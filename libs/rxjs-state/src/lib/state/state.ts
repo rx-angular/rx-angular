@@ -1,5 +1,5 @@
-import {Observable, OperatorFunction, Subscribable, Subscription, Unsubscribable} from 'rxjs';
-import {filter, map, pluck, tap} from 'rxjs/operators';
+import { Observable, OperatorFunction, Subscribable, Subscription, Unsubscribable } from 'rxjs';
+import { filter, map, pluck, tap } from 'rxjs/operators';
 import {
   createAccumulationObservable,
   createSideEffectObservable,
@@ -10,9 +10,12 @@ import {
   stateful,
   WrongSelectParamsError
 } from '../core';
+import { isKeyOf } from '../core/utils/typing';
 
-type projectStateFn<T> = (oldState: T) => Partial<T>;
-type projectSliceFn<T, K extends keyof T> = (oldState: T) => T[K];
+type ProjectStateFn<T> = (oldState: T) => Partial<T>;
+type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
+type ProjectStateReducer<T, K extends keyof T> = (oldState: T, value: any) => Partial<T>;
+type ProjectValueReducer<T, K extends keyof T> = (oldState: T, value: any) => T[K];
 
 
 /**
@@ -40,11 +43,11 @@ export class RxState<T> implements Subscribable<any> {
    * ls.setState({bar: 7});
    * ls.setState('test', 'tau');
    */
-  setState(stateOrProjectState: Partial<T> | projectStateFn<T>): void;
-  setState<K extends keyof T, O>(key: K, projectSlice: projectSliceFn<T, K>): void;
+  setState(stateOrProjectState: Partial<T> | ProjectStateFn<T>): void;
+  setState<K extends keyof T, O>(key: K, projectSlice: ProjectValueFn<T, K>): void;
   setState<K extends keyof T>(
-    keyOrStateOrProjectState: Partial<T> | projectStateFn<T> | K,
-    stateOrSliceProjectFn?: projectSliceFn<T, K>
+    keyOrStateOrProjectState: Partial<T> | ProjectStateFn<T> | K,
+    stateOrSliceProjectFn?: ProjectValueFn<T, K>
   ): void {
 
     if (typeof keyOrStateOrProjectState === 'object' && stateOrSliceProjectFn === undefined) {
@@ -58,53 +61,58 @@ export class RxState<T> implements Subscribable<any> {
     }
 
     if (isKeyOf<T>(keyOrStateOrProjectState) && typeof stateOrSliceProjectFn === 'function') {
-      const state: any = {[keyOrStateOrProjectState]: stateOrSliceProjectFn(this.accumulationObservable.state)};
+      const state: any = { [keyOrStateOrProjectState]: stateOrSliceProjectFn(this.accumulationObservable.state) };
       this.accumulationObservable.nextSlice(state);
       return;
     }
 
     throw new Error('wrong param');
 
-
-    function isKeyOf<O>(k: unknown): k is keyof O {
-      return (
-        !!k &&
-        (
-          typeof k === 'string' ||
-          typeof k === 'symbol' ||
-          typeof k === 'number'
-        )
-      );
-    }
   }
 
   /**
    * @example
    * const ls = new State<{test: string, bar: number}>();
-   * ls.connect(of({test: 'tau'}));
-   * ls.connect('bar', of(42));
+   * ls.connect(of({foo: 'bar'}));
+   * ls.connect(of({foo: 'bar'}), (oldState) => ({foo: oldState.foo + '?'}));
+   * ls.connect('foo', of('bar!'));
+   * ls.connect('foo', of('!'), (oldState, change) => ({foo: oldState.foo + change}));
    */
-  connect<K extends keyof T>(slice$: Observable<Partial<T>>): void;
-  connect<K extends keyof T>(key: K, value$: Observable<T[K]>): void;
-  connect<K extends keyof T>(keyOrSlice$: K | Observable<Partial<T>>, value$?: Observable<T[K]>): void {
-    if (isObservableGuard(keyOrSlice$) && value$ === undefined) {
-      this.accumulationObservable.nextSliceObservable(keyOrSlice$);
+  connect<K extends keyof T>(slice$: Observable<any>, projectFn?: ProjectStateReducer<T, K>): void;
+  connect<K extends keyof T>(key: K, slice$: Observable<T[K]>): void;
+  connect<K extends keyof T>(key: K, slice$: Observable<any>, projectSliceFn: ProjectValueReducer<T, K>): void;
+  connect<K extends keyof T>(keyOrSlice$: K | Observable<any>, projectOrSlices$?: ProjectStateReducer<T, K> | Observable<T[K] | any>, projectValueFn?: ProjectValueReducer<T, K>): void {
+    console.log('connect', keyOrSlice$, projectOrSlices$, projectValueFn);
+    if (isObservableGuard<any>(keyOrSlice$)
+      && projectOrSlices$ === undefined
+      && projectValueFn === undefined
+    ) {
+      const slice$ = keyOrSlice$;
+      this.accumulationObservable.nextSliceObservable(slice$);
       return;
     }
-    if (typeof keyOrSlice$ === 'string' && value$ !== undefined) {
-      this.accumulationObservable.nextSliceObservable(
-        value$.pipe(
-          // undefined can occur if:
-          // - key oes not extist
-          // - key is set to undefined
-          filter(slice => slice !== undefined),
-          map(slice => ({[keyOrSlice$]: slice}))
-          // @TODO fix typing
-        ) as any
-      );
+
+    if (isKeyOf<T>(keyOrSlice$)
+      && isObservableGuard<T[K]>(projectOrSlices$)
+      && projectValueFn === undefined) {
+      const key = keyOrSlice$;
+      const slice$ = projectOrSlices$.pipe(filter(slice => slice !== undefined));
+      this.accumulationObservable.nextSliceObservable(slice$);
       return;
     }
-    throw new Error('wrong param');
+
+    if (isKeyOf<T>(keyOrSlice$)
+      && isObservableGuard<any>(projectOrSlices$)
+      && typeof projectValueFn === 'function') {
+      const key = keyOrSlice$;
+      const slice$ = projectOrSlices$.pipe(
+        filter(slice => slice !== undefined),
+        map(value => ({ [key]: projectValueFn(this.getState(), value) } as any)));
+      this.accumulationObservable.nextSliceObservable(slice$);
+      return;
+    }
+
+    throw new Error('wrong params passed to connect');
   }
 
   /**

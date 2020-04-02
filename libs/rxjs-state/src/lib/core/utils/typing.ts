@@ -42,3 +42,14 @@ export function isIterableGuard<T>(obj: unknown): obj is Array<T> {
   }
   return typeof (obj as any)[Symbol.iterator] === 'function';
 }
+
+export function isKeyOf<O>(k: unknown): k is keyof O {
+  return (
+    !!k &&
+    (
+      typeof k === 'string' ||
+      typeof k === 'symbol' ||
+      typeof k === 'number'
+    )
+  );
+}

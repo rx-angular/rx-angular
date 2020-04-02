@@ -1,1 +1,1 @@
-export * from './lib/ngx-rx-state.module';
+export * from './lib/index';
