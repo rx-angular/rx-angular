@@ -5,9 +5,9 @@ import { Subscription } from 'rxjs';
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'vanilla-demo',
-  template: `value$: {{value$ | async | json}}`
+  template: `vanilla-demo: {{value$ | async | json}}`
 })
-export class VanillaExampleComponent extends RxState<{}> implements OnDestroy {
+export class VanillaDemoComponent extends RxState<{}> implements OnDestroy {
   subscription = new Subscription();
   value$ = this.select();
 
