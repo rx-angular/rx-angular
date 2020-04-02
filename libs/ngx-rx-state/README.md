@@ -1,7 +1,44 @@
 # ngx-state
 
-## Description
+#### Reactive Component State in Angular
+
 RxState is a light-weight reactive state management service which is especially useful to organize component state in Angular.
+
+## Description
+
+In most of the component-oriented applications, there is the need to structure container components.
+Even after a well thought refactoring into more display components and grouping logic into responsibilities it's always hard to handle.
+
+The data structure you manage inside these components is only here for their very component. Not for any other components.
+This data structure appears with the component and disappears when the component is removed.
+
+This is a good example of component state.  
+
+This library helps to organize component state reactive.
+
+**Features**
+- Component State Management (Also a global service is provided)
+- Subscription-less coding
+- State lifetime tied to component lifetime
+- Lifecycle independent state composition
+- Slim and intuitive API
+- Fully typed and tested
+
+**Information Video**  
+([🎥 Live Demo at 24:47](https://www.youtube.com/watch?v=I8uaHMs8rw0&t=24m47s))
+
+
+**NPM Package**  
+[📦 ngx-rx-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ngx-rx-state)  
+
+**Sourcecode**  
+[📦 ngx-rx/rxjs-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-state)  
+
+**Research**  
+ ([💾 Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
+
+
+---
 
 
 ## API
