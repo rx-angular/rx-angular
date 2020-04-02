@@ -1,12 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
 import { RxGlobalState } from '@ngx-rx/ngx-rx-state';
+import { createStateChecker, PrimitiveState } from './fixtures';
 
-interface PrimitiveState {
-  bol: boolean;
-  str: string;
-  num: number;
-}
+const stateChecker = createStateChecker((actual, expected) => {
+  if (typeof expected === 'object') {
+    expect(actual).toEqual(expected);
+  } else {
+    expect(actual).toBe(expected);
+  }
+});
+
 
 describe('RxStateService', () => {
   let service: RxGlobalState<PrimitiveState>;
@@ -21,7 +25,8 @@ describe('RxStateService', () => {
   });
 
   it('should be hot on instantiation', () => {
-    expect(service).toBeTruthy();
+    stateChecker.checkSubscriptions(service, 1);
   });
+
 
 });
