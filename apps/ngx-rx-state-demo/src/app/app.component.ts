@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { RxState } from 'rxjs-state';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'ngx-rx-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  template: `<vanilla-demo></vanilla-demo>`
 })
 export class AppComponent {
-  title = 'ngx-rx-state-demo';
+
 }
