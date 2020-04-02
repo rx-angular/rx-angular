@@ -5,7 +5,7 @@
 npm install rxjs-state
 
 ## Description
-RxState is a light-weight reactive state management service which is especially useful to organize component state in Angular.
+RxState is a light-weight reactive state management service which is especially useful to organize component state.
 
 ## API
  ```typescript
