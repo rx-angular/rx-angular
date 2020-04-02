@@ -78,28 +78,39 @@ export class RxState<T> implements Subscribable<any> {
    * ls.connect('foo', of('bar!'));
    * ls.connect('foo', of('!'), (oldState, change) => ({foo: oldState.foo + change}));
    */
-  connect<K extends keyof T>(slice$: Observable<any>, projectFn?: ProjectStateReducer<T, K>): void;
+  connect<K extends keyof T>(slice$: Observable<any | Partial<T>>, projectFn?: ProjectStateReducer<T, K>): void;
   connect<K extends keyof T>(key: K, slice$: Observable<T[K]>): void;
   connect<K extends keyof T>(key: K, slice$: Observable<any>, projectSliceFn: ProjectValueReducer<T, K>): void;
   connect<K extends keyof T>(keyOrSlice$: K | Observable<any>, projectOrSlices$?: ProjectStateReducer<T, K> | Observable<T[K] | any>, projectValueFn?: ProjectValueReducer<T, K>): void {
-    console.log('connect', keyOrSlice$, projectOrSlices$, projectValueFn);
     if (isObservableGuard<any>(keyOrSlice$)
       && projectOrSlices$ === undefined
       && projectValueFn === undefined
     ) {
-      const slice$ = keyOrSlice$;
+      const slice$ = keyOrSlice$.pipe(filter(slice => slice !== undefined));
       this.accumulationObservable.nextSliceObservable(slice$);
       return;
     }
+
+    if (isObservableGuard<any>(keyOrSlice$)
+      && typeof projectOrSlices$ === 'function' && !isObservableGuard<T[K]>(projectOrSlices$)
+      && projectValueFn === undefined
+    ) {
+      const project = projectOrSlices$;
+      const slice$ = keyOrSlice$.pipe(filter(slice => slice !== undefined), map(v => project(this.getState(), v)));
+      this.accumulationObservable.nextSliceObservable(slice$);
+      return;
+    }
+
 
     if (isKeyOf<T>(keyOrSlice$)
       && isObservableGuard<T[K]>(projectOrSlices$)
       && projectValueFn === undefined) {
       const key = keyOrSlice$;
-      const slice$ = projectOrSlices$.pipe(filter(slice => slice !== undefined));
+      const slice$ = projectOrSlices$.pipe(filter(slice => slice !== undefined), map(value => ({[key]: value} as any)));
       this.accumulationObservable.nextSliceObservable(slice$);
       return;
     }
+
 
     if (isKeyOf<T>(keyOrSlice$)
       && isObservableGuard<any>(projectOrSlices$)
