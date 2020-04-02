@@ -1,9 +1,27 @@
 {
-  "name": "@ngx-rx/ngx-rx-state",
-  "version": "0.0.1",
+  "name": "ngx-rx-state",
+  "version": "0.0.1-alpha.1",
+  "description": "A lightweight robust reactive state management object written in RxJS",
+  "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=10.12.0",
+    "npm": ">=5.3.0",
+    "yarn": ">=1.9.2"
+  },
+  "keywords": [
+    "angular",
+    "rxjs"
+  ],
+  "author": "Michael Hladky <michael@hladky.at>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BioPhoton/ngx-rx.git"
+  },
   "peerDependencies": {
-    "@angular/common": "^9.1.0",
-    "@angular/core": "^9.1.0",
-    "tslib": "^1.10.0"
+    "rxjs": "^6.5.3"
   }
 }
