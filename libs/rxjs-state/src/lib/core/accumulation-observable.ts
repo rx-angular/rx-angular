@@ -1,7 +1,7 @@
 import { ConnectableObservable, merge, Observable, queueScheduler, Subject, Subscribable, Subscription } from 'rxjs';
 import { distinctUntilChanged, mergeAll, observeOn, publishReplay, scan, tap } from 'rxjs/operators';
 
-export function createAccumulationObservable<T>(
+export function createAccumulationObservable<T extends object>(
   stateObservables = new Subject<Observable<Partial<T>>>(),
   stateSlices = new Subject<Partial<T>>(),
   stateAccumulator: (st: T, sl: Partial<T>) => T = (st: T, sl: Partial<T>): T => {

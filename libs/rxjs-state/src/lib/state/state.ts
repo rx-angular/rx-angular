@@ -22,7 +22,7 @@ type ProjectValueReducer<T, K extends keyof T> = (oldState: T, value: any) => T[
  * @example
  * const ls = new State<{test: string, bar: number}>();
  */
-export class RxState<T> implements Subscribable<any> {
+export class RxState<T extends object> implements Subscribable<any> {
   private accumulationObservable = createAccumulationObservable<T>();
   private effectObservable = createSideEffectObservable();
 
@@ -61,7 +61,8 @@ export class RxState<T> implements Subscribable<any> {
     }
 
     if (isKeyOf<T>(keyOrStateOrProjectState) && typeof stateOrSliceProjectFn === 'function') {
-      const state: any = { [keyOrStateOrProjectState]: stateOrSliceProjectFn(this.accumulationObservable.state) };
+      const state: Partial<T> = {};
+      state[keyOrStateOrProjectState] = stateOrSliceProjectFn(this.accumulationObservable.state);
       this.accumulationObservable.nextSlice(state);
       return;
     }
@@ -106,7 +107,10 @@ export class RxState<T> implements Subscribable<any> {
       && isObservableGuard<T[K]>(projectOrSlices$)
       && projectValueFn === undefined) {
       const key = keyOrSlice$;
-      const slice$ = projectOrSlices$.pipe(filter(slice => slice !== undefined), map(value => ({[key]: value} as any)));
+      const slice$ = projectOrSlices$.pipe(
+        filter(slice => slice !== undefined),
+        map(value => ({...{},[key]: value}))
+      );
       this.accumulationObservable.nextSliceObservable(slice$);
       return;
     }
@@ -118,7 +122,7 @@ export class RxState<T> implements Subscribable<any> {
       const key = keyOrSlice$;
       const slice$ = projectOrSlices$.pipe(
         filter(slice => slice !== undefined),
-        map(value => ({ [key]: projectValueFn(this.getState(), value) } as any)));
+        map(value => ({ ...{}, [key]: projectValueFn(this.getState(), value) })));
       this.accumulationObservable.nextSliceObservable(slice$);
       return;
     }
