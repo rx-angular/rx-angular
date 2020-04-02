@@ -1,6 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
-import { RxState } from '@ngx-rx/ngx-rx-state';
-import { Subscription } from 'rxjs';
+import { Component } from '@angular/core';
+import { RxState } from 'ngx-rx-state';
 
 @Component({
   // tslint:disable-next-line:component-selector

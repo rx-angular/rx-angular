@@ -39,6 +39,7 @@
     "@angular/router": "9.1.0",
     "@nrwl/angular": "9.2.1",
     "core-js": "^2.5.4",
+    "ngx-rx-state": "0.0.1-alpha.2",
     "rxjs": "~6.5.4",
     "rxjs-state": "0.0.1-alpha.3",
     "tslib": "^1.10.0",
