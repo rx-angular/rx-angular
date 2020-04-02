@@ -15,7 +15,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@ngx-rx/ngx-rx-state": ["libs/ngx-rx-state/src/index.ts"],
+      "@rxjs-state": ["libs/rxjs-state/src/index.ts"],
+      "@test-helpers": ["libs/test-helpers/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

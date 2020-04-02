@@ -25,6 +25,15 @@
     "ngx-rx-state-demo-e2e": {
       "tags": [],
       "implicitDependencies": ["ngx-rx-state-demo"]
+    },
+    "ngx-rx-state": {
+      "tags": []
+    },
+    "rxjs-state": {
+      "tags": []
+    },
+    "test-helpers": {
+      "tags": []
     }
   }
 }
