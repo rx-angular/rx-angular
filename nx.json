@@ -34,6 +34,19 @@
     },
     "test-helpers": {
       "tags": []
+    },
+    "rxjs-etc": {
+      "tags": []
+    },
+    "ts-etc": {
+      "tags": []
+    },
+    "ng-reactive-experiments": {
+      "tags": []
+    },
+    "ng-reactive-experiments-e2e": {
+      "tags": [],
+      "implicitDependencies": ["ng-reactive-experiments"]
     }
   }
 }

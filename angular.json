@@ -229,6 +229,187 @@
           }
         }
       }
+    },
+    "rxjs-etc": {
+      "root": "libs/rxjs-etc",
+      "sourceRoot": "libs/rxjs-etc/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/rxjs-etc/tsconfig.lib.json",
+              "libs/rxjs-etc/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/rxjs-etc/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/rxjs-etc/jest.config.js",
+            "tsConfig": "libs/rxjs-etc/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ts-etc": {
+      "root": "libs/ts-etc",
+      "sourceRoot": "libs/ts-etc/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ts-etc/tsconfig.lib.json",
+              "libs/ts-etc/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ts-etc/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ts-etc/jest.config.js",
+            "tsConfig": "libs/ts-etc/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ng-reactive-experiments": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/ng-reactive-experiments",
+      "sourceRoot": "apps/ng-reactive-experiments/src",
+      "prefix": "ngx-rx",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/ng-reactive-experiments",
+            "index": "apps/ng-reactive-experiments/src/index.html",
+            "main": "apps/ng-reactive-experiments/src/main.ts",
+            "polyfills": "apps/ng-reactive-experiments/src/polyfills.ts",
+            "tsConfig": "apps/ng-reactive-experiments/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/ng-reactive-experiments/src/favicon.ico",
+              "apps/ng-reactive-experiments/src/assets"
+            ],
+            "styles": ["apps/ng-reactive-experiments/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/ng-reactive-experiments/src/environments/environment.ts",
+                  "with": "apps/ng-reactive-experiments/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "ng-reactive-experiments:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ng-reactive-experiments:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ng-reactive-experiments:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/ng-reactive-experiments/tsconfig.app.json",
+              "apps/ng-reactive-experiments/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/ng-reactive-experiments/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/ng-reactive-experiments/jest.config.js",
+            "tsConfig": "apps/ng-reactive-experiments/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "apps/ng-reactive-experiments/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "ng-reactive-experiments-e2e": {
+      "root": "apps/ng-reactive-experiments-e2e",
+      "sourceRoot": "apps/ng-reactive-experiments-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/ng-reactive-experiments-e2e/cypress.json",
+            "tsConfig": "apps/ng-reactive-experiments-e2e/tsconfig.e2e.json",
+            "devServerTarget": "ng-reactive-experiments:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ng-reactive-experiments:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/ng-reactive-experiments-e2e/tsconfig.e2e.json"],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/ng-reactive-experiments-e2e/**"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {

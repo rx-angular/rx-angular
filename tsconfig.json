@@ -18,7 +18,9 @@
     "paths": {
       "@ngx-rx/ngx-rx-state": ["libs/ngx-rx-state/src/index.ts"],
       "@rxjs-state": ["libs/rxjs-state/src/index.ts"],
-      "@test-helpers": ["libs/test-helpers/src/index.ts"]
+      "@test-helpers": ["libs/test-helpers/src/index.ts"],
+      "@ngx-rx/rxjs-etc": ["libs/rxjs-etc/src/index.ts"],
+      "@ngx-rx/ts-etc": ["libs/ts-etc/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
