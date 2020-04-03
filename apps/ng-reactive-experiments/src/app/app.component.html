@@ -1,107 +1,52 @@
-<header class="flex">
-  <img
-    alt="Nx logo"
-    width="75"
-    src="https://nx.dev/assets/images/nx-logo-white.svg"
-  />
-  <h1>Welcome to {{ title }}!</h1>
-</header>
-<main>
-  <h2>Resources &amp; Tools</h2>
-  <p>
-    Thank you for using and showing some ♥ for Nx.
-  </p>
-  <div class="flex github-star-container">
-    <a
-      href="https://github.com/nrwl/nx"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      If you like Nx, please give it a star:
-      <div class="github-star-badge">
-        <svg
-          class="material-icons"
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
-          <path d="M0 0h24v24H0z" fill="none" />
-          <path
-            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-          />
-        </svg>
-        Star
-      </div>
-    </a>
-  </div>
-  <p>
-    Here are some links to help you get started.
-  </p>
-  <ul class="resources">
-    <li class="col-span-2">
-      <a
-        class="resource flex"
-        href="https://connect.nrwl.io/app/courses/nx-workspaces/intro"
-      >
-        Nx video course
-      </a>
-    </li>
-    <li class="col-span-2">
-      <a
-        class="resource flex"
-        href="https://nx.dev/angular/getting-started/what-is-nx"
-      >
-        Nx video tutorial
-      </a>
-    </li>
-    <li class="col-span-2">
-      <a
-        class="resource flex"
-        href="https://nx.dev/angular/tutorial/01-create-application"
-      >
-        Interactive tutorial
-      </a>
-    </li>
-    <li class="col-span-2">
-      <a class="resource flex" href="https://connect.nrwl.io/">
-        <img
-          height="36"
-          alt="Nrwl Connect"
-          src="https://connect.nrwl.io/assets/img/CONNECT_ColorIcon.png"
-        />
-        <span class="gutter-left">Nrwl Connect</span>
-      </a>
-    </li>
-  </ul>
-  <h2>Next Steps</h2>
-  <p>Here are some things you can do with Nx.</p>
-  <details open>
-    <summary>Add UI library</summary>
-    <pre>
-# Generate UI lib
-ng g @nrwl/angular:lib ui
+<mat-toolbar class="app-toolbar" color="primary">
+  <button mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <h1 class="mat-title">Angular Performance Tests</h1>
+  <app-config-panel class="config-panel" [appComponentRef]="thisRef"></app-config-panel>
+</mat-toolbar>
+<mat-sidenav-container
+  [style.marginTop.px]="0"
+  class="app-sidenav-container">
+  <mat-sidenav mode='side'
+               opened="true"
+               class="main-sidenav"
+               fixedTopGap="56">
 
-# Add a component
-ng g @nrwl/angular:component xyz --project ui</pre
-    >
-  </details>
-  <details>
-    <summary>View dependency graph</summary>
-    <pre>nx dep-graph</pre>
-  </details>
-  <details>
-    <summary>Run affected commands</summary>
-    <pre>
-# see what's been affected by changes
-ng affected:dep-graph
+    <mat-nav-list>
+      <ng-container *ngFor="let item of menuItems">
 
-# run tests for current changes
-ng affected:test
+        <mat-expansion-panel *ngIf="item.children as children">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{item.label}}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <a *ngFor="let child of children" [routerLink]="child.link"
+             mat-list-item
+             routerLinkActive="active">
+            <mat-icon style="margin-right: .5rem;">warning</mat-icon>
+            {{child.label}}
+          </a>
+        </mat-expansion-panel>
+        <ng-container *ngIf="!item.children">
+          <a [routerLink]="item.link"
+             mat-list-item
+             routerLinkActive="active">
+            <mat-icon style="margin-right: .5rem;">warning</mat-icon>
+            {{item.label}}
+          </a>
+        </ng-container>
 
-# run e2e tests for current changes
-ng affected:e2e
-</pre
-    >
-  </details>
-</main>
+      </ng-container>
+
+      <a mat-list-item routerLink="animation" routerLinkActive="active">
+        <mat-icon style="margin-right: .5rem;">invert_colors</mat-icon>
+        Animation
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="main-content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

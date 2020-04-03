@@ -1,0 +1,7 @@
+<div class="grow-wrapper"
+     *ngIf="viewState$ | ngrxPush as state"
+     [@grow]="state.animationState"
+     (@grow.done)="animationDone.next($event)"
+     (@grow.start)="animationStarted.next($event)">
+
+</div>
