@@ -2,16 +2,6 @@ import { createSideEffectObservable } from '@rxjs-state';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
 
-interface PrimitiveState {
-  test: string;
-  bar: number;
-}
-
-interface ArrayState {
-  items: number[];
-}
-
-
 let testScheduler: TestScheduler;
 
 beforeEach(() => {

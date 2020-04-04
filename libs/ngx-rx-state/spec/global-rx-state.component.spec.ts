@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Component } from '@angular/core';
-import { RxGlobalState, RxState } from '@ngx-rx/ngx-rx-state';
+import { Component, OnDestroy } from '@angular/core';
+import { RxGlobalState } from '@ngx-rx/ngx-rx-state';
 import { createStateChecker, PrimitiveState } from './fixtures';
 
 const stateChecker = createStateChecker((actual, expected) => {
@@ -15,24 +15,28 @@ const stateChecker = createStateChecker((actual, expected) => {
 
 @Component({
   selector: 'ngx-rx-state-local-provider-test',
-  template: `<span>{{value$}}</span>`,
+  template: `<span>{{value$}}</span>`
 })
-export class RxStateInjectionComponent {
+export class RxStateInjectionComponent implements OnDestroy {
 
   value$ = this.state.select();
+
   constructor(public state: RxGlobalState<PrimitiveState>) {
 
   }
 
+  ngOnDestroy(): void {
+  }
+
 }
 
-describe('LocalProviderTestComponent', () => {
+describe('Injection test component', () => {
   let component: RxStateInjectionComponent;
   let fixture: ComponentFixture<RxStateInjectionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RxStateInjectionComponent ],
+      declarations: [RxStateInjectionComponent],
       providers: [RxGlobalState]
     })
       .compileComponents();

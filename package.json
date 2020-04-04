@@ -26,8 +26,8 @@
     "dep-graph": "nx dep-graph",
     "help": "nx help",
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
-    "rxjs-state:publish": "ng build --project rxjs-state && cd ./dist/libs/rxjs-state && npm publish",
-    "ngx-rx-state:publish": "ng build --project rxjs-state && cd ./dist/libs/rxjs-state && npm publish"
+    "rxjs-state:publish": "ng test --project rxjs-state && ng build --project rxjs-state && cd ./dist/libs/rxjs-state && npm publish",
+    "ngx-rx-state:publish": "npm i -S rxjs-state@latest && ng test --project ngx-rx-state && ng build --project ngx-rx-state --prod && cd ./dist/libs/ngx-rx-state && npm publish"
   },
   "private": true,
   "dependencies": {
@@ -45,7 +45,7 @@
     "core-js": "^2.5.4",
     "ngx-rx-state": "0.0.1-alpha.2",
     "rxjs": "~6.5.4",
-    "rxjs-state": "0.0.1-alpha.3",
+    "rxjs-state": "0.0.3",
     "tslib": "^1.10.0",
     "zone.js": "^0.10.2"
   },

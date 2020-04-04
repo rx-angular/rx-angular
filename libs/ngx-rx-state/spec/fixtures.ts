@@ -13,7 +13,7 @@ export const initialPrimitiveState: PrimitiveState = {
   bol: true
 };
 
-export function setupState<T>(cfg: { initialState?: T }) {
+export function setupState<T extends object>(cfg: { initialState?: T }) {
   const { initialState } = { ...cfg };
   const state = new RxState<T>();
   if (initialState) {
@@ -24,12 +24,12 @@ export function setupState<T>(cfg: { initialState?: T }) {
 
 type ProjectStateFn<T> = (state: T) => any;
 
-export interface StateChecker<T> {
+export interface StateChecker<T extends object> {
   checkState: (service: RxState<T>, expectedState: any) => void;
   checkSubscriptions: (service: RxState<T>, expected: any) => void;
 }
 
-export function createStateChecker<T>(
+export function createStateChecker<T extends object>(
   assert: (a: any, e: any) => void
 ): StateChecker<T> {
 

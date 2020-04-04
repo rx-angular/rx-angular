@@ -27,7 +27,7 @@ const initialPrimitiveState: PrimitiveState = {
   bol: true
 };
 
-function setupAccumulationObservable<T>(cfg: { initialState?: T, initialize?: boolean }) {
+function setupAccumulationObservable<T extends object>(cfg: { initialState?: T, initialize?: boolean }) {
   const { initialState, initialize } = { initialize: true, ...cfg };
   const acc = createAccumulationObservable<T>();
   if (initialize) {

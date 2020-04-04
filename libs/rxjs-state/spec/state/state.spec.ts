@@ -24,7 +24,7 @@ const initialPrimitiveState: PrimitiveState = {
   bol: true
 };
 
-function setupState<T>(cfg: { initialState?: T, initialize?: boolean }) {
+function setupState<T extends object>(cfg: { initialState?: T, initialize?: boolean }) {
   const { initialState, initialize } = { initialize: true, ...cfg };
   const state = new RxState<T>();
   if (initialize) {
