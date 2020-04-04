@@ -7,6 +7,8 @@ RxState is a light-weight reactive state management service especially useful fo
 ## Description
 RxState is a light-weight reactive state management service which is especially useful to organize component state.
 
+**[Angular version here](https://www.npmjs.com/package/ngx-rx-state)**
+
 ## install
 
 `npm install --save rxjs-state`
