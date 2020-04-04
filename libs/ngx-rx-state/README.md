@@ -23,8 +23,9 @@ This library helps to organize component state reactively.
 - Component State Management (Also a global service is provided `RxGlobalState`)
 - Lazy state. No initial state needed.
 - **Subscription-less coding**
+- Lifecycle independent programming
+- State queries are cached
 - State lifetime tied to component lifetime
-- Lifecycle independent state composition
 - Slim and intuitive API
 - Fully typed and tested
 

@@ -1,11 +1,15 @@
 # rxjs-state
 
-## install
+RxState is a light-weight reactive state management service especially useful for component state in SPAs.
 
-`npm install --save rxjs-state`
+![rxjs-state logo](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/libs/rxjs-state/images/rxjs-state_logo.png)
 
 ## Description
 RxState is a light-weight reactive state management service which is especially useful to organize component state.
+
+## install
+
+`npm install --save rxjs-state`
 
 
 ## Setup
