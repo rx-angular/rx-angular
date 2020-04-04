@@ -2,10 +2,10 @@
 
 #### Reactive Component State for Angular
 
-RxState is a light-weight reactive state management service which is especially useful to organize component state in Angular.
+RxState is a light-weight reactive state management service especially useful for component state in Angular.
 Furthermore a global service is provided and can act as a small global state manager.
 
-[]()
+![ngx-rx-state logo](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/libs/ngx-rx-state/images/ngx-rx-state_logo.png)
 
 ## Description
 
@@ -20,8 +20,9 @@ This is a good example of component state.
 This library helps to organize component state reactively.
 
 **Features**
-- Component State Management (Also a global service is provided)
-- Subscription-less coding
+- Component State Management (Also a global service is provided `RxGlobalState`)
+- Lazy state. No initial state needed.
+- **Subscription-less coding**
 - State lifetime tied to component lifetime
 - Lifecycle independent state composition
 - Slim and intuitive API
@@ -29,7 +30,6 @@ This library helps to organize component state reactively.
 
 **Information Video**  
 ([🎥 Live Demo at 24:47](https://www.youtube.com/watch?v=I8uaHMs8rw0&t=24m47s))
-
 
 **NPM Package**  
 [📦 ngx-rx-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ngx-rx-state)  
@@ -41,7 +41,8 @@ This library helps to organize component state reactively.
  ([💾 Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
 
 **Usage in the wild**
-- [fully-reactive zone-less Angular/Ionic App](https://startrack-ng.web.app/search)
+- [Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) by [Mike Hartington](https://twitter.com/mhartington)
+- [Demo](https://github.com/BioPhoton/ngx-rx/tree/master/apps/ngx-rx-state-demo)
 
 ---
 
