@@ -22,9 +22,8 @@
     "url": "https://github.com/BioPhoton/ngx-rx.git"
   },
   "peerDependencies": {
-    "@angular/core": "^9.1.0",
-    "tslib": "^1.10.0",
+    "@angular/core": ">8.0.0",
     "rxjs": "^6.5.3",
-    "rxjs-state" : "0.0.5"
+    "rxjs-state" : "0.0.6"
   }
 }
