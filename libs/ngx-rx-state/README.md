@@ -41,9 +41,9 @@ This library helps to organize component state reactive.
 ---
 
 
-## API
+## Setup
  ```typescript
-import { State } from 'rxjs-state';
+import { RxState } from 'rxjs-state';
 
 interface MyState {
     foo: string;
@@ -56,6 +56,9 @@ interface MyState {
 
 const state = new RxState<MyState>();
 ```
+
+## API
+
 ### setState
 Add new slices to the state by providing an object
  ```typescript
@@ -64,9 +67,6 @@ state.setState({ foo: 'boo' });
 
 state.setState({ bar: 2 });
 // new state => { foo: 'boo', bar: 2 }
-
-state.setState({ loo: {boo: 'boo', baz: 1337 }})
-// new state => { foo: 'boo', bar: 2, loo: {boo: 'boo', baz: 1337 }}
 ```
 
 Add new Slices to the state by providing a projection function
