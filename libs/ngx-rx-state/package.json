@@ -1,6 +1,6 @@
 {
   "name": "ngx-rx-state",
-  "version": "0.0.1-rc.1",
+  "version": "0.0.1",
   "description": "A lightweight robust reactive state management service for Angular",
   "main": "index.js",
   "publishConfig": {
@@ -25,6 +25,6 @@
     "@angular/core": "^9.1.0",
     "tslib": "^1.10.0",
     "rxjs": "^6.5.3",
-    "rx-state" : "0.0.3"
+    "rx-state" : "0.0.4"
   }
 }
