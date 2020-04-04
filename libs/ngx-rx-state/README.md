@@ -29,21 +29,23 @@ This library helps to organize component state reactively.
 - Slim and intuitive API
 - Fully typed and tested
 
-**Information Video**  
-([🎥 Live Demo at 24:47](https://www.youtube.com/watch?v=I8uaHMs8rw0&t=24m47s))
+**Resources**
 
-**NPM Package**  
-[📦 ngx-rx-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ngx-rx-state)  
+Videos:  
+- ([🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch))
 
-**Sourcecode**  
-[📦 ngx-rx/rxjs-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-state)  
+NPM Package:  
+- [📦 ngx-rx-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ngx-rx-state)  
 
-**Research**  
- ([💾 Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
+Sourcecode:  
+- [📦 ngx-rx/rxjs-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-state)  
 
-**Usage in the wild**
+Research Documents
+- ([💾 Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
+
+Usage in the wild
 - [Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) by [Mike Hartington](https://twitter.com/mhartington)
-- [Demo](https://github.com/BioPhoton/ngx-rx/tree/master/apps/ngx-rx-state-demo)
+- [Repository Demo](https://github.com/BioPhoton/ngx-rx/tree/master/apps/ngx-rx-state-demo)
 
 ---
 
