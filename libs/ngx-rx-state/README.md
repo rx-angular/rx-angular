@@ -32,7 +32,7 @@ This library helps to organize component state reactively.
 **Resources**
 
 Videos:  
-- ([🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch))
+- [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch)
 
 NPM Package:  
 - [📦 ngx-rx-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ngx-rx-state)  
@@ -41,14 +41,19 @@ Sourcecode:
 - [📦 ngx-rx/rxjs-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-state)  
 
 Research Documents
-- ([💾 Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
+- [💾 Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
 
 Usage in the wild
 - [Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) by [Mike Hartington](https://twitter.com/mhartington)
 - [Repository Demo](https://github.com/BioPhoton/ngx-rx/tree/master/apps/ngx-rx-state-demo)
 
 ---
+TOC
 
+- Setup
+- API
+- Usage in Angular
+---
 
 ## Setup
 As the RxState class is just a plain vanilla Javascript Class
