@@ -2,7 +2,8 @@ import { ROUTES as DEMO_BASICS_ROUTES } from './examples/demo-basics/demo-basics
 
 export const ROUTES = [
   {
-    path: '',
+    path: 'ngx-rx-root',
+    pathMatch: 'full',
     redirectTo: 'demo-basics'
   },
   { path: 'demo-basics', children: DEMO_BASICS_ROUTES }

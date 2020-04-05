@@ -44,13 +44,13 @@ export class DemoBasicsComponent4 {
     constructor(public vm: DemoBasicsViewModelService,
                 private store: Store<any>,
                 private actions$: Actions) {
-        this.vm.connectState('list',
+        this.vm.connect('list',
             this.store.select(selectRepositoryList).pipe(map(this.parseListItems))
         );
-        this.vm.connectEffect(this.vm.refreshListSideEffect$
+        this.vm.hold(this.vm.refreshListSideEffect$
             .pipe(tap(_ => this.store.dispatch(fetchRepositoryList({}))))
         );
-        this.vm.connectState('isPending', this.actions$
+        this.vm.connect('isPending', this.actions$
             .pipe(
                 ofType(repositoryListFetchError, repositoryListFetchSuccess, fetchRepositoryList),
                 map(a => a.type === fetchRepositoryList.type)
