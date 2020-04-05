@@ -32,7 +32,7 @@ This library helps to organize component state reactively.
 **Resources**
 
 Videos:  
-- [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch)
+- [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch?v=I8uaHMs8rw0)
 
 NPM Package:  
 - [📦 ngx-rx-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ngx-rx-state)  
