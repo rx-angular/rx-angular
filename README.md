@@ -11,6 +11,6 @@ The target Framework is Angular but the features are designed to get reused in o
 - [Angular](https://angular.io)
   - [📦 ngx-rx-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ngx-rx-state) - Reactive Component State-Management
 - [RxJS](https://rxjs.dev)
-  - [💾 rxjs-etc](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-etc) - Reactive Component State-Management
+  - [💾 rxjs-etc](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-etc) - A seo of RxJS helper functions
   
  
