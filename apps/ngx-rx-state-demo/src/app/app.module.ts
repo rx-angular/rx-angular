@@ -40,7 +40,8 @@ export const materialModules = [
 
     RouterModule.forRoot(ROUTES),
     materialModules,
-    GithubModule
+    GithubModule,
+    BrowserAnimationsModule
   ],
   declarations: [AppComponent],
   bootstrap: [AppComponent]

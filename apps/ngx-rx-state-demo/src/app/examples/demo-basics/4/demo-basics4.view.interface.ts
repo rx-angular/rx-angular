@@ -1,5 +1,5 @@
 import {Observable, Subject} from "rxjs";
-import {DemoBasicsBaseModel} from "./demo-basics.base-model.interface";
+import {DemoBasicsBaseModel} from "./demo-basics5.base-model.interface";
 
 export interface DemoBasicsView {
     // All UI-Events or component EventBindings

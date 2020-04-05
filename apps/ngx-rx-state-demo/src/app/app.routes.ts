@@ -1,10 +1,13 @@
-import { ROUTES as DEMO_BASICS_ROUTES } from './examples/demo-basics/demo-basics.module';
+import { Routes } from '@angular/router';
 
-export const ROUTES = [
+export const ROUTES: Routes = [
   {
     path: 'ngx-rx-root',
-    pathMatch: 'full',
     redirectTo: 'demo-basics'
   },
-  { path: 'demo-basics', children: DEMO_BASICS_ROUTES }
+  {
+    path: 'demo-basics',
+    loadChildren: () => import('./examples/demo-basics/demo-basics.module')
+      .then(m => m.DemoBasicsModule)
+  }
 ];

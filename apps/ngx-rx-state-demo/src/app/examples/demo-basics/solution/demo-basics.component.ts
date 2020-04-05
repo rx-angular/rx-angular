@@ -8,13 +8,13 @@ import {
     RepositoryListItem,
     selectRepositoryList
 } from "../../../data-access/github";
-import {DemoBasics4ViewModelService} from "./demo-basics4.view-model.service";
+import {DemoBasicsViewModelService} from "./demo-basics.view-model.service";
 import {DemoBasicsItem} from "../demo-basics-item.interface";
 import {Actions, ofType} from "@ngrx/effects";
 
 @Component({
-    selector: 'demo-basics-4',
-    templateUrl: './demo-basics-4.view.html',
+    selector: 'demo-basics',
+    templateUrl: './demo-basics.view.html',
     styles: [`
         .list .mat-expansion-panel-header {
             position: relative;
@@ -30,9 +30,9 @@ import {Actions, ofType} from "@ngrx/effects";
         }
     `],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [DemoBasics4ViewModelService]
+    providers: [DemoBasicsViewModelService]
 })
-export class DemoBasicsComponent4 {
+export class DemoBasicsComponent {
 
     @Input()
     set refreshInterval(refreshInterval: number) {
@@ -41,7 +41,7 @@ export class DemoBasicsComponent4 {
         }
     }
 
-    constructor(public vm: DemoBasics4ViewModelService,
+    constructor(public vm: DemoBasicsViewModelService,
                 private store: Store<any>,
                 private actions$: Actions) {
         this.vm.connect('list',

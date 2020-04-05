@@ -1,8 +1,8 @@
 import {merge, Subject, timer} from "rxjs";
 import {map, switchMap} from "rxjs/operators";
 import {Injectable} from "@angular/core";
-import {DemoBasicsBaseModel} from "./demo-basics.base-model.interface";
-import {DemoBasicsView} from "./demo-basics.view.interface";
+import {DemoBasicsBaseModel} from "./demo-basics5.base-model.interface";
+import {DemoBasicsView} from "./demo-basics4.view.interface";
 import { RxState } from 'ngx-rx-state';
 
 const initState: DemoBasicsBaseModel = {
@@ -13,7 +13,7 @@ const initState: DemoBasicsBaseModel = {
 };
 
 @Injectable()
-export class DemoBasicsViewModelService extends RxState<DemoBasicsBaseModel> implements DemoBasicsView {
+export class DemoBasics4ViewModelService extends RxState<DemoBasicsBaseModel> implements DemoBasicsView {
     baseModel$ = this.select();
 
     // ListView =================================================

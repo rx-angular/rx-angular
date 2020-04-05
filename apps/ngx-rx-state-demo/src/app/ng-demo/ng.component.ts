@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RxState } from 'rxjs-state';
+import { RxState } from '@ngx-rx/ngx-rx-state';
 
 import { distinctUntilChanged, mapTo, switchMap, tap } from 'rxjs/operators';
 import { interval, NEVER } from 'rxjs';

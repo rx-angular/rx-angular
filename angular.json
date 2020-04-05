@@ -83,7 +83,10 @@
               "apps/ngx-rx-state-demo/tsconfig.app.json",
               "apps/ngx-rx-state-demo/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/ngx-rx-state-demo/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/ngx-rx-state-demo/**"
+            ]
           }
         },
         "test": {
@@ -118,8 +121,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/ngx-rx-state-demo-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/ngx-rx-state-demo-e2e/**"]
+            "tsConfig": [
+              "apps/ngx-rx-state-demo-e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/ngx-rx-state-demo-e2e/**"
+            ]
           }
         }
       }
@@ -149,7 +157,10 @@
               "libs/ngx-rx-state/tsconfig.lib.json",
               "libs/ngx-rx-state/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/ngx-rx-state/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ngx-rx-state/**"
+            ]
           }
         },
         "test": {
@@ -181,7 +192,10 @@
               "libs/rxjs-state/tsconfig.lib.json",
               "libs/rxjs-state/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/rxjs-state/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/rxjs-state/**"
+            ]
           }
         },
         "test": {
@@ -199,7 +213,9 @@
             "tsConfig": "libs/rxjs-state/tsconfig.lib.json",
             "packageJson": "libs/rxjs-state/package.json",
             "main": "libs/rxjs-state/src/index.ts",
-            "assets": ["libs/rxjs-state/*.md"]
+            "assets": [
+              "libs/rxjs-state/*.md"
+            ]
           }
         }
       }
@@ -217,7 +233,10 @@
               "libs/test-helpers/tsconfig.lib.json",
               "libs/test-helpers/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/test-helpers/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/test-helpers/**"
+            ]
           }
         },
         "test": {
@@ -243,7 +262,10 @@
               "libs/rxjs-etc/tsconfig.lib.json",
               "libs/rxjs-etc/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/rxjs-etc/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/rxjs-etc/**"
+            ]
           }
         },
         "test": {
@@ -269,7 +291,10 @@
               "libs/ts-etc/tsconfig.lib.json",
               "libs/ts-etc/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/ts-etc/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ts-etc/**"
+            ]
           }
         },
         "test": {
@@ -306,7 +331,9 @@
               "apps/ng-reactive-experiments/src/favicon.ico",
               "apps/ng-reactive-experiments/src/assets"
             ],
-            "styles": ["apps/ng-reactive-experiments/src/styles.scss"],
+            "styles": [
+              "apps/ng-reactive-experiments/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -402,7 +429,9 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/ng-reactive-experiments-e2e/tsconfig.e2e.json"],
+            "tsConfig": [
+              "apps/ng-reactive-experiments-e2e/tsconfig.e2e.json"
+            ],
             "exclude": [
               "**/node_modules/**",
               "!apps/ng-reactive-experiments-e2e/**"
