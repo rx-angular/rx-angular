@@ -10,5 +10,7 @@ The target Framework is Angular but the features are designed to get reused in o
   - [📦 rxjs-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-state) - Lightweight Flexible State-Management Object
 - [Angular](https://angular.io)
   - [📦 ngx-rx-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ngx-rx-state) - Reactive Component State-Management
+- [RxJS](https://rxjs.dev)
+  - [💾 rxjs-etc](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-etc) - Reactive Component State-Management
   
  
