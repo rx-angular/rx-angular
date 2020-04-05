@@ -49,11 +49,16 @@ Usage in the wild
 
 ---
 TOC
-
+- Install
 - Setup
 - API
 - Usage in Angular
 ---
+
+## Install
+`npm install --save ngx-rx-state`  
+and the peer dependency:   
+`npm install --save rxjs-state`
 
 ## Setup
 As the RxState class is just a plain vanilla Javascript Class
