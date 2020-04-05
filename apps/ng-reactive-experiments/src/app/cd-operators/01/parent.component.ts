@@ -1,11 +1,9 @@
-import {ChangeDetectorRef, Component, ElementRef, NgZone, ViewChild} from '@angular/core';
-import {environment} from '../../../environments/environment';
-import {defer, fromEvent, range, Subject} from 'rxjs';
-import {createIdleStrategy, getStrategies} from '../../../../projects/component/src/core/cd-aware';
-import {renderChanges} from '../../../../projects/component/src/core/operators/renderChanges';
-import {map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
-import {CdConfigService} from '../../cd-config.service';
-import {BaseComponent} from '../../base.component.ts/base.component';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { defer, fromEvent, range } from 'rxjs';
+import { getStrategies, renderChanges } from '@ngx-rx/ngrx-component-experiments';
+import { switchMap, tap } from 'rxjs/operators';
+import { BaseComponent } from '../../base.component.ts/base.component';
 
 @Component({
     selector: 'app-cd-operators-parent01',
