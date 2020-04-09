@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Component, OnDestroy } from '@angular/core';
-import { RxState } from '@ngx-rx/ngx-rx-state';
+import { RxLocalState } from '@ngx-rx/ngx-rx-state';
 import { createStateChecker, PrimitiveState } from './fixtures';
 
 const stateChecker = createStateChecker((actual, expected) => {
@@ -16,7 +16,7 @@ const stateChecker = createStateChecker((actual, expected) => {
   selector: 'ngx-rx-state-inheritance-test',
   template: `<span>{{value$}}</span>`
 })
-export class RxStateInheritanceComponent extends RxState<PrimitiveState>{
+export class RxStateInheritanceComponent extends RxLocalState<PrimitiveState>{
 
   value$ = this.select();
   constructor() {
@@ -29,12 +29,12 @@ export class RxStateInheritanceComponent extends RxState<PrimitiveState>{
 @Component({
   selector: 'ngx-rx-state-local-provider-test',
   template: `<span>{{value$}}</span>`,
-  providers: [RxState]
+  providers: [RxLocalState]
 })
 export class RxStateInjectionComponent implements OnDestroy {
 
   value$ = this.state.select();
-  constructor(public state: RxState<PrimitiveState>) {
+  constructor(public state: RxLocalState<PrimitiveState>) {
 
   }
   ngOnDestroy(): void {

@@ -26,7 +26,7 @@ export class CdOperatorsParent01Component extends BaseComponent {
 
     cfg = {ngZone: this.ngZone, cdRef: this.cdRef, component: this};
     strategies = getStrategies<number>(this.cfg);
-    idleStrategies = createIdleStrategy(this.cfg);
+
 
     value$ = this.btnClick$.pipe(
         switchMap(() => range(1, 5)),
