@@ -1,4 +1,4 @@
-import { RxLocalState } from '@ngx-rx/ngx-rx-state';
+import { RxState } from '@ngx-rx/ngx-rx-state';
 import { take } from 'rxjs/operators';
 
 export interface PrimitiveState {
@@ -15,7 +15,7 @@ export const initialPrimitiveState: PrimitiveState = {
 
 export function setupState<T extends object>(cfg: { initialState?: T }) {
   const { initialState } = { ...cfg };
-  const state = new RxLocalState<T>();
+  const state = new RxState<T>();
   if (initialState) {
     state.setState(initialState);
   }
@@ -25,8 +25,8 @@ export function setupState<T extends object>(cfg: { initialState?: T }) {
 type ProjectStateFn<T> = (state: T) => any;
 
 export interface StateChecker<T extends object> {
-  checkState: (service: RxLocalState<T>, expectedState: any) => void;
-  checkSubscriptions: (service: RxLocalState<T>, expected: any) => void;
+  checkState: (service: RxState<T>, expectedState: any) => void;
+  checkSubscriptions: (service: RxState<T>, expected: any) => void;
 }
 
 export function createStateChecker<T extends object>(
@@ -38,7 +38,7 @@ export function createStateChecker<T extends object>(
     checkSubscriptions
   };
 
-  function checkState(service: RxLocalState<T>, stateOrProject: object, project?: ProjectStateFn<T>): void {
+  function checkState(service: RxState<T>, stateOrProject: object, project?: ProjectStateFn<T>): void {
 
     if (typeof stateOrProject === 'object' && project === undefined) {
       assert(service.getState(), stateOrProject);
@@ -56,7 +56,7 @@ export function createStateChecker<T extends object>(
     throw Error('Wrong param. Should be object and optional projection function');
   }
 
-  function checkSubscriptions(service: RxLocalState<T>, numTotalSubs: number): void {
+  function checkSubscriptions(service: RxState<T>, numTotalSubs: number): void {
     const actual = (service as any).subscription._subscriptions ? (service as any).subscription._subscriptions.length : 0;
     assert(actual, numTotalSubs);
   }

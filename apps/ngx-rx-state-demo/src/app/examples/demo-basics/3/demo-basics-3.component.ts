@@ -4,7 +4,7 @@ import {map, switchMap, tap} from "rxjs/operators";
 import {fetchRepositoryList, RepositoryListItem, selectRepositoryList} from "../../../data-access/github";
 import {merge, Subject, timer} from "rxjs";
 import {DemoBasicsItem} from "../demo-basics-item.interface";
-import { RxLocalState } from '@ngx-rx/ngx-rx-state';
+import { RxState } from 'ngx-rx-state';
 
 interface ComponentState {
     refreshInterval: number;
@@ -65,11 +65,11 @@ const initComponentState = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoBasicsComponent3 extends RxLocalState<ComponentState> {
+export class DemoBasicsComponent3 extends RxState<ComponentState> {
     refreshClicks = new Subject<Event>();
     listExpandedChanges = new Subject<boolean>();
 
-    model$ = this.$;
+    model$ = this.select();
 
     @Input()
     set refreshInterval(refreshInterval: number) {

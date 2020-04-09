@@ -1,11 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {Subscription} from 'rxjs';
-import {RxState} from '@rxjs-state';
+import {RxState as BaseRxState} from 'rxjs-state';
 
 @Injectable({providedIn: 'root'})
-export class RxGlobalState<T extends object> extends RxState<T> implements OnDestroy {
-  readonly subscription = new Subscription();
-  readonly $ = this.$
+export class RxGlobalState<T extends object> extends BaseRxState<T> implements OnDestroy {
+  subscription = new Subscription();
 
   constructor() {
     super();

@@ -4,7 +4,7 @@ import {map} from "rxjs/operators";
 import {RepositoryListItem, selectRepositoryList} from "../../../data-access/github";
 import {NEVER, Subject} from "rxjs";
 import {DemoBasicsItem} from "../demo-basics-item.interface";
-import { RxLocalState } from '@ngx-rx/ngx-rx-state';
+import { RxState } from 'ngx-rx-state';
 
 
 interface ComponentState {
@@ -61,7 +61,7 @@ const initComponentState = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoBasicsComponent2 extends RxLocalState<ComponentState> {
+export class DemoBasicsComponent2 extends RxState<ComponentState> {
     refreshClicks = new Subject<Event>();
     listExpandedChanges = new Subject<boolean>();
 

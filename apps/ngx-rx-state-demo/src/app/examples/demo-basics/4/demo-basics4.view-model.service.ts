@@ -3,7 +3,7 @@ import {map, switchMap} from "rxjs/operators";
 import {Injectable} from "@angular/core";
 import {DemoBasicsBaseModel} from "./demo-basics5.base-model.interface";
 import {DemoBasicsView} from "./demo-basics4.view.interface";
-import { RxLocalState } from '@ngx-rx/ngx-rx-state';
+import { RxState } from 'ngx-rx-state';
 
 const initState: DemoBasicsBaseModel = {
     refreshInterval: 1000,
@@ -13,7 +13,7 @@ const initState: DemoBasicsBaseModel = {
 };
 
 @Injectable()
-export class DemoBasics4ViewModelService extends RxLocalState<DemoBasicsBaseModel> implements DemoBasicsView {
+export class DemoBasics4ViewModelService extends RxState<DemoBasicsBaseModel> implements DemoBasicsView {
     baseModel$ = this.select();
 
     // ListView =================================================

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RxLocalState } from '@ngx-rx/ngx-rx-state';
+import { RxState } from '@ngx-rx/ngx-rx-state';
 import { createStateChecker, PrimitiveState, setupState } from './fixtures';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -23,7 +23,7 @@ beforeEach(() => {
 });
 
 describe('RxStateService', () => {
-  let service: RxLocalState<PrimitiveState>;
+  let service: RxState<PrimitiveState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

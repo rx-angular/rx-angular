@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RxLocalState } from '@ngx-rx/ngx-rx-state';
+import { RxState } from '@ngx-rx/ngx-rx-state';
 
 import { distinctUntilChanged, mapTo, switchMap, tap } from 'rxjs/operators';
 import { interval, NEVER } from 'rxjs';
@@ -46,7 +46,7 @@ export interface CountState {
     <button (click)="countReset()">reset</button>
     <button (click)="countAdd()">add</button>
     <button (click)="countSubtract()">sub</button>`,
-  providers: [RxLocalState]
+  providers: [RxState]
 })
 export class NgDemoComponent {
 
@@ -71,7 +71,7 @@ export class NgDemoComponent {
   state$ = this.state.select();
 
   constructor(
-    public state: RxLocalState<CountState>
+    public state: RxState<CountState>
   ) {
     this.state.setState(this.initialState);
     state.hold(this.timerCount$);
