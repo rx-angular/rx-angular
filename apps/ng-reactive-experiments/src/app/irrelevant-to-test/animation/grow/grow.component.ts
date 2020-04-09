@@ -2,7 +2,8 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {ApplicationRef, Component, Input, Output} from '@angular/core';
 import {Subject} from 'rxjs';
 import {environment} from '../../../../environments/environment';
-import {RxState} from '@rx-state/rxjs-state';
+import { RxState } from 'ngx-rx-state';
+
 
 export type GrowAnimationState = 'grown' | 'shrinked';
 
