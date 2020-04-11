@@ -4,7 +4,7 @@ import {
   isPromiseGuard,
   PotentialObservableValue,
   Output,
-} from '../utils';
+} from '../../utils';
 
 export function toObservableValue<T>(
   p: PotentialObservableValue<T>

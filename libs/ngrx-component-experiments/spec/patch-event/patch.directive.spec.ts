@@ -1,9 +1,9 @@
-import { PatchDirective } from './patch.directive';
+import { PatchDirective } from '../../src/lib/patch/patch.directive';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 @Component({
-  template: `<p [cdOn]="['click']">Testing Directives is awesome! {{runCdCycle()}}</p>`
+  template: `<p [patch]="['click']">Testing Directives is awesome! {{runCdCycle()}}</p>`
 })
 class TestComponent {
   cdCycles = 0;
@@ -24,7 +24,7 @@ describe('CdOnDirective', () => {
     TestBed.configureTestingModule({
       declarations: [
         TestComponent,
-        CdOnDirective
+        PatchDirective
       ]
     });
 
