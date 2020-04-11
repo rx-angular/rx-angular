@@ -1,4 +1,3 @@
 export * from './utils';
-export * from './operators';
-export * from './projections';
+export * from './rxjs';
 export * from './cd-aware';

@@ -8,8 +8,8 @@ import {
     TeardownLogic,
 } from 'rxjs';
 import {InnerSubscriber, OuterSubscriber, subscribeToResult} from 'rxjs/internal-compatibility';
-import {generateFrames} from '../projections';
-import {createPropertiesWeakMap} from '../utils/properties-weakmap';
+import {generateFrames} from '../observable';
+import {createPropertiesWeakMap} from '../../utils/properties-weakmap';
 
 
 
@@ -47,6 +47,8 @@ export const defaultCoalesceDurationSelector = <T>(value: T) =>
     generateFrames();
 
 /**
+ * coalesce
+ *
  * Emits a value from the source Observable, then ignores subsequent source
  * values for a duration determined by another Observable, then repeats this
  * process.
@@ -157,10 +159,12 @@ class CoalesceSubscriber<T, R> extends OuterSubscriber<T, R> {
         const {_hasValue, _sendValue, _leading} = this;
         if (_hasValue) {
             if (_leading) {
+              // tslint:disable-next-line:no-non-null-assertion
                 this.destination.next(_sendValue!);
                 this._hasValue = false;
                 this._sendValue = null;
             }
+          // tslint:disable-next-line:no-non-null-assertion
             this.startCoalesceDuration(_sendValue!);
         }
     }
