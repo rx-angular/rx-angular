@@ -58,7 +58,6 @@ export function createPropertiesWeakMap<O extends object, P extends object>(
 
       propertyMap.set(ctx, properties);
     }
-    console.log('propertyMap.get: ', properties);
     return properties;
   }
 
@@ -68,7 +67,6 @@ export function createPropertiesWeakMap<O extends object, P extends object>(
       properties[prop] = value;
     });
     propertyMap.set(ctx, properties);
-    console.log('propertyMap.set: ', properties);
     return properties;
   }
 

@@ -5,7 +5,7 @@ import {
   SubscribableOrPromise,
   Subscriber,
   Subscription,
-  TeardownLogic
+  TeardownLogic,
 } from 'rxjs';
 import {
   InnerSubscriber,
@@ -55,49 +55,33 @@ export const defaultCoalesceDurationSelector = <T>(value: T) =>
   generateFrames();
 
 /**
- * Emits a value from the source Observable, then ignores subsequent source
- * values for a duration determined by another Observable, then repeats this
- * process.
+ * @description
+ * Limits the number of synchronous emitted a value from the source Observable to
+ * one emitted value per [`AnimationFrame`](https://developer.mozilla.org/en-US/search?q=AnimationFrame),
+ * then repeats this process for every tick of the browsers event loop.
  *
- * <span class="informal">It's like {@link throttle}, but providing a way to configure scoping.</span>
+ * The coalesce operator is based on the [throttle](https://rxjs-dev.firebaseapp.com/api/operators/throttle) operator.
+ * In addition to that is provides emitted values for the trailing end only, as well as maintaining a context to scope coalescing.
  *
- * ![](coalesce.png)
- *
- * `coalesce` emits the source Observable values on the output Observable
- * when its internal timer is disabled, and ignores source values when the timer
- * is enabled. Initially, the timer is disabled. As soon as the first source
- * value arrives, it is forwarded to the output Observable, and then the timer
- * is enabled by calling the `durationSelector` function with the source value,
- * which returns the "duration" Observable. When the duration Observable emits a
- * value or completes, the timer is disabled, and this process repeats for the
- * next source value.
- *
- * ## Example
- * Emit clicks at a rate of at most one click per second
- * ```ts
- * import { fromEvent, interval } from 'rxjs';
- * import { coalesce } from 'rxjs/operators';
- *
- * const clicks = fromEvent(document, 'click');
- * const result = clicks.pipe(coalesce(ev => interval(1000)));
- * result.subscribe(x => console.log(x));
- * ```
- *
- * @see {@link audit}
- * @see {@link debounce}
- * @see {@link delayWhen}
- * @see {@link sample}
- * @see {@link throttle}
- * @see {@link throttleTime}
- *
- * @param {function(value: T): SubscribableOrPromise} durationSelector A function
+ * @param {function(value: T): SubscribableOrPromise} durationSelector - A function
  * that receives a value from the source Observable, for computing the silencing
  * duration for each source value, returned as an Observable or a Promise.
- * @param {Object} config a configuration object to define `leading` and `trailing` behavior. Defaults
- * to `{ leading: true, trailing: false }`.
+ * It defaults to `requestAnimationFrame` as durationSelector.
+ * @param {Object} config - A configuration object to define `leading` and `trailing` behavior and the context object.
+ * Defaults to `{ leading: false, trailing: true }`. The default scoping is per subscriber.
  * @return {Observable<T>} An Observable that performs the coalesce operation to
  * limit the rate of emissions from the source.
- * @name coalesce
+ *
+ * @usageNotes
+ * Emit clicks at a rate of at most one click per second
+ * ```ts
+ * import { fromEvent, animationFrames } from 'rxjs';
+ * import { coalesce } from 'ngRx/component';
+ *
+ * const clicks = fromEvent(document, 'click');
+ * const result = clicks.pipe(coalesce(ev => animationFrames));
+ * result.subscribe(x => console.log(x));
+ * ```
  */
 export function coalesce<T>(
   durationSelector: (
@@ -123,7 +107,6 @@ class CoalesceOperator<T> implements Operator<T, T> {
 }
 
 class CoalesceSubscriber<T, R> extends OuterSubscriber<T, R> {
-  // tslint:disable:variable-name
   private _coalesced: Subscription | null | undefined;
   private _sendValue: T | null = null;
   private _hasValue = false;
