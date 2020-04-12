@@ -22,8 +22,8 @@ export class Performance04DataService {
 
     constructor() { }
 
-    getData(limit?: number): Person[] {
-        let data: Person[] = persons;
+    getData(limit?: number): any[] {
+        let data: any[] = persons;
         if (limit) {
             data = data.slice(0, limit);
         }
