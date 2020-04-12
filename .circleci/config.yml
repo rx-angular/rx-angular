@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
-  build-and-test:
+  install-and-test:
     executor:
       name: node/default
     steps:
@@ -15,10 +15,13 @@ jobs:
             - run:
                 name: 'Test with code-coverage'
                 command: npm test
-            - run:
-                name: 'Build'
-                command: npm run nx affected --target=build
-
+  build-master:
+    executor: default
+    steps:
+      - setup
+      - run: yarn nx affected --target=lint --base=origin/master~1 --parallel
+      - run: yarn nx affected --target=test --base=origin/master~1 --parallel
+      - run: yarn nx affected --target=build --base=origin/master~1 --parallel
 workflows:
     build-and-test:
       jobs:
