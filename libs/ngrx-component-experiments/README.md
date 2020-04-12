@@ -1,7 +1,2 @@
 # ngrx-component-experiments
-
-This library was generated with [Nx](https://nx.dev).
-
-## Running unit tests
-
-Run `nx test ngrx-component-experiments` to execute the unit tests.
+[![ngx-rx](https://circleci.com/gh/BioPhoton/ngx-rx.svg?style=shield)](https://circleci.com/gh/BioPhoton/ngx-rx)

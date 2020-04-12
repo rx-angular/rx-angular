@@ -1,7 +1,3 @@
 # ts-etc
 
-This library was generated with [Nx](https://nx.dev).
-
-## Running unit tests
-
-Run `ng test ts-etc` to execute the unit tests via [Jest](https://jestjs.io).
+[![ngx-rx](https://circleci.com/gh/BioPhoton/ngx-rx.svg?style=shield)](https://circleci.com/gh/BioPhoton/ngx-rx)

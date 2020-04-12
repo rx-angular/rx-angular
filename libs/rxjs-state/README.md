@@ -1,4 +1,5 @@
 # rxjs-state
+[![ngx-rx](https://circleci.com/gh/BioPhoton/ngx-rx.svg?style=shield)](https://circleci.com/gh/BioPhoton/ngx-rx)
 
 RxState is a light-weight reactive state management service especially useful for component state in SPAs.
 

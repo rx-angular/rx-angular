@@ -1,6 +1,6 @@
 # NgxRx
 
-## [![ngx-rx](https://circleci.com/gh/BioPhoton/ngx-rx.svg?style=shield)](https://circleci.com/gh/BioPhoton/ngx-rx)
+[![ngx-rx](https://circleci.com/gh/BioPhoton/ngx-rx.svg?style=shield)](https://circleci.com/gh/BioPhoton/ngx-rx)
 
 This repository holds a set of helpers to create fully reactive applications.
 The target Framework is Angular but the features are designed to get reused in other frameworks too.
