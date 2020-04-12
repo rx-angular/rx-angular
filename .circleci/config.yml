@@ -15,7 +15,6 @@ jobs:
             - run:
                 name: 'Test with code-coverage'
                 command: npm test
-            - run: yarn nx affected --target=lint --base=origin/master~1 --parallel
             - run: yarn nx affected --target=test --base=origin/master~1 --parallel
             - run: yarn nx affected --target=build --base=origin/master~1 --parallel
 workflows:
