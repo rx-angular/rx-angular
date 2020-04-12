@@ -25,7 +25,7 @@
   },
   "projects": {
     "ng-reactive-experiments": {
-      "tags": []
+      "tags": ["app"]
     },
     "ng-reactive-experiments-e2e": {
       "tags": [],
@@ -43,22 +43,22 @@
       ]
     },
     "ngx-rx-state": {
-      "tags": []
+      "tags": ["scope:shared","type:lib"]
     },
     "rxjs-state": {
-      "tags": []
+      "tags": ["scope:shared","type:lib"]
     },
     "test-helpers": {
-      "tags": []
+      "tags": ["scope:shared","type:lib"]
     },
     "rxjs-etc": {
-      "tags": []
+      "tags": ["scope:shared","type:lib"]
     },
     "ts-etc": {
-      "tags": []
+      "tags": ["scope:shared","type:lib"]
     },
     "ngrx-component-experiments": {
-      "tags": []
+      "tags": ["scope:shared","type:lib"]
     }
   }
 }

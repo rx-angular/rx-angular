@@ -13,8 +13,11 @@ jobs:
                 name: 'Install'
                 command: npm install
             - run:
-                name: 'Test with coverage'
+                name: 'Test with code-coverage'
                 command: npm test
+            - run:
+                name: 'Build'
+                command: npm run nx affected --target=build
 
 workflows:
     build-and-test:

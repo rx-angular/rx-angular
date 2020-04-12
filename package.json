@@ -7,7 +7,7 @@
     "nx": "nx",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
+    "test": "nx test --code-coverage",
     "lint": "nx workspace-lint && ng lint",
     "e2e": "ng e2e",
     "affected:apps": "nx affected:apps",
