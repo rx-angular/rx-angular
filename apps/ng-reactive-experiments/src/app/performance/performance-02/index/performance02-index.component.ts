@@ -23,6 +23,8 @@ import { environment } from '../../../../environments/environment';
   changeDetection: environment.changeDetection
 })
 export class Performance02IndexComponent implements OnInit, OnDestroy {
+
+  constructor(private dataService: Performance02DataService) {}
   displayedColumns: string[] = [
     'select',
     'name',
@@ -117,13 +119,11 @@ export class Performance02IndexComponent implements OnInit, OnDestroy {
   masterToggle = new Subject<MatCheckboxChange>();
 
   changeDetections = 0;
+
+  private destroy$ = new Subject<void>();
   detectedChanges = () => {
     return ++this.changeDetections;
   };
-
-  private destroy$ = new Subject<void>();
-
-  constructor(private dataService: Performance02DataService) {}
 
   ngOnInit(): void {
     this.refetchData();

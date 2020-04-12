@@ -97,6 +97,38 @@ export interface LetViewContext<T> {
  */
 @Directive({ selector: '[ngrxLet]' })
 export class LetDirective<U> implements OnDestroy {
+
+  @Input()
+  set ngrxLet(
+    potentialObservable: Observable<U> | Promise<U> | null | undefined
+  ) {
+    this.cdAware.nextVale(potentialObservable);
+  }
+
+  @Input()
+  set ngrxLetConfig(config: string | undefined) {
+    this.cdAware.nextConfig(config);
+  }
+
+  constructor(
+    cdRef: ChangeDetectorRef,
+    ngZone: NgZone,
+    private readonly templateRef: TemplateRef<LetViewContext<U>>,
+    private readonly viewContainerRef: ViewContainerRef
+  ) {
+    this.cdAware = createCdAware<U>({
+      strategies: getStrategies<U>({
+        component: (cdRef as any).context,
+        ngZone,
+        cdRef
+      }),
+      resetContextObserver: this.resetContextObserver,
+      updateViewContextObserver: this.updateViewContextObserver
+    });
+    this.subscription = this.cdAware.subscribe();
+  }
+
+  static ngTemplateGuard_ngrxLet: 'binding';
   private embeddedView: any;
   private readonly ViewContext: LetViewContext<U | undefined | null> = {
     $implicit: undefined,
@@ -150,38 +182,6 @@ export class LetDirective<U> implements OnDestroy {
     ctx: unknown | null | undefined
   ): ctx is LetViewContext<U> {
     return true;
-  }
-
-  static ngTemplateGuard_ngrxLet: 'binding';
-
-  @Input()
-  set ngrxLet(
-    potentialObservable: Observable<U> | Promise<U> | null | undefined
-  ) {
-    this.cdAware.nextVale(potentialObservable);
-  }
-
-  @Input()
-  set ngrxLetConfig(config: string | undefined) {
-    this.cdAware.nextConfig(config);
-  }
-
-  constructor(
-    cdRef: ChangeDetectorRef,
-    ngZone: NgZone,
-    private readonly templateRef: TemplateRef<LetViewContext<U>>,
-    private readonly viewContainerRef: ViewContainerRef
-  ) {
-    this.cdAware = createCdAware<U>({
-      strategies: getStrategies<U>({
-        component: (cdRef as any).context,
-        ngZone,
-        cdRef
-      }),
-      resetContextObserver: this.resetContextObserver,
-      updateViewContextObserver: this.updateViewContextObserver
-    });
-    this.subscription = this.cdAware.subscribe();
   }
 
   createEmbeddedView() {

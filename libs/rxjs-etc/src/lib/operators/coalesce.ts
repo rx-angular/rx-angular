@@ -13,7 +13,7 @@ import {
   subscribeToResult
 } from 'rxjs/internal-compatibility';
 import { generateFrames } from '../observable';
-import { createPropertiesWeakMap } from '../utils/properties-weakmap';
+import { createPropertiesWeakMap } from '@ngx-rx/ts-etc';
 
 export interface CoalesceConfig {
   context?: object;
@@ -164,18 +164,18 @@ class CoalesceSubscriber<T, R> extends OuterSubscriber<T, R> {
     const { _hasValue, _sendValue, _leading } = this;
     if (_hasValue) {
       if (_leading) {
-        this.destination.next(_sendValue!);
+        this.destination.next(_sendValue);
         this._hasValue = false;
         this._sendValue = null;
       }
-      this.startCoalesceDuration(_sendValue!);
+      this.startCoalesceDuration(_sendValue);
     }
   }
 
   private exhaustLastValue() {
     const { _hasValue, _sendValue } = this;
     if (_hasValue && _sendValue) {
-      this.destination.next(_sendValue!);
+      this.destination.next(_sendValue);
       this._hasValue = false;
       this._sendValue = null;
     }
