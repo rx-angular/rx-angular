@@ -14,10 +14,10 @@ jobs:
                 command: npm install
             - run:
                 name: 'Test with code-coverage'
-                command: yarn nx affected --target=test --code-coverage --base=origin/master~1 --parallel
+                command: yarn nx affected --target=test --base=origin/master~1 --parallel
             - run:
                 name: 'Test with code-coverage'
-                comand: yarn nx affected --target=build --base=origin/master~1 --only-failed
+                comand: yarn nx affected --target=build --base=origin/master~1 --parallel --only-failed
 workflows:
     build-and-test:
       jobs:
