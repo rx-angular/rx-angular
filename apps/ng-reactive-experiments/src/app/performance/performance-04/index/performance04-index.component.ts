@@ -5,8 +5,7 @@ import {combineLatest, Observable, Subject} from 'rxjs';
 import {map, startWith, withLatestFrom} from 'rxjs/operators';
 import {Performance04DataService, Person} from './performance-04-data.service';
 import {environment} from '../../../../environments/environment';
-import {RxState} from '@rx-state/rxjs-state';
-import {stateful} from '../../../../../projects/rxjs-state/src/lib/core/operators/stateful';
+import {RxState} from '@ngx-rx/ngx-rx-state';
 
 export interface Performance04State {
     data: Person[];
@@ -36,7 +35,7 @@ export class Performance04IndexComponent extends RxState<Performance04State> imp
         this.data$,
         this.filter$
     ])
-        .pipe(map(([data, f]) => this.filterData(data, f)), stateful());
+        .pipe(map(([data, f]) => this.filterData(data, f)));
 
     selection = new SelectionModel<Person>(true, []);
     readonly allSelected$ = this.select('allSelected');

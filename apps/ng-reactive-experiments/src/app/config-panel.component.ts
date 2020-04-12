@@ -8,14 +8,14 @@ import {
     ɵdetectChanges
 } from '@angular/core';
 import {environment} from '../environments/environment';
-import {getChangeDetectionHandler, hasZone, isIvy} from '../../projects/component/src/core/utils';
+import {hasZone, isIvy} from '@ngx-rx/ts-etc';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {Router} from '@angular/router';
 import {CdConfigService} from './cd-config.service';
 import {FormBuilder} from '@angular/forms';
 import {defer, fromEvent, merge, Observable} from 'rxjs';
 import {startWith, tap} from 'rxjs/operators';
-import {RxState} from '@rx-state/rxjs-state';
+import {RxState} from '@ngx-rx/ngx-rx-state';
 
 @Component({
     selector: 'app-config-panel',
@@ -81,7 +81,7 @@ export class ConfigPanelComponent extends RxState<{
     readonly zoneEnv = hasZone(this.ngZone) ? 'NgZone' : 'NgNoopZone';
     readonly changeDetection = 'cd.' + (this.env.changeDetection === 1 ? 'Default' : 'OnPush');
     readonly engine = isIvy() ? 'Ivy' : 'ViewEngine';
-    readonly renderTechnique = (this.engine ? 'ɵ' : 'cdRef.') + getChangeDetectionHandler(this.ngZone, this.cdRef).name;
+    readonly renderTechnique;
 
     readonly configForm = this.fb.group({
         strategy: ['pessimistic1']

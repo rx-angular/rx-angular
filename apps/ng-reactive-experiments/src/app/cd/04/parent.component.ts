@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, ElementRef, ViewChild} from '@angula
 import {defer, merge} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {BaseComponent} from '../../base.component.ts/base.component';
-import {fromEvent} from '@zoneless-helpers';
+import {fromZoneEvent} from '@rxjs';
 
 @Component({
     selector: 'app-cd-parent04',
@@ -29,9 +29,9 @@ import {fromEvent} from '@zoneless-helpers';
 })
 export class CdParent04Component extends BaseComponent {
     @ViewChild('markForCheck') markForCheckElem: ElementRef<HTMLButtonElement>;
-    markForCheck$ = defer(() => fromEvent(this.markForCheckElem.nativeElement, 'click'));
+    markForCheck$ = defer(() => fromZoneEvent(this.markForCheckElem.nativeElement, 'click'));
     @ViewChild('detectChanges') detectChangesElem: ElementRef<HTMLButtonElement>;
-    detectChanges$ = defer(() => fromEvent(this.detectChangesElem.nativeElement, 'click'));
+    detectChanges$ = defer(() => fromZoneEvent(this.detectChangesElem.nativeElement, 'click'));
 
     baseEffects$ = merge(
         this.markForCheck$.pipe(tap(() => this.cdRef_markForCheck())),

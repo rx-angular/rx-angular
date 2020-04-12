@@ -4,7 +4,7 @@ import {defer, from, Observable, Subject} from 'rxjs';
 import {scan, startWith} from 'rxjs/operators';
 import {CdConfigService} from '../../cd-config.service';
 import {BaseComponent} from '../../base.component.ts/base.component';
-import {fromEvent} from '@zoneless-helpers';
+import {fromZoneEvent} from '@rxjs';
 
 @Component({
   selector: 'app-let-parent11',
@@ -22,7 +22,7 @@ import {fromEvent} from '@zoneless-helpers';
 })
 export class LetParent11Component extends BaseComponent {
     @ViewChild('button') button: ElementRef<HTMLButtonElement>;
-    btnClick$ = defer(() => fromEvent(this.button.nativeElement, 'click'));
+    btnClick$ = defer(() => fromZoneEvent(this.button.nativeElement, 'click'));
 
     value$: Observable<number> = this.btnClick$.pipe(startWith(0), scan((a): any => ++a, 0));
 

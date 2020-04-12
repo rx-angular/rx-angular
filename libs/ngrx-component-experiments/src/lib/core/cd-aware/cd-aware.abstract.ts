@@ -1,19 +1,20 @@
 import {
-    combineLatest,
-    NEVER,
-    NextObserver,
-    Observable,
-    PartialObserver,
-    Subject,
-    Subscribable,
-    Subscription,
+  combineLatest,
+  EMPTY,
+  NextObserver,
+  Observable,
+  PartialObserver,
+  Subject,
+  Subscribable,
+  Subscription
 } from 'rxjs';
-import {distinctUntilChanged, filter, map, startWith, switchMap, tap} from 'rxjs/operators';
-import {CdStrategy, DEFAULT_STRATEGY_NAME, StrategySelection} from './strategy';
+import { distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import { CdStrategy, StrategySelection } from './strategy';
+import { nameToStrategy } from './nameToStrategy';
 
 export interface CdAware<U> extends Subscribable<U> {
-    nextVale: (value: any) => void;
-    nextConfig: (config: string) => void;
+  nextVale: (value: any) => void;
+  nextConfig: (config: string) => void;
 }
 
 /**
@@ -26,56 +27,47 @@ export interface CdAware<U> extends Subscribable<U> {
  * Also custom behaviour is something you need to implement in the extending class
  */
 export function createCdAware<U>(cfg: {
-    strategies: StrategySelection<U>;
-    resetContextObserver: NextObserver<unknown>;
-    updateViewContextObserver: PartialObserver<any>;
+  strategies: StrategySelection<U>;
+  resetContextObserver: NextObserver<unknown>;
+  updateViewContextObserver: PartialObserver<any>;
 }): CdAware<U | undefined | null> {
 
-    const configSubject = new Subject<string>();
-    const config$: Observable<CdStrategy<U>> = configSubject.pipe(
+  const configSubject = new Subject<string>();
+  const config$: Observable<CdStrategy<U>> = configSubject.pipe(
+    nameToStrategy(cfg.strategies)
+  );
+
+  const observablesSubject = new Subject<Observable<U>>();
+  const observables$$ = observablesSubject.pipe(
+    distinctUntilChanged()
+  );
+
+  const renderSideEffect$ = combineLatest([observables$$, config$]).pipe(
+    switchMap(([observable$, strategy]) => {
+      if (observable$ === undefined || observable$ === null) {
+        cfg.resetContextObserver.next(observable$);
+        strategy.render();
+        return EMPTY;
+      }
+
+      return observable$.pipe(
         distinctUntilChanged(),
-        startWith(DEFAULT_STRATEGY_NAME),
-        map((strategy: string): CdStrategy<U> => cfg.strategies[strategy] ? cfg.strategies[strategy] : cfg.strategies.idle),
-        tap(strategy => console.log('strategy', strategy.name))
-    );
+        tap((value) => cfg.updateViewContextObserver.next(value)),
+        strategy.behaviour(),
+        tap(() => strategy.render())
+      );
+    })
+  );
 
-    const observablesSubject = new Subject<Observable<U>>();
-    const observables$$ = observablesSubject.pipe(
-        distinctUntilChanged()
-    );
-
-    let prevObservable;
-    const renderSideEffect$ = combineLatest([observables$$, config$]).pipe(
-        switchMap(([observable$, strategy]) => {
-            if (prevObservable === observable$) {
-                return NEVER;
-            }
-            prevObservable = observable$;
-
-            if (observable$ === undefined || observable$ === null) {
-                cfg.resetContextObserver.next(observable$);
-                strategy.render();
-                return NEVER;
-            }
-
-            return observable$.pipe(
-                distinctUntilChanged(),
-                tap((value) => cfg.updateViewContextObserver.next(value)),
-                strategy.behaviour(),
-                tap(() => strategy.render())
-            );
-        })
-    );
-
-    return {
-        nextVale(value: any): void {
-            observablesSubject.next(value);
-        },
-        nextConfig(nextConfig: string): void {
-            configSubject.next(nextConfig);
-        },
-        subscribe(): Subscription {
-            return renderSideEffect$.subscribe();
-        }
-    } as CdAware<U | undefined | null>;
+  return {
+    nextVale(value: any): void {
+      observablesSubject.next(value);
+    },
+    nextConfig(nextConfig: string): void {
+      configSubject.next(nextConfig);
+    },
+    subscribe(): Subscription {
+      return renderSideEffect$.subscribe();
+    }
+  } as CdAware<U | undefined | null>;
 }

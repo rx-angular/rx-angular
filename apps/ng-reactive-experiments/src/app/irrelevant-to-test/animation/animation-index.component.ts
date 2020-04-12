@@ -3,7 +3,7 @@ import {Subject} from 'rxjs';
 import {map, withLatestFrom} from 'rxjs/operators';
 import {GrowAnimationState} from './grow/grow.component';
 import {environment} from '../../../environments/environment';
-import {RxState} from '@rx-state/rxjs-state';
+import {RxState} from '@rxjs-state';
 
 export interface AnimationIndexComponentState {
     growState: GrowAnimationState;

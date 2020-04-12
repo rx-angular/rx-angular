@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, ElementRef, ViewChild} from '@angular/core';
 import {defer, fromEvent, interval, Observable} from 'rxjs';
 import {scan, startWith, switchMap, takeUntil, withLatestFrom} from 'rxjs/operators';
-import {generateFrames} from '../../../../projects/component/src/core/projections';
+import {generateFrames} from '@rxjs';
 import {BaseComponent} from '../../base.component.ts/base.component';
 
 @Component({

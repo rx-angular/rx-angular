@@ -9,7 +9,7 @@ import {MatListModule} from '@angular/material/list';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTableModule} from '@angular/material/table';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import {ReactiveComponentModule} from '../../../projects/component/src';
+import {ReactiveComponentModule} from '@ngx-rx/ngrx-component-experiments';
 import {RouterModule} from '@angular/router';
 import {ROUTES as CD_ROUTES} from './cd-operators.routes';
 

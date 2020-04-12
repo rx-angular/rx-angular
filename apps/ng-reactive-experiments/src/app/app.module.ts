@@ -6,7 +6,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {ReactiveComponentModule} from '@component'; //'@ngrx/component';
+import {ReactiveComponentModule} from '@ngx-rx/ngrx-component-experiments'; //'@ngrx/component';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ROUTES} from './app.routing';
@@ -14,7 +14,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {ConfigPanelComponent} from './config-panel.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatChipsModule} from '@angular/material/chips';
-import {ZonelessHelpersModule} from '@zoneless-helpers';
 
 @NgModule({
     declarations: [
@@ -33,7 +32,6 @@ import {ZonelessHelpersModule} from '@zoneless-helpers';
         MatChipsModule,
         MatExpansionModule,
         RouterModule,
-        ZonelessHelpersModule,
         ReactiveComponentModule
     ],
     providers: [],
