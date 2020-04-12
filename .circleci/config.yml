@@ -12,9 +12,10 @@ jobs:
             - run:
                 name: 'Install'
                 command: npm install
-            - run: yarn nx affected --target=lint --base=origin/master~1 --parallel
-            - run: yarn nx affected --target=test --base=origin/master~1 --parallel
-            - run: yarn nx affected --target=build --base=origin/master~1 --only-failed
+            - run: npm run nx affected --target=lint --base=origin/master~1 --parallel
+            - run: npm run nx affected --target=test --base=origin/master~1 --parallel
+            - run: npm run ng build --project rxjs-state -prod
+            - run: npm run ng build --project ngx-rx-state -prod
 workflows:
     build-and-test:
       jobs:
