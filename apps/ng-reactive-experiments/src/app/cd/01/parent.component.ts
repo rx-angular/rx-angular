@@ -1,8 +1,9 @@
 import {ChangeDetectionStrategy, Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
-import {fromEvent} from '@zoneless-helpers';
+
 import {BaseComponent} from '../../base.component.ts/base.component';
 import {tap} from 'rxjs/operators';
 import {defer} from 'rxjs';
+import { fromZoneEvent } from '@rxjs';
 
 @Component({
     selector: 'app-cd-parent01',
@@ -29,7 +30,7 @@ import {defer} from 'rxjs';
 })
 export class CdParent01Component extends BaseComponent {
     @ViewChild('button') button: ElementRef<HTMLButtonElement>;
-    btnClick$ = defer(() => fromEvent(this.button.nativeElement, 'click'));
+    btnClick$ = defer(() => fromZoneEvent(this.button.nativeElement, 'click'));
 
     baseEffects$ = this.btnClick$.pipe(
         tap(() => this.cdRef_detectChanges())

@@ -9,7 +9,7 @@ import {MatListModule} from '@angular/material/list';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTableModule} from '@angular/material/table';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import {ReactiveComponentModule} from '../../../projects/component/src';
+import {ReactiveComponentModule} from '@ngx-rx/ngrx-component-experiments';
 import {RouterModule} from '@angular/router';
 import {Child0201Component} from './02/child01.component';
 import {Child0202Component} from './02/child02.component';

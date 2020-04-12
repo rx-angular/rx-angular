@@ -5,7 +5,7 @@ import {combineLatest, Observable, Subject} from 'rxjs';
 import {distinctUntilChanged, filter, map, pluck, shareReplay, startWith, withLatestFrom} from 'rxjs/operators';
 import {Performance03DataService, Person} from './performance-03-data.service';
 import {environment} from '../../../../environments/environment';
-import {RxState} from '@rx-state/rxjs-state';
+import {RxState} from '@ngx-rx/ngx-rx-state';
 
 export interface Performance03State {
     data: Person[];

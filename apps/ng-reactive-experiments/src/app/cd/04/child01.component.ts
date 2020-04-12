@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
 import {BaseComponent} from '../../base.component.ts/base.component';
 import {defer, merge} from 'rxjs';
-import {fromEvent} from '@zoneless-helpers';
 import {tap} from 'rxjs/operators';
+import { fromZoneEvent } from '@rxjs';
 
 @Component({
     selector: 'app-cd04-child01-default',
@@ -18,9 +18,9 @@ import {tap} from 'rxjs/operators';
 })
 export class Child0401Component  extends BaseComponent {
     @ViewChild('markForCheck') markForCheckElem: ElementRef<HTMLButtonElement>;
-    markForCheck$ = defer(() => fromEvent(this.markForCheckElem.nativeElement, 'click'));
+    markForCheck$ = defer(() => fromZoneEvent(this.markForCheckElem.nativeElement, 'click'));
     @ViewChild('detectChanges') detectChangesElem: ElementRef<HTMLButtonElement>;
-    detectChanges$ = defer(() => fromEvent(this.detectChangesElem.nativeElement, 'click'));
+    detectChanges$ = defer(() => fromZoneEvent(this.detectChangesElem.nativeElement, 'click'));
 
     baseEffects$ = merge(
         this.markForCheck$.pipe(tap(() => this.cdRef_markForCheck())),

@@ -3,7 +3,7 @@ import {environment} from '../../../environments/environment';
 import {defer, Observable} from 'rxjs';
 import {scan, startWith} from 'rxjs/operators';
 import {BaseComponent} from '../../base.component.ts/base.component';
-import {fromEvent} from '@zoneless-helpers';
+import {fromZoneEvent} from '@rxjs';
 
 @Component({
     selector: 'app-mixed-parent02',
@@ -29,7 +29,7 @@ import {fromEvent} from '@zoneless-helpers';
 })
 export class Parent02Component extends BaseComponent {
     @ViewChild('button') button: ElementRef<HTMLButtonElement>;
-    btnClick$ = defer(() => fromEvent(this.button.nativeElement, 'click'));
+    btnClick$ = defer(() => fromZoneEvent(this.button.nativeElement, 'click'));
 
     nums1$: Observable<number> = this.btnClick$.pipe(
         startWith(0), scan(i => ++i, 0), scan((nums, num): any => [...nums, num], []));

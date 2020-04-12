@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, ElementRef, ViewChild} from '@angula
 import {defer} from 'rxjs';
 import {BaseComponent} from '../../base.component.ts/base.component';
 import {tap} from 'rxjs/operators';
-import {fromEvent} from '@zoneless-helpers';
+import {fromZoneEvent} from '@rxjs';
 
 @Component({
     selector: 'app-cd-parent06',
@@ -28,7 +28,7 @@ import {fromEvent} from '@zoneless-helpers';
 })
 export class CdParent06Component extends BaseComponent {
     @ViewChild('button') button: ElementRef<HTMLButtonElement>;
-    btnClick$ = defer(() => fromEvent(this.button.nativeElement, 'click'));
+    btnClick$ = defer(() => fromZoneEvent(this.button.nativeElement, 'click'));
 
     baseEffects$ = this.btnClick$.pipe(tap(() => this.appRef_tick()));
 

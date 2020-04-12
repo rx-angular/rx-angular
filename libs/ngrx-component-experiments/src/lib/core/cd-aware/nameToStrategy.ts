@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
-import { CdStrategy, DEFAULT_STRATEGY_NAME } from '@ngx-rx/ngrx-component-experiments';
-import { distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
-import { StrategySelection } from '../cd-aware';
+import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { CdStrategy, DEFAULT_STRATEGY_NAME , StrategySelection} from '../cd-aware/strategy';
+
 
 export function nameToStrategy<U>(strategies: StrategySelection<U>) {
   return (o$: Observable<string>): Observable<CdStrategy<U>> => {

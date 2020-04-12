@@ -1,7 +1,7 @@
 import {AfterViewInit, ChangeDetectorRef, Component, NgZone, OnDestroy} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {EMPTY, of, range, Subject, Subscription} from 'rxjs';
-import {createCdAware, getStrategies} from '../../../../projects/component/src/core/cd-aware';
+import {createCdAware, getStrategies} from '@ngx-rx/ngrx-component-experiments';
 import {CdConfigService} from '../../cd-config.service';
 
 @Component({

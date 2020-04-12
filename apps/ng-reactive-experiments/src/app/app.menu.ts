@@ -1,4 +1,4 @@
-import {MenuItem} from '@navigation';
+import { MenuItem } from '../app/core/navigation/menu-item.interface';
 import {MENU_ITEMS as PERFORMANCE_MENU_ITEMS} from './performance/performance.menu';
 import {MENU_ITEMS as CD_MENU_ITEMS} from './cd/cd.menu';
 import {MENU_ITEMS as PUSH_MENU_ITEMS} from './push/push.menu';
