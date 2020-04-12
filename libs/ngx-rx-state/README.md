@@ -20,12 +20,14 @@ This is a good example of component state.
 This library helps to organize component state reactively.
 
 **Features**
+- Better rendering performance (using `OnPush`)
 - Component State Management (Also a global service is provided `RxGlobalState`)
-- Lazy state. No initial state needed.
 - **Subscription-less coding**
+- Lazy state. No initial state needed.
 - Lifecycle independent programming
-- State queries are cached
-- State lifetime tied to component lifetime
+- State queries are automatically cached
+- Automated subscription handling 
+- Foundation for Zone-Less applications
 - Slim and intuitive API
 - Fully typed and tested
 
