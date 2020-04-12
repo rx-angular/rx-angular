@@ -14,13 +14,14 @@
     position: relative;
     table {
       flex-grow: 1;
-      th, td {
-        padding-left: .5rem;
-        padding-right: .5rem;
+      th,
+      td {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
       }
     }
     .row-active {
-      background-color: rgba(0, 0, 0, .5);
+      background-color: rgba(0, 0, 0, 0.5);
     }
   }
 }

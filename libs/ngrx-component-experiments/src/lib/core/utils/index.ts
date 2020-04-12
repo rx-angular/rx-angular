@@ -11,5 +11,5 @@ export {
   isPromiseGuard,
   isStringArrayGuard,
   PotentialObservableValue,
-  Output,
+  Output
 } from './typing';

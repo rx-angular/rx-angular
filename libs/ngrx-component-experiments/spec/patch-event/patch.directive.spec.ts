@@ -1,19 +1,20 @@
 import { PatchDirective } from '../../src/lib/patch/patch.directive';
-import {Component} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 @Component({
-  template: `<p [patch]="['click']">Testing Directives is awesome! {{runCdCycle()}}</p>`
+  template: `
+    <p [patch]="['click']">Testing Directives is awesome! {{ runCdCycle() }}</p>
+  `
 })
 class TestComponent {
   cdCycles = 0;
-  constructor() { }
+  constructor() {}
 
   runCdCycle() {
     this.cdCycles++;
     return this.cdCycles;
   }
-
 }
 
 describe('CdOnDirective', () => {
@@ -22,10 +23,7 @@ describe('CdOnDirective', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        TestComponent,
-        PatchDirective
-      ]
+      declarations: [TestComponent, PatchDirective]
     });
 
     fixture = TestBed.createComponent(TestComponent);
@@ -41,10 +39,5 @@ describe('CdOnDirective', () => {
     const p: HTMLElement = debugEl.querySelector('p');
 
     expect(1).toBeTruthy();
-
   });
-
-
-
-
 });

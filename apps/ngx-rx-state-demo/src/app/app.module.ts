@@ -33,10 +33,15 @@ export const materialModules = [
 
 @NgModule({
   imports: [
-    BrowserModule, HttpClientModule, ReactiveFormsModule,
+    BrowserModule,
+    HttpClientModule,
+    ReactiveFormsModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: environment.production
+    }),
 
     RouterModule.forRoot(ROUTES),
     materialModules,
@@ -46,7 +51,4 @@ export const materialModules = [
   declarations: [AppComponent],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-
-
-}
+export class AppModule {}

@@ -1,8 +1,8 @@
-import {DemoBasicsItem} from "../demo-basics-item.interface";
+import { DemoBasicsItem } from '../demo-basics-item.interface';
 
 export interface DemoBasicsBaseModel {
-    refreshInterval: number;
-    list: DemoBasicsItem[];
-    listExpanded: boolean;
-    isPending: boolean;
+  refreshInterval: number;
+  list: DemoBasicsItem[];
+  listExpanded: boolean;
+  isPending: boolean;
 }

@@ -2,7 +2,7 @@ import {
   ChangeDetectorRef,
   NgZone,
   ɵdetectChanges as detectChanges,
-  ɵmarkDirty as markDirty,
+  ɵmarkDirty as markDirty
 } from '@angular/core';
 
 import { isIvy } from './is-ivy';

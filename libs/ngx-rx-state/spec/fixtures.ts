@@ -32,33 +32,41 @@ export interface StateChecker<T extends object> {
 export function createStateChecker<T extends object>(
   assert: (a: any, e: any) => void
 ): StateChecker<T> {
-
   return {
     checkState,
     checkSubscriptions
   };
 
-  function checkState(service: RxState<T>, stateOrProject: object, project?: ProjectStateFn<T>): void {
-
+  function checkState(
+    service: RxState<T>,
+    stateOrProject: object,
+    project?: ProjectStateFn<T>
+  ): void {
     if (typeof stateOrProject === 'object' && project === undefined) {
       assert(service.getState(), stateOrProject);
-      service.select(take(1)).subscribe(actual => assert(actual, stateOrProject));
+      service
+        .select(take(1))
+        .subscribe(actual => assert(actual, stateOrProject));
       return;
     }
 
     if (typeof stateOrProject === 'object' && typeof project === 'function') {
       assert(project(service.getState()), stateOrProject);
-      service.select(take(1))
+      service
+        .select(take(1))
         .subscribe(actual => assert(project(actual), stateOrProject));
       return;
     }
 
-    throw Error('Wrong param. Should be object and optional projection function');
+    throw Error(
+      'Wrong param. Should be object and optional projection function'
+    );
   }
 
   function checkSubscriptions(service: RxState<T>, numTotalSubs: number): void {
-    const actual = (service as any).subscription._subscriptions ? (service as any).subscription._subscriptions.length : 0;
+    const actual = (service as any).subscription._subscriptions
+      ? (service as any).subscription._subscriptions.length
+      : 0;
     assert(actual, numTotalSubs);
   }
-
 }

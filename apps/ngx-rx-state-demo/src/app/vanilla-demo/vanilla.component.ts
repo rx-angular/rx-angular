@@ -5,7 +5,9 @@ import { Subscription } from 'rxjs';
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'vanilla-demo',
-  template: `vanilla-demo: {{value$ | async | json}}`
+  template: `
+    vanilla-demo: {{ value$ | async | json }}
+  `
 })
 export class VanillaDemoComponent extends RxState<{}> implements OnDestroy {
   subscription = new Subscription();
@@ -14,7 +16,7 @@ export class VanillaDemoComponent extends RxState<{}> implements OnDestroy {
   constructor() {
     super();
     this.subscription.add(this.subscribe());
-    this.setState({test: 43})
+    this.setState({ test: 43 });
   }
 
   ngOnDestroy(): void {

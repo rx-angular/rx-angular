@@ -31,16 +31,13 @@ export function createCdAware<U>(cfg: {
   resetContextObserver: NextObserver<unknown>;
   updateViewContextObserver: PartialObserver<any>;
 }): CdAware<U | undefined | null> {
-
   const configSubject = new Subject<string>();
   const config$: Observable<CdStrategy<U>> = configSubject.pipe(
     nameToStrategy(cfg.strategies)
   );
 
   const observablesSubject = new Subject<Observable<U>>();
-  const observables$$ = observablesSubject.pipe(
-    distinctUntilChanged()
-  );
+  const observables$$ = observablesSubject.pipe(distinctUntilChanged());
 
   const renderSideEffect$ = combineLatest([observables$$, config$]).pipe(
     switchMap(([observable$, strategy]) => {
@@ -52,7 +49,7 @@ export function createCdAware<U>(cfg: {
 
       return observable$.pipe(
         distinctUntilChanged(),
-        tap((value) => cfg.updateViewContextObserver.next(value)),
+        tap(value => cfg.updateViewContextObserver.next(value)),
         strategy.behaviour(),
         tap(() => strategy.render())
       );

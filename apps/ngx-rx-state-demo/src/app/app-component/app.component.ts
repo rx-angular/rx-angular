@@ -1,14 +1,12 @@
-import {Component} from '@angular/core';
-import {AppViewModel} from "./app.view.model";
+import { Component } from '@angular/core';
+import { AppViewModel } from './app.view.model';
 
 @Component({
-    selector: 'ngx-rx-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    providers: [AppViewModel]
+  selector: 'ngx-rx-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  providers: [AppViewModel]
 })
 export class AppComponent {
-    constructor(public vm: AppViewModel) {
-
-    }
+  constructor(public vm: AppViewModel) {}
 }

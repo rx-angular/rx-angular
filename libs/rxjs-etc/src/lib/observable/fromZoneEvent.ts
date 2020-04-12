@@ -3,14 +3,15 @@
 import { fromEventPattern, Observable } from 'rxjs';
 
 interface ZoneEventListenerOptions extends EventListenerOptions {
-  patched: boolean
+  patched: boolean;
 }
 
-export function fromZoneEvent<T>(target: any, eventName: string, options?: ZoneEventListenerOptions): Observable<T> {
-  return fromEventPattern<T>(
-    addClickHandler,
-    removeClickHandler
-  );
+export function fromZoneEvent<T>(
+  target: any,
+  eventName: string,
+  options?: ZoneEventListenerOptions
+): Observable<T> {
+  return fromEventPattern<T>(addClickHandler, removeClickHandler);
 
   function addClickHandler(handler) {
     if (options.patched) {
@@ -25,6 +26,4 @@ export function fromZoneEvent<T>(target: any, eventName: string, options?: ZoneE
     }
     (target as any).__zone_symbol__removeEventListener(eventName, handler);
   }
-
 }
-

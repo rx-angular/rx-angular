@@ -8,6 +8,6 @@ const EXPORTS = [DECLARATIONS];
 
 @NgModule({
   declarations: [DECLARATIONS],
-  exports: [EXPORTS],
+  exports: [EXPORTS]
 })
 export class ReactiveComponentModule {}

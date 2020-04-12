@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy} from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
 
 export const environment = {
   production: true,

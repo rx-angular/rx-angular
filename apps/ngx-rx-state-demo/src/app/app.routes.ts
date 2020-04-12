@@ -7,7 +7,9 @@ export const ROUTES: Routes = [
   },
   {
     path: 'demo-basics',
-    loadChildren: () => import('./examples/demo-basics/demo-basics.module')
-      .then(m => m.DemoBasicsModule)
+    loadChildren: () =>
+      import('./examples/demo-basics/demo-basics.module').then(
+        m => m.DemoBasicsModule
+      )
   }
 ];

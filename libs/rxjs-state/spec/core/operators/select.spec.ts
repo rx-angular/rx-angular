@@ -16,11 +16,10 @@ interface NestedState {
     key1: {
       key11: {
         key111: string;
-      }
-    }
-  }
+      };
+    };
+  };
 }
-
 
 let testScheduler: TestScheduler;
 
@@ -30,7 +29,6 @@ beforeEach(() => {
 
 // tslint:disable: no-duplicate-string
 describe('select', () => {
-
   describe('should mirror the behavior of the stateful and', () => {
     it('should mirror EMPTY', () => {
       testScheduler.run(({ expectObservable }) => {
@@ -67,15 +65,16 @@ describe('select', () => {
       });
     });
 
-    it('should replay the last emitted value', () => {
-
-    });
+    it('should replay the last emitted value', () => {});
 
     it('should accept one operator', () => {
       testScheduler.run(({ cold, expectObservable }) => {
         const values = { a: 2, b: 4 };
         const source = cold('a|', values);
-        expectObservable(source.pipe(select(map(v => v * 2)))).toBe('b|', values);
+        expectObservable(source.pipe(select(map(v => v * 2)))).toBe(
+          'b|',
+          values
+        );
       });
     });
 
@@ -83,13 +82,17 @@ describe('select', () => {
       testScheduler.run(({ cold, expectObservable }) => {
         const values = { a: 2, b: 4 };
         const source = cold('a|', values);
-        expectObservable(source.pipe(select(
-          map(v => v * 2),
-          map(v => v / 2),
-          map(v => v * 2),
-          map(v => v / 2),
-          map(v => v * 2)
-        ))).toBe('b|', values);
+        expectObservable(
+          source.pipe(
+            select(
+              map(v => v * 2),
+              map(v => v / 2),
+              map(v => v * 2),
+              map(v => v / 2),
+              map(v => v * 2)
+            )
+          )
+        ).toBe('b|', values);
       });
     });
   });
@@ -101,7 +104,9 @@ describe('select', () => {
         str: 'string',
         num: 42
       };
-      const source: Observable<PrimitiveState> = cold('a|', { a: primitiveState });
+      const source: Observable<PrimitiveState> = cold('a|', {
+        a: primitiveState
+      });
       expectObservable(source.pipe(select('bol'))).toBe('a|', { a: true });
     });
   });
@@ -112,7 +117,9 @@ describe('select', () => {
         obj: { key1: { key11: { key111: 'test' } } }
       };
       const source: Observable<NestedState> = cold('a|', { a: nestedState });
-      expectObservable(source.pipe(select('obj', 'key1', 'key11', 'key111'))).toBe('a|', { a: 'test' });
+      expectObservable(
+        source.pipe(select('obj', 'key1', 'key11', 'key111'))
+      ).toBe('a|', { a: 'test' });
     });
   });
 
@@ -123,8 +130,12 @@ describe('select', () => {
         str: 'string',
         num: 42
       };
-      const source: Observable<PrimitiveState> = cold('a|', { a: primitiveState });
-      expectObservable(source.pipe(select(map(s => s.bol)))).toBe('a|', { a: true });
+      const source: Observable<PrimitiveState> = cold('a|', {
+        a: primitiveState
+      });
+      expectObservable(source.pipe(select(map(s => s.bol)))).toBe('a|', {
+        a: true
+      });
     });
   });
 
@@ -134,12 +145,16 @@ describe('select', () => {
         obj: { key1: { key11: { key111: 'test' } } }
       };
       const source: Observable<NestedState> = cold('a|', { a: nestedState });
-      expectObservable(source.pipe(select(
-        map(s => s.obj),
-        map(s => s.key1),
-        map(s => s.key11),
-        map(s => s.key111)
-      ))).toBe('a|', { a: 'test' });
+      expectObservable(
+        source.pipe(
+          select(
+            map(s => s.obj),
+            map(s => s.key1),
+            map(s => s.key11),
+            map(s => s.key111)
+          )
+        )
+      ).toBe('a|', { a: 'test' });
     });
   });
 });

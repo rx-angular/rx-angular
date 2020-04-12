@@ -12,25 +12,24 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ReactiveComponentModule } from '@ngx-rx/ngrx-component-experiments';
 
 import { Performance04IndexComponent } from './index/performance04-index.component';
-import {RouterModule} from '@angular/router';
-import {ROUTES as PERFORMANCE04_ROUTES} from './performance-04.routes';
-
+import { RouterModule } from '@angular/router';
+import { ROUTES as PERFORMANCE04_ROUTES } from './performance-04.routes';
 
 @NgModule({
   declarations: [Performance04IndexComponent],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(PERFORMANCE04_ROUTES),
-        MatListModule,
-        MatTableModule,
-        MatCheckboxModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatIconModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        ReactiveComponentModule
-    ]
+  imports: [
+    CommonModule,
+    RouterModule.forChild(PERFORMANCE04_ROUTES),
+    MatListModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    ReactiveComponentModule
+  ]
 })
-export class Performance04Module { }
+export class Performance04Module {}

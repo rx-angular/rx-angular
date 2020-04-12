@@ -1,6 +1,6 @@
 # Implementing state, selections and UI interaction
 
-1) Implement RxState Service ComponentState by extending the RxState class.
+1. Implement RxState Service ComponentState by extending the RxState class.
 
 ```typescript
 export class DemoBasicsComponent2 extends RxState<ComponentState>
@@ -13,14 +13,16 @@ model$ = this.select();
 ```
 
 2.1) Initialize component state
+
 ```typescript
  constructor(...) {
   ...
   this.setState(initComponentState);
-}    
+}
 ```
 
 2.2) Connect input bindings
+
 ```typescript
  @Input()
 set refreshInterval(refreshInterval: number) {
@@ -31,16 +33,16 @@ set refreshInterval(refreshInterval: number) {
 ```
 
 2.3) Connect state from child components ( listExpandedChanges => listExpanded )
+
 ```typescript
-this.connect(
-  this.listExpandedChanges.pipe(map(b => ({listExpanded: b})))
-);
+this.connect(this.listExpandedChanges.pipe(map(b => ({ listExpanded: b }))));
 ```
 
 2.4) Connect Global state (selectRepositoryList -> parseListItems => list)
+
 ```typescript
-this.connect('list',
+this.connect(
+  'list',
   this.store.select(selectRepositoryList).pipe(map(this.parseListItems))
 );
 ```
- 

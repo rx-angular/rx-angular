@@ -21,7 +21,9 @@ export interface StrategySelection<U> {
   [key: string]: CdStrategy<U>;
 }
 
-export function getStrategies<T>(cfg: StrategyFactoryConfig): StrategySelection<T> {
+export function getStrategies<T>(
+  cfg: StrategyFactoryConfig
+): StrategySelection<T> {
   return {
     idle: createIdleStrategy<T>(cfg),
     noop: createNoopStrategy<T>()
@@ -47,7 +49,9 @@ export function getStrategies<T>(cfg: StrategyFactoryConfig): StrategySelection<
  * | ZoneFull | cdRef.markForCheck | ❌         | None           |
  * | ZoneLess | cdRef.markForCheck | ❌         | None           |
  */
-export function createIdleStrategy<T>(cfg: Pick<StrategyFactoryConfig, 'cdRef'>): CdStrategy<T> {
+export function createIdleStrategy<T>(
+  cfg: Pick<StrategyFactoryConfig, 'cdRef'>
+): CdStrategy<T> {
   return {
     render: (): void => {
       cfg.cdRef.markForCheck();
@@ -80,8 +84,7 @@ export function createIdleStrategy<T>(cfg: Pick<StrategyFactoryConfig, 'cdRef'>)
  */
 export function createNoopStrategy<T>(cfg?: any): CdStrategy<T> {
   return {
-    render: (): void => {
-    },
+    render: (): void => {},
     behaviour: () => o => {
       console.log('noop');
       return o;

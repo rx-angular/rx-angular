@@ -1,4 +1,10 @@
-import { Observable, OperatorFunction, Subscribable, Subscription, Unsubscribable } from 'rxjs';
+import {
+  Observable,
+  OperatorFunction,
+  Subscribable,
+  Subscription,
+  Unsubscribable
+} from 'rxjs';
 import { filter, map, pluck, tap } from 'rxjs/operators';
 import {
   createAccumulationObservable,
@@ -14,9 +20,14 @@ import { isKeyOf } from '../core/utils/typing';
 
 type ProjectStateFn<T> = (oldState: T) => Partial<T>;
 type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
-type ProjectStateReducer<T, K extends keyof T> = (oldState: T, value: any) => Partial<T>;
-type ProjectValueReducer<T, K extends keyof T> = (oldState: T, value: any) => T[K];
-
+type ProjectStateReducer<T, K extends keyof T> = (
+  oldState: T,
+  value: any
+) => Partial<T>;
+type ProjectValueReducer<T, K extends keyof T> = (
+  oldState: T,
+  value: any
+) => T[K];
 
 /**
  * @example
@@ -28,9 +39,7 @@ export class RxState<T extends object> implements Subscribable<any> {
 
   readonly $ = this.accumulationObservable.state$;
 
-  constructor() {
-
-  }
+  constructor() {}
 
   getState(): T {
     return this.accumulationObservable.state;
@@ -44,31 +53,45 @@ export class RxState<T extends object> implements Subscribable<any> {
    * ls.setState('test', 'tau');
    */
   setState(stateOrProjectState: Partial<T> | ProjectStateFn<T>): void;
-  setState<K extends keyof T, O>(key: K, projectSlice: ProjectValueFn<T, K>): void;
+  setState<K extends keyof T, O>(
+    key: K,
+    projectSlice: ProjectValueFn<T, K>
+  ): void;
   setState<K extends keyof T>(
     keyOrStateOrProjectState: Partial<T> | ProjectStateFn<T> | K,
     stateOrSliceProjectFn?: ProjectValueFn<T, K>
   ): void {
-
-    if (typeof keyOrStateOrProjectState === 'object' && stateOrSliceProjectFn === undefined) {
+    if (
+      typeof keyOrStateOrProjectState === 'object' &&
+      stateOrSliceProjectFn === undefined
+    ) {
       this.accumulationObservable.nextSlice(keyOrStateOrProjectState);
       return;
     }
 
-    if (typeof keyOrStateOrProjectState === 'function' && stateOrSliceProjectFn === undefined) {
-      this.accumulationObservable.nextSlice(keyOrStateOrProjectState(this.accumulationObservable.state));
+    if (
+      typeof keyOrStateOrProjectState === 'function' &&
+      stateOrSliceProjectFn === undefined
+    ) {
+      this.accumulationObservable.nextSlice(
+        keyOrStateOrProjectState(this.accumulationObservable.state)
+      );
       return;
     }
 
-    if (isKeyOf<T>(keyOrStateOrProjectState) && typeof stateOrSliceProjectFn === 'function') {
+    if (
+      isKeyOf<T>(keyOrStateOrProjectState) &&
+      typeof stateOrSliceProjectFn === 'function'
+    ) {
       const state: Partial<T> = {};
-      state[keyOrStateOrProjectState] = stateOrSliceProjectFn(this.accumulationObservable.state);
+      state[keyOrStateOrProjectState] = stateOrSliceProjectFn(
+        this.accumulationObservable.state
+      );
       this.accumulationObservable.nextSlice(state);
       return;
     }
 
     throw new Error('wrong param');
-
   }
 
   /**
@@ -79,50 +102,70 @@ export class RxState<T extends object> implements Subscribable<any> {
    * ls.connect('foo', of('bar!'));
    * ls.connect('foo', of('!'), (oldState, change) => ({foo: oldState.foo + change}));
    */
-  connect<K extends keyof T>(slice$: Observable<any | Partial<T>>, projectFn?: ProjectStateReducer<T, K>): void;
+  connect<K extends keyof T>(
+    slice$: Observable<any | Partial<T>>,
+    projectFn?: ProjectStateReducer<T, K>
+  ): void;
   connect<K extends keyof T>(key: K, slice$: Observable<T[K]>): void;
-  connect<K extends keyof T>(key: K, slice$: Observable<any>, projectSliceFn: ProjectValueReducer<T, K>): void;
-  connect<K extends keyof T>(keyOrSlice$: K | Observable<any>, projectOrSlices$?: ProjectStateReducer<T, K> | Observable<T[K] | any>, projectValueFn?: ProjectValueReducer<T, K>): void {
-    if (isObservableGuard<any>(keyOrSlice$)
-      && projectOrSlices$ === undefined
-      && projectValueFn === undefined
+  connect<K extends keyof T>(
+    key: K,
+    slice$: Observable<any>,
+    projectSliceFn: ProjectValueReducer<T, K>
+  ): void;
+  connect<K extends keyof T>(
+    keyOrSlice$: K | Observable<any>,
+    projectOrSlices$?: ProjectStateReducer<T, K> | Observable<T[K] | any>,
+    projectValueFn?: ProjectValueReducer<T, K>
+  ): void {
+    if (
+      isObservableGuard<any>(keyOrSlice$) &&
+      projectOrSlices$ === undefined &&
+      projectValueFn === undefined
     ) {
       const slice$ = keyOrSlice$.pipe(filter(slice => slice !== undefined));
       this.accumulationObservable.nextSliceObservable(slice$);
       return;
     }
 
-    if (isObservableGuard<any>(keyOrSlice$)
-      && typeof projectOrSlices$ === 'function' && !isObservableGuard<T[K]>(projectOrSlices$)
-      && projectValueFn === undefined
+    if (
+      isObservableGuard<any>(keyOrSlice$) &&
+      typeof projectOrSlices$ === 'function' &&
+      !isObservableGuard<T[K]>(projectOrSlices$) &&
+      projectValueFn === undefined
     ) {
       const project = projectOrSlices$;
-      const slice$ = keyOrSlice$.pipe(filter(slice => slice !== undefined), map(v => project(this.getState(), v)));
-      this.accumulationObservable.nextSliceObservable(slice$);
-      return;
-    }
-
-
-    if (isKeyOf<T>(keyOrSlice$)
-      && isObservableGuard<T[K]>(projectOrSlices$)
-      && projectValueFn === undefined) {
-      const key = keyOrSlice$;
-      const slice$ = projectOrSlices$.pipe(
+      const slice$ = keyOrSlice$.pipe(
         filter(slice => slice !== undefined),
-        map(value => ({...{},[key]: value}))
+        map(v => project(this.getState(), v))
       );
       this.accumulationObservable.nextSliceObservable(slice$);
       return;
     }
 
-
-    if (isKeyOf<T>(keyOrSlice$)
-      && isObservableGuard<any>(projectOrSlices$)
-      && typeof projectValueFn === 'function') {
+    if (
+      isKeyOf<T>(keyOrSlice$) &&
+      isObservableGuard<T[K]>(projectOrSlices$) &&
+      projectValueFn === undefined
+    ) {
       const key = keyOrSlice$;
       const slice$ = projectOrSlices$.pipe(
         filter(slice => slice !== undefined),
-        map(value => ({ ...{}, [key]: projectValueFn(this.getState(), value) })));
+        map(value => ({ ...{}, [key]: value }))
+      );
+      this.accumulationObservable.nextSliceObservable(slice$);
+      return;
+    }
+
+    if (
+      isKeyOf<T>(keyOrSlice$) &&
+      isObservableGuard<any>(projectOrSlices$) &&
+      typeof projectValueFn === 'function'
+    ) {
+      const key = keyOrSlice$;
+      const slice$ = projectOrSlices$.pipe(
+        filter(slice => slice !== undefined),
+        map(value => ({ ...{}, [key]: projectValueFn(this.getState(), value) }))
+      );
       this.accumulationObservable.nextSliceObservable(slice$);
       return;
     }
@@ -171,24 +214,32 @@ export class RxState<T extends object> implements Subscribable<any> {
     k1: K1,
     k2: K2
   ): Observable<T[K1][K2]>;
-  select<K1 extends keyof T,
+  select<
+    K1 extends keyof T,
     K2 extends keyof T[K1],
-    K3 extends keyof T[K1][K2]>(k1: K1, k2: K2, k3: K3): Observable<T[K1][K2][K3]>;
-  select<K1 extends keyof T,
+    K3 extends keyof T[K1][K2]
+  >(k1: K1, k2: K2, k3: K3): Observable<T[K1][K2][K3]>;
+  select<
+    K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
-    K4 extends keyof T[K1][K2][K3]>(k1: K1, k2: K2, k3: K3, k4: K4): Observable<T[K1][K2][K3][K4]>;
-  select<K1 extends keyof T,
+    K4 extends keyof T[K1][K2][K3]
+  >(k1: K1, k2: K2, k3: K3, k4: K4): Observable<T[K1][K2][K3][K4]>;
+  select<
+    K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
     K4 extends keyof T[K1][K2][K3],
-    K5 extends keyof T[K1][K2][K3][K4]>(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): Observable<T[K1][K2][K3][K4][K5]>;
-  select<K1 extends keyof T,
+    K5 extends keyof T[K1][K2][K3][K4]
+  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): Observable<T[K1][K2][K3][K4][K5]>;
+  select<
+    K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
     K4 extends keyof T[K1][K2][K3],
     K5 extends keyof T[K1][K2][K3][K4],
-    K6 extends keyof T[K1][K2][K3][K4][K5]>(
+    K6 extends keyof T[K1][K2][K3][K4][K5]
+  >(
     k1: K1,
     k2: K2,
     k3: K3,
@@ -197,7 +248,9 @@ export class RxState<T extends object> implements Subscribable<any> {
     k6: K6
   ): Observable<T[K1][K2][K3][K4][K5][K6]>;
   // ===========================
-  select<R>(...opOrMapFn: OperatorFunction<T, R>[] | string[]): Observable<T | R> {
+  select<R>(
+    ...opOrMapFn: OperatorFunction<T, R>[] | string[]
+  ): Observable<T | R> {
     if (!opOrMapFn || opOrMapFn.length === 0) {
       return this.$.pipe(stateful());
     } else if (isStringArrayGuard(opOrMapFn)) {
@@ -227,5 +280,4 @@ export class RxState<T extends object> implements Subscribable<any> {
     subscription.add(this.effectObservable.subscribe());
     return subscription;
   }
-
 }

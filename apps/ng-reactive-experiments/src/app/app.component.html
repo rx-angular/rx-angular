@@ -3,41 +3,37 @@
     <mat-icon>menu</mat-icon>
   </button>
   <h1 class="mat-title">Angular Performance Tests</h1>
-  <app-config-panel class="config-panel" [appComponentRef]="thisRef"></app-config-panel>
+  <app-config-panel
+    class="config-panel"
+    [appComponentRef]="thisRef"
+  ></app-config-panel>
 </mat-toolbar>
-<mat-sidenav-container
-  [style.marginTop.px]="0"
-  class="app-sidenav-container">
-  <mat-sidenav mode='side'
-               opened="true"
-               class="main-sidenav"
-               fixedTopGap="56">
-
+<mat-sidenav-container [style.marginTop.px]="0" class="app-sidenav-container">
+  <mat-sidenav mode="side" opened="true" class="main-sidenav" fixedTopGap="56">
     <mat-nav-list>
       <ng-container *ngFor="let item of menuItems">
-
         <mat-expansion-panel *ngIf="item.children as children">
           <mat-expansion-panel-header>
             <mat-panel-title>
-              {{item.label}}
+              {{ item.label }}
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <a *ngFor="let child of children" [routerLink]="child.link"
-             mat-list-item
-             routerLinkActive="active">
+          <a
+            *ngFor="let child of children"
+            [routerLink]="child.link"
+            mat-list-item
+            routerLinkActive="active"
+          >
             <mat-icon style="margin-right: .5rem;">warning</mat-icon>
-            {{child.label}}
+            {{ child.label }}
           </a>
         </mat-expansion-panel>
         <ng-container *ngIf="!item.children">
-          <a [routerLink]="item.link"
-             mat-list-item
-             routerLinkActive="active">
+          <a [routerLink]="item.link" mat-list-item routerLinkActive="active">
             <mat-icon style="margin-right: .5rem;">warning</mat-icon>
-            {{item.label}}
+            {{ item.label }}
           </a>
         </ng-container>
-
       </ng-container>
 
       <a mat-list-item routerLink="animation" routerLinkActive="active">

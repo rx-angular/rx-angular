@@ -12,22 +12,18 @@ const stateChecker = createStateChecker((actual, expected) => {
   }
 });
 
-
 @Component({
   selector: 'ngx-rx-state-local-provider-test',
-  template: `<span>{{value$}}</span>`
+  template: `
+    <span>{{ value$ }}</span>
+  `
 })
 export class RxStateInjectionComponent implements OnDestroy {
-
   value$ = this.state.select();
 
-  constructor(public state: RxGlobalState<PrimitiveState>) {
+  constructor(public state: RxGlobalState<PrimitiveState>) {}
 
-  }
-
-  ngOnDestroy(): void {
-  }
-
+  ngOnDestroy(): void {}
 }
 
 describe('Injection test component', () => {
@@ -38,8 +34,7 @@ describe('Injection test component', () => {
     TestBed.configureTestingModule({
       declarations: [RxStateInjectionComponent],
       providers: [RxGlobalState]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

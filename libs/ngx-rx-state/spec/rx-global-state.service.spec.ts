@@ -11,7 +11,6 @@ const stateChecker = createStateChecker((actual, expected) => {
   }
 });
 
-
 describe('RxStateService', () => {
   let service: RxGlobalState<PrimitiveState>;
 
@@ -27,6 +26,4 @@ describe('RxStateService', () => {
   it('should be hot on instantiation', () => {
     stateChecker.checkSubscriptions(service, 1);
   });
-
-
 });

@@ -14,51 +14,42 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ]
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
       }
     }
   },
   "projects": {
     "ng-reactive-experiments": {
-      "tags": []
+      "tags": ["app"]
     },
     "ng-reactive-experiments-e2e": {
       "tags": [],
-      "implicitDependencies": [
-        "ng-reactive-experiments"
-      ]
+      "implicitDependencies": ["ng-reactive-experiments"]
     },
     "ngx-rx-state-demo": {
       "tags": []
     },
     "ngx-rx-state-demo-e2e": {
       "tags": [],
-      "implicitDependencies": [
-        "ngx-rx-state-demo"
-      ]
+      "implicitDependencies": ["ngx-rx-state-demo"]
     },
     "ngx-rx-state": {
-      "tags": []
+      "tags": ["scope:shared", "type:lib"]
     },
     "rxjs-state": {
-      "tags": []
+      "tags": ["scope:shared", "type:lib"]
     },
     "test-helpers": {
-      "tags": []
+      "tags": ["scope:shared", "type:lib"]
     },
     "rxjs-etc": {
-      "tags": []
+      "tags": ["scope:shared", "type:lib"]
     },
     "ts-etc": {
-      "tags": []
+      "tags": ["scope:shared", "type:lib"]
     },
     "ngrx-component-experiments": {
-      "tags": []
+      "tags": ["scope:shared", "type:lib"]
     }
   }
 }

@@ -4,5 +4,4 @@ import { NgModule } from '@angular/core';
   imports: [],
   declarations: []
 })
-export class RxStateModule {
-}
+export class RxStateModule {}

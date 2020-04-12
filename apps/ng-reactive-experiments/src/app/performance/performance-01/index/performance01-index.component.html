@@ -4,7 +4,7 @@
   <span>Showing {{ filteredData?.length }} / {{ data?.length }} entries</span>
   <mat-form-field style="margin-left: 1rem;">
     <mat-label>Input</mat-label>
-    <input matInput #filterInput (input)="filter = filterInput.value">
+    <input matInput #filterInput (input)="filter = filterInput.value" />
   </mat-form-field>
   <mat-form-field style="margin-left: 1rem;">
     <mat-label>Dataset</mat-label>
@@ -29,18 +29,26 @@
     <!-- Checkbox Column -->
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
-        <mat-checkbox (change)="$event ? masterToggle() : null"
-                      [checked]="selection.hasValue() && isAllSelected()"
-                      [indeterminate]="selection.hasValue() && !isAllSelected()"
-                      [aria-label]="checkboxLabel()">
+        <mat-checkbox
+          (change)="$event ? masterToggle() : null"
+          [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()"
+          [aria-label]="checkboxLabel()"
+        >
         </mat-checkbox>
       </th>
       <td mat-cell *matCellDef="let row">
-        <mat-checkbox (click)="$event.stopPropagation()"
-                      *ngIf="isRowHovered(row) || selection.isSelected(row) || !selection.isEmpty()"
-                      (change)="$event ? selection.toggle(row) : null"
-                      [checked]="selection.isSelected(row)"
-                      [aria-label]="checkboxLabel(row)">
+        <mat-checkbox
+          (click)="$event.stopPropagation()"
+          *ngIf="
+            isRowHovered(row) ||
+            selection.isSelected(row) ||
+            !selection.isEmpty()
+          "
+          (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)"
+          [aria-label]="checkboxLabel(row)"
+        >
         </mat-checkbox>
       </td>
     </ng-container>
@@ -49,7 +57,7 @@
     <mat-text-column name="age"></mat-text-column>
     <mat-text-column name="balance"></mat-text-column>
     <ng-container matColumnDef="picture">
-      <th mat-header-cell *matHeaderCellDef> Picture </th>
+      <th mat-header-cell *matHeaderCellDef>Picture</th>
       <td mat-cell *matCellDef="let person">
         <img [src]="person.picture" [alt]="person.name" />
       </td>
@@ -59,12 +67,13 @@
     <mat-text-column name="phone"></mat-text-column>
     <mat-text-column name="address"></mat-text-column>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-        (mouseenter)="rowHovered(row)"
-        (mouseleave)="rowBlurred(row)"
-        [class.row-active]="isRowHovered(row)"
-        (click)="selection.toggle(row)">
-    </tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      (mouseenter)="rowHovered(row)"
+      (mouseleave)="rowBlurred(row)"
+      [class.row-active]="isRowHovered(row)"
+      (click)="selection.toggle(row)"
+    ></tr>
   </table>
 </div>
-

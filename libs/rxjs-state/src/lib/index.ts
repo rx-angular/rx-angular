@@ -3,5 +3,5 @@ export {
   stateful,
   createAccumulationObservable,
   createSideEffectObservable
-} from './core'
-export {RxState} from './state'
+} from './core';
+export { RxState } from './state';
