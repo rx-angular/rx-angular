@@ -281,7 +281,7 @@ describe('coalesce operator additional logic', () => {
 
     it('should emit only once per scope async', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-        const coalesceConfig = {
+        const cfg = {
           leading: false,
           trailing: true,
           context: window as any,
@@ -294,8 +294,8 @@ describe('coalesce operator additional logic', () => {
         const exp1 = '--------f---|';
         const exp2 = '------------|';
 
-        const result1 = s1.pipe(coalesce(() => n1, coalesceConfig));
-        const result2 = s1.pipe(coalesce(() => n1, coalesceConfig));
+        const result1 = s1.pipe(coalesce(() => n1, cfg));
+        const result2 = s1.pipe(coalesce(() => n1, cfg));
         expectObservable(result1).toBe(exp1);
         expectObservable(result2).toBe(exp2);
         expectSubscriptions(s1.subscriptions).toBe(s1Subs);
@@ -304,7 +304,7 @@ describe('coalesce operator additional logic', () => {
 
     it('should emit only once per scope sync', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-        const coalesceConfig = {
+        const cfg = {
           leading: false,
           trailing: true,
           context: window as any,
@@ -316,8 +316,8 @@ describe('coalesce operator additional logic', () => {
 
         const exp1 = '-----------f--|';
         const exp2 = '--------------|';
-        const result1 = s1.pipe(coalesce(() => d1, coalesceConfig));
-        const result2 = s1.pipe(coalesce(() => d1, coalesceConfig));
+        const result1 = s1.pipe(coalesce(() => d1, cfg));
+        const result2 = s1.pipe(coalesce(() => d1, cfg));
         expectObservable(result1).toBe(exp1);
         expectObservable(result2).toBe(exp2);
         expectSubscriptions(s1.subscriptions).toBe(s1Subs);
@@ -347,14 +347,14 @@ describe('coalesce operator additional logic', () => {
 
       it('should emit once per micro task', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const coalesceConfig = {
+          const cfg = {
             leading: false,
             trailing: true,
             context: window as any,
           };
           testScheduler.run(() => {
             let syncEmission1: any;
-            let syncEmission2: any;
+
 
             const arrNum = [1, 2, 3, 4];
             const arrAlph = ['a', 'b', 'c', 'd'];
@@ -404,7 +404,7 @@ describe('coalesce operator additional logic', () => {
       // different durationSelectors (NOT RECOMMENDED!)
       it('should emit after the first durationSelectors completion if sync (THIS IS BAD)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const coalesceConfig = {
+          const cfg = {
             leading: false,
             trailing: true,
             context: window as any,
@@ -417,8 +417,8 @@ describe('coalesce operator additional logic', () => {
           const exp1 = '------f-----|';
           const exp2 = '------------|';
 
-          const result1 = s1.pipe(coalesce(() => d1, coalesceConfig));
-          const result2 = s1.pipe(coalesce(() => d2, coalesceConfig));
+          const result1 = s1.pipe(coalesce(() => d1, cfg));
+          const result2 = s1.pipe(coalesce(() => d2, cfg));
           expectObservable(result1).toBe(exp1);
           expectObservable(result2).toBe(exp2);
           expectSubscriptions(s1.subscriptions).toBe(s1Subs);
@@ -427,7 +427,7 @@ describe('coalesce operator additional logic', () => {
 
       it('should interfere with other durationSelectors if async (THIS IS BAD)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const coalesceConfig = {
+          const cfg = {
             leading: false,
             trailing: true,
             context: window as any,
@@ -442,8 +442,8 @@ describe('coalesce operator additional logic', () => {
           const exp1 = '-------d----|';
           const exp2 = '---------f--|';
 
-          const result1 = s1.pipe(coalesce(() => d1, coalesceConfig));
-          const result2 = s1.pipe(coalesce(() => d2, coalesceConfig));
+          const result1 = s1.pipe(coalesce(() => d1, cfg));
+          const result2 = s1.pipe(coalesce(() => d2, cfg));
           expectObservable(result1).toBe(exp1);
           expectObservable(result2).toBe(exp2);
           expectSubscriptions(s1.subscriptions).toBe(s1Subs);

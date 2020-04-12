@@ -1,7 +1,7 @@
 import {
   AsyncCancelerFn,
   AsyncProducerFn,
-  generateFrames,
+  generateFrames
 } from '../../src';
 import { of } from 'rxjs';
 

@@ -1,12 +1,8 @@
 import { Observable, Subscriber } from 'rxjs';
 
-export interface AsyncProducerFn {
-  (arg?: any): any;
-}
+export type AsyncProducerFn = (arg?: any) => any;
 
-export interface AsyncCancelerFn {
-  (arg?: any): void;
-}
+export type AsyncCancelerFn = (arg?: any) => void;
 
 export interface TimestampProvider {
   now(): number;
