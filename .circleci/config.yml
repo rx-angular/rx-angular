@@ -10,11 +10,11 @@ jobs:
       - node/with-cache:
           steps:
             - run:
-              name: 'Install'
-              command: npm install
+                name: 'Install'
+                command: npm install
             - run:
-              name: 'Test with coverage'
-              command: npm test
+                name: 'Test with coverage'
+                command: npm test
 
 workflows:
     build-and-test:
