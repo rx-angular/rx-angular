@@ -11,12 +11,12 @@ import {environment} from '../../../../environments/environment';
 })
 export class Performance01IndexComponent implements OnInit {
     displayedColumns: string[] = ['select', 'name', 'age', 'balance', 'picture', 'eyeColor', 'company', 'phone', 'address'];
-    private _data: Person[] = [];
-    set data(data: Person[]) {
+    private _data: any[] = [];
+    set data(data: any[]) {
         this._data = data;
         this.filter = this.filter;
     }
-    get data(): Person[] {
+    get data(): any[] {
         return this._data;
     }
     filteredData: Person[] = [];
@@ -36,7 +36,7 @@ export class Performance01IndexComponent implements OnInit {
     changeDetections = 0;
     detectedChanges = () => {
         return ++this.changeDetections;
-    }
+    };
 
     constructor(
         private dataService: Performance01DataService
