@@ -1,47 +1,56 @@
 # Implementing MVVM Design Pattern
 
 1. Create an interface DemoBasicsView and implement all UI interaction like buttons etc.
-```typescript
 
+```typescript
 ```
-2. Create an interface DemoBasicsBaseModel this is basically a copy of your previous ComponentState.
-```typescript
 
+2. Create an interface DemoBasicsBaseModel this is basically a copy of your previous ComponentState.
+
+```typescript
 ```
 
 3. Implement a property `baseModel$: Observable<DemoBasicsBaseModel>;` to provide the base model state.
-```typescript
 
+```typescript
 ```
+
 4. Create a service called DemoBasicsViewModel
-```typescript
 
+```typescript
 ```
+
 - extend LocalState<DemoBasicsBaseModel>
-```typescript
 
+```typescript
 ```
+
 - implement DemoBasicsView
-```typescript
 
+```typescript
 ```
+
 5. Inject `DemoBasicsViewModel` as service into `DemoBasicsComponent` constructor under property `vm`
-```typescript
 
+```typescript
 ```
+
 - remove everything related to the view
-```typescript
 
+```typescript
 ```
+
 - Refactor to use the vm connectState method
-```typescript
 
-```
-- Refactor to use the vm refreshListSideEffect$ property
 ```typescript
-
 ```
+
+- Refactor to use the vm refreshListSideEffect\$ property
+
+```typescript
+```
+
 6. Refactor to use the vm.setState
-```typescript
 
+```typescript
 ```

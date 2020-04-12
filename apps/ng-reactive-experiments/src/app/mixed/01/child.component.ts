@@ -6,8 +6,10 @@ import { BaseComponent } from '../../base.component.ts/base.component';
   selector: 'app-mixed-child01',
   template: `
     <h3>Mixed Setup Child 01</h3>
-    <span>render: </span><b class="num-renders">{{getNumOfRenderings()}}</b><br>
-    Passed input binding: {{value}} <!-- -->
+    <span>render: </span><b class="num-renders">{{ getNumOfRenderings() }}</b
+    ><br />
+    Passed input binding: {{ value }}
+    <!-- -->
   `,
   changeDetection: environment.changeDetection
 })

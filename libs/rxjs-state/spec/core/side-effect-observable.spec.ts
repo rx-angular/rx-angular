@@ -8,7 +8,6 @@ beforeEach(() => {
   testScheduler = new TestScheduler(jestMatcher);
 });
 
-
 // tslint:disable: no-duplicate-string
 fdescribe('createSideEffectObservable', () => {
   it('should return object', () => {

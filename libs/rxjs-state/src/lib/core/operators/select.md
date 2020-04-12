@@ -1,15 +1,13 @@
- Rough description
+Rough description
 
- ![](select.png)
+![](select.png)
 
- Detailed description
+Detailed description
 
- ## Example
+## Example
 
- ```ts
+```ts
+```
 
- ```
-
- @param {...OperatorFunction} 
- @return {Observable} A new Observable of distinct, non undefined replayed values from the source values.
- 
+@param {...OperatorFunction}
+@return {Observable} A new Observable of distinct, non undefined replayed values from the source values.

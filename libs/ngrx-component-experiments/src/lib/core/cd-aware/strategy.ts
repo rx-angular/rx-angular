@@ -1,44 +1,54 @@
-import {generateFrames} from '../rxjs/observable/generateFrames';
-import {coalesce} from '../rxjs/operators/coalesce';
-import {MonoTypeOperatorFunction, Observable} from 'rxjs';
-import {ChangeDetectorRef, NgZone, ɵdetectChanges as detectChanges, ɵmarkDirty as markDirty} from '@angular/core';
-import {hasZone, isIvy} from '../utils';
+import { generateFrames } from '../rxjs/observable/generateFrames';
+import { coalesce } from '../rxjs/operators/coalesce';
+import { MonoTypeOperatorFunction, Observable } from 'rxjs';
+import {
+  ChangeDetectorRef,
+  NgZone,
+  ɵdetectChanges as detectChanges,
+  ɵmarkDirty as markDirty
+} from '@angular/core';
+import { hasZone, isIvy } from '../utils';
 
 function getSaveDurationSelector(ngZone: NgZone): () => Observable<number> {
-    return () => hasZone(ngZone) ? generateFrames(
-        (window as any).__zone_symbol__requestAnimationFrame,
-        (window as any).__zone_symbol__cancelAnimationFrame
-    ) : generateFrames();
+  return () =>
+    hasZone(ngZone)
+      ? generateFrames(
+          (window as any).__zone_symbol__requestAnimationFrame,
+          (window as any).__zone_symbol__cancelAnimationFrame
+        )
+      : generateFrames();
 }
 
 export interface StrategyFactoryConfig {
-    component: any;
-    ngZone: NgZone;
-    cdRef: ChangeDetectorRef;
+  component: any;
+  ngZone: NgZone;
+  cdRef: ChangeDetectorRef;
 }
 
 export interface CdStrategy<T> {
-    behaviour: (cfg?: any) => MonoTypeOperatorFunction<T>;
-    render: () => void;
-    name: string;
+  behaviour: (cfg?: any) => MonoTypeOperatorFunction<T>;
+  render: () => void;
+  name: string;
 }
 
 export const DEFAULT_STRATEGY_NAME = 'idle';
 
 export interface StrategySelection<U> {
-    idle: CdStrategy<U>;
-    [key: string]: CdStrategy<U>;
+  idle: CdStrategy<U>;
+  [key: string]: CdStrategy<U>;
 }
 
-export function getStrategies<T>(cfg: StrategyFactoryConfig): StrategySelection<T> {
-    return {
-        idle: createIdleStrategy<T>(cfg),
-        noop: createNoopStrategy<T>(),
-        pessimistic1: createPessimistic1Strategy<T>(cfg),
-        pessimistic2: createPessimistic2Strategy<T>(cfg),
-        optimistic1: createOptimistic1Strategy<T>(cfg),
-        optimistic2: createOptimistic2Strategy<T>(cfg)
-    };
+export function getStrategies<T>(
+  cfg: StrategyFactoryConfig
+): StrategySelection<T> {
+  return {
+    idle: createIdleStrategy<T>(cfg),
+    noop: createNoopStrategy<T>(),
+    pessimistic1: createPessimistic1Strategy<T>(cfg),
+    pessimistic2: createPessimistic2Strategy<T>(cfg),
+    optimistic1: createOptimistic1Strategy<T>(cfg),
+    optimistic2: createOptimistic2Strategy<T>(cfg)
+  };
 }
 
 /**
@@ -60,17 +70,19 @@ export function getStrategies<T>(cfg: StrategyFactoryConfig): StrategySelection<
  * | ZoneFull | cdRef.markForCheck | ❌         | None           |
  * | ZoneLess | cdRef.markForCheck | ❌         | None           |
  */
-export function createIdleStrategy<T>(cfg: Pick<StrategyFactoryConfig, 'cdRef'>): CdStrategy<T> {
-    return {
-        render: (): void => {
-            cfg.cdRef.markForCheck();
-        },
-        behaviour: () => o => {
-            console.log('idle');
-            return o;
-        },
-        name: 'idle'
-    };
+export function createIdleStrategy<T>(
+  cfg: Pick<StrategyFactoryConfig, 'cdRef'>
+): CdStrategy<T> {
+  return {
+    render: (): void => {
+      cfg.cdRef.markForCheck();
+    },
+    behaviour: () => o => {
+      console.log('idle');
+      return o;
+    },
+    name: 'idle'
+  };
 }
 
 /**
@@ -92,17 +104,15 @@ export function createIdleStrategy<T>(cfg: Pick<StrategyFactoryConfig, 'cdRef'>)
  * | ZoneLess | None               | ❌         | None           |
  */
 export function createNoopStrategy<T>(cfg?: any): CdStrategy<T> {
-    return {
-        render: (): void => {
-        },
-        behaviour: () => o => {
-            console.log('noop');
-            return o;
-        },
-        name: 'noop'
-    };
+  return {
+    render: (): void => {},
+    behaviour: () => o => {
+      console.log('noop');
+      return o;
+    },
+    name: 'noop'
+  };
 }
-
 
 /**
  *
@@ -125,33 +135,33 @@ export function createNoopStrategy<T>(cfg?: any): CdStrategy<T> {
  * | ZoneFull | ɵmarkDirty         | ❌         | None           |
  * | ZoneLess | ɵmarkDirty         | ❌         | None           |
  */
-export function createPessimistic1Strategy<T>(cfg: StrategyFactoryConfig): CdStrategy<T> {
-    const inIvy = isIvy();
-    const inZone = hasZone(cfg.ngZone);
-    const durationSelector = getSaveDurationSelector(cfg.ngZone);
+export function createPessimistic1Strategy<T>(
+  cfg: StrategyFactoryConfig
+): CdStrategy<T> {
+  const inIvy = isIvy();
+  const inZone = hasZone(cfg.ngZone);
+  const durationSelector = getSaveDurationSelector(cfg.ngZone);
 
-    function render() {
-        if (inZone && !inIvy) {
-            cfg.cdRef.markForCheck();
-        } else if (!inZone && !inIvy) {
-            cfg.cdRef.detectChanges();
-        } else {
-            markDirty(cfg.component);
-        }
+  function render() {
+    if (inZone && !inIvy) {
+      cfg.cdRef.markForCheck();
+    } else if (!inZone && !inIvy) {
+      cfg.cdRef.detectChanges();
+    } else {
+      markDirty(cfg.component);
     }
+  }
 
-    const behaviour = (o$: Observable<T>): Observable<T> => {
-        console.log('pessimistic1');
-        return !inZone && !inIvy ?
-            o$.pipe(coalesce(durationSelector)) :
-            o$;
-    };
+  const behaviour = (o$: Observable<T>): Observable<T> => {
+    console.log('pessimistic1');
+    return !inZone && !inIvy ? o$.pipe(coalesce(durationSelector)) : o$;
+  };
 
-    return {
-        behaviour: () => behaviour,
-        render,
-        name: 'pessimistic1'
-    };
+  return {
+    behaviour: () => behaviour,
+    render,
+    name: 'pessimistic1'
+  };
 }
 
 /**
@@ -174,35 +184,37 @@ export function createPessimistic1Strategy<T>(cfg: StrategyFactoryConfig): CdStr
  * | ZoneFull | ɵmarkDirty         | ❌         | None           |
  * | ZoneLess | ɵmarkDirty         | ❌         | None           |
  */
-export function createPessimistic2Strategy<T>(cfg: StrategyFactoryConfig): CdStrategy<T> {
-    const inIvy = isIvy();
-    const inZone = hasZone(cfg.ngZone);
-    const durationSelector = getSaveDurationSelector(cfg.ngZone);
-    const coalesceConfig = {context: (cfg.component) as any};
+export function createPessimistic2Strategy<T>(
+  cfg: StrategyFactoryConfig
+): CdStrategy<T> {
+  const inIvy = isIvy();
+  const inZone = hasZone(cfg.ngZone);
+  const durationSelector = getSaveDurationSelector(cfg.ngZone);
+  const coalesceConfig = { context: cfg.component as any };
 
-    function render() {
-        if (inZone && !inIvy) {
-            cfg.cdRef.markForCheck();
-        } else if (!inZone && !inIvy) {
-            cfg.cdRef.detectChanges();
-        } else {
-            console.log('ɵmarkDirty');
-            markDirty(cfg.component);
-        }
+  function render() {
+    if (inZone && !inIvy) {
+      cfg.cdRef.markForCheck();
+    } else if (!inZone && !inIvy) {
+      cfg.cdRef.detectChanges();
+    } else {
+      console.log('ɵmarkDirty');
+      markDirty(cfg.component);
     }
+  }
 
-    const behaviour = (o$: Observable<T>): Observable<T> => {
-        console.log('pessimistic2');
-        return !inZone && !inIvy ?
-            o$.pipe(coalesce(durationSelector, coalesceConfig)) :
-            o$;
-    };
+  const behaviour = (o$: Observable<T>): Observable<T> => {
+    console.log('pessimistic2');
+    return !inZone && !inIvy
+      ? o$.pipe(coalesce(durationSelector, coalesceConfig))
+      : o$;
+  };
 
-    return {
-        behaviour: () => behaviour,
-        render,
-        name: 'pessimistic2'
-    };
+  return {
+    behaviour: () => behaviour,
+    render,
+    name: 'pessimistic2'
+  };
 }
 
 /**
@@ -222,39 +234,45 @@ export function createPessimistic2Strategy<T>(cfg: StrategyFactoryConfig): CdStr
  * | ZoneFull | ɵmarkDirty         | ❌         | None           |
  * | ZoneLess | ɵdetectChanges     | ✔️         | LView          |
  */
-export function createOptimistic1Strategy<T>(cfg: StrategyFactoryConfig): CdStrategy<T> {
-    const inIvy = isIvy();
-    const inZone = hasZone(cfg.ngZone);
-    const durationSelector = getSaveDurationSelector(cfg.ngZone);
+export function createOptimistic1Strategy<T>(
+  cfg: StrategyFactoryConfig
+): CdStrategy<T> {
+  const inIvy = isIvy();
+  const inZone = hasZone(cfg.ngZone);
+  const durationSelector = getSaveDurationSelector(cfg.ngZone);
 
-    function render() {
-        if (inIvy) {
-            if (inZone) {
-                markDirty(cfg.component);
-            } else {
-                detectChanges(cfg.component);
-            }
-        } else {
-            if (inZone) {
-                cfg.cdRef.markForCheck();
-            } else {
-                cfg.cdRef.detectChanges();
-            }
-        }
+  function render() {
+    if (inIvy) {
+      if (inZone) {
+        markDirty(cfg.component);
+      } else {
+        detectChanges(cfg.component);
+      }
+    } else {
+      if (inZone) {
+        cfg.cdRef.markForCheck();
+      } else {
+        cfg.cdRef.detectChanges();
+      }
     }
+  }
 
-    const coalesceConfig = { context: inIvy ? (cfg.cdRef as any)._lView : ((cfg.cdRef as any).context) as any};
+  const coalesceConfig = {
+    context: inIvy
+      ? (cfg.cdRef as any)._lView
+      : ((cfg.cdRef as any).context as any)
+  };
 
-    const behaviour = (o$: Observable<T>): Observable<T> => {
-        console.log('optimistic1');
-        return inZone ? o$.pipe(coalesce(durationSelector, coalesceConfig)) : o$;
-    };
+  const behaviour = (o$: Observable<T>): Observable<T> => {
+    console.log('optimistic1');
+    return inZone ? o$.pipe(coalesce(durationSelector, coalesceConfig)) : o$;
+  };
 
-    return {
-        behaviour: () => behaviour,
-        render,
-        name: 'optimistic1'
-    };
+  return {
+    behaviour: () => behaviour,
+    render,
+    name: 'optimistic1'
+  };
 }
 
 /**
@@ -276,20 +294,25 @@ export function createOptimistic1Strategy<T>(cfg: StrategyFactoryConfig): CdStra
  * | ZoneFull | ɵdetectChanges     | ✔️         | LView          |
  * | ZoneLess | ɵdetectChanges     | ✔️         | LView          |
  */
-export function createOptimistic2Strategy<T>(cfg: StrategyFactoryConfig): CdStrategy<T> {
-    const inIvy = isIvy();
-    const durationSelector = getSaveDurationSelector(cfg.ngZone);
-    const coalesceConfig = {context: (inIvy ? (cfg.cdRef as any)._lView : cfg.component) as any};
+export function createOptimistic2Strategy<T>(
+  cfg: StrategyFactoryConfig
+): CdStrategy<T> {
+  const inIvy = isIvy();
+  const durationSelector = getSaveDurationSelector(cfg.ngZone);
+  const coalesceConfig = {
+    context: (inIvy ? (cfg.cdRef as any)._lView : cfg.component) as any
+  };
 
-    const behaviour = (o$: Observable<T>): Observable<T> => {
-        console.log('optimistic2');
-        return o$.pipe(coalesce(durationSelector, coalesceConfig));
-    };
+  const behaviour = (o$: Observable<T>): Observable<T> => {
+    console.log('optimistic2');
+    return o$.pipe(coalesce(durationSelector, coalesceConfig));
+  };
 
-    return {
-        behaviour: () => behaviour,
-        render(): void { inIvy ? detectChanges(cfg.component) : cfg.cdRef.detectChanges(); },
-        name: 'optimistic2'
-    };
+  return {
+    behaviour: () => behaviour,
+    render(): void {
+      inIvy ? detectChanges(cfg.component) : cfg.cdRef.detectChanges();
+    },
+    name: 'optimistic2'
+  };
 }
-

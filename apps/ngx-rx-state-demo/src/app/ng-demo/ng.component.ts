@@ -5,38 +5,44 @@ import { distinctUntilChanged, mapTo, switchMap, tap } from 'rxjs/operators';
 import { interval, NEVER } from 'rxjs';
 
 export interface CountState {
-  isCounting: boolean,
-  countingUp: boolean,
-  count: number,
-  countDiff: number,
-  countSpeed: number,
+  isCounting: boolean;
+  countingUp: boolean;
+  count: number;
+  countDiff: number;
+  countSpeed: number;
 }
 
 @Component({
   selector: 'ng-demo',
   template: `
     <div *ngIf="state$ | async as state">
-      <h2>Count: {{state.count}}</h2>
+      <h2>Count: {{ state.count }}</h2>
       <label>
         Count Diff
-        <input type="number"
-               [value]="state.countDiff"
-               (change)="countUpdateCountDiff($event.target.value)"
-               (keyup)="countUpdateCountDiff($event.target.value)">
-      </label><br>
+        <input
+          type="number"
+          [value]="state.countDiff"
+          (change)="countUpdateCountDiff($event.target.value)"
+          (keyup)="countUpdateCountDiff($event.target.value)"
+        /> </label
+      ><br />
       <label>
         Count Speed
-        <input type="number"
-               [value]="state.countSpeed"
-               (change)="countUpdateCountSpeed($event.target.value)"
-               (keyup)="countUpdateCountSpeed($event.target.value)">
-      </label><br>
+        <input
+          type="number"
+          [value]="state.countSpeed"
+          (change)="countUpdateCountSpeed($event.target.value)"
+          (keyup)="countUpdateCountSpeed($event.target.value)"
+        /> </label
+      ><br />
       <label>
         Set Count
-        <input type="number"
-               value="10"
-               (change)="countUpdateCount($event.target.value)"
-               (keyup)="countUpdateCount($event.target.value)">
+        <input
+          type="number"
+          value="10"
+          (change)="countUpdateCount($event.target.value)"
+          (keyup)="countUpdateCount($event.target.value)"
+        />
       </label>
     </div>
 
@@ -45,11 +51,11 @@ export interface CountState {
     <button (click)="countPause()">pause</button>
     <button (click)="countReset()">reset</button>
     <button (click)="countAdd()">add</button>
-    <button (click)="countSubtract()">sub</button>`,
+    <button (click)="countSubtract()">sub</button>
+  `,
   providers: [RxState]
 })
 export class NgDemoComponent {
-
   initialState: CountState = {
     isCounting: false,
     countingUp: true,
@@ -59,25 +65,25 @@ export class NgDemoComponent {
   };
 
   private timerCount$ = this.state.select().pipe(
-    distinctUntilChanged((x, y) =>
-      x.countingUp === y.countingUp &&
-      x.countSpeed === y.countSpeed &&
-      x.isCounting === y.isCounting),
+    distinctUntilChanged(
+      (x, y) =>
+        x.countingUp === y.countingUp &&
+        x.countSpeed === y.countSpeed &&
+        x.isCounting === y.isCounting
+    ),
     switchMap(({ countSpeed, countingUp, isCounting }) =>
-      isCounting ? interval(countSpeed).pipe(mapTo(countingUp)) : NEVER),
-    tap(countingUp => countingUp ? this.countAdd() : this.countSubtract())
+      isCounting ? interval(countSpeed).pipe(mapTo(countingUp)) : NEVER
+    ),
+    tap(countingUp => (countingUp ? this.countAdd() : this.countSubtract()))
   );
 
   state$ = this.state.select();
 
-  constructor(
-    public state: RxState<CountState>
-  ) {
+  constructor(public state: RxState<CountState>) {
     this.state.setState(this.initialState);
     state.hold(this.timerCount$);
     this.countReset();
   }
-
 
   countAdd() {
     this.state.setState(state => ({ count: state.count + state.countDiff }));
@@ -114,5 +120,4 @@ export class NgDemoComponent {
   countReset() {
     this.state.setState(this.initialState);
   }
-
 }

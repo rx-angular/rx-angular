@@ -34,7 +34,7 @@
       "implicitDependencies": ["ngx-rx-state-demo"]
     },
     "ngx-rx-state": {
-      "tags": ["scope:shared","type:lib"]
+      "tags": ["scope:shared", "type:lib"]
     },
     "rxjs-state": {
       "tags": ["scope:shared", "type:lib"]

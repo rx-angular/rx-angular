@@ -11,24 +11,23 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { Performance01IndexComponent } from './index/performance01-index.component';
-import {RouterModule} from '@angular/router';
-import {ROUTES as PERFORMANCE_1_ROUTES} from './performance-01.routes';
-
+import { RouterModule } from '@angular/router';
+import { ROUTES as PERFORMANCE_1_ROUTES } from './performance-01.routes';
 
 @NgModule({
   declarations: [Performance01IndexComponent],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(PERFORMANCE_1_ROUTES),
-        MatListModule,
-        MatTableModule,
-        MatCheckboxModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatIconModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule
-    ]
+  imports: [
+    CommonModule,
+    RouterModule.forChild(PERFORMANCE_1_ROUTES),
+    MatListModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule
+  ]
 })
-export class Performance01Module { }
+export class Performance01Module {}

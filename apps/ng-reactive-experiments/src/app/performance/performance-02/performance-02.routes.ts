@@ -1,8 +1,8 @@
-import {Performance02IndexComponent} from './index/performance02-index.component';
+import { Performance02IndexComponent } from './index/performance02-index.component';
 
 export const ROUTES = [
-    {
-        path: '',
-        component: Performance02IndexComponent
-    }
+  {
+    path: '',
+    component: Performance02IndexComponent
+  }
 ];

@@ -7,38 +7,45 @@
 // (window as any).__Zone_disable_mediaQuery = true;
 // (window as any).__Zone_disable_timers = true;
 const blacklistedEvents = [
-    // 'scroll',
-    // 'mousedown',
-    // 'mouseenter',
-    // 'mouseleave',
-    // 'mousemove',
-    // 'mouseout',
-    // 'mouseover',
-    // 'mouseup',
-    // 'load',
-    // 'pointerup',
-    // 'change',
-    // 'blur',
-    // 'focus',
-    // 'click',
-    // 'contextmenu',
-    // 'drag',
-    // 'dragend',
-    // 'dragenter',
-    // 'dragleave',
-    // 'dragover',
-    // 'dragstart',
-    // 'drop',
-    // 'input'
+  // 'scroll',
+  // 'mousedown',
+  // 'mouseenter',
+  // 'mouseleave',
+  // 'mousemove',
+  // 'mouseout',
+  // 'mouseover',
+  // 'mouseup',
+  // 'load',
+  // 'pointerup',
+  // 'change',
+  // 'blur',
+  // 'focus',
+  // 'click',
+  // 'contextmenu',
+  // 'drag',
+  // 'dragend',
+  // 'dragenter',
+  // 'dragleave',
+  // 'dragover',
+  // 'dragstart',
+  // 'drop',
+  // 'input'
 ];
 
-const targets = [window, Document, HTMLBodyElement, HTMLBodyElement.prototype, HTMLElement, HTMLElement.prototype];
+const targets = [
+  window,
+  Document,
+  HTMLBodyElement,
+  HTMLBodyElement.prototype,
+  HTMLElement,
+  HTMLElement.prototype
+];
 (window as any).__Zone_ignore_on_properties = [];
-targets.forEach((target) => {
-    (window as any).__Zone_ignore_on_properties.push({
-        target,
-        ignoreProperties: blacklistedEvents
-    });
+targets.forEach(target => {
+  (window as any).__Zone_ignore_on_properties.push({
+    target,
+    ignoreProperties: blacklistedEvents
+  });
 });
 
 (window as any).__zone_symbol__BLACK_LISTED_EVENTS = blacklistedEvents;

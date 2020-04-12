@@ -10,26 +10,24 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
-
 import { Performance02IndexComponent } from './index/performance02-index.component';
-import {RouterModule} from '@angular/router';
-import {ROUTES as PERFORMANCE_2_ROUTES} from '../performance-02/performance-02.routes';
-
+import { RouterModule } from '@angular/router';
+import { ROUTES as PERFORMANCE_2_ROUTES } from '../performance-02/performance-02.routes';
 
 @NgModule({
   declarations: [Performance02IndexComponent],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(PERFORMANCE_2_ROUTES),
-        MatListModule,
-        MatTableModule,
-        MatCheckboxModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatIconModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule
-    ]
+  imports: [
+    CommonModule,
+    RouterModule.forChild(PERFORMANCE_2_ROUTES),
+    MatListModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule
+  ]
 })
-export class Performance02Module { }
+export class Performance02Module {}

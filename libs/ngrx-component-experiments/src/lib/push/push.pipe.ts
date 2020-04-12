@@ -1,6 +1,17 @@
-import {ChangeDetectorRef, NgZone, OnDestroy, Pipe, PipeTransform} from '@angular/core';
-import {NextObserver, Observable, PartialObserver, Unsubscribable} from 'rxjs';
-import {CdAware, createCdAware, getStrategies} from '../core';
+import {
+  ChangeDetectorRef,
+  NgZone,
+  OnDestroy,
+  Pipe,
+  PipeTransform
+} from '@angular/core';
+import {
+  NextObserver,
+  Observable,
+  PartialObserver,
+  Unsubscribable
+} from 'rxjs';
+import { CdAware, createCdAware, getStrategies } from '../core';
 
 /**
  * @Pipe PushPipe
@@ -46,45 +57,51 @@ import {CdAware, createCdAware, getStrategies} from '../core';
  *
  * @publicApi
  */
-@Pipe({name: 'ngrxPush', pure: false})
+@Pipe({ name: 'ngrxPush', pure: false })
 export class PushPipe<S> implements PipeTransform, OnDestroy {
-    private renderedValue: any | null | undefined;
+  private renderedValue: any | null | undefined;
 
-    private readonly subscription: Unsubscribable;
-    private readonly cdAware: CdAware<S | null | undefined>;
-    private readonly updateViewContextObserver: PartialObserver<S | null | undefined> = {
-        // assign value that will get returned from the transform function on the next change detection
-        next: (value: S | null | undefined) => (this.renderedValue = value),
-    };
-    private readonly resetContextObserver: NextObserver<unknown> = {
-        next: (value: unknown) => (this.renderedValue = undefined),
-    };
+  private readonly subscription: Unsubscribable;
+  private readonly cdAware: CdAware<S | null | undefined>;
+  private readonly updateViewContextObserver: PartialObserver<
+    S | null | undefined
+  > = {
+    // assign value that will get returned from the transform function on the next change detection
+    next: (value: S | null | undefined) => (this.renderedValue = value)
+  };
+  private readonly resetContextObserver: NextObserver<unknown> = {
+    next: (value: unknown) => (this.renderedValue = undefined)
+  };
 
-    constructor(cdRef: ChangeDetectorRef, ngZone: NgZone) {
-        this.cdAware = createCdAware<S>({
-            strategies: getStrategies<S>({component: (cdRef as any).context, ngZone, cdRef}),
-            updateViewContextObserver: this.updateViewContextObserver,
-            resetContextObserver: this.resetContextObserver,
-        });
-        this.subscription = this.cdAware.subscribe();
-    }
+  constructor(cdRef: ChangeDetectorRef, ngZone: NgZone) {
+    this.cdAware = createCdAware<S>({
+      strategies: getStrategies<S>({
+        component: (cdRef as any).context,
+        ngZone,
+        cdRef
+      }),
+      updateViewContextObserver: this.updateViewContextObserver,
+      resetContextObserver: this.resetContextObserver
+    });
+    this.subscription = this.cdAware.subscribe();
+  }
 
-    transform<T>(potentialObservable: null, config?: string): null;
-    transform<T>(potentialObservable: undefined, config?: string): undefined;
-    transform<T>(
-        potentialObservable: Observable<T> | Promise<T>,
-        config?: string
-    ): T;
-    transform<T>(
-        potentialObservable: Observable<T> | Promise<T> | null | undefined,
-        config: string | undefined
-    ): T | null | undefined {
-        this.cdAware.nextConfig(config);
-        this.cdAware.nextVale(potentialObservable as any);
-        return this.renderedValue as T | null | undefined;
-    }
+  transform<T>(potentialObservable: null, config?: string): null;
+  transform<T>(potentialObservable: undefined, config?: string): undefined;
+  transform<T>(
+    potentialObservable: Observable<T> | Promise<T>,
+    config?: string
+  ): T;
+  transform<T>(
+    potentialObservable: Observable<T> | Promise<T> | null | undefined,
+    config: string | undefined
+  ): T | null | undefined {
+    this.cdAware.nextConfig(config);
+    this.cdAware.nextVale(potentialObservable as any);
+    return this.renderedValue as T | null | undefined;
+  }
 
-    ngOnDestroy(): void {
-        this.subscription.unsubscribe();
-    }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 }

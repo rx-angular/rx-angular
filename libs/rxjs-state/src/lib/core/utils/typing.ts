@@ -46,10 +46,6 @@ export function isIterableGuard<T>(obj: unknown): obj is Array<T> {
 export function isKeyOf<O>(k: unknown): k is keyof O {
   return (
     !!k &&
-    (
-      typeof k === 'string' ||
-      typeof k === 'symbol' ||
-      typeof k === 'number'
-    )
+    (typeof k === 'string' || typeof k === 'symbol' || typeof k === 'number')
   );
 }

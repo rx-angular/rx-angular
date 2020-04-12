@@ -13,13 +13,11 @@ interface ArrayState {
   items: number[];
 }
 
-
 let testScheduler: TestScheduler;
 
 beforeEach(() => {
   testScheduler = new TestScheduler(jestMatcher);
 });
-
 
 // tslint:disable: no-duplicate-string
 describe('stateful', () => {
@@ -45,12 +43,11 @@ describe('stateful', () => {
   });
 
   it('should pass only distinct values', () => {
-      testScheduler.run(({ cold, expectObservable }) => {
-        const source = cold('v-v-a-a-v|');
-        expectObservable(source.pipe(stateful())).toBe('v---a---v|');
-      });
-    }
-  );
+    testScheduler.run(({ cold, expectObservable }) => {
+      const source = cold('v-v-a-a-v|');
+      expectObservable(source.pipe(stateful())).toBe('v---a---v|');
+    });
+  });
 
   it('should pass only values other than undefined', () => {
     testScheduler.run(({ cold, expectObservable }) => {
@@ -60,15 +57,16 @@ describe('stateful', () => {
     });
   });
 
-  it('should replay the last emitted value', () => {
-
-  });
+  it('should replay the last emitted value', () => {});
 
   it('should accept one operator', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const values = { a: 2, b: 4 };
       const source = cold('a|', values);
-      expectObservable(source.pipe(stateful(map(v => v * 2)))).toBe('b|', values);
+      expectObservable(source.pipe(stateful(map(v => v * 2)))).toBe(
+        'b|',
+        values
+      );
     });
   });
 
@@ -76,14 +74,17 @@ describe('stateful', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const values = { a: 2, b: 4 };
       const source = cold('a|', values);
-      expectObservable(source.pipe(stateful(
-        map(v => v * 2),
-        map(v => v / 2),
-        map(v => v * 2),
-        map(v => v / 2),
-        map(v => v * 2)
-      ))).toBe('b|', values);
+      expectObservable(
+        source.pipe(
+          stateful(
+            map(v => v * 2),
+            map(v => v / 2),
+            map(v => v * 2),
+            map(v => v / 2),
+            map(v => v * 2)
+          )
+        )
+      ).toBe('b|', values);
     });
   });
-
 });

@@ -15,7 +15,6 @@ const stateChecker = createStateChecker((actual, expected) => {
   }
 });
 
-
 let testScheduler: TestScheduler;
 
 beforeEach(() => {
@@ -45,10 +44,9 @@ describe('RxStateService', () => {
   });
 
   describe('mirrors vanilla RxState', () => {
-
     it('should provide the getState method', async () => {
       service.setState({ num: 11 });
-      expect(service.getState()).toEqual({num: 11});
+      expect(service.getState()).toEqual({ num: 11 });
     });
 
     it('should provide the setState method', async () => {
@@ -66,10 +64,12 @@ describe('RxStateService', () => {
       service.connect(of({ num: 1 }));
       await stateChecker.checkState(service, { num: 1 });
 
-      service.connect(of(1), (oldState, slice) => ({ num: oldState.num + slice }));
+      service.connect(of(1), (oldState, slice) => ({
+        num: oldState.num + slice
+      }));
       await stateChecker.checkState(service, { num: 2 });
 
-       service.connect('num', of(3));
+      service.connect('num', of(3));
       await stateChecker.checkState(service, { num: 3 });
 
       service.connect('num', of(1), (s: PrimitiveState, v: any) => s.num + v);
@@ -78,11 +78,10 @@ describe('RxStateService', () => {
 
     it('should provide the hold method', async () => {
       let effectFlag;
-      const effect$ = of(1).pipe(tap(v => effectFlag = v));
+      const effect$ = of(1).pipe(tap(v => (effectFlag = v)));
       expect(effectFlag).toBe(undefined);
       service.hold(effect$);
       expect(effectFlag).toBe(1);
     });
   });
-
 });

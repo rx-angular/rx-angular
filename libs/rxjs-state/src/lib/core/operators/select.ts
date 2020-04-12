@@ -1,11 +1,17 @@
 import {
   MonoTypeOperatorFunction,
-  Observable, of,
-  OperatorFunction,
+  Observable,
+  of,
+  OperatorFunction
 } from 'rxjs';
-import {map, pluck} from 'rxjs/operators';
-import {WrongSelectParamsError, isOperateFnArrayGuard, isStringArrayGuard, pipeFromArray} from '../utils';
-import {stateful} from "./stateful";
+import { map, pluck } from 'rxjs/operators';
+import {
+  WrongSelectParamsError,
+  isOperateFnArrayGuard,
+  isStringArrayGuard,
+  pipeFromArray
+} from '../utils';
+import { stateful } from './stateful';
 
 export function select<T>(): MonoTypeOperatorFunction<T>;
 // ========================
@@ -37,7 +43,7 @@ export function select<T, A, B, C, D, E>(
 // ================================
 export function select<T, K1 extends keyof T>(
   k1: K1
-): OperatorFunction<T,T[K1]>;
+): OperatorFunction<T, T[K1]>;
 export function select<T, K1 extends keyof T, K2 extends keyof T[K1]>(
   k1: K1,
   k2: K2
@@ -47,14 +53,14 @@ export function select<
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2]
->(k1: K1, k2: K2, k3: K3): OperatorFunction<T,T[K1][K2][K3]>;
+>(k1: K1, k2: K2, k3: K3): OperatorFunction<T, T[K1][K2][K3]>;
 export function select<
   T,
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
   K4 extends keyof T[K1][K2][K3]
->(k1: K1, k2: K2, k3: K3, k4: K4): OperatorFunction<T,T[K1][K2][K3][K4]>;
+>(k1: K1, k2: K2, k3: K3, k4: K4): OperatorFunction<T, T[K1][K2][K3][K4]>;
 export function select<
   T,
   K1 extends keyof T,
@@ -68,7 +74,7 @@ export function select<
   k3: K3,
   k4: K4,
   k5: K5
-): OperatorFunction<T,T[K1][K2][K3][K4][K5]>;
+): OperatorFunction<T, T[K1][K2][K3][K4][K5]>;
 export function select<
   T,
   K1 extends keyof T,
@@ -84,9 +90,11 @@ export function select<
   k4: K4,
   k5: K5,
   k6: K6
-): OperatorFunction<T,T[K1][K2][K3][K4][K5][K6]>;
+): OperatorFunction<T, T[K1][K2][K3][K4][K5][K6]>;
 // ===========================
-export function select<T>(...opOrMapFn: OperatorFunction<T, any>[] | string[]): OperatorFunction<T, any> {
+export function select<T>(
+  ...opOrMapFn: OperatorFunction<T, any>[] | string[]
+): OperatorFunction<T, any> {
   return (state$: Observable<T>) => {
     if (!opOrMapFn || opOrMapFn.length === 0) {
       return state$.pipe(stateful());

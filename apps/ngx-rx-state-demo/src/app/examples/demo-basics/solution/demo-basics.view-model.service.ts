@@ -1,6 +1,6 @@
 import { merge, Observable, Subject, timer } from 'rxjs';
-import {map, switchMap} from "rxjs/operators";
-import {Injectable} from "@angular/core";
+import { map, switchMap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 import { RxState } from 'ngx-rx-state';
 import { DemoBasicsItem } from '../demo-basics-item.interface';
 
@@ -13,10 +13,9 @@ export interface DemoBasicsBaseModel {
 
 export interface DemoBasicsView {
   refreshClicks: Subject<Event>;
-  listExpandedChanges: Subject<boolean>
+  listExpandedChanges: Subject<boolean>;
   baseModel$: Observable<DemoBasicsBaseModel>;
 }
-
 
 const initState: DemoBasicsBaseModel = {
   refreshInterval: 1000,
@@ -26,27 +25,24 @@ const initState: DemoBasicsBaseModel = {
 };
 
 @Injectable()
-export class DemoBasicsViewModelService extends RxState<DemoBasicsBaseModel> implements DemoBasicsView {
-    baseModel$ = this.select();
+export class DemoBasicsViewModelService extends RxState<DemoBasicsBaseModel>
+  implements DemoBasicsView {
+  baseModel$ = this.select();
 
-    refreshClicks = new Subject<Event>();
-    listExpandedChanges = new Subject<boolean>();
+  refreshClicks = new Subject<Event>();
+  listExpandedChanges = new Subject<boolean>();
 
-    refreshListSideEffect$ = merge(
-        this.refreshClicks,
-        this.select(map(s => s.refreshInterval))
-            .pipe(switchMap(ms => timer(ms)))
+  refreshListSideEffect$ = merge(
+    this.refreshClicks,
+    this.select(map(s => s.refreshInterval)).pipe(switchMap(ms => timer(ms)))
+  );
+
+  constructor() {
+    super();
+    this.setState(initState);
+
+    this.connect(
+      this.listExpandedChanges.pipe(map(b => ({ listExpanded: b })))
     );
-
-    constructor() {
-        super();
-        this.setState(initState);
-
-        this.connect(this.listExpandedChanges
-            .pipe(map(b => ({listExpanded: b})))
-        );
-    }
-
+  }
 }
-
-

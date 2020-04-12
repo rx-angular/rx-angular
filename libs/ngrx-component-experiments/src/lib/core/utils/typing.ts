@@ -4,7 +4,8 @@ export type PotentialObservableValue<T> =
   | Promise<T>
   | undefined
   | null;
-export type Output<T> = Observable<T>
+export type Output<T> =
+  | Observable<T>
   | Observable<undefined>
   | Observable<null>;
 

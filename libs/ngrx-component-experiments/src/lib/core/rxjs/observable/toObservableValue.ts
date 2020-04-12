@@ -3,7 +3,7 @@ import {
   isObservableGuard,
   isPromiseGuard,
   PotentialObservableValue,
-  Output,
+  Output
 } from '../../utils';
 
 export function toObservableValue<T>(

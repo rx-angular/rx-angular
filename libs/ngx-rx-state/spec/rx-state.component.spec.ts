@@ -14,34 +14,28 @@ const stateChecker = createStateChecker((actual, expected) => {
 
 @Component({
   selector: 'ngx-rx-state-inheritance-test',
-  template: `<span>{{value$}}</span>`
+  template: `
+    <span>{{ value$ }}</span>
+  `
 })
-export class RxStateInheritanceComponent extends RxState<PrimitiveState>{
-
+export class RxStateInheritanceComponent extends RxState<PrimitiveState> {
   value$ = this.select();
   constructor() {
-    super()
+    super();
   }
-
 }
-
 
 @Component({
   selector: 'ngx-rx-state-local-provider-test',
-  template: `<span>{{value$}}</span>`,
+  template: `
+    <span>{{ value$ }}</span>
+  `,
   providers: [RxState]
 })
 export class RxStateInjectionComponent implements OnDestroy {
-
   value$ = this.state.select();
-  constructor(public state: RxState<PrimitiveState>) {
-
-  }
-  ngOnDestroy(): void {
-
-  }
-
-
+  constructor(public state: RxState<PrimitiveState>) {}
+  ngOnDestroy(): void {}
 }
 
 describe('LocalProviderTestComponent', () => {
@@ -50,9 +44,8 @@ describe('LocalProviderTestComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RxStateInjectionComponent ]
-    })
-      .compileComponents();
+      declarations: [RxStateInjectionComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -67,16 +60,14 @@ describe('LocalProviderTestComponent', () => {
   });
 });
 
-
 describe('InheritanceTestComponent', () => {
   let component: RxStateInheritanceComponent;
   let fixture: ComponentFixture<RxStateInheritanceComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RxStateInheritanceComponent ]
-    })
-      .compileComponents();
+      declarations: [RxStateInheritanceComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
