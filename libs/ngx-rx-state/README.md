@@ -39,6 +39,9 @@ Videos:
 
 - [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch?v=I8uaHMs8rw0)
 
+Articles:
+- [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
+
 NPM Package:
 
 - [📦 ngx-rx-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ngx-rx-state)
@@ -47,9 +50,9 @@ Sourcecode:
 
 - [📦 ngx-rx/rxjs-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-state)
 
-Research Documents
+Design Documents
 
-- [💾 Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
+- [💾 Design Documents](https://hackmd.io/wVkWRc3XQWmtM6YcktRTrA)
 
 Usage in the wild
 
