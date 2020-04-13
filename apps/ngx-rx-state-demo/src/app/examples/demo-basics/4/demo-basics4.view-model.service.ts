@@ -1,9 +1,27 @@
-import { merge, Subject, timer } from 'rxjs';
+import { merge, Observable, Subject, timer } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { DemoBasicsBaseModel } from './demo-basics5.base-model.interface';
-import { DemoBasicsView } from './demo-basics4.view.interface';
 import { RxState } from 'ngx-rx-state';
+import { DemoBasicsItem } from '../demo-basics-item.interface';
+
+
+
+export interface DemoBasicsView {
+  // All UI-Events or component EventBindings
+  refreshClicks: Subject<Event>;
+  listExpandedChanges: Subject<boolean>;
+  // Optional The base model as observable
+  baseModel$: Observable<DemoBasicsBaseModel>;
+  // Optional Derivations as observable
+  // ....
+}
+
+export interface DemoBasicsBaseModel {
+  refreshInterval: number;
+  list: DemoBasicsItem[];
+  listExpanded: boolean;
+  isPending: boolean;
+}
 
 const initState: DemoBasicsBaseModel = {
   refreshInterval: 1000,
@@ -13,8 +31,7 @@ const initState: DemoBasicsBaseModel = {
 };
 
 @Injectable()
-export class DemoBasics4ViewModelService extends RxState<DemoBasicsBaseModel>
-  implements DemoBasicsView {
+export class DemoBasics4ViewModelService extends RxState<DemoBasicsBaseModel> {
   baseModel$ = this.select();
 
   // ListView =================================================
