@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Component, OnDestroy } from '@angular/core';
-import { RxGlobalState } from '@ngx-rx/ngx-rx-state';
+import { RxGlobalState } from '../src';
 import { createStateChecker, PrimitiveState } from './fixtures';
 
 const stateChecker = createStateChecker((actual, expected) => {

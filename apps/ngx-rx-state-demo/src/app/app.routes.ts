@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { VanillaDemoComponent } from './vanilla-demo/vanilla.component';
 
 export const ROUTES: Routes = [
   {
@@ -11,5 +12,9 @@ export const ROUTES: Routes = [
       import('./examples/demo-basics/demo-basics.module').then(
         m => m.DemoBasicsModule
       )
+  },
+  {
+    path: 'rxjs-state',
+    component: VanillaDemoComponent
   }
 ];

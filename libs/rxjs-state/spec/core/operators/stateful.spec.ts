@@ -1,4 +1,4 @@
-import { stateful } from '../../../src/lib/core/operators/stateful';
+import { stateful } from '../../../src';
 import { EMPTY, NEVER } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';

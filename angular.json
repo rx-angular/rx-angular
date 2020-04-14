@@ -1,6 +1,219 @@
 {
   "version": 1,
   "projects": {
+    "test-helpers": {
+      "root": "libs/test-helpers",
+      "sourceRoot": "libs/test-helpers/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/test-helpers/tsconfig.lib.json",
+              "libs/test-helpers/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/test-helpers/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/test-helpers/jest.config.js",
+            "tsConfig": "libs/test-helpers/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ts-etc": {
+      "root": "libs/ts-etc",
+      "sourceRoot": "libs/ts-etc/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ts-etc/tsconfig.lib.json",
+              "libs/ts-etc/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ts-etc/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ts-etc/jest.config.js",
+            "tsConfig": "libs/ts-etc/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "options": {
+            "outputPath": "dist/libs/ts-etc",
+            "tsConfig": "libs/ts-etc/tsconfig.lib.json",
+            "packageJson": "libs/ts-etc/package.json",
+            "main": "libs/ts-etc/src/index.ts",
+            "assets": ["libs/ts-etc/*.md"]
+          }
+        }
+      }
+    },
+    "rxjs-etc": {
+      "root": "libs/rxjs-etc",
+      "sourceRoot": "libs/rxjs-etc/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/rxjs-etc/tsconfig.lib.json",
+              "libs/rxjs-etc/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/rxjs-etc/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/rxjs-etc/jest.config.js",
+            "tsConfig": "libs/rxjs-etc/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "options": {
+            "outputPath": "dist/libs/rxjs-etc",
+            "tsConfig": "libs/rxjs-etc/tsconfig.lib.json",
+            "packageJson": "libs/rxjs-etc/package.json",
+            "main": "libs/rxjs-etc/src/index.ts",
+            "assets": ["libs/rxjs-etc/*.md"]
+          }
+        }
+      }
+    },
+    "rxjs-state": {
+      "root": "libs/rxjs-state",
+      "sourceRoot": "libs/rxjs-state/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/rxjs-state/tsconfig.lib.json",
+              "libs/rxjs-state/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/rxjs-state/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/rxjs-state/jest.config.js",
+            "tsConfig": "libs/rxjs-state/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "options": {
+            "outputPath": "dist/libs/rxjs-state",
+            "tsConfig": "libs/rxjs-state/tsconfig.lib.json",
+            "packageJson": "libs/rxjs-state/package.json",
+            "main": "libs/rxjs-state/src/index.ts",
+            "assets": ["libs/rxjs-state/*.md"]
+          }
+        }
+      }
+    },
+    "ngx-rx-state": {
+      "projectType": "library",
+      "root": "libs/ngx-rx-state",
+      "sourceRoot": "libs/ngx-rx-state/src",
+      "prefix": "ngx-rx",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:package",
+          "options": {
+            "tsConfig": "libs/ngx-rx-state/tsconfig.lib.json",
+            "project": "libs/ngx-rx-state/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/ngx-rx-state/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ngx-rx-state/tsconfig.lib.json",
+              "libs/ngx-rx-state/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ngx-rx-state/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ngx-rx-state/jest.config.js",
+            "tsConfig": "libs/ngx-rx-state/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/ngx-rx-state/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
+    "ngrx-component-experiments": {
+      "projectType": "library",
+      "root": "libs/ngrx-component-experiments",
+      "sourceRoot": "libs/ngrx-component-experiments/src",
+      "prefix": "ngx-rx",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ngrx-component-experiments/tsconfig.lib.json",
+              "libs/ngrx-component-experiments/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ngrx-component-experiments/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ngrx-component-experiments/jest.config.js",
+            "tsConfig": "libs/ngrx-component-experiments/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/ngrx-component-experiments/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
     "ngx-rx-state-demo": {
       "projectType": "application",
       "schematics": {
@@ -120,164 +333,6 @@
           "options": {
             "tsConfig": ["apps/ngx-rx-state-demo-e2e/tsconfig.e2e.json"],
             "exclude": ["**/node_modules/**", "!apps/ngx-rx-state-demo-e2e/**"]
-          }
-        }
-      }
-    },
-    "ngx-rx-state": {
-      "projectType": "library",
-      "root": "libs/ngx-rx-state",
-      "sourceRoot": "libs/ngx-rx-state/src",
-      "prefix": "ngx-rx",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/ngx-rx-state/tsconfig.lib.json",
-            "project": "libs/ngx-rx-state/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/ngx-rx-state/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/ngx-rx-state/tsconfig.lib.json",
-              "libs/ngx-rx-state/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/ngx-rx-state/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/ngx-rx-state/jest.config.js",
-            "tsConfig": "libs/ngx-rx-state/tsconfig.spec.json",
-            "passWithNoTests": true,
-            "setupFile": "libs/ngx-rx-state/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      }
-    },
-    "rxjs-state": {
-      "root": "libs/rxjs-state",
-      "sourceRoot": "libs/rxjs-state/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/rxjs-state/tsconfig.lib.json",
-              "libs/rxjs-state/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/rxjs-state/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/rxjs-state/jest.config.js",
-            "tsConfig": "libs/rxjs-state/tsconfig.spec.json",
-            "passWithNoTests": true
-          }
-        },
-        "build": {
-          "builder": "@nrwl/node:package",
-          "options": {
-            "outputPath": "dist/libs/rxjs-state",
-            "tsConfig": "libs/rxjs-state/tsconfig.lib.json",
-            "packageJson": "libs/rxjs-state/package.json",
-            "main": "libs/rxjs-state/src/index.ts",
-            "assets": ["libs/rxjs-state/*.md"]
-          }
-        }
-      }
-    },
-    "test-helpers": {
-      "root": "libs/test-helpers",
-      "sourceRoot": "libs/test-helpers/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/test-helpers/tsconfig.lib.json",
-              "libs/test-helpers/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/test-helpers/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/test-helpers/jest.config.js",
-            "tsConfig": "libs/test-helpers/tsconfig.spec.json",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "rxjs-etc": {
-      "root": "libs/rxjs-etc",
-      "sourceRoot": "libs/rxjs-etc/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/rxjs-etc/tsconfig.lib.json",
-              "libs/rxjs-etc/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/rxjs-etc/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/rxjs-etc/jest.config.js",
-            "tsConfig": "libs/rxjs-etc/tsconfig.spec.json",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "ts-etc": {
-      "root": "libs/ts-etc",
-      "sourceRoot": "libs/ts-etc/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/ts-etc/tsconfig.lib.json",
-              "libs/ts-etc/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/ts-etc/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/ts-etc/jest.config.js",
-            "tsConfig": "libs/ts-etc/tsconfig.spec.json",
-            "passWithNoTests": true
           }
         }
       }
@@ -408,41 +463,6 @@
               "!apps/ng-reactive-experiments-e2e/**"
             ]
           }
-        }
-      }
-    },
-    "ngrx-component-experiments": {
-      "projectType": "library",
-      "root": "libs/ngrx-component-experiments",
-      "sourceRoot": "libs/ngrx-component-experiments/src",
-      "prefix": "ngx-rx",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/ngrx-component-experiments/tsconfig.lib.json",
-              "libs/ngrx-component-experiments/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ngrx-component-experiments/**"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/ngrx-component-experiments/jest.config.js",
-            "tsConfig": "libs/ngrx-component-experiments/tsconfig.spec.json",
-            "passWithNoTests": true,
-            "setupFile": "libs/ngrx-component-experiments/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
         }
       }
     }

@@ -1,4 +1,4 @@
-import { RxState } from '@ngx-rx/ngx-rx-state';
+import { RxState } from '../src';
 import { take } from 'rxjs/operators';
 
 export interface PrimitiveState {

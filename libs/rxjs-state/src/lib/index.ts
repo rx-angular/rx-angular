@@ -4,4 +4,4 @@ export {
   createAccumulationObservable,
   createSideEffectObservable
 } from './core';
-export { RxState } from './state';
+export { RxJsState } from './state';

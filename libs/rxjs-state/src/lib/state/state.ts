@@ -33,7 +33,7 @@ type ProjectValueReducer<T, K extends keyof T> = (
  * @example
  * const ls = new State<{test: string, bar: number}>();
  */
-export class RxState<T extends object> implements Subscribable<any> {
+export class RxJsState<T extends object> implements Subscribable<any> {
   private accumulationObservable = createAccumulationObservable<T>();
   private effectObservable = createSideEffectObservable();
 

@@ -1,4 +1,4 @@
-import { createSideEffectObservable } from '@rxjs-state';
+import { createSideEffectObservable } from '../../src';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
 

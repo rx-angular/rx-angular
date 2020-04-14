@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RxGlobalState } from '@ngx-rx/ngx-rx-state';
+import { RxGlobalState } from '../src';
 import { createStateChecker, PrimitiveState } from './fixtures';
 
 const stateChecker = createStateChecker((actual, expected) => {

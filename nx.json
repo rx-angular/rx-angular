@@ -19,13 +19,6 @@
     }
   },
   "projects": {
-    "ng-reactive-experiments": {
-      "tags": ["app"]
-    },
-    "ng-reactive-experiments-e2e": {
-      "tags": [],
-      "implicitDependencies": ["ng-reactive-experiments"]
-    },
     "ngx-rx-state-demo": {
       "tags": []
     },
@@ -34,22 +27,29 @@
       "implicitDependencies": ["ngx-rx-state-demo"]
     },
     "ngx-rx-state": {
-      "tags": ["scope:shared", "type:lib"]
+      "tags": []
     },
     "rxjs-state": {
-      "tags": ["scope:shared", "type:lib"]
+      "tags": []
     },
     "test-helpers": {
-      "tags": ["scope:shared", "type:lib"]
+      "tags": []
     },
     "rxjs-etc": {
-      "tags": ["scope:shared", "type:lib"]
+      "tags": []
     },
     "ts-etc": {
-      "tags": ["scope:shared", "type:lib"]
+      "tags": []
     },
     "ngrx-component-experiments": {
-      "tags": ["scope:shared", "type:lib"]
+      "tags": []
+    },
+    "ng-reactive-experiments": {
+      "tags": []
+    },
+    "ng-reactive-experiments-e2e": {
+      "tags": [],
+      "implicitDependencies": ["ng-reactive-experiments"]
     }
   }
 }

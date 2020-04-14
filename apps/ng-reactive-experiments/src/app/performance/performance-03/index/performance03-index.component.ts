@@ -16,7 +16,7 @@ import {
   Person
 } from './performance-03-data.service';
 import { environment } from '../../../../environments/environment';
-import { RxState } from '@ngx-rx/ngx-rx-state';
+import { RxState } from '@ngx-rx-state';
 
 export interface Performance03State {
   data: Person[];

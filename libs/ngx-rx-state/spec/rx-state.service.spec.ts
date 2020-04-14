@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RxState } from '@ngx-rx/ngx-rx-state';
+import { RxState } from '../src';
 import { createStateChecker, PrimitiveState, setupState } from './fixtures';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';

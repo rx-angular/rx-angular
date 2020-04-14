@@ -1,4 +1,4 @@
-import { RxState } from '@rxjs-state';
+import { RxJsState } from '../../src';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
 
@@ -29,7 +29,7 @@ function setupState<T extends object>(cfg: {
   initialize?: boolean;
 }) {
   const { initialState, initialize } = { initialize: true, ...cfg };
-  const state = new RxState<T>();
+  const state = new RxJsState<T>();
   if (initialize) {
     state.subscribe();
   }
@@ -48,7 +48,7 @@ beforeEach(() => {
 // tslint:disable: no-duplicate-string
 describe('State', () => {
   it('should create new instance', () => {
-    const state = new RxState<PrimitiveState>();
+    const state = new RxJsState<PrimitiveState>();
     expect(state).toBeDefined();
   });
 
@@ -81,7 +81,7 @@ describe('State', () => {
 
     it('should return initial state', () => {
       testScheduler.run(({ expectObservable }) => {
-        const state = new RxState<PrimitiveState>();
+        const state = new RxJsState<PrimitiveState>();
         state.subscribe();
 
         state.setState({ num: 42 });

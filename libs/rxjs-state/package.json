@@ -1,6 +1,6 @@
 {
   "name": "rxjs-state",
-  "version": "0.0.6",
+  "version": "1.0.0",
   "description": "Reactive Component State-Management for Angular, React Vue and Svelte. A lightweight robust reactive state management object written in RxJS",
   "main": "index.js",
   "publishConfig": {
