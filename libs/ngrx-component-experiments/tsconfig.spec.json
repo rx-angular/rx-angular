@@ -5,8 +5,8 @@
     "module": "commonjs",
     "types": ["jest", "node"],
     "paths": {
-      "rxjs-state": [
-        "libs/rxjs-state/src/index.ts"
+      "@ngx-rx-state": [
+        "libs/ngx-rx-state/src/index.ts"
       ]
     }
   },
