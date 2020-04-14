@@ -6,7 +6,15 @@
     "types": [
       "jest",
       "node"
-    ]
+    ],
+    "paths": {
+      "rxjs-state": [
+        "libs/rxjs-state/src/index.ts"
+      ],
+      "@test-helpers": [
+        "libs/test-helpers/src/index.ts"
+      ]
+    }
   },
   "files": [
     "src/test-setup.ts"
