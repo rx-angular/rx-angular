@@ -7,6 +7,9 @@
     "paths": {
       "@ngx-rx-state": [
         "libs/ngx-rx-state/src/index.ts"
+      ],
+      "rxjs-state": [
+        "libs/rxjs-state/src/index.ts"
       ]
     }
   },
