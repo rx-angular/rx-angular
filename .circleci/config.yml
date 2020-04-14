@@ -1,0 +1,22 @@
+version: 2.1
+orbs:
+  node: circleci/node@1.1.6
+jobs:
+  build-and-test:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/with-cache:
+          steps:
+            - run:
+                name: 'Install'
+                command: npm install
+            - run: yarn nx affected --target=lint --base=origin/master~1 --parallel
+            - run: yarn nx affected --target=test --base=origin/master~1 --parallel
+            - run: yarn ng build --project rxjs-state
+            - run: yarn ng build --project ngx-rx-state --prod
+workflows:
+    build-and-test:
+      jobs:
+        - build-and-test
