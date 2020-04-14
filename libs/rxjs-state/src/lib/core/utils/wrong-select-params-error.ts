@@ -1,8 +1,7 @@
+// tslint:disable-next-line:no-empty-interface
 export interface WrongSelectParamsErrorError extends Error {}
 
-export interface WrongSelectParamsErrorCtor {
-  new (): WrongSelectParamsErrorError;
-}
+export type WrongSelectParamsErrorCtor = new () => WrongSelectParamsErrorError;
 
 function WrongSelectParamsErrorImpl(this: any) {
   Error.call(this);

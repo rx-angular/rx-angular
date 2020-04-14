@@ -20,7 +20,6 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { GithubModule } from './data-access/github';
 import { VanillaDemoComponent } from './vanilla-demo/vanilla.component';
-import { NgDemoComponent } from './ng-demo/ng.component';
 
 export const materialModules = [
   BrowserAnimationsModule,
@@ -50,7 +49,8 @@ export const materialModules = [
     GithubModule,
     BrowserAnimationsModule
   ],
-  declarations: [AppComponent, VanillaDemoComponent, NgDemoComponent],
+  declarations: [AppComponent, VanillaDemoComponent],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+}
