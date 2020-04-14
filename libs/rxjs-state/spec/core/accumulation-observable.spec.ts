@@ -1,4 +1,4 @@
-import { createAccumulationObservable } from '@rxjs-state';
+import { createAccumulationObservable } from '../../src';
 import { pluck } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';

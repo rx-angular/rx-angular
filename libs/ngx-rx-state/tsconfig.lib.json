@@ -5,7 +5,13 @@
     "declaration": true,
     "inlineSources": true,
     "types": [],
-    "lib": ["dom", "es2018"]
+    "lib": ["dom", "es2018"],
+    "paths": {
+      "rxjs-state": [
+        "dist/libs/rxjs-state",
+        "libs/rxjs-state/src/index.ts"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableIvy": false,

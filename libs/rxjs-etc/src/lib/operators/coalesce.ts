@@ -13,7 +13,7 @@ import {
   subscribeToResult
 } from 'rxjs/internal-compatibility';
 import { generateFrames } from '../observable';
-import { createPropertiesWeakMap } from '@ngx-rx/ts-etc';
+import { createPropertiesWeakMap } from '@ts-etc';
 
 export interface CoalesceConfig {
   context?: object;

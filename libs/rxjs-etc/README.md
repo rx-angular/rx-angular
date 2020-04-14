@@ -1,7 +1,7 @@
 # rxjs-etc
 [![ngx-rx](https://circleci.com/gh/BioPhoton/ngx-rx.svg?style=shield)](https://circleci.com/gh/BioPhoton/ngx-rx)
 
-A set of rxjs functions. :)
+Reusable RxJS code
 
 ## Observable
 

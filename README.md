@@ -9,8 +9,10 @@ The target Framework is Angular but the features are designed to get reused in o
 
 **Packages included:**
 
-- Vanilla TypeScript
-  - [📦 rxjs-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-state) - Lightweight Flexible State-Management Object
+- [TypeScript](https://www.typescriptlang.org/)
+  - [📦 ts-etc](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ts-etc) - Reusable Typescript code
+  - [📦 rxjs-etc](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-etc) - Reusable RxJS code
+  - [📦 rxjs-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-state) - Reusable TypeScript code
 - [Angular](https://angular.io)
   - [📦 ngx-rx-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ngx-rx-state) - Reactive Component State-Management
 - [RxJS](https://rxjs.dev)

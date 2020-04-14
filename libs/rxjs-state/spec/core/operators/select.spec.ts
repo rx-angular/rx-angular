@@ -1,6 +1,6 @@
 import { jestMatcher } from '@test-helpers';
 
-import { select } from '../../../src/lib/core/operators/select';
+import { select } from '../../../src';
 import { EMPTY, NEVER, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
