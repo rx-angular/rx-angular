@@ -9,8 +9,7 @@ import { getGlobalThis } from './get-global-this';
 //
 // So for Ivy we need to make sure that ng is undefined or,
 // in case of dev environment, ng.probe is undefined
-
-export function isIvy(): boolean {
+export function isViewEngineIvy(): boolean {
   const ng: any = getGlobalThis().ng;
 
   // Is the global ng object is unavailable?

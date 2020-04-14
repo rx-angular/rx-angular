@@ -7,11 +7,11 @@ import {
   ɵdetectChanges as detectChanges,
   ɵmarkDirty as markDirty
 } from '@angular/core';
-import { hasZone, isIvy } from '../utils';
+import { isNgZone, isViewEngineIvy } from '@ts-etc';
 
 function getSaveDurationSelector(ngZone: NgZone): () => Observable<number> {
   return () =>
-    hasZone(ngZone)
+    isNgZone(ngZone)
       ? generateFrames(
           (window as any).__zone_symbol__requestAnimationFrame,
           (window as any).__zone_symbol__cancelAnimationFrame
@@ -138,8 +138,8 @@ export function createNoopStrategy<T>(cfg?: any): CdStrategy<T> {
 export function createPessimistic1Strategy<T>(
   cfg: StrategyFactoryConfig
 ): CdStrategy<T> {
-  const inIvy = isIvy();
-  const inZone = hasZone(cfg.ngZone);
+  const inIvy = isViewEngineIvy();
+  const inZone = isNgZone(cfg.ngZone);
   const durationSelector = getSaveDurationSelector(cfg.ngZone);
 
   function render() {
@@ -187,8 +187,8 @@ export function createPessimistic1Strategy<T>(
 export function createPessimistic2Strategy<T>(
   cfg: StrategyFactoryConfig
 ): CdStrategy<T> {
-  const inIvy = isIvy();
-  const inZone = hasZone(cfg.ngZone);
+  const inIvy = isViewEngineIvy();
+  const inZone = isNgZone(cfg.ngZone);
   const durationSelector = getSaveDurationSelector(cfg.ngZone);
   const coalesceConfig = { context: cfg.component as any };
 
@@ -237,8 +237,8 @@ export function createPessimistic2Strategy<T>(
 export function createOptimistic1Strategy<T>(
   cfg: StrategyFactoryConfig
 ): CdStrategy<T> {
-  const inIvy = isIvy();
-  const inZone = hasZone(cfg.ngZone);
+  const inIvy = isViewEngineIvy();
+  const inZone = isNgZone(cfg.ngZone);
   const durationSelector = getSaveDurationSelector(cfg.ngZone);
 
   function render() {
@@ -297,7 +297,7 @@ export function createOptimistic1Strategy<T>(
 export function createOptimistic2Strategy<T>(
   cfg: StrategyFactoryConfig
 ): CdStrategy<T> {
-  const inIvy = isIvy();
+  const inIvy = isViewEngineIvy();
   const durationSelector = getSaveDurationSelector(cfg.ngZone);
   const coalesceConfig = {
     context: (inIvy ? (cfg.cdRef as any)._lView : cfg.component) as any
