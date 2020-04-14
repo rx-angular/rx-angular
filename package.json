@@ -26,7 +26,7 @@
     "workspace-schematic": "nx workspace-schematic",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
+    "_postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
     "rxjs-state:publish": "nx test rxjs-state && ng build rxjs-state && cd ./dist/libs/rxjs-state && npm publish",
     "ngx-rx-state:publish": "nx test ngx-rx-state && nx build ngx-rx-state --prod && cd ./dist/libs/ngx-rx-state && npm publish"
   },
