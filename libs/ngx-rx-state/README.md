@@ -42,14 +42,6 @@ Videos:
 Articles:
 - [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
 
-NPM Package:
-
-- [📦 ngx-rx-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ngx-rx-state)
-
-Sourcecode:
-
-- [📦 ngx-rx/rxjs-state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-state)
-
 Design Documents
 
 - [💾 Design Documents](https://hackmd.io/wVkWRc3XQWmtM6YcktRTrA)
