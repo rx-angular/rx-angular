@@ -9,12 +9,26 @@ are related to, or effected by `zone.js`.
 This function checks the window object `zone.js` was instantiated.
 If so, the `window` object maintains a property named `Zone`.
 
+Here how [Angular checks it](https://github.com/angular/angular/blob/master/packages/core/src/zone/ng_zone.ts#L123).
+
 ```typescript
 import {envZonePatched} from '@ts-etc'
 
 const envIsZonePatched: boolean = envZonePatched(); 
 
 console.log(`The environment ${envIsZonePatched ? 'IS' : 'IS NOT'} patched by zone.js`)
+```
+
+## apiZonePatched
+
+This function checks the a specific Browser API is patched by `zone.js`.
+
+```typescript
+import {apiZonePatched} from '@ts-etc'
+
+const apiIsZonePatched: boolean = apiZonePatched('Promise'); 
+
+console.log(`The Promise API ${apiIsZonePatched ? 'IS' : 'IS NOT'} patched by zone.js`)
 ```
 
 ## isNgZone

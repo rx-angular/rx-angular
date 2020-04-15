@@ -4,7 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-  NgZone,
+  NgZone, Type,
   ɵdetectChanges
 } from '@angular/core';
 import { environment } from '../environments/environment';
