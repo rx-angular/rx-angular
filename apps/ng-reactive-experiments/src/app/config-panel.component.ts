@@ -15,7 +15,7 @@ import { CdConfigService } from './cd-config.service';
 import { FormBuilder } from '@angular/forms';
 import { defer, fromEvent, merge, Observable } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
-import { RxState } from '@ngx-rx-state';
+import { RxState } from 'ngx-rx-state';
 
 @Component({
   selector: 'app-config-panel',

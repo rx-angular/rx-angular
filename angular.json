@@ -105,6 +105,18 @@
       "projectType": "library",
       "schematics": {},
       "architect": {
+        "build": {
+          "builder": "@nrwl/angular:package",
+          "options": {
+            "tsConfig": "libs/rxjs-state/tsconfig.lib.json",
+            "project": "libs/rxjs-state/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/rxjs-state/tsconfig.lib.prod.json"
+            }
+          }
+        },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
@@ -121,16 +133,6 @@
             "jestConfig": "libs/rxjs-state/jest.config.js",
             "tsConfig": "libs/rxjs-state/tsconfig.spec.json",
             "passWithNoTests": true
-          }
-        },
-        "build": {
-          "builder": "@nrwl/node:package",
-          "options": {
-            "outputPath": "dist/libs/rxjs-state",
-            "tsConfig": "libs/rxjs-state/tsconfig.lib.json",
-            "packageJson": "libs/rxjs-state/package.json",
-            "main": "libs/rxjs-state/src/index.ts",
-            "assets": ["libs/rxjs-state/*.md"]
           }
         }
       }
