@@ -57,7 +57,6 @@ export class DraftParent01Component implements AfterViewInit, OnDestroy {
     private cfgService: CdConfigService
   ) {
     const strategies = getStrategies<number>({
-      ngZone,
       cdRef,
       component: this
     });

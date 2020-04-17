@@ -52,10 +52,9 @@ export class PatchDirective extends RxState<{
   ) {
     super();
     this.strategies = getStrategies({
-      ngZone,
       cdRef,
       component: (this.cdRef as any).context
     });
-    this.setState({ strategyName: 'idle' });
+    this.setState({ strategyName: 'native' });
   }
 }

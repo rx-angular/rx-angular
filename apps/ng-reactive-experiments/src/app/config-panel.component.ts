@@ -42,11 +42,10 @@ import { RxState } from '@ngx-rx-state';
             *ngFor="
               let strategy of [
                 undefined,
-                'idle',
-                'pessimistic1',
-                'pessimistic2',
-                'optimistic1',
-                'optimistic2'
+                'native',
+                'noop',
+                'global',
+                'local'
               ]
             "
           >
@@ -97,7 +96,7 @@ export class ConfigPanelComponent
   readonly renderTechnique;
 
   readonly configForm = this.fb.group({
-    strategy: ['pessimistic1']
+    strategy: ['native']
   });
   readonly configForm$: Observable<{
     strategy: string;

@@ -7,6 +7,7 @@ import { MENU_ITEMS as MIXED_MENU_ITEMS } from './mixed/mixed.menu';
 import { MENU_ITEMS as DRAFT_MENU_ITEMS } from './draft/draft.menu';
 import { MENU_ITEMS as CD_OPERATORS_MENU_ITEMS } from './cd-operators/cd-operators.menu';
 import { MENU_ITEMS as RX_STATE_MENU_ITEMS } from './rx-state/rx-state.menu';
+import { STRATEGIES_MENU } from './strategies/strategies.menu';
 
 export const MENU_ITEMS: MenuItem[] = [
   ...DRAFT_MENU_ITEMS,
@@ -16,5 +17,6 @@ export const MENU_ITEMS: MenuItem[] = [
   ...MIXED_MENU_ITEMS,
   ...PERFORMANCE_MENU_ITEMS,
   ...CD_OPERATORS_MENU_ITEMS,
-  ...RX_STATE_MENU_ITEMS
+  ...RX_STATE_MENU_ITEMS,
+  ...STRATEGIES_MENU
 ];

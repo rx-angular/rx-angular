@@ -1,5 +1,6 @@
 /** A shared promise instance to cause a delay of one microtask */
-import { apiZonePatched, getGlobalThis } from '@ts-etc';
+import { getGlobalThis } from './get-global-this';
+import { apiZonePatched } from './zone-checks';
 
 let resolvedPromise: Promise<void> | null = null;
 
