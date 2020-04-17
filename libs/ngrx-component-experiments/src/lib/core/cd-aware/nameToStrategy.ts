@@ -3,8 +3,8 @@ import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import {
   CdStrategy,
   DEFAULT_STRATEGY_NAME,
-  StrategySelection
-} from '../cd-aware/strategy';
+  StrategySelection,
+} from './strategy';
 
 export function nameToStrategy<U>(strategies: StrategySelection<U>) {
   return (o$: Observable<string>): Observable<CdStrategy<U>> => {
@@ -13,7 +13,9 @@ export function nameToStrategy<U>(strategies: StrategySelection<U>) {
       startWith(DEFAULT_STRATEGY_NAME),
       map(
         (strategy: string): CdStrategy<U> =>
-          strategies[strategy] ? strategies[strategy] : strategies.native
+          strategies[strategy]
+            ? strategies[strategy]
+            : strategies[DEFAULT_STRATEGY_NAME]
       )
     );
   };

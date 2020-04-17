@@ -2,17 +2,17 @@ import {
   ChangeDetectorRef,
   Directive,
   Input,
-  NgZone,
   OnDestroy,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 
 import {
   NextObserver,
   Observable,
-  PartialObserver,
-  Unsubscribable
+  ObservableInput,
+  Observer,
+  Unsubscribable,
 } from 'rxjs';
 import { CdAware, createCdAware, getStrategies } from '../core';
 
@@ -21,9 +21,9 @@ export interface LetViewContext<T> {
   $implicit?: T;
   // to enable `as` syntax we have to assign the directives selector (var as v)
   ngrxLet?: T;
-  // set context var complete to true (var$; let v = $error)
+  // set context var complete to true (var$; let e = $error)
   $error?: boolean;
-  // set context var complete to true (var$; let v = $complete)
+  // set context var complete to true (var$; let c = $complete)
   $complete?: boolean;
 }
 
@@ -57,10 +57,8 @@ export interface LetViewContext<T> {
  *
  * @usageNotes
  *
- * ### Examples
- *
  * The `*ngrxLet` directive take over several things and makes it more convenient and save to work with streams in the template
- * `<ng-container *let="observableNumber$ as c"></ng-container>`
+ * `<ng-container *ngrxLet="observableNumber$ as c"></ng-container>`
  *
  * ```html
  * <ng-container *ngrxLet="observableNumber$ as n">
@@ -99,30 +97,26 @@ export interface LetViewContext<T> {
 export class LetDirective<U> implements OnDestroy {
 
   @Input()
-  set ngrxLet(
-    potentialObservable: Observable<U> | Promise<U> | null | undefined
-  ) {
-    this.cdAware.nextVale(potentialObservable);
+  set ngrxLet(potentialObservable: ObservableInput<U> | null | undefined) {
+    this.cdAware.nextPotentialObservable(potentialObservable);
   }
 
   @Input()
-  set ngrxLetConfig(config: string | undefined) {
-    this.cdAware.nextConfig(config);
+  set ngrxLetConfig(config: string | Observable<string> | undefined) {
+    if (config) {
+      this.cdAware.nextStrategy(config);
+    }
   }
 
   constructor(
     cdRef: ChangeDetectorRef,
-    ngZone: NgZone,
     private readonly templateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
     this.cdAware = createCdAware<U>({
-      strategies: getStrategies<U>({
-        component: (cdRef as any).context,
-        cdRef
-      }),
-      resetContextObserver: this.resetContextObserver,
-      updateViewContextObserver: this.updateViewContextObserver
+      strategies: getStrategies<U>({ cdRef }),
+      resetObserver: this.resetObserver,
+      updateObserver: this.updateObserver,
     });
     this.subscription = this.cdAware.subscribe();
   }
@@ -133,12 +127,12 @@ export class LetDirective<U> implements OnDestroy {
     $implicit: undefined,
     ngrxLet: undefined,
     $error: false,
-    $complete: false
+    $complete: false,
   };
 
   protected readonly subscription: Unsubscribable;
   private readonly cdAware: CdAware<U | null | undefined>;
-  private readonly resetContextObserver: NextObserver<unknown> = {
+  private readonly resetObserver: NextObserver<void> = {
     next: () => {
       // if not initialized no need to set undefined
       if (this.embeddedView) {
@@ -147,11 +141,9 @@ export class LetDirective<U> implements OnDestroy {
         this.ViewContext.$error = false;
         this.ViewContext.$complete = false;
       }
-    }
+    },
   };
-  private readonly updateViewContextObserver: PartialObserver<
-    U | null | undefined
-  > = {
+  private readonly updateObserver: Observer<U | null | undefined> = {
     next: (value: U | null | undefined) => {
       // to have init lazy
       if (!this.embeddedView) {
@@ -173,7 +165,7 @@ export class LetDirective<U> implements OnDestroy {
         this.createEmbeddedView();
       }
       this.ViewContext.$complete = true;
-    }
+    },
   };
 
   static ngTemplateContextGuard<U>(

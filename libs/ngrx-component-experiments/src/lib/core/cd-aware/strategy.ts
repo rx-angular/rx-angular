@@ -1,34 +1,17 @@
 // @Notice this part of the code is in the coalescing PR https://github.com/ngrx/platform/pull/2456
-import { ChangeDetectorRef, ɵdetectChanges as detectChanges, ɵmarkDirty as markDirty, } from '@angular/core';
-// import { generateFrames } from '../projections/generateFrames';
-// import { coalesce } from '../operators/coalesce';
-import { MonoTypeOperatorFunction, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { coalesce, CoalesceConfig } from '../rxjs/operators';
-import { generateFrames } from '../rxjs/observable';
+import { coalesce , generateFrames } from '@rxjs-etc';
+
+import { defer, from, MonoTypeOperatorFunction, Observable } from 'rxjs';
+import {
+  ChangeDetectorRef,
+  ɵdetectChanges as detectChanges,
+  ɵmarkDirty as markDirty,
+} from '@angular/core';
 import { apiZonePatched, getGlobalThis, isViewEngineIvy } from '@ts-etc';
-
-/** A shared promise instance to cause a delay of one microtask */
-let resolvedPromise: Promise<void> | null = null;
-
-function getResolvedPromise(): Promise<void> {
-  resolvedPromise =
-    resolvedPromise || apiZonePatched('Promise')
-    ? (getGlobalThis().__zone_symbol__Promise.resolve() as Promise<void>)
-    : Promise.resolve();
-  return resolvedPromise;
-}
-
-/*export function getZoneUnPatchedDurationSelector(): () => Observable<number> {
- return () => defer(() => from(getResolvedPromise()).pipe(mapTo(1)));
- }*/
-
-export function getZoneUnPatchedDurationSelector(): () => Observable<number> {
-  return () => generateFrames();
-}
+import { mapTo } from 'rxjs/operators';
+import { getZoneUnPatchedDurationSelector } from './duration-selector';
 
 export interface StrategyFactoryConfig {
-  component: any;
   cdRef: ChangeDetectorRef;
 }
 
@@ -38,22 +21,22 @@ export interface CdStrategy<T> {
   name: string;
 }
 
-export const DEFAULT_STRATEGY_NAME = 'local';
+export const DEFAULT_STRATEGY_NAME = 'native';
+export const IS_VIEW_ENGINE_IVY = isViewEngineIvy();
 
 export interface StrategySelection<U> {
-  native: CdStrategy<U>;
-
+  [DEFAULT_STRATEGY_NAME]: CdStrategy<U>;
   [key: string]: CdStrategy<U>;
 }
 
 export function getStrategies<T>(
-  cfg: StrategyFactoryConfig
+  config: StrategyFactoryConfig
 ): StrategySelection<T> {
   return {
-    native: createNativeStrategy<T>(cfg),
+    [DEFAULT_STRATEGY_NAME]: createNativeStrategy<T>(config),
     noop: createNoopStrategy<T>(),
-    global: createGlobalStrategy<T>(cfg),
-    local: createLocalStrategy<T>(cfg)
+    global: createGlobalStrategy<T>(config),
+    local: createLocalStrategy<T>(config),
   };
 }
 
@@ -115,7 +98,7 @@ export function createNativeStrategy<T>(
  * @return {CdStrategy<T>} - The calculated strategy
  *
  */
-export function createNoopStrategy<T>(cfg?: any): CdStrategy<T> {
+export function createNoopStrategy<T>(): CdStrategy<T> {
   return {
     render: (): void => {},
     behaviour: () => o => o,
@@ -140,15 +123,13 @@ export function createNoopStrategy<T>(cfg?: any): CdStrategy<T> {
  *
  */
 export function createGlobalStrategy<T>(
-  cfg: StrategyFactoryConfig
+  config: StrategyFactoryConfig
 ): CdStrategy<T> {
-  const inIvy = isViewEngineIvy();
-
   function render() {
-    if (!inIvy) {
-      cfg.cdRef.markForCheck();
+    if (!IS_VIEW_ENGINE_IVY) {
+      config.cdRef.markForCheck();
     } else {
-      markDirty(cfg.component);
+      markDirty((config.cdRef as any).context);
     }
   }
 
@@ -169,13 +150,11 @@ export function createGlobalStrategy<T>(
  * that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
  *
  * As detectChanges has no coalescing of render calls
- * like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` has, so we have to apply our own coalescing, 'scoped' on
- * component level.
+ * like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` has, so we have to apply our own coalescing, 'scoped' on component level.
  *
  * Coalescing, in this very manner,
- * means **collecting all events** in the same
- * [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render and
- * execute **re-rendering only once**.
+ * means **collecting all events** in the same [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick,
+ * that would cause a re-render and execute **re-rendering only once**.
  *
  * 'Scoped' coalescing, in addition, means **grouping the collected events by** a specific context.
  * E. g. the **component** from which the re-rendering was initiated.
@@ -189,27 +168,35 @@ export function createGlobalStrategy<T>(
  *
  */
 export function createLocalStrategy<T>(
-  cfg: StrategyFactoryConfig
+  config: StrategyFactoryConfig
 ): CdStrategy<T> {
-  const inIvy = isViewEngineIvy();
   const durationSelector = getZoneUnPatchedDurationSelector();
-  const coalesceConfig: CoalesceConfig = {
-    context: (inIvy
-              ? (cfg.cdRef as any)._lView
-              : (cfg.cdRef as any).context) as any,
+  // @Notice this part of the code is in the coalescing PR https://github.com/ngrx/platform/pull/2456
+  //const coalesceConfig: CoalesceConfig
+  const coalesceConfig: any = {
+    // @TODO ensure that context is === to _lView across class and template (all cases!!!)
+    // If yes, kick out _lView
+    context: (IS_VIEW_ENGINE_IVY
+      ? (config.cdRef as any)._lView
+      : (config.cdRef as any).context) as any,
   };
 
   function render() {
-    if (!inIvy) {
-      cfg.cdRef.detectChanges();
+    // @TODO ensure that detectChanges is behaves identical to ɵdetectChanges
+    // If yes, kick out ɵdetectChanges
+    if (!IS_VIEW_ENGINE_IVY) {
+      config.cdRef.detectChanges();
     } else {
-      detectChanges(cfg.component);
+      detectChanges((config.cdRef as any).context);
     }
   }
 
   const behaviour = () => (o$: Observable<T>): Observable<T> => {
     return o$
-      .pipe(coalesce(durationSelector, coalesceConfig));
+      .pipe(
+      // @Notice this part of the code is in the coalescing PR https://github.com/ngrx/platform/pull/2456
+       coalesce(durationSelector, coalesceConfig)
+      );
   };
 
   return {
