@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
   selector: 'ngx-rx-scroll-item',
   styleUrls: ['scroll-item.component.scss'],
   template: `
-    <ng-content></ng-content><span style="margin: 0 1rem;">Val: {{ val$ | ngrxPush: strategy$ }}</span><span>Rendered by: {{ strategy$ | ngrxPush }}</span>
+   <span style="margin: 0 1rem;">Val: {{ val$ | ngrxPush: strategy$ }}</span>
   `,
 })
 export class ScrollItemComponent {

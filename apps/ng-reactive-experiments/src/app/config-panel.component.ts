@@ -4,11 +4,11 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-  NgZone, Type,
+  NgZone,
   ɵdetectChanges
 } from '@angular/core';
 import { environment } from '../environments/environment';
-import { isNgZone, isViewEngineIvy  } from '@ts-etc';
+import { isNgZone, isViewEngineIvy } from '@ts-etc';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
 import { CdConfigService } from './cd-config.service';
@@ -27,32 +27,40 @@ import { RxState } from '@ngx-rx-state';
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-chip-list class="config-display">
-            <mat-chip color="accent"> <mat-icon>snooze</mat-icon>&nbsp; {{ zoneEnv }}</mat-chip>
-            <mat-chip><mat-icon>image</mat-icon> &nbsp; {{ engine }}</mat-chip>
-            <mat-chip><mat-icon>autorenew</mat-icon>&nbsp; {{ changeDetection }}</mat-chip>
-            <mat-chip><mat-icon>settings </mat-icon>&nbsp; {{strategy()}}</mat-chip>
+            <mat-chip>
+              <mat-icon disabled="zoneEnv === 'NgZone'">snooze</mat-icon>&nbsp; {{ zoneEnv }}</mat-chip>
+            <mat-chip>
+              <mat-icon>image</mat-icon> &nbsp; {{ engine }}</mat-chip>
+            <mat-chip>
+              <mat-icon>{{changeDetection === 'Default' ? 'autorenew' : 'youtube_searched_for'}}</mat-icon>&nbsp; {{ changeDetection }}
+            </mat-chip>
+            <mat-chip>
+              <mat-icon>settings</mat-icon>&nbsp; {{strategy()}}</mat-chip>
           </mat-chip-list>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
       <form [formGroup]="configForm">
-        <select formControlName="strategy" id="strategy">
-          <option
-            [value]="strategy"
-            *ngFor="
-              let strategy of [
-                undefined,
-                'native',
-                'noop',
-                'global',
-                'local'
+        <mat-form-field>
+          <mat-label>Change Detection Strategy</mat-label>
+          <mat-select formControlName="strategy" id="strategy">
+            <mat-option
+              [value]="strategy"
+              *ngFor="
+              let s of [
+                {name: undefined, icon: 'find_replace'},
+                {name: 'native', icon: 'find_replace'},
+                {name: 'noop', icon: 'block'},
+                {name: 'global', icon: 'vertical_align_bottom'},
+                {name: 'local', icon: 'call_split'},
+                {name: 'leaf', icon: 'play_for_work'}
               ]
             "
-          >
-            {{ strategy }}
-          </option>
-        </select>
-        <label for="strategy"> Optimize coalescing</label>
+            >
+              <mat-icon [ngClass]="{rot180: s.name === 'local'}">{{s.icon}}</mat-icon>&nbsp;{{ s.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </form>
       <button id="btnAppTick" mat-raised-button>ApplicationRef.tick()</button>
       <button id="btnDetectChanges" mat-raised-button>
@@ -61,7 +69,7 @@ import { RxState } from '@ngx-rx-state';
     </mat-expansion-panel>
   `,
   styles: [
-    `
+      `
       .config-panel {
         background: #c2185b;
       }
@@ -90,8 +98,7 @@ export class ConfigPanelComponent
   readonly env = environment;
   readonly hasZone = isNgZone(this.ngZone);
   readonly zoneEnv = isNgZone(this.ngZone) ? 'NgZone' : 'NgNoopZone';
-  readonly changeDetection =
-    'cd.' + (this.env.changeDetection === 1 ? 'Default' : 'OnPush');
+  readonly changeDetection = this.env.changeDetection === 1 ? 'Default' : 'OnPush';
   readonly engine = isViewEngineIvy() ? 'Ivy' : 'ViewEngine';
   readonly renderTechnique;
 
@@ -124,7 +131,6 @@ export class ConfigPanelComponent
   }
 
   tick() {
-    console.log('appRef.tick()');
     this.appRef.tick();
   }
 

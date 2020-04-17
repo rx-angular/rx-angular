@@ -14,6 +14,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { ConfigPanelComponent } from './config-panel.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatInputModule } from '@angular/material/input';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [AppComponent, ConfigPanelComponent],
@@ -30,7 +33,10 @@ import { MatChipsModule } from '@angular/material/chips';
     MatChipsModule,
     MatExpansionModule,
     RouterModule,
-    ReactiveComponentModule
+    ReactiveComponentModule,
+    MatInputModule,
+    MatOptionModule,
+    MatSelectModule
   ],
   providers: [],
   exports: [],
