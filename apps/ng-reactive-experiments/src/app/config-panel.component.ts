@@ -26,13 +26,13 @@ import { RxState } from '@ngx-rx-state';
     >
       <mat-expansion-panel-header>
         <mat-panel-title>
-          {{ zoneEnv }} - {{ engine }} - {{ changeDetection }}:
-        </mat-panel-title>
-        <mat-panel-description>
           <mat-chip-list class="config-display">
-            <mat-chip>{{ strategy() }}</mat-chip>
+            <mat-chip color="accent"> <mat-icon>snooze</mat-icon>&nbsp; {{ zoneEnv }}</mat-chip>
+            <mat-chip><mat-icon>image</mat-icon> &nbsp; {{ engine }}</mat-chip>
+            <mat-chip><mat-icon>autorenew</mat-icon>&nbsp; {{ changeDetection }}</mat-chip>
+            <mat-chip><mat-icon>settings </mat-icon>&nbsp; {{strategy()}}</mat-chip>
           </mat-chip-list>
-        </mat-panel-description>
+        </mat-panel-title>
       </mat-expansion-panel-header>
 
       <form [formGroup]="configForm">

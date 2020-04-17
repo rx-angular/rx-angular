@@ -27,9 +27,6 @@
       "@ts-etc": [
         "libs/ts-etc/src/index.ts"
       ],
-      "@ngx-rx/ts-etc": [
-        "libs/ts-etc/src/index.ts"
-      ],
       "@rxjs-etc": [
         "libs/rxjs-etc/src/index.ts"
       ],
