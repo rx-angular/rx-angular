@@ -1,5 +1,6 @@
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'ngx-rx-virtual-scroll-demo',
@@ -13,6 +14,7 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
         </ngx-rx-scroll-item>
       </div>
     </cdk-virtual-scroll-viewport>`,
+  changeDetection: environment.changeDetection
 })
 export class VirtualScrollDemoComponent implements AfterViewInit {
 

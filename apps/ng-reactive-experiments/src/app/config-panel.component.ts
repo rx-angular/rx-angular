@@ -45,7 +45,8 @@ import { RxState } from '@ngx-rx-state';
                 'native',
                 'noop',
                 'global',
-                'local'
+                'local',
+                'brutal'
               ]
             "
           >
