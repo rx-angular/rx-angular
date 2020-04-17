@@ -10,9 +10,8 @@ import {
 import {
   InnerSubscriber,
   OuterSubscriber,
-  subscribeToResult
+  subscribeToResult,
 } from 'rxjs/internal-compatibility';
-import { generateFrames } from '../observable';
 import { createPropertiesWeakMap } from '@ts-etc';
 
 export interface CoalesceConfig {
@@ -24,40 +23,33 @@ export interface CoalesceConfig {
 interface CoalescingContextProps {
   isCoalescing: boolean;
 }
+
 const coalescingContextPropertiesMap = createPropertiesWeakMap<
   object,
   CoalescingContextProps
 >(ctx => ({
-  isCoalescing: false
+  isCoalescing: false,
 }));
 
-export const defaultCoalesceConfig: Pick<
-  CoalesceConfig,
-  'leading' | 'trailing'
-> & { context: undefined } = {
+const defaultCoalesceConfig: CoalesceConfig = {
   leading: false,
   trailing: true,
-  context: undefined
+  context: undefined,
 };
 
 function getCoalesceConfig(
   config: CoalesceConfig = defaultCoalesceConfig
-): Pick<CoalesceConfig, 'leading' | 'trailing'> & {
-  context: object | undefined;
-} {
+): CoalesceConfig {
   return {
     ...defaultCoalesceConfig,
-    ...config
+    ...config,
   };
 }
-
-export const defaultCoalesceDurationSelector = <T>(value: T) =>
-  generateFrames();
 
 /**
  * @description
  * Limits the number of synchronous emitted a value from the source Observable to
- * one emitted value per [`AnimationFrame`](https://developer.mozilla.org/en-US/search?q=AnimationFrame),
+ * one emitted value per [`AnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame),
  * then repeats this process for every tick of the browsers event loop.
  *
  * The coalesce operator is based on the [throttle](https://rxjs-dev.firebaseapp.com/api/operators/throttle) operator.
@@ -84,9 +76,7 @@ export const defaultCoalesceDurationSelector = <T>(value: T) =>
  * ```
  */
 export function coalesce<T>(
-  durationSelector: (
-    value: T
-  ) => SubscribableOrPromise<any> = defaultCoalesceDurationSelector,
+  durationSelector: (value: T) => SubscribableOrPromise<any>,
   config?: CoalesceConfig
 ): MonoTypeOperatorFunction<T> {
   return (source: Observable<T>) =>
@@ -157,7 +147,7 @@ class CoalesceSubscriber<T, R> extends OuterSubscriber<T, R> {
 
   private exhaustLastValue() {
     const { _hasValue, _sendValue } = this;
-    if (_hasValue && _sendValue) {
+    if (_hasValue) {
       this.destination.next(_sendValue);
       this._hasValue = false;
       this._sendValue = null;
@@ -169,7 +159,7 @@ class CoalesceSubscriber<T, R> extends OuterSubscriber<T, R> {
     if (!!duration) {
       this.add((this._coalesced = subscribeToResult(this, duration)));
       coalescingContextPropertiesMap.setProps(this._context, {
-        isCoalescing: true
+        isCoalescing: true,
       });
     }
   }
@@ -186,7 +176,7 @@ class CoalesceSubscriber<T, R> extends OuterSubscriber<T, R> {
         this.exhaustLastValue();
       }
       coalescingContextPropertiesMap.setProps(this._context, {
-        isCoalescing: false
+        isCoalescing: false,
       });
     }
   }

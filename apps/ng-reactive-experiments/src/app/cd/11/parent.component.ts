@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { defer } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { fromZoneEvent } from '@rxjs';
+import { fromZoneEvent } from '@rxjs-etc';
 import { BaseComponent } from '../../base.component.ts/base.component';
 import { tap } from 'rxjs/operators';
 

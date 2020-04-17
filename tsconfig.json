@@ -27,16 +27,25 @@
       "@ts-etc": [
         "libs/ts-etc/src/index.ts"
       ],
+      "@ngx-rx/ts-etc": [
+        "libs/ts-etc/src/index.ts"
+      ],
       "@rxjs-etc": [
         "libs/rxjs-etc/src/index.ts"
       ],
       "@rxjs-state": [
         "libs/rxjs-state/src/index.ts"
       ],
+      "rxjs-state": [
+        "libs/rxjs-state/src/index.ts"
+      ],
       "@ngx-rx-state": [
         "libs/ngx-rx-state/src/index.ts"
       ],
-      "@ngrx-component-experiments": [
+      "ngx-rx-state": [
+        "libs/ngx-rx-state/src/index.ts"
+      ],
+      "@ngx-rx/ngrx-component-experiments": [
         "libs/ngrx-component-experiments/src/index.ts"
       ]
     }

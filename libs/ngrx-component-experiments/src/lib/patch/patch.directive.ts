@@ -4,7 +4,7 @@ import { filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/oper
 import { RxState } from '@ngx-rx-state';
 import { getStrategies, StrategySelection } from '../core';
 import { nameToStrategy } from '../core/cd-aware/nameToStrategy';
-import { renderChanges } from '../core/rxjs/operators';
+import { renderChange } from '../renderChange';
 
 // <p [patch]="['click]"></p>
 
@@ -41,7 +41,7 @@ export class PatchDirective extends RxState<{
   renderSideEffect$ = this.events$.pipe(
     withLatestFrom(this.strategy$),
     switchMap(([event, strategy]) =>
-      of(event).pipe(tap(renderChanges(strategy)))
+      of(event).pipe(tap(renderChange(strategy)))
     )
   );
 
@@ -51,11 +51,7 @@ export class PatchDirective extends RxState<{
     private elemRef: ElementRef
   ) {
     super();
-    this.strategies = getStrategies({
-      ngZone,
-      cdRef,
-      component: (this.cdRef as any).context
-    });
-    this.setState({ strategyName: 'idle' });
+    this.strategies = getStrategies({cdRef});
+    this.setState({ strategyName: 'native' });
   }
 }

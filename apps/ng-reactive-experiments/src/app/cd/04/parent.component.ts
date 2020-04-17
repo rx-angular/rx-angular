@@ -7,7 +7,7 @@ import {
 import { defer, merge } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { BaseComponent } from '../../base.component.ts/base.component';
-import { fromZoneEvent } from '@rxjs';
+import { fromZoneEvent } from '@rxjs-etc';
 
 @Component({
   selector: 'app-cd-parent04',

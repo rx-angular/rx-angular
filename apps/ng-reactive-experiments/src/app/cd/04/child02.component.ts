@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { BaseComponent } from '../../base.component.ts/base.component';
 import { defer, merge } from 'rxjs';
-import { fromZoneEvent } from '@rxjs';
+import { fromZoneEvent } from '@rxjs-etc';
 import { tap } from 'rxjs/operators';
 
 @Component({

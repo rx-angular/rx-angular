@@ -1,20 +1,20 @@
 import {
   ChangeDetectorRef,
-  NgZone,
   OnDestroy,
   Pipe,
-  PipeTransform
+  PipeTransform,
 } from '@angular/core';
 import {
   NextObserver,
   Observable,
-  PartialObserver,
-  Unsubscribable
+  ObservableInput,
+  Unsubscribable,
 } from 'rxjs';
 import { CdAware, createCdAware, getStrategies } from '../core';
 
 /**
  * @Pipe PushPipe
+ *
  * @description
  *
  * The `ngrxPush` pipe serves as a drop-in replacement for the `async` pipe.
@@ -46,8 +46,6 @@ import { CdAware, createCdAware, getStrategies } from '../core';
  *
  * @usageNotes
  *
- * ### Examples
- *
  * `ngrxPush` pipe solves that problem. It can be used like shown here:
  * ```html
  * {{observable$ | ngrxPush}}
@@ -59,46 +57,49 @@ import { CdAware, createCdAware, getStrategies } from '../core';
  */
 @Pipe({ name: 'ngrxPush', pure: false })
 export class PushPipe<S> implements PipeTransform, OnDestroy {
-  private renderedValue: any | null | undefined;
+  private renderedValue: S | null | undefined;
 
   private readonly subscription: Unsubscribable;
   private readonly cdAware: CdAware<S | null | undefined>;
-  private readonly updateViewContextObserver: PartialObserver<
+  private readonly resetObserver: NextObserver<void> = {
+    next: () => (this.renderedValue = undefined),
+  };
+  private readonly updateObserver: NextObserver<
     S | null | undefined
   > = {
-    // assign value that will get returned from the transform function on the next change detection
-    next: (value: S | null | undefined) => (this.renderedValue = value)
-  };
-  private readonly resetContextObserver: NextObserver<unknown> = {
-    next: (value: unknown) => (this.renderedValue = undefined)
+    next: (value: S | null | undefined) => (this.renderedValue = value),
   };
 
-  constructor(cdRef: ChangeDetectorRef, ngZone: NgZone) {
+  constructor(cdRef: ChangeDetectorRef) {
     this.cdAware = createCdAware<S>({
-      strategies: getStrategies<S>({
-        component: (cdRef as any).context,
-        ngZone,
-        cdRef
-      }),
-      updateViewContextObserver: this.updateViewContextObserver,
-      resetContextObserver: this.resetContextObserver
+      strategies: getStrategies<S>({ cdRef }),
+      updateObserver: this.updateObserver,
+      resetObserver: this.resetObserver,
     });
     this.subscription = this.cdAware.subscribe();
   }
 
-  transform<T>(potentialObservable: null, config?: string): null;
-  transform<T>(potentialObservable: undefined, config?: string): undefined;
   transform<T>(
-    potentialObservable: Observable<T> | Promise<T>,
-    config?: string
+    potentialObservable: null,
+    config?: string | Observable<string>
+  ): null;
+  transform<T>(
+    potentialObservable: undefined,
+    config?: string | Observable<string>
+  ): undefined;
+  transform<T>(
+    potentialObservable: ObservableInput<T>,
+    config?: string | Observable<string>
   ): T;
   transform<T>(
-    potentialObservable: Observable<T> | Promise<T> | null | undefined,
-    config: string | undefined
+    potentialObservable: ObservableInput<T> | null | undefined,
+    config: string | Observable<string> | undefined
   ): T | null | undefined {
-    this.cdAware.nextConfig(config);
-    this.cdAware.nextVale(potentialObservable as any);
-    return this.renderedValue as T | null | undefined;
+    if (config) {
+      this.cdAware.nextStrategy(config);
+    }
+    this.cdAware.nextPotentialObservable(potentialObservable);
+    return this.renderedValue as any;
   }
 
   ngOnDestroy(): void {

@@ -4,11 +4,11 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-  NgZone,
+  NgZone, Type,
   ɵdetectChanges
 } from '@angular/core';
 import { environment } from '../environments/environment';
-import { hasZone, isIvy } from '@ngx-rx/ts-etc';
+import { isNgZone, isViewEngineIvy  } from '@ts-etc';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
 import { CdConfigService } from './cd-config.service';
@@ -42,11 +42,10 @@ import { RxState } from '@ngx-rx-state';
             *ngFor="
               let strategy of [
                 undefined,
-                'idle',
-                'pessimistic1',
-                'pessimistic2',
-                'optimistic1',
-                'optimistic2'
+                'native',
+                'noop',
+                'global',
+                'local'
               ]
             "
           >
@@ -84,20 +83,20 @@ export class ConfigPanelComponent
     fromEvent(document.getElementById('btnDetectChanges'), 'click')
   );
 
-  expanded = hasZone(this.ngZone) ? false : true;
+  expanded = isNgZone(this.ngZone) ? false : true;
   @Input()
   appComponentRef;
 
   readonly env = environment;
-  readonly hasZone = hasZone(this.ngZone);
-  readonly zoneEnv = hasZone(this.ngZone) ? 'NgZone' : 'NgNoopZone';
+  readonly hasZone = isNgZone(this.ngZone);
+  readonly zoneEnv = isNgZone(this.ngZone) ? 'NgZone' : 'NgNoopZone';
   readonly changeDetection =
     'cd.' + (this.env.changeDetection === 1 ? 'Default' : 'OnPush');
-  readonly engine = isIvy() ? 'Ivy' : 'ViewEngine';
+  readonly engine = isViewEngineIvy() ? 'Ivy' : 'ViewEngine';
   readonly renderTechnique;
 
   readonly configForm = this.fb.group({
-    strategy: ['pessimistic1']
+    strategy: ['native']
   });
   readonly configForm$: Observable<{
     strategy: string;
