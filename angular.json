@@ -386,10 +386,7 @@
               "apps/ngx-rx-experiments/tsconfig.app.json",
               "apps/ngx-rx-experiments/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/ngx-rx-experiments/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/ngx-rx-experiments/**"]
           }
         },
         "test": {
@@ -425,10 +422,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": ["apps/ngx-rx-experiments-e2e/tsconfig.e2e.json"],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/ngx-rx-experiments-e2e/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/ngx-rx-experiments-e2e/**"]
           }
         }
       }
