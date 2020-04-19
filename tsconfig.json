@@ -10,39 +10,22 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@test-helpers": [
-        "libs/test-helpers/src/index.ts"
-      ],
-      "@ngx-rx/ts-etc": [
-        "libs/ts-etc/src/index.ts"
-      ],
-      "@ngx-rx/rxjs-etc": [
-        "libs/rxjs-etc/src/index.ts"
-      ],
-      "@ngx-rx/rxjs-state": [
-        "libs/rxjs-state/src/index.ts"
-      ],
-      "@ngx-rx/state": [
-        "libs/state/src/index.ts"
-      ],
+      "@test-helpers": ["libs/test-helpers/src/index.ts"],
+      "@ngx-rx/ts-etc": ["libs/ts-etc/src/index.ts"],
+      "@ngx-rx/rxjs-etc": ["libs/rxjs-etc/src/index.ts"],
+      "@ngx-rx/rxjs-state": ["libs/rxjs-state/src/index.ts"],
+      "@ngx-rx/state": ["libs/state/src/index.ts"],
       "@ngx-rx/ngrx-component-experiments": [
         "libs/ngrx-component-experiments/src/index.ts"
-      ]
+      ],
+      "@ngx-rx/xxrxjs-state": ["libs/xxrxjs-state/src/index.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

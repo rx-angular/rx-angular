@@ -50,6 +50,9 @@
     "ng-reactive-experiments-e2e": {
       "tags": [],
       "implicitDependencies": ["ng-reactive-experiments"]
+    },
+    "xxrxjs-state": {
+      "tags": []
     }
   }
 }
