@@ -32,9 +32,16 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "nx affected:lint --fix && nx format:write",
-      "pre-push": "nx affected:test"
+      "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "apps/**/*.ts": [
+      "nx affected:lint --fix && nx format:write"
+    ],
+    "libs/**/*.ts": [
+      "nx affected:lint --fix && nx format:write"
+    ]
   },
   "private": true,
   "dependencies": {
@@ -76,6 +83,7 @@
     "husky": "^4.2.5",
     "jest": "25.2.3",
     "jest-preset-angular": "8.1.2",
+    "lint-staged": "^10.1.6",
     "ng-packagr": "^9.0.0",
     "prettier": "1.19.1",
     "ts-jest": "25.2.1",
