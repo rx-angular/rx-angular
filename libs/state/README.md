@@ -73,7 +73,7 @@ and the peer dependency:
 As the RxState class is just a plain vanilla Javascript Class
 
 ```typescript
-import { RxState } from 'rxjs-state';
+import { RxState } from '@ngx-rx/rxjs-state';
 
 interface MyState {
   foo: string;

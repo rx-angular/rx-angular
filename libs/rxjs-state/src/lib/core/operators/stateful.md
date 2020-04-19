@@ -9,7 +9,7 @@ Detailed description
 ```ts
 import { from } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { stateful } from 'rxjs-state';
+import { stateful } from '@ngx-rx/rxjs-state';
 
 const source = from([2, 2, 2, undefined, 4]);
 const statefulSource = clicks.pipe(stateful(map(v => v * 2)));

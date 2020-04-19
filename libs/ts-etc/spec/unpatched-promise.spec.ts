@@ -1,4 +1,4 @@
-import { getGlobalThis, getUnpatchedResolvedPromise } from '@ts-etc';
+import { getGlobalThis, getUnpatchedResolvedPromise } from '@ngx-rx/ts-etc';
 
 const original__zone_symbol__Promise = getGlobalThis().__zone_symbol__Promise || Promise;
 

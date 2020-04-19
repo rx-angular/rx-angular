@@ -1,4 +1,4 @@
-import { jestMatcher } from '@test-helpers';
+import { jestMatcher } from 'test-helpers';
 
 import { select } from '../../../src';
 import { EMPTY, NEVER, Observable } from 'rxjs';

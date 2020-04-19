@@ -1,5 +1,5 @@
 module.exports = {
-  name: 'rxjs-state',
+  name: '@ngx-rx/rxjs-state',
   preset: '../../jest.config.js',
   transform: {
     '^.+\\.[tj]sx?$': 'ts-jest'

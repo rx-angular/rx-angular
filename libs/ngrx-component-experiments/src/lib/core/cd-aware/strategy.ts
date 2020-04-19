@@ -1,5 +1,5 @@
 // @Notice this part of the code is in the coalescing PR https://github.com/ngrx/platform/pull/2456
-import { coalesce , generateFrames } from '@rxjs-etc';
+import { coalesce , generateFrames } from '@ngx-rx/rxjs-etc';
 
 import { defer, from, MonoTypeOperatorFunction, Observable } from 'rxjs';
 import {
@@ -7,7 +7,7 @@ import {
   ɵdetectChanges as detectChanges,
   ɵmarkDirty as markDirty,
 } from '@angular/core';
-import { apiZonePatched, getGlobalThis, isViewEngineIvy } from '@ts-etc';
+import { apiZonePatched, getGlobalThis, isViewEngineIvy } from '@ngx-rx/ts-etc';
 import { mapTo } from 'rxjs/operators';
 import { getZoneUnPatchedDurationSelector } from './duration-selector';
 

@@ -1,5 +1,5 @@
 module.exports = {
-  name: 'ts-etc',
+  name: '@ngx-rx/ts-etc',
   preset: '../../jest.config.js',
   transform: {
     '^.+\\.[tj]sx?$': 'ts-jest'

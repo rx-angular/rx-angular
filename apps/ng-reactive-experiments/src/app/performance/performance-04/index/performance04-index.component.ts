@@ -8,7 +8,7 @@ import {
   Person
 } from './performance-04-data.service';
 import { environment } from '../../../../environments/environment';
-import { RxState } from '@ngx-rx-state';
+import { RxState } from '@state';
 
 export interface Performance04State {
   data: Person[];

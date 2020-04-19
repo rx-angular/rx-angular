@@ -1,17 +1,17 @@
-import {MockNgZone} from './mock-ng-zone';
-import { MockNoopNgZone } from './mock-noop-ng-zone';
+import {MockNgZoneSpec} from './mock-ng-zone.spec';
+import { MockNoopNgZoneSpec } from './mock-noop-ng-zone.spec';
 
 /**
  * this is not exposed as NgZone should never be exposed to get miss matched with the real one
  */
-class NgZone extends MockNgZone {
+class NgZone extends MockNgZoneSpec {
 
 }
 
 /**
  * this is not exposed as NgZone should never be exposed to get miss matched with the real one
  */
-class NoopNgZone extends MockNoopNgZone {
+class NoopNgZone extends MockNoopNgZoneSpec {
 
 }
 

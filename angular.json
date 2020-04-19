@@ -153,21 +153,21 @@
         }
       }
     },
-    "ngx-rx-state": {
+    "state": {
       "projectType": "library",
-      "root": "libs/ngx-rx-state",
-      "sourceRoot": "libs/ngx-rx-state/src",
+      "root": "libs/state",
+      "sourceRoot": "libs/state/src",
       "prefix": "ngx-rx",
       "architect": {
         "build": {
           "builder": "@nrwl/angular:package",
           "options": {
-            "tsConfig": "libs/ngx-rx-state/tsconfig.lib.json",
-            "project": "libs/ngx-rx-state/ng-package.json"
+            "tsConfig": "libs/state/tsconfig.lib.json",
+            "project": "libs/state/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "libs/ngx-rx-state/tsconfig.lib.prod.json"
+              "tsConfig": "libs/state/tsconfig.lib.prod.json"
             }
           }
         },
@@ -175,20 +175,20 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/ngx-rx-state/tsconfig.lib.json",
-              "libs/ngx-rx-state/tsconfig.spec.json"
+              "libs/state/tsconfig.lib.json",
+              "libs/state/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**",
-              "!libs/ngx-rx-state/**"
+              "!libs/state/**"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/ngx-rx-state/jest.config.js",
-            "tsConfig": "libs/ngx-rx-state/tsconfig.spec.json",
+            "jestConfig": "libs/state/jest.config.js",
+            "tsConfig": "libs/state/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "libs/ngx-rx-state/src/test-setup.ts"
           }
@@ -243,7 +243,7 @@
         }
       },
       "root": "apps/ngx-rx-state-demo",
-      "sourceRoot": "apps/ngx-rx-state-demo/src",
+      "sourceRoot": "apps/state-demo/src",
       "prefix": "ngx-rx",
       "architect": {
         "build": {

@@ -20,7 +20,7 @@ RxState is a light-weight reactive state management service which is especially 
 As the RxState class is just a plain vanilla Javascript Class
 
 ```typescript
-import { RxState } from 'rxjs-state';
+import { RxState } from '@ngx-rx/rxjs-state';
 
 interface MyState {
   foo: string;

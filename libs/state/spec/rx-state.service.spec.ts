@@ -5,7 +5,7 @@ import { createStateChecker, PrimitiveState, setupState } from './fixtures';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-import { jestMatcher } from '@test-helpers';
+import { jestMatcher } from 'test-helpers';
 
 const stateChecker = createStateChecker((actual, expected) => {
   if (typeof expected === 'object') {

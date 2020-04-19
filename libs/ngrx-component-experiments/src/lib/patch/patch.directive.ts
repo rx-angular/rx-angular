@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Directive, ElementRef, Input, NgZone } from '@angular/core';
 import { from, fromEvent, of } from 'rxjs';
 import { filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { RxState } from '@ngx-rx-state';
+import { RxState } from '@state';
 import { getStrategies, StrategySelection } from '../core';
 import { nameToStrategy } from '../core/cd-aware/nameToStrategy';
 import { renderChange } from '../renderChange';

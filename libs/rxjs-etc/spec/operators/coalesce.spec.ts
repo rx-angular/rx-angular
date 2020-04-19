@@ -1,9 +1,9 @@
 import { TestScheduler } from 'rxjs/internal/testing/TestScheduler';
 import { mergeMapTo, share } from 'rxjs/operators';
 import { concat, defer, from, of, timer } from 'rxjs';
-import { jestMatcher } from '@test-helpers';
+import { jestMatcher } from 'test-helpers';
 
-import { coalesce, CoalesceConfig } from '@rxjs-etc';
+import { coalesce, CoalesceConfig } from '@ngx-rx/rxjs-etc';
 
 /** @test {coalesce} */
 describe('coalesce operator additional logic', () => {

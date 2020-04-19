@@ -15,7 +15,7 @@ jobs:
             - run: yarn nx affected --target=lint --base=origin/master~1 --parallel
             - run: yarn nx affected --target=test --base=origin/master~1 --parallel
             - run: yarn ng build --project rxjs-state
-            - run: yarn ng build --project ngx-rx-state --prod
+            - run: yarn ng build --project state --prod
 workflows:
     build-and-test:
       jobs:

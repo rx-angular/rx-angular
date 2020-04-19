@@ -8,7 +8,7 @@ It should be used to replace `window` due to different environments in:
 - Browser
 
 ```typescript
-import {getGlobalThis} from '@ts-etc'
+import {getGlobalThis} from '@ngx-rx/ts-etc'
 
 const globalThis = getGlobalThis(); 
 

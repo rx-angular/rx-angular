@@ -14,7 +14,7 @@ export const ROUTES: Routes = [
       )
   },
   {
-    path: 'rxjs-state',
+    path: '@ngx-rx/rxjs-state',
     component: VanillaDemoComponent
   }
 ];

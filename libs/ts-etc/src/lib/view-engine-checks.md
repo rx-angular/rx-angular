@@ -21,7 +21,7 @@ So for Ivy we need to make sure that ng is undefined or,
 in case of dev environment, ng.probe is undefined.
 
 ```typescript
-import {isViewEngineIvy} from '@ts-etc'
+import {isViewEngineIvy} from '@ngx-rx/ts-etc'
 
 const isViewEngineUsingIvy: boolean = isViewEngineIvy(); 
 

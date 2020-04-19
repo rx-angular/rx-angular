@@ -2,7 +2,7 @@ import { createAccumulationObservable } from '../../src';
 import { pluck } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-import { jestMatcher } from '@test-helpers';
+import { jestMatcher } from 'test-helpers';
 
 interface PrimitiveState {
   bol: boolean;

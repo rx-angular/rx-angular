@@ -1,6 +1,6 @@
 import { createSideEffectObservable } from '../../src';
 import { TestScheduler } from 'rxjs/testing';
-import { jestMatcher } from '@test-helpers';
+import { jestMatcher } from 'test-helpers';
 
 let testScheduler: TestScheduler;
 

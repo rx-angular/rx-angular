@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { RxJsState } from 'rxjs-state';
+import { RxJsState } from '@ngx-rx/rxjs-state';
 import { Subscription } from 'rxjs';
 
 @Component({
