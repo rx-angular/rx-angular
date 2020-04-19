@@ -23,7 +23,6 @@ import { environment } from '../../../../environments/environment';
   changeDetection: environment.changeDetection
 })
 export class Performance02IndexComponent implements OnInit, OnDestroy {
-
   constructor(private dataService: Performance02DataService) {}
   displayedColumns: string[] = [
     'select',

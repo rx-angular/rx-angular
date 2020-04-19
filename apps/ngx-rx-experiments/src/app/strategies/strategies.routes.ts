@@ -11,4 +11,4 @@ export const STRATEGY_ROUTES: Routes = [
     path: 'virtual-scroll',
     component: VirtualScrollDemoComponent
   }
-]
+];

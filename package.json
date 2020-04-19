@@ -36,11 +36,9 @@
     }
   },
   "lint-staged": {
-    "apps/**/*.ts": [
-      "nx affected:lint --fix && nx format:write"
-    ],
-    "libs/**/*.ts": [
-      "nx affected:lint --fix && nx format:write"
+    "{apps,libs}/**/*.{ts,html,scss,md,json}": [
+      "npm run affected:lint -- --fix --uncommitted",
+      "npm run format:write -- --uncommitted"
     ]
   },
   "private": true,

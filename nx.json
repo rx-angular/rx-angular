@@ -44,12 +44,12 @@
     "ngrx-component-experiments": {
       "tags": []
     },
-    "ng-reactive-experiments": {
+    "ngx-rx-experiments": {
       "tags": []
     },
-    "ng-reactive-experiments-e2e": {
+    "ngx-rx-experiments-e2e": {
       "tags": [],
-      "implicitDependencies": ["ng-reactive-experiments"]
+      "implicitDependencies": ["ngx-rx-experiments"]
     }
   }
 }

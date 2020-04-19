@@ -18,7 +18,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <button #button>increment</button>
     <!-- -->
     <br />
-    <insertion [template]="ref"></insertion>
+    <app-insertion [template]="ref"></app-insertion>
 
     <ng-template #ref>
       <span>{{ value1$ | ngrxPush }}</span>

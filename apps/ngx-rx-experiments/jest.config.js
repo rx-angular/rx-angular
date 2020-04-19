@@ -1,7 +1,7 @@
 module.exports = {
-  name: 'ng-reactive-experiments',
+  name: 'ngx-rx-experiments',
   preset: '../../jest.config.js',
-  coverageDirectory: '../../coverage/apps/ng-reactive-experiments',
+  coverageDirectory: '../../coverage/apps/ngx-rx-experiments',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',

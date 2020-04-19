@@ -8,8 +8,6 @@ import { VirtualScrollDemoComponent } from './virtual-scroll-demo/virtual-scroll
 import { StrategiesOverviewComponent } from './strategies.overview.component';
 import { ScrollItemComponent } from './virtual-scroll-demo/scroll-item.component';
 
-
-
 @NgModule({
   declarations: [
     VirtualScrollDemoComponent,
@@ -23,4 +21,4 @@ import { ScrollItemComponent } from './virtual-scroll-demo/scroll-item.component
     ScrollingModule
   ]
 })
-export class StrategiesModule { }
+export class StrategiesModule {}

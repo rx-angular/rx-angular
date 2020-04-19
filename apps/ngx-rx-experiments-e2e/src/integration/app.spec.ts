@@ -1,6 +1,6 @@
 import { getGreeting } from '../support/app.po';
 
-describe('ng-reactive-experiments', () => {
+describe('ngx-rx-experiments', () => {
   beforeEach(() => cy.visit('/'));
 
   it('should display welcome message', () => {
@@ -8,6 +8,6 @@ describe('ng-reactive-experiments', () => {
     cy.login('my-email@something.com', 'myPassword');
 
     // Function helper example, see `../support/app.po.ts` file
-    getGreeting().contains('Welcome to ng-reactive-experiments!');
+    getGreeting().contains('Welcome to ngx-rx-experiments!');
   });
 });
