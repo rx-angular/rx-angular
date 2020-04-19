@@ -1,4 +1,4 @@
-export class MockEventEmitterSpec<T> {
+export class MockEventEmitter<T> {
   next: (value: any) => {};
   error: (error: any) => {};
   complete: () => {};

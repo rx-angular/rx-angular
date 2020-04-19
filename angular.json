@@ -133,7 +133,7 @@
             "jestConfig": "libs/state/jest.config.js",
             "tsConfig": "libs/state/tsconfig.spec.json",
             "passWithNoTests": true,
-            "setupFile": "libs/ngx-rx-state/src/test-setup.ts"
+            "setupFile": "libs/state/src/test-setup.ts"
           }
         }
       },

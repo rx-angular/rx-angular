@@ -9,7 +9,7 @@ import {
   manualInstanceNgZone,
   manualInstanceNoopNgZone,
   mockPromise
-} from './fixtures/fixtures.spec';
+} from './fixtures/fixtures';
 
 describe('envZonePatched', () => {
   it('should return true if `zone.js` did patch the global API', () => {

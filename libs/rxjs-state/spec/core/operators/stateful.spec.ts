@@ -2,7 +2,7 @@ import { stateful } from '@ngx-rx/rxjs-state';
 import { EMPTY, NEVER } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-import { jestMatcher } from 'test-helpers';
+import { jestMatcher } from '@test-helpers';
 
 interface PrimitiveState {
   test: string;

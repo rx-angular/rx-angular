@@ -2,7 +2,7 @@ import { mapTo, mergeMap } from 'rxjs/operators';
 import { concat, of, timer } from 'rxjs';
 import { coalesce, CoalesceConfig } from '../../src';
 
-import { jestMatcher } from 'test-helpers';
+import { jestMatcher } from '@test-helpers';
 import { TestScheduler } from 'rxjs/testing';
 
 /** @test {coalesce} */

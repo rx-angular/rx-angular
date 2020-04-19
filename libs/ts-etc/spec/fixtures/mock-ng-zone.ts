@@ -1,22 +1,22 @@
-import { MockEventEmitterSpec } from './mock-event-emitter.spec';
+import { MockEventEmitter } from './mock-event-emitter';
 
 /**
  * source: https://github.com/angular/angular/blob/master/packages/core/src/zone/ng_zone.ts#L88
  */
-export class MockNoopNgZoneSpec {
+export class MockNgZone {
   readonly hasPendingMacrotasks: boolean = false;
   readonly hasPendingMicrotasks: boolean = false;
   readonly isStable: boolean = true;
-  readonly onUnstable: MockEventEmitterSpec<any> = new MockEventEmitterSpec(
+  readonly onUnstable: MockEventEmitter<any> = new MockEventEmitter(
     false
   );
-  readonly onMicrotaskEmpty: MockEventEmitterSpec<
+  readonly onMicrotaskEmpty: MockEventEmitter<
     any
-  > = new MockEventEmitterSpec(false);
-  readonly onStable: MockEventEmitterSpec<any> = new MockEventEmitterSpec(
+  > = new MockEventEmitter(false);
+  readonly onStable: MockEventEmitter<any> = new MockEventEmitter(
     false
   );
-  readonly onError: MockEventEmitterSpec<any> = new MockEventEmitterSpec(false);
+  readonly onError: MockEventEmitter<any> = new MockEventEmitter(false);
 
   static isInAngularZone(): boolean {
     return true;

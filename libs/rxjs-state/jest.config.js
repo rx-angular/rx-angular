@@ -1,7 +1,7 @@
 module.exports = {
-  name: 'xxrxjs-state',
+  name: 'rxjs-state',
   preset: '../../jest.config.js',
-  coverageDirectory: '../../coverage/libs/xxrxjs-state',
+  coverageDirectory: '../../coverage/libs/rxjs-state',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',
