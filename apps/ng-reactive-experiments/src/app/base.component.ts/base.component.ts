@@ -49,7 +49,13 @@ export abstract class BaseComponent
     protected cdRef: ChangeDetectorRef,
     protected ngZone: NgZone,
     protected coalesceConfigService: CdConfigService
-  ) {}
+  ) {
+    this.cdRef.markForCheck = () => {
+      console.log('markForCheck');
+      this.cdRef.markForCheck()
+    };
+
+  }
 
   appRef_tick() {
     this.appRef.tick();
