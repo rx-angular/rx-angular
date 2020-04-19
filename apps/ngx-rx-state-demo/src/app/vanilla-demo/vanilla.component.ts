@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { RxJsState } from 'rxjs-state';
+import { RxJsState } from '@ngx-rx/rxjs-state';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,13 +14,13 @@ export class VanillaDemoComponent extends RxJsState<any> implements OnDestroy {
   value$ = this.select();
 
   constructor() {
-   super();
-   this.subscription.add(this.subscribe());
-   this.setState({ test: 43 });
-    console.log(this.select())
+    super();
+    this.subscription.add(this.subscribe());
+    this.setState({ test: 43 });
+    console.log(this.select());
   }
 
   ngOnDestroy(): void {
-   this.subscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }

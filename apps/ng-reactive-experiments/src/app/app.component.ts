@@ -3,7 +3,7 @@ import { ApplicationRef, Component, NgZone } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
-import { isNgZone } from '@ts-etc';
+import { isNgZone } from '@ngx-rx/ts-etc';
 import { MENU_ITEMS } from './app.menu';
 
 @Component({

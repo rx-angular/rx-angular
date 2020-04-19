@@ -9,7 +9,7 @@ import {
 import { BaseComponent } from '../../base.component.ts/base.component';
 import { tap } from 'rxjs/operators';
 import { defer } from 'rxjs';
-import { fromZoneEvent } from '@rxjs-etc';
+import { fromZoneEvent } from '@ngx-rx/rxjs-etc';
 
 @Component({
   selector: 'app-cd-parent01',

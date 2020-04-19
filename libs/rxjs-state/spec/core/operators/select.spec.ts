@@ -1,6 +1,6 @@
 import { jestMatcher } from '@test-helpers';
 
-import { select } from '../../../src';
+import { select } from '@ngx-rx/rxjs-state';
 import { EMPTY, NEVER, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';

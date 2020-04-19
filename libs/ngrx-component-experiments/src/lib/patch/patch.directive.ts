@@ -1,7 +1,20 @@
-import { ChangeDetectorRef, Directive, ElementRef, Input, NgZone } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Directive,
+  ElementRef,
+  Input,
+  NgZone
+} from '@angular/core';
 import { from, fromEvent, of } from 'rxjs';
-import { filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { RxState } from '@ngx-rx-state';
+import {
+  filter,
+  map,
+  mergeMap,
+  switchMap,
+  tap,
+  withLatestFrom
+} from 'rxjs/operators';
+import { RxState } from '@ngx-rx/state';
 import { getStrategies, StrategySelection } from '../core';
 import { nameToStrategy } from '../core/cd-aware/nameToStrategy';
 import { renderChange } from '../renderChange';
@@ -51,7 +64,7 @@ export class PatchDirective extends RxState<{
     private elemRef: ElementRef
   ) {
     super();
-    this.strategies = getStrategies({cdRef});
+    this.strategies = getStrategies({ cdRef });
     this.setState({ strategyName: 'native' });
   }
 }

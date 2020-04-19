@@ -1,4 +1,4 @@
-import { apiZonePatched, getGlobalThis } from '@ts-etc';
+import { apiZonePatched, getGlobalThis } from '@ngx-rx/ts-etc';
 import { defer, from, Observable } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
 

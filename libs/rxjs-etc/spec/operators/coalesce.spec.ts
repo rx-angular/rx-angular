@@ -3,7 +3,7 @@ import { mergeMapTo, share } from 'rxjs/operators';
 import { concat, defer, from, of, timer } from 'rxjs';
 import { jestMatcher } from '@test-helpers';
 
-import { coalesce, CoalesceConfig } from '@rxjs-etc';
+import { coalesce, CoalesceConfig } from '@ngx-rx/rxjs-etc';
 
 /** @test {coalesce} */
 describe('coalesce operator additional logic', () => {
@@ -133,7 +133,7 @@ describe('coalesce operator additional logic', () => {
     beforeEach(() => {
       coalesceConfig = {
         leading: true,
-        trailing: true,
+        trailing: true
       };
     });
 
@@ -300,7 +300,7 @@ describe('coalesce operator additional logic', () => {
         const cfg = {
           leading: false,
           trailing: true,
-          context: window as any,
+          context: window as any
         };
 
         const s1 = cold('---abcdef---|');
@@ -323,7 +323,7 @@ describe('coalesce operator additional logic', () => {
         const cfg = {
           leading: false,
           trailing: true,
-          context: window as any,
+          context: window as any
         };
 
         const s1 = cold('---(abcdef)---|');
@@ -366,7 +366,7 @@ describe('coalesce operator additional logic', () => {
           const cfg = {
             leading: false,
             trailing: true,
-            context: window as any,
+            context: window as any
           };
           testScheduler.run(() => {
             let syncEmission1: any;
@@ -422,7 +422,7 @@ describe('coalesce operator additional logic', () => {
           const cfg = {
             leading: false,
             trailing: true,
-            context: window as any,
+            context: window as any
           };
 
           const s1 = cold('---(abcdef)-|');
@@ -445,7 +445,7 @@ describe('coalesce operator additional logic', () => {
           const cfg = {
             leading: false,
             trailing: true,
-            context: window as any,
+            context: window as any
           };
 
           const s1 = cold('----abcdef--|');

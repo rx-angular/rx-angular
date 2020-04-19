@@ -1,4 +1,4 @@
-import {MockEventEmitter} from './mock-event-emitter';
+import { MockEventEmitter } from './mock-event-emitter';
 
 /**
  * source: https://github.com/angular/angular/blob/master/packages/core/src/zone/ng_zone.ts#L88
@@ -8,7 +8,9 @@ export class MockNgZone {
   readonly hasPendingMicrotasks: boolean = false;
   readonly isStable: boolean = true;
   readonly onUnstable: MockEventEmitter<any> = new MockEventEmitter(false);
-  readonly onMicrotaskEmpty: MockEventEmitter<any> = new MockEventEmitter(false);
+  readonly onMicrotaskEmpty: MockEventEmitter<any> = new MockEventEmitter(
+    false
+  );
   readonly onStable: MockEventEmitter<any> = new MockEventEmitter(false);
   readonly onError: MockEventEmitter<any> = new MockEventEmitter(false);
 
@@ -16,25 +18,33 @@ export class MockNgZone {
     return true;
   }
 
-  static assertInAngularZone(): void {
-  }
+  static assertInAngularZone(): void {}
 
-  static assertNotInAngularZone(): void {
-  }
+  static assertNotInAngularZone(): void {}
 
-  constructor({ enableLongStackTrace = false, shouldCoalesceEventChangeDetection = false }) {
-
-  }
+  constructor({
+    enableLongStackTrace = false,
+    shouldCoalesceEventChangeDetection = false
+  }) {}
 
   run(fn: Function): any {
     return fn();
   }
 
-  runTask<T>(fn: (...args: any[]) => T, applyThis?: any, applyArgs?: any[], name?: string): T {
+  runTask<T>(
+    fn: (...args: any[]) => T,
+    applyThis?: any,
+    applyArgs?: any[],
+    name?: string
+  ): T {
     return undefined;
   }
 
-  runGuarded<T>(fn: (...args: any[]) => T, applyThis?: any, applyArgs?: any[]): T {
+  runGuarded<T>(
+    fn: (...args: any[]) => T,
+    applyThis?: any,
+    applyArgs?: any[]
+  ): T {
     return undefined;
   }
 

@@ -5,14 +5,14 @@ import {
   SubscribableOrPromise,
   Subscriber,
   Subscription,
-  TeardownLogic,
+  TeardownLogic
 } from 'rxjs';
 import {
   InnerSubscriber,
   OuterSubscriber,
-  subscribeToResult,
+  subscribeToResult
 } from 'rxjs/internal-compatibility';
-import { createPropertiesWeakMap } from '@ts-etc';
+import { createPropertiesWeakMap } from '@ngx-rx/ts-etc';
 
 export interface CoalesceConfig {
   context?: object;
@@ -28,13 +28,13 @@ const coalescingContextPropertiesMap = createPropertiesWeakMap<
   object,
   CoalescingContextProps
 >(ctx => ({
-  isCoalescing: false,
+  isCoalescing: false
 }));
 
 const defaultCoalesceConfig: CoalesceConfig = {
   leading: false,
   trailing: true,
-  context: undefined,
+  context: undefined
 };
 
 function getCoalesceConfig(
@@ -42,7 +42,7 @@ function getCoalesceConfig(
 ): CoalesceConfig {
   return {
     ...defaultCoalesceConfig,
-    ...config,
+    ...config
   };
 }
 
@@ -159,7 +159,7 @@ class CoalesceSubscriber<T, R> extends OuterSubscriber<T, R> {
     if (!!duration) {
       this.add((this._coalesced = subscribeToResult(this, duration)));
       coalescingContextPropertiesMap.setProps(this._context, {
-        isCoalescing: true,
+        isCoalescing: true
       });
     }
   }
@@ -176,7 +176,7 @@ class CoalesceSubscriber<T, R> extends OuterSubscriber<T, R> {
         this.exhaustLastValue();
       }
       coalescingContextPropertiesMap.setProps(this._context, {
-        isCoalescing: false,
+        isCoalescing: false
       });
     }
   }

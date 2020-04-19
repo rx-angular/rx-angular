@@ -8,7 +8,7 @@ import {
 import { ApplicationRef, Component, Input, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { RxState } from 'ngx-rx-state';
+import { RxState } from '@ngx-rx/state';
 
 export type GrowAnimationState = 'grown' | 'shrinked';
 

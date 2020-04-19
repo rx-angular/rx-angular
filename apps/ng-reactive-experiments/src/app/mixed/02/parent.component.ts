@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { defer, Observable } from 'rxjs';
 import { scan, startWith } from 'rxjs/operators';
 import { BaseComponent } from '../../base.component.ts/base.component';
-import { fromZoneEvent } from '@rxjs-etc';
+import { fromZoneEvent } from '@ngx-rx/rxjs-etc';
 
 @Component({
   selector: 'app-mixed-parent02',

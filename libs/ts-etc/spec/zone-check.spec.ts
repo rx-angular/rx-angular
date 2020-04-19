@@ -1,5 +1,15 @@
-import { apiZonePatched, envZonePatched, getGlobalThis, isNgZone, isNoopNgZone } from '../src';
-import { manualInstanceNgZone, manualInstanceNoopNgZone, mockPromise } from './fixtures/fixtures';
+import {
+  apiZonePatched,
+  envZonePatched,
+  getGlobalThis,
+  isNgZone,
+  isNoopNgZone
+} from '../src';
+import {
+  manualInstanceNgZone,
+  manualInstanceNoopNgZone,
+  mockPromise
+} from './fixtures/fixtures';
 
 describe('envZonePatched', () => {
   it('should return true if `zone.js` did patch the global API', () => {
@@ -48,4 +58,3 @@ describe('isNoopNgZone', () => {
     expect(isNoopNgZone(notNoopNgZone)).toBe(false);
   });
 });
-

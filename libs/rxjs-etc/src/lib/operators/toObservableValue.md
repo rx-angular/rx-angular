@@ -1,6 +1,6 @@
 # toObservableValue
 
-Converts ObservableInput<T> as well as null and undefined 
+Converts ObservableInput<T> as well as null and undefined
 
 ![toObservableValue Observable Projection Marble Diagram](generated/images/guide/component/toObservableValue.png)
 
@@ -27,7 +27,7 @@ This example demonstrates how the render method is only called once thus having 
 
 ```typescript
 import { coalesce } from '@ngrx/component';
-import { range } from '@rxjs-etc';
+import { range } from '@ngx-rx/rxjs-etc';
 
 const source$ = range(1, 4); // stream of data
 source$.pipe(coalesce()).subscribe(stateChanges => {
@@ -58,7 +58,7 @@ Setting `leading` and `trailing` to true would result in the emissions `1, 10`.
 
 ```typescript
 import { coalesce } from '@ngrx/component';
-import { range } from '@rxjs-etc';
+import { range } from '@ngx-rx/rxjs-etc';
 
 const source$ = range(1, 4); // synchronous emitted values
 source$
@@ -74,7 +74,7 @@ only one rendering call thus having multiple subscribers to the incoming stream.
 
 ```typescript
 import { coalesce } from '@ngrx/component';
-import { range, animationFrames } from '@rxjs-etc';
+import { range, animationFrames } from '@ngx-rx/rxjs-etc';
 
 const source$ = range(1, 10); // synchronous emitted values
 const coalesceConfig = {

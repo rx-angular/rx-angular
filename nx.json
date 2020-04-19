@@ -26,7 +26,7 @@
       "tags": [],
       "implicitDependencies": ["ngx-rx-state-demo"]
     },
-    "ngx-rx-state": {
+    "state": {
       "tags": []
     },
     "rxjs-state": {

@@ -1,4 +1,5 @@
 # ngx-rx-state
+
 [![ngx-rx](https://circleci.com/gh/BioPhoton/ngx-rx.svg?style=shield)](https://circleci.com/gh/BioPhoton/ngx-rx)
 
 #### Reactive Component State for Angular
@@ -40,6 +41,7 @@ Videos:
 - [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch?v=I8uaHMs8rw0)
 
 Articles:
+
 - [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
 
 Design Documents
@@ -73,7 +75,7 @@ and the peer dependency:
 As the RxState class is just a plain vanilla Javascript Class
 
 ```typescript
-import { RxState } from 'rxjs-state';
+import { RxState } from '@ngx-rx/rxjs-state';
 
 interface MyState {
   foo: string;

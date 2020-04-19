@@ -7,7 +7,7 @@ import {
 } from '../../../data-access/github';
 import { NEVER, Subject } from 'rxjs';
 import { DemoBasicsItem } from '../demo-basics-item.interface';
-import { RxState } from 'ngx-rx-state';
+import { RxState } from '@ngx-rx/state';
 
 interface ComponentState {
   refreshInterval: number;
