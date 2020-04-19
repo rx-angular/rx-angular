@@ -7,15 +7,11 @@ export class MockNgZone {
   readonly hasPendingMacrotasks: boolean = false;
   readonly hasPendingMicrotasks: boolean = false;
   readonly isStable: boolean = true;
-  readonly onUnstable: MockEventEmitter<any> = new MockEventEmitter(
+  readonly onUnstable: MockEventEmitter<any> = new MockEventEmitter(false);
+  readonly onMicrotaskEmpty: MockEventEmitter<any> = new MockEventEmitter(
     false
   );
-  readonly onMicrotaskEmpty: MockEventEmitter<
-    any
-  > = new MockEventEmitter(false);
-  readonly onStable: MockEventEmitter<any> = new MockEventEmitter(
-    false
-  );
+  readonly onStable: MockEventEmitter<any> = new MockEventEmitter(false);
   readonly onError: MockEventEmitter<any> = new MockEventEmitter(false);
 
   static isInAngularZone(): boolean {
