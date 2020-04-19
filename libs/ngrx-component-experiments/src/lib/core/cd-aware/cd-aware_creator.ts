@@ -1,10 +1,9 @@
 import {
   BehaviorSubject,
-  combineLatest, concat, defer,
   EMPTY,
-  isObservable,
   NextObserver,
   Observable,
+  of,
   PartialObserver,
   Subject,
   Subscribable,
@@ -12,17 +11,18 @@ import {
 } from 'rxjs';
 import {
   catchError,
-  distinctUntilChanged, map,
+  distinctUntilChanged,
+  map,
   mergeAll,
-  switchMap, switchMapTo, take,
+  switchMap,
   tap
 } from 'rxjs/operators';
+import { nameToStrategy } from './nameToStrategy';
 import {
   CdStrategy,
   DEFAULT_STRATEGY_NAME,
   StrategySelection
 } from './strategy';
-import { nameToStrategy } from './nameToStrategy';
 
 export interface CdAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
@@ -43,22 +43,24 @@ export function createCdAware<U>(cfg: {
   resetObserver: NextObserver<void>;
   updateObserver: PartialObserver<U> & NextObserver<U>;
 }): CdAware<U | undefined | null> {
-
   let strategy: CdStrategy<U>;
-  const strategyName$ = new BehaviorSubject<string | Observable<string>>(DEFAULT_STRATEGY_NAME);
+  const strategyName$ = new BehaviorSubject<string | Observable<string>>(
+    DEFAULT_STRATEGY_NAME
+  );
   const updateStrategyEffect$: Observable<CdStrategy<U>> = strategyName$.pipe(
-    stringOrObservable =>
+    switchMap(stringOrObservable =>
       typeof stringOrObservable === 'string'
-        ? stringOrObservable
-        : stringOrObservable.pipe(mergeAll()),
+        ? of(stringOrObservable)
+        : stringOrObservable.pipe(mergeAll())
+    ),
     nameToStrategy(cfg.strategies),
-    tap(s => strategy = s)
+    tap(s => (strategy = s))
   );
 
   const observablesFromTemplate$ = new Subject<Observable<U>>();
   const renderingEffect$ = observablesFromTemplate$.pipe(
     distinctUntilChanged(),
-    tap((observable$) => {
+    tap(observable$ => {
       if (observable$ === null) {
         cfg.updateObserver.next(observable$ as any);
       } else {
@@ -67,7 +69,7 @@ export function createCdAware<U>(cfg: {
       strategy.render();
     }),
     map(o$ => o$.pipe(strategy.behaviour())),
-    switchMap((observable$) => (observable$ == null) ? EMPTY : observable$),
+    switchMap(observable$ => (observable$ == null ? EMPTY : observable$)),
     distinctUntilChanged(),
     tap(cfg.updateObserver),
     tap(() => strategy.render()),
