@@ -1,6 +1,7 @@
 import { getGlobalThis, getUnpatchedResolvedPromise } from '@ngx-rx/ts-etc';
 
-const original__zone_symbol__Promise = getGlobalThis().__zone_symbol__Promise || Promise;
+const original__zone_symbol__Promise =
+  getGlobalThis().__zone_symbol__Promise || Promise;
 
 function restoreGlobalThis() {
   getGlobalThis().__zone_symbol__Promise = original__zone_symbol__Promise;
@@ -27,7 +28,8 @@ describe('getUnPatchedResolvedPromise', () => {
   });
 
   it('should return the the native/un-patched Promise from globalThis.__zone_symbol__Promise', () => {
-    const originalThen: Function = getGlobalThis().__zone_symbol__Promise.prototype.then;
+    const originalThen: Function = getGlobalThis().__zone_symbol__Promise
+      .prototype.then;
     let called = false;
     getGlobalThis().__zone_symbol__Promise.prototype.then = function() {
       const chained = originalThen.apply(this, arguments);
@@ -36,8 +38,7 @@ describe('getUnPatchedResolvedPromise', () => {
     };
     const promise = getUnpatchedResolvedPromise();
     promise.then(res => {
-        expect(called).toBe(true);
-      }
-    );
+      expect(called).toBe(true);
+    });
   });
 });

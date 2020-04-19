@@ -1,11 +1,11 @@
 // @Notice this part of the code is in the coalescing PR https://github.com/ngrx/platform/pull/2456
-import { coalesce , generateFrames } from '@ngx-rx/rxjs-etc';
+import { coalesce, generateFrames } from '@ngx-rx/rxjs-etc';
 
 import { defer, from, MonoTypeOperatorFunction, Observable } from 'rxjs';
 import {
   ChangeDetectorRef,
   ɵdetectChanges as detectChanges,
-  ɵmarkDirty as markDirty,
+  ɵmarkDirty as markDirty
 } from '@angular/core';
 import { apiZonePatched, getGlobalThis, isViewEngineIvy } from '@ngx-rx/ts-etc';
 import { mapTo } from 'rxjs/operators';
@@ -36,7 +36,7 @@ export function getStrategies<T>(
     [DEFAULT_STRATEGY_NAME]: createNativeStrategy<T>(config),
     noop: createNoopStrategy<T>(),
     global: createGlobalStrategy<T>(config),
-    local: createLocalStrategy<T>(config),
+    local: createLocalStrategy<T>(config)
   };
 }
 
@@ -81,7 +81,7 @@ export function createNativeStrategy<T>(
   return {
     render: (): void => config.cdRef.markForCheck(),
     behaviour: () => o => o,
-    name: 'native',
+    name: 'native'
   };
 }
 
@@ -102,7 +102,7 @@ export function createNoopStrategy<T>(): CdStrategy<T> {
   return {
     render: (): void => {},
     behaviour: () => o => o,
-    name: 'noop',
+    name: 'noop'
   };
 }
 
@@ -138,7 +138,7 @@ export function createGlobalStrategy<T>(
   return {
     behaviour,
     render,
-    name: 'global',
+    name: 'global'
   };
 }
 
@@ -178,7 +178,7 @@ export function createLocalStrategy<T>(
     // If yes, kick out _lView
     context: (IS_VIEW_ENGINE_IVY
       ? (config.cdRef as any)._lView
-      : (config.cdRef as any).context) as any,
+      : (config.cdRef as any).context) as any
   };
 
   function render() {
@@ -192,16 +192,15 @@ export function createLocalStrategy<T>(
   }
 
   const behaviour = () => (o$: Observable<T>): Observable<T> => {
-    return o$
-      .pipe(
+    return o$.pipe(
       // @Notice this part of the code is in the coalescing PR https://github.com/ngrx/platform/pull/2456
-       coalesce(durationSelector, coalesceConfig)
-      );
+      coalesce(durationSelector, coalesceConfig)
+    );
   };
 
   return {
     behaviour,
     render,
-    name: 'local',
+    name: 'local'
   };
 }

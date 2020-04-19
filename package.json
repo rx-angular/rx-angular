@@ -33,7 +33,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "nx affected:lint --fix && nx format:write",
-      "pre-push": "nx affected:lint --fix"
+      "pre-push": "nx affected:lint --fix && nx format:write"
     }
   },
   "private": true,

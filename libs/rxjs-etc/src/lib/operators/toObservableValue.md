@@ -1,6 +1,6 @@
 # toObservableValue
 
-Converts ObservableInput<T> as well as null and undefined 
+Converts ObservableInput<T> as well as null and undefined
 
 ![toObservableValue Observable Projection Marble Diagram](generated/images/guide/component/toObservableValue.png)
 

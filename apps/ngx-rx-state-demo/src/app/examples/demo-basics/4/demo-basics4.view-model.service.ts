@@ -4,8 +4,6 @@ import { Injectable } from '@angular/core';
 import { RxState } from '@ngx-rx/state';
 import { DemoBasicsItem } from '../demo-basics-item.interface';
 
-
-
 export interface DemoBasicsView {
   // All UI-Events or component EventBindings
   refreshClicks: Subject<Event>;

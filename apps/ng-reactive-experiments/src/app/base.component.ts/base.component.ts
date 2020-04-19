@@ -52,9 +52,8 @@ export abstract class BaseComponent
   ) {
     this.cdRef.markForCheck = () => {
       console.log('markForCheck');
-      this.cdRef.markForCheck()
+      this.cdRef.markForCheck();
     };
-
   }
 
   appRef_tick() {
