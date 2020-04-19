@@ -1,9 +1,10 @@
 module.exports = {
-  name: '@ngx-rx/rxjs-state',
+  name: 'xxrxjs-state',
   preset: '../../jest.config.js',
-  transform: {
-    '^.+\\.[tj]sx?$': 'ts-jest'
-  },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'html'],
-  coverageDirectory: '../../coverage/libs/rxjs-state'
+  coverageDirectory: '../../coverage/libs/xxrxjs-state',
+  snapshotSerializers: [
+    'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
+    'jest-preset-angular/build/AngularSnapshotSerializer.js',
+    'jest-preset-angular/build/HTMLCommentSerializer.js'
+  ]
 };

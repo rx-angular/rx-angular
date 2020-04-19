@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { EMPTY, of, range, Subject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { RxState } from '@state';
+import { RxState } from '@ngx-rx/state';
 import { BaseComponent } from '../../base.component.ts/base.component';
 
 @Component({
