@@ -1,7 +1,7 @@
 module.exports = {
-  name: 'state-demo',
+  name: 'base-state-demo',
   preset: '../../jest.config.js',
-  coverageDirectory: '../../coverage/apps/state-demo',
+  coverageDirectory: '../../coverage/apps/base-state-demo',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',

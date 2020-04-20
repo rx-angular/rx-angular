@@ -76,7 +76,7 @@ export interface LetViewContext<T> {
  * We can track the observables:
  * - next value
  * - error value
- * - complete state
+ * - complete base-state
  *
  * ```html
  * <ng-container *ngrxLet="observableNumber$; let n; let e = $error, let c = $complete">

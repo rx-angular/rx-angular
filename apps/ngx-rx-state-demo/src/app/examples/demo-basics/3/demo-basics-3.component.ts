@@ -8,7 +8,7 @@ import {
 } from '../../../data-access/github';
 import { merge, Subject, timer } from 'rxjs';
 import { DemoBasicsItem } from '../demo-basics-item.interface';
-import { RxState } from '@ngx-rx/state';
+import { RxState } from 'ngx-rx-state';
 
 interface ComponentState {
   refreshInterval: number;
@@ -16,7 +16,7 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
-// The  initial state is normally derived form somewhere else automatically. But could also get specified statically here.
+// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
@@ -25,7 +25,7 @@ const initComponentState = {
 
 // 1. Create an interface DemoBasicsView and implement all UI interaction like buttons etc.
 // 2. Create an interface DemoBasicsBaseModel this is basically a copy of your previous ComponentState.
-// 3. Implement a property `baseModel$: Observable<DemoBasicsBaseModel>;` to provide the base model state.
+// 3. Implement a property `baseModel$: Observable<DemoBasicsBaseModel>;` to provide the base model base-state.
 // 4. Create a service called DemoBasicsViewModel
 //   - extend LocalState<DemoBasicsBaseModel>
 //   - implement DemoBasicsView

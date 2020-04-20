@@ -1,4 +1,4 @@
-import { RxJsState } from '@ngx-rx/rxjs-state';
+import { RxJsState } from '../../src/lib/core';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
 

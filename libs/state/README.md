@@ -66,16 +66,14 @@ TOC
 
 ## Install
 
-`npm install --save ngx-rx-state`  
-and the peer dependency:  
-`npm install --save rxjs-state`
+`npm install --save ngx-rx-state`
 
 ## Setup
 
 As the RxState class is just a plain vanilla Javascript Class
 
 ```typescript
-import { RxState } from '@ngx-rx/rxjs-state';
+import { RxState } from '@ngx-rx-state';
 
 interface MyState {
   foo: string;
@@ -90,18 +88,34 @@ const state = new RxState<MyState>();
 ```
 
 ## API
+![ngx-rx-state logo](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/libs/ngx-rx-state/images/ngx-rx-state_API-names.png)
 
-### setState
+The API in a nutshell
+- `$` - The complete state observable
+- `set` - Set state imperatively
+- `connect` - Connect state reactively 
+- `get` - Get current state imperatively
+- `select` - Select state changes reactively
+- `hold` - maintaining the subscription of a side effect
+
+The best practices in a nutshell
+- **Don't nest one of `set`, `connect`, `get`, `select` or `hold` into each other**
+- Use `connect` over `set` 
+- In most of the cases `get` is not needed. The old state is always available.
+
+
+
+### set
 
 **Add new slices to the state by providing an object**
 
 ```typescript
 const state = new RxState<{ foo: string; bar: number }>();
 state.setState({ foo: 'boo' });
-// new state => { foo: 'boo' }
+// new base-state => { foo: 'boo' }
 
 state.setState({ bar: 2 });
-// new state => { foo: 'boo', bar: 2 }
+// new base-state => { foo: 'boo', bar: 2 }
 ```
 
 **Add new Slices to the state by providing a projection function**
@@ -111,7 +125,7 @@ const state = new RxState<{ bar: number }>();
 
 state.setState({ bar: 1 });
 state.setState(currentState => ({ bar: currentState.bar + 2 }));
-// new state => {bar: 3}
+// new base-state => {bar: 3}
 ```
 
 ### connect
@@ -149,7 +163,7 @@ const slice$ = of({
   foo: 'foo'
 });
 state.connect(slice$);
-// new state => { foo: 'foo', bar: 5}
+// new base-state => { foo: 'foo', bar: 5}
 ```
 
 ### select
@@ -254,6 +268,25 @@ state.hold(btnClick$, clickEvent => console.log(clickEvent));
 
 ### Basic Setup
 
+**Provide the `RxState` inside a `Component` or `Directive` and `Inject` it**
+
+```typescript
+@Component({
+  selector: 'app-stateful',
+  template: `
+    <div>{{ state$ | async | json }}</div>
+  `,
+  providers: [RxState]
+})
+export class StatefulComponent {
+  readonly state$ = this.state.select();
+
+  constructor(private state: RxState<{ foo: string }>) {}
+}
+```
+
+In very small components you can also extend to keep the api short.
+
 **Extend from the `RxState` inside a `Component`, `Directive` or `Service`**
 
 ```typescript
@@ -269,23 +302,6 @@ export class StatefulComponent extends RxState<{ foo: number }> {
   constructor() {
     super();
   }
-}
-```
-
-**Provide the `RxState` inside a `Component` or `Directive` and `Inject` it**
-
-```typescript
-@Component({
-  selector: 'app-stateful',
-  template: `
-    <div>{{ state$ | async | json }}</div>
-  `,
-  providers: [RxState]
-})
-export class StatefulComponent {
-  readonly state$ = this.state.select();
-
-  constructor(private state: RxState<{ foo: string }>) {}
 }
 ```
 

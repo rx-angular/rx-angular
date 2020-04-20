@@ -7,7 +7,7 @@ import {
 } from '../../../data-access/github';
 import { NEVER, Subject } from 'rxjs';
 import { DemoBasicsItem } from '../demo-basics-item.interface';
-import { RxState } from '@ngx-rx/state';
+import { RxState } from 'ngx-rx-state';
 
 interface ComponentState {
   refreshInterval: number;
@@ -15,7 +15,7 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
-// The  initial state is normally derived form somewhere else automatically. But could also get specified statically here.
+// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,

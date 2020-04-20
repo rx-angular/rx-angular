@@ -3,11 +3,11 @@ import { RxStateOverviewComponent } from './rx-state.overview.component';
 
 export const ROUTES = [
   {
-    path: 'rx-state',
+    path: 'rx-base-state',
     component: RxStateOverviewComponent
   },
   {
-    path: 'rx-state-01',
+    path: 'rx-base-state-01',
     component: RxStateParent01Component
   }
 ];

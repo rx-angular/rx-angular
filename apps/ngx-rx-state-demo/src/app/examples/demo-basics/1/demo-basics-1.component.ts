@@ -18,7 +18,7 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
-// The  initial state is normally derived form somewhere else automatically. But could also get specified statically here.
+// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
@@ -95,7 +95,7 @@ export class DemoBasicsComponent1 {
   refreshClicks = new Subject<Event>();
   listExpandedChanges = new Subject<boolean>();
 
-  // UI state
+  // UI base-state
   // 1.1) Select component State
   m = initComponentState;
 
@@ -108,10 +108,10 @@ export class DemoBasicsComponent1 {
   }
 
   constructor(private store: Store<any>) {
-    // 2.1) Initialize component state
+    // 2.1) Initialize component base-state
     // 2.2) Connect input bindings
-    // 2.3) Connect state from child components ( listExpandedChanges => listExpanded )
-    // 2.4) Connect Global state (selectRepositoryList -> parseListItems => list)
+    // 2.3) Connect base-state from child components ( listExpandedChanges => listExpanded )
+    // 2.4) Connect Global base-state (selectRepositoryList -> parseListItems => list)
   }
 
   onRefreshClicks(event) {}
