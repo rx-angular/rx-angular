@@ -6,13 +6,7 @@ import {
   Subscribable,
   Subscription
 } from 'rxjs';
-import {
-  distinctUntilChanged,
-  mergeAll,
-  observeOn,
-  publishReplay,
-  scan
-} from 'rxjs/operators';
+import { mergeAll, observeOn } from 'rxjs/operators';
 
 export function createSideEffectObservable<T>(
   stateObservables = new Subject<Observable<T>>()
