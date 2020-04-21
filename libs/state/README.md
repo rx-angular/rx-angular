@@ -70,7 +70,7 @@ const state = new RxState<MyState>();
 ## API
 ![state logo](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/libs/state/images/state_API-names.png)
 
-The API in a nutshell
+**The API in a nutshell**
 - `$` - The complete state observable
 - `set` - Set state imperatively
 - `connect` - Connect state reactively 
@@ -78,11 +78,12 @@ The API in a nutshell
 - `select` - Select state changes reactively
 - `hold` - maintaining the subscription of a side effect
 
-The best practices in a nutshell
+**The best practices in a nutshell**
 - **Don't nest one of `set`, `connect`, `get`, `select` or `hold` into each other**
 - Use `connect` over `set` 
 - In most of the cases `get` is not needed. The old state is always available.
 
+![state types](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/libs/state/images/state_API-types.png)
 
 
 ### set
