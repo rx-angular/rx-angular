@@ -1,5 +1,5 @@
-# @ngx-rx/state
-
+# @ngx-rx/state 
+_(currently under ngx-rx-state on NPM)_  
 [![ngx-rx](https://circleci.com/gh/BioPhoton/ngx-rx.svg?style=shield)](https://circleci.com/gh/BioPhoton/ngx-rx)
 
 #### Reactive Component State for Angular
