@@ -61,6 +61,18 @@
     "ngx-rx-ts-etc-demo-e2e": {
       "tags": [],
       "implicitDependencies": ["ngx-rx-ts-etc-demo"]
+    },
+    "let": {
+      "tags": []
+    },
+    "patch": {
+      "tags": []
+    },
+    "push": {
+      "tags": []
+    },
+    "render-changes": {
+      "tags": []
     }
   }
 }

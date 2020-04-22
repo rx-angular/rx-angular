@@ -22,7 +22,11 @@
       "@ngx-rx/state": ["libs/state/src/index.ts"],
       "@ngx-rx/ngrx-component-experiments": [
         "libs/ngrx-component-experiments/src/index.ts"
-      ]
+      ],
+      "@ngx-rx/let": ["libs/let/src/index.ts"],
+      "@ngx-rx/patch": ["libs/patch/src/index.ts"],
+      "@ngx-rx/push": ["libs/push/src/index.ts"],
+      "@ngx-rx/render-changes": ["libs/render-changes/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

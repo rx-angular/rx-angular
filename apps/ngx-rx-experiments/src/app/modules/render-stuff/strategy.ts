@@ -1,5 +1,6 @@
 import { MonoTypeOperatorFunction } from 'rxjs';
 import { ChangeDetectorRef, NgZone } from '@angular/core';
+import { StrategySelection } from '@ngx-rx/rxjs-etc';
 
 export interface StrategyFactoryConfig {
   component: any;
@@ -14,12 +15,6 @@ export interface CdStrategy<T> {
 }
 
 export const DEFAULT_STRATEGY_NAME = 'idle';
-
-export interface StrategySelection<U> {
-  idle: CdStrategy<U>;
-
-  [key: string]: CdStrategy<U>;
-}
 
 export function getStrategies<T>(
   cfg: StrategyFactoryConfig
