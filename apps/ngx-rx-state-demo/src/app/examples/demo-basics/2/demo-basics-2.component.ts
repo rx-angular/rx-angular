@@ -27,8 +27,9 @@ const initComponentState = {
   selector: 'demo-basics-2',
   template: `
     <h3>Demo Basics 2 - Handle Side Effects</h3>
+    <small>Child re-renders: {{rerenders()}}</small><br/>
     <mat-expansion-panel
-      *ngIf="model$ | async as m"
+      *ngIf="model$ | ngrxPush as m"
       (expandedChange)="listExpandedChanges.next($event)"
       [expanded]="m.listExpanded"
     >
@@ -66,6 +67,7 @@ const initComponentState = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DemoBasicsComponent2 extends RxState<ComponentState> implements OnInit, OnDestroy {
+
   intervalSubscription = new Subscription();
   // 1.1) Introduce reactive UI ( refreshClicks = new Subject<Event>(); )
   listExpandedChanges = new Subject<boolean>();
@@ -75,20 +77,25 @@ export class DemoBasicsComponent2 extends RxState<ComponentState> implements OnI
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 100) {
-      this.setState({ refreshInterval });
+      this.set({ refreshInterval });
     }
+  }
+
+  numRenders = 0;
+  rerenders(): number {
+    return  ++this.numRenders;
   }
 
   constructor(private store: Store<any>) {
     super();
-    this.setState(initComponentState);
+    this.set(initComponentState);
     this.connect(this.listExpandedChanges.pipe(map(b => ({ listExpanded: b }))));
     this.connect('list', this.store.select(selectRepositoryList).pipe(map(this.parseListItems)));
 
     // Side-Effects
     // 2.1) setup side-effect (this.refreshListSideEffect$)
     // 2.2) show subscribe and connect
-    // 2.3) extent side effect with refresh interval
+    // 2.mvvm) extent side effect with refresh interval
 
   }
 

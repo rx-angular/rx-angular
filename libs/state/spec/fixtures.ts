@@ -17,7 +17,7 @@ export function setupState<T extends object>(cfg: { initialState?: T }) {
   const { initialState } = { ...cfg };
   const state = new RxState<T>();
   if (initialState) {
-    state.setState(initialState);
+    state.set(initialState);
   }
   return state;
 }
@@ -43,7 +43,7 @@ export function createStateChecker<T extends object>(
     project?: ProjectStateFn<T>
   ): void {
     if (typeof stateOrProject === 'object' && project === undefined) {
-      assert(service.getState(), stateOrProject);
+      assert(service.get(), stateOrProject);
       service
         .select(take(1))
         .subscribe(actual => assert(actual, stateOrProject));
@@ -51,7 +51,7 @@ export function createStateChecker<T extends object>(
     }
 
     if (typeof stateOrProject === 'object' && typeof project === 'function') {
-      assert(project(service.getState()), stateOrProject);
+      assert(project(service.get()), stateOrProject);
       service
         .select(take(1))
         .subscribe(actual => assert(project(actual), stateOrProject));

@@ -34,7 +34,7 @@ function setupState<T extends object>(cfg: {
     state.subscribe();
   }
   if (initialState) {
-    state.setState(initialState);
+    state.set(initialState);
   }
   return state;
 }
@@ -84,7 +84,7 @@ describe('State', () => {
         const state = new RxJsState<PrimitiveState>();
         state.subscribe();
 
-        state.setState({ num: 42 });
+        state.set({ num: 42 });
         expectObservable(state.select('num')).toBe('s', { s: 42 });
       });
     });
@@ -116,7 +116,7 @@ describe('setState', () => {
       state.select().subscribe(s => {
         throw Error('should never emit');
       });
-      state.setState(initialPrimitiveState);
+      state.set(initialPrimitiveState);
       state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
     });
     it('should override previous base-state slices', () => {
@@ -124,9 +124,9 @@ describe('setState', () => {
       state.select().subscribe(s => {
         throw Error('should never emit');
       });
-      state.setState(initialPrimitiveState);
+      state.set(initialPrimitiveState);
       state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
-      state.setState({ num: 1 });
+      state.set({ num: 1 });
       state.select().subscribe(s => expect(s).toBe({ num: 1 }));
     });
   });
@@ -136,13 +136,13 @@ describe('setState', () => {
       state.select().subscribe(s => {
         throw Error('should never emit');
       });
-      state.setState(s => initialPrimitiveState);
+      state.set(s => initialPrimitiveState);
       state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
     });
     it('should override previous base-state slices', () => {
       const state = setupState({ initialState: initialPrimitiveState });
       state.select().subscribe(s => expect(state).toBe(initialPrimitiveState));
-      state.setState(s => ({ num: s.num + 1 }));
+      state.set(s => ({ num: s.num + 1 }));
       state.select().subscribe(s => expect(state).toBe({ num: 43 }));
     });
   });
@@ -152,13 +152,13 @@ describe('setState', () => {
       state.select().subscribe(s => {
         // throw Error('should never emit');
       });
-      state.setState('num', s => 1);
+      state.set('num', s => 1);
       state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
     });
     it('should override previous base-state slices', () => {
       const state = setupState({ initialState: initialPrimitiveState });
       state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
-      state.setState('num', s => s.num + 1);
+      state.set('num', s => s.num + 1);
       state.select().subscribe(s => expect(s).toBe({ num: 43 }));
     });
   });

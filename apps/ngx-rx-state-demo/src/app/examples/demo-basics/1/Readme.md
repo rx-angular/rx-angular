@@ -1,4 +1,13 @@
 # Implementing state, selections and UI interaction
+0. Implement reactive template helpers (push pipe)
+```html
+{{storeList$ | ngrxPush}}}
+```
+
+0.1 finetune with strategies
+```html
+{{storeList$ | ngrxPush: 'local'}}}
+```
 
 1. Implement RxState Service ComponentState by extending the RxState class.
 
@@ -45,4 +54,10 @@ this.connect(
   'list',
   this.store.select(selectRepositoryList).pipe(map(this.parseListItems))
 );
+```
+
+3) Improve rendering
+
+```html
+
 ```

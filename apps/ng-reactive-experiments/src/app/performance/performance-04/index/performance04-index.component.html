@@ -11,7 +11,7 @@
       <input
         matInput
         #filterInput
-        (input)="setState({ filter: filterInput.value })"
+        (input)="set({ filter: filterInput.value })"
       />
     </mat-form-field>
     <mat-form-field style="margin-left: 1rem;">
@@ -77,8 +77,8 @@
       <tr
         mat-row
         *matRowDef="let row; columns: displayedColumns"
-        (mouseenter)="setState({ hoveredRow: row._id })"
-        (mouseleave)="setState({ hoveredRow: null })"
+        (mouseenter)="set({ hoveredRow: row._id })"
+        (mouseleave)="set({ hoveredRow: null })"
         [class.row-active]="state?.hoveredRow === row._id"
         (click)="selection.toggle(row)"
       ></tr>

@@ -1,7 +1,8 @@
 <h3>Final Example</h3>
+<small>Child re-renders: {{rerenders()}}</small><br/>
 <mat-expansion-panel
   class="list"
-  *ngIf="vm.baseModel$ | async as bm"
+  *ngrxLet="vm.baseModel$; let bm"
   (expandedChange)="vm.listExpandedChanges.next($event)"
   [expanded]="bm.listExpanded"
 >
@@ -21,8 +22,7 @@
   <button
     mat-raised-button
     color="primary"
-    (click)="vm.refreshClicks.next($event)"
-  >
+    (click)="vm.refreshClicks.next($event)">
     Refresh List
   </button>
 

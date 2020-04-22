@@ -32,11 +32,11 @@ export class PatchDirective extends RxState<{
   strategies: StrategySelection<any>;
 
   @Input() set patch(events: string[]) {
-    this.setState({ events });
+    this.set({ events });
   }
 
   @Input() set strategy(strategyName: string) {
-    this.setState({ strategyName });
+    this.set({ strategyName });
   }
 
   events$ = this.select(
@@ -65,6 +65,6 @@ export class PatchDirective extends RxState<{
   ) {
     super();
     this.strategies = getStrategies({ cdRef });
-    this.setState({ strategyName: 'native' });
+    this.set({ strategyName: 'native' });
   }
 }

@@ -46,7 +46,7 @@ export interface GrowComponentState {
 })
 export class GrowComponent extends RxState<GrowComponentState> {
   @Input() set animationState(animationState: GrowAnimationState) {
-    this.setState({ animationState });
+    this.set({ animationState });
   }
 
   @Output() readonly animationDone = new Subject<AnimationEvent>();

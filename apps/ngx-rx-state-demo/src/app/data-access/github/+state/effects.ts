@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, concatMap, map, switchMap, tap } from 'rxjs/operators';
 
 import { GitHubService } from '../github.service';
 import {
@@ -18,7 +18,7 @@ export class GitHubEffects {
     this.actions$.pipe(
       ofType(fetchRepositoryList.type),
       tap(v => console.log('EFFECT fetch', v)),
-      switchMap(action =>
+      concatMap(action =>
         this.gitHubService.getData(action).pipe(
           tap(v => console.log('EFFECT fetch-success', v)),
           map(list => repositoryListFetchSuccess({ list })),

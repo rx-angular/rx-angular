@@ -3,12 +3,11 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'demo-basics2-container',
+  selector: 'demo-basicsmvvm-container',
   template: `
-    <h1>Step-2</h1>
-    <small>Parent re-renders: {{rerenders()}}</small><br/>
+    <h1>Step 3</h1>
     <mat-form-field>
-      <label>RefreshInterval</label>
+      <label>RefreshInterval {{ refreshInterval$ | async }}</label>
       <input
         type="number"
         (input)="refreshIntervalInput$.next($event)"
@@ -16,17 +15,13 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <demo-basics-2 [refreshInterval]="refreshInterval$ | async">
-    </demo-basics-2>
+    <demo-basics-mvvm [refreshInterval]="refreshInterval$ | async">
+    </demo-basics-mvvm>
   `
 })
-export class DemoBasics2ContainerComponent {
+export class DemoBasicsMvvmContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();
   refreshInterval$ = this.refreshIntervalInput$.pipe(
     map((e: any) => e.target.value)
   );
-  numRenders = 0;
-  rerenders(): number {
-    return  ++this.numRenders;
-  }
 }

@@ -29,6 +29,7 @@ const initComponentState = {
   selector: 'demo-basics-1',
   template: `
     <h3>Demo Basic 1 - Setup and Retrieving State</h3>
+    <small>Child rerenders: {{rerenders()}}</small><br/>
     <!-- CC Dominic Elm and his template streams :) -->
     <mat-expansion-panel
       (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
@@ -112,10 +113,15 @@ export class DemoBasicsComponent1 implements OnInit, OnDestroy {
   @Output()
   listExpandedChange = new Subject<boolean>();
 
+  numRenders = 0;
+  rerenders(): number {
+    return  ++this.numRenders;
+  }
+
   constructor(private store: Store<any>) {
     // 2.1) Initialize component base-state
     // 2.2) Connect input bindings
-    // 2.3) Connect base-state from child components ( listExpandedChanges => listExpanded )
+    // 2.mvvm) Connect base-state from child components ( listExpandedChanges => listExpanded )
     // 2.4) Connect Global base-state (selectRepositoryList -> parseListItems => list)
   }
 

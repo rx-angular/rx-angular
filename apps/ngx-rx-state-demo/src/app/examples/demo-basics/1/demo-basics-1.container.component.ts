@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -6,8 +6,9 @@ import { map } from 'rxjs/operators';
   selector: 'demo-basics1-container',
   template: `
     <h1>Step 1</h1>
+    <small>Parent re-renders: {{rerenders()}}</small><br/>
     <mat-form-field>
-      <label>RefreshInterval {{ refreshInterval$ | async }}</label>
+      <label>RefreshInterval</label>
       <input
         type="number"
         (input)="refreshIntervalInput$.next($event)"
@@ -17,7 +18,8 @@ import { map } from 'rxjs/operators';
 
     <demo-basics-1 [refreshInterval]="refreshInterval$ | async" (listExpandedChange)="listExpandedChange$.next($event)">
     </demo-basics-1>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DemoBasics1ContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();
@@ -25,4 +27,9 @@ export class DemoBasics1ContainerComponent {
     map((e: any) => e.target.value)
   );
   listExpandedChange$ = new Subject<Event>();
+
+  numRenders = 0;
+  rerenders(): number {
+    return  ++this.numRenders;
+  }
 }

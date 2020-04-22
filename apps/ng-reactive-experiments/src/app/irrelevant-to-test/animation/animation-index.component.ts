@@ -30,7 +30,7 @@ export class AnimationIndexComponent extends RxState<
 
   constructor(private appRef: ApplicationRef) {
     super();
-    this.setState({
+    this.set({
       growState: 'shrinked'
     });
 
