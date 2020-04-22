@@ -9,6 +9,10 @@ export const STRATEGIES_MENU: MenuItem[] = [
       {
         link: 'strategies/virtual-scroll',
         label: 'Virtual Scroll'
+      },
+      {
+        link: 'strategies/local01',
+        label: 'Local 01'
       }
     ]
   }
