@@ -26,8 +26,8 @@ By default the coalesce operator helps you to buffer incoming values within an a
 This example demonstrates how the render method is only called once thus having four changes of the source stream.
 
 ```typescript
-import { coalesce } from '@ngrx/component';
-import { range } from '@ngx-rx/rxjs-etc';
+import { coalesce } from '@ngx-rx/rxjs-etc';
+import { range } from 'rxjs';
 
 const source$ = range(1, 4); // stream of data
 source$.pipe(coalesce()).subscribe(stateChanges => {
@@ -57,8 +57,8 @@ Setting `trailing` to true would result in the emissions `10`.
 Setting `leading` and `trailing` to true would result in the emissions `1, 10`.
 
 ```typescript
-import { coalesce } from '@ngrx/component';
-import { range } from '@ngx-rx/rxjs-etc';
+import { coalesce } from '@ngx-rx/rxjs-etc';
+import { range } from 'rxjs';
 
 const source$ = range(1, 4); // synchronous emitted values
 source$
@@ -73,8 +73,8 @@ This simple example shows how it is possible to coalesce multiple subscribers to
 only one rendering call thus having multiple subscribers to the incoming stream.
 
 ```typescript
-import { coalesce } from '@ngrx/component';
-import { range, animationFrames } from '@ngx-rx/rxjs-etc';
+import { coalesce, generateFrames } from '@ngx-rx/rxjs-etc';
+import { range, animationFrames } from 'rxjs';
 
 const source$ = range(1, 10); // synchronous emitted values
 const coalesceConfig = {
