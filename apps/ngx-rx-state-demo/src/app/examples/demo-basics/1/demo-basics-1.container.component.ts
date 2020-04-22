@@ -16,7 +16,7 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <demo-basics-1 [refreshInterval]="refreshInterval$ | ngrxPush:'detache'" (listExpandedChange)="listExpandedChange$.next($event)">
+    <demo-basics-1 [refreshInterval]="refreshInterval$ | async" (listExpandedChange)="listExpandedChange$.next($event)">
     </demo-basics-1>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
