@@ -10,7 +10,7 @@ import { interval, Observable, Subject, Subscription } from 'rxjs';
 import { DemoBasicsItem } from '../demo-basics-item.interface';
 
 import { ofType } from '@ngrx/effects';
-import { map, tap } from 'rxjs/operators';
+import { map, startWith, tap } from 'rxjs/operators';
 
 interface ComponentState {
   refreshInterval: number;
@@ -41,7 +41,7 @@ const initComponentState = {
           List
         </mat-panel-title>
         <mat-panel-description>
-<span>{{ (storeList$ | async).length }} Repositories Updated every:
+  <span>{{ (storeList$ | async)?.length }} Repositories Updated every:
   {{ _refreshInterval }} ms
           </span>
         </mat-panel-description>
@@ -56,7 +56,7 @@ const initComponentState = {
       </button>
 
       <ng-container *ngIf="storeList$ | async as list">
-        <div *ngIf="list.length; else noList">
+        <div *ngIf="list?.length; else noList">
           <mat-list>
             <mat-list-item *ngFor="let item of list">
               {{ item.name }}
@@ -95,7 +95,8 @@ export class DemoBasicsComponent1 implements OnInit, OnDestroy {
   // UI interaction
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.store.select(selectRepositoryList).pipe(
-    map(this.parseListItems)
+    map(this.parseListItems),
+    startWith(initComponentState.list)
   );
 
   // UI base-state

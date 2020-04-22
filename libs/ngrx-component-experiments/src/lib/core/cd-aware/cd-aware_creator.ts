@@ -47,10 +47,11 @@ export function createCdAware<U>(cfg: {
   let strategy: CdStrategy<U>;
   const strategyName$ = new BehaviorSubject<string | Observable<string>>(DEFAULT_STRATEGY_NAME);
   const updateStrategyEffect$: Observable<CdStrategy<U>> = strategyName$.pipe(
-    stringOrObservable =>
+    map(stringOrObservable =>
       typeof stringOrObservable === 'string'
         ? stringOrObservable
-        : stringOrObservable.pipe(mergeAll()),
+        : stringOrObservable.pipe(mergeAll())
+    ),
     nameToStrategy(cfg.strategies),
     tap(s => strategy = s)
   );

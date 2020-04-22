@@ -3,6 +3,7 @@
 <mat-expansion-panel
   class="list"
   *ngrxLet="vm.baseModel$; let bm"
+  strategy="detach"
   (expandedChange)="vm.listExpandedChanges.next($event)"
   [expanded]="bm.listExpanded"
 >
