@@ -112,7 +112,7 @@ export class DemoBasicsComponent1 implements OnInit, OnDestroy {
 
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
-  listExpandedChange = new Subject<boolean>();
+  listExpandedChange = this.listExpandedChanges;
 
   numRenders = 0;
   rerenders(): number {
@@ -122,7 +122,7 @@ export class DemoBasicsComponent1 implements OnInit, OnDestroy {
   constructor(private store: Store<any>) {
     // 2.1) Initialize component base-state
     // 2.2) Connect input bindings
-    // 2.mvvm) Connect base-state from child components ( listExpandedChanges => listExpanded )
+    // 2.3) Connect base-state from child components ( listExpandedChanges => listExpanded )
     // 2.4) Connect Global base-state (selectRepositoryList -> parseListItems => list)
   }
 
