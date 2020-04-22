@@ -21,7 +21,7 @@ export interface CdStrategy<T> {
   name: string;
 }
 
-export const DEFAULT_STRATEGY_NAME = 'native';
+export const DEFAULT_STRATEGY_NAME = 'global';
 export const IS_VIEW_ENGINE_IVY = isViewEngineIvy();
 
 export interface StrategySelection<U> {
@@ -33,10 +33,11 @@ export function getStrategies<T>(
   config: StrategyFactoryConfig
 ): StrategySelection<T> {
   return {
-    [DEFAULT_STRATEGY_NAME]: createNativeStrategy<T>(config),
     noop: createNoopStrategy<T>(),
+    native: createNativeStrategy<T>(config),
     global: createGlobalStrategy<T>(config),
-    local: createLocalStrategy<T>(config)
+    local: createLocalStrategy<T>(config),
+    detach: createDetachStrategy<T>(config)
   };
 }
 
@@ -202,5 +203,67 @@ export function createLocalStrategy<T>(
     behaviour,
     render,
     name: 'local'
+  };
+}
+
+/**
+ *  Detach Strategy
+ *
+ * This strategy is rendering the actual component and
+ * all it's children that are on a path
+ * that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
+ *
+ * As detectChanges has no coalescing of render calls
+ * like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` has, so we have to apply our own coalescing, 'scoped' on component level.
+ *
+ * Coalescing, in this very manner,
+ * means **collecting all events** in the same [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick,
+ * that would cause a re-render and execute **re-rendering only once**.
+ *
+ * 'Scoped' coalescing, in addition, means **grouping the collected events by** a specific context.
+ * E. g. the **component** from which the re-rendering was initiated.
+ *
+ * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
+ * |-------------| --------------| ------------ ------ | ---------------- |
+ * | `local`     | ✔️/✔️          | dC / ɵDC            | ✔️ + C/ LV       |
+ *
+ * @param config { StrategyFactoryConfig } - The values this strategy needs to get calculated.
+ * @return {CdStrategy<T>} - The calculated strategy
+ *
+ */
+export function createDetachStrategy<T>(
+  config: StrategyFactoryConfig
+): CdStrategy<T> {
+  const durationSelector = getZoneUnPatchedDurationSelector();
+  // @Notice this part of the code is in the coalescing PR https://github.com/ngrx/platform/pull/2456
+  //const coalesceConfig: CoalesceConfig
+  const coalesceConfig: any = {
+    // @TODO ensure that context is === to _lView across class and template (all cases!!!)
+    // If yes, kick out _lView
+    context: (IS_VIEW_ENGINE_IVY
+      ? (config.cdRef as any)._lView
+      : (config.cdRef as any).context) as any
+  };
+
+  function render() {
+    // @TODO ensure that detectChanges is behaves identical to ɵdetectChanges
+    // If yes, kick out ɵdetectChanges
+    config.cdRef.reattach();
+    if (!IS_VIEW_ENGINE_IVY) {
+      config.cdRef.detectChanges();
+    } else {
+      detectChanges((config.cdRef as any).context);
+    }
+    config.cdRef.detach();
+  }
+
+  const behaviour = () => (o$: Observable<T>): Observable<T> => {
+    return o$.pipe(coalesce(durationSelector, coalesceConfig));
+  };
+
+  return {
+    behaviour,
+    render,
+    name: 'detach'
   };
 }

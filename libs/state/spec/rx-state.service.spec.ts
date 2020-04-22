@@ -45,18 +45,18 @@ describe('RxStateService', () => {
 
   describe('mirrors vanilla RxState', () => {
     it('should provide the getState method', async () => {
-      service.setState({ num: 11 });
-      expect(service.getState()).toEqual({ num: 11 });
+      service.set({ num: 11 });
+      expect(service.get()).toEqual({ num: 11 });
     });
 
     it('should provide the setState method', async () => {
-      service.setState({ num: 1 });
+      service.set({ num: 1 });
       await stateChecker.checkState(service, { num: 1 });
 
-      service.setState(s => ({ num: s.num + 2 }));
+      service.set(s => ({ num: s.num + 2 }));
       await stateChecker.checkState(service, { num: 3 });
 
-      service.setState('num', s => s.num + 3);
+      service.set('num', s => s.num + 3);
       await stateChecker.checkState(service, { num: 6 });
     });
 

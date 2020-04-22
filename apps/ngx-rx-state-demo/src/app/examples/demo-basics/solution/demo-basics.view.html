@@ -1,7 +1,9 @@
 <h3>Final Example</h3>
+<small>Child re-renders: {{rerenders()}}</small><br />
 <mat-expansion-panel
   class="list"
-  *ngIf="vm.baseModel$ | async as bm"
+  *ngrxLet="vm.baseModel$; let bm"
+  strategy="detach"
   (expandedChange)="vm.listExpandedChanges.next($event)"
   [expanded]="bm.listExpanded"
 >

@@ -6,16 +6,16 @@ import {
   Unsubscribable
 } from 'rxjs';
 import { filter, map, pluck, tap } from 'rxjs/operators';
+import { createAccumulationObservable } from './accumulation-observable';
+import { createSideEffectObservable } from './side-effect-observable';
+import { stateful } from './operators';
 import {
-  createAccumulationObservable,
-  createSideEffectObservable,
   isObservableGuard,
   isOperateFnArrayGuard,
   isStringArrayGuard,
   pipeFromArray,
-  stateful,
   WrongSelectParamsError
-} from './index';
+} from './utils';
 import { isKeyOf } from './utils/typing';
 
 type ProjectStateFn<T> = (oldState: T) => Partial<T>;
@@ -41,7 +41,7 @@ export class RxJsState<T extends object> implements Subscribable<any> {
 
   constructor() {}
 
-  getState(): T {
+  get(): T {
     return this.accumulationObservable.state;
   }
 
@@ -52,12 +52,9 @@ export class RxJsState<T extends object> implements Subscribable<any> {
    * ls.setState({bar: 7});
    * ls.setState('test', 'tau');
    */
-  setState(stateOrProjectState: Partial<T> | ProjectStateFn<T>): void;
-  setState<K extends keyof T, O>(
-    key: K,
-    projectSlice: ProjectValueFn<T, K>
-  ): void;
-  setState<K extends keyof T>(
+  set(stateOrProjectState: Partial<T> | ProjectStateFn<T>): void;
+  set<K extends keyof T, O>(key: K, projectSlice: ProjectValueFn<T, K>): void;
+  set<K extends keyof T>(
     keyOrStateOrProjectState: Partial<T> | ProjectStateFn<T> | K,
     stateOrSliceProjectFn?: ProjectValueFn<T, K>
   ): void {
@@ -136,7 +133,7 @@ export class RxJsState<T extends object> implements Subscribable<any> {
       const project = projectOrSlices$;
       const slice$ = keyOrSlice$.pipe(
         filter(slice => slice !== undefined),
-        map(v => project(this.getState(), v))
+        map(v => project(this.get(), v))
       );
       this.accumulationObservable.nextSliceObservable(slice$);
       return;
@@ -164,7 +161,7 @@ export class RxJsState<T extends object> implements Subscribable<any> {
       const key = keyOrSlice$;
       const slice$ = projectOrSlices$.pipe(
         filter(slice => slice !== undefined),
-        map(value => ({ ...{}, [key]: projectValueFn(this.getState(), value) }))
+        map(value => ({ ...{}, [key]: projectValueFn(this.get(), value) }))
       );
       this.accumulationObservable.nextSliceObservable(slice$);
       return;
