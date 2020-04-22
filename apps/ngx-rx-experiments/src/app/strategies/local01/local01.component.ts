@@ -17,17 +17,15 @@ interface Local01State {
     <div style="border: 1px solid red; padding: 1rem">
       <h3>Component</h3>
       <ng-container *ngrxLet="value1$; let v; config: strategy">
-        <span>value1: {{ v }}</span>
-      </ng-container><br>
+        <span>value1: {{ v }}</span> </ng-container
+      ><br />
       <ng-container *ngrxLet="value2$; let v; config: strategy">
         <span>value2: {{ v }}</span>
       </ng-container>
     </div>
-
   `
 })
 export class Local01Component {
-
   readonly strategy = 'local';
 
   readonly state$ = new Subject<Local01State>();
@@ -35,9 +33,7 @@ export class Local01Component {
   readonly value1$ = this.state$.pipe(pluck('value1'));
   readonly value2$ = this.state$.pipe(pluck('value2'));
 
-  constructor() {
-
-  }
+  constructor() {}
 
   change() {
     const value1 = Math.floor(Math.random() * 100);

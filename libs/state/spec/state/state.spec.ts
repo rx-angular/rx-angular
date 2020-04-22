@@ -1,6 +1,6 @@
-import { RxJsState } from '../../src/lib/core';
-import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
+import { TestScheduler } from 'rxjs/testing';
+import { RxJsState } from '../../src/lib/core';
 
 interface PrimitiveState {
   bol: boolean;

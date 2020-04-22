@@ -2,7 +2,7 @@ import { Component, Input, TemplateRef } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { BaseComponent } from '../../base.component.ts/base.component';
 @Component({
-  selector: 'insertion',
+  selector: 'app-insertion',
   template: `
     <h3>Push Pipe Child 31</h3>
     <span>render: </span><b class="num-renders">{{ getNumOfRenderings() }}</b

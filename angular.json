@@ -301,33 +301,33 @@
         }
       }
     },
-    "ng-reactive-experiments": {
+    "ngx-rx-experiments": {
       "projectType": "application",
       "schematics": {
         "@nrwl/angular:component": {
           "style": "scss"
         }
       },
-      "root": "apps/ng-reactive-experiments",
-      "sourceRoot": "apps/ng-reactive-experiments/src",
+      "root": "apps/ngx-rx-experiments",
+      "sourceRoot": "apps/ngx-rx-experiments/src",
       "prefix": "ngx-rx",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/ng-reactive-experiments",
-            "index": "apps/ng-reactive-experiments/src/index.html",
-            "main": "apps/ng-reactive-experiments/src/main.ts",
-            "polyfills": "apps/ng-reactive-experiments/src/polyfills.ts",
-            "tsConfig": "apps/ng-reactive-experiments/tsconfig.app.json",
+            "outputPath": "dist/apps/ngx-rx-experiments",
+            "index": "apps/ngx-rx-experiments/src/index.html",
+            "main": "apps/ngx-rx-experiments/src/main.ts",
+            "polyfills": "apps/ngx-rx-experiments/src/polyfills.ts",
+            "tsConfig": "apps/ngx-rx-experiments/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "apps/ng-reactive-experiments/src/favicon.ico",
-              "apps/ng-reactive-experiments/src/assets"
+              "apps/ngx-rx-experiments/src/favicon.ico",
+              "apps/ngx-rx-experiments/src/assets"
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
-              "apps/ng-reactive-experiments/src/styles.scss"
+              "apps/ngx-rx-experiments/src/styles.scss"
             ],
             "scripts": []
           },
@@ -335,8 +335,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/ng-reactive-experiments/src/environments/environment.ts",
-                  "with": "apps/ng-reactive-experiments/src/environments/environment.prod.ts"
+                  "replace": "apps/ngx-rx-experiments/src/environments/environment.ts",
+                  "with": "apps/ngx-rx-experiments/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -365,70 +365,64 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ng-reactive-experiments:build"
+            "browserTarget": "ngx-rx-experiments:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ng-reactive-experiments:build:production"
+              "browserTarget": "ngx-rx-experiments:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ng-reactive-experiments:build"
+            "browserTarget": "ngx-rx-experiments:build"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "apps/ng-reactive-experiments/tsconfig.app.json",
-              "apps/ng-reactive-experiments/tsconfig.spec.json"
+              "apps/ngx-rx-experiments/tsconfig.app.json",
+              "apps/ngx-rx-experiments/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/ng-reactive-experiments/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/ngx-rx-experiments/**"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/ng-reactive-experiments/jest.config.js",
-            "tsConfig": "apps/ng-reactive-experiments/tsconfig.spec.json",
+            "jestConfig": "apps/ngx-rx-experiments/jest.config.js",
+            "tsConfig": "apps/ngx-rx-experiments/tsconfig.spec.json",
             "passWithNoTests": true,
-            "setupFile": "apps/ng-reactive-experiments/src/test-setup.ts"
+            "setupFile": "apps/ngx-rx-experiments/src/test-setup.ts"
           }
         }
       }
     },
-    "ng-reactive-experiments-e2e": {
-      "root": "apps/ng-reactive-experiments-e2e",
-      "sourceRoot": "apps/ng-reactive-experiments-e2e/src",
+    "ngx-rx-experiments-e2e": {
+      "root": "apps/ngx-rx-experiments-e2e",
+      "sourceRoot": "apps/ngx-rx-experiments-e2e/src",
       "projectType": "application",
       "architect": {
         "e2e": {
           "builder": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/ng-reactive-experiments-e2e/cypress.json",
-            "tsConfig": "apps/ng-reactive-experiments-e2e/tsconfig.e2e.json",
-            "devServerTarget": "ng-reactive-experiments:serve"
+            "cypressConfig": "apps/ngx-rx-experiments-e2e/cypress.json",
+            "tsConfig": "apps/ngx-rx-experiments-e2e/tsconfig.e2e.json",
+            "devServerTarget": "ngx-rx-experiments:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ng-reactive-experiments:serve:production"
+              "devServerTarget": "ngx-rx-experiments:serve:production"
             }
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/ng-reactive-experiments-e2e/tsconfig.e2e.json"],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/ng-reactive-experiments-e2e/**"
-            ]
+            "tsConfig": ["apps/ngx-rx-experiments-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/ngx-rx-experiments-e2e/**"]
           }
         }
       }

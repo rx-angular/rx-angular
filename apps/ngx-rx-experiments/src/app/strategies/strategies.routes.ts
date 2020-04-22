@@ -16,4 +16,4 @@ export const STRATEGY_ROUTES: Routes = [
     path: 'local01',
     component: Local01Component
   }
-]
+];

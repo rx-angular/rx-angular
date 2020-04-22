@@ -1,5 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import { Store } from '@ngrx/store';
+import { RxState } from '@ngx-rx/state';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   fetchRepositoryList,
@@ -8,7 +15,6 @@ import {
 } from '../../../data-access/github';
 import { interval, NEVER, Subject, Subscription } from 'rxjs';
 import { DemoBasicsItem } from '../demo-basics-item.interface';
-import { RxState } from '@ngx-rx/state';
 
 interface ComponentState {
   refreshInterval: number;
@@ -27,7 +33,8 @@ const initComponentState = {
   selector: 'demo-basics-2',
   template: `
     <h3>Demo Basics 2 - Handle Side Effects</h3>
-    <small>Child re-renders: {{rerenders()}}</small><br/>
+    <small>Child re-renders: {{ rerenders() }}</small
+    ><br />
     <mat-expansion-panel
       *ngIf="model$ | ngrxPush as m"
       (expandedChange)="listExpandedChanges.next($event)"
@@ -38,7 +45,8 @@ const initComponentState = {
           List
         </mat-panel-title>
         <mat-panel-description>
-          <span>{{ m.list.length }} Repositories Updated every:
+          <span
+            >{{ m.list.length }} Repositories Updated every:
             {{ m.refreshInterval }} ms
           </span>
         </mat-panel-description>
@@ -47,7 +55,8 @@ const initComponentState = {
       <button
         mat-raised-button
         color="primary"
-        (click)="onRefreshClicks($event)">
+        (click)="onRefreshClicks($event)"
+      >
         Refresh List
       </button>
 
@@ -66,8 +75,8 @@ const initComponentState = {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoBasicsComponent2 extends RxState<ComponentState> implements OnInit, OnDestroy {
-
+export class DemoBasicsComponent2 extends RxState<ComponentState>
+  implements OnInit, OnDestroy {
   intervalSubscription = new Subscription();
   // 1.1) Introduce reactive UI ( refreshClicks = new Subject<Event>(); )
   listExpandedChanges = new Subject<boolean>();
@@ -83,20 +92,24 @@ export class DemoBasicsComponent2 extends RxState<ComponentState> implements OnI
 
   numRenders = 0;
   rerenders(): number {
-    return  ++this.numRenders;
+    return ++this.numRenders;
   }
 
   constructor(private store: Store<any>) {
     super();
     this.set(initComponentState);
-    this.connect(this.listExpandedChanges.pipe(map(b => ({ listExpanded: b }))));
-    this.connect('list', this.store.select(selectRepositoryList).pipe(map(this.parseListItems)));
+    this.connect(
+      this.listExpandedChanges.pipe(map(b => ({ listExpanded: b })))
+    );
+    this.connect(
+      'list',
+      this.store.select(selectRepositoryList).pipe(map(this.parseListItems))
+    );
 
     // Side-Effects
     // 2.1) setup side-effect (this.refreshListSideEffect$)
     // 2.2) show subscribe and connect
     // 2.mvvm) extent side effect with refresh interval
-
   }
 
   ngOnDestroy(): void {
@@ -109,11 +122,12 @@ export class DemoBasicsComponent2 extends RxState<ComponentState> implements OnI
 
   resetRefreshTick() {
     this.intervalSubscription.unsubscribe();
-    this.intervalSubscription =
-      this.select('refreshInterval').pipe(
+    this.intervalSubscription = this.select('refreshInterval')
+      .pipe(
         switchMap(ms => interval(ms)),
-        tap(_ =>  this.store.dispatch(fetchRepositoryList({})))
-      ).subscribe()
+        tap(_ => this.store.dispatch(fetchRepositoryList({})))
+      )
+      .subscribe();
   }
 
   onRefreshClicks(event) {

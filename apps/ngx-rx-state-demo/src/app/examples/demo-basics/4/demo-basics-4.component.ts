@@ -44,7 +44,7 @@ export class DemoBasicsComponent4 {
 
   numRenders = 0;
   rerenders(): number {
-    return  ++this.numRenders;
+    return ++this.numRenders;
   }
 
   constructor(

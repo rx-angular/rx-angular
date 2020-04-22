@@ -1,4 +1,5 @@
-# @ngx-rx/state 
+# @ngx-rx/state
+
 _(currently under ngx-rx-state on NPM)_  
 [![ngx-rx](https://circleci.com/gh/BioPhoton/ngx-rx.svg?style=shield)](https://circleci.com/gh/BioPhoton/ngx-rx)
 
@@ -22,6 +23,7 @@ This is a good example of component state.
 This library helps to organize component state reactively.
 
 **Features**
+
 - Slim and intuitive API
 - Fully typed and tested
 - Easy and Flexible Reactive Component State Management
@@ -42,6 +44,7 @@ TOC
 - API
 - Usage in Angular
 - Resources
+
 ---
 
 ## Install
@@ -68,23 +71,25 @@ const state = new RxState<MyState>();
 ```
 
 ## API
+
 ![state logo](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/libs/state/images/state_API-names.png)
 
 **The API in a nutshell**
+
 - `$` - The complete state observable
 - `set` - Set state imperatively
-- `connect` - Connect state reactively 
+- `connect` - Connect state reactively
 - `get` - Get current state imperatively
 - `select` - Select state changes reactively
 - `hold` - maintaining the subscription of a side effect
 
 **The best practices in a nutshell**
+
 - **Don't nest one of `set`, `connect`, `get`, `select` or `hold` into each other**
-- Use `connect` over `set` 
+- Use `connect` over `set`
 - In most of the cases `get` is not needed. The old state is always available.
 
 ![state types](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/libs/state/images/state_API-types.png)
-
 
 ### set
 
@@ -415,7 +420,6 @@ export class StatefulComponent {
    }
 }
 ```
-
 
 **Resources**
 

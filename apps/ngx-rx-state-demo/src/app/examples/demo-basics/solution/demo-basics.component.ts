@@ -42,12 +42,10 @@ export class DemoBasicsComponent {
     }
   }
 
-
   numRenders = 0;
   rerenders(): number {
-    return  ++this.numRenders;
+    return ++this.numRenders;
   }
-
 
   constructor(
     public vm: DemoBasicsViewModelService,

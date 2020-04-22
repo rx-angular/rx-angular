@@ -1,7 +1,7 @@
-import { merge, Observable, Subject, timer } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { RxState } from '@ngx-rx/state';
+import { merge, Observable, Subject, timer } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { DemoBasicsItem } from '../demo-basics-item.interface';
 
 export interface DemoBasicsView {

@@ -1,9 +1,9 @@
 import { jestMatcher } from '@test-helpers';
-
-import { select } from '../../../src/lib/core';
 import { EMPTY, NEVER, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
+
+import { select } from '../../../src/lib/core';
 
 interface PrimitiveState {
   bol: boolean;
