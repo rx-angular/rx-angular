@@ -10,8 +10,12 @@ The target Framework is Angular but the features are designed to get reused in o
 **Packages included:**
 
 - [TypeScript](https://www.typescriptlang.org/)
-  - [💾 ts-etc](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ts-etc) - Reusable Typescript code
+  - [💾 ts-etc](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ts-etc/Readme.md) - Reusable Typescript code
 - [RxJS](https://rxjs.dev)
-  - [💾 rxjs-etc](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-etc) - Reusable RxJS code
+  - [💾 rxjs-etc](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-etc/Readme.md) - Reusable RxJS code
 - [Angular](https://angular.io)
-  - [📦 @ngx-rx/state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/state) - Reactive Component State-Management for Angular
+  - [📦 @ngx-rx/state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/state/Readme.md) - A Toolset for Reactive Component State-Management for Angular
+    -  RxState Service - Flexible Reactive Component State
+    -  Operators
+       -  stateful - filter undefined, distinct valuers, shareReplay
+       -  select - pluck properties and apply stateful operator

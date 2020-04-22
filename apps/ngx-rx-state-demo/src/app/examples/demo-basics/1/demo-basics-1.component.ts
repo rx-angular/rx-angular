@@ -1,16 +1,16 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import {
   fetchRepositoryList,
   repositoryListFetchError,
   repositoryListFetchSuccess,
-  RepositoryListItem
+  RepositoryListItem, selectRepositoryList
 } from '../../../data-access/github';
-import { Observable, Subject } from 'rxjs';
+import { interval, Observable, Subject, Subscription } from 'rxjs';
 import { DemoBasicsItem } from '../demo-basics-item.interface';
 
 import { ofType } from '@ngrx/effects';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 interface ComponentState {
   refreshInterval: number;
@@ -31,8 +31,8 @@ const initComponentState = {
     <h3>Demo Basic 1 - Setup and Retrieving State</h3>
     <!-- CC Dominic Elm and his template streams :) -->
     <mat-expansion-panel
-      (expandedChange)="listExpandedChanges.next($event)"
-      [expanded]="m.listExpanded"
+      (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
+      [expanded]="listExpanded"
     >
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
@@ -40,30 +40,29 @@ const initComponentState = {
           List
         </mat-panel-title>
         <mat-panel-description>
-          <span *ngIf="!m.listExpanded"
-            >{{ m.list.length }} Repositories Updated every:
-            {{ m.refreshInterval }}
-            ms
+<span>{{ (storeList$ | async).length }} Repositories Updated every:
+  {{ _refreshInterval }} ms
           </span>
-          <span *ngIf="m.listExpanded">{{ m.list.length }}</span>
         </mat-panel-description>
       </mat-expansion-panel-header>
 
       <button
         mat-raised-button
         color="primary"
-        (click)="refreshClicks.next($event)"
+        (click)="onRefreshClicks($event)"
       >
         Refresh List
       </button>
 
-      <div *ngIf="m.list.length; else noList">
-        <mat-list>
-          <mat-list-item *ngFor="let item of m.list">
-            {{ item.name }}
-          </mat-list-item>
-        </mat-list>
-      </div>
+      <ng-container *ngIf="storeList$ | async as list">
+        <div *ngIf="list.length; else noList">
+          <mat-list>
+            <mat-list-item *ngFor="let item of list">
+              {{ item.name }}
+            </mat-list-item>
+          </mat-list>
+        </div>
+      </ng-container>
 
       <ng-template #noList>
         <mat-card>No list given!</mat-card>
@@ -71,7 +70,7 @@ const initComponentState = {
     </mat-expansion-panel>
   `,
   styles: [
-    `
+      `
       .list .mat-expansion-panel-header {
         position: relative;
       }
@@ -90,22 +89,28 @@ const initComponentState = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 // 1) implement LocalState Service => ComponentState
-export class DemoBasicsComponent1 {
+export class DemoBasicsComponent1 implements OnInit, OnDestroy {
+  intervalSubscription = new Subscription();
   // UI interaction
-  refreshClicks = new Subject<Event>();
   listExpandedChanges = new Subject<boolean>();
+  storeList$ = this.store.select(selectRepositoryList).pipe(
+    map(this.parseListItems)
+  );
 
   // UI base-state
   // 1.1) Select component State
-  m = initComponentState;
-
-  _refreshInterval: number;
+  _refreshInterval: number = initComponentState.refreshInterval;
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 4000) {
       this._refreshInterval = refreshInterval;
+      this.resetRefreshTick();
     }
   }
+
+  listExpanded: boolean = initComponentState.listExpanded;
+  @Output()
+  listExpandedChange = new Subject<boolean>();
 
   constructor(private store: Store<any>) {
     // 2.1) Initialize component base-state
@@ -114,7 +119,26 @@ export class DemoBasicsComponent1 {
     // 2.4) Connect Global base-state (selectRepositoryList -> parseListItems => list)
   }
 
-  onRefreshClicks(event) {}
+  ngOnDestroy(): void {
+        this.intervalSubscription.unsubscribe();
+    }
+
+  ngOnInit(): void {
+    this.resetRefreshTick();
+  }
+
+  resetRefreshTick() {
+    this.intervalSubscription.unsubscribe();
+    this.intervalSubscription =
+      interval(this._refreshInterval).pipe(
+        tap(_ =>  this.store.dispatch(fetchRepositoryList({})))
+      ).subscribe()
+  }
+
+  onRefreshClicks(event) {
+    this.store.dispatch(fetchRepositoryList({}));
+  }
+
   // Map RepositoryListItem to ListItem
   parseListItems(l: RepositoryListItem[]): DemoBasicsItem[] {
     return l.map(({ id, name }) => ({ id, name }));

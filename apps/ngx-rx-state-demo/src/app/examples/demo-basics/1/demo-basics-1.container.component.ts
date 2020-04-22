@@ -15,7 +15,7 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <demo-basics-1 [refreshInterval]="refreshInterval$ | async">
+    <demo-basics-1 [refreshInterval]="refreshInterval$ | async" (listExpandedChange)="listExpandedChange$.next($event)">
     </demo-basics-1>
   `
 })
@@ -24,4 +24,5 @@ export class DemoBasics1ContainerComponent {
   refreshInterval$ = this.refreshIntervalInput$.pipe(
     map((e: any) => e.target.value)
   );
+  listExpandedChange$ = new Subject<Event>();
 }

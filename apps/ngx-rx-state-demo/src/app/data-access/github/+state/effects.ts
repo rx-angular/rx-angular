@@ -17,9 +17,10 @@ export class GitHubEffects {
   fetchGithubRepositoriesList$ = createEffect(() =>
     this.actions$.pipe(
       ofType(fetchRepositoryList.type),
+      tap(v => console.log('EFFECT fetch', v)),
       switchMap(action =>
         this.gitHubService.getData(action).pipe(
-          tap(v => console.log('EFFECT fetch Data', v)),
+          tap(v => console.log('EFFECT fetch-success', v)),
           map(list => repositoryListFetchSuccess({ list })),
           catchError(error => of(repositoryListFetchError({ error })))
         )
