@@ -7,15 +7,21 @@ import {
 } from 'rxjs';
 import { filter, map, pluck, tap } from 'rxjs/operators';
 import {
-  createAccumulationObservable,
-  createSideEffectObservable,
+  createAccumulationObservable
+} from './accumulation-observable';
+import {
+  createSideEffectObservable
+} from './side-effect-observable';
+import {
+  stateful
+} from './operators';
+import {
   isObservableGuard,
   isOperateFnArrayGuard,
   isStringArrayGuard,
   pipeFromArray,
-  stateful,
   WrongSelectParamsError
-} from './index';
+} from './utils';
 import { isKeyOf } from './utils/typing';
 
 type ProjectStateFn<T> = (oldState: T) => Partial<T>;
@@ -39,7 +45,8 @@ export class RxJsState<T extends object> implements Subscribable<any> {
 
   readonly $ = this.accumulationObservable.state$;
 
-  constructor() {}
+  constructor() {
+  }
 
   getState(): T {
     return this.accumulationObservable.state;
@@ -214,32 +221,24 @@ export class RxJsState<T extends object> implements Subscribable<any> {
     k1: K1,
     k2: K2
   ): Observable<T[K1][K2]>;
-  select<
-    K1 extends keyof T,
+  select<K1 extends keyof T,
     K2 extends keyof T[K1],
-    K3 extends keyof T[K1][K2]
-  >(k1: K1, k2: K2, k3: K3): Observable<T[K1][K2][K3]>;
-  select<
-    K1 extends keyof T,
+    K3 extends keyof T[K1][K2]>(k1: K1, k2: K2, k3: K3): Observable<T[K1][K2][K3]>;
+  select<K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
-    K4 extends keyof T[K1][K2][K3]
-  >(k1: K1, k2: K2, k3: K3, k4: K4): Observable<T[K1][K2][K3][K4]>;
-  select<
-    K1 extends keyof T,
+    K4 extends keyof T[K1][K2][K3]>(k1: K1, k2: K2, k3: K3, k4: K4): Observable<T[K1][K2][K3][K4]>;
+  select<K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
     K4 extends keyof T[K1][K2][K3],
-    K5 extends keyof T[K1][K2][K3][K4]
-  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): Observable<T[K1][K2][K3][K4][K5]>;
-  select<
-    K1 extends keyof T,
+    K5 extends keyof T[K1][K2][K3][K4]>(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): Observable<T[K1][K2][K3][K4][K5]>;
+  select<K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
     K4 extends keyof T[K1][K2][K3],
     K5 extends keyof T[K1][K2][K3][K4],
-    K6 extends keyof T[K1][K2][K3][K4][K5]
-  >(
+    K6 extends keyof T[K1][K2][K3][K4][K5]>(
     k1: K1,
     k2: K2,
     k3: K3,
