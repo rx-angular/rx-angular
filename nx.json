@@ -47,6 +47,20 @@
     },
     "ngrx-component-experiments": {
       "tags": []
+    },
+    "ngx-rx-rxjs-etc-demo": {
+      "tags": []
+    },
+    "ngx-rx-rxjs-etc-demo-e2e": {
+      "tags": [],
+      "implicitDependencies": ["ngx-rx-rxjs-etc-demo"]
+    },
+    "ngx-rx-ts-etc-demo": {
+      "tags": []
+    },
+    "ngx-rx-ts-etc-demo-e2e": {
+      "tags": [],
+      "implicitDependencies": ["ngx-rx-ts-etc-demo"]
     }
   }
 }

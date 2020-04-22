@@ -27,7 +27,8 @@
     "dep-graph": "nx dep-graph",
     "help": "nx help",
     "_postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
-    "ngx-rx-state:publish": "nx test state && nx build state --prod && cd ./dist/libs/state && npm publish"
+    "ngx-rx-state:publish": "nx test state && nx build state --prod && cd ./dist/libs/state && npm publish",
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points"
   },
   "husky": {
     "hooks": {
