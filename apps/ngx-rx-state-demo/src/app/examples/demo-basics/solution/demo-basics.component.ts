@@ -38,9 +38,16 @@ export class DemoBasicsComponent {
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 4000) {
-      this.vm.setState({ refreshInterval });
+      this.vm.set({ refreshInterval });
     }
   }
+
+
+  numRenders = 0;
+  rerenders(): number {
+    return  ++this.numRenders;
+  }
+
 
   constructor(
     public vm: DemoBasicsViewModelService,

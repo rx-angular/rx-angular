@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
   selector: 'demo-basics3-container',
   template: `
     <h1>Step 3</h1>
+    <small>Child re-renders: {{rerenders()}}</small><br/>
     <mat-form-field>
       <label>RefreshInterval {{ refreshInterval$ | async }}</label>
       <input
@@ -24,4 +25,10 @@ export class DemoBasics3ContainerComponent {
   refreshInterval$ = this.refreshIntervalInput$.pipe(
     map((e: any) => e.target.value)
   );
+
+  numRenders = 0;
+  rerenders(): number {
+    return  ++this.numRenders;
+  }
+
 }

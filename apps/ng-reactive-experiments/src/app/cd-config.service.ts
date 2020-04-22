@@ -14,7 +14,7 @@ export class CdConfigService extends RxState<CdConfig> {
   constructor() {
     super();
     this.hold(this.select(), state => (this.state = state));
-    this.setState({
+    this.set({
       strategy: DEFAULT_STRATEGY_NAME
     });
   }

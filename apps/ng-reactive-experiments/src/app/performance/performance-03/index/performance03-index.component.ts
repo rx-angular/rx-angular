@@ -84,7 +84,7 @@ export class Performance03IndexComponent extends RxState<Performance03State>
   constructor(private dataService: Performance03DataService) {
     super();
     this.refetchData();
-    this.setState({
+    this.set({
       checkboxLabels: {},
       rowSelectionState: {},
       anySelected: false,
@@ -145,7 +145,7 @@ export class Performance03IndexComponent extends RxState<Performance03State>
   }
 
   refetchData(limit: number = 100) {
-    this.setState({ data: this.dataService.getData(limit) });
+    this.set({ data: this.dataService.getData(limit) });
   }
 
   /** The label for the checkbox on the passed row */

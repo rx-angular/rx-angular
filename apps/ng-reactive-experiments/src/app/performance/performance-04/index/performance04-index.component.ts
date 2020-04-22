@@ -64,7 +64,7 @@ export class Performance04IndexComponent extends RxState<Performance04State>
   ) {
     super();
     this.refetchData();
-    this.setState({
+    this.set({
       checkboxLabels: {},
       rowSelectionState: {},
       anySelected: false,
@@ -124,7 +124,7 @@ export class Performance04IndexComponent extends RxState<Performance04State>
   }
 
   refetchData(limit: number = 100) {
-    this.setState({ data: this.dataService.getData(limit) });
+    this.set({ data: this.dataService.getData(limit) });
   }
 
   /** The label for the checkbox on the passed row */

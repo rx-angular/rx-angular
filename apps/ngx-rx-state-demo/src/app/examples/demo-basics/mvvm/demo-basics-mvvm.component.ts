@@ -30,10 +30,9 @@ const initComponentState = {
 //   - extend LocalState<DemoBasicsBaseModel>
 //   - implement DemoBasicsView
 @Component({
-  selector: 'demo-basics-3',
+  selector: 'demo-basics-mvvm',
   template: `
-    <h3>Demo Basics 3 - Fine-Tune Rendering</h3>
-    <small>Child re-renders: {{rerenders()}}</small><br/>
+    <h3>Demo Basics 3 - Introduce MVVM Architecture</h3>
     <mat-expansion-panel
       *ngIf="model$ | async as m"
       (expandedChange)="listExpandedChanges.next($event)"
@@ -75,7 +74,7 @@ const initComponentState = {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoBasicsComponent3 extends RxState<ComponentState> {
+export class DemoBasicsComponentMvvm extends RxState<ComponentState> {
   refreshClicks = new Subject<Event>();
   listExpandedChanges = new Subject<boolean>();
 
@@ -96,11 +95,6 @@ export class DemoBasicsComponent3 extends RxState<ComponentState> {
       switchMap(ms => timer(0, ms))
     )
   ).pipe(tap(_ => this.store.dispatch(fetchRepositoryList({}))));
-
-  numRenders = 0;
-  rerenders(): number {
-    return  ++this.numRenders;
-  }
 
   // 5. Inject `DemoBasicsViewModel` as service into `DemoBasicsComponent` constructor under property `vm`
   constructor(private store: Store<any>) {

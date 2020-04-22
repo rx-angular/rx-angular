@@ -49,13 +49,13 @@ export class RxStateParent01Component extends BaseComponent
   nextValueClick$ = this.nextValueSubject.pipe(
     tap(next => {
       if (next === 'STATIC_VALUE') {
-        this.rxState.setState({ num: 55 });
+        this.rxState.set({ num: 55 });
       }
       if (next === 'STATIC_PROJECT') {
-        this.rxState.setState(s => ({ num: s.num + 55 }));
+        this.rxState.set(s => ({ num: s.num + 55 }));
       }
       if (next === 'STATIC_KEY_PROJECT') {
-        this.rxState.setState('num', s => s.num + 55);
+        this.rxState.set('num', s => s.num + 55);
       }
       if (next === 'EMPTY') {
         this.rxState.connect(EMPTY);

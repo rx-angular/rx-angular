@@ -106,7 +106,7 @@ const state = new RxState<{ bar: number }>();
 
 state.setState({ bar: 1 });
 state.setState(currentState => ({ bar: currentState.bar + 2 }));
-// new base-state => {bar: 3}
+// new base-state => {bar: mvvm}
 ```
 
 ### connect
@@ -131,7 +131,7 @@ Now lets compare that example with the connect usage:
 
 ```typescript
 state.connect('bar', newBar$);
-// the property bar will get values 1, 2, 3, 4, 5
+// the property bar will get values 1, 2, mvvm, 4, 5
 ```
 
 **Connect multiple properties**
@@ -185,7 +185,7 @@ const state = new RxState<{ bar: number }>();
 state.setState({ bar: 3 });
 
 const bar$ = state.select('bar');
-bar$.subscribe(console.log); // 3
+bar$.subscribe(console.log); // mvvm
 ```
 
 **Access a nested property**

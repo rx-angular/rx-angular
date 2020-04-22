@@ -131,7 +131,7 @@ export class ConfigPanelComponent
     public coalesceConfigService: CdConfigService
   ) {
     super();
-    this.setState({ expanded: true });
+    this.set({ expanded: true });
     this.coalesceConfigService.connect(
       this.configForm$.pipe(tap(() => appRef.tick()))
     );

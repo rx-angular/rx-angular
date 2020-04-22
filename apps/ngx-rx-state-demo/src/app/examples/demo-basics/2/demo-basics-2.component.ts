@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { map } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import {
+  fetchRepositoryList,
   RepositoryListItem,
   selectRepositoryList
 } from '../../../data-access/github';
-import { NEVER, Subject } from 'rxjs';
+import { interval, NEVER, Subject, Subscription } from 'rxjs';
 import { DemoBasicsItem } from '../demo-basics-item.interface';
 import { RxState } from '@ngx-rx/state';
 
@@ -26,8 +27,9 @@ const initComponentState = {
   selector: 'demo-basics-2',
   template: `
     <h3>Demo Basics 2 - Handle Side Effects</h3>
+    <small>Child re-renders: {{rerenders()}}</small><br/>
     <mat-expansion-panel
-      *ngIf="model$ | async as m"
+      *ngIf="model$ | ngrxPush as m"
       (expandedChange)="listExpandedChanges.next($event)"
       [expanded]="m.listExpanded"
     >
@@ -36,19 +38,16 @@ const initComponentState = {
           List
         </mat-panel-title>
         <mat-panel-description>
-          <span *ngIf="!m.listExpanded"
-            >{{ m.list.length }} Repositories Updated every:
-            {{ m.refreshInterval }} ms</span
-          >
-          <span *ngIf="m.listExpanded">{{ m.list.length }}</span>
+          <span>{{ m.list.length }} Repositories Updated every:
+            {{ m.refreshInterval }} ms
+          </span>
         </mat-panel-description>
       </mat-expansion-panel-header>
 
       <button
         mat-raised-button
         color="primary"
-        (click)="refreshClicks.next($event)"
-      >
+        (click)="onRefreshClicks($event)">
         Refresh List
       </button>
 
@@ -67,8 +66,10 @@ const initComponentState = {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoBasicsComponent2 extends RxState<ComponentState> {
-  refreshClicks = new Subject<Event>();
+export class DemoBasicsComponent2 extends RxState<ComponentState> implements OnInit, OnDestroy {
+
+  intervalSubscription = new Subscription();
+  // 1.1) Introduce reactive UI ( refreshClicks = new Subject<Event>(); )
   listExpandedChanges = new Subject<boolean>();
 
   model$ = this.select();
@@ -76,30 +77,50 @@ export class DemoBasicsComponent2 extends RxState<ComponentState> {
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 100) {
-      this.setState({ refreshInterval });
+      this.set({ refreshInterval });
     }
   }
 
-  refreshListSideEffect$ = NEVER;
+  numRenders = 0;
+  rerenders(): number {
+    return  ++this.numRenders;
+  }
 
   constructor(private store: Store<any>) {
     super();
-    this.setState(initComponentState);
-    this.connect(
-      this.listExpandedChanges.pipe(map(b => ({ listExpanded: b })))
-    );
-    this.connect(
-      'list',
-      this.store.select(selectRepositoryList).pipe(map(this.parseListItems))
-    );
+    this.set(initComponentState);
+    this.connect(this.listExpandedChanges.pipe(map(b => ({ listExpanded: b }))));
+    this.connect('list', this.store.select(selectRepositoryList).pipe(map(this.parseListItems)));
 
     // Side-Effects
-    // 1) setup side-effect
-    // 2) show subscribe and connect
-    // 3) extent side effect with refresh interval
-    this.refreshListSideEffect$.subscribe();
+    // 2.1) setup side-effect (this.refreshListSideEffect$)
+    // 2.2) show subscribe and connect
+    // 2.mvvm) extent side effect with refresh interval
+
   }
 
+  ngOnDestroy(): void {
+    this.intervalSubscription.unsubscribe();
+  }
+
+  ngOnInit(): void {
+    this.resetRefreshTick();
+  }
+
+  resetRefreshTick() {
+    this.intervalSubscription.unsubscribe();
+    this.intervalSubscription =
+      this.select('refreshInterval').pipe(
+        switchMap(ms => interval(ms)),
+        tap(_ =>  this.store.dispatch(fetchRepositoryList({})))
+      ).subscribe()
+  }
+
+  onRefreshClicks(event) {
+    this.store.dispatch(fetchRepositoryList({}));
+  }
+
+  // Map RepositoryListItem to ListItem
   parseListItems(l: RepositoryListItem[]): DemoBasicsItem[] {
     return l.map(({ id, name }) => ({ id, name }));
   }
