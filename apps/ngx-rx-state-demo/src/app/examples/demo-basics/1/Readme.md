@@ -56,8 +56,4 @@ this.connect(
 );
 ```
 
-3) Improve rendering
-
-```html
-
-```
+3) Connect Outputs
