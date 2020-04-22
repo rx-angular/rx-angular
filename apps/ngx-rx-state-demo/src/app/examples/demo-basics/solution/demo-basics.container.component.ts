@@ -6,7 +6,8 @@ import { map } from 'rxjs/operators';
   selector: 'demo-basics4-container',
   template: `
     <h1>Solution</h1>
-    <small>Child re-renders: {{rerenders()}}</small><br/>
+    <small>Child re-renders: {{ rerenders() }}</small
+    ><br />
     <mat-form-field>
       <label>RefreshInterval</label>
       <input
@@ -16,8 +17,7 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <demo-basics [refreshInterval]="refreshInterval$ | ngrxPush">
-    </demo-basics>
+    <demo-basics [refreshInterval]="refreshInterval$ | ngrxPush"> </demo-basics>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -27,10 +27,8 @@ export class DemoBasicsContainerComponent {
     map((e: any) => e.target.value)
   );
 
-
   numRenders = 0;
   rerenders(): number {
-    return  ++this.numRenders;
+    return ++this.numRenders;
   }
-
 }

@@ -26,13 +26,6 @@
       "tags": [],
       "implicitDependencies": ["ngx-rx-state-demo"]
     },
-    "ng-reactive-experiments": {
-      "tags": []
-    },
-    "ng-reactive-experiments-e2e": {
-      "tags": [],
-      "implicitDependencies": ["ng-reactive-experiments"]
-    },
     "state": {
       "tags": []
     },
@@ -47,6 +40,13 @@
     },
     "ngrx-component-experiments": {
       "tags": []
+    },
+    "ngx-rx-experiments": {
+      "tags": []
+    },
+    "ngx-rx-experiments-e2e": {
+      "tags": [],
+      "implicitDependencies": ["ngx-rx-experiments"]
     },
     "ngx-rx-rxjs-etc-demo": {
       "tags": []

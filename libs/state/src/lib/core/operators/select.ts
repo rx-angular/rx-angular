@@ -1,15 +1,10 @@
+import { MonoTypeOperatorFunction, Observable, OperatorFunction } from 'rxjs';
+import { pluck } from 'rxjs/operators';
 import {
-  MonoTypeOperatorFunction,
-  Observable,
-  of,
-  OperatorFunction
-} from 'rxjs';
-import { map, pluck } from 'rxjs/operators';
-import {
-  WrongSelectParamsError,
   isOperateFnArrayGuard,
   isStringArrayGuard,
-  pipeFromArray
+  pipeFromArray,
+  WrongSelectParamsError
 } from '../utils';
 import { stateful } from './stateful';
 

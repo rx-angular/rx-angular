@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { RxState } from '@ngx-rx/state';
+import { merge, Subject, timer } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   fetchRepositoryList,
   RepositoryListItem,
   selectRepositoryList
 } from '../../../data-access/github';
-import { merge, Subject, timer } from 'rxjs';
 import { DemoBasicsItem } from '../demo-basics-item.interface';
-import { RxState } from '@ngx-rx/state';
 
 interface ComponentState {
   refreshInterval: number;
@@ -33,7 +33,8 @@ const initComponentState = {
   selector: 'demo-basics-3',
   template: `
     <h3>Demo Basics 3 - Fine-Tune Rendering</h3>
-    <small>Child re-renders: {{rerenders()}}</small><br/>
+    <small>Child re-renders: {{ rerenders() }}</small
+    ><br />
     <mat-expansion-panel
       *ngIf="model$ | async as m"
       (expandedChange)="listExpandedChanges.next($event)"
@@ -99,7 +100,7 @@ export class DemoBasicsComponent3 extends RxState<ComponentState> {
 
   numRenders = 0;
   rerenders(): number {
-    return  ++this.numRenders;
+    return ++this.numRenders;
   }
 
   // 5. Inject `DemoBasicsViewModel` as service into `DemoBasicsComponent` constructor under property `vm`

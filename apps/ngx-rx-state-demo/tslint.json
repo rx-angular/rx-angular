@@ -4,7 +4,5 @@
     "directive-selector": [false, "attribute", "ngxRx", "camelCase"],
     "component-selector": [false, "element", "ngx-rx", "kebab-case"]
   },
-  "linterOptions": {
-    "exclude": ["!**/*"]
-  }
+  "linterOptions": { "exclude": ["!**/*"] }
 }

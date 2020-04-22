@@ -83,7 +83,8 @@ export const materialModules = [
 @NgModule({
   declarations: [DECLARATIONS],
   imports: [
-    CommonModule, materialModules,
+    CommonModule,
+    materialModules,
     RouterModule.forChild(ROUTES),
     ReactiveComponentModule
   ],

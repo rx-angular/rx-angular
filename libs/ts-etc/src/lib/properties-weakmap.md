@@ -77,6 +77,8 @@ A better solution would be to use a WeakMap.
 ### WeakMaps
 
 ```typescript
+import { createPropertieWeakMap } from '@ngx-rx/ts-etc';
+
 const someObject3: object = {
   foo: 'bar',
   isCoalescing: 'weakMap version'

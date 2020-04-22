@@ -1,10 +1,13 @@
 # Implementing state, selections and UI interaction
+
 0. Implement reactive template helpers (push pipe)
+
 ```html
 {{storeList$ | ngrxPush}}}
 ```
 
 0.1 finetune with strategies
+
 ```html
 {{storeList$ | ngrxPush: 'local'}}}
 ```
@@ -56,4 +59,4 @@ this.connect(
 );
 ```
 
-3) Connect Outputs
+3. Connect Outputs

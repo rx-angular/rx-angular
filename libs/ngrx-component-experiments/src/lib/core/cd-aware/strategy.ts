@@ -242,7 +242,7 @@ export function createDetachStrategy<T>(
     // If yes, kick out _lView
     context: (IS_VIEW_ENGINE_IVY
       ? (config.cdRef as any)._lView
-      : (config.cdRef as any).context) as any,
+      : (config.cdRef as any).context) as any
   };
 
   function render() {
@@ -258,15 +258,12 @@ export function createDetachStrategy<T>(
   }
 
   const behaviour = () => (o$: Observable<T>): Observable<T> => {
-    return o$
-      .pipe(
-       coalesce(durationSelector, coalesceConfig)
-      );
+    return o$.pipe(coalesce(durationSelector, coalesceConfig));
   };
 
   return {
     behaviour,
     render,
-    name: 'detach',
+    name: 'detach'
   };
 }

@@ -1,10 +1,18 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import {
   fetchRepositoryList,
   repositoryListFetchError,
   repositoryListFetchSuccess,
-  RepositoryListItem, selectRepositoryList
+  RepositoryListItem,
+  selectRepositoryList
 } from '../../../data-access/github';
 import { interval, Observable, Subject, Subscription } from 'rxjs';
 import { DemoBasicsItem } from '../demo-basics-item.interface';
@@ -30,7 +38,8 @@ const initComponentState = {
   selector: 'demo-basics-1',
   template: `
     <h3>Demo Basic 1 - Setup and Retrieving State</h3>
-    <small>Child rerenders: {{rerenders()}}</small><br/>
+    <small>Child rerenders: {{ rerenders() }}</small
+    ><br />
     <!-- CC Dominic Elm and his template streams :) -->
     <mat-expansion-panel
       (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
@@ -42,8 +51,9 @@ const initComponentState = {
           List
         </mat-panel-title>
         <mat-panel-description>
-  <span>{{ (storeList$ | async)?.length }} Repositories Updated every:
-  {{ _refreshInterval }} ms
+          <span
+            >{{ (storeList$ | async)?.length }} Repositories Updated every:
+            {{ _refreshInterval }} ms
           </span>
         </mat-panel-description>
       </mat-expansion-panel-header>
@@ -72,7 +82,7 @@ const initComponentState = {
     </mat-expansion-panel>
   `,
   styles: [
-      `
+    `
       .list .mat-expansion-panel-header {
         position: relative;
       }
@@ -95,10 +105,9 @@ export class DemoBasicsComponent1 implements OnInit, OnDestroy {
   intervalSubscription = new Subscription();
   // UI interaction
   listExpandedChanges = new Subject<boolean>();
-  storeList$ = this.store.select(selectRepositoryList).pipe(
-    map(this.parseListItems),
-    startWith(initComponentState.list)
-  );
+  storeList$ = this.store
+    .select(selectRepositoryList)
+    .pipe(map(this.parseListItems), startWith(initComponentState.list));
 
   // UI base-state
   // 1.1) Select component State
@@ -119,12 +128,11 @@ export class DemoBasicsComponent1 implements OnInit, OnDestroy {
 
   numRenders = 0;
   rerenders(): number {
-    return  ++this.numRenders;
+    return ++this.numRenders;
   }
 
   constructor(private store: Store<any>) {
     // super();
-
     // 2.1) Initialize component base-state
     // 2.2) Connect input bindings
     // 2.3) Connect base-state from child components ( listExpandedChanges => listExpanded )
@@ -132,8 +140,8 @@ export class DemoBasicsComponent1 implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-        this.intervalSubscription.unsubscribe();
-    }
+    this.intervalSubscription.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.resetRefreshTick();
@@ -141,10 +149,9 @@ export class DemoBasicsComponent1 implements OnInit, OnDestroy {
 
   resetRefreshTick() {
     this.intervalSubscription.unsubscribe();
-    this.intervalSubscription =
-      interval(this._refreshInterval).pipe(
-        tap(_ =>  this.store.dispatch(fetchRepositoryList({})))
-      ).subscribe()
+    this.intervalSubscription = interval(this._refreshInterval)
+      .pipe(tap(_ => this.store.dispatch(fetchRepositoryList({}))))
+      .subscribe();
   }
 
   onRefreshClicks(event) {

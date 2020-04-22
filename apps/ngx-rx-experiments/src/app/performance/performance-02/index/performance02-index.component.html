@@ -35,7 +35,9 @@
         <mat-checkbox
           (change)="masterToggle.next($event)"
           [checked]="(anySelected$ | async) && (allSelected$ | async)"
-          [indeterminate]="(anySelected$ | async) && (allSelected$ | async) != null"
+          [indeterminate]="
+            (anySelected$ | async) && (allSelected$ | async) != null
+          "
           [aria-label]="masterCheckboxLabel$ | async"
         >
         </mat-checkbox>

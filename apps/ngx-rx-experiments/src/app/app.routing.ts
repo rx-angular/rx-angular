@@ -65,6 +65,7 @@ export const ROUTES: Routes = [
   },
   {
     path: 'strategies',
-    loadChildren: () => import('./strategies/strategies.module').then(m => m.StrategiesModule)
+    loadChildren: () =>
+      import('./strategies/strategies.module').then(m => m.StrategiesModule)
   }
 ];

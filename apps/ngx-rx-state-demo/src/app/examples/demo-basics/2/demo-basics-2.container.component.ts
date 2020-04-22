@@ -6,7 +6,8 @@ import { map } from 'rxjs/operators';
   selector: 'demo-basics2-container',
   template: `
     <h1>Step-2</h1>
-    <small>Parent re-renders: {{rerenders()}}</small><br/>
+    <small>Parent re-renders: {{ rerenders() }}</small
+    ><br />
     <mat-form-field>
       <label>RefreshInterval</label>
       <input
@@ -27,6 +28,6 @@ export class DemoBasics2ContainerComponent {
   );
   numRenders = 0;
   rerenders(): number {
-    return  ++this.numRenders;
+    return ++this.numRenders;
   }
 }

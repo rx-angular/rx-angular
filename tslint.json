@@ -3,9 +3,6 @@
     "node_modules/@nrwl/workspace/src/tslint",
     "node_modules/codelyzer"
   ],
-  "linterOptions": {
-    "exclude": ["**/*"]
-  },
   "rules": {
     "arrow-return-shorthand": true,
     "callable-types": true,
