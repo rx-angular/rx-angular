@@ -1,8 +1,6 @@
 import {
   BehaviorSubject,
-  combineLatest, concat, defer,
   EMPTY,
-  isObservable,
   NextObserver,
   Observable,
   PartialObserver,
@@ -10,19 +8,9 @@ import {
   Subscribable,
   Subscription
 } from 'rxjs';
-import {
-  catchError,
-  distinctUntilChanged, map,
-  mergeAll,
-  switchMap, switchMapTo, take,
-  tap
-} from 'rxjs/operators';
-import {
-  CdStrategy,
-  DEFAULT_STRATEGY_NAME,
-  StrategySelection
-} from './strategy';
+import { catchError, distinctUntilChanged, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { nameToStrategy } from './nameToStrategy';
+import { CdStrategy, DEFAULT_STRATEGY_NAME, StrategySelection } from './strategy';
 
 export interface CdAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
@@ -66,10 +54,9 @@ export function createCdAware<U>(cfg: {
       }
       strategy.render();
     }),
-    map(o$ => o$.pipe(strategy.behaviour())),
+    map(o$ => o$.pipe(distinctUntilChanged(), tap(cfg.updateObserver.next), strategy.behaviour())),
     switchMap((observable$) => (observable$ == null) ? EMPTY : observable$),
     distinctUntilChanged(),
-    tap(cfg.updateObserver),
     tap(() => strategy.render()),
     catchError(e => {
       console.error(e);
