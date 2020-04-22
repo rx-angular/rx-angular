@@ -4,7 +4,7 @@ import {
   Input,
   OnDestroy,
   TemplateRef,
-  ViewContainerRef,
+  ViewContainerRef
 } from '@angular/core';
 
 import {
@@ -12,7 +12,7 @@ import {
   Observable,
   ObservableInput,
   Observer,
-  Unsubscribable,
+  Unsubscribable
 } from 'rxjs';
 import { CdAware, createCdAware, getStrategies } from '../core';
 
@@ -51,13 +51,16 @@ export interface LetViewContext<T> {
  * - binding is always present. (`*ngIf="truthy$"`)
  * - it takes away the multiple usages of the `async` or `ngrxPush` pipe
  * - a unified/structured way of handling null and undefined
- * - triggers change-detection differently if `zone.js` is present or not (`ChangeDetectorRef.detectChanges` or `ChangeDetectorRef.markForCheck`)
- * - triggers change-detection differently if ViewEngine or Ivy is present (`ChangeDetectorRef.detectChanges` or `ɵdetectChanges`)
+ * - triggers change-detection differently if `zone.js` is present or not (`ChangeDetectorRef.detectChanges` or
+ *   `ChangeDetectorRef.markForCheck`)
+ * - triggers change-detection differently if ViewEngine or Ivy is present (`ChangeDetectorRef.detectChanges` or
+ *   `ɵdetectChanges`)
  * - distinct same values in a row (distinctUntilChanged operator),
  *
  * @usageNotes
  *
- * The `*ngrxLet` directive take over several things and makes it more convenient and save to work with streams in the template
+ * The `*ngrxLet` directive take over several things and makes it more convenient and save to work with streams in the
+ *   template
  * `<ng-container *ngrxLet="observableNumber$ as c"></ng-container>`
  *
  * ```html
@@ -76,7 +79,7 @@ export interface LetViewContext<T> {
  * We can track the observables:
  * - next value
  * - error value
- * - complete state
+ * - complete base-state
  *
  * ```html
  * <ng-container *ngrxLet="observableNumber$; let n; let e = $error, let c = $complete">
@@ -95,7 +98,6 @@ export interface LetViewContext<T> {
  */
 @Directive({ selector: '[ngrxLet]' })
 export class LetDirective<U> implements OnDestroy {
-
   @Input()
   set ngrxLet(potentialObservable: ObservableInput<U> | null | undefined) {
     this.cdAware.nextPotentialObservable(potentialObservable);
@@ -116,7 +118,7 @@ export class LetDirective<U> implements OnDestroy {
     this.cdAware = createCdAware<U>({
       strategies: getStrategies<U>({ cdRef }),
       resetObserver: this.resetObserver,
-      updateObserver: this.updateObserver,
+      updateObserver: this.updateObserver
     });
     this.subscription = this.cdAware.subscribe();
   }
@@ -127,7 +129,7 @@ export class LetDirective<U> implements OnDestroy {
     $implicit: undefined,
     ngrxLet: undefined,
     $error: false,
-    $complete: false,
+    $complete: false
   };
 
   protected readonly subscription: Unsubscribable;
@@ -141,7 +143,7 @@ export class LetDirective<U> implements OnDestroy {
         this.ViewContext.$error = false;
         this.ViewContext.$complete = false;
       }
-    },
+    }
   };
   private readonly updateObserver: Observer<U | null | undefined> = {
     next: (value: U | null | undefined) => {
@@ -165,7 +167,7 @@ export class LetDirective<U> implements OnDestroy {
         this.createEmbeddedView();
       }
       this.ViewContext.$complete = true;
-    },
+    }
   };
 
   static ngTemplateContextGuard<U>(

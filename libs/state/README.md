@@ -1,5 +1,6 @@
-# ngx-rx-state
+# @ngx-rx/state
 
+_(currently under ngx-rx-state on NPM)_  
 [![ngx-rx](https://circleci.com/gh/BioPhoton/ngx-rx.svg?style=shield)](https://circleci.com/gh/BioPhoton/ngx-rx)
 
 #### Reactive Component State for Angular
@@ -7,7 +8,7 @@
 RxState is a light-weight reactive state management service especially useful for component state in Angular.
 Furthermore a global service is provided and can act as a small global state manager.
 
-![ngx-rx-state logo](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/libs/ngx-rx-state/images/ngx-rx-state_logo.png)
+![state logo](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/libs/state/images/state_logo.png)
 
 ## Description
 
@@ -23,35 +24,16 @@ This library helps to organize component state reactively.
 
 **Features**
 
-- Better rendering performance (using `OnPush`)
-- Component State Management (Also a global service is provided `RxGlobalState`)
-- **Subscription-less coding**
-- Lazy state. No initial state needed.
-- Lifecycle independent programming
-- State queries are automatically cached
-- Automated subscription handling
-- Foundation for Zone-Less applications
 - Slim and intuitive API
 - Fully typed and tested
-
-**Resources**
-
-Videos:
-
-- [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch?v=I8uaHMs8rw0)
-
-Articles:
-
-- [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
-
-Design Documents
-
-- [💾 Design Documents](https://hackmd.io/wVkWRc3XQWmtM6YcktRTrA)
-
-Usage in the wild
-
-- [Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) by [Mike Hartington](https://twitter.com/mhartington)
-- [Repository Demo](https://github.com/BioPhoton/ngx-rx/tree/master/apps/ngx-rx-state-demo)
+- Easy and Flexible Reactive Component State Management
+- **Subscription-less coding**
+- Automated subscription handling
+- State queries are automatically cached
+- Better rendering performance (using `OnPush`)
+- Lazy state. No initial state needed.
+- Lifecycle independent programming
+- Foundation for Zone-Less applications
 
 ---
 
@@ -61,21 +43,20 @@ TOC
 - Setup
 - API
 - Usage in Angular
+- Resources
 
 ---
 
 ## Install
 
-`npm install --save ngx-rx-state`  
-and the peer dependency:  
-`npm install --save rxjs-state`
+`npm install --save @ngx-rx/state`
 
 ## Setup
 
 As the RxState class is just a plain vanilla Javascript Class
 
 ```typescript
-import { RxState } from '@ngx-rx/rxjs-state';
+import { RxState } from '@ngx-rx/state';
 
 interface MyState {
   foo: string;
@@ -91,17 +72,36 @@ const state = new RxState<MyState>();
 
 ## API
 
-### setState
+![state logo](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/libs/state/images/state_API-names.png)
+
+**The API in a nutshell**
+
+- `$` - The complete state observable
+- `set` - Set state imperatively
+- `connect` - Connect state reactively
+- `get` - Get current state imperatively
+- `select` - Select state changes reactively
+- `hold` - maintaining the subscription of a side effect
+
+**The best practices in a nutshell**
+
+- **Don't nest one of `set`, `connect`, `get`, `select` or `hold` into each other**
+- Use `connect` over `set`
+- In most of the cases `get` is not needed. The old state is always available.
+
+![state types](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/libs/state/images/state_API-types.png)
+
+### set
 
 **Add new slices to the state by providing an object**
 
 ```typescript
 const state = new RxState<{ foo: string; bar: number }>();
 state.setState({ foo: 'boo' });
-// new state => { foo: 'boo' }
+// new base-state => { foo: 'boo' }
 
 state.setState({ bar: 2 });
-// new state => { foo: 'boo', bar: 2 }
+// new base-state => { foo: 'boo', bar: 2 }
 ```
 
 **Add new Slices to the state by providing a projection function**
@@ -111,7 +111,7 @@ const state = new RxState<{ bar: number }>();
 
 state.setState({ bar: 1 });
 state.setState(currentState => ({ bar: currentState.bar + 2 }));
-// new state => {bar: 3}
+// new base-state => {bar: 3}
 ```
 
 ### connect
@@ -149,7 +149,7 @@ const slice$ = of({
   foo: 'foo'
 });
 state.connect(slice$);
-// new state => { foo: 'foo', bar: 5}
+// new base-state => { foo: 'foo', bar: 5}
 ```
 
 ### select
@@ -254,6 +254,25 @@ state.hold(btnClick$, clickEvent => console.log(clickEvent));
 
 ### Basic Setup
 
+**Provide the `RxState` inside a `Component` or `Directive` and `Inject` it**
+
+```typescript
+@Component({
+  selector: 'app-stateful',
+  template: `
+    <div>{{ state$ | async | json }}</div>
+  `,
+  providers: [RxState]
+})
+export class StatefulComponent {
+  readonly state$ = this.state.select();
+
+  constructor(private state: RxState<{ foo: string }>) {}
+}
+```
+
+In very small components you can also extend to keep the api short.
+
 **Extend from the `RxState` inside a `Component`, `Directive` or `Service`**
 
 ```typescript
@@ -269,23 +288,6 @@ export class StatefulComponent extends RxState<{ foo: number }> {
   constructor() {
     super();
   }
-}
-```
-
-**Provide the `RxState` inside a `Component` or `Directive` and `Inject` it**
-
-```typescript
-@Component({
-  selector: 'app-stateful',
-  template: `
-    <div>{{ state$ | async | json }}</div>
-  `,
-  providers: [RxState]
-})
-export class StatefulComponent {
-  readonly state$ = this.state.select();
-
-  constructor(private state: RxState<{ foo: string }>) {}
 }
 ```
 
@@ -418,3 +420,22 @@ export class StatefulComponent {
    }
 }
 ```
+
+**Resources**
+
+Videos:
+
+- [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch?v=I8uaHMs8rw0)
+
+Articles:
+
+- [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
+
+Design Documents
+
+- [💾 Design Documents](https://hackmd.io/wVkWRc3XQWmtM6YcktRTrA)
+
+Usage in the wild
+
+- [Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) by [Mike Hartington](https://twitter.com/mhartington)
+- [Repository Demo](https://github.com/BioPhoton/ngx-rx/tree/master/apps/ngx-rx-state-demo)

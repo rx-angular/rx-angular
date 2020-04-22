@@ -35,7 +35,7 @@ export function stateful<T, R>(
 ): OperatorFunction<T, T | R> {
   return (s: Observable<T>): Observable<T | R> => {
     return s.pipe(
-      // distinct same state objects (e.g. a default emission of default switch cases, incorrect mutable handling
+      // distinct same base-state objects (e.g. a default emission of default switch cases, incorrect mutable handling
       // of data) @TODO evaluate benefits vs. overhead
       distinctUntilChanged(),
       // CUSTOM LOGIC HERE
@@ -45,7 +45,7 @@ export function stateful<T, R>(
         }
         return o;
       },
-      // initial emissions, undefined is no state, pollution with skip(1)
+      // initial emissions, undefined is no base-state, pollution with skip(1)
       filter(v => v !== undefined),
       // distinct same derivation value
       distinctUntilChanged(),

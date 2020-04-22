@@ -1,6 +1,6 @@
-import { RxJsState } from '@ngx-rx/rxjs-state';
-import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
+import { TestScheduler } from 'rxjs/testing';
+import { RxJsState } from '../../src/lib/core';
 
 interface PrimitiveState {
   bol: boolean;
@@ -64,7 +64,7 @@ describe('State', () => {
     });
   });
 
-  it('should return initial state', () => {
+  it('should return initial base-state', () => {
     testScheduler.run(({ expectObservable }) => {
       const state = setupState({ initialState: initialPrimitiveState });
       expectObservable(state.select()).toBe('s', { s: initialPrimitiveState });
@@ -72,14 +72,14 @@ describe('State', () => {
   });
 
   describe('slice by key', () => {
-    it('should return empty state after init', () => {
+    it('should return empty base-state after init', () => {
       testScheduler.run(({ expectObservable }) => {
         const state = setupState({});
         expectObservable(state.select()).toBe('');
       });
     });
 
-    it('should return initial state', () => {
+    it('should return initial base-state', () => {
       testScheduler.run(({ expectObservable }) => {
         const state = new RxJsState<PrimitiveState>();
         state.subscribe();
@@ -98,7 +98,7 @@ describe('State', () => {
       });
     });
 
-    it('should return full state object on select', () => {
+    it('should return full base-state object on select', () => {
       testScheduler.run(({ expectObservable }) => {
         const state = setupState({ initialState: initialPrimitiveState });
         expectObservable(state.select()).toBe('s', {
@@ -110,7 +110,7 @@ describe('State', () => {
 });
 
 describe('setState', () => {
-  describe('with state partial', () => {
+  describe('with base-state partial', () => {
     it('should add new slices', () => {
       const state = setupState({});
       state.select().subscribe(s => {
@@ -119,7 +119,7 @@ describe('setState', () => {
       state.setState(initialPrimitiveState);
       state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
     });
-    it('should override previous state slices', () => {
+    it('should override previous base-state slices', () => {
       const state = setupState({ initialState: initialPrimitiveState });
       state.select().subscribe(s => {
         throw Error('should never emit');
@@ -130,7 +130,7 @@ describe('setState', () => {
       state.select().subscribe(s => expect(s).toBe({ num: 1 }));
     });
   });
-  describe('with state project partial', () => {
+  describe('with base-state project partial', () => {
     it('should add new slices', () => {
       const state = setupState({});
       state.select().subscribe(s => {
@@ -139,14 +139,14 @@ describe('setState', () => {
       state.setState(s => initialPrimitiveState);
       state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
     });
-    it('should override previous state slices', () => {
+    it('should override previous base-state slices', () => {
       const state = setupState({ initialState: initialPrimitiveState });
       state.select().subscribe(s => expect(state).toBe(initialPrimitiveState));
       state.setState(s => ({ num: s.num + 1 }));
       state.select().subscribe(s => expect(state).toBe({ num: 43 }));
     });
   });
-  describe('with state key and value partial', () => {
+  describe('with base-state key and value partial', () => {
     it('should add new slices', () => {
       const state = setupState<PrimitiveState>({});
       state.select().subscribe(s => {
@@ -155,7 +155,7 @@ describe('setState', () => {
       state.setState('num', s => 1);
       state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
     });
-    it('should override previous state slices', () => {
+    it('should override previous base-state slices', () => {
       const state = setupState({ initialState: initialPrimitiveState });
       state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
       state.setState('num', s => s.num + 1);
@@ -168,6 +168,6 @@ describe('connectState', () => {
   describe('with observable of slices', () => {
     it('should add new slices', () => {});
 
-    it('should override previous state slices', () => {});
+    it('should override previous base-state slices', () => {});
   });
 });

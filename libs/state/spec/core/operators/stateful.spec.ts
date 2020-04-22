@@ -1,8 +1,8 @@
-import { stateful } from '@ngx-rx/rxjs-state';
+import { jestMatcher } from '@test-helpers';
 import { EMPTY, NEVER } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-import { jestMatcher } from '@test-helpers';
+import { stateful } from '../../../src/lib/core';
 
 interface PrimitiveState {
   test: string;

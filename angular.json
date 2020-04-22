@@ -426,50 +426,6 @@
           }
         }
       }
-    },
-    "rxjs-state": {
-      "projectType": "library",
-      "root": "libs/rxjs-state",
-      "sourceRoot": "libs/rxjs-state/src",
-      "prefix": "ngx-rx",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/rxjs-state/tsconfig.lib.json",
-            "project": "libs/rxjs-state/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/rxjs-state/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/rxjs-state/tsconfig.lib.json",
-              "libs/rxjs-state/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/rxjs-state/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/rxjs-state/jest.config.js",
-            "tsConfig": "libs/rxjs-state/tsconfig.spec.json",
-            "passWithNoTests": true,
-            "setupFile": "libs/rxjs-state/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      }
     }
   },
   "cli": {

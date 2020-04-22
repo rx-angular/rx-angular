@@ -1,8 +1,8 @@
-import { createAccumulationObservable } from '@ngx-rx/rxjs-state';
-import { pluck } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
+import { of } from 'rxjs';
+import { pluck } from 'rxjs/operators';
+import { TestScheduler } from 'rxjs/testing';
+import { createAccumulationObservable } from '../../src/lib/core';
 
 interface PrimitiveState {
   bol: boolean;
@@ -74,7 +74,7 @@ describe('createAccumulationObservable', () => {
       });
     });
 
-    it('should return initial state', () => {
+    it('should return initial base-state', () => {
       testScheduler.run(({ expectObservable }) => {
         const acc = setupAccumulationObservable<PrimitiveState>({
           initialState: initialPrimitiveState
@@ -106,7 +106,7 @@ describe('createAccumulationObservable', () => {
       expect(acc.state).toStrictEqual({});
     });
 
-    it('should return initial state', () => {
+    it('should return initial base-state', () => {
       const acc = setupAccumulationObservable<PrimitiveState>({
         initialState: initialPrimitiveState
       });
@@ -115,7 +115,7 @@ describe('createAccumulationObservable', () => {
   });
 
   describe('nextSlice', () => {
-    it('should add new state by partial', () => {
+    it('should add new base-state by partial', () => {
       testScheduler.run(({ expectObservable }) => {
         const acc = setupAccumulationObservable<PrimitiveState>({});
         acc.nextSlice({ num: 42 });
@@ -123,7 +123,7 @@ describe('createAccumulationObservable', () => {
       });
     });
 
-    it('should override previous state by partial', () => {
+    it('should override previous base-state by partial', () => {
       const acc = setupAccumulationObservable<PrimitiveState>({
         initialState: initialPrimitiveState
       });
@@ -146,7 +146,7 @@ describe('createAccumulationObservable', () => {
       });
     });
 
-    it('should override previous state slices', () => {
+    it('should override previous base-state slices', () => {
       const acc = setupAccumulationObservable<PrimitiveState>({
         initialState: initialPrimitiveState
       });

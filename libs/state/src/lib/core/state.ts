@@ -15,8 +15,8 @@ import {
   pipeFromArray,
   stateful,
   WrongSelectParamsError
-} from '../core';
-import { isKeyOf } from '../core/utils/typing';
+} from './index';
+import { isKeyOf } from './utils/typing';
 
 type ProjectStateFn<T> = (oldState: T) => Partial<T>;
 type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
