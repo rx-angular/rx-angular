@@ -11,6 +11,7 @@ import { DemoBasicsItem } from '../demo-basics-item.interface';
 
 import { ofType } from '@ngrx/effects';
 import { map, startWith, tap } from 'rxjs/operators';
+import { RxState } from '@ngx-rx/state';
 
 interface ComponentState {
   refreshInterval: number;
@@ -89,7 +90,7 @@ const initComponentState = {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-// 1) implement LocalState Service => ComponentState
+// 1) implement RxState Service => extends RxState<ComponentState>
 export class DemoBasicsComponent1 implements OnInit, OnDestroy {
   intervalSubscription = new Subscription();
   // UI interaction
@@ -101,6 +102,8 @@ export class DemoBasicsComponent1 implements OnInit, OnDestroy {
 
   // UI base-state
   // 1.1) Select component State
+  //
+
   _refreshInterval: number = initComponentState.refreshInterval;
   @Input()
   set refreshInterval(refreshInterval: number) {
@@ -120,6 +123,8 @@ export class DemoBasicsComponent1 implements OnInit, OnDestroy {
   }
 
   constructor(private store: Store<any>) {
+    // super();
+
     // 2.1) Initialize component base-state
     // 2.2) Connect input bindings
     // 2.3) Connect base-state from child components ( listExpandedChanges => listExpanded )
