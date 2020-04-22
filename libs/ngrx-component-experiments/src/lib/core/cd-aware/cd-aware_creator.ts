@@ -18,7 +18,6 @@ import {
   tap
 } from 'rxjs/operators';
 import { nameToStrategy } from './nameToStrategy';
-import { nameToStrategy } from './nameToStrategy';
 import {
   CdStrategy,
   DEFAULT_STRATEGY_NAME,
