@@ -19,60 +19,31 @@
     }
   },
   "projects": {
-    "ngx-rx-state-demo": {
+    "state-demo": {
       "tags": []
     },
-    "ngx-rx-state-demo-e2e": {
+    "state-demo-e2e": {
       "tags": [],
-      "implicitDependencies": ["ngx-rx-state-demo"]
+      "implicitDependencies": ["state-demo"]
     },
-    "state": {
+    "experiments": {
       "tags": []
+    },
+    "experiments-e2e": {
+      "tags": [],
+      "implicitDependencies": ["experiments"]
     },
     "test-helpers": {
-      "tags": []
+      "tags": ["type:util"]
     },
-    "rxjs-etc": {
-      "tags": []
+    "core": {
+      "tags": ["type:util"]
     },
-    "ts-etc": {
-      "tags": []
+    "state": {
+      "tags": ["type:feature"]
     },
-    "ngrx-component-experiments": {
-      "tags": []
-    },
-    "ngx-rx-experiments": {
-      "tags": []
-    },
-    "ngx-rx-experiments-e2e": {
-      "tags": [],
-      "implicitDependencies": ["ngx-rx-experiments"]
-    },
-    "ngx-rx-rxjs-etc-demo": {
-      "tags": []
-    },
-    "ngx-rx-rxjs-etc-demo-e2e": {
-      "tags": [],
-      "implicitDependencies": ["ngx-rx-rxjs-etc-demo"]
-    },
-    "ngx-rx-ts-etc-demo": {
-      "tags": []
-    },
-    "ngx-rx-ts-etc-demo-e2e": {
-      "tags": [],
-      "implicitDependencies": ["ngx-rx-ts-etc-demo"]
-    },
-    "let": {
-      "tags": []
-    },
-    "patch": {
-      "tags": []
-    },
-    "push": {
-      "tags": []
-    },
-    "render-changes": {
-      "tags": []
+    "template": {
+      "tags": ["type:feature"]
     }
   }
 }

@@ -10,7 +10,7 @@ The target Framework is Angular but the features are designed to get reused in o
 **Packages included:**
 
 - [TypeScript](https://www.typescriptlang.org/)
-  - [💾 @ngx-rx/ts-etc](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ts-etc/Readme.md) - Reusable Typescript code
+  - [💾 @ngx-rx/core](https://github.com/BioPhoton/ngx-rx/tree/master/libs/core/Readme.md) - Reusable Typescript code
 - [RxJS](https://rxjs.dev)
   - [💾 @ngx-rx/rxjs-etc](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-etc/Readme.md) - Reusable RxJS code
 - [Angular](https://angular.io)
