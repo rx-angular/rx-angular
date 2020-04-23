@@ -34,7 +34,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
       </button>
       <button (click)="nextValueSubject.next('MULTI')">next multi-shot</button>
     </div>
-    <div class="case-content">value$: {{ value$ | ngrxPush | json }}</div>
+    <div class="case-content">value$: {{ value$ | push | json }}</div>
   `,
   changeDetection: environment.changeDetection
 })

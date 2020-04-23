@@ -11,7 +11,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <h2>
       Push Pipe 01
       <small
-        >one single-shot observable bound by one ngrxPush as template
+        >one single-shot observable bound by one push as template
         expression</small
       >
     </h2>
@@ -22,7 +22,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <button #button>increment</button>
     <!-- -->
     <br />
-    Value1: {{ value1$ | ngrxPush: strategy }}
+    Value1: {{ value1$ | push: strategy }}
   `,
   changeDetection: environment.changeDetection
 })

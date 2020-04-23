@@ -3,13 +3,13 @@
 0. Implement reactive template helpers (push pipe)
 
 ```html
-{{storeList$ | ngrxPush}}}
+{{storeList$ | push}}}
 ```
 
 0.1 finetune with strategies
 
 ```html
-{{storeList$ | ngrxPush: 'local'}}}
+{{storeList$ | push: 'local'}}}
 ```
 
 1. Implement RxState Service ComponentState by extending the RxState class.

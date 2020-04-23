@@ -49,7 +49,7 @@ export interface LetViewContext<T> {
  *
  * Included Features:
  * - binding is always present. (`*ngIf="truthy$"`)
- * - it takes away the multiple usages of the `async` or `ngrxPush` pipe
+ * - it takes away the multiple usages of the `async` or `push` pipe
  * - a unified/structured way of handling null and undefined
  * - triggers change-detection differently if `zone.js` is present or not (`ChangeDetectorRef.detectChanges` or
  *   `ChangeDetectorRef.markForCheck`)

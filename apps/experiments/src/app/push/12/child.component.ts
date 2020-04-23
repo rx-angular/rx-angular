@@ -12,7 +12,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     ><br />
     <span>strategy: </span><b class="strategy">{{ strategy }}</b
     ><br />
-    Passed input binding: {{ value1$ | ngrxPush: strategy }}
+    Passed input binding: {{ value1$ | push: strategy }}
     <!-- -->
   `,
   changeDetection: environment.changeDetection

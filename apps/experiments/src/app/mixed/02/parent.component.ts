@@ -19,14 +19,14 @@ import { fromZoneEvent } from '@ngx-rx/rxjs-etc';
     <button #button>increment</button>
     <!-- -->
     <br />
-    {{ nums1$ | ngrxPush }}
-    <app-mixed-child02 [value]="nums1$ | ngrxPush"></app-mixed-child02>
-    <span *ngFor="let num of nums1$ | ngrxPush">{{ num }}</span>
-    <ng-container *ngIf="nums1$ | ngrxPush as sync1">{{
+    {{ nums1$ | push }}
+    <app-mixed-child02 [value]="nums1$ | push"></app-mixed-child02>
+    <span *ngFor="let num of nums1$ | push">{{ num }}</span>
+    <ng-container *ngIf="nums1$ | push as sync1">{{
       sync1 | json
     }}</ng-container>
     <ng-container *ngrxLet="nums1$ as sync1">{{ sync1 | json }}</ng-container>
-    <app-mixed-child01 [value]="nums1$ | ngrxPush"></app-mixed-child01>
+    <app-mixed-child01 [value]="nums1$ | push"></app-mixed-child01>
   `,
   changeDetection: environment.changeDetection
 })

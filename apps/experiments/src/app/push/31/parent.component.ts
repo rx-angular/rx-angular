@@ -21,7 +21,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <app-insertion [template]="ref"></app-insertion>
 
     <ng-template #ref>
-      <span>{{ value1$ | ngrxPush }}</span>
+      <span>{{ value1$ | push }}</span>
     </ng-template>
   `,
   changeDetection: environment.changeDetection

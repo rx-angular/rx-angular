@@ -18,7 +18,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <h2>
       Push Pipe 02
       <small
-        >one single-shot observable bound by multiple ngrxPush as template
+        >one single-shot observable bound by multiple push as template
         expression</small
       >
     </h2>
@@ -28,9 +28,9 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <br />
     <button #button>increment</button>
     <!-- -->
-    Value1: {{ value1$ | ngrxPush: strategy }} Value1:
-    {{ value1$ | ngrxPush: strategy }} Value1:
-    {{ value1$ | ngrxPush: strategy }}
+    Value1: {{ value1$ | push: strategy }} Value1:
+    {{ value1$ | push: strategy }} Value1:
+    {{ value1$ | push: strategy }}
     <br />
   `,
   changeDetection: environment.changeDetection

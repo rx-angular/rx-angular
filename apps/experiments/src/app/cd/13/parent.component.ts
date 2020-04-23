@@ -32,10 +32,10 @@ import { BaseComponent } from '../../base.component.ts/base.component';
       >
     </div>
     <div class="case-interaction">
-      Value: {{ value$ | ngrxPush: 'optimistic1' }}<br />
+      Value: {{ value$ | push: 'optimistic1' }}<br />
       <span
         >aF:{{
-          (isPatchedAf$ | ngrxPush: 'optimistic1') ? 'Patched' : 'UnPatched'
+          (isPatchedAf$ | push: 'optimistic1') ? 'Patched' : 'UnPatched'
         }}</span
       ><br />
       <button #button>Run AF for 1 sec</button>

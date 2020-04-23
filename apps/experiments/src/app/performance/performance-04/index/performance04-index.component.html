@@ -3,7 +3,7 @@
   <mat-toolbar style="margin-bottom: 1rem" color="primary">
     <span>Detected Changes: {{ detectedChanges() }}</span>
     <span
-      >Showing {{ (filteredData$ | ngrxPush)?.length }} /
+      >Showing {{ (filteredData$ | push)?.length }} /
       {{ state.data?.length }} entries</span
     >
     <mat-form-field style="margin-left: 1rem;">
@@ -33,7 +33,7 @@
     </mat-form-field>
   </mat-toolbar>
   <div class="mat-elevation-z8 table-wrapper">
-    <table mat-table [dataSource]="filteredData$ | ngrxPush">
+    <table mat-table [dataSource]="filteredData$ | push">
       <ng-container matColumnDef="select">
         <th mat-header-cell *matHeaderCellDef>
           <mat-checkbox

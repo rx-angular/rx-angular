@@ -11,7 +11,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <h2>
       Push Pipe 14
       <small
-        >multiple single-shot observable bound by multiple ngrxPush as input
+        >multiple single-shot observable bound by multiple push as input
         binding</small
       >
     </h2>
@@ -28,12 +28,9 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <button #button>increment</button>
     <!-- -->
     <br />
-    <app-push-child14 [value]="value1$ | ngrxPush: strategy">
-    </app-push-child14>
-    <app-push-child14 [value]="value2$ | ngrxPush: strategy">
-    </app-push-child14>
-    <app-push-child14 [value]="value3$ | ngrxPush: strategy">
-    </app-push-child14>
+    <app-push-child14 [value]="value1$ | push: strategy"> </app-push-child14>
+    <app-push-child14 [value]="value2$ | push: strategy"> </app-push-child14>
+    <app-push-child14 [value]="value3$ | push: strategy"> </app-push-child14>
   `,
   changeDetection: environment.changeDetection
 })

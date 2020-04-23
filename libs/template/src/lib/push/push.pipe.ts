@@ -17,7 +17,7 @@ import { RenderAware, createRenderAware, getStrategies } from '@ngx-rx/core';
  *
  * @description
  *
- * The `ngrxPush` pipe serves as a drop-in replacement for the `async` pipe.
+ * The `push` pipe serves as a drop-in replacement for the `async` pipe.
  * It contains intelligent handling of change detection to enable us
  * running in zone-full as well as zone-less mode without any changes to the code.
  *
@@ -35,7 +35,7 @@ import { RenderAware, createRenderAware, getStrategies } from '@ngx-rx/core';
  * Heavy dynamic and interactive UIs suffer from zones change detection a lot and can
  * lean to bad performance or even unusable applications, but the `async` pipe does not work in zone-less mode.
  *
- * `ngrxPush` pipe solves that problem.
+ * `push` pipe solves that problem.
  *
  * Included Features:
  *  - Take observables or promises, retrieve their values and render the value to the template
@@ -46,16 +46,16 @@ import { RenderAware, createRenderAware, getStrategies } from '@ngx-rx/core';
  *
  * @usageNotes
  *
- * `ngrxPush` pipe solves that problem. It can be used like shown here:
+ * `push` pipe solves that problem. It can be used like shown here:
  * ```html
- * {{observable$ | ngrxPush}}
- * <ng-container *ngIf="observable$ | ngrxPush as o">{{o}}</ng-container>
- * <component [value]="observable$ | ngrxPush"></component>
+ * {{observable$ | push}}
+ * <ng-container *ngIf="observable$ | push as o">{{o}}</ng-container>
+ * <component [value]="observable$ | push"></component>
  * ```
  *
  * @publicApi
  */
-@Pipe({ name: 'ngrxPush', pure: false })
+@Pipe({ name: 'push', pure: false })
 export class PushPipe<S> implements PipeTransform, OnDestroy {
   private renderedValue: S | null | undefined;
 

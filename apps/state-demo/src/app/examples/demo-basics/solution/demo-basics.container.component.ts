@@ -17,7 +17,7 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <demo-basics [refreshInterval]="refreshInterval$ | ngrxPush"> </demo-basics>
+    <demo-basics [refreshInterval]="refreshInterval$ | push"> </demo-basics>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

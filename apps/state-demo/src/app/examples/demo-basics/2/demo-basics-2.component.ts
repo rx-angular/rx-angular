@@ -36,7 +36,7 @@ const initComponentState = {
     <small>Child re-renders: {{ rerenders() }}</small
     ><br />
     <mat-expansion-panel
-      *ngIf="model$ | ngrxPush as m"
+      *ngIf="model$ | push as m"
       (expandedChange)="listExpandedChanges.next($event)"
       [expanded]="m.listExpanded"
     >

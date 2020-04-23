@@ -11,8 +11,8 @@ import { fromZoneEvent } from '@ngx-rx/core';
     <h2>
       Mixed Setup 01
       <small
-        >One single-shot observable bound by one ngrxPush and one ngrxLet as
-        input binding</small
+        >One single-shot observable bound by one push and one ngrxLet as input
+        binding</small
       >
     </h2>
     <span>render: </span><b class="num-renders">{{ getNumOfRenderings() }}</b
@@ -23,9 +23,7 @@ import { fromZoneEvent } from '@ngx-rx/core';
     <!-- -->
     <br />
     <ng-container *ngrxLet="value1$ as sync1">{{ sync1 }}</ng-container>
-    <app-mixed-child01
-      [value]="value1$ | ngrxPush: strategy"
-    ></app-mixed-child01>
+    <app-mixed-child01 [value]="value1$ | push: strategy"></app-mixed-child01>
   `,
   changeDetection: environment.changeDetection
 })

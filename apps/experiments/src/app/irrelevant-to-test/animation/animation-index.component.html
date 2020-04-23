@@ -1,4 +1,4 @@
-<ng-container *ngIf="viewState$ | ngrxPush as state">
+<ng-container *ngIf="viewState$ | push as state">
   <mat-toolbar style="margin-bottom: 1rem" color="primary">
     <span style="margin-right: 1rem;">Animations with rxjs state</span>
     <span>Detected Changes: {{ detectedChanges() }}</span>

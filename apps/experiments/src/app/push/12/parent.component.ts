@@ -11,7 +11,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
       Push Pipe 12
       <small
         >one single-shot observable passed directly to input binding rendered
-        over ngrxPush</small
+        over push</small
       >
     </h2>
     <span>render: </span><b class="num-renders">{{ getNumOfRenderings() }}</b
