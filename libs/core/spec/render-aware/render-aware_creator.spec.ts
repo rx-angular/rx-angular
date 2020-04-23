@@ -20,13 +20,16 @@ class RenderAwareImplementation<U> implements OnDestroy {
   public completed = false;
   private readonly subscription: Unsubscribable;
   public RenderAware: RenderAware<U | undefined | null>;
-  resetContextObserver: NextObserver<any> = {
+  resetObserver: NextObserver<any> = {
     next: () => (this.renderedValue = undefined)
   };
-  updateViewContextObserver: Observer<any> = {
+  updateObserver: Observer<any> = {
     next: (n: any) => (this.renderedValue = n),
     error: e => (this.error = e),
-    complete: () => (this.completed = true)
+    complete: () => {
+      console.log('complete');
+      this.completed = true;
+    }
   };
 
   constructor() {
@@ -38,8 +41,8 @@ class RenderAwareImplementation<U> implements OnDestroy {
           name: DEFAULT_STRATEGY_NAME
         }
       },
-      updateObserver: this.updateViewContextObserver,
-      resetObserver: this.resetContextObserver
+      updateObserver: this.updateObserver,
+      resetObserver: this.resetObserver
     });
     this.subscription = this.RenderAware.subscribe();
   }
@@ -116,7 +119,7 @@ describe('RenderAware', () => {
     });
   });
 
-  describe('observable context', () => {
+  fdescribe('observable context', () => {
     it('next handling running observable', () => {
       renderAwareImplementation.RenderAware.nextPotentialObservable(
         concat(of(42), NEVER)

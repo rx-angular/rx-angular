@@ -55,9 +55,9 @@ describe('getZoneUnPatchedPromiseDurationSelector', () => {
 });
 
 describe('DEFAULT_STRATEGY_NAME', () => {
-  it('should be `native`', () => {
+  it('should be `global`', () => {
     const strategies = getStrategies(getMockNativeStrategyConfig());
-    expect(strategies[DEFAULT_STRATEGY_NAME].name).toBe('native');
+    expect(strategies[DEFAULT_STRATEGY_NAME].name).toBe('global');
   });
 });
 
