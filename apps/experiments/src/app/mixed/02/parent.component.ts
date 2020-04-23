@@ -25,7 +25,7 @@ import { fromZoneEvent } from '@ngx-rx/rxjs-etc';
     <ng-container *ngIf="nums1$ | push as sync1">{{
       sync1 | json
     }}</ng-container>
-    <ng-container *ngrxLet="nums1$ as sync1">{{ sync1 | json }}</ng-container>
+    <ng-container *rxLet="nums1$ as sync1">{{ sync1 | json }}</ng-container>
     <app-mixed-child01 [value]="nums1$ | push"></app-mixed-child01>
   `,
   changeDetection: environment.changeDetection

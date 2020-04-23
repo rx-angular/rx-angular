@@ -12,7 +12,7 @@ import { fromZoneEvent } from '@ngx-rx/core';
     <h2>
       Let Directive 12
       <small
-        >One single-shot observables bound by multiple ngrxLet as input binding
+        >One single-shot observables bound by multiple rxLet as input binding
         with let syntax</small
       >
     </h2>
@@ -21,9 +21,9 @@ import { fromZoneEvent } from '@ngx-rx/core';
     <span>strategy: </span><b class="strategy">{{ strategy }}</b>
     <br />
     <button #button>increment</button>
-    <ng-container *ngrxLet="value1$; let v">Value1: {{ v }}</ng-container>
-    <ng-container *ngrxLet="value1$; let v">Value1: {{ v }}</ng-container>
-    <ng-container *ngrxLet="value1$; let v">Value1: {{ v }}</ng-container>
+    <ng-container *rxLet="value1$; let v">Value1: {{ v }}</ng-container>
+    <ng-container *rxLet="value1$; let v">Value1: {{ v }}</ng-container>
+    <ng-container *rxLet="value1$; let v">Value1: {{ v }}</ng-container>
   `,
   changeDetection: environment.changeDetection
 })

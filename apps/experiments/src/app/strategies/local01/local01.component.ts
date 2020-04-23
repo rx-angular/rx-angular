@@ -16,10 +16,10 @@ interface Local01State {
     <button (click)="change()">Click</button>
     <div style="border: 1px solid red; padding: 1rem">
       <h3>Component</h3>
-      <ng-container *ngrxLet="value1$; let v; config: strategy">
+      <ng-container *rxLet="value1$; let v; config: strategy">
         <span>value1: {{ v }}</span> </ng-container
       ><br />
-      <ng-container *ngrxLet="value2$; let v; config: strategy">
+      <ng-container *rxLet="value2$; let v; config: strategy">
         <span>value2: {{ v }}</span>
       </ng-container>
     </div>

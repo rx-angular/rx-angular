@@ -11,7 +11,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <h2>
       Let Directive 02
       <small
-        >One single-shot observables bound by multiple ngrxLet as input binding
+        >One single-shot observables bound by multiple rxLet as input binding
         with as syntax</small
       >
     </h2>
@@ -20,9 +20,9 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <span>strategy: </span><b class="strategy">{{ strategy }}</b>
     <br />
     <button #button>increment</button>
-    <ng-container *ngrxLet="value1$ as v">Value1: {{ v }}</ng-container>
-    <ng-container *ngrxLet="value1$ as v">Value1: {{ v }}</ng-container>
-    <ng-container *ngrxLet="value1$ as v">Value1: {{ v }}</ng-container>
+    <ng-container *rxLet="value1$ as v">Value1: {{ v }}</ng-container>
+    <ng-container *rxLet="value1$ as v">Value1: {{ v }}</ng-container>
+    <ng-container *rxLet="value1$ as v">Value1: {{ v }}</ng-container>
   `,
   changeDetection: environment.changeDetection
 })

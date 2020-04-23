@@ -20,7 +20,7 @@ export interface LetViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
   $implicit?: T;
   // to enable `as` syntax we have to assign the directives selector (var as v)
-  ngrxLet?: T;
+  rxLet?: T;
   // set context var complete to true (var$; let e = $error)
   $error?: boolean;
   // set context var complete to true (var$; let c = $complete)
@@ -32,7 +32,7 @@ export interface LetViewContext<T> {
  *
  * @description
  *
- * The `*ngrxLet` directive serves a convenient way of binding observables to a view context (a dom element scope).
+ * The `*rxLet` directive serves a convenient way of binding observables to a view context (a dom element scope).
  * It also helps with several internal processing under the hood.
  *
  * The current way of binding an observable to the view looks like that:
@@ -59,17 +59,17 @@ export interface LetViewContext<T> {
  *
  * @usageNotes
  *
- * The `*ngrxLet` directive take over several things and makes it more convenient and save to work with streams in the
+ * The `*rxLet` directive take over several things and makes it more convenient and save to work with streams in the
  *   template
- * `<ng-container *ngrxLet="observableNumber$ as c"></ng-container>`
+ * `<ng-container *rxLet="observableNumber$ as c"></ng-container>`
  *
  * ```html
- * <ng-container *ngrxLet="observableNumber$ as n">
+ * <ng-container *rxLet="observableNumber$ as n">
  * <app-number [number]="n">
  * </app-number>
  * </ng-container>
  *
- * <ng-container *ngrxLet="observableNumber$; let n">
+ * <ng-container *rxLet="observableNumber$; let n">
  * <app-number [number]="n">
  * </app-number>
  * </ng-container>
@@ -82,7 +82,7 @@ export interface LetViewContext<T> {
  * - complete base-state
  *
  * ```html
- * <ng-container *ngrxLet="observableNumber$; let n; let e = $error, let c = $complete">
+ * <ng-container *rxLet="observableNumber$; let n; let e = $error, let c = $complete">
  * <app-number [number]="n"  *ngIf="!e && !c">
  * </app-number>
  * <ng-container *ngIf="e">
@@ -99,7 +99,7 @@ export interface LetViewContext<T> {
 @Directive({ selector: '[rxLet]' })
 export class LetDirective<U> implements OnDestroy {
   @Input()
-  set ngrxLet(potentialObservable: ObservableInput<U> | null | undefined) {
+  set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
     this.RenderAware.nextPotentialObservable(potentialObservable);
   }
 
@@ -123,11 +123,11 @@ export class LetDirective<U> implements OnDestroy {
     this.subscription = this.RenderAware.subscribe();
   }
 
-  static ngTemplateGuard_ngrxLet: 'binding';
+  static ngTemplateGuard_rxLet: 'binding';
   private embeddedView: any;
   private readonly ViewContext: LetViewContext<U | undefined | null> = {
     $implicit: undefined,
-    ngrxLet: undefined,
+    rxLet: undefined,
     $error: false,
     $complete: false
   };
@@ -139,7 +139,7 @@ export class LetDirective<U> implements OnDestroy {
       // if not initialized no need to set undefined
       if (this.embeddedView) {
         this.ViewContext.$implicit = undefined;
-        this.ViewContext.ngrxLet = undefined;
+        this.ViewContext.rxLet = undefined;
         this.ViewContext.$error = false;
         this.ViewContext.$complete = false;
       }
@@ -152,7 +152,7 @@ export class LetDirective<U> implements OnDestroy {
         this.createEmbeddedView();
       }
       this.ViewContext.$implicit = value;
-      this.ViewContext.ngrxLet = value;
+      this.ViewContext.rxLet = value;
     },
     error: (error: Error) => {
       // to have init lazy

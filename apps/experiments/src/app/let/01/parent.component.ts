@@ -12,15 +12,15 @@ import { fromZoneEvent } from '@ngx-rx/core';
     <h2>
       Let Directive 01
       <small
-        >One single-shot observable bound by one ngrxLet as input binding with
-        as syntax</small
+        >One single-shot observable bound by one rxLet as input binding with as
+        syntax</small
       >
     </h2>
     <span>render: </span><b class="num-renders">{{ getNumOfRenderings() }}</b
     ><br />: strategy
     <br />
     <button #button>increment</button>
-    <ng-container *ngrxLet="value$ as v; let w">
+    <ng-container *rxLet="value$ as v; let w">
       Value: {{ v }} {{ w }}
     </ng-container>
   `,
