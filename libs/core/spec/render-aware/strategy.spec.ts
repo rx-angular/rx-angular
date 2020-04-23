@@ -4,11 +4,11 @@ import {
   DEFAULT_STRATEGY_NAME,
   getStrategies,
   getZoneUnPatchedPromiseDurationSelector
-} from '@ngx-rx/core';
+} from '../../src';
 import { getMockNativeStrategyConfig } from '../fixtures/fixtures';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
-import { getGlobalThis } from '@ngx-rx/core';
+import { getGlobalThis } from '../../src';
 
 let testScheduler: TestScheduler;
 

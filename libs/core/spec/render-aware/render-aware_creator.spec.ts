@@ -3,7 +3,7 @@ import {
   RenderAware,
   createRenderAware,
   DEFAULT_STRATEGY_NAME
-} from '@ngx-rx/core';
+} from '../../src';
 import {
   concat,
   EMPTY,

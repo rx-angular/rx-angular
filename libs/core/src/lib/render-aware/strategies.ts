@@ -1,11 +1,11 @@
-import { coalesce, CoalesceConfig } from '@ngx-rx/core';
+import { coalesce, CoalesceConfig } from '../operators';
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import {
   ChangeDetectorRef,
   ɵdetectChanges as detectChanges,
   ɵmarkDirty as markDirty
 } from '@angular/core';
-import { isViewEngineIvy } from '@ngx-rx/core';
+import { isViewEngineIvy } from '../utils';
 import { getZoneUnPatchedPromiseDurationSelector } from './promise-duration-selector';
 
 export interface RenderStrategyFactoryConfig {

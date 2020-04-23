@@ -1,4 +1,4 @@
-import { getGlobalThis } from '@ngx-rx/core';
+import { getGlobalThis } from '../../src';
 
 describe('getGlobalThis', () => {
   it('should return global this', () => {

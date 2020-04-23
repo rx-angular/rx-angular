@@ -1,4 +1,4 @@
-import { getGlobalThis, isViewEngineIvy } from '@ngx-rx/core';
+import { getGlobalThis, isViewEngineIvy } from '../../src';
 
 describe('isViewEngineIvy', () => {
   describe('in ViewEngine Angular 8 + 9', () => {

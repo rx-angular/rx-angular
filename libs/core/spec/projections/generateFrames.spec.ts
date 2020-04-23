@@ -1,4 +1,4 @@
-import { AsyncCancelerFn, AsyncProducerFn, generateFrames } from '@ngx-rx/core';
+import { AsyncCancelerFn, AsyncProducerFn, generateFrames } from '../../src';
 import { of } from 'rxjs';
 
 /** @test {generateFrames} */

@@ -4,7 +4,7 @@ import {
   getGlobalThis,
   isNgZone,
   isNoopNgZone
-} from '@ngx-rx/core';
+} from '../../src';
 import {
   manualInstanceNgZone,
   manualInstanceNoopNgZone,
