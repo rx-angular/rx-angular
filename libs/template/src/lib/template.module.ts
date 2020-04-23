@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { LetModule } from './let';
 import { PushModule } from './push';
-import { PatchModule } from './patch';
 
-const MODULES = [LetModule, PushModule, PatchModule];
+const MODULES = [LetModule, PushModule];
 @NgModule({
   imports: MODULES,
   exports: MODULES
