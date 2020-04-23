@@ -3,7 +3,7 @@ import { EMPTY, NEVER, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 
-import { select } from '../../../src/lib/core';
+import { select } from '../../../src';
 
 interface PrimitiveState {
   bol: boolean;
