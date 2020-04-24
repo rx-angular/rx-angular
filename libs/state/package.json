@@ -1,6 +1,6 @@
 {
-  "name": "rx-angular-state",
-  "version": "1.0.0-rc.1",
+  "name": "@rx-angular/state",
+  "version": "1.0.0-beta.0",
   "description": "**Fully** Reactive Component State in Angular. RxState is a light-weight reactive state management service especially useful for component state in Angular.",
   "main": "index.js",
   "publishConfig": {

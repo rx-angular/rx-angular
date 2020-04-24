@@ -1,5 +1,5 @@
 {
-  "npmScope": "ngx-rx",
+  "npmScope": "rx-angular",
   "implicitDependencies": {
     "angular.json": "*",
     "package.json": {
@@ -41,6 +41,13 @@
     },
     "template": {
       "tags": ["type:feature"]
+    },
+    "architecture-demos": {
+      "tags": []
+    },
+    "architecture-demos-e2e": {
+      "tags": [],
+      "implicitDependencies": ["architecture-demos"]
     }
   }
 }

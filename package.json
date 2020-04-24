@@ -1,5 +1,5 @@
 {
-  "name": "ngx-rx",
+  "name": "rx-angular",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -27,7 +27,7 @@
     "dep-graph": "nx dep-graph",
     "help": "nx help",
     "_postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
-    "ngx-rx-state:publish": "nx test state && nx build state --prod && cd ./dist/libs/state && npm publish",
+    "state:publish": "nx test state && nx build state --prod && cd ./dist/libs/state && npm publish",
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points"
   },
   "husky": {
@@ -44,20 +44,21 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^9.1.2",
+    "@angular/cdk": "^9.2.1",
     "@angular/common": "^9.1.2",
     "@angular/compiler": "^9.1.2",
     "@angular/core": "^9.1.2",
     "@angular/forms": "^9.1.2",
+    "@angular/material": "^9.2.1",
     "@angular/platform-browser": "^9.1.2",
     "@angular/platform-browser-dynamic": "^9.1.2",
     "@angular/router": "^9.1.2",
-    "@angular/cdk": "^9.2.1",
-    "@angular/material": "^9.2.1",
-    "@nrwl/angular": "9.2.2",
-    "@nrwl/node": "^9.2.2",
     "@ngrx/effects": "^9.0.0",
     "@ngrx/store": "^9.0.0",
     "@ngrx/store-devtools": "^9.0.0",
+    "@nrwl/angular": "9.2.2",
+    "@nrwl/node": "^9.2.2",
+    "@rx-angular/state": "^1.0.0-beta.0",
     "core-js": "^3.6.5",
     "rxjs": "~6.5.5",
     "tslib": "^1.11.1",

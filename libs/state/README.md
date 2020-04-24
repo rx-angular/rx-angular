@@ -1,6 +1,5 @@
 # @rx-angular/state
 
-_(currently under rx-angular-state on NPM)_  
 [![rx-angular](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
 
 #### Reactive Component State for Angular
@@ -379,14 +378,20 @@ export class StatefulComponent {
 @Component({
   selector: 'app-stateful',
   template: `
-    <div (click)="">Click</div>
+    <div (click)="onClick($event)">Increment</div>
   `,
   providers: [RxState]
 })
 export class StatefulComponent {
-  @Output() count = this.state.select('count');
+  @Output() countChange = this.state.select('count');
 
   constructor(private state: RxState<{ count: number }>) {}
+
+  onClick() {
+    this.state.set(({ count }) => {
+      count: count++;
+    });
+  }
 }
 ```
 
