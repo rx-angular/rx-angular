@@ -46,13 +46,10 @@ describe('LocalProviderTestComponent', () => {
     TestBed.configureTestingModule({
       declarations: [RxStateInjectionComponent]
     }).compileComponents();
-  }));
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(RxStateInjectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', async () => {
     stateChecker.checkSubscriptions(component.state, 1);
