@@ -36,9 +36,6 @@
     "test-helpers": {
       "tags": ["type:util"]
     },
-    "core": {
-      "tags": ["type:util"]
-    },
     "state": {
       "tags": ["type:feature"]
     },

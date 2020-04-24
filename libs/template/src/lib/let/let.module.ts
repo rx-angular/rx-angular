@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { LetDirective } from './index';
+import { LetDirective } from './let.directive';
 
-const DECLARATIONS = [LetDirective];
+const EXPORTED_DECLARATIONS = [LetDirective];
 
 @NgModule({
-  declarations: DECLARATIONS,
-  imports: [CommonModule],
-  exports: [DECLARATIONS]
+  declarations: EXPORTED_DECLARATIONS,
+  exports: [EXPORTED_DECLARATIONS]
 })
 export class LetModule {}

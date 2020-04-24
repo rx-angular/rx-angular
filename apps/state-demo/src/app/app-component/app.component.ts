@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AppViewModel } from './app.view.model';
 
 @Component({
-  selector: 'ngx-rx-root',
+  selector: 'rx-state-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [AppViewModel]

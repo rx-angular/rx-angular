@@ -4,7 +4,7 @@ import { CdConfigService } from '../../cd-config.service';
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'ngx-rx-scroll-item',
+  selector: 'rx-scroll-item',
   styleUrls: ['scroll-item.component.scss'],
   template: `
     <span style="margin: 0 1rem;">Val: {{ val$ | push: strategy$ }}</span>

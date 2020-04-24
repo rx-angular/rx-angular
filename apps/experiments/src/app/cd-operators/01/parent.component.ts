@@ -4,7 +4,7 @@ import { defer, fromEvent, range } from 'rxjs';
 import {
   getStrategies,
   renderChange
-} from '@ngx-rx/ngrx-component-experiments';
+} from '@rx-angular/ngrx-component-experiments';
 import { switchMap, tap } from 'rxjs/operators';
 import { BaseComponent } from '../../base.component.ts/base.component';
 

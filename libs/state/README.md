@@ -1,14 +1,14 @@
-# @ngx-rx/state
+# @rx-angular/state
 
-_(currently under ngx-rx-state on NPM)_  
-[![ngx-rx](https://circleci.com/gh/BioPhoton/ngx-rx.svg?style=shield)](https://circleci.com/gh/BioPhoton/ngx-rx)
+_(currently under rx-angular-state on NPM)_  
+[![rx-angular](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
 
 #### Reactive Component State for Angular
 
 RxState is a light-weight reactive state management service especially useful for component state in Angular.
 Furthermore a global service is provided and can act as a small global state manager.
 
-![state logo](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/libs/state/images/state_logo.png)
+![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_logo.png)
 
 ## Description
 
@@ -49,14 +49,14 @@ TOC
 
 ## Install
 
-`npm install --save @ngx-rx/state`
+`npm install --save @rx-angular/state`
 
 ## Setup
 
 As the RxState class is just a plain vanilla Javascript Class
 
 ```typescript
-import { RxState } from '@ngx-rx/state';
+import { RxState } from '@rx-angular/state';
 
 interface MyState {
   foo: string;
@@ -72,7 +72,7 @@ const state = new RxState<MyState>();
 
 ## API
 
-![state logo](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/libs/state/images/state_API-names.png)
+![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-names.png)
 
 **The API in a nutshell**
 
@@ -89,7 +89,7 @@ const state = new RxState<MyState>();
 - Use `connect` over `set`
 - In most of the cases `get` is not needed. The old state is always available.
 
-![state types](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/libs/state/images/state_API-types.png)
+![state types](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-types.png)
 
 ### set
 
@@ -438,4 +438,4 @@ Design Documents
 Usage in the wild
 
 - [Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) by [Mike Hartington](https://twitter.com/mhartington)
-- [Repository Demo](https://github.com/BioPhoton/ngx-rx/tree/master/apps/ngx-rx-state-demo)
+- [Repository Demo](https://github.com/BioPhoton/rx-angular/tree/master/apps/rx-angular-state-demo)

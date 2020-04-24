@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { DEFAULT_STRATEGY_NAME } from '@ngx-rx/ngrx-component-experiments';
-import { RxState } from '@ngx-rx/state';
+import { DEFAULT_STRATEGY_NAME } from '@rx-angular/ngrx-component-experiments';
+import { RxState } from '@rx-angular/state';
 
 export interface CdConfig {
   strategies: string[];

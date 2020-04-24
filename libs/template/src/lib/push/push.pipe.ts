@@ -10,7 +10,7 @@ import {
   ObservableInput,
   Unsubscribable
 } from 'rxjs';
-import { RenderAware, createRenderAware, getStrategies } from '@ngx-rx/core';
+import { RenderAware, createRenderAware, getStrategies } from '../core';
 
 /**
  * @Pipe PushPipe

@@ -8,7 +8,7 @@ import {
 } from '../../../data-access/github';
 import { merge, Subject, timer } from 'rxjs';
 import { DemoBasicsItem } from '../demo-basics-item.interface';
-import { RxState } from '@ngx-rx/state';
+import { RxState } from '@rx-angular/state';
 
 interface ComponentState {
   refreshInterval: number;

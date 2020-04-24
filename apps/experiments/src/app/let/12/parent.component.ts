@@ -4,7 +4,7 @@ import { defer, from, Observable, Subject } from 'rxjs';
 import { scan, startWith } from 'rxjs/operators';
 import { CdConfigService } from '../../cd-config.service';
 import { BaseComponent } from '../../base.component.ts/base.component';
-import { fromZoneEvent } from '@ngx-rx/core';
+import { fromZoneEvent } from '@rx-angular/template';
 
 @Component({
   selector: 'app-let-parent12',

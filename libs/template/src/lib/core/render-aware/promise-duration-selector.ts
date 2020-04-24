@@ -1,4 +1,5 @@
-import { apiZonePatched, getGlobalThis } from '@ngx-rx/core';
+import { getGlobalThis } from '../utils/get-global-this';
+import { apiZonePatched } from '../utils/zone-checks';
 import { defer, from, Observable } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
 

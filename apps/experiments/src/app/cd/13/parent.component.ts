@@ -12,7 +12,7 @@ import {
   takeUntil,
   withLatestFrom
 } from 'rxjs/operators';
-import { generateFrames } from '@ngx-rx/core';
+import { generateFrames } from '@rx-angular/template';
 import { BaseComponent } from '../../base.component.ts/base.component';
 
 @Component({

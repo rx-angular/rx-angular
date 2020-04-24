@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'ngx-rx-strategies.overview',
+  selector: 'rx-strategies-overview',
   template: `
     <h1>Strategies Overview</h1>
   `

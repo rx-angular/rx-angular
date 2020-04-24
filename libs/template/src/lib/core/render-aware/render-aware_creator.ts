@@ -17,11 +17,11 @@ import {
   tap
 } from 'rxjs/operators';
 import { nameToStrategy } from './nameToStrategy';
-import { RenderStrategy, DEFAULT_STRATEGY_NAME } from './strategies';
-
-export interface StrategySelection<U> {
-  [strategy: string]: RenderStrategy<U>;
-}
+import {
+  RenderStrategy,
+  DEFAULT_STRATEGY_NAME,
+  StrategySelection
+} from './strategies';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
@@ -72,12 +72,11 @@ export function createRenderAware<U>(cfg: {
     map(o$ =>
       o$.pipe(
         distinctUntilChanged(),
-        tap(cfg.updateObserver.next),
+        tap(cfg.updateObserver),
         strategy.behaviour()
       )
     ),
     switchMap(observable$ => (observable$ == null ? EMPTY : observable$)),
-    distinctUntilChanged(),
     tap(() => strategy.render()),
     catchError(e => {
       console.error(e);

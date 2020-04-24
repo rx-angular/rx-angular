@@ -1,8 +1,15 @@
-# toObservableValue
+# coalesce
 
-Converts ObservableInput<T> as well as null and undefined
+Limits the number of synchronous emitted a value from the source Observable to
+one emitted value per [`AnimationFrame`](https://developer.mozilla.org/en-US/search?q=AnimationFrame),
+then repeats this process for every tick of the browsers event loop.
 
-![toObservableValue Observable Projection Marble Diagram](generated/images/guide/component/toObservableValue.png)
+The coalesce operator is based on the [throttle](https://rxjs-dev.firebaseapp.com/api/operators/throttle) operator.
+In addition to that is provides emitted values for the trailing end only, as well as maintaining a context to scope coalescing.
+
+![coalesce Operator Marble Diagram](generated/images/guide/component/coalesce.png)
+
+![coalesce Operator Marble Diagram (v2)](generated/images/guide/component/coalesce_2.png)
 
 ## Description
 
@@ -26,7 +33,7 @@ By default the coalesce operator helps you to buffer incoming values within an a
 This example demonstrates how the render method is only called once thus having four changes of the source stream.
 
 ```typescript
-import { coalesce } from '@ngx-rx/core';
+import { coalesce } from '@rx-angular/template';
 import { range } from 'rxjs';
 
 const source$ = range(1, 4); // stream of data
@@ -57,7 +64,7 @@ Setting `trailing` to true would result in the emissions `10`.
 Setting `leading` and `trailing` to true would result in the emissions `1, 10`.
 
 ```typescript
-import { coalesce } from '@ngx-rx/core';
+import { coalesce } from '@rx-angular/template';
 import { range } from 'rxjs';
 
 const source$ = range(1, 4); // synchronous emitted values
@@ -73,7 +80,7 @@ This simple example shows how it is possible to coalesce multiple subscribers to
 only one rendering call thus having multiple subscribers to the incoming stream.
 
 ```typescript
-import { coalesce, generateFrames } from '@ngx-rx/core';
+import { coalesce, generateFrames } from '@rx-angular/template';
 import { range, animationFrames } from 'rxjs';
 
 const source$ = range(1, 10); // synchronous emitted values

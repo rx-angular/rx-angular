@@ -9,7 +9,7 @@ It should be used to replace `window` due to different environments in:
 - Browser
 
 ```typescript
-import { getGlobalThis } from '@ngx-rx/core';
+import { getGlobalThis } from '@rx-angular/template';
 
 const globalThis = getGlobalThis();
 

@@ -1,5 +1,5 @@
 module.exports = {
-  name: '@ngx-rx/base-state',
+  name: '@rx-angular/base-state',
   preset: '../../jest.config.js',
   coverageDirectory: '../../coverage/libs/base-state',
   snapshotSerializers: [

@@ -19,7 +19,7 @@ import { DemoBasicsItem } from '../demo-basics-item.interface';
 
 import { ofType } from '@ngrx/effects';
 import { map, startWith, tap } from 'rxjs/operators';
-import { RxState } from '@ngx-rx/state';
+import { RxState } from '@rx-angular/state';
 
 interface ComponentState {
   refreshInterval: number;

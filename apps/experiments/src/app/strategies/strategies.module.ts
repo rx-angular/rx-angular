@@ -2,7 +2,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ReactiveComponentModule } from '@ngx-rx/ngrx-component-experiments';
+import { TemplateModule } from '@rx-angular/template';
 import { Local01Component } from './local01/local01.component';
 import { StrategiesOverviewComponent } from './strategies.overview.component';
 import { STRATEGY_ROUTES } from './strategies.routes';

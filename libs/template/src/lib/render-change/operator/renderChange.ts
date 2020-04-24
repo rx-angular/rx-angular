@@ -1,6 +1,6 @@
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { RenderStrategy } from '@ngx-rx/core';
+import { RenderStrategy } from '../../core';
 
 export function renderChange<T>(
   strategy: RenderStrategy<T>

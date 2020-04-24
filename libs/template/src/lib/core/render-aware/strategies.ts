@@ -8,6 +8,10 @@ import {
 import { isViewEngineIvy } from '../utils';
 import { getZoneUnPatchedPromiseDurationSelector } from './promise-duration-selector';
 
+export interface StrategySelection<U> {
+  [strategy: string]: RenderStrategy<U>;
+}
+
 export interface RenderStrategyFactoryConfig {
   cdRef: ChangeDetectorRef;
 }

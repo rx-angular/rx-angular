@@ -1,6 +1,6 @@
 import { MonoTypeOperatorFunction } from 'rxjs';
 import { ChangeDetectorRef, NgZone } from '@angular/core';
-import { StrategySelection } from '@ngx-rx/rxjs-etc';
+import { StrategySelection } from '@rx-angular/rxjs-etc';
 
 export interface StrategyFactoryConfig {
   component: any;

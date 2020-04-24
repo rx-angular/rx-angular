@@ -9,7 +9,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { ReactiveComponentModule } from '@ngx-rx/ngrx-component-experiments';
+import { TemplateModule } from '@rx-angular/template';
 import { RouterModule } from '@angular/router';
 import { ROUTES as MIXED_ROUTES } from './mixed.routes';
 import { Parent01Component } from './01/parent.component';

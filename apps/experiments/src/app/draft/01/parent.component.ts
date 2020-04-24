@@ -10,7 +10,7 @@ import { EMPTY, of, range, Subject, Subscription } from 'rxjs';
 import {
   createCdAware,
   getStrategies
-} from '@ngx-rx/ngrx-component-experiments';
+} from '@rx-angular/ngrx-component-experiments';
 import { CdConfigService } from '../../cd-config.service';
 
 @Component({

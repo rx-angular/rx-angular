@@ -14,7 +14,7 @@ import {
   Observer,
   Unsubscribable
 } from 'rxjs';
-import { RenderAware, createRenderAware, getStrategies } from '@ngx-rx/core';
+import { RenderAware, createRenderAware, getStrategies } from '../core';
 
 export interface LetViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)

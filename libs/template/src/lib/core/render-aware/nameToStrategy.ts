@@ -1,7 +1,10 @@
 import { Observable } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import { RenderStrategy, DEFAULT_STRATEGY_NAME } from './strategies';
-import { StrategySelection } from './render-aware_creator';
+import {
+  RenderStrategy,
+  DEFAULT_STRATEGY_NAME,
+  StrategySelection
+} from './strategies';
 
 export function nameToStrategy<U>(strategies: StrategySelection<U>) {
   return (o$: Observable<string>): Observable<RenderStrategy<U>> => {

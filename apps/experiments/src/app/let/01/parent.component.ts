@@ -4,7 +4,7 @@ import { defer, Observable } from 'rxjs';
 import { scan, startWith, tap } from 'rxjs/operators';
 
 import { BaseComponent } from '../../base.component.ts/base.component';
-import { fromZoneEvent } from '@ngx-rx/core';
+import { fromZoneEvent } from '@rx-angular/template';
 
 @Component({
   selector: 'app-let-parent01',

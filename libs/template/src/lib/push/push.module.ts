@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { PushPipe } from './index';
+import { PushPipe } from './push.pipe';
 const DECLARATIONS = [PushPipe];
 @NgModule({
   declarations: DECLARATIONS,

@@ -6,7 +6,7 @@ import {
   OnInit
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { RxState } from '@ngx-rx/state';
+import { RxState } from '@rx-angular/state';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   fetchRepositoryList,

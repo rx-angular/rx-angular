@@ -12,7 +12,7 @@ If so, the `window` object maintains a property named `Zone`.
 Here how [Angular checks it](https://github.com/angular/angular/blob/master/packages/core/src/zone/ng_zone.ts#L123).
 
 ```typescript
-import { envZonePatched } from '@ngx-rx/core';
+import { envZonePatched } from '@rx-angular/template';
 
 const envIsZonePatched: boolean = envZonePatched();
 
@@ -26,7 +26,7 @@ console.log(
 This function checks the a specific Browser API is patched by `zone.js`.
 
 ```typescript
-import { apiZonePatched } from '@ngx-rx/core';
+import { apiZonePatched } from '@rx-angular/template';
 
 const apiIsZonePatched: boolean = apiZonePatched('Promise');
 
@@ -50,7 +50,7 @@ Consider the situation of a Angular element configured for ZoneLess
 environments is used in an Angular application relining on the zone mechanism.
 
 ```typescript
-import { isNgZone } from '@ngx-rx/core';
+import { isNgZone } from '@rx-angular/template';
 
 const isInstanceNgZone: boolean = isNgZone();
 
@@ -67,7 +67,7 @@ if the constructor name is equal to `NgNoopZone`.
 For more detailed information read the description of [isNgZone](#isngzone).
 
 ```typescript
-import { isNgNoopZone } from '@ngx-rx/core';
+import { isNgNoopZone } from '@rx-angular/template';
 
 const isInstanceNgNoopZone: boolean = isNgNoopZone();
 

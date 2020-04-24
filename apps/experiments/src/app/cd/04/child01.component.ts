@@ -8,7 +8,7 @@ import {
 import { BaseComponent } from '../../base.component.ts/base.component';
 import { defer, merge } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { fromZoneEvent } from '@ngx-rx/core';
+import { fromZoneEvent } from '@rx-angular/template';
 
 @Component({
   selector: 'app-cd04-child01-default',

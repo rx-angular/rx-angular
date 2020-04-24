@@ -8,14 +8,14 @@ import {
   ɵdetectChanges
 } from '@angular/core';
 import { environment } from '../environments/environment';
-import { isNgZone, isViewEngineIvy } from '@ngx-rx/core';
+import { isNgZone, isViewEngineIvy } from '@rx-angular/template';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
 import { CdConfigService } from './cd-config.service';
 import { FormBuilder } from '@angular/forms';
 import { defer, fromEvent, merge, Observable } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
-import { RxState } from '@ngx-rx/state';
+import { RxState } from '@rx-angular/state';
 
 @Component({
   selector: 'app-config-panel',

@@ -8,7 +8,7 @@ import {
 import { defer } from 'rxjs';
 import { BaseComponent } from '../../base.component.ts/base.component';
 import { tap } from 'rxjs/operators';
-import { fromZoneEvent } from '@ngx-rx/core';
+import { fromZoneEvent } from '@rx-angular/template';
 
 @Component({
   selector: 'app-cd-parent03',

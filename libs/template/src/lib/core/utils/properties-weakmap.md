@@ -77,7 +77,7 @@ A better solution would be to use a WeakMap.
 ### WeakMaps
 
 ```typescript
-import { createPropertieWeakMap } from '@ngx-rx/core';
+import { createPropertieWeakMap } from '@rx-angular/template';
 
 const someObject3: object = {
   foo: 'bar',
