@@ -1,13 +1,10 @@
 {
-  "name": "ngx-rx-state",
+  "name": "rx-angular-state",
   "version": "1.0.0-rc.1",
   "description": "**Fully** Reactive Component State in Angular. RxState is a light-weight reactive state management service especially useful for component state in Angular.",
   "main": "index.js",
   "publishConfig": {
     "access": "public"
-  },
-  "scripts": {
-    "postinstall": "npm i @ngx-rx/rxjs-etc @ngx-rx/ts-etc"
   },
   "engines": {
     "node": ">=10.12.0",
@@ -24,12 +21,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BioPhoton/ngx-rx.git"
+    "url": "https://github.com/BioPhoton/rx-angular.git"
   },
   "peerDependencies": {
     "@angular/core": ">8.0.0",
-    "rxjs": "^6.5.3",
-    "@ngx-rx/rxjs-etc": "1.0.0.rc.1",
-    "@ngx-rx/ts-etc": "1.0.0.rc.1"
+    "rxjs": "^6.5.5"
   }
 }

@@ -13,7 +13,7 @@ const stateChecker = createStateChecker((actual, expected) => {
 });
 
 @Component({
-  selector: 'ngx-rx-state-inheritance-test',
+  selector: 'rx-angular-state-inheritance-test',
   template: `
     <span>{{ value$ }}</span>
   `
@@ -26,7 +26,7 @@ export class RxStateInheritanceComponent extends RxState<PrimitiveState> {
 }
 
 @Component({
-  selector: 'ngx-rx-state-local-provider-test',
+  selector: 'rx-angular-state-local-provider-test',
   template: `
     <span>{{ value$ }}</span>
   `,

@@ -37,7 +37,7 @@
   },
   "lint-staged": {
     "{apps,libs}/**/*.{ts,html,scss,md,json}": [
-      "npm run affected:lint -- --fix --uncommitted",
+      "npm run affected:lint -- --uncommitted --fix --parallel",
       "npm run format:write -- --uncommitted"
     ]
   },

@@ -12,9 +12,9 @@ jobs:
             - run:
                 name: 'Install'
                 command: npm install
-            - run: yarn nx affected --target=lint --base=origin/master~1 --parallel
-            - run: yarn nx affected --target=test --base=origin/master~1 --parallel
-            - run: yarn nx affected --target=build ---base=origin/master~1 --with-deps
+            - run: npm run affected:lint --  --parallel
+            - run: npm run affected:test --  --parallel
+            - run: npm run affected:build --  --with-deps
 workflows:
     build-and-test:
       jobs:

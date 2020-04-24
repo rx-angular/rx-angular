@@ -1,21 +1,13 @@
 # NgxRx
 
-[![ngx-rx](https://circleci.com/gh/BioPhoton/ngx-rx.svg?style=shield)](https://circleci.com/gh/BioPhoton/ngx-rx)
+[![rx-angular](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
 
 This repository holds a set of helpers to create fully reactive applications.
 The target Framework is Angular but the features are designed to get reused in other frameworks too.
 
-![ngx-rx logo](https://raw.githubusercontent.com/BioPhoton/ngx-rx/master/images/ngx-rx_logo.png)
+![rx-angular logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/images/rx-angular_logo.png)
 
 **Packages included:**
 
-- [TypeScript](https://www.typescriptlang.org/)
-  - [💾 ts-etc](https://github.com/BioPhoton/ngx-rx/tree/master/libs/ts-etc/Readme.md) - Reusable Typescript code
-- [RxJS](https://rxjs.dev)
-  - [💾 rxjs-etc](https://github.com/BioPhoton/ngx-rx/tree/master/libs/rxjs-etc/Readme.md) - Reusable RxJS code
-- [Angular](https://angular.io)
-  - [📦 @ngx-rx/state](https://github.com/BioPhoton/ngx-rx/tree/master/libs/state/Readme.md) - A Toolset for Reactive Component State-Management for Angular
-    - RxState Service - Flexible Reactive Component State
-    - Operators
-      - stateful - filter undefined, distinct valuers, shareReplay
-      - select - pluck properties and apply stateful operator
+- [💾 @rx-angular/template](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/Readme.md) - Reactive Directives and Pipes
+- [📦 @rx-angular/state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/Readme.md) - A Toolset for Reactive Component State-Management for Angular

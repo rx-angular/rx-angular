@@ -1,0 +1,8 @@
+{
+  "name": "@rx-angular/template",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/core": "^9.1.1",
+    "tslib": "^1.10.0"
+  }
+}
