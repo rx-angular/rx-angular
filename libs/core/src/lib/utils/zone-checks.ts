@@ -1,4 +1,5 @@
 import { getGlobalThis } from './get-global-this';
+
 /**
  * envZonePatched
  *
@@ -12,7 +13,6 @@ import { getGlobalThis } from './get-global-this';
  * @return {boolean} - true if `zone.js` patched global APIs.
  *
  */
-
 export function envZonePatched(): boolean {
   return getGlobalThis().Zone !== undefined;
 }
