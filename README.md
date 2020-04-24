@@ -8,5 +8,6 @@ The target Framework is Angular but the features are designed to get reused in o
 ![rx-angular logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/images/rx-angular_logo.png)
 
 **Packages included:**
-  - [💾 @rx-angular/template](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/Readme.md) - Reactive Directives and Pipes
-  - [📦 @rx-angular/state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/Readme.md) - A Toolset for Reactive Component State-Management for Angular
+
+- [💾 @rx-angular/template](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/Readme.md) - Reactive Directives and Pipes
+- [📦 @rx-angular/state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/Readme.md) - A Toolset for Reactive Component State-Management for Angular
