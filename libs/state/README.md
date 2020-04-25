@@ -27,6 +27,7 @@ This library helps to organize component state reactively.
 - Fully typed and tested
 - Easy and Flexible Reactive Component State Management
 - **Subscription-less coding**
+- Partial state updates updates
 - Automated subscription handling
 - State queries are automatically cached
 - Better rendering performance (using `OnPush`)
@@ -443,4 +444,5 @@ Design Documents
 Usage in the wild
 
 - [Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) by [Mike Hartington](https://twitter.com/mhartington)
+- [Counter](https://stackblitz.com/edit/rx-angular-state-demo?file=src%2Fapp%2Fcounter.component.ts)
 - [Repository Demo](https://github.com/BioPhoton/rx-angular/tree/master/apps/rx-angular-state-demo)

@@ -7,5 +7,6 @@ export {
   isObservableGuard,
   isOperateFnArrayGuard,
   isPromiseGuard,
-  isStringArrayGuard
+  isStringArrayGuard,
+  isKeyOf
 } from './typing';

@@ -28,7 +28,7 @@ export class RxStateInheritanceComponent extends RxState<PrimitiveState> {
 @Component({
   selector: 'rx-angular-state-local-provider-test',
   template: `
-    <span>{{ value$ }}</span>
+    <span>{{ value$ | async }}</span>
   `,
   providers: [RxState]
 })

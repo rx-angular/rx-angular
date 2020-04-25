@@ -30,7 +30,7 @@
 ```typescript
 ```
 
-5. Inject `DemoBasicsViewModel` as service into `DemoBasicsComponent` constructor under property `vm`
+5. Inject `DemoBasicsViewModel` as service into `MutateStateComponent` constructor under property `vm`
 
 ```typescript
 ```

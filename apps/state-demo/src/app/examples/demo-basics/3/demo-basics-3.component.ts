@@ -103,7 +103,7 @@ export class DemoBasicsComponent3 extends RxState<ComponentState> {
     return ++this.numRenders;
   }
 
-  // 5. Inject `DemoBasicsViewModel` as service into `DemoBasicsComponent` constructor under property `vm`
+  // 5. Inject `DemoBasicsViewModel` as service into `MutateStateComponent` constructor under property `vm`
   constructor(private store: Store<any>) {
     // remove everything related to the view
     super();

@@ -96,7 +96,7 @@ export class DemoBasicsComponentMvvm extends RxState<ComponentState> {
     )
   ).pipe(tap(_ => this.store.dispatch(fetchRepositoryList({}))));
 
-  // 5. Inject `DemoBasicsViewModel` as service into `DemoBasicsComponent` constructor under property `vm`
+  // 5. Inject `DemoBasicsViewModel` as service into `MutateStateComponent` constructor under property `vm`
   constructor(private store: Store<any>) {
     // remove everything related to the view
     super();
