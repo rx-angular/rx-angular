@@ -1,7 +1,13 @@
-# template
+# @rx-angular/template
 
-This library was generated with [Nx](https://nx.dev).
+[![rx-angular](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
 
-## Running unit tests
+#### Reactive Template Rendering for Angular
 
-Run `nx test template` to execute the unit tests.
+---
+
+## Install
+
+`npm install --save @rx-angular/template`
+
+## Setup
