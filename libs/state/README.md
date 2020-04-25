@@ -154,9 +154,16 @@ state.connect(slice$);
 
 ### select
 
-Selecting state and extend the selection behavior with RxJS operators.
-Other state management libs provide selector functions like react. The downside is they are not compossable.
-`RxState` provides state selection fully reactive.
+`select` helps you to select state and extend the selection behavior with RxJS operators.
+You can think of it like it would be a special RxJS `pipe`.
+In addition to the original one it adds caching and limits the emission to distinct values.
+
+Other state management libs, especially the once from the react ecosystem, provide selector functions.
+The downside is they are not composable in a reactive way.
+This limits the composition to a simple `combineLatest`.
+
+`RxState` provides state selections fully reactive.
+All state selections are lazy by default.
 
 **State is lazy!**
 
