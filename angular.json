@@ -58,12 +58,6 @@
               ]
             },
             "bundled": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/state-demo/src/environments/environment.ts",
-                  "with": "apps/state-demo/src/environments/environment.prod.ts"
-                }
-              ],
               "optimization": true,
               "extractCss": true,
               "vendorChunk": false,
@@ -81,6 +75,24 @@
                 }
               ],
               "tsConfig": "apps/state-demo/tsconfig.app.bundle.json"
+            },
+            "npm": {
+              "optimization": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "tsConfig": "apps/state-demo/tsconfig.app.npm.json"
             }
           }
         },
@@ -95,6 +107,9 @@
             },
             "bundled": {
               "browserTarget": "state-demo:build:bundled"
+            },
+            "npm": {
+              "browserTarget": "state-demo:build:npm"
             }
           }
         },

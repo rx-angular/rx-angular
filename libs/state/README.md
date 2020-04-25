@@ -1,6 +1,6 @@
 # @rx-angular/state
 
-[![rx-angular](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
+[![rx-angular circleci-status](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
 
 #### Reactive Component State for Angular
 
@@ -21,16 +21,16 @@ This is a good example of component state.
 
 This library helps to organize component state reactively.
 
+It is an easy, flexible, fully typed and tested reactive component state management dedicated to angular.
+
 **Features**
 
 - Slim and intuitive API
-- Fully typed and tested
-- Easy and Flexible Reactive Component State Management
-- **Subscription-less coding**
-- Partial state updates updates
 - Automated subscription handling
+- **Subscription-less coding**
+- Partial state updates
 - State queries are automatically cached
-- Better rendering performance (using `OnPush`)
+- Better rendering performance
 - Lazy state. No initial state needed.
 - Lifecycle independent programming
 - Foundation for Zone-Less applications
@@ -49,7 +49,7 @@ TOC
 
 ## Install
 
-`npm install --save @rx-angular/state`
+`npm install @rx-angular/state`
 
 ## Setup
 

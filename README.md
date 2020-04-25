@@ -8,5 +8,5 @@ This repository holds a set of helpers to create fully reactive applications.
 
 **Packages included:**
 
-- [📦 @rx-angular/state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/Readme.md) - A Toolset for Reactive Component State-Management for Angular
-- [💾 @rx-angular/template](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/Readme.md) - Reactive Directives and Pipes
+- [📦 @rx-angular/state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/README.md) - A Toolset for Reactive Component State-Management for Angular
+- [💾 @rx-angular/template](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/README.md) - Reactive Directives and Pipes

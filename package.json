@@ -58,7 +58,7 @@
     "@ngrx/store-devtools": "^9.0.0",
     "@nrwl/angular": "9.2.2",
     "@nrwl/node": "^9.2.2",
-    "@rx-angular/state": "^1.0.0-beta.0",
+    "@rx-angular/state": "^1.0.0-rc.0",
     "core-js": "^3.6.5",
     "rxjs": "~6.5.5",
     "tslib": "^1.11.1",
