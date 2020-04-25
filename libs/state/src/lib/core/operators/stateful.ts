@@ -1,7 +1,6 @@
 import { MonoTypeOperatorFunction, Observable, OperatorFunction } from 'rxjs';
-import { pipeFromArray } from 'rxjs/internal/util/pipe';
 import { distinctUntilChanged, filter, shareReplay } from 'rxjs/operators';
-import { isOperateFnArrayGuard } from '../utils';
+import { isOperateFnArrayGuard, pipeFromArray } from '../utils';
 
 export function stateful<T>(): MonoTypeOperatorFunction<T>;
 // ========================
