@@ -9,7 +9,7 @@ beforeEach(() => {
 });
 
 // tslint:disable: no-duplicate-string
-fdescribe('createSideEffectObservable', () => {
+describe('createSideEffectObservable', () => {
   it('should return object', () => {
     testScheduler.run(() => {
       const ef = createSideEffectObservable();

@@ -1,0 +1,43 @@
+:host {
+  text-align: center;
+  display: block;
+}
+button {
+  margin: 0 5px;
+}
+
+.count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 127px;
+  width: 100%;
+  margin: 0 auto;
+  font: 80px 'Open Sans Condensed', sans-serif;
+  text-align: center;
+  letter-spacing: -3px;
+
+  .position {
+    display: inline-block;
+    height: 1.6em;
+    overflow: hidden;
+    position: relative;
+    width: 1.05em;
+
+    .digit {
+      position: absolute;
+      display: block;
+      width: 1em;
+      background-color: #444;
+      border-radius: 0.2em;
+      text-align: center;
+      color: #fff;
+      letter-spacing: -1px;
+
+      &.static {
+        box-shadow: 1px 1px 1px rgba(4, 4, 4, 0.35);
+        background: linear-gradient(to bottom, #3a3a3a 50%, #444444 50%);
+      }
+    }
+  }
+}

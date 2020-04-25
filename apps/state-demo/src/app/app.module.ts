@@ -42,7 +42,6 @@ export const materialModules = [
       maxAge: 25,
       logOnly: environment.production
     }),
-
     RouterModule.forRoot(ROUTES),
     materialModules,
     GithubModule,

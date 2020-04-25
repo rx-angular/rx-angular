@@ -28,7 +28,7 @@ export class RxStateInheritanceComponent extends RxState<PrimitiveState> {
 @Component({
   selector: 'rx-angular-state-local-provider-test',
   template: `
-    <span>{{ value$ }}</span>
+    <span>{{ value$ | async }}</span>
   `,
   providers: [RxState]
 })
@@ -46,13 +46,10 @@ describe('LocalProviderTestComponent', () => {
     TestBed.configureTestingModule({
       declarations: [RxStateInjectionComponent]
     }).compileComponents();
-  }));
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(RxStateInjectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', async () => {
     stateChecker.checkSubscriptions(component.state, 1);

@@ -1,11 +1,22 @@
 import { TestBed } from '@angular/core/testing';
 
 import { RxState } from '../src';
-import { createStateChecker, PrimitiveState, setupState } from './fixtures';
-import { of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import {
+  createStateChecker,
+  initialPrimitiveState,
+  PrimitiveState
+} from './fixtures';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
+
+function setupState<T extends object>(cfg: { initialState?: T }) {
+  const { initialState } = { ...cfg };
+  const state = new RxState<T>();
+  if (initialState) {
+    state.set(initialState);
+  }
+  return state;
+}
 
 const stateChecker = createStateChecker((actual, expected) => {
   if (typeof expected === 'object') {
@@ -43,45 +54,123 @@ describe('RxStateService', () => {
     stateChecker.checkSubscriptions(service, 0);
   });
 
-  describe('mirrors vanilla RxState', () => {
-    it('should provide the getState method', async () => {
-      service.set({ num: 11 });
-      expect(service.get()).toEqual({ num: 11 });
+  describe('State', () => {
+    it('should create new instance', () => {
+      const state = new RxState<PrimitiveState>();
+      expect(state).toBeDefined();
     });
 
-    it('should provide the setState method', async () => {
-      service.set({ num: 1 });
-      await stateChecker.checkState(service, { num: 1 });
+    describe('select', () => {
+      it('should return initial base-state', () => {
+        testScheduler.run(({ expectObservable }) => {
+          const state = setupState({ initialState: initialPrimitiveState });
+          expectObservable(state.select()).toBe('s', {
+            s: initialPrimitiveState
+          });
+        });
+      });
 
-      service.set(s => ({ num: s.num + 2 }));
-      await stateChecker.checkState(service, { num: 3 });
+      describe('slice by key', () => {
+        it('should return empty base-state after init', () => {
+          testScheduler.run(({ expectObservable }) => {
+            const state = setupState({});
+            expectObservable(state.select()).toBe('');
+          });
+        });
 
-      service.set('num', s => s.num + 3);
-      await stateChecker.checkState(service, { num: 6 });
+        it('should return initial base-state', () => {
+          testScheduler.run(({ expectObservable }) => {
+            const state = new RxState<PrimitiveState>();
+            state.subscribe();
+
+            state.set({ num: 42 });
+            expectObservable(state.select('num')).toBe('s', { s: 42 });
+          });
+        });
+      });
+
+      describe('slice by map function', () => {
+        it('should return nothing if empty', () => {
+          testScheduler.run(({ expectObservable }) => {
+            const state = setupState({});
+            expectObservable(state.select()).toBe('');
+          });
+        });
+
+        it('should return full base-state object on select', () => {
+          testScheduler.run(({ expectObservable }) => {
+            const state = setupState({ initialState: initialPrimitiveState });
+            expectObservable(state.select()).toBe('s', {
+              s: initialPrimitiveState
+            });
+          });
+        });
+      });
     });
+  });
 
-    it('should provide the connect method', async () => {
-      service.connect(of({ num: 1 }));
-      await stateChecker.checkState(service, { num: 1 });
-
-      service.connect(of(1), (oldState, slice) => ({
-        num: oldState.num + slice
-      }));
-      await stateChecker.checkState(service, { num: 2 });
-
-      service.connect('num', of(3));
-      await stateChecker.checkState(service, { num: 3 });
-
-      service.connect('num', of(1), (s: PrimitiveState, v: any) => s.num + v);
-      await stateChecker.checkState(service, { num: 4 });
+  describe('setState', () => {
+    describe('with base-state partial', () => {
+      it('should add new slices', () => {
+        const state = setupState({});
+        state.select().subscribe(s => {
+          throw Error('should never emit');
+        });
+        state.set(initialPrimitiveState);
+        state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
+      });
+      it('should override previous base-state slices', () => {
+        const state = setupState({ initialState: initialPrimitiveState });
+        state.select().subscribe(s => {
+          throw Error('should never emit');
+        });
+        state.set(initialPrimitiveState);
+        state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
+        state.set({ num: 1 });
+        state.select().subscribe(s => expect(s).toBe({ num: 1 }));
+      });
     });
+    describe('with base-state project partial', () => {
+      it('should add new slices', () => {
+        const state = setupState({});
+        state.select().subscribe(s => {
+          throw Error('should never emit');
+        });
+        state.set(s => initialPrimitiveState);
+        state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
+      });
+      it('should override previous base-state slices', () => {
+        const state = setupState({ initialState: initialPrimitiveState });
+        state
+          .select()
+          .subscribe(s => expect(state).toBe(initialPrimitiveState));
+        state.set(s => ({ num: s.num + 1 }));
+        state.select().subscribe(s => expect(state).toBe({ num: 43 }));
+      });
+    });
+    describe('with base-state key and value partial', () => {
+      it('should add new slices', () => {
+        const state = setupState<PrimitiveState>({});
+        state.select().subscribe(s => {
+          // throw Error('should never emit');
+        });
+        state.set('num', s => 1);
+        state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
+      });
+      it('should override previous base-state slices', () => {
+        const state = setupState({ initialState: initialPrimitiveState });
+        state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
+        state.set('num', s => s.num + 1);
+        state.select().subscribe(s => expect(s).toBe({ num: 43 }));
+      });
+    });
+  });
 
-    it('should provide the hold method', async () => {
-      let effectFlag;
-      const effect$ = of(1).pipe(tap(v => (effectFlag = v)));
-      expect(effectFlag).toBe(undefined);
-      service.hold(effect$);
-      expect(effectFlag).toBe(1);
+  describe('connectState', () => {
+    describe('with observable of slices', () => {
+      it('should add new slices', () => {});
+
+      it('should override previous base-state slices', () => {});
     });
   });
 });

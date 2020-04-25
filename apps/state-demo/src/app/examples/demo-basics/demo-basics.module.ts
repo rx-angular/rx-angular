@@ -12,7 +12,6 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { TemplateModule } from '@rx-angular/template';
 import { DemoBasics1ContainerComponent } from './1/demo-basics-1.container.component';
 import { DemoBasicsComponent1 } from './1/demo-basics-1.component';
 import { DemoBasics2ContainerComponent } from './2/demo-basics-2.container.component';
@@ -82,12 +81,7 @@ export const materialModules = [
 
 @NgModule({
   declarations: [DECLARATIONS],
-  imports: [
-    CommonModule,
-    materialModules,
-    RouterModule.forChild(ROUTES),
-    TemplateModule
-  ],
+  imports: [CommonModule, materialModules, RouterModule.forChild(ROUTES)],
   exports: [DECLARATIONS]
 })
 export class DemoBasicsModule {}
