@@ -175,10 +175,10 @@ export class Counter1Component extends RxState<CounterState> {
       )
     );
 
-    const tick$ = combineLatest(
+    const tick$ = combineLatest([
       this.select('isTicking'),
       this.select('tickSpeed')
-    ).pipe(switchMap(([isTicking, ms]) => (isTicking ? timer(0, ms) : EMPTY)));
+    ]).pipe(switchMap(([isTicking, ms]) => (isTicking ? timer(0, ms) : EMPTY)));
 
     this.connect(
       'count',
