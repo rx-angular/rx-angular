@@ -12,9 +12,9 @@ jobs:
             - run:
                 name: 'Install'
                 command: npm install
-            - run: npm run affected:lint --  --parallel
-            - run: npm run affected:test --  --parallel
-            - run: npm run affected:build --  --with-deps
+            - run: npm run affected:lint -- --base=origin/master~1 --parallel
+            - run: npm run affected:test -- --base=origin/master~1 --parallel
+            - run: npm run affected:build -- --base=origin/master~1 --with-deps
 workflows:
     build-and-test:
       jobs:
