@@ -13,7 +13,7 @@ import { DemoBasicsItem } from '../mutate-state-item.interface';
 import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
-  selector: 'demo-basics',
+  selector: 'mutate-state',
   templateUrl: './mutate-state.view.html',
   styles: [
     `

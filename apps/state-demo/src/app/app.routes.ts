@@ -19,5 +19,12 @@ export const ROUTES: Routes = [
       import('./examples/mutate-state/mutate-state.module').then(
         m => m.MutateStateModule
       )
+  },
+  {
+    path: 'dynamic-counter',
+    loadChildren: () =>
+      import('./examples/dynamic-counter/dynamic-counter.module').then(
+        m => m.DynamicCounterModule
+      )
   }
 ];

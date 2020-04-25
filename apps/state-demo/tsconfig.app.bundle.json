@@ -2,7 +2,7 @@
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
     "paths": {
-      "@rx-angular/*": ["dist/list/*"]
+      "@rx-angular/*": ["dist/libs/*"]
     }
   }
 }

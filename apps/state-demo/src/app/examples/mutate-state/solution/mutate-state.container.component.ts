@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'demo-basics4-container',
+  selector: 'mutate-state-container',
   template: `
     <h1>Solution</h1>
     <small>Child re-renders: {{ rerenders() }}</small
@@ -17,7 +17,7 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <demo-basics [refreshInterval]="refreshInterval$ | async"> </demo-basics>
+    <mutate-state [refreshInterval]="refreshInterval$ | async"> </mutate-state>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
