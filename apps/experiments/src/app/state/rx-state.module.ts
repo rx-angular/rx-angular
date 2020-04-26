@@ -13,7 +13,6 @@ import { TemplateModule } from '@rx-angular/template';
 import { RouterModule } from '@angular/router';
 import { ROUTES as RX_STATE_ROUTES } from './rx-state.routes';
 
-import { RxStateParent01Component } from './01/parent.component';
 import { RxStateOverviewComponent } from './rx-state.overview.component';
 import { RxStateParentCompositionComponent } from './composition/parent.component';
 import { RxStateParentSubscriptionComponent } from './subscription/parent.component';
@@ -24,7 +23,6 @@ import { RxStateParentSubscriptionLessComponent } from './subscription-less-inte
 
 @NgModule({
   declarations: [
-    RxStateParent01Component,
     RxStateOverviewComponent,
     RxStateChildSelectionsComponent,
     RxStateParentCompositionComponent,

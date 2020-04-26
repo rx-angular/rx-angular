@@ -13,7 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MutateState1ContainerComponent } from './1/mutate-state-1.container.component';
-import { DemoBasicsComponent1 } from './1/mutate-state-1.component';
+import { MutateState1Component1 } from './1/mutate-state-1.component';
 import { MutateStateContainerComponent } from './solution/mutate-state.container.component';
 import { MutateStateComponent } from './solution/mutate-state.component';
 
@@ -36,7 +36,7 @@ const DECLARATIONS = [
   MutateStateContainerComponent,
   MutateStateComponent,
   MutateState1ContainerComponent,
-  DemoBasicsComponent1
+  MutateState1Component1
 ];
 export const materialModules = [
   MatIconModule,

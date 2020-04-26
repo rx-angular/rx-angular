@@ -59,7 +59,7 @@ export const ROUTES: Routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./rx-state/rx-state.module').then(mod => mod.RxStateModule),
+      import('./state/rx-state.module').then(mod => mod.RxStateModule),
     canActivate: [],
     canActivateChild: []
   },
