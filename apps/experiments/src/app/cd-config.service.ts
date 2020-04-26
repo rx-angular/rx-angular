@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DEFAULT_STRATEGY_NAME } from '@rx-angular/ngrx-component-experiments';
+import { DEFAULT_STRATEGY_NAME } from '@rx-angular/template';
 import { RxState } from '@rx-angular/state';
 
 export interface CdConfig {

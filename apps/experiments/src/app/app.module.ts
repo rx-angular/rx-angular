@@ -6,7 +6,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TemplateModule } from '@rx-angular/template'; //'@ngrx/component';
+import { TemplateModule } from '@rx-angular/template';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ROUTES } from './app.routing';
@@ -33,7 +33,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatChipsModule,
     MatExpansionModule,
     RouterModule,
-    ReactiveComponentModule,
+    TemplateModule,
     MatInputModule,
     MatOptionModule,
     MatSelectModule

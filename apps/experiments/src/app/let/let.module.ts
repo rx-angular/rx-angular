@@ -40,7 +40,7 @@ import { LetParent12Component } from './12/parent.component';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    ReactiveComponentModule
+    TemplateModule
   ]
 })
 export class LetModule {}

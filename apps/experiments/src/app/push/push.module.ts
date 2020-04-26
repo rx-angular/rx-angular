@@ -66,7 +66,7 @@ import { Child31Component } from './31/child.component';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    ReactiveComponentModule
+    TemplateModule
   ]
 })
 export class PushModule {}

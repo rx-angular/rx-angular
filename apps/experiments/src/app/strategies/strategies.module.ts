@@ -19,7 +19,7 @@ import { VirtualScrollDemoComponent } from './virtual-scroll-demo/virtual-scroll
   imports: [
     CommonModule,
     RouterModule.forChild(STRATEGY_ROUTES),
-    ReactiveComponentModule,
+    TemplateModule,
     ScrollingModule
   ]
 })

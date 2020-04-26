@@ -6,7 +6,7 @@ import { RxState } from '@rx-angular/state';
 import { BaseComponent } from '../../base.component.ts/base.component';
 
 @Component({
-  selector: 'app-draft-parent01',
+  selector: 'app-rx-state-parent01',
   template: `
     <h2>RxState 01</h2>
     <div class="base-info">

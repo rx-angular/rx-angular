@@ -39,7 +39,7 @@ import { MixedOverviewComponent } from './mixed.overview.component';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    ReactiveComponentModule
+    TemplateModule
   ]
 })
 export class MixedModule {}
