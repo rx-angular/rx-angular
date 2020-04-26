@@ -309,7 +309,7 @@ er a usecase where the @ngrx/store gets connected to the local state:
 @Component({
   selector: 'app-stateful',
   template: `
-    <div>{{ (state$ | async).counter }}</div>
+    <div>{{ (state$ | async).count }}</div>
   `,
   providers: [RxState]
 })
@@ -317,10 +317,10 @@ export class StatefulComponent {
   readonly state$ = this.state.select();
 
   constructor(
-    private state: RxState<{ counter: number }>,
+    private state: RxState<{ count: number }>,
     private store: Store<AppState>
   ) {
-    state.connect('counter', store.select('counter'));
+    state.connect('count', store.select('count'));
   }
 }
 ```
@@ -360,13 +360,13 @@ This way the ChangeDetection for the `Input` binding will only fire once for the
 const initialState: ComponentState = {
   title: 'MyComponent',
   showButton: false,
-  counter: 0
+  count: 0
 };
 
 @Component({
   selector: 'app-stateful',
   template: `
-    <div>{{ (state$ | async).counter }}</div>
+    <div>{{ (state$ | async).count }}</div>
   `,
   providers: [RxState]
 })
