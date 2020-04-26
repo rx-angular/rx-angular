@@ -30,7 +30,7 @@ import { DrfatOverviewComponent } from './drfat.overview.component';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    ReactiveComponentModule
+    TemplateModule
   ]
 })
 export class DraftModule {}

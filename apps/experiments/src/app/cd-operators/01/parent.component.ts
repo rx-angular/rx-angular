@@ -1,10 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { defer, fromEvent, range } from 'rxjs';
-import {
-  getStrategies,
-  renderChange
-} from '@rx-angular/ngrx-component-experiments';
+import { getStrategies, renderChange } from '@rx-angular/template';
 import { switchMap, tap } from 'rxjs/operators';
 import { BaseComponent } from '../../base.component.ts/base.component';
 

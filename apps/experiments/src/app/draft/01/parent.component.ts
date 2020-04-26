@@ -7,10 +7,7 @@ import {
 } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { EMPTY, of, range, Subject, Subscription } from 'rxjs';
-import {
-  createCdAware,
-  getStrategies
-} from '@rx-angular/ngrx-component-experiments';
+import { createRenderAware, getStrategies } from '@rx-angular/template';
 import { CdConfigService } from '../../cd-config.service';
 
 @Component({
@@ -57,7 +54,7 @@ export class DraftParent01Component implements AfterViewInit, OnDestroy {
     private cfgService: CdConfigService
   ) {
     const strategies = getStrategies<number>({ cdRef });
-    this.cdAware = createCdAware<number>({
+    this.cdAware = createRenderAware<number>({
       strategies,
       resetObserver: {
         next: () => {

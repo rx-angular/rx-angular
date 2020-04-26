@@ -15,9 +15,23 @@ import { ROUTES as RX_STATE_ROUTES } from './rx-state.routes';
 
 import { RxStateParent01Component } from './01/parent.component';
 import { RxStateOverviewComponent } from './rx-state.overview.component';
+import { RxStateParentCompositionComponent } from './composition/parent.component';
+import { RxStateParentSubscriptionComponent } from './subscription/parent.component';
+import { RxStateParentSelectionsComponent } from './selections/parent.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RxStateChildSelectionsComponent } from './selections/child.component';
+import { RxStateParentSubscriptionLessComponent } from './subscription-less-interaction/parent.component';
 
 @NgModule({
-  declarations: [RxStateParent01Component, RxStateOverviewComponent],
+  declarations: [
+    RxStateParent01Component,
+    RxStateOverviewComponent,
+    RxStateChildSelectionsComponent,
+    RxStateParentCompositionComponent,
+    RxStateParentSelectionsComponent,
+    RxStateParentSubscriptionComponent,
+    RxStateParentSubscriptionLessComponent
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(RX_STATE_ROUTES),
@@ -30,7 +44,9 @@ import { RxStateOverviewComponent } from './rx-state.overview.component';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    ReactiveComponentModule
+    TemplateModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class RxStateModule {}

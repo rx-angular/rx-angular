@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
   template: `
     <h1>ChangeDetection Overview</h1>
     <div class="push-cases">
-      <app-draft-parent01 class="item"></app-draft-parent01>
+      <app-rx-state-parent01 class="item"></app-rx-state-parent01>
     </div>
   `,
   changeDetection: environment.changeDetection,

@@ -16,20 +16,29 @@ import { DynamicCounter1ContainerComponent } from './1/dynamic-counter-1.contain
 import { Counter1Component } from './1/dynamic-counter-1.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToArrayPipe } from '../../core/to-array.pipe';
+import { DynamicCounterContainerComponent } from './solution/dynamic-counter.container.component';
+import { CounterComponent } from './solution/dynamic-counter.component';
+import { PushModule } from '@rx-angular/template';
 
 export const ROUTES = [
   {
     path: '',
     pathMatch: 'full',
-    component: DynamicCounter1ContainerComponent
+    component: DynamicCounterContainerComponent
   },
   {
     path: 'step-1',
     component: DynamicCounter1ContainerComponent
+  },
+  {
+    path: 'solution',
+    component: DynamicCounterContainerComponent
   }
 ];
 const DECLARATIONS = [
   ToArrayPipe,
+  DynamicCounterContainerComponent,
+  CounterComponent,
   DynamicCounter1ContainerComponent,
   Counter1Component
 ];
@@ -52,7 +61,8 @@ export const materialModules = [
     CommonModule,
     materialModules,
     RouterModule.forChild(ROUTES),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PushModule
   ],
   exports: [DECLARATIONS]
 })

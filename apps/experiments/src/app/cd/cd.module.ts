@@ -80,7 +80,7 @@ import { CdParent13Component } from './13/parent.component';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    ReactiveComponentModule
+    TemplateModule
   ]
 })
 export class CdModule {}
