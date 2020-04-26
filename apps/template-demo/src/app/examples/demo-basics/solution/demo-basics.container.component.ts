@@ -6,18 +6,7 @@ import { map } from 'rxjs/operators';
   selector: 'demo-basics4-container',
   template: `
     <h1>Solution</h1>
-    <small>Child re-renders: {{ rerenders() }}</small
-    ><br />
-    <mat-form-field>
-      <label>RefreshInterval</label>
-      <input
-        type="number"
-        (input)="refreshIntervalInput$.next($event)"
-        matInput
-      />
-    </mat-form-field>
-
-    <demo-basics [refreshInterval]="refreshInterval$ | async"> </demo-basics>
+    <demo-basics> </demo-basics>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

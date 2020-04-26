@@ -12,8 +12,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { DemoBasicsContainerComponent } from './solution/demo-basics.container.component';
 import { DemoBasicsComponent } from './solution/demo-basics.component';
+import { DemoBasicsContainerComponent } from './solution/demo-basics.container.component';
 
 export const ROUTES = [
   {
@@ -26,7 +26,7 @@ export const ROUTES = [
     component: DemoBasicsContainerComponent
   }
 ];
-const DECLARATIONS = [DemoBasicsContainerComponent, DemoBasicsComponent];
+const DECLARATIONS = [DemoBasicsComponent, DemoBasicsContainerComponent];
 export const materialModules = [
   MatIconModule,
   MatListModule,
