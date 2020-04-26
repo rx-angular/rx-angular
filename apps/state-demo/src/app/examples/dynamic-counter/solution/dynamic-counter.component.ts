@@ -41,42 +41,78 @@ const initialCounterState = {
 
     <form [formGroup]="counterForm" class="counter">
       <div class="count">
-        <span class="position" *ngFor="let d of count$ | push | toArray">
+        <span class="position" *ngFor="let d of count$ | async | toArray">
           <span class="digit static">
             {{ d }}
           </span>
         </span>
       </div>
 
-      <button type="button" slice="isTicking" mat-raised-button color="primary">
+      <button
+        type="button"
+        (click)="set({ isTicking: true })"
+        mat-raised-button
+        color="primary"
+      >
         Start
       </button>
 
-      <button type="button" slice="isTicking" mat-raised-button color="primary">
+      <button
+        type="button"
+        (click)="set({ isTicking: false })"
+        mat-raised-button
+        color="primary"
+      >
         Pause
       </button>
 
-      <button type="button" mat-raised-button color="primary">
+      <button
+        type="button"
+        (click)="set(initialCounterState)"
+        mat-raised-button
+        color="primary"
+      >
         Reset
       </button>
 
       <br />
 
-      <button type="button" mat-raised-button color="primary">
+      <button
+        type="button"
+        (click)="btnSetTo.next($event)"
+        mat-raised-button
+        color="primary"
+      >
         Set To
       </button>
 
       <mat-form-field>
         <label>Count</label>
-        <input type="number" min="0" matInput [formControlName]="'count'" />
+        <input
+          type="number"
+          min="0"
+          matInput
+          matInput
+          [formControlName]="'count'"
+        />
       </mat-form-field>
       <br />
 
-      <button type="button" slice="countUp" mat-raised-button color="primary">
+      <button
+        type="button"
+        (click)="set({ countUp: true })"
+        mat-raised-button
+        color="primary"
+      >
         Count Up
       </button>
 
-      <button type="button" slice="countUp" mat-raised-button color="primary">
+      <button
+        type="button"
+        (click)="set({ countUp: false })"
+        mat-raised-button
+        color="primary"
+      >
         Count Down
       </button>
 
@@ -91,9 +127,9 @@ const initialCounterState = {
       </mat-form-field>
     </form>
   `,
-  styleUrls: ['./dynamic-counter-1.component.scss']
+  styleUrls: ['./dynamic-counter.component.scss']
 })
-export class Counter1Component extends RxState<CounterState> {
+export class CounterComponent extends RxState<CounterState> {
   initialCounterState = initialCounterState;
 
   counterForm = this.fb.group({
@@ -111,6 +147,9 @@ export class Counter1Component extends RxState<CounterState> {
     super();
     this.set(this.initialCounterState);
     this.counterForm.patchValue(initialCounterState);
+
+    this.connect(this.counterForm$.pipe(pluckDistinct('tickSpeed')));
+    this.connect(this.counterForm$.pipe(pluckDistinct('countDiff')));
 
     this.connect(
       this.btnSetTo.pipe(
