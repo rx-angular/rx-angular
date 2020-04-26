@@ -12,8 +12,8 @@ yarn generate-typescript-docs [-w]
 
 This script uses the TypeScript compiler API to traverse the server source code and extract data about the types as well as other information such as descriptions and default values.
 
-Currently, any `interface`, `class` or `type` which includes the JSDoc `@docCategory` tag will be extracted into a markdown file in 
-the [apps/docs/generated](./apps/docs/generated) directory. Those files then will be rendered by the *upcoming* `docs app`.
+Currently, any `interface`, `class` or `type` which includes the JSDoc `@docCategory` tag will be extracted into a markdown file in
+the [apps/docs/generated](./apps/docs/generated) directory. Those files then will be rendered by the _upcoming_ `docs app`.
 
 ## Docs-specific JSDoc tags
 
@@ -49,7 +49,7 @@ class.
 ````ts
 /**
  * @description
- * Greets people with a friendly message. 
+ * Greets people with a friendly message.
  * Used by the {@link AppInitializer} during the start-up process.
  *
  * @example
@@ -62,21 +62,20 @@ class.
  * @docsCategory helpers
  */
 export class Greeter {
+  /**
+   * @description
+   * Greets the person by name
+   */
+  greet(name: string): string {
+    return `Hi, ${name}, good to see you!`;
+  }
 
-    /**
-     * @description
-     * Greets the person by name
-     */
-    greet(name: string): string {
-      return `Hi, ${name}, good to see you!`;
-    }
-    
-    /**
-     * Required as a work-around for issue #1234
-     * @internal
-     */
-    someMethodUsedOnlyByVendureCore() {
-        // ...
-    }
+  /**
+   * Required as a work-around for issue #1234
+   * @internal
+   */
+  someMethodUsedOnlyByVendureCore() {
+    // ...
+  }
 }
 ````

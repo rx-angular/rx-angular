@@ -6,95 +6,95 @@ import * as ts from 'typescript';
  */
 
 export interface MethodParameterInfo {
-    name: string;
-    type: string;
-    optional: boolean;
-    initializer?: string;
+  name: string;
+  type: string;
+  optional: boolean;
+  initializer?: string;
 }
 
 export interface MemberInfo {
-    name: string;
-    description: string;
-    type: string;
-    fullText: string;
-    modifiers: string[];
+  name: string;
+  description: string;
+  type: string;
+  fullText: string;
+  modifiers: string[];
 }
 
 export interface PropertyInfo extends MemberInfo {
-    kind: 'property';
-    defaultValue: string;
+  kind: 'property';
+  defaultValue: string;
 }
 
 export interface MethodInfo extends MemberInfo {
-    kind: 'method';
-    parameters: MethodParameterInfo[];
+  kind: 'method';
+  parameters: MethodParameterInfo[];
 }
 
 export interface DocsPage {
-    title: string;
-    category: string;
-    declarations: ParsedDeclaration[];
-    fileName: string;
+  title: string;
+  category: string;
+  declarations: ParsedDeclaration[];
+  fileName: string;
 }
 
 export interface DeclarationInfo {
-    packageName: string;
-    sourceFile: string;
-    sourceLine: number;
-    title: string;
-    fullText: string;
-    weight: number;
-    category: string;
-    description: string;
-    page: string | undefined;
+  packageName: string;
+  sourceFile: string;
+  sourceLine: number;
+  title: string;
+  fullText: string;
+  weight: number;
+  category: string;
+  description: string;
+  page: string | undefined;
 }
 
 export interface InterfaceInfo extends DeclarationInfo {
-    kind: 'interface';
-    extends?: string;
-    members: Array<PropertyInfo | MethodInfo>;
+  kind: 'interface';
+  extends?: string;
+  members: Array<PropertyInfo | MethodInfo>;
 }
 
 export interface ClassInfo extends DeclarationInfo {
-    kind: 'class';
-    implements?: string;
-    extends?: string;
-    members: Array<PropertyInfo | MethodInfo>;
+  kind: 'class';
+  implements?: string;
+  extends?: string;
+  members: Array<PropertyInfo | MethodInfo>;
 }
 
 export interface TypeAliasInfo extends DeclarationInfo {
-    kind: 'typeAlias';
-    members?: Array<PropertyInfo | MethodInfo>;
-    type: ts.TypeNode;
+  kind: 'typeAlias';
+  members?: Array<PropertyInfo | MethodInfo>;
+  type: ts.TypeNode;
 }
 
 export interface EnumInfo extends DeclarationInfo {
-    kind: 'enum';
-    members: PropertyInfo[];
+  kind: 'enum';
+  members: PropertyInfo[];
 }
 
 export interface FunctionInfo extends DeclarationInfo {
-    kind: 'function';
-    parameters: MethodParameterInfo[];
-    type?: ts.TypeNode;
+  kind: 'function';
+  parameters: MethodParameterInfo[];
+  type?: ts.TypeNode;
 }
 
 export interface VariableInfo extends DeclarationInfo {
-    kind: 'variable';
+  kind: 'variable';
 }
 
 export type ParsedDeclaration =
-    | TypeAliasInfo
-    | ClassInfo
-    | InterfaceInfo
-    | EnumInfo
-    | FunctionInfo
-    | VariableInfo;
+  | TypeAliasInfo
+  | ClassInfo
+  | InterfaceInfo
+  | EnumInfo
+  | FunctionInfo
+  | VariableInfo;
 export type ValidDeclaration =
-    | ts.InterfaceDeclaration
-    | ts.TypeAliasDeclaration
-    | ts.ClassDeclaration
-    | ts.EnumDeclaration
-    | ts.FunctionDeclaration
-    | ts.VariableStatement;
+  | ts.InterfaceDeclaration
+  | ts.TypeAliasDeclaration
+  | ts.ClassDeclaration
+  | ts.EnumDeclaration
+  | ts.FunctionDeclaration
+  | ts.VariableStatement;
 export type TypeMap = Map<string, string>;

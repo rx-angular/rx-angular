@@ -10,12 +10,16 @@ import * as klawSync from 'klaw-sync';
 /**
  * Generates the Hugo front matter with the title of the document
  */
-export function generateFrontMatter(title: string, weight: number, showToc: boolean = true): string {
+export function generateFrontMatter(
+  title: string,
+  weight: number,
+  showToc: boolean = true
+): string {
   return `---
-title: "${ titleCase(title.replace(/-/g, ' ')) }"
-weight: ${ weight }
-date: ${ new Date().toISOString() }
-showtoc: ${ showToc }
+title: "${titleCase(title.replace(/-/g, ' '))}"
+weight: ${weight}
+date: ${new Date().toISOString()}
+showtoc: ${showToc}
 generated: true
 ---
 <!-- This file was generated from the Vendure source. Do not modify. Instead, re-run the "docs:build" script -->
@@ -23,7 +27,10 @@ generated: true
 }
 
 export function titleCase(input: string): string {
-  return input.split(' ').map(w => w[0].toLocaleUpperCase() + w.substr(1)).join(' ');
+  return input
+    .split(' ')
+    .map(w => w[0].toLocaleUpperCase() + w.substr(1))
+    .join(' ');
 }
 
 /**
@@ -44,7 +51,7 @@ export function deleteGeneratedDocs(outputPath: string) {
       }
     }
     if (deleteCount) {
-      console.log(`Deleted ${ deleteCount } generated docs from ${ outputPath }`);
+      console.log(`Deleted ${deleteCount} generated docs from ${outputPath}`);
     }
   } catch (e) {
     console.error('Could not delete generated docs!');
