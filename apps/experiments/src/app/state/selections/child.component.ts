@@ -37,7 +37,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
     </div>
   `,
   changeDetection: environment.changeDetection
-  //providers: [SubscriptionHandlingService]
+  // providers: [SubscriptionHandlingService]
 })
 export class RxStateChildSelectionsComponent {
   state$ = new ReplaySubject(1);

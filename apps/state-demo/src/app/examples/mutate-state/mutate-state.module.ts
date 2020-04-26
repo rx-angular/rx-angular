@@ -14,30 +14,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MutateState1ContainerComponent } from './1/mutate-state-1.container.component';
 import { MutateState1Component1 } from './1/mutate-state-1.component';
-import { MutateStateContainerComponent } from './solution/mutate-state.container.component';
-import { MutateStateComponent } from './solution/mutate-state.component';
-
 export const ROUTES = [
   {
     path: '',
     pathMatch: 'full',
-    component: MutateStateContainerComponent
+    component: MutateState1ContainerComponent
   },
   {
     path: 'step-1',
     component: MutateState1ContainerComponent
-  },
-  {
-    path: 'solution',
-    component: MutateStateContainerComponent
   }
 ];
-const DECLARATIONS = [
-  MutateStateContainerComponent,
-  MutateStateComponent,
-  MutateState1ContainerComponent,
-  MutateState1Component1
-];
+const DECLARATIONS = [MutateState1ContainerComponent, MutateState1Component1];
 export const materialModules = [
   MatIconModule,
   MatListModule,

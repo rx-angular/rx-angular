@@ -17,11 +17,7 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <mutate-state-1
-      [refreshInterval]="refreshInterval$ | async"
-      (listExpandedChange)="listExpandedChange$.next($event)"
-    >
-    </mutate-state-1>
+    <mutate-state-1> </mutate-state-1>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
