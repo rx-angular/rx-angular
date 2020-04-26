@@ -533,7 +533,8 @@
   },
   "cli": {
     "defaultCollection": "@nrwl/angular",
-    "analytics": false
+    "analytics": false,
+    "packageManager": "yarn"
   },
   "schematics": {
     "@nrwl/angular:application": {
