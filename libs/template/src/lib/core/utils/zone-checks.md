@@ -40,7 +40,7 @@ console.log(
 This function takes any instance of a class and checks
 if the constructor name is equal to `NgZone`.
 
-This means the Angular application that instantiated this service assumes it runs in a ZuneLess environment,
+This means the Angular application that instantiated this service assumes it runs in a ZoneLess environment,
 and therefor it's change detection will not be triggered by zone related logic.
 
 However, keep in mind this does not mean `zone.js` is not present.

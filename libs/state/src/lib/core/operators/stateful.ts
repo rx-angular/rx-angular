@@ -48,7 +48,7 @@ export function stateful<T, R>(
       filter(v => v !== undefined),
       // distinct same derivation value
       distinctUntilChanged(),
-      // reuse custom operations result for multiple subscribers and reemit the last canculated value.
+      // reuse custom operations result for multiple subscribers and reemit the last calculated value.
       shareReplay({ bufferSize: 1, refCount: true })
     );
   };
