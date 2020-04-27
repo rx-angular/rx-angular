@@ -48,6 +48,9 @@
     "architecture-demos-e2e": {
       "tags": [],
       "implicitDependencies": ["architecture-demos"]
+    },
+    "docs": {
+      "tags": []
     }
   }
 }
