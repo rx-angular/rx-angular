@@ -218,7 +218,7 @@ export function createLocalStrategy<T>(
  *
  * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
  * |-------------| --------------| ------------ ------ | ---------------- |
- * | `local`     | ✔️/✔️          | dC / ɵDC            | ✔️ + C/ LV       |
+ * | `detach`     | ✔️/✔️          | dC / ɵDC            | ✔️ + C/ LV       |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return {RenderStrategy<T>} - The calculated strategy

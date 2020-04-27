@@ -92,7 +92,7 @@ The const `propsMap` can now be used to maintain properties per instance without
 
 ```typescript
 console.log('someObject3 before:', someObject3);
-// {foo: "bar", isCoalescing: "waerMap version"}
+// {foo: "bar", isCoalescing: "weakMap version"}
 console.log('props before:', propertMap.getProperties(someObject3));
 // {isCoalescing: "weakMap version"}
 
