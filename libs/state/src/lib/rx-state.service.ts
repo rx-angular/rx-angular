@@ -17,7 +17,6 @@ import {
   WrongSelectParamsError,
   isKeyOf
 } from './core';
-import {} from './core/utils/typing';
 import { filter, map, pluck, tap } from 'rxjs/operators';
 
 type ProjectStateFn<T> = (oldState: T) => Partial<T>;
@@ -39,12 +38,10 @@ type ProjectValueReducer<T, K extends keyof T> = (
  * ![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_logo.png)
  *
  * @example
- *```Typescript
+ * ```Typescript
  * Component({
  *   selector: 'app-stateful',
- *   template: `
- *     <div>{{ state$ | async | json }}</div>
- *   `,
+ *   template: `<div>{{ state$ | async | json }}</div>`,
  *   providers: [RxState]
  * })
  * export class StatefulComponent {
@@ -66,7 +63,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
 
   /**
    * @description
-   * The state exposed as `Observable`
+   * The full state exposed as `Observable<T>`
    */
   readonly $ = this.accumulationObservable.state$;
 
@@ -104,24 +101,24 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
 
   /**
    * @description
-   * Manipulate the state by providing a `Partial` state or a `ProjectionFunction`.
+   * Manipulate the state by providing a `Partial<T>` state or a `ProjectionFunction<T>`.
    *
    * @example
-   * Update the state by providing a `Partial`
+   * Update the state by providing a `Partial<T>`
    * ```TypeScript
-   * const update = {
+   * const slice = {
    *   foo: 'bar',
    *   bar: 5
    * };
-   * state.set(update);
+   * state.set(slice);
    * ```
    *
-   * Update the state by providing a `ProjectionFunction`
+   * Update the state by providing a `ProjectionFunction<T>`
    * ```TypeScript
-   * const update = oldState => ({
+   * const updateFn = oldState => ({
    *   bar: oldState.bar + 5
    * });
-   * state.set(update);
+   * state.set(updateFn);
    * ```
    *
    * @param {Partial<T>|ProjectStateFn<T>} stateOrProjectState
@@ -131,13 +128,13 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
 
   /**
    * @description
-   * Manipulate a single property by providing a `ProjectionFunction`.
+   * Manipulate a single property by providing a `ProjectionFunction<T>`.
    *
    * @example
-   * Update the state by providing a `ProjectionFunction`
+   * Update the state by providing a `ProjectionFunction<T>`
    * ```TypeScript
-   * const update = oldState => oldState.bar + 5;
-   * state.set('bar', update);
+   * const updateFn = oldState => oldState.bar + 5;
+   * state.set('bar', updateFn);
    * ```
    *
    * @param {K} key
@@ -145,6 +142,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
    * @return void
    */
   set<K extends keyof T, O>(key: K, projectSlice: ProjectValueFn<T, K>): void;
+  // TODO: set correct parameters
   /**
    * @description
    * Manipulate a single property by providing a value.
@@ -156,7 +154,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
    * ```
    *
    * @param {K} keyOrStateOrProjectState
-   * @param {?} stateOrSliceProjectFn
+   * @param {ProjectValueFn<T, K>} stateOrSliceProjectFn
    * @return void
    */
   set<K extends keyof T>(
@@ -197,10 +195,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
   }
 
   /**
-   *
    * @description
-   * Connect an `Observable` source of type `Partial<T>` to the state.
-   * Any properties emitted by the source will result in an immediate update of the corresponding properties in the state.
+   * Connect an `Observable<Partial<T>>` to the state `T`.
+   * Any change emitted by the source will get merged into the state.
    * The state will handle subscriptions.
    *
    * @example
@@ -231,8 +228,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
   /**
    *
    * @description
-   * Connect an `Observable` source to a specific property in the state. Any emission of the source will
-   * result in an immediate update of the corresponding property in the state.
+   * Connect an `Observable<T[K]>` source to a specific property `K` in the state `T`. Any emitted change will update
+   * this
+   * specific property in the state.
    * The state will handle subscriptions.
    *
    * @example
@@ -246,9 +244,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
   /**
    *
    * @description
-   * Connect an `Observable` source to a specific property in the state. Additionally you can provide a
+   * Connect an `Observable<Partial<T>>` source to a specific property in the state. Additionally you can provide a
    * `projectionFunction` to access the current state object on every emission of your connected `Observable`.
-   * Any emission of the source will result in an immediate update of the corresponding property in the state.
+   * Any change emitted by the source will get merged into the state.
    * The state will handle subscriptions.
    *
    * @example
@@ -330,7 +328,8 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
 
   /**
    * @description
-   * returns the state as cached and distinct `Observable`. This way you don't have to think about **late subscribers**,
+   * returns the state as cached and distinct `Observable<T>`. This way you don't have to think about **late
+   * subscribers**,
    * **multiple subscribers** or **multiple emissions** of the same value
    *
    * @example
@@ -345,7 +344,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
 
   /**
    * @description
-   * returns the state as cached and distinct `Observable`. Accepts arbitrary
+   * returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
    * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to manipulate the selection.
    *
    * @example
@@ -396,7 +395,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
   /**
    * @description
    * Access a single property of the state by providing keys.
-   * Returns a single property of the state as cached and distinct `Observable`.
+   * Returns a single property of the state as cached and distinct `Observable<T[K1]>`.
    *
    * @example
    * **Access a single property**
@@ -406,9 +405,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
    *
    * **Access a nested property**
    * ```Typescript
-   * const foo$ = state.select('bar.foo');
+   * const foo$ = state.select('bar', 'foo');
    * ```
-   * @returns Observable
+   * @return Observable<T[K1]>
    */
   select<K1 extends keyof T>(k1: K1): Observable<T[K1]>;
   /**
@@ -481,7 +480,8 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
 
   /**
    * @description
-   * Manages side-effects of your state. Provide any `Observable` **side-effect** and an optional `sideEffectFunction`.
+   * Manages side-effects of your state. Provide an `Observable<any>` **side-effect** and an optional
+   * `sideEffectFunction`.
    * The state will handle subscriptions.
    *
    * @example
