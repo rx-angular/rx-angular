@@ -373,7 +373,7 @@ export class TypescriptDocsRenderer {
           )}`;
         }
       }
-      output += `### ${member.name}\n\n`;
+      output += `### ${member.name} \n##### ${type}\n\n`;
       /*output += `{{< member-info kind="${[...member.modifiers, member.kind].join(' ')}" type="${type}" ${defaultParam}>}}\n\n`;
             output += `{{< member-description >}}${this.renderDescription(member.description, knownTypeMap, docsUrl)}{{< /member-description >}}\n\n`;*/
       output += `${defaultParam}\n\n`;
