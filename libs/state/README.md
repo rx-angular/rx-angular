@@ -36,7 +36,7 @@ The **intuitive API** specifically designed for managing **component state**, **
 
 `npm install @rx-angular/state`
 
-##API
+## API
 
 Read the [API Documentation](./docs/api.md)
 
