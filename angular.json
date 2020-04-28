@@ -758,7 +758,7 @@
           }
         }
       }
-    }
+    },
     "template-demo": {
       "projectType": "application",
       "schematics": {
