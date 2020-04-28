@@ -44,7 +44,7 @@ Read the [API Documentation](./docs/api.md)
 
 ### Provide (recommended)
 
-The recommended way of using the RxState is by **providing** a local instance bound to the component lifecycle.
+The recommended way of using the `RxState` service is by **providing** a local instance bound to the component lifecycle.
 
 **Provide the `RxState` inside a `Component` or `Directive` and `Inject` it**
 
