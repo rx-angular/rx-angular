@@ -18,7 +18,7 @@ them **not targeting** managing state on **component level**.
 
 That's where `@rx-angular/state` comes into place.
 The **intuitive API** specifically designed for managing **component state**, **automatic subscription handling** and
-**lifecycle integration** making `RxState` the **perfect fit** for handling **component state** in Angular.
+**lifecycle integration** making `@rx-angular/state` the **perfect fit** for handling **component state** in Angular.
 
 ## Key features
 
