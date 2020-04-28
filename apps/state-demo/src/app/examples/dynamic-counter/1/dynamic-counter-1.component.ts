@@ -41,7 +41,7 @@ const initialCounterState = {
 
     <form [formGroup]="counterForm" class="counter">
       <div class="count">
-        <span class="position" *ngFor="let d of count$ | push | toArray">
+        <span class="position" *ngFor="let d of count$ | async | toArray">
           <span class="digit static">
             {{ d }}
           </span>
