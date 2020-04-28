@@ -13,7 +13,7 @@ RxState is a light-weight, flexible, strongly typed and tested tool dedicated to
 Developing **reactive**, **complex** and **robust** user interfaces confronts developers with manging an overwhelmingly huge amount
 events of different types and sources _aka_ **State Management**.
 
-There are plenty solutions available for managing state on a **global level** (Akita, NgRx, NgXs, ...). All of
+There are plenty of solutions available for managing state on a **global level** (Akita, NgRx, NgXs, ...). All of
 them **not targeting** managing state on **component level**.
 
 Thats where `RxState` comes into place.
