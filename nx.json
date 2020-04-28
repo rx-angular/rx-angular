@@ -26,6 +26,13 @@
       "tags": [],
       "implicitDependencies": ["state-demo"]
     },
+    "template-demo": {
+      "tags": []
+    },
+    "template-demo-e2e": {
+      "tags": [],
+      "implicitDependencies": ["template-demo"]
+    },
     "experiments": {
       "tags": []
     },

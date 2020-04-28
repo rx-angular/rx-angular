@@ -19,6 +19,19 @@ import {
   VariableInfo
 } from './typescript-docgen-types';
 
+    ClassInfo,
+    DeclarationInfo,
+    DocsPage,
+    EnumInfo,
+    FunctionInfo,
+    InterfaceInfo,
+    MethodParameterInfo,
+    TypeAliasInfo,
+    TypeMap,
+    VariableInfo,
+} from './typescript-docgen-types';
+
+
 /**
  * THX TO @michaelbromley
  * copied from here: https://github.com/vendure-ecommerce/vendure/blob/8592e9d80427f08ff7454cd9106c07f15aa765d0/scripts/docs/typescript-docs-renderer.ts#L2
