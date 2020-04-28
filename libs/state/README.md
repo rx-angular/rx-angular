@@ -16,7 +16,7 @@ events of different types and sources _aka_ **State Management**.
 There are plenty of solutions available for managing state on a **global level** (Akita, NgRx, NgXs, ...). All of
 them **not targeting** managing state on **component level**.
 
-Thats where `RxState` comes into place.
+That's where `@rx-angular/state` comes into place.
 The **intuitive API** specifically designed for managing **component state**, **automatic subscription handling** and
 **lifecycle integration** making `RxState` the **perfect fit** for handling **component state** in Angular.
 
