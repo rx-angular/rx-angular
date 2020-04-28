@@ -66,7 +66,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
 
   /**
    * @description
-   * The state exposed as `Observable`
+   * The full state exposed as `Observable`
    */
   readonly $ = this.accumulationObservable.state$;
 
