@@ -42,11 +42,11 @@ Read the [API Documentation](./docs/api.md)
 
 ## Basic Setup
 
-### Provide (recommended)
+### Compose
 
-The recommended way of using the `RxState` service is by **providing** a local instance bound to the component lifecycle.
+One way of using the `RxState` service is by `providing` a local instance bound to the component lifecycle.
 
-**Provide the `RxState` inside a `Component` or `Directive` and `Inject` it**
+Provide the `RxState` inside a `Component` or `Directive` and `Inject` it
 
 ```typescript
 @Component({
@@ -63,12 +63,12 @@ export class StatefulComponent {
 }
 ```
 
-### Extend (minimal)
+### Inherit
 
 If you wish, there is also the possibility of **extending** the `RxState` service. This is generally
 not the recommended way but indeed useful for very small components.
 
-**Extend from the `RxState` inside a `Component`, `Directive`**
+Extend from the `RxState` inside a `Component`, `Directive`
 
 ```typescript
 @Directive({
@@ -88,7 +88,7 @@ export class StatefulComponent extends RxState<{ foo: number }> {
 If you strive for a more sophisticated **separation of concerns** you can `extend` the `RxState` in a
 locally provided `Service`.
 
-**Create a local `Service` by `extending` the `RxState`**
+Create a local `Service` by `extending` the `RxState`
 
 ```typescript
 interface StatefulComponentState {
@@ -104,7 +104,7 @@ export class StatefulComponentService extends RxState<StatefulComponentState> {
 }
 ```
 
-**`Provide` the `Service` inside the using `Component` or `Directive`**
+`Provide` the `Service` inside the using `Component` or `Directive`
 
 ```typescript
 @Component({
