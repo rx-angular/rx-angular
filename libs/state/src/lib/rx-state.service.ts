@@ -101,19 +101,19 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
 
   /**
    * @description
-   * Manipulate the state by providing a `Partial<T>` state or a `ProjectionFunction<T>`.
+   * Manipulate one or many properties of the state by providing a `Partial<T>` state or a `ProjectionFunction<T>`.
    *
    * @example
-   * Update the state by providing a `Partial<T>`
+   * Update one or many properties of the state by providing a `Partial<T>`
    * ```TypeScript
-   * const slice = {
+   * const partialState = {
    *   foo: 'bar',
    *   bar: 5
    * };
-   * state.set(slice);
+   * state.set(partialState);
    * ```
    *
-   * Update the state by providing a `ProjectionFunction<T>`
+   * Update one or many properties of the state by providing a `ProjectionFunction<T>`
    * ```TypeScript
    * const updateFn = oldState => ({
    *   bar: oldState.bar + 5
@@ -128,13 +128,12 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
 
   /**
    * @description
-   * Manipulate a single property by providing a `ProjectionFunction<T>`.
+   * Manipulate a single property of the state by the property name and a `ProjectionFunction<T>`.
    *
    * @example
-   * Update the state by providing a `ProjectionFunction<T>`
    * ```TypeScript
-   * const updateFn = oldState => oldState.bar + 5;
-   * state.set('bar', updateFn);
+   * const reduceFn = oldState => oldState.bar + 5;
+   * state.set('bar', reduceFn);
    * ```
    *
    * @param {K} key
@@ -145,10 +144,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
   // TODO: set correct parameters
   /**
    * @description
-   * Manipulate a single property by providing a value.
+   * Manipulate a single property by providing the property name and a value.
    *
    * @example
-   * Update the state by providing a value
    * ```TypeScript
    * state.set('bar', 5);
    * ```
@@ -198,7 +196,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
    * @description
    * Connect an `Observable<Partial<T>>` to the state `T`.
    * Any change emitted by the source will get merged into the state.
-   * The state will handle subscriptions.
+   * Subscription handling is done automatically.
    *
    * @example
    * ```Typescript
@@ -231,7 +229,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
    * Connect an `Observable<T[K]>` source to a specific property `K` in the state `T`. Any emitted change will update
    * this
    * specific property in the state.
-   * The state will handle subscriptions.
+   * Subscription handling is done automatically.
    *
    * @example
    * ```Typescript
@@ -247,7 +245,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
    * Connect an `Observable<Partial<T>>` source to a specific property in the state. Additionally you can provide a
    * `projectionFunction` to access the current state object on every emission of your connected `Observable`.
    * Any change emitted by the source will get merged into the state.
-   * The state will handle subscriptions.
+   * Subscription handling is done automatically.
    *
    * @example
    *
@@ -345,7 +343,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
   /**
    * @description
    * returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
-   * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to manipulate the selection.
+   * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive composition.
    *
    * @example
    * ```Typescript
@@ -482,7 +480,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
    * @description
    * Manages side-effects of your state. Provide an `Observable<any>` **side-effect** and an optional
    * `sideEffectFunction`.
-   * The state will handle subscriptions.
+   * Subscription handling is done automatically.
    *
    * @example
    * Directly pass an observable side-effect
