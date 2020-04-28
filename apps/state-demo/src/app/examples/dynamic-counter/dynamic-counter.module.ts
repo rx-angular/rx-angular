@@ -18,7 +18,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ToArrayPipe } from '../../core/to-array.pipe';
 import { DynamicCounterContainerComponent } from './solution/dynamic-counter.container.component';
 import { CounterComponent } from './solution/dynamic-counter.component';
-import { PushModule } from '@rx-angular/template';
 
 export const ROUTES = [
   {
@@ -61,8 +60,7 @@ export const materialModules = [
     CommonModule,
     materialModules,
     RouterModule.forChild(ROUTES),
-    ReactiveFormsModule,
-    PushModule
+    ReactiveFormsModule
   ],
   exports: [DECLARATIONS]
 })
