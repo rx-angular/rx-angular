@@ -1,6 +1,6 @@
 # Increment
 
-**Imperative**
+## Imperative
 
 ```typescript
 @Component({
