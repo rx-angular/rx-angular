@@ -85,7 +85,7 @@ We should see the initial state in the template.
 
 ## Setup Input bindings
 
-As parts of our state gets passed over input bindings we eed to feed this changes to the components state.
+As parts of our state get passed as input bindings we need to insert these changes into the components' state.
 There is one problem, the `set` function decorated with `@Input` is not compos able with RxJS.
 
 We could write Reactive decorators like `@Input$` and alos do this for all other things not reactive in a component.
