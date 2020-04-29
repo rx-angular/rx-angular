@@ -1,4 +1,6 @@
-## What's the difference between `providing` or `extending` the `RxState`?
+# Frequently asked questions
+
+## What's the difference between injecting and extending the `RxState` service?
 
 ## How can I run partial updates?
 
@@ -18,9 +20,11 @@ class AnyComponent extends RxState<ComponentState> {
   }
 
   resetList() {
-    this.connect(of({ list: [], loading: false }));
+    this.connect(this.globalState$.list$({ list: [], loading: false }));
   }
 }
 ```
 
 ## How to refactor a reactive component?
+
+## Why should I use `Observables` for button clicks instead of callbacks??

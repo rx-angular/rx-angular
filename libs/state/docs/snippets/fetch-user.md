@@ -46,8 +46,8 @@ export class MyComponent {
 @Component({
   selector: 'my-comp',
   template: `
-    <loading [isLoading]="isLoading$ | ngrxPush"></loading>
-    <div>{{ users$ | ngrxPush }}</div>
+    <loading [isLoading]="isLoading$ | push"></loading>
+    <div>{{ users$ | push }}</div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -25,7 +25,7 @@ export class MyComponent {
 @Component({
   selector: 'my-comp',
   template: `
-    <div *ngrxLet="state$; let s">{{ s.count }}</div>
+    <div *rxLet="state$; let s">{{ s.count }}</div>
     <button (click)="onClick($event)">Increment</button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -38,13 +38,13 @@ export class MyComponent extends RxState<{ count: number }> {
 }
 ```
 
-**Reactive Writing**
+## Reactive Writing
 
 ```typescript
 @Component({
   selector: 'my-comp',
   template: `
-    <div *ngrxLet="state$; let s">{{ s.count }}</div>
+    <div *rxLet="state$; let s">{{ s.count }}</div>
     <button (click)="btn$.next($event)">Increment</button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -7,8 +7,9 @@
 - State is injected over the constructor
 - State is displayed over a pipe in the template
 - UI interaction is implemented over `Subjects`
-- use `*ngrxLet` over `*ngIf`
-  Bad:
+- use `*rxLet` over `*ngIf`
+
+Bad:
 
 ```html
 <ng-container *ngIf="obj$ | async as obj">
@@ -19,19 +20,10 @@
 Good:
 
 ```html
-<ng-container *ngrxLet="obj$; let obj">
+<ng-container *rxLet="obj$; let obj">
   {{obj}}
 </ng-container>
 ```
-
-## Logic
-
-- Pure functions as much as possible
-
-**Micro Architecture:**
-
-- Display-only and container components
-- No HTTP requests in Container or Display components directly (firing the request in the componene it self)
 
 ## Component Implementation Approach
 
@@ -39,8 +31,8 @@ Good:
 
 In a first step you want to setup the state interface. A property which should change the view of your component should find it's place into the interface.
 View bindings and triggers which in turn mutate your state should be `Subjects`.
-In the best case you keep your state *normalized*.
-*Derived state* should be handled seperately.
+In the best case you keep your state _normalized_.
+_Derived state_ should be handled seperately.
 
 **Example view interface**:
 
@@ -61,43 +53,48 @@ interface MyView {
 ```
 
 ### Setup view interactions
-  ```typescript
+
+```typescript
 @Component({
   selector: 'app-stateful-component',
-  template: `<div> {{ vm$ | async | json }}</div>`,
+  template: `
+    <div>{{ vm$ | async | json }}</div>
+  `,
   changeDetection: Changedetection.OnPush,
   providers: [RxState]
 })
-  export class StatefulComponent implements MyView {
-  
-    readonly vm$ = this.state.select();
-    
-    readonly click$ = new Subject<MouseEvent>();
-    readonly expanded$ = this.click$.pipe(); // map it
-    readonly vm$: Observable<MyState> = this.state.select();
-    
-    @Input('items') set items(items: string[]) {
-        this.state.set({ items });
-    }
-    
-    constructor(private state: RxState<MyState>) {}
+export class StatefulComponent implements MyView {
+  readonly vm$ = this.state.select();
+
+  readonly click$ = new Subject<MouseEvent>();
+  readonly expanded$ = this.click$.pipe(); // map it
+  readonly vm$: Observable<MyState> = this.state.select();
+
+  @Input('items') set items(items: string[]) {
+    this.state.set({ items });
   }
-  ```
-  - Hook up `@Input` bindings
-  ```typescript
-  @Input()
-  set task(task: Task) {
-    this.state.setState({task})
-  }
-  ```
-  - Hook up UI state
+
+  constructor(private state: RxState<MyState>) {}
+}
+```
+
+- Hook up `@Input` bindings
+
+```typescript
+@Input()
+set task(task: Task) {
+  this.state.setState({task})
+}
+```
+
+- Hook up UI state
 
 ```typescript
 vm$ = this.state.select();
 ```
 
 ```html
-<ng-container *ngrxLet="obj$; let obj">
+<ng-container *rxLet="obj$; let obj">
   {{obj}}
 </ng-container>
 ```
@@ -112,7 +109,7 @@ vm$ = this.state.select();
 
   ```typescript
   @Output()
-  taskChanges = this.state.select(s => s.task);
+  taskChanges = this.state.$.pipe(distinctUntilKeyChanged('prop'));
   ```
 
 Observables and projection functions are named in a way they give us information about the returned data struckture.
