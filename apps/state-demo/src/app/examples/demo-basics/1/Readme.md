@@ -72,7 +72,7 @@ export class DemoBasicsComponent2 extends RxState<ComponentState> {
 As `RxState` is empty and thus lazy on initialization, we can decide which and if we put values to state initially.
 We can initialize the state imperatively over `set` or over a observable and the `connect()` method.
 
-Here we use `set`. As initial value we pass the already existing `initComponentState` object.
+We will use `set` as we already have initial values as `initComponentState` object.
 
 ```typescript
  constructor(...) {
