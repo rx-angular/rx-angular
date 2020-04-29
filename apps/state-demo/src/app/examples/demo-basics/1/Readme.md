@@ -86,13 +86,8 @@ We should see the initial state in the template.
 ## Setup Input bindings
 
 As parts of our state get passed as input bindings we need to insert these changes into the components' state.
-There is one problem, the `set` function decorated with `@Input` is not compos able with RxJS.
-
-We could write Reactive decorators like `@Input$` and alos do this for all other things not reactive in a component.
-
-Or we could simple use the services imperative `set` method to hook into other imperative code in the class.
-
-In this case we hook into the imperative callback of the `refreshInterval` component input binding.
+The problem with setting values in an imperative way is that it's not composable. 
+Thats why in this case we have to hook into the imperative callback of the `refreshInterval` component input binding.
 
 We run a partial update to our state by providing a object containing the new state slice `{refreshInterval: number}`.
 This can be done by using a reduce function `(oldState) => ({refreshInterval: oldState.refreshInterval + 2})` or just the slice itself `{refreshInterval: 2}`.
