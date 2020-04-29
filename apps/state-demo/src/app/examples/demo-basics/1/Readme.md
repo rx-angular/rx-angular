@@ -83,7 +83,7 @@ We will use `set` as we already have initial values as `initComponentState` obje
 
 We should see the initial state in the template.
 
-2.2) Connect input bindings
+## Setup Input bindings
 
 As parts of our state gets passed over input bindings we eed to feed this changes to the components state.
 There is one problem, the `set` function decorated with `@Input` is not compos able with RxJS.
