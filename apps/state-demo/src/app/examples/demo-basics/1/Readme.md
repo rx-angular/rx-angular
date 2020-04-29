@@ -106,8 +106,8 @@ set refreshInterval(refreshInterval: number) {
 ```
 
 We also have to adopt the related method `resetRefreshTick` where `_refreshInterval`is used.
-As the interval value get already maintained by the components state
-we can just select the value with `this.select('refreshInterval')` and use the `` operator to create the new interval.
+As `refreshInterval` already is part of the components' state,
+we can easily select the value with `this.select('refreshInterval')` and use the `interval` operator to create the new interval.
 
 ```typescript
 import {..., switchMap} from 'rxjs/operators';
