@@ -62,7 +62,7 @@ with very little effort in any component.
 ## Demo
 
 - [Basic Tutorial](https://github.com/BioPhoton/rx-angular/tree/master/apps/rx-angular-state-demo)
-- [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-demo?file=src%2Fapp%2Fcounter.component.ts)
+- [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
 
 ## Snippets
 
