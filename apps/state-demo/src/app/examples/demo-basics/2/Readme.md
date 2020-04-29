@@ -14,6 +14,7 @@ A function has a "side-effect" if:
 
 - Mutation of local static variables are done e.g. `this.prop = value`
 - non-local variables are used
+## Examples
 
 ```typescript
 let state = true;
