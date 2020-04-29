@@ -92,7 +92,7 @@ Another side-effect is contained in the `onRefreshClicks` callback. Here we disp
 
 Lets refactore those and handle them in a clean and reactiv way.
 
-1. Refactor to a reactive UI
+### Refactor to a reactive UI
 
 As RxJS is providing us a very powerful way of composing the emitted events we will refactor oue UI interaction the streams.
 
