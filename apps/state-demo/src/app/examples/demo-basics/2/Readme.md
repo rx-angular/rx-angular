@@ -59,6 +59,7 @@ A side-effect has 2 important parts:
 
 In the above examples the trigger was the method call itself, but we can also set an emitted value form an `Observable` as trigger.
 This side-effect logic is a render call or any other logic executed by the trigger.
+## Application
 
 With this in mind let's take a look at the component logic and see if we can identify a side effect:
 
