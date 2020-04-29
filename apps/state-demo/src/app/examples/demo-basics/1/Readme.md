@@ -9,7 +9,7 @@ over input bindings and a clean separation of responsibilities.
 
 ---
 
-1. Implement RxState Service ComponentState by extending the RxState class.
+## Implement RxState Service
 
 Let's start with introducing a reactive state to our component.
 This can be done over inheritance, we extend form the state service, or composition, we inject the service in the constructor and add the service to the component `providers` section.
