@@ -114,7 +114,7 @@ export class DemoBasicsComponent2 extends RxState<ComponentState>
 }
 ```
 
-2. Setup a variable to store the side-effect.
+### Setup the store side-effect
 
 In out class we create a new property called `refreshListSideEffect$` and assing the newly created click Observable to is.
 
