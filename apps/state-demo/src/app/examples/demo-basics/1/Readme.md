@@ -45,7 +45,7 @@ constructor(...) {
 }
 ```
 
-1.1) Select component State, display and initialize it.
+## Select and display state
 
 Lets setup a component property `model$` and display it in the template at the very top to debug the state.
 
