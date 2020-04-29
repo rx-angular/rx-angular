@@ -33,7 +33,7 @@ export class ChildComponent {
 }
 ```
 
-**Passing Observables**
+## Passing observables
 
 ```typescript
 @Component({
