@@ -89,7 +89,7 @@ As parts of our state get passed as input bindings we need to insert these chang
 The problem with setting values in an imperative way is that it's not composable. 
 Thats why in this case we have to hook into the imperative callback of the `refreshInterval` component input binding.
 
-We run a partial update to our state by providing a object containing the new state slice `{refreshInterval: number}`.
+We run a partial update to our state by providing an object containing the new state slice `{refreshInterval: number}`.
 This can be done by using a reduce function `(oldState) => ({refreshInterval: oldState.refreshInterval + 2})` or just the slice itself `{refreshInterval: 2}`.
 As no previous state is needed to calculate the new value we provide the slice itself for the partial update.
 
