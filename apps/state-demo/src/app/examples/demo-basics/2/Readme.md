@@ -85,7 +85,7 @@ Another side-effect is contained in the `onRefreshClicks` callback. Here we disp
 
 ```typescript
   onRefreshClicks(event) {
-    this.store.dispatch(fetchRepositoryList({}));
+    this.listService.refetchList();
   }
 ```
 
@@ -127,7 +127,7 @@ From the `resetRefreshTick` method we now move the logic that starts the tick an
 
 ```typescript
 refreshListSideEffect$ = this.refreshClick$.pipe(
-  tap(() => this.store.dispatch(fetchRepositoryList({})))
+  tap(() => this.listService.refetchList())
 );
 ```
 
@@ -171,7 +171,7 @@ This means we could simply merge their outputs together.
 refreshListSideEffect$ = merge(
   this.refreshClicks,
   this.intervalRefreshTick$
-).pipe(tap(_ => this.store.dispatch(fetchRepositoryList({}))));
+).pipe(tap(_ => this.listService.refetchList()));
 ```
 
 As a last step we could use another overload of the `hold` method to get better readability of the code.
@@ -184,7 +184,7 @@ In our coustructor we can use it as following:
 ```typescript
 constructor(...) {
   // ...
-  this.hold(refreshListSideEffect$, () => this.store.dispatch(fetchRepositoryList({})));
+  this.hold(refreshListSideEffect$, () => this.listService.refetchList());
 }
 ```
 
@@ -212,13 +212,13 @@ In the example we can get rid of the following snippets:
     this.intervalSubscription = this.select('refreshInterval')
       .pipe(
         switchMap(ms => interval(ms)),
-        tap(_ => this.store.dispatch(fetchRepositoryList({})))
+        tap(_ => this.listService.refetchList())
       )
       .subscribe();
   }
   // ...
   onRefreshClicks(event) {
-    this.store.dispatch(fetchRepositoryList({}));
+    this.listService.refetchList();
   }
   // ...
 }

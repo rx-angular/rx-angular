@@ -228,11 +228,11 @@ target slice on which we want to connect the global state to. In our case is the
 
 ```typescript
 // ...
-constructor(private store: Store) {
+constructor(private listService: ListService) {
   // ...
   this.connect(
     'list',
-    this.store.select(selectRepositoryList).pipe(map(this.parseListItems))
+    this.listService.list$.pipe(map(this.parseListItems))
   );
 }
 ```
