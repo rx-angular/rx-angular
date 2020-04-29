@@ -32,8 +32,7 @@ type ProjectValueReducer<T, K extends keyof T> = (
 
 /**
  * @description
- * RxState is a light-weight reactive state management service especially useful for component state in Angular.
- * Furthermore a global service is provided and can act as a small global state manager.
+ * RxState is a light-weight reactive state management service for managing local state in angular.
  *
  * ![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_logo.png)
  *
@@ -51,8 +50,8 @@ type ProjectValueReducer<T, K extends keyof T> = (
  * }
  * ```
  *
- * @docsCategory State
- * @docsPage State
+ * @docsCategory RxState
+ * @docsPage RxState
  */
 @Injectable()
 export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
@@ -115,10 +114,10 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
    *
    * Update one or many properties of the state by providing a `ProjectionFunction<T>`
    * ```TypeScript
-   * const updateFn = oldState => ({
+   * const reduceFn = oldState => ({
    *   bar: oldState.bar + 5
    * });
-   * state.set(updateFn);
+   * state.set(reduceFn);
    * ```
    *
    * @param {Partial<T>|ProjectStateFn<T>} stateOrProjectState
@@ -396,7 +395,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
    * Returns a single property of the state as cached and distinct `Observable<T[K1]>`.
    *
    * @example
-   * **Access a single property**
+   *  **Access a single property**
    * ```Typescript
    * const bar$ = state.select('bar');
    * ```

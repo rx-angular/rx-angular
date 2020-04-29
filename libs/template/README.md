@@ -1,6 +1,8 @@
 # @rx-angular/template
 
 [![rx-angular](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
+[![npm version](https://badge.fury.io/js/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/@rx-angular/template)
+
 
 #### Reactive Template Rendering for Angular
 

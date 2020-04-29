@@ -1,8 +1,6 @@
 # @rx-angular/state
 
 [![rx-angular circleci-status](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
-[![npm version](https://badge.fury.io/js/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/@rx-angular/state)
-
 
 ## Reactive Component State for Angular
 
@@ -13,7 +11,6 @@ RxState is a light-weight, flexible, strongly typed and tested tool dedicated to
 ## Description
 
 Developing modern, **reactive** user interfaces imposes a variety of challenging tasks. Naming some of those:
-
 - reacting to events from different sources
 - transforming and composing state
 - handling state lifetime
