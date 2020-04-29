@@ -67,7 +67,7 @@ export class DemoBasicsComponent2 extends RxState<ComponentState> {
 }
 ```
 
-2.1) Initialize component state
+## Initialize component state
 
 As `RxState` is lazy we can decide on initial values.
 We can initialize the state imperatively over `set` or over a observable ant the `cnnect` method.
