@@ -1,6 +1,6 @@
 # Concepts and best practices
 
-**Component Shell and Folder**
+## Component Shell and Folder
 
 - `@Input` bindings are setter
 - `@Output` bindings are state derivations
