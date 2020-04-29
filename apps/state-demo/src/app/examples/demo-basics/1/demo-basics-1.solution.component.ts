@@ -3,18 +3,22 @@ import {
   Component,
   Input,
   OnDestroy,
-  OnInit
+  OnInit,
+  Output
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { RxState } from '@rx-angular/state';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { distinctUntilKeyChanged, map, switchMap, tap } from 'rxjs/operators';
 import {
-  fetchRepositoryList,
-  RepositoryListItem,
-  selectRepositoryList
-} from '../../../data-access/github';
-import { interval, NEVER, Subject, Subscription } from 'rxjs';
-import { DemoBasicsItem } from '../demo-basics-item.interface';
+  ListServerItem,
+  ListService
+} from '../../../data-access/list-resource';
+import { interval, Subject, Subscription } from 'rxjs';
+
+export interface DemoBasicsItem {
+  id: string;
+  name: string;
+}
 
 interface ComponentState {
   refreshInterval: number;
@@ -22,7 +26,6 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
-// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
@@ -30,24 +33,25 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'demo-basics-2',
+  selector: 'demo-basics-1-solution',
   template: `
-    <h3>Demo Basics 2 - Handle Side Effects</h3>
-    <small>Child re-renders: {{ rerenders() }}</small
-    ><br />
+    <h3>
+      Demo Basics 1 - Setup a reactive state, its selections and the related UI
+      interactions
+    </h3>
     <mat-expansion-panel
-      *ngIf="model$ | push as m"
+      *ngIf="model$ | async as vm"
       (expandedChange)="listExpandedChanges.next($event)"
-      [expanded]="m.listExpanded"
+      [expanded]="vm.listExpanded"
     >
       <mat-expansion-panel-header>
         <mat-panel-title>
           List
         </mat-panel-title>
         <mat-panel-description>
-          <span
-            >{{ m.list.length }} Repositories Updated every:
-            {{ m.refreshInterval }} ms
+          <span>
+            {{ vm.list.length }} Repositories Updated every:
+            {{ vm.refreshInterval }} ms
           </span>
         </mat-panel-description>
       </mat-expansion-panel-header>
@@ -60,9 +64,9 @@ const initComponentState = {
         Refresh List
       </button>
 
-      <div *ngIf="m.list.length; else noList">
+      <div *ngIf="vm.list.length; else noList">
         <mat-list>
-          <mat-list-item *ngFor="let item of m.list">
+          <mat-list-item *ngFor="let item of vm.list">
             {{ item.name }}
           </mat-list-item>
         </mat-list>
@@ -75,10 +79,9 @@ const initComponentState = {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoBasicsComponent2 extends RxState<ComponentState>
+export class DemoBasicsComponent1Solution extends RxState<ComponentState>
   implements OnInit, OnDestroy {
   intervalSubscription = new Subscription();
-  // 1.1) Introduce reactive UI ( refreshClicks = new Subject<Event>(); )
   listExpandedChanges = new Subject<boolean>();
 
   model$ = this.select();
@@ -87,29 +90,20 @@ export class DemoBasicsComponent2 extends RxState<ComponentState>
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 100) {
       this.set({ refreshInterval });
+      this.resetRefreshTick();
     }
   }
 
-  numRenders = 0;
-  rerenders(): number {
-    return ++this.numRenders;
-  }
+  @Output()
+  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'));
 
-  constructor(private store: Store<any>) {
+  constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
     this.connect(
-      this.listExpandedChanges.pipe(map(b => ({ listExpanded: b })))
+      this.listExpandedChanges.pipe(map(listExpanded => ({ listExpanded })))
     );
-    this.connect(
-      'list',
-      this.store.select(selectRepositoryList).pipe(map(this.parseListItems))
-    );
-
-    // Side-Effects
-    // 2.1) setup side-effect (this.refreshListSideEffect$)
-    // 2.2) show subscribe and connect
-    // 2.3) extent side effect with refresh interval
+    this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
   }
 
   ngOnDestroy(): void {
@@ -125,17 +119,16 @@ export class DemoBasicsComponent2 extends RxState<ComponentState>
     this.intervalSubscription = this.select('refreshInterval')
       .pipe(
         switchMap(ms => interval(ms)),
-        tap(_ => this.store.dispatch(fetchRepositoryList({})))
+        tap(_ => this.listService.refetchList())
       )
       .subscribe();
   }
 
   onRefreshClicks(event) {
-    this.store.dispatch(fetchRepositoryList({}));
+    this.listService.refetchList();
   }
 
-  // Map RepositoryListItem to ListItem
-  parseListItems(l: RepositoryListItem[]): DemoBasicsItem[] {
+  parseListItems(l: ListServerItem[]): DemoBasicsItem[] {
     return l.map(({ id, name }) => ({ id, name }));
   }
 }

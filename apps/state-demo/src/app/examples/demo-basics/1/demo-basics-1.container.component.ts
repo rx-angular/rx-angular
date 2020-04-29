@@ -6,8 +6,6 @@ import { map } from 'rxjs/operators';
   selector: 'demo-basics1-container',
   template: `
     <h1>Step 1</h1>
-    <small>Parent re-renders: {{ rerenders() }}</small
-    ><br />
     <mat-form-field>
       <label>RefreshInterval</label>
       <input
@@ -17,11 +15,11 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <demo-basics-1
+    <demo-basics-1-start
       [refreshInterval]="refreshInterval$ | async"
       (listExpandedChange)="listExpandedChange$.next($event)"
     >
-    </demo-basics-1>
+    </demo-basics-1-start>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -30,10 +28,5 @@ export class DemoBasics1ContainerComponent {
   refreshInterval$ = this.refreshIntervalInput$.pipe(
     map((e: any) => e.target.value)
   );
-  listExpandedChange$ = new Subject<Event>();
-
-  numRenders = 0;
-  rerenders(): number {
-    return ++this.numRenders;
-  }
+  listExpandedChange$ = new Subject<boolean>();
 }

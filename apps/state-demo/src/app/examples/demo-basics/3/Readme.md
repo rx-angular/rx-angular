@@ -1,4 +1,4 @@
-# Optimizing the view
+# Micro Architecture and the MVVM Design Pattern
 
 1. Create an interface DemoBasicsView and implement all UI interaction like buttons etc.
 

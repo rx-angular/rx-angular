@@ -1,14 +1,16 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { RxState } from '@rx-angular/state';
-import { merge, Subject, timer } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
-  fetchRepositoryList,
-  RepositoryListItem,
-  selectRepositoryList
-} from '../../../data-access/github';
-import { DemoBasicsItem } from '../demo-basics-item.interface';
+  ListServerItem,
+  ListService
+} from '../../../data-access/list-resource';
+import { merge, Subject, timer } from 'rxjs';
+import { RxState } from '@rx-angular/state';
+
+export interface DemoBasicsItem {
+  id: string;
+  name: string;
+}
 
 interface ComponentState {
   refreshInterval: number;
@@ -16,25 +18,15 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
-// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
   list: []
 };
-
-// 1. Create an interface DemoBasicsView and implement all UI interaction like buttons etc.
-// 2. Create an interface DemoBasicsBaseModel this is basically a copy of your previous ComponentState.
-// mvvm. Implement a property `baseModel$: Observable<DemoBasicsBaseModel>;` to provide the base model base-state.
-// 4. Create a service called DemoBasicsViewModel
-//   - extend LocalState<DemoBasicsBaseModel>
-//   - implement DemoBasicsView
 @Component({
-  selector: 'demo-basics-3',
+  selector: 'demo-basics-3-start',
   template: `
-    <h3>Demo Basics 3 - Fine-Tune Rendering</h3>
-    <small>Child re-renders: {{ rerenders() }}</small
-    ><br />
+    <h3>Demo Basics 3 - Introduce MVVM Architecture</h3>
     <mat-expansion-panel
       *ngIf="model$ | async as m"
       (expandedChange)="listExpandedChanges.next($event)"
@@ -76,7 +68,7 @@ const initComponentState = {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoBasicsComponent3 extends RxState<ComponentState> {
+export class DemoBasicsComponenteStart extends RxState<ComponentState> {
   refreshClicks = new Subject<Event>();
   listExpandedChanges = new Subject<boolean>();
 
@@ -85,7 +77,6 @@ export class DemoBasicsComponent3 extends RxState<ComponentState> {
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 100) {
-      // 6. Refactor to use the vm.setState
       this.set({ refreshInterval });
     }
   }
@@ -96,31 +87,19 @@ export class DemoBasicsComponent3 extends RxState<ComponentState> {
       map(s => s.refreshInterval),
       switchMap(ms => timer(0, ms))
     )
-  ).pipe(tap(_ => this.store.dispatch(fetchRepositoryList({}))));
+  ).pipe(tap(_ => this.listService.refetchList()));
 
-  numRenders = 0;
-  rerenders(): number {
-    return ++this.numRenders;
-  }
-
-  // 5. Inject `DemoBasicsViewModel` as service into `MutateStateComponent` constructor under property `vm`
-  constructor(private store: Store<any>) {
-    // remove everything related to the view
+  constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
     this.connect(
       this.listExpandedChanges.pipe(map(b => ({ listExpanded: b })))
     );
-    // Refactor to use the vm connectState method
-    this.connect(
-      'list',
-      this.store.select(selectRepositoryList).pipe(map(this.parseListItems))
-    );
-    // Refactor to use the vm refreshListSideEffect$ property
+    this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
     this.hold(this.refreshListSideEffect$);
   }
 
-  parseListItems(l: RepositoryListItem[]): DemoBasicsItem[] {
+  parseListItems(l: ListServerItem[]): DemoBasicsItem[] {
     return l.map(({ id, name }) => ({ id, name }));
   }
 }

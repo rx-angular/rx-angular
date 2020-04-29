@@ -7,7 +7,7 @@ import {
   repositoryListFetchSuccess,
   RepositoryListItem,
   selectRepositoryList
-} from '../../../data-access/github';
+} from '../../../data-access/list-resource';
 import { DemoBasicsViewModelService } from './demo-basics.view-model.service';
 import { DemoBasicsItem } from '../demo-basics-item.interface';
 import { Actions, ofType } from '@ngrx/effects';

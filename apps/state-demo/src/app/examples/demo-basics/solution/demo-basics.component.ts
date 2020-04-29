@@ -1,16 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { map, tap } from 'rxjs/operators';
 import {
-  fetchRepositoryList,
-  repositoryListFetchError,
-  repositoryListFetchSuccess,
-  RepositoryListItem,
-  selectRepositoryList
-} from '../../../data-access/github';
-import { DemoBasicsViewModelService } from './demo-basics.view-model.service';
-import { DemoBasicsItem } from '../demo-basics-item.interface';
-import { Actions, ofType } from '@ngrx/effects';
+  ListServerItem,
+  ListService
+} from '../../../data-access/list-resource';
+import {
+  DemoBasicsItem,
+  DemoBasicsViewModelService
+} from './demo-basics.view-model.service';
 
 @Component({
   selector: 'demo-basics',
@@ -49,32 +46,21 @@ export class DemoBasicsComponent {
 
   constructor(
     public vm: DemoBasicsViewModelService,
-    private store: Store<any>,
-    private actions$: Actions
+    private listService: ListService
   ) {
     this.vm.connect(
       'list',
-      this.store.select(selectRepositoryList).pipe(map(this.parseListItems))
+      this.listService.list$.pipe(map(this.parseListItems))
     );
     this.vm.hold(
       this.vm.refreshListSideEffect$.pipe(
-        tap(_ => this.store.dispatch(fetchRepositoryList({})))
+        tap(_ => this.listService.refetchList())
       )
     );
-    this.vm.connect(
-      'isPending',
-      this.actions$.pipe(
-        ofType(
-          repositoryListFetchError,
-          repositoryListFetchSuccess,
-          fetchRepositoryList
-        ),
-        map(a => a.type === fetchRepositoryList.type)
-      )
-    );
+    this.vm.connect('isPending', this.listService.loadingSignal$);
   }
 
-  parseListItems(l: RepositoryListItem[]): DemoBasicsItem[] {
+  parseListItems(l: ListServerItem[]): DemoBasicsItem[] {
     return l.map(({ id, name }) => ({ id, name }));
   }
 }

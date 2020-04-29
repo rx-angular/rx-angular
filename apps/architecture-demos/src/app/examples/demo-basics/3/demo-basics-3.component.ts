@@ -25,7 +25,7 @@ const initComponentState = {
 
 // 1. Create an interface DemoBasicsView and implement all UI interaction like buttons etc.
 // 2. Create an interface DemoBasicsBaseModel this is basically a copy of your previous ComponentState.
-// mvvm. Implement a property `baseModel$: Observable<DemoBasicsBaseModel>;` to provide the base model base-state.
+// 3. Implement a property `baseModel$: Observable<DemoBasicsBaseModel>;` to provide the base model base-state.
 // 4. Create a service called DemoBasicsViewModel
 //   - extend LocalState<DemoBasicsBaseModel>
 //   - implement DemoBasicsView
