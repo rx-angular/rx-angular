@@ -132,7 +132,7 @@ refreshListSideEffect$ = this.refreshClick$.pipe(
 );
 ```
 
-3. Initialize the side effect by leveraging the `hold` method of `RxState` in the constructor
+### `hold` the side-effect
 
 `hold` as the name implies "holds" something. It holds a subscription to a side effect and takes care of its initialisation.
 Furthermore, it automatically handles the subscription management and unsubscribes if the component gets destroyed.
