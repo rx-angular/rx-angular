@@ -47,7 +47,7 @@ constructor(...) {
 
 ## Select and display state
 
-Lets setup a component property `model$` and display it in the template at the very top to debug the state.
+Lets setup a component property `model$` which holds all data we wish to display in the template.
 
 `model$` get the full state object assigned from the components state.
 This is done by using the `$` property of the state service.
