@@ -156,7 +156,7 @@ now we can replace the `_refreshInterval` in the template with `vm.refreshInterv
 ## React to state changes from child components
 
 In this example we use an expand-panel to display the list.
-Its open and close state needs to connected to the components state.  
+We identify its' open and close state as part of the components' state.  
 We also have to forward the changes to the components `listExpandedChange` output binding.
 
 As connecting Observables to the state is a very essential part, there is a method on the service, that deals with this specific case.
