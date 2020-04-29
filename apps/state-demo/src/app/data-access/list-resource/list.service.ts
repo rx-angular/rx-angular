@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, merge, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { ListServerItem } from './list.server.model';
 import {
   catchError,
   delay,
   distinctUntilChanged,
   filter,
-  map,
-  startWith
+  map
 } from 'rxjs/operators';
 
 interface ListServiceState {
@@ -64,8 +63,8 @@ export class ListService {
   }
 
   httpGetListItem = (arg?: any): Observable<{ list: any[] }> =>
-    // tslint:disable-next-line:no-bitwise
     of(getData(arg)).pipe(
+      // tslint:disable-next-line:no-bitwise
       delay(~~(Math.random() * 5000)),
       map(list => ({ list }))
     );
