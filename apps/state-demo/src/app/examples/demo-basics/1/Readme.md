@@ -197,7 +197,7 @@ Now lets refactor the state binding to the expand-panel.
 
 If we open and close the expand-panel we should see the change reflected in the state.
 
-2.5 Connect Outputs
+## Setup Output bindings
 
 Next lets replace the logic for the output binding of the component.
 
