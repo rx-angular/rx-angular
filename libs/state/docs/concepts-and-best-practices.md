@@ -59,8 +59,8 @@ interface MyState {
 }
 
 interface MyView {
-  btnSubmitClick$: Subject<Event>();
-  expandedChange$: boolean;
+  click$: Subject<MouseEvent>();
+  expanded$: boolean;
   vm$: Observable<MyState>; // ViewModel
 }
 ```
