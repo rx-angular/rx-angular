@@ -35,19 +35,14 @@ Good:
 
 ## Component Implementation Approach
 
-- 1. Define the view
-     In best case start with an interface that lists all UI interaction.
-     Included things:
-  - Event bindings e.g. `(click)`, `(blur)` etc
-  - Output bindings of child components e.g. `(inputChanges)`
-  - The component state is normalized (model vs view model)
-    This is the _core state_ that is needed to calculate the views _display state_.
-    In most cases the _displayed state_ is equal to the _core state_.
-    In some cases it differs. e.g. _core state_ is a list of items stored in an array.
-    _display state_ is the list and the number of total and selected items.
-    In this case we don't store the state for total and selected count, but derive it over a map function.
-    Also sorting/hiding parts or the items is a good example.
-    Example view interface:
+### Defining the Interface
+
+In a first step you want to setup the state interface. A property which should change the view of your component should find it's place into the interface.
+View bindings and triggers which in turn mutate your state should be `Subjects`.
+In the best case you keep your state *normalized*.
+*Derived state* should be handled seperately.
+
+**Example view interface**:
 
 ```typescript
 
