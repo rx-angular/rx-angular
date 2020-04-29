@@ -1,4 +1,6 @@
-# On every URL change fetch users from the back end and deal with loading flags
+# Load data on route change
+
+On every URL change fetch users from the back end and deal with loading flags
 
 **Imperative**
 
