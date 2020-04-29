@@ -145,7 +145,7 @@ constructor(...) {
 
 This should dispatch an action on every button click.
 
-4. Refactor the side-effect triggered by the background process
+### Refactor background process side-effect
 
 The other side-effect in this component is the background process that dispatches the refresh action in an interval defined over the `refreshInterval` input binding.
 
