@@ -201,7 +201,7 @@ If we open and close the expand-panel we should see the change reflected in the 
 
 Next lets replace the logic for the output binding of the component.
 
-As the open/closed state is already present in the components state we can directly derive the changes form it.
+As the open/closed state is already reflected in the components' state, we can directly derive changes from them.
 
 As we are only interested in changes of the slice `listExpanded` we can use the `distinctUntilKeysChanged` operator
 to get the changes.
