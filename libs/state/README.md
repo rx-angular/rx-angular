@@ -35,7 +35,7 @@ Using this library allows you to implement things like:
 - subscription-less interaction
 - hook into imperative functions (e.g. component lifecycle or HostBindings)
 
-a one-line in your component
+with very little effort in any component.
 
 ## Key features
 
