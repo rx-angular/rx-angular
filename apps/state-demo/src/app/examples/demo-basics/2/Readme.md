@@ -49,7 +49,7 @@ function sideEffectFn(state) {
 }
 ```
 
-As a good rule of thumb, you can consider every function without a return value as side.-ffect
+As a good rule of thumb, you can consider every function without a return value as side-effect
 
 A side-effect has 2 important parts:
 
