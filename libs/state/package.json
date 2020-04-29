@@ -1,7 +1,7 @@
 {
   "name": "@rx-angular/state",
   "version": "1.0.0",
-  "description": "**Fully** Reactive Component State in Angular. @rx-angular/state is a light-weight reactive state management service especially useful for component state in Angular.",
+  "description": "RxState is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in angular.",
   "main": "index.js",
   "publishConfig": {
     "access": "public"
@@ -14,8 +14,13 @@
   "keywords": [
     "angular",
     "rxjs",
+    "state",
+    "ephemeral state",
     "component state",
-    "state management"
+    "state management",
+    "performance",
+    "state",
+    "reactive state"
   ],
   "author": "Michael Hladky <michael@hladky.at>",
   "license": "MIT",
