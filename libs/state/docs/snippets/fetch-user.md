@@ -40,7 +40,7 @@ export class MyComponent {
 }
 ```
 
-**Reactive**
+## Reactive
 
 ```typescript
 @Component({
