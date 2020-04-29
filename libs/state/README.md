@@ -1,6 +1,8 @@
 # @rx-angular/state
 
 [![rx-angular circleci-status](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
+[![npm version](https://badge.fury.io/js/%40ngrx%2Fstore.svg)](https://www.npmjs.com/@rx-angular/state)
+
 
 #### Reactive Component State for Angular
 
