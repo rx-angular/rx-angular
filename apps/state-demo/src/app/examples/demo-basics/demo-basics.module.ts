@@ -13,17 +13,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DemoBasics1ContainerComponent } from './1/demo-basics-1.container.component';
-import { DemoBasicsComponent1 } from './1/demo-basics-1.component';
+import { DemoBasicsComponent1Start } from './1/demo-basics-1.start.component';
 import { DemoBasics2ContainerComponent } from './2/demo-basics-2.container.component';
-import { DemoBasicsComponent2 } from './2/demo-basics-2.component';
+import { DemoBasicsComponent2Start } from './2/demo-basics-2.start.component';
 import { DemoBasicsMvvmContainerComponent } from './mvvm/demo-basics-mvvm.container.component';
 import { DemoBasicsComponentMvvm } from './mvvm/demo-basics-mvvm.component';
-import { DemoBasics4ContainerComponent } from './4/demo-basics-4.container.component';
-import { DemoBasicsComponent4 } from './4/demo-basics-4.component';
 import { DemoBasicsContainerComponent } from './solution/demo-basics.container.component';
 import { DemoBasicsComponent } from './solution/demo-basics.component';
-import { DemoBasicsComponent3 } from './3/demo-basics-3.component';
-import { DemoBasics3ContainerComponent } from './3/demo-basics-3.container.component';
+import { DemoBasicsComponent1Solution } from './1/demo-basics-1.solution.component';
+import { DemoBasicsComponent2Solution } from './2/demo-basics-2.solution.component';
 
 export const ROUTES = [
   {
@@ -40,14 +38,6 @@ export const ROUTES = [
     component: DemoBasics2ContainerComponent
   },
   {
-    path: 'step-3',
-    component: DemoBasics3ContainerComponent
-  },
-  {
-    path: 'step-4',
-    component: DemoBasics4ContainerComponent
-  },
-  {
     path: 'solution',
     component: DemoBasicsContainerComponent
   }
@@ -55,16 +45,15 @@ export const ROUTES = [
 const DECLARATIONS = [
   DemoBasicsContainerComponent,
   DemoBasicsComponent,
+
   DemoBasics1ContainerComponent,
-  DemoBasicsComponent1,
+  DemoBasicsComponent1Start,
+  DemoBasicsComponent1Solution,
   DemoBasics2ContainerComponent,
-  DemoBasicsComponent2,
-  DemoBasics3ContainerComponent,
-  DemoBasicsComponent3,
+  DemoBasicsComponent2Start,
+  DemoBasicsComponent2Solution,
   DemoBasicsMvvmContainerComponent,
-  DemoBasicsComponentMvvm,
-  DemoBasics4ContainerComponent,
-  DemoBasicsComponent4
+  DemoBasicsComponentMvvm
 ];
 export const materialModules = [
   MatIconModule,

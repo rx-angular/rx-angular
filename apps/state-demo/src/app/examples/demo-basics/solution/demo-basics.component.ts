@@ -9,8 +9,8 @@ import {
   selectRepositoryList
 } from '../../../data-access/github';
 import { DemoBasicsViewModelService } from './demo-basics.view-model.service';
-import { DemoBasicsItem } from '../demo-basics-item.interface';
 import { Actions, ofType } from '@ngrx/effects';
+import { DemoBasicsItem } from '../3/demo-basics-3.component';
 
 @Component({
   selector: 'demo-basics',

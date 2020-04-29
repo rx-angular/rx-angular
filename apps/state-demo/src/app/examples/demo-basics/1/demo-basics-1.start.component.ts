@@ -6,20 +6,19 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import {
   fetchRepositoryList,
-  repositoryListFetchError,
-  repositoryListFetchSuccess,
   RepositoryListItem,
   selectRepositoryList
 } from '../../../data-access/github';
-import { interval, Observable, Subject, Subscription } from 'rxjs';
-import { DemoBasicsItem } from '../demo-basics-item.interface';
-
-import { ofType } from '@ngrx/effects';
+import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
+
+export interface DemoBasicsItem {
+  id: string;
+  name: string;
+}
 
 interface ComponentState {
   refreshInterval: number;
@@ -35,12 +34,12 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'demo-basics-1',
+  selector: 'demo-basics-1-start',
   template: `
-    <h3>Demo Basic 1 - Setup and Retrieving State</h3>
-    <small>Child rerenders: {{ rerenders() }}</small
-    ><br />
-    <!-- CC Dominic Elm and his template streams :) -->
+    <h3>
+      Demo Basic 1 - Setup a reactive state, its selections and the related UI
+      interactions
+    </h3>
     <mat-expansion-panel
       (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
       [expanded]="listExpanded"
@@ -100,18 +99,12 @@ const initComponentState = {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-// 1) implement RxState Service => extends RxState<ComponentState>
-export class DemoBasicsComponent1 implements OnInit, OnDestroy {
+export class DemoBasicsComponent1Start implements OnInit, OnDestroy {
   intervalSubscription = new Subscription();
-  // UI interaction
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.store
     .select(selectRepositoryList)
     .pipe(map(this.parseListItems), startWith(initComponentState.list));
-
-  // UI base-state
-  // 1.1) Select component State
-  //
 
   _refreshInterval: number = initComponentState.refreshInterval;
   @Input()
@@ -126,18 +119,7 @@ export class DemoBasicsComponent1 implements OnInit, OnDestroy {
   @Output()
   listExpandedChange = this.listExpandedChanges;
 
-  numRenders = 0;
-  rerenders(): number {
-    return ++this.numRenders;
-  }
-
-  constructor(private store: Store<any>) {
-    // super();
-    // 2.1) Initialize component base-state
-    // 2.2) Connect input bindings
-    // 2.3) Connect base-state from child components ( listExpandedChanges => listExpanded )
-    // 2.4) Connect Global base-state (selectRepositoryList -> parseListItems => list)
-  }
+  constructor(private store: Store<any>) {}
 
   ngOnDestroy(): void {
     this.intervalSubscription.unsubscribe();
@@ -158,7 +140,6 @@ export class DemoBasicsComponent1 implements OnInit, OnDestroy {
     this.store.dispatch(fetchRepositoryList({}));
   }
 
-  // Map RepositoryListItem to ListItem
   parseListItems(l: RepositoryListItem[]): DemoBasicsItem[] {
     return l.map(({ id, name }) => ({ id, name }));
   }

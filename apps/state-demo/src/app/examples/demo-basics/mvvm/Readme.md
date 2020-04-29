@@ -1,4 +1,4 @@
-# Implementing MVVM Design Pattern
+# Implementing ths MVVM Design Pattern
 
 1. Create an interface DemoBasicsView and implement all UI interaction like buttons etc.
 

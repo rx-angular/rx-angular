@@ -17,8 +17,8 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <demo-basics-2 [refreshInterval]="refreshInterval$ | async">
-    </demo-basics-2>
+    <demo-basics-2-start [refreshInterval]="refreshInterval$ | async">
+    </demo-basics-2-start>
   `
 })
 export class DemoBasics2ContainerComponent {

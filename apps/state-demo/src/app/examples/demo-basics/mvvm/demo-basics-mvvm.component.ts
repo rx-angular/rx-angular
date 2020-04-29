@@ -7,8 +7,12 @@ import {
   selectRepositoryList
 } from '../../../data-access/github';
 import { merge, Subject, timer } from 'rxjs';
-import { DemoBasicsItem } from '../demo-basics-item.interface';
 import { RxState } from '@rx-angular/state';
+
+export interface DemoBasicsItem {
+  id: string;
+  name: string;
+}
 
 interface ComponentState {
   refreshInterval: number;
