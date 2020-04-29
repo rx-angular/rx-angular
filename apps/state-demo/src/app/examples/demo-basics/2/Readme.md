@@ -1,4 +1,4 @@
-# Handing Side Effects reactively
+# Handling Side Effects reactively
 
 This section is targeting the concept of side effects, and it's reactive handling.
 
