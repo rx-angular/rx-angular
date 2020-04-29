@@ -2,6 +2,8 @@
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
 [![rx-angular circleci-status](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
+[![npm version](https://badge.fury.io/js/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/@rx-angular/state)
+
 
 ## Reactive Component State for Angular
 
@@ -52,11 +54,22 @@ a one-line in your component
 
 ## API
 
-Read the [API Documentation](./docs/api.md)
+[API Documentation](./docs/api.md)
 
 ## Usage
 
-Find more information about usage and use cases in the [Usage Documentation](./docs/usage.md).
+[Usage Documentation](./docs/usage.md)
+
+## Demo
+
+- [Basic Tutorial](https://github.com/BioPhoton/rx-angular/tree/master/apps/rx-angular-state-demo)
+- [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-demo?file=src%2Fapp%2Fcounter.component.ts)
+
+## Snippets
+
+- [Logic comparison](./docs/snippets/component-logic-comparison.md)
+- [Loading state and data fetching](./docs/snippets/fetch-user.md)
+- [Passing Observables](./docs/snippets/passing-observables-directly.md)
 
 ## Demos/Tutorials
 
@@ -65,9 +78,16 @@ Find more information about usage and use cases in the [Usage Documentation](./d
 
 ## Resources
 
-- [🎥 Video - Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch?v=I8uaHMs8rw0)
-  Articles:
-- [💾 Article - Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
+Videos
+
+- [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch?v=I8uaHMs8rw0)
+
+Articles
+
+- [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
+
+Design Documents
+
 - [💾 Design Documents](https://hackmd.io/wVkWRc3XQWmtM6YcktRTrA)
   Usage in the wild
 - [Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) by [Mike Hartington](https://twitter.com/mhartington)
