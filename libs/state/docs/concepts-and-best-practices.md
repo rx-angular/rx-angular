@@ -66,8 +66,6 @@ interface MyView {
 ```
 
 - 2. Setup initial View interaction.
-     Implement the Interface in your class and let the IDE auto implement the properties.
-  - Set initial state
   ```typescript
   interface CompState
     construct(private state: RxState<CompState>)
