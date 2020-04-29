@@ -24,7 +24,7 @@ Good:
 </ng-container>
 ```
 
-**Logic:**
+## Logic
 
 - Pure functions as much as possible
 
