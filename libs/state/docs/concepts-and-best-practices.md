@@ -33,7 +33,7 @@ Good:
 - Display-only and container components
 - No HTTP requests in Container or Display components directly (firing the request in the componene it self)
 
-**Component Implementation Approach:**
+## Component Implementation Approach
 
 - 1. Define the view
      In best case start with an interface that lists all UI interaction.
