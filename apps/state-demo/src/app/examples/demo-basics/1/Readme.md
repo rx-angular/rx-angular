@@ -128,7 +128,7 @@ If we edit the parents input box we should see the changes in the components log
 ## Bind the state to the view
 
 In this example we will use a very simple method and directly bind the complete component state to the view.
-Later performance optimisations link only binding the relevant values to the view can be done later.
+Further performance improvements can be done later.
 
 To bind the state we can use a simple trick with the structural directive `*ngIf`, the `as` syntax and the `async` pipe.
 
