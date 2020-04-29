@@ -2,7 +2,7 @@
 
 This section is targeting the concept of side effects, and it's reactive handling.
 
-Let's first quickly discuss 2 vocabularies, "side effect" is, and "pure function".
+Let's first quickly define two terms, "side effect" & "pure function".
 
 **Pure function:**
 A function is called pure if:
