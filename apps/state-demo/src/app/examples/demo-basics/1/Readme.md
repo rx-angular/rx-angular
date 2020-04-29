@@ -213,7 +213,7 @@ Lets refactor to following and delete the `listExpanded` property int he class a
   listExpandedChange = this.$.pipe(distinctUntilKeysChanged('listExpanded'));
 ```
 
-2.6) Connect Global state to the `list` slice.
+## Connect Global state to the `list` slice.
 
 In components, we often need to merge global state into local state. That state get provided over an observable.
 A common related task here is to transform a global object into a new shape that gets displayed.
