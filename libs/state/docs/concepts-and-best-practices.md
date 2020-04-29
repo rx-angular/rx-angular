@@ -67,11 +67,26 @@ interface MyView {
 
 - 2. Setup initial View interaction.
   ```typescript
-  interface CompState
-    construct(private state: RxState<CompState>)
-    set task(task: Task) {
-      this.state.setState({task})
+@Component({
+  selector: 'app-stateful-component',
+  template: `<div> {{ vm$ | async | json }}</div>`,
+  changeDetection: Changedetection.OnPush,
+  providers: [RxState]
+})
+  export class StatefulComponent implements MyView {
+  
+    readonly vm$ = this.state.select();
+    
+    readonly click$ = new Subject<MouseEvent>();
+    readonly expanded$ = this.click$.pipe(); // map it
+    readonly vm$: Observable<MyState> = this.state.select();
+    
+    @Input('items') set items(items: string[]) {
+        this.state.set({ items });
     }
+    
+    constructor(private state: RxState<MyState>) {}
+  }
   ```
   - Hook up `@Input` bindings
   ```typescript
