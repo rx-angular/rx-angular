@@ -1,4 +1,4 @@
-# General
+# Concepts and best practices
 
 **Component Shell and Folder**
 
