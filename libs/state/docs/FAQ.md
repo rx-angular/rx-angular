@@ -1,4 +1,4 @@
-## Is there another way than extending form the state service?
+## What's the difference between `providing` or `extending` the `RxState`?
 
 ## How can I run partial updates?
 
