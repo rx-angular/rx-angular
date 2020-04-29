@@ -215,8 +215,7 @@ Lets refactor to following and delete the `listExpanded` property int he class a
 
 ## Connect Global state to the `list` slice.
 
-In components, we often need to merge global state into local state. That state get provided over an observable.
-A common related task here is to transform a global object into a new shape that gets displayed.
+In components, we often need to transform global state into local state. Most often you also need to map the global object into a new shape that fits the view. That state gets provided as `Observable`
 In the current implementation we use ta method called `parseListItems` to achieve that.
 
 We already used the `connect` method to connect child component state.
