@@ -19,7 +19,7 @@ export class MyComponent {
 }
 ```
 
-**Reactive Reading**
+## Reactive reading
 
 ```typescript
 @Component({
