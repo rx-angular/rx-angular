@@ -34,7 +34,7 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'demo-basics-2-start',
+  selector: 'demo-basics-2-solution',
   template: `
     <h3>Demo Basics 2 - Handle Side Effects</h3>
     <mat-expansion-panel

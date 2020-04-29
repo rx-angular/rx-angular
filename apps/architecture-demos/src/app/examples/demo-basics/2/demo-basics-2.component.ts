@@ -109,7 +109,7 @@ export class DemoBasicsComponent2 extends RxState<ComponentState>
     // Side-Effects
     // 2.1) setup side-effect (this.refreshListSideEffect$)
     // 2.2) show subscribe and connect
-    // 2.mvvm) extent side effect with refresh interval
+    // 2.3) extent side effect with refresh interval
   }
 
   ngOnDestroy(): void {

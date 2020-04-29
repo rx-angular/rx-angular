@@ -20,21 +20,13 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
-// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
   list: []
 };
-
-// 1. Create an interface DemoBasicsView and implement all UI interaction like buttons etc.
-// 2. Create an interface DemoBasicsBaseModel this is basically a copy of your previous ComponentState.
-// mvvm. Implement a property `baseModel$: Observable<DemoBasicsBaseModel>;` to provide the base model base-state.
-// 4. Create a service called DemoBasicsViewModel
-//   - extend LocalState<DemoBasicsBaseModel>
-//   - implement DemoBasicsView
 @Component({
-  selector: 'demo-basics-mvvm',
+  selector: 'demo-basics-3-start',
   template: `
     <h3>Demo Basics 3 - Introduce MVVM Architecture</h3>
     <mat-expansion-panel
@@ -87,7 +79,6 @@ export class DemoBasicsComponentMvvm extends RxState<ComponentState> {
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 100) {
-      // 6. Refactor to use the vm.setState
       this.set({ refreshInterval });
     }
   }
@@ -100,20 +91,16 @@ export class DemoBasicsComponentMvvm extends RxState<ComponentState> {
     )
   ).pipe(tap(_ => this.store.dispatch(fetchRepositoryList({}))));
 
-  // 5. Inject `DemoBasicsViewModel` as service into `MutateStateComponent` constructor under property `vm`
   constructor(private store: Store<any>) {
-    // remove everything related to the view
     super();
     this.set(initComponentState);
     this.connect(
       this.listExpandedChanges.pipe(map(b => ({ listExpanded: b })))
     );
-    // Refactor to use the vm connectState method
     this.connect(
       'list',
       this.store.select(selectRepositoryList).pipe(map(this.parseListItems))
     );
-    // Refactor to use the vm refreshListSideEffect$ property
     this.hold(this.refreshListSideEffect$);
   }
 

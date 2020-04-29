@@ -16,8 +16,8 @@ import { DemoBasics1ContainerComponent } from './1/demo-basics-1.container.compo
 import { DemoBasicsComponent1Start } from './1/demo-basics-1.start.component';
 import { DemoBasics2ContainerComponent } from './2/demo-basics-2.container.component';
 import { DemoBasicsComponent2Start } from './2/demo-basics-2.start.component';
-import { DemoBasicsMvvmContainerComponent } from './mvvm/demo-basics-mvvm.container.component';
-import { DemoBasicsComponentMvvm } from './mvvm/demo-basics-mvvm.component';
+import { DemoBasics3ContainerComponent } from './3/demo-basics-3.container.component';
+import { DemoBasicsComponentMvvm } from './3/demo-basics-3.start.component';
 import { DemoBasicsContainerComponent } from './solution/demo-basics.container.component';
 import { DemoBasicsComponent } from './solution/demo-basics.component';
 import { DemoBasicsComponent1Solution } from './1/demo-basics-1.solution.component';
@@ -52,7 +52,7 @@ const DECLARATIONS = [
   DemoBasics2ContainerComponent,
   DemoBasicsComponent2Start,
   DemoBasicsComponent2Solution,
-  DemoBasicsMvvmContainerComponent,
+  DemoBasics3ContainerComponent,
   DemoBasicsComponentMvvm
 ];
 export const materialModules = [

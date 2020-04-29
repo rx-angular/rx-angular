@@ -15,11 +15,11 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <demo-basics-mvvm [refreshInterval]="refreshInterval$ | async">
-    </demo-basics-mvvm>
+    <demo-basics-3-start [refreshInterval]="refreshInterval$ | async">
+    </demo-basics-3-start>
   `
 })
-export class DemoBasicsMvvmContainerComponent {
+export class DemoBasics3ContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();
   refreshInterval$ = this.refreshIntervalInput$.pipe(
     map((e: any) => e.target.value)
