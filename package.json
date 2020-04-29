@@ -27,7 +27,7 @@
     "dep-graph": "nx dep-graph",
     "generate-typescript-docs": "ts-node -P tools/tsconfig.tools.json tools/scripts/docs/generate-typescript-docs.ts",
     "help": "nx help",
-    "state:publish": "nx test state && nx build state --prod && cd ./dist/libs/state"
+    "state:publish": "nx test state && nx build state --prod && cd ./dist/libs/state && npm publish"
   },
   "husky": {
     "hooks": {

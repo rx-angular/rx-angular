@@ -4,7 +4,6 @@
 [![rx-angular circleci-status](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
 [![npm version](https://badge.fury.io/js/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/@rx-angular/state)
 
-
 ## Reactive Component State for Angular
 
 RxState is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in angular.
@@ -54,11 +53,11 @@ a one-line in your component
 
 ## API
 
-[API Documentation](./docs/api.md)
+[API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api.md)
 
 ## Usage
 
-[Usage Documentation](./docs/usage.md)
+[Usage Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/usage.md)
 
 ## Demo
 
@@ -67,9 +66,9 @@ a one-line in your component
 
 ## Snippets
 
-- [Logic comparison](./docs/snippets/component-logic-comparison.md)
-- [Loading state and data fetching](./docs/snippets/fetch-user.md)
-- [Passing Observables](./docs/snippets/passing-observables-directly.md)
+- [Logic comparison](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/component-logic-comparison.md)
+- [Loading state and data fetching](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/fetch-user.md)
+- [Passing Observables](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/passing-observables-directly.md)
 
 ## Demos/Tutorials
 
