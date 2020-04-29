@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
-  fetchRepositoryList,
-  RepositoryListItem,
-  selectRepositoryList
-} from '../../../data-access/github';
+  ListServerItem,
+  ListService
+} from '../../../data-access/list-resource';
 import { merge, Subject, timer } from 'rxjs';
 import { RxState } from '@rx-angular/state';
 
@@ -70,7 +68,7 @@ const initComponentState = {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoBasicsComponentMvvm extends RxState<ComponentState> {
+export class DemoBasicsComponenteStart extends RxState<ComponentState> {
   refreshClicks = new Subject<Event>();
   listExpandedChanges = new Subject<boolean>();
 
@@ -89,22 +87,19 @@ export class DemoBasicsComponentMvvm extends RxState<ComponentState> {
       map(s => s.refreshInterval),
       switchMap(ms => timer(0, ms))
     )
-  ).pipe(tap(_ => this.store.dispatch(fetchRepositoryList({}))));
+  ).pipe(tap(_ => this.listService.refetchList()));
 
-  constructor(private store: Store<any>) {
+  constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
     this.connect(
       this.listExpandedChanges.pipe(map(b => ({ listExpanded: b })))
     );
-    this.connect(
-      'list',
-      this.store.select(selectRepositoryList).pipe(map(this.parseListItems))
-    );
+    this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
     this.hold(this.refreshListSideEffect$);
   }
 
-  parseListItems(l: RepositoryListItem[]): DemoBasicsItem[] {
+  parseListItems(l: ListServerItem[]): DemoBasicsItem[] {
     return l.map(({ id, name }) => ({ id, name }));
   }
 }

@@ -6,12 +6,10 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { Store } from '@ngrx/store';
 import {
-  fetchRepositoryList,
-  RepositoryListItem,
-  selectRepositoryList
-} from '../../../data-access/github';
+  ListServerItem,
+  ListService
+} from '../../../data-access/list-resource';
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 
@@ -102,9 +100,10 @@ const initComponentState = {
 export class DemoBasicsComponent1Start implements OnInit, OnDestroy {
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
-  storeList$ = this.store
-    .select(selectRepositoryList)
-    .pipe(map(this.parseListItems), startWith(initComponentState.list));
+  storeList$ = this.listService.list$.pipe(
+    map(this.parseListItems),
+    startWith(initComponentState.list)
+  );
 
   _refreshInterval: number = initComponentState.refreshInterval;
   @Input()
@@ -119,7 +118,7 @@ export class DemoBasicsComponent1Start implements OnInit, OnDestroy {
   @Output()
   listExpandedChange = this.listExpandedChanges;
 
-  constructor(private store: Store<any>) {}
+  constructor(private listService: ListService) {}
 
   ngOnDestroy(): void {
     this.intervalSubscription.unsubscribe();
@@ -132,15 +131,15 @@ export class DemoBasicsComponent1Start implements OnInit, OnDestroy {
   resetRefreshTick() {
     this.intervalSubscription.unsubscribe();
     this.intervalSubscription = interval(this._refreshInterval)
-      .pipe(tap(_ => this.store.dispatch(fetchRepositoryList({}))))
+      .pipe(tap(_ => this.listService.refetchList()))
       .subscribe();
   }
 
   onRefreshClicks(event) {
-    this.store.dispatch(fetchRepositoryList({}));
+    this.listService.refetchList();
   }
 
-  parseListItems(l: RepositoryListItem[]): DemoBasicsItem[] {
+  parseListItems(l: ListServerItem[]): DemoBasicsItem[] {
     return l.map(({ id, name }) => ({ id, name }));
   }
 }

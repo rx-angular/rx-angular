@@ -1,20 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
-import { Store } from '@ngrx/store';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { distinctUntilKeyChanged, map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import {
-  fetchRepositoryList,
-  RepositoryListItem,
-  selectRepositoryList
-} from '../../../data-access/github';
-import { interval, merge, Subject, Subscription, timer } from 'rxjs';
+  ListServerItem,
+  ListService
+} from '../../../data-access/list-resource';
+import { merge, Subject, timer } from 'rxjs';
 
 export interface DemoBasicsItem {
   id: string;
@@ -96,22 +87,19 @@ export class DemoBasicsComponent2Solution extends RxState<ComponentState> {
   );
   refreshListSideEffect$ = merge(this.refreshClicks, this.intervalRefreshTick$);
 
-  constructor(private store: Store<any>) {
+  constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
     this.connect(
       this.listExpandedChanges.pipe(map(listExpanded => ({ listExpanded })))
     );
-    this.connect(
-      'list',
-      this.store.select(selectRepositoryList).pipe(map(this.parseListItems))
-    );
+    this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
     this.hold(this.refreshListSideEffect$, () =>
-      this.store.dispatch(fetchRepositoryList({}))
+      this.listService.refetchList()
     );
   }
 
-  parseListItems(l: RepositoryListItem[]): DemoBasicsItem[] {
+  parseListItems(l: ListServerItem[]): DemoBasicsItem[] {
     return l.map(({ id, name }) => ({ id, name }));
   }
 }

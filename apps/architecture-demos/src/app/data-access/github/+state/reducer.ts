@@ -3,7 +3,7 @@ import { repositoryListFetchSuccess } from './actions';
 import { RepositoryListItem } from './repository-list.model';
 import { getData } from '../github.service';
 
-export const GITHUB_FEATURE_KEY = 'github';
+export const GITHUB_FEATURE_KEY = 'list-resource';
 
 export interface GitHubState {
   user: string;

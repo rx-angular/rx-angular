@@ -18,7 +18,7 @@ import { environment } from '../environments/environment';
 
 import { AppComponent } from './app-component/app.component';
 import { ROUTES } from './app.routes';
-import { GithubModule } from './data-access/github';
+import { ListResourceModule } from './data-access/list-resource';
 
 export const materialModules = [
   BrowserAnimationsModule,
@@ -44,7 +44,7 @@ export const materialModules = [
     }),
     RouterModule.forRoot(ROUTES),
     materialModules,
-    GithubModule,
+    ListResourceModule,
     BrowserAnimationsModule
   ],
   declarations: [AppComponent],

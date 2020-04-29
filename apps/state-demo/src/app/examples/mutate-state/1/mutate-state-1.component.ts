@@ -1,24 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
-import { Action, Store } from '@ngrx/store';
-import {
-  fetchRepositoryList,
-  repositoryListFetchError,
-  repositoryListFetchSuccess,
-  RepositoryListItem,
-  selectRepositoryList
-} from '../../../data-access/github';
-import { interval, Observable, Subject, Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+import { interval } from 'rxjs';
 import { DemoBasicsItem } from '../mutate-state-item.interface';
 
-import { ofType } from '@ngrx/effects';
-import { map, startWith, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 
 interface ComponentState {
@@ -27,7 +12,6 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
-// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
@@ -40,7 +24,6 @@ const initComponentState = {
     <h3>Demo Basic 1 - Setup and Retrieving State</h3>
     <small>Child rerenders: {{ rerenders() }}</small
     ><br />
-    <!-- CC Dominic Elm and his template streams :) -->
     <mat-card *rxLet="select(); let vm">
       <mat-card-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
@@ -53,9 +36,9 @@ const initComponentState = {
       </button>
 
       <ng-container>
-        <div *ngIf="list?.length; else noList">
+        <div *ngIf="vm.list?.length; else noList">
           <mat-list>
-            <mat-list-item *ngFor="let item of list">
+            <mat-list-item *ngFor="let item of vm.list">
               {{ item.name }}
             </mat-list-item>
           </mat-list>
