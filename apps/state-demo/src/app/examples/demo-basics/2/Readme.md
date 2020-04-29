@@ -69,7 +69,7 @@ In the `ngOnInit` we initialize a background process over `resetRefreshTick`.
   }
 ```
 
-It is also reset whenever the input binding for `refreshInterval` changes.
+The interval also gets reset whenever the input binding for `refreshInterval` changes.
 
 ```typescript
    @Input()
