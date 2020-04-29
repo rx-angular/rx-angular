@@ -49,8 +49,7 @@ constructor(...) {
 
 Lets setup a component property `model$` which holds all data we wish to display in the template.
 
-`model$` get the full state object assigned from the components state.
-This is done by using the `$` property of the state service.
+By assigning the `model$` to the `$` property of the `RxState` class we get the full state object as `Observable<ComponentState>`
 
 ```typescript
 
