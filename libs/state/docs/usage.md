@@ -1,5 +1,83 @@
 # Usage
 
+## Basic Setup
+
+### Compose
+
+The default way of using the `RxState` service is by `providing` a local instance bound to the components' lifecycle.
+This way you have full control about the API and what you want to expose.
+
+```typescript
+@Component({
+  selector: 'app-stateful',
+  template: `
+    <div>{{ state$ | async | json }}</div>
+  `,
+  providers: [RxState]
+})
+export class StatefulComponent {
+  readonly state$ = this.state.select();
+
+  constructor(private state: RxState<{ foo: string }>) {}
+}
+```
+
+### Inherit
+
+If you wish, there is also the possibility of **extending** the `RxState` service. This can come in very handy for small
+components. Keep in mind you will expose the full `RxState` API to everyone having access to the component extending it.
+
+```typescript
+@Directive({
+  selector: '[appStateful]'
+})
+export class StatefulComponent extends RxState<{ foo: number }> {
+  readonly state$ = this.select();
+
+  constructor() {
+    super();
+  }
+}
+```
+
+## Extended Setup
+
+If you strive for a more sophisticated **separation of concerns** you can `extend` the `RxState` in a
+locally provided `Service`.
+
+Create a local `Service` by `extending` the `RxState`
+
+```typescript
+interface StatefulComponentState {
+  foo: number;
+}
+@Injectable()
+export class StatefulComponentService extends RxState<StatefulComponentState> {
+  readonly state$ = this.select();
+
+  constructor() {
+    super();
+  }
+}
+```
+
+`Provide` the `Service` inside the using `Component` or `Directive`
+
+```typescript
+@Component({
+  selector: 'app-stateful',
+  template: `
+    <div>{{ viewState$ | async | json }}</div>
+  `,
+  providers: [StatefulComponentService]
+})
+export class StatefulComponent {
+  readonly viewState$ = this.state.state$;
+
+  constructor(private state: StatefulComponentService) {}
+}
+```
+
 _disclaimer_: this doc is work in progress. Not every use case has found it's way into the docs. We encourage you to contribute :).
 
 ### Connect global data
