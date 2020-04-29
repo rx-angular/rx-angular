@@ -1,6 +1,6 @@
 # Passing observables directly
 
-**Passing Values**
+## Passing values
 
 ```typescript
 @Component({
