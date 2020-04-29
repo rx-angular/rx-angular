@@ -65,7 +65,7 @@ interface MyView {
 }
 ```
 
-- 2. Setup initial View interaction.
+### Setup view interactions
   ```typescript
 @Component({
   selector: 'app-stateful-component',
