@@ -12,9 +12,9 @@ jobs:
             - run:
                 name: 'Install'
                 command: yarn install
-            - run: yarn nx run --target=lint -- --all
-            - run: yarn nx run --target=test -- --all
-            - run: yarn nx run --target=build -- --all --with-deps
+            - run: yarn nx run --target=lint --all
+            - run: yarn nx run --target=test --all
+            - run: yarn nx run --target=build --all --with-deps
 workflows:
     build-and-test:
       jobs:
