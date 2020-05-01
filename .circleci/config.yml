@@ -11,7 +11,7 @@ jobs:
           steps:
             - run:
                 name: 'Install'
-                command: yarn install
+                command: yarn install --frozen-lockfile --non-interactive
             - run: yarn nx run-many --target=test --all
             - run: yarn nx run-many --target=test --all
             - run: yarn nx run-many --target=build --all --with-deps
