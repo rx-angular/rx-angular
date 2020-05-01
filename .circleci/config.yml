@@ -11,10 +11,10 @@ jobs:
           steps:
             - run:
                 name: 'Install'
-                command: npm install
-            - run: npm run affected:lint --  --parallel
-            - run: npm run affected:test --  --parallel
-            - run: npm run affected:build --  --with-deps
+                command: yarn install
+            - run: yarn nx run --target=lint -- --all
+            - run: yarn nx run --target=test -- --all
+            - run: yarn nx run --target=build -- --all --with-deps
 workflows:
     build-and-test:
       jobs:

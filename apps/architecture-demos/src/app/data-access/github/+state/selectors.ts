@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { GitHubFeatureState, GitHubState } from './reducer';
 
-export const selectGitHub = (globalState: GitHubFeatureState) => {
+export const selectGitHub = (globalState: any) => {
   return globalState.github;
 };
 
