@@ -12,7 +12,7 @@ import {
   OuterSubscriber,
   subscribeToResult
 } from 'rxjs/internal-compatibility';
-import { createPropertiesWeakMap } from '../utils';
+import { createPropertiesWeakMap } from '../../utils';
 
 export interface CoalesceConfig {
   context?: object;
