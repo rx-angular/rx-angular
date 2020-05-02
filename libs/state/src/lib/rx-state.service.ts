@@ -140,19 +140,8 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * @return void
    */
   set<K extends keyof T, O>(key: K, projectSlice: ProjectValueFn<T, K>): void;
-  // TODO: set correct parameters
   /**
-   * @description
-   * Manipulate a single property by providing the property name and a value.
-   *
-   * @example
-   * ```TypeScript
-   * state.set('bar', 5);
-   * ```
-   *
-   * @param {K} keyOrStateOrProjectState
-   * @param {ProjectValueFn<T, K>} stateOrSliceProjectFn
-   * @return void
+   * @internal
    */
   set<K extends keyof T>(
     keyOrStateOrProjectState: Partial<T> | ProjectStateFn<T> | K,
