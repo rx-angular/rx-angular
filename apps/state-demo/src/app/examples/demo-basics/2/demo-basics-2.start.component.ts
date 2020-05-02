@@ -36,7 +36,7 @@ const initComponentState = {
   template: `
     <h3>Demo Basics 2 - Handle Side Effects</h3>
     <mat-expansion-panel
-      *rxLet="model$"
+      *ngIf="model$ | async as vm"
       (expandedChange)="listExpandedChanges.next($event)"
       [expanded]="vm.listExpanded"
     >
@@ -55,7 +55,7 @@ const initComponentState = {
       <button
         mat-raised-button
         color="primary"
-        (click)="refreshClick.next($event)"
+        (click)="onRefreshClicks($event)"
       >
         Refresh List
       </button>
@@ -79,7 +79,7 @@ export class DemoBasicsComponent2Start extends RxState<ComponentState>
   implements OnInit, OnDestroy {
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
-  refreshClick = new Subject<boolean>();
+  refreshClick = new Subject<Event>();
 
   model$ = this.select();
 
