@@ -16,12 +16,6 @@ export function isPromiseGuard<T>(value: unknown): value is Promise<T> {
   );
 }
 
-export function isObservableGuard<T>(
-  potentialObservableValue: unknown
-): potentialObservableValue is Observable<T> {
-  return isObservable(potentialObservableValue);
-}
-
 export function isOperateFnArrayGuard<T, R = T>(
   op: any[]
 ): op is OperatorFunction<T, R>[] {
