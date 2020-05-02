@@ -10,7 +10,9 @@
 a {
   text-decoration: none;
 }
-*, *:after, *:before {
+*,
+*:after,
+*:before {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -38,7 +40,7 @@ h4 {
   border-radius: 2px;
 }
 .module:hover {
-  background-color: #EEE;
+  background-color: #eee;
   cursor: pointer;
   color: #607d8b;
 }
@@ -51,7 +53,8 @@ h4 {
 @media (max-width: 600px) {
   .module {
     font-size: 10px;
-    max-height: 75px; }
+    max-height: 75px;
+  }
 }
 @media (max-width: 1024px) {
   .grid {

@@ -7,7 +7,9 @@ h2 {
 body {
   margin: 2em;
 }
-body, input[text], button {
+body,
+input[text],
+button {
   color: crimson;
   font-family: Cambria, Georgia;
 }

@@ -8,17 +8,17 @@
 .heroes li {
   position: relative;
   cursor: pointer;
-  background-color: #EEE;
-  margin: .5em;
-  padding: .3em 0;
+  background-color: #eee;
+  margin: 0.5em;
+  padding: 0.3em 0;
   height: 1.6em;
   border-radius: 4px;
 }
 
 .heroes li:hover {
-  color: #607D8B;
-  background-color: #DDD;
-  left: .1em;
+  color: #607d8b;
+  background-color: #ddd;
+  left: 0.1em;
 }
 
 .heroes a {
@@ -30,7 +30,7 @@
 }
 
 .heroes a:hover {
-  color: #607D8B;
+  color: #607d8b;
 }
 
 .heroes .badge {
@@ -46,7 +46,7 @@
   height: 1.8em;
   min-width: 16px;
   text-align: right;
-  margin-right: .8em;
+  margin-right: 0.8em;
   border-radius: 4px 0 0 4px;
 }
 
@@ -71,4 +71,3 @@ button.delete {
   background-color: gray !important;
   color: white;
 }
-
