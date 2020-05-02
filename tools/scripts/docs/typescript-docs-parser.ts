@@ -11,7 +11,6 @@ import {
   MethodParameterInfo,
   ParsedDeclaration,
   PropertyInfo,
-  TypeAliasInfo,
   ValidDeclaration
 } from './typescript-docgen-types';
 
