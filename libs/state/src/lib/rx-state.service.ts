@@ -511,10 +511,3 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     return subscription;
   }
 }
-
-const i$ = interval(200);
-const s = new RxState<{ foo: string }>();
-
-s.connect(i$, (o_state, sl) => {
-  return o_state;
-});
