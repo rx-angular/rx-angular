@@ -1,5 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
+  interval,
+  isObservable,
   Observable,
   OperatorFunction,
   Subscribable,
@@ -9,7 +11,6 @@ import {
 import {
   createAccumulationObservable,
   createSideEffectObservable,
-  isObservableGuard,
   isOperateFnArrayGuard,
   isStringArrayGuard,
   pipeFromArray,
@@ -21,13 +22,12 @@ import { filter, map, pluck, tap } from 'rxjs/operators';
 
 type ProjectStateFn<T> = (oldState: T) => Partial<T>;
 type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
-type ProjectStateReducer<T, K extends keyof T> = (
+
+type ProjectStateReducer<T, V> = (oldState: T, value: V) => Partial<T>;
+
+type ProjectValueReducer<T, K extends keyof T, V> = (
   oldState: T,
-  value: any
-) => Partial<T>;
-type ProjectValueReducer<T, K extends keyof T> = (
-  oldState: T,
-  value: any
+  value: V
 ) => T[K];
 
 /**
@@ -54,7 +54,7 @@ type ProjectValueReducer<T, K extends keyof T> = (
  * @docsPage RxState
  */
 @Injectable()
-export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
+export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
   private subscription = new Subscription();
 
   private accumulationObservable = createAccumulationObservable<T>();
@@ -140,19 +140,8 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
    * @return void
    */
   set<K extends keyof T, O>(key: K, projectSlice: ProjectValueFn<T, K>): void;
-  // TODO: set correct parameters
   /**
-   * @description
-   * Manipulate a single property by providing the property name and a value.
-   *
-   * @example
-   * ```TypeScript
-   * state.set('bar', 5);
-   * ```
-   *
-   * @param {K} keyOrStateOrProjectState
-   * @param {ProjectValueFn<T, K>} stateOrSliceProjectFn
-   * @return void
+   * @internal
    */
   set<K extends keyof T>(
     keyOrStateOrProjectState: Partial<T> | ProjectStateFn<T> | K,
@@ -218,9 +207,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
    * 5 due to the projectionFunction
    * ```
    */
-  connect<K extends keyof T>(
-    slice$: Observable<any | Partial<T>>,
-    projectFn?: ProjectStateReducer<T, K>
+  connect<V>(
+    inputOrSlice$: Observable<Partial<T> | V>,
+    projectFn?: ProjectStateReducer<T, V>
   ): void;
   /**
    *
@@ -254,37 +243,39 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
    * // every 250ms the property timer will get updated
    * ```
    */
-  connect<K extends keyof T>(
+  connect<K extends keyof T, V>(
     key: K,
-    slice$: Observable<any>,
-    projectSliceFn: ProjectValueReducer<T, K>
+    input$: Observable<V>,
+    projectSliceFn: ProjectValueReducer<T, K, V>
   ): void;
   /**
    * @internal
    */
-  connect<K extends keyof T>(
-    keyOrSlice$: K | Observable<any>,
-    projectOrSlices$?: ProjectStateReducer<T, K> | Observable<T[K] | any>,
-    projectValueFn?: ProjectValueReducer<T, K>
+  connect<K extends keyof T, V>(
+    keyOrInputOrSlice$: K | Observable<Partial<T> | V>,
+    projectOrSlices$?: ProjectStateReducer<T, V> | Observable<T[K]>,
+    projectValueFn?: ProjectValueReducer<T, K, V>
   ): void {
     if (
-      isObservableGuard<any>(keyOrSlice$) &&
+      isObservable<Partial<T>>(keyOrInputOrSlice$) &&
       projectOrSlices$ === undefined &&
       projectValueFn === undefined
     ) {
-      const slice$ = keyOrSlice$.pipe(filter(slice => slice !== undefined));
+      const slice$ = keyOrInputOrSlice$.pipe(
+        filter(slice => slice !== undefined)
+      );
       this.accumulationObservable.nextSliceObservable(slice$);
       return;
     }
 
     if (
-      isObservableGuard<any>(keyOrSlice$) &&
+      isObservable<V>(keyOrInputOrSlice$) &&
       typeof projectOrSlices$ === 'function' &&
-      !isObservableGuard<T[K]>(projectOrSlices$) &&
+      !isObservable<T[K]>(projectOrSlices$) &&
       projectValueFn === undefined
     ) {
       const project = projectOrSlices$;
-      const slice$ = keyOrSlice$.pipe(
+      const slice$ = keyOrInputOrSlice$.pipe(
         filter(slice => slice !== undefined),
         map(v => project(this.get(), v))
       );
@@ -293,11 +284,11 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
     }
 
     if (
-      isKeyOf<T>(keyOrSlice$) &&
-      isObservableGuard<T[K]>(projectOrSlices$) &&
+      isKeyOf<T>(keyOrInputOrSlice$) &&
+      isObservable<T[K]>(projectOrSlices$) &&
       projectValueFn === undefined
     ) {
-      const key = keyOrSlice$;
+      const key = keyOrInputOrSlice$;
       const slice$ = projectOrSlices$.pipe(
         filter(slice => slice !== undefined),
         map(value => ({ ...{}, [key]: value }))
@@ -307,11 +298,11 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
     }
 
     if (
-      isKeyOf<T>(keyOrSlice$) &&
-      isObservableGuard<any>(projectOrSlices$) &&
+      isKeyOf<T>(keyOrInputOrSlice$) &&
+      isObservable<V>(projectOrSlices$) &&
       typeof projectValueFn === 'function'
     ) {
-      const key = keyOrSlice$;
+      const key = keyOrInputOrSlice$;
       const slice$ = projectOrSlices$.pipe(
         filter(slice => slice !== undefined),
         map(value => ({ ...{}, [key]: projectValueFn(this.get(), value) }))
@@ -520,3 +511,10 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<any> {
     return subscription;
   }
 }
+
+const i$ = interval(200);
+const s = new RxState<{ foo: string }>();
+
+s.connect(i$, (o_state, sl) => {
+  return o_state;
+});

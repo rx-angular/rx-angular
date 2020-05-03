@@ -1,14 +1,13 @@
 # RxState
 
-RxState is a light-weight reactive state management service especially useful for component state in Angular.
-Furthermore a global service is provided and can act as a small global state manager.
+RxState is a light-weight reactive state management service for managing local state in angular.
 
 ![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_logo.png)
 
 _Example_
 
 ```Typescript
-@Component({
+Component({
   selector: 'app-stateful',
   template: `<div>{{ state$ | async | json }}</div>`,
   providers: [RxState]
@@ -23,15 +22,14 @@ export class StatefulComponent {
 ## Signature
 
 ```TypeScript
-class RxState<T extends object> implements OnDestroy, Subscribable<any> {
+class RxState<T extends object> implements OnDestroy, Subscribable<T> {
   readonly readonly $ = this.accumulationObservable.state$;
   get() => T;
   set(stateOrProjectState: Partial<T> | ProjectStateFn<T>) => void;
   set(key: K, projectSlice: ProjectValueFn<T, K>) => void;
-  set(keyOrStateOrProjectState: Partial<T> | ProjectStateFn<T> | K, stateOrSliceProjectFn?: ProjectValueFn<T, K>) => void;
-  connect(slice$: Observable<any | Partial<T>>, projectFn?: ProjectStateReducer<T, K>) => void;
+  connect(inputOrSlice$: Observable<Partial<T> | V>, projectFn?: ProjectStateReducer<T, V>) => void;
   connect(key: K, slice$: Observable<T[K]>) => void;
-  connect(key: K, slice$: Observable<any>, projectSliceFn: ProjectValueReducer<T, K>) => void;
+  connect(key: K, input$: Observable<V>, projectSliceFn: ProjectValueReducer<T, K, V>) => void;
   select() => Observable<T>;
   select(op: OperatorFunction<T, A>) => Observable<A>;
   select(k1: K1) => Observable<T[K1]>;
@@ -83,10 +81,10 @@ state.set(partialState);
 Update one or many properties of the state by providing a `ProjectionFunction<T>`
 
 ```TypeScript
-const updateFn = oldState => ({
+const reduceFn = oldState => ({
   bar: oldState.bar + 5
 });
-state.set(updateFn);
+state.set(reduceFn);
 ```
 
 ### set
@@ -102,21 +100,9 @@ const reduceFn = oldState => oldState.bar + 5;
 state.set('bar', reduceFn);
 ```
 
-### set
-
-##### (keyOrStateOrProjectState: Partial&#60;T&#62; | ProjectStateFn&#60;T&#62; | K, stateOrSliceProjectFn?: ProjectValueFn&#60;T, K&#62;) => void
-
-Manipulate a single property by providing the property name and a value.
-
-_Example_
-
-```TypeScript
-state.set('bar', 5);
-```
-
 ### connect
 
-##### (slice\$: Observable&#60;any | Partial&#60;T&#62;&#62;, projectFn?: ProjectStateReducer&#60;T, K&#62;) => void
+##### (inputOrSlice\$: Observable&#60;Partial&#60;T&#62; | V&#62;, projectFn?: ProjectStateReducer&#60;T, V&#62;) => void
 
 Connect an `Observable<Partial<T>>` to the state `T`.
 Any change emitted by the source will get merged into the state.
@@ -164,7 +150,7 @@ state.connect('timer', myTimer$);
 
 ### connect
 
-##### (key: K, slice\$: Observable&#60;any&#62;, projectSliceFn: ProjectValueReducer&#60;T, K&#62;) => void
+##### (key: K, input\$: Observable&#60;V&#62;, projectSliceFn: ProjectValueReducer&#60;T, K, V&#62;) => void
 
 Connect an `Observable<Partial<T>>` source to a specific property in the state. Additionally you can provide a
 `projectionFunction` to access the current state object on every emission of your connected `Observable`.
