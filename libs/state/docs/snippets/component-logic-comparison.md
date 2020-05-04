@@ -49,7 +49,7 @@ export class MyComponent {
 ## Reactive reading
 
 State:
-The components state is maintain over `RxState` by extending the class `export class MyComponent extends RxState<{ count: number }> {`
+The components' state gets managed with `RxState` by extending the class. `export class MyComponent extends RxState<{ count: number }> {`
 The components state is typed as `{ count: number }`.
 In the class the state gets provided as Observable `state$ = this.select();`
 
