@@ -50,6 +50,10 @@ with very little effort in any component.
 
 `npm install @rx-angular/state`
 
+## Tutorials
+
+- [Basic Tutorial](https://github.com/BioPhoton/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics)
+
 ## API
 
 [API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api.md)
