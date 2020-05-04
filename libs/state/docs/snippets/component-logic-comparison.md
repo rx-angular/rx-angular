@@ -64,10 +64,8 @@ The click binding is set-up over an event binding `(click)` and fires the callba
 This callback increments the state's `count` property by sending the new value `this.set('count', s => s.count + 1);`
 
 **Rendering**:
-The click binding fires a zone event and the component and its ancestors get marked dirty.
-The `rxLet` directive fires `ChangeDetectorRef#markForCheck` and the component and its ancestors get marked dirty.
-`ApplicationRef.tick` fires and re-renders the whole component tree. Every component which is marked as dirty gets re-rendered.
-Important to know here is that the re-renders of the component tree gets triggered only one time even if the directive, and the click scheduled a re-rendering.
+The click binding gets detected by zone which in turn flags this component and all of its ancestors as dirty.
+This results in an `ApplicationRef.tick` call which re-renders all dirty flagged components.
 
 ```typescript
 @Component({
