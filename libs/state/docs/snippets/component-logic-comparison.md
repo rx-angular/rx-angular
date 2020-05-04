@@ -91,10 +91,8 @@ The components' state gets managed with `RxState` by extending the class. `expor
 The components state is a simple interface `{ count: number }`.
 Inside the class we expose our state as Observable `readonly state$ = this.select();`
 
-Display:
-To display the value we use a reactive structural directive `*rxLet`
-which binds the `state$` output to its host th div element.
-Inside we simply use display the state over a template expression.
+**Display**:
+To display the value we use a a simple structural directive called `*rxLet` which binds the `state$` property of the component to its `host element`. We can then assign our state observable to a `local template variable`.
 
 Whenever the bound Observable emits a new value the `rxLet` directive fires `ChangeDetectorRef#markForCheck`.
 The component and its ancestors get marked dirty.
