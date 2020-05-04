@@ -53,7 +53,7 @@ The components' state gets managed with `RxState` by extending the class. `expor
 The components' state is a simple interface: `{ count: number }`.
 Inside the class we expose our state as Observable `readonly state$ = this.select();`
 
-Display:
+**Display**:
 To display the value we use a reactive structural directive `*rxLet`
 which binds the `state$` output to its host th div element.
 Inside we simply use display the state over a template expression.
