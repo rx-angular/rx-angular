@@ -162,9 +162,7 @@ In this section we use the `strategy` option of the `rxLet` directive to get adv
 The sections **State** and **Action** are identical to the previous examples.
 
 **Rendering**:
-A rerender gets only triggered by the `rxLet` directive, but the process is now different.
-
-Instead of marking all ancestors dirty we only rerender the very component and its children.
+The rendering still gets managed by the `rxLet` Directive. But with the `strategy` set to `local` changes will not result in a re-render of any ancestor component. Thus saving you tons of rendering cycles.
 
 ```typescript
 @Component({
