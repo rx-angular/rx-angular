@@ -51,7 +51,7 @@ export class MyComponent {
 State:
 The components' state gets managed with `RxState` by extending the class. `export class MyComponent extends RxState<{ count: number }> {`
 The components' state is a simple interface: `{ count: number }`.
-In the class the state gets provided as Observable `state$ = this.select();`
+Inside the class we expose our state as Observable `readonly state$ = this.select();`
 
 Display:
 To display the value we use a reactive structural directive `*rxLet`
