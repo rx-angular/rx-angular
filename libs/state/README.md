@@ -55,7 +55,7 @@ with very little effort in any component.
 [API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api.md)
 
 ## Usage
-- [Usage Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/usage.md)
+[Usage Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/usage.md)
 
 ### Tutorials
 - [Basic Tutorial](https://github.com/BioPhoton/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics)
@@ -71,7 +71,7 @@ with very little effort in any component.
 Videos
 
 - [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch?v=I8uaHMs8rw0)
-
+- [🎥 Extending Angular for the Reactive Web](https://youtu.be/pkN6CeZ8h_U?t=5913)
 Articles
 
 - [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
