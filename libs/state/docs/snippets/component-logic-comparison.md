@@ -20,7 +20,7 @@ The components' state is a simple object `state: { count: number } = {};`.
 To display the value we use a template expression `{{ state.count }}`.
 This expression gets reevaluated whenever the component re-renders.
 
-Action:
+**Action**:
 The state gets incremented by one whenever the button gets clicked.
 The click binding is set-up over an event binding `(click)` and fires the callback `onClick`.
 This callback increments the state's `count` property, `this.state.count = this.state.count + 1;`
