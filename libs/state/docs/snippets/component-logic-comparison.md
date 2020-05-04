@@ -150,7 +150,7 @@ export class MyComponent extends RxState<{ count: number }> {
   state$ = this.select();
   btn$ = new Subject();
   constructor() {
-    this.connect(this.btn$, (s, e) => ({ count: s.count + 1 }));
+    this.connect(this.btn$, (oldState, clickEvent) => ({ count: s.count + 1 }));
   }
 }
 ```
