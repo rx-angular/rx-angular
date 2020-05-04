@@ -119,8 +119,8 @@ This results in an `ApplicationRef.tick` call which re-renders all dirty flagged
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyComponent extends RxState<{ count: number }> {
-  state$ = this.select();
-  btn$ = new Subject();
+  readonly state$ = this.select();
+  readonly btn$ = new Subject();
   constructor() {
     this.connect(this.btn$, (s, e) => ({ count: s.count + 1 }));
   }
