@@ -16,7 +16,7 @@ We have a component that:
 **State**:
 The components' state is a simple object `state: { count: number } = {};`.
 
-Display:
+**Display**:
 To display the value we use a template expression `{{ state.count }}`.
 This expression gets reevaluated whenever the component re-renders.
 
