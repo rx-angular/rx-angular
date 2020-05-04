@@ -4,7 +4,7 @@ This snippet compares 3 different implementations of the same problem.
 It serves as a small refactoring guide
 and shows the difference of imperative and declarative/reactive programming.
 
-Problem:
+**Problem**:
 As problem we discuss a component which
 
 - maintains a state `{ count: number }`
