@@ -101,8 +101,8 @@ The state gets incremented by one whenever the button gets clicked.
 In the class we use a Subject to track clicks `btn$ = new Subject();`.
 The click binding is set-up over an event binding `(click)` and fires the Subjects `next` method.
 
-This Observable gets connected to the component state in the constructor `this.connect(btn$, (s, e) => ({ count: s.count + 1 }));`.
-Whenever the Subject emits we apply the increment logic over a passed function.
+This Observable gets connected to the components' state in the constructor `this.connect(btn$, (oldState, clickEvent) => ({ count: s.count + 1 }));`.
+Whenever the Subject emits, we apply the increment logic passed as a function.
 The function signature looks like this: `(oldState: T, newValue: T[K]) => T`.
 
 Rendering:
