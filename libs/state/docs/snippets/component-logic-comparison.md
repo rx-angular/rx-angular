@@ -159,7 +159,7 @@ export class MyComponent extends RxState<{ count: number }> {
 
 In this section we use the `strategy` option of the `rxLet` directive to get advanced control over rendering.
 
-The sections State ans Action are identical.
+The sections **State** and **Action** are identical to the previous examples.
 The Display has a small difference. We use the `local` strategy with our directive `*rxLet="state$; let s; strategy:'local'"`.
 
 Rendering:
