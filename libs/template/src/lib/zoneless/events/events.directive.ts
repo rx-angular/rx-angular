@@ -1,7 +1,7 @@
 import { Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { reapplyEventListenerZoneUnPatched } from '../../core/utils/make-zone-less';
+import { revertEventListenerZonePatch } from '../../core/utils/make-zone-less';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[zoneless]' })
@@ -18,7 +18,7 @@ export class EventsDirective implements OnDestroy {
 
   reapplyEventListenersZoneUnPatched(events) {
     events.forEach(ev => {
-      reapplyEventListenerZoneUnPatched(this.el.nativeElement, ev);
+      revertEventListenerZonePatch(this.el.nativeElement, ev);
     });
   }
 
