@@ -13,7 +13,7 @@ We have a component that:
 
 ## Imperative
 
-State:
+**State**:
 The components' state is a simple object `state: { count: number } = {};`.
 
 Display:
