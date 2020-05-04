@@ -4,7 +4,6 @@ export {
   isUndefinedOrNullGuard,
   isDefinedGuard,
   isIterableGuard,
-  isObservableGuard,
   isOperateFnArrayGuard,
   isPromiseGuard,
   isStringArrayGuard,
