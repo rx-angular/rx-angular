@@ -23,7 +23,7 @@ This expression gets reevaluated whenever the component re-renders.
 Action:
 The state gets incremented by one whenever the button gets clicked.
 The click binding is set-up over an event binding `(click)` and fires the callback `onClick`.
-This callback increments the state's `count` property `this.state.count = this.state.count + 1;`
+This callback increments the state's `count` property, `this.state.count = this.state.count + 1;`
 
 Rendering:
 The click binding fires a zone event and the component and its ancestors get marked dirty.
@@ -134,7 +134,7 @@ export class MyComponent extends RxState<{ count: number }> {
   state$ = this.select();
   btn$ = new Subject();
   constructor() {
-    this.connect(btn$, (s, e) => ({ count: s.count + 1 }));
+    this.connect(this.btn$, (s, e) => ({ count: s.count + 1 }));
   }
 }
 ```
@@ -162,7 +162,7 @@ export class MyComponent extends RxState<{ count: number }> {
   state$ = this.select();
   btn$ = new Subject();
   constructor() {
-    this.connect(btn$, (s, e) => ({ count: s.count + 1 }));
+    this.connect(this.btn$, (s, e) => ({ count: s.count + 1 }));
   }
 }
 ```
@@ -192,7 +192,7 @@ export class MyComponent extends RxState<{ count: number }> {
   state$ = this.select();
   btn$ = new Subject();
   constructor() {
-    this.connect(btn$, (s, e) => ({ count: s.count + 1 }));
+    this.connect(this.btn$, (s, e) => ({ count: s.count + 1 }));
   }
 }
 ```
