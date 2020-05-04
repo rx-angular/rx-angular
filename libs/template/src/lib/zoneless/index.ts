@@ -1,2 +1,2 @@
-export * from './zoneless.events.directive';
-export * from './zoneless.module';
+export * from './events';
+export * from './rxjs';

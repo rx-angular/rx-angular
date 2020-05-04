@@ -1,11 +1,11 @@
 import { Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { reapplyEventListenerZoneUnPatched } from '../core/utils/make-zone-less';
+import { reapplyEventListenerZoneUnPatched } from '../../core/utils/make-zone-less';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[zoneless]' })
-export class ZoneLessDirective implements OnDestroy {
+export class EventsDirective implements OnDestroy {
   subscription = new Subscription();
   events$ = new BehaviorSubject<string[]>(['click']);
 
