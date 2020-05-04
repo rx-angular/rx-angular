@@ -38,17 +38,21 @@ with very little effort in any component.
 
 ## Key features
 
-- Slim, on point and intuitive API
+- Slim and intuitive API
 - Automated subscription handling
-- Connecting any Observable source to the state
+- Connect any Observable source to the state
 - Partial state updates
 - Reactive state selection
-- Lazy state
+- Lazy state (no BehaviourSubject)
 - Foundation for zone-less Angular applications
 
 ## Install
 
 `npm install @rx-angular/state`
+
+## Tutorials
+
+- [Basic Tutorial](https://github.com/BioPhoton/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics)
 
 ## API
 
@@ -87,5 +91,7 @@ Articles
 Design Documents
 
 - [💾 Design Documents](https://hackmd.io/wVkWRc3XQWmtM6YcktRTrA)
-  Usage in the wild
+
+Usage in the wild
+
 - [Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) by [Mike Hartington](https://twitter.com/mhartington)
