@@ -86,10 +86,10 @@ export class MyComponent extends RxState<{ count: number }> {
 
 ## Reactive Writing
 
-State:
-The components state is maintain over `RxState` by extending the class `export class MyComponent extends RxState<{ count: number }> {`
-The components state is typed as `{ count: number }`.
-In the class the state gets provided as Observable `state$ = this.select();`
+**State**:
+The components' state gets managed with `RxState` by extending the class. `export class MyComponent extends RxState<{ count: number }> {`
+The components state is a simple interface `{ count: number }`.
+Inside the class we expose our state as Observable `readonly state$ = this.select();`
 
 Display:
 To display the value we use a reactive structural directive `*rxLet`
