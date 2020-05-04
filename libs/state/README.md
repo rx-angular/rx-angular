@@ -38,7 +38,7 @@ with very little effort in any component.
 
 ## Key features
 
-- Slim, on-point and intuitive API
+- Slim and intuitive API
 - Automated subscription handling
 - Connecting any Observable source to the state
 - Partial state updates
