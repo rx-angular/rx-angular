@@ -58,7 +58,7 @@ To display the value we use a a simple structural directive called `*rxLet` whic
 
 Whenever the bound Observable emits a new value the `rxLet` directive flags this component and all of its ancestors as dirty.
 
-Action:
+**Action**:
 The state gets incremented by one whenever the button gets clicked.
 The click binding is set-up over an event binding `(click)` and fires the callback `onClick`.
 This callback increments the state's `count` property by sending the new value `this.set('count', s => s.count + 1);`
