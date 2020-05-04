@@ -26,7 +26,7 @@ The click binding is set-up over an event binding `(click)` and fires the callba
 This callback increments the state's `count` property, `this.state.count = this.state.count + 1;`
 
 **Rendering**:
-The click binding fires a zone event and the component and its ancestors get marked dirty.
+The click binding gets detected by zone which in turn flags this component and all of its ancestors as dirty.
 `ApplicationRef.tick` fires and re-renders the whole component tree. Every component which is marked as dirty gets re-rendered.
 
 ```typescript
