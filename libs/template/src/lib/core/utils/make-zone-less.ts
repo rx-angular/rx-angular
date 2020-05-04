@@ -1,4 +1,4 @@
-import { apiZonePatched, getGlobalThis } from '@rx-angular/template';
+import { apiZonePatched, getGlobalThis } from '../utils';
 
 /**
  * getZoneUnPatchedApi
