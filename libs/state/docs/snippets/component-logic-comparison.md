@@ -56,9 +56,7 @@ Inside the class we expose our state as Observable `readonly state$ = this.selec
 **Display**:
 To display the value we use a a simple structural directive called `*rxLet` which binds the `state$` property of the component to its `host element`. We can then assign our state observable to a `local template variable`.
 
-Whenever the bound Observable emits a new value the `rxLet` directive fires `ChangeDetectorRef#markForCheck`.
-The component and its ancestors get marked dirty.
-`ApplicationRef.tick` fires and re-renders the whole component tree. Every component which is marked as dirty gets re-rendered.
+Whenever the bound Observable emits a new value the `rxLet` directive flags this component and all of its ancestors as dirty.
 
 Action:
 The state gets incremented by one whenever the button gets clicked.
