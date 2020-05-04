@@ -50,33 +50,21 @@ with very little effort in any component.
 
 `npm install @rx-angular/state`
 
-## Tutorials
-
-- [Basic Tutorial](https://github.com/BioPhoton/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics)
-
 ## API
 
 [API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api.md)
 
 ## Usage
+- [Usage Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/usage.md)
 
-[Usage Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/usage.md)
-
-## Demo
-
+### Tutorials
 - [Basic Tutorial](https://github.com/BioPhoton/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics)
 - [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
 
-## Snippets
-
+### Snippets
 - [Logic comparison - Increment a Value](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/component-logic-comparison.md)
 - [Loading state and data fetching](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/fetch-user.md)
 - [Passing Observables](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/passing-observables-directly.md)
-
-## Demos/Tutorials
-
-- [Migrate to reactive components with `@rx-angular/state`](https://github.com/BioPhoton/rx-angular/tree/master/apps/state-demo/app/examples/demo-basics)
-- [Dynamic Counter Demo](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
 
 ## Resources
 
