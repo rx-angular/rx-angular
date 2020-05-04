@@ -27,7 +27,7 @@ This callback increments the state's `count` property, `this.state.count = this.
 
 **Rendering**:
 The click binding gets detected by zone which in turn flags this component and all of its ancestors as dirty.
-`ApplicationRef.tick` fires and re-renders the whole component tree. Every component which is marked as dirty gets re-rendered.
+This results in an `ApplicationRef.tick` call which re-renders all dirty flagged components.
 
 ```typescript
 @Component({
