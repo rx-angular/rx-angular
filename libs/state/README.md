@@ -40,7 +40,7 @@ with very little effort in any component.
 
 - Slim and intuitive API
 - Automated subscription handling
-- Connecting any Observable source to the state
+- Connect any Observable source to the state
 - Partial state updates
 - Reactive state selection
 - Lazy state (no BehaviourSubject)
