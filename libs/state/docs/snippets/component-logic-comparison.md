@@ -96,7 +96,7 @@ To display the value we use a a simple structural directive called `*rxLet` whic
 
 Whenever the bound Observable emits a new value the `rxLet` directive flags this component and all of its ancestors as dirty.
 
-Action:
+**Action**:
 The state gets incremented by one whenever the button gets clicked.
 In the class we use a Subject to track clicks `btn$ = new Subject();`.
 The click binding is set-up over an event binding `(click)` and fires the Subjects `next` method.
