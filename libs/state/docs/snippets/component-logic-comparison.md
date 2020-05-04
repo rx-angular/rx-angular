@@ -14,7 +14,7 @@ We have a component that:
 ## Imperative
 
 State:
-The components state is maintain as simple object `state: { count: number } = {};`.
+The components' state is a simple object `state: { count: number } = {};`.
 
 Display:
 To display the value we use a template expression `{{ state.count }}`.
