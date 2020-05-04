@@ -1,6 +1,7 @@
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
+// compareFn should return true if oldVal and newVal are NOT EQUAL!
 export type CompareFn<T> = (x: T, y: T) => boolean;
 export type KeyCompareMap<T extends object> = {
   [K in keyof T]: CompareFn<T[K]>;
