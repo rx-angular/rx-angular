@@ -23,5 +23,5 @@ Furthermore there is a refresh button. A click on it also refreshes the list dat
 
 Chapters we will discuss are:
 
-- [Setup a reactive state, selections and, UI interactions](./1/Readme.md)
-- [Handing Side Effects reactively](./2/Readme.md)
+- [Setup a reactive state, selections and, UI interactions](./1)
+- [Handing Side Effects reactively](./2)
