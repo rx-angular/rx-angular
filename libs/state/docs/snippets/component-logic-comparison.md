@@ -105,11 +105,9 @@ This Observable gets connected to the components' state in the constructor `this
 Whenever the Subject emits, we apply the increment logic passed as a function.
 The function signature looks like this: `(oldState: T, newValue: T[K]) => T`.
 
-Rendering:
-The click binding fires a zone event and the component and its ancestors get marked dirty.
-The `rxLet` directive fires `ChangeDetectorRef#markForCheck` and the component and its ancestors get marked dirty.
-`ApplicationRef.tick` fires and re-renders the whole component tree. Every component which is marked as dirty gets re-rendered.
-Important to know here is that the re-renders of the component tree gets triggered only one time even if the directive, and the click scheduled a re-rendering.
+**Rendering**:
+The click binding gets detected by zone which in turn flags this component and all of its ancestors as dirty.
+This results in an `ApplicationRef.tick` call which re-renders all dirty flagged components.
 
 ```typescript
 @Component({
