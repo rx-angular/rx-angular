@@ -5,7 +5,7 @@ It serves as a small refactoring guide
 and shows the difference of imperative and declarative/reactive programming.
 
 **Problem**:
-As problem we discuss a component which
+We have a component that:
 
 - maintains a state `{ count: number }`
 - displays the actual value of `count`
