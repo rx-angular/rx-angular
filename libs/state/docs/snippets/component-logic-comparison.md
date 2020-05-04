@@ -50,7 +50,7 @@ export class MyComponent {
 
 State:
 The components' state gets managed with `RxState` by extending the class. `export class MyComponent extends RxState<{ count: number }> {`
-The components state is typed as `{ count: number }`.
+The components' state is a simple interface: `{ count: number }`.
 In the class the state gets provided as Observable `state$ = this.select();`
 
 Display:
