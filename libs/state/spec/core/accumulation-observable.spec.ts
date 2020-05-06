@@ -2,7 +2,8 @@ import { jestMatcher } from '@test-helpers';
 import { of } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-import { createAccumulationObservable } from '../../src/lib/core';
+import { createAccumulationObservable, select } from '../../src/lib/core';
+import { RxState } from '@rx-angular/state';
 
 interface PrimitiveState {
   bol: boolean;
@@ -52,6 +53,37 @@ describe('createAccumulationObservable', () => {
   it('should return object', () => {
     const acc = createAccumulationObservable();
     expect(acc).toBeDefined();
+  });
+
+  describe('signal$', () => {
+    it('should return NO empty base-state after init when subscribing late', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupAccumulationObservable({});
+        expectObservable(state.signal$).toBe('');
+      });
+    });
+
+    it('should return No changes when subscribing late', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupAccumulationObservable<PrimitiveState>({});
+        state.subscribe();
+
+        state.nextSlice({ num: 42 });
+        expectObservable(state.signal$.pipe(pluck('num'))).toBe('');
+      });
+    });
+
+    it('should return changes after subscription', () => {
+      const state = setupAccumulationObservable<PrimitiveState>({});
+      state.subscribe();
+      state.nextSlice({ num: 42 });
+      const slice$ = state.signal$.pipe(select('num'));
+
+      let i = -1;
+      const valuesInOrder = ['', { num: 777 }];
+      slice$.subscribe(next => expect(next).toBe(valuesInOrder[++i]));
+      state.nextSlice({ num: 777 });
+    });
   });
 
   describe('state$', () => {

@@ -11,6 +11,7 @@ import {
   distinctUntilChanged,
   mergeAll,
   observeOn,
+  publish,
   publishReplay,
   scan,
   tap
@@ -28,23 +29,27 @@ export function createAccumulationObservable<T extends object>(
 ): {
   state: T;
   state$: Observable<T>;
+  signal$: Observable<T>;
   nextSlice: (stateSlice: Partial<T>) => void;
   nextSliceObservable: (state$: Observable<Partial<T>>) => void;
 } & Subscribable<T> {
+  const signal$ = merge(
+    stateObservables.pipe(
+      distinctUntilChanged(),
+      mergeAll(),
+      observeOn(queueScheduler)
+    ),
+    stateSlices.pipe(observeOn(queueScheduler))
+  ).pipe(
+    scan(stateAccumulator, {} as T),
+    tap(newState => (compositionObservable.state = newState)),
+    publish()
+  );
+  const state$ = signal$.pipe(publishReplay(1));
   const compositionObservable = {
     state: {},
-    state$: merge(
-      stateObservables.pipe(
-        distinctUntilChanged(),
-        mergeAll(),
-        observeOn(queueScheduler)
-      ),
-      stateSlices.pipe(observeOn(queueScheduler))
-    ).pipe(
-      scan(stateAccumulator, {} as T),
-      tap(newState => (compositionObservable.state = newState)),
-      publishReplay(1)
-    ),
+    signal$,
+    state$,
     nextSlice,
     nextSliceObservable,
     subscribe
@@ -65,6 +70,12 @@ export function createAccumulationObservable<T extends object>(
   }
 
   function subscribe(): Subscription {
-    return (compositionObservable.state$ as ConnectableObservable<T>).connect();
+    const sub = (compositionObservable.signal$ as ConnectableObservable<
+      T
+    >).connect();
+    sub.add(
+      (compositionObservable.state$ as ConnectableObservable<T>).connect()
+    );
+    return sub;
   }
 }

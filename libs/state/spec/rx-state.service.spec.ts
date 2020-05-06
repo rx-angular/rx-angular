@@ -8,6 +8,8 @@ import {
 } from './fixtures';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
+import { select } from '../src/lib/core/operators/select';
+import { pluck } from 'rxjs/operators';
 
 function setupState<T extends object>(cfg: { initialState?: T }) {
   const { initialState } = { ...cfg };
@@ -59,9 +61,108 @@ describe('RxStateService', () => {
       const state = new RxState<PrimitiveState>();
       expect(state).toBeDefined();
     });
+  });
 
-    describe('select', () => {
+  describe('$', () => {
+    it('should return NO empty base-state after init when subscribing late', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupState({});
+        expectObservable(state.$).toBe('');
+      });
+    });
+
+    it('should return No changes when subscribing late', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = new RxState<PrimitiveState>();
+        state.subscribe();
+
+        state.set({ num: 42 });
+        expectObservable(state.$.pipe(pluck('num'))).toBe('');
+      });
+    });
+
+    it('should return new changes', () => {
+      const state = new RxState<PrimitiveState>();
+      state.subscribe();
+      state.set({ num: 42 });
+      const slice$ = state.$.pipe(select('num'));
+      let i = -1;
+      const valuesInOrder = ['', { num: 777 }];
+      slice$.subscribe(next => expect(next).toBe(valuesInOrder[++i]));
+      state.set({ num: 777 });
+    });
+  });
+
+  describe('stateful with select', () => {
+    it('should return empty base-state after init when subscribing late', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupState({});
+        expectObservable(state.select()).toBe('');
+      });
+    });
+
+    it('should return changes when subscribing late', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = new RxState<PrimitiveState>();
+        state.subscribe();
+
+        state.set({ num: 42 });
+        expectObservable(state.select('num')).toBe('n', { n: 42 });
+      });
+    });
+
+    it('should return new changes', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = new RxState<PrimitiveState>();
+        state.subscribe();
+        state.set({ num: 42 });
+        const slice$ = state.select('num');
+        let i = -1;
+        const valuesInOrder = [{ num: 42 }, { num: 777 }];
+        slice$.subscribe(next => expect(next).toBe(valuesInOrder[++i]));
+        state.set({ num: 777 });
+      });
+    });
+  });
+
+  describe('select', () => {
+    it('should return initial base-state', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupState({ initialState: initialPrimitiveState });
+        expectObservable(state.select()).toBe('s', {
+          s: initialPrimitiveState
+        });
+      });
+    });
+
+    describe('slice by key', () => {
+      it('should return empty base-state after init', () => {
+        testScheduler.run(({ expectObservable }) => {
+          const state = setupState({});
+          expectObservable(state.select()).toBe('');
+        });
+      });
+
       it('should return initial base-state', () => {
+        testScheduler.run(({ expectObservable }) => {
+          const state = new RxState<PrimitiveState>();
+          state.subscribe();
+
+          state.set({ num: 42 });
+          expectObservable(state.select('num')).toBe('s', { s: 42 });
+        });
+      });
+    });
+
+    describe('slice by map function', () => {
+      it('should return nothing if empty', () => {
+        testScheduler.run(({ expectObservable }) => {
+          const state = setupState({});
+          expectObservable(state.select()).toBe('');
+        });
+      });
+
+      it('should return full base-state object on select', () => {
         testScheduler.run(({ expectObservable }) => {
           const state = setupState({ initialState: initialPrimitiveState });
           expectObservable(state.select()).toBe('s', {
@@ -69,47 +170,10 @@ describe('RxStateService', () => {
           });
         });
       });
-
-      describe('slice by key', () => {
-        it('should return empty base-state after init', () => {
-          testScheduler.run(({ expectObservable }) => {
-            const state = setupState({});
-            expectObservable(state.select()).toBe('');
-          });
-        });
-
-        it('should return initial base-state', () => {
-          testScheduler.run(({ expectObservable }) => {
-            const state = new RxState<PrimitiveState>();
-            state.subscribe();
-
-            state.set({ num: 42 });
-            expectObservable(state.select('num')).toBe('s', { s: 42 });
-          });
-        });
-      });
-
-      describe('slice by map function', () => {
-        it('should return nothing if empty', () => {
-          testScheduler.run(({ expectObservable }) => {
-            const state = setupState({});
-            expectObservable(state.select()).toBe('');
-          });
-        });
-
-        it('should return full base-state object on select', () => {
-          testScheduler.run(({ expectObservable }) => {
-            const state = setupState({ initialState: initialPrimitiveState });
-            expectObservable(state.select()).toBe('s', {
-              s: initialPrimitiveState
-            });
-          });
-        });
-      });
     });
   });
 
-  describe('setState', () => {
+  describe('set', () => {
     describe('with base-state partial', () => {
       it('should add new slices', () => {
         const state = setupState({});
@@ -166,7 +230,7 @@ describe('RxStateService', () => {
     });
   });
 
-  describe('connectState', () => {
+  describe('connect', () => {
     describe('with observable of slices', () => {
       it('should add new slices', () => {});
 
