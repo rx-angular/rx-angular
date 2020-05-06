@@ -30,8 +30,8 @@ describe('distinctUntilKeysChanged operator', () => {
   it('should distinguish between values', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 }, b: { val: 2 } };
-      const e1 = cold('--a--a--a--b--b--a--|', values);
-      const e1subs = '^-------------------!';
+      const e1 =  cold('--a--a--a--b--b--a--|', values);
+      const e1subs =   '^-------------------!';
       const expected = '--a--------b-----a--|';
 
       expectObservable(
@@ -46,8 +46,8 @@ describe('distinctUntilKeysChanged operator', () => {
   it('should distinguish between values with multiple keys', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 }, b: { val: 1, valOther: 3 } };
-      const e1 = cold('--a--a--a--b--b--a--|', values);
-      const e1subs = '^-------------------!';
+      const e1 =  cold('--a--a--a--b--b--a--|', values);
+      const e1subs =   '^-------------------!';
       const expected = '--a--------b-----a--|';
 
       expectObservable(
@@ -86,8 +86,8 @@ describe('distinctUntilKeysChanged operator', () => {
           }
         }
       };
-      const e1 = cold('--a--a--b--c--d--e--|', values);
-      const e1subs = '^-------------------!';
+      const e1 =  cold('--a--a--b--c--d--e--|', values);
+      const e1subs =   '^-------------------!';
       const expected = '--a-----b--c--------|';
       const keyCompare: KeyCompareMap<DistinctUntilSomeChangedTest> = {
         val: (oldVal, newVal) => oldVal !== newVal,
@@ -106,8 +106,8 @@ describe('distinctUntilKeysChanged operator', () => {
   it('should distinguish between values and does not completes', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 }, b: { val: 2 } };
-      const e1 = cold('--a--a--a--b--b--a-', values);
-      const e1subs = '^------------------';
+      const e1 =  cold('--a--a--a--b--b--a-', values);
+      const e1subs =   '^------------------';
       const expected = '--a--------b-----a-';
 
       expectObservable(
@@ -128,8 +128,8 @@ describe('distinctUntilKeysChanged operator', () => {
         d: { val: 1 },
         e: { val: 5 }
       };
-      const e1 = cold('--a--b--c--d--e--|', values);
-      const e1subs = '^----------------!';
+      const e1 =  cold('--a--b--c--d--e--|', values);
+      const e1subs =   '^----------------!';
       const expected = '--a--b-----d--e--|';
 
       expectObservable(
@@ -150,8 +150,8 @@ describe('distinctUntilKeysChanged operator', () => {
         d: { valOther: 1 },
         e: { valOther: 5 }
       };
-      const e1 = cold('--a--b--c--d--e--|', values);
-      const e1subs = '^----------------!';
+      const e1 =  cold('--a--b--c--d--e--|', values);
+      const e1subs =   '^----------------!';
       const expected = '--a--------------|';
 
       expectObservable(
@@ -165,8 +165,8 @@ describe('distinctUntilKeysChanged operator', () => {
 
   it('should not completes if source never completes', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 = cold('-');
-      const e1subs = '^';
+      const e1 =  cold('-');
+      const e1subs =   '^';
       const expected = '-';
 
       expectObservable(
@@ -178,8 +178,8 @@ describe('distinctUntilKeysChanged operator', () => {
 
   it('should not completes if source does not completes', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 = cold('-');
-      const e1subs = '^';
+      const e1 =  cold('-');
+      const e1subs =   '^';
       const expected = '-';
 
       expectObservable(
@@ -191,8 +191,8 @@ describe('distinctUntilKeysChanged operator', () => {
 
   it('should complete if source is empty', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 = cold('|');
-      const e1subs = '(^!)';
+      const e1 =  cold('|');
+      const e1subs =   '(^!)';
       const expected = '|';
 
       expectObservable(
@@ -204,8 +204,8 @@ describe('distinctUntilKeysChanged operator', () => {
 
   it('should complete if source does not emit', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 = cold('------|');
-      const e1subs = '^-----!';
+      const e1 =  cold('------|');
+      const e1subs =   '^-----!';
       const expected = '------|';
 
       expectObservable(
@@ -218,8 +218,8 @@ describe('distinctUntilKeysChanged operator', () => {
   it('should emit if source emits single element only', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 } };
-      const e1 = cold('--a--|', values);
-      const e1subs = '^----!';
+      const e1 =  cold('--a--|', values);
+      const e1subs =   '^----!';
       const expected = '--a--|';
 
       expectObservable(
@@ -248,8 +248,8 @@ describe('distinctUntilKeysChanged operator', () => {
   it('should raises error if source raises error', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 } };
-      const e1 = cold('--a--a--#', values);
-      const e1subs = '^-------!';
+      const e1 =  cold('--a--a--#', values);
+      const e1subs =   '^-------!';
       const expected = '--a-----#';
 
       expectObservable(
@@ -263,8 +263,8 @@ describe('distinctUntilKeysChanged operator', () => {
 
   it('should raises error if source throws', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 = cold('#');
-      const e1subs = '(^!)';
+      const e1 =  cold('#');
+      const e1subs =   '(^!)';
       const expected = '#';
 
       expectObservable(
@@ -283,8 +283,8 @@ describe('distinctUntilKeysChanged operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 = cold('--a--b--c--d--e--|', values);
-      const e1subs = '^----------------!';
+      const e1 =  cold('--a--b--c--d--e--|', values);
+      const e1subs =   '^----------------!';
       const expected = '--a--b--c--d--e--|';
 
       expectObservable(
@@ -305,10 +305,10 @@ describe('distinctUntilKeysChanged operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 = cold('--a--b--b--d--a--e--|', values);
-      const e1subs = '^---------!          ';
+      const e1 =  cold('--a--b--b--d--a--e--|', values);
+      const e1subs =   '^---------!          ';
       const expected = '--a--b-----          ';
-      const unsub = '----------!          ';
+      const unsub =    '----------!          ';
 
       const result = (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
         distinctUntilKeysChanged(['val'])
@@ -328,10 +328,10 @@ describe('distinctUntilKeysChanged operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 = cold('--a--b--b--d--a--e--|', values);
-      const e1subs = '^---------!          ';
+      const e1 =  cold('--a--b--b--d--a--e--|', values);
+      const e1subs =   '^---------!          ';
       const expected = '--a--b-----          ';
-      const unsub = '----------!          ';
+      const unsub =    '----------!          ';
 
       const result = (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
         mergeMap((x: any) => of(x)),
@@ -347,8 +347,8 @@ describe('distinctUntilKeysChanged operator', () => {
   it('should emit once if source elements are all same', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 } };
-      const e1 = cold('--a--a--a--a--a--a--|', values);
-      const e1subs = '^-------------------!';
+      const e1 =  cold('--a--a--a--a--a--a--|', values);
+      const e1subs =   '^-------------------!';
       const expected = '--a-----------------|';
 
       expectObservable(
@@ -369,8 +369,8 @@ describe('distinctUntilKeysChanged operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 = cold('--a--b--c--d--e--|', values);
-      const e1subs = '^----------------!';
+      const e1 =  cold('--a--b--c--d--e--|', values);
+      const e1subs =   '^----------------!';
       const expected = '--a--------------|';
 
       expectObservable(
@@ -383,8 +383,8 @@ describe('distinctUntilKeysChanged operator', () => {
   it('should emit all if comparer returns true always regardless of source emits', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 } };
-      const e1 = cold('--a--a--a--a--a--a--|', values);
-      const e1subs = '^-------------------!';
+      const e1 =  cold('--a--a--a--a--a--a--|', values);
+      const e1subs =   '^-------------------!';
       const expected = '--a--a--a--a--a--a--|';
 
       expectObservable(
@@ -403,8 +403,8 @@ describe('distinctUntilKeysChanged operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 = cold('--a--b--c--d--e--|', values);
-      const e1subs = '^----------------!';
+      const e1 =  cold('--a--b--c--d--e--|', values);
+      const e1subs =   '^----------------!';
       const expected = '--a-----c-----e--|';
       const selector = (x: number, y: number) => y % 2 !== 0;
 
@@ -424,8 +424,8 @@ describe('distinctUntilKeysChanged operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 = cold('--a--b--c--d--e--|', values);
-      const e1subs = '^----------!      ';
+      const e1 =  cold('--a--b--c--d--e--|', values);
+      const e1subs =   '^----------!      ';
       const expected = '--a--b--c--#      ';
       const selector = (x: number, y: number) => {
         if (y === 4) {
