@@ -54,7 +54,15 @@ with very little effort in any component.
 
 ## API
 
-[API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api.md)
+Services:
+
+- [RxState](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api.md)
+
+Operators:
+
+- [stateful](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/operators/stateful.md)
+- [select](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/operators/select.md)
+- [distinctUntilSomeChanged](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/operators/distinctUntilSomeChanged.md)
 
 ## Usage
 
@@ -70,6 +78,9 @@ with very little effort in any component.
 - [Logic comparison - Increment a Value](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/component-logic-comparison.md)
 - [Loading state and data fetching](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/fetch-user.md)
 - [Passing Observables](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/passing-observables-directly.md)
+- [How to run partial state updates](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/how-to-run-partial-state-updates.md)
+- [Get nested state slices](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/get-nested-state-slices.md)
+- [Derive simple state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/derive-simple-state.md)
 
 ## Resources
 
