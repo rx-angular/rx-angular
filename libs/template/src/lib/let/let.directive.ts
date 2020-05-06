@@ -100,13 +100,13 @@ export interface LetViewContext<T> {
 export class LetDirective<U> implements OnDestroy {
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
-    this.RenderAware.nextPotentialObservable(potentialObservable);
+    this.renderAware.nextPotentialObservable(potentialObservable);
   }
 
   @Input()
   set strategy(config: string | Observable<string> | undefined) {
     if (config) {
-      this.RenderAware.nextStrategy(config);
+      this.renderAware.nextStrategy(config);
     }
   }
 
@@ -115,12 +115,12 @@ export class LetDirective<U> implements OnDestroy {
     private readonly templateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
-    this.RenderAware = createRenderAware<U>({
+    this.renderAware = createRenderAware<U>({
       strategies: getStrategies<U>({ cdRef }),
       resetObserver: this.resetObserver,
       updateObserver: this.updateObserver
     });
-    this.subscription = this.RenderAware.subscribe();
+    this.subscription = this.renderAware.subscribe();
   }
 
   static ngTemplateGuard_rxLet: 'binding';
@@ -133,7 +133,7 @@ export class LetDirective<U> implements OnDestroy {
   };
 
   protected readonly subscription: Unsubscribable;
-  private readonly RenderAware: RenderAware<U | null | undefined>;
+  private readonly renderAware: RenderAware<U | null | undefined>;
   private readonly resetObserver: NextObserver<void> = {
     next: () => {
       // if not initialized no need to set undefined

@@ -1,4 +1,4 @@
-import { coalesce, CoalesceConfig } from '../operators';
+import { coalesce, CoalesceConfig } from '../rxjs/operators';
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import {
   ChangeDetectorRef,
@@ -22,7 +22,7 @@ export interface RenderStrategy<T> {
   name: string;
 }
 
-export const DEFAULT_STRATEGY_NAME = 'global';
+export const DEFAULT_STRATEGY_NAME = 'native';
 export const IS_VIEW_ENGINE_IVY = isViewEngineIvy();
 
 export function getStrategies<T>(
@@ -31,9 +31,11 @@ export function getStrategies<T>(
   return {
     noop: createNoopStrategy<T>(),
     native: createNativeStrategy<T>(config),
-    global: createGlobalStrategy<T>(config),
     local: createLocalStrategy<T>(config),
-    detach: createDetachStrategy<T>(config)
+    global: createGlobalStrategy<T>(config),
+    ɵlocal: createɵLocalStrategy<T>(config),
+    ɵglobal: createɵGlobalStrategy<T>(config),
+    ɵdetach: createɵDetachStrategy<T>(config)
   };
 }
 
@@ -50,10 +52,13 @@ export function getStrategies<T>(
  *
  * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
  * |-------------| --------------| ------------------- | ---------------- |
- * | `native`    | ❌/❌          | mFC / mFC           | ❌               |
- * | `global`    | ❌/✔️       | mFC  / ɵMD          | ❌                |
- * | `local`     | ✔️/✔️    | dC / ɵDC            | ✔️ + C/ LV     |
  * | `noop`      | ❌/❌          | no rendering        | ❌               |
+ * | `native`    | ❌/❌          | mFC / mFC           | ❌               |
+ * | `global`    | ❌/✔ ️       | mFC  / ɵMD           | ❌               |
+ * | `local`     | ✔/✔ ️        | dC / ɵDC            | ✔ ️ + C/ LV     |
+ * | `ɵglobal`   | ❌/✔ ️       | mFC  / ɵMD          | ❌               |
+ * | `ɵlocal`    | ✔/✔ ️       | dC / ɵDC             | ✔ ️ + C/ LV     |
+ * | `ɵdetach`   | ❌/✔ ️       | mFC  / ɵMD          | ❌               |
  *
  */
 
@@ -113,13 +118,47 @@ export function createNoopStrategy<T>(): RenderStrategy<T> {
  *
  * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
  * |-------------| --------------| ------------ ------ | ---------------- |
- * | `global`    | ❌/✔️         | mFC / ɵMD           | ❌               |
+ * | `global`    | ❌/❌️         | mFC / mFC         | ❌               |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return {RenderStrategy<T>} - The calculated strategy
  *
  */
 export function createGlobalStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy<T> {
+  function render() {
+    config.cdRef.markForCheck();
+  }
+
+  function behaviour() {
+    return (o$: Observable<T>): Observable<T> => o$;
+  }
+
+  return {
+    behaviour,
+    render,
+    name: 'global'
+  };
+}
+
+/**
+ *
+ * ɵGlobal Strategy
+ *
+ * This strategy is rendering the application root and
+ * all it's children that are on a path
+ * that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
+ *
+ * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
+ * |-------------| --------------| ------------ ------ | ---------------- |
+ * | `ɵglobal`   | ❌/✔️       | mFC / ɵMD           | ❌               |
+ *
+ * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
+ * @return {RenderStrategy<T>} - The calculated strategy
+ *
+ */
+export function createɵGlobalStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
   function render() {
@@ -135,7 +174,7 @@ export function createGlobalStrategy<T>(
   return {
     behaviour,
     render,
-    name: 'global'
+    name: 'ɵglobal'
   };
 }
 
@@ -147,18 +186,13 @@ export function createGlobalStrategy<T>(
  * that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
  *
  * As detectChanges has no coalescing of render calls
- * like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` has, so we have to apply our own coalescing, 'scoped' on component level.
- *
- * Coalescing, in this very manner,
- * means **collecting all events** in the same [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick,
- * that would cause a re-render and execute **re-rendering only once**.
- *
- * 'Scoped' coalescing, in addition, means **grouping the collected events by** a specific context.
- * E. g. the **component** from which the re-rendering was initiated.
+ * like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` has,
+ * this strategy may have negative performance impacts depending
+ * on the usage and the related template structure.
  *
  * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
  * |-------------| --------------| ------------ ------ | ---------------- |
- * | `local`     | ✔️/✔️          | dC / ɵDC            | ✔️ + C/ LV       |
+ * | `local`     | ✔️/✔️    | dC / dC             | ✔️ + C/C       |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return {RenderStrategy<T>} - The calculated strategy
@@ -167,30 +201,16 @@ export function createGlobalStrategy<T>(
 export function createLocalStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const durationSelector = getZoneUnPatchedPromiseDurationSelector();
-  // @Notice this part of the code is in the coalescing PR https://github.com/ngrx/platform/pull/2456
-  //const coalesceConfig: CoalesceConfig
-  const coalesceConfig: any = {
-    // @TODO ensure that context is === to _lView across class and template (all cases!!!)
-    // If yes, kick out _lView
-    context: (IS_VIEW_ENGINE_IVY
-      ? (config.cdRef as any)._lView
-      : (config.cdRef as any).context) as any
-  };
-
   function render() {
-    // @TODO ensure that detectChanges is behaves identical to ɵdetectChanges
-    // If yes, kick out ɵdetectChanges
-    if (!IS_VIEW_ENGINE_IVY) {
-      config.cdRef.detectChanges();
-    } else {
-      detectChanges((config.cdRef as any).context);
-    }
+    // issue #68
+    config.cdRef.detectChanges();
   }
 
-  const behaviour = () => (o$: Observable<T>): Observable<T> => {
-    return o$.pipe(coalesce(durationSelector, coalesceConfig));
-  };
+  function behaviour() {
+    return (o$: Observable<T>): Observable<T> => {
+      return o$;
+    };
+  }
 
   return {
     behaviour,
@@ -200,7 +220,7 @@ export function createLocalStrategy<T>(
 }
 
 /**
- *  Detach Strategy
+ *  ɵLocal Strategy
  *
  * This strategy is rendering the actual component and
  * all it's children that are on a path
@@ -218,34 +238,25 @@ export function createLocalStrategy<T>(
  *
  * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
  * |-------------| --------------| ------------ ------ | ---------------- |
- * | `detach`     | ✔️/✔️          | dC / ɵDC            | ✔️ + C/ LV       |
+ * | `ɵlocal`    | ✔️/✔️    | dC / dC             | ✔️ + C         |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return {RenderStrategy<T>} - The calculated strategy
  *
  */
-export function createDetachStrategy<T>(
+export function createɵLocalStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
   const durationSelector = getZoneUnPatchedPromiseDurationSelector();
   const coalesceConfig: CoalesceConfig = {
-    // @TODO ensure that context is === to _lView across class and template (all cases!!!)
-    // If yes, kick out _lView
-    context: (IS_VIEW_ENGINE_IVY
-      ? (config.cdRef as any)._lView
-      : (config.cdRef as any).context) as any
+    // issue #69
+    // @Notice Usage of internal method
+    context: (config.cdRef as any).context
   };
 
   function render() {
-    // @TODO ensure that detectChanges is behaves identical to ɵdetectChanges
-    // If yes, kick out ɵdetectChanges
-    config.cdRef.reattach();
-    if (!IS_VIEW_ENGINE_IVY) {
-      config.cdRef.detectChanges();
-    } else {
-      detectChanges((config.cdRef as any).context);
-    }
-    config.cdRef.detach();
+    // issue #68
+    config.cdRef.detectChanges();
   }
 
   const behaviour = () => (o$: Observable<T>): Observable<T> => {
@@ -255,6 +266,61 @@ export function createDetachStrategy<T>(
   return {
     behaviour,
     render,
-    name: 'detach'
+    name: 'ɵlocal'
+  };
+}
+
+/**
+ *  ɵDetach Strategy
+ *
+ * This strategy is rendering the actual component and
+ * all it's children that are on a path
+ * that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
+ *
+ * As detectChanges has no coalescing of render calls
+ * like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` has, so we have to apply our own coalescing, 'scoped' on component level.
+ *
+ * Coalescing, in this very manner,
+ * means **collecting all events** in the same [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick,
+ * that would cause a re-render and execute **re-rendering only once**.
+ *
+ * 'Scoped' coalescing, in addition, means **grouping the collected events by** a specific context.
+ * E. g. the **component** from which the re-rendering was initiated.
+ *
+ * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
+ * |-------------| --------------| ------------ ------ | ---------------- |
+ * | `ɵdetach`     | ✔️/✔️          | dC / ɵDC            | ✔️ + C/ LV       |
+ *
+ * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
+ * @return {RenderStrategy<T>} - The calculated strategy
+ *
+ */
+export function createɵDetachStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy<T> {
+  const durationSelector = getZoneUnPatchedPromiseDurationSelector();
+  const coalesceConfig: CoalesceConfig = {
+    // issue #69
+    // @Notice Usage of internal method
+    context: (config.cdRef as any).context
+  };
+
+  function render() {
+    config.cdRef.reattach();
+    // issue #68
+    config.cdRef.detectChanges();
+    config.cdRef.detach();
+  }
+
+  function behaviour() {
+    return (o$: Observable<T>): Observable<T> => {
+      return o$.pipe(coalesce(durationSelector, coalesceConfig));
+    };
+  }
+
+  return {
+    behaviour,
+    render,
+    name: 'ɵdetach'
   };
 }

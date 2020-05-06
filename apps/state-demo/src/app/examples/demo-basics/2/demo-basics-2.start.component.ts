@@ -12,7 +12,7 @@ import {
   ListService,
   ListServerItem
 } from '../../../data-access/list-resource';
-import { interval, Subject, Subscription } from 'rxjs';
+import { interval, merge, Subject, Subscription } from 'rxjs';
 
 export interface DemoBasicsItem {
   id: string;
@@ -79,14 +79,20 @@ export class DemoBasicsComponent2Start extends RxState<ComponentState>
   implements OnInit, OnDestroy {
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
+  refreshClick = new Subject<Event>();
 
   model$ = this.select();
+
+  intervalRefreshTick$ = this.select('refreshInterval').pipe(
+    switchMap(ms => interval(ms))
+  );
+
+  refreshListSideEffect$ = merge(this.intervalRefreshTick$, this.refreshClick);
 
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 100) {
       this.set({ refreshInterval });
-      this.resetRefreshTick();
     }
   }
 
@@ -100,6 +106,7 @@ export class DemoBasicsComponent2Start extends RxState<ComponentState>
       this.listExpandedChanges.pipe(map(listExpanded => ({ listExpanded })))
     );
     this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
+    this.hold(this.refreshListSideEffect$, _ => this.listService.refetchList());
   }
 
   ngOnDestroy(): void {
@@ -127,4 +134,14 @@ export class DemoBasicsComponent2Start extends RxState<ComponentState>
   parseListItems(l: ListServerItem[]): DemoBasicsItem[] {
     return l.map(({ id, name }) => ({ id, name }));
   }
+
+  /*
+    intervalRefreshTick$ = this.select(
+    map(s => s.refreshInterval),
+    switchMap(ms => timer(0, ms))
+  );
+  refreshListSideEffect$ = merge(this.refreshClicks, this.intervalRefreshTick$);
+
+
+  * */
 }

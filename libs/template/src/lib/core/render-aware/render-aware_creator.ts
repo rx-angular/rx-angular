@@ -1,6 +1,7 @@
 import {
   BehaviorSubject,
   EMPTY,
+  isObservable,
   NextObserver,
   Observable,
   of,
@@ -11,6 +12,7 @@ import {
 import {
   catchError,
   distinctUntilChanged,
+  filter,
   map,
   mergeAll,
   switchMap,
@@ -22,6 +24,7 @@ import {
   DEFAULT_STRATEGY_NAME,
   StrategySelection
 } from './strategies';
+import { toObservableValue } from '../rxjs/operators';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
@@ -49,6 +52,7 @@ export function createRenderAware<U>(cfg: {
   const updateStrategyEffect$: Observable<RenderStrategy<
     U
   >> = strategyName$.pipe(
+    distinctUntilChanged(),
     switchMap(stringOrObservable =>
       typeof stringOrObservable === 'string'
         ? of(stringOrObservable)
@@ -59,8 +63,11 @@ export function createRenderAware<U>(cfg: {
   );
 
   const observablesFromTemplate$ = new Subject<Observable<U>>();
-  const renderingEffect$ = observablesFromTemplate$.pipe(
-    distinctUntilChanged(),
+  const valuesFromTemplate$ = observablesFromTemplate$.pipe(
+    distinctUntilChanged()
+  );
+  const renderingEffect$ = valuesFromTemplate$.pipe(
+    // handle null | undefined assignment and new Observable reset
     tap(observable$ => {
       if (observable$ === null) {
         cfg.updateObserver.next(observable$ as any);
@@ -69,6 +76,8 @@ export function createRenderAware<U>(cfg: {
       }
       strategy.render();
     }),
+    // forward only observable values
+    filter(o$ => isObservable(o$)),
     map(o$ =>
       o$.pipe(
         distinctUntilChanged(),
