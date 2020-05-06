@@ -143,3 +143,54 @@ describe('InheritanceTestComponent', () => {
     stateChecker.checkSubscriptions(component, 0);
   });
 });
+
+describe('GlueTestComponent', () => {
+  let parent: RxStateGlueContainerComponent;
+  let child: RxStateGlueComponent;
+  let parentFixture: ComponentFixture<RxStateGlueContainerComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [RxStateGlueComponent, RxStateGlueContainerComponent]
+    }).compileComponents();
+    parentFixture = TestBed.createComponent(RxStateGlueContainerComponent);
+    parentFixture.detectChanges();
+
+    parent = parentFixture.componentInstance;
+    child = parentFixture.componentInstance.child;
+  });
+
+  it('should create', () => {
+    stateChecker.checkSubscriptions(parent, 1);
+    parent.ngOnDestroy();
+    stateChecker.checkSubscriptions(parent, 0);
+  });
+
+  it('should work with output  initial', () => {
+    parentFixture.detectChanges();
+    const containerValue = parentFixture.nativeElement.querySelector('#parent')
+      .innerHTML;
+    const childValue = parentFixture.nativeElement.querySelector('#child')
+      .innerHTML;
+
+    expect(containerValue).toBe('undefined');
+    expect(childValue).toBe('42');
+  });
+
+  it('should work with output changes', () => {
+    parentFixture.detectChanges();
+    const containerValue = parentFixture.nativeElement.querySelector('#parent')
+      .innerHTML;
+    const childValue = parentFixture.nativeElement.querySelector('#child')
+      .innerHTML;
+
+    expect(containerValue).toBe('undefined');
+    expect(childValue).toBe('42');
+
+    child.set({ num: 777 });
+
+    parentFixture.detectChanges();
+    expect(containerValue).toBe('777');
+    expect(childValue).toBe('777');
+  });
+});
