@@ -1,6 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Component, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnDestroy,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { RxState } from '../../src';
 import {
   createStateChecker,
@@ -25,19 +32,30 @@ const initialChildState = { str: 'initialChildState' };
     }}</span>
   `
 })
-export class RxStateGlueComponent extends RxState<{ str: string }> {
+export class RxStateGlueComponent extends RxState<{ str: string }>
+  implements AfterViewInit {
+  afterViewInit = false;
   str$ = this.select('str');
   @Input()
   set str(str: string) {
-    this.set({ str });
+    if (str !== null && str !== '') {
+      this.set({ str });
+    }
   }
 
   @Output()
   strChange: Observable<string> = this.$.pipe(select('str'));
 
+  @Output()
+  strChangeWrong: Observable<string> = this.select('str');
+
   constructor() {
     super();
     this.set(initialChildState);
+  }
+
+  ngAfterViewInit(): void {
+    this.afterViewInit = true;
   }
 }
 
@@ -50,13 +68,18 @@ export class RxStateGlueComponent extends RxState<{ str: string }> {
     <rx-angular-state-glue-test
       [str]="str$ | async"
       (strChange)="strChange$.next($event)"
+      (strChangeWrong)="strChangeWrong$.next($event)"
     >
     </rx-angular-state-glue-test>
   `
 })
-export class RxStateGlueContainerComponent extends RxState<PrimitiveState> {
+export class RxStateGlueContainerComponent
+  extends RxState<PrimitiveState & { strWrong: string }>
+  implements AfterViewInit {
   strChange$ = new Subject<string>();
+  strChangeWrong$ = new Subject<string>();
   str$ = this.select('str');
+  afterViewInit = false;
 
   @ViewChild(RxStateGlueComponent)
   child;
@@ -64,6 +87,11 @@ export class RxStateGlueContainerComponent extends RxState<PrimitiveState> {
   constructor() {
     super();
     this.connect('str', this.strChange$);
+    this.connect('strWrong', this.strChangeWrong$);
+  }
+
+  ngAfterViewInit(): void {
+    this.afterViewInit = true;
   }
 }
 
@@ -111,9 +139,28 @@ describe('GlueTestComponent', () => {
   });
 
   it('should work with output initialisation', () => {
-    parent.set(initialParentState);
-    parent.child.set(initialParentState);
-    expect(parent.get().str).toBe(initialParentState.str);
+    expect(parent.afterViewInit).toBeTruthy();
+    expect(parent.child.afterViewInit).toBeTruthy();
+
+    expect(parent.get().str).toBe(undefined);
+    expect(parent.child.get().str).toBe(initialChildState.str);
+
+    const value1FromParent = 'value1FromParent';
+    parent.set({ str: value1FromParent });
+    expect(parent.get().str).toBe(value1FromParent);
+    expect(parent.child.get().str).toBe(initialChildState.str);
+
+    parentFixture.detectChanges();
+    expect(parent.get().str).toBe(value1FromParent);
+    expect(parent.child.get().str).toBe(value1FromParent);
+  });
+
+  it('should work wrong output initialisation', () => {
+    expect(parent.afterViewInit).toBeTruthy();
+    expect(parent.child.afterViewInit).toBeTruthy();
+
+    expect(parent.get().str).toBe(undefined);
+    expect(parent.get().strWrong).toBe(initialChildState.str);
     expect(parent.child.get().str).toBe(initialChildState.str);
   });
 });
