@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { Component, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import {
   AfterViewInit,
   Component,
