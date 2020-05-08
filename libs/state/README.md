@@ -36,6 +36,8 @@ Using this library allows you to implement things like:
 
 with very little effort in any component.
 
+![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-names.png) ![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-types.png)
+
 ## Key features
 
 - Slim and intuitive API
@@ -55,18 +57,22 @@ with very little effort in any component.
 [API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api.md)
 
 ## Usage
+
 [Usage Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/usage.md)
 
 ### Tutorials
+
 - [Basic Tutorial](https://github.com/BioPhoton/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics)
 - [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
 
 ### Snippets
+
 - [Logic comparison - Increment a Value](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/component-logic-comparison.md)
 - [Loading state and data fetching](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/fetch-user.md)
 - [Passing Observables](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/passing-observables-directly.md)
 
 ## Resources
+
 - [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch?v=I8uaHMs8rw0)
 - [🎥 Extending Angular for the Reactive Web](https://youtu.be/pkN6CeZ8h_U?t=5913)
 - [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
