@@ -10,14 +10,12 @@ import { stateful } from './stateful';
 
 /**
  * @description
- * returns the state as cached and distinct `Observable<T>`. This way you don't have to think about **late subscribers**,
- * **multiple subscribers** or **multiple emissions** of the same value
+ * returns the state as shared, replayed and distinct `Observable<T>`. This way you don't have to think about late 
+ * subscribers, multiple subscribers or multiple emissions of the same value.
  *
  * @example
- * ```Typescript
  * const state$ = state.pipe(select());
  * state$.subscribe(state => doStuff(state));
- * ```
  *
  * @returns Observable<T>
  */
