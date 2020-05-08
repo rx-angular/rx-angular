@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ConfigService } from '../config.service';
 import { MessageService } from '../message.service';
 
 @Component({
@@ -7,5 +8,8 @@ import { MessageService } from '../message.service';
   styleUrls: ['./messages.component.css']
 })
 export class MessagesComponent {
-  constructor(public messageService: MessageService) {}
+  constructor(
+    public messageService: MessageService,
+    public configService: ConfigService
+  ) {}
 }

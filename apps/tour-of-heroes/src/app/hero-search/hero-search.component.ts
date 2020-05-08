@@ -4,6 +4,7 @@ import { RxState } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
 
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { ConfigService } from '../config.service';
 
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
@@ -36,7 +37,8 @@ export class HeroSearchComponent {
 
   constructor(
     public heroService: HeroService,
-    private state: RxState<HeroSearchComponentState>
+    private state: RxState<HeroSearchComponentState>,
+    public configService: ConfigService
   ) {
     this.state.connect('heroes', this._searchResult$);
   }

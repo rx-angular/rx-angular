@@ -14,7 +14,7 @@
 <ul class="heroes">
   <li
     *ngFor="
-      let hero of heroes$ | push: 'ɵlocal';
+      let hero of heroes$ | push: configService.renderStrategy$;
       trackBy: heroService.trackHero
     "
   >

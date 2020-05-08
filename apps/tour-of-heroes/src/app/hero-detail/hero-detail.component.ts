@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import { ConfigService } from '../config.service';
 
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
@@ -27,7 +28,8 @@ export class HeroDetailComponent {
     private route: ActivatedRoute,
     private heroService: HeroService,
     private location: Location,
-    private state: RxState<HeroDetailComponentState>
+    private state: RxState<HeroDetailComponentState>,
+    public configService: ConfigService
   ) {
     const hero$ = this.route.paramMap.pipe(
       switchMap(params => this.heroService.getHero(Number(params.get('id'))))
