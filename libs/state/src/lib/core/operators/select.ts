@@ -81,15 +81,12 @@ export function select<T, A, B, C, D, E>(
  * Returns a single property of the state as cached and distinct `Observable<T[K1]>`.
  *
  * @example
- *  **Access a single property**
- * ```Typescript
+ *  // Access a single property
  * const bar$ = state$.pipe(select('bar'));
- * ```
  *
- * **Access a nested property**
- * ```Typescript
+ * // Access a nested property
  * const foo$ = state$.pipe(select('bar', 'foo'));
- * ```
+ *
  * @return Observable<T[K1]>
  */
 export function select<T, K1 extends keyof T>(
