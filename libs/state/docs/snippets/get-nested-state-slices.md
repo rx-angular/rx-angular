@@ -4,17 +4,7 @@ One very common tasks when deriving state is selecting a single value out of the
 If you are familiar with RxJS, you will know about the [`pluck` operator](https://rxjs-dev.firebaseapp.com/api/operators/pluck) which "plucks" out values from an object.
 Also, the [`map`](https://rxjs-dev.firebaseapp.com/api/operators/map) operator could be used for this.
 
-```typescript
-import { Observable } from 'rxjs';
-import { map, pluck } from 'rxjs/operators';
-
-const state$: Observable<{ person: { name: string } }>;
-const derivation1$ = state$.pipe(map(state => state?.person?.name));
-const derivation2$ = state$.pipe(pluck('person', 'name'));
-```
-
-In both cases we have repetitive work to do.
-For this situation we can use the [`stateful`]()operator from `@rx-angular/state`.
+As shown in [deriving simple state](./deriving-simple-state.md) we use `stateful` operator from `@rx-angular/state` to get basic observable handling right out of the box.
 
 ```typescript
 import { Observable } from 'rxjs';
