@@ -54,15 +54,7 @@ with very little effort in any component.
 
 ## API
 
-Services:
-
-- [RxState](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api.md)
-
-Operators:
-
-- [stateful](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/operators/stateful.md)
-- [select](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/operators/select.md)
-- [distinctUntilSomeChanged](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/operators/distinctUntilSomeChanged.md)
+[API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api.md)
 
 ## Usage
 
