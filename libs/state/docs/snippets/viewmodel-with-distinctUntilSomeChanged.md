@@ -1,68 +1,81 @@
 Here is an example for using the [`distinctUntilSomeChanged`](../state/src/lib/core/operators/distinctUntilSomeChanged.ts) operator
-as tool to manage view distinct state slices.
+as tool to manage distinct state slices.
 
-Example:
+Imagine the following setup. The state of your component is defined by this interface:
 
 ```typescript
-
-interface Item {
-  id: string;
-  name: string;
-}
-
 interface ComponentState {
-   title: string,
-   created: string,
-   list: Item[],
-   visibleItemIds: string[]
+  title: string;
+  created: string;
+  list: string[];
 }
-
-interface ComponentViewModel {
-   title: string,
-   created: string,
-   visibleItems: Item[],
-   total: number
-}
-
-@Component()
-export class ViewmodelComponent extends RxState<ComponentState> {
-    private readonly directSlices$: Observable<{title: string, created: string}> =  this.select(
-      distinctUntilSomeChanged(['title', 'created']),
-      map(({title, created}) => ({title, created}))
-    );
-
-    private readonly customSlices$: Observable<{visibleItems: Item[], total: number}> = this.select(
-       distinctUntilSomeChanged(['visibleItemIds', 'list']),
-       map(({list, visibleItemIds}) => ({
-         total: list.length,
-         visibleItems: list.filter(item => visibleItemIds.some(visibleItemId => visibleItemId === item.id)
-      }))
-    );
-
-    readonly viewModel$: Observable<ComponentViewModel > = combineLatest([directSlices$,customSlices$])
-    .pipe(
-      map(([directSlices, customSlices]) => ({...directSlices, ...customSlices}))
-    );
-
-    constructor() {
-        super();
-    }
-
-}
-
 ```
 
-In the template used as
+You want to render the following template.
 
 ```html
-<ng-container *ngIf="ViewModel$ | asyc as vm">
+<ng-container *ngIf="viewModel$ | asyc as vm">
   <h1>
     {{vm.title}}
-    <small> {{vm.created | date}} - <b>total: {{vm.total}}</b> </small>
+    <small><b>total: {{vm.total}}</b></small>
   </h1>
   <ul>
-    <li *ngFor="let item of vm.visibleItems"></li>
+    <li *ngFor="let item of vm.items">{{ item }}</li>
   </ul>
   <ng-container></ng-container
 ></ng-container>
+```
+
+As your view requires additional and/or derived information from your component state, we need to transform the
+`ComponentState` state into another shape (`ComponentViewModel`):
+
+```typescript
+interface ComponentViewModel {
+  title: string;
+  list: string[];
+  total: number;
+}
+```
+
+As changes of your viewmodel ultimately result in component renderings. We have to make sure that it's emissions
+are distinct.
+
+_Example w/o `distinctUntilSomeChanged`_:
+
+We could achieve this by using the `combineLatest` operator in combination (no pun intended) with the
+`select` method.
+
+```typescript
+@Component()
+export class ViewModelComponent extends RxState<ComponentState> {
+  readonly viewModel$: Observable<ComponentViewModel> = combineLatest([
+    this.select('list').pipe(map(list => ({ list, total: list.length }))),
+    this.select('title')
+  ]).pipe(
+    map(([{ list, total }, title]) => ({ list, total, title })),
+    shareReplay({ refCount: true, bufferSize: 1 })
+  );
+  constructor() {
+    super();
+  }
+}
+```
+
+_Example w `distinctUntilSomeChanged`_:
+
+For this kind of scenario the `distinctUntilSomeChanged` operator was created. Utilizing the `distinctUntilSomeChanged`
+operator inside of the `select` method not only saves you some lines of code and provides more readability.
+It also reduces the amount of computations needed for the viewmodel. Which is a shared and distinct `Observable`.
+
+```typescript
+@Component()
+export class ViewModelComponent extends RxState<ComponentState> {
+  readonly viewModel$: Observable<ComponentViewModel> = this.select(
+    distinctUntilSomeChanged(['title', 'list']),
+    map(({ title, list }) => ({ title, list, total: list.length }))
+  );
+  constructor() {
+    super();
+  }
+}
 ```
