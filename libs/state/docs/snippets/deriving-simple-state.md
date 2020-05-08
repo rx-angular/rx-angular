@@ -2,18 +2,16 @@
 
 As the name `stateful` implies this operator is useful when you process an Observable which maintains state.
 
-If an Observable maintain state there are repetitive and custom things.
+Maintaining state as an `Observable` source comes with a handful of repetitive as well as situational tasks.
 
-The following things need to get ensured always:
+You will always (aka repetitive) want to ensure that:
+- only distinct state changes are emitted
+- only defined values are emitted (filter out undefined, which ensures lazy state)
+- share and replay custom operations for multiple subscribers (saves performance)
 
-- emit only distinct values (state changes)
-- filter out undefined values (lazy state)
-- share and replay the applied operations for multiple subscribers (display the state derivation)
-
-The following things are always custom:
-
-- get a subset of state derivation
-- compose in other Observables or change the Observables behaviour
+You will sometimes (aka situational) need:
+- a subset of the state (derivations)
+- compose the state with other Observables or change the Observables behaviour
 
 If we take a simple state derivation and select the number of items in a list the above looks like this:
 
