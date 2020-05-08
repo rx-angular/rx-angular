@@ -1,10 +1,8 @@
 # Get nested state slices
 
-One of the fundamental reactive state derivations is getting a value of a state slice.
-In some cases this slice could also be deeply nested inside our reactive state.
-
-In RxJS there is an operator called [`pluck`](https://rxjs-dev.firebaseapp.com/api/operators/pluck) which "plucks" out values from an emitted object.
-Also, the [`map`](https://rxjs-dev.firebaseapp.com/api/operators/map) operator could serve for such a task:
+One very common tasks when deriving state is selecting a single value out of the whole state.
+If you are familiar with RxJS, you will know about the [`pluck` operator](https://rxjs-dev.firebaseapp.com/api/operators/pluck) which "plucks" out values from an object.
+Also, the [`map`](https://rxjs-dev.firebaseapp.com/api/operators/map) operator could be used for this.
 
 ```typescript
 import { Observable } from 'rxjs';
