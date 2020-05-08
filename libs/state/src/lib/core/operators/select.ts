@@ -28,15 +28,13 @@ export function select<T>(): MonoTypeOperatorFunction<T>;
  * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive composition.
  *
  * @example
- * ```Typescript
  * const profilePicture$ = state.pipe(
  *   select(
  *    pluck('profilePicture'),
  *    switchMap(profilePicture => mapImageAsync(profilePicture))
  *   )
  * );
- * ```
- * @param op { OperatorFunction<T, A> }
+ * @param  { OperatorFunction<T, A> } op
  * @returns Observable<A>
  */
 export function select<T, A>(
