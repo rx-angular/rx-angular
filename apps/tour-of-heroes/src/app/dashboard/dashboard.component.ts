@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { ConfigService } from '../config.service';
 import { Hero } from '../hero';

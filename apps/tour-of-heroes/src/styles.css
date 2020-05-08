@@ -4,25 +4,30 @@ h1 {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 250%;
 }
+
 h2,
 h3 {
   color: #444;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: lighter;
 }
+
 body {
   margin: 2em;
 }
+
 body,
 input[text],
 button {
   color: #333;
   font-family: Cambria, Georgia;
 }
+
 a {
   cursor: pointer;
   cursor: hand;
 }
+
 button {
   font-family: Arial;
   background-color: #eee;
@@ -32,9 +37,11 @@ button {
   cursor: pointer;
   cursor: hand;
 }
+
 button:hover {
   background-color: #cfd8dc;
 }
+
 button:disabled {
   background-color: #eee;
   color: #aaa;
@@ -51,14 +58,17 @@ nav a {
   background-color: #eee;
   border-radius: 4px;
 }
+
 nav a:visited,
 a:link {
   color: #607d8b;
 }
+
 nav a:hover {
   color: #039be5;
   background-color: #cfd8dc;
 }
+
 nav a.active {
   color: #039be5;
 }

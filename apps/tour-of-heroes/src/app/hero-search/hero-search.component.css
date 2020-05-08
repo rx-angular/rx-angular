@@ -24,9 +24,11 @@
 .search-result li a:hover {
   color: white;
 }
+
 .search-result li a:active {
   color: white;
 }
+
 #search-box {
   width: 200px;
   height: 20px;

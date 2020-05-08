@@ -1,14 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { defer, merge, Observable, Subject } from 'rxjs';
-import {
-  filter,
-  map,
-  startWith,
-  switchMap,
-  switchMapTo,
-  withLatestFrom
-} from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { filter, map, startWith, switchMap } from 'rxjs/operators';
 import { ConfigService } from '../config.service';
 
 import { Hero } from '../hero';

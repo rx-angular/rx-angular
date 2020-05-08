@@ -4,9 +4,11 @@ h2 {
   font-family: Arial, Helvetica, sans-serif;
   font-weight: lighter;
 }
+
 body {
   margin: 2em;
 }
+
 body,
 input[text],
 button {
@@ -23,14 +25,17 @@ button.clear {
   cursor: pointer;
   cursor: hand;
 }
+
 button:hover {
   background-color: #cfd8dc;
 }
+
 button:disabled {
   background-color: #eee;
   color: #aaa;
   cursor: auto;
 }
+
 button.clear {
   color: #333;
   margin-bottom: 12px;

@@ -6,11 +6,13 @@ label {
   color: #607d8b;
   font-weight: bold;
 }
+
 input {
   height: 2em;
   font-size: 1em;
   padding-left: 0.4em;
 }
+
 button {
   margin-top: 20px;
   font-family: Arial;
@@ -20,9 +22,11 @@ button {
   border-radius: 4px;
   cursor: pointer;
 }
+
 button:hover {
   background-color: #cfd8dc;
 }
+
 button:disabled {
   background-color: #eee;
   color: #ccc;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ConfigService } from '../config.service';
 import { MessageService } from '../message.service';
 

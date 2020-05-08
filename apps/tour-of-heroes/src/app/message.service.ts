@@ -4,6 +4,7 @@ import { RxState } from '@rx-angular/state';
 interface MessageServiceState {
   messages: string[];
 }
+
 const initState: MessageServiceState = {
   messages: []
 };
