@@ -35,11 +35,10 @@ export class TypescriptDocsRenderer {
     if (!fs.existsSync(outputPath)) {
       fs.mkdirs(outputPath);
     }
-
     for (const page of pages) {
       let markdown = '';
-      markdown += generateFrontMatter(page.title, 10);
-      markdown += `\n# ${page.title}\n`;
+      // markdown += generateFrontMatter(page.title, 10);
+      // markdown += `\n# ${page.title}\n`;
       for (const info of page.declarations) {
         switch (info.kind) {
           case 'interface':
@@ -316,7 +315,7 @@ export class TypescriptDocsRenderer {
     let output = '';
     for (const param of params) {
       const type = this.renderType(param.type, knownTypeMap, docsUrl);
-      output += `### ${param.name}\n\n`;
+      output += `### ${param.name}\n ##### typeof ${type}\n\n`;
       // output += `{{< member-info kind="parameter" type="${type}" >}}\n\n`;
     }
     return output;
@@ -360,7 +359,7 @@ export class TypescriptDocsRenderer {
           )}`;
         }
       }
-      output += `### ${member.name} \n##### ${type}\n\n`;
+      output += `### ${member.name} \n##### typeof: ${type}\n\n`;
       /*output += `{{< member-info kind="${[...member.modifiers, member.kind].join(' ')}" type="${type}" ${defaultParam}>}}\n\n`;
             output += `{{< member-description >}}${this.renderDescription(member.description, knownTypeMap, docsUrl)}{{< /member-description >}}\n\n`;*/
       output += `${defaultParam}\n\n`;
