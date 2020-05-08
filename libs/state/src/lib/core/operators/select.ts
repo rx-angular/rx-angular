@@ -10,7 +10,7 @@ import { stateful } from './stateful';
 
 /**
  * @description
- * returns the state as shared, replayed and distinct `Observable<T>`. This way you don't have to think about late 
+ * returns the state as shared, replayed and distinct `Observable<T>`. This way you don't have to think about late
  * subscribers, multiple subscribers or multiple emissions of the same value.
  *
  * @example
@@ -36,6 +36,9 @@ export function select<T>(): MonoTypeOperatorFunction<T>;
  * );
  * @param  { OperatorFunction<T, A> } op
  * @returns Observable<A>
+ *
+ * @docsPage select
+ * @docsCategory operators
  */
 export function select<T, A>(
   op: OperatorFunction<T, A>

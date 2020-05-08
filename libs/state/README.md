@@ -54,7 +54,7 @@ with very little effort in any component.
 
 ## API
 
-[API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api.md)
+[API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api/overview.md)
 
 ## Usage
 

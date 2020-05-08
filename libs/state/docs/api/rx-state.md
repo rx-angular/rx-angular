@@ -6,7 +6,7 @@ RxState is a light-weight reactive state management service for managing local s
 
 _Example_
 
-```Typescript
+```TypeScript
 Component({
   selector: 'app-stateful',
   template: `<div>{{ state$ | async | json }}</div>`,
@@ -23,7 +23,7 @@ export class StatefulComponent {
 
 ```TypeScript
 class RxState<T extends object> implements OnDestroy, Subscribable<T> {
-  readonly readonly $ = this.accumulationObservable.state$;
+  readonly readonly $: Observable<T> = this.accumulationObservable.signal$;
   get() => T;
   set(stateOrProjectState: Partial<T> | ProjectStateFn<T>) => void;
   set(key: K, projectSlice: ProjectValueFn<T, K>) => void;
@@ -41,19 +41,20 @@ class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
 ### \$
 
-#####
+##### typeof: Observable&#60;T&#62;
 
-The full state exposed as `Observable<T>`
+The unmodified state exposed as `Observable<T>`. It is not shared, distinct or gets replayed.
+Use the `$` property if you want to read the state without having applied {@link stateful} to it.
 
 ### get
 
-##### () => T
+##### typeof: () => T
 
 Read from the state in imperative manner. Returns the state object in its current state.
 
 _Example_
 
-```Typescript
+```TypeScript
 const { disabled } = state.get();
 if (!disabled) {
   doStuff();
@@ -62,25 +63,23 @@ if (!disabled) {
 
 ### set
 
-##### (stateOrProjectState: Partial&#60;T&#62; | ProjectStateFn&#60;T&#62;) => void
+##### typeof: (stateOrProjectState: Partial&#60;T&#62; | ProjectStateFn&#60;T&#62;) => void
 
 Manipulate one or many properties of the state by providing a `Partial<T>` state or a `ProjectionFunction<T>`.
 
 _Example_
 
-Update one or many properties of the state by providing a `Partial<T>`
-
 ```TypeScript
+// Update one or many properties of the state by providing a `Partial<T>`
+
 const partialState = {
   foo: 'bar',
   bar: 5
 };
 state.set(partialState);
-```
 
-Update one or many properties of the state by providing a `ProjectionFunction<T>`
+// Update one or many properties of the state by providing a `ProjectionFunction<T>`
 
-```TypeScript
 const reduceFn = oldState => ({
   bar: oldState.bar + 5
 });
@@ -89,7 +88,7 @@ state.set(reduceFn);
 
 ### set
 
-##### (key: K, projectSlice: ProjectValueFn&#60;T, K&#62;) => void
+##### typeof: (key: K, projectSlice: ProjectValueFn&#60;T, K&#62;) => void
 
 Manipulate a single property of the state by the property name and a `ProjectionFunction<T>`.
 
@@ -102,7 +101,7 @@ state.set('bar', reduceFn);
 
 ### connect
 
-##### (inputOrSlice\$: Observable&#60;Partial&#60;T&#62; | V&#62;, projectFn?: ProjectStateReducer&#60;T, V&#62;) => void
+##### typeof: (inputOrSlice\$: Observable&#60;Partial&#60;T&#62; | V&#62;, projectFn?: ProjectStateReducer&#60;T, V&#62;) => void
 
 Connect an `Observable<Partial<T>>` to the state `T`.
 Any change emitted by the source will get merged into the state.
@@ -110,30 +109,28 @@ Subscription handling is done automatically.
 
 _Example_
 
-```Typescript
+```TypeScript
 const sliceToAdd$ = interval(250).pipe(mapTo({
   bar: 5,
   foo: 'foo'
 });
 state.connect(sliceToAdd$);
 // every 250ms the properties bar and foo get updated due to the emission of sliceToAdd$
-```
 
-Additionally you can provide a `projectionFunction` to access the current state object and do custom mappings.
+// Additionally you can provide a `projectionFunction` to access the current state object and do custom mappings.
 
-```Typescript
 const sliceToAdd$ = interval(250).pipe(mapTo({
   bar: 5,
   foo: 'foo'
 });
 state.connect(sliceToAdd$, (state, slice) => state.bar += slice.bar);
 // every 250ms the properties bar and foo get updated due to the emission of sliceToAdd$. Bar will increase by
-5 due to the projectionFunction
+// 5 due to the projectionFunction
 ```
 
 ### connect
 
-##### (key: K, slice\$: Observable&#60;T[K]&#62;) => void
+##### typeof: (key: K, slice\$: Observable&#60;T[K]&#62;) => void
 
 Connect an `Observable<T[K]>` source to a specific property `K` in the state `T`. Any emitted change will update
 this
@@ -142,7 +139,7 @@ Subscription handling is done automatically.
 
 _Example_
 
-```Typescript
+```TypeScript
 const myTimer$ = interval(250);
 state.connect('timer', myTimer$);
 // every 250ms the property timer will get updated
@@ -150,7 +147,7 @@ state.connect('timer', myTimer$);
 
 ### connect
 
-##### (key: K, input\$: Observable&#60;V&#62;, projectSliceFn: ProjectValueReducer&#60;T, K, V&#62;) => void
+##### typeof: (key: K, input\$: Observable&#60;V&#62;, projectSliceFn: ProjectValueReducer&#60;T, K, V&#62;) => void
 
 Connect an `Observable<Partial<T>>` source to a specific property in the state. Additionally you can provide a
 `projectionFunction` to access the current state object on every emission of your connected `Observable`.
@@ -159,7 +156,7 @@ Subscription handling is done automatically.
 
 _Example_
 
-```Typescript
+```TypeScript
 const myTimer$ = interval(250);
 state.connect('timer', myTimer$, (state, timerChange) => state.timer += timerChange);
 // every 250ms the property timer will get updated
@@ -167,7 +164,7 @@ state.connect('timer', myTimer$, (state, timerChange) => state.timer += timerCha
 
 ### select
 
-##### () => Observable&#60;T&#62;
+##### typeof: () => Observable&#60;T&#62;
 
 returns the state as cached and distinct `Observable<T>`. This way you don't have to think about **late
 subscribers**,
@@ -175,21 +172,21 @@ subscribers**,
 
 _Example_
 
-```Typescript
+```TypeScript
 const state$ = state.select();
 state$.subscribe(state => doStuff(state));
 ```
 
 ### select
 
-##### (op: OperatorFunction&#60;T, A&#62;) => Observable&#60;A&#62;
+##### typeof: (op: OperatorFunction&#60;T, A&#62;) => Observable&#60;A&#62;
 
 returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
 [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive composition.
 
 _Example_
 
-```Typescript
+```TypeScript
 const profilePicture$ = state.select(
  pluck('profilePicture'),
  switchMap(profilePicture => mapImageAsync(profilePicture))
@@ -198,28 +195,26 @@ const profilePicture$ = state.select(
 
 ### select
 
-##### (k1: K1) => Observable&#60;T[K1]&#62;
+##### typeof: (k1: K1) => Observable&#60;T[K1]&#62;
 
 Access a single property of the state by providing keys.
 Returns a single property of the state as cached and distinct `Observable<T[K1]>`.
 
 _Example_
 
-**Access a single property**
+```TypeScript
+// Access a single property
 
-```Typescript
 const bar$ = state.select('bar');
-```
 
-**Access a nested property**
+// Access a nested property
 
-```Typescript
 const foo$ = state.select('bar', 'foo');
 ```
 
 ### hold
 
-##### (obsOrObsWithSideEffect: Observable&#60;S&#62;, sideEffectFn?: (arg: S) =&#62; void) => void
+##### typeof: (obsOrObsWithSideEffect: Observable&#60;S&#62;, sideEffectFn?: (arg: S) =&#62; void) => void
 
 Manages side-effects of your state. Provide an `Observable<any>` **side-effect** and an optional
 `sideEffectFunction`.
@@ -227,19 +222,15 @@ Subscription handling is done automatically.
 
 _Example_
 
-Directly pass an observable side-effect
-
-```Typescript
+```TypeScript
+// Directly pass an observable side-effect
 const localStorageEffect$ = changes$.pipe(
  tap(changes => storeChanges(changes))
 );
-
 state.hold(localStorageEffect$);
-```
 
-Pass an additional `sideEffectFunction`
+// Pass an additional `sideEffectFunction`
 
-```Typescript
 const localStorageEffectFn = changes => storeChanges(changes);
 state.hold(changes$, localStorageEffectFn);
 ```
