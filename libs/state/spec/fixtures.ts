@@ -8,7 +8,7 @@ export interface PrimitiveState {
 }
 
 export const initialPrimitiveState: PrimitiveState = {
-  str: 'string',
+  str: 'str',
   num: 42,
   bol: true
 };

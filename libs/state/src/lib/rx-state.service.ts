@@ -62,9 +62,11 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   /**
    * @description
-   * The full state exposed as `Observable<T>`
+   * The full unmodified state exposed as `Observable<T>`
+   * The main difference between `$`and `select` is,
+   * `select` uses publishReplay(1) under the hood and applies the {@link stateful} operator internally.
    */
-  readonly $ = this.accumulationObservable.state$;
+  readonly $ = this.accumulationObservable.signal$;
 
   /**
    * @internal
@@ -457,11 +459,15 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     ...opOrMapFn: OperatorFunction<T, R>[] | string[]
   ): Observable<T | R> {
     if (!opOrMapFn || opOrMapFn.length === 0) {
-      return this.$.pipe(stateful());
+      return this.accumulationObservable.state$.pipe(stateful());
     } else if (isStringArrayGuard(opOrMapFn)) {
-      return this.$.pipe(stateful(pluck(...opOrMapFn)));
+      return this.accumulationObservable.state$.pipe(
+        stateful(pluck(...opOrMapFn))
+      );
     } else if (isOperateFnArrayGuard(opOrMapFn)) {
-      return this.$.pipe(stateful(pipeFromArray(opOrMapFn)));
+      return this.accumulationObservable.state$.pipe(
+        stateful(pipeFromArray(opOrMapFn))
+      );
     }
     throw new WrongSelectParamsError();
   }
