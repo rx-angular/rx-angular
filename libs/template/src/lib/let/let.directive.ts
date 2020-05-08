@@ -103,7 +103,7 @@ export class LetDirective<U> implements OnDestroy {
     this.renderAware.nextPotentialObservable(potentialObservable);
   }
 
-  @Input()
+  @Input('rxLetStrategy')
   set strategy(config: string | Observable<string> | undefined) {
     if (config) {
       this.renderAware.nextStrategy(config);
