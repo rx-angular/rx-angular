@@ -14,7 +14,7 @@ const setupPushPipeComponent = () => {
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef }
     ]
   });
-  pushPipe = TestBed.get(PushPipe);
+  pushPipe = TestBed.inject(PushPipe);
 };
 
 describe('PushPipe used as a Service', () => {

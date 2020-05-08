@@ -11,7 +11,7 @@ jobs:
           steps:
             - run:
                 name: 'Install'
-                command: npm install --frozen-lockfile --non-interactive
+                command: npm install
             - run: npm run affected:lint --  --parallel
             - run: npm run affected:test --  --parallel
             - run: npm run affected:build --  --with-deps
