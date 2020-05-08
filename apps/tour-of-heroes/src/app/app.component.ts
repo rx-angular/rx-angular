@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { ApplicationRef, Component } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { AppRenderStrategy, ConfigService } from './config.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +10,15 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Tour of Heroes';
+
+  constructor(
+    private router: Router,
+    private appRef: ApplicationRef,
+    private configService: ConfigService
+  ) {
+    configService.setStrategy(AppRenderStrategy.ɵlocal);
+    router.events
+      .pipe(filter(e => e instanceof NavigationEnd))
+      .subscribe(() => appRef.tick());
+  }
 }

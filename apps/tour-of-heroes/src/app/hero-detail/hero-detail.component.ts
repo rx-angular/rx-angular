@@ -30,7 +30,7 @@ export class HeroDetailComponent {
     private state: RxState<HeroDetailComponentState>
   ) {
     const hero$ = this.route.paramMap.pipe(
-      switchMap(id => this.heroService.getHero(Number(id)))
+      switchMap(params => this.heroService.getHero(Number(params.get('id'))))
     );
     this.state.connect('hero', hero$);
     const saveEffect$ = this.save$.pipe(

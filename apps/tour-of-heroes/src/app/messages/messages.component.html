@@ -1,4 +1,4 @@
-<div *rxLet="messageService.messages$; let messages">
+<div *rxLet="messageService.messages$; let messages; strategy: 'ɵlocal'">
   <h2>Messages</h2>
   <button class="clear" (click)="messageService.clear()">clear</button>
   <div *ngFor="let message of messages">{{ message }}</div>

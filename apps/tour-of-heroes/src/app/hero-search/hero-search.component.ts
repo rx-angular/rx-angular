@@ -35,7 +35,7 @@ export class HeroSearchComponent {
   );
 
   constructor(
-    private heroService: HeroService,
+    public heroService: HeroService,
     private state: RxState<HeroSearchComponentState>
   ) {
     this.state.connect('heroes', this._searchResult$);

@@ -9,6 +9,7 @@ import {
   switchMapTo,
   withLatestFrom
 } from 'rxjs/operators';
+import { ConfigService } from '../config.service';
 
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
@@ -56,8 +57,9 @@ export class HeroesComponent {
   );
 
   constructor(
-    private heroService: HeroService,
-    private state: RxState<HeroesComponentState>
+    public heroService: HeroService,
+    private state: RxState<HeroesComponentState>,
+    public configService: ConfigService
   ) {
     this.state.set(initHeroesComponentState);
     this.state.hold(this.state.select(), console.log);

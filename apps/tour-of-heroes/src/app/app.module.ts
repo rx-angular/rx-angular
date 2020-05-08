@@ -44,10 +44,4 @@ import { MessagesComponent } from './messages/messages.component';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-  constructor(private router: Router, private appRef: ApplicationRef) {
-    router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
-      .subscribe(() => appRef.tick());
-  }
-}
+export class AppModule {}
