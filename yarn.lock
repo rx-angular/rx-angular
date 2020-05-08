@@ -1353,21 +1353,6 @@
     merge-source-map "^1.1.0"
     schema-utils "^2.6.4"
 
-"@ngrx/effects@^9.0.0":
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-9.1.0.tgz#b977780ce9e58632ae8e2f259741a3861bbbbfe4"
-  integrity sha512-DPMtp/2YTrvuxMqaehQ39FeoNODuMcRB6xDImvrnMFPIkUcP3mDHnIg6UB5c2JvfHlZZClKR+Fb+RE2nuVub8w==
-
-"@ngrx/store-devtools@^9.0.0":
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-9.1.0.tgz#503f6468454bb633433408884b99377716f9d884"
-  integrity sha512-KDvuNBxfTgDHjESiouEoPXq8GCUYbHnA+jOs8MzzwVDmxNLeZuDy3amaVzKv9Q5nncI6mNGcXOzTKWzapET8Sw==
-
-"@ngrx/store@^9.0.0":
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-9.1.0.tgz#1339716a34e2b389979d25464bb32b0dba799557"
-  integrity sha512-Ah2nApPZXTvKl7ybaFMIFwEdMg8b7PvIKATigbDTUftAsFxked2+T7blNv6aCgSfEqbOVMBTYPk7OsLCYZoz4Q==
-
 "@ngtools/webpack@9.1.1":
   version "9.1.1"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-9.1.1.tgz#d67c23a62cd6d5ff0ca8f46062d9dc4aa7eebff4"
@@ -1538,11 +1523,6 @@
     "@types/estree" "0.0.39"
     estree-walker "^1.0.1"
     micromatch "^4.0.2"
-
-"@rx-angular/state@^1.0.0-rc.0":
-  version "1.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@rx-angular/state/-/state-1.0.0-rc.1.tgz#3c4c6439ad4a6ceb204287e3b0e9ed3d8657af18"
-  integrity sha512-Z4KIPu6eY94CbImbCGrhVQOGoL3Q34y1khtk9wMQ33MjOXYIAXP8v9p2u5XGUtBKp08Y7lwM9seeMmd0cI3aeg==
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
