@@ -60,9 +60,8 @@ const defaultCompare = <T, K extends keyof T>(oldVal, newVal) =>
  * compute if values are distinct or not.
  *
  * @example
- * An example comparing the first letters of just the name property.
+ * // An example comparing the first letters of just the name property.
  *
- * ```Typescript
  * import { of } from 'rxjs';
  * import { distinctUntilSomeChanged } from 'rx-angular/state';
  *
@@ -89,7 +88,6 @@ const defaultCompare = <T, K extends keyof T>(oldVal, newVal) =>
  * // { age: 4, name: 'Foo1' }
  * // { age: 7, name: 'Bar' }
  * // { age: 5, name: 'Foo2' }
- * ```
  *
  * @see {@link distinctUntilChanged}
  * @see {@link distinctUntilKeyChanged}
@@ -116,7 +114,7 @@ export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
  * compute if values are distinct or not.
  *
  * @example
- * ```Typescript
+ *
  * import { of } from 'rxjs';
  * import { distinctUntilSomeChanged } from 'rx-angular/state';
  *
@@ -140,11 +138,9 @@ export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
  * // { age: 7, name: 'Bar' }
  * // { age: 5, name: 'Foo' }
  * // { age: 6, name: 'Foo' }
- * ```
  *
- * An example with a custom comparison applied to each key
- *
- * ```Typescript
+ * @example
+ * // An example with a custom comparison applied to each key
  * import { of } from 'rxjs';
  * import { distinctUntilSomeChanged } from 'rxjs/operators';
  * import { isDeepEqual } from 'custom/is-equal';
@@ -171,7 +167,6 @@ export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
  * // { age: 7, name: 'Bar' }
  * // { age: 5, name: 'Foo2' }
  * // { age: 6, name: 'Foo3' }
- * ```
  *
  * @see {@link distinctUntilChanged}
  * @see {@link distinctUntilKeyChanged}
