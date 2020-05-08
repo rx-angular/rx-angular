@@ -56,7 +56,7 @@ export function createRenderAware<U>(cfg: {
     switchMap(stringOrObservable =>
       typeof stringOrObservable === 'string'
         ? of(stringOrObservable)
-        : stringOrObservable.pipe(mergeAll())
+        : stringOrObservable
     ),
     nameToStrategy(cfg.strategies),
     tap(s => (strategy = s))
