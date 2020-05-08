@@ -1,7 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { merge, Observable, Subject } from 'rxjs';
-import { switchMap, switchMapTo } from 'rxjs/operators';
+import { defer, merge, Observable, Subject } from 'rxjs';
+import {
+  filter,
+  map,
+  startWith,
+  switchMap,
+  switchMapTo,
+  withLatestFrom
+} from 'rxjs/operators';
 
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
@@ -26,8 +33,26 @@ export class HeroesComponent {
   readonly heroes$: Observable<Hero[]> = this.state.select('heroes');
   readonly add = new Subject<string>();
   readonly delete = new Subject<Hero>();
+
   private readonly _heroAdded$ = this.add.pipe(
     switchMap(name => this.heroService.addHero({ name } as Hero))
+  );
+  private readonly _heroDeleted$ = this.delete.pipe(
+    switchMap(deletedHero =>
+      this.heroService.deleteHero(deletedHero).pipe(
+        map(hero => {
+          // no hero means error, we have to revert the optimistic change
+          if (!hero) {
+            return [...this.state.get().heroes, deletedHero];
+          }
+          return null;
+        }),
+        // apply optimistic change
+        startWith(this.state.get().heroes.filter(h => h.id !== deletedHero.id)),
+        // only apply optimistic change and the revert if needed
+        filter(change => change !== null)
+      )
+    )
   );
 
   constructor(
@@ -35,14 +60,11 @@ export class HeroesComponent {
     private state: RxState<HeroesComponentState>
   ) {
     this.state.set(initHeroesComponentState);
+    this.state.hold(this.state.select(), console.log);
     this.state.connect('heroes', this.heroService.getHeroes());
+    this.state.connect('heroes', this._heroDeleted$);
     this.state.connect(this._heroAdded$, (oldState, addedHero) => ({
       heroes: [...oldState.heroes, addedHero]
     }));
   }
-
-  /*delete(hero: Hero): void {
-    this.heroes = this.heroes.filter(h => h !== hero);
-    this.heroService.deleteHero(hero).subscribe();
-  }*/
 }

@@ -1,10 +1,12 @@
-import { NgModule } from '@angular/core';
+import { ApplicationRef, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { LetModule } from '@rx-angular/template';
+import { NavigationEnd, Router } from '@angular/router';
+import { LetModule, PushModule } from '@rx-angular/template';
 
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { filter } from 'rxjs/operators';
 import { InMemoryDataService } from './in-memory-data.service';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -29,7 +31,8 @@ import { MessagesComponent } from './messages/messages.component';
     HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {
       dataEncapsulation: false
     }),
-    LetModule
+    LetModule,
+    PushModule
   ],
   declarations: [
     AppComponent,
@@ -41,4 +44,10 @@ import { MessagesComponent } from './messages/messages.component';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private router: Router, private appRef: ApplicationRef) {
+    router.events
+      .pipe(filter(e => e instanceof NavigationEnd))
+      .subscribe(() => appRef.tick());
+  }
+}

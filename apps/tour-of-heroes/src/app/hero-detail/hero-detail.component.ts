@@ -1,38 +1,50 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { RxState } from '@rx-angular/state';
+import { Subject } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
 
+interface HeroDetailComponentState {
+  hero: Hero;
+}
+
 @Component({
   selector: 'app-hero-detail',
   templateUrl: './hero-detail.component.html',
-  styleUrls: ['./hero-detail.component.css']
+  styleUrls: ['./hero-detail.component.css'],
+  providers: [RxState]
 })
-export class HeroDetailComponent implements OnInit {
-  @Input() hero: Hero;
+export class HeroDetailComponent {
+  readonly hero$ = this.state.select('hero');
+
+  readonly save$ = new Subject<Hero>();
 
   constructor(
     private route: ActivatedRoute,
     private heroService: HeroService,
-    private location: Location
-  ) {}
-
-  ngOnInit(): void {
-    this.getHero();
-  }
-
-  getHero(): void {
-    const id = +this.route.snapshot.paramMap.get('id');
-    this.heroService.getHero(id).subscribe(hero => (this.hero = hero));
+    private location: Location,
+    private state: RxState<HeroDetailComponentState>
+  ) {
+    const hero$ = this.route.paramMap.pipe(
+      switchMap(id => this.heroService.getHero(Number(id)))
+    );
+    this.state.connect('hero', hero$);
+    const saveEffect$ = this.save$.pipe(
+      switchMap(hero => this.heroService.updateHero(hero)),
+      tap(() => this.goBack())
+    );
+    this.state.hold(saveEffect$);
   }
 
   goBack(): void {
     this.location.back();
   }
 
-  save(): void {
-    this.heroService.updateHero(this.hero).subscribe(() => this.goBack());
+  save(hero: Hero): void {
+    this.save$.next(hero);
   }
 }

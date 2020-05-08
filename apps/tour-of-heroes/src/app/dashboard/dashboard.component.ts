@@ -1,24 +1,25 @@
 import { Component, OnInit } from '@angular/core';
+import { RxState } from '@rx-angular/state';
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
+
+interface DashboardComponentState {
+  heroes: Hero[];
+}
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
+  providers: [RxState]
 })
-export class DashboardComponent implements OnInit {
-  heroes: Hero[] = [];
+export class DashboardComponent {
+  readonly heroes$ = this.state.select('heroes');
 
-  constructor(private heroService: HeroService) {}
-
-  ngOnInit() {
-    this.getHeroes();
-  }
-
-  getHeroes(): void {
-    this.heroService
-      .getHeroes()
-      .subscribe(heroes => (this.heroes = heroes.slice(1, 5)));
+  constructor(
+    private heroService: HeroService,
+    private state: RxState<DashboardComponentState>
+  ) {
+    this.state.connect('heroes', this.heroService.getHeroes());
   }
 }
