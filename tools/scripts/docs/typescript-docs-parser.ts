@@ -423,7 +423,14 @@ export class TypescriptDocsParser {
    * wherein the asterisks are not stripped as they should be, see https://github.com/Microsoft/TypeScript/issues/23517)
    */
   private formatExampleCode(example: string = ''): string {
-    return '\n\n*Example*\n\n' + example.replace(/\n\s+\*\s/g, '\n');
+    return '\n\n*Example*\n\n' + this.wrapInTypescript(example.replace(/\n\s+\*\s/g, '\n'));
+  }
+
+  private wrapInTypescript(val: string = '') {
+    let output = `\`\`\`TypeScript\n`;
+    output += `${val}\n`;
+    output += `\`\`\`\n`;
+    return output;
   }
 
   private kebabCase<T extends string | undefined>(input: T): T {

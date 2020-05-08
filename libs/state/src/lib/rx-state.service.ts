@@ -37,7 +37,6 @@ type ProjectValueReducer<T, K extends keyof T, V> = (
  * ![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_logo.png)
  *
  * @example
- * ```Typescript
  * Component({
  *   selector: 'app-stateful',
  *   template: `<div>{{ state$ | async | json }}</div>`,
@@ -48,7 +47,6 @@ type ProjectValueReducer<T, K extends keyof T, V> = (
  *
  *   constructor(private state: RxState<{ foo: string }>) {}
  * }
- * ```
  *
  * @docsCategory RxState
  * @docsPage RxState
@@ -62,11 +60,10 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   /**
    * @description
-   * The full unmodified state exposed as `Observable<T>`
-   * The main difference between `$`and `select` is,
-   * `select` uses publishReplay(1) under the hood and applies the {@link stateful} operator internally.
+   * The unmodified state exposed as `Observable<T>`. It is not shared, distinct or gets replayed.
+   * Use the `$` property if you want to read the state without having applied {@link stateful} to it.
    */
-  readonly $ = this.accumulationObservable.signal$;
+  readonly $: Observable<T> = this.accumulationObservable.signal$;
 
   /**
    * @internal
@@ -87,12 +84,10 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * Read from the state in imperative manner. Returns the state object in its current state.
    *
    * @example
-   * ```Typescript
    * const { disabled } = state.get();
    * if (!disabled) {
    *   doStuff();
    * }
-   * ```
    *
    * @return T
    */
@@ -105,22 +100,20 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * Manipulate one or many properties of the state by providing a `Partial<T>` state or a `ProjectionFunction<T>`.
    *
    * @example
-   * Update one or many properties of the state by providing a `Partial<T>`
-   * ```TypeScript
+   * // Update one or many properties of the state by providing a `Partial<T>`
+   *
    * const partialState = {
    *   foo: 'bar',
    *   bar: 5
    * };
    * state.set(partialState);
-   * ```
    *
-   * Update one or many properties of the state by providing a `ProjectionFunction<T>`
-   * ```TypeScript
+   * // Update one or many properties of the state by providing a `ProjectionFunction<T>`
+   *
    * const reduceFn = oldState => ({
    *   bar: oldState.bar + 5
    * });
    * state.set(reduceFn);
-   * ```
    *
    * @param {Partial<T>|ProjectStateFn<T>} stateOrProjectState
    * @return void
@@ -132,10 +125,8 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * Manipulate a single property of the state by the property name and a `ProjectionFunction<T>`.
    *
    * @example
-   * ```TypeScript
    * const reduceFn = oldState => oldState.bar + 5;
    * state.set('bar', reduceFn);
-   * ```
    *
    * @param {K} key
    * @param {ProjectValueFn<T, K>} projectSlice
@@ -189,25 +180,22 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * Subscription handling is done automatically.
    *
    * @example
-   * ```Typescript
    * const sliceToAdd$ = interval(250).pipe(mapTo({
    *   bar: 5,
    *   foo: 'foo'
    * });
    * state.connect(sliceToAdd$);
    * // every 250ms the properties bar and foo get updated due to the emission of sliceToAdd$
-   * ```
    *
-   * Additionally you can provide a `projectionFunction` to access the current state object and do custom mappings.
-   * ```Typescript
+   * // Additionally you can provide a `projectionFunction` to access the current state object and do custom mappings.
+   *
    * const sliceToAdd$ = interval(250).pipe(mapTo({
    *   bar: 5,
    *   foo: 'foo'
    * });
    * state.connect(sliceToAdd$, (state, slice) => state.bar += slice.bar);
    * // every 250ms the properties bar and foo get updated due to the emission of sliceToAdd$. Bar will increase by
-   * 5 due to the projectionFunction
-   * ```
+   * // 5 due to the projectionFunction
    */
   connect<V>(
     inputOrSlice$: Observable<Partial<T> | V>,
@@ -222,11 +210,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * Subscription handling is done automatically.
    *
    * @example
-   * ```Typescript
    * const myTimer$ = interval(250);
    * state.connect('timer', myTimer$);
    * // every 250ms the property timer will get updated
-   * ```
    */
   connect<K extends keyof T>(key: K, slice$: Observable<T[K]>): void;
   /**
@@ -238,12 +224,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * Subscription handling is done automatically.
    *
    * @example
-   *
-   * ```Typescript
    * const myTimer$ = interval(250);
    * state.connect('timer', myTimer$, (state, timerChange) => state.timer += timerChange);
    * // every 250ms the property timer will get updated
-   * ```
    */
   connect<K extends keyof T, V>(
     key: K,
@@ -323,10 +306,8 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * **multiple subscribers** or **multiple emissions** of the same value
    *
    * @example
-   * ```Typescript
    * const state$ = state.select();
    * state$.subscribe(state => doStuff(state));
-   * ```
    *
    * @returns Observable<T>
    */
@@ -338,12 +319,10 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive composition.
    *
    * @example
-   * ```Typescript
    * const profilePicture$ = state.select(
    *  pluck('profilePicture'),
    *  switchMap(profilePicture => mapImageAsync(profilePicture))
    * );
-   * ```
    * @param op { OperatorFunction<T, A> }
    * @returns Observable<A>
    */
@@ -388,15 +367,14 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * Returns a single property of the state as cached and distinct `Observable<T[K1]>`.
    *
    * @example
-   *  **Access a single property**
-   * ```Typescript
-   * const bar$ = state.select('bar');
-   * ```
+   * // Access a single property
    *
-   * **Access a nested property**
-   * ```Typescript
+   * const bar$ = state.select('bar');
+   *
+   * // Access a nested property
+   *
    * const foo$ = state.select('bar', 'foo');
-   * ```
+   *
    * @return Observable<T[K1]>
    */
   select<K1 extends keyof T>(k1: K1): Observable<T[K1]>;
@@ -479,20 +457,19 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * Subscription handling is done automatically.
    *
    * @example
-   * Directly pass an observable side-effect
-   * ```Typescript
+   * // Directly pass an observable side-effect
    * const localStorageEffect$ = changes$.pipe(
    *  tap(changes => storeChanges(changes))
    * );
-   *
    * state.hold(localStorageEffect$);
-   * ```
    *
-   * Pass an additional `sideEffectFunction`
-   * ```Typescript
+   * // Pass an additional `sideEffectFunction`
+   *
    * const localStorageEffectFn = changes => storeChanges(changes);
    * state.hold(changes$, localStorageEffectFn);
-   * ```
+   *
+   * @param {Observable<S>} obsOrObsWithSideEffect
+   * @param {function} [sideEffectFn]
    */
   hold<S>(
     obsOrObsWithSideEffect: Observable<S>,
