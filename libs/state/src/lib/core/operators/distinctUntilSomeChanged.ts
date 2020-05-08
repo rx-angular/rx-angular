@@ -22,8 +22,7 @@ export type CompareFn<T> = (oldVal: T, newVal: T) => boolean;
  * `undefined` in order to utilize the default equality check.
  *
  * @example
- * ```Typescript
- *  const keyCompareMap = {
+ * const keyCompareMap = {
  *    myKey: (o, n) => customCompare(o, n),
  *    myOtherKey: undefined
  *  };
@@ -31,7 +30,6 @@ export type CompareFn<T> = (oldVal: T, newVal: T) => boolean;
  *    myKey: 5,
  *    myOtherKey: 'bar'
  *  }).pipe(distinctUntilSomeChanged(keyCompareMap));
- * ```
  *
  * @docsPage distinctUntilSomeChanged
  * @docsCategory operators
