@@ -1,6 +1,6 @@
 # Deriving simple state
 
-As the name implies this operator is useful when you process an Observable which maintains state.
+As the name `stateful` implies this operator is useful when you process an Observable which maintains state.
 
 If an Observable maintain state there are repetitive and custom things.
 
