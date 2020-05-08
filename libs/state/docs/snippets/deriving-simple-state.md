@@ -34,8 +34,7 @@ const derivation$ = state$.pipe(
 );
 ```
 
-By using the `stateful` operator we have the ability
-to place custom logic into the above process, and the repetitive operators get abstracted away.
+Using the `stateful` operator gives you the advantage to insert custom logic to derive state without having to think about sharing or replaying. It will also apply `distinctUntilChanged` by default. But you can provide custom logic for distinct values aswell.
 
 ```typescript
 import { Observable } from 'rxjs';
