@@ -63,6 +63,7 @@ a function which handles change detection for us.
   providers: [RxState]
 })
 export class RxComponent {
+  // Modifying the class
   @HostBinding('[class.is-hidden]') get isHidden() {
     return !this.state.get().visible;
   }
