@@ -364,7 +364,7 @@ export class ChecklistComponent implements OnDestroy {
 
 Let's do another round and refactor `List` component using `@rx-angular/state`. In the core of it are operators `mergeAll()` that works with stream of streams instead of single values and `scan()` that accumulates values form this streams into single state observable.
 
-First step will be addint `RxState` service to our component.
+First step will be adding `RxState` service to our component.
 
 ```
 @Component({
@@ -387,7 +387,7 @@ RxState service is in component providers. That means that lifecycle of this ser
   tasks$ = this.state.select("tasks");
 ```
 
-Visually it looks the same but select operator allows lot more possibilities than just passing keys. You can read about it [here](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api.md#select). Also selection will be cached, distinct and undefined values will be filtered out.
+Visually it looks the same but select operator allows lot more possibilities than just passing keys. You can read about it [here](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api/rx-state.md#select). Also selection will be cached, distinct and undefined values will be filtered out.
 
 **Updating state reactively**
 
@@ -427,7 +427,7 @@ Now we need to update our `answerHandler$` so it will return an id of task that 
   }
 ```
 
-Note that we removed `withLatestFrom(this.tasks$)` and using different approach with `connect`. First we tell to what field updates should be applied to, after that goes source of updates and the last one is `projectionFunction`. In this funciton first argument is our current state, second one is a value from our source. More on possible `connect` variants [here](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api.md#connect).
+Note that we removed `withLatestFrom(this.tasks$)` and using different approach with `connect`. First we tell to what field updates should be applied to, after that goes source of updates and the last one is `projectionFunction`. In this funciton first argument is our current state, second one is a value from our source. More on possible `connect` variants [here](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api/rx-state.md#connect).
 
 **Full component code**
 
