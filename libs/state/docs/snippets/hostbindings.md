@@ -41,7 +41,7 @@ export class RxComponent {
     return `${this.state.get().top ? this.state.get().top : 0}px`;
   }
   @HostBinding('[style.maxHeight]') get maxHeight() {
-    return `${this.state.get().maxHeight ? this.state.get().maxHeight : 0}px`;
+    return `${this.state.get().maxHeight}px`;
   }
 
   constructor(private state: RxState<ComponentState>) {}
