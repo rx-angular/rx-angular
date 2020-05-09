@@ -22,23 +22,11 @@
     "state-demo": {
       "tags": []
     },
-    "state-demo-e2e": {
-      "tags": [],
-      "implicitDependencies": ["state-demo"]
-    },
     "template-demo": {
       "tags": []
     },
-    "template-demo-e2e": {
-      "tags": [],
-      "implicitDependencies": ["template-demo"]
-    },
     "experiments": {
       "tags": []
-    },
-    "experiments-e2e": {
-      "tags": [],
-      "implicitDependencies": ["experiments"]
     },
     "test-helpers": {
       "tags": ["type:util"]
@@ -52,19 +40,11 @@
     "architecture-demos": {
       "tags": []
     },
-    "architecture-demos-e2e": {
-      "tags": [],
-      "implicitDependencies": ["architecture-demos"]
-    },
     "docs": {
       "tags": []
     },
     "tour-of-heroes": {
       "tags": []
-    },
-    "tour-of-heroes-e2e": {
-      "tags": [],
-      "implicitDependencies": ["tour-of-heroes"]
     }
   }
 }
