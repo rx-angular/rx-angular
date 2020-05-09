@@ -427,7 +427,9 @@ Now we need to update our `answerHandler$` so it will return an id of task that 
   }
 ```
 
-Note that we removed `withLatestFrom(this.tasks$)` and using different approach with `connect`. First we tell to what field updates should be applied to, after that goes source of updates and the last one is `projectionFunction`. In this funciton first argument is our current state, second one is a value from our source. More on possible `connect` variants [here](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api/rx-state.md#connect).
+Note that we removed `withLatestFrom(this.tasks$)` in favor of the `projectionFunction` in `connect`.
+First we define fields to be updated, then the source of the changes and lastly we provide the `projectionFunction`.
+The functions' first first argument is the current state, the second is the change coming from our source. More on possible `connect` variants [here](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api/rx-state.md#connect).
 
 **Full component code**
 
