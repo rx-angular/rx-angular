@@ -86,7 +86,7 @@ We should see the initial state in the template.
 ## Setup Input bindings
 
 As parts of our state get passed as input bindings we need to insert these changes into the components' state.
-The problem with setting values in an imperative way is that it's not composable. 
+The problem with setting values in an imperative way is that it's not composable.
 Thats why in this case we have to hook into the imperative callback of the `refreshInterval` component input binding.
 
 We run a partial update to our state by providing an object containing the new state slice `{refreshInterval: number}`.
@@ -198,14 +198,14 @@ Next lets replace the logic for the output binding of the component.
 
 As the open/closed state is already reflected in the components' state, we can directly derive changes from them.
 
-As we are only interested in changes of the slice `listExpanded` we can use the `distinctUntilKeysChanged` operator
+As we are only interested in changes of the slice `listExpanded` we can use the `distinctUntilKeyChanged` operator
 to get the changes.
 
 Lets refactor to following and delete the `listExpanded` property int he class and template.
 
 ```typescript
   @Output()
-  listExpandedChange = this.$.pipe(distinctUntilKeysChanged('listExpanded'));
+  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'));
 ```
 
 ## Connect Global state to the `list` slice.

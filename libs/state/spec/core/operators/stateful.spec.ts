@@ -3,15 +3,7 @@ import { EMPTY, NEVER } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { stateful } from '../../../src';
-
-interface PrimitiveState {
-  test: string;
-  bar: number;
-}
-
-interface ArrayState {
-  items: number[];
-}
+import { initialNestedState } from '../../fixtures';
 
 let testScheduler: TestScheduler;
 
@@ -19,7 +11,6 @@ beforeEach(() => {
   testScheduler = new TestScheduler(jestMatcher);
 });
 
-// tslint:disable: no-duplicate-string
 describe('stateful', () => {
   it('should mirror EMPTY', () => {
     testScheduler.run(({ expectObservable }) => {

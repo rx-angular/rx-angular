@@ -87,8 +87,6 @@ const defaultCompare = <T, K extends keyof T>(oldVal, newVal) =>
  * // { age: 7, name: 'Bar' }
  * // { age: 5, name: 'Foo2' }
  *
- * @see {@link distinctUntilChanged}
- * @see {@link distinctUntilKeyChanged}
  * @see {@link KeyCompareMap}
  *
  * @param {KeyCompareMap<T>} keyCompareMap

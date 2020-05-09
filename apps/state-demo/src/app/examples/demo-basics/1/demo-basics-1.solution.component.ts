@@ -6,7 +6,6 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { RxState } from '@rx-angular/state';
 import { distinctUntilKeyChanged, map, switchMap, tap } from 'rxjs/operators';
 import {
