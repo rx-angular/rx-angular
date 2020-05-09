@@ -4,6 +4,9 @@ This snippet compares 3 different implementations of the same problem.
 It serves as a small refactoring guide
 and shows the difference of imperative and declarative/reactive programming.
 
+This snippet uses the `rxLet` directive (`@rx-angular/template`, not released yet) as replacement for angulars `async` pipe.
+All examples will work with the `async`.
+
 **Problem**:
 We have a component that:
 
@@ -54,7 +57,7 @@ The components' state is a simple interface: `{ count: number }`.
 Inside the class we expose our state as Observable `readonly state$ = this.select();`
 
 **Display**:
-To display the value we use a a simple structural directive called `*rxLet` which binds the `state$` property of the component to its `host element`. We can then assign our state observable to a `local template variable`.
+To display the value we use a simple structural directive called `*rxLet` which binds the `state$` property of the component to its `host element`. We can then assign our state observable to a `local template variable`.
 
 Whenever the bound Observable emits a new value the `rxLet` directive flags this component and all of its ancestors as dirty.
 

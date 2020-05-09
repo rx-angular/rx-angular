@@ -4,22 +4,12 @@ import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 
 import { select } from '../../../src';
-
-interface PrimitiveState {
-  bol: boolean;
-  str: string;
-  num: number;
-}
-
-interface NestedState {
-  obj: {
-    key1: {
-      key11: {
-        key111: string;
-      };
-    };
-  };
-}
+import {
+  initialNestedState,
+  initialPrimitiveState,
+  NestedState,
+  PrimitiveState
+} from '../../fixtures';
 
 let testScheduler: TestScheduler;
 
@@ -27,7 +17,6 @@ beforeEach(() => {
   testScheduler = new TestScheduler(jestMatcher);
 });
 
-// tslint:disable: no-duplicate-string
 describe('select', () => {
   describe('should mirror the behavior of the stateful and', () => {
     it('should mirror EMPTY', () => {
@@ -113,10 +102,9 @@ describe('select', () => {
 
   it('should accept multiple strings keyof T', () => {
     testScheduler.run(({ cold, expectObservable }) => {
-      const nestedState: NestedState = {
-        obj: { key1: { key11: { key111: 'test' } } }
-      };
-      const source: Observable<NestedState> = cold('a|', { a: nestedState });
+      const source: Observable<NestedState> = cold('a|', {
+        a: initialNestedState
+      });
       expectObservable(
         source.pipe(select('obj', 'key1', 'key11', 'key111'))
       ).toBe('a|', { a: 'test' });
@@ -125,13 +113,8 @@ describe('select', () => {
 
   it('should accept one operator', () => {
     testScheduler.run(({ cold, expectObservable }) => {
-      const primitiveState: PrimitiveState = {
-        bol: true,
-        str: 'string',
-        num: 42
-      };
       const source: Observable<PrimitiveState> = cold('a|', {
-        a: primitiveState
+        a: initialPrimitiveState
       });
       expectObservable(source.pipe(select(map(s => s.bol)))).toBe('a|', {
         a: true
@@ -141,10 +124,9 @@ describe('select', () => {
 
   it('should accept multiple operators', () => {
     testScheduler.run(({ cold, expectObservable }) => {
-      const nestedState: NestedState = {
-        obj: { key1: { key11: { key111: 'test' } } }
-      };
-      const source: Observable<NestedState> = cold('a|', { a: nestedState });
+      const source: Observable<NestedState> = cold('a|', {
+        a: initialNestedState
+      });
       expectObservable(
         source.pipe(
           select(

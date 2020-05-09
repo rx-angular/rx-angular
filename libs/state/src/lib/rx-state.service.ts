@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
-  interval,
   isObservable,
   Observable,
   OperatorFunction,
@@ -218,7 +217,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
   /**
    *
    * @description
-   * Connect an `Observable<Partial<T>>` source to a specific property in the state. Additionally you can provide a
+   * Connect an `Observable<V>` source to a specific property in the state. Additionally you can provide a
    * `projectionFunction` to access the current state object on every emission of your connected `Observable`.
    * Any change emitted by the source will get merged into the state.
    * Subscription handling is done automatically.

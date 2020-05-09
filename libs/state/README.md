@@ -36,7 +36,10 @@ Using this library allows you to implement things like:
 
 with very little effort in any component.
 
-![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-names.png) ![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-types.png)
+<p float="left">
+  <img src="https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-names.png" width="49%" />
+  <img src="https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-types.png" width="49%" />
+</p>
 
 ## Key features
 
@@ -54,7 +57,7 @@ with very little effort in any component.
 
 ## API
 
-[API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api.md)
+[API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api/overview.md)
 
 ## Usage
 
@@ -67,9 +70,14 @@ with very little effort in any component.
 
 ### Snippets
 
-- [Logic comparison - Increment a Value](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/component-logic-comparison.md)
-- [Loading state and data fetching](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/fetch-user.md)
-- [Passing Observables](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/passing-observables-directly.md)
+- [Logic comparison - Increment a Value](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/logic-comparison--increment-a-value.md)
+- [Loading state and data fetching](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/loading-state-and-data-fetching.md)
+- [Passing Observables directly](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/passing-observables-directly.md)
+- [How to run partial state updates](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/how-to-run-partial-state-updates.md)
+- [Get nested state slices](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/get-nested-state-slices.md)
+- [Derive simple state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/derive-simple-state.md)
+- [BehaviorSubject vs RxState](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/behavior-subject-vs-rx-state.md)
+- [ViewModel with distinctUntilSomeChanged](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/viewmodel-with-distinctUntilSomeChanged.md)
 
 ## Resources
 

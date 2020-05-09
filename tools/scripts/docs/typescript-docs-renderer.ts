@@ -315,7 +315,7 @@ export class TypescriptDocsRenderer {
     let output = '';
     for (const param of params) {
       const type = this.renderType(param.type, knownTypeMap, docsUrl);
-      output += `### ${param.name}\n ##### typeof ${type}\n\n`;
+      output += `### ${param.name}\n ##### typeof: ${type}\n\n`;
       // output += `{{< member-info kind="parameter" type="${type}" >}}\n\n`;
     }
     return output;
