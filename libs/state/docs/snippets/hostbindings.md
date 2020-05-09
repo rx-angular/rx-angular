@@ -38,7 +38,7 @@ export class RxComponent {
     return !this.state.get().visible;
   }
   @HostBinding('[style.marginTop]') get marginTop() {
-    return `${this.state.get().top ? this.state.get().top : 0}px`;
+    return `${this.state.get().top}px`;
   }
   @HostBinding('[style.maxHeight]') get maxHeight() {
     return `${this.state.get().maxHeight}px`;
