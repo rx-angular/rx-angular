@@ -34,6 +34,7 @@ sure that state changes that are related to the `HostBindings` value are actuall
   providers: [RxState]
 })
 export class RxComponent {
+  // Modifying the class
   @HostBinding('[class.is-hidden]') get isHidden() {
     return !this.state.get().visible;
   }
