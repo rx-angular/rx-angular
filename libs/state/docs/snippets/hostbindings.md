@@ -27,7 +27,7 @@ In this setup we assign our `HostBindings` to the `get()` method of our state.
 
 As stated in the title, we have to be aware changeDetection. On every changeDetection cycle, angular will re-evaluate
 all `HostBindings`. If our component doesn't get flagged as dirty, our `HostBindings` won't get updated. So we have to make
-sure that our state changes which should update our `HostBindings` are actually resulting in changeDetection.
+sure that state changes that are related to the `HostBindings` value are actually triggering a re-render.
 
 ```ts
 @Component({
