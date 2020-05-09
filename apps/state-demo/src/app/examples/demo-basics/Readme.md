@@ -19,7 +19,7 @@ The open/close state of the expansion-panel is forwarded to the parent component
 As input binding the parent container maintains a number over an input box. Every change od the number gets forwarded to the child component over an input binding.
 
 In the child component there is a background process running. the input value from the parent gets used to start an interval and refresh the list data every [n] milliseconds.
-Furthermore there is a refresh button. A click on it also refreshes the list data.
+Furthermore, there is a refresh button. A click on it also refreshes the list data.
 
 Chapters we will discuss are:
 
