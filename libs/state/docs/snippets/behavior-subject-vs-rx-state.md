@@ -1,3 +1,6 @@
+@Notice: This content is a copy of [this comment](https://github.com/BioPhoton/rx-angular/issues/75#issuecomment-626031134) created by [@Karnaukhov-kh](https://github.com/Karnaukhov-kh)
+We are incredible thankful for that contribution!!
+
 ### BehaviorSubject vs RxState
 
 Let's take a look at a simple checklist app, see how it can be implemented in the imperative way and after that we will iterate over it and add some reactiveness. We skip any additional logic as routing, errors handling etc in this examples.
