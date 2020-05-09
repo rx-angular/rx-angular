@@ -67,6 +67,7 @@ export class RxComponent {
   @HostBinding('[class.is-hidden]') get isHidden() {
     return !this.state.get().visible;
   }
+  // Modifying styles
   @HostBinding('[style.marginTop]') get marginTop() {
     return `${this.state.get().top}px`;
   }
