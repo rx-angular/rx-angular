@@ -3,7 +3,7 @@
 Some examples how to reactively handle basic [`HostBindings`](https://angular.io/api/core/HostBinding) with `@rx-angular/state` `RxState`.
 
 Sadly `HostBindings` are not able to bind to `Observable` sources out of the box. So we have to come up with custom solutions
-in order still have fully reactive components.
+in order to have fully reactive components.
 
 In the following examples we will use the `rxLet` directive or the `push` pipe as replacements for angulars `async` pipe.
 `rxLet` and `push` belong to the not yet released `@rx-angular/template` package.
