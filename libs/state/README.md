@@ -36,7 +36,10 @@ Using this library allows you to implement things like:
 
 with very little effort in any component.
 
-![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-names.png) ![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-types.png)
+<p float="left">
+  <img src="https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-names.png" width="49%" />
+  <img src="https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-types.png" width="49%" />
+</p>
 
 ## Key features
 
