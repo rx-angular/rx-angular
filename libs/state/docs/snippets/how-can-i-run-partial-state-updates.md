@@ -1,6 +1,9 @@
 ## How can I run partial updates?
 
 `RxState` has partial updates built in. Every change sent to the state over `set` or `connect` is treated as partial update.
+An instance of `RxState` typed with `T` accepts `Partial<T>` in the `set` and `connect` method.
+
+The partial update can happen directly by providing a `Partial<T>` or over a reduce function `(oldState, change) => newState`.
 
 ```typescript
 import { RxState } from `rx-angular/state`;
