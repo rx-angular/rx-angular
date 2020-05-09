@@ -387,7 +387,7 @@ RxState service is in component providers. That means that lifecycle of this ser
   tasks$ = this.state.select("tasks");
 ```
 
-Visually it looks the same but select operator allows lot more possibilities than just passing keys. You can read about it [here](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api/rx-state.md#select). Also selection will be cached, distinct and undefined values will be filtered out.
+Visually it looks the same but the select operator provides a lot more than just passing keys. You can read about it [here](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api/rx-state.md#select). Also selection will be shareReplayed, distincted and undefined values will be filtered out.
 
 **Updating state reactively**
 
