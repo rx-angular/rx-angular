@@ -12,8 +12,8 @@ jobs:
             - run:
                 name: 'Install'
                 command: npm install --frozen-lockfile --non-interactive
-            - run: npm run affected:lint
-            - run: npm run nx test state
+            - run: npm run nx affected:build -- --base=origin/master~1 --head=origin/master
+            - run: npm test state--  --parallel
             - run: npm run nx build state --  --with-deps
 workflows:
     build-and-test:
