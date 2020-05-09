@@ -56,7 +56,7 @@ With this setup in place we have two options to get things done.
 ### Call ChangeDetection manually
 
 Since rendering is a side-effect, we could utilize the `hold` method and register
-a side-effect which handles changeDetection for us.
+a function which handles change detection for us.
 
 ```ts
 @Component({
