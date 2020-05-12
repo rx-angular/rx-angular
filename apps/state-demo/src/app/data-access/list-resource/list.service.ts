@@ -39,17 +39,14 @@ export class ListService {
     map(({ loading, error }) => ({ loading, error })),
     filter(o => o.loading === false && o.error !== '')
   );
-  loadingSignal$ = this.state$.pipe(
-    map(({ loading }) => loading),
-    filter(b => b)
-  );
+  loadingSignal$ = this.state$.pipe(map(({ loading }) => loading));
 
   constructor(private http: HttpClient) {
     this.state$.subscribe(console.log);
   }
 
   refetchList() {
-    this.state$.next({ ...this.state$.getValue(), loading: false });
+    this.state$.next({ ...this.state$.getValue(), loading: true });
     this.httpGetListItem({ num: 1 })
       .pipe(catchError(e => of({ error: e, loading: false, list: [] })))
       .subscribe(slice => {

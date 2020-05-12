@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
   selector: 'demo-basics4-container',
   template: `
     <h1>Solution</h1>
-    <small>Child re-renders: {{ rerenders() }}</small
+    <small>re-renders: {{ rerenders() }}</small
     ><br />
     <mat-form-field>
       <label>RefreshInterval</label>
