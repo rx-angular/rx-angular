@@ -88,13 +88,7 @@ const initialCounterState = {
 
       <mat-form-field>
         <label>Count</label>
-        <input
-          type="number"
-          min="0"
-          matInput
-          matInput
-          [formControlName]="'count'"
-        />
+        <input type="number" min="0" matInput [formControlName]="'count'" />
       </mat-form-field>
       <br />
 
