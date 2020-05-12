@@ -14,13 +14,6 @@ export const ROUTES: Routes = [
       )
   },
   {
-    path: 'mutate-state',
-    loadChildren: () =>
-      import('./examples/mutate-state/mutate-state.module').then(
-        m => m.MutateStateModule
-      )
-  },
-  {
     path: 'dynamic-counter',
     loadChildren: () =>
       import('./examples/dynamic-counter/dynamic-counter.module').then(

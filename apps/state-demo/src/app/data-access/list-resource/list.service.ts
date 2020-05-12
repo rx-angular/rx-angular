@@ -39,10 +39,8 @@ export class ListService {
     map(({ loading, error }) => ({ loading, error })),
     filter(o => o.loading === false && o.error !== '')
   );
-  loadingSignal$ = this.state$.pipe(
-    map(({ loading }) => loading)
-    // filter(b => b)
-  );
+
+  loadingSignal$ = this.state$.pipe(map(({ loading }) => loading));
 
   constructor(private http: HttpClient) {
     this.state$.subscribe(console.log);
