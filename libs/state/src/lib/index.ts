@@ -1,2 +1,2 @@
 export { RxState } from './rx-state.service';
-export { select, stateful } from './core/operators';
+export { select, stateful, distinctUntilSomeChanged } from './core/operators';
