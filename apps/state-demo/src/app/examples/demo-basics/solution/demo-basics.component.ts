@@ -8,6 +8,7 @@ import {
   DemoBasicsItem,
   DemoBasicsViewModelService
 } from './demo-basics.view-model.service';
+import { distinctUntilSomeChanged } from '@rx-angular/state';
 
 @Component({
   selector: 'demo-basics',
@@ -52,6 +53,7 @@ export class DemoBasicsComponent {
       'list',
       this.listService.list$.pipe(map(this.parseListItems))
     );
+
     this.vm.hold(
       this.vm.refreshListSideEffect$.pipe(
         tap(_ => this.listService.refetchList())
