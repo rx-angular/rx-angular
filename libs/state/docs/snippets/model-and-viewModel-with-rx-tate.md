@@ -129,7 +129,8 @@ export class ListComponent extends RxState<IList> {
       itemsTotal: items.length,
       isOpen,
       buttonLabel: isOpen ? "Close" : "Open"
-    }))
+    })),
+    distinctUntilSomeChanged(['itemsTotal', 'isOpen])
   );
 
   constructor(private api: ListApiService) {
