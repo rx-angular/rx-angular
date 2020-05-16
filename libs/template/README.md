@@ -13,7 +13,7 @@ It provides structural directives, pipes as well as RxJS operators for rendering
 
 ## Description
 
-This package is all about rendering. There ear 2 things that need to pe understood:
+This package is all about rendering. There are 2 things that need to be understood:
 
 - usage of directives, pipes and operators
 - understanding the rendering strategies
