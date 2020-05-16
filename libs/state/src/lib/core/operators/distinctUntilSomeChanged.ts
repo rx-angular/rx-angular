@@ -41,7 +41,7 @@ export type KeyCompareMap<T extends object> = {
 /**
  * @internal
  */
-const defaultCompare = <T, K extends keyof T>(oldVal, newVal) =>
+const defaultCompare = <T, K extends keyof T>(oldVal: any, newVal: any) =>
   oldVal === newVal;
 
 /**
@@ -198,7 +198,11 @@ export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
     distinctCompare = (oldState, newState) => {
       return Object.keys(keyComparatorMap).some(
         key =>
-          !innerCompare(oldState[key], newState[key], keyComparatorMap[key])
+          !innerCompare(
+            (oldState as any)[key],
+            (newState as any)[key],
+            (keyComparatorMap as any)[key]
+          )
       );
     };
   }

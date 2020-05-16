@@ -46,7 +46,7 @@ export function createAccumulationObservable<T extends object>(
     publish()
   );
   const state$ = signal$.pipe(publishReplay(1));
-  const compositionObservable = {
+  const compositionObservable: any = {
     state: {},
     signal$,
     state$,

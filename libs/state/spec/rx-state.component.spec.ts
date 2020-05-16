@@ -98,7 +98,7 @@ export class RxStateGlueContainerComponent extends RxState<PrimitiveState> {
   str$ = this.select('str');
 
   @ViewChild(RxStateGlueComponent)
-  child;
+  child: any;
 
   constructor() {
     super();

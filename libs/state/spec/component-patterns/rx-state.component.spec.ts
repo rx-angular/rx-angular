@@ -72,7 +72,7 @@ export class RxStateGlueContainerComponent
   afterViewInit = false;
 
   @ViewChild(RxStateGlueComponent)
-  child;
+  child: any;
 
   constructor() {
     super();
