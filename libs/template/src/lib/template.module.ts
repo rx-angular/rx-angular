@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 
 import { LetModule } from './let';
 import { PushModule } from './push';
-import { EventsModule } from './zoneless/events';
+import { UnpatchEventsModule } from './unpatch/events';
 
 @NgModule({
-  exports: [LetModule, PushModule, EventsModule]
+  exports: [LetModule, PushModule, UnpatchEventsModule]
 })
 export class TemplateModule {}
