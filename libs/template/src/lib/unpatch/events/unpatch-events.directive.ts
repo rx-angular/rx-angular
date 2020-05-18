@@ -38,7 +38,6 @@ export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit');
     this.subscription = this.events$
       .pipe(
         tap(eventList => this.reapplyEventListenersZoneUnPatched(eventList))
