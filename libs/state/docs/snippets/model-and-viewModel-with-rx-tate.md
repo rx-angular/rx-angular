@@ -2,7 +2,8 @@ In this example we will see what is the deifference between Model and ViewModel 
 
 # What is what?
 ### What is Model?
-Model is an object or class that holds our data.
+A model is an object or class that holds our data. In our case, it is a property in our component called model.
+This data structure holds the raw data (mostly normalized in terms of relational databases) needed to render the view.
 ### What is ViewModel?
 ViewModel is data that is needed in our views.
 ### What is View?
@@ -256,4 +257,3 @@ export class ListComponent extends RxState<IViewList> {
 </section>
 ```
 We are accessing each property separately as an observable and displaying it in the tamplate using `async` pipe.
-
