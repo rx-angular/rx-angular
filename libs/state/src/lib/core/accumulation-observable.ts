@@ -17,6 +17,14 @@ import {
   tap
 } from 'rxjs/operators';
 
+interface AccumulationObservable<T> extends Subscribable<T> {
+  state: T;
+  state$: Observable<T>;
+  signal$: Observable<T>;
+  nextSlice: (stateSlice: Partial<T>) => void;
+  nextSliceObservable: (state$: Observable<Partial<T>>) => void;
+}
+
 export function createAccumulationObservable<T extends object>(
   stateObservables = new Subject<Observable<Partial<T>>>(),
   stateSlices = new Subject<Partial<T>>(),
@@ -45,9 +53,9 @@ export function createAccumulationObservable<T extends object>(
     tap(newState => (compositionObservable.state = newState)),
     publish()
   );
-  const state$ = signal$.pipe(publishReplay(1));
-  const compositionObservable: any = {
-    state: {},
+  const state$: Observable<T> = signal$.pipe(publishReplay(1));
+  const compositionObservable: AccumulationObservable<T> = {
+    state: {} as T,
     signal$,
     state$,
     nextSlice,

@@ -19,7 +19,7 @@ Developing modern, **reactive** user interfaces imposes a variety of challenging
 - handling subscriptions
 
 There are plenty of solutions available for managing these challenges on a **global level** (Akita, NgRx, NgXs, ...).
-None of them targeting the special needs of the **component level**.
+None of them is dedicated targeting the special needs of the **component level**.
 
 `@rx-angular/state` was specifically designed to give developers a tool for mastering **component state** without forcing
 them to use complex design patterns.
