@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
   selector: 'demo-basics4-container',
   template: `
     <h1>Solution</h1>
-    <demo-basics> </demo-basics>
+    <demo-basics></demo-basics>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
