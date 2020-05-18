@@ -29,7 +29,7 @@ export function envZonePatched(): boolean {
  *
  */
 export function apiZonePatched(name: string): boolean {
-  return getGlobalThis()['__zone_symbol__' + name] !== undefined;
+  return getGlobalThis()['__zone_symbol__' + name] === undefined;
 }
 
 /**

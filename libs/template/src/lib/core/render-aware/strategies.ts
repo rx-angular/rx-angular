@@ -6,7 +6,7 @@ import {
   ɵmarkDirty as markDirty
 } from '@angular/core';
 import { isViewEngineIvy } from '../utils';
-import { getZoneUnPatchedPromiseDurationSelector } from './promise-duration-selector';
+import { getZoneUnPatchedPromiseDurationSelector } from './get-zone-un-patched-promise-duration-selector';
 
 export interface StrategySelection<U> {
   [strategy: string]: RenderStrategy<U>;
