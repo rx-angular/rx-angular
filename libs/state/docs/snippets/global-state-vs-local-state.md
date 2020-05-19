@@ -39,6 +39,6 @@ Lets take a look at simple todo app. This app has 2 views.
 
 ### What is global and what is local?
 
-- `counter` property is a part of **local** state of each view. Counter value calculated differently.
+- `counter` property is a part of **local** state of each view. Counter value is specific for each view.
 - `isExpanded` property is also part of **local** state. Both lists can be expanded/collapsed but this status isn't shared between them and they don't care about this status of each other.
-- `tasks` array is a part of our app **global** state. This array needed for each view and received from the same endpoint. We don't really need to load it twice. It is time to introduce another state layer to our application and move tasks array and retreiving logic there.
+- `tasks` array is a part of our app **global** state. This array needed for each view and received from the same endpoint. We don't really need to load it twice. It is time to introduce global layer to our application and move tasks array and retreiving logic there.
