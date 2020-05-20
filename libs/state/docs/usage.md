@@ -80,7 +80,7 @@ export class StatefulComponent {
 
 _disclaimer_: this doc is work in progress. Not every use case has found it's way into the docs. We encourage you to contribute :).
 
-### Connect global data
+### Connect global state
 
 **Connect state slices from third party services (e.g. NgRx `Store`) or trigger them from side-effects**
 
