@@ -106,7 +106,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const e1subs = '^-------------------!';
       const expected = '--a-----b--c--d-----|';
       const keyCompare: KeyCompareMap<DistinctUntilSomeChangedTest> = {
-        val: (oldVal, newVal) => oldVal === newVal,
+        val: undefined,
         objVal: (oldVal, newVal) => oldVal?.foo === newVal?.foo
       };
 
