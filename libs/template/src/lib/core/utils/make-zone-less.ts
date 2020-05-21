@@ -15,7 +15,7 @@ import { apiZonePatched, getGlobalThis } from '../utils';
  */
 export function getZoneUnPatchedApi(name: string, elem?: any): Function {
   elem = elem || getGlobalThis();
-  return apiZonePatched(name) ? elem[name] : elem['__zone_symbol__' + name];
+  return apiZonePatched(name) ? elem['__zone_symbol__' + name] : elem[name];
 }
 
 /**

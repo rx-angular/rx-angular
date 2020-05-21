@@ -6,8 +6,9 @@ let resolvedPromise: Promise<void> | null = null;
 
 export function getUnpatchedResolvedPromise(): Promise<void> {
   resolvedPromise =
-    resolvedPromise || apiZonePatched('Promise')
+    resolvedPromise ||
+    (apiZonePatched('Promise')
       ? (getGlobalThis().__zone_symbol__Promise.resolve() as Promise<void>)
-      : Promise.resolve();
+      : Promise.resolve());
   return resolvedPromise;
 }
