@@ -1,42 +1,6 @@
 import { MonoTypeOperatorFunction } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-
-/**
- * @description
- * The function which is used by `distinctUntilSomeChanged` to determine if changes are distinct or not.
- * Should return true if values are equal.
- *
- * @param {T} oldVal
- * @param {T} newVal
- *
- * @return boolean
- *
- * @docsPage distinctUntilSomeChanged
- * @docsCategory operators
- */
-export type CompareFn<T> = (oldVal: T, newVal: T) => boolean;
-
-/**
- * @description
- * The `KeyCompareMap` is used to configure custom comparison for defined keys. You can set the `CompareFn` to
- * `undefined` in order to utilize the default equality check.
- *
- * @example
- * const keyCompareMap = {
- *    myKey: (o, n) => customCompare(o, n),
- *    myOtherKey: undefined
- *  };
- *  const o$ = of({
- *    myKey: 5,
- *    myOtherKey: 'bar'
- *  }).pipe(distinctUntilSomeChanged(keyCompareMap));
- *
- * @docsPage distinctUntilSomeChanged
- * @docsCategory operators
- */
-export type KeyCompareMap<T extends object> = {
-  [K in keyof T]?: CompareFn<T[K]>;
-};
+import { CompareFn, KeyCompareMap } from '../interfaces';
 
 /**
  * @internal
@@ -163,10 +127,6 @@ export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
  * // { age: 7, name: 'Bar' }
  * // { age: 5, name: 'Foo2' }
  * // { age: 6, name: 'Foo3' }
- *
- * @see {@link distinctUntilChanged}
- * @see {@link distinctUntilKeyChanged}
- * @see {@link CompareFn}
  *
  * @param {K[]} keys String key for object property lookup on each item.
  * @param {CompareFn<T[K]>} [compare] Optional comparison function called to test if an item is distinct from the

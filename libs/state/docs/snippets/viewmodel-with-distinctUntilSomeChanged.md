@@ -1,4 +1,4 @@
-Here is an example for using the [`distinctUntilSomeChanged`](../state/src/lib/core/operators/distinctUntilSomeChanged.ts) operator
+Here is an example for using the [`distinctUntilSomeChanged`](../../src/lib/rxjs/operators/distinctUntilSomeChanged.ts) operator
 as tool to manage distinct state slices.
 
 Imagine the following setup. The state of your component is defined by this interface:

@@ -5,7 +5,7 @@ import {
   isStringArrayGuard,
   pipeFromArray,
   WrongSelectParamsError
-} from '../utils';
+} from '../../core/utils';
 import { stateful } from './stateful';
 
 /**
