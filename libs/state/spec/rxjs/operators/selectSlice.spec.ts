@@ -1,7 +1,7 @@
 import { jestMatcher } from '@test-helpers';
 import { Observable } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-import { selectSlice } from '../../../src/lib/core/operators/selectSlice';
+import { selectSlice } from '../../../src/lib/rxjs/operators/selectSlice';
 
 let testScheduler: TestScheduler;
 
@@ -37,7 +37,7 @@ describe('selectSlice operator', () => {
 
       expectObservable(
         (<Observable<ISelectSliceTest>>e1).pipe(
-          selectSlice('valOther')
+          selectSlice(['valOther'])
         )
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);

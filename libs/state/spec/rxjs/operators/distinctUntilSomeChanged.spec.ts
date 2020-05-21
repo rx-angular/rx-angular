@@ -1,9 +1,9 @@
 import { jestMatcher } from '@test-helpers';
 import { mergeMap } from 'rxjs/operators';
 import {
-  distinctUntilSomeChanged,
   KeyCompareMap
-} from '../../../src/lib/core/operators/distinctUntilSomeChanged';
+} from '../../../src/lib/rxjs/interfaces';
+import { distinctUntilSomeChanged } from '../../../src/lib/rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 

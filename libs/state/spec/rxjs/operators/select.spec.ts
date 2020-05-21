@@ -3,7 +3,7 @@ import { EMPTY, NEVER, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 
-import { select } from '../../../src';
+import { select } from '@rx-angular/state';
 import {
   initialNestedState,
   initialPrimitiveState,

@@ -4,7 +4,7 @@ import { AfterViewInit, Component, Input, Output, ViewChild } from '@angular/cor
 import { RxState } from '../../src';
 import { initialPrimitiveState, PrimitiveState } from './../fixtures';
 import { Observable, Subject } from 'rxjs';
-import { select } from '../../src/lib/core/operators/select';
+import { select } from '../../src/lib/rxjs/operators/select';
 
 const initialParentState: PrimitiveState = {
   ...initialPrimitiveState,

@@ -8,7 +8,7 @@ import {
 } from './fixtures';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
-import { select } from '../src/lib/core/operators/select';
+import { select } from '../src/lib/rxjs/operators/select';
 import { pluck } from 'rxjs/operators';
 
 function setupState<T extends object>(cfg: { initialState?: T }) {
