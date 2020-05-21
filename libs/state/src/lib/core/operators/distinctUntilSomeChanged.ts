@@ -35,7 +35,7 @@ export type CompareFn<T> = (oldVal: T, newVal: T) => boolean;
  * @docsCategory operators
  */
 export type KeyCompareMap<T extends object> = {
-  [K in keyof T]: CompareFn<T[K]>;
+  [K in keyof T]?: CompareFn<T[K]>;
 };
 
 /**
@@ -68,11 +68,11 @@ const defaultCompare = <T, K extends keyof T>(oldVal: any, newVal: any) =>
  *    name: string;
  * }
  * // compare the first letters of the name property
- * const customComparison: KeyValueMap<Person> = {
+ * const customComparison: KeyCompareMap<Person> = {
  *   name: (oldName, newName) => oldName.substring(0, 3) === newName.substring(0, 3)
  * };
  *
- * of(
+ * of<Person>(
  *   { age: 4, name: 'Foo1'},
  *   { age: 7, name: 'Bar'},
  *   { age: 5, name: 'Foo2'},
