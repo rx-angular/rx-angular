@@ -2,7 +2,7 @@
 
 ## Global state
 
-- **Lifetime**. Static and is equal to the app lifetime.
+- **Lifetime**. Static and, beside lazy instantiation, equal to the app lifetime. It never gets destroyed. 
 - **Sharing**. Shared globally in the app. In Angular global state is nearly always shared over global singleton services.
 - **Processed Sources**. In most cases process external sources (REST API's, Web Sockets, Browser URL).
 
