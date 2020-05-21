@@ -1,4 +1,4 @@
-## Global vs. Local State
+# Difference between Global and Local state
 
 ## Global state
 
