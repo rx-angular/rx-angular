@@ -1,5 +1,5 @@
 import { Observable, OperatorFunction } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { CompareFn, KeyCompareMap } from '../interfaces';
 import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
 
@@ -85,8 +85,37 @@ export function selectSlice<T extends object, K extends keyof T, R>(
  * // displays:
  * // { items: ['foo', 'bar'], panelOpen: true }
  *
+ * * @example
+ * // An example with a custom comparison applied to each key
+ * import { of } from 'rxjs';
+ * import { selectSlices } from 'rxjs/operators';
+ * import { isDeepEqual } from 'custom/is-equal';
  *
- * @param {(keyof T)[]} keys - the array of keys which should be selected
+ * interface Person {
+ *     age: number;
+ *     name: string;
+ *  }
+ *
+ *  const customCompare = (oldVal, newVal) => isDeepEqual(oldVal, newVal);
+ *
+ * const state$: Observable<MyState> = of(
+ *  { title: 'myTitle', items: ['foo'],  panelOpen: true},
+ *  { title: 'myTitle2', items: ['foo', 'bar'],  panelOpen: true},
+ *  { title: 'newTitle', items: ['foo', 'baz'],  panelOpen: true},
+ *  { title: 'newTitle', items: ['foo', 'baz'],  panelOpen: true}
+ * )
+ * .pipe(
+ *     selectSlices(['title', 'items'], customCompare),
+ *   )
+ *   .subscribe(x => console.log(x));
+ *
+ * // displays:
+ * //  { title: 'myTitle', items: ['foo'],  panelOpen: true},
+ * //  { title: 'myTitle2', items: ['foo', 'bar'],  panelOpen: true},
+ * //  { title: 'myTitle2', items: ['foo', 'baz'],  panelOpen: true},
+ *
+ * @param {(K)[]} keys - the array of keys which should be selected
+ * @param {CompareFn<T[K]>} [compare] Optional comparison function called to test if an item is distinct from the
  * @docsPage selectSlice
  * @docsCategory operators
  */

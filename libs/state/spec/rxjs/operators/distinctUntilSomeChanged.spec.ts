@@ -16,8 +16,6 @@ interface DistinctUntilSomeChangedTestObj {
 
 interface DistinctUntilSomeChangedTest {
   val?: number;
-  valOther?: number;
-  strVal?: string;
   objVal?: DistinctUntilSomeChangedTestObj;
 }
 
@@ -35,7 +33,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '--a--------b-----a--|';
 
       expectObservable(
-        (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
+        e1.pipe(
           distinctUntilSomeChanged(['val'])
         )
       ).toBe(expected, values);
@@ -51,7 +49,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '--a--------b-----a--|';
 
       expectObservable(
-        (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
+        e1.pipe(
           distinctUntilSomeChanged(['val', 'valOther'])
         )
       ).toBe(expected, values);
@@ -67,7 +65,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '--a-----------------|';
 
       expectObservable(
-        (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
+        e1.pipe(
           distinctUntilSomeChanged(['val'])
         )
       ).toBe(expected, values);
@@ -111,7 +109,7 @@ describe('distinctUntilSomeChanged operator', () => {
       };
 
       expectObservable(
-        (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
+        e1.pipe(
           distinctUntilSomeChanged(keyCompare)
         )
       ).toBe(expected, values);
@@ -127,7 +125,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '--a--------b-----a-';
 
       expectObservable(
-        (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
+        e1.pipe(
           distinctUntilSomeChanged(['val'])
         )
       ).toBe(expected, values);
@@ -149,7 +147,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '--a--b-----d--e--|';
 
       expectObservable(
-        (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
+        e1.pipe(
           distinctUntilSomeChanged(['val'])
         )
       ).toBe(expected, values);
@@ -171,7 +169,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '--a--------------|';
 
       expectObservable(
-        (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
+        e1.pipe(
           distinctUntilSomeChanged(['val'])
         )
       ).toBe(expected, values);
@@ -239,7 +237,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '--a--|';
 
       expectObservable(
-        (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
+        e1.pipe(
           distinctUntilSomeChanged(['val'])
         )
       ).toBe(expected, values);
@@ -254,7 +252,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '(a|)';
 
       expectObservable(
-        (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
+        e1.pipe(
           distinctUntilSomeChanged(['val'])
         )
       ).toBe(expected, values);
@@ -269,7 +267,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '--a-----#';
 
       expectObservable(
-        (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
+        e1.pipe(
           distinctUntilSomeChanged(['val'])
         )
       ).toBe(expected, values);
@@ -304,7 +302,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '--a--b--c--d--e--|';
 
       expectObservable(
-        (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
+        e1.pipe(
           distinctUntilSomeChanged(['val'])
         )
       ).toBe(expected, values);
@@ -326,7 +324,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '--a--b-----          ';
       const unsub =    '----------!          ';
 
-      const result = (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
+      const result = e1.pipe(
         distinctUntilSomeChanged(['val'])
       );
 
@@ -349,7 +347,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '--a--b-----          ';
       const unsub =    '----------!          ';
 
-      const result = (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
+      const result = e1.pipe(
         mergeMap((x: any) => of(x)),
         distinctUntilSomeChanged(['val']),
         mergeMap((x: any) => of(x))
@@ -368,7 +366,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '--a-----------------|';
 
       expectObservable(
-        (<Observable<DistinctUntilSomeChangedTest>>e1).pipe(
+        e1.pipe(
           distinctUntilSomeChanged(['val'])
         )
       ).toBe(expected, values);

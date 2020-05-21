@@ -128,10 +128,6 @@ export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
  * // { age: 5, name: 'Foo2' }
  * // { age: 6, name: 'Foo3' }
  *
- * @see {@link distinctUntilChanged}
- * @see {@link distinctUntilKeyChanged}
- * @see {@link CompareFn}
- *
  * @param {K[]} keys String key for object property lookup on each item.
  * @param {CompareFn<T[K]>} [compare] Optional comparison function called to test if an item is distinct from the
  * previous item in the source. (applied to each specified key)
