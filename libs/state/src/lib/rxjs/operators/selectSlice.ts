@@ -137,14 +137,26 @@ export function selectSlice<T extends object, K extends keyof T, R>(
     ? distinctUntilSomeChanged(keysOrMap, compare)
     : distinctUntilSomeChanged(keysOrMap);
 
-  return (o$: Observable<T>) =>
+  return (o$: Observable<T>): Observable<Partial<T>> =>
     o$.pipe(
-      distinctOperator,
-      map(s =>
-        keys.reduce((vm, key) => {
-          vm[key] = s[key];
-          return vm;
-        }, {} as Partial<T>)
-      )
+      // to avoid emissions of empty objects map to present values and filter out emissions with no values present
+      map(state => ({
+        definedKeys: keys.filter(
+          k => state.hasOwnProperty(k) && state[k] !== undefined
+        ),
+        state
+      })),
+      filter(({ definedKeys, state }) => !!definedKeys.length),
+      // create view-model
+      map(({ definedKeys, state }) =>
+        definedKeys
+          .filter(k => state.hasOwnProperty(k) && state[k] !== undefined)
+          .reduce((vm, key) => {
+            vm[key] = state[key];
+            return vm;
+          }, {} as Partial<T>)
+      ),
+      // forward distinct values
+      distinctOperator
     );
 }

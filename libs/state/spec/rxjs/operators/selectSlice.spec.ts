@@ -168,7 +168,7 @@ describe('selectSlice operator', () => {
       };
       const e1 =  cold('--a--b--c--d--e--|', values);
       const e1subs =   '^----------------!';
-      const expected = '--a--b-----d--e--|';
+      const expected = '--a-----------e--|';
 
       expectObservable(
         e1.pipe(
@@ -190,7 +190,7 @@ describe('selectSlice operator', () => {
       };
       const e1 =  cold('--a--b--c--d--e--|', values);
       const e1subs =   '^----------------!';
-      const expected = '--a--------------|';
+      const expected = '-----------------|';
 
       expectObservable(
         e1.pipe(
