@@ -1,6 +1,6 @@
 # Selecting the ViewModel
 
-Here are some useful strategies to properly handle `ViewModels` with `@rx-angular`.
+Here are some useful strategies to properly handle `ViewModels` with `@rx-angular/state`.
 
 Imagine the following setup:
 
