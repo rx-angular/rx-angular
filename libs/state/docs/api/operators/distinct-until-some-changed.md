@@ -53,7 +53,7 @@ function distinctUntilSomeChanged<T extends object, K extends keyof T>(keyCompar
 
 ### keyCompareMap
 
-##### typeof: <a href='/docs/generated/operators/interfaces#keycomparemap'>KeyCompareMap</a>&#60;T&#62;
+##### typeof: KeyCompareMap&#60;T&#62;
 
 # distinctUntilSomeChanged
 
@@ -141,4 +141,4 @@ function distinctUntilSomeChanged<T extends object, K extends keyof T>(keys: K[]
 
 ### compare
 
-##### typeof: <a href='/docs/generated/operators/interfaces#comparefn'>CompareFn</a>&#60;T[K]&#62;
+##### typeof: CompareFn&#60;T[K]&#62;

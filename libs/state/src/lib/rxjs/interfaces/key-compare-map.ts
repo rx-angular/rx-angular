@@ -15,6 +15,13 @@ import { CompareFn } from './compare-fn';
  *    myOtherKey: 'bar'
  *  }).pipe(distinctUntilSomeChanged(keyCompareMap));
  *
+ *  //or
+ *
+ *  const o$ = of({
+ *    myKey: 5,
+ *    myOtherKey: 'bar'
+ *  }).pipe(selectSlice(keyCompareMap));
+ *
  * @docsPage interfaces
  * @docsCategory operators
  */

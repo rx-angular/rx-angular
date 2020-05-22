@@ -1,6 +1,7 @@
 # CompareFn
 
-The function which is used by `distinctUntilSomeChanged` to determine if changes are distinct or not.
+The function which is used by `distinctUntilSomeChanged` and `selectSlice` to determine if changes are distinct or
+not.
 Should return true if values are equal.
 
 ## Signature
@@ -25,6 +26,13 @@ const keyCompareMap = {
    myKey: 5,
    myOtherKey: 'bar'
  }).pipe(distinctUntilSomeChanged(keyCompareMap));
+
+ //or
+
+ const o$ = of({
+   myKey: 5,
+   myOtherKey: 'bar'
+ }).pipe(selectSlice(keyCompareMap));
 ```
 
 ## Signature

@@ -51,7 +51,7 @@ function selectSlice<T extends object, K extends keyof T, R>(keyCompareMap: KeyC
 
 ### keyCompareMap
 
-##### typeof: <a href='/docs/generated/operators/interfaces#keycomparemap'>KeyCompareMap</a>&#60;T&#62;
+##### typeof: KeyCompareMap&#60;T&#62;
 
 # selectSlice
 
@@ -129,4 +129,4 @@ function selectSlice<T extends object, K extends keyof T, R>(keys: K[], compare?
 
 ### compare
 
-##### typeof: <a href='/docs/generated/operators/interfaces#comparefn'>CompareFn</a>&#60;T[K]&#62;
+##### typeof: CompareFn&#60;T[K]&#62;

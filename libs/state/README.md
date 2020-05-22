@@ -45,6 +45,7 @@ with very little effort in any component.
 
 - Slim and intuitive API
 - Automated subscription handling
+- Intuitive way for handling ViewModels
 - Connect any Observable source to the state
 - Partial state updates
 - Reactive state selection
@@ -63,12 +64,12 @@ with very little effort in any component.
 
 [Usage Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/usage.md)
 
-### Tutorials
+## Tutorials
 
 - [Basic Tutorial](https://github.com/BioPhoton/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics)
 - [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
 
-### Snippets
+## Snippets
 
 - [Logic comparison - Increment a Value](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/logic-comparison--increment-a-value.md)
 - [Loading state and data fetching](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/loading-state-and-data-fetching.md)

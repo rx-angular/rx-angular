@@ -400,14 +400,15 @@ export class TypescriptDocsRenderer {
       // remove newlines
       .replace(/\n/g, ' ');
 
-    for (const [key, val] of knownTypeMap) {
+    /*for (const [key, val] of knownTypeMap) {
       const re = new RegExp(`\\b${key}\\b`, 'g');
       const strippedIndex = val.replace(/\/_index$/, '');
+      typeText = key;
       typeText = typeText.replace(
         re,
         `<a href='${docsUrl}/${strippedIndex}'>${key}</a>`
       );
-    }
+    }*/
     return typeText;
   }
 
