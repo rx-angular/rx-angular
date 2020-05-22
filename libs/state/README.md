@@ -77,7 +77,7 @@ with very little effort in any component.
 - [Get nested state slices](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/get-nested-state-slices.md)
 - [Derive simple state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/derive-simple-state.md)
 - [BehaviorSubject vs RxState](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/behavior-subject-vs-rx-state.md)
-- [ViewModel with distinctUntilSomeChanged](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/viewmodel-with-distinctUntilSomeChanged.md)
+- [Managing ViewModels with selectSlice](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/selecting-the-viewmodel.md)
 - [Manage reactive HostBindings](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/hostbindings.md)
 - [Difference between Global and Local state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/global-state-vs-local-state.md)
 
