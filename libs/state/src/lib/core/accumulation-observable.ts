@@ -1,4 +1,5 @@
 import {
+  BehaviorSubject,
   ConnectableObservable,
   merge,
   Observable,
@@ -14,33 +15,30 @@ import {
   publish,
   publishReplay,
   scan,
-  tap
+  tap,
+  withLatestFrom
 } from 'rxjs/operators';
 
-interface AccumulationObservable<T> extends Subscribable<T> {
+export type AccumulationFn = <T>(st: T, sl: Partial<T>) => T;
+
+const defaultAccumulator: AccumulationFn = <T>(st: T, sl: Partial<T>): T => {
+  return { ...st, ...sl };
+};
+
+interface Accumulator<T> extends Subscribable<T> {
   state: T;
   state$: Observable<T>;
   signal$: Observable<T>;
   nextSlice: (stateSlice: Partial<T>) => void;
   nextSliceObservable: (state$: Observable<Partial<T>>) => void;
+  nextAccumulator: (fn: AccumulationFn) => void;
 }
 
 export function createAccumulationObservable<T extends object>(
   stateObservables = new Subject<Observable<Partial<T>>>(),
   stateSlices = new Subject<Partial<T>>(),
-  stateAccumulator: (st: T, sl: Partial<T>) => T = (
-    st: T,
-    sl: Partial<T>
-  ): T => {
-    return { ...st, ...sl };
-  }
-): {
-  state: T;
-  state$: Observable<T>;
-  signal$: Observable<T>;
-  nextSlice: (stateSlice: Partial<T>) => void;
-  nextSliceObservable: (state$: Observable<Partial<T>>) => void;
-} & Subscribable<T> {
+  accumulatorObservable = new BehaviorSubject(defaultAccumulator)
+): Accumulator<T> {
   const signal$ = merge(
     stateObservables.pipe(
       distinctUntilChanged(),
@@ -49,17 +47,22 @@ export function createAccumulationObservable<T extends object>(
     ),
     stateSlices.pipe(observeOn(queueScheduler))
   ).pipe(
-    scan(stateAccumulator, {} as T),
+    withLatestFrom(accumulatorObservable.pipe(observeOn(queueScheduler))),
+    scan(
+      (state, [slice, stateAccumulator]) => stateAccumulator(state, slice),
+      {} as T
+    ),
     tap(newState => (compositionObservable.state = newState)),
     publish()
   );
   const state$: Observable<T> = signal$.pipe(publishReplay(1));
-  const compositionObservable: AccumulationObservable<T> = {
+  const compositionObservable: Accumulator<T> = {
     state: {} as T,
     signal$,
     state$,
     nextSlice,
     nextSliceObservable,
+    nextAccumulator,
     subscribe
   };
 
@@ -68,6 +71,10 @@ export function createAccumulationObservable<T extends object>(
   return compositionObservable;
 
   // ======
+
+  function nextAccumulator(accumulatorFn: AccumulationFn): void {
+    accumulatorObservable.next(accumulatorFn);
+  }
 
   function nextSlice(stateSlice: Partial<T>): void {
     stateSlices.next(stateSlice);

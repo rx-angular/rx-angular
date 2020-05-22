@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { createAccumulationObservable, select } from '../../src/lib/core';
-import { RxState } from '@rx-angular/state';
+import createSpy = jasmine.createSpy;
 
 interface PrimitiveState {
   bol: boolean;
@@ -189,6 +189,33 @@ describe('createAccumulationObservable', () => {
       acc.state$
         .pipe(pluck('num'))
         .subscribe(res => expect(res).toBe({ s: 42 }));
+    });
+  });
+
+  describe('nextAccumulator', () => {
+    it('should accept new accumulator functions while running', () => {
+      let numAccCalls = 0;
+      const customAcc = <T>(s: T, sl: Partial<T>) => {
+        ++numAccCalls;
+        return {
+          ...s, ...sl
+        };
+      };
+      const acc = setupAccumulationObservable<PrimitiveState>({});
+      testScheduler.run(({ expectObservable }) => {
+        acc.nextSlice({ num: 42 });
+        expectObservable(acc.state$.pipe(pluck('num'))).toBe('(abc)', {
+          a: 42,
+          b: 43,
+          c: 44
+        });
+
+        acc.nextAccumulator(customAcc);
+        acc.nextSlice({ num: 43 });
+        acc.nextSlice({ num: 44 });
+      });
+
+      expect(numAccCalls).toBe(2)
     });
   });
 });

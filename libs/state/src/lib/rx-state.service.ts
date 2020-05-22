@@ -15,7 +15,8 @@ import {
   pipeFromArray,
   stateful,
   WrongSelectParamsError,
-  isKeyOf
+  isKeyOf,
+  AccumulationFn
 } from './core';
 import { filter, map, pluck, tap } from 'rxjs/operators';
 
@@ -54,7 +55,7 @@ type ProjectValueReducer<T, K extends keyof T, V> = (
 export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
   private subscription = new Subscription();
 
-  private accumulationObservable = createAccumulationObservable<T>();
+  private accumulator = createAccumulationObservable<T>();
   private effectObservable = createSideEffectObservable();
 
   /**
@@ -62,7 +63,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * The unmodified state exposed as `Observable<T>`. It is not shared, distinct or gets replayed.
    * Use the `$` property if you want to read the state without having applied {@link stateful} to it.
    */
-  readonly $: Observable<T> = this.accumulationObservable.signal$;
+  readonly $: Observable<T> = this.accumulator.signal$;
 
   /**
    * @internal
@@ -78,6 +79,10 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     this.subscription.unsubscribe();
   }
 
+  setAccumulator(accumulatorFn: AccumulationFn) {
+    this.accumulator.nextAccumulator(accumulatorFn);
+  }
+
   /**
    * @description
    * Read from the state in imperative manner. Returns the state object in its current state.
@@ -91,7 +96,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * @return T
    */
   get(): T {
-    return this.accumulationObservable.state;
+    return this.accumulator.state;
   }
 
   /**
@@ -143,7 +148,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       typeof keyOrStateOrProjectState === 'object' &&
       stateOrSliceProjectFn === undefined
     ) {
-      this.accumulationObservable.nextSlice(keyOrStateOrProjectState);
+      this.accumulator.nextSlice(keyOrStateOrProjectState);
       return;
     }
 
@@ -151,8 +156,8 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       typeof keyOrStateOrProjectState === 'function' &&
       stateOrSliceProjectFn === undefined
     ) {
-      this.accumulationObservable.nextSlice(
-        keyOrStateOrProjectState(this.accumulationObservable.state)
+      this.accumulator.nextSlice(
+        keyOrStateOrProjectState(this.accumulator.state)
       );
       return;
     }
@@ -163,9 +168,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     ) {
       const state: Partial<T> = {};
       state[keyOrStateOrProjectState] = stateOrSliceProjectFn(
-        this.accumulationObservable.state
+        this.accumulator.state
       );
-      this.accumulationObservable.nextSlice(state);
+      this.accumulator.nextSlice(state);
       return;
     }
 
@@ -248,7 +253,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       const slice$ = keyOrInputOrSlice$.pipe(
         filter(slice => slice !== undefined)
       );
-      this.accumulationObservable.nextSliceObservable(slice$);
+      this.accumulator.nextSliceObservable(slice$);
       return;
     }
 
@@ -263,7 +268,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
         filter(slice => slice !== undefined),
         map(v => project(this.get(), v))
       );
-      this.accumulationObservable.nextSliceObservable(slice$);
+      this.accumulator.nextSliceObservable(slice$);
       return;
     }
 
@@ -277,7 +282,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
         filter(slice => slice !== undefined),
         map(value => ({ ...{}, [key]: value }))
       );
-      this.accumulationObservable.nextSliceObservable(slice$);
+      this.accumulator.nextSliceObservable(slice$);
       return;
     }
 
@@ -291,7 +296,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
         filter(slice => slice !== undefined),
         map(value => ({ ...{}, [key]: projectValueFn(this.get(), value) }))
       );
-      this.accumulationObservable.nextSliceObservable(slice$);
+      this.accumulator.nextSliceObservable(slice$);
       return;
     }
 
@@ -436,15 +441,11 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     ...opOrMapFn: OperatorFunction<T, R>[] | string[]
   ): Observable<T | R> {
     if (!opOrMapFn || opOrMapFn.length === 0) {
-      return this.accumulationObservable.state$.pipe(stateful());
+      return this.accumulator.state$.pipe(stateful());
     } else if (isStringArrayGuard(opOrMapFn)) {
-      return this.accumulationObservable.state$.pipe(
-        stateful(pluck(...opOrMapFn))
-      );
+      return this.accumulator.state$.pipe(stateful(pluck(...opOrMapFn)));
     } else if (isOperateFnArrayGuard(opOrMapFn)) {
-      return this.accumulationObservable.state$.pipe(
-        stateful(pipeFromArray(opOrMapFn))
-      );
+      return this.accumulator.state$.pipe(stateful(pipeFromArray(opOrMapFn)));
     }
     throw new WrongSelectParamsError();
   }
@@ -488,7 +489,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    */
   subscribe(): Unsubscribable {
     const subscription = new Subscription();
-    subscription.add(this.accumulationObservable.subscribe());
+    subscription.add(this.accumulator.subscribe());
     subscription.add(this.effectObservable.subscribe());
     return subscription;
   }
