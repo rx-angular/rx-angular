@@ -237,4 +237,69 @@ describe('RxStateService', () => {
       it('should override previous base-state slices', () => {});
     });
   });
+
+  describe('setAccumulator', () => {
+
+      it('should work before a value was emitted', () => {
+        let numAccCalls = 0;
+        const customAcc = <T>(s: T, sl: Partial<T>) => {
+          ++numAccCalls;
+          return {
+            ...s, ...sl
+          };
+        };
+        const state = setupState({initialState: initialPrimitiveState});
+        testScheduler.run(({ expectObservable }) => {
+
+          expectObservable(state.select('num')).toBe('(abc)', {
+            a: 42,
+            b: 43,
+            c: 44
+          });
+
+          state.setAccumulator(customAcc);
+          state.set({ num: 42 });
+          state.set({ num: 43 });
+          state.set({ num: 44 });
+        });
+
+        expect(numAccCalls).toBe(3)
+      });
+
+      it('should work in between emissions', () => {
+        let numAcc1Calls = 0;
+        const customAcc1 = <T>(s: T, sl: Partial<T>) => {
+          ++numAcc1Calls;
+          return {
+            ...s, ...sl
+          };
+        };
+        let numAcc2Calls = 0;
+        const customAcc2 = <T>(s: T, sl: Partial<T>) => {
+          ++numAcc2Calls;
+          return {
+            ...s, ...sl
+          };
+        };
+        const state = setupState({initialState: initialPrimitiveState});
+        testScheduler.run(({ expectObservable }) => {
+
+          expectObservable(state.select('num')).toBe('(abc)', {
+            a: 42,
+            b: 43,
+            c: 44
+          });
+
+          state.set({ num: 42 });
+          state.setAccumulator(customAcc1);
+          state.set({ num: 43 });
+          state.setAccumulator(customAcc2);
+          state.set({ num: 44 });
+        });
+
+        expect(numAcc1Calls).toBe(1)
+        expect(numAcc2Calls).toBe(1)
+      });
+
+  });
 });
