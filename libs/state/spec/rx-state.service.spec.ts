@@ -1,15 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
 import { RxState } from '../src';
-import {
-  createStateChecker,
-  initialPrimitiveState,
-  PrimitiveState
-} from './fixtures';
+import { createStateChecker, initialPrimitiveState, PrimitiveState } from './fixtures';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
 import { select } from '../src/lib/rxjs/operators/select';
 import { pluck } from 'rxjs/operators';
+import { from } from 'rxjs';
 
 function setupState<T extends object>(cfg: { initialState?: T }) {
   const { initialState } = { ...cfg };
@@ -64,7 +61,7 @@ describe('RxStateService', () => {
   });
 
   describe('$', () => {
-    it('should return NO empty base-state after init when subscribing late', () => {
+    it('should return NO empty state after init when subscribing late', () => {
       testScheduler.run(({ expectObservable }) => {
         const state = setupState({});
         expectObservable(state.$).toBe('');
@@ -94,7 +91,7 @@ describe('RxStateService', () => {
   });
 
   describe('stateful with select', () => {
-    it('should return empty base-state after init when subscribing late', () => {
+    it('should return empty state after init when subscribing late', () => {
       testScheduler.run(({ expectObservable }) => {
         const state = setupState({});
         expectObservable(state.select()).toBe('');
@@ -126,7 +123,7 @@ describe('RxStateService', () => {
   });
 
   describe('select', () => {
-    it('should return initial base-state', () => {
+    it('should return initial state', () => {
       testScheduler.run(({ expectObservable }) => {
         const state = setupState({ initialState: initialPrimitiveState });
         expectObservable(state.select()).toBe('s', {
@@ -136,14 +133,14 @@ describe('RxStateService', () => {
     });
 
     describe('slice by key', () => {
-      it('should return empty base-state after init', () => {
+      it('should return empty state after init', () => {
         testScheduler.run(({ expectObservable }) => {
           const state = setupState({});
           expectObservable(state.select()).toBe('');
         });
       });
 
-      it('should return initial base-state', () => {
+      it('should return initial state', () => {
         testScheduler.run(({ expectObservable }) => {
           const state = new RxState<PrimitiveState>();
           state.subscribe();
@@ -162,7 +159,7 @@ describe('RxStateService', () => {
         });
       });
 
-      it('should return full base-state object on select', () => {
+      it('should return full state object on select', () => {
         testScheduler.run(({ expectObservable }) => {
           const state = setupState({ initialState: initialPrimitiveState });
           expectObservable(state.select()).toBe('s', {
@@ -174,7 +171,7 @@ describe('RxStateService', () => {
   });
 
   describe('set', () => {
-    describe('with base-state partial', () => {
+    describe('with state partial', () => {
       it('should add new slices', () => {
         const state = setupState({});
         state.select().subscribe(s => {
@@ -183,7 +180,7 @@ describe('RxStateService', () => {
         state.set(initialPrimitiveState);
         state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
       });
-      it('should override previous base-state slices', () => {
+      it('should override previous state slices', () => {
         const state = setupState({ initialState: initialPrimitiveState });
         state.select().subscribe(s => {
           throw Error('should never emit');
@@ -194,7 +191,7 @@ describe('RxStateService', () => {
         state.select().subscribe(s => expect(s).toBe({ num: 1 }));
       });
     });
-    describe('with base-state project partial', () => {
+    describe('with state project partial', () => {
       it('should add new slices', () => {
         const state = setupState({});
         state.select().subscribe(s => {
@@ -203,7 +200,7 @@ describe('RxStateService', () => {
         state.set(s => initialPrimitiveState);
         state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
       });
-      it('should override previous base-state slices', () => {
+      it('should override previous state slices', () => {
         const state = setupState({ initialState: initialPrimitiveState });
         state
           .select()
@@ -212,7 +209,7 @@ describe('RxStateService', () => {
         state.select().subscribe(s => expect(state).toBe({ num: 43 }));
       });
     });
-    describe('with base-state key and value partial', () => {
+    describe('with state key and value partial', () => {
       it('should add new slices', () => {
         const state = setupState<PrimitiveState>({});
         state.select().subscribe(s => {
@@ -221,7 +218,7 @@ describe('RxStateService', () => {
         state.set('num', s => 1);
         state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
       });
-      it('should override previous base-state slices', () => {
+      it('should override previous state slices', () => {
         const state = setupState({ initialState: initialPrimitiveState });
         state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
         state.set('num', s => s.num + 1);
@@ -231,75 +228,91 @@ describe('RxStateService', () => {
   });
 
   describe('connect', () => {
-    describe('with observable of slices', () => {
-      it('should add new slices', () => {});
 
-      it('should override previous base-state slices', () => {});
+
+    it('should add new slices', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupState({ initialState: initialPrimitiveState });
+        expectObservable(state.select('num')).toBe('(abc)', {
+          a: 42,
+          b: 43,
+          c: 44
+        });
+
+        state.connect(from([{ num: 42 }, { num: 43 }, { num: 44 }]));
+      });
     });
+
+    it('should get previous state slices and accumulate', () => {
+
+
+    });
+
   });
+
 
   describe('setAccumulator', () => {
 
-      it('should work before a value was emitted', () => {
-        let numAccCalls = 0;
-        const customAcc = <T>(s: T, sl: Partial<T>) => {
-          ++numAccCalls;
-          return {
-            ...s, ...sl
-          };
+    it('should work before a value was emitted', () => {
+      let numAccCalls = 0;
+      const customAcc = <T>(s: T, sl: Partial<T>) => {
+        ++numAccCalls;
+        return {
+          ...s, ...sl
         };
-        const state = setupState({initialState: initialPrimitiveState});
-        testScheduler.run(({ expectObservable }) => {
+      };
+      const state = setupState({ initialState: initialPrimitiveState });
+      testScheduler.run(({ expectObservable }) => {
 
-          expectObservable(state.select('num')).toBe('(abc)', {
-            a: 42,
-            b: 43,
-            c: 44
-          });
-
-          state.setAccumulator(customAcc);
-          state.set({ num: 42 });
-          state.set({ num: 43 });
-          state.set({ num: 44 });
+        expectObservable(state.select('num')).toBe('(abc)', {
+          a: 42,
+          b: 43,
+          c: 44
         });
 
-        expect(numAccCalls).toBe(3)
+        state.setAccumulator(customAcc);
+        state.set({ num: 42 });
+        state.set({ num: 43 });
+        state.set({ num: 44 });
       });
 
-      it('should work in between emissions', () => {
-        let numAcc1Calls = 0;
-        const customAcc1 = <T>(s: T, sl: Partial<T>) => {
-          ++numAcc1Calls;
-          return {
-            ...s, ...sl
-          };
-        };
-        let numAcc2Calls = 0;
-        const customAcc2 = <T>(s: T, sl: Partial<T>) => {
-          ++numAcc2Calls;
-          return {
-            ...s, ...sl
-          };
-        };
-        const state = setupState({initialState: initialPrimitiveState});
-        testScheduler.run(({ expectObservable }) => {
+      expect(numAccCalls).toBe(3);
+    });
 
-          expectObservable(state.select('num')).toBe('(abc)', {
-            a: 42,
-            b: 43,
-            c: 44
-          });
+    it('should work in between emissions', () => {
+      let numAcc1Calls = 0;
+      const customAcc1 = <T>(s: T, sl: Partial<T>) => {
+        ++numAcc1Calls;
+        return {
+          ...s, ...sl
+        };
+      };
+      let numAcc2Calls = 0;
+      const customAcc2 = <T>(s: T, sl: Partial<T>) => {
+        ++numAcc2Calls;
+        return {
+          ...s, ...sl
+        };
+      };
+      const state = setupState({ initialState: initialPrimitiveState });
+      testScheduler.run(({ expectObservable }) => {
 
-          state.set({ num: 42 });
-          state.setAccumulator(customAcc1);
-          state.set({ num: 43 });
-          state.setAccumulator(customAcc2);
-          state.set({ num: 44 });
+        expectObservable(state.select('num')).toBe('(abc)', {
+          a: 42,
+          b: 43,
+          c: 44
         });
 
-        expect(numAcc1Calls).toBe(1)
-        expect(numAcc2Calls).toBe(1)
+        state.set({ num: 42 });
+        state.setAccumulator(customAcc1);
+        state.set({ num: 43 });
+        state.setAccumulator(customAcc2);
+        state.set({ num: 44 });
       });
+
+      expect(numAcc1Calls).toBe(1);
+      expect(numAcc2Calls).toBe(1);
+    });
 
   });
 });
