@@ -8,7 +8,7 @@
  *
  * @return boolean
  *
- * @docsPage distinctUntilSomeChanged
+ * @docsPage interfaces
  * @docsCategory operators
  */
 export type CompareFn<T> = (oldVal: T, newVal: T) => boolean;

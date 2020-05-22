@@ -3,10 +3,6 @@ import { filter, map } from 'rxjs/operators';
 import { CompareFn, KeyCompareMap } from '../interfaces';
 import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
 
-function safePluck<T extends object>(key: keyof T) {
-  return (val: T) => (val !== undefined && val !== null ? val[key] : undefined);
-}
-
 /**
  * @description
  *
@@ -63,6 +59,10 @@ export function selectSlice<T extends object, K extends keyof T, R>(
  *
  * Returns an Observable that emits only the provided `keys` emitted by the source Observable. Each key will get
  * filtered to only emit _defined_ values as well as checked for distinct emissions.
+ * Comparison will be done for each set key in the `keys` array.
+ *
+ * If a comparator function is provided, then it will be called for each item to test for whether or not that value
+ *  should be emitted.
  *
  * @example
  *
@@ -91,10 +91,6 @@ export function selectSlice<T extends object, K extends keyof T, R>(
  * import { selectSlices } from 'rxjs/operators';
  * import { isDeepEqual } from 'custom/is-equal';
  *
- * interface Person {
- *     age: number;
- *     name: string;
- *  }
  *
  *  const customCompare = (oldVal, newVal) => isDeepEqual(oldVal, newVal);
  *
@@ -112,7 +108,7 @@ export function selectSlice<T extends object, K extends keyof T, R>(
  * // displays:
  * //  { title: 'myTitle', items: ['foo'],  panelOpen: true},
  * //  { title: 'myTitle2', items: ['foo', 'bar'],  panelOpen: true},
- * //  { title: 'myTitle2', items: ['foo', 'baz'],  panelOpen: true},
+ * //  { title: 'newTitle', items: ['foo', 'baz'],  panelOpen: true},
  *
  * @param {(K)[]} keys - the array of keys which should be selected
  * @param {CompareFn<T[K]>} [compare] Optional comparison function called to test if an item is distinct from the

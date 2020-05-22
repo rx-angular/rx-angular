@@ -1,3 +1,5 @@
+import { CompareFn } from './compare-fn';
+
 /**
  * @description
  * The `KeyCompareMap` is used to configure custom comparison for defined keys. You can set the `CompareFn` to
@@ -13,11 +15,9 @@
  *    myOtherKey: 'bar'
  *  }).pipe(distinctUntilSomeChanged(keyCompareMap));
  *
- * @docsPage distinctUntilSomeChanged
+ * @docsPage interfaces
  * @docsCategory operators
  */
-import { CompareFn } from './compare-fn';
-
 export type KeyCompareMap<T extends object> = {
   [K in keyof T]?: CompareFn<T[K]>;
 };
