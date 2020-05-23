@@ -3,7 +3,7 @@ module.exports = {
   preset: '../../jest.config.js',
   coverageDirectory: '../../coverage/state',
   collectCoverageFrom: [
-    "**/spec/**/{!(fixtures),}.ts"
+    "./src/**/*.ts"
   ],
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
