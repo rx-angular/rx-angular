@@ -1,19 +1,9 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { Component, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, Input, Output, ViewChild } from '@angular/core';
 import { RxState } from '../src';
-import {
-  createStateChecker,
-  initialPrimitiveState,
-  PrimitiveState
-} from './fixtures';
+import { createStateChecker, PrimitiveState } from './fixtures';
 import { Observable, Subject } from 'rxjs';
 import { select } from '../src/lib/rxjs/operators/select';
-
-const initialParentState: PrimitiveState = {
-  ...initialPrimitiveState,
-  str: 'initialParent'
-};
 
 const initialChildState = { str: 'initialChildState' };
 
@@ -48,7 +38,9 @@ export class RxStateInheritanceComponent extends RxState<PrimitiveState> {
 })
 export class RxStateInjectionComponent {
   num$ = this.state.select();
-  constructor(public state: RxState<PrimitiveState>) {}
+
+  constructor(public state: RxState<PrimitiveState>) {
+  }
 }
 
 @Component({
@@ -56,11 +48,12 @@ export class RxStateInjectionComponent {
   template: `
     <span id="child">{{
       (str$ | async) == null ? 'undefined' : (str$ | async)
-    }}</span>
+      }}</span>
   `
 })
 export class RxStateGlueComponent extends RxState<{ str: string }> {
   str$ = this.select('str');
+
   @Input()
   set str(str: string) {
     this.set({ str });
@@ -85,7 +78,7 @@ export class RxStateGlueComponent extends RxState<{ str: string }> {
   template: `
     <span id="parent">{{
       (str$ | async) == null ? 'undefined' : (str$ | async)
-    }}</span>
+      }}</span>
     <rx-angular-state-glue-test
       [str]="str$ | async"
       (strChange)="strChange$.next($event)"

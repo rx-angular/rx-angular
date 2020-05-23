@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { RxState } from '../src';
 import {
   createStateChecker,

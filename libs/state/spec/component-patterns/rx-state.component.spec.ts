@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AfterViewInit, Component, Input, Output, ViewChild } from '@angular/core';
 import { RxState } from '../../src';
-import { initialPrimitiveState, PrimitiveState } from './../fixtures';
+import { initialPrimitiveState, PrimitiveState } from '../fixtures';
 import { Observable, Subject } from 'rxjs';
 import { select } from '../../src/lib/rxjs/operators/select';
 
