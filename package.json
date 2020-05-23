@@ -63,6 +63,7 @@
     "@nrwl/node": "^9.2.2",
     "angular-in-memory-web-api": "^0.10.0",
     "core-js": "^3.6.5",
+    "coveralls": "^3.1.0",
     "rxjs": "^6.5.5",
     "tslib": "^1.11.1",
     "zone.js": "^0.10.3"
