@@ -3,8 +3,7 @@ import { pluck } from 'rxjs/operators';
 import {
   isOperateFnArrayGuard,
   isStringArrayGuard,
-  pipeFromArray,
-  WrongSelectParamsError
+  pipeFromArray
 } from '../../core/utils';
 import { stateful } from './stateful';
 
@@ -172,6 +171,6 @@ export function select<T>(
     } else if (isOperateFnArrayGuard(opOrMapFn)) {
       return state$.pipe(stateful(pipeFromArray(opOrMapFn)));
     }
-    throw new WrongSelectParamsError();
+    throw new Error('wrong params passed to select');
   };
 }
