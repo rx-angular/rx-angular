@@ -19,7 +19,7 @@ export function isPromiseGuard<T>(value: unknown): value is Promise<T> {
 export function isOperateFnArrayGuard<T, R = T>(
   op: any[]
 ): op is OperatorFunction<T, R>[] {
-  return op.length > 0 && op.every((i: any) => typeof i !== 'string');
+  return op.length > 0 && op.every((i: any) => typeof i === 'function');
 }
 
 export function isStringArrayGuard(op: any[]): op is string[] {

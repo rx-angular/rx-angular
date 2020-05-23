@@ -1,11 +1,11 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { RxState } from '../src';
 import { createStateChecker, initialPrimitiveState, PrimitiveState } from './fixtures';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
 import { select } from '../src/lib/rxjs/operators/select';
-import { pluck } from 'rxjs/operators';
-import { from } from 'rxjs';
+import { map, pluck, takeUntil } from 'rxjs/operators';
+import { from, of, Subject } from 'rxjs';
 
 function setupState<T extends object>(cfg: { initialState?: T }) {
   const { initialState } = { ...cfg };
@@ -131,6 +131,13 @@ describe('RxStateService', () => {
       });
     });
 
+    it('should throw with wrong params', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      expect(() => state.select(true as any)).toThrowError('wrong params passed to select');
+
+    });
+
     describe('slice by key', () => {
       it('should return empty state after init', () => {
         testScheduler.run(({ expectObservable }) => {
@@ -151,6 +158,7 @@ describe('RxStateService', () => {
     });
 
     describe('slice by map function', () => {
+
       it('should return nothing if empty', () => {
         testScheduler.run(({ expectObservable }) => {
           const state = setupState({});
@@ -166,6 +174,25 @@ describe('RxStateService', () => {
           });
         });
       });
+
+      it('should return slice on select with prop', () => {
+        testScheduler.run(({ expectObservable }) => {
+          const state = setupState({ initialState: initialPrimitiveState });
+          expectObservable(state.select('num')).toBe('s', {
+            s: initialPrimitiveState.num
+          });
+        });
+      });
+
+      it('should return slice on select with operator', () => {
+        testScheduler.run(({ expectObservable }) => {
+          const state = setupState({ initialState: initialPrimitiveState });
+          expectObservable(state.select(map(s => s.num))).toBe('s', {
+            s: initialPrimitiveState.num
+          });
+        });
+      });
+
     });
   });
 
@@ -188,6 +215,13 @@ describe('RxStateService', () => {
         state.select().subscribe(s => expect(s).toBe(initialPrimitiveState));
         state.set({ num: 1 });
         state.select().subscribe(s => expect(s).toBe({ num: 1 }));
+      });
+
+      it('should throw with wrong params', () => {
+        const state = setupState({ initialState: initialPrimitiveState });
+
+        expect(() => state.set('wrong params passed to set' as any)).toThrowError('wrong param');
+
       });
     });
     describe('with state project partial', () => {
@@ -229,7 +263,7 @@ describe('RxStateService', () => {
   describe('connect', () => {
 
 
-    it('should add new slices', () => {
+    it('should work with observables directly', () => {
       testScheduler.run(({ expectObservable }) => {
         const state = setupState({ initialState: initialPrimitiveState });
         expectObservable(state.select('num')).toBe('(abc)', {
@@ -242,13 +276,58 @@ describe('RxStateService', () => {
       });
     });
 
-    it('should get previous state slices and accumulate', () => {
+    it('should work with prop name and observable', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupState({ initialState: initialPrimitiveState });
+        expectObservable(state.select('num')).toBe('(abc)', {
+          a: 42,
+          b: 43,
+          c: 44
+        });
 
+        state.connect('num', from([{ num: 42 }, { num: 43 }, { num: 44 }]).pipe(map(s => s.num)));
+      });
+    });
+
+    it('should work with observable and project', () => {
+
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupState({ initialState: initialPrimitiveState });
+        expectObservable(state.select('num')).toBe('(abc)', {
+          a: 42,
+          b: 43,
+          c: 44
+        });
+
+        state.connect(
+          from([{ num: 42 }, { num: 43 }, { num: 44 }]),
+          (s, n) => ({ num: n.num })
+        );
+
+      });
+    });
+
+    it('should work with prop name and observable and reducer', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupState({ initialState: initialPrimitiveState });
+        expectObservable(state.select('num')).toBe('(abc)', {
+          a: 42,
+          b: 43,
+          c: 44
+        });
+
+        state.connect('num', from([{ num: 42 }, { num: 43 }, { num: 44 }]), (s, v) => v.num);
+      });
+    });
+
+    it('should throw with wrong params', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      expect(() => state.connect('some string' as any)).toThrowError('wrong params passed to connect');
 
     });
 
   });
-
 
   describe('setAccumulator', () => {
 
@@ -312,6 +391,35 @@ describe('RxStateService', () => {
       expect(numAcc1Calls).toBe(1);
       expect(numAcc2Calls).toBe(1);
     });
+
+  });
+
+  describe('hold', () => {
+
+    it('should work with effect-observable', () => {
+      testScheduler.run(({ cold, expectSubscriptions }) => {
+        const state = setupState({ initialState: initialPrimitiveState });
+
+        const test$ = cold('(abc)', { a: 1, b: 2, c: 3 });
+        const sub = '(^!)';
+        const stop = new Subject();
+        state.hold(test$.pipe(takeUntil(stop)));
+        stop.next(1);
+        expectSubscriptions(test$.subscriptions).toBe(sub);
+
+      });
+    });
+
+    it('should work with observable and effect',  fakeAsync(() => {
+
+      let calls = 0;
+      const effect = (v: number) => {
+        calls = calls + 1;
+      };
+      const state = setupState({ initialState: initialPrimitiveState });
+      state.hold(of(1, 2, 3), effect);
+      expect(calls).toBe(3);
+    }));
 
   });
 });
