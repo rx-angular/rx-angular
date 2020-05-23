@@ -1,12 +1,4 @@
-import { isObservable, Observable, OperatorFunction } from 'rxjs';
-
-export function isUndefinedOrNullGuard<T>(
-  potentialObservableValue: unknown
-): potentialObservableValue is undefined | null {
-  return (
-    potentialObservableValue === null || potentialObservableValue === undefined
-  );
-}
+import { OperatorFunction } from 'rxjs';
 
 export function isPromiseGuard<T>(value: unknown): value is Promise<T> {
   return (
@@ -19,19 +11,21 @@ export function isPromiseGuard<T>(value: unknown): value is Promise<T> {
 export function isOperateFnArrayGuard<T, R = T>(
   op: any[]
 ): op is OperatorFunction<T, R>[] {
+  if (!Array.isArray(op)) {
+    return false;
+  }
   return op.length > 0 && op.every((i: any) => typeof i === 'function');
 }
 
 export function isStringArrayGuard(op: any[]): op is string[] {
+  if (!Array.isArray(op)) {
+    return false;
+  }
   return op.length > 0 && op.every((i: any) => typeof i === 'string');
 }
 
-export function isDefinedGuard<T>(opr: T | undefined): opr is T {
-  return opr !== undefined;
-}
-
 export function isIterableGuard<T>(obj: unknown): obj is Array<T> {
-  if (isUndefinedOrNullGuard(obj)) {
+  if (obj === null || obj === undefined) {
     return false;
   }
   return typeof (obj as any)[Symbol.iterator] === 'function';
