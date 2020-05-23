@@ -14,7 +14,6 @@ import {
   isStringArrayGuard,
   pipeFromArray,
   stateful,
-  WrongSelectParamsError,
   isKeyOf,
   AccumulationFn
 } from './core';
@@ -174,7 +173,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       return;
     }
 
-    throw new Error('wrong param');
+    throw new Error('wrong params passed to set');
   }
 
   /**
@@ -447,7 +446,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     } else if (isOperateFnArrayGuard(opOrMapFn)) {
       return this.accumulator.state$.pipe(stateful(pipeFromArray(opOrMapFn)));
     }
-    throw new WrongSelectParamsError();
+    throw new Error('wrong params passed to select');
   }
 
   /**
@@ -475,7 +474,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     obsOrObsWithSideEffect: Observable<S>,
     sideEffectFn?: (arg: S) => void
   ): void {
-    if (sideEffectFn) {
+    if (typeof sideEffectFn === 'function') {
       this.effectObservable.nextEffectObservable(
         obsOrObsWithSideEffect.pipe(tap(sideEffectFn))
       );
