@@ -77,6 +77,8 @@ describe('isIterableGuard', () => {
   });
 
   it('should return false for no Promise', () => {
+    expect(isIterableGuard(undefined)).toBeFalsy();
+    expect(isIterableGuard(null)).toBeFalsy();
     expect(isIterableGuard(true)).toBeFalsy();
     expect(isIterableGuard({ })).toBeFalsy();
   });
