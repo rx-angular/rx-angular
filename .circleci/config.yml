@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@1.1.6
-  coveralls: coveralls/coveralls@1.0.6
+  codecov: codecov/codecov@1.0.2
 jobs:
   build-and-test:
     executor:
@@ -16,7 +16,8 @@ jobs:
             - run: npm run nx affected:lint -- --base=origin/master --head=origin/master
             - run: npm run nx affected:build -- --base=origin/master --head=origin/master
             - run: npm run nx affected:test -- --base=origin/master --head=origin/master --code-coverage
-            - run: npm run state:coveralls
+            - codecov/upload:
+                file: ./coverage/state/src/lcov.info
 workflows:
     build-and-test:
       jobs:
