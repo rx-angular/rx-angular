@@ -28,7 +28,8 @@
     "generate-typescript-docs": "ts-node -P tools/tsconfig.tools.json tools/scripts/docs/generate-typescript-docs.ts",
     "help": "nx help",
     "state:publish": "nx test state && nx build state --prod && cd ./dist/libs/state && npm publish",
-    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points"
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
+    "state:coveralls": "coveralls <  ./coverage/state/lcov.info"
   },
   "husky": {
     "hooks": {
@@ -53,8 +54,6 @@
     "@angular/platform-browser": "^9.1.2",
     "@angular/platform-browser-dynamic": "^9.1.2",
     "@angular/router": "^9.1.2",
-    "@nrwl/angular": "9.2.2",
-    "@nrwl/node": "^9.2.2",
     "angular-in-memory-web-api": "^0.10.0",
     "core-js": "^3.6.5",
     "rxjs": "^6.5.5",
@@ -70,6 +69,8 @@
     "@nrwl/cypress": "9.2.2",
     "@nrwl/jest": "9.2.2",
     "@nrwl/workspace": "9.2.2",
+    "@nrwl/angular": "9.2.2",
+    "@nrwl/node": "^9.2.2",
     "@types/jest": "25.1.4",
     "@types/klaw-sync": "^6.0.0",
     "@types/node": "~8.9.4",
@@ -79,6 +80,7 @@
     "eslint": "6.8.0",
     "husky": "^4.2.5",
     "jest": "25.2.3",
+    "coveralls": "^3.1.0",
     "jest-preset-angular": "8.1.2",
     "klaw-sync": "^6.0.0",
     "lint-staged": "^10.1.6",
