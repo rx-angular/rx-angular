@@ -170,7 +170,8 @@ export function select<T>(
       return state$.pipe(stateful(pluck(...opOrMapFn)));
     } else if (isOperateFnArrayGuard(opOrMapFn)) {
       return state$.pipe(stateful(pipeFromArray(opOrMapFn)));
+    } else {
+      throw new Error('wrong params passed to select');
     }
-    throw new Error('wrong params passed to select');
   };
 }
