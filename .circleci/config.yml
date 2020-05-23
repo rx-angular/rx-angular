@@ -14,7 +14,7 @@ jobs:
                 command: npm install --frozen-lockfile --non-interactive
             - run: npm run nx affected:lint -- --base=origin/master --head=origin/master
             - run: npm run nx affected:build -- --base=origin/master --head=origin/master
-            - run: npm run nx affected:test -- --base=origin/master --head=origin/master --code-coverage
+            - run: npm run nx test state -- --code-coverage
             - run: npm run state:coveralls
 workflows:
     build-and-test:
