@@ -1,6 +1,7 @@
 /**
  * @description
- * The function which is used by `distinctUntilSomeChanged` to determine if changes are distinct or not.
+ * The function which is used by `distinctUntilSomeChanged` and `selectSlice` to determine if changes are distinct or
+ * not.
  * Should return true if values are equal.
  *
  * @param {T} oldVal
@@ -8,7 +9,7 @@
  *
  * @return boolean
  *
- * @docsPage distinctUntilSomeChanged
+ * @docsPage interfaces
  * @docsCategory operators
  */
 export type CompareFn<T> = (oldVal: T, newVal: T) => boolean;
