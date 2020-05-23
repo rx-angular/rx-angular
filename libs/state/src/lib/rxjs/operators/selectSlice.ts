@@ -3,10 +3,6 @@ import { filter, map } from 'rxjs/operators';
 import { CompareFn, KeyCompareMap } from '../interfaces';
 import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
 
-function safePluck<T extends object>(key: keyof T) {
-  return (val: T) => (val !== undefined && val !== null ? val[key] : undefined);
-}
-
 /**
  * @description
  *
