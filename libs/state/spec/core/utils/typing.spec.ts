@@ -50,7 +50,7 @@ describe('isOperateFnArrayGuard', () => {
 
 describe('isStringArrayGuard', () => {
 
-  it('should return true for a array of strings', () => {
+  it('should return true if input is an array of strings', () => {
     expect(isStringArrayGuard(['1', '2', '3'])).toBeTruthy();
   });
 
