@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 @Component({
   selector: 'demo-basics',
   template: `
-    render{{ render() }}
+    render: {{ render() }}
     <button [unpatch] (click)="log($event)" (mouseover)="log($event)">
       test
     </button>
