@@ -18,7 +18,7 @@ describe('isPromiseGuard', () => {
     })).toBeTruthy();
   });
 
-  it('should return false for no Promise', () => {
+  it('should return false if input is not a promise', () => {
     expect(isPromiseGuard(true)).toBeFalsy();
     expect(isPromiseGuard({ then: true })).toBeFalsy();
   });
