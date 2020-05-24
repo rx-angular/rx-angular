@@ -76,7 +76,7 @@ describe('isIterableGuard', () => {
     expect(isIterableGuard({[Symbol.iterator]: () => {}})).toBeTruthy();
   });
 
-  it('should return false for no Promise', () => {
+  it('should return false for input types other than Promise', () => {
     expect(isIterableGuard(undefined)).toBeFalsy();
     expect(isIterableGuard(null)).toBeFalsy();
     expect(isIterableGuard(true)).toBeFalsy();
