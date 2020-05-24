@@ -8,11 +8,11 @@
      - libs/state/**/*
 
 # Add 'template' label to any change within the 'template' package
-   template:
+  template:
      - libs/template/*
      - libs/template/**/*
 
 
 # Add 'test' label to any change to *.spec.js files within the source dir
-   test:
+  test:
      - libs/**/*.spec.js
