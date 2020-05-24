@@ -54,7 +54,7 @@ describe('isStringArrayGuard', () => {
     expect(isStringArrayGuard(['1', '2', '3'])).toBeTruthy();
   });
 
-  it('should return false for other values', () => {
+  it('should return false for other input types', () => {
     expect(isStringArrayGuard(1 as any)).toBeFalsy();
     expect(isStringArrayGuard([1, 2, 3])).toBeFalsy();
     expect(isStringArrayGuard([() => {}, () => {}, () => {}])).toBeFalsy();
