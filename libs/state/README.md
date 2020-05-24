@@ -2,6 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
 [![rx-angular circleci-status](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
+[![Coverage Status](https://coveralls.io/repos/github/BioPhoton/rx-angular/badge.svg?branch=master)](https://coveralls.io/github/BioPhoton/rx-angular?branch=master)
 
 ## Reactive Component State for Angular
 

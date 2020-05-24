@@ -1,5 +1,5 @@
 import { jestMatcher } from '@test-helpers';
-import { EMPTY, NEVER, Observable } from 'rxjs';
+import { EMPTY, NEVER, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 
@@ -138,5 +138,11 @@ describe('select', () => {
         )
       ).toBe('a|', { a: 'test' });
     });
+  });
+
+
+  it('should throw with wrong params', () => {
+    expect(() => of().pipe(select(true as any))).toThrowError('wrong params passed to select');
+
   });
 });
