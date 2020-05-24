@@ -71,7 +71,7 @@ describe('isStringArrayGuard', () => {
 });
 
 describe('isIterableGuard', () => {
-  it('should return true for a Promise', () => {
+  it('should return true if input is a Promise', () => {
     expect(isIterableGuard([])).toBeTruthy();
     expect(isIterableGuard({[Symbol.iterator]: () => {}})).toBeTruthy();
   });
