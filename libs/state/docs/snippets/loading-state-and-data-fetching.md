@@ -47,18 +47,18 @@ export class MyComponent {
   selector: 'my-comp',
   template: `
     <loading [isLoading]="isLoading$ | push"></loading>
-    <div>{{ users$ | push }}</div>
+    <div>{{ user$ | push }}</div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyComponent {
-  readonly users$ = this.state.select('users');
+  readonly user$ = this.state.select('user');
   readonly isLoading$ = this.state.select('isLoading');
 
   constructor(
     private router: Router,
     private userService: UserService,
-    private state: RxState<{ user: string; loading: boolean }>
+    private state: RxState<{ user: string; isLoading: boolean }>
   ) {
     const fetchUserOnUrlChange$ = this.router.params.pipe(
       switchMap(p =>
