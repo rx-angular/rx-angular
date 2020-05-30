@@ -40,7 +40,7 @@ export class DemoBasicsComponent {
     /*
     from([1, 2]).pipe(tap(console.log), debounce(() => from(getUnpatchedResolvedPromise()).pipe(observeOn(asapScheduler)))).subscribe(v => console.log('s', v));
     from(['a', 'b']).pipe(tap(console.log), debounce(() => from(getUnpatchedResolvedPromise()).pipe(observeOn(asapScheduler)))).subscribe(v => console.log('s', v));
-*/
+
     // Received: 1,2,s 2, a,b,s b
     // Expected: 1,2,a,b,s 2,s b
 
@@ -52,6 +52,8 @@ export class DemoBasicsComponent {
     Promise.resolve('b').then((v) => console.log('p', v));
     // Received: 1,2,a,b,p 2,p b
     // Expected: 1,2,a,b,p 2,p b
+
+     */
   }
 
   renderChange() {
