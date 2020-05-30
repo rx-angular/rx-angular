@@ -3,6 +3,7 @@ import {
   MonoTypeOperatorFunction,
   Observable,
   Operator,
+  scheduled,
   SchedulerLike,
   SubscribableOrPromise,
   Subscriber,
@@ -76,8 +77,9 @@ export function coalesce<T>(
   const parsedConfig = getCoalesceConfig(config);
   return (source: Observable<T>) =>
     source
-      .lift(new CoalesceOperator(durationSelector, parsedConfig))
-      .pipe(observeOn(parsedConfig.scheduler));
+      //   .pipe(observeOn(parsedConfig.scheduler))
+      .lift(new CoalesceOperator(durationSelector, parsedConfig));
+  //   .pipe(observeOn(parsedConfig.scheduler))
 }
 
 class CoalesceOperator<T> implements Operator<T, T> {
@@ -116,7 +118,12 @@ class CoalesceSubscriber<T, R> extends OuterSubscriber<T, R> {
   protected _next(value: T): void {
     this._hasValue = true;
     this._sendValue = value;
-    if (!this._coalesced) {
+    console.log(
+      '_next',
+      value,
+      coalescingContextPropertiesMap.getProps(this._context)
+    );
+    if (!coalescingContextPropertiesMap.getProps(this._context).isCoalescing) {
       this.send();
     }
   }
@@ -154,6 +161,10 @@ class CoalesceSubscriber<T, R> extends OuterSubscriber<T, R> {
       coalescingContextPropertiesMap.setProps(this._context, {
         isCoalescing: true,
       });
+      console.log(
+        'startCoalesceDuration',
+        coalescingContextPropertiesMap.getProps(this._context)
+      );
     }
   }
 
@@ -170,6 +181,10 @@ class CoalesceSubscriber<T, R> extends OuterSubscriber<T, R> {
       coalescingContextPropertiesMap.setProps(this._context, {
         isCoalescing: false,
       });
+      console.log(
+        'coalescingDone',
+        coalescingContextPropertiesMap.getProps(this._context)
+      );
     }
   }
 

@@ -2,9 +2,15 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnInit,
 } from '@angular/core';
-import { getStrategies, renderChangeWith } from '@rx-angular/template';
-import { from } from 'rxjs';
+import {
+  getStrategies,
+  renderChange,
+  render,
+  coalesce,
+} from '@rx-angular/template';
+import { asapScheduler, from, scheduled } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -16,13 +22,11 @@ import { tap } from 'rxjs/operators';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DemoBasicsComponent {
+export class DemoBasicsComponent implements OnInit {
   numRenders = 0;
   strategies;
 
-  constructor(private cdRef: ChangeDetectorRef) {
-    this.strategies = getStrategies<number>({ cdRef });
-  }
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   rerenders() {
     return ++this.numRenders;
@@ -32,10 +36,18 @@ export class DemoBasicsComponent {
     const resolvedP = Promise.resolve();
 
     from([1, 2])
-      .pipe(tap(console.log), renderChangeWith(this.strategies.ɵlocal))
+      .pipe(
+        tap(console.log),
+        coalesce(() => scheduled([1], asapScheduler), { context: window })
+      )
       .subscribe((v) => console.log('s', v));
+    scheduled([1], asapScheduler).subscribe((v) => console.log('X', v));
+
     from(['a', 'b'])
-      .pipe(tap(console.log), renderChangeWith(this.strategies.ɵlocal))
+      .pipe(
+        tap(console.log),
+        coalesce(() => scheduled([1], asapScheduler), { context: window })
+      )
       .subscribe((v) => console.log('s', v));
     /*
     from([1, 2]).pipe(tap(console.log), debounce(() => from(getUnpatchedResolvedPromise()).pipe(observeOn(asapScheduler)))).subscribe(v => console.log('s', v));
@@ -57,8 +69,12 @@ export class DemoBasicsComponent {
   }
 
   renderChange() {
-    renderChangeWith(this.strategies.ɵlocal);
-    renderChangeWith(this.strategies.ɵlocal);
-    renderChangeWith(this.strategies.ɵlocal);
+    render(this.strategies.ɵlocal);
+    render(this.strategies.ɵlocal);
+    render(this.strategies.ɵlocal);
+  }
+
+  ngOnInit() {
+    this.strategies = getStrategies<number>({ cdRef: this.cdRef });
   }
 }

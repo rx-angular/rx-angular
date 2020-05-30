@@ -281,11 +281,13 @@ describe('coalesce operator additional logic', () => {
     it('should emit per subscriber by default sync', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
         const s1 = cold('--(abcdef)--|');
-        const s1Subs = ['^-----------!', '^-----------!'];
-        const n1 = cold('  (-----|)   ');
-        const n1Subs = ['--(^----!)   ', '--(^----!)   '];
-        const exp1 = '--(-----f)--|';
-        const exp2 = '--(-----f)--|';
+        const s1Subs = ['^-----------!',
+                        '^-----------!'];
+        const n1 =   cold('(|)   ');
+        const n1Subs = ['--(^!)   ',
+                        '--(^!)   '];
+        const exp1 =    '--(f)-------|';
+        const exp2 =    '--(f)-------|';
 
         const result1 = s1.pipe(coalesce(() => n1));
         const result2 = s1.pipe(coalesce(() => n1));

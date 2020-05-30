@@ -1,2 +1,2 @@
-export * from './operator/renderChangeWith';
-export * from './render-change';
+export * from './operator/renderChange';
+export * from './render';
