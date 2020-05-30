@@ -1,40 +1,34 @@
 import {
+  asapScheduler,
   MonoTypeOperatorFunction,
   Observable,
   Operator,
+  SchedulerLike,
   SubscribableOrPromise,
   Subscriber,
   Subscription,
-  TeardownLogic
+  TeardownLogic,
 } from 'rxjs';
 import {
   InnerSubscriber,
   OuterSubscriber,
-  subscribeToResult
+  subscribeToResult,
 } from 'rxjs/internal-compatibility';
-import { createPropertiesWeakMap } from '../../utils';
+import { coalescingContextPropertiesMap } from '../../render-aware/coalescing-context-properties-map';
+import { observeOn } from 'rxjs/operators';
 
 export interface CoalesceConfig {
   context?: object;
   leading?: boolean;
   trailing?: boolean;
+  scheduler?: SchedulerLike;
 }
-
-interface CoalescingContextProps {
-  isCoalescing: boolean;
-}
-
-const coalescingContextPropertiesMap = createPropertiesWeakMap<
-  object,
-  CoalescingContextProps
->(ctx => ({
-  isCoalescing: false
-}));
 
 const defaultCoalesceConfig: CoalesceConfig = {
   leading: false,
   trailing: true,
-  context: undefined
+  context: undefined,
+  scheduler: asapScheduler,
 };
 
 function getCoalesceConfig(
@@ -42,7 +36,7 @@ function getCoalesceConfig(
 ): CoalesceConfig {
   return {
     ...defaultCoalesceConfig,
-    ...config
+    ...config,
   };
 }
 
@@ -90,9 +84,12 @@ class CoalesceOperator<T> implements Operator<T, T> {
   ) {}
 
   call(subscriber: Subscriber<T>, source: any): TeardownLogic {
-    return source.subscribe(
-      new CoalesceSubscriber(subscriber, this.durationSelector, this.config)
-    );
+    const parsedConfig = getCoalesceConfig(this.config);
+    return source
+      .pipe(observeOn(parsedConfig.scheduler))
+      .subscribe(
+        new CoalesceSubscriber(subscriber, this.durationSelector, parsedConfig)
+      );
   }
 }
 
@@ -103,27 +100,26 @@ class CoalesceSubscriber<T, R> extends OuterSubscriber<T, R> {
   private _leading: boolean | undefined;
   private _trailing: boolean | undefined;
   private _context: object;
-  private _contextProps: CoalescingContextProps;
 
   constructor(
     protected destination: Subscriber<T>,
     private durationSelector: (value: T) => SubscribableOrPromise<number>,
-    config?: CoalesceConfig
+    config: CoalesceConfig
   ) {
     super(destination);
-    const parsedConfig = getCoalesceConfig(config);
-    this._leading = parsedConfig.leading;
-    this._trailing = parsedConfig.trailing;
+    this._leading = config.leading;
+    this._trailing = config.trailing;
     // We create the object for context scoping by default per subscription
-    this._context = parsedConfig.context || {};
-    this._contextProps = coalescingContextPropertiesMap.getProps(this._context);
+    this._context = config.context || {};
   }
 
   protected _next(value: T): void {
     this._hasValue = true;
     this._sendValue = value;
-
-    if (!this._coalesced) {
+    if (
+      !this._coalesced &&
+      !coalescingContextPropertiesMap.getProps(this._context).isCoalescing
+    ) {
       this.send();
     }
   }
@@ -159,24 +155,24 @@ class CoalesceSubscriber<T, R> extends OuterSubscriber<T, R> {
     if (!!duration) {
       this.add((this._coalesced = subscribeToResult(this, duration)));
       coalescingContextPropertiesMap.setProps(this._context, {
-        isCoalescing: true
+        isCoalescing: true,
       });
     }
   }
 
   private coalescingDone() {
-    const { _coalesced, _trailing, _contextProps } = this;
+    const { _coalesced, _trailing } = this;
     if (_coalesced) {
       _coalesced.unsubscribe();
     }
     this._coalesced = null;
 
-    if (_contextProps.isCoalescing) {
+    if (coalescingContextPropertiesMap.getProps(this._context).isCoalescing) {
       if (_trailing) {
         this.exhaustLastValue();
       }
       coalescingContextPropertiesMap.setProps(this._context, {
-        isCoalescing: false
+        isCoalescing: false,
       });
     }
   }

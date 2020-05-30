@@ -1,12 +1,7 @@
 import { coalesce, CoalesceConfig } from '../rxjs/operators';
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
-import {
-  ChangeDetectorRef,
-  ɵdetectChanges as detectChanges,
-  ɵmarkDirty as markDirty
-} from '@angular/core';
-import { isViewEngineIvy } from '../utils';
-import { getZoneUnPatchedPromiseDurationSelector } from './get-zone-un-patched-promise-duration-selector';
+import { ChangeDetectorRef, ɵmarkDirty as markDirty } from '@angular/core';
+import { getUnpatchedResolvedPromise, isViewEngineIvy } from '../utils';
 
 export interface StrategySelection<U> {
   [strategy: string]: RenderStrategy<U>;
@@ -35,7 +30,7 @@ export function getStrategies<T>(
     global: createGlobalStrategy<T>(config),
     ɵlocal: createɵLocalStrategy<T>(config),
     ɵglobal: createɵGlobalStrategy<T>(config),
-    ɵdetach: createɵDetachStrategy<T>(config)
+    ɵdetach: createɵDetachStrategy<T>(config),
   };
 }
 
@@ -82,8 +77,8 @@ export function createNativeStrategy<T>(
 ): RenderStrategy<T> {
   return {
     render: (): void => config.cdRef.markForCheck(),
-    behaviour: () => o => o,
-    name: 'native'
+    behaviour: () => (o) => o,
+    name: 'native',
   };
 }
 
@@ -103,8 +98,8 @@ export function createNativeStrategy<T>(
 export function createNoopStrategy<T>(): RenderStrategy<T> {
   return {
     render: (): void => {},
-    behaviour: () => o => o,
-    name: 'noop'
+    behaviour: () => (o) => o,
+    name: 'noop',
   };
 }
 
@@ -138,7 +133,7 @@ export function createGlobalStrategy<T>(
   return {
     behaviour,
     render,
-    name: 'global'
+    name: 'global',
   };
 }
 
@@ -174,7 +169,7 @@ export function createɵGlobalStrategy<T>(
   return {
     behaviour,
     render,
-    name: 'ɵglobal'
+    name: 'ɵglobal',
   };
 }
 
@@ -215,7 +210,7 @@ export function createLocalStrategy<T>(
   return {
     behaviour,
     render,
-    name: 'local'
+    name: 'local',
   };
 }
 
@@ -247,11 +242,11 @@ export function createLocalStrategy<T>(
 export function createɵLocalStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const durationSelector = getZoneUnPatchedPromiseDurationSelector();
+  const durationSelector = () => getUnpatchedResolvedPromise();
   const coalesceConfig: CoalesceConfig = {
     // issue #69
     // @Notice Usage of internal method
-    context: (config.cdRef as any).context
+    context: (config.cdRef as any).context,
   };
 
   function render() {
@@ -266,7 +261,7 @@ export function createɵLocalStrategy<T>(
   return {
     behaviour,
     render,
-    name: 'ɵlocal'
+    name: 'ɵlocal',
   };
 }
 
@@ -298,11 +293,11 @@ export function createɵLocalStrategy<T>(
 export function createɵDetachStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const durationSelector = getZoneUnPatchedPromiseDurationSelector();
+  const durationSelector = () => getUnpatchedResolvedPromise();
   const coalesceConfig: CoalesceConfig = {
     // issue #69
     // @Notice Usage of internal method
-    context: (config.cdRef as any).context
+    context: (config.cdRef as any).context,
   };
 
   function render() {
@@ -321,6 +316,6 @@ export function createɵDetachStrategy<T>(
   return {
     behaviour,
     render,
-    name: 'ɵdetach'
+    name: 'ɵdetach',
   };
 }
