@@ -38,10 +38,10 @@ export function apiZonePatched(name: string): boolean {
  *
  * @description
  *
- * This function takes any instance of a class and checks
- * if the constructor name is equal to `NgZone`.
- * This means the Angular application that instantiated this service assumes it runs in a ZoneLess environment,
- * and therefor it's change detection will not be triggered by zone related logic.
+ * This function takes an instance of a class which implements the NgZone interface and checks if
+ * its `runOutsideAngular()` function calls `apply()` on the function passed as parameter. This
+ * means the Angular application that instantiated this service assumes it runs in a ZoneLess
+ * environment, and therefore it's change detection will not be triggered by zone related logic.
  *
  * However, keep in mind this does not mean `zone.js` is not present.
  * The environment could still run in ZoneFull mode even if Angular turned it off.
@@ -53,7 +53,14 @@ export function apiZonePatched(name: string): boolean {
  *
  */
 export function isNgZone(instance: any): boolean {
-  return instance?.constructor?.name === 'NgZone';
+  let calledApply = false;
+
+  function fn() {}
+  fn.apply = () => (calledApply = true);
+
+  instance.runOutsideAngular(fn);
+
+  return calledApply;
 }
 
 /**
@@ -71,5 +78,5 @@ export function isNgZone(instance: any): boolean {
  *
  */
 export function isNoopNgZone(instance: any): boolean {
-  return instance?.constructor?.name === 'NoopNgZone';
+  return !isNgZone(instance);
 }
