@@ -3,7 +3,9 @@ import { mergeMapTo, share } from 'rxjs/operators';
 import { concat, defer, from, of, timer } from 'rxjs';
 
 
-import { coalesce, CoalesceConfig } from '../../../../src/lib/core';
+import { CoalesceConfig } from '../../../../src/lib/core';
+import { coalesce2 as coalesce } from '../../../../src/lib/core/rxjs/operators/coalesce2';
+
 import { jestMatcher } from '@test-helpers';
 
 /** @test {coalesce} */

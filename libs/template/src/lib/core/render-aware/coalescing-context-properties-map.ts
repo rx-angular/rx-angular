@@ -1,12 +1,12 @@
 import { createPropertiesWeakMap } from '../utils/properties-weakmap';
 
 export interface CoalescingContextProps {
-  isCoalescing: boolean;
+  instances: any[];
 }
 
 export const coalescingContextPropertiesMap = createPropertiesWeakMap<
   object,
   CoalescingContextProps
 >((ctx) => ({
-  isCoalescing: false,
+  instances: [],
 }));
