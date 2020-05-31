@@ -37,16 +37,16 @@ export class DemoBasicsComponent implements OnInit {
 
     from([1, 2])
       .pipe(
-        tap(console.log),
-        coalesce(() => scheduled([1], asapScheduler), { context: window })
+        tap(console.log)
+        ///    coalesce(() => scheduled([1], asapScheduler), { context: { } as any })
       )
       .subscribe((v) => console.log('s', v));
-    scheduled([1], asapScheduler).subscribe((v) => console.log('X', v));
+    //  scheduled([1], asapScheduler).subscribe((v) => console.log('X', v));
 
     from(['a', 'b'])
       .pipe(
-        tap(console.log),
-        coalesce(() => scheduled([1], asapScheduler), { context: window })
+        tap(console.log)
+        //   coalesce(() => scheduled([1], asapScheduler), { context: { } as any })
       )
       .subscribe((v) => console.log('s', v));
     /*
