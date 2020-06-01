@@ -1,4 +1,4 @@
-import { createPropertiesWeakMap } from '@rx-angular/template';
+import { createPropertiesWeakMap } from '../utils';
 
 interface CoalescingContextProps {
   numCoalescingSubscribers: number;
@@ -7,8 +7,8 @@ interface CoalescingContextProps {
 const coalescingContextPropertiesMap = createPropertiesWeakMap<
   object,
   CoalescingContextProps
->((ctx) => ({
-  numCoalescingSubscribers: 0,
+>(ctx => ({
+  numCoalescingSubscribers: 0
 }));
 
 export function createCoalesceManager(
@@ -22,7 +22,7 @@ export function createCoalesceManager(
   return {
     remove: removeCoalesceSubscriber,
     add: addCoalescingSubscription,
-    isCoalescing,
+    isCoalescing
   };
 
   // Handles the coalescing relate to a scope e.g. a class instance
@@ -31,7 +31,7 @@ export function createCoalesceManager(
       coalescingContextPropertiesMap.getProps(_scope).numCoalescingSubscribers -
       1;
     coalescingContextPropertiesMap.setProps(_scope, {
-      numCoalescingSubscribers,
+      numCoalescingSubscribers
     });
   }
 
@@ -41,7 +41,7 @@ export function createCoalesceManager(
       coalescingContextPropertiesMap.getProps(_scope).numCoalescingSubscribers +
       1;
     coalescingContextPropertiesMap.setProps(_scope, {
-      numCoalescingSubscribers,
+      numCoalescingSubscribers
     });
   }
 

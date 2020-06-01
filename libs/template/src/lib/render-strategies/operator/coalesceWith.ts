@@ -1,4 +1,5 @@
 import {
+  from,
   MonoTypeOperatorFunction,
   Observable,
   Observer,
@@ -6,8 +7,9 @@ import {
   SubscribableOrPromise,
   Subscriber,
   Subscription,
-  Unsubscribable,
+  Unsubscribable
 } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { createCoalesceManager } from '../../core/render-aware/coalescing-manager';
 
 /**
@@ -44,8 +46,8 @@ export function coalesceWith<T>(
   scope?: object
 ): MonoTypeOperatorFunction<T> {
   const _scope = scope || {};
-  return (source) => {
-    const o$ = new Observable<T>((observer) => {
+  return source => {
+    const o$ = new Observable<T>(observer => {
       const rootSubscription = new Subscription();
       rootSubscription.add(
         source.subscribe(createInnerObserver(observer, rootSubscription))
@@ -62,31 +64,45 @@ export function coalesceWith<T>(
       let actionSubscription: Unsubscribable;
       let latestValue: T | undefined;
       const coa = createCoalesceManager(_scope);
+      const emitLatestValue = () => {
+        coa.remove();
+        if (!coa.isCoalescing()) {
+          outerObserver.next(latestValue);
+        }
+      };
       return {
         complete: () => {
           if (actionSubscription) {
-            coa.remove();
-            if (!coa.isCoalescing()) {
-              outerObserver.next(latestValue);
-            }
+            emitLatestValue();
           }
           outerObserver.complete();
         },
-        error: (error) => outerObserver.error(error),
-        next: (value) => {
+        error: error => outerObserver.error(error),
+        next: value => {
           latestValue = value;
           if (!actionSubscription) {
             coa.add();
-            actionSubscription = durationSelector.subscribe(() => {
-              coa.remove();
-              if (!coa.isCoalescing()) {
-                outerObserver.next(latestValue);
-              }
-              actionSubscription = undefined;
-            });
+            console.log('subscribe');
+            actionSubscription = from(durationSelector)
+              .pipe(
+                finalize(() => {
+                  if (actionSubscription) {
+                    console.log('durselector emitted');
+                    console.log('is coalescing', coa.isCoalescing());
+                    emitLatestValue();
+                    actionSubscription = undefined;
+                  }
+                })
+              )
+              .subscribe(() => {
+                console.log('durselector emitted');
+                console.log('is coalescing', coa.isCoalescing());
+                emitLatestValue();
+                actionSubscription = undefined;
+              });
             rootSubscription.add(actionSubscription);
           }
-        },
+        }
       };
     }
   };

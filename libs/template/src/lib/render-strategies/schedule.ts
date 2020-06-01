@@ -1,13 +1,12 @@
 import { Subscribable } from 'rxjs';
-import { CoalesceConfig } from './operator/coalesceWith';
-import { createCoalesceManager } from '../core/coalescing/coalescing-context-properties-map';
+import { createCoalesceManager } from '../core/render-aware';
 
 export function schedule(
   durationSelector: Subscribable<any>,
-  config: CoalesceConfig,
+  scope: object,
   callback: () => void
 ): void {
-  const _scope = config.scope || {};
+  const _scope = scope || {};
   const coa = createCoalesceManager(_scope);
 
   if (!coa.isCoalescing()) {
