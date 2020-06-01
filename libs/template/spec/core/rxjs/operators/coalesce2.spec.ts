@@ -4,7 +4,7 @@ import { concat, defer, from, of, timer } from 'rxjs';
 
 
 import { CoalesceConfig } from '../../../../src/lib/core';
-import { coalesce2 as coalesce } from '../../../../src/lib/core/rxjs/operators/coalesce2';
+import { coalesce2 as coalesce } from '../../../../src/lib/render-strategies/operator/coalesceWith';
 
 import { jestMatcher } from '@test-helpers';
 
@@ -305,7 +305,7 @@ describe('coalesce operator additional logic', () => {
         coalesceConfig = {
           leading: false,
           trailing: true,
-          context: window as any,
+          scope: window as any,
         };
 
         const s1 = cold('---abcdef---|');
@@ -327,7 +327,7 @@ describe('coalesce operator additional logic', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
         coalesceConfig = {
           leading: false,
-          context: window as any,
+          scope: window as any,
         };
 
         const s1 = cold('---(abcdef)----');
@@ -372,7 +372,7 @@ describe('coalesce operator additional logic', () => {
           coalesceConfig = {
             leading: false,
             trailing: true,
-            context: window as any,
+            scope: window as any,
           };
           testScheduler.run(() => {
             let syncEmission1: any;
@@ -428,7 +428,7 @@ describe('coalesce operator additional logic', () => {
           coalesceConfig = {
             leading: false,
             trailing: true,
-            context: window as any,
+            scope: window as any,
           };
 
           const s1 = cold('---(abcdef)-|');
@@ -451,7 +451,7 @@ describe('coalesce operator additional logic', () => {
           coalesceConfig = {
             leading: false,
             trailing: true,
-            context: window as any,
+            scope: window as any,
           };
 
           const s1 = cold('----abcdef--|');

@@ -1,24 +1,14 @@
-import { coalesce, CoalesceConfig } from '../rxjs/operators';
-import { MonoTypeOperatorFunction, Observable } from 'rxjs';
-import { ChangeDetectorRef, ɵmarkDirty as markDirty } from '@angular/core';
-import { getUnpatchedResolvedPromise, isViewEngineIvy } from '../utils';
-
-export interface StrategySelection<U> {
-  [strategy: string]: RenderStrategy<U>;
-}
-
-export interface RenderStrategyFactoryConfig {
-  cdRef: ChangeDetectorRef;
-}
-
-export interface RenderStrategy<T> {
-  behaviour: () => MonoTypeOperatorFunction<T>;
-  render: () => void;
-  name: string;
-}
+import { from, Observable } from 'rxjs';
+import { ɵmarkDirty as markDirty } from '@angular/core';
+import { getUnpatchedResolvedPromise } from '../core/utils';
+import { schedule } from './schedule';
+import {
+  RenderStrategy,
+  RenderStrategyFactoryConfig,
+} from '../core/render-aware/interfaces';
+import { coalesceWith } from './operator/coalesceWith';
 
 export const DEFAULT_STRATEGY_NAME = 'native';
-export const IS_VIEW_ENGINE_IVY = isViewEngineIvy();
 
 export function getStrategies<T>(
   config: RenderStrategyFactoryConfig
@@ -75,8 +65,13 @@ export function getStrategies<T>(
 export function createNativeStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
+  function render() {
+    config.cdRef.markForCheck();
+  }
+
   return {
-    render: (): void => config.cdRef.markForCheck(),
+    renderStatic: render,
+    render,
     behaviour: () => (o) => o,
     name: 'native',
   };
@@ -97,6 +92,7 @@ export function createNativeStrategy<T>(
  */
 export function createNoopStrategy<T>(): RenderStrategy<T> {
   return {
+    renderStatic: (): void => {},
     render: (): void => {},
     behaviour: () => (o) => o,
     name: 'noop',
@@ -131,6 +127,7 @@ export function createGlobalStrategy<T>(
   }
 
   return {
+    renderStatic: render,
     behaviour,
     render,
     name: 'global',
@@ -157,16 +154,13 @@ export function createɵGlobalStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
   function render() {
-    if (!IS_VIEW_ENGINE_IVY) {
-      config.cdRef.markForCheck();
-    } else {
-      markDirty((config.cdRef as any).context);
-    }
+    markDirty((config.cdRef as any).context);
   }
 
   const behaviour = () => (o$: Observable<T>): Observable<T> => o$;
 
   return {
+    renderStatic: render,
     behaviour,
     render,
     name: 'ɵglobal',
@@ -197,7 +191,6 @@ export function createLocalStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
   function render() {
-    // issue #68
     config.cdRef.detectChanges();
   }
 
@@ -208,6 +201,7 @@ export function createLocalStrategy<T>(
   }
 
   return {
+    renderStatic: render,
     behaviour,
     render,
     name: 'local',
@@ -242,23 +236,23 @@ export function createLocalStrategy<T>(
 export function createɵLocalStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const durationSelector = () => getUnpatchedResolvedPromise();
-  const coalesceConfig: CoalesceConfig = {
-    // issue #69
-    // @Notice Usage of internal method
-    context: (config.cdRef as any).context,
-  };
+  const durationSelector = from(getUnpatchedResolvedPromise());
+  const scope = getContext(config.cdRef as any);
 
   function render() {
-    // issue #68
     config.cdRef.detectChanges();
   }
 
+  function renderStatic() {
+    schedule(durationSelector, scope, render);
+  }
+
   const behaviour = () => (o$: Observable<T>): Observable<T> => {
-    return o$.pipe(coalesce(durationSelector, coalesceConfig));
+    return o$.pipe(coalesceWith(durationSelector, scope));
   };
 
   return {
+    renderStatic,
     behaviour,
     render,
     name: 'ɵlocal',
@@ -293,29 +287,33 @@ export function createɵLocalStrategy<T>(
 export function createɵDetachStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const durationSelector = () => getUnpatchedResolvedPromise();
-  const coalesceConfig: CoalesceConfig = {
-    // issue #69
-    // @Notice Usage of internal method
-    context: (config.cdRef as any).context,
-  };
+  const durationSelector = from(getUnpatchedResolvedPromise());
+  const scope = getContext(config.cdRef as any);
 
   function render() {
     config.cdRef.reattach();
-    // issue #68
     config.cdRef.detectChanges();
     config.cdRef.detach();
   }
 
+  function renderStatic() {
+    schedule(durationSelector, scope, render);
+  }
+
   function behaviour() {
     return (o$: Observable<T>): Observable<T> => {
-      return o$.pipe(coalesce(durationSelector, coalesceConfig));
+      return o$.pipe(coalesceWith(durationSelector, scope));
     };
   }
 
   return {
+    renderStatic,
     behaviour,
     render,
     name: 'ɵdetach',
   };
+}
+
+function getContext(cdRef) {
+  return (cdRef as any).context;
 }

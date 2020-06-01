@@ -1,3 +1,4 @@
 export * from './render-aware_creator';
-export * from './strategies';
 export * from './nameToStrategy';
+export * from './interfaces';
+export * from './coalescing-manager';

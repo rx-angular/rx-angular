@@ -1,6 +1,6 @@
 import { mapTo, mergeMap } from 'rxjs/operators';
 import { concat, of, timer } from 'rxjs';
-import { coalesce, CoalesceConfig } from '../../../../src/lib/core';
+import { coalesceWith, CoalesceConfig } from '../../../../src/lib/core';
 
 import { jestMatcher } from '@test-helpers';
 import { TestScheduler } from 'rxjs/testing';
@@ -27,7 +27,7 @@ describe('coalesce operator', () => {
         ];
         const expected = '-a--------b-----c----|';
 
-        const result = e1.pipe(coalesce(() => e2, cfg));
+        const result = e1.pipe(coalesceWith(() => e2, cfg));
 
         expectObservable(result).toBe(expected);
         expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -49,7 +49,7 @@ describe('coalesce operator', () => {
         ];
         const expected = '-a--------b-----c----|';
 
-        const result = e1.pipe(coalesce(() => e2, cfg));
+        const result = e1.pipe(coalesceWith(() => e2, cfg));
 
         expectObservable(result).toBe(expected);
         expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -68,7 +68,7 @@ describe('coalesce operator', () => {
         const e2subs = '-^------------!               ';
         const expected = '-a-------------               ';
 
-        const result = e1.pipe(coalesce(() => e2, cfg));
+        const result = e1.pipe(coalesceWith(() => e2, cfg));
 
         expectObservable(result, unsub).toBe(expected);
         expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -89,7 +89,7 @@ describe('coalesce operator', () => {
 
         const result = e1.pipe(
           mergeMap((x: string) => of(x)),
-          coalesce(() => e2, cfg),
+          coalesceWith(() => e2, cfg),
           mergeMap((x: string) => of(x))
         );
 
@@ -115,7 +115,7 @@ describe('coalesce operator', () => {
         ];
         const expected = 'a-----a-----a-----a-----a|';
 
-        const result = e1.pipe(coalesce(() => e2, cfg));
+        const result = e1.pipe(coalesceWith(() => e2, cfg));
 
         expectObservable(result).toBe(expected);
         expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -132,7 +132,7 @@ describe('coalesce operator', () => {
         const e2 = cold('|                         ');
         const expected = 'abcdefabcdefabcdefabcdefa|';
 
-        const result = e1.pipe(coalesce(() => e2, cfg));
+        const result = e1.pipe(coalesceWith(() => e2, cfg));
 
         expectObservable(result).toBe(expected);
         expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -149,7 +149,7 @@ describe('coalesce operator', () => {
         const e2subs = '----^------------------------!';
         const expected = '----a------------------------|';
 
-        const result = e1.pipe(coalesce(() => e2, cfg));
+        const result = e1.pipe(coalesceWith(() => e2, cfg));
 
         expectObservable(result).toBe(expected);
         expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -167,7 +167,7 @@ describe('coalesce operator', () => {
         const e2subs = '----^------------------------!';
         const expected = '----a------------------------#';
 
-        const result = e1.pipe(coalesce(() => e2, cfg));
+        const result = e1.pipe(coalesceWith(() => e2, cfg));
 
         expectObservable(result).toBe(expected);
         expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -185,7 +185,7 @@ describe('coalesce operator', () => {
         const e2subs = '----(^!)                      ';
         const expected = '----(a#)                      ';
 
-        const result = e1.pipe(coalesce(() => e2, cfg));
+        const result = e1.pipe(coalesceWith(() => e2, cfg));
 
         expectObservable(result).toBe(expected);
         expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -216,7 +216,7 @@ describe('coalesce operator', () => {
         const expected = 'a-----a---a-------a--a|   ';
 
         let i = 0;
-        const result = e1.pipe(coalesce(() => e2[i++], cfg));
+        const result = e1.pipe(coalesceWith(() => e2[i++], cfg));
 
         expectObservable(result).toBe(expected);
         expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -245,7 +245,7 @@ describe('coalesce operator', () => {
         const expected = 'a-----a---a------#        ';
 
         let i = 0;
-        const result = e1.pipe(coalesce(() => e2[i++], cfg));
+        const result = e1.pipe(coalesceWith(() => e2[i++], cfg));
 
         expectObservable(result).toBe(expected);
         expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -271,7 +271,7 @@ describe('coalesce operator', () => {
 
         let i = 0;
         const result = s1.pipe(
-          coalesce(() => {
+          coalesceWith(() => {
             if (i++ === 3) {
               throw new Error('lol');
             }
@@ -296,7 +296,7 @@ describe('coalesce operator', () => {
           return cold('-----|');
         }
 
-        expectObservable(e1.pipe(coalesce(durationSelector, cfg))).toBe(
+        expectObservable(e1.pipe(coalesceWith(durationSelector, cfg))).toBe(
           expected
         );
         expectSubscriptions(e1.subscriptions).toBe(subs);
@@ -315,7 +315,7 @@ describe('coalesce operator', () => {
           return cold('-----|');
         }
 
-        expectObservable(e1.pipe(coalesce(durationSelector, cfg))).toBe(
+        expectObservable(e1.pipe(coalesceWith(durationSelector, cfg))).toBe(
           expected
         );
         expectSubscriptions(e1.subscriptions).toBe(subs);
@@ -332,7 +332,7 @@ describe('coalesce operator', () => {
         return cold('-----|');
       }
 
-      expectObservable(e1.pipe(coalesce(durationSelector, cfg))).toBe(expected);
+      expectObservable(e1.pipe(coalesceWith(durationSelector, cfg))).toBe(expected);
       expectSubscriptions(e1.subscriptions).toBe(subs);
     });
   });
@@ -346,7 +346,7 @@ describe('coalesce operator', () => {
         return cold('-----|');
       }
 
-      expectObservable(e1.pipe(coalesce(durationSelector, cfg))).toBe(expected);
+      expectObservable(e1.pipe(coalesceWith(durationSelector, cfg))).toBe(expected);
       expectSubscriptions(e1.subscriptions).toBe(subs);
     });
   });
@@ -360,7 +360,7 @@ describe('coalesce operator', () => {
         return cold('-----|');
       }
 
-      expectObservable(e1.pipe(coalesce(durationSelector, cfg))).toBe(expected);
+      expectObservable(e1.pipe(coalesceWith(durationSelector, cfg))).toBe(expected);
       expectSubscriptions(e1.subscriptions).toBe(subs);
     });
   });
@@ -376,7 +376,7 @@ describe('coalesce operator', () => {
       const expected = [1, 2, 3, 4];
 
       e1.pipe(
-        coalesce(() => {
+        coalesceWith(() => {
           return new Promise((resolve: any) => {
             resolve(42);
           });
@@ -406,7 +406,7 @@ describe('coalesce operator', () => {
     const error = new Error('error');
 
     e1.pipe(
-      coalesce((x: number) => {
+      coalesceWith((x: number) => {
         if (x === 3) {
           return new Promise((resolve: any, reject: any) => {
             reject(error);
@@ -442,7 +442,7 @@ describe('coalesce operator', () => {
           const exp = '--x------------------|      ';
 
           const result = s1.pipe(
-            coalesce(() => n1, { leading: true, trailing: true })
+            coalesceWith(() => n1, { leading: true, trailing: true })
           );
           expectObservable(result).toBe(exp);
           expectSubscriptions(s1.subscriptions).toBe(s1Subs);
@@ -462,7 +462,7 @@ describe('coalesce operator', () => {
           const n1Subs = [' --^------------!           '];
           const exp = ' ---------------x-----|     ';
 
-          const result = s1.pipe(coalesce(() => n1));
+          const result = s1.pipe(coalesceWith(() => n1));
           expectObservable(result).toBe(exp);
           expectSubscriptions(s1.subscriptions).toBe(s1Subs);
           expectSubscriptions(n1.subscriptions).toBe(n1Subs);

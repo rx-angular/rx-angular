@@ -3,7 +3,7 @@ import { mergeMapTo, share } from 'rxjs/operators';
 import { concat, defer, from, of, timer } from 'rxjs';
 
 
-import { coalesce, CoalesceConfig } from '../../../../src/lib/core';
+import { coalesceWith, CoalesceConfig } from '../../../../src/lib/core';
 import { jestMatcher } from '@test-helpers';
 
 /** @test {coalesce} */
@@ -24,7 +24,7 @@ describe('coalesce operator additional logic', () => {
       const n1Subs = ['---^-----!'];
       const exp = '---------a---|';
 
-      const result = s1.pipe(coalesce(() => n1));
+      const result = s1.pipe(coalesceWith(() => n1));
       expectObservable(result).toBe(exp, values);
       expectSubscriptions(s1.subscriptions).toBe(s1Subs);
       expectSubscriptions(n1.subscriptions).toBe(n1Subs);
@@ -39,7 +39,7 @@ describe('coalesce operator additional logic', () => {
       const n1Subs = ['---^--------!'];
       const exp = '------------(f|)';
 
-      const result = s1.pipe(coalesce(() => n1));
+      const result = s1.pipe(coalesceWith(() => n1));
       expectObservable(result).toBe(exp);
       expectSubscriptions(s1.subscriptions).toBe(s1Subs);
       expectSubscriptions(n1.subscriptions).toBe(n1Subs);
@@ -59,7 +59,7 @@ describe('coalesce operator additional logic', () => {
         const n1Subs = ['---^----!    '];
         const exp = '--------f---|';
 
-        const result = s1.pipe(coalesce(() => n1, coalesceConfig));
+        const result = s1.pipe(coalesceWith(() => n1, coalesceConfig));
         expectObservable(result).toBe(exp);
         expectSubscriptions(s1.subscriptions).toBe(s1Subs);
         expectSubscriptions(n1.subscriptions).toBe(n1Subs);
@@ -74,7 +74,7 @@ describe('coalesce operator additional logic', () => {
         const n1Subs = ['--^-------!  '];
         const exp = '----------f-|';
 
-        const result = s1.pipe(coalesce(() => n1, coalesceConfig));
+        const result = s1.pipe(coalesceWith(() => n1, coalesceConfig));
         expectObservable(result).toBe(exp);
         expectSubscriptions(s1.subscriptions).toBe(s1Subs);
         expectSubscriptions(n1.subscriptions).toBe(n1Subs);
@@ -89,7 +89,7 @@ describe('coalesce operator additional logic', () => {
         const n1Subs = ['(^!)     '];
         const exp = '(f)-----|';
 
-        const result = s1.pipe(coalesce(() => n1, coalesceConfig));
+        const result = s1.pipe(coalesceWith(() => n1, coalesceConfig));
         expectObservable(result).toBe(exp);
         expectSubscriptions(s1.subscriptions).toBe(s1Subs);
         expectSubscriptions(n1.subscriptions).toBe(n1Subs);
@@ -102,7 +102,7 @@ describe('coalesce operator additional logic', () => {
         const s1 = cold('(abcdef)|');
         const exp = '--------(f|)';
 
-        const result = s1.pipe(coalesce(durationSelector, coalesceConfig));
+        const result = s1.pipe(coalesceWith(durationSelector, coalesceConfig));
         expectObservable(result).toBe(exp);
       });
     });
@@ -116,7 +116,7 @@ describe('coalesce operator additional logic', () => {
         timer(50).pipe(mergeMapTo(of(10, 11, 12)))
       );
       const expected = [3, 6, 9, 12];
-      e1.pipe(coalesce(durationSelector)).subscribe(
+      e1.pipe(coalesceWith(durationSelector)).subscribe(
         (x: number) => {
           expect(x).toEqual(expected.shift());
         },
@@ -170,7 +170,7 @@ describe('coalesce operator additional logic', () => {
         const n1Subs = ['---^----!    '];
         const exp = '---a----f---|';
 
-        const result = s1.pipe(coalesce(() => n1, coalesceConfig));
+        const result = s1.pipe(coalesceWith(() => n1, coalesceConfig));
         expectObservable(result).toBe(exp);
         expectSubscriptions(s1.subscriptions).toBe(s1Subs);
         expectSubscriptions(n1.subscriptions).toBe(n1Subs);
@@ -185,7 +185,7 @@ describe('coalesce operator additional logic', () => {
         const n1Subs = ['--^-------!  '];
         const exp = '--a-------f-|';
 
-        const result = s1.pipe(coalesce(() => n1, coalesceConfig));
+        const result = s1.pipe(coalesceWith(() => n1, coalesceConfig));
         expectObservable(result).toBe(exp);
         expectSubscriptions(s1.subscriptions).toBe(s1Subs);
         expectSubscriptions(n1.subscriptions).toBe(n1Subs);
@@ -200,7 +200,7 @@ describe('coalesce operator additional logic', () => {
         const n1Subs = ['(^!)     '];
         const exp = '(af)----|';
 
-        const result = s1.pipe(coalesce(() => n1, coalesceConfig));
+        const result = s1.pipe(coalesceWith(() => n1, coalesceConfig));
         expectObservable(result).toBe(exp);
         expectSubscriptions(s1.subscriptions).toBe(s1Subs);
         expectSubscriptions(n1.subscriptions).toBe(n1Subs);
@@ -213,7 +213,7 @@ describe('coalesce operator additional logic', () => {
         const s1 = cold('(abcdef)|');
         const exp = 'a-------(f|)';
 
-        const result = s1.pipe(coalesce(durationSelector, coalesceConfig));
+        const result = s1.pipe(coalesceWith(durationSelector, coalesceConfig));
         expectObservable(result).toBe(exp);
       });
     });
@@ -227,7 +227,7 @@ describe('coalesce operator additional logic', () => {
         timer(50).pipe(mergeMapTo(of(10, 11, 12)))
       );
       const expected = [1, 3, 4, 6, 7, 9, 10, 12];
-      e1.pipe(coalesce(durationSelector)).subscribe(
+      e1.pipe(coalesceWith(durationSelector)).subscribe(
         (x: number) => {
           expect(x).toEqual(expected.shift());
         },
@@ -252,7 +252,7 @@ describe('coalesce operator additional logic', () => {
         const n1Subs = '---^----!    ';
         const exp1 = '--------a----';
 
-        const result1 = s1.pipe(coalesce(() => n1, coalescingConfig));
+        const result1 = s1.pipe(coalesceWith(() => n1, coalescingConfig));
         expectObservable(result1).toBe(exp1);
         expectSubscriptions(s1.subscriptions).toBe(s1Subs);
         expectSubscriptions(n1.subscriptions).toBe(n1Subs);
@@ -269,8 +269,8 @@ describe('coalesce operator additional logic', () => {
         const exp1 = '--------f---|';
         const exp2 = '--------f---|';
 
-        const result1 = s1.pipe(coalesce(() => n1));
-        const result2 = s1.pipe(coalesce(() => n1));
+        const result1 = s1.pipe(coalesceWith(() => n1));
+        const result2 = s1.pipe(coalesceWith(() => n1));
         expectObservable(result1).toBe(exp1);
         expectObservable(result2).toBe(exp2);
         expectSubscriptions(s1.subscriptions).toBe(s1Subs);
@@ -289,8 +289,8 @@ describe('coalesce operator additional logic', () => {
         const exp1 =    '--(f)-------|';
         const exp2 =    '--(f)-------|';
 
-        const result1 = s1.pipe(coalesce(() => n1));
-        const result2 = s1.pipe(coalesce(() => n1));
+        const result1 = s1.pipe(coalesceWith(() => n1));
+        const result2 = s1.pipe(coalesceWith(() => n1));
         expectObservable(result1).toBe(exp1);
         expectObservable(result2).toBe(exp2);
         expectSubscriptions(s1.subscriptions).toBe(s1Subs);
@@ -303,7 +303,7 @@ describe('coalesce operator additional logic', () => {
         coalesceConfig = {
           leading: false,
           trailing: true,
-          context: window as any,
+          scope: window as any,
         };
 
         const s1 = cold('---abcdef---|');
@@ -313,8 +313,8 @@ describe('coalesce operator additional logic', () => {
         const exp1 = '--------f---|';
         const exp2 = '------------|';
 
-        const result1 = s1.pipe(coalesce(() => n1, coalesceConfig));
-        const result2 = s1.pipe(coalesce(() => n1, coalesceConfig));
+        const result1 = s1.pipe(coalesceWith(() => n1, coalesceConfig));
+        const result2 = s1.pipe(coalesceWith(() => n1, coalesceConfig));
         expectObservable(result1).toBe(exp1);
         expectObservable(result2).toBe(exp2);
         expectSubscriptions(s1.subscriptions).toBe(s1Subs);
@@ -325,7 +325,7 @@ describe('coalesce operator additional logic', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
         coalesceConfig = {
           leading: false,
-          context: window as any,
+          scope: window as any,
         };
 
         const s1 = cold('---(abcdef)----');
@@ -336,8 +336,8 @@ describe('coalesce operator additional logic', () => {
 
         const exp1 =    '---f----------|';
         const exp2 =    '--------------|';
-        const result1 = s1.pipe(coalesce(() => p1, coalesceConfig));
-        const result2 = s1.pipe(coalesce(() => p1, coalesceConfig));
+        const result1 = s1.pipe(coalesceWith(() => p1, coalesceConfig));
+        const result2 = s1.pipe(coalesceWith(() => p1, coalesceConfig));
         expectObservable(result1).toBe(exp1);
         expectObservable(result2).toBe(exp2);
        // expectSubscriptions(s1.subscriptions).toBe(s1Subs);
@@ -370,7 +370,7 @@ describe('coalesce operator additional logic', () => {
           coalesceConfig = {
             leading: false,
             trailing: true,
-            context: window as any,
+            scope: window as any,
           };
           testScheduler.run(() => {
             let syncEmission1: any;
@@ -379,11 +379,11 @@ describe('coalesce operator additional logic', () => {
             const arrAlph = ['a', 'b', 'c', 'd'];
             const num$ = from(arrNum).pipe(
               share(),
-              coalesce(() => defer(() => from([1])), coalesceConfig)
+              coalesceWith(() => defer(() => from([1])), coalesceConfig)
             );
             const alph$ = from(arrAlph).pipe(
               share(),
-              coalesce(() => defer(() => from([1])), coalesceConfig)
+              coalesceWith(() => defer(() => from([1])), coalesceConfig)
             );
 
             expect(syncEmission1).not.toBeDefined();
@@ -426,7 +426,7 @@ describe('coalesce operator additional logic', () => {
           coalesceConfig = {
             leading: false,
             trailing: true,
-            context: window as any,
+            scope: window as any,
           };
 
           const s1 = cold('---(abcdef)-|');
@@ -436,8 +436,8 @@ describe('coalesce operator additional logic', () => {
           const exp1 = '------f-----|';
           const exp2 = '------------|';
 
-          const result1 = s1.pipe(coalesce(() => d1, coalesceConfig));
-          const result2 = s1.pipe(coalesce(() => d2, coalesceConfig));
+          const result1 = s1.pipe(coalesceWith(() => d1, coalesceConfig));
+          const result2 = s1.pipe(coalesceWith(() => d2, coalesceConfig));
           expectObservable(result1).toBe(exp1);
           expectObservable(result2).toBe(exp2);
           expectSubscriptions(s1.subscriptions).toBe(s1Subs);
@@ -449,7 +449,7 @@ describe('coalesce operator additional logic', () => {
           coalesceConfig = {
             leading: false,
             trailing: true,
-            context: window as any,
+            scope: window as any,
           };
 
           const s1 = cold('----abcdef--|');
@@ -461,8 +461,8 @@ describe('coalesce operator additional logic', () => {
           const exp1 = '-------d----|';
           const exp2 = '---------f--|';
 
-          const result1 = s1.pipe(coalesce(() => d1, coalesceConfig));
-          const result2 = s1.pipe(coalesce(() => d2, coalesceConfig));
+          const result1 = s1.pipe(coalesceWith(() => d1, coalesceConfig));
+          const result2 = s1.pipe(coalesceWith(() => d2, coalesceConfig));
           expectObservable(result1).toBe(exp1);
           expectObservable(result2).toBe(exp2);
           expectSubscriptions(s1.subscriptions).toBe(s1Subs);
