@@ -7,8 +7,8 @@ interface CoalescingContextProps {
 const coalescingContextPropertiesMap = createPropertiesWeakMap<
   object,
   CoalescingContextProps
->(ctx => ({
-  numCoalescingSubscribers: 0
+>((ctx) => ({
+  numCoalescingSubscribers: 0,
 }));
 
 export function createCoalesceManager(
@@ -20,32 +20,32 @@ export function createCoalesceManager(
 } {
   const _scope = scope;
   return {
-    remove: removeCoalesceSubscriber,
-    add: addCoalescingSubscription,
-    isCoalescing
+    remove: removeSubscriber,
+    add: addSubscription,
+    isCoalescing,
   };
 
-  // Handles the coalescing relate to a scope e.g. a class instance
-  function removeCoalesceSubscriber(): void {
+  // Increments the number of subscriptions in a scope e.g. a class instance
+  function removeSubscriber(): void {
     const numCoalescingSubscribers =
       coalescingContextPropertiesMap.getProps(_scope).numCoalescingSubscribers -
       1;
     coalescingContextPropertiesMap.setProps(_scope, {
-      numCoalescingSubscribers
+      numCoalescingSubscribers,
     });
   }
 
-  // Handles the coalescing relate to a scope e.g. a class instance
-  function addCoalescingSubscription(): void {
+  // Decrements the number of subscriptions in a scope e.g. a class instance
+  function addSubscription(): void {
     const numCoalescingSubscribers =
       coalescingContextPropertiesMap.getProps(_scope).numCoalescingSubscribers +
       1;
     coalescingContextPropertiesMap.setProps(_scope, {
-      numCoalescingSubscribers
+      numCoalescingSubscribers,
     });
   }
 
-  // checks if anybody is already coalescing atm
+  // Checks if anybody else is already coalescing atm
   function isCoalescing(): boolean {
     return (
       coalescingContextPropertiesMap.getProps(_scope).numCoalescingSubscribers >

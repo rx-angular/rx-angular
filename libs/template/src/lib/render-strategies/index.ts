@@ -1,3 +1,3 @@
 export * from './operator/renderChange';
-export * from './schedule';
+export * from './scheduling/schedule';
 export * from './strategies';
