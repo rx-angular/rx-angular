@@ -33,6 +33,8 @@ export function apiZonePatched(name: string): boolean {
   return getGlobalThis()['__zone_symbol__' + name] !== undefined;
 }
 
+const zoneDetectionCache = new WeakMap<any, boolean>();
+
 /**
  * isNgZone
  *
@@ -53,12 +55,19 @@ export function apiZonePatched(name: string): boolean {
  *
  */
 export function isNgZone(instance: any): boolean {
+  const cachedValue = zoneDetectionCache.get(instance);
+
+  if (cachedValue !== undefined) {
+    return cachedValue;
+  }
+
   let calledApply = false;
 
   function fn() {}
   fn.apply = () => (calledApply = true);
 
   instance.runOutsideAngular(fn);
+  zoneDetectionCache.set(instance, calledApply);
 
   return calledApply;
 }
