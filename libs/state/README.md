@@ -78,6 +78,7 @@ with very little effort in any component.
 - [How to run partial state updates](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/how-can-i-run-partial-state-updates.md)
 - [Get nested state slices](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/get-nested-state-slices.md)
 - [Deriving simple state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/deriving-simple-state.md)
+- [Composing state using NgRx selectors](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/composing-state-using-ngrx-selectors.md)
 - [BehaviorSubject vs RxState](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/behavior-subject-vs-rx-state.md)
 - [Managing ViewModels with selectSlice](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/selecting-the-viewmodel.md)
 - [Manage reactive HostBindings](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/hostbindings.md)
