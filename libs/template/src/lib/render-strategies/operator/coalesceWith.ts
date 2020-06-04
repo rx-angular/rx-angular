@@ -1,5 +1,4 @@
 import {
-  from,
   MonoTypeOperatorFunction,
   Observable,
   Observer,
@@ -9,17 +8,18 @@ import {
   Subscription,
   Unsubscribable
 } from 'rxjs';
-import { finalize } from 'rxjs/operators';
 import { createCoalesceManager } from '../../core/render-aware/coalescing-manager';
 
 /**
  * @description
  * Limits the number of synchronous emitted a value from the source Observable to
- * one emitted value per [`AnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame),
- * then repeats this process for every tick of the browsers event loop.
+ * one emitted value per
+ *   [`AnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame), then repeats
+ *   this process for every tick of the browsers event loop.
  *
  * The coalesce operator is based on the [throttle](https://rxjs-dev.firebaseapp.com/api/operators/throttle) operator.
- * In addition to that is provides emitted values for the trailing end only, as well as maintaining a context to scope coalescing.
+ * In addition to that is provides emitted values for the trailing end only, as well as maintaining a context to scope
+ *   coalescing.
  *
  * @param {function(value: T): SubscribableOrPromise} durationSelector - A function
  * that receives a value from the source Observable, for computing the silencing
@@ -64,7 +64,7 @@ export function coalesceWith<T>(
       let actionSubscription: Unsubscribable;
       let latestValue: T | undefined;
       const coa = createCoalesceManager(_scope);
-      const emitLatestValue = () => {
+      const tryEmitLatestValue = () => {
         coa.remove();
         if (!coa.isCoalescing()) {
           outerObserver.next(latestValue);
@@ -73,7 +73,7 @@ export function coalesceWith<T>(
       return {
         complete: () => {
           if (actionSubscription) {
-            emitLatestValue();
+            tryEmitLatestValue();
           }
           outerObserver.complete();
         },
@@ -82,24 +82,18 @@ export function coalesceWith<T>(
           latestValue = value;
           if (!actionSubscription) {
             coa.add();
-            console.log('subscribe');
-            actionSubscription = from(durationSelector)
-              .pipe(
-                finalize(() => {
-                  if (actionSubscription) {
-                    console.log('durselector emitted');
-                    console.log('is coalescing', coa.isCoalescing());
-                    emitLatestValue();
-                    actionSubscription = undefined;
-                  }
-                })
-              )
-              .subscribe(() => {
-                console.log('durselector emitted');
-                console.log('is coalescing', coa.isCoalescing());
-                emitLatestValue();
+            actionSubscription = durationSelector.subscribe({
+              next: () => {
+                tryEmitLatestValue();
                 actionSubscription = undefined;
-              });
+              },
+              complete: () => {
+                if (actionSubscription) {
+                  tryEmitLatestValue();
+                  actionSubscription = undefined;
+                }
+              }
+            });
             rootSubscription.add(actionSubscription);
           }
         }

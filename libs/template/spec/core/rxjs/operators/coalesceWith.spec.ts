@@ -188,8 +188,8 @@ describe('coalesce operator additional logic', () => {
         const s1Subs = ['^-----------!', '^-----------!'];
         const n1 = cold('   -----|    ');
 
-        const exp1 = '--------f---|';
-        const exp2 = '------------|';
+        const exp1 = '------------|';
+        const exp2 = '--------f---|';
 
         const result1 = s1.pipe(coalesceWith(n1, scope));
         const result2 = s1.pipe(coalesceWith(n1, scope));
@@ -201,20 +201,19 @@ describe('coalesce operator additional logic', () => {
 
     it('should emit only once per scope sync', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-        const scope = window as any;
+        const scope = {};
 
-        const s1 = cold('---(abcdef)----');
+        const s1 = cold('---(abcdef)---|');
         const s1Subs = ['^-------------!', '^-------------!'];
         const d1 = cold('   (|)         ');
-        const p1 = from(Promise.resolve(1));
 
-        const exp1 =    '---f----------|';
-        const exp2 =    '--------------|';
-        const result1 = s1.pipe(coalesceWith(p1, scope));
-        const result2 = s1.pipe(coalesceWith(p1, scope));
+        const exp1 =    '--------------|';
+        const exp2 =    '---f----------|';
+        const result1 = s1.pipe(coalesceWith(d1, scope));
+        const result2 = s1.pipe(coalesceWith(d1, scope));
         expectObservable(result1).toBe(exp1);
         expectObservable(result2).toBe(exp2);
-       // expectSubscriptions(s1.subscriptions).toBe(s1Subs);
+        expectSubscriptions(s1.subscriptions).toBe(s1Subs);
       });
     });
 
@@ -241,7 +240,7 @@ describe('coalesce operator additional logic', () => {
 
       it('should emit once per micro task', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const scope = window as any;
+          const scope = {};
           testScheduler.run(() => {
             let syncEmission1: any;
 
@@ -291,16 +290,16 @@ describe('coalesce operator additional logic', () => {
       });
 
       // different durationSelectors (NOT RECOMMENDED!)
-      it('should emit after the first durationSelectors completion if sync (THIS IS BAD)', () => {
+      it('should emit after the second durationSelectors completion if sync', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const scope = window as any;
+          const scope = {};
 
           const s1 = cold('---(abcdef)-|');
           const s1Subs = ['^-----------!', '^-----------!'];
           const d1 = cold('   ---|      ');
-          const d2 = cold('   -----|    ');
-          const exp1 = '------f-----|';
-          const exp2 = '------------|';
+          const d2 = cold('   ------|  ');
+          const exp1 =    '------------|';
+          const exp2 =    '---------f--|';
 
           const result1 = s1.pipe(coalesceWith(d1, scope));
           const result2 = s1.pipe(coalesceWith(d2, scope));
@@ -310,9 +309,9 @@ describe('coalesce operator additional logic', () => {
         });
       });
 
-      xit('should interfere with other durationSelectors if async (THIS IS BAD)', () => {
+      it('should interfere with other durationSelectors if async (THIS IS BAD)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const scope = window as any;
+          const scope = {};
 
           const s1 = cold('----abcdef--|');
           const s1Subs = ['^-----------!', '^-----------!'];
@@ -320,8 +319,8 @@ describe('coalesce operator additional logic', () => {
           const d1Subs = ['----^--!     ', '--------^--! '];
           const d2 = cold('    -----|   ');
           const d2Subs = ['----^----!   '];
-          const exp1 = '-------d----|';
-          const exp2 = '---------f--|';
+          const exp1 = '-----------f|';
+          const exp2 = '------------|';
 
           const result1 = s1.pipe(coalesceWith(d1, scope));
           const result2 = s1.pipe(coalesceWith(d2, scope));

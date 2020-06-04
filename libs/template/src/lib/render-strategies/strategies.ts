@@ -4,7 +4,7 @@ import { getUnpatchedResolvedPromise } from '../core/utils';
 import { schedule } from './scheduling/schedule';
 import {
   RenderStrategy,
-  RenderStrategyFactoryConfig,
+  RenderStrategyFactoryConfig
 } from '../core/render-aware/interfaces';
 import { coalesceWith } from './operator/coalesceWith';
 
@@ -23,7 +23,7 @@ export function getStrategies<T>(
     ɵlocal: createɵLocalStrategy<T>(config),
     ɵglobal: createɵGlobalStrategy<T>(config),
     ɵdetach: createɵDetachStrategy<T>(config),
-    ɵpostTask: createɵPostTaskStrategy<T>(config),
+    ɵpostTask: createɵPostTaskStrategy<T>(config)
   };
 }
 
@@ -75,8 +75,8 @@ export function createNativeStrategy<T>(
   return {
     renderStatic: render,
     render,
-    behaviour: () => (o) => o,
-    name: 'native',
+    behaviour: () => o => o,
+    name: 'native'
   };
 }
 
@@ -97,8 +97,8 @@ export function createNoopStrategy<T>(): RenderStrategy<T> {
   return {
     renderStatic: (): void => {},
     render: (): void => {},
-    behaviour: () => (o) => o,
-    name: 'noop',
+    behaviour: () => o => o,
+    name: 'noop'
   };
 }
 
@@ -133,7 +133,7 @@ export function createGlobalStrategy<T>(
     renderStatic: render,
     behaviour,
     render,
-    name: 'global',
+    name: 'global'
   };
 }
 
@@ -166,7 +166,7 @@ export function createɵGlobalStrategy<T>(
     renderStatic: render,
     behaviour,
     render,
-    name: 'ɵglobal',
+    name: 'ɵglobal'
   };
 }
 
@@ -207,7 +207,7 @@ export function createLocalStrategy<T>(
     renderStatic: render,
     behaviour,
     render,
-    name: 'local',
+    name: 'local'
   };
 }
 
@@ -247,7 +247,7 @@ export function createɵLocalStrategy<T>(
   }
 
   function renderStatic() {
-    schedule(durationSelector, scope, render);
+    // schedule(durationSelector, scope, render);
   }
 
   const behaviour = () => (o$: Observable<T>): Observable<T> => {
@@ -258,7 +258,7 @@ export function createɵLocalStrategy<T>(
     renderStatic,
     behaviour,
     render,
-    name: 'ɵlocal',
+    name: 'ɵlocal'
   };
 }
 
@@ -300,7 +300,7 @@ export function createɵDetachStrategy<T>(
   }
 
   function renderStatic() {
-    schedule(durationSelector, scope, render);
+    // schedule(durationSelector, scope, render);
   }
 
   function behaviour() {
@@ -313,7 +313,7 @@ export function createɵDetachStrategy<T>(
     renderStatic,
     behaviour,
     render,
-    name: 'ɵdetach',
+    name: 'ɵdetach'
   };
 }
 
@@ -350,7 +350,7 @@ export function createɵPostTaskStrategy<T>(
   }
 
   function renderStatic() {
-    schedule(durationSelector, scope, render);
+    // schedule(durationSelector, scope, render);
   }
 
   function behaviour() {
@@ -363,7 +363,7 @@ export function createɵPostTaskStrategy<T>(
     renderStatic,
     behaviour,
     render,
-    name: 'ɵpostTask',
+    name: 'ɵpostTask'
   };
 }
 
@@ -402,7 +402,7 @@ export function createɵIdleCallbackStrategy<T>(
   }
 
   function renderStatic() {
-    schedule(durationSelector, scope, renderMethod);
+    // schedule(durationSelector, scope, renderMethod);
   }
 
   function behaviour() {
@@ -415,7 +415,7 @@ export function createɵIdleCallbackStrategy<T>(
     renderStatic,
     behaviour,
     render,
-    name: 'ɵpostTask',
+    name: 'ɵpostTask'
   };
 }
 
