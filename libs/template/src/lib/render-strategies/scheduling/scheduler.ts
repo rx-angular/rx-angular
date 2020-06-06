@@ -17,13 +17,8 @@ declare const scheduler: {
   postTask: <T>(options: PostTaskOptions) => Promise<T>;
 };
 
-class RxScheduler {}
-
-function getPostTaskScheduler<T>(options: PostTaskOptions): RxScheduler {
+function getPostTaskScheduler<T>(options: PostTaskOptions) {
   return {
-    now() {
-      return 0;
-    },
     schedule(work, state: T): Subscription {
       return defer(() =>
         from((scheduler as any).postTask(work, options))
@@ -75,25 +70,6 @@ function _getPostTaskScheduler<T>(
     schedule: coalesceScheduleMethod(scope, schedule),
   } as SchedulerLike;
 }
-
-/*
-function getIdleCallbackScheduler(scope, options: PostTaskOptions): SchedulerLike {
-  return coalesceScheduleMethod(scope, {
-    now() {
-      return 0;
-    },
-    schedule<T>(work: any, delay?: number, state?: T): Subscription {
-      return defer(() => new Observable(() => {
-        const id = window.requestIdleCallback();
-
-        return () => {
-          window.cancelIdleCallbackId()
-        }
-      })).subscribe();
-    }
-  });
-}
-*/
 
 function coalesceScheduleMethod2(
   scope: object,
