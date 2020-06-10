@@ -1,4 +1,4 @@
-import { CompareFn } from '../../operators/distinctUntilSomeChanged';
+import { CompareFn } from '../../../rxjs/interfaces/compare-fn';
 
 export function remove<T>(
   array: NonNullable<NonNullable<T>[]>,
@@ -9,7 +9,7 @@ export function remove<T>(
   const defaultCompare = (a: T, b: T) => a === b;
   const innerCompare = compare || defaultCompare;
 
-  return array.filter(existingItem => {
-    return !items.some(item => innerCompare(item, existingItem));
+  return array.filter((existingItem) => {
+    return !items.some((item) => innerCompare(item, existingItem));
   });
 }

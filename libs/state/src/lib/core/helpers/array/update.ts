@@ -1,4 +1,4 @@
-import { CompareFn } from '../../operators/distinctUntilSomeChanged';
+import { CompareFn } from '../../../rxjs/interfaces/compare-fn';
 
 export function update<T>(
   array: NonNullable<NonNullable<T>[]>,
@@ -9,7 +9,9 @@ export function update<T>(
   const defaultCompare = (a: T, b: T) => a === b;
   const innerCompare = compare || defaultCompare;
 
-  return array.map(existingItem => {
-    return items.find(item => innerCompare(item, existingItem)) || existingItem;
+  return array.map((existingItem) => {
+    return (
+      items.find((item) => innerCompare(item, existingItem)) || existingItem
+    );
   });
 }
