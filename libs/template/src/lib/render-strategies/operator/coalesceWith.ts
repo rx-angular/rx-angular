@@ -2,11 +2,10 @@ import {
   MonoTypeOperatorFunction,
   Observable,
   Observer,
-  Subscribable,
+  SchedulerLike,
   SubscribableOrPromise,
   Subscriber,
   Subscription,
-  Unsubscribable
 } from 'rxjs';
 import { createCoalesceManager } from '../../core/render-aware/coalescing-manager';
 
@@ -21,7 +20,7 @@ import { createCoalesceManager } from '../../core/render-aware/coalescing-manage
  * In addition to that is provides emitted values for the trailing end only, as well as maintaining a context to scope
  *   coalescing.
  *
- * @param {function(value: T): SubscribableOrPromise} durationSelector - A function
+ * @param {function(value: T): SubscribableOrPromise} scheduler - A function
  * that receives a value from the source Observable, for computing the silencing
  * duration for each source value, returned as an Observable or a Promise.
  * It defaults to `requestAnimationFrame` as durationSelector.
@@ -42,12 +41,14 @@ import { createCoalesceManager } from '../../core/render-aware/coalescing-manage
  * ```
  */
 export function coalesceWith<T>(
-  durationSelector: Subscribable<any>,
+  scheduler: SchedulerLike,
   scope?: object
 ): MonoTypeOperatorFunction<T> {
   const _scope = scope || {};
-  return source => {
-    const o$ = new Observable<T>(observer => {
+  return (source) => {
+    // We can use this approach over RxJS internal OOP approach as the browser performance issues
+    // from back than do not exist anymore and the code is not that bloated
+    const o$ = new Observable<T>((observer) => {
       const rootSubscription = new Subscription();
       rootSubscription.add(
         source.subscribe(createInnerObserver(observer, rootSubscription))
@@ -61,7 +62,7 @@ export function coalesceWith<T>(
       outerObserver: Subscriber<T>,
       rootSubscription: Subscription
     ): Observer<T> {
-      let actionSubscription: Unsubscribable;
+      let coalescingDurationSubscription: Subscription;
       let latestValue: T | undefined;
       const coa = createCoalesceManager(_scope);
       const tryEmitLatestValue = () => {
@@ -72,31 +73,24 @@ export function coalesceWith<T>(
       };
       return {
         complete: () => {
-          if (actionSubscription) {
+          if (coalescingDurationSubscription) {
             tryEmitLatestValue();
           }
           outerObserver.complete();
         },
-        error: error => outerObserver.error(error),
-        next: value => {
+        error: (error) => outerObserver.error(error),
+        next: (value) => {
           latestValue = value;
-          if (!actionSubscription) {
+          if (!coalescingDurationSubscription) {
             coa.add();
-            actionSubscription = durationSelector.subscribe({
-              next: () => {
-                tryEmitLatestValue();
-                actionSubscription = undefined;
-              },
-              complete: () => {
-                if (actionSubscription) {
-                  tryEmitLatestValue();
-                  actionSubscription = undefined;
-                }
-              }
+            coalescingDurationSubscription = scheduler.schedule(() => {
+              tryEmitLatestValue();
+              coalescingDurationSubscription = undefined;
             });
-            rootSubscription.add(actionSubscription);
+            // stop coalescing if input subscription ends (error, complete, unsubscribe)
+            rootSubscription.add(coalescingDurationSubscription);
           }
-        }
+        },
       };
     }
   };

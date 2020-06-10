@@ -1,14 +1,11 @@
-import { defer, from, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ɵmarkDirty as markDirty } from '@angular/core';
-import { getUnpatchedResolvedPromise } from '../core/utils';
-import { schedule } from './scheduling/schedule';
 import {
   RenderStrategy,
-  RenderStrategyFactoryConfig
+  RenderStrategyFactoryConfig,
 } from '../core/render-aware/interfaces';
 import { coalesceWith } from './operator/coalesceWith';
-
-declare const scheduler;
+import { microtaskScheduler } from './scheduling/scheduler';
 
 export const DEFAULT_STRATEGY_NAME = 'native';
 
@@ -23,7 +20,7 @@ export function getStrategies<T>(
     ɵlocal: createɵLocalStrategy<T>(config),
     ɵglobal: createɵGlobalStrategy<T>(config),
     ɵdetach: createɵDetachStrategy<T>(config),
-    ɵpostTask: createɵPostTaskStrategy<T>(config)
+    ɵpostTask: createɵPostTaskStrategy<T>(config),
   };
 }
 
@@ -75,8 +72,8 @@ export function createNativeStrategy<T>(
   return {
     renderStatic: render,
     render,
-    behaviour: () => o => o,
-    name: 'native'
+    behaviour: () => (o) => o,
+    name: 'native',
   };
 }
 
@@ -97,8 +94,8 @@ export function createNoopStrategy<T>(): RenderStrategy<T> {
   return {
     renderStatic: (): void => {},
     render: (): void => {},
-    behaviour: () => o => o,
-    name: 'noop'
+    behaviour: () => (o) => o,
+    name: 'noop',
   };
 }
 
@@ -133,7 +130,7 @@ export function createGlobalStrategy<T>(
     renderStatic: render,
     behaviour,
     render,
-    name: 'global'
+    name: 'global',
   };
 }
 
@@ -166,7 +163,7 @@ export function createɵGlobalStrategy<T>(
     renderStatic: render,
     behaviour,
     render,
-    name: 'ɵglobal'
+    name: 'ɵglobal',
   };
 }
 
@@ -207,7 +204,7 @@ export function createLocalStrategy<T>(
     renderStatic: render,
     behaviour,
     render,
-    name: 'local'
+    name: 'local',
   };
 }
 
@@ -239,7 +236,7 @@ export function createLocalStrategy<T>(
 export function createɵLocalStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const durationSelector = from(getUnpatchedResolvedPromise());
+  const scheduler = microtaskScheduler({});
   const scope = getContext(config.cdRef as any);
 
   function render() {
@@ -251,14 +248,14 @@ export function createɵLocalStrategy<T>(
   }
 
   const behaviour = () => (o$: Observable<T>): Observable<T> => {
-    return o$.pipe(coalesceWith(durationSelector, scope));
+    return o$.pipe(coalesceWith(scheduler, scope));
   };
 
   return {
     renderStatic,
     behaviour,
     render,
-    name: 'ɵlocal'
+    name: 'ɵlocal',
   };
 }
 
@@ -290,7 +287,7 @@ export function createɵLocalStrategy<T>(
 export function createɵDetachStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const durationSelector = from(getUnpatchedResolvedPromise());
+  const scheduler = microtaskScheduler({});
   const scope = getContext(config.cdRef as any);
 
   function render() {
@@ -305,7 +302,7 @@ export function createɵDetachStrategy<T>(
 
   function behaviour() {
     return (o$: Observable<T>): Observable<T> => {
-      return o$.pipe(coalesceWith(durationSelector, scope));
+      return o$.pipe(coalesceWith(scheduler, scope));
     };
   }
 
@@ -313,7 +310,7 @@ export function createɵDetachStrategy<T>(
     renderStatic,
     behaviour,
     render,
-    name: 'ɵdetach'
+    name: 'ɵdetach',
   };
 }
 
@@ -340,9 +337,7 @@ export function createɵDetachStrategy<T>(
 export function createɵPostTaskStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const durationSelector = defer(() =>
-    from((scheduler as any).postTask(() => {}, { priority: 'user-blocking' }))
-  );
+  const scheduler = microtaskScheduler({});
   const scope = getContext(config.cdRef as any);
 
   function render() {
@@ -355,7 +350,7 @@ export function createɵPostTaskStrategy<T>(
 
   function behaviour() {
     return (o$: Observable<T>): Observable<T> => {
-      return o$.pipe(coalesceWith(durationSelector, scope));
+      return o$.pipe(coalesceWith(scheduler, scope));
     };
   }
 
@@ -363,7 +358,7 @@ export function createɵPostTaskStrategy<T>(
     renderStatic,
     behaviour,
     render,
-    name: 'ɵpostTask'
+    name: 'ɵpostTask',
   };
 }
 
@@ -390,9 +385,7 @@ export function createɵPostTaskStrategy<T>(
 export function createɵIdleCallbackStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const durationSelector = defer(() =>
-    from((scheduler as any).postTask(() => {}, { priority: 'user-blocking' }))
-  );
+  const scheduler = microtaskScheduler({});
   const scope = getContext(config.cdRef as any);
 
   const renderMethod = config.cdRef.detectChanges;
@@ -407,7 +400,7 @@ export function createɵIdleCallbackStrategy<T>(
 
   function behaviour() {
     return (o$: Observable<T>): Observable<T> => {
-      return o$.pipe(coalesceWith(durationSelector, scope));
+      return o$.pipe(coalesceWith(scheduler, scope));
     };
   }
 
@@ -415,7 +408,7 @@ export function createɵIdleCallbackStrategy<T>(
     renderStatic,
     behaviour,
     render,
-    name: 'ɵpostTask'
+    name: 'ɵpostTask',
   };
 }
 

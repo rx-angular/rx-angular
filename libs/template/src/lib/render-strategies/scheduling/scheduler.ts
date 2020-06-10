@@ -6,18 +6,18 @@ import {
   Subscribable,
   Subscription,
 } from 'rxjs';
-import { createCoalesceManager } from '@rx-angular/template';
+import { createCoalesceManager, getUnpatchedResolvedPromise } from '../../core';
 
-export interface PostTaskOptions {
+export interface SchedulerOptions {
   priority: string;
   delay: number;
 }
 
 declare const scheduler: {
-  postTask: <T>(options: PostTaskOptions) => Promise<T>;
+  postTask: <T>(options: SchedulerOptions) => Promise<T>;
 };
 
-function getPostTaskScheduler<T>(options: PostTaskOptions) {
+function getPostTaskScheduler<T>(options: SchedulerOptions) {
   return {
     schedule(work, state: T): Subscription {
       return defer(() =>
@@ -53,14 +53,12 @@ function getCoalescedSchedulerAction<T>(
   } as SchedulerAction<T>;
 }
 
-function _getPostTaskScheduler<T>(
+export function microtaskScheduler<T>(
   scope,
-  options: PostTaskOptions
+  options?: SchedulerOptions
 ): SchedulerLike {
   const schedule = (work: any, delay?: number, state?: T): Subscription => {
-    return defer(() =>
-      from((scheduler as any).postTask(work(state), options))
-    ).subscribe();
+    return defer(() => from(getUnpatchedResolvedPromise())).subscribe();
   };
 
   return {
