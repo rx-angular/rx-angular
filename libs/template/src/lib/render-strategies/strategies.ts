@@ -1,11 +1,11 @@
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { ɵmarkDirty as markDirty } from '@angular/core';
 import {
   RenderStrategy,
   RenderStrategyFactoryConfig,
 } from '../core/render-aware/interfaces';
-import { coalesceWith } from './operator/coalesceWith';
-import { microtaskScheduler } from './scheduling/scheduler';
+import { scheduleCoalesced } from './scheduling/scheduleCoalesced';
+import { getUnpatchedResolvedPromise } from '../core/utils';
 
 export const DEFAULT_STRATEGY_NAME = 'native';
 
@@ -236,19 +236,20 @@ export function createLocalStrategy<T>(
 export function createɵLocalStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const scheduler = microtaskScheduler({});
   const scope = getContext(config.cdRef as any);
+  const schedule = (work) =>
+    from(getUnpatchedResolvedPromise()).subscribe(work);
 
   function render() {
     config.cdRef.detectChanges();
   }
 
   function renderStatic() {
-    // schedule(durationSelector, scope, render);
+    scheduleCoalesced(render, schedule, scope);
   }
 
   const behaviour = () => (o$: Observable<T>): Observable<T> => {
-    return o$.pipe(coalesceWith(scheduler, scope));
+    return o$;
   };
 
   return {
@@ -287,7 +288,7 @@ export function createɵLocalStrategy<T>(
 export function createɵDetachStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const scheduler = microtaskScheduler({});
+  const schedule = () => from(getUnpatchedResolvedPromise()).subscribe();
   const scope = getContext(config.cdRef as any);
 
   function render() {
@@ -297,12 +298,12 @@ export function createɵDetachStrategy<T>(
   }
 
   function renderStatic() {
-    // schedule(durationSelector, scope, render);
+    scheduleCoalesced(render, schedule, scope);
   }
 
   function behaviour() {
     return (o$: Observable<T>): Observable<T> => {
-      return o$.pipe(coalesceWith(scheduler, scope));
+      return o$;
     };
   }
 
@@ -337,7 +338,7 @@ export function createɵDetachStrategy<T>(
 export function createɵPostTaskStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const scheduler = microtaskScheduler({});
+  const schedule = () => from(getUnpatchedResolvedPromise()).subscribe();
   const scope = getContext(config.cdRef as any);
 
   function render() {
@@ -345,12 +346,12 @@ export function createɵPostTaskStrategy<T>(
   }
 
   function renderStatic() {
-    // schedule(durationSelector, scope, render);
+    scheduleCoalesced(render, schedule, scope);
   }
 
   function behaviour() {
     return (o$: Observable<T>): Observable<T> => {
-      return o$.pipe(coalesceWith(scheduler, scope));
+      return o$;
     };
   }
 
@@ -385,7 +386,7 @@ export function createɵPostTaskStrategy<T>(
 export function createɵIdleCallbackStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const scheduler = microtaskScheduler({});
+  const schedule = () => from(getUnpatchedResolvedPromise()).subscribe();
   const scope = getContext(config.cdRef as any);
 
   const renderMethod = config.cdRef.detectChanges;
@@ -395,12 +396,12 @@ export function createɵIdleCallbackStrategy<T>(
   }
 
   function renderStatic() {
-    // schedule(durationSelector, scope, renderMethod);
+    scheduleCoalesced(renderMethod, schedule, scope);
   }
 
   function behaviour() {
     return (o$: Observable<T>): Observable<T> => {
-      return o$.pipe(coalesceWith(scheduler, scope));
+      return o$;
     };
   }
 

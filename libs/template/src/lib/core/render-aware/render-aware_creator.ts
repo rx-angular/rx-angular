@@ -69,19 +69,12 @@ export function createRenderAware<U>(cfg: {
       } else {
         cfg.resetObserver.next();
       }
-      strategy.render();
+      strategy.renderStatic();
     }),
     // forward only observable values
     filter((o$) => isObservable(o$)),
-    map((o$) =>
-      o$.pipe(
-        distinctUntilChanged(),
-        tap(cfg.updateObserver),
-        strategy.behaviour()
-      )
-    ),
     switchMap((observable$) => (observable$ == null ? EMPTY : observable$)),
-    tap(() => strategy.render()),
+    tap(() => strategy.renderStatic()),
     catchError((e) => {
       console.error(e);
       return EMPTY;
