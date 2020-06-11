@@ -1,3 +1,4 @@
 export * from './operator/renderChange';
-export * from './scheduling/scheduleCoalesced';
+export * from './operator/coalesceWith';
+export * from './scheduling';
 export * from './strategies';

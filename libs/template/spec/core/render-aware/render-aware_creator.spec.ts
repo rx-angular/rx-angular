@@ -1,9 +1,9 @@
 import { OnDestroy } from '@angular/core';
 import {
   RenderAware,
-  createRenderAware,
-  DEFAULT_STRATEGY_NAME
+  createRenderAware, StrategySelection,
 } from '../../../src/lib/core';
+import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies';
 import {
   concat,
   EMPTY,
@@ -24,7 +24,9 @@ class CdAwareImplementation<U> implements OnDestroy {
     next: _ => (this.renderedValue = undefined)
   };
   updateObserver: Observer<U | undefined | null> = {
-    next: (n: U | undefined | null) => (this.renderedValue = n),
+    next: (n: U | undefined | null) => {
+      this.renderedValue = n;
+    },
     error: e => (this.error = e),
     complete: () => (this.completed = true)
   };
@@ -34,12 +36,13 @@ class CdAwareImplementation<U> implements OnDestroy {
       strategies: {
         [DEFAULT_STRATEGY_NAME]: {
           render: () => {},
-          behaviour: () => o => o,
+          renderStatic: () => {},
           name: DEFAULT_STRATEGY_NAME
         }
       },
       updateObserver: this.updateObserver,
-      resetObserver: this.resetObserver
+      resetObserver: this.resetObserver,
+      defaultStrategy: DEFAULT_STRATEGY_NAME
     });
     this.subscription = this.cdAware.subscribe();
   }

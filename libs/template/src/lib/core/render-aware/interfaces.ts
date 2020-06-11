@@ -11,7 +11,6 @@ export interface RenderStrategyFactoryConfig {
 
 export interface RenderStrategy<T> {
   renderStatic: () => void;
-  behaviour: () => MonoTypeOperatorFunction<T>;
   render: () => void;
   name: string;
 }

@@ -1,11 +1,11 @@
-import { from, Observable } from 'rxjs';
 import { ɵmarkDirty as markDirty } from '@angular/core';
+import { from } from 'rxjs';
 import {
   RenderStrategy,
-  RenderStrategyFactoryConfig,
+  RenderStrategyFactoryConfig
 } from '../core/render-aware/interfaces';
-import { scheduleCoalesced } from './scheduling/scheduleCoalesced';
 import { getUnpatchedResolvedPromise } from '../core/utils';
+import { scheduleCoalesced } from './scheduling/scheduleCoalesced';
 
 export const DEFAULT_STRATEGY_NAME = 'native';
 
@@ -20,7 +20,7 @@ export function getStrategies<T>(
     ɵlocal: createɵLocalStrategy<T>(config),
     ɵglobal: createɵGlobalStrategy<T>(config),
     ɵdetach: createɵDetachStrategy<T>(config),
-    ɵpostTask: createɵPostTaskStrategy<T>(config),
+    ɵpostTask: createɵPostTaskStrategy<T>(config)
   };
 }
 
@@ -72,8 +72,7 @@ export function createNativeStrategy<T>(
   return {
     renderStatic: render,
     render,
-    behaviour: () => (o) => o,
-    name: 'native',
+    name: 'native'
   };
 }
 
@@ -94,8 +93,7 @@ export function createNoopStrategy<T>(): RenderStrategy<T> {
   return {
     renderStatic: (): void => {},
     render: (): void => {},
-    behaviour: () => (o) => o,
-    name: 'noop',
+    name: 'noop'
   };
 }
 
@@ -122,15 +120,10 @@ export function createGlobalStrategy<T>(
     config.cdRef.markForCheck();
   }
 
-  function behaviour() {
-    return (o$: Observable<T>): Observable<T> => o$;
-  }
-
   return {
     renderStatic: render,
-    behaviour,
     render,
-    name: 'global',
+    name: 'global'
   };
 }
 
@@ -157,13 +150,10 @@ export function createɵGlobalStrategy<T>(
     markDirty((config.cdRef as any).context);
   }
 
-  const behaviour = () => (o$: Observable<T>): Observable<T> => o$;
-
   return {
     renderStatic: render,
-    behaviour,
     render,
-    name: 'ɵglobal',
+    name: 'ɵglobal'
   };
 }
 
@@ -194,17 +184,10 @@ export function createLocalStrategy<T>(
     config.cdRef.detectChanges();
   }
 
-  function behaviour() {
-    return (o$: Observable<T>): Observable<T> => {
-      return o$;
-    };
-  }
-
   return {
     renderStatic: render,
-    behaviour,
     render,
-    name: 'local',
+    name: 'local'
   };
 }
 
@@ -216,11 +199,13 @@ export function createLocalStrategy<T>(
  * that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
  *
  * As detectChanges has no coalescing of render calls
- * like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` has, so we have to apply our own coalescing, 'scoped' on component level.
+ * like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` has, so we have to apply our own coalescing, 'scoped' on
+ * component level.
  *
  * Coalescing, in this very manner,
- * means **collecting all events** in the same [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick,
- * that would cause a re-render and execute **re-rendering only once**.
+ * means **collecting all events** in the same
+ * [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render and
+ * execute **re-rendering only once**.
  *
  * 'Scoped' coalescing, in addition, means **grouping the collected events by** a specific context.
  * E. g. the **component** from which the re-rendering was initiated.
@@ -237,8 +222,8 @@ export function createɵLocalStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
   const scope = getContext(config.cdRef as any);
-  const schedule = (work) =>
-    from(getUnpatchedResolvedPromise()).subscribe(work);
+  const schedule = work =>
+    from(getUnpatchedResolvedPromise()).subscribe(() => work());
 
   function render() {
     config.cdRef.detectChanges();
@@ -248,15 +233,10 @@ export function createɵLocalStrategy<T>(
     scheduleCoalesced(render, schedule, scope);
   }
 
-  const behaviour = () => (o$: Observable<T>): Observable<T> => {
-    return o$;
-  };
-
   return {
     renderStatic,
-    behaviour,
     render,
-    name: 'ɵlocal',
+    name: 'ɵlocal'
   };
 }
 
@@ -268,11 +248,13 @@ export function createɵLocalStrategy<T>(
  * that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
  *
  * As detectChanges has no coalescing of render calls
- * like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` has, so we have to apply our own coalescing, 'scoped' on component level.
+ * like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` has, so we have to apply our own coalescing, 'scoped' on
+ * component level.
  *
  * Coalescing, in this very manner,
- * means **collecting all events** in the same [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick,
- * that would cause a re-render and execute **re-rendering only once**.
+ * means **collecting all events** in the same
+ * [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render and
+ * execute **re-rendering only once**.
  *
  * 'Scoped' coalescing, in addition, means **grouping the collected events by** a specific context.
  * E. g. the **component** from which the re-rendering was initiated.
@@ -288,7 +270,8 @@ export function createɵLocalStrategy<T>(
 export function createɵDetachStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const schedule = () => from(getUnpatchedResolvedPromise()).subscribe();
+  const schedule = work =>
+    from(getUnpatchedResolvedPromise()).subscribe(() => work());
   const scope = getContext(config.cdRef as any);
 
   function render() {
@@ -301,17 +284,10 @@ export function createɵDetachStrategy<T>(
     scheduleCoalesced(render, schedule, scope);
   }
 
-  function behaviour() {
-    return (o$: Observable<T>): Observable<T> => {
-      return o$;
-    };
-  }
-
   return {
     renderStatic,
-    behaviour,
     render,
-    name: 'ɵdetach',
+    name: 'ɵdetach'
   };
 }
 
@@ -338,7 +314,8 @@ export function createɵDetachStrategy<T>(
 export function createɵPostTaskStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const schedule = () => from(getUnpatchedResolvedPromise()).subscribe();
+  const schedule = work =>
+    from(getUnpatchedResolvedPromise()).subscribe(() => work());
   const scope = getContext(config.cdRef as any);
 
   function render() {
@@ -349,17 +326,10 @@ export function createɵPostTaskStrategy<T>(
     scheduleCoalesced(render, schedule, scope);
   }
 
-  function behaviour() {
-    return (o$: Observable<T>): Observable<T> => {
-      return o$;
-    };
-  }
-
   return {
     renderStatic,
-    behaviour,
     render,
-    name: 'ɵpostTask',
+    name: 'ɵpostTask'
   };
 }
 
@@ -386,7 +356,8 @@ export function createɵPostTaskStrategy<T>(
 export function createɵIdleCallbackStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const schedule = () => from(getUnpatchedResolvedPromise()).subscribe();
+  const schedule = work =>
+    from(getUnpatchedResolvedPromise()).subscribe(() => work());
   const scope = getContext(config.cdRef as any);
 
   const renderMethod = config.cdRef.detectChanges;
@@ -399,17 +370,10 @@ export function createɵIdleCallbackStrategy<T>(
     scheduleCoalesced(renderMethod, schedule, scope);
   }
 
-  function behaviour() {
-    return (o$: Observable<T>): Observable<T> => {
-      return o$;
-    };
-  }
-
   return {
     renderStatic,
-    behaviour,
     render,
-    name: 'ɵpostTask',
+    name: 'ɵpostTask'
   };
 }
 

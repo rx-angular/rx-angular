@@ -1,11 +1,13 @@
+import { from } from 'rxjs';
+import {
+  getGlobalThis, getUnpatchedResolvedPromise
+} from '../../../src/lib/core';
 import {
   createNativeStrategy,
   createNoopStrategy,
   DEFAULT_STRATEGY_NAME,
-  getGlobalThis,
-  getStrategies,
-  tickFromUnPatchedPromise
-} from '../../../src/lib/core';
+  getStrategies
+} from '../../../src/lib/render-strategies';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
 
@@ -30,6 +32,10 @@ const original__zone_symbol__Promise =
   getGlobalThis().__zone_symbol__Promise || Promise;
 function restoreGlobalThis() {
   getGlobalThis().__zone_symbol__Promise = original__zone_symbol__Promise;
+}
+
+function tickFromUnPatchedPromise() {
+  return from(getUnpatchedResolvedPromise());
 }
 
 describe('getZoneUnPatchedDurationSelector', () => {

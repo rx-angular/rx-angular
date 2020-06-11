@@ -1,6 +1,5 @@
-import { SchedulerLike, Subscribable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { createCoalesceManager } from '../../core/render-aware';
-import { getUnpatchedResolvedPromise } from '../../core/utils';
 
 export function scheduleCoalesced(
   work: () => void,

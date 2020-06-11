@@ -14,7 +14,7 @@ function getMarkDirty(cdRef: ChangeDetectorRef) {
     if (options.parent) {
       markDirty(ref);
     } else {
-      scheduleCoalesced(cdRef.detectChanges, options.scheduleCD, ref);
+      scheduleCoalesced(() => cdRef.detectChanges(), options.scheduleCD, ref);
     }
   };
 }

@@ -2,12 +2,13 @@ import {
   BehaviorSubject,
   EMPTY,
   isObservable,
+  NEVER,
   NextObserver,
   Observable,
   of,
   Subject,
   Subscribable,
-  Subscription,
+  Subscription
 } from 'rxjs';
 import {
   catchError,
@@ -15,7 +16,7 @@ import {
   filter,
   map,
   switchMap,
-  tap,
+  tap
 } from 'rxjs/operators';
 import { nameToStrategy } from './nameToStrategy';
 import { RenderStrategy, StrategySelection } from './interfaces';
@@ -48,13 +49,13 @@ export function createRenderAware<U>(cfg: {
     U
   >> = strategyName$.pipe(
     distinctUntilChanged(),
-    switchMap((stringOrObservable) =>
+    switchMap(stringOrObservable =>
       typeof stringOrObservable === 'string'
         ? of(stringOrObservable)
         : stringOrObservable
     ),
     nameToStrategy(cfg.strategies),
-    tap((s) => (strategy = s))
+    tap(s => (strategy = s))
   );
 
   const observablesFromTemplate$ = new Subject<Observable<U>>();
@@ -63,7 +64,7 @@ export function createRenderAware<U>(cfg: {
   );
   const renderingEffect$ = valuesFromTemplate$.pipe(
     // handle null | undefined assignment and new Observable reset
-    tap((observable$) => {
+    tap(observable$ => {
       if (observable$ === null) {
         cfg.updateObserver.next(observable$ as any);
       } else {
@@ -72,10 +73,10 @@ export function createRenderAware<U>(cfg: {
       strategy.renderStatic();
     }),
     // forward only observable values
-    filter((o$) => isObservable(o$)),
-    switchMap((observable$) => (observable$ == null ? EMPTY : observable$)),
+    filter(o$ => isObservable(o$)),
+    switchMap(o$ => o$.pipe(tap(cfg.updateObserver))),
     tap(() => strategy.renderStatic()),
-    catchError((e) => {
+    catchError(e => {
       console.error(e);
       return EMPTY;
     })
@@ -92,6 +93,6 @@ export function createRenderAware<U>(cfg: {
       return new Subscription()
         .add(updateStrategyEffect$.subscribe())
         .add(renderingEffect$.subscribe());
-    },
+    }
   } as RenderAware<U | undefined | null>;
 }

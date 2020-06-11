@@ -1,9 +1,9 @@
 import { TestScheduler } from 'rxjs/internal/testing/TestScheduler';
 import { finalize, mergeMapTo, share, tap } from 'rxjs/operators';
-import { concat, defer, from, of, timer } from 'rxjs';
+import { concat, defer, from, of, Subscription, timer } from 'rxjs';
 
 import { jestMatcher } from '@test-helpers';
-import { coalesceWith } from '../../../../src/lib/render-strategies/operator/coalesceWith';
+import { coalesceWith } from '../../../src/lib/render-strategies/operator/coalesceWith';
 
 /** @test {coalesceWith} */
 describe('coalesce operator additional logic', () => {
@@ -206,7 +206,6 @@ describe('coalesce operator additional logic', () => {
         const s1 = cold('---(abcdef)---|');
         const s1Subs = ['^-------------!', '^-------------!'];
         const d1 = cold('   (|)         ');
-
         const exp1 =    '--------------|';
         const exp2 =    '---f----------|';
         const result1 = s1.pipe(coalesceWith(d1, scope));
