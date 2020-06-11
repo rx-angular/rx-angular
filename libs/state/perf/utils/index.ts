@@ -14,7 +14,7 @@ export interface BenchmarkSuite {
   options?: Benchmark.Options;
 }
 
-export function runBenchmarkSuit(benchmarkSuite: BenchmarkSuite) {
+export function runBenchmarkSuite(benchmarkSuite: BenchmarkSuite) {
   const suite = new Benchmark.Suite();
   const listeners: BenchmarkListener = {
     cycle: function(event: Event) {
