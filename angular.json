@@ -301,6 +301,20 @@
             "passWithNoTests": true,
             "setupFile": "libs/state/src/test-setup.ts"
           }
+        },
+        "perfBuild": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "main": "libs/state/perf/index.ts",
+            "outputPath": "dist/libs/state-perf/dist",
+            "tsConfig": "libs/state/tsconfig.perf.json"
+          }
+        },
+        "perf": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "state:perfBuild"
+          }
         }
       },
       "schematics": {
