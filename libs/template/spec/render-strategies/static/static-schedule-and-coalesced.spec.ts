@@ -1,36 +1,28 @@
 import { coalesceAndSchedule } from '../../../src/lib/render-strategies/static';
-import { of } from 'rxjs';
 import { SchedulingPriority } from '../../../src/lib/render-strategies/core/interfaces';
 
 /** @test {coalesceWith} */
-describe('priorityCoalesce', () => {
-  it('should change the execution context', (done) => {
+describe('schedule and coalesce', () => {
+  it('should change the execution context for coalescing', (done) => {
     let test = 0;
     const doWork = () => {
-      console.log('in doWork');
       test++;
-    }
+    };
     coalesceAndSchedule(doWork, SchedulingPriority.Promise, {});
     expect(test).toBe(0);
+    // this happens after coalescing
     Promise.resolve().then(() => {
-      console.log('in promise1');
-      expect(test).toBe(1);
-      return Promise.resolve().then(() => {
-        console.log('in promise1.1');
-      });
+      expect(test).toBe(0);
     });
-    Promise.resolve().then(() => {
-      console.log('in promise2');
-      expect(test).toBe(1);
-    });
+    // this happens after scheduling
     setTimeout(() => {
-      console.log('timeout');
+      expect(test).toBe(1);
       done();
-    }, 100)
+    }, 0);
     expect(test).toBe(0);
   });
 
-  it('should coalesce to a scope async', (done) => {
+  it('should coalesce to a scope', (done) => {
     let test = 0;
     const priority = SchedulingPriority.Promise;
     const doWork = () => test++;
@@ -40,14 +32,20 @@ describe('priorityCoalesce', () => {
     coalesceAndSchedule(doWork, priority, scope);
     coalesceAndSchedule(doWork, priority, scope);
     expect(test).toBe(0);
+    // this happens after coalescing
     Promise.resolve().then(() => {
-      expect(test).toBe(1);
+      expect(test).toBe(0);
       done();
     });
+    // this happens after scheduling
+    setTimeout(() => {
+      expect(test).toBe(1);
+      done();
+    }, 100);
     expect(test).toBe(0);
   });
 
-  it('should work with multiple scopes async', (done) => {
+  it('should work with multiple scopes', (done) => {
     let test = 0;
     const priority = SchedulingPriority.Promise;
     const doWork = () => test++;
@@ -58,7 +56,12 @@ describe('priorityCoalesce', () => {
     coalesceAndSchedule(doWork, priority, scope2);
     coalesceAndSchedule(doWork, priority, scope2);
     expect(test).toBe(0);
+    // this happens after coalescing
     Promise.resolve().then(() => {
+      expect(test).toBe(0);
+    });
+    // this happens after scheduling
+    setTimeout(() => {
       expect(test).toBe(2);
       done();
     });

@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DemoBasicsComponent } from './solution/demo-basics.component';
 import { DemoBasicsContainerComponent } from './solution/demo-basics.container.component';
+import { TemplateModule } from '@rx-angular/template';
 
 export const ROUTES = [
   {
@@ -42,7 +43,12 @@ export const materialModules = [
 
 @NgModule({
   declarations: [DECLARATIONS],
-  imports: [CommonModule, materialModules, RouterModule.forChild(ROUTES)],
+  imports: [
+    CommonModule,
+    materialModules,
+    RouterModule.forChild(ROUTES),
+    TemplateModule
+  ],
   exports: [DECLARATIONS]
 })
 export class DemoBasicsModule {}

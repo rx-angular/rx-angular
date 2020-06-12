@@ -4,7 +4,7 @@ import {
   Input,
   OnDestroy,
   TemplateRef,
-  ViewContainerRef,
+  ViewContainerRef
 } from '@angular/core';
 
 import {
@@ -12,13 +12,13 @@ import {
   Observable,
   ObservableInput,
   Observer,
-  Unsubscribable,
+  Unsubscribable
 } from 'rxjs';
-import { RenderAware, createRenderAware } from '../core';
+import { createRenderAware, RenderAware } from '../core';
 import {
   DEFAULT_STRATEGY_NAME,
-  getStrategies,
-} from '../render-strategies/strategies';
+  getStrategies
+} from '../render-strategies/strategies/strategies-map';
 
 export interface LetViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
@@ -123,7 +123,7 @@ export class LetDirective<U> implements OnDestroy {
       strategies: getStrategies<U>({ cdRef }),
       resetObserver: this.resetObserver,
       updateObserver: this.updateObserver,
-      defaultStrategy: DEFAULT_STRATEGY_NAME,
+      defaultStrategy: DEFAULT_STRATEGY_NAME
     });
     this.subscription = this.renderAware.subscribe();
   }
@@ -134,7 +134,7 @@ export class LetDirective<U> implements OnDestroy {
     $implicit: undefined,
     rxLet: undefined,
     $error: false,
-    $complete: false,
+    $complete: false
   };
 
   protected readonly subscription: Unsubscribable;
@@ -148,7 +148,7 @@ export class LetDirective<U> implements OnDestroy {
         this.ViewContext.$error = false;
         this.ViewContext.$complete = false;
       }
-    },
+    }
   };
   private readonly updateObserver: Observer<U | null | undefined> = {
     next: (value: U | null | undefined) => {
@@ -172,7 +172,7 @@ export class LetDirective<U> implements OnDestroy {
         this.createEmbeddedView();
       }
       this.ViewContext.$complete = true;
-    },
+    }
   };
 
   static ngTemplateContextGuard<U>(

@@ -4,6 +4,7 @@ import {
   asyncScheduler,
   SchedulerLike
 } from 'rxjs';
+import { SchedulingPriority } from './interfaces';
 
 export const prioritiesMap: { [name: string]: SchedulerLike } = {
   animationFrame: animationFrameScheduler,
@@ -14,3 +15,9 @@ export const prioritiesMap: { [name: string]: SchedulerLike } = {
   // 'user-visible': 'user-visible',
   // 'background': 'background'
 };
+
+export function getScheduler(
+  priority: SchedulingPriority = SchedulingPriority.animationFrame
+): SchedulerLike {
+  return prioritiesMap[priority];
+}

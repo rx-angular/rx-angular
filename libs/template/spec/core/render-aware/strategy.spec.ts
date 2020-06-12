@@ -3,9 +3,6 @@ import {
   getGlobalThis, getUnpatchedResolvedPromise
 } from '../../../src/lib/core';
 import {
-  createNativeStrategy,
-  createNoopStrategy,
-  DEFAULT_STRATEGY_NAME,
   getStrategies
 } from '../../../src/lib/render-strategies';
 import { TestScheduler } from 'rxjs/testing';
@@ -15,6 +12,9 @@ import {
   getMockNativeStrategyConfig,
   getMockNoopStrategyConfig
 } from '../../fixtures';
+import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
+import { createNativeStrategy } from '../../../src/lib/render-strategies/strategies/native.strategy';
+import { createNoopStrategy } from '../../../src/lib/render-strategies/strategies/noop.strategy';
 
 const t = { foo: true, bar: 'test', baz: [] };
 
@@ -94,7 +94,7 @@ describe('strategies', () => {
     it('should call the renderMethod `ChangeDetectorRef#markForCheck`', () => {
       const cfg = getMockNativeStrategyConfig();
       const strategy = createNativeStrategy(cfg);
-      strategy.render();
+      strategy.renderMethod();
       expect(cfg.cdRef.markForCheck).toHaveBeenCalledTimes(1);
     });
   });

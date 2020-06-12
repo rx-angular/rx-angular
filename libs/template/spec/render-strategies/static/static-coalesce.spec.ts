@@ -4,8 +4,7 @@ import { staticCoalesce } from '../../../src/lib/render-strategies/static/static
 /** @test {coalesceWith} */
 describe('staticCoalesce', () => {
 
-
-  it('should coalesce to a scope async', (done) => {
+  it('should coalesce to a scope', (done) => {
     let test = 0;
     const durationSelector = () => from(Promise.resolve());
     const doWork = () => test++;
@@ -23,7 +22,7 @@ describe('staticCoalesce', () => {
   });
 
 
-  it('should work with multiple scopes async', (done) => {
+  it('should work with multiple scopes', (done) => {
     let test = 0;
     const durationSelector = () => from(Promise.resolve());
     const doWork = () => test++;

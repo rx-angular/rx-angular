@@ -1,10 +1,5 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewContainerRef
-} from '@angular/core';
-import { EMPTY, interval, NEVER, Observable, of, throwError } from 'rxjs';
+import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import { EMPTY, interval, NEVER, Observable, of } from 'rxjs';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let';
 import { take } from 'rxjs/operators';
@@ -13,15 +8,13 @@ import { MockChangeDetectorRef } from '../fixtures';
 @Component({
   template: `
     <ng-container
-      *rxLet="value$ as value; $error as error; $complete as complete"
-      >{{
-        value === undefined
-          ? 'undefined'
-          : value === null
-          ? 'null'
-          : (value | json)
-      }}</ng-container
-    >
+      *rxLet="value$ as value; $error as error; $complete as complete">{{
+      value === undefined
+        ? 'undefined'
+        : value === null
+        ? 'null'
+        : (value | json)
+      }}</ng-container>
   `
 })
 class LetDirectiveTestComponent {

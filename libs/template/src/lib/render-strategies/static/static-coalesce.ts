@@ -1,15 +1,15 @@
 import { Subscribable } from 'rxjs';
-import { createCoalesceManager } from '../../core/render-aware';
+import { createCoalesceManager } from '../../core/render-aware/coalescing-manager';
 
 export function staticCoalesce<T>(
   work: () => T,
-  durationSelector: () => Subscribable<any>,
+  durationSelector: Subscribable<any>,
   scope: object = {}
 ): void {
   const coalescingManager = createCoalesceManager(scope);
   if (!coalescingManager.isCoalescing()) {
     coalescingManager.add();
-    durationSelector().subscribe(() => {
+    durationSelector.subscribe(() => {
       tryExecuteWork();
     });
   }

@@ -8,7 +8,7 @@ import {
   Subscription,
   Unsubscribable
 } from 'rxjs';
-import { createCoalesceManager } from '../../core/render-aware/coalescing-manager';
+import { createCoalesceManager } from '../../../core/render-aware/coalescing-manager';
 
 /**
  * @description

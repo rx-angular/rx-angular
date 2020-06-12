@@ -1,5 +1,5 @@
 import { ChangeDetectorRef } from '@angular/core';
-import { MonoTypeOperatorFunction } from 'rxjs';
+import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 
 export interface StrategySelection<U> {
   [strategy: string]: RenderStrategy<U>;
@@ -10,7 +10,8 @@ export interface RenderStrategyFactoryConfig {
 }
 
 export interface RenderStrategy<T> {
-  renderStatic: () => void;
-  render: () => void;
   name: string;
+  scheduleCD: () => void;
+  behavior: (o: Observable<T>) => Observable<T>;
+  renderMethod: () => void;
 }
