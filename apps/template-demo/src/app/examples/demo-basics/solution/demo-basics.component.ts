@@ -29,6 +29,10 @@ import { mergeMap, tap } from 'rxjs/operators';
     <br />
 
     push: {{ value$ | push }}<br />
+    push: {{ value$ | push }}<br />
+    push: {{ value$ | push }}<br />
+    push: {{ value$ | push }}<br />
+    push: {{ value$ | push }}<br />
 
     ---- <br />
     <ng-container *rxLet="value$; let value"> rxLet: {{ value }} </ng-container
@@ -47,7 +51,6 @@ export class DemoBasicsComponent implements OnInit {
   value$: Observable<string> = defer(() =>
     this.nextValues.pipe(
       mergeMap(() => ['1', '2', '3', '4', Math.random() + '']),
-      renderChange(this.strategies.ɵlocal),
       tap(v => console.log('value$', v))
     )
   );
