@@ -1,11 +1,10 @@
 import { ɵmarkDirty as markDirty } from '@angular/core';
-import { from } from 'rxjs';
 import {
   RenderStrategy,
   RenderStrategyFactoryConfig
 } from '../core/render-aware/interfaces';
-import { getUnpatchedResolvedPromise } from '../core/utils';
-import { scheduleCoalesced } from './scheduling/scheduleCoalesced';
+import { coalesceAndSchedule } from './static';
+import { SchedulingPriority } from './core/interfaces';
 
 export const DEFAULT_STRATEGY_NAME = 'native';
 
@@ -222,15 +221,14 @@ export function createɵLocalStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
   const scope = getContext(config.cdRef as any);
-  const schedule = work =>
-    from(getUnpatchedResolvedPromise()).subscribe(() => work());
+  const priority = SchedulingPriority.animationFrame;
 
   function render() {
     config.cdRef.detectChanges();
   }
 
   function renderStatic() {
-    scheduleCoalesced(render, schedule, scope);
+    coalesceAndSchedule(render, priority, scope);
   }
 
   return {
@@ -270,8 +268,7 @@ export function createɵLocalStrategy<T>(
 export function createɵDetachStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const schedule = work =>
-    from(getUnpatchedResolvedPromise()).subscribe(() => work());
+  const priority = SchedulingPriority.animationFrame;
   const scope = getContext(config.cdRef as any);
 
   function render() {
@@ -281,7 +278,7 @@ export function createɵDetachStrategy<T>(
   }
 
   function renderStatic() {
-    scheduleCoalesced(render, schedule, scope);
+    coalesceAndSchedule(render, priority, scope);
   }
 
   return {
@@ -314,8 +311,7 @@ export function createɵDetachStrategy<T>(
 export function createɵPostTaskStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const schedule = work =>
-    from(getUnpatchedResolvedPromise()).subscribe(() => work());
+  const priority = SchedulingPriority.animationFrame;
   const scope = getContext(config.cdRef as any);
 
   function render() {
@@ -323,7 +319,7 @@ export function createɵPostTaskStrategy<T>(
   }
 
   function renderStatic() {
-    scheduleCoalesced(render, schedule, scope);
+    coalesceAndSchedule(render, priority, scope);
   }
 
   return {
@@ -356,8 +352,7 @@ export function createɵPostTaskStrategy<T>(
 export function createɵIdleCallbackStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const schedule = work =>
-    from(getUnpatchedResolvedPromise()).subscribe(() => work());
+  const priority = SchedulingPriority.animationFrame;
   const scope = getContext(config.cdRef as any);
 
   const renderMethod = config.cdRef.detectChanges;
@@ -367,7 +362,7 @@ export function createɵIdleCallbackStrategy<T>(
   }
 
   function renderStatic() {
-    scheduleCoalesced(renderMethod, schedule, scope);
+    coalesceAndSchedule(renderMethod, priority, scope);
   }
 
   return {

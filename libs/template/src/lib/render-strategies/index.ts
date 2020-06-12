@@ -1,4 +1,4 @@
-export * from './operator/renderChange';
-export * from './operator/coalesceWith';
-export * from './scheduling';
+export * from './rxjs/renderChange';
+export * from './rxjs/coalesceWith';
+export * from './static';
 export * from './strategies';
