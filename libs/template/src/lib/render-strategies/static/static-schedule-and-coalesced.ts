@@ -11,6 +11,5 @@ export function coalesceAndSchedule(
 ): void {
   const durationSelector = from(getUnpatchedResolvedPromise());
   const scheduledWork = () => schedule(work, priority);
-  console.log(scope);
   staticCoalesce(scheduledWork, durationSelector, scope);
 }

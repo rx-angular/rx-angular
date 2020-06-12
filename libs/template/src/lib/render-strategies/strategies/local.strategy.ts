@@ -3,7 +3,7 @@ import { SchedulingPriority } from '../core/interfaces';
 import { getUnpatchedResolvedPromise } from '../../core/utils/unpatched-promise';
 import { from } from 'rxjs';
 import { getScheduler } from '../core/priorities-map';
-import { observeOn } from 'rxjs/operators';
+import { observeOn, tap } from 'rxjs/operators';
 import {
   RenderStrategy,
   RenderStrategyFactoryConfig
@@ -34,7 +34,6 @@ import { coalesceWith } from '../rxjs/operators/coalesceWith';
 export function getLocalStrategies<T>(
   config: RenderStrategyFactoryConfig
 ): { [strategy: string]: RenderStrategy<T> } {
-  console.log('config', config);
   return {
     local: createLocalStrategy<T>(config),
     ɵlocal: createɵLocalStrategy<T>(config),
@@ -105,19 +104,16 @@ export function createLocalStrategy<T>(
 export function createɵLocalStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  console.log('createɵLocalStrategy config', config);
   const durationSelector = from(getUnpatchedResolvedPromise());
   const scope = (config.cdRef as any).context;
-  console.log('createɵLocalStrategy', (config.cdRef as any).context);
   const priority = SchedulingPriority.animationFrame;
   const scheduler = getScheduler(priority);
 
   const renderMethod = () => {
-    console.log('call config.cdRef.detectChanges()');
     config.cdRef.detectChanges();
   };
   const behavior = o =>
-    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+    o.pipe(coalesceWith(durationSelector, scope), tap(console.log));
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {

@@ -30,7 +30,7 @@ export interface RenderAware<U> extends Subscribable<U> {
  * RenderAware
  *
  * @description
- * This abstract class holds all the shared logic for the push pipe and the let directive
+ * This function returns an object that holds all the shared logic for the push pipe and the let directive
  * responsible for change detection
  * If you extend this class you need to implement how the update of the rendered value happens.
  * Also custom behaviour is something you need to implement in the extending class
@@ -78,8 +78,8 @@ export function createRenderAware<U>(cfg: {
     map(o$ =>
       o$.pipe(
         distinctUntilChanged(),
-        tap(cfg.updateObserver),
-        strategy.behavior
+        tap(cfg.updateObserver)
+        // strategy.behavior,
       )
     ),
     switchMap(observable$ => observable$),

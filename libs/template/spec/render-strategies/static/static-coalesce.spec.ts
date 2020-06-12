@@ -6,7 +6,7 @@ describe('staticCoalesce', () => {
 
   it('should coalesce to a scope', (done) => {
     let test = 0;
-    const durationSelector = () => from(Promise.resolve());
+    const durationSelector = from(Promise.resolve());
     const doWork = () => test++;
     const scope = {};
     staticCoalesce(doWork, durationSelector, scope);
@@ -24,7 +24,7 @@ describe('staticCoalesce', () => {
 
   it('should work with multiple scopes', (done) => {
     let test = 0;
-    const durationSelector = () => from(Promise.resolve());
+    const durationSelector = from(Promise.resolve());
     const doWork = () => test++;
     const scope = {};
     const scope2 = {};

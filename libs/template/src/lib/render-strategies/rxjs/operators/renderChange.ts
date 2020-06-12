@@ -8,7 +8,6 @@ export function renderChange<T>(
   return (s: Observable<T>): Observable<T> => {
     return s.pipe(
       strategy.behavior,
-      tap(v => console.log(strategy.renderMethod, v)),
       tap(v => strategy.renderMethod())
     );
   };
