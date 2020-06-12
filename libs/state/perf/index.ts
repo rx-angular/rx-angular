@@ -1,4 +1,4 @@
-import { runBenchmarkSuit } from './utils';
+import { runBenchmarkSuite } from './utils';
 import { oneOfSuite } from './core/transformation-helpers/one-of.suite';
 
-runBenchmarkSuit(oneOfSuite);
+runBenchmarkSuite(oneOfSuite);
