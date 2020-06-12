@@ -14,7 +14,6 @@ import {
   distinctUntilChanged,
   filter,
   map,
-  observeOn,
   switchMap,
   tap
 } from 'rxjs/operators';
@@ -103,5 +102,5 @@ export function createRenderAware<U>(cfg: {
         .add(updateStrategyEffect$.subscribe())
         .add(renderingEffect$.subscribe());
     }
-  } as RenderAware<U | undefined | null>;
+  };
 }
