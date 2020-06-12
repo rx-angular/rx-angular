@@ -29,8 +29,6 @@ import { mergeMap, tap } from 'rxjs/operators';
     <br />
 
     push: {{ value$ | push }}<br />
-    push: {{ value$ | push }}<br />
-    push: {{ value$ | push }}<br />
 
     ---- <br />
     <ng-container *rxLet="value$; let value"> rxLet: {{ value }} </ng-container
@@ -63,28 +61,36 @@ export class DemoBasicsComponent implements OnInit {
 
   rxRenderChange() {
     toNever(from(['1', '2']))
-      .pipe(renderChange(this.strategies.ɵlocal))
+      .pipe(
+        tap(v => (this.value = v)),
+        renderChange(this.strategies.ɵlocal)
+      )
       .subscribe(v => {
         console.log('s', v);
-        this.value = v;
       });
     toNever(from(['a', 'b']))
-      .pipe(renderChange(this.strategies.ɵlocal))
+      .pipe(
+        tap(v => (this.value = v)),
+        renderChange(this.strategies.ɵlocal)
+      )
       .subscribe(v => {
         console.log('s', v);
-        this.value = v;
       });
     toNever(from(['§', '$']))
-      .pipe(renderChange(this.strategies.ɵlocal))
+      .pipe(
+        tap(v => (this.value = v)),
+        renderChange(this.strategies.ɵlocal)
+      )
       .subscribe(v => {
         console.log('s', v);
-        this.value = v;
       });
     toNever(from(['ü', Math.random() + '']))
-      .pipe(renderChange(this.strategies.ɵlocal))
+      .pipe(
+        tap(v => (this.value = v)),
+        renderChange(this.strategies.ɵlocal)
+      )
       .subscribe(v => {
         console.log('s', v);
-        this.value = v;
       });
   }
 
