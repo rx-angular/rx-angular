@@ -5,6 +5,6 @@ export * from './array/toDictionary';
 export * from './object/deletProp';
 export * from './object/merge';
 export * from './object/setProp';
-export * from './object/toArray';
+export * from './object/dictionaryToArray';
 export * from './object/toggle';
 export * from './interfaces/only-keys-of-specific-type';
