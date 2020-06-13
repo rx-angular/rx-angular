@@ -3,7 +3,8 @@ import {
   isKeyOf,
   isOperateFnArrayGuard,
   isPromiseGuard,
-  isStringArrayGuard
+  isStringArrayGuard,
+  isObjectGuard
 } from '../../../src/lib/core/utils';
 import { from, of } from 'rxjs';
 
@@ -95,5 +96,20 @@ describe('isKeyOf', () => {
     expect(isKeyOf(true)).toBeFalsy();
     expect(isKeyOf([])).toBeFalsy();
     expect(isKeyOf({})).toBeFalsy();
+  });
+});
+
+describe('isObjectGuard', () => {
+  it('should return true for object', () => {
+    expect(isObjectGuard({})).toBeTruthy();
+  });
+
+  it('should return false for primitives and arrays', () => {
+    expect(isObjectGuard([])).toBeFalsy();
+    expect(isObjectGuard(true)).toBeFalsy();
+    expect(isObjectGuard('')).toBeFalsy();
+    expect(isObjectGuard(1)).toBeFalsy();
+    expect(isObjectGuard(Symbol('test'))).toBeFalsy();
+    expect(isObjectGuard((a: any) => a)).toBeFalsy();
   });
 });
