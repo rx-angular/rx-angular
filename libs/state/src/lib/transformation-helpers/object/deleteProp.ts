@@ -1,14 +1,14 @@
-import { isKeyOf } from '../../core/utils';
+import { isObjectGuard, isKeyOf } from '../../core/utils/typing';
 
 export function deleteProp<T extends object, K extends keyof T>(
   object: T,
   key: K
 ): Omit<T, K> {
-  if (isKeyOf<T>(key) && !Array.isArray(object)) {
+  if (isObjectGuard(object) && isKeyOf<T>(key)) {
     const copy = { ...object };
     delete copy[key];
     return copy;
   }
 
-  throw new Error('RxState deleteProp: provided key is not valid');
+  throw new Error(`wrong params to 'deleteProp'`);
 }
