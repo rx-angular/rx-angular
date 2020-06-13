@@ -68,7 +68,7 @@ export function createRenderAware<U>(cfg: {
   const renderingEffect$ = valuesFromTemplate$.pipe(
     // handle null | undefined assignment and new Observable reset
     tap(observable$ => {
-      if (!firstTemplateObservableChange) {
+      if (!firstTemplateObservableChange || observable$ === null) {
         if (observable$ === null) {
           cfg.updateObserver.next(observable$ as any);
         } else {
