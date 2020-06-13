@@ -17,35 +17,38 @@ import { mergeMap, tap } from 'rxjs/operators';
     ---
     <br />
 
-    <button (click)="scheduleCD()">renderChange</button>
+    <button [unpatch] (click)="scheduleCD()">renderChange</button>
     {{ value }}
     <br />
 
-    <button (click)="rxRenderChange()">rxRenderChange</button>
+    <button [unpatch] (click)="rxRenderChange()">rxRenderChange</button>
 
     <br />
 
-    <button (click)="rxUpdateValue()">rxUpdateValue</button>
+    <button [unpatch] (click)="rxUpdateValue()">rxUpdateValue</button>
     <br />
-
-    push: {{ value$ | push }}<br />
-    push: {{ value$ | push }}<br />
-    push: {{ value$ | push }}<br />
-    push: {{ value$ | push }}<br />
-    push: {{ value$ | push }}<br />
+    <!--
+    push: {{ value$ | push: strategy }}<br />
+    push: {{ value$ | push: strategy }}<br />
+    push: {{ value$ | push: strategy }}<br />
+    push: {{ value$ | push: strategy }}<br />-->
+    push: {{ value$ | push: strategy }}<br />
 
     ---- <br />
-    <ng-container *rxLet="value$; let value"> rxLet: {{ value }} </ng-container
-    ><br />
-    <ng-container *rxLet="value$; let value"> rxLet: {{ value }} </ng-container
-    ><br />
-    <ng-container *rxLet="value$; let value"> rxLet: {{ value }} </ng-container
-    ><br />
+    <!--
+    <ng-container *rxLet="value$; let value; strategy:strategy"> rxLet: {{ value }} </ng-container> <br />
+    <ng-container *rxLet="value$; let value; strategy:strategy"> rxLet: {{ value }} </ng-container> <br />
+    <ng-container *rxLet="value$; let value; strategy:strategy"> rxLet: {{ value }} </ng-container>
+     -->
+    <br />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DemoBasicsComponent implements OnInit {
   numRenders = 0;
+
+  strategy = 'ɵlocal';
+
   strategies;
   nextValues = new Subject<any>();
   value$: Observable<string> = defer(() =>
@@ -66,7 +69,7 @@ export class DemoBasicsComponent implements OnInit {
     toNever(from(['1', '2']))
       .pipe(
         tap(v => (this.value = v)),
-        renderChange(this.strategies.ɵlocal)
+        renderChange(this.strategies[this.strategy])
       )
       .subscribe(v => {
         console.log('s', v);
@@ -74,7 +77,7 @@ export class DemoBasicsComponent implements OnInit {
     toNever(from(['a', 'b']))
       .pipe(
         tap(v => (this.value = v)),
-        renderChange(this.strategies.ɵlocal)
+        renderChange(this.strategies[this.strategy])
       )
       .subscribe(v => {
         console.log('s', v);
@@ -82,7 +85,7 @@ export class DemoBasicsComponent implements OnInit {
     toNever(from(['§', '$']))
       .pipe(
         tap(v => (this.value = v)),
-        renderChange(this.strategies.ɵlocal)
+        renderChange(this.strategies[this.strategy])
       )
       .subscribe(v => {
         console.log('s', v);
@@ -90,7 +93,7 @@ export class DemoBasicsComponent implements OnInit {
     toNever(from(['ü', Math.random() + '']))
       .pipe(
         tap(v => (this.value = v)),
-        renderChange(this.strategies.ɵlocal)
+        renderChange(this.strategies[this.strategy])
       )
       .subscribe(v => {
         console.log('s', v);
@@ -99,10 +102,10 @@ export class DemoBasicsComponent implements OnInit {
 
   scheduleCD() {
     this.value = Math.random() + '';
-    this.strategies.ɵlocal.scheduleCD();
-    this.strategies.ɵlocal.scheduleCD();
-    this.strategies.ɵlocal.scheduleCD();
-    this.strategies.ɵlocal.scheduleCD();
+    this.strategies[this.strategy].scheduleCD();
+    this.strategies[this.strategy].scheduleCD();
+    this.strategies[this.strategy].scheduleCD();
+    this.strategies[this.strategy].scheduleCD();
   }
 
   rxUpdateValue() {
