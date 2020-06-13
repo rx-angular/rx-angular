@@ -1,13 +1,7 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewContainerRef
-} from '@angular/core';
-import { EMPTY, interval, NEVER, Observable, of, throwError } from 'rxjs';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Observable, of, throwError } from 'rxjs';
+import { async, TestBed } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let';
-import { take } from 'rxjs/operators';
 import { MockChangeDetectorRef } from '../fixtures';
 
 @Component({

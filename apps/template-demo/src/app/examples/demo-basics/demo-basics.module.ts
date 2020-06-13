@@ -15,6 +15,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DemoBasicsComponent } from './solution/demo-basics.component';
 import { DemoBasicsContainerComponent } from './solution/demo-basics.container.component';
 import { TemplateModule } from '@rx-angular/template';
+import { RenderPrioDirective } from './solution/render-prio.directive';
 
 export const ROUTES = [
   {
@@ -27,7 +28,11 @@ export const ROUTES = [
     component: DemoBasicsContainerComponent
   }
 ];
-const DECLARATIONS = [DemoBasicsComponent, DemoBasicsContainerComponent];
+const DECLARATIONS = [
+  DemoBasicsComponent,
+  DemoBasicsContainerComponent,
+  RenderPrioDirective
+];
 export const materialModules = [
   MatIconModule,
   MatListModule,

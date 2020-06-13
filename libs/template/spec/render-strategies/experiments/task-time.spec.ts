@@ -1,11 +1,8 @@
-import { schedule } from '@rx-angular/template';
-import { SchedulingPriority } from '../../../src/lib/render-strategies/core/interfaces';
-
 /** @test {coalesceWith} */
 describe('execution order', () => {
 
   it('task, micro, macro', (done) => {
-    const executionOrder = [1,2,3];
+    const executionOrder = [1, 2, 3];
     setTimeout(() => {
       expect(executionOrder.shift()).toBe(3);
       done();
@@ -36,7 +33,7 @@ describe('execution order', () => {
   });
 
   it('micro nested', (done) => {
-    const executionOrder = [1,2,3,4,5];
+    const executionOrder = [1, 2, 3, 4, 5];
     Promise.resolve().then(() => {
       expect(executionOrder.shift()).toBe(2);
       Promise.resolve().then(() => {
@@ -54,7 +51,7 @@ describe('execution order', () => {
   });
 
   it('macro nested', (done) => {
-    const executionOrder = [1,2,3,4,5];
+    const executionOrder = [1, 2, 3, 4, 5];
     setTimeout(() => {
       expect(executionOrder.shift()).toBe(3);
       setTimeout(() => {

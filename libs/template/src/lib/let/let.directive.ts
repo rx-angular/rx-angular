@@ -119,8 +119,10 @@ export class LetDirective<U> implements OnDestroy {
     private readonly templateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
+    this.strategies = getStrategies<U>({ cdRef });
+
     this.renderAware = createRenderAware<U>({
-      strategies: getStrategies<U>({ cdRef }),
+      strategies: this.strategies,
       resetObserver: this.resetObserver,
       updateObserver: this.updateObserver,
       defaultStrategy: DEFAULT_STRATEGY_NAME
@@ -129,6 +131,7 @@ export class LetDirective<U> implements OnDestroy {
   }
 
   static ngTemplateGuard_rxLet: 'binding';
+  strategies;
   private embeddedView: any;
   private readonly ViewContext: LetViewContext<U | undefined | null> = {
     $implicit: undefined,

@@ -1,6 +1,6 @@
 import { TestScheduler } from 'rxjs/internal/testing/TestScheduler';
-import { finalize, mergeMapTo, share, tap } from 'rxjs/operators';
-import { concat, defer, from, of, Subscription, timer } from 'rxjs';
+import { mergeMapTo, share } from 'rxjs/operators';
+import { concat, defer, from, of, timer } from 'rxjs';
 
 import { jestMatcher } from '@test-helpers';
 import { coalesceWith } from '../../../src/lib/render-strategies/rxjs/operators/coalesceWith';
@@ -17,10 +17,10 @@ describe('coalesce operator additional logic', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: false };
       const s1 = cold('---a---------|', values);
-      const s1Subs =  '^------------!';
+      const s1Subs = '^------------!';
       const n1 = cold('   ------a|  ');
       const n1Subs = ['---^------!'];
-      const exp =     '---------a---|';
+      const exp = '---------a---|';
       const result = s1.pipe(coalesceWith(n1));
       expectObservable(result).toBe(exp, values);
       expectSubscriptions(s1.subscriptions).toBe(s1Subs);
@@ -164,12 +164,12 @@ describe('coalesce operator additional logic', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
         const s1 = cold('--(abcdef)--|');
         const s1Subs = ['^-----------!',
-                        '^-----------!'];
-        const n1 =   cold('(|)   ');
+          '^-----------!'];
+        const n1 = cold('(|)   ');
         const n1Subs = ['--(^!)   ',
-                        '--(^!)   '];
-        const exp1 =    '--(f)-------|';
-        const exp2 =    '--(f)-------|';
+          '--(^!)   '];
+        const exp1 = '--(f)-------|';
+        const exp2 = '--(f)-------|';
 
         const result1 = s1.pipe(coalesceWith(n1));
         const result2 = s1.pipe(coalesceWith(n1));
@@ -206,8 +206,8 @@ describe('coalesce operator additional logic', () => {
         const s1 = cold('---(abcdef)---|');
         const s1Subs = ['^-------------!', '^-------------!'];
         const d1 = cold('   (|)         ');
-        const exp1 =    '--------------|';
-        const exp2 =    '---f----------|';
+        const exp1 = '--------------|';
+        const exp2 = '---f----------|';
         const result1 = s1.pipe(coalesceWith(d1, scope));
         const result2 = s1.pipe(coalesceWith(d1, scope));
         expectObservable(result1).toBe(exp1);
@@ -297,8 +297,8 @@ describe('coalesce operator additional logic', () => {
           const s1Subs = ['^-----------!', '^-----------!'];
           const d1 = cold('   ---|      ');
           const d2 = cold('   ------|  ');
-          const exp1 =    '------------|';
-          const exp2 =    '---------f--|';
+          const exp1 = '------------|';
+          const exp2 = '---------f--|';
 
           const result1 = s1.pipe(coalesceWith(d1, scope));
           const result2 = s1.pipe(coalesceWith(d2, scope));
