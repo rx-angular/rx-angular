@@ -10,7 +10,9 @@ import {
   ObservableInput,
   Unsubscribable
 } from 'rxjs';
-import { RenderAware, createRenderAware, getStrategies } from '../core';
+import { RenderAware, createRenderAware } from '../core';
+import { getStrategies } from '../render-strategies';
+import { DEFAULT_STRATEGY_NAME } from '../render-strategies/strategies/strategies-map';
 
 /**
  * @Pipe PushPipe
@@ -74,7 +76,8 @@ export class PushPipe<S> implements PipeTransform, OnDestroy {
     this.RenderAware = createRenderAware<S>({
       strategies: getStrategies<S>({ cdRef }),
       updateObserver: this.updateObserver,
-      resetObserver: this.resetObserver
+      resetObserver: this.resetObserver,
+      defaultStrategy: DEFAULT_STRATEGY_NAME
     });
     this.subscription = this.RenderAware.subscribe();
   }

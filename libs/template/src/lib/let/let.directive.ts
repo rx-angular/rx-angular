@@ -14,7 +14,11 @@ import {
   Observer,
   Unsubscribable
 } from 'rxjs';
-import { RenderAware, createRenderAware, getStrategies } from '../core';
+import { createRenderAware, RenderAware } from '../core';
+import {
+  DEFAULT_STRATEGY_NAME,
+  getStrategies
+} from '../render-strategies/strategies/strategies-map';
 
 export interface LetViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
@@ -118,7 +122,8 @@ export class LetDirective<U> implements OnDestroy {
     this.renderAware = createRenderAware<U>({
       strategies: getStrategies<U>({ cdRef }),
       resetObserver: this.resetObserver,
-      updateObserver: this.updateObserver
+      updateObserver: this.updateObserver,
+      defaultStrategy: DEFAULT_STRATEGY_NAME
     });
     this.subscription = this.renderAware.subscribe();
   }

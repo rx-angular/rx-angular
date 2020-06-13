@@ -1,11 +1,10 @@
+import { from } from 'rxjs';
 import {
-  createNativeStrategy,
-  createNoopStrategy,
-  DEFAULT_STRATEGY_NAME,
-  getGlobalThis,
-  getStrategies,
-  tickFromUnPatchedPromise
+  getGlobalThis, getUnpatchedResolvedPromise
 } from '../../../src/lib/core';
+import {
+  getStrategies
+} from '../../../src/lib/render-strategies';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
 
@@ -13,6 +12,9 @@ import {
   getMockNativeStrategyConfig,
   getMockNoopStrategyConfig
 } from '../../fixtures';
+import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
+import { createNativeStrategy } from '../../../src/lib/render-strategies/strategies/native.strategy';
+import { createNoopStrategy } from '../../../src/lib/render-strategies/strategies/noop.strategy';
 
 const t = { foo: true, bar: 'test', baz: [] };
 
@@ -30,6 +32,10 @@ const original__zone_symbol__Promise =
   getGlobalThis().__zone_symbol__Promise || Promise;
 function restoreGlobalThis() {
   getGlobalThis().__zone_symbol__Promise = original__zone_symbol__Promise;
+}
+
+function tickFromUnPatchedPromise() {
+  return from(getUnpatchedResolvedPromise());
 }
 
 describe('getZoneUnPatchedDurationSelector', () => {
@@ -88,7 +94,7 @@ describe('strategies', () => {
     it('should call the renderMethod `ChangeDetectorRef#markForCheck`', () => {
       const cfg = getMockNativeStrategyConfig();
       const strategy = createNativeStrategy(cfg);
-      strategy.render();
+      strategy.renderMethod();
       expect(cfg.cdRef.markForCheck).toHaveBeenCalledTimes(1);
     });
   });

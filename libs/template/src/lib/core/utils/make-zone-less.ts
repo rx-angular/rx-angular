@@ -1,4 +1,5 @@
-import { apiZonePatched, getGlobalThis } from '../utils';
+import { getGlobalThis } from './get-global-this';
+import { apiZonePatched } from './zone-checks';
 
 /**
  * getZoneUnPatchedApi

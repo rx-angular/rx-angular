@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { defer, fromEvent, range } from 'rxjs';
-import { getStrategies, renderChange } from '@rx-angular/template';
+import { getStrategies, render } from '@rx-angular/template';
 import { switchMap, tap } from 'rxjs/operators';
 import { BaseComponent } from '../../base.component.ts/base.component';
 
@@ -19,7 +19,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
 
     value$: {{ value$ | async }}
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class CdOperatorsParent01Component extends BaseComponent {
   @ViewChild('button') button: ElementRef<HTMLButtonElement>;
@@ -30,8 +30,8 @@ export class CdOperatorsParent01Component extends BaseComponent {
 
   value$ = this.btnClick$.pipe(
     switchMap(() => range(1, 5)),
-    tap(v => console.log('before:', v)),
-    renderChange(this.strategies.optimistic2),
-    tap(v => console.log('after:', v))
+    tap((v) => console.log('before:', v)),
+    render(this.strategies.optimistic2),
+    tap((v) => console.log('after:', v))
   );
 }

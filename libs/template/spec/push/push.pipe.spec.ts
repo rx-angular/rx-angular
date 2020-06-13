@@ -16,6 +16,18 @@ class PushPipeTestComponent {
   value$: Observable<number> = of(42);
 }
 
+
+@Component({
+  template: `
+    <p id="p1">{{ (value$ | push | json) || 'undefined' }}</p>
+    <p id="p2">{{ (value$ | push | json) || 'undefined' }}</p>
+    <p id="p3">{{ (value$ | push | json) || 'undefined' }}</p>
+  `
+})
+class PushPipeMultipleTestComponent {
+  value$: Observable<number> = of(42);
+}
+
 let fixturePushPipeTestComponent: any;
 let pushPipeTestComponent: {
   value$: Observable<any> | undefined | null;

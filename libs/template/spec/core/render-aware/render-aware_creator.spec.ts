@@ -1,18 +1,7 @@
 import { OnDestroy } from '@angular/core';
-import {
-  RenderAware,
-  createRenderAware,
-  DEFAULT_STRATEGY_NAME
-} from '../../../src/lib/core';
-import {
-  concat,
-  EMPTY,
-  NEVER,
-  NextObserver,
-  Observer,
-  of,
-  Unsubscribable
-} from 'rxjs';
+import { createRenderAware, RenderAware } from '../../../src/lib/core';
+import { concat, EMPTY, NEVER, NextObserver, Observer, of, Unsubscribable } from 'rxjs';
+import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
 
 class CdAwareImplementation<U> implements OnDestroy {
   public renderedValue: any = undefined;
@@ -24,7 +13,9 @@ class CdAwareImplementation<U> implements OnDestroy {
     next: _ => (this.renderedValue = undefined)
   };
   updateObserver: Observer<U | undefined | null> = {
-    next: (n: U | undefined | null) => (this.renderedValue = n),
+    next: (n: U | undefined | null) => {
+      this.renderedValue = n;
+    },
     error: e => (this.error = e),
     complete: () => (this.completed = true)
   };
@@ -33,13 +24,15 @@ class CdAwareImplementation<U> implements OnDestroy {
     this.cdAware = createRenderAware<U>({
       strategies: {
         [DEFAULT_STRATEGY_NAME]: {
-          render: () => {},
-          behaviour: () => o => o,
-          name: DEFAULT_STRATEGY_NAME
+          name: DEFAULT_STRATEGY_NAME,
+          renderMethod: () => {},
+          scheduleCD: () => {},
+          behavior: (o) => o
         }
       },
       updateObserver: this.updateObserver,
-      resetObserver: this.resetObserver
+      resetObserver: this.resetObserver,
+      defaultStrategy: DEFAULT_STRATEGY_NAME
     });
     this.subscription = this.cdAware.subscribe();
   }
