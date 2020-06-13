@@ -14,6 +14,7 @@ import {
   distinctUntilChanged,
   filter,
   map,
+  shareReplay,
   switchMap,
   tap
 } from 'rxjs/operators';
@@ -55,31 +56,39 @@ export function createRenderAware<U>(cfg: {
         : stringOrObservable
     ),
     nameToStrategy(cfg.strategies),
-    tap(s => (strategy = s))
+    tap(s => (strategy = s)),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   const observablesFromTemplate$ = new Subject<Observable<U>>();
   const valuesFromTemplate$ = observablesFromTemplate$.pipe(
     distinctUntilChanged()
   );
+  let firstTemplateObservableChange = true;
   const renderingEffect$ = valuesFromTemplate$.pipe(
     // handle null | undefined assignment and new Observable reset
     tap(observable$ => {
-      if (observable$ === null) {
-        cfg.updateObserver.next(observable$ as any);
-      } else {
-        cfg.resetObserver.next();
+      if (!firstTemplateObservableChange) {
+        if (observable$ === null) {
+          cfg.updateObserver.next(observable$ as any);
+        } else {
+          cfg.resetObserver.next();
+        }
+        strategy.scheduleCD();
       }
-      // @TODO schedule it
-      strategy.renderMethod();
+      firstTemplateObservableChange = false;
     }),
     // forward only observable values
     filter(o$ => isObservable(o$)),
     map(o$ =>
-      o$.pipe(
-        distinctUntilChanged(),
-        tap(cfg.updateObserver)
-        // strategy.behavior,
+      updateStrategyEffect$.pipe(
+        switchMap(() =>
+          o$.pipe(
+            distinctUntilChanged(),
+            tap(cfg.updateObserver),
+            strategy.behavior
+          )
+        )
       )
     ),
     switchMap(observable$ => observable$),
