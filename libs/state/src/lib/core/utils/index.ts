@@ -4,5 +4,6 @@ export {
   isOperateFnArrayGuard,
   isPromiseGuard,
   isStringArrayGuard,
-  isKeyOf
+  isKeyOf,
+  isObjectGuard
 } from './typing';
