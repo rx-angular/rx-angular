@@ -48,7 +48,7 @@ import { mergeMap, tap } from 'rxjs/operators';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoBasicsComponent implements OnInit {
+export class CoalescingComponent implements OnInit {
   numRenders = 0;
 
   strategy = 'ɵlocal';

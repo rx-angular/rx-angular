@@ -12,8 +12,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { DemoBasicsComponent } from './solution/demo-basics.component';
-import { DemoBasicsContainerComponent } from './solution/demo-basics.container.component';
+import { Let1ContainerComponent } from './solution/let1.container.component';
 import { TemplateModule } from '@rx-angular/template';
 import { RenderPrioDirective } from './solution/render-prio.directive';
 
@@ -21,18 +20,14 @@ export const ROUTES = [
   {
     path: '',
     pathMatch: 'full',
-    component: DemoBasicsContainerComponent
+    component: Let1ContainerComponent
   },
   {
     path: 'solution',
-    component: DemoBasicsContainerComponent
+    component: Let1ContainerComponent
   }
 ];
-const DECLARATIONS = [
-  DemoBasicsComponent,
-  DemoBasicsContainerComponent,
-  RenderPrioDirective
-];
+const DECLARATIONS = [Let1ContainerComponent, RenderPrioDirective];
 export const materialModules = [
   MatIconModule,
   MatListModule,
@@ -56,4 +51,4 @@ export const materialModules = [
   ],
   exports: [DECLARATIONS]
 })
-export class DemoBasicsModule {}
+export class PrioritizeInViewportModule {}

@@ -74,7 +74,12 @@ export class RenderPrioDirective {
       .pipe(map(visibility => (visibility === 'visible' ? 'ɵlocal' : 'noop')))
       .subscribe(strategyName => {
         letDirective.strategy = strategyName;
+        // render actual state on viewport enter
         letDirective.strategies[strategyName].scheduleCD();
+
+        //
+
+        this.el.nativeElement.classList.add(strategyName);
       });
   }
 }

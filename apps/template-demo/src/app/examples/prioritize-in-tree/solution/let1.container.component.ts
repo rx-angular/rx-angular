@@ -3,12 +3,10 @@ import { BehaviorSubject, EMPTY, interval, merge, Subject } from 'rxjs';
 import { map, scan, switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'demo-basics4-container',
+  selector: 'let1-container',
   template: `
-    <h1>Solution</h1>
+    <h1>Stop rendering if directive is out of the viewport</h1>
     rerenders: {{ rerenders() }}<br />
-    <!-- <demo-basics></demo-basics> -->
-
     <button [unpatch] (click)="incrementTrigger.next()">
       count up
     </button>
@@ -27,16 +25,17 @@ import { map, scan, switchMap } from 'rxjs/operators';
     `
       .view-port {
         height: 300px;
-        overflow: scroll;
+        overflow-y: scroll;
         border: 1px solid red;
       }
       .target {
         margin: 500px 0 500px 0;
+        border: 1px solid blue;
       }
     `
   ]
 })
-export class DemoBasicsContainerComponent {
+export class Let1ContainerComponent {
   incrementTrigger = new Subject<Event>();
   toggleAutoIncrement = new BehaviorSubject<any>(false);
 
