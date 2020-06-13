@@ -1,0 +1,92 @@
+import { toDictionary } from "@rx-angular/state";
+
+
+interface Creature {
+  id: number;
+  type: string;
+  real: boolean;
+  breeds: string[];
+}
+
+
+let creatures: Creature[];
+
+const genus = Symbol('genus');
+
+const dictionaryByNumber = {
+  1: {id: 1, type: 'cat', real: true, breeds: ['Persian']},
+  2: {id: 2, type: 'dog', real: true, breeds: ['Doberman']},
+  3: {id: 3, type: 'catDog', real: false, breeds: []}
+};
+
+const dictionaryByString = {
+  cat: {id: 1, type: 'cat', real: true, breeds: ['Persian']},
+  dog: {id: 2, type: 'dog', real: true, breeds: ['Doberman']},
+  catDog: {id: 3, type: 'catDog', real: false, breeds: []}
+};
+
+const dictionaryBySymbol = {
+  felis: {id: 1, type: 'cat', real: true, breeds: ['Persian'], [genus]: 'felis'},
+  canis: {id: 2, type: 'dog', real: true, breeds: ['Doberman'], [genus]: 'canis'},
+  fake: {id: 3, type: 'catDog', real: false, breeds: [], [genus]: 'fake'}
+}
+
+beforeEach(() => {
+  creatures = [
+    {id: 1, type: 'cat', real: true, breeds: ['Persian']},
+    {id: 2, type: 'dog', real: true, breeds: ['Doberman']},
+    {id: 3, type: 'catDog', real: false, breeds: []}
+  ];
+});
+
+
+describe('toDictionary', () => {
+
+  describe('general', () => {
+    it('should be defined', () => {
+      const fn = toDictionary;
+
+      expect(fn).toBeDefined();
+    });
+  });
+
+  describe('functionality', () => {
+    it('should create dictionary by number', () => {
+      const dictionaryResult = toDictionary(creatures, 'id');
+
+      expect(dictionaryResult).toEqual(dictionaryByNumber);
+    });
+
+    it('should create dictionary by string', () => {
+      const dictionaryResult = toDictionary(creatures, 'type');
+
+      expect(dictionaryResult).toEqual(dictionaryByString);
+    });
+
+    it('should create dictionary by symbol', () => {
+      const dictionaryResult = toDictionary(Object.values(dictionaryBySymbol), genus);
+
+      expect(dictionaryResult).toEqual(dictionaryBySymbol);
+    });
+  });
+
+  describe('edge cases', () => {
+    it('should work with empty initial array', () => {
+      const dictionaryResult = toDictionary([] as any, 'fakeKey');
+
+      expect(dictionaryResult).toEqual({});
+    });
+
+    it('should throw error if key does not exist', () => {
+      expect(() => toDictionary(creatures, 'fake' as any)).toThrow(Error);
+    });
+
+    it('should throw error when key value is not string, number or symbol', () => {
+      expect(() => toDictionary(creatures, 'breeds' as any)).toThrow(Error);
+    });
+
+    it('should throw error when key is not provided', () => {
+      expect(() => toDictionary(creatures, null as any)).toThrow(Error);
+    });
+  })
+});

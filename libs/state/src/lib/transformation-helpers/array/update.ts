@@ -1,8 +1,8 @@
 import { CompareFn } from '../../rxjs/interfaces/compare-fn';
 
-export function update<T>(
+export function update<T extends object, I extends T>(
   array: NonNullable<NonNullable<T>[]>,
-  itemsOrItem: NonNullable<NonNullable<T>[]> | NonNullable<T>,
+  itemsOrItem: NonNullable<NonNullable<I>[]> | NonNullable<I>,
   compare?: CompareFn<T>
 ): T[] {
   if (array && itemsOrItem) {

@@ -1,5 +1,5 @@
 import { OnlyKeysOfSpecificType } from '../interfaces/only-keys-of-specific-type';
-import { isKeyOf } from '../../core/utils';
+import { isKeyOf } from '../../core/utils/typing';
 
 export function toDictionary<T extends object>(
   array: T[],
@@ -8,6 +8,10 @@ export function toDictionary<T extends object>(
     | OnlyKeysOfSpecificType<T, string>
     | OnlyKeysOfSpecificType<T, symbol>
 ): { [key: string]: T } {
+  if (!array.length) {
+    return {};
+  }
+
   if (isKeyOf<T>(array[0][key])) {
     return array.reduce(
       (acc, entity) => ({
@@ -18,5 +22,5 @@ export function toDictionary<T extends object>(
     );
   }
 
-  throw new Error(`${key} is not a string, number or symbol`);
+  throw new Error(`wrong params to 'toDictionary'`);
 }
