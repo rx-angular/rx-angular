@@ -1,5 +1,6 @@
 import {
   BehaviorSubject,
+  ConnectableObservable,
   EMPTY,
   isObservable,
   NextObserver,
@@ -14,13 +15,14 @@ import {
   distinctUntilChanged,
   filter,
   map,
-  shareReplay,
+  publishReplay,
+  switchAll,
   switchMap,
   tap
 } from 'rxjs/operators';
-import { nameToStrategy } from './nameToStrategy';
-import { RenderStrategy, StrategySelection } from './interfaces';
 import { DEFAULT_STRATEGY_NAME } from '../../render-strategies/strategies/strategies-map';
+import { RenderStrategy, StrategySelection } from './interfaces';
+import { nameToStrategy } from './nameToStrategy';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
@@ -57,7 +59,7 @@ export function createRenderAware<U>(cfg: {
     ),
     nameToStrategy(cfg.strategies),
     tap(s => (strategy = s)),
-    shareReplay({ bufferSize: 1, refCount: true })
+    publishReplay(1)
   );
 
   const observablesFromTemplate$ = new Subject<Observable<U>>();
@@ -91,7 +93,7 @@ export function createRenderAware<U>(cfg: {
         )
       )
     ),
-    switchMap(observable$ => observable$),
+    switchAll(),
     tap(() => strategy.renderMethod()),
     catchError(e => {
       console.error(e);
@@ -108,7 +110,11 @@ export function createRenderAware<U>(cfg: {
     },
     subscribe(): Subscription {
       return new Subscription()
-        .add(updateStrategyEffect$.subscribe())
+        .add(
+          (updateStrategyEffect$ as ConnectableObservable<
+            RenderStrategy<U>
+          >).connect()
+        )
         .add(renderingEffect$.subscribe());
     }
   };
