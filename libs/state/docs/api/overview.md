@@ -11,7 +11,25 @@
 - [distinctUntilSomeChanged](./operators/distinct-until-some-changed.md)
 - [selectSlice](./operators/select-slice.md)
 
+## Transformation helpers
+
+### Array
+
+- [insert](./transformation-helpers/array/insert.md)
+- [remove](./transformation-helpers/array/remove.md)
+- [update](./transformation-helpers/array/udpdate.md)
+- [toDictionary](./transformation-helpers/array/to-dictionary.md)
+
+### Object
+
+- [setProp](./transformation-helpers/object/set-prop.md)
+- [deleteProp](./transformation-helpers/object/delete-prop.md)
+- [toggle](./transformation-helpers/object/toggle.md)
+- [mergeObjects](./transformation-helpers/object/merge-objects.md)
+- [dictionaryToArray](./transformation-helpers/object/dictionary-to-array.md)
+
 ## Interfaces
 
 - [KeyCompareMap](./operators/interfaces.md)
 - [CompareFn](./operators/interfaces.md)
+- [OnlyKeysOfSpecificType](./transformation-helpers/interfaces/only-keys-of-specific-type.md)
