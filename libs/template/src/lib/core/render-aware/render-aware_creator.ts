@@ -1,5 +1,6 @@
 import {
   BehaviorSubject,
+  ConnectableObservable,
   EMPTY,
   isObservable,
   NextObserver,
@@ -14,12 +15,16 @@ import {
   distinctUntilChanged,
   filter,
   map,
+  publish,
+  publishReplay,
+  startWith,
+  switchAll,
   switchMap,
   tap
 } from 'rxjs/operators';
-import { nameToStrategy } from './nameToStrategy';
-import { RenderStrategy, StrategySelection } from './interfaces';
 import { DEFAULT_STRATEGY_NAME } from '../../render-strategies/strategies/strategies-map';
+import { RenderStrategy, StrategySelection } from './interfaces';
+import { nameToStrategy } from './nameToStrategy';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
@@ -42,12 +47,11 @@ export function createRenderAware<U>(cfg: {
   defaultStrategy: string;
 }): RenderAware<U | undefined | null> {
   let strategy: RenderStrategy<U>;
-  const strategyName$ = new BehaviorSubject<string | Observable<string>>(
-    DEFAULT_STRATEGY_NAME
-  );
+  const strategyName$ = new Subject<string | Observable<string>>();
   const updateStrategyEffect$: Observable<RenderStrategy<
     U
   >> = strategyName$.pipe(
+    startWith(DEFAULT_STRATEGY_NAME),
     distinctUntilChanged(),
     switchMap(stringOrObservable =>
       typeof stringOrObservable === 'string'
@@ -55,34 +59,42 @@ export function createRenderAware<U>(cfg: {
         : stringOrObservable
     ),
     nameToStrategy(cfg.strategies),
-    tap(s => (strategy = s))
+    tap(s => (strategy = s)),
+    publishReplay(1)
   );
 
   const observablesFromTemplate$ = new Subject<Observable<U>>();
   const valuesFromTemplate$ = observablesFromTemplate$.pipe(
     distinctUntilChanged()
   );
+  let firstTemplateObservableChange = true;
   const renderingEffect$ = valuesFromTemplate$.pipe(
     // handle null | undefined assignment and new Observable reset
     tap(observable$ => {
-      if (observable$ === null) {
-        cfg.updateObserver.next(observable$ as any);
-      } else {
-        cfg.resetObserver.next();
+      if (!firstTemplateObservableChange || observable$ === null) {
+        if (observable$ === null) {
+          cfg.updateObserver.next(observable$ as any);
+        } else {
+          cfg.resetObserver.next();
+        }
+        strategy.scheduleCD();
       }
-      // @TODO schedule it
-      strategy.renderMethod();
+      firstTemplateObservableChange = false;
     }),
     // forward only observable values
     filter(o$ => isObservable(o$)),
     map(o$ =>
-      o$.pipe(
-        distinctUntilChanged(),
-        tap(cfg.updateObserver)
-        // strategy.behavior,
+      updateStrategyEffect$.pipe(
+        switchMap(() =>
+          o$.pipe(
+            distinctUntilChanged(),
+            tap(cfg.updateObserver),
+            strategy.behavior
+          )
+        )
       )
     ),
-    switchMap(observable$ => observable$),
+    switchAll(),
     tap(() => strategy.renderMethod()),
     catchError(e => {
       console.error(e);
@@ -99,7 +111,11 @@ export function createRenderAware<U>(cfg: {
     },
     subscribe(): Subscription {
       return new Subscription()
-        .add(updateStrategyEffect$.subscribe())
+        .add(
+          (updateStrategyEffect$ as ConnectableObservable<
+            RenderStrategy<U>
+          >).connect()
+        )
         .add(renderingEffect$.subscribe());
     }
   };

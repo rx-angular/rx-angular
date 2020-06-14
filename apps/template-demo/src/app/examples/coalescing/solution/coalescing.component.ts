@@ -27,11 +27,11 @@ import { mergeMap, tap } from 'rxjs/operators';
 
     <button [unpatch] (click)="rxUpdateValue()">rxUpdateValue</button>
     <br />
-    <!--
+    <!-- -->
     push: {{ value$ | push: strategy }}<br />
     push: {{ value$ | push: strategy }}<br />
     push: {{ value$ | push: strategy }}<br />
-    push: {{ value$ | push: strategy }}<br />-->
+    push: {{ value$ | push: strategy }}<br />
     push: {{ value$ | push: strategy }}<br />
 
     ---- <br />

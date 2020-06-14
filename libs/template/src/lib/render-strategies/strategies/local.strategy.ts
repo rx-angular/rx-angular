@@ -113,7 +113,7 @@ export function createɵLocalStrategy<T>(
     config.cdRef.detectChanges();
   };
   const behavior = o =>
-    o.pipe(coalesceWith(durationSelector, scope), tap(console.log));
+    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
