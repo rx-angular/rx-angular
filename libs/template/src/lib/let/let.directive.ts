@@ -2,7 +2,9 @@ import {
   ChangeDetectorRef,
   Directive,
   Input,
+  OnChanges,
   OnDestroy,
+  SimpleChanges,
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
@@ -101,37 +103,20 @@ export interface LetViewContext<T> {
  * @publicApi
  */
 @Directive({ selector: '[rxLet]' })
-export class LetDirective<U> implements OnDestroy {
+export class LetDirective<U> implements OnChanges, OnDestroy {
+  static ngTemplateGuard_rxLet: 'binding';
+
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
     this.renderAware.nextPotentialObservable(potentialObservable);
   }
-
   @Input('rxLetStrategy')
   set strategy(config: string | Observable<string> | undefined) {
-    if (config) {
-      this.renderAware.nextStrategy(config);
-    }
+    const strategy = config || DEFAULT_STRATEGY_NAME;
+    this.renderAware.nextStrategy(strategy);
   }
 
-  constructor(
-    cdRef: ChangeDetectorRef,
-    private readonly templateRef: TemplateRef<LetViewContext<U>>,
-    private readonly viewContainerRef: ViewContainerRef
-  ) {
-    this.strategies = getStrategies<U>({ cdRef });
-
-    this.renderAware = createRenderAware<U>({
-      strategies: this.strategies,
-      resetObserver: this.resetObserver,
-      updateObserver: this.updateObserver,
-      defaultStrategy: DEFAULT_STRATEGY_NAME
-    });
-    this.subscription = this.renderAware.subscribe();
-  }
-
-  static ngTemplateGuard_rxLet: 'binding';
-  strategies;
+  readonly strategies;
   private embeddedView: any;
   private readonly ViewContext: LetViewContext<U | undefined | null> = {
     $implicit: undefined,
@@ -178,11 +163,34 @@ export class LetDirective<U> implements OnDestroy {
     }
   };
 
+  private firstChange = true;
+
   static ngTemplateContextGuard<U>(
     dir: LetDirective<U>,
     ctx: unknown | null | undefined
   ): ctx is LetViewContext<U> {
     return true;
+  }
+
+  constructor(
+    cdRef: ChangeDetectorRef,
+    private readonly templateRef: TemplateRef<LetViewContext<U>>,
+    private readonly viewContainerRef: ViewContainerRef
+  ) {
+    this.strategies = getStrategies<U>({ cdRef });
+
+    this.renderAware = createRenderAware<U>({
+      strategies: this.strategies,
+      resetObserver: this.resetObserver,
+      updateObserver: this.updateObserver
+    });
+    this.subscription = this.renderAware.subscribe();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.firstChange && !changes.strategy) {
+      this.strategy = DEFAULT_STRATEGY_NAME;
+    }
   }
 
   createEmbeddedView() {

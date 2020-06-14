@@ -76,8 +76,7 @@ export class PushPipe<S> implements PipeTransform, OnDestroy {
     this.RenderAware = createRenderAware<S>({
       strategies: getStrategies<S>({ cdRef }),
       updateObserver: this.updateObserver,
-      resetObserver: this.resetObserver,
-      defaultStrategy: DEFAULT_STRATEGY_NAME
+      resetObserver: this.resetObserver
     });
     this.subscription = this.RenderAware.subscribe();
   }
@@ -98,9 +97,8 @@ export class PushPipe<S> implements PipeTransform, OnDestroy {
     potentialObservable: ObservableInput<T> | null | undefined,
     config: string | Observable<string> | undefined
   ): T | null | undefined {
-    if (config) {
-      this.RenderAware.nextStrategy(config);
-    }
+    const strategy = config || DEFAULT_STRATEGY_NAME;
+    this.RenderAware.nextStrategy(strategy);
     this.RenderAware.nextPotentialObservable(potentialObservable);
     return this.renderedValue as any;
   }

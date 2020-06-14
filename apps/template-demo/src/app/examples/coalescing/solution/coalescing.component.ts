@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { getStrategies, renderChange } from '@rx-angular/template';
 import { concat, defer, from, NEVER, Observable, Subject } from 'rxjs';
-import { mergeMap, tap } from 'rxjs/operators';
+import { delay, mergeMap, startWith, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'demo-basics',
@@ -27,7 +27,7 @@ import { mergeMap, tap } from 'rxjs/operators';
 
     <button [unpatch] (click)="rxUpdateValue()">rxUpdateValue</button>
     <br />
-    <!-- -->
+
     push: {{ value$ | push: strategy }}<br />
     push: {{ value$ | push: strategy }}<br />
     push: {{ value$ | push: strategy }}<br />
@@ -35,10 +35,15 @@ import { mergeMap, tap } from 'rxjs/operators';
     push: {{ value$ | push: strategy }}<br />
 
     ---- <br />
-    <!--
-    <ng-container *rxLet="value$; let value; strategy:strategy"> rxLet: {{ value }} </ng-container> <br />
-    <ng-container *rxLet="value$; let value; strategy:strategy"> rxLet: {{ value }} </ng-container> <br />
-     -->
+
+    <ng-container *rxLet="value$; let value; strategy: strategy">
+      rxLet: {{ value }}
+    </ng-container>
+    <br />
+    <ng-container *rxLet="value$; let value; strategy: strategy">
+      rxLet: {{ value }}
+    </ng-container>
+    <br />
 
     <ng-container *rxLet="value$; let value; strategy: strategy">
       rxLet: {{ value }}
@@ -55,11 +60,9 @@ export class CoalescingComponent implements OnInit {
 
   strategies;
   nextValues = new Subject<any>();
-  value$: Observable<string> = defer(() =>
-    this.nextValues.pipe(
-      mergeMap(() => ['1', '2', '3', '4', Math.random() + '']),
-      tap(v => console.log('value$', v))
-    )
+  value$: Observable<string> = this.nextValues.pipe(
+    mergeMap(() => ['1', '2', '3', '4', Math.random() + '']),
+    tap(v => console.log('value$', v))
   );
   value;
 
