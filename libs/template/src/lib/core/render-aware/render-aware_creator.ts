@@ -15,7 +15,9 @@ import {
   distinctUntilChanged,
   filter,
   map,
+  publish,
   publishReplay,
+  startWith,
   switchAll,
   switchMap,
   tap
@@ -45,12 +47,11 @@ export function createRenderAware<U>(cfg: {
   defaultStrategy: string;
 }): RenderAware<U | undefined | null> {
   let strategy: RenderStrategy<U>;
-  const strategyName$ = new BehaviorSubject<string | Observable<string>>(
-    DEFAULT_STRATEGY_NAME
-  );
+  const strategyName$ = new Subject<string | Observable<string>>();
   const updateStrategyEffect$: Observable<RenderStrategy<
     U
   >> = strategyName$.pipe(
+    startWith(DEFAULT_STRATEGY_NAME),
     distinctUntilChanged(),
     switchMap(stringOrObservable =>
       typeof stringOrObservable === 'string'
