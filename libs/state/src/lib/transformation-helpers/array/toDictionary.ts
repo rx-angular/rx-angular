@@ -34,18 +34,20 @@ export function toDictionary<T extends object>(
     | OnlyKeysOfSpecificType<T, string>
     | OnlyKeysOfSpecificType<T, symbol>
 ): { [key: string]: T } {
-  if (!array.length) {
-    return {};
-  }
+  if (array && Array.isArray(array)) {
+    if (!array.length) {
+      return {};
+    }
 
-  if (isKeyOf<T>(array[0][key])) {
-    return array.reduce(
-      (acc, entity) => ({
-        ...acc,
-        [entity[key] as any]: entity
-      }),
-      {}
-    );
+    if (isKeyOf<T>(array[0][key])) {
+      return array.reduce(
+        (acc, entity) => ({
+          ...acc,
+          [entity[key] as any]: entity
+        }),
+        {}
+      );
+    }
   }
 
   throw new Error(`wrong params to 'toDictionary'`);

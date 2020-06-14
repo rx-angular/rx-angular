@@ -88,5 +88,14 @@ describe('toDictionary', () => {
     it('should throw error when key is not provided', () => {
       expect(() => toDictionary(creatures, null as any)).toThrow(Error);
     });
+
+    it('should throw error when string is provided instead of array', () => {
+      expect(() => toDictionary('' as any, '')).toThrow(Error);
+    });
+
+    it('should throw error when array is not provided', () => {
+      const arr: any[] = null as any;
+      expect(() => toDictionary(arr, '')).toThrow(Error);
+    });
   })
 });
