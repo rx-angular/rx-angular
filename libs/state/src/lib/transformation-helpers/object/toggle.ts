@@ -15,5 +15,5 @@ export function toggle<T extends object>(
     }
   }
 
-  throw new Error('RxState toggle: value is not boolean');
+  throw new Error(`wrong params to 'toggle'`);
 }
