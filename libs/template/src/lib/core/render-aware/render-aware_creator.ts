@@ -79,10 +79,7 @@ export function createRenderAware<U>(cfg: {
     map(o$ => o$.pipe(distinctUntilChanged(), tap(cfg.updateObserver))),
     switchAll(),
     withLatestFrom(strategy$),
-    tap(([v, strat]) => {
-      console.log('strategy', strat.name);
-      strat.scheduleCD();
-    }),
+    tap(([v, strat]) => strat.scheduleCD()),
     catchError(e => {
       console.error(e);
       return EMPTY;
