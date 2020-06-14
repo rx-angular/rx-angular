@@ -84,14 +84,10 @@ export function createRenderAware<U>(cfg: {
     // forward only observable values
     filter(o$ => isObservable(o$)),
     map(o$ =>
-      updateStrategyEffect$.pipe(
-        switchMap(() =>
-          o$.pipe(
-            distinctUntilChanged(),
-            tap(cfg.updateObserver),
-            strategy.behavior
-          )
-        )
+      o$.pipe(
+        distinctUntilChanged(),
+        tap(cfg.updateObserver),
+        strategy.behavior
       )
     ),
     switchAll(),
