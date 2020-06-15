@@ -17,7 +17,7 @@ const cat = {id: 1, type: 'cat'};
 
 const catWithname = mergeObjects(cat, {name: 'Fluffy'});
 
-// anonymusCat will be:
+// catWithname will be:
 // {id: 1, type: 'cat', name: 'Fluffy'};
 ```
 
