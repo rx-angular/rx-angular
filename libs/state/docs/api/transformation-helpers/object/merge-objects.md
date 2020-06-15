@@ -8,7 +8,7 @@ _Example_
 
 ```TypeScript
 
-const cat = {id: 1, type: 'cat'};
+const cat = {id: 1, type: 'cat', name: 'Leo'};
 
 const catWithname = mergeObjects(cat, {name: 'Fluffy'});
 
