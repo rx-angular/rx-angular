@@ -7,11 +7,6 @@ Not mutating original object.
 _Example_
 
 ```TypeScript
-interface Creature {
- id: number,
- type: string,
- name: string
-}
 
 const cat = {id: 1, type: 'cat'};
 
