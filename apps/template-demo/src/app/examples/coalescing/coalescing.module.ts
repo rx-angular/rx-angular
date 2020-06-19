@@ -27,27 +27,10 @@ export const ROUTES = [
   }
 ];
 const DECLARATIONS = [CoalescingComponent];
-export const materialModules = [
-  MatIconModule,
-  MatListModule,
-  MatCardModule,
-  MatButtonModule,
-  MatExpansionModule,
-  MatBadgeModule,
-  MatProgressSpinnerModule,
-  MatProgressBarModule,
-  MatInputModule,
-  MatFormFieldModule
-];
 
 @NgModule({
   declarations: [DECLARATIONS],
-  imports: [
-    CommonModule,
-    materialModules,
-    RouterModule.forChild(ROUTES),
-    TemplateModule
-  ],
+  imports: [CommonModule, RouterModule.forChild(ROUTES), TemplateModule],
   exports: [DECLARATIONS]
 })
 export class CoalescingModule {}

@@ -126,7 +126,7 @@ export class LetDirective<U> implements OnChanges, OnDestroy {
   };
 
   protected readonly subscription: Unsubscribable;
-  private readonly renderAware: RenderAware<U | null | undefined>;
+  readonly renderAware: RenderAware<U | null | undefined>;
   private readonly resetObserver: NextObserver<void> = {
     next: () => {
       // if not initialized no need to set undefined
@@ -140,7 +140,7 @@ export class LetDirective<U> implements OnChanges, OnDestroy {
   };
   private readonly updateObserver: Observer<U | null | undefined> = {
     next: (value: U | null | undefined) => {
-      // to have init lazy
+      // to have initial rendering lazy
       if (!this.embeddedView) {
         this.createEmbeddedView();
       }
@@ -148,14 +148,14 @@ export class LetDirective<U> implements OnChanges, OnDestroy {
       this.ViewContext.rxLet = value;
     },
     error: (error: Error) => {
-      // to have init lazy
+      // to have initial rendering lazy
       if (!this.embeddedView) {
         this.createEmbeddedView();
       }
       this.ViewContext.$error = true;
     },
     complete: () => {
-      // to have init lazy
+      // to have initial rendering lazy
       if (!this.embeddedView) {
         this.createEmbeddedView();
       }

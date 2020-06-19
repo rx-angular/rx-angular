@@ -4,9 +4,10 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { getStrategies, renderChange } from '@rx-angular/template';
+
 import { concat, defer, from, NEVER, Observable, Subject } from 'rxjs';
 import { delay, mergeMap, startWith, tap } from 'rxjs/operators';
+import { getStrategies } from '@rx-angular/template';
 
 @Component({
   selector: 'demo-basics',
@@ -16,10 +17,10 @@ import { delay, mergeMap, startWith, tap } from 'rxjs/operators';
     <br />
     ---
     <br />
-
-    <button [unpatch] (click)="scheduleCD()">renderChange</button>
-    {{ value }}
-    <br />
+    <label>Render Strategy</label>
+    <select (change)="strategy = $event?.target?.value">
+      <option [value]="s" *ngFor="let s of strategies">{{ s }}</option>
+    </select>
 
     <button [unpatch] (click)="rxRenderChange()">rxRenderChange</button>
 
@@ -56,9 +57,9 @@ import { delay, mergeMap, startWith, tap } from 'rxjs/operators';
 export class CoalescingComponent implements OnInit {
   numRenders = 0;
 
-  strategy = 'ɵlocal';
+  strategy = 'local';
 
-  strategies;
+  strategies = Object.keys(getStrategies({ cdRef: {} } as any));
   nextValues = new Subject<any>();
   value$: Observable<string> = this.nextValues.pipe(
     mergeMap(() => ['1', '2', '3', '4', Math.random() + '']),
@@ -72,56 +73,13 @@ export class CoalescingComponent implements OnInit {
     return ++this.numRenders;
   }
 
-  rxRenderChange() {
-    toNever(from(['1', '2']))
-      .pipe(
-        tap(v => (this.value = v)),
-        renderChange(this.strategies[this.strategy])
-      )
-      .subscribe(v => {
-        console.log('s', v);
-      });
-    toNever(from(['a', 'b']))
-      .pipe(
-        tap(v => (this.value = v)),
-        renderChange(this.strategies[this.strategy])
-      )
-      .subscribe(v => {
-        console.log('s', v);
-      });
-    toNever(from(['§', '$']))
-      .pipe(
-        tap(v => (this.value = v)),
-        renderChange(this.strategies[this.strategy])
-      )
-      .subscribe(v => {
-        console.log('s', v);
-      });
-    toNever(from(['ü', Math.random() + '']))
-      .pipe(
-        tap(v => (this.value = v)),
-        renderChange(this.strategies[this.strategy])
-      )
-      .subscribe(v => {
-        console.log('s', v);
-      });
-  }
-
-  scheduleCD() {
-    this.value = Math.random() + '';
-    this.strategies[this.strategy].scheduleCD();
-    this.strategies[this.strategy].scheduleCD();
-    this.strategies[this.strategy].scheduleCD();
-    this.strategies[this.strategy].scheduleCD();
-  }
+  rxRenderChange() {}
 
   rxUpdateValue() {
     this.nextValues.next(1);
   }
 
-  ngOnInit() {
-    this.strategies = getStrategies<any>({ cdRef: this.cdRef });
-  }
+  ngOnInit() {}
 }
 
 function toNever<T>(o: Observable<T>): Observable<T> {

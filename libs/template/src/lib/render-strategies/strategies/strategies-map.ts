@@ -7,7 +7,7 @@ import { createNativeStrategy } from './native.strategy';
 import { getLocalStrategies } from './local.strategy';
 import { getGlobalStrategies } from './global.strategy';
 
-export const DEFAULT_STRATEGY_NAME = 'native';
+export const DEFAULT_STRATEGY_NAME = 'local';
 
 export function getStrategies<T>(
   config: RenderStrategyFactoryConfig

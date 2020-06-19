@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { merge, Observable, Subject, timer } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 
 export interface DemoBasicsItem {
   id: string;
@@ -38,15 +38,16 @@ export class DemoBasicsViewModelService extends RxState<DemoBasicsBaseModel>
 
   refreshListSideEffect$ = merge(
     this.refreshClicks,
-    this.select(map(s => s.refreshInterval)).pipe(switchMap(ms => timer(ms)))
+    this.select(
+      map(s => s.refreshInterval),
+      filter(refreshInterval => refreshInterval > 4000)
+    ).pipe(switchMap(ms => timer(ms)))
   );
 
   constructor() {
     super();
     this.set(initState);
 
-    this.connect(
-      this.listExpandedChanges.pipe(map(b => ({ listExpanded: b })))
-    );
+    this.connect('listExpanded', this.listExpandedChanges);
   }
 }

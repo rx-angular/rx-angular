@@ -14,8 +14,11 @@
   "keywords": [
     "angular",
     "rxjs",
-    "component state",
-    "state management"
+    "performance",
+    "rendering",
+    "template",
+    "scheduling",
+    "coalescing"
   ],
   "author": "Michael Hladky <michael@hladky.at>",
   "license": "MIT",

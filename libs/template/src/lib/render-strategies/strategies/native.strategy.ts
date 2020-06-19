@@ -22,6 +22,8 @@ export function createNativeStrategy<T>(
     name: 'native',
     renderMethod: config.cdRef.markForCheck,
     behavior: o => o,
-    scheduleCD: () => {}
+    scheduleCD: () => {
+      config.cdRef.markForCheck();
+    }
   };
 }

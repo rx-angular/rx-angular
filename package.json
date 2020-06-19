@@ -38,7 +38,7 @@
     }
   },
   "lint-staged": {
-    "{apps,libs}/**/*.{ts,html,scss,md,json}": [
+    "{apps,libs}/**/!(images)/**/*.{ts,html,scss,md,json}": [
       "yarn affected:lint -- --uncommitted --fix --parallel",
       "yarn format:write -- --uncommitted"
     ]

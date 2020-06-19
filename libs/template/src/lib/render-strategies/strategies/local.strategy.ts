@@ -23,11 +23,10 @@ import { coalesceWith } from '../rxjs/operators/coalesceWith';
  *
  * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
  * |-------------| --------------| ------------------- | ---------------- |
- * | `local`     | ✔/✔ ️        | dC / ɵDC            | ✔ ️ + C/ LV     |
- * | `ɵlocal`    | ✔/✔ ️        | dC / ɵDC            | ✔ ️ + C/ LV     |
- * | `ɵdetach`   | ❌/✔ ️       | mFC  / ɵMD          | ❌               |
- * | `ɵpostTask` | ❌/✔ ️       | mFC  / ɵMD          | ❌               |
- * | `ɵidleCallback` | ❌/✔ ️   | mFC  / ɵMD          | ❌               |
+ * | `local`    | ✔/✔ ️        | dC / ɵDC            | ✔ ️ + C/ LV     |
+ * | `detach`   | ❌/✔ ️       | mFC  / ɵMD          | ❌               |
+ * | `postTask` | ❌/✔ ️       | mFC  / ɵMD          | ❌               |
+ * | `idleCallback` | ❌/✔ ️   | mFC  / ɵMD          | ❌               |
  *
  */
 
@@ -36,46 +35,32 @@ export function getLocalStrategies<T>(
 ): { [strategy: string]: RenderStrategy<T> } {
   return {
     local: createLocalStrategy<T>(config),
-    ɵlocal: createɵLocalStrategy<T>(config),
-    ɵdetach: createɵDetachStrategy(config),
-    ɵpostTask: createɵPostTaskStrategy(config)
+    localNative: createLocalNativeStrategy<T>(config),
+    detach: createDetachStrategy(config),
+    postTask: createPostTaskStrategy(config),
+    idleCallback: createIdleCallbackStrategy(config)
+  };
+}
+
+export function createLocalNativeStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy<T> {
+  const renderMethod = () => {
+    config.cdRef.detectChanges();
+  };
+  const behavior = o => o.pipe();
+  const scheduleCD = () => renderMethod();
+
+  return {
+    name: 'localNative',
+    renderMethod,
+    behavior,
+    scheduleCD
   };
 }
 
 /**
  *  Local Strategy
- *
- * This strategy is rendering the actual component and
- * all it's children that are on a path
- * that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
- *
- * As detectChanges has no coalescing of render calls
- * like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` has,
- * this strategy may have negative performance impacts depending
- * on the usage and the related template structure.
- *
- * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
- * |-------------| --------------| ------------ ------ | ---------------- |
- * | `local`     | ✔️/✔️    | dC / dC             | ✔️ + C/C       |
- *
- * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
- * @return {RenderStrategy<T>} - The calculated strategy
- *
- */
-export function createLocalStrategy<T>(
-  config: RenderStrategyFactoryConfig
-): RenderStrategy<T> {
-  const renderMethod = () => config.cdRef.detectChanges();
-  return {
-    name: 'local',
-    renderMethod,
-    behavior: o => o,
-    scheduleCD: () => renderMethod
-  };
-}
-
-/**
- *  ɵLocal Strategy
  *
  * This strategy is rendering the actual component and
  * all it's children that are on a path
@@ -101,7 +86,7 @@ export function createLocalStrategy<T>(
  * @return {RenderStrategy<T>} - The calculated strategy
  *
  */
-export function createɵLocalStrategy<T>(
+export function createLocalStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
   const durationSelector = from(getUnpatchedResolvedPromise());
@@ -117,7 +102,7 @@ export function createɵLocalStrategy<T>(
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
-    name: 'ɵlocal',
+    name: 'local',
     renderMethod,
     behavior,
     scheduleCD
@@ -125,7 +110,7 @@ export function createɵLocalStrategy<T>(
 }
 
 /**
- *  ɵDetach Strategy
+ *  Detach Strategy
  *
  * This strategy is rendering the actual component and
  * all it's children that are on a path
@@ -151,7 +136,7 @@ export function createɵLocalStrategy<T>(
  * @return {RenderStrategy<T>} - The calculated strategy
  *
  */
-export function createɵDetachStrategy<T>(
+export function createDetachStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
   const durationSelector = from(getUnpatchedResolvedPromise());
@@ -169,7 +154,7 @@ export function createɵDetachStrategy<T>(
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
-    name: 'ɵdetach',
+    name: 'detach',
     renderMethod,
     behavior,
     scheduleCD
@@ -177,7 +162,7 @@ export function createɵDetachStrategy<T>(
 }
 
 /**
- *  ɵpostTaks Strategy
+ *  PostTaks Strategy
  *
  * This strategy is rendering the actual component and
  * all it's children that are on a path
@@ -196,12 +181,12 @@ export function createɵDetachStrategy<T>(
  * @return {RenderStrategy<T>} - The calculated strategy
  *
  */
-export function createɵPostTaskStrategy<T>(
+export function createPostTaskStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
   const durationSelector = from(getUnpatchedResolvedPromise());
   const scope = (config.cdRef as any).context;
-  const priority = SchedulingPriority.animationFrame;
+  const priority = SchedulingPriority.background;
   const scheduler = getScheduler(priority);
 
   const renderMethod = () => {
@@ -212,7 +197,7 @@ export function createɵPostTaskStrategy<T>(
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
-    name: 'ɵpostTask',
+    name: 'postTask',
     renderMethod,
     behavior,
     scheduleCD
@@ -220,7 +205,7 @@ export function createɵPostTaskStrategy<T>(
 }
 
 /**
- *  ɵIdleCallback Strategy
+ *  IdleCallback Strategy
  *
  * This strategy is rendering the actual component and
  * all it's children that are on a path
@@ -239,14 +224,13 @@ export function createɵPostTaskStrategy<T>(
  * @return {RenderStrategy<T>} - The calculated strategy
  *
  */
-export function createɵIdleCallbackStrategy<T>(
+export function createIdleCallbackStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
   const durationSelector = from(getUnpatchedResolvedPromise());
   const scope = (config.cdRef as any).context;
   const priority = SchedulingPriority.idleCallback;
   const scheduler = getScheduler(priority);
-
   const renderMethod = () => {
     config.cdRef.detectChanges();
   };
@@ -255,7 +239,7 @@ export function createɵIdleCallbackStrategy<T>(
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
-    name: 'ɵIdleCallback',
+    name: 'idleCallback',
     renderMethod,
     behavior,
     scheduleCD

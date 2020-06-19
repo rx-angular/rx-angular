@@ -1,7 +1,7 @@
-import { Directive, ElementRef, Optional } from '@angular/core';
+import { Directive, ElementRef, Input, Optional } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map, mergeAll } from 'rxjs/operators';
-import { LetDirective } from '@rx-angular/template';
+import { LetDirective, RenderStrategy } from '@rx-angular/template';
 
 function intersectionObserver(
   options?: object
@@ -40,13 +40,24 @@ const observerSupported = () =>
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[viewport-prio]'
+  selector: '[viewport-prio],[*rxLet]'
 })
 export class RenderPrioDirective {
+  initialStrategyName: string;
+
   entriesSubject = new Subject<IntersectionObserverEntry[]>();
   entries$: Observable<IntersectionObserverEntry> = this.entriesSubject.pipe(
     mergeAll()
   );
+
+  _viewportPrio = 'noop';
+  @Input('viewport-prio')
+  set viewportPrio(prio) {
+    if (prio) {
+      this._viewportPrio = prio;
+      console.log('prio', prio);
+    }
+  }
 
   private observer: IntersectionObserver | null = observerSupported()
     ? new IntersectionObserver(entries => this.entriesSubject.next(entries), {
@@ -68,17 +79,25 @@ export class RenderPrioDirective {
     private readonly el: ElementRef,
     @Optional() letDirective: LetDirective<any>
   ) {
+    this.initialStrategyName = letDirective.renderAware.gatStrategy().name;
     this.observer.observe(this.el.nativeElement);
 
     this.visibilityEvents$
-      .pipe(map(visibility => (visibility === 'visible' ? 'ɵlocal' : 'noop')))
+      .pipe(
+        map(visibility =>
+          visibility === 'visible'
+            ? this.initialStrategyName
+            : this._viewportPrio
+        )
+      )
       .subscribe(strategyName => {
         letDirective.strategy = strategyName;
+        console.log('switched to ', strategyName);
+
         // render actual state on viewport enter
         letDirective.strategies[strategyName].scheduleCD();
 
         //
-
         this.el.nativeElement.classList.add(strategyName);
       });
   }

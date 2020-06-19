@@ -7,6 +7,13 @@ export const ROUTES: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'scheduling',
+    loadChildren: () =>
+      import('./examples/scheduling/scheduling.module').then(
+        m => m.SchedulingModule
+      )
+  },
+  {
     path: 'coalescing',
     loadChildren: () =>
       import('./examples/coalescing/coalescing.module').then(

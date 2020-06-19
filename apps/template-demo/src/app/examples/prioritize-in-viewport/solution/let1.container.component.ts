@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject, EMPTY, interval, merge, Subject } from 'rxjs';
 import { map, scan, switchMap } from 'rxjs/operators';
+import { getStrategies } from '@rx-angular/template';
 
 @Component({
   selector: 'let1-container',
@@ -13,10 +14,22 @@ import { map, scan, switchMap } from 'rxjs/operators';
     <button [unpatch] (click)="toggleAutoIncrement.next('')">
       auto
     </button>
+    <label>VisibleStrategy</label>
+    <select (change)="visibleStrategy = $event?.target?.value">
+      <option [value]="s" *ngFor="let s of strategies">{{ s }}</option>
+    </select>
+    <label>InVisibleStrategy</label>
+    <select (change)="invisibleStrategy = $event?.target?.value">
+      <option [value]="s" *ngFor="let s of strategies">{{ s }}</option>
+    </select>
     <br />
     <b>viewPort</b>
     <div #viewPort class="view-port">
-      <div class="target" [viewport-prio] *rxLet="count$; let count">
+      <div
+        class="target"
+        [viewport-prio]="invisibleStrategy"
+        *rxLet="count$; let count; strategy: visibleStrategy"
+      >
         <b>target</b> <br />
         value: {{ count }}
       </div>
@@ -38,7 +51,7 @@ import { map, scan, switchMap } from 'rxjs/operators';
       .noop {
         border: 1px solid blue;
       }
-      .ɵlocal {
+      .local {
         border: 1px dashed green;
       }
     `
@@ -48,11 +61,16 @@ export class Let1ContainerComponent {
   incrementTrigger = new Subject<Event>();
   toggleAutoIncrement = new BehaviorSubject<any>(false);
 
+  strategies = Object.keys(getStrategies({ cdRef: {} } as any));
+
+  visibleStrategy: string;
+  invisibleStrategy: string;
+
   count$ = merge(
     this.incrementTrigger,
     this.toggleAutoIncrement.pipe(
       scan(v => !v, true),
-      switchMap(v => (v ? interval(300) : EMPTY))
+      switchMap(v => (v ? interval(0) : EMPTY))
     )
   ).pipe(scan(v => ++v, 0));
 
