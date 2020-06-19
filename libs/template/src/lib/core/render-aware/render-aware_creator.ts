@@ -10,7 +10,6 @@ import {
 } from 'rxjs';
 import {
   catchError,
-  debounceTime,
   distinctUntilChanged,
   filter,
   map,
@@ -26,7 +25,7 @@ import { nameToStrategy } from './nameToStrategy';
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
   nextStrategy: (config: string | Observable<string>) => void;
-  gatStrategy: () => RenderStrategy<U>;
+  getStrategy: () => RenderStrategy<U>;
 }
 
 /**
@@ -53,7 +52,6 @@ export function createRenderAware<U>(cfg: {
         : stringOrObservable
     ),
     nameToStrategy(cfg.strategies),
-    tap(console.log),
     tap(s => (strategy = s)),
     publishReplay(1)
   );
@@ -98,7 +96,7 @@ export function createRenderAware<U>(cfg: {
     nextStrategy(nextConfig: string | Observable<string>): void {
       strategyName$.next(nextConfig);
     },
-    gatStrategy: () => strategy,
+    getStrategy: () => strategy,
     subscribe(): Subscription {
       return new Subscription()
         .add((strategy$ as ConnectableObservable<RenderStrategy<U>>).connect())

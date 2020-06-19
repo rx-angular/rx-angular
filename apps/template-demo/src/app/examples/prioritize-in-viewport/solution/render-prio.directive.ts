@@ -79,7 +79,7 @@ export class RenderPrioDirective {
     private readonly el: ElementRef,
     @Optional() letDirective: LetDirective<any>
   ) {
-    this.initialStrategyName = letDirective.renderAware.gatStrategy().name;
+    this.initialStrategyName = letDirective.renderAware.getStrategy().name;
     this.observer.observe(this.el.nativeElement);
 
     this.visibilityEvents$
