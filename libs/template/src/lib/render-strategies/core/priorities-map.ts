@@ -2,19 +2,19 @@ import { animationFrameScheduler, asyncScheduler, SchedulerLike } from 'rxjs';
 import { SchedulingPriority } from './interfaces';
 import {
   idleScheduler,
-  postTaskScheduler,
+  getPostTaskScheduler,
   unpatchedAsapScheduler
 } from '../rxjs/scheduling';
-import { PostTaskSchedulerPriority } from '../rxjs/scheduling/postTaskScheduler';
+import { PostTaskSchedulerPriority } from '../rxjs/scheduling/getPostTaskScheduler';
 
 export const prioritiesMap: { [name: string]: SchedulerLike } = {
   animationFrame: animationFrameScheduler,
   Promise: unpatchedAsapScheduler,
   setInterval: asyncScheduler,
   idleCallback: idleScheduler,
-  userBlocking: postTaskScheduler(PostTaskSchedulerPriority.userBlocking),
-  userVisible: postTaskScheduler(PostTaskSchedulerPriority.userVisible),
-  background: postTaskScheduler(PostTaskSchedulerPriority.background)
+  userBlocking: getPostTaskScheduler(PostTaskSchedulerPriority.userBlocking),
+  userVisible: getPostTaskScheduler(PostTaskSchedulerPriority.userVisible),
+  background: getPostTaskScheduler(PostTaskSchedulerPriority.background)
 };
 
 export function getScheduler(

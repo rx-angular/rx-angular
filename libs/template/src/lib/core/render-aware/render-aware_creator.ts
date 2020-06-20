@@ -79,8 +79,7 @@ export function createRenderAware<U>(cfg: {
     }),
     // forward only observable values
     filter(o$ => o$ !== undefined),
-    map(o$ => o$.pipe(distinctUntilChanged(), tap(cfg.updateObserver))),
-    switchAll(),
+    switchMap(o$ => o$.pipe(distinctUntilChanged(), tap(cfg.updateObserver))),
     withLatestFrom(strategy$),
     tap(([v, strat]) => strat.scheduleCD()),
     catchError(e => {

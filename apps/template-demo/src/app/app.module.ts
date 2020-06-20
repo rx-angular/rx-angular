@@ -14,6 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app-component/app.component';
 import { ROUTES } from './app.routes';
+import { ViewportModule } from './viewport.module';
 
 export const materialModules = [
   BrowserAnimationsModule,
@@ -32,7 +33,8 @@ export const materialModules = [
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule.forRoot(ROUTES),
-    materialModules
+    materialModules,
+    ViewportModule
   ],
   declarations: [AppComponent],
   bootstrap: [AppComponent]

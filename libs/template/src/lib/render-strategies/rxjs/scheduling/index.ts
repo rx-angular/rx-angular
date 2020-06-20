@@ -1,3 +1,3 @@
 export { unpatchedAsapScheduler } from './asapScheduler';
-export { postTaskScheduler } from './postTaskScheduler';
+export { getPostTaskScheduler } from './getPostTaskScheduler';
 export { idleScheduler } from './idleCallbackScheduler';

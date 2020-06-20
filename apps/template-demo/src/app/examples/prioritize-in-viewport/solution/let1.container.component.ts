@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject, EMPTY, interval, merge, Subject } from 'rxjs';
-import { map, scan, switchMap } from 'rxjs/operators';
+import { scan, startWith, switchMap } from 'rxjs/operators';
 import { getStrategies } from '@rx-angular/template';
 
 @Component({
@@ -40,9 +40,10 @@ import { getStrategies } from '@rx-angular/template';
     `
       .view-port {
         height: 250px;
-        overflow-y: scroll;
+        #overflow-y: scroll;
         border: 1px solid red;
       }
+
       .target {
         margin: 300px 0;
         padding: 20px;
@@ -51,6 +52,7 @@ import { getStrategies } from '@rx-angular/template';
       .noop {
         border: 1px solid blue;
       }
+
       .local {
         border: 1px dashed green;
       }
@@ -72,9 +74,13 @@ export class Let1ContainerComponent {
       scan(v => !v, true),
       switchMap(v => (v ? interval(0) : EMPTY))
     )
-  ).pipe(scan(v => ++v, 0));
+  ).pipe(
+    startWith(1),
+    scan(v => ++v, 0)
+  );
 
   numRenders = 0;
+
   rerenders(): number {
     return ++this.numRenders;
   }

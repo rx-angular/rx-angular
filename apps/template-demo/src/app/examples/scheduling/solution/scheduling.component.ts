@@ -1,7 +1,8 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component
+  Component,
+  OnInit
 } from '@angular/core';
 
 import { concat, NEVER, Observable, Subject } from 'rxjs';
@@ -50,7 +51,7 @@ import {
     `
   ]
 })
-export class SchedulingComponent {
+export class SchedulingComponent implements OnInit {
   numRenders = 0;
 
   prios = SchedulingPriority;
@@ -63,9 +64,7 @@ export class SchedulingComponent {
   );
   value;
 
-  constructor(private cdRef: ChangeDetectorRef) {
-    this.strategies = getStrategies({ cdRef });
-  }
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   rerenders() {
     return ++this.numRenders;
@@ -80,6 +79,11 @@ export class SchedulingComponent {
     priority
       ? getScheduler(priority).schedule(XXXXXXXXXXXXXXXXXXXXX)
       : XXXXXXXXXXXXXXXXXXXXX();
+  }
+
+  ngOnInit() {
+    this.strategies = getStrategies({ cdRef: this.cdRef });
+    console.log(this.strategies, this.cdRef);
   }
 }
 
