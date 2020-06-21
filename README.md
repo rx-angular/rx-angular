@@ -4,6 +4,7 @@ RxAngular offers a comprehensive toolset for handling fully reactive Angular app
 performance and template rendering.
 
 RxAngular is divided into two initially independent packages:
+
 - [📦@rx-angular/state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/README.md)
 - [💾@rx-angular/template](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/README.md)
 
@@ -17,7 +18,7 @@ This repository holds a set of helpers to create **fully reactive** as well as *
 
 ## Packages
 
-Find details in the linked readme files below for installation and setup instructions, examples and resources. 
+Find details in the linked readme files below for installation and setup instructions, examples and resources.
 
 - [📦@rx-angular/state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/README.md) - Reactive Component State-Management
 - [💾@rx-angular/template](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/README.md) - Reactive Rendering
@@ -29,5 +30,3 @@ Find details in the linked readme files below for installation and setup instruc
 or  
 `yarn add @rx-angular/state`  
 `yarn add @rx-angular/template`
-
-

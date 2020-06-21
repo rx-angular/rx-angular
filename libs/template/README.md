@@ -92,7 +92,7 @@ Coalescing, in this very manner, means _collecting all events_ in the same
 [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick,
 that would cause a re-rendering and execute **re-rendering only once**.
 
-![Coalescing](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/coalescing.png)
+![Coalescing](../template/images/coalescing.png)
 
 ### Scoped Coalescing
 
@@ -104,7 +104,7 @@ E.g. the **component** from which the re-rendering was initiated.
 Coalescing provides us a way to gather multiple re-renderings to a single point of execution. Scheduling in this
 case means searching for the very **optimized** point in time when to really _execute rendering_.
 
-![Scheduling Options](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/scheduling-options.png)
+![Scheduling Options](../template/images/scheduling-options.png)
 
 ## Directives
 
@@ -193,7 +193,7 @@ We can track:
 The `push` pipe serves as a drop-in replacement for angulars built-in `async` pipe.
 Just like the `*rxLet` Directive, it leverages a `RenderStrategy` under the hood which
 in turn takes care of optimizing the `ChangeDetection` of your component.
-  
+
 The rendering behavior can be configured per PushPipe instance using the strategy parameter.
 You find more information about [`RenderStrategies`](#RenderStrategies) in the sections below.
 
