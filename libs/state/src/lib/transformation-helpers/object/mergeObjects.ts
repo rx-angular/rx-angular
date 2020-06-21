@@ -1,10 +1,9 @@
 import { isObjectGuard } from '../../core/utils/typing';
 /**
  * @description
- * Merges object of type T with updates of type Partial T.
- * Returns new object where updates overrides original values.
- * Not mutating original object.
- *
+ * Merges an object of type T with updates of type Partial<T>.
+ * Returns a new object where updates override original values while not mutating the original one.
+
  * @example
  * interface Creature {
  *  id: number,
