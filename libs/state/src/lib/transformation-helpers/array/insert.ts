@@ -1,6 +1,6 @@
 /**
  * @description
- * Inserts one or multiple items to array T[].
+ * Inserts one or multiple items to an array T[].
  * Returns new updated array T[].
  * Not mutating original array.
  *
