@@ -40,7 +40,7 @@ import { getStrategies } from '@rx-angular/template';
     `
       .view-port {
         height: 250px;
-        #overflow-y: scroll;
+        overflow-y: scroll;
         border: 1px solid red;
       }
 
@@ -65,7 +65,7 @@ export class Let1ContainerComponent {
 
   strategies = Object.keys(getStrategies({ cdRef: {} } as any));
 
-  visibleStrategy: string;
+  visibleStrategy = 'local';
   invisibleStrategy: string;
 
   count$ = merge(

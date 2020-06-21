@@ -63,9 +63,15 @@ import { CoalescingTestService } from './coalescing-test.service';
     push: {{ value$ | push: strategy$ }}<br />
     push: {{ value$ | push: strategy$ }}<br />
     push: {{ value$ | push: strategy$ }}<br />
+    push: {{ value$ | push: strategy$ }}<br />
+    push: {{ value$ | push: strategy$ }}<br />
+    push: {{ value$ | push: strategy$ }}<br />
+    push: {{ value$ | push: strategy$ }}<br />
+    push: {{ value$ | push: strategy$ }}<br />
 
     ---- <br />
-
+    <!--  <br />
+    -->
     <ng-container *rxLet="value$; let value; strategy: strategy$">
       rxLet: {{ value }}
     </ng-container>
@@ -78,8 +84,42 @@ import { CoalescingTestService } from './coalescing-test.service';
     <ng-container *rxLet="value$; let value; strategy: strategy$">
       rxLet: {{ value }}
     </ng-container>
-
+    <ng-container *rxLet="value$; let value; strategy: strategy$">
+      rxLet: {{ value }}
+    </ng-container>
     <br />
+    <ng-container *rxLet="value$; let value; strategy: strategy$">
+      rxLet: {{ value }}
+    </ng-container>
+    <br />
+
+    <ng-container *rxLet="value$; let value; strategy: strategy$">
+      rxLet: {{ value }}
+    </ng-container>
+    <ng-container *rxLet="value$; let value; strategy: strategy$">
+      rxLet: {{ value }}
+    </ng-container>
+    <br />
+    <ng-container *rxLet="value$; let value; strategy: strategy$">
+      rxLet: {{ value }}
+    </ng-container>
+    <br />
+
+    <ng-container *rxLet="value$; let value; strategy: strategy$">
+      rxLet: {{ value }}
+    </ng-container>
+    <ng-container *rxLet="value$; let value; strategy: strategy$">
+      rxLet: {{ value }}
+    </ng-container>
+    <br />
+    <ng-container *rxLet="value$; let value; strategy: strategy$">
+      rxLet: {{ value }}
+    </ng-container>
+    <br />
+
+    <ng-container *rxLet="value$; let value; strategy: strategy$">
+      rxLet: {{ value }}
+    </ng-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [CoalescingTestService]

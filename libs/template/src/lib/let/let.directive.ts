@@ -4,6 +4,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   SimpleChanges,
   TemplateRef,
   ViewContainerRef
@@ -103,7 +104,7 @@ export interface LetViewContext<T> {
  * @publicApi
  */
 @Directive({ selector: '[rxLet]' })
-export class LetDirective<U> implements OnChanges, OnDestroy {
+export class LetDirective<U> implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
 
   @Input()
@@ -111,9 +112,9 @@ export class LetDirective<U> implements OnChanges, OnDestroy {
     this.renderAware.nextPotentialObservable(potentialObservable);
   }
   @Input('rxLetStrategy')
-  set strategy(config: string | Observable<string> | undefined) {
-    const strategy = config || DEFAULT_STRATEGY_NAME;
-    this.renderAware.nextStrategy(strategy);
+  set strategy(strategy: string | Observable<string> | undefined) {
+    console.log('rxLetStrategy: ', strategy);
+    this.renderAware.nextStrategy(strategy || DEFAULT_STRATEGY_NAME);
   }
 
   readonly strategies;
@@ -125,7 +126,7 @@ export class LetDirective<U> implements OnChanges, OnDestroy {
     $complete: false
   };
 
-  protected readonly subscription: Unsubscribable;
+  protected subscription: Unsubscribable;
   readonly renderAware: RenderAware<U | null | undefined>;
   private readonly resetObserver: NextObserver<void> = {
     next: () => {
@@ -163,8 +164,6 @@ export class LetDirective<U> implements OnChanges, OnDestroy {
     }
   };
 
-  private firstChange = true;
-
   static ngTemplateContextGuard<U>(
     dir: LetDirective<U>,
     ctx: unknown | null | undefined
@@ -184,13 +183,11 @@ export class LetDirective<U> implements OnChanges, OnDestroy {
       resetObserver: this.resetObserver,
       updateObserver: this.updateObserver
     });
-    this.subscription = this.renderAware.subscribe();
+    this.renderAware.nextStrategy(DEFAULT_STRATEGY_NAME);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (this.firstChange && !changes.strategy) {
-      this.strategy = DEFAULT_STRATEGY_NAME;
-    }
+  ngOnInit() {
+    this.subscription = this.renderAware.subscribe();
   }
 
   createEmbeddedView() {

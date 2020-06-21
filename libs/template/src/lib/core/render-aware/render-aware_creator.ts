@@ -4,6 +4,7 @@ import {
   NextObserver,
   Observable,
   of,
+  ReplaySubject,
   Subject,
   Subscribable,
   Subscription
@@ -21,11 +22,12 @@ import {
 } from 'rxjs/operators';
 import { RenderStrategy, StrategySelection } from './interfaces';
 import { nameToStrategy } from './nameToStrategy';
+import { DEFAULT_STRATEGY_NAME } from '../../render-strategies/strategies/strategies-map';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
   nextStrategy: (config: string | Observable<string>) => void;
-  getStrategy: () => RenderStrategy<U>;
+  activeStrategy$: Observable<RenderStrategy<U>>;
 }
 
 /**
@@ -42,7 +44,7 @@ export function createRenderAware<U>(cfg: {
   resetObserver: NextObserver<void>;
   updateObserver: NextObserver<U>;
 }): RenderAware<U | undefined | null> {
-  const strategyName$ = new Subject<string | Observable<string>>();
+  const strategyName$ = new ReplaySubject<string | Observable<string>>(1);
   let strategy: RenderStrategy<U>;
   const strategy$: Observable<RenderStrategy<U>> = strategyName$.pipe(
     distinctUntilChanged(),
@@ -52,11 +54,10 @@ export function createRenderAware<U>(cfg: {
         : stringOrObservable
     ),
     nameToStrategy(cfg.strategies),
-    tap(s => (strategy = s)),
-    publishReplay(1)
+    tap(s => (strategy = s))
   );
 
-  const observablesFromTemplate$ = new Subject<Observable<U>>();
+  const observablesFromTemplate$ = new ReplaySubject<Observable<U>>(1);
   const valuesFromTemplate$ = observablesFromTemplate$.pipe(
     distinctUntilChanged()
   );
@@ -81,6 +82,7 @@ export function createRenderAware<U>(cfg: {
     filter(o$ => o$ !== undefined),
     switchMap(o$ => o$.pipe(distinctUntilChanged(), tap(cfg.updateObserver))),
     withLatestFrom(strategy$),
+    tap(s => console.log(s[1].name)),
     tap(([v, strat]) => strat.scheduleCD()),
     catchError(e => {
       console.error(e);
@@ -95,10 +97,10 @@ export function createRenderAware<U>(cfg: {
     nextStrategy(nextConfig: string | Observable<string>): void {
       strategyName$.next(nextConfig);
     },
-    getStrategy: () => strategy,
+    activeStrategy$: strategy$,
     subscribe(): Subscription {
       return new Subscription()
-        .add((strategy$ as ConnectableObservable<RenderStrategy<U>>).connect())
+        .add(strategy$.subscribe())
         .add(renderingEffect$.subscribe());
     }
   };

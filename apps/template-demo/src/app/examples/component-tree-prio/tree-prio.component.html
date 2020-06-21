@@ -11,6 +11,7 @@
 <load-test class=""></load-test>
 
 <button [unpatch] (click)="remove()">Click me</button>
+<!--
 <div style="display: flex">
   <mat-card class="card">
     <mat-card-header>
@@ -29,17 +30,13 @@
     </mat-card-content>
   </mat-card>
 </div>
-
-<div
-  [viewport-prio]="invisibleStrategy"
-  *rxLet="data$; let data; strategy: visibleStrategy"
->
+-->
+<div *rxLet="data$; let data; strategy: visibleStrategy">
   {{ data.length }}
 </div>
 <mat-toolbar
   style="margin-bottom: 1rem"
   color="primary"
-  [viewport-prio]="invisibleStrategy"
   *rxLet="data$; let data; strategy: visibleStrategy"
 >
   <span>Showing {{ data?.length }} / {{ data?.length }} entries</span>

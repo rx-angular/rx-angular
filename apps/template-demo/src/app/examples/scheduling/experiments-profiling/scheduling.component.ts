@@ -5,7 +5,7 @@ import {
   OnInit
 } from '@angular/core';
 
-import { concat, NEVER, Observable, Subject } from 'rxjs';
+import { concat, NEVER, Observable, of, Subject } from 'rxjs';
 import { scan, tap } from 'rxjs/operators';
 import {
   getScheduler,
@@ -58,6 +58,8 @@ export class SchedulingComponent implements OnInit {
   numRenders = 0;
 
   prios = SchedulingPriority;
+
+  o$ = of(0);
 
   strategies;
   nextValues = new Subject<any>();

@@ -1,7 +1,7 @@
 import { Directive, ElementRef, Input, OnInit, Optional } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { map, mergeAll, tap } from 'rxjs/operators';
-import { LetDirective, RenderStrategy } from '@rx-angular/template';
+import { filter, map, mergeAll, tap, withLatestFrom } from 'rxjs/operators';
+import { LetDirective } from '@rx-angular/template';
 
 function intersectionObserver(
   options?: object
@@ -43,8 +43,6 @@ const observerSupported = () =>
   selector: '[viewport-prio]'
 })
 export class RenderPrioDirective implements OnInit {
-  initialStrategyName: string;
-
   entriesSubject = new Subject<IntersectionObserverEntry[]>();
   entries$: Observable<IntersectionObserverEntry> = this.entriesSubject.pipe(
     mergeAll()
@@ -54,8 +52,7 @@ export class RenderPrioDirective implements OnInit {
   @Input('viewport-prio')
   set viewportPrio(prio) {
     if (prio) {
-      this._viewportPrio = prio;
-      console.log('prio', prio);
+      this._viewportPrio = prio || 'noop';
     }
   }
 
@@ -83,17 +80,18 @@ export class RenderPrioDirective implements OnInit {
   }
 
   ngOnInit() {
-    this.initialStrategyName = this.letDirective.renderAware.getStrategy().name;
-    console.log(this.el);
+    const letStrategyName$ = this.letDirective.renderAware.activeStrategy$.pipe(
+      map(s => s.name),
+      filter(name => name !== this._viewportPrio)
+    );
+
     this.observer.observe(this.el.nativeElement);
 
     this.visibilityEvents$
       .pipe(
-        tap(console.log),
-        map(visibility =>
-          visibility === 'visible'
-            ? this.initialStrategyName
-            : this._viewportPrio
+        withLatestFrom(letStrategyName$),
+        map(([visibility, strategyName]) =>
+          visibility === 'visible' ? strategyName : this._viewportPrio
         )
       )
       .subscribe(strategyName => {
