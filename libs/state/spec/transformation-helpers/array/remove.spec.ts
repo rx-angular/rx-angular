@@ -78,10 +78,10 @@ describe('remove', () => {
       expect(remove([], [])).toEqual([]);
     });
 
-    it('should work if one or both arguments are undefined', () => {
-      expect(remove(null as any, creatures)).toEqual(undefined);
+    it('should work if one or both arguments are null', () => {
+      expect(remove(null as any, creatures)).toEqual(null);
       expect(remove(creatures, null as any)).toEqual(creatures);
-      expect(remove(null as any, null as any)).toEqual(undefined);
+      expect(remove(null as any, null as any)).toEqual(null);
     });
 
     it('should work when initial array is not array', () => {

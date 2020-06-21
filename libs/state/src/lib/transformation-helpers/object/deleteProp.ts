@@ -26,7 +26,7 @@ export function deleteProp<T extends object, K extends keyof T>(
   key: K
 ): Omit<T, K> {
   if (object === undefined || object === null) {
-    return undefined as any;
+    return object;
   }
 
   if (!isObjectGuard(object)) {

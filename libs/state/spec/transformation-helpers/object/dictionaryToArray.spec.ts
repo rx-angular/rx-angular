@@ -53,7 +53,7 @@ describe('dictionaryToArray', () => {
     });
 
     it('should return undefined if dictionary null or undefined', () => {
-      expect(dictionaryToArray(null as any)).toEqual(undefined);
+      expect(dictionaryToArray(null as any)).toEqual(null);
       expect(dictionaryToArray(undefined as any)).toEqual(undefined);
     });
 

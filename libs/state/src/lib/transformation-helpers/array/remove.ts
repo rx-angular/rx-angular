@@ -47,7 +47,7 @@ export function remove<T>(
   const innerCompare = compare || defaultCompare;
 
   if (array === undefined || array === null) {
-    return undefined as any;
+    return array;
   }
 
   if (!Array.isArray(array) || !array.length) {

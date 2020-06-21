@@ -24,7 +24,7 @@ import { isObjectGuard } from '../../core/utils/typing';
  */
 export function dictionaryToArray<T>(dictionary: { [key: string]: T }): T[] {
   if (dictionary === undefined || dictionary === null) {
-    return undefined as any;
+    return dictionary;
   }
 
   if (!isObjectGuard(dictionary)) {

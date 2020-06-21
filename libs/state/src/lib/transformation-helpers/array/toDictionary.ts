@@ -35,7 +35,7 @@ export function toDictionary<T extends object>(
     | OnlyKeysOfSpecificType<T, symbol>
 ): { [key: string]: T } {
   if (array === null || array === undefined) {
-    return undefined as any;
+    return array;
   }
 
   if (!Array.isArray(array) || !array.length || !isKeyOf<T>(array[0][key])) {
