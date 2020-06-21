@@ -121,7 +121,3 @@ export class SchedulingComponent implements OnInit {
     console.log(this.strategies, this.cdRef);
   }
 }
-
-function toNever<T>(o: Observable<T>): Observable<T> {
-  return concat(o, NEVER);
-}

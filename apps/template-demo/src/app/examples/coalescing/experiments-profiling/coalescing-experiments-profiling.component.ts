@@ -84,7 +84,7 @@ import { CoalescingTestService } from './coalescing-test.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [CoalescingTestService]
 })
-export class CoalescingComponent implements OnInit {
+export class CoalescingExperimentsProfilingComponent implements OnInit {
   numRenders = 0;
 
   strategy$ = this.s.strategy$;

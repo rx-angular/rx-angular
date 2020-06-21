@@ -9,7 +9,7 @@ import { Person, TreePrioService } from './tree-prio.service';
 import { RxState } from '@rx-angular/state';
 import { tap } from 'rxjs/operators';
 import { getStrategies } from '@rx-angular/template';
-import { CoalescingTestService } from '../coalescing/solution/coalescing-test.service';
+import { CoalescingTestService } from '../coalescing/experiments-profiling/coalescing-test.service';
 
 export interface ComponentState {
   data: Person[];
