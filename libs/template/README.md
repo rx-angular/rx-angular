@@ -3,34 +3,80 @@
 [![rx-angular](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
 [![npm version](https://badge.fury.io/js/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/@rx-angular/template)
 
-#### Reactive Template Rendering for Angular
+## Reactive Template Rendering for Angular
 
-@rx-angular/template is a toolset for reactive rendering in Angular.
-It provides structural directives, pipes as well as RxJS operators for rendering.
+@rx-angular/template is a comprehensive toolset for fully reactive rendering in Angular.
+It leverages the latest Browser APIs to maximize the rendering performance of your angular application.
+The functionalities are provided by
+structural directives, pipes, RxJS operators or imperative functions for managing rendering.
 
 ![template logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/template_logo.png)
 
 ## Description
 
-This package is all about rendering. There are 2 things that need to be understood:
+**@rx-angular/template** is nothing less than a revolution in `ChangeDetection` for angular applications.
+Developers are provided with tools for high-performance rendering, which are operated by a broad and intuitive API.
 
+The package focuses on template rendering and the coordination of `ChangeDetection` cycles. Changes get scoped,
+coalesced and scheduled using the latest browser APIs.
+Rendering behavior is fully customizable by using built in or providing custom [`RenderStrategies`](#RenderStrategies).
+In addition to the use of the scheduling APIs in the browser, local rendering of components is the
+foundation for future helpers such as viewport prioritization.
+
+@rx-angular/template is all about performance optimizing your rendering. The default configuration
+should already improve the rendering performance of your application by a decent amount. If you plan to
+improve your rendering performance to the maximum possible, there are several techniques that need to be known
+and considered.
+
+Allthough we give our best to provide the most simple developer experience possible, some things
+need to known if you want to master the rendering of your angular application.
+
+Terms that need to be understood:
+
+- Coalescing
+- Scoped Coalescing
+- Scheduling
 - usage of directives, pipes and operators
-- understanding the rendering strategies
-
----
+- the rendering strategies
 
 ## Install
 
-`npm install --save @rx-angular/template`
+`npm install --save @rx-angular/template`  
+or  
+`yarn add @rx-angular/template`
 
-## Setup
+## Current Situation
+
+The current way of binding _reactive_ sources to a view in angular looks like that:
+
+```html
+{{ heroData$ | async }}
+<ng-container *ngIf="heroData$ | async as data">{{data | json}}</ng-container>
+<hero-list-component [value]="heroData$ | async"></hero-list-component>
+```
+
+The problem is, `async` pipe flags the component and all its **ancestors** as dirty.
+It needs zone.js microtask queue to exhaust until `ApplicationRef.tick` is called to render all dirty marked
+components from top to bottom.
+
+This more often than not causes a huge amount of unnecessary re-renderings of components which didn't
+had any changes whatsoever / in the first place.
+
+While this approach is pretty convenient to use,
+since the rendering gets brute forced on any change, making REALLY sure anything gets re-rendered.
+Heavy dynamic and interactive UIs suffer pretty bad from `zone.js ChangeDetection`.
+This can lean to very bad performance or even unusable applications.
+Furthermore, it turns out the `async` pipe does not work in zone-less environments as well as many third party
+software aswell.
+
+The comprehensive toolset of `@rx-angular/template` solves most of those issues with or without `zone.js`.
 
 ## Included Features
 
 - Directives
   - RxLet (\*rxLet)
   - Viewport Priority (viewport-prio)
-  - Unpatch Event Bindings (unpatch)
+  - Unpatch Event Bindings from `zones.js / NgZone` (unpatch)
 - Pipes
   - Push (push)
 - Render Strategies
@@ -42,121 +88,171 @@ This package is all about rendering. There are 2 things that need to be understo
 
 ### Coalescing
 
-#### Scoped Coalescing
+Coalescing, in this very manner, means _collecting all events_ in the same
+[EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick,
+that would cause a re-rendering and execute **re-rendering only once**.
+
+![Coalescing](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/coalescing.png)
+
+### Scoped Coalescing
+
+Scoped Coalescing, in addition, means **grouping the collected events** by a specific context.
+E.g. the **component** from which the re-rendering was initiated.
 
 ### Scheduling
 
-## Directive - LetDirective
+Coalescing provides us a way to gather multiple re-renderings to a single point of execution. Scheduling in this
+case means searching for the very **optimized** point in time when to really _execute rendering_.
 
-The `*rxLet` directive serves a convenient way of binding observables to a view context (a dom element scope).
-It also helps with several internal processing under the hood.
+![Scheduling Options](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/scheduling-options.png)
 
-The current way of binding an observable to the view looks like that:
+## Directives
+
+### LetDirective
+
+The `*rxLet` directive serves a convenient way of binding observables to a view context. Furthermore it helps
+you structure view related models into view context scopes (dom elements scope).
+Under the hood it leverages a `RenderStrategy` which in turn takes care of optimizing the `ChangeDetection`
+of your component.
+
+The rendering behavior can be configured per LetDirective instance by using the strategy `@Input()`.
+You find more information about [`RenderStrategies`](#RenderStrategies) in the sections below.
+
+Other Features:
+
+- lazy rendering
+- binding is always present (`*ngIf="truthy$"`) ???
+- it takes away multiple usages of the `async` or `push` pipe
+- a unified/structured way of handling null, undefined or error
+- distinct same values in a row, skips not needed re-renderings
+
+The current way of binding an observable in angular applications to the view looks like that:
 
 ```html
-<ng-containerng *If="observableNumber$ as n">
-<app-number [number]="n">
-</app-number>
-<app-number-special [number]="n">
-</app-number-special>
+<ng-container *ngIf="heroData$ | async as data">
+  <hero-search [term]="data.searchTerm"> </hero-search>
+  <hero-list-component [heroes]="data.heroes"> </hero-list-component>
 </ng-container>
 ```
 
-The problem is `*ngIf` is also interfering with rendering and in case of a `0` the component would be hidden
+`*ngIf` is also interfering with rendering. In case of any falsy
+value (e.g. `0`), the component would get detached from the dom.
 
-Included Features:
-
-- binding is always present. (`*ngIf="truthy$"`)
-- it takes away the multiple usages of the `async` or `push` pipe
-- a unified/structured way of handling null and undefined
-- triggers change-detection differently if `zone.js` is present or not (`ChangeDetectorRef.detectChanges` or
-  `ChangeDetectorRef.markForCheck`)
-- triggers change-detection differently if ViewEngine or Ivy is present (`ChangeDetectorRef.detectChanges` or
-  `ɵdetectChanges`)
-- distinct same values in a row (distinctUntilChanged operator),
-
-@usageNotes
-
-The `*rxLet` directive take over several things and makes it more convenient and save to work with streams in the
-template
-`<ng-containerrxLet="observableNumber$ as c"></ng-container>`
+View binding with `*rxLet`:
 
 ```html
-<ng-containerrxLet="observableNumber$ as n">
-<app-number [number]="n">
-</app-number>
-</ng-container>
-
-<ng-containerrxLet="observableNumber$; let n">
-<app-number [number]="n">
-</app-number>
+<ng-container *rxLet="heroData$; let data">
+  <hero-search [term]="data.searchTerm"> </hero-search>
+  <hero-list-component [heroes]="data.heroes"> </hero-list-component>
 </ng-container>
 ```
 
-In addition to that it provides us information from the whole observable context.
-We can track the observables:
+Structure your view into multiple lazy loading components:
+
+```html
+<hero-search *rxLet="searchData$; let s" [term]="s.term"> </hero-search>
+<hero-list-component *rxLet="listData$; let l" [heroes]="l.heroes">
+</hero-list-component>
+```
+
+Using different render strategies:
+
+```html
+<hero-search *rxLet="searchData$; let s; strategy: 'global'" [term]="s.term">
+</hero-search>
+<hero-list-component *rxLet="listData$; let l" [heroes]="l.heroes">
+</hero-list-component>
+```
+
+The `*rxLet` Directive will render it's template and manage `ChangeDetection` after it got an initial value.
+So if the incoming `Observable` emits it's values lazy (e.g. data coming from `Http`), your template will be
+rendered lazy aswell. This can very positively impact the initial render performance of your application.
+
+In addition to that it provides us information of the observable context.
+We can track:
 
 - next value
 - error value
-- complete base-state
+- base state
 
 ```html
-<ng-containerrxLet="observableNumber$; let n; let e = $error, let c = $complete">
-<app-number [number]="n" *ngIf="!e && !c">
-</app-number>
-<ng-containerng *If="e">
-There is an error: {{e}}
-</ng-container>
-<ng-containerng *If="c">
-Observable completed: {{c}}
-</ng-container>
+<ng-container *rxLet="heroData$; let data; let e = $error, let c = $complete">
+  <hero-list-component *ngIf="!e && !c" [heroes]="data.heroes">
+  </hero-list-component>
+  <ng-container *ngIf="e">
+    There is an error: {{e}}
+  </ng-container>
+  <ng-container *ngIf="c">
+    Observable completed: {{c}}
+  </ng-container>
 </ng-container>
 ```
 
-## Pipe - PushPipe
+## PushPipe
 
-The `push` pipe serves as a drop-in replacement for the `async` pipe.
-It contains intelligent handling of change detection to enable us
-running in zone-full as well as zone-less mode without any changes to the code.
+The `push` pipe serves as a drop-in replacement for angulars built-in `async` pipe.
+Just like the `*rxLet` Directive, it leverages a `RenderStrategy` under the hood which
+in turn takes care of optimizing the `ChangeDetection` of your component.
+  
+The rendering behavior can be configured per PushPipe instance using the strategy parameter.
+You find more information about [`RenderStrategies`](#RenderStrategies) in the sections below.
 
-The current way of binding an observable to the view looks like that:
+Usage in the template
 
 ```html
-{{observable$ | async}}
-<ng-containerng *If="observable$ | async as o">{{o}}</ng-container>
-<component [value]="observable$ | async"></component>
+<hero-search [term]="searchTerm$ | push"> </hero-search>
+<hero-list-component [heroes]="heroes$ | push"> </hero-list-component>
 ```
 
-The problem is `async` pipe just marks the component and all its ancestors as dirty.
-It needs zone.js microtask queue to exhaust until `ApplicationRef.tick` is called to render all dirty marked
-components.
+Using different strategies
 
-Heavy dynamic and interactive UIs suffer from zones change detection a lot and can
-lean to bad performance or even unusable applications, but the `async` pipe does not work in zone-less mode.
+```html
+<hero-search [term]="searchTerm$ | push: 'global'"> </hero-search>
+<hero-list-component [heroes]="heroes$ | push: 'global'"> </hero-list-component>
+```
 
-`push` pipe solves that problem.
+Other Features:
 
-Included Features:
-
+- lazy rendering (see [LetDirective](#LetDirective))
 - Take observables or promises, retrieve their values and render the value to the template
-- Handling null and undefined values in a clean unified/structured way
-- Triggers change-detection differently if `zone.js` is present or not (`detectChanges` or `markForCheck`)
-- Distinct same values in a row to increase performance
-- Coalescing of change detection calls to boost performance
+- a unified/structured way of handling null, undefined or error
+- distinct same values in a row, skips not needed re-renderings
 
-`push` pipe solves that problem. It can be used like shown here:
+## RenderStrategies
 
-```html
-{{observable$ | push}}
-<ng-containerng *If="observable$ | push as o">{{o}}</ng-container>
-<component [value]="observable$ | push"></component>
+The `RenderStrategies` can be seen as the _core_ of the performance optimization layer. They utilize all
+[`Concepts`](#Concepts) explained above in order to provide a streamlined and focused API to master
+angular rendering and `ChangeDetection`.
+
+### Usage
+
+Use the corresponding `RenderStrategy#name` as parameter or Input with the `PushPipe` or `LetDirective`.
+When you want to handle `ChangeDetection` manually inside a `Component`, `Directive` or `Service`, you can
+simply use the built-in `StrategySelection`.
+
+```typescript
+import { Component, ChangeDetectorRef } from '@angular/core';
+import { getStrategies } from '@rx-angular/template';
+
+@Component()
+export class PerformanceAwareComponent {
+  constructor(private cdRef: ChangeDetectorRef) {
+    const strategies = getStrategies({ cdRef });
+    // now select your desired strategy:
+    const detachStrategy = strategies.detach;
+    // schedule a re-render:
+    detachStrategy.scheduleCD();
+    // render synchronously:
+    detachStrategy.renderMethod();
+  }
+}
 ```
 
-## Rendering Strategies
+### Built-in Strategies
 
-![Template - Rendering Strategies](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/template_rendering-strategies.png)
+![Template - RenderStrategies](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/template_rendering-strategies.png)
 
-### Native Strategy
+#### Native Strategy
 
 This strategy mirrors Angular's built-in `async` pipe.
 This means for every emitted value `ChangeDetectorRef#markForCheck` is called.
@@ -165,17 +261,18 @@ This means for every emitted value `ChangeDetectorRef#markForCheck` is called.
 | -------- | ------------- | ------------------ | --------------- |
 | `native` | ❌/❌         | mFC / mFC          | ❌              |
 
-### Noop
+#### Noop
 
 Noop Strategy
 
-This strategy is does nothing. It serves for debugging only
+This strategy does nothing. It serves for debugging purposes or as fine-grained performance optimization tool.
+Use it with caution, since it stops `ChangeDetection` completely.
 
 | Name   | ZoneLess VE/I | Render Method VE/I | Coalescing VE/I |
 | ------ | ------------- | ------------------ | --------------- |
 | `noop` | ❌/❌         | no rendering       | ❌              |
 
-### Global Strategy
+#### Global Strategy
 
 This strategy is rendering the application root and
 all it's children that are on a path
@@ -185,46 +282,33 @@ that is marked as dirty or has components with `ChangeDetectionStrategy.Default`
 | -------- | ------------- | ------------------ | ---------- |
 | `global` | ❌/✔️         | mFC / ɵMD          | ❌         |
 
-### Local Strategy
+#### Local Strategy
 
 This strategy is rendering the actual component and
-all it's children that are on a path
+all it's **children** that are on a path
 that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
 
-As detectChanges has no coalescing of render calls
-like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` has, so we have to apply our own coalescing, 'scoped' on
-component level.
+As detectChanges is synchronous and has no built-in coalescing of rendering
+like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` have, we have to apply our own coalescing.
+It is also _scoped_ on component level. (see [Concepts](#Concepts) for more information)
 
-Coalescing, in this very manner,
-means*collecting all events\*\* in the same
-[EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render and
-execute*re-rendering only once\*\*.
+| Name    | ZoneLess VE/I | Render Method VE/I | Coalescing/Schedule    |
+| ------- | ------------- | ------------------ | ---------------------- |
+| `local` | ✔️/✔️         | dC / dC            | micro + animationFrame |
 
-'Scoped' coalescing, in addition, means*grouping the collected events by\*\* a specific context.
-E. g. the*component\*\* from which the re-rendering was initiated.
+#### Detach Strategy
 
-| Name    | ZoneLess VE/I | Render Method | Coalescing/Schedule |
-| ------- | ------------- | ------------- | ------------------- |
-| `local` | ✔️/✔️         | dC / dC       | micro + X           |
+The Detach Strategy share its behavior with the **Local Strategy** . It can be seen as
+the **Local Strategys** more aggressive brother. Instead of just rendering scheduled changes,
+it will also `detach` (`ChangeDetectorRef#detach`) this very `ChangeDetectorRef` from the detection cycle.
+Use this strategy on your own risk. It provides absolute _maximum_ performance, since your `Component` is
+effectively resilient against re-renderings coming from any other source than this strategy. But it will come with
+some downsights as you will see when using it :). Have fun!!
 
-### Detach Detach
+| Name     | ZoneLess VE/I | Render Method VE/I | Coalescing             |
+| -------- | ------------- | ------------------ | ---------------------- |
+| `detach` | ✔️/✔️         | dC / ɵDC           | micro + animationFrame |
 
-This strategy is rendering the actual component and
-all it's children that are on a path
-that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
+### Custom Strategies
 
-As detectChanges has no coalescing of render calls
-like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` has, so we have to apply our own coalescing, 'scoped' on
-component level.
-
-Coalescing, in this very manner,
-means*collecting all events\*\* in the same
-[EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render and
-execute*re-rendering only once\*\*.
-
-'Scoped' coalescing, in addition, means*grouping the collected events by\*\* a specific context.
-E. g. the*component\*\* from which the re-rendering was initiated.
-
-| Name     | ZoneLess VE/I | Render Method VE/I | Coalescing VE/I |
-| -------- | ------------- | ------------------ | --------------- |
-| `detach` | ✔️/✔️         | dC / ɵDC           | ✔️ + C/ LV      |
+ON ROADMAP, WILL COME SOON
