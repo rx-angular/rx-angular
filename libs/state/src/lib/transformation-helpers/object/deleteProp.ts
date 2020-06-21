@@ -2,9 +2,9 @@ import { isObjectGuard, isKeyOf } from '../../core/utils/typing';
 
 /**
  * @description
- * Accepts object of type T and key of type K extends keyof T.
- * Removes property from an object and returns new updated object without specified property.
- * If property not found returns copy of original object.
+ * Accepts an object of type T and key of type K extends keyof T.
+ * Removes property from an object and returns a new updated object without specified property.
+ * If property not found returns copy of the original object.
  * Not mutating original object.
  *
  * @example

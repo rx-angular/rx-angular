@@ -1,11 +1,10 @@
 /**
  * @description
- * Inserts one or multiple items to array T[].
- * Returns new updated array T[].
- * Not mutating original array.
+ * Inserts one or multiple items to an array T[].
+ * Returns a new instance of the updated array T[], and does not mutate the original one.
  *
  * @example
- * // Inseting single value
+ * // Inserting single value
  *
  * const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}];
  *
@@ -15,7 +14,7 @@
  * //  [{id: 1, type: 'cat'}, {id: 2, type: 'dog}, {id: 3, type: 'parrot}];
  *
  * @example
- * // Inseting multiple values
+ * // Inserting multiple values
  *
  * const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}];
  *
