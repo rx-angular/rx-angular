@@ -4,7 +4,7 @@
  * Returns a new instance of the updated array T[], and does not mutate the original one.
  *
  * @example
- * // Inseting single value
+ * // Inserting single value
  *
  * const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}];
  *
