@@ -2,7 +2,7 @@ import { isObjectGuard } from '../../core/utils/typing';
 
 /**
  * @description
- * Converts dictionary of type {[key: string]: T} to array T[].
+ * Converts a dictionary of type {[key: string]: T} to array T[].
  *
  * @example
  *
