@@ -5,7 +5,6 @@ import { isKeyOf } from '../../core/utils/typing';
  * @description
  * Converts an array of objects to a dictionary {[key: string]: T}.
  * Accepts array T[] and key of type string, number or symbol as inputs.
- * Returns dictionary {[key: string]: T};
  *
  *
  * @example
