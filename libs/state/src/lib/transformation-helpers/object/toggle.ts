@@ -4,8 +4,7 @@ import { isKeyOf, isObjectGuard } from '../../core/utils/typing';
  * @description
  * Toggles a boolean property in the object.
  * Accepts object of type T and key value of which is boolean.
- * Toggles the property and returns new object.
- * Not mutating original object.
+ * Toggles the property and returns a new object, while not mutating the original one.
  *
  * @example
  *
