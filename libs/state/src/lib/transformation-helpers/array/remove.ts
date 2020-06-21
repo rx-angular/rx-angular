@@ -2,7 +2,7 @@ import { CompareFn } from '../../rxjs/interfaces/compare-fn';
 
 /**
  * @description
- * Removes one or multiple items from array T[].
+ * Removes one or multiple items from an array T[].
  * You can provide a custom comparison function that should return true if items match.
  * If no comparison is provided, an equality check is used by default.
  * Returns new updated array T[].
