@@ -14,7 +14,7 @@
  * //  [{id: 1, type: 'cat'}, {id: 2, type: 'dog}, {id: 3, type: 'parrot}];
  *
  * @example
- * // Inseting multiple values
+ * // Inserting multiple values
  *
  * const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}];
  *
