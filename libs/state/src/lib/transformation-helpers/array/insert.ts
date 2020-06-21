@@ -24,6 +24,7 @@
  * // updatedCreatures will be:
  * // [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}, {id: 3, type: 'parrot'}, {id: 4, type: 'hamster'}];
  *
+ *
  * @returns T[]
  *
  * @docsPage insert
@@ -31,10 +32,15 @@
  */
 
 export function insert<T, I extends T>(array: T[], itemsOrItem: I[] | I): T[] {
-  if (array && itemsOrItem) {
-    const items = Array.isArray(itemsOrItem) ? itemsOrItem : [itemsOrItem];
-    return [...array, ...items];
+  const items = itemsOrItem
+    ? Array.isArray(itemsOrItem)
+      ? itemsOrItem
+      : [itemsOrItem]
+    : [];
+
+  if (!array || !Array.isArray(array)) {
+    return items;
   }
 
-  throw new Error(`wrong params to 'insert'`);
+  return [...array, ...items];
 }

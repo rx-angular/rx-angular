@@ -52,22 +52,22 @@ describe('mergeObjects', () => {
       expect(result).toEqual(primitiveState);
     });
 
-    it('should throw error if at least one input not provided', () => {
-      expect(() => mergeObjects(null as any, primitiveState)).toThrow(Error);
-      expect(() => mergeObjects(primitiveState, null as any)).toThrow(Error);
-      expect(() => mergeObjects(null as any, null as any)).toThrow(Error);
+    it('should work if at least one argument not provided', () => {
+      expect(mergeObjects(null as any, primitiveState)).toEqual(primitiveState);
+      expect(mergeObjects(primitiveState, null as any)).toEqual(primitiveState);
+      expect(mergeObjects(null as any, null as any)).toEqual({});
     });
 
-    it('should throw error if at least one of inputs is not an object', () => {
-      expect(() => mergeObjects(primitiveState, '' as any)).toThrow(Error);
-      expect(() => mergeObjects('' as any, primitiveState)).toThrow(Error);
-      expect(() => mergeObjects('' as any, '' as any)).toThrow(Error);
+    it('should work if at least one of inputs is not an object', () => {
+      expect(mergeObjects(primitiveState, '' as any)).toEqual(primitiveState);
+      expect(mergeObjects('' as any, primitiveState)).toEqual(primitiveState);
+      expect(mergeObjects('' as any, '' as any)).toEqual({});
     });
 
-    it('should throw error if at least on of objects is array', () => {
-      expect(() => mergeObjects(primitiveState, [primitiveState] as any)).toThrow(Error);
-      expect(() => mergeObjects([primitiveState] as any, primitiveState)).toThrow(Error);
-      expect(() => mergeObjects([primitiveState] as any, [primitiveState] as any)).toThrow(Error);
+    it('should work if at least on of objects is array', () => {
+      expect(mergeObjects(primitiveState, [primitiveState] as any)).toEqual(primitiveState);
+      expect(mergeObjects([primitiveState] as any, primitiveState)).toEqual(primitiveState);
+      expect(mergeObjects([primitiveState] as any, [primitiveState] as any)).toEqual({});
     });
   })
 });

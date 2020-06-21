@@ -77,25 +77,30 @@ describe('toDictionary', () => {
       expect(dictionaryResult).toEqual({});
     });
 
-    it('should throw error if key does not exist', () => {
-      expect(() => toDictionary(creatures, 'fake' as any)).toThrow(Error);
+    it('should return empty object if key does not exist', () => {
+      expect(toDictionary(creatures, 'fake' as any)).toEqual({});
     });
 
-    it('should throw error when key value is not string, number or symbol', () => {
-      expect(() => toDictionary(creatures, 'breeds' as any)).toThrow(Error);
+    it('should return empty object when key value is not string, number or symbol', () => {
+      expect(toDictionary(creatures, 'breeds' as any)).toEqual({});
     });
 
-    it('should throw error when key is not provided', () => {
-      expect(() => toDictionary(creatures, null as any)).toThrow(Error);
+    it('should return empty object when key is not provided', () => {
+      expect(toDictionary(creatures, null as any)).toEqual({});
     });
 
-    it('should throw error when string is provided instead of array', () => {
-      expect(() => toDictionary('' as any, '')).toThrow(Error);
+    it('should return empty object when first argument is not array', () => {
+      expect(toDictionary('' as any, '')).toEqual({});
+      expect(toDictionary({} as any, '')).toEqual({});
+      expect(toDictionary(1 as any, '')).toEqual({});
+      expect(toDictionary(false as any, '')).toEqual({});
     });
 
-    it('should throw error when array is not provided', () => {
+    it('should return null or undefined when array is not provided', () => {
       const arr: any[] = null as any;
-      expect(() => toDictionary(arr, '')).toThrow(Error);
+      const arr2: any[] = undefined as any;
+      expect( toDictionary(arr, '')).toEqual(undefined);
+      expect(toDictionary(arr2, '')).toEqual(undefined);
     });
   })
 });

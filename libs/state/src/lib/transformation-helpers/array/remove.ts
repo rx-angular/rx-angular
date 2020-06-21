@@ -33,20 +33,28 @@ import { CompareFn } from '../../rxjs/interfaces/compare-fn';
  * @docsPage remove
  * @docsCategory transformation-helpers
  */
-export function remove<T, I extends T>(
+export function remove<T>(
   array: T[],
-  itemsOrItem: I[] | I,
+  itemsOrItem: Partial<T>[] | Partial<T>,
   compare?: CompareFn<T>
 ): T[] {
-  if (array && itemsOrItem) {
-    const items = Array.isArray(itemsOrItem) ? itemsOrItem : [itemsOrItem];
-    const defaultCompare = (a: T, b: T) => a === b;
-    const innerCompare = compare || defaultCompare;
+  const items = itemsOrItem
+    ? Array.isArray(itemsOrItem)
+      ? itemsOrItem
+      : [itemsOrItem]
+    : [];
+  const defaultCompare = (a: T, b: T) => a === b;
+  const innerCompare = compare || defaultCompare;
 
-    return array.filter(existingItem => {
-      return !items.some(item => innerCompare(item, existingItem));
-    });
+  if (array === undefined || array === null) {
+    return undefined as any;
   }
 
-  throw new Error(`wrong params to 'remove'`);
+  if (!Array.isArray(array) || !array.length) {
+    return [];
+  }
+
+  return array.filter(existingItem => {
+    return !items.some(item => innerCompare(item as T, existingItem));
+  });
 }

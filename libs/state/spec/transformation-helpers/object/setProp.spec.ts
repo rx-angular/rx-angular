@@ -48,18 +48,20 @@ describe('setProp', () => {
   });
 
   describe('edge cases', () => {
-    it('should throw error if first argument is not an object', () => {
-      expect(() => setProp('' as any, 'fake' as any, 42)).toThrow(Error);
+    it('should return empty object if first argument is not an object', () => {
+      expect(setProp('' as any, 'fake' as any, 42)).toEqual({});
+      expect(setProp('' as any, 'fake' as any, 42)).toEqual({});
+      expect(setProp(null as any, 'fake', 42)).toEqual({});
+      expect(setProp(null as any, null as any, 42)).toEqual({});
+      expect(setProp([primitiveState], 'concat', () => [])).toEqual({});
     });
 
-    it('should throw error if at least one input not provied', () => {
-      expect(() => setProp(null as any, 'fake', 42)).toThrow(Error);
-      expect(() => setProp(primitiveState, null as any, 42)).toThrow(Error);
-      expect(() => setProp(null as any, null as any, 42)).toThrow(Error);
+    it('should initialize non-existing key', () => {
+      expect(setProp(primitiveState, 'fake' as any, 42)).toEqual({...primitiveState, fake: 42});
     });
 
-    it('should throw error if object is array', () => {
-      expect(() => setProp([primitiveState], 'concat', () => [])).toThrow(Error);
+    it('should return original object if key not found/not provided', () => {
+      expect(setProp(primitiveState, null as any, 42)).toEqual(primitiveState);
     });
-  })
+  });
 });

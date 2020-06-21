@@ -23,9 +23,15 @@ import { isObjectGuard } from '../../core/utils/typing';
  * @docsCategory transformation-helpers
  */
 export function dictionaryToArray<T>(dictionary: { [key: string]: T }): T[] {
-  if (isObjectGuard(dictionary)) {
-    return Object.values(dictionary);
+  if (dictionary === undefined || dictionary === null) {
+    return undefined as any;
   }
 
-  throw new Error(`wrong params to 'dictionaryToArray'`);
+  if (!isObjectGuard(dictionary)) {
+    return [];
+  }
+
+  return Object.values(dictionary);
 }
+
+// return undefined (and for dictionary)

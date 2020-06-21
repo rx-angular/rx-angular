@@ -26,15 +26,16 @@ export function toggle<T extends object>(
   object: T,
   key: OnlyKeysOfSpecificType<T, boolean>
 ): T {
-  if (isObjectGuard(object)) {
-    if (!object[key]) {
-      return object;
-    }
-
-    if (isKeyOf<T>(key) && typeof object[key] === 'boolean') {
-      return { ...object, [key]: !object[key] };
-    }
+  if (!isObjectGuard(object)) {
+    return {} as T;
   }
 
-  throw new Error(`wrong params to 'toggle'`);
+  if (
+    isKeyOf<T>(key) &&
+    (typeof object[key] === 'boolean' || !object.hasOwnProperty(key))
+  ) {
+    return { ...object, [key]: !object[key] };
+  }
+
+  return object;
 }

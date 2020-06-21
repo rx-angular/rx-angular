@@ -61,6 +61,12 @@ describe('remove', () => {
 
       expect(creaturesResult).toEqual(creatures);
     });
+
+    it('should work with partials', () => {
+      const creaturesResult = remove(creatures, {id: 1}, (o, n) => o.id === n.id);
+
+      expect(creaturesResult).toEqual(creaturesAfterSingleItemRemove);
+    });
   });
 
   describe('edge cases', () => {
@@ -72,10 +78,17 @@ describe('remove', () => {
       expect(remove([], [])).toEqual([]);
     });
 
-    it('should throw error when aat least one input not provided', () => {
-      expect(() => remove(null as any, creatures)).toThrow(Error);
-      expect(() => remove(creatures, null as any)).toThrow(Error);
-      expect(() => remove(null as any, null as any)).toThrow(Error);
+    it('should work if one or both arguments are undefined', () => {
+      expect(remove(null as any, creatures)).toEqual(undefined);
+      expect(remove(creatures, null as any)).toEqual(creatures);
+      expect(remove(null as any, null as any)).toEqual(undefined);
+    });
+
+    it('should work when initial array is not array', () => {
+      expect(remove('' as any, creatures)).toEqual([]);
+      expect(remove(1 as any, creatures)).toEqual([]);
+      expect(remove({} as any, creatures)).toEqual([]);
+      expect(remove(false as any, creatures)).toEqual([]);
     });
   })
 });

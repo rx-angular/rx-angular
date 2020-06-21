@@ -56,10 +56,17 @@ describe('update', () => {
       expect(update(creatures, [], (a, b) => a.id === b.id)).toEqual(creatures);
     });
 
-    it('should throw error when at least one input not provided', () => {
-      expect(() => update(null as any, creatures)).toThrow(Error);
-      expect(() => update(creatures, null as any)).toThrow(Error);
-      expect(() => update(null as any, null as any)).toThrow(Error);
+    it('should work when one or both inputs not provided', () => {
+      expect(update(null as any, creatures)).toEqual(creatures);
+      expect(update(creatures, null as any)).toEqual(creatures);
+      expect(update(null as any, null as any)).toEqual([]);
+    });
+
+    it('should work when initial array is not array', () => {
+      expect(update('' as any, creatures)).toEqual(creatures);
+      expect(update(1 as any, creatures)).toEqual(creatures);
+      expect(update({} as any, creatures)).toEqual(creatures);
+      expect(update(false as any, creatures)).toEqual(creatures);
     });
   });
 });

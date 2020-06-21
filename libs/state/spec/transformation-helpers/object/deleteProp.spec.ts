@@ -39,18 +39,20 @@ describe('deleteProp', () => {
       expect(result).toEqual(primitiveState);
     });
 
-    it('should throw error if first argument is not an object', () => {
-      expect(() => deleteProp('' as any, 'fake')).toThrow(Error);
+    it('should return original object if property not provided', () => {
+      expect(deleteProp(primitiveState, null as any)).toEqual(primitiveState);
     });
 
-    it('should throw error if at least one input not provied', () => {
-      expect(() => deleteProp(null as any, 'fake')).toThrow(Error);
-      expect(() => deleteProp(primitiveState, null as any)).toThrow(Error);
-      expect(() => deleteProp(null as any, null as any)).toThrow(Error);
+    it('should return undefined  if object is null or undefiend', () => {
+      expect(deleteProp(null as any, null as any)).toEqual(undefined);
+      expect(deleteProp(undefined as any, 'fake')).toEqual(undefined);
     });
 
-    it('should throw error if object is array', () => {
-      expect(() => deleteProp([primitiveState], 'concat')).toThrow(Error);
+    it('should return empty object if first argument is not an object', () => {
+      expect(deleteProp('' as any, 'fake')).toEqual({});
+      expect(deleteProp(1 as any, 'fake')).toEqual({});
+      expect(deleteProp(false as any, 'fake')).toEqual({});
+      expect(deleteProp([], 'concat')).toEqual({});
     });
   })
 });

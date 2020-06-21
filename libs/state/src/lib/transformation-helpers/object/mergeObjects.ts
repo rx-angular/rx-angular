@@ -25,9 +25,11 @@ import { isObjectGuard } from '../../core/utils/typing';
  * @docsCategory transformation-helpers
  */
 export function mergeObjects<T extends object>(object: T, upd: Partial<T>): T {
-  if (isObjectGuard(object) && isObjectGuard(upd)) {
-    return { ...object, ...upd };
+  const update = isObjectGuard(upd) ? upd : {};
+
+  if (!isObjectGuard(object)) {
+    return update as T;
   }
 
-  throw new Error(`wrong params to 'mergeObjects'`);
+  return { ...object, ...update };
 }

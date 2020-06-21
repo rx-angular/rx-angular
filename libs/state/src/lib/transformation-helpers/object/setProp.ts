@@ -24,12 +24,16 @@ export function setProp<T extends object, K extends keyof T>(
   key: K,
   value: T[K]
 ): T {
-  if (isObjectGuard(object) && isKeyOf<T>(key)) {
+  if (!isObjectGuard(object)) {
+    return {} as T;
+  }
+
+  if (isKeyOf<T>(key)) {
     return {
       ...object,
       [key]: value
     };
   }
 
-  throw new Error(`wrong params to 'setProp'`);
+  return object;
 }

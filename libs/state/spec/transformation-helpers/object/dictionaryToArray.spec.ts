@@ -52,12 +52,16 @@ describe('dictionaryToArray', () => {
       expect(arrayResult).toEqual([]);
     });
 
-    it('should throw error if dictionary is not provided', () => {
-      expect(() => dictionaryToArray(null as any)).toThrow(Error);
+    it('should return undefined if dictionary null or undefined', () => {
+      expect(dictionaryToArray(null as any)).toEqual(undefined);
+      expect(dictionaryToArray(undefined as any)).toEqual(undefined);
     });
 
-    it('should throw error if dictionary is not an object', () => {
-      expect(() => dictionaryToArray('' as any)).toThrow(Error);
+    it('should return empty array if dictionary is not an object', () => {
+      expect(dictionaryToArray('' as any)).toEqual([]);
+      expect(dictionaryToArray(1 as any)).toEqual([]);
+      expect(dictionaryToArray(false as any)).toEqual([]);
+      expect(dictionaryToArray({} as any)).toEqual([]);
     });
   })
 });

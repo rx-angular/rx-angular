@@ -26,20 +26,22 @@ import { CompareFn } from '../../rxjs/interfaces/compare-fn';
  */
 export function update<T extends object, I extends T>(
   array: T[],
-  itemsOrItem: I[] | I,
+  itemsOrItem: T[] | T,
   compare?: CompareFn<T>
 ): T[] {
-  if (array && itemsOrItem) {
-    const items = Array.isArray(itemsOrItem) ? itemsOrItem : [itemsOrItem];
-    const defaultCompare = (a: T, b: T) => a === b;
-    const innerCompare = compare || defaultCompare;
+  const items = itemsOrItem
+    ? Array.isArray(itemsOrItem)
+      ? itemsOrItem
+      : [itemsOrItem]
+    : [];
+  const defaultCompare = (a: T, b: T) => a === b;
+  const innerCompare = compare || defaultCompare;
 
-    return array.map(existingItem => {
-      return (
-        items.find(item => innerCompare(item, existingItem)) || existingItem
-      );
-    });
+  if (!array || !Array.isArray(array)) {
+    return items;
   }
 
-  throw new Error(`wrong params to 'update'`);
+  return array.map(existingItem => {
+    return items.find(item => innerCompare(item, existingItem)) || existingItem;
+  });
 }

@@ -34,23 +34,21 @@ describe('toggle', () => {
 
   describe('edge cases', () => {
     it('should return initial object if property not found', () => {
-      const nonExistingKeyResult = toggle(primitiveState, 'fake' as any);
       const noKeyResult = toggle(primitiveState, null as any);
 
-      expect(nonExistingKeyResult).toEqual(primitiveState);
       expect(noKeyResult).toEqual(primitiveState);
     });
 
-    it('should throw error first argument is not and object', () => {
-      expect(() => toggle('' as any, 'fake')).toThrow(Error);
+    it('should return empty object if some or all arguments provided', () => {
+      expect(toggle(null as any, null as any)).toEqual({});
     });
 
-    it('should throw error no arguments provided', () => {
-      expect(() => toggle(null as any, null as any)).toThrow(Error);
+    it('should return original object if key value is not a boolean', () => {
+      expect(toggle(primitiveState, 'str' as any)).toEqual(primitiveState);
     });
 
-    it('should throw error if key value is not a boolean', () => {
-      expect(() => toggle(primitiveState, 'str' as any)).toThrow(Error);
+    it('should initialize new values in an object', () => {
+      expect(toggle(primitiveState, 'newBoolean' as any)).toEqual({...primitiveState, newBoolean: true});
     });
   });
 });

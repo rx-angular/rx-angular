@@ -25,11 +25,19 @@ export function deleteProp<T extends object, K extends keyof T>(
   object: T,
   key: K
 ): Omit<T, K> {
-  if (isObjectGuard(object) && isKeyOf<T>(key)) {
-    const copy = { ...object };
-    delete copy[key];
-    return copy;
+  if (object === undefined || object === null) {
+    return undefined as any;
   }
 
-  throw new Error(`wrong params to 'deleteProp'`);
+  if (!isObjectGuard(object)) {
+    return {} as Omit<T, K>;
+  }
+
+  if (!isKeyOf<T>(key)) {
+    return object;
+  }
+
+  const copy = { ...object };
+  delete copy[key];
+  return copy;
 }

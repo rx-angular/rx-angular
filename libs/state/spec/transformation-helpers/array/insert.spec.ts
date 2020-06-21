@@ -6,6 +6,7 @@ interface Creature {
 }
 
 let creatures: Creature[];
+
 const creatureToAdd = {id: 3, type: 'catDog'};
 
 beforeEach(() => {
@@ -55,10 +56,18 @@ describe('insert', () => {
       expect(insert([], [])).toEqual([]);
     });
 
-    it('should throw error when at least one of inputs not provided', () => {
-      expect(() => insert(null as any, 1)).toThrow(Error);
-      expect(() => insert(creatures, null as any)).toThrow(Error);
-      expect(() => insert(null as any, null as any)).toThrow(Error);
+    it('should work if one or multiple inputs not provided', () => {
+      expect(insert(null as any, creatures)).toEqual(creatures);
+      expect(insert(creatures, null as any)).toEqual(creatures);
+      expect(insert(null as any, null as any)).toEqual([]);
     });
-  })
+
+    it('should work when initial array is not array', () => {
+      expect(insert('' as any, creatures)).toEqual(creatures);
+      expect(insert(1 as any, creatures)).toEqual(creatures);
+      expect(insert({} as any, creatures)).toEqual(creatures);
+      expect(insert(false as any, creatures)).toEqual(creatures);
+    });
+
+  });
 });
