@@ -15,7 +15,7 @@ import { isObjectGuard } from '../../core/utils/typing';
  *
  * const catWithname = mergeObjects(cat, {name: 'Fluffy'});
  *
- * // anonymousCat will be:
+ * // catWithname will be:
  * // {id: 1, type: 'cat', name: 'Fluffy'};
  *
  * @returns T
