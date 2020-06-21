@@ -1,8 +1,7 @@
 /**
  * @description
  * Inserts one or multiple items to an array T[].
- * Returns new updated array T[].
- * Not mutating original array.
+ * Returns a new instance of the updated array T[], and does not mutate the original one.
  *
  * @example
  * // Inseting single value
