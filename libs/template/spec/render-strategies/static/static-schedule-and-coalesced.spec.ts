@@ -1,5 +1,5 @@
 import { coalesceAndSchedule } from '../../../src/lib/render-strategies/static';
-import { SchedulingPriority } from '../../../src/lib/render-strategies/core/interfaces';
+import { SchedulingPriority } from '../../../src/lib/render-strategies/rxjs/scheduling/interfaces';
 
 /** @test {coalesceWith} */
 describe('schedule and coalesce', () => {

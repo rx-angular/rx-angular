@@ -14,6 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { ViewportModule } from '../../viewport.module';
+import { AppModule } from '../../app.module';
+import { SharedModule } from '../shared/shared.module';
 
 export const ROUTES = [
   {
@@ -40,7 +42,8 @@ const DECLARATIONS = [TreePrioComponent];
     MatSelectModule,
     TemplateModule,
     MatCardModule,
-    ViewportModule
+    ViewportModule,
+    SharedModule
   ],
   exports: [DECLARATIONS]
 })

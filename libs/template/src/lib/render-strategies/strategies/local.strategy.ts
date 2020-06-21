@@ -1,8 +1,8 @@
 import { coalesceAndSchedule, staticCoalesce } from '../static';
-import { SchedulingPriority } from '../core/interfaces';
+import { SchedulingPriority } from '../rxjs/scheduling/interfaces';
 import { getUnpatchedResolvedPromise } from '../../core/utils/unpatched-promise';
 import { from, Observable } from 'rxjs';
-import { getScheduler } from '../core/priorities-map';
+import { getScheduler } from '../rxjs/scheduling/priority-scheduler-map';
 import { observeOn } from 'rxjs/operators';
 import {
   RenderStrategy,
@@ -39,6 +39,8 @@ export function getLocalStrategies<T>(
 ): { [strategy: string]: RenderStrategy<T> } {
   return {
     local: createLocalStrategy<T>(config),
+    localCoalesce: createLocalCoalesceStrategy<T>(config),
+    localCoalesceAndSchedule: createLocalCoalesceAndScheduleStrategy<T>(config),
     localNative: createLocalNativeStrategy<T>(config),
     detach: createDetachStrategy(config),
     userVisible: createUserVisibleStrategy(config),
@@ -109,6 +111,52 @@ export function createLocalStrategy<T>(
 
   return {
     name: 'local',
+    renderMethod,
+    behavior,
+    scheduleCD
+  };
+}
+
+export function createLocalCoalesceStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy<T> {
+  const durationSelector = from(getUnpatchedResolvedPromise());
+  const scope = (config.cdRef as any).context;
+  const priority = SchedulingPriority.animationFrame;
+  const scheduler = getScheduler(priority);
+
+  const renderMethod = () => {
+    config.cdRef.detectChanges();
+  };
+  const behavior = o =>
+    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+  const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
+
+  return {
+    name: 'localCoalesce',
+    renderMethod,
+    behavior,
+    scheduleCD
+  };
+}
+
+export function createLocalCoalesceAndScheduleStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy<T> {
+  const durationSelector = from(getUnpatchedResolvedPromise());
+  const scope = (config.cdRef as any).context;
+  const priority = SchedulingPriority.animationFrame;
+  const scheduler = getScheduler(priority);
+
+  const renderMethod = () => {
+    config.cdRef.detectChanges();
+  };
+  const behavior = o =>
+    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+  const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
+
+  return {
+    name: 'localCoalesceAndSchedule',
     renderMethod,
     behavior,
     scheduleCD

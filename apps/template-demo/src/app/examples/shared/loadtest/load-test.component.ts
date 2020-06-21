@@ -26,10 +26,10 @@ import {
   tap
 } from 'rxjs/operators';
 import { getStrategies } from '@rx-angular/template';
-import { CoalescingTestService } from './coalescing-test.service';
+import { LoadTestService } from './load-test.service';
 
 @Component({
-  selector: 'demo-basics',
+  selector: 'load-test',
   template: `
     renders: {{ rerenders() }}
 
@@ -44,24 +44,15 @@ import { CoalescingTestService } from './coalescing-test.service';
     <select [unpatch] (change)="strategy$.next($event?.target?.value)">
       <option [value]="s" *ngFor="let s of strategies">{{ s }}</option>
     </select>
-
     <br />
-
     <button [unpatch] (click)="updateValue()">UpdateValue</button>
-    <br />
     <button [unpatch] (click)="updatePattern()">updatePattern</button>
-    <br />
     <button [unpatch] (click)="updatePatternSet()">
       updatePatternSet {{ strategy$ | push }}
     </button>
-    <br />
     <button [unpatch] (click)="s.toggle.next($event)">toggle</button>
     <br />
 
-    push: {{ value$ | push: strategy$ }}<br />
-    push: {{ value$ | push: strategy$ }}<br />
-    push: {{ value$ | push: strategy$ }}<br />
-    push: {{ value$ | push: strategy$ }}<br />
     push: {{ value$ | push: strategy$ }}<br />
 
     ---- <br />
@@ -82,9 +73,9 @@ import { CoalescingTestService } from './coalescing-test.service';
     <br />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [CoalescingTestService]
+  providers: [LoadTestService]
 })
-export class CoalescingComponent implements OnInit {
+export class LoadTestComponent implements OnInit {
   numRenders = 0;
 
   strategy$ = this.s.strategy$;
@@ -92,10 +83,7 @@ export class CoalescingComponent implements OnInit {
   strategies = Object.keys(getStrategies({ cdRef: {} } as any));
   value$: Observable<string> = this.s.value$;
 
-  constructor(
-    private cdRef: ChangeDetectorRef,
-    public s: CoalescingTestService
-  ) {}
+  constructor(private cdRef: ChangeDetectorRef, public s: LoadTestService) {}
 
   rerenders() {
     return ++this.numRenders;

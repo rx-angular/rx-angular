@@ -8,17 +8,10 @@
 <select (change)="invisibleStrategy = $event?.target?.value">
   <option [value]="s" *ngFor="let s of strategies">{{ s }}</option>
 </select>
+<load-test class=""></load-test>
 
 <button [unpatch] (click)="remove()">Click me</button>
 <div style="display: flex">
-  <mat-card class="card">
-    <mat-card-header>
-      Test Card
-    </mat-card-header>
-    <mat-card-content>
-      <img src="./assets\images\rx-angular_logo.png" />
-    </mat-card-content>
-  </mat-card>
   <mat-card class="card">
     <mat-card-header>
       Test Card
@@ -51,6 +44,7 @@
 >
   <span>Showing {{ data?.length }} / {{ data?.length }} entries</span>
 </mat-toolbar>
+
 <div class="mat-elevation-z8 table-wrapper">
   <table
     mat-table

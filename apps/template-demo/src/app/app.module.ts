@@ -37,6 +37,7 @@ export const materialModules = [
     ViewportModule
   ],
   declarations: [AppComponent],
+  exports: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
