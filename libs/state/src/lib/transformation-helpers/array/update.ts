@@ -5,8 +5,7 @@ import { CompareFn } from '../../rxjs/interfaces/compare-fn';
  * Updates one or multiple items in an array T[].
  * You can provide a custom comparison function that should return true if items match.
  * If no comparison is provided, an equality check is used by default.
- * Not mutating original array.
- * Returns new updated array of type T[];
+ * Returns a new instance of the updated array T[], and does not mutate the original one.
  *
  * @example
  *
