@@ -1,20 +1,20 @@
 import { from } from 'rxjs';
 import {
   getGlobalThis, getUnpatchedResolvedPromise
-} from '../../../src/lib/core';
+} from '../../src/lib/core';
 import {
   getStrategies
-} from '../../../src/lib/render-strategies';
+} from '../../src/lib/render-strategies';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
 
 import {
   getMockNativeStrategyConfig,
   getMockNoopStrategyConfig
-} from '../../fixtures';
-import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
-import { createNativeStrategy } from '../../../src/lib/render-strategies/strategies/native.strategy';
-import { createNoopStrategy } from '../../../src/lib/render-strategies/strategies/noop.strategy';
+} from '../fixtures';
+import { DEFAULT_STRATEGY_NAME } from '../../src/lib/render-strategies/strategies/strategies-map';
+import { createNativeStrategy } from '../../src/lib/render-strategies/strategies/native.strategy';
+import { createNoopStrategy } from '../../src/lib/render-strategies/strategies/noop.strategy';
 
 const t = { foo: true, bar: 'test', baz: [] };
 
@@ -76,7 +76,7 @@ describe('getZoneUnPatchedDurationSelector', () => {
 describe('DEFAULT_STRATEGY_NAME', () => {
   it('should be `native`', () => {
     const strategies = getStrategies(getMockNoopStrategyConfig());
-    expect(strategies[DEFAULT_STRATEGY_NAME].name).toBe('native');
+    expect(strategies[DEFAULT_STRATEGY_NAME].name).toBe('local');
   });
 });
 

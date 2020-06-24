@@ -45,7 +45,6 @@ export function createRenderAware<U>(cfg: {
   updateObserver: NextObserver<U>;
 }): RenderAware<U | undefined | null> {
   const strategyName$ = new ReplaySubject<string | Observable<string>>(1);
-  let strategy: RenderStrategy<U>;
   const strategy$: Observable<RenderStrategy<U>> = strategyName$.pipe(
     distinctUntilChanged(),
     switchMap(stringOrObservable =>
@@ -53,8 +52,7 @@ export function createRenderAware<U>(cfg: {
         ? of(stringOrObservable)
         : stringOrObservable
     ),
-    nameToStrategy(cfg.strategies),
-    tap(s => (strategy = s))
+    nameToStrategy(cfg.strategies)
   );
 
   const observablesFromTemplate$ = new ReplaySubject<Observable<U>>(1);
@@ -82,7 +80,6 @@ export function createRenderAware<U>(cfg: {
     filter(o$ => o$ !== undefined),
     switchMap(o$ => o$.pipe(distinctUntilChanged(), tap(cfg.updateObserver))),
     withLatestFrom(strategy$),
-    tap(s => console.log(s[1].name)),
     tap(([v, strat]) => strat.scheduleCD()),
     catchError(e => {
       console.error(e);
