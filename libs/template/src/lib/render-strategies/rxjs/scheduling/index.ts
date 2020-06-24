@@ -1,3 +1,6 @@
 export { unpatchedAsapScheduler } from './asapScheduler';
-export { postTaskScheduler } from './postTaskScheduler';
+export { getPostTaskScheduler } from './getPostTaskScheduler';
 export { idleScheduler } from './idleCallbackScheduler';
+export { unpatchedAnimationFrameScheduler } from './animationFrameScheduler';
+export * from './interfaces';
+export * from './priority-scheduler-map';

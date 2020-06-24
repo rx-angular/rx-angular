@@ -1,7 +1,7 @@
 import { from } from 'rxjs';
 import { staticCoalesce } from './static-coalesce';
 import { schedule } from './static-schedule';
-import { SchedulingPriority } from '../core/interfaces';
+import { SchedulingPriority } from '../rxjs/scheduling/interfaces';
 import { getUnpatchedResolvedPromise } from '../../core/utils/unpatched-promise';
 
 export function coalesceAndSchedule(

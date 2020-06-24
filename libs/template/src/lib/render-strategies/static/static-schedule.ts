@@ -1,6 +1,6 @@
 import { Subscription } from 'rxjs';
-import { getScheduler } from '../core/priorities-map';
-import { SchedulingPriority } from '../core/interfaces';
+import { getScheduler } from '../rxjs/scheduling/priority-scheduler-map';
+import { SchedulingPriority } from '../rxjs/scheduling/interfaces';
 
 export function schedule(
   work: () => void,

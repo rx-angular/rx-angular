@@ -20,7 +20,6 @@ export function getZoneUnPatchedApi(name: string, elem?: any): Function {
 }
 
 /**
- * reapplyEventListenerZoneUnPatched
  *
  * @description
  *
@@ -30,8 +29,9 @@ export function getZoneUnPatchedApi(name: string, elem?: any): Function {
  * @param elem {HTMLElement} - The elem to re-apply the listeners to.
  * @param event {string} - The name of the event from which to re-apply the listeners.
  *
+ * @returns void
  */
-export function revertEventListenerZonePatch(elem: HTMLElement, event: string) {
+export function unpatchEventListener(elem: HTMLElement, event: string): void {
   const eventListeners = (elem as any).eventListeners(event);
   // Return if no event listeners are present
   if (!eventListeners) {

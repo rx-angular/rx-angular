@@ -28,7 +28,7 @@ interface SchedulerPostTaskOptions {
   signal?: any;
 }
 
-const scheduler: PostTaskScheduler =
+export const postTaskScheduler: PostTaskScheduler =
   typeof window !== 'undefined'
     ? (window as any).scheduler || {
         postTask<T>(options: SchedulerPostTaskOptions): Promise<T> {
@@ -59,7 +59,7 @@ class PostTaskAction<T> extends Subscription {
   }
 }
 
-export function postTaskScheduler(
+export function getPostTaskScheduler(
   priority: PostTaskSchedulerPriority
 ): SchedulerLike {
   return ({
@@ -85,7 +85,7 @@ export function postTaskScheduler(
       // weired hack
       action._scheduler = this;
 
-      const promise = scheduler
+      const promise = postTaskScheduler
         .postTask(() => {}, options)
         .then(() => {
           try {

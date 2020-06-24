@@ -12,21 +12,31 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { CoalescingComponent } from './solution/coalescing.component';
+import { CoalescingExperimentsProfilingComponent } from './experiments-profiling/coalescing-experiments-profiling.component';
 import { TemplateModule } from '@rx-angular/template';
+import { RealLife1ContainerComponent } from './real-life-1/real-life-1.container.component';
+import { RealLife1Component } from './real-life-1/real-life-1.component';
 
 export const ROUTES = [
   {
     path: '',
     pathMatch: 'full',
-    component: CoalescingComponent
+    component: CoalescingExperimentsProfilingComponent
   },
   {
-    path: 'solution',
-    component: CoalescingComponent
+    path: 'experiments-profiling',
+    component: CoalescingExperimentsProfilingComponent
+  },
+  {
+    path: 'real-life-1',
+    component: RealLife1ContainerComponent
   }
 ];
-const DECLARATIONS = [CoalescingComponent];
+const DECLARATIONS = [
+  CoalescingExperimentsProfilingComponent,
+  RealLife1ContainerComponent,
+  RealLife1Component
+];
 
 @NgModule({
   declarations: [DECLARATIONS],

@@ -1,7 +1,7 @@
-import { Directive, ElementRef, Input, Optional } from '@angular/core';
+import { Directive, ElementRef, Input, OnInit, Optional } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { map, mergeAll } from 'rxjs/operators';
-import { LetDirective, RenderStrategy } from '@rx-angular/template';
+import { filter, map, mergeAll, tap, withLatestFrom } from 'rxjs/operators';
+import { LetDirective } from '@rx-angular/template';
 
 function intersectionObserver(
   options?: object
@@ -40,11 +40,9 @@ const observerSupported = () =>
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[viewport-prio],[*rxLet]'
+  selector: '[viewport-prio]'
 })
-export class RenderPrioDirective {
-  initialStrategyName: string;
-
+export class RenderPrioDirective implements OnInit {
   entriesSubject = new Subject<IntersectionObserverEntry[]>();
   entries$: Observable<IntersectionObserverEntry> = this.entriesSubject.pipe(
     mergeAll()
@@ -54,8 +52,7 @@ export class RenderPrioDirective {
   @Input('viewport-prio')
   set viewportPrio(prio) {
     if (prio) {
-      this._viewportPrio = prio;
-      console.log('prio', prio);
+      this._viewportPrio = prio || 'noop';
     }
   }
 
@@ -77,25 +74,32 @@ export class RenderPrioDirective {
 
   constructor(
     private readonly el: ElementRef,
-    @Optional() letDirective: LetDirective<any>
+    @Optional() private letDirective: LetDirective<any>
   ) {
-    this.initialStrategyName = letDirective.renderAware.getStrategy().name;
+    console.log('PRIO');
+  }
+
+  ngOnInit() {
+    const letStrategyName$ = this.letDirective.renderAware.activeStrategy$.pipe(
+      map(s => s.name),
+      filter(name => name !== this._viewportPrio)
+    );
+
     this.observer.observe(this.el.nativeElement);
 
     this.visibilityEvents$
       .pipe(
-        map(visibility =>
-          visibility === 'visible'
-            ? this.initialStrategyName
-            : this._viewportPrio
+        withLatestFrom(letStrategyName$),
+        map(([visibility, strategyName]) =>
+          visibility === 'visible' ? strategyName : this._viewportPrio
         )
       )
       .subscribe(strategyName => {
-        letDirective.strategy = strategyName;
+        this.letDirective.strategy = strategyName;
         console.log('switched to ', strategyName);
 
         // render actual state on viewport enter
-        letDirective.strategies[strategyName].scheduleCD();
+        this.letDirective.strategies[strategyName].scheduleCD();
 
         //
         this.el.nativeElement.classList.add(strategyName);

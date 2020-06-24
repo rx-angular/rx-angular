@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Let1ContainerComponent } from './solution/let1.container.component';
 import { TemplateModule } from '@rx-angular/template';
-import { RenderPrioDirective } from './solution/render-prio.directive';
+import { ViewportModule } from '../../viewport.module';
 
 export const ROUTES = [
   {
@@ -16,11 +16,16 @@ export const ROUTES = [
     component: Let1ContainerComponent
   }
 ];
-const DECLARATIONS = [Let1ContainerComponent, RenderPrioDirective];
+const DECLARATIONS = [Let1ContainerComponent];
 
 @NgModule({
   declarations: [DECLARATIONS],
-  imports: [CommonModule, RouterModule.forChild(ROUTES), TemplateModule],
+  imports: [
+    CommonModule,
+    ViewportModule,
+    RouterModule.forChild(ROUTES),
+    TemplateModule
+  ],
   exports: [DECLARATIONS]
 })
 export class PrioritizeInViewportModule {}

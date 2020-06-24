@@ -1,14 +1,18 @@
-import { coalesceAndSchedule } from '../static';
-import { SchedulingPriority } from '../core/interfaces';
+import { coalesceAndSchedule, staticCoalesce } from '../static';
+import { SchedulingPriority } from '../rxjs/scheduling/interfaces';
 import { getUnpatchedResolvedPromise } from '../../core/utils/unpatched-promise';
-import { from } from 'rxjs';
-import { getScheduler } from '../core/priorities-map';
-import { observeOn, tap } from 'rxjs/operators';
+import { from, Observable } from 'rxjs';
+import { getScheduler } from '../rxjs/scheduling/priority-scheduler-map';
+import { observeOn } from 'rxjs/operators';
 import {
   RenderStrategy,
   RenderStrategyFactoryConfig
 } from '../../core/render-aware/interfaces';
 import { coalesceWith } from '../rxjs/operators/coalesceWith';
+import {
+  postTaskScheduler,
+  PostTaskSchedulerPriority
+} from '../rxjs/scheduling/getPostTaskScheduler';
 
 /**
  * Strategies
@@ -35,9 +39,13 @@ export function getLocalStrategies<T>(
 ): { [strategy: string]: RenderStrategy<T> } {
   return {
     local: createLocalStrategy<T>(config),
+    localCoalesce: createLocalCoalesceStrategy<T>(config),
+    localCoalesceAndSchedule: createLocalCoalesceAndScheduleStrategy<T>(config),
     localNative: createLocalNativeStrategy<T>(config),
     detach: createDetachStrategy(config),
-    postTask: createPostTaskStrategy(config),
+    userVisible: createUserVisibleStrategy(config),
+    userBlocking: createUserBlockingStrategy(config),
+    background: createBackgroundStrategy(config),
     idleCallback: createIdleCallbackStrategy(config)
   };
 }
@@ -109,6 +117,52 @@ export function createLocalStrategy<T>(
   };
 }
 
+export function createLocalCoalesceStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy<T> {
+  const durationSelector = from(getUnpatchedResolvedPromise());
+  const scope = (config.cdRef as any).context;
+  const priority = SchedulingPriority.animationFrame;
+  const scheduler = getScheduler(priority);
+
+  const renderMethod = () => {
+    config.cdRef.detectChanges();
+  };
+  const behavior = o =>
+    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+  const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
+
+  return {
+    name: 'localCoalesce',
+    renderMethod,
+    behavior,
+    scheduleCD
+  };
+}
+
+export function createLocalCoalesceAndScheduleStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy<T> {
+  const durationSelector = from(getUnpatchedResolvedPromise());
+  const scope = (config.cdRef as any).context;
+  const priority = SchedulingPriority.animationFrame;
+  const scheduler = getScheduler(priority);
+
+  const renderMethod = () => {
+    config.cdRef.detectChanges();
+  };
+  const behavior = o =>
+    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+  const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
+
+  return {
+    name: 'localCoalesceAndSchedule',
+    renderMethod,
+    behavior,
+    scheduleCD
+  };
+}
+
 /**
  *  Detach Strategy
  *
@@ -162,29 +216,20 @@ export function createDetachStrategy<T>(
 }
 
 /**
- *  PostTaks Strategy
- *
- * This strategy is rendering the actual component and
- * all it's children that are on a path
- * that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
- *
- * As detectChanges is used the coalescing described in `ɵlocal` is implemented here.
- *
- * 'Scoped' coalescing, in addition, means **grouping the collected events by** a specific context.
- * E. g. the **component** from which the re-rendering was initiated.
- *
- * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
- * |-------------| --------------| ------------ ------ | ---------------- |
- * | `ɵdetach`   | ✔️/✔️    | dC / ɵDC            | ✔️ + C/ LV     |
- *
- * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
- * @return {RenderStrategy<T>} - The calculated strategy
+ *  PostTask - Priority UserVisible Strategy
  *
  */
-export function createPostTaskStrategy<T>(
+export function createUserVisibleStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const durationSelector = from(getUnpatchedResolvedPromise());
+  const durationSelector = new Observable(subscriber => {
+    from(
+      postTaskScheduler.postTask(() => void 0, {
+        priority: PostTaskSchedulerPriority.userVisible,
+        delay: 0
+      })
+    ).subscribe(subscriber);
+  });
   const scope = (config.cdRef as any).context;
   const priority = SchedulingPriority.background;
   const scheduler = getScheduler(priority);
@@ -197,7 +242,80 @@ export function createPostTaskStrategy<T>(
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
-    name: 'postTask',
+    name: 'userVisible',
+    renderMethod,
+    behavior,
+    scheduleCD
+  };
+}
+
+/**
+ *  PostTask - Priority UserBlocking Strategy
+ *
+ */
+export function createUserBlockingStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy<T> {
+  const durationSelector = new Observable(subscriber => {
+    from(
+      postTaskScheduler.postTask(() => void 0, {
+        priority: PostTaskSchedulerPriority.userVisible,
+        delay: 0
+      })
+    ).subscribe(subscriber);
+  });
+  const scope = (config.cdRef as any).context;
+  const priority = SchedulingPriority.background;
+  const scheduler = getScheduler(priority);
+
+  const renderMethod = () => {
+    config.cdRef.detectChanges();
+  };
+  const behavior = o =>
+    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+  const scheduleCD = () => {
+    staticCoalesce(renderMethod, durationSelector, scope);
+    // coalesceAndSchedule(renderMethod, priority, scope);
+  };
+
+  return {
+    name: 'userBlocking',
+    renderMethod,
+    behavior,
+    scheduleCD
+  };
+}
+
+/**
+ *  PostTask - Priority Background Strategy
+ *
+ */
+export function createBackgroundStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy<T> {
+  const durationSelector = new Observable(subscriber => {
+    from(
+      postTaskScheduler.postTask(() => void 0, {
+        priority: PostTaskSchedulerPriority.userVisible,
+        delay: 0
+      })
+    ).subscribe(subscriber);
+  });
+  const scope = (config.cdRef as any).context;
+  const priority = SchedulingPriority.background;
+  const scheduler = getScheduler(priority);
+
+  const renderMethod = () => {
+    config.cdRef.detectChanges();
+  };
+  const behavior = o =>
+    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+  const scheduleCD = () => {
+    staticCoalesce(renderMethod, durationSelector, scope);
+    // coalesceAndSchedule(renderMethod, priority, scope);
+  };
+  return {
+    name: 'background',
     renderMethod,
     behavior,
     scheduleCD

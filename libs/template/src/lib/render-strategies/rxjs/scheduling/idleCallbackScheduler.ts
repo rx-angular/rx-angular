@@ -30,7 +30,7 @@ type RequestIdleCallback = (
 
 type CancelIdleCallback = (idleId: IdleId) => void;
 
-const cancelIdleCallback: CancelIdleCallback =
+export const cancelIdleCallback: CancelIdleCallback =
   typeof window !== 'undefined'
     ? (window as any).cancelIdleCallback ||
       function(idleId: IdleId): void {
@@ -39,7 +39,7 @@ const cancelIdleCallback: CancelIdleCallback =
       }
     : () => {};
 
-const requestIdleCallback: RequestIdleCallback =
+export const requestIdleCallback: RequestIdleCallback =
   typeof window !== 'undefined'
     ? (window as any).requestIdleCallback ||
       function(cb: Function) {

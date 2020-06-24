@@ -37,9 +37,9 @@ export function getGlobalStrategies<T>(
  * all it's children that are on a path
  * that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
  *
- * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
+ * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing       |
  * |-------------| --------------| ------------ ------ | ---------------- |
- * | `global`   | ❌/✔️       | mFC / ɵMD           | ❌               |
+ * | `global`   | ❌/✔️       | mFC / ɵMD           | ❌                |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return {RenderStrategy<T>} - The calculated strategy

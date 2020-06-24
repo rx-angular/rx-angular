@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { SchedulingComponent } from './solution/scheduling.component';
+import { SchedulingComponent } from './experiments-profiling/scheduling.component';
 import { TemplateModule } from '@rx-angular/template';
 
 export const ROUTES = [
