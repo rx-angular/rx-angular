@@ -1,16 +1,19 @@
-import { asyncScheduler, SchedulerLike } from 'rxjs';
+import {
+  animationFrameScheduler,
+  asapScheduler,
+  asyncScheduler,
+  SchedulerLike
+} from 'rxjs';
 import { SchedulingPriority } from './interfaces';
 import {
   getPostTaskScheduler,
   PostTaskSchedulerPriority
 } from './getPostTaskScheduler';
-import { unpatchedAnimationFrameScheduler } from './animationFrameScheduler';
-import { unpatchedAsapScheduler } from './asapScheduler';
 import { idleScheduler } from './idleCallbackScheduler';
 
 export const prioritySchedulerMap: { [name: string]: SchedulerLike } = {
-  animationFrame: unpatchedAnimationFrameScheduler,
-  Promise: unpatchedAsapScheduler,
+  animationFrame: animationFrameScheduler,
+  Promise: asapScheduler,
   setInterval: asyncScheduler,
   idleCallback: idleScheduler,
   userBlocking: getPostTaskScheduler(PostTaskSchedulerPriority.userBlocking),
@@ -18,9 +21,7 @@ export const prioritySchedulerMap: { [name: string]: SchedulerLike } = {
   background: getPostTaskScheduler(PostTaskSchedulerPriority.background)
 };
 
-export function getScheduler(
-  priority: SchedulingPriority = SchedulingPriority.animationFrame
-): SchedulerLike {
+export function getScheduler(priority: SchedulingPriority): SchedulerLike {
   if (!prioritySchedulerMap.hasOwnProperty(priority)) {
     throw new Error(`priority ${priority} is not present in prioritiesMap`);
   }

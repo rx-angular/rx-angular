@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
 import { EMPTY, interval, NEVER, Observable, of } from 'rxjs';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let';
 import { take } from 'rxjs/operators';
 import { MockChangeDetectorRef } from '../fixtures';
@@ -46,7 +46,7 @@ const setupLetDirectiveTestComponent = (): void => {
 };
 
 describe('LetDirective when nexting values', () => {
-  beforeEach(async(setupLetDirectiveTestComponent));
+  beforeEach((setupLetDirectiveTestComponent));
 
   it('should be instantiable', () => {
     expect(fixtureLetDirectiveTestComponent).toBeDefined();
