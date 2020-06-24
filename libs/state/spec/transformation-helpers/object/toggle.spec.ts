@@ -22,6 +22,18 @@ describe('toggle', () => {
 
       expect(simpleState).toEqual(primitiveState);
     });
+
+    it('should not return same reference', () => {
+      const simpleState = {...primitiveState};
+      const result = toggle(simpleState, 'bol');
+      const result2 = toggle(simpleState, null as any);
+
+      simpleState.num = 24;
+
+      expect(simpleState).toEqual({num: 24, bol: true, str: 'str'});
+      expect(result).toEqual({...primitiveState, bol: false});
+      expect(result2).toEqual(primitiveState);
+    });
   });
 
   describe('functionality', () => {

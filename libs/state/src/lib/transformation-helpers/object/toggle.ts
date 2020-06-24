@@ -36,5 +36,5 @@ export function toggle<T extends object>(
     return { ...object, [key]: !object[key] };
   }
 
-  return object;
+  return { ...object };
 }

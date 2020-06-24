@@ -27,7 +27,7 @@ export function mergeObjects<T extends object>(object: T, upd: Partial<T>): T {
   const update = isObjectGuard(upd) ? upd : {};
 
   if (!isObjectGuard(object)) {
-    return update as T;
+    return { ...update } as T;
   }
 
   return { ...object, ...update };

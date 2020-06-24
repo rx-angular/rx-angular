@@ -27,6 +27,18 @@ describe('insert', () => {
 
       expect(originalCreatures).toEqual(creatures);
     });
+
+    it('should not return same reference', () => {
+      const originalCreatures = [...creatures];
+      const result = insert(originalCreatures, creatureToAdd);
+      const result2 = insert(null as any, originalCreatures);
+
+      originalCreatures[0] = null as any;
+
+      expect(originalCreatures).toEqual([null, {id: 2, type: 'dog'}]);
+      expect(result).toEqual([...creatures, creatureToAdd]);
+      expect(result2).toEqual(creatures);
+    });
   });
 
   describe('functionality', () => {

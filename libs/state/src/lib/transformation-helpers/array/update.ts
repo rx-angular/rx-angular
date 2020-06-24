@@ -23,7 +23,7 @@ import { CompareFn } from '../../rxjs/interfaces/compare-fn';
  * @docsPage update
  * @docsCategory transformation-helpers
  */
-export function update<T extends object, I extends T>(
+export function update<T extends object>(
   array: T[],
   itemsOrItem: T[] | T,
   compare?: CompareFn<T>
@@ -37,7 +37,7 @@ export function update<T extends object, I extends T>(
   const innerCompare = compare || defaultCompare;
 
   if (!array || !Array.isArray(array)) {
-    return items;
+    return [...items];
   }
 
   return array.map(existingItem => {

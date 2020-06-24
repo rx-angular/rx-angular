@@ -34,5 +34,5 @@ export function setProp<T extends object, K extends keyof T>(
     };
   }
 
-  return object;
+  return { ...object };
 }

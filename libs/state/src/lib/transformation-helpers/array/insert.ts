@@ -38,7 +38,7 @@ export function insert<T, I extends T>(array: T[], itemsOrItem: I[] | I): T[] {
     : [];
 
   if (!array || !Array.isArray(array)) {
-    return items;
+    return [...items];
   }
 
   return [...array, ...items];

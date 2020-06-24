@@ -22,6 +22,17 @@ describe('deleteProp', () => {
 
       expect(simpleState).toEqual(primitiveState);
     });
+
+    it('should not return same reference', () => {
+      const simpleState = {...primitiveState};
+      const result = deleteProp(simpleState, 'str');
+      const result2 = deleteProp(simpleState, null as any);
+      simpleState.bol = false;
+
+      expect(result).toEqual({num: 42, bol: true});
+      expect(simpleState).toEqual({num: 42, bol: false, str: 'str'});
+      expect(result2).toEqual(primitiveState);
+    });
   });
 
   describe('functionality', () => {

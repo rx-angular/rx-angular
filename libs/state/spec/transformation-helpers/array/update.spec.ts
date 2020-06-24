@@ -31,6 +31,18 @@ describe('update', () => {
 
       expect(originalCreatures).toEqual(creatures);
     });
+
+    it('should not return same reference', () => {
+      const originalCreatures = [...creatures];
+      const result = update(originalCreatures, creaturesForUpdate[0], (o, n) => o.id === n.id);
+      const result2 = update(null as any, originalCreatures);
+
+      originalCreatures[0] = null as any;
+
+      expect(originalCreatures).toEqual([null, {id: 2, type: 'dog'}, {id: 3, type: 'catDog'}]);
+      expect(result).toEqual(creaturesAfterSingleItemUpdate);
+      expect(result2).toEqual(creatures);
+    });
   });
 
   describe('functionality', () => {

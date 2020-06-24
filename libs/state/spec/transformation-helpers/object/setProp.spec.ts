@@ -24,6 +24,18 @@ describe('setProp', () => {
 
       expect(simpleState).toEqual(primitiveState);
     });
+
+    it('should not return same reference', () => {
+      const simpleState = {...primitiveState};
+      const result = setProp(simpleState, 'num', 43);
+      const result2 = setProp(simpleState, null as any, 42);
+
+      simpleState.bol = false;
+
+      expect(simpleState).toEqual({num: 42, bol: false, str: 'str'});
+      expect(result).toEqual({...primitiveState, num: 43});
+      expect(result2).toEqual(primitiveState);
+    });
   });
 
   describe('functionality', () => {

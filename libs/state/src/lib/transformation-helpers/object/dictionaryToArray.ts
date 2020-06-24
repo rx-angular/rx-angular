@@ -33,5 +33,3 @@ export function dictionaryToArray<T>(dictionary: { [key: string]: T }): T[] {
 
   return Object.values(dictionary);
 }
-
-// return undefined (and for dictionary)

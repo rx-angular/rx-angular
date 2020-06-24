@@ -34,7 +34,7 @@ export function deleteProp<T extends object, K extends keyof T>(
   }
 
   if (!isKeyOf<T>(key)) {
-    return object;
+    return { ...object };
   }
 
   const copy = { ...object };

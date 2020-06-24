@@ -16,6 +16,20 @@ describe('mergeObjects', () => {
       const fn = mergeObjects;
       expect(fn).toBeDefined();
     });
+
+    it('should not return same reference', () => {
+      const simpleState = {...primitiveState};
+      const result = mergeObjects(simpleState, {num: 43});
+      const result2 = mergeObjects(null as any, simpleState);
+      const result3 = mergeObjects([] as any, simpleState);
+
+      simpleState.bol = false;
+
+      expect(simpleState).toEqual({num: 42, bol: false, str: 'str'});
+      expect(result).toEqual({...primitiveState, num: 43});
+      expect(result2).toEqual(primitiveState);
+      expect(result3).toEqual(primitiveState);
+    });
   });
 
   describe('functionality', () => {
