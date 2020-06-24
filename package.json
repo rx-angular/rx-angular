@@ -30,7 +30,8 @@
     "state:publish": "nx test state && nx build state --prod && cd ./dist/libs/state && npm publish",
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
     "state:coveralls": "coveralls <  ./coverage/state/lcov.info",
-    "state:perf": "nx perf state"
+    "state:perf": "nx perf state",
+    "template:publish": "nx test template && nx build template --prod && cd ./dist/libs/template && npm publish"
   },
   "husky": {
     "hooks": {
