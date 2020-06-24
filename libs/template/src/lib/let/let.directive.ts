@@ -113,7 +113,6 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   }
   @Input('rxLetStrategy')
   set strategy(strategy: string | Observable<string> | undefined) {
-    console.log('rxLetStrategy: ', strategy);
     this.renderAware.nextStrategy(strategy || DEFAULT_STRATEGY_NAME);
   }
 

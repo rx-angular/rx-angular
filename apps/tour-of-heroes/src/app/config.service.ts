@@ -5,10 +5,7 @@ export enum AppRenderStrategy {
   noop = 'noop',
   native = 'native',
   local = 'local',
-  global = 'global',
-  ɵlocal = 'ɵlocal',
-  ɵglobal = 'ɵglobal',
-  ɵdetach = 'ɵdetach'
+  global = 'global'
 }
 
 export interface AppConfig {

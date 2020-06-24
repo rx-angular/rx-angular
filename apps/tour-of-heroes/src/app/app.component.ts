@@ -9,6 +9,7 @@ import { AppRenderStrategy, ConfigService } from './config.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  numRender = 0;
   title = 'Tour of Heroes';
 
   constructor(
@@ -16,9 +17,13 @@ export class AppComponent {
     private appRef: ApplicationRef,
     private configService: ConfigService
   ) {
-    configService.setStrategy(AppRenderStrategy.ɵlocal);
+    configService.setStrategy(AppRenderStrategy.local);
     router.events
       .pipe(filter(e => e instanceof NavigationEnd))
       .subscribe(() => appRef.tick());
+  }
+
+  renders() {
+    return ++this.numRender;
   }
 }
