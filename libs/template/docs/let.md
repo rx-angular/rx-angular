@@ -11,7 +11,6 @@ You find more information about [`RenderStrategies`](https://github.com/BioPhoto
 Other Features:
 
 - lazy rendering
-- binding is always present (`*ngIf="truthy$"`) ???
 - it takes away multiple usages of the `async` or `push` pipe
 - a unified/structured way of handling null, undefined or error
 - distinct same values in a row skip not needed re-renderings
