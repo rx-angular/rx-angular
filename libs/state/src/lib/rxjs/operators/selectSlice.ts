@@ -50,9 +50,9 @@ import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
  * @docsPage selectSlice
  * @docsCategory operators
  */
-export function selectSlice<T extends object, K extends keyof T, R>(
-  keyCompareMap: KeyCompareMap<T>
-): OperatorFunction<T, R>;
+export function selectSlice<T extends object, K extends keyof T>(
+  keyCompareMap: KeyCompareMap<{ [P in K]: T[P] }>
+): OperatorFunction<T, PickStrict<T, K>>;
 
 /**
  * @description
@@ -106,26 +106,26 @@ export function selectSlice<T extends object, K extends keyof T, R>(
  *   .subscribe(x => console.log(x));
  *
  * // displays:
- * //  { title: 'myTitle', items: ['foo'],  panelOpen: true},
- * //  { title: 'myTitle2', items: ['foo', 'bar'],  panelOpen: true},
- * //  { title: 'newTitle', items: ['foo', 'baz'],  panelOpen: true},
+ * //  { title: 'myTitle', items: ['foo'] },
+ * //  { title: 'myTitle2', items: ['foo', 'bar'] },
+ * //  { title: 'newTitle', items: ['foo', 'baz'] },
  *
  * @param {(K)[]} keys - the array of keys which should be selected
  * @param {CompareFn<T[K]>} [compare] Optional comparison function called to test if an item is distinct from the
  * @docsPage selectSlice
  * @docsCategory operators
  */
-export function selectSlice<T extends object, K extends keyof T, R>(
+export function selectSlice<T extends object, K extends keyof T>(
   keys: K[],
-  compare?: CompareFn<T[K]>
-): OperatorFunction<T, R>;
+  compare?: CompareFn<PickStrict<T, K>[K]>
+): OperatorFunction<T, PickStrict<T, K>>;
 /**
  * @internal
  */
-export function selectSlice<T extends object, K extends keyof T, R>(
-  keysOrMap: K[] | KeyCompareMap<T>,
-  compare?: CompareFn<T[K]>
-): OperatorFunction<T, Partial<T>> {
+export function selectSlice<T extends object, K extends keyof T>(
+  keysOrMap: K[] | KeyCompareMap<{ [P in K]: T[P] }>,
+  compare?: CompareFn<PickStrict<T, K>[K]>
+): OperatorFunction<T, PickStrict<T, K>> {
   const keys = Array.isArray(keysOrMap)
     ? keysOrMap
     : (Object.keys(keysOrMap) as K[]);
@@ -133,7 +133,7 @@ export function selectSlice<T extends object, K extends keyof T, R>(
     ? distinctUntilSomeChanged(keysOrMap, compare)
     : distinctUntilSomeChanged(keysOrMap);
 
-  return (o$: Observable<T>): Observable<Partial<T>> =>
+  return (o$: Observable<T>): Observable<PickStrict<T, K>> =>
     o$.pipe(
       // to avoid emissions of empty objects map to present values and filter out emissions with no values present
       map(state => ({
@@ -150,9 +150,16 @@ export function selectSlice<T extends object, K extends keyof T, R>(
           .reduce((vm, key) => {
             vm[key] = state[key];
             return vm;
-          }, {} as Partial<T>)
+          }, {} as PickStrict<T, K>)
       ),
       // forward distinct values
       distinctOperator
     );
 }
+
+type PickStrict<T extends object, K extends keyof T> = Pick<
+  T,
+  {
+    [I in keyof T]: I;
+  }[K]
+>;
