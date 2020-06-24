@@ -23,7 +23,7 @@ the coordination and optimization of `ChangeDetection` cycles. While the `PushPi
 straight **drop in replacement** for the `AsyncPipe (async)`, the `LetDirective` will often provide a more
 convenient way of managing reactive sources and lazy rendering of the view.
 
-Using those with the default configuration should already improve the rendering performance of
+Using those with the default strategy ([Local Strategy](#Local Strategy)) should already improve the rendering performance of
 your application by a decent amount.
 
 The applied optimization behavior is fully customizable by using built-in or
@@ -365,8 +365,17 @@ angular rendering and `ChangeDetection`.
 ### Usage
 
 Use the corresponding `RenderStrategy#name` as parameter or Input with the `PushPipe` or `LetDirective`.
+By default, they will use the [Local Strategy](#Local Strategy).
+
+```html
+<div *rxLet="list$; let list; strategy: 'global'"></div>
+<hero-list heroes="list$ | push: 'global'"></hero-list>
+```
+
 When you want to handle `ChangeDetection` manually inside a `Component`, `Directive` or `Service`, you can
 simply use the built-in `StrategySelection`.
+
+_imperative approach_
 
 ```typescript
 import { Component, ChangeDetectorRef } from '@angular/core';
