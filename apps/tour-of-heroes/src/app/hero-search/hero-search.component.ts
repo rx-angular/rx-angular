@@ -36,6 +36,10 @@ export class HeroSearchComponent {
     switchMap((term: string) => this.heroService.searchHeroes(term))
   );
 
+  trackHero(idx: number, hero: Hero): number {
+    return hero.id;
+  }
+
   constructor(
     public heroService: HeroService,
     private state: RxState<HeroSearchComponentState>,

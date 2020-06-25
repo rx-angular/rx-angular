@@ -25,4 +25,8 @@ export class DashboardComponent {
   ) {
     this.state.connect('heroes', this.heroService.getHeroes());
   }
+
+  trackHero(idx: number, hero: Hero): number {
+    return hero.id;
+  }
 }

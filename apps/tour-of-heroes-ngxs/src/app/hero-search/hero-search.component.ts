@@ -39,8 +39,7 @@ export class HeroSearchComponent {
   constructor(
     public heroState: HeroStateService,
     private state: RxState<HeroSearchComponentState>,
-    public configService: ConfigService,
-    public heroService: HeroService
+    public configService: ConfigService
   ) {
     this.state.connect('heroes', this.heroState.search$);
   }
@@ -48,5 +47,9 @@ export class HeroSearchComponent {
   // Push a search term into the observable stream.
   search(term: string): void {
     this.searchTerms.next(term);
+  }
+
+  trackHero(idx: number, hero: Hero): number {
+    return hero.id;
   }
 }
