@@ -6,7 +6,7 @@ performance and template rendering.
 RxAngular is divided into two initially independent packages:
 
 - [📦@rx-angular/state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/README.md)
-- [💾@rx-angular/template](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/README.md)
+- [📦@rx-angular/template](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/README.md)
 
 Used together, you get a powerful tool for developing high-performance angular applications with or without NgZone.
 
@@ -21,7 +21,7 @@ This repository holds a set of helpers to create **fully reactive** as well as *
 Find details in the linked readme files below for installation and setup instructions, examples and resources.
 
 - [📦@rx-angular/state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/README.md) - Reactive Component State-Management
-- [💾@rx-angular/template](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/README.md) - Reactive Rendering
+- [📦@rx-angular/template](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/README.md) - Reactive Rendering
 
 ## Install
 
