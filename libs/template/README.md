@@ -55,15 +55,24 @@ or
 
 ## Usage
 
-Import `TemplateModule` to your Module.
+Import `TemplateModule` to your Module. Alternatively, you can import LetModule or PushModule individually.
 
 ```typescript
-
+// Importing full TemplateMdoule.
 import { TemplateModule } from '@rx-angular/template';
 
 @NgModule({
   declarations: [...],
   imports: [TemplateModule],
+})
+export class MyModule {}
+
+// Importing LetModule & PushModule individually.
+import { LetModule, PushModule } from '@rx-angular/template';
+
+@NgModule({
+  declarations: [...],
+  imports: [LetModule, PushModule],
 })
 export class MyModule {}
 ## Features
