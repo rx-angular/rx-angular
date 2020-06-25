@@ -55,7 +55,7 @@ or
 
 ## Usage
 
-Import `TemplateModule` to your Module.
+Importing `TemplateModule` to your Module (includes push, \*rxLet, unpatch).
 
 ```typescript
 import { TemplateModule } from '@rx-angular/template';
@@ -67,7 +67,7 @@ import { TemplateModule } from '@rx-angular/template';
 export class MyModule {}
 ```
 
-Alternatively, you can import `LetModule`, `PushModule` or `UnpatchEventsModule` individually.
+Alternatively, you can import each feature module individually.
 
 ```typescript
 import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
