@@ -26,5 +26,5 @@ import { CompareFn } from './compare-fn';
  * @docsCategory operators
  */
 export type KeyCompareMap<T extends object> = {
-  [K in keyof T]?: CompareFn<T[K]>;
+  [K in keyof Partial<T>]: CompareFn<T[K]>;
 };

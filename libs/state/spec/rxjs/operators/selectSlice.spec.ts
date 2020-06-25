@@ -28,19 +28,21 @@ describe('selectSlice operator', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = {
         a: { val: 1, valOther: 2 },
-        b: { val: 2, valOther: 4 },
-        c: { valOther: 2 },
-        d: { valOther: 4 }
+        b: { val: 1, valOther: 4 },
       };
-      const e1 = cold('--a--a--a--b--b--a--|', values);
-      const e1subs = '^-------------------!';
-      const expected = '--c--------d-----c--|';
+      const expectedValues = {
+        a: { valOther: 2 },
+        b: { valOther: 4 }
+      }
+      const e1 = cold<any>('--a--a--a--b--b--a--|', values);
+      const e1subs =       '^-------------------!';
+      const expected =     '--a--------b-----a--|';
 
       expectObservable(
         e1.pipe(
           selectSlice(['valOther'])
         )
-      ).toBe(expected, values);
+      ).toBe(expected, expectedValues);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
   });
@@ -134,7 +136,7 @@ describe('selectSlice operator', () => {
 
       expectObservable(
         e1.pipe(
-          selectSlice(keyCompare)
+          selectSlice(['val', 'objVal'], keyCompare)
         )
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -412,7 +414,7 @@ describe('selectSlice operator', () => {
       const expected = '--a--------------|';
 
       expectObservable(
-        e1.pipe(selectSlice(['val'], () => true))
+        e1.pipe(selectSlice(['val'], {val: () => true}))
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
@@ -426,7 +428,7 @@ describe('selectSlice operator', () => {
       const expected = '--a--a--a--a--a--a--|';
 
       expectObservable(
-        e1.pipe(selectSlice(['val'], () => false))
+        e1.pipe(selectSlice(['val'], {val: () => false}))
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
@@ -447,7 +449,7 @@ describe('selectSlice operator', () => {
       const selector = (x: number, y: number) => y % 2 === 0;
 
       expectObservable(
-        e1.pipe(selectSlice(['val'], selector))
+        e1.pipe(selectSlice(['val'], {val: selector}))
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
@@ -473,7 +475,7 @@ describe('selectSlice operator', () => {
       };
 
       expectObservable(
-        e1.pipe(selectSlice(['val'], selector))
+        e1.pipe(selectSlice(['val'], {val: selector}))
       ).toBe(expected, values, new Error('error'));
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });

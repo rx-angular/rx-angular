@@ -5,61 +5,18 @@ import { CompareFn, KeyCompareMap } from '../interfaces';
 /**
  * @internal
  */
-const defaultCompare = <T, K extends keyof T>(oldVal: any, newVal: any) =>
-  oldVal === newVal;
+function safePluck<T extends object, K extends keyof T>(
+  obj: T | null | undefined,
+  key: K
+): T[K] | undefined {
+  return !!obj ? obj[key] : undefined;
+}
 
 /**
- * @description
- *
- * Returns an Observable that emits all items emitted by the source Observable that are distinct by comparison from
- * the previous item. You can provide a custom comparison for each key individually by setting a `KeyCompareMap<T>`.
- * If no comparison is provided for a specified key, an equality check is used by default.
- *
- * If properties of the source change, which are not specified for comparison, no change will be emitted.
- *
- * The name `distinctUntilSomeChanged` was picked since it internally iterates over the `keys` and utilizes the
- * [some](https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Array/some) method in order to
- * compute if values are distinct or not.
- *
- * @example
- * // An example comparing the first letters of just the name property.
- *
- * import { of } from 'rxjs';
- * import { distinctUntilSomeChanged } from 'rx-angular/state';
- *
- * interface Person {
- *    age: number;
- *    name: string;
- * }
- * // compare the first letters of the name property
- * const customComparison: KeyCompareMap<Person> = {
- *   name: (oldName, newName) => oldName.substring(0, 3) === newName.substring(0, 3)
- * };
- *
- * of<Person>(
- *   { age: 4, name: 'Foo1'},
- *   { age: 7, name: 'Bar'},
- *   { age: 5, name: 'Foo2'},
- *   { age: 6, name: 'Foo3'},
- * ).pipe(
- *   distinctUntilSomeChanged(customComparison),
- * )
- * .subscribe(x => console.log(x));
- *
- * // displays:
- * // { age: 4, name: 'Foo1' }
- * // { age: 7, name: 'Bar' }
- * // { age: 5, name: 'Foo2' }
- *
- * @see {@link KeyCompareMap}
- *
- * @param {KeyCompareMap<T>} keyCompareMap
- * @docsPage distinctUntilSomeChanged
- * @docsCategory operators
+ * @internal
  */
-export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
-  keyCompareMap: KeyCompareMap<T>
-): MonoTypeOperatorFunction<T>;
+const defaultCompare = <V>(oldVal: V, newVal: V) => oldVal === newVal;
+
 /**
  * @description
  *
@@ -136,33 +93,22 @@ export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
  */
 export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
   keys: K[],
-  compare?: CompareFn<T[K]>
-): MonoTypeOperatorFunction<T>;
-/**
- * @internal
- */
-export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
-  keysOrMap: K[] | KeyCompareMap<T>,
-  compare?: CompareFn<T[K]>
+  keyCompareMap?: KeyCompareMap<T>
 ): MonoTypeOperatorFunction<T> {
-  let distinctCompare: CompareFn<T>;
-  if (Array.isArray(keysOrMap)) {
-    const keys = keysOrMap;
-    const innerCompare: CompareFn<T[K]> = compare ? compare : defaultCompare;
-    distinctCompare = (oldState, newState) =>
-      keys.some(key => !innerCompare(oldState[key], newState[key]));
-  } else {
-    const keyComparatorMap = keysOrMap;
-    const innerCompare = (a: T[K], b: T[K], customCompFn?: CompareFn<T[K]>) =>
-      customCompFn ? customCompFn(a, b) : defaultCompare(a, b);
+  // default compare function applying === to every key
+  // @TODO: investigate if we get in trouble with null | undefined values
+  let distinctCompare: CompareFn<T> = (oldState, newState) =>
+    keys.some(
+      key => !defaultCompare(safePluck(oldState, key), safePluck(newState, key))
+    );
+
+  // generate compare function respecting every case of provided keyCompareMap
+  if (keyCompareMap) {
+    const compare: (key: K) => CompareFn<T[K]> = key =>
+      keyCompareMap[key] || defaultCompare;
     distinctCompare = (oldState, newState) => {
-      return Object.keys(keyComparatorMap).some(
-        key =>
-          !innerCompare(
-            (oldState as any)[key],
-            (newState as any)[key],
-            (keyComparatorMap as any)[key]
-          )
+      return keys.some(
+        key => !compare(key)(safePluck(oldState, key), safePluck(newState, key))
       );
     };
   }

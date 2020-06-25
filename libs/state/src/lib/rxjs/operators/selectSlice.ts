@@ -1,58 +1,7 @@
+import { CompareFn, KeyCompareMap } from '../interfaces';
 import { Observable, OperatorFunction } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { CompareFn, KeyCompareMap } from '../interfaces';
 import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
-
-/**
- * @description
- *
- * Returns an Observable that emits a distinct subset of the received object.
- * You can provide a custom comparison for each key individually by setting a `KeyCompareMap<T>`.
- * If no comparison is provided for a specified key, an equality check is used by default.
- *
- * @example
- *
- * import { of, Observable } from 'rxjs';
- * import { tap } from 'rxjs/operators';
- * import { selectSlice } from 'rx-angular/state';
- *
- * interface MyState {
- *    title: string;
- *    items: string[];
- *    panelOpen: boolean;
- * }
- *
- * // Select title and panelOpen.
- * // compare the first letters of the `title` property and use the default comparison for `panelOpen`
- * const customComparison: KeyCompareMap<MyState> = {
- *   title: (oldTitle, newTitle) => oldTitle.substring(0, 3) === newTitle.substring(0, 3),
- *   panelOpen: undefined
- * };
- *
- * const state$: Observable<MyState> = of(
- *  { title: 'myTitle', items: ['foo', 'bar'],  panelOpen: true},
- *  { title: 'myTitle2', items: ['foo', 'bar'],  panelOpen: true},
- *  { title: 'newTitle', items: ['foo', 'bar'],  panelOpen: true},
- *  { title: 'newTitle', items: ['foo', 'bar'],  panelOpen: false}
- * );
- * const viewModel$ = state$.pipe(
- *  selectSlice(customComparison),
- *  tap(console.log)
- * ).subscribe();
- *
- * // displays:
- * // { panelOpen: true, title: 'myTitle' }
- * // { panelOpen: true, title: 'newTitle' }
- * // { panelOpen: false, title: 'newTitle' }
- *
- * @param {KeyCompareMap<T>} keyCompareMap* @docsPage selectSlice
- * @docsCategory operators
- * @docsPage selectSlice
- * @docsCategory operators
- */
-export function selectSlice<T extends object, K extends keyof T>(
-  keyCompareMap: KeyCompareMap<{ [P in K]: T[P] }>
-): OperatorFunction<T, PickStrict<T, K>>;
 
 /**
  * @description
@@ -66,26 +15,6 @@ export function selectSlice<T extends object, K extends keyof T>(
  *
  * @example
  *
- * import { of, Observable } from 'rxjs';
- * import { tap } from 'rxjs/operators';
- * import { selectSlice } from 'rx-angular/state';
- *
- * interface MyState {
- *    title: string;
- *    items: string[];
- *    panelOpen: boolean;
- * }
- * const state$: Observable<MyState> = of({
- *   title: 'myTitle',
- *   items: ['foo', 'bar'],
- *   panelOpen: true
- * });
- * const slice$ = state$.pipe(selectSlice(['items', 'panelOpen'])).pipe(tap(console.log)).subscribe();
- *
- * // displays:
- * // { items: ['foo', 'bar'], panelOpen: true }
- *
- * * @example
  * // An example with a custom comparison applied to each key
  * import { of } from 'rxjs';
  * import { selectSlices } from 'rxjs/operators';
@@ -110,35 +39,50 @@ export function selectSlice<T extends object, K extends keyof T>(
  * //  { title: 'myTitle2', items: ['foo', 'bar'] },
  * //  { title: 'newTitle', items: ['foo', 'baz'] },
  *
+ * @example
+ *
+ * import { of, Observable } from 'rxjs';
+ * import { tap } from 'rxjs/operators';
+ * import { selectSlice } from 'rx-angular/state';
+ *
+ * interface MyState {
+ *    title: string;
+ *    items: string[];
+ *    panelOpen: boolean;
+ * }
+ * // Select title and panelOpen.
+ * // compare the first letters of the `title` property and use the default comparison for `panelOpen`
+ * const customComparison: KeyCompareMap<MyState> = {
+ *   title: (oldTitle, newTitle) => oldTitle.substring(0, 3) === newTitle.substring(0, 3)
+ * };
+ * const state$: Observable<MyState> = of({
+ *   title: 'myTitle',
+ *   items: ['foo', 'bar'],
+ *   panelOpen: true
+ * });
+ * const slice$ = state$.pipe(selectSlice(['items', 'panelOpen']), tap(console.log)).subscribe();
+ *
+ * // displays:
+ * // { items: ['foo', 'bar'], panelOpen: true }
+ *
  * @param {(K)[]} keys - the array of keys which should be selected
- * @param {CompareFn<T[K]>} [compare] Optional comparison function called to test if an item is distinct from the
+ * @param {KeyCompareMap<{ [P in K]: T[P] }>} [keyCompareMap] Optional KeyCompareMap to provide custom compare logic
+ * for some the keys
  * @docsPage selectSlice
  * @docsCategory operators
  */
 export function selectSlice<T extends object, K extends keyof T>(
   keys: K[],
-  compare?: CompareFn<PickStrict<T, K>[K]>
-): OperatorFunction<T, PickStrict<T, K>>;
-/**
- * @internal
- */
-export function selectSlice<T extends object, K extends keyof T>(
-  keysOrMap: K[] | KeyCompareMap<{ [P in K]: T[P] }>,
-  compare?: CompareFn<PickStrict<T, K>[K]>
+  keyCompareMap?: KeyCompareMap<{ [P in K]: T[P] }>
 ): OperatorFunction<T, PickStrict<T, K>> {
-  const keys = Array.isArray(keysOrMap)
-    ? keysOrMap
-    : (Object.keys(keysOrMap) as K[]);
-  const distinctOperator = Array.isArray(keysOrMap)
-    ? distinctUntilSomeChanged(keysOrMap, compare)
-    : distinctUntilSomeChanged(keysOrMap);
-
+  const distinctOperator = distinctUntilSomeChanged(keys, keyCompareMap);
   return (o$: Observable<T>): Observable<PickStrict<T, K>> =>
     o$.pipe(
+      distinctOperator,
       // to avoid emissions of empty objects map to present values and filter out emissions with no values present
       map(state => ({
         definedKeys: keys.filter(
-          k => state.hasOwnProperty(k) && state[k] !== undefined
+          k => state && state.hasOwnProperty(k) && state[k] !== undefined
         ),
         state
       })),

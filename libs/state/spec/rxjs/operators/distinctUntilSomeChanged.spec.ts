@@ -110,7 +110,7 @@ describe('distinctUntilSomeChanged operator', () => {
 
       expectObservable(
         e1.pipe(
-          distinctUntilSomeChanged(keyCompare)
+          distinctUntilSomeChanged(['val', 'objVal'], keyCompare)
         )
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -388,7 +388,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '--a--------------|';
 
       expectObservable(
-        e1.pipe(distinctUntilSomeChanged(['val'], () => true))
+        e1.pipe(distinctUntilSomeChanged(['val'], {val: () => true}))
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
@@ -402,7 +402,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const expected = '--a--a--a--a--a--a--|';
 
       expectObservable(
-        e1.pipe(distinctUntilSomeChanged(['val'], () => false))
+        e1.pipe(distinctUntilSomeChanged(['val'], {val: () => false}))
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
@@ -423,7 +423,7 @@ describe('distinctUntilSomeChanged operator', () => {
       const selector = (x: number, y: number) => y % 2 === 0;
 
       expectObservable(
-        e1.pipe(distinctUntilSomeChanged(['val'], selector))
+        e1.pipe(distinctUntilSomeChanged(['val'], {val: selector}))
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
@@ -449,7 +449,7 @@ describe('distinctUntilSomeChanged operator', () => {
       };
 
       expectObservable(
-        e1.pipe(distinctUntilSomeChanged(['val'], selector))
+        e1.pipe(distinctUntilSomeChanged(['val'], {val: selector}))
       ).toBe(expected, values, new Error('error'));
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
