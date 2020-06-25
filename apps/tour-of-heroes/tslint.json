@@ -1,8 +1,8 @@
 {
   "extends": "../../tslint.json",
   "rules": {
-    "directive-selector": [true, "attribute", "app", "camelCase"],
-    "component-selector": [true, "element", "app", "kebab-case"]
+    "directive-selector": [true, "attribute", "rxAngular", "camelCase"],
+    "component-selector": [true, "element", "rx-angular", "kebab-case"]
   },
   "linterOptions": {
     "exclude": ["!**/*"]

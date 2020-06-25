@@ -3,18 +3,17 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { ConfigService } from '../config.service';
 
 import { Hero } from '../hero';
-import { HeroService } from '../hero.service';
+import { HeroStateService } from '../ngxs/hero-feature/hero.state';
 
 interface HeroDetailComponentState {
   hero: Hero;
 }
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'app-hero-detail',
   templateUrl: './hero-detail.component.html',
   styleUrls: ['./hero-detail.component.css'],
@@ -23,21 +22,24 @@ interface HeroDetailComponentState {
 export class HeroDetailComponent {
   readonly hero$ = this.state.select('hero');
 
+  readonly change$ = new Subject<Partial<Hero>>();
   readonly save$ = new Subject<Hero>();
 
   constructor(
     private route: ActivatedRoute,
-    private heroService: HeroService,
+    private heroState: HeroStateService,
     private location: Location,
     private state: RxState<HeroDetailComponentState>,
     public configService: ConfigService
   ) {
     const hero$ = this.route.paramMap.pipe(
-      switchMap(params => this.heroService.getHero(Number(params.get('id'))))
+      switchMap(params => this.heroState.hero$(parseInt(params.get('id'), 10)))
     );
     this.state.connect('hero', hero$);
     const saveEffect$ = this.save$.pipe(
-      switchMap(hero => this.heroService.updateHero(hero)),
+      withLatestFrom(this.change$),
+      map(([oldHero, change]) => ({ ...oldHero, ...change })),
+      switchMap(hero => this.heroState.dispatchUpdateHero(hero)),
       tap(() => this.goBack())
     );
     this.state.hold(saveEffect$);

@@ -3,7 +3,6 @@ import { ConfigService } from '../config.service';
 import { MessageService } from '../message.service';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'app-messages',
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.css']

@@ -1363,6 +1363,13 @@
     rxjs "6.5.4"
     webpack-sources "1.4.3"
 
+"@ngxs/store@3.6.2":
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/@ngxs/store/-/store-3.6.2.tgz#cfba63dc1e5bd422e89e54b3332cd69818510624"
+  integrity sha512-al7GU618SAuz2Ul4rFYVDgS1DM0gHReGOGvbnE7LBt4Etz3gsJERNYXPp2bSA7lZGaRPRaFfIHJN+Lm/GikFJw==
+  dependencies:
+    tslib "^1.9.0"
+
 "@nrwl/angular@9.2.2":
   version "9.2.2"
   resolved "https://registry.yarnpkg.com/@nrwl/angular/-/angular-9.2.2.tgz#8fdc2efe926b7423ec86e6e16108b654fa4dfc75"
@@ -2112,10 +2119,10 @@ alphanum-sort@^1.0.0:
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
 
-angular-in-memory-web-api@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/angular-in-memory-web-api/-/angular-in-memory-web-api-0.10.0.tgz#6b56a9b355ce073bca0daf2e097742647bd9e2bb"
-  integrity sha512-GzY4lHPR8suREYfgiYiJSBrgq0bdCiFw/LuqW5IsOQfRx98AvS69A5Ehz12oMLy9ABzoGpqmNC5fcFtClDAPqQ==
+angular-in-memory-web-api@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/angular-in-memory-web-api/-/angular-in-memory-web-api-0.11.0.tgz#46e4ad896b36d669f36801fc8cafa7db8278d078"
+  integrity sha512-QV1qYHm+Zd+wrvlcPLnAcqqGpOmCN1EUj4rRuYHpek8+QqFFdxBNuPZOJCKvU7I97z5QSKHsdc6PNKlpUQr3UA==
 
 ansi-align@^3.0.0:
   version "3.0.0"

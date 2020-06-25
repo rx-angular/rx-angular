@@ -7,6 +7,7 @@ import { environment } from './environments/environment';
 if (environment.production) {
   enableProdMode();
 }
+
 const compilerOptions = {
   ngZone: environment.hasZone ? 'zone.js' : 'noop'
 } as any;

@@ -16,6 +16,7 @@ const initHeroesComponentState: Partial<HeroesComponentState> = {
 };
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'app-heroes',
   templateUrl: './heroes.component.html',
   styleUrls: ['./heroes.component.css'],

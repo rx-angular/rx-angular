@@ -7,6 +7,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ConfigService } from '../config.service';
 
 import { Hero } from '../hero';
+import { HeroStateService } from '../ngxs/hero-feature/hero.state';
 import { HeroService } from '../hero.service';
 
 interface HeroSearchComponentState {
@@ -14,7 +15,6 @@ interface HeroSearchComponentState {
 }
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'app-hero-search',
   templateUrl: './hero-search.component.html',
   styleUrls: ['./hero-search.component.css'],
@@ -33,15 +33,16 @@ export class HeroSearchComponent {
     distinctUntilChanged(),
 
     // switch to new search observable each time the term changes
-    switchMap((term: string) => this.heroService.searchHeroes(term))
+    switchMap((term: string) => this.heroState.dispatchSearchHero(term))
   );
 
   constructor(
-    public heroService: HeroService,
+    public heroState: HeroStateService,
     private state: RxState<HeroSearchComponentState>,
-    public configService: ConfigService
+    public configService: ConfigService,
+    public heroService: HeroService
   ) {
-    this.state.connect('heroes', this._searchResult$);
+    this.state.connect('heroes', this.heroState.search$);
   }
 
   // Push a search term into the observable stream.
