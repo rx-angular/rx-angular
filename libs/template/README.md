@@ -55,19 +55,17 @@ or
 
 ## Usage
 
-Import `TemplateModule` to your `AppModule`.
+Import `TemplateModule` to your Module.
 
 ```typescript
+
 import { TemplateModule } from '@rx-angular/template';
 
 @NgModule({
   declarations: [...],
   imports: [TemplateModule],
 })
-export class AppModule {}
-```
-
-
+export class MyModule {}
 ## Features
 
 - Directives
