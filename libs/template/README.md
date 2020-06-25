@@ -55,10 +55,9 @@ or
 
 ## Usage
 
-Import `TemplateModule` to your Module. Alternatively, you can import LetModule or PushModule individually.
+Import `TemplateModule` to your Module.
 
 ```typescript
-// Importing full TemplateMdoule.
 import { TemplateModule } from '@rx-angular/template';
 
 @NgModule({
@@ -66,15 +65,20 @@ import { TemplateModule } from '@rx-angular/template';
   imports: [TemplateModule],
 })
 export class MyModule {}
+```
 
-// Importing LetModule & PushModule individually.
-import { LetModule, PushModule } from '@rx-angular/template';
+Alternatively, you can import `LetModule`, `PushModule` or `UnpatchEventsModule` individually.
+
+```typescript
+import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
 
 @NgModule({
   declarations: [...],
-  imports: [LetModule, PushModule],
+  imports: [LetModule, PushModule, UnpatchEventsModule],
 })
 export class MyModule {}
+```
+
 ## Features
 
 - Directives
