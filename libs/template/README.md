@@ -53,6 +53,21 @@ are several techniques that need to be known and considered.
 or  
 `yarn add @rx-angular/template`
 
+## Usage
+
+Import `TemplateModule` to your `AppModule`.
+
+```typescript
+import { TemplateModule } from '@rx-angular/template';
+
+@NgModule({
+  declarations: [...],
+  imports: [TemplateModule],
+})
+export class AppModule {}
+```
+
+
 ## Features
 
 - Directives
