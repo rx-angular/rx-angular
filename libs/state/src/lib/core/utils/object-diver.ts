@@ -1,6 +1,6 @@
-export function objectDiver<T, K>(
+export function objectDiver<T>(
   obj: T | Partial<T>,
-  keys: Array<K | Partial<K>>
+  keys: string[]
 ): T | Partial<T> {
   const key = keys.shift();
   const value = obj[key];

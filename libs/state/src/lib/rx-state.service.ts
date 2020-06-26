@@ -149,11 +149,12 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     K3 extends keyof T[K1][K2],
     K4 extends keyof T[K1][K2][K3],
     K5 extends keyof T[K1][K2][K3][K4],
-    K6 extends keyof T[K1][K2][K3][K4][K5],
-    K extends K1 | K2 | K3 | K4 | K5 | K6
-  >(...keys: K[]): T | Partial<T> {
-    if (isStringArrayGuard(keys)) {
-      return objectDiver<T, K>(this.accumulator.state, keys);
+    K6 extends keyof T[K1][K2][K3][K4][K5]
+  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5, k6: K6): T | Partial<T>;
+
+  get(keys?: string[]): T | Partial<T> {
+    if (!!keys && isStringArrayGuard(keys)) {
+      return objectDiver<T>(this.accumulator.state, keys);
     } else {
       return this.accumulator.state;
     }
