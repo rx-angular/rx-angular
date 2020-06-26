@@ -66,7 +66,7 @@ if (!disabled) {
 
 ##### typeof: (k1: K1) => Partial<T>
 
-Read from the state in imperative manner by providing keys as parameters.
+Read from the state in an imperative manner by providing keys as parameters to reach deeply nested values.
 Returns the part of state object.
 
 _Example_
