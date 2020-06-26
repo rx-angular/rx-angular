@@ -12,7 +12,7 @@ Returns a new instance of the updated array T[], and does not mutate the origina
  *
  * const items = [1,2,3,4,5];
  *
- * const updatedItems = insert(items, [1,2,3]);
+ * const updatedItems = remove(items, [1,2,3]);
  *
  * // updatedItems will be: [4,5];
  *
