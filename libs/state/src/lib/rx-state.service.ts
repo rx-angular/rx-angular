@@ -100,20 +100,19 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   /**
    * @description
-   * Read from the state in imperative manner. Returns the part state object in its current state.
+   * Read from the state in imperative manner by providing keys as parameters.
+   * Returns the part of state object.
    *
    * @example
-   * const disabled = state.get('disabled');
+   * // Access a single property
    *
-   * or
+   * const bar = state.get('bar');
    *
-   * const disabled = state.get('data', 'more', 'disabled');
+   * // Access a nested property
    *
-   * if (!disabled) {
-   *   doStuff();
-   * }
+   * const foo = state.get('bar', 'foo');
    *
-   * @return T
+   * @return T | Partial<T>
    */
 
   get<K1 extends keyof T>(k1?: K1): T | Partial<T>;

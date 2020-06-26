@@ -1,7 +1,7 @@
 export function objectDiver<T, K>(
   obj: T | Partial<T>,
   keys: Array<K | Partial<K>>
-): Partial<T> {
+): T | Partial<T> {
   const key = keys.shift();
   if (!!key && !!obj) {
     const value = obj[key];
