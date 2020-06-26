@@ -1,4 +1,4 @@
-import { CompareFn, KeyCompareMap } from '../interfaces';
+import { KeyCompareMap } from '../interfaces';
 import { Observable, OperatorFunction } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
@@ -74,30 +74,39 @@ import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
 export function selectSlice<T extends object, K extends keyof T>(
   keys: K[],
   keyCompareMap?: KeyCompareMap<{ [P in K]: T[P] }>
-): OperatorFunction<T, PickStrict<T, K>> {
-  const distinctOperator = distinctUntilSomeChanged(keys, keyCompareMap);
-  return (o$: Observable<T>): Observable<PickStrict<T, K>> =>
+): OperatorFunction<T, PickStrict<T, K> | null> {
+  return (o$: Observable<T>): Observable<PickStrict<T, K> | null> =>
     o$.pipe(
-      distinctOperator,
-      // to avoid emissions of empty objects map to present values and filter out emissions with no values present
-      map(state => ({
-        definedKeys: keys.filter(
-          k => state && state.hasOwnProperty(k) && state[k] !== undefined
-        ),
-        state
-      })),
-      filter(({ definedKeys, state }) => !!definedKeys.length),
-      // create view-model
-      map(({ definedKeys, state }) =>
-        definedKeys
+      filter(state => state !== undefined),
+      map(state => {
+        // forward null
+        if (state === null) {
+          return null;
+        }
+
+        const definedKeys = keys
+          // filter out undefined properties e. g. {}, { str: undefined }
+          .filter(k => state.hasOwnProperty(k) && state[k] !== undefined);
+
+        // this will get filtered out in the next operator
+        // {str: 'test'} => selectSlice([]) => no emission
+        // {str: 'test'} => selectSlice(['notPresent']) => no emission
+        // {str: 'test'} => state.select(selectSlice([])) => no emission
+        // {str: 'test'} => state.select(selectSlice(['notPresent'])) => no emission
+        if (!definedKeys.length) {
+          return undefined;
+        }
+
+        // create view-model
+        return definedKeys
           .filter(k => state.hasOwnProperty(k) && state[k] !== undefined)
           .reduce((vm, key) => {
             vm[key] = state[key];
             return vm;
-          }, {} as PickStrict<T, K>)
-      ),
-      // forward distinct values
-      distinctOperator
+          }, {} as PickStrict<T, K>);
+      }),
+      filter(v => v !== undefined),
+      distinctUntilSomeChanged(keys, keyCompareMap)
     );
 }
 

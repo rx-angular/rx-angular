@@ -28,15 +28,15 @@ describe('selectSlice operator', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = {
         a: { val: 1, valOther: 2 },
-        b: { val: 1, valOther: 4 },
+        b: { val: 1, valOther: 4 }
       };
       const expectedValues = {
         a: { valOther: 2 },
         b: { valOther: 4 }
-      }
+      };
       const e1 = cold<any>('--a--a--a--b--b--a--|', values);
-      const e1subs =       '^-------------------!';
-      const expected =     '--a--------b-----a--|';
+      const e1subs = '^-------------------!';
+      const expected = '--a--------b-----a--|';
 
       expectObservable(
         e1.pipe(
@@ -54,8 +54,8 @@ describe('selectSlice operator', () => {
   it('should distinguish between values', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 }, b: { val: 2 } };
-      const e1 =  cold('--a--a--a--b--b--a--|', values);
-      const e1subs =   '^-------------------!';
+      const e1 = cold('--a--a--a--b--b--a--|', values);
+      const e1subs = '^-------------------!';
       const expected = '--a--------b-----a--|';
 
       expectObservable(
@@ -69,9 +69,9 @@ describe('selectSlice operator', () => {
 
   it('should distinguish between values with multiple keys', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const values: {[key: string]: ISelectSliceTest} = { a: { val: 1 }, b: { val: 1, valOther: 3 } };
-      const e1 =  cold('--a--a--a--b--b--a--|', values);
-      const e1subs =   '^-------------------!';
+      const values: { [key: string]: ISelectSliceTest } = { a: { val: 1 }, b: { val: 1, valOther: 3 } };
+      const e1 = cold('--a--a--a--b--b--a--|', values);
+      const e1subs = '^-------------------!';
       const expected = '--a--------b-----a--|';
 
       expectObservable(
@@ -146,8 +146,8 @@ describe('selectSlice operator', () => {
   it('should distinguish between values and does not completes', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 }, b: { val: 2 } };
-      const e1 =  cold('--a--a--a--b--b--a-', values);
-      const e1subs =   '^------------------';
+      const e1 = cold('--a--a--a--b--b--a-', values);
+      const e1subs = '^------------------';
       const expected = '--a--------b-----a-';
 
       expectObservable(
@@ -161,15 +161,15 @@ describe('selectSlice operator', () => {
 
   it('should distinguish between values with key set', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const values: {[key: string]: ISelectSliceTest} = {
+      const values: { [key: string]: ISelectSliceTest } = {
         a: { val: 1 },
         b: { valOther: 1 },
         c: { valOther: 3 },
         d: { val: 1 },
         e: { val: 5 }
       };
-      const e1 =  cold('--a--b--c--d--e--|', values);
-      const e1subs =   '^----------------!';
+      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1subs = '^----------------!';
       const expected = '--a-----------e--|';
 
       expectObservable(
@@ -183,15 +183,15 @@ describe('selectSlice operator', () => {
 
   it('should not emit if source does not have element with key', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const values: {[key: string]: ISelectSliceTest} = {
+      const values: { [key: string]: ISelectSliceTest } = {
         a: { valOther: 1 },
         b: { valOther: 1 },
         c: { valOther: 3 },
         d: { valOther: 1 },
         e: { valOther: 5 }
       };
-      const e1 =  cold('--a--b--c--d--e--|', values);
-      const e1subs =   '^----------------!';
+      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1subs = '^----------------!';
       const expected = '-----------------|';
 
       expectObservable(
@@ -205,8 +205,8 @@ describe('selectSlice operator', () => {
 
   it('should not completes if source never completes', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 =  cold('-');
-      const e1subs =   '^';
+      const e1 = cold('-');
+      const e1subs = '^';
       const expected = '-';
 
       expectObservable(
@@ -218,8 +218,8 @@ describe('selectSlice operator', () => {
 
   it('should not completes if source does not completes', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 =  cold('-');
-      const e1subs =   '^';
+      const e1 = cold('-');
+      const e1subs = '^';
       const expected = '-';
 
       expectObservable(
@@ -231,8 +231,8 @@ describe('selectSlice operator', () => {
 
   it('should complete if source is empty', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 =  cold('|');
-      const e1subs =   '(^!)';
+      const e1 = cold('|');
+      const e1subs = '(^!)';
       const expected = '|';
 
       expectObservable(
@@ -244,8 +244,8 @@ describe('selectSlice operator', () => {
 
   it('should complete if source does not emit', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 =  cold('------|');
-      const e1subs =   '^-----!';
+      const e1 = cold('------|');
+      const e1subs = '^-----!';
       const expected = '------|';
 
       expectObservable(
@@ -258,8 +258,8 @@ describe('selectSlice operator', () => {
   it('should emit if source emits single element only', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 } };
-      const e1 =  cold('--a--|', values);
-      const e1subs =   '^----!';
+      const e1 = cold('--a--|', values);
+      const e1subs = '^----!';
       const expected = '--a--|';
 
       expectObservable(
@@ -288,8 +288,8 @@ describe('selectSlice operator', () => {
   it('should raises error if source raises error', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 } };
-      const e1 =  cold('--a--a--#', values);
-      const e1subs =   '^-------!';
+      const e1 = cold('--a--a--#', values);
+      const e1subs = '^-------!';
       const expected = '--a-----#';
 
       expectObservable(
@@ -303,8 +303,8 @@ describe('selectSlice operator', () => {
 
   it('should raises error if source throws', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 =  cold('#');
-      const e1subs =   '(^!)';
+      const e1 = cold('#');
+      const e1subs = '(^!)';
       const expected = '#';
 
       expectObservable(
@@ -323,8 +323,8 @@ describe('selectSlice operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 =  cold('--a--b--c--d--e--|', values);
-      const e1subs =   '^----------------!';
+      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1subs = '^----------------!';
       const expected = '--a--b--c--d--e--|';
 
       expectObservable(
@@ -345,10 +345,10 @@ describe('selectSlice operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 =  cold('--a--b--b--d--a--e--|', values);
-      const e1subs =   '^---------!          ';
+      const e1 = cold('--a--b--b--d--a--e--|', values);
+      const e1subs = '^---------!          ';
       const expected = '--a--b-----          ';
-      const unsub =    '----------!          ';
+      const unsub = '----------!          ';
 
       const result = e1.pipe(
         selectSlice(['val'])
@@ -368,10 +368,10 @@ describe('selectSlice operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 =  cold('--a--b--b--d--a--e--|', values);
-      const e1subs =   '^---------!          ';
+      const e1 = cold('--a--b--b--d--a--e--|', values);
+      const e1subs = '^---------!          ';
       const expected = '--a--b-----          ';
-      const unsub =    '----------!          ';
+      const unsub = '----------!          ';
 
       const result = e1.pipe(
         mergeMap((x: any) => of(x)),
@@ -387,8 +387,8 @@ describe('selectSlice operator', () => {
   it('should emit once if source elements are all same', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 } };
-      const e1 =  cold('--a--a--a--a--a--a--|', values);
-      const e1subs =   '^-------------------!';
+      const e1 = cold('--a--a--a--a--a--a--|', values);
+      const e1subs = '^-------------------!';
       const expected = '--a-----------------|';
 
       expectObservable(
@@ -409,12 +409,12 @@ describe('selectSlice operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 =  cold('--a--b--c--d--e--|', values);
-      const e1subs =   '^----------------!';
+      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1subs = '^----------------!';
       const expected = '--a--------------|';
 
       expectObservable(
-        e1.pipe(selectSlice(['val'], {val: () => true}))
+        e1.pipe(selectSlice(['val'], { val: () => true }))
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
@@ -423,12 +423,12 @@ describe('selectSlice operator', () => {
   it('should emit all if comparer returns false always regardless of source emits', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 } };
-      const e1 =  cold('--a--a--a--a--a--a--|', values);
-      const e1subs =   '^-------------------!';
+      const e1 = cold('--a--a--a--a--a--a--|', values);
+      const e1subs = '^-------------------!';
       const expected = '--a--a--a--a--a--a--|';
 
       expectObservable(
-        e1.pipe(selectSlice(['val'], {val: () => false}))
+        e1.pipe(selectSlice(['val'], { val: () => false }))
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
@@ -443,13 +443,13 @@ describe('selectSlice operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 =  cold('--a--b--c--d--e--|', values);
-      const e1subs =   '^----------------!';
+      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1subs = '^----------------!';
       const expected = '--a-----c-----e--|';
       const selector = (x: number, y: number) => y % 2 === 0;
 
       expectObservable(
-        e1.pipe(selectSlice(['val'], {val: selector}))
+        e1.pipe(selectSlice(['val'], { val: selector }))
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
@@ -464,8 +464,8 @@ describe('selectSlice operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 =  cold('--a--b--c--d--e--|', values);
-      const e1subs =   '^----------!      ';
+      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1subs = '^----------!      ';
       const expected = '--a--b--c--#      ';
       const selector = (x: number, y: number) => {
         if (y === 4) {
@@ -475,10 +475,98 @@ describe('selectSlice operator', () => {
       };
 
       expectObservable(
-        e1.pipe(selectSlice(['val'], {val: selector}))
+        e1.pipe(selectSlice(['val'], { val: selector }))
       ).toBe(expected, values, new Error('error'));
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
   });
 });
 
+
+describe('selectSlice edge cases', () => {
+  it('case {str} => undefined', () => {
+    const test = {
+      inputMarble: '--a--a--a--b--b--a--|',
+      inputValues: { a: { str: 'test' }, b: undefined },
+      expectedMarble: '--a-----------------|',
+      expectValues: { a: { str: 'test' }, b: undefined }
+    };
+    testCase(test);
+  });
+  it('case  {str} => {undefined}', () => {
+    const test = {
+      inputMarble: '--a--a--a--b--b--a--|',
+      inputValues: { a: { str: 'test' }, b: { str: undefined } },
+      expectedMarble: '--a-----------------|',
+      expectValues: { a: { str: 'test' }, b: { str: undefined } }
+    };
+    testCase(test);
+  });
+  it('case {str} => null', () => {
+    const test = {
+      name: 'case {str} => null',
+      inputMarble: '--a--a--a--b--b--a--|',
+      inputValues: { a: { str: 'test' }, b: null },
+      expectedMarble: '--a--------b-----a--|',
+      expectValues: { a: { str: 'test' }, b: null }
+    };
+    testCase(test);
+  });
+  it('case {str} => {null}', () => {
+    const test = {
+      inputMarble: '--a--a--a--b--b--a--|',
+      inputValues: { a: { str: 'test' }, b: { str: null } },
+      expectedMarble: '--a--------b-----a--|',
+      expectValues: { a: { str: 'test' }, b: { str: null } }
+    };
+    testCase(test);
+  });
+  it('case  null => undefined', () => {
+    const test = {
+      inputMarble: '--a--a--a--b--b--a--|',
+      inputValues: { a: null, b: undefined },
+      expectedMarble: '--a-----------------|',
+      expectValues: { a: null, b: undefined }
+    };
+    testCase(test);
+  });
+  it('case {null} => {undefined}', () => {
+    const test = {
+      inputMarble: '--a--a--a--b--b--a--|',
+      inputValues: { a: { str: null }, b: { str: undefined } },
+      expectedMarble: '--a-----------------|',
+      expectValues: { a: { str: null }, b: { str: undefined } }
+    };
+    testCase(test);
+  });
+  it('case  undefined => null', () => {
+    const test = {
+      inputMarble: '--a--a--a--b--b--a--|',
+      inputValues: { a: undefined, b: null },
+      expectedMarble: '-----------b--------|',
+      expectValues: { a: undefined, b: null }
+    };
+    testCase(test);
+  });
+  it('case {undefined} => {null}', () => {
+    const test = {
+      inputMarble: '--a--a--a--b--b--a--|',
+      inputValues: { a: { str: undefined }, b: { str: null } },
+      expectedMarble: '-----------b--------|',
+      expectValues: { a: { str: undefined }, b: { str: null } }
+    };
+    testCase(test);
+  });
+});
+
+function testCase(test: any) {
+  testScheduler.run(({ cold, expectObservable }) => {
+    const e1 = cold(test.inputMarble, test.inputValues as any);
+    const expected = test.expectedMarble;
+    expectObservable(
+      e1.pipe(
+        selectSlice<any, any>(['str'])
+      )
+    ).toBe(expected, test.expectValues);
+  });
+}

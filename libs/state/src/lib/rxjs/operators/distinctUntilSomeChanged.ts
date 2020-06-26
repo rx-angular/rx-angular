@@ -8,8 +8,8 @@ import { CompareFn, KeyCompareMap } from '../interfaces';
 function safePluck<T extends object, K extends keyof T>(
   obj: T | null | undefined,
   key: K
-): T[K] | undefined {
-  return !!obj ? obj[key] : undefined;
+): T[K] | null | undefined {
+  return obj != null ? obj[key] : obj;
 }
 
 /**
@@ -96,7 +96,6 @@ export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
   keyCompareMap?: KeyCompareMap<T>
 ): MonoTypeOperatorFunction<T> {
   // default compare function applying === to every key
-  // @TODO: investigate if we get in trouble with null | undefined values
   let distinctCompare: CompareFn<T> = (oldState, newState) =>
     keys.some(
       key => !defaultCompare(safePluck(oldState, key), safePluck(newState, key))
