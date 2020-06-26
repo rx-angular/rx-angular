@@ -14,6 +14,7 @@ interface HeroDetailComponentState {
 }
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'app-hero-detail',
   templateUrl: './hero-detail.component.html',
   styleUrls: ['./hero-detail.component.css'],

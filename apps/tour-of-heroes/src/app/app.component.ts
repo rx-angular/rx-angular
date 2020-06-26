@@ -4,6 +4,7 @@ import { filter } from 'rxjs/operators';
 import { AppRenderStrategy, ConfigService } from './config.service';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']

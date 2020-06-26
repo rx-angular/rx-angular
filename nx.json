@@ -45,6 +45,9 @@
     },
     "tour-of-heroes": {
       "tags": []
+    },
+    "tour-of-heroes-ngxs": {
+      "tags": []
     }
   }
 }

@@ -1,7 +1,7 @@
 module.exports = {
   name: 'tour-of-heroes',
   preset: '../../jest.config.js',
-  coverageDirectory: '../../coverage/apps/tour-of-heroes',
+  coverageDirectory: '../../coverage/tour-of-heroes',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',

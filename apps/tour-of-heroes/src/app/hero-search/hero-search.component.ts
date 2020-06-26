@@ -14,6 +14,7 @@ interface HeroSearchComponentState {
 }
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'app-hero-search',
   templateUrl: './hero-search.component.html',
   styleUrls: ['./hero-search.component.css'],
@@ -34,6 +35,10 @@ export class HeroSearchComponent {
     // switch to new search observable each time the term changes
     switchMap((term: string) => this.heroService.searchHeroes(term))
   );
+
+  trackHero(idx: number, hero: Hero): number {
+    return hero.id;
+  }
 
   constructor(
     public heroService: HeroService,
