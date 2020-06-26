@@ -3,8 +3,8 @@ export function objectDiver<T, K>(
   keys: Array<K | Partial<K>>
 ): T | Partial<T> {
   const key = keys.shift();
-  if (!!key && !!obj) {
-    const value = obj[key];
+  const value = obj[key];
+  if (!!key) {
     return !!value && keys.length > 0 ? objectDiver(value, keys) : value;
   }
   return obj;

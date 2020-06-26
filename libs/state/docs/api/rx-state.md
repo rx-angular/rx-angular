@@ -64,7 +64,7 @@ if (!disabled) {
 
 ### get
 
-##### typeof: (k1: K1) => Parital<T>
+##### typeof: (k1: K1) => Partial<T>
 
 Read from the state in imperative manner by providing keys as parameters.
 Returns the part of state object.
