@@ -16,12 +16,7 @@ const items = [1,2,3,4,5];
 const updatedItems = remove(items, [1,2,3]);
 
 // updatedItems will be: [4,5];
-
-Removes one or multiple items from array T[].
-You can provide a custom comparison function that should return true if items match.
-If no comparison is provided, an equality check is used by default.
-Returns new updated array T[].
-Not mutating original array.
+```
 
 _Example_
 
