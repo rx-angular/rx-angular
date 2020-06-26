@@ -6,3 +6,4 @@ export {
   isStringArrayGuard,
   isKeyOf
 } from './typing';
+export { objectDiver } from './object-diver';

@@ -15,7 +15,8 @@ import {
   pipeFromArray,
   stateful,
   isKeyOf,
-  AccumulationFn
+  AccumulationFn,
+  objectDiver
 } from './core';
 import { filter, map, pluck, tap } from 'rxjs/operators';
 
@@ -94,8 +95,69 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    *
    * @return T
    */
-  get(): T {
-    return this.accumulator.state;
+
+  get(): T;
+
+  /**
+   * @description
+   * Read from the state in imperative manner. Returns the part state object in its current state.
+   *
+   * @example
+   * const disabled = state.get('disabled');
+   *
+   * or
+   *
+   * const disabled = state.get('data', 'more', 'disabled');
+   *
+   * if (!disabled) {
+   *   doStuff();
+   * }
+   *
+   * @return T
+   */
+
+  get<K1 extends keyof T>(k1?: K1): T | Partial<T>;
+
+  get<K1 extends keyof T, K2 extends keyof T[K1]>(
+    k1?: K1,
+    k2?: K2
+  ): T | Partial<T>;
+
+  get<K1 extends keyof T, K2 extends keyof T[K1], K3 extends keyof T[K1][K2]>(
+    k1?: K1,
+    k2?: K2,
+    k3?: K3
+  ): T | Partial<T>;
+
+  get<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3]
+  >(k1?: K1, k2?: K2, k3?: K3, k4?: K4): T | Partial<T>;
+
+  get<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3],
+    K5 extends keyof T[K1][K2][K3][K4]
+  >(k1?: K1, k2?: K2, k3?: K3, k4?: K4, k5?: K5): T | Partial<T>;
+
+  get<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3],
+    K5 extends keyof T[K1][K2][K3][K4],
+    K6 extends keyof T[K1][K2][K3][K4][K5],
+    K extends K1 | K2 | K3 | K4 | K5 | K6
+  >(...keys: K[]): T | Partial<T> {
+    if (isStringArrayGuard(keys)) {
+      return objectDiver<T, K>(this.accumulator.state, keys);
+    } else {
+      return this.accumulator.state;
+    }
   }
 
   /**
