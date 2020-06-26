@@ -1,6 +1,6 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RxState } from '../src';
-import { createStateChecker, initialPrimitiveState, PrimitiveState, initialNestedState } from './fixtures';
+import { createStateChecker, initialPrimitiveState, PrimitiveState } from './fixtures';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
 import { select } from '../src/lib/rxjs/operators/select';
@@ -122,16 +122,16 @@ describe('RxStateService', () => {
   });
 
   describe('get', () => {
-    const state = setupState({ initialState: initialNestedState });
+    const state = setupState({ initialState: initialPrimitiveState });
 
     it('should return value when keys are provided as params', () => {
-      const val = state.get('obj', 'key1', 'key11', 'key111');
-      expect(val).toEqual(initialNestedState.obj.key1.key11.key111)
+      const val = state.get('num');
+      expect(val).toEqual(initialPrimitiveState.num)
     })
 
     it('should return whole state object when no keys provided', () => {
       const val = state.get();
-      expect(val.obj.key1.key11.key111).toEqual(initialNestedState.obj.key1.key11.key111)
+      expect(val.num).toEqual(initialPrimitiveState.num)
     })
   })
 
