@@ -72,6 +72,11 @@ Returns the part of state object.
 _Example_
 
 ```TypeScript
+interface State {
+  bar: { foo: `test`},
+  baz: true
+}
+
 // Access a single property
 
 const bar = state.get('bar');
