@@ -1,6 +1,6 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { RxState } from '../src';
-import { createStateChecker, initialPrimitiveState, PrimitiveState } from './fixtures';
+import { createStateChecker, initialPrimitiveState, PrimitiveState, initialNestedState } from './fixtures';
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
 import { select } from '../src/lib/rxjs/operators/select';
@@ -120,6 +120,20 @@ describe('RxStateService', () => {
       });
     });
   });
+
+  describe('get', () => {
+    const state = setupState({ initialState: initialNestedState });
+
+    it('should return value when keys are provided as params', () => {
+      const val = state.get('obj', 'key1', 'key11', 'key111');
+      expect(val).toEqual(initialNestedState.obj.key1.key11.key111)
+    })
+
+    it('should return whole state object when no keys provided', () => {
+      const val = state.get();
+      expect(val.obj.key1.key11.key111).toEqual(initialNestedState.obj.key1.key11.key111)
+    })
+  })
 
   describe('select', () => {
     it('should return initial state', () => {
@@ -410,7 +424,7 @@ describe('RxStateService', () => {
       });
     });
 
-    it('should work with observable and effect',  fakeAsync(() => {
+    it('should work with observable and effect', fakeAsync(() => {
 
       let calls = 0;
       const effect = (v: number) => {
