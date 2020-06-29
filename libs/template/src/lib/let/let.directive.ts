@@ -103,7 +103,10 @@ export interface LetViewContext<T> {
  *
  * @publicApi
  */
-@Directive({ selector: '[rxLet]' })
+@Directive({
+  selector: '[rxLet]',
+  exportAs: 'renderNotifier'
+})
 export class LetDirective<U> implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
 

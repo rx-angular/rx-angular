@@ -11,7 +11,7 @@ export interface RenderStrategyFactoryConfig {
 
 export interface RenderStrategy<T> {
   name: string;
-  scheduleCD: () => void;
+  scheduleCD: () => Observable<any>;
   behavior: (o: Observable<T>) => Observable<T>;
   renderMethod: () => void;
 }

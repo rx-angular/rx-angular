@@ -1,6 +1,9 @@
 export * from './lib/core';
 export * from './lib/render-strategies';
-export * from './lib/push';
-export * from './lib/let';
-export * from './lib/unpatch/events';
-export * from './lib/template.module';
+export { PushPipe, PushModule } from './lib/push';
+export { LetDirective, LetModule } from './lib/let';
+export {
+  UnpatchEventsDirective,
+  UnpatchEventsModule
+} from './lib/unpatch/events';
+export { TemplateModule } from './lib/template.module';

@@ -12,7 +12,8 @@ import { coalesceWith } from '../rxjs/operators/coalesceWith';
 import {
   postTaskScheduler,
   PostTaskSchedulerPriority
-} from '../rxjs/scheduling/getPostTaskScheduler';
+} from '../rxjs/scheduling/postTask';
+import { postTaskTick } from '../rxjs/scheduling/postTaskTick';
 
 /**
  * Strategies
@@ -222,14 +223,11 @@ export function createDetachStrategy<T>(
 export function createUserVisibleStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const durationSelector = new Observable(subscriber => {
-    from(
-      postTaskScheduler.postTask(() => void 0, {
-        priority: PostTaskSchedulerPriority.userVisible,
-        delay: 0
-      })
-    ).subscribe(subscriber);
+  const durationSelector = postTaskTick({
+    priority: PostTaskSchedulerPriority.userVisible,
+    delay: 0
   });
+
   const scope = (config.cdRef as any).context;
   const priority = SchedulingPriority.background;
   const scheduler = getScheduler(priority);
@@ -256,13 +254,9 @@ export function createUserVisibleStrategy<T>(
 export function createUserBlockingStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const durationSelector = new Observable(subscriber => {
-    from(
-      postTaskScheduler.postTask(() => void 0, {
-        priority: PostTaskSchedulerPriority.userVisible,
-        delay: 0
-      })
-    ).subscribe(subscriber);
+  const durationSelector = postTaskTick({
+    priority: PostTaskSchedulerPriority.userVisible,
+    delay: 0
   });
   const scope = (config.cdRef as any).context;
   const priority = SchedulingPriority.background;
@@ -293,13 +287,9 @@ export function createUserBlockingStrategy<T>(
 export function createBackgroundStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const durationSelector = new Observable(subscriber => {
-    from(
-      postTaskScheduler.postTask(() => void 0, {
-        priority: PostTaskSchedulerPriority.userVisible,
-        delay: 0
-      })
-    ).subscribe(subscriber);
+  const durationSelector = postTaskTick({
+    priority: PostTaskSchedulerPriority.userVisible,
+    delay: 0
   });
   const scope = (config.cdRef as any).context;
   const priority = SchedulingPriority.background;
@@ -345,7 +335,7 @@ export function createBackgroundStrategy<T>(
 export function createIdleCallbackStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy<T> {
-  const durationSelector = from(getUnpatchedResolvedPromise());
+  const durationSelector = idle;
   const scope = (config.cdRef as any).context;
   const priority = SchedulingPriority.idleCallback;
   const scheduler = getScheduler(priority);

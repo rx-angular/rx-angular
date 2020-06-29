@@ -1,10 +1,11 @@
 # coalesceWith
 
 Limits the number of synchronous emitted a value from the source Observable to
-one emitted value per [`AnimationFrame`](https://developer.mozilla.org/en-US/search?q=AnimationFrame),
-then repeats this process for every tick of the browsers event loop.
+one emitted value per durationSelector.
+Typically, rendering will use a [`AnimationFrame`](https://developer.mozilla.org/en-US/search?q=AnimationFrame),
+then repeats this process for every tick of the Browsers event loop.
 
-The coalesceWith operator is based on the [throttle](https://rxjs-dev.firebaseapp.com/api/operators/throttle) operator.
+The coalesceWith operator is based similar to `debounce(from(Promise.resolve()))` operator.
 In addition to that is provides emitted values for the trailing end only, as well as maintaining a context to scope coalescing.
 
 ![coalesceWith Operator Marble Diagram](generated/images/guide/component/coalesceWith.png)

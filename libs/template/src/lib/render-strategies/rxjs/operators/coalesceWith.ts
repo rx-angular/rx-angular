@@ -42,7 +42,7 @@ import { createCoalesceManager } from '../../../core/render-aware/coalescing-man
  * ```
  */
 export function coalesceWith<T>(
-  durationSelector: Subscribable<any>,
+  durationSelector: Observable<any>,
   scope?: object
 ): MonoTypeOperatorFunction<T> {
   const _scope = scope || {};

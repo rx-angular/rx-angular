@@ -1,9 +1,9 @@
-import { Subscribable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { createCoalesceManager } from '../../core/render-aware/coalescing-manager';
 
 export function staticCoalesce<T>(
   work: () => T,
-  durationSelector: Subscribable<any>,
+  durationSelector: Observable<any>,
   scope: object = {}
 ): void {
   const coalescingManager = createCoalesceManager(scope);

@@ -1,4 +1,4 @@
-import { schedule } from '../../../src/lib/render-strategies/static';
+import { staticSchedule } from '../../../src/lib/render-strategies/static';
 import { SchedulingPriority } from '../../../src/lib/render-strategies/rxjs/scheduling/interfaces';
 
 /** @test {coalesceWith} */
@@ -8,7 +8,7 @@ describe('staticSchedule', () => {
     let test = 0;
     const priority = SchedulingPriority.Promise;
     const doWork = () => test++;
-    schedule(doWork, priority);
+    staticSchedule(doWork, priority);
     expect(test).toBe(0);
     Promise.resolve().then(() => {
       expect(test).toBe(1);

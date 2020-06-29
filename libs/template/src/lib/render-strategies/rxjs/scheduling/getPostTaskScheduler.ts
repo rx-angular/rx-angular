@@ -5,45 +5,11 @@ import {
   Subscription
 } from 'rxjs';
 import { isObject } from 'util';
-
-/**
- *
- * Implementation based on rxjs-etc => IdleScheduler
- *
- */
-
-export enum PostTaskSchedulerPriority {
-  background = 'background',
-  userBlocking = 'user-blocking',
-  userVisible = 'user-visible'
-}
-
-interface PostTaskScheduler {
-  postTask<T>(cb: () => void, options: SchedulerPostTaskOptions): Promise<T>;
-}
-
-interface SchedulerPostTaskOptions {
-  priority: PostTaskSchedulerPriority | string | null;
-  delay: number;
-  signal?: any;
-}
-
-export const postTaskScheduler: PostTaskScheduler =
-  typeof window !== 'undefined'
-    ? (window as any).scheduler || {
-        postTask<T>(options: SchedulerPostTaskOptions): Promise<T> {
-          const start = Date.now();
-          return new Promise(resolve => {
-            setTimeout(function() {
-              console.error(
-                'postTask not implemented. Use setTimeout as fallback'
-              );
-              resolve();
-            }, 1);
-          });
-        }
-      }
-    : () => {};
+import {
+  postTaskScheduler,
+  PostTaskSchedulerPriority,
+  SchedulerPostTaskOptions
+} from './postTask';
 
 class PostTaskAction<T> extends Subscription {
   _scheduler;

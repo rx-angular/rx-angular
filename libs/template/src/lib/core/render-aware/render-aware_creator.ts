@@ -80,7 +80,7 @@ export function createRenderAware<U>(cfg: {
     filter(o$ => o$ !== undefined),
     switchMap(o$ => o$.pipe(distinctUntilChanged(), tap(cfg.updateObserver))),
     withLatestFrom(strategy$),
-    tap(([v, strat]) => strat.scheduleCD()),
+    switchMap(([v, strat]) => strat.scheduleCD()),
     catchError(e => {
       console.error(e);
       return EMPTY;

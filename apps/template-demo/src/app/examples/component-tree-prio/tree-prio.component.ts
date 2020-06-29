@@ -3,13 +3,15 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import { Person, TreePrioService } from './tree-prio.service';
 import { RxState } from '@rx-angular/state';
 import { tap } from 'rxjs/operators';
 import { getStrategies } from '@rx-angular/template';
 import { CoalescingTestService } from '../coalescing/experiments-profiling/coalescing-test.service';
+import { Observable } from 'rxjs';
 
 export interface ComponentState {
   data: Person[];
@@ -35,6 +37,9 @@ export class TreePrioComponent extends RxState<ComponentState>
   visibleStrategy: string;
   invisibleStrategy: string;
 
+  @ViewChild('name1')
+  name1;
+
   displayedColumns: string[] = [
     'select',
     'name',
@@ -59,6 +64,12 @@ export class TreePrioComponent extends RxState<ComponentState>
   ) {
     super();
     this.refetchData();
+  }
+
+  getRenderNotifier(comRef): Observable<any> {
+    // afterCD
+    //
+    return getStrategies(comRef as any).local.newAPI();
   }
 
   getData() {
