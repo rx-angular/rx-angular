@@ -13,17 +13,17 @@ import { isObjectGuard } from '../../core/utils/typing';
  *
  * const cat = {id: 1, type: 'cat'};
  *
- * const catWithname = mergeObjects(cat, {name: 'Fluffy'});
+ * const catWithname = patch(cat, {name: 'Fluffy'});
  *
  * // catWithname will be:
  * // {id: 1, type: 'cat', name: 'Fluffy'};
  *
  * @returns T
  *
- * @docsPage mergeObjects
+ * @docsPage patch
  * @docsCategory transformation-helpers
  */
-export function mergeObjects<T extends object>(object: T, upd: Partial<T>): T {
+export function patch<T extends object>(object: T, upd: Partial<T>): T {
   const update = isObjectGuard(upd) ? upd : {};
 
   if (!isObjectGuard(object)) {

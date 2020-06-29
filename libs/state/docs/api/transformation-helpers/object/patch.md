@@ -1,4 +1,4 @@
-# mergeObjects
+# patch
 
 Merges object of type T with updates of type Partial T.
 Returns new object where updated overrides original values.
@@ -10,7 +10,7 @@ _Example_
 
 const cat = {id: 1, type: 'cat', name: 'Leo'};
 
-const catWithname = mergeObjects(cat, {name: 'Fluffy'});
+const catWithname = patch(cat, {name: 'Fluffy'});
 
 // catWithname will be:
 // {id: 1, type: 'cat', name: 'Fluffy'};
@@ -19,7 +19,7 @@ const catWithname = mergeObjects(cat, {name: 'Fluffy'});
 ## Signature
 
 ```TypeScript
-function mergeObjects<T extends object>(object: T, upd: Partial<T>): T
+function patch<T extends object>(object: T, upd: Partial<T>): T
 ```
 
 ## Parameters

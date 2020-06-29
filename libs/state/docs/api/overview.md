@@ -25,7 +25,7 @@
 - [setProp](./transformation-helpers/object/set-prop.md)
 - [deleteProp](./transformation-helpers/object/delete-prop.md)
 - [toggle](./transformation-helpers/object/toggle.md)
-- [mergeObjects](./transformation-helpers/object/merge-objects.md)
+- [patch](./transformation-helpers/object/merge-objects.md)
 - [dictionaryToArray](./transformation-helpers/object/dictionary-to-array.md)
 
 ## Interfaces

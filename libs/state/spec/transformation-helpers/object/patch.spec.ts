@@ -1,4 +1,4 @@
-import { mergeObjects } from "@rx-angular/state";
+import { patch } from "@rx-angular/state";
 import { initialPrimitiveState, PrimitiveState, NestedState, initialNestedState } from '../../fixtures';
 
 let primitiveState: PrimitiveState;
@@ -9,19 +9,19 @@ beforeEach(() => {
   nestedState = initialNestedState;
 });
 
-describe('mergeObjects', () => {
+describe('patch', () => {
 
   describe('general', () => {
     it('should be defined', () => {
-      const fn = mergeObjects;
+      const fn = patch;
       expect(fn).toBeDefined();
     });
 
     it('should not return same reference', () => {
       const simpleState = {...primitiveState};
-      const result = mergeObjects(simpleState, {num: 43});
-      const result2 = mergeObjects(null as any, simpleState);
-      const result3 = mergeObjects([] as any, simpleState);
+      const result = patch(simpleState, {num: 43});
+      const result2 = patch(null as any, simpleState);
+      const result3 = patch([] as any, simpleState);
 
       simpleState.bol = false;
 
@@ -34,25 +34,25 @@ describe('mergeObjects', () => {
 
   describe('functionality', () => {
     it('should merge 2 objects of the same type', () => {
-      const result = mergeObjects(primitiveState, primitiveState);
+      const result = patch(primitiveState, primitiveState);
 
       expect(result).toEqual(primitiveState);
     });
 
     it('should override original values with updates', () => {
-      const result = mergeObjects(primitiveState, {...primitiveState, str: 'str2'});
+      const result = patch(primitiveState, {...primitiveState, str: 'str2'});
 
       expect(result).toEqual({num: 42, bol: true, str: 'str2'});
     });
 
     it('should work with partial updates', () => {
-      const result = mergeObjects(primitiveState, {str: 'str2'});
+      const result = patch(primitiveState, {str: 'str2'});
 
       expect(result).toEqual({num: 42, bol: true, str: 'str2'});
     });
 
     it('should return original object if updates are empty object', () => {
-      const result = mergeObjects(primitiveState, {});
+      const result = patch(primitiveState, {});
 
       expect(result).toEqual(primitiveState);
     });
@@ -61,27 +61,27 @@ describe('mergeObjects', () => {
 
   describe('edge cases', () => {
     it('should work with empty initial object', () => {
-      const result = mergeObjects({}, primitiveState);
+      const result = patch({}, primitiveState);
 
       expect(result).toEqual(primitiveState);
     });
 
     it('should work if at least one argument not provided', () => {
-      expect(mergeObjects(null as any, primitiveState)).toEqual(primitiveState);
-      expect(mergeObjects(primitiveState, null as any)).toEqual(primitiveState);
-      expect(mergeObjects(null as any, null as any)).toEqual({});
+      expect(patch(null as any, primitiveState)).toEqual(primitiveState);
+      expect(patch(primitiveState, null as any)).toEqual(primitiveState);
+      expect(patch(null as any, null as any)).toEqual({});
     });
 
     it('should work if at least one of inputs is not an object', () => {
-      expect(mergeObjects(primitiveState, '' as any)).toEqual(primitiveState);
-      expect(mergeObjects('' as any, primitiveState)).toEqual(primitiveState);
-      expect(mergeObjects('' as any, '' as any)).toEqual({});
+      expect(patch(primitiveState, '' as any)).toEqual(primitiveState);
+      expect(patch('' as any, primitiveState)).toEqual(primitiveState);
+      expect(patch('' as any, '' as any)).toEqual({});
     });
 
-    it('should work if at least on of objects is array', () => {
-      expect(mergeObjects(primitiveState, [primitiveState] as any)).toEqual(primitiveState);
-      expect(mergeObjects([primitiveState] as any, primitiveState)).toEqual(primitiveState);
-      expect(mergeObjects([primitiveState] as any, [primitiveState] as any)).toEqual({});
+    it('should work if at least one of objects is array', () => {
+      expect(patch(primitiveState, [primitiveState] as any)).toEqual(primitiveState);
+      expect(patch([primitiveState] as any, primitiveState)).toEqual(primitiveState);
+      expect(patch([primitiveState] as any, [primitiveState] as any)).toEqual({});
     });
   })
 });
