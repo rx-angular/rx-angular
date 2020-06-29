@@ -60,12 +60,12 @@ describe('setProp', () => {
   });
 
   describe('edge cases', () => {
-    it('should return empty object if first argument is not an object', () => {
-      expect(setProp('' as any, 'fake' as any, 42)).toEqual({});
-      expect(setProp('' as any, 'fake' as any, 42)).toEqual({});
-      expect(setProp(null as any, 'fake', 42)).toEqual({});
+    it('should return object with provided property if first argument is not an object', () => {
+      expect(setProp('' as any, 'fake' as any, 42)).toEqual({fake: 42});
+      expect(setProp('' as any, 'fake' as any, 42)).toEqual({fake: 42});
+      expect(setProp(null as any, 'fake', 42)).toEqual({fake: 42});
       expect(setProp(null as any, null as any, 42)).toEqual({});
-      expect(setProp([primitiveState], 'concat', () => [])).toEqual({});
+      expect(setProp([primitiveState], 'concat', 32 as any)).toEqual({concat: 32});
     });
 
     it('should initialize non-existing key', () => {

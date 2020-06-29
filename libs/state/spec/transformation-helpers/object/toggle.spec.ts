@@ -42,25 +42,25 @@ describe('toggle', () => {
 
       expect(result).toEqual({num: 42, bol: false, str: 'str'});
     });
+
+    it('should initialize new values in an object', () => {
+      expect(toggle(primitiveState, 'newBoolean' as any)).toEqual({...primitiveState, newBoolean: true});
+    });
   });
 
   describe('edge cases', () => {
-    it('should return initial object if property not found', () => {
+    it('should return initial object if property not provided', () => {
       const noKeyResult = toggle(primitiveState, null as any);
 
       expect(noKeyResult).toEqual(primitiveState);
     });
 
-    it('should return empty object if some or all arguments provided', () => {
+    it('should return empty object if no arguments provided', () => {
       expect(toggle(null as any, null as any)).toEqual({});
     });
 
     it('should return original object if key value is not a boolean', () => {
       expect(toggle(primitiveState, 'str' as any)).toEqual(primitiveState);
-    });
-
-    it('should initialize new values in an object', () => {
-      expect(toggle(primitiveState, 'newBoolean' as any)).toEqual({...primitiveState, newBoolean: true});
     });
   });
 });

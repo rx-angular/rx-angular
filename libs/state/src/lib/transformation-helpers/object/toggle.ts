@@ -4,7 +4,7 @@ import { isKeyOf, isObjectGuard } from '../../core/utils/typing';
  * @description
  * Toggles a boolean property in the object.
  * Accepts object of type T and key value of which is boolean.
- * Toggles the property and returns a new object, while not mutating the original one.
+ * Toggles the property and returns a shallow copy of an object, while not mutating the original one.
  *
  * @example
  *
@@ -25,16 +25,15 @@ export function toggle<T extends object>(
   object: T,
   key: OnlyKeysOfSpecificType<T, boolean>
 ): T {
-  if (!isObjectGuard(object)) {
-    return {} as T;
-  }
+  const initialObject = isObjectGuard(object) ? object : ({} as T);
 
   if (
     isKeyOf<T>(key) &&
-    (typeof object[key] === 'boolean' || !object.hasOwnProperty(key))
+    (typeof initialObject[key] === 'boolean' ||
+      !initialObject.hasOwnProperty(key))
   ) {
-    return { ...object, [key]: !object[key] };
+    return { ...initialObject, [key]: !initialObject[key] };
   }
 
-  return { ...object };
+  return { ...initialObject };
 }
