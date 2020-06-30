@@ -1,11 +1,10 @@
 import { jestMatcher } from '@test-helpers';
 import { mergeMap } from 'rxjs/operators';
-import {
-  KeyCompareMap
-} from '../../../src/lib/rxjs/interfaces';
+import { KeyCompareMap } from '../../../src/lib/rxjs/interfaces';
 import { distinctUntilSomeChanged } from '../../../src/lib/rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
+import { PrimitiveState } from '../../fixtures';
 
 let testScheduler: TestScheduler;
 
@@ -23,13 +22,14 @@ beforeEach(() => {
   testScheduler = new TestScheduler(jestMatcher);
 });
 
+
 /** @test {distinctUntilSomeChanged} */
 describe('distinctUntilSomeChanged operator', () => {
   it('should distinguish between values', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 }, b: { val: 2 } };
-      const e1 =  cold('--a--a--a--b--b--a--|', values);
-      const e1subs =   '^-------------------!';
+      const e1 = cold('--a--a--a--b--b--a--|', values);
+      const e1subs = '^-------------------!';
       const expected = '--a--------b-----a--|';
 
       expectObservable(
@@ -44,8 +44,8 @@ describe('distinctUntilSomeChanged operator', () => {
   it('should distinguish between values with multiple keys', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 }, b: { val: 1, valOther: 3 } };
-      const e1 =  cold('--a--a--a--b--b--a--|', values);
-      const e1subs =   '^-------------------!';
+      const e1 = cold('--a--a--a--b--b--a--|', values);
+      const e1subs = '^-------------------!';
       const expected = '--a--------b-----a--|';
 
       expectObservable(
@@ -110,7 +110,7 @@ describe('distinctUntilSomeChanged operator', () => {
 
       expectObservable(
         e1.pipe(
-          distinctUntilSomeChanged(keyCompare)
+          distinctUntilSomeChanged(['val', 'objVal'], keyCompare)
         )
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -120,8 +120,8 @@ describe('distinctUntilSomeChanged operator', () => {
   it('should distinguish between values and does not completes', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 }, b: { val: 2 } };
-      const e1 =  cold('--a--a--a--b--b--a-', values);
-      const e1subs =   '^------------------';
+      const e1 = cold('--a--a--a--b--b--a-', values);
+      const e1subs = '^------------------';
       const expected = '--a--------b-----a-';
 
       expectObservable(
@@ -142,8 +142,8 @@ describe('distinctUntilSomeChanged operator', () => {
         d: { val: 1 },
         e: { val: 5 }
       };
-      const e1 =  cold('--a--b--c--d--e--|', values);
-      const e1subs =   '^----------------!';
+      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1subs = '^----------------!';
       const expected = '--a--b-----d--e--|';
 
       expectObservable(
@@ -164,8 +164,8 @@ describe('distinctUntilSomeChanged operator', () => {
         d: { valOther: 1 },
         e: { valOther: 5 }
       };
-      const e1 =  cold('--a--b--c--d--e--|', values);
-      const e1subs =   '^----------------!';
+      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1subs = '^----------------!';
       const expected = '--a--------------|';
 
       expectObservable(
@@ -179,8 +179,8 @@ describe('distinctUntilSomeChanged operator', () => {
 
   it('should not completes if source never completes', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 =  cold('-');
-      const e1subs =   '^';
+      const e1 = cold('-');
+      const e1subs = '^';
       const expected = '-';
 
       expectObservable(
@@ -192,8 +192,8 @@ describe('distinctUntilSomeChanged operator', () => {
 
   it('should not completes if source does not completes', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 =  cold('-');
-      const e1subs =   '^';
+      const e1 = cold('-');
+      const e1subs = '^';
       const expected = '-';
 
       expectObservable(
@@ -205,8 +205,8 @@ describe('distinctUntilSomeChanged operator', () => {
 
   it('should complete if source is empty', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 =  cold('|');
-      const e1subs =   '(^!)';
+      const e1 = cold('|');
+      const e1subs = '(^!)';
       const expected = '|';
 
       expectObservable(
@@ -218,8 +218,8 @@ describe('distinctUntilSomeChanged operator', () => {
 
   it('should complete if source does not emit', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 =  cold('------|');
-      const e1subs =   '^-----!';
+      const e1 = cold('------|');
+      const e1subs = '^-----!';
       const expected = '------|';
 
       expectObservable(
@@ -232,8 +232,8 @@ describe('distinctUntilSomeChanged operator', () => {
   it('should emit if source emits single element only', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 } };
-      const e1 =  cold('--a--|', values);
-      const e1subs =   '^----!';
+      const e1 = cold('--a--|', values);
+      const e1subs = '^----!';
       const expected = '--a--|';
 
       expectObservable(
@@ -262,8 +262,8 @@ describe('distinctUntilSomeChanged operator', () => {
   it('should raises error if source raises error', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 } };
-      const e1 =  cold('--a--a--#', values);
-      const e1subs =   '^-------!';
+      const e1 = cold('--a--a--#', values);
+      const e1subs = '^-------!';
       const expected = '--a-----#';
 
       expectObservable(
@@ -277,8 +277,8 @@ describe('distinctUntilSomeChanged operator', () => {
 
   it('should raises error if source throws', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const e1 =  cold('#');
-      const e1subs =   '(^!)';
+      const e1 = cold('#');
+      const e1subs = '(^!)';
       const expected = '#';
 
       expectObservable(
@@ -297,8 +297,8 @@ describe('distinctUntilSomeChanged operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 =  cold('--a--b--c--d--e--|', values);
-      const e1subs =   '^----------------!';
+      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1subs = '^----------------!';
       const expected = '--a--b--c--d--e--|';
 
       expectObservable(
@@ -319,10 +319,10 @@ describe('distinctUntilSomeChanged operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 =  cold('--a--b--b--d--a--e--|', values);
-      const e1subs =   '^---------!          ';
+      const e1 = cold('--a--b--b--d--a--e--|', values);
+      const e1subs = '^---------!          ';
       const expected = '--a--b-----          ';
-      const unsub =    '----------!          ';
+      const unsub = '----------!          ';
 
       const result = e1.pipe(
         distinctUntilSomeChanged(['val'])
@@ -342,10 +342,10 @@ describe('distinctUntilSomeChanged operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 =  cold('--a--b--b--d--a--e--|', values);
-      const e1subs =   '^---------!          ';
+      const e1 = cold('--a--b--b--d--a--e--|', values);
+      const e1subs = '^---------!          ';
       const expected = '--a--b-----          ';
-      const unsub =    '----------!          ';
+      const unsub = '----------!          ';
 
       const result = e1.pipe(
         mergeMap((x: any) => of(x)),
@@ -361,8 +361,8 @@ describe('distinctUntilSomeChanged operator', () => {
   it('should emit once if source elements are all same', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 } };
-      const e1 =  cold('--a--a--a--a--a--a--|', values);
-      const e1subs =   '^-------------------!';
+      const e1 = cold('--a--a--a--a--a--a--|', values);
+      const e1subs = '^-------------------!';
       const expected = '--a-----------------|';
 
       expectObservable(
@@ -383,12 +383,12 @@ describe('distinctUntilSomeChanged operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 =  cold('--a--b--c--d--e--|', values);
-      const e1subs =   '^----------------!';
+      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1subs = '^----------------!';
       const expected = '--a--------------|';
 
       expectObservable(
-        e1.pipe(distinctUntilSomeChanged(['val'], () => true))
+        e1.pipe(distinctUntilSomeChanged(['val'], { val: () => true }))
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
@@ -397,12 +397,12 @@ describe('distinctUntilSomeChanged operator', () => {
   it('should emit all if comparer returns false always regardless of source emits', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 } };
-      const e1 =  cold('--a--a--a--a--a--a--|', values);
-      const e1subs =   '^-------------------!';
+      const e1 = cold('--a--a--a--a--a--a--|', values);
+      const e1subs = '^-------------------!';
       const expected = '--a--a--a--a--a--a--|';
 
       expectObservable(
-        e1.pipe(distinctUntilSomeChanged(['val'], () => false))
+        e1.pipe(distinctUntilSomeChanged(['val'], { val: () => false }))
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
@@ -417,13 +417,13 @@ describe('distinctUntilSomeChanged operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 =  cold('--a--b--c--d--e--|', values);
-      const e1subs =   '^----------------!';
+      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1subs = '^----------------!';
       const expected = '--a-----c-----e--|';
       const selector = (x: number, y: number) => y % 2 === 0;
 
       expectObservable(
-        e1.pipe(distinctUntilSomeChanged(['val'], selector))
+        e1.pipe(distinctUntilSomeChanged(['val'], { val: selector }))
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
@@ -438,8 +438,8 @@ describe('distinctUntilSomeChanged operator', () => {
         d: { val: 4 },
         e: { val: 5 }
       };
-      const e1 =  cold('--a--b--c--d--e--|', values);
-      const e1subs =   '^----------!      ';
+      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1subs = '^----------!      ';
       const expected = '--a--b--c--#      ';
       const selector = (x: number, y: number) => {
         if (y === 4) {
@@ -449,9 +449,94 @@ describe('distinctUntilSomeChanged operator', () => {
       };
 
       expectObservable(
-        e1.pipe(distinctUntilSomeChanged(['val'], selector))
+        e1.pipe(distinctUntilSomeChanged(['val'], { val: selector }))
       ).toBe(expected, values, new Error('error'));
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
   });
+});
+
+describe('distinctUntilSomeChanged edge cases', () => {
+
+  it('should handle the defined edge cases', () => {
+    const testSet = [
+      {
+        name: 'case {str} => undefined',
+        inputMarble:    '--a--a--a--b--b--a--|',
+        inputValues: { a: { str: 'test' }, b: undefined },
+        expectedMarble: '--a--------b-----a--|',
+        expectValues: { a: { str: 'test' }, b: undefined }
+      },
+      {
+        name: 'case {str} => null',
+        inputMarble:    '--a--a--a--b--b--a--|',
+        inputValues: { a: { str: 'test' }, b: null },
+        expectedMarble: '--a--------b-----a--|',
+        expectValues: { a: { str: 'test' }, b: null }
+      },
+      {
+        name: 'case  null => undefined',
+        inputMarble:    '--a--a--a--b--b--a--|',
+        inputValues: { a: null, b: undefined },
+        expectedMarble: '--a--------b-----a--|',
+        expectValues: { a: null, b: undefined }
+      },
+      {
+        name: 'case  undefined => null',
+        inputMarble:    '--a--a--a--b--b--a--|',
+        inputValues: { a: undefined, b: null },
+        expectedMarble: '--a--------b-----a--|',
+        expectValues: { a: undefined, b: null }
+      },
+      {
+        name: 'case  {str} => {undefined}',
+        inputMarble:    '--a--a--a--b--b--a--|',
+        inputValues: { a: { str: 'test' }, b: { str: undefined } },
+        expectedMarble: '--a--------b-----a--|',
+        expectValues: { a: { str: 'test' }, b: { str: undefined } }
+      },
+      {
+        name: 'case {str} => {null}',
+        inputMarble:    '--a--a--a--b--b--a--|',
+        inputValues: { a: { str: 'test' }, b: { str: null } },
+        expectedMarble: '--a--------b-----a--|',
+        expectValues: { a: { str: 'test' }, b: { str: null } }
+      },
+      {
+        name: 'case {null} => {undefined}',
+        inputMarble:    '--a--a--a--b--b--a--|',
+        inputValues: { a: { str: null }, b: { str: undefined } },
+        expectedMarble: '--a--------b-----a--|',
+        expectValues: { a: { str: null }, b: { str: undefined } }
+      },
+      {
+        name: 'case {undefined} => {null}',
+        inputMarble:    '--a--a--a--b--b--a--|',
+        inputValues: { a: { str: undefined }, b: { str: null } },
+        expectedMarble: '--a--------b-----a--|',
+        expectValues: { a: { str: undefined }, b: { str: null } }
+      }
+    ];
+
+    testScheduler.run(({cold, expectObservable}) => {
+      testSet.forEach((test) => {
+        const e1 =  cold(test.inputMarble, test.inputValues as any);
+        const expected = test.expectedMarble;
+
+        /*
+        // to figure out which test case failed :D
+        if(test.name === testCaseNameAsStringHere) {
+        console.log('test', test);
+        }
+        */
+        expectObservable(
+          e1.pipe(
+            distinctUntilSomeChanged(['str'])
+          )
+        ).toBe(expected, test.expectValues);
+
+      })
+    })
+  });
+
 });
