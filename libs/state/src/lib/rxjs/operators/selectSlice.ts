@@ -10,34 +10,32 @@ import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
  * filtered to only emit _defined_ values as well as checked for distinct emissions.
  * Comparison will be done for each set key in the `keys` array.
  *
- * If a comparator function is provided, then it will be called for each item to test for whether or not that value
- *  should be emitted.
+ * You can fine grain your distinct checks by providing a `KeyCompareMap` with those keys you want to compute
+ * explicitly different
  *
  * @example
  *
  * // An example with a custom comparison applied to each key
  * import { of } from 'rxjs';
- * import { selectSlices } from 'rxjs/operators';
- * import { isDeepEqual } from 'custom/is-equal';
+ * import { selectSlice } from 'rx-angular/state';
  *
- *
- *  const customCompare = (oldVal, newVal) => isDeepEqual(oldVal, newVal);
  *
  * const state$: Observable<MyState> = of(
- *  { title: 'myTitle', items: ['foo'],  panelOpen: true},
- *  { title: 'myTitle2', items: ['foo', 'bar'],  panelOpen: true},
- *  { title: 'newTitle', items: ['foo', 'baz'],  panelOpen: true},
- *  { title: 'newTitle', items: ['foo', 'baz'],  panelOpen: true}
+ *  { title: 'myTitle', panelOpen: true},
+ *  { title: 'myTitle2', panelOpen: true},
+ *  { title: 'newTitle', panelOpen: true},
+ *  { title: 'newTitle', panelOpen: false}
  * )
  * .pipe(
- *     selectSlices(['title', 'items'], customCompare),
+ *     selectSlice(['title', 'panelOpen']),
  *   )
  *   .subscribe(x => console.log(x));
  *
  * // displays:
- * //  { title: 'myTitle', items: ['foo'] },
- * //  { title: 'myTitle2', items: ['foo', 'bar'] },
- * //  { title: 'newTitle', items: ['foo', 'baz'] },
+ * //  { title: 'myTitle', panelOpen: true },
+ * //  { title: 'myTitle2', panelOpen: true },
+ * //  { title: 'newTitle', panelOpen: true },
+ * //  { title: 'newTitle', panelOpen: false }
  *
  * @example
  *
@@ -50,20 +48,23 @@ import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
  *    items: string[];
  *    panelOpen: boolean;
  * }
- * // Select title and panelOpen.
- * // compare the first letters of the `title` property and use the default comparison for `panelOpen`
+ * // Select items and title.
+ * // apply custom compare logic for the items array
  * const customComparison: KeyCompareMap<MyState> = {
- *   title: (oldTitle, newTitle) => oldTitle.substring(0, 3) === newTitle.substring(0, 3)
+ *   items: (oldItems, newItems) => compareItems(oldItems, newItems)
  * };
- * const state$: Observable<MyState> = of({
- *   title: 'myTitle',
- *   items: ['foo', 'bar'],
- *   panelOpen: true
- * });
- * const slice$ = state$.pipe(selectSlice(['items', 'panelOpen']), tap(console.log)).subscribe();
+ * const state$: Observable<MyState> = of(
+ * { title: 'myTitle', items: ['foo', 'bar'], panelOpen: true },
+ * { title: 'myTitle', items: ['foo', 'bar'], panelOpen: false },
+ * { title: 'nextTitle', items: ['foo', 'baR'], panelOpen: true },
+ * { title: 'nextTitle', items: ['fooRz', 'boo'], panelOpen: false },
+ * );
+ * const slice$ = state$.pipe(selectSlice(['title', 'items']), tap(console.log)).subscribe();
  *
  * // displays:
- * // { items: ['foo', 'bar'], panelOpen: true }
+ * // { title: 'myTitle', items: ['foo', 'bar'] }
+ * // { title: 'nextTitle', items: ['foo', 'baR'] }
+ * // { title: 'nextTitle', items: ['fooRz', 'boo'] }
  *
  * @param {(K)[]} keys - the array of keys which should be selected
  * @param {KeyCompareMap<{ [P in K]: T[P] }>} [keyCompareMap] Optional KeyCompareMap to provide custom compare logic

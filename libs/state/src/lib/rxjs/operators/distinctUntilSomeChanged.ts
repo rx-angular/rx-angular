@@ -23,8 +23,8 @@ const defaultCompare = <V>(oldVal: V, newVal: V) => oldVal === newVal;
  * Returns an Observable that emits all items emitted by the source Observable that are distinct by comparison from
  * the previous item. Comparison will be done for each set key in the `keys` array.
  *
- * If a comparator function is provided, then it will be called for each item to test for whether or not that value should be emitted.
- * If properties of the source change which are not specified for comparison, no change will be emitted.
+ * You can fine grain your distinct checks by providing a `KeyCompareMap` with those keys you want to compute
+ * explicitly different
  *
  * The name `distinctUntilSomeChanged` was picked since it internally iterates over the `keys` and utilizes the
  * [some](https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Array/some) method in order to
@@ -41,53 +41,51 @@ const defaultCompare = <V>(oldVal: V, newVal: V) => oldVal === newVal;
  * }
  *
  * of(
- *   { age: 4, name: 'Foo'},
- *   { age: 7, name: 'Bar'},
- *   { age: 5, name: 'Foo'},
- *   { age: 6, name: 'Foo'},
+ *   { age: 4, name: 'Hans'},
+ *   { age: 7, name: 'Sophie'},
+ *   { age: 5, name: 'Han Solo'},
+ *   { age: 5, name: 'HanSophie'},
  * ).pipe(
  *   distinctUntilSomeChanged(['age', 'name']),
  * )
  * .subscribe(x => console.log(x));
  *
  * // displays:
- * // { age: 4, name: 'Foo' }
- * // { age: 7, name: 'Bar' }
- * // { age: 5, name: 'Foo' }
- * // { age: 6, name: 'Foo' }
+ * // { age: 4, name: 'Hans'}
+ * // { age: 7, name: 'Sophie'}
+ * // { age: 5, name: 'Han Solo'}
+ * // { age: 5, name: 'HanSophie'}
  *
  * @example
- * // An example with a custom comparison applied to each key
+ * // An example with `KeyCompareMap`
  * import { of } from 'rxjs';
  * import { distinctUntilSomeChanged } from 'rxjs/operators';
- * import { isDeepEqual } from 'custom/is-equal';
  *
  * interface Person {
  *     age: number;
  *     name: string;
  *  }
- *
- *  const customCompare = (oldVal, newVal) => isDeepEqual(oldVal, newVal);
+ * const customComparison: KeyCompareMap<Person> = {
+ *   name: (oldName, newName) => oldName.substring(0, 2) === newName.substring(0, 2)
+ * };
  *
  * of(
- *     { age: 4, name: 'Foo1'},
- *     { age: 7, name: 'Bar'},
- *     { age: 5, name: 'Foo2'},
- *     { age: 6, name: 'Foo3'},
+ *     { age: 4, name: 'Hans'},
+ *     { age: 7, name: 'Sophie'},
+ *     { age: 5, name: 'Han Solo'},
+ *     { age: 5, name: 'HanSophie'},
  *   ).pipe(
- *     distinctUntilSomeChanged(['age', 'name'], customCompare),
+ *     distinctUntilSomeChanged(['age', 'name'], customComparison),
  *   )
  *   .subscribe(x => console.log(x));
  *
  * // displays:
- * // { age: 4, name: 'Foo1' }
- * // { age: 7, name: 'Bar' }
- * // { age: 5, name: 'Foo2' }
- * // { age: 6, name: 'Foo3' }
+ * // { age: 4, name: 'Hans' }
+ * // { age: 7, name: 'Sophie' }
+ * // { age: 5, name: 'Han Solo' }
  *
  * @param {K[]} keys String key for object property lookup on each item.
- * @param {CompareFn<T[K]>} [compare] Optional comparison function called to test if an item is distinct from the
- * previous item in the source. (applied to each specified key)
+ * @param {KeyCompareMap<T>} [compare] Optional KeyCompareMap to explicitly define comparisons for some of the keys
  * @docsPage distinctUntilSomeChanged
  * @docsCategory operators
  */
