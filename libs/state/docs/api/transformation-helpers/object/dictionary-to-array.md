@@ -1,1 +1,23 @@
-# dictionaryToArrayConverts dictionary of type {[key: string]: T} to array T[]._Example_```TypeScriptconst creaturesDictionary = {  '1': {id: 1, type: 'cat'},  '2': {id: 2, type: 'dog'},  '3': {id: 3, type: 'parrot'}};const creaturesArray = dictionaryToArray(creaturesDictionary);// creaturesArray will be:// [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}, {id: 3, type: 'parrot'}];```## Signature```TypeScriptfunction dictionaryToArray<T>(dictionary: { [key: string]: T }): T[]```## Parameters### dictionary##### typeof: { [key: string]: T }
+
+
+# dictionaryToArray
+
+Converts a dictionary of type {[key: string]: T} to array T[].
+
+*Example*
+
+```TypeScript
+const creaturesDictionary = {  '1': {id: 1, type: 'cat'},  '2': {id: 2, type: 'dog'},  '3': {id: 3, type: 'parrot'}};const creaturesArray = dictionaryToArray(creaturesDictionary);// creaturesArray will be:// [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}, {id: 3, type: 'parrot'}];
+```
+
+
+## Signature
+
+```TypeScript
+function dictionaryToArray<T>(dictionary: { [key: string]: T }): T[]
+```
+## Parameters
+
+### dictionary
+ ##### typeof: { [key: string]: T }
+

@@ -1,1 +1,29 @@
-# updateUpdates one or multiple items in array T[].You can provide a custom comparison function that should return true if items match.If no comparison is provided, an equality check is used by default.Not mutating original array.Returns new updated array of type T[];_Example_```TypeScriptconst creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}];const newCat = {id: 1, type: 'lion'};const updatedCreatures = update(creatures, newCat, (a, b) => a.id === b.id);// updatedCreatures will be:// [{id: 1, type: 'lion'}, {id: 2, type: 'dog'}];```## Signature```TypeScriptfunction update<T extends object, I extends T>(array: T[], itemsOrItem: NonNullable<NonNullable<I>[]> | NonNullable<I>, compare?: CompareFn<T>): T[]```## Parameters### array##### typeof: T[]### itemsOrItem##### typeof: NonNullable&#60;NonNullable&#60;I&#62;[]&#62; | NonNullable&#60;I&#62;### compare##### typeof: CompareFn&#60;T&#62;
+
+
+# update
+
+Updates one or multiple items in an array T[].You can provide a custom comparison function that should return true if items match.If no comparison is provided, an equality check is used by default.Returns a shallow copy of the updated array T[], and does not mutate the original one.
+
+*Example*
+
+```TypeScript
+const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}];const newCat = {id: 1, type: 'lion'};const updatedCreatures = update(creatures, newCat, (a, b) => a.id === b.id);// updatedCreatures will be:// [{id: 1, type: 'lion'}, {id: 2, type: 'dog'}];
+```
+
+
+## Signature
+
+```TypeScript
+function update<T extends object>(array: T[], itemsOrItem: T[] | T, compare?: CompareFn<T>): T[]
+```
+## Parameters
+
+### array
+ ##### typeof: T[]
+
+### itemsOrItem
+ ##### typeof: T[] | T
+
+### compare
+ ##### typeof: CompareFn&#60;T&#62;
+
