@@ -54,7 +54,7 @@ describe('deleteProp', () => {
       expect(deleteProp(primitiveState, null as any)).toEqual(primitiveState);
     });
 
-    it('should return undefined  if object is null or undefiend', () => {
+    it('should return undefined or null if object is null or undefiend', () => {
       expect(deleteProp(null as any, null as any)).toEqual(null);
       expect(deleteProp(undefined as any, 'fake')).toEqual(undefined);
     });

@@ -99,7 +99,7 @@ describe('toDictionary', () => {
     it('should return null or undefined when array is not provided', () => {
       const arr: any[] = null as any;
       const arr2: any[] = undefined as any;
-      expect( toDictionary(arr, '')).toEqual(null);
+      expect(toDictionary(arr, '')).toEqual(null);
       expect(toDictionary(arr2, '')).toEqual(undefined);
     });
   })

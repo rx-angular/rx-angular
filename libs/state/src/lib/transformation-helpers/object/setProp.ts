@@ -2,7 +2,7 @@ import { isObjectGuard, isKeyOf } from '../../core/utils/typing';
 /**
  * @description
  * Accepts an object of type T, key of type K extends keyof T, and value of type T[K].
- * Sets the property and returns a newly updated shallow copy of an object while not mutating the original one
+ * Sets the property and returns a newly updated shallow copy of an object while not mutating the original one.
  *
  * @example
  *

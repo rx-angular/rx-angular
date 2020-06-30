@@ -64,7 +64,7 @@ describe('update', () => {
     it('should work with empty values', () => {
       const emptyCreatures: Creature[] = [];
 
-      expect(update(emptyCreatures, creatures, (a, b) => a.id === b.id)).toEqual([]);
+      expect(update(emptyCreatures, creatures, (a, b) => a.id === b.id)).toEqual(creatures);
       expect(update(creatures, [], (a, b) => a.id === b.id)).toEqual(creatures);
     });
 

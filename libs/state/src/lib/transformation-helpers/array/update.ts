@@ -5,7 +5,7 @@ import { CompareFn } from '../../rxjs/interfaces/compare-fn';
  * Updates one or multiple items in an array T[].
  * You can provide a custom comparison function that should return true if items match.
  * If no comparison is provided, an equality check is used by default.
- * Returns a new instance of the updated array T[], and does not mutate the original one.
+ * Returns a shallow copy of the updated array T[], and does not mutate the original one.
  *
  * @example
  *
@@ -36,7 +36,7 @@ export function update<T extends object>(
   const defaultCompare = (a: T, b: T) => a === b;
   const innerCompare = compare || defaultCompare;
 
-  if (!array || !Array.isArray(array)) {
+  if (!array || !array.length || !Array.isArray(array)) {
     return [...items];
   }
 
