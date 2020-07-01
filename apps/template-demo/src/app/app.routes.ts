@@ -14,6 +14,13 @@ export const ROUTES: Routes = [
       )
   },
   {
+    path: 'renderer',
+    loadChildren: () =>
+      import('./examples/render-queue/render-queue.module').then(
+        m => m.RenderQueueModule
+      )
+  },
+  {
     path: 'coalescing',
     loadChildren: () =>
       import('./examples/coalescing/coalescing.module').then(

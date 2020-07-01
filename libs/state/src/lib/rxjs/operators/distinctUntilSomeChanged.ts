@@ -8,7 +8,7 @@ import { CompareFn, KeyCompareMap } from '../interfaces';
 function safePluck<T extends object, K extends keyof T>(
   obj: T | null | undefined,
   key: K
-): T[K] | null | undefined {
+): any | T[K] | null | undefined {
   return obj != null ? obj[key] : obj;
 }
 

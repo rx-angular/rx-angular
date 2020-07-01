@@ -1,0 +1,9 @@
+<button unpatch (click)="renderChild1()">renderChild1</button>
+<button unpatch (click)="renderChild2()">renderChild2</button>
+<button unpatch (click)="renderSelf()">renderSelf</button>
+<button unpatch (click)="renderMixed()">renderMixed</button>
+
+<button unpatch (click)="doToggle()">{{ toggle }}</button>
+
+<rx-angular-child *ngIf="toggle"></rx-angular-child>
+<rx-angular-child2></rx-angular-child2>
