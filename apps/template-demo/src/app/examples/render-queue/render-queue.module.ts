@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatListModule } from '@angular/material/list';
 import { RouterModule, Routes } from '@angular/router';
 import { UnpatchEventsModule } from '@rx-angular/template';
 import { Child2Component } from './render-queue/child2.component';
@@ -15,6 +16,11 @@ const ROUTES: Routes = [
 
 @NgModule({
   declarations: [RenderQueueComponent, ChildComponent, Child2Component],
-  imports: [CommonModule, UnpatchEventsModule, RouterModule.forChild(ROUTES)]
+  imports: [
+    CommonModule,
+    UnpatchEventsModule,
+    RouterModule.forChild(ROUTES),
+    MatListModule
+  ]
 })
 export class RenderQueueModule {}

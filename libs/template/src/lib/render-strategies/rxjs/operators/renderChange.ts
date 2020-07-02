@@ -6,9 +6,6 @@ export function renderChange<T>(
   strategy: RenderStrategy<T>
 ): MonoTypeOperatorFunction<T> {
   return (s: Observable<T>): Observable<T> => {
-    return s.pipe(
-      strategy.behavior,
-      tap(v => strategy.renderMethod())
-    );
+    return s.pipe(strategy.behavior);
   };
 }

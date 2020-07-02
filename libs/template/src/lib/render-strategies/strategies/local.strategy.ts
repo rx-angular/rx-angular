@@ -1,9 +1,13 @@
+import {
+  scheduleByPriority,
+  WorkPriority
+} from '../rxjs/scheduling/animationFramePriorityScheduler';
 import { coalesceAndSchedule, staticCoalesce } from '../static';
 import { SchedulingPriority } from '../rxjs/scheduling/interfaces';
 import { getUnpatchedResolvedPromise } from '../../core/utils/unpatched-promise';
 import { from, Observable } from 'rxjs';
 import { getScheduler } from '../rxjs/scheduling/priority-scheduler-map';
-import { observeOn } from 'rxjs/operators';
+import { observeOn, tap } from 'rxjs/operators';
 import {
   RenderStrategy,
   RenderStrategyFactoryConfig
@@ -39,10 +43,13 @@ export function getLocalStrategies<T>(
 ): { [strategy: string]: RenderStrategy<T> } {
   return {
     local: createLocalStrategy<T>(config),
+    localBlocking: createLocalBlockingStrategy<T>(config),
+    localSmooth: createLocalSmoothStrategy<T>(config),
     localCoalesce: createLocalCoalesceStrategy<T>(config),
     localCoalesceAndSchedule: createLocalCoalesceAndScheduleStrategy<T>(config),
     localNative: createLocalNativeStrategy<T>(config),
     detach: createDetachStrategy(config),
+    detachSmooth: createDetachSmoothStrategy(config),
     userVisible: createUserVisibleStrategy(config),
     userBlocking: createUserBlockingStrategy(config),
     background: createBackgroundStrategy(config),
@@ -106,11 +113,67 @@ export function createLocalStrategy<T>(
     config.cdRef.detectChanges();
   };
   const behavior = o =>
-    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+    o.pipe(
+      coalesceWith(durationSelector, scope),
+      observeOn(scheduler),
+      tap(() => renderMethod())
+    );
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
     name: 'local',
+    renderMethod,
+    behavior,
+    scheduleCD
+  };
+}
+
+export function createLocalBlockingStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy<T> {
+  const durationSelector = from(getUnpatchedResolvedPromise());
+  const scope = (config.cdRef as any).context;
+  const priority = SchedulingPriority.animationFrame;
+  const workPriority = WorkPriority.blocking;
+
+  const renderMethod = () => {
+    config.cdRef.detectChanges();
+  };
+  const behavior = o =>
+    o.pipe(
+      coalesceWith(durationSelector, scope),
+      scheduleByPriority(() => ({ priority: workPriority, work: renderMethod }))
+    );
+  const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
+
+  return {
+    name: 'local',
+    renderMethod,
+    behavior,
+    scheduleCD
+  };
+}
+
+export function createLocalSmoothStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy<T> {
+  const durationSelector = from(getUnpatchedResolvedPromise());
+  const scope = (config.cdRef as any).context;
+  const priority = SchedulingPriority.animationFrame;
+  const workPriority = WorkPriority.smooth;
+
+  const renderMethod = () => {
+    config.cdRef.detectChanges();
+  };
+  const behavior = o =>
+    o.pipe(
+      coalesceWith(durationSelector, scope),
+      scheduleByPriority(() => ({ priority: workPriority, work: renderMethod }))
+    );
+  const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
+
+  return {
+    name: 'localSmooth',
     renderMethod,
     behavior,
     scheduleCD
@@ -196,7 +259,7 @@ export function createDetachStrategy<T>(
   const durationSelector = from(getUnpatchedResolvedPromise());
   const scope = (config.cdRef as any).context;
   const priority = SchedulingPriority.animationFrame;
-  const scheduler = getScheduler(priority);
+  const workPriority = WorkPriority.blocking;
 
   const renderMethod = () => {
     config.cdRef.reattach();
@@ -204,11 +267,42 @@ export function createDetachStrategy<T>(
     config.cdRef.detach();
   };
   const behavior = o =>
-    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+    o.pipe(
+      coalesceWith(durationSelector, scope),
+      scheduleByPriority(() => ({ priority: workPriority, work: renderMethod }))
+    );
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
     name: 'detach',
+    renderMethod,
+    behavior,
+    scheduleCD
+  };
+}
+
+export function createDetachSmoothStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy<T> {
+  const durationSelector = from(getUnpatchedResolvedPromise());
+  const scope = (config.cdRef as any).context;
+  const priority = SchedulingPriority.animationFrame;
+  const workPriority = WorkPriority.smooth;
+
+  const renderMethod = () => {
+    config.cdRef.reattach();
+    config.cdRef.detectChanges();
+    config.cdRef.detach();
+  };
+  const behavior = o =>
+    o.pipe(
+      coalesceWith(durationSelector, scope),
+      scheduleByPriority(() => ({ priority: workPriority, work: renderMethod }))
+    );
+  const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
+
+  return {
+    name: 'detachSmooth',
     renderMethod,
     behavior,
     scheduleCD
