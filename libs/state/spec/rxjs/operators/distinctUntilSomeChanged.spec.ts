@@ -4,7 +4,6 @@ import { KeyCompareMap } from '../../../src/lib/rxjs/interfaces';
 import { distinctUntilSomeChanged } from '../../../src/lib/rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-import { PrimitiveState } from '../../fixtures';
 
 let testScheduler: TestScheduler;
 
@@ -110,7 +109,7 @@ describe('distinctUntilSomeChanged operator', () => {
 
       expectObservable(
         e1.pipe(
-          distinctUntilSomeChanged(keyCompare)
+          distinctUntilSomeChanged(['val', 'objVal'], keyCompare)
         )
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
