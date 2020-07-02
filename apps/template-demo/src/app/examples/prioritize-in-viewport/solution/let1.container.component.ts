@@ -34,6 +34,23 @@ import { getStrategies } from '@rx-angular/template';
         value: {{ count }}
       </div>
     </div>
+
+    <button [unpatch] (click)="signals.complete()">
+      complete
+    </button>
+    <button [unpatch] (click)="signals.next('a')">
+      next
+    </button>
+
+    <div
+      *rxLet="signals; let count; strategy: visibleStrategy; complete: complete"
+    >
+      value: {{ count }}
+    </div>
+
+    <ng-template #complete>
+      <h1>COMPLETE</h1>
+    </ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
@@ -61,6 +78,7 @@ import { getStrategies } from '@rx-angular/template';
 })
 export class Let1ContainerComponent {
   incrementTrigger = new Subject<Event>();
+  signals = new Subject<any>();
   toggleAutoIncrement = new BehaviorSubject<any>(false);
 
   strategies = Object.keys(getStrategies({ cdRef: {} } as any));

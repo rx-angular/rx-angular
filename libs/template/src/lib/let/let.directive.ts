@@ -107,6 +107,13 @@ export interface LetViewContext<T> {
 export class LetDirective<U> implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
 
+  private _completeTemplateRef: TemplateRef<
+    LetViewContext<U | undefined | null>
+  > | null = null;
+  private _errorTemplateRef: TemplateRef<
+    LetViewContext<U | undefined | null>
+  > | null = null;
+
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
     this.renderAware.nextPotentialObservable(potentialObservable);
@@ -116,9 +123,25 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     this.renderAware.nextStrategy(strategy || DEFAULT_STRATEGY_NAME);
   }
 
+  @Input()
+  set rxLetComplete(
+    templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
+  ) {
+    assertTemplate('rxLetComplete', templateRef);
+    this._completeTemplateRef = templateRef;
+  }
+
+  @Input()
+  set rxLetError(
+    templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
+  ) {
+    assertTemplate('rxLetError', templateRef);
+    this._errorTemplateRef = templateRef;
+  }
+
   readonly strategies;
   private embeddedView: any;
-  private readonly ViewContext: LetViewContext<U | undefined | null> = {
+  private readonly viewContext: LetViewContext<U | undefined | null> = {
     $implicit: undefined,
     rxLet: undefined,
     $error: false,
@@ -131,10 +154,10 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     next: () => {
       // if not initialized no need to set undefined
       if (this.embeddedView) {
-        this.ViewContext.$implicit = undefined;
-        this.ViewContext.rxLet = undefined;
-        this.ViewContext.$error = false;
-        this.ViewContext.$complete = false;
+        this.viewContext.$implicit = undefined;
+        this.viewContext.rxLet = undefined;
+        this.viewContext.$error = false;
+        this.viewContext.$complete = false;
       }
     }
   };
@@ -142,24 +165,23 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     next: (value: U | null | undefined) => {
       // to have initial rendering lazy
       if (!this.embeddedView) {
-        this.createEmbeddedView();
+        this.createEmbeddedView(this.templateRef);
       }
-      this.ViewContext.$implicit = value;
-      this.ViewContext.rxLet = value;
+      this.viewContext.$implicit = value;
+      this.viewContext.rxLet = value;
     },
     error: (error: Error) => {
       // to have initial rendering lazy
       if (!this.embeddedView) {
-        this.createEmbeddedView();
+        this.createEmbeddedView(this.templateRef);
       }
-      this.ViewContext.$error = true;
+      this.viewContext.$error = true;
     },
     complete: () => {
-      // to have initial rendering lazy
-      if (!this.embeddedView) {
-        this.createEmbeddedView();
-      }
-      this.ViewContext.$complete = true;
+      console.log('complete');
+
+      this.createEmbeddedView(this._completeTemplateRef);
+      this.viewContext.$complete = true;
     }
   };
 
@@ -189,10 +211,10 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     this.subscription = this.renderAware.subscribe();
   }
 
-  createEmbeddedView() {
+  createEmbeddedView(templateRef: TemplateRef<any>) {
     this.embeddedView = this.viewContainerRef.createEmbeddedView(
-      this.templateRef,
-      this.ViewContext
+      templateRef,
+      this.viewContext
     );
   }
 
@@ -200,4 +222,19 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
     this.viewContainerRef.clear();
   }
+}
+
+function assertTemplate(
+  property: string,
+  templateRef: TemplateRef<any> | null
+): templateRef is TemplateRef<any> {
+  const isTemplateRefOrNull = !!(
+    !templateRef || templateRef.createEmbeddedView
+  );
+  if (!isTemplateRefOrNull) {
+    throw new Error(
+      `${property} must be a TemplateRef, but received something else.`
+    );
+  }
+  return isTemplateRefOrNull;
 }
