@@ -11,7 +11,4 @@
  * @docsPage interfaces
  * @docsCategory operators
  */
-export type CompareFn<T> = (
-  oldVal: T | null | undefined,
-  newVal: T | null | undefined
-) => boolean;
+export type CompareFn<T> = (oldVal: T, newVal: T) => boolean;
