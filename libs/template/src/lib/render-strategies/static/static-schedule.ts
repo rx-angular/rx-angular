@@ -12,10 +12,15 @@ export function staticSchedule(
     }
     return abortController;
   }
-  priorityTickMap[priority].subscribe(() => {
-    if (!abortController.signal.aborted) {
-      work();
+  priorityTickMap[priority].subscribe(
+    () => {
+      if (!abortController.signal.aborted) {
+        work();
+      }
+    },
+    error => {
+      console.error(error);
     }
-  });
+  );
   return abortController;
 }
