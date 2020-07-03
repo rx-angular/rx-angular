@@ -1,4 +1,4 @@
-import { getScheduler } from '../rxjs/scheduling/priority-scheduler-map';
+import { getScheduler } from '../rxjs/scheduling/priority-tick-map';
 import { SchedulingPriority } from '../rxjs/scheduling/interfaces';
 
 export function staticSchedule(

@@ -9,7 +9,7 @@ import { isObject } from 'util';
 import { postTaskScheduler, SchedulerPostTaskOptions } from './postTask';
 
 export const postTaskTick = (options: SchedulerPostTaskOptions) =>
-  new Observable(subscription => {
+  new Observable<number>(subscription => {
     postTaskScheduler
       .postTask(() => {}, options)
       .then(() => {

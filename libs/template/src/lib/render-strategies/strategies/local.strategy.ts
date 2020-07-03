@@ -2,7 +2,7 @@ import { coalesceAndSchedule, staticCoalesce } from '../static';
 import { SchedulingPriority } from '../rxjs/scheduling/interfaces';
 import { getUnpatchedResolvedPromise } from '../../core/utils/unpatched-resolved-promise';
 import { from } from 'rxjs';
-import { getScheduler } from '../rxjs/scheduling/priority-scheduler-map';
+import { getScheduler } from '../rxjs/scheduling/priority-tick-map';
 import { observeOn, tap } from 'rxjs/operators';
 import {
   RenderStrategy,
