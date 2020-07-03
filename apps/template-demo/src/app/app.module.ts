@@ -14,7 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app-component/app.component';
 import { ROUTES } from './app.routes';
-import { ViewportModule } from './viewport.module';
+import { ViewportPrioModule } from '@rx-angular/template';
 
 export const materialModules = [
   BrowserAnimationsModule,
@@ -34,7 +34,7 @@ export const materialModules = [
     ReactiveFormsModule,
     RouterModule.forRoot(ROUTES),
     materialModules,
-    ViewportModule
+    ViewportPrioModule
   ],
   declarations: [AppComponent],
   exports: [],

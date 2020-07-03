@@ -16,18 +16,19 @@ import { ɵmarkDirty as markDirty } from '@angular/core';
  * | `native`    | ❌       | mFC           | ❌                | ❌         | ❌      |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
- * @return {RenderStrategy<T>} - The calculated strategy
+ * @return {RenderStrategy} - The calculated strategy
  *
  */
-export function createNativeStrategy<T>(
-  config: RenderStrategyFactoryConfig<T>
+export function createNativeStrategy(
+  config: RenderStrategyFactoryConfig
 ): RenderStrategy {
+  const component = (config.cdRef as any).context;
   return {
     name: 'native',
     detectChanges: () => config.cdRef.markForCheck(),
-    rxScheduleCD: o => o.pipe(tap(() => markDirty(config.component))),
+    rxScheduleCD: o => o.pipe(tap(() => markDirty(component))),
     scheduleCD: () => {
-      markDirty(config.component);
+      markDirty(component);
       return new AbortController();
     }
   };

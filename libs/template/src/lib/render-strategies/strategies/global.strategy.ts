@@ -2,13 +2,13 @@ import { ɵmarkDirty as markDirty } from '@angular/core';
 import {
   RenderStrategy,
   RenderStrategyFactoryConfig
-} from '../../core/render-aware/interfaces';
+} from '../../core/render-aware';
 
-export function getGlobalStrategies<T>(
-  config: RenderStrategyFactoryConfig<T>
+export function getGlobalStrategies(
+  config: RenderStrategyFactoryConfig
 ): { [strategy: string]: RenderStrategy } {
   return {
-    global: createGlobalStrategy<T>(config)
+    global: createGlobalStrategy(config)
   };
 }
 
@@ -40,10 +40,10 @@ export function getGlobalStrategies<T>(
  * @return {RenderStrategy<T>} - The calculated strategy
  *
  */
-export function createGlobalStrategy<T>(
-  config: RenderStrategyFactoryConfig<T>
+export function createGlobalStrategy(
+  config: RenderStrategyFactoryConfig
 ): RenderStrategy {
-  const renderMethod = () => markDirty((config.component as any).context);
+  const renderMethod = () => markDirty((config.cdRef as any).context);
 
   return {
     name: 'global',

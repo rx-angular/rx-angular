@@ -9,19 +9,8 @@ import {
 import { coalesceWith } from '../rxjs/operators/coalesceWith';
 import { ɵdetectChanges as detectChanges } from '@angular/core';
 import { promiseTick } from '../rxjs/scheduling';
-import { createNoopStrategy } from './noop.strategy';
-import { createNativeStrategy } from './native.strategy';
-import { getGlobalStrategies } from './global.strategy';
 
 const promiseDurationSelector = promiseTick();
-
-export function getExperimentalLocalStrategies<T>(
-  config: RenderStrategyFactoryConfig<T>
-): { [strategy: string]: RenderStrategy } {
-  return {
-    ...getLocalStrategies(config)
-  };
-}
 
 /**
  * Experimental Local Strategies
@@ -41,7 +30,7 @@ export function getExperimentalLocalStrategies<T>(
  */
 
 export function getLocalStrategies<T>(
-  config: RenderStrategyFactoryConfig<T>
+  config: RenderStrategyFactoryConfig
 ): { [strategy: string]: RenderStrategy } {
   return {
     local: createLocalStrategy<T>(config),
@@ -77,22 +66,23 @@ export function getLocalStrategies<T>(
  *
  */
 export function createLocalStrategy<T>(
-  config: RenderStrategyFactoryConfig<T>
+  config: RenderStrategyFactoryConfig
 ): RenderStrategy {
+  const component = (config.cdRef as any).context;
   const priority = SchedulingPriority.animationFrame;
   const tick = priorityTickMap[priority];
 
   const renderMethod = () => {
-    detectChanges(config.component);
+    detectChanges(component);
   };
   const behavior = o =>
     o.pipe(
-      coalesceWith(promiseDurationSelector, config.component),
+      coalesceWith(promiseDurationSelector, component),
       switchMap(v => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
-    coalesceAndSchedule(renderMethod, priority, config.component);
+    coalesceAndSchedule(renderMethod, priority, component);
 
   return {
     name: 'local',
@@ -129,25 +119,26 @@ export function createLocalStrategy<T>(
  * @return {RenderStrategy} - The calculated strategy
  *
  */
-export function createDetachStrategy<T>(
-  config: RenderStrategyFactoryConfig<T>
+export function createDetachStrategy(
+  config: RenderStrategyFactoryConfig
 ): RenderStrategy {
+  const component = (config.cdRef as any).context;
   const priority = SchedulingPriority.animationFrame;
   const tick = priorityTickMap[priority];
 
   const renderMethod = () => {
     config.cdRef.reattach();
-    detectChanges(config.component);
+    detectChanges(component);
     config.cdRef.detach();
   };
   const behavior = o =>
     o.pipe(
-      coalesceWith(promiseDurationSelector, config.component),
+      coalesceWith(promiseDurationSelector, component),
       switchMap(v => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
-    coalesceAndSchedule(renderMethod, priority, config.component);
+    coalesceAndSchedule(renderMethod, priority, component);
 
   return {
     name: 'detach',

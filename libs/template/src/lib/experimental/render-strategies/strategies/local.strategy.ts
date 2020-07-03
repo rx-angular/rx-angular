@@ -34,12 +34,12 @@ const promiseDurationSelector = promiseTick();
  *
  */
 
-export function getLocalStrategies<T>(
-  config: RenderStrategyFactoryConfig<T>
+export function getExperimentalLocalStrategies(
+  config: RenderStrategyFactoryConfig
 ): { [strategy: string]: RenderStrategy } {
   return {
-    localCoalesce: createLocalCoalesceStrategy<T>(config),
-    localCoalesceAndSchedule: createLocalCoalesceAndScheduleStrategy<T>(config),
+    localCoalesce: createLocalCoalesceStrategy(config),
+    localCoalesceAndSchedule: createLocalCoalesceAndScheduleStrategy(config),
     userVisible: createUserVisibleStrategy(config),
     userBlocking: createUserBlockingStrategy(config),
     background: createBackgroundStrategy(config),
@@ -47,23 +47,24 @@ export function getLocalStrategies<T>(
   };
 }
 
-export function createLocalCoalesceStrategy<T>(
-  config: RenderStrategyFactoryConfig<T>
+export function createLocalCoalesceStrategy(
+  config: RenderStrategyFactoryConfig
 ): RenderStrategy {
+  const component = (config.cdRef as any).context;
   const priority = SchedulingPriority.animationFrame;
   const tick = priorityTickMap[priority];
 
   const renderMethod = () => {
-    detectChanges(config.component);
+    detectChanges(component);
   };
   const behavior = o =>
     o.pipe(
-      coalesceWith(promiseDurationSelector, config.component),
+      coalesceWith(promiseDurationSelector, component),
       switchMap(v => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
-    coalesceAndSchedule(renderMethod, priority, config.component);
+    coalesceAndSchedule(renderMethod, priority, component);
 
   return {
     name: 'localCoalesce',
@@ -73,23 +74,24 @@ export function createLocalCoalesceStrategy<T>(
   };
 }
 
-export function createLocalCoalesceAndScheduleStrategy<T>(
-  config: RenderStrategyFactoryConfig<T>
+export function createLocalCoalesceAndScheduleStrategy(
+  config: RenderStrategyFactoryConfig
 ): RenderStrategy {
+  const component = (config.cdRef as any).context;
   const priority = SchedulingPriority.animationFrame;
   const tick = priorityTickMap[priority];
 
   const renderMethod = () => {
-    detectChanges(config.component);
+    detectChanges(component);
   };
   const behavior = o =>
     o.pipe(
-      coalesceWith(promiseDurationSelector, config.component),
+      coalesceWith(promiseDurationSelector, component),
       switchMap(v => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
-    coalesceAndSchedule(renderMethod, priority, config.component);
+    coalesceAndSchedule(renderMethod, priority, component);
 
   return {
     name: 'localCoalesceAndSchedule',
@@ -103,23 +105,24 @@ export function createLocalCoalesceAndScheduleStrategy<T>(
  *  PostTask - Priority UserVisible Strategy
  *
  */
-export function createUserVisibleStrategy<T>(
-  config: RenderStrategyFactoryConfig<T>
+export function createUserVisibleStrategy(
+  config: RenderStrategyFactoryConfig
 ): RenderStrategy {
+  const component = (config.cdRef as any).context;
   const priority = SchedulingPriority.background;
   const tick = priorityTickMap[priority];
 
   const renderMethod = () => {
-    detectChanges(config.component);
+    detectChanges(component);
   };
   const behavior = o =>
     o.pipe(
-      coalesceWith(promiseDurationSelector, config.component),
+      coalesceWith(promiseDurationSelector, component),
       switchMap(v => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
-    coalesceAndSchedule(renderMethod, priority, config.component);
+    coalesceAndSchedule(renderMethod, priority, component);
 
   return {
     name: 'userVisible',
@@ -133,23 +136,24 @@ export function createUserVisibleStrategy<T>(
  *  PostTask - Priority UserBlocking Strategy
  *
  */
-export function createUserBlockingStrategy<T>(
-  config: RenderStrategyFactoryConfig<T>
+export function createUserBlockingStrategy(
+  config: RenderStrategyFactoryConfig
 ): RenderStrategy {
+  const component = (config.cdRef as any).context;
   const priority = SchedulingPriority.idleCallback;
   const tick = priorityTickMap[priority];
 
   const renderMethod = () => {
-    detectChanges(config.component);
+    detectChanges(component);
   };
   const behavior = o =>
     o.pipe(
-      coalesceWith(promiseDurationSelector, config.component),
+      coalesceWith(promiseDurationSelector, component),
       switchMap(v => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
-    coalesceAndSchedule(renderMethod, priority, config.component);
+    coalesceAndSchedule(renderMethod, priority, component);
 
   return {
     name: 'userBlocking',
@@ -163,23 +167,24 @@ export function createUserBlockingStrategy<T>(
  *  PostTask - Priority Background Strategy
  *
  */
-export function createBackgroundStrategy<T>(
-  config: RenderStrategyFactoryConfig<T>
+export function createBackgroundStrategy(
+  config: RenderStrategyFactoryConfig
 ): RenderStrategy {
+  const component = (config.cdRef as any).context;
   const priority = SchedulingPriority.background;
   const tick = priorityTickMap[priority];
 
   const renderMethod = () => {
-    detectChanges(config.component);
+    detectChanges(component);
   };
   const behavior = o =>
     o.pipe(
-      coalesceWith(promiseDurationSelector, config.component),
+      coalesceWith(promiseDurationSelector, component),
       switchMap(v => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
-    coalesceAndSchedule(renderMethod, priority, config.component);
+    coalesceAndSchedule(renderMethod, priority, component);
 
   return {
     name: 'background',
@@ -209,22 +214,23 @@ export function createBackgroundStrategy<T>(
  * @return {RenderStrategy} - The calculated strategy
  *
  */
-export function createIdleCallbackStrategy<T>(
-  config: RenderStrategyFactoryConfig<T>
+export function createIdleCallbackStrategy(
+  config: RenderStrategyFactoryConfig
 ): RenderStrategy {
+  const component = (config.cdRef as any).context;
   const priority = SchedulingPriority.idleCallback;
   const tick = priorityTickMap[priority];
   const renderMethod = () => {
-    detectChanges(config.component);
+    detectChanges(component);
   };
   const behavior = o =>
     o.pipe(
-      coalesceWith(promiseDurationSelector, config.component),
+      coalesceWith(promiseDurationSelector, component),
       switchMap(v => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
-    coalesceAndSchedule(renderMethod, priority, config.component);
+    coalesceAndSchedule(renderMethod, priority, component);
 
   return {
     name: 'idleCallback',
