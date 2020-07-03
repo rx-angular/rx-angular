@@ -95,7 +95,7 @@ describe('strategies', () => {
       const cfg = getMockNativeStrategyConfig();
       const strategy = createNativeStrategy(cfg);
       strategy.detectChanges();
-      expect(cfg.scope.markForCheck).toHaveBeenCalledTimes(1);
+      expect(cfg.cdRef.markForCheck).toHaveBeenCalledTimes(1);
     });
   });
 
