@@ -70,11 +70,11 @@ export class MyModule {}
 Alternatively, you can import each feature module individually.
 
 ```typescript
-import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { LetModule, PushModule, ViewportPrioModule } from '@rx-angular/template';
 
 @NgModule({
   declarations: [...],
-  imports: [LetModule, PushModule, UnpatchEventsModule],
+  imports: [LetModule, PushModule, ViewportPrioModule],
 })
 export class MyModule {}
 ```

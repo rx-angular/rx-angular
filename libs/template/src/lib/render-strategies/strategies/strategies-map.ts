@@ -11,10 +11,10 @@ export const DEFAULT_STRATEGY_NAME = 'local';
 
 export function getStrategies<T>(
   config: RenderStrategyFactoryConfig
-): { [strategy: string]: RenderStrategy<T> } {
+): { [strategy: string]: RenderStrategy } {
   return {
-    noop: createNoopStrategy<T>(),
-    native: createNativeStrategy<T>(config),
+    noop: createNoopStrategy(),
+    native: createNativeStrategy(config),
     ...getGlobalStrategies(config),
     ...getLocalStrategies(config)
   };

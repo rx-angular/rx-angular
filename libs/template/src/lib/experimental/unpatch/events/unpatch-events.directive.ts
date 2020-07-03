@@ -8,7 +8,7 @@ import {
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { zonePatchedEvents } from './unpatch-event-list';
-import { unpatchEventListener } from '../../core/utils/make-zone-less';
+import { unpatchEventListener } from '../../../core/utils/get-zone-unpatched-api';
 
 /**
  * @Directive UnpatchEventsDirective

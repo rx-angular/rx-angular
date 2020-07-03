@@ -1,4 +1,5 @@
 import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core';
+import { tap } from 'rxjs/operators';
 
 /**
  * Native Strategy
@@ -17,13 +18,14 @@ import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core';
  */
 export function createNativeStrategy<T>(
   config: RenderStrategyFactoryConfig
-): RenderStrategy<T> {
+): RenderStrategy {
   return {
     name: 'native',
-    renderMethod: config.cdRef.markForCheck,
-    behavior: o => o,
+    detectChanges: config.cdRef.markForCheck,
+    rxScheduleCD: o => o.pipe(tap(config.cdRef.markForCheck)),
     scheduleCD: () => {
       config.cdRef.markForCheck();
+      return new AbortController();
     }
   };
 }

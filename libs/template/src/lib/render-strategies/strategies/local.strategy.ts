@@ -1,19 +1,17 @@
 import { coalesceAndSchedule, staticCoalesce } from '../static';
 import { SchedulingPriority } from '../rxjs/scheduling/interfaces';
-import { getUnpatchedResolvedPromise } from '../../core/utils/unpatched-promise';
-import { from, Observable } from 'rxjs';
+import { getUnpatchedResolvedPromise } from '../../core/utils/unpatched-resolved-promise';
+import { from } from 'rxjs';
 import { getScheduler } from '../rxjs/scheduling/priority-scheduler-map';
-import { observeOn } from 'rxjs/operators';
+import { observeOn, tap } from 'rxjs/operators';
 import {
   RenderStrategy,
   RenderStrategyFactoryConfig
 } from '../../core/render-aware/interfaces';
 import { coalesceWith } from '../rxjs/operators/coalesceWith';
-import {
-  postTaskScheduler,
-  PostTaskSchedulerPriority
-} from '../rxjs/scheduling/postTask';
+import { PostTaskSchedulerPriority } from '../rxjs/scheduling/postTask';
 import { postTaskTick } from '../rxjs/scheduling/postTaskTick';
+import { idleCallbackTick } from '../rxjs/scheduling/idleCallbackTick';
 
 /**
  * Strategies
@@ -37,7 +35,7 @@ import { postTaskTick } from '../rxjs/scheduling/postTaskTick';
 
 export function getLocalStrategies<T>(
   config: RenderStrategyFactoryConfig
-): { [strategy: string]: RenderStrategy<T> } {
+): { [strategy: string]: RenderStrategy } {
   return {
     local: createLocalStrategy<T>(config),
     localCoalesce: createLocalCoalesceStrategy<T>(config),
@@ -53,17 +51,20 @@ export function getLocalStrategies<T>(
 
 export function createLocalNativeStrategy<T>(
   config: RenderStrategyFactoryConfig
-): RenderStrategy<T> {
+): RenderStrategy {
   const renderMethod = () => {
     config.cdRef.detectChanges();
   };
-  const behavior = o => o.pipe();
-  const scheduleCD = () => renderMethod();
+  const behavior = o => o.pipe(tap(renderMethod));
+  const scheduleCD = () => {
+    renderMethod();
+    return new AbortController();
+  };
 
   return {
     name: 'localNative',
-    renderMethod,
-    behavior,
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
     scheduleCD
   };
 }
@@ -92,12 +93,12 @@ export function createLocalNativeStrategy<T>(
  * | `ɵlocal`    | ✔️/✔️    | dC / dC             | ✔️ + C         |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
- * @return {RenderStrategy<T>} - The calculated strategy
+ * @return {RenderStrategy} - The calculated strategy
  *
  */
 export function createLocalStrategy<T>(
   config: RenderStrategyFactoryConfig
-): RenderStrategy<T> {
+): RenderStrategy {
   const durationSelector = from(getUnpatchedResolvedPromise());
   const scope = (config.cdRef as any).context;
   const priority = SchedulingPriority.animationFrame;
@@ -107,20 +108,24 @@ export function createLocalStrategy<T>(
     config.cdRef.detectChanges();
   };
   const behavior = o =>
-    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+    o.pipe(
+      coalesceWith(durationSelector, scope),
+      observeOn(scheduler),
+      tap(renderMethod)
+    );
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
     name: 'local',
-    renderMethod,
-    behavior,
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
     scheduleCD
   };
 }
 
 export function createLocalCoalesceStrategy<T>(
   config: RenderStrategyFactoryConfig
-): RenderStrategy<T> {
+): RenderStrategy {
   const durationSelector = from(getUnpatchedResolvedPromise());
   const scope = (config.cdRef as any).context;
   const priority = SchedulingPriority.animationFrame;
@@ -130,20 +135,24 @@ export function createLocalCoalesceStrategy<T>(
     config.cdRef.detectChanges();
   };
   const behavior = o =>
-    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+    o.pipe(
+      coalesceWith(durationSelector, scope),
+      observeOn(scheduler),
+      tap(renderMethod)
+    );
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
     name: 'localCoalesce',
-    renderMethod,
-    behavior,
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
     scheduleCD
   };
 }
 
 export function createLocalCoalesceAndScheduleStrategy<T>(
   config: RenderStrategyFactoryConfig
-): RenderStrategy<T> {
+): RenderStrategy {
   const durationSelector = from(getUnpatchedResolvedPromise());
   const scope = (config.cdRef as any).context;
   const priority = SchedulingPriority.animationFrame;
@@ -153,13 +162,17 @@ export function createLocalCoalesceAndScheduleStrategy<T>(
     config.cdRef.detectChanges();
   };
   const behavior = o =>
-    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+    o.pipe(
+      coalesceWith(durationSelector, scope),
+      observeOn(scheduler),
+      tap(renderMethod)
+    );
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
     name: 'localCoalesceAndSchedule',
-    renderMethod,
-    behavior,
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
     scheduleCD
   };
 }
@@ -188,12 +201,12 @@ export function createLocalCoalesceAndScheduleStrategy<T>(
  * | `ɵdetach`     | ✔️/✔️          | dC / ɵDC            | ✔️ + C/ LV       |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
- * @return {RenderStrategy<T>} - The calculated strategy
+ * @return {RenderStrategy} - The calculated strategy
  *
  */
 export function createDetachStrategy<T>(
   config: RenderStrategyFactoryConfig
-): RenderStrategy<T> {
+): RenderStrategy {
   const durationSelector = from(getUnpatchedResolvedPromise());
   const scope = (config.cdRef as any).context;
   const priority = SchedulingPriority.animationFrame;
@@ -205,13 +218,17 @@ export function createDetachStrategy<T>(
     config.cdRef.detach();
   };
   const behavior = o =>
-    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+    o.pipe(
+      coalesceWith(durationSelector, scope),
+      observeOn(scheduler),
+      tap(renderMethod)
+    );
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
     name: 'detach',
-    renderMethod,
-    behavior,
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
     scheduleCD
   };
 }
@@ -222,7 +239,7 @@ export function createDetachStrategy<T>(
  */
 export function createUserVisibleStrategy<T>(
   config: RenderStrategyFactoryConfig
-): RenderStrategy<T> {
+): RenderStrategy {
   const durationSelector = postTaskTick({
     priority: PostTaskSchedulerPriority.userVisible,
     delay: 0
@@ -236,13 +253,17 @@ export function createUserVisibleStrategy<T>(
     config.cdRef.detectChanges();
   };
   const behavior = o =>
-    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+    o.pipe(
+      coalesceWith(durationSelector, scope),
+      observeOn(scheduler),
+      tap(renderMethod)
+    );
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
     name: 'userVisible',
-    renderMethod,
-    behavior,
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
     scheduleCD
   };
 }
@@ -253,7 +274,7 @@ export function createUserVisibleStrategy<T>(
  */
 export function createUserBlockingStrategy<T>(
   config: RenderStrategyFactoryConfig
-): RenderStrategy<T> {
+): RenderStrategy {
   const durationSelector = postTaskTick({
     priority: PostTaskSchedulerPriority.userVisible,
     delay: 0
@@ -266,16 +287,18 @@ export function createUserBlockingStrategy<T>(
     config.cdRef.detectChanges();
   };
   const behavior = o =>
-    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
-  const scheduleCD = () => {
+    o.pipe(
+      coalesceWith(durationSelector, scope),
+      observeOn(scheduler),
+      tap(renderMethod)
+    );
+  const scheduleCD = () =>
     staticCoalesce(renderMethod, durationSelector, scope);
-    // coalesceAndSchedule(renderMethod, priority, scope);
-  };
 
   return {
     name: 'userBlocking',
-    renderMethod,
-    behavior,
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
     scheduleCD
   };
 }
@@ -286,7 +309,7 @@ export function createUserBlockingStrategy<T>(
  */
 export function createBackgroundStrategy<T>(
   config: RenderStrategyFactoryConfig
-): RenderStrategy<T> {
+): RenderStrategy {
   const durationSelector = postTaskTick({
     priority: PostTaskSchedulerPriority.userVisible,
     delay: 0
@@ -299,15 +322,18 @@ export function createBackgroundStrategy<T>(
     config.cdRef.detectChanges();
   };
   const behavior = o =>
-    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
-  const scheduleCD = () => {
+    o.pipe(
+      coalesceWith(durationSelector, scope),
+      observeOn(scheduler),
+      tap(renderMethod)
+    );
+  const scheduleCD = () =>
     staticCoalesce(renderMethod, durationSelector, scope);
-    // coalesceAndSchedule(renderMethod, priority, scope);
-  };
+
   return {
     name: 'background',
-    renderMethod,
-    behavior,
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
     scheduleCD
   };
 }
@@ -329,13 +355,13 @@ export function createBackgroundStrategy<T>(
  * | `ɵdetach`     | ✔️/✔️          | dC / ɵDC            | ✔️ + C/ LV       |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
- * @return {RenderStrategy<T>} - The calculated strategy
+ * @return {RenderStrategy} - The calculated strategy
  *
  */
 export function createIdleCallbackStrategy<T>(
   config: RenderStrategyFactoryConfig
-): RenderStrategy<T> {
-  const durationSelector = idle;
+): RenderStrategy {
+  const durationSelector = idleCallbackTick();
   const scope = (config.cdRef as any).context;
   const priority = SchedulingPriority.idleCallback;
   const scheduler = getScheduler(priority);
@@ -343,13 +369,17 @@ export function createIdleCallbackStrategy<T>(
     config.cdRef.detectChanges();
   };
   const behavior = o =>
-    o.pipe(coalesceWith(durationSelector, scope), observeOn(scheduler));
+    o.pipe(
+      coalesceWith(durationSelector, scope),
+      observeOn(scheduler),
+      tap(renderMethod)
+    );
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
     name: 'idleCallback',
-    renderMethod,
-    behavior,
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
     scheduleCD
   };
 }

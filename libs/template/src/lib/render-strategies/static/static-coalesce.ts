@@ -5,7 +5,7 @@ export function staticCoalesce<T>(
   work: () => T,
   durationSelector: Observable<any>,
   scope: object = {}
-): void {
+): AbortController {
   const coalescingManager = createCoalesceManager(scope);
   if (!coalescingManager.isCoalescing()) {
     coalescingManager.add();
@@ -13,6 +13,9 @@ export function staticCoalesce<T>(
       tryExecuteWork();
     });
   }
+
+  // @TODO
+  return new AbortController();
 
   // =====
 

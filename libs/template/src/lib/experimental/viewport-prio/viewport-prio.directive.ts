@@ -1,7 +1,37 @@
 import { Directive, ElementRef, Input, OnInit, Optional } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, mergeAll, tap, withLatestFrom } from 'rxjs/operators';
-import { LetDirective } from '@rx-angular/template';
+import { getZoneUnPatchedApi, LetDirective } from '@rx-angular/template';
+
+/**
+ *
+ * @description
+ *
+ * This function takes an elem and event and re-applies the listeners from the passed event to the
+ * passed element with the zone un-patched version of it.
+ *
+ * @param elem {HTMLElement} - The elem to re-apply the listeners to.
+ * @param event {string} - The name of the event from which to re-apply the listeners.
+ *
+ * @returns void
+ */
+function unpatchEventListener(elem: HTMLElement, event: string): void {
+  const eventListeners = (elem as any).eventListeners(event);
+  // Return if no event listeners are present
+  if (!eventListeners) {
+    return;
+  }
+
+  const addEventListener = getZoneUnPatchedApi('addEventListener', elem).bind(
+    elem
+  );
+  eventListeners.forEach(listener => {
+    // Remove and reapply listeners with patched API
+    elem.removeEventListener(event, listener);
+    // Reapply listeners with un-patched API
+    addEventListener(event, listener);
+  });
+}
 
 function intersectionObserver(
   options?: object
@@ -42,7 +72,7 @@ const observerSupported = () =>
   // tslint:disable-next-line:directive-selector
   selector: '[viewport-prio]'
 })
-export class RenderPrioDirective implements OnInit {
+export class ViewportPrioDirective implements OnInit {
   entriesSubject = new Subject<IntersectionObserverEntry[]>();
   entries$: Observable<IntersectionObserverEntry> = this.entriesSubject.pipe(
     mergeAll()
@@ -75,9 +105,7 @@ export class RenderPrioDirective implements OnInit {
   constructor(
     private readonly el: ElementRef,
     @Optional() private letDirective: LetDirective<any>
-  ) {
-    console.log('PRIO');
-  }
+  ) {}
 
   ngOnInit() {
     const letStrategyName$ = this.letDirective.renderAware.activeStrategy$.pipe(
@@ -96,7 +124,6 @@ export class RenderPrioDirective implements OnInit {
       )
       .subscribe(strategyName => {
         this.letDirective.strategy = strategyName;
-        console.log('switched to ', strategyName);
 
         // render actual state on viewport enter
         this.letDirective.strategies[strategyName].scheduleCD();

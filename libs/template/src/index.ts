@@ -5,5 +5,9 @@ export { LetDirective, LetModule } from './lib/let';
 export {
   UnpatchEventsDirective,
   UnpatchEventsModule
-} from './lib/unpatch/events';
+} from './lib/experimental/unpatch/events';
+export {
+  ViewportPrioModule,
+  ViewportPrioDirective
+} from './lib/experimental/viewport-prio';
 export { TemplateModule } from './lib/template.module';

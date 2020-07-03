@@ -1,5 +1,5 @@
 import { MonoTypeOperatorFunction, Observable, of } from 'rxjs';
-import { observeOn, switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { priorityTickMap, SchedulingPriority } from '../scheduling';
 import { ɵdetectChanges, ɵmarkDirty } from '@angular/core';
 import { coalesceWith } from './coalesceWith';
@@ -32,10 +32,7 @@ export function renderChange(
       coalesceWith(promiseTick()),
       switchMap(() => {
         if (tick$) {
-          return tick$.pipe(
-            observeOn(smoothScheduler),
-            tap(() => render())
-          );
+          return tick$.pipe(tap(() => render()));
         }
         return of(0).pipe(tap(() => render()));
       })

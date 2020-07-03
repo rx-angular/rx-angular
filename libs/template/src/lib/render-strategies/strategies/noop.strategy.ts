@@ -13,14 +13,14 @@ import {
  * | `noop`      | ❌/❌         | no rendering        | ❌               |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
- * @return {RenderStrategy<T>} - The calculated strategy
+ * @return {RenderStrategy} - The calculated strategy
  *
  */
-export function createNoopStrategy<T>(): RenderStrategy<T> {
+export function createNoopStrategy(): RenderStrategy {
   return {
     name: 'noop',
-    renderMethod: () => {},
-    behavior: o => o,
-    scheduleCD: () => {}
+    detectChanges: () => {},
+    rxScheduleCD: o => o,
+    scheduleCD: () => new AbortController()
   };
 }

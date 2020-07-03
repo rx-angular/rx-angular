@@ -28,7 +28,7 @@ async function createNgZone(ngZone: 'zone.js'|'noop'): Promise<NgZone> {
   return testComp.injectedNgZone;
 }
 
-describe('NgZone', () => {
+xdescribe('NgZone', () => {
   it('should invoke a given function by calling .apply()', async () => {
     const fn = createSpy();
     const ngZone = await createNgZone('zone.js');
@@ -41,7 +41,7 @@ describe('NgZone', () => {
   });
 });
 
-describe('NoopNgZone', () => {
+xdescribe('NoopNgZone', () => {
   it('should invoke a given function directly', async () => {
     const fn = createSpy();
     const ngZone = await createNgZone('noop');

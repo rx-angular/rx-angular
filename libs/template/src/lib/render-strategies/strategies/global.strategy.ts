@@ -6,7 +6,7 @@ import {
 
 export function getGlobalStrategies<T>(
   config: RenderStrategyFactoryConfig
-): { [strategy: string]: RenderStrategy<T> } {
+): { [strategy: string]: RenderStrategy } {
   return {
     global: createGlobalStrategy<T>(config)
   };
@@ -47,13 +47,16 @@ export function getGlobalStrategies<T>(
  */
 export function createGlobalStrategy<T>(
   config: RenderStrategyFactoryConfig
-): RenderStrategy<T> {
+): RenderStrategy {
   const renderMethod = () => markDirty((config.cdRef as any).context);
 
   return {
     name: 'global',
-    renderMethod,
-    behavior: o => o,
-    scheduleCD: () => renderMethod()
+    detectChanges: renderMethod,
+    rxScheduleCD: o => o,
+    scheduleCD: () => {
+      renderMethod();
+      return new AbortController();
+    }
   };
 }

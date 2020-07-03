@@ -94,7 +94,7 @@ describe('strategies', () => {
     it('should call the renderMethod `ChangeDetectorRef#markForCheck`', () => {
       const cfg = getMockNativeStrategyConfig();
       const strategy = createNativeStrategy(cfg);
-      strategy.renderMethod();
+      strategy.detectChanges();
       expect(cfg.cdRef.markForCheck).toHaveBeenCalledTimes(1);
     });
   });
