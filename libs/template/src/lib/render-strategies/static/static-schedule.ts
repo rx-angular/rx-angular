@@ -1,4 +1,4 @@
-import { getScheduler } from '../rxjs/scheduling/priority-tick-map';
+import { priorityTickMap } from '../rxjs/scheduling/priority-tick-map';
 import { SchedulingPriority } from '../rxjs/scheduling/interfaces';
 
 export function staticSchedule(
@@ -12,7 +12,7 @@ export function staticSchedule(
     }
     return abortController;
   }
-  getScheduler(priority).schedule(() => {
+  priorityTickMap[priority].subscribe(() => {
     if (!abortController.signal.aborted) {
       work();
     }

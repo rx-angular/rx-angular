@@ -1,5 +1,5 @@
 import { staticSchedule } from '../../../src/lib/render-strategies/static';
-import { SchedulingPriority } from '../../../src/lib/render-strategies/rxjs/scheduling/interfaces';
+import { SchedulingPriority } from '../../../src/lib/render-strategies/rxjs/scheduling';
 
 /** @test {coalesceWith} */
 describe('staticSchedule', () => {
