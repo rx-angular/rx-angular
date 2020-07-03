@@ -41,15 +41,31 @@ import { getStrategies } from '@rx-angular/template';
     <button [unpatch] (click)="signals.next('a')">
       next
     </button>
+    <button [unpatch] (click)="signals.error(error)">
+      error
+    </button>
 
     <div
-      *rxLet="signals; let count; strategy: visibleStrategy; complete: complete"
+      *rxLet="
+        signals;
+        let count;
+        strategy: visibleStrategy;
+        complete: complete;
+        error: error;
+        suspense: suspense
+      "
     >
       value: {{ count }}
     </div>
 
     <ng-template #complete>
       <h1>COMPLETE</h1>
+    </ng-template>
+    <ng-template #error>
+      <h1>ERRor</h1>
+    </ng-template>
+    <ng-template #suspense>
+      <h1>LAZY</h1>
     </ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -82,6 +98,7 @@ export class Let1ContainerComponent {
   toggleAutoIncrement = new BehaviorSubject<any>(false);
 
   strategies = Object.keys(getStrategies({ cdRef: {} } as any));
+  error = new Error();
 
   visibleStrategy = 'local';
   invisibleStrategy: string;
