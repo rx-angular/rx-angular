@@ -19,19 +19,19 @@ import { BaseComponent } from '../../base.component.ts/base.component';
 
     value$: {{ value$ | async }}
   `,
-  changeDetection: environment.changeDetection,
+  changeDetection: environment.changeDetection
 })
 export class CdOperatorsParent01Component extends BaseComponent {
   @ViewChild('button') button: ElementRef<HTMLButtonElement>;
   btnClick$ = defer(() => fromEvent(this.button.nativeElement, 'click'));
 
-  cfg = { ngZone: this.ngZone, cdRef: this.cdRef, component: this };
+  cfg = { ngZone: this.ngZone, scope: this.scope, component: this };
   strategies = getStrategies<number>(this.cfg);
 
   value$ = this.btnClick$.pipe(
     switchMap(() => range(1, 5)),
-    tap((v) => console.log('before:', v)),
+    tap(v => console.log('before:', v)),
     render(this.strategies.optimistic2),
-    tap((v) => console.log('after:', v))
+    tap(v => console.log('after:', v))
   );
 }

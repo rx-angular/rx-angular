@@ -77,25 +77,25 @@ export class SchedulingComponent implements OnInit {
 
   scheduleAllPrios() {
     const sync = () => {
-      this.cdRef.detectChanges();
+      this.scope.detectChanges();
     };
     const micro = () => {
-      this.cdRef.detectChanges();
+      this.scope.detectChanges();
     };
     const animationFrame = () => {
-      this.cdRef.detectChanges();
+      this.scope.detectChanges();
     };
     const idleCallback = () => {
-      this.cdRef.detectChanges();
+      this.scope.detectChanges();
     };
     const userBlocking = () => {
-      this.cdRef.detectChanges();
+      this.scope.detectChanges();
     };
     const userVisible = () => {
-      this.cdRef.detectChanges();
+      this.scope.detectChanges();
     };
     const background = () => {
-      this.cdRef.detectChanges();
+      this.scope.detectChanges();
     };
 
     sync();
@@ -109,7 +109,7 @@ export class SchedulingComponent implements OnInit {
 
   scheduleByPrio(priority?: SchedulingPriority) {
     const XXXXXXXXXXXXXXXXXXXXX = () => {
-      this.cdRef.detectChanges();
+      this.scope.detectChanges();
       console.log('scheduled over', priority);
     };
 
@@ -119,7 +119,7 @@ export class SchedulingComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.strategies = getStrategies({ cdRef: this.cdRef });
-    console.log(this.strategies, this.cdRef);
+    this.strategies = getStrategies({ scope: this.scope });
+    console.log(this.strategies, this.scope);
   }
 }

@@ -10,7 +10,7 @@ import { getGlobalStrategies } from './global.strategy';
 export const DEFAULT_STRATEGY_NAME = 'local';
 
 export function getStrategies<T>(
-  config: RenderStrategyFactoryConfig
+  config: RenderStrategyFactoryConfig<T>
 ): { [strategy: string]: RenderStrategy } {
   return {
     noop: createNoopStrategy(),

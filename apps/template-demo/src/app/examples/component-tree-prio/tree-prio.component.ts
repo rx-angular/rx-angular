@@ -33,7 +33,7 @@ export interface ComponentState {
 })
 export class TreePrioComponent extends RxState<ComponentState>
   implements OnInit {
-  strategies = Object.keys(getStrategies({ cdRef: {} } as any));
+  strategies = Object.keys(getStrategies({ scope: {} } as any));
   visibleStrategy: string;
   invisibleStrategy: string;
 

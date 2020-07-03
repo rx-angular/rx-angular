@@ -26,7 +26,7 @@ import { getStrategies } from '@rx-angular/template';
 @Component()
 export class PerformanceAwareComponent {
   constructor(private cdRef: ChangeDetectorRef) {
-    const strategies = getStrategies({ cdRef });
+    const strategies = getStrategies({ cdRef: scope });
     // now select your desired strategy:
     const detachStrategy = strategies.detach;
     // schedule a re-render:

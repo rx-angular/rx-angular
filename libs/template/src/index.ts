@@ -1,3 +1,4 @@
+export { getStrategies } from './lib/render-strategies';
 export { PushPipe, PushModule } from './lib/push';
 export { LetDirective, LetModule } from './lib/let';
 // EXPERIMENTAL

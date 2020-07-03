@@ -5,7 +5,7 @@ import { StrategySelection } from '@rx-angular/rxjs-etc';
 export interface StrategyFactoryConfig {
   component: any;
   ngZone: NgZone;
-  cdRef: ChangeDetectorRef;
+  scope: ChangeDetectorRef;
 }
 
 export interface CdStrategy<T> {
@@ -45,11 +45,11 @@ export function getStrategies<T>(
  * | ZoneLess | cdRef.markForCheck | ❌         | None           |
  */
 export function createIdleStrategy<T>(
-  cfg: Pick<StrategyFactoryConfig, 'cdRef'>
+  cfg: Pick<StrategyFactoryConfig, 'scope'>
 ): CdStrategy<T> {
   return {
     render: (): void => {
-      cfg.cdRef.markForCheck();
+      cfg.scope.markForCheck();
     },
     behaviour: () => o => {
       console.log('idle');

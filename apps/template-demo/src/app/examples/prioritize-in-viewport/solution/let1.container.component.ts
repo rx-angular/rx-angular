@@ -63,7 +63,7 @@ export class Let1ContainerComponent {
   incrementTrigger = new Subject<Event>();
   toggleAutoIncrement = new BehaviorSubject<any>(false);
 
-  strategies = Object.keys(getStrategies({ cdRef: {} } as any));
+  strategies = Object.keys(getStrategies({ component: this }));
 
   visibleStrategy = 'local';
   invisibleStrategy: string;

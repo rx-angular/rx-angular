@@ -28,7 +28,7 @@ export class RealLife1ContainerComponent implements OnInit {
   constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.strategies = getStrategies({ cdRef: this.cdRef });
+    this.strategies = getStrategies({ scope: this.scope });
   }
 
   updateObject() {

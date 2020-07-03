@@ -1,12 +1,13 @@
-import { ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ChangeDetectorRef, Type } from '@angular/core';
 
 export interface StrategySelection {
   [strategy: string]: RenderStrategy;
 }
 
-export interface RenderStrategyFactoryConfig {
+export interface RenderStrategyFactoryConfig<T> {
   cdRef: ChangeDetectorRef;
+  component: Type<T> | HTMLElement;
 }
 
 /**

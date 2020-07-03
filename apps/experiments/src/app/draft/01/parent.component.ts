@@ -53,7 +53,7 @@ export class DraftParent01Component implements AfterViewInit, OnDestroy {
     cdRef: ChangeDetectorRef,
     private cfgService: CdConfigService
   ) {
-    const strategies = getStrategies<number>({ cdRef });
+    const strategies = getStrategies<number>({ cdRef: scope });
     this.cdAware = createRenderAware<number>({
       strategies,
       resetObserver: {

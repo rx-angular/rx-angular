@@ -5,7 +5,7 @@ import {
 } from '../../core/render-aware/interfaces';
 
 export function getGlobalStrategies<T>(
-  config: RenderStrategyFactoryConfig
+  config: RenderStrategyFactoryConfig<T>
 ): { [strategy: string]: RenderStrategy } {
   return {
     global: createGlobalStrategy<T>(config)
@@ -13,19 +13,14 @@ export function getGlobalStrategies<T>(
 }
 
 /**
- * Strategies
+ * Global Strategies
  *
- * - VE/I - Options for ViewEngine / Ivy
- * - mFC - `cdRef.markForCheck`
- * - dC - `cdRef.detectChanges`
  * - ɵMD - `ɵmarkDirty`
- * - ɵDC - `ɵdetectChanges`
- * - LV  - `LView`
  * - C - `Component`
  *
- * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
- * |-------------| --------------| ------------------- | ---------------- |
- * | `global`   | ❌/✔ ️        | mFC  / ɵMD          | ❌               |
+ * | Name        | ZoneLess | Render Method | ScopedCoalescing | Scheduling | Chunked |
+ * |-------------| ---------| --------------| ---------------- | ---------- |-------- |
+ * | `global`     | ✔        | ɵMD           | C + Pr          | ❌         | ❌      |
  *
  */
 
@@ -37,18 +32,18 @@ export function getGlobalStrategies<T>(
  * all it's children that are on a path
  * that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
  *
- * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing       |
- * |-------------| --------------| ------------ ------ | ---------------- |
- * | `global`   | ❌/✔️       | mFC / ɵMD           | ❌                |
+ * | Name        | ZoneLess | Render Method | ScopedCoalescing | Scheduling | Chunked |
+ * |-------------| ---------| --------------| ---------------- | ---------- |-------- |
+ * | `global`     | ✔        | ɵMD           | C + Pr          | ❌         | ❌      |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return {RenderStrategy<T>} - The calculated strategy
  *
  */
 export function createGlobalStrategy<T>(
-  config: RenderStrategyFactoryConfig
+  config: RenderStrategyFactoryConfig<T>
 ): RenderStrategy {
-  const renderMethod = () => markDirty((config.cdRef as any).context);
+  const renderMethod = () => markDirty((config.component as any).context);
 
   return {
     name: 'global',
