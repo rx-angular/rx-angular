@@ -118,22 +118,22 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
   get<K1 extends keyof T>(k1?: K1): T | Partial<T>;
 
   get<K1 extends keyof T, K2 extends keyof T[K1]>(
-    k1?: K1,
-    k2?: K2
-  ): T | Partial<T>;
+    k1: K1,
+    k2: K2
+  ): T | T[K1][K2];
 
   get<K1 extends keyof T, K2 extends keyof T[K1], K3 extends keyof T[K1][K2]>(
-    k1?: K1,
-    k2?: K2,
-    k3?: K3
-  ): T | Partial<T>;
+    k1: K1,
+    k2: K2,
+    k3: K3
+  ): T | T[K1][K2][K3];
 
   get<
     K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
     K4 extends keyof T[K1][K2][K3]
-  >(k1?: K1, k2?: K2, k3?: K3, k4?: K4): T | Partial<T>;
+  >(k1: K1, k2: K2, k3: K3, k4: K4): T | T[K1][K2][K3][K4];
 
   get<
     K1 extends keyof T,
@@ -141,7 +141,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     K3 extends keyof T[K1][K2],
     K4 extends keyof T[K1][K2][K3],
     K5 extends keyof T[K1][K2][K3][K4]
-  >(k1?: K1, k2?: K2, k3?: K3, k4?: K4, k5?: K5): T | Partial<T>;
+  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): T | T[K1][K2][K3][K4][K5];
 
   get<
     K1 extends keyof T,
@@ -150,7 +150,14 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     K4 extends keyof T[K1][K2][K3],
     K5 extends keyof T[K1][K2][K3][K4],
     K6 extends keyof T[K1][K2][K3][K4][K5]
-  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5, k6: K6): T | Partial<T>;
+  >(
+    k1: K1,
+    k2: K2,
+    k3: K3,
+    k4: K4,
+    k5: K5,
+    k6: K6
+  ): T | T[K1][K2][K3][K4][K5][K6];
 
   get(...keys: string[]): T | Partial<T> {
     if (!!keys && isStringArrayGuard(keys)) {
