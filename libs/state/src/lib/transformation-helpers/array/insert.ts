@@ -8,7 +8,7 @@
  *
  * const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}];
  *
- * const updatedCreatures = insert(items, {id: 3, type: 'parrot'});
+ * const updatedCreatures = insert(creatures, {id: 3, type: 'parrot'});
  *
  * // updatedCreatures will be:
  * //  [{id: 1, type: 'cat'}, {id: 2, type: 'dog}, {id: 3, type: 'parrot}];
@@ -18,10 +18,37 @@
  *
  * const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}];
  *
- * const updatedCreatures = insert(items, [{id: 3, type: 'parrot'}, {id: 4, type: 'hamster'}]);
+ * const updatedCreatures = insert(creatures, [{id: 3, type: 'parrot'}, {id: 4, type: 'hamster'}]);
  *
  * // updatedCreatures will be:
  * // [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}, {id: 3, type: 'parrot'}, {id: 4, type: 'hamster'}];
+ *
+ * @example
+ * // Usage with RxState
+ *
+ * export class ListComponent {
+ *
+ *    readonly creatures$: Observable<Creature[]> = this.state.select('creatures');
+ *    readonly insertCreature$ = new Subject<void>();
+ *
+ *    constructor(private state: RxState<ComponentState>) {
+ *      // Reactive implementation
+ *      state.connect(
+ *        'creatures',
+ *        this.insertCreature$,
+ *        ({ creatures }) => {
+ *            const creatureToAdd = {id: generateId(), name: 'newCreature', type: 'dinosaur' };
+ *            return insert(creatures, creatureToAdd)
+ *        }
+ *      );
+ *    }
+ *
+ *    // Imperative implementation
+ *    insertCeature(): void {
+ *        const creatureToAdd = {id: generateId(), name: 'newCreature', type: 'dinosaur' };
+ *        this.state.set({ creatures: insert(this.state.get().creatures, creatureToAdd)});
+ *    }
+ * }
  *
  *
  * @returns T[]
@@ -30,16 +57,23 @@
  * @docsCategory transformation-helpers
  */
 
-export function insert<T, I extends T>(array: T[], itemsOrItem: I[] | I): T[] {
-  const items = itemsOrItem
-    ? Array.isArray(itemsOrItem)
-      ? itemsOrItem
-      : [itemsOrItem]
-    : [];
+import { isDefined } from '../../core/utils/typing';
 
-  if (!array || !Array.isArray(array)) {
-    return [...items];
+export function insert<T>(source: T[], updates: T | T[]): T[] {
+  const updatesDefined = isDefined(updates);
+  const sourceIsArray = Array.isArray(source);
+  const invalidInput = !sourceIsArray && !updatesDefined;
+
+  if (!sourceIsArray && isDefined(source)) {
+    console.warn(`Insert: Original value (${source}) is not an array.`);
   }
 
-  return [...array, ...items];
+  if (invalidInput) {
+    return source;
+  }
+
+  return [
+    ...(sourceIsArray ? source : []),
+    ...(updatesDefined ? (Array.isArray(updates) ? updates : [updates]) : [])
+  ];
 }

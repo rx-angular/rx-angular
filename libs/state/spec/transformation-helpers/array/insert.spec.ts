@@ -60,25 +60,77 @@ describe('insert', () => {
   });
 
   describe('edge cases', () => {
-    it('should work with empty values', () => {
-      const emptyObjectsArray: Creature[]  = [];
 
-      expect(insert(emptyObjectsArray, creatures)).toEqual(creatures);
-      expect(insert(creatures, emptyObjectsArray)).toEqual(creatures);
-      expect(insert([], [])).toEqual([]);
+    describe('emtpy values', () => {
+        it('should return updates if original array is empty', () => {
+            const emptyObjectsArray: Creature[]  = [];
+            expect(insert(emptyObjectsArray, creatures)).toEqual(creatures);
+        });
+
+        it('should return original array if updates array is empty', () => {
+            const emptyObjectsArray: Creature[]  = [];
+            expect(insert(creatures, emptyObjectsArray)).toEqual(creatures);
+        });
+
+        it('should return empty array if both original array and updates are empty', () => {
+          expect(insert([], [])).toEqual([]);
+        });
     });
 
-    it('should work if one or multiple inputs not provided', () => {
-      expect(insert(null as any, creatures)).toEqual(creatures);
-      expect(insert(creatures, null as any)).toEqual(creatures);
-      expect(insert(null as any, null as any)).toEqual([]);
+    describe('undefined values', () => {
+        it('should return updates if original array is undefined', () => {
+          expect(insert(undefined as any, creatures)).toEqual(creatures);
+        });
+
+        it('should return original array if updates are undefined', () => {
+          expect(insert(creatures, undefined as any)).toEqual(creatures);
+        });
+
+        it('should return undefined if both values are undefined', () => {
+          expect(insert(undefined as any, undefined as any)).toEqual(undefined);
+        });
+
+        it('should return undefined if original array is null and updates are undefined', () => {
+          expect(insert(undefined as any, null as any)).toEqual(undefined);
+        });
     });
 
-    it('should work when initial array is not array', () => {
-      expect(insert('' as any, creatures)).toEqual(creatures);
-      expect(insert(1 as any, creatures)).toEqual(creatures);
-      expect(insert({} as any, creatures)).toEqual(creatures);
-      expect(insert(false as any, creatures)).toEqual(creatures);
+    describe('null values', () => {
+        it('should return updates if original array is null', () => {
+          expect(insert(null as any, creatures)).toEqual(creatures);
+        });
+
+        it('should return original array if updates are null', () => {
+          expect(insert(creatures, null as any)).toEqual(creatures);
+        });
+
+        it('should return null if both values are null', () => {
+          expect(insert(null as any, null as any)).toEqual(null);
+        });
+
+        it('should return null if original array is null and updates are undefined', () => {
+          expect(insert(null as any, undefined as any)).toEqual(null);
+        });
+    });
+
+    describe('unexpected value types', () => {
+        it('should return updates if original array not an array', () => {
+          expect(insert('' as any, creatures)).toEqual(creatures);
+          expect(insert(1 as any, creatures)).toEqual(creatures);
+          expect(insert({} as any, creatures)).toEqual(creatures);
+          expect(insert(false as any, creatures)).toEqual(creatures);
+        });
+
+        it('should return array with updates if updates not matching expected type', () => {
+          expect(insert(creatures, '' as any)).toEqual([...creatures, '']);
+          expect(insert(creatures, 1 as any)).toEqual([...creatures, 1]);
+          expect(insert(creatures, {} as any)).toEqual([...creatures, {}]);
+          expect(insert(creatures, false as any)).toEqual([...creatures, false]);
+        });
+
+        it('should return original value if original value is not an array and updates not provided', () => {
+          expect(insert(1 as any, undefined as any)).toEqual(1);
+        });
     });
 
   });
