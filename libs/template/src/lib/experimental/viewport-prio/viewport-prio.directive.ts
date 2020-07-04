@@ -1,7 +1,8 @@
 import { Directive, ElementRef, Input, OnInit, Optional } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { filter, map, mergeAll, tap, withLatestFrom } from 'rxjs/operators';
-import { getZoneUnPatchedApi, LetDirective } from '@rx-angular/template';
+import { filter, map, mergeAll, withLatestFrom } from 'rxjs/operators';
+import { getZoneUnPatchedApi } from '../../core';
+import { LetDirective } from '../../let';
 
 /**
  *

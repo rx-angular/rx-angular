@@ -5,11 +5,11 @@ import {
   OnInit
 } from '@angular/core';
 
-import { concat, NEVER, Observable, of, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { scan, tap } from 'rxjs/operators';
 import {
-  getScheduler,
   getStrategies,
+  priorityTickMap,
   SchedulingPriority
 } from '@rx-angular/template';
 
@@ -77,49 +77,51 @@ export class SchedulingComponent implements OnInit {
 
   scheduleAllPrios() {
     const sync = () => {
-      this.scope.detectChanges();
+      this.cdRef.detectChanges();
     };
     const micro = () => {
-      this.scope.detectChanges();
+      this.cdRef.detectChanges();
     };
     const animationFrame = () => {
-      this.scope.detectChanges();
+      this.cdRef.detectChanges();
     };
     const idleCallback = () => {
-      this.scope.detectChanges();
+      this.cdRef.detectChanges();
     };
     const userBlocking = () => {
-      this.scope.detectChanges();
+      this.cdRef.detectChanges();
     };
     const userVisible = () => {
-      this.scope.detectChanges();
+      this.cdRef.detectChanges();
     };
     const background = () => {
-      this.scope.detectChanges();
+      this.cdRef.detectChanges();
     };
 
     sync();
-    getScheduler(SchedulingPriority.Promise).schedule(micro);
-    getScheduler(SchedulingPriority.animationFrame).schedule(animationFrame);
-    getScheduler(SchedulingPriority.background).schedule(background);
-    getScheduler(SchedulingPriority.userVisible).schedule(userVisible);
-    getScheduler(SchedulingPriority.userBlocking).schedule(userBlocking);
-    getScheduler(SchedulingPriority.idleCallback).schedule(idleCallback);
+    priorityTickMap[SchedulingPriority.Promise].subscribe(micro);
+    priorityTickMap[SchedulingPriority.animationFrame].subscribe(
+      animationFrame
+    );
+    priorityTickMap[SchedulingPriority.background].subscribe(background);
+    priorityTickMap[SchedulingPriority.userVisible].subscribe(userVisible);
+    priorityTickMap[SchedulingPriority.userBlocking].subscribe(userBlocking);
+    priorityTickMap[SchedulingPriority.idleCallback].subscribe(idleCallback);
   }
 
   scheduleByPrio(priority?: SchedulingPriority) {
     const XXXXXXXXXXXXXXXXXXXXX = () => {
-      this.scope.detectChanges();
+      this.cdRef.detectChanges();
       console.log('scheduled over', priority);
     };
 
     priority
-      ? getScheduler(priority).schedule(XXXXXXXXXXXXXXXXXXXXX)
+      ? priorityTickMap[priority].subscribe(XXXXXXXXXXXXXXXXXXXXX)
       : XXXXXXXXXXXXXXXXXXXXX();
   }
 
   ngOnInit() {
-    this.strategies = getStrategies({ scope: this.scope });
-    console.log(this.strategies, this.scope);
+    this.strategies = getStrategies({ cdRef: this.cdRef });
+    console.log(this.strategies, this.cdRef);
   }
 }

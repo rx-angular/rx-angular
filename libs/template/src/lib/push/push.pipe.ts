@@ -74,9 +74,8 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
 
   constructor(cdRef: ChangeDetectorRef) {
     this.RenderAware = createRenderAware<U>({
-      strategies: getStrategies<U>({
-        cdRef,
-        component: (cdRef as any).context
+      strategies: getStrategies({
+        cdRef
       }),
       updateObserver: this.updateObserver,
       resetObserver: this.resetObserver

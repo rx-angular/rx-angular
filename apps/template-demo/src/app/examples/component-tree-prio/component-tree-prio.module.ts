@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { TemplateModule } from '@rx-angular/template';
+import { TemplateModule, ViewportPrioModule } from '@rx-angular/template';
 import { TreePrioComponent } from './tree-prio.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,8 +13,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { ViewportModule } from '../../viewport.module';
-import { AppModule } from '../../app.module';
+
 import { SharedModule } from '../shared/shared.module';
 
 export const ROUTES = [
@@ -42,7 +41,7 @@ const DECLARATIONS = [TreePrioComponent];
     MatSelectModule,
     TemplateModule,
     MatCardModule,
-    ViewportModule,
+    ViewportPrioModule,
     SharedModule
   ],
   exports: [DECLARATIONS]

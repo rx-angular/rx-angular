@@ -25,7 +25,7 @@ export class CdOperatorsParent01Component extends BaseComponent {
   @ViewChild('button') button: ElementRef<HTMLButtonElement>;
   btnClick$ = defer(() => fromEvent(this.button.nativeElement, 'click'));
 
-  cfg = { ngZone: this.ngZone, scope: this.scope, component: this };
+  cfg = { ngZone: this.ngZone, cdRef: this.cdRef, component: this };
   strategies = getStrategies<number>(this.cfg);
 
   value$ = this.btnClick$.pipe(

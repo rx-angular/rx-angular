@@ -50,9 +50,9 @@ export abstract class BaseComponent
     protected ngZone: NgZone,
     protected coalesceConfigService: CdConfigService
   ) {
-    this.scope.markForCheck = () => {
+    this.cdRef.markForCheck = () => {
       console.log('markForCheck');
-      this.scope.markForCheck();
+      this.cdRef.markForCheck();
     };
   }
 
@@ -61,11 +61,11 @@ export abstract class BaseComponent
   }
 
   cdRef_detectChanges() {
-    this.scope.detectChanges();
+    this.cdRef.detectChanges();
   }
 
   cdRef_markForCheck() {
-    this.scope.markForCheck();
+    this.cdRef.markForCheck();
     this.isMarkedDirty = true;
     this.nativeElem.classList.add('dirty');
   }

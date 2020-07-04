@@ -80,7 +80,7 @@ export class LoadTestComponent implements OnInit {
 
   strategy$ = this.s.strategy$;
 
-  strategies = Object.keys(getStrategies({ scope: {} } as any));
+  strategies = Object.keys(getStrategies({ cdRef: { context: {} } } as any));
   value$: Observable<string> = this.s.value$;
 
   constructor(private cdRef: ChangeDetectorRef, public s: LoadTestService) {}

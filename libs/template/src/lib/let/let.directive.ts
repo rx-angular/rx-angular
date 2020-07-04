@@ -5,7 +5,6 @@ import {
   OnDestroy,
   OnInit,
   TemplateRef,
-  Type,
   ViewContainerRef
 } from '@angular/core';
 
@@ -178,10 +177,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     private readonly templateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
-    this.strategies = getStrategies({
-      cdRef,
-      component: (cdRef as any).context
-    });
+    this.strategies = getStrategies({ cdRef });
 
     this.renderAware = createRenderAware<U>({
       strategies: this.strategies,
