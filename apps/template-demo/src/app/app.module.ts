@@ -15,6 +15,7 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app-component/app.component';
 import { ROUTES } from './app.routes';
 import { ViewportPrioModule } from '@rx-angular/template';
+import { ComparisonUnpatchModule } from './examples/unpatch/comparison-unpatch.module';
 
 export const materialModules = [
   BrowserAnimationsModule,

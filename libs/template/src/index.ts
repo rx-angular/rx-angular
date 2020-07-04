@@ -3,6 +3,7 @@ export {
   priorityTickMap,
   SchedulingPriority
 } from './lib/render-strategies';
+export { getZoneUnPatchedApi } from './lib/core';
 export { PushPipe, PushModule } from './lib/push';
 export { LetDirective, LetModule } from './lib/let';
 // EXPERIMENTAL
