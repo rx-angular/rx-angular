@@ -103,7 +103,8 @@ export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
   // generate compare function respecting every case of provided keyCompareMap
   if (keyCompareMap !== undefined) {
     const compare = (key: K) => {
-      return keyCompareMap.hasOwnProperty(key)
+      return keyCompareMap.hasOwnProperty(key) &&
+        keyCompareMap[key] !== undefined
         ? (keyCompareMap[key] as CompareFn<T[K]>)
         : defaultCompare;
     };
