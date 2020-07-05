@@ -31,7 +31,10 @@
   </mat-card>
 </div>
 -->
-<div *rxLet="data$; let data; strategy: visibleStrategy">
+<div
+  *rxLet="data$; let data; strategy: visibleStrategy"
+  #name1="renderNotifier"
+>
   {{ data.length }}
 </div>
 <mat-toolbar

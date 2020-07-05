@@ -2,12 +2,12 @@ import { Observable } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { RenderStrategy, StrategySelection } from './interfaces';
 
-export function nameToStrategy<U>(strategies: StrategySelection<U>) {
-  return (o$: Observable<string>): Observable<RenderStrategy<U>> => {
+export function nameToStrategy(strategies: StrategySelection) {
+  return (o$: Observable<string>): Observable<RenderStrategy> => {
     return o$.pipe(
       distinctUntilChanged(),
       map(
-        (strategy: string): RenderStrategy<U> => {
+        (strategy: string): RenderStrategy => {
           const s = strategies[strategy];
           if (!!s) {
             return s;

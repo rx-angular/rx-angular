@@ -5,7 +5,7 @@ import {
   Input,
   OnInit
 } from '@angular/core';
-import { getStrategies, StrategySelection } from '@rx-angular/template';
+import { getStrategies } from '@rx-angular/template';
 
 @Component({
   selector: 'coalesce-real-life-1',
@@ -23,7 +23,7 @@ import { getStrategies, StrategySelection } from '@rx-angular/template';
 export class RealLife1Component implements OnInit {
   numRenders = 0;
   strategy = 'localNative';
-  strategies: StrategySelection<any>;
+  strategies;
 
   _name = '';
   set name(name: string) {

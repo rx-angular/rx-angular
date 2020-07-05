@@ -8,19 +8,19 @@ import {
  *
  * This strategy is does nothing. It serves for debugging only
  *
- * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
- * |-------------| --------------| ------------ ------ | ---------------- |
- * | `noop`      | ❌/❌         | no rendering        | ❌               |
+ * | Name        | ZoneLess | Render Method | ScopedCoalescing | Scheduling | Chunked |
+ * |-------------| ---------| --------------| ---------------- | ---------- |-------- |
+ * | `noop`      | ❌       | ❌             | ❌                | ❌         | ❌      |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
- * @return {RenderStrategy<T>} - The calculated strategy
+ * @return {RenderStrategy} - The calculated strategy
  *
  */
-export function createNoopStrategy<T>(): RenderStrategy<T> {
+export function createNoopStrategy(): RenderStrategy {
   return {
     name: 'noop',
-    renderMethod: () => {},
-    behavior: o => o,
-    scheduleCD: () => {}
+    detectChanges: () => {},
+    rxScheduleCD: o => o,
+    scheduleCD: () => new AbortController()
   };
 }

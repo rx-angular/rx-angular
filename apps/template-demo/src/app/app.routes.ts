@@ -7,6 +7,13 @@ export const ROUTES: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'unpatch',
+    loadChildren: () =>
+      import('./examples/unpatch/comparison-unpatch.module').then(
+        m => m.ComparisonUnpatchModule
+      )
+  },
+  {
     path: 'scheduling',
     loadChildren: () =>
       import('./examples/scheduling/scheduling.module').then(

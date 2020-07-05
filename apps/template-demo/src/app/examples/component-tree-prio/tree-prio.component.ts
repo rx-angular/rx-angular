@@ -1,15 +1,14 @@
-import { SelectionModel } from '@angular/cdk/collections';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import { Person, TreePrioService } from './tree-prio.service';
 import { RxState } from '@rx-angular/state';
 import { tap } from 'rxjs/operators';
 import { getStrategies } from '@rx-angular/template';
-import { CoalescingTestService } from '../coalescing/experiments-profiling/coalescing-test.service';
 
 export interface ComponentState {
   data: Person[];
@@ -31,9 +30,12 @@ export interface ComponentState {
 })
 export class TreePrioComponent extends RxState<ComponentState>
   implements OnInit {
-  strategies = Object.keys(getStrategies({ cdRef: {} } as any));
+  strategies = Object.keys(getStrategies({ cdRef: this.cdRef }));
   visibleStrategy: string;
   invisibleStrategy: string;
+
+  @ViewChild('name1')
+  name1;
 
   displayedColumns: string[] = [
     'select',
@@ -64,6 +66,7 @@ export class TreePrioComponent extends RxState<ComponentState>
   getData() {
     this.dataService.getData(100);
   }
+
   ngOnInit(): void {}
 
   refetchData(limit: number = 100) {

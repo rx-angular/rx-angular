@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { DEFAULT_STRATEGY_NAME } from '@rx-angular/template';
 import { RxState } from '@rx-angular/state';
 
 export interface CdConfig {
@@ -15,7 +14,7 @@ export class CdConfigService extends RxState<CdConfig> {
     super();
     this.hold(this.select(), state => (this.state = state));
     this.set({
-      strategy: DEFAULT_STRATEGY_NAME
+      strategy: 'local'
     });
   }
 

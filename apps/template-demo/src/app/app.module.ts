@@ -14,7 +14,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app-component/app.component';
 import { ROUTES } from './app.routes';
-import { ViewportModule } from './viewport.module';
+import { ViewportPrioModule } from '@rx-angular/template';
+import { ComparisonUnpatchModule } from './examples/unpatch/comparison-unpatch.module';
+import { SharedModule } from './examples/shared/shared.module';
 
 export const materialModules = [
   BrowserAnimationsModule,
@@ -34,7 +36,8 @@ export const materialModules = [
     ReactiveFormsModule,
     RouterModule.forRoot(ROUTES),
     materialModules,
-    ViewportModule
+    ViewportPrioModule,
+    SharedModule
   ],
   declarations: [AppComponent],
   exports: [],

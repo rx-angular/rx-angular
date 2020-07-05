@@ -4,10 +4,9 @@ import {
   ElementRef,
   ViewChild
 } from '@angular/core';
-import { defer } from 'rxjs';
+import { defer, Subject } from 'rxjs';
 import { BaseComponent } from '../../base.component.ts/base.component';
 import { tap } from 'rxjs/operators';
-import { fromZoneEvent } from '@rx-angular/template';
 
 @Component({
   selector: 'app-cd-parent06',
@@ -29,7 +28,9 @@ import { fromZoneEvent } from '@rx-angular/template';
       >
     </div>
     <div class="case-interaction">
-      <button #button>ApplicationRef#tick</button>
+      <button [unpatch] (click)="btnClick$.next($event)">
+        ApplicationRef#tick
+      </button>
     </div>
     <div class="case-content">
       <app-cd06-child01-default></app-cd06-child01-default>
@@ -39,8 +40,7 @@ import { fromZoneEvent } from '@rx-angular/template';
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class CdParent06Component extends BaseComponent {
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
-  btnClick$ = defer(() => fromZoneEvent(this.button.nativeElement, 'click'));
+  btnClick$ = new Subject<Event>();
 
   baseEffects$ = this.btnClick$.pipe(tap(() => this.appRef_tick()));
 }

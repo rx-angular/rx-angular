@@ -2,10 +2,8 @@ import {
   ChangeDetectorRef,
   Directive,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges,
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
@@ -103,7 +101,10 @@ export interface LetViewContext<T> {
  *
  * @publicApi
  */
-@Directive({ selector: '[rxLet]' })
+@Directive({
+  selector: '[rxLet]',
+  exportAs: 'renderNotifier'
+})
 export class LetDirective<U> implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
 
@@ -111,6 +112,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
     this.renderAware.nextPotentialObservable(potentialObservable);
   }
+
   @Input('rxLetStrategy')
   set strategy(strategy: string | Observable<string> | undefined) {
     this.renderAware.nextStrategy(strategy || DEFAULT_STRATEGY_NAME);
@@ -175,7 +177,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     private readonly templateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
-    this.strategies = getStrategies<U>({ cdRef });
+    this.strategies = getStrategies({ cdRef });
 
     this.renderAware = createRenderAware<U>({
       strategies: this.strategies,

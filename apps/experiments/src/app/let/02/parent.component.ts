@@ -1,8 +1,6 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { defer, from, fromEvent, Observable, Subject } from 'rxjs';
-import { scan, startWith } from 'rxjs/operators';
-import { CdConfigService } from '../../cd-config.service';
+import { defer, fromEvent, Observable, Subject } from 'rxjs';
 import { BaseComponent } from '../../base.component.ts/base.component';
 
 @Component({
@@ -19,7 +17,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     ><br />
     <span>strategy: </span><b class="strategy">{{ strategy }}</b>
     <br />
-    <button #button>increment</button>
+    <button [unpatch] (click)="btnClick$.next($event)">increment</button>
     <ng-container *rxLet="value1$ as v">Value1: {{ v }}</ng-container>
     <ng-container *rxLet="value1$ as v">Value1: {{ v }}</ng-container>
     <ng-container *rxLet="value1$ as v">Value1: {{ v }}</ng-container>
@@ -27,8 +25,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
   changeDetection: environment.changeDetection
 })
 export class LetParent02Component extends BaseComponent {
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
-  btnClick$ = defer(() => fromEvent(this.button.nativeElement, 'click'));
+  btnClick$ = new Subject<Event>();
 
   value1$: Observable<number>;
 }

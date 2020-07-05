@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Let1ContainerComponent } from './solution/let1.container.component';
-import { TemplateModule } from '@rx-angular/template';
-import { ViewportModule } from '../../viewport.module';
+import { TemplateModule, ViewportPrioModule } from '@rx-angular/template';
 
 export const ROUTES = [
   {
@@ -22,7 +21,7 @@ const DECLARATIONS = [Let1ContainerComponent];
   declarations: [DECLARATIONS],
   imports: [
     CommonModule,
-    ViewportModule,
+    ViewportPrioModule,
     RouterModule.forChild(ROUTES),
     TemplateModule
   ],

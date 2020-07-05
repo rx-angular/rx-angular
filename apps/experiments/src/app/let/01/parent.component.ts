@@ -1,10 +1,9 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { defer, Observable } from 'rxjs';
+import { defer, Observable, Subject } from 'rxjs';
 import { scan, startWith, tap } from 'rxjs/operators';
 
 import { BaseComponent } from '../../base.component.ts/base.component';
-import { fromZoneEvent } from '@rx-angular/template';
 
 @Component({
   selector: 'app-let-parent01',
@@ -19,7 +18,7 @@ import { fromZoneEvent } from '@rx-angular/template';
     <span>render: </span><b class="num-renders">{{ getNumOfRenderings() }}</b
     ><br />: strategy
     <br />
-    <button #button>increment</button>
+    <button [unpatch] (click)="btnClick$.next($event)">increment</button>
     <ng-container *rxLet="value$ as v; let w">
       Value: {{ v }} {{ w }}
     </ng-container>
@@ -27,8 +26,7 @@ import { fromZoneEvent } from '@rx-angular/template';
   changeDetection: environment.changeDetection
 })
 export class LetParent01Component extends BaseComponent {
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
-  btnClick$ = defer(() => fromZoneEvent(this.button.nativeElement, 'click'));
+  btnClick$ = new Subject<Event>();
 
   value$: Observable<number> = this.btnClick$.pipe(
     tap(console.log),

@@ -4,7 +4,7 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { getStrategies, StrategySelection } from '@rx-angular/template';
+import { getStrategies } from '@rx-angular/template';
 
 @Component({
   selector: 'coalesce-real-life-1-container',
@@ -18,7 +18,7 @@ import { getStrategies, StrategySelection } from '@rx-angular/template';
 })
 export class RealLife1ContainerComponent implements OnInit {
   numRenders = 0;
-  strategies: StrategySelection<any>;
+  strategies;
   obj = {
     name: 'test',
     age: 42,

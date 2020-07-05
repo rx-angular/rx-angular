@@ -15,7 +15,7 @@
   <li
     *ngFor="
       let hero of heroes$ | push: configService.renderStrategy$;
-      trackBy: heroService.trackHero
+      trackBy: heroService.trackByHero
     "
   >
     <a routerLink="/detail/{{ hero.id }}">

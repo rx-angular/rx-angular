@@ -37,9 +37,6 @@
     "template": {
       "tags": ["type:feature"]
     },
-    "architecture-demos": {
-      "tags": []
-    },
     "docs": {
       "tags": []
     },
