@@ -61,6 +61,10 @@ export function toggle<T extends object>(
     console.warn(`Toggle: key argument (${key}) is invalid.`);
   }
 
+  if (keyIsValid && typeof initialObject[key] !== 'boolean') {
+    console.warn(`Toggle: value of the key (${key}) is not a boolean.`);
+  }
+
   if (
     keyIsValid &&
     (typeof initialObject[key] === 'boolean' ||
