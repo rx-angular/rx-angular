@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { defer, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { scan, startWith } from 'rxjs/operators';
 import { BaseComponent } from '../../base.component.ts/base.component';
 
