@@ -16,7 +16,7 @@ import {
   stateful,
   isKeyOf,
   AccumulationFn,
-  objectDiver
+  safePluck
 } from './core';
 import { filter, map, pluck, tap } from 'rxjs/operators';
 
@@ -159,9 +159,16 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     k6: K6
   ): T | T[K1][K2][K3][K4][K5][K6];
 
-  get(...keys: string[]): T | Partial<T> {
+  get<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3],
+    K5 extends keyof T[K1][K2][K3][K4],
+    K6 extends keyof T[K1][K2][K3][K4][K5]
+  >(...keys: Array<K1 | K2 | K3 | K4 | K5 | K6>): T | Partial<T> {
     if (!!keys && isStringArrayGuard(keys)) {
-      return objectDiver<T>(this.accumulator.state, keys);
+      return safePluck<T, K1, K2, K3, K4, K5, K6>(this.accumulator.state, keys);
     } else {
       return this.accumulator.state;
     }

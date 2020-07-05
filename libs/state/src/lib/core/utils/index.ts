@@ -6,4 +6,4 @@ export {
   isStringArrayGuard,
   isKeyOf
 } from './typing';
-export { objectDiver } from './object-diver';
+export { safePluck } from './safe-pluck';
