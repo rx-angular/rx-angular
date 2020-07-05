@@ -6,13 +6,17 @@ import { CompareFn, KeyCompareMap } from '../interfaces';
  * @internal
  */
 function safePluck<T extends object, K extends keyof T>(obj: T, key: K): T[K] {
-  return obj !== null && obj !== undefined ? obj[key] : obj;
+  return obj !== null && obj !== undefined
+    ? obj[key]
+    : ((obj as unknown) as T[K]);
 }
 
 /**
  * @internal
  */
-const defaultCompare = <V>(oldVal: V, newVal: V) => oldVal === newVal;
+function defaultCompare<T>(oldVal: T, newVal: T): boolean {
+  return oldVal === newVal;
+}
 
 /**
  * @description
@@ -97,9 +101,12 @@ export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
     );
 
   // generate compare function respecting every case of provided keyCompareMap
-  if (keyCompareMap) {
-    const compare: (key: K) => CompareFn<T[K]> = key =>
-      keyCompareMap[key] || defaultCompare;
+  if (keyCompareMap !== undefined) {
+    const compare = (key: K) => {
+      return keyCompareMap.hasOwnProperty(key)
+        ? (keyCompareMap[key] as CompareFn<T[K]>)
+        : defaultCompare;
+    };
     distinctCompare = (oldState, newState) => {
       return keys.some(
         key => !compare(key)(safePluck(oldState, key), safePluck(newState, key))
