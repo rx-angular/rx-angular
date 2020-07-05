@@ -5,5 +5,6 @@ export {
   isPromiseGuard,
   isStringArrayGuard,
   isKeyOf,
-  isObjectGuard
+  isObjectGuard,
+  isDefined
 } from './typing';

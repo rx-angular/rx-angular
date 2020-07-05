@@ -4,7 +4,8 @@ import {
   isOperateFnArrayGuard,
   isPromiseGuard,
   isStringArrayGuard,
-  isObjectGuard
+  isObjectGuard,
+  isDefined
 } from '../../../src/lib/core/utils';
 import { from, of } from 'rxjs';
 
@@ -111,5 +112,23 @@ describe('isObjectGuard', () => {
     expect(isObjectGuard(1)).toBeFalsy();
     expect(isObjectGuard(Symbol('test'))).toBeFalsy();
     expect(isObjectGuard((a: any) => a)).toBeFalsy();
+  });
+});
+
+describe('isDefined', () => {
+  it('should return true for everything that is not null or undefined', () => {
+    expect(isDefined(true)).toBeTruthy();
+    expect(isDefined(false)).toBeTruthy();
+    expect(isDefined('')).toBeTruthy();
+    expect(isDefined(0)).toBeTruthy();
+    expect(isDefined(Symbol('test'))).toBeTruthy();
+    expect(isDefined([])).toBeTruthy();
+    expect(isDefined({})).toBeTruthy();
+    expect(isDefined((a: any) => a)).toBeTruthy();
+  });
+
+  it('should return false for null and undefined', () => {
+    expect(isDefined(undefined)).toBeFalsy();
+    expect(isDefined(null)).toBeFalsy();
   });
 });
