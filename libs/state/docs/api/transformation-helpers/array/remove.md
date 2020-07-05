@@ -1,36 +1,108 @@
-
-
 # remove
 
-Removes one or multiple items from an array T[].You can provide a custom comparison function that should return true if items match.If no comparison is provided, an equality check is used by default.Returns a shallow copy of the updated array T[], and does not mutate the original one.
+Removes one or multiple items from an array T[].
+For comparison you can provide key, array of keys or a custom comparison function that should return true if items match.
+If no comparison data is provided, an equality check is used by default.
+Returns a shallow copy of the updated array T[], and does not mutate the original one.
 
-*Example*
-
-```TypeScript
-// Removing value without comparison functionconst items = [1,2,3,4,5];const updatedItems = remove(items, [1,2,3]);// updatedItems will be: [4,5];
-```
-
-
-*Example*
+_Example_
 
 ```TypeScript
-// Removing values with comparison functionconst creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'unicorn'}, {id: 3, type: 'kobold'}];const nonExistingCreatures = [{id: 2, type: 'unicorn'}, {id: 3, type: 'kobold'}];const realCreatures = remove(creatures, nonExistingCreatures, (a, b) => a.id === b.id);// realCreatures will be: [{id: 1, type: 'cat'}];
+// Removing value without comparison data
+
+const items = [1,2,3,4,5];
+
+const updatedItems = remove(items, [1,2,3]);
+
+// updatedItems will be: [4,5];
 ```
 
+_Example_
+
+```TypeScript
+// Removing values with comparison function
+
+const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'unicorn'}, {id: 3, type: 'kobold'}];
+
+const nonExistingCreatures = [{id: 2, type: 'unicorn'}, {id: 3, type: 'kobold'}];
+
+const realCreatures = remove(creatures, nonExistingCreatures, (a, b) => a.id === b.id);
+
+// realCreatures will be: [{id: 1, type: 'cat'}];
+```
+
+_Example_
+
+```TypeScript
+// Removing values with key
+
+const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'unicorn'}, {id: 3, type: 'kobold'}];
+
+const nonExistingCreatures = [{id: 2, type: 'unicorn'}, {id: 3, type: 'kobold'}];
+
+const realCreatures = remove(creatures, nonExistingCreatures, 'id');
+
+// realCreatures will be: [{id: 1, type: 'cat'}];
+```
+
+_Example_
+
+```TypeScript
+// Removing values with array of keys
+
+const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'unicorn'}, {id: 3, type: 'kobold'}];
+
+const nonExistingCreatures = [{id: 2, type: 'unicorn'}, {id: 3, type: 'kobold'}];
+
+const realCreatures = remove(creatures, nonExistingCreatures, ['id', 'type']);
+
+// realCreatures will be: [{id: 1, type: 'cat'}];
+```
+
+_Example_
+
+```TypeScript
+// Usage with RxState
+
+export class ListComponent {
+
+   readonly creatures$: Observable<Creature[]> = this.state.select('creatures');
+   readonly removeCreature$ = new Subject<Creature>();
+
+   constructor(private state: RxState<ComponentState>) {
+     // Reactive implementation
+     state.connect(
+       'creatures',
+       this.removeCreature$,
+       ({ creatures }, creatureToRemove) => {
+           return remove(creatures, creatureToRemove, (a, b) => a.id === b.id);
+       }
+     );
+   }
+
+   // Imperative implementation
+   removeCreature(creatureToRemove: Creature): void {
+       this.state.set({ creatures: remove(this.state.get().creatures, creatureToRemove, (a, b) => a.id === b.id)});
+   }
+}
+```
 
 ## Signature
 
 ```TypeScript
-function remove<T>(array: T[], itemsOrItem: Partial<T>[] | Partial<T>, compare?: CompareFn<T>): T[]
+function remove<T>(source: T[], scrap: Partial<T>[] | Partial<T>, compare?: ComparableData<T>): T[]
 ```
+
 ## Parameters
 
-### array
- ##### typeof: T[]
+### source
 
-### itemsOrItem
- ##### typeof: Partial&#60;T&#62;[] | Partial&#60;T&#62;
+##### typeof: T[]
+
+### scrap
+
+##### typeof: Partial&#60;T&#62;[] | Partial&#60;T&#62;
 
 ### compare
- ##### typeof: CompareFn&#60;T&#62;
 
+##### typeof: ComparableData&#60;T&#62;

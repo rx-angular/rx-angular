@@ -3,17 +3,18 @@ import { update } from "@rx-angular/state";
 interface Creature {
   id: number;
   type: string;
+  name: string;
 }
 
-const creaturesForUpdate: Creature[] = [{id: 1, type: 'lion'}, {id: 2, type: 'wolf'}];
+const creaturesForUpdate: Creature[] = [{id: 1, type: 'lion', name: 'Bella'}, {id: 2, type: 'wolf', name: 'Sparky'}];
 let creatures: Creature[];
 let creaturesAfterSingleItemUpdate: Creature[];
 let creaturesAfterMultipleItemsUpdate: Creature[];
 
 beforeEach(() => {
-  creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}, {id: 3, type: 'catDog'}];
-  creaturesAfterMultipleItemsUpdate = [{id: 1, type: 'lion'}, {id: 2, type: 'wolf'}, {id: 3, type: 'catDog'}];
-  creaturesAfterSingleItemUpdate = [{id: 1, type: 'lion'}, {id: 2, type: 'dog'}, {id: 3, type: 'catDog'}];
+  creatures = [{id: 1, type: 'cat', name: 'Bella'}, {id: 2, type: 'dog', name: 'Sparky'}, {id: 3, type: 'catDog', name: 'Cat-Dog'}];
+  creaturesAfterMultipleItemsUpdate = [{id: 1, type: 'lion', name: 'Bella'}, {id: 2, type: 'wolf', name: 'Sparky'}, {id: 3, type: 'catDog', name: 'Cat-Dog'}];
+  creaturesAfterSingleItemUpdate = [{id: 1, type: 'lion', name: 'Bella'}, {id: 2, type: 'dog', name: 'Sparky'}, {id: 3, type: 'catDog', name: 'Cat-Dog'}];
 });
 
 
@@ -39,46 +40,96 @@ describe('update', () => {
 
       originalCreatures[0] = null as any;
 
-      expect(originalCreatures).toEqual([null, {id: 2, type: 'dog'}, {id: 3, type: 'catDog'}]);
+      expect(originalCreatures).toEqual([null, {id: 2, type: 'dog', name: 'Sparky'}, {id: 3, type: 'catDog', name: 'Cat-Dog'}]);
       expect(result).toEqual(creaturesAfterSingleItemUpdate);
       expect(result2).toEqual(creatures);
     });
   });
 
   describe('functionality', () => {
-    it('should update single value', () => {
-      const creaturesResult = update(creatures, creaturesForUpdate[0], (o, n) => o.id === n.id);
+      it('should update value if matching by compareFn', () => {
+        expect(update(creatures, creaturesForUpdate, (a, b) => a.id === b.id)).toEqual(creaturesAfterMultipleItemsUpdate);
+      });
 
-      expect(creaturesResult).toEqual(creaturesAfterSingleItemUpdate);
-    });
+      it('should update value if matching by key', () => {
+        expect(update(creatures, creaturesForUpdate, 'id')).toEqual(creaturesAfterMultipleItemsUpdate);
+      });
 
-    it('should update multiple values', () => {
-      const updatedCreatures = [{id: 1, type: 'lion'}, {id: 2, type: 'wolf'}];
-      const creaturesResult = update(creatures, updatedCreatures, (o, n) => o.id === n.id);
+      it('should update value if matching by array of keys', () => {
+        expect(update(creatures, creaturesForUpdate, ['id'])).toEqual(creaturesAfterMultipleItemsUpdate);
+      });
 
-      expect(creaturesResult).toEqual(creaturesAfterMultipleItemsUpdate);
-    });
+      it('should update partials', () => {
+        expect(update(creatures, {id: 1, type: 'lion'}, 'id')).toEqual(creaturesAfterSingleItemUpdate);
+      });
   });
 
   describe('edge cases', () => {
-    it('should work with empty values', () => {
-      const emptyCreatures: Creature[] = [];
 
-      expect(update(emptyCreatures, creatures, (a, b) => a.id === b.id)).toEqual(creatures);
-      expect(update(creatures, [], (a, b) => a.id === b.id)).toEqual(creatures);
+    describe('emtpy values', () => {
+      it('should return updates if original array is empty', () => {
+          const emptyObjectsArray: Creature[]  = [];
+          expect(update(emptyObjectsArray, creatures)).toEqual(creatures);
+      });
+
+      it('should return original array if updates array is empty', () => {
+          const emptyObjectsArray: Creature[]  = [];
+          expect(update(creatures, emptyObjectsArray)).toEqual(creatures);
+      });
+
+      it('should return empty array if both original array and updates are empty', () => {
+        expect(update([], [])).toEqual([]);
+      });
     });
 
-    it('should work when one or both inputs not provided', () => {
-      expect(update(null as any, creatures)).toEqual(creatures);
-      expect(update(creatures, null as any)).toEqual(creatures);
-      expect(update(null as any, null as any)).toEqual([]);
+    describe('undefined values', () => {
+        it('should return updates if original array is undefined', () => {
+          expect(update(undefined as any, creatures)).toEqual(creatures);
+        });
+
+        it('should return original array if updates are undefined', () => {
+          expect(update(creatures, undefined as any)).toEqual(creatures);
+        });
+
+        it('should return undefined if both values are undefined', () => {
+          expect(update(undefined as any, undefined as any)).toEqual(undefined);
+        });
+
+        it('should return undefined if original array is null and updates are undefined', () => {
+          expect(update(undefined as any, null as any)).toEqual(undefined);
+        });
     });
 
-    it('should work when initial array is not array', () => {
-      expect(update('' as any, creatures)).toEqual(creatures);
-      expect(update(1 as any, creatures)).toEqual(creatures);
-      expect(update({} as any, creatures)).toEqual(creatures);
-      expect(update(false as any, creatures)).toEqual(creatures);
+    describe('null values', () => {
+        it('should return updates if original array is null', () => {
+          expect(update(null as any, creatures)).toEqual(creatures);
+        });
+
+        it('should return original array if updates are null', () => {
+          expect(update(creatures, null as any)).toEqual(creatures);
+        });
+
+        it('should return null if both values are null', () => {
+          expect(update(null as any, null as any)).toEqual(null);
+        });
+
+        it('should return null if original array is null and updates are undefined', () => {
+          expect(update(null as any, undefined as any)).toEqual(null);
+        });
+    });
+
+    describe('unexpected value types', () => {
+        it('should return updates if original array not an array', () => {
+          expect(update(1 as any, creatures)).toEqual(creatures);
+        });
+
+        it('should return original array if updates not matching expected type', () => {
+          expect(update(creatures, {} as any)).toEqual(creatures);
+        });
+
+        it('should return original value if original value is not an array and updates not provided', () => {
+          expect(update(1 as any, undefined as any)).toEqual(1);
+        });
     });
   });
 });

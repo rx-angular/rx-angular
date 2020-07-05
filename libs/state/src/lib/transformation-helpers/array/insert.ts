@@ -38,7 +38,7 @@
  *        this.insertCreature$,
  *        ({ creatures }) => {
  *            const creatureToAdd = {id: generateId(), name: 'newCreature', type: 'dinosaur' };
- *            return insert(creatures, creatureToAdd)
+ *            return insert(creatures, creatureToAdd);
  *        }
  *      );
  *    }

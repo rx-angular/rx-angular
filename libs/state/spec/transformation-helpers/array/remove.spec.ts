@@ -34,61 +34,112 @@ describe('remove', () => {
   });
 
   describe('functionality', () => {
-    it('should remove single value', () => {
-      const creaturesResult = remove(creatures, creaturesForRemove[0], (o, n) => o.id === n.id);
-      const numbersResult = remove([1,2], 2);
 
-      expect(numbersResult).toEqual([1]);
-      expect(creaturesResult).toEqual(creaturesAfterSingleItemRemove);
+    describe('primitives', () => {
+
+      it('should remove single value', () => {
+        expect(remove([1,2], 2)).toEqual([1]);
+      });
+
+      it('should remove multiple values', () => {
+        expect(remove([1,2], [1,2])).toEqual([]);
+      });
+
+      it('should remove values with compareFn', () => {
+        expect(remove([1,2], [1,2], (a, b) => a.toString() === b.toString())).toEqual([]);
+      });
+
     });
 
-    it('should remove multiple values', () => {
-      const creaturesResult = remove(creatures, creaturesForRemove, (o, n) => o.id === n.id);
-      const numbersResult = remove([1, 2, 3], [1, 2]);
+    describe('non-primitives', () => {
 
-      expect(numbersResult).toEqual([3]);
-      expect(creaturesResult).toEqual(creaturesAfterMultipleItemsRemove);
-    });
+      it('should remove value if reference is the same', () => {
+        expect(remove(creatures, creatures)).toEqual([]);
+      });
 
-    it('should remove non-primitive values which has the same reference without compareFn', () => {
-      const creaturesResult = remove(creatures, creatures);
+      it('should remove value if matching by compareFn', () => {
+        expect(remove(creatures, creaturesForRemove, (a, b) => a.id === b.id)).toEqual(creaturesAfterMultipleItemsRemove);
+      });
 
-      expect(creaturesResult).toEqual([]);
-    });
+      it('should remove value if matching by key', () => {
+        expect(remove(creatures, creaturesForRemove, 'id')).toEqual(creaturesAfterMultipleItemsRemove);
+      });
 
-    it('should NOT remove non-primitive values which has different reference without compareFn', () => {
-      const creaturesResult = remove(creatures, creaturesForRemove[0]);
+      it('should remove value if matching by array of keys', () => {
+        expect(remove(creatures, creaturesForRemove, ['id',  'type'])).toEqual(creaturesAfterMultipleItemsRemove);
+      });
 
-      expect(creaturesResult).toEqual(creatures);
-    });
+      it('should remove partials', () => {
+        expect(remove(creatures, {id: 1}, (o, n) => o.id === n.id)).toEqual(creaturesAfterSingleItemRemove);
+      });
 
-    it('should work with partials', () => {
-      const creaturesResult = remove(creatures, {id: 1}, (o, n) => o.id === n.id);
-
-      expect(creaturesResult).toEqual(creaturesAfterSingleItemRemove);
     });
   });
 
   describe('edge cases', () => {
-    it('should work with empty values', () => {
-      const emptyCreatures: Creature[] = [];
 
-      expect(remove(emptyCreatures, creatures, (a, b) => a.id === b.id)).toEqual([]);
-      expect(remove(creatures, [], (a, b) => a.id === b.id)).toEqual(creatures);
-      expect(remove([], [])).toEqual([]);
+    describe('empty values', () => {
+
+      it('should return empty array if original array was empty', () => {
+        const emptyCreatures: Creature[] = [];
+        expect(remove(emptyCreatures, creatures, (a, b) => a.id === b.id)).toEqual([]);
+      });
+
+      it('should return original array if items are empty', () => {
+        expect(remove(creatures, [], (a, b) => a.id === b.id)).toEqual(creatures);
+      });
+
+      it('should return empty array if both arguments are empty arrays', () => {
+        expect(remove([], [])).toEqual([]);
+      });
+
     });
 
-    it('should work if one or both arguments are null', () => {
-      expect(remove(null as any, creatures)).toEqual(null);
-      expect(remove(creatures, null as any)).toEqual(creatures);
-      expect(remove(null as any, null as any)).toEqual(null);
+    describe('null values', () => {
+
+      it('should return null if original array is null', () => {
+        expect(remove(null as any, creatures)).toEqual(null);
+      });
+
+      it('should return original array is items are null', () => {
+        expect(remove(creatures, null as any)).toEqual(creatures);
+      });
+
+      it('should return null if original array is null', () => {
+        expect(remove(null as any, null as any)).toEqual(null);
+      });
+
+      it('should return null if oriignal array is null and items are undefined', () => {
+        expect(remove(null as any, undefined as any)).toEqual(null);
+      });
+
     });
 
-    it('should work when initial array is not array', () => {
-      expect(remove('' as any, creatures)).toEqual([]);
-      expect(remove(1 as any, creatures)).toEqual([]);
-      expect(remove({} as any, creatures)).toEqual([]);
-      expect(remove(false as any, creatures)).toEqual([]);
+    describe('undefined values', () => {
+
+      it('should return undefined if original array is null', () => {
+        expect(remove(undefined as any, creatures)).toEqual(undefined);
+      });
+
+      it('should return original array is items are undefined', () => {
+        expect(remove(creatures, undefined as any)).toEqual(creatures);
+      });
+
+      it('should return undefined if original array is undefined', () => {
+        expect(remove(undefined as any, undefined as any)).toEqual(undefined);
+      });
+
+      it('should return undefined if oriignal array is null and items are null', () => {
+        expect(remove(undefined as any, null as any)).toEqual(undefined);
+      });
+
+    });
+
+    describe('unexpected values', () => {
+      it('should return original value is original value is not an array', () => {
+        expect(remove(false as any, creatures)).toEqual(false);
+      });
+
     });
   })
 });
