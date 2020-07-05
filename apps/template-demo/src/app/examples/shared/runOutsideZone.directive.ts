@@ -16,7 +16,7 @@ export class RunOutsideZoneDirective implements AfterViewInit, OnDestroy {
   subscription = new Subscription();
   events$ = new BehaviorSubject<string[]>(['click']);
 
-  @Input('unpatch')
+  @Input('runOutsideZone')
   set events(value: string[]) {
     if (value && value.length > 0) {
       this.events$.next(value);
