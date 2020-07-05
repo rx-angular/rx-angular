@@ -1,4 +1,4 @@
-import { isObjectGuard, isKeyOf, isDefined } from '../../core/utils/typing';
+import { isDefined, isKeyOf, isObjectGuard } from '../../core/utils/typing';
 
 /**
  * @description

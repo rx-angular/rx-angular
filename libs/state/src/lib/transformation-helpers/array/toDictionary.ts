@@ -1,5 +1,5 @@
+import { isDefined, isKeyOf } from '../../core/utils/typing';
 import { OnlyKeysOfSpecificType } from '../interfaces/only-keys-of-specific-type';
-import { isKeyOf, isDefined } from '../../core/utils/typing';
 
 /**
  * @description

@@ -1,4 +1,4 @@
-import { isObjectGuard, isKeyOf } from '../../core/utils/typing';
+import { isKeyOf, isObjectGuard } from '../../core/utils/typing';
 /**
  * @description
  * Accepts an object of type T, key of type K extends keyof T, and value of type T[K].

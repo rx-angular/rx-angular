@@ -1,6 +1,4 @@
-import { isObjectGuard, isDefined } from '../../core/utils/typing';
-import { RxState } from '../../rx-state.service';
-import { Subject } from 'rxjs';
+import { isObjectGuard } from '../../core/utils/typing';
 /**
  * @description
  * Merges an object of type T with updates of type Partial<T>.

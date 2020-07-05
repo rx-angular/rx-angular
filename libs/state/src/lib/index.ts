@@ -6,4 +6,3 @@ export {
   selectSlice
 } from './rxjs/operators';
 export { KeyCompareMap, CompareFn } from './rxjs/interfaces';
-export * from './transformation-helpers/index';
