@@ -5,7 +5,7 @@ import { valuesComparer } from '../_internals/valuesComparer.util';
 /**
  * @description
  * Removes one or multiple items from an array T[].
- * For comparison you can provide key, array of keys or a custom comparison function that should return true if items match.
+ * For comparison you can provide a key, an array of keys or a custom comparison function that should return true if items match.
  * If no comparison data is provided, an equality check is used by default.
  * Returns a shallow copy of the updated array T[], and does not mutate the original one.
  *
