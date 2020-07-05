@@ -1,7 +1,3 @@
-import { isDefined } from '../../core/utils/typing';
-import { ComparableData } from '../interfaces/comparable-data-type';
-import { valuesComparer } from '../_internals/valuesComparer.util';
-
 /**
  * @description
  * Removes one or multiple items from an array T[].
@@ -80,6 +76,10 @@ import { valuesComparer } from '../_internals/valuesComparer.util';
  * @docsPage remove
  * @docsCategory transformation-helpers
  */
+
+import { ComparableData } from '../interfaces/comparable-data-type';
+import { isDefined } from '../../core';
+import { valuesComparer } from '../_internals/valuesComparer.util';
 
 export function remove<T>(
   source: T[],

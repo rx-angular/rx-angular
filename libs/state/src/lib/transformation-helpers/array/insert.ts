@@ -56,7 +56,7 @@
  * @docsCategory transformation-helpers
  */
 
-import { isDefined } from '../../core/utils/typing';
+import { isDefined } from '../../core';
 
 export function insert<T>(source: T[], updates: T | T[]): T[] {
   const updatesDefined = isDefined(updates);

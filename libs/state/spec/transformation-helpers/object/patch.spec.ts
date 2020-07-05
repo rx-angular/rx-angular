@@ -1,5 +1,5 @@
 import { initialPrimitiveState, PrimitiveState, NestedState, initialNestedState } from '../../fixtures';
-import { patch } from '@rx-angular/state/transformations';
+import { patch } from '@rx-angular/state';
 
 let primitiveState: PrimitiveState;
 let nestedState: NestedState;
@@ -69,19 +69,19 @@ describe('patch', () => {
     it('should work if at least one argument not provided', () => {
       expect(patch(null as any, primitiveState)).toEqual(primitiveState);
       expect(patch(primitiveState, null as any)).toEqual(primitiveState);
-      expect(patch(null as any, null as any)).toEqual({});
+      expect(patch(null as any, null as any)).toEqual(null);
     });
 
     it('should work if at least one of inputs is not an object', () => {
       expect(patch(primitiveState, '' as any)).toEqual(primitiveState);
       expect(patch('' as any, primitiveState)).toEqual(primitiveState);
-      expect(patch('' as any, '' as any)).toEqual({});
+      expect(patch('' as any, '' as any)).toEqual('');
     });
 
     it('should work if at least one of objects is array', () => {
       expect(patch(primitiveState, [primitiveState] as any)).toEqual(primitiveState);
       expect(patch([primitiveState] as any, primitiveState)).toEqual(primitiveState);
-      expect(patch([primitiveState] as any, [primitiveState] as any)).toEqual({});
+      expect(patch([primitiveState] as any, [primitiveState] as any)).toEqual([primitiveState]);
     });
   })
 });

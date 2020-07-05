@@ -1,5 +1,5 @@
 import { initialPrimitiveState, PrimitiveState } from '../../fixtures';
-import { toggle } from '@rx-angular/state/transformations';
+import { toggle } from '@rx-angular/state';
 
 let primitiveState: PrimitiveState;
 
@@ -56,7 +56,7 @@ describe('toggle', () => {
     });
 
     it('should return empty object if no arguments provided', () => {
-      expect(toggle(null as any, null as any)).toEqual({});
+      expect(toggle(null as any, null as any)).toEqual(null);
     });
 
     it('should return original object if key value is not a boolean', () => {

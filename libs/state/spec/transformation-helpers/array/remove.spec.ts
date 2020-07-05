@@ -1,4 +1,4 @@
-import { remove } from "@rx-angular/state/transformations";
+import { remove } from "@rx-angular/state";
 
 interface Creature {
   id: number;

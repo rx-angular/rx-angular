@@ -58,11 +58,11 @@ deleteProp(nonObject, 'prop') > nonObject;
 ### setProp
 
 ```typescript
-setProp(nonObject, 'prop' as any, 42) > {};
-setProp(null as any, 'prop', 42) > {};
-setProp(null as any, null as any, 42) > {};
-setProp([state], 'concat', () => []) > {};
-setProp(state, 'notInitedKey' as any, 42) > { ...state, notInitedKey: 42 };
+setProp(nonObject, 'prop' as any, 42) > { prop: 42 };
+setProp(null as any, 'prop', 42) > { prop: 42 };
+setProp(null as any, null as any, 42) > null;
+setProp([state], 'concat', () => []) > { concat: () => [] };
+setProp(state, 'nonExisting' as any, 42) > { ...state, nonExisting: 42 };
 setProp(state, null as any, 42) > state;
 ```
 
@@ -70,25 +70,23 @@ setProp(state, null as any, 42) > state;
 
 ```typescript
 toggle(state, null as any) > state;
-toggle(null as any, null as any) > {};
+toggle(null as any, null as any) > null;
 toggle(state, 'str' as any) > state;
-toggle(state, 'notInitedBooleanKey' as any) >
-  { ...state, notInitedBooleanKey: true };
+toggle(state, 'nonExistingBooleanKey' as any) >
+  { ...state, nonExistingBooleanKey: true };
 ```
 
 ### patch
 
 ```typescript
 patch({}, state) > state;
-patch(null as any, primitiveState) > state;
+patch(null as any, state) > state;
 patch(state, null as any) > state;
 patch(null as any, null as any) > null;
-patch(state, '' as any) > state;
+patch(undefined as any, undefined as any) > undefined;
+patch(state, nonObject) > state;
 patch(nonObject, state) > state;
 patch(nonObject, nonObjectUpdate) > nonObject;
-patch(state, [state] as any) > state;
-patch([state] as any, state) > state;
-patch([state] as any, [state] as any) > {};
 ```
 
 ### dictionaryToArray

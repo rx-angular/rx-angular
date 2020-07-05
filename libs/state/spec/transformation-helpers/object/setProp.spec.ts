@@ -1,5 +1,5 @@
 import { initialPrimitiveState, PrimitiveState, NestedState, initialNestedState } from '../../fixtures';
-import { setProp } from '@rx-angular/state/transformations';
+import { setProp } from '@rx-angular/state';
 
 let primitiveState: PrimitiveState;
 let nestedState: NestedState;
@@ -65,7 +65,7 @@ describe('setProp', () => {
       expect(setProp('' as any, 'fake' as any, 42)).toEqual({fake: 42});
       expect(setProp(null as any, 'fake', 42)).toEqual({fake: 42});
       expect(setProp(undefined as any, 'fake', 42)).toEqual({fake: 42});
-      expect(setProp(null as any, null as any, 42)).toEqual({});
+      expect(setProp(null as any, null as any, 42)).toEqual(null);
       expect(setProp([primitiveState], 'concat', 32 as any)).toEqual({concat: 32});
     });
 

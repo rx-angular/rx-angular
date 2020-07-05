@@ -1,6 +1,6 @@
-import { isDefined } from '../../core/utils/typing';
 import { ComparableData } from '../interfaces/comparable-data-type';
 import { valuesComparer } from '../_internals/valuesComparer.util';
+import { isDefined } from '../../core';
 
 /**
  * @description

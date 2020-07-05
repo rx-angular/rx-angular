@@ -1,5 +1,5 @@
-import { isKeyOf, isObjectGuard } from '../../core/utils/typing';
 import { OnlyKeysOfSpecificType } from '../interfaces/only-keys-of-specific-type';
+import { isObjectGuard, isKeyOf, isDefined } from '../../core';
 /**
  * @description
  * Toggles a boolean property in the object.
@@ -63,6 +63,10 @@ export function toggle<T extends object>(
 
   if (keyIsValid && typeof initialObject[key] !== 'boolean') {
     console.warn(`Toggle: value of the key (${key}) is not a boolean.`);
+  }
+
+  if (!isDefined(object) && !keyIsValid) {
+    return object;
   }
 
   if (

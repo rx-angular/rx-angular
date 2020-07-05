@@ -1,4 +1,4 @@
-import { toDictionary } from "@rx-angular/state/transformations";
+import { toDictionary } from "@rx-angular/state";
 
 interface Creature {
   id: number;

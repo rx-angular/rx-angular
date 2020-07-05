@@ -1,4 +1,5 @@
-import { isKeyOf, isObjectGuard } from '../../core/utils/typing';
+import { isObjectGuard, isKeyOf, isDefined } from '../../core';
+
 /**
  * @description
  * Accepts an object of type T, key of type K extends keyof T, and value of type T[K].
@@ -56,6 +57,10 @@ export function setProp<T extends object, K extends keyof T>(
 
   if (!keyIsValid) {
     console.warn(`SetProp: key argument (${key}) is invalid.`);
+  }
+
+  if (!isDefined(object) && !keyIsValid) {
+    return object;
   }
 
   if (keyIsValid) {

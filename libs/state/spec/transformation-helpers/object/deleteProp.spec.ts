@@ -1,5 +1,5 @@
 import { initialPrimitiveState, PrimitiveState } from '../../fixtures';
-import { deleteProp } from '@rx-angular/state/transformations';
+import { deleteProp } from '@rx-angular/state';
 
 let primitiveState: PrimitiveState;
 

@@ -1,4 +1,5 @@
-import { isObjectGuard } from '../../core/utils/typing';
+import { isObjectGuard } from '../../core';
+
 /**
  * @description
  * Merges an object of type T with updates of type Partial<T>.
@@ -58,7 +59,7 @@ export function patch<T extends object>(object: T, upd: Partial<T>): T {
     console.warn(
       `Patch: original value ${object} and updates ${upd} are not objects.`
     );
-    return {} as T;
+    return object;
   }
 
   return { ...object, ...update };

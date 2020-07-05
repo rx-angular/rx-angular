@@ -1,4 +1,5 @@
-import {valuesComparer} from '../../../src/lib/transformation-helpers/_internals/valuesComparer.util';
+import { valuesComparer } from "../../../src/lib/transformation-helpers/_internals/valuesComparer.util";
+
 interface Creature {
   id: number;
   type: string;
