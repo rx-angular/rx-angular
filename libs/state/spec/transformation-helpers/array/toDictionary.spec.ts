@@ -31,6 +31,7 @@ const dictionaryBySymbol = {
 }
 
 beforeEach(() => {
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
   creatures = [
     {id: 1, type: 'cat', real: true, breeds: ['Persian']},
     {id: 2, type: 'dog', real: true, breeds: ['Doberman']},

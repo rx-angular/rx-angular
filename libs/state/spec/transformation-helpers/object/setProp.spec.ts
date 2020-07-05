@@ -7,6 +7,7 @@ let nestedState: NestedState;
 beforeEach(() => {
   primitiveState = initialPrimitiveState;
   nestedState = initialNestedState;
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 

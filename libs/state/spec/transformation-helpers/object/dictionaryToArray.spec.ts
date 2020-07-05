@@ -9,6 +9,11 @@ interface Creature {
   breeds: string[];
 }
 
+beforeEach(() => {
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
+});
+
+
 describe('dictionaryToArray', () => {
 
   describe('general', () => {

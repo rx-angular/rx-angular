@@ -5,6 +5,7 @@ let primitiveState: PrimitiveState;
 
 beforeEach(() => {
   primitiveState = initialPrimitiveState;
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 

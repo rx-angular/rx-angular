@@ -14,6 +14,7 @@ beforeEach(() => {
   creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}, {id: 3, type: 'catDog'}];
   creaturesAfterSingleItemRemove = [{id: 2, type: 'dog'}, {id: 3, type: 'catDog'}];
   creaturesAfterMultipleItemsRemove= [{id: 3, type: 'catDog'}];
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 
