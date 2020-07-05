@@ -1,4 +1,4 @@
-import { isObjectGuard, isKeyOf } from '../../core/utils/typing';
+import { isObjectGuard, isKeyOf, isDefined } from '../../core/utils/typing';
 
 /**
  * @description
@@ -16,6 +16,29 @@ import { isObjectGuard, isKeyOf } from '../../core/utils/typing';
  * // anonymusCat will be:
  * // {id: 1, type: 'cat'};
  *
+ * @example
+ * // Usage with RxState
+ *
+ * export class ProfileComponent {
+ *
+ *    readonly removeName$ = new Subject();
+ *
+ *    constructor(private state: RxState<ComponentState>) {
+ *      // Reactive implementation
+ *      state.connect(
+ *        this.removeName$,
+ *        (state) => {
+ *            return deleteProp(state, 'name');
+ *        }
+ *      );
+ *    }
+ *
+ *    // Imperative implementation
+ *    removeName(): void {
+ *        this.state.set(remove(this.get(), 'name'));
+ *    }
+ * }
+ *
  * @returns Omit<T, K>
  *
  * @docsPage deleteProp
@@ -25,15 +48,13 @@ export function deleteProp<T extends object, K extends keyof T>(
   object: T,
   key: K
 ): Omit<T, K> {
-  if (object === undefined || object === null) {
+  if (!isDefined(object) || !isObjectGuard(object)) {
+    console.warn(`DeleteProp: original value ${object} is not an object.`);
     return object;
   }
 
-  if (!isObjectGuard(object)) {
-    return {} as Omit<T, K>;
-  }
-
   if (!isKeyOf<T>(key)) {
+    console.warn(`DeleteProp: provided key is not a string, number or symbol.`);
     return { ...object };
   }
 

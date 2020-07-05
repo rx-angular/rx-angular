@@ -59,11 +59,11 @@ describe('deleteProp', () => {
       expect(deleteProp(undefined as any, 'fake')).toEqual(undefined);
     });
 
-    it('should return empty object if first argument is not an object', () => {
-      expect(deleteProp('' as any, 'fake')).toEqual({});
-      expect(deleteProp(1 as any, 'fake')).toEqual({});
-      expect(deleteProp(false as any, 'fake')).toEqual({});
-      expect(deleteProp([], 'concat')).toEqual({});
+    it('should return first argument if it is not an object', () => {
+      expect(deleteProp('' as any, 'fake')).toEqual('');
+      expect(deleteProp(1 as any, 'fake')).toEqual(1);
+      expect(deleteProp(false as any, 'fake')).toEqual(false);
+      expect(deleteProp([], 'concat')).toEqual([]);
     });
   })
 });
