@@ -1,5 +1,5 @@
 import { OnlyKeysOfSpecificType } from '../interfaces/only-keys-of-specific-type';
-import { isKeyOf } from '../../core/utils/typing';
+import { isKeyOf, isDefined } from '../../core/utils/typing';
 
 /**
  * @description
@@ -19,6 +19,29 @@ import { isKeyOf } from '../../core/utils/typing';
  * //  2: {id: 2, type: 'dog'},
  * //  3: {id: 3, type: 'parrot'}
  * // };
+ * @example
+ * // Usage with RxState
+ *
+ * export class ListComponent {
+ *
+ *    readonly convertToDictionary$ = new Subject();
+ *
+ *    constructor(private state: RxState<ComponentState>) {
+ *      // Reactive implementation
+ *      state.connect(
+ *        'creaturesDictionary',
+ *        this.convertToDictionary$,
+ *        ({ creatures }) => {
+ *            return toDictionary(creatures, 'id');
+ *        }
+ *      );
+ *    }
+ *
+ *    // Imperative implementation
+ *    convertToDictionary(): void {
+ *        this.state.set({ creaturesDictionary: toDictionary(this.state.get().creatures, 'id'});
+ *    }
+ * }
  *
  * @see {@link OnlyKeysOfSpecificType}
  * @param {OnlyKeysOfSpecificType<T, S>} key
@@ -27,21 +50,22 @@ import { isKeyOf } from '../../core/utils/typing';
  * @docsCategory transformation-helpers
  */
 export function toDictionary<T extends object>(
-  array: T[],
+  source: T[],
   key:
     | OnlyKeysOfSpecificType<T, number>
     | OnlyKeysOfSpecificType<T, string>
     | OnlyKeysOfSpecificType<T, symbol>
 ): { [key: string]: T } {
-  if (array === null || array === undefined) {
-    return array;
+  if (!isDefined(source)) {
+    return source;
   }
 
-  if (!Array.isArray(array) || !array.length || !isKeyOf<T>(array[0][key])) {
+  if (!Array.isArray(source) || !source.length || !isKeyOf<T>(source[0][key])) {
+    console.warn('ToDictionary: unexpected input params.');
     return {};
   }
 
-  return array.reduce(
+  return source.reduce(
     (acc, entity) => ({
       ...acc,
       [entity[key] as any]: entity
