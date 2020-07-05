@@ -6,7 +6,9 @@ import { CompareFn, KeyCompareMap } from '../interfaces';
  * @internal
  */
 function safePluck<T extends object, K extends keyof T>(obj: T, key: K): T[K] {
-  return obj !== null && obj !== undefined ? obj[key] : obj;
+  return obj !== null && obj !== undefined
+    ? obj[key]
+    : ((obj as unknown) as T[K]);
 }
 
 /**
