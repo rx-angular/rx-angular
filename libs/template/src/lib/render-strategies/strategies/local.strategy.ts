@@ -1,12 +1,13 @@
 import { coalesceAndSchedule } from '../static';
-import { SchedulingPriority, priorityTickMap } from '../rxjs/scheduling';
+import { SchedulingPriority } from '../rxjs/scheduling/interfaces';
+import { priorityTickMap } from '../rxjs/scheduling/priority-tick-map';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   RenderStrategy,
   RenderStrategyFactoryConfig
 } from '../../core/render-aware';
-import { coalesceWith } from '../rxjs/operators';
-import { promiseTick } from '../rxjs/scheduling';
+import { coalesceWith } from '../rxjs/operators/coalesceWith';
+import { promiseTick } from '../rxjs/scheduling/promiseTick';
 import { ɵdetectChanges as detectChanges } from '@angular/core';
 
 const promiseDurationSelector = promiseTick();
