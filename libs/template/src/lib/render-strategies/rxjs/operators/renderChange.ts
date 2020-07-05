@@ -1,6 +1,6 @@
 import { MonoTypeOperatorFunction } from 'rxjs';
-import { getStrategies } from '../../strategies';
-import { ChangeDetectorRef, Type } from '@angular/core';
+import { getStrategies } from '../../strategies/strategies-map';
+import { ChangeDetectorRef } from '@angular/core';
 
 export function renderChange<T>(
   cdRef: ChangeDetectorRef,
