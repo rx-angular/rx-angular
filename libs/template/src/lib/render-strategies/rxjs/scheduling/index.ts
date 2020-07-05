@@ -6,6 +6,6 @@ export {
   scheduleByPriority,
   WorkDefinition,
   WorkPriority
-} from './animationFramePriorityScheduler';
+} from './globalAnimationFrame';
 export * from './interfaces';
 export * from './priority-tick-map';

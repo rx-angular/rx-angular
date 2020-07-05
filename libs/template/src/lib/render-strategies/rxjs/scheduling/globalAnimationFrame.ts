@@ -26,9 +26,17 @@ interface ScheduledWorkDefinition extends WorkDefinition {
   rescheduled?: number;
 }
 
-const workQueue = new Set<ScheduledWorkDefinition>();
-const renderNotifier = new Subject<void>();
-let isScheduling = false;
+interface GlobalWorker {
+  queue: Set<ScheduledWorkDefinition>;
+  renderNotifier: Subject<void>;
+  isScheduling: boolean;
+}
+
+export const globalWorker: GlobalWorker = {
+  queue: new Set<ScheduledWorkDefinition>(),
+  renderNotifier: new Subject<void>(),
+  isScheduling: false
+};
 
 export function scheduleByPriority<T>(
   workDefinitionFn: () => WorkDefinition
@@ -39,8 +47,8 @@ export function scheduleByPriority<T>(
     return () => {
       while (workToDeplete.length > 0) {
         const w = workToDeplete.pop();
-        if (workQueue.has(w)) {
-          workQueue.delete(w);
+        if (globalWorker.queue.has(w)) {
+          globalWorker.queue.delete(w);
         }
       }
     };
@@ -53,33 +61,34 @@ export function scheduleByPriority<T>(
           ...workDefinitionFn(),
           rescheduled: 0
         };
-        workQueue.add(scheduledWorkDefinition);
+        globalWorker.queue.add(scheduledWorkDefinition);
         workToDeplete.push(scheduledWorkDefinition);
-        if (!isScheduling) {
-          isScheduling = true;
-          const finishScheduling = () => (isScheduling = false);
+        if (!globalWorker.isScheduling) {
+          globalWorker.isScheduling = true;
+          const finishScheduling = () => (globalWorker.isScheduling = false);
           scheduleAndExhaust$().subscribe({
             error: finishScheduling,
             complete: finishScheduling
           });
         }
-        return renderNotifier;
+        return globalWorker.renderNotifier;
       })
     );
   };
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
-function scheduleAndExhaust$(): Observable<void> {
+export function scheduleAndExhaust$(): Observable<void> {
   return new Observable<void>(subscriber => {
     let frameId;
     function exhaust() {
-      if (workQueue.size > 0) {
+      if (globalWorker.queue.size > 0) {
         let runtime = 0;
         // fetch tasks as array and sort them by priority
-        const tasks = Array.from(workQueue.entries(), def => def[0]).sort(
-          (a, b) => a.priority - b.priority
-        );
+        const tasks = Array.from(
+          globalWorker.queue.entries(),
+          def => def[0]
+        ).sort((a, b) => a.priority - b.priority);
         // amount of blocking tasks in the current queue
         let blockingTasksLeft = tasks.filter(
           def => def.priority === WorkPriority.blocking
@@ -98,26 +107,26 @@ function scheduleAndExhaust$(): Observable<void> {
               blockingTasksLeft--;
             }
             // delete work from queue
-            workQueue.delete(taskDefinition);
+            globalWorker.queue.delete(taskDefinition);
             //console.warn(`running ${ isSmooth ? 'smooth' : 'blocking' } task. total runtime:`, runtime);
           } else {
             taskDefinition.rescheduled++;
           }
         }
-        if (workQueue.size > 0) {
+        if (globalWorker.queue.size > 0) {
           // queue has entries left -> reschedule
-          //console.warn('rescheduling:', workQueue.size);
-          renderNotifier.next();
+          //console.warn('rescheduling:', globalWorker.queue.size);
+          globalWorker.renderNotifier.next();
           frameId = animFrame(exhaust);
         } else {
           // queue is empty -> exhaust completed
           //console.warn('exhaust completed');
-          renderNotifier.next();
+          globalWorker.renderNotifier.next();
           subscriber.complete();
         }
       } else {
         // queue is empty -> exhaust completed
-        renderNotifier.next();
+        globalWorker.renderNotifier.next();
         subscriber.complete();
       }
     }
