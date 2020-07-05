@@ -4,7 +4,6 @@ import { KeyCompareMap } from '../../../src/lib/rxjs/interfaces';
 import { distinctUntilSomeChanged } from '../../../src/lib/rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-import { PrimitiveState } from '../../fixtures';
 
 let testScheduler: TestScheduler;
 

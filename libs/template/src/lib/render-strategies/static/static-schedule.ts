@@ -1,30 +1,37 @@
-import { Subscription } from 'rxjs';
-import { getScheduler } from '../rxjs/scheduling/priority-scheduler-map';
+import { priorityTickMap } from '../rxjs/scheduling/priority-tick-map';
 import { SchedulingPriority } from '../rxjs/scheduling/interfaces';
 
-export function schedule(
+export function staticSchedule(
   work: () => void,
   priority: false | SchedulingPriority,
-  afterScheduling?: () => void
+  abC: AbortController = new AbortController()
 ): AbortController {
-  const abortController = new AbortController();
+  // immediately execute work
   if (priority === false) {
-    if (!abortController.signal.aborted) {
-      work();
-      afterScheduling();
-    }
-    return abortController;
+    tryExecuteWork();
+    return abC;
   }
-  // push work to global work queue
-  // check if already scheduling on global scope
-  // if not -> start observing tick and mark global scope as scheduling
-  // if yes -> do nothing
-  // addToQueue(work: () => void): Subscription
-  getScheduler(priority).schedule(() => {
-    if (!abortController.signal.aborted) {
+
+  // schedule work
+  const sub = priorityTickMap[priority].subscribe(
+    () => tryExecuteWork(),
+    error => console.error(error),
+    // on complete abort further executions
+    () => abC.abort()
+  );
+  const abortHandler = function() {
+    sub.unsubscribe();
+    abC.signal.removeEventListener('abort', abortHandler, false);
+  };
+  abC.signal.addEventListener('abort', abortHandler, false);
+
+  return abC;
+
+  // execute work and abort further executions
+  function tryExecuteWork() {
+    if (!abC.signal.aborted) {
       work();
-      afterScheduling();
+      abC.abort();
     }
-  });
-  return abortController;
+  }
 }

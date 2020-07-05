@@ -5,11 +5,11 @@ import {
   OnInit
 } from '@angular/core';
 
-import { concat, NEVER, Observable, of, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { scan, tap } from 'rxjs/operators';
 import {
-  getScheduler,
   getStrategies,
+  priorityTickMap,
   SchedulingPriority
 } from '@rx-angular/template';
 
@@ -99,12 +99,14 @@ export class SchedulingComponent implements OnInit {
     };
 
     sync();
-    getScheduler(SchedulingPriority.Promise).schedule(micro);
-    getScheduler(SchedulingPriority.animationFrame).schedule(animationFrame);
-    getScheduler(SchedulingPriority.background).schedule(background);
-    getScheduler(SchedulingPriority.userVisible).schedule(userVisible);
-    getScheduler(SchedulingPriority.userBlocking).schedule(userBlocking);
-    getScheduler(SchedulingPriority.idleCallback).schedule(idleCallback);
+    priorityTickMap[SchedulingPriority.Promise].subscribe(micro);
+    priorityTickMap[SchedulingPriority.animationFrame].subscribe(
+      animationFrame
+    );
+    priorityTickMap[SchedulingPriority.background].subscribe(background);
+    priorityTickMap[SchedulingPriority.userVisible].subscribe(userVisible);
+    priorityTickMap[SchedulingPriority.userBlocking].subscribe(userBlocking);
+    priorityTickMap[SchedulingPriority.idleCallback].subscribe(idleCallback);
   }
 
   scheduleByPrio(priority?: SchedulingPriority) {
@@ -114,7 +116,7 @@ export class SchedulingComponent implements OnInit {
     };
 
     priority
-      ? getScheduler(priority).schedule(XXXXXXXXXXXXXXXXXXXXX)
+      ? priorityTickMap[priority].subscribe(XXXXXXXXXXXXXXXXXXXXX)
       : XXXXXXXXXXXXXXXXXXXXX();
   }
 

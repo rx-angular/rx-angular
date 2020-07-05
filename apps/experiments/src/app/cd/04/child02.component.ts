@@ -1,13 +1,11 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   ViewChild
 } from '@angular/core';
 import { BaseComponent } from '../../base.component.ts/base.component';
-import { defer, merge } from 'rxjs';
-import { fromZoneEvent } from '@rx-angular/template';
+import { defer, merge, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -17,20 +15,18 @@ import { tap } from 'rxjs/operators';
     ChangeDetectionStrategy: OnPush<br />
     <span>render: </span><b class="num-renders">{{ getNumOfRenderings() }}</b
     ><br />
-    <button #markForCheck>ChangeDetectorRef#markForCheck</button>
-    <button #detectChanges>ChangeDetectorRef#detectChanges</button>
+    <button [unpatch] (click)="markForCheck$.next($event)">
+      ChangeDetectorRef#markForCheck
+    </button>
+    <button [unpatch] (click)="detectChanges$.next($event)">
+      ChangeDetectorRef#detectChanges
+    </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Child0402Component extends BaseComponent {
-  @ViewChild('markForCheck') markForCheckElem: ElementRef<HTMLButtonElement>;
-  markForCheck$ = defer(() =>
-    fromZoneEvent(this.markForCheckElem.nativeElement, 'click')
-  );
-  @ViewChild('detectChanges') detectChangesElem: ElementRef<HTMLButtonElement>;
-  detectChanges$ = defer(() =>
-    fromZoneEvent(this.detectChangesElem.nativeElement, 'click')
-  );
+  markForCheck$ = new Subject<Event>();
+  detectChanges$ = new Subject<Event>();
 
   baseEffects$ = merge(
     this.markForCheck$.pipe(tap(() => this.cdRef_markForCheck())),

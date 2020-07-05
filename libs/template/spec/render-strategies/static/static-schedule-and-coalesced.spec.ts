@@ -35,7 +35,6 @@ describe('schedule and coalesce', () => {
     // this happens after coalescing
     Promise.resolve().then(() => {
       expect(test).toBe(0);
-      done();
     });
     // this happens after scheduling
     setTimeout(() => {
@@ -67,4 +66,29 @@ describe('schedule and coalesce', () => {
     });
     expect(test).toBe(0);
   });
+
+  it('should stop if aborted', (done) => {
+    let test = 0;
+    const priority = SchedulingPriority.Promise;
+    const doWork = () => test++;
+    const scope = {};
+    const abC = new AbortController();
+    coalesceAndSchedule(doWork, priority, scope, abC);
+    coalesceAndSchedule(doWork, priority, scope, abC);
+    coalesceAndSchedule(doWork, priority, scope, abC);
+    coalesceAndSchedule(doWork, priority, scope, abC);
+    expect(test).toBe(0);
+    abC.abort();
+    // this happens after coalescing
+    Promise.resolve().then(() => {
+      expect(test).toBe(0);
+    });
+    // this happens after scheduling
+    setTimeout(() => {
+      expect(test).toBe(0);
+      done();
+    }, 100);
+    expect(test).toBe(0);
+  });
+
 });

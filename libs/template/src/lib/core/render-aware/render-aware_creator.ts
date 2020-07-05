@@ -1,35 +1,28 @@
 import {
-  combineLatest,
-  ConnectableObservable,
   EMPTY,
   NextObserver,
   Observable,
   of,
   ReplaySubject,
-  Subject,
   Subscribable,
   Subscription
 } from 'rxjs';
 import {
   catchError,
+  combineLatest,
   distinctUntilChanged,
   filter,
   map,
-  publishReplay,
-  switchAll,
   switchMap,
-  takeUntil,
-  tap,
-  withLatestFrom
+  tap
 } from 'rxjs/operators';
 import { RenderStrategy, StrategySelection } from './interfaces';
 import { nameToStrategy } from './nameToStrategy';
-import { DEFAULT_STRATEGY_NAME } from '../../render-strategies/strategies/strategies-map';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
   nextStrategy: (config: string | Observable<string>) => void;
-  activeStrategy$: Observable<RenderStrategy<U>>;
+  activeStrategy$: Observable<RenderStrategy>;
 }
 
 /**
@@ -42,19 +35,21 @@ export interface RenderAware<U> extends Subscribable<U> {
  * Also custom behaviour is something you need to implement in the extending class
  */
 export function createRenderAware<U>(cfg: {
-  strategies: StrategySelection<U>;
+  strategies: StrategySelection;
   resetObserver: NextObserver<void>;
   updateObserver: NextObserver<U>;
 }): RenderAware<U | undefined | null> {
   const strategyName$ = new ReplaySubject<string | Observable<string>>(1);
-  const strategy$: Observable<RenderStrategy<U>> = strategyName$.pipe(
+  let strategy: RenderStrategy;
+  const strategy$: Observable<RenderStrategy> = strategyName$.pipe(
     distinctUntilChanged(),
     switchMap(stringOrObservable =>
       typeof stringOrObservable === 'string'
         ? of(stringOrObservable)
         : stringOrObservable
     ),
-    nameToStrategy(cfg.strategies)
+    nameToStrategy(cfg.strategies),
+    tap(s => (strategy = s))
   );
 
   const observablesFromTemplate$ = new ReplaySubject<Observable<U>>(1);
@@ -80,9 +75,10 @@ export function createRenderAware<U>(cfg: {
     }),
     // forward only observable values
     filter(o$ => o$ !== undefined),
-    switchMap(o$ => o$.pipe(distinctUntilChanged(), tap(cfg.updateObserver))),
-    withLatestFrom(strategy$),
-    tap(([v, strat]) => strat.scheduleCD()),
+    combineLatest(strategy$),
+    switchMap(([o$, s]) =>
+      o$.pipe(distinctUntilChanged(), tap(cfg.updateObserver), s.rxScheduleCD)
+    ),
     catchError(e => {
       console.error(e);
       return EMPTY;

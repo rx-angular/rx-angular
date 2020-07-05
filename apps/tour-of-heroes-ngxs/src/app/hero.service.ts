@@ -95,6 +95,10 @@ export class HeroService {
     );
   }
 
+  trackByHero(h: Hero): number {
+    return h.id;
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

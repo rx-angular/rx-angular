@@ -367,102 +367,6 @@
         }
       }
     },
-    "architecture-demos": {
-      "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
-      "root": "apps/architecture-demos",
-      "sourceRoot": "apps/architecture-demos/src",
-      "prefix": "rx",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/architecture-demos",
-            "index": "apps/architecture-demos/src/index.html",
-            "main": "apps/architecture-demos/src/main.ts",
-            "polyfills": "apps/architecture-demos/src/polyfills.ts",
-            "tsConfig": "apps/architecture-demos/tsconfig.app.json",
-            "aot": true,
-            "assets": [
-              "apps/architecture-demos/src/favicon.ico",
-              "apps/architecture-demos/src/assets"
-            ],
-            "styles": ["apps/architecture-demos/src/styles.scss"],
-            "scripts": []
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/architecture-demos/src/environments/environment.ts",
-                  "with": "apps/architecture-demos/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "architecture-demos:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "architecture-demos:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "architecture-demos:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/architecture-demos/tsconfig.app.json",
-              "apps/architecture-demos/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/architecture-demos/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/architecture-demos/jest.config.js",
-            "tsConfig": "apps/architecture-demos/tsconfig.spec.json",
-            "passWithNoTests": true,
-            "setupFile": "apps/architecture-demos/src/test-setup.ts"
-          }
-        }
-      }
-    },
     "template-demo": {
       "projectType": "application",
       "schematics": {
@@ -656,7 +560,7 @@
       "projectType": "application",
       "schematics": {
         "@nrwl/angular:component": {
-          "style": "css"
+          "style": "scss"
         }
       },
       "root": "apps/tour-of-heroes",
@@ -676,7 +580,7 @@
               "apps/tour-of-heroes/src/favicon.ico",
               "apps/tour-of-heroes/src/assets"
             ],
-            "styles": ["apps/tour-of-heroes/src/styles.css"],
+            "styles": ["apps/tour-of-heroes/src/styles.scss"],
             "scripts": []
           },
           "configurations": {

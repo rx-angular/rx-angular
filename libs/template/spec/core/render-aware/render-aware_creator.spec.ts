@@ -25,14 +25,15 @@ class CdAwareImplementation<U> implements OnDestroy {
       strategies: {
         [DEFAULT_STRATEGY_NAME]: {
           name: DEFAULT_STRATEGY_NAME,
-          renderMethod: () => {},
-          scheduleCD: () => {},
-          behavior: (o) => o
+          detectChanges: () => {},
+          scheduleCD: () => new AbortController(),
+          rxScheduleCD: (o) => o
         }
       },
       updateObserver: this.updateObserver,
       resetObserver: this.resetObserver
     });
+    this.cdAware.nextStrategy('local');
     this.subscription = this.cdAware.subscribe();
   }
 

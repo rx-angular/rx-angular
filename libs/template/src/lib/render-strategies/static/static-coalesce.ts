@@ -1,24 +1,33 @@
-import { Subscribable } from 'rxjs';
-import { createCoalesceManager } from '../../core/render-aware/coalescing-manager';
+import { Observable, Subscription } from 'rxjs';
+import { coalescingManager } from '../../core/render-aware';
 
 export function staticCoalesce<T>(
   work: () => T,
-  durationSelector: Subscribable<any>,
-  scope: object = {}
-): void {
-  const coalescingManager = createCoalesceManager(scope);
-  if (!coalescingManager.isCoalescing()) {
-    coalescingManager.add();
-    durationSelector.subscribe(() => {
+  durationSelector: Observable<any>,
+  scope: object = {},
+  abC: AbortController = new AbortController()
+): AbortController {
+  let sub: Subscription;
+
+  if (!coalescingManager.isCoalescing(scope)) {
+    coalescingManager.add(scope);
+    sub = durationSelector.subscribe(() => {
       tryExecuteWork();
     });
+    const abortHandler = function() {
+      sub.unsubscribe();
+      abC.signal.removeEventListener('abort', abortHandler, false);
+    };
+    abC.signal.addEventListener('abort', abortHandler, false);
   }
+
+  return abC;
 
   // =====
 
   function tryExecuteWork() {
-    coalescingManager.remove();
-    if (!coalescingManager.isCoalescing()) {
+    coalescingManager.remove(scope);
+    if (!coalescingManager.isCoalescing(scope)) {
       return work();
     }
   }

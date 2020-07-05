@@ -1,4 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component
+} from '@angular/core';
 import { BehaviorSubject, EMPTY, interval, merge, Subject } from 'rxjs';
 import { scan, startWith, switchMap } from 'rxjs/operators';
 import { getStrategies } from '@rx-angular/template';
@@ -63,7 +67,7 @@ export class Let1ContainerComponent {
   incrementTrigger = new Subject<Event>();
   toggleAutoIncrement = new BehaviorSubject<any>(false);
 
-  strategies = Object.keys(getStrategies({ cdRef: {} } as any));
+  strategies = Object.keys(getStrategies({ cdRef: this.cdRef }));
 
   visibleStrategy = 'local';
   invisibleStrategy: string;
@@ -78,6 +82,8 @@ export class Let1ContainerComponent {
     startWith(1),
     scan(v => ++v, 0)
   );
+
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   numRenders = 0;
 

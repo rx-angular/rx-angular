@@ -3,13 +3,6 @@ import { ROUTES as PERFORMANCE_ROUTES } from './performance/performance.routes';
 import { ROUTES as PUSH_ROUTES } from './push/push.routes';
 
 export const ROUTES: Routes = [
-  {
-    path: '',
-    loadChildren: () =>
-      import('./draft/draft.module').then(mod => mod.DraftModule),
-    canActivate: [],
-    canActivateChild: []
-  },
   ...PUSH_ROUTES,
   {
     path: '',

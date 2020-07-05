@@ -1,9 +1,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { defer, Observable } from 'rxjs';
+import { defer, Observable, Subject } from 'rxjs';
 import { scan, startWith } from 'rxjs/operators';
 import { BaseComponent } from '../../base.component.ts/base.component';
-import { fromZoneEvent } from '@rx-angular/template';
 
 @Component({
   selector: 'app-mixed-parent02',
@@ -16,7 +15,7 @@ import { fromZoneEvent } from '@rx-angular/template';
     ><br />
     <span>strategy: </span><b class="strategy">{{ strategy }}</b>
     <br />
-    <button #button>increment</button>
+    <button [unpatch] (click)="btnClick$.next($event)">increment</button>
     <!-- -->
     <br />
     {{ nums1$ | push }}
@@ -31,8 +30,7 @@ import { fromZoneEvent } from '@rx-angular/template';
   changeDetection: environment.changeDetection
 })
 export class Parent02Component extends BaseComponent {
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
-  btnClick$ = defer(() => fromZoneEvent(this.button.nativeElement, 'click'));
+  btnClick$ = new Subject<Event>();
 
   nums1$: Observable<number> = this.btnClick$.pipe(
     startWith(0),

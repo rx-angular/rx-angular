@@ -5,10 +5,9 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { defer } from 'rxjs';
+import { defer, Subject } from 'rxjs';
 import { BaseComponent } from '../../base.component.ts/base.component';
 import { tap } from 'rxjs/operators';
-import { fromZoneEvent } from '@rx-angular/template';
 
 @Component({
   selector: 'app-cd-parent02',
@@ -30,7 +29,9 @@ import { fromZoneEvent } from '@rx-angular/template';
       >
     </div>
     <div class="case-interaction">
-      <button #button>ChangeDetectorRef#detectChanges</button>
+      <button [unpatch] (click)="btnClick$.next($event)">
+        ChangeDetectorRef#detectChanges
+      </button>
     </div>
     <div class="case-content">
       <app-cd02-child01-default></app-cd02-child01-default>
@@ -41,8 +42,7 @@ import { fromZoneEvent } from '@rx-angular/template';
   encapsulation: ViewEncapsulation.None
 })
 export class CdParent02Component extends BaseComponent {
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
-  btnClick$ = defer(() => fromZoneEvent(this.button.nativeElement, 'click'));
+  btnClick$ = new Subject<Event>();
 
   baseEffects$ = this.btnClick$.pipe(tap(() => this.cdRef_detectChanges()));
 }

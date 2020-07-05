@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let';
 import { MockChangeDetectorRef } from '../fixtures';
 
@@ -41,7 +41,7 @@ const setupLetDirectiveTestComponentStrategy = (): void => {
 };
 
 describe('LetDirective when using strategy', () => {
-  beforeEach(async(setupLetDirectiveTestComponentStrategy));
+  beforeEach(setupLetDirectiveTestComponentStrategy);
 
   it('should work with different if a strategy other than the default', () => {
     letDirectiveTestComponent.value$ = of(1, 2, 3, 4, 5);

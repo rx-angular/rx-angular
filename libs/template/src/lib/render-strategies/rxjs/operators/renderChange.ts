@@ -1,11 +1,12 @@
-import { MonoTypeOperatorFunction, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { RenderStrategy } from '../../../core';
+import { MonoTypeOperatorFunction } from 'rxjs';
+import { getStrategies } from '../../strategies/strategies-map';
+import { ChangeDetectorRef } from '@angular/core';
 
 export function renderChange<T>(
-  strategy: RenderStrategy<T>
+  cdRef: ChangeDetectorRef,
+  strategyName: string
 ): MonoTypeOperatorFunction<T> {
-  return (s: Observable<T>): Observable<T> => {
-    return s.pipe(strategy.behavior);
-  };
+  const strategies = getStrategies({ cdRef });
+  const strategy = strategies[strategyName];
+  return o => o.pipe(strategy.rxScheduleCD);
 }
