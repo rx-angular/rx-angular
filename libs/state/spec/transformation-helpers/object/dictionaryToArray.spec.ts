@@ -1,5 +1,5 @@
-import { dictionaryToArray } from "@rx-angular/state";
-import { PrimitiveState, initialPrimitiveState } from '../../fixtures';
+import { initialPrimitiveState } from '../../fixtures';
+import { dictionaryToArray } from '@rx-angular/state/transformations';
 
 
 interface Creature {

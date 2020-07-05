@@ -1,5 +1,5 @@
-import { setProp } from "@rx-angular/state";
 import { initialPrimitiveState, PrimitiveState, NestedState, initialNestedState } from '../../fixtures';
+import { setProp } from '@rx-angular/state/transformations';
 
 let primitiveState: PrimitiveState;
 let nestedState: NestedState;

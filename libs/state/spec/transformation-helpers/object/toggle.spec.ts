@@ -1,5 +1,5 @@
-import { toggle } from "@rx-angular/state";
 import { initialPrimitiveState, PrimitiveState } from '../../fixtures';
+import { toggle } from '@rx-angular/state/transformations';
 
 let primitiveState: PrimitiveState;
 

@@ -1,4 +1,4 @@
-import { update } from "@rx-angular/state";
+import { update } from "@rx-angular/state/transformations";
 
 interface Creature {
   id: number;
