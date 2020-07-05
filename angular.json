@@ -656,7 +656,7 @@
       "projectType": "application",
       "schematics": {
         "@nrwl/angular:component": {
-          "style": "css"
+          "style": "scss"
         }
       },
       "root": "apps/tour-of-heroes",
@@ -676,7 +676,7 @@
               "apps/tour-of-heroes/src/favicon.ico",
               "apps/tour-of-heroes/src/assets"
             ],
-            "styles": ["apps/tour-of-heroes/src/styles.css"],
+            "styles": ["apps/tour-of-heroes/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
