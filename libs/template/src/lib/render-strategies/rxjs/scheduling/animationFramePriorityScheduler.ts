@@ -87,7 +87,7 @@ function scheduleAndExhaust$(): Observable<void> {
         // exhaust queue while there are tasks AND (there are blocking tasks left to process OR the runtime exceeds
         // 16ms)
         while ((blockingTasksLeft > 0 || runtime <= 16) && tasks.length > 0) {
-          const taskDefinition = tasks.pop();
+          const taskDefinition = tasks.slice(0, 1)[0];
           const isSmooth = taskDefinition.priority === WorkPriority.smooth;
           // make sure to run all tasks marked with blocking priority and smooth tasks which got rescheduled at
           // least 2 times regardless of the runtime!

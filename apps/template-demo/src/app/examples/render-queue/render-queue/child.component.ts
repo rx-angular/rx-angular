@@ -51,7 +51,7 @@ export class ChildComponent extends RxState<Renderable<ChildComponent>>
   }
 
   ngOnInit() {
-    const strategy = getStrategies({ cdRef: this.cdRef }).localBlocking;
+    const strategy = getStrategies({ cdRef: this.cdRef }).localSmooth;
     this.hold(
       this.doRender.pipe(
         tap(
