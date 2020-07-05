@@ -36,7 +36,6 @@ _Example_
 
 export class ListComponent {
 
-   readonly creatures$: Observable<Creature[]> = this.state.select('creatures');
    readonly insertCreature$ = new Subject<void>();
 
    constructor(private state: RxState<ComponentState>) {

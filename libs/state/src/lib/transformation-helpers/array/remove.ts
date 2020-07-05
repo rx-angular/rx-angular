@@ -56,7 +56,6 @@ import { ComparableData } from '../interfaces/comparable-data-type';
  *
  * export class ListComponent {
  *
- *    readonly creatures$: Observable<Creature[]> = this.state.select('creatures');
  *    readonly removeCreature$ = new Subject<Creature>();
  *
  *    constructor(private state: RxState<ComponentState>) {
