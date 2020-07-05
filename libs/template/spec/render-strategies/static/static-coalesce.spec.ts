@@ -30,15 +30,18 @@ describe('staticCoalesce', () => {
     const doWork = () => test++;
     const scope = {};
     const scope2 = {};
+
     staticCoalesce(doWork, durationSelector, scope);
     staticCoalesce(doWork, durationSelector, scope);
     staticCoalesce(doWork, durationSelector, scope2);
     staticCoalesce(doWork, durationSelector, scope2);
     expect(test).toBe(0);
-    Promise.resolve().then(() => {
+
+    setTimeout(() => {
       expect(test).toBe(2);
       done();
-    });
+    },0);
+
     expect(test).toBe(0);
   });
 
