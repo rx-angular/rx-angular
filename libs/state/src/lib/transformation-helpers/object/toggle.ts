@@ -15,6 +15,30 @@ import { isKeyOf, isObjectGuard } from '../../core/utils/typing';
  * // updatedState will be:
  * // {items: [1,2,3], loading: false};
  *
+ * @example
+ * // Usage with RxState
+ *
+ * export class ListComponent {
+ *    readonly loadingChange$ = new Subject();
+ *
+ *    constructor(
+ *      private state: RxState<ComponentState>
+ *    ) {
+ *      // Reactive implementation
+ *      state.connect(
+ *        this.api.loadingChange$,
+ *        (state, _) => {
+ *            return toggle(state, 'isLoading');
+ *        }
+ *      );
+ *    }
+ *
+ *    // Imperative implementation
+ *    toggleLoading(): void {
+ *      this.set(toggle(state, 'isLoading'));
+ *    }
+ * }
+ *
  * @returns T
  *
  * @docsPage toggle
@@ -25,10 +49,20 @@ export function toggle<T extends object>(
   object: T,
   key: OnlyKeysOfSpecificType<T, boolean>
 ): T {
-  const initialObject = isObjectGuard(object) ? object : ({} as T);
+  const objectIsObject = isObjectGuard(object);
+  const keyIsValid = isKeyOf<T>(key);
+  const initialObject = objectIsObject ? object : ({} as T);
+
+  if (!objectIsObject) {
+    console.warn(`Toggle: original value (${object}) is not an object.`);
+  }
+
+  if (!keyIsValid) {
+    console.warn(`Toggle: key argument (${key}) is invalid.`);
+  }
 
   if (
-    isKeyOf<T>(key) &&
+    keyIsValid &&
     (typeof initialObject[key] === 'boolean' ||
       !initialObject.hasOwnProperty(key))
   ) {
