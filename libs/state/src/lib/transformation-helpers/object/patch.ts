@@ -1,4 +1,6 @@
-import { isObjectGuard } from '../../core/utils/typing';
+import { isObjectGuard, isDefined } from '../../core/utils/typing';
+import { RxState } from '../../rx-state.service';
+import { Subject } from 'rxjs';
 /**
  * @description
  * Merges an object of type T with updates of type Partial<T>.
@@ -18,6 +20,29 @@ import { isObjectGuard } from '../../core/utils/typing';
  * // catWithname will be:
  * // {id: 1, type: 'cat', name: 'Fluffy'};
  *
+ * @example
+ * // Usage with RxState
+ *
+ * export class ProfileComponent {
+ *
+ *    readonly changeName$ = new Subject<string>();
+ *
+ *    constructor(private state: RxState<ComponentState>) {
+ *      // Reactive implementation
+ *      state.connect(
+ *        this.changeName$,
+ *        (state, name) => {
+ *            return patch(state, { name });
+ *        }
+ *      );
+ *    }
+ *
+ *    // Imperative implementation
+ *    changeName(name: string): void {
+ *        this.state.set(patch(this.get(), { name }));
+ *    }
+ * }
+ *
  * @returns T
  *
  * @docsPage patch
@@ -26,8 +51,16 @@ import { isObjectGuard } from '../../core/utils/typing';
 export function patch<T extends object>(object: T, upd: Partial<T>): T {
   const update = isObjectGuard(upd) ? upd : {};
 
-  if (!isObjectGuard(object)) {
+  if (!isObjectGuard(object) && isObjectGuard(upd)) {
+    console.warn(`Patch: original value ${object} is not an object.`);
     return { ...update } as T;
+  }
+
+  if (!isObjectGuard(object) && !isObjectGuard(upd)) {
+    console.warn(
+      `Patch: original value ${object} and updates ${upd} are not objects.`
+    );
+    return {} as T;
   }
 
   return { ...object, ...update };
