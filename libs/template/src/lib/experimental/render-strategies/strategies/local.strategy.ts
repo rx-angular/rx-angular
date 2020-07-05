@@ -1,6 +1,8 @@
 import { coalesceAndSchedule } from '../../../render-strategies/static';
-import { SchedulingPriority } from '../../../render-strategies/rxjs/scheduling';
-import { priorityTickMap } from '../../../render-strategies/rxjs/scheduling';
+import {
+  SchedulingPriority,
+  priorityTickMap
+} from '../../../render-strategies/rxjs/scheduling';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   RenderStrategy,

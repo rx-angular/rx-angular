@@ -1,18 +1,21 @@
 import { staticCoalesce } from '../../../src/lib/render-strategies/static';
 import { priorityTickMap, SchedulingPriority } from '@rx-angular/template';
+import { from } from 'rxjs';
 
 /** @test {coalesceWith} */
 describe('staticCoalesce', () => {
 
   it('should coalesce to a scope', (done) => {
     let test = 0;
-    const durationSelector = priorityTickMap[SchedulingPriority.Promise];
+    const durationSelector = from(Promise.resolve());
     const doWork = () => test++;
     const scope = {};
-    staticCoalesce(doWork, durationSelector, scope);
-    staticCoalesce(doWork, durationSelector, scope);
-    staticCoalesce(doWork, durationSelector, scope);
-    staticCoalesce(doWork, durationSelector, scope);
+    const abC = new AbortController();
+
+    staticCoalesce(doWork, durationSelector, scope, abC);
+    staticCoalesce(doWork, durationSelector, scope, abC);
+    staticCoalesce(doWork, durationSelector, scope, abC);
+    staticCoalesce(doWork, durationSelector, scope, abC);
     expect(test).toBe(0);
     Promise.resolve().then(() => {
       expect(test).toBe(1);
@@ -20,7 +23,6 @@ describe('staticCoalesce', () => {
     });
     expect(test).toBe(0);
   });
-
 
   it('should work with multiple scopes', (done) => {
     let test = 0;

@@ -1,1 +1,1 @@
-export { getLocalStrategies } from './local.strategy';
+export { getExperimentalLocalStrategies } from './local.strategy';
