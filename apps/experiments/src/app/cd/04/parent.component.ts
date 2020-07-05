@@ -4,10 +4,9 @@ import {
   ElementRef,
   ViewChild
 } from '@angular/core';
-import { defer, merge } from 'rxjs';
+import { defer, merge, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { BaseComponent } from '../../base.component.ts/base.component';
-import { fromZoneEvent } from '@rx-angular/template';
 
 @Component({
   selector: 'app-cd-parent04',
@@ -29,8 +28,12 @@ import { fromZoneEvent } from '@rx-angular/template';
       >
     </div>
     <div class="case-interaction">
-      <button #markForCheck>ChangeDetectorRef#markForCheck</button>
-      <button #detectChanges>ChangeDetectorRef#detectChanges</button>
+      <button [unpatch] (click)="markForCheck$.next($event)">
+        ChangeDetectorRef#markForCheck
+      </button>
+      <button [unpatch] (click)="detectChanges$.next($event)">
+        ChangeDetectorRef#detectChanges
+      </button>
     </div>
     <div class="case-content">
       <app-cd04-child01-default></app-cd04-child01-default>
@@ -40,14 +43,8 @@ import { fromZoneEvent } from '@rx-angular/template';
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class CdParent04Component extends BaseComponent {
-  @ViewChild('markForCheck') markForCheckElem: ElementRef<HTMLButtonElement>;
-  markForCheck$ = defer(() =>
-    fromZoneEvent(this.markForCheckElem.nativeElement, 'click')
-  );
-  @ViewChild('detectChanges') detectChangesElem: ElementRef<HTMLButtonElement>;
-  detectChanges$ = defer(() =>
-    fromZoneEvent(this.detectChangesElem.nativeElement, 'click')
-  );
+  markForCheck$ = new Subject<Event>();
+  detectChanges$ = new Subject<Event>();
 
   baseEffects$ = merge(
     this.markForCheck$.pipe(tap(() => this.cdRef_markForCheck())),

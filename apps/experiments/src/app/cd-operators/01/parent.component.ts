@@ -1,7 +1,7 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { defer, fromEvent, range } from 'rxjs';
-import { getStrategies, render } from '@rx-angular/template';
+import { range, Subject } from 'rxjs';
+import { getStrategies } from '@rx-angular/template';
 import { switchMap, tap } from 'rxjs/operators';
 import { BaseComponent } from '../../base.component.ts/base.component';
 
@@ -15,23 +15,22 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <span>render: </span><b class="num-renders">{{ getNumOfRenderings() }}</b
     ><br />
     <br />
-    <button #button>Next</button><br />
+    <button [unpatch] (click)="btnClick$.next($event)">Next</button>
 
     value$: {{ value$ | async }}
   `,
   changeDetection: environment.changeDetection
 })
 export class CdOperatorsParent01Component extends BaseComponent {
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
-  btnClick$ = defer(() => fromEvent(this.button.nativeElement, 'click'));
+  btnClick$ = new Subject<Event>();
 
-  cfg = { ngZone: this.ngZone, cdRef: this.cdRef, component: this };
-  strategies = getStrategies<number>(this.cfg);
+  cfg = { cdRef: this.cdRef };
+  strategies = getStrategies(this.cfg);
 
   value$ = this.btnClick$.pipe(
     switchMap(() => range(1, 5)),
     tap(v => console.log('before:', v)),
-    render(this.strategies.optimistic2),
+    tap(() => this.strategies.local.scheduleCD),
     tap(v => console.log('after:', v))
   );
 }

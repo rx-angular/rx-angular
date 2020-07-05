@@ -1,10 +1,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { defer, from, Observable, Subject } from 'rxjs';
+import { defer, Observable, Subject } from 'rxjs';
 import { scan, startWith } from 'rxjs/operators';
-import { CdConfigService } from '../../cd-config.service';
 import { BaseComponent } from '../../base.component.ts/base.component';
-import { fromZoneEvent } from '@rx-angular/template';
 
 @Component({
   selector: 'app-let-parent11',
@@ -26,8 +24,7 @@ import { fromZoneEvent } from '@rx-angular/template';
   changeDetection: environment.changeDetection
 })
 export class LetParent11Component extends BaseComponent {
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
-  btnClick$ = defer(() => fromZoneEvent(this.button.nativeElement, 'click'));
+  btnClick$ = new Subject<Event>();
 
   value$: Observable<number> = this.btnClick$.pipe(
     startWith(0),

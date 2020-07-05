@@ -1,7 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { defer } from 'rxjs';
+import { defer, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { fromZoneEvent } from '@rx-angular/template';
 import { BaseComponent } from '../../base.component.ts/base.component';
 import { tap } from 'rxjs/operators';
 
@@ -22,14 +21,15 @@ import { tap } from 'rxjs/operators';
       >
     </div>
     <div class="case-interaction">
-      <button #button>Click over ViewChild</button>
+      <button [unpatch] (click)="btnClick$.next($event)">
+        Click over ViewChild
+      </button>
     </div>
   `,
   changeDetection: environment.changeDetection
 })
 export class CdParent11Component extends BaseComponent {
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
-  btnClick$ = defer(() => fromZoneEvent(this.button.nativeElement, 'click'));
+  btnClick$ = new Subject();
   baseEffects$ = this.btnClick$.pipe(
     tap(() => console.log('click over ViewChild'))
   );

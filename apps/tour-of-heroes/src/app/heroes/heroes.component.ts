@@ -63,4 +63,8 @@ export class HeroesComponent {
       heroes: [...oldState.heroes, addedHero]
     }));
   }
+
+  trackHero(idx: number, hero: Hero): number {
+    return hero.id;
+  }
 }
