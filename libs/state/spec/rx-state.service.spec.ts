@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RxState } from '../src';
 import { createStateChecker, initialPrimitiveState, PrimitiveState } from './fixtures';
 import { TestScheduler } from 'rxjs/testing';
@@ -320,11 +320,70 @@ describe('RxStateService', () => {
       });
     });
 
+    it('should pass undefined for observable', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const s: { num: number | undefined } = { num: 0 };
+        const state = setupState({ initialState: s });
+
+        expectObservable(state.$.pipe(map(st => st.num))).toBe('(abc)', {
+          a: undefined,
+          b: 43,
+          c: undefined
+        });
+
+        state.connect(from([{ num: undefined }, { num: 43 }, { num: undefined }]), (o, n) => n);
+      });
+    });
+
+    it('should pass undefined for projectFn', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const s: { num: number | undefined } = { num: 0 };
+        const state = setupState({ initialState: s });
+
+        expectObservable(state.$.pipe(map(st => st.num))).toBe('(abc)', {
+          a: undefined,
+          b: 43,
+          c: undefined
+        });
+
+        state.connect('num', from([undefined, 43, undefined]), (o, n) => n);
+      });
+    });
+
+    it('should pass undefined for key observable', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const s: { num: number | undefined } = { num: 0 };
+        const state = setupState({ initialState: s });
+
+        expectObservable(state.$.pipe(map(st => st.num))).toBe('(abc)', {
+          a: undefined,
+          b: 43,
+          c: undefined
+        });
+
+        state.connect('num', from([undefined, 43, undefined]));
+      });
+    });
+
+    it('should pass undefined for observable projectFn', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const s: { num: number | undefined } = { num: 5 };
+        const state = setupState({ initialState: s });
+
+        expectObservable(state.$.pipe(map(st => st.num))).toBe('(abc)', {
+          a: undefined,
+          b: 43,
+          c: undefined
+        });
+
+        state.connect(from([{ num: undefined }, { num: 43 }, { num: undefined }]), (sta, newVal) => newVal);
+      });
+    });
+
+
     it('should throw with wrong params', () => {
       const state = setupState({ initialState: initialPrimitiveState });
-
       expect(() => state.connect('some string' as any)).toThrowError('wrong params passed to connect');
-
     });
 
   });
@@ -410,7 +469,7 @@ describe('RxStateService', () => {
       });
     });
 
-    it('should work with observable and effect',  fakeAsync(() => {
+    it('should work with observable and effect', fakeAsync(() => {
 
       let calls = 0;
       const effect = (v: number) => {
