@@ -8,7 +8,6 @@ describe('staticSchedule', () => {
     let test = 0;
     const priority = SchedulingPriority.Promise;
     const doWork = () => {
-      console.log('INCREMENT');
       test++;
     }
     staticSchedule(doWork, priority);
@@ -16,11 +15,34 @@ describe('staticSchedule', () => {
 
     Promise.resolve()
       .then(() => {
-        console.log('RESOLVE');
         expect(test).toBe(1);
       })
       .catch((e) => {
-        console.log('ERRORERRORERRORERRORERRORERROR', e);
+        throw new Error('Should not get called');
+      })
+      .finally(() => {
+        done();
+      });
+
+    expect(test).toBe(0);
+  });
+
+
+  it('should stop if aborted', (done) => {
+    let test = 0;
+    const priority = SchedulingPriority.Promise;
+    const doWork = () => {
+      test++;
+    }
+
+    const abC = staticSchedule(doWork, priority);
+    expect(test).toBe(0);
+    abC.abort();
+    Promise.resolve()
+      .then(() => {
+        expect(test).toBe(0);
+      })
+      .catch((e) => {
         throw new Error('Should not get called');
       })
       .finally(() => {

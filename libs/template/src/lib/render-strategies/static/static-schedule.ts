@@ -3,24 +3,35 @@ import { SchedulingPriority } from '../rxjs/scheduling/interfaces';
 
 export function staticSchedule(
   work: () => void,
-  priority: false | SchedulingPriority
+  priority: false | SchedulingPriority,
+  abC: AbortController = new AbortController()
 ): AbortController {
-  const abortController = new AbortController();
+  // immediately execute work
   if (priority === false) {
-    if (!abortController.signal.aborted) {
-      work();
-    }
-    return abortController;
+    tryExecuteWork();
+    return abC;
   }
-  priorityTickMap[priority].subscribe(
-    () => {
-      if (!abortController.signal.aborted) {
-        work();
-      }
-    },
-    error => {
-      console.error(error);
-    }
+
+  // schedule work
+  const sub = priorityTickMap[priority].subscribe(
+    () => tryExecuteWork(),
+    error => console.error(error),
+    // on complete abort further executions
+    () => abC.abort()
   );
-  return abortController;
+  const abortHandler = function() {
+    sub.unsubscribe();
+    abC.signal.removeEventListener('abort', abortHandler, false);
+  };
+  abC.signal.addEventListener('abort', abortHandler, false);
+
+  return abC;
+
+  // execute work and abort further executions
+  function tryExecuteWork() {
+    if (!abC.signal.aborted) {
+      work();
+      abC.abort();
+    }
+  }
 }

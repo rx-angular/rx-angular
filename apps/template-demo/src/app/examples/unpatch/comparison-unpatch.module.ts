@@ -12,7 +12,7 @@ export const ROUTES = [
     component: ComparisonUnpatchComponent
   },
   {
-    path: 'experiments-profiling',
+    path: 'comparison',
     component: ComparisonUnpatchComponent
   }
 ];

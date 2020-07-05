@@ -8,7 +8,7 @@ import {
   Subscription,
   Unsubscribable
 } from 'rxjs';
-import { createCoalesceManager } from '../../../core/render-aware/coalescing-manager';
+import { coalescingManager } from '../../../core/render-aware/coalescing-manager';
 
 /**
  * @description
@@ -63,10 +63,10 @@ export function coalesceWith<T>(
     ): Observer<T> {
       let actionSubscription: Unsubscribable;
       let latestValue: T | undefined;
-      const coa = createCoalesceManager(_scope);
+
       const tryEmitLatestValue = () => {
-        coa.remove();
-        if (!coa.isCoalescing()) {
+        coalescingManager.remove(_scope);
+        if (!coalescingManager.isCoalescing(_scope)) {
           outerObserver.next(latestValue);
         }
       };
@@ -81,7 +81,7 @@ export function coalesceWith<T>(
         next: value => {
           latestValue = value;
           if (!actionSubscription) {
-            coa.add();
+            coalescingManager.add(_scope);
             actionSubscription = durationSelector.subscribe({
               next: () => {
                 tryEmitLatestValue();
