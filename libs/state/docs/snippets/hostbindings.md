@@ -80,7 +80,7 @@ export class RxComponent {
     private state: RxState<ComponentState>,
     private cdRef: ChangeDetectorRef
   ) {
-    state.hold(state.select(), () => this.scope.markForCheck());
+    state.hold(state.select(), () => this.cdRef.markForCheck());
   }
 }
 ```
