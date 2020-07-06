@@ -16,7 +16,6 @@ jobs:
             - run: npm run nx affected:build -- --base=origin/master --head=origin/${CIRCLE_BRANCH}
             - run: npm run ng test -- --project=state --code-coverage
             - run: npm run ng test -- --project=template --code-coverage
-            - run: npm run state:coveralls
 workflows:
     build-and-test:
       jobs:
