@@ -48,7 +48,7 @@ export class RenderQueueComponent
               Math.random()
             ))
         ),
-        strategy.behavior
+        strategy.rxScheduleCD
       ),
       () => {
         console.log('rendered', this);

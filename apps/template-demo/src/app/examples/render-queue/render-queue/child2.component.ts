@@ -41,7 +41,7 @@ export class Child2Component extends RxState<Renderable<Child2Component>>
               Math.random()
             ))
         ),
-        strategy.behavior
+        strategy.rxScheduleCD
       ),
       () => {
         // console.log('rendered', this);
