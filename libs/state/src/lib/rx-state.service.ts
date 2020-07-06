@@ -3,7 +3,6 @@ import {
   isObservable,
   Observable,
   OperatorFunction,
-  Subject,
   Subscribable,
   Subscription,
   Unsubscribable
