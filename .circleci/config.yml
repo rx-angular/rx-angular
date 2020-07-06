@@ -13,7 +13,7 @@ jobs:
                 name: 'Install'
                 command: npm install --frozen-lockfile --non-interactive
             - run: npm run ng test -- --runInBand --project=state --code-coverage
-            - run: npm run ng test -- --project=template --code-coverage
+            - run: npm run ng test -- --runInBand --project=template --code-coverage
             - run: npm run nx affected:lint -- --base=origin/master --head=origin/${CIRCLE_BRANCH}
             - run: npm run nx affected:build -- --base=origin/master --head=origin/${CIRCLE_BRANCH}
             - run: npm run state:coveralls
