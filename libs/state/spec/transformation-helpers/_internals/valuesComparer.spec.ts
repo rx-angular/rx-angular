@@ -92,13 +92,17 @@ describe('valuesComparer', () => {
         expect(valuesComparer(item, clone, ['id', 'name' as any])).toBeTruthy();
       });
 
-      it('should return false if some keys in array not matching', () => {
-        expect(valuesComparer(item, {...clone, id: 23}, ['id', 'type'])).toBeFalsy();
-      });
-
       it('should return true if one of provided keys is not a primitive', () => {
         expect(valuesComparer(item, clone, ['id', {a: 1} as any])).toBeTruthy();
-      })
+      });
+
+      it('should compare with defaultCompare if array of provided keys not including strings/numbers/symbols', () => {
+        expect(valuesComparer(item, clone, [[] as any, {a: 1} as any])).toBeFalsy();
+      });
+
+      it('should compare with defaultCompare if array of provided keys is empty', () => {
+        expect(valuesComparer(item, clone, [])).toBeFalsy();
+      });
     });
   })
 });
