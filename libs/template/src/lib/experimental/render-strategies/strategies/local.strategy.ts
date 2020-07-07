@@ -91,7 +91,7 @@ export function createChunkStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy {
   const scope = (config.cdRef as any).context;
-  const taskPriority = GlobalTaskPriority.smooth;
+  const taskPriority = GlobalTaskPriority.chunk;
   const component = (config.cdRef as any).context;
 
   const renderMethod = () => {

@@ -7,7 +7,10 @@ import {
   ViewChildren
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { getStrategies } from '@rx-angular/template';
+import {
+  getExperimentalLocalStrategies,
+  getStrategies
+} from '@rx-angular/template';
 import { Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Renderable } from '../interfaces';
@@ -39,12 +42,13 @@ export class RenderQueueComponent
   }
 
   ngOnInit() {
-    const strategy = getStrategies({ cdRef: this.cdRef }).localBlocking;
+    const strategy = getExperimentalLocalStrategies({ cdRef: this.cdRef })
+      .chunk;
     this.hold(
       this.doRender.pipe(
         tap(
           () =>
-            (this.items = Array.from(Array(1000).keys()).map(() =>
+            (this.items = Array.from(Array(100).keys()).map(() =>
               Math.random()
             ))
         ),
@@ -58,8 +62,20 @@ export class RenderQueueComponent
 
   ngAfterViewInit() {}
 
-  updateChildren() {
-    this.childComponents.forEach(child => child.doRender.next());
+  updateChildrenBlocking() {
+    this.childComponents.forEach(child => child.doRenderBlocking.next());
+  }
+
+  updateChildrenStaticBlocking() {
+    this.childComponents.forEach(child => child.renderStatic('blocking'));
+  }
+
+  updateChildrenChunked() {
+    this.childComponents.forEach(child => child.doRenderChunked.next());
+  }
+
+  updateChildrenStaticChunked() {
+    this.childComponents.forEach(child => child.renderStatic('chunk'));
   }
 
   doToggle() {

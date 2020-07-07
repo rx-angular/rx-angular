@@ -6,9 +6,9 @@ import {
   OnInit
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { getStrategies } from '@rx-angular/template';
 import { Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { getExperimentalLocalStrategies } from '@rx-angular/template';
 import { Renderable } from '../interfaces';
 
 @Component({
@@ -41,9 +41,12 @@ export class ChildComponent extends RxState<Renderable<ChildComponent>>
 
   destroyed = new Subject();
 
-  doRender = new Subject();
+  doRenderChunked = new Subject<string>();
+  doRenderBlocking = new Subject<string>();
 
-  items = Array.from(Array(10).keys()).map(() => Math.random());
+  items = Array.from(Array(100).keys()).map(() => Math.random());
+
+  private strategies;
 
   constructor(private cdRef: ChangeDetectorRef) {
     super();
@@ -51,19 +54,23 @@ export class ChildComponent extends RxState<Renderable<ChildComponent>>
   }
 
   ngOnInit() {
-    const strategy = getStrategies({ cdRef: this.cdRef }).localSmooth;
+    this.strategies = getExperimentalLocalStrategies({ cdRef: this.cdRef });
     this.hold(
-      this.doRender.pipe(
-        tap(
-          () =>
-            (this.items = Array.from(Array(100).keys()).map(() =>
-              Math.random()
-            ))
-        ),
-        strategy.rxScheduleCD
+      this.doRenderBlocking.pipe(
+        tap(() => this.updateItems()),
+        this.strategies.blocking.rxScheduleCD
       ),
       () => {
-        // console.log('rendered', this);
+        //console.log('rendered', this);
+      }
+    );
+    this.hold(
+      this.doRenderChunked.pipe(
+        tap(() => this.updateItems()),
+        this.strategies.chunk.rxScheduleCD
+      ),
+      () => {
+        //console.log('rendered', this);
       }
     );
   }
@@ -73,7 +80,16 @@ export class ChildComponent extends RxState<Renderable<ChildComponent>>
     this.destroyed.complete();
   }
 
+  renderStatic(strategyName: string) {
+    this.updateItems();
+    this.strategies[strategyName].scheduleCD();
+  }
+
   render() {
     return this.renderings++;
+  }
+
+  private updateItems(): void {
+    this.items = Array.from(Array(100).keys()).map(() => Math.random());
   }
 }

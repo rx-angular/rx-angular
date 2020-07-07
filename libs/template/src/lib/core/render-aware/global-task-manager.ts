@@ -55,8 +55,10 @@ function createGlobalTaskManager(): GlobalTaskManager {
     };
     queue.add(scheduledWorkDefinition);
     if (!isScheduled) {
+      isScheduled = true;
       const finishScheduling = () => (isScheduled = false);
       scheduleAndExhaust$().subscribe({
+        next: () => tick.next(),
         error: finishScheduling,
         complete: finishScheduling
       });
@@ -98,38 +100,42 @@ function createGlobalTaskManager(): GlobalTaskManager {
             (blockingTasksLeft > 0 || runtime <= 16) &&
             remainingTasks.length > 0
           ) {
-            const taskDefinition = remainingTasks.slice(0, 1)[0];
-            const isSmooth =
+            const taskDefinition = remainingTasks.shift();
+            const chunkTask =
               taskDefinition.priority === GlobalTaskPriority.chunk;
             // make sure to run all tasks marked with blocking priority and chunk tasks which got rescheduled at
             // least 2 times regardless of the runtime!
-            if (!isSmooth || runtime <= 16 || taskDefinition.rescheduled >= 2) {
+            if (
+              !chunkTask ||
+              runtime <= 16 ||
+              taskDefinition.rescheduled >= 2
+            ) {
               // measure task runtime and add it to the runtime of this frame
               runtime += runTask(taskDefinition.work);
-              if (!isSmooth) {
+              if (!chunkTask) {
                 blockingTasksLeft--;
               }
               // delete work from queue
               queue.delete(taskDefinition);
-              //console.warn(`running ${ isSmooth ? 'chunk' : 'blocking' } task. total runtime:`, runtime);
+              // console.warn(`running ${ chunkTask ? 'chunk' : 'blocking' } task. total runtime:`, runtime);
             } else {
               taskDefinition.rescheduled++;
             }
           }
           if (size() > 0) {
             // queue has entries left -> reschedule
-            //console.warn('rescheduling:', globalTaskManager.queue.size);
-            tick.next();
+            // console.warn('rescheduling:', size());
+            subscriber.next();
             frameId = animFrame(exhaust);
           } else {
             // queue is empty -> exhaust completed
-            //console.warn('exhaust completed');
-            tick.next();
+            // console.warn('exhaust completed');
+            subscriber.next();
             subscriber.complete();
           }
         } else {
           // queue is empty -> exhaust completed
-          tick.next();
+          subscriber.next();
           subscriber.complete();
         }
       }

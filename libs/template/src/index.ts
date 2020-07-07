@@ -15,4 +15,5 @@ export {
   ViewportPrioModule,
   ViewportPrioDirective
 } from './lib/experimental/viewport-prio';
+export { getExperimentalLocalStrategies } from './lib/experimental/render-strategies';
 export { TemplateModule } from './lib/template.module';
