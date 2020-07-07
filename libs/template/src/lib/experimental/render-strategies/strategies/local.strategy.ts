@@ -8,10 +8,10 @@ import { coalesceWith } from '../../../render-strategies/rxjs/operators';
 import {
   priorityTickMap,
   promiseTick,
-  scheduleByPriority,
   SchedulingPriority,
-  WorkPriority
+  TaskPriority
 } from '../../../render-strategies/rxjs/scheduling';
+import { scheduleOnGlobalTick } from '../../../render-strategies/rxjs/scheduling/globalAnimationFrameTick';
 import { coalesceAndSchedule } from '../../../render-strategies/static';
 
 const promiseDurationSelector = promiseTick();
@@ -27,14 +27,16 @@ const promiseDurationSelector = promiseTick();
  * - bg - `background`
  * - iC - `idleCallback`
  *
- * | Name                       | ZoneLess | Render Method | ScopedCoalescing | Scheduling | Chunked |
- * |--------------------------- | ---------| --------------| ---------------- | ---------- |-------- |
- * | `localCoalesce`            | ✔        | ɵDC           | C + Pr          | ❌          | ❌       |
- * | `localCoalesceAndSchedule` | ✔        | ɵDC           | C + Pr          | aF         | ❌       |
- * | `ɵuserVisible`              | ✔        | ɵDC           | C + Pr          | uV         | ❌       |
- * | `ɵuserBlocking`             | ✔        | ɵDC           | C + Pr          | uB         | ❌       |
- * | `ɵbackground`               | ✔        | ɵDC           | C + Pr          | bg         | ❌       |
- * | `idleCallback`             | ✔        | ɵDC           | C + Pr          | iC         | ❌       |
+ * | Name                       | ZoneLess | Render Method | ScopedCoalescing | Scheduling | Chunked + Queued |
+ * |--------------------------- | ---------| --------------| ---------------- | ---------- |----------------- |
+ * | `localCoalesce`            | ✔        | ɵDC           | C + Pr          | ❌          | ❌                 |
+ * | `localCoalesceAndSchedule` | ✔        | ɵDC           | C + Pr          | aF         | ❌                 |
+ * | `chunk`                    | ✔        | ɵDC           | C + Pr          | aF         | ✔ + blocking      |
+ * | `blocking`                 | ✔        | ɵDC           | C + Pr          | aF         | ❌ + chunk         |
+ * | `ɵuserVisible`              | ✔        | ɵDC           | C + Pr          | uV         | ❌                |
+ * | `ɵuserBlocking`             | ✔        | ɵDC           | C + Pr          | uB         | ❌                |
+ * | `ɵbackground`               | ✔        | ɵDC           | C + Pr          | bg         | ❌                |
+ * | `idleCallback`             | ✔        | ɵDC           | C + Pr          | iC         | ❌                 |
  *
  */
 
@@ -47,16 +49,18 @@ export function getExperimentalLocalStrategies(
     userVisible: createUserVisibleStrategy(config),
     userBlocking: createUserBlockingStrategy(config),
     background: createBackgroundStrategy(config),
-    idleCallback: createIdleCallbackStrategy(config)
+    idleCallback: createIdleCallbackStrategy(config),
+    chunk: createChunkStrategy(config),
+    blocking: createBlockingStrategy(config)
   };
 }
 
-export function createLocalBlockingStrategy<T>(
+export function createBlockingStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy {
   const scope = (config.cdRef as any).context;
   const priority = SchedulingPriority.animationFrame;
-  const workPriority = WorkPriority.blocking;
+  const taskPriority = TaskPriority.blocking;
 
   const renderMethod = () => {
     config.cdRef.detectChanges();
@@ -64,23 +68,27 @@ export function createLocalBlockingStrategy<T>(
   const behavior = o =>
     o.pipe(
       coalesceWith(promiseDurationSelector, scope),
-      scheduleByPriority(() => ({ priority: workPriority, work: renderMethod }))
+      scheduleOnGlobalTick(() => ({
+        priority: taskPriority,
+        work: renderMethod
+      }))
     );
+  // @TODO: implement static
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
-    name: 'localBlocking',
+    name: 'chunkedBlocking',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
     scheduleCD
   };
 }
 
-export function createLocalSmoothStrategy<T>(
+export function createChunkStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy {
   const scope = (config.cdRef as any).context;
-  const workPriority = WorkPriority.smooth;
+  const taskPriority = TaskPriority.smooth;
   const component = (config.cdRef as any).context;
   const priority = SchedulingPriority.animationFrame;
 
@@ -90,12 +98,16 @@ export function createLocalSmoothStrategy<T>(
   const behavior = o =>
     o.pipe(
       coalesceWith(promiseDurationSelector, component),
-      scheduleByPriority(() => ({ priority: workPriority, work: renderMethod }))
+      scheduleOnGlobalTick(() => ({
+        priority: taskPriority,
+        work: renderMethod
+      }))
     );
+  // @TODO: implement static
   const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
 
   return {
-    name: 'localSmooth',
+    name: 'chunked',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
     scheduleCD
