@@ -1,31 +1,10 @@
 import { jestMatcher } from '@test-helpers';
-import { of } from 'rxjs';
-import { pluck } from 'rxjs/operators';
+import { interval, of } from 'rxjs';
+import { map, pluck, switchMap, take } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { createAccumulationObservable, select } from '../../src/lib/core';
-import createSpy = jasmine.createSpy;
+import { initialPrimitiveState, PrimitiveState } from '../fixtures';
 
-interface PrimitiveState {
-  bol: boolean;
-  str: string;
-  num: number;
-}
-
-interface NestedState {
-  obj: {
-    key1: {
-      key11: {
-        key111: string;
-      };
-    };
-  };
-}
-
-const initialPrimitiveState: PrimitiveState = {
-  str: 'string',
-  num: 42,
-  bol: true
-};
 
 function setupAccumulationObservable<T extends object>(cfg: {
   initialState?: T;
@@ -218,4 +197,78 @@ describe('createAccumulationObservable', () => {
       expect(numAccCalls).toBe(2)
     });
   });
+
+  describe('emissions', () => {
+
+    it('should stop on unsubscribe from state', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const acc = createAccumulationObservable<PrimitiveState>();
+        const sub = acc.subscribe();
+        acc.nextSlice(initialPrimitiveState);
+        sub.unsubscribe();
+        expectObservable(acc.state$).toBe('');
+      });
+    });
+
+    it('should stop on complete from state', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const acc = createAccumulationObservable<PrimitiveState>();
+        const sub = acc.subscribe();
+        acc.nextSlice(initialPrimitiveState);
+        sub.unsubscribe();
+        expectObservable(acc.state$).toBe('');
+      });
+    });
+
+    it('should stop from connect observable', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const acc = createAccumulationObservable<PrimitiveState>();
+        const sub = acc.subscribe();
+        acc.nextSlice(initialPrimitiveState);
+        const tick$ = interval(1000).pipe(map(num => ({num})));
+        acc.nextSliceObservable(tick$)
+        sub.unsubscribe();
+        expectObservable(acc.state$).toBe('');
+      });
+    });
+
+    it('should stop from connect key & observable', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const acc = createAccumulationObservable<PrimitiveState>();
+        const sub = acc.subscribe();
+        sub.unsubscribe();
+        expectObservable(acc.state$).toBe('');
+      });
+    });
+
+    it('should stop from connect observable & projectFn', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const acc = createAccumulationObservable<PrimitiveState>();
+        const sub = acc.subscribe();
+        sub.unsubscribe();
+        expectObservable(acc.state$).toBe('');
+      });
+    });
+
+    it('should stop from connect key & observable & projectFn', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const acc = createAccumulationObservable<PrimitiveState>();
+        const sub = acc.subscribe();
+        sub.unsubscribe();
+        expectObservable(acc.state$).toBe('');
+      });
+    });
+
+    it('should stop in selects with HOOs', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const acc = createAccumulationObservable<PrimitiveState>();
+        const sub = acc.subscribe();
+        acc.nextSlice({num: 0});
+        expectObservable(acc.state$.pipe(
+          switchMap(() => interval(100).pipe(map(num => ({num})), take(3)))
+        )).toBe('');
+        sub.unsubscribe();
+      });
+    });
+  })
 });
