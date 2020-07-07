@@ -37,3 +37,11 @@ export function isKeyOf<O>(k: unknown): k is keyof O {
     (typeof k === 'string' || typeof k === 'symbol' || typeof k === 'number')
   );
 }
+
+export function isObjectGuard(obj: unknown): obj is object {
+  return obj && typeof obj === 'object' && !Array.isArray(obj);
+}
+
+export function isDefined(val: unknown): val is NonNullable<any> {
+  return val !== null && val !== undefined;
+}
