@@ -52,7 +52,10 @@ export function createAccumulationObservable<T extends object>(
       (state, [slice, stateAccumulator]) => stateAccumulator(state, slice),
       {} as T
     ),
-    tap(newState => (compositionObservable.state = newState)),
+    tap(
+      newState => (compositionObservable.state = newState),
+      error => console.error(error)
+    ),
     publish()
   );
   const state$: Observable<T> = signal$.pipe(publishReplay(1));
@@ -91,11 +94,6 @@ export function createAccumulationObservable<T extends object>(
     sub.add(
       (compositionObservable.state$ as ConnectableObservable<T>).connect()
     );
-    sub.add(() => {
-      accumulatorObservable.complete();
-      stateObservables.complete();
-      stateSlices.complete();
-    });
     return sub;
   }
 }
