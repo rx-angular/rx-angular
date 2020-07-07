@@ -1,6 +1,7 @@
 import { ɵdetectChanges as detectChanges } from '@angular/core';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
+  GlobalTaskPriority,
   RenderStrategy,
   RenderStrategyFactoryConfig
 } from '../../../core/render-aware';
@@ -9,10 +10,12 @@ import {
   priorityTickMap,
   promiseTick,
   SchedulingPriority,
-  TaskPriority
+  scheduleOnGlobalTick
 } from '../../../render-strategies/rxjs/scheduling';
-import { scheduleOnGlobalTick } from '../../../render-strategies/rxjs/scheduling/globalAnimationFrameTick';
-import { coalesceAndSchedule } from '../../../render-strategies/static';
+import {
+  coalesceAndSchedule,
+  coalesceAndScheduleGlobal
+} from '../../../render-strategies/static';
 
 const promiseDurationSelector = promiseTick();
 
@@ -59,8 +62,7 @@ export function createBlockingStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy {
   const scope = (config.cdRef as any).context;
-  const priority = SchedulingPriority.animationFrame;
-  const taskPriority = TaskPriority.blocking;
+  const taskPriority = GlobalTaskPriority.blocking;
 
   const renderMethod = () => {
     config.cdRef.detectChanges();
@@ -73,11 +75,12 @@ export function createBlockingStrategy<T>(
         work: renderMethod
       }))
     );
-  // @TODO: implement static
-  const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
+
+  const scheduleCD = () =>
+    coalesceAndScheduleGlobal(renderMethod, taskPriority, scope);
 
   return {
-    name: 'chunkedBlocking',
+    name: 'blocking',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
     scheduleCD
@@ -88,9 +91,8 @@ export function createChunkStrategy<T>(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy {
   const scope = (config.cdRef as any).context;
-  const taskPriority = TaskPriority.smooth;
+  const taskPriority = GlobalTaskPriority.smooth;
   const component = (config.cdRef as any).context;
-  const priority = SchedulingPriority.animationFrame;
 
   const renderMethod = () => {
     detectChanges(component);
@@ -103,11 +105,12 @@ export function createChunkStrategy<T>(
         work: renderMethod
       }))
     );
-  // @TODO: implement static
-  const scheduleCD = () => coalesceAndSchedule(renderMethod, priority, scope);
+
+  const scheduleCD = () =>
+    coalesceAndScheduleGlobal(renderMethod, taskPriority, scope);
 
   return {
-    name: 'chunked',
+    name: 'chunk',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
     scheduleCD

@@ -1,39 +1,39 @@
-import { Observable, OperatorFunction, Subject } from 'rxjs';
-import { share, switchMap, switchMapTo } from 'rxjs/operators';
-import { getZoneUnPatchedApi } from '../../../core/utils';
+import { Observable, Subject } from 'rxjs';
+import { share } from 'rxjs/operators';
+import { getZoneUnPatchedApi } from '../utils';
 
 // TODO: fetch the unpatched version but keep the fallbacks!
 const animFrame = /*window.requestAnimationFrame ||
-  window.webkitRequestAnimationFrame ||
-  (window as any).mozRequestAnimationFrame ||
-  function(callback) {
-    window.setTimeout(callback, 1000 / 60);
-  };*/ getZoneUnPatchedApi(
+ window.webkitRequestAnimationFrame ||
+ (window as any).mozRequestAnimationFrame ||
+ function(callback) {
+ window.setTimeout(callback, 1000 / 60);
+ };*/ getZoneUnPatchedApi(
   'requestAnimationFrame'
 );
 
-export enum TaskPriority {
-  smooth,
+export enum GlobalTaskPriority {
+  chunk,
   blocking
 }
 
-export interface TaskDefinition {
+export interface GlobalTask {
   work: (...args: any[]) => void;
-  priority: TaskPriority;
+  priority: GlobalTaskPriority;
 }
 
-interface ScheduledTaskDefinition extends TaskDefinition {
+interface ScheduledGlobalTask extends GlobalTask {
   rescheduled?: number;
 }
 
-interface GlobalWorker {
-  scheduleTask(task: TaskDefinition): void; // Observable<void> ?
-  deleteTask(task: TaskDefinition): void;
+interface GlobalTaskManager {
+  scheduleTask(task: GlobalTask): void; // Observable<void> ?
+  deleteTask(task: GlobalTask): void;
   tick(): Observable<void>;
 }
 
-function createGlobalWorker(): GlobalWorker {
-  const queue = new Set<ScheduledTaskDefinition>();
+function createGlobalTaskManager(): GlobalTaskManager {
+  const queue = new Set<ScheduledGlobalTask>();
   const tick = new Subject<void>();
   const tick$ = tick.pipe(share());
   let isScheduled = false;
@@ -44,11 +44,11 @@ function createGlobalWorker(): GlobalWorker {
     deleteTask
   };
 
-  function deleteTask(taskDefinition: TaskDefinition) {
+  function deleteTask(taskDefinition: GlobalTask) {
     queue.delete(taskDefinition);
   }
 
-  function scheduleTask(taskDefinition: TaskDefinition) {
+  function scheduleTask(taskDefinition: GlobalTask) {
     const scheduledWorkDefinition = {
       ...taskDefinition,
       rescheduled: 0
@@ -90,7 +90,7 @@ function createGlobalWorker(): GlobalWorker {
           const remainingTasks = tasks();
           // amount of blocking tasks in the current queue
           let blockingTasksLeft = remainingTasks.filter(
-            def => def.priority === TaskPriority.blocking
+            def => def.priority === GlobalTaskPriority.blocking
           ).length;
           // exhaust queue while there are tasks AND (there are blocking tasks left to process OR the runtime exceeds
           // 16ms)
@@ -99,8 +99,9 @@ function createGlobalWorker(): GlobalWorker {
             remainingTasks.length > 0
           ) {
             const taskDefinition = remainingTasks.slice(0, 1)[0];
-            const isSmooth = taskDefinition.priority === TaskPriority.smooth;
-            // make sure to run all tasks marked with blocking priority and smooth tasks which got rescheduled at
+            const isSmooth =
+              taskDefinition.priority === GlobalTaskPriority.chunk;
+            // make sure to run all tasks marked with blocking priority and chunk tasks which got rescheduled at
             // least 2 times regardless of the runtime!
             if (!isSmooth || runtime <= 16 || taskDefinition.rescheduled >= 2) {
               // measure task runtime and add it to the runtime of this frame
@@ -110,14 +111,14 @@ function createGlobalWorker(): GlobalWorker {
               }
               // delete work from queue
               queue.delete(taskDefinition);
-              //console.warn(`running ${ isSmooth ? 'smooth' : 'blocking' } task. total runtime:`, runtime);
+              //console.warn(`running ${ isSmooth ? 'chunk' : 'blocking' } task. total runtime:`, runtime);
             } else {
               taskDefinition.rescheduled++;
             }
           }
           if (size() > 0) {
             // queue has entries left -> reschedule
-            //console.warn('rescheduling:', globalWorker.queue.size);
+            //console.warn('rescheduling:', globalTaskManager.queue.size);
             tick.next();
             frameId = animFrame(exhaust);
           } else {
@@ -138,4 +139,4 @@ function createGlobalWorker(): GlobalWorker {
   }
 }
 
-export const globalWorker = createGlobalWorker();
+export const globalTaskManager = createGlobalTaskManager();

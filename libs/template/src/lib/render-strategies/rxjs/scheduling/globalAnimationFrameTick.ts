@@ -1,9 +1,9 @@
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { map, switchMap, switchMapTo } from 'rxjs/operators';
-import { globalWorker, TaskDefinition } from './globalAnimationFrame';
+import { globalTaskManager, GlobalTask } from '../../../core/render-aware';
 
 export function scheduleOnGlobalTick<T>(
-  workDefinitionFn: () => TaskDefinition
+  workDefinitionFn: () => GlobalTask
 ): MonoTypeOperatorFunction<T> {
   const workToDeplete = [];
   const depleteQueue$ = new Observable<void>(subscriber => {
@@ -11,7 +11,7 @@ export function scheduleOnGlobalTick<T>(
     return () => {
       while (workToDeplete.length > 0) {
         const w = workToDeplete.pop();
-        globalWorker.deleteTask(w);
+        globalTaskManager.deleteTask(w);
       }
     };
   });
@@ -20,9 +20,9 @@ export function scheduleOnGlobalTick<T>(
       switchMapTo(o$),
       switchMap(val => {
         const scheduledTask = workDefinitionFn();
-        globalWorker.scheduleTask(scheduledTask);
+        globalTaskManager.scheduleTask(scheduledTask);
         workToDeplete.push(scheduledTask);
-        return globalWorker.tick().pipe(map(() => val));
+        return globalTaskManager.tick().pipe(map(() => val));
       })
     );
   };
