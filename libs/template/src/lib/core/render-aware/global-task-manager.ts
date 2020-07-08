@@ -49,11 +49,10 @@ function createGlobalTaskManager(): GlobalTaskManager {
   }
 
   function scheduleTask(taskDefinition: GlobalTask) {
-    const scheduledWorkDefinition = {
-      ...taskDefinition,
-      rescheduled: 0
-    };
-    queue.add(scheduledWorkDefinition);
+    // we need to keep the reference to the task definition in order to no break the depleteQueue of the
+    // scheduleOnGlobalTick operator
+    (taskDefinition as ScheduledGlobalTask).rescheduled = 0;
+    queue.add(taskDefinition as ScheduledGlobalTask);
     if (!isScheduled) {
       isScheduled = true;
       const finishScheduling = () => (isScheduled = false);
