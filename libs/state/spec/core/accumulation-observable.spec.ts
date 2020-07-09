@@ -210,16 +210,6 @@ describe('createAccumulationObservable', () => {
       });
     });
 
-    it('should stop on complete from state', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const acc = createAccumulationObservable<PrimitiveState>();
-        const sub = acc.subscribe();
-        acc.nextSlice(initialPrimitiveState);
-        sub.unsubscribe();
-        expectObservable(acc.state$).toBe('');
-      });
-    });
-
     it('should stop from connect observable', () => {
       testScheduler.run(({ expectObservable }) => {
         const acc = createAccumulationObservable<PrimitiveState>();
@@ -232,43 +222,5 @@ describe('createAccumulationObservable', () => {
       });
     });
 
-    it('should stop from connect key & observable', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const acc = createAccumulationObservable<PrimitiveState>();
-        const sub = acc.subscribe();
-        sub.unsubscribe();
-        expectObservable(acc.state$).toBe('');
-      });
-    });
-
-    it('should stop from connect observable & projectFn', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const acc = createAccumulationObservable<PrimitiveState>();
-        const sub = acc.subscribe();
-        sub.unsubscribe();
-        expectObservable(acc.state$).toBe('');
-      });
-    });
-
-    it('should stop from connect key & observable & projectFn', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const acc = createAccumulationObservable<PrimitiveState>();
-        const sub = acc.subscribe();
-        sub.unsubscribe();
-        expectObservable(acc.state$).toBe('');
-      });
-    });
-
-    it('should stop in selects with HOOs', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const acc = createAccumulationObservable<PrimitiveState>();
-        const sub = acc.subscribe();
-        acc.nextSlice({num: 0});
-        expectObservable(acc.state$.pipe(
-          switchMap(() => interval(100).pipe(map(num => ({num})), take(3)))
-        )).toBe('');
-        sub.unsubscribe();
-      });
-    });
   })
 });

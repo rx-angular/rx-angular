@@ -200,9 +200,25 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * // every 250ms the properties bar and foo get updated due to the emission of sliceToAdd$. Bar will increase by
    * // 5 due to the projectionFunction
    */
+  connect(inputOrSlice$: Observable<Partial<T>>): void;
+
+  /**
+   * @description
+   * Connect an `Observable<V>` to the state `T`.
+   * Any change emitted by the source will get forwarded to to project function and merged into the state.
+   * Subscription handling is done automatically.
+   *
+   * You have to provide a `projectionFunction` to access the current state object and do custom mappings.
+   *
+   * @example
+   * const sliceToAdd$ = interval(250);
+   * state.connect(sliceToAdd$, (s, v) => ({bar: v}));
+   * // every 250ms the property bar get updated due to the emission of sliceToAdd$
+   *
+   */
   connect<V>(
-    inputOrSlice$: Observable<Partial<T> | V>,
-    projectFn?: ProjectStateReducer<T, V>
+    inputOrSlice$: Observable<V>,
+    projectFn: ProjectStateReducer<T, V>
   ): void;
   /**
    *
