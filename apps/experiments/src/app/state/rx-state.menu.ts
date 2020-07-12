@@ -20,6 +20,10 @@ export const MENU_ITEMS: MenuItem[] = [
       {
         link: 'connect',
         label: 'Connecting'
+      },
+      {
+        link: 'selectslice',
+        label: 'SelectSlice'
       }
     ]
   }

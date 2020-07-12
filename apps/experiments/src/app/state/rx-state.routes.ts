@@ -1,4 +1,5 @@
 import { RxStateOverviewComponent } from './rx-state.overview.component';
+import { RxStateSelectSliceComponent } from './selectslice/select-slice.component';
 import { RxStateParentSubscriptionComponent } from './subscription/parent.component';
 import { RxStateParentSelectionsComponent } from './selections/parent.component';
 import { RxStateParentCompositionComponent } from './composition/parent.component';
@@ -24,5 +25,9 @@ export const ROUTES = [
   {
     path: 'connect',
     component: RxStateParentSubscriptionLessComponent
+  },
+  {
+    path: 'selectslice',
+    component: RxStateSelectSliceComponent
   }
 ];
