@@ -9,9 +9,9 @@ import {
 } from 'rxjs';
 import {
   catchError,
-  combineLatest,
   distinctUntilChanged,
   filter,
+  finalize,
   map,
   switchMap,
   tap
@@ -40,7 +40,7 @@ export function createRenderAware<U>(cfg: {
   updateObserver: NextObserver<U>;
 }): RenderAware<U | undefined | null> {
   const strategyName$ = new ReplaySubject<string | Observable<string>>(1);
-  let strategy: RenderStrategy;
+  let currentStrategy: RenderStrategy;
   const strategy$: Observable<RenderStrategy> = strategyName$.pipe(
     distinctUntilChanged(),
     switchMap(stringOrObservable =>
@@ -49,7 +49,7 @@ export function createRenderAware<U>(cfg: {
         : stringOrObservable
     ),
     nameToStrategy(cfg.strategies),
-    tap(s => (strategy = s))
+    tap(s => (currentStrategy = s))
   );
 
   const observablesFromTemplate$ = new ReplaySubject<Observable<U>>(1);
@@ -75,9 +75,13 @@ export function createRenderAware<U>(cfg: {
     }),
     // forward only observable values
     filter(o$ => o$ !== undefined),
-    combineLatest(strategy$),
-    switchMap(([o$, s]) =>
-      o$.pipe(distinctUntilChanged(), tap(cfg.updateObserver), s.rxScheduleCD)
+    switchMap(o$ =>
+      o$.pipe(
+        distinctUntilChanged(),
+        tap(cfg.updateObserver),
+        currentStrategy.rxScheduleCD,
+        finalize(() => currentStrategy.scheduleCD())
+      )
     ),
     catchError(e => {
       console.error(e);

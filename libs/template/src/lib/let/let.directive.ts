@@ -5,7 +5,8 @@ import {
   OnDestroy,
   OnInit,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
+  EmbeddedViewRef
 } from '@angular/core';
 
 import {
@@ -15,7 +16,7 @@ import {
   Observer,
   Unsubscribable
 } from 'rxjs';
-import { createRenderAware, RenderAware } from '../core';
+import { createRenderAware, RenderAware, StrategySelection } from '../core';
 import {
   DEFAULT_STRATEGY_NAME,
   getStrategies
@@ -30,6 +31,53 @@ export interface LetViewContext<T> {
   $error?: boolean;
   // set context var complete to true (var$; let c = $complete)
   $complete?: boolean;
+}
+
+type RxLetTemplateName =
+  | 'rxLetNext'
+  | 'rxLetComplete'
+  | 'rxLetError'
+  | 'rxLetSuspense';
+
+class TemplateManager<T> {
+  private templateCache = new Map<RxLetTemplateName, TemplateRef<T>>();
+  private viewCache = new Map<RxLetTemplateName, EmbeddedViewRef<T>>();
+
+  constructor(
+    private viewContext: T,
+    private viewContainerRef: ViewContainerRef
+  ) {}
+
+  updateViewContext(viewContextSlice: Partial<T>): void {
+    Object.entries(viewContextSlice).forEach(([key, value]) => {
+      this.viewContext[key] = value;
+    });
+  }
+
+  addTemplateRef(name: RxLetTemplateName, templateRef: TemplateRef<T>): void {
+    assertTemplate(name, templateRef);
+    this.templateCache.set(name, templateRef);
+  }
+
+  insertEmbeddedView(name: RxLetTemplateName) {
+    if (this.templateCache.has(name)) {
+      this.viewContainerRef.detach();
+      if (this.viewCache.has(name)) {
+        this.viewContainerRef.insert(this.viewCache.get(name));
+      } else {
+        const newView = this.viewContainerRef.createEmbeddedView(
+          this.templateCache.get(name),
+          this.viewContext
+        );
+        this.viewCache.set(name, newView);
+      }
+    }
+  }
+
+  destroy() {
+    this.viewCache.forEach(embeddedView => embeddedView?.destroy());
+    this.viewContainerRef.clear();
+  }
 }
 
 /**
@@ -108,19 +156,39 @@ export interface LetViewContext<T> {
 export class LetDirective<U> implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
 
+  private templateManager: TemplateManager<
+    LetViewContext<U | undefined | null>
+  >;
+
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
     this.renderAware.nextPotentialObservable(potentialObservable);
   }
-
   @Input('rxLetStrategy')
   set strategy(strategy: string | Observable<string> | undefined) {
     this.renderAware.nextStrategy(strategy || DEFAULT_STRATEGY_NAME);
   }
+  @Input()
+  set rxLetComplete(
+    templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
+  ) {
+    this.templateManager.addTemplateRef('rxLetComplete', templateRef);
+  }
+  @Input()
+  set rxLetError(
+    templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
+  ) {
+    this.templateManager.addTemplateRef('rxLetError', templateRef);
+  }
+  @Input()
+  set rxLetSuspense(
+    templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
+  ) {
+    this.templateManager.addTemplateRef('rxLetSuspense', templateRef);
+  }
 
-  readonly strategies;
-  private embeddedView: any;
-  private readonly ViewContext: LetViewContext<U | undefined | null> = {
+  readonly strategies: StrategySelection;
+  private readonly viewContext: LetViewContext<U | undefined | null> = {
     $implicit: undefined,
     rxLet: undefined,
     $error: false,
@@ -131,37 +199,33 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   readonly renderAware: RenderAware<U | null | undefined>;
   private readonly resetObserver: NextObserver<void> = {
     next: () => {
-      // if not initialized no need to set undefined
-      if (this.embeddedView) {
-        this.ViewContext.$implicit = undefined;
-        this.ViewContext.rxLet = undefined;
-        this.ViewContext.$error = false;
-        this.ViewContext.$complete = false;
-      }
+      this.templateManager.updateViewContext({
+        $implicit: undefined,
+        rxLet: undefined,
+        $error: false,
+        $complete: false
+      });
     }
   };
   private readonly updateObserver: Observer<U | null | undefined> = {
     next: (value: U | null | undefined) => {
-      // to have initial rendering lazy
-      if (!this.embeddedView) {
-        this.createEmbeddedView();
-      }
-      this.ViewContext.$implicit = value;
-      this.ViewContext.rxLet = value;
+      this.templateManager.insertEmbeddedView('rxLetNext');
+      this.templateManager.updateViewContext({
+        $implicit: value,
+        rxLet: value
+      });
     },
     error: (error: Error) => {
-      // to have initial rendering lazy
-      if (!this.embeddedView) {
-        this.createEmbeddedView();
-      }
-      this.ViewContext.$error = true;
+      this.templateManager.insertEmbeddedView('rxLetError');
+      this.templateManager.updateViewContext({
+        $error: true
+      });
     },
     complete: () => {
-      // to have initial rendering lazy
-      if (!this.embeddedView) {
-        this.createEmbeddedView();
-      }
-      this.ViewContext.$complete = true;
+      this.templateManager.insertEmbeddedView('rxLetComplete');
+      this.templateManager.updateViewContext({
+        $complete: true
+      });
     }
   };
 
@@ -174,10 +238,14 @@ export class LetDirective<U> implements OnInit, OnDestroy {
 
   constructor(
     cdRef: ChangeDetectorRef,
-    private readonly templateRef: TemplateRef<LetViewContext<U>>,
+    private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
     this.strategies = getStrategies({ cdRef });
+    this.templateManager = new TemplateManager(
+      this.viewContext,
+      this.viewContainerRef
+    );
 
     this.renderAware = createRenderAware<U>({
       strategies: this.strategies,
@@ -188,18 +256,28 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.templateManager.insertEmbeddedView('rxLetSuspense');
+    this.templateManager.addTemplateRef('rxLetNext', this.nextTemplateRef);
     this.subscription = this.renderAware.subscribe();
-  }
-
-  createEmbeddedView() {
-    this.embeddedView = this.viewContainerRef.createEmbeddedView(
-      this.templateRef,
-      this.ViewContext
-    );
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-    this.viewContainerRef.clear();
+    this.templateManager.destroy();
   }
+}
+
+function assertTemplate<T>(
+  property: string,
+  templateRef: TemplateRef<T> | null
+): templateRef is TemplateRef<T> {
+  const isTemplateRefOrNull = !!(
+    !templateRef || templateRef.createEmbeddedView
+  );
+  if (!isTemplateRefOrNull) {
+    throw new Error(
+      `${property} must be a TemplateRef, but received something else.`
+    );
+  }
+  return isTemplateRefOrNull;
 }
