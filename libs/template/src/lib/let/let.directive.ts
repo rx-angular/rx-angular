@@ -24,13 +24,13 @@ import { TemplateManager } from '../core/utils/template-manager';
 
 export interface LetViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
-  $implicit?: T;
+  $implicit: T;
   // to enable `as` syntax we have to assign the directives selector (var as v)
-  rxLet?: T;
+  rxLet: T;
   // set context var complete to true (var$; let e = $error)
-  $error?: boolean;
+  $error: boolean;
   // set context var complete to true (var$; let c = $complete)
-  $complete?: boolean;
+  $complete: boolean;
 }
 
 /**
@@ -144,12 +144,6 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   private readonly templateManager: TemplateManager<
     LetViewContext<U | undefined | null>
   >;
-  private readonly viewContext: LetViewContext<U | undefined | null> = {
-    $implicit: undefined,
-    rxLet: undefined,
-    $error: false,
-    $complete: false
-  };
   private readonly resetObserver: NextObserver<void> = {
     next: () => {
       this.templateManager.updateViewContext({
@@ -195,10 +189,12 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     private readonly viewContainerRef: ViewContainerRef
   ) {
     this.strategies = getStrategies({ cdRef });
-    this.templateManager = new TemplateManager(
-      this.viewContext,
-      this.viewContainerRef
-    );
+    this.templateManager = new TemplateManager(this.viewContainerRef, {
+      $implicit: undefined,
+      rxLet: undefined,
+      $error: false,
+      $complete: false
+    });
 
     this.renderAware = createRenderAware({
       strategies: this.strategies,

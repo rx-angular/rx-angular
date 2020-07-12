@@ -2,14 +2,17 @@ import { EmbeddedViewRef, TemplateRef, ViewContainerRef } from '@angular/core';
 
 type RxTemplateName = 'rxNext' | 'rxComplete' | 'rxError' | 'rxSuspense';
 
-export class TemplateManager<T extends object> {
+export class TemplateManager<T> {
   private templateCache = new Map<RxTemplateName, TemplateRef<T>>();
   private viewCache = new Map<RxTemplateName, EmbeddedViewRef<T>>();
+  private readonly viewContext: T;
 
   constructor(
-    private viewContext: T,
-    private viewContainerRef: ViewContainerRef
-  ) {}
+    private viewContainerRef: ViewContainerRef,
+    initialViewContext: T
+  ) {
+    this.viewContext = { ...initialViewContext };
+  }
 
   updateViewContext(viewContextSlice: Partial<T>): void {
     Object.entries(viewContextSlice).forEach(([key, value]) => {
