@@ -163,12 +163,16 @@ export class LetDirective<U> implements OnInit, OnDestroy {
       });
     },
     error: (error: Error) => {
+      // fallback to rxNext when there's no template for rxError
+      this.templateManager.insertEmbeddedView('rxNext');
       this.templateManager.insertEmbeddedView('rxError');
       this.templateManager.updateViewContext({
         $error: true
       });
     },
     complete: () => {
+      // fallback to rxNext when there's no template for rxComplete
+      this.templateManager.insertEmbeddedView('rxNext');
       this.templateManager.insertEmbeddedView('rxComplete');
       this.templateManager.updateViewContext({
         $complete: true
