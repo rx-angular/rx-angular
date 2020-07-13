@@ -25,6 +25,7 @@ export class StatefulComponent {
 class RxState<T extends object> implements OnDestroy, Subscribable<T> {
   readonly readonly $: Observable<T> = this.accumulationObservable.signal$;
   get() => T;
+  get(k1: K1) => Partial<T>;
   set(stateOrProjectState: Partial<T> | ProjectStateFn<T>) => void;
   set(key: K, projectSlice: ProjectValueFn<T, K>) => void;
   connect(inputOrSlice$: Observable<Partial<T> | V>, projectFn?: ProjectStateReducer<T, V>) => void;
@@ -59,6 +60,30 @@ const { disabled } = state.get();
 if (!disabled) {
   doStuff();
 }
+```
+
+### get
+
+##### typeof: (k1: K1) => Partial<T>
+
+Read from the state in an imperative manner by providing keys as parameters to reach deeply nested values.
+Returns the part of state object.
+
+_Example_
+
+```TypeScript
+interface State {
+  bar: { foo: `test`},
+  baz: true
+}
+
+// Access a single property
+
+const bar = state.get('bar');
+
+// Access a nested property
+
+const foo = state.get('bar', 'foo');
 ```
 
 ### set

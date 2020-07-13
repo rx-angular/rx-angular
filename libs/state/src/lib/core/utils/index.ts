@@ -8,3 +8,4 @@ export {
   isObjectGuard,
   isDefined
 } from './typing';
+export { safePluck } from './safe-pluck';

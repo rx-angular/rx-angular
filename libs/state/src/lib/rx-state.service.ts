@@ -15,7 +15,8 @@ import {
   pipeFromArray,
   stateful,
   isKeyOf,
-  AccumulationFn
+  AccumulationFn,
+  safePluck
 } from './core';
 import { filter, map, pluck, tap } from 'rxjs/operators';
 
@@ -94,8 +95,83 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    *
    * @return T
    */
-  get(): T {
-    return this.accumulator.state;
+
+  get(): T;
+
+  /**
+   * @description
+   * Read from the state in imperative manner by providing keys as parameters.
+   * Returns the part of state object.
+   *
+   * @example
+   * // Access a single property
+   *
+   * const bar = state.get('bar');
+   *
+   * // Access a nested property
+   *
+   * const foo = state.get('bar', 'foo');
+   *
+   * @return T | Partial<T>
+   */
+
+  get<K1 extends keyof T>(k1?: K1): T | Partial<T>;
+
+  get<K1 extends keyof T, K2 extends keyof T[K1]>(
+    k1: K1,
+    k2: K2
+  ): T | T[K1][K2];
+
+  get<K1 extends keyof T, K2 extends keyof T[K1], K3 extends keyof T[K1][K2]>(
+    k1: K1,
+    k2: K2,
+    k3: K3
+  ): T | T[K1][K2][K3];
+
+  get<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3]
+  >(k1: K1, k2: K2, k3: K3, k4: K4): T | T[K1][K2][K3][K4];
+
+  get<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3],
+    K5 extends keyof T[K1][K2][K3][K4]
+  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): T | T[K1][K2][K3][K4][K5];
+
+  get<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3],
+    K5 extends keyof T[K1][K2][K3][K4],
+    K6 extends keyof T[K1][K2][K3][K4][K5]
+  >(
+    k1: K1,
+    k2: K2,
+    k3: K3,
+    k4: K4,
+    k5: K5,
+    k6: K6
+  ): T | T[K1][K2][K3][K4][K5][K6];
+
+  get<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3],
+    K5 extends keyof T[K1][K2][K3][K4],
+    K6 extends keyof T[K1][K2][K3][K4][K5]
+  >(...keys: Array<K1 | K2 | K3 | K4 | K5 | K6>): T | Partial<T> {
+    if (!!keys && isStringArrayGuard(keys)) {
+      return safePluck<T, K1, K2, K3, K4, K5, K6>(this.accumulator.state, keys);
+    } else {
+      return this.accumulator.state;
+    }
   }
 
   /**
