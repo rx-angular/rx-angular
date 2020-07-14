@@ -19,13 +19,13 @@
 ## Transformation helpers
 
 - [Principles of helpers](./transformation-helpers/transformation-helpers.md)
-- [Edge cases overview](./edge-cases-overview.md)
+- [Edge cases overview](./transformation-helpers/edge-cases-overview.md)
 
 ### Array
 
 - [insert](./transformation-helpers/array/insert.md)
 - [remove](./transformation-helpers/array/remove.md)
-- [update](./transformation-helpers/array/udpdate.md)
+- [update](./transformation-helpers/array/update.md)
 - [toDictionary](./transformation-helpers/array/to-dictionary.md)
 
 ### Object

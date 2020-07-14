@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RxState } from '../src';
 import { createStateChecker, initialPrimitiveState, PrimitiveState } from './fixtures';
 import { TestScheduler } from 'rxjs/testing';
@@ -120,6 +120,20 @@ describe('RxStateService', () => {
       });
     });
   });
+
+  describe('get', () => {
+    const state = setupState({ initialState: initialPrimitiveState });
+
+    it('should return value when keys are provided as params', () => {
+      const val = state.get('num');
+      expect(val).toEqual(initialPrimitiveState.num)
+    })
+
+    it('should return whole state object when no keys provided', () => {
+      const val = state.get();
+      expect(val.num).toEqual(initialPrimitiveState.num)
+    })
+  })
 
   describe('select', () => {
     it('should return initial state', () => {
@@ -410,7 +424,7 @@ describe('RxStateService', () => {
       });
     });
 
-    it('should work with observable and effect',  fakeAsync(() => {
+    it('should work with observable and effect', fakeAsync(() => {
 
       let calls = 0;
       const effect = (v: number) => {
