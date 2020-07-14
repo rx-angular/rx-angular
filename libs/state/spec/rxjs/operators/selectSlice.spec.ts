@@ -61,8 +61,7 @@ describe('selectSlice operator', () => {
       expectObservable(
         e1.pipe(
           selectSlice(['val']),
-          map(({ val }) => ({ val })) // this is here to test if the typings work in strict mode. we had some
-          // struggles ;)
+          map(({ val }) => ({ val })) // this is here to test if the typings work in strict mode
         )
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
