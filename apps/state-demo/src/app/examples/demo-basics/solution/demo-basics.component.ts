@@ -23,7 +23,7 @@ import { DemoBasicsAdapterService } from './demo-basics.adapter.service';
     `
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DemoBasicsViewModelService]
+  providers: [DemoBasicsViewModelService, DemoBasicsAdapterService]
 })
 export class DemoBasicsComponent extends RxState<any> {
   @Input()

@@ -5,7 +5,8 @@ describe('safePluck', () => {
     const obj = { foo: { bar } };
     it('should not touch passed arguments', () => {
         const args = ['foo', 'bar'];
-        expect(safePluck(args.length)).toBe(2);
+        safePluck(obj, args);
+        expect(args.length).toBe(2);
     })
     it('should return `bar` when keys are provided', () => {
         expect(safePluck(obj, ['foo', 'bar'])).toEqual(bar);
