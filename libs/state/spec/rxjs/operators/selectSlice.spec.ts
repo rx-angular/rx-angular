@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 import { selectSlice } from '../../../src/lib/rxjs/operators/selectSlice';
 import { KeyCompareMap } from '../../../src/lib/rxjs/interfaces';
-import { mergeMap } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 
 let testScheduler: TestScheduler;
 
@@ -60,7 +60,8 @@ describe('selectSlice operator', () => {
 
       expectObservable(
         e1.pipe(
-          selectSlice(['val'])
+          selectSlice(['val']),
+          map(({ val }) => ({ val })) // this is here to test if the typings work in strict mode
         )
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
