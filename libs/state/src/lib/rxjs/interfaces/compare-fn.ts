@@ -3,6 +3,9 @@
  * The function which is used by `KeyCompareMap` to determine if changes are distinct or not.
  * Should return true if values are equal.
  *
+ * @param {T} oldVal
+ * @param {T} newVal
+ *
  * @return boolean
  *
  * @docsPage interfaces
