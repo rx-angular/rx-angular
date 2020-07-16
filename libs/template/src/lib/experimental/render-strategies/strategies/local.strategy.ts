@@ -54,7 +54,11 @@ export function getExperimentalLocalStrategies(
     background: createBackgroundStrategy(config),
     idleCallback: createIdleCallbackStrategy(config),
     chunk: createChunkStrategy(config),
-    blocking: createBlockingStrategy(config)
+    chunkFirst: createChunkFirstStrategy(config),
+    blocking: createBlockingStrategy(config),
+    detachChunk: createDetachChunkStrategy(config),
+    detachChunkFirst: createDetachChunkFirstStrategy(config),
+    detachBlocking: createDetachBlockingStrategy(config)
   };
 }
 
@@ -111,6 +115,130 @@ export function createChunkStrategy<T>(
 
   return {
     name: 'chunk',
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
+    scheduleCD
+  };
+}
+
+export function createChunkFirstStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy {
+  const scope = (config.cdRef as any).context;
+  const component = (config.cdRef as any).context;
+  let taskPriority = GlobalTaskPriority.chunk;
+  const renderMethod = () => {
+    config.cdRef.detectChanges();
+  };
+  const behavior = o =>
+    o.pipe(
+      coalesceWith(promiseDurationSelector, component),
+      scheduleOnGlobalTick(() => ({
+        priority: taskPriority,
+        work: renderMethod
+      })),
+      tap(() => (taskPriority = GlobalTaskPriority.blocking))
+    );
+
+  const scheduleCD = () =>
+    coalesceAndScheduleGlobal(renderMethod, taskPriority, scope);
+
+  return {
+    name: 'chunkFirst',
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
+    scheduleCD
+  };
+}
+
+export function createDetachChunkStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy {
+  const scope = (config.cdRef as any).context;
+  const component = (config.cdRef as any).context;
+  const taskPriority = GlobalTaskPriority.chunk;
+  const renderMethod = () => {
+    config.cdRef.reattach();
+    config.cdRef.detectChanges();
+    config.cdRef.detach();
+  };
+  const behavior = o =>
+    o.pipe(
+      coalesceWith(promiseDurationSelector, component),
+      scheduleOnGlobalTick(() => ({
+        priority: taskPriority,
+        work: renderMethod
+      }))
+    );
+
+  const scheduleCD = () =>
+    coalesceAndScheduleGlobal(renderMethod, taskPriority, scope);
+
+  return {
+    name: 'detachChunk',
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
+    scheduleCD
+  };
+}
+
+export function createDetachChunkFirstStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy {
+  const scope = (config.cdRef as any).context;
+  const component = (config.cdRef as any).context;
+  let taskPriority = GlobalTaskPriority.chunk;
+  const renderMethod = () => {
+    config.cdRef.reattach();
+    config.cdRef.detectChanges();
+    config.cdRef.detach();
+  };
+  const behavior = o =>
+    o.pipe(
+      coalesceWith(promiseDurationSelector, component),
+      scheduleOnGlobalTick(() => ({
+        priority: taskPriority,
+        work: renderMethod
+      })),
+      tap(() => (taskPriority = GlobalTaskPriority.blocking))
+    );
+
+  const scheduleCD = () =>
+    coalesceAndScheduleGlobal(renderMethod, taskPriority, scope);
+
+  return {
+    name: 'detachChunkFirst',
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
+    scheduleCD
+  };
+}
+
+export function createDetachBlockingStrategy<T>(
+  config: RenderStrategyFactoryConfig
+): RenderStrategy {
+  const scope = (config.cdRef as any).context;
+  const component = (config.cdRef as any).context;
+  const taskPriority = GlobalTaskPriority.blocking;
+  const renderMethod = () => {
+    config.cdRef.reattach();
+    config.cdRef.detectChanges();
+    config.cdRef.detach();
+  };
+  const behavior = o =>
+    o.pipe(
+      coalesceWith(promiseDurationSelector, component),
+      scheduleOnGlobalTick(() => ({
+        priority: taskPriority,
+        work: renderMethod
+      }))
+    );
+
+  const scheduleCD = () =>
+    coalesceAndScheduleGlobal(renderMethod, taskPriority, scope);
+
+  return {
+    name: 'detachBlocking',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
     scheduleCD
