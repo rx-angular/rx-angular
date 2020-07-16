@@ -15,7 +15,8 @@ import {
   pipeFromArray,
   stateful,
   isKeyOf,
-  AccumulationFn
+  AccumulationFn,
+  safePluck
 } from './core';
 import { filter, map, pluck, tap } from 'rxjs/operators';
 
@@ -94,8 +95,83 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    *
    * @return T
    */
-  get(): T {
-    return this.accumulator.state;
+
+  get(): T;
+
+  /**
+   * @description
+   * Read from the state in imperative manner by providing keys as parameters.
+   * Returns the part of state object.
+   *
+   * @example
+   * // Access a single property
+   *
+   * const bar = state.get('bar');
+   *
+   * // Access a nested property
+   *
+   * const foo = state.get('bar', 'foo');
+   *
+   * @return T | Partial<T>
+   */
+
+  get<K1 extends keyof T>(k1?: K1): T | Partial<T>;
+
+  get<K1 extends keyof T, K2 extends keyof T[K1]>(
+    k1: K1,
+    k2: K2
+  ): T | T[K1][K2];
+
+  get<K1 extends keyof T, K2 extends keyof T[K1], K3 extends keyof T[K1][K2]>(
+    k1: K1,
+    k2: K2,
+    k3: K3
+  ): T | T[K1][K2][K3];
+
+  get<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3]
+  >(k1: K1, k2: K2, k3: K3, k4: K4): T | T[K1][K2][K3][K4];
+
+  get<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3],
+    K5 extends keyof T[K1][K2][K3][K4]
+  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): T | T[K1][K2][K3][K4][K5];
+
+  get<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3],
+    K5 extends keyof T[K1][K2][K3][K4],
+    K6 extends keyof T[K1][K2][K3][K4][K5]
+  >(
+    k1: K1,
+    k2: K2,
+    k3: K3,
+    k4: K4,
+    k5: K5,
+    k6: K6
+  ): T | T[K1][K2][K3][K4][K5][K6];
+
+  get<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3],
+    K5 extends keyof T[K1][K2][K3][K4],
+    K6 extends keyof T[K1][K2][K3][K4][K5]
+  >(...keys: Array<K1 | K2 | K3 | K4 | K5 | K6>): T | Partial<T> {
+    if (!!keys && isStringArrayGuard(keys)) {
+      return safePluck<T, K1, K2, K3, K4, K5, K6>(this.accumulator.state, keys);
+    } else {
+      return this.accumulator.state;
+    }
   }
 
   /**
@@ -200,9 +276,25 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * // every 250ms the properties bar and foo get updated due to the emission of sliceToAdd$. Bar will increase by
    * // 5 due to the projectionFunction
    */
+  connect(inputOrSlice$: Observable<Partial<T>>): void;
+
+  /**
+   * @description
+   * Connect an `Observable<V>` to the state `T`.
+   * Any change emitted by the source will get forwarded to to project function and merged into the state.
+   * Subscription handling is done automatically.
+   *
+   * You have to provide a `projectionFunction` to access the current state object and do custom mappings.
+   *
+   * @example
+   * const sliceToAdd$ = interval(250);
+   * state.connect(sliceToAdd$, (s, v) => ({bar: v}));
+   * // every 250ms the property bar get updated due to the emission of sliceToAdd$
+   *
+   */
   connect<V>(
-    inputOrSlice$: Observable<Partial<T> | V>,
-    projectFn?: ProjectStateReducer<T, V>
+    inputOrSlice$: Observable<V>,
+    projectFn: ProjectStateReducer<T, V>
   ): void;
   /**
    *

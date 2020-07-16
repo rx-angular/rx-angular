@@ -91,6 +91,11 @@ export function createAccumulationObservable<T extends object>(
     sub.add(
       (compositionObservable.state$ as ConnectableObservable<T>).connect()
     );
+    sub.add(() => {
+      accumulatorObservable.complete();
+      stateObservables.complete();
+      stateSlices.complete();
+    });
     return sub;
   }
 }
