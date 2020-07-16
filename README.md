@@ -21,7 +21,7 @@ This repository holds a set of helpers to create **fully reactive** as well as *
 Find details in the linked readme files below for installation and setup instructions, examples and resources.
 
 - [📦@rx-angular/state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/README.md) - Reactive Component State-Management
-- [📦@rx-angular/template](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/README.md) - Reactive Rendering
+- [📦@rx-angular/template](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/README.md) - High-Performance Reactive Rendering
 
 ## Install
 
