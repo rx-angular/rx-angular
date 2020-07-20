@@ -56,6 +56,7 @@ export function createAccumulationObservable<T extends object>(
       newState => (compositionObservable.state = newState),
       error => console.error(error)
     ),
+    catchError(e => EMPTY)
     publish()
   );
   const state$: Observable<T> = signal$.pipe(publishReplay(1));
