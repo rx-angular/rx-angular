@@ -6,7 +6,8 @@ import {
   queueScheduler,
   Subject,
   Subscribable,
-  Subscription
+  Subscription,
+  EMPTY
 } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -16,7 +17,8 @@ import {
   publishReplay,
   scan,
   tap,
-  withLatestFrom
+  withLatestFrom,
+  catchError
 } from 'rxjs/operators';
 
 export type AccumulationFn = <T>(st: T, sl: Partial<T>) => T;
@@ -56,7 +58,7 @@ export function createAccumulationObservable<T extends object>(
       newState => (compositionObservable.state = newState),
       error => console.error(error)
     ),
-    catchError(e => EMPTY)
+    catchError(e => EMPTY),
     publish()
   );
   const state$: Observable<T> = signal$.pipe(publishReplay(1));
