@@ -15,21 +15,22 @@ import {
   Observer,
   Unsubscribable
 } from 'rxjs';
-import { createRenderAware, RenderAware } from '../core';
+import { createRenderAware, RenderAware, StrategySelection } from '../core';
 import {
   DEFAULT_STRATEGY_NAME,
   getStrategies
 } from '../render-strategies/strategies/strategies-map';
+import { TemplateManager } from '../core/utils/template-manager';
 
 export interface LetViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
-  $implicit?: T;
+  $implicit: T;
   // to enable `as` syntax we have to assign the directives selector (var as v)
-  rxLet?: T;
+  rxLet: T;
   // set context var complete to true (var$; let e = $error)
-  $error?: boolean;
+  $error: boolean;
   // set context var complete to true (var$; let c = $complete)
-  $complete?: boolean;
+  $complete: boolean;
 }
 
 /**
@@ -108,60 +109,74 @@ export interface LetViewContext<T> {
 export class LetDirective<U> implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
 
+  readonly strategies: StrategySelection;
+  readonly renderAware: RenderAware<U | null | undefined>;
+
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
     this.renderAware.nextPotentialObservable(potentialObservable);
   }
-
   @Input('rxLetStrategy')
   set strategy(strategy: string | Observable<string> | undefined) {
     this.renderAware.nextStrategy(strategy || DEFAULT_STRATEGY_NAME);
   }
-
-  readonly strategies;
-  private embeddedView: any;
-  private readonly ViewContext: LetViewContext<U | undefined | null> = {
-    $implicit: undefined,
-    rxLet: undefined,
-    $error: false,
-    $complete: false
-  };
+  @Input()
+  set rxLetComplete(
+    templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
+  ) {
+    this.templateManager.addTemplateRef('rxComplete', templateRef);
+  }
+  @Input()
+  set rxLetError(
+    templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
+  ) {
+    this.templateManager.addTemplateRef('rxError', templateRef);
+  }
+  @Input()
+  set rxLetSuspense(
+    templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
+  ) {
+    this.templateManager.addTemplateRef('rxSuspense', templateRef);
+  }
 
   protected subscription: Unsubscribable;
-  readonly renderAware: RenderAware<U | null | undefined>;
+
+  private readonly templateManager: TemplateManager<
+    LetViewContext<U | undefined | null>
+  >;
   private readonly resetObserver: NextObserver<void> = {
     next: () => {
-      // if not initialized no need to set undefined
-      if (this.embeddedView) {
-        this.ViewContext.$implicit = undefined;
-        this.ViewContext.rxLet = undefined;
-        this.ViewContext.$error = false;
-        this.ViewContext.$complete = false;
-      }
+      this.templateManager.updateViewContext({
+        $implicit: undefined,
+        rxLet: undefined,
+        $error: false,
+        $complete: false
+      });
     }
   };
   private readonly updateObserver: Observer<U | null | undefined> = {
     next: (value: U | null | undefined) => {
-      // to have initial rendering lazy
-      if (!this.embeddedView) {
-        this.createEmbeddedView();
-      }
-      this.ViewContext.$implicit = value;
-      this.ViewContext.rxLet = value;
+      this.templateManager.insertEmbeddedView('rxNext');
+      this.templateManager.updateViewContext({
+        $implicit: value,
+        rxLet: value
+      });
     },
     error: (error: Error) => {
-      // to have initial rendering lazy
-      if (!this.embeddedView) {
-        this.createEmbeddedView();
-      }
-      this.ViewContext.$error = true;
+      // fallback to rxNext when there's no template for rxError
+      this.templateManager.insertEmbeddedView('rxNext');
+      this.templateManager.insertEmbeddedView('rxError');
+      this.templateManager.updateViewContext({
+        $error: true
+      });
     },
     complete: () => {
-      // to have initial rendering lazy
-      if (!this.embeddedView) {
-        this.createEmbeddedView();
-      }
-      this.ViewContext.$complete = true;
+      // fallback to rxNext when there's no template for rxComplete
+      this.templateManager.insertEmbeddedView('rxNext');
+      this.templateManager.insertEmbeddedView('rxComplete');
+      this.templateManager.updateViewContext({
+        $complete: true
+      });
     }
   };
 
@@ -174,12 +189,18 @@ export class LetDirective<U> implements OnInit, OnDestroy {
 
   constructor(
     cdRef: ChangeDetectorRef,
-    private readonly templateRef: TemplateRef<LetViewContext<U>>,
+    private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
     this.strategies = getStrategies({ cdRef });
+    this.templateManager = new TemplateManager(this.viewContainerRef, {
+      $implicit: undefined,
+      rxLet: undefined,
+      $error: false,
+      $complete: false
+    });
 
-    this.renderAware = createRenderAware<U>({
+    this.renderAware = createRenderAware({
       strategies: this.strategies,
       resetObserver: this.resetObserver,
       updateObserver: this.updateObserver
@@ -188,18 +209,13 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.templateManager.insertEmbeddedView('rxSuspense');
+    this.templateManager.addTemplateRef('rxNext', this.nextTemplateRef);
     this.subscription = this.renderAware.subscribe();
-  }
-
-  createEmbeddedView() {
-    this.embeddedView = this.viewContainerRef.createEmbeddedView(
-      this.templateRef,
-      this.ViewContext
-    );
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-    this.viewContainerRef.clear();
+    this.templateManager.destroy();
   }
 }
