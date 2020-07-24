@@ -215,7 +215,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscription?.unsubscribe();
     this.templateManager.destroy();
   }
 }

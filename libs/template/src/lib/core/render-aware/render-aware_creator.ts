@@ -11,7 +11,6 @@ import {
   catchError,
   distinctUntilChanged,
   filter,
-  finalize,
   map,
   switchMap,
   tap
@@ -80,11 +79,22 @@ export function createRenderAware<U>(cfg: {
         distinctUntilChanged(),
         tap(cfg.updateObserver),
         currentStrategy.rxScheduleCD,
-        finalize(() => currentStrategy.scheduleCD())
+        tap({
+          // handle "error" and "complete" cases for Observable from template
+          error: err => {
+            console.error(err);
+            if (cfg.updateObserver.error) {
+              cfg.updateObserver.error(err);
+              currentStrategy.detectChanges();
+            }
+          },
+          complete: cfg.updateObserver.complete
+            ? () => currentStrategy.detectChanges()
+            : undefined
+        })
       )
     ),
     catchError(e => {
-      console.error(e);
       return EMPTY;
     })
   );
