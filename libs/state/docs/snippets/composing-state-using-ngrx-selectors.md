@@ -1,4 +1,4 @@
-# Composing state using ngrx selector
+# Reusing ngrx selectors to compose state 
 
 Here is an example of using [NgRx selectors](https://ngrx.io/guide/store/selectors) alongside `@rx-angular/state` to compose reusable state selectors.
 
