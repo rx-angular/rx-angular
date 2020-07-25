@@ -357,7 +357,6 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       return;
     }
 
-    // state.connect(observable$, updates$, undefined)
     if (
       isKeyOf<T>(keyOrInputOrSlice$) &&
       isObservable<T[K]>(projectOrSlices$) &&
