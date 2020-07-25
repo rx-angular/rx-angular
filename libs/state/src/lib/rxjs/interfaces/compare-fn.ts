@@ -3,8 +3,8 @@
  * The function which is used by `KeyCompareMap` to determine if changes are distinct or not.
  * Should return true if values are equal.
  *
- * @param {T | null | undefined} oldVal
- * @param {T | null | undefined} newVal
+ * @param {T} oldVal
+ * @param {T} newVal
  *
  * @return boolean
  *

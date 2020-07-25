@@ -6,10 +6,7 @@ Should return true if values are equal.
 ## Signature
 
 ```TypeScript
-type CompareFn<T> = (
-  oldVal: T | null | undefined,
-  newVal: T | null | undefined
-) => boolean
+type CompareFn<T> = (oldVal: T, newVal: T) => boolean
 ```
 
 # KeyCompareMap

@@ -341,10 +341,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       projectOrSlices$ === undefined &&
       projectValueFn === undefined
     ) {
-      const slice$ = keyOrInputOrSlice$.pipe(
-        filter(slice => slice !== undefined)
-      );
-      this.accumulator.nextSliceObservable(slice$);
+      this.accumulator.nextSliceObservable(keyOrInputOrSlice$);
       return;
     }
 
@@ -355,10 +352,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       projectValueFn === undefined
     ) {
       const project = projectOrSlices$;
-      const slice$ = keyOrInputOrSlice$.pipe(
-        filter(slice => slice !== undefined),
-        map(v => project(this.get(), v))
-      );
+      const slice$ = keyOrInputOrSlice$.pipe(map(v => project(this.get(), v)));
       this.accumulator.nextSliceObservable(slice$);
       return;
     }
@@ -370,7 +364,6 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     ) {
       const key = keyOrInputOrSlice$;
       const slice$ = projectOrSlices$.pipe(
-        filter(slice => slice !== undefined),
         map(value => ({ ...{}, [key]: value }))
       );
       this.accumulator.nextSliceObservable(slice$);
@@ -384,7 +377,6 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     ) {
       const key = keyOrInputOrSlice$;
       const slice$ = projectOrSlices$.pipe(
-        filter(slice => slice !== undefined),
         map(value => ({ ...{}, [key]: projectValueFn(this.get(), value) }))
       );
       this.accumulator.nextSliceObservable(slice$);
