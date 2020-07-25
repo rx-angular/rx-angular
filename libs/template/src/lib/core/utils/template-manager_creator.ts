@@ -9,6 +9,18 @@ export interface TemplateManager<T> {
   destroy(): void;
 }
 
+/**
+ * TemplateManager
+ *
+ * @description
+ * This function returns an object that holds the logic for managing templates to
+ * be embedded into a `ViewContainerRef`. Internally it caches template references and instantiates
+ * embedded views. The `TemplateManager` re-uses templates and embedded views whenever
+ * a new observable notification is sent updating only the view context.
+ *
+ * @param viewContainerRef top-level view container templates will be attached to
+ * @param initialViewContext initial view context state
+ */
 export function createTemplateManager<T extends object>(
   viewContainerRef: ViewContainerRef,
   initialViewContext: T

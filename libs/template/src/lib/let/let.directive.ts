@@ -47,16 +47,14 @@ export interface LetViewContext<T> {
  * The current way of binding an observable to the view looks like that:
  * ```html
  * <ng-container *ngIf="observableNumber$ as n">
- * <app-number [number]="n">
- * </app-number>
- * <app-number-special [number]="n">
- * </app-number-special>
+ *   <app-number [number]="n"></app-number>
+ *   <app-number-special [number]="n"></app-number-special>
  * </ng-container>
  *  ```
  *
- *  The problem is `*ngIf` is also interfering with rendering and in case of a `0` the component would be hidden
+ * The problem is `*ngIf` is also interfering with rendering and in case of a `0` the component would be hidden.
  *
- * Included Features:
+ * Included Features for `*rxLet`:
  * - binding is always present. (`*ngIf="truthy$"`)
  * - it takes away the multiple usages of the `async` or `push` pipe
  * - a unified/structured way of handling null and undefined
@@ -68,39 +66,57 @@ export interface LetViewContext<T> {
  *
  * @usageNotes
  *
- * The `*rxLet` directive take over several things and makes it more convenient and save to work with streams in the
- *   template
- * `<ng-container *rxLet="observableNumber$ as c"></ng-container>`
+ * The `*rxLet` directive takes over several things and makes it more convenient and save to work with streams in the
+ * template:
  *
  * ```html
  * <ng-container *rxLet="observableNumber$ as n">
- * <app-number [number]="n">
- * </app-number>
+ *   <app-number [number]="n"></app-number>
  * </ng-container>
  *
  * <ng-container *rxLet="observableNumber$; let n">
- * <app-number [number]="n">
- * </app-number>
+ *   <app-number [number]="n"></app-number>
  * </ng-container>
  * ```
  *
  * In addition to that it provides us information from the whole observable context.
  * We can track the observables:
  * - next value
- * - error value
- * - complete base-state
+ * - error occurrence
+ * - complete occurrence
  *
  * ```html
  * <ng-container *rxLet="observableNumber$; let n; let e = $error, let c = $complete">
- * <app-number [number]="n"  *ngIf="!e && !c">
- * </app-number>
- * <ng-container *ngIf="e">
- * There is an error: {{e}}
+ *   <app-number [number]="n" *ngIf="!e && !c"></app-number>
+ *   <ng-container *ngIf="e">
+ *     There is an error: {{ e }}
+ *   </ng-container>
+ *   <ng-container *ngIf="c">
+ *     Observable completed: {{ c }}
+ *   </ng-container>
  * </ng-container>
- * <ng-container *ngIf="c">
- * Observable completed: {{c}}
+ * ```
+ *
+ * You can also use template anchors and display template's content for different observable states:
+ * - on complete
+ * - on error
+ * - on suspense - before the first value is emitted
+ *
+ * ```html
+ * <ng-container
+ *   *rxLet="
+ *     observableNumber$;
+ *     let n;
+ *     error: error;
+ *     complete: complete;
+ *     suspense: suspense;
+ *   "
+ * >
+ *   <app-number [number]="n"></app-number>
  * </ng-container>
- * </ng-container>
+ * <ng-template #error>ERROR</ng-template>
+ * <ng-template #complete>COMPLETE</ng-template>
+ * <ng-template #suspense>SUSPENSE</ng-template>
  * ```
  *
  * @publicApi
