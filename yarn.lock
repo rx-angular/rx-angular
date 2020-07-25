@@ -172,10 +172,12 @@
   dependencies:
     tslib "^2.0.0"
 
-"@angular/cdk@^9.2.1":
-  version "9.2.1"
-  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-9.2.1.tgz#9a590b8d4671fe2fa47648297b5ea372267d238f"
-  integrity sha512-aSG1UNPszkSnpNuDCNd7ZgT29oQ8vqHPmoqjvJI0JkEv3i6uEs5tRuhWl3TK39wDNuwdlq0AY47XTa/0Ppb5RQ==
+"@angular/cdk@^10.1.0":
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-10.1.0.tgz#e01a48db1ff23b82ac718ed5b6d73139ad7911f8"
+  integrity sha512-zSZcpsfhRWdNAzNXnKZIlaX1uAWY+8W2zV7ktQNJoNypo9X02rY0YtmPBzlPjT0ITjM4EqohZ07nfd+5bLUw4A==
+  dependencies:
+    tslib "^2.0.0"
   optionalDependencies:
     parse5 "^5.0.0"
 
