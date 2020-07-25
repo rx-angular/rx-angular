@@ -336,7 +336,6 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     projectOrSlices$?: ProjectStateReducer<T, V> | Observable<T[K]>,
     projectValueFn?: ProjectValueReducer<T, K, V>
   ): void {
-    // state.connect(observable$, undefined, undefined)
     if (
       isObservable<Partial<T>>(keyOrInputOrSlice$) &&
       projectOrSlices$ === undefined &&
