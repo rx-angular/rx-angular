@@ -58,6 +58,7 @@ export function createAccumulationObservable<T extends object>(
       newState => (compositionObservable.state = newState),
       error => console.error(error)
     ),
+    // @Notice We catch the error here as it get lost in between `publish` and `publishReplay`. We return empty to
     catchError(e => EMPTY),
     publish()
   );
