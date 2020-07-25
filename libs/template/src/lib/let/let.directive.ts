@@ -17,10 +17,13 @@ import {
 } from 'rxjs';
 import { createRenderAware, RenderAware, StrategySelection } from '../core';
 import {
+  createTemplateManager,
+  TemplateManager
+} from '../core/utils/template-manager_creator';
+import {
   DEFAULT_STRATEGY_NAME,
   getStrategies
 } from '../render-strategies/strategies/strategies-map';
-import { TemplateManager } from '../core/utils/template-manager';
 
 export interface LetViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
@@ -193,7 +196,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     private readonly viewContainerRef: ViewContainerRef
   ) {
     this.strategies = getStrategies({ cdRef });
-    this.templateManager = new TemplateManager(this.viewContainerRef, {
+    this.templateManager = createTemplateManager(this.viewContainerRef, {
       $implicit: undefined,
       rxLet: undefined,
       $error: false,
