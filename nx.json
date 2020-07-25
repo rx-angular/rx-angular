@@ -14,7 +14,12 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ]
       }
     }
   },
@@ -29,13 +34,19 @@
       "tags": []
     },
     "test-helpers": {
-      "tags": ["type:util"]
+      "tags": [
+        "type:util"
+      ]
     },
     "state": {
-      "tags": ["type:feature"]
+      "tags": [
+        "type:feature"
+      ]
     },
     "template": {
-      "tags": ["type:feature"]
+      "tags": [
+        "type:feature"
+      ]
     },
     "docs": {
       "tags": []
@@ -46,5 +57,8 @@
     "tour-of-heroes-ngxs": {
       "tags": []
     }
+  },
+  "affected": {
+    "defaultBase": "master"
   }
 }
