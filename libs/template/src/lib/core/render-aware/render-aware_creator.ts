@@ -80,7 +80,7 @@ export function createRenderAware<U>(cfg: {
         tap(cfg.updateObserver),
         currentStrategy.rxScheduleCD,
         tap({
-          // handle "error" and "complete" cases for Observable from template
+          // handle "error" and "complete" notifications for Observable from template
           error: err => {
             console.error(err);
             if (cfg.updateObserver.error) {

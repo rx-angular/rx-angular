@@ -4,7 +4,7 @@ type RxTemplateName = 'rxNext' | 'rxComplete' | 'rxError' | 'rxSuspense';
 
 export interface TemplateManager<T> {
   updateViewContext(viewContextSlice: Partial<T>): void;
-  addTemplateRef(name: RxTemplateName, templateRef: TemplateRef<T>);
+  addTemplateRef(name: RxTemplateName, templateRef: TemplateRef<T>): void;
   insertEmbeddedView(name: RxTemplateName): void;
   destroy(): void;
 }
@@ -18,7 +18,7 @@ export interface TemplateManager<T> {
  * embedded views. The `TemplateManager` re-uses templates and embedded views whenever
  * a new observable notification is sent updating only the view context.
  *
- * @param viewContainerRef top-level view container templates will be attached to
+ * @param viewContainerRef reference to a top-level view container templates will be attached to
  * @param initialViewContext initial view context state
  */
 export function createTemplateManager<T extends object>(
@@ -41,10 +41,13 @@ export function createTemplateManager<T extends object>(
     },
     insertEmbeddedView(name: RxTemplateName) {
       if (templateCache.has(name)) {
+        // detach currently inserted view
         viewContainerRef.detach();
+
         if (viewCache.has(name)) {
           viewContainerRef.insert(viewCache.get(name));
         } else {
+          // creates and inserts view to the view container
           const newView = viewContainerRef.createEmbeddedView(
             templateCache.get(name),
             viewContext
@@ -54,7 +57,7 @@ export function createTemplateManager<T extends object>(
       }
     },
     destroy() {
-      viewCache.forEach(embeddedView => embeddedView?.destroy());
+      viewCache.forEach(view => view?.destroy());
       viewContainerRef.clear();
     }
   };
