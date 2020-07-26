@@ -3,6 +3,7 @@ import { SchedulingPriority } from '../../../src/lib/render-strategies/rxjs/sche
 
 /** @test {coalesceWith} */
 describe('schedule and coalesce', () => {
+
   it('should change the execution context for coalescing', (done) => {
     let test = 0;
     const doWork = () => {

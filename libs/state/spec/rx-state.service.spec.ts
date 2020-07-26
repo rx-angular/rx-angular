@@ -1,12 +1,12 @@
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { jestMatcher } from '@test-helpers';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RxState } from '../src';
 import { createStateChecker, initialPrimitiveState, PrimitiveState } from './fixtures';
 import { TestScheduler } from 'rxjs/testing';
-import { jestMatcher } from '@test-helpers';
 import { select } from '../src/lib/rxjs/operators/select';
 import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
 import { from, interval, of, Subject } from 'rxjs';
-import { createAccumulationObservable } from '../src/lib/core';
 
 function setupState<T extends object>(cfg: { initialState?: T }) {
   const { initialState } = { ...cfg };
@@ -397,7 +397,7 @@ describe('RxStateService', () => {
 
     it('should throw with wrong params', () => {
       const state = setupState({ initialState: initialPrimitiveState });
-      
+
       expect(() => state.connect('some string' as any))
         .toThrowError('wrong params passed to connect');
     });
