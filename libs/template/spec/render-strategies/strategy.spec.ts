@@ -6,6 +6,7 @@ import {
   getStrategies
 } from '../../src/lib/render-strategies';
 import { TestScheduler } from 'rxjs/testing';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 
 import {
