@@ -40,5 +40,12 @@ export const ROUTES: Routes = [
       import('./examples/component-tree-prio/component-tree-prio.module').then(
         m => m.ComponentTreePrioModule
       )
+  },
+  {
+    path: 'template-binding',
+    loadChildren: () =>
+      import('./examples/template-binding/template-binding.module').then(
+        m => m.TemplateBindingModule
+      )
   }
 ];
