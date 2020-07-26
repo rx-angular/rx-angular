@@ -23,7 +23,8 @@ export class StatefulComponent {
 
 ```TypeScript
 class RxState<T extends object> implements OnDestroy, Subscribable<T> {
-  readonly readonly $: Observable<T> = this.accumulationObservable.signal$;
+  readonly readonly $: Observable<T> = this.accumulator.signal$;
+  setAccumulator(accumulatorFn: AccumulationFn) => ;
   get() => T;
   get(k1: K1) => Partial<T>;
   set(stateOrProjectState: Partial<T> | ProjectStateFn<T>) => void;
@@ -46,6 +47,10 @@ class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
 The unmodified state exposed as `Observable<T>`. It is not shared, distinct or gets replayed.
 Use the `$` property if you want to read the state without having applied <a href='/docs/generated/operators/stateful#stateful'>stateful</a> to it.
+
+### setAccumulator
+
+##### typeof: (accumulatorFn: AccumulationFn) =>
 
 ### get
 
@@ -174,7 +179,7 @@ state.connect('timer', myTimer$);
 
 ##### typeof: (key: K, input\$: Observable&#60;V&#62;, projectSliceFn: ProjectValueReducer&#60;T, K, V&#62;) => void
 
-Connect an `Observable<Partial<T>>` source to a specific property in the state. Additionally you can provide a
+Connect an `Observable<V>` source to a specific property in the state. Additionally you can provide a
 `projectionFunction` to access the current state object on every emission of your connected `Observable`.
 Any change emitted by the source will get merged into the state.
 Subscription handling is done automatically.
