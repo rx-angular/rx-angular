@@ -17,8 +17,9 @@ import {
   takeUntil,
   tap
 } from 'rxjs/operators';
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 
+@Injectable()
 export class LoadTestService {
   ms = 10;
   strategy$ = new BehaviorSubject('noop');
