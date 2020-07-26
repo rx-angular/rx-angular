@@ -81,21 +81,21 @@ describe('distinctUntilSomeChanged operator', () => {
           val: 2,
           objVal: {
             foo: 'foo',
-            bar: 'bar'
+            bar: 0
           }
         },
         d: {
           val: 2,
           objVal: {
             foo: 'foo2',
-            bar: 'bar'
+            bar: 0
           }
         },
         e: {
           val: 2,
           objVal: {
             foo: 'foo2',
-            bar: 'bar3'
+            bar: 3
           }
         }
       };
