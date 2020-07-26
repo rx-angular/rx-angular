@@ -7,6 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
 import { TemplateModule, ViewportPrioModule } from '@rx-angular/template';
+import { LetTemplateBindingHttpExampleComponent } from './let-template-binding/examples/let-template-binding-http-example.component';
+import { LetTemplateBindingSubjectExampleComponent } from './let-template-binding/examples/let-template-binding-subject-example.component';
 import { LetTemplateBindingComponent } from './let-template-binding/let-template-binding.component';
 import { ToStringPipe } from './let-template-binding/to-string.pipe';
 
@@ -17,7 +19,12 @@ export const ROUTES = [
     component: LetTemplateBindingComponent
   }
 ];
-const DECLARATIONS = [LetTemplateBindingComponent, ToStringPipe];
+const DECLARATIONS = [
+  LetTemplateBindingComponent,
+  ToStringPipe,
+  LetTemplateBindingSubjectExampleComponent,
+  LetTemplateBindingHttpExampleComponent
+];
 
 @NgModule({
   declarations: [DECLARATIONS],
