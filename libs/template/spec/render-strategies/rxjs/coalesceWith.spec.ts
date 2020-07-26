@@ -2,6 +2,7 @@ import { TestScheduler } from 'rxjs/internal/testing/TestScheduler';
 import { mergeMapTo, share } from 'rxjs/operators';
 import { concat, defer, from, of, timer } from 'rxjs';
 
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { coalesceWith } from '../../../src/lib/render-strategies/rxjs/operators/coalesceWith';
 
