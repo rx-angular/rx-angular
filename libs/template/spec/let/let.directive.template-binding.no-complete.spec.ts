@@ -46,6 +46,7 @@ describe('LetDirective when template binding without "complete" template', () =>
   });
 
   it('should fallback to and render "next" template when observable completes', () => {
+    component.value$ = of(1);
     fixture.detectChanges();
     expectContentToBe('1');
   });

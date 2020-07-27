@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LetDirective } from '@rx-angular/template';
-import { EMPTY, interval, Observable, of, Subject, NEVER } from 'rxjs';
+import { EMPTY, interval, Observable, of, Subject, NEVER, throwError } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -54,17 +54,15 @@ describe('LetDirective when template binding with all templates', () => {
   });
 
   it('should render "complete" template on the observable completion', () => {
+    // The resulting synchronous notification sequence is: 1,2,3,complete
+    component.value$ = of(1, 2, 3);
     fixture.detectChanges();
     expectContentToBe('complete');
   });
 
   it('should render "error" template on observable error', () => {
-    component.value$ = new Subject();
+    component.value$ = throwError(new Error('test error'));
     fixture.detectChanges();
-
-    (component.value$ as Subject<number>).error(new Error('test'));
-    fixture.detectChanges();
-
     expectContentToBe('error');
   });
 
@@ -83,6 +81,8 @@ describe('LetDirective when template binding with all templates', () => {
 
     tick(1000);
     fixture.detectChanges();
+    // the last emitted value ('2') and complete notification are in sync
+    // so we expect "complete" here
     expectContentToBe('complete');
   }));
 

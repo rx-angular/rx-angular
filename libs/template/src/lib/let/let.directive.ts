@@ -13,7 +13,8 @@ import {
   Observable,
   ObservableInput,
   Observer,
-  Unsubscribable
+  Unsubscribable,
+  Subscription
 } from 'rxjs';
 import { createRenderAware, RenderAware, StrategySelection } from '../core';
 import {
@@ -158,7 +159,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     this.templateManager.addTemplateRef('rxSuspense', templateRef);
   }
 
-  protected subscription: Unsubscribable;
+  protected subscription: Unsubscribable = new Subscription();
 
   private readonly templateManager: TemplateManager<
     LetViewContext<U | undefined | null>
@@ -234,7 +235,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription?.unsubscribe();
+    this.subscription.unsubscribe();
     this.templateManager.destroy();
   }
 }

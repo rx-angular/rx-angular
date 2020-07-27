@@ -14,7 +14,7 @@ Other Features:
 - it takes away multiple usages of the `async` or `push` pipe
 - a unified/structured way of handling null, undefined or error
 - distinct same values in a row skip not needed re-renderings
-- display custom templates for different observable notifications
+- display custom templates for different observable notifications (suspense, next, error, complete)
 
 The current way of binding an observable in angular applications to the view looks like that:
 
