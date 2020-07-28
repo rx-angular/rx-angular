@@ -32,7 +32,7 @@ The `unpatch` directive solves this problem in a convenient way:
 ```
 
 
-> **Warning**: Do not use `[unpatch]` on elements that should trigger navigation (with `routerLink` directly or with method bound to `(click)` or other events.
+> **Warning**: Do not use `[unpatch]` on elements that should trigger navigation (with `routerLink` directly or with method bound to `(click)` or other events).
 
 
 Included Features:
