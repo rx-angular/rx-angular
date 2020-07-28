@@ -1,3 +1,8 @@
-import { RenderStrategy } from '../../core/render-aware';
+import {
+  RenderStrategy,
+  RenderStrategyFactoryConfig
+} from '../../core/render-aware';
 
-export type NoopStrategyConstructorType = () => RenderStrategy;
+export type NoopStrategyConstructor = (
+  config?: RenderStrategyFactoryConfig
+) => RenderStrategy;

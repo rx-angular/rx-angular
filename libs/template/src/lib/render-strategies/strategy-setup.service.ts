@@ -1,33 +1,37 @@
 import { Injectable } from '@angular/core';
 import { patch, RxState } from '@rx-angular/state';
-import { StrategyNameType } from './interfaces/strategy-name.type';
-import { availableStrategies } from './constants/default-strategies.constant';
 import { Subject } from 'rxjs';
-import { StrategySetupState } from './interfaces/strategy-setup-state.interface';
+import { availableStrategies } from './constants/default-strategies.constant';
 import { AddStrategyRequest } from './interfaces/add-strategy-request.interface';
-import { AvailableStrategies } from './interfaces/available-strategies.interface';
+import { ExtendedStrategies } from './interfaces/extended-strategy';
+import { DefaultStrategyName } from './interfaces/default-strategy-name.type';
+import { StrategySetupState } from './interfaces/strategy-setup-state.interface';
 
 @Injectable({ providedIn: 'root' })
-export class StrategySetupService extends RxState<StrategySetupState> {
-  private strategyChange$ = new Subject<StrategyNameType>();
-  private outOfViewportStrategyChange$ = new Subject<StrategyNameType>();
-  private newStrategyRegistration$ = new Subject<AddStrategyRequest>();
+export class StrategySetupService<
+  S extends string = DefaultStrategyName
+> extends RxState<StrategySetupState<keyof ExtendedStrategies<S>>> {
+  private strategyChange$ = new Subject<keyof ExtendedStrategies<S>>();
+  private outOfViewportStrategyChange$ = new Subject<
+    keyof ExtendedStrategies<S>
+  >();
+  private newStrategyRegistration$ = new Subject<AddStrategyRequest<S>>();
 
   strategy$ = this.select('currentStrategy');
   outOfViewportStrategy$ = this.select('currentOutOfViewportStrategy');
 
-  get strategy(): StrategyNameType {
+  get strategy(): keyof ExtendedStrategies<S> {
     return this.get().currentStrategy;
   }
 
-  get outOfViewportStrategy(): StrategyNameType {
+  get outOfViewportStrategy(): keyof ExtendedStrategies<S> {
     return this.get().currentOutOfViewportStrategy;
   }
 
   constructor() {
     super();
     this.set({
-      strategies: availableStrategies,
+      strategies: availableStrategies as ExtendedStrategies<S>,
       currentStrategy: 'local',
       currentOutOfViewportStrategy: 'noop'
     });
@@ -50,7 +54,7 @@ export class StrategySetupService extends RxState<StrategySetupState> {
     this.connect(this.newStrategyRegistration$, (state, strategy) => ({
       strategies: patch(state.strategies, {
         [strategy.name]: strategy.constructor
-      }),
+      } as Partial<ExtendedStrategies<S>>),
       currentStrategy: strategy.options?.setAsDefault
         ? strategy.name
         : state.currentStrategy,
@@ -60,21 +64,21 @@ export class StrategySetupService extends RxState<StrategySetupState> {
     }));
   }
 
-  changeStrategy(strategy: StrategyNameType) {
+  changeStrategy(strategy: keyof ExtendedStrategies<S>) {
     this.strategyChange$.next(strategy);
   }
 
-  changeOutOfViewportStrategy(strategy: StrategyNameType) {
+  changeOutOfViewportStrategy(strategy: keyof ExtendedStrategies<S>) {
     this.outOfViewportStrategyChange$.next(strategy);
   }
 
-  addNewStrategy(request: AddStrategyRequest) {
+  addNewStrategy(request: AddStrategyRequest<S>) {
     this.newStrategyRegistration$.next(request);
   }
 
   private strategyExists(
-    strategies: AvailableStrategies,
-    strategy: StrategyNameType
+    strategies: ExtendedStrategies<S>,
+    strategy: keyof ExtendedStrategies<S>
   ): boolean {
     const isExisting = strategies[strategy];
 
@@ -82,6 +86,6 @@ export class StrategySetupService extends RxState<StrategySetupState> {
       console.warn(`Strategy ${strategy} not found`);
     }
 
-    return isExisting;
+    return !!isExisting;
   }
 }
