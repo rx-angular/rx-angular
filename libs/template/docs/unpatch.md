@@ -4,6 +4,7 @@ The `unpatch` directive helps developers to partially deactivate `NgZone`, as we
 of unnecessary renderings through zones `addEventListener` patches.
 It can be used on any element you apply to event bindings.
 
+
 The current way of binding events to DOM:
 
 ```html
@@ -29,6 +30,10 @@ The `unpatch` directive solves this problem in a convenient way:
   click or hover me
 </button>
 ```
+
+
+> **Warning**: Do not use `[unpatch]` on elements that should trigger navigation (with `routerLink` directly or with method bound to `(click)` or other events.
+
 
 Included Features:
 
