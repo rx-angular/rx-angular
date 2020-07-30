@@ -3,6 +3,6 @@ import {
   RenderStrategyFactoryConfig
 } from '../../core/render-aware';
 
-export type StrategyConstructorType = <T>(
+export type StrategyConstructor = (
   config: RenderStrategyFactoryConfig
 ) => RenderStrategy;
