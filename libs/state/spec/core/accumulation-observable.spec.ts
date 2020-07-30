@@ -1,8 +1,10 @@
+
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { interval, of, throwError } from 'rxjs';
-import { map, pluck, switchMap, take } from 'rxjs/operators';
+import { map, pluck } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-import { createAccumulationObservable, select, stateful } from '../../src/lib/core';
+import { createAccumulationObservable, select } from '../../src/lib/core';
 import { initialPrimitiveState, PrimitiveState } from '../fixtures';
 
 

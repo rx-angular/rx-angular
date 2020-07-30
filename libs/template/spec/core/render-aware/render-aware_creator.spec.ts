@@ -3,6 +3,7 @@ import { createRenderAware, RenderAware } from '../../../src/lib/core';
 import { concat, EMPTY, NEVER, NextObserver, Observer, of, Unsubscribable } from 'rxjs';
 import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
 
+// TODO: Add Angular decorator.
 class CdAwareImplementation<U> implements OnDestroy {
   public renderedValue: any = undefined;
   public error: any = undefined;

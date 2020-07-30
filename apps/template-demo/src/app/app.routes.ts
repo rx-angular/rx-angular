@@ -42,6 +42,13 @@ export const ROUTES: Routes = [
       ),
   },
   {
+    path: 'template-binding',
+    loadChildren: () =>
+      import('./examples/template-binding/template-binding.module').then(
+        (m) => m.TemplateBindingModule
+      ),
+  },
+  {
     path: 'strategies-setup',
     loadChildren: () =>
       import('./examples/strategies-setup/strategies-setup.module').then(

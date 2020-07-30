@@ -57,8 +57,16 @@
         "allow": [],
         "depConstraints": [
           {
-            "sourceTag": "*",
-            "onlyDependOnLibsWithTags": ["*"]
+            "sourceTag": "type:utils",
+            "onlyDependOnLibsWithTags": []
+          },
+          {
+            "sourceTag": "type:app",
+            "onlyDependOnLibsWithTags": ["type:lib", "type:utils"]
+          },
+          {
+            "sourceTag": "type:lib",
+            "onlyDependOnLibsWithTags": ["type:utils"]
           }
         ]
       }

@@ -20,31 +20,34 @@
   },
   "projects": {
     "state-demo": {
-      "tags": []
+      "tags": ["type:app"]
     },
     "template-demo": {
-      "tags": []
+      "tags": ["type:app"]
     },
     "experiments": {
-      "tags": []
+      "tags": ["type:app"]
     },
     "test-helpers": {
       "tags": ["type:util"]
     },
     "state": {
-      "tags": ["type:feature"]
+      "tags": ["type:lib"]
     },
     "template": {
-      "tags": ["type:feature"]
+      "tags": ["type:lib"]
     },
     "docs": {
-      "tags": []
+      "tags": ["type:app"]
     },
     "tour-of-heroes": {
-      "tags": []
+      "tags": ["type:app"]
     },
     "tour-of-heroes-ngxs": {
-      "tags": []
+      "tags": ["type:app"]
     }
+  },
+  "affected": {
+    "defaultBase": "master"
   }
 }

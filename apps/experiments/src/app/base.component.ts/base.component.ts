@@ -7,12 +7,14 @@ import {
   NgZone,
   OnDestroy,
   ɵdetectChanges,
-  ɵmarkDirty
+  ɵmarkDirty,
+  Directive,
 } from '@angular/core';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { CdConfigService } from '../cd-config.service';
 import { environment } from '../../environments/environment';
 
+@Directive()
 export abstract class BaseComponent
   implements AfterViewInit, AfterViewChecked, OnDestroy {
   cd = environment.changeDetection ? 'Default' : 'OnPush';
