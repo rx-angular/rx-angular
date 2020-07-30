@@ -1,0 +1,9 @@
+<div class="padding">
+  <span>renders: {{ detectedChanges() }}</span>
+  <select (change)="changeStrategy($event.target.value)" class="block">
+    <option [value]="s" *ngFor="let s of strategies">{{ s }}</option>
+  </select>
+  <div class="padding">
+    <rx-angular-demo-counter></rx-angular-demo-counter>
+  </div>
+</div>

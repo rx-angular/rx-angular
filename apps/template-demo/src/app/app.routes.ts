@@ -4,41 +4,48 @@ export const ROUTES: Routes = [
   {
     path: '',
     redirectTo: 'coalescing',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'unpatch',
     loadChildren: () =>
       import('./examples/unpatch/comparison-unpatch.module').then(
-        m => m.ComparisonUnpatchModule
-      )
+        (m) => m.ComparisonUnpatchModule
+      ),
   },
   {
     path: 'scheduling',
     loadChildren: () =>
       import('./examples/scheduling/scheduling.module').then(
-        m => m.SchedulingModule
-      )
+        (m) => m.SchedulingModule
+      ),
   },
   {
     path: 'coalescing',
     loadChildren: () =>
       import('./examples/coalescing/coalescing.module').then(
-        m => m.CoalescingModule
-      )
+        (m) => m.CoalescingModule
+      ),
   },
   {
     path: 'prioritize-in-viewport',
     loadChildren: () =>
       import(
         './examples/prioritize-in-viewport/prioritize-in-viewport.module'
-      ).then(m => m.PrioritizeInViewportModule)
+      ).then((m) => m.PrioritizeInViewportModule),
   },
   {
     path: 'tree-prio',
     loadChildren: () =>
       import('./examples/component-tree-prio/component-tree-prio.module').then(
-        m => m.ComponentTreePrioModule
-      )
-  }
+        (m) => m.ComponentTreePrioModule
+      ),
+  },
+  {
+    path: 'strategies-setup',
+    loadChildren: () =>
+      import('./examples/strategies-setup/strategies-setup.module').then(
+        (m) => m.StrategiesSetupModule
+      ),
+  },
 ];

@@ -1,0 +1,5 @@
+<span>renders: {{ detectedChanges() }}</span>
+<button mat-button (click)="increment()" [unpatch]>Increment</button>
+<mat-card>
+  <mat-card-title>{{ counter$ | push }}</mat-card-title>
+</mat-card>
