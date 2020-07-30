@@ -2,17 +2,18 @@ import {
   ChangeDetectorRef,
   OnDestroy,
   Pipe,
-  PipeTransform
+  PipeTransform,
 } from '@angular/core';
 import {
   NextObserver,
   Observable,
   ObservableInput,
-  Unsubscribable
+  Unsubscribable,
 } from 'rxjs';
 import { createRenderAware, RenderAware } from '../core';
 import { getStrategies } from '../render-strategies';
 import { DEFAULT_STRATEGY_NAME } from '../render-strategies/strategies/strategies-map';
+import { StrategySetupService } from '../strategies-setup/strategy-setup.service';
 
 /**
  * @Pipe PushPipe
@@ -61,26 +62,36 @@ import { DEFAULT_STRATEGY_NAME } from '../render-strategies/strategies/strategie
 export class PushPipe<U> implements PipeTransform, OnDestroy {
   private renderedValue: U | null | undefined;
 
-  private readonly subscription: Unsubscribable;
+  private readonly subscriptions: Unsubscribable[];
   private readonly RenderAware: RenderAware<U | null | undefined>;
   private readonly resetObserver: NextObserver<void> = {
     next: () => {
       this.renderedValue = undefined;
-    }
+    },
   };
   private readonly updateObserver: NextObserver<U | null | undefined> = {
-    next: (value: U | null | undefined) => (this.renderedValue = value)
+    next: (value: U | null | undefined) => (this.renderedValue = value),
   };
 
-  constructor(cdRef: ChangeDetectorRef) {
+  private strategyFromSetup: string;
+
+  constructor(
+    cdRef: ChangeDetectorRef,
+    private setupService: StrategySetupService
+  ) {
     this.RenderAware = createRenderAware<U>({
       strategies: getStrategies({
-        cdRef
+        cdRef,
       }),
       updateObserver: this.updateObserver,
-      resetObserver: this.resetObserver
+      resetObserver: this.resetObserver,
     });
-    this.subscription = this.RenderAware.subscribe();
+    this.subscriptions = [
+      this.RenderAware.subscribe(),
+      this.setupService.strategy$.subscribe(
+        (s) => (this.strategyFromSetup = s)
+      ),
+    ];
   }
 
   transform<T>(
@@ -99,13 +110,13 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
     potentialObservable: ObservableInput<T> | null | undefined,
     config: string | Observable<string> | undefined
   ): T | null | undefined {
-    const strategy = config || DEFAULT_STRATEGY_NAME;
+    const strategy = config || this.strategyFromSetup || DEFAULT_STRATEGY_NAME;
     this.RenderAware.nextStrategy(strategy);
     this.RenderAware.nextPotentialObservable(potentialObservable);
     return this.renderedValue as any;
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 }

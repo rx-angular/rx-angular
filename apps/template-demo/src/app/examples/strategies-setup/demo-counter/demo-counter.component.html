@@ -1,5 +1,17 @@
+<mat-card-title>Counter #{{ index }}</mat-card-title>
+
 <span>renders: {{ detectedChanges() }}</span>
-<button mat-button (click)="increment()" [unpatch]>Increment</button>
+<select (change)="changeStrategy($event.target.value)" class="block">
+  <option
+    [value]="s"
+    [selected]="s === currentStrategy"
+    *ngFor="let s of strategies"
+    >{{ s }}</option
+  >
+</select>
+<button mat-button (click)="increment()" color="primary" [unpatch]>
+  Increment {{ currentStrategy }}
+</button>
 <mat-card>
   <mat-card-title>{{ counter$ | push }}</mat-card-title>
 </mat-card>

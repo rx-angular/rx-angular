@@ -7,15 +7,17 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './strategies-setup-test.component.html',
   styleUrls: ['./strategies-setup-test.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [StrategySetupService],
 })
 export class StrategiesSetupTestComponent implements OnInit {
   strategies = ['global', 'local', 'native', 'noop', 'detach'];
   changeDetections = 0;
+  currentStrategy: string;
   detectedChanges = () => {
     return ++this.changeDetections;
   };
   constructor(private setupService: StrategySetupService) {
-    this.setupService.strategy$.subscribe(console.log);
+    this.setupService.strategy$.subscribe((s) => (this.currentStrategy = s));
   }
 
   ngOnInit(): void {}
