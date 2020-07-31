@@ -1,11 +1,9 @@
 import {
-  BehaviorSubject,
   EMPTY,
-  isObservable,
   NextObserver,
   Observable,
   of,
-  Subject,
+  ReplaySubject,
   Subscribable,
   Subscription
 } from 'rxjs';
@@ -14,44 +12,35 @@ import {
   distinctUntilChanged,
   filter,
   map,
-  mergeAll,
   switchMap,
   tap
 } from 'rxjs/operators';
+import { RenderStrategy, StrategySelection } from './interfaces';
 import { nameToStrategy } from './nameToStrategy';
-import {
-  RenderStrategy,
-  DEFAULT_STRATEGY_NAME,
-  StrategySelection
-} from './strategies';
-import { toObservableValue } from '../rxjs/operators';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
   nextStrategy: (config: string | Observable<string>) => void;
+  activeStrategy$: Observable<RenderStrategy>;
 }
 
 /**
  * RenderAware
  *
  * @description
- * This abstract class holds all the shared logic for the push pipe and the let directive
+ * This function returns an object that holds all the shared logic for the push pipe and the let directive
  * responsible for change detection
  * If you extend this class you need to implement how the update of the rendered value happens.
  * Also custom behaviour is something you need to implement in the extending class
  */
 export function createRenderAware<U>(cfg: {
-  strategies: StrategySelection<U>;
+  strategies: StrategySelection;
   resetObserver: NextObserver<void>;
   updateObserver: NextObserver<U>;
 }): RenderAware<U | undefined | null> {
-  let strategy: RenderStrategy<U>;
-  const strategyName$ = new BehaviorSubject<string | Observable<string>>(
-    DEFAULT_STRATEGY_NAME
-  );
-  const updateStrategyEffect$: Observable<RenderStrategy<
-    U
-  >> = strategyName$.pipe(
+  const strategyName$ = new ReplaySubject<string | Observable<string>>(1);
+  let currentStrategy: RenderStrategy;
+  const strategy$: Observable<RenderStrategy> = strategyName$.pipe(
     distinctUntilChanged(),
     switchMap(stringOrObservable =>
       typeof stringOrObservable === 'string'
@@ -59,36 +48,53 @@ export function createRenderAware<U>(cfg: {
         : stringOrObservable
     ),
     nameToStrategy(cfg.strategies),
-    tap(s => (strategy = s))
+    tap(s => (currentStrategy = s))
   );
 
-  const observablesFromTemplate$ = new Subject<Observable<U>>();
+  const observablesFromTemplate$ = new ReplaySubject<Observable<U>>(1);
   const valuesFromTemplate$ = observablesFromTemplate$.pipe(
     distinctUntilChanged()
   );
+  let firstTemplateObservableChange = true;
+
   const renderingEffect$ = valuesFromTemplate$.pipe(
     // handle null | undefined assignment and new Observable reset
-    tap(observable$ => {
+    map(observable$ => {
       if (observable$ === null) {
-        cfg.updateObserver.next(observable$ as any);
-      } else {
-        cfg.resetObserver.next();
+        return of(null);
       }
-      strategy.render();
+      if (!firstTemplateObservableChange) {
+        cfg.resetObserver.next();
+        if (observable$ === undefined) {
+          return of(undefined);
+        }
+      }
+      firstTemplateObservableChange = false;
+      return observable$;
     }),
     // forward only observable values
-    filter(o$ => isObservable(o$)),
-    map(o$ =>
+    filter(o$ => o$ !== undefined),
+    switchMap(o$ =>
       o$.pipe(
         distinctUntilChanged(),
         tap(cfg.updateObserver),
-        strategy.behaviour()
+        currentStrategy.rxScheduleCD,
+        tap({
+          // handle "error" and "complete" notifications for Observable from template
+          error: err => {
+            console.error(err);
+            if (cfg.updateObserver.error) {
+              cfg.updateObserver.error(err);
+              currentStrategy.detectChanges();
+            }
+          },
+          complete: cfg.updateObserver.complete
+            ? () => currentStrategy.detectChanges()
+            : undefined
+        })
       )
     ),
-    switchMap(observable$ => (observable$ == null ? EMPTY : observable$)),
-    tap(() => strategy.render()),
     catchError(e => {
-      console.error(e);
       return EMPTY;
     })
   );
@@ -100,10 +106,11 @@ export function createRenderAware<U>(cfg: {
     nextStrategy(nextConfig: string | Observable<string>): void {
       strategyName$.next(nextConfig);
     },
+    activeStrategy$: strategy$,
     subscribe(): Subscription {
       return new Subscription()
-        .add(updateStrategyEffect$.subscribe())
+        .add(strategy$.subscribe())
         .add(renderingEffect$.subscribe());
     }
-  } as RenderAware<U | undefined | null>;
+  };
 }

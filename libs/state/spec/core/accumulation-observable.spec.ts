@@ -1,31 +1,12 @@
+
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
-import { of } from 'rxjs';
-import { pluck } from 'rxjs/operators';
+import { interval, of, throwError } from 'rxjs';
+import { map, pluck } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { createAccumulationObservable, select } from '../../src/lib/core';
-import createSpy = jasmine.createSpy;
+import { initialPrimitiveState, PrimitiveState } from '../fixtures';
 
-interface PrimitiveState {
-  bol: boolean;
-  str: string;
-  num: number;
-}
-
-interface NestedState {
-  obj: {
-    key1: {
-      key11: {
-        key111: string;
-      };
-    };
-  };
-}
-
-const initialPrimitiveState: PrimitiveState = {
-  str: 'string',
-  num: 42,
-  bol: true
-};
 
 function setupAccumulationObservable<T extends object>(cfg: {
   initialState?: T;
@@ -83,6 +64,15 @@ describe('createAccumulationObservable', () => {
       const valuesInOrder = ['', { num: 777 }];
       slice$.subscribe(next => expect(next).toBe(valuesInOrder[++i]));
       state.nextSlice({ num: 777 });
+    });
+
+    it('should log error if getting error', () => {
+      const spy = jest.spyOn(console, 'error').mockImplementation();
+      const state = setupAccumulationObservable<PrimitiveState>({});
+      state.nextSliceObservable(throwError('test') as any);
+      state.subscribe();
+
+      expect(spy).toBeCalled();
     });
   });
 
@@ -218,4 +208,30 @@ describe('createAccumulationObservable', () => {
       expect(numAccCalls).toBe(2)
     });
   });
+
+  describe('emissions', () => {
+
+    it('should stop on unsubscribe from state', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const acc = createAccumulationObservable<PrimitiveState>();
+        const sub = acc.subscribe();
+        acc.nextSlice(initialPrimitiveState);
+        sub.unsubscribe();
+        expectObservable(acc.state$).toBe('');
+      });
+    });
+
+    it('should stop from connect observable', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const acc = createAccumulationObservable<PrimitiveState>();
+        const sub = acc.subscribe();
+        acc.nextSlice(initialPrimitiveState);
+        const tick$ = interval(1000).pipe(map(num => ({num})));
+        acc.nextSliceObservable(tick$)
+        sub.unsubscribe();
+        expectObservable(acc.state$).toBe('');
+      });
+    });
+
+  })
 });

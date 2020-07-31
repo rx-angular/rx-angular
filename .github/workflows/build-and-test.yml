@@ -1,0 +1,35 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: rx-angular CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+        fetch-depth: 0
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: git fetch --no-tags --prune --depth=5 origin master
+    - run: npm install --frozen-lockfile --non-interactive
+    - run: npm run nx affected:lint -- --base=origin/master
+    - run: npm run nx affected:build -- --base=origin/master
+    - run: npm run ng test -- --project=state --code-coverage
+    - run: npm run ng test -- --project=template --code-coverage

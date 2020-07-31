@@ -1,5 +1,18 @@
-export * from './lib/template.module';
-export * from './lib/let';
-export * from './lib/push';
-export * from './lib/core';
-export * from './lib/render-change';
+export {
+  getStrategies,
+  priorityTickMap,
+  SchedulingPriority
+} from './lib/render-strategies';
+export { getZoneUnPatchedApi, isNgZone, isViewEngineIvy } from './lib/core';
+export { PushPipe, PushModule } from './lib/push';
+export { LetDirective, LetModule } from './lib/let';
+// EXPERIMENTAL
+export {
+  UnpatchEventsDirective,
+  UnpatchEventsModule
+} from './lib/experimental/unpatch/events';
+export {
+  ViewportPrioModule,
+  ViewportPrioDirective
+} from './lib/experimental/viewport-prio';
+export { TemplateModule } from './lib/template.module';

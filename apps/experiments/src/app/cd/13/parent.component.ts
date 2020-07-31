@@ -4,15 +4,15 @@ import {
   ElementRef,
   ViewChild
 } from '@angular/core';
-import { defer, fromEvent, interval, Observable } from 'rxjs';
+import { defer, fromEvent, interval, Observable, Subject } from 'rxjs';
 import {
   scan,
   startWith,
   switchMap,
   takeUntil,
+  tap,
   withLatestFrom
 } from 'rxjs/operators';
-import { generateFrames } from '@rx-angular/template';
 import { BaseComponent } from '../../base.component.ts/base.component';
 
 @Component({
@@ -38,23 +38,22 @@ import { BaseComponent } from '../../base.component.ts/base.component';
           (isPatchedAf$ | push: 'optimistic1') ? 'Patched' : 'UnPatched'
         }}</span
       ><br />
-      <button #button>Run AF for 1 sec</button>
+      <button [unpatch] (click)="btnClick$.next($event)">
+        Run AF for 1 sec
+      </button>
       <br />
-      <button #buttonToggle>Toggle Observable</button>
+      <button [unpatch] (click)="btnToggle$.next($event)">
+        Toggle Observable
+      </button>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class CdParent13Component extends BaseComponent {
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
-  btnClick$ = this.afterViewInit$.pipe(
-    switchMap(_ => fromEvent(this.button.nativeElement, 'click'))
-  );
+  btnClick$ = new Subject<Event>();
 
-  @ViewChild('buttonToggle') buttonToggle: ElementRef<HTMLButtonElement>;
-  btnToggle$ = this.afterViewInit$.pipe(
-    switchMap(_ => fromEvent(this.buttonToggle.nativeElement, 'click'))
-  );
+  btnToggle$ = new Subject();
+
   isPatchedAf$ = this.btnToggle$.pipe(
     startWith(true),
     scan(isPatched => !isPatched)
@@ -63,20 +62,9 @@ export class CdParent13Component extends BaseComponent {
   value$;
 
   baseEffects$ = defer(() => {
-    const asyncProducer = (window as any).__zone_symbol__requestAnimationFrame;
-    const asyncCanceler = (window as any).__zone_symbol__cancelAnimationFrame;
-    const afPatched$: Observable<number> = generateFrames();
-    const afUnPatched$: Observable<number> = generateFrames(
-      asyncProducer,
-      asyncCanceler
-    );
     return this.btnClick$.pipe(
       withLatestFrom(this.isPatchedAf$),
-      switchMap((_, isPatchedAf) =>
-        (isPatchedAf ? afUnPatched$ : afPatched$).pipe(
-          takeUntil(interval(1000))
-        )
-      )
+      tap(() => console.error('Not implemented'))
     );
   });
 }

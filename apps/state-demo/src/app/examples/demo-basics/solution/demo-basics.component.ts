@@ -1,14 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { map, tap } from 'rxjs/operators';
-import {
-  ListServerItem,
-  ListService
-} from '../../../data-access/list-resource';
-import {
-  DemoBasicsItem,
-  DemoBasicsViewModelService
-} from './demo-basics.view-model.service';
-import { distinctUntilSomeChanged } from '@rx-angular/state';
+import { DemoBasicsViewModelService } from './demo-basics.view-model.service';
+import { RxState } from '@rx-angular/state';
+import { DemoBasicsAdapterService } from './demo-basics.adapter.service';
 
 @Component({
   selector: 'demo-basics',
@@ -30,14 +23,12 @@ import { distinctUntilSomeChanged } from '@rx-angular/state';
     `
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DemoBasicsViewModelService]
+  providers: [DemoBasicsViewModelService, DemoBasicsAdapterService]
 })
-export class DemoBasicsComponent {
+export class DemoBasicsComponent extends RxState<any> {
   @Input()
   set refreshInterval(refreshInterval: number) {
-    if (refreshInterval > 4000) {
-      this.vm.set({ refreshInterval });
-    }
+    this.vm.set({ refreshInterval });
   }
 
   numRenders = 0;
@@ -47,22 +38,12 @@ export class DemoBasicsComponent {
 
   constructor(
     public vm: DemoBasicsViewModelService,
-    private listService: ListService
+    private ca: DemoBasicsAdapterService
   ) {
-    this.vm.connect(
-      'list',
-      this.listService.list$.pipe(map(this.parseListItems))
-    );
+    super();
 
-    this.vm.hold(
-      this.vm.refreshListSideEffect$.pipe(
-        tap(_ => this.listService.refetchList())
-      )
-    );
-    this.vm.connect('isPending', this.listService.loadingSignal$);
-  }
-
-  parseListItems(l: ListServerItem[]): DemoBasicsItem[] {
-    return l.map(({ id, name }) => ({ id, name }));
+    this.vm.connect('list', this.ca.list$);
+    this.vm.connect('isPending', this.ca.loadingSignal$);
+    this.hold(this.vm.refreshListSideEffect$, _ => this.ca.refetchList());
   }
 }

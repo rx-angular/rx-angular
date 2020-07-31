@@ -10,7 +10,9 @@ import {
   ObservableInput,
   Unsubscribable
 } from 'rxjs';
-import { RenderAware, createRenderAware, getStrategies } from '../core';
+import { createRenderAware, RenderAware } from '../core';
+import { getStrategies } from '../render-strategies';
+import { DEFAULT_STRATEGY_NAME } from '../render-strategies/strategies/strategies-map';
 
 /**
  * @Pipe PushPipe
@@ -56,23 +58,25 @@ import { RenderAware, createRenderAware, getStrategies } from '../core';
  * @publicApi
  */
 @Pipe({ name: 'push', pure: false })
-export class PushPipe<S> implements PipeTransform, OnDestroy {
-  private renderedValue: S | null | undefined;
+export class PushPipe<U> implements PipeTransform, OnDestroy {
+  private renderedValue: U | null | undefined;
 
   private readonly subscription: Unsubscribable;
-  private readonly RenderAware: RenderAware<S | null | undefined>;
+  private readonly RenderAware: RenderAware<U | null | undefined>;
   private readonly resetObserver: NextObserver<void> = {
     next: () => {
       this.renderedValue = undefined;
     }
   };
-  private readonly updateObserver: NextObserver<S | null | undefined> = {
-    next: (value: S | null | undefined) => (this.renderedValue = value)
+  private readonly updateObserver: NextObserver<U | null | undefined> = {
+    next: (value: U | null | undefined) => (this.renderedValue = value)
   };
 
   constructor(cdRef: ChangeDetectorRef) {
-    this.RenderAware = createRenderAware<S>({
-      strategies: getStrategies<S>({ cdRef }),
+    this.RenderAware = createRenderAware<U>({
+      strategies: getStrategies({
+        cdRef
+      }),
       updateObserver: this.updateObserver,
       resetObserver: this.resetObserver
     });
@@ -95,9 +99,8 @@ export class PushPipe<S> implements PipeTransform, OnDestroy {
     potentialObservable: ObservableInput<T> | null | undefined,
     config: string | Observable<string> | undefined
   ): T | null | undefined {
-    if (config) {
-      this.RenderAware.nextStrategy(config);
-    }
+    const strategy = config || DEFAULT_STRATEGY_NAME;
+    this.RenderAware.nextStrategy(strategy);
     this.RenderAware.nextPotentialObservable(potentialObservable);
     return this.renderedValue as any;
   }

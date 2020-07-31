@@ -1,20 +1,19 @@
 import { Observable } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import {
-  RenderStrategy,
-  DEFAULT_STRATEGY_NAME,
-  StrategySelection
-} from './strategies';
+import { RenderStrategy, StrategySelection } from './interfaces';
 
-export function nameToStrategy<U>(strategies: StrategySelection<U>) {
-  return (o$: Observable<string>): Observable<RenderStrategy<U>> => {
+export function nameToStrategy(strategies: StrategySelection) {
+  return (o$: Observable<string>): Observable<RenderStrategy> => {
     return o$.pipe(
       distinctUntilChanged(),
       map(
-        (strategy: string): RenderStrategy<U> =>
-          strategies[strategy]
-            ? strategies[strategy]
-            : strategies[DEFAULT_STRATEGY_NAME]
+        (strategy: string): RenderStrategy => {
+          const s = strategies[strategy];
+          if (!!s) {
+            return s;
+          }
+          throw new Error(`Strategy ${strategy} does not exist.`);
+        }
       )
     );
   };

@@ -10,8 +10,20 @@
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <h3 matSubheader>Tutorials</h3>
-      <a mat-list-item [routerLink]="['demo-basics']">Demo Basics</a>
-      <a mat-list-item [routerLink]="['demo-basics/solution']">Solution</a>
+      <a mat-list-item [routerLink]="['unpatch']">unpatch</a>
+      <a mat-list-item [routerLink]="['scheduling']">Scheduling</a>
+      <a mat-list-item [routerLink]="['coalescing/experiments-profiling']"
+        >Coalescing Profiling</a
+      >
+      <a mat-list-item [routerLink]="['coalescing/real-life-1']"
+        >Coalescing Imperative</a
+      >
+      <a mat-list-item [routerLink]="['scheduling']">Scheduling</a>
+      <a mat-list-item [routerLink]="['prioritize-in-viewport']"
+        >Viewport Prio</a
+      >
+      <a mat-list-item [routerLink]="['tree-prio']">ComponentTree Prio</a>
+      <a mat-list-item [routerLink]="['template-binding']">Template Binding</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -25,7 +37,7 @@
       >
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>Tackle Ephemeral-State Reactive</span>
+      <span>RxAngular Template</span>
     </mat-toolbar>
     <div class="container">
       <router-outlet></router-outlet>

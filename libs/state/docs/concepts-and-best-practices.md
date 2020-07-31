@@ -64,11 +64,9 @@ interface MyView {
   providers: [RxState]
 })
 export class StatefulComponent implements MyView {
-  readonly vm$ = this.state.select();
-
+  readonly vm$: Observable<MyState> = this.state.select();
   readonly click$ = new Subject<MouseEvent>();
   readonly expanded$ = this.click$.pipe(); // map it
-  readonly vm$: Observable<MyState> = this.state.select();
 
   @Input('items') set items(items: string[]) {
     this.state.set({ items });

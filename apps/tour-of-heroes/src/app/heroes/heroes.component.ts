@@ -16,6 +16,7 @@ const initHeroesComponentState: Partial<HeroesComponentState> = {
 };
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'app-heroes',
   templateUrl: './heroes.component.html',
   styleUrls: ['./heroes.component.css'],
@@ -61,5 +62,9 @@ export class HeroesComponent {
     this.state.connect(this._heroAdded$, (oldState, addedHero) => ({
       heroes: [...oldState.heroes, addedHero]
     }));
+  }
+
+  trackHero(idx: number, hero: Hero): number {
+    return hero.id;
   }
 }

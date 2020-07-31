@@ -9,6 +9,7 @@ interface DashboardComponentState {
 }
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
@@ -23,5 +24,9 @@ export class DashboardComponent {
     public configService: ConfigService
   ) {
     this.state.connect('heroes', this.heroService.getHeroes());
+  }
+
+  trackHero(idx: number, hero: Hero): number {
+    return hero.id;
   }
 }

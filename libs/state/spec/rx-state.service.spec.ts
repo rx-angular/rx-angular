@@ -1,11 +1,12 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { jestMatcher } from '@test-helpers';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RxState } from '../src';
 import { createStateChecker, initialPrimitiveState, PrimitiveState } from './fixtures';
 import { TestScheduler } from 'rxjs/testing';
-import { jestMatcher } from '@test-helpers';
 import { select } from '../src/lib/rxjs/operators/select';
-import { map, pluck, takeUntil } from 'rxjs/operators';
-import { from, of, Subject } from 'rxjs';
+import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
+import { from, interval, of, Subject } from 'rxjs';
 
 function setupState<T extends object>(cfg: { initialState?: T }) {
   const { initialState } = { ...cfg };
@@ -120,6 +121,20 @@ describe('RxStateService', () => {
       });
     });
   });
+
+  describe('get', () => {
+    const state = setupState({ initialState: initialPrimitiveState });
+
+    it('should return value when keys are provided as params', () => {
+      const val = state.get('num');
+      expect(val).toEqual(initialPrimitiveState.num)
+    })
+
+    it('should return whole state object when no keys provided', () => {
+      const val = state.get();
+      expect(val.num).toEqual(initialPrimitiveState.num)
+    })
+  })
 
   describe('select', () => {
     it('should return initial state', () => {
@@ -262,7 +277,6 @@ describe('RxStateService', () => {
 
   describe('connect', () => {
 
-
     it('should work with observables directly', () => {
       testScheduler.run(({ expectObservable }) => {
         const state = setupState({ initialState: initialPrimitiveState });
@@ -320,12 +334,135 @@ describe('RxStateService', () => {
       });
     });
 
+    it('should pass undefined for observable', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const s: { num: number | undefined } = { num: 0 };
+        const state = setupState({ initialState: s });
+
+        expectObservable(state.$.pipe(map(st => st.num))).toBe('(abc)', {
+          a: undefined,
+          b: 43,
+          c: undefined
+        });
+
+        state.connect(from([{ num: undefined }, { num: 43 }, { num: undefined }]), (o, n) => n);
+      });
+    });
+
+    it('should pass undefined for projectFn', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const s: { num: number | undefined } = { num: 0 };
+        const state = setupState({ initialState: s });
+
+        expectObservable(state.$.pipe(map(st => st.num))).toBe('(abc)', {
+          a: undefined,
+          b: 43,
+          c: undefined
+        });
+
+        state.connect('num', from([undefined, 43, undefined]), (o, n) => n);
+      });
+    });
+
+    it('should pass undefined for key observable', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const s: { num: number | undefined } = { num: 0 };
+        const state = setupState({ initialState: s });
+
+        expectObservable(state.$.pipe(map(st => st.num))).toBe('(abc)', {
+          a: undefined,
+          b: 43,
+          c: undefined
+        });
+
+        state.connect('num', from([undefined, 43, undefined]));
+      });
+    });
+
+    it('should pass undefined for observable projectFn', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const s: { num: number | undefined } = { num: 5 };
+        const state = setupState({ initialState: s });
+
+        expectObservable(state.$.pipe(map(st => st.num))).toBe('(abc)', {
+          a: undefined,
+          b: 43,
+          c: undefined
+        });
+
+        state.connect(from([{ num: undefined }, { num: 43 }, { num: undefined }]), (sta, newVal) => newVal);
+      });
+    });
+
+
     it('should throw with wrong params', () => {
       const state = setupState({ initialState: initialPrimitiveState });
 
-      expect(() => state.connect('some string' as any)).toThrowError('wrong params passed to connect');
+      expect(() => state.connect('some string' as any))
+        .toThrowError('wrong params passed to connect');
+    });
+
+    it('should stop from connect observable', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupState({ initialState: initialPrimitiveState });
+        const sub = state.subscribe();
+        state.set(initialPrimitiveState);
+        const tick$ = interval(100).pipe(map(num => ({num})));
+        state.connect(tick$);
+        sub.unsubscribe();
+        expectObservable(state.select()).toBe('');
+      });
+    });
+
+    it('should stop from connect key & observable', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupState({ initialState: initialPrimitiveState });
+        const sub = state.subscribe();
+        state.set(initialPrimitiveState);
+        const tick$ = interval(100);
+        state.connect('num', tick$);
+        sub.unsubscribe();
+        expectObservable(state.select()).toBe('');
+      });
 
     });
+
+    it('should stop from connect observable & projectFn', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupState({ initialState: initialPrimitiveState });
+        const sub = state.subscribe();
+        state.set(initialPrimitiveState);
+        const tick$ = interval(100);
+        state.connect(tick$, (s, v) => ({num: s.num+v}));
+        sub.unsubscribe();
+        expectObservable(state.select()).toBe('');
+      });
+    });
+
+    it('should stop from connect key & observable & projectFn', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupState({ initialState: initialPrimitiveState });
+        const sub = state.subscribe();
+        state.set(initialPrimitiveState);
+        const tick$ = interval(100);
+        state.connect('num', tick$, (s, v) => s.num+v);
+        sub.unsubscribe();
+        expectObservable(state.select()).toBe('');
+      });
+    });
+
+    it('should stop in selects with HOOs', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupState({ initialState: initialPrimitiveState });
+        const sub = state.subscribe();
+        state.set(initialPrimitiveState);
+        expectObservable(state.select(
+          switchMap(() => interval(100).pipe(map(num => ({num})), take(3)))
+        )).toBe('');
+        sub.unsubscribe();
+      });
+    });
+
 
   });
 
@@ -410,7 +547,7 @@ describe('RxStateService', () => {
       });
     });
 
-    it('should work with observable and effect',  fakeAsync(() => {
+    it('should work with observable and effect', fakeAsync(() => {
 
       let calls = 0;
       const effect = (v: number) => {

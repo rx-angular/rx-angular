@@ -119,8 +119,4 @@ export class HeroService {
   private log(message: string) {
     this.messageService.add(`HeroService: ${message}`);
   }
-
-  trackHero(idx: number, hero: Hero): number {
-    return hero.id;
-  }
 }

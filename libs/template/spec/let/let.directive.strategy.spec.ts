@@ -1,20 +1,14 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewContainerRef
-} from '@angular/core';
-import { EMPTY, interval, NEVER, Observable, of, throwError } from 'rxjs';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { TestBed } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let';
-import { take } from 'rxjs/operators';
 import { MockChangeDetectorRef } from '../fixtures';
 
 @Component({
   template: `
     <ng-container
       *rxLet="value$; let value; $error as error; $complete as complete"
-      >{{ (value | json) || 'undefined' }}</ng-container
+    >{{ (value | json) || 'undefined' }}</ng-container
     >
   `
 })
@@ -47,7 +41,7 @@ const setupLetDirectiveTestComponentStrategy = (): void => {
 };
 
 describe('LetDirective when using strategy', () => {
-  beforeEach(async(setupLetDirectiveTestComponentStrategy));
+  beforeEach(setupLetDirectiveTestComponentStrategy);
 
   it('should work with different if a strategy other than the default', () => {
     letDirectiveTestComponent.value$ = of(1, 2, 3, 4, 5);

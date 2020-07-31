@@ -1,7 +1,6 @@
 # CompareFn
 
-The function which is used by `distinctUntilSomeChanged` and `selectSlice` to determine if changes are distinct or
-not.
+The function which is used by `KeyCompareMap` to determine if changes are distinct or not.
 Should return true if values are equal.
 
 ## Signature
@@ -12,33 +11,31 @@ type CompareFn<T> = (oldVal: T, newVal: T) => boolean
 
 # KeyCompareMap
 
-The `KeyCompareMap` is used to configure custom comparison for defined keys. You can set the `CompareFn` to
-`undefined` in order to utilize the default equality check.
+The `KeyCompareMap` is used to configure custom comparison for defined keys.
 
 _Example_
 
 ```TypeScript
 const keyCompareMap = {
-   myKey: (o, n) => customCompare(o, n),
-   myOtherKey: undefined
+   myKey: (o, n) => customCompare(o, n)
  };
  const o$ = of({
    myKey: 5,
    myOtherKey: 'bar'
- }).pipe(distinctUntilSomeChanged(keyCompareMap));
+ }).pipe(distinctUntilSomeChanged(['myKey', 'myOtherKey'], keyCompareMap));
 
  //or
 
  const o$ = of({
    myKey: 5,
    myOtherKey: 'bar'
- }).pipe(selectSlice(keyCompareMap));
+ }).pipe(selectSlice(['myKey', 'myOtherKey'], keyCompareMap));
 ```
 
 ## Signature
 
 ```TypeScript
 type KeyCompareMap<T extends object> = {
-  [K in keyof T]?: CompareFn<T[K]>;
+  [K in keyof Partial<T>]: CompareFn<T[K]>;
 }
 ```

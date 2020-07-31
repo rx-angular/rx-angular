@@ -1,11 +1,6 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewContainerRef
-} from '@angular/core';
-import { EMPTY, interval, NEVER, Observable, of, throwError } from 'rxjs';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import { EMPTY, interval, NEVER, Observable, of } from 'rxjs';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let';
 import { take } from 'rxjs/operators';
 import { MockChangeDetectorRef } from '../fixtures';
@@ -13,15 +8,13 @@ import { MockChangeDetectorRef } from '../fixtures';
 @Component({
   template: `
     <ng-container
-      *rxLet="value$ as value; $error as error; $complete as complete"
-      >{{
-        value === undefined
-          ? 'undefined'
-          : value === null
-          ? 'null'
-          : (value | json)
-      }}</ng-container
-    >
+      *rxLet="value$ as value; $error as error; $complete as complete">{{
+      value === undefined
+        ? 'undefined'
+        : value === null
+        ? 'null'
+        : (value | json)
+      }}</ng-container>
   `
 })
 class LetDirectiveTestComponent {
@@ -53,7 +46,7 @@ const setupLetDirectiveTestComponent = (): void => {
 };
 
 describe('LetDirective when nexting values', () => {
-  beforeEach(async(setupLetDirectiveTestComponent));
+  beforeEach((setupLetDirectiveTestComponent));
 
   it('should be instantiable', () => {
     expect(fixtureLetDirectiveTestComponent).toBeDefined();
