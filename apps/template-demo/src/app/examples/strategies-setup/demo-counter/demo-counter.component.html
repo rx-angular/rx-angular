@@ -9,9 +9,20 @@
     >{{ s }}</option
   >
 </select>
-<button mat-button (click)="increment()" color="primary" [unpatch]>
-  Increment {{ currentStrategy }}
-</button>
+<ng-container
+  *ngIf="currentStrategy === 'global' || currentStrategy === 'noop'"
+>
+  <button mat-button (click)="increment()" color="primary">
+    Increment {{ currentStrategy }}
+  </button>
+</ng-container>
+<ng-container
+  *ngIf="currentStrategy !== 'global' && currentStrategy !== 'noop'"
+>
+  <button mat-button (click)="increment()" color="primary" [unpatch]>
+    Increment {{ currentStrategy }} [UNPATCH]
+  </button>
+</ng-container>
 <mat-card>
   <mat-card-title>{{ counter$ | push }}</mat-card-title>
 </mat-card>

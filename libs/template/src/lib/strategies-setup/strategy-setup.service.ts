@@ -55,9 +55,7 @@ export class StrategySetupService<S extends string = DefaultStrategyName> {
     @Inject(RX_ANGULAR_DEFAULT_INVISIBLE_STRATEGY)
     private outOfViewportStrategy: keyof ExtendedStrategies<S>,
     @Inject(RX_AVAILABLE_STRATEGIES) private strategies: ExtendedStrategies<S>
-  ) {
-    this.state$.subscribe(console.log);
-  }
+  ) {}
 
   private strategyOrFallback(
     strategy: keyof ExtendedStrategies<S>,

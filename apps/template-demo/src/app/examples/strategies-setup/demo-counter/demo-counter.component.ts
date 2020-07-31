@@ -12,7 +12,7 @@ import { StrategySetupService } from '@rx-angular/template';
 export class DemoCounterComponent {
   @Input() set defaultStrategy(s) {
     this.setupService.strategy = s;
-    this.currentStrategy = s;
+    // this.currentStrategy = s;
   }
   @Input() index = 0;
   counter$ = new BehaviorSubject<number>(0);
