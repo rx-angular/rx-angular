@@ -5,5 +5,5 @@ import { DefaultStrategyName } from './default-strategy-name.type';
 export interface TemplateSetup<S extends string = DefaultStrategyName> {
   defaultStrategy?: keyof ExtendedStrategies<S>;
   defaultInvisibleStrategy?: keyof ExtendedStrategies<S>;
-  customStrategies?: { [key: string]: StrategyConstructor };
+  customStrategies?: Record<S, StrategyConstructor>;
 }

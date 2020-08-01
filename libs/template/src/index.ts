@@ -16,4 +16,4 @@ export {
   ViewportPrioDirective,
 } from './lib/experimental/viewport-prio';
 export { TemplateModule } from './lib/template.module';
-export { StrategySetupService } from './lib/strategies-setup/strategy-setup.service';
+export { StrategiesSetupService } from './lib/strategies-setup/strategies-setup.service';
