@@ -13,7 +13,7 @@ import {
 import { createRenderAware, RenderAware } from '../core';
 import { getStrategies } from '../render-strategies';
 import { DEFAULT_STRATEGY_NAME } from '../render-strategies/strategies/strategies-map';
-import { StrategySetupService } from '../strategies-setup/strategy-setup.service';
+import { StrategiesSetupService } from '../strategies-setup/strategies-setup.service';
 
 /**
  * @Pipe PushPipe
@@ -77,7 +77,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
 
   constructor(
     cdRef: ChangeDetectorRef,
-    private setupService: StrategySetupService
+    private setupService: StrategiesSetupService
   ) {
     this.RenderAware = createRenderAware<U>({
       strategies: getStrategies({

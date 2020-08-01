@@ -25,7 +25,7 @@ import {
   DEFAULT_STRATEGY_NAME,
   getStrategies,
 } from '../render-strategies/strategies/strategies-map';
-import { StrategySetupService } from '../strategies-setup/strategy-setup.service';
+import { StrategiesSetupService } from '../strategies-setup/strategies-setup.service';
 
 export interface LetViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
@@ -210,7 +210,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
 
   constructor(
     cdRef: ChangeDetectorRef,
-    private setupService: StrategySetupService,
+    private setupService: StrategiesSetupService,
     private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
