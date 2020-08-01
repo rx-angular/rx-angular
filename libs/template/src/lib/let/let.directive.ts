@@ -25,6 +25,7 @@ import {
   DEFAULT_STRATEGY_NAME,
   getStrategies,
 } from '../render-strategies/strategies/strategies-map';
+import { StrategySetupService } from '../strategies-setup/strategy-setup.service';
 
 export interface LetViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
@@ -159,7 +160,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     this.templateManager.addTemplateRef('rxSuspense', templateRef);
   }
 
-  protected subscription: Unsubscribable = new Subscription();
+  protected subscriptions: Unsubscribable[] = [];
 
   private readonly templateManager: TemplateManager<
     LetViewContext<U | undefined | null>
@@ -209,6 +210,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
 
   constructor(
     cdRef: ChangeDetectorRef,
+    private setupService: StrategySetupService,
     private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
@@ -225,17 +227,22 @@ export class LetDirective<U> implements OnInit, OnDestroy {
       resetObserver: this.resetObserver,
       updateObserver: this.updateObserver,
     });
-    this.renderAware.nextStrategy(DEFAULT_STRATEGY_NAME);
+
+    this.subscriptions.push(
+      this.setupService.strategy$.subscribe((s) =>
+        this.renderAware.nextStrategy(s || DEFAULT_STRATEGY_NAME)
+      )
+    );
   }
 
   ngOnInit() {
     this.templateManager.insertEmbeddedView('rxSuspense');
     this.templateManager.addTemplateRef('rxNext', this.nextTemplateRef);
-    this.subscription = this.renderAware.subscribe();
+    this.subscriptions.push(this.renderAware.subscribe());
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach((s) => s.unsubscribe());
     this.templateManager.destroy();
   }
 }
