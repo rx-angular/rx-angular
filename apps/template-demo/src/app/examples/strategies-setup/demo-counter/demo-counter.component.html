@@ -24,5 +24,12 @@
   </button>
 </ng-container>
 <mat-card>
-  <mat-card-title>{{ counter$ | push }}</mat-card-title>
+  <ng-container *ngIf="binding === 'push'">
+    <mat-card-title>{{ counter$ | push }}</mat-card-title>
+  </ng-container>
+  <ng-container *ngIf="binding === 'rxLet'">
+    <mat-card-title *rxLet="counter$; let counter">{{
+      counter
+    }}</mat-card-title>
+  </ng-container>
 </mat-card>

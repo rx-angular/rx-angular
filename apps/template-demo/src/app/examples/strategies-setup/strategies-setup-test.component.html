@@ -8,34 +8,94 @@
       >{{ s }}</option
     >
   </select>
-  <div class="padding">
-    <rx-angular-demo-counter
-      defaultStrategy="global"
-      index="1"
-    ></rx-angular-demo-counter>
-  </div>
-  <div class="padding">
-    <rx-angular-demo-counter
-      defaultStrategy="native"
-      index="2"
-    ></rx-angular-demo-counter>
-  </div>
-  <div class="padding">
-    <rx-angular-demo-counter
-      defaultStrategy="local"
-      index="3"
-    ></rx-angular-demo-counter>
-  </div>
-  <div class="padding">
-    <rx-angular-demo-counter
-      defaultStrategy="detach"
-      index="4"
-    ></rx-angular-demo-counter>
-  </div>
-  <div class="padding">
-    <rx-angular-demo-counter
-      defaultStrategy="noop"
-      index="5"
-    ></rx-angular-demo-counter>
-  </div>
+  <br />
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Push
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="mat-row">
+      <div class="padding">
+        <rx-angular-demo-counter
+          defaultStrategy="global"
+          index="1"
+          binding="push"
+        ></rx-angular-demo-counter>
+      </div>
+      <div class="padding">
+        <rx-angular-demo-counter
+          defaultStrategy="native"
+          index="2"
+          binding="push"
+        ></rx-angular-demo-counter>
+      </div>
+      <div class="padding">
+        <rx-angular-demo-counter
+          defaultStrategy="local"
+          index="3"
+          binding="push"
+        ></rx-angular-demo-counter>
+      </div>
+      <div class="padding">
+        <rx-angular-demo-counter
+          defaultStrategy="detach"
+          index="4"
+          binding="push"
+        ></rx-angular-demo-counter>
+      </div>
+      <div class="padding">
+        <rx-angular-demo-counter
+          defaultStrategy="noop"
+          index="5"
+          binding="push"
+        ></rx-angular-demo-counter>
+      </div>
+    </div>
+  </mat-expansion-panel>
+  <br />
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        rxLet
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="mat-row">
+      <div class="padding">
+        <rx-angular-demo-counter
+          defaultStrategy="global"
+          index="1"
+          binding="rxLet"
+        ></rx-angular-demo-counter>
+      </div>
+      <div class="padding">
+        <rx-angular-demo-counter
+          defaultStrategy="native"
+          index="2"
+          binding="rxLet"
+        ></rx-angular-demo-counter>
+      </div>
+      <div class="padding">
+        <rx-angular-demo-counter
+          defaultStrategy="local"
+          index="3"
+          binding="rxLet"
+        ></rx-angular-demo-counter>
+      </div>
+      <div class="padding">
+        <rx-angular-demo-counter
+          defaultStrategy="detach"
+          index="4"
+          binding="rxLet"
+        ></rx-angular-demo-counter>
+      </div>
+      <div class="padding">
+        <rx-angular-demo-counter
+          defaultStrategy="noop"
+          index="5"
+          binding="rxLet"
+        ></rx-angular-demo-counter>
+      </div>
+    </div>
+  </mat-expansion-panel>
 </div>
