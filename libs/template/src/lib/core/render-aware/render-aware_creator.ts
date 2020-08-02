@@ -5,7 +5,7 @@ import {
   of,
   ReplaySubject,
   Subscribable,
-  Subscription
+  Subscription,
 } from 'rxjs';
 import {
   catchError,
@@ -13,8 +13,9 @@ import {
   filter,
   map,
   switchMap,
-  tap
+  tap,
 } from 'rxjs/operators';
+import { finalizeWithScheduledCD } from './finalizeWithScheduledCD';
 import { RenderStrategy, StrategySelection } from './interfaces';
 import { nameToStrategy } from './nameToStrategy';
 
@@ -42,13 +43,13 @@ export function createRenderAware<U>(cfg: {
   let currentStrategy: RenderStrategy;
   const strategy$: Observable<RenderStrategy> = strategyName$.pipe(
     distinctUntilChanged(),
-    switchMap(stringOrObservable =>
+    switchMap((stringOrObservable) =>
       typeof stringOrObservable === 'string'
         ? of(stringOrObservable)
         : stringOrObservable
     ),
     nameToStrategy(cfg.strategies),
-    tap(s => (currentStrategy = s))
+    tap((s) => (currentStrategy = s))
   );
 
   const observablesFromTemplate$ = new ReplaySubject<Observable<U>>(1);
@@ -59,7 +60,7 @@ export function createRenderAware<U>(cfg: {
 
   const renderingEffect$ = valuesFromTemplate$.pipe(
     // handle null | undefined assignment and new Observable reset
-    map(observable$ => {
+    map((observable$) => {
       if (observable$ === null) {
         return of(null);
       }
@@ -73,28 +74,17 @@ export function createRenderAware<U>(cfg: {
       return observable$;
     }),
     // forward only observable values
-    filter(o$ => o$ !== undefined),
-    switchMap(o$ =>
+    filter((o$) => o$ !== undefined),
+    switchMap((o$) =>
       o$.pipe(
         distinctUntilChanged(),
         tap(cfg.updateObserver),
         currentStrategy.rxScheduleCD,
-        tap({
-          // handle "error" and "complete" notifications for Observable from template
-          error: err => {
-            console.error(err);
-            if (cfg.updateObserver.error) {
-              cfg.updateObserver.error(err);
-              currentStrategy.detectChanges();
-            }
-          },
-          complete: cfg.updateObserver.complete
-            ? () => currentStrategy.detectChanges()
-            : undefined
-        })
+        finalizeWithScheduledCD(currentStrategy, cfg.updateObserver)
       )
     ),
-    catchError(e => {
+    catchError((e) => {
+      console.error(e);
       return EMPTY;
     })
   );
@@ -111,6 +101,6 @@ export function createRenderAware<U>(cfg: {
       return new Subscription()
         .add(strategy$.subscribe())
         .add(renderingEffect$.subscribe());
-    }
+    },
   };
 }
