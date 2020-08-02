@@ -1,7 +1,9 @@
 import { OnDestroy } from '@angular/core';
-import { createRenderAware, RenderAware } from '../../../src/lib/core';
-import { concat, EMPTY, NEVER, NextObserver, Observer, of, Unsubscribable } from 'rxjs';
+import { concat, EMPTY, NEVER, NextObserver, Observer, of, Subject, Unsubscribable } from 'rxjs';
+import { startWith, tap } from 'rxjs/operators';
+import { createRenderAware, RenderAware, StrategySelection } from '../../../src/lib/core';
 import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
+import createSpy = jasmine.createSpy;
 
 // TODO: Add Angular decorator.
 class CdAwareImplementation<U> implements OnDestroy {
@@ -21,20 +23,13 @@ class CdAwareImplementation<U> implements OnDestroy {
     complete: () => (this.completed = true)
   };
 
-  constructor() {
+  constructor(strategySelection: StrategySelection) {
     this.cdAware = createRenderAware<U>({
-      strategies: {
-        [DEFAULT_STRATEGY_NAME]: {
-          name: DEFAULT_STRATEGY_NAME,
-          detectChanges: () => {},
-          scheduleCD: () => new AbortController(),
-          rxScheduleCD: (o) => o
-        }
-      },
+      strategies: strategySelection,
       updateObserver: this.updateObserver,
       resetObserver: this.resetObserver
     });
-    this.cdAware.nextStrategy('local');
+    this.cdAware.nextStrategy(DEFAULT_STRATEGY_NAME);
     this.subscription = this.cdAware.subscribe();
   }
 
@@ -44,8 +39,23 @@ class CdAwareImplementation<U> implements OnDestroy {
 }
 
 let cdAwareImplementation: CdAwareImplementation<any>;
+let strategies: StrategySelection;
 const setupCdAwareImplementation = () => {
-  cdAwareImplementation = new CdAwareImplementation();
+  strategies = {
+    [DEFAULT_STRATEGY_NAME]: {
+      name: DEFAULT_STRATEGY_NAME,
+      detectChanges: createSpy('detectChanges'),
+      scheduleCD: () => new AbortController(),
+      rxScheduleCD: createSpy('rxScheduleCD').and.callFake(o => o)
+    },
+    testStrat: {
+      name: 'testStrat',
+      detectChanges: createSpy('detectChanges'),
+      scheduleCD: () => new AbortController(),
+      rxScheduleCD: createSpy('rxScheduleCD').and.callFake(o => o)
+    }
+  };
+  cdAwareImplementation = new CdAwareImplementation(strategies);
   cdAwareImplementation.renderedValue = undefined;
   cdAwareImplementation.error = undefined;
   cdAwareImplementation.completed = false;
@@ -94,18 +104,22 @@ describe('CdAware', () => {
       cdAwareImplementation.cdAware.nextPotentialObservable(NEVER);
       expect(cdAwareImplementation.renderedValue).toBe(undefined);
     });
-    // Also: 'should keep last emitted value in the view until a new observable NEVER was passed (as no value ever was emitted from new observable)'
+    // Also: 'should keep last emitted value in the view until a new observable NEVER was passed (as no value ever was
+    // emitted from new observable)'
     it('should render emitted value from passed observable without changing it', () => {
       cdAwareImplementation.cdAware.nextPotentialObservable(of(42));
       expect(cdAwareImplementation.renderedValue).toBe(42);
     });
 
-    it('should render undefined as value when a new observable NEVER was passed (as no value ever was emitted from new observable)', () => {
-      cdAwareImplementation.cdAware.nextPotentialObservable(of(42));
-      expect(cdAwareImplementation.renderedValue).toBe(42);
-      cdAwareImplementation.cdAware.nextPotentialObservable(NEVER);
-      expect(cdAwareImplementation.renderedValue).toBe(undefined);
-    });
+    it(
+      'should render undefined as value when a new observable NEVER was passed (as no value ever was emitted from new observable)',
+      () => {
+        cdAwareImplementation.cdAware.nextPotentialObservable(of(42));
+        expect(cdAwareImplementation.renderedValue).toBe(42);
+        cdAwareImplementation.cdAware.nextPotentialObservable(NEVER);
+        expect(cdAwareImplementation.renderedValue).toBe(undefined);
+      }
+    );
   });
 
   describe('observable context', () => {
@@ -141,6 +155,24 @@ describe('CdAware', () => {
       expect(cdAwareImplementation.renderedValue).toBe(undefined);
       expect(cdAwareImplementation.error).toBe(undefined);
       expect(cdAwareImplementation.completed).toBe(true);
+    });
+  });
+
+  describe('strategy handling', () => {
+    it('should handle strategy switching', () => {
+      const values = new Subject();
+      const value$ = values.pipe(startWith(1), tap(console.log));
+      cdAwareImplementation.cdAware.nextPotentialObservable(
+        value$
+      );
+      expect(cdAwareImplementation.renderedValue).toBe(1);
+      expect(strategies[DEFAULT_STRATEGY_NAME].rxScheduleCD).toHaveBeenCalled();
+      cdAwareImplementation.cdAware.nextStrategy('testStrat');
+      values.next(2);
+      expect(strategies.testStrat.rxScheduleCD).toHaveBeenCalled();
+      expect(cdAwareImplementation.renderedValue).toBe(2);
+      expect(cdAwareImplementation.error).toBe(undefined);
+      expect(cdAwareImplementation.completed).toBe(false);
     });
   });
 });
