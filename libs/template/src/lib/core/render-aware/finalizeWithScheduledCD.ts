@@ -1,9 +1,4 @@
-import {
-  MonoTypeOperatorFunction,
-  NextObserver,
-  Observable,
-  Subscriber,
-} from 'rxjs';
+import { MonoTypeOperatorFunction, Observable, Subscriber } from 'rxjs';
 import { RenderStrategy } from './interfaces';
 
 /**
@@ -11,11 +6,11 @@ import { RenderStrategy } from './interfaces';
  * for the view and cancellation of this scheduled CD on teardown.
  *
  * @param strategy
- * @param viewUpdateObserver observer defining logic for the view update on observable notification(s)
+ * @param config determines whether change detection should be triggered on error and/or complete
  */
 export function finalizeWithScheduledCD<T>(
   strategy: RenderStrategy,
-  viewUpdateObserver: NextObserver<T>
+  config = { scheduleOnError: true, scheduleOnComplete: true }
 ): MonoTypeOperatorFunction<T> {
   return (o$: Observable<T>) =>
     new Observable((subscriber: Subscriber<T>) => {
@@ -23,13 +18,13 @@ export function finalizeWithScheduledCD<T>(
       const subscription = o$.subscribe({
         error: (err) => {
           subscriber.error(err);
-          if (viewUpdateObserver.error) {
+          if (config.scheduleOnError) {
             abortController = strategy.scheduleCD();
           }
         },
         complete: () => {
           subscriber.complete();
-          if (viewUpdateObserver.complete) {
+          if (config.scheduleOnComplete) {
             abortController = strategy.scheduleCD();
           }
         },

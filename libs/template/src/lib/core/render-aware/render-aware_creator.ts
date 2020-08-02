@@ -80,7 +80,10 @@ export function createRenderAware<U>(cfg: {
         distinctUntilChanged(),
         tap(cfg.updateObserver),
         currentStrategy.rxScheduleCD,
-        finalizeWithScheduledCD(currentStrategy, cfg.updateObserver)
+        finalizeWithScheduledCD(currentStrategy, {
+          scheduleOnError: !!cfg.updateObserver.error,
+          scheduleOnComplete: !!cfg.updateObserver.complete,
+        })
       )
     ),
     catchError((e) => {
