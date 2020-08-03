@@ -1,6 +1,17 @@
 import { OnDestroy } from '@angular/core';
-import { concat, EMPTY, NEVER, NextObserver, Observer, of, Subject, Unsubscribable } from 'rxjs';
-import { startWith, tap } from 'rxjs/operators';
+import {
+  asapScheduler,
+  concat,
+  EMPTY,
+  interval,
+  NEVER,
+  NextObserver, Observable,
+  Observer,
+  of,
+  Subject, throwError,
+  Unsubscribable
+} from 'rxjs';
+import { startWith, tap, throttle, throttleTime } from 'rxjs/operators';
 import { createRenderAware, RenderAware, StrategySelection } from '../../../src/lib/core';
 import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
 import createSpy = jasmine.createSpy;
@@ -123,6 +134,7 @@ describe('CdAware', () => {
   });
 
   describe('observable context', () => {
+    // TODO: naming? What's this test for? I don't understand
     it('next handling running observable', () => {
       cdAwareImplementation.cdAware.nextPotentialObservable(
         concat(of(42), NEVER)
@@ -141,12 +153,12 @@ describe('CdAware', () => {
 
     it('error handling', () => {
       expect(cdAwareImplementation.renderedValue).toBe(undefined);
-      cdAwareImplementation.cdAware.subscribe({
-        error: (e: Error) => expect(e).toBeDefined()
-      });
+      const error = new Error();
+      cdAwareImplementation.cdAware.nextPotentialObservable(throwError(error));
       expect(cdAwareImplementation.renderedValue).toBe(undefined);
-      // @TODO use this line
+      // @TODO use this line: why?
       // expect(cdAwareImplementation.error).toBe(ArgumentNotObservableError);
+      expect(cdAwareImplementation.error).toBe(error);
       expect(cdAwareImplementation.completed).toBe(false);
     });
 
@@ -173,6 +185,28 @@ describe('CdAware', () => {
       expect(cdAwareImplementation.renderedValue).toBe(2);
       expect(cdAwareImplementation.error).toBe(undefined);
       expect(cdAwareImplementation.completed).toBe(false);
+    });
+
+    it('should handle subscriptions with ongoing observables', () => {
+      const values = new Subject();
+      let subscribers = 0;
+      const v$ = new Observable(subscriber => {
+        subscribers++;
+        values.pipe(startWith(1)).subscribe(innerValue => {
+          subscriber.next(innerValue);
+        })
+      });
+      cdAwareImplementation.cdAware.nextPotentialObservable(v$);
+      expect(cdAwareImplementation.renderedValue).toBe(1);
+      values.next(2);
+      expect(cdAwareImplementation.renderedValue).toBe(2);
+      cdAwareImplementation.cdAware.nextStrategy('testStrat');
+      expect(cdAwareImplementation.renderedValue).toBe(2);
+      values.next(3);
+      expect(cdAwareImplementation.renderedValue).toBe(3);
+      expect(cdAwareImplementation.error).toBe(undefined);
+      expect(cdAwareImplementation.completed).toBe(false);
+      expect(subscribers).toBe(1);
     });
   });
 });

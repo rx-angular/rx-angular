@@ -1,19 +1,22 @@
 import {
-  EMPTY,
+  MonoTypeOperatorFunction,
   NextObserver,
   Observable,
   of,
   ReplaySubject,
   Subscribable,
-  Subscription
+  Subscription,
 } from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
   filter,
+  finalize,
   map,
+  shareReplay,
   switchMap,
-  tap
+  tap,
+  withLatestFrom,
 } from 'rxjs/operators';
 import { RenderStrategy, StrategySelection } from './interfaces';
 import { nameToStrategy } from './nameToStrategy';
@@ -42,13 +45,15 @@ export function createRenderAware<U>(cfg: {
   let currentStrategy: RenderStrategy;
   const strategy$: Observable<RenderStrategy> = strategyName$.pipe(
     distinctUntilChanged(),
-    switchMap(stringOrObservable =>
+    switchMap((stringOrObservable) =>
       typeof stringOrObservable === 'string'
         ? of(stringOrObservable)
         : stringOrObservable
     ),
     nameToStrategy(cfg.strategies),
-    tap(s => (currentStrategy = s))
+    tap((s) => (currentStrategy = s)),
+    // do not repeat the steps before for each subscriber
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   const observablesFromTemplate$ = new ReplaySubject<Observable<U>>(1);
@@ -59,7 +64,7 @@ export function createRenderAware<U>(cfg: {
 
   const renderingEffect$ = valuesFromTemplate$.pipe(
     // handle null | undefined assignment and new Observable reset
-    map(observable$ => {
+    map((observable$) => {
       if (observable$ === null) {
         return of(null);
       }
@@ -73,29 +78,22 @@ export function createRenderAware<U>(cfg: {
       return observable$;
     }),
     // forward only observable values
-    filter(o$ => o$ !== undefined),
-    switchMap(o$ =>
-      o$.pipe(
-        distinctUntilChanged(),
-        tap(cfg.updateObserver),
-        currentStrategy.rxScheduleCD,
-        tap({
-          // handle "error" and "complete" notifications for Observable from template
-          error: err => {
-            console.error(err);
-            if (cfg.updateObserver.error) {
-              cfg.updateObserver.error(err);
-              currentStrategy.detectChanges();
-            }
-          },
-          complete: cfg.updateObserver.complete
-            ? () => currentStrategy.detectChanges()
-            : undefined
-        })
-      )
-    ),
-    catchError(e => {
-      return EMPTY;
+    filter((o$) => o$ !== undefined),
+    distinctUntilChanged(),
+    combineStrategyAndValue(strategy$, cfg.updateObserver),
+    // finalize(() => currentStrategy.scheduleCD()),
+    tap({
+      // TODO: doesnt work
+      complete: () => {
+        console.log('completed');
+        if (cfg.updateObserver.complete) {
+          cfg.updateObserver.complete();
+        }
+        currentStrategy.scheduleCD();
+      },
+    }),
+    catchError((e) => {
+      return currentStrategy.rxScheduleCD(of(e));
     })
   );
 
@@ -108,9 +106,39 @@ export function createRenderAware<U>(cfg: {
     },
     activeStrategy$: strategy$,
     subscribe(): Subscription {
-      return new Subscription()
-        .add(strategy$.subscribe())
-        .add(renderingEffect$.subscribe());
-    }
+      return (
+        new Subscription()
+          //.add(strategy$.subscribe()) TODO: seems to work without, investigate
+          .add(renderingEffect$.subscribe())
+      );
+    },
+  };
+}
+
+function combineStrategyAndValue(
+  strategyChanges$: Observable<RenderStrategy>,
+  updateObserver: NextObserver<any>
+): MonoTypeOperatorFunction<any> {
+  return (o$) => {
+    return o$.pipe(
+      switchMap((v$) => {
+        return v$.pipe(
+          // TODO: do we need this?
+          distinctUntilChanged(),
+          // manage completion, error and next
+          tap(updateObserver),
+          // grab latest strategy
+          withLatestFrom(strategyChanges$),
+          // hack to always use latest strategy on value change
+          switchMap(([renderValue, strategy]) =>
+            of(renderValue).pipe(
+              /*finalize(() => strategy.rxScheduleCD),
+                 catchError(strategy.rxScheduleCD)*/
+              strategy.rxScheduleCD
+            )
+          )
+        );
+      })
+    );
   };
 }
