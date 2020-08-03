@@ -115,7 +115,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * @return T | Partial<T>
    */
 
-  get<K1 extends keyof T>(k1?: K1): T[K1];
+  get<K1 extends keyof T>(k1: K1): T[K1];
 
   get<K1 extends keyof T, K2 extends keyof T[K1]>(k1: K1, k2: K2): T[K1][K2];
 
