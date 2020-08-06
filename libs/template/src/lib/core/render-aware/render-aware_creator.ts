@@ -11,7 +11,6 @@ import {
   catchError,
   distinctUntilChanged,
   filter,
-  finalize,
   map,
   shareReplay,
   switchMap,
@@ -80,8 +79,17 @@ export function createRenderAware<U>(cfg: {
     // forward only observable values
     filter((o$) => o$ !== undefined),
     distinctUntilChanged(),
-    combineStrategyAndValue(strategy$, cfg.updateObserver),
-    // finalize(() => currentStrategy.scheduleCD()),
+    switchMap((o$) =>
+      o$
+        // Added behavior will get applied to the observable in `renderWithLatestStrategy`
+        .pipe(
+          // Forward only distinct values
+          distinctUntilChanged(),
+          // Update completion, error and next
+          tap(cfg.updateObserver),
+          renderWithLatestStrategy(strategy$)
+        )
+    ),
     tap({
       // TODO: doesnt work
       complete: () => {
@@ -115,30 +123,20 @@ export function createRenderAware<U>(cfg: {
   };
 }
 
-function combineStrategyAndValue(
-  strategyChanges$: Observable<RenderStrategy>,
-  updateObserver: NextObserver<any>
+function renderWithLatestStrategy(
+  strategyChanges$: Observable<RenderStrategy>
 ): MonoTypeOperatorFunction<any> {
   return (o$) => {
     return o$.pipe(
-      switchMap((v$) => {
-        return v$.pipe(
-          // TODO: do we need this?
-          distinctUntilChanged(),
-          // manage completion, error and next
-          tap(updateObserver),
-          // grab latest strategy
-          withLatestFrom(strategyChanges$),
-          // hack to always use latest strategy on value change
-          switchMap(([renderValue, strategy]) =>
-            of(renderValue).pipe(
-              /*finalize(() => strategy.rxScheduleCD),
-                 catchError(strategy.rxScheduleCD)*/
-              strategy.rxScheduleCD
-            )
-          )
-        );
-      })
+      withLatestFrom(strategyChanges$),
+      // hack to always use latest strategy on value change
+      switchMap(([renderValue, strategy]) =>
+        of(renderValue).pipe(
+          /*finalize(() => strategy.rxScheduleCD),
+             catchError(strategy.rxScheduleCD)*/
+          strategy.rxScheduleCD
+        )
+      )
     );
   };
 }
