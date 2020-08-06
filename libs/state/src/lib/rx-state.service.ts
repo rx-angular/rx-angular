@@ -111,7 +111,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    *
    * const foo = state.get('bar', 'foo');
    *
-   * @return T | T[K1]
+   * @return T | T[K1] | T[K1][K2]
    */
 
   get<K1 extends keyof T>(k1: K1): T[K1];
@@ -171,7 +171,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     | T[K1][K2][K3][K4]
     | T[K1][K2][K3][K4][K5]
     | T[K1][K2][K3][K4][K5][K6] {
-    if (!!keys) {
+    if (!!keys && keys.length >= 0) {
       return safePluck(this.accumulator.state, keys);
     } else {
       return this.accumulator.state;
