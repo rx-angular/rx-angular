@@ -32,7 +32,7 @@ class CdAwareImplementation<U> implements OnDestroy {
         }
       },
       updateObserver: this.updateObserver,
-      resetObserver: this.resetObserver
+      resetNextObserver: this.resetObserver
     });
     this.cdAware.nextStrategy('local');
     this.subscription = this.cdAware.subscribe();

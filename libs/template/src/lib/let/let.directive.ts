@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 
 import {
@@ -14,16 +14,16 @@ import {
   ObservableInput,
   Observer,
   Unsubscribable,
-  Subscription
+  Subscription,
 } from 'rxjs';
 import { createRenderAware, RenderAware, StrategySelection } from '../core';
 import {
   createTemplateManager,
-  TemplateManager
+  TemplateManager,
 } from '../core/utils/template-manager_creator';
 import {
   DEFAULT_STRATEGY_NAME,
-  getStrategies
+  getStrategies,
 } from '../render-strategies/strategies/strategies-map';
 
 export interface LetViewContext<T> {
@@ -124,7 +124,7 @@ export interface LetViewContext<T> {
  */
 @Directive({
   selector: '[rxLet]',
-  exportAs: 'renderNotifier'
+  exportAs: 'renderNotifier',
 })
 export class LetDirective<U> implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
@@ -170,16 +170,16 @@ export class LetDirective<U> implements OnInit, OnDestroy {
         $implicit: undefined,
         rxLet: undefined,
         $error: false,
-        $complete: false
+        $complete: false,
       });
-    }
+    },
   };
   private readonly updateObserver: Observer<U | null | undefined> = {
     next: (value: U | null | undefined) => {
       this.templateManager.insertEmbeddedView('rxNext');
       this.templateManager.updateViewContext({
         $implicit: value,
-        rxLet: value
+        rxLet: value,
       });
     },
     error: (error: Error) => {
@@ -187,7 +187,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
       this.templateManager.insertEmbeddedView('rxNext');
       this.templateManager.insertEmbeddedView('rxError');
       this.templateManager.updateViewContext({
-        $error: true
+        $error: true,
       });
     },
     complete: () => {
@@ -195,9 +195,9 @@ export class LetDirective<U> implements OnInit, OnDestroy {
       this.templateManager.insertEmbeddedView('rxNext');
       this.templateManager.insertEmbeddedView('rxComplete');
       this.templateManager.updateViewContext({
-        $complete: true
+        $complete: true,
       });
-    }
+    },
   };
 
   static ngTemplateContextGuard<U>(
@@ -217,13 +217,13 @@ export class LetDirective<U> implements OnInit, OnDestroy {
       $implicit: undefined,
       rxLet: undefined,
       $error: false,
-      $complete: false
+      $complete: false,
     });
 
     this.renderAware = createRenderAware({
       strategies: this.strategies,
-      resetObserver: this.resetObserver,
-      updateObserver: this.updateObserver
+      resetNextObserver: this.resetObserver,
+      updateObserver: this.updateObserver,
     });
     this.renderAware.nextStrategy(DEFAULT_STRATEGY_NAME);
   }
