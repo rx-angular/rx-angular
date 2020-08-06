@@ -70,8 +70,11 @@ export function safePluck<
   | T[K1][K2][K3][K4]
   | T[K1][K2][K3][K4][K5]
   | T[K1][K2][K3][K4][K5][K6] {
-  if (!keys || keys.length <= 0 || !stateObject) {
-    throw new Error('No params given to pluck');
+  if (!keys || keys.length <= 0) {
+    throw new Error('No keys given to pluck');
+  }
+  if (!stateObject) {
+    throw new Error('No object to pluck from');
   }
   if (Object.keys(stateObject).length <= 0) {
     throw new Error(`Can't pluck from empty object`);
