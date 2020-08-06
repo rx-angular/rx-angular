@@ -44,7 +44,16 @@ export function safePluck<
   K4 extends keyof T[K1][K2][K3],
   K5 extends keyof T[K1][K2][K3][K4],
   K6 extends keyof T[K1][K2][K3][K4][K5]
->(stateObject: T, keys: [K1, K2, K3, K4, K5, K6]): T[K1][K2][K3][K4][K5][K6];
+>(
+  stateObject: T,
+  keys:
+    | [K1]
+    | [K1, K2]
+    | [K1, K2, K3]
+    | [K1, K2, K3, K4]
+    | [K1, K2, K3, K4, K5]
+    | [K1, K2, K3, K4, K5, K6]
+): T[K1][K2][K3][K4][K5][K6];
 
 export function safePluck<
   T extends object,
@@ -82,7 +91,7 @@ export function safePluck<
   // clone keys in order to not mutate input
   const stateKeys = [...keys];
   let prop = stateObject[stateKeys.shift() as K1];
-  keys.forEach((key) => {
+  stateKeys.forEach(key => {
     if (isObject(prop) && isKeyOf(key)) {
       prop = prop[key];
     }
