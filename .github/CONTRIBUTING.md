@@ -57,6 +57,6 @@ This document was adapted from the open-source contribution guidelines for [Face
 
 [github-flow]: https://guides.github.com/introduction/flow/index.html
 
-[issues]: https://github.com/https://github.com/alanda-io/alanda/issues
+[issues]: https://github.com/BioPhoton/rx-angular/issues
 
-[new-issue]: https://github.com/alanda-io/alanda/issues/new
+[new-issue]: https://github.com/BioPhoton/rx-angular/issues/new

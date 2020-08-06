@@ -61,9 +61,9 @@ This document was adapted from the open-source support guidelines for [remarkjs]
 
 <!-- Definitions -->
 
-[license]:  https://github.com/alanda-io/alanda/blob/main/LICENSE.md
+[license]: https://github.com/BioPhoton/rx-angular/blob/main/LICENSE.md
 
-[coc]: https://github.com/alanda-io/alanda/.github/blob/main/CODE_OF_CONDUCT.md
+[coc]: https://github.com/BioPhoton/rx-angular/.github/blob/main/CODE_OF_CONDUCT.md
 
 [rubberduck]: https://rubberduckdebugging.com
 
