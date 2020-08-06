@@ -100,9 +100,7 @@ export function createRenderAware<U>(cfg: {
         currentStrategy.scheduleCD();
       },
     }),
-    catchError((e) => {
-      return currentStrategy.rxScheduleCD(of(e));
-    })
+    catchError((e) => of(e).pipe(currentStrategy.rxScheduleCD))
   );
 
   return {
