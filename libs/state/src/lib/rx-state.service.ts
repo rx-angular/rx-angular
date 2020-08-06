@@ -5,7 +5,7 @@ import {
   OperatorFunction,
   Subscribable,
   Subscription,
-  Unsubscribable
+  Unsubscribable,
 } from 'rxjs';
 import {
   createAccumulationObservable,
@@ -16,7 +16,7 @@ import {
   stateful,
   isKeyOf,
   AccumulationFn,
-  safePluck
+  safePluck,
 } from './core';
 import { filter, map, pluck, tap } from 'rxjs/operators';
 
@@ -95,7 +95,6 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    *
    * @return T
    */
-
   get(): T;
 
   /**
@@ -112,26 +111,26 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    *
    * const foo = state.get('bar', 'foo');
    *
-   * @return T | Partial<T>
+   * @return T | T[K1] | T[K1][K2]
    */
 
   get<K1 extends keyof T>(k1: K1): T[K1];
-
+  /** @internal **/
   get<K1 extends keyof T, K2 extends keyof T[K1]>(k1: K1, k2: K2): T[K1][K2];
-
+  /** @internal **/
   get<K1 extends keyof T, K2 extends keyof T[K1], K3 extends keyof T[K1][K2]>(
     k1: K1,
     k2: K2,
     k3: K3
   ): T[K1][K2][K3];
-
+  /** @internal **/
   get<
     K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
     K4 extends keyof T[K1][K2][K3]
   >(k1: K1, k2: K2, k3: K3, k4: K4): T[K1][K2][K3][K4];
-
+  /** @internal **/
   get<
     K1 extends keyof T,
     K2 extends keyof T[K1],
@@ -139,7 +138,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     K4 extends keyof T[K1][K2][K3],
     K5 extends keyof T[K1][K2][K3][K4]
   >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): T[K1][K2][K3][K4][K5];
-
+  /** @internal **/
   get<
     K1 extends keyof T,
     K2 extends keyof T[K1],
@@ -148,7 +147,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     K5 extends keyof T[K1][K2][K3][K4],
     K6 extends keyof T[K1][K2][K3][K4][K5]
   >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5, k6: K6): T[K1][K2][K3][K4][K5][K6];
-
+  /** @internal **/
   get<
     K1 extends keyof T,
     K2 extends keyof T[K1],
@@ -157,7 +156,13 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     K5 extends keyof T[K1][K2][K3][K4],
     K6 extends keyof T[K1][K2][K3][K4][K5]
   >(
-    ...keys: Array<K1 | K2 | K3 | K4 | K5 | K6>
+    ...keys:
+      | [K1]
+      | [K1, K2]
+      | [K1, K2, K3]
+      | [K1, K2, K3, K4]
+      | [K1, K2, K3, K4, K5]
+      | [K1, K2, K3, K4, K5, K6]
   ):
     | T
     | T[K1]
@@ -166,8 +171,8 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     | T[K1][K2][K3][K4]
     | T[K1][K2][K3][K4][K5]
     | T[K1][K2][K3][K4][K5][K6] {
-    if (!!keys && isStringArrayGuard(keys)) {
-      return safePluck<T, K1, K2, K3, K4, K5, K6>(this.accumulator.state, keys);
+    if (!!keys && keys.length >= 0) {
+      return safePluck(this.accumulator.state, keys);
     } else {
       return this.accumulator.state;
     }
@@ -351,7 +356,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       projectValueFn === undefined
     ) {
       const project = projectOrSlices$;
-      const slice$ = keyOrInputOrSlice$.pipe(map(v => project(this.get(), v)));
+      const slice$ = keyOrInputOrSlice$.pipe(
+        map((v) => project(this.get(), v))
+      );
       this.accumulator.nextSliceObservable(slice$);
       return;
     }
@@ -363,7 +370,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     ) {
       const key = keyOrInputOrSlice$;
       const slice$ = projectOrSlices$.pipe(
-        map(value => ({ ...{}, [key]: value }))
+        map((value) => ({ ...{}, [key]: value }))
       );
       this.accumulator.nextSliceObservable(slice$);
       return;
@@ -376,7 +383,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     ) {
       const key = keyOrInputOrSlice$;
       const slice$ = projectOrSlices$.pipe(
-        map(value => ({ ...{}, [key]: projectValueFn(this.get(), value) }))
+        map((value) => ({ ...{}, [key]: projectValueFn(this.get(), value) }))
       );
       this.accumulator.nextSliceObservable(slice$);
       return;
