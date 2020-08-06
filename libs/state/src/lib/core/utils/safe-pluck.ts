@@ -35,6 +35,7 @@ export function safePluck<
   K4 extends keyof T[K1][K2][K3],
   K5 extends keyof T[K1][K2][K3][K4]
 >(stateObject: T, keys: [K1, K2, K3, K4, K5]): T[K1][K2][K3][K4][K5];
+
 export function safePluck<
   T extends object,
   K1 extends keyof T,
@@ -43,16 +44,7 @@ export function safePluck<
   K4 extends keyof T[K1][K2][K3],
   K5 extends keyof T[K1][K2][K3][K4],
   K6 extends keyof T[K1][K2][K3][K4][K5]
->(
-  stateObject: T,
-  keys:
-    | [K1]
-    | [K1, K2]
-    | [K1, K2, K3]
-    | [K1, K2, K3, K4]
-    | [K1, K2, K3, K4, K5]
-    | [K1, K2, K3, K4, K5, K6]
-): T[K1][K2][K3][K4][K5][K6];
+>(stateObject: T, keys: [K1, K2, K3, K4, K5, K6]): T[K1][K2][K3][K4][K5][K6];
 
 export function safePluck<
   T extends object,
