@@ -308,6 +308,20 @@
           "options": {
             "buildTarget": "state:perfBuild"
           }
+        },
+        "serve-docs-admin": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "parallel": true,
+            "commands": [
+              {
+                "command": "npx serve libs/state/docs/admin"
+              },
+              {
+                "command": "npx netlify-cms-proxy-server"
+              }
+            ]
+          }
         }
       },
       "schematics": {
