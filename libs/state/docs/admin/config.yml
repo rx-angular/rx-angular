@@ -1,0 +1,32 @@
+backend:
+  name: proxy
+  proxy_url: http://localhost:8081/api/v1
+  branch: master # Branch to update (optional; defaults to master)
+media_folder: "libs/state/docs/images" # Media files will be stored in the repo under static/images/uploads
+public_folder: "/images" # The src attribute for uploaded media will begin with /images/uploads
+collections:
+- name: "page"
+  label: "Page"
+  folder: "libs/state/docs/api/"
+  create: true
+  slug: "{{filename}}"
+  fields:
+    - {label: "Filename", name: "filename", widget: "string"}
+    - {label: "Content", name: "body", widget: "markdown"}
+- name: "operator"
+  label: "Operator"
+  folder: "libs/state/docs/api/operators"
+  create: true
+  slug: "{{filename}}"
+  fields:
+    - {label: "Filename", name: "filename", widget: "string"}
+    - {label: "Content", name: "body", widget: "markdown"}
+- name: "transformation-helpers"
+  label: "Transformation Helpers"
+  folder: "libs/state/docs/api/"
+  path: "/"
+  create: true
+  slug: "{{filename}}"
+  fields:
+    - {label: "Filename", name: "filename", widget: "string"}
+    - {label: "Content", name: "body", widget: "markdown"}
