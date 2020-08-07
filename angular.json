@@ -308,20 +308,6 @@
           "options": {
             "buildTarget": "state:perfBuild"
           }
-        },
-        "serve-docs-admin": {
-          "builder": "@nrwl/workspace:run-commands",
-          "options": {
-            "parallel": true,
-            "commands": [
-              {
-                "command": "npx serve libs/state/docs/admin"
-              },
-              {
-                "command": "npx netlify-cms-proxy-server"
-              }
-            ]
-          }
         }
       },
       "schematics": {
@@ -468,91 +454,33 @@
     },
     "docs": {
       "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
-      "root": "apps/docs",
-      "sourceRoot": "apps/docs/src",
+      "root": "docs",
+      "sourceRoot": "docs/docs",
       "prefix": "rx-angular",
       "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+        "serve-admin": {
+          "builder": "@nrwl/workspace:run-commands",
           "options": {
-            "outputPath": "dist/apps/docs",
-            "index": "apps/docs/src/index.html",
-            "main": "apps/docs/src/main.ts",
-            "polyfills": "apps/docs/src/polyfills.ts",
-            "tsConfig": "apps/docs/tsconfig.app.json",
-            "aot": true,
-            "assets": ["apps/docs/src/favicon.ico", "apps/docs/src/assets"],
-            "styles": ["apps/docs/src/styles.scss"],
-            "scripts": []
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/docs/src/environments/environment.ts",
-                  "with": "apps/docs/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            }
+            "parallel": true,
+            "commands": [
+              {
+                "command": "npx serve docs/docs/admin"
+              },
+              {
+                "command": "npx netlify-cms-proxy-server"
+              }
+            ]
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@nrwl/workspace:run-commands",
           "options": {
-            "browserTarget": "docs:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "docs:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "docs:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/docs/tsconfig.app.json",
-              "apps/docs/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/docs/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/docs/jest.config.js",
-            "passWithNoTests": true
+            "parallel": true,
+            "commands": [
+              {
+                "command": "npx docsify-cli serve docs/docs"
+              }
+            ]
           }
         }
       }
