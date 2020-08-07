@@ -23,8 +23,17 @@ collections:
     - {label: "Content", name: "body", widget: "markdown"}
 - name: "transformation-helpers"
   label: "Transformation Helpers"
+  folder: "libs/state/docs/api/transformation-helpers/"
+  path: "/" # files from subfolders too
+  create: true
+  slug: "{{filename}}"
+  fields:
+    - {label: "Filename", name: "filename", widget: "string"}
+    - {label: "Content", name: "body", widget: "markdown"}
+- name: "all"
+  label: "All"
   folder: "libs/state/docs/api/"
-  path: "/"
+  path: "////" # files from [n] subfolders too (n is number of slashes)
   create: true
   slug: "{{filename}}"
   fields:
