@@ -91,7 +91,7 @@ export function safePluck<
   // clone keys in order to not mutate input
   const stateKeys = [...keys];
   let prop = stateObject[stateKeys.shift() as K1];
-  stateKeys.forEach(key => {
+  stateKeys.forEach((key) => {
     if (isObject(prop) && isKeyOf(key)) {
       prop = prop[key];
     }
