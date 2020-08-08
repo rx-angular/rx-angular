@@ -5,19 +5,19 @@ returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
 
 _Example_
 
-```TypeScript
+```typescript
 const profilePicture$ = state.pipe(
   select(
-   pluck('profilePicture'),
-   switchMap(profilePicture => mapImageAsync(profilePicture))
+    pluck('profilePicture'),
+    switchMap(profilePicture => mapImageAsync(profilePicture))
   )
 );
 ```
 
 ### Signature
 
-```TypeScript
-function select<T, A>(op: OperatorFunction<T, A>): OperatorFunction<T, A>
+```typescript
+function select<T, A>(op: OperatorFunction<T, A>): OperatorFunction<T, A>;
 ```
 
 ### Parameters

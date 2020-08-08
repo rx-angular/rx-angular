@@ -5,8 +5,12 @@ Accepts array T[] and key of type string, number or symbol as inputs.
 
 _Example_
 
-```TypeScript
-const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}, {id: 3, type: 'parrot'}];
+```typescript
+const creatures = [
+  { id: 1, type: 'cat' },
+  { id: 2, type: 'dog' },
+  { id: 3, type: 'parrot' }
+];
 
 const creaturesDictionary = toDictionary(creatures, 'id');
 
@@ -20,7 +24,7 @@ const creaturesDictionary = toDictionary(creatures, 'id');
 
 _Example_
 
-```TypeScript
+```typescript
 // Usage with RxState
 
 export class ListComponent {
@@ -47,10 +51,14 @@ export class ListComponent {
 
 ### Signature
 
-```TypeScript
-function toDictionary<T extends object>(source: T[], key: | OnlyKeysOfSpecificType<T, number>
+```typescript
+function toDictionary<T extends object>(
+  source: T[],
+  key:
+    | OnlyKeysOfSpecificType<T, number>
     | OnlyKeysOfSpecificType<T, string>
-    | OnlyKeysOfSpecificType<T, symbol>): { [key: string]: T }
+    | OnlyKeysOfSpecificType<T, symbol>
+): { [key: string]: T };
 ```
 
 ### Edge cases

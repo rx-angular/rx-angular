@@ -4,12 +4,12 @@ RxState is a light-weight reactive state management service for managing local s
 
 _Example_
 
-```TypeScript
+```typescript
 Component({
   selector: 'app-stateful',
   template: `<div>{{ state$ | async | json }}</div>`,
   providers: [RxState]
-})
+});
 export class StatefulComponent {
   readonly state$ = this.state.select();
 
@@ -23,7 +23,7 @@ export class StatefulComponent {
 
 ## Signature
 
-```TypeScript
+```typescript
 class RxState<T extends object> implements OnDestroy, Subscribable<T> {
   readonly readonly $: Observable<T> = this.accumulator.signal$;
 
@@ -60,7 +60,7 @@ Use the `$` property if you want to read the state without having applied <a hre
 
 ### Signature
 
-```TypeScript
+```typescript
 connect(inputOrSlice$: Observable<Partial<T> | V>, projectFn?: ProjectStateReducer<T, V>): void
 ```
 
@@ -70,7 +70,7 @@ Subscription handling is done automatically.
 
 _Example_
 
-```TypeScript
+```typescript
 const sliceToAdd$ = interval(250).pipe(mapTo({
   bar: 5,
   foo: 'foo'
@@ -91,7 +91,7 @@ state.connect(sliceToAdd$, (state, slice) => state.bar += slice.bar);
 
 ### Signature
 
-```TypeScript
+```typescript
 connect(key: K, slice$: Observable<T[K]>): void
 ```
 
@@ -102,7 +102,7 @@ Subscription handling is done automatically.
 
 _Example_
 
-```TypeScript
+```typescript
 const myTimer$ = interval(250);
 state.connect('timer', myTimer$);
 // every 250ms the property timer will get updated
@@ -110,7 +110,7 @@ state.connect('timer', myTimer$);
 
 ### Signature
 
-```TypeScript
+```typescript
 connect(key: K, slice$: Observable<V>, projectSliceFn: ProjectValueReducer<T, K, V>): void
 ```
 
@@ -121,9 +121,13 @@ Subscription handling is done automatically.
 
 _Example_
 
-```TypeScript
+```typescript
 const myTimer$ = interval(250);
-state.connect('timer', myTimer$, (state, timerChange) => state.timer += timerChange);
+state.connect(
+  'timer',
+  myTimer$,
+  (state, timerChange) => (state.timer += timerChange)
+);
 // every 250ms the property timer will get updated
 ```
 
@@ -133,7 +137,7 @@ state.connect('timer', myTimer$, (state, timerChange) => state.timer += timerCha
 
 ### Signature
 
-```TypeScript
+```typescript
 set(stateOrProjectState: Partial<T> | ProjectStateFn<T>): void
 ```
 
@@ -141,7 +145,7 @@ Manipulate one or many properties of the state by providing a `Partial<T>` state
 
 _Example_
 
-```TypeScript
+```typescript
 // Update one or many properties of the state by providing a `Partial<T>`
 
 const partialState = {
@@ -160,7 +164,7 @@ state.set(reduceFn);
 
 ### Signature
 
-```TypeScript
+```typescript
 set(key: K, projectSlice: ProjectValueFn<T, K>): void
 ```
 
@@ -168,7 +172,7 @@ Manipulate a single property of the state by the property name and a `Projection
 
 _Example_
 
-```TypeScript
+```typescript
 const reduceFn = oldState => oldState.bar + 5;
 state.set('bar', reduceFn);
 ```
@@ -179,7 +183,7 @@ state.set('bar', reduceFn);
 
 ### Signature
 
-```TypeScript
+```typescript
 select(): Observable<T>
 ```
 
@@ -189,14 +193,14 @@ subscribers**,
 
 _Example_
 
-```TypeScript
+```typescript
 const state$ = state.select();
 state$.subscribe(state => doStuff(state));
 ```
 
 ### Signature
 
-```TypeScript
+```typescript
 select(op: OperatorFunction<T, A>): Observable<A>
 ```
 
@@ -205,16 +209,16 @@ returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
 
 _Example_
 
-```TypeScript
+```typescript
 const profilePicture$ = state.select(
- pluck('profilePicture'),
- switchMap(profilePicture => mapImageAsync(profilePicture))
+  pluck('profilePicture'),
+  switchMap(profilePicture => mapImageAsync(profilePicture))
 );
 ```
 
 ### Signature
 
-```TypeScript
+```typescript
 select(k1: K1): Observable<T[K1]>
 ```
 
@@ -223,7 +227,7 @@ Returns a single property of the state as cached and distinct `Observable<T[K1]>
 
 _Example_
 
-```TypeScript
+```typescript
 // Access a single property
 
 const bar$ = state.select('bar');
@@ -239,7 +243,7 @@ const foo$ = state.select('bar', 'foo');
 
 ### Signature
 
-```TypeScript
+```typescript
 get(): T
 ```
 
@@ -247,7 +251,7 @@ Read from the state in imperative manner. Returns the state object in its curren
 
 _Example_
 
-```TypeScript
+```typescript
 const { disabled } = state.get();
 if (!disabled) {
   doStuff();
@@ -256,7 +260,7 @@ if (!disabled) {
 
 ### Signature
 
-```TypeScript
+```typescript
 get(k1: K1): Partial<T>
 ```
 
@@ -265,10 +269,10 @@ Returns the part of state object.
 
 _Example_
 
-```TypeScript
+```typescript
 interface State {
-  bar: { foo: `test`},
-  baz: true
+  bar: { foo: `test` };
+  baz: true;
 }
 
 // Access a single property
@@ -286,7 +290,7 @@ const foo = state.get('bar', 'foo');
 
 ### Signature
 
-```TypeScript
+```typescript
   hold(obsOrObsWithSideEffect: Observable<S>, sideEffectFn?: (arg: S) => void): void
 ```
 
@@ -296,10 +300,10 @@ Subscription handling is done automatically.
 
 _Example_
 
-```TypeScript
+```typescript
 // Directly pass an observable side-effect
 const localStorageEffect$ = changes$.pipe(
- tap(changes => storeChanges(changes))
+  tap(changes => storeChanges(changes))
 );
 state.hold(localStorageEffect$);
 
@@ -315,7 +319,7 @@ state.hold(changes$, localStorageEffectFn);
 
 ### Signature
 
-```TypeScript
+```typescript
 setAccumulator(accumulatorFn: AccumulationFn) => void
 ```
 

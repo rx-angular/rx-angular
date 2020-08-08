@@ -6,8 +6,8 @@ Toggles the property and returns a shallow copy of an object, while not mutating
 
 _Example_
 
-```TypeScript
-const state = {items: [1,2,3], loading: true};
+```typescript
+const state = { items: [1, 2, 3], loading: true };
 
 const updatedState = toggle(state, 'loading');
 
@@ -17,35 +17,33 @@ const updatedState = toggle(state, 'loading');
 
 _Example_
 
-```TypeScript
+```typescript
 // Usage with RxState
 
 export class ListComponent {
-   readonly loadingChange$ = new Subject();
+  readonly loadingChange$ = new Subject();
 
-   constructor(
-     private state: RxState<ComponentState>
-   ) {
-     // Reactive implementation
-     state.connect(
-       this.api.loadingChange$,
-       (state, _) => {
-           return toggle(state, 'isLoading');
-       }
-     );
-   }
+  constructor(private state: RxState<ComponentState>) {
+    // Reactive implementation
+    state.connect(this.api.loadingChange$, (state, _) => {
+      return toggle(state, 'isLoading');
+    });
+  }
 
-   // Imperative implementation
-   toggleLoading(): void {
-     this.set(toggle(state, 'isLoading'));
-   }
+  // Imperative implementation
+  toggleLoading(): void {
+    this.set(toggle(state, 'isLoading'));
+  }
 }
 ```
 
 ### Signature
 
-```TypeScript
-function toggle<T extends object>(object: T, key: OnlyKeysOfSpecificType<T, boolean>): T
+```typescript
+function toggle<T extends object>(
+  object: T,
+  key: OnlyKeysOfSpecificType<T, boolean>
+): T;
 ```
 
 ### Edge cases

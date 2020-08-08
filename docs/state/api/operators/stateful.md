@@ -22,7 +22,7 @@ You will sometimes (aka situational) need:
 
 _Example_
 
-```TypeScript
+```typescript
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { stateful } from 'rx-angular/state';
@@ -38,15 +38,15 @@ const derivation$ = state$.pipe(
 
 ### Signature
 
-```TypeScript
-function stateful<T>(): MonoTypeOperatorFunction<T>
+```typescript
+function stateful<T>(): MonoTypeOperatorFunction<T>;
 ```
 
 As it acts like the Observables `pipe` method, it accepts one or many RxJS operators as params.
 
 _Example_
 
-```TypeScript
+```typescript
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { stateful } from 'rx-angular/state';
@@ -62,8 +62,10 @@ const derivation$ = state$.pipe(
 
 ### Signature
 
-```TypeScript
-function stateful<T, R>(optionalDerive: OperatorFunction<T, R>[]): OperatorFunction<T, T | R>
+```typescript
+function stateful<T, R>(
+  optionalDerive: OperatorFunction<T, R>[]
+): OperatorFunction<T, T | R>;
 ```
 
 ### Parameters

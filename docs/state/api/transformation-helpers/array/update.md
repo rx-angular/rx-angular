@@ -7,12 +7,15 @@ Returns a shallow copy of the array T[] and updated items, does not mutate the o
 
 _Example_
 
-```TypeScript
+```typescript
 // Update with comparison function
 
-const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}];
+const creatures = [
+  { id: 1, type: 'cat' },
+  { id: 2, type: 'dog' }
+];
 
-const newCat = {id: 1, type: 'lion'};
+const newCat = { id: 1, type: 'lion' };
 
 const updatedCreatures = update(creatures, newCat, (a, b) => a.id === b.id);
 
@@ -22,12 +25,15 @@ const updatedCreatures = update(creatures, newCat, (a, b) => a.id === b.id);
 
 _Example_
 
-```TypeScript
+```typescript
 // Update with key
 
-const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}];
+const creatures = [
+  { id: 1, type: 'cat' },
+  { id: 2, type: 'dog' }
+];
 
-const newCat = {id: 1, type: 'lion'};
+const newCat = { id: 1, type: 'lion' };
 
 const updatedCreatures = update(creatures, newCat, 'id');
 
@@ -37,12 +43,15 @@ const updatedCreatures = update(creatures, newCat, 'id');
 
 _Example_
 
-```TypeScript
+```typescript
 // Update with array of keys
 
-const creatures = [{id: 1, type: 'cat', name: 'Bella'}, {id: 2, type: 'dog', name: 'Sparky'}];
+const creatures = [
+  { id: 1, type: 'cat', name: 'Bella' },
+  { id: 2, type: 'dog', name: 'Sparky' }
+];
 
-const newCat = {id: 1, type: 'lion', name: 'Bella'};
+const newCat = { id: 1, type: 'lion', name: 'Bella' };
 
 const updatedCreatures = update(creatures, newCat, ['id', 'name']);
 
@@ -52,35 +61,44 @@ const updatedCreatures = update(creatures, newCat, ['id', 'name']);
 
 _Example_
 
-```TypeScript
+```typescript
 // Usage with RxState
 
 export class ListComponent {
+  readonly updateCreature$ = new Subject<Creature>();
 
-   readonly updateCreature$ = new Subject<Creature>();
+  constructor(private state: RxState<ComponentState>) {
+    // Reactive implementation
+    state.connect(
+      'creatures',
+      this.updateCreature$,
+      ({ creatures }, creatureToUpdate) => {
+        return update(creatures, creatureToRemove, (a, b) => a.id === b.id);
+      }
+    );
+  }
 
-   constructor(private state: RxState<ComponentState>) {
-     // Reactive implementation
-     state.connect(
-       'creatures',
-       this.updateCreature$,
-       ({ creatures }, creatureToUpdate) => {
-           return update(creatures, creatureToRemove, (a, b) => a.id === b.id);
-       }
-     );
-   }
-
-   // Imperative implementation
-   updateCreature(creatureToUpdate: Creature): void {
-       this.state.set({ creatures: update(this.state.get().creatures, creatureToUpdate, (a, b) => a.id === b.id)});
-   }
+  // Imperative implementation
+  updateCreature(creatureToUpdate: Creature): void {
+    this.state.set({
+      creatures: update(
+        this.state.get().creatures,
+        creatureToUpdate,
+        (a, b) => a.id === b.id
+      )
+    });
+  }
 }
 ```
 
 ### Signature
 
-```TypeScript
-function update<T extends object>(source: T[], updates: Partial<T>[] | Partial<T>, compare?: ComparableData<T>): T[]
+```typescript
+function update<T extends object>(
+  source: T[],
+  updates: Partial<T>[] | Partial<T>,
+  compare?: ComparableData<T>
+): T[];
 ```
 
 ### Edge cases

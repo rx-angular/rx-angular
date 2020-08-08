@@ -5,16 +5,16 @@ Returns a new object where updates override original values while not mutating t
 
 _Example_
 
-```TypeScript
+```typescript
 interface Creature {
- id: number,
- type: string,
- name: string
+  id: number;
+  type: string;
+  name: string;
 }
 
-const cat = {id: 1, type: 'cat'};
+const cat = { id: 1, type: 'cat' };
 
-const catWithname = patch(cat, {name: 'Fluffy'});
+const catWithname = patch(cat, { name: 'Fluffy' });
 
 // catWithname will be:
 // {id: 1, type: 'cat', name: 'Fluffy'};
@@ -22,34 +22,30 @@ const catWithname = patch(cat, {name: 'Fluffy'});
 
 _Example_
 
-```TypeScript
+```typescript
 // Usage with RxState
 
 export class ProfileComponent {
+  readonly changeName$ = new Subject<string>();
 
-   readonly changeName$ = new Subject<string>();
+  constructor(private state: RxState<ComponentState>) {
+    // Reactive implementation
+    state.connect(this.changeName$, (state, name) => {
+      return patch(state, { name });
+    });
+  }
 
-   constructor(private state: RxState<ComponentState>) {
-     // Reactive implementation
-     state.connect(
-       this.changeName$,
-       (state, name) => {
-           return patch(state, { name });
-       }
-     );
-   }
-
-   // Imperative implementation
-   changeName(name: string): void {
-       this.state.set(patch(this.get(), { name }));
-   }
+  // Imperative implementation
+  changeName(name: string): void {
+    this.state.set(patch(this.get(), { name }));
+  }
 }
 ```
 
 ### Signature
 
-```TypeScript
-function patch<T extends object>(object: T, upd: Partial<T>): T
+```typescript
+function patch<T extends object>(object: T, upd: Partial<T>): T;
 ```
 
 ```typescript

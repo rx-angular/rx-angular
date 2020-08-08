@@ -13,7 +13,7 @@ should not be the longterm solution to handle `HostBindings` in a fully reactive
 
 Imagine you have the following state which you want to bind to properties of your host element.
 
-```ts
+`````typescript
 interface ComponentState {
   visible: boolean;
   top: number;
@@ -29,7 +29,7 @@ As stated in the title, we have to be aware changeDetection. On every changeDete
 all `HostBindings`. If our component doesn't get flagged as dirty, our `HostBindings` won't get updated. So we have to make
 sure that state changes that are related to the `HostBindings` value are actually triggering a re-render.
 
-```ts
+````typescript
 @Component({
   providers: [RxState]
 })
@@ -58,7 +58,7 @@ With this setup in place we have two options to get things done.
 Since rendering is a side-effect, we could utilize the `hold` method and register
 a function which handles change detection for us.
 
-```ts
+````typescript
 @Component({
   providers: [RxState]
 })
@@ -96,7 +96,7 @@ to the view correctly.
 
 Inside the component:
 
-```ts
+````typescript
   readonly viewState$ = this.state.select();
 ```
 
@@ -119,7 +119,7 @@ We will utilize the `ElementRef` itself for this purpose and manipulate the DOM 
 
 Feel free to use angulars `Renderer2` if you want an abstraction layer, should work the exact same way.
 
-```ts
+````typescript
 @Component({
   providers: [RxState]
 })
@@ -147,3 +147,4 @@ export class RxComponent {
   }
 }
 ```
+`````
