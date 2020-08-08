@@ -17,25 +17,21 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-defaults.css"
     /> -->
-    <style>
-      :root {
-        --theme-color: #dc0030;
-      }
-    </style>
   </head>
   <body>
     <div id="app"></div>
     <script>
       window.$docsify = {
         name: 'RxAngular',
-        // coverpage: 'partials/_coverpage.md',
         logo: 'logo.jpg',
-        // maxLevel: 1,
         subMaxLevel: 2,
-        loadSidebar: './_sidebar.md'
+        loadSidebar: './_sidebar.md',
+        auto2top: true,
+        themeColor: '#dc0030'
       };
     </script>
     <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.21.0/components/prism-typescript.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify-edit-on-github"></script>
   </body>
 </html>
