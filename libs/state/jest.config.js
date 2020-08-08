@@ -1,7 +1,8 @@
 module.exports = {
   name: '@rx-angular/state',
   preset: '../../jest.config.js',
-  coverageDirectory: '../../coverage/state',
+  coverageReporters: ['lcov', 'cobertura'],
+  coverageDirectory: '../../docs/test-coverage/state',
   collectCoverageFrom: ['./src/**/*.ts'],
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
