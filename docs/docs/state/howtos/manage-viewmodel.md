@@ -45,7 +45,7 @@ As your view requires additional and/or derived information from your component 
 Changes of your `viewModel$` ultimately result in component renderings, so we have to make sure that it's emissions
 are distinct.
 
-## _Example w [`selectSlice`](../api/operators/select-slice.md)_:
+## Example w `selectSlice`
 
 For this scenario we created the `selectSlice` operator.
 It returns an Observable that emits a distinct subset of the received object.
@@ -72,7 +72,7 @@ export class ViewModelComponent extends RxState<ComponentState> {
 }
 ```
 
-## _Example w multiple Observables and [`selectSlice`](../api/operators/select-slice.md)_:
+## Example w multiple Observables and `selectSlice`
 
 There are situations where you want to divide your `ViewModel` into different parts.
 

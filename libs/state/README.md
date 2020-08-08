@@ -72,8 +72,8 @@ with very little effort in any component.
 
 ## Snippets
 
-- [Logic comparison - Increment a Value](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/logic-comparison--increment-a-value.md)
-- [Loading state and data fetching](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/loading-state-and-data-fetching.md)
+- [Logic comparison - Increment a Value](https://github.com/BioPhoton/rx-angular/tree/master/docs/docs/state/tutorials/incrementing-value.md)
+- [Loading state and data fetching](https://github.com/BioPhoton/rx-angular/tree/master/docs/docs/state/howtos/load-data-on-route-change.md)
 - [Passing Observables directly](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/passing-observables-directly.md)
 - [How to run partial state updates](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/how-can-i-run-partial-state-updates.md)
 - [Get nested state slices](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/get-nested-state-slices.md)

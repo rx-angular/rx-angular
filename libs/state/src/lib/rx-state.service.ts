@@ -79,7 +79,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     this.subscription.unsubscribe();
   }
 
-  setAccumulator(accumulatorFn: AccumulationFn) {
+  setAccumulator(accumulatorFn: AccumulationFn): void {
     this.accumulator.nextAccumulator(accumulatorFn);
   }
 

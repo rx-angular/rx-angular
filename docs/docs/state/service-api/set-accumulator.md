@@ -1,3 +1,0 @@
-# setAccumulator
-
-##### typeof: (accumulatorFn: AccumulationFn) =>

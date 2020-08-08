@@ -1,13 +1,19 @@
+# Overview
+
+Set of interfaces that are used inside RxState, our custom RxJS operators and transformation helpers. Also can be used separately.
+
 # CompareFn
 
 The function which is used by `KeyCompareMap` to determine if changes are distinct or not.
 Should return true if values are equal.
 
-## Signature
+### Signature
 
 ```TypeScript
 type CompareFn<T> = (oldVal: T, newVal: T) => boolean
 ```
+
+---
 
 # KeyCompareMap
 
@@ -32,13 +38,15 @@ const keyCompareMap = {
  }).pipe(selectSlice(['myKey', 'myOtherKey'], keyCompareMap));
 ```
 
-## Signature
+### Signature
 
 ```TypeScript
 type KeyCompareMap<T extends object> = {
   [K in keyof Partial<T>]: CompareFn<T[K]>;
 }
 ```
+
+---
 
 # OnlyKeysOfSpecificType
 
@@ -66,7 +74,7 @@ updateCreature(cat, 'name', 'Luna');
 updateCreature(cat, 'id', 3);
 ```
 
-## Signature
+### Signature
 
 ```TypeScript
 type OnlyKeysOfSpecificType<T, S> = {
