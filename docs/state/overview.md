@@ -8,7 +8,7 @@
 
 RxState is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in angular.
 
-![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_logo.png)
+![state logo](../images/state/state_logo.png)
 
 ## Description
 
@@ -38,8 +38,8 @@ Using this library allows you to implement things like:
 with very little effort in any component.
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-names.png" width="49%" />
-  <img src="https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-types.png" width="49%" />
+  <img src="../images/state/state_API-names.png" width="49%" />
+  <img src="../images/state/state_API-types.png" width="49%" />
 </p>
 
 ## Key features

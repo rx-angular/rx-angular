@@ -1,6 +1,6 @@
 - [RxAngular](/)
 
-- @rx-angular/template
+- @rx-angular/template [BETA]
 
   - Getting started
 

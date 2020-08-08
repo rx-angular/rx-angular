@@ -1,13 +1,13 @@
 # RenderStrategies
 
 The `RenderStrategies` can be seen as the _core_ of the performance optimization layer. They utilize all
-[`Concepts`](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/concepts.md) explained above in order to provide a streamlined and focused API to master
+[`Concepts`](template/theory/concepts.md) explained above in order to provide a streamlined and focused API to master
 angular rendering and `ChangeDetection`.
 
 ## Usage
 
 Use the corresponding `RenderStrategy#name` as parameter or Input with the `PushPipe` or `LetDirective`.
-By default, they will use the [Local Strategy](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/viewport-prio.md).
+By default, they will use the `Local Strategy`.
 
 ```html
 <div *rxLet="list$; let list; strategy: 'global'"></div>
@@ -39,7 +39,7 @@ export class PerformanceAwareComponent {
 
 # Built-in Strategies
 
-![Template - RenderStrategies](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/template_rendering-strategies.png)
+![Template - RenderStrategies](../../../images/template/template_rendering-strategies.png)
 
 ## Local Strategy
 
@@ -49,7 +49,7 @@ that is marked as dirty or has components with `ChangeDetectionStrategy.Default`
 
 As detectChanges is synchronous and has no built-in coalescing of rendering
 like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` have, we have to apply our own coalescing.
-It is also _scoped_ on the component level. (see [Concepts](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/concepts.md) for more information)
+It is also _scoped_ on the component level. (see [Concepts](template/theory/concepts.md) for more information)
 
 | Name    | ZoneLess VE/I | Render Method VE/I | Coalescing/Schedule    |
 | ------- | ------------- | ------------------ | ---------------------- |

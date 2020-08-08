@@ -6,7 +6,7 @@ Under the hood, it leverages a `RenderStrategy` which in turn takes care of opti
 of your component.
 
 The rendering behavior can be configured per LetDirective instance by using the strategy `@Input()`.
-You find more information about [`RenderStrategies`](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/render-strategies.md) in the sections below.
+You find more information about [`RenderStrategies`](template/features/render-strategies.md) in the sections below.
 
 Other Features:
 
