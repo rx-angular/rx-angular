@@ -1,5 +1,27 @@
 - [RxAngular](/)
 
+- @rx-angular/template
+
+  - Getting started
+
+    - [Overview](/template/overview.md)
+    - [Setup](/template/basic-setup.md)
+
+  - Theory
+
+    - [Rendering issues in Angular](/template/theory/rendering-issues.md)
+    - [Concepts](/template/theory/concepts.md)
+
+  - Features
+
+    - [LetDirective](/template/features/let.md)
+    - [PushPipe](/template/features/push.md)
+    - [RenderStrategies](/template/features/render-strategies.md)
+
+  - Experimental
+
+    - [Unpatch directive](/template/experimental/unpatch.md)
+
 - @rx-angular/state
 
   - Getting started

@@ -17,9 +17,9 @@ export class StatefulComponent {
 }
 ```
 
-![](api-schema.jpg)
+![](../../../images/state/api-schema.jpg)
 
-![](api-reveal.jpg)
+![](../../../images/state/api-reveal.jpg)
 
 ## Signature
 

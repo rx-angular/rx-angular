@@ -37,41 +37,11 @@ export class PerformanceAwareComponent {
 }
 ```
 
-## Built-in Strategies
+# Built-in Strategies
 
 ![Template - RenderStrategies](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/template_rendering-strategies.png)
 
-### Native Strategy
-
-This strategy mirrors Angular's built-in `async` pipe.
-This means for every emitted value `ChangeDetectorRef#markForCheck` is called.
-
-| Name     | ZoneLess VE/I | Render Method VE/I | Coalescing VE/I |
-| -------- | ------------- | ------------------ | --------------- |
-| `native` | ❌/❌         | mFC / mFC          | ❌              |
-
-### Noop
-
-Noop Strategy
-
-This strategy does nothing. It serves for debugging purposes or as a fine-grained performance optimization tool.
-Use it with caution, since it stops `ChangeDetection` completely.
-
-| Name   | ZoneLess VE/I | Render Method VE/I | Coalescing VE/I |
-| ------ | ------------- | ------------------ | --------------- |
-| `noop` | ❌/❌         | no rendering       | ❌              |
-
-### Global Strategy
-
-This strategy is rendering the application root and
-all its children that are on a path
-that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
-
-| Name     | ZoneLess VE/I | Render Method VE/I | Coalescing |
-| -------- | ------------- | ------------------ | ---------- |
-| `global` | ❌/✔️         | mFC / ɵMD          | ❌         |
-
-### Local Strategy
+## Local Strategy
 
 This strategy is rendering the actual component and
 all it's **children** that are on a path
@@ -85,19 +55,32 @@ It is also _scoped_ on the component level. (see [Concepts](https://github.com/B
 | ------- | ------------- | ------------------ | ---------------------- |
 | `local` | ✔️/✔️         | dC / dC            | micro + animationFrame |
 
-### Detach Strategy
+## Native Strategy
 
-The Detach Strategy shares its behavior with the **Local Strategy** . It can be seen as
-the **Local Strategies** more aggressive brother. Instead of just rendering scheduled changes,
-it will also `detach` (`ChangeDetectorRef#detach`) this very `ChangeDetectorRef` from the detection cycle.
-Use this strategy at your own risk. It provides absolute **maximum performance** since your `Component` is
-effectively resilient against re-renderings coming from any other source than itself. But it will come with
-some down sights as you will see when using it :). Have fun!!
+This strategy mirrors Angular's built-in `async` pipe.
+This means for every emitted value `ChangeDetectorRef#markForCheck` is called.
 
-| Name     | ZoneLess VE/I | Render Method VE/I | Coalescing             |
-| -------- | ------------- | ------------------ | ---------------------- |
-| `detach` | ✔️/✔️         | dC / ɵDC           | micro + animationFrame |
+| Name     | ZoneLess VE/I | Render Method VE/I | Coalescing VE/I |
+| -------- | ------------- | ------------------ | --------------- |
+| `native` | ❌/❌         | mFC / mFC          | ❌              |
 
-## Custom Strategies
+## Global Strategy
 
-_coming soon_
+This strategy is rendering the application root and
+all its children that are on a path
+that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
+
+| Name     | ZoneLess VE/I | Render Method VE/I | Coalescing |
+| -------- | ------------- | ------------------ | ---------- |
+| `global` | ❌/✔️         | mFC / ɵMD          | ❌         |
+
+## Noop
+
+Noop Strategy
+
+This strategy does nothing. It serves for debugging purposes or as a fine-grained performance optimization tool.
+Use it with caution, since it stops `ChangeDetection` completely.
+
+| Name   | ZoneLess VE/I | Render Method VE/I | Coalescing VE/I |
+| ------ | ------------- | ------------------ | --------------- |
+| `noop` | ❌/❌         | no rendering       | ❌              |

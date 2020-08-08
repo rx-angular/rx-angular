@@ -10,7 +10,7 @@ RxAngular is divided into two initially independent packages:
 
 Used together, you get a powerful tool for developing high-performance angular applications with or without NgZone.
 
-## @rx-angular/template
+### @rx-angular/template
 
 [![npm version](https://badge.fury.io/js/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/@rx-angular/template)
 [![rx-angular](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
@@ -21,13 +21,13 @@ the user experience of your angular application.
 The functionalities are provided by
 structural directives, pipes, RxJS operators, or imperative functions to manage the rendering in Angular.
 
-## Key features
+### Key features
 
 - Optimized rendering performance
 - Configurable change detection strategies
 - Works in zone-full as well as zone-less applications
 
-## @rx-angular/state
+### @rx-angular/state
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
 [![rx-angular circleci-status](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
@@ -35,7 +35,7 @@ structural directives, pipes, RxJS operators, or imperative functions to manage 
 
 A light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in Angular applications.
 
-## Key features
+### Key features
 
 - Slim and intuitive API
 - Automated subscription handling
