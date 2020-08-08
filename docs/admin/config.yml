@@ -1,0 +1,31 @@
+backend:
+  name: proxy
+  proxy_url: http://localhost:8081/api/v1
+  branch: master # Branch to update (optional; defaults to master)
+media_folder: 'docs/images' # Media files will be stored in the repo under static/images/uploads
+public_folder: '/images' # The src attribute for uploaded media will begin with /images/uploads
+collections:
+  - name: 'partial'
+    label: 'Partial'
+    summary: '{{filename}}.{{extension}}'
+    folder: 'docs/partials/'
+    path: '/'
+    create: true
+    fields:
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+  - name: 'state-page'
+    label: 'State Page'
+    summary: '{{filename}}.{{extension}}'
+    folder: 'docs/state/'
+    path: '/'
+    create: true
+    fields:
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+  - name: 'template-page'
+    label: 'Template Page'
+    summary: '{{filename}}.{{extension}}'
+    folder: 'docs/template/'
+    path: '/'
+    create: true
+    fields:
+      - { label: 'Content', name: 'body', widget: 'markdown' }

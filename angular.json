@@ -455,7 +455,7 @@
     "docs": {
       "projectType": "application",
       "root": "docs",
-      "sourceRoot": "docs/docs",
+      "sourceRoot": "docs",
       "prefix": "rx-angular",
       "architect": {
         "serve-admin": {
@@ -464,7 +464,7 @@
             "parallel": true,
             "commands": [
               {
-                "command": "npx serve docs/docs/admin"
+                "command": "npx serve docs/admin"
               },
               {
                 "command": "npx netlify-cms-proxy-server"
@@ -478,7 +478,7 @@
             "parallel": true,
             "commands": [
               {
-                "command": "npx docsify-cli serve docs/docs"
+                "command": "npx docsify-cli serve docs"
               }
             ]
           }

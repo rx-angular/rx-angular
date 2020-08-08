@@ -59,11 +59,11 @@ with very little effort in any component.
 
 ## API
 
-[API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api/overview.md)
+[API Documentation](../../docs/state/misc/api-overview.md)
 
 ## Usage
 
-[Usage Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/usage.md)
+[Usage Documentation](../../docs/state/basic-setup.md)
 
 ## Tutorials
 
@@ -72,18 +72,18 @@ with very little effort in any component.
 
 ## Snippets
 
-- [Logic comparison - Increment a Value](https://github.com/BioPhoton/rx-angular/tree/master/docs/docs/state/tutorials/incrementing-value.md)
-- [Loading state and data fetching](https://github.com/BioPhoton/rx-angular/tree/master/docs/docs/state/howtos/load-data-on-route-change.md)
-- [Passing Observables directly](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/passing-observables-directly.md)
-- [How to run partial state updates](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/how-can-i-run-partial-state-updates.md)
-- [Get nested state slices](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/get-nested-state-slices.md)
-- [Deriving simple state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/deriving-simple-state.md)
-- [Composing state using NgRx selectors](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/composing-state-using-ngrx-selectors.md)
-- [Manage entities using NgRx entity adapter](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/manage-collections-with-ngrx-entity.md)
-- [BehaviorSubject vs RxState](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/behavior-subject-vs-rx-state.md)
-- [Managing ViewModels with selectSlice](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/selecting-the-viewmodel.md)
-- [Manage reactive HostBindings](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/hostbindings.md)
-- [Difference between Global and Local state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/global-state-vs-local-state.md)
+- [Logic comparison - Increment a Value](../../docs/state/tutorials/incrementing-value.md)
+- [Loading state and data fetching](../../docs/state/howtos/load-data-on-route-change.md)
+- [Passing Observables directly](../../docs/state/tutorials/passing-observables.md)
+- [How to run partial state updates](../../docs/state/howtos/partial-updates.md)
+- [Get nested state slices](../../docs/state/misc/get-nested-state-slices.md)
+- [Deriving simple state](../../docs/state/misc/deriving-simple-state.md)
+- [Composing state using NgRx selectors](../../docs/state/integrations/compose-state-using-ngrx-selectors.md)
+- [Manage entities using NgRx entity adapter](../../docs/state/integrations/manage-entities-ngrx.md)
+- [BehaviorSubject vs RxState](../../docs/state/tutorials/from-imperative-to-reactive.md)
+- [Managing ViewModels with selectSlice](../../docs/state/howtos/manage-viewmodel.md)
+- [Manage reactive HostBindings](../../docs/state/howtos/hostbindings.md)
+- [Difference between Global and Local state](../../docs/state/howtos/determine-state.md)
 
 ## Resources
 
