@@ -2,8 +2,12 @@ import { ApplicationRef, Component, NgModule, NgZone } from '@angular/core';
 import { getTestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { isNgZone, isNoopNgZone } from '../../../src/lib/core/utils';
+import { mockConsole } from '@test-helpers';
+
 
 describe('hasZone', () => {
+  beforeAll(() => mockConsole());
+
   async function setup({ defaultZone }: { defaultZone: boolean }) {
     @Component({
       // tslint:disable-next-line:component-selector
