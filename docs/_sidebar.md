@@ -1,6 +1,6 @@
 - [RxAngular](/)
 
-- @rx-angular/template [BETA]
+<!-- - @rx-angular/template [BETA]
 
   - Getting started
 
@@ -20,7 +20,7 @@
 
   - Experimental
 
-    - [Unpatch directive](/template/experimental/unpatch.md)
+    - [Unpatch directive](/template/experimental/unpatch.md) -->
 
 - @rx-angular/state
 
