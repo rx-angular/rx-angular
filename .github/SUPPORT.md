@@ -5,7 +5,7 @@
 > abide by its terms.
 
 Welcome to RxAngular!  👋
-The toolkit for fully reactive as well as zone-less applications.
+The toolkit for fully reactive, high performance angular applications.
 We’re excited that you’re using this repository and we’d love to help.
 To help us help you, please read through the following guidelines.
 
