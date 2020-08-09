@@ -2,6 +2,7 @@ import { OnDestroy } from '@angular/core';
 import { createRenderAware, RenderAware } from '../../../src/lib/core';
 import { concat, EMPTY, NEVER, NextObserver, Observer, of, Unsubscribable } from 'rxjs';
 import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
+import { mockConsole } from '@test-helpers';
 
 // TODO: Add Angular decorator.
 class CdAwareImplementation<U> implements OnDestroy {
@@ -51,7 +52,10 @@ const setupCdAwareImplementation = () => {
   cdAwareImplementation.completed = false;
 };
 
+
 describe('CdAware', () => {
+  beforeAll(() => mockConsole());
+
   beforeEach(() => {
     setupCdAwareImplementation();
   });
