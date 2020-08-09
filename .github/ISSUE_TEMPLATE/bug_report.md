@@ -25,11 +25,7 @@ if applicable and relevant include any of the following:
 
 # Steps to Reproduce the Issue
 <!--
-Explain in detail hoe to reproduce the issue:
-
-1. Do Something
-2. ???
-3. Bug
+Explain detailed information about the steps how to reproduce this specific bug
 
 In best case provide a [stackblitz](stackblitz.com) example
 
