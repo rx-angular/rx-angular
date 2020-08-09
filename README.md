@@ -10,7 +10,7 @@ RxAngular is divided into two initially independent packages:
 
 Used together, you get a powerful tool for developing high-performance angular applications with or without NgZone.
 
-[![rx-angular](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
+![rx-angular CI](https://github.com/BioPhoton/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
 
 This repository holds a set of helpers to create **fully reactive** as well as **fully zone-less** applications.
 
