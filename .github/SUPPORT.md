@@ -9,8 +9,7 @@ The toolkit for fully reactive, high performance angular applications.
 We’re excited that you’re using this repository and we’d love to help.
 To help us help you, please read through the following guidelines.
 
-Please understand that people involved with this project often do so for fun,
-next to their day job; you are not entitled to free customer service.
+Please understand that people involved with this project often do so in their spare time besides their daily business. You are not entitled to free customer service.
 
 ## Table of Contents
 
