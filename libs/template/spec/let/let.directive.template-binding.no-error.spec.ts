@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LetDirective } from '@rx-angular/template';
 import { Observable, of, Subject } from 'rxjs';
+import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
@@ -38,6 +39,7 @@ const setUpFixture = () => {
 };
 
 describe('LetDirective when template binding without "error" template', () => {
+  beforeAll(() => mockConsole());
   beforeEach(async(setupTestComponent));
   beforeEach(setUpFixture);
 

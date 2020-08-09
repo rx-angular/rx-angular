@@ -4,6 +4,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { getGlobalThis } from '../../src/lib/core/utils';
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
 import { MockChangeDetectorRef } from '../fixtures';
+import { mockConsole } from '@test-helpers';
 
 let pushPipe: any;
 
@@ -18,6 +19,7 @@ const setupPushPipeComponent = () => {
 };
 
 describe('PushPipe used as a Service', () => {
+  beforeAll(() => mockConsole());
   beforeEach(async(setupPushPipeComponent));
 
   it('should be instantiable', () => {

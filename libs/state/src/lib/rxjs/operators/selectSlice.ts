@@ -94,7 +94,7 @@ export function selectSlice<T extends object, K extends keyof T>(
         // {str: 'test'} => selectSlice(['notPresent']) => no emission
         // {str: 'test'} => state.select(selectSlice([])) => no emission
         // {str: 'test'} => state.select(selectSlice(['notPresent'])) => no emission
-        if (!definedKeys.length) {
+        if (definedKeys.length <= 0) {
           return undefined;
         }
 
@@ -113,5 +113,5 @@ export function selectSlice<T extends object, K extends keyof T>(
 
 type PickSlice<T extends object, K extends keyof T> = Pick<
   T,
-  { [I in keyof T]: I }[K]
+  { [I in K]: I }[K]
 >;

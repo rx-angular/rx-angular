@@ -14,7 +14,10 @@ import {
 import { startWith, tap, throttle, throttleTime } from 'rxjs/operators';
 import { createRenderAware, RenderAware, StrategySelection } from '../../../src/lib/core';
 import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
+
 import createSpy = jasmine.createSpy;
+import { mockConsole } from '@test-helpers';
+
 
 // TODO: Add Angular decorator.
 class CdAwareImplementation<U> implements OnDestroy {
@@ -72,7 +75,10 @@ const setupCdAwareImplementation = () => {
   cdAwareImplementation.completed = false;
 };
 
+
 describe('CdAware', () => {
+  beforeAll(() => mockConsole());
+
   beforeEach(() => {
     setupCdAwareImplementation();
   });

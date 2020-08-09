@@ -4,6 +4,7 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let';
 import { take } from 'rxjs/operators';
 import { MockChangeDetectorRef } from '../fixtures';
+import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
@@ -46,6 +47,7 @@ const setupLetDirectiveTestComponent = (): void => {
 };
 
 describe('LetDirective when nexting values', () => {
+  beforeAll(() => mockConsole());
   beforeEach((setupLetDirectiveTestComponent));
 
   it('should be instantiable', () => {
