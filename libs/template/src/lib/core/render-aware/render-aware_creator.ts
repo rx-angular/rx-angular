@@ -112,11 +112,7 @@ export function createRenderAware<U>(cfg: {
     },
     activeStrategy$: strategy$,
     subscribe(): Subscription {
-      return (
-        new Subscription()
-          //.add(strategy$.subscribe()) TODO: seems to work without, investigate
-          .add(renderingEffect$.subscribe())
-      );
+      return new Subscription().add(renderingEffect$.subscribe());
     },
   };
 }
