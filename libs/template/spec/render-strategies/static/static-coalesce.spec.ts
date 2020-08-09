@@ -1,9 +1,11 @@
 import { staticCoalesce } from '../../../src/lib/render-strategies/static';
 import { priorityTickMap, SchedulingPriority } from '@rx-angular/template';
 import { from } from 'rxjs';
+import { mockConsole } from '@test-helpers';
 
 /** @test {coalesceWith} */
 describe('staticCoalesce', () => {
+  beforeAll(() => mockConsole());
 
   it('should coalesce to a scope', (done) => {
     let test = 0;

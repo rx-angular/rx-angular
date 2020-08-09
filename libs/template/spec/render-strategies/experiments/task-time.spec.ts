@@ -1,5 +1,9 @@
+import { mockConsole } from "@test-helpers";
+
+
 /** @test {coalesceWith} */
 describe('execution order', () => {
+  beforeAll(() => mockConsole());
 
   it('task, micro, macro', (done) => {
     const executionOrder = [1, 2, 3];
