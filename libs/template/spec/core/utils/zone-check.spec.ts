@@ -2,6 +2,7 @@ import { ApplicationRef, Component, NgModule, NgZone } from '@angular/core';
 import { getTestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { isNgZone, isNoopNgZone } from '../../../src/lib/core/utils';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
 

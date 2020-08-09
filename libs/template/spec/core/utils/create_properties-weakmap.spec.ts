@@ -1,4 +1,5 @@
 import { createPropertiesWeakMap } from '../../../src/lib/core/utils';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
 const propertyNameString = 'flag';

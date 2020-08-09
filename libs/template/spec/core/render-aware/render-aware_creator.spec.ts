@@ -1,22 +1,22 @@
 import { OnDestroy } from '@angular/core';
 import {
-  asapScheduler,
   concat,
   EMPTY,
-  interval,
   NEVER,
-  NextObserver, Observable,
+  NextObserver,
+  Observable,
   Observer,
   of,
-  Subject, throwError,
+  Subject,
+  throwError,
   Unsubscribable
 } from 'rxjs';
-import { startWith, tap, throttle, throttleTime } from 'rxjs/operators';
+import { startWith, tap } from 'rxjs/operators';
 import { createRenderAware, RenderAware, StrategySelection } from '../../../src/lib/core';
 import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
-
-import createSpy = jasmine.createSpy;
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import createSpy = jasmine.createSpy;
 
 
 // TODO: Add Angular decorator.
@@ -200,7 +200,7 @@ describe('CdAware', () => {
         subscribers++;
         values.pipe(startWith(1)).subscribe(innerValue => {
           subscriber.next(innerValue);
-        })
+        });
       });
       cdAwareImplementation.cdAware.nextPotentialObservable(v$);
       expect(cdAwareImplementation.renderedValue).toBe(1);

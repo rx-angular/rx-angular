@@ -1,5 +1,6 @@
 import { coalesceAndSchedule } from '../../../src/lib/render-strategies/static';
 import { SchedulingPriority } from '../../../src/lib/render-strategies/rxjs/scheduling/interfaces';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
 /** @test {coalesceWith} */

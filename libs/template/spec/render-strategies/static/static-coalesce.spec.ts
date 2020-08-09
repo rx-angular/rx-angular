@@ -1,6 +1,7 @@
 import { staticCoalesce } from '../../../src/lib/render-strategies/static';
 import { priorityTickMap, SchedulingPriority } from '@rx-angular/template';
 import { from } from 'rxjs';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
 /** @test {coalesceWith} */
