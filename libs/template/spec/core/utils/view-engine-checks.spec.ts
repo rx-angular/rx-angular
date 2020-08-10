@@ -1,4 +1,5 @@
 import { getGlobalThis, isViewEngineIvy } from '../../../src/lib/core';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
 
