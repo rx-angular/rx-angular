@@ -16,30 +16,16 @@ describe('safePluck', () => {
     expect(safePluck(obj, ['foo', 'bar'])).toEqual(bar);
   });
 
-  it('should throw error when object and key are invalid', () => {
-    expect(() => safePluck(undefined as any, null as any)).toThrowError(
-      'No keys given to pluck'
-    );
+  it('should return undefined when object is not valid', () => {
+    expect(safePluck([undefined] as any, ['prop1'] as any)).toEqual(undefined);
   });
 
-  it('should throw error when object is invalid', () => {
-    const args = ['foo', 'bar'] as any;
-    expect(() => safePluck(undefined as any, args)).toThrowError(
-      'No object to pluck from'
-    );
+  it('should return undefined when keys are not provided', () => {
+    expect(safePluck(obj, null as any)).toEqual(undefined);
   });
 
-  it('should throw error when object is empty', () => {
-    const args = ['foo', 'bar'] as any;
-    expect(() => safePluck({}, args)).toThrowError(
-      "Can't pluck from empty object"
-    );
-  });
-
-  it('should throw error when keys are not provided', () => {
-    expect(() => safePluck(obj, null as any)).toThrowError(
-      'No keys given to pluck'
-    );
+  it('should return undefined when incorrect keys are provided', () => {
+    expect(safePluck(obj, ['incorrect-key'] as any)).toEqual(undefined);
   });
 
   it('should return undefined when incorrect keys are provided', () => {
