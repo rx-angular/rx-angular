@@ -126,8 +126,6 @@ function renderWithLatestStrategy(
       // hack to always use latest strategy on value change
       switchMap(([renderValue, strategy]) =>
         of(renderValue).pipe(
-          /*finalize(() => strategy.rxScheduleCD),
-             catchError(strategy.rxScheduleCD)*/
           strategy.rxScheduleCD
         )
       )
