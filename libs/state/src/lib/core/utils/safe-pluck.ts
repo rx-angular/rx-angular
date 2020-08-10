@@ -79,14 +79,12 @@ export function safePluck<
   | T[K1][K2][K3][K4]
   | T[K1][K2][K3][K4][K5]
   | T[K1][K2][K3][K4][K5][K6] | null | undefined {
-  if (!keys || keys.length <= 0) {
-    throw new Error('No keys given to pluck');
+  // needed to match null and undefined conventions of RxAngular core components
+  if (stateObject == null) {
+    return stateObject;
   }
-  if (!stateObject) {
-    throw new Error('No object to pluck from');
-  }
-  if (Object.keys(stateObject).length <= 0) {
-    throw new Error(`Can't pluck from empty object`);
+  if (!keys || keys.length <= 0 || Object.keys(stateObject).length <= 0) {
+    return undefined;
   }
   // clone keys in order to not mutate input
   const stateKeys = [...keys];
