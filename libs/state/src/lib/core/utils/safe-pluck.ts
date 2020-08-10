@@ -78,7 +78,7 @@ export function safePluck<
   | T[K1][K2][K3]
   | T[K1][K2][K3][K4]
   | T[K1][K2][K3][K4][K5]
-  | T[K1][K2][K3][K4][K5][K6] {
+  | T[K1][K2][K3][K4][K5][K6] | null | undefined {
   if (!keys || keys.length <= 0) {
     throw new Error('No keys given to pluck');
   }
