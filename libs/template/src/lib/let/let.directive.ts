@@ -25,16 +25,11 @@ import {
   DEFAULT_STRATEGY_NAME,
   getStrategies,
 } from '../render-strategies/strategies/strategies-map';
+import { RxTemplateObserver, RxViewContext } from '../core/model';
 
-export interface LetViewContext<T> {
-  // to enable `let` syntax we have to use $implicit (var; let v = var)
-  $implicit: T;
+export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
   rxLet: T;
-  // set context var complete to true (var$; let e = $error)
-  $error: boolean;
-  // set context var complete to true (var$; let c = $complete)
-  $complete: boolean;
 }
 
 /**
@@ -164,22 +159,26 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   private readonly templateManager: TemplateManager<
     LetViewContext<U | undefined | null>
   >;
-  private readonly resetObserver: NextObserver<void> = {
-    next: () => {
+  private readonly templateObserver: RxTemplateObserver<
+    U | null | undefined
+  > = {
+    suspense: () => {
       this.templateManager.updateViewContext({
         $implicit: undefined,
         rxLet: undefined,
+        $suspense: true,
         $error: false,
         $complete: false,
       });
     },
-  };
-  private readonly updateObserver: Observer<U | null | undefined> = {
     next: (value: U | null | undefined) => {
       this.templateManager.insertEmbeddedView('rxNext');
       this.templateManager.updateViewContext({
         $implicit: value,
         rxLet: value,
+        $suspense: false,
+        $error: false,
+        $complete: false,
       });
     },
     error: (error: Error) => {
@@ -187,7 +186,11 @@ export class LetDirective<U> implements OnInit, OnDestroy {
       this.templateManager.insertEmbeddedView('rxNext');
       this.templateManager.insertEmbeddedView('rxError');
       this.templateManager.updateViewContext({
+        $implicit: undefined,
+        rxLet: undefined,
+        $suspense: false,
         $error: true,
+        $complete: false,
       });
     },
     complete: () => {
@@ -195,6 +198,10 @@ export class LetDirective<U> implements OnInit, OnDestroy {
       this.templateManager.insertEmbeddedView('rxNext');
       this.templateManager.insertEmbeddedView('rxComplete');
       this.templateManager.updateViewContext({
+        $implicit: undefined,
+        rxLet: undefined,
+        $suspense: false,
+        $error: false,
         $complete: true,
       });
     },
@@ -214,6 +221,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   ) {
     this.strategies = getStrategies({ cdRef });
     this.templateManager = createTemplateManager(this.viewContainerRef, {
+      $suspense: undefined,
       $implicit: undefined,
       rxLet: undefined,
       $error: false,
@@ -222,8 +230,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
 
     this.renderAware = createRenderAware({
       strategies: this.strategies,
-      resetNextObserver: this.resetObserver,
-      updateObserver: this.updateObserver,
+      templateObserver: this.templateObserver,
     });
     this.renderAware.nextStrategy(DEFAULT_STRATEGY_NAME);
   }

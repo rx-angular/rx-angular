@@ -1,5 +1,5 @@
 import { OnDestroy } from '@angular/core';
-import { createRenderAware, RenderAware } from '../../../src/lib/core';
+import { createRenderAware, RenderAware, RxTemplateObserver } from '../../../src/lib/core';
 import { concat, EMPTY, NEVER, NextObserver, Observer, of, Unsubscribable } from 'rxjs';
 import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
 
@@ -8,12 +8,11 @@ class CdAwareImplementation<U> implements OnDestroy {
   public renderedValue: any = undefined;
   public error: any = undefined;
   public completed = false;
+  public suspense = false;
   private readonly subscription: Unsubscribable;
   public cdAware: RenderAware<U | undefined | null>;
-  resetObserver: NextObserver<any> = {
-    next: _ => (this.renderedValue = undefined)
-  };
-  updateObserver: Observer<U | undefined | null> = {
+  templateObserver: RxTemplateObserver<U | undefined | null> = {
+    suspense: () => {this.suspense = true},
     next: (n: U | undefined | null) => {
       this.renderedValue = n;
     },
@@ -31,8 +30,7 @@ class CdAwareImplementation<U> implements OnDestroy {
           rxScheduleCD: (o) => o
         }
       },
-      updateObserver: this.updateObserver,
-      resetNextObserver: this.resetObserver
+      templateObserver: this.templateObserver
     });
     this.cdAware.nextStrategy('local');
     this.subscription = this.cdAware.subscribe();

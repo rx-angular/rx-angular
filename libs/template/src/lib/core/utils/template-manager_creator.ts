@@ -3,7 +3,7 @@ import { EmbeddedViewRef, TemplateRef, ViewContainerRef } from '@angular/core';
 type RxTemplateName = 'rxNext' | 'rxComplete' | 'rxError' | 'rxSuspense';
 
 export interface TemplateManager<T> {
-  updateViewContext(viewContextSlice: Partial<T>): void;
+  updateViewContext(viewContextSlice: T): void;
   addTemplateRef(name: RxTemplateName, templateRef: TemplateRef<T>): void;
   insertEmbeddedView(name: RxTemplateName): void;
   destroy(): void;
@@ -58,9 +58,9 @@ export function createTemplateManager<T extends object>(
       }
     },
     destroy() {
-      viewCache.forEach(view => view?.destroy());
+      viewCache.forEach((view) => view?.destroy());
       viewContainerRef.clear();
-    }
+    },
   };
 }
 

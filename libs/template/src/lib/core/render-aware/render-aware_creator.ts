@@ -2,6 +2,7 @@ import {
   EMPTY,
   NextObserver,
   Observable,
+  Observer,
   of,
   ReplaySubject,
   Subscribable,
@@ -17,6 +18,7 @@ import {
 } from 'rxjs/operators';
 import { RenderStrategy, StrategySelection } from './interfaces';
 import { nameToStrategy } from './nameToStrategy';
+import { RxTemplateObserver } from '../model';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
@@ -35,8 +37,7 @@ export interface RenderAware<U> extends Subscribable<U> {
  */
 export function createRenderAware<U>(cfg: {
   strategies: StrategySelection;
-  resetNextObserver: NextObserver<void>;
-  updateObserver: NextObserver<U>;
+  templateObserver: RxTemplateObserver<U>;
 }): RenderAware<U | undefined | null> {
   const strategyName$ = new ReplaySubject<string | Observable<string>>(1);
   let currentStrategy: RenderStrategy;
@@ -64,7 +65,7 @@ export function createRenderAware<U>(cfg: {
         return of(null);
       }
       if (nonInitialValues) {
-        cfg.resetNextObserver.next();
+        cfg.templateObserver.suspense();
         if (observable$ === undefined) {
           return of(undefined);
         }
@@ -77,18 +78,18 @@ export function createRenderAware<U>(cfg: {
     switchMap((o$) =>
       o$.pipe(
         distinctUntilChanged(),
-        tap(cfg.updateObserver),
+        tap(cfg.templateObserver as Observer<U>),
         currentStrategy.rxScheduleCD,
         tap({
           // handle "error" and "complete" notifications for Observable from template
           error: (err) => {
             console.error(err);
-            if (cfg.updateObserver.error) {
-              cfg.updateObserver.error(err);
+            if (cfg.templateObserver.error) {
+              cfg.templateObserver.error(err);
               currentStrategy.detectChanges();
             }
           },
-          complete: cfg.updateObserver.complete
+          complete: cfg.templateObserver.complete
             ? () => currentStrategy.detectChanges()
             : undefined,
         })
