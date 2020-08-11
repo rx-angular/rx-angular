@@ -6,9 +6,9 @@ import {
   ReplaySubject,
   Subscribable,
   Subscription,
+  Subscriber,
 } from 'rxjs';
 import {
-  catchError,
   distinctUntilChanged,
   filter,
   map,
@@ -89,18 +89,7 @@ export function createRenderAware<U>(cfg: {
           tap(cfg.updateObserver),
           renderWithLatestStrategy(strategy$)
         )
-    ),
-    tap({
-      // TODO: doesnt work
-      complete: () => {
-        console.log('completed');
-        if (cfg.updateObserver.complete) {
-          cfg.updateObserver.complete();
-        }
-        currentStrategy.scheduleCD();
-      },
-    }),
-    catchError((e) => of(e).pipe(currentStrategy.rxScheduleCD))
+    )
   );
 
   return {
@@ -117,18 +106,33 @@ export function createRenderAware<U>(cfg: {
   };
 }
 
-function renderWithLatestStrategy(
+function renderWithLatestStrategy<T>(
   strategyChanges$: Observable<RenderStrategy>
-): MonoTypeOperatorFunction<any> {
+): MonoTypeOperatorFunction<T> {
   return (o$) => {
     return o$.pipe(
+      handleErrorAndComplete(),
       withLatestFrom(strategyChanges$),
-      // hack to always use latest strategy on value change
+      // always use latest strategy on value change
       switchMap(([renderValue, strategy]) =>
-        of(renderValue).pipe(
-          strategy.rxScheduleCD
-        )
+        of(renderValue).pipe(strategy.rxScheduleCD)
       )
     );
   };
+
+  function handleErrorAndComplete<U>(): MonoTypeOperatorFunction<U> {
+    return (o$: Observable<U>) =>
+      new Observable((subscriber: Subscriber<U>) => {
+        const subscription = o$.subscribe({
+          next: (val) => subscriber.next(val),
+          // make "error" and "complete" notifications comply with `rxScheduleCD`
+          error: (err) => {
+            console.error(err);
+            subscriber.next();
+          },
+          complete: () => subscriber.next(),
+        });
+        return () => subscription.unsubscribe();
+      });
+  }
 }
