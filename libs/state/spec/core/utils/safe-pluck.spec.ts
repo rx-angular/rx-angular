@@ -14,6 +14,7 @@ describe('safePluck', () => {
 
   it('should return value of last key', () => {
     expect(safePluck(obj, ['foo', 'bar'])).toEqual(bar);
+    expect(safePluck(obj, 'foo')).toEqual(obj.foo);
   });
 
   describe('edge cases', () => {
