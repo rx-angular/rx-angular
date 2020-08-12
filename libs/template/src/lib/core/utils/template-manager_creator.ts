@@ -29,7 +29,7 @@ export function createTemplateManager<T extends object>(
   const templateCache = new Map<RxTemplateName, TemplateRef<T>>();
   const viewCache = new Map<RxTemplateName, EmbeddedViewRef<T>>();
   const viewContext = { ...initialViewContext };
-
+  let activeView: RxTemplateName;
   return {
     updateViewContext(viewContextSlice: Partial<T>) {
       Object.entries(viewContextSlice).forEach(([key, value]) => {
@@ -41,26 +41,29 @@ export function createTemplateManager<T extends object>(
       templateCache.set(name, templateRef);
     },
     insertEmbeddedView(name: RxTemplateName) {
-      if (templateCache.has(name)) {
-        // detach currently inserted view
-        viewContainerRef.detach();
+      if (activeView !== name) {
+        if (templateCache.has(name)) {
+          // detach currently inserted view
+          viewContainerRef.detach();
 
-        if (viewCache.has(name)) {
-          viewContainerRef.insert(viewCache.get(name));
-        } else {
-          // creates and inserts view to the view container
-          const newView = viewContainerRef.createEmbeddedView(
-            templateCache.get(name),
-            viewContext
-          );
-          viewCache.set(name, newView);
+          if (viewCache.has(name)) {
+            viewContainerRef.insert(viewCache.get(name));
+          } else {
+            // creates and inserts view to the view container
+            const newView = viewContainerRef.createEmbeddedView(
+              templateCache.get(name),
+              viewContext
+            );
+            viewCache.set(name, newView);
+          }
         }
       }
+      activeView = name;
     },
     destroy() {
-      viewCache.forEach(view => view?.destroy());
+      viewCache.forEach((view) => view?.destroy());
       viewContainerRef.clear();
-    }
+    },
   };
 }
 
