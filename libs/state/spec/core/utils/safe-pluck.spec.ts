@@ -16,19 +16,29 @@ describe('safePluck', () => {
     expect(safePluck(obj, ['foo', 'bar'])).toEqual(bar);
   });
 
-  it('should return undefined when object is not valid', () => {
-    expect(safePluck([undefined] as any, ['prop1'] as any)).toEqual(undefined);
-  });
+  describe('edge cases', () => {
+    it('should return undefined when object is not valid', () => {
+      expect(safePluck([undefined] as any, ['prop1'] as any)).toEqual(undefined);
+      expect(safePluck(undefined as any, ['prop1'] as any)).toEqual(undefined);
+      expect(safePluck('' as any, ['prop1'] as any)).toEqual(undefined);
+      expect(safePluck(0 as any, ['prop1'] as any)).toEqual(undefined);
+      expect(safePluck([], ['length'])).toEqual(undefined);
+      expect(safePluck({} as any, ['prop1'] as any)).toEqual(undefined);
+    });
 
-  it('should return undefined when keys are not provided', () => {
-    expect(safePluck(obj, null as any)).toEqual(undefined);
-  });
+    it('should return null when object is null', () => {
+      expect(safePluck(null as any, ['prop1'] as any)).toEqual(null);
+      expect(safePluck(null as any, [] as any)).toEqual(null);
+      expect(safePluck(null as any, null as any)).toEqual(null);
+    });
 
-  it('should return undefined when incorrect keys are provided', () => {
-    expect(safePluck(obj, ['incorrect-key'] as any)).toEqual(undefined);
-  });
-
-  it('should return undefined when incorrect keys are provided', () => {
-    expect(safePluck(obj, ['incorrect-key'] as any)).toEqual(undefined);
+    it('should return undefined when keys are invalid', () => {
+      expect(safePluck(obj, null as any)).toEqual(undefined);
+      expect(safePluck(obj, [{}] as any)).toEqual(undefined);
+      expect(safePluck(obj, [0] as any)).toEqual(undefined);
+      expect(safePluck(obj, [''] as any)).toEqual(undefined);
+      expect(safePluck(obj, [undefined] as any)).toEqual(undefined);
+      expect(safePluck(obj, [] as any)).toEqual(undefined);
+    });
   });
 });
