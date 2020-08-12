@@ -41,5 +41,10 @@ describe('safePluck', () => {
       expect(safePluck(obj, [undefined] as any)).toEqual(undefined);
       expect(safePluck(obj, [] as any)).toEqual(undefined);
     });
+
+    it('should return last value if undefined occurs in state object', () => {
+      const stateObj: ISafePluckSpec = { foo: undefined as any };
+      expect(safePluck(stateObj, ['foo','bar'])).toEqual(undefined);
+    })
   });
 });
