@@ -1,4 +1,4 @@
-import { isKeyOf } from './typing';
+import { isKeyOf, isDefined } from './typing';
 import { isObject } from 'util';
 
 export function safePluck<T extends object, K1 extends keyof T>(
@@ -78,7 +78,9 @@ export function safePluck<
   | T[K1][K2][K3]
   | T[K1][K2][K3][K4]
   | T[K1][K2][K3][K4][K5]
-  | T[K1][K2][K3][K4][K5][K6] | null | undefined {
+  | T[K1][K2][K3][K4][K5][K6]
+  | null
+  | undefined {
   // needed to match null and undefined conventions of RxAngular core components
   // safePluck(null) -> return null
   // safePluck(undefined) -> return undefined
@@ -93,9 +95,14 @@ export function safePluck<
     return undefined;
   }
   // sanitize keys -> keep only valid keys (string, number, symbol)
-  const keysArr = (Array.isArray(keys) ? keys : [keys])
-    .filter(k => isKeyOf<T>(k));
-  if (keysArr.length === 0 || !isObject(stateObject) || Object.keys(stateObject).length === 0) {
+  const keysArr = (Array.isArray(keys) ? keys : [keys]).filter((k) =>
+    isKeyOf<T>(k)
+  );
+  if (
+    keysArr.length === 0 ||
+    !isObject(stateObject) ||
+    Object.keys(stateObject).length === 0
+  ) {
     return undefined;
   }
   let prop = stateObject[keysArr.shift() as K1];
