@@ -80,16 +80,27 @@ export function safePluck<
   | T[K1][K2][K3][K4][K5]
   | T[K1][K2][K3][K4][K5][K6] | null | undefined {
   // needed to match null and undefined conventions of RxAngular core components
-  if (stateObject == null) {
+  // safePluck(null) -> return null
+  // safePluck(undefined) -> return undefined
+  // safePluck(obj, ['wrongKey']) -> return undefined
+  // safePluck(obj, ['correctKey']) -> return value of key
+  // safePluck(obj, '') -> return undefined
+  // safePluck(obj, null) -> return undefined
+  if (!isDefined(stateObject)) {
     return stateObject;
   }
-  if (!keys || keys.length <= 0 || Object.keys(stateObject).length <= 0) {
+  if (!isDefined(keys)) {
     return undefined;
   }
-  // clone keys in order to not mutate input
-  const stateKeys = [...keys];
-  let prop = stateObject[stateKeys.shift() as K1];
-  stateKeys.forEach((key) => {
+  // sanitize keys -> keep only valid keys (string, number, symbol)
+  const keysArr = (Array.isArray(keys) ? keys : [keys])
+    .filter(k => isKeyOf<T>(k));
+  if (keysArr.length === 0 || !isObject(stateObject) || Object.keys(stateObject).length === 0) {
+    return undefined;
+  }
+  let prop = stateObject[keysArr.shift() as K1];
+
+  keysArr.forEach((key) => {
     if (isObject(prop) && isKeyOf(key)) {
       prop = prop[key];
     }
