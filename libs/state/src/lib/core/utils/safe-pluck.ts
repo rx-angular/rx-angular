@@ -3,7 +3,7 @@ import { isObject } from 'util';
 
 export function safePluck<T extends object, K1 extends keyof T>(
   stateObject: T,
-  keys: [K1]
+  keys: K1 | [K1]
 ): T[K1];
 
 export function safePluck<
