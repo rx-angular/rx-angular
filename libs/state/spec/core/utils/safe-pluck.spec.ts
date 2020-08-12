@@ -12,7 +12,7 @@ describe('safePluck', () => {
     expect(args.length).toBe(2);
   });
 
-  it('should return `bar` when keys are provided', () => {
+  it('should return value of last key', () => {
     expect(safePluck(obj, ['foo', 'bar'])).toEqual(bar);
   });
 
