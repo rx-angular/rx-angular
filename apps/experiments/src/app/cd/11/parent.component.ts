@@ -26,7 +26,7 @@ import { tap } from 'rxjs/operators';
       </button>
     </div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class CdParent11Component extends BaseComponent {
   btnClick$ = new Subject();

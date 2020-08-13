@@ -10,6 +10,6 @@ import { environment } from '../../environments/environment';
       <app-mixed-parent02 class="item"></app-mixed-parent02>
     </div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class MixedOverviewComponent {}

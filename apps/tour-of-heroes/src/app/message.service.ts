@@ -6,7 +6,7 @@ interface MessageServiceState {
 }
 
 const initState: MessageServiceState = {
-  messages: []
+  messages: [],
 };
 
 @Injectable({ providedIn: 'root' })
@@ -19,7 +19,7 @@ export class MessageService extends RxState<MessageServiceState> {
   }
 
   add(message: string) {
-    this.set('messages', oldState => [...oldState.messages, message]);
+    this.set('messages', (oldState) => [...oldState.messages, message]);
   }
 
   clear() {

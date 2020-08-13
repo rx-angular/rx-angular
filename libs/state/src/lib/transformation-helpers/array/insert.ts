@@ -73,6 +73,6 @@ export function insert<T>(source: T[], updates: T | T[]): T[] {
 
   return [
     ...(sourceIsArray ? source : []),
-    ...(updatesDefined ? (Array.isArray(updates) ? updates : [updates]) : [])
+    ...(updatesDefined ? (Array.isArray(updates) ? updates : [updates]) : []),
   ];
 }

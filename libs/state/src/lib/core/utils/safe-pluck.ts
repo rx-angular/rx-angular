@@ -27,7 +27,7 @@ export function safePluck<
   | T[K1][K2][K3][K4][K5]
   | T[K1][K2][K3][K4][K5][K6] {
   let prop = stateObject;
-  keys.forEach(key => {
+  keys.forEach((key) => {
     if (isKeyOf(key) && !!prop[key]) {
       prop = prop[key];
     }

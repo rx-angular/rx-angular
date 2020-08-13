@@ -4,10 +4,10 @@ import { CdOperatorsOverviewComponent } from './cd-operators.overview.component'
 export const ROUTES = [
   {
     path: 'cd-operators',
-    component: CdOperatorsOverviewComponent
+    component: CdOperatorsOverviewComponent,
   },
   {
     path: 'cd-operators-01',
-    component: CdOperatorsParent01Component
-  }
+    component: CdOperatorsParent01Component,
+  },
 ];

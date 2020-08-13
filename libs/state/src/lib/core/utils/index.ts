@@ -6,6 +6,6 @@ export {
   isStringArrayGuard,
   isKeyOf,
   isObjectGuard,
-  isDefined
+  isDefined,
 } from './typing';
 export { safePluck } from './safe-pluck';

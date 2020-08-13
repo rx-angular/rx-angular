@@ -30,7 +30,7 @@ import { CdOperatorsOverviewComponent } from './cd-operators.overview.component'
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    TemplateModule
-  ]
+    TemplateModule,
+  ],
 })
 export class CdOperatorsModule {}

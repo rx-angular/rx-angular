@@ -5,6 +5,6 @@ const EXPORTED_DECLARATIONS = [LetDirective];
 
 @NgModule({
   declarations: EXPORTED_DECLARATIONS,
-  exports: [EXPORTED_DECLARATIONS]
+  exports: [EXPORTED_DECLARATIONS],
 })
 export class LetModule {}

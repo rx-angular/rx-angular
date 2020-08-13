@@ -15,7 +15,7 @@ import { RouterModule } from '@angular/router';
     RouterModule.forChild(ROUTES),
     MatToolbarModule,
     TemplateModule,
-    MatButtonModule
-  ]
+    MatButtonModule,
+  ],
 })
 export class IrrelevantToTestModule {}

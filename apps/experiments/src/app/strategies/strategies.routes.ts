@@ -6,14 +6,14 @@ import { VirtualScrollDemoComponent } from './virtual-scroll-demo/virtual-scroll
 export const STRATEGY_ROUTES: Routes = [
   {
     path: '',
-    component: StrategiesOverviewComponent
+    component: StrategiesOverviewComponent,
   },
   {
     path: 'virtual-scroll',
-    component: VirtualScrollDemoComponent
+    component: VirtualScrollDemoComponent,
   },
   {
     path: 'local01',
-    component: Local01Component
-  }
+    component: Local01Component,
+  },
 ];

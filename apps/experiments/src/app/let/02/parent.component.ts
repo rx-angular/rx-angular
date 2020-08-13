@@ -22,7 +22,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <ng-container *rxLet="value1$ as v">Value1: {{ v }}</ng-container>
     <ng-container *rxLet="value1$ as v">Value1: {{ v }}</ng-container>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class LetParent02Component extends BaseComponent {
   btnClick$ = new Subject<Event>();

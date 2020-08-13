@@ -21,7 +21,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <button #button>increment</button>
     <app-push-child05 [value]="value1$ | push: strategy"></app-push-child05>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Parent05Component extends BaseComponent {
   @ViewChild('button') button: ElementRef<HTMLButtonElement>;
@@ -30,7 +30,7 @@ export class Parent05Component extends BaseComponent {
   numArray = [0, 1, 3, 4, 5];
   value1$ = this.btnClick$.pipe(
     startWith(0),
-    concatMap(a => from(this.numArray)),
+    concatMap((a) => from(this.numArray)),
     scan((a): any => ++a, 0)
   );
 

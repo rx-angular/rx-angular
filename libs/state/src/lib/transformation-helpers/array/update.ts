@@ -101,8 +101,8 @@ export function update<T extends object>(
     return [...updatesAsArray] as T[];
   }
 
-  return source.map(existingItem => {
-    const match = updatesAsArray.find(item =>
+  return source.map((existingItem) => {
+    const match = updatesAsArray.find((item) =>
       valuesComparer(item as T, existingItem, compare)
     );
 

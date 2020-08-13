@@ -5,7 +5,7 @@ import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, startWith, withLatestFrom } from 'rxjs/operators';
 import {
   Performance04DataService,
-  Person
+  Person,
 } from './performance-04-data.service';
 import { environment } from '../../../../environments/environment';
 import { RxState } from '@rx-angular/state';
@@ -26,7 +26,7 @@ export interface Performance04State {
   selector: 'app-performance-04-index',
   templateUrl: './performance04-index.component.html',
   styleUrls: ['./performance04-index.component.scss'],
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Performance04IndexComponent extends RxState<Performance04State>
   implements OnInit {
@@ -39,7 +39,7 @@ export class Performance04IndexComponent extends RxState<Performance04State>
     'eyeColor',
     'company',
     'phone',
-    'address'
+    'address',
   ];
   readonly viewState$: Observable<Performance04State> = this.select();
   readonly data$ = this.select('data');
@@ -68,25 +68,25 @@ export class Performance04IndexComponent extends RxState<Performance04State>
       checkboxLabels: {},
       rowSelectionState: {},
       anySelected: false,
-      allSelected: false
+      allSelected: false,
     });
     this.connect(
       combineLatest([
         this.selection.changed.pipe(
-          map(change => change.source.selected),
+          map((change) => change.source.selected),
           startWith([])
         ),
-        this.data$
+        this.data$,
       ]).pipe(
         map(([selected, data]) => {
           const anySelected = selected.length > 0;
           const allSelected = anySelected && selected.length === data.length;
           const rowSelectionState = {};
           if (selected.length > 0) {
-            selected.forEach(p => (rowSelectionState[p._id] = true));
+            selected.forEach((p) => (rowSelectionState[p._id] = true));
           }
           const checkboxLabels: { [key: string]: string } = {};
-          data.forEach(p => {
+          data.forEach((p) => {
             checkboxLabels[p._id] = this.checkboxLabel(
               p,
               allSelected,
@@ -101,7 +101,7 @@ export class Performance04IndexComponent extends RxState<Performance04State>
             allSelected,
             masterCheckboxLabel,
             checkboxLabels,
-            rowSelectionState
+            rowSelectionState,
           };
         })
       )
@@ -139,7 +139,7 @@ export class Performance04IndexComponent extends RxState<Performance04State>
   filterData(data: Person[], f: string): Person[] {
     if (!!f) {
       const filterValue = f.toLowerCase();
-      return data.filter(p => {
+      return data.filter((p) => {
         return (
           p.name.toLowerCase().includes(filterValue) ||
           p.balance.toLowerCase().includes(filterValue) ||
@@ -147,10 +147,7 @@ export class Performance04IndexComponent extends RxState<Performance04State>
           p.company.toLowerCase().includes(filterValue) ||
           p.phone.toLowerCase().includes(filterValue) ||
           p.address.toLowerCase().includes(filterValue) ||
-          p.age
-            .toString()
-            .toLowerCase()
-            .includes(filterValue)
+          p.age.toString().toLowerCase().includes(filterValue)
         );
       });
     }

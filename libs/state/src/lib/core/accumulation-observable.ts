@@ -7,7 +7,7 @@ import {
   Subject,
   Subscribable,
   Subscription,
-  EMPTY
+  EMPTY,
 } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -18,7 +18,7 @@ import {
   scan,
   tap,
   withLatestFrom,
-  catchError
+  catchError,
 } from 'rxjs/operators';
 
 export type AccumulationFn = <T>(st: T, sl: Partial<T>) => T;
@@ -55,11 +55,11 @@ export function createAccumulationObservable<T extends object>(
       {} as T
     ),
     tap(
-      newState => (compositionObservable.state = newState),
-      error => console.error(error)
+      (newState) => (compositionObservable.state = newState),
+      (error) => console.error(error)
     ),
     // @Notice We catch the error here as it get lost in between `publish` and `publishReplay`. We return empty to
-    catchError(e => EMPTY),
+    catchError((e) => EMPTY),
     publish()
   );
   const state$: Observable<T> = signal$.pipe(publishReplay(1));
@@ -70,7 +70,7 @@ export function createAccumulationObservable<T extends object>(
     nextSlice,
     nextSliceObservable,
     nextAccumulator,
-    subscribe
+    subscribe,
   };
 
   // ======

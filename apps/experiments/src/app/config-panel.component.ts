@@ -5,7 +5,7 @@ import {
   Component,
   Input,
   NgZone,
-  ɵdetectChanges
+  ɵdetectChanges,
 } from '@angular/core';
 import { environment } from '../environments/environment';
 import { isNgZone, isViewEngineIvy } from '@rx-angular/template';
@@ -88,9 +88,9 @@ import { RxState } from '@rx-angular/state';
         background: transparent;
         font-weight: normal;
       }
-    `
+    `,
   ],
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class ConfigPanelComponent
   extends RxState<{
@@ -114,7 +114,7 @@ export class ConfigPanelComponent
   readonly renderTechnique;
 
   readonly configForm = this.fb.group({
-    strategy: ['native']
+    strategy: ['native'],
   });
   readonly configForm$: Observable<{
     strategy: string;

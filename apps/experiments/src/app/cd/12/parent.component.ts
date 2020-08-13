@@ -23,7 +23,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
       <button id="btn-cd12">Click over document.getElementById</button>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class CdParent12Component extends BaseComponent {
   btnClick$ = defer(() =>
@@ -31,7 +31,7 @@ export class CdParent12Component extends BaseComponent {
   );
 
   baseEffects$ = this.btnClick$.pipe(
-    tap(v => console.log(v)),
-    tap(_ => console.log('click over document.getElementById'))
+    tap((v) => console.log(v)),
+    tap((_) => console.log('click over document.getElementById'))
   );
 }

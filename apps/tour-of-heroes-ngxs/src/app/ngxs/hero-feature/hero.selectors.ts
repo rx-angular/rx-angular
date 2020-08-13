@@ -10,7 +10,7 @@ export function getSearch(s): Hero[] {
 export function getHeroesById(id: number) {
   return (s): Hero => {
     return getHeroes(s)
-      .filter(h => h.id === id)
+      .filter((h) => h.id === id)
       .pop();
   };
 }
