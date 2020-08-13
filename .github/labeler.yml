@@ -21,4 +21,4 @@
 # This should help to spot those rare changes and move them into a separate PR. e. g. yarn.lock
   root-files-affected:
     - '*'
-    - '*.*'
+    - '!*.*'

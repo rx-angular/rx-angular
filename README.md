@@ -2,7 +2,7 @@
 
 RxAngular offers a comprehensive toolset for handling fully reactive Angular applications with the main focus on runtime
 performance and template rendering.
-
+ 
 RxAngular is divided into two initially independent packages:
 
 - [📦@rx-angular/state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/README.md)
