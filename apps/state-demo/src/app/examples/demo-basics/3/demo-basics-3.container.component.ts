@@ -17,7 +17,7 @@ import { map } from 'rxjs/operators';
 
     <demo-basics-3-start [refreshInterval]="refreshInterval$ | async">
     </demo-basics-3-start>
-  `
+  `,
 })
 export class DemoBasics3ContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();

@@ -18,7 +18,7 @@ interface HeroSearchComponentState {
   selector: 'app-hero-search',
   templateUrl: './hero-search.component.html',
   styleUrls: ['./hero-search.component.css'],
-  providers: [RxState]
+  providers: [RxState],
 })
 export class HeroSearchComponent {
   readonly heroes$: Observable<Hero[]> = this.state.select('heroes');

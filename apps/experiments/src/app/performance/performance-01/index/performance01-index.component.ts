@@ -2,7 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit } from '@angular/core';
 import {
   Performance01DataService,
-  Person
+  Person,
 } from './performance-01-data.service';
 import { environment } from '../../../../environments/environment';
 
@@ -10,7 +10,7 @@ import { environment } from '../../../../environments/environment';
   selector: 'app-performance-01-index',
   templateUrl: './performance01-index.component.html',
   styleUrls: ['./performance01-index.component.scss'],
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Performance01IndexComponent implements OnInit {
   displayedColumns: string[] = [
@@ -22,7 +22,7 @@ export class Performance01IndexComponent implements OnInit {
     'eyeColor',
     'company',
     'phone',
-    'address'
+    'address',
   ];
   private _data: any[] = [];
   set data(data: any[]) {
@@ -72,7 +72,7 @@ export class Performance01IndexComponent implements OnInit {
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.data.forEach(row => this.selection.select(row));
+      : this.data.forEach((row) => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -100,7 +100,7 @@ export class Performance01IndexComponent implements OnInit {
   filterData(data: Person[], filter: string): Person[] {
     if (!!filter) {
       const filterValue = filter.toLowerCase();
-      return data.filter(p => {
+      return data.filter((p) => {
         return (
           p.name.toLowerCase().includes(filterValue) ||
           p.balance.toLowerCase().includes(filterValue) ||
@@ -108,10 +108,7 @@ export class Performance01IndexComponent implements OnInit {
           p.company.toLowerCase().includes(filterValue) ||
           p.phone.toLowerCase().includes(filterValue) ||
           p.address.toLowerCase().includes(filterValue) ||
-          p.age
-            .toString()
-            .toLowerCase()
-            .includes(filterValue)
+          p.age.toString().toLowerCase().includes(filterValue)
         );
       });
     }

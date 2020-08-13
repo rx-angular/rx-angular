@@ -14,50 +14,50 @@ import { Parent31Component } from './31/parent.component';
 export const ROUTES = [
   {
     path: 'push',
-    component: PushOverviewComponent
+    component: PushOverviewComponent,
   },
   {
     path: 'push-01',
-    component: Parent01Component
+    component: Parent01Component,
   },
   {
     path: 'push-02',
-    component: Parent02Component
+    component: Parent02Component,
   },
   {
     path: 'push-03',
-    component: Parent03Component
+    component: Parent03Component,
   },
   {
     path: 'push-04',
-    component: Parent04Component
+    component: Parent04Component,
   },
   {
     path: 'push-05',
-    component: Parent05Component
+    component: Parent05Component,
   },
   {
     path: 'push-11',
-    component: Parent11Component
+    component: Parent11Component,
   },
   {
     path: 'push-12',
-    component: Parent12Component
+    component: Parent12Component,
   },
   {
     path: 'push-13',
-    component: Parent13Component
+    component: Parent13Component,
   },
   {
     path: 'push-14',
-    component: Parent14Component
+    component: Parent14Component,
   },
   {
     path: 'push-21',
-    component: Parent21Component
+    component: Parent21Component,
   },
   {
     path: 'push-31',
-    component: Parent31Component
-  }
+    component: Parent31Component,
+  },
 ];

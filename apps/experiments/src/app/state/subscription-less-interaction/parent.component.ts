@@ -5,7 +5,7 @@ import {
   isObservable,
   of,
   Subject,
-  Subscription
+  Subscription,
 } from 'rxjs';
 import {
   map,
@@ -14,7 +14,7 @@ import {
   publishReplay,
   scan,
   shareReplay,
-  tap
+  tap,
 } from 'rxjs/operators';
 import { SourceService } from './source.service';
 
@@ -32,7 +32,7 @@ interface ComponentState {
       <pre>{{ state$ | async | json }}</pre>
     </div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class RxStateParentSubscriptionLessComponent implements OnDestroy {
   subscription = new Subscription();
@@ -42,16 +42,16 @@ export class RxStateParentSubscriptionLessComponent implements OnDestroy {
     scan(
       (state: ComponentState, slices: Partial<ComponentState>) => ({
         ...state,
-        ...slices
+        ...slices,
       }),
       {}
     )
   );
 
-  source1$ = this.source.$.pipe(map(v => ({ value: v })));
+  source1$ = this.source.$.pipe(map((v) => ({ value: v })));
 
   constructor(private source: SourceService) {
-    this.subscription = this.source1$.subscribe(v => {
+    this.subscription = this.source1$.subscribe((v) => {
       this.stateSources$.next(v);
     });
   }

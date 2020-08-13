@@ -31,7 +31,7 @@ sure that state changes that are related to the `HostBindings` value are actuall
 
 ```ts
 @Component({
-  providers: [RxState]
+  providers: [RxState],
 })
 export class RxComponent {
   // Modifying the class
@@ -60,7 +60,7 @@ a function which handles change detection for us.
 
 ```ts
 @Component({
-  providers: [RxState]
+  providers: [RxState],
 })
 export class RxComponent {
   // Modifying the class
@@ -121,7 +121,7 @@ Feel free to use angulars `Renderer2` if you want an abstraction layer, should w
 
 ```ts
 @Component({
-  providers: [RxState]
+  providers: [RxState],
 })
 export class RxComponent {
   constructor(
@@ -136,9 +136,9 @@ export class RxComponent {
       nativeElement.style.maxHeight = `${maxHeight ? maxHeight : 100}px`;
       // by using this, we could assign more classes
       const classList: { [cls: string]: boolean } = {
-        'is-hidden': !visible
+        'is-hidden': !visible,
       };
-      Object.keys(classList).forEach(cls => {
+      Object.keys(classList).forEach((cls) => {
         classList[cls]
           ? nativeElement.classList.add(cls)
           : nativeElement.classList.remove(cls);

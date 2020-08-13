@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  hasZone: true
+  hasZone: true,
 };

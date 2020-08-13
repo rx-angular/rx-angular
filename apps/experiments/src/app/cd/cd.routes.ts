@@ -12,42 +12,42 @@ import { CdParent13Component } from './13/parent.component';
 export const ROUTES = [
   {
     path: 'cd',
-    component: CdOverviewComponent
+    component: CdOverviewComponent,
   },
   {
     path: 'cd-01',
-    component: CdParent01Component
+    component: CdParent01Component,
   },
   {
     path: 'cd-02',
-    component: CdParent02Component
+    component: CdParent02Component,
   },
   {
     path: 'cd-03',
-    component: CdParent03Component
+    component: CdParent03Component,
   },
   {
     path: 'cd-04',
-    component: CdParent04Component
+    component: CdParent04Component,
   },
   {
     path: 'cd-05',
-    component: CdParent05Component
+    component: CdParent05Component,
   },
   {
     path: 'cd-06',
-    component: CdParent06Component
+    component: CdParent06Component,
   },
   {
     path: 'cd-11',
-    component: CdParent11Component
+    component: CdParent11Component,
   },
   {
     path: 'cd-12',
-    component: CdParent12Component
+    component: CdParent12Component,
   },
   {
     path: 'cd-13',
-    component: CdParent13Component
-  }
+    component: CdParent13Component,
+  },
 ];

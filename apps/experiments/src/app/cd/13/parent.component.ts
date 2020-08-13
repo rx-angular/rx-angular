@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { defer, fromEvent, interval, Observable, Subject } from 'rxjs';
 import {
@@ -11,7 +11,7 @@ import {
   switchMap,
   takeUntil,
   tap,
-  withLatestFrom
+  withLatestFrom,
 } from 'rxjs/operators';
 import { BaseComponent } from '../../base.component.ts/base.component';
 
@@ -47,7 +47,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
       </button>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class CdParent13Component extends BaseComponent {
   btnClick$ = new Subject<Event>();
@@ -56,7 +56,7 @@ export class CdParent13Component extends BaseComponent {
 
   isPatchedAf$ = this.btnToggle$.pipe(
     startWith(true),
-    scan(isPatched => !isPatched)
+    scan((isPatched) => !isPatched)
   );
 
   value$;

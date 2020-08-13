@@ -10,10 +10,10 @@ if (environment.production) {
 
 const compilerOptions: any = environment.zoneLess
   ? {
-      ngZone: 'noop'
+      ngZone: 'noop',
     }
   : {};
 
 platformBrowserDynamic()
   .bootstrapModule(AppModule, compilerOptions)
-  .catch(err => console.error(err));
+  .catch((err) => console.error(err));

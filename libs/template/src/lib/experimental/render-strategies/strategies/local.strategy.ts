@@ -1,12 +1,12 @@
 import { coalesceAndSchedule } from '../../../render-strategies/static';
 import {
   SchedulingPriority,
-  priorityTickMap
+  priorityTickMap,
 } from '../../../render-strategies/rxjs/scheduling';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   RenderStrategy,
-  RenderStrategyFactoryConfig
+  RenderStrategyFactoryConfig,
 } from '../../../core/render-aware';
 import { coalesceWith } from '../../../render-strategies/rxjs/operators';
 import { ɵdetectChanges as detectChanges } from '@angular/core';
@@ -45,7 +45,7 @@ export function getExperimentalLocalStrategies(
     userVisible: createUserVisibleStrategy(config),
     userBlocking: createUserBlockingStrategy(config),
     background: createBackgroundStrategy(config),
-    idleCallback: createIdleCallbackStrategy(config)
+    idleCallback: createIdleCallbackStrategy(config),
   };
 }
 
@@ -59,10 +59,10 @@ export function createLocalCoalesceStrategy(
   const renderMethod = () => {
     detectChanges(component);
   };
-  const behavior = o =>
+  const behavior = (o) =>
     o.pipe(
       coalesceWith(promiseDurationSelector, component),
-      switchMap(v => tick.pipe(map(() => v))),
+      switchMap((v) => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
@@ -72,7 +72,7 @@ export function createLocalCoalesceStrategy(
     name: 'localCoalesce',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
-    scheduleCD
+    scheduleCD,
   };
 }
 
@@ -86,10 +86,10 @@ export function createLocalCoalesceAndScheduleStrategy(
   const renderMethod = () => {
     detectChanges(component);
   };
-  const behavior = o =>
+  const behavior = (o) =>
     o.pipe(
       coalesceWith(promiseDurationSelector, component),
-      switchMap(v => tick.pipe(map(() => v))),
+      switchMap((v) => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
@@ -99,7 +99,7 @@ export function createLocalCoalesceAndScheduleStrategy(
     name: 'localCoalesceAndSchedule',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
-    scheduleCD
+    scheduleCD,
   };
 }
 
@@ -117,10 +117,10 @@ export function createUserVisibleStrategy(
   const renderMethod = () => {
     detectChanges(component);
   };
-  const behavior = o =>
+  const behavior = (o) =>
     o.pipe(
       coalesceWith(promiseDurationSelector, component),
-      switchMap(v => tick.pipe(map(() => v))),
+      switchMap((v) => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
@@ -130,7 +130,7 @@ export function createUserVisibleStrategy(
     name: 'userVisible',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
-    scheduleCD
+    scheduleCD,
   };
 }
 
@@ -148,10 +148,10 @@ export function createUserBlockingStrategy(
   const renderMethod = () => {
     detectChanges(component);
   };
-  const behavior = o =>
+  const behavior = (o) =>
     o.pipe(
       coalesceWith(promiseDurationSelector, component),
-      switchMap(v => tick.pipe(map(() => v))),
+      switchMap((v) => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
@@ -161,7 +161,7 @@ export function createUserBlockingStrategy(
     name: 'userBlocking',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
-    scheduleCD
+    scheduleCD,
   };
 }
 
@@ -179,10 +179,10 @@ export function createBackgroundStrategy(
   const renderMethod = () => {
     detectChanges(component);
   };
-  const behavior = o =>
+  const behavior = (o) =>
     o.pipe(
       coalesceWith(promiseDurationSelector, component),
-      switchMap(v => tick.pipe(map(() => v))),
+      switchMap((v) => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
@@ -192,7 +192,7 @@ export function createBackgroundStrategy(
     name: 'background',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
-    scheduleCD
+    scheduleCD,
   };
 }
 
@@ -225,10 +225,10 @@ export function createIdleCallbackStrategy(
   const renderMethod = () => {
     detectChanges(component);
   };
-  const behavior = o =>
+  const behavior = (o) =>
     o.pipe(
       coalesceWith(promiseDurationSelector, component),
-      switchMap(v => tick.pipe(map(() => v))),
+      switchMap((v) => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
@@ -238,6 +238,6 @@ export function createIdleCallbackStrategy(
     name: 'idleCallback',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
-    scheduleCD
+    scheduleCD,
   };
 }

@@ -3,7 +3,7 @@ import {
   Component,
   ElementRef,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import { defer, Subject } from 'rxjs';
 import { BaseComponent } from '../../base.component.ts/base.component';
@@ -39,7 +39,7 @@ import { tap } from 'rxjs/operators';
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.Default,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class CdParent02Component extends BaseComponent {
   btnClick$ = new Subject<Event>();

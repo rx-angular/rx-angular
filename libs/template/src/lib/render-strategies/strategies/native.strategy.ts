@@ -26,10 +26,10 @@ export function createNativeStrategy(
   return {
     name: 'native',
     detectChanges: () => config.cdRef.markForCheck(),
-    rxScheduleCD: o => o.pipe(tap(() => markDirty(component))),
+    rxScheduleCD: (o) => o.pipe(tap(() => markDirty(component))),
     scheduleCD: () => {
       markDirty(component);
       return new AbortController();
-    }
+    },
   };
 }

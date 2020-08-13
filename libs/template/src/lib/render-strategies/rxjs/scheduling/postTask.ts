@@ -1,7 +1,7 @@
 export enum PostTaskSchedulerPriority {
   background = 'background',
   userBlocking = 'user-blocking',
-  userVisible = 'user-visible'
+  userVisible = 'user-visible',
 }
 
 export interface PostTaskScheduler {
@@ -19,14 +19,14 @@ export const postTaskScheduler: PostTaskScheduler =
     ? (window as any).scheduler || {
         postTask<T>(options: SchedulerPostTaskOptions): Promise<T> {
           const start = Date.now();
-          return new Promise(resolve => {
-            setTimeout(function() {
+          return new Promise((resolve) => {
+            setTimeout(function () {
               console.error(
                 'postTask not implemented. Use setTimeout as fallback'
               );
               resolve();
             }, 1);
           });
-        }
+        },
       }
     : () => {};

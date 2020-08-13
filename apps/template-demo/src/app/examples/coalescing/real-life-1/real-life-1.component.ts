@@ -3,7 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import { getStrategies } from '@rx-angular/template';
 
@@ -18,7 +18,7 @@ import { getStrategies } from '@rx-angular/template';
       <li *ngFor="let item of _items">{{ item }}</li>
     </ul>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RealLife1Component implements OnInit {
   numRenders = 0;

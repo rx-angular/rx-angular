@@ -3,13 +3,16 @@ import {
   Observable,
   SchedulerAction,
   SchedulerLike,
-  Subscription
+  Subscription,
 } from 'rxjs';
 import { isObject } from 'util';
-import { postTaskScheduler, SchedulerPostTaskOptions } from './postTask';
+import {
+  postTaskScheduler,
+  SchedulerPostTaskOptions,
+} from '../../../../render-strategies/rxjs/scheduling/postTask';
 
 export const postTaskTick = (options: SchedulerPostTaskOptions) =>
-  new Observable<number>(subscription => {
+  new Observable<number>((subscription) => {
     postTaskScheduler
       .postTask(() => {}, options)
       .then(() => {

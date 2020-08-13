@@ -16,14 +16,14 @@ export const ROUTES = [
   {
     path: '',
     pathMatch: 'full',
-    component: LetTemplateBindingComponent
-  }
+    component: LetTemplateBindingComponent,
+  },
 ];
 const DECLARATIONS = [
   LetTemplateBindingComponent,
   ToStringPipe,
   LetTemplateBindingSubjectExampleComponent,
-  LetTemplateBindingHttpExampleComponent
+  LetTemplateBindingHttpExampleComponent,
 ];
 
 @NgModule({
@@ -37,8 +37,8 @@ const DECLARATIONS = [
     MatCardModule,
     MatButtonModule,
     MatBadgeModule,
-    MatIconModule
+    MatIconModule,
   ],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
 export class TemplateBindingModule {}

@@ -30,13 +30,13 @@ import { HeroStateService } from './ngxs/hero-feature/hero.state';
     // and returns simulated server responses.
     // Remove it when a real server is ready to receive requests.
     HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {
-      dataEncapsulation: false
+      dataEncapsulation: false,
     }),
     NgxsModule.forRoot([HeroStateService], {
-      developmentMode: !environment.production
+      developmentMode: !environment.production,
     }),
     LetModule,
-    PushModule
+    PushModule,
   ],
   declarations: [
     AppComponent,
@@ -44,8 +44,8 @@ import { HeroStateService } from './ngxs/hero-feature/hero.state';
     HeroesComponent,
     HeroDetailComponent,
     MessagesComponent,
-    HeroSearchComponent
+    HeroSearchComponent,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

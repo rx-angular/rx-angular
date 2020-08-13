@@ -5,7 +5,7 @@ import {
   OperatorFunction,
   Subscribable,
   Subscription,
-  Unsubscribable
+  Unsubscribable,
 } from 'rxjs';
 import {
   createAccumulationObservable,
@@ -16,7 +16,7 @@ import {
   stateful,
   isKeyOf,
   AccumulationFn,
-  safePluck
+  safePluck,
 } from './core';
 import { filter, map, pluck, tap } from 'rxjs/operators';
 
@@ -352,7 +352,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       projectValueFn === undefined
     ) {
       const project = projectOrSlices$;
-      const slice$ = keyOrInputOrSlice$.pipe(map(v => project(this.get(), v)));
+      const slice$ = keyOrInputOrSlice$.pipe(
+        map((v) => project(this.get(), v))
+      );
       this.accumulator.nextSliceObservable(slice$);
       return;
     }
@@ -364,7 +366,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     ) {
       const key = keyOrInputOrSlice$;
       const slice$ = projectOrSlices$.pipe(
-        map(value => ({ ...{}, [key]: value }))
+        map((value) => ({ ...{}, [key]: value }))
       );
       this.accumulator.nextSliceObservable(slice$);
       return;
@@ -377,7 +379,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     ) {
       const key = keyOrInputOrSlice$;
       const slice$ = projectOrSlices$.pipe(
-        map(value => ({ ...{}, [key]: projectValueFn(this.get(), value) }))
+        map((value) => ({ ...{}, [key]: projectValueFn(this.get(), value) }))
       );
       this.accumulator.nextSliceObservable(slice$);
       return;

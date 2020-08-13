@@ -26,7 +26,7 @@ function unpatchEventListener(elem: HTMLElement, event: string): void {
   const addEventListener = getZoneUnPatchedApi('addEventListener', elem).bind(
     elem
   );
-  eventListeners.forEach(listener => {
+  eventListeners.forEach((listener) => {
     // Remove and reapply listeners with patched API
     elem.removeEventListener(event, listener);
     // Reapply listeners with un-patched API
@@ -43,12 +43,12 @@ function intersectionObserver(
 } {
   const subject = new Subject();
   const observer = observerSupported()
-    ? new IntersectionObserver(entries => {
-        entries.forEach(entry => subject.next(entry));
+    ? new IntersectionObserver((entries) => {
+        entries.forEach((entry) => subject.next(entry));
       }, options)
     : null;
 
-  const entries$ = new Observable(subscriber => {
+  const entries$ = new Observable((subscriber) => {
     subject.subscribe(subscriber);
     return () => {
       if (observer) {
@@ -60,7 +60,7 @@ function intersectionObserver(
   return {
     entries$,
     observe: observer.observe,
-    unobserve: observer.unobserve
+    unobserve: observer.unobserve,
   };
 }
 
@@ -71,7 +71,7 @@ const observerSupported = () =>
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[viewport-prio]'
+  selector: '[viewport-prio]',
 })
 export class ViewportPrioDirective implements OnInit {
   entriesSubject = new Subject<IntersectionObserverEntry[]>();
@@ -88,13 +88,13 @@ export class ViewportPrioDirective implements OnInit {
   }
 
   private observer: IntersectionObserver | null = observerSupported()
-    ? new IntersectionObserver(entries => this.entriesSubject.next(entries), {
-        threshold: 0
+    ? new IntersectionObserver((entries) => this.entriesSubject.next(entries), {
+        threshold: 0,
       })
     : null;
 
   visibilityEvents$ = this.entries$.pipe(
-    map(entry => {
+    map((entry) => {
       if (entry.intersectionRatio > 0) {
         return 'visible';
       } else {
@@ -110,8 +110,8 @@ export class ViewportPrioDirective implements OnInit {
 
   ngOnInit() {
     const letStrategyName$ = this.letDirective.renderAware.activeStrategy$.pipe(
-      map(s => s.name),
-      filter(name => name !== this._viewportPrio)
+      map((s) => s.name),
+      filter((name) => name !== this._viewportPrio)
     );
 
     this.observer.observe(this.el.nativeElement);
@@ -123,7 +123,7 @@ export class ViewportPrioDirective implements OnInit {
           visibility === 'visible' ? strategyName : this._viewportPrio
         )
       )
-      .subscribe(strategyName => {
+      .subscribe((strategyName) => {
         this.letDirective.strategy = strategyName;
 
         // render actual state on viewport enter

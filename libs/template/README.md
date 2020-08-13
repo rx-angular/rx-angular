@@ -4,7 +4,6 @@
 ![rx-angular CI](https://github.com/BioPhoton/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
 [![Coverage Status](https://github.com/BioPhoton/rx-angular/blob/master/docs/test-coverage/template/jest-coverage-badge.svg)](https://biophoton.github.io/rx-angular/test-coverage/template/lcov-report/index.html)
 
-
 ## Reactive Template Rendering for Angular
 
 @rx-angular/template is a comprehensive toolset for fully reactive rendering in Angular.

@@ -9,7 +9,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     ><br />
     Value: <ng-container [ngTemplateOutlet]="template"></ng-container>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Child31Component extends BaseComponent {
   @Input() template: TemplateRef<any>;

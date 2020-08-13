@@ -24,7 +24,7 @@ export class MockNgZone {
 
   constructor({
     enableLongStackTrace = false,
-    shouldCoalesceEventChangeDetection = false
+    shouldCoalesceEventChangeDetection = false,
   }) {}
 
   run(fn: Function): any {

@@ -37,7 +37,7 @@ export function createPropertiesWeakMap<O extends object, P extends object>(
 
   return {
     getProps: getProperties,
-    setProps: setProperties
+    setProps: setProperties,
   };
 
   function getProperties(ctx: O): P {

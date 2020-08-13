@@ -97,7 +97,8 @@ export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
   // default compare function applying === to every key
   let distinctCompare: CompareFn<T> = (oldState, newState) =>
     keys.some(
-      key => !defaultCompare(safePluck(oldState, key), safePluck(newState, key))
+      (key) =>
+        !defaultCompare(safePluck(oldState, key), safePluck(newState, key))
     );
 
   // generate compare function respecting every case of provided keyCompareMap
@@ -110,7 +111,8 @@ export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
     };
     distinctCompare = (oldState, newState) => {
       return keys.some(
-        key => !compare(key)(safePluck(oldState, key), safePluck(newState, key))
+        (key) =>
+          !compare(key)(safePluck(oldState, key), safePluck(newState, key))
       );
     };
   }

@@ -23,7 +23,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <br />
     <app-push-child11 [value]="value1$ | push: strategy"> </app-push-child11>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Parent11Component extends BaseComponent {
   btnClick = new Subject<Event>();
