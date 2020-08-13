@@ -61,9 +61,9 @@ export class ViewModelComponent extends RxState<ComponentState> {
       title,
       created,
       total: list.length,
-      visibleItems: list.filter(item =>
-        visibleItemIds.some(itemId => itemId === item.id)
-      )
+      visibleItems: list.filter((item) =>
+        visibleItemIds.some((itemId) => itemId === item.id)
+      ),
     }))
   );
   constructor() {
@@ -110,11 +110,11 @@ export class ViewModelComponent extends RxState<ComponentState> {
       selectSlice(['list', 'visibleItemIds']),
       map(({ list, visibleItemIds }) => ({
         total: list.length,
-        visibleItems: list.filter(item =>
-          visibleItemIds.some(itemId => itemId === item.id)
-        )
+        visibleItems: list.filter((item) =>
+          visibleItemIds.some((itemId) => itemId === item.id)
+        ),
       }))
-    )
+    ),
   };
   constructor() {
     super();

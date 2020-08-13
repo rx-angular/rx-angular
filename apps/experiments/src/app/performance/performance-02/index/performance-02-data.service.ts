@@ -16,7 +16,7 @@ export interface Person {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class Performance02DataService {
   constructor() {}

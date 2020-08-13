@@ -58,9 +58,9 @@ export function createTemplateManager<T extends object>(
       }
     },
     destroy() {
-      viewCache.forEach(view => view?.destroy());
+      viewCache.forEach((view) => view?.destroy());
       viewContainerRef.clear();
-    }
+    },
   };
 }
 

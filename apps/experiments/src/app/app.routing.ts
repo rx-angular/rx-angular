@@ -7,58 +7,58 @@ export const ROUTES: Routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./push/push.module').then(mod => mod.PushModule),
+      import('./push/push.module').then((mod) => mod.PushModule),
     canActivate: [],
-    canActivateChild: []
+    canActivateChild: [],
   },
   {
     path: '',
     loadChildren: () =>
-      import('./mixed/mixed.module').then(mod => mod.MixedModule),
+      import('./mixed/mixed.module').then((mod) => mod.MixedModule),
     canActivate: [],
-    canActivateChild: []
+    canActivateChild: [],
   },
   {
     path: '',
-    loadChildren: () => import('./let/let.module').then(mod => mod.LetModule),
+    loadChildren: () => import('./let/let.module').then((mod) => mod.LetModule),
     canActivate: [],
-    canActivateChild: []
+    canActivateChild: [],
   },
   {
     path: '',
-    loadChildren: () => import('./cd/cd.module').then(mod => mod.CdModule),
+    loadChildren: () => import('./cd/cd.module').then((mod) => mod.CdModule),
     canActivate: [],
-    canActivateChild: []
+    canActivateChild: [],
   },
   ...PERFORMANCE_ROUTES,
   {
     path: '',
     loadChildren: () =>
       import('./irrelevant-to-test/irrelevant-to-test.module').then(
-        mod => mod.IrrelevantToTestModule
+        (mod) => mod.IrrelevantToTestModule
       ),
     canActivate: [],
-    canActivateChild: []
+    canActivateChild: [],
   },
   {
     path: '',
     loadChildren: () =>
       import('./cd-operators/cd-operators.module').then(
-        mod => mod.CdOperatorsModule
+        (mod) => mod.CdOperatorsModule
       ),
     canActivate: [],
-    canActivateChild: []
+    canActivateChild: [],
   },
   {
     path: '',
     loadChildren: () =>
-      import('./state/rx-state.module').then(mod => mod.RxStateModule),
+      import('./state/rx-state.module').then((mod) => mod.RxStateModule),
     canActivate: [],
-    canActivateChild: []
+    canActivateChild: [],
   },
   {
     path: 'strategies',
     loadChildren: () =>
-      import('./strategies/strategies.module').then(m => m.StrategiesModule)
-  }
+      import('./strategies/strategies.module').then((m) => m.StrategiesModule),
+  },
 ];

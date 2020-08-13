@@ -8,26 +8,26 @@ import { LetParent12Component } from './12/parent.component';
 export const ROUTES = [
   {
     path: 'let',
-    component: LetOverviewComponent
+    component: LetOverviewComponent,
   },
   {
     path: 'let-01',
-    component: LetParent01Component
+    component: LetParent01Component,
   },
   {
     path: 'let-02',
-    component: LetParent02Component
+    component: LetParent02Component,
   },
   {
     path: 'let-03',
-    component: LetParent03Component
+    component: LetParent03Component,
   },
   {
     path: 'let-11',
-    component: LetParent11Component
+    component: LetParent11Component,
   },
   {
     path: 'let-12',
-    component: LetParent12Component
-  }
+    component: LetParent12Component,
+  },
 ];

@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { DemoBasicsItem } from './demo-basics.view-model.service';
 import {
   ListServerItem,
-  ListService
+  ListService,
 } from '../../../data-access/list-resource';
 import { ActivatedRoute } from '@angular/router';
 

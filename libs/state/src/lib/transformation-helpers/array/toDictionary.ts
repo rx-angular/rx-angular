@@ -68,7 +68,7 @@ export function toDictionary<T extends object>(
   return source.reduce(
     (acc, entity) => ({
       ...acc,
-      [entity[key] as any]: entity
+      [entity[key] as any]: entity,
     }),
     {}
   );

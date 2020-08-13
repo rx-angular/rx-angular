@@ -14,14 +14,14 @@ import { SubscriptionHandlingService } from './subscription.service';
     <div class="case-content">Process running internally</div>
   `,
   changeDetection: environment.changeDetection,
-  providers: [SubscriptionHandlingService]
+  providers: [SubscriptionHandlingService],
 })
 export class RxStateParentSubscriptionComponent implements OnDestroy {
   subscription = new Subscription();
   onDestroy$ = new Subject<void>();
 
   process1$ = this.source.$.pipe(
-    tap(num => {
+    tap((num) => {
       console.log('New value: ', num);
     })
   );

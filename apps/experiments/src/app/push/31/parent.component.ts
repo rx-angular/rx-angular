@@ -24,7 +24,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
       <span>{{ value1$ | push }}</span>
     </ng-template>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Parent31Component extends BaseComponent {
   @ViewChild('button') button: ElementRef<HTMLButtonElement>;

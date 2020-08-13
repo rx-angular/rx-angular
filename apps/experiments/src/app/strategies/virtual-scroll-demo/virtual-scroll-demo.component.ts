@@ -12,7 +12,7 @@ import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
         </ngx-rx-scroll-item>
       </div>
     </cdk-virtual-scroll-viewport>
-  `
+  `,
 })
 export class VirtualScrollDemoComponent implements AfterViewInit {
   readonly items = this.getItems();

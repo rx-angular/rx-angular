@@ -66,7 +66,7 @@ export function setProp<T extends object, K extends keyof T>(
   if (keyIsValid) {
     return {
       ...initialObject,
-      [key]: value
+      [key]: value,
     };
   }
 

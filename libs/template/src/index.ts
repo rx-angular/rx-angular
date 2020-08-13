@@ -1,7 +1,7 @@
 export {
   getStrategies,
   priorityTickMap,
-  SchedulingPriority
+  SchedulingPriority,
 } from './lib/render-strategies';
 export { getZoneUnPatchedApi, isNgZone, isViewEngineIvy } from './lib/core';
 export { PushPipe, PushModule } from './lib/push';
@@ -9,10 +9,10 @@ export { LetDirective, LetModule } from './lib/let';
 // EXPERIMENTAL
 export {
   UnpatchEventsDirective,
-  UnpatchEventsModule
+  UnpatchEventsModule,
 } from './lib/experimental/unpatch/events';
 export {
   ViewportPrioModule,
-  ViewportPrioDirective
+  ViewportPrioDirective,
 } from './lib/experimental/viewport-prio';
 export { TemplateModule } from './lib/template.module';

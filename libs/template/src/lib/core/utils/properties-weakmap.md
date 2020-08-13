@@ -7,7 +7,7 @@ We want to maintain values for a certain object but we can't mutate the object p
 ```typescript
 const someObject1: object = {
   foo: 'bar',
-  isCoalescing: 'default version'
+  isCoalescing: 'default version',
 };
 ```
 
@@ -37,7 +37,7 @@ One way to avoid that could be using Symbols.
 ```typescript
 const someObject2: object = {
   foo: 'bar',
-  isCoalescing: 'symbol version'
+  isCoalescing: 'symbol version',
 };
 ```
 
@@ -81,7 +81,7 @@ import { createPropertieWeakMap } from '@rx-angular/template';
 
 const someObject3: object = {
   foo: 'bar',
-  isCoalescing: 'weakMap version'
+  isCoalescing: 'weakMap version',
 };
 
 const getDefaults = (ctx: object): Properties => ({ isCoalescing: false });

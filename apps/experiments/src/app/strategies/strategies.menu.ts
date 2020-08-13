@@ -8,12 +8,12 @@ export const STRATEGIES_MENU: MenuItem[] = [
       // 01. One single-shot observable bound by one push as template expression
       {
         link: 'strategies/virtual-scroll',
-        label: 'Virtual Scroll'
+        label: 'Virtual Scroll',
       },
       {
         link: 'strategies/local01',
-        label: 'Local 01'
-      }
-    ]
-  }
+        label: 'Local 01',
+      },
+    ],
+  },
 ];

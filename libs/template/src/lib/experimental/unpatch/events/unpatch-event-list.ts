@@ -21,5 +21,5 @@ export const zonePatchedEvents = [
   'dragover',
   'dragstart',
   'drop',
-  'input'
+  'input',
 ];

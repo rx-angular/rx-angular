@@ -3,8 +3,8 @@ import { PostTaskSchedulerPriority } from './postTask';
 import { animationFrameTick } from './animationFrameTick';
 import { promiseTick } from './promiseTick';
 import { timeoutTick } from './timeoutTick';
-import { idleCallbackTick } from './idleCallbackTick';
-import { postTaskTick } from './postTaskTick';
+import { idleCallbackTick } from '../../../experimental/render-strategies/rxjs/scheduling/idleCallbackTick';
+import { postTaskTick } from '../../../experimental/render-strategies/rxjs/scheduling/postTaskTick';
 
 export const priorityTickMap: { [name: string]: Observable<number> } = {
   animationFrame: animationFrameTick(),
@@ -12,10 +12,10 @@ export const priorityTickMap: { [name: string]: Observable<number> } = {
   setInterval: timeoutTick(),
   idleCallback: idleCallbackTick(),
   userBlocking: postTaskTick({
-    priority: PostTaskSchedulerPriority.userBlocking
+    priority: PostTaskSchedulerPriority.userBlocking,
   }),
   userVisible: postTaskTick({
-    priority: PostTaskSchedulerPriority.userVisible
+    priority: PostTaskSchedulerPriority.userVisible,
   }),
-  background: postTaskTick({ priority: PostTaskSchedulerPriority.background })
+  background: postTaskTick({ priority: PostTaskSchedulerPriority.background }),
 };

@@ -24,7 +24,7 @@ export const materialModules = [
   MatSidenavModule,
   MatIconModule,
   MatListModule,
-  MatCardModule
+  MatCardModule,
 ];
 
 @NgModule({
@@ -35,9 +35,9 @@ export const materialModules = [
     RouterModule.forRoot(ROUTES),
     materialModules,
     ListResourceModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
   declarations: [AppComponent],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

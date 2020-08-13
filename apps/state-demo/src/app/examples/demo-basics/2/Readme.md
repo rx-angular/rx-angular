@@ -14,6 +14,7 @@ A function has a "side-effect" if:
 
 - Mutation of local static variables are done e.g. `this.prop = value`
 - non-local variables are used
+
 ## Examples
 
 ```typescript
@@ -59,6 +60,7 @@ A side-effect has 2 important parts:
 
 In the above examples the trigger was the method call itself, but we can also set an emitted value form an `Observable` as trigger.
 This side-effect logic is a render call or any other logic executed by the trigger.
+
 ## Application
 
 With this in mind let's take a look at the component logic and see if we can identify a side effect:
@@ -159,8 +161,8 @@ Lets first refactor the trigger `this.select('refreshInterval').pipe(switchMap(m
 
 ```typescript
 intervalRefreshTick$ = this.select(
-  map(s => s.refreshInterval),
-  switchMap(ms => timer(0, ms))
+  map((s) => s.refreshInterval),
+  switchMap((ms) => timer(0, ms))
 );
 ```
 
@@ -173,7 +175,7 @@ This means we could simply merge their outputs together.
 refreshListSideEffect$ = merge(
   this.refreshClicks,
   this.intervalRefreshTick$
-).pipe(tap(_ => this.listService.refetchList()));
+).pipe(tap((_) => this.listService.refetchList()));
 ```
 
 As a last step we could use another overload of the `hold` method to get better readability of the code.

@@ -4,7 +4,7 @@ import {
   Component,
   ElementRef,
   OnInit,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { defer, fromEvent, Observable, Subject } from 'rxjs';
@@ -33,7 +33,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     {{ value1$ | push: strategy }}
     <br />
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Parent02Component extends BaseComponent {
   @ViewChild('button') button: ElementRef<HTMLButtonElement>;

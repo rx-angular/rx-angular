@@ -12,7 +12,7 @@ interface HeroesComponentState {
 }
 
 const initHeroesComponentState: Partial<HeroesComponentState> = {
-  heroes: []
+  heroes: [],
 };
 
 @Component({
@@ -20,7 +20,7 @@ const initHeroesComponentState: Partial<HeroesComponentState> = {
   selector: 'app-heroes',
   templateUrl: './heroes.component.html',
   styleUrls: ['./heroes.component.css'],
-  providers: [RxState]
+  providers: [RxState],
 })
 export class HeroesComponent {
   heroes: Hero[];
@@ -30,12 +30,12 @@ export class HeroesComponent {
   readonly delete = new Subject<Hero>();
 
   private readonly _heroAdded$ = this.add.pipe(
-    switchMap(name => this.heroService.addHero({ name } as Hero))
+    switchMap((name) => this.heroService.addHero({ name } as Hero))
   );
   private readonly _heroDeleted$ = this.delete.pipe(
-    switchMap(deletedHero =>
+    switchMap((deletedHero) =>
       this.heroService.deleteHero(deletedHero).pipe(
-        map(hero => {
+        map((hero) => {
           // no hero means error, we have to revert the optimistic change
           if (!hero) {
             return [...this.state.get().heroes, deletedHero];
@@ -43,9 +43,11 @@ export class HeroesComponent {
           return null;
         }),
         // apply optimistic change
-        startWith(this.state.get().heroes.filter(h => h.id !== deletedHero.id)),
+        startWith(
+          this.state.get().heroes.filter((h) => h.id !== deletedHero.id)
+        ),
         // only apply optimistic change and the revert if needed
-        filter(change => change !== null)
+        filter((change) => change !== null)
       )
     )
   );
@@ -60,7 +62,7 @@ export class HeroesComponent {
     this.state.connect('heroes', this.heroService.getHeroes());
     this.state.connect('heroes', this._heroDeleted$);
     this.state.connect(this._heroAdded$, (oldState, addedHero) => ({
-      heroes: [...oldState.heroes, addedHero]
+      heroes: [...oldState.heroes, addedHero],
     }));
   }
 

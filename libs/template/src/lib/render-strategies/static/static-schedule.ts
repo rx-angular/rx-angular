@@ -15,11 +15,11 @@ export function staticSchedule(
   // schedule work
   const sub = priorityTickMap[priority].subscribe(
     () => tryExecuteWork(),
-    error => console.error(error),
+    (error) => console.error(error),
     // on complete abort further executions
     () => abC.abort()
   );
-  const abortHandler = function() {
+  const abortHandler = function () {
     sub.unsubscribe();
     abC.signal.removeEventListener('abort', abortHandler, false);
   };

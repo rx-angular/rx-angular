@@ -3,7 +3,7 @@ import { pluck } from 'rxjs/operators';
 import {
   isOperateFnArrayGuard,
   isStringArrayGuard,
-  pipeFromArray
+  pipeFromArray,
 } from '../../core/utils';
 import { stateful } from './stateful';
 

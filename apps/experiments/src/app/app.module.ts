@@ -36,10 +36,10 @@ import { MatSelectModule } from '@angular/material/select';
     TemplateModule,
     MatInputModule,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule,
   ],
   providers: [],
   exports: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
