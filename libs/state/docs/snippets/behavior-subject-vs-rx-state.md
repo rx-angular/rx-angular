@@ -1,11 +1,11 @@
 @Notice: This content is a copy of [this comment](https://github.com/BioPhoton/rx-angular/issues/75#issuecomment-626031134) created by [@Karnaukhov-kh](https://github.com/Karnaukhov-kh)
 We are incredible thankful for that contribution!!
 
-### BehaviorSubject vs RxState
+# Migrating to RxState
 
 Let's take a look at a simple checklist app, see how it can be implemented in the imperative way and after that we will iterate over it and add some reactiveness. We skip any additional logic as routing, errors handling etc in this examples.
 
-### Intial solution
+## Intial solution
 
 **Interfaces**
 
@@ -27,8 +27,6 @@ export interface ITask {
   name: string;
 }
 ```
-
-### Main part of this application is `List` component.
 
 List is a nested smart component.
 
@@ -86,7 +84,7 @@ template
     </section>
 ```
 
-### Step 1. Basic solution using BehaviorSubject
+## Step 1. Basic solution using BehaviorSubject
 
 First pattern that many developers who switching to reactive programming with Angular & RxJS will find is so called "Observable data service" (organization of state with `BehaviorSubject` as data storage).
 
@@ -218,7 +216,7 @@ But there are some issues with this approach.
 - Update (or write) part is still imperative. We need to call a method in our component, subscribe to some observable and inside subscription update our state with `patch()` method. We are breaking reactive flow.
 - We have multiple subscriptions in pretty simple component. Subscription management should be done manually if we don't use external packages or create own solution for this.
 
-### Step 2. A bit more reactive component.
+## Step 2. A bit more reactive component.
 
 **First let's try to get rid of `OnInit` lifecycle hook.**
 
@@ -360,7 +358,7 @@ export class ChecklistComponent implements OnDestroy {
 - We still need to manage subscription.
 - State updates are side effects of our api calls. We are using `tap` in our pipe to handle this and manually calling `this.state.patch()` method in our component. It is still not reactive.
 
-### Step 3. Fully reactive component.
+## Step 3. Fully reactive component.
 
 Let's do another round and refactor `List` component using `@rx-angular/state`. In the core of it are operators `mergeAll()` that works with stream of streams instead of single values and `scan()` that accumulates values form this streams into single state observable.
 
