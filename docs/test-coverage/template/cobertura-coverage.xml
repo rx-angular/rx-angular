@@ -1,121 +1,112 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="431" lines-covered="400" line-rate="0.9281" branches-valid="75" branches-covered="56" branch-rate="0.7467" timestamp="1597351320699" complexity="0" version="0.1">
+<coverage lines-valid="422" lines-covered="391" line-rate="0.9265000000000001" branches-valid="75" branches-covered="56" branch-rate="0.7467" timestamp="1597362571151" complexity="0" version="0.1">
   <sources>
-    <source>C:\Users\micha\git\rx-angular</source>
+    <source>/home/runner/work/rx-angular/rx-angular</source>
   </sources>
   <packages>
     <package name="src" line-rate="1" branch-rate="1">
       <classes>
-        <class name="index.ts" filename="libs\template\src\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/template/src/index.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="0" signature="()V">
               <lines>
-                <line number="4" hits="0"/>
+                <line number="2" hits="0"/>
               </lines>
             </method>
             <method name="(anonymous_1)" hits="2" signature="()V">
               <lines>
-                <line number="5" hits="2"/>
+                <line number="3" hits="2"/>
               </lines>
             </method>
             <method name="(anonymous_2)" hits="2" signature="()V">
               <lines>
-                <line number="6" hits="2"/>
+                <line number="4" hits="2"/>
               </lines>
             </method>
             <method name="(anonymous_3)" hits="0" signature="()V">
               <lines>
-                <line number="8" hits="0"/>
+                <line number="6" hits="0"/>
               </lines>
             </method>
             <method name="(anonymous_4)" hits="0" signature="()V">
               <lines>
-                <line number="9" hits="0"/>
+                <line number="6" hits="0"/>
               </lines>
             </method>
             <method name="(anonymous_5)" hits="0" signature="()V">
               <lines>
-                <line number="10" hits="0"/>
+                <line number="6" hits="0"/>
               </lines>
             </method>
             <method name="(anonymous_6)" hits="0" signature="()V">
               <lines>
-                <line number="12" hits="0"/>
+                <line number="7" hits="0"/>
               </lines>
             </method>
             <method name="(anonymous_7)" hits="0" signature="()V">
               <lines>
-                <line number="13" hits="0"/>
+                <line number="7" hits="0"/>
               </lines>
             </method>
             <method name="(anonymous_8)" hits="15" signature="()V">
               <lines>
-                <line number="15" hits="15"/>
+                <line number="8" hits="15"/>
               </lines>
             </method>
             <method name="(anonymous_9)" hits="0" signature="()V">
               <lines>
-                <line number="16" hits="0"/>
+                <line number="8" hits="0"/>
               </lines>
             </method>
             <method name="(anonymous_10)" hits="0" signature="()V">
               <lines>
-                <line number="19" hits="0"/>
+                <line number="11" hits="0"/>
               </lines>
             </method>
             <method name="(anonymous_11)" hits="0" signature="()V">
               <lines>
-                <line number="20" hits="0"/>
+                <line number="12" hits="0"/>
               </lines>
             </method>
             <method name="(anonymous_12)" hits="0" signature="()V">
               <lines>
-                <line number="22" hits="0"/>
+                <line number="15" hits="0"/>
               </lines>
             </method>
             <method name="(anonymous_13)" hits="0" signature="()V">
               <lines>
-                <line number="23" hits="0"/>
+                <line number="16" hits="0"/>
               </lines>
             </method>
             <method name="(anonymous_14)" hits="0" signature="()V">
               <lines>
-                <line number="25" hits="0"/>
+                <line number="18" hits="0"/>
               </lines>
             </method>
           </methods>
           <lines>
+            <line number="1" hits="5" branch="false"/>
             <line number="2" hits="5" branch="false"/>
-            <line number="3" hits="5" branch="false"/>
-            <line number="4" hits="5" branch="false"/>
-            <line number="5" hits="5" branch="false"/>
+            <line number="3" hits="7" branch="false"/>
+            <line number="4" hits="7" branch="false"/>
             <line number="6" hits="5" branch="false"/>
             <line number="7" hits="5" branch="false"/>
-            <line number="8" hits="5" branch="false"/>
-            <line number="9" hits="5" branch="false"/>
+            <line number="8" hits="20" branch="false"/>
             <line number="10" hits="5" branch="false"/>
             <line number="11" hits="5" branch="false"/>
             <line number="12" hits="5" branch="false"/>
-            <line number="13" hits="5" branch="false"/>
             <line number="14" hits="5" branch="false"/>
-            <line number="15" hits="15" branch="false"/>
+            <line number="15" hits="5" branch="false"/>
             <line number="16" hits="5" branch="false"/>
             <line number="18" hits="5" branch="false"/>
-            <line number="19" hits="5" branch="false"/>
-            <line number="20" hits="5" branch="false"/>
-            <line number="21" hits="5" branch="false"/>
-            <line number="22" hits="5" branch="false"/>
-            <line number="23" hits="5" branch="false"/>
-            <line number="24" hits="5" branch="false"/>
-            <line number="25" hits="5" branch="false"/>
           </lines>
         </class>
       </classes>
     </package>
     <package name="src.lib" line-rate="1" branch-rate="1">
       <classes>
-        <class name="template.module.ts" filename="libs\template\src\lib\template.module.ts" line-rate="1" branch-rate="1">
+        <class name="template.module.ts" filename="libs/template/src/lib/template.module.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -131,7 +122,7 @@
     </package>
     <package name="src.lib.core" line-rate="1" branch-rate="1">
       <classes>
-        <class name="index.ts" filename="libs\template\src\lib\core\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/template/src/lib/core/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -143,7 +134,7 @@
     </package>
     <package name="src.lib.core.render-aware" line-rate="0.9523999999999999" branch-rate="0.7">
       <classes>
-        <class name="index.ts" filename="libs\template\src\lib\core\render-aware\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/template/src/lib/core/render-aware/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -151,7 +142,7 @@
             <line number="2" hits="17" branch="false"/>
           </lines>
         </class>
-        <class name="render-aware_creator.ts" filename="libs\template\src\lib\core\render-aware\render-aware_creator.ts" line-rate="0.95" branch-rate="0.7">
+        <class name="render-aware_creator.ts" filename="libs/template/src/lib/core/render-aware/render-aware_creator.ts" line-rate="0.95" branch-rate="0.7">
           <methods>
             <method name="createRenderAware" hits="65" signature="()V">
               <lines>
@@ -301,7 +292,7 @@
     </package>
     <package name="src.lib.core.utils" line-rate="0.9667" branch-rate="0.7353000000000001">
       <classes>
-        <class name="coalescing-manager.ts" filename="libs\template\src\lib\core\utils\coalescing-manager.ts" line-rate="1" branch-rate="0">
+        <class name="coalescing-manager.ts" filename="libs/template/src/lib/core/utils/coalescing-manager.ts" line-rate="1" branch-rate="0">
           <methods>
             <method name="(anonymous_0)" hits="547" signature="()V">
               <lines>
@@ -342,24 +333,24 @@
             <line number="60" hits="129" branch="false"/>
           </lines>
         </class>
-        <class name="get-global-this.ts" filename="libs\template\src\lib\core\utils\get-global-this.ts" line-rate="1" branch-rate="0.3333">
+        <class name="get-global-this.ts" filename="libs/template/src/lib/core/utils/get-global-this.ts" line-rate="1" branch-rate="0.3333">
           <methods>
-            <method name="getGlobalThis" hits="317" signature="()V">
+            <method name="getGlobalThis" hits="315" signature="()V">
               <lines>
-                <line number="13" hits="317"/>
+                <line number="13" hits="315"/>
               </lines>
             </method>
           </methods>
           <lines>
             <line number="13" hits="20" branch="false"/>
-            <line number="14" hits="317" branch="true" condition-coverage="33.33333333333333% (1/3)"/>
+            <line number="14" hits="315" branch="true" condition-coverage="33.33333333333333% (1/3)"/>
           </lines>
         </class>
-        <class name="get-zone-unpatched-api.ts" filename="libs\template\src\lib\core\utils\get-zone-unpatched-api.ts" line-rate="1" branch-rate="0.75">
+        <class name="get-zone-unpatched-api.ts" filename="libs/template/src/lib/core/utils/get-zone-unpatched-api.ts" line-rate="1" branch-rate="0.75">
           <methods>
-            <method name="getZoneUnPatchedApi" hits="138" signature="()V">
+            <method name="getZoneUnPatchedApi" hits="137" signature="()V">
               <lines>
-                <line number="17" hits="138"/>
+                <line number="17" hits="137"/>
               </lines>
             </method>
           </methods>
@@ -367,11 +358,11 @@
             <line number="1" hits="20" branch="false"/>
             <line number="2" hits="20" branch="false"/>
             <line number="17" hits="20" branch="false"/>
-            <line number="18" hits="138" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="19" hits="138" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="18" hits="137" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="19" hits="137" branch="true" condition-coverage="50% (1/2)"/>
           </lines>
         </class>
-        <class name="index.ts" filename="libs\template\src\lib\core\utils\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/template/src/lib/core/utils/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -384,7 +375,7 @@
             <line number="7" hits="20" branch="false"/>
           </lines>
         </class>
-        <class name="properties-weakmap.ts" filename="libs\template\src\lib\core\utils\properties-weakmap.ts" line-rate="1" branch-rate="1">
+        <class name="properties-weakmap.ts" filename="libs/template/src/lib/core/utils/properties-weakmap.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="createPropertiesWeakMap" hits="21" signature="()V">
               <lines>
@@ -438,7 +429,7 @@
             <line number="74" hits="66" branch="false"/>
           </lines>
         </class>
-        <class name="template-manager_creator.ts" filename="libs\template\src\lib\core\utils\template-manager_creator.ts" line-rate="0.9523999999999999" branch-rate="0.8332999999999999">
+        <class name="template-manager_creator.ts" filename="libs/template/src/lib/core/utils/template-manager_creator.ts" line-rate="0.9523999999999999" branch-rate="0.8332999999999999">
           <methods>
             <method name="createTemplateManager" hits="31" signature="()V">
               <lines>
@@ -505,7 +496,7 @@
             <line number="79" hits="54" branch="false"/>
           </lines>
         </class>
-        <class name="unpatched-resolved-promise.ts" filename="libs\template\src\lib\core\utils\unpatched-resolved-promise.ts" line-rate="1" branch-rate="1">
+        <class name="unpatched-resolved-promise.ts" filename="libs/template/src/lib/core/utils/unpatched-resolved-promise.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="getUnpatchedResolvedPromise" hits="97" signature="()V">
               <lines>
@@ -522,7 +513,7 @@
             <line number="13" hits="97" branch="false"/>
           </lines>
         </class>
-        <class name="view-engine-checks.ts" filename="libs\template\src\lib\core\utils\view-engine-checks.ts" line-rate="1" branch-rate="1">
+        <class name="view-engine-checks.ts" filename="libs/template/src/lib/core/utils/view-engine-checks.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="isViewEngineIvy" hits="3" signature="()V">
               <lines>
@@ -537,16 +528,16 @@
             <line number="27" hits="3" branch="false"/>
           </lines>
         </class>
-        <class name="zone-checks.ts" filename="libs\template\src\lib\core\utils\zone-checks.ts" line-rate="0.8824" branch-rate="0.5">
+        <class name="zone-checks.ts" filename="libs/template/src/lib/core/utils/zone-checks.ts" line-rate="0.8824" branch-rate="0.5">
           <methods>
             <method name="envZonePatched" hits="0" signature="()V">
               <lines>
                 <line number="16" hits="0"/>
               </lines>
             </method>
-            <method name="apiZonePatched" hits="152" signature="()V">
+            <method name="apiZonePatched" hits="151" signature="()V">
               <lines>
-                <line number="31" hits="152"/>
+                <line number="31" hits="151"/>
               </lines>
             </method>
             <method name="isNgZone" hits="4" signature="()V">
@@ -575,7 +566,7 @@
             <line number="16" hits="20" branch="false"/>
             <line number="17" hits="0" branch="false"/>
             <line number="31" hits="20" branch="false"/>
-            <line number="33" hits="152" branch="false"/>
+            <line number="33" hits="151" branch="false"/>
             <line number="36" hits="20" branch="false"/>
             <line number="57" hits="20" branch="false"/>
             <line number="58" hits="4" branch="false"/>
@@ -594,7 +585,7 @@
     </package>
     <package name="src.lib.let" line-rate="0.9573999999999999" branch-rate="0">
       <classes>
-        <class name="index.ts" filename="libs\template\src\lib\let\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/template/src/lib/let/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -602,7 +593,7 @@
             <line number="2" hits="9" branch="false"/>
           </lines>
         </class>
-        <class name="let.directive.ts" filename="libs\template\src\lib\let\let.directive.ts" line-rate="0.9512" branch-rate="0">
+        <class name="let.directive.ts" filename="libs/template/src/lib/let/let.directive.ts" line-rate="0.9512" branch-rate="0">
           <methods>
             <method name="(anonymous_0)" hits="31" signature="()V">
               <lines>
@@ -714,7 +705,7 @@
             <line number="240" hits="23" branch="false"/>
           </lines>
         </class>
-        <class name="let.module.ts" filename="libs\template\src\lib\let\let.module.ts" line-rate="1" branch-rate="1">
+        <class name="let.module.ts" filename="libs/template/src/lib/let/let.module.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -728,7 +719,7 @@
     </package>
     <package name="src.lib.push" line-rate="1" branch-rate="1">
       <classes>
-        <class name="index.ts" filename="libs\template\src\lib\push\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/template/src/lib/push/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -736,7 +727,7 @@
             <line number="2" hits="7" branch="false"/>
           </lines>
         </class>
-        <class name="push.module.ts" filename="libs\template\src\lib\push\push.module.ts" line-rate="1" branch-rate="1">
+        <class name="push.module.ts" filename="libs/template/src/lib/push/push.module.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -746,7 +737,7 @@
             <line number="9" hits="7" branch="false"/>
           </lines>
         </class>
-        <class name="push.pipe.ts" filename="libs\template\src\lib\push\push.pipe.ts" line-rate="1" branch-rate="1">
+        <class name="push.pipe.ts" filename="libs/template/src/lib/push/push.pipe.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="18" signature="()V">
               <lines>
@@ -797,7 +788,7 @@
     </package>
     <package name="src.lib.render-strategies" line-rate="1" branch-rate="1">
       <classes>
-        <class name="index.ts" filename="libs\template\src\lib\render-strategies\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/template/src/lib/render-strategies/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -810,7 +801,7 @@
     </package>
     <package name="src.lib.render-strategies.rxjs" line-rate="1" branch-rate="1">
       <classes>
-        <class name="index.ts" filename="libs\template\src\lib\render-strategies\rxjs\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/template/src/lib/render-strategies/rxjs/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -822,7 +813,7 @@
     </package>
     <package name="src.lib.render-strategies.rxjs.operators" line-rate="0.8889" branch-rate="1">
       <classes>
-        <class name="coalesceWith.ts" filename="libs\template\src\lib\render-strategies\rxjs\operators\coalesceWith.ts" line-rate="0.9655" branch-rate="1">
+        <class name="coalesceWith.ts" filename="libs/template/src/lib/render-strategies/rxjs/operators/coalesceWith.ts" line-rate="0.9655" branch-rate="1">
           <methods>
             <method name="coalesceWith" hits="95" signature="()V">
               <lines>
@@ -907,7 +898,7 @@
             <line number="97" hits="96" branch="false"/>
           </lines>
         </class>
-        <class name="index.ts" filename="libs\template\src\lib\render-strategies\rxjs\operators\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/template/src/lib/render-strategies/rxjs/operators/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -915,7 +906,7 @@
             <line number="2" hits="8" branch="false"/>
           </lines>
         </class>
-        <class name="renderChange.ts" filename="libs\template\src\lib\render-strategies\rxjs\operators\renderChange.ts" line-rate="0.4" branch-rate="1">
+        <class name="renderChange.ts" filename="libs/template/src/lib/render-strategies/rxjs/operators/renderChange.ts" line-rate="0.4" branch-rate="1">
           <methods>
             <method name="renderChange" hits="0" signature="()V">
               <lines>
@@ -940,7 +931,7 @@
     </package>
     <package name="src.lib.render-strategies.rxjs.scheduling" line-rate="0.9756" branch-rate="1">
       <classes>
-        <class name="animationFrameTick.ts" filename="libs\template\src\lib\render-strategies\rxjs\scheduling\animationFrameTick.ts" line-rate="1" branch-rate="1">
+        <class name="animationFrameTick.ts" filename="libs/template/src/lib/render-strategies/rxjs/scheduling/animationFrameTick.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="15" signature="()V">
               <lines>
@@ -952,14 +943,14 @@
                 <line number="5" hits="73"/>
               </lines>
             </method>
-            <method name="(anonymous_2)" hits="5" signature="()V">
+            <method name="(anonymous_2)" hits="4" signature="()V">
               <lines>
-                <line number="6" hits="5"/>
+                <line number="6" hits="4"/>
               </lines>
             </method>
-            <method name="(anonymous_3)" hits="65" signature="()V">
+            <method name="(anonymous_3)" hits="64" signature="()V">
               <lines>
-                <line number="11" hits="65"/>
+                <line number="11" hits="64"/>
               </lines>
             </method>
           </methods>
@@ -969,13 +960,13 @@
             <line number="4" hits="15" branch="false"/>
             <line number="5" hits="15" branch="false"/>
             <line number="6" hits="73" branch="false"/>
-            <line number="7" hits="5" branch="false"/>
-            <line number="8" hits="5" branch="false"/>
+            <line number="7" hits="4" branch="false"/>
+            <line number="8" hits="4" branch="false"/>
             <line number="11" hits="73" branch="false"/>
-            <line number="12" hits="65" branch="false"/>
+            <line number="12" hits="64" branch="false"/>
           </lines>
         </class>
-        <class name="index.ts" filename="libs\template\src\lib\render-strategies\rxjs\scheduling\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/template/src/lib/render-strategies/rxjs/scheduling/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -985,7 +976,7 @@
             <line number="4" hits="9" branch="false"/>
           </lines>
         </class>
-        <class name="interfaces.ts" filename="libs\template\src\lib\render-strategies\rxjs\scheduling\interfaces.ts" line-rate="1" branch-rate="1">
+        <class name="interfaces.ts" filename="libs/template/src/lib/render-strategies/rxjs/scheduling/interfaces.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="15" signature="()V">
               <lines>
@@ -1004,7 +995,7 @@
             <line number="8" hits="15" branch="false"/>
           </lines>
         </class>
-        <class name="priority-tick-map.ts" filename="libs\template\src\lib\render-strategies\rxjs\scheduling\priority-tick-map.ts" line-rate="1" branch-rate="1">
+        <class name="priority-tick-map.ts" filename="libs/template/src/lib/render-strategies/rxjs/scheduling/priority-tick-map.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -1017,7 +1008,7 @@
             <line number="9" hits="15" branch="false"/>
           </lines>
         </class>
-        <class name="promiseTick.ts" filename="libs\template\src\lib\render-strategies\rxjs\scheduling\promiseTick.ts" line-rate="0.9231" branch-rate="1">
+        <class name="promiseTick.ts" filename="libs/template/src/lib/render-strategies/rxjs/scheduling/promiseTick.ts" line-rate="0.9231" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="28" signature="()V">
               <lines>
@@ -1065,7 +1056,7 @@
     </package>
     <package name="src.lib.render-strategies.static" line-rate="0.9148999999999999" branch-rate="0.6154">
       <classes>
-        <class name="index.ts" filename="libs\template\src\lib\render-strategies\static\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/template/src/lib/render-strategies/static/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -1074,7 +1065,7 @@
             <line number="3" hits="15" branch="false"/>
           </lines>
         </class>
-        <class name="static-coalesce.ts" filename="libs\template\src\lib\render-strategies\static\static-coalesce.ts" line-rate="1" branch-rate="0.6667000000000001">
+        <class name="static-coalesce.ts" filename="libs/template/src/lib/render-strategies/static/static-coalesce.ts" line-rate="1" branch-rate="0.6667000000000001">
           <methods>
             <method name="staticCoalesce" hits="25" signature="()V">
               <lines>
@@ -1114,7 +1105,7 @@
             <line number="32" hits="7" branch="false"/>
           </lines>
         </class>
-        <class name="static-schedule-and-coalesced.ts" filename="libs\template\src\lib\render-strategies\static\static-schedule-and-coalesced.ts" line-rate="1" branch-rate="0.5">
+        <class name="static-schedule-and-coalesced.ts" filename="libs/template/src/lib/render-strategies/static/static-schedule-and-coalesced.ts" line-rate="1" branch-rate="0.5">
           <methods>
             <method name="coalesceAndSchedule" hits="13" signature="()V">
               <lines>
@@ -1148,7 +1139,7 @@
             <line number="29" hits="13" branch="false"/>
           </lines>
         </class>
-        <class name="static-schedule.ts" filename="libs\template\src\lib\render-strategies\static\static-schedule.ts" line-rate="0.7646999999999999" branch-rate="0.6">
+        <class name="static-schedule.ts" filename="libs/template/src/lib/render-strategies/static/static-schedule.ts" line-rate="0.7646999999999999" branch-rate="0.6">
           <methods>
             <method name="staticSchedule" hits="6" signature="()V">
               <lines>
@@ -1205,7 +1196,7 @@
     </package>
     <package name="src.lib.render-strategies.strategies" line-rate="0.7857" branch-rate="1">
       <classes>
-        <class name="global.strategy.ts" filename="libs\template\src\lib\render-strategies\strategies\global.strategy.ts" line-rate="0.6667000000000001" branch-rate="1">
+        <class name="global.strategy.ts" filename="libs/template/src/lib/render-strategies/strategies/global.strategy.ts" line-rate="0.6667000000000001" branch-rate="1">
           <methods>
             <method name="getGlobalStrategies" hits="50" signature="()V">
               <lines>
@@ -1245,7 +1236,7 @@
             <line number="54" hits="0" branch="false"/>
           </lines>
         </class>
-        <class name="index.ts" filename="libs\template\src\lib\render-strategies\strategies\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/template/src/lib/render-strategies/strategies/index.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="19" signature="()V">
               <lines>
@@ -1281,7 +1272,7 @@
             <line number="5" hits="8" branch="false"/>
           </lines>
         </class>
-        <class name="local.strategy.ts" filename="libs\template\src\lib\render-strategies\strategies\local.strategy.ts" line-rate="0.8056" branch-rate="1">
+        <class name="local.strategy.ts" filename="libs/template/src/lib/render-strategies/strategies/local.strategy.ts" line-rate="0.8056" branch-rate="1">
           <methods>
             <method name="getLocalStrategies" hits="50" signature="()V">
               <lines>
@@ -1293,9 +1284,9 @@
                 <line number="68" hits="50"/>
               </lines>
             </method>
-            <method name="(anonymous_2)" hits="5" signature="()V">
+            <method name="(anonymous_2)" hits="4" signature="()V">
               <lines>
-                <line number="75" hits="5"/>
+                <line number="75" hits="4"/>
               </lines>
             </method>
             <method name="(anonymous_3)" hits="73" signature="()V">
@@ -1308,9 +1299,9 @@
                 <line number="81" hits="73"/>
               </lines>
             </method>
-            <method name="(anonymous_5)" hits="5" signature="()V">
+            <method name="(anonymous_5)" hits="4" signature="()V">
               <lines>
-                <line number="81" hits="5"/>
+                <line number="81" hits="4"/>
               </lines>
             </method>
             <method name="(anonymous_6)" hits="0" signature="()V">
@@ -1365,7 +1356,7 @@
             <line number="72" hits="50" branch="false"/>
             <line number="73" hits="50" branch="false"/>
             <line number="75" hits="50" branch="false"/>
-            <line number="76" hits="5" branch="false"/>
+            <line number="76" hits="4" branch="false"/>
             <line number="78" hits="50" branch="false"/>
             <line number="79" hits="73" branch="false"/>
             <line number="81" hits="73" branch="false"/>
@@ -1388,7 +1379,7 @@
             <line number="143" hits="50" branch="false"/>
           </lines>
         </class>
-        <class name="native.strategy.ts" filename="libs\template\src\lib\render-strategies\strategies\native.strategy.ts" line-rate="0.6667000000000001" branch-rate="1">
+        <class name="native.strategy.ts" filename="libs/template/src/lib/render-strategies/strategies/native.strategy.ts" line-rate="0.6667000000000001" branch-rate="1">
           <methods>
             <method name="createNativeStrategy" hits="52" signature="()V">
               <lines>
@@ -1428,7 +1419,7 @@
             <line number="32" hits="0" branch="false"/>
           </lines>
         </class>
-        <class name="noop.strategy.ts" filename="libs\template\src\lib\render-strategies\strategies\noop.strategy.ts" line-rate="0.5" branch-rate="1">
+        <class name="noop.strategy.ts" filename="libs/template/src/lib/render-strategies/strategies/noop.strategy.ts" line-rate="0.5" branch-rate="1">
           <methods>
             <method name="createNoopStrategy" hits="51" signature="()V">
               <lines>
@@ -1458,7 +1449,7 @@
             <line number="24" hits="0" branch="false"/>
           </lines>
         </class>
-        <class name="strategies-map.ts" filename="libs\template\src\lib\render-strategies\strategies\strategies-map.ts" line-rate="1" branch-rate="1">
+        <class name="strategies-map.ts" filename="libs/template/src/lib/render-strategies/strategies/strategies-map.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="getStrategies" hits="50" signature="()V">
               <lines>
