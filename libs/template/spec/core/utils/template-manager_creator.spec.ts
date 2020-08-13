@@ -108,7 +108,7 @@ describe('TemplateManager', () => {
     expect(testComponent.viewContainerRef.length).toBe(1);
   });
 
-  it('insertEmbeddedView should create and insert a created view out of a registered template and call createEmbeddedView', () => {
+  it('displayView should create and insert a created view out of a registered template and call createEmbeddedView', () => {
     templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
     testComponent.viewContainerRef.createEmbeddedView = createSpy('createEmbeddedView');
     testComponent.viewContainerRef.insert = createSpy('insert');
