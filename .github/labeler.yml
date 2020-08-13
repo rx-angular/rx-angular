@@ -20,5 +20,5 @@
 # Add 'root-file-changes' label to any change to files located directly in the root dir
 # This should help to spot those rare changes and move them into a separate PR. e. g. yarn.lock
   root-files-affected:
-    - './**/*'
-    - './*.*'
+    - '*'
+    - '*.*'
