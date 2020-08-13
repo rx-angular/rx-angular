@@ -96,7 +96,7 @@ describe('TemplateManager', () => {
       .toThrow(new Error('Updating an already existing Template is not supported at the moment.'));
   });
 
-  it('insertEmbeddedView should create and insert a created view out of a registered template and increment internal Caches', () => {
+  it('displayView should create and insert a created view out of a registered template and increment internal Caches', () => {
     const _m: any = templateManager;
     templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
     expect(_m.templateCache.size).toBe(1);
