@@ -1,5 +1,3 @@
-# Usage
-
 ## Basic Setup
 
 ### Compose
@@ -10,10 +8,8 @@ This way you have full control about the API and what you want to expose.
 ```typescript
 @Component({
   selector: 'app-stateful',
-  template: `
-    <div>{{ state$ | async | json }}</div>
-  `,
-  providers: [RxState]
+  template: ` <div>{{ state$ | async | json }}</div> `,
+  providers: [RxState],
 })
 export class StatefulComponent {
   readonly state$ = this.state.select();
@@ -29,7 +25,7 @@ components. Keep in mind you will expose the full `RxState` API to everyone havi
 
 ```typescript
 @Directive({
-  selector: '[appStateful]'
+  selector: '[appStateful]',
 })
 export class StatefulComponent extends RxState<{ foo: number }> {
   readonly state$ = this.select();
@@ -40,7 +36,7 @@ export class StatefulComponent extends RxState<{ foo: number }> {
 }
 ```
 
-## Extended Setup
+## Usage with services
 
 If you strive for a more sophisticated **separation of concerns** you can `extend` the `RxState` in a
 locally provided `Service`.
@@ -66,10 +62,8 @@ export class StatefulComponentService extends RxState<StatefulComponentState> {
 ```typescript
 @Component({
   selector: 'app-stateful',
-  template: `
-    <div>{{ viewState$ | async | json }}</div>
-  `,
-  providers: [StatefulComponentService]
+  template: ` <div>{{ viewState$ | async | json }}</div> `,
+  providers: [StatefulComponentService],
 })
 export class StatefulComponent {
   readonly viewState$ = this.state.state$;
@@ -80,7 +74,7 @@ export class StatefulComponent {
 
 _disclaimer_: this doc is work in progress. Not every use case has found it's way into the docs. We encourage you to contribute :).
 
-### Connect global state
+## Connect global state
 
 **Connect state slices from third party services (e.g. NgRx `Store`) or trigger them from side-effects**
 
@@ -90,10 +84,8 @@ er a usecase where the @ngrx/store gets connected to the local state:
 ```typescript
 @Component({
   selector: 'app-stateful',
-  template: `
-    <div>{{ (state$ | async).count }}</div>
-  `,
-  providers: [RxState]
+  template: ` <div>{{ (state$ | async).count }}</div> `,
+  providers: [RxState],
 })
 export class StatefulComponent {
   readonly state$ = this.state.select();
@@ -107,17 +99,15 @@ export class StatefulComponent {
 }
 ```
 
-### Input Property Bindings
+## Input Property Bindings
 
 **Combining `Input` bindings passing single values with RxState**
 
 ```typescript
 @Component({
   selector: 'app-stateful',
-  template: `
-    <div>{{ title$ | async }}</div>
-  `,
-  providers: [RxState]
+  template: ` <div>{{ title$ | async }}</div> `,
+  providers: [RxState],
 })
 export class StatefulComponent {
   readonly title$ = this.select('title');
@@ -142,15 +132,13 @@ This way the ChangeDetection for the `Input` binding will only fire once for the
 const initialState: ComponentState = {
   title: 'MyComponent',
   showButton: false,
-  count: 0
+  count: 0,
 };
 
 @Component({
   selector: 'app-stateful',
-  template: `
-    <div>{{ (state$ | async).count }}</div>
-  `,
-  providers: [RxState]
+  template: ` <div>{{ (state$ | async).count }}</div> `,
+  providers: [RxState],
 })
 export class StatefulComponent {
   @Input() set config(count$: Observable<ComponentStateInput>) {
@@ -160,20 +148,18 @@ export class StatefulComponent {
 }
 ```
 
-### Output Property Bindings
+## Output Property Bindings
 
 **Combining `Output` bindings directly from RxState**
 
 ```typescript
 @Component({
   selector: 'app-stateful',
-  template: `
-    <div (click)="onClick($event)">Increment</div>
-  `,
-  providers: [RxState]
+  template: ` <div (click)="onClick($event)">Increment</div> `,
+  providers: [RxState],
 })
 export class StatefulComponent {
-  @Output() countChange = this.state.select('count');
+  @Output() countChange = this.state.$.pipe(select('count'));
 
   constructor(private state: RxState<{ count: number }>) {}
 
@@ -185,7 +171,7 @@ export class StatefulComponent {
 }
 ```
 
-### Updates based on previous state
+## Updates based on previous state
 
 Often it is needed to get the previous state to calculate the new one.
 
