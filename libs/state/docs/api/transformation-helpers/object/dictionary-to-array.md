@@ -1,4 +1,4 @@
-# dictionaryToArray
+## dictionaryToArray
 
 Converts a dictionary of type {[key: string]: T} to array T[].
 
@@ -50,14 +50,24 @@ export class ListComponent {
 }
 ```
 
-## Signature
+### Edge cases
+
+```typescript
+dictionaryToArray({}) > [];
+dictionaryToArray(null as any) > null;
+dictionaryToArray(undefined as any) > undefined;
+dictionaryToArray(nonObject) > [];
+dictionaryToArray([1, 2, 3] as any) > [];
+```
+
+### Signature
 
 ```TypeScript
 function dictionaryToArray<T>(dictionary: { [key: string]: T }): T[]
 ```
 
-## Parameters
+### Parameters
 
-### dictionary
+#### dictionary
 
-##### typeof: { [key: string]: T }
+###### typeof: { [key: string]: T }

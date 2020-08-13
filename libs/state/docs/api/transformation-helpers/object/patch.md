@@ -1,4 +1,4 @@
-# patch
+## patch
 
 Merges an object of type T with updates of type Partial<T>.
 Returns a new object where updates override original values while not mutating the original one.
@@ -46,18 +46,31 @@ export class ProfileComponent {
 }
 ```
 
-## Signature
+### Edge cases
+
+```typescript
+patch({}, state) > state;
+patch(null as any, state) > state;
+patch(state, null as any) > state;
+patch(null as any, null as any) > null;
+patch(undefined as any, undefined as any) > undefined;
+patch(state, nonObject) > state;
+patch(nonObject, state) > state;
+patch(nonObject, nonObjectUpdate) > nonObject;
+```
+
+### Signature
 
 ```TypeScript
 function patch<T extends object>(object: T, upd: Partial<T>): T
 ```
 
-## Parameters
+### Parameters
 
-### object
+#### object
 
-##### typeof: T
+###### typeof: T
 
-### upd
+#### upd
 
-##### typeof: Partial&#60;T&#62;
+###### typeof: Partial&#60;T&#62;

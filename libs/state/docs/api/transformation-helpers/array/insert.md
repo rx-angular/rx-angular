@@ -1,4 +1,4 @@
-# insert
+## insert
 
 Inserts one or multiple items to an array T[].
 Returns a shallow copy of the updated array T[], and does not mutate the original one.
@@ -58,18 +58,28 @@ export class ListComponent {
 }
 ```
 
-## Signature
+### Edge cases
+
+```typescript
+insert(null as any, items) > items;
+insert(items, null as any) > items;
+insert(null as any, null as any) > null;
+insert(undefined as any, undefined as any) > undefined;
+insert(nonArray as any, items) > items;
+```
+
+### Signature
 
 ```TypeScript
 function insert<T>(source: T[], updates: T | T[]): T[]
 ```
 
-## Parameters
+### Parameters
 
-### array
+#### array
 
-##### typeof: T[]
+###### typeof: T[]
 
-### itemsOrItem
+#### itemsOrItem
 
-##### typeof: T | T[]
+###### typeof: T | T[]

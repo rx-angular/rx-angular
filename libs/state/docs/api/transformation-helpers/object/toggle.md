@@ -1,4 +1,4 @@
-# toggle
+## toggle
 
 Toggles a boolean property in the object.
 Accepts object of type T and key value of which is boolean.
@@ -42,18 +42,28 @@ export class ListComponent {
 }
 ```
 
-## Signature
+### Edge cases
+
+```typescript
+toggle(state, null as any) > state;
+toggle(null as any, null as any) > null;
+toggle(state, 'str' as any) > state;
+toggle(state, 'nonExistingBooleanKey' as any) >
+  { ...state, nonExistingBooleanKey: true };
+```
+
+### Signature
 
 ```TypeScript
 function toggle<T extends object>(object: T, key: OnlyKeysOfSpecificType<T, boolean>): T
 ```
 
-## Parameters
+### Parameters
 
-### object
+#### object
 
-##### typeof: T
+###### typeof: T
 
-### key
+#### key
 
-##### typeof: OnlyKeysOfSpecificType&#60;T, boolean&#62;
+###### typeof: OnlyKeysOfSpecificType&#60;T, boolean&#62;

@@ -1,4 +1,4 @@
-# setProp
+## setProp
 
 Accepts an object of type T, key of type K extends keyof T, and value of type T[K].
 Sets the property and returns a newly updated shallow copy of an object while not mutating the original one.
@@ -40,22 +40,33 @@ export class ProfileComponent {
 }
 ```
 
-## Signature
+### Edge cases
+
+```typescript
+setProp(nonObject, 'prop' as any, 42) > { prop: 42 };
+setProp(null as any, 'prop', 42) > { prop: 42 };
+setProp(null as any, null as any, 42) > null;
+setProp([state], 'concat', () => []) > { concat: () => [] };
+setProp(state, 'nonExisting' as any, 42) > { ...state, nonExisting: 42 };
+setProp(state, null as any, 42) > state;
+```
+
+### Signature
 
 ```TypeScript
 function setProp<T extends object, K extends keyof T>(object: T, key: K, value: T[K]): T
 ```
 
-## Parameters
+### Parameters
 
-### object
+#### object
 
-##### typeof: T
+###### typeof: T
 
-### key
+#### key
 
-##### typeof: K
+###### typeof: K
 
-### value
+#### value
 
-##### typeof: T[K]
+###### typeof: T[K]

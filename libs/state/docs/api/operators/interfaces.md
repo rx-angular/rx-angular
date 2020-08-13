@@ -1,15 +1,15 @@
-# CompareFn
+## CompareFn
 
 The function which is used by `KeyCompareMap` to determine if changes are distinct or not.
 Should return true if values are equal.
 
-## Signature
+### Signature
 
 ```TypeScript
 type CompareFn<T> = (oldVal: T, newVal: T) => boolean
 ```
 
-# KeyCompareMap
+## KeyCompareMap
 
 The `KeyCompareMap` is used to configure custom comparison for defined keys.
 
@@ -32,7 +32,7 @@ const keyCompareMap = {
  }).pipe(selectSlice(['myKey', 'myOtherKey'], keyCompareMap));
 ```
 
-## Signature
+### Signature
 
 ```TypeScript
 type KeyCompareMap<T extends object> = {

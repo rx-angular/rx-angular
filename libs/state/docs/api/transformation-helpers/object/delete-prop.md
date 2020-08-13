@@ -1,4 +1,4 @@
-# deleteProp
+## deleteProp
 
 Accepts an object of type T and key of type K extends keyof T.
 Removes property from an object and returns a shallow copy of the updated object without specified property.
@@ -42,18 +42,27 @@ export class ProfileComponent {
 }
 ```
 
-## Signature
+### Edge cases
+
+```typescript
+deleteProp(state, null as any) > state;
+deleteProp(null as any, null as any) > null;
+deleteProp(undefined as any, undefined as any) > undefined;
+deleteProp(nonObject, 'prop') > nonObject;
+```
+
+### Signature
 
 ```TypeScript
 function deleteProp<T extends object, K extends keyof T>(object: T, key: K): Omit<T, K>
 ```
 
-## Parameters
+### Parameters
 
-### object
+#### object
 
-##### typeof: T
+###### typeof: T
 
-### key
+#### key
 
-##### typeof: K
+###### typeof: K

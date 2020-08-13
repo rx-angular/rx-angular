@@ -1,4 +1,4 @@
-# remove
+## remove
 
 Removes one or multiple items from an array T[].
 For comparison you can provide key, array of keys or a custom comparison function that should return true if items match.
@@ -86,22 +86,32 @@ export class ListComponent {
 }
 ```
 
-## Signature
+### Edge cases
+
+```typescript
+remove(null as any, items) > null;
+remove(items, null as any) > items;
+remove(null as any, null as any) > null;
+remove(undefined as any, undefined as any) > undefined;
+remove(nonArray as any, items) > nonArray;
+```
+
+### Signature
 
 ```TypeScript
 function remove<T>(source: T[], scrap: Partial<T>[] | Partial<T>, compare?: ComparableData<T>): T[]
 ```
 
-## Parameters
+### Parameters
 
-### source
+#### source
 
-##### typeof: T[]
+###### typeof: T[]
 
-### scrap
+#### scrap
 
-##### typeof: Partial&#60;T&#62;[] | Partial&#60;T&#62;
+###### typeof: Partial&#60;T&#62;[] | Partial&#60;T&#62;
 
-### compare
+#### compare
 
-##### typeof: ComparableData&#60;T&#62;
+###### typeof: ComparableData&#60;T&#62;
