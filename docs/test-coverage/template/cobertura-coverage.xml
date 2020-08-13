@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="463" lines-covered="414" line-rate="0.8942" branches-valid="81" branches-covered="61" branch-rate="0.7531" timestamp="1597349234669" complexity="0" version="0.1">
+<coverage lines-valid="437" lines-covered="406" line-rate="0.9290999999999999" branches-valid="75" branches-covered="56" branch-rate="0.7467" timestamp="1597349934655" complexity="0" version="0.1">
   <sources>
     <source>C:\Users\micha\git\rx-angular</source>
   </sources>
@@ -960,7 +960,7 @@
         </class>
       </classes>
     </package>
-    <package name="src.lib.render-strategies.rxjs.scheduling" line-rate="0.7164" branch-rate="0.9">
+    <package name="src.lib.render-strategies.rxjs.scheduling" line-rate="0.9756" branch-rate="1">
       <classes>
         <class name="animationFrameTick.ts" filename="libs\template\src\lib\render-strategies\rxjs\scheduling\animationFrameTick.ts" line-rate="1" branch-rate="1">
           <methods>
@@ -1026,81 +1026,6 @@
             <line number="8" hits="15" branch="false"/>
           </lines>
         </class>
-        <class name="intervalTick.ts" filename="libs\template\src\lib\render-strategies\rxjs\scheduling\intervalTick.ts" line-rate="0" branch-rate="1">
-          <methods>
-            <method name="(anonymous_0)" hits="0" signature="()V">
-              <lines>
-                <line number="3" hits="0"/>
-              </lines>
-            </method>
-            <method name="(anonymous_1)" hits="0" signature="()V">
-              <lines>
-                <line number="4" hits="0"/>
-              </lines>
-            </method>
-            <method name="(anonymous_2)" hits="0" signature="()V">
-              <lines>
-                <line number="5" hits="0"/>
-              </lines>
-            </method>
-            <method name="(anonymous_3)" hits="0" signature="()V">
-              <lines>
-                <line number="10" hits="0"/>
-              </lines>
-            </method>
-          </methods>
-          <lines>
-            <line number="1" hits="0" branch="false"/>
-            <line number="3" hits="0" branch="false"/>
-            <line number="4" hits="0" branch="false"/>
-            <line number="5" hits="0" branch="false"/>
-            <line number="6" hits="0" branch="false"/>
-            <line number="7" hits="0" branch="false"/>
-            <line number="10" hits="0" branch="false"/>
-            <line number="11" hits="0" branch="false"/>
-          </lines>
-        </class>
-        <class name="postTask.ts" filename="libs\template\src\lib\render-strategies\rxjs\scheduling\postTask.ts" line-rate="0.5" branch-rate="0.8332999999999999">
-          <methods>
-            <method name="(anonymous_0)" hits="15" signature="()V">
-              <lines>
-                <line number="1" hits="15"/>
-              </lines>
-            </method>
-            <method name="(anonymous_1)" hits="0" signature="()V">
-              <lines>
-                <line number="20" hits="0"/>
-              </lines>
-            </method>
-            <method name="(anonymous_2)" hits="0" signature="()V">
-              <lines>
-                <line number="22" hits="0"/>
-              </lines>
-            </method>
-            <method name="(anonymous_3)" hits="0" signature="()V">
-              <lines>
-                <line number="23" hits="0"/>
-              </lines>
-            </method>
-            <method name="(anonymous_4)" hits="0" signature="()V">
-              <lines>
-                <line number="32" hits="0"/>
-              </lines>
-            </method>
-          </methods>
-          <lines>
-            <line number="1" hits="15" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="2" hits="15" branch="false"/>
-            <line number="3" hits="15" branch="false"/>
-            <line number="4" hits="15" branch="false"/>
-            <line number="17" hits="15" branch="false"/>
-            <line number="21" hits="0" branch="false"/>
-            <line number="22" hits="0" branch="false"/>
-            <line number="23" hits="0" branch="false"/>
-            <line number="24" hits="0" branch="false"/>
-            <line number="27" hits="0" branch="false"/>
-          </lines>
-        </class>
         <class name="priority-tick-map.ts" filename="libs\template\src\lib\render-strategies\rxjs\scheduling\priority-tick-map.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
@@ -1156,40 +1081,6 @@
             <line number="19" hits="82" branch="false"/>
             <line number="20" hits="82" branch="false"/>
             <line number="21" hits="82" branch="false"/>
-          </lines>
-        </class>
-        <class name="timeoutTick.ts" filename="libs\template\src\lib\render-strategies\rxjs\scheduling\timeoutTick.ts" line-rate="0.375" branch-rate="1">
-          <methods>
-            <method name="(anonymous_0)" hits="15" signature="()V">
-              <lines>
-                <line number="3" hits="15"/>
-              </lines>
-            </method>
-            <method name="(anonymous_1)" hits="0" signature="()V">
-              <lines>
-                <line number="4" hits="0"/>
-              </lines>
-            </method>
-            <method name="(anonymous_2)" hits="0" signature="()V">
-              <lines>
-                <line number="5" hits="0"/>
-              </lines>
-            </method>
-            <method name="(anonymous_3)" hits="0" signature="()V">
-              <lines>
-                <line number="10" hits="0"/>
-              </lines>
-            </method>
-          </methods>
-          <lines>
-            <line number="1" hits="15" branch="false"/>
-            <line number="3" hits="15" branch="false"/>
-            <line number="4" hits="15" branch="false"/>
-            <line number="5" hits="0" branch="false"/>
-            <line number="6" hits="0" branch="false"/>
-            <line number="7" hits="0" branch="false"/>
-            <line number="10" hits="0" branch="false"/>
-            <line number="11" hits="0" branch="false"/>
           </lines>
         </class>
       </classes>
