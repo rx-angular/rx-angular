@@ -6,7 +6,7 @@ import {
   SubscribableOrPromise,
   Subscriber,
   Subscription,
-  Unsubscribable
+  Unsubscribable,
 } from 'rxjs';
 import { coalescingManager } from '../../../core/render-aware/coalescing-manager';
 
@@ -32,7 +32,7 @@ import { coalescingManager } from '../../../core/render-aware/coalescing-manager
  *
  * @usageNotes
  * Emit clicks at a rate of at most one click per second
- * ```ts
+ * ```typescript
  * import { fromEvent, animationFrames } from 'rxjs';
  * import { coalesce } from 'ngRx/component';
  *
@@ -46,8 +46,8 @@ export function coalesceWith<T>(
   scope?: object
 ): MonoTypeOperatorFunction<T> {
   const _scope = scope || {};
-  return source => {
-    const o$ = new Observable<T>(observer => {
+  return (source) => {
+    const o$ = new Observable<T>((observer) => {
       const rootSubscription = new Subscription();
       rootSubscription.add(
         source.subscribe(createInnerObserver(observer, rootSubscription))
@@ -77,8 +77,8 @@ export function coalesceWith<T>(
           }
           outerObserver.complete();
         },
-        error: error => outerObserver.error(error),
-        next: value => {
+        error: (error) => outerObserver.error(error),
+        next: (value) => {
           latestValue = value;
           if (!actionSubscription) {
             coalescingManager.add(_scope);
@@ -92,11 +92,11 @@ export function coalesceWith<T>(
                   tryEmitLatestValue();
                   actionSubscription = undefined;
                 }
-              }
+              },
             });
             rootSubscription.add(actionSubscription);
           }
-        }
+        },
       };
     }
   };
