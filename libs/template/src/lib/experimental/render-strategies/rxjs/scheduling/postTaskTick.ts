@@ -1,24 +1,16 @@
-import {
-  asyncScheduler,
-  Observable,
-  SchedulerAction,
-  SchedulerLike,
-  Subscription,
-} from 'rxjs';
-import { isObject } from 'util';
-import {
-  postTaskScheduler,
-  SchedulerPostTaskOptions,
-} from '../../../../render-strategies/rxjs/scheduling/postTask';
+import { Observable } from 'rxjs';
+import { postTaskScheduler, SchedulerPostTaskOptions } from './postTask';
 
 export const postTaskTick = (options: SchedulerPostTaskOptions) =>
   new Observable<number>((subscription) => {
     postTaskScheduler
-      .postTask(() => {}, options)
+      .postTask(() => {
+      }, options)
       .then(() => {
         subscription.next(0);
         subscription.complete();
       });
 
-    return () => {};
+    return () => {
+    };
   });
