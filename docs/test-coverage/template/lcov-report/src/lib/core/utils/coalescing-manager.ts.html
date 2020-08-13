@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/lib/render-strategies/strategies/global.strategy.ts</title>
+    <title>Code coverage report for src/lib/core/utils/coalescing-manager.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">src/lib/render-strategies/strategies</a> global.strategy.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">src/lib/core/utils</a> coalescing-manager.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/10</span>
+                <span class='fraction'>10/10</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.67% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/9</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -114,21 +114,15 @@
 <a name='L55'></a><a href='#L55'>55</a>
 <a name='L56'></a><a href='#L56'>56</a>
 <a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">13x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">50x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -140,10 +134,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">547x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -156,77 +152,105 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">50x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">50x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ɵmarkDirty as markDirty } from '@angular/core';
-import {
-  RenderStrategy,
-  RenderStrategyFactoryConfig,
-} from '../../core/render-aware';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">104x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">104x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">105x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">105x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">129x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createPropertiesWeakMap } from './index';
 &nbsp;
-export function getGlobalStrategies(
-  config: RenderStrategyFactoryConfig
-): { [strategy: string]: RenderStrategy } {
-  return {
-    global: createGlobalStrategy(config),
-  };
+interface CoalescingContextProps {
+  numCoalescingSubscribers: number;
 }
 &nbsp;
-/**
- * Global Strategies
- *
- * - ɵMD - `ɵmarkDirty`
- * - C - `Component`
- *
- * | Name        | ZoneLess | Render Method | ScopedCoalescing | Scheduling | Chunked |
- * |-------------| ---------| --------------| ---------------- | ---------- |-------- |
- * | `global`     | ✔        | ɵMD           | C + Pr          | ❌         | ❌      |
- *
- */
+interface CoalescingManager {
+  remove: (scope: object) =&gt; void,
+  add: (scope: object) =&gt; void,
+  isCoalescing: (scope: object) =&gt; boolean,
+}
+&nbsp;
+export const coalescingManager = createCoalesceManager();
+&nbsp;
+const coalescingContextPropertiesMap = createPropertiesWeakMap&lt;
+  object,
+  CoalescingContextProps
+&gt;((ctx) =&gt; ({
+  numCoalescingSubscribers: 0,
+}));
 &nbsp;
 /**
+ * @describe createCoalesceManager
  *
- * Global Strategy
+ * returns a
+ * Maintains a weak map of component references ans flags
+ * them if the coalescing process is already started for them.
  *
- * This strategy is rendering the application root and
- * all it's children that are on a path
- * that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
- *
- * | Name        | ZoneLess | Render Method | ScopedCoalescing | Scheduling | Chunked |
- * |-------------| ---------| --------------| ---------------- | ---------- |-------- |
- * | `global`     | ✔        | ɵMD           | C + Pr          | ❌         | ❌      |
- *
- * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
- * @return {RenderStrategy&lt;T&gt;} - The calculated strategy
- *
+ * Used in render aware internally.
  */
-export function createGlobalStrategy(
-  config: RenderStrategyFactoryConfig
-): RenderStrategy {
-  const renderMethod = <span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >markDirty((config.cdRef as any).context);</span>
-&nbsp;
+function createCoalesceManager(): CoalescingManager {
   return {
-    name: 'global',
-    detectChanges: renderMethod,
-    rxScheduleCD: <span class="fstat-no" title="function not covered" >(o</span>) =&gt; <span class="cstat-no" title="statement not covered" >o,</span>
-    scheduleCD: <span class="fstat-no" title="function not covered" >() =</span>&gt; {
-<span class="cstat-no" title="statement not covered" >      renderMethod();</span>
-<span class="cstat-no" title="statement not covered" >      return new AbortController();</span>
-    },
+    remove: removeWork,
+    add: addWork,
+    isCoalescing,
   };
+&nbsp;
+  // Increments the number of subscriptions in a scope e.g. a class instance
+  function removeWork(scope: object = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span>: void {
+    const numCoalescingSubscribers =
+      coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers -
+      1;
+    coalescingContextPropertiesMap.setProps(scope, {
+      numCoalescingSubscribers,
+    });
+  }
+&nbsp;
+  // Decrements the number of subscriptions in a scope e.g. a class instance
+  function addWork(scope: object = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span>: void {
+    const numCoalescingSubscribers =
+      coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers +
+      1;
+    coalescingContextPropertiesMap.setProps(scope, {
+      numCoalescingSubscribers,
+    });
+  }
+&nbsp;
+  // Checks if anybody else is already coalescing atm
+  function isCoalescing(scope: object = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span>: boolean {
+    return (
+      coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers &gt;
+      0
+    );
+  }
 }
 &nbsp;</pre></td></tr></table></pre>
 
