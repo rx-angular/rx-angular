@@ -4,7 +4,6 @@ The `unpatch` directive helps developers to partially deactivate `NgZone`, as we
 of unnecessary renderings through zones `addEventListener` patches.
 It can be used on any element you apply to event bindings.
 
-
 The current way of binding events to DOM:
 
 ```html
