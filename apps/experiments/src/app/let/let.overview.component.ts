@@ -13,6 +13,6 @@ import { environment } from '../../environments/environment';
       <app-let-parent12 class="item"></app-let-parent12>
     </div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class LetOverviewComponent {}

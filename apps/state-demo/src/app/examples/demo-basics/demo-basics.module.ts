@@ -27,20 +27,20 @@ export const ROUTES = [
   {
     path: '',
     pathMatch: 'full',
-    component: DemoBasicsContainerComponent
+    component: DemoBasicsContainerComponent,
   },
   {
     path: 'step-1',
-    component: DemoBasics1ContainerComponent
+    component: DemoBasics1ContainerComponent,
   },
   {
     path: 'step-2',
-    component: DemoBasics2ContainerComponent
+    component: DemoBasics2ContainerComponent,
   },
   {
     path: 'solution',
-    component: DemoBasicsContainerComponent
-  }
+    component: DemoBasicsContainerComponent,
+  },
 ];
 const DECLARATIONS = [
   DemoBasicsContainerComponent,
@@ -53,7 +53,7 @@ const DECLARATIONS = [
   DemoBasicsComponent2Start,
   DemoBasicsComponent2Solution,
   DemoBasics3ContainerComponent,
-  DemoBasicsComponenteStart
+  DemoBasicsComponenteStart,
 ];
 export const materialModules = [
   MatIconModule,
@@ -65,12 +65,12 @@ export const materialModules = [
   MatProgressSpinnerModule,
   MatProgressBarModule,
   MatInputModule,
-  MatFormFieldModule
+  MatFormFieldModule,
 ];
 
 @NgModule({
   declarations: [DECLARATIONS],
   imports: [CommonModule, materialModules, RouterModule.forChild(ROUTES)],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
 export class DemoBasicsModule {}

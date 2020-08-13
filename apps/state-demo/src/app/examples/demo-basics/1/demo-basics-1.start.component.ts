@@ -4,11 +4,11 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output
+  Output,
 } from '@angular/core';
 import {
   ListServerItem,
-  ListService
+  ListService,
 } from '../../../data-access/list-resource';
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
@@ -28,7 +28,7 @@ interface ComponentState {
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
-  list: []
+  list: [],
 };
 
 @Component({
@@ -93,9 +93,9 @@ const initComponentState = {
       .list .mat-expansion-panel-content .mat-expansion-panel-body {
         padding-top: 10px;
       }
-    `
+    `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoBasicsComponent1Start implements OnInit, OnDestroy {
   intervalSubscription = new Subscription();
@@ -131,7 +131,7 @@ export class DemoBasicsComponent1Start implements OnInit, OnDestroy {
   resetRefreshTick() {
     this.intervalSubscription.unsubscribe();
     this.intervalSubscription = interval(this._refreshInterval)
-      .pipe(tap(_ => this.listService.refetchList()))
+      .pipe(tap((_) => this.listService.refetchList()))
       .subscribe();
   }
 

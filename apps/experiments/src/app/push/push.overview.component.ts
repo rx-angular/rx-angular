@@ -19,6 +19,6 @@ import { environment } from '../../environments/environment';
       <app-push-parent31 class="item"></app-push-parent31>
     </div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class PushOverviewComponent {}

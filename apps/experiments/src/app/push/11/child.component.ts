@@ -12,7 +12,7 @@ import { defer, fromEvent } from 'rxjs';
     Passed input binding: {{ value }}
     <!-- -->
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Child11Component extends BaseComponent {
   @Input()

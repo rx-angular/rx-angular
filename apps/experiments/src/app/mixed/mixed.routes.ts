@@ -5,14 +5,14 @@ import { Parent02Component } from './02/parent.component';
 export const ROUTES = [
   {
     path: 'mixed',
-    component: MixedOverviewComponent
+    component: MixedOverviewComponent,
   },
   {
     path: 'mixed-01',
-    component: Parent01Component
+    component: Parent01Component,
   },
   {
     path: 'mixed-02',
-    component: Parent02Component
-  }
+    component: Parent02Component,
+  },
 ];

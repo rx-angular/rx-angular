@@ -23,23 +23,23 @@ export const ROUTES = [
   {
     path: '',
     pathMatch: 'full',
-    component: DynamicCounterContainerComponent
+    component: DynamicCounterContainerComponent,
   },
   {
     path: 'step-1',
-    component: DynamicCounter1ContainerComponent
+    component: DynamicCounter1ContainerComponent,
   },
   {
     path: 'solution',
-    component: DynamicCounterContainerComponent
-  }
+    component: DynamicCounterContainerComponent,
+  },
 ];
 const DECLARATIONS = [
   ToArrayPipe,
   DynamicCounterContainerComponent,
   CounterComponent,
   DynamicCounter1ContainerComponent,
-  Counter1Component
+  Counter1Component,
 ];
 export const materialModules = [
   MatIconModule,
@@ -51,7 +51,7 @@ export const materialModules = [
   MatProgressSpinnerModule,
   MatProgressBarModule,
   MatInputModule,
-  MatFormFieldModule
+  MatFormFieldModule,
 ];
 
 @NgModule({
@@ -60,8 +60,8 @@ export const materialModules = [
     CommonModule,
     materialModules,
     RouterModule.forChild(ROUTES),
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
 export class DynamicCounterModule {}

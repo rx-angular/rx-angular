@@ -7,7 +7,7 @@ import {
   range,
   ReplaySubject,
   Subject,
-  Subscription
+  Subscription,
 } from 'rxjs';
 
 @Component({
@@ -23,13 +23,13 @@ import {
       </app-rx-state-child-selections>
     </div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class RxStateParentSelectionsComponent {
   values$ = new Subject();
 
   formGroupModel$ = of({
     name: '',
-    age: 0
+    age: 0,
   });
 }

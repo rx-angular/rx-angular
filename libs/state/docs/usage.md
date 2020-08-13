@@ -10,10 +10,8 @@ This way you have full control about the API and what you want to expose.
 ```typescript
 @Component({
   selector: 'app-stateful',
-  template: `
-    <div>{{ state$ | async | json }}</div>
-  `,
-  providers: [RxState]
+  template: ` <div>{{ state$ | async | json }}</div> `,
+  providers: [RxState],
 })
 export class StatefulComponent {
   readonly state$ = this.state.select();
@@ -29,7 +27,7 @@ components. Keep in mind you will expose the full `RxState` API to everyone havi
 
 ```typescript
 @Directive({
-  selector: '[appStateful]'
+  selector: '[appStateful]',
 })
 export class StatefulComponent extends RxState<{ foo: number }> {
   readonly state$ = this.select();
@@ -66,10 +64,8 @@ export class StatefulComponentService extends RxState<StatefulComponentState> {
 ```typescript
 @Component({
   selector: 'app-stateful',
-  template: `
-    <div>{{ viewState$ | async | json }}</div>
-  `,
-  providers: [StatefulComponentService]
+  template: ` <div>{{ viewState$ | async | json }}</div> `,
+  providers: [StatefulComponentService],
 })
 export class StatefulComponent {
   readonly viewState$ = this.state.state$;
@@ -90,10 +86,8 @@ er a usecase where the @ngrx/store gets connected to the local state:
 ```typescript
 @Component({
   selector: 'app-stateful',
-  template: `
-    <div>{{ (state$ | async).count }}</div>
-  `,
-  providers: [RxState]
+  template: ` <div>{{ (state$ | async).count }}</div> `,
+  providers: [RxState],
 })
 export class StatefulComponent {
   readonly state$ = this.state.select();
@@ -114,10 +108,8 @@ export class StatefulComponent {
 ```typescript
 @Component({
   selector: 'app-stateful',
-  template: `
-    <div>{{ title$ | async }}</div>
-  `,
-  providers: [RxState]
+  template: ` <div>{{ title$ | async }}</div> `,
+  providers: [RxState],
 })
 export class StatefulComponent {
   readonly title$ = this.select('title');
@@ -142,15 +134,13 @@ This way the ChangeDetection for the `Input` binding will only fire once for the
 const initialState: ComponentState = {
   title: 'MyComponent',
   showButton: false,
-  count: 0
+  count: 0,
 };
 
 @Component({
   selector: 'app-stateful',
-  template: `
-    <div>{{ (state$ | async).count }}</div>
-  `,
-  providers: [RxState]
+  template: ` <div>{{ (state$ | async).count }}</div> `,
+  providers: [RxState],
 })
 export class StatefulComponent {
   @Input() set config(count$: Observable<ComponentStateInput>) {
@@ -167,10 +157,8 @@ export class StatefulComponent {
 ```typescript
 @Component({
   selector: 'app-stateful',
-  template: `
-    <div (click)="onClick($event)">Increment</div>
-  `,
-  providers: [RxState]
+  template: ` <div (click)="onClick($event)">Increment</div> `,
+  providers: [RxState],
 })
 export class StatefulComponent {
   @Output() countChange = this.state.select('count');

@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component
+  Component,
 } from '@angular/core';
 
 @Component({
@@ -20,7 +20,7 @@ import {
     <button [unpatch] (click)="unpatch()">unpatch</button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: []
+  providers: [],
 })
 export class ComparisonUnpatchComponent {
   numRenders = 0;

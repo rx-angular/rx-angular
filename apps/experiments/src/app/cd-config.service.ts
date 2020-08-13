@@ -12,9 +12,9 @@ export class CdConfigService extends RxState<CdConfig> {
 
   constructor() {
     super();
-    this.hold(this.select(), state => (this.state = state));
+    this.hold(this.select(), (state) => (this.state = state));
     this.set({
-      strategy: 'local'
+      strategy: 'local',
     });
   }
 

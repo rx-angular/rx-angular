@@ -21,26 +21,26 @@ export const ROUTES = [
   {
     path: '',
     pathMatch: 'full',
-    component: CoalescingExperimentsProfilingComponent
+    component: CoalescingExperimentsProfilingComponent,
   },
   {
     path: 'experiments-profiling',
-    component: CoalescingExperimentsProfilingComponent
+    component: CoalescingExperimentsProfilingComponent,
   },
   {
     path: 'real-life-1',
-    component: RealLife1ContainerComponent
-  }
+    component: RealLife1ContainerComponent,
+  },
 ];
 const DECLARATIONS = [
   CoalescingExperimentsProfilingComponent,
   RealLife1ContainerComponent,
-  RealLife1Component
+  RealLife1Component,
 ];
 
 @NgModule({
   declarations: [DECLARATIONS],
   imports: [CommonModule, RouterModule.forChild(ROUTES), TemplateModule],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
 export class CoalescingModule {}

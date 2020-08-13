@@ -19,7 +19,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
 
     value$: {{ value$ | async }}
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class CdOperatorsParent01Component extends BaseComponent {
   btnClick$ = new Subject<Event>();
@@ -29,8 +29,8 @@ export class CdOperatorsParent01Component extends BaseComponent {
 
   value$ = this.btnClick$.pipe(
     switchMap(() => range(1, 5)),
-    tap(v => console.log('before:', v)),
+    tap((v) => console.log('before:', v)),
     tap(() => this.strategies.local.scheduleCD),
-    tap(v => console.log('after:', v))
+    tap((v) => console.log('after:', v))
   );
 }

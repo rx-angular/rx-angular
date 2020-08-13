@@ -18,7 +18,7 @@ interface HeroDetailComponentState {
   selector: 'app-hero-detail',
   templateUrl: './hero-detail.component.html',
   styleUrls: ['./hero-detail.component.css'],
-  providers: [RxState]
+  providers: [RxState],
 })
 export class HeroDetailComponent {
   readonly hero$ = this.state.select('hero');
@@ -33,11 +33,11 @@ export class HeroDetailComponent {
     public configService: ConfigService
   ) {
     const hero$ = this.route.paramMap.pipe(
-      switchMap(params => this.heroService.getHero(Number(params.get('id'))))
+      switchMap((params) => this.heroService.getHero(Number(params.get('id'))))
     );
     this.state.connect('hero', hero$);
     const saveEffect$ = this.save$.pipe(
-      switchMap(hero => this.heroService.updateHero(hero)),
+      switchMap((hero) => this.heroService.updateHero(hero)),
       tap(() => this.goBack())
     );
     this.state.hold(saveEffect$);

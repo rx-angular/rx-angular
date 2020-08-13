@@ -5,5 +5,5 @@ export enum SchedulingPriority {
   userBlocking = 'userBlocking',
   userVisible = 'userVisible',
   background = 'background',
-  setInterval = 'setInterval'
+  setInterval = 'setInterval',
 }

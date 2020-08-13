@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnInit
+  OnInit,
 } from '@angular/core';
 
 import {
@@ -14,7 +14,7 @@ import {
   interval,
   NEVER,
   Observable,
-  Subject
+  Subject,
 } from 'rxjs';
 import {
   concatMap,
@@ -23,7 +23,7 @@ import {
   switchMap,
   take,
   takeUntil,
-  tap
+  tap,
 } from 'rxjs/operators';
 import { getStrategies } from '@rx-angular/template';
 import { CoalescingTestService } from './coalescing-test.service';
@@ -122,7 +122,7 @@ import { CoalescingTestService } from './coalescing-test.service';
     </ng-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [CoalescingTestService]
+  providers: [CoalescingTestService],
 })
 export class CoalescingExperimentsProfilingComponent implements OnInit {
   numRenders = 0;

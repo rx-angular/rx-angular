@@ -5,7 +5,7 @@ import { AppViewModel } from './app.view.model';
   selector: 'rx-state-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [AppViewModel]
+  providers: [AppViewModel],
 })
 export class AppComponent {
   constructor(public vm: AppViewModel) {}

@@ -9,6 +9,6 @@ import { environment } from '../../environments/environment';
       <app-cd-operators-parent01 class="item"></app-cd-operators-parent01>
     </div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class CdOperatorsOverviewComponent {}
