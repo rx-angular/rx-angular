@@ -1,7 +1,13 @@
-import { createPropertiesWeakMap } from '../utils';
+import { createPropertiesWeakMap } from './index';
 
 interface CoalescingContextProps {
   numCoalescingSubscribers: number;
+}
+
+interface CoalescingManager {
+  remove: (scope: object) => void,
+  add: (scope: object) => void,
+  isCoalescing: (scope: object) => boolean,
 }
 
 export const coalescingManager = createCoalesceManager();
@@ -13,11 +19,16 @@ const coalescingContextPropertiesMap = createPropertiesWeakMap<
   numCoalescingSubscribers: 0,
 }));
 
-function createCoalesceManager(): {
-  remove: (scope: object) => void;
-  add: (scope: object) => void;
-  isCoalescing: (scope: object) => boolean;
-} {
+/**
+ * @describe createCoalesceManager
+ *
+ * returns a
+ * Maintains a weak map of component references ans flags
+ * them if the coalescing process is already started for them.
+ *
+ * Used in render aware internally.
+ */
+function createCoalesceManager(): CoalescingManager {
   return {
     remove: removeWork,
     add: addWork,

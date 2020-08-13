@@ -18,7 +18,6 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { RenderStrategy, StrategySelection } from './interfaces';
-import { nameToStrategy } from './nameToStrategy';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
@@ -49,7 +48,14 @@ export function createRenderAware<U>(cfg: {
         ? of(stringOrObservable)
         : stringOrObservable
     ),
-    nameToStrategy(cfg.strategies),
+    map((strategy: string): RenderStrategy => {
+        const s = cfg.strategies[strategy];
+        if (!!s) {
+          return s;
+        }
+        throw new Error(`Strategy ${strategy} does not exist.`);
+      }
+    ),
     tap((s) => (currentStrategy = s)),
     // do not repeat the steps before for each subscriber
     shareReplay({ bufferSize: 1, refCount: true })
