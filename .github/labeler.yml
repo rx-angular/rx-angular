@@ -16,3 +16,12 @@
 # Add 'test' label to any change to *.spec.js files within the source dir
   test:
      - libs/**/*.spec.js
+
+# Add 'root-file-changes' label to any change to files located directly in the root dir
+  root-files-affected:
+    - '*'
+    - '!*.*'
+
+# Add 'github' label to any change to files located directly in the root dir
+  github:
+    - '.github/*'

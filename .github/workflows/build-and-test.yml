@@ -31,5 +31,4 @@ jobs:
     - run: npm install --frozen-lockfile --non-interactive
     - run: npm run nx affected:lint -- --base=origin/master --head=${{ github.event.pull_request.head.ref }}
     - run: npm run nx affected:build -- --base=origin/master --head=${{ github.event.pull_request.head.ref }}
-    - run: npm run ng test -- --project=state --code-coverage
-    - run: npm run ng test -- --project=template --code-coverage
+    - run: npm run nx affected:test -- --base=origin/master --head=${{ github.event.pull_request.head.ref }}
