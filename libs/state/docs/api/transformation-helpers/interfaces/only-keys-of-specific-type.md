@@ -1,20 +1,25 @@
-# OnlyKeysOfSpecificType
+## OnlyKeysOfSpecificType
 
 Allows to pass only keys which value is of specific type.
 
 _Example_
 
-```TypeScript
+
+```typescript
 interface Creature {
- id: number;
- type: string;
- name: string;
+  id: number;
+  type: string;
+  name: string;
 }
 
-const cat = {id: 1, type: 'cat', name: 'Fluffy'};
+const cat = { id: 1, type: 'cat', name: 'Fluffy' };
 
-function updateCreature<T>(creature: T, key: OnlyKeysOfSpecificType<T, string>, value: string) {
- // update logic
+function updateCreature<T>(
+  creature: T,
+  key: OnlyKeysOfSpecificType<T, string>,
+  value: string
+) {
+  // update logic
 }
 
 // Valid key
@@ -24,10 +29,11 @@ updateCreature(cat, 'name', 'Luna');
 updateCreature(cat, 'id', 3);
 ```
 
-## Signature
+### Signature
 
-```TypeScript
+```typescript
 type OnlyKeysOfSpecificType<T, S> = {
   [Key in keyof T]: S extends T[Key] ? Key : never;
-}[keyof T]
+}[keyof T];
+
 ```

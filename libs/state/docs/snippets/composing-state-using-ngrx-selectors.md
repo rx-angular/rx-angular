@@ -1,3 +1,5 @@
+_Author: [@Phhansen](https://github.com/Phhansen)_
+
 # Reusing ngrx selectors to compose state
 
 Here is an example of using [NgRx selectors](https://ngrx.io/guide/store/selectors) alongside `@rx-angular/state` to compose reusable state selectors.

@@ -1,14 +1,14 @@
-# dictionaryToArray
+## dictionaryToArray
 
 Converts a dictionary of type {[key: string]: T} to array T[].
 
 _Example_
 
-```TypeScript
+```typescript
 const creaturesDictionary = {
-  '1': {id: 1, type: 'cat'},
-  '2': {id: 2, type: 'dog'},
-  '3': {id: 3, type: 'parrot'}
+  '1': { id: 1, type: 'cat' },
+  '2': { id: 2, type: 'dog' },
+  '3': { id: 3, type: 'parrot' },
 };
 
 const creaturesArray = dictionaryToArray(creaturesDictionary);
@@ -19,45 +19,54 @@ const creaturesArray = dictionaryToArray(creaturesDictionary);
 
 _Example_
 
-```TypeScript
+```typescript
 // Usage with RxState
 
 export class ListComponent {
-   readonly removeName$ = new Subject();
+  readonly removeName$ = new Subject();
 
-   constructor(
-     private state: RxState<ComponentState>,
-     private api: ApiService
-   ) {
-     // Reactive implementation
-     state.connect(
-       'creatures',
-       this.api.creaturesDictionary$,
-       (_, creatures) => {
-           return dictionaryToArray(creatures);
-       }
-     );
-   }
+  constructor(private state: RxState<ComponentState>, private api: ApiService) {
+    // Reactive implementation
+    state.connect(
+      'creatures',
+      this.api.creaturesDictionary$,
+      (_, creatures) => {
+        return dictionaryToArray(creatures);
+      }
+    );
+  }
 
-   // Imperative implementation
-   removeName(): void {
-     this.api.creaturesDictionary$.pipe(
-       // subscription handling logic
-     ).subscribe(
-       dictionary => this.set({creatures: dictionaryToArray(dictionary)})
-     );
-   }
+  // Imperative implementation
+  removeName(): void {
+    this.api.creaturesDictionary$
+      .pipe
+      // subscription handling logic
+      ()
+      .subscribe((dictionary) =>
+        this.set({ creatures: dictionaryToArray(dictionary) })
+      );
+  }
 }
 ```
 
-## Signature
+### Edge cases
 
-```TypeScript
-function dictionaryToArray<T>(dictionary: { [key: string]: T }): T[]
+```typescript
+dictionaryToArray({}) > [];
+dictionaryToArray(null as any) > null;
+dictionaryToArray(undefined as any) > undefined;
+dictionaryToArray(nonObject) > [];
+dictionaryToArray([1, 2, 3] as any) > [];
 ```
 
-## Parameters
+### Signature
 
-### dictionary
+```typescript
+function dictionaryToArray<T>(dictionary: { [key: string]: T }): T[];
+```
 
-##### typeof: { [key: string]: T }
+### Parameters
+
+#### dictionary
+
+###### typeof: { [key: string]: T }

@@ -32,7 +32,7 @@ import { coalescingManager } from '../../../core/utils/coalescing-manager';
  *
  * @usageNotes
  * Emit clicks at a rate of at most one click per second
- * ```ts
+ * ```typescript
  * import { fromEvent, animationFrames } from 'rxjs';
  * import { coalesce } from 'ngRx/component';
  *

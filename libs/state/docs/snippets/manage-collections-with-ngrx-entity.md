@@ -1,3 +1,5 @@
+_Author: [@Phhansen](https://github.com/Phhansen)_
+
 # Manage entities using `@ngrx/entity`
 
 When working with collections or arrays in our state, we tend to write a lot of repeated code when we want to add, update or delete items from these collections.

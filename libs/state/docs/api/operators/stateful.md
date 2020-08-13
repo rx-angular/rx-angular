@@ -1,4 +1,4 @@
-# stateful
+## stateful
 
 As the name `stateful` implies this operator is useful when you process an Observable which maintains state.
 
@@ -22,7 +22,7 @@ You will sometimes (aka situational) need:
 
 _Example_
 
-```TypeScript
+```typescript
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { stateful } from 'rx-angular/state';
@@ -30,46 +30,28 @@ import { stateful } from 'rx-angular/state';
 const state$: Observable<{ name: string; items: string[] }>;
 const derivation$ = state$.pipe(
   stateful(
-    map(state => state.list.length),
-    filter(length => length > 3)
+    map((state) => state.list.length),
+    filter((length) => length > 3)
   )
 );
 ```
 
-## Signature
+### Signature
 
-```TypeScript
-function stateful<T>(): MonoTypeOperatorFunction<T>
+```typescript
+function stateful<T>(): MonoTypeOperatorFunction<T>;
 ```
 
-# stateful
+### Signature
 
-As it acts like the Observables `pipe` method, it accepts one or many RxJS operators as params.
-
-_Example_
-
-```TypeScript
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { stateful } from 'rx-angular/state';
-
-const state$: Observable<{ name: string; items: string[] }>;
-const derivation$ = state$.pipe(
-  stateful(
-    map(state => state.list.length),
-    filter(length => length > 3)
-  )
-);
+```typescript
+function stateful<T, R>(
+  optionalDerive: OperatorFunction<T, R>[]
+): OperatorFunction<T, T | R>;
 ```
 
-## Signature
+### Parameters
 
-```TypeScript
-function stateful<T, R>(optionalDerive: OperatorFunction<T, R>[]): OperatorFunction<T, T | R>
-```
-
-## Parameters
-
-### optionalDerive
+#### optionalDerive
 
 ##### typeof: OperatorFunction&#60;T, R&#62;[]
