@@ -36,44 +36,6 @@ export class StatefulComponent extends RxState<{ foo: number }> {
 }
 ```
 
-## Usage with services
-
-If you strive for a more sophisticated **separation of concerns** you can `extend` the `RxState` in a
-locally provided `Service`.
-
-Create a local `Service` by `extending` the `RxState`
-
-```typescript
-interface StatefulComponentState {
-  foo: number;
-}
-@Injectable()
-export class StatefulComponentService extends RxState<StatefulComponentState> {
-  readonly state$ = this.select();
-
-  constructor() {
-    super();
-  }
-}
-```
-
-`Provide` the `Service` inside the using `Component` or `Directive`
-
-```typescript
-@Component({
-  selector: 'app-stateful',
-  template: ` <div>{{ viewState$ | async | json }}</div> `,
-  providers: [StatefulComponentService],
-})
-export class StatefulComponent {
-  readonly viewState$ = this.state.state$;
-
-  constructor(private state: StatefulComponentService) {}
-}
-```
-
-_disclaimer_: this doc is work in progress. Not every use case has found it's way into the docs. We encourage you to contribute :).
-
 ## Connect global state
 
 **Connect state slices from third party services (e.g. NgRx `Store`) or trigger them from side-effects**
@@ -201,3 +163,41 @@ export class StatefulComponent {
    }
 }
 ```
+
+## Usage with services
+
+If you strive for a more sophisticated **separation of concerns** you can `extend` the `RxState` in a
+locally provided `Service`.
+
+Create a local `Service` by `extending` the `RxState`
+
+```typescript
+interface StatefulComponentState {
+  foo: number;
+}
+@Injectable()
+export class StatefulComponentService extends RxState<StatefulComponentState> {
+  readonly state$ = this.select();
+
+  constructor() {
+    super();
+  }
+}
+```
+
+`Provide` the `Service` inside the using `Component` or `Directive`
+
+```typescript
+@Component({
+  selector: 'app-stateful',
+  template: ` <div>{{ viewState$ | async | json }}</div> `,
+  providers: [StatefulComponentService],
+})
+export class StatefulComponent {
+  readonly viewState$ = this.state.state$;
+
+  constructor(private state: StatefulComponentService) {}
+}
+```
+
+_disclaimer_: this doc is work in progress. Not every use case has found it's way into the docs. We encourage you to contribute :).
