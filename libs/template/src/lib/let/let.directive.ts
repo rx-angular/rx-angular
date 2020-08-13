@@ -13,8 +13,8 @@ import {
   Observable,
   ObservableInput,
   Observer,
-  Unsubscribable,
   Subscription,
+  Unsubscribable,
 } from 'rxjs';
 import { createRenderAware, RenderAware, StrategySelection } from '../core';
 import {
@@ -25,6 +25,8 @@ import {
   DEFAULT_STRATEGY_NAME,
   getStrategies,
 } from '../render-strategies/strategies/strategies-map';
+
+type RxTemplateName = 'rxNext' | 'rxComplete' | 'rxError' | 'rxSuspense';
 
 export interface LetViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
@@ -162,11 +164,14 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   protected subscription: Unsubscribable = new Subscription();
 
   private readonly templateManager: TemplateManager<
-    LetViewContext<U | undefined | null>
+    LetViewContext<U | undefined | null>,
+    RxTemplateName
   >;
   private readonly resetObserver: NextObserver<void> = {
     next: () => {
-      this.templateManager.insertEmbeddedView('rxSuspense');
+      this.templateManager.hasTemplateRef('rxSuspense')
+        ? this.templateManager.displayView('rxSuspense')
+        : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
         $implicit: undefined,
         rxLet: undefined,
@@ -177,7 +182,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   };
   private readonly updateObserver: Observer<U | null | undefined> = {
     next: (value: U | null | undefined) => {
-      this.templateManager.insertEmbeddedView('rxNext');
+      this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
         $implicit: value,
         rxLet: value,
@@ -185,16 +190,18 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     },
     error: (error: Error) => {
       // fallback to rxNext when there's no template for rxError
-      this.templateManager.insertEmbeddedView('rxNext');
-      this.templateManager.insertEmbeddedView('rxError');
+      this.templateManager.hasTemplateRef('rxError')
+        ? this.templateManager.displayView('rxError')
+        : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
         $error: true,
       });
     },
     complete: () => {
       // fallback to rxNext when there's no template for rxComplete
-      this.templateManager.insertEmbeddedView('rxNext');
-      this.templateManager.insertEmbeddedView('rxComplete');
+      this.templateManager.hasTemplateRef('rxComplete')
+        ? this.templateManager.displayView('rxComplete')
+        : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
         $complete: true,
       });
@@ -230,8 +237,11 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.templateManager.insertEmbeddedView('rxSuspense');
     this.templateManager.addTemplateRef('rxNext', this.nextTemplateRef);
+    // @TODO comment why we do this here
+    this.templateManager.hasTemplateRef('rxSuspense')
+      ? this.templateManager.displayView('rxSuspense')
+      : this.templateManager.displayView('rxNext');
     this.subscription = this.renderAware.subscribe();
   }
 
