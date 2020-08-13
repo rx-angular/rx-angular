@@ -7,8 +7,8 @@ Not mutating original object.
 
 _Example_
 
-```TypeScript
-const cat = {id: 1, type: 'cat', name: 'Fluffy'};
+```typescript
+const cat = { id: 1, type: 'cat', name: 'Fluffy' };
 
 const anonymusCat = deleteProp(cat, 'name');
 
@@ -18,27 +18,23 @@ const anonymusCat = deleteProp(cat, 'name');
 
 _Example_
 
-```TypeScript
+```typescript
 // Usage with RxState
 
 export class ProfileComponent {
+  readonly removeName$ = new Subject();
 
-   readonly removeName$ = new Subject();
+  constructor(private state: RxState<ComponentState>) {
+    // Reactive implementation
+    state.connect(this.removeName$, (state) => {
+      return deleteProp(state, 'name');
+    });
+  }
 
-   constructor(private state: RxState<ComponentState>) {
-     // Reactive implementation
-     state.connect(
-       this.removeName$,
-       (state) => {
-           return deleteProp(state, 'name');
-       }
-     );
-   }
-
-   // Imperative implementation
-   removeName(): void {
-       this.state.set(remove(this.get(), 'name'));
-   }
+  // Imperative implementation
+  removeName(): void {
+    this.state.set(remove(this.get(), 'name'));
+  }
 }
 ```
 
@@ -53,8 +49,11 @@ deleteProp(nonObject, 'prop') > nonObject;
 
 ### Signature
 
-```TypeScript
-function deleteProp<T extends object, K extends keyof T>(object: T, key: K): Omit<T, K>
+```typescript
+function deleteProp<T extends object, K extends keyof T>(
+  object: T,
+  key: K
+): Omit<T, K>;
 ```
 
 ### Parameters

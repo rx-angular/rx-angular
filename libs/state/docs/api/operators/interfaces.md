@@ -5,8 +5,8 @@ Should return true if values are equal.
 
 ### Signature
 
-```TypeScript
-type CompareFn<T> = (oldVal: T, newVal: T) => boolean
+```typescript
+type CompareFn<T> = (oldVal: T, newVal: T) => boolean;
 ```
 
 ## KeyCompareMap
@@ -15,27 +15,27 @@ The `KeyCompareMap` is used to configure custom comparison for defined keys.
 
 _Example_
 
-```TypeScript
+```typescript
 const keyCompareMap = {
-   myKey: (o, n) => customCompare(o, n)
- };
- const o$ = of({
-   myKey: 5,
-   myOtherKey: 'bar'
- }).pipe(distinctUntilSomeChanged(['myKey', 'myOtherKey'], keyCompareMap));
+  myKey: (o, n) => customCompare(o, n),
+};
+const o$ = of({
+  myKey: 5,
+  myOtherKey: 'bar',
+}).pipe(distinctUntilSomeChanged(['myKey', 'myOtherKey'], keyCompareMap));
 
- //or
+//or
 
- const o$ = of({
-   myKey: 5,
-   myOtherKey: 'bar'
- }).pipe(selectSlice(['myKey', 'myOtherKey'], keyCompareMap));
+const o$ = of({
+  myKey: 5,
+  myOtherKey: 'bar',
+}).pipe(selectSlice(['myKey', 'myOtherKey'], keyCompareMap));
 ```
 
 ### Signature
 
-```TypeScript
+```typescript
 type KeyCompareMap<T extends object> = {
   [K in keyof Partial<T>]: CompareFn<T[K]>;
-}
+};
 ```

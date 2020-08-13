@@ -7,38 +7,56 @@ Returns a shallow copy of the updated array T[], and does not mutate the origina
 
 _Example_
 
-```TypeScript
+```typescript
 // Removing value without comparison data
 
-const items = [1,2,3,4,5];
+const items = [1, 2, 3, 4, 5];
 
-const updatedItems = remove(items, [1,2,3]);
+const updatedItems = remove(items, [1, 2, 3]);
 
 // updatedItems will be: [4,5];
 ```
 
 _Example_
 
-```TypeScript
+```typescript
 // Removing values with comparison function
 
-const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'unicorn'}, {id: 3, type: 'kobold'}];
+const creatures = [
+  { id: 1, type: 'cat' },
+  { id: 2, type: 'unicorn' },
+  { id: 3, type: 'kobold' },
+];
 
-const nonExistingCreatures = [{id: 2, type: 'unicorn'}, {id: 3, type: 'kobold'}];
+const nonExistingCreatures = [
+  { id: 2, type: 'unicorn' },
+  { id: 3, type: 'kobold' },
+];
 
-const realCreatures = remove(creatures, nonExistingCreatures, (a, b) => a.id === b.id);
+const realCreatures = remove(
+  creatures,
+  nonExistingCreatures,
+  (a, b) => a.id === b.id
+);
 
 // realCreatures will be: [{id: 1, type: 'cat'}];
 ```
 
 _Example_
 
-```TypeScript
+```typescript
 // Removing values with key
 
-const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'unicorn'}, {id: 3, type: 'kobold'}];
+const creatures = [
+  { id: 1, type: 'cat' },
+  { id: 2, type: 'unicorn' },
+  { id: 3, type: 'kobold' },
+];
 
-const nonExistingCreatures = [{id: 2, type: 'unicorn'}, {id: 3, type: 'kobold'}];
+const nonExistingCreatures = [
+  { id: 2, type: 'unicorn' },
+  { id: 3, type: 'kobold' },
+];
 
 const realCreatures = remove(creatures, nonExistingCreatures, 'id');
 
@@ -47,12 +65,19 @@ const realCreatures = remove(creatures, nonExistingCreatures, 'id');
 
 _Example_
 
-```TypeScript
+```typescript
 // Removing values with array of keys
 
-const creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'unicorn'}, {id: 3, type: 'kobold'}];
+const creatures = [
+  { id: 1, type: 'cat' },
+  { id: 2, type: 'unicorn' },
+  { id: 3, type: 'kobold' },
+];
 
-const nonExistingCreatures = [{id: 2, type: 'unicorn'}, {id: 3, type: 'kobold'}];
+const nonExistingCreatures = [
+  { id: 2, type: 'unicorn' },
+  { id: 3, type: 'kobold' },
+];
 
 const realCreatures = remove(creatures, nonExistingCreatures, ['id', 'type']);
 
@@ -61,28 +86,33 @@ const realCreatures = remove(creatures, nonExistingCreatures, ['id', 'type']);
 
 _Example_
 
-```TypeScript
+```typescript
 // Usage with RxState
 
 export class ListComponent {
+  readonly removeCreature$ = new Subject<Creature>();
 
-   readonly removeCreature$ = new Subject<Creature>();
+  constructor(private state: RxState<ComponentState>) {
+    // Reactive implementation
+    state.connect(
+      'creatures',
+      this.removeCreature$,
+      ({ creatures }, creatureToRemove) => {
+        return remove(creatures, creatureToRemove, (a, b) => a.id === b.id);
+      }
+    );
+  }
 
-   constructor(private state: RxState<ComponentState>) {
-     // Reactive implementation
-     state.connect(
-       'creatures',
-       this.removeCreature$,
-       ({ creatures }, creatureToRemove) => {
-           return remove(creatures, creatureToRemove, (a, b) => a.id === b.id);
-       }
-     );
-   }
-
-   // Imperative implementation
-   removeCreature(creatureToRemove: Creature): void {
-       this.state.set({ creatures: remove(this.state.get().creatures, creatureToRemove, (a, b) => a.id === b.id)});
-   }
+  // Imperative implementation
+  removeCreature(creatureToRemove: Creature): void {
+    this.state.set({
+      creatures: remove(
+        this.state.get().creatures,
+        creatureToRemove,
+        (a, b) => a.id === b.id
+      ),
+    });
+  }
 }
 ```
 
@@ -98,8 +128,12 @@ remove(nonArray as any, items) > nonArray;
 
 ### Signature
 
-```TypeScript
-function remove<T>(source: T[], scrap: Partial<T>[] | Partial<T>, compare?: ComparableData<T>): T[]
+```typescript
+function remove<T>(
+  source: T[],
+  scrap: Partial<T>[] | Partial<T>,
+  compare?: ComparableData<T>
+): T[];
 ```
 
 ### Parameters

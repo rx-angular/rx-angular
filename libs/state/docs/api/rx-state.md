@@ -327,8 +327,11 @@ Allows to customize state accumulation function.
 
 _Example_
 
-```Typescript
-const myAccumulator = (state: MyState, slice: Partial<MyState>) => ({...state, ...slice});
+```typescript
+const myAccumulator = (state: MyState, slice: Partial<MyState>) => ({
+  ...state,
+  ...slice,
+});
 
 this.state.setAccumulator(myAccumulator);
 ```
