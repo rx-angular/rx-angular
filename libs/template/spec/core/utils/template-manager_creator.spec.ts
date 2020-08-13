@@ -117,7 +117,7 @@ describe('TemplateManager', () => {
     expect(testComponent.viewContainerRef.insert).toHaveBeenCalledTimes(0);
   });
 
-  it('insertEmbeddedView should throw if a unregistered registered template is used', () => {
+  it('displayView should throw if an unregistered registered template is used', () => {
     const _m: any = templateManager;
     expect(_m.templateCache.size).toBe(0);
     expect(_m.viewCache.size).toBe(0);
