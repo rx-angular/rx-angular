@@ -44,7 +44,7 @@ jobs:
 
           # Name of the branch to use, if different from the one that triggered the workflow
           # Default: the branch that triggered the workflow (from GITHUB_REF)
-          #ref: 'someOtherBranch'
+          ref: 'github-pages'
 
         env:
           # This is necessary in order to push a commit to the repo
