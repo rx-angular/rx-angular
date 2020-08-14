@@ -23,7 +23,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <ng-container *rxLet="value1$; let v">Value1: {{ v }}</ng-container>
     <ng-container *rxLet="value1$; let v">Value1: {{ v }}</ng-container>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class LetParent12Component extends BaseComponent {
   @ViewChild('button') button: ElementRef<HTMLButtonElement>;

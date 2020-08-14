@@ -10,7 +10,7 @@ import { map } from 'rxjs/operators';
     ><br />
     <dynamic1-counter> </dynamic1-counter>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DynamicCounter1ContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();

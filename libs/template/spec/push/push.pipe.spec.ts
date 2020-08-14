@@ -2,6 +2,8 @@ import { PushPipe } from '../../src/lib/push';
 import { TestBed } from '@angular/core/testing';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { mockConsole } from '@test-helpers';
 
 function wrapWithSpace(str: string): string {
   return ' ' + str + ' ';
@@ -46,6 +48,8 @@ const setupPushPipeComponent = () => {
 };
 
 describe('PushPipe used as pipe in the template', () => {
+  beforeAll(() => mockConsole());
+
   beforeEach(setupPushPipeComponent);
 
   it('should be instantiable', () => {

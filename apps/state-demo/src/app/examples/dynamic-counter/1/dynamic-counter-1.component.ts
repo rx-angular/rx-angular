@@ -5,7 +5,7 @@ import {
   withLatestFrom,
   switchMap,
   tap,
-  pluck
+  pluck,
 } from 'rxjs/operators';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
@@ -31,7 +31,7 @@ const initialCounterState = {
   count: 0,
   countUp: true,
   tickSpeed: 200,
-  countDiff: 1
+  countDiff: 1,
 };
 
 @Component({
@@ -91,7 +91,7 @@ const initialCounterState = {
       </mat-form-field>
     </form>
   `,
-  styleUrls: ['./dynamic-counter-1.component.scss']
+  styleUrls: ['./dynamic-counter-1.component.scss'],
 })
 export class Counter1Component extends RxState<CounterState> {
   initialCounterState = initialCounterState;
@@ -99,7 +99,7 @@ export class Counter1Component extends RxState<CounterState> {
   counterForm = this.fb.group({
     tickSpeed: [],
     count: [],
-    countDiff: []
+    countDiff: [],
   });
   counterForm$ = this.counterForm.valueChanges;
 
@@ -126,7 +126,7 @@ export class Counter1Component extends RxState<CounterState> {
 
     const tick$ = combineLatest([
       this.select('isTicking'),
-      this.select('tickSpeed')
+      this.select('tickSpeed'),
     ]).pipe(switchMap(([isTicking, ms]) => (isTicking ? timer(0, ms) : EMPTY)));
 
     this.connect(
@@ -138,11 +138,11 @@ export class Counter1Component extends RxState<CounterState> {
 }
 
 function pluckDistinct<T>(key: string) {
-  return o$ =>
+  return (o$) =>
     o$.pipe(
       stateful(
         pluck(key),
-        map(v => ({ [key]: v }))
+        map((v) => ({ [key]: v }))
       )
     );
 }

@@ -20,10 +20,10 @@ import { DemoBasicsAdapterService } from './demo-basics.adapter.service';
       .list .mat-expansion-panel-content .mat-expansion-panel-body {
         padding-top: 10px;
       }
-    `
+    `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DemoBasicsViewModelService, DemoBasicsAdapterService]
+  providers: [DemoBasicsViewModelService, DemoBasicsAdapterService],
 })
 export class DemoBasicsComponent extends RxState<any> {
   @Input()
@@ -44,6 +44,6 @@ export class DemoBasicsComponent extends RxState<any> {
 
     this.vm.connect('list', this.ca.list$);
     this.vm.connect('isPending', this.ca.loadingSignal$);
-    this.hold(this.vm.refreshListSideEffect$, _ => this.ca.refetchList());
+    this.hold(this.vm.refreshListSideEffect$, (_) => this.ca.refetchList());
   }
 }

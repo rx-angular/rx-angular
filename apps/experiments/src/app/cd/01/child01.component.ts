@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import { BaseComponent } from '../../base.component.ts/base.component';
 
@@ -23,6 +23,6 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.Default,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class Child0101Component extends BaseComponent {}

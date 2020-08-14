@@ -27,10 +27,10 @@ import { MessagesComponent } from './messages/messages.component';
     // and returns simulated server responses.
     // Remove it when a real server is ready to receive requests.
     HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {
-      dataEncapsulation: false
+      dataEncapsulation: false,
     }),
     LetModule,
-    PushModule
+    PushModule,
   ],
   declarations: [
     AppComponent,
@@ -38,8 +38,8 @@ import { MessagesComponent } from './messages/messages.component';
     HeroesComponent,
     HeroDetailComponent,
     MessagesComponent,
-    HeroSearchComponent
+    HeroSearchComponent,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -4,6 +4,6 @@ import { ViewportPrioDirective } from './viewport-prio.directive';
 const DECLARATIONS = [ViewportPrioDirective];
 @NgModule({
   declarations: DECLARATIONS,
-  exports: DECLARATIONS
+  exports: DECLARATIONS,
 })
 export class ViewportPrioModule {}

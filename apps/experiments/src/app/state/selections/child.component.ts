@@ -7,7 +7,7 @@ import {
   range,
   ReplaySubject,
   Subject,
-  Subscription
+  Subscription,
 } from 'rxjs';
 import {
   map,
@@ -16,7 +16,7 @@ import {
   startWith,
   switchMap,
   takeUntil,
-  tap
+  tap,
 } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 import { BaseComponent } from '../../base.component.ts/base.component';
@@ -36,7 +36,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
       </form>
     </div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
   // providers: [SubscriptionHandlingService]
 })
 export class RxStateChildSelectionsComponent {
@@ -51,7 +51,7 @@ export class RxStateChildSelectionsComponent {
 
   formGroup$: Observable<FormGroup> = this.state$.pipe(
     startWith({}),
-    map(input => this.getFormGroupFromConfig(input))
+    map((input) => this.getFormGroupFromConfig(input))
   );
 
   @Output() formValueChange = this.formGroup$.pipe(

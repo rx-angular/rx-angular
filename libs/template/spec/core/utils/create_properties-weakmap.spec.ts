@@ -1,4 +1,6 @@
 import { createPropertiesWeakMap } from '../../../src/lib/core/utils';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { mockConsole } from '@test-helpers';
 
 const propertyNameString = 'flag';
 const propertyNameSymbol = Symbol('flag');
@@ -10,11 +12,14 @@ const initialContextObjectState = {
   flag: 'original value'
 };
 
+
 //  **NOTICE:**
 //  [WeakMaps](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap)
 //  don't hold hard references, so garbage collection will happen
 
 describe('propertiesWeakMap', () => {
+  beforeAll(() => mockConsole());
+
   beforeEach(() => {
     contextObject = { ...initialContextObjectState };
   });

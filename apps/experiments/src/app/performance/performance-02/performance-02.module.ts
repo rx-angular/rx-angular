@@ -27,7 +27,7 @@ import { ROUTES as PERFORMANCE_2_ROUTES } from '../performance-02/performance-02
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
-  ]
+    MatSelectModule,
+  ],
 })
 export class Performance02Module {}

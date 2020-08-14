@@ -9,7 +9,7 @@ import { MENU_ITEMS } from './app.menu';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   thisRef = this;
@@ -25,9 +25,9 @@ export class AppComponent {
   ) {
     this.router.events
       .pipe(
-        filter(e => e instanceof NavigationEnd),
+        filter((e) => e instanceof NavigationEnd),
         filter(() => !isNgZone(ngZone)),
-        tap(e => this.appRef.tick())
+        tap((e) => this.appRef.tick())
       )
       .subscribe();
   }

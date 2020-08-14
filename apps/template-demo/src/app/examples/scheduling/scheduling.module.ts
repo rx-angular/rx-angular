@@ -8,18 +8,18 @@ export const ROUTES = [
   {
     path: '',
     pathMatch: 'full',
-    component: SchedulingComponent
+    component: SchedulingComponent,
   },
   {
     path: 'solution',
-    component: SchedulingComponent
-  }
+    component: SchedulingComponent,
+  },
 ];
 const DECLARATIONS = [SchedulingComponent];
 
 @NgModule({
   declarations: [DECLARATIONS],
   imports: [CommonModule, RouterModule.forChild(ROUTES), TemplateModule],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
 export class SchedulingModule {}

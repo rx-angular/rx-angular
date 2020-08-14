@@ -5,7 +5,7 @@ export enum AppRenderStrategy {
   noop = 'noop',
   native = 'native',
   local = 'local',
-  global = 'global'
+  global = 'global',
 }
 
 export interface AppConfig {
@@ -13,7 +13,7 @@ export interface AppConfig {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConfigService {
   // doing this in order to NOT expose the full state API. We don't have to unsubscribe in a global service either.

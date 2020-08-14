@@ -26,7 +26,7 @@ import { LetParent12Component } from './12/parent.component';
     LetParent03Component,
     LetParent11Component,
     LetParent12Component,
-    LetOverviewComponent
+    LetOverviewComponent,
   ],
   imports: [
     CommonModule,
@@ -40,7 +40,7 @@ import { LetParent12Component } from './12/parent.component';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    TemplateModule
-  ]
+    TemplateModule,
+  ],
 })
 export class LetModule {}

@@ -98,8 +98,8 @@ export function remove<T>(
     return source;
   }
 
-  return source.filter(existingItem => {
-    return !scrapAsArray.some(item =>
+  return source.filter((existingItem) => {
+    return !scrapAsArray.some((item) =>
       valuesComparer(item as T, existingItem, compare)
     );
   });

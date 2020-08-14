@@ -3,7 +3,7 @@ import {
   Directive,
   ElementRef,
   Input,
-  OnDestroy
+  OnDestroy,
 } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -32,7 +32,7 @@ export function unpatchEventListener(elem: HTMLElement, event: string): void {
   const addEventListener = getZoneUnPatchedApi('addEventListener', elem).bind(
     elem
   );
-  eventListeners.forEach(listener => {
+  eventListeners.forEach((listener) => {
     // Remove and reapply listeners with patched API
     elem.removeEventListener(event, listener);
     // Reapply listeners with un-patched API
@@ -95,7 +95,7 @@ export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
   }
 
   reapplyEventListenersZoneUnPatched(events) {
-    events.forEach(ev => {
+    events.forEach((ev) => {
       unpatchEventListener(this.el.nativeElement, ev);
     });
   }
@@ -109,7 +109,7 @@ export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.subscription = this.events$
       .pipe(
-        tap(eventList => this.reapplyEventListenersZoneUnPatched(eventList))
+        tap((eventList) => this.reapplyEventListenersZoneUnPatched(eventList))
       )
       .subscribe();
   }

@@ -14,6 +14,6 @@ import { BaseComponent } from '../../base.component.ts/base.component';
       >
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Child0602Component extends BaseComponent {}

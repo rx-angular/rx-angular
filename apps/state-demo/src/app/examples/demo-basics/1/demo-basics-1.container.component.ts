@@ -21,7 +21,7 @@ import { map } from 'rxjs/operators';
     >
     </demo-basics-1-start>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoBasics1ContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();

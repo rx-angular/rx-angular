@@ -9,11 +9,11 @@ import {
   pluck,
   shareReplay,
   startWith,
-  withLatestFrom
+  withLatestFrom,
 } from 'rxjs/operators';
 import {
   Performance03DataService,
-  Person
+  Person,
 } from './performance-03-data.service';
 import { environment } from '../../../../environments/environment';
 import { RxState } from '@rx-angular/state';
@@ -34,7 +34,7 @@ export interface Performance03State {
   selector: 'app-performance-03-index',
   templateUrl: './performance03-index.component.html',
   styleUrls: ['./performance03-index.component.scss'],
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Performance03IndexComponent extends RxState<Performance03State>
   implements OnInit {
@@ -47,7 +47,7 @@ export class Performance03IndexComponent extends RxState<Performance03State>
     'eyeColor',
     'company',
     'phone',
-    'address'
+    'address',
   ];
   readonly viewState$: Observable<Performance03State> = this.$;
   readonly data$ = this.$.pipe(
@@ -55,7 +55,7 @@ export class Performance03IndexComponent extends RxState<Performance03State>
     distinctUntilChanged(),
     shareReplay({
       refCount: true,
-      bufferSize: 1
+      bufferSize: 1,
     })
   );
   readonly filter$ = this.$.pipe(pluck('filter'), distinctUntilChanged());
@@ -64,7 +64,7 @@ export class Performance03IndexComponent extends RxState<Performance03State>
     distinctUntilChanged(),
     shareReplay({
       refCount: true,
-      bufferSize: 1
+      bufferSize: 1,
     })
   );
 
@@ -88,25 +88,25 @@ export class Performance03IndexComponent extends RxState<Performance03State>
       checkboxLabels: {},
       rowSelectionState: {},
       anySelected: false,
-      allSelected: false
+      allSelected: false,
     });
     this.connect(
       combineLatest([
         this.selection.changed.pipe(
-          map(change => change.source.selected),
+          map((change) => change.source.selected),
           startWith([])
         ),
-        this.data$
+        this.data$,
       ]).pipe(
         map(([selected, data]) => {
           const anySelected = selected.length > 0;
           const allSelected = anySelected && selected.length === 0;
           const rowSelectionState = {};
           if (selected.length > 0) {
-            selected.forEach(p => (rowSelectionState[p._id] = true));
+            selected.forEach((p) => (rowSelectionState[p._id] = true));
           }
           const checkboxLabels: { [key: string]: string } = {};
-          data.forEach(p => {
+          data.forEach((p) => {
             checkboxLabels[p._id] = this.checkboxLabel(
               p,
               allSelected,
@@ -121,7 +121,7 @@ export class Performance03IndexComponent extends RxState<Performance03State>
             allSelected,
             masterCheckboxLabel,
             checkboxLabels,
-            rowSelectionState
+            rowSelectionState,
           };
         })
       )
@@ -138,7 +138,7 @@ export class Performance03IndexComponent extends RxState<Performance03State>
         if (allSelected) {
           this.selection.clear();
         } else {
-          data.forEach(d => this.selection.select(d));
+          data.forEach((d) => this.selection.select(d));
         }
       }
     );
@@ -160,7 +160,7 @@ export class Performance03IndexComponent extends RxState<Performance03State>
   filterData(data: Person[], f: string): Person[] {
     if (!!f) {
       const filterValue = f.toLowerCase();
-      return data.filter(p => {
+      return data.filter((p) => {
         return (
           p.name.toLowerCase().includes(filterValue) ||
           p.balance.toLowerCase().includes(filterValue) ||
@@ -168,10 +168,7 @@ export class Performance03IndexComponent extends RxState<Performance03State>
           p.company.toLowerCase().includes(filterValue) ||
           p.phone.toLowerCase().includes(filterValue) ||
           p.address.toLowerCase().includes(filterValue) ||
-          p.age
-            .toString()
-            .toLowerCase()
-            .includes(filterValue)
+          p.age.toString().toLowerCase().includes(filterValue)
         );
       });
     }

@@ -21,7 +21,7 @@ export type CancelIdleCallback = (idleId: IdleId) => void;
 export const cancelIdleCallback: CancelIdleCallback =
   typeof window !== 'undefined'
     ? (window as any).cancelIdleCallback ||
-      function(idleId: IdleId): void {
+      function (idleId: IdleId): void {
         console.warn('Fake cancelIdleCallback used');
         clearTimeout(idleId);
       }
@@ -30,15 +30,15 @@ export const cancelIdleCallback: CancelIdleCallback =
 export const requestIdleCallback: RequestIdleCallback =
   typeof window !== 'undefined'
     ? (window as any).requestIdleCallback ||
-      function(cb: Function) {
+      function (cb: Function) {
         console.warn('Fake requestIdleCallback used');
         const start = Date.now();
-        return setTimeout(function() {
+        return setTimeout(function () {
           cb({
             didTimeout: false,
-            timeRemaining: function() {
+            timeRemaining: function () {
               return Math.max(0, 50 - (Date.now() - start));
-            }
+            },
           });
         }, 1);
       }

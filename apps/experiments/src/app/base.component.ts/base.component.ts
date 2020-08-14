@@ -8,7 +8,7 @@ import {
   OnDestroy,
   ɵdetectChanges,
   ɵmarkDirty,
-  Directive
+  Directive,
 } from '@angular/core';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { CdConfigService } from '../cd-config.service';

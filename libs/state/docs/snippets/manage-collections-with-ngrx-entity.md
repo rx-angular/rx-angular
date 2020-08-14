@@ -1,4 +1,7 @@
+_Author: [@Phhansen](https://github.com/Phhansen)_
+
 # Manage entities using `@ngrx/entity`
+
 When working with collections or arrays in our state, we tend to write a lot of repeated code when we want to add, update or delete items from these collections.
 
 In NgRx they have created a helper library called [@ngrx/entity adapter](https://ngrx.io/guide/entity/adapter). The adapter provides a simple API to manipulate and query these collections, hiding a lot of the repetetive code needed.
@@ -12,8 +15,8 @@ interface Item {
 }
 
 interface ComponentState {
-    items: Item[];
-    loading: boolean;
+  items: Item[];
+  loading: boolean;
 }
 ```
 
@@ -21,27 +24,26 @@ Now if we want to add one item to our array _(in an immutable way)_, we replace 
 
 ```typescript
 @Component({
-    selector: "my-component"
+  selector: 'my-component',
 })
 export class MyComponent extends RxState<ComponentState> {
+  readonly addItem$ = new Subject<string>();
 
-    readonly addItem$ = new Subject<string>();
+  constructor() {
+    super();
 
-    constructor() {
-        super();
+    this.connect(this.addItem$, (oldState, itemName) => {
+      const newItem = {
+        id: uuid(), // unique hash generation fn()
+        name: itemName,
+      };
 
-        this.connect(this.addItem$, (oldState, itemName) => {
-            const newItem = {
-                id: uuid(), // unique hash generation fn()
-                name: itemName
-            };
-
-            return {
-                ...oldState,
-                items: [...oldState.items, newItem]
-            };
-        });
-    }
+      return {
+        ...oldState,
+        items: [...oldState.items, newItem],
+      };
+    });
+  }
 }
 ```
 
@@ -50,6 +52,7 @@ Now if we want to update one item, we have query the `items` array to first get 
 What about deleting an item? You get the picture. **It´s a lot of code**, and it will grow even more if we have several types of collections in our state.
 
 ## Using `@ngrx/entity`
+
 Now let us see how our code will look when using `@ngrx/entity`.
 
 ```typescript
@@ -59,11 +62,11 @@ interface Item {
 }
 
 interface ComponentState extends EntityState<Item> {
-    loading: boolean;
+  loading: boolean;
 }
 
 const adapter: EntityAdapter<Item> = createEntityAdapter<Item>({
-    selectId: (item: Item) => item.id
+  selectId: (item: Item) => item.id,
 });
 ```
 
@@ -73,17 +76,18 @@ Now lets see how the component has changed.
 
 ```typescript
 @Component({
-    selector: "my-component"
+  selector: 'my-component',
 })
 export class MyComponent extends RxState<ComponentState> {
+  readonly addItem$ = new Subject<string>();
 
-    readonly addItem$ = new Subject<string>();
+  constructor() {
+    super();
 
-    constructor() {
-        super();
-
-        this.connect(this.addItem$, (oldState, itemName) => adapter.addOne({ id: uuid(), name: itemName()}, oldState));
-    }
+    this.connect(this.addItem$, (oldState, itemName) =>
+      adapter.addOne({ id: uuid(), name: itemName() }, oldState)
+    );
+  }
 }
 ```
 
@@ -94,27 +98,27 @@ Delete an item? `removeOne(item.id, oldState)`.
 Check out the [full list of adapter collection methods](https://ngrx.io/guide/entity/adapter#adapter-collection-methods)
 
 ## Selecting state with `@ngrx/entity`
+
 The entity adapter comes with a small set of default selectors we can use right out of the box.
 
 ```typescript
-import { select } from "@ngrx/store";
+import { select } from '@ngrx/store';
 
 const {
   selectIds,
   selectEntities,
   selectAll,
-  selectTotal
+  selectTotal,
 } = adapter.getSelectors();
 
 @Component({
-    selector: "my-component"
+  selector: 'my-component',
 })
 export class MyComponent extends RxState<ComponentState> {
+  readonly items$ = this.select(select(selectAll));
 
-    readonly items$ = this.select(select(selectAll));
-
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 }
 ```

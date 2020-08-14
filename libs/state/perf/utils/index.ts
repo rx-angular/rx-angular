@@ -17,17 +17,17 @@ export interface BenchmarkSuite {
 export function runBenchmarkSuite(benchmarkSuite: BenchmarkSuite) {
   const suite = new Benchmark.Suite();
   const listeners: BenchmarkListener = {
-    cycle: function(event: Event) {
+    cycle: function (event: Event) {
       console.log(String(event.target));
     },
-    complete: function() {
+    complete: function () {
       console.log('Fastest is ' + this.filter('fastest').map('name'));
     },
-    ...(benchmarkSuite.listeners ? benchmarkSuite.listeners : {})
+    ...(benchmarkSuite.listeners ? benchmarkSuite.listeners : {}),
   };
   const options: Benchmark.Options = {
     async: true,
-    ...(benchmarkSuite.options ? benchmarkSuite.options : {})
+    ...(benchmarkSuite.options ? benchmarkSuite.options : {}),
   };
 
   // Add tests

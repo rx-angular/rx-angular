@@ -1,7 +1,8 @@
 # @rx-angular/template
 
-[![rx-angular](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
-[![npm version](https://badge.fury.io/js/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/@rx-angular/template)
+[![npm](https://img.shields.io/npm/v/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/package/%40rx-angular%2Ftemplate)
+![rx-angular CI](https://github.com/BioPhoton/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
+[![Coverage Status](https://github.com/BioPhoton/rx-angular/blob/github-pages/docs/test-coverage/template/jest-coverage-badge.svg)](https://biophoton.github.io/rx-angular/test-coverage/template/lcov-report/index.html)
 
 ## Reactive Template Rendering for Angular
 
