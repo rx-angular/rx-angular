@@ -1,24 +1,24 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="344" lines-covered="344" line-rate="1" branches-valid="216" branches-covered="216" branch-rate="1" timestamp="1596988005539" complexity="0" version="0.1">
+<coverage lines-valid="345" lines-covered="345" line-rate="1" branches-valid="216" branches-covered="216" branch-rate="1" timestamp="1597362550548" complexity="0" version="0.1">
   <sources>
-    <source>C:\Users\micha\git\rx-angular</source>
+    <source>/home/runner/work/rx-angular/rx-angular</source>
   </sources>
   <packages>
     <package name="src" line-rate="1" branch-rate="1">
       <classes>
-        <class name="index.ts" filename="libs\state\src\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/state/src/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
-            <line number="1" hits="21" branch="false"/>
+            <line number="1" hits="15" branch="false"/>
           </lines>
         </class>
       </classes>
     </package>
     <package name="src.lib" line-rate="1" branch-rate="1">
       <classes>
-        <class name="index.ts" filename="libs\state\src\lib\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/state/src/lib/index.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="93" signature="()V">
               <lines>
@@ -111,7 +111,7 @@
             <line number="19" hits="24" branch="false"/>
           </lines>
         </class>
-        <class name="rx-state.service.ts" filename="libs\state\src\lib\rx-state.service.ts" line-rate="1" branch-rate="1">
+        <class name="rx-state.service.ts" filename="libs/state/src/lib/rx-state.service.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="100" signature="()V">
               <lines>
@@ -145,32 +145,32 @@
             </method>
             <method name="(anonymous_6)" hits="9" signature="()V">
               <lines>
-                <line number="355" hits="9"/>
+                <line number="356" hits="9"/>
               </lines>
             </method>
             <method name="(anonymous_7)" hits="20" signature="()V">
               <lines>
-                <line number="367" hits="20"/>
+                <line number="369" hits="20"/>
               </lines>
             </method>
             <method name="(anonymous_8)" hits="6" signature="()V">
               <lines>
-                <line number="380" hits="6"/>
+                <line number="382" hits="6"/>
               </lines>
             </method>
             <method name="(anonymous_9)" hits="55" signature="()V">
               <lines>
-                <line number="523" hits="55"/>
+                <line number="525" hits="55"/>
               </lines>
             </method>
             <method name="(anonymous_10)" hits="2" signature="()V">
               <lines>
-                <line number="557" hits="2"/>
+                <line number="559" hits="2"/>
               </lines>
             </method>
             <method name="(anonymous_11)" hits="110" signature="()V">
               <lines>
-                <line number="573" hits="110"/>
+                <line number="575" hits="110"/>
               </lines>
             </method>
           </methods>
@@ -207,44 +207,45 @@
             <line number="345" hits="2" branch="false"/>
             <line number="348" hits="23" branch="true" condition-coverage="100% (2/2)"/>
             <line number="354" hits="4" branch="false"/>
-            <line number="355" hits="9" branch="false"/>
-            <line number="356" hits="4" branch="false"/>
-            <line number="357" hits="4" branch="false"/>
-            <line number="360" hits="19" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="365" hits="15" branch="false"/>
-            <line number="366" hits="15" branch="false"/>
-            <line number="367" hits="20" branch="false"/>
-            <line number="369" hits="15" branch="false"/>
-            <line number="370" hits="15" branch="false"/>
-            <line number="373" hits="4" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="378" hits="3" branch="false"/>
-            <line number="379" hits="3" branch="false"/>
-            <line number="380" hits="6" branch="false"/>
-            <line number="382" hits="3" branch="false"/>
-            <line number="383" hits="3" branch="false"/>
-            <line number="386" hits="1" branch="false"/>
-            <line number="526" hits="55" branch="true" condition-coverage="100% (4/4)"/>
-            <line number="527" hits="24" branch="false"/>
-            <line number="528" hits="31" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="529" hits="28" branch="false"/>
-            <line number="530" hits="3" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="531" hits="2" branch="false"/>
-            <line number="533" hits="1" branch="false"/>
-            <line number="561" hits="2" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="562" hits="1" branch="false"/>
-            <line number="565" hits="1" branch="false"/>
+            <line number="355" hits="4" branch="false"/>
+            <line number="356" hits="9" branch="false"/>
+            <line number="358" hits="4" branch="false"/>
+            <line number="359" hits="4" branch="false"/>
+            <line number="362" hits="19" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="367" hits="15" branch="false"/>
+            <line number="368" hits="15" branch="false"/>
+            <line number="369" hits="20" branch="false"/>
+            <line number="371" hits="15" branch="false"/>
+            <line number="372" hits="15" branch="false"/>
+            <line number="375" hits="4" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="380" hits="3" branch="false"/>
+            <line number="381" hits="3" branch="false"/>
+            <line number="382" hits="6" branch="false"/>
+            <line number="384" hits="3" branch="false"/>
+            <line number="385" hits="3" branch="false"/>
+            <line number="388" hits="1" branch="false"/>
+            <line number="528" hits="55" branch="true" condition-coverage="100% (4/4)"/>
+            <line number="529" hits="24" branch="false"/>
+            <line number="530" hits="31" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="531" hits="28" branch="false"/>
+            <line number="532" hits="3" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="533" hits="2" branch="false"/>
+            <line number="535" hits="1" branch="false"/>
+            <line number="563" hits="2" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="564" hits="1" branch="false"/>
             <line number="567" hits="1" branch="false"/>
-            <line number="574" hits="110" branch="false"/>
-            <line number="575" hits="110" branch="false"/>
+            <line number="569" hits="1" branch="false"/>
             <line number="576" hits="110" branch="false"/>
             <line number="577" hits="110" branch="false"/>
+            <line number="578" hits="110" branch="false"/>
+            <line number="579" hits="110" branch="false"/>
           </lines>
         </class>
       </classes>
     </package>
     <package name="src.lib.core" line-rate="1" branch-rate="1">
       <classes>
-        <class name="accumulation-observable.ts" filename="libs\state\src\lib\core\accumulation-observable.ts" line-rate="1" branch-rate="1">
+        <class name="accumulation-observable.ts" filename="libs/state/src/lib/core/accumulation-observable.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="105" signature="()V">
               <lines>
@@ -328,7 +329,7 @@
             <line number="106" hits="129" branch="false"/>
           </lines>
         </class>
-        <class name="index.ts" filename="libs\state\src\lib\core\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/state/src/lib/core/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -338,7 +339,7 @@
             <line number="4" hits="17" branch="false"/>
           </lines>
         </class>
-        <class name="side-effect-observable.ts" filename="libs\state\src\lib\core\side-effect-observable.ts" line-rate="1" branch-rate="1">
+        <class name="side-effect-observable.ts" filename="libs/state/src/lib/core/side-effect-observable.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="createSideEffectObservable" hits="102" signature="()V">
               <lines>
@@ -370,7 +371,7 @@
     </package>
     <package name="src.lib.core.utils" line-rate="1" branch-rate="1">
       <classes>
-        <class name="index.ts" filename="libs\state\src\lib\core\utils\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/state/src/lib/core/utils/index.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="56" signature="()V">
               <lines>
@@ -431,7 +432,7 @@
             <line number="11" hits="26" branch="false"/>
           </lines>
         </class>
-        <class name="pipe-from-array.ts" filename="libs\state\src\lib\core\utils\pipe-from-array.ts" line-rate="1" branch-rate="1">
+        <class name="pipe-from-array.ts" filename="libs/state/src/lib/core/utils/pipe-from-array.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="pipeFromArray" hits="56" signature="()V">
               <lines>
@@ -461,7 +462,7 @@
             <line number="16" hits="14" branch="false"/>
           </lines>
         </class>
-        <class name="safe-pluck.ts" filename="libs\state\src\lib\core\utils\safe-pluck.ts" line-rate="1" branch-rate="1">
+        <class name="safe-pluck.ts" filename="libs/state/src/lib/core/utils/safe-pluck.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="safePluck" hits="5" signature="()V">
               <lines>
@@ -484,7 +485,7 @@
             <line number="35" hits="5" branch="false"/>
           </lines>
         </class>
-        <class name="typing.ts" filename="libs\state\src\lib\core\utils\typing.ts" line-rate="1" branch-rate="1">
+        <class name="typing.ts" filename="libs/state/src/lib/core/utils/typing.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="isPromiseGuard" hits="4" signature="()V">
               <lines>
@@ -559,7 +560,7 @@
     </package>
     <package name="src.lib.rxjs.operators" line-rate="1" branch-rate="1">
       <classes>
-        <class name="distinctUntilSomeChanged.ts" filename="libs\state\src\lib\rxjs\operators\distinctUntilSomeChanged.ts" line-rate="1" branch-rate="1">
+        <class name="distinctUntilSomeChanged.ts" filename="libs/state/src/lib/rxjs/operators/distinctUntilSomeChanged.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="safePluck" hits="414" signature="()V">
               <lines>
@@ -588,22 +589,22 @@
             </method>
             <method name="(anonymous_5)" hits="50" signature="()V">
               <lines>
-                <line number="105" hits="50"/>
+                <line number="106" hits="50"/>
               </lines>
             </method>
             <method name="(anonymous_6)" hits="42" signature="()V">
               <lines>
-                <line number="111" hits="42"/>
+                <line number="112" hits="42"/>
               </lines>
             </method>
             <method name="(anonymous_7)" hits="50" signature="()V">
               <lines>
-                <line number="113" hits="50"/>
+                <line number="114" hits="50"/>
               </lines>
             </method>
             <method name="(anonymous_8)" hits="189" signature="()V">
               <lines>
-                <line number="117" hits="189"/>
+                <line number="119" hits="189"/>
               </lines>
             </method>
           </methods>
@@ -614,17 +615,17 @@
             <line number="93" hits="19" branch="false"/>
             <line number="98" hits="63" branch="false"/>
             <line number="99" hits="147" branch="false"/>
-            <line number="100" hits="157" branch="false"/>
-            <line number="104" hits="63" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="105" hits="10" branch="false"/>
-            <line number="106" hits="50" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="111" hits="10" branch="false"/>
-            <line number="112" hits="42" branch="false"/>
-            <line number="113" hits="50" branch="false"/>
-            <line number="117" hits="189" branch="false"/>
+            <line number="101" hits="157" branch="false"/>
+            <line number="105" hits="63" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="106" hits="10" branch="false"/>
+            <line number="107" hits="50" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="112" hits="10" branch="false"/>
+            <line number="113" hits="42" branch="false"/>
+            <line number="115" hits="50" branch="false"/>
+            <line number="119" hits="189" branch="false"/>
           </lines>
         </class>
-        <class name="index.ts" filename="libs\state\src\lib\rxjs\operators\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/state/src/lib/rxjs/operators/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -634,7 +635,7 @@
             <line number="4" hits="18" branch="false"/>
           </lines>
         </class>
-        <class name="select.ts" filename="libs\state\src\lib\rxjs\operators\select.ts" line-rate="1" branch-rate="1">
+        <class name="select.ts" filename="libs/state/src/lib/rxjs/operators/select.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="select" hits="20" signature="()V">
               <lines>
@@ -662,7 +663,7 @@
             <line number="174" hits="1" branch="false"/>
           </lines>
         </class>
-        <class name="selectSlice.ts" filename="libs\state\src\lib\rxjs\operators\selectSlice.ts" line-rate="1" branch-rate="1">
+        <class name="selectSlice.ts" filename="libs/state/src/lib/rxjs/operators/selectSlice.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="selectSlice" hits="32" signature="()V">
               <lines>
@@ -725,7 +726,7 @@
             <line number="109" hits="127" branch="false"/>
           </lines>
         </class>
-        <class name="stateful.ts" filename="libs\state\src\lib\rxjs\operators\stateful.ts" line-rate="1" branch-rate="1">
+        <class name="stateful.ts" filename="libs/state/src/lib/rxjs/operators/stateful.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="stateful" hits="80" signature="()V">
               <lines>
@@ -764,7 +765,7 @@
     </package>
     <package name="src.lib.transformation-helpers._internals" line-rate="1" branch-rate="1">
       <classes>
-        <class name="valuesComparer.util.ts" filename="libs\state\src\lib\transformation-helpers\_internals\valuesComparer.util.ts" line-rate="1" branch-rate="1">
+        <class name="valuesComparer.util.ts" filename="libs/state/src/lib/transformation-helpers/_internals/valuesComparer.util.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="valuesComparer" hits="79" signature="()V">
               <lines>
@@ -804,7 +805,7 @@
     </package>
     <package name="src.lib.transformation-helpers.array" line-rate="1" branch-rate="1">
       <classes>
-        <class name="index.ts" filename="libs\state\src\lib\transformation-helpers\array\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/state/src/lib/transformation-helpers/array/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -814,7 +815,7 @@
             <line number="4" hits="15" branch="false"/>
           </lines>
         </class>
-        <class name="insert.ts" filename="libs\state\src\lib\transformation-helpers\array\insert.ts" line-rate="1" branch-rate="1">
+        <class name="insert.ts" filename="libs/state/src/lib/transformation-helpers/array/insert.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="insert" hits="27" signature="()V">
               <lines>
@@ -835,7 +836,7 @@
             <line number="74" hits="22" branch="false"/>
           </lines>
         </class>
-        <class name="remove.ts" filename="libs\state\src\lib\transformation-helpers\array\remove.ts" line-rate="1" branch-rate="1">
+        <class name="remove.ts" filename="libs/state/src/lib/transformation-helpers/array/remove.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="remove" hits="21" signature="()V">
               <lines>
@@ -867,7 +868,7 @@
             <line number="103" hits="35" branch="false"/>
           </lines>
         </class>
-        <class name="toDictionary.ts" filename="libs\state\src\lib\transformation-helpers\array\toDictionary.ts" line-rate="1" branch-rate="1">
+        <class name="toDictionary.ts" filename="libs/state/src/lib/transformation-helpers/array/toDictionary.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="toDictionary" hits="13" signature="()V">
               <lines>
@@ -892,7 +893,7 @@
             <line number="69" hits="9" branch="false"/>
           </lines>
         </class>
-        <class name="update.ts" filename="libs\state\src\lib\transformation-helpers\array\update.ts" line-rate="1" branch-rate="1">
+        <class name="update.ts" filename="libs/state/src/lib/transformation-helpers/array/update.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="update" hits="21" signature="()V">
               <lines>
@@ -936,7 +937,7 @@
     </package>
     <package name="src.lib.transformation-helpers.object" line-rate="1" branch-rate="1">
       <classes>
-        <class name="deleteProp.ts" filename="libs\state\src\lib\transformation-helpers\object\deleteProp.ts" line-rate="1" branch-rate="1">
+        <class name="deleteProp.ts" filename="libs/state/src/lib/transformation-helpers/object/deleteProp.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="deleteProp" hits="12" signature="()V">
               <lines>
@@ -958,7 +959,7 @@
             <line number="63" hits="4" branch="false"/>
           </lines>
         </class>
-        <class name="dictionaryToArray.ts" filename="libs\state\src\lib\transformation-helpers\object\dictionaryToArray.ts" line-rate="1" branch-rate="1">
+        <class name="dictionaryToArray.ts" filename="libs/state/src/lib/transformation-helpers/object/dictionaryToArray.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="dictionaryToArray" hits="9" signature="()V">
               <lines>
@@ -977,7 +978,7 @@
             <line number="65" hits="4" branch="false"/>
           </lines>
         </class>
-        <class name="index.ts" filename="libs\state\src\lib\transformation-helpers\object\index.ts" line-rate="1" branch-rate="1">
+        <class name="index.ts" filename="libs/state/src/lib/transformation-helpers/object/index.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
@@ -988,7 +989,7 @@
             <line number="5" hits="15" branch="false"/>
           </lines>
         </class>
-        <class name="patch.ts" filename="libs\state\src\lib\transformation-helpers\object\patch.ts" line-rate="1" branch-rate="1">
+        <class name="patch.ts" filename="libs/state/src/lib/transformation-helpers/object/patch.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="patch" hits="17" signature="()V">
               <lines>
@@ -1009,7 +1010,7 @@
             <line number="65" hits="9" branch="false"/>
           </lines>
         </class>
-        <class name="setProp.ts" filename="libs\state\src\lib\transformation-helpers\object\setProp.ts" line-rate="1" branch-rate="1">
+        <class name="setProp.ts" filename="libs/state/src/lib/transformation-helpers/object/setProp.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="setProp" hits="14" signature="()V">
               <lines>
@@ -1034,7 +1035,7 @@
             <line number="73" hits="2" branch="false"/>
           </lines>
         </class>
-        <class name="toggle.ts" filename="libs\state\src\lib\transformation-helpers\object\toggle.ts" line-rate="1" branch-rate="1">
+        <class name="toggle.ts" filename="libs/state/src/lib/transformation-helpers/object/toggle.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="toggle" hits="8" signature="()V">
               <lines>
