@@ -25,7 +25,7 @@
     "update": "ng update @nrwl/workspace",
     "workspace-schematic": "nx workspace-schematic",
     "dep-graph": "nx dep-graph",
-    "build-docs": "nx run-many --projects state,template --target build-docs",
+    "build-docs-page": "nx run-many --projects state,template --target build-docs",
     "generate-typescript-docs": "ts-node -P tools/tsconfig.tools.json tools/scripts/docs/generate-typescript-docs.ts",
     "help": "nx help",
     "state:publish": "nx test state && nx build state --prod && cd ./dist/libs/state && npm publish",
