@@ -3,6 +3,8 @@ import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core
 import { LetDirective } from '@rx-angular/template';
 import { EMPTY, interval, Observable, of, Subject, NEVER, throwError } from 'rxjs';
 import { take } from 'rxjs/operators';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
@@ -40,6 +42,7 @@ const setUpFixture = () => {
 };
 
 describe('LetDirective when template binding with all templates', () => {
+  beforeAll(() => mockConsole());
   beforeEach(async(setupTestComponent));
   beforeEach(setUpFixture);
 
@@ -56,7 +59,7 @@ describe('LetDirective when template binding with all templates', () => {
   it('should render "complete" template on the observable completion', () => {
     // The resulting synchronous notification sequence is: 1,2,3,complete
     component.value$ = of(1, 2, 3);
-    // The resulting synchronous notification sequence is: 1,2,3,complete 
+    // The resulting synchronous notification sequence is: 1,2,3,complete
     component.value$ = of(1,2,3);
     fixture.detectChanges();
     expectContentToBe('complete');

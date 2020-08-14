@@ -3,7 +3,7 @@ import {
   state,
   style,
   transition,
-  trigger
+  trigger,
 } from '@angular/animations';
 import { ApplicationRef, Component, Input, Output } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -27,22 +27,22 @@ export interface GrowComponentState {
         'shrinked',
         style({
           height: '100px',
-          width: '100px'
+          width: '100px',
         })
       ),
       state(
         'grown',
         style({
           height: '500px',
-          width: '500px'
+          width: '500px',
         })
       ),
       transition(
         'grown <=> shrinked',
         animate('225ms cubic-bezier(0.4,0.0,0.2,1)')
-      )
-    ])
-  ]
+      ),
+    ]),
+  ],
 })
 export class GrowComponent extends RxState<GrowComponentState> {
   @Input() set animationState(animationState: GrowAnimationState) {

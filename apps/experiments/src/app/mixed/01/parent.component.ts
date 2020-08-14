@@ -24,7 +24,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <ng-container *rxLet="value1$ as sync1">{{ sync1 }}</ng-container>
     <app-mixed-child01 [value]="value1$ | push: strategy"></app-mixed-child01>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Parent01Component extends BaseComponent {
   btnClick$ = new Subject<Event>();

@@ -21,7 +21,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <button #button>increment</button>
     <ng-container *rxLet="value$; let v">Value: {{ v }}</ng-container>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class LetParent11Component extends BaseComponent {
   btnClick$ = new Subject<Event>();

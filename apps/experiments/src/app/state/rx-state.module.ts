@@ -30,7 +30,7 @@ import { RxStateSelectSliceComponent } from './selectslice/select-slice.componen
     RxStateParentSelectionsComponent,
     RxStateParentSubscriptionComponent,
     RxStateParentSubscriptionLessComponent,
-    RxStateSelectSliceComponent
+    RxStateSelectSliceComponent,
   ],
   imports: [
     CommonModule,
@@ -46,7 +46,7 @@ import { RxStateSelectSliceComponent } from './selectslice/select-slice.componen
     MatSelectModule,
     TemplateModule,
     FormsModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+  ],
 })
 export class RxStateModule {}

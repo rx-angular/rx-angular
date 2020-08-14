@@ -38,13 +38,13 @@ const targets = [
   HTMLBodyElement,
   HTMLBodyElement.prototype,
   HTMLElement,
-  HTMLElement.prototype
+  HTMLElement.prototype,
 ];
 (window as any).__Zone_ignore_on_properties = [];
-targets.forEach(target => {
+targets.forEach((target) => {
   (window as any).__Zone_ignore_on_properties.push({
     target,
-    ignoreProperties: blacklistedEvents
+    ignoreProperties: blacklistedEvents,
   });
 });
 

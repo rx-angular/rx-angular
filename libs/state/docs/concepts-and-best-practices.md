@@ -57,11 +57,9 @@ interface MyView {
 ```typescript
 @Component({
   selector: 'app-stateful-component',
-  template: `
-    <div>{{ vm$ | async | json }}</div>
-  `,
+  template: ` <div>{{ vm$ | async | json }}</div> `,
   changeDetection: Changedetection.OnPush,
-  providers: [RxState]
+  providers: [RxState],
 })
 export class StatefulComponent implements MyView {
   readonly vm$: Observable<MyState> = this.state.select();

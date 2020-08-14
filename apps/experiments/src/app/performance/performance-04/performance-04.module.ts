@@ -29,7 +29,7 @@ import { ROUTES as PERFORMANCE04_ROUTES } from './performance-04.routes';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    TemplateModule
-  ]
+    TemplateModule,
+  ],
 })
 export class Performance04Module {}

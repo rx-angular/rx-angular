@@ -52,7 +52,7 @@ import { Child31Component } from './31/child.component';
     Child21Component,
     Parent31Component,
     Child31Component,
-    PushOverviewComponent
+    PushOverviewComponent,
   ],
   imports: [
     CommonModule,
@@ -66,7 +66,7 @@ import { Child31Component } from './31/child.component';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    TemplateModule
-  ]
+    TemplateModule,
+  ],
 })
 export class PushModule {}

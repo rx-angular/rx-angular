@@ -23,7 +23,7 @@ interface Local01State {
         <span>value2: {{ v }}</span>
       </ng-container>
     </div>
-  `
+  `,
 })
 export class Local01Component {
   readonly strategy = 'local';

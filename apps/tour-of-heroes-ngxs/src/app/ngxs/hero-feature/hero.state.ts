@@ -5,7 +5,7 @@ import {
   DeleteHero,
   FetchHero,
   SearchHero,
-  UpdateHero
+  UpdateHero,
 } from './hero.actions';
 import { HeroService } from '../../hero.service';
 import { Hero } from '../../hero';
@@ -21,8 +21,8 @@ export interface HeroState {
   name: 'hero',
   defaults: {
     heroes: [] as Hero[],
-    search: [] as Hero[]
-  }
+    search: [] as Hero[],
+  },
 })
 @Injectable({ providedIn: 'root' })
 export class HeroStateService {
@@ -37,10 +37,10 @@ export class HeroStateService {
 
   @Action(FetchHero)
   private fetchHero(ctx: StateContext<HeroState>, a) {
-    this.heroService.getHeroes().subscribe(heroes => {
+    this.heroService.getHeroes().subscribe((heroes) => {
       ctx.setState({
         ...ctx.getState(),
-        heroes
+        heroes,
       });
     });
   }
@@ -52,10 +52,10 @@ export class HeroStateService {
   @Action(AddHero)
   private addHero(ctx: StateContext<HeroState>, action: AddHero) {
     const state = ctx.getState();
-    this.heroService.addHero(action.hero).subscribe(hero => {
+    this.heroService.addHero(action.hero).subscribe((hero) => {
       ctx.setState({
         ...state,
-        heroes: [...state.heroes, hero]
+        heroes: [...state.heroes, hero],
       });
     });
   }
@@ -70,7 +70,7 @@ export class HeroStateService {
     this.heroService.deleteHero(action.hero).subscribe(() => {
       ctx.setState({
         ...state,
-        heroes: state.heroes.filter((h: Hero) => h.id !== action.hero.id)
+        heroes: state.heroes.filter((h: Hero) => h.id !== action.hero.id),
       });
     });
   }
@@ -87,7 +87,7 @@ export class HeroStateService {
         ...state,
         heroes: state.heroes.map((h: Hero) =>
           h.id === action.hero.id ? action.hero : h
-        )
+        ),
       });
     });
   }
@@ -99,10 +99,10 @@ export class HeroStateService {
   @Action(SearchHero)
   private searchHero(ctx: StateContext<HeroState>, action: SearchHero) {
     const state = ctx.getState();
-    this.heroService.searchHeroes(action.term).subscribe(heroes => {
+    this.heroService.searchHeroes(action.term).subscribe((heroes) => {
       ctx.setState({
         ...state,
-        heroes
+        heroes,
       });
     });
   }

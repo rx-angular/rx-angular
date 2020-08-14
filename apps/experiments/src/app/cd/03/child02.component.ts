@@ -16,6 +16,6 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <span>render: </span><b class="num-renders">{{ getNumOfRenderings() }}</b
     ><br />
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Child0302Component extends BaseComponent {}

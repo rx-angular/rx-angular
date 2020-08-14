@@ -4,7 +4,7 @@ import { getUnpatchedResolvedPromise } from '../../../core';
 // @NOTICE replace logic with 7v handling of promises in RxJS
 
 export const promiseTick = () =>
-  new Observable<number>(subscriber => {
+  new Observable<number>((subscriber) => {
     let cancelled = false;
     getUnpatchedResolvedPromise()
       .then(() => {
@@ -13,7 +13,7 @@ export const promiseTick = () =>
           subscriber.complete();
         }
       })
-      .catch(e => {
+      .catch((e) => {
         subscriber.error(e);
       });
     return () => {

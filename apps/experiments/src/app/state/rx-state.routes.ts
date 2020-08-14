@@ -8,26 +8,26 @@ import { RxStateParentSubscriptionLessComponent } from './subscription-less-inte
 export const ROUTES = [
   {
     path: 'rx-base-state',
-    component: RxStateOverviewComponent
+    component: RxStateOverviewComponent,
   },
   {
     path: 'subscription',
-    component: RxStateParentSubscriptionComponent
+    component: RxStateParentSubscriptionComponent,
   },
   {
     path: 'composition',
-    component: RxStateParentCompositionComponent
+    component: RxStateParentCompositionComponent,
   },
   {
     path: 'selections',
-    component: RxStateParentSelectionsComponent
+    component: RxStateParentSelectionsComponent,
   },
   {
     path: 'connect',
-    component: RxStateParentSubscriptionLessComponent
+    component: RxStateParentSubscriptionLessComponent,
   },
   {
     path: 'selectslice',
-    component: RxStateSelectSliceComponent
-  }
+    component: RxStateSelectSliceComponent,
+  },
 ];

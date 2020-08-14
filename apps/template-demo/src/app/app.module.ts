@@ -25,7 +25,7 @@ export const materialModules = [
   MatSidenavModule,
   MatIconModule,
   MatListModule,
-  MatMenuModule
+  MatMenuModule,
 ];
 
 @NgModule({
@@ -36,10 +36,10 @@ export const materialModules = [
     RouterModule.forRoot(ROUTES),
     materialModules,
     ViewportPrioModule,
-    SharedModule
+    SharedModule,
   ],
   declarations: [AppComponent],
   exports: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

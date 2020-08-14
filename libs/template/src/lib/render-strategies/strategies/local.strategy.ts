@@ -4,7 +4,7 @@ import { priorityTickMap } from '../rxjs/scheduling/priority-tick-map';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   RenderStrategy,
-  RenderStrategyFactoryConfig
+  RenderStrategyFactoryConfig,
 } from '../../core/render-aware';
 import { coalesceWith } from '../rxjs/operators/coalesceWith';
 import { promiseTick } from '../rxjs/scheduling/promiseTick';
@@ -34,7 +34,7 @@ export function getLocalStrategies<T>(
 ): { [strategy: string]: RenderStrategy } {
   return {
     local: createLocalStrategy<T>(config),
-    detach: createDetachStrategy(config)
+    detach: createDetachStrategy(config),
   };
 }
 
@@ -73,12 +73,12 @@ export function createLocalStrategy<T>(
   const tick = priorityTickMap[priority];
 
   const renderMethod = () => {
-    detectChanges(component);
+    config.cdRef.detectChanges();
   };
-  const behavior = o =>
+  const behavior = (o) =>
     o.pipe(
       coalesceWith(promiseDurationSelector, component),
-      switchMap(v => tick.pipe(map(() => v))),
+      switchMap((v) => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
@@ -88,7 +88,7 @@ export function createLocalStrategy<T>(
     name: 'local',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
-    scheduleCD
+    scheduleCD,
   };
 }
 
@@ -131,10 +131,10 @@ export function createDetachStrategy(
     detectChanges(component);
     config.cdRef.detach();
   };
-  const behavior = o =>
+  const behavior = (o) =>
     o.pipe(
       coalesceWith(promiseDurationSelector, component),
-      switchMap(v => tick.pipe(map(() => v))),
+      switchMap((v) => tick.pipe(map(() => v))),
       tap(renderMethod)
     );
   const scheduleCD = () =>
@@ -144,6 +144,6 @@ export function createDetachStrategy(
     name: 'detach',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
-    scheduleCD
+    scheduleCD,
   };
 }

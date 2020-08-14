@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import { BaseComponent } from '../../base.component.ts/base.component';
 
@@ -19,6 +19,6 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class Child0202Component extends BaseComponent {}

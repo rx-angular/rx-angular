@@ -8,12 +8,12 @@ export const ROUTES = [
   {
     path: '',
     pathMatch: 'full',
-    component: Let1ContainerComponent
+    component: Let1ContainerComponent,
   },
   {
     path: 'solution',
-    component: Let1ContainerComponent
-  }
+    component: Let1ContainerComponent,
+  },
 ];
 const DECLARATIONS = [Let1ContainerComponent];
 
@@ -23,8 +23,8 @@ const DECLARATIONS = [Let1ContainerComponent];
     CommonModule,
     ViewportPrioModule,
     RouterModule.forChild(ROUTES),
-    TemplateModule
+    TemplateModule,
   ],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
 export class PrioritizeInViewportModule {}

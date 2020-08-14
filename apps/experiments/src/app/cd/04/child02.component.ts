@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { BaseComponent } from '../../base.component.ts/base.component';
 import { defer, merge, Subject } from 'rxjs';
@@ -22,7 +22,7 @@ import { tap } from 'rxjs/operators';
       ChangeDetectorRef#detectChanges
     </button>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Child0402Component extends BaseComponent {
   markForCheck$ = new Subject<Event>();
