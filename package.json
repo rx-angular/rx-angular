@@ -1,6 +1,6 @@
 {
   "name": "rx-angular",
-  "version": "0.0.0",
+  "version": "0.0.0-development",
   "license": "MIT",
   "scripts": {
     "ng": "nx",
@@ -32,7 +32,8 @@
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points && node ./decorate-angular-cli.js",
     "state:coveralls": "coveralls <  ./coverage/state/lcov.info",
     "state:perf": "nx perf state",
-    "template:publish": "nx test template && nx build template --prod && cd ./dist/libs/template && npm publish"
+    "template:publish": "nx test template && nx build template --prod && cd ./dist/libs/template && npm publish",
+    "semantic-release": "semantic-release"
   },
   "husky": {
     "hooks": {
@@ -95,6 +96,11 @@
     "ts-jest": "25.2.1",
     "ts-node": "~7.0.0",
     "tslint": "~6.1.0",
-    "typescript": "~3.9.7"
+    "typescript": "~3.9.7",
+    "semantic-release": "^17.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BioPhoton/rx-angular.git"
   }
 }
