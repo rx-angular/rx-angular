@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
 ![rx-angular CI](https://github.com/BioPhoton/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
-[![Coverage Status](https://github.com/BioPhoton/rx-angular/blob/master/docs/test-coverage/state/jest-coverage-badge.svg)](https://biophoton.github.io/rx-angular/test-coverage/state/lcov-report/index.html)
+[![Coverage Status](https://github.com/BioPhoton/rx-angular/blob/github-pages/docs/test-coverage/state/jest-coverage-badge.svg)](https://biophoton.github.io/rx-angular/test-coverage/state/lcov-report/index.html)
 
 ## Reactive Component State for Angular
 
