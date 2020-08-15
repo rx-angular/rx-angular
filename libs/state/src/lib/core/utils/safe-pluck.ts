@@ -1,5 +1,4 @@
-import { isKeyOf, isDefined } from './typing';
-import { isObject } from 'util';
+import { isKeyOf, isDefined, isObjectGuard } from './typing';
 
 export function safePluck<T extends object, K1 extends keyof T>(
   stateObject: T,
@@ -95,20 +94,20 @@ export function safePluck<
     return undefined;
   }
   // sanitize keys -> keep only valid keys (string, number, symbol)
-  const keysArr = (Array.isArray(keys) ? keys : [keys]).filter((k) =>
+  const keysArr = (Array.isArray(keys) ? keys : [keys]).filter(k =>
     isKeyOf<T>(k)
   );
   if (
     keysArr.length === 0 ||
-    !isObject(stateObject) ||
+    !isObjectGuard(stateObject) ||
     Object.keys(stateObject).length === 0
   ) {
     return undefined;
   }
   let prop = stateObject[keysArr.shift() as K1];
 
-  keysArr.forEach((key) => {
-    if (isObject(prop) && isKeyOf(key)) {
+  keysArr.forEach(key => {
+    if (isObjectGuard(prop) && isKeyOf(key)) {
       prop = prop[key];
     }
   });
