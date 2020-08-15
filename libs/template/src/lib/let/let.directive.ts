@@ -169,9 +169,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   >;
   private readonly resetObserver: NextObserver<void> = {
     next: () => {
-      this.templateManager.hasTemplateRef('rxSuspense')
-        ? this.templateManager.displayView('rxSuspense')
-        : this.templateManager.displayView('rxNext');
+      this.displayInitialView();
       this.templateManager.updateViewContext({
         $implicit: undefined,
         rxLet: undefined,
@@ -238,15 +236,19 @@ export class LetDirective<U> implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.templateManager.addTemplateRef('rxNext', this.nextTemplateRef);
-    // @TODO comment why we do this here
-    this.templateManager.hasTemplateRef('rxSuspense')
-      ? this.templateManager.displayView('rxSuspense')
-      : this.templateManager.displayView('rxNext');
+    this.displayInitialView();
     this.subscription = this.renderAware.subscribe();
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
     this.templateManager.destroy();
+  }
+
+  private displayInitialView = () => {
+    // display "suspense" template if provided, display "next" otherwise
+    this.templateManager.hasTemplateRef('rxSuspense')
+      ? this.templateManager.displayView('rxSuspense')
+      : this.templateManager.displayView('rxNext');
   }
 }

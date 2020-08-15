@@ -1,57 +1,66 @@
-import { createTemplateManager, TemplateManager } from '../../../src/lib/core/utils/template-manager_creator';
-import { Component, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, Directive, Input, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { createTemplateManager, TemplateManager } from '../../../src/lib/core/utils/template-manager_creator';
 import createSpy = jasmine.createSpy;
 
 export interface TestViewContext {
-  prop1: string
+  $implicit: string;
+  value: string;
+}
+
+@Directive({
+  // tslint:disable-next-line:directive-selector
+  selector: '[container]'
+})
+class TestContainerDirective {
+
+  manager: TemplateManager<TestViewContext, 'templateRefA' | 'templateRefB'>;
+
+  @Input() private templateA: TemplateRef<TestViewContext>;
+  @Input() private templateB: TemplateRef<TestViewContext>;
+
+  constructor(public viewContainerRef: ViewContainerRef) {
+    this.manager = createTemplateManager(this.viewContainerRef, {});
+    templateManager = this.manager;
+    testViewContainerRef = this.viewContainerRef;
+  }
 }
 
 @Component({
   template: `
-    <ng-container [ngTemplateOutlet]="templateRefA">
+    <ng-container container [templateA]="templateRefA" [templateB]="templateRefB">
     </ng-container>
 
-    <ng-template #templateRefA>
-      Template A
+    <ng-template #templateRefA let-value="value">
+      [Template:A][Context:{{ value }}]
     </ng-template>
 
-    <ng-template #templateRefB>
-      Template B
+    <ng-template #templateRefB let-value="value">
+      [Template:B][Context:{{ value }}]
     </ng-template>
   `
 })
 class TemplateManagerTestComponent {
 
-  manager: TemplateManager<TestViewContext>;
-  state1: TestViewContext = { prop1: 'state1' };
-  state2: TestViewContext = { prop1: 'state2' };
-
   @ViewChild('templateRefA')
-  templateRefA;
+  templateRefA: TemplateRef<TestViewContext>;
 
   @ViewChild('templateRefB')
-  templateRefB;
-
-  constructor(public viewContainerRef: ViewContainerRef) {
-    this.manager = createTemplateManager(this.viewContainerRef, {});
-  }
-
-  createA() {
-    this.manager.updateViewContext(this.state1);
-  }
-
+  templateRefB: TemplateRef<TestViewContext>;
 }
 
 let fixtureTestComponent: ComponentFixture<TemplateManagerTestComponent> = null;
 let testComponent: TemplateManagerTestComponent = null;
+let testComponentNativeElement: HTMLElement;
+let testViewContainerRef: ViewContainerRef;
 let templateManager: TemplateManager<TestViewContext> = null;
 const setupTestComponent = (): void => {
   TestBed.configureTestingModule({
-    declarations: [TemplateManagerTestComponent],
+    declarations: [TestContainerDirective, TemplateManagerTestComponent],
     providers: [
       TemplateRef,
-      ViewContainerRef
+      ViewContainerRef,
+      TestContainerDirective
     ]
   });
 
@@ -59,7 +68,7 @@ const setupTestComponent = (): void => {
     TemplateManagerTestComponent
   );
   testComponent = fixtureTestComponent.componentInstance;
-  templateManager = testComponent.manager;
+  testComponentNativeElement = fixtureTestComponent.nativeElement;
   fixtureTestComponent.detectChanges();
 };
 
@@ -74,63 +83,59 @@ describe('TemplateManager', () => {
 
   it('addTemplateRef should throw if no TemplateRef is passed', () => {
     expect(function() {
-      testComponent.manager.addTemplateRef('wrongValue', 'asdf' as any);
+      templateManager.addTemplateRef('wrongValue' as any, 'asdf' as any);
     })
       .toThrow(new Error('wrongValue must be a TemplateRef, but received something else.'));
   });
 
-  it('addTemplateRef should add TemplateRef under a key', () => {
-    const _m: any = testComponent.manager;
-    expect(_m.templateCache.size).toBe(0);
-    expect(testComponent.viewContainerRef.length).toBe(0);
+  it('addTemplateRef should add TemplateRef to template cache', () => {
+    expect(templateManager.hasTemplateRef('templateRefA')).toBe(false);
+    expect(testViewContainerRef.length).toBe(0);
+
     templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
-    expect(_m.templateCache.size).toBe(1);
-    expect(testComponent.viewContainerRef.length).toBe(0);
+    expect(templateManager.hasTemplateRef('templateRefA')).toBe(true);
+    expect(testViewContainerRef.length).toBe(0);
   });
 
-  it('addTemplateRef should throw if no TemplateRef is passed', () => {
-    testComponent.manager.addTemplateRef('templateRefA', testComponent.templateRefA);
+  it('addTemplateRef should throw if an already cached TemplateRef is cached', () => {
+    templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
     expect(function() {
-      testComponent.manager.addTemplateRef('templateRefA', testComponent.templateRefA);
+      templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
     })
       .toThrow(new Error('Updating an already existing Template is not supported at the moment.'));
   });
 
-  it('displayView should create and insert a created view out of a registered template and increment internal Caches', () => {
-    const _m: any = templateManager;
+  it('displayView should create and insert a view out of a registered template', () => {
     templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
-    expect(_m.templateCache.size).toBe(1);
-    expect(_m.viewCache.size).toBe(0);
-    expect(testComponent.viewContainerRef.length).toBe(0);
+    expect(templateManager.hasTemplateRef('templateRefA')).toBe(true);
+    expect(testViewContainerRef.length).toBe(0);
+
     templateManager.displayView('templateRefA');
-    expect(_m.templateCache.size).toBe(1);
-    expect(_m.viewCache.size).toBe(1);
-    expect(testComponent.viewContainerRef.length).toBe(1);
+    expect(templateManager.hasTemplateRef('templateRefA')).toBe(true);
+    expect(testViewContainerRef.length).toBe(1);
   });
 
-  it('displayView should create and insert a created view out of a registered template and call createEmbeddedView', () => {
+  it('displayView should create and insert a view out of a registered template by calling createEmbeddedView', () => {
     templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
-    testComponent.viewContainerRef.createEmbeddedView = createSpy('createEmbeddedView');
-    testComponent.viewContainerRef.insert = createSpy('insert');
+    testViewContainerRef.createEmbeddedView = createSpy('createEmbeddedView');
+    testViewContainerRef.insert = createSpy('insert');
     templateManager.displayView('templateRefA');
-    expect(testComponent.viewContainerRef.createEmbeddedView).toHaveBeenCalledTimes(1);
-    expect(testComponent.viewContainerRef.insert).toHaveBeenCalledTimes(0);
+
+    expect(testViewContainerRef.createEmbeddedView).toHaveBeenCalledTimes(1);
+    expect(testViewContainerRef.insert).toHaveBeenCalledTimes(0);
   });
 
   it('displayView should throw if an unregistered registered template is used', () => {
-    const _m: any = templateManager;
-    expect(_m.templateCache.size).toBe(0);
-    expect(_m.viewCache.size).toBe(0);
-    expect(testComponent.viewContainerRef.length).toBe(0);
+    expect(templateManager.hasTemplateRef('templateRefA')).toBe(false);
+    expect(testViewContainerRef.length).toBe(0);
     expect(() => templateManager.displayView('templateRefA'))
       .toThrowError(new Error('A non-existing view was tried to insert templateRefA'));
-    expect(_m.templateCache.size).toBe(0);
-    expect(_m.viewCache.size).toBe(0);
-    expect(testComponent.viewContainerRef.length).toBe(0);
+    expect(templateManager.hasTemplateRef('templateRefA')).toBe(false);
+    expect(testViewContainerRef.length).toBe(0);
   });
 
-  it('Maintainer should understand viewContainerRef', () => {
-    const viewContainerRef: any = testComponent.viewContainerRef;
+  it('should ensure that the Maintainer understands `ViewContainerRef`', () => {
+    const viewContainerRef: any = testViewContainerRef;
     expect(viewContainerRef.length).toBe(0);
     const v1 = viewContainerRef.createEmbeddedView(testComponent.templateRefA, {});
     expect(viewContainerRef.length).toBe(1);
@@ -147,37 +152,66 @@ describe('TemplateManager', () => {
     expect(viewContainerRef.length).toBe(2);
   });
 
-  it('displayView should insert when switching to an already created view', () => {
-    const _m: any = templateManager;
+  it('displayView should get the view out of cache and insert when switching to an already created view', () => {
     templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
-    templateManager.addTemplateRef('templateRefB', testComponent.templateRefA);
+    templateManager.addTemplateRef('templateRefB', testComponent.templateRefB);
     templateManager.displayView('templateRefA');
     templateManager.displayView('templateRefB');
-    testComponent.viewContainerRef.createEmbeddedView = createSpy('createEmbeddedView');
-    testComponent.viewContainerRef.insert = createSpy('insert');
+    testViewContainerRef.createEmbeddedView = createSpy('createEmbeddedView');
+    testViewContainerRef.insert = createSpy('insert');
     templateManager.displayView('templateRefA');
-    expect(testComponent.viewContainerRef.createEmbeddedView).toHaveBeenCalledTimes(0);
-    expect(testComponent.viewContainerRef.insert).toHaveBeenCalledTimes(1);
+
+    expect(testViewContainerRef.createEmbeddedView).toHaveBeenCalledTimes(0);
+    expect(testViewContainerRef.insert).toHaveBeenCalledTimes(1);
   });
 
   it('displayView should do nothing if the passed view is already displayed', () => {
     templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
     templateManager.displayView('templateRefA');
-    testComponent.viewContainerRef.createEmbeddedView = createSpy('createEmbeddedView');
-    testComponent.viewContainerRef.insert = createSpy('insert');
+    testViewContainerRef.createEmbeddedView = createSpy('createEmbeddedView');
+    testViewContainerRef.insert = createSpy('insert');
     templateManager.displayView('templateRefA');
-    expect(testComponent.viewContainerRef.createEmbeddedView).toHaveBeenCalledTimes(0);
-    expect(testComponent.viewContainerRef.insert).toHaveBeenCalledTimes(0);
+
+    expect(testViewContainerRef.createEmbeddedView).toHaveBeenCalledTimes(0);
+    expect(testViewContainerRef.insert).toHaveBeenCalledTimes(0);
   });
 
   it('destroy should clean up all registered templates', () => {
-    const _m: any = templateManager;
     templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
-    expect(_m.viewContainerRef.length).toBe(0);
+    expect(testViewContainerRef.length).toBe(0);
+
     templateManager.displayView('templateRefA');
-    expect(_m.viewContainerRef.length).toBe(1);
+    expect(testViewContainerRef.length).toBe(1);
+
     templateManager.destroy();
-    expect(_m.viewContainerRef.length).toBe(0);
+    expect(testViewContainerRef.length).toBe(0);
   });
 
+  it('should detach only the last embedded view on `displayView`', () => {
+    templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
+    testViewContainerRef.detach = createSpy('detach');
+    templateManager.displayView('templateRefA');
+
+    expect(testViewContainerRef.detach).toHaveBeenCalledTimes(1);
+    // `ViewContainerRef#detach` with 0 arguments detaches the last view
+    expect(testViewContainerRef.detach).toHaveBeenCalledWith();
+  });
+
+  it('should update view context based on passed slice of view context object', () => {
+    templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
+    templateManager.displayView('templateRefA');
+    templateManager.updateViewContext({ value: 'A' });
+    fixtureTestComponent.detectChanges();
+    expectTextContentToBe('[Template:A][Context:A]');
+
+    templateManager.addTemplateRef('templateRefB', testComponent.templateRefB);
+    templateManager.displayView('templateRefB');
+    templateManager.updateViewContext({ value: 'B' });
+    fixtureTestComponent.detectChanges();
+    expectTextContentToBe('[Template:B][Context:B]');
+  });
 });
+
+function expectTextContentToBe(textContent: string): void {
+  expect(fixtureTestComponent.nativeElement.textContent.trim()).toBe(textContent);
+}
