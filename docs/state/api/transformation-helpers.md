@@ -10,36 +10,36 @@ You can use the transformation helpers without RxState but expect the behavior t
 
 # Array
 
-[insert.md](transformation-helpers/array/insert.md ':include')
+[insert.md](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/docs/api/transformation-helpers/array/insert.md ':include')
 
 ---
 
-[remvoe.md](transformation-helpers/array/remove.md ':include')
+[remvoe.md](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/docs/api/transformation-helpers/array/remove.md ':include')
 
 ---
 
-[to-dictionary.md](transformation-helpers/array/to-dictionary.md ':include')
+[to-dictionary.md](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/docs/api/transformation-helpers/array/to-dictionary.md ':include')
 
 ---
 
-[update.md](transformation-helpers/array/update.md ':include')
+[update.md](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/docs/api/transformation-helpers/array/update.md ':include')
 
 # Object
 
-[delete-prop.md](transformation-helpers/object/delete-prop.md ':include')
+[delete-prop.md](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/docs/api/transformation-helpers/object/delete-prop.md ':include')
 
 ---
 
-[dictionary-to-array.md](transformation-helpers/object/dictionary-to-array.md ':include')
+[dictionary-to-array.md](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/docs/api/transformation-helpers/object/dictionary-to-array.md ':include')
 
 ---
 
-[patch.md](transformation-helpers/object/patch.md ':include')
+[patch.md](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/docs/api/transformation-helpers/object/patch.md ':include')
 
 ---
 
-[set-prop.md](transformation-helpers/object/set-prop.md ':include')
+[set-prop.md](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/docs/api/transformation-helpers/object/set-prop.md ':include')
 
 ---
 
-[toggle.md](transformation-helpers/object/toggle.md ':include')
+[toggle.md](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/docs/api/transformation-helpers/object/toggle.md ':include')

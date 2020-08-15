@@ -58,3 +58,4 @@
 
   - [Demos](/state/demos.md)
   - [Resources](/state/resources.md)
+  - [Community](/state/community.md)
