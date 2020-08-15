@@ -1,5 +1,3 @@
-- [RxAngular](/)
-
 <!-- - @rx-angular/template [BETA]
 
   - Getting started
@@ -22,7 +20,7 @@
 
     - [Unpatch directive](/template/experimental/unpatch.md) -->
 
-- @rx-angular/state
+- **@rx-angular/state**
 
   - Getting started
 
@@ -56,6 +54,9 @@
     - [Reuse ngrx selectors to compose state](/web/state/integrations/compose-state-using-ngrx-selectors.md)
     - [Manage entities using `@ngrx/entity`](/web/state/integrations/manage-entities-ngrx.md)
 
-  - [Demos](/web/state/general/demos.md)
-  - [Resources](/web/state/general/resources.md)
-  - [Community](/web/state/general/community.md)
+---
+
+- **Links**
+
+- [![Github](https://icongram.jgog.in/simple/github.svg?color=808080&size=16)Github](https://github.com/BioPhoton/rx-angular)
+- [![Slack](https://icongr.am/devicon/slack-original.svg?size=16&color=currentColor)Slack](https://github.com/BioPhoton/rx-angular)
