@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 
 import {
@@ -13,18 +13,20 @@ import {
   Observable,
   ObservableInput,
   Observer,
+  Subscription,
   Unsubscribable,
-  Subscription
 } from 'rxjs';
 import { createRenderAware, RenderAware, StrategySelection } from '../core';
 import {
   createTemplateManager,
-  TemplateManager
+  TemplateManager,
 } from '../core/utils/template-manager_creator';
 import {
   DEFAULT_STRATEGY_NAME,
-  getStrategies
+  getStrategies,
 } from '../render-strategies/strategies/strategies-map';
+
+type RxTemplateName = 'rxNext' | 'rxComplete' | 'rxError' | 'rxSuspense';
 
 export interface LetViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
@@ -124,7 +126,7 @@ export interface LetViewContext<T> {
  */
 @Directive({
   selector: '[rxLet]',
-  exportAs: 'renderNotifier'
+  exportAs: 'renderNotifier',
 })
 export class LetDirective<U> implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
@@ -162,42 +164,48 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   protected subscription: Unsubscribable = new Subscription();
 
   private readonly templateManager: TemplateManager<
-    LetViewContext<U | undefined | null>
+    LetViewContext<U | undefined | null>,
+    RxTemplateName
   >;
   private readonly resetObserver: NextObserver<void> = {
     next: () => {
+      this.templateManager.hasTemplateRef('rxSuspense')
+        ? this.templateManager.displayView('rxSuspense')
+        : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
         $implicit: undefined,
         rxLet: undefined,
         $error: false,
-        $complete: false
+        $complete: false,
       });
-    }
+    },
   };
   private readonly updateObserver: Observer<U | null | undefined> = {
     next: (value: U | null | undefined) => {
-      this.templateManager.insertEmbeddedView('rxNext');
+      this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
         $implicit: value,
-        rxLet: value
+        rxLet: value,
       });
     },
     error: (error: Error) => {
       // fallback to rxNext when there's no template for rxError
-      this.templateManager.insertEmbeddedView('rxNext');
-      this.templateManager.insertEmbeddedView('rxError');
+      this.templateManager.hasTemplateRef('rxError')
+        ? this.templateManager.displayView('rxError')
+        : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $error: true
+        $error: true,
       });
     },
     complete: () => {
       // fallback to rxNext when there's no template for rxComplete
-      this.templateManager.insertEmbeddedView('rxNext');
-      this.templateManager.insertEmbeddedView('rxComplete');
+      this.templateManager.hasTemplateRef('rxComplete')
+        ? this.templateManager.displayView('rxComplete')
+        : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $complete: true
+        $complete: true,
       });
-    }
+    },
   };
 
   static ngTemplateContextGuard<U>(
@@ -217,20 +225,23 @@ export class LetDirective<U> implements OnInit, OnDestroy {
       $implicit: undefined,
       rxLet: undefined,
       $error: false,
-      $complete: false
+      $complete: false,
     });
 
     this.renderAware = createRenderAware({
       strategies: this.strategies,
       resetObserver: this.resetObserver,
-      updateObserver: this.updateObserver
+      updateObserver: this.updateObserver,
     });
     this.renderAware.nextStrategy(DEFAULT_STRATEGY_NAME);
   }
 
   ngOnInit() {
-    this.templateManager.insertEmbeddedView('rxSuspense');
     this.templateManager.addTemplateRef('rxNext', this.nextTemplateRef);
+    // @TODO comment why we do this here
+    this.templateManager.hasTemplateRef('rxSuspense')
+      ? this.templateManager.displayView('rxSuspense')
+      : this.templateManager.displayView('rxNext');
     this.subscription = this.renderAware.subscribe();
   }
 

@@ -4,6 +4,6 @@ import { UnpatchEventsDirective } from './unpatch-events.directive';
 const DECLARATIONS = [UnpatchEventsDirective];
 @NgModule({
   declarations: DECLARATIONS,
-  exports: DECLARATIONS
+  exports: DECLARATIONS,
 })
 export class UnpatchEventsModule {}

@@ -9,6 +9,6 @@ const DECLARATIONS = [LoadTestComponent, RunOutsideZoneDirective];
 @NgModule({
   declarations: [DECLARATIONS],
   imports: [CommonModule, TemplateModule, UnpatchEventsModule],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
 export class SharedModule {}

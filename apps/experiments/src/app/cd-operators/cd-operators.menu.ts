@@ -8,8 +8,8 @@ export const MENU_ITEMS: MenuItem[] = [
       // 01.
       {
         link: 'cd-operators-01',
-        label: 'CD Operators 01'
-      }
-    ]
-  }
+        label: 'CD Operators 01',
+      },
+    ],
+  },
 ];

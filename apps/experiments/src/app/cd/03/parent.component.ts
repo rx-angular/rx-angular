@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 
 import { defer, Subject } from 'rxjs';
@@ -36,7 +36,7 @@ import { tap } from 'rxjs/operators';
       <app-cd03-child02-push></app-cd03-child02-push>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class CdParent03Component extends BaseComponent {
   btnClick$ = new Subject<Event>();

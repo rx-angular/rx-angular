@@ -25,7 +25,7 @@ const initState: DemoBasicsBaseModel = {
   refreshInterval: 1000,
   listExpanded: true,
   isPending: true,
-  list: []
+  list: [],
 };
 
 @Injectable()
@@ -39,9 +39,9 @@ export class DemoBasicsViewModelService extends RxState<DemoBasicsBaseModel>
   refreshListSideEffect$ = merge(
     this.refreshClicks,
     this.select(
-      map(s => s.refreshInterval),
-      filter(refreshInterval => refreshInterval > 4000)
-    ).pipe(switchMap(ms => timer(ms)))
+      map((s) => s.refreshInterval),
+      filter((refreshInterval) => refreshInterval > 4000)
+    ).pipe(switchMap((ms) => timer(ms)))
   );
 
   constructor() {

@@ -7,7 +7,7 @@ import {
   delay,
   distinctUntilChanged,
   filter,
-  map
+  map,
 } from 'rxjs/operators';
 
 interface ListServiceState {
@@ -17,27 +17,27 @@ interface ListServiceState {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ListService {
   private state$ = new BehaviorSubject<Partial<ListServiceState>>({
     list: [],
     loading: false,
-    error: ''
+    error: '',
   });
 
   list$ = this.state$.pipe(
-    map(s => s.list),
+    map((s) => s.list),
     distinctUntilChanged()
   );
 
   errorSignal$ = this.state$.pipe(
-    map(s => s.error),
-    filter(b => !!b)
+    map((s) => s.error),
+    filter((b) => !!b)
   );
   successSignal$ = this.state$.pipe(
     map(({ loading, error }) => ({ loading, error })),
-    filter(o => o.loading === false && o.error !== '')
+    filter((o) => o.loading === false && o.error !== '')
   );
 
   loadingSignal$ = this.state$.pipe(map(({ loading }) => loading));
@@ -49,13 +49,13 @@ export class ListService {
   refetchList() {
     this.state$.next({ ...this.state$.getValue(), loading: true });
     this.httpGetListItem({ num: 1 })
-      .pipe(catchError(e => of({ error: e, loading: false, list: [] })))
-      .subscribe(slice => {
+      .pipe(catchError((e) => of({ error: e, loading: false, list: [] })))
+      .subscribe((slice) => {
         console.log('list: ', this.state$.getValue());
         return this.state$.next({
           error: '',
           list: [...this.state$.value.list, ...slice.list],
-          loading: false
+          loading: false,
         });
       });
   }
@@ -64,16 +64,16 @@ export class ListService {
     of(getData(arg)).pipe(
       // tslint:disable-next-line:no-bitwise
       delay(~~(Math.random() * 5000)),
-      map(list => ({ list }))
+      map((list) => ({ list }))
     );
 }
 
 export function getData(cfg = { num: 5 }): ListServerItem[] {
   // tslint:disable-next-line:no-bitwise
   const randId = (s: string) => s + ~~(Math.random() * 100);
-  return new Array(cfg.num).fill(cfg.num).map(_ => ({
+  return new Array(cfg.num).fill(cfg.num).map((_) => ({
     id: randId('id'),
     name: randId('name'),
-    created: Date.now() / 1000 + ''
+    created: Date.now() / 1000 + '',
   }));
 }

@@ -5,7 +5,7 @@ import {
   from,
   interval,
   Observable,
-  Subject
+  Subject,
 } from 'rxjs';
 import { getStrategies } from '@rx-angular/template';
 import {
@@ -15,7 +15,7 @@ import {
   switchMap,
   take,
   takeUntil,
-  tap
+  tap,
 } from 'rxjs/operators';
 import { ChangeDetectorRef, Injectable } from '@angular/core';
 
@@ -31,8 +31,8 @@ export class LoadTestService {
   value;
 
   toggleTick = this.toggle.pipe(
-    scan(isTrue => !isTrue, true),
-    switchMap(isTrue => (isTrue ? interval(this.ms) : EMPTY)),
+    scan((isTrue) => !isTrue, true),
+    switchMap((isTrue) => (isTrue ? interval(this.ms) : EMPTY)),
     tap(() => this.nextValues.next(1))
   );
 
@@ -49,7 +49,7 @@ export class LoadTestService {
   updatePatternSet(strategyNames: string[]) {
     from(strategyNames)
       .pipe(
-        concatMap(strategyName => {
+        concatMap((strategyName) => {
           this.strategy$.next(strategyName);
           console.log('strategy', strategyName);
           return interval(this.ms, asapScheduler).pipe(

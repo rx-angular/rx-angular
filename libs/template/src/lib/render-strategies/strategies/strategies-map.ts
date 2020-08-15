@@ -1,6 +1,6 @@
 import {
   RenderStrategy,
-  RenderStrategyFactoryConfig
+  RenderStrategyFactoryConfig,
 } from '../../core/render-aware';
 import { createNoopStrategy } from './noop.strategy';
 import { createNativeStrategy } from './native.strategy';
@@ -16,7 +16,7 @@ export function getStrategies(
     noop: createNoopStrategy(),
     native: createNativeStrategy(config),
     ...getGlobalStrategies(config),
-    ...getLocalStrategies(config)
+    ...getLocalStrategies(config),
   };
 }
 

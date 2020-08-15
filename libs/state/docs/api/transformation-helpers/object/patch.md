@@ -1,20 +1,20 @@
-# patch
+## patch
 
 Merges an object of type T with updates of type Partial<T>.
 Returns a new object where updates override original values while not mutating the original one.
 
 _Example_
 
-```TypeScript
+```typescript
 interface Creature {
- id: number,
- type: string,
- name: string
+  id: number;
+  type: string;
+  name: string;
 }
 
-const cat = {id: 1, type: 'cat'};
+const cat = { id: 1, type: 'cat' };
 
-const catWithname = patch(cat, {name: 'Fluffy'});
+const catWithname = patch(cat, { name: 'Fluffy' });
 
 // catWithname will be:
 // {id: 1, type: 'cat', name: 'Fluffy'};
@@ -22,42 +22,51 @@ const catWithname = patch(cat, {name: 'Fluffy'});
 
 _Example_
 
-```TypeScript
+```typescript
 // Usage with RxState
 
 export class ProfileComponent {
+  readonly changeName$ = new Subject<string>();
 
-   readonly changeName$ = new Subject<string>();
+  constructor(private state: RxState<ComponentState>) {
+    // Reactive implementation
+    state.connect(this.changeName$, (state, name) => {
+      return patch(state, { name });
+    });
+  }
 
-   constructor(private state: RxState<ComponentState>) {
-     // Reactive implementation
-     state.connect(
-       this.changeName$,
-       (state, name) => {
-           return patch(state, { name });
-       }
-     );
-   }
-
-   // Imperative implementation
-   changeName(name: string): void {
-       this.state.set(patch(this.get(), { name }));
-   }
+  // Imperative implementation
+  changeName(name: string): void {
+    this.state.set(patch(this.get(), { name }));
+  }
 }
 ```
 
-## Signature
+### Edge cases
 
-```TypeScript
-function patch<T extends object>(object: T, upd: Partial<T>): T
+```typescript
+patch({}, state) > state;
+patch(null as any, state) > state;
+patch(state, null as any) > state;
+patch(null as any, null as any) > null;
+patch(undefined as any, undefined as any) > undefined;
+patch(state, nonObject) > state;
+patch(nonObject, state) > state;
+patch(nonObject, nonObjectUpdate) > nonObject;
 ```
 
-## Parameters
+### Signature
 
-### object
+```typescript
+function patch<T extends object>(object: T, upd: Partial<T>): T;
+```
 
-##### typeof: T
+### Parameters
 
-### upd
+#### object
 
-##### typeof: Partial&#60;T&#62;
+###### typeof: T
+
+#### upd
+
+###### typeof: Partial&#60;T&#62;

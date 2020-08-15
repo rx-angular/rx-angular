@@ -1,3 +1,5 @@
+_Author: [@Phhansen](https://github.com/Phhansen)_
+
 # Manage entities using `@ngrx/entity`
 
 When working with collections or arrays in our state, we tend to write a lot of repeated code when we want to add, update or delete items from these collections.
@@ -22,7 +24,7 @@ Now if we want to add one item to our array _(in an immutable way)_, we replace 
 
 ```typescript
 @Component({
-  selector: 'my-component'
+  selector: 'my-component',
 })
 export class MyComponent extends RxState<ComponentState> {
   readonly addItem$ = new Subject<string>();
@@ -33,12 +35,12 @@ export class MyComponent extends RxState<ComponentState> {
     this.connect(this.addItem$, (oldState, itemName) => {
       const newItem = {
         id: uuid(), // unique hash generation fn()
-        name: itemName
+        name: itemName,
       };
 
       return {
         ...oldState,
-        items: [...oldState.items, newItem]
+        items: [...oldState.items, newItem],
       };
     });
   }
@@ -64,7 +66,7 @@ interface ComponentState extends EntityState<Item> {
 }
 
 const adapter: EntityAdapter<Item> = createEntityAdapter<Item>({
-  selectId: (item: Item) => item.id
+  selectId: (item: Item) => item.id,
 });
 ```
 
@@ -74,7 +76,7 @@ Now lets see how the component has changed.
 
 ```typescript
 @Component({
-  selector: 'my-component'
+  selector: 'my-component',
 })
 export class MyComponent extends RxState<ComponentState> {
   readonly addItem$ = new Subject<string>();
@@ -106,11 +108,11 @@ const {
   selectIds,
   selectEntities,
   selectAll,
-  selectTotal
+  selectTotal,
 } = adapter.getSelectors();
 
 @Component({
-  selector: 'my-component'
+  selector: 'my-component',
 })
 export class MyComponent extends RxState<ComponentState> {
   readonly items$ = this.select(select(selectAll));

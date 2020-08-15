@@ -15,7 +15,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     Passed input binding: {{ value1$ | push: strategy }}
     <!-- -->
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Child12Component extends BaseComponent {
   valueSubject = new ReplaySubject<Observable<number>>(1);

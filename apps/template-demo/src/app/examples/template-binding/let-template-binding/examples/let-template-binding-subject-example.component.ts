@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { scan, startWith } from 'rxjs/operators';
 
 @Component({
@@ -8,6 +8,9 @@ import { scan, startWith } from 'rxjs/operators';
     <mat-card class="card">
       <mat-card-header>
         <h1>Subject</h1>
+        <button class="btn-reset" mat-button (click)="reset()">
+          <mat-icon>refresh</mat-icon>RESET
+        </button>
       </mat-card-header>
 
       <mat-card-content>
@@ -47,13 +50,13 @@ import { scan, startWith } from 'rxjs/operators';
 
     <ng-template #complete>
       <div>
-        <mat-icon class="complete-icon">thumb_up</mat-icon>
+        <mat-icon class="notification-icon complete-icon">thumb_up</mat-icon>
         <h2>Completed!</h2>
       </div>
     </ng-template>
     <ng-template #error>
       <div>
-        <mat-icon class="error-icon">thumb_down</mat-icon>
+        <mat-icon class="notification-icon error-icon">thumb_down</mat-icon>
         <h2>Something went wrong...</h2>
       </div>
     </ng-template>
@@ -67,6 +70,10 @@ import { scan, startWith } from 'rxjs/operators';
   `,
   styles: [
     `
+      h1 {
+        margin: 0;
+      }
+
       mat-card-content {
         min-height: 10rem;
         display: flex;
@@ -74,10 +81,14 @@ import { scan, startWith } from 'rxjs/operators';
         align-items: center;
       }
 
-      mat-icon {
+      .notification-icon {
         font-size: 5rem;
         height: initial;
         width: initial;
+      }
+
+      .btn-reset {
+        margin-left: 6rem;
       }
 
       .card {
@@ -93,19 +104,28 @@ import { scan, startWith } from 'rxjs/operators';
       .error-icon {
         color: darkred;
       }
-    `
-  ]
+    `,
+  ],
 })
 export class LetTemplateBindingSubjectExampleComponent {
   errorStub = new Error('Template observable error!');
   visibleStrategy = 'local';
-  signals$ = new Subject<any>();
-  signalsCount$ = this.signals$.pipe(
-    scan(acc => acc + 1, 0),
-    startWith(0)
-  );
+  signals$: Subject<number>;
+  signalsCount$: Observable<number>;
+
+  constructor() {
+    this.reset();
+  }
 
   random() {
     return Math.random();
+  }
+
+  reset() {
+    this.signals$ = new Subject<any>();
+    this.signalsCount$ = this.signals$.pipe(
+      scan((acc) => acc + 1, 0),
+      startWith(0)
+    );
   }
 }

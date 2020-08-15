@@ -13,7 +13,7 @@ export interface AnimationIndexComponentState {
   selector: 'app-animation-index',
   templateUrl: './animation-index.component.html',
   styleUrls: ['./animation-index.component.scss'],
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class AnimationIndexComponent extends RxState<
   AnimationIndexComponentState
@@ -31,7 +31,7 @@ export class AnimationIndexComponent extends RxState<
   constructor(private appRef: ApplicationRef) {
     super();
     this.set({
-      growState: 'shrinked'
+      growState: 'shrinked',
     });
 
     this.connect(

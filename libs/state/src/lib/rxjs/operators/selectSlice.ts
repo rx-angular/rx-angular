@@ -113,5 +113,5 @@ export function selectSlice<T extends object, K extends keyof T>(
 
 type PickSlice<T extends object, K extends keyof T> = Pick<
   T,
-  { [I in keyof T]: I }[K]
+  { [I in K]: I }[K]
 >;

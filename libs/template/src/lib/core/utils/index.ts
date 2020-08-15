@@ -4,3 +4,4 @@ export * from './unpatched-resolved-promise';
 export * from './view-engine-checks';
 export * from './zone-checks';
 export * from './get-zone-unpatched-api';
+export * from './coalescing-manager';

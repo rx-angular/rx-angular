@@ -4,13 +4,13 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output
+  Output,
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { distinctUntilKeyChanged, map, switchMap, tap } from 'rxjs/operators';
 import {
   ListService,
-  ListServerItem
+  ListServerItem,
 } from '../../../data-access/list-resource';
 import { interval, merge, Subject, Subscription } from 'rxjs';
 
@@ -28,7 +28,7 @@ interface ComponentState {
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
-  list: []
+  list: [],
 };
 
 @Component({
@@ -73,7 +73,7 @@ const initComponentState = {
       </ng-template>
     </mat-expansion-panel>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoBasicsComponent2Start extends RxState<ComponentState>
   implements OnInit, OnDestroy {
@@ -84,7 +84,7 @@ export class DemoBasicsComponent2Start extends RxState<ComponentState>
   model$ = this.select();
 
   intervalRefreshTick$ = this.select('refreshInterval').pipe(
-    switchMap(ms => interval(ms))
+    switchMap((ms) => interval(ms))
   );
 
   refreshListSideEffect$ = merge(this.intervalRefreshTick$, this.refreshClick);
@@ -103,10 +103,12 @@ export class DemoBasicsComponent2Start extends RxState<ComponentState>
     super();
     this.set(initComponentState);
     this.connect(
-      this.listExpandedChanges.pipe(map(listExpanded => ({ listExpanded })))
+      this.listExpandedChanges.pipe(map((listExpanded) => ({ listExpanded })))
     );
     this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
-    this.hold(this.refreshListSideEffect$, _ => this.listService.refetchList());
+    this.hold(this.refreshListSideEffect$, (_) =>
+      this.listService.refetchList()
+    );
   }
 
   ngOnDestroy(): void {
@@ -121,8 +123,8 @@ export class DemoBasicsComponent2Start extends RxState<ComponentState>
     this.intervalSubscription.unsubscribe();
     this.intervalSubscription = this.select('refreshInterval')
       .pipe(
-        switchMap(ms => interval(ms)),
-        tap(_ => this.listService.refetchList())
+        switchMap((ms) => interval(ms)),
+        tap((_) => this.listService.refetchList())
       )
       .subscribe();
   }

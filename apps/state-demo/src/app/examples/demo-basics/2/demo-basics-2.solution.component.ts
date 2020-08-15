@@ -3,7 +3,7 @@ import { RxState } from '@rx-angular/state';
 import { map, switchMap } from 'rxjs/operators';
 import {
   ListServerItem,
-  ListService
+  ListService,
 } from '../../../data-access/list-resource';
 import { merge, Subject, timer } from 'rxjs';
 
@@ -21,7 +21,7 @@ interface ComponentState {
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
-  list: []
+  list: [],
 };
 
 @Component({
@@ -66,7 +66,7 @@ const initComponentState = {
       </ng-template>
     </mat-expansion-panel>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoBasicsComponent2Solution extends RxState<ComponentState> {
   refreshClicks = new Subject<Event>();
@@ -82,8 +82,8 @@ export class DemoBasicsComponent2Solution extends RxState<ComponentState> {
   }
 
   intervalRefreshTick$ = this.select(
-    map(s => s.refreshInterval),
-    switchMap(ms => timer(0, ms))
+    map((s) => s.refreshInterval),
+    switchMap((ms) => timer(0, ms))
   );
   refreshListSideEffect$ = merge(this.refreshClicks, this.intervalRefreshTick$);
 
@@ -91,7 +91,7 @@ export class DemoBasicsComponent2Solution extends RxState<ComponentState> {
     super();
     this.set(initComponentState);
     this.connect(
-      this.listExpandedChanges.pipe(map(listExpanded => ({ listExpanded })))
+      this.listExpandedChanges.pipe(map((listExpanded) => ({ listExpanded })))
     );
     this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
     this.hold(this.refreshListSideEffect$, () =>

@@ -26,9 +26,9 @@ const derivation$ = state$.pipe(
   // distinct same base-state objects (e.g. a emission of default switch cases, incorrect mutable handling of data) @TODO evaluate benefits vs. overhead
   distinctUntilChanged(),
   // CUSTOM LOGIC HERE
-  map(state => state.list.length),
+  map((state) => state.list.length),
   // Filter out undefined to have lazy state and the ability to delete state slices over time
-  filter(v => v !== undefined),
+  filter((v) => v !== undefined),
   // Distinct same values derived from the state
   distinctUntilChanged(),
   // Reuse custom operations result for multiple subscribers and reemit the last calculated value.
@@ -44,5 +44,5 @@ import { map } from 'rxjs/operators';
 import { stateful } from '@rx-angular/state';
 
 const state$: Observable<{ name: string; items: string[] }>;
-const derivation$ = state$.pipe(stateful(map(state => state.list.length)));
+const derivation$ = state$.pipe(stateful(map((state) => state.list.length)));
 ```

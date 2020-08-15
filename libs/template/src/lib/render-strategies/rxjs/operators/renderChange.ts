@@ -8,5 +8,5 @@ export function renderChange<T>(
 ): MonoTypeOperatorFunction<T> {
   const strategies = getStrategies({ cdRef });
   const strategy = strategies[strategyName];
-  return o => o.pipe(strategy.rxScheduleCD);
+  return (o) => o.pipe(strategy.rxScheduleCD);
 }

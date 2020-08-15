@@ -2,13 +2,13 @@ import {
   ChangeDetectorRef,
   OnDestroy,
   Pipe,
-  PipeTransform
+  PipeTransform,
 } from '@angular/core';
 import {
   NextObserver,
   Observable,
   ObservableInput,
-  Unsubscribable
+  Unsubscribable,
 } from 'rxjs';
 import { createRenderAware, RenderAware } from '../core';
 import { getStrategies } from '../render-strategies';
@@ -66,19 +66,19 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
   private readonly resetObserver: NextObserver<void> = {
     next: () => {
       this.renderedValue = undefined;
-    }
+    },
   };
   private readonly updateObserver: NextObserver<U | null | undefined> = {
-    next: (value: U | null | undefined) => (this.renderedValue = value)
+    next: (value: U | null | undefined) => (this.renderedValue = value),
   };
 
   constructor(cdRef: ChangeDetectorRef) {
     this.RenderAware = createRenderAware<U>({
       strategies: getStrategies({
-        cdRef
+        cdRef,
       }),
       updateObserver: this.updateObserver,
-      resetObserver: this.resetObserver
+      resetObserver: this.resetObserver,
     });
     this.subscription = this.RenderAware.subscribe();
   }

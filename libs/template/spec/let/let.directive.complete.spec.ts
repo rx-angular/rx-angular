@@ -3,6 +3,7 @@ import { EMPTY, Observable, of } from 'rxjs';
 import { async, TestBed } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let';
 import { MockChangeDetectorRef } from '../fixtures';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
 @Component({

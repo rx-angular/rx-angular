@@ -14,13 +14,13 @@ import { VirtualScrollDemoComponent } from './virtual-scroll-demo/virtual-scroll
     VirtualScrollDemoComponent,
     StrategiesOverviewComponent,
     Local01Component,
-    ScrollItemComponent
+    ScrollItemComponent,
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(STRATEGY_ROUTES),
     TemplateModule,
-    ScrollingModule
-  ]
+    ScrollingModule,
+  ],
 })
 export class StrategiesModule {}

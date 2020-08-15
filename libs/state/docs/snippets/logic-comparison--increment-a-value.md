@@ -39,7 +39,7 @@ This results in an `ApplicationRef.tick` call which re-renders all dirty flagged
     <div>Value: {{ state.count }}</div>
     <button (click)="onClick($event)">Increment</button>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyComponent {
   state: { count: number } = {};
@@ -77,12 +77,12 @@ This results in an `ApplicationRef.tick` call which re-renders all dirty flagged
     <div *rxLet="state$; let s">Value: {{ s.count }}</div>
     <button (click)="onClick($event)">Increment</button>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyComponent extends RxState<{ count: number }> {
   state$ = this.select();
   onClick(e) {
-    this.set('count', s => s.count + 1);
+    this.set('count', (s) => s.count + 1);
   }
 }
 ```
@@ -119,7 +119,7 @@ This results in an `ApplicationRef.tick` call which re-renders all dirty flagged
     <div *rxLet="state$; let s">Value: {{ s.count }}</div>
     <button (click)="btn$.next($event)">Increment</button>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyComponent extends RxState<{ count: number }> {
   readonly state$ = this.select();
@@ -147,7 +147,7 @@ A rerender gets only triggered by the `rxLet` directive. The process is the same
     <div *rxLet="state$; let s">Value: {{ s.count }}</div>
     <button [zoneless] (click)="btn$.next($event)">Increment</button>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyComponent extends RxState<{ count: number }> {
   state$ = this.select();
@@ -174,7 +174,7 @@ The rendering still gets managed by the `rxLet` Directive. But with the `strateg
     <div *rxLet="state$; let s; strategy: 'local'">Value: {{ s.count }}</div>
     <button [zoneless] (click)="btn$.next($event)">Increment</button>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyComponent extends RxState<{ count: number }> {
   state$ = this.select();

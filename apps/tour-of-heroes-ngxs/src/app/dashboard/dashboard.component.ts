@@ -12,7 +12,7 @@ interface DashboardComponentState {
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-  providers: [RxState]
+  providers: [RxState],
 })
 export class DashboardComponent {
   readonly heroes$ = this.state.select('heroes');

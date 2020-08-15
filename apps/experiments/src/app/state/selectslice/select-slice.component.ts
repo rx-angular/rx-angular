@@ -13,7 +13,7 @@ interface MyState {
   selector: 'rx-select-slice',
   templateUrl: './select-slice.component.html',
   styleUrls: ['./select-slice.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RxStateSelectSliceComponent extends RxState<MyState> {
   readonly viewState$ = this.select(
