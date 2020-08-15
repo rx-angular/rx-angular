@@ -43,11 +43,11 @@ class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 }
 ```
 
-![](../../images/api-schema.jpg)
+![](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/api-schema.jpg)
 
-![](../../images/api-reveal.jpg)
+![](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/api-reveal.jpg)
 
-## \$
+## \$ (state observable)
 
 ##### typeof: Observable&#60;T&#62;
 
