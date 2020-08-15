@@ -78,8 +78,8 @@ export function selectSlice<T extends object, K extends keyof T>(
 ): OperatorFunction<T, PickSlice<T, K>> {
   return (o$: Observable<T>): Observable<PickSlice<T, K>> =>
     o$.pipe(
-      filter(state => state !== undefined),
-      map(state => {
+      filter((state) => state !== undefined),
+      map((state) => {
         // forward null
         if (state === null) {
           return null;
@@ -87,7 +87,7 @@ export function selectSlice<T extends object, K extends keyof T>(
 
         const definedKeys = keys
           // filter out undefined properties e. g. {}, { str: undefined }
-          .filter(k => state.hasOwnProperty(k) && state[k] !== undefined);
+          .filter((k) => state.hasOwnProperty(k) && state[k] !== undefined);
 
         // this will get filtered out in the next operator
         // {str: 'test'} => selectSlice([]) => no emission
@@ -100,13 +100,13 @@ export function selectSlice<T extends object, K extends keyof T>(
 
         // create view-model
         return definedKeys
-          .filter(k => state.hasOwnProperty(k) && state[k] !== undefined)
+          .filter((k) => state.hasOwnProperty(k) && state[k] !== undefined)
           .reduce((vm, key) => {
             vm[key] = state[key];
             return vm;
           }, {} as PickSlice<T, K>);
       }),
-      filter(v => v !== undefined),
+      filter((v) => v !== undefined),
       distinctUntilSomeChanged(keys, keyCompareMap)
     );
 }
