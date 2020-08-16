@@ -1,5 +1,5 @@
 import { MonoTypeOperatorFunction } from 'rxjs';
-import { getStrategies } from '../../strategies/strategies-map';
+import { getStrategies } from '../../../../render-strategies/strategies/strategies-map';
 import { ChangeDetectorRef } from '@angular/core';
 
 export function renderChange<T>(
