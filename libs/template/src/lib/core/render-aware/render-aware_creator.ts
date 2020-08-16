@@ -11,11 +11,11 @@ import {
 import {
   distinctUntilChanged,
   filter,
-  map,
+  map, materialize,
   shareReplay,
   switchMap,
   tap,
-  withLatestFrom,
+  withLatestFrom
 } from 'rxjs/operators';
 import { RenderStrategy, StrategySelection } from './interfaces';
 
@@ -117,28 +117,13 @@ function renderWithLatestStrategy<T>(
 ): MonoTypeOperatorFunction<T> {
   return (o$) => {
     return o$.pipe(
-      handleErrorAndComplete(),
+      // move next, error, complete into the same channel
+      // @NOTICE: we are loosing the rendered value and would need to unpack the notification object
+      materialize(),
       withLatestFrom(strategyChanges$),
       // always use latest strategy on value change
-      switchMap(([renderValue, strategy]) =>
-        of(renderValue).pipe(strategy.rxScheduleCD)
-      )
+      switchMap(([renderValue, strategy]) => of(renderValue).pipe(strategy.rxScheduleCD))
     );
   };
 
-  function handleErrorAndComplete<U>(): MonoTypeOperatorFunction<U> {
-    return (o$: Observable<U>) =>
-      new Observable((subscriber: Subscriber<U>) => {
-        const subscription = o$.subscribe({
-          next: (val) => subscriber.next(val),
-          // make "error" and "complete" notifications comply with `rxScheduleCD`
-          error: (err) => {
-            console.error(err);
-            subscriber.next();
-          },
-          complete: () => subscriber.next(),
-        });
-        return () => subscription.unsubscribe();
-      });
-  }
 }
