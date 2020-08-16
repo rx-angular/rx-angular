@@ -19,10 +19,8 @@ This in turn triggers another re-rendering, and the value get displayed in the c
 ```typescript
 @Component({
   selector: 'parent',
-  template: `
-    <user-list [users]="users$ | async"></user-list>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  template: ` <user-list [users]="users$ | async"></user-list> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ParentComponent {
   users$ = userService.users$;
@@ -36,7 +34,7 @@ export class ParentComponent {
       {{ user }}
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChildComponent {
   users$ = this.select('users');
@@ -64,9 +62,7 @@ In a real life application only a view of those changes at the right place gives
 ```typescript
 @Component({
   selector: 'parent',
-  template: `
-    <user-list [users]="users$"></user-list>
-  `
+  template: ` <user-list [users]="users$"></user-list> `,
 })
 export class ParentComponent {
   users$ = userService.users$;
@@ -80,7 +76,7 @@ export class ParentComponent {
       {{ user }}
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChildComponent {
   users$ = this.select('users');

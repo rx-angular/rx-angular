@@ -8,11 +8,11 @@ import {
   shareReplay,
   startWith,
   takeUntil,
-  withLatestFrom
+  withLatestFrom,
 } from 'rxjs/operators';
 import {
   Performance02DataService,
-  Person
+  Person,
 } from './performance-02-data.service';
 import { environment } from '../../../../environments/environment';
 
@@ -20,7 +20,7 @@ import { environment } from '../../../../environments/environment';
   selector: 'app-performance-02-index',
   templateUrl: './performance02-index.component.html',
   styleUrls: ['./performance02-index.component.scss'],
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Performance02IndexComponent implements OnInit, OnDestroy {
   constructor(private dataService: Performance02DataService) {}
@@ -33,7 +33,7 @@ export class Performance02IndexComponent implements OnInit, OnDestroy {
     'eyeColor',
     'company',
     'phone',
-    'address'
+    'address',
   ];
 
   readonly data$ = new BehaviorSubject<Person[]>([]);
@@ -42,50 +42,52 @@ export class Performance02IndexComponent implements OnInit, OnDestroy {
     map(([data, f]) => this.filterData(data, f)),
     shareReplay({
       refCount: true,
-      bufferSize: 1
+      bufferSize: 1,
     })
   );
 
   selection = new SelectionModel<Person>(true, []);
   readonly allSelected$: Observable<boolean> = combineLatest([
-    this.selection.changed.pipe(map(change => change.source.selected.length)),
-    this.data$.pipe(map(d => d.length))
+    this.selection.changed.pipe(map((change) => change.source.selected.length)),
+    this.data$.pipe(map((d) => d.length)),
   ]).pipe(
     map(([lengthSelected, lengthData]) => lengthSelected === lengthData),
     startWith(false),
     shareReplay({
       refCount: true,
-      bufferSize: 1
+      bufferSize: 1,
     })
   );
 
   readonly anySelected$: Observable<boolean> = this.selection.changed.pipe(
-    map(change => change.source.selected.length > 0),
+    map((change) => change.source.selected.length > 0),
     shareReplay({
       refCount: true,
-      bufferSize: 1
+      bufferSize: 1,
     })
   );
 
   readonly rowSelectionState$: Observable<{
     [key: string]: boolean;
-  }> = this.selection.changed.pipe(map(change => change.source.selected)).pipe(
-    map(selected => {
-      const selectionStates = {};
-      if (selected.length > 0) {
-        selected.forEach(p => (selectionStates[p._id] = true));
-      }
-      return selectionStates;
-    }),
-    startWith({}),
-    shareReplay({
-      refCount: true,
-      bufferSize: 1
-    })
-  );
+  }> = this.selection.changed
+    .pipe(map((change) => change.source.selected))
+    .pipe(
+      map((selected) => {
+        const selectionStates = {};
+        if (selected.length > 0) {
+          selected.forEach((p) => (selectionStates[p._id] = true));
+        }
+        return selectionStates;
+      }),
+      startWith({}),
+      shareReplay({
+        refCount: true,
+        bufferSize: 1,
+      })
+    );
 
   readonly masterCheckboxLabel$: Observable<string> = this.allSelected$.pipe(
-    map(allSelected => `${allSelected ? 'select' : 'deselect'} all`)
+    map((allSelected) => `${allSelected ? 'select' : 'deselect'} all`)
   );
 
   readonly checkBoxLabels$: Observable<{
@@ -93,11 +95,11 @@ export class Performance02IndexComponent implements OnInit, OnDestroy {
   }> = combineLatest([
     this.rowSelectionState$,
     this.allSelected$,
-    this.data$
+    this.data$,
   ]).pipe(
     map(([selectionStates, allSelected, data]) => {
       const labels = {};
-      data.forEach(p => {
+      data.forEach((p) => {
         labels[p._id] = this.checkboxLabel(
           p,
           allSelected,
@@ -109,7 +111,7 @@ export class Performance02IndexComponent implements OnInit, OnDestroy {
     startWith({}),
     shareReplay({
       refCount: true,
-      bufferSize: 1
+      bufferSize: 1,
     })
   );
 
@@ -136,7 +138,7 @@ export class Performance02IndexComponent implements OnInit, OnDestroy {
         if (allSelected) {
           this.selection.clear();
         } else {
-          data.forEach(d => this.selection.select(d));
+          data.forEach((d) => this.selection.select(d));
         }
       });
   }
@@ -161,7 +163,7 @@ export class Performance02IndexComponent implements OnInit, OnDestroy {
   filterData(data: Person[], filterStr: string): Person[] {
     if (!!filterStr) {
       const filterValue = filterStr.toLowerCase();
-      return data.filter(p => {
+      return data.filter((p) => {
         return (
           p.name.toLowerCase().includes(filterValue) ||
           p.balance.toLowerCase().includes(filterValue) ||
@@ -169,10 +171,7 @@ export class Performance02IndexComponent implements OnInit, OnDestroy {
           p.company.toLowerCase().includes(filterValue) ||
           p.phone.toLowerCase().includes(filterValue) ||
           p.address.toLowerCase().includes(filterValue) ||
-          p.age
-            .toString()
-            .toLowerCase()
-            .includes(filterValue)
+          p.age.toString().toLowerCase().includes(filterValue)
         );
       });
     }

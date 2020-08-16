@@ -14,6 +14,7 @@ Other Features:
 - it takes away multiple usages of the `async` or `push` pipe
 - a unified/structured way of handling null, undefined or error
 - distinct same values in a row skip not needed re-renderings
+- display custom templates for different observable notifications (suspense, next, error, complete)
 
 The current way of binding an observable in angular applications to the view looks like that:
 
@@ -24,7 +25,7 @@ The current way of binding an observable in angular applications to the view loo
 </ng-container>
 ```
 
-`*ngIf` is also interfering with rendering. In case of any false
+`*ngIf` is also interfering with rendering. In case of any falsy
 value (e.g. `0`), the component would get detached from the dom.
 
 View binding with `*rxLet`:
@@ -54,11 +55,11 @@ Using different render strategies:
 ```
 
 The `*rxLet` Directive will render its template and manage `ChangeDetection` after it got an initial value.
-So if the incoming `Observable` emits it's value lazy (e.g. data coming from `Http`), your template will be
-rendered lazy as well. This can very positively impact the initial render performance of your application.
+So if the incoming `Observable` emits its value lazily (e.g. data coming from `Http`), your template will be
+rendered lazily as well. This can very positively impact the initial render performance of your application.
 
 In addition to that, it provides us information on the observable context.
-We can track:
+You can track:
 
 - next value
 - error value
@@ -76,3 +77,30 @@ We can track:
   </ng-container>
 </ng-container>
 ```
+
+You can also use template anchors and display template's content for different observable state:
+
+- on complete
+- on error
+- on suspense - before the first value is emitted
+
+```html
+<ng-container
+  *rxLet="
+    observableNumber$;
+    let n;
+    error: error;
+    complete: complete;
+    suspense: suspense;
+  "
+>
+  <app-number [number]="n"></app-number>
+</ng-container>
+<ng-template #error>ERROR</ng-template>
+<ng-template #complete>COMPLETE</ng-template>
+<ng-template #suspense>SUSPENSE</ng-template>
+```
+
+Internally, `*rxLet` is using a simple "view memoization" - it caches all anchored template references and re-uses
+them whenever the observable notification (next/error/complete) is sent. Then it only updates the context
+(e.g. a value from the observable) in the view.

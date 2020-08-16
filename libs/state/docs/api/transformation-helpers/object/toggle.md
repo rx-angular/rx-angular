@@ -1,4 +1,4 @@
-# toggle
+## toggle
 
 Toggles a boolean property in the object.
 Accepts object of type T and key value of which is boolean.
@@ -6,8 +6,8 @@ Toggles the property and returns a shallow copy of an object, while not mutating
 
 _Example_
 
-```TypeScript
-const state = {items: [1,2,3], loading: true};
+```typescript
+const state = { items: [1, 2, 3], loading: true };
 
 const updatedState = toggle(state, 'loading');
 
@@ -17,43 +17,51 @@ const updatedState = toggle(state, 'loading');
 
 _Example_
 
-```TypeScript
+```typescript
 // Usage with RxState
 
 export class ListComponent {
-   readonly loadingChange$ = new Subject();
+  readonly loadingChange$ = new Subject();
 
-   constructor(
-     private state: RxState<ComponentState>
-   ) {
-     // Reactive implementation
-     state.connect(
-       this.api.loadingChange$,
-       (state, _) => {
-           return toggle(state, 'isLoading');
-       }
-     );
-   }
+  constructor(private state: RxState<ComponentState>) {
+    // Reactive implementation
+    state.connect(this.api.loadingChange$, (state, _) => {
+      return toggle(state, 'isLoading');
+    });
+  }
 
-   // Imperative implementation
-   toggleLoading(): void {
-     this.set(toggle(state, 'isLoading'));
-   }
+  // Imperative implementation
+  toggleLoading(): void {
+    this.set(toggle(state, 'isLoading'));
+  }
 }
 ```
 
-## Signature
+### Edge cases
 
-```TypeScript
-function toggle<T extends object>(object: T, key: OnlyKeysOfSpecificType<T, boolean>): T
+```typescript
+toggle(state, null as any) > state;
+toggle(null as any, null as any) > null;
+toggle(state, 'str' as any) > state;
+toggle(state, 'nonExistingBooleanKey' as any) >
+  { ...state, nonExistingBooleanKey: true };
 ```
 
-## Parameters
+### Signature
 
-### object
+```typescript
+function toggle<T extends object>(
+  object: T,
+  key: OnlyKeysOfSpecificType<T, boolean>
+): T;
+```
 
-##### typeof: T
+### Parameters
 
-### key
+#### object
 
-##### typeof: OnlyKeysOfSpecificType&#60;T, boolean&#62;
+###### typeof: T
+
+#### key
+
+###### typeof: OnlyKeysOfSpecificType&#60;T, boolean&#62;

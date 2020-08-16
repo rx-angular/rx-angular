@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+/docs/test-coverage
 
 # dependencies
 /node_modules

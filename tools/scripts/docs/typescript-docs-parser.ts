@@ -11,7 +11,7 @@ import {
   MethodParameterInfo,
   ParsedDeclaration,
   PropertyInfo,
-  ValidDeclaration
+  ValidDeclaration,
 } from './typescript-docgen-types';
 
 /**
@@ -31,7 +31,7 @@ export class TypescriptDocsParser {
    * parsed data structures ready for rendering.
    */
   parse(filePaths: string[]): DocsPage[] {
-    const sourceFiles = filePaths.map(filePath => {
+    const sourceFiles = filePaths.map((filePath) => {
       return ts.createSourceFile(
         filePath,
         this.replaceEscapedAtTokens(fs.readFileSync(filePath).toString()),
@@ -43,7 +43,7 @@ export class TypescriptDocsParser {
     const statements = this.getStatementsWithSourceLocation(sourceFiles);
 
     const pageMap = statements
-      .map(statement => {
+      .map((statement) => {
         const info = this.parseDeclaration(
           statement.statement,
           statement.sourceFile,
@@ -51,7 +51,7 @@ export class TypescriptDocsParser {
         );
         return info;
       })
-      .filter(val => val !== undefined && val !== null)
+      .filter((val) => val !== undefined && val !== null)
       .reduce((pages, declaration) => {
         const pageTitle = declaration.page || declaration.title;
         const existingPage = pages.get(pageTitle);
@@ -67,7 +67,7 @@ export class TypescriptDocsParser {
             title: pageTitle,
             category: declaration.category,
             declarations: [declaration],
-            fileName
+            fileName,
           });
         }
         return pages;
@@ -88,7 +88,7 @@ export class TypescriptDocsParser {
     sourceLine: number;
   }> {
     return sourceFiles.reduce((st, sf) => {
-      const statementsWithSources = sf.statements.map(statement => {
+      const statementsWithSources = sf.statements.map((statement) => {
         const sourceFile = path
           .relative(path.join(__dirname, '..'), sf.fileName)
           .replace(/\\/g, '/');
@@ -136,7 +136,7 @@ export class TypescriptDocsParser {
       weight,
       category,
       description,
-      page: docsPage
+      page: docsPage,
     };
 
     if (ts.isInterfaceDeclaration(statement)) {
@@ -147,7 +147,7 @@ export class TypescriptDocsParser {
           statement,
           ts.SyntaxKind.ExtendsKeyword
         ),
-        members: this.parseMembers(statement.members)
+        members: this.parseMembers(statement.members),
       };
     } else if (ts.isTypeAliasDeclaration(statement)) {
       return {
@@ -156,7 +156,7 @@ export class TypescriptDocsParser {
         kind: 'typeAlias',
         members: ts.isTypeLiteralNode(statement.type)
           ? this.parseMembers(statement.type.members)
-          : undefined
+          : undefined,
       };
     } else if (ts.isClassDeclaration(statement)) {
       return {
@@ -170,31 +170,31 @@ export class TypescriptDocsParser {
         implements: this.getHeritageClauseText(
           statement,
           ts.SyntaxKind.ImplementsKeyword
-        )
+        ),
       };
     } else if (ts.isEnumDeclaration(statement)) {
       return {
         ...info,
         kind: 'enum' as 'enum',
-        members: this.parseMembers(statement.members) as PropertyInfo[]
+        members: this.parseMembers(statement.members) as PropertyInfo[],
       };
     } else if (ts.isFunctionDeclaration(statement)) {
-      const parameters = statement.parameters.map(p => ({
+      const parameters = statement.parameters.map((p) => ({
         name: p.name.getText(),
         type: p.type ? p.type.getText() : '',
         optional: !!p.questionToken,
-        initializer: p.initializer && p.initializer.getText()
+        initializer: p.initializer && p.initializer.getText(),
       }));
       return {
         ...info,
         kind: 'function',
         parameters,
-        type: statement.type
+        type: statement.type,
       };
     } else if (ts.isVariableStatement(statement)) {
       return {
         ...info,
-        kind: 'variable'
+        kind: 'variable',
       };
     }
   }
@@ -210,7 +210,7 @@ export class TypescriptDocsParser {
     if (!heritageClauses) {
       return;
     }
-    const clause = heritageClauses.find(cl => cl.token === kind);
+    const clause = heritageClauses.find((cl) => cl.token === kind);
     if (!clause) {
       return;
     }
@@ -235,7 +235,7 @@ export class TypescriptDocsParser {
     ) {
       typeParams =
         '<' +
-        declaration.typeParameters.map(tp => tp.getText()).join(', ') +
+        declaration.typeParameters.map((tp) => tp.getText()).join(', ') +
         '>';
     }
     return name + typeParams;
@@ -260,7 +260,7 @@ export class TypescriptDocsParser {
 
     for (const member of members) {
       const modifiers = member.modifiers
-        ? member.modifiers.map(m => m.getText())
+        ? member.modifiers.map((m) => m.getText())
         : [];
       const isPrivate = modifiers.includes('private');
       if (
@@ -297,10 +297,11 @@ export class TypescriptDocsParser {
           fullText = member.getText();
         }
         this.parseTags(member, {
-          description: tag => (description += tag.comment || ''),
-          example: tag => (description += this.formatExampleCode(tag.comment)),
-          default: tag => (defaultValue = tag.comment || ''),
-          internal: tag => (isInternal = true)
+          description: (tag) => (description += tag.comment || ''),
+          example: (tag) =>
+            (description += this.formatExampleCode(tag.comment)),
+          default: (tag) => (defaultValue = tag.comment || ''),
+          internal: (tag) => (isInternal = true),
         });
         if (isInternal) {
           continue;
@@ -313,29 +314,29 @@ export class TypescriptDocsParser {
           name,
           description: this.restoreAtTokens(description),
           type,
-          modifiers
+          modifiers,
         };
         if (
           ts.isMethodSignature(member) ||
           ts.isMethodDeclaration(member) ||
           ts.isConstructorDeclaration(member)
         ) {
-          parameters = member.parameters.map(p => ({
+          parameters = member.parameters.map((p) => ({
             name: p.name.getText(),
             type: p.type ? p.type.getText() : '',
             optional: !!p.questionToken,
-            initializer: p.initializer && p.initializer.getText()
+            initializer: p.initializer && p.initializer.getText(),
           }));
           result.push({
             ...memberInfo,
             kind: 'method',
-            parameters
+            parameters,
           });
         } else {
           result.push({
             ...memberInfo,
             kind: 'property',
-            defaultValue
+            defaultValue,
           });
         }
       }
@@ -350,7 +351,7 @@ export class TypescriptDocsParser {
   private getDeclarationWeight(statement: ValidDeclaration): number {
     let weight = 10;
     this.parseTags(statement, {
-      docsWeight: tag => (weight = Number.parseInt(tag.comment || '10', 10))
+      docsWeight: (tag) => (weight = Number.parseInt(tag.comment || '10', 10)),
     });
     return weight;
   }
@@ -358,7 +359,7 @@ export class TypescriptDocsParser {
   private getDocsPage(statement: ValidDeclaration): string | undefined {
     let docsPage: string | undefined;
     this.parseTags(statement, {
-      docsPage: tag => (docsPage = tag.comment)
+      docsPage: (tag) => (docsPage = tag.comment),
     });
     return docsPage;
   }
@@ -369,8 +370,8 @@ export class TypescriptDocsParser {
   private getDeclarationDescription(statement: ValidDeclaration): string {
     let description = '';
     this.parseTags(statement, {
-      description: tag => (description += tag.comment),
-      example: tag => (description += this.formatExampleCode(tag.comment))
+      description: (tag) => (description += tag.comment),
+      example: (tag) => (description += this.formatExampleCode(tag.comment)),
     });
     return this.restoreAtTokens(description);
   }
@@ -381,7 +382,7 @@ export class TypescriptDocsParser {
   private getDocsCategory(statement: ValidDeclaration): string | undefined {
     let category: string | undefined;
     this.parseTags(statement, {
-      docsCategory: tag => (category = tag.comment || '')
+      docsCategory: (tag) => (category = tag.comment || ''),
     });
     return this.kebabCase(category);
   }
@@ -423,7 +424,10 @@ export class TypescriptDocsParser {
    * wherein the asterisks are not stripped as they should be, see https://github.com/Microsoft/TypeScript/issues/23517)
    */
   private formatExampleCode(example: string = ''): string {
-    return '\n\n*Example*\n\n' + this.wrapInTypescript(example.replace(/\n\s+\*\s/g, '\n'));
+    return (
+      '\n\n*Example*\n\n' +
+      this.wrapInTypescript(example.replace(/\n\s+\*\s/g, '\n'))
+    );
   }
 
   private wrapInTypescript(val: string = '') {

@@ -2,11 +2,15 @@ import { TestScheduler } from 'rxjs/internal/testing/TestScheduler';
 import { mergeMapTo, share } from 'rxjs/operators';
 import { concat, defer, from, of, timer } from 'rxjs';
 
-import { jestMatcher } from '@test-helpers';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { jestMatcher, mockConsole } from '@test-helpers';
 import { coalesceWith } from '../../../src/lib/render-strategies/rxjs/operators/coalesceWith';
+
 
 /** @test {coalesceWith} */
 describe('coalesce operator additional logic', () => {
+  beforeAll(() => mockConsole());
+
   let testScheduler: TestScheduler;
 
   beforeEach(() => {

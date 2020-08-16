@@ -3,6 +3,8 @@ import { EMPTY, Observable, of } from 'rxjs';
 import { async, TestBed } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let';
 import { MockChangeDetectorRef } from '../fixtures';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
@@ -41,6 +43,7 @@ const setupLetDirectiveTestComponentComplete = (): void => {
 };
 
 describe('LetDirective when complete', () => {
+  beforeAll(() => mockConsole());
   beforeEach(async(setupLetDirectiveTestComponentComplete));
 
   it('should render true if completed', () => {

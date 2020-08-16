@@ -6,7 +6,8 @@ import {
   getStrategies
 } from '../../src/lib/render-strategies';
 import { TestScheduler } from 'rxjs/testing';
-import { jestMatcher } from '@test-helpers';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { jestMatcher, mockConsole } from '@test-helpers';
 
 import {
   getMockNativeStrategyConfig,
@@ -38,7 +39,10 @@ function tickFromUnPatchedPromise() {
   return from(getUnpatchedResolvedPromise());
 }
 
+
 describe('getZoneUnPatchedDurationSelector', () => {
+  beforeAll(() => mockConsole());
+
   beforeEach(restoreGlobalThis);
 
   it('should return the the native/un-patched Promise from globalThis.Promise if zone didnt patch it', () => {

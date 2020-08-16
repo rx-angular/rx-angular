@@ -3,6 +3,6 @@ import { NgModule } from '@angular/core';
 @NgModule({
   imports: [],
   declarations: [],
-  bootstrap: []
+  bootstrap: [],
 })
 export class ListResourceModule {}

@@ -20,6 +20,7 @@ import { RxStateParentSelectionsComponent } from './selections/parent.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RxStateChildSelectionsComponent } from './selections/child.component';
 import { RxStateParentSubscriptionLessComponent } from './subscription-less-interaction/parent.component';
+import { RxStateSelectSliceComponent } from './selectslice/select-slice.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { RxStateParentSubscriptionLessComponent } from './subscription-less-inte
     RxStateParentCompositionComponent,
     RxStateParentSelectionsComponent,
     RxStateParentSubscriptionComponent,
-    RxStateParentSubscriptionLessComponent
+    RxStateParentSubscriptionLessComponent,
+    RxStateSelectSliceComponent,
   ],
   imports: [
     CommonModule,
@@ -44,7 +46,7 @@ import { RxStateParentSubscriptionLessComponent } from './subscription-less-inte
     MatSelectModule,
     TemplateModule,
     FormsModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+  ],
 })
 export class RxStateModule {}

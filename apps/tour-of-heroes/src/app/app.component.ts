@@ -7,7 +7,7 @@ import { AppRenderStrategy, ConfigService } from './config.service';
   // tslint:disable-next-line:component-selector
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   numRender = 0;
@@ -20,7 +20,7 @@ export class AppComponent {
   ) {
     configService.setStrategy(AppRenderStrategy.local);
     router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
+      .pipe(filter((e) => e instanceof NavigationEnd))
       .subscribe(() => appRef.tick());
   }
 

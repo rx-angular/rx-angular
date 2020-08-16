@@ -18,7 +18,7 @@ import { tap } from 'rxjs/operators';
     </button>
     <app-cd02-child0101-push></app-cd02-child0101-push>
   `,
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class Child0401Component extends BaseComponent {
   markForCheck$ = new Subject<Event>();

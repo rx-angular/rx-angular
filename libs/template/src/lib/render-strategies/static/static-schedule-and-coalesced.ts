@@ -20,7 +20,7 @@ export function coalesceAndSchedule(
     abC
   );
 
-  const abortHandler = function() {
+  const abortHandler = function () {
     coalesceAbC.abort();
     abC.signal.removeEventListener('abort', abortHandler, false);
   };

@@ -1,25 +1,65 @@
+/*
+  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
+  It is not intended to be used to perform a compilation.
+
+  To learn more about this file see: https://angular.io/config/solution-tsconfig.
+*/
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "rootDir": ".",
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "es2015",
-    "module": "esnext",
-    "typeRoots": ["node_modules/@types"],
-    "lib": ["es2018", "dom"],
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@test-helpers": ["libs/test-helpers/src/index.ts"],
-      "@rx-angular/state": ["libs/state/src/index.ts"],
-      "@rx-angular/template": ["libs/template/src/index.ts"]
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/state-demo/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/state-demo/tsconfig.spec.json"
+    },
+    {
+      "path": "./apps/experiments/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/experiments/tsconfig.spec.json"
+    },
+    {
+      "path": "./libs/test-helpers/tsconfig.spec.json"
+    },
+    {
+      "path": "./libs/state/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/state/tsconfig.spec.json"
+    },
+    {
+      "path": "./libs/state/tsconfig.perf.json"
+    },
+    {
+      "path": "./libs/template/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/template/tsconfig.spec.json"
+    },
+    {
+      "path": "./apps/template-demo/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/template-demo/tsconfig.spec.json"
+    },
+    {
+      "path": "./apps/docs/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/docs/tsconfig.spec.json"
+    },
+    {
+      "path": "./apps/tour-of-heroes/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/tour-of-heroes/tsconfig.spec.json"
+    },
+    {
+      "path": "./apps/tour-of-heroes-ngxs/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/tour-of-heroes-ngxs/tsconfig.spec.json"
     }
-  },
-  "exclude": ["node_modules", "tmp"]
+  ]
 }

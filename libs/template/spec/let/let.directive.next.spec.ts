@@ -4,6 +4,8 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let';
 import { take } from 'rxjs/operators';
 import { MockChangeDetectorRef } from '../fixtures';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
@@ -46,6 +48,7 @@ const setupLetDirectiveTestComponent = (): void => {
 };
 
 describe('LetDirective when nexting values', () => {
+  beforeAll(() => mockConsole());
   beforeEach((setupLetDirectiveTestComponent));
 
   it('should be instantiable', () => {
@@ -57,7 +60,7 @@ describe('LetDirective when nexting values', () => {
   it('should render undefined as value when initially undefined was passed (as no value ever was emitted)', () => {
     letDirectiveTestComponent.value$ = undefined;
     fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('');
+    expect(componentNativeElement.textContent).toBe('undefined');
   });
 
   it('should render null as value when initially null was passed (as no value ever was emitted)', () => {
@@ -87,7 +90,7 @@ describe('LetDirective when nexting values', () => {
   it('should render nothing as value when initially NEVER was passed (as no value ever was emitted)', () => {
     letDirectiveTestComponent.value$ = NEVER;
     fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('');
+    expect(componentNativeElement.textContent).toBe('undefined');
   });
 
   it('should render emitted value from passed observable without changing it', () => {
@@ -123,7 +126,7 @@ describe('LetDirective when nexting values', () => {
   it('should render values over time when a new observable was passed', fakeAsync(() => {
     letDirectiveTestComponent.value$ = interval(1000).pipe(take(3));
     fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('');
+    expect(componentNativeElement.textContent).toBe('undefined');
     tick(1000);
     fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('0');

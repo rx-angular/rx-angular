@@ -63,7 +63,7 @@ By assigning the `model$` to the `$` property of the `RxState` class we get the 
   ...
 })
 export class DemoBasicsComponent2 extends RxState<ComponentState> {
-  model$ = this.$;
+  model$ = this.select();
 }
 ```
 

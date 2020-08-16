@@ -1,9 +1,11 @@
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { Observable, of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 import { selectSlice } from '../../../src/lib/rxjs/operators/selectSlice';
 import { KeyCompareMap } from '../../../src/lib/rxjs/interfaces';
-import { mergeMap } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
+import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
 
 let testScheduler: TestScheduler;
 
@@ -60,7 +62,8 @@ describe('selectSlice operator', () => {
 
       expectObservable(
         e1.pipe(
-          selectSlice(['val'])
+          selectSlice(['val']),
+          map(({ val }) => ({ val })) // this is here to test if the typings work in strict mode
         )
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -108,25 +111,25 @@ describe('selectSlice operator', () => {
           val: 2,
           objVal: {
             foo: 'foo',
-            bar: 'bar'
+            bar: 0
           }
         },
         d: {
           val: 2,
           objVal: {
             foo: 'foo2',
-            bar: 'bar'
+            bar: 0
           }
         },
         e: {
           val: 2,
           objVal: {
             foo: 'foo2',
-            bar: 'bar3'
+            bar: 3
           }
         }
       };
-      const e1 = cold('--a--a--b--c--d--e--|', values);
+      const e1: ColdObservable<ISelectSliceTest> = cold('--a--a--b--c--d--e--|', values);
       const e1subs = '^-------------------!';
       const expected = '--a-----b--c--d-----|';
       const keyCompare: KeyCompareMap<ISelectSliceTest> = {

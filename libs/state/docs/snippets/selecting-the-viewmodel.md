@@ -45,7 +45,7 @@ As your view requires additional and/or derived information from your component 
 Changes of your `viewModel$` ultimately result in component renderings, so we have to make sure that it's emissions
 are distinct.
 
-## _Example w [`selectSlice`](../api/operators/select-slice.md)_:
+## Using [`selectSlice`](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api/operators/select-slice.md):
 
 For this scenario we created the `selectSlice` operator.
 It returns an Observable that emits a distinct subset of the received object.
@@ -61,9 +61,9 @@ export class ViewModelComponent extends RxState<ComponentState> {
       title,
       created,
       total: list.length,
-      visibleItems: list.filter(item =>
-        visibleItemIds.some(itemId => itemId === item.id)
-      )
+      visibleItems: list.filter((item) =>
+        visibleItemIds.some((itemId) => itemId === item.id)
+      ),
     }))
   );
   constructor() {
@@ -72,7 +72,7 @@ export class ViewModelComponent extends RxState<ComponentState> {
 }
 ```
 
-## _Example w multiple Observables and [`selectSlice`](../api/operators/select-slice.md)_:
+## Multiple Observables and [`selectSlice`](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api/operators/select-slice.md):
 
 There are situations where you want to divide your `ViewModel` into different parts.
 
@@ -110,11 +110,11 @@ export class ViewModelComponent extends RxState<ComponentState> {
       selectSlice(['list', 'visibleItemIds']),
       map(({ list, visibleItemIds }) => ({
         total: list.length,
-        visibleItems: list.filter(item =>
-          visibleItemIds.some(itemId => itemId === item.id)
-        )
+        visibleItems: list.filter((item) =>
+          visibleItemIds.some((itemId) => itemId === item.id)
+        ),
       }))
-    )
+    ),
   };
   constructor() {
     super();

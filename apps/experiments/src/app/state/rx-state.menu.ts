@@ -7,20 +7,24 @@ export const MENU_ITEMS: MenuItem[] = [
     children: [
       {
         link: 'subscription',
-        label: 'Subscription'
+        label: 'Subscription',
       },
       {
         link: 'composition',
-        label: 'Composition'
+        label: 'Composition',
       },
       {
         link: 'selections',
-        label: 'Selections'
+        label: 'Selections',
       },
       {
         link: 'connect',
-        label: 'Connecting'
-      }
-    ]
-  }
+        label: 'Connecting',
+      },
+      {
+        link: 'selectslice',
+        label: 'SelectSlice',
+      },
+    ],
+  },
 ];

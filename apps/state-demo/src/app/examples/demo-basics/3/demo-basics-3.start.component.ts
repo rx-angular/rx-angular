@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   ListServerItem,
-  ListService
+  ListService,
 } from '../../../data-access/list-resource';
 import { merge, Subject, timer } from 'rxjs';
 import { RxState } from '@rx-angular/state';
@@ -21,7 +21,7 @@ interface ComponentState {
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
-  list: []
+  list: [],
 };
 @Component({
   selector: 'demo-basics-3-start',
@@ -66,7 +66,7 @@ const initComponentState = {
       </ng-template>
     </mat-expansion-panel>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoBasicsComponenteStart extends RxState<ComponentState> {
   refreshClicks = new Subject<Event>();
@@ -84,16 +84,16 @@ export class DemoBasicsComponenteStart extends RxState<ComponentState> {
   refreshListSideEffect$ = merge(
     this.refreshClicks,
     this.select(
-      map(s => s.refreshInterval),
-      switchMap(ms => timer(0, ms))
+      map((s) => s.refreshInterval),
+      switchMap((ms) => timer(0, ms))
     )
-  ).pipe(tap(_ => this.listService.refetchList()));
+  ).pipe(tap((_) => this.listService.refetchList()));
 
   constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
     this.connect(
-      this.listExpandedChanges.pipe(map(b => ({ listExpanded: b })))
+      this.listExpandedChanges.pipe(map((b) => ({ listExpanded: b })))
     );
     this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
     this.hold(this.refreshListSideEffect$);

@@ -1,4 +1,5 @@
 import { RxStateOverviewComponent } from './rx-state.overview.component';
+import { RxStateSelectSliceComponent } from './selectslice/select-slice.component';
 import { RxStateParentSubscriptionComponent } from './subscription/parent.component';
 import { RxStateParentSelectionsComponent } from './selections/parent.component';
 import { RxStateParentCompositionComponent } from './composition/parent.component';
@@ -7,22 +8,26 @@ import { RxStateParentSubscriptionLessComponent } from './subscription-less-inte
 export const ROUTES = [
   {
     path: 'rx-base-state',
-    component: RxStateOverviewComponent
+    component: RxStateOverviewComponent,
   },
   {
     path: 'subscription',
-    component: RxStateParentSubscriptionComponent
+    component: RxStateParentSubscriptionComponent,
   },
   {
     path: 'composition',
-    component: RxStateParentCompositionComponent
+    component: RxStateParentCompositionComponent,
   },
   {
     path: 'selections',
-    component: RxStateParentSelectionsComponent
+    component: RxStateParentSelectionsComponent,
   },
   {
     path: 'connect',
-    component: RxStateParentSubscriptionLessComponent
-  }
+    component: RxStateParentSubscriptionLessComponent,
+  },
+  {
+    path: 'selectslice',
+    component: RxStateSelectSliceComponent,
+  },
 ];

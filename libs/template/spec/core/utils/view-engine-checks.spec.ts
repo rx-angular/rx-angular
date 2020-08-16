@@ -1,6 +1,11 @@
 import { getGlobalThis, isViewEngineIvy } from '../../../src/lib/core';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { mockConsole } from '@test-helpers';
+
 
 describe('isIvy', () => {
+  beforeAll(() => mockConsole());
+
   describe('in ViewEngine Angular 8 + 9', () => {
     it('should return false if ng is defined with probe', () => {
       getGlobalThis().ng = { probe: true };

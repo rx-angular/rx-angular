@@ -1,4 +1,4 @@
-# selectSlice
+## selectSlice
 
 Returns an Observable that emits only the provided `keys` emitted by the source Observable. Each key will get
 filtered to only emit _defined_ values as well as checked for distinct emissions.
@@ -9,22 +9,19 @@ explicitly different
 
 _Example_
 
-```TypeScript
+```typescript
 // An example with a custom comparison applied to each key
 import { of } from 'rxjs';
 import { selectSlice } from 'rx-angular/state';
 
-
 const state$: Observable<MyState> = of(
- { title: 'myTitle', panelOpen: true},
- { title: 'myTitle2', panelOpen: true},
- { title: 'newTitle', panelOpen: true},
- { title: 'newTitle', panelOpen: false}
+  { title: 'myTitle', panelOpen: true },
+  { title: 'myTitle2', panelOpen: true },
+  { title: 'newTitle', panelOpen: true },
+  { title: 'newTitle', panelOpen: false }
 )
-.pipe(
-    selectSlice(['title', 'panelOpen']),
-  )
-  .subscribe(x => console.log(x));
+  .pipe(selectSlice(['title', 'panelOpen']))
+  .subscribe((x) => console.log(x));
 
 // displays:
 //  { title: 'myTitle', panelOpen: true },
@@ -35,28 +32,30 @@ const state$: Observable<MyState> = of(
 
 _Example_
 
-```TypeScript
+```typescript
 import { of, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { selectSlice } from 'rx-angular/state';
 
 interface MyState {
-   title: string;
-   items: string[];
-   panelOpen: boolean;
+  title: string;
+  items: string[];
+  panelOpen: boolean;
 }
 // Select items and title.
 // apply custom compare logic for the items array
 const customComparison: KeyCompareMap<MyState> = {
-  items: (oldItems, newItems) => compareItems(oldItems, newItems)
+  items: (oldItems, newItems) => compareItems(oldItems, newItems),
 };
 const state$: Observable<MyState> = of(
-{ title: 'myTitle', items: ['foo', 'bar'], panelOpen: true },
-{ title: 'myTitle', items: ['foo', 'bar'], panelOpen: false },
-{ title: 'nextTitle', items: ['foo', 'baR'], panelOpen: true },
-{ title: 'nextTitle', items: ['fooRz', 'boo'], panelOpen: false },
+  { title: 'myTitle', items: ['foo', 'bar'], panelOpen: true },
+  { title: 'myTitle', items: ['foo', 'bar'], panelOpen: false },
+  { title: 'nextTitle', items: ['foo', 'baR'], panelOpen: true },
+  { title: 'nextTitle', items: ['fooRz', 'boo'], panelOpen: false }
 );
-const slice$ = state$.pipe(selectSlice(['title', 'items']), tap(console.log)).subscribe();
+const slice$ = state$
+  .pipe(selectSlice(['title', 'items']), tap(console.log))
+  .subscribe();
 
 // displays:
 // { title: 'myTitle', items: ['foo', 'bar'] }
@@ -64,18 +63,21 @@ const slice$ = state$.pipe(selectSlice(['title', 'items']), tap(console.log)).su
 // { title: 'nextTitle', items: ['fooRz', 'boo'] }
 ```
 
-## Signature
+### Signature
 
-```TypeScript
-function selectSlice<T extends object, K extends keyof T>(keys: K[], keyCompareMap?: KeyCompareMap<{ [P in K]: T[P] }>): OperatorFunction<T, PickStrict<T, K> | null>
+```typescript
+function selectSlice<T extends object, K extends keyof T>(
+  keys: K[],
+  keyCompareMap?: KeyCompareMap<{ [P in K]: T[P] }>
+): OperatorFunction<T, PickSlice<T, K> | null>;
 ```
 
-## Parameters
+### Parameters
 
-### keys
+#### keys
 
 ##### typeof: K[]
 
-### keyCompareMap
+#### keyCompareMap
 
 ##### typeof: KeyCompareMap&#60;{ [P in K]: T[P] }&#62;

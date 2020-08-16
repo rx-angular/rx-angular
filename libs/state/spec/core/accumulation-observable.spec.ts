@@ -1,6 +1,8 @@
+
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
-import { interval, of } from 'rxjs';
-import { map, pluck, switchMap, take } from 'rxjs/operators';
+import { interval, of, throwError } from 'rxjs';
+import { map, pluck } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { createAccumulationObservable, select } from '../../src/lib/core';
 import { initialPrimitiveState, PrimitiveState } from '../fixtures';
@@ -62,6 +64,15 @@ describe('createAccumulationObservable', () => {
       const valuesInOrder = ['', { num: 777 }];
       slice$.subscribe(next => expect(next).toBe(valuesInOrder[++i]));
       state.nextSlice({ num: 777 });
+    });
+
+    it('should log error if getting error', () => {
+      const spy = jest.spyOn(console, 'error').mockImplementation();
+      const state = setupAccumulationObservable<PrimitiveState>({});
+      state.nextSliceObservable(throwError('test') as any);
+      state.subscribe();
+
+      expect(spy).toBeCalled();
     });
   });
 
@@ -210,16 +221,6 @@ describe('createAccumulationObservable', () => {
       });
     });
 
-    it('should stop on complete from state', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const acc = createAccumulationObservable<PrimitiveState>();
-        const sub = acc.subscribe();
-        acc.nextSlice(initialPrimitiveState);
-        sub.unsubscribe();
-        expectObservable(acc.state$).toBe('');
-      });
-    });
-
     it('should stop from connect observable', () => {
       testScheduler.run(({ expectObservable }) => {
         const acc = createAccumulationObservable<PrimitiveState>();
@@ -232,43 +233,5 @@ describe('createAccumulationObservable', () => {
       });
     });
 
-    it('should stop from connect key & observable', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const acc = createAccumulationObservable<PrimitiveState>();
-        const sub = acc.subscribe();
-        sub.unsubscribe();
-        expectObservable(acc.state$).toBe('');
-      });
-    });
-
-    it('should stop from connect observable & projectFn', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const acc = createAccumulationObservable<PrimitiveState>();
-        const sub = acc.subscribe();
-        sub.unsubscribe();
-        expectObservable(acc.state$).toBe('');
-      });
-    });
-
-    it('should stop from connect key & observable & projectFn', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const acc = createAccumulationObservable<PrimitiveState>();
-        const sub = acc.subscribe();
-        sub.unsubscribe();
-        expectObservable(acc.state$).toBe('');
-      });
-    });
-
-    it('should stop in selects with HOOs', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const acc = createAccumulationObservable<PrimitiveState>();
-        const sub = acc.subscribe();
-        acc.nextSlice({num: 0});
-        expectObservable(acc.state$.pipe(
-          switchMap(() => interval(100).pipe(map(num => ({num})), take(3)))
-        )).toBe('');
-        sub.unsubscribe();
-      });
-    });
   })
 });

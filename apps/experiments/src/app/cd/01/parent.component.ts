@@ -3,7 +3,7 @@ import {
   Component,
   ElementRef,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 
 import { BaseComponent } from '../../base.component.ts/base.component';
@@ -38,7 +38,7 @@ import { defer, Subject } from 'rxjs';
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.Default,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class CdParent01Component extends BaseComponent {
   btnClick$ = new Subject<Event>();

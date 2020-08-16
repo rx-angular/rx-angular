@@ -14,7 +14,7 @@ import { SourceService } from './source.service';
       numberOfEmissions{{ composition1$ | async }}
     </div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class RxStateParentCompositionComponent implements OnDestroy {
   subscription = new Subscription();
@@ -22,7 +22,7 @@ export class RxStateParentCompositionComponent implements OnDestroy {
   hotComposition1$;
 
   composition1$ = this.source.$.pipe(
-    scan(numOfEmissions => ++numOfEmissions, 0),
+    scan((numOfEmissions) => ++numOfEmissions, 0),
     shareReplay(1)
   );
 

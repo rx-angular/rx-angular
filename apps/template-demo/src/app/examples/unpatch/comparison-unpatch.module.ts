@@ -9,12 +9,12 @@ export const ROUTES = [
   {
     path: '',
     pathMatch: 'full',
-    component: ComparisonUnpatchComponent
+    component: ComparisonUnpatchComponent,
   },
   {
     path: 'comparison',
-    component: ComparisonUnpatchComponent
-  }
+    component: ComparisonUnpatchComponent,
+  },
 ];
 const DECLARATIONS = [ComparisonUnpatchComponent];
 
@@ -24,8 +24,8 @@ const DECLARATIONS = [ComparisonUnpatchComponent];
     CommonModule,
     RouterModule.forChild(ROUTES),
     UnpatchEventsModule,
-    SharedModule
+    SharedModule,
   ],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
 export class ComparisonUnpatchModule {}

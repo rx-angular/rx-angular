@@ -1,4 +1,4 @@
-# deleteProp
+## deleteProp
 
 Accepts an object of type T and key of type K extends keyof T.
 Removes property from an object and returns a shallow copy of the updated object without specified property.
@@ -7,8 +7,8 @@ Not mutating original object.
 
 _Example_
 
-```TypeScript
-const cat = {id: 1, type: 'cat', name: 'Fluffy'};
+```typescript
+const cat = { id: 1, type: 'cat', name: 'Fluffy' };
 
 const anonymusCat = deleteProp(cat, 'name');
 
@@ -18,42 +18,50 @@ const anonymusCat = deleteProp(cat, 'name');
 
 _Example_
 
-```TypeScript
+```typescript
 // Usage with RxState
 
 export class ProfileComponent {
+  readonly removeName$ = new Subject();
 
-   readonly removeName$ = new Subject();
+  constructor(private state: RxState<ComponentState>) {
+    // Reactive implementation
+    state.connect(this.removeName$, (state) => {
+      return deleteProp(state, 'name');
+    });
+  }
 
-   constructor(private state: RxState<ComponentState>) {
-     // Reactive implementation
-     state.connect(
-       this.removeName$,
-       (state) => {
-           return deleteProp(state, 'name');
-       }
-     );
-   }
-
-   // Imperative implementation
-   removeName(): void {
-       this.state.set(remove(this.get(), 'name'));
-   }
+  // Imperative implementation
+  removeName(): void {
+    this.state.set(remove(this.get(), 'name'));
+  }
 }
 ```
 
-## Signature
+### Edge cases
 
-```TypeScript
-function deleteProp<T extends object, K extends keyof T>(object: T, key: K): Omit<T, K>
+```typescript
+deleteProp(state, null as any) > state;
+deleteProp(null as any, null as any) > null;
+deleteProp(undefined as any, undefined as any) > undefined;
+deleteProp(nonObject, 'prop') > nonObject;
 ```
 
-## Parameters
+### Signature
 
-### object
+```typescript
+function deleteProp<T extends object, K extends keyof T>(
+  object: T,
+  key: K
+): Omit<T, K>;
+```
 
-##### typeof: T
+### Parameters
 
-### key
+#### object
 
-##### typeof: K
+###### typeof: T
+
+#### key
+
+###### typeof: K
