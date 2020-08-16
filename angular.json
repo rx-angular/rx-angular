@@ -534,7 +534,6 @@
         "serve-docsify": {
           "builder": "@nrwl/workspace:run-commands",
           "options": {
-            "parallel": true,
             "commands": [
               {
                 "command": "npx docsify-cli serve docs"
