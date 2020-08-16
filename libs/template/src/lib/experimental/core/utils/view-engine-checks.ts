@@ -1,4 +1,4 @@
-import { getGlobalThis } from './get-global-this';
+import { getGlobalThis } from '../../../core/utils/get-global-this';
 
 /**
  * envRunsIvy
