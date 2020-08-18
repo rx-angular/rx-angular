@@ -119,7 +119,7 @@ describe('envZonePatched', () => {
     expect(await setup({ defaultZone: true })).toEqual({ checkEnvZonePatched: true });
   });
 
-  it('returns false when no zone is present', async () => {
+  it('returns true when zone is present', async () => {
     expect(envZonePatched()).toBe(true);
   });
 
