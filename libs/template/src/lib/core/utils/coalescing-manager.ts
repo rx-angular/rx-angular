@@ -1,4 +1,4 @@
-import { createPropertiesWeakMap } from './index';
+import { createPropertiesWeakMap } from './properties-weakmap';
 
 interface CoalescingContextProps {
   numCoalescingSubscribers: number;

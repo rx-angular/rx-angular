@@ -1,14 +1,43 @@
 import { EmbeddedViewRef, TemplateRef, ViewContainerRef } from '@angular/core';
 
-export interface TemplateManager<ViewContext, Names = string> {
-  updateViewContext(viewContextSlice: Partial<ViewContext>): void;
+export interface TemplateManager<C extends object, N extends string = string> {
 
-  addTemplateRef(name: Names, templateRef: TemplateRef<ViewContext>): void;
+  /**
+   * @description
+   * Mutates the inner viewContext with the passed object slice.
+   *
+   * @param viewContextSlice - the object holding the new state
+   */
+  updateViewContext(viewContextSlice: Partial<C>): void;
 
-  hasTemplateRef(name: Names): boolean;
+  /**
+   * @description
+   * Adds a template to the internal templateRefCache map.
+   *
+   * @param name
+   * @param templateRef
+   */
+  addTemplateRef(name: N, templateRef: TemplateRef<C>): void;
 
-  displayView(name: Names): void;
+  /**
+   * @description
+   * Checks if `TemplateRef` instance is cached under the provided name.
+   */
+  hasTemplateRef(name: N): boolean;
 
+  /**
+   * @description
+   * Creates and inserts view out of registered templates and caches it for the later
+   * re-usage.
+   *
+   * @param name name of the cached view
+   */
+  displayView(name: N): void;
+
+  /**
+   * @description
+   * Clears all cached views. This should be called if the instance that holds the template manager dies.
+   */
   destroy(): void;
 }
 
@@ -25,48 +54,27 @@ export interface TemplateManager<ViewContext, Names = string> {
  * @param viewContainerRef reference to a top-level view container where passed templates will be attached
  * @param initialViewContext initial view context state
  */
-export function createTemplateManager<ViewContext extends object>(
+export function createTemplateManager<C extends object, N extends string = string>(
   viewContainerRef: ViewContainerRef,
-  initialViewContext: ViewContext
-): TemplateManager<ViewContext> {
-  const templateCache = new Map<string, TemplateRef<ViewContext>>();
-  const viewCache = new Map<string, EmbeddedViewRef<ViewContext>>();
+  initialViewContext: C
+): TemplateManager<C, N> {
+  const templateCache = new Map<N, TemplateRef<C>>();
+  const viewCache = new Map<N, EmbeddedViewRef<C>>();
   const viewContext = { ...initialViewContext };
-  let activeView: string;
+  let activeView: N;
+
   return {
-    /**
-     * @NOTICE following properties are exposed because of testing reasons.
-     * When moving this into the CDK we need to rethink that.
-     */
-    viewContainerRef,
-    viewCache,
-    templateCache,
-    /**
-     * Start public properties
-     */
-    hasTemplateRef(name: string): boolean {
-      return this.templateCache.has(name);
+    hasTemplateRef(name: N): boolean {
+      return templateCache.has(name);
     },
-    /**
-     * @description
-     * mutates the inner viewContext to store the passed object
-     *
-     * @param viewContextSlice - the object holding the new state
-     *
-     */
-    updateViewContext(viewContextSlice: Partial<ViewContext>) {
+
+    updateViewContext(viewContextSlice: Partial<C>) {
       Object.entries(viewContextSlice).forEach(([key, value]) => {
         viewContext[key] = value;
       });
     },
-    /**
-     * @description
-     * Adds a template to the internal templateRefCache map
-     *
-     * @param name
-     * @param templateRef
-     */
-    addTemplateRef(name: string, templateRef: TemplateRef<ViewContext>) {
+
+    addTemplateRef(name: N, templateRef: TemplateRef<C>) {
       assertTemplate(name, templateRef);
       if (!templateCache.has(name)) {
         templateCache.set(name, templateRef);
@@ -77,16 +85,17 @@ export function createTemplateManager<ViewContext extends object>(
         );
       }
     },
-    displayView(name: string) {
+
+    displayView(name: N) {
       if (activeView !== name) {
         if (templateCache.has(name)) {
-          // Detach currently inserted view from dom and remove it from viewContainerRef.
-          viewContainerRef.detach(0);
+          // Detach currently inserted view from the container
+          viewContainerRef.detach();
 
           if (viewCache.has(name)) {
-            viewContainerRef.insert(viewCache.get(name), 0);
+            viewContainerRef.insert(viewCache.get(name));
           } else {
-            // creates and inserts view to the view container
+            // Creates and inserts view to the view container
             const newView = viewContainerRef.createEmbeddedView(
               templateCache.get(name),
               viewContext
@@ -98,18 +107,16 @@ export function createTemplateManager<ViewContext extends object>(
           // In CDK it should work different.
           throw new Error(`A non-existing view was tried to insert ${name}`);
         }
+
+        activeView = name;
       }
-      activeView = name;
     },
-    /**
-     * @description
-     * Clears all cached views. This should be called if the instance that holds the template manager dies.
-     */
+
     destroy() {
       viewCache.forEach((view) => view?.destroy());
       viewContainerRef.clear();
     },
-  } as TemplateManager<ViewContext>;
+  };
 }
 
 function assertTemplate<T>(
