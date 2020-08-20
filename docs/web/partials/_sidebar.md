@@ -41,14 +41,14 @@
     - [Migrating to RxState](/web/state/tutorials/from-imperative-to-reactive.md)
     - [Passing observables directly](/web/state/tutorials/passing-observables.md)
 
-  - HowTos
+  - Recipes
 
     - [Determine state type](/web/state/howtos/determine-state.md)
     - [Manage ViewModel](/web/state/howtos/manage-viewmodel.md)
     - [Run partial updates](/web/state/howtos/partial-updates.md)
     - [Load data on route change](/web/state/howtos/load-data-on-route-change.md)
     - [Work with HostBindings](/web/state/howtos/hostbindings.md)
-    - [Using RxState as Global State](/web/state/howtos/rx-state-as-global-state.md)
+    - [Use RxState as Global State](/web/state/howtos/rx-state-as-global-state.md)
 
   - Integrations
 
