@@ -84,6 +84,7 @@ with very little effort in any component.
 - [Managing ViewModels with selectSlice](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/selecting-the-viewmodel.md)
 - [Manage reactive HostBindings](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/hostbindings.md)
 - [Difference between Global and Local state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/global-state-vs-local-state.md)
+- [Using RxState as Global State](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/snippets/manage-global-state.md)
 
 ## Resources
 
