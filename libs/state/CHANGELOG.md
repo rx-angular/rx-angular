@@ -84,17 +84,25 @@
 
 ## [1.0.3](https://github.com/BioPhoton/rx-angular/compare/state@1.0.2...state@1.0.3) (2020-04-29)
 
+### Other
+
 - **state:** fix documentation links
 
 ## [1.0.2](https://github.com/BioPhoton/rx-angular/compare/state@1.0.1...state@1.0.2) (2020-04-29)
+
+### Other
 
 - **state:** fix documentation links
 
 ## [1.0.1](https://github.com/BioPhoton/rx-angular/compare/state@1.0.0...state@1.0.1) (2020-04-29)
 
+### Other
+
 - **state:** update package description
 
 # [1.0.0](https://github.com/BioPhoton/rx-angular/compare/state@1.0.0-rc.2...state@1.0.0) (2020-04-29)
+
+### Other
 
 - **state:** state documentation
 
