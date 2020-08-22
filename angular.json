@@ -513,15 +513,34 @@
     },
     "docs": {
       "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
-      "root": "apps/docs",
-      "sourceRoot": "apps/docs/src",
+      "root": "docs",
+      "sourceRoot": "docs",
       "prefix": "rx-angular",
       "architect": {
+        "serve-admin": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "parallel": true,
+            "commands": [
+              {
+                "command": "npx serve docs/admin"
+              },
+              {
+                "command": "npx netlify-cms-proxy-server"
+              }
+            ]
+          }
+        },
+        "serve-docsify": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx docsify-cli serve docs"
+              }
+            ]
+          }
+        },
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
