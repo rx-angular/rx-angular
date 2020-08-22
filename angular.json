@@ -321,7 +321,7 @@
           "options": {
             "commands": [
               {
-                "command": "npx conventional-changelog -p angular -k libs/state/package.json -i libs/state/CHANGELOG.md -s --commit-path libs/state --tagPrefix state@"
+                "command": "npx conventional-changelog -p angular -k ./libs/state/package.json -i ./libs/state/CHANGELOG.md -s --commit-path ./libs/state --tagPrefix state@"
               }
             ]
           }
@@ -425,7 +425,7 @@
           "options": {
             "commands": [
               {
-                "command": "npx conventional-changelog -p angular -k libs/template/package.json -i libs/template/CHANGELOG.md -s --commit-path libs/template --tagPrefix template@"
+                "command": "npx conventional-changelog -p angular -k ./libs/template/package.json -i ./libs/template/CHANGELOG.md -s --commit-path ./libs/template --tagPrefix template@"
               }
             ]
           }
