@@ -5,10 +5,10 @@ name: Release State
 
 on:
   - pull_request
-  #push:
+  - push:
   # Sequence of patterns matched against refs/tags
-  #tags:
-  #  - 'state@*' # Push event
+  tags:
+    - 'state@*' # Push event
 jobs:
   build-docs:
 
