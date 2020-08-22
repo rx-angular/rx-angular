@@ -316,6 +316,16 @@
             ]
           }
         },
+        "changelog": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx conventional-changelog -p angular -k libs/state/package.json -i libs/state/CHANGELOG.md -r 0 -s --commit-path libs/state"
+              }
+            ]
+          }
+        },
         "test-coverage": {
           "builder": "@nrwl/jest:jest",
           "options": {
