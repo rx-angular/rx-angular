@@ -4,10 +4,12 @@
 name: Release State
 
 on:
-  push:
-    branches:
-      - master
+  pull_request:
 
+  push:
+  # Sequence of patterns matched against refs/tags
+  tags:
+    - 'state@*' # Push event
 jobs:
   build-docs:
 
