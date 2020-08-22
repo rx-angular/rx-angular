@@ -1,30 +1,54 @@
-# TODO: https://github.com/actions/create-release/issues/64#issuecomment-638695206
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Create State Release
+name: Release State
 
 on:
-  push:
+  - pull_request
+  #push:
   # Sequence of patterns matched against refs/tags
-  tags:
-  - 'state@*' # Push events to matching state@*, i.e. state@1.0, state@20.15.10
-
-
+  #tags:
+  #  - 'state@*' # Push event
 jobs:
-  build:
-    name: Create Release
+  build-docs:
+
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      - uses: actions/checkout@v2
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Changelog.md
-          draft: false
-          prerelease: false
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: git fetch --no-tags --prune --depth=5 origin master
+      - run: npm install --frozen-lockfile --non-interactive
+      - run: npm run nx changelog state
+      - name: set Environment Variables
+        id: release
+        run: |
+          VERSION=$(sed 's/[^0-9|.]//g' ./libs/package.json)  # zb. 2.4.2
+          if [ $REPOSITORY = "master" ]; then IS_PRE='false'; else IS_PRE='true'; fi
+          if [ $REPOSITORY = "master" ]; then POSTFIX=''    ; else POSTFIX='PRE';    fi
+          RELEASEBODY=$(awk -v RS='Release ' '/'$VERSION':(.*)/ {print $0}' ChangeLog.h)
+          RELEASEBODY="${RELEASEBODY//'%'/'%25'}"
+          RELEASEBODY="${RELEASEBODY//$'\n'/'%0A'}"
+          RELEASEBODY="${RELEASEBODY//$'\r'/'%0D'}"
+          echo "::set-output name=version::${VERSION}"
+          echo "::set-output name=IS_PRERELEASE::${IS_PRE}"
+          echo "::set-output name=RELEASENAME_POSTFIX::${POSTFIX}"
+          echo "::set-output name=RELEASEBODY::${RELEASEBODY}"
+          echo "::set-env name=body::${RELEASEBODY}"
+        env:
+          REPOSITORY: ${{ github.event.repository.name }}
+
+
+
+
+
