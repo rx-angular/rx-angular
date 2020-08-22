@@ -26,13 +26,12 @@
     "workspace-schematic": "nx workspace-schematic",
     "dep-graph": "nx dep-graph",
     "build-docs-page": "nx run-many --projects state,template --target build-docs",
+    "chanelog": "nx changelog state",
     "generate-typescript-docs": "ts-node -P tools/tsconfig.tools.json tools/scripts/docs/generate-typescript-docs.ts",
     "help": "nx help",
     "state:publish": "nx test state && nx build state --prod && cd ./dist/libs/state && npm publish",
-    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points && node ./decorate-angular-cli.js",
-    "state:coveralls": "coveralls <  ./coverage/state/lcov.info",
-    "state:perf": "nx perf state",
-    "template:publish": "nx test template && nx build template --prod && cd ./dist/libs/template && npm publish"
+    "template:publish": "nx test template && nx build template --prod && cd ./dist/libs/template && npm publish",
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points && node ./decorate-angular-cli.js"
   },
   "husky": {
     "hooks": {
