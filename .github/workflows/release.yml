@@ -41,7 +41,7 @@ jobs:
       - name: set Environment Variables
         id: release
         run: |
-          VERSION=$(sed 's/[^0-9|.]//g' ./libs/package.json)  # zb. 2.4.2
+          VERSION=$(sed 's/[^0-9|.]//g' ./libs/state/src/package.json)  # zb. 2.4.2
           if [ $REPOSITORY = "master" ]; then IS_PRE='false'; else IS_PRE='true'; fi
           if [ $REPOSITORY = "master" ]; then POSTFIX=''    ; else POSTFIX='PRE';    fi
           RELEASEBODY=$(awk -v RS='Release ' '/'$VERSION':(.*)/ {print $0}' ChangeLog.h)
