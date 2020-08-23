@@ -3,15 +3,14 @@ import * as path from 'path';
 import * as ts from 'typescript';
 
 import {
-  ClassInfo,
   DocsPage,
-  InterfaceInfo,
   MemberInfo,
   MethodInfo,
   MethodParameterInfo,
+  MutatorInfo,
   ParsedDeclaration,
   PropertyInfo,
-  ValidDeclaration,
+  ValidDeclaration
 } from './typescript-docgen-types';
 
 /**
@@ -255,8 +254,8 @@ export class TypescriptDocsParser {
    */
   private parseMembers(
     members: ts.NodeArray<ts.TypeElement | ts.ClassElement | ts.EnumMember>
-  ): Array<PropertyInfo | MethodInfo> {
-    const result: Array<PropertyInfo | MethodInfo> = [];
+  ): Array<PropertyInfo | MethodInfo | MutatorInfo> {
+    const result: Array<PropertyInfo | MethodInfo | MutatorInfo> = [];
 
     for (const member of members) {
       const modifiers = member.modifiers
@@ -272,6 +271,7 @@ export class TypescriptDocsParser {
           ts.isConstructorDeclaration(member) ||
           ts.isEnumMember(member) ||
           ts.isGetAccessorDeclaration(member) ||
+          ts.isSetAccessorDeclaration(member) ||
           ts.isIndexSignatureDeclaration(member))
       ) {
         const name = member.name
@@ -292,6 +292,11 @@ export class TypescriptDocsParser {
         } else if (ts.isGetAccessorDeclaration(member)) {
           fullText = `${member.name.getText()}: ${
             member.type ? member.type.getText() : 'void'
+          }`;
+        } else if (ts.isSetAccessorDeclaration(member)) {
+          const decoratorsText = member.decorators?.map(d => d.getText()).join(' ');
+          fullText = `${!!decoratorsText ? decoratorsText + ' ' : ''}${member.name.getText()}: ${
+            member.parameters?.[0]?.type.getText() || 'void'
           }`;
         } else {
           fullText = member.getText();
@@ -331,6 +336,19 @@ export class TypescriptDocsParser {
             ...memberInfo,
             kind: 'method',
             parameters,
+          });
+        } else if (ts.isSetAccessorDeclaration(member)) {
+          const originParameter = member.parameters[0];
+          const parameter = {
+            name: originParameter.name.getText(),
+            type: originParameter.type.getText(),
+            optional: !!originParameter.questionToken,
+            initializer: originParameter.initializer && originParameter.initializer.getText(),
+          };
+          result.push({
+            ...memberInfo,
+            kind: 'mutator',
+            parameter
           });
         } else {
           result.push({
