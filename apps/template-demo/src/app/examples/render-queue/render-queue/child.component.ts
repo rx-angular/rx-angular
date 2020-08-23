@@ -8,8 +8,8 @@ import {
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { getExperimentalLocalStrategies } from '@rx-angular/template';
 import { Renderable } from '../interfaces';
+import { getStrategies } from '@rx-angular/template';
 
 @Component({
   selector: 'rx-angular-child',
@@ -66,7 +66,7 @@ export class ChildComponent extends RxState<Renderable<ChildComponent>>
   }
 
   ngOnInit() {
-    this.strategies = getExperimentalLocalStrategies({ cdRef: this.cdRef });
+    this.strategies = getStrategies({ cdRef: this.cdRef });
     this.hold(
       this.doRenderBlocking.pipe(
         tap(() => this.updateItems()),

@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Renderable } from '../interfaces';
 import { ChildComponent } from './child.component';
-import { getExperimentalLocalStrategies } from '@rx-angular/template';
+import { getStrategies } from '@rx-angular/template';
 
 @Component({
   selector: 'rx-angular-render-queue',
@@ -43,7 +43,7 @@ export class RenderQueueComponent
   }
 
   ngOnInit() {
-    const strategy = getExperimentalLocalStrategies({ cdRef: this.cdRef })
+    const strategy = getStrategies({ cdRef: this.cdRef })
       .chunk;
     this.hold(
       this.doRender.pipe(

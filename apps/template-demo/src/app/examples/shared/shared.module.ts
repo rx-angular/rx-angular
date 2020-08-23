@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { LoadTestComponent } from './loadtest/load-test.component';
 import { TemplateModule, UnpatchEventsModule } from '@rx-angular/template';
 import { RunOutsideZoneDirective } from './runOutsideZone.directive';
+import { DebugHelperModule } from '../../debug-helper.module.ts/debug-helper.module';
 
 const DECLARATIONS = [LoadTestComponent, RunOutsideZoneDirective];
 
@@ -17,8 +18,8 @@ const DECLARATIONS = [LoadTestComponent, RunOutsideZoneDirective];
     UnpatchEventsModule,
     MatButtonModule,
     MatIconModule,
-    MatRippleModule
+    DebugHelperModule
   ],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS, DebugHelperModule]
 })
 export class SharedModule {}

@@ -1,0 +1,19 @@
+:host {
+  mat-ripple:not(:empty) {
+    transform: translateZ(0);
+  }
+  .mat-ripple {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .rx-num-render {
+    text-shadow: 1px 1px 1px gray;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
