@@ -34,7 +34,7 @@ type ProjectValueReducer<T, K extends keyof T, V> = (
  * @description
  * RxState is a light-weight reactive state management service for managing local state in angular.
  *
- * ![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_logo.png)
+ * ![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/docs/images/state/state_logo.png)
  *
  * @example
  * Component({
@@ -79,7 +79,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     this.subscription.unsubscribe();
   }
 
-  setAccumulator(accumulatorFn: AccumulationFn) {
+  setAccumulator(accumulatorFn: AccumulationFn): void {
     this.accumulator.nextAccumulator(accumulatorFn);
   }
 

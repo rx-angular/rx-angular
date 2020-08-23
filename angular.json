@@ -513,15 +513,34 @@
     },
     "docs": {
       "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "apps/docs",
-      "sourceRoot": "apps/docs/src",
+      "sourceRoot": "apps/docs",
       "prefix": "rx-angular",
       "architect": {
+        "serve-admin": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "parallel": true,
+            "commands": [
+              {
+                "command": "npx serve docs/admin"
+              },
+              {
+                "command": "npx netlify-cms-proxy-server"
+              }
+            ]
+          }
+        },
+        "serve-docsify": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx docsify-cli serve docs"
+              }
+            ]
+          }
+        },
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
@@ -626,7 +645,10 @@
               "apps/tour-of-heroes/src/favicon.ico",
               "apps/tour-of-heroes/src/assets"
             ],
-            "styles": ["apps/tour-of-heroes/src/styles.scss"],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
+              "apps/tour-of-heroes/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {

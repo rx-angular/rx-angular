@@ -228,8 +228,6 @@ export class TypescriptDocsRenderer {
       output += classInfo.implements + ' ';
     }
     output += `{\n`;
-    const renderModifiers = (modifiers: string[]) =>
-      modifiers.length ? modifiers.join(' ') + ' ' : '';
     output += members
       .map((member) => {
         if (member.kind === 'method') {
@@ -239,12 +237,10 @@ export class TypescriptDocsRenderer {
           if (member.fullText === 'constructor') {
             return `  constructor(${args})`;
           } else {
-            return `  ${renderModifiers(member.modifiers)}${
-              member.fullText
-            }(${args}) => ${member.type};`;
+            return `  ${member.fullText}(${args}) => ${member.type};`;
           }
         } else {
-          return `  ${renderModifiers(member.modifiers)}${member.fullText}`;
+          return `  ${member.fullText}`;
         }
       })
       .join(`\n`);
@@ -340,6 +336,8 @@ export class TypescriptDocsRenderer {
               docsUrl
             )}" `
           : '';
+      } else if (member.kind === 'mutator') {
+        type = this.renderType(member.parameter.type, knownTypeMap, docsUrl);
       } else {
         const args = member.parameters
           .map((p) =>
