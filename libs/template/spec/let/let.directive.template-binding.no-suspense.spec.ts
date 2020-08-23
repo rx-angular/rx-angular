@@ -52,7 +52,7 @@ describe('LetDirective when template binding without "suspense" template', () =>
   it('should not render anything when "suspense" template is not provided until a value is emitted', () => {
     component.value$ = new Subject();
     fixture.detectChanges();
-    expectContentToBe('undefined');
+    expectContentToBe('');
 
     (component.value$ as Subject<number>).next(1);
     fixture.detectChanges();
