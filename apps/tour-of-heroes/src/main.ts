@@ -8,8 +8,9 @@ if (environment.production) {
   enableProdMode();
 }
 const compilerOptions = {
-  ngZone: environment.hasZone ? 'zone.js' : 'noop',
+  ngZone: environment.hasZone ? 'zone.js' : 'noop'
 } as any;
+console.log('compilerOptions', compilerOptions);
 platformBrowserDynamic()
   .bootstrapModule(AppModule, compilerOptions)
-  .catch((err) => console.error(err));
+  .catch(err => console.error(err));

@@ -513,8 +513,8 @@
     },
     "docs": {
       "projectType": "application",
-      "root": "docs",
-      "sourceRoot": "docs",
+      "root": "apps/docs",
+      "sourceRoot": "apps/docs",
       "prefix": "rx-angular",
       "architect": {
         "serve-admin": {
@@ -645,7 +645,10 @@
               "apps/tour-of-heroes/src/favicon.ico",
               "apps/tour-of-heroes/src/assets"
             ],
-            "styles": ["apps/tour-of-heroes/src/styles.scss"],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
+              "apps/tour-of-heroes/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
