@@ -9,10 +9,8 @@ import {
 } from '@angular/core';
 
 import {
-  NextObserver,
   Observable,
   ObservableInput,
-  Observer,
   Unsubscribable,
   Subscription,
 } from 'rxjs';
@@ -29,10 +27,9 @@ import { RxTemplateObserver, RxViewContext } from '../core/model';
 
 type RxTemplateName = 'rxNext' | 'rxComplete' | 'rxError' | 'rxSuspense';
 
-export interface LetViewContext<T> {
+export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
   $implicit: T;
-export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
   rxLet: T;
 }
