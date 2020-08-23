@@ -12,7 +12,7 @@ Used together, you get a powerful tool for developing high-performance angular a
 
 This repository holds a set of helpers to create **fully reactive** as well as **fully zone-less** applications.
 
-![rx-angular logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/images/rx-angular_logo.png)
+![rx-angular logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/apps/template-demo/src/assets/images/rx-angular_logo.png)
 
 ## Packages
 
@@ -28,3 +28,7 @@ Find details in the linked readme files below for installation and setup instruc
 or  
 `yarn add @rx-angular/state`  
 `yarn add @rx-angular/template`
+
+## Homepage
+
+https://biophoton.github.io/rx-angular/#/

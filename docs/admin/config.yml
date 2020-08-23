@@ -1,0 +1,95 @@
+backend:
+  name: proxy
+  proxy_url: http://localhost:8081/api/v1
+  branch: master # Branch to update (optional; defaults to master)
+media_folder: 'docs/images' # Media files will be stored in the repo under static/images/uploads
+public_folder: '/images' # The src attribute for uploaded media will begin with /images/uploads
+collections:
+  - name: 'web-partials'
+    label: 'web/partials'
+    summary: '{{filename}}.{{extension}}'
+    folder: 'docs/web/partials/'
+    path: '/'
+    create: true
+    fields:
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+  - name: 'web-state-general'
+    label: 'web/state/general'
+    summary: '{{filename}}.{{extension}}'
+    folder: 'docs/web/state/general'
+    path: '/'
+    create: true
+    fields:
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+  - name: 'web-state-api'
+    label: 'web/state/api'
+    summary: '{{filename}}.{{extension}}'
+    folder: 'docs/web/state/api'
+    path: '/'
+    create: true
+    fields:
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+  - name: 'web-state-howtos'
+    label: 'web/state/howtos'
+    summary: '{{filename}}.{{extension}}'
+    folder: 'docs/web/state/howtos'
+    path: '/'
+    create: true
+    fields:
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+  - name: 'web-state-tutorials'
+    label: 'web/state/tutorials'
+    summary: '{{filename}}.{{extension}}'
+    folder: 'docs/web/state/tutorials'
+    path: '/'
+    create: true
+    fields:
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+  - name: 'state-pages'
+    label: 'git/state'
+    summary: '{{filename}}.{{extension}}'
+    folder: 'libs/state/docs/'
+    path: '/'
+    create: false
+    fields:
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+  - name: 'state-snippet'
+    label: 'git/state/snippets'
+    summary: '{{filename}}.{{extension}}'
+    folder: 'libs/state/docs/snippets'
+    path: '/'
+    create: true
+    fields:
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+  - name: 'array-transformation-helpers'
+    label: 'git/state/transformation-helpers/array'
+    summary: '{{filename}}.{{extension}}'
+    folder: 'libs/state/docs/api/transformation-helpers/array'
+    path: '/'
+    create: true
+    fields:
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+  - name: 'object-transformation-helpers'
+    label: 'git/state/transformation-helpers/objects'
+    summary: '{{filename}}.{{extension}}'
+    folder: 'libs/state/docs/api/transformation-helpers/object'
+    path: '/'
+    create: true
+    fields:
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+  - name: 'state-rxjs-operators'
+    label: 'git/state/rxjs-operators'
+    summary: '{{filename}}.{{extension}}'
+    folder: 'libs/state/docs/api/operators'
+    path: '/'
+    create: true
+    fields:
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+  - name: 'template-page'
+    label: 'git/template'
+    summary: '{{filename}}.{{extension}}'
+    folder: 'libs/template/docs/'
+    path: '/'
+    create: true
+    fields:
+      - { label: 'Content', name: 'body', widget: 'markdown' }

@@ -1,6 +1,6 @@
 # Selecting the ViewModel
 
-Here are some useful strategies to properly handle `ViewModels` with `@rx-angular/state`.
+Here are some useful strategies to properly handle `ViewModels` with `@rx-angular/state`. In this examples we will use standalone [`selectSlice`](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api/operators/select-slice.md) operator.
 
 Imagine the following setup:
 
@@ -45,7 +45,7 @@ As your view requires additional and/or derived information from your component 
 Changes of your `viewModel$` ultimately result in component renderings, so we have to make sure that it's emissions
 are distinct.
 
-## Using [`selectSlice`](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api/operators/select-slice.md):
+## Using selectSlice:
 
 For this scenario we created the `selectSlice` operator.
 It returns an Observable that emits a distinct subset of the received object.
@@ -72,7 +72,7 @@ export class ViewModelComponent extends RxState<ComponentState> {
 }
 ```
 
-## Multiple Observables and [`selectSlice`](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api/operators/select-slice.md):
+## Multiple Observables and selectSlice:
 
 There are situations where you want to divide your `ViewModel` into different parts.
 

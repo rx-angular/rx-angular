@@ -3,6 +3,7 @@
   "version": "1.3.4",
   "description": "RxState is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in angular",
   "main": "index.js",
+  "homepage": "https://biophoton.github.io/rx-angular/#/",
   "publishConfig": {
     "access": "public"
   },
