@@ -29,7 +29,7 @@ import { RxState } from '@rx-angular/state';
         complete: completeView
 
     -->
-
+    {{value$ | async}}
     <ng-container *ngIf="value$ | push as value">
       next: {{ value | json }}<br />
     </ng-container>
