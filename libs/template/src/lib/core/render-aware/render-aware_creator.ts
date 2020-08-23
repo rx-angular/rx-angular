@@ -19,7 +19,6 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { RenderStrategy, StrategySelection } from './interfaces';
-import { nameToStrategy } from './nameToStrategy';
 import { RxTemplateObserver } from '../model';
 
 export interface RenderAware<U> extends Subscribable<U> {
@@ -50,8 +49,6 @@ export function createRenderAware<U>(cfg: {
         ? of(stringOrObservable)
         : stringOrObservable
     ),
-    nameToStrategy(cfg.strategies),
-    tap((s) => (currentStrategy = s))
     map((strategy: string): RenderStrategy => {
         const s = cfg.strategies[strategy];
         if (!!s) {
