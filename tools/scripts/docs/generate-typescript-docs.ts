@@ -21,7 +21,10 @@ interface DocsSectionConfig {
 
 const sections: DocsSectionConfig[] = [
   {
-    sourceDirs: ['libs/state/src/'],
+    sourceDirs: [
+      'libs/state/src/',
+      'libs/template/src/'
+    ],
     exclude: [],
     outputPath: 'generated',
   },

@@ -48,13 +48,17 @@ are several techniques that need to be known and considered.
 - [Coalescing, Scoped Coalescing & Scheduling](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/concepts.md)
 - [Rendering Issues in Angular](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/performance-issues.md)
 
-## Install
+## Installation
 
 `npm install --save @rx-angular/template`  
 or  
 `yarn add @rx-angular/template`
 
-## Usage
+## API
+
+[API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/api/overview.md)
+
+## Basic setup
 
 Importing `TemplateModule` to your Module (includes push, \*rxLet, unpatch).
 

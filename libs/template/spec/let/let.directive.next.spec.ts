@@ -57,10 +57,10 @@ describe('LetDirective when nexting values', () => {
     expect(componentNativeElement).toBeDefined();
   });
 
-  it('should render undefined as value when initially undefined was passed (as no value ever was emitted)', () => {
+  it('should render nothing when initially undefined was passed (as no value ever was emitted)', () => {
     letDirectiveTestComponent.value$ = undefined;
     fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('undefined');
+    expect(componentNativeElement.textContent).toBe('');
   });
 
   it('should render null as value when initially null was passed (as no value ever was emitted)', () => {
@@ -90,7 +90,7 @@ describe('LetDirective when nexting values', () => {
   it('should render nothing as value when initially NEVER was passed (as no value ever was emitted)', () => {
     letDirectiveTestComponent.value$ = NEVER;
     fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('undefined');
+    expect(componentNativeElement.textContent).toBe('');
   });
 
   it('should render emitted value from passed observable without changing it', () => {
@@ -126,7 +126,7 @@ describe('LetDirective when nexting values', () => {
   it('should render values over time when a new observable was passed', fakeAsync(() => {
     letDirectiveTestComponent.value$ = interval(1000).pipe(take(3));
     fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('undefined');
+    expect(componentNativeElement.textContent).toBe('');
     tick(1000);
     fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('0');
