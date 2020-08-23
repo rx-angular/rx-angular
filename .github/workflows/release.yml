@@ -34,7 +34,7 @@ jobs:
           VERSION=$(node --eval="process.stdout.write(require('./libs/state/package.json').version)")  # e.g. 2.4.2
           if [ $REPOSITORY = "master" ]; then IS_PRE='false'; else IS_PRE='true'; fi
           if [ $REPOSITORY = "master" ]; then POSTFIX=''    ; else POSTFIX='PRE';    fi
-          RELEASEBODY=$(awk -v RS='Release ' '/'$VERSION':(.*)/ {print $0}' ChangeLog.h)
+          RELEASEBODY=$(awk -v RS='Release ' '/'$VERSION':(.*)/')
           RELEASEBODY="${RELEASEBODY//'%'/'%25'}"
           RELEASEBODY="${RELEASEBODY//$'\n'/'%0A'}"
           RELEASEBODY="${RELEASEBODY//$'\r'/'%0D'}"
