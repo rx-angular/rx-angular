@@ -8336,6 +8336,14 @@ ng-packagr@^9.1.5:
     terser "^4.3.8"
     update-notifier "^4.0.0"
 
+ngx-skeleton-loader@^2.4.4:
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/ngx-skeleton-loader/-/ngx-skeleton-loader-2.4.4.tgz#39d714b57c236fcd52e51012d54c63824c8c0e15"
+  integrity sha512-FFwy9XsHmygjL2dI2PfPVCUPR7CA64rAL4veHPmFtjgqKl5AyKatYBtmxxko8mONVckLbiq04SuhupVpvLzHNw==
+  dependencies:
+    perf-marks "^1.13.4"
+    tslib "^1.10.0"
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
@@ -9115,6 +9123,13 @@ pend@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/pend/-/pend-1.2.0.tgz#7a57eb550a6783f9115331fcf4663d5c8e007a50"
   integrity sha1-elfrVQpng/kRUzH89GY9XI4AelA=
+
+perf-marks@^1.13.4:
+  version "1.13.4"
+  resolved "https://registry.yarnpkg.com/perf-marks/-/perf-marks-1.13.4.tgz#d9b311ca08502423382e93b27e106d75e4904352"
+  integrity sha512-kUh3obyuYDcLfeHRgFfG1Gi/Ni/qNBKvYQ5ct/vWMidFM9FQg1/zQ3eKU3YNZt881jf0Ozw4B9FYGZX9lb4jPQ==
+  dependencies:
+    tslib "^2.0.1"
 
 performance-now@^2.1.0:
   version "2.1.0"
@@ -11729,6 +11744,11 @@ tslib@^1.10.0, tslib@^1.8.1, tslib@^1.9.0:
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.11.1.tgz#eb15d128827fbee2841549e171f45ed338ac7e35"
   integrity sha512-aZW88SY8kQbU7gpV19lN24LtXh/yD4ZZg6qieAJDDg+YBsJcSmLGK9QpnUjAKVG/xefmvJGd1WUmfpT/g6AJGA==
+
+tslib@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.0.1.tgz#410eb0d113e5b6356490eec749603725b021b43e"
+  integrity sha512-SgIkNheinmEBgx1IUNirK0TUD4X9yjjBRTqqjggWCU3pUEqIk3/Uwl3yRixYKT6WjQuGiwDv4NomL3wqRCj+CQ==
 
 tslint@~6.1.0:
   version "6.1.2"

@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  NgZone
 } from '@angular/core';
 import { BehaviorSubject, EMPTY, interval, merge, Subject } from 'rxjs';
 import { scan, startWith, switchMap } from 'rxjs/operators';
@@ -11,31 +12,45 @@ import { getStrategies } from '@rx-angular/template';
   selector: 'let1-container',
   template: `
     <h1>Stop rendering if directive is out of the viewport</h1>
-    rerenders: {{ rerenders() }}<br />
+    rerenders: <renders></renders><br />
     <button [unpatch] (click)="incrementTrigger.next()">
       count up
     </button>
     <button [unpatch] (click)="toggleAutoIncrement.next('')">
       auto
     </button>
-    <label>VisibleStrategy</label>
-    <select (change)="visibleStrategy = $event?.target?.value">
-      <option [value]="s" *ngFor="let s of strategies">{{ s }}</option>
+    <label>VisibleStrategy {{ visibleStrategy$ | push }}</label>
+    <select (change)="visibleStrategy$.next($event?.target?.value)">
+      <option
+        [selected]="(visibleStrategy$ | push) === s"
+        [value]="s"
+        *ngFor="let s of strategies"
+        >{{ s }}</option
+      >
     </select>
-    <label>InVisibleStrategy</label>
-    <select (change)="invisibleStrategy = $event?.target?.value">
-      <option [value]="s" *ngFor="let s of strategies">{{ s }}</option>
+
+    <label>InVisibleStrategy {{ invisibleStrategy$ | push }}</label>
+    <select (change)="invisibleStrategy$.next($event?.target?.value)">
+      <option
+        [selected]="(invisibleStrategy$ | push) === s"
+        [value]="s"
+        *ngFor="let s of strategies"
+        >{{ s }}</option
+      >
     </select>
     <br />
     <b>viewPort</b>
     <div #viewPort class="view-port">
-      <div
-        class="target"
-        [viewport-prio]="invisibleStrategy"
-        *rxLet="count$; let count; strategy: visibleStrategy"
-      >
-        <b>target</b> <br />
-        value: {{ count }}
+      <div class="view-port-inner">
+        <div
+          class="target"
+          [viewport-prio]="invisibleStrategy$"
+          [viewport-prio-root]="viewPort"
+          *rxLet="count$; let count; strategy: visibleStrategy$ | push"
+        >
+          <b>target</b>
+          value: {{ count }}
+        </div>
       </div>
     </div>
   `,
@@ -48,9 +63,21 @@ import { getStrategies } from '@rx-angular/template';
         border: 1px solid red;
       }
 
+      .view-port-inner {
+        height: 1000px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
       .target {
-        margin: 300px 0;
-        padding: 20px;
+        height: 100px;
+        width: 100px;
+        border: 1px solid red;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        justify-content: center;
       }
 
       .noop {
@@ -60,8 +87,8 @@ import { getStrategies } from '@rx-angular/template';
       .local {
         border: 1px dashed green;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class Let1ContainerComponent {
   incrementTrigger = new Subject<Event>();
@@ -69,21 +96,21 @@ export class Let1ContainerComponent {
 
   strategies = Object.keys(getStrategies({ cdRef: this.cdRef }));
 
-  visibleStrategy = 'local';
-  invisibleStrategy: string;
+  visibleStrategy$ = new BehaviorSubject('local');
+  invisibleStrategy$ = new BehaviorSubject('noop');
 
   count$ = merge(
     this.incrementTrigger,
     this.toggleAutoIncrement.pipe(
-      scan((v) => !v, true),
-      switchMap((v) => (v ? interval(0) : EMPTY))
+      scan(v => !v, true),
+      switchMap(v => (v ? interval(200) : EMPTY))
     )
   ).pipe(
     startWith(1),
-    scan((v) => ++v, 0)
+    scan(v => ++v, 0)
   );
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(private ngZone: NgZone, private cdRef: ChangeDetectorRef) {}
 
   numRenders = 0;
 

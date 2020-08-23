@@ -4,48 +4,55 @@ export const ROUTES: Routes = [
   {
     path: '',
     redirectTo: 'coalescing',
-    pathMatch: 'full',
+    pathMatch: 'full'
   },
   {
     path: 'unpatch',
     loadChildren: () =>
       import('./examples/unpatch/comparison-unpatch.module').then(
-        (m) => m.ComparisonUnpatchModule
-      ),
+        m => m.ComparisonUnpatchModule
+      )
   },
   {
     path: 'scheduling',
     loadChildren: () =>
       import('./examples/scheduling/scheduling.module').then(
-        (m) => m.SchedulingModule
-      ),
+        m => m.SchedulingModule
+      )
+  },
+  {
+    path: 'renderer',
+    loadChildren: () =>
+      import('./examples/render-queue/render-queue.module').then(
+        m => m.RenderQueueModule
+      )
   },
   {
     path: 'coalescing',
     loadChildren: () =>
       import('./examples/coalescing/coalescing.module').then(
-        (m) => m.CoalescingModule
-      ),
+        m => m.CoalescingModule
+      )
   },
   {
     path: 'prioritize-in-viewport',
     loadChildren: () =>
       import(
         './examples/prioritize-in-viewport/prioritize-in-viewport.module'
-      ).then((m) => m.PrioritizeInViewportModule),
+      ).then(m => m.PrioritizeInViewportModule)
   },
   {
     path: 'tree-prio',
     loadChildren: () =>
       import('./examples/component-tree-prio/component-tree-prio.module').then(
-        (m) => m.ComponentTreePrioModule
-      ),
+        m => m.ComponentTreePrioModule
+      )
   },
   {
-    path: 'template-binding',
+    path: 'lazy-templates',
     loadChildren: () =>
-      import('./examples/template-binding/template-binding.module').then(
-        (m) => m.TemplateBindingModule
-      ),
-  },
+      import('./examples/memoized-views/memoized-views.module').then(
+        m => m.MemoizedViewsModule
+      )
+  }
 ];

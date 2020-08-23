@@ -20,8 +20,8 @@ export const ROUTES = [
   {
     path: '',
     pathMatch: 'full',
-    component: TreePrioComponent,
-  },
+    component: TreePrioComponent
+  }
 ];
 const DECLARATIONS = [TreePrioComponent];
 
@@ -42,8 +42,8 @@ const DECLARATIONS = [TreePrioComponent];
     TemplateModule,
     MatCardModule,
     ViewportPrioModule,
-    SharedModule,
+    SharedModule
   ],
-  exports: [DECLARATIONS],
+  exports: [DECLARATIONS]
 })
 export class ComponentTreePrioModule {}
