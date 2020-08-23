@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 
 import { Observable, Subject } from 'rxjs';
@@ -19,6 +19,7 @@ interface HeroSearchComponentState {
   templateUrl: './hero-search.component.html',
   styleUrls: ['./hero-search.component.css'],
   providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeroSearchComponent {
   readonly heroes$: Observable<Hero[]> = this.state.select('heroes');

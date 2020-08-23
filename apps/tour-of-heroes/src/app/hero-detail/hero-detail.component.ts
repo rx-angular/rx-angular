@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { RxState } from '@rx-angular/state';
@@ -19,6 +19,7 @@ interface HeroDetailComponentState {
   templateUrl: './hero-detail.component.html',
   styleUrls: ['./hero-detail.component.css'],
   providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeroDetailComponent {
   readonly hero$ = this.state.select('hero');
@@ -33,11 +34,11 @@ export class HeroDetailComponent {
     public configService: ConfigService
   ) {
     const hero$ = this.route.paramMap.pipe(
-      switchMap((params) => this.heroService.getHero(Number(params.get('id'))))
+      switchMap(params => this.heroService.getHero(Number(params.get('id'))))
     );
     this.state.connect('hero', hero$);
     const saveEffect$ = this.save$.pipe(
-      switchMap((hero) => this.heroService.updateHero(hero)),
+      switchMap(hero => this.heroService.updateHero(hero)),
       tap(() => this.goBack())
     );
     this.state.hold(saveEffect$);

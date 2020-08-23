@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ConfigService } from '../config.service';
 import { MessageService } from '../message.service';
 
@@ -7,6 +7,7 @@ import { MessageService } from '../message.service';
   selector: 'app-messages',
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MessagesComponent {
   constructor(
