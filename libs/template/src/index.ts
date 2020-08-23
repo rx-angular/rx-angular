@@ -3,6 +3,8 @@ export {
   priorityTickMap,
   SchedulingPriority,
 } from './lib/render-strategies';
+// @TODO clarify if we should expost this
+export { getZoneUnPatchedApi, isNgZone, isViewEngineIvy } from './lib/core';
 export { getZoneUnPatchedApi, isNgZone } from './lib/core';
 export { PushPipe, PushModule } from './lib/push';
 export { LetDirective, LetModule } from './lib/let';
