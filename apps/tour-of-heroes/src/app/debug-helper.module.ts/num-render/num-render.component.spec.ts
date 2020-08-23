@@ -1,4 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatRippleModule } from '@angular/material/core';
 
 import { NumRenderComponent } from './num-render.component';
 
@@ -8,7 +10,8 @@ describe('NumRenderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NumRenderComponent ]
+      declarations: [ NumRenderComponent ],
+      imports: [ CommonModule, MatRippleModule ]
     })
     .compileComponents();
   }));
@@ -16,7 +19,7 @@ describe('NumRenderComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(NumRenderComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    // fixture.detectChanges();
   });
 
   it('should create', () => {
