@@ -30,6 +30,11 @@ export interface MethodInfo extends MemberInfo {
   parameters: MethodParameterInfo[];
 }
 
+export interface MutatorInfo extends MemberInfo {
+  kind: 'mutator';
+  parameter: MethodParameterInfo;
+}
+
 export interface DocsPage {
   title: string;
   category: string;
@@ -52,19 +57,19 @@ export interface DeclarationInfo {
 export interface InterfaceInfo extends DeclarationInfo {
   kind: 'interface';
   extends?: string;
-  members: Array<PropertyInfo | MethodInfo>;
+  members: Array<PropertyInfo | MethodInfo | MutatorInfo>;
 }
 
 export interface ClassInfo extends DeclarationInfo {
   kind: 'class';
   implements?: string;
   extends?: string;
-  members: Array<PropertyInfo | MethodInfo>;
+  members: Array<PropertyInfo | MethodInfo | MutatorInfo>;
 }
 
 export interface TypeAliasInfo extends DeclarationInfo {
   kind: 'typeAlias';
-  members?: Array<PropertyInfo | MethodInfo>;
+  members?: Array<PropertyInfo | MethodInfo | MutatorInfo>;
   type: ts.TypeNode;
 }
 
