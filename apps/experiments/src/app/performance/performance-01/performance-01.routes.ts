@@ -3,6 +3,6 @@ import { Performance01IndexComponent } from './index/performance01-index.compone
 export const ROUTES = [
   {
     path: '',
-    component: Performance01IndexComponent
-  }
+    component: Performance01IndexComponent,
+  },
 ];

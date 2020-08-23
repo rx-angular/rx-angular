@@ -1,11 +1,43 @@
 import { EmbeddedViewRef, TemplateRef, ViewContainerRef } from '@angular/core';
 
-type RxTemplateName = 'rxNext' | 'rxComplete' | 'rxError' | 'rxSuspense';
+export interface TemplateManager<C extends object, N extends string = string> {
 
-export interface TemplateManager<T> {
-  updateViewContext(viewContextSlice: T): void;
-  addTemplateRef(name: RxTemplateName, templateRef: TemplateRef<T>): void;
-  insertEmbeddedView(name: RxTemplateName): void;
+  /**
+   * @description
+   * Mutates the inner viewContext with the passed object slice.
+   *
+   * @param viewContextSlice - the object holding the new state
+   */
+  updateViewContext(viewContextSlice: Partial<C>): void;
+
+  /**
+   * @description
+   * Adds a template to the internal templateRefCache map.
+   *
+   * @param name
+   * @param templateRef
+   */
+  addTemplateRef(name: N, templateRef: TemplateRef<C>): void;
+
+  /**
+   * @description
+   * Checks if `TemplateRef` instance is cached under the provided name.
+   */
+  hasTemplateRef(name: N): boolean;
+
+  /**
+   * @description
+   * Creates and inserts view out of registered templates and caches it for the later
+   * re-usage.
+   *
+   * @param name name of the cached view
+   */
+  displayView(name: N): void;
+
+  /**
+   * @description
+   * Clears all cached views. This should be called if the instance that holds the template manager dies.
+   */
   destroy(): void;
 }
 
@@ -22,41 +54,64 @@ export interface TemplateManager<T> {
  * @param viewContainerRef reference to a top-level view container where passed templates will be attached
  * @param initialViewContext initial view context state
  */
-export function createTemplateManager<T extends object>(
+export function createTemplateManager<C extends object, N extends string = string>(
   viewContainerRef: ViewContainerRef,
-  initialViewContext: T
-): TemplateManager<T> {
-  const templateCache = new Map<RxTemplateName, TemplateRef<T>>();
-  const viewCache = new Map<RxTemplateName, EmbeddedViewRef<T>>();
+  initialViewContext: C
+): TemplateManager<C, N> {
+  const templateCache = new Map<N, TemplateRef<C>>();
+  const viewCache = new Map<N, EmbeddedViewRef<C>>();
   const viewContext = { ...initialViewContext };
+  let activeView: N;
 
   return {
-    updateViewContext(viewContextSlice: Partial<T>) {
+    hasTemplateRef(name: N): boolean {
+      return templateCache.has(name);
+    },
+
+    updateViewContext(viewContextSlice: Partial<C>) {
       Object.entries(viewContextSlice).forEach(([key, value]) => {
         viewContext[key] = value;
       });
     },
-    addTemplateRef(name: RxTemplateName, templateRef: TemplateRef<T>) {
-      assertTemplate(name, templateRef);
-      templateCache.set(name, templateRef);
-    },
-    insertEmbeddedView(name: RxTemplateName) {
-      if (templateCache.has(name)) {
-        // detach currently inserted view
-        viewContainerRef.detach();
 
-        if (viewCache.has(name)) {
-          viewContainerRef.insert(viewCache.get(name));
-        } else {
-          // creates and inserts view to the view container
-          const newView = viewContainerRef.createEmbeddedView(
-            templateCache.get(name),
-            viewContext
-          );
-          viewCache.set(name, newView);
-        }
+    addTemplateRef(name: N, templateRef: TemplateRef<C>) {
+      assertTemplate(name, templateRef);
+      if (!templateCache.has(name)) {
+        templateCache.set(name, templateRef);
+      } else {
+        // @Notice We have to think through how this would work. We also call viewCache.set(name, newView); in insertEmbeddedView
+        throw new Error(
+          'Updating an already existing Template is not supported at the moment.'
+        );
       }
     },
+
+    displayView(name: N) {
+      if (activeView !== name) {
+        if (templateCache.has(name)) {
+          // Detach currently inserted view from the container
+          viewContainerRef.detach();
+
+          if (viewCache.has(name)) {
+            viewContainerRef.insert(viewCache.get(name));
+          } else {
+            // Creates and inserts view to the view container
+            const newView = viewContainerRef.createEmbeddedView(
+              templateCache.get(name),
+              viewContext
+            );
+            viewCache.set(name, newView);
+          }
+        } else {
+          // @NOTICE this is here to cause errors and see in which situations we would throw.
+          // In CDK it should work different.
+          throw new Error(`A non-existing view was tried to insert ${name}`);
+        }
+
+        activeView = name;
+      }
+    },
+
     destroy() {
       viewCache.forEach((view) => view?.destroy());
       viewContainerRef.clear();

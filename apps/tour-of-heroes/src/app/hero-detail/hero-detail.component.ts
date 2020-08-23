@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { RxState } from '@rx-angular/state';
@@ -18,7 +18,8 @@ interface HeroDetailComponentState {
   selector: 'app-hero-detail',
   templateUrl: './hero-detail.component.html',
   styleUrls: ['./hero-detail.component.css'],
-  providers: [RxState]
+  providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeroDetailComponent {
   readonly hero$ = this.state.select('hero');

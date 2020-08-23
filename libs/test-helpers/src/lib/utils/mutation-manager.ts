@@ -10,7 +10,7 @@ export function mutationManagerFactory<T>(obj: AnyObject, props: AnyObject) {
     ): AnyObject => {
       return {
         ...originalObj,
-        [prop]: obj.hasOwnProperty(prop) ? obj[prop] : defaultValue
+        [prop]: obj.hasOwnProperty(prop) ? obj[prop] : defaultValue,
       };
     },
     {}
@@ -24,6 +24,6 @@ export function mutationManagerFactory<T>(obj: AnyObject, props: AnyObject) {
     },
     set: (prop: string, value: any) => {
       obj[prop] = value;
-    }
+    },
   };
 }

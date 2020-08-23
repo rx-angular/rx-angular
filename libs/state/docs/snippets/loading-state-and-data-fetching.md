@@ -49,7 +49,7 @@ export class MyComponent {
     <loading [isLoading]="isLoading$ | push"></loading>
     <div>{{ user$ | push }}</div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyComponent {
   readonly user$ = this.state.select('user');
@@ -61,9 +61,9 @@ export class MyComponent {
     private state: RxState<{ user: string; isLoading: boolean }>
   ) {
     const fetchUserOnUrlChange$ = this.router.params.pipe(
-      switchMap(p =>
+      switchMap((p) =>
         this.userService.getUser(p.user).pipe(
-          map(res => ({ user: res.user })),
+          map((res) => ({ user: res.user })),
           startWith({ isLoading: true }),
           endWith({ isLoading: false })
         )

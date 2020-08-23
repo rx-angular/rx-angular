@@ -23,5 +23,5 @@ Furthermore, there is a refresh button. A click on it also refreshes the list da
 
 Chapters we will discuss are:
 
-- [Setup a reactive state, selections and, UI interactions](./1)
-- [Handing Side Effects reactively](./2)
+- [Setup a reactive state, selections and, UI interactions](https://github.com/BioPhoton/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics/1)
+- [Handing Side Effects reactively](https://github.com/BioPhoton/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics/2)

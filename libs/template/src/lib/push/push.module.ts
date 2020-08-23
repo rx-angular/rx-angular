@@ -4,6 +4,6 @@ const DECLARATIONS = [PushPipe];
 @NgModule({
   declarations: DECLARATIONS,
   imports: [],
-  exports: DECLARATIONS
+  exports: DECLARATIONS,
 })
 export class PushModule {}

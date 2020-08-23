@@ -1,7 +1,8 @@
 # @rx-angular/template
 
-[![rx-angular](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
-[![npm version](https://badge.fury.io/js/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/@rx-angular/template)
+[![npm](https://img.shields.io/npm/v/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/package/%40rx-angular%2Ftemplate)
+![rx-angular CI](https://github.com/BioPhoton/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
+[![Coverage Status](https://raw.githubusercontent.com/BioPhoton/rx-angular/github-pages/docs/test-coverage/template/jest-coverage-badge.svg)](https://biophoton.github.io/rx-angular/test-coverage/template/lcov-report/index.html)
 
 ## Reactive Template Rendering for Angular
 
@@ -47,13 +48,17 @@ are several techniques that need to be known and considered.
 - [Coalescing, Scoped Coalescing & Scheduling](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/concepts.md)
 - [Rendering Issues in Angular](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/performance-issues.md)
 
-## Install
+## Installation
 
 `npm install --save @rx-angular/template`  
 or  
 `yarn add @rx-angular/template`
 
-## Usage
+## API
+
+[API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/api/overview.md)
+
+## Basic setup
 
 Importing `TemplateModule` to your Module (includes push, \*rxLet, unpatch).
 

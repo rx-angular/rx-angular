@@ -1,8 +1,8 @@
 # @rx-angular/state
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
-[![rx-angular circleci-status](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
-[![Coverage Status](https://coveralls.io/repos/github/BioPhoton/rx-angular/badge.svg?branch=master)](https://coveralls.io/github/BioPhoton/rx-angular?branch=master)
+![rx-angular CI](https://github.com/BioPhoton/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
+[![Coverage Status](https://raw.githubusercontent.com/BioPhoton/rx-angular/github-pages/docs/test-coverage/state/jest-coverage-badge.svg)](https://biophoton.github.io/rx-angular/test-coverage/state/lcov-report/index.html)
 
 ## Reactive Component State for Angular
 
@@ -84,6 +84,7 @@ with very little effort in any component.
 - [Managing ViewModels with selectSlice](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/selecting-the-viewmodel.md)
 - [Manage reactive HostBindings](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/hostbindings.md)
 - [Difference between Global and Local state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/global-state-vs-local-state.md)
+- [Using RxState as Global State](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/snippets/manage-global-state.md)
 
 ## Resources
 

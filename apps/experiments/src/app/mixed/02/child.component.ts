@@ -11,7 +11,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     Passed input binding: {{ value }}
     <!-- -->
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Child02Component extends BaseComponent {
   @Input()

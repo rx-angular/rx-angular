@@ -16,7 +16,7 @@ import {
   MethodParameterInfo,
   TypeAliasInfo,
   TypeMap,
-  VariableInfo
+  VariableInfo,
 } from './typescript-docgen-types';
 
 /**
@@ -209,7 +209,7 @@ export class TypescriptDocsRenderer {
       output += interfaceInfo.extends + ' ';
     }
     output += `{\n`;
-    output += members.map(member => `  ${member.fullText}`).join(`\n`);
+    output += members.map((member) => `  ${member.fullText}`).join(`\n`);
     output += `\n}\n`;
     output += `\`\`\`\n`;
 
@@ -228,23 +228,19 @@ export class TypescriptDocsRenderer {
       output += classInfo.implements + ' ';
     }
     output += `{\n`;
-    const renderModifiers = (modifiers: string[]) =>
-      modifiers.length ? modifiers.join(' ') + ' ' : '';
     output += members
-      .map(member => {
+      .map((member) => {
         if (member.kind === 'method') {
           const args = member.parameters
-            .map(p => this.renderParameter(p, p.type))
+            .map((p) => this.renderParameter(p, p.type))
             .join(', ');
           if (member.fullText === 'constructor') {
             return `  constructor(${args})`;
           } else {
-            return `  ${renderModifiers(member.modifiers)}${
-              member.fullText
-            }(${args}) => ${member.type};`;
+            return `  ${member.fullText}(${args}) => ${member.type};`;
           }
         } else {
-          return `  ${renderModifiers(member.modifiers)}${member.fullText}`;
+          return `  ${member.fullText}`;
         }
       })
       .join(`\n`);
@@ -261,7 +257,7 @@ export class TypescriptDocsRenderer {
     output += `type ${fullText} = `;
     if (members) {
       output += `{\n`;
-      output += members.map(member => `  ${member.fullText}`).join(`\n`);
+      output += members.map((member) => `  ${member.fullText}`).join(`\n`);
       output += `\n}\n`;
     } else {
       output += type.getText() + `\n`;
@@ -278,7 +274,7 @@ export class TypescriptDocsRenderer {
     if (members) {
       output += `{\n`;
       output += members
-        .map(member => {
+        .map((member) => {
           let line = member.description ? `  // ${member.description}\n` : '';
           line += `  ${member.fullText}`;
           return line;
@@ -296,7 +292,7 @@ export class TypescriptDocsRenderer {
   ): string {
     const { fullText, parameters, type } = functionInfo;
     const args = parameters
-      .map(p => this.renderParameter(p, p.type))
+      .map((p) => this.renderParameter(p, p.type))
       .join(', ');
     let output = '';
     output += `\`\`\`TypeScript\n`;
@@ -340,9 +336,11 @@ export class TypescriptDocsRenderer {
               docsUrl
             )}" `
           : '';
+      } else if (member.kind === 'mutator') {
+        type = this.renderType(member.parameter.type, knownTypeMap, docsUrl);
       } else {
         const args = member.parameters
-          .map(p =>
+          .map((p) =>
             this.renderParameter(
               p,
               this.renderType(p.type, knownTypeMap, docsUrl)
@@ -396,7 +394,7 @@ export class TypescriptDocsRenderer {
     let typeText = type
       .trim()
       // encode HTML entities
-      .replace(/[\u00A0-\u9999<>\&]/gim, i => '&#' + i.charCodeAt(0) + ';')
+      .replace(/[\u00A0-\u9999<>\&]/gim, (i) => '&#' + i.charCodeAt(0) + ';')
       // remove newlines
       .replace(/\n/g, ' ');
 

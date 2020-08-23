@@ -1,7 +1,11 @@
-# RxAngular
+# RxAngular ![rx-angular CI](https://github.com/BioPhoton/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
 
 RxAngular offers a comprehensive toolset for handling fully reactive Angular applications with the main focus on runtime
 performance and template rendering.
+
+## Homepage
+
+https://biophoton.github.io/rx-angular/#/
 
 RxAngular is divided into two initially independent packages:
 
@@ -10,11 +14,9 @@ RxAngular is divided into two initially independent packages:
 
 Used together, you get a powerful tool for developing high-performance angular applications with or without NgZone.
 
-[![rx-angular](https://circleci.com/gh/BioPhoton/rx-angular.svg?style=shield)](https://circleci.com/gh/BioPhoton/rx-angular)
-
 This repository holds a set of helpers to create **fully reactive** as well as **fully zone-less** applications.
 
-![rx-angular logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/images/rx-angular_logo.png)
+![rx-angular logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/apps/template-demo/src/assets/images/rx-angular_logo.png)
 
 ## Packages
 

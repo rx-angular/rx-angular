@@ -20,6 +20,6 @@ import { BaseComponent } from '../base.component.ts/base.component';
       <app-cd-parent13 class="item"></app-cd-parent13>
     </div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class CdOverviewComponent extends BaseComponent {}

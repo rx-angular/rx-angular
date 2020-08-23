@@ -1,8 +1,11 @@
 import { staticSchedule } from '../../../src/lib/render-strategies/static';
 import { SchedulingPriority } from '../../../src/lib/render-strategies/rxjs/scheduling';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { mockConsole } from '@test-helpers';
 
 
 describe('staticSchedule', () => {
+  beforeAll(() => mockConsole());
 
   it('should change the execution context', (done) => {
     let test = 0;

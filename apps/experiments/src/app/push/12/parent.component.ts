@@ -24,7 +24,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <br />
     <app-push-child12 [value]="value1$"> </app-push-child12>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Parent12Component extends BaseComponent {
   @ViewChild('button') button: ElementRef<HTMLButtonElement>;

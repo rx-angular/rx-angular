@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, startWith, switchMap } from 'rxjs/operators';
@@ -20,7 +20,8 @@ const initHeroesComponentState: Partial<HeroesComponentState> = {
   selector: 'app-heroes',
   templateUrl: './heroes.component.html',
   styleUrls: ['./heroes.component.css'],
-  providers: [RxState]
+  providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeroesComponent {
   heroes: Hero[];

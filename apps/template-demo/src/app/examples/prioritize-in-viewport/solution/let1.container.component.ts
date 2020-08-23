@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component
+  Component,
 } from '@angular/core';
 import { BehaviorSubject, EMPTY, interval, merge, Subject } from 'rxjs';
 import { scan, startWith, switchMap } from 'rxjs/operators';
@@ -60,8 +60,8 @@ import { getStrategies } from '@rx-angular/template';
       .local {
         border: 1px dashed green;
       }
-    `
-  ]
+    `,
+  ],
 })
 export class Let1ContainerComponent {
   incrementTrigger = new Subject<Event>();
@@ -75,12 +75,12 @@ export class Let1ContainerComponent {
   count$ = merge(
     this.incrementTrigger,
     this.toggleAutoIncrement.pipe(
-      scan(v => !v, true),
-      switchMap(v => (v ? interval(0) : EMPTY))
+      scan((v) => !v, true),
+      switchMap((v) => (v ? interval(0) : EMPTY))
     )
   ).pipe(
     startWith(1),
-    scan(v => ++v, 0)
+    scan((v) => ++v, 0)
   );
 
   constructor(private cdRef: ChangeDetectorRef) {}

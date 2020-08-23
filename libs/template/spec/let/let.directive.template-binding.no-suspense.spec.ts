@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LetDirective } from '@rx-angular/template';
 import { Observable, of, Subject } from 'rxjs';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
@@ -39,6 +41,7 @@ const setUpFixture = () => {
 };
 
 describe('LetDirective when template binding without "suspense" template', () => {
+  beforeAll(() => mockConsole());
   beforeEach(async(setupTestComponent));
   beforeEach(setUpFixture);
 

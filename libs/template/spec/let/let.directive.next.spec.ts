@@ -4,6 +4,8 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let';
 import { take } from 'rxjs/operators';
 import { MockChangeDetectorRef } from '../fixtures';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
@@ -46,6 +48,7 @@ const setupLetDirectiveTestComponent = (): void => {
 };
 
 describe('LetDirective when nexting values', () => {
+  beforeAll(() => mockConsole());
   beforeEach((setupLetDirectiveTestComponent));
 
   it('should be instantiable', () => {
@@ -54,7 +57,7 @@ describe('LetDirective when nexting values', () => {
     expect(componentNativeElement).toBeDefined();
   });
 
-  it('should render undefined as value when initially undefined was passed (as no value ever was emitted)', () => {
+  it('should render nothing when initially undefined was passed (as no value ever was emitted)', () => {
     letDirectiveTestComponent.value$ = undefined;
     fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('');

@@ -6,7 +6,7 @@ import {
   share,
   switchMap,
   takeUntil,
-  withLatestFrom
+  withLatestFrom,
 } from 'rxjs/operators';
 
 @Component({
@@ -109,8 +109,8 @@ import {
       .error-icon {
         color: darkred;
       }
-    `
-  ]
+    `,
+  ],
 })
 export class LetTemplateBindingHttpExampleComponent {
   visibleStrategy = 'local';
@@ -127,13 +127,14 @@ export class LetTemplateBindingHttpExampleComponent {
           } else {
             return fromPromise(
               fetch(
-                `https://swapi.dev/api/people/${Math.floor(Math.random() * 50) +
-                  1}`
-              ).then(a => a.json())
+                `https://swapi.dev/api/people/${
+                  Math.floor(Math.random() * 50) + 1
+                }`
+              ).then((a) => a.json())
             );
           }
         }),
-        map(hero => hero.name || hero.detail || 'Not found')
+        map((hero) => hero.name || hero.detail || 'Not found')
       );
     }),
     share(),

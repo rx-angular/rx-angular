@@ -24,20 +24,20 @@
             mat-list-item
             routerLinkActive="active"
           >
-            <mat-icon style="margin-right: .5rem;">warning</mat-icon>
+            <mat-icon style="margin-right: 0.5rem;">warning</mat-icon>
             {{ child.label }}
           </a>
         </mat-expansion-panel>
         <ng-container *ngIf="!item.children">
           <a [routerLink]="item.link" mat-list-item routerLinkActive="active">
-            <mat-icon style="margin-right: .5rem;">warning</mat-icon>
+            <mat-icon style="margin-right: 0.5rem;">warning</mat-icon>
             {{ item.label }}
           </a>
         </ng-container>
       </ng-container>
 
       <a mat-list-item routerLink="animation" routerLinkActive="active">
-        <mat-icon style="margin-right: .5rem;">invert_colors</mat-icon>
+        <mat-icon style="margin-right: 0.5rem;">invert_colors</mat-icon>
         Animation
       </a>
     </mat-nav-list>

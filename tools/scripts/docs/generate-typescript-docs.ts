@@ -21,19 +21,24 @@ interface DocsSectionConfig {
 
 const sections: DocsSectionConfig[] = [
   {
-    sourceDirs: ['libs/state/src/'],
+    sourceDirs: [
+      'libs/state/src/',
+      'libs/template/src/'
+    ],
     exclude: [],
-    outputPath: 'generated'
-  }
+    outputPath: 'generated',
+  },
 ];
 
 generateTypescriptDocs(sections);
 
-const watchMode = !!process.argv.find(arg => arg === '--watch' || arg === '-w');
+const watchMode = !!process.argv.find(
+  (arg) => arg === '--watch' || arg === '-w'
+);
 if (watchMode) {
   console.log(`Watching for changes to source files...`);
-  sections.forEach(section => {
-    section.sourceDirs.forEach(dir => {
+  sections.forEach((section) => {
+    section.sourceDirs.forEach((dir) => {
       fs.watch(dir, { recursive: true }, (eventType, file) => {
         if (extname(file) === '.ts') {
           console.log(`Changes detected in ${dir}`);
@@ -86,8 +91,9 @@ function generateTypescriptDocs(
 
     if (generatedCount) {
       console.log(
-        `Generated ${generatedCount} typescript api docs for "${outputPath}" in ${+new Date() -
-          timeStart}ms`
+        `Generated ${generatedCount} typescript api docs for "${outputPath}" in ${
+          +new Date() - timeStart
+        }ms`
       );
     }
   }
@@ -106,10 +112,10 @@ function getSourceFilePaths(
   excludePatterns: RegExp[] = []
 ): string[] {
   return sourceDirs
-    .map(scanPath =>
+    .map((scanPath) =>
       klawSync(path.join(__dirname, '../../../', scanPath), {
         nodir: true,
-        filter: item => {
+        filter: (item) => {
           if (path.extname(item.path) === '.ts') {
             for (const pattern of excludePatterns) {
               if (pattern.test(item.path)) {
@@ -120,9 +126,9 @@ function getSourceFilePaths(
           }
           return false;
         },
-        traverseAll: true
+        traverseAll: true,
       })
     )
     .reduce((allFiles, files) => [...allFiles, ...files], [])
-    .map(item => item.path);
+    .map((item) => item.path);
 }

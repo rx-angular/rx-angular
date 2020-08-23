@@ -123,7 +123,7 @@ export function stateful<T, R>(
         return o;
       },
       // initial emissions, undefined is no base-state, pollution with skip(1)
-      filter(v => v !== undefined),
+      filter((v) => v !== undefined),
       // distinct same derivation value
       distinctUntilChanged(),
       // reuse custom operations result for multiple subscribers and reemit the last calculated value.

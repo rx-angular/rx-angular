@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { ConfigService } from '../config.service';
 import { Hero } from '../hero';
@@ -13,7 +13,8 @@ interface DashboardComponentState {
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-  providers: [RxState]
+  providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent {
   readonly heroes$ = this.state.select('heroes');

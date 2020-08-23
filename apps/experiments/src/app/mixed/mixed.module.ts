@@ -25,7 +25,7 @@ import { MixedOverviewComponent } from './mixed.overview.component';
     Child01Component,
     Parent02Component,
     Child02Component,
-    MixedOverviewComponent
+    MixedOverviewComponent,
   ],
   imports: [
     CommonModule,
@@ -39,7 +39,7 @@ import { MixedOverviewComponent } from './mixed.overview.component';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    TemplateModule
-  ]
+    TemplateModule,
+  ],
 })
 export class MixedModule {}

@@ -1,6 +1,7 @@
 {
   "name": "@rx-angular/template",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
+  "homepage": "https://biophoton.github.io/rx-angular/#/",
   "description": "**Fully** Reactive Component Template Rendering in Angular. @rx-angular/template aims to be a reflection of Angular's built in renderings just reactive.",
   "main": "index.js",
   "publishConfig": {

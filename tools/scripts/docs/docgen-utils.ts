@@ -27,7 +27,10 @@ generated: true
 }
 
 export function titleCase(input: string): string {
-  return input.split(' ').map(w => w[0].toLocaleUpperCase() + w.substr(1)).join(' ');
+  return input
+    .split(' ')
+    .map((w) => w[0].toLocaleUpperCase() + w.substr(1))
+    .join(' ');
 }
 
 /**

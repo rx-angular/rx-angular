@@ -66,7 +66,7 @@ import { CdParent13Component } from './13/parent.component';
     CdParent11Component,
     CdParent12Component,
     CdParent13Component,
-    CdOverviewComponent
+    CdOverviewComponent,
   ],
   imports: [
     CommonModule,
@@ -80,7 +80,7 @@ import { CdParent13Component } from './13/parent.component';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    TemplateModule
-  ]
+    TemplateModule,
+  ],
 })
 export class CdModule {}

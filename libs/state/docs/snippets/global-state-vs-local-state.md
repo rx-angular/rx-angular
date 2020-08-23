@@ -2,7 +2,7 @@
 
 ## Global state
 
-- **Lifetime**. Static and, beside lazy instantiation, equal to the app lifetime. It never gets destroyed. 
+- **Lifetime**. Static and, beside lazy instantiation, equal to the app lifetime. It never gets destroyed.
 - **Sharing**. Shared globally in the app. In Angular global state is nearly always shared over global singleton services.
 - **Processed Sources**. In most cases process external sources (REST API's, Web Sockets, Browser URL).
 
@@ -43,6 +43,5 @@ Let's take a look at a simple todo app. This app has 2 views.
 - `isExpanded` property is also part of **local** state. Both lists can be expanded/collapsed but this status isn't shared between them and they don't care about this status of each other.
 - `tasks` array is a part of our app **global** state. This array needed for each view and received from the same endpoint. We don't need to load it twice. It is time to introduce a global layer to our application and move tasks array and retrieving logic there.
 
-Resources: 
+Resources:
 _[Research on Reactive-Ephemeral-State in component-oriented frameworks](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk), Dev.to, Michael Hladky_
-

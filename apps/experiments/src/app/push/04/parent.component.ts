@@ -23,7 +23,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <!-- -->
     Value1: {{ value1$ | push: strategy }}
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Parent04Component extends BaseComponent {
   @ViewChild('button') button: ElementRef<HTMLButtonElement>;
@@ -32,7 +32,7 @@ export class Parent04Component extends BaseComponent {
   numArray = [0, 1, 3, 4, 5];
   value1$: Observable<number> = this.btnClick$.pipe(
     startWith(0),
-    concatMap(a => from(this.numArray)),
+    concatMap((a) => from(this.numArray)),
     scan((a): any => ++a, 0)
   );
 }

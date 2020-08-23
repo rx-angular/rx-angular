@@ -14,14 +14,16 @@ import { SubscriptionHandlingService } from './subscription.service';
 
     <div class="case-content">numberOfEmissions{{ selection1$ }}</div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
   //providers: [SubscriptionHandlingService]
 })
 export class RxStateParentCompositionSolutionComponent implements OnDestroy {
   subscription = new Subscription();
   onDestroy$ = new Subject<void>();
 
-  selection1$ = this.source.$.pipe(scan(numOfEmissions => ++numOfEmissions, 0));
+  selection1$ = this.source.$.pipe(
+    scan((numOfEmissions) => ++numOfEmissions, 0)
+  );
 
   constructor(private source: SourceService) {}
 

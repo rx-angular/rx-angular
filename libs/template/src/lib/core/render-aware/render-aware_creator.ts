@@ -1,5 +1,5 @@
 import {
-  EMPTY,
+  MonoTypeOperatorFunction,
   NextObserver,
   Observable,
   Observer,
@@ -7,14 +7,16 @@ import {
   ReplaySubject,
   Subscribable,
   Subscription,
+  Subscriber,
 } from 'rxjs';
 import {
-  catchError,
   distinctUntilChanged,
   filter,
   map,
+  shareReplay,
   switchMap,
   tap,
+  withLatestFrom,
 } from 'rxjs/operators';
 import { RenderStrategy, StrategySelection } from './interfaces';
 import { nameToStrategy } from './nameToStrategy';
@@ -50,6 +52,17 @@ export function createRenderAware<U>(cfg: {
     ),
     nameToStrategy(cfg.strategies),
     tap((s) => (currentStrategy = s))
+    map((strategy: string): RenderStrategy => {
+        const s = cfg.strategies[strategy];
+        if (!!s) {
+          return s;
+        }
+        throw new Error(`Strategy ${strategy} does not exist.`);
+      }
+    ),
+    tap((s) => (currentStrategy = s)),
+    // do not repeat the steps before for each subscriber
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   const observablesFromTemplate$ = new ReplaySubject<Observable<U>>(1);
@@ -75,29 +88,18 @@ export function createRenderAware<U>(cfg: {
     }),
     // forward only observable values
     filter((o$) => o$ !== undefined),
+    distinctUntilChanged(),
     switchMap((o$) =>
-      o$.pipe(
-        distinctUntilChanged(),
-        tap(cfg.templateObserver as Observer<U>),
-        currentStrategy.rxScheduleCD,
-        tap({
-          // handle "error" and "complete" notifications for Observable from template
-          error: (err) => {
-            console.error(err);
-            if (cfg.templateObserver.error) {
-              cfg.templateObserver.error(err);
-              currentStrategy.detectChanges();
-            }
-          },
-          complete: cfg.templateObserver.complete
-            ? () => currentStrategy.detectChanges()
-            : undefined,
-        })
-      )
-    ),
-    catchError((e) => {
-      return EMPTY;
-    })
+      o$
+        // Added behavior will get applied to the observable in `renderWithLatestStrategy`
+        .pipe(
+          // Forward only distinct values
+          distinctUntilChanged(),
+          // Update completion, error and next
+          tap(cfg.templateObserver),
+          renderWithLatestStrategy(strategy$)
+        )
+    )
   );
 
   return {
@@ -109,9 +111,38 @@ export function createRenderAware<U>(cfg: {
     },
     activeStrategy$: strategy$,
     subscribe(): Subscription {
-      return new Subscription()
-        .add(strategy$.subscribe())
-        .add(renderingEffect$.subscribe());
+      return new Subscription().add(renderingEffect$.subscribe());
     },
   };
+}
+
+function renderWithLatestStrategy<T>(
+  strategyChanges$: Observable<RenderStrategy>
+): MonoTypeOperatorFunction<T> {
+  return (o$) => {
+    return o$.pipe(
+      handleErrorAndComplete(),
+      withLatestFrom(strategyChanges$),
+      // always use latest strategy on value change
+      switchMap(([renderValue, strategy]) =>
+        of(renderValue).pipe(strategy.rxScheduleCD)
+      )
+    );
+  };
+
+  function handleErrorAndComplete<U>(): MonoTypeOperatorFunction<U> {
+    return (o$: Observable<U>) =>
+      new Observable((subscriber: Subscriber<U>) => {
+        const subscription = o$.subscribe({
+          next: (val) => subscriber.next(val),
+          // make "error" and "complete" notifications comply with `rxScheduleCD`
+          error: (err) => {
+            console.error(err);
+            subscriber.next();
+          },
+          complete: () => subscriber.next(),
+        });
+        return () => subscription.unsubscribe();
+      });
+  }
 }

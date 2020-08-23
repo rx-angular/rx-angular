@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
     Passed input binding: {{ value }}
     <!-- -->
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Child14Component {
   @Input()

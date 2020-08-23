@@ -24,7 +24,7 @@ import { BaseComponent } from '../../base.component.ts/base.component';
     <br />
     Value1: {{ value1$ | push: strategy }}
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
 })
 export class Parent01Component extends BaseComponent {
   @ViewChild('button') button: ElementRef<HTMLButtonElement>;

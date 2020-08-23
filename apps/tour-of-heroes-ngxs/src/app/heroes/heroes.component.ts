@@ -13,14 +13,14 @@ interface HeroesComponentState {
 }
 
 const initHeroesComponentState: Partial<HeroesComponentState> = {
-  heroes: []
+  heroes: [],
 };
 
 @Component({
   selector: 'app-heroes',
   templateUrl: './heroes.component.html',
   styleUrls: ['./heroes.component.css'],
-  providers: [RxState]
+  providers: [RxState],
 })
 export class HeroesComponent {
   heroes: Hero[];
@@ -41,12 +41,12 @@ export class HeroesComponent {
     this.state.connect('heroes', this.heroState.heroes$);
 
     this.state.hold(
-      this.add.pipe(switchMap(name => this.heroState.dispatchAddHero(name)))
+      this.add.pipe(switchMap((name) => this.heroState.dispatchAddHero(name)))
     );
 
     this.state.hold(
       this.delete.pipe(
-        switchMap(hero => this.heroState.dispatchDeleteHero(hero))
+        switchMap((hero) => this.heroState.dispatchDeleteHero(hero))
       )
     );
   }

@@ -1,9 +1,14 @@
 import { ApplicationRef, Component, NgModule, NgZone } from '@angular/core';
 import { getTestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { isNgZone, isNoopNgZone } from '../../../src/lib/core/utils';
+import { envZonePatched, isNgZone, isNoopNgZone } from '../../../src/lib/core/utils';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { mockConsole } from '@test-helpers';
+
 
 describe('hasZone', () => {
+  beforeAll(() => mockConsole());
+
   async function setup({ defaultZone }: { defaultZone: boolean }) {
     @Component({
       // tslint:disable-next-line:component-selector
@@ -79,4 +84,43 @@ describe('isNoopNgZone', () => {
   it('returns true when noop zone is chosen', async () => {
     expect(await setup({ defaultZone: false })).toEqual({ hasZone: true });
   });
+});
+
+describe('envZonePatched', () => {
+  async function setup({ defaultZone }: { defaultZone: boolean }) {
+    @Component({
+      // tslint:disable-next-line:component-selector
+      selector: 'body',
+      template: '<div></div>',
+    })
+    class NgZoneTestComponent {
+      checkEnvZonePatched = envZonePatched();
+    }
+
+    @NgModule({
+      declarations: [NgZoneTestComponent],
+      exports: [NgZoneTestComponent],
+      bootstrap: [NgZoneTestComponent],
+      imports: [NoopAnimationsModule],
+    })
+    class MyAppModule {}
+
+    const platform = getTestBed().platform;
+    const moduleRef = defaultZone
+      ? await platform.bootstrapModule(MyAppModule)
+      : await platform.bootstrapModule(MyAppModule, { ngZone: 'noop' });
+    const appRef = moduleRef.injector.get(ApplicationRef);
+    const testComp = appRef.components[0].instance;
+
+    return { checkEnvZonePatched: testComp.checkEnvZonePatched };
+  }
+
+  it('returns true when default zone is used', async () => {
+    expect(await setup({ defaultZone: true })).toEqual({ checkEnvZonePatched: true });
+  });
+
+  it('returns true when zone is present', async () => {
+    expect(envZonePatched()).toBe(true);
+  });
+
 });

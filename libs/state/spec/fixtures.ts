@@ -21,16 +21,16 @@ export const initialNestedState: NestedState = {
   obj: {
     key1: {
       key11: {
-        key111: 'test'
-      }
-    }
-  }
+        key111: 'test',
+      },
+    },
+  },
 };
 
 export const initialPrimitiveState: PrimitiveState = {
   str: 'str',
   num: 42,
-  bol: true
+  bol: true,
 };
 
 export function setupState<T extends object>(cfg: { initialState?: T }) {
@@ -54,7 +54,7 @@ export function createStateChecker<T extends object>(
 ): StateChecker<T> {
   return {
     checkState,
-    checkSubscriptions
+    checkSubscriptions,
   };
 
   function checkState(
@@ -66,7 +66,7 @@ export function createStateChecker<T extends object>(
       assert(service.get(), stateOrProject);
       service
         .select(take(1))
-        .subscribe(actual => assert(actual, stateOrProject));
+        .subscribe((actual) => assert(actual, stateOrProject));
       return;
     }
 
@@ -74,7 +74,7 @@ export function createStateChecker<T extends object>(
       assert(project(service.get()), stateOrProject);
       service
         .select(take(1))
-        .subscribe(actual => assert(project(actual), stateOrProject));
+        .subscribe((actual) => assert(project(actual), stateOrProject));
       return;
     }
 

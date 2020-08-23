@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnInit
+  OnInit,
 } from '@angular/core';
 
 import {
@@ -14,7 +14,7 @@ import {
   interval,
   NEVER,
   Observable,
-  Subject
+  Subject,
 } from 'rxjs';
 import {
   concatMap,
@@ -23,7 +23,7 @@ import {
   switchMap,
   take,
   takeUntil,
-  tap
+  tap,
 } from 'rxjs/operators';
 import { getStrategies } from '@rx-angular/template';
 import { LoadTestService } from './load-test.service';
@@ -73,7 +73,7 @@ import { LoadTestService } from './load-test.service';
     <br />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [LoadTestService]
+  providers: [LoadTestService],
 })
 export class LoadTestComponent implements OnInit {
   numRenders = 0;

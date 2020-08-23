@@ -38,7 +38,7 @@ import { coalesceWith } from '@rx-angular/template';
 import { range } from 'rxjs';
 
 const source$ = range(1, 4); // stream of data
-source$.pipe(coalesceWith()).subscribe(stateChanges => {
+source$.pipe(coalesceWith()).subscribe((stateChanges) => {
   render(); // render method will be called once for the value 4 of the stream
 });
 ```
@@ -71,7 +71,7 @@ import { range } from 'rxjs';
 const source$ = range(1, 4); // synchronous emitted values
 source$
   .pipe(coalesceWith({ leading: true, tailing: true }))
-  .subscribe(v => console.log(v)); // 1, 10
+  .subscribe((v) => console.log(v)); // 1, 10
 ```
 
 ### Usage of Context Scoping
@@ -86,18 +86,18 @@ import { range, animationFrames } from 'rxjs';
 
 const source$ = range(1, 10); // synchronous emitted values
 const coalesceWithConfig = {
-  context: {} // e.g. this.componentRef;
+  context: {}, // e.g. this.componentRef;
 };
 
 source$
   .pipe(coalesceWith(() => animationFrames(), coalesceWithConfig))
-  .subscribe(stateChanges => {
+  .subscribe((stateChanges) => {
     render(stateChanges); // render method will be called once for the value 4 of the stream
   });
 
 source$
   .pipe(coalesceWith(() => generateFrames(), coalesceWithConfig))
-  .subscribe(stateChanges => {
+  .subscribe((stateChanges) => {
     render(stateChanges);
   });
 // view doesn't get rendered, since the value will be emitted only once per scope

@@ -4,7 +4,12 @@ import {
   Pipe,
   PipeTransform,
 } from '@angular/core';
-import { Observable, ObservableInput, Unsubscribable } from 'rxjs';
+import {
+  NextObserver,
+  Observable,
+  ObservableInput,
+  Unsubscribable,
+} from 'rxjs';
 import { createRenderAware, RenderAware } from '../core';
 import { getStrategies } from '../render-strategies';
 import { DEFAULT_STRATEGY_NAME } from '../render-strategies/strategies/strategies-map';
