@@ -513,8 +513,8 @@
     },
     "docs": {
       "projectType": "application",
-      "root": "docs",
-      "sourceRoot": "docs",
+      "root": "apps/docs",
+      "sourceRoot": "apps/docs",
       "prefix": "rx-angular",
       "architect": {
         "serve-admin": {
