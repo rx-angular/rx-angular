@@ -246,9 +246,9 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   }
 
   private displayInitialView = () => {
-    // display "suspense" template if provided, display "next" otherwise
-    this.templateManager.hasTemplateRef('rxSuspense')
-      ? this.templateManager.displayView('rxSuspense')
-      : this.templateManager.displayView('rxNext');
+    // display "suspense" template if provided
+    if (this.templateManager.hasTemplateRef('rxSuspense')) {
+      this.templateManager.displayView('rxSuspense');
+    }
   }
 }
