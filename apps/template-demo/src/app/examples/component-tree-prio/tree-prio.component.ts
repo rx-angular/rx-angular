@@ -3,7 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { Person, TreePrioService } from './tree-prio.service';
 import { RxState } from '@rx-angular/state';
@@ -26,7 +26,7 @@ export interface ComponentState {
   selector: 'tree-prio',
   templateUrl: './tree-prio.component.html',
   styleUrls: ['./tree-prio.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreePrioComponent extends RxState<ComponentState>
   implements OnInit {
@@ -46,7 +46,7 @@ export class TreePrioComponent extends RxState<ComponentState>
     'eyeColor',
     'company',
     'phone',
-    'address',
+    'address'
   ];
   readonly data$ = this.select('data').pipe(tap(console.log));
 
@@ -74,7 +74,7 @@ export class TreePrioComponent extends RxState<ComponentState>
   }
 
   remove() {
-    this.set((s) => {
+    this.set(s => {
       return { data: s.data.slice(0, -1) };
     });
   }
@@ -82,7 +82,7 @@ export class TreePrioComponent extends RxState<ComponentState>
   filterData(data: Person[], f: string): Person[] {
     if (!!f) {
       const filterValue = f.toLowerCase();
-      return data.filter((p) => {
+      return data.filter(p => {
         return (
           p.name.toLowerCase().includes(filterValue) ||
           p.balance.toLowerCase().includes(filterValue) ||
@@ -90,7 +90,10 @@ export class TreePrioComponent extends RxState<ComponentState>
           p.company.toLowerCase().includes(filterValue) ||
           p.phone.toLowerCase().includes(filterValue) ||
           p.address.toLowerCase().includes(filterValue) ||
-          p.age.toString().toLowerCase().includes(filterValue)
+          p.age
+            .toString()
+            .toLowerCase()
+            .includes(filterValue)
         );
       });
     }
