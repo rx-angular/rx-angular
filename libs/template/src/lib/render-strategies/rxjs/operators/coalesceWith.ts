@@ -2,7 +2,6 @@ import {
   MonoTypeOperatorFunction,
   Observable,
   Observer,
-  Subscribable,
   SubscribableOrPromise,
   Subscriber,
   Subscription,
