@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnInit,
+  OnInit
 } from '@angular/core';
 
 import { Observable, of, Subject } from 'rxjs';
@@ -10,7 +10,7 @@ import { scan, tap } from 'rxjs/operators';
 import {
   getStrategies,
   priorityTickMap,
-  SchedulingPriority,
+  SchedulingPriority
 } from '@rx-angular/template';
 
 @Component({
@@ -51,8 +51,8 @@ import {
       button:active {
         background: red;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class SchedulingComponent implements OnInit {
   numRenders = 0;
@@ -64,8 +64,8 @@ export class SchedulingComponent implements OnInit {
   strategies;
   nextValues = new Subject<any>();
   value$: Observable<string> = this.nextValues.pipe(
-    scan((count) => ++count),
-    tap((v) => console.log('count:', v))
+    scan(count => ++count),
+    tap(v => console.log('count:', v))
   );
   value;
 

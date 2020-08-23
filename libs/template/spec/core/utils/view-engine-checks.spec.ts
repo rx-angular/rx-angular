@@ -1,6 +1,7 @@
-import { getGlobalThis, isViewEngineIvy } from '../../../src/lib/core';
+import { getGlobalThis } from '../../../src/lib/core';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { isViewEngineIvy } from '@rx-angular/template';
 
 
 describe('isIvy', () => {

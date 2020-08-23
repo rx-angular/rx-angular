@@ -7,7 +7,6 @@ import {
   Observable,
   Subject,
 } from 'rxjs';
-import { getStrategies } from '@rx-angular/template';
 import {
   concatMap,
   mergeMap,
@@ -17,22 +16,20 @@ import {
   takeUntil,
   tap,
 } from 'rxjs/operators';
-import { ChangeDetectorRef, Injectable } from '@angular/core';
 
-@Injectable()
 export class CoalescingTestService {
   ms = 10;
   strategy$ = new BehaviorSubject('noop');
   nextValues = new Subject<any>();
   toggle = new Subject<any>();
   value$: Observable<string> = this.nextValues.pipe(
-    mergeMap(() => ['1', '2', '3', '4', Math.random() + ''])
+    mergeMap(() => ['1', '2', Math.random() + ''])
   );
   value;
 
   toggleTick = this.toggle.pipe(
-    scan((isTrue) => !isTrue, true),
-    switchMap((isTrue) => (isTrue ? interval(this.ms) : EMPTY)),
+    scan(isTrue => !isTrue, true),
+    switchMap(isTrue => (isTrue ? interval(this.ms) : EMPTY)),
     tap(() => this.nextValues.next(1))
   );
 
@@ -49,7 +46,7 @@ export class CoalescingTestService {
   updatePatternSet(strategyNames: string[]) {
     from(strategyNames)
       .pipe(
-        concatMap((strategyName) => {
+        concatMap(strategyName => {
           this.strategy$.next(strategyName);
           console.log('strategy', strategyName);
           return interval(this.ms, asapScheduler).pipe(

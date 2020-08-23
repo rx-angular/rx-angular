@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnInit,
+  OnInit
 } from '@angular/core';
 import { getStrategies } from '@rx-angular/template';
 
@@ -14,7 +14,7 @@ import { getStrategies } from '@rx-angular/template';
     <coalesce-real-life-1> </coalesce-real-life-1>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [],
+  providers: []
 })
 export class RealLife1ContainerComponent implements OnInit {
   numRenders = 0;
@@ -22,7 +22,7 @@ export class RealLife1ContainerComponent implements OnInit {
   obj = {
     name: 'test',
     age: 42,
-    items: [1, 2, 3, 4, 5],
+    items: [1, 2, 3, 4, 5]
   };
 
   constructor(private cdRef: ChangeDetectorRef) {}
@@ -39,7 +39,7 @@ export class RealLife1ContainerComponent implements OnInit {
       Math.random(),
       Math.random(),
       Math.random(),
-      Math.random(),
+      Math.random()
     ];
     this.strategies['local'].scheduleCD();
   }

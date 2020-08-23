@@ -13,34 +13,19 @@ import {
   from,
   interval,
   NEVER,
-  Observable,
-  Subject,
+  Observable
 } from 'rxjs';
-import {
-  concatMap,
-  mergeMap,
-  scan,
-  switchMap,
-  take,
-  takeUntil,
-  tap,
-} from 'rxjs/operators';
 import { getStrategies } from '@rx-angular/template';
 import { CoalescingTestService } from './coalescing-test.service';
 
 @Component({
   selector: 'demo-basics',
   template: `
-    renders: {{ rerenders() }}
+    <renders></renders>
 
     <br />
-    ---
-    <br />
-    <label>tick in ms</label>
-    <input (change)="s.ms = $event.target?.value" />
-    <br />
-
-    <label>Render Strategy</label>
+    --
+    <label>Render Strategy: {{ strategy$ | push }}</label>
     <select [unpatch] (change)="strategy$.next($event?.target?.value)">
       <option [value]="s" *ngFor="let s of strategies">{{ s }}</option>
     </select>
@@ -49,84 +34,15 @@ import { CoalescingTestService } from './coalescing-test.service';
 
     <button [unpatch] (click)="updateValue()">UpdateValue</button>
     <br />
-    <button [unpatch] (click)="updatePattern()">updatePattern</button>
-    <br />
-    <button [unpatch] (click)="updatePatternSet()">
-      updatePatternSet {{ strategy$ | push }}
-    </button>
-    <br />
-    <button [unpatch] (click)="s.toggle.next($event)">toggle</button>
-    <br />
-
-    push: {{ value$ | push: strategy$ }}<br />
-    push: {{ value$ | push: strategy$ }}<br />
-    push: {{ value$ | push: strategy$ }}<br />
-    push: {{ value$ | push: strategy$ }}<br />
-    push: {{ value$ | push: strategy$ }}<br />
-    push: {{ value$ | push: strategy$ }}<br />
-    push: {{ value$ | push: strategy$ }}<br />
-    push: {{ value$ | push: strategy$ }}<br />
-    push: {{ value$ | push: strategy$ }}<br />
-    push: {{ value$ | push: strategy$ }}<br />
-
-    ---- <br />
-    <!--  <br />
-    -->
-    <ng-container *rxLet="value$; let value; strategy: strategy$">
-      rxLet: {{ value }}
-    </ng-container>
-    <br />
-    <ng-container *rxLet="value$; let value; strategy: strategy$">
-      rxLet: {{ value }}
-    </ng-container>
-    <br />
-
-    <ng-container *rxLet="value$; let value; strategy: strategy$">
-      rxLet: {{ value }}
-    </ng-container>
-    <ng-container *rxLet="value$; let value; strategy: strategy$">
-      rxLet: {{ value }}
-    </ng-container>
-    <br />
-    <ng-container *rxLet="value$; let value; strategy: strategy$">
-      rxLet: {{ value }}
-    </ng-container>
-    <br />
-
-    <ng-container *rxLet="value$; let value; strategy: strategy$">
-      rxLet: {{ value }}
-    </ng-container>
-    <ng-container *rxLet="value$; let value; strategy: strategy$">
-      rxLet: {{ value }}
-    </ng-container>
-    <br />
-    <ng-container *rxLet="value$; let value; strategy: strategy$">
-      rxLet: {{ value }}
-    </ng-container>
-    <br />
-
-    <ng-container *rxLet="value$; let value; strategy: strategy$">
-      rxLet: {{ value }}
-    </ng-container>
-    <ng-container *rxLet="value$; let value; strategy: strategy$">
-      rxLet: {{ value }}
-    </ng-container>
-    <br />
-    <ng-container *rxLet="value$; let value; strategy: strategy$">
-      rxLet: {{ value }}
-    </ng-container>
-    <br />
-
-    <ng-container *rxLet="value$; let value; strategy: strategy$">
-      rxLet: {{ value }}
-    </ng-container>
+    <coalescing-child
+      [value]="value$"
+      [strategy]="strategy$"
+    ></coalescing-child>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [CoalescingTestService],
+  providers: [CoalescingTestService]
 })
 export class CoalescingExperimentsProfilingComponent implements OnInit {
-  numRenders = 0;
-
   strategy$ = this.s.strategy$;
 
   strategies = Object.keys(getStrategies({ cdRef: { context: {} } } as any));
@@ -136,10 +52,6 @@ export class CoalescingExperimentsProfilingComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     public s: CoalescingTestService
   ) {}
-
-  rerenders() {
-    return ++this.numRenders;
-  }
 
   updateValue() {
     this.s.updateValue();
