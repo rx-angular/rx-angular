@@ -175,6 +175,14 @@ export class LetDirective<U> implements OnInit, OnDestroy {
 
   /**
    * @description
+   * Object holding logic for managing strategies and change detection for the `LetDirective`.
+   *
+   * @internal
+   */
+  readonly renderAware: RenderAware<U | null | undefined>;
+
+  /**
+   * @description
    * The Observable to be bound to the context of a template.
    *
    * @example
@@ -295,7 +303,6 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   }
 
   private subscription: Unsubscribable = new Subscription();
-  private readonly renderAware: RenderAware<U | null | undefined>;
   private readonly templateManager: TemplateManager<
     LetViewContext<U | undefined | null>,
     RxTemplateName
