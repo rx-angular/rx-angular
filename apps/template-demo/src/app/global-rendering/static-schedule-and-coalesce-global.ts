@@ -1,5 +1,5 @@
 import { from } from 'rxjs';
-import { staticCoalesce } from '../../../../../libs/template/src/lib/render-strategies/static';
+import { staticCoalesce } from '@rx-angular/template';
 import { globalTaskManager, GlobalTaskPriority } from './global-task-manager';
 
 export function coalesceAndScheduleGlobal(

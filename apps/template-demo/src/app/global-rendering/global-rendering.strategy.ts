@@ -1,7 +1,6 @@
 import { from } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { RenderStrategy, RenderStrategyFactoryConfig } from '../../../../../libs/template/src/lib/core/render-aware';
-import { coalesceWith } from '../../../../../libs/template/src/lib/render-strategies/rxjs/operators';
+import { RenderStrategy, RenderStrategyFactoryConfig, coalesceWith } from '@rx-angular/template';
 import { GlobalTaskPriority } from './global-task-manager';
 import { scheduleOnGlobalTick } from './globalAnimationFrameTick';
 import { coalesceAndScheduleGlobal } from './static-schedule-and-coalesce-global';
