@@ -23,7 +23,7 @@ Using different strategies
 
 Other Features:
 
-- lazy rendering (see [LetDirective](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/let.md))
+- lazy rendering (see [LetDirective](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/api/let-directive.md))
 - Take observables or promises, retrieve their values and render the value to the template
 - a unified/structured way of handling null, undefined or error
 - distinct same values in a row skip not needed re-renderings
