@@ -10,9 +10,9 @@ import { RxState } from '@rx-angular/state';
 
 import { Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { getGlobalRenderingStrategies } from '../../../global-rendering';
 import { Renderable } from '../interfaces';
 import { ChildComponent } from './child.component';
-import { getStrategies } from '@rx-angular/template';
 
 @Component({
   selector: 'rx-angular-render-queue',
@@ -22,17 +22,11 @@ import { getStrategies } from '@rx-angular/template';
 export class RenderQueueComponent
   extends RxState<Renderable<RenderQueueComponent>>
   implements OnInit, AfterViewInit {
-  /*
-   @ViewChild(ChildComponent, { read: ComponentRef}) child1Ref: ComponentRef<ChildComponent>;
-   @ViewChild(ChildComponent) child1: ChildComponent;
-   @ViewChild(Child2Component, { read: ComponentRef}) child2Ref: ComponentRef<Child2Component>;
-   @ViewChild(Child2Component) child2: Child2Component;
-   */
 
   @ViewChildren(ChildComponent) childComponents: QueryList<ChildComponent>;
 
   toggle = true;
-  numChildren = 10;
+  numChildren = 25;
 
   doRender = new Subject();
 
@@ -43,8 +37,7 @@ export class RenderQueueComponent
   }
 
   ngOnInit() {
-    const strategy = getStrategies({ cdRef: this.cdRef })
-      .chunk;
+    const strategy = getGlobalRenderingStrategies({ cdRef: this.cdRef }).chunk;
     this.hold(
       this.doRender.pipe(
         tap(

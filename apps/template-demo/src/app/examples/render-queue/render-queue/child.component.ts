@@ -8,6 +8,7 @@ import {
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { getGlobalRenderingStrategies } from '../../../global-rendering';
 import { Renderable } from '../interfaces';
 import { getStrategies } from '@rx-angular/template';
 
@@ -25,13 +26,16 @@ import { getStrategies } from '@rx-angular/template';
     `
       :host {
         position: relative;
-        width: 150px;
-        height: 150px;
-        border: 1px red solid;
+        width: 75px;
+        height: 75px;
+        border: 1px tomato solid;
         display: flex;
         justify-content: center;
         align-items: center;
-        overflow: scroll;
+        overflow: hidden;
+      }
+      table {
+        visibility: hidden;
       }
       .renders {
         position: absolute;
@@ -49,7 +53,7 @@ import { getStrategies } from '@rx-angular/template';
 })
 export class ChildComponent extends RxState<Renderable<ChildComponent>>
   implements OnInit, OnDestroy {
-  numItems = 10;
+  numItems = 30;
 
   destroyed = new Subject();
 
@@ -66,11 +70,13 @@ export class ChildComponent extends RxState<Renderable<ChildComponent>>
   }
 
   ngOnInit() {
-    this.strategies = getStrategies({ cdRef: this.cdRef });
+    this.strategies = getGlobalRenderingStrategies({ cdRef: this.cdRef });
+    const blockingStrategy = this.strategies.blocking;
+    const chunkStrategy = this.strategies.chunk;
     this.hold(
       this.doRenderBlocking.pipe(
         tap(() => this.updateItems()),
-        this.strategies.blocking.rxScheduleCD
+        blockingStrategy.rxScheduleCD
       ),
       () => {
         //console.log('rendered', this);
@@ -79,7 +85,7 @@ export class ChildComponent extends RxState<Renderable<ChildComponent>>
     this.hold(
       this.doRenderChunked.pipe(
         tap(() => this.updateItems()),
-        this.strategies.chunk.rxScheduleCD
+        chunkStrategy.rxScheduleCD
       ),
       () => {
         //console.log('rendered', this);

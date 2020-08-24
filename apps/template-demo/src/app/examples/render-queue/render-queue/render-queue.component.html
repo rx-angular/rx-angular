@@ -1,24 +1,13 @@
-<div>
-  <strong>Chunked</strong>
-  <button unpatch (click)="updateChildrenChunked()">
-    updateChildrenChunked
+<h1 style="margin-top: 1rem;">Global render queue</h1>
+<div style="margin: 1rem 0; display: flex;">
+  <button mat-raised-button color="primary" unpatch (click)="updateChildrenChunked()">
+    Render chunked
   </button>
-  <button unpatch (click)="updateChildrenStaticChunked()">
-    updateChildrenStaticChunked
-  </button>
-</div>
-<div>
-  <strong>Blocking</strong>
-
-  <button unpatch (click)="updateChildrenBlocking()">
-    updateChildrenBlocking
-  </button>
-  <button unpatch (click)="updateChildrenStaticBlocking()">
-    updateChildrenStaticBlocking
+  <button style="margin-left: 2rem;" mat-raised-button color="primary" unpatch (click)="updateChildrenBlocking()">
+    Render blocking
   </button>
 </div>
 <renders></renders>
 <div class="render-queue-wrapper">
   <rx-angular-child *ngFor="let item of items"></rx-angular-child>
 </div>
-<!-- <rx-angular-child2></rx-angular-child2>-->
