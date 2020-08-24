@@ -3,16 +3,14 @@ import {
   concat,
   EMPTY,
   NEVER,
-  NextObserver,
   Observable,
-  Observer,
   of,
   Subject,
   throwError,
   Unsubscribable
 } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
-import { createRenderAware, RenderAware, StrategySelection } from '../../../src/lib/core';
+import { createRenderAware, RenderAware, RxTemplateObserver, StrategySelection } from '../../../src/lib/core';
 import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
