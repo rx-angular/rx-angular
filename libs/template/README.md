@@ -19,7 +19,7 @@ structural directives, pipes, RxJS operators, or imperative functions to manage 
 **@rx-angular/template** is nothing less than a revolution in `ChangeDetection` for angular applications.
 Developers are provided with tools for high-performance rendering, which are operated by a broad and intuitive API.
 
-The [LetDirective (`*rxLet`)](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/let.md) &
+The [LetDirective (`*rxLet`)](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/api/let-directive.md) &
 [PushPipe (`push`)](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/push.md) focus
 on template rendering, the coordination and optimization of `ChangeDetection` cycles. While the `PushPipe` is a
 straight **drop in replacement** for the `AsyncPipe (async)`, the `LetDirective` will often provide a more
@@ -87,7 +87,7 @@ export class MyModule {}
 ## Features
 
 - Directives
-  - [LetDirective (\*rxLet)](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/let.md)
+  - [LetDirective (\*rxLet)](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/api/let-directive.md)
   - [Viewport Priority (viewport-prio)](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/viewport-prio.md)
   - [UnpatchEventsDirective (unpatch)](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/unpatch.md)
 - Pipes
