@@ -19,6 +19,7 @@ import { getStrategies } from '@rx-angular/template';
     <button [unpatch] (click)="toggleAutoIncrement.next('')">
       auto
     </button>
+    <!--
     <label>VisibleStrategy {{ visibleStrategy$ | push }}</label>
     <select (change)="visibleStrategy$.next($event?.target?.value)">
       <option
@@ -38,16 +39,16 @@ import { getStrategies } from '@rx-angular/template';
         >{{ s }}</option
       >
     </select>
+    -->
     <br />
+
     <b>viewPort</b>
     <div #viewPort class="view-port">
       <div class="view-port-inner">
         <div
           class="target"
-          [viewport-prio]="invisibleStrategy$"
-          [viewport-prio-root]="viewPort"
-          *rxLet="count$; let count; strategy: visibleStrategy$ | push"
-        >
+          viewport-prio
+          *rxLet="count$; let count; strategy: visibleStrategy$ | push">
           <b>target</b>
           value: {{ count }}
         </div>
