@@ -54,5 +54,12 @@ export const ROUTES: Routes = [
       import('./examples/memoized-views/memoized-views.module').then(
         m => m.MemoizedViewsModule
       )
+  },
+  {
+    path: 'template-binding',
+    loadChildren: () =>
+      import('./examples/template-binding/template-binding.module').then(
+        m => m.TemplateBindingModule
+      )
   }
 ];
