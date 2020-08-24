@@ -1,6 +1,6 @@
 {
   "name": "rx-angular",
-  "version": "0.1.1",
+  "version": "0.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "nx",
@@ -60,7 +60,6 @@
     "@types/lodash": "^4.14.157",
     "angular-in-memory-web-api": "^0.11.0",
     "benchmark": "^2.1.4",
-    "conventional-recommended-bump": "^6.0.10",
     "core-js": "^3.6.5",
     "ngx-skeleton-loader": "^2.4.4",
     "rxjs": "^6.6.0",
