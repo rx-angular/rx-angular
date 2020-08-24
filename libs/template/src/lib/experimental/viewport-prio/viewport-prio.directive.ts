@@ -1,6 +1,6 @@
 import { Directive, ElementRef, Input, OnInit, Optional } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { filter, map, mergeAll, withLatestFrom } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { filter, map, mergeAll, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { getZoneUnPatchedApi } from '../../core';
 import { LetDirective } from '../../let';
 
@@ -80,12 +80,12 @@ export class ViewportPrioDirective implements OnInit {
   );
 
   _viewportPrio = 'noop';
-  @Input('viewport-prio')
+ /* @Input('viewport-prio')
   set viewportPrio(prio) {
     if (prio) {
       this._viewportPrio = prio || 'noop';
     }
-  }
+  }*/
 
   private observer: IntersectionObserver | null = observerSupported()
     ? new IntersectionObserver((entries) => this.entriesSubject.next(entries), {
@@ -121,16 +121,15 @@ export class ViewportPrioDirective implements OnInit {
         withLatestFrom(letStrategyName$),
         map(([visibility, strategyName]) =>
           visibility === 'visible' ? strategyName : this._viewportPrio
-        )
+        ),
+        tap((strategyName) => {
+          this.letDirective.strategy = strategyName;
+          // render actual state on viewport enter
+          // @TODO this doesnt catch unsubscribe (cant be cancelled)
+          this.letDirective.strategies[strategyName].scheduleCD()
+        }),
+
       )
-      .subscribe((strategyName) => {
-        this.letDirective.strategy = strategyName;
-
-        // render actual state on viewport enter
-        this.letDirective.strategies[strategyName].scheduleCD();
-
-        //
-        this.el.nativeElement.classList.add(strategyName);
-      });
+      .subscribe();
   }
 }
