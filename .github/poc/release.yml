@@ -1,0 +1,53 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Release State
+
+on:
+  - pull_request
+  #- push:
+  # Sequence of patterns matched against refs/tags
+  #tags:
+  #  - 'state@*' # Push event
+jobs:
+  build-docs:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: git fetch --no-tags --prune --depth=5 origin master
+      - name: set Environment Variables
+        id: release
+        run: |
+          VERSION=$(node --eval="process.stdout.write(require('./libs/state/package.json').version)")  # e.g. 2.4.2
+          NEW_VERSION=$(node --eval="process.stdout.write(?)")
+          if [ $REPOSITORY = "master" ]; then IS_PRE='false'; else IS_PRE='true'; fi
+          if [ $REPOSITORY = "master" ]; then POSTFIX=''    ; else POSTFIX='PRE';    fi
+          RELEASEBODY=$(awk -v RS='Release ' '/'$VERSION':(.*)/')
+          RELEASEBODY="${RELEASEBODY//'%'/'%25'}"
+          RELEASEBODY="${RELEASEBODY//$'\n'/'%0A'}"
+          RELEASEBODY="${RELEASEBODY//$'\r'/'%0D'}"
+          echo "::set-output name=version::${VERSION}"
+          echo "::set-output name=IS_PRERELEASE::${IS_PRE}"
+          echo "::set-output name=RELEASENAME_POSTFIX::${POSTFIX}"
+          echo "::set-output name=RELEASEBODY::${RELEASEBODY}"
+          echo "::set-env name=body::${RELEASEBODY}"
+        env:
+          REPOSITORY: ${{ github.event.repository.name }}
+
+
+
+
+
