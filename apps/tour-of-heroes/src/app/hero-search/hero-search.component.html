@@ -1,9 +1,6 @@
-<renders></renders>
 <div id="search-component">
-  <h4><label for="search-box">Hero Search</label></h4>
-
+  <h4><label for="search-box">Hero Search</label> <renders></renders></h4>
   <input id="search-box" (input)="search($event?.target?.value)" />
-
   <ul class="search-result">
     <li
       *ngFor="
