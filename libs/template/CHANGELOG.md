@@ -1,3 +1,20 @@
+# [1.0.0-alpha.3](https://github.com/BioPhoton/rx-angular/compare/template@1.0.0-alpha.2...template@1.0.0-alpha.3) (2020-08-25)
+
+
+### Bug Fixes
+
+* **coverage:** exclude index files from coverage, adopted state config ([#242](https://github.com/BioPhoton/rx-angular/issues/242)) ([3bb60da](https://github.com/BioPhoton/rx-angular/commit/3bb60dad76af807ef7dde45dbce3081b23916db9))
+* **envZonePatched:** add tests for envZonePatched ([#240](https://github.com/BioPhoton/rx-angular/issues/240)) ([b90f204](https://github.com/BioPhoton/rx-angular/commit/b90f2044f79ec48f89a6445df0f176606f072604))
+* **export-experimental:** export interfaces for custom strategies ([#259](https://github.com/BioPhoton/rx-angular/issues/259)) ([e457235](https://github.com/BioPhoton/rx-angular/commit/e457235141603692de0ec51595fe13268450535e))
+* **rxLet:** fixed let directive initial rendering ([#254](https://github.com/BioPhoton/rx-angular/issues/254)) ([2d20574](https://github.com/BioPhoton/rx-angular/commit/2d20574d99b184cfbbcef93ff964bd6c76d276d4))
+
+
+### Features
+
+* **template:** embedding rxSuspense template on observable reset for LetDirective ([#221](https://github.com/BioPhoton/rx-angular/issues/221)) ([6f56043](https://github.com/BioPhoton/rx-angular/commit/6f560432d1f5bef49805bbd297866dc104cf0f0e))
+
+
+
 # [1.0.0-alpha.2](https://github.com/BioPhoton/rx-angular/compare/template@1.0.0-alpha.2...template@1.0.0-alpha.2) (2020-08-22)
 
 
