@@ -1,3 +1,15 @@
+# [1.4.0](https://github.com/BioPhoton/rx-angular/compare/state@1.3.4...state@1.4.0) (2020-08-28)
+
+### Features
+
+[Docs page](https://biophoton.github.io/rx-angular/#/web/state/general/overview) for @rx-angular/state
+
+### Bug Fixes
+
+* **coverage:** exclude index files from coverage, adopted state config ([#242](https://github.com/BioPhoton/rx-angular/issues/242)) ([3bb60da](https://github.com/BioPhoton/rx-angular/commit/3bb60dad76af807ef7dde45dbce3081b23916db9))
+* **state:** array length check strict ([#210](https://github.com/BioPhoton/rx-angular/issues/210)) ([f57b46f](https://github.com/BioPhoton/rx-angular/commit/f57b46f896fa387d6bb1f6a416405e46496733c7))
+* **state:** inferred type from `selectSlice` for the subtype of state correctly ([#200](https://github.com/BioPhoton/rx-angular/issues/200)) ([c0bd296](https://github.com/BioPhoton/rx-angular/commit/c0bd296f206246a3790d487796dfdde46f56d3aa))
+
 ## [1.3.4](https://github.com/BioPhoton/rx-angular/compare/state@1.3.4...state@1.3.4) (2020-08-22)
 
 ### Bug Fixes
