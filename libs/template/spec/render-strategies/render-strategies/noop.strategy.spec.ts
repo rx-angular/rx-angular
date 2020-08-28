@@ -5,6 +5,11 @@ import { getMockStrategyConfig } from '../../fixtures';
 import { from, of } from 'rxjs';
 import createSpy = jasmine.createSpy;
 
+/**
+ * NOOP STRATEGY
+ * Doing nothing. Should not trigger change detection
+ */
+
 const noopStrategyName = 'noop';
 
 describe('noop Strategy', () => {
