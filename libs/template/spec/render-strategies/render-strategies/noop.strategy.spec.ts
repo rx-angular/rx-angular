@@ -9,25 +9,25 @@ import createSpy = jasmine.createSpy;
  * NOOP STRATEGY
  * Doing nothing. Should not trigger change detection
  */
+const strategyName = 'noop';
 
-const noopStrategyName = 'noop';
 
 describe('noop Strategy', () => {
   beforeAll(() => mockConsole());
 
   it('should be present in strategies map', () => {
-    const strategy = getStrategies(getMockStrategyConfig())[noopStrategyName];
+    const strategy = getStrategies(getMockStrategyConfig())[strategyName];
     expect(strategy).toBeDefined();
   });
 
-  it(`should have ${noopStrategyName} as name`, () => {
-    const strategy = getStrategies(getMockStrategyConfig())[noopStrategyName];
-    expect(strategy.name).toBe(noopStrategyName );
+  it(`should have ${strategyName} as name`, () => {
+    const strategy = getStrategies(getMockStrategyConfig())[strategyName];
+    expect(strategy.name).toBe(strategyName );
   });
 
   it('should call cdRef#detectChanges 0 times when rxScheduleCD is used with a single sync emission', () => {
     const cfg = getMockStrategyConfig();
-    const strategy = getStrategies(cfg)[noopStrategyName];
+    const strategy = getStrategies(cfg)[strategyName];
     strategy.rxScheduleCD(of(1));
     expect(cfg.cdRef.detectChanges).toHaveBeenCalledTimes(0)
     expect(cfg.cdRef.markForCheck).toHaveBeenCalledTimes(0)
@@ -35,7 +35,7 @@ describe('noop Strategy', () => {
 
   it('should call cdRef#detectChanges 0 times when rxScheduleCD is used with multiple sync emissions', () => {
     const cfg = getMockStrategyConfig();
-    const strategy = getStrategies(cfg)[noopStrategyName];
+    const strategy = getStrategies(cfg)[strategyName];
     strategy.rxScheduleCD(from([0,1,2,3,4,5]));
     expect(cfg.cdRef.detectChanges).toHaveBeenCalledTimes(0)
     expect(cfg.cdRef.markForCheck).toHaveBeenCalledTimes(0)
@@ -43,7 +43,7 @@ describe('noop Strategy', () => {
 
   it('should call cdRef#detectChanges 0 times when scheduleCD is called a single time', () => {
     const cfg = getMockStrategyConfig();
-    const strategy = getStrategies(cfg)[noopStrategyName];
+    const strategy = getStrategies(cfg)[strategyName];
     strategy.scheduleCD();
     expect(cfg.cdRef.detectChanges).toHaveBeenCalledTimes(0)
     expect(cfg.cdRef.markForCheck).toHaveBeenCalledTimes(0)
@@ -51,7 +51,7 @@ describe('noop Strategy', () => {
 
   it('should call cdRef#detectChanges 0 times when scheduleCD is called multiple times sync', () => {
     const cfg = getMockStrategyConfig();
-    const strategy = getStrategies(cfg)[noopStrategyName];
+    const strategy = getStrategies(cfg)[strategyName];
     strategy.scheduleCD();
     strategy.scheduleCD();
     strategy.scheduleCD();
@@ -62,7 +62,7 @@ describe('noop Strategy', () => {
 
   it('should call strategy#detectChanges 0 times when scheduleCD or rxScheduleCD is called', () => {
     const cfg = getMockStrategyConfig();
-    const strategy = getStrategies(cfg)[noopStrategyName];
+    const strategy = getStrategies(cfg)[strategyName];
     strategy.rxScheduleCD(from([0,1,2,3,4,5]));
     strategy.detectChanges = createSpy('detectChanges')
     strategy.scheduleCD();

@@ -9,25 +9,25 @@ import createSpy = jasmine.createSpy;
  * NATIVE STRATEGY
  * Doing the same thing as Angular natively. Based on markForCheck.
  */
- 
-const nativeStrategyName = 'native';
+
+const strategyName = 'native';
 
 describe('native Strategy', () => {
   beforeAll(() => mockConsole());
 
   it('should be present in strategies map', () => {
-    const strategy = getStrategies(getMockStrategyConfig())[nativeStrategyName];
+    const strategy = getStrategies(getMockStrategyConfig())[strategyName];
     expect(strategy).toBeDefined();
   });
 
-  it(`should have ${nativeStrategyName} as name`, () => {
-    const strategy = getStrategies(getMockStrategyConfig())[nativeStrategyName];
-    expect(strategy.name).toBe(nativeStrategyName );
+  it(`should have ${strategyName} as name`, () => {
+    const strategy = getStrategies(getMockStrategyConfig())[strategyName];
+    expect(strategy.name).toBe(strategyName );
   });
 
   it('should call cdRef#markForCheck 1 time when rxScheduleCD is used with a single sync emission', (done) => {
     const cfg = getMockStrategyConfig();
-    const strategy = getStrategies(cfg)[nativeStrategyName];
+    const strategy = getStrategies(cfg)[strategyName];
     strategy.rxScheduleCD(of(1)).subscribe({
       complete: () => {
         expect(cfg.cdRef.markForCheck).toHaveBeenCalledTimes(1);
@@ -39,7 +39,7 @@ describe('native Strategy', () => {
 
   it('should call cdRef#markForCheck 6 times when rxScheduleCD is used with multiple sync emissions', (done) => {
     const cfg = getMockStrategyConfig();
-    const strategy = getStrategies(cfg)[nativeStrategyName];
+    const strategy = getStrategies(cfg)[strategyName];
     strategy.rxScheduleCD(from([0,1,2,3,4,5])).subscribe({
       complete: () => {
         expect(cfg.cdRef.markForCheck).toHaveBeenCalledTimes(6);
@@ -52,7 +52,7 @@ describe('native Strategy', () => {
 
   it('should call cdRef#markForCheck 1 times when scheduleCD is called a single time', () => {
     const cfg = getMockStrategyConfig();
-    const strategy = getStrategies(cfg)[nativeStrategyName];
+    const strategy = getStrategies(cfg)[strategyName];
     strategy.scheduleCD();
     expect(cfg.cdRef.markForCheck).toHaveBeenCalledTimes(1)
     expect(cfg.cdRef.detectChanges).toHaveBeenCalledTimes(0)
@@ -60,7 +60,7 @@ describe('native Strategy', () => {
 
   it('should call cdRef#markForCheck 4 times when scheduleCD is called multiple times sync', () => {
     const cfg = getMockStrategyConfig();
-    const strategy = getStrategies(cfg)[nativeStrategyName];
+    const strategy = getStrategies(cfg)[strategyName];
     strategy.scheduleCD();
     strategy.scheduleCD();
     strategy.scheduleCD();
@@ -71,7 +71,7 @@ describe('native Strategy', () => {
 
   it('should call cdRef#markForCheck 6 times when scheduleCD or rxScheduleCD is called', (done) => {
     const cfg = getMockStrategyConfig();
-    const strategy = getStrategies(cfg)[nativeStrategyName];
+    const strategy = getStrategies(cfg)[strategyName];
     strategy.detectChanges = createSpy('detectChanges')
     strategy.scheduleCD();
     strategy.rxScheduleCD(from([0,1,2,3,4,5])).subscribe({
