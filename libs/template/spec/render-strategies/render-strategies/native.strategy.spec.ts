@@ -5,6 +5,11 @@ import { getMockStrategyConfig } from '../../fixtures';
 import { from, of } from 'rxjs';
 import createSpy = jasmine.createSpy;
 
+/**
+ * NATIVE STRATEGY
+ * Doing the same thing as Angular natively. Based on markForCheck.
+ */
+ 
 const nativeStrategyName = 'native';
 
 describe('native Strategy', () => {
