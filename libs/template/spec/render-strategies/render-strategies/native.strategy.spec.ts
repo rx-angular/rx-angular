@@ -1,9 +1,10 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
-import { getStrategies } from '@rx-angular/template';
+import { getStrategies } from '../../../src/lib/render-strategies';
 import {
-  getMockStrategyConfig, multipleCalls, numMultipleCalls, oneCall, runStrategyMethod
+  getMockStrategyConfig, multipleCalls, numMultipleCalls, oneCall, runStrategyMethod, testRxScheduleCDMethod
 } from '../../fixtures';
 import { fakeAsync, tick } from '@angular/core/testing';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { mockConsole } from '@test-helpers';
 
 /**
  * NATIVE STRATEGY
@@ -13,7 +14,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 const strategyName = 'native';
 
 describe('native Strategy', () => {
-  // beforeAll(() => mockConsole());
+  beforeAll(() => mockConsole());
 
   it('should be present in strategies map', () => {
     const strategy = getStrategies(getMockStrategyConfig())[strategyName];

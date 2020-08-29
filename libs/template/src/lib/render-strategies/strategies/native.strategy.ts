@@ -1,6 +1,5 @@
 import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core';
 import { tap } from 'rxjs/operators';
-import { ɵmarkDirty as markDirty } from '@angular/core';
 
 /**
  * Native Strategy
