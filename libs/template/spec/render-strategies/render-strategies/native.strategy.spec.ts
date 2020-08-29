@@ -50,7 +50,7 @@ describe('native Strategy', () => {
     singleCallDetectChanges(done)(strategyName, 0);
   });
 
-  it('should call cdRef#markForCheck 0 times when scheduleCD is called a single time', (done) => {
+  it('should call cdRef#markForCheck 1 time when scheduleCD is called a single time', (done) => {
     singleCallMarkForCheck(done)(strategyName, 1);
   });
 
