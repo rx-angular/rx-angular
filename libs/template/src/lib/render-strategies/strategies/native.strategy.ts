@@ -26,7 +26,9 @@ export function createNativeStrategy(
   return {
     name: 'native',
     detectChanges: () => config.cdRef.markForCheck(),
-    rxScheduleCD: (o) => o.pipe(tap(() => config.cdRef.markForCheck())),
+    rxScheduleCD: (o) => o.pipe(tap(() => {
+      config.cdRef.markForCheck()
+    })),
     scheduleCD: () => {
       config.cdRef.markForCheck()
       return new AbortController();
