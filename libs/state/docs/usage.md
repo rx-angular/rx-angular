@@ -200,4 +200,16 @@ export class StatefulComponent {
 }
 ```
 
+## setAccumulator and deep-copying state 
+
+Use `setAccumulator` to update state via deep-copies.
+
+```typescript
+const myAccumulator = (state: MyState, slice: Partial<MyState>) => deepCopy(state, slice);
+this.state.setAccumulator(myAccumulator);
+```
+
+This can be done at runtime. 
+
+
 _disclaimer_: this doc is work in progress. Not every use case has found it's way into the docs. We encourage you to contribute :).

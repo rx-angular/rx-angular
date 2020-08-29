@@ -323,7 +323,8 @@ state.hold(changes$, localStorageEffectFn);
 setAccumulator(accumulatorFn: AccumulationFn) => void
 ```
 
-Allows to customize state accumulation function.
+Allows to customize state accumulation function. 
+This can be helpful to implement deep updates and tackle other immutability problems in a custom way.
 
 _Example_
 
