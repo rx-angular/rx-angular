@@ -5,7 +5,6 @@ import {
   PipeTransform,
 } from '@angular/core';
 import {
-  NextObserver,
   Observable,
   ObservableInput,
   Unsubscribable,
@@ -64,12 +63,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
 
   private readonly subscription: Unsubscribable;
   private readonly RenderAware: RenderAware<U | null | undefined>;
-  private readonly resetObserver: RxTemplateObserver<U  | null | undefined> = {
-    suspense: () => {
-      this.renderedValue = undefined;
-    },
-    next: (value: U | null | undefined) =>  this.renderedValue = undefined,
-  };
+
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => this.renderedValue = undefined,
     next: (value: U | null | undefined) => this.renderedValue = value,
@@ -80,8 +74,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
       strategies: getStrategies({
         cdRef,
       }),
-      templateObserver: this.templateObserver,
-      resetObserver: this.resetObserver,
+      templateObserver: this.templateObserver
     });
     this.subscription = this.RenderAware.subscribe();
   }

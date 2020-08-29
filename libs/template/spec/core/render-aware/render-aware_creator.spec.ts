@@ -28,12 +28,7 @@ class CdAwareImplementation<U> implements OnDestroy {
   public completed = false;
   private readonly subscription: Unsubscribable;
   public cdAware: RenderAware<U | undefined | null>;
-  resetObserver: RxTemplateObserver<U | undefined | null> = {
-    suspense: () => {
-      (this.renderedValue = undefined)
-    },
-    next: _ => (this.renderedValue = undefined)
-  };
+
   templateObserver: RxTemplateObserver<U | undefined | null> = {
     suspense: () => {
       (this.renderedValue = undefined)
@@ -48,8 +43,7 @@ class CdAwareImplementation<U> implements OnDestroy {
   constructor(strategySelection: StrategySelection) {
     this.cdAware = createRenderAware<U>({
       strategies: strategySelection,
-      templateObserver: this.templateObserver,
-      resetObserver: this.resetObserver
+      templateObserver: this.templateObserver
     });
     this.cdAware.nextStrategy(DEFAULT_STRATEGY_NAME);
     this.subscription = this.cdAware.subscribe();

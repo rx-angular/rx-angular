@@ -9,10 +9,8 @@ import {
 } from '@angular/core';
 
 import {
-  NextObserver,
   Observable,
   ObservableInput,
-  Observer,
   Subscription,
   Unsubscribable,
 } from 'rxjs';
@@ -25,7 +23,7 @@ import {
   DEFAULT_STRATEGY_NAME,
   getStrategies,
 } from '../render-strategies/strategies/strategies-map';
-import { RxTemplateObserver } from '../core/model';
+import { RxTemplateObserver, RxViewContext } from '../core/model';
 
 type RxTemplateName = 'rxNext' | 'rxComplete' | 'rxError' | 'rxSuspense';
 
@@ -308,18 +306,6 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     LetViewContext<U | undefined | null>,
     RxTemplateName
   >;
-  private readonly resetObserver: RxTemplateObserver<U | null | undefined> = {
-    suspense: () => {
-      this.displayInitialView();
-      this.templateManager.updateViewContext({
-        $implicit: undefined,
-        rxLet: undefined,
-        $error: false,
-        $complete: false,
-      });
-    },
-    next() {}
-  };
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => {
       this.displayInitialView();
@@ -385,7 +371,6 @@ export class LetDirective<U> implements OnInit, OnDestroy {
 
     this.renderAware = createRenderAware({
       strategies: this.strategies,
-      resetObserver: this.resetObserver,
       templateObserver: this.templateObserver,
     });
     this.renderAware.nextStrategy(DEFAULT_STRATEGY_NAME);
