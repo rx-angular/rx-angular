@@ -1,5 +1,4 @@
 // tslint:disable-next-line:nx-enforce-module-boundaries
-import { mockConsole } from '@test-helpers';
 import { getStrategies } from '@rx-angular/template';
 import {
   getMockStrategyConfig,
@@ -8,17 +7,17 @@ import {
   runStrategyMethod,
   testRxScheduleCDMethod
 } from '../../fixtures';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
 
 /**
- * NOOP STRATEGY
- * Doing nothing. Should not trigger change detection
+ * GLOBAL STRATEGY
+ * Based on markDirty.
  */
-const strategyName = 'noop';
 
+const strategyName = 'global';
 
-describe('noop Strategy', () => {
-  beforeAll(() => mockConsole());
+describe('global Strategy', () => {
+  // beforeAll(() => mockConsole());
 
   it('should be present in strategies map', () => {
     const strategy = getStrategies(getMockStrategyConfig())[strategyName];
@@ -34,7 +33,7 @@ describe('noop Strategy', () => {
     testRxScheduleCDMethod(done)('detectChanges', strategyName, oneCall, 0);
   });
 
-  it('should call cdRef#markForCheck 0 times when rxScheduleCD is used with a single sync emission', (done) => {
+  it(`should call cdRef#markForCheck 0 times when rxScheduleCD is used with a single sync emission`, (done) => {
     testRxScheduleCDMethod(done)('markForCheck', strategyName, oneCall, 0);
   });
 
@@ -42,7 +41,7 @@ describe('noop Strategy', () => {
     testRxScheduleCDMethod(done)('detectChanges', strategyName, multipleCalls, 0);
   });
 
-  it('should call cdRef#markForCheck 0 times when rxScheduleCD is used with multiple sync emissions', (done) => {
+  it(`should call cdRef#markForCheck 0 times when rxScheduleCD is used with multiple sync emissions`, (done) => {
     testRxScheduleCDMethod(done)('markForCheck', strategyName, multipleCalls, 0);
   });
 
@@ -54,10 +53,11 @@ describe('noop Strategy', () => {
       singleCall: oneCall
     });
     tick(100);
+    flushMicrotasks();
     expect(cfg.cdRef[method]).toHaveBeenCalledTimes(0);
   }));
 
-  it('should call cdRef#markForCheck 0 times when scheduleCD is called a single time', fakeAsync(() => {
+  it(`should call cdRef#markForCheck 0 times when scheduleCD is called a single time`, fakeAsync(() => {
     const method = 'markForCheck';
     const cfg = runStrategyMethod()({
       strategyMethodName: 'scheduleCD',
@@ -68,7 +68,7 @@ describe('noop Strategy', () => {
     expect(cfg.cdRef[method]).toHaveBeenCalledTimes(0);
   }));
 
-  it('should call cdRef#detectChanges 0 times when scheduleCD is called multiple times sync', fakeAsync(() => {
+  it(`should call cdRef#detectChanges 0 times when scheduleCD is called multiple times sync`, fakeAsync(() => {
       const method = 'detectChanges';
       const cfg = runStrategyMethod()({
         strategyMethodName: 'scheduleCD',
@@ -80,7 +80,7 @@ describe('noop Strategy', () => {
     })
   );
 
-  it('should call cdRef#markForCheck 0 times when scheduleCD is called multiple times sync', fakeAsync(() => {
+  it(`should call cdRef#markForCheck 0 times when scheduleCD is called multiple times sync`, fakeAsync(() => {
       const method = 'markForCheck';
       const cfg = runStrategyMethod()({
         strategyMethodName: 'scheduleCD',
@@ -106,7 +106,7 @@ describe('noop Strategy', () => {
     })
   );
 
-  it('should call strategy#markForCheck 0 times when scheduleCD or rxScheduleCD is called', fakeAsync(() => {
+  it(`should call strategy#markForCheck 0 times when scheduleCD or rxScheduleCD is called`, fakeAsync(() => {
       const method = 'markForCheck';
       const cfg = runStrategyMethod()({
         strategyMethodName: 'scheduleCD',
@@ -119,5 +119,9 @@ describe('noop Strategy', () => {
       })(method, strategyName, multipleCalls, 0);
     })
   );
+
+  it(`@TODO TEST call of markDirty`, () => {
+    expect(0).toBe(1);
+  });
 
 });
