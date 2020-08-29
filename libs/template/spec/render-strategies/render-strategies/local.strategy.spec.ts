@@ -3,12 +3,11 @@ import { getStrategies } from '@rx-angular/template';
 import {
   getMockStrategyConfig,
   multipleCalls,
-  numMultipleCalls,
   oneCall,
   runStrategyMethod,
   testRxScheduleCDMethod
 } from '../../fixtures';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
 
 /**
  * LOCAL STRATEGY
@@ -48,21 +47,34 @@ describe('local Strategy', () => {
 
   it('should call cdRef#detectChanges 1 times when scheduleCD is called a single time', fakeAsync(() => {
     const method = 'detectChanges';
-    const cfg = runStrategyMethod()('scheduleCD', strategyName, oneCall);
+    const cfg = runStrategyMethod()({
+      strategyMethodName: 'scheduleCD',
+      strategyName,
+      singleCall: oneCall
+    });
     tick(100);
+    flushMicrotasks();
     expect(cfg.cdRef[method]).toHaveBeenCalledTimes(1);
   }));
 
   it(`should call cdRef#markForCheck 0 times when scheduleCD is called a single time`, fakeAsync(() => {
     const method = 'markForCheck';
-    const cfg = runStrategyMethod()('scheduleCD', strategyName, oneCall);
+    const cfg = runStrategyMethod()({
+      strategyMethodName: 'scheduleCD',
+      strategyName,
+      singleCall: oneCall
+    });
     tick(100);
     expect(cfg.cdRef[method]).toHaveBeenCalledTimes(0);
   }));
 
   it(`should call cdRef#detectChanges 1 times when scheduleCD is called multiple times sync`, fakeAsync(() => {
       const method = 'detectChanges';
-      const cfg = runStrategyMethod()('scheduleCD', strategyName, multipleCalls);
+      const cfg = runStrategyMethod()({
+        strategyMethodName: 'scheduleCD',
+        strategyName,
+        singleCall: multipleCalls
+      });
       tick(100);
       expect(cfg.cdRef[method]).toHaveBeenCalledTimes(1);
     })
@@ -70,7 +82,9 @@ describe('local Strategy', () => {
 
   it(`should call cdRef#markForCheck 0 times when scheduleCD is called multiple times sync`, fakeAsync(() => {
       const method = 'markForCheck';
-      const cfg = runStrategyMethod()('scheduleCD', strategyName, multipleCalls);
+      const cfg = runStrategyMethod()({ strategyMethodName: 'scheduleCD',
+      strategyName,
+      singleCall: multipleCalls});
       tick(100);
       expect(cfg.cdRef[method]).toHaveBeenCalledTimes(0);
     })
@@ -78,7 +92,11 @@ describe('local Strategy', () => {
 
   it('should call strategy#detectChanges 1 times when scheduleCD or rxScheduleCD is called', fakeAsync(() => {
       const method = 'detectChanges';
-      const cfg = runStrategyMethod()('scheduleCD', strategyName, multipleCalls);
+      const cfg = runStrategyMethod()({
+        strategyMethodName: 'scheduleCD',
+        strategyName,
+        singleCall: multipleCalls
+      });
       tick(100);
       expect(cfg.cdRef[method]).toHaveBeenCalledTimes(1);
       testRxScheduleCDMethod(() => {
@@ -88,7 +106,11 @@ describe('local Strategy', () => {
 
   it(`should call strategy#markForCheck 0 times when scheduleCD or rxScheduleCD is called`, fakeAsync((done) => {
       const method = 'markForCheck';
-      const cfg = runStrategyMethod()('scheduleCD', strategyName, multipleCalls);
+      const cfg = runStrategyMethod()({
+        strategyMethodName: 'scheduleCD',
+        strategyName,
+        singleCall: multipleCalls
+      });
       tick(100);
       expect(cfg.cdRef[method]).toHaveBeenCalledTimes(0);
       testRxScheduleCDMethod(() => {})(method, strategyName, multipleCalls, 0);
