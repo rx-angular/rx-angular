@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
-import { RenderStrategy } from '@rx-angular/template';
+import { RenderStrategy } from '../../src/lib/core/render-aware/interfaces';
 import { Observable, of } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let';

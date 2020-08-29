@@ -100,6 +100,11 @@ describe('LetDirective when template binding with all templates', () => {
     fixture.detectChanges();
     expectContentToBe('suspense');
   });
+
+  it('should have `ngTemplateContextGuard` defined', () => {
+    expect(LetDirective.ngTemplateContextGuard).toBeDefined();
+    expect(LetDirective.ngTemplateContextGuard({} as LetDirective<any>, {})).toBe(true);
+  });
 });
 
 function expectContentToBe(content: string): void {
