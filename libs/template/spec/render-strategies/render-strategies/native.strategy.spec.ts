@@ -67,7 +67,7 @@ describe('native Strategy', () => {
     multipleCallsDetectChanges(done)(strategyName, 0);
   });
 
-  it('should call strategy#markForCheck 0 times when scheduleCD or rxScheduleCD is called', (done) => {
+  it('should call strategy#markForCheck 6 times when scheduleCD or rxScheduleCD is called', (done) => {
     multipleEmissionMarkForCheck(done)(strategyName, 6);
     multipleCallsMarkForCheck(done)(strategyName, 6);
   });
