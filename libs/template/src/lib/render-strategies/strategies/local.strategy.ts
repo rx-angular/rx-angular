@@ -54,12 +54,12 @@ export function getLocalStrategies<T>(
  * [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render and
  * execute **re-rendering only once**.
  *
- * 'Scoped' coalescing, in addition, means **grouping the collected events by** a specific context.
+ * 'Scoped' coalescing, in addition, means **grouping the collected events** by a specific context.
  * E. g. the **component** from which the re-rendering was initiated.
  *
- * | Name        | ZoneLess | Render Method | ScopedCoalescing | Scheduling | Chunked |
- * |-------------| ---------| --------------| ---------------- | ---------- |-------- |
- * | `local`     | ✔        | ɵDC           | C + Pr           | aF         | ❌      |
+ * | Name        | Also ZoneLess | Render Method | ScopedCoalescing | Scheduling     |
+ * |-------------| --------------| --------------| ---------------- | -------------- |
+ * | `local`     | ✔             | detectChanges | ✔                | animationFrame |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return {RenderStrategy} - The calculated strategy
