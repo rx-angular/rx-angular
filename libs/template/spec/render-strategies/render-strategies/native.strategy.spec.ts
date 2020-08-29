@@ -58,7 +58,7 @@ describe('native Strategy', () => {
     multipleCallsDetectChanges(done)(strategyName, 0);
   });
 
-  it('should call cdRef#markForCheck 0 times when scheduleCD is called multiple times sync', (done) => {
+  it('should call cdRef#markForCheck 6 times when scheduleCD is called multiple times sync', (done) => {
     multipleCallsMarkForCheck(done)(strategyName, 6);
   });
 
