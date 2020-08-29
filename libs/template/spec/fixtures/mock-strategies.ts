@@ -3,6 +3,6 @@ import { MockChangeDetectorRef } from './fixtures';
 
 export function getMockStrategyConfig() {
   return {
-    cdRef: (new MockChangeDetectorRef() as any) as ChangeDetectorRef,
+    cdRef: new MockChangeDetectorRef()
   };
 }

@@ -4,10 +4,11 @@ import {
   getMockStrategyConfig,
   multipleCalls,
   oneCall,
-  runStrategyMethod,
-  testRxScheduleCDMethod
+  testStrategyMethod,
+  CallsExpectations
 } from '../../fixtures';
-import { fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
+import { mockConsole } from '@test-helpers';
 
 /**
  * LOCAL STRATEGY
@@ -16,105 +17,86 @@ import { fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
 
 const strategyName = 'local';
 
+const callsExpectations: CallsExpectations = {
+  detectChanges: 1,
+  markForCheck: 0,
+  detach: 0,
+  reattach: 0
+};
+
 describe('local Strategy', () => {
-  // beforeAll(() => mockConsole());
+  beforeAll(() => mockConsole());
 
-  it('should be present in strategies map', () => {
-    const strategy = getStrategies(getMockStrategyConfig())[strategyName];
-    expect(strategy).toBeDefined();
-  });
-
-  it(`should have ${strategyName} as name`, () => {
-    const strategy = getStrategies(getMockStrategyConfig())[strategyName];
-    expect(strategy.name).toBe(strategyName);
-  });
-
-  it('should call cdRef#detectChanges 1 times when rxScheduleCD is used with a single sync emission', (done) => {
-    testRxScheduleCDMethod(done)('detectChanges', strategyName, oneCall, 1);
-  });
-
-  it(`should call cdRef#markForCheck 0 times when rxScheduleCD is used with a single sync emission`, (done) => {
-    testRxScheduleCDMethod(done)('markForCheck', strategyName, oneCall, 0);
-  });
-
-  it('should call cdRef#detectChanges 1 times when rxScheduleCD is used with multiple sync emissions', (done) => {
-    testRxScheduleCDMethod(done)('detectChanges', strategyName, multipleCalls, 1);
-  });
-
-  it(`should call cdRef#markForCheck 0 times when rxScheduleCD is used with multiple sync emissions`, (done) => {
-    testRxScheduleCDMethod(done)('markForCheck', strategyName, multipleCalls, 0);
-  });
-
-  it('should call cdRef#detectChanges 1 times when scheduleCD is called a single time', fakeAsync(() => {
-    const method = 'detectChanges';
-    const cfg = runStrategyMethod()({
-      strategyMethodName: 'scheduleCD',
-      strategyName,
-      singleCall: oneCall
+  describe('declaration', () => {
+    it('should be present in strategies map', () => {
+      const strategy = getStrategies(getMockStrategyConfig())[strategyName];
+      expect(strategy).toBeDefined();
     });
-    tick(100);
-    flushMicrotasks();
-    expect(cfg.cdRef[method]).toHaveBeenCalledTimes(1);
-  }));
 
-  it(`should call cdRef#markForCheck 0 times when scheduleCD is called a single time`, fakeAsync(() => {
-    const method = 'markForCheck';
-    const cfg = runStrategyMethod()({
-      strategyMethodName: 'scheduleCD',
-      strategyName,
-      singleCall: oneCall
+    it(`should have ${strategyName} as name`, () => {
+      const strategy = getStrategies(getMockStrategyConfig())[strategyName];
+      expect(strategy.name).toBe(strategyName);
     });
-    tick(100);
-    expect(cfg.cdRef[method]).toHaveBeenCalledTimes(0);
-  }));
+  });
 
-  it(`should call cdRef#detectChanges 1 times when scheduleCD is called multiple times sync`, fakeAsync(() => {
-      const method = 'detectChanges';
-      const cfg = runStrategyMethod()({
-        strategyMethodName: 'scheduleCD',
+  describe('rxScheduleCD', () => {
+    it('should call cdRef#detectChanges 1 times when rxScheduleCD is used with a single sync emission', (done) => {
+      testStrategyMethod({
         strategyName,
-        singleCall: multipleCalls
-      });
-      tick(100);
-      expect(cfg.cdRef[method]).toHaveBeenCalledTimes(1);
-    })
-  );
+        strategyMethod: 'rxScheduleCD',
+        singleTime: true,
+        callsExpectations
+      }, done);
+    });
 
-  it(`should call cdRef#markForCheck 0 times when scheduleCD is called multiple times sync`, fakeAsync(() => {
-      const method = 'markForCheck';
-      const cfg = runStrategyMethod()({ strategyMethodName: 'scheduleCD',
-      strategyName,
-      singleCall: multipleCalls});
-      tick(100);
-      expect(cfg.cdRef[method]).toHaveBeenCalledTimes(0);
-    })
-  );
-
-  it('should call strategy#detectChanges 1 times when scheduleCD or rxScheduleCD is called', fakeAsync(() => {
-      const method = 'detectChanges';
-      const cfg = runStrategyMethod()({
-        strategyMethodName: 'scheduleCD',
+    it('should call cdRef#detectChanges 1 times when rxScheduleCD is used with multiple sync emissions', (done) => {
+      testStrategyMethod({
         strategyName,
-        singleCall: multipleCalls
-      });
-      tick(100);
-      expect(cfg.cdRef[method]).toHaveBeenCalledTimes(1);
-      testRxScheduleCDMethod(() => {
-      })(method, strategyName, multipleCalls, 1);
-    })
-  );
+        strategyMethod: 'rxScheduleCD',
+        singleTime: true,
+        callsExpectations
+      }, done);
+    });
+  });
 
-  it(`should call strategy#markForCheck 0 times when scheduleCD or rxScheduleCD is called`, fakeAsync((done) => {
-      const method = 'markForCheck';
-      const cfg = runStrategyMethod()({
-        strategyMethodName: 'scheduleCD',
+  describe('scheduleCD', () => {
+    it('should call cdRef#detectChanges 1 times when scheduleCD is called a single time', fakeAsync(() => {
+      testStrategyMethod({
         strategyName,
-        singleCall: multipleCalls
+        strategyMethod: 'scheduleCD',
+        flushMicrotask: true,
+        singleTime: true,
+        callsExpectations
       });
-      tick(100);
-      expect(cfg.cdRef[method]).toHaveBeenCalledTimes(0);
-      testRxScheduleCDMethod(() => {})(method, strategyName, multipleCalls, 0);
+    }));
+
+    it(`should call cdRef#detectChanges 1 times when scheduleCD is called multiple times sync`, fakeAsync(() => {
+      // This test currently fails
+        testStrategyMethod({
+          strategyName,
+          strategyMethod: 'scheduleCD',
+          singleTime: false,
+          callsExpectations
+        });
+      })
+    );
+  })
+
+  describe('combined scheduleCD & rxScheduleCD', () => {
+    it('should call strategy#detectChanges 1 times when scheduleCD or rxScheduleCD is called', fakeAsync(() => {
+      testStrategyMethod({
+        strategyName,
+        strategyMethod: 'scheduleCD',
+        singleTime: false,
+        callsExpectations
+      });
+      testStrategyMethod({
+        strategyName,
+        strategyMethod: 'rxScheduleCD',
+        singleTime: false,
+        callsExpectations
+      }, () => {});
     })
   );
-
+  })
 });
