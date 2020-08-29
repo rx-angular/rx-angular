@@ -308,8 +308,8 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     LetViewContext<U | undefined | null>,
     RxTemplateName
   >;
-  private readonly resetObserver: NextObserver<void> = {
-    next: () => {
+  private readonly resetObserver: RxTemplateObserver<U | null | undefined> = {
+    suspense: () => {
       this.displayInitialView();
       this.templateManager.updateViewContext({
         $implicit: undefined,
@@ -318,6 +318,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
         $complete: false,
       });
     },
+    next() {}
   };
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => {

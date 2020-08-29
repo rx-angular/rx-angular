@@ -18,6 +18,7 @@ import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strate
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher, mockConsole } from '@test-helpers';
 import createSpy = jasmine.createSpy;
+import { RxTemplateObserver } from '../../../src/lib/core/model';
 
 
 // TODO: Add Angular decorator.
@@ -27,10 +28,16 @@ class CdAwareImplementation<U> implements OnDestroy {
   public completed = false;
   private readonly subscription: Unsubscribable;
   public cdAware: RenderAware<U | undefined | null>;
-  resetObserver: NextObserver<any> = {
+  resetObserver: RxTemplateObserver<U | undefined | null> = {
+    suspense: () => {
+      (this.renderedValue = undefined)
+    },
     next: _ => (this.renderedValue = undefined)
   };
-  templateObserver: Observer<U | undefined | null> = {
+  templateObserver: RxTemplateObserver<U | undefined | null> = {
+    suspense: () => {
+      (this.renderedValue = undefined)
+    },
     next: (n: U | undefined | null) => {
       this.renderedValue = n;
     },

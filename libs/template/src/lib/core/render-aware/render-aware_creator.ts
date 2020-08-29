@@ -37,7 +37,7 @@ export interface RenderAware<U> extends Subscribable<U> {
  */
 export function createRenderAware<U>(cfg: {
   strategies: StrategySelection;
-  resetObserver: NextObserver<void>;
+  resetObserver: RxTemplateObserver<U>;
   templateObserver: RxTemplateObserver<U>;
 }): RenderAware<U | undefined | null> {
   const strategyName$ = new ReplaySubject<string | Observable<string>>(1);
@@ -75,7 +75,7 @@ export function createRenderAware<U>(cfg: {
         return of(null);
       }
       if (!firstTemplateObservableChange) {
-        cfg.resetObserver.next();
+        cfg.resetObserver.suspense();
         if (observable$ === undefined) {
           return of(undefined);
         }
