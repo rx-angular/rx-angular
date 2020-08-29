@@ -4,7 +4,7 @@ const DECLARATIONS = [PushPipe];
 
 /**
  * @description
- * This module exports the PushPush
+ * This module exports the PushPipe
  *
  * @example
  *
