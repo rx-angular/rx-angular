@@ -27,15 +27,9 @@ import { RxTemplateObserver, RxViewContext } from '../core/model';
 
 type RxTemplateName = 'rxNext' | 'rxComplete' | 'rxError' | 'rxSuspense';
 
-export interface LetViewContext<T> {
-  // to enable `let` syntax we have to use $implicit (var; let v = var)
-  $implicit: T;
+export interface LetViewContext<T> extends RxViewContext<T>  {
   // to enable `as` syntax we have to assign the directives selector (var as v)
   rxLet: T;
-  // set context var complete to true (var$; let e = $error)
-  $error: boolean;
-  // set context var complete to true (var$; let c = $complete)
-  $complete: boolean;
 }
 
 /**
@@ -162,6 +156,14 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * @internal
    */
   static ngTemplateGuard_rxLet: 'binding';
+
+  readonly initialViewContext: LetViewContext<U> = {
+    $implicit: undefined,
+    rxLet: undefined,
+    $error: false,
+    $complete: false,
+    $suspense: false
+  };
 
   /**
    * @description
@@ -362,12 +364,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     private readonly viewContainerRef: ViewContainerRef
   ) {
     this.strategies = getStrategies({ cdRef });
-    this.templateManager = createTemplateManager(this.viewContainerRef, {
-      $implicit: undefined,
-      rxLet: undefined,
-      $error: false,
-      $complete: false,
-    });
+    this.templateManager = createTemplateManager(this.viewContainerRef, this.initialViewContext);
 
     this.renderAware = createRenderAware({
       strategies: this.strategies,
