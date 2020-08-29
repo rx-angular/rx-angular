@@ -30,7 +30,7 @@ class CdAwareImplementation<U> implements OnDestroy {
   resetObserver: NextObserver<any> = {
     next: _ => (this.renderedValue = undefined)
   };
-  updateObserver: Observer<U | undefined | null> = {
+  templateObserver: Observer<U | undefined | null> = {
     next: (n: U | undefined | null) => {
       this.renderedValue = n;
     },
@@ -41,7 +41,7 @@ class CdAwareImplementation<U> implements OnDestroy {
   constructor(strategySelection: StrategySelection) {
     this.cdAware = createRenderAware<U>({
       strategies: strategySelection,
-      updateObserver: this.updateObserver,
+      templateObserver: this.templateObserver,
       resetObserver: this.resetObserver
     });
     this.cdAware.nextStrategy(DEFAULT_STRATEGY_NAME);

@@ -25,6 +25,7 @@ import {
   DEFAULT_STRATEGY_NAME,
   getStrategies,
 } from '../render-strategies/strategies/strategies-map';
+import { RxTemplateObserver } from '../core/model';
 
 type RxTemplateName = 'rxNext' | 'rxComplete' | 'rxError' | 'rxSuspense';
 
@@ -318,7 +319,16 @@ export class LetDirective<U> implements OnInit, OnDestroy {
       });
     },
   };
-  private readonly updateObserver: Observer<U | null | undefined> = {
+  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
+    suspense: () => {
+      this.displayInitialView();
+      this.templateManager.updateViewContext({
+        $implicit: undefined,
+        rxLet: undefined,
+        $error: false,
+        $complete: false,
+      });
+    },
     next: (value: U | null | undefined) => {
       this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
@@ -375,7 +385,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     this.renderAware = createRenderAware({
       strategies: this.strategies,
       resetObserver: this.resetObserver,
-      updateObserver: this.updateObserver,
+      templateObserver: this.templateObserver,
     });
     this.renderAware.nextStrategy(DEFAULT_STRATEGY_NAME);
   }

@@ -13,6 +13,7 @@ import {
 import { createRenderAware, RenderAware } from '../core';
 import { getStrategies } from '../render-strategies';
 import { DEFAULT_STRATEGY_NAME } from '../render-strategies/strategies/strategies-map';
+import { RxTemplateObserver } from '../core/model';
 
 /**
  * @Pipe PushPipe
@@ -68,8 +69,9 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
       this.renderedValue = undefined;
     },
   };
-  private readonly updateObserver: NextObserver<U | null | undefined> = {
-    next: (value: U | null | undefined) => (this.renderedValue = value),
+  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
+    suspense: () => this.renderedValue = undefined,
+    next: (value: U | null | undefined) => this.renderedValue = value,
   };
 
   constructor(cdRef: ChangeDetectorRef) {
@@ -77,7 +79,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
       strategies: getStrategies({
         cdRef,
       }),
-      updateObserver: this.updateObserver,
+      templateObserver: this.templateObserver,
       resetObserver: this.resetObserver,
     });
     this.subscription = this.RenderAware.subscribe();

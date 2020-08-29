@@ -18,6 +18,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { RenderStrategy, StrategySelection } from './interfaces';
+import { RxTemplateObserver } from '../model';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
@@ -37,7 +38,7 @@ export interface RenderAware<U> extends Subscribable<U> {
 export function createRenderAware<U>(cfg: {
   strategies: StrategySelection;
   resetObserver: NextObserver<void>;
-  updateObserver: NextObserver<U>;
+  templateObserver: RxTemplateObserver<U>;
 }): RenderAware<U | undefined | null> {
   const strategyName$ = new ReplaySubject<string | Observable<string>>(1);
   let currentStrategy: RenderStrategy;
@@ -92,7 +93,7 @@ export function createRenderAware<U>(cfg: {
           // Forward only distinct values
           distinctUntilChanged(),
           // Update completion, error and next
-          tap(cfg.updateObserver),
+          tap(cfg.templateObserver),
           renderWithLatestStrategy(strategy$)
         )
     )
