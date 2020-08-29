@@ -22,14 +22,14 @@ export function testRxScheduleCDMethod(done) {
 }
 
 export function runStrategyMethod<K extends keyof RenderStrategy>() {
-  return (strategyMethodName: K, strategyName: string, singleCall: boolean) => {
+  return (args: {strategyMethodName: K, strategyName: string, singleCall: boolean}) => {
     const cfg = getMockStrategyConfig();
-    const strategy = getStrategies(cfg)[strategyName];
-    Array(singleCall ? 1 : numMultipleCalls)
+    const strategy = getStrategies(cfg)[args.strategyName];
+    Array(args.singleCall ? 1 : numMultipleCalls)
       .fill(0)
       .forEach(() => {
-        console.log('runStrategyMethod', strategyMethodName);
-        strategy[strategyMethodName as string]();
+        console.log('runStrategyMethod', args.strategyMethodName);
+        strategy[args.strategyMethodName as string]();
       });
     return cfg;
   };
