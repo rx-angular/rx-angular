@@ -9,6 +9,22 @@ import { getGlobalStrategies } from './global.strategy';
 
 export const DEFAULT_STRATEGY_NAME = 'local';
 
+/**
+ * @description
+ * This method returns the provided strategies as name:strategy pair
+ *
+ * Built-in Strategies:
+ *
+ * | Name      | Zone Agnostic | Render Method   | Coalescing    | Scheduling                 |
+ * | --------- | --------------| --------------- | ------------- | -------------------------- |
+ * | `local`   | ✔             | `detectChanges` | ✔             | `requestAnimationFrame`   |
+ * | `global`  | ✔             | `ɵmarkDirty`    | ❌             | ❌                        |
+ * | `detach`  | ✔             | `detectChanges` | ✔             | `requestAnimationFrame`   |
+ * | `noop`    | ✔             | ❌              | ❌             | ❌                        |
+ * | `native`  | ❌             | `markForCheck` | ❌             | ❌                        |
+ *
+ * @param config
+ */
 export function getStrategies(
   config: RenderStrategyFactoryConfig
 ): { [strategy: string]: RenderStrategy } {
@@ -19,25 +35,3 @@ export function getStrategies(
     ...getLocalStrategies(config),
   };
 }
-
-/**
- * Strategies
- *
- * - mFC - `cdRef.markForCheck`
- * - dC - `cdRef.detectChanges`
- * - ɵMD - `ɵmarkDirty`
- * - ɵDC - `ɵdetectChanges`
- * - C - `Component`
- * - det - `cdRef.detach`
- * - ret - `cdRef.reattach`
- * - Pr - `Promise`
- * - aF - `requestAnimationFrame`
- *
- * | Name        | ZoneLess | Render Method | ScopedCoalescing | Scheduling | Chunked |
- * |-------------| ---------| --------------| ---------------- | ---------- |-------- |
- * | `noop`      | ❌       | ❌             | ❌               | ❌         | ❌       |
- * | `native`    | ❌       | mFC           | ❌                | ❌         | ❌      |
- * | `global`    | ✔        | ɵMD           | C + Pr           | ❌         | ❌      |
- * | `local`     | ✔        | ɵDC           | C + Pr           | aF         | ❌      |
- * | `detach`    | ✔ ️     | ret,ɵDC, det  | C + Pr           | aF         | ❌      |
- */

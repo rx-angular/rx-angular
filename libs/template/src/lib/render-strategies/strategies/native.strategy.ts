@@ -3,17 +3,18 @@ import { tap } from 'rxjs/operators';
 import { ɵmarkDirty as markDirty } from '@angular/core';
 
 /**
- * Native Strategy
  * @description
  *
- * - mFC - `cdRef.markForCheck`
+ * Native Strategy
+ *
+ * @description
  *
  * This strategy mirrors Angular's built-in `async` pipe.
  * This means for every emitted value `ChangeDetectorRef#markForCheck` is called.
  *
- * | Name        | ZoneLess | Render Method | ScopedCoalescing | Scheduling | Chunked |
- * |-------------| ---------| --------------| ---------------- | ---------- |-------- |
- * | `native`    | ❌       | mFC           | ❌                | ❌         | ❌      |
+ * | Name      | Zone Agnostic | Render Method   | Coalescing    | Scheduling |
+ * | --------- | --------------| --------------- | ------------- | ---------- |
+ * | `native`  | ❌             | `markForCheck` | ❌             | ❌         |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return {RenderStrategy} - The calculated strategy

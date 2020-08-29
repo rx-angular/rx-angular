@@ -4,13 +4,16 @@ import {
 } from '../../core/render-aware/interfaces';
 
 /**
+ * @description
+ *
  * Noop Strategy
  *
- * This strategy is does nothing. It serves for debugging only
+ * This strategy is does nothing. It serves several performance features
+ * as well as a helpful tool when migrating and for debugging.
  *
- * | Name        | ZoneLess | Render Method | ScopedCoalescing | Scheduling | Chunked |
- * |-------------| ---------| --------------| ---------------- | ---------- |-------- |
- * | `noop`      | ❌       | ❌             | ❌                | ❌         | ❌      |
+ * | Name      | Zone Agnostic | Render Method   | Coalescing    | Scheduling |
+ * | --------- | --------------| --------------- | ------------- | ---------- |
+ * | `noop`    | ✔             |❌               | ❌             | ❌         |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return {RenderStrategy} - The calculated strategy

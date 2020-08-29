@@ -13,14 +13,20 @@ export function getGlobalStrategies(
 }
 
 /**
+ *
+ * @description
+ *
  * Global Strategies
  *
- * - ɵMD - `ɵmarkDirty`
- * - C - `Component`
+ * This strategy leverages Angular's internal `ɵmarkDirty` render method.
+ * This means it acts identical to `ChangeDetectorRef#markForCheck` but works also zone-less.
  *
- * | Name        | ZoneLess | Render Method | ScopedCoalescing | Scheduling | Chunked |
- * |-------------| ---------| --------------| ---------------- | ---------- |-------- |
- * | `global`     | ✔        | ɵMD           | C + Pr          | ❌         | ❌      |
+ * | Name      | Zone Agnostic | Render Method   | Coalescing    | Scheduling |
+ * | --------- | --------------| --------------- | ------------- | ---------- |
+ * | `global`  | ✔             | `ɵmarkDirty`    | ❌            | ❌         |
+ *
+ * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
+ * @return { RenderStrategy } - The calculated strategy
  *
  */
 
