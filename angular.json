@@ -316,6 +316,16 @@
             ]
           }
         },
+        "changelog": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx conventional-changelog-cli -p angular -k ./libs/state/package.json -i ./libs/state/CHANGELOG.md -s --commit-path ./libs/state --tagPrefix state@"
+              }
+            ]
+          }
+        },
         "test-coverage": {
           "builder": "@nrwl/jest:jest",
           "options": {
@@ -408,6 +418,16 @@
             "jestConfig": "libs/template/jest.config.js",
             "passWithNoTests": true,
             "codeCoverage": true
+          }
+        },
+        "changelog": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx conventional-changelog-cli -p angular -k ./libs/template/package.json -i ./libs/template/CHANGELOG.md -s --commit-path ./libs/template --tagPrefix template@"
+              }
+            ]
           }
         }
       },

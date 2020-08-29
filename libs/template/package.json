@@ -1,7 +1,6 @@
 {
   "name": "@rx-angular/template",
-  "version": "1.0.0-alpha.3",
-  "homepage": "https://biophoton.github.io/rx-angular/#/",
+  "version": "1.0.0-alpha.4",
   "description": "**Fully** Reactive Component Template Rendering in Angular. @rx-angular/template aims to be a reflection of Angular's built in renderings just reactive.",
   "main": "index.js",
   "publishConfig": {
@@ -12,6 +11,8 @@
     "npm": ">=5.3.0",
     "yarn": ">=1.9.2"
   },
+  "author": "Michael Hladky <michael@hladky.at>",
+  "homepage": "https://biophoton.github.io/rx-angular/#/",
   "keywords": [
     "angular",
     "rxjs",
@@ -23,7 +24,24 @@
     "scheduling",
     "coalescing"
   ],
-  "author": "Michael Hladky <michael@hladky.at>",
+  "contributors": [
+    {
+      "name": "Michael Hladky",
+      "email": "michael@hladky.at"
+    },
+    {
+      "name": "Julian Jandl",
+      "email": "julian@jandl.wien"
+    },
+    {
+      "name": "Kirill Karnaukhov",
+      "email": "karnaukhov.kh@gmail.com"
+    },
+    {
+      "name": "Kajetan Świątek",
+      "email": "kajetan.swiatek@gmail.com"
+    }
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",

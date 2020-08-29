@@ -10,10 +10,11 @@ import {
   Unsubscribable
 } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
+import { TestScheduler } from 'rxjs/testing';
 import { createRenderAware, RenderAware, RxTemplateObserver, StrategySelection } from '../../../src/lib/core';
 import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
 // tslint:disable-next-line:nx-enforce-module-boundaries
-import { mockConsole } from '@test-helpers';
+import { jestMatcher, mockConsole } from '@test-helpers';
 import createSpy = jasmine.createSpy;
 
 
@@ -79,7 +80,7 @@ describe('CdAware', () => {
     setupCdAwareImplementation();
   });
 
-  it('should be implementable', () => {
+  it('should be defined', () => {
     expect(cdAwareImplementation).toBeDefined();
   });
 
@@ -100,6 +101,12 @@ describe('CdAware', () => {
 
     it('should render undefined as value when initially of(undefined) was passed (as undefined was emitted)', () => {
       cdAwareImplementation.cdAware.nextPotentialObservable(of(undefined));
+      expect(cdAwareImplementation.renderedValue).toBe(undefined);
+    });
+
+    it('should render undefined as value when next value undefined was passed (as undefined was emitted)', () => {
+      cdAwareImplementation.cdAware.nextPotentialObservable(of(1));
+      cdAwareImplementation.cdAware.nextPotentialObservable(undefined);
       expect(cdAwareImplementation.renderedValue).toBe(undefined);
     });
 
@@ -209,6 +216,15 @@ describe('CdAware', () => {
       expect(cdAwareImplementation.error).toBe(undefined);
       expect(cdAwareImplementation.completed).toBe(false);
       expect(subscribers).toBe(1);
+    });
+
+    it('should throw an error when a non-existent strategy was provided', () => {
+      const testScheduler: TestScheduler = new TestScheduler(jestMatcher);
+      testScheduler.run(({ expectObservable }) => {
+        const strategy = 'doesNotExist';
+        cdAwareImplementation.cdAware.nextStrategy(strategy);
+        expectObservable(cdAwareImplementation.cdAware.activeStrategy$).toBe('#', null, new Error(`Strategy ${strategy} does not exist.`));
+      })
     });
   });
 });
