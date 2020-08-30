@@ -80,10 +80,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * @example
    *
    * ```typescript
-   * const myAccumulator = (state: MyState, slice: Partial<MyState>) => ({
-   * ...state,
-   * ...slice
-   * });
+   * const myAccumulator = (state: MyState, slice: Partial<MyState>) => deepCopy(state, slice);
    *
    * this.state.setAccumulator(myAccumulator);
    * ```
