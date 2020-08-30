@@ -57,7 +57,7 @@ describe('local Strategy', () => {
     });
   });
 
-  describe('scheduleCD', () => {
+  xdescribe('scheduleCD', () => {
     it('should call cdRef#detectChanges 1 times when scheduleCD is called a single time', fakeAsync(() => {
       testStrategyMethod({
         strategyName,
@@ -80,7 +80,7 @@ describe('local Strategy', () => {
     );
   })
 
-  describe('combined scheduleCD & rxScheduleCD', () => {
+  xdescribe('combined scheduleCD & rxScheduleCD', () => {
     it('should call strategy#detectChanges 1 times when scheduleCD or rxScheduleCD is called', fakeAsync(() => {
       testStrategyMethod({
         strategyName,
