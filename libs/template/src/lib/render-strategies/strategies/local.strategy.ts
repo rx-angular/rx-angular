@@ -73,7 +73,6 @@ export function createLocalStrategy<T>(
   const tick = priorityTickMap[priority];
 
   const renderMethod = () => {
-    console.log('local renderMethod');
     config.cdRef.detectChanges();
   };
   const behavior = (o) =>
