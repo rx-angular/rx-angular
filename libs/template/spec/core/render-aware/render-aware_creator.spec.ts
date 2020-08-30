@@ -173,6 +173,7 @@ describe('CdAware', () => {
       // @TODO use this line: why?
       // expect(cdAwareImplementation.error).toBe(ArgumentNotObservableError);
       expect(cdAwareImplementation.error).toBe(error);
+      expect(console.error).toHaveBeenCalledWith(error);
       expect(cdAwareImplementation.completed).toBe(false);
     });
 

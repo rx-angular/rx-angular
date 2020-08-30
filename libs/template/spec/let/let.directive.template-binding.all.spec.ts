@@ -59,8 +59,6 @@ describe('LetDirective when template binding with all templates', () => {
   it('should render "complete" template on the observable completion', () => {
     // The resulting synchronous notification sequence is: 1,2,3,complete
     component.value$ = of(1, 2, 3);
-    // The resulting synchronous notification sequence is: 1,2,3,complete
-    component.value$ = of(1,2,3);
     fixture.detectChanges();
     expectContentToBe('complete');
   });
@@ -101,6 +99,11 @@ describe('LetDirective when template binding with all templates', () => {
     component.value$ = NEVER;
     fixture.detectChanges();
     expectContentToBe('suspense');
+  });
+
+  it('should have `ngTemplateContextGuard` defined', () => {
+    expect(LetDirective.ngTemplateContextGuard).toBeDefined();
+    expect(LetDirective.ngTemplateContextGuard({} as LetDirective<any>, {})).toBe(true);
   });
 });
 
