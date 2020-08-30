@@ -5,7 +5,6 @@ import {
   PipeTransform,
 } from '@angular/core';
 import {
-  NextObserver,
   Observable,
   ObservableInput,
   Unsubscribable,
@@ -13,6 +12,7 @@ import {
 import { createRenderAware, RenderAware } from '../core';
 import { getStrategies } from '../render-strategies';
 import { DEFAULT_STRATEGY_NAME } from '../render-strategies/strategies/strategies-map';
+import { RxTemplateObserver } from '../core/model';
 
 /**
  * @Pipe PushPipe
@@ -63,13 +63,10 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
 
   private readonly subscription: Unsubscribable;
   private readonly RenderAware: RenderAware<U | null | undefined>;
-  private readonly resetObserver: NextObserver<void> = {
-    next: () => {
-      this.renderedValue = undefined;
-    },
-  };
-  private readonly updateObserver: NextObserver<U | null | undefined> = {
-    next: (value: U | null | undefined) => (this.renderedValue = value),
+
+  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
+    suspense: () => this.renderedValue = undefined,
+    next: (value: U | null | undefined) => this.renderedValue = value,
   };
 
   constructor(cdRef: ChangeDetectorRef) {
@@ -77,8 +74,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
       strategies: getStrategies({
         cdRef,
       }),
-      updateObserver: this.updateObserver,
-      resetObserver: this.resetObserver,
+      templateObserver: this.templateObserver
     });
     this.subscription = this.RenderAware.subscribe();
   }

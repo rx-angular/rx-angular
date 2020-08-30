@@ -9,10 +9,8 @@ import {
 } from '@angular/core';
 
 import {
-  NextObserver,
   Observable,
   ObservableInput,
-  Observer,
   Subscription,
   Unsubscribable,
 } from 'rxjs';
@@ -25,18 +23,13 @@ import {
   DEFAULT_STRATEGY_NAME,
   getStrategies,
 } from '../render-strategies/strategies/strategies-map';
+import { RxTemplateObserver, RxViewContext } from '../core/model';
 
 type RxTemplateName = 'rxNext' | 'rxComplete' | 'rxError' | 'rxSuspense';
 
-export interface LetViewContext<T> {
-  // to enable `let` syntax we have to use $implicit (var; let v = var)
-  $implicit: T;
+export interface LetViewContext<T> extends RxViewContext<T>  {
   // to enable `as` syntax we have to assign the directives selector (var as v)
   rxLet: T;
-  // set context var complete to true (var$; let e = $error)
-  $error: boolean;
-  // set context var complete to true (var$; let c = $complete)
-  $complete: boolean;
 }
 
 /**
@@ -163,6 +156,14 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * @internal
    */
   static ngTemplateGuard_rxLet: 'binding';
+
+  readonly initialViewContext: LetViewContext<U> = {
+    $implicit: undefined,
+    rxLet: undefined,
+    $error: false,
+    $complete: false,
+    $suspense: false
+  };
 
   /**
    * @description
@@ -307,8 +308,8 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     LetViewContext<U | undefined | null>,
     RxTemplateName
   >;
-  private readonly resetObserver: NextObserver<void> = {
-    next: () => {
+  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
+    suspense: () => {
       this.displayInitialView();
       this.templateManager.updateViewContext({
         $implicit: undefined,
@@ -317,8 +318,6 @@ export class LetDirective<U> implements OnInit, OnDestroy {
         $complete: false,
       });
     },
-  };
-  private readonly updateObserver: Observer<U | null | undefined> = {
     next: (value: U | null | undefined) => {
       this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
@@ -365,17 +364,11 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     private readonly viewContainerRef: ViewContainerRef
   ) {
     this.strategies = getStrategies({ cdRef });
-    this.templateManager = createTemplateManager(this.viewContainerRef, {
-      $implicit: undefined,
-      rxLet: undefined,
-      $error: false,
-      $complete: false,
-    });
+    this.templateManager = createTemplateManager(this.viewContainerRef, this.initialViewContext);
 
     this.renderAware = createRenderAware({
       strategies: this.strategies,
-      resetObserver: this.resetObserver,
-      updateObserver: this.updateObserver,
+      templateObserver: this.templateObserver,
     });
     this.renderAware.nextStrategy(DEFAULT_STRATEGY_NAME);
   }
