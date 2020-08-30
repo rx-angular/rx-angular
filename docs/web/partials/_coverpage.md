@@ -1,4 +1,4 @@
-![logo](../images/logo.jpg)
+![logo](../../images/logo.jpg)
 
 # <b>@rx-angular</b>
 
