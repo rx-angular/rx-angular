@@ -12,9 +12,9 @@ import { ɵmarkDirty as markDirty } from '@angular/core';
  * This strategy mirrors Angular's built-in `async` pipe.
  * This means for every emitted value `ChangeDetectorRef#markForCheck` is called.
  *
- * | Name      | Zone Agnostic | Render Method   | Coalescing    | Scheduling |
- * | --------- | --------------| --------------- | ------------- | ---------- |
- * | `native`  | ❌             | `markForCheck` | ❌             | ❌         |
+ * | Name      | Zone Agnostic | Render Method     | Coalescing    | Scheduling |
+ * | --------- | --------------| ----------------- | ------------- | ---------- |
+ * | `native`  | ❌             | ⮁ `markForCheck` | ❌             | ❌         |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return {RenderStrategy} - The calculated strategy

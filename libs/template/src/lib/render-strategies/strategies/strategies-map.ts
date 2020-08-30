@@ -15,13 +15,13 @@ export const DEFAULT_STRATEGY_NAME = 'local';
  *
  * Built-in Strategies:
  *
- * | Name      | Zone Agnostic | Render Method   | Coalescing    | Scheduling                 |
- * | --------- | --------------| --------------- | ------------- | -------------------------- |
- * | `local`   | ✔             | `detectChanges` | ✔             | `requestAnimationFrame`   |
- * | `global`  | ✔             | `ɵmarkDirty`    | ❌             | ❌                        |
- * | `detach`  | ✔             | `detectChanges` | ✔             | `requestAnimationFrame`   |
- * | `noop`    | ✔             | ❌              | ❌             | ❌                        |
- * | `native`  | ❌             | `markForCheck` | ❌             | ❌                        |
+ * | Name      | Zone Agnostic | Render Method     | Coalescing    | Scheduling                 |
+ * | --------- | --------------| ----------------- | ------------- | -------------------------- |
+ * | `local`   | ✔             | 🠗 `detectChanges` | ✔             | `requestAnimationFrame`   |
+ * | `global`  | ✔             | ⮁ `ɵmarkDirty`    | ❌             | ❌                        |
+ * | `detach`  | ✔             | ⭭ `detectChanges` | ✔             | `requestAnimationFrame`   |
+ * | `noop`    | ✔             | - ❌              | ❌             | ❌                        |
+ * | `native`  | ❌             | ⮁ `markForCheck` | ❌             | ❌                        |
  *
  * @param config
  */

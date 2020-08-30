@@ -59,9 +59,9 @@ export function getLocalStrategies<T>(
  * 'Scoped' coalescing, in addition, means **grouping the collected events** by a specific context.
  * E. g. the **component** from which the re-rendering was initiated.
  *
- * | Name      | Zone Agnostic | Render Method   | Coalescing    | Scheduling                 |
- * | --------- | --------------| --------------- | ------------- | -------------------------- |
- * | `local`   | ✔             | `detectChanges` | ✔             | `requestAnimationFrame`   |
+ * | Name      | Zone Agnostic | Render Method     | Coalescing    | Scheduling                 |
+ * | --------- | --------------| ----------------- | ------------- | -------------------------- |
+ * | `local`   | ✔             | 🠗 `detectChanges` | ✔             | `requestAnimationFrame`   |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return {RenderStrategy} - The calculated strategy
