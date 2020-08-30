@@ -93,7 +93,7 @@ export function createLocalStrategy<T>(
     name: 'local',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
-    scheduleCD,
+    scheduleCD
   };
 }
 

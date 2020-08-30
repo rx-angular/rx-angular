@@ -1,6 +1,5 @@
 import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core';
 import { tap } from 'rxjs/operators';
-import { ɵmarkDirty as markDirty } from '@angular/core';
 
 /**
  * @description
@@ -29,9 +28,11 @@ export function createNativeStrategy(
   return {
     name: 'native',
     detectChanges: () => config.cdRef.markForCheck(),
-    rxScheduleCD: (o) => o.pipe(tap(() => markDirty(component))),
+    rxScheduleCD: (o) => o.pipe(tap(() => {
+      config.cdRef.markForCheck()
+    })),
     scheduleCD: () => {
-      markDirty(component);
+      config.cdRef.markForCheck()
       return new AbortController();
     },
   };

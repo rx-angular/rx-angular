@@ -1,10 +1,14 @@
 import createSpy = jasmine.createSpy;
+import { ChangeDetectorRef } from '@angular/core';
 
-export class MockChangeDetectorRef {
+export class MockChangeDetectorRef extends ChangeDetectorRef {
   markForCheck = createSpy('markForCheck');
   detectChanges = createSpy('detectChanges');
+  detach = createSpy('detach');
+  reattach = createSpy('reattach');
+  checkNoChanges = createSpy('checkNoChanges');
 }
 
 export const mockPromise = {
-  then: () => {},
+  then: () => {}
 };

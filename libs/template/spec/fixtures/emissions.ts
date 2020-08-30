@@ -1,0 +1,113 @@
+import { from, of } from 'rxjs';
+import { getStrategies, RenderStrategy } from '@rx-angular/template';
+import { getMockStrategyConfig } from './mock-strategies';
+import { ChangeDetectorRef } from '@angular/core';
+import { tick, flushMicrotasks } from '@angular/core/testing';
+
+export const oneCall = true;
+export const multipleCalls = false;
+export const singleEmission$ = of(0);
+export const numMultipleCalls = 6;
+export const multipleEmissions$ = from(
+  Array(numMultipleCalls).map((v, i) => i)
+);
+
+export function testStrategyMethod(
+  config: StrategyTestConfig,
+  done?: jest.DoneCallback | any
+) {
+  testsMap.get(config.strategyMethod)(config, done);
+}
+
+const testsMap = new Map<keyof RenderStrategy, Function>([
+  ['rxScheduleCD', testRxScheduleCD],
+  ['scheduleCD', testScheduleCD]
+]);
+
+function testRxScheduleCD(
+  config: StrategyTestConfig,
+  done?: jest.DoneCallback | any
+) {
+  const { strategyName, singleTime, callsExpectations } = config;
+  const cfg = getMockStrategyConfig();
+  const strategy = getStrategies(cfg)[strategyName];
+
+  strategy
+    .rxScheduleCD(singleTime ? singleEmission$ : multipleEmissions$)
+    .subscribe({
+      complete: () => {
+        checkExpectations(cfg, callsExpectations);
+        done();
+      }
+    });
+}
+
+function testScheduleCD(config: StrategyTestConfig) {
+  const { strategyName, singleTime, callsExpectations } = config;
+  const cfg = getMockStrategyConfig();
+  const strategy = getStrategies(cfg)[strategyName];
+
+  for (let i = 0; i < (singleTime ? 1 : numMultipleCalls); i++) {
+    strategy.scheduleCD();
+  }
+
+  tick(100);
+
+  if (config.flushMicrotask) {
+    flushMicrotasks();
+  }
+
+  checkExpectations(cfg, callsExpectations);
+  return cfg;
+}
+
+function expectationDefined(
+  expectCallTimes: CallsExpectations,
+  key: keyof CallsExpectations
+): boolean {
+  return expectCallTimes[key] !== undefined && expectCallTimes[key] !== null;
+}
+
+function checkExpectations(
+  cfg: { cdRef: ChangeDetectorRef },
+  expectations: CallsExpectations
+) {
+  /**
+   * Using manual if instead of Object.keys to have
+   * more transparent messages in case if test fails
+   */
+  if (expectationDefined(expectations, 'detectChanges')) {
+    expect(cfg.cdRef['detectChanges']).toHaveBeenCalledTimes(
+      expectations.detectChanges
+    );
+  }
+
+  if (expectationDefined(expectations, 'markForCheck')) {
+    expect(cfg.cdRef['markForCheck']).toHaveBeenCalledTimes(
+      expectations.markForCheck
+    );
+  }
+
+  if (expectationDefined(expectations, 'detach')) {
+    expect(cfg.cdRef['detach']).toHaveBeenCalledTimes(expectations.detach);
+  }
+
+  if (expectationDefined(expectations, 'reattach')) {
+    expect(cfg.cdRef['reattach']).toHaveBeenCalledTimes(expectations.reattach);
+  }
+}
+
+interface StrategyTestConfig {
+  strategyName: string;
+  strategyMethod: keyof RenderStrategy;
+  singleTime: boolean;
+  callsExpectations: CallsExpectations;
+  flushMicrotask?: boolean;
+}
+
+export interface CallsExpectations {
+  markForCheck?: number;
+  detectChanges?: number;
+  detach?: number;
+  reattach?: number;
+}
