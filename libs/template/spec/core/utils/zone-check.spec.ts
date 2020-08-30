@@ -55,7 +55,6 @@ describe('isNoopNgZone', () => {
       template: '<div></div>',
     })
     class NgZoneTestComponent {
-      checkNoopNgZone = isNoopNgZone(this.ngZone);
       constructor(readonly ngZone: NgZone) {}
     }
 
@@ -74,15 +73,23 @@ describe('isNoopNgZone', () => {
     const appRef = moduleRef.injector.get(ApplicationRef);
     const testComp = appRef.components[0].instance;
 
-    return { hasZone: testComp.checkNoopNgZone };
+    return { component: testComp, ngZone: testComp.ngZone };
   }
 
   it('returns false when default zone is used', async () => {
-    expect(await setup({ defaultZone: true })).toEqual({ hasZone: false });
+    const componentSetup = await setup({ defaultZone: true });
+    expect(isNoopNgZone(componentSetup.ngZone)).toEqual(false);
+  });
+
+  it('should return same value from cache', async () => {
+    const componentSetup = await setup({ defaultZone: false });
+    expect(isNoopNgZone(componentSetup.ngZone)).toEqual(true);
+    expect(isNoopNgZone(componentSetup.ngZone)).toEqual(true);
   });
 
   it('returns true when noop zone is chosen', async () => {
-    expect(await setup({ defaultZone: false })).toEqual({ hasZone: true });
+    const componentSetup = await setup({ defaultZone: false });
+    expect(isNoopNgZone(componentSetup.ngZone)).toEqual(true);
   });
 });
 
