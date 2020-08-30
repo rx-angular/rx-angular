@@ -48,7 +48,7 @@ export function getLocalStrategies<T>(
  * that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
  *
  * As detectChanges has no coalescing of render calls
- * like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` has, so we have to apply our own coalescing, 'scoped' on
+ * like [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) or [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) has, so we have to apply our own coalescing, 'scoped' on
  * component level.
  *
  * Coalescing, in this very manner,
@@ -59,9 +59,12 @@ export function getLocalStrategies<T>(
  * 'Scoped' coalescing, in addition, means **grouping the collected events** by a specific context.
  * E. g. the **component** from which the re-rendering was initiated.
  *
- * | Name      | Zone Agnostic | Render Method     | Coalescing    | Scheduling                 |
- * | --------- | --------------| ----------------- | ------------- | -------------------------- |
- * | `local`   | ✔             | 🠗 `detectChanges` | ✔             | `requestAnimationFrame`   |
+ * This context could be the Component instance or a ViewContextRef,
+ * both accessed over the context over `ChangeDetectorRef#context`.
+ *
+ * | Name      | Zone Agnostic | Render Method     | Coalescing         | Scheduling                 |
+ * | --------- | --------------| ----------------- | ------------------ | -------------------------- |
+ * | `local`   | ✔             | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame`   |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return {RenderStrategy} - The calculated strategy

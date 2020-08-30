@@ -8,12 +8,13 @@ import {
  *
  * Noop Strategy
  *
- * This strategy is does nothing. It serves several performance features
- * as well as a helpful tool when migrating and for debugging.
+ * The no-operation strategy does nothing.
+ * It can be a useful tool for performance improvements as well as debugging
+ * The [`[viewport-prio]`](https://github.com/BioPhoton/rx-angular/blob/ef99804c1b07aeb96763cacca6afad7bbdab03b1/libs/template/src/lib/experimental/viewport-prio/viewport-prio.directive.ts) directive use it to limit renderings to only visible components:
  *
  * | Name      | Zone Agnostic | Render Method     | Coalescing    | Scheduling |
  * | --------- | --------------| ----------------- | ------------- | ---------- |
- * | `noop`    | ✔             | - ❌              | ❌             | ❌         |
+ * | `noop`    | ✔             | - `noop`          | ❌             | ❌         |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return {RenderStrategy} - The calculated strategy
