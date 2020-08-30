@@ -13,31 +13,21 @@ export function getGlobalStrategies(
 }
 
 /**
+ *
+ * @description
+ *
  * Global Strategies
  *
- * - ɵMD - `ɵmarkDirty`
- * - C - `Component`
+ * This strategy leverages Angular's internal [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) render method.
+ * It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) but works also zone-less.
+ * `markDirty` in comparison to `markForCheck` also calls [`scheduleTick`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1863) which is the reason why it also works in zone-less environments.
  *
- * | Name        | ZoneLess | Render Method | ScopedCoalescing | Scheduling | Chunked |
- * |-------------| ---------| --------------| ---------------- | ---------- |-------- |
- * | `global`     | ✔        | ɵMD           | C + Pr          | ❌         | ❌      |
- *
- */
-
-/**
- *
- * Global Strategy
- *
- * This strategy is rendering the application root and
- * all it's children that are on a path
- * that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
- *
- * | Name        | ZoneLess | Render Method | ScopedCoalescing | Scheduling | Chunked |
- * |-------------| ---------| --------------| ---------------- | ---------- |-------- |
- * | `global`     | ✔        | ɵMD           | C + Pr          | ❌         | ❌      |
+ * | Name      | Zone Agnostic | Render Method     | Coalescing      | Scheduling       |
+ * | --------- | --------------| ----------------- | --------------- | ---------------- |
+ * | `global`  | ✔             | ⮁ `ɵmarkDirty`   | ✔ `RootContext` | [`animationFrame`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/util/misc_utils.ts#L39)   |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
- * @return {RenderStrategy<T>} - The calculated strategy
+ * @return { RenderStrategy } - The calculated strategy
  *
  */
 export function createGlobalStrategy(
