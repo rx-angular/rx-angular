@@ -1,13 +1,11 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { getStrategies } from '@rx-angular/template';
 import {
   getMockStrategyConfig,
-  multipleCalls,
-  oneCall,
   testStrategyMethod,
   CallsExpectations
 } from '../../fixtures';
 import { fakeAsync } from '@angular/core/testing';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
 /**
@@ -71,7 +69,7 @@ describe('local Strategy', () => {
     }));
 
     it(`should call cdRef#detectChanges 1 times when scheduleCD is called multiple times sync`, fakeAsync(() => {
-      // This test currently fails
+        // This test currently fails
         testStrategyMethod({
           strategyName,
           strategyMethod: 'scheduleCD',

@@ -1,5 +1,3 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
-import { mockConsole } from '@test-helpers';
 import { getStrategies } from '@rx-angular/template';
 import {
   getMockStrategyConfig,
@@ -7,6 +5,8 @@ import {
   CallsExpectations
 } from '../../fixtures';
 import { fakeAsync } from '@angular/core/testing';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { mockConsole } from '@test-helpers';
 
 /**
  * NOOP STRATEGY

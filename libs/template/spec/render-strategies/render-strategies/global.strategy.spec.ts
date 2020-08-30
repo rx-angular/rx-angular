@@ -1,13 +1,11 @@
 // tslint:disable-next-line:nx-enforce-module-boundaries
-import { getStrategies } from '@rx-angular/template';
+import { getStrategies } from '../../../src/lib/render-strategies';
 import {
   getMockStrategyConfig,
-  multipleCalls,
-  oneCall,
   testStrategyMethod,
   CallsExpectations
 } from '../../fixtures';
-import { fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 
 /**
  * GLOBAL STRATEGY
