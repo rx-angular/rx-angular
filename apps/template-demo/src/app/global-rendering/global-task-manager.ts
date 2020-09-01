@@ -1,5 +1,4 @@
 import { Observable, Subject } from 'rxjs';
-import { share } from 'rxjs/operators';
 
 // TODO: fetch the unpatched version but keep the fallbacks!
 export const animFrame = window.requestAnimationFrame ||
@@ -12,9 +11,6 @@ export const animFrame = window.requestAnimationFrame ||
 const cancelAnimFrame = window.cancelAnimationFrame ||
   window.webkitCancelAnimationFrame ||
   (window as any).mozCancelAnimationFrame || function(callback) {};
-
-const runtimeThreshold = 16;
-const maxReschedules = 2;
 
 export enum GlobalTaskPriority {
   chunk,
@@ -36,10 +32,13 @@ interface GlobalTaskManager {
   tick(): Observable<void>;
 }
 
+const frameThresh = 16;
+const rescheduleMax = 2;
+
 function createGlobalTaskManager(): GlobalTaskManager {
   const queue = new Set<ScheduledGlobalTask>();
   const tick = new Subject<void>();
-  const tick$ = tick.pipe(share());
+  const tick$ = tick;
   let isScheduled = false;
 
   return {
@@ -98,23 +97,23 @@ function createGlobalTaskManager(): GlobalTaskManager {
           // exhaust queue while there are tasks AND (there are blocking tasks left to process OR the runtime exceeds
           // 16ms)
           while (
-            (blockingTasksLeft > 0 || runtime <= runtimeThreshold) &&
+            (blockingTasksLeft > 0 || runtime <= frameThresh) &&
             remainingTasks.length > 0
             ) {
             // TODO: consider using pop over shift! (render inside-out)
             const taskDefinition = remainingTasks.shift();
-            const blockingTask =
-              taskDefinition.priority === GlobalTaskPriority.blocking;
+            const chunkTask =
+              taskDefinition.priority === GlobalTaskPriority.chunk;
             // make sure to run all tasks marked with blocking priority and chunk tasks which got rescheduled at
             // least 2 times regardless of the runtime!
             if (
-              blockingTask ||
-              runtime <= runtimeThreshold ||
-              taskDefinition.rescheduled >= maxReschedules
+              !chunkTask ||
+              runtime <= frameThresh ||
+              taskDefinition.rescheduled >= rescheduleMax
             ) {
               // measure task runtime and add it to the runtime of this frame
               runtime += runTask(taskDefinition.work);
-              if (blockingTask) {
+              if (!chunkTask) {
                 blockingTasksLeft--;
               }
               // delete work from queue
@@ -124,10 +123,10 @@ function createGlobalTaskManager(): GlobalTaskManager {
               taskDefinition.rescheduled++;
             }
           }
+          cancelAnimFrame(frameId);
           if (size() > 0) {
             // queue has entries left -> reschedule
             // console.warn('rescheduling:', size());
-            cancelAnimFrame(frameId);
             // cancelAnimationFrame(frameId);
             frameId = animFrame(exhaust);
             subscriber.next();
