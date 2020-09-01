@@ -36,7 +36,7 @@ function createCoalesceManager(): CoalescingManager {
   };
 
   // Increments the number of subscriptions in a scope e.g. a class instance
-  function removeWork(scope: object = {}): void {
+  function removeWork(scope: object): void {
     const numCoalescingSubscribers =
       coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers -
       1;
@@ -46,7 +46,7 @@ function createCoalesceManager(): CoalescingManager {
   }
 
   // Decrements the number of subscriptions in a scope e.g. a class instance
-  function addWork(scope: object = {}): void {
+  function addWork(scope: object): void {
     const numCoalescingSubscribers =
       coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers +
       1;
@@ -56,7 +56,7 @@ function createCoalesceManager(): CoalescingManager {
   }
 
   // Checks if anybody else is already coalescing atm
-  function isCoalescing(scope: object = {}): boolean {
+  function isCoalescing(scope: object): boolean {
     return (
       coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers >
       0
