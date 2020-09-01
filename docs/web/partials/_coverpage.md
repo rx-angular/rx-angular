@@ -1,4 +1,4 @@
-![logo](../../images/logo.jpg)
+![logo](https://github.com/BioPhoton/rx-angular/blob/github-pages/docs/images/logo.jpg?raw=true)
 
 # <b>@rx-angular</b>
 
