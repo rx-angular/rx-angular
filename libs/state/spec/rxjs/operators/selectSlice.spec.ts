@@ -1,11 +1,11 @@
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { Observable, of } from 'rxjs';
-import { TestScheduler } from 'rxjs/testing';
-import { selectSlice } from '../../../src/lib/rxjs/operators/selectSlice';
-import { KeyCompareMap } from '../../../src/lib/rxjs/interfaces';
-import { map, mergeMap } from 'rxjs/operators';
 import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
+import { map, mergeMap } from 'rxjs/operators';
+import { TestScheduler } from 'rxjs/testing';
+import { KeyCompareMap } from '../../../src/lib/rxjs/interfaces';
+import { selectSlice } from '../../../src/lib/rxjs/operators/selectSlice';
 
 let testScheduler: TestScheduler;
 
@@ -72,7 +72,7 @@ describe('selectSlice operator', () => {
 
   it('should distinguish between values with multiple keys', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const values: { [key: string]: ISelectSliceTest } = { a: { val: 1 }, b: { val: 1, valOther: 3 } };
+      const values: { [key: string]: ISelectSliceTest } = { a: { val: 1, valOther: 1 }, b: { val: 1, valOther: 3 } };
       const e1 = cold('--a--a--a--b--b--a--|', values);
       const e1subs = '^-------------------!';
       const expected = '--a--------b-----a--|';
@@ -102,11 +102,55 @@ describe('selectSlice operator', () => {
     });
   });
 
+  it('should ignore changes if any selected key is undefined', () => {
+    testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+      const values = { a: { val: 1 }, b: { val: 1, valOther: 3 } , c: { valOther: 3}};
+      const e1 = cold<ISelectSliceTest>('--a--a--a--b--b--a--|', values);
+      const e1subs = '^-------------------!';
+      const expected =                  '-----------c--------|';
+
+      expectObservable(
+        e1.pipe(
+          selectSlice(['valOther'])
+        )
+      ).toBe(expected, values);
+      expectSubscriptions(e1.subscriptions).toBe(e1subs);
+    });
+  });
+
+  it('should ignore changes if any selected key is undefined with KeyCompareMap', () => {
+    testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+      const values = { a: { val: 1, valOther: undefined }, b: { val: 1, valOther: 3 } , c: { valOther: 3}};
+      const e1 = cold<ISelectSliceTest>('--a--a--a--b--b--a--|', values);
+      const e1subs = '^-------------------!';
+      const expected =                  '-----------c--------|';
+
+      expectObservable(
+        e1.pipe(
+          selectSlice(['valOther'], { valOther: ((oldVal, newVal) => oldVal === newVal)})
+        )
+      ).toBe(expected, values);
+      expectSubscriptions(e1.subscriptions).toBe(e1subs);
+    });
+  });
+
   it('should distinguish between values by keyCompareMap', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = {
-        a: { val: 1 },
-        b: { val: 2 },
+        a: {
+          val: 1,
+          objVal: {
+            foo: 'foo',
+            bar: 0
+          }
+        },
+        b: {
+          val: 3,
+          objVal: {
+            foo: 'foo',
+            bar: 0
+          }
+        },
         c: {
           val: 2,
           objVal: {
