@@ -1,8 +1,7 @@
-import { from, of } from 'rxjs';
-import { getStrategies, RenderStrategy } from '@rx-angular/template';
-import { getMockStrategyConfig } from './mock-strategies';
 import { ChangeDetectorRef } from '@angular/core';
-import { tick, flushMicrotasks } from '@angular/core/testing';
+import { getStrategies, RenderStrategy } from '@rx-angular/template';
+import { from, of } from 'rxjs';
+import { getMockStrategyConfig } from './mock-strategies';
 
 export const oneCall = true;
 export const multipleCalls = false;
@@ -14,7 +13,7 @@ export const multipleEmissions$ = from(
 
 export function testStrategyMethod(
   config: StrategyTestConfig,
-  done?: jest.DoneCallback | any
+  done: jest.DoneCallback | any
 ) {
   testsMap.get(config.strategyMethod)(config, done);
 }
@@ -26,13 +25,13 @@ const testsMap = new Map<keyof RenderStrategy, Function>([
 
 function testRxScheduleCD(
   config: StrategyTestConfig,
-  done?: jest.DoneCallback | any
+  done: jest.DoneCallback | any
 ) {
   const { strategyName, singleTime, callsExpectations } = config;
   const cfg = getMockStrategyConfig();
-  const strategy = getStrategies(cfg)[strategyName];
+  const renderStrategy = getStrategies(cfg)[strategyName];
 
-  strategy
+  renderStrategy
     .rxScheduleCD(singleTime ? singleEmission$ : multipleEmissions$)
     .subscribe({
       complete: () => {
@@ -42,22 +41,21 @@ function testRxScheduleCD(
     });
 }
 
-function testScheduleCD(config: StrategyTestConfig) {
+function testScheduleCD(config: StrategyTestConfig, done: jest.DoneCallback | any) {
   const { strategyName, singleTime, callsExpectations } = config;
   const cfg = getMockStrategyConfig();
-  const strategy = getStrategies(cfg)[strategyName];
+  const renderStrategy = getStrategies(cfg)[strategyName];
 
   for (let i = 0; i < (singleTime ? 1 : numMultipleCalls); i++) {
-    strategy.scheduleCD();
+    renderStrategy.scheduleCD();
   }
 
-  tick(100);
-
-  if (config.flushMicrotask) {
-    flushMicrotasks();
-  }
-
-  checkExpectations(cfg, callsExpectations);
+  setTimeout(() => {
+    checkExpectations(cfg, callsExpectations);
+    if (done) {
+      done();
+    }
+  }, 200);
   return cfg;
 }
 

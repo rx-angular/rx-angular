@@ -4,7 +4,6 @@ import {
   testStrategyMethod,
   CallsExpectations
 } from '../../fixtures';
-import { fakeAsync } from '@angular/core/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
@@ -57,40 +56,40 @@ describe('noop Strategy', () => {
   });
 
   describe('scheduleCD', () => {
-    it('should not trigger change detection when scheduleCD is called a single time', fakeAsync(() => {
+    it('should not trigger change detection when scheduleCD is called a single time', (done) => {
       testStrategyMethod({
         strategyName,
         strategyMethod: 'scheduleCD',
         singleTime: true,
         callsExpectations
-      });
-    }));
+      }, done);
+    });
 
-    it('should not trigger change detection when scheduleCD is called multiple times sync', fakeAsync(() => {
-        testStrategyMethod({
-          strategyName,
-          strategyMethod: 'scheduleCD',
-          singleTime: false,
-          callsExpectations
-        });
-    }));
-  })
-
-  describe('combined scheduleCD & rxScheduleCD', () => {
-    it('should not trigger change detection when scheduleCD or rxScheduleCD is called', fakeAsync(() => {
+    it('should not trigger change detection when scheduleCD is called multiple times sync', done => {
       testStrategyMethod({
         strategyName,
         strategyMethod: 'scheduleCD',
         singleTime: false,
         callsExpectations
-      });
+      }, done);
+    });
+  })
+
+  describe('combined scheduleCD & rxScheduleCD', () => {
+    it('should not trigger change detection when scheduleCD or rxScheduleCD is called', done => {
+      testStrategyMethod({
+        strategyName,
+        strategyMethod: 'scheduleCD',
+        singleTime: false,
+        callsExpectations
+      }, () => {});
       testStrategyMethod({
         strategyName,
         strategyMethod: 'rxScheduleCD',
         singleTime: false,
         callsExpectations
-      }, () => {});
-    }));
+      }, done);
+    });
   })
 
 
