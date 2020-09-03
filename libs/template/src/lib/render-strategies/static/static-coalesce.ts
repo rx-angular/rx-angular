@@ -26,10 +26,12 @@ export function staticCoalesce<T>(
 
   // =====
 
-  function tryExecuteWork() {
+  function tryExecuteWork(): T | void {
     coalescingManager.remove(scope);
     if (!coalescingManager.isCoalescing(scope)) {
       return work();
+    } else {
+      return void 0;
     }
   }
 }
