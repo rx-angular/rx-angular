@@ -10,7 +10,7 @@ Use the corresponding `RenderStrategy#name` as parameter or Input with the `Push
 By default, they will use the [Local Strategy](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/viewport-prio.md).
 
 ```html
-<div *rxLet="list$; let list; strategy: 'global'"></div>
+<divrxLet="list$; let list; strategy: 'global'"></div>
 <hero-list heroes="list$ | push: 'global'"></hero-list>
 ```
 
@@ -41,62 +41,81 @@ export class PerformanceAwareComponent {
 
 ![Template - RenderStrategies](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/template_rendering-strategies.png)
 
-### Native Strategy
-
-This strategy mirrors Angular's built-in `async` pipe.
-This means for every emitted value `ChangeDetectorRef#markForCheck` is called.
-
-| Name     | ZoneLess VE/I | Render Method VE/I | Coalescing VE/I |
-| -------- | ------------- | ------------------ | --------------- |
-| `native` | ❌/❌         | mFC / mFC          | ❌              |
-
-### Noop
-
-Noop Strategy
-
-This strategy does nothing. It serves for debugging purposes or as a fine-grained performance optimization tool.
-Use it with caution, since it stops `ChangeDetection` completely.
-
-| Name   | ZoneLess VE/I | Render Method VE/I | Coalescing VE/I |
-| ------ | ------------- | ------------------ | --------------- |
-| `noop` | ❌/❌         | no rendering       | ❌              |
-
-### Global Strategy
-
-This strategy is rendering the application root and
-all its children that are on a path
-that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
-
-| Name     | ZoneLess VE/I | Render Method VE/I | Coalescing |
-| -------- | ------------- | ------------------ | ---------- |
-| `global` | ❌/✔️         | mFC / ɵMD          | ❌         |
-
 ### Local Strategy
 
 This strategy is rendering the actual component and
-all it's **children** that are on a path
+all it's children that are on a path
 that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
 
-As detectChanges is synchronous and has no built-in coalescing of rendering
-like `ChangeDetectorRef#markForCheck` or `ɵmarkDirty` have, we have to apply our own coalescing.
-It is also _scoped_ on the component level. (see [Concepts](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/concepts.md) for more information)
+As detectChanges has no coalescing of render calls
+like [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) or [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) has, so we have to apply our own coalescing, 'scoped' on
+component level.
 
-| Name    | ZoneLess VE/I | Render Method VE/I | Coalescing/Schedule    |
-| ------- | ------------- | ------------------ | ---------------------- |
-| `local` | ✔️/✔️         | dC / dC            | micro + animationFrame |
+Coalescing, in this very manner,
+means*collecting all events** in the same
+[EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render and
+execute*re-rendering only once**.
+
+'Scoped' coalescing, in addition, means*grouping the collected events** by a specific context.
+E. g. the*component** from which the re-rendering was initiated.
+
+This context could be the Component instance or a ViewContextRef,
+both accessed over the context over `ChangeDetectorRef#context`.
+
+| Name      | Zone Agnostic | Render Method     | Coalescing         | Scheduling                 |
+| --------- | --------------| ----------------- | ------------------ | -------------------------- |
+| `local`   | ✔             | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame`   |
+
+### Global Strategy
+
+This strategy leverages Angular's internal [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) render method.
+It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) but works also zone-less.
+`markDirty` in comparison to `markForCheck` also calls [`scheduleTick`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1863) which is the reason why it also works in zone-less environments.
+
+| Name      | Zone Agnostic | Render Method     | Coalescing      | Scheduling       |
+| --------- | --------------| ----------------- | --------------- | ---------------- |
+| `global`  | ✔             | ⮁ `ɵmarkDirty`   | ✔ `RootContext` | [`animationFrame`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/util/misc_utils.ts#L39)   |
+
 
 ### Detach Strategy
 
-The Detach Strategy shares its behavior with the **Local Strategy** . It can be seen as
-the **Local Strategies** more aggressive brother. Instead of just rendering scheduled changes,
-it will also `detach` (`ChangeDetectorRef#detach`) this very `ChangeDetectorRef` from the detection cycle.
-Use this strategy at your own risk. It provides absolute **maximum performance** since your `Component` is
-effectively resilient against re-renderings coming from any other source than itself. But it will come with
-some down sights as you will see when using it :). Have fun!!
+ This strategy behaves the same as the local strategy.
+ The detach strategy detaches the component from Angulars change detection.
+ With every new value it re-attaches the component/embedded view to the change detection,
+ renders the new value and detaches again.
+ 
+ If a component is detached the input bindings will still receive values.
+ Also the internal logic will work as expected including the use of `ViewChild`.
+ Only the template will not be updated.
+ 
+ | Name      | Zone Agnostic | Render Method     | Coalescing         | Scheduling                 |
+ | --------- | --------------| ----------------- | ------------------ | -------------------------- |
+ | `detach`  | ✔             | ⭭ `detectChanges` | ✔ ComponentContext | `requestAnimationFrame`   |
 
-| Name     | ZoneLess VE/I | Render Method VE/I | Coalescing             |
-| -------- | ------------- | ------------------ | ---------------------- |
-| `detach` | ✔️/✔️         | dC / ɵDC           | micro + animationFrame |
+
+### Noop
+
+The no-operation strategy does nothing.
+It can be a useful tool for performance improvements as well as debugging
+The [`[viewport-prio]`](https://github.com/BioPhoton/rx-angular/blob/ef99804c1b07aeb96763cacca6afad7bbdab03b1/libs/template/src/lib/experimental/viewport-prio/viewport-prio.directive.ts) directive use it to limit renderings to only visible components:
+
+| Name      | Zone Agnostic | Render Method     | Coalescing    | Scheduling |
+| --------- | --------------| ----------------- | ------------- | ---------- |
+| `noop`    | ✔             | - `noop`          | ❌             | ❌         |
+
+
+### Native
+
+This strategy mirrors Angular's built-in `async` pipe.
+This means for every emitted value [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) is called.
+Angular still needs zone.js to trigger the [`ApplicationRef#tick`](https://github.com/angular/angular/blob/7d8dce11c0726cdba999fc59a83295d19e5e92e6/packages/core/src/application_ref.ts#L719) to re-render,
+as the internally called function [`markViewDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1837) is only responsible for dirty marking and not rendering.
+
+| Name      | Zone Agnostic | Render Method     | Coalescing    | Scheduling               |
+| --------- | --------------| ----------------- | ------------- | ------------------------ |
+| `native`  | ❌            | ⮁ `markForCheck` | ✔ RootContext  | `requestAnimationFrame`  |
+
+
 
 ## Custom Strategies
 

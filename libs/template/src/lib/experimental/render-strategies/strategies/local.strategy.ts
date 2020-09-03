@@ -210,7 +210,7 @@ export function createBackgroundStrategy(
  *
  * | Name        | ZoneLess VE/I | Render Method VE/I  | Coalescing VE/I  |
  * |-------------| --------------| ------------ ------ | ---------------- |
- * | `ɵdetach`     | ✔️/✔️          | dC / ɵDC            | ✔️ + C/ LV       |
+ * | `idleCall`     | ✔️/✔️          | dC / ɵDC            | ✔️ + C/ LV       |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return {RenderStrategy} - The calculated strategy
