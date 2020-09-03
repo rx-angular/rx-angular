@@ -10,32 +10,30 @@ describe('getZoneUnPatchedApi', () => {
     expect(getZoneUnPatchedApi('addEventListener')).toBeDefined();
   });
 
-  it('should get unpatched Api from window', async () => {
-    getGlobalThis().__zone_symbol__addEventListener = 'addEventListener';
-    expect(getZoneUnPatchedApi('addEventListener')).toBe('addEventListener');
-    delete getGlobalThis().__zone_symbol__addEventListener;
+  it('should get original Api from window', async () => {
+    getGlobalThis()['win-removeEventListener'] = 'win-removeEventListener';
+     expect(getZoneUnPatchedApi('win-removeEventListener')).toBe('win-removeEventListener');
   });
 
   it('should get unpatched Api from window', async () => {
-    getGlobalThis().__zone_symbol__removeEventListener = 'removeEventListener';
-    expect(getZoneUnPatchedApi('removeEventListener', getGlobalThis())).toBe('removeEventListener');
-    delete getGlobalThis().__zone_symbol__removeEventListener;
+    getGlobalThis()['win-addEventListener'] = 'win-addEventListener';
+    getGlobalThis()['__zone_symbol__win-addEventListener'] = '__zone_symbol__win-addEventListener'
+    expect(getZoneUnPatchedApi('win-addEventListener')).toBe('__zone_symbol__win-addEventListener');
   });
 
   it('should get original Api from element', async () => {
     const elem = {
-      addEventListener:  'elem-addEventListener'
+      'elem-removeEventListener': 'elem-removeEventListener',
     };
-    expect(getZoneUnPatchedApi('addEventListener', elem)).toBe('elem-addEventListener');
+    expect(getZoneUnPatchedApi('elem-removeEventListener', elem)).toBe('elem-removeEventListener');
   });
-
 
   it('should get unpatched Api from element', async () => {
     const elem = {
-      addEventListener:  'elem-addEventListener',
-      __zone_symbol__addEventListener:  'elem-__zone_symbol__addEventListener',
+      'elem-addEventListener': 'elem-addEventListener',
+      '__zone_symbol__elem-addEventListener': '__zone_symbol__elem-addEventListener'
     };
-    expect(getZoneUnPatchedApi('addEventListener', elem)).toBe('elem-__zone_symbol__addEventListener');
+    expect(getZoneUnPatchedApi('elem-addEventListener', elem)).toBe(elem['__zone_symbol__elem-addEventListener']);
   });
 
 });

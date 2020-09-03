@@ -13,7 +13,7 @@ import { getGlobalThis } from './get-global-this';
  * @return {Function} - The zone un-patched API in question.
  *
  */
-export function getZoneUnPatchedApi<T>(name: string, elem?: object): T {
+export function getZoneUnPatchedApi<T = Function>(name: string, elem?: object): T {
   elem = elem || getGlobalThis();
   return isApiZonePatched(name, elem) ? elem['__zone_symbol__' + name] : elem[name];
 }
