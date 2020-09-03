@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/BioPhoton/rx-angular/compare/state@1.4.0...state@1.4.1) (2020-09-03)
+
+### Bug Fixes
+
+* **selectSlice:** fixed undefined selected key behavior ([#284](https://github.com/BioPhoton/rx-angular/issues/284)) ([8a385f7](https://github.com/BioPhoton/rx-angular/commit/8a385f7149e3ad04a59466d2930686fb3dabe75c))
+
+
 # [1.4.0](https://github.com/BioPhoton/rx-angular/compare/state@1.3.4...state@1.4.0) (2020-08-28)
 
 ### Features
