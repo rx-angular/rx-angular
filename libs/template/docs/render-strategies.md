@@ -41,6 +41,15 @@ export class PerformanceAwareComponent {
 
 ![Template - RenderStrategies](https://github.com/BioPhoton/rx-angular/raw/master/libs/template/docs/images/template_rendering-strategies.png)
 
+
+| Name      | Zone Agnostic | Render Method     | Coalescing         | Scheduling                 |
+| --------- | --------------| ----------------- | ------------------ | -------------------------- |
+| `local`   | ✔             | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame`   |
+| `global`  | ✔             | ⮁ `ɵmarkDirty`    | ✔ RootContext     | `requestAnimationFrame`   |
+| `detach`  | ✔             | ⭭ `detectChanges` | ✔ ComponentContext | `requestAnimationFrame`   |
+| `noop`    | ✔             | - `noop`          | ❌                 | ❌                        |
+| `native`  | ❌             | ⮁ `markForCheck` | ✔ RootContext     | `requestAnimationFrame`  |
+
 ### Local Strategy
 
 This strategy is rendering the actual component and
