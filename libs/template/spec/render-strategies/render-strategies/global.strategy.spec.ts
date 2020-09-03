@@ -57,37 +57,36 @@ describe('global Strategy', () => {
   });
 
   xdescribe('scheduleCD', () => {
-    it('should call cdRef#detectChanges & cdRef#markForCheck 0 times when scheduleCD is called a single time', fakeAsync(() => {
+    it('should call cdRef#detectChanges & cdRef#markForCheck 0 times when scheduleCD is called a single time', (done) => {
       testStrategyMethod({
         strategyName,
         strategyMethod: 'scheduleCD',
         flushMicrotask: true,
         singleTime: true,
         callsExpectations
-      });
-    }));
+      }, done);
+    });
 
-    it(`should call cdRef#detectChanges  0 times when scheduleCD is called multiple times sync`, fakeAsync(() => {
-        testStrategyMethod({
-          strategyName,
-          strategyMethod: 'scheduleCD',
-          flushMicrotask: true,
-          singleTime: false,
-          callsExpectations
-        });
-      })
-    );
+    it(`should call cdRef#detectChanges  0 times when scheduleCD is called multiple times sync`, (done) => {
+      testStrategyMethod({
+        strategyName,
+        strategyMethod: 'scheduleCD',
+        flushMicrotask: true,
+        singleTime: false,
+        callsExpectations
+      }, done);
+    });
   });
 
   xdescribe('combined scheduleCD & rxScheduleCD', () => {
-    it('should call strategy#detectChanges 0 times when scheduleCD or rxScheduleCD is called', fakeAsync(() => {
+    it('should call strategy#detectChanges 0 times when scheduleCD or rxScheduleCD is called', (done) => {
         testStrategyMethod({
           strategyName,
           strategyMethod: 'scheduleCD',
           flushMicrotask: true,
           singleTime: false,
           callsExpectations
-        });
+        }, done);
 
         testStrategyMethod({
           strategyName,
@@ -96,13 +95,11 @@ describe('global Strategy', () => {
           callsExpectations
         }, () => {});
       })
-    );
   });
-
-
 
   xit(`@TODO TEST call of markDirty`, () => {
     expect(0).toBe(1);
   });
 
 });
+
