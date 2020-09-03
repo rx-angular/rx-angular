@@ -11,22 +11,31 @@ describe('getZoneUnPatchedApi', () => {
   });
 
   it('should get unpatched Api from window', async () => {
-    getGlobalThis().__zone_symbol__addEventListener = 42;
-    expect(getZoneUnPatchedApi('addEventListener')).toBe(42);
+    getGlobalThis().__zone_symbol__addEventListener = 'addEventListener';
+    expect(getZoneUnPatchedApi('addEventListener')).toBe('addEventListener');
     delete getGlobalThis().__zone_symbol__addEventListener;
   });
 
   it('should get unpatched Api from window', async () => {
-    getGlobalThis().__zone_symbol__removeEventListener = 777;
-    expect(getZoneUnPatchedApi('removeEventListener', getGlobalThis())).toBe(777);
+    getGlobalThis().__zone_symbol__removeEventListener = 'removeEventListener';
+    expect(getZoneUnPatchedApi('removeEventListener', getGlobalThis())).toBe('removeEventListener');
     delete getGlobalThis().__zone_symbol__removeEventListener;
   });
 
-  it('should get original Api from window', async () => {
+  it('should get original Api from element', async () => {
     const elem = {
-      addEventListener:  21
+      addEventListener:  'elem-addEventListener'
     };
-    expect(getZoneUnPatchedApi('addEventListener', elem)).toBe(21);
+    expect(getZoneUnPatchedApi('addEventListener', elem)).toBe('elem-addEventListener');
+  });
+
+
+  it('should get unpatched Api from element', async () => {
+    const elem = {
+      addEventListener:  'elem-addEventListener',
+      __zone_symbol__addEventListener:  'elem-__zone_symbol__addEventListener',
+    };
+    expect(getZoneUnPatchedApi('addEventListener', elem)).toBe('elem-__zone_symbol__addEventListener');
   });
 
 });
