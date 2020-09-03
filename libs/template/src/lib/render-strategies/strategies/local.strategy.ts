@@ -133,7 +133,7 @@ export function createDetachStrategy(
 
   const renderMethod = () => {
     config.cdRef.reattach();
-    detectChanges(component);
+    config.cdRef.detectChanges();
     config.cdRef.detach();
   };
   const behavior = (o) =>

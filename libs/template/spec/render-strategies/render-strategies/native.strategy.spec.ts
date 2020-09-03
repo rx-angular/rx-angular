@@ -1,10 +1,7 @@
-import { getStrategies } from '../../../src/lib/render-strategies';
-import {
-  getMockStrategyConfig, numMultipleCalls, testStrategyMethod, CallsExpectations
-} from '../../fixtures';
-import { fakeAsync } from '@angular/core/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { getStrategies } from '../../../src/lib/render-strategies';
+import { CallsExpectations, getMockStrategyConfig, numMultipleCalls, testStrategyMethod } from '../../fixtures';
 
 /**
  * NATIVE STRATEGY
@@ -29,7 +26,7 @@ describe('native Strategy', () => {
       expect(strategy).toBeDefined();
     });
 
-    it(`should have ${strategyName} as name`, () => {
+    it(`should have ${ strategyName } as name`, () => {
       const strategy = getStrategies(getMockStrategyConfig())[strategyName];
       expect(strategy.name).toBe(strategyName);
     });
@@ -45,53 +42,60 @@ describe('native Strategy', () => {
       }, done);
     });
 
-    it(`should call cdRef#markForCheck ${numMultipleCalls} times when rxScheduleCD is used with multiple sync emissions`, (done) => {
-      testStrategyMethod({
-        strategyName,
-        strategyMethod: 'rxScheduleCD',
-        singleTime: false,
-        callsExpectations: {...callsExpectations, markForCheck: numMultipleCalls}
-      }, done);
-    });
+    it(
+      `should call cdRef#markForCheck ${ numMultipleCalls } times when rxScheduleCD is used with multiple sync emissions`,
+      (done) => {
+        testStrategyMethod({
+          strategyName,
+          strategyMethod: 'rxScheduleCD',
+          singleTime: false,
+          callsExpectations: { ...callsExpectations, markForCheck: numMultipleCalls }
+        }, done);
+      }
+    );
   });
 
   describe('scheduleCD', () => {
-    it(`should call cdRef#markForCheck 1 times when scheduleCD is called a single time`, fakeAsync(() => {
+    it(`should call cdRef#markForCheck 1 times when scheduleCD is called a single time`, done => {
       testStrategyMethod({
         strategyName,
         strategyMethod: 'scheduleCD',
         singleTime: true,
         callsExpectations
-      });
-    }));
+      }, done);
+    });
 
-    it(`should call cdRef#markForCheck ${numMultipleCalls} times when scheduleCD is called multiple times sync`, fakeAsync(() => {
+    it(
+      `should call cdRef#markForCheck ${ numMultipleCalls } times when scheduleCD is called multiple times sync`,
+      done => {
         testStrategyMethod({
           strategyName,
           strategyMethod: 'scheduleCD',
           singleTime: false,
-          callsExpectations: {...callsExpectations, markForCheck: numMultipleCalls}
-        });
-      })
+          callsExpectations: { ...callsExpectations, markForCheck: numMultipleCalls }
+        }, done);
+      }
     );
   });
 
   describe('combined scheduleCD & rxScheduleCD', () => {
-    it(`should call strategy#markForCheck ${numMultipleCalls} times when scheduleCD or rxScheduleCD is called`, fakeAsync(() => {
+    it(
+      `should call strategy#markForCheck ${ numMultipleCalls } times when scheduleCD or rxScheduleCD is called`,
+      done => {
         testStrategyMethod({
           strategyName,
           strategyMethod: 'scheduleCD',
           singleTime: false,
-          callsExpectations: {...callsExpectations, markForCheck: numMultipleCalls}
-        });
+          callsExpectations: { ...callsExpectations, markForCheck: numMultipleCalls }
+        }, () => {});
 
         testStrategyMethod({
           strategyName,
           strategyMethod: 'rxScheduleCD',
           singleTime: false,
-          callsExpectations: {...callsExpectations, markForCheck: numMultipleCalls}
-        }, () => {});
-      })
+          callsExpectations: { ...callsExpectations, markForCheck: numMultipleCalls }
+        }, done);
+      }
     );
   });
 
