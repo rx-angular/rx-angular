@@ -10,6 +10,10 @@ import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
  * filtered to only emit _defined_ values as well as checked for distinct emissions.
  * Comparison will be done for each set key in the `keys` array.
  *
+ * `selectSlice` will only emit _valid_ selections. A selection is _valid_ if every
+ * selected key exists and is defined in the source Observable. This ensures that the `selectSlice`
+ * operator will always return a complete slice with all values defined.
+ *
  * You can fine grain your distinct checks by providing a `KeyCompareMap` with those keys you want to compute
  * explicitly different
  *
