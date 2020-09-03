@@ -88,7 +88,7 @@ export class DemoBasicsComponent1Solution extends RxState<ComponentState>
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 100) {
-      this.set({ refreshInterval });
+      this.set({ refreshInterval: refreshInterval });
       this.resetRefreshTick();
     }
   }

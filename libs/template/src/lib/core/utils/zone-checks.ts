@@ -1,6 +1,25 @@
 import { getGlobalThis } from './get-global-this';
 
 /**
+ * getZoneUnPatchedApi
+ *
+ * @description
+ *
+ * This function returns the zone un-patched API for the a specific Browser API.
+ * If no element is passed the window is used instead
+ *
+ * @param name {string} - The name of the API to check.
+ * @param elem {any} - The elem to get un-patched API from.
+ * @return {Function} - The zone un-patched API in question.
+ *
+ */
+export function getZoneUnPatchedApi<T = Function>(name: string, elem?: object): T {
+  elem = elem || getGlobalThis();
+  return isApiZonePatched(name, elem) ? elem['__zone_symbol__' + name] : elem[name];
+}
+
+
+/**
  * envZonePatched
  *
  * @description
@@ -13,7 +32,7 @@ import { getGlobalThis } from './get-global-this';
  * @return {boolean} - true if `zone.js` patched global APIs.
  *
  */
-export function envZonePatched(): boolean {
+export function isEnvZonePatched(): boolean {
   return getGlobalThis().Zone !== undefined;
 }
 
@@ -24,13 +43,14 @@ export function envZonePatched(): boolean {
  *
  * This function checks if a specific Browser API is patched by `zone.js`.
  *
- * @param name {string} - The name of the API to check.
+ * @param name - The name of the API to check.
+ * @param elem - The name of the API to check.
  * @return {boolean} - true if `zone.js` patched the API in question.
  *
  */
-export function apiZonePatched(name: string): boolean {
+export function isApiZonePatched(name: string, elem: object): boolean {
   // if symbol is present, zone patched the API
-  return getGlobalThis()['__zone_symbol__' + name] !== undefined;
+  return elem['__zone_symbol__' + name] !== undefined;
 }
 
 const zoneDetectionCache = new WeakMap<any, boolean>();
@@ -89,3 +109,4 @@ export function isNgZone(instance: any): boolean {
 export function isNoopNgZone(instance: any): boolean {
   return !isNgZone(instance);
 }
+

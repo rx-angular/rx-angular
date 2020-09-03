@@ -3,7 +3,10 @@ module.exports = {
   preset: '../../jest.config.js',
   coverageReporters: ['lcov', 'cobertura'],
   coverageDirectory: '../../docs/test-coverage/state',
-  collectCoverageFrom: ['./src/**/!(index).ts', '!./src/lib/experimental/**/*.ts'],
+  collectCoverageFrom: [
+    './src/**/!(index).ts',
+    '!./src/lib/experimental/**/*.ts'
+  ],
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',

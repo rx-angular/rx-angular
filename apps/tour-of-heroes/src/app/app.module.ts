@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { LetModule, PushModule } from '@rx-angular/template';
+import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
 
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './in-memory-data.service';
@@ -32,6 +32,7 @@ import { DebugHelperModule } from './debug-helper.module.ts/debug-helper.module'
     }),
     LetModule,
     PushModule,
+    UnpatchEventsModule,
     DebugHelperModule
   ],
   declarations: [

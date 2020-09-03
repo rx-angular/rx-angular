@@ -1,6 +1,6 @@
 <div id="search-component">
   <h4><label for="search-box">Hero Search</label> <renders></renders></h4>
-  <input id="search-box" (input)="search($event?.target?.value)" />
+  <input id="search-box" [unpatch] (input)="search($event?.target?.value)" />
   <ul class="search-result">
     <li
       *ngFor="

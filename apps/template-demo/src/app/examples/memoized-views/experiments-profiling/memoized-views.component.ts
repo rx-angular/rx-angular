@@ -18,19 +18,22 @@ import { RxState } from '@rx-angular/state';
     <renders></renders>
     <br />
     <!--
-
-        <ng-container *rxLet="value$; let value;">
-
-        let e = error;
-        let c = complete;
-
- suspense: suspenseView;
-        error: errorView;
-        complete: completeView
-
+        <ng-container *rxLet="value$; let value;
+          let e = error;
+          let c = complete;
+          suspense: suspenseView;
+          error: errorView;
+          complete: completeView
+        ">
     -->
-    {{value$ | async}}
-    <ng-container *ngIf="value$ | push as value">
+    {{value$ | push}}
+    <ng-container *rxLet="value$; let value;
+          let e = error;
+          let c = complete;
+          suspense: suspenseView;
+          error: errorView;
+          complete: completeView
+        ">
       next: {{ value | json }}<br />
     </ng-container>
 

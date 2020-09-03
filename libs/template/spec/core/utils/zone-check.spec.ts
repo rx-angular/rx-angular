@@ -1,7 +1,7 @@
 import { ApplicationRef, Component, NgModule, NgZone } from '@angular/core';
 import { getTestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { envZonePatched, isNgZone, isNoopNgZone } from '../../../src/lib/core/utils';
+import { isEnvZonePatched, isNgZone, isNoopNgZone } from '../../../src/lib/core/utils';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
@@ -101,7 +101,7 @@ describe('envZonePatched', () => {
       template: '<div></div>',
     })
     class NgZoneTestComponent {
-      checkEnvZonePatched = envZonePatched();
+      checkEnvZonePatched = isEnvZonePatched();
     }
 
     @NgModule({
@@ -127,7 +127,7 @@ describe('envZonePatched', () => {
   });
 
   it('returns true when zone is present', async () => {
-    expect(envZonePatched()).toBe(true);
+    expect(isEnvZonePatched()).toBe(true);
   });
 
 });

@@ -7,24 +7,10 @@ import {
 } from '@angular/core';
 
 import {
-  asapScheduler,
-  BehaviorSubject,
-  concat,
-  EMPTY,
-  from,
-  interval,
-  NEVER,
-  Observable,
-  Subject
+  Observable
 } from 'rxjs';
 import {
-  concatMap,
   map,
-  mergeMap,
-  scan,
-  switchMap,
-  take,
-  takeUntil,
   tap,
   withLatestFrom
 } from 'rxjs/operators';
