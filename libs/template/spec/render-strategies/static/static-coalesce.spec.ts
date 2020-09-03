@@ -3,10 +3,35 @@ import { priorityTickMap, SchedulingPriority } from '@rx-angular/template';
 import { from } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { coalescingManager } from '../../../src/lib/core/utils';
+import createSpy = jasmine.createSpy;
 
 /** @test {coalesceWith} */
 describe('staticCoalesce', () => {
   beforeAll(() => mockConsole());
+
+  it('should be callable without errors', (done) => {
+    const durationSelector = from(Promise.resolve());
+    const spy = createSpy('spy');
+    staticCoalesce(spy, durationSelector);
+    setTimeout(() => {
+      expect(spy).toHaveBeenCalledTimes(1);
+      done();
+    });
+
+  });
+
+  it('should test els branch of tryExecuteWork', (done) => {
+    const scope = {};
+    const durationSelector = from(Promise.resolve());
+    const spy = createSpy('spy');
+    staticCoalesce(spy, durationSelector, scope);
+    coalescingManager.add(scope);
+    setTimeout(() => {
+      expect(spy).toHaveBeenCalledTimes(0);
+      done();
+    });
+  });
 
   it('should coalesce to a scope', (done) => {
     let test = 0;
@@ -43,7 +68,7 @@ describe('staticCoalesce', () => {
     setTimeout(() => {
       expect(test).toBe(2);
       done();
-    },0);
+    }, 0);
 
     expect(test).toBe(0);
   });
