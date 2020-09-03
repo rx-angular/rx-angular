@@ -10,6 +10,10 @@ import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
  * filtered to only emit _defined_ values as well as checked for distinct emissions.
  * Comparison will be done for each set key in the `keys` array.
  *
+ * `selectSlice` will only emit _valid_ selections. A selection is _valid_ if every
+ * selected key exists and is defined in the source Observable. This ensures that the `selectSlice`
+ * operator will always return a complete slice with all values defined.
+ *
  * You can fine grain your distinct checks by providing a `KeyCompareMap` with those keys you want to compute
  * explicitly different
  *
@@ -84,23 +88,27 @@ export function selectSlice<T extends object, K extends keyof T>(
         if (state === null) {
           return null;
         }
-
+        // an array of all keys which exist and are _defined_ in the state object
         const definedKeys = keys
           // filter out undefined properties e. g. {}, { str: undefined }
           .filter((k) => state.hasOwnProperty(k) && state[k] !== undefined);
 
-        // this will get filtered out in the next operator
+        // we want to ensure to only emit _valid_ selections
+        // a selection is _valid_ if every selected key exists and has a value:
+
+        // {} => selectSlice(['foo']) => no emission
         // {str: 'test'} => selectSlice([]) => no emission
         // {str: 'test'} => selectSlice(['notPresent']) => no emission
         // {str: 'test'} => state.select(selectSlice([])) => no emission
         // {str: 'test'} => state.select(selectSlice(['notPresent'])) => no emission
-        if (definedKeys.length <= 0) {
+        // {str: undefined} => state.select(selectSlice(['str'])) => no emission
+        // {str: 'test', foo: undefined } => state.select(selectSlice(['foo'])) => no emission
+        if (definedKeys.length < keys.length) {
           return undefined;
         }
 
-        // create view-model
+        // create the selected slice
         return definedKeys
-          .filter((k) => state.hasOwnProperty(k) && state[k] !== undefined)
           .reduce((vm, key) => {
             vm[key] = state[key];
             return vm;
