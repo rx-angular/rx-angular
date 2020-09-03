@@ -84,21 +84,26 @@ export function selectSlice<T extends object, K extends keyof T>(
         if (state === null) {
           return null;
         }
-
+        // an array of all keys which exist and are _defined_ in the state object
         const definedKeys = keys
           // filter out undefined properties e. g. {}, { str: undefined }
           .filter((k) => state.hasOwnProperty(k) && state[k] !== undefined);
 
-        // this will get filtered out in the next operator
+        // we want to ensure to only emit _valid_ selections
+        // a selection is _valid_ if every selected key exists and has a value:
+
+        // {} => selectSlice(['foo']) => no emission
         // {str: 'test'} => selectSlice([]) => no emission
         // {str: 'test'} => selectSlice(['notPresent']) => no emission
         // {str: 'test'} => state.select(selectSlice([])) => no emission
         // {str: 'test'} => state.select(selectSlice(['notPresent'])) => no emission
+        // {str: undefined} => state.select(selectSlice(['str'])) => no emission
+        // {str: 'test', foo: undefined } => state.select(selectSlice(['foo'])) => no emission
         if (definedKeys.length < keys.length) {
           return undefined;
         }
 
-        // create view-model
+        // create the selected slice
         return definedKeys
           .reduce((vm, key) => {
             vm[key] = state[key];
