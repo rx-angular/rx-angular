@@ -12,7 +12,7 @@ the user experience of your angular application.
 The functionalities are provided by
 structural directives, pipes, RxJS operators, or imperative functions to manage the rendering in Angular.
 
-![template logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/template_logo.png)
+![template logo](https://github.com/BioPhoton/rx-angular/raw/master/libs/template/docs/images/template_logo.png)
 
 ## Description
 

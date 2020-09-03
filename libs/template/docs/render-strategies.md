@@ -39,7 +39,7 @@ export class PerformanceAwareComponent {
 
 ## Built-in Strategies
 
-![Template - RenderStrategies](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/template_rendering-strategies.png)
+![Template - RenderStrategies](https://github.com/BioPhoton/rx-angular/raw/master/libs/template/docs/images/template_rendering-strategies.png)
 
 ### Local Strategy
 
