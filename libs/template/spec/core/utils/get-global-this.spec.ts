@@ -5,6 +5,9 @@ import { mockConsole } from '@test-helpers';
 
 describe('getGlobalThis', () => {
   beforeAll(() => mockConsole());
+  afterEach(() => {
+    delete getGlobalThis().prop;
+  });
 
   it('should return global this', () => {
     getGlobalThis().prop = 42;

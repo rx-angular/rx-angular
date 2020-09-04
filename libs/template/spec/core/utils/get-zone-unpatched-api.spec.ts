@@ -2,9 +2,22 @@ import { getGlobalThis, getZoneUnPatchedApi } from '../../../src/lib/core/utils'
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
+let originalWinRemoveEventListener;
+let originalWinAddEventListener;
+let originalZoneSymboWinAddEventListener;
 
 describe('getZoneUnPatchedApi', () => {
-  beforeAll(() => mockConsole());
+  beforeAll(() => {
+    mockConsole();
+    originalWinRemoveEventListener = getGlobalThis()['win-removeEventListener'];
+    originalWinAddEventListener = getGlobalThis()['win-addEventListener'];
+    originalZoneSymboWinAddEventListener = getGlobalThis()['__zone_symbol__win-addEventListener'];
+  });
+  afterEach(() => {
+    getGlobalThis()['win-removeEventListener'] = originalWinRemoveEventListener;
+    getGlobalThis()['win-addEventListener'] = originalWinAddEventListener;
+    getGlobalThis()['__zone_symbol__win-addEventListener'] = originalZoneSymboWinAddEventListener;
+  });
 
   it('should execute', async () => {
     expect(getZoneUnPatchedApi('addEventListener')).toBeDefined();

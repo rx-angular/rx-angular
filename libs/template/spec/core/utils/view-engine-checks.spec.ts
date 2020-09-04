@@ -6,6 +6,9 @@ import { isViewEngineIvy } from '@rx-angular/template';
 
 describe('isIvy', () => {
   beforeAll(() => mockConsole());
+  afterEach(() => {
+    delete getGlobalThis().ng;
+  });
 
   describe('in ViewEngine Angular 8 + 9', () => {
     it('should return false if ng is defined with probe', () => {
