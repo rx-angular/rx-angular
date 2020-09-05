@@ -8,7 +8,6 @@ import {
 } from '../../core/render-aware';
 import { coalesceWith } from '../rxjs/operators/coalesceWith';
 import { promiseTick } from '../rxjs/scheduling/promiseTick';
-import { defer } from 'rxjs';
 
 const promiseDurationSelector = promiseTick();
 
@@ -61,17 +60,11 @@ export function createDetachStrategy(
     config.cdRef.detectChanges();
     config.cdRef.detach();
   };
-  const behavior = (o) =>
-    defer(() => {
-      // Detach component on subscribe
-      // This happens in the renderAware when a new change is detected and before the rendering process starts
-      config.cdRef.detach();
-      return o.pipe(
+  const behavior = (o) => o.pipe(
           coalesceWith(promiseDurationSelector, component),
+          // dispose previous render attempts (tick schedules it into the future)
           switchMap((v) => tick.pipe(map(() => v))),
           tap(renderMethod)
-        )
-      }
     );
   const scheduleCD = () =>
     coalesceAndSchedule(renderMethod, priority, component);
