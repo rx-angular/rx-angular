@@ -3,13 +3,19 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
 import { MatButtonModule } from '@angular/material/button';
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '../../shared/shared.module';
 import { HttpErrorsComponent } from './http-errors/http-errors.component';
 import { ErrorHandlingComponent } from './error-handling/error-handling.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { NgIfHackComponent } from './ng-if-hack/ng-if-hack.component';
+import { LetTemplateBindingComponent } from './let-template-binding/let-template-binding.component';
+import { LetTemplateBindingSubjectExampleComponent } from './let-template-binding/examples/let-template-binding-subject-example.component';
+import { LetTemplateBindingHttpExampleComponent } from './let-template-binding/examples/let-template-binding-http-example.component';
+import { ToStringPipe } from './let-template-binding/to-string.pipe';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatBadgeModule } from '@angular/material/badge';
 
 export const ROUTES = [
   {
@@ -23,11 +29,25 @@ export const ROUTES = [
   {
     path: 'http-errors',
     component: HttpErrorsComponent
+  },
+  {
+    path: 'template-bindings',
+    component: LetTemplateBindingComponent
+  },
+  {
+    path: 'ng-if-hack',
+    component: NgIfHackComponent
   }
+
 ];
 const DECLARATIONS = [
   HttpErrorsComponent,
-  ErrorHandlingComponent
+  ErrorHandlingComponent,
+  LetTemplateBindingComponent,
+  ToStringPipe,
+  LetTemplateBindingSubjectExampleComponent,
+  LetTemplateBindingHttpExampleComponent,
+  NgIfHackComponent
 ];
 
 @NgModule({
@@ -39,6 +59,8 @@ const DECLARATIONS = [
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatProgressSpinnerModule,
+    MatBadgeModule,
     SharedModule,
     RouterModule.forChild(ROUTES)
   ]

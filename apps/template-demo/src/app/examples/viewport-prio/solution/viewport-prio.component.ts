@@ -91,7 +91,7 @@ import { getStrategies } from '@rx-angular/template';
     `
   ]
 })
-export class Let1ContainerComponent {
+export class ViewportPrioComponent {
   incrementTrigger = new Subject<Event>();
   toggleAutoIncrement = new BehaviorSubject<any>(false);
 

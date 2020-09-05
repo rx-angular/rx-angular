@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { map, scan, share, startWith, tap } from 'rxjs/operators';
+import { map, scan, share } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 
 @Component({

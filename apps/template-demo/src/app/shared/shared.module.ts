@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { LoadTestComponent } from './loadtest/load-test.component';
 import { PushModule, TemplateModule, UnpatchEventsModule } from '@rx-angular/template';
 import { RunOutsideZoneDirective } from './runOutsideZone.directive';
-import { DebugHelperModule } from '../../debug-helper.module.ts/debug-helper.module';
+import { DebugHelperModule } from '../debug-helper.module.ts/debug-helper.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ListItemGhostComponent } from './list-item-ghost/list-item-ghost.component';
 import { FormGhostComponent } from './form-ghost/form-ghost.component';
