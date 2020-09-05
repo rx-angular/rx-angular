@@ -7,6 +7,13 @@ export const ROUTES: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'rx-let',
+    loadChildren: () =>
+      import('./examples/rx-let/rx-let-demo.module').then(
+        m => m.RxLetDemoModule
+      )
+  },
+  {
     path: 'unpatch',
     loadChildren: () =>
       import('./examples/unpatch/comparison-unpatch.module').then(

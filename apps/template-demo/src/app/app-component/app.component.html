@@ -7,9 +7,12 @@
     [mode]="(vm.isHandset$ | async) ? 'over' : 'side'"
     [opened]="(vm.isHandset$ | async) === false"
   >
-    <mat-toolbar>Menu <renders></renders></mat-toolbar>
+    <mat-toolbar>Menu<renders></renders></mat-toolbar>
     <mat-nav-list>
       <h3 matSubheader>Examples</h3>
+      <a mat-list-item [routerLink]="['rx-let']">RxLet</a>
+      <a mat-list-item [routerLink]="['rx-let/error-handling']">Error Handling</a>
+      <a mat-list-item [routerLink]="['rx-let/http-errors']">HTTP Errors</a>
       <a mat-list-item [routerLink]="['lazy-templates']">Lazy Templates</a>
       <a mat-list-item [routerLink]="['template-binding']">Template Bindings</a>
       <a mat-list-item [routerLink]="['unpatch']">Unpatch</a>
