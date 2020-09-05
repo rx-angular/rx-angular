@@ -2,7 +2,7 @@
 
 A brief overview about what is about the current situation in terms of rendering in angular applications.
 
-![Scheduling Options](images/bad-rendering-performance-angular.png)
+![Scheduling Options](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/bad-rendering-performance-angular.png)
 
 ## Binding Reactive Sources
 
