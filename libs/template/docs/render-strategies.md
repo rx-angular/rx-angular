@@ -39,16 +39,15 @@ export class PerformanceAwareComponent {
 
 ## Built-in Strategies
 
-![Template - RenderStrategies](https://github.com/BioPhoton/rx-angular/raw/master/libs/template/docs/images/template_rendering-strategies.png)
+![Template - RenderStrategies](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/template_rendering-strategies.png)
 
-
-| Name      | Zone Agnostic | Render Method     | Coalescing         | Scheduling                 |
-| --------- | --------------| ----------------- | ------------------ | -------------------------- |
-| `local`   | ✔             | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame`   |
-| `global`  | ✔             | ⮁ `ɵmarkDirty`    | ✔ RootContext     | `requestAnimationFrame`   |
-| `detach`  | ✔             | ⭭ `detectChanges` | ✔ ComponentContext | `requestAnimationFrame`   |
-| `noop`    | ✔             | - `noop`          | ❌                 | ❌                        |
-| `native`  | ❌             | ⮁ `markForCheck` | ✔ RootContext     | `requestAnimationFrame`  |
+| Name     | Zone Agnostic | Render Method     | Coalescing         | Scheduling              |
+| -------- | ------------- | ----------------- | ------------------ | ----------------------- |
+| `local`  | ✔             | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame` |
+| `global` | ✔             | ⮁ `ɵmarkDirty`    | ✔ RootContext      | `requestAnimationFrame` |
+| `detach` | ✔             | ⭭ `detectChanges` | ✔ ComponentContext | `requestAnimationFrame` |
+| `noop`   | ✔             | - `noop`          | ❌                 | ❌                      |
+| `native` | ❌            | ⮁ `markForCheck`  | ✔ RootContext      | `requestAnimationFrame` |
 
 ### Local Strategy
 
@@ -61,19 +60,19 @@ like [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/
 component level.
 
 Coalescing, in this very manner,
-means*collecting all events** in the same
+means*collecting all events\*\* in the same
 [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render and
-execute*re-rendering only once**.
+execute*re-rendering only once\*\*.
 
-'Scoped' coalescing, in addition, means*grouping the collected events** by a specific context.
-E. g. the*component** from which the re-rendering was initiated.
+'Scoped' coalescing, in addition, means*grouping the collected events\*\* by a specific context.
+E. g. the*component\*\* from which the re-rendering was initiated.
 
 This context could be the Component instance or a ViewContextRef,
 both accessed over the context over `ChangeDetectorRef#context`.
 
-| Name      | Zone Agnostic | Render Method     | Coalescing         | Scheduling                 |
-| --------- | --------------| ----------------- | ------------------ | -------------------------- |
-| `local`   | ✔             | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame`   |
+| Name    | Zone Agnostic | Render Method     | Coalescing         | Scheduling              |
+| ------- | ------------- | ----------------- | ------------------ | ----------------------- |
+| `local` | ✔             | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame` |
 
 ### Global Strategy
 
@@ -81,26 +80,24 @@ This strategy leverages Angular's internal [`ɵmarkDirty`](https://github.com/an
 It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) but works also zone-less.
 `markDirty` in comparison to `markForCheck` also calls [`scheduleTick`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1863) which is the reason why it also works in zone-less environments.
 
-| Name      | Zone Agnostic | Render Method     | Coalescing      | Scheduling       |
-| --------- | --------------| ----------------- | --------------- | ---------------- |
-| `global`  | ✔             | ⮁ `ɵmarkDirty`   | ✔ `RootContext` | [`animationFrame`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/util/misc_utils.ts#L39)   |
-
+| Name     | Zone Agnostic | Render Method  | Coalescing      | Scheduling                                                                                                                                            |
+| -------- | ------------- | -------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `global` | ✔             | ⮁ `ɵmarkDirty` | ✔ `RootContext` | [`animationFrame`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/util/misc_utils.ts#L39) |
 
 ### Detach Strategy
 
- This strategy behaves the same as the local strategy.
- The detach strategy detaches the component from Angulars change detection.
- With every new value it re-attaches the component/embedded view to the change detection,
- renders the new value and detaches again.
- 
- If a component is detached the input bindings will still receive values.
- Also the internal logic will work as expected including the use of `ViewChild`.
- Only the template will not be updated.
- 
- | Name      | Zone Agnostic | Render Method     | Coalescing         | Scheduling                 |
- | --------- | --------------| ----------------- | ------------------ | -------------------------- |
- | `detach`  | ✔             | ⭭ `detectChanges` | ✔ ComponentContext | `requestAnimationFrame`   |
+This strategy behaves the same as the local strategy.
+The detach strategy detaches the component from Angulars change detection.
+With every new value it re-attaches the component/embedded view to the change detection,
+renders the new value and detaches again.
 
+If a component is detached the input bindings will still receive values.
+Also the internal logic will work as expected including the use of `ViewChild`.
+Only the template will not be updated.
+
+| Name     | Zone Agnostic | Render Method     | Coalescing         | Scheduling              |
+| -------- | ------------- | ----------------- | ------------------ | ----------------------- |
+| `detach` | ✔             | ⭭ `detectChanges` | ✔ ComponentContext | `requestAnimationFrame` |
 
 ### Noop
 
@@ -108,10 +105,9 @@ The no-operation strategy does nothing.
 It can be a useful tool for performance improvements as well as debugging
 The [`[viewport-prio]`](https://github.com/BioPhoton/rx-angular/blob/ef99804c1b07aeb96763cacca6afad7bbdab03b1/libs/template/src/lib/experimental/viewport-prio/viewport-prio.directive.ts) directive use it to limit renderings to only visible components:
 
-| Name      | Zone Agnostic | Render Method     | Coalescing    | Scheduling |
-| --------- | --------------| ----------------- | ------------- | ---------- |
-| `noop`    | ✔             | - `noop`          | ❌             | ❌         |
-
+| Name   | Zone Agnostic | Render Method | Coalescing | Scheduling |
+| ------ | ------------- | ------------- | ---------- | ---------- |
+| `noop` | ✔             | - `noop`      | ❌         | ❌         |
 
 ### Native
 
@@ -120,11 +116,9 @@ This means for every emitted value [`ChangeDetectorRef#markForCheck`](https://gi
 Angular still needs zone.js to trigger the [`ApplicationRef#tick`](https://github.com/angular/angular/blob/7d8dce11c0726cdba999fc59a83295d19e5e92e6/packages/core/src/application_ref.ts#L719) to re-render,
 as the internally called function [`markViewDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1837) is only responsible for dirty marking and not rendering.
 
-| Name      | Zone Agnostic | Render Method     | Coalescing    | Scheduling               |
-| --------- | --------------| ----------------- | ------------- | ------------------------ |
-| `native`  | ❌            | ⮁ `markForCheck` | ✔ RootContext  | `requestAnimationFrame`  |
-
-
+| Name     | Zone Agnostic | Render Method    | Coalescing    | Scheduling              |
+| -------- | ------------- | ---------------- | ------------- | ----------------------- |
+| `native` | ❌            | ⮁ `markForCheck` | ✔ RootContext | `requestAnimationFrame` |
 
 ## Custom Strategies
 
