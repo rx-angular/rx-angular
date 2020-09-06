@@ -6,7 +6,7 @@ import { getUnpatchedResolvedPromise } from '../../core/utils';
 
 export function coalesceAndSchedule(
   work: () => void,
-  priority: SchedulingPriority,
+  priority: false | SchedulingPriority,
   scope: object = {},
   abC: AbortController = new AbortController()
 ): AbortController {
