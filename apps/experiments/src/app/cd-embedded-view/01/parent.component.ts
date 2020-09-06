@@ -1,28 +1,49 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { range, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { getStrategies } from '@rx-angular/template';
-import { switchMap, tap } from 'rxjs/operators';
-import { BaseComponent } from '../../base.component.ts/base.component';
+import { scan } from 'rxjs/operators';
 
 @Component({
   selector: 'app-cd-embedded-view-parent01',
   template: `
     <h2>
-      CD EmbeddedView 01
+      CD EmbeddedView 01 <renders></renders>
     </h2>
 
-    value$: {{ value$ | async }}
+    <button [unpatch] (click)="btn1Click$.next($event)">
+      before next
+    </button>
+
+    <button [unpatch] (click)="btn2Click$.next($event)">
+      after next
+    </button>
+
+    <div class="row">
+      <div class="col">
+        <ng-container *pocLet="value1$; let value">
+          <renders></renders>
+          {{value}}
+        </ng-container>
+      </div>
+
+      <div class="col">
+        <ng-container *oLet="value2$; let value">
+          <renders></renders>
+          {{value}}
+        </ng-container>
+      </div>
+    </div>
   `,
   changeDetection: environment.changeDetection,
 })
-export class CdEmbeddedViewParent01Component extends BaseComponent {
-  btnClick$ = new Subject<Event>();
-
-  cfg = { cdRef: this.cdRef };
-  strategies = getStrategies(this.cfg);
-
-  value$ = this.btnClick$.pipe(
-
+export class CdEmbeddedViewParent01Component {
+  btn1Click$ = new Subject<Event>();
+  btn2Click$ = new Subject<Event>();
+  value1$ = this.btn1Click$.pipe(
+    scan(a => ++a, 0)
+  );
+  value2$ = this.btn2Click$.pipe(
+    scan(a => ++a, 0)
   );
 }

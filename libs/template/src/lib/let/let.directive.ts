@@ -259,6 +259,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
   ) {
     this.templateManager.addTemplateRef('rxComplete', templateRef);
+    this.templateManager.addTemplateRef('rxComplete', templateRef);
   }
 
   /**
