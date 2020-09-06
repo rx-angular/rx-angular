@@ -61,4 +61,9 @@ export const ROUTES: Routes = [
     loadChildren: () =>
       import('./strategies/strategies.module').then((m) => m.StrategiesModule),
   },
+  {
+    path: 'embedded-view',
+    loadChildren: () =>
+      import('./cd-embedded-view/cd-embedded-view.module').then((m) => m.CdEmbeddedViewModule),
+  },
 ];
