@@ -21,7 +21,7 @@ import { scan } from 'rxjs/operators';
 
     <div class="row">
       <div class="col">
-        <ng-container *pocLet="value1$; let value">
+        <ng-container *poc1Let="value1$; let value">
           <renders></renders>
           {{value}}
         </ng-container>

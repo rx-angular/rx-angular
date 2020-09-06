@@ -22,9 +22,9 @@ export interface PocLetViewContext<T> {
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[pocLet]'
+  selector: '[poc1Let]'
 })
-export class PocLetDirective<U> implements OnInit, OnDestroy {
+export class Poc1LetDirective<U> implements OnInit, OnDestroy {
   observables$ = new ReplaySubject(1);
   viewContext = { $implicit: undefined};
   embeddedView;
@@ -35,7 +35,7 @@ export class PocLetDirective<U> implements OnInit, OnDestroy {
     );
 
   @Input()
-  set pocLet(potentialObservable: ObservableInput<U> | null | undefined) {
+  set poc1Let(potentialObservable: ObservableInput<U> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
 

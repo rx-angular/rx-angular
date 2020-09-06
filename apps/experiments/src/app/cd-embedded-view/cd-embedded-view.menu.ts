@@ -8,7 +8,11 @@ export const MENU_ITEMS: MenuItem[] = [
       // 01.
       {
         link: 'embedded-view/cd-embedded-view-01',
-        label: 'embedded-view/CD embedded-view 01',
+        label: 'CD embedded-view 01',
+      },
+      {
+        link: 'embedded-view/cd-embedded-view-02',
+        label: 'CD embedded-view 02',
       },
     ],
   },
