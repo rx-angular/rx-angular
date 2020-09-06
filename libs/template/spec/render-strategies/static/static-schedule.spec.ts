@@ -2,10 +2,43 @@ import { staticSchedule } from '../../../src/lib/render-strategies/static';
 import { SchedulingPriority } from '../../../src/lib/render-strategies/rxjs/scheduling';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import createSpy = jasmine.createSpy;
+import { timer } from 'rxjs';
 
 
 describe('staticSchedule', () => {
   beforeAll(() => mockConsole());
+
+  it('should work without priority', () => {
+    let test = 0;
+    const doWork = () => {
+      test++;
+    }
+    staticSchedule(doWork, false);
+    expect(test).toBe(1);
+  });
+
+  it('should abort on complete', (done) => {
+    let test = 0;
+    const doWork = () => {
+      test++;
+    };
+    const priority = SchedulingPriority.Promise;
+    const abc = {
+      abort: createSpy('abort'),
+      signal: {
+        addEventListener: () => void 0,
+        // hack to enter complete only and get 1 call
+        aborted: true
+      }
+    } as unknown as AbortController;
+    staticSchedule(doWork,priority , abc);
+    expect(abc.abort).toHaveBeenCalledTimes(0);
+    setTimeout(() => {
+      expect(abc.abort).toHaveBeenCalledTimes(1);
+      done();
+    })
+  });
 
   it('should change the execution context', (done) => {
     let test = 0;
