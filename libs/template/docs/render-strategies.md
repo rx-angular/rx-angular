@@ -64,8 +64,8 @@ means*collecting all events\*\* in the same
 [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render and
 execute*re-rendering only once\*\*.
 
-'Scoped' coalescing, in addition, means*grouping the collected events\*\* by a specific context.
-E. g. the*component\*\* from which the re-rendering was initiated.
+'Scoped' coalescing, in addition, means *grouping the collected events* by a specific context.
+E. g. the *component* from which the re-rendering was initiated.
 
 This context could be the Component instance or a ViewContextRef,
 both accessed over the context over `ChangeDetectorRef#context`.
