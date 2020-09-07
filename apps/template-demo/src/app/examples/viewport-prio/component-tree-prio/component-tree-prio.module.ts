@@ -14,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '../../../shared/shared.module';
 
 export const ROUTES = [
   {

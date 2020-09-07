@@ -5,7 +5,7 @@ import { CoalescingExperimentsProfilingComponent } from './experiments-profiling
 import { TemplateModule } from '@rx-angular/template';
 import { RealLife1ContainerComponent } from './real-life-1/real-life-1.container.component';
 import { RealLife1Component } from './real-life-1/real-life-1.component';
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '../../../shared/shared.module';
 import { CoalescingExperimentsProfilingChildComponent } from './experiments-profiling/coalescing-experiments-profiling-child.component';
 
 export const ROUTES = [

@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Let1ContainerComponent } from './solution/let1.container.component';
+import { ViewportPrioComponent } from './solution/viewport-prio.component';
 import { TemplateModule, ViewportPrioModule } from '@rx-angular/template';
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '../../shared/shared.module';
 
 export const ROUTES = [
   {
     path: '',
     pathMatch: 'full',
-    component: Let1ContainerComponent
+    component: ViewportPrioComponent
   },
   {
     path: 'solution',
-    component: Let1ContainerComponent
+    component: ViewportPrioComponent
   }
 ];
-const DECLARATIONS = [Let1ContainerComponent];
+const DECLARATIONS = [ViewportPrioComponent];
 
 @NgModule({
   declarations: [DECLARATIONS],
@@ -29,4 +29,4 @@ const DECLARATIONS = [Let1ContainerComponent];
   ],
   exports: [DECLARATIONS]
 })
-export class PrioritizeInViewportModule {}
+export class ViewportPrioDemoModule {}

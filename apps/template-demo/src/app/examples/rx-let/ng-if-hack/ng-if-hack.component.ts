@@ -17,16 +17,6 @@ import { RxState } from '@rx-angular/state';
     <button unpatch (click)="complete.next()">Complete</button>
     <renders></renders>
     <br />
-    <!--
-        <ng-container *rxLet="value$; let value;
-          let e = error;
-          let c = complete;
-          suspense: suspenseView;
-          error: errorView;
-          complete: completeView
-        ">
-    -->
-    {{value$ | push}}
     <ng-container *rxLet="value$; let value;
           let e = error;
           let c = complete;
@@ -65,7 +55,7 @@ import { RxState } from '@rx-angular/state';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState]
 })
-export class MemoizedViewsComponent {
+export class NgIfHackComponent {
   reset = new Subject();
   next = new Subject();
   error = new Subject();

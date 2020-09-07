@@ -1,10 +1,52 @@
 body {
 }
+
 .row {
   display: flex;
   margin: 0 -15px;
+
   .col {
     width: 50%;
     padding: 0 15px;
   }
+}
+
+/* RxAngular-Template Internal Classes */
+.let-suspense {
+
+}
+
+.let-next {
+
+}
+
+.let-error {
+
+}
+
+.let-complete {
+
+}
+
+/* RxAngular-Template Helper Classes */
+.template-type {
+  font-size: 10px;
+  font-weight: bold;
+
+  .let-suspense {
+    color: gray;
+  }
+
+  .let-next {
+    color: green;
+  }
+
+  .let-error {
+    color: red;
+  }
+
+  .let-complete {
+    color: orange;
+  }
+
 }
