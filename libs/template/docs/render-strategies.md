@@ -59,10 +59,8 @@ As detectChanges has no coalescing of render calls
 like [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) or [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) have, we apply our own coalescing, 'scoped' on
 component level.
 
-Coalescing, in this very manner,
-means*collecting all events\*\* in the same
-[EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render and
-execute*re-rendering only once\*\*.
+Coalescing, in this very manner, means *collecting all events* in the same
+[EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render. Then execute re-rendering only *once*.
 
 'Scoped' coalescing, in addition, means *grouping the collected events* by a specific context.
 E. g. the *component* from which the re-rendering was initiated.
