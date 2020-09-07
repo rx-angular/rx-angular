@@ -29,7 +29,7 @@ type RxTemplateName = 'rxNext' | 'rxComplete' | 'rxError' | 'rxSuspense';
 
 export interface LetViewContext<T> extends RxViewContext<T>  {
   // to enable `as` syntax we have to assign the directives selector (var as v)
-  rxLet: T | Error;
+  rxLet: T;
 }
 
 /**
