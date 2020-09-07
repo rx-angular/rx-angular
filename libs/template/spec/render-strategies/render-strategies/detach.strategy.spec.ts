@@ -33,8 +33,9 @@ describe('detach Strategy', () => {
   });
 
   describe('rxScheduleCD', () => {
-    it('should call cdRef#detectChanges, cdRef#detach, cdRef#reattach 1 times when rxScheduleCD is used with a' +
-      ' single sync emission', done => {
+    it('should call cdRef#detectChanges, cdRef#detach, cdRef#reattach 1 times when rxScheduleCD is used with a single sync emission', done => {
+
+
       testStrategyMethod({
         strategyName,
         strategyMethod: 'rxScheduleCD',
