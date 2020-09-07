@@ -10,7 +10,7 @@ Use the corresponding `RenderStrategy#name` as parameter or Input with the `Push
 By default, they will use the [Local Strategy](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/viewport-prio.md).
 
 ```html
-<divrxLet="list$; let list; strategy: 'global'"></div>
+<div *rxLet="list$; let list; strategy: 'global'"></div>
 <hero-list heroes="list$ | push: 'global'"></hero-list>
 ```
 
