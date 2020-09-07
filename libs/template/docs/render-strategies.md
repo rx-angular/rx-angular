@@ -86,10 +86,11 @@ It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angul
 
 ### Detach Strategy
 
-This strategy behaves the same as the local strategy.
-The detach strategy detaches the component from Angulars change detection.
-With every new value it re-attaches the component/embedded view to the change detection,
-renders the new value and detaches again.
+In terms of rendering, this strategy behaves the same as the local strategy.
+Using this strategy will [`detach`](https://angular.io/api/core/ChangeDetectorRef#detach) the affected view from
+Angulars change-detection tree.
+In order to render changes properly, it re-attaches the view to the change detection tree before any rendering happens,
+and detaches it again after changes got rendered.
 
 If a component is detached the input bindings will still receive values.
 Also the internal logic will work as expected including the use of `ViewChild`.
