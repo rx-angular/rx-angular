@@ -16,11 +16,11 @@ import { Hero, heroes } from '../data';
       refresh data
     </button>
 
-    <!--<renders></renders>-->
+    <renders></renders>
 
     <div class="item-list">
       <div class="item" *pocForAdvanced="items$; let item; trackBy: trackHero">
-        <!--<renders></renders>-->
+        <renders></renders>
         {{ item.name }}
         <button [unpatch] (click)="toggleUpdate$.next(item)">
           update me

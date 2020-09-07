@@ -15,12 +15,12 @@ import { todos } from '../data';
       toggle
     </button>
 
-    <!--<renders></renders>-->
+    <renders></renders>
 
     <div class="row">
       <div class="col">
         <ng-container *pocForBasic="items$; let item">
-          <!--<renders></renders>-->
+          <renders></renders>
           {{ item }}
         </ng-container>
       </div>
