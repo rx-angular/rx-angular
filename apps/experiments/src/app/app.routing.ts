@@ -61,4 +61,9 @@ export const ROUTES: Routes = [
     loadChildren: () =>
       import('./strategies/strategies.module').then((m) => m.StrategiesModule),
   },
+  {
+    path: 'for-poc',
+    loadChildren: () =>
+      import('./for/for-poc.module').then((m) => m.ForPocModule),
+  },
 ];

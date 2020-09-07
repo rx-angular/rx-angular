@@ -6,6 +6,7 @@ import { MENU_ITEMS as LET_MENU_ITEMS } from './let/let.menu';
 import { MENU_ITEMS as MIXED_MENU_ITEMS } from './mixed/mixed.menu';
 import { MENU_ITEMS as CD_OPERATORS_MENU_ITEMS } from './cd-operators/cd-operators.menu';
 import { MENU_ITEMS as RX_STATE_MENU_ITEMS } from './state/rx-state.menu';
+import { MENU_ITEMS as RX_FOR_MENU_ITEMS } from './for/for-poc.menu';
 import { STRATEGIES_MENU } from './strategies/strategies.menu';
 
 export const MENU_ITEMS: MenuItem[] = [
@@ -17,4 +18,5 @@ export const MENU_ITEMS: MenuItem[] = [
   ...CD_OPERATORS_MENU_ITEMS,
   ...RX_STATE_MENU_ITEMS,
   ...STRATEGIES_MENU,
+  ...RX_FOR_MENU_ITEMS
 ];
