@@ -10,6 +10,8 @@ import { environment } from '../../environments/environment';
       </app-cd-embedded-view-parent01>
       <app-cd-embedded-view-parent02 class="item">
       </app-cd-embedded-view-parent02>
+      <app-cd-embedded-view-parent03 class="item">
+      </app-cd-embedded-view-parent03>
     </div>
   `,
   changeDetection: environment.changeDetection,

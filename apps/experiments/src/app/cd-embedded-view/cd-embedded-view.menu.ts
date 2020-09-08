@@ -14,6 +14,10 @@ export const MENU_ITEMS: MenuItem[] = [
         link: 'embedded-view/cd-embedded-view-02',
         label: 'CD embedded-view 02',
       },
+      {
+        link: 'embedded-view/cd-embedded-view-03',
+        label: 'CD embedded-view 03',
+      },
     ],
   },
 ];

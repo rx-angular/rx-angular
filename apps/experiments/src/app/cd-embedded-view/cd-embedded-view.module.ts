@@ -11,14 +11,20 @@ import { RendersModule } from '../renders/renders.module';
 import { OriginalLetDirective } from './01/original-let.directive';
 import { CdEmbeddedViewParent02Component } from './02/parent.component';
 import { Poc2LetDirective } from './02/poc2-let.directive';
+import { CdEmbeddedViewParent03Component } from './03/parent.component';
+import { PocForDirective } from './03/poc-for.directive';
+import { Poc2ForDirective } from './03/poc2-for.directive';
 
 @NgModule({
   declarations: [
     OriginalLetDirective,
     Poc1LetDirective,
     Poc2LetDirective,
+    PocForDirective,
+    Poc2ForDirective,
     CdEmbeddedViewParent01Component,
     CdEmbeddedViewParent02Component,
+    CdEmbeddedViewParent03Component,
     CdEmbeddedViewOverviewComponent
   ],
   imports: [

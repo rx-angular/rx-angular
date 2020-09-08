@@ -2,6 +2,7 @@
 import { CdEmbeddedViewOverviewComponent } from './cd-embedded-view.overview.component';
 import { CdEmbeddedViewParent01Component } from './01/parent.component';
 import { CdEmbeddedViewParent02Component } from './02/parent.component';
+import { CdEmbeddedViewParent03Component } from './03/parent.component';
 
 export const ROUTES = [
   {
@@ -19,5 +20,9 @@ export const ROUTES = [
   {
     path: 'cd-embedded-view-02',
     component: CdEmbeddedViewParent02Component,
+  },
+  {
+    path: 'cd-embedded-view-03',
+    component: CdEmbeddedViewParent03Component,
   },
 ];
