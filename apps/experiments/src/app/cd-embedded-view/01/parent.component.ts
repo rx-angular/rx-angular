@@ -11,12 +11,12 @@ import { scan } from 'rxjs/operators';
       CD EmbeddedView 01 <renders></renders>
     </h2>
 
-    <button [unpatch] (click)="btn1Click$.next($event)">
-      before next
+    <button mat-raised-button [unpatch] (click)="btn2Click$.next($event)">
+      CD by Directive#cdRef
     </button>
 
-    <button [unpatch] (click)="btn2Click$.next($event)">
-      after next
+    <button mat-raised-button [unpatch] (click)="btn1Click$.next($event)">
+      CD by EmbeddedView#cdRef
     </button>
 
     <div class="row">

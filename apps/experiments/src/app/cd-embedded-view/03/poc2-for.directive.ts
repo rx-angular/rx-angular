@@ -33,17 +33,11 @@ export class Poc2ForDirective<U> implements OnInit, OnDestroy {
     this.observables$.next(potentialObservable);
   }
 
-  _pocForTrackBy;
   @Input()
-  set poc2ForTrackBy(key: string) {
-    this._pocForTrackBy = key;
-  }
+  poc2ForTrackBy;
 
-  _pocForDistinctBy = (a, b) => a === b;
   @Input()
-  set poc2ForDistinctBy(compareFn: (a, b) => boolean) {
-    this._pocForDistinctBy = compareFn;
-  }
+  poc2ForDistinctBy = (a, b) => a === b;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -57,9 +51,9 @@ export class Poc2ForDirective<U> implements OnInit, OnDestroy {
     this.subscription = this.values$
       .pipe(
         mergeMap(arr => arr),
-        groupBy(i => i[this._pocForTrackBy]),
+        groupBy(i => i[this.poc2ForTrackBy]),
         map(o$ => o$.pipe(
-            distinctUntilChanged(this._pocForDistinctBy),
+            distinctUntilChanged(this.poc2ForDistinctBy),
             tap(this.updateItem)
           )
         ),
@@ -69,7 +63,7 @@ export class Poc2ForDirective<U> implements OnInit, OnDestroy {
   }
 
   updateItem = (item): void => {
-    const key = item[this._pocForTrackBy];
+    const key = item[this.poc2ForTrackBy];
     let existingItem = this.embeddedViews.has(key) ? this.embeddedViews.get(key) : undefined;
     if (!existingItem) {
       const view = this.viewContainerRef

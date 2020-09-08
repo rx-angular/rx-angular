@@ -14,9 +14,9 @@ import { distinctUntilChanged, switchAll } from 'rxjs/operators';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[pocFor]'
+  selector: '[poc1For]'
 })
-export class PocForDirective<U> implements OnInit, OnDestroy {
+export class Poc1ForDirective<U> implements OnInit, OnDestroy {
   observables$ = new ReplaySubject(1);
   embeddedViews: Map<U, { view: EmbeddedViewRef<any>, item: any }> = new Map();
 
@@ -26,15 +26,12 @@ export class PocForDirective<U> implements OnInit, OnDestroy {
     );
 
   @Input()
-  set pocFor(potentialObservable: ObservableInput<U> | null | undefined) {
+  set poc1For(potentialObservable: ObservableInput<U> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
 
-  _pocForTrackBy;
   @Input()
-  set pocForTrackBy(key: string) {
-    this._pocForTrackBy = key;
-  }
+  poc1ForTrackBy;
 
   private subscription: Unsubscribable = new Subscription();
 
@@ -54,7 +51,7 @@ export class PocForDirective<U> implements OnInit, OnDestroy {
   }
 
   updateItem = (item, idx): void => {
-    const key = item[this._pocForTrackBy];
+    const key = item[this.poc1ForTrackBy];
     let existingItem = this.embeddedViews.has(key) ? this.embeddedViews.get(key) : undefined;
     if (!existingItem) {
       const view = this.viewContainerRef

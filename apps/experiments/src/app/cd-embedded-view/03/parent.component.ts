@@ -63,7 +63,7 @@ const mutableArr = (n: number = 10) => {
       </div>
       <div class="col">
         <h3>rxFor - push based</h3>
-        <ng-container *pocFor="array$; let i; trackBy: 'id'">
+        <ng-container *poc1For="array$; let i; trackBy: 'id'">
           <renders></renders>
           -
           <mat-icon>{{i.value ? 'check' : 'highlight_off'}}</mat-icon>

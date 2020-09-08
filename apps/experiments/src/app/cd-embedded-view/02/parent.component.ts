@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Subject } from 'rxjs';
-import { getStrategies } from '@rx-angular/template';
 import { scan } from 'rxjs/operators';
 
 @Component({
@@ -16,23 +15,28 @@ import { scan } from 'rxjs/operators';
       toggle
     </button>
 
-
     <div class="row">
       <div class="col">
-        <ng-container *poc2Let="value1$; let value; falsey: f">
+        <ng-container *poc1If="value1$; let value; falsey: f">
           <renders></renders>
           TRUE
           {{value}}
         </ng-container>
-        <ng-template #f>
-          <renders></renders>
-          FALSE
-        </ng-template>
       </div>
-
+      <div class="col">
+        <ng-container *poc2If="value1$; let value; falsey: f">
+          <renders></renders>
+          TRUE
+          {{value}}
+        </ng-container>
+      </div>
     </div>
+    <ng-template #f>
+      <renders></renders>
+      FALSE
+    </ng-template>
   `,
-  changeDetection: environment.changeDetection,
+  changeDetection: environment.changeDetection
 })
 export class CdEmbeddedViewParent02Component {
   toggleClick$ = new Subject<Event>();
