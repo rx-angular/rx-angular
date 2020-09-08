@@ -20,8 +20,7 @@ export class PocForDirective<U> implements OnInit, OnDestroy {
   observables$ = new ReplaySubject(1);
   embeddedViews: Map<U, { view: EmbeddedViewRef<any>, item: any }> = new Map();
 
-  values$: Observable<U[]> = this.observables$
-    .pipe(
+  values$: Observable<U[]> = this.observables$.pipe(
       distinctUntilChanged(),
       switchAll()
     );
@@ -37,7 +36,6 @@ export class PocForDirective<U> implements OnInit, OnDestroy {
     this._pocForTrackBy = key;
   }
 
-
   private subscription: Unsubscribable = new Subscription();
 
   constructor(
@@ -51,28 +49,27 @@ export class PocForDirective<U> implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.values$
       .subscribe(
-        arr => {
-          arr.forEach((item, idx) => {
-            const key = item[this._pocForTrackBy];
-            if (!this.embeddedViews.has(key)) {
-              const view = this.viewContainerRef.createEmbeddedView(
-                this.templateRef,
-                { $implicit: item },
-                idx
-              );
-              this.embeddedViews.set(key, { view, item });
-            } else {
-              this.embeddedViews.get(key).view.context.$implicit = item;
-            }
-
-            this.embeddedViews.get(key).view.detectChanges();
-          });
-        }
+        arr => arr.forEach(this.updateItem)
       );
   }
 
+  updateItem = (item, idx): void => {
+    const key = item[this._pocForTrackBy];
+    let existingItem = this.embeddedViews.has(key) ? this.embeddedViews.get(key) : undefined;
+    if (!existingItem) {
+      const view = this.viewContainerRef
+        .createEmbeddedView(this.templateRef, { $implicit: item }, idx);
+      existingItem = { view, item};
+      this.embeddedViews.set(key, existingItem);
+
+    } else {
+      existingItem.view.context.$implicit = item;
+    }
+    existingItem.view.detectChanges();
+  }
+
   ngOnDestroy() {
-    this.embeddedViews.forEach(i => i.view.destroy());
+    this.viewContainerRef.clear();
     this.subscription.unsubscribe();
   }
 

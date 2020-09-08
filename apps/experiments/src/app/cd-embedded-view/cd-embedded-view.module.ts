@@ -14,6 +14,8 @@ import { Poc2LetDirective } from './02/poc2-let.directive';
 import { CdEmbeddedViewParent03Component } from './03/parent.component';
 import { PocForDirective } from './03/poc-for.directive';
 import { Poc2ForDirective } from './03/poc2-for.directive';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { Poc2ForDirective } from './03/poc2-for.directive';
     CommonModule,
     RouterModule.forChild(CD_ROUTES),
     UnpatchEventsModule,
-    RendersModule
+    RendersModule,
+    MatIconModule,
+    MatButtonModule
   ]
 })
 export class CdEmbeddedViewModule {

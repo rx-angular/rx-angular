@@ -17,6 +17,8 @@ import { distinctUntilChanged, groupBy, map, mergeAll, mergeMap, switchAll, tap 
   selector: '[poc2For]'
 })
 export class Poc2ForDirective<U> implements OnInit, OnDestroy {
+  private subscription: Unsubscribable = new Subscription();
+
   observables$ = new ReplaySubject(1);
   embeddedViews: Map<U, { view: EmbeddedViewRef<any>, item: any }> = new Map();
 
@@ -37,7 +39,11 @@ export class Poc2ForDirective<U> implements OnInit, OnDestroy {
     this._pocForTrackBy = key;
   }
 
-  private subscription: Unsubscribable = new Subscription();
+  _pocForDistinctBy = (a, b) => a === b;
+  @Input()
+  set poc2ForDistinctBy(compareFn: (a, b) => boolean) {
+    this._pocForDistinctBy = compareFn;
+  }
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -53,29 +59,33 @@ export class Poc2ForDirective<U> implements OnInit, OnDestroy {
         mergeMap(arr => arr),
         groupBy(i => i[this._pocForTrackBy]),
         map(o$ => o$.pipe(
-            distinctUntilChanged(),
-            tap((item) => {
-              const key = item[this._pocForTrackBy];
-              if (!this.embeddedViews.has(key)) {
-                const view = this.viewContainerRef.createEmbeddedView(
-                  this.templateRef,
-                  { $implicit: item }
-                );
-                this.embeddedViews.set(key, { view, item });
-              } else {
-                this.embeddedViews.get(key).view.context.$implicit = item;
-              }
-
-              this.embeddedViews.get(key).view.detectChanges();
-            }))
+            distinctUntilChanged(this._pocForDistinctBy),
+            tap(this.updateItem)
+          )
         ),
         mergeAll()
       )
-      .subscribe( );
+      .subscribe();
   }
 
+  updateItem = (item): void => {
+    const key = item[this._pocForTrackBy];
+    let existingItem = this.embeddedViews.has(key) ? this.embeddedViews.get(key) : undefined;
+    if (!existingItem) {
+      const view = this.viewContainerRef
+        .createEmbeddedView(this.templateRef, { $implicit: item });
+      existingItem = { view, item};
+      this.embeddedViews.set(key, existingItem);
+
+    } else {
+      existingItem.view.context.$implicit = item;
+    }
+    existingItem.view.detectChanges();
+  }
+
+
   ngOnDestroy() {
-    this.embeddedViews.forEach(i => i.view.destroy());
+    this.viewContainerRef.clear();
     this.subscription.unsubscribe();
   }
 
