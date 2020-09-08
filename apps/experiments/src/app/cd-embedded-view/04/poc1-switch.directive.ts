@@ -42,11 +42,6 @@ export class Poc1Switch<U> implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.defaultEmbeddedView = this.viewContainerRef.createEmbeddedView(
-      this.truthyTemplateRef,
-      this.viewContext
-    );
-
     this.subscription = this.values$
       .subscribe(
         v => {
