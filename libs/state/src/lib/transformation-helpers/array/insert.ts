@@ -1,3 +1,5 @@
+import { isDefined } from '../../core';
+
 /**
  * @description
  * Inserts one or multiple items to an array T[].
@@ -55,9 +57,6 @@
  * @docsPage insert
  * @docsCategory transformation-helpers
  */
-
-import { isDefined } from '../../core';
-
 export function insert<T>(source: T[], updates: T | T[]): T[] {
   const updatesDefined = isDefined(updates);
   const sourceIsArray = Array.isArray(source);
