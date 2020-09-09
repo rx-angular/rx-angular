@@ -1,14 +1,6 @@
-import {
-  ChangeDetectorRef,
-  Directive,
-  Input,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewContainerRef
-} from '@angular/core';
+import { Directive, EmbeddedViewRef, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 
-import { ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
+import { ObservableInput, ReplaySubject, Subscription } from 'rxjs';
 import { distinctUntilChanged, switchAll } from 'rxjs/operators';
 
 @Directive({
@@ -16,16 +8,17 @@ import { distinctUntilChanged, switchAll } from 'rxjs/operators';
   selector: '[poc1Switch]'
 })
 export class Poc1Switch<U> implements OnInit, OnDestroy {
-  private subscription: Unsubscribable = new Subscription();
+  private subscription = new Subscription();
   observables$ = new ReplaySubject(1);
-  viewContext = { $implicit: undefined};
+  viewContext = { $implicit: undefined };
 
-  defaultEmbeddedView;
+  defaultEmbeddedView: EmbeddedViewRef<any>;
 
   values$ = this.observables$
     .pipe(
       distinctUntilChanged(),
-      switchAll()
+      switchAll(),
+      distinctUntilChanged()
     );
 
   @Input()
@@ -34,18 +27,21 @@ export class Poc1Switch<U> implements OnInit, OnDestroy {
   }
 
   constructor(
-
+    private viewContainerRef: ViewContainerRef,
+    private templateRef: TemplateRef<any>
   ) {
 
   }
 
   ngOnInit() {
-    this.subscription = this.values$
-      .subscribe(
-        v => {
-
-        }
-      );
+    this.defaultEmbeddedView = this.viewContainerRef.createEmbeddedView(
+      this.templateRef,
+      { $implicit: undefined }
+    );
+    this.subscription.add(this.values$.subscribe(value => {
+      this.defaultEmbeddedView.context.$implicit = value;
+      this.defaultEmbeddedView.detectChanges();
+    }));
   }
 
   ngOnDestroy() {

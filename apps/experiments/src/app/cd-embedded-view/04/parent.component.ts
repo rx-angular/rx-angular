@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Subject } from 'rxjs';
-import { map, scan } from 'rxjs/operators';
+import { map, scan, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-cd-embedded-view-parent04',
@@ -23,7 +23,7 @@ import { map, scan } from 'rxjs/operators';
 
     <div class="row">
       <div class="col">
-        <ng-container *ngFor="let value of [switchValue$ | async]">
+        <!--<ng-container *ngFor="let value of [switchValue$ | async]">
           <ng-container [ngSwitch]="value">
             <p *ngSwitchCase="true">
               TRUE
@@ -34,19 +34,21 @@ import { map, scan } from 'rxjs/operators';
               {{value}}
             </p>
           </ng-container>
-        </ng-container>
+        </ng-container>-->
       </div>
       <div class="col">
         <ng-container *poc1Switch="switchValue$; let value">
-          <div *poc1SwitchCase="case1Value$">
+          <div *poc1SwitchCase="case1Value$; let caseValue">
             <renders></renders>
-            Case1
-            {{value}}
+            <div>Case 1</div>
+            <div>SwitchValue: {{value}}</div>
+            <div>CaseValue: {{caseValue}}</div>
           </div>
-          <div *poc2SwitchCase="case2Value$">
+          <div *poc1SwitchCase="case2Value$; let caseValue">
             <renders></renders>
-            Case2
-            {{value}}
+            <div>Case 2</div>
+            <div>SwitchValue: {{value}}</div>
+            <div>CaseValue: {{caseValue}}</div>
           </div>
         </ng-container>
       </div>
@@ -59,12 +61,15 @@ export class CdEmbeddedViewParent04Component {
   case1Click$ = new Subject<Event>();
   case2Click$ = new Subject<Event>();
   switchValue$ = this.toggleClick$.pipe(
-    scan(a => !a, false)
+    scan(a => !a, false),
+    startWith(false)
   );
-  case1Value$ = this.toggleClick$.pipe(
-    map(a => Math.random() < 0.5)
+  case1Value$ = this.case1Click$.pipe(
+    map(a => Math.random() < 0.5),
+    startWith(true)
   );
-  case2Value$ = this.toggleClick$.pipe(
-    map(a => Math.random() < 0.5)
+  case2Value$ = this.case2Click$.pipe(
+    map(a => Math.random() < 0.5),
+    startWith(false)
   );
 }
