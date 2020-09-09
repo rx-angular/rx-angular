@@ -34,9 +34,7 @@ export class Poc1Switch<U> implements OnInit, OnDestroy {
   }
 
   constructor(
-    private cdRef: ChangeDetectorRef,
-    private readonly truthyTemplateRef: TemplateRef<any>,
-    private readonly viewContainerRef: ViewContainerRef
+
   ) {
 
   }
@@ -45,8 +43,7 @@ export class Poc1Switch<U> implements OnInit, OnDestroy {
     this.subscription = this.values$
       .subscribe(
         v => {
-          this.viewContext.$implicit = v;
-          this.defaultEmbeddedView.detectChanges();
+
         }
       );
   }

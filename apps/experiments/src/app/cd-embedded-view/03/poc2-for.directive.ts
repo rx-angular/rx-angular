@@ -50,6 +50,7 @@ export class Poc2ForDirective<U> implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.values$
       .pipe(
+        tap(),
         mergeMap(arr => arr),
         groupBy(i => i[this.poc2ForTrackBy]),
         map(o$ => o$.pipe(

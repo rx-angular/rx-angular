@@ -22,13 +22,11 @@ export class Poc1SwitchCase implements OnInit, OnDestroy {
   };
 
   constructor(
-    viewContainer: ViewContainerRef, templateRef: TemplateRef<Object>,
+    private viewContainer: ViewContainerRef,
+    private templateRef: TemplateRef<Object>,
     @Host() private poc1Switch: Poc1Switch<any>
   ) {
-    this._view = viewContainer.createEmbeddedView(
-      templateRef,
-      { $implicit: undefined }
-    );
+
   }
 
   ngOnInit() {
@@ -39,7 +37,17 @@ export class Poc1SwitchCase implements OnInit, OnDestroy {
       .pipe(
         tap(([b, c]) => {
           if (b === c) {
+            if(!this._view) {
+              this._view = this.viewContainer.createEmbeddedView(
+                this.templateRef,
+                { $implicit: undefined }
+              );
+            } else {
+              this.viewContainer.insert(this._view);
+            }
             this._view.detectChanges();
+          } else {
+            this.viewContainer.clear();
           }
         })
       )

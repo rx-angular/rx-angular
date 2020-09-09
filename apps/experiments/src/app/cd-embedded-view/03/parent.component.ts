@@ -1,20 +1,27 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { merge, Subject } from 'rxjs';
+import { merge, Observable, Subject } from 'rxjs';
 import { map, scan, share } from 'rxjs/operators';
 
 const rand = (n: number = 2): number => {
   // tslint:disable-next-line:no-bitwise
   return ~~(Math.random() * n);
 };
-const immutableIncArr = (n: number = 10) => (o$) => o$.pipe(
+const immutableIncArr = (n: number = 10) => (o$: Observable<number>) => o$.pipe(
   scan((a, i, idx) => {
-    a[idx % n] = { id: idx % n, value: rand() };
+    if(i === 1) {
+      a[idx % n] = { id: idx % n, value: rand() };
+    } else if(i === 0) {
+      const id = rand(a.length);
+      a[id] = { id, value: rand() };
+    } else {
+      a.splice(idx % n, 1);
+    }
     return a;
   }, [])
 );
 const mutableIncArr = (n: number = 10) => {
-  return (o$) => o$.pipe(
+  return (o$: Observable<number>) => o$.pipe(
     scan((a, i, idx) => {
       a[idx % n].value = rand();
       return a;
@@ -22,13 +29,13 @@ const mutableIncArr = (n: number = 10) => {
   );
 }
 
-const immutableArr = (n: number = 10) => (o$) => o$.pipe(
+const immutableArr = (n: number = 10) => (o$: Observable<number>) => o$.pipe(
   map(v => Array(n).fill(0).map((_, idx) => ({ id: idx % n, value: rand() })))
 );
 
 const mutableArr = (n: number = 10) => {
   const arr = Array(n);
-  return (o$) => o$.pipe(
+  return (o$: Observable<number>) => o$.pipe(
     map(v => arr.forEach((i, idx) => i.value = rand()))
   );
 }
@@ -44,9 +51,16 @@ const mutableArr = (n: number = 10) => {
     <button mat-raised-button (click)="trackById({})">
       CD
     </button>
-    <button mat-raised-button [unpatch] (click)="changeOneClick$.next($event)">
-      Change one
+    <button mat-raised-button [unpatch] (click)="changeOneClick$.next(1)">
+      add
     </button>
+    <button mat-raised-button [unpatch] (click)="changeOneClick$.next(0)">
+      update
+    </button>
+    <button mat-raised-button [unpatch] (click)="changeOneClick$.next(-1)">
+      remove
+    </button>
+
     <button mat-raised-button [unpatch] (click)="changeAllClick$.next($event)">
       Change all
     </button>
