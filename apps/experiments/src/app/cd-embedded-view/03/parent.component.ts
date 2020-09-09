@@ -61,7 +61,7 @@ const mutableArr = (n: number = 10) => {
       remove
     </button>
 
-    <button mat-raised-button [unpatch] (click)="changeAllClick$.next($event)">
+    <button mat-raised-button [unpatch] (click)="changeAllClick$.next(10)">
       Change all
     </button>
 
@@ -102,6 +102,15 @@ const mutableArr = (n: number = 10) => {
           <br/>
         </ng-container>
       </div>
+      <div class="col">
+        <h3>rxFor - iterable, trackByFn</h3>
+        <ng-container *pocForIterable="array$; let i; trackBy: trackById">
+          <renders></renders>
+          -
+          <mat-icon>{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
+          <br/>
+        </ng-container>
+      </div>
     </div>
   `,
   styles: [`
@@ -117,8 +126,8 @@ const mutableArr = (n: number = 10) => {
   changeDetection: environment.changeDetection
 })
 export class CdEmbeddedViewParent03Component {
-  changeOneClick$ = new Subject<Event>();
-  changeAllClick$ = new Subject<Event>();
+  changeOneClick$ = new Subject<number>();
+  changeAllClick$ = new Subject<number>();
 
   array$ = merge(
     this.changeOneClick$.pipe(immutableIncArr()),

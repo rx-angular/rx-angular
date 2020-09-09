@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UnpatchEventsModule } from '@rx-angular/template';
 import { RouterModule } from '@angular/router';
+import { PocForIterable } from './03/poc3-for.directive';
 import { ROUTES as CD_ROUTES } from './cd-embedded-view.routes';
 
 import { MatIconModule } from '@angular/material/icon';
@@ -34,7 +35,7 @@ import { Poc1SwitchCase } from './04/poc1-switch-case.directive';
     Poc2IfDirective,
     Poc1ForDirective,
     Poc2ForDirective,
-    Poc1Switch, Poc1SwitchCase
+    Poc1Switch, Poc1SwitchCase, PocForIterable
   ],
   imports: [
     CommonModule,
