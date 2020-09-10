@@ -4,7 +4,6 @@ import { EMPTY, NEVER } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { stateful } from '@rx-angular/state';
-import { initialNestedState } from '../../fixtures';
 
 let testScheduler: TestScheduler;
 

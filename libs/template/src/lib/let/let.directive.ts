@@ -157,6 +157,9 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    */
   static ngTemplateGuard_rxLet: 'binding';
 
+  /**
+   * @internal
+   */
   readonly initialViewContext: LetViewContext<U> = {
     $implicit: undefined,
     rxLet: undefined,
@@ -308,6 +311,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     LetViewContext<U | undefined | null>,
     RxTemplateName
   >;
+
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => {
       this.displayInitialView();
@@ -316,6 +320,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
         rxLet: undefined,
         $error: false,
         $complete: false,
+        $suspense: true
       });
     },
     next: (value: U | null | undefined) => {
@@ -331,7 +336,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
         ? this.templateManager.displayView('rxError')
         : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $error: true,
+        $error: error,
       });
     },
     complete: () => {
@@ -391,7 +396,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   }
 
   private displayInitialView = () => {
-    // display "suspense" template if provided
+    // Display "suspense" template if provided
     if (this.templateManager.hasTemplateRef('rxSuspense')) {
       this.templateManager.displayView('rxSuspense');
     }

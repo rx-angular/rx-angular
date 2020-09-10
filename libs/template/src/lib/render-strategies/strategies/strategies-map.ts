@@ -6,6 +6,7 @@ import { createNoopStrategy } from './noop.strategy';
 import { createNativeStrategy } from './native.strategy';
 import { getLocalStrategies } from './local.strategy';
 import { getGlobalStrategies } from './global.strategy';
+import { getDetachStrategies } from './detach-strategy';
 
 export const DEFAULT_STRATEGY_NAME = 'local';
 
@@ -29,9 +30,10 @@ export function getStrategies(
   config: RenderStrategyFactoryConfig
 ): { [strategy: string]: RenderStrategy } {
   return {
-    noop: createNoopStrategy(),
-    native: createNativeStrategy(config),
+    ...getLocalStrategies(config),
     ...getGlobalStrategies(config),
-    ...getLocalStrategies(config)
+    ...getDetachStrategies(config),
+    noop: createNoopStrategy(),
+    native: createNativeStrategy(config)
   };
 }

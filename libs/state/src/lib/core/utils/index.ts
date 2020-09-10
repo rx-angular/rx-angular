@@ -7,5 +7,5 @@ export {
   isKeyOf,
   isObjectGuard,
   isDefined,
-} from './typing';
+} from './guards';
 export { safePluck } from './safe-pluck';
