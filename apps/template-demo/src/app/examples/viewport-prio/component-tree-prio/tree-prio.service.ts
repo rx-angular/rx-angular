@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { data as persons } from '../data.js';
+import { data as persons } from '../../data.js';
 
 export interface Person {
   _id: string;

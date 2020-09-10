@@ -1,17 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { isObservable, Observable, OperatorFunction, Subscribable, Subscription, Unsubscribable } from 'rxjs';
-import {
-  AccumulationFn,
-  createAccumulationObservable,
-  createSideEffectObservable,
-  isKeyOf,
-  isOperateFnArrayGuard,
-  isStringArrayGuard,
-  pipeFromArray,
-  safePluck,
-  stateful
-} from './core';
 import { map, pluck, tap } from 'rxjs/operators';
+import { isKeyOf, isOperateFnArrayGuard, isStringArrayGuard, pipeFromArray, safePluck } from './core';
+import { AccumulationFn, createAccumulationObservable, createSideEffectObservable } from './cdk';
+import { stateful } from './rxjs/operators';
 
 type ProjectStateFn<T> = (oldState: T) => Partial<T>;
 type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
@@ -26,8 +18,6 @@ type ProjectValueReducer<T, K extends keyof T, V> = (
 /**
  * @description
  * RxState is a light-weight reactive state management service for managing local state in angular.
- *
- * ![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/docs/images/state/state_logo.png)
  *
  * @example
  * Component({

@@ -4,7 +4,8 @@ import { jestMatcher } from '@test-helpers';
 import { interval, of, throwError } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-import { createAccumulationObservable, select } from '../../src/lib/core';
+import { createAccumulationObservable } from '../../src/lib/cdk';
+import { select } from '@rx-angular/state';
 import { initialPrimitiveState, PrimitiveState } from '../fixtures';
 
 

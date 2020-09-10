@@ -54,6 +54,6 @@ describe('LetDirective when error', () => {
   it('should render the error to true if one occurs', () => {
     letDirectiveTestComponent.value$ = throwError(new Error('error message'));
     fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('true');
+    expect(componentNativeElement.textContent).toBe('Error: error message');
   });
 });

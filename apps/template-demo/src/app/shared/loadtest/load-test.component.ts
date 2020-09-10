@@ -1,30 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
-import {
-  asapScheduler,
-  BehaviorSubject,
-  concat,
-  EMPTY,
-  from,
-  interval,
-  NEVER,
-  Observable,
-  Subject,
-} from 'rxjs';
-import {
-  concatMap,
-  mergeMap,
-  scan,
-  switchMap,
-  take,
-  takeUntil,
-  tap,
-} from 'rxjs/operators';
+import { concat, NEVER, Observable } from 'rxjs';
 import { getStrategies } from '@rx-angular/template';
 import { LoadTestService } from './load-test.service';
 
@@ -33,47 +9,47 @@ import { LoadTestService } from './load-test.service';
   template: `
     renders: {{ rerenders() }}
 
-    <br />
+    <br/>
     ---
-    <br />
+    <br/>
     <label>tick in ms</label>
-    <input (change)="s.ms = $event.target?.value" />
-    <br />
+    <input (change)="s.ms = $event.target?.value"/>
+    <br/>
 
     <label>Render Strategy</label>
     <select [unpatch] (change)="strategy$.next($event?.target?.value)">
       <option [value]="s" *ngFor="let s of strategies">{{ s }}</option>
     </select>
-    <br />
+    <br/>
     <button [unpatch] (click)="updateValue()">UpdateValue</button>
     <button [unpatch] (click)="updatePattern()">updatePattern</button>
     <button [unpatch] (click)="updatePatternSet()">
       updatePatternSet {{ strategy$ | push }}
     </button>
     <button [unpatch] (click)="s.toggle.next($event)">toggle</button>
-    <br />
+    <br/>
 
-    push: {{ value$ | push: strategy$ }}<br />
+    push: {{ value$ | push: strategy$ }}<br/>
 
-    ---- <br />
-
-    <ng-container *rxLet="value$; let value; strategy: strategy$">
-      rxLet: {{ value }}
-    </ng-container>
-    <br />
-    <ng-container *rxLet="value$; let value; strategy: strategy$">
-      rxLet: {{ value }}
-    </ng-container>
-    <br />
+    ---- <br/>
 
     <ng-container *rxLet="value$; let value; strategy: strategy$">
       rxLet: {{ value }}
     </ng-container>
+    <br/>
+    <ng-container *rxLet="value$; let value; strategy: strategy$">
+      rxLet: {{ value }}
+    </ng-container>
+    <br/>
 
-    <br />
+    <ng-container *rxLet="value$; let value; strategy: strategy$">
+      rxLet: {{ value }}
+    </ng-container>
+
+    <br/>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [LoadTestService],
+  providers: [LoadTestService]
 })
 export class LoadTestComponent implements OnInit {
   numRenders = 0;
@@ -83,7 +59,8 @@ export class LoadTestComponent implements OnInit {
   strategies = Object.keys(getStrategies({ cdRef: { context: {} } } as any));
   value$: Observable<string> = this.s.value$;
 
-  constructor(private cdRef: ChangeDetectorRef, public s: LoadTestService) {}
+  constructor(private cdRef: ChangeDetectorRef, public s: LoadTestService) {
+  }
 
   rerenders() {
     return ++this.numRenders;

@@ -29,6 +29,7 @@ export interface RenderStrategy {
    * @property
    * RxJS operator to uses the strategy specific behavior when call the render method.
    * Takes a callback that signals the render and returns and Observable to unsubscribe from and stop work.
+   * This function will get called for every rendered value.
    */
   rxScheduleCD: <T>(o: Observable<T>) => Observable<any>;
   /**

@@ -7,6 +7,20 @@ import { mockConsole } from '@test-helpers';
 describe('schedule and coalesce', () => {
   beforeAll(() => mockConsole());
 
+  it('should be callable', (done) => {
+    let test = 0;
+    const doWork = () => {
+      test++;
+      expect(test).toBe(1);
+      done();
+    };
+    coalesceAndSchedule(doWork, false);
+    expect(test).toBe(0);
+    // this happens after coalescing
+    expect(test).toBe(0);
+  });
+
+
   it('should change the execution context for coalescing', (done) => {
     let test = 0;
     const doWork = () => {

@@ -72,10 +72,10 @@ export class StatefulComponent {
   providers: [RxState],
 })
 export class StatefulComponent {
-  readonly title$ = this.select('title');
+  readonly title$ = this.state.select('title');
 
   @Input() set title(title: string) {
-    this.state.setState({ title });
+    this.state.set({ title });
   }
 
   constructor(private state: RxState<{ title: string }>) {}
@@ -149,7 +149,7 @@ Often it is needed to get the previous state to calculate the new one.
    providers: [RxState]
 })
 export class StatefulComponent {
-   readonly items$ = this.select('items');
+   readonly items$ = this.state.select('items');
    readonly btnClick$ = new Subject();
 
    constructor(private state: RxState<{list: {id: number}}>) {
