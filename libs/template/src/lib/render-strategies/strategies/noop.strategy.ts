@@ -20,7 +20,7 @@ import {
  * @return {RenderStrategy} - The calculated strategy
  *
  */
-export function createNoopStrategy(): RenderStrategy {
+export function createNoopStrategy(config: RenderStrategyFactoryConfig): RenderStrategy {
   return {
     name: 'noop',
     detectChanges: () => {},
