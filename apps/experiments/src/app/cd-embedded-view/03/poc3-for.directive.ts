@@ -47,6 +47,9 @@ interface RecordViewTuple<T, U extends NgIterable<T>> {
   selector: '[pocForIterable]'
 })
 export class PocForIterable<T, U extends NgIterable<T> = NgIterable<T>> implements OnInit, OnDestroy {
+  private differ: IterableDiffer<T> | null = null;
+  private subscription: Unsubscribable = new Subscription();
+
   observables$ = new ReplaySubject<ObservableInput<U & NgIterable<T>>>(1);
   values: U & NgIterable<T>;
   values$ = this.observables$
@@ -68,10 +71,6 @@ export class PocForIterable<T, U extends NgIterable<T> = NgIterable<T>> implemen
 
   @Input()
   pocForIterableDistinctBy = (a, b) => a === b;
-
-  private differ: IterableDiffer<T> | null = null;
-
-  private subscription: Unsubscribable = new Subscription();
 
   constructor(
     private cdRef: ChangeDetectorRef,
