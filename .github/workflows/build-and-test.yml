@@ -37,6 +37,6 @@ jobs:
         path: ~/.npm
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./yarn.lock') }}
     - run: yarn
-    - run: yarn nx affected:lint -- --base=origin/master --head=${{ github.event.pull_request.head.ref }}
-    - run: yarn nx affected:build -- --base=origin/master --head=${{ github.event.pull_request.head.ref }}
-    - run: yarn nx affected:test -- --base=origin/master --head=${{ github.event.pull_request.head.ref }}
+    - run: yarn nx affected:lint --base=origin/master --head=${{ github.event.pull_request.head.ref }}
+    - run: yarn nx affected:build --base=origin/master --head=${{ github.event.pull_request.head.ref }}
+    - run: yarn nx affected:test --base=origin/master --head=${{ github.event.pull_request.head.ref }}
