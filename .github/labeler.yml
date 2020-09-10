@@ -12,10 +12,15 @@
      - libs/template/*
      - libs/template/**/*
 
+# Add 'documentation' label to any change to files within a docs dir
+  documentation:
+    - libs/**/docs/**/*
+    - docs/**/*
 
 # Add 'test' label to any change to *.spec.js files within the source dir
   test:
      - libs/**/*.spec.js
+     - libs/**/perf/**/*
 
 # Add 'root-file-changes' label to any change to files located directly in the root dir
 #  root-files-affected:
