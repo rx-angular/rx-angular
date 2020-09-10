@@ -15,9 +15,9 @@ export function staticSchedule(
   // schedule work
   const sub = priorityTickMap[priority].subscribe(
     {
-      complete: () => tryExecuteWork(),
-      // on complete abort further executions
-      next: () => abC.abort()
+     // on complete abort further executions
+     complete: () => abC.abort(),
+     next: () => tryExecuteWork()
     }
   );
   const abortHandler = function () {
