@@ -104,7 +104,7 @@ describe('strategies', () => {
 
   describe('createNoopStrategy', () => {
     it('should return a strategy named `noop`', () => {
-      const strategy = createNoopStrategy();
+      const strategy = createNoopStrategy(getMockStrategyConfig());
       expect(strategy.name).toBe('noop');
     });
   });

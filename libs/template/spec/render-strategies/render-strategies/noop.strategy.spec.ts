@@ -1,9 +1,5 @@
 import { getStrategies } from '@rx-angular/template';
-import {
-  getMockStrategyConfig,
-  testStrategyMethod,
-  CallsExpectations
-} from '../../fixtures';
+import { CallsExpectations, getMockStrategyConfig, testStrategyMethod } from '../../fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
@@ -29,11 +25,12 @@ describe('noop Strategy', () => {
       expect(strategy).toBeDefined();
     });
 
+
     it(`should have ${strategyName} as name`, () => {
       const strategy = getStrategies(getMockStrategyConfig())[strategyName];
       expect(strategy.name).toBe(strategyName);
     });
-  })
+  });
 
   describe('rxScheduleCD', () => {
     it('should not trigger change detection when rxScheduleCD is used with a single sync emission', (done) => {
@@ -45,14 +42,15 @@ describe('noop Strategy', () => {
       }, done);
     });
 
-    it('should not trigger change detection when rxScheduleCD is used with multiple sync emissions', (done) => {
+    it('should not trigger change detection when detectChanges is used with multiple sync emissions', (done) => {
       testStrategyMethod({
         strategyName,
-        strategyMethod: 'rxScheduleCD',
+        strategyMethod: 'detectChanges',
         singleTime: false,
         callsExpectations
       }, done);
     });
+
   });
 
   describe('scheduleCD', () => {
@@ -73,7 +71,7 @@ describe('noop Strategy', () => {
         callsExpectations
       }, done);
     });
-  })
+  });
 
   describe('combined scheduleCD & rxScheduleCD', () => {
     it('should not trigger change detection when scheduleCD or rxScheduleCD is called', done => {
@@ -82,7 +80,8 @@ describe('noop Strategy', () => {
         strategyMethod: 'scheduleCD',
         singleTime: false,
         callsExpectations
-      }, () => {});
+      }, () => {
+      });
       testStrategyMethod({
         strategyName,
         strategyMethod: 'rxScheduleCD',
@@ -90,7 +89,7 @@ describe('noop Strategy', () => {
         callsExpectations
       }, done);
     });
-  })
+  });
 
 
 });

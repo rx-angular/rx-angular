@@ -33,7 +33,7 @@ export function getStrategies(
     ...getLocalStrategies(config),
     ...getGlobalStrategies(config),
     ...getDetachStrategies(config),
-    noop: createNoopStrategy(),
+    noop: createNoopStrategy(config),
     native: createNativeStrategy(config)
   };
 }

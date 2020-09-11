@@ -20,7 +20,8 @@ export function testStrategyMethod(
 
 const testsMap = new Map<keyof RenderStrategy, Function>([
   ['rxScheduleCD', testRxScheduleCD],
-  ['scheduleCD', testScheduleCD]
+  ['scheduleCD', testScheduleCD],
+  ['detectChanges', testDetectChanges]
 ]);
 
 function testRxScheduleCD(
@@ -48,6 +49,24 @@ function testScheduleCD(config: StrategyTestConfig, done: jest.DoneCallback | an
 
   for (let i = 0; i < (singleTime ? 1 : numMultipleCalls); i++) {
     renderStrategy.scheduleCD();
+  }
+
+  setTimeout(() => {
+    checkExpectations(cfg, callsExpectations);
+    if (done) {
+      done();
+    }
+  }, 200);
+  return cfg;
+}
+
+function testDetectChanges(config: StrategyTestConfig, done: jest.DoneCallback | any) {
+  const { strategyName, singleTime, callsExpectations } = config;
+  const cfg = getMockStrategyConfig();
+  const renderStrategy = getStrategies(cfg)[strategyName];
+
+  for (let i = 0; i < (singleTime ? 1 : numMultipleCalls); i++) {
+    renderStrategy.detectChanges();
   }
 
   setTimeout(() => {
