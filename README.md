@@ -16,7 +16,7 @@ This repository holds a set of helpers to create **fully reactive** as well as *
 
 ## Homepage
 
-https://biophoton.github.io/rx-angular/#/
+https://rx-angular.github.io/rx-angular/#/
 
 ## Packages
 
