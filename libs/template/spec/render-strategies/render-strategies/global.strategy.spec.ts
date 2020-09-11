@@ -1,11 +1,33 @@
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { getStrategies } from '../../../src/lib/render-strategies';
-import {
-  getMockStrategyConfig,
-  testStrategyMethod,
-  CallsExpectations
-} from '../../fixtures';
-import { fakeAsync } from '@angular/core/testing';
+import { CallsExpectations, getMockStrategyConfig, testStrategyMethod } from '../../fixtures';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { LetDirective } from '@rx-angular/template';
+
+@Component({
+  template: ``
+})
+class GlobalStrategyTestComponent {
+  constructor(public cdRef: ChangeDetectorRef) {
+  }
+}
+
+let fixture: ComponentFixture<GlobalStrategyTestComponent>;
+let component: GlobalStrategyTestComponent;
+let nativeElement: HTMLElement;
+
+const setupTestComponent = () => {
+  TestBed.configureTestingModule({
+    declarations: [GlobalStrategyTestComponent, LetDirective]
+  }).compileComponents();
+};
+
+const setUpFixture = () => {
+  fixture = TestBed.createComponent(GlobalStrategyTestComponent);
+  component = fixture.componentInstance;
+  nativeElement = fixture.nativeElement;
+};
 
 /**
  * GLOBAL STRATEGY
@@ -17,12 +39,14 @@ const strategyName = 'global';
 const callsExpectations: CallsExpectations = {
   detectChanges: 0,
   markForCheck: 0,
-  detach:0,
+  detach: 0,
   reattach: 0
 };
 
 describe('global Strategy', () => {
   // beforeAll(() => mockConsole());
+  beforeEach(async(setupTestComponent));
+  beforeEach(setUpFixture);
 
   describe('declaration', () => {
     it('should be present in strategies map', () => {
@@ -34,6 +58,29 @@ describe('global Strategy', () => {
       const strategy = getStrategies(getMockStrategyConfig())[strategyName];
       expect(strategy.name).toBe(strategyName);
     });
+
+    it(`should mark component as dirty`, () => {
+      const strategy = getStrategies({ cdRef: component.cdRef })[strategyName];
+      /*
+      LViewDebug
+      https://github.com/angular/angular/blob/2c4a98a28594afc16a481ff4fc56cb37ce1a04b0/packages/core/src/render3/instructions/lview_debug.ts
+
+
+      https://github.com/angular/angular/blob/2c4a98a28594afc16a481ff4fc56cb37ce1a04b0/packages/core/src/render3/interfaces/view.ts#L351
+      markViewDirty(component[__ngContext__])!; === component[__ngContext__][2].Dirty = 0b000001000000; // LViewFlags.Dirty
+      */
+      const dirtyValue = 0b000001000000;
+      function isDirty(c: any) {
+        return c['__ngContext__'][2].Dirty === dirtyValue;
+      }
+      fixture.detectChanges();
+      expect(isDirty(component)).toBeFalsy();
+      strategy.scheduleCD();
+      expect(isDirty(component)).toBeTruthy();
+
+    });
+
+
   });
 
   describe('rxScheduleCD', () => {
@@ -80,21 +127,22 @@ describe('global Strategy', () => {
 
   xdescribe('combined scheduleCD & rxScheduleCD', () => {
     it('should call strategy#detectChanges 0 times when scheduleCD or rxScheduleCD is called', (done) => {
-        testStrategyMethod({
-          strategyName,
-          strategyMethod: 'scheduleCD',
-          flushMicrotask: true,
-          singleTime: false,
-          callsExpectations
-        }, done);
+      testStrategyMethod({
+        strategyName,
+        strategyMethod: 'scheduleCD',
+        flushMicrotask: true,
+        singleTime: false,
+        callsExpectations
+      }, done);
 
-        testStrategyMethod({
-          strategyName,
-          strategyMethod: 'rxScheduleCD',
-          singleTime: false,
-          callsExpectations
-        }, () => {});
-      })
+      testStrategyMethod({
+        strategyName,
+        strategyMethod: 'rxScheduleCD',
+        singleTime: false,
+        callsExpectations
+      }, () => {
+      });
+    });
   });
 
   xit(`@TODO TEST call of markDirty`, () => {
