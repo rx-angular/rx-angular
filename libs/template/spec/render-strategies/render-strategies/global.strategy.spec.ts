@@ -22,7 +22,6 @@ const callsExpectations: CallsExpectations = {
 };
 
 describe('global Strategy', () => {
-  // beforeAll(() => mockConsole());
 
   describe('declaration', () => {
     it('should be present in strategies map', () => {
