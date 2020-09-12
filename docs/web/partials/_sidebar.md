@@ -59,5 +59,5 @@
 
 - **Links**
 
-- [![Github](https://icongram.jgog.in/simple/github.svg?color=808080&size=16)Github](https://github.com/BioPhoton/rx-angular)
+- [![Github](https://icongram.jgog.in/simple/github.svg?color=808080&size=16)Github](https://github.com/rx-angular/rx-angular)
 - [![Slack](https://icongr.am/devicon/slack-original.svg?size=16&color=currentColor)Slack](https://rxangular.slack.com/)
