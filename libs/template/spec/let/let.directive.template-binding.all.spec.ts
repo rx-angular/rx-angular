@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { LetDirective } from '@rx-angular/template';
 import { EMPTY, interval, Observable, of, Subject, NEVER, throwError } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -43,7 +43,7 @@ const setUpFixture = () => {
 
 describe('LetDirective when template binding with all templates', () => {
   beforeAll(() => mockConsole());
-  beforeEach(async(setupTestComponent));
+  beforeEach(waitForAsync(setupTestComponent));
   beforeEach(setUpFixture);
 
   it('should be initiated', () => {

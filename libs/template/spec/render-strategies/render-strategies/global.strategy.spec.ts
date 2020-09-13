@@ -1,7 +1,7 @@
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { getStrategies } from '../../../src/lib/render-strategies';
 import { CallsExpectations, getMockStrategyConfig, testStrategyMethod } from '../../fixtures';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { LetDirective } from '@rx-angular/template';
 
@@ -45,7 +45,7 @@ const callsExpectations: CallsExpectations = {
 
 describe('global Strategy', () => {
   // beforeAll(() => mockConsole());
-  beforeEach(async(setupTestComponent));
+  beforeEach(waitForAsync(setupTestComponent));
   beforeEach(setUpFixture);
 
   describe('declaration', () => {
@@ -71,7 +71,13 @@ describe('global Strategy', () => {
       */
       const dirtyValue = 0b000001000000;
       function isDirty(c: any) {
-        return c['__ngContext__'][2].Dirty === dirtyValue;
+        // These are the flags from non-readable __ngContext__.
+        // For some reason it is in different places when you try to run this function second time. But it is working!
+        const componentFlags = c.__ngContext__[2] || c.__ngContext__.lView[2];
+
+        // See this line https://github.com/angular/angular/blob/2c4a98a28594afc16a481ff4fc56cb37ce1a04b0/packages/core/src/render3/instructions/lview_debug.ts#L391
+        // tslint:disable-next-line: no-bitwise
+        return !!(componentFlags & dirtyValue);
       }
       fixture.detectChanges();
       expect(isDirty(component)).toBeFalsy();
