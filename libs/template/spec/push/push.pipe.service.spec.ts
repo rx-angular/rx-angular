@@ -1,5 +1,5 @@
 import { PushPipe } from '../../src/lib/push';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
 import { MockChangeDetectorRef } from '../fixtures';
@@ -20,7 +20,7 @@ const setupPushPipeComponent = () => {
 
 describe('PushPipe used as a Service', () => {
   beforeAll(() => mockConsole());
-  beforeEach(waitForAsync(setupPushPipeComponent));
+  beforeEach(async(setupPushPipeComponent));
 
   it('should be instantiable', () => {
     expect(pushPipe).toBeDefined();

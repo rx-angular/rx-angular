@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
 import { EMPTY, Observable, of } from 'rxjs';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let';
 import { MockChangeDetectorRef } from '../fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
@@ -44,7 +44,7 @@ const setupLetDirectiveTestComponentComplete = (): void => {
 
 describe('LetDirective when complete', () => {
   beforeAll(() => mockConsole());
-  beforeEach(waitForAsync(setupLetDirectiveTestComponentComplete));
+  beforeEach(async(setupLetDirectiveTestComponentComplete));
 
   it('should render true if completed', () => {
     letDirectiveTestComponent.value$ = EMPTY;

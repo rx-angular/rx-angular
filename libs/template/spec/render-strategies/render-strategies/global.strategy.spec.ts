@@ -1,7 +1,7 @@
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { getStrategies } from '../../../src/lib/render-strategies';
 import { CallsExpectations, getMockStrategyConfig, testStrategyMethod } from '../../fixtures';
-import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { LetDirective } from '@rx-angular/template';
 
@@ -45,7 +45,7 @@ const callsExpectations: CallsExpectations = {
 
 describe('global Strategy', () => {
   // beforeAll(() => mockConsole());
-  beforeEach(waitForAsync(setupTestComponent));
+  beforeEach(async(setupTestComponent));
   beforeEach(setUpFixture);
 
   describe('declaration', () => {
