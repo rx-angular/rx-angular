@@ -1,5 +1,6 @@
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { getStrategies } from '../../../src/lib/render-strategies';
+import * as AngularCore from '@angular/core';
 import { CallsExpectations, getMockStrategyConfig, testStrategyMethod } from '../../fixtures';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChangeDetectorRef, Component } from '@angular/core';
@@ -47,6 +48,7 @@ describe('global Strategy', () => {
   // beforeAll(() => mockConsole());
   beforeEach(async(setupTestComponent));
   beforeEach(setUpFixture);
+  beforeEach(spyOnMarkDirty);
 
   describe('declaration', () => {
     it('should be present in strategies map', () => {
@@ -61,29 +63,8 @@ describe('global Strategy', () => {
 
     it(`should mark component as dirty`, () => {
       const strategy = getStrategies({ cdRef: component.cdRef })[strategyName];
-      /*
-      LViewDebug
-      https://github.com/angular/angular/blob/2c4a98a28594afc16a481ff4fc56cb37ce1a04b0/packages/core/src/render3/instructions/lview_debug.ts
-
-
-      https://github.com/angular/angular/blob/2c4a98a28594afc16a481ff4fc56cb37ce1a04b0/packages/core/src/render3/interfaces/view.ts#L351
-      markViewDirty(component[__ngContext__])!; === component[__ngContext__][2].Dirty = 0b000001000000; // LViewFlags.Dirty
-      */
-      const dirtyValue = 0b000001000000;
-      function isDirty(c: any) {
-        // These are the flags from non-readable __ngContext__.
-        // For some reason it is in different places when you try to run this function second time. But it is working!
-        const componentFlags = c.__ngContext__[2] || c.__ngContext__.lView[2];
-
-        // See this line https://github.com/angular/angular/blob/2c4a98a28594afc16a481ff4fc56cb37ce1a04b0/packages/core/src/render3/instructions/lview_debug.ts#L391
-        // tslint:disable-next-line: no-bitwise
-        return !!(componentFlags & dirtyValue);
-      }
-      fixture.detectChanges();
-      expect(isDirty(component)).toBeFalsy();
       strategy.scheduleCD();
-      expect(isDirty(component)).toBeTruthy();
-
+      expect(AngularCore['ɵmarkDirty']).toHaveBeenCalledWith(component);
     });
 
 
@@ -109,7 +90,7 @@ describe('global Strategy', () => {
     });
   });
 
-  xdescribe('scheduleCD', () => {
+  describe('scheduleCD', () => {
     it('should call cdRef#detectChanges & cdRef#markForCheck 0 times when scheduleCD is called a single time', (done) => {
       testStrategyMethod({
         strategyName,
@@ -131,7 +112,7 @@ describe('global Strategy', () => {
     });
   });
 
-  xdescribe('combined scheduleCD & rxScheduleCD', () => {
+  describe('combined scheduleCD & rxScheduleCD', () => {
     it('should call strategy#detectChanges 0 times when scheduleCD or rxScheduleCD is called', (done) => {
       testStrategyMethod({
         strategyName,
@@ -157,3 +138,6 @@ describe('global Strategy', () => {
 
 });
 
+function spyOnMarkDirty() {
+  spyOn(AngularCore, 'ɵmarkDirty').and.callFake(() => undefined);
+}
