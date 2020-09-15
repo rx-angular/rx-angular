@@ -61,10 +61,10 @@ This document was adapted from the open-source support guidelines for [remarkjs]
 
 <!-- Definitions -->
 
-[license]: https://github.com/BioPhoton/rx-angular/blob/main/LICENSE.md
-[coc]: https://github.com/BioPhoton/rx-angular/.github/blob/main/CODE_OF_CONDUCT.md
+[license]: https://github.com/rx-angular/rx-angular/blob/main/LICENSE.md
+[coc]: https://github.com/rx-angular/rx-angular/.github/blob/main/CODE_OF_CONDUCT.md
 [rubberduck]: https://rubberduckdebugging.com
 [xy]: https://meta.stackexchange.com/questions/66377/what-is-the-xy-problem/66378#66378
 [stackblitz]: https://stackblitz.com
 [slack]: https://rxangular.slack.com
-[contributing]: https://github.com/BioPhoton/rx-angular/.github/blob/main/CONTRIBUTING.md
+[contributing]: https://github.com/rx-angular/rx-angular/.github/blob/main/CONTRIBUTING.md

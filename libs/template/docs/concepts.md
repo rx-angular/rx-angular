@@ -8,7 +8,7 @@ Coalescing, in this very manner, means _collecting all events_ in the same
 [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick,
 that would cause a re-rendering and execute **re-rendering only once**.
 
-![Coalescing](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/coalescing.png)
+![Coalescing](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/images/coalescing.png)
 
 ## Scoped Coalescing
 
@@ -20,4 +20,4 @@ E.g. the **component** from which the re-rendering was initiated.
 Coalescing provides us a way to gather multiple re-renderings to a single point of execution. Scheduling in this
 the case means searching for the very **optimized** point in time when to really _execute rendering_.
 
-![Scheduling Options](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/scheduling-options.png)
+![Scheduling Options](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/images/scheduling-options.png)

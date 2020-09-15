@@ -202,6 +202,22 @@ describe('CdAware', () => {
       expect(cdAwareImplementation.completed).toBe(false);
     });
 
+    it('should handle strategy switching with observable', () => {
+      const values = new Subject();
+      const value$ = values.pipe(startWith(1), tap(console.log));
+      cdAwareImplementation.cdAware.nextPotentialObservable(
+        value$
+      );
+      expect(cdAwareImplementation.renderedValue).toBe(1);
+      expect(strategies[DEFAULT_STRATEGY_NAME].rxScheduleCD).toHaveBeenCalled();
+      cdAwareImplementation.cdAware.nextStrategy(of('testStrat'));
+      values.next(2);
+      expect(strategies.testStrat.rxScheduleCD).toHaveBeenCalled();
+      expect(cdAwareImplementation.renderedValue).toBe(2);
+      expect(cdAwareImplementation.error).toBe(undefined);
+      expect(cdAwareImplementation.completed).toBe(false);
+    });
+
     it('should handle subscriptions with ongoing observables', () => {
       const values = new Subject();
       let subscribers = 0;

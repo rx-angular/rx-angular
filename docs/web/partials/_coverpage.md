@@ -1,4 +1,4 @@
-![logo](https://github.com/BioPhoton/rx-angular/blob/github-pages/docs/images/logo.jpg?raw=true)
+![logo](https://github.com/rx-angular/rx-angular/blob/github-pages/docs/images/logo.jpg?raw=true)
 
 # <b>@rx-angular</b>
 
@@ -7,7 +7,7 @@
 - 📦@rx-angular/state - Reactive Component State-Management
 - 📦@rx-angular/template - High-Performance Reactive Rendering
 
-[GitHub](https://github.com/BioPhoton/rx-angular)
+[GitHub](https://github.com/rx-angular/rx-angular)
 [Get Started](web/state/general/overview)
 
 <!-- background color -->

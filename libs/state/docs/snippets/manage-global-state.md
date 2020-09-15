@@ -2,7 +2,7 @@ _Author: [@Phhansen](https://github.com/Phhansen)_
 
 # How to manage global state
 
-For an explainer on how to easily identify what should be global state and what should local state, please read: [Difference between Global and Local state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/global-state-vs-local-state.md).
+For an explainer on how to easily identify what should be global state and what should local state, please read: [Difference between Global and Local state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/global-state-vs-local-state.md).
 
 ## Example
 

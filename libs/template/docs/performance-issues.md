@@ -2,7 +2,7 @@
 
 A brief overview about what is about the current situation in terms of rendering in angular applications.
 
-![Scheduling Options](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/bad-rendering-performance-angular.png)
+![Scheduling Options](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/images/bad-rendering-performance-angular.png)
 
 ## Binding Reactive Sources
 
@@ -64,12 +64,12 @@ rely on some `NgZone` callbacks (including `@angular/components` & `@angular/cdk
 stop working at all after using `'noop' NgZone`.
 
 To encounter those issues at least partially, @rx-angular/template provides easy to use optimization tools
-such as the [[unpatch] directive](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/unpatch.md).
+such as the [[unpatch] directive](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/unpatch.md).
 
 Nevertheless, if you know what you do and want to build a render performance critical application, `@rx-angular/template`
 is the perfect candidate for being its base.
 
 Some further information about NgZone (zone.js):
 
-- [zone-js-references](https://gist.github.com/BioPhoton/090684defbe926f398e8d3d4b0b1f0e1)
+- [zone-js-references](https://gist.github.com/rx-angular/090684defbe926f398e8d3d4b0b1f0e1)
 - [zone.js MODULE.md](https://github.com/angular/zone.js/blob/master/MODULE.md)

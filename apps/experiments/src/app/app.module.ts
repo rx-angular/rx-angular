@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 
+
 @NgModule({
   declarations: [AppComponent, ConfigPanelComponent],
   imports: [

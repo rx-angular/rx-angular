@@ -1,13 +1,13 @@
 # RenderStrategies
 
 The `RenderStrategies` can be seen as the _core_ of the performance optimization layer. They utilize all
-[`Concepts`](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/concepts.md) explained above in order to provide a streamlined and focused API to master
+[`Concepts`](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/concepts.md) explained above in order to provide a streamlined and focused API to master
 angular rendering and `ChangeDetection`.
 
 ## Usage
 
 Use the corresponding `RenderStrategy#name` as parameter or Input with the `PushPipe` or `LetDirective`.
-By default, they will use the [Local Strategy](https://github.com/BioPhoton/rx-angular/tree/master/libs/template/docs/viewport-prio.md).
+By default, they will use the [Local Strategy](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/viewport-prio.md).
 
 ```html
 <div *rxLet="list$; let list; strategy: 'global'"></div>
@@ -39,7 +39,7 @@ export class PerformanceAwareComponent {
 
 ## Built-in Strategies
 
-![Template - RenderStrategies](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/template/images/template_rendering-strategies.png)
+![Template - RenderStrategies](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/images/template_rendering-strategies.png)
 
 | Name     | Zone Agnostic | Render Method     | Coalescing         | Scheduling              |
 | -------- | ------------- | ----------------- | ------------------ | ----------------------- |
@@ -105,7 +105,7 @@ Additional information about `detached` views:
 
 The no-operation strategy does nothing.
 It can be a useful tool for performance improvements as well as debugging
-The [`[viewport-prio]`](https://github.com/BioPhoton/rx-angular/blob/ef99804c1b07aeb96763cacca6afad7bbdab03b1/libs/template/src/lib/experimental/viewport-prio/viewport-prio.directive.ts) directive use it to limit renderings to only visible components:
+The [`[viewport-prio]`](https://github.com/rx-angular/rx-angular/blob/ef99804c1b07aeb96763cacca6afad7bbdab03b1/libs/template/src/lib/experimental/viewport-prio/viewport-prio.directive.ts) directive use it to limit renderings to only visible components:
 
 | Name   | Zone Agnostic | Render Method | Coalescing | Scheduling |
 | ------ | ------------- | ------------- | ---------- | ---------- |

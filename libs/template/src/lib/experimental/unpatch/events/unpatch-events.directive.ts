@@ -85,10 +85,19 @@ export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
   subscription = new Subscription();
   events$ = new BehaviorSubject<string[]>(zonePatchedEvents);
 
+  /**
+   * @description
+   * List of events that the element should be unpatched from. When input is empty or undefined,
+   * the element is unpatched from all zone-patched events.
+   *
+   * Full list of zone-patched browser events can be found in
+   * [this document](https://github.com/angular/angular/blob/master/packages/zone.js/STANDARD-APIS.md#browser).
+   *
+   */
   @Input('unpatch')
-  set events(value: string[]) {
-    if (value && value.length > 0) {
-      this.events$.next(value);
+  set events(events: string[]) {
+    if (events && events.length > 0) {
+      this.events$.next(events);
     } else {
       this.events$.next(zonePatchedEvents);
     }

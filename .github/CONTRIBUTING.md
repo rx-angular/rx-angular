@@ -62,5 +62,5 @@ This document was adapted from the open-source contribution guidelines for [Face
 
 [mit]: https://choosealicense.com/licenses/mit/
 [github-flow]: https://guides.github.com/introduction/flow/index.html
-[issues]: https://github.com/BioPhoton/rx-angular/issues
-[new-issue]: https://github.com/BioPhoton/rx-angular/issues/new
+[issues]: https://github.com/rx-angular/rx-angular/issues
+[new-issue]: https://github.com/rx-angular/rx-angular/issues/new
