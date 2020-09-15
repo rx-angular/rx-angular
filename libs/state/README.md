@@ -1,14 +1,14 @@
 # @rx-angular/state
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
-![rx-angular CI](https://github.com/BioPhoton/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
-[![Coverage Status](https://raw.githubusercontent.com/BioPhoton/rx-angular/github-pages/docs/test-coverage/state/jest-coverage-badge.svg)](https://biophoton.github.io/rx-angular/test-coverage/state/lcov-report/index.html)
+![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
+[![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/state/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/state/lcov-report/index.html)
 
 ## Reactive Component State for Angular
 
 RxState is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in angular.
 
-![state logo](https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_logo.png)
+![state logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/images/state_logo.png)
 
 ## Description
 
@@ -38,8 +38,8 @@ Using this library allows you to implement things like:
 with very little effort in any component.
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-names.png" width="49%" />
-  <img src="https://raw.githubusercontent.com/BioPhoton/rx-angular/master/libs/state/images/state_API-types.png" width="49%" />
+  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/images/state_API-names.png" width="49%" />
+  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/images/state_API-types.png" width="49%" />
 </p>
 
 ## Key features
@@ -59,32 +59,32 @@ with very little effort in any component.
 
 ## API
 
-[API Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/api/overview.md)
+[API Documentation](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/api/overview.md)
 
 ## Usage
 
-[Usage Documentation](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/usage.md)
+[Usage Documentation](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/usage.md)
 
 ## Tutorials
 
-- [Basic Tutorial](https://github.com/BioPhoton/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics)
+- [Basic Tutorial](https://github.com/rx-angular/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics)
 - [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
 
 ## Snippets
 
-- [Logic comparison - Increment a Value](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/logic-comparison--increment-a-value.md)
-- [Loading state and data fetching](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/loading-state-and-data-fetching.md)
-- [Passing Observables directly](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/passing-observables-directly.md)
-- [How to run partial state updates](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/how-can-i-run-partial-state-updates.md)
-- [Get nested state slices](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/get-nested-state-slices.md)
-- [Deriving simple state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/deriving-simple-state.md)
-- [Composing state using NgRx selectors](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/composing-state-using-ngrx-selectors.md)
-- [Manage entities using NgRx entity adapter](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/manage-collections-with-ngrx-entity.md)
-- [BehaviorSubject vs RxState](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/behavior-subject-vs-rx-state.md)
-- [Managing ViewModels with selectSlice](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/selecting-the-viewmodel.md)
-- [Manage reactive HostBindings](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/hostbindings.md)
-- [Difference between Global and Local state](https://github.com/BioPhoton/rx-angular/tree/master/libs/state/docs/snippets/global-state-vs-local-state.md)
-- [Using RxState as Global State](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/snippets/manage-global-state.md)
+- [Logic comparison - Increment a Value](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/logic-comparison--increment-a-value.md)
+- [Loading state and data fetching](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/loading-state-and-data-fetching.md)
+- [Passing Observables directly](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/passing-observables-directly.md)
+- [How to run partial state updates](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/how-can-i-run-partial-state-updates.md)
+- [Get nested state slices](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/get-nested-state-slices.md)
+- [Deriving simple state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/deriving-simple-state.md)
+- [Composing state using NgRx selectors](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/composing-state-using-ngrx-selectors.md)
+- [Manage entities using NgRx entity adapter](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/manage-collections-with-ngrx-entity.md)
+- [BehaviorSubject vs RxState](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/behavior-subject-vs-rx-state.md)
+- [Managing ViewModels with selectSlice](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/selecting-the-viewmodel.md)
+- [Manage reactive HostBindings](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/hostbindings.md)
+- [Difference between Global and Local state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/global-state-vs-local-state.md)
+- [Using RxState as Global State](https://github.com/rx-angular/rx-angular/blob/master/libs/state/docs/snippets/manage-global-state.md)
 
 ## Resources
 

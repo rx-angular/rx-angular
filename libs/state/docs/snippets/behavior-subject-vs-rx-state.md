@@ -1,4 +1,4 @@
-@Notice: This content is a copy of [this comment](https://github.com/BioPhoton/rx-angular/issues/75#issuecomment-626031134) created by [@Karnaukhov-kh](https://github.com/Karnaukhov-kh)
+@Notice: This content is a copy of [this comment](https://github.com/rx-angular/rx-angular/issues/75#issuecomment-626031134) created by [@Karnaukhov-kh](https://github.com/Karnaukhov-kh)
 We are incredible thankful for that contribution!!
 
 # Migrating to RxState
@@ -385,7 +385,7 @@ RxState service is in component providers. That means that lifecycle of this ser
   tasks$ = this.state.select("tasks");
 ```
 
-Visually it looks the same but the select operator provides a lot more than just passing keys. You can read about it [here](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api/rx-state.md#select). Also selection will be shareReplayed, distincted and undefined values will be filtered out.
+Visually it looks the same but the select operator provides a lot more than just passing keys. You can read about it [here](https://github.com/rx-angular/rx-angular/blob/master/libs/state/docs/api/rx-state.md#select). Also selection will be shareReplayed, distincted and undefined values will be filtered out.
 
 **Updating state reactively**
 
@@ -427,7 +427,7 @@ Now we need to update our `answerHandler$` so it will return an id of task that 
 
 Note that we removed `withLatestFrom(this.tasks$)` in favor of the `projectionFunction` in `connect`.
 First we define fields to be updated, then the source of the changes and lastly we provide the `projectionFunction`.
-The functions' first first argument is the current state, the second is the change coming from our source. More on possible `connect` variants [here](https://github.com/BioPhoton/rx-angular/blob/master/libs/state/docs/api/rx-state.md#connect).
+The functions' first first argument is the current state, the second is the change coming from our source. More on possible `connect` variants [here](https://github.com/rx-angular/rx-angular/blob/master/libs/state/docs/api/rx-state.md#connect).
 
 **Full component code**
 

@@ -4,7 +4,7 @@ In this tutorial we will learn how to refactor a component written in imperative
 
 To setup the project locally run following steps:
 
-- `git clone https://github.com/BioPhoton/rx-angular.git rx-angular`
+- `git clone https://github.com/rx-angular/rx-angular.git rx-angular`
 - `cd rx-angular`
 - `npm install` or `yarn install`
 - `npm run nx serve state-demo` or `yarn nx serve state-demo`
@@ -23,5 +23,5 @@ Furthermore, there is a refresh button. A click on it also refreshes the list da
 
 Chapters we will discuss are:
 
-- [Setup a reactive state, selections and, UI interactions](https://github.com/BioPhoton/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics/1)
-- [Handing Side Effects reactively](https://github.com/BioPhoton/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics/2)
+- [Setup a reactive state, selections and, UI interactions](https://github.com/rx-angular/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics/1)
+- [Handing Side Effects reactively](https://github.com/rx-angular/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics/2)

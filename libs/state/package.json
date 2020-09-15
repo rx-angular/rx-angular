@@ -12,7 +12,7 @@
     "yarn": ">=1.9.2"
   },
   "author": "Michael Hladky <michael@hladky.at>",
-  "homepage": "https://biophoton.github.io/rx-angular/#/",
+  "homepage": "https://rx-angular.github.io/rx-angular/#/",
   "keywords": [
     "angular",
     "rxjs",
@@ -45,7 +45,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BioPhoton/rx-angular.git"
+    "url": "https://github.com/rx-angular/rx-angular.git"
   },
   "peerDependencies": {
     "@angular/core": ">8.0.0",
