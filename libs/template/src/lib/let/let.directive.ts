@@ -212,7 +212,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * \@Component({
    *   selector: 'app-root',
    *   template: `
-   *     <ng-container *rxLet="hero$; let hero; strategy: 'local'">
+   *     <ng-container *rxLet="hero$; let hero; strategy: strategy">
    *       <app-hero [hero]="hero"></app-hero>
    *     </ng-container>
    *   `
