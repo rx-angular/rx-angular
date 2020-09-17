@@ -29,8 +29,8 @@
     "chanelog": "nx changelog state",
     "generate-typescript-docs": "ts-node -P tools/tsconfig.tools.json tools/scripts/docs/generate-typescript-docs.ts",
     "help": "nx help",
-    "state:publish": "nx test state && nx build state --prod && cd ./dist/libs/state && npm publish",
-    "template:publish": "nx test template && nx build template --prod && cd ./dist/libs/template && npm publish",
+    "state:publish": "nx publish state",
+    "template:publish": "nx publish template",
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points && node ./decorate-angular-cli.js"
   },
   "husky": {
