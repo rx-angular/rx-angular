@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
-import { PostTaskSchedulerPriority } from '../../../experimental/render-strategies/rxjs/scheduling/postTask';
-import { timeoutTick } from '../../../experimental/render-strategies/rxjs/scheduling/timeoutTick';
-import { idleCallbackTick } from '../../../experimental/render-strategies/rxjs/scheduling/idleCallbackTick';
-import { postTaskTick } from '../../../experimental/render-strategies/rxjs/scheduling/postTaskTick';
+import { PostTaskSchedulerPriority } from '../../../experimental/render-strategies/rxjs/scheduling/postTask.experimental';
+import { timeoutTick } from '../../../experimental/render-strategies/rxjs/scheduling/timeoutTick.experimental';
+import { idleCallbackTick } from '../../../experimental/render-strategies/rxjs/scheduling/idleCallbackTick.experimental';
+import { postTaskTick } from '../../../experimental/render-strategies/rxjs/scheduling/postTaskTick.experimental';
 import { animationFrameTick } from './animationFrameTick';
 import { promiseTick } from './promiseTick';
 

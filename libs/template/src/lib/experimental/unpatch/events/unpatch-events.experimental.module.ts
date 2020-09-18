@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { UnpatchEventsDirective } from './unpatch-events.directive';
+import { UnpatchEventsDirective } from './unpatch-events.experimental.directive';
 
 const DECLARATIONS = [UnpatchEventsDirective];
 @NgModule({

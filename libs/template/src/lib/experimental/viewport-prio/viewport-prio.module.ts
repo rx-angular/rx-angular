@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { ViewportPrioDirective } from './viewport-prio.directive';
+import { ViewportPrioDirective } from './viewport-prio.experimental.directive';
 
 const DECLARATIONS = [ViewportPrioDirective];
 @NgModule({

@@ -30,9 +30,7 @@ The `unpatch` directive solves this problem in a convenient way:
 </button>
 ```
 
-
 > **Warning**: Do not use `[unpatch]` on elements that should trigger navigation (with `routerLink` directly or with method bound to `(click)` or other events). Otherwise you will end up having a 'Navigation triggered outside Angular zone, did you forget to call "ngZone.run()"?' warning.
-
 
 Included Features:
 

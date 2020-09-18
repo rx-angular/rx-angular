@@ -11,8 +11,8 @@ import { SharedModule } from '../../../shared/shared.module';
 const ROUTES: Routes = [
   {
     component: RenderQueueComponent,
-    path: ''
-  }
+    path: '',
+  },
 ];
 
 @NgModule({
@@ -22,7 +22,7 @@ const ROUTES: Routes = [
     UnpatchEventsModule,
     RouterModule.forChild(ROUTES),
     MatListModule,
-    SharedModule
-  ]
+    SharedModule,
+  ],
 })
 export class RenderQueueModule {}
