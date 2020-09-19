@@ -1,15 +1,18 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
-import { BehaviorSubject, EMPTY, interval, NEVER, Observable, of, Subject } from 'rxjs';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { LetDirective } from '../../src/lib/let';
-import { take } from 'rxjs/operators';
-import { MockChangeDetectorRef } from '../fixtures';
+import { TestBed } from '@angular/core/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { LetDirective } from '../../src/lib/let';
+import { MockChangeDetectorRef } from '../fixtures';
 
 @Component({
   template: `
-    <ng-template let-value [rxLet]="value$" (rendered)="rendered$.next($event)">{{value === undefined ? 'undefined' : value === null ? 'null' : value}}</ng-template>
+    <ng-template let-value [rxLet]="value$" (rendered)="rendered$.next($event)">{{value === undefined ?
+                                                                                  'undefined' :
+                                                                                  value === null ?
+                                                                                  'null' :
+                                                                                  value}}</ng-template>
   `
 })
 class LetDirectiveTestComponent {
@@ -52,7 +55,7 @@ describe('LetDirective renderCallback', () => {
     expect(componentNativeElement).toBeDefined();
   });
 
-  it('should render nothing when initially undefined was passed (as no value ever was emitted)', done => {
+  it('should emit the latest value after rendering', done => {
     letDirectiveTestComponent.rendered$.subscribe(renderedValue => {
       expect(renderedValue).toBe(42);
       done();
@@ -61,24 +64,4 @@ describe('LetDirective renderCallback', () => {
     fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('42');
   });
-
-  it('should render values over time when a new observable was passed', fakeAsync(() => {
-    letDirectiveTestComponent.value$ = interval(1000).pipe(take(3));
-    fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('');
-    tick(1000);
-    fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('0');
-    tick(1000);
-    fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('1');
-    tick(1000);
-    fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('2');
-
-    tick(1000);
-    fixtureLetDirectiveTestComponent.detectChanges();
-    // Remains at 2, since that was the last value.
-    expect(componentNativeElement.textContent).toBe('2');
-  }));
 });
