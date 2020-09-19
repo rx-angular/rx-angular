@@ -66,4 +66,9 @@ export const ROUTES: Routes = [
     loadChildren: () =>
       import('./cd-embedded-view/cd-embedded-view.module').then((m) => m.CdEmbeddedViewModule),
   },
+  {
+    path: 'render-callback',
+    loadChildren: () =>
+      import('./render-callback/render-callback.module').then((m) => m.RenderCallbackModule),
+  },
 ];

@@ -8,6 +8,7 @@ import { MENU_ITEMS as CD_OPERATORS_MENU_ITEMS } from './cd-operators/cd-operato
 import { MENU_ITEMS as RX_STATE_MENU_ITEMS } from './state/rx-state.menu';
 import { STRATEGIES_MENU } from './strategies/strategies.menu';
 import { MENU_ITEMS as EMBEDDED_VIEW_MENU } from './cd-embedded-view/cd-embedded-view.menu';
+import { MENU_ITEMS as RENDER_CALLBACK_MENU } from './render-callback/render-callback.menu';
 
 export const MENU_ITEMS: MenuItem[] = [
   ...CD_MENU_ITEMS,
@@ -18,5 +19,6 @@ export const MENU_ITEMS: MenuItem[] = [
   ...CD_OPERATORS_MENU_ITEMS,
   ...RX_STATE_MENU_ITEMS,
   ...STRATEGIES_MENU,
-  ...EMBEDDED_VIEW_MENU
+  ...EMBEDDED_VIEW_MENU,
+  ...RENDER_CALLBACK_MENU
 ];
