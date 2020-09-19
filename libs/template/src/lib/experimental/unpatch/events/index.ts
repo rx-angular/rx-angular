@@ -1,2 +1,2 @@
-export * from './unpatch-events.directive';
-export * from './unpatch-events.module';
+export * from './unpatch-events.experimental.directive';
+export * from './unpatch-events.experimental.module';

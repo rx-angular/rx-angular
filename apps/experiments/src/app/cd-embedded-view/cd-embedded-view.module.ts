@@ -35,7 +35,9 @@ import { Poc1SwitchCase } from './04/poc1-switch-case.directive';
     Poc2IfDirective,
     Poc1ForDirective,
     Poc2ForDirective,
-    Poc1Switch, Poc1SwitchCase, PocForIterable
+    Poc1Switch,
+    Poc1SwitchCase,
+    PocForIterable,
   ],
   imports: [
     CommonModule,
@@ -43,8 +45,7 @@ import { Poc1SwitchCase } from './04/poc1-switch-case.directive';
     UnpatchEventsModule,
     RendersModule,
     MatIconModule,
-    MatButtonModule
-  ]
+    MatButtonModule,
+  ],
 })
-export class CdEmbeddedViewModule {
-}
+export class CdEmbeddedViewModule {}

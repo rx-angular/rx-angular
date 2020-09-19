@@ -36,7 +36,7 @@ const promiseDurationSelector = promiseTick();
  *
  */
 
-export function getExperimentalLocalStrategies(
+export function getLocalStrategies(
   config: RenderStrategyFactoryConfig
 ): { [strategy: string]: RenderStrategy } {
   return {
