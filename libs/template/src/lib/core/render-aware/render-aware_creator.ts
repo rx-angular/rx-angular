@@ -5,12 +5,12 @@ import {
   ReplaySubject,
   Subscribable,
   Subscription,
-  Subscriber,
+  Subscriber, ConnectableObservable,
 } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
-  map,
+  map, publishReplay,
   shareReplay,
   switchMap,
   tap,
@@ -23,6 +23,7 @@ export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
   nextStrategy: (config: string | Observable<string>) => void;
   activeStrategy$: Observable<RenderStrategy>;
+  rendered$: Observable<U>;
 }
 
 /**
@@ -94,7 +95,8 @@ export function createRenderAware<U>(cfg: {
           tap(cfg.templateObserver),
           renderWithLatestStrategy(strategy$)
         )
-    )
+    ),
+    publishReplay(1)
   );
 
   return {
@@ -104,9 +106,10 @@ export function createRenderAware<U>(cfg: {
     nextStrategy(nextConfig: string | Observable<string>): void {
       strategyName$.next(nextConfig);
     },
+    rendered$: renderingEffect$,
     activeStrategy$: strategy$,
     subscribe(): Subscription {
-      return new Subscription().add(renderingEffect$.subscribe());
+      return new Subscription().add((renderingEffect$ as ConnectableObservable<U>).connect());
     },
   };
 }

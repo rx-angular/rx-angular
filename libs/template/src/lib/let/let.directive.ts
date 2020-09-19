@@ -3,12 +3,13 @@ import {
   Directive,
   Input,
   OnDestroy,
-  OnInit,
+  OnInit, Output,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
 
 import {
+  defer,
   Observable,
   ObservableInput,
   Subscription,
@@ -305,6 +306,8 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   ) {
     this.templateManager.addTemplateRef('rxSuspense', templateRef);
   }
+
+  @Output() readonly rendered = defer(() => this.renderAware.rendered$);
 
   private subscription: Unsubscribable = new Subscription();
   private readonly templateManager: TemplateManager<

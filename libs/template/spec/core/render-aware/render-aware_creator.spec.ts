@@ -78,7 +78,7 @@ const setupCdAwareImplementation = () => {
 };
 
 
-describe('CdAware', () => {
+describe('RenderAware', () => {
   beforeAll(() => mockConsole());
 
   beforeEach(() => {
@@ -134,6 +134,30 @@ describe('CdAware', () => {
     it('should render emitted value from passed observable without changing it', () => {
       cdAwareImplementation.cdAware.nextPotentialObservable(of(42));
       expect(cdAwareImplementation.renderedValue).toBe(42);
+    });
+
+    it('should emit rendered value after changes got detected from strategy', done => {
+      cdAwareImplementation.cdAware.rendered$.subscribe(renderedValue => {
+        expect(renderedValue).toBe(42);
+        done();
+      });
+      cdAwareImplementation.cdAware.nextPotentialObservable(of(42));
+    });
+
+    it('should emit undefined as rendered value on error', done => {
+      cdAwareImplementation.cdAware.rendered$.subscribe(renderedValue => {
+        expect(renderedValue).toBeUndefined();
+        done();
+      });
+      cdAwareImplementation.cdAware.nextPotentialObservable(throwError('error'));
+    });
+
+    it('should emit undefined as rendered value on complete', done => {
+      cdAwareImplementation.cdAware.nextPotentialObservable(of(42));
+      cdAwareImplementation.cdAware.rendered$.subscribe(renderedValue => {
+        expect(renderedValue).toBeUndefined();
+        done();
+      });
     });
 
     it(
