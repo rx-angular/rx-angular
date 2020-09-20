@@ -87,7 +87,6 @@ export class ConfigPanelComponent
   }>
   implements AfterViewInit {
   strategies = [
-    { name: undefined, icon: 'find_replace' },
     { name: 'local', icon: 'call_split' },
     { name: 'global', icon: 'vertical_align_bottom' },
     { name: 'detach', icon: 'play_for_work' },
@@ -111,11 +110,11 @@ export class ConfigPanelComponent
   readonly renderTechnique;
 
   readonly configForm = this.fb.group({
-    strategy: ['native']
+    strategy: []
   });
   readonly configForm$: Observable<{
     strategy: string;
-  }> = this.configForm.valueChanges.pipe(startWith(this.configForm.value));
+  }> = this.configForm.valueChanges;
   strategyName$ = this.coalesceConfigService.strategyName$;
 
   constructor(
@@ -129,10 +128,15 @@ export class ConfigPanelComponent
   ) {
     super();
     this.set({ expanded: true });
-    this.coalesceConfigService.hold(this.configForm$.pipe(tap(() => appRef.tick())));
+
+    this.hold(this.coalesceConfigService.strategyName$, (strategy) => this.configForm.setValue({strategy}));
+    this.hold(this.configForm$.pipe(tap(() => appRef.tick())));
     this.coalesceConfigService
       .connect('strategy', this.configForm$
-        .pipe(map(f => f.strategy), tap(console.log))
+        .pipe(
+          map(f => f.strategy),
+          tap(v => console.log('cscsc', v))
+        )
       );
   }
 
