@@ -1,5 +1,6 @@
 import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core';
-import { tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { timeoutTick } from '../../experimental/render-strategies/rxjs/scheduling';
 
 /**
  * @description
@@ -24,16 +25,17 @@ import { tap } from 'rxjs/operators';
 export function createNativeStrategy(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy {
-  const component = (config.cdRef as any).context;
+  const renderMethod = () => config.cdRef.markForCheck();
   return {
     name: 'native',
-    detectChanges: () => config.cdRef.markForCheck(),
-    rxScheduleCD: (o) => o.pipe(tap(() => {
-      config.cdRef.markForCheck()
-    })),
+    detectChanges: () => renderMethod(),
+    rxScheduleCD: (o) => o.pipe(
+      tap(() => renderMethod()),
+      switchMap(v => timeoutTick().pipe(map(() => v)))
+    ),
     scheduleCD: () => {
-      config.cdRef.markForCheck()
+      renderMethod();
       return new AbortController();
-    },
+    }
   };
 }

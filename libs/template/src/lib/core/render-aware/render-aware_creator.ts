@@ -1,22 +1,22 @@
 import {
   ConnectableObservable,
-  MonoTypeOperatorFunction,
+  MonoTypeOperatorFunction, Notification, NotificationKind,
   Observable,
   of,
   ReplaySubject,
   Subscribable,
   Subscriber,
-  Subscription,
+  Subscription
 } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
-  map,
+  map, materialize,
   publish,
-  shareReplay,
+  shareReplay, startWith,
   switchMap,
   tap,
-  withLatestFrom,
+  withLatestFrom
 } from 'rxjs/operators';
 import { RxTemplateObserver } from '../model';
 import { RenderStrategy, StrategySelection } from './interfaces';
@@ -116,17 +116,25 @@ export function createRenderAware<U>(cfg: {
   };
 }
 
+
 function renderWithLatestStrategy<T>(
   strategyChanges$: Observable<RenderStrategy>
 ): MonoTypeOperatorFunction<T> {
+  const suspenseNotification = {
+    kind: 'S',
+    value: undefined,
+    hasValue: false,
+    error: undefined,
+  }
   return (o$) => {
     return o$.pipe(
-      handleErrorAndComplete(),
+      materialize(),
       withLatestFrom(strategyChanges$),
       // always use latest strategy on value change
       switchMap(([renderValue, strategy]) =>
         of(renderValue).pipe(strategy.rxScheduleCD)
-      )
+      ),
+      startWith(suspenseNotification)
     );
   };
 

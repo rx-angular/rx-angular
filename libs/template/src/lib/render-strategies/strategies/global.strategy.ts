@@ -3,6 +3,8 @@ import {
   RenderStrategy,
   RenderStrategyFactoryConfig,
 } from '../../core/render-aware';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { animationFrameTick } from '../rxjs/scheduling';
 
 export function getGlobalStrategies(
   config: RenderStrategyFactoryConfig
@@ -37,8 +39,11 @@ export function createGlobalStrategy(
 
   return {
     name: 'global',
-    detectChanges: renderMethod,
-    rxScheduleCD: (o) => o,
+    detectChanges: () => renderMethod(),
+    rxScheduleCD: (o) => o.pipe(
+      tap(() => renderMethod()),
+      switchMap(v => animationFrameTick().pipe(map(() => v)))
+    ),
     scheduleCD: () => {
       renderMethod();
       return new AbortController();

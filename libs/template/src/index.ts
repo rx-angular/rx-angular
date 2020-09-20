@@ -2,6 +2,7 @@
 export {
   RenderStrategy,
   RenderStrategyFactoryConfig,
+  RxNotification
 } from './lib/core/render-aware';
 export { coalesceWith } from './lib/render-strategies/rxjs/operators/coalesceWith';
 export { staticCoalesce } from './lib/render-strategies/static';
