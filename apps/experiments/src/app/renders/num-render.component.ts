@@ -14,6 +14,8 @@ export class NumRenderComponent implements AfterViewInit {
 
   @Input()
   radius = 40
+  @Input()
+  color = 'rgba(253,255,0,0.24)'
 
   constructor() {}
 

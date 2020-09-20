@@ -11,7 +11,7 @@ import { immutableArr, immutableIncArr } from '../utils';
     <h2>
       CD EmbeddedView 06
       <small>Local Variables</small>
-      <renders></renders>
+      <renders radius="60" [color]="componentColor"></renders>
     </h2>
 
     <button mat-raised-button [unpatch] (click)="changeOneClick$.next(1)">
@@ -34,9 +34,9 @@ import { immutableArr, immutableIncArr } from '../utils';
           trackBy: trackById
           ">
           <b>Item: </b>
-          <renders></renders>
+          <renders [color]="itemColor"></renders>
           <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-            <renders [radius]="15"></renders>
+            <renders [radius]="15" [color]="childColor"></renders>
             child:
             <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
           </ng-container>
@@ -52,9 +52,9 @@ import { immutableArr, immutableIncArr } from '../utils';
           let value;
           ">
           <b>Item: </b>
-          <renders></renders>
+          <renders  [color]="itemColor"></renders>
           <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-            <renders [radius]="15"></renders>
+            <renders [radius]="15" [color]="childColor"></renders>
             child:
             <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
           </ng-container>
@@ -68,10 +68,10 @@ import { immutableArr, immutableIncArr } from '../utils';
         let selectSlices = $selectSlices;
         ">
           <b>Item: </b>
-          <renders></renders>
+          <renders  [color]="itemColor"></renders>
         <!--   {{selectSlices(['arr']) | push | json}} -->
           <ng-container *poc2For="selectSlices(['arr']); let i; trackBy: trackByKey; distinctBy:distinctBy">
-            <renders [radius]="15"></renders>
+            <renders [radius]="15"  [color]="childColor"></renders>
             child:
             <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
           </ng-container>
@@ -99,6 +99,10 @@ import { immutableArr, immutableIncArr } from '../utils';
   `]
 })
 export class CdEmbeddedViewParent06Component {
+
+  componentColor = 'rgba(255,0,0,0.24)';
+  itemColor = 'rgba(253,255,0,0.24)';
+  childColor = 'rgba(153,255,0,0.24)';
 
   localVariableProjections = {
     test: (a) => {
