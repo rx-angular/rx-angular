@@ -1,5 +1,7 @@
-import { Observable } from 'rxjs';
+import { Notification, Observable } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+
+export type RxNotification = Omit<Notification<any>, 'kind'> & { kind: 'S' | 'N' | 'E' | 'C' };
 
 export interface StrategySelection {
   [strategy: string]: RenderStrategy;
@@ -36,5 +38,6 @@ export interface RenderStrategy {
    * @property
    * Calls the render method directly
    */
+  // @TODO This is needed in situations like
   detectChanges: () => void;
 }

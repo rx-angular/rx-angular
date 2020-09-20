@@ -5,7 +5,7 @@ import {
   Component,
   Input,
   NgZone,
-  ɵdetectChanges,
+  ɵdetectChanges
 } from '@angular/core';
 import { environment } from '../environments/environment';
 import { isNgZone, isViewEngineIvy } from '@rx-angular/template';
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 import { CdConfigService } from './cd-config.service';
 import { FormBuilder } from '@angular/forms';
 import { defer, fromEvent, merge, Observable } from 'rxjs';
-import { startWith, tap } from 'rxjs/operators';
+import { map, startWith, tap } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 
 @Component({
@@ -31,17 +31,18 @@ import { RxState } from '@rx-angular/state';
               <mat-icon disabled="zoneEnv === 'NgZone'">snooze</mat-icon>&nbsp;
               {{ zoneEnv }}</mat-chip
             >
-            <mat-chip> <mat-icon>image</mat-icon> &nbsp; {{ engine }}</mat-chip>
+            <mat-chip>
+              <mat-icon>image</mat-icon> &nbsp; {{ engine }}</mat-chip>
             <mat-chip>
               <mat-icon>{{
                 changeDetection === 'Default'
                   ? 'autorenew'
                   : 'youtube_searched_for'
-              }}</mat-icon
+                }}</mat-icon
               >&nbsp; {{ changeDetection }}
             </mat-chip>
             <mat-chip>
-              <mat-icon>settings</mat-icon>&nbsp; {{ strategy() }}</mat-chip
+              <mat-icon>settings</mat-icon>&nbsp; {{ strategyName$ | push:'local' }}</mat-chip
             >
           </mat-chip-list>
         </mat-panel-title>
@@ -52,22 +53,10 @@ import { RxState } from '@rx-angular/state';
           <mat-label>Change Detection Strategy</mat-label>
           <mat-select formControlName="strategy" id="strategy">
             <mat-option
-              [value]="strategy"
-              *ngFor="
-                let s of [
-                  { name: undefined, icon: 'find_replace' },
-                  { name: 'native', icon: 'find_replace' },
-                  { name: 'noop', icon: 'block' },
-                  { name: 'global', icon: 'vertical_align_bottom' },
-                  { name: 'local', icon: 'call_split' },
-                  { name: 'leaf', icon: 'play_for_work' }
-                ]
-              "
-            >
-              <mat-icon [ngClass]="{ rot180: s.name === 'local' }">{{
-                s.icon
-              }}</mat-icon
-              >&nbsp;{{ s.name }}
+              [value]="s.name"
+              *ngFor="let s of strategies">
+              <mat-icon mat-list-icon [ngClass]="{ rot180: s.name === 'local' }">{{s.icon}}</mat-icon>
+              {{ s.name }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -79,7 +68,7 @@ import { RxState } from '@rx-angular/state';
     </mat-expansion-panel>
   `,
   styles: [
-    `
+      `
       .config-panel {
         background: #c2185b;
       }
@@ -88,15 +77,23 @@ import { RxState } from '@rx-angular/state';
         background: transparent;
         font-weight: normal;
       }
-    `,
+    `
   ],
-  changeDetection: environment.changeDetection,
+  changeDetection: environment.changeDetection
 })
 export class ConfigPanelComponent
   extends RxState<{
     expanded: boolean;
   }>
   implements AfterViewInit {
+  strategies = [
+    { name: undefined, icon: 'find_replace' },
+    { name: 'local', icon: 'call_split' },
+    { name: 'global', icon: 'vertical_align_bottom' },
+    { name: 'detach', icon: 'play_for_work' },
+    { name: 'noop', icon: 'block' },
+    { name: 'native', icon: 'find_replace' }
+  ];
   detectChangeClick$ = defer(() =>
     fromEvent(document.getElementById('btnDetectChanges'), 'click')
   );
@@ -114,12 +111,12 @@ export class ConfigPanelComponent
   readonly renderTechnique;
 
   readonly configForm = this.fb.group({
-    strategy: ['native'],
+    strategy: ['native']
   });
   readonly configForm$: Observable<{
     strategy: string;
   }> = this.configForm.valueChanges.pipe(startWith(this.configForm.value));
-  strategy = () => this.coalesceConfigService.getConfig('strategy');
+  strategyName$ = this.coalesceConfigService.strategyName$;
 
   constructor(
     private fb: FormBuilder,
@@ -132,9 +129,11 @@ export class ConfigPanelComponent
   ) {
     super();
     this.set({ expanded: true });
-    this.coalesceConfigService.connect(
-      this.configForm$.pipe(tap(() => appRef.tick()))
-    );
+    this.coalesceConfigService.hold(this.configForm$.pipe(tap(() => appRef.tick())));
+    this.coalesceConfigService
+      .connect('strategy', this.configForm$
+        .pipe(map(f => f.strategy), tap(console.log))
+      );
   }
 
   detectChanges() {
