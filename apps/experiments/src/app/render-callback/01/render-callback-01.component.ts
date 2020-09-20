@@ -55,8 +55,7 @@ export class RenderCallback01Component implements AfterViewInit {
   readonly content$ = this.click.pipe(
     startWith(null),
     map(() => Math.ceil(Math.max(35, Math.random() * 250))),
-    map(wordCount => new Array(wordCount).fill('Lorem Ipsum')),
-    map(words => words.join(' ')),
+    map(wordCount => 'Lorem Ipsum '.repeat(wordCount)),
     shareReplay(1)
   );
 
