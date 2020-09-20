@@ -11,13 +11,23 @@ import {
 
 import { Observable, ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
 import { distinctUntilChanged, groupBy, map, mergeAll, mergeMap, pluck, switchAll, tap } from 'rxjs/operators';
+import { selectSlice } from '@rx-angular/state';
 
-export interface Poc6Locv2ViewContext<T> {
+export class Poc6Locv2ViewContext<T extends object, K = keyof T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
   poc6LocV2?: T;
-  $value$: T,
-  $prop_arr$: T,
-  $implicit?: T
+  $prop_arr$: any;
+  $implicit?: T;
+
+  constructor(private $value$: Observable<T>) {
+    this.$prop_arr$ = $value$.pipe(pluck('arr'), distinctUntilChanged());
+  }
+
+  $selectSlices = (props: K[]): Observable<any> => {
+    return this.$value$.pipe(
+     pluck(...props as any)
+  );
+  }
 }
 
 @Directive({
@@ -79,7 +89,7 @@ export class Poc6Locv2Directive<U> implements OnInit, OnDestroy {
     let existingItem = this.embeddedViews.has(key) ? this.embeddedViews.get(key) : undefined;
     if (!existingItem) {
       const view = this.viewContainerRef
-        .createEmbeddedView(this.templateRef, { $value$, $prop_arr$: $value$.pipe(pluck('arr'), distinctUntilChanged()) });
+    .createEmbeddedView(this.templateRef, new Poc6Locv2ViewContext<any>($value$));
       existingItem = { view, item: $value$ };
       this.embeddedViews.set(key, existingItem);
       existingItem.view.detectChanges();

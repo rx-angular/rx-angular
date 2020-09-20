@@ -33,9 +33,12 @@ import { immutableArr, immutableIncArr } from '../utils';
           *ngFor="let value of array$ | async;
           trackBy: trackById
           ">
-          <b>Item: </b><renders></renders>
+          <b>Item: </b>
+          <renders></renders>
           <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-            <renders [radius]="15"></renders> child: <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
+            <renders [radius]="15"></renders>
+            child:
+            <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
           </ng-container>
           <br/>
         </ng-container>
@@ -48,9 +51,12 @@ import { immutableArr, immutableIncArr } from '../utils';
           distinctBy:distinctBy
           let value;
           ">
-          <b>Item: </b><renders></renders>
+          <b>Item: </b>
+          <renders></renders>
           <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-            <renders [radius]="15"></renders> child: <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
+            <renders [radius]="15"></renders>
+            child:
+            <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
           </ng-container>
           <br/>
         </ng-container>
@@ -59,11 +65,15 @@ import { immutableArr, immutableIncArr } from '../utils';
         <h2>value as stream</h2>
         <ng-container *poc6LocV2="array$;
         let value$ = $value$;
-        let arr$ = $prop_arr$;
+        let selectSlices = $selectSlices;
         ">
-          <b>Item: </b><renders></renders>
-          <ng-container *poc2For="arr$; let i; trackBy: trackByKey; distinctBy:distinctBy">
-            <renders  [radius]="15"></renders> child: <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
+          <b>Item: </b>
+          <renders></renders>
+        <!--   {{selectSlices(['arr']) | push | json}} -->
+          <ng-container *poc2For="selectSlices(['arr']); let i; trackBy: trackByKey; distinctBy:distinctBy">
+            <renders [radius]="15"></renders>
+            child:
+            <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
           </ng-container>
           <br/>
         </ng-container>
