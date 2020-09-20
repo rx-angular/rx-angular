@@ -20,9 +20,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      if: github.event_name == 'pull_request'
       with:
-        ref: ${{ github.event.pull_request.head.ref }}
         fetch-depth: 0
+        ref: ${{ github.event.pull_request.head.ref }}
+    - uses: actions/checkout@v2
+      if: github.event_name == 'push'
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
