@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UnpatchEventsModule } from '@rx-angular/template';
+import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
 import { RouterModule } from '@angular/router';
 import { PocForIterable } from './03/poc3-for.directive';
 import { ROUTES as CD_ROUTES } from './cd-embedded-view.routes';
@@ -21,6 +21,8 @@ import { CdEmbeddedViewParent02Component } from './02/parent.component';
 import { CdEmbeddedViewParent03Component } from './03/parent.component';
 import { CdEmbeddedViewParent04Component } from './04/parent.component';
 import { Poc1SwitchCase } from './04/poc1-switch-case.directive';
+import { Poc5Locv5 } from './05/poc5-locv.directive';
+import { CdEmbeddedViewParent05Component } from './05/parent.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,8 @@ import { Poc1SwitchCase } from './04/poc1-switch-case.directive';
     Poc1Switch,
     Poc1SwitchCase,
     PocForIterable,
+    Poc5Locv5,
+    CdEmbeddedViewParent05Component
   ],
   imports: [
     CommonModule,
@@ -46,6 +50,7 @@ import { Poc1SwitchCase } from './04/poc1-switch-case.directive';
     RendersModule,
     MatIconModule,
     MatButtonModule,
-  ],
+    PushModule
+  ]
 })
 export class CdEmbeddedViewModule {}
