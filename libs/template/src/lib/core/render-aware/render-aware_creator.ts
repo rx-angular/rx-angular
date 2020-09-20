@@ -1,23 +1,25 @@
 import {
+  ConnectableObservable,
   MonoTypeOperatorFunction,
   Observable,
   of,
   ReplaySubject,
   Subscribable,
+  Subscriber,
   Subscription,
-  Subscriber, ConnectableObservable,
 } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
-  map, publishReplay,
+  map,
+  publish,
   shareReplay,
   switchMap,
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { RenderStrategy, StrategySelection } from './interfaces';
 import { RxTemplateObserver } from '../model';
+import { RenderStrategy, StrategySelection } from './interfaces';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
@@ -45,15 +47,15 @@ export function createRenderAware<U>(cfg: {
     distinctUntilChanged(),
     switchMap((stringOrObservable) =>
       typeof stringOrObservable === 'string'
-        ? of(stringOrObservable)
-        : stringOrObservable
+      ? of(stringOrObservable)
+      : stringOrObservable
     ),
     map((strategy: string): RenderStrategy => {
         const s = cfg.strategies[strategy];
         if (!!s) {
           return s;
         }
-        throw new Error(`Strategy ${strategy} does not exist.`);
+        throw new Error(`Strategy ${ strategy } does not exist.`);
       }
     ),
     tap((s) => (currentStrategy = s)),
@@ -96,7 +98,7 @@ export function createRenderAware<U>(cfg: {
           renderWithLatestStrategy(strategy$)
         )
     ),
-    publishReplay(1)
+    publish()
   );
 
   return {

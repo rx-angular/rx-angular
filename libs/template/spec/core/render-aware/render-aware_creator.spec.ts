@@ -137,11 +137,13 @@ describe('RenderAware', () => {
     });
 
     it('should emit rendered value after changes got detected from strategy', done => {
+      const value = new Subject();
+      cdAwareImplementation.cdAware.nextPotentialObservable(value);
       cdAwareImplementation.cdAware.rendered$.subscribe(renderedValue => {
         expect(renderedValue).toBe(42);
         done();
       });
-      cdAwareImplementation.cdAware.nextPotentialObservable(of(42));
+      value.next(42);
     });
 
     it('should emit undefined as rendered value on error', done => {
@@ -153,11 +155,13 @@ describe('RenderAware', () => {
     });
 
     it('should emit undefined as rendered value on complete', done => {
-      cdAwareImplementation.cdAware.nextPotentialObservable(of(42));
+      const value = new Subject();
+      cdAwareImplementation.cdAware.nextPotentialObservable(value);
       cdAwareImplementation.cdAware.rendered$.subscribe(renderedValue => {
         expect(renderedValue).toBeUndefined();
         done();
       });
+      value.complete();
     });
 
     it(
