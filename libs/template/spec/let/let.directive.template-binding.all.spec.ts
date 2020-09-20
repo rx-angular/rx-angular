@@ -47,7 +47,7 @@ describe('LetDirective when template binding with all templates', () => {
   beforeEach(setUpFixture);
 
   it('should be initiated', () => {
-    expect(component).not.toBeDefined();
+    expect(component).toBeDefined();
   });
 
   it('should render "suspense" template before the first value is emitted', () => {
