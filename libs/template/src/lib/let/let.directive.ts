@@ -9,8 +9,8 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
-import { defer, Observable, ObservableInput, Subscription, Unsubscribable, } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { defer, NextObserver, Observable, ObservableInput, Subscription, Unsubscribable, } from 'rxjs';
+import { filter, map, share } from 'rxjs/operators';
 import { createRenderAware, RenderAware, RxNotificationKind, StrategySelection } from '../core';
 import { RxTemplateObserver, RxViewContext } from '../core/model';
 import { createTemplateManager, TemplateManager, } from '../core/utils/template-manager_creator';
@@ -20,6 +20,8 @@ export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
   rxLet: T;
 }
+
+export type LetRenderCallback<T> = (renderedValue: T) => void;
 
 /**
  * @Directive LetDirective
@@ -295,14 +297,21 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     this.templateManager.addTemplateRef('S', templateRef);
   }
 
+  private _renderObserver: NextObserver<U>;
+  @Input()
+  set rxLetRenderCallback(callback: NextObserver<U>) {
+    this._renderObserver = callback;
+  }
+
   // We use defer here as the as otherwise the the `@Output` decorator subscribes earlier than the arnderAware property
   // is assigned
   @Output() readonly rendered = defer(() => this.renderAware.rendered$.pipe(
     filter(({ kind }) => this.templateManager.hasTemplateRef(kind)),
-    map(({ value }) => value as U)
+    map(({ value }) => value as U),
+    share()
   ));
 
-  private subscription: Unsubscribable = new Subscription();
+  private subscription = new Subscription();
   private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>,
     RxNotificationKind>;
 
@@ -378,7 +387,8 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   ngOnInit() {
     this.templateManager.addTemplateRef('N', this.nextTemplateRef);
     this.displayInitialView();
-    this.subscription = this.renderAware.subscribe();
+    this.subscription.add(this.renderAware.subscribe());
+    this.subscribeRenderCallbacks();
   }
 
   /**
@@ -387,6 +397,12 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscription.unsubscribe();
     this.templateManager.destroy();
+  }
+
+  private subscribeRenderCallbacks(): void {
+    this.subscription.add(this.rendered.pipe(
+      filter(() => !!this._renderObserver)
+    ).subscribe(this._renderObserver))
   }
 
   private displayInitialView = () => {

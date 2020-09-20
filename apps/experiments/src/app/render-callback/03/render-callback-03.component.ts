@@ -11,10 +11,10 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 
 import { CdConfigService } from '../../cd-config.service';
 
 @Component({
-  selector: 'rx-render-callback-01',
+  selector: 'rx-render-callback-03',
   template: `
-    <h1>Render Callback example 01</h1>
-    <h4>Height calculation using rendered$ Event</h4>
+    <h1>Render Callback example 03</h1>
+    <h4>Height calculation using LetRenderCallback</h4>
     <h4>RenderStrategy: {{strategyName$ | push: 'local'}}</h4>
     <button unpatch (click)="reset()">Reset</button>
     <button unpatch (click)="updateClick.next()">Update content</button>
@@ -24,8 +24,6 @@ import { CdConfigService } from '../../cd-config.service';
       <div class="example-result" style="height: 170px; overflow-y: scroll">
         <h4>render callback output</h4>
         <span>rendered$:</span>
-        <rx-notification [notification]="rendered$">
-        </rx-notification>
       </div>
       <div class="example-result">
         <h4>After value changed</h4>
@@ -40,15 +38,12 @@ import { CdConfigService } from '../../cd-config.service';
                                           ) + 'px' }}</strong></span>
       </div>
     </div>
-    <ng-template let-content
-                 [rxLetStrategy]="strategyName$"
-                 [rxLet]="content$"
-                 (rendered)="rendered$.next($event)">
+    <ng-container *rxLet="content$; let content; strategy: strategyName$; renderCallback: rendered$">
       <div class="example-box"
            #box>
         {{ content }}
       </div>
-    </ng-template>
+    </ng-container>
   `,
   styles: [
       `
@@ -74,14 +69,14 @@ import { CdConfigService } from '../../cd-config.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RenderCallback01Component implements AfterViewInit {
+export class RenderCallback03Component implements AfterViewInit {
 
   @ViewChild('box') box: ElementRef<HTMLElement>;
 
   private readonly afterViewInit$ = new Subject();
 
   readonly strategyName$ = this.cfgS.select(map(s => s.strategy));
-  readonly rendered$ = new Subject<number>();
+  readonly rendered$ = new Subject<string>();
   readonly updateClick = new Subject();
   readonly errorClick = new Subject();
   readonly completeClick = new Subject();

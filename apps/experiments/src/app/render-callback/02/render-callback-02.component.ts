@@ -6,15 +6,16 @@ import {
   ElementRef,
   ViewChild
 } from '@angular/core';
+import { LetDirective } from '@rx-angular/template';
 import { merge, Subject, throwError } from 'rxjs';
 import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 'rxjs/operators';
 import { CdConfigService } from '../../cd-config.service';
 
 @Component({
-  selector: 'rx-render-callback-01',
+  selector: 'rx-render-callback-02',
   template: `
-    <h1>Render Callback example 01</h1>
-    <h4>Height calculation using rendered$ Event</h4>
+    <h1>Render Callback example 02</h1>
+    <h4>Height calculation using ViewChild</h4>
     <h4>RenderStrategy: {{strategyName$ | push: 'local'}}</h4>
     <button unpatch (click)="reset()">Reset</button>
     <button unpatch (click)="updateClick.next()">Update content</button>
@@ -24,8 +25,6 @@ import { CdConfigService } from '../../cd-config.service';
       <div class="example-result" style="height: 170px; overflow-y: scroll">
         <h4>render callback output</h4>
         <span>rendered$:</span>
-        <rx-notification [notification]="rendered$">
-        </rx-notification>
       </div>
       <div class="example-result">
         <h4>After value changed</h4>
@@ -40,22 +39,19 @@ import { CdConfigService } from '../../cd-config.service';
                                           ) + 'px' }}</strong></span>
       </div>
     </div>
-    <ng-template let-content
-                 [rxLetStrategy]="strategyName$"
-                 [rxLet]="content$"
-                 (rendered)="rendered$.next($event)">
+    <ng-container *rxLet="content$; let content; strategy: strategyName$">
       <div class="example-box"
            #box>
         {{ content }}
       </div>
-    </ng-template>
+    </ng-container>
   `,
   styles: [
       `
       .example-results {
         display: flex;
         width: 100%;
-        justify-content: space-evenly;
+        justify-content: space-between;
         margin-bottom: 3rem;
       }
 
@@ -74,14 +70,14 @@ import { CdConfigService } from '../../cd-config.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RenderCallback01Component implements AfterViewInit {
+export class RenderCallback02Component implements AfterViewInit {
 
   @ViewChild('box') box: ElementRef<HTMLElement>;
+  @ViewChild(LetDirective) renderer: LetDirective<string>;
 
   private readonly afterViewInit$ = new Subject();
 
   readonly strategyName$ = this.cfgS.select(map(s => s.strategy));
-  readonly rendered$ = new Subject<number>();
   readonly updateClick = new Subject();
   readonly errorClick = new Subject();
   readonly completeClick = new Subject();
@@ -98,13 +94,13 @@ export class RenderCallback01Component implements AfterViewInit {
   );
 
   readonly calculatedAfterRender$ = this.afterViewInit$.pipe(
-    switchMap(() => this.rendered$),
+    switchMap(() => this.renderer.rendered),
     map(() => this.box.nativeElement.getBoundingClientRect().height)
   );
 
   // afterViewInit$ is needed, otherwise the ViewChild would not be ready
   readonly calculatedAfterValue$ = this.afterViewInit$.pipe(
-    switchMap(() => this.rendered$.pipe(take(1))),
+    switchMap(() => this.renderer.rendered.pipe(take(1))),
     switchMap(() => this.content$.pipe(
       map(() => this.box.nativeElement.getBoundingClientRect().height)
     )),
