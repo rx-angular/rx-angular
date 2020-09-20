@@ -20,8 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request_target.head.ref }}
-          repository: ${{ github.event.pull_request_target.repo }}
+          ref: ${{ github.event.pull_request.head }}
           fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
