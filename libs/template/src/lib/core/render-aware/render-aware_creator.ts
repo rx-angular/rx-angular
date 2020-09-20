@@ -19,13 +19,13 @@ import {
   withLatestFrom
 } from 'rxjs/operators';
 import { RxTemplateObserver } from '../model';
-import { RenderStrategy, StrategySelection } from './interfaces';
+import { RenderStrategy, RxNotification, StrategySelection } from './interfaces';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
   nextStrategy: (config: string | Observable<string>) => void;
   activeStrategy$: Observable<RenderStrategy>;
-  rendered$: Observable<U>;
+  rendered$: Observable<RxNotification>;
 }
 
 /**
@@ -120,12 +120,12 @@ export function createRenderAware<U>(cfg: {
 function renderWithLatestStrategy<T>(
   strategyChanges$: Observable<RenderStrategy>
 ): MonoTypeOperatorFunction<T> {
-  const suspenseNotification = {
+  const suspenseNotification: RxNotification = {
     kind: 'S',
     value: undefined,
     hasValue: false,
     error: undefined,
-  }
+  };
   return (o$) => {
     return o$.pipe(
       materialize(),
@@ -134,7 +134,12 @@ function renderWithLatestStrategy<T>(
       switchMap(([renderValue, strategy]) =>
         of(renderValue).pipe(strategy.rxScheduleCD)
       ),
-      startWith(suspenseNotification)
+      startWith(suspenseNotification),
+      tap(({ kind, error }) => {
+        if (kind === 'E') {
+          console.error(error);
+        }
+      })
     );
   };
 

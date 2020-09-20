@@ -7,7 +7,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { merge, Subject, throwError } from 'rxjs';
-import { map, scan, shareReplay, startWith, switchMap, switchMapTo, takeUntil } from 'rxjs/operators';
+import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 'rxjs/operators';
 import { CdConfigService } from '../../cd-config.service';
 
 @Component({
@@ -28,11 +28,15 @@ import { CdConfigService } from '../../cd-config.service';
       </div>
       <div class="example-result">
         <h4>After value changed</h4>
-        <span>calculated size: <strong>{{ (calculatedAfterValue$ | push) + 'px' }}</strong></span>
+        <span>calculated size: <strong>{{ (
+                                            calculatedAfterValue$ | push
+                                          ) + 'px' }}</strong></span>
       </div>
       <div class="example-result">
         <h4>After renderCallback</h4>
-        <span>calculated size: <strong>{{ (calculatedAfterRender$ | push) + 'px' }}</strong></span>
+        <span>calculated size: <strong>{{ (
+                                            calculatedAfterRender$ | push
+                                          ) + 'px' }}</strong></span>
       </div>
     </div>
     <ng-template let-content
@@ -45,26 +49,28 @@ import { CdConfigService } from '../../cd-config.service';
       </div>
     </ng-template>
   `,
-  styles: [`
-    .example-results {
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-      margin-bottom: 3rem;
-    }
+  styles: [
+      `
+      .example-results {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        margin-bottom: 3rem;
+      }
 
-    .example-result {
-      width: 30%;
-    }
+      .example-result {
+        width: 30%;
+      }
 
-    .example-box {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 300px;
-      outline: 1px solid red;
-    }
-  `],
+      .example-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 300px;
+        outline: 1px solid red;
+      }
+    `
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RenderCallback01Component implements AfterViewInit {
@@ -78,7 +84,17 @@ export class RenderCallback01Component implements AfterViewInit {
   readonly updateClick = new Subject();
   readonly errorClick = new Subject();
   readonly completeClick = new Subject();
-  content$;
+  private readonly reset$ = new Subject();
+  readonly content$ = this.reset$.pipe(
+    switchMap(() => merge(
+      this.updateClick,
+      this.errorClick.pipe(switchMapTo(throwError(new Error('Boom!'))))
+    )),
+    scan(a => !a, false),
+    map(b => b ? sentence() : paragraph()),
+    takeUntil(this.completeClick),
+    shareReplay(1)
+  );
 
   readonly calculatedAfterRender$ = this.afterViewInit$.pipe(
     switchMap(() => this.rendered$),
@@ -87,32 +103,26 @@ export class RenderCallback01Component implements AfterViewInit {
 
   // afterViewInit$ is needed, otherwise the ViewChild would not be ready
   readonly calculatedAfterValue$ = this.afterViewInit$.pipe(
-    switchMap(() => this.content$),
-    map(() => this.box.nativeElement.getBoundingClientRect().height)
+    switchMap(() => this.rendered$.pipe(take(1))),
+    switchMap(() => this.content$.pipe(
+      map(() => this.box.nativeElement.getBoundingClientRect().height)
+    )),
   );
 
-  constructor(private cfgS: CdConfigService,
-              private cdRef: ChangeDetectorRef
+  constructor(
+    private cfgS: CdConfigService,
+    private cdRef: ChangeDetectorRef
   ) {
-
   }
 
   reset() {
-    this.content$ = merge(
-      this.updateClick,
-      this.errorClick.pipe(switchMapTo(throwError(new Error('Boom!'))))
-    ).pipe(
-      scan(a => !a, false),
-      map(b => b ? sentence() : paragraph()),
-      takeUntil(this.completeClick),
-      shareReplay(1)
-    );
+    this.reset$.next();
     this.cdRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
-    this.reset();
     this.afterViewInit$.next();
+    this.reset();
   }
 
 }

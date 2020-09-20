@@ -1,24 +1,13 @@
 import { OnDestroy } from '@angular/core';
-import {
-  concat,
-  EMPTY,
-  NEVER,
-  NextObserver,
-  Observable,
-  Observer,
-  of,
-  Subject,
-  throwError,
-  Unsubscribable
-} from 'rxjs';
-import { startWith, tap } from 'rxjs/operators';
-import { TestScheduler } from 'rxjs/testing';
-import { createRenderAware, RenderAware, StrategySelection } from '../../../src/lib/core';
-import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher, mockConsole } from '@test-helpers';
-import createSpy = jasmine.createSpy;
+import { concat, EMPTY, NEVER, Observable, of, Subject, throwError, Unsubscribable } from 'rxjs';
+import { filter, startWith, tap } from 'rxjs/operators';
+import { TestScheduler } from 'rxjs/testing';
+import { createRenderAware, RenderAware, StrategySelection } from '../../../src/lib/core';
 import { RxTemplateObserver } from '../../../src/lib/core/model';
+import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
+import createSpy = jasmine.createSpy;
 
 
 // TODO: Add Angular decorator.
@@ -31,7 +20,7 @@ class CdAwareImplementation<U> implements OnDestroy {
 
   templateObserver: RxTemplateObserver<U | undefined | null> = {
     suspense: () => {
-      (this.renderedValue = undefined)
+      (this.renderedValue = undefined);
     },
     next: (n: U | undefined | null) => {
       this.renderedValue = n;
@@ -139,26 +128,31 @@ describe('RenderAware', () => {
     it('should emit rendered value after changes got detected from strategy', done => {
       const value = new Subject();
       cdAwareImplementation.cdAware.nextPotentialObservable(value);
-      cdAwareImplementation.cdAware.rendered$.subscribe(renderedValue => {
-        expect(renderedValue).toBe(42);
+      cdAwareImplementation.cdAware.rendered$.subscribe(renderSignal => {
+        expect(renderSignal.value).toBe(42);
+        expect(renderSignal.kind).toBe('N');
         done();
       });
       value.next(42);
     });
 
     it('should emit undefined as rendered value on error', done => {
-      cdAwareImplementation.cdAware.rendered$.subscribe(renderedValue => {
-        expect(renderedValue).toBeUndefined();
-        done();
-      });
+      cdAwareImplementation.cdAware.rendered$
+        .pipe(filter(renderSignal => renderSignal.kind !== 'S'))
+        .subscribe(renderSignal => {
+          expect(renderSignal.hasValue).toBeFalsy();
+          expect(renderSignal.kind).toBe('E');
+          done();
+        });
       cdAwareImplementation.cdAware.nextPotentialObservable(throwError('error'));
     });
 
     it('should emit undefined as rendered value on complete', done => {
       const value = new Subject();
       cdAwareImplementation.cdAware.nextPotentialObservable(value);
-      cdAwareImplementation.cdAware.rendered$.subscribe(renderedValue => {
-        expect(renderedValue).toBeUndefined();
+      cdAwareImplementation.cdAware.rendered$.subscribe(renderSignal => {
+        expect(renderSignal.value).toBeUndefined();
+        expect(renderSignal.kind).toBe('C');
         done();
       });
       value.complete();
@@ -273,8 +267,12 @@ describe('RenderAware', () => {
       testScheduler.run(({ expectObservable }) => {
         const strategy = 'doesNotExist';
         cdAwareImplementation.cdAware.nextStrategy(strategy);
-        expectObservable(cdAwareImplementation.cdAware.activeStrategy$).toBe('#', null, new Error(`Strategy ${strategy} does not exist.`));
-      })
+        expectObservable(cdAwareImplementation.cdAware.activeStrategy$).toBe(
+          '#',
+          null,
+          new Error(`Strategy ${ strategy } does not exist.`)
+        );
+      });
     });
   });
 });

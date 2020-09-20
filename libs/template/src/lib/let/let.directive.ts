@@ -15,6 +15,7 @@ import {
   Subscription,
   Unsubscribable,
 } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { createRenderAware, RenderAware, StrategySelection } from '../core';
 import {
   createTemplateManager,
@@ -308,7 +309,21 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   }
 
   // We use defer here as the as otherwise the the `@Output` decorator subscribes earlier than the arnderAware property is assigned
-  @Output() readonly rendered = defer(() => this.renderAware.rendered$);
+  @Output() readonly rendered = defer(() => this.renderAware.rendered$.pipe(
+    filter(notification => {
+      if (notification.kind === 'S') {
+        return this.templateManager.hasTemplateRef('rxSuspense');
+      }
+      if (notification.kind === 'E') {
+        return this.templateManager.hasTemplateRef('rxError');
+      }
+      if (notification.kind === 'C') {
+        return this.templateManager.hasTemplateRef('rxComplete');
+      }
+      return true;
+    }),
+    map(({ value }) => value as U)
+  ));
 
   private subscription: Unsubscribable = new Subscription();
   private readonly templateManager: TemplateManager<
