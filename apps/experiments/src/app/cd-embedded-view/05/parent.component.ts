@@ -62,6 +62,4 @@ export class CdEmbeddedViewParent05Component {
     share()
   );
 
-  trackById = i => i.id;
-  distinctBy = (a, b) => a.value === b.value;
 }
