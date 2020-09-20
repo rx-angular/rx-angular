@@ -36,7 +36,7 @@ function testRxScheduleCD(
     .rxScheduleCD(singleTime ? singleEmission$ : multipleEmissions$)
     .subscribe({
       complete: () => {
-        checkExpectations(cfg, callsExpectations);
+        checkExpectations(cfg, config, callsExpectations);
         done();
       }
     });
@@ -48,11 +48,15 @@ function testScheduleCD(config: StrategyTestConfig, done: jest.DoneCallback | an
   const renderStrategy = getStrategies(cfg)[strategyName];
 
   for (let i = 0; i < (singleTime ? 1 : numMultipleCalls); i++) {
-    renderStrategy.scheduleCD();
+    renderStrategy.scheduleCD(() => {
+      if (config.afterCD) {
+        config.afterCD();
+      }
+    });
   }
 
   setTimeout(() => {
-    checkExpectations(cfg, callsExpectations);
+    checkExpectations(cfg, config, callsExpectations);
     if (done) {
       done();
     }
@@ -70,7 +74,7 @@ function testDetectChanges(config: StrategyTestConfig, done: jest.DoneCallback |
   }
 
   setTimeout(() => {
-    checkExpectations(cfg, callsExpectations);
+    checkExpectations(cfg, config, callsExpectations);
     if (done) {
       done();
     }
@@ -86,7 +90,8 @@ function expectationDefined(
 }
 
 function checkExpectations(
-  cfg: { cdRef: ChangeDetectorRef },
+  strategyConfig: { cdRef: ChangeDetectorRef },
+  testConfig: StrategyTestConfig,
   expectations: CallsExpectations
 ) {
   /**
@@ -94,23 +99,27 @@ function checkExpectations(
    * more transparent messages in case if test fails
    */
   if (expectationDefined(expectations, 'detectChanges')) {
-    expect(cfg.cdRef['detectChanges']).toHaveBeenCalledTimes(
+    expect(strategyConfig.cdRef['detectChanges']).toHaveBeenCalledTimes(
       expectations.detectChanges
     );
   }
 
   if (expectationDefined(expectations, 'markForCheck')) {
-    expect(cfg.cdRef['markForCheck']).toHaveBeenCalledTimes(
+    expect(strategyConfig.cdRef['markForCheck']).toHaveBeenCalledTimes(
       expectations.markForCheck
     );
   }
 
   if (expectationDefined(expectations, 'detach')) {
-    expect(cfg.cdRef['detach']).toHaveBeenCalledTimes(expectations.detach);
+    expect(strategyConfig.cdRef['detach']).toHaveBeenCalledTimes(expectations.detach);
   }
 
   if (expectationDefined(expectations, 'reattach')) {
-    expect(cfg.cdRef['reattach']).toHaveBeenCalledTimes(expectations.reattach);
+    expect(strategyConfig.cdRef['reattach']).toHaveBeenCalledTimes(expectations.reattach);
+  }
+
+  if (expectationDefined(expectations, 'afterCD') && testConfig.afterCD) {
+    expect(testConfig.afterCD).toHaveBeenCalledTimes(expectations.afterCD);
   }
 }
 
@@ -119,6 +128,7 @@ interface StrategyTestConfig {
   strategyMethod: keyof RenderStrategy;
   singleTime: boolean;
   callsExpectations: CallsExpectations;
+  afterCD?: () => void;
   flushMicrotask?: boolean;
 }
 
@@ -127,4 +137,5 @@ export interface CallsExpectations {
   detectChanges?: number;
   detach?: number;
   reattach?: number;
+  afterCD?: number;
 }

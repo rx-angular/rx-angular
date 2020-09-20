@@ -1,10 +1,9 @@
 import { ɵmarkDirty as markDirty } from '@angular/core';
-import {
-  RenderStrategy,
-  RenderStrategyFactoryConfig,
-} from '../../core/render-aware';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { fromEvent } from 'rxjs';
+import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { RenderStrategy, RenderStrategyFactoryConfig, } from '../../core/render-aware';
 import { animationFrameTick } from '../rxjs/scheduling';
+import { afterScheduleCD } from '../util';
 
 export function getGlobalStrategies(
   config: RenderStrategyFactoryConfig
@@ -20,13 +19,20 @@ export function getGlobalStrategies(
  *
  * Global Strategies
  *
- * This strategy leverages Angular's internal [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) render method.
- * It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) but works also zone-less.
- * `markDirty` in comparison to `markForCheck` also calls [`scheduleTick`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1863) which is the reason why it also works in zone-less environments.
+ * This strategy leverages Angular's internal
+ *   [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36)
+ *   render method. It acts identical to
+ *   [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128)
+ *   but works also zone-less.
+ * `markDirty` in comparison to `markForCheck` also calls
+ *   [`scheduleTick`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1863)
+ *   which is the reason why it also works in zone-less environments.
  *
  * | Name      | Zone Agnostic | Render Method     | Coalescing      | Scheduling       |
  * | --------- | --------------| ----------------- | --------------- | ---------------- |
- * | `global`  | ✔             | ⮁ `ɵmarkDirty`   | ✔ `RootContext` | [`animationFrame`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/util/misc_utils.ts#L39)   |
+ * | `global`  | ✔             | ⮁ `ɵmarkDirty`   | ✔ `RootContext` |
+ *   [`animationFrame`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/util/misc_utils.ts#L39)
+ *     |
  *
  * @param config { RenderStrategyFactoryConfig } - The values this strategy needs to get calculated.
  * @return { RenderStrategy } - The calculated strategy
@@ -36,7 +42,7 @@ export function createGlobalStrategy(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy {
   const renderMethod = () => markDirty((config.cdRef as any).context);
-
+  const cdScheduler = afterScheduleCD(animationFrameTick);
   return {
     name: 'global',
     detectChanges: () => renderMethod(),
@@ -44,9 +50,9 @@ export function createGlobalStrategy(
       tap(() => renderMethod()),
       switchMap(v => animationFrameTick().pipe(map(() => v)))
     ),
-    scheduleCD: () => {
+    scheduleCD: <R>(afterCD?: () => R) => {
       renderMethod();
-      return new AbortController();
+      return cdScheduler(afterCD);
     },
   };
 }

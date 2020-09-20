@@ -8,6 +8,7 @@ import {
 } from '../../core/render-aware';
 import { coalesceWith } from '../rxjs/operators/coalesceWith';
 import { promiseTick } from '../rxjs/scheduling/promiseTick';
+import { afterCoalesceAndSchedule } from '../util';
 
 const promiseDurationSelector = promiseTick();
 
@@ -66,8 +67,10 @@ export function createDetachStrategy(
           switchMap((v) => tick.pipe(map(() => v))),
           tap(renderMethod)
     );
-  const scheduleCD = () =>
-    coalesceAndSchedule(renderMethod, priority, component);
+  const scheduleCD = <R>(afterCD?: () => R) =>
+    coalesceAndSchedule(() => {
+      afterCoalesceAndSchedule(renderMethod, afterCD);
+    }, priority, component);
 
   return {
     name: 'detach',

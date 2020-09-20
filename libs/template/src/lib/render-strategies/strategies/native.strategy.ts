@@ -1,6 +1,7 @@
 import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { timeoutTick } from '../../experimental/render-strategies/rxjs/scheduling';
+import { afterScheduleCD } from '../util';
 
 /**
  * @description
@@ -26,6 +27,7 @@ export function createNativeStrategy(
   config: RenderStrategyFactoryConfig
 ): RenderStrategy {
   const renderMethod = () => config.cdRef.markForCheck();
+  const cdScheduled = afterScheduleCD(timeoutTick);
   return {
     name: 'native',
     detectChanges: () => renderMethod(),
@@ -33,9 +35,9 @@ export function createNativeStrategy(
       tap(() => renderMethod()),
       switchMap(v => timeoutTick().pipe(map(() => v)))
     ),
-    scheduleCD: () => {
+    scheduleCD: <R>(afterCD?: () => R) => {
       renderMethod();
-      return new AbortController();
+      return cdScheduled(afterCD);
     }
   };
 }
