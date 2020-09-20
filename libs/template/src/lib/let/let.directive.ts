@@ -307,6 +307,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     this.templateManager.addTemplateRef('rxSuspense', templateRef);
   }
 
+  // We use defer here as the as otherwise the the `@Output` decorator subscribes earlier than the arnderAware property is assigned
   @Output() readonly rendered = defer(() => this.renderAware.rendered$);
 
   private subscription: Unsubscribable = new Subscription();
