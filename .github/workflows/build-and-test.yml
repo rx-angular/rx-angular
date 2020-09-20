@@ -20,12 +20,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      if: github.event_name == 'pull_request'
       with:
-        fetch-depth: 0
         ref: ${{ github.event.pull_request.head.ref }}
-    - uses: actions/checkout@v2
-      if: github.event_name == 'push'
+        repository: 'kajetansw/rx-angular'
+        fetch-depth: 0
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
