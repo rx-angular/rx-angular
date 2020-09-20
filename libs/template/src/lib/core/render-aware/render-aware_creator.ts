@@ -25,7 +25,7 @@ export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
   nextStrategy: (config: string | Observable<string>) => void;
   activeStrategy$: Observable<RenderStrategy>;
-  rendered$: Observable<RxNotification>;
+  rendered$: Observable<RxNotification<U>>;
 }
 
 /**
@@ -120,7 +120,7 @@ export function createRenderAware<U>(cfg: {
 function renderWithLatestStrategy<T>(
   strategyChanges$: Observable<RenderStrategy>
 ): MonoTypeOperatorFunction<T> {
-  const suspenseNotification: RxNotification = {
+  const suspenseNotification: RxNotification<T> = {
     kind: 'S',
     value: undefined,
     hasValue: false,
@@ -142,20 +142,4 @@ function renderWithLatestStrategy<T>(
       })
     );
   };
-
-  function handleErrorAndComplete<U>(): MonoTypeOperatorFunction<U> {
-    return (o$: Observable<U>) =>
-      new Observable((subscriber: Subscriber<U>) => {
-        const subscription = o$.subscribe({
-          next: (val) => subscriber.next(val),
-          // make "error" and "complete" notifications comply with `rxScheduleCD`
-          error: (err) => {
-            console.error(err);
-            subscriber.next();
-          },
-          complete: () => subscriber.next(),
-        });
-        return () => subscription.unsubscribe();
-      });
-  }
 }

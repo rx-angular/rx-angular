@@ -9,14 +9,14 @@ import { tap } from 'rxjs/operators';
   templateUrl: './rx-notification.component.html',
   styleUrls: ['./rx-notification.component.scss']
 })
-export class RxNotificationComponent extends RxState<RxNotification>{
+export class RxNotificationComponent<T> extends RxState<RxNotification<T>>{
 
   notification$ = this.select();
   @Input()
   log = false;
 
   @Input()
-  set notification(notification$: Observable<RxNotification>) {
+  set notification(notification$: Observable<RxNotification<T>>) {
     this.connect(notification$.pipe(
       tap((v) => {
         if(this.log) {

@@ -3,33 +3,20 @@ import {
   Directive,
   Input,
   OnDestroy,
-  OnInit, Output,
+  OnInit,
+  Output,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
 
-import {
-  defer,
-  Observable,
-  ObservableInput,
-  Subscription,
-  Unsubscribable,
-} from 'rxjs';
+import { defer, Observable, ObservableInput, Subscription, Unsubscribable, } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { createRenderAware, RenderAware, StrategySelection } from '../core';
-import {
-  createTemplateManager,
-  TemplateManager,
-} from '../core/utils/template-manager_creator';
-import {
-  DEFAULT_STRATEGY_NAME,
-  getStrategies,
-} from '../render-strategies/strategies/strategies-map';
+import { createRenderAware, RenderAware, RxNotificationKind, StrategySelection } from '../core';
 import { RxTemplateObserver, RxViewContext } from '../core/model';
+import { createTemplateManager, TemplateManager, } from '../core/utils/template-manager_creator';
+import { DEFAULT_STRATEGY_NAME, getStrategies, } from '../render-strategies/strategies/strategies-map';
 
-type RxTemplateName = 'rxNext' | 'rxComplete' | 'rxError' | 'rxSuspense';
-
-export interface LetViewContext<T> extends RxViewContext<T>  {
+export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
   rxLet: T;
 }
@@ -43,9 +30,9 @@ export interface LetViewContext<T> extends RxViewContext<T>  {
  * you structure view-related models into view context scope (DOM element's scope).
  *
  * Under the hood, it leverages a `RenderStrategy` which in turn takes care of optimizing the change detection
- * of your component. The `LetDirective` will render its template and manage change detection after it got an initial value.
- * So if the incoming `Observable` emits its value lazily (e.g. data coming from `Http`), your template will be
- * rendered lazily as well. This can very positively impact the initial render performance of your application.
+ * of your component. The `LetDirective` will render its template and manage change detection after it got an initial
+ *   value. So if the incoming `Observable` emits its value lazily (e.g. data coming from `Http`), your template will
+ *   be rendered lazily as well. This can very positively impact the initial render performance of your application.
  *
  *
  * ### Problems with `async` and `*ngIf`
@@ -263,7 +250,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   set rxLetComplete(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
   ) {
-    this.templateManager.addTemplateRef('rxComplete', templateRef);
+    this.templateManager.addTemplateRef('C', templateRef);
   }
 
   /**
@@ -284,7 +271,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   set rxLetError(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
   ) {
-    this.templateManager.addTemplateRef('rxError', templateRef);
+    this.templateManager.addTemplateRef('E', templateRef);
   }
 
   /**
@@ -305,31 +292,19 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   set rxLetSuspense(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
   ) {
-    this.templateManager.addTemplateRef('rxSuspense', templateRef);
+    this.templateManager.addTemplateRef('S', templateRef);
   }
 
-  // We use defer here as the as otherwise the the `@Output` decorator subscribes earlier than the arnderAware property is assigned
+  // We use defer here as the as otherwise the the `@Output` decorator subscribes earlier than the arnderAware property
+  // is assigned
   @Output() readonly rendered = defer(() => this.renderAware.rendered$.pipe(
-    filter(notification => {
-      if (notification.kind === 'S') {
-        return this.templateManager.hasTemplateRef('rxSuspense');
-      }
-      if (notification.kind === 'E') {
-        return this.templateManager.hasTemplateRef('rxError');
-      }
-      if (notification.kind === 'C') {
-        return this.templateManager.hasTemplateRef('rxComplete');
-      }
-      return true;
-    }),
+    filter(({ kind }) => this.templateManager.hasTemplateRef(kind)),
     map(({ value }) => value as U)
   ));
 
   private subscription: Unsubscribable = new Subscription();
-  private readonly templateManager: TemplateManager<
-    LetViewContext<U | undefined | null>,
-    RxTemplateName
-  >;
+  private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>,
+    RxNotificationKind>;
 
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => {
@@ -343,26 +318,26 @@ export class LetDirective<U> implements OnInit, OnDestroy {
       });
     },
     next: (value: U | null | undefined) => {
-      this.templateManager.displayView('rxNext');
+      this.templateManager.displayView('N');
       this.templateManager.updateViewContext({
         $implicit: value,
         rxLet: value,
       });
     },
     error: (error: Error) => {
-      // fallback to rxNext when there's no template for rxError
-      this.templateManager.hasTemplateRef('rxError')
-        ? this.templateManager.displayView('rxError')
-        : this.templateManager.displayView('rxNext');
+      // fallback to N when there's no template for E
+      this.templateManager.hasTemplateRef('E')
+      ? this.templateManager.displayView('E')
+      : this.templateManager.displayView('N');
       this.templateManager.updateViewContext({
         $error: error,
       });
     },
     complete: () => {
-      // fallback to rxNext when there's no template for rxComplete
-      this.templateManager.hasTemplateRef('rxComplete')
-        ? this.templateManager.displayView('rxComplete')
-        : this.templateManager.displayView('rxNext');
+      // fallback to N when there's no template for C
+      this.templateManager.hasTemplateRef('C')
+      ? this.templateManager.displayView('C')
+      : this.templateManager.displayView('N');
       this.templateManager.updateViewContext({
         $complete: true,
       });
@@ -401,7 +376,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * @internal
    */
   ngOnInit() {
-    this.templateManager.addTemplateRef('rxNext', this.nextTemplateRef);
+    this.templateManager.addTemplateRef('N', this.nextTemplateRef);
     this.displayInitialView();
     this.subscription = this.renderAware.subscribe();
   }
@@ -416,8 +391,8 @@ export class LetDirective<U> implements OnInit, OnDestroy {
 
   private displayInitialView = () => {
     // Display "suspense" template if provided
-    if (this.templateManager.hasTemplateRef('rxSuspense')) {
-      this.templateManager.displayView('rxSuspense');
+    if (this.templateManager.hasTemplateRef('S')) {
+      this.templateManager.displayView('S');
     }
-  }
+  };
 }

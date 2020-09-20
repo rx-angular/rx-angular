@@ -1,7 +1,9 @@
-import { Notification, Observable } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+import { Notification, Observable } from 'rxjs';
 
-export type RxNotification = Omit<Notification<any>, 'kind' | 'observe' | 'do' | 'accept' | 'toObservable'> & { kind: 'S' | 'N' | 'E' | 'C' };
+export type RxNotificationKind = 'S' | 'N' | 'E' | 'C';
+type NotificationExtract = 'value' | 'hasValue' | 'error';
+export type RxNotification<T> = Pick<Notification<T>, NotificationExtract> & { kind: RxNotificationKind };
 
 export interface StrategySelection {
   [strategy: string]: RenderStrategy;
