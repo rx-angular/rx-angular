@@ -29,7 +29,7 @@ import { map, scan, share, startWith } from 'rxjs/operators';
           let last = last;
           let customVariable = customVariable;
           ">
-          {{value}}<br/>
+          {{value | json}}<br/>
           {{index}}<br/>
           {{first}}<br/>
           {{last}}<br/>
@@ -52,7 +52,12 @@ export class CdEmbeddedViewParent05Component {
   }
 
   array$ = merge(
-    this.toggleClick$.pipe(scan(a => ([...a, Math.random() * 10]), [])),
+    this.toggleClick$.pipe(scan(a => ([...a, {
+      // tslint:disable-next-line:no-bitwise
+      id: ~~Math.random() * 100,
+      // tslint:disable-next-line:no-bitwise
+      name: Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5),
+    }]), [])),
   ).pipe(
     share()
   );
