@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 
 @Component({
@@ -7,14 +7,19 @@ import { MatRipple } from '@angular/material/core';
   templateUrl: './num-render.component.html',
   styleUrls: ['./num-render.component.scss'],
 })
-export class NumRenderComponent implements OnInit {
+export class NumRenderComponent implements AfterViewInit {
   @ViewChild(MatRipple) ripple: MatRipple;
 
   renders = 0;
 
+  @Input()
+  radius = 40
+
   constructor() {}
 
-  ngOnInit(): void {}
+  ngAfterViewInit(): void {
+    this.ripple.launch({ centered: true });
+  }
 
   render() {
     if (this.ripple) {

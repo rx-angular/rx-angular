@@ -1,25 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { merge, Subject } from 'rxjs';
-import { map, scan, share, startWith } from 'rxjs/operators';
+import { share } from 'rxjs/operators';
+import { immutableArr, immutableIncArr } from '../utils';
 
 @Component({
-  selector: 'app-cd-embedded-view-parent04',
+  selector: 'app-cd-embedded-view-parent05',
   template: `
     <h2>
-      CD EmbeddedView 04
+      CD EmbeddedView 05
+      <small>Local Variables</small>
       <renders></renders>
     </h2>
 
-    <button [unpatch] (click)="toggleClick$.next($event)">
-      toggle
+    <button mat-raised-button [unpatch] (click)="changeOneClick$.next(1)">
+      update
+    </button>
+    <button mat-raised-button [unpatch] (click)="changeAllClick$.next(10)">
+      Change all
     </button>
 
+    <!-- <pre>{{array$ | push | json}}</pre> -->
+    <mat-checkbox></mat-checkbox>
     <div class="row">
       <div class="col">
-      </div>
-      <div class="col">
-        {{array$ | push | json}}
+        <h2>Static Custom Variables</h2>
         <ng-container
           *poc5LocV="array$;
           let value;
@@ -29,37 +34,54 @@ import { map, scan, share, startWith } from 'rxjs/operators';
           let last = last;
           let customVariable = customVariable;
           ">
-          {{value | json}}<br/>
-          {{index}}<br/>
-          {{first}}<br/>
-          {{last}}<br/>
-          {{customVariable.test}}<br/>
+          id: {{value.id}},
+          index: {{index}},
+          first: {{first}},
+          last: {{last}}, <br/>
+          customVariable: {{customVariable | json}}<br/>
+          <b>Item: </b><renders></renders>
+          <ng-container *ngFor="let item of value.arr; trackBy: trackById">
+            <renders [radius]="10"></renders> child: {{item.value}}
+          </ng-container>
+          <br/>
         </ng-container>
       </div>
     </div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
+  encapsulation: ViewEncapsulation.None,
+  styles: [`
+    .row {
+      display: flex;
+    }
+
+    .col {
+      width: 49%;
+    }
+  `]
 })
 export class CdEmbeddedViewParent05Component {
-  toggleClick$ = new Subject<Event>();
 
-  localVariableProjections= {
+
+  localVariableProjections = {
     test: (a) => {
-      console.log('a', a);
       // tslint:disable-next-line:no-bitwise
-      return ~~a.$implicit
+      return ~~a.$implicit;
     }
-  }
+  };
+
+  changeOneClick$ = new Subject<number>();
+  changeAllClick$ = new Subject<number>();
 
   array$ = merge(
-    this.toggleClick$.pipe(scan(a => ([...a, {
-      // tslint:disable-next-line:no-bitwise
-      id: ~~Math.random() * 100,
-      // tslint:disable-next-line:no-bitwise
-      name: Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5),
-    }]), [])),
+    this.changeOneClick$.pipe(immutableIncArr()),
+    this.changeAllClick$.pipe(immutableArr())
   ).pipe(
     share()
   );
+
+  trackById = (i) => i.id;
+  trackByKey = 'id';
+  distinctBy = (a, b) => a.value === b.value;
 
 }

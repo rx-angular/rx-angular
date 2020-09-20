@@ -1,44 +1,8 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { merge, Observable, Subject } from 'rxjs';
-import { map, scan, share } from 'rxjs/operators';
-
-const rand = (n: number = 2): number => {
-  // tslint:disable-next-line:no-bitwise
-  return ~~(Math.random() * n);
-};
-const immutableIncArr = (n: number = 10) => (o$: Observable<number>) => o$.pipe(
-  scan((a, i, idx) => {
-    if(i === 1) {
-      a[idx % n] = { id: idx % n, value: rand() };
-    } else if(i === 0) {
-      const id = rand(a.length);
-      a[id] = { id, value: rand() };
-    } else {
-      a.splice(idx % n, 1);
-    }
-    return a;
-  }, [])
-);
-const mutableIncArr = (n: number = 10) => {
-  return (o$: Observable<number>) => o$.pipe(
-    scan((a, i, idx) => {
-      a[idx % n].value = rand();
-      return a;
-    }, [])
-  );
-}
-
-const immutableArr = (n: number = 10) => (o$: Observable<number>) => o$.pipe(
-  map(v => Array(n).fill(0).map((_, idx) => ({ id: idx % n, value: rand() })))
-);
-
-const mutableArr = (n: number = 10) => {
-  const arr = Array(n);
-  return (o$: Observable<number>) => o$.pipe(
-    map(v => arr.forEach((i, idx) => i.value = rand()))
-  );
-}
+import { merge, Subject } from 'rxjs';
+import { share } from 'rxjs/operators';
+import { immutableArr, immutableIncArr } from '../utils';
 
 @Component({
   selector: 'app-cd-embedded-view-parent03',
@@ -131,7 +95,7 @@ export class CdEmbeddedViewParent03Component {
 
   array$ = merge(
     this.changeOneClick$.pipe(immutableIncArr()),
-    this.changeAllClick$.pipe(immutableArr()),
+    this.changeAllClick$.pipe(immutableArr())
   ).pipe(
     share()
   );

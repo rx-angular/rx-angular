@@ -20,11 +20,11 @@ import { distinctUntilChanged, filter, map, switchAll, tap } from 'rxjs/operator
 
 interface RecordViewTuple<T, U extends NgIterable<T>> {
   record: any;
-  view: EmbeddedViewRef<Poc5Locv5ViewContext<T, U>>;
+  view: EmbeddedViewRef<Poc6Locv6ViewContext<T, U>>;
 }
 
 
-export class Poc5Locv5ViewContext<T, U extends NgIterable<T> = NgIterable<T>> {
+export class Poc6Locv6ViewContext<T, U extends NgIterable<T> = NgIterable<T>> {
 
   localVariableProjections: CustomVariablesProjectors = {};
 
@@ -61,9 +61,9 @@ interface CustomVariablesProjectors {
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[poc5LocV]'
+  selector: '[poc6LocV]'
 })
-export class Poc5Locv5<T, U extends NgIterable<T> = NgIterable<T>> implements OnInit, OnDestroy {
+export class Poc6Locv6<T, U extends NgIterable<T> = NgIterable<T>> implements OnInit, OnDestroy {
   private differ: IterableDiffer<T> | null = null;
   private subscription: Unsubscribable = new Subscription();
 
@@ -79,22 +79,22 @@ export class Poc5Locv5<T, U extends NgIterable<T> = NgIterable<T>> implements On
 
   _localVariableProjections;
   @Input()
-  set poc5LocVLocalVariableProjections(o: CustomVariablesProjectors) {
+  set poc6LocVLocalVariableProjections(o: CustomVariablesProjectors) {
     this._localVariableProjections = o;
   }
   @Input()
-  set poc5LocVIterableTrackBy(fn: TrackByFunction<T>) {
+  set poc6LocVIterableTrackBy(fn: TrackByFunction<T>) {
     this._trackByFn = fn;
   }
 
   @Input()
-  set poc5LocV(potentialObservable: ObservableInput<U & NgIterable<T>> | null | undefined) {
+  set poc6LocV(potentialObservable: ObservableInput<U & NgIterable<T>> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private readonly nextTemplateRef: TemplateRef<Poc5Locv5ViewContext<T, U>>,
+    private readonly nextTemplateRef: TemplateRef<Poc6Locv6ViewContext<T, U>>,
     private readonly viewContainerRef: ViewContainerRef,
     private iterableDiffers: IterableDiffers
   ) {
@@ -145,7 +145,7 @@ export class Poc5Locv5<T, U extends NgIterable<T> = NgIterable<T>> implements On
           // create the embedded view for each value with default values
           const view = this.viewContainerRef.createEmbeddedView(
             this.nextTemplateRef,
-            new Poc5Locv5ViewContext<T, U>(null, this.values, -1, -1),
+            new Poc6Locv6ViewContext<T, U>(null, this.values, -1, -1),
             currentIndex === null ? undefined : currentIndex
           );
           insertTuples.push({
@@ -160,7 +160,7 @@ export class Poc5Locv5<T, U extends NgIterable<T> = NgIterable<T>> implements On
 
         } else if (previousIndex !== null) {
 
-          const view = <EmbeddedViewRef<Poc5Locv5ViewContext<T, U>>>this.viewContainerRef.get(previousIndex);
+          const view = <EmbeddedViewRef<Poc6Locv6ViewContext<T, U>>>this.viewContainerRef.get(previousIndex);
           this.viewContainerRef.move(view, currentIndex);
           insertTuples.push({
             view,
@@ -174,7 +174,7 @@ export class Poc5Locv5<T, U extends NgIterable<T> = NgIterable<T>> implements On
     }
 
     for (let i = 0, ilen = this.viewContainerRef.length; i < ilen; i++) {
-      const viewRef = <EmbeddedViewRef<Poc5Locv5ViewContext<T, U>>>this.viewContainerRef.get(i);
+      const viewRef = <EmbeddedViewRef<Poc6Locv6ViewContext<T, U>>>this.viewContainerRef.get(i);
       viewRef.context.localVariableProjections = this._localVariableProjections;
 
       viewRef.context.index = i;
@@ -184,14 +184,14 @@ export class Poc5Locv5<T, U extends NgIterable<T> = NgIterable<T>> implements On
 
     changes.forEachIdentityChange((record: IterableChangeRecord<T>) => {
       const viewRef =
-        <EmbeddedViewRef<Poc5Locv5ViewContext<T, U>>>this.viewContainerRef.get(record.currentIndex);
+        <EmbeddedViewRef<Poc6Locv6ViewContext<T, U>>>this.viewContainerRef.get(record.currentIndex);
       viewRef.context.$implicit = record.item;
       viewRef.detectChanges();
     });
   }
 
   private _perViewChange(
-    view: EmbeddedViewRef<Poc5Locv5ViewContext<T, U>>, record: IterableChangeRecord<T>) {
+    view: EmbeddedViewRef<Poc6Locv6ViewContext<T, U>>, record: IterableChangeRecord<T>) {
     view.context.$implicit = record.item;
     view.detectChanges();
   }
