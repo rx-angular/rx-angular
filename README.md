@@ -28,6 +28,7 @@ Find details in the linked readme files below for installation and setup instruc
   It ships with a light weight state management, RxJS operators and transformation helpers.
   Setup:
   - `npm install --save @rx-angular/state`  
+  - `yarn add @rx-angular/state`  
   Features:
   - Reactive Component-State [RxState<T>]()
     - State as a signal [.$]().pipe(map(s => s.prop))
@@ -44,8 +45,8 @@ Find details in the linked readme files below for installation and setup instruc
     - o$.pipe([stateful()]() 
     - o$.pipe([distinctUntilSomeChanged(['list'], {list})]() 
   - Imperative state transformation helper
-    - Array: [insert]() , [remove]() , [toDictionary](), [update]() 
-    - Object: [deleteProp]() , [dictionaryToArray](), [patch]() , [setProp]() , [toggle]() 
+    - Array []: [insert]() , [remove]() , [toDictionary](), [update]() 
+    - Object {}: [deleteProp]() , [dictionaryToArray](), [patch]() , [setProp]() , [toggle]() 
    
 - [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/master/libs/template/README.md) - High-Performance Reactive Rendering
 
