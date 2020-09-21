@@ -23,6 +23,30 @@ https://rx-angular.github.io/rx-angular/#/
 Find details in the linked readme files below for installation and setup instructions, examples and resources.
 
 - [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/README.md) - Reactive Component State-Management
+  Description:
+  RxState is a light-weight, flexible tool to manage component state in efficiently. 
+  It ships with a light weight state management, RxJS operators and transformation helpers.
+  Setup:
+  - `npm install --save @rx-angular/state`  
+  Features:
+  - Reactive Component-State [RxState<T>]()
+    - State as a signal [.$]().pipe(map(s => s.prop))
+      - Imperative style 
+        - [.set]()('prop', (oldState, value) => oldState.prop + value) 
+        - [.get]()('prop') 
+      - Reactive style  
+        - [.connect]()('prop', prop$) 
+        - [.select]()(map(s => s.prop))
+      - Reactive Side-Effects [.hold]()()
+  - Reactive state management operators
+    - o$.pipe([select(map(s => s.prop))]() 
+    - o$.pipe([selectSlice(['list'], {list})]() 
+    - o$.pipe([stateful()]() 
+    - o$.pipe([distinctUntilSomeChanged(['list'], {list})]() 
+  - Imperative state transformation helper
+    - Array: [insert]() , [remove]() , [toDictionary](), [update]() 
+    - Object: [deleteProp]() , [dictionaryToArray](), [patch]() , [setProp]() , [toggle]() 
+   
 - [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/master/libs/template/README.md) - High-Performance Reactive Rendering
 
 ## Install
