@@ -30,23 +30,24 @@ Find details in the linked readme files below for installation and setup instruc
   - `npm install --save @rx-angular/state`  
   - `yarn add @rx-angular/state`  
   Features:
-  - Reactive Component-State [RxState<T>]()
-    - State as a signal [.$]().pipe(map(s => s.prop))
+  - Reactive Component-State [RxState<T>](https://rx-angular.github.io/rx-angular/#/web/state/api/rx-state)
+    - State as a signal [.$](https://rx-angular.github.io/rx-angular/#/web/state/api/rx-state?id=-state-observable).pipe(map(s => s.prop))
       - Imperative style 
-        - [.set]()('prop', (oldState, value) => oldState.prop + value) 
-        - [.get]()('prop') 
+        - [.set](https://rx-angular.github.io/rx-angular/#/web/state/api/rx-state?id=set)('prop', (oldState, value) => oldState.prop + value) 
+        - [.get](https://rx-angular.github.io/rx-angular/#/web/state/api/rx-state?id=get)('prop') 
       - Reactive style  
-        - [.connect]()('prop', prop$) 
-        - [.select]()(map(s => s.prop))
-      - Reactive Side-Effects [.hold]()()
+        - [.connect](https://rx-angular.github.io/rx-angular/#/web/state/api/rx-state?id=connect)('prop', prop$) 
+        - [.select](https://rx-angular.github.io/rx-angular/#/web/state/api/rx-state?id=select)(map(s => s.prop))
+      - Reactive side-effects [.hold](https://rx-angular.github.io/rx-angular/#/web/state/api/rx-state?id=hold)(trigger$, effectFn)
+      - Configurable composition [.setAccumulator](https://rx-angular.github.io/rx-angular/#/web/state/api/rx-state?id=setaccumulator)(trigger$, effectFn)
   - Reactive state management operators
-    - o$.pipe([select(map(s => s.prop))]() 
-    - o$.pipe([selectSlice(['list'], {list})]() 
-    - o$.pipe([stateful()]() 
-    - o$.pipe([distinctUntilSomeChanged(['list'], {list})]() 
+    - o$.pipe([select](https://rx-angular.github.io/rx-angular/#/web/state/api/rxjs-operators?id=select)(map(s => s.prop))]() 
+    - o$.pipe([selectSlice](https://rx-angular.github.io/rx-angular/#/web/state/api/rxjs-operators?id=selectSlices)(\['prop'\], {prop})]() 
+    - o$.pipe([stateful(https://rx-angular.github.io/rx-angular/#/web/state/api/rxjs-operators?id=stateful)]() 
+    - o$.pipe([distinctUntilSomeChanged](https://rx-angular.github.io/rx-angular/#/web/state/api/rxjs-operators?id=distinctuntilsomechanged)(\['prop'\], {list})]() 
   - Imperative state transformation helper
-    - Array []: [insert]() , [remove]() , [toDictionary](), [update]() 
-    - Object {}: [deleteProp]() , [dictionaryToArray](), [patch]() , [setProp]() , [toggle]() 
+    - Array []: [insert](https://rx-angular.github.io/rx-angular/#/web/state/api/transformation-helpers?id=insert) , [remove](https://rx-angular.github.io/rx-angular/#/web/state/api/transformation-helpers?id=remove) , [toDictionary](https://rx-angular.github.io/rx-angular/#/web/state/api/transformation-helpers?id=toDictionary), [update](https://rx-angular.github.io/rx-angular/#/web/state/api/transformation-helpers?id=update) 
+    - Object {}: [deleteProp](https://rx-angular.github.io/rx-angular/#/web/state/api/transformation-helpers?id=deleteProp) , [dictionaryToArray](https://rx-angular.github.io/rx-angular/#/web/state/api/transformation-helpers?id=dictianaryToArray), [patch](https://rx-angular.github.io/rx-angular/#/web/state/api/transformation-helpers?id=patch) , [setProp]() , [toggle]() 
    
 - [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/master/libs/template/README.md) - High-Performance Reactive Rendering
 
