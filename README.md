@@ -22,14 +22,14 @@ https://rx-angular.github.io/rx-angular/#/
 
 Find details in the linked readme files below for installation and setup instructions, examples and resources.
 
-- [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/README.md) - Reactive Component State-Management
-  Description:
+- [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/README.md) - Reactive Component State-Management  
+  **Description:**  
   RxState is a light-weight, flexible tool to manage component state in efficiently. 
-  It ships with a light weight state management, RxJS operators and transformation helpers.
-  Setup:
+  It ships with a light weight state management, RxJS operators and transformation helpers.  
+  **Setup:**
   - `npm install --save @rx-angular/state`  
   - `yarn add @rx-angular/state`  
-  Features:
+  **Features:**  
   - Reactive Component-State [RxState<T>](https://rx-angular.github.io/rx-angular/#/web/state/api/rx-state)
     - State as a signal [.$](https://rx-angular.github.io/rx-angular/#/web/state/api/rx-state?id=-state-observable).pipe(map(s => s.prop))
       - Imperative style 
@@ -50,11 +50,10 @@ Find details in the linked readme files below for installation and setup instruc
     - Object {}: [deleteProp](https://rx-angular.github.io/rx-angular/#/web/state/api/transformation-helpers?id=deleteProp) , [dictionaryToArray](https://rx-angular.github.io/rx-angular/#/web/state/api/transformation-helpers?id=dictianaryToArray), [patch](https://rx-angular.github.io/rx-angular/#/web/state/api/transformation-helpers?id=patch) , [setProp]() , [toggle]() 
    
 - [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/master/libs/template/README.md) - High-Performance Reactive Rendering
-
-## Install
-
-`npm install --save @rx-angular/state`  
-`npm install --save @rx-angular/template`  
-or  
-`yarn add @rx-angular/state`  
-`yarn add @rx-angular/template`
+**Description:**  
+RxState is a light-weight, flexible tool to manage component state in efficiently. 
+It ships with a light weight state management, RxJS operators and transformation helpers.  
+**Setup:**  
+- `npm install --save @rx-angular/template`  
+- `yarn add @rx-angular/template`  
+**Features:**    
