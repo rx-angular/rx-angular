@@ -43,7 +43,7 @@ Find details in the linked readme files below for installation and setup instruc
   - Reactive state management operators
     - o$.pipe([select](https://rx-angular.github.io/rx-angular/#/web/state/api/rxjs-operators?id=select)(map(s => s.prop))]() 
     - o$.pipe([selectSlice](https://rx-angular.github.io/rx-angular/#/web/state/api/rxjs-operators?id=selectSlices)(\['prop'\], {prop})]() 
-    - o$.pipe([stateful(https://rx-angular.github.io/rx-angular/#/web/state/api/rxjs-operators?id=stateful)]() 
+    - o$.pipe([stateful](https://rx-angular.github.io/rx-angular/#/web/state/api/rxjs-operators?id=stateful)() 
     - o$.pipe([distinctUntilSomeChanged](https://rx-angular.github.io/rx-angular/#/web/state/api/rxjs-operators?id=distinctuntilsomechanged)(\['prop'\], {list})]() 
   - Imperative state transformation helper
     - Array []: [insert](https://rx-angular.github.io/rx-angular/#/web/state/api/transformation-helpers?id=insert) , [remove](https://rx-angular.github.io/rx-angular/#/web/state/api/transformation-helpers?id=remove) , [toDictionary](https://rx-angular.github.io/rx-angular/#/web/state/api/transformation-helpers?id=toDictionary), [update](https://rx-angular.github.io/rx-angular/#/web/state/api/transformation-helpers?id=update) 
