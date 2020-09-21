@@ -2475,6 +2475,11 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@stackblitz/sdk@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@stackblitz/sdk/-/sdk-1.5.0.tgz#2cbf7e0607021b24f25187cc15f5e6e9446e6afa"
+  integrity sha512-n3NTLbIbZzhaWEdxeX+b1SfjR3FGppHJ0K4CtNfb1hXgMlPp/PZItStuAF6VdEazbqXI3XtNhVdJlQBJSl2t/w==
+
 "@types/babel__core@^7.0.0":
   version "7.1.9"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.9.tgz#77e59d438522a6fb898fa43dc3455c6e72f3963d"
@@ -6679,6 +6684,11 @@ husky@^4.3.0:
     please-upgrade-node "^3.2.0"
     slash "^3.0.0"
     which-pm-runs "^1.0.0"
+
+i@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/i/-/i-0.3.6.tgz#d96c92732076f072711b6b10fd7d4f65ad8ee23d"
+  integrity sha1-2WyScyB28HJxG2sQ/X1PZa2O4j0=
 
 iconv-lite@0.4.24, iconv-lite@^0.4.24, iconv-lite@~0.4.13:
   version "0.4.24"
