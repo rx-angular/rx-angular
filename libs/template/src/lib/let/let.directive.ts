@@ -312,8 +312,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   ));
 
   private subscription = new Subscription();
-  private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>,
-    RxNotificationKind>;
+  private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>, RxNotificationKind>;
 
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => {
