@@ -72,6 +72,7 @@
     "@angular/cli": "10.1.1",
     "@angular/compiler-cli": "^10.1.1",
     "@angular/language-service": "^10.1.1",
+    "@ngxs/devtools-plugin": "^3.7.0",
     "@nrwl/angular": "10.1.0",
     "@nrwl/cypress": "10.1.0",
     "@nrwl/jest": "10.1.0",
