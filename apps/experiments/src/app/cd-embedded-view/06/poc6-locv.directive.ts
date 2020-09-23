@@ -10,29 +10,60 @@ import {
   NgIterable,
   OnDestroy,
   OnInit,
-  TemplateRef, TrackByFunction,
+  TemplateRef,
+  TrackByFunction,
   ViewContainerRef
 } from '@angular/core';
 
-import { ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
-import { distinctUntilChanged, filter, groupBy, map, mergeAll, mergeMap, switchAll, tap } from 'rxjs/operators';
+import { Observable, ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
+import { distinctUntilChanged, filter, map, switchAll, tap } from 'rxjs/operators';
 
-export class PocForViewContext<T, U extends NgIterable<T> = NgIterable<T>> {
-
-  $implicit: T;
-  public pocLet: U;
-
-}
 interface RecordViewTuple<T, U extends NgIterable<T>> {
   record: any;
-  view: EmbeddedViewRef<PocForViewContext<T, U>>;
+  view: EmbeddedViewRef<Poc6Locv6ViewContext<T, U>>;
+}
+
+
+export class Poc6Locv6ViewContext<T, U extends NgIterable<T> = NgIterable<T>> {
+
+  localVariableProjections: CustomVariablesProjectors = {};
+
+  constructor(public $implicit: T, public pocLet: U, public index: number, public count: number) {
+  }
+
+  get first(): boolean {
+    return this.index === 0;
+  }
+
+  get last(): boolean {
+    return this.index === this.count - 1;
+  }
+
+  get even(): boolean {
+    return this.index % 2 === 0;
+  }
+
+  get odd(): boolean {
+    return !this.even;
+  }
+
+  get customVariable(): unknown {
+    return Object.entries(this.localVariableProjections)
+      .reduce((acc, [name, fn]) => {
+        return { ...acc, [name]: fn(this) };
+      }, {});
+  }
+}
+
+interface CustomVariablesProjectors {
+  [variableName: string]: (context) => unknown;
 }
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[pocForIterable]'
+  selector: '[poc6LocV]'
 })
-export class PocForIterable<T, U extends NgIterable<T> = NgIterable<T>> implements OnInit, OnDestroy {
+export class Poc6Locv6<T, U extends NgIterable<T> = NgIterable<T>> implements OnInit, OnDestroy {
   private differ: IterableDiffer<T> | null = null;
   private subscription: Unsubscribable = new Subscription();
 
@@ -45,22 +76,25 @@ export class PocForIterable<T, U extends NgIterable<T> = NgIterable<T>> implemen
     );
 
   private _trackByFn: TrackByFunction<T>;
+
+  _localVariableProjections;
   @Input()
-  set pocForIterableTrackBy(fn: TrackByFunction<T>) {
+  set poc6LocVLocalVariableProjections(o: CustomVariablesProjectors) {
+    this._localVariableProjections = o;
+  }
+  @Input()
+  set poc6LocVIterableTrackBy(fn: TrackByFunction<T>) {
     this._trackByFn = fn;
   }
 
   @Input()
-  set pocForIterable(potentialObservable: ObservableInput<U & NgIterable<T>> | null | undefined) {
+  set poc6LocV(potentialObservable: ObservableInput<U & NgIterable<T>> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
 
-  @Input()
-  pocForIterableDistinctBy = (a, b) => a === b;
-
   constructor(
     private cdRef: ChangeDetectorRef,
-    private readonly nextTemplateRef: TemplateRef<PocForViewContext<T, U>>,
+    private readonly nextTemplateRef: TemplateRef<Poc6Locv6ViewContext<T, U>>,
     private readonly viewContainerRef: ViewContainerRef,
     private iterableDiffers: IterableDiffers
   ) {
@@ -69,22 +103,22 @@ export class PocForIterable<T, U extends NgIterable<T> = NgIterable<T>> implemen
 
   ngOnInit() {
     this.subscription = this.values$.pipe(
-        // the actual values arrive here
-        tap(value => {
-          // set helper variable for applyChanges method
-          this.values = value;
-          // set new differ if there is none yet
-          if (!this.differ && value) {
-            this.differ = this.iterableDiffers.find(value).create(this._trackByFn);
-          }
-        }),
-        // if there is no differ, we don't need to apply changes
-        filter(() => !!this.differ),
-        // apply differ -> return changes
-        map(value => this.differ.diff(value)),
-        // filter out no changes
-        filter(changes => !!changes)
-      )
+      // the actual values arrive here
+      tap(value => {
+        // set helper variable for applyChanges method
+        this.values = value;
+        // set new differ if there is none yet
+        if (!this.differ && value) {
+          this.differ = this.iterableDiffers.find(value).create(this._trackByFn);
+        }
+      }),
+      // if there is no differ, we don't need to apply changes
+      filter(() => !!this.differ),
+      // apply differ -> return changes
+      map(value => this.differ.diff(value)),
+      // filter out no changes
+      filter(changes => !!changes)
+    )
       .subscribe(
         changes => {
           this.applyChanges(changes);
@@ -111,10 +145,7 @@ export class PocForIterable<T, U extends NgIterable<T> = NgIterable<T>> implemen
           // create the embedded view for each value with default values
           const view = this.viewContainerRef.createEmbeddedView(
             this.nextTemplateRef,
-            {
-              $implicit: this.values as any,
-              pocLet: this.values,
-            },
+            new Poc6Locv6ViewContext<T, U>(null, this.values, -1, -1),
             currentIndex === null ? undefined : currentIndex
           );
           insertTuples.push({
@@ -129,7 +160,7 @@ export class PocForIterable<T, U extends NgIterable<T> = NgIterable<T>> implemen
 
         } else if (previousIndex !== null) {
 
-          const view = <EmbeddedViewRef<PocForViewContext<T, U>>>this.viewContainerRef.get(previousIndex);
+          const view = <EmbeddedViewRef<Poc6Locv6ViewContext<T, U>>>this.viewContainerRef.get(previousIndex);
           this.viewContainerRef.move(view, currentIndex);
           insertTuples.push({
             view,
@@ -143,20 +174,24 @@ export class PocForIterable<T, U extends NgIterable<T> = NgIterable<T>> implemen
     }
 
     for (let i = 0, ilen = this.viewContainerRef.length; i < ilen; i++) {
-      const viewRef = <EmbeddedViewRef<PocForViewContext<T, U>>>this.viewContainerRef.get(i);
+      const viewRef = <EmbeddedViewRef<Poc6Locv6ViewContext<T, U>>>this.viewContainerRef.get(i);
+      viewRef.context.localVariableProjections = this._localVariableProjections;
+
+      viewRef.context.index = i;
+      viewRef.context.count = ilen;
       viewRef.context.pocLet = this.values;
     }
 
     changes.forEachIdentityChange((record: IterableChangeRecord<T>) => {
       const viewRef =
-        <EmbeddedViewRef<PocForViewContext<T, U>>>this.viewContainerRef.get(record.currentIndex);
+        <EmbeddedViewRef<Poc6Locv6ViewContext<T, U>>>this.viewContainerRef.get(record.currentIndex);
       viewRef.context.$implicit = record.item;
       viewRef.detectChanges();
     });
   }
 
   private _perViewChange(
-    view: EmbeddedViewRef<PocForViewContext<T, U>>, record: IterableChangeRecord<T>) {
+    view: EmbeddedViewRef<Poc6Locv6ViewContext<T, U>>, record: IterableChangeRecord<T>) {
     view.context.$implicit = record.item;
     view.detectChanges();
   }
