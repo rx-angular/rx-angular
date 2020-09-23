@@ -81,7 +81,5 @@ export class CdEmbeddedViewParent05Component {
   );
 
   trackById = (i) => i.id;
-  trackByKey = 'id';
-  distinctBy = (a, b) => a.value === b.value;
 
 }
