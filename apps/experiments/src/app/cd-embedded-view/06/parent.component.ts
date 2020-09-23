@@ -99,6 +99,7 @@ import { immutableArr, immutableIncArr } from '../utils';
   `]
 })
 export class CdEmbeddedViewParent06Component {
+  trackByKey = 'id';
 
   componentColor = 'rgba(255,0,0,0.24)';
   itemColor = 'rgba(253,255,0,0.24)';
@@ -131,7 +132,7 @@ export class CdEmbeddedViewParent06Component {
   );
 
   trackById = (i) => i.id;
-  trackByKey = 'id';
+
   distinctBy = (a, b) => a.value === b.value;
 
 }

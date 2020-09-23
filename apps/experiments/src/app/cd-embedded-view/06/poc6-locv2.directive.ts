@@ -59,7 +59,7 @@ export class Poc6Locv2Directive<U> implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private readonly templateRef: TemplateRef<Poc6Locv2ViewContext<U>>,
+    private readonly templateRef: TemplateRef<Poc6Locv2ViewContext<any>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
 
