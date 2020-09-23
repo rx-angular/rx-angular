@@ -8,8 +8,8 @@ import {
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { getGlobalRenderingStrategies } from '../core/global-render.strategy';
 import { Renderable } from '../interfaces';
-import { getStrategies } from '@rx-angular/template';
 
 @Component({
   selector: 'rx-angular-child',
@@ -49,7 +49,7 @@ import { getStrategies } from '@rx-angular/template';
 })
 export class ChildComponent extends RxState<Renderable<ChildComponent>>
   implements OnInit, OnDestroy {
-  numItems = 10;
+  numItems = 100;
 
   destroyed = new Subject();
 
@@ -66,7 +66,7 @@ export class ChildComponent extends RxState<Renderable<ChildComponent>>
   }
 
   ngOnInit() {
-    this.strategies = getStrategies({ cdRef: this.cdRef });
+    this.strategies = getGlobalRenderingStrategies({ cdRef: this.cdRef });
     this.hold(
       this.doRenderBlocking.pipe(
         tap(() => this.updateItems()),

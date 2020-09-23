@@ -10,9 +10,9 @@ import { RxState } from '@rx-angular/state';
 
 import { Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { getGlobalRenderingStrategies } from '../core/global-render.strategy';
 import { Renderable } from '../interfaces';
 import { ChildComponent } from './child.component';
-import { getStrategies } from '@rx-angular/template';
 
 @Component({
   selector: 'rx-angular-render-queue',
@@ -43,7 +43,7 @@ export class RenderQueueComponent
   }
 
   ngOnInit() {
-    const strategy = getStrategies({ cdRef: this.cdRef })
+    const strategy = getGlobalRenderingStrategies({ cdRef: this.cdRef })
       .chunk;
     this.hold(
       this.doRender.pipe(
