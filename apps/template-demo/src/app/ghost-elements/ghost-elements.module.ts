@@ -22,6 +22,6 @@ const IMPORTS = [
   imports: [IMPORTS],
   exports: [DECLARATIONS, IMPORTS]
 })
-export class SharedModule {
+export class GhostElementsModule {
 }
 

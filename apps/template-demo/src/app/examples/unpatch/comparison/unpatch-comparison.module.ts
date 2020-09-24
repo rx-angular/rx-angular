@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { UnpatchEventsModule } from '@rx-angular/template';
 import { ComparisonUnpatchComponent } from './comparison-unpatch.component';
 import { ROUTES } from './comparison.routes';
-import { SharedModule } from '../../../shared/shared.module';
 import { RunOutsideZoneDirective } from './runOutsideZone.directive';
 import { DirtyChecksModule } from '../../../debug-helper/dirty-checks/dirty-checks.module';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,6 +19,7 @@ const DECLARATIONS = [ComparisonUnpatchComponent, RunOutsideZoneDirective];
     UnpatchEventsModule,
     DirtyChecksModule
   ],
-  exports: [DECLARATIONS],
+  exports: [DECLARATIONS]
 })
-export class UnpatchComparisonModule {}
+export class UnpatchComparisonModule {
+}

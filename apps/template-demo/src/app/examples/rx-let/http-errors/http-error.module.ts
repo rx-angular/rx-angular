@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatBadgeModule } from '@angular/material/badge';
 import { DirtyChecksModule } from '../../../debug-helper/dirty-checks/dirty-checks.module';
-import { SharedModule } from '../../../shared/shared.module';
+import { GhostElementsModule } from '../../../ghost-elements/ghost-elements.module';
 import { ROUTES } from './http-error.routes';
 import { HttpErrorsComponent } from './http-errors.component';
 
@@ -28,7 +28,7 @@ const DECLARATIONS = [
     MatInputModule,
     MatProgressSpinnerModule,
     MatBadgeModule,
-    SharedModule,
+    GhostElementsModule,
     DirtyChecksModule,
     RouterModule.forChild(ROUTES)
   ]

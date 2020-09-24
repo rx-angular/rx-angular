@@ -3,14 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CoalescingExperimentsProfilingComponent } from './experiments-profiling/coalescing-experiments-profiling.component';
 import { TemplateModule } from '@rx-angular/template';
-import { SharedModule } from '../../../shared/shared.module';
 import { CoalescingExperimentsProfilingChildComponent } from './experiments-profiling/coalescing-experiments-profiling-child.component';
 import { ROUTES } from './coalescing.routes';
 import { DirtyChecksModule } from '../../../debug-helper/dirty-checks/dirty-checks.module';
 
 const DECLARATIONS = [
   CoalescingExperimentsProfilingComponent,
-  CoalescingExperimentsProfilingChildComponent,
+  CoalescingExperimentsProfilingChildComponent
 ];
 
 @NgModule({
@@ -23,4 +22,5 @@ const DECLARATIONS = [
   ],
   exports: [DECLARATIONS]
 })
-export class CoalescingModule {}
+export class CoalescingModule {
+}

@@ -10,8 +10,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatBadgeModule } from '@angular/material/badge';
 import { DirtyChecksModule } from '../../../debug-helper/dirty-checks/dirty-checks.module';
 import { ErrorHandlingComponent } from './error-handling.component';
-import { SharedModule } from '../../../shared/shared.module';
 import { ROUTES } from './error-handling.routes';
+import { GhostElementsModule } from '../../../ghost-elements/ghost-elements.module';
 
 const DECLARATIONS = [
   ErrorHandlingComponent
@@ -28,7 +28,7 @@ const DECLARATIONS = [
     MatInputModule,
     MatProgressSpinnerModule,
     MatBadgeModule,
-    SharedModule,
+    GhostElementsModule,
     DirtyChecksModule,
     RouterModule.forChild(ROUTES)
   ]
