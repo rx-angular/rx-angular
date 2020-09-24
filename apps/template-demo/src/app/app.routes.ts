@@ -23,15 +23,15 @@ export const ROUTES: Routes = [
   {
     path: 'unpatch',
     loadChildren: () =>
-      import('./examples/unpatch/comparison-unpatch.module').then(
-        m => m.ComparisonUnpatchModule
+      import('./examples/unpatch/unpatch.module').then(
+        m => m.UnpatchModule
       )
   },
-  {
+    {
     path: 'viewport-prio',
     loadChildren: () =>
-      import('./examples/viewport-prio/component-tree-prio/component-tree-prio.module').then(
-        m => m.ComponentTreePrioModule
+      import('./examples/viewport-prio/viewport-prio-demo.module').then(
+        m => m.ViewportPrioModule
       )
   }
 ];

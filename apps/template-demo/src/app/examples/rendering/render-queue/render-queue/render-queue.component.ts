@@ -22,12 +22,6 @@ import { ChildComponent } from './child.component';
 export class RenderQueueComponent
   extends RxState<Renderable<RenderQueueComponent>>
   implements OnInit, AfterViewInit {
-  /*
-   @ViewChild(ChildComponent, { read: ComponentRef}) child1Ref: ComponentRef<ChildComponent>;
-   @ViewChild(ChildComponent) child1: ChildComponent;
-   @ViewChild(Child2Component, { read: ComponentRef}) child2Ref: ComponentRef<Child2Component>;
-   @ViewChild(Child2Component) child2: Child2Component;
-   */
 
   @ViewChildren(ChildComponent) childComponents: QueryList<ChildComponent>;
 

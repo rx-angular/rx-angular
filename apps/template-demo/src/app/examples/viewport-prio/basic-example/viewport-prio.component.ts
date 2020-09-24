@@ -19,27 +19,6 @@ import { getStrategies } from '@rx-angular/template';
     <button [unpatch] (click)="toggleAutoIncrement.next('')">
       auto
     </button>
-    <!--
-    <label>VisibleStrategy {{ visibleStrategy$ | push }}</label>
-    <select (change)="visibleStrategy$.next($event?.target?.value)">
-      <option
-        [selected]="(visibleStrategy$ | push) === s"
-        [value]="s"
-        *ngFor="let s of strategies"
-        >{{ s }}</option
-      >
-    </select>
-
-    <label>InVisibleStrategy {{ invisibleStrategy$ | push }}</label>
-    <select (change)="invisibleStrategy$.next($event?.target?.value)">
-      <option
-        [selected]="(invisibleStrategy$ | push) === s"
-        [value]="s"
-        *ngFor="let s of strategies"
-        >{{ s }}</option
-      >
-    </select>
-    -->
     <br />
 
     <b>viewPort</b>
@@ -48,7 +27,7 @@ import { getStrategies } from '@rx-angular/template';
         <div
           class="target"
           viewport-prio
-          *rxLet="count$; let count; strategy: visibleStrategy$ | push">
+          *rxLet="count$; let count;">
           <b>target</b>
           value: {{ count }}
         </div>

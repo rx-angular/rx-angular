@@ -15,9 +15,7 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app-component/app.component';
 import { ROUTES } from './app.routes';
 import { ViewportPrioModule } from '@rx-angular/template';
-import { ComparisonUnpatchModule } from './examples/unpatch/comparison-unpatch.module';
 import { SharedModule } from './shared/shared.module';
-import { RxLetDemoModule } from './examples/rx-let/rx-let-demo.module';
 
 export const materialModules = [
   BrowserAnimationsModule,
@@ -44,4 +42,5 @@ export const materialModules = [
   exports: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+}

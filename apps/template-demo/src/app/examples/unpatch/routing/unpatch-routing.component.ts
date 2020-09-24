@@ -22,7 +22,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: []
 })
-export class ComparisonUnpatchComponent {
+export class UnpatchRoutingComponent {
   numRenders = 0;
 
   constructor(private cdRef: ChangeDetectorRef) {}

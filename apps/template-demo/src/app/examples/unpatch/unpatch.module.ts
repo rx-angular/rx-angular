@@ -28,4 +28,4 @@ const DECLARATIONS = [ComparisonUnpatchComponent];
   ],
   exports: [DECLARATIONS],
 })
-export class ComparisonUnpatchModule {}
+export class UnpatchModule {}
