@@ -12,7 +12,7 @@ import { getStrategies } from '@rx-angular/template';
   selector: 'let1-container',
   template: `
     <h1>Stop rendering if directive is out of the viewport</h1>
-    rerenders: <renders></renders><br />
+    <renders></renders><br />
     <button mat-raised-button [unpatch] (click)="incrementTrigger.next()">
       count up
     </button>

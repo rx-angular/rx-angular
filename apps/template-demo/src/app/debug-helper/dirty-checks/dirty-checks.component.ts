@@ -5,11 +5,14 @@ import { MatRipple } from '@angular/material/core';
   // tslint:disable-next-line:component-selector
   selector: 'renders',
   template: `
+    <div class="num-dirty-checks" matRipple [matRippleColor]="'rgba(68,68,200,0.24)'">
+      {{ render() }}
+    </div>
     <div class="rx-num-render" matRipple [matRippleColor]="'rgba(68,68,200,0.24)'">
       {{ render() }}
     </div>
   `,
-  styles: ['./dirty-checks.component.scss']
+  styleUrls: ['./dirty-checks.component.scss']
 })
 export class DirtyChecksComponent implements OnInit {
   @ViewChild(MatRipple) ripple: MatRipple;
