@@ -7,6 +7,13 @@ export const ROUTES: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'rendering',
+    loadChildren: () =>
+      import('./examples/rendering/rendering.module').then(
+        m => m.RenderingDemoModule
+      )
+  },
+  {
     path: 'rx-let',
     loadChildren: () =>
       import('./examples/rx-let/rx-let-demo.module').then(
