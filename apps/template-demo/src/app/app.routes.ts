@@ -35,7 +35,7 @@ export const ROUTES: Routes = [
       )
   },
   {
-    path: 'viewport-prio',
+    path: 'view-port-prio',
     loadChildren: () =>
       import('./examples/viewport-prio/viewport-prio-demo.module').then(
         m => m.ViewportPrioModule

@@ -2,14 +2,14 @@ export const MENU_ITEMS = [
 
   {
     label: 'Renderer',
-    link: 'renderer'
+    link: 'strategies/renderer'
   },
   {
     label: 'Coalescing',
-    link: 'coalescing'
+    link: 'strategies/coalescing'
   },
   {
     label: 'Scheduling',
-    link: 'scheduling'
+    link: 'strategies/scheduling'
   }
 ];

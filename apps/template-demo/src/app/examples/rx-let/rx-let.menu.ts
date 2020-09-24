@@ -1,18 +1,18 @@
 export const MENU_ITEMS = [
   {
     label: 'Error Handling',
-    link: 'error-handling'
+    link: 'rx-let/error-handling'
   },
   {
     label: 'Http Errors',
-    link: 'http-errors'
+    link: 'rx-let/http-errors'
   },
   {
     label: '*ngif hack',
-    link: 'ngif-hack'
+    link: 'rx-let/ng-if-hack'
   },
   {
     label: 'Template Bindings',
-    link: 'template-bindings'
+    link: 'rx-let/template-bindings'
   }
 ];
