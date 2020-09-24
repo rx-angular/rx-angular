@@ -5,23 +5,17 @@
     fixedInViewport
     [attr.role]="(vm.isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(vm.isHandset$ | async) ? 'over' : 'side'"
-    [opened]="(vm.isHandset$ | async) === false"
-  >
-    <mat-toolbar>Menu<renders></renders></mat-toolbar>
+    [opened]="(vm.isHandset$ | async) === false">
+    <mat-toolbar>Menu
+      <renders></renders>
+    </mat-toolbar>
+
     <mat-nav-list>
-      <h3 matSubheader>Examples</h3>
-      <a mat-list-item [routerLink]="['rendering']">Rendering</a>
-      <a mat-list-item [routerLink]="['rendering/scheduling']">Scheduling</a>
-      <a mat-list-item [routerLink]="['rendering/coalescing/experiments-profiling']">Coalescing</a>
-      <a mat-list-item [routerLink]="['rendering/renderer']">Chunked Rendering</a>
-      <a mat-list-item [routerLink]="['rx-let']">RxLet</a>
-      <a mat-list-item [routerLink]="['rx-let/error-handling']">Error Handling</a>
-      <a mat-list-item [routerLink]="['rx-let/http-errors']">HTTP Errors</a>
-      <a mat-list-item [routerLink]="['rx-let/ng-if-hack']">*ngIf hack</a>
-      <a mat-list-item [routerLink]="['rx-let/template-binding']">Template Bindings</a>
-      <a mat-list-item [routerLink]="['unpatch']">Unpatch</a>
-      <a mat-list-item [routerLink]="['viewport-prio']">Viewport Prio</a>
+      <ng-container *ngFor="let i of menuItems">
+        <a mat-list-item [routerLink]="[i.link]">{{i.label}}</a>
+      </ng-container>
     </mat-nav-list>
+
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
@@ -30,8 +24,7 @@
         aria-label="Toggle sidenav"
         mat-icon-button
         (click)="drawer.toggle()"
-        *ngIf="vm.isHandset$ | async"
-      >
+        *ngIf="vm.isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span>RxAngular Template <renders></renders></span>

@@ -1,12 +1,10 @@
-import { MenuItem } from '../../../../../experiments/src/app/core/navigation/menu-item.interface';
-
-export const MENU_ITEMS: MenuItem[] = [
+export const MENU_ITEMS = [
   {
-    label: 'Comparison',
-    link: 'Comparison'
+    label: 'comparison',
+    link: 'comparison'
   },
   {
-    label: 'Routing',
-    link: 'routing'
+    label: 'router',
+    link: 'router'
   }
 ];

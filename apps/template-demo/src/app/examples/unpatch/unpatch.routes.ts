@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { ComparisonUnpatchComponent } from './comparison/comparison-unpatch.component';
-import { UnpatchRoutingComponent } from './routing/unpatch-routing.component';
 
 export const ROUTES: Routes = [
   {
@@ -10,11 +8,16 @@ export const ROUTES: Routes = [
   },
   {
     path: 'comparison',
-    component: ComparisonUnpatchComponent
+    loadChildren: () =>
+      import('./comparison/unpatch-comparison.module').then(
+        m => m.UnpatchComparisonModule
+      )
   },
-
   {
     path: 'routing',
-    component: UnpatchRoutingComponent
+    loadChildren: () =>
+      import('./routing/unpatch-routing.module').then(
+        m => m.UnpatchRoutingModule
+      )
   }
 ];
