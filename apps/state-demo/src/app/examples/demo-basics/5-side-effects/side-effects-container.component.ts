@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
   selector: 'side-effects-container',
   template: `
     <h1>Side Effects</h1>
-    <small>Parent re-renders: {{ rerenders() }}</small><br />
+    <br />
     <mat-form-field>
       <label>RefreshInterval</label>
       <input
@@ -24,8 +24,4 @@ export class SideEffectsContainerComponent {
   refreshInterval$ = this.refreshIntervalInput$.pipe(
     map((e: any) => e.target.value)
   );
-  numRenders = 0;
-  rerenders(): number {
-    return ++this.numRenders;
-  }
 }

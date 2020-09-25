@@ -3,10 +3,9 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'demo-basics4-container',
+  selector: 'output-bindings-container',
   template: `
-    <h1>Solution</h1>
-    <br />
+    <h1>Global State</h1>
     <mat-form-field>
       <label>RefreshInterval</label>
       <input
@@ -16,13 +15,18 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <demo-basics [refreshInterval]="refreshInterval$ | async"> </demo-basics>
+    <global-state-start
+      [refreshInterval]="refreshInterval$ | async"
+      (listExpandedChange)="listExpandedChange$.next($event)"
+    >
+    </global-state-start>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DemoBasicsContainerComponent {
+export class GlobalStateContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();
   refreshInterval$ = this.refreshIntervalInput$.pipe(
     map((e: any) => e.target.value)
   );
+  listExpandedChange$ = new Subject<boolean>();
 }

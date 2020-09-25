@@ -6,13 +6,13 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { RxState } from '@rx-angular/state';
-import { distinctUntilKeyChanged, map, startWith, switchMap, tap } from 'rxjs/operators';
 import {
   ListServerItem,
   ListService,
 } from '../../../data-access/list-resource';
 import { interval, Subject, Subscription } from 'rxjs';
+import { map, startWith, tap } from 'rxjs/operators';
+import { RxState } from '@rx-angular/state';
 
 export interface DemoBasicsItem {
   id: string;
@@ -25,6 +25,7 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
+// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
@@ -32,15 +33,15 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'output-bindings-solution',
+  selector: 'global-state-start',
   template: `
     <h3>
       Output Bindings
     </h3>
     <mat-expansion-panel
       *ngIf="model$ | async as vm"
-      (expandedChange)="listExpandedChanges.next($event)"
-      [expanded]="vm.listExpanded"
+      (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
+      [expanded]="listExpanded"
     >
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
@@ -80,7 +81,7 @@ const initComponentState = {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OutputBindingsSolution extends RxState<ComponentState>
+export class GlobalStateStart extends RxState<ComponentState>
   implements OnInit, OnDestroy {
   model$ = this.select();
 
@@ -101,13 +102,11 @@ export class OutputBindingsSolution extends RxState<ComponentState>
 
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
-  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
+  listExpandedChange = this.listExpandedChanges;
 
   constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
-
-    this.connect('listExpanded', this.listExpandedChanges)
   }
 
   ngOnDestroy(): void {

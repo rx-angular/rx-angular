@@ -26,18 +26,13 @@ set refreshInterval(refreshInterval: number) {
 
 We also have to adopt the related method `resetRefreshTick` where `_refreshInterval`is used.
 As `refreshInterval` already is part of the components' state,
-we can easily select the value with `this.select('refreshInterval')` and use the `interval` operator to create the new interval.
+we can easily select the value with `this.get('refreshInterval')` and use the `interval` operator to create the new interval.
 
 ```typescript
-import {..., switchMap} from 'rxjs/operators';
-...
-
 resetRefreshTick() {
     this.intervalSubscription.unsubscribe();
-    this.intervalSubscription = this.select('refreshInterval')
-         .pipe(
-           switchMap(ms => interval(ms)),
-           tap(_ => this.store.dispatch(fetchRepositoryList({}))))
+    this.intervalSubscription = interval(this.get('refreshInterval'))
+      .pipe(tap((_) => this.listService.refetchList()))
       .subscribe();
 }
 ```

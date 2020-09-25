@@ -12,6 +12,7 @@ import {
 } from '../../../data-access/list-resource';
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
+import { RxState } from '@rx-angular/state';
 
 export interface DemoBasicsItem {
   id: string;
@@ -37,6 +38,7 @@ const initComponentState = {
     <h3>
      Input Bindings
     </h3>
+    {{model$  | async | json}}
     <mat-expansion-panel
       (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
       [expanded]="listExpanded"
@@ -96,7 +98,9 @@ const initComponentState = {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputBindingsStart implements OnInit, OnDestroy {
+export class InputBindingsStart extends RxState<ComponentState> implements OnInit, OnDestroy {
+  model$ = this.select();
+
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.listService.list$.pipe(
@@ -117,7 +121,10 @@ export class InputBindingsStart implements OnInit, OnDestroy {
   @Output()
   listExpandedChange = this.listExpandedChanges;
 
-  constructor(private listService: ListService) {}
+  constructor(private listService: ListService) {
+    super();
+    this.set(initComponentState);
+  }
 
   ngOnDestroy(): void {
     this.intervalSubscription.unsubscribe();

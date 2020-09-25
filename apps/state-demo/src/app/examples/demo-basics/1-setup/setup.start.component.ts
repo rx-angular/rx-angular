@@ -6,13 +6,12 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { RxState } from '@rx-angular/state';
-import { distinctUntilKeyChanged, map, startWith, switchMap, tap } from 'rxjs/operators';
 import {
   ListServerItem,
   ListService,
 } from '../../../data-access/list-resource';
 import { interval, Subject, Subscription } from 'rxjs';
+import { map, startWith, tap } from 'rxjs/operators';
 
 export interface DemoBasicsItem {
   id: string;
@@ -25,6 +24,7 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
+// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
@@ -32,16 +32,14 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'output-bindings-solution',
+  selector: 'setup-start',
   template: `
     <h3>
-      Output Bindings
+      Setup
     </h3>
     <mat-expansion-panel
-      *ngIf="model$ | async as vm"
-      (expandedChange)="listExpandedChanges.next($event)"
-      [expanded]="vm.listExpanded"
-    >
+      (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
+      [expanded]="listExpanded">
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
         <mat-panel-title>
@@ -49,8 +47,8 @@ const initComponentState = {
         </mat-panel-title>
         <mat-panel-description>
           <span
-          >{{ (storeList$ | async)?.length }} Repositories Updated every:
-            {{ vm.refreshInterval }} ms
+            >{{ (storeList$ | async)?.length }} Repositories Updated every:
+            {{ _refreshInterval }} ms
           </span>
         </mat-panel-description>
       </mat-expansion-panel-header>
@@ -78,12 +76,26 @@ const initComponentState = {
       </ng-template>
     </mat-expansion-panel>
   `,
+  styles: [
+    `
+      .list .mat-expansion-panel-header {
+        position: relative;
+      }
+
+      .list .mat-expansion-panel-header mat-progress-bar {
+        position: absolute;
+        top: 0px;
+        left: 0;
+      }
+
+      .list .mat-expansion-panel-content .mat-expansion-panel-body {
+        padding-top: 10px;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OutputBindingsSolution extends RxState<ComponentState>
-  implements OnInit, OnDestroy {
-  model$ = this.select();
-
+export class SetupStart implements OnInit, OnDestroy {
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.listService.list$.pipe(
@@ -91,24 +103,20 @@ export class OutputBindingsSolution extends RxState<ComponentState>
     startWith(initComponentState.list)
   );
 
+  _refreshInterval: number = initComponentState.refreshInterval;
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 4000) {
-      this.set({refreshInterval});
+      this._refreshInterval = refreshInterval;
       this.resetRefreshTick();
     }
   }
 
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
-  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
+  listExpandedChange = this.listExpandedChanges;
 
-  constructor(private listService: ListService) {
-    super();
-    this.set(initComponentState);
-
-    this.connect('listExpanded', this.listExpandedChanges)
-  }
+  constructor(private listService: ListService) {}
 
   ngOnDestroy(): void {
     this.intervalSubscription.unsubscribe();
@@ -120,7 +128,7 @@ export class OutputBindingsSolution extends RxState<ComponentState>
 
   resetRefreshTick() {
     this.intervalSubscription.unsubscribe();
-    this.intervalSubscription = interval(this.get('refreshInterval'))
+    this.intervalSubscription = interval(this._refreshInterval)
       .pipe(tap((_) => this.listService.refetchList()))
       .subscribe();
   }

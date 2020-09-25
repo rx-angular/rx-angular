@@ -38,7 +38,7 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
-export class SetupReactiveComponentStateContainerComponent extends RxState<ComponentState> {
+export class SetupReactiveComponentStateContainerComponent extends RxState<ComponentState> ... {
 ```
 
 Also, a `super` in the constructor is needed as we extend from another class.
