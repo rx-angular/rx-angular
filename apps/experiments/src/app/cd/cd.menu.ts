@@ -3,45 +3,33 @@ import { MenuItem } from '../core/navigation/menu-item.interface';
 export const MENU_ITEMS: MenuItem[] = [
   {
     link: 'cd',
-    label: 'ChangeDetection Overview',
+    label: 'ChangeDetection Methods',
     children: [
       // 01.
       {
-        link: 'cd-01',
-        label: 'ChangeDetection 01',
+        link: 'detect-changes',
+        label: 'ɵdetectChanges',
       },
       {
-        link: 'cd-02',
-        label: 'ChangeDetection 02',
+        link: 'ref-detect-changes',
+        label: 'cdRef.detectChanges',
       },
       {
-        link: 'cd-03',
-        label: 'ChangeDetection 03',
+        link: 'ref-mark-for-check',
+        label: 'cdRef.markForCheck',
       },
       {
-        link: 'cd-04',
-        label: 'ChangeDetection 04',
+        link: 'mark-dirty',
+        label: 'ɵmarkDirty',
       },
       {
-        link: 'cd-05',
-        label: 'ChangeDetection 05',
+        link: 'app-ref-tick',
+        label: 'ApplicationRef.tick',
       },
       {
-        link: 'cd-06',
-        label: 'ChangeDetection 06',
-      },
-      {
-        link: 'cd-11',
-        label: 'ChangeDetection 11',
-      },
-      {
-        link: 'cd-12',
-        label: 'ChangeDetection 12',
-      },
-      {
-        link: 'cd-13',
-        label: 'ChangeDetection 13',
-      },
+        link: 'patched-apis',
+        label: 'Patched Apis',
+      }
     ],
   },
 ];

@@ -1,18 +1,16 @@
-import { Parent01Component } from './01/parent.component';
-import { MixedOverviewComponent } from './mixed.overview.component';
-import { Parent02Component } from './02/parent.component';
+import { Routes } from '@angular/router';
 
-export const ROUTES = [
+export const ROUTES: Routes = [
   {
-    path: 'mixed',
-    component: MixedOverviewComponent,
+    path: '',
+    redirectTo: 'mixed-01'
   },
   {
     path: 'mixed-01',
-    component: Parent01Component,
+    loadChildren: () => import('./01/mix-1.module').then(m => m.Mix1Module)
   },
   {
     path: 'mixed-02',
-    component: Parent02Component,
-  },
+    loadChildren: () => import('./02/mix2.module').then(m => m.Mix2Module)
+  }
 ];

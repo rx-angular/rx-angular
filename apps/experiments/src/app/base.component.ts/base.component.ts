@@ -80,10 +80,6 @@ export abstract class BaseComponent
     ɵdetectChanges(this);
   }
 
-  scheduleDetectChanges() {
-    console.log('NOT IMPLEMENTED');
-  }
-
   get strategy() {
     return this.coalesceConfigService.getConfig('strategy');
   }
