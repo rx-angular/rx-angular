@@ -5,7 +5,7 @@ import { ROUTES as PUSH_ROUTES } from './push/push.routes';
 export const ROUTES: Routes = [
   {
     path: '',
-    loadChildren: () => import('./cd/cd.module').then((mod) => mod.CdModule),
+    loadChildren: () => import('./fundamentals/cd/cd.module').then((mod) => mod.CdModule),
     canActivate: [],
     canActivateChild: [],
   },
@@ -26,7 +26,7 @@ export const ROUTES: Routes = [
   },
   {
     path: '',
-    loadChildren: () => import('./let/let.module').then((mod) => mod.LetModule),
+    loadChildren: () => import('./structural-directives/let/let.module').then((mod) => mod.LetModule),
     canActivate: [],
     canActivateChild: [],
   },
@@ -65,6 +65,6 @@ export const ROUTES: Routes = [
   {
     path: 'embedded-view',
     loadChildren: () =>
-      import('./cd-embedded-view/cd-embedded-view.module').then((m) => m.CdEmbeddedViewModule),
+      import('./structural-directives/cd-embedded-view/cd-embedded-view.module').then((m) => m.CdEmbeddedViewModule),
   },
 ];
