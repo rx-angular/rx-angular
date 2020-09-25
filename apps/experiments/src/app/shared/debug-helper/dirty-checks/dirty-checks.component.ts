@@ -5,7 +5,7 @@ import { MatRipple } from '@angular/material/core';
   // tslint:disable-next-line:component-selector
   selector: 'renders',
   template: `
-    <div class="rx-num-render" matRipple [matRippleColor]="color" [matRippleRadius]="radius">
+    <div class="num-dirty-checks" matRipple [matRippleColor]="color" [matRippleRadius]="radius">
       {{ numDirtyChecks() }}
     </div>
 
