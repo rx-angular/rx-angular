@@ -12,48 +12,70 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { DemoBasics1ContainerComponent } from './1/demo-basics-1.container.component';
-import { DemoBasicsComponent1Start } from './1/demo-basics-1.start.component';
-import { DemoBasics2ContainerComponent } from './2/demo-basics-2.container.component';
-import { DemoBasicsComponent2Start } from './2/demo-basics-2.start.component';
-import { DemoBasics3ContainerComponent } from './3/demo-basics-3.container.component';
-import { DemoBasicsComponenteStart } from './3/demo-basics-3.start.component';
+import { SetupContainerComponent } from './1-setup/setup-container.component';
+import { InputBindingsContainerComponent } from './2-input-bindings/input-bindings-container.component';
+import { OutputBindingsContainerComponent } from './3-output-bindings/output-bindings-container.component';
+import { PresenterPatternContainerComponent } from './5-presenter-pattern/presenter-pattern.container.component';
 import { DemoBasicsContainerComponent } from './solution/demo-basics.container.component';
+import { SideEffectsContainerComponent } from './4-side-effects/side-effects-container.component';
+import { InputBindingsSolution } from './2-input-bindings/input-bindings.solution.component';
+import { InputBindingsStart } from './2-input-bindings/input-bindings.start.component';
+import { OutputBindingsStart } from './3-output-bindings/output-bindings.start.component';
+import { OutputBindingsSolution } from './3-output-bindings/output-bindings.solution.component';
+import { SideEffectsStart } from './4-side-effects/side-effects.start.component';
+import { SideEffectsSolution } from './4-side-effects/side-effects.solution.component';
+import { PresenterPatternStart } from './5-presenter-pattern/presenter-pattern.start.component';
+import { SetupStart } from './1-setup/setup-reactive-component-state.start.component';
+import { SetupSolution } from './1-setup/setup-reactive-component-state.solution.component';
 import { DemoBasicsComponent } from './solution/demo-basics.component';
-import { DemoBasicsComponent1Solution } from './1/demo-basics-1.solution.component';
-import { DemoBasicsComponent2Solution } from './2/demo-basics-2.solution.component';
 
 export const ROUTES = [
   {
     path: '',
-    pathMatch: 'full',
-    component: DemoBasicsContainerComponent,
+    component: SetupContainerComponent
   },
   {
-    path: 'step-1',
-    component: DemoBasics1ContainerComponent,
+    path: 'setup',
+    component: SetupContainerComponent
   },
   {
-    path: 'step-2',
-    component: DemoBasics2ContainerComponent,
+    path: 'input-bindings',
+    component: InputBindingsContainerComponent
+  },
+  {
+    path: 'output-bindings',
+    component: OutputBindingsContainerComponent
+  },
+  {
+    path: 'side-effects',
+    component: SideEffectsContainerComponent
+  },
+  {
+    path: 'presenter-pattern',
+    component: PresenterPatternContainerComponent
   },
   {
     path: 'solution',
-    component: DemoBasicsContainerComponent,
-  },
+    component: DemoBasicsContainerComponent
+  }
 ];
 const DECLARATIONS = [
+  SetupContainerComponent,
+  SetupStart,
+  SetupSolution,
+  InputBindingsContainerComponent,
+  InputBindingsStart,
+  InputBindingsSolution,
+  OutputBindingsContainerComponent,
+  OutputBindingsStart,
+  OutputBindingsSolution,
+  SideEffectsContainerComponent,
+  SideEffectsStart,
+  SideEffectsSolution,
+  PresenterPatternContainerComponent,
+  PresenterPatternStart,
   DemoBasicsContainerComponent,
-  DemoBasicsComponent,
-
-  DemoBasics1ContainerComponent,
-  DemoBasicsComponent1Start,
-  DemoBasicsComponent1Solution,
-  DemoBasics2ContainerComponent,
-  DemoBasicsComponent2Start,
-  DemoBasicsComponent2Solution,
-  DemoBasics3ContainerComponent,
-  DemoBasicsComponenteStart,
+  DemoBasicsComponent
 ];
 export const materialModules = [
   MatIconModule,
@@ -65,12 +87,13 @@ export const materialModules = [
   MatProgressSpinnerModule,
   MatProgressBarModule,
   MatInputModule,
-  MatFormFieldModule,
+  MatFormFieldModule
 ];
 
 @NgModule({
   declarations: [DECLARATIONS],
   imports: [CommonModule, materialModules, RouterModule.forChild(ROUTES)],
-  exports: [DECLARATIONS],
+  exports: [DECLARATIONS]
 })
-export class DemoBasicsModule {}
+export class DemoBasicsModule {
+}

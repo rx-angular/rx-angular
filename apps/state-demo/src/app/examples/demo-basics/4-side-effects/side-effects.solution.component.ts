@@ -1,18 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { distinctUntilKeyChanged, map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import {
-  ListService,
   ListServerItem,
+  ListService,
 } from '../../../data-access/list-resource';
-import { interval, merge, Subject, Subscription } from 'rxjs';
+import { merge, Subject, timer } from 'rxjs';
 
 export interface DemoBasicsItem {
   id: string;
@@ -32,14 +25,13 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'demo-basics-2-start',
+  selector: 'side-effects-solution',
   template: `
-    <h3>Demo Basics 2 - Handle Side Effects</h3>
+    <h3>Side Effects</h3>
     <mat-expansion-panel
       *ngIf="model$ | async as vm"
       (expandedChange)="listExpandedChanges.next($event)"
-      [expanded]="vm.listExpanded"
-    >
+      [expanded]="vm.listExpanded">
       <mat-expansion-panel-header>
         <mat-panel-title>
           List
@@ -55,7 +47,7 @@ const initComponentState = {
       <button
         mat-raised-button
         color="primary"
-        (click)="onRefreshClicks($event)"
+        (click)="refreshClicks.next($event)"
       >
         Refresh List
       </button>
@@ -75,19 +67,11 @@ const initComponentState = {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DemoBasicsComponent2Start extends RxState<ComponentState>
-  implements OnInit, OnDestroy {
-  intervalSubscription = new Subscription();
+export class SideEffectsSolution extends RxState<ComponentState> {
+  refreshClicks = new Subject<Event>();
   listExpandedChanges = new Subject<boolean>();
-  refreshClick = new Subject<Event>();
 
   model$ = this.select();
-
-  intervalRefreshTick$ = this.select('refreshInterval').pipe(
-    switchMap((ms) => interval(ms))
-  );
-
-  refreshListSideEffect$ = merge(this.intervalRefreshTick$, this.refreshClick);
 
   @Input()
   set refreshInterval(refreshInterval: number) {
@@ -96,8 +80,11 @@ export class DemoBasicsComponent2Start extends RxState<ComponentState>
     }
   }
 
-  @Output()
-  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'));
+  intervalRefreshTick$ = this.select(
+    map((s) => s.refreshInterval),
+    switchMap((ms) => timer(0, ms))
+  );
+  refreshListSideEffect$ = merge(this.refreshClicks, this.intervalRefreshTick$);
 
   constructor(private listService: ListService) {
     super();
@@ -106,44 +93,12 @@ export class DemoBasicsComponent2Start extends RxState<ComponentState>
       this.listExpandedChanges.pipe(map((listExpanded) => ({ listExpanded })))
     );
     this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
-    this.hold(this.refreshListSideEffect$, (_) =>
+    this.hold(this.refreshListSideEffect$, () =>
       this.listService.refetchList()
     );
-  }
-
-  ngOnDestroy(): void {
-    this.intervalSubscription.unsubscribe();
-  }
-
-  ngOnInit(): void {
-    this.resetRefreshTick();
-  }
-
-  resetRefreshTick() {
-    this.intervalSubscription.unsubscribe();
-    this.intervalSubscription = this.select('refreshInterval')
-      .pipe(
-        switchMap((ms) => interval(ms)),
-        tap((_) => this.listService.refetchList())
-      )
-      .subscribe();
-  }
-
-  onRefreshClicks(event) {
-    this.listService.refetchList();
   }
 
   parseListItems(l: ListServerItem[]): DemoBasicsItem[] {
     return l.map(({ id, name }) => ({ id, name }));
   }
-
-  /*
-    intervalRefreshTick$ = this.select(
-    map(s => s.refreshInterval),
-    switchMap(ms => timer(0, ms))
-  );
-  refreshListSideEffect$ = merge(this.refreshClicks, this.intervalRefreshTick$);
-
-
-  * */
 }

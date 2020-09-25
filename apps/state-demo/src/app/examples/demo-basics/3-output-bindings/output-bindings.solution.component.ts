@@ -32,11 +32,10 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'demo-basics-1-solution',
+  selector: 'output-bindings-solution',
   template: `
     <h3>
-      Demo Basics 1 - Setup a reactive state, its selections and the related UI
-      interactions
+      Output Bindings
     </h3>
     <mat-expansion-panel
       *ngIf="model$ | async as vm"
@@ -78,7 +77,7 @@ const initComponentState = {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DemoBasicsComponent1Solution extends RxState<ComponentState>
+export class OutputBindingsSolution extends RxState<ComponentState>
   implements OnInit, OnDestroy {
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();

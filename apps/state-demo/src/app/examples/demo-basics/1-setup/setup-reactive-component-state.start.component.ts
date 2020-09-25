@@ -32,11 +32,10 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'demo-basics-1-start',
+  selector: 'setup-start',
   template: `
     <h3>
-      Demo Basic 1 - Setup a reactive state, its selections and the related UI
-      interactions
+      Setup
     </h3>
     <mat-expansion-panel
       (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
@@ -97,7 +96,7 @@ const initComponentState = {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DemoBasicsComponent1Start implements OnInit, OnDestroy {
+export class SetupStart implements OnInit, OnDestroy {
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.listService.list$.pipe(

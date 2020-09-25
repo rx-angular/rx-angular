@@ -24,9 +24,9 @@ const initComponentState = {
   list: [],
 };
 @Component({
-  selector: 'demo-basics-3-start',
+  selector: 'presenter-pattern-start',
   template: `
-    <h3>Demo Basics 3 - Introduce MVVM Architecture</h3>
+    <h3>Presenter Pattern</h3>
     <mat-expansion-panel
       *ngIf="model$ | async as m"
       (expandedChange)="listExpandedChanges.next($event)"
@@ -68,7 +68,7 @@ const initComponentState = {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DemoBasicsComponenteStart extends RxState<ComponentState> {
+export class PresenterPatternStart extends RxState<ComponentState> {
   refreshClicks = new Subject<Event>();
   listExpandedChanges = new Subject<boolean>();
 
