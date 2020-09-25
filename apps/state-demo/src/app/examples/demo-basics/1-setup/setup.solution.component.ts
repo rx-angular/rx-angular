@@ -6,12 +6,13 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { RxState } from '@rx-angular/state';
+import { distinctUntilKeyChanged, map, startWith, switchMap, tap } from 'rxjs/operators';
 import {
   ListServerItem,
   ListService,
 } from '../../../data-access/list-resource';
 import { interval, Subject, Subscription } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
 
 export interface DemoBasicsItem {
   id: string;
@@ -24,7 +25,6 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
-// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
@@ -32,15 +32,15 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'setup-start',
+  selector: 'setup-solution',
   template: `
     <h3>
       Setup
     </h3>
+    {{model$  | async | json}}
     <mat-expansion-panel
       (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
-      [expanded]="listExpanded"
-    >
+      [expanded]="listExpanded">
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
         <mat-panel-title>
@@ -48,7 +48,7 @@ const initComponentState = {
         </mat-panel-title>
         <mat-panel-description>
           <span
-            >{{ (storeList$ | async)?.length }} Repositories Updated every:
+          >{{ (storeList$ | async)?.length }} Repositories Updated every:
             {{ _refreshInterval }} ms
           </span>
         </mat-panel-description>
@@ -96,7 +96,9 @@ const initComponentState = {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SetupStart implements OnInit, OnDestroy {
+export class SetupSolution extends RxState<ComponentState> implements OnInit, OnDestroy {
+  model$ = this.select();
+
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.listService.list$.pipe(
@@ -117,7 +119,10 @@ export class SetupStart implements OnInit, OnDestroy {
   @Output()
   listExpandedChange = this.listExpandedChanges;
 
-  constructor(private listService: ListService) {}
+  constructor(private listService: ListService) {
+    super();
+    this.set(initComponentState);
+  }
 
   ngOnDestroy(): void {
     this.intervalSubscription.unsubscribe();

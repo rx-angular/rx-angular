@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { distinctUntilKeyChanged, map, switchMap, tap } from 'rxjs/operators';
+import { distinctUntilKeyChanged, map, startWith, switchMap, tap } from 'rxjs/operators';
 import {
   ListService,
   ListServerItem,
@@ -34,19 +34,22 @@ const initComponentState = {
 @Component({
   selector: 'side-effects-start',
   template: `
-    <h3>Side Effects</h3>
+    <h3>
+      Side Effects
+    </h3>
     <mat-expansion-panel
       *ngIf="model$ | async as vm"
       (expandedChange)="listExpandedChanges.next($event)"
       [expanded]="vm.listExpanded"
     >
-      <mat-expansion-panel-header>
+      <mat-expansion-panel-header class="list">
+        <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
         <mat-panel-title>
           List
         </mat-panel-title>
         <mat-panel-description>
-          <span>
-            {{ vm.list.length }} Repositories Updated every:
+          <span
+          >{{ vm.list.length }} Repositories Updated every:
             {{ vm.refreshInterval }} ms
           </span>
         </mat-panel-description>
@@ -60,7 +63,7 @@ const initComponentState = {
         Refresh List
       </button>
 
-      <div *ngIf="vm.list.length; else noList">
+      <div *ngIf="vm.list?.length; else noList">
         <mat-list>
           <mat-list-item *ngFor="let item of vm.list">
             {{ item.name }}
@@ -77,38 +80,32 @@ const initComponentState = {
 })
 export class SideEffectsStart extends RxState<ComponentState>
   implements OnInit, OnDestroy {
-  intervalSubscription = new Subscription();
-  listExpandedChanges = new Subject<boolean>();
-  refreshClick = new Subject<Event>();
-
   model$ = this.select();
 
-  intervalRefreshTick$ = this.select('refreshInterval').pipe(
-    switchMap((ms) => interval(ms))
+  intervalSubscription = new Subscription();
+  listExpandedChanges = new Subject<boolean>();
+  storeList$ = this.listService.list$.pipe(
+    map(this.parseListItems),
+    startWith(initComponentState.list)
   );
-
-  refreshListSideEffect$ = merge(this.intervalRefreshTick$, this.refreshClick);
 
   @Input()
   set refreshInterval(refreshInterval: number) {
-    if (refreshInterval > 100) {
-      this.set({ refreshInterval });
+    if (refreshInterval > 4000) {
+      this.set({refreshInterval});
+      this.resetRefreshTick();
     }
   }
 
+  listExpanded: boolean = initComponentState.listExpanded;
   @Output()
-  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'));
+  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
 
   constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
-    this.connect(
-      this.listExpandedChanges.pipe(map((listExpanded) => ({ listExpanded })))
-    );
-    this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
-    this.hold(this.refreshListSideEffect$, (_) =>
-      this.listService.refetchList()
-    );
+
+    this.connect('listExpanded', this.listExpandedChanges)
   }
 
   ngOnDestroy(): void {
@@ -121,11 +118,8 @@ export class SideEffectsStart extends RxState<ComponentState>
 
   resetRefreshTick() {
     this.intervalSubscription.unsubscribe();
-    this.intervalSubscription = this.select('refreshInterval')
-      .pipe(
-        switchMap((ms) => interval(ms)),
-        tap((_) => this.listService.refetchList())
-      )
+    this.intervalSubscription = interval(this.get('refreshInterval'))
+      .pipe(tap((_) => this.listService.refetchList()))
       .subscribe();
   }
 
@@ -136,14 +130,4 @@ export class SideEffectsStart extends RxState<ComponentState>
   parseListItems(l: ListServerItem[]): DemoBasicsItem[] {
     return l.map(({ id, name }) => ({ id, name }));
   }
-
-  /*
-    intervalRefreshTick$ = this.select(
-    map(s => s.refreshInterval),
-    switchMap(ms => timer(0, ms))
-  );
-  refreshListSideEffect$ = merge(this.refreshClicks, this.intervalRefreshTick$);
-
-
-  * */
 }

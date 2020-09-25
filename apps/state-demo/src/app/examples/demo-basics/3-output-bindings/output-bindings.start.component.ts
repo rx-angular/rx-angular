@@ -12,6 +12,7 @@ import {
 } from '../../../data-access/list-resource';
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
+import { RxState } from '@rx-angular/state';
 
 export interface DemoBasicsItem {
   id: string;
@@ -38,6 +39,7 @@ const initComponentState = {
       Output Bindings
     </h3>
     <mat-expansion-panel
+      *ngIf="model$ | async as vm"
       (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
       [expanded]="listExpanded"
     >
@@ -48,8 +50,8 @@ const initComponentState = {
         </mat-panel-title>
         <mat-panel-description>
           <span
-            >{{ (storeList$ | async)?.length }} Repositories Updated every:
-            {{ _refreshInterval }} ms
+          >{{ (storeList$ | async)?.length }} Repositories Updated every:
+            {{ vm.refreshInterval }} ms
           </span>
         </mat-panel-description>
       </mat-expansion-panel-header>
@@ -77,26 +79,12 @@ const initComponentState = {
       </ng-template>
     </mat-expansion-panel>
   `,
-  styles: [
-    `
-      .list .mat-expansion-panel-header {
-        position: relative;
-      }
-
-      .list .mat-expansion-panel-header mat-progress-bar {
-        position: absolute;
-        top: 0px;
-        left: 0;
-      }
-
-      .list .mat-expansion-panel-content .mat-expansion-panel-body {
-        padding-top: 10px;
-      }
-    `,
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OutputBindingsStart implements OnInit, OnDestroy {
+export class OutputBindingsStart extends RxState<ComponentState>
+  implements OnInit, OnDestroy {
+  model$ = this.select();
+
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.listService.list$.pipe(
@@ -104,11 +92,10 @@ export class OutputBindingsStart implements OnInit, OnDestroy {
     startWith(initComponentState.list)
   );
 
-  _refreshInterval: number = initComponentState.refreshInterval;
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 4000) {
-      this._refreshInterval = refreshInterval;
+      this.set({refreshInterval});
       this.resetRefreshTick();
     }
   }
@@ -117,7 +104,10 @@ export class OutputBindingsStart implements OnInit, OnDestroy {
   @Output()
   listExpandedChange = this.listExpandedChanges;
 
-  constructor(private listService: ListService) {}
+  constructor(private listService: ListService) {
+    super();
+    this.set(initComponentState);
+  }
 
   ngOnDestroy(): void {
     this.intervalSubscription.unsubscribe();
@@ -129,7 +119,7 @@ export class OutputBindingsStart implements OnInit, OnDestroy {
 
   resetRefreshTick() {
     this.intervalSubscription.unsubscribe();
-    this.intervalSubscription = interval(this._refreshInterval)
+    this.intervalSubscription = interval(this.get('refreshInterval'))
       .pipe(tap((_) => this.listService.refetchList()))
       .subscribe();
   }

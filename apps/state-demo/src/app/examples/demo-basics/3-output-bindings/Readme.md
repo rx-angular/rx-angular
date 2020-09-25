@@ -1,32 +1,6 @@
 # Handle Output Bindings
 
-## Bind the state to the view
-
-In this example we will use a very simple method and directly bind the complete component state to the view.
-Further performance improvements can be done later.
-
-To bind the state we can use a simple trick with the structural directive `*ngIf`, the `as` syntax and the `async` pipe.
-
-```html
-<ng-container *ngIf="model$ | async as vm"> </ng-container>
-```
-
-`vm` is a short form for view model.
-
-The implementation in our expand-panel looks like this:
-
-```html
-<mat-expansion-panel *ngIf="model$ | async as vm"> </mat-expansion-panel>
-```
-
-now we can replace the `_refreshInterval` in the template with `vm.refreshInterval`.
-
-```html
-<span>
-  (storeList$ | async)?.length }} Repositories Updated every: {{
-  vm.refreshInterval }} ms
-</span>
-```
+---
 
 ## React to state changes from child components
 
@@ -43,7 +17,17 @@ One way of using it is passing an Observable of type `Partial<ComponentState>` t
 We already have a subject for the user interaction with the open/closed state called `listExpandedChanges`.
 It next the new state whenever we click the expand-panel.
 
-What we need to do now is to transform the `boolean` value to fit `Partial<ComponentState>`.
+
+We can use connect with multiple overloads. Here the best usage would look like this:
+```typescript
+constructor() {
+  // ...
+  this.connect('listExpanded', this.listExpandedChanges);
+}
+```
+
+Optionally, we could also provide it as `Partial`.
+Here we need to transform the `boolean` value to fit `Partial<ComponentState>`.
 Here we can use the `map` operator to achieve the transformation and pass following projection function `listExpanded => ({ listExpanded})`
 
 ```typescript
@@ -54,6 +38,8 @@ constructor() {
   this.connect(this.listExpandedChanges.pipe(map(listExpanded => ({ listExpanded}))));
 }
 ```
+
+This overload is especially useful when updating multiple properties at the same time.
 
 Now lets refactor the state binding to the expand-panel.
 
@@ -79,8 +65,10 @@ to get the changes.
 Lets refactor to following and delete the `listExpanded` property in the class and template.
 
 ```typescript
+  import { map, distinctUntilKeyChanged } from `rxjs`;
+  // ...
   @Output()
-  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'));
+  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
 ```
 
 Here we used `$` which it a 'signal' of the state changes. Signals in comparison to stateful streams don't replay the last value on subscription.

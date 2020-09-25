@@ -93,7 +93,7 @@ Another side-effect is contained in the `onRefreshClicks` callback. Here we disp
   }
 ```
 
-Lets refactore those and handle them in a clean and reactiv way.
+Lets refactor those and handle them in a clean and reactive way.
 
 ### Refactor to a reactive UI
 
@@ -112,41 +112,47 @@ In our case we have the refresh button as UI interaction. To get its interaction
 ```typescript
 export class DemoBasicsComponent2 extends RxState<ComponentState>
   implements OnInit, OnDestroy {
-  refreshClicks = new Subject<Event>();
+  refreshClicks$ = new Subject<Event>();
   //...
 }
 ```
 
-### Setup the store side-effect
-
-In out class we create a new property called `refreshListSideEffect$` and assing the newly created click Observable to is.
-
-```typescript
-refreshListSideEffect$ = this.refreshClick$;
-```
-
 This is the trigger for our side-effect.
 
-From the `resetRefreshTick` method we now move the logic that starts the tick and place it in the `pipe` method of `this.refreshClick$`.
-
-```typescript
-refreshListSideEffect$ = this.refreshClick$.pipe(
-  tap(() => this.listService.refetchList())
-);
-```
-
 ### `hold` the side-effect
+
+From the `resetRefreshTick` method we now move the logic that starts the tick,  
+and place it in the `hold` method as callback parameter.
 
 `hold` as the name implies "holds" something. It holds a subscription to a side effect and takes care of its initialisation.
 Furthermore, it automatically handles the subscription management and unsubscribes if the component gets destroyed.
 
 ```typescript
 constructor(...) {
-  this.hold(refreshListSideEffect$);
+  this.hold(this.refreshClicks$, () => this.listService.refetchList());
 }
 ```
 
 This should dispatch an action on every button click.
+
+Optionally we could also put the side effect into a tap operator:
+
+In out class we create a new property called `refreshListSideEffect$` and assign the newly created click Observable to is.
+
+```typescript
+refreshListSideEffect$ = this.refreshClicks$.pipe(
+  tap(() => this.listService.refetchList())
+);
+```
+
+and hold it directly: 
+
+
+```typescript
+constructor(...) {
+  this.hold(refreshListSideEffect$);
+}
+```
 
 ### Refactor background process side-effect
 

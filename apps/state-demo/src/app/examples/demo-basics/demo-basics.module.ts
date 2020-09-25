@@ -15,24 +15,27 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SetupContainerComponent } from './1-setup/setup-container.component';
 import { InputBindingsContainerComponent } from './2-input-bindings/input-bindings-container.component';
 import { OutputBindingsContainerComponent } from './3-output-bindings/output-bindings-container.component';
-import { PresenterPatternContainerComponent } from './5-presenter-pattern/presenter-pattern.container.component';
+import { PresenterPatternContainerComponent } from './6-presenter-pattern/presenter-pattern.container.component';
 import { DemoBasicsContainerComponent } from './solution/demo-basics.container.component';
-import { SideEffectsContainerComponent } from './4-side-effects/side-effects-container.component';
+import { GlobalStateContainerComponent } from './4-global-state/global-state-container.component';
+import { SideEffectsContainerComponent } from './5-side-effects/side-effects-container.component';
 import { InputBindingsSolution } from './2-input-bindings/input-bindings.solution.component';
 import { InputBindingsStart } from './2-input-bindings/input-bindings.start.component';
 import { OutputBindingsStart } from './3-output-bindings/output-bindings.start.component';
 import { OutputBindingsSolution } from './3-output-bindings/output-bindings.solution.component';
-import { SideEffectsStart } from './4-side-effects/side-effects.start.component';
-import { SideEffectsSolution } from './4-side-effects/side-effects.solution.component';
-import { PresenterPatternStart } from './5-presenter-pattern/presenter-pattern.start.component';
-import { SetupStart } from './1-setup/setup-reactive-component-state.start.component';
-import { SetupSolution } from './1-setup/setup-reactive-component-state.solution.component';
+import { GlobalStateStart } from './4-global-state/global-state.start.component';
+import { GlobalStateSolution } from './4-global-state/global-state.solution.component';
+import { SideEffectsStart } from './5-side-effects/side-effects.start.component';
+import { SideEffectsSolution } from './5-side-effects/side-effects.solution.component';
+import { PresenterPatternStart } from './6-presenter-pattern/presenter-pattern.start.component';
+import { SetupStart } from './1-setup/setup.start.component';
+import { SetupSolution } from './1-setup/setup.solution.component';
 import { DemoBasicsComponent } from './solution/demo-basics.component';
 
 export const ROUTES = [
   {
     path: '',
-    component: SetupContainerComponent
+    redirectTo: 'setup'
   },
   {
     path: 'setup',
@@ -45,6 +48,10 @@ export const ROUTES = [
   {
     path: 'output-bindings',
     component: OutputBindingsContainerComponent
+  },
+  {
+    path: 'global-state',
+    component: GlobalStateContainerComponent
   },
   {
     path: 'side-effects',
@@ -69,6 +76,9 @@ const DECLARATIONS = [
   OutputBindingsContainerComponent,
   OutputBindingsStart,
   OutputBindingsSolution,
+  GlobalStateContainerComponent,
+  GlobalStateStart,
+  GlobalStateSolution,
   SideEffectsContainerComponent,
   SideEffectsStart,
   SideEffectsSolution,
