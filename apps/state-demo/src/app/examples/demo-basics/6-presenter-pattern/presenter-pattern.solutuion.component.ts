@@ -15,7 +15,7 @@ export interface DemoBasicsItem {
 }
 
 @Component({
-  selector: 'presenter-pattern-start',
+  selector: 'presenter-pattern-solution',
   template: `
     <h3>Presenter Pattern</h3>
     <mat-expansion-panel
