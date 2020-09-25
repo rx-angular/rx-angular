@@ -8,11 +8,14 @@ import { map } from 'rxjs/operators';
 Injectable()
 export class Adapter extends RxState<Pick<ComponentState, 'list'>> {
 
-  list$ = this.listService.list$.pipe(map(this.parseListItems))
+  list$ = this.select('list');
   constructor(
     private listService: ListService
   ) {
     super();
+    this.connect('list', this.listService.list$
+      .pipe(map(this.parseListItems))
+    );
   }
 
   refresh = () => {

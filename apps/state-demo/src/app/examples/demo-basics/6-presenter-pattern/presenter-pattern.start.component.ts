@@ -1,35 +1,26 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import {
   ListServerItem,
   ListService,
 } from '../../../data-access/list-resource';
-import { merge, Subject, timer } from 'rxjs';
+import { merge, Observable, Subject, timer } from 'rxjs';
 import { RxState } from '@rx-angular/state';
+import { Presenter } from './presenter';
+import { Adapter } from './adapter';
 
 export interface DemoBasicsItem {
   id: string;
   name: string;
 }
 
-interface ComponentState {
-  refreshInterval: number;
-  list: DemoBasicsItem[];
-  listExpanded: boolean;
-}
-
-const initComponentState = {
-  refreshInterval: 10000,
-  listExpanded: false,
-  list: [],
-};
 @Component({
   selector: 'presenter-pattern-start',
   template: `
     <h3>Presenter Pattern</h3>
     <mat-expansion-panel
-      *ngIf="model$ | async as m"
-      (expandedChange)="listExpandedChanges.next($event)"
+      *ngIf="ps.vm$ | async as m"
+      (expandedChange)="ps.listExpandedChanges.next($event)"
       [expanded]="m.listExpanded"
     >
       <mat-expansion-panel-header>
@@ -38,7 +29,7 @@ const initComponentState = {
         </mat-panel-title>
         <mat-panel-description>
           <span *ngIf="!m.listExpanded"
-            >{{ m.list.length }} Repositories Updated every:
+          >{{ m.list.length }} Repositories Updated every:
             {{ m.refreshInterval }} ms</span
           >
           <span *ngIf="m.listExpanded">{{ m.list.length }}</span>
@@ -48,7 +39,7 @@ const initComponentState = {
       <button
         mat-raised-button
         color="primary"
-        (click)="refreshClicks.next($event)"
+        (click)="ps.refreshClicks.next($event)"
       >
         Refresh List
       </button>
@@ -67,39 +58,23 @@ const initComponentState = {
     </mat-expansion-panel>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [Presenter, Adapter]
 })
-export class PresenterPatternStart extends RxState<ComponentState> {
-  refreshClicks = new Subject<Event>();
-  listExpandedChanges = new Subject<boolean>();
-
-  model$ = this.select();
+export class PresenterPatternStart extends RxState<any>{
 
   @Input()
-  set refreshInterval(refreshInterval: number) {
-    if (refreshInterval > 100) {
-      this.set({ refreshInterval });
-    }
+  set refreshInterval(refreshInterval$: Observable<number>) {
+      this.ps.connect('refreshInterval', refreshInterval$.pipe(
+        filter(i => i > 100)
+      ));
   }
 
-  refreshListSideEffect$ = merge(
-    this.refreshClicks,
-    this.select(
-      map((s) => s.refreshInterval),
-      switchMap((ms) => timer(0, ms))
-    )
-  ).pipe(tap((_) => this.listService.refetchList()));
-
-  constructor(private listService: ListService) {
+  constructor(
+    public ps: Presenter,
+    public ad: Adapter
+  ) {
     super();
-    this.set(initComponentState);
-    this.connect(
-      this.listExpandedChanges.pipe(map((b) => ({ listExpanded: b })))
-    );
-    this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
-    this.hold(this.refreshListSideEffect$);
-  }
-
-  parseListItems(l: ListServerItem[]): DemoBasicsItem[] {
-    return l.map(({ id, name }) => ({ id, name }));
+    this.ps.connect('list', this.ad.list$);
+    this.hold(this.ps.refreshListTrigger$, this.ad.refresh);
   }
 }
