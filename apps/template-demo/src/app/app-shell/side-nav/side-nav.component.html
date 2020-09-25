@@ -1,0 +1,55 @@
+<cdk-tree
+  class="ot-app-shell-tree"
+  [dataSource]="navItemDataSource"
+  [treeControl]="treeControl"
+>
+  <!-- This is the tree node template for leaf nodes -->
+  <cdk-nested-tree-node
+    *cdkTreeNodeDef="let navItem; let level = level"
+    class="app-shell-tree-node app-shell-leaf-node"
+  >
+    <a
+      mat-flat-button
+      (click)="navItemSelected.next(navItem)"
+      [routerLink]="navItem.link"
+      routerLinkActive="active"
+      appShellSideNavItem
+      [appShellSideNavItemLevel]="level"
+      class="w-100 text-left"
+    >
+      <mat-icon
+        *ngIf="navItem.icon"
+        class="mr-1"
+        [svgIcon]="navItem.icon.svgIcon"
+      >
+        {{ navItem.icon.matIcon }}
+      </mat-icon>
+      {{ navItem.label }}
+    </a>
+  </cdk-nested-tree-node>
+  <!-- This is the tree node template for expandable nodes -->
+  <cdk-nested-tree-node
+    *cdkTreeNodeDef="let navItem; let level = level; when: hasChild"
+    class="app-shell-tree-node app-shell-expandable-node"
+  >
+    <a
+      mat-flat-button
+      appShellSideNavItem
+      [appShellSideNavItemLevel]="level"
+      cdkTreeNodeToggle
+      class="w-100 text-left"
+    >
+      <mat-icon
+        *ngIf="navItem.icon"
+        class="mr-1"
+        [svgIcon]="navItem.icon.svgIcon"
+      >
+        {{ navItem.icon.matIcon }}
+      </mat-icon>
+      <strong>{{ navItem.label }}</strong>
+    </a>
+    <div [hidden]="!treeControl.isExpanded(navItem)">
+      <ng-container cdkTreeNodeOutlet></ng-container>
+    </div>
+  </cdk-nested-tree-node>
+</cdk-tree>

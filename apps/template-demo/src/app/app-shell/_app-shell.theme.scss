@@ -1,0 +1,22 @@
+@import '~@angular/material/theming';
+
+@mixin app-shell-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  $headerBg: mat-color($primary);
+  $headerColor: mat-color($primary, default-contrast);
+
+  app-side-nav {
+    .app-shell-sidenav-item {
+      &.active {
+        background-color: mat-color($background, 'hover');
+      }
+    }
+  }
+}
+
+@mixin ot-app-shell-typography($config) {
+}

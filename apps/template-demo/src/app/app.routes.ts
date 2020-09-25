@@ -7,10 +7,10 @@ export const ROUTES: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'rendering',
+    path: 'strategies',
     loadChildren: () =>
-      import('./examples/rendering/rendering.module').then(
-        m => m.RenderingDemoModule
+      import('./examples/strategies/strategies.module').then(
+        m => m.StrategiesDemoModule
       )
   },
   {
@@ -21,17 +21,24 @@ export const ROUTES: Routes = [
       )
   },
   {
-    path: 'unpatch',
+    path: 'push',
     loadChildren: () =>
-      import('./examples/unpatch/comparison-unpatch.module').then(
-        m => m.ComparisonUnpatchModule
+      import('./examples/push/push.module').then(
+        m => m.PushDemoModule
       )
   },
   {
-    path: 'viewport-prio',
+    path: 'unpatch',
     loadChildren: () =>
-      import('./examples/viewport-prio/component-tree-prio/component-tree-prio.module').then(
-        m => m.ComponentTreePrioModule
+      import('./examples/unpatch/unpatch.module').then(
+        m => m.UnpatchModule
+      )
+  },
+  {
+    path: 'view-port-prio',
+    loadChildren: () =>
+      import('./examples/viewport-prio/viewport-prio-demo.module').then(
+        m => m.ViewportPrioModule
       )
   }
 ];

@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ROUTES } from './viewport-prio.routes';
+import { ROUTES } from './unpatch.routes';
+
 
 @NgModule({
   imports: [
@@ -9,5 +10,5 @@ import { ROUTES } from './viewport-prio.routes';
     RouterModule.forChild(ROUTES)
   ]
 })
-export class ViewportPrioModule {
+export class UnpatchModule {
 }
