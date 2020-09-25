@@ -228,8 +228,9 @@ In the example we can get rid of the following snippets:
 }
 ```
 
-We can say without any doubt we did an excellent job.
-Side-effect's are nor organized in a structured and readable way and the subscription handling gets done automatically by the state layer.
+We can say without any doubt say we did an excellent job. :)
+
+Side-effect's are now organized in a structured and readable way and the subscription handling gets done automatically by the state layer.
 Furthermore, we could get rid of all implemented lifecycles as well as the callback function for the button cick.
 
 All in all an amazing job!
