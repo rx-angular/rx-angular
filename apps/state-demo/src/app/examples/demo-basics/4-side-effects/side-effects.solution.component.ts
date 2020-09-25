@@ -31,8 +31,7 @@ const initComponentState = {
     <mat-expansion-panel
       *ngIf="model$ | async as vm"
       (expandedChange)="listExpandedChanges.next($event)"
-      [expanded]="vm.listExpanded"
-    >
+      [expanded]="vm.listExpanded">
       <mat-expansion-panel-header>
         <mat-panel-title>
           List
