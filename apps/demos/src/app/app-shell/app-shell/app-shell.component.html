@@ -1,0 +1,44 @@
+<mat-sidenav-container
+  class="app-shell-container"
+  *ngIf="viewState$ | async as state"
+>
+  <mat-sidenav
+    #drawer
+    class="app-shell-sidenav"
+    fixedInViewport
+    [attr.role]="state.isHandset ? 'dialog' : 'navigation'"
+    [mode]="state.isHandset ? 'over' : 'side'"
+    [opened]="state.isHandset === false"
+  >
+    <mat-toolbar>
+      <ng-content select="[appShellSidenavTitle]"></ng-content>
+    </mat-toolbar>
+    <ng-content select="app-side-nav"></ng-content>
+  </mat-sidenav>
+  <mat-sidenav-content class="app-shell-content">
+    <mat-toolbar class="app-shell-header" color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="state.isHandset && !state.showBackButton"
+      >
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="onBackButtonClick.next($event)"
+        *ngIf="state.showBackButton"
+      >
+        <mat-icon aria-label="navigate back">keyboard_backspace</mat-icon>
+      </button>
+      <ng-content select="[appShellHeaderContent]"></ng-content>
+    </mat-toolbar>
+    <div class="container-fluid app-shell-content-container" cdkScrollable>
+      <ng-content></ng-content>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

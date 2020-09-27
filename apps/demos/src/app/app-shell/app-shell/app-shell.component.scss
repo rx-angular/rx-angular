@@ -1,0 +1,23 @@
+.app-shell-container {
+  height: 100%;
+}
+
+.app-shell-content {
+  overflow: hidden;
+}
+
+.app-shell-sidenav {
+  width: 250px;
+}
+
+.app-shell-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.app-shell-content-container {
+  height: calc(100vh - 64px);
+  overflow-y: scroll;
+  overflow-x: hidden;
+}

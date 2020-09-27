@@ -1,0 +1,81 @@
+.log-item {
+  &.component {
+    background: $mat-green;
+    &.ctor {
+      background: lightgreen;
+    }
+    &.on-changes {
+      background: lightgreen;
+    }
+    &.on-init {
+      background: lightgreen;
+    }
+    &.after-view-init {
+      background: lightgreen;
+    }
+    &.after-view-checked {
+      background: lightgreen;
+    }
+    &.after-content-init {
+      background: lightgreen;
+    }
+    &.after-content-checked {
+      background: lightgreen;
+    }
+    &.template-expression {
+      background: lightgreen;
+    }
+    &.template-binding {
+      background: lightgreen;
+    }
+    &.on-destroy {
+      background: lightgreen;
+    }
+  }
+
+  &.directive {
+    background: orange;
+    &.ctor {
+      background: lightgreen;
+    }
+    &.on-changes {
+      background: lightgreen;
+    }
+    &.on-init {
+      background: lightgreen;
+    }
+    &.on-destroy {
+      background: lightgreen;
+    }
+  }
+
+  &.pipe {
+    background: rosybrown;
+    &.ctor {
+      background: lightgreen;
+    }
+    &.transform {
+      background: lightgreen;
+    }
+    &.on-destroy {
+      background: lightgreen;
+    }
+  }
+
+  &.service {
+    background: lightblue;
+    &.ctor {
+      background: lightgreen;
+    }
+    &.on-destroy {
+      background: lightgreen;
+    }
+  }
+
+  &.module {
+    background: gray;
+    &.ctor {
+      background: lightgreen;
+    }
+  }
+}
