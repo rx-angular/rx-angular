@@ -45,6 +45,13 @@
     },
     "tour-of-heroes-ngxs": {
       "tags": ["type:app"]
+    },
+    "demos": {
+      "tags": []
+    },
+    "demos-e2e": {
+      "tags": [],
+      "implicitDependencies": ["demos"]
     }
   },
   "affected": {

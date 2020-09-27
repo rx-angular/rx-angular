@@ -1,0 +1,79 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.mat-nav-list .mat-list-item {
+  line-height: 1.1;
+
+  &.active {
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+}
+
+.cases-overview {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+
+  & > .component {
+    width: 47%;
+  }
+}
+
+.component {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 -5px 0-5px;
+  flex-direction: column;
+
+  border-style: dashed;
+  border-color: gray;
+  border-width: 2px;
+
+  &.dirty {
+    border-color: red;
+  }
+  &.cd-onpush {
+    border-style: solid;
+  }
+  &.cd-default {
+    border-style: dashed;
+  }
+
+  & .case-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+    > .component {
+      width: 47%;
+    }
+  }
+
+  .case-info,
+  .case-interaction,
+  .case-content {
+    width: 100%;
+
+    .dirty {
+    }
+
+    .cds {
+    }
+
+    .num-renders {
+    }
+  }
+}
+
+.rot180 {
+  transform: rotate(180deg);
+}
