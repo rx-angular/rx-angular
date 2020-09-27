@@ -1,0 +1,18 @@
+.app-shell-tree-node {
+  display: block;
+}
+
+.app-shell-sidenav-item {
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.app-shell-sidenav-item-level-1 {
+  padding-left: 2rem;
+}
+
+.app-shell-sidenav-item-level-2 {
+  padding-left: 3rem;
+}

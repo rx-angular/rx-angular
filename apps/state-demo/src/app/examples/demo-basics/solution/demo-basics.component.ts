@@ -31,11 +31,6 @@ export class DemoBasicsComponent extends RxState<any> {
     this.vm.set({ refreshInterval });
   }
 
-  numRenders = 0;
-  rerenders(): number {
-    return ++this.numRenders;
-  }
-
   constructor(
     public vm: DemoBasicsViewModelService,
     private ca: DemoBasicsAdapterService

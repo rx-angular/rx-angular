@@ -11,10 +11,10 @@ import { RxState } from '@rx-angular/state';
 @Component({
   selector: 'demo-basics',
   template: `
-    <button unpatch (click)="reset.next()">Reset</button>
-    <button unpatch (click)="next.next()">Next</button>
-    <button unpatch (click)="error.next()">Error</button>
-    <button unpatch (click)="complete.next()">Complete</button>
+    <button mat-raised-button [unpatch] (click)="reset.next()">Reset</button>
+    <button mat-raised-button [unpatch] (click)="next.next()">Next</button>
+    <button mat-raised-button [unpatch] (click)="error.next()">Error</button>
+    <button mat-raised-button [unpatch] (click)="complete.next()">Complete</button>
     <renders></renders>
     <br />
     <ng-container *rxLet="value$; let value;
