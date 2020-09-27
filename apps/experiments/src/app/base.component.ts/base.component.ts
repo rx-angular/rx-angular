@@ -52,10 +52,10 @@ export abstract class BaseComponent
     protected ngZone: NgZone,
     protected coalesceConfigService: CdConfigService
   ) {
-    this.cdRef.markForCheck = () => {
+    /*this.cdRef.markForCheck = () => {
       console.log('markForCheck');
       this.cdRef.markForCheck();
-    };
+    };*/
   }
 
   appRef_tick() {
@@ -72,11 +72,11 @@ export abstract class BaseComponent
     this.nativeElem.classList.add('dirty');
   }
 
-  ɵmarkDirty() {
+  markDirty() {
     ɵmarkDirty(this);
   }
 
-  ɵdetectChanges() {
+  detectChanges() {
     ɵdetectChanges(this);
   }
 

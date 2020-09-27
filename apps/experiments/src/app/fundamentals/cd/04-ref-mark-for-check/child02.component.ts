@@ -9,21 +9,18 @@ import { tap } from 'rxjs/operators';
     <h3>ChangeDetection Child 02</h3>
     ChangeDetectionStrategy: OnPush<br/>
     <renders></renders><br/>
-    <button mat-raised-button [unpatch] (click)="markForCheck$.next($event)">
-      ChangeDetectorRef#markForCheck
+    <button mat-raised-button (click)="cdRef_markForCheck()">
+      ChangeDetectorRef#markForCheck (can't unpatch)
     </button>
-    <button mat-raised-button [unpatch] (click)="detectChanges$.next($event)">
+    <button mat-raised-button [unpatch] (click)="markDirty()">
+      ɵmarkDirty
+    </button>
+    <button mat-raised-button [unpatch] (click)="cdRef_detectChanges()">
       ChangeDetectorRef#detectChanges
     </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Child0402Component extends BaseComponent {
-  markForCheck$ = new Subject<Event>();
-  detectChanges$ = new Subject<Event>();
 
-  baseEffects$ = merge(
-    this.markForCheck$.pipe(tap(() => this.cdRef_markForCheck())),
-    this.detectChanges$.pipe(tap(() => this.cdRef_detectChanges()))
-  );
 }

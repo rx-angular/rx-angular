@@ -24,10 +24,16 @@ import { BaseComponent } from '../../../base.component.ts/base.component';
       <renders></renders>
     </div>
     <div class="case-interaction">
-      <button mat-raised-button [unpatch] (click)="markForCheck()">
-        ChangeDetectorRef#markForCheck
+      <button mat-raised-button (click)="cdRef_markForCheck()">
+        ChangeDetectorRef#markForCheck (patched)
       </button>
-      <button mat-raised-button [unpatch] (click)="detectChanges()">
+      <button mat-raised-button [unpatch] (click)="cdRef_markForCheck()">
+        ChangeDetectorRef#markForCheck (unpatched)
+      </button>
+      <button mat-raised-button [unpatch] (click)="markDirty()">
+        ɵmarkDirty
+      </button>
+      <button mat-raised-button [unpatch] (click)="cdRef_detectChanges()">
         ChangeDetectorRef#detectChanges
       </button>
     </div>
@@ -39,13 +45,5 @@ import { BaseComponent } from '../../../base.component.ts/base.component';
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class RefMarkMorCheckContainerComponent extends BaseComponent {
-
-  markForCheck() {
-    this.cdRef_markForCheck()
-  }
-
-  detectChanges() {
-    this.cdRef_detectChanges()
-  }
 
 }

@@ -39,5 +39,5 @@ import { tap } from 'rxjs/operators';
 export class MarkDirtyComponent extends BaseComponent {
   btnClick$ = new Subject<Event>();
 
-  baseEffects$ = this.btnClick$.pipe(tap(() => this.ɵmarkDirty()));
+  baseEffects$ = this.btnClick$.pipe(tap(() => this.markDirty()));
 }
