@@ -1,52 +1,71 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
 import {
-  ListServerItem,
-  ListService,
-} from '../../../data-access/list-resource';
-import { merge, Observable, Subject, timer } from 'rxjs';
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { Presenter } from './presenter';
-import { Adapter } from './adapter';
+import { distinctUntilKeyChanged, map, startWith, switchMap, tap } from 'rxjs/operators';
+import {
+  ListService,
+  ListServerItem,
+} from '../../../data-access/list-resource';
+import { interval, merge, Subject, Subscription } from 'rxjs';
 
 export interface DemoBasicsItem {
   id: string;
   name: string;
 }
 
+interface ComponentState {
+  refreshInterval: number;
+  list: DemoBasicsItem[];
+  listExpanded: boolean;
+}
+
+const initComponentState = {
+  refreshInterval: 10000,
+  listExpanded: false,
+  list: [],
+};
+
 @Component({
   selector: 'presenter-pattern-start',
   template: `
-    <h3>Presenter Pattern</h3>
+    <h3>
+      Side Effects
+    </h3>
     <mat-expansion-panel
-      *ngIf="ps.vm$ | async as m"
-      (expandedChange)="ps.listExpandedChanges.next($event)"
-      [expanded]="m.listExpanded"
+      *ngIf="model$ | async as vm"
+      (expandedChange)="listExpandedChanges.next($event)"
+      [expanded]="vm.listExpanded"
     >
-      <mat-expansion-panel-header>
+      <mat-expansion-panel-header class="list">
+        <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
         <mat-panel-title>
-          User Name
+          List
         </mat-panel-title>
         <mat-panel-description>
-          <span *ngIf="!m.listExpanded"
-          >{{ m.list.length }} Repositories Updated every:
-            {{ m.refreshInterval }} ms</span
-          >
-          <span *ngIf="m.listExpanded">{{ m.list.length }}</span>
+          <span
+          >{{ vm.list.length }} Repositories Updated every:
+            {{ vm.refreshInterval }} ms
+          </span>
         </mat-panel-description>
       </mat-expansion-panel-header>
 
       <button
         mat-raised-button
         color="primary"
-        (click)="ps.refreshClicks.next($event)"
+        (click)="onRefreshClicks($event)"
       >
         Refresh List
       </button>
 
-      <div *ngIf="m.list.length; else noList">
+      <div *ngIf="vm.list?.length; else noList">
         <mat-list>
-          <mat-list-item *ngFor="let item of m.list">
+          <mat-list-item *ngFor="let item of vm.list">
             {{ item.name }}
           </mat-list-item>
         </mat-list>
@@ -58,23 +77,57 @@ export interface DemoBasicsItem {
     </mat-expansion-panel>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [Presenter, Adapter]
 })
-export class PresenterPatternStart extends RxState<any>{
+export class PresenterPatternStart extends RxState<ComponentState>
+  implements OnInit, OnDestroy {
+  model$ = this.select();
+
+  intervalSubscription = new Subscription();
+  listExpandedChanges = new Subject<boolean>();
+  storeList$ = this.listService.list$.pipe(
+    map(this.parseListItems),
+    startWith(initComponentState.list)
+  );
 
   @Input()
-  set refreshInterval(refreshInterval$: Observable<number>) {
-      this.ps.connect('refreshInterval', refreshInterval$.pipe(
-        filter(i => i > 100)
-      ));
+  set refreshInterval(refreshInterval: number) {
+    if (refreshInterval > 4000) {
+      this.set({refreshInterval});
+      this.resetRefreshTick();
+    }
   }
 
-  constructor(
-    public ps: Presenter,
-    public ad: Adapter
-  ) {
+  listExpanded: boolean = initComponentState.listExpanded;
+  @Output()
+  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
+
+  constructor(private listService: ListService) {
     super();
-    this.ps.connect('list', this.ad.list$);
-    this.hold(this.ps.refreshListTrigger$, this.ad.refresh);
+    this.set(initComponentState);
+
+    this.connect('listExpanded', this.listExpandedChanges)
+  }
+
+  ngOnDestroy(): void {
+    this.intervalSubscription.unsubscribe();
+  }
+
+  ngOnInit(): void {
+    this.resetRefreshTick();
+  }
+
+  resetRefreshTick() {
+    this.intervalSubscription.unsubscribe();
+    this.intervalSubscription = interval(this.get('refreshInterval'))
+      .pipe(tap((_) => this.listService.refetchList()))
+      .subscribe();
+  }
+
+  onRefreshClicks(event) {
+    this.listService.refetchList();
+  }
+
+  parseListItems(l: ListServerItem[]): DemoBasicsItem[] {
+    return l.map(({ id, name }) => ({ id, name }));
   }
 }
