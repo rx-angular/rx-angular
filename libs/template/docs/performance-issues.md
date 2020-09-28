@@ -52,7 +52,7 @@ This can be irrelevant on hardware accelerated powerhouses, user experiences wil
 On top of that, we think that this technique inserts way too much _magic_ in the framework itself as well as keeping away
 crucial control over what happens in your application.
 
-You can play around in the `demo apps (expermiments, template-demo)` if you want
+You can play around in the `demo apps (experiments, template-demo)` if you want
 to get a clearer picture of what actually happens.
 
 [The Deep Dive Podcast, Episode 1](https://twitter.com/TheDeepDiveDev/status/1272668862736150530?s=20):
@@ -62,9 +62,6 @@ The long term goal should be to eliminate NgZone by using the `'noop' NgZone`. H
 a feasible option. Most third party libraries
 rely on some `NgZone` callbacks (including `@angular/components` & `@angular/cdk` pretty heavily). Some of the components will
 stop working at all after using `'noop' NgZone`.
-
-To encounter those issues at least partially, @rx-angular/template provides easy to use optimization tools
-such as the [[unpatch] directive](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/unpatch.md).
 
 Nevertheless, if you know what you do and want to build a render performance critical application, `@rx-angular/template`
 is the perfect candidate for being its base.

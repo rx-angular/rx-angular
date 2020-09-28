@@ -59,11 +59,11 @@ As detectChanges has no coalescing of render calls
 like [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) or [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) have, we apply our own coalescing, 'scoped' on
 component level.
 
-Coalescing, in this very manner, means *collecting all events* in the same
-[EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render. Then execute re-rendering only *once*.
+Coalescing, in this very manner, means _collecting all events_ in the same
+[EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render. Then execute re-rendering only _once_.
 
-'Scoped' coalescing, in addition, means *grouping the collected events* by a specific context.
-E. g. the *component* from which the re-rendering was initiated.
+'Scoped' coalescing, in addition, means _grouping the collected events_ by a specific context.
+E. g. the _component_ from which the re-rendering was initiated.
 
 This context could be the Component instance or a ViewContextRef,
 both accessed over the context over `ChangeDetectorRef#context`.
@@ -82,30 +82,9 @@ It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angul
 | -------- | ------------- | -------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `global` | ✔             | ⮁ `ɵmarkDirty` | ✔ `RootContext` | [`animationFrame`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/util/misc_utils.ts#L39) |
 
-### Detach Strategy
-
-In terms of rendering, this strategy behaves the same as the local strategy.
-Using this strategy will [`detach`](https://angular.io/api/core/ChangeDetectorRef#detach) the affected view from
-Angulars change-detection tree.
-In order to render changes properly, it re-attaches the view to the change detection tree before any rendering happens,
-and detaches it again after changes got rendered.
-
-Additional information about `detached` views:
-
-* If a view is detached, its input bindings will still receive values
-* Also any related code will get executed properly as well as using Angulars internal APIs such as `ViewChild`
-* Detached views are not getting checked when their parent components call `detectChanges`
-* `HostBindings` like `[class]` `@animation` ... are not getting updated properly, when the parent component does not detect a new change
-
-| Name     | Zone Agnostic | Render Method     | Coalescing         | Scheduling              |
-| -------- | ------------- | ----------------- | ------------------ | ----------------------- |
-| `detach` | ✔             | ⭭ `detectChanges` | ✔ ComponentContext | `requestAnimationFrame` |
-
 ### Noop
 
 The no-operation strategy does nothing.
-It can be a useful tool for performance improvements as well as debugging
-The [`[viewport-prio]`](https://github.com/rx-angular/rx-angular/blob/ef99804c1b07aeb96763cacca6afad7bbdab03b1/libs/template/src/lib/experimental/viewport-prio/viewport-prio.directive.ts) directive use it to limit renderings to only visible components:
 
 | Name   | Zone Agnostic | Render Method | Coalescing | Scheduling |
 | ------ | ------------- | ------------- | ---------- | ---------- |
@@ -121,7 +100,3 @@ as the internally called function [`markViewDirty`](https://github.com/angular/a
 | Name     | Zone Agnostic | Render Method    | Coalescing    | Scheduling              |
 | -------- | ------------- | ---------------- | ------------- | ----------------------- |
 | `native` | ❌            | ⮁ `markForCheck` | ✔ RootContext | `requestAnimationFrame` |
-
-## Custom Strategies
-
-_coming soon_
