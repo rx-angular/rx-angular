@@ -4,6 +4,7 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { AppShellNavItem } from '../app-shell.models';
+import { generateRoutes } from './utils';
 
 interface SideNavState {
   navItems: AppShellNavItem[];
@@ -23,7 +24,7 @@ export class AppShellSideNavComponent {
   );
 
   @Input() set navItems(navItems: AppShellNavItem[]) {
-    this.navItemDataSource._data.next(navItems || []);
+    this.navItemDataSource._data.next(generateRoutes(navItems) || []);
   }
 
   @Output() readonly navItemSelected = new Subject<AppShellNavItem>();

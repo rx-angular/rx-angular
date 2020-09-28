@@ -31,6 +31,7 @@ import { PresenterPatternStart } from './6-presenter-pattern/presenter-pattern.s
 import { SetupStart } from './1-setup/setup.start.component';
 import { SetupSolution } from './1-setup/setup.solution.component';
 import { DemoBasicsComponent } from './solution/demo-basics.component';
+import { HttpClientModule } from '@angular/common/http';
 
 export const ROUTES = [
   {

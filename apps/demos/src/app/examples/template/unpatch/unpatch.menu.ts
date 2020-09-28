@@ -1,10 +1,10 @@
 export const MENU_ITEMS = [
   {
     label: 'comparison',
-    link: 'unpatch/comparison'
+    link: 'comparison'
   },
   {
     label: 'router',
-    link: 'unpatch/routing'
+    link: 'routing'
   }
 ];
