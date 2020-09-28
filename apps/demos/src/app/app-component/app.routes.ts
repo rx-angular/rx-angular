@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-export const ROUTES: Routes = [
+export const EXAMPLES_TEMPLATE_ROUTES: Routes = [
   {
     path: '',
     redirectTo: 'rx-let',
@@ -41,4 +41,34 @@ export const ROUTES: Routes = [
         m => m.ViewportPrioModule
       )
   }/**/
+];
+export const EXAMPLES_STATE_ROUTES: Routes = [
+  {
+    path: '',
+    redirectTo: 'basics',
+    pathMatch: 'full'
+  },
+  {
+    path: 'basics',
+    loadChildren: () =>
+      import('../tutorials/demo-basics/demo-basics.module').then(
+        m => m.DemoBasicsModule
+      )
+  }
+];
+
+export const ROUTES: Routes = [
+  {
+    path: '',
+    redirectTo: 'template',
+    pathMatch: 'full'
+  },
+  {
+    path: 'template',
+    children: EXAMPLES_TEMPLATE_ROUTES
+  },
+  {
+    path: 'tutorials',
+    children: EXAMPLES_STATE_ROUTES
+  }
 ];

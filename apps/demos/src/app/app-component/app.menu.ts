@@ -3,8 +3,9 @@ import { MENU_ITEMS as UNPATCH_MENU_ITEMS } from '../examples/template/unpatch/u
 import { MENU_ITEMS as PUSH_MENU_ITEMS } from '../examples/template/push/push.menu';
 import { MENU_ITEMS as STRATEGIES_MENU_ITEMS } from '../examples/template/strategies/strategies.menu';
 import { MENU_ITEMS as VIEWPORT_PRIO_MENU_ITEMS } from '../examples/template/viewport-prio/viewport-prio.menu';
+import { MENU_ITEMS as DEMO_BASICS_MENU_ITEMS } from '../tutorials/demo-basics/demo-basics.menu';
 
-export const MENU_ITEMS = [
+export const TEMPLATE_MENU_ITEMS = [
   {
     label: 'Strategies',
     link: 'strategies',
@@ -15,7 +16,7 @@ export const MENU_ITEMS = [
     link: 'push',
     children: PUSH_MENU_ITEMS,
   },
- {
+  {
     label: '*rxLet',
     link: 'rx-let',
     children: RX_LET_MENU_ITEMS,
@@ -30,5 +31,26 @@ export const MENU_ITEMS = [
     link: 'view-port-prio',
     children: VIEWPORT_PRIO_MENU_ITEMS,
   }
-  /**/
+];
+
+export const TUTORIALS_MENU_ITEMS = [
+  {
+    label: 'Basics',
+    link: 'basics',
+    children: DEMO_BASICS_MENU_ITEMS,
+  }
+];
+
+
+export const MENU_ITEMS = [
+  {
+    label: 'Template',
+    link: 'template',
+    children: TEMPLATE_MENU_ITEMS,
+  },
+  {
+    label: 'Tutorials',
+    link: 'tutorials',
+    children: TUTORIALS_MENU_ITEMS,
+  }
 ];
