@@ -1,12 +1,32 @@
+<style type="text/css">
+.row {
+    width: 100%;
+    display: flex;
+    border: 1px solid red;
+}
+
+.row .col {
+    width: 50%;
+}
+</style>
+
 # RxAngular ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
 
 RxAngular offers a comprehensive toolset for handling fully reactive Angular applications with the main focus on runtime
 performance and template rendering.
 
-RxAngular is divided into two initially independent packages:
+RxAngular is divided into the following independent packages:
 
-- [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/README.md)
-- [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/master/libs/template/README.md)
+<div class="row">
+    <div class="col">
+    State
+    <img alt="state" src="./libs/state/images/state_logo.png" />
+    </div>
+    <div class="col">
+    Template
+    <img alt="state" src="./libs/template/docs/images/template_logo.png" />
+    </div>
+</div>
 
 Used together, you get a powerful tool for developing high-performance angular applications with or without NgZone.
 
