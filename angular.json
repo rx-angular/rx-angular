@@ -291,7 +291,6 @@
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "tsConfig": "libs/state/tsconfig.spec.json",
             "jestConfig": "libs/state/jest.config.js",
             "passWithNoTests": true
           }
@@ -396,7 +395,6 @@
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "tsConfig": "libs/template/tsconfig.spec.json",
             "jestConfig": "libs/template/jest.config.js",
             "passWithNoTests": true
           }
