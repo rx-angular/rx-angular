@@ -33,7 +33,7 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'global-state-start',
+  selector: 'rxa-global-state-start',
   template: `
     <h3>
       Output Bindings

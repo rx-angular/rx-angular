@@ -3,7 +3,7 @@ import { AppPresenter } from './app-presenter.service';
 import { MENU_ITEMS } from './app.menu';
 
 @Component({
-  selector: 'app-root',
+  selector: 'rxa-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [AppPresenter],

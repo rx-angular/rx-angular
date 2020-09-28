@@ -10,7 +10,7 @@ interface MyState {
 }
 
 @Component({
-  selector: 'rx-select-slice',
+  selector: 'rxa-select-slice',
   templateUrl: './select-slice.component.html',
   styleUrls: ['./select-slice.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

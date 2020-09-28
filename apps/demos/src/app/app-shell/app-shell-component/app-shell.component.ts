@@ -13,7 +13,7 @@ interface AppShellState {
 }
 
 @Component({
-  selector: 'app-shell',
+  selector: 'rxa-app-shell',
   templateUrl: './app-shell.component.html',
   styleUrls: ['./app-shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

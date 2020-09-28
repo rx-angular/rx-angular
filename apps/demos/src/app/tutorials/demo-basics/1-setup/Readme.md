@@ -58,7 +58,7 @@ By assigning the `model$` to the `$` property of the `RxState` class we get the 
 ```typescript
 
 @Component({
-  selector: 'demo-basics-1',
+  selector: 'rxa-demo-basics-1',
   template: `
     model$: <pre>{{model$ | async | json}}</pre>
     <h3>Demo Basic 1 - Setup and Retrieving State</h3>

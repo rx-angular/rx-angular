@@ -3,7 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { scan, startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'let-template-binding-subject-example',
+  selector: 'rxa-let-template-binding-subject-example',
   template: `
     <mat-card class="card">
       <mat-card-header>

@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'output-bindings-container',
+  selector: 'rxa-output-bindings-container',
   template: `
     <h1>Global State</h1>
     <mat-form-field>
@@ -15,11 +15,11 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <global-state-start
+    <rxa-global-state-start
       [refreshInterval]="refreshInterval$ | async"
       (listExpandedChange)="listExpandedChange$.next($event)"
     >
-    </global-state-start>
+    </rxa-global-state-start>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

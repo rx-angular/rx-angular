@@ -3,16 +3,16 @@ import { environment } from '../../../../environments/environment';
 import { of, Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-rx-state-parent-selections',
+  selector: 'rxa-state-parent-selections',
   template: `
     <h2>Selection Handling</h2>
     <div class="case-content">
       <pre>{{ values$ | async | json }}</pre>
-      <app-rx-state-child-selections
+      <rxa-state-child-selections
         [formGroupModel]="formGroupModel$ | async"
         (formValueChange)="values$.next($event)"
       >
-      </app-rx-state-child-selections>
+      </rxa-state-child-selections>
     </div>
   `,
   changeDetection: environment.changeDetection

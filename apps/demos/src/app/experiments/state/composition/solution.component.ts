@@ -5,7 +5,7 @@ import { scan } from 'rxjs/operators';
 import { SourceService } from './source.service';
 
 @Component({
-  selector: 'app-rx-state-parent-composition',
+  selector: 'rxa-state-parent-composition',
   template: `
     <h2>Selection Handling</h2>
 

@@ -22,7 +22,7 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'global-state-solution',
+  selector: 'rxa-global-state-solution',
   template: `
     <h3>
       Global State

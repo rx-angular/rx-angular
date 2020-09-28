@@ -4,7 +4,7 @@ import { RxState } from '@rx-angular/state';
 import { DemoBasicsAdapterService } from './demo-basics.adapter.service';
 
 @Component({
-  selector: 'demo-basics',
+  selector: 'rxa-demo-basics',
   templateUrl: './demo-basics.view.html',
   styles: [
     `

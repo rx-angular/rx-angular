@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CdConfigService } from '../../../../shared/debug-helper/strategy-control-panel';
 
 @Component({
-  selector: 'app-cd04-child02-push',
+  selector: 'rxa-cd04-child02-push',
   template: `
     <h3>ChangeDetection Child 02</h3>
     ChangeDetectionStrategy: OnPush<br/>

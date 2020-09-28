@@ -4,13 +4,14 @@ import { Observable, Subject } from 'rxjs';
 import { scan, startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-mixed-parent01',
+  selector: 'rxa-mixed-parent01',
   template: `
     <h2>
       Mixed Setup 01
       <small
       >One single-shot observable bound by one push and one rxLet as input
-        binding</small
+        binding
+      </small
       >
     </h2>
     <renders></renders><br/>
@@ -20,7 +21,7 @@ import { scan, startWith } from 'rxjs/operators';
     <!-- -->
     <br/>
     <ng-container *rxLet="value1$ as sync1">{{ sync1 }}</ng-container>
-    <app-mixed-child01 [value]="value1$ | push"></app-mixed-child01>
+    <rxa-mixed-child01 [value]="value1$ | push"></rxa-mixed-child01>
   `,
   changeDetection: environment.changeDetection
 })

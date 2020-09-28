@@ -11,9 +11,9 @@
     [opened]="state.isHandset === false"
   >
     <mat-toolbar>
-      <ng-content select="[appShellSidenavTitle]"></ng-content>
+      <ng-content select="[rxaAppShellSidenavTitle]"></ng-content>
     </mat-toolbar>
-    <ng-content select="app-side-nav"></ng-content>
+    <ng-content select="rxa-side-nav"></ng-content>
   </mat-sidenav>
   <mat-sidenav-content class="app-shell-content">
     <mat-toolbar class="app-shell-header" color="primary">
@@ -35,7 +35,7 @@
       >
         <mat-icon aria-label="navigate back">keyboard_backspace</mat-icon>
       </button>
-      <ng-content select="[appShellHeaderContent]"></ng-content>
+      <ng-content select="[rxaAppShellHeaderContent]"></ng-content>
     </mat-toolbar>
     <div class="container-fluid app-shell-content-container" cdkScrollable>
       <ng-content></ng-content>

@@ -32,7 +32,7 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'side-effects-start',
+  selector: 'rxa-side-effects-start',
   template: `
     <h3>
       Side Effects

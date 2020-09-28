@@ -32,7 +32,7 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'input-bindings-solution',
+  selector: 'rxa-input-bindings-solution',
   template: `
     <h3>
       Input Bindings

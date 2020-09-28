@@ -3,7 +3,7 @@ import { defer, Subject } from 'rxjs';
 import { scan, startWith, tap, withLatestFrom } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-cd-parent13',
+  selector: 'rxa-cd-parent13',
   template: `
     <h2>
       CD 13

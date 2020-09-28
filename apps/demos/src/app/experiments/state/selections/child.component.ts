@@ -5,7 +5,7 @@ import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-rx-state-child-selections',
+  selector: 'rxa-state-child-selections',
   template: `
     <div class="case-content">
       <form *ngIf="formGroup$ | async as formGroup" [formGroup]="formGroup">

@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { scan } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-cd-embedded-view-parent02',
+  selector: 'rxa-cd-embedded-view-parent02',
   template: `
     <h2>
       CD EmbeddedView 02

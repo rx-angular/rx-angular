@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-cd03-child02-push',
+  selector: 'rxa-cd03-child02-push',
   template: `
     <div class="case-info">
       <span>CD: <b class="cds">OnPush</b></span>

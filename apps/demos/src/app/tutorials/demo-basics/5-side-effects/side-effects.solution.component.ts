@@ -25,7 +25,7 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'side-effects-solution',
+  selector: 'rxa-side-effects-solution',
   template: `
     <h3>
       Side Effects

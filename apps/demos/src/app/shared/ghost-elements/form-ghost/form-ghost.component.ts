@@ -1,7 +1,7 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 
 @Component({
-  selector: 'form-ghost',
+  selector: 'rxa-form-ghost',
   template: `
     <div *ngFor="let n of numItems" class="form-ghost">
       <ngx-skeleton-loader class="input-ghost"></ngx-skeleton-loader>

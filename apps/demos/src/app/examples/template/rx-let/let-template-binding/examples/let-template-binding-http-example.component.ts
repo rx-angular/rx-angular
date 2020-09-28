@@ -10,7 +10,7 @@ import {
 } from 'rxjs/operators';
 
 @Component({
-  selector: 'let-template-binding-http-example',
+  selector: 'rxa-let-template-binding-http-example',
   template: `
     <mat-card class="card">
       <mat-card-header>

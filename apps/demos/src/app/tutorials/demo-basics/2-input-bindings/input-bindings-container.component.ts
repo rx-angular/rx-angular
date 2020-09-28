@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'input-bindings-container',
+  selector: 'rxa-input-bindings-container',
   template: `
     <h1>Input Bindings</h1>
     <mat-form-field>
@@ -15,11 +15,11 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <input-bindings-start
+    <rxa-input-bindings-start
       [refreshInterval]="refreshInterval$ | async"
       (listExpandedChange)="listExpandedChange$.next($event)"
     >
-    </input-bindings-start>
+    </rxa-input-bindings-start>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -22,7 +22,7 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'presenter-pattern-start',
+  selector: 'rxa-presenter-pattern-start',
   template: `
     <h3>
       Side Effects

@@ -5,13 +5,14 @@ import { tap } from 'rxjs/operators';
 import { CdConfigService } from '../../../../shared/debug-helper/strategy-control-panel';
 
 @Component({
-  selector: 'app-cd-parent06',
+  selector: 'rxa-cd-parent06',
   template: `
     <h2>
       CD 06
       <small
       >ApplicationRef#tick when called in the component renders itself and all
-        child components with cd.Default</small
+        child components with cd.Default
+      </small
       >
     </h2>
     <div class="case-info">
@@ -24,8 +25,8 @@ import { CdConfigService } from '../../../../shared/debug-helper/strategy-contro
       </button>
     </div>
     <div class="case-content">
-      <app-cd06-child01-default></app-cd06-child01-default>
-      <app-cd06-child02-push></app-cd06-child02-push>
+      <rxa-cd06-child01-default></rxa-cd06-child01-default>
+      <rxa-cd06-child02-push></rxa-cd06-child02-push>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.Default

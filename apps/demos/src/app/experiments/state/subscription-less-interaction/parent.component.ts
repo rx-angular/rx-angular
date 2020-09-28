@@ -24,7 +24,7 @@ interface ComponentState {
 }
 
 @Component({
-  selector: 'app-rx-state-parent-subscription-less-interaction',
+  selector: 'rxa-state-parent-subscription-less-interaction',
   template: `
     <h2>Subscription Less interaction</h2>
     <div class="case-content">

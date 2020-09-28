@@ -6,7 +6,7 @@ import { immutableArr, immutableIncArr } from '../utils';
 
 
 @Component({
-  selector: 'app-cd-embedded-view-parent06',
+  selector: 'rxa-cd-embedded-view-parent06',
   template: `
     <h2>
       CD EmbeddedView 06

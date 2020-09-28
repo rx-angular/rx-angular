@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'presenter-pattern-container',
+  selector: 'rxa-presenter-pattern-container',
   template: `
     <h1>Presenter Pattern</h1>
     <mat-form-field>
@@ -15,8 +15,8 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <presenter-pattern-start [refreshInterval]="refreshInterval$ | async">
-    </presenter-pattern-start>
+    <rxa-presenter-pattern-start [refreshInterval]="refreshInterval$ | async">
+    </rxa-presenter-pattern-start>
   `,
 })
 export class PresenterPatternContainerComponent {

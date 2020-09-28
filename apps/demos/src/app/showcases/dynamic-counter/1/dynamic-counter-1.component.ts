@@ -35,7 +35,7 @@ const initialCounterState = {
 };
 
 @Component({
-  selector: 'dynamic1-counter',
+  selector: 'rxa-dynamic1-counter',
   template: `
     <h1>Counter With Container</h1>
 

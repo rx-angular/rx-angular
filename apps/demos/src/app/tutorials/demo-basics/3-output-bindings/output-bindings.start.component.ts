@@ -33,7 +33,7 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'output-bindings-start',
+  selector: 'rxa-output-bindings-start',
   template: `
     <h3>
       Output Bindings

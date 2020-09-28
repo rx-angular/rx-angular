@@ -6,7 +6,7 @@ import { SourceService } from './source.service';
 import { SubscriptionHandlingService } from './subscription.service';
 
 @Component({
-  selector: 'app-rx-state-parent-subscription',
+  selector: 'rxa-state-parent-subscription',
   template: `
     <h2>Subscription Handling</h2>
     <div class="case-content">Process running internally</div>

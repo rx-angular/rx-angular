@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CdConfigService } from '../../../../shared/debug-helper/strategy-control-panel';
 
 @Component({
-  selector: 'app-cd04-child01-default',
+  selector: 'rxa-cd04-child01-default',
   template: `
     <h3>ChangeDetection Child 01</h3>
     ChangeDetectionStrategy: Default<br/>
@@ -16,7 +16,7 @@ import { CdConfigService } from '../../../../shared/debug-helper/strategy-contro
     <button mat-raised-button [unpatch] (click)="cdConfig.cdRef_detectChanges()">
       ChangeDetectorRef#detectChanges
     </button>
-    <app-cd04-child0101-push></app-cd04-child0101-push>
+    <rxa-cd04-child0101-push></rxa-cd04-child0101-push>
   `,
   changeDetection: ChangeDetectionStrategy.Default
 })

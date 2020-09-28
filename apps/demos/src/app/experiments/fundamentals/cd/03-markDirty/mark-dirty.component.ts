@@ -5,13 +5,14 @@ import { tap } from 'rxjs/operators';
 import { CdConfigService } from '../../../../shared/debug-helper/strategy-control-panel';
 
 @Component({
-  selector: 'app-cd-parent03',
+  selector: 'rxa-cd-parent03',
   template: `
     <h2>
       C 03
       <small
       >ɵmarkDirty when called in the component renders itself and all child
-        components with cd.Default</small
+        components with cd.Default
+      </small
       >
     </h2>
     <div class="case-info">
@@ -22,8 +23,8 @@ import { CdConfigService } from '../../../../shared/debug-helper/strategy-contro
       <button mat-raised-button [unpatch] (click)="btnClick$.next($event)">ɵmarkDirty</button>
     </div>
     <div class="case-content">
-      <app-cd03-child01-default></app-cd03-child01-default>
-      <app-cd03-child02-push></app-cd03-child02-push>
+      <rxa-cd03-child01-default></rxa-cd03-child01-default>
+      <rxa-cd03-child02-push></rxa-cd03-child02-push>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.Default

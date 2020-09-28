@@ -2,7 +2,7 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'rx-virtual-scroll-demo',
+  selector: 'rxa-virtual-scroll-demo',
   template: `
     <h1>Virtual Scroll Viewport</h1>
     <cdk-virtual-scroll-viewport [itemSize]="50" style="height: 500px;">

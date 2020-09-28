@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-push-overview',
+  selector: 'rxa-push-overview',
   template: `
     <h1>ChangeDetection Overview</h1>
     <div class="push-cases"></div>

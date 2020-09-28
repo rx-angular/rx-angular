@@ -2,13 +2,14 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CdConfigService } from '../../../../shared/debug-helper/strategy-control-panel';
 
 @Component({
-  selector: 'app-cd-parent04',
+  selector: 'rxa-cd-parent04',
   template: `
     <h2>
       CD 04
       <small
       >ChangeDetectorRef#markForCheck when called in the component renders
-        itself and all child components with cd.Default</small
+        itself and all child components with cd.Default
+      </small
       >
     </h2>
     <div class="case-info">
@@ -30,8 +31,8 @@ import { CdConfigService } from '../../../../shared/debug-helper/strategy-contro
       </button>
     </div>
     <div class="case-content">
-      <app-cd04-child01-default></app-cd04-child01-default>
-      <app-cd04-child02-push></app-cd04-child02-push>
+      <rxa-cd04-child01-default></rxa-cd04-child01-default>
+      <rxa-cd04-child02-push></rxa-cd04-child02-push>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.Default

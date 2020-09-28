@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'setup-container',
+  selector: 'rxa-setup-container',
   template: `
     <h1>Setup</h1>
     <mat-form-field>
@@ -15,10 +15,10 @@ import { map } from 'rxjs/operators';
       />
     </mat-form-field>
 
-    <setup-start
+    <rxa-setup-start
       [refreshInterval]="refreshInterval$ | async"
       (listExpandedChange)="listExpandedChange$.next($event)">
-    </setup-start>
+    </rxa-setup-start>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

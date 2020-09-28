@@ -3,12 +3,12 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'dynamic-counter1-container',
+  selector: 'rxa-dynamic-counter1-container',
   template: `
     <h1>Step 1</h1>
     <small>Parent re-renders: {{ rerenders() }}</small
-    ><br />
-    <dynamic1-counter> </dynamic1-counter>
+    ><br/>
+    <rxa-dynamic1-counter></rxa-dynamic1-counter>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

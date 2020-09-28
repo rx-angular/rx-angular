@@ -4,7 +4,7 @@ import { map, scan, share } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 
 @Component({
-  selector: 'let-error-handling',
+  selector: 'rxa-let-error-handling',
   template: `
     <mat-card class="card">
 
@@ -39,7 +39,7 @@ import { RxState } from '@rx-angular/state';
         </div>
 
         <ng-template #suspenseView>
-          <form-ghost></form-ghost>
+          <rxa-form-ghost></rxa-form-ghost>
         </ng-template>
       </mat-card-content>
 

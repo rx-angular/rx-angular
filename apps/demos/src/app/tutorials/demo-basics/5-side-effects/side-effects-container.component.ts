@@ -3,10 +3,10 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'side-effects-container',
+  selector: 'rxa-side-effects-container',
   template: `
     <h1>Side Effects</h1>
-    <br />
+    <br/>
     <mat-form-field>
       <label>RefreshInterval</label>
       <input
@@ -15,8 +15,8 @@ import { map } from 'rxjs/operators';
         matInput/>
     </mat-form-field>
 
-    <side-effects-start [refreshInterval]="refreshInterval$ | async">
-    </side-effects-start>
+    <rxa-side-effects-start [refreshInterval]="refreshInterval$ | async">
+    </rxa-side-effects-start>
   `,
 })
 export class SideEffectsContainerComponent {

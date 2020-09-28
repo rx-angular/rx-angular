@@ -14,8 +14,7 @@ import {
 } from '@rx-angular/template';
 
 @Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'scheduling',
+  selector: 'rxa-scheduling',
   template: `
     renders: {{ rerenders() }}
     <br />

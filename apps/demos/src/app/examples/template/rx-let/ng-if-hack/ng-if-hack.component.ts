@@ -9,7 +9,7 @@ import { getStrategies } from '@rx-angular/template';
 import { RxState } from '@rx-angular/state';
 
 @Component({
-  selector: 'demo-basics',
+  selector: 'rxa-demo-basics',
   template: `
     <button mat-raised-button [unpatch] (click)="reset.next()">Reset</button>
     <button mat-raised-button [unpatch] (click)="next.next()">Next</button>

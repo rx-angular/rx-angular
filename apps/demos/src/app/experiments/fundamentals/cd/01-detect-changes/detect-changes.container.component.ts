@@ -3,13 +3,14 @@ import { Subject } from 'rxjs';
 import { CdConfigService } from '../../../../shared/debug-helper/strategy-control-panel';
 
 @Component({
-  selector: 'app-cd-parent01',
+  selector: 'rxa-cd-parent01',
   template: `
     <h2>
       CD 01
       <small
       >ɵdetectChanges when called in the component renders itself and all
-        child components with cd.Default</small
+        child components with cd.Default
+      </small
       >
     </h2>
     <div class="case-info">
@@ -22,8 +23,8 @@ import { CdConfigService } from '../../../../shared/debug-helper/strategy-contro
       </button>
     </div>
     <div class="case-content">
-      <app-cd01-child01-default></app-cd01-child01-default>
-      <app-cd01-child02-push></app-cd01-child02-push>
+      <rxa-cd01-child01-default></rxa-cd01-child01-default>
+      <rxa-cd01-child02-push></rxa-cd01-child02-push>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.Default,

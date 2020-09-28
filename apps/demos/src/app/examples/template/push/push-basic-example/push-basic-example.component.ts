@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'push-basic-example',
+  selector: 'rxa-push-basic-example',
   template: `
     @TODO
   `,

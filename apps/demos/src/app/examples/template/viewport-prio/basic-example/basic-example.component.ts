@@ -9,7 +9,7 @@ import { scan, startWith, switchMap } from 'rxjs/operators';
 import { getStrategies } from '@rx-angular/template';
 
 @Component({
-  selector: 'let1-container',
+  selector: 'rxa-let1-container',
   template: `
     <h1>Stop rendering if directive is out of the viewport</h1>
     <renders></renders><br />

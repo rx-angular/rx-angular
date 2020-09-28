@@ -5,7 +5,7 @@ import { getStrategies } from '@rx-angular/template';
 import { scan } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-cd-embedded-view-parent01',
+  selector: 'rxa-cd-embedded-view-parent01',
   template: `
     <h2>
       CD EmbeddedView 01 <renders></renders>

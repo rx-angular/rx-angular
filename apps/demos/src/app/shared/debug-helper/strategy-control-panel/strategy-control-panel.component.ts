@@ -18,7 +18,7 @@ import { startWith, tap } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 
 @Component({
-  selector: 'app-config-panel',
+  selector: 'rxa-config-panel',
   template: `
     <mat-expansion-panel
       class="mat-background-primary config-panel"

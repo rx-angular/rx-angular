@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'demo-basics',
+  selector: 'rxa-demo-basics',
   template: `
     <renders></renders>
 

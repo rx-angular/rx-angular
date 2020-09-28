@@ -4,7 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { scan, startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-mixed-parent02',
+  selector: 'rxa-mixed-parent02',
   template: `
     <h2>
       Mixed Setup 02
@@ -17,13 +17,13 @@ import { scan, startWith } from 'rxjs/operators';
     <!-- -->
     <br/>
     {{ nums1$ | push }}
-    <app-mixed-child02 [value]="nums1$ | push"></app-mixed-child02>
+    <rxa-mixed-child02 [value]="nums1$ | push"></rxa-mixed-child02>
     <span *ngFor="let num of nums1$ | push">{{ num }}</span>
     <ng-container *ngIf="nums1$ | push as sync1">{{
       sync1 | json
       }}</ng-container>
     <ng-container *rxLet="nums1$ as sync1">{{ sync1 | json }}</ng-container>
-    <app-mixed-child02 [value]="nums1$ | push"></app-mixed-child02>
+    <rxa-mixed-child02 [value]="nums1$ | push"></rxa-mixed-child02>
   `,
   changeDetection: environment.changeDetection
 })

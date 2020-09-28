@@ -5,7 +5,7 @@ import { share } from 'rxjs/operators';
 import { immutableArr, immutableIncArr } from '../utils';
 
 @Component({
-  selector: 'app-cd-embedded-view-parent05',
+  selector: 'rxa-cd-embedded-view-parent05',
   template: `
     <h2>
       CD EmbeddedView 05

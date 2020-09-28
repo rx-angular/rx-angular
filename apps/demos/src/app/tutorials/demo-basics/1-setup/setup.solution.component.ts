@@ -32,7 +32,7 @@ const initComponentState = {
 };
 
 @Component({
-  selector: 'setup-solution',
+  selector: 'rxa-setup-solution',
   template: `
     <h3>
       Setup

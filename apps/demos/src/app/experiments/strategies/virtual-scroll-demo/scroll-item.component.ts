@@ -4,7 +4,7 @@ import { CdConfigService } from '../../../shared/debug-helper/strategy-control-p
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'rx-scroll-item',
+  selector: 'rxa-scroll-item',
   styleUrls: ['scroll-item.component.scss'],
   template: `
     <span style="margin: 0 1rem;">Val: {{ val$ | push: strategy$ }}</span>

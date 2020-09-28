@@ -5,7 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { RxState } from '@rx-angular/state';
 
 @Component({
-  selector: 'http-errors',
+  selector: 'rxa-http-errors',
   template: `
     <mat-card class="card">
       <mat-card-header>

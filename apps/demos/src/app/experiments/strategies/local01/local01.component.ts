@@ -9,7 +9,7 @@ interface Local01State {
 }
 
 @Component({
-  selector: 'rx-strategies-local01',
+  selector: 'rxa-strategies-local01',
   changeDetection: environment.changeDetection,
   template: `
     <h1>Local 01</h1>
