@@ -25,9 +25,7 @@
               "apps/state-demo/src/favicon.ico",
               "apps/state-demo/src/assets"
             ],
-            "styles": [
-              "apps/state-demo/src/styles.scss"
-            ],
+            "styles": ["apps/state-demo/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -128,10 +126,7 @@
               "apps/state-demo/tsconfig.app.json",
               "apps/state-demo/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/state-demo/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/state-demo/**/*"]
           }
         },
         "test": {
@@ -228,10 +223,7 @@
               "apps/experiments/tsconfig.app.json",
               "apps/experiments/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/experiments/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/experiments/**/*"]
           }
         },
         "test": {
@@ -256,10 +248,7 @@
               "libs/test-helpers/tsconfig.lib.json",
               "libs/test-helpers/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/test-helpers/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/test-helpers/**/*"]
           }
         },
         "test": {
@@ -296,16 +285,12 @@
               "libs/state/tsconfig.lib.json",
               "libs/state/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/state/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/state/**/*"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "tsConfig": "libs/state/tsconfig.spec.json",
             "jestConfig": "libs/state/jest.config.js",
             "passWithNoTests": true
           }
@@ -404,16 +389,12 @@
               "libs/template/tsconfig.lib.json",
               "libs/template/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/template/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/template/**/*"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "tsConfig": "libs/template/tsconfig.spec.json",
             "jestConfig": "libs/template/jest.config.js",
             "passWithNoTests": true
           }
@@ -498,9 +479,7 @@
               "apps/template-demo/src/favicon.ico",
               "apps/template-demo/src/assets"
             ],
-            "styles": [
-              "apps/template-demo/src/styles.scss"
-            ],
+            "styles": ["apps/template-demo/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -558,10 +537,7 @@
               "apps/template-demo/tsconfig.app.json",
               "apps/template-demo/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/template-demo/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/template-demo/**/*"]
           }
         },
         "test": {
@@ -612,13 +588,8 @@
             "polyfills": "apps/docs/src/polyfills.ts",
             "tsConfig": "apps/docs/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "apps/docs/src/favicon.ico",
-              "apps/docs/src/assets"
-            ],
-            "styles": [
-              "apps/docs/src/styles.scss"
-            ],
+            "assets": ["apps/docs/src/favicon.ico", "apps/docs/src/assets"],
+            "styles": ["apps/docs/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -676,10 +647,7 @@
               "apps/docs/tsconfig.app.json",
               "apps/docs/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/docs/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/docs/**/*"]
           }
         },
         "test": {
@@ -787,10 +755,7 @@
               "apps/tour-of-heroes/tsconfig.app.json",
               "apps/tour-of-heroes/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/tour-of-heroes/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/tour-of-heroes/**/*"]
           }
         },
         "test": {
@@ -826,9 +791,7 @@
               "apps/tour-of-heroes-ngxs/src/favicon.ico",
               "apps/tour-of-heroes-ngxs/src/assets"
             ],
-            "styles": [
-              "apps/tour-of-heroes-ngxs/src/styles.scss"
-            ],
+            "styles": ["apps/tour-of-heroes-ngxs/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -861,9 +824,7 @@
               ]
             },
             "zoneless": {
-              "polyfills": [
-                "apps/tour-of-heroes-ngxs/src/polyfills.ts"
-              ],
+              "polyfills": ["apps/tour-of-heroes-ngxs/src/polyfills.ts"],
               "fileReplacements": [
                 {
                   "replace": "apps/tour-of-heroes/src/environments/environment.ts",
@@ -900,10 +861,7 @@
               "apps/tour-of-heroes-ngxs/tsconfig.app.json",
               "apps/tour-of-heroes-ngxs/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/tour-of-heroes-ngxs/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/tour-of-heroes-ngxs/**/*"]
           }
         },
         "test": {
