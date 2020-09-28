@@ -28,11 +28,11 @@ export class PerformanceAwareComponent {
   constructor(private cdRef: ChangeDetectorRef) {
     const strategies = getStrategies({ cdRef });
     // now select your desired strategy:
-    const detachStrategy = strategies.detach;
+    const localStrategy = strategies.local;
     // schedule a re-render:
-    detachStrategy.scheduleCD();
+    localStrategy.scheduleCD();
     // render synchronously:
-    detachStrategy.renderMethod();
+    localStrategy.renderMethod();
   }
 }
 ```
