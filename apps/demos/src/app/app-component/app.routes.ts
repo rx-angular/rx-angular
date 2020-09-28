@@ -56,6 +56,20 @@ export const EXAMPLES_STATE_ROUTES: Routes = [
       )
   }
 ];
+export const SHOWCASES_ROUTES: Routes = [
+  {
+    path: '',
+    redirectTo: 'dynamic-counter',
+    pathMatch: 'full'
+  },
+  {
+    path: 'dynamic-counter',
+    loadChildren: () =>
+      import('../showcases/dynamic-counter/dynamic-counter.module').then(
+        m => m.DynamicCounterModule
+      )
+  }
+];
 
 export const ROUTES: Routes = [
   {
@@ -70,5 +84,9 @@ export const ROUTES: Routes = [
   {
     path: 'tutorials',
     children: EXAMPLES_STATE_ROUTES
+  },
+  {
+    path: 'showcases',
+    children: SHOWCASES_ROUTES
   }
 ];

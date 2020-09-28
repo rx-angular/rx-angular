@@ -15,9 +15,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DynamicCounter1ContainerComponent } from './1/dynamic-counter-1.container.component';
 import { Counter1Component } from './1/dynamic-counter-1.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ToArrayPipe } from '../../core/to-array.pipe';
 import { DynamicCounterContainerComponent } from './solution/dynamic-counter.container.component';
 import { CounterComponent } from './solution/dynamic-counter.component';
+import { UtilsModule } from '../../shared/utils/utils.module';
 
 export const ROUTES = [
   {
@@ -35,7 +35,6 @@ export const ROUTES = [
   },
 ];
 const DECLARATIONS = [
-  ToArrayPipe,
   DynamicCounterContainerComponent,
   CounterComponent,
   DynamicCounter1ContainerComponent,
@@ -52,6 +51,7 @@ export const materialModules = [
   MatProgressBarModule,
   MatInputModule,
   MatFormFieldModule,
+  UtilsModule,
 ];
 
 @NgModule({

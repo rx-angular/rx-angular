@@ -41,16 +41,28 @@ export const TUTORIALS_MENU_ITEMS = [
   }
 ];
 
+export const SHOWCASES_MENU_ITEMS = [
+  {
+    label: 'Dynamic Counter',
+    link: 'dynamic-counter',
+  }
+];
+
 
 export const MENU_ITEMS = [
   {
     label: 'Template',
     link: 'template',
-    children: TEMPLATE_MENU_ITEMS,
+    children: TEMPLATE_MENU_ITEMS
   },
   {
     label: 'Tutorials',
     link: 'tutorials',
-    children: TUTORIALS_MENU_ITEMS,
+    children: TUTORIALS_MENU_ITEMS
+  },
+  {
+    label: 'Showcases',
+    link: 'showcases',
+    children: SHOWCASES_MENU_ITEMS
   }
 ];
