@@ -876,7 +876,7 @@
     "demos": {
       "projectType": "application",
       "schematics": {
-        "@nrwl/angular:component": {
+        "@schematics/angular:component": {
           "style": "scss"
         }
       },
@@ -959,9 +959,7 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/demos/jest.config.js",
-            "tsConfig": "apps/demos/tsconfig.spec.json",
-            "passWithNoTests": true,
-            "setupFile": "apps/demos/src/test-setup.ts"
+            "passWithNoTests": true
           }
         }
       }

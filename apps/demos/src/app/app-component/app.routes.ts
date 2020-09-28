@@ -9,36 +9,36 @@ export const ROUTES: Routes = [
   {
     path: 'strategies',
     loadChildren: () =>
-      import('./examples/strategies/strategies.module').then(
+      import('../examples/template/strategies/strategies.module').then(
         m => m.StrategiesDemoModule
       )
   },
   {
     path: 'rx-let',
     loadChildren: () =>
-      import('./examples/rx-let/rx-let-demo.module').then(
+      import('../examples/template/rx-let/rx-let-demo.module').then(
         m => m.RxLetDemoModule
       )
   },
   {
     path: 'push',
     loadChildren: () =>
-      import('./examples/push/push.module').then(
+      import('../examples/template/push/push.module').then(
         m => m.PushDemoModule
       )
   },
   {
     path: 'unpatch',
     loadChildren: () =>
-      import('./examples/unpatch/unpatch.module').then(
+      import('../examples/template/unpatch/unpatch.module').then(
         m => m.UnpatchModule
       )
   },
   {
     path: 'view-port-prio',
     loadChildren: () =>
-      import('./examples/viewport-prio/viewport-prio-demo.module').then(
+      import('../examples/template/viewport-prio/viewport-prio-demo.module').then(
         m => m.ViewportPrioModule
       )
-  }
+  }/**/
 ];
