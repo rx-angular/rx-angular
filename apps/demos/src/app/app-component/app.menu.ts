@@ -4,6 +4,7 @@ import { MENU_ITEMS as PUSH_MENU_ITEMS } from '../examples/template/push/push.me
 import { MENU_ITEMS as STRATEGIES_MENU_ITEMS } from '../examples/template/strategies/strategies.menu';
 import { MENU_ITEMS as VIEWPORT_PRIO_MENU_ITEMS } from '../examples/template/viewport-prio/viewport-prio.menu';
 import { MENU_ITEMS as DEMO_BASICS_MENU_ITEMS } from '../tutorials/demo-basics/demo-basics.menu';
+import { MENU_ITEMS as EXPERIMENTS_MENU_ITEMS } from '../experiments/exmerimenst.menu';
 
 export const TEMPLATE_MENU_ITEMS = [
   {
@@ -48,7 +49,6 @@ export const SHOWCASES_MENU_ITEMS = [
   }
 ];
 
-
 export const MENU_ITEMS = [
   {
     label: 'Template',
@@ -64,5 +64,10 @@ export const MENU_ITEMS = [
     label: 'Showcases',
     link: 'showcases',
     children: SHOWCASES_MENU_ITEMS
+  },
+  {
+    label: 'Experiments',
+    link: 'experiments',
+    children: EXPERIMENTS_MENU_ITEMS
   }
 ];

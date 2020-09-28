@@ -2,8 +2,11 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import { ChangeDetectionStrategy } from '@angular/core';
+
 export const environment = {
   production: false,
+  changeDetection: ChangeDetectionStrategy.Default
 };
 
 /*
