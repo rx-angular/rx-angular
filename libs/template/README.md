@@ -37,11 +37,6 @@ By default, changes get scoped, coalesced and scheduled using the latest browser
 Beyond to the use of the scheduling APIs in the browser, local rendering of components is also
 key for a smooth experience.
 
-Additionally, @rx-angular/template provides some neat optimization tools such as
-[unpatch](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/unpatch.md) or
-[viewport-prio](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/viewport-prio.md) which in general will give you more control
-about what changes are leading to re-renderings.
-
 If you plan to improve your rendering performance to the maximum possible, there
 are several techniques that need to be known and considered.
 
@@ -88,8 +83,15 @@ export class MyModule {}
 
 - Directives
   - [LetDirective (\*rxLet)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/api/let-directive.md)
-  - [Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/viewport-prio.md)
-  - [UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/unpatch.md)
 - Pipes
   - [PushPipe (push)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/push.md)
 - [Render Strategies](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/render-strategies.md)
+
+## Experimental features
+
+Additionally, @rx-angular/template provides some experimental optimization tools which in general will give you more control
+about what changes are leading to re-renderings.
+
+- [🧪 Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/experimental/viewport-prio.md)
+- [🧪 UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/experimental/unpatch.md)
+- [🧪 Detach strategy](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/experimental/experimental-render-strategies.md)

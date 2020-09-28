@@ -1,10 +1,10 @@
-# Rendering Issues in Angular
+## Rendering Issues in Angular
 
 A brief overview about what is about the current situation in terms of rendering in angular applications.
 
 ![Scheduling Options](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/images/bad-rendering-performance-angular.png)
 
-## Binding Reactive Sources
+### Binding Reactive Sources
 
 The current way of binding _reactive_ sources to a view in angular looks like that:
 
@@ -30,7 +30,7 @@ software as well.
 
 The comprehensive toolset of `@rx-angular/template` solves most of those issues with or without `zone.js`.
 
-## NgZone
+### NgZone
 
 `NgZone` assumes that DOM events like click, resize, focus, blur (+ `EventEmitters`, `setTimeOut`, `Promise.resolve()`, etc)
 are always used by developers to dispatch actions which leads to state mutation. If one of those

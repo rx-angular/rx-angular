@@ -1,13 +1,13 @@
-# RenderStrategies
+## RenderStrategies
 
 The `RenderStrategies` can be seen as the _core_ of the performance optimization layer. They utilize all
 [`Concepts`](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/concepts.md) explained above in order to provide a streamlined and focused API to master
 angular rendering and `ChangeDetection`.
 
-## Usage
+### Usage
 
 Use the corresponding `RenderStrategy#name` as parameter or Input with the `PushPipe` or `LetDirective`.
-By default, they will use the [Local Strategy](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/viewport-prio.md).
+By default, they will use the [Local Strategy](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/render-strategies.md#local-strategy).
 
 ```html
 <div *rxLet="list$; let list; strategy: 'global'"></div>
@@ -37,15 +37,14 @@ export class PerformanceAwareComponent {
 }
 ```
 
-## Built-in Strategies
+### Built-in Strategies
 
-![Template - RenderStrategies](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/images/template_rendering-strategies.png)
+![Template - RenderStrategies](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/docs/images/template_rendering-strategies.png)
 
 | Name     | Zone Agnostic | Render Method     | Coalescing         | Scheduling              |
 | -------- | ------------- | ----------------- | ------------------ | ----------------------- |
 | `local`  | ✔             | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame` |
 | `global` | ✔             | ⮁ `ɵmarkDirty`    | ✔ RootContext      | `requestAnimationFrame` |
-| `detach` | ✔             | ⭭ `detectChanges` | ✔ ComponentContext | `requestAnimationFrame` |
 | `noop`   | ✔             | - `noop`          | ❌                 | ❌                      |
 | `native` | ❌            | ⮁ `markForCheck`  | ✔ RootContext      | `requestAnimationFrame` |
 
@@ -84,7 +83,7 @@ It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angul
 
 ### Noop
 
-The no-operation strategy does nothing.
+The no-operation strategy does nothing. It can be a useful tool for performance improvements as well as debugging.
 
 | Name   | Zone Agnostic | Render Method | Coalescing | Scheduling |
 | ------ | ------------- | ------------- | ---------- | ---------- |

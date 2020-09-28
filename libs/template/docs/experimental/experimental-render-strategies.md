@@ -1,4 +1,8 @@
-### Detach Strategy
+## Experimental strategies
+
+Those strageies are considered as experimental and might changed in the future. But you can try them right now and provide us feedback.
+
+### 🧪 Detach Strategy
 
 In terms of rendering, this strategy behaves the same as the local strategy.
 Using this strategy will [`detach`](https://angular.io/api/core/ChangeDetectorRef#detach) the affected view from
