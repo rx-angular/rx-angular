@@ -1,179 +1,36 @@
 {
   "version": 1,
   "projects": {
-    "state-demo": {
+    "demos": {
       "projectType": "application",
       "schematics": {
-        "@nrwl/angular:component": {
+        "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "apps/state-demo",
-      "sourceRoot": "apps/state-demo/src",
-      "prefix": "rx",
+      "root": "apps/demos",
+      "sourceRoot": "apps/demos/src",
+      "prefix": "rxa",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/state-demo",
-            "index": "apps/state-demo/src/index.html",
-            "main": "apps/state-demo/src/main.ts",
-            "polyfills": "apps/state-demo/src/polyfills.ts",
-            "tsConfig": "apps/state-demo/tsconfig.app.json",
+            "outputPath": "dist/apps/demos",
+            "index": "apps/demos/src/index.html",
+            "main": "apps/demos/src/main.ts",
+            "polyfills": "apps/demos/src/polyfills.ts",
+            "tsConfig": "apps/demos/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "apps/state-demo/src/favicon.ico",
-              "apps/state-demo/src/assets"
-            ],
-            "styles": ["apps/state-demo/src/styles.scss"],
+            "assets": ["apps/demos/src/favicon.ico", "apps/demos/src/assets"],
+            "styles": ["apps/demos/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/state-demo/src/environments/environment.ts",
-                  "with": "apps/state-demo/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            },
-            "bundled": {
-              "optimization": true,
-              "extractCss": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ],
-              "tsConfig": "apps/state-demo/tsconfig.app.bundle.json"
-            },
-            "npm": {
-              "optimization": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ],
-              "tsConfig": "apps/state-demo/tsconfig.app.npm.json"
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "state-demo:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "state-demo:build:production"
-            },
-            "bundled": {
-              "browserTarget": "state-demo:build:bundled"
-            },
-            "npm": {
-              "browserTarget": "state-demo:build:npm"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "state-demo:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/state-demo/tsconfig.app.json",
-              "apps/state-demo/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/state-demo/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/state-demo/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "experiments": {
-      "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
-      "root": "apps/experiments",
-      "sourceRoot": "apps/experiments/src",
-      "prefix": "rx",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/experiments",
-            "index": "apps/experiments/src/index.html",
-            "main": "apps/experiments/src/main.ts",
-            "polyfills": "apps/experiments/src/polyfills.ts",
-            "tsConfig": "apps/experiments/tsconfig.app.json",
-            "aot": true,
-            "assets": [
-              "apps/experiments/src/favicon.ico",
-              "apps/experiments/src/assets"
-            ],
-            "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
-              "apps/experiments/src/styles.scss"
-            ],
-            "scripts": []
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/experiments/src/environments/environment.ts",
-                  "with": "apps/experiments/src/environments/environment.prod.ts"
+                  "replace": "apps/demos/src/environments/environment.ts",
+                  "with": "apps/demos/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -202,256 +59,63 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "experiments:build"
+            "browserTarget": "demos:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "experiments:build:production"
+              "browserTarget": "demos:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "experiments:build"
+            "browserTarget": "demos:build"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "apps/experiments/tsconfig.app.json",
-              "apps/experiments/tsconfig.spec.json"
+              "apps/demos/tsconfig.app.json",
+              "apps/demos/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/experiments/**/*"]
+            "exclude": ["**/node_modules/**", "!apps/demos/**/*"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/experiments/jest.config.js",
+            "jestConfig": "apps/demos/jest.config.js",
             "passWithNoTests": true
           }
         }
       }
     },
-    "test-helpers": {
-      "root": "libs/test-helpers",
-      "sourceRoot": "libs/test-helpers/src",
-      "projectType": "library",
-      "schematics": {},
+    "demos-e2e": {
+      "root": "apps/demos-e2e",
+      "sourceRoot": "apps/demos-e2e/src",
+      "projectType": "application",
       "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
           "options": {
-            "tsConfig": [
-              "libs/test-helpers/tsconfig.lib.json",
-              "libs/test-helpers/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/test-helpers/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/test-helpers/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "state": {
-      "projectType": "library",
-      "root": "libs/state",
-      "sourceRoot": "libs/state/src",
-      "prefix": "rx",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/state/tsconfig.lib.json",
-            "project": "libs/state/ng-package.json"
+            "cypressConfig": "apps/demos-e2e/cypress.json",
+            "tsConfig": "apps/demos-e2e/tsconfig.e2e.json",
+            "devServerTarget": "demos:serve"
           },
           "configurations": {
             "production": {
-              "tsConfig": "libs/state/tsconfig.lib.prod.json"
+              "devServerTarget": "demos:serve:production"
             }
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/state/tsconfig.lib.json",
-              "libs/state/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/state/**/*"]
+            "tsConfig": ["apps/demos-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/demos-e2e/**/*"]
           }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/state/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "build-docs": {
-          "builder": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              {
-                "command": "nx test-coverage state && nx test-coverage-badge state"
-              }
-            ]
-          }
-        },
-        "test-coverage-badge": {
-          "builder": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              {
-                "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/state/cobertura-coverage.xml -d docs/test-coverage/state"
-              }
-            ]
-          }
-        },
-        "changelog": {
-          "builder": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              {
-                "command": "npx conventional-changelog-cli -p angular -k ./libs/state/package.json -i ./libs/state/CHANGELOG.md -s --commit-path ./libs/state --tagPrefix state@"
-              }
-            ]
-          }
-        },
-        "test-coverage": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/state/jest.config.js",
-            "passWithNoTests": true,
-            "codeCoverage": true
-          }
-        },
-        "perfBuild": {
-          "builder": "@nrwl/node:build",
-          "options": {
-            "main": "libs/state/perf/index.ts",
-            "outputPath": "dist/libs/state-perf/dist",
-            "tsConfig": "libs/state/tsconfig.perf.json"
-          }
-        },
-        "perf": {
-          "builder": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "state:perfBuild"
-          }
-        },
-        "publish": {
-          "builder": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              {
-                "command": "nx changelog template && nx test template && nx build template --prod && cd ./dist/libs/template && npm publish"
-              }
-            ]
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      }
-    },
-    "template": {
-      "projectType": "library",
-      "root": "libs/template",
-      "sourceRoot": "libs/template/src",
-      "prefix": "rx",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/template/tsconfig.lib.json",
-            "project": "libs/template/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/template/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/template/tsconfig.lib.json",
-              "libs/template/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/template/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/template/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "build-docs": {
-          "builder": "@nrwl/workspace:run-commands",
-          "sequential": true,
-          "options": {
-            "commands": [
-              {
-                "command": "nx test-coverage template && nx test-coverage-badge template"
-              }
-            ]
-          }
-        },
-        "test-coverage-badge": {
-          "builder": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              {
-                "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/template/cobertura-coverage.xml -d docs/test-coverage/template"
-              }
-            ]
-          }
-        },
-        "test-coverage": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/template/jest.config.js",
-            "passWithNoTests": true,
-            "codeCoverage": true
-          }
-        },
-        "changelog": {
-          "builder": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              {
-                "command": "npx conventional-changelog-cli -p angular -k ./libs/template/package.json -i ./libs/template/CHANGELOG.md -s --commit-path ./libs/template --tagPrefix template@"
-              }
-            ]
-          }
-        },
-        "publish": {
-          "builder": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              {
-                "command": "nx test template && nx build template --prod && cd ./dist/libs/template && npm publish"
-              }
-            ]
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
         }
       }
     },
@@ -873,121 +537,223 @@
         }
       }
     },
-    "demos": {
-      "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
+    "test-helpers": {
+      "root": "libs/test-helpers",
+      "sourceRoot": "libs/test-helpers/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/test-helpers/tsconfig.lib.json",
+              "libs/test-helpers/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/test-helpers/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/test-helpers/jest.config.js",
+            "passWithNoTests": true
+          }
         }
-      },
-      "root": "apps/demos",
-      "sourceRoot": "apps/demos/src",
-      "prefix": "rx-angular",
+      }
+    },
+    "state": {
+      "projectType": "library",
+      "root": "libs/state",
+      "sourceRoot": "libs/state/src",
+      "prefix": "rx",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@nrwl/angular:package",
           "options": {
-            "outputPath": "dist/apps/demos",
-            "index": "apps/demos/src/index.html",
-            "main": "apps/demos/src/main.ts",
-            "polyfills": "apps/demos/src/polyfills.ts",
-            "tsConfig": "apps/demos/tsconfig.app.json",
-            "aot": true,
-            "assets": ["apps/demos/src/favicon.ico", "apps/demos/src/assets"],
-            "styles": ["apps/demos/src/styles.scss"],
-            "scripts": []
+            "tsConfig": "libs/state/tsconfig.lib.json",
+            "project": "libs/state/ng-package.json"
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/demos/src/environments/environment.ts",
-                  "with": "apps/demos/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
+              "tsConfig": "libs/state/tsconfig.lib.prod.json"
             }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "demos:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "demos:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "demos:build"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "apps/demos/tsconfig.app.json",
-              "apps/demos/tsconfig.spec.json"
+              "libs/state/tsconfig.lib.json",
+              "libs/state/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/demos/**/*"]
+            "exclude": ["**/node_modules/**", "!libs/state/**/*"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/demos/jest.config.js",
+            "jestConfig": "libs/state/jest.config.js",
             "passWithNoTests": true
           }
+        },
+        "build-docs": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "nx test-coverage state && nx test-coverage-badge state"
+              }
+            ]
+          }
+        },
+        "test-coverage-badge": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/state/cobertura-coverage.xml -d docs/test-coverage/state"
+              }
+            ]
+          }
+        },
+        "changelog": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx conventional-changelog-cli -p angular -k ./libs/state/package.json -i ./libs/state/CHANGELOG.md -s --commit-path ./libs/state --tagPrefix state@"
+              }
+            ]
+          }
+        },
+        "test-coverage": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/state/jest.config.js",
+            "passWithNoTests": true,
+            "codeCoverage": true
+          }
+        },
+        "perfBuild": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "main": "libs/state/perf/index.ts",
+            "outputPath": "dist/libs/state-perf/dist",
+            "tsConfig": "libs/state/tsconfig.perf.json"
+          }
+        },
+        "perf": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "state:perfBuild"
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "nx changelog template && nx test template && nx build template --prod && cd ./dist/libs/template && npm publish"
+              }
+            ]
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
         }
       }
     },
-    "demos-e2e": {
-      "root": "apps/demos-e2e",
-      "sourceRoot": "apps/demos-e2e/src",
-      "projectType": "application",
+    "template": {
+      "projectType": "library",
+      "root": "libs/template",
+      "sourceRoot": "libs/template/src",
+      "prefix": "rx",
       "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
+        "build": {
+          "builder": "@nrwl/angular:package",
           "options": {
-            "cypressConfig": "apps/demos-e2e/cypress.json",
-            "tsConfig": "apps/demos-e2e/tsconfig.e2e.json",
-            "devServerTarget": "demos:serve"
+            "tsConfig": "libs/template/tsconfig.lib.json",
+            "project": "libs/template/ng-package.json"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "demos:serve:production"
+              "tsConfig": "libs/template/tsconfig.lib.prod.json"
             }
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/demos-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/demos-e2e/**/*"]
+            "tsConfig": [
+              "libs/template/tsconfig.lib.json",
+              "libs/template/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/template/**/*"]
           }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/template/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build-docs": {
+          "builder": "@nrwl/workspace:run-commands",
+          "sequential": true,
+          "options": {
+            "commands": [
+              {
+                "command": "nx test-coverage template && nx test-coverage-badge template"
+              }
+            ]
+          }
+        },
+        "test-coverage-badge": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/template/cobertura-coverage.xml -d docs/test-coverage/template"
+              }
+            ]
+          }
+        },
+        "test-coverage": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/template/jest.config.js",
+            "passWithNoTests": true,
+            "codeCoverage": true
+          }
+        },
+        "changelog": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx conventional-changelog-cli -p angular -k ./libs/template/package.json -i ./libs/template/CHANGELOG.md -s --commit-path ./libs/template --tagPrefix template@"
+              }
+            ]
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "nx test template && nx build template --prod && cd ./dist/libs/template && npm publish"
+              }
+            ]
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
         }
       }
     }
@@ -1006,5 +772,5 @@
       "unitTestRunner": "jest"
     }
   },
-  "defaultProject": "state-demo"
+  "defaultProject": "demos"
 }

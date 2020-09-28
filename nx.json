@@ -19,13 +19,14 @@
     }
   },
   "projects": {
-    "state-demo": {
+    "demos": {
       "tags": ["type:app"]
+    },
+    "demos-e2e": {
+      "tags": [],
+      "implicitDependencies": ["demos"]
     },
     "template-demo": {
-      "tags": ["type:app"]
-    },
-    "experiments": {
       "tags": ["type:app"]
     },
     "test-helpers": {
@@ -45,13 +46,6 @@
     },
     "tour-of-heroes-ngxs": {
       "tags": ["type:app"]
-    },
-    "demos": {
-      "tags": []
-    },
-    "demos-e2e": {
-      "tags": [],
-      "implicitDependencies": ["demos"]
     }
   },
   "affected": {
