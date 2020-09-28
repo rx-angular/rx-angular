@@ -14,9 +14,10 @@ This repository holds a set of helpers to create **fully reactive** as well as *
 
 ![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/apps/template-demo/src/assets/images/rx-angular_logo.png)
 
-## Homepage
+## Links
 
-https://rx-angular.github.io/rx-angular/#/
+- [📚 Official docs](https://rx-angular.github.io/rx-angular/#/)
+- [![Discord](https://icongr.am/material/discord.svg?size=16&color=7289da) Discord channel](https://discord.com/invite/vRdEVZ)
 
 ## Packages
 
