@@ -5,8 +5,7 @@ export function generateRoutes(navigationItems: AppShellNavItem[], link: string 
     (items, item) => {
       item.link = link ? link + '/' + item.link : item.link;
       if (item.children && item.children.length) {
-        // @TODO handle case if link is any[]
-        item.children = generateRoutes(item.children, item.link as any);
+        item.children = generateRoutes(item.children, item.link);
       }
       return items.concat([item]);
     }, []);

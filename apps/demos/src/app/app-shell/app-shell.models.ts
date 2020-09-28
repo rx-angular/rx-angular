@@ -1,6 +1,6 @@
 export interface AppShellNavItem {
   label: string;
-  link: any[] | string;
+  link: string;
   icon?: {
     svgIcon?: string;
     matIcon?: string;
