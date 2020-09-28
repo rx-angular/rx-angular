@@ -3,24 +3,23 @@ import { RxState } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ConfigService } from '../config.service';
-
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
-import { HeroStateService } from '../ngxs/hero-feature/hero.state';
+import { HeroStateFacade } from '../ngxs/hero-feature/hero.facade';
 
 interface HeroesComponentState {
   heroes: Hero[];
 }
 
 const initHeroesComponentState: Partial<HeroesComponentState> = {
-  heroes: [],
+  heroes: []
 };
 
 @Component({
   selector: 'app-heroes',
   templateUrl: './heroes.component.html',
   styleUrls: ['./heroes.component.css'],
-  providers: [RxState],
+  providers: [RxState]
 })
 export class HeroesComponent {
   heroes: Hero[];
@@ -33,7 +32,7 @@ export class HeroesComponent {
     public heroService: HeroService,
     private state: RxState<HeroesComponentState>,
     public configService: ConfigService,
-    private heroState: HeroStateService
+    private heroState: HeroStateFacade
   ) {
     this.heroState.dispatchFetchHero();
 
@@ -41,12 +40,12 @@ export class HeroesComponent {
     this.state.connect('heroes', this.heroState.heroes$);
 
     this.state.hold(
-      this.add.pipe(switchMap((name) => this.heroState.dispatchAddHero(name)))
+      this.add.pipe(switchMap(name => this.heroState.dispatchAddHero(name)))
     );
 
     this.state.hold(
       this.delete.pipe(
-        switchMap((hero) => this.heroState.dispatchDeleteHero(hero))
+        switchMap(hero => this.heroState.dispatchDeleteHero(hero))
       )
     );
   }
