@@ -11,7 +11,6 @@ export class CdConfigService extends RxState<CdConfig> {
   private state: CdConfig;
 
   constructor(  protected appRef: ApplicationRef,
-                protected cdRef: ChangeDetectorRef,
                 protected ngZone: NgZone) {
     super();
     this.hold(this.select(), (state) => (this.state = state));
@@ -26,21 +25,5 @@ export class CdConfigService extends RxState<CdConfig> {
 
   appRef_tick() {
     this.appRef.tick();
-  }
-
-  cdRef_detectChanges() {
-    this.cdRef.detectChanges();
-  }
-
-  cdRef_markForCheck() {
-    this.cdRef.markForCheck();
-  }
-
-  markDirty() {
-    ɵmarkDirty(this);
-  }
-
-  detectChanges() {
-    ɵdetectChanges(this);
   }
 }
