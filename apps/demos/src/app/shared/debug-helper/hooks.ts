@@ -1,7 +1,8 @@
-import { AfterViewInit, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Injectable, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 
-export class Hooks implements OnDestroy, AfterViewInit, OnChanges {
+@Injectable()
+export abstract class Hooks implements OnDestroy, AfterViewInit, OnChanges {
   afterViewInit$ = new Subject();
   onChanges$ = new Subject();
   onDestroy$ = new Subject();

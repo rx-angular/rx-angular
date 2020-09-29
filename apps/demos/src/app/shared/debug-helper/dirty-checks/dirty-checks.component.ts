@@ -18,6 +18,10 @@ export class DirtyChecksComponent extends Hooks {
   renders = 0;
 
   @Input()
+  rippleOn = true;
+
+
+  @Input()
   radius = 40;
 
   @Input()
@@ -30,7 +34,8 @@ export class DirtyChecksComponent extends Hooks {
 
   numDirtyChecks() {
     if (this.ripple) {
-      this.ripple.launch({ centered: true });
+      // tslint:disable-next-line:no-unused-expression
+      this.rippleOn && this.ripple.launch({ centered: true });
     }
     return ++this.renders;
   }

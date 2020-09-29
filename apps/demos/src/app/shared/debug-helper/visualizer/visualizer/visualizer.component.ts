@@ -1,15 +1,17 @@
 import { Component, Input } from '@angular/core';
 import { defer, isObservable, Observable, of, ReplaySubject } from 'rxjs';
-import { pluck, switchAll, switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, pluck, switchAll, switchMap } from 'rxjs/operators';
 import { Hooks } from '../../hooks';
 
 @Component({
   selector: 'rxa-visualizer',
   template: `
     <div class="indicators">
-      <rxa-dirty-check [color]="componentColor"></rxa-dirty-check>
-      <rxa-renders [color]="itemColor" [value$]="valuesO$"></rxa-renders>
+      <rxa-dirty-check [color]="checkColor" [radius]="radius"></rxa-dirty-check>
+      <rxa-renders [color]="renderColor" [value$]="valuesO$"></rxa-renders>
     </div>
+    <ng-content select="[visualizerHeader]">
+    </ng-content>
     <div class="content">
       <ng-content>
       </ng-content>
@@ -18,17 +20,19 @@ import { Hooks } from '../../hooks';
   styleUrls: ['./visualizer.component.scss'],
   // tslint:disable-next-line:no-host-metadata-property
   host: {
-    '[style.height.px]': 'size',
     '[style.width.px]': 'size'
   }
 })
 export class VisualizerComponent extends Hooks {
 
-  componentColor = 'rgba(255,0,0,0.24)';
-  itemColor = 'rgba(253,255,0,0.24)';
+  renderColor = 'rgba(255,0,0,0.24)';
+  checkColor = 'rgba(253,255,0,0.24)';
 
   @Input()
-  size = 130;
+  size;
+
+  @Input()
+  radius = 10;
 
   changeO$ = new ReplaySubject<Observable<any>>(1);
 
@@ -46,12 +50,10 @@ export class VisualizerComponent extends Hooks {
 
   valuesO$ = defer(() => this.afterViewInit$.pipe(
     switchMap(() => this.changeO$.pipe(
+      distinctUntilChanged(),
       switchAll(),
-      // tap((v) => console.log('key', this.key)),
-      tap(v => console.log('value', v)),
       pluck(this.key),
-
-      //  distinctUntilChanged()
+      distinctUntilChanged()
       )
     ))
   );

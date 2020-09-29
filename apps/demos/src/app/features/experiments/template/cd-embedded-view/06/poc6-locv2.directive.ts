@@ -85,7 +85,6 @@ export class Poc6Locv2Directive<U> implements OnInit, OnDestroy {
   }
 
   updateItem = (key, $value$): void => {
-    console.log('updateItem', key);
     let existingItem = this.embeddedViews.has(key) ? this.embeddedViews.get(key) : undefined;
     if (!existingItem) {
       const view = this.viewContainerRef

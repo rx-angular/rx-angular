@@ -1,5 +1,8 @@
 import { Observable } from 'rxjs';
-import { map, scan } from 'rxjs/operators';
+import { map, scan, share } from 'rxjs/operators';
+
+const children1 = 10;
+const children2 = 3;
 
 export const rand = (n: number = 2): number => {
   // tslint:disable-next-line:no-bitwise
@@ -12,9 +15,9 @@ export const randArray = (n: number = 6): any[] => {
 
 
 
-export const immutableIncArr = (n: number = 10) => (o$: Observable<number>) => o$.pipe(
+export const immutableIncArr = (n: number = children1) => (o$: Observable<number>) => o$.pipe(
   scan((a, i, idx) => {
-    const arr = randArray(3);
+    const arr = randArray(children2);
     const value = rand();
     if(i === 1) {
       a[idx % n] = { id: idx % n, value, arr };
@@ -25,29 +28,33 @@ export const immutableIncArr = (n: number = 10) => (o$: Observable<number>) => o
       a.splice(idx % n, 1);
     }
     return a;
-  }, [])
+  }, []),
+  share()
 );
-export const mutableIncArr = (n: number = 10) => {
+export const mutableIncArr = (n: number = children1) => {
   return (o$: Observable<number>) => o$.pipe(
     scan((a, i, idx) => {
-      const arr = randArray(3);
+      const arr = randArray(children2);
       a[idx % n].value = rand();
       a[idx % n].arr = arr;
       return a;
-    }, [])
+    }, []),
+    share()
   );
 }
 
-export const immutableArr = (n: number = 10) => (o$: Observable<number>) => o$.pipe(
-  map(v => Array(n).fill(0).map((_, idx) => ({ id: idx % n, value: rand(), arr: randArray(3) })))
+export const immutableArr = (n: number = children1) => (o$: Observable<number>) => o$.pipe(
+  map(v => Array(n).fill(0).map((_, idx) => ({ id: idx % n, value: rand(), arr: randArray(children2) }))),
+  share()
 );
 
-export const mutableArr = (n: number = 10) => {
+export const mutableArr = (n: number = children1) => {
   const arr = Array(n);
   return (o$: Observable<number>) => o$.pipe(
     map(v => arr.forEach((i, idx) => {
       i.value = rand();
-      i.arr = randArray(3);
-    }))
+      i.arr = randArray(children2);
+    })),
+    share()
   );
 }

@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { environment } from '../../../../../../environments/environment';
 import { EMPTY, interval, merge, Subject } from 'rxjs';
-import { map, scan, share, switchMap, switchMapTo } from 'rxjs/operators';
+import { scan, share, switchMap } from 'rxjs/operators';
 import { immutableArr, immutableIncArr } from '../utils';
 
 
@@ -27,6 +27,7 @@ import { immutableArr, immutableIncArr } from '../utils';
     <!-- <pre>{{array$ | push | json}}</pre> -->
     <mat-checkbox></mat-checkbox>
     <div class="row">
+      <!--  -->
       <div class="col">
         <h2>Native Angular</h2>
         <ng-container
@@ -34,15 +35,13 @@ import { immutableArr, immutableIncArr } from '../utils';
           trackBy: trackById
           ">
           <b>Item: </b>
-          <rxa-dirty-check [color]="itemColor"></rxa-dirty-check>
-          <rxa-renders [value$]="array$"></rxa-renders>
+          <rxa-visualizer [value$]="value.arr" key="" size="150">
           <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-            <rxa-dirty-check [radius]="15" [color]="childColor"></rxa-dirty-check>
-            <rxa-renders [color]="itemColor" [value$]="i"></rxa-renders>
-            child:
+            <rxa-visualizer [value$]="i" key="" size="150">
             <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
+            </rxa-visualizer>
           </ng-container>
-          <br/>
+          </rxa-visualizer>
         </ng-container>
       </div>
       <div class="col">
@@ -53,38 +52,33 @@ import { immutableArr, immutableIncArr } from '../utils';
           distinctBy:distinctBy
           let value;
           ">
-          <b>Item: </b>
-          <rxa-dirty-check [color]="itemColor"></rxa-dirty-check>
-          <rxa-renders [value$]="array$"></rxa-renders>
-          <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-            <rxa-dirty-check [radius]="15" [color]="childColor"></rxa-dirty-check>
-            <rxa-renders [value$]="i"></rxa-renders>
-            child:
-            <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
-          </ng-container>
-          <br/>
+          <rxa-visualizer [value$]="array$" key="" size="150">
+            <ng-container *ngFor="let i of value.arr; trackBy: trackById">
+              <rxa-visualizer [value$]="i" key="" size="150">
+                <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
+              </rxa-visualizer>
+            </ng-container>
+          </rxa-visualizer>
         </ng-container>
       </div>
+
       <div class="col">
         <h2>value as stream</h2>
         <ng-container *poc6LocV2="array$;
         let value$ = $value$;
         let selectSlices = $selectSlices;
         ">
-
-          <rxa-visualizer [value$]="value$" key="value" size="300">
-
-         <ng-container *poc2For="
+          <rxa-visualizer [value$]="selectSlices(['arr'])" key="" size="150">
+            <ng-container *poc2For="
          selectSlices(['arr']);
          let i;
          trackBy: trackByKey;
          distinctBy:distinctBy
-         let v$ = $value$;"
-         >
-            <rxa-visualizer [value$]="i" key="value" size="100">
-            <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
-            </rxa-visualizer>
-          </ng-container>
+         let v$ = $value$;">
+              <rxa-visualizer [value$]="v$" key="value" size="50">
+                <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
+              </rxa-visualizer>
+            </ng-container>
             <!-- -->
           </rxa-visualizer>
         </ng-container>
@@ -94,18 +88,25 @@ import { immutableArr, immutableIncArr } from '../utils';
   changeDetection: environment.changeDetection,
   encapsulation: ViewEncapsulation.None,
   styles: [`
+    h1, h2, h3 {
+      width: 100%;
+    }
     .red {
       color: red;
     }
+
     .green {
       color: green;
     }
+
     .row {
       display: flex;
     }
 
     .col {
-      width: 32%;
+      flex-basis: 33%;
+      display: flex;
+      flex-wrap: wrap;
     }
   `]
 })
@@ -132,7 +133,7 @@ export class CdEmbeddedViewParent06Component {
     merge(
       this.toggleIntervalClick$.pipe(
         scan(a => !a, false),
-        switchMap(b => b ? interval(100): EMPTY),
+        switchMap(b => b ? interval(100) : EMPTY)
       ),
       this.changeAllClick$
     ).pipe(

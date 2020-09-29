@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { ConnectableObservable, isObservable, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged, publish, scan, switchAll, switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, pluck, publish, scan, switchAll, switchMap, tap } from 'rxjs/operators';
 import { isObject } from 'util';
 import { Hooks } from '../hooks';
 
@@ -19,7 +19,7 @@ import { Hooks } from '../hooks';
   selector: 'rxa-renders',
   template: `
     <div class="renderings" matRipple [matRippleColor]="color" [matRippleRadius]="radius">
-      {{ numRenders$ | push }}
+      {{ numRenders$ | push | json }}
     </div>
   `,
   styleUrls: ['./renderings.component.scss']
@@ -33,10 +33,14 @@ export class RenderingsComponent extends Hooks {
     switchMap(() => this.changeO$.pipe(
     distinctUntilChanged(),
     switchAll(),
-   // distinctUntilChanged(),
-    scan(n => ++n, 0),
-    tap(() => this.ripple.launch({ centered: true }))
+    distinctUntilChanged(),
+    // scan(n => ++n, 0),
+    // tap(() => this.rippleOn && this.ripple.launch({ centered: true }))
   )))
+
+  @Input()
+  rippleOn = true;
+
   @Input()
   radius = 40;
 
@@ -47,8 +51,9 @@ export class RenderingsComponent extends Hooks {
   set value$(v$: Observable<any> | any) {
     if(isObservable(v$)) {
       this.changeO$.next(v$);
+    } else {
+      this.changeO$.next(of(v$));
     }
-    this.changeO$.next(of(v$));
   };
 
   constructor() {

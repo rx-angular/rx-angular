@@ -3,26 +3,28 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES as CD_ROUTES } from './detect-changes.routes';
 import { MatButtonModule } from '@angular/material/button';
-import { Child0101Component } from './child01.component';
-import { Child0102Component } from './child02.component';
-import { Child010101Component } from './child0101.component';
-import { DirtyChecksModule } from '../../../../../shared/debug-helper/dirty-checks/dirty-checks.module';
+import { DirtyChecksModule } from '../../../../../shared/debug-helper/dirty-checks';
 import { UnpatchEventsModule } from '@rx-angular/template';
 import { DetectChangesContainerComponent } from './detect-changes.container.component';
+import { CdDefaultModule } from '../../../../../shared/debug-helper/cd-default/cd-default.module';
+import { VisualizerModule } from '../../../../../shared/debug-helper/visualizer/visualizer.module';
+import { CdOnPushModule } from '../../../../../shared/debug-helper/cd-on-push/cd-on-push.module';
+import { CdTriggerModule } from '../../../../../shared/debug-helper/cd-trigger/cd-trigger.module';
 
 @NgModule({
   declarations: [
-    DetectChangesContainerComponent,
-    Child0101Component,
-    Child0102Component,
-    Child010101Component
+    DetectChangesContainerComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(CD_ROUTES),
     MatButtonModule,
     DirtyChecksModule,
-    UnpatchEventsModule
+    UnpatchEventsModule,
+    CdDefaultModule,
+    VisualizerModule,
+    CdOnPushModule,
+    CdTriggerModule
   ]
 })
 export class DetectChangesModule {
