@@ -27,6 +27,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Poc6Locv6 } from './06/poc6-locv.directive';
 import { CdEmbeddedViewParent06Component } from './06/parent.component';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks/dirty-checks.module';
+import { RenderingsModule } from '../../../../shared/debug-helper/renderings';
+import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 
 @NgModule({
   declarations: [
@@ -59,7 +61,9 @@ import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks/
     PushModule,
     LetModule,
     MatCheckboxModule,
-    DirtyChecksModule
+    DirtyChecksModule,
+    RenderingsModule,
+    VisualizerModule
   ]
 })
 export class CdEmbeddedViewModule {

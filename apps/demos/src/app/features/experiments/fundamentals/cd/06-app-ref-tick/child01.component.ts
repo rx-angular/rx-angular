@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   template: `
     <div class="case-info">
       <span>CD: <b class="cds">Default</b></span>
-      <renders></renders>
+      <rxa-dirty-check></rxa-dirty-check>
     </div>
     <div class="case-content">
       <rxa-cd06-child0101-push></rxa-cd06-child0101-push>

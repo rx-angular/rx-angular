@@ -14,7 +14,7 @@ import { Renderable } from '../interfaces';
 @Component({
   selector: 'rxa-child',
   template: `
-    <renders class="renders"></renders>
+    <rxa-dirty-check class="renders"></rxa-dirty-check>
     <table>
       <tr *ngFor="let item of items">
         <td>{{ item }}</td>

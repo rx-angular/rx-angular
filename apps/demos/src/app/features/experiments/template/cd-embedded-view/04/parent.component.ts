@@ -8,7 +8,7 @@ import { map, scan, startWith } from 'rxjs/operators';
   template: `
     <h2>
       CD EmbeddedView 04
-      <renders></renders>
+      <rxa-dirty-check></rxa-dirty-check>
     </h2>
 
     <button [unpatch] (click)="toggleClick$.next($event)">
@@ -39,13 +39,13 @@ import { map, scan, startWith } from 'rxjs/operators';
       <div class="col">
         <ng-container *poc1Switch="switchValue$; let value">
           <div *poc1SwitchCase="case1Value$; let caseValue">
-            <renders></renders>
+            <rxa-dirty-check></rxa-dirty-check>
             <div>Case 1</div>
             <div>SwitchValue: {{value}}</div>
             <div>CaseValue: {{caseValue}}</div>
           </div>
           <div *poc1SwitchCase="case2Value$; let caseValue">
-            <renders></renders>
+            <rxa-dirty-check></rxa-dirty-check>
             <div>Case 2</div>
             <div>SwitchValue: {{value}}</div>
             <div>CaseValue: {{caseValue}}</div>

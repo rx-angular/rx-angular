@@ -1,18 +1,18 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
+import { Hooks } from '../hooks';
 
 @Component({
   // tslint:disable-next-line:component-selector
-  selector: 'renders',
+  selector: 'rxa-dirty-check',
   template: `
     <div class="num-dirty-checks" matRipple [matRippleColor]="color" [matRippleRadius]="radius">
       {{ numDirtyChecks() }}
     </div>
-
   `,
   styleUrls: ['./dirty-checks.component.scss']
 })
-export class DirtyChecksComponent implements AfterViewInit {
+export class DirtyChecksComponent extends Hooks {
   @ViewChild(MatRipple) ripple: MatRipple;
 
   renders = 0;
@@ -23,10 +23,9 @@ export class DirtyChecksComponent implements AfterViewInit {
   @Input()
   color = 'rgba(253,255,0,0.24)'
 
-  constructor() {}
-
-  ngAfterViewInit(): void {
-    this.ripple.launch({ centered: true });
+  constructor() {
+    super();
+    this.afterViewInit$.subscribe(() => this.ripple.launch({ centered: true }));
   }
 
   numDirtyChecks() {

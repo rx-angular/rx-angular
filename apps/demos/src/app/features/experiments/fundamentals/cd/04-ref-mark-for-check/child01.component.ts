@@ -6,7 +6,7 @@ import { CdHelper } from '../../../../../shared/utils/cd-helper';
   template: `
     <h3>ChangeDetection Child 01</h3>
     ChangeDetectionStrategy: Default<br/>
-    <renders></renders><br/>
+    <rxa-dirty-check></rxa-dirty-check><br/>
     <button mat-raised-button (click)="cdConfig.cdRef_markForCheck()">
       ChangeDetectorRef#markForCheck (can't unpatch)
     </button>

@@ -14,7 +14,7 @@ import { scan, startWith } from 'rxjs/operators';
       </small
       >
     </h2>
-    <renders></renders><br/>
+    <rxa-dirty-check></rxa-dirty-check><br/>
     <span>strategy: </span><b class="strategy"></b>
     <br/>
     <button [unpatch] (click)="btnClick$.next($event)">increment</button>

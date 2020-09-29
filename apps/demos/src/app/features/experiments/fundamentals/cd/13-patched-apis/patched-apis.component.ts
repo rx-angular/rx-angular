@@ -11,7 +11,7 @@ import { scan, startWith, tap, withLatestFrom } from 'rxjs/operators';
     </h2>
     <div class="case-info">
       <span>CD: <b class="cds">Default</b></span>
-      <renders></renders>
+      <rxa-dirty-check></rxa-dirty-check>
     </div>
     <div class="case-interaction">
       Value: {{ value$ | push: 'optimistic1' }}<br/>

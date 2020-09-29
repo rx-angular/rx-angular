@@ -5,7 +5,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
   template: `
     <div class="base-info">
       <span>CD: <b class="cds">Default</b></span>
-      <renders></renders>
+      <rxa-dirty-check></rxa-dirty-check>
       g
     </div>
     <div class="case-content">

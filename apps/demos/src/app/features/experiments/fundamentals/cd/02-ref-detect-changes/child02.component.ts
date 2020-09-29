@@ -9,7 +9,7 @@ import {
   template: `
     <div class="case-info">
       <span>CD: <b class="cds">OnPush</b></span>
-      <renders></renders>
+      <rxa-dirty-check></rxa-dirty-check>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

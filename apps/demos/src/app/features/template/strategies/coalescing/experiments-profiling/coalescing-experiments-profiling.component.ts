@@ -7,7 +7,8 @@ import { CoalescingTestService } from './coalescing-test.service';
 @Component({
   selector: 'rxa-demo-basics',
   template: `
-      <renders></renders>
+    <rxa-renders></rxa-renders>
+    <rxa-dirty-check></rxa-dirty-check>
 
       <br/>
       --

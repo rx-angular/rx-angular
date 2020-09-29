@@ -15,7 +15,7 @@ import { tap } from 'rxjs/operators';
     </h2>
     <div class="case-info">
       <span>CD: <b class="cds">Default</b></span>
-      <renders></renders>
+      <rxa-dirty-check></rxa-dirty-check>
     </div>
     <div class="case-interaction">
       <button mat-raised-button [unpatch] (click)="btnClick$.next($event)">

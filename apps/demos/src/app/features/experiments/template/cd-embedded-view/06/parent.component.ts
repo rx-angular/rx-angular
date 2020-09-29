@@ -11,7 +11,7 @@ import { immutableArr, immutableIncArr } from '../utils';
     <h2>
       CD EmbeddedView 06
       <small>Local Variables</small>
-      <renders radius="60" [color]="componentColor"></renders>
+      <rxa-dirty-check radius="60" [color]="componentColor"></rxa-dirty-check>
     </h2>
 
     <button mat-raised-button [unpatch] (click)="changeOneClick$.next(1)">
@@ -34,9 +34,11 @@ import { immutableArr, immutableIncArr } from '../utils';
           trackBy: trackById
           ">
           <b>Item: </b>
-          <renders [color]="itemColor"></renders>
+          <rxa-dirty-check [color]="itemColor"></rxa-dirty-check>
+          <rxa-renders [value$]="array$"></rxa-renders>
           <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-            <renders [radius]="15" [color]="childColor"></renders>
+            <rxa-dirty-check [radius]="15" [color]="childColor"></rxa-dirty-check>
+            <rxa-renders [color]="itemColor" [value$]="i"></rxa-renders>
             child:
             <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
           </ng-container>
@@ -52,9 +54,11 @@ import { immutableArr, immutableIncArr } from '../utils';
           let value;
           ">
           <b>Item: </b>
-          <renders  [color]="itemColor"></renders>
+          <rxa-dirty-check [color]="itemColor"></rxa-dirty-check>
+          <rxa-renders [value$]="array$"></rxa-renders>
           <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-            <renders [radius]="15" [color]="childColor"></renders>
+            <rxa-dirty-check [radius]="15" [color]="childColor"></rxa-dirty-check>
+            <rxa-renders [value$]="i"></rxa-renders>
             child:
             <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
           </ng-container>
@@ -67,15 +71,22 @@ import { immutableArr, immutableIncArr } from '../utils';
         let value$ = $value$;
         let selectSlices = $selectSlices;
         ">
-          <b>Item: </b>
-          <renders  [color]="itemColor"></renders>
-        <!--   {{selectSlices(['arr']) | push | json}} -->
-          <ng-container *poc2For="selectSlices(['arr']); let i; trackBy: trackByKey; distinctBy:distinctBy">
-            <renders [radius]="15"  [color]="childColor"></renders>
-            child:
+
+          <rxa-visualizer [value$]="value$" key="value" size="300">
+
+         <ng-container *poc2For="
+         selectSlices(['arr']);
+         let i;
+         trackBy: trackByKey;
+         distinctBy:distinctBy
+         let v$ = $value$;"
+         >
+            <rxa-visualizer [value$]="i" key="value" size="100">
             <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
+            </rxa-visualizer>
           </ng-container>
-          <br/>
+            <!-- -->
+          </rxa-visualizer>
         </ng-container>
       </div>
     </div>

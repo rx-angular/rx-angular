@@ -8,7 +8,8 @@ import { scan } from 'rxjs/operators';
   selector: 'rxa-cd-embedded-view-parent01',
   template: `
     <h2>
-      CD EmbeddedView 01 <renders></renders>
+      CD EmbeddedView 01
+      <rxa-dirty-check></rxa-dirty-check>
     </h2>
 
     <button mat-raised-button [unpatch] (click)="btn2Click$.next($event)">
@@ -22,14 +23,14 @@ import { scan } from 'rxjs/operators';
     <div class="row">
       <div class="col">
         <ng-container *poc1Let="value1$; let value">
-          <renders></renders>
+          <rxa-dirty-check></rxa-dirty-check>
           {{value}}
         </ng-container>
       </div>
 
       <div class="col">
         <ng-container *oLet="value2$; let value">
-          <renders></renders>
+          <rxa-dirty-check></rxa-dirty-check>
           {{value}}
         </ng-container>
       </div>

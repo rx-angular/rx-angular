@@ -8,7 +8,7 @@ import { scan } from 'rxjs/operators';
   template: `
     <h2>
       CD EmbeddedView 02
-      <renders></renders>
+      <rxa-dirty-check></rxa-dirty-check>
     </h2>
 
     <button [unpatch] (click)="toggleClick$.next($event)">
@@ -18,21 +18,21 @@ import { scan } from 'rxjs/operators';
     <div class="row">
       <div class="col">
         <ng-container *poc1If="value1$; let value; falsey: f">
-          <renders></renders>
+          <rxa-dirty-check></rxa-dirty-check>
           TRUE
           {{value}}
         </ng-container>
       </div>
       <div class="col">
         <ng-container *poc2If="value1$; let value; falsey: f">
-          <renders></renders>
+          <rxa-dirty-check></rxa-dirty-check>
           TRUE
           {{value}}
         </ng-container>
       </div>
     </div>
     <ng-template #f>
-      <renders></renders>
+      <rxa-dirty-check></rxa-dirty-check>
       FALSE
     </ng-template>
   `,

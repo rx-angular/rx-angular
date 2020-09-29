@@ -9,7 +9,7 @@ import { immutableArr, immutableIncArr } from '../utils';
   template: `
     <h2>
       CD EmbeddedView 03
-      <renders></renders>
+      <rxa-dirty-check></rxa-dirty-check>
     </h2>
 
     <button mat-raised-button (click)="trackById({})">
@@ -33,7 +33,7 @@ import { immutableArr, immutableIncArr } from '../utils';
       <div class="col">
         <h3>Native Angular</h3>
         <ng-container *ngFor="let i of array$ | async; trackBy: trackById">
-          <renders></renders>
+          <rxa-dirty-check></rxa-dirty-check>
           -
           <mat-icon>{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
           <br/>
@@ -42,7 +42,7 @@ import { immutableArr, immutableIncArr } from '../utils';
       <div class="col">
         <h3>rxFor - push based</h3>
         <ng-container *poc1For="array$; let i; trackBy: 'id'">
-          <renders></renders>
+          <rxa-dirty-check></rxa-dirty-check>
           -
           <mat-icon>{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
           <br/>
@@ -51,7 +51,7 @@ import { immutableArr, immutableIncArr } from '../utils';
       <div class="col">
         <h3>rxFor - trackBy</h3>
         <ng-container *poc2For="array$; let i; trackBy: 'id'">
-          <renders></renders>
+          <rxa-dirty-check></rxa-dirty-check>
           -
           <mat-icon>{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
           <br/>
@@ -60,7 +60,7 @@ import { immutableArr, immutableIncArr } from '../utils';
       <div class="col">
         <h3>rxFor - trackBy, distinctBy</h3>
         <ng-container *poc2For="array$; let i; trackBy: 'id'; distinctBy: distinctBy">
-          <renders></renders>
+          <rxa-dirty-check></rxa-dirty-check>
           -
           <mat-icon>{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
           <br/>
@@ -69,7 +69,7 @@ import { immutableArr, immutableIncArr } from '../utils';
       <div class="col">
         <h3>rxFor - iterable, trackByFn</h3>
         <ng-container *pocForIterable="array$; let i; trackBy: trackById">
-          <renders></renders>
+          <rxa-dirty-check></rxa-dirty-check>
           -
           <mat-icon>{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
           <br/>

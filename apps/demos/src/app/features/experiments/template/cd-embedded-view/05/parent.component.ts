@@ -10,7 +10,7 @@ import { immutableArr, immutableIncArr } from '../utils';
     <h2>
       CD EmbeddedView 05
       <small>Local Variables</small>
-      <renders></renders>
+      <rxa-dirty-check></rxa-dirty-check>
     </h2>
 
     <button mat-raised-button [unpatch] (click)="changeOneClick$.next(1)">
@@ -39,9 +39,11 @@ import { immutableArr, immutableIncArr } from '../utils';
           first: {{first}},
           last: {{last}}, <br/>
           customVariable: {{customVariable | json}}<br/>
-          <b>Item: </b><renders></renders>
+          <b>Item: </b>
+          <rxa-dirty-check></rxa-dirty-check>
           <ng-container *ngFor="let item of value.arr; trackBy: trackById">
-            <renders [radius]="10"></renders> child: {{item.value}}
+            <rxa-dirty-check [radius]="10"></rxa-dirty-check>
+            child: {{item.value}}
           </ng-container>
           <br/>
         </ng-container>

@@ -6,6 +6,7 @@ import { TemplateModule } from '@rx-angular/template';
 import { CoalescingExperimentsProfilingChildComponent } from './experiments-profiling/coalescing-experiments-profiling-child.component';
 import { ROUTES } from './coalescing.routes';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
+import { RenderingsModule } from '../../../../shared/debug-helper/renderings';
 
 const DECLARATIONS = [
   CoalescingExperimentsProfilingComponent,
@@ -18,7 +19,8 @@ const DECLARATIONS = [
     CommonModule,
     RouterModule.forChild(ROUTES),
     TemplateModule,
-    DirtyChecksModule
+    DirtyChecksModule,
+    RenderingsModule
   ],
   exports: [DECLARATIONS]
 })

@@ -21,15 +21,16 @@ import { RxState } from '@rx-angular/state';
 @Component({
   selector: 'rxa-coalescing-child',
   template: `
-    strategy$ : {{ strategy$ | push: 'local' }}, renders: <renders></renders>
-    <br />
+    strategy$ : {{ strategy$ | push: 'local' }}, renders:
+    <rxa-dirty-check></rxa-dirty-check>
+    <br/>
 
-    push: {{ value$ | push: strategy$ }}<br />
-    push: {{ value$ | push: strategy$ }}<br />
+    push: {{ value$ | push: strategy$ }}<br/>
+    push: {{ value$ | push: strategy$ }}<br/>
     <ng-container *rxLet="value$; let value; strategy: strategy$">
       rxLet: {{ value }}
     </ng-container>
-    <br />
+    <br/>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [CoalescingTestService]

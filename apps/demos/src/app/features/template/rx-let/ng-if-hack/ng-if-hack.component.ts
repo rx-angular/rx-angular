@@ -15,8 +15,8 @@ import { RxState } from '@rx-angular/state';
     <button mat-raised-button [unpatch] (click)="next.next()">Next</button>
     <button mat-raised-button [unpatch] (click)="error.next()">Error</button>
     <button mat-raised-button [unpatch] (click)="complete.next()">Complete</button>
-    <renders></renders>
-    <br />
+    <rxa-dirty-check></rxa-dirty-check>
+    <br/>
     <ng-container *rxLet="value$; let value;
           let e = error;
           let c = complete;
@@ -24,7 +24,7 @@ import { RxState } from '@rx-angular/state';
           error: errorView;
           complete: completeView
         ">
-      next: {{ value | json }}<br />
+      next: {{ value | json }}<br/>
     </ng-container>
 
     <!--

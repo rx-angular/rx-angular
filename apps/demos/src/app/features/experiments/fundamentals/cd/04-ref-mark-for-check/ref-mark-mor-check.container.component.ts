@@ -15,7 +15,7 @@ import { CdHelper } from '../../../../../shared/utils/cd-helper';
     </h2>
     <div class="case-info">
       <span>CD: <b class="cds">Default</b></span>
-      <renders></renders>
+      <rxa-dirty-check></rxa-dirty-check>
     </div>
     <div class="case-interaction">
       <button mat-raised-button (click)="cdHelper.cdRef_markForCheck()">

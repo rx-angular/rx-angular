@@ -5,7 +5,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   template: `
     <div class="case-info">
       <span>CD: <b class="cds">Default</b></span>
-      <renders></renders>
+      <rxa-dirty-check></rxa-dirty-check>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

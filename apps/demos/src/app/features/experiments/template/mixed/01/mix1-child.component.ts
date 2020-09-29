@@ -5,7 +5,7 @@ import { environment } from '../../../../../../environments/environment';
   selector: 'rxa-mixed-child01',
   template: `
     <h3>Mixed Setup Child 01</h3>
-    <renders></renders><br />
+    <rxa-dirty-check></rxa-dirty-check><br/>
     Passed input binding: {{ value }}
     <!-- -->
   `,

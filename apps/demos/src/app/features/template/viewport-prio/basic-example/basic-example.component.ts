@@ -12,14 +12,14 @@ import { getStrategies } from '@rx-angular/template';
   selector: 'rxa-let1-container',
   template: `
     <h1>Stop rendering if directive is out of the viewport</h1>
-    <renders></renders><br />
+    <rxa-dirty-check></rxa-dirty-check><br/>
     <button mat-raised-button [unpatch] (click)="incrementTrigger.next()">
       count up
     </button>
     <button mat-raised-button [unpatch] (click)="toggleAutoIncrement.next('')">
       auto
     </button>
-    <br />
+    <br/>
 
     <b>viewPort</b>
     <div #viewPort class="view-port">
