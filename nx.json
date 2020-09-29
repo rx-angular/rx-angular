@@ -26,9 +26,6 @@
       "tags": [],
       "implicitDependencies": ["demos"]
     },
-    "template-demo": {
-      "tags": ["type:app"]
-    },
     "test-helpers": {
       "tags": ["type:util"]
     },

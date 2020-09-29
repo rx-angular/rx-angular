@@ -19,7 +19,7 @@ import { CoalescingTestService } from './coalescing-test.service';
 import { RxState } from '@rx-angular/state';
 
 @Component({
-  selector: 'coalescing-child',
+  selector: 'rxa-coalescing-child',
   template: `
     strategy$ : {{ strategy$ | push: 'local' }}, renders: <renders></renders>
     <br />

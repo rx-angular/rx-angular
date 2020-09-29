@@ -5,26 +5,26 @@ import { getStrategies } from '@rx-angular/template';
 import { CoalescingTestService } from './coalescing-test.service';
 
 @Component({
-  selector: 'demo-basics',
+  selector: 'rxa-demo-basics',
   template: `
-    <renders></renders>
+      <renders></renders>
 
-    <br/>
-    --
-    <label>Render Strategy: {{ strategy$ | push }}</label>
-    <select [unpatch] (change)="strategy$.next($event?.target?.value)">
-      <option [value]="s" *ngFor="let s of strategies">{{ s }}</option>
-    </select>
+      <br/>
+      --
+      <label>Render Strategy: {{ strategy$ | push }}</label>
+      <select [unpatch] (change)="strategy$.next($event?.target?.value)">
+          <option [value]="s" *ngFor="let s of strategies">{{ s }}</option>
+      </select>
 
-    <br/>
+      <br/>
 
-    <button (click)="updateValue()">UpdateValue</button>
-    <button [unpatch] (click)="updateValue()">UpdateValue (unpatched)</button>
-    <br/>
-    <coalescing-child
-      [value]="value$"
-      [strategy]="strategy$"
-    ></coalescing-child>
+      <button (click)="updateValue()">UpdateValue</button>
+      <button [unpatch] (click)="updateValue()">UpdateValue (unpatched)</button>
+      <br/>
+      <rxa-coalescing-child
+              [value]="value$"
+              [strategy]="strategy$"
+      ></rxa-coalescing-child>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [CoalescingTestService]
