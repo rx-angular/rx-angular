@@ -1,8 +1,8 @@
-import { HttpErrorsComponent } from '../http-errors/http-errors.component';
+import { NgIfHackComponent } from './ng-if-hack.component';
 
 export const ROUTES = [
   {
     path: '',
-    component: HttpErrorsComponent
+    component: NgIfHackComponent
   }
 ];

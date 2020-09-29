@@ -1,20 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
-import {
-  asapScheduler,
-  BehaviorSubject,
-  concat,
-  EMPTY,
-  from,
-  interval,
-  NEVER,
-  Observable
-} from 'rxjs';
+import { concat, NEVER, Observable } from 'rxjs';
 import { getStrategies } from '@rx-angular/template';
 import { CoalescingTestService } from './coalescing-test.service';
 
@@ -23,17 +9,18 @@ import { CoalescingTestService } from './coalescing-test.service';
   template: `
     <renders></renders>
 
-    <br />
+    <br/>
     --
     <label>Render Strategy: {{ strategy$ | push }}</label>
     <select [unpatch] (change)="strategy$.next($event?.target?.value)">
       <option [value]="s" *ngFor="let s of strategies">{{ s }}</option>
     </select>
 
-    <br />
+    <br/>
 
-    <button [unpatch] (click)="updateValue()">UpdateValue</button>
-    <br />
+    <button (click)="updateValue()">UpdateValue</button>
+    <button [unpatch] (click)="updateValue()">UpdateValue (unpatched)</button>
+    <br/>
     <coalescing-child
       [value]="value$"
       [strategy]="strategy$"
@@ -51,7 +38,8 @@ export class CoalescingExperimentsProfilingComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     public s: CoalescingTestService
-  ) {}
+  ) {
+  }
 
   updateValue() {
     this.s.updateValue();

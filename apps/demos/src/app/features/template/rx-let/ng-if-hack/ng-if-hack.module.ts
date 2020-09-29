@@ -6,6 +6,8 @@ import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks'
 import { ROUTES } from './ng-if-hack.routes';
 import { NgIfHackComponent } from './ng-if-hack.component';
 import { LetModule, UnpatchEventsModule } from '@rx-angular/template';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { MatIconModule } from '@angular/material/icon';
 
 const DECLARATIONS = [
   NgIfHackComponent
@@ -19,7 +21,9 @@ const DECLARATIONS = [
     MatButtonModule,
     DirtyChecksModule,
     LetModule,
-    UnpatchEventsModule
+    UnpatchEventsModule,
+    NgxSkeletonLoaderModule,
+    MatIconModule
   ]
 })
 export class NgIfHackModule {

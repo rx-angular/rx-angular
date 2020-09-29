@@ -35,7 +35,7 @@ import { RxState } from '@rx-angular/state';
               matInput/>
           </mat-form-field>
           <br/>
-          <button mat-raised-button>Send</button>
+          <button mat-raised-button color="primary">Send</button>
         </div>
 
         <ng-template #suspenseView>
