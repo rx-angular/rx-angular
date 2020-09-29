@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Subject } from 'rxjs';
+import { CdHelper } from '../../../../../shared/utils/cd-helper';
 
 @Component({
   selector: 'rxa-cd-parent03',
@@ -18,19 +19,16 @@ import { Subject } from 'rxjs';
       <renders></renders>
     </div>
     <div class="case-interaction">
-      <button mat-raised-button [unpatch] (click)="btnClick$.next($event)">ɵmarkDirty</button>
+      <button mat-raised-button [unpatch] (click)="cdHelper.markDirty()">ɵmarkDirty</button>
     </div>
     <div class="case-content">
       <rxa-cd03-child01-default></rxa-cd03-child01-default>
       <rxa-cd03-child02-push></rxa-cd03-child02-push>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
+  providers: [CdHelper]
 })
 export class MarkDirtyComponent {
-  btnClick$ = new Subject<Event>();
-
-  /*baseEffects$ = this.btnClick$.pipe(tap(() => this.cdConfig.markDirty()));
-   constructor(public cdConfig: CdConfigService) {
-   }*/
+  constructor(public cdHelper: CdHelper) {}
 }

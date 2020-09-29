@@ -10,7 +10,7 @@
     [mode]="state.isHandset ? 'over' : 'side'"
     [opened]="state.isHandset === false"
   >
-    <mat-toolbar>
+    <mat-toolbar color="primary">
       <ng-content select="[rxaAppShellSidenavTitle]"></ng-content>
     </mat-toolbar>
     <ng-content select="rxa-side-nav"></ng-content>

@@ -9,18 +9,20 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$rx-state-primary: mat-palette($mat-indigo);
+$rx-state-primary: mat-palette($mat-pink);
 $rx-state-accent: mat-palette($mat-pink, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
 $rx-state-warn: mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$rx-state-theme: mat-light-theme(
-  $rx-state-primary,
-  $rx-state-accent,
-  $rx-state-warn
-);
+$rx-state-theme: mat-dark-theme((
+  color: (
+    primary: $rx-state-primary,
+    accent: $rx-state-accent,
+    warn: $rx-state-warn,
+  )
+));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component

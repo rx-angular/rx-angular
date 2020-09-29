@@ -12,7 +12,7 @@ import { getGlobalRenderingStrategies } from '../core/global-render.strategy';
 import { Renderable } from '../interfaces';
 
 @Component({
-  selector: 'rx-angular-child',
+  selector: 'rxa-child',
   template: `
     <renders class="renders"></renders>
     <table>

@@ -15,7 +15,7 @@ import { Renderable } from '../interfaces';
 import { ChildComponent } from './child.component';
 
 @Component({
-  selector: 'rx-angular-render-queue',
+  selector: 'rxa-render-queue',
   templateUrl: './render-queue.component.html',
   styleUrls: ['./render-queue.component.css']
 })
