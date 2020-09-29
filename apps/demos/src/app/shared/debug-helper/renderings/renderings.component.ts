@@ -31,11 +31,11 @@ export class RenderingsComponent extends Hooks {
   changeO$ = new ReplaySubject<Observable<any>>(1);
   numRenders$ = this.afterViewInit$.pipe(
     switchMap(() => this.changeO$.pipe(
-    distinctUntilChanged(),
     switchAll(),
+    tap(v => console.log('rendering', v)),
     distinctUntilChanged(),
     // scan(n => ++n, 0),
-    // tap(() => this.rippleOn && this.ripple.launch({ centered: true }))
+    tap(() => this.rippleOn && this.ripple.launch({ centered: true }))
   )))
 
   @Input()

@@ -1,13 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { defer, isObservable, Observable, of, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, pluck, switchAll, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, pluck, switchAll, switchMap, tap } from 'rxjs/operators';
 import { Hooks } from '../../hooks';
 
 @Component({
   selector: 'rxa-visualizer',
   template: `
     <div class="indicators">
-      <rxa-dirty-check [color]="checkColor" [radius]="radius"></rxa-dirty-check>
+      <rxa-dirty-check style="margin-right: 1rem" [color]="checkColor" [radius]="radius"></rxa-dirty-check>
       <rxa-renders [color]="renderColor" [value$]="valuesO$"></rxa-renders>
     </div>
     <ng-content select="[visualizerHeader]">
@@ -45,15 +45,14 @@ export class VisualizerComponent extends Hooks {
     }
   };
 
-  @Input()
-  key = '';
+  @Input() key;
 
   valuesO$ = defer(() => this.afterViewInit$.pipe(
     switchMap(() => this.changeO$.pipe(
       distinctUntilChanged(),
-      switchAll(),
-      pluck(this.key),
-      distinctUntilChanged()
+      switchMap(o$ => !!this.key ? o$.pipe(pluck(this.key)) : o$),
+      distinctUntilChanged(),
+      tap(v => console.log('value', v))
       )
     ))
   );

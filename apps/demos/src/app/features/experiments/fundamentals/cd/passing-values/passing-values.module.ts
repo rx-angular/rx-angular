@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './passing-values.routes';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,12 +10,13 @@ import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
 import { DirtyChecksModule } from '../../../../../shared/debug-helper/dirty-checks';
 import { PassingValuesComponent } from './passing-values.component';
 import { VisualizerModule } from '../../../../../shared/debug-helper/visualizer/visualizer.module';
+import { RecursiveReactiveComponent } from './recursive/recursive-reactive.component';
 import { RecursiveComponent } from './recursive/recursive.component';
 import { CdTriggerModule } from '../../../../../shared/debug-helper/cd-trigger/cd-trigger.module';
 
 
 @NgModule({
-  declarations: [PassingValuesComponent, RecursiveComponent],
+  declarations: [PassingValuesComponent, RecursiveComponent, RecursiveReactiveComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
@@ -21,7 +25,10 @@ import { CdTriggerModule } from '../../../../../shared/debug-helper/cd-trigger/c
     UnpatchEventsModule,
     PushModule,
     VisualizerModule,
-    CdTriggerModule
+    CdTriggerModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class PassingValuesModule {
