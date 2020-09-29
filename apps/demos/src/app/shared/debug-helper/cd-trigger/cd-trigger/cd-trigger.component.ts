@@ -20,11 +20,9 @@ import { CdHelper } from '../../../utils/cd-helper';
       ɵdetectChanges
     </button>
   `,
-  styles: [`
-    :host {
-      display: flex;
-    }
-  `],
+  host: {
+    class: 'd-flex flex-wrap'
+  },
   providers: [CdHelper]
 })
 export class CdTriggerComponent {

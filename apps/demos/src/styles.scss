@@ -9,5 +9,6 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
-@import './styes/theme';
-@import './styes/general';
+@import 'styles/utils';
+@import 'styles/theme';
+@import 'styles/general';

@@ -7,40 +7,49 @@ import { scan, startWith } from 'rxjs/operators';
   template: `
     <rxa-visualizer>
       <ng-container visualizerHeader>
-        <h2>Passing Values</h2>
-        <button mat-raised-button (click)="btnClick$.next($event)">
-          Increment Static
-        </button>
-        <button mat-raised-button [unpatch] (click)="btnReactiveClick$.next($event)">
-          Increment Reactive
-        </button>
-        <button mat-raised-button color="accent" (click)="btnBothClick$.next($event)">
-          Increment Both
-        </button>
-        <mat-form-field>
-          <mat-label>Nesting Level</mat-label>
-          <input matInput [(ngModel)]="level">
-        </mat-form-field>
+        <h1 class="mat-headline">Passing Values</h1>
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <mat-form-field>
+              <mat-label>Nesting Level</mat-label>
+              <input matInput type="number" [(ngModel)]="level">
+            </mat-form-field>
+            <div>
+              <button mat-raised-button color="primary" (click)="btnBothClick$.next($event)">
+                <mat-icon class="mr-2">add</mat-icon> Increment Both
+              </button>
+            </div>
+          </div>
+        </div>
       </ng-container>
-      <div class="passing-values-container">
-        <div>
-          <h2>Static Values</h2>
+      <div class="row w-100">
+        <div class="col-sm-12 col-md-6">
+          <h2 class="mat-subheader">Static Values</h2>
+          <div>
+            <strong>Current value:</strong> {{ staticValue }}
+          </div>
+          <div class="mb-1">
+            <button mat-mini-fab (click)="btnClick$.next($event)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
           <rxa-recursive [level]="level" [value]="staticValue"></rxa-recursive>
         </div>
-        <div>
-          <h2>Reactive Values</h2>
+        <div class="col-sm-12 col-md-6">
+          <h2 class="mat-subheader">Reactive Values</h2>
+          <div>
+            <strong>Current value:</strong> {{ valueReactive$ | push }}
+          </div>
+          <div class="mb-1">
+            <button mat-mini-fab unpatch (click)="btnReactiveClick$.next($event)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
           <rxa-recursive-reactive [level]="level" [value$]="valueReactive$"></rxa-recursive-reactive>
         </div>
       </div>
     </rxa-visualizer>
   `,
-  styles: [`
-    .passing-values-container {
-      display: flex;
-      justify-content: space-evenly;
-      width: 100%;
-    }
-  `],
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class PassingValuesComponent {
@@ -48,7 +57,11 @@ export class PassingValuesComponent {
   btnReactiveClick$ = new Subject<Event>();
   btnBothClick$ = new Subject<Event>();
 
-  level = 3;
+  private _level = 3;
+  set level(level: number) {
+    this._level = level >= 1 ? level : 1;
+  }
+  get level(): number { return this._level }
 
   staticValue = 0;
 

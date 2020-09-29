@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CdHelper } from '../../../utils/cd-helper';
+import { Component } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
+import { CdHelper } from '../../../utils/cd-helper';
 
 @Component({
   selector: 'rxa-cd-env',
@@ -14,17 +14,14 @@ import { environment } from '../../../../../environments/environment';
       <ng-content></ng-content>
 
     </rxa-visualizer>`,
-  styles: [`
-    :host {
-      display: block;
-      width: 100%;
-    }
-  `],
+  host: {
+    class: 'd-block w-100'
+  },
   changeDetection: environment.changeDetection,
   providers: [CdHelper]
 })
 export class CdEnvComponent {
-  changeDetection = environment.changeDetection
+  changeDetection = environment.changeDetection;
   constructor(public cdHelper: CdHelper) {
   }
 }

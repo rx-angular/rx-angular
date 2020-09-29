@@ -13,12 +13,9 @@ import { CdHelper } from '../../../utils/cd-helper';
       <ng-content>
       </ng-content>
     </rxa-visualizer>`,
-  styles: [`
-    :host {
-      display: block;
-      width: 100%;
-    }
-  `],
+  host: {
+    class: 'd-block w-100'
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [CdHelper]
 })

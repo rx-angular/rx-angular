@@ -1,26 +1,27 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CdHelper } from '../../../../../shared/utils/cd-helper';
 
 @Component({
   selector: 'rxa-cd-parent01',
   template: `
     <rxa-cd-default>
-      <rxa-cd-default>
-        <rxa-cd-on-push>
-        </rxa-cd-on-push>
-      </rxa-cd-default>
-      <rxa-cd-on-push>
-      </rxa-cd-on-push>
+      <div class="row w-100">
+        <div class="col-sm-12 col-md-6">
+          <h2 class="mat-subheader">CD Default</h2>
+          <rxa-cd-default>
+            <rxa-cd-on-push>
+            </rxa-cd-on-push>
+          </rxa-cd-default>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <h2 class="mat-subheader">CD OnPush</h2>
+          <rxa-cd-on-push>
+          </rxa-cd-on-push>
+        </div>
+      </div>
     </rxa-cd-default>
   `,
-  styles: [`
-    :host {
-      width: 900px;
-      display: flex;
-    }
-  `],
   changeDetection: ChangeDetectionStrategy.Default,
-  encapsulation: ViewEncapsulation.None,
   providers: [CdHelper]
 })
 export class DetectChangesContainerComponent {

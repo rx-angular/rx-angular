@@ -6,21 +6,25 @@ import { Hooks } from '../../hooks';
 @Component({
   selector: 'rxa-visualizer',
   template: `
-    <div class="indicators">
+    <div class="d-flex">
       <rxa-dirty-check style="margin-right: 1rem" [color]="checkColor" [radius]="radius"></rxa-dirty-check>
       <rxa-renders [color]="renderColor" [value$]="valuesO$"></rxa-renders>
     </div>
     <ng-content select="[visualizerHeader]">
     </ng-content>
-    <div class="content">
+    <div class="w-100 h-100 d-flex align-items-center justify-content-center flex-grow-1">
       <ng-content>
       </ng-content>
     </div>
   `,
-  styleUrls: ['./visualizer.component.scss'],
-  // tslint:disable-next-line:no-host-metadata-property
+  styles: [`
+    :host {
+      outline: 1px solid green;
+    }
+  `],
   host: {
-    '[style.width.px]': 'size'
+    '[style.width.px]': 'size',
+    class: 'd-flex flex-column w-100 m-1 p-1'
   }
 })
 export class VisualizerComponent extends Hooks {
