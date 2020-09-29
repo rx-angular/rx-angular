@@ -1,0 +1,21 @@
+:host {
+  outline: 1px solid green;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+}
+
+.indicators {
+  justify-content: center;
+  flex-direction: row;
+  display: flex;
+  width: 100%;
+}
+.content {
+  justify-content: center;
+  flex-direction: row;
+  align-content: space-between;
+  display: flex;
+  width: 100%;
+}
+
