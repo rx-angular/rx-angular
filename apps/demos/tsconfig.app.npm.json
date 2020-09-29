@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "paths": {
+      "@rx-angular/*": ["node_modules/@rx-angular/*"]
+    }
+  }
+}

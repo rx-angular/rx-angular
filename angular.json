@@ -53,6 +53,24 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "npm": {
+              "optimization": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "tsConfig": "apps/demos/tsconfig.app.npm.json"
             }
           }
         },
@@ -64,6 +82,9 @@
           "configurations": {
             "production": {
               "browserTarget": "demos:build:production"
+            },
+            "npm": {
+              "browserTarget": "demos:build:npm"
             }
           }
         },

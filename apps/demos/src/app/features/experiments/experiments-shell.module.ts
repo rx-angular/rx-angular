@@ -4,14 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 const ROUTES: Routes = [
   {
     path: 'change-detections',
-    loadChildren: () => import('./fundamentals/cd/cd.module').then((mod) => mod.CdModule),
-    canActivate: [],
-    canActivateChild: []
-  },
-  {
-    path: 'mixed',
-    loadChildren: () =>
-      import('./template/mixed/mixed.module').then((mod) => mod.MixedModule),
+    loadChildren: () => import('./fundamentals/change-detection/change-detection.module')
+      .then((mod) => mod.ChangeDetectionModule),
     canActivate: [],
     canActivateChild: []
   },

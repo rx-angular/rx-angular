@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ROUTES as CD_ROUTES } from './cd.routes';
+import { ROUTES as CD_ROUTES } from './change-detection.routes';
 
 @NgModule({
   declarations: [],
@@ -8,5 +8,5 @@ import { ROUTES as CD_ROUTES } from './cd.routes';
     RouterModule.forChild(CD_ROUTES)
   ]
 })
-export class CdModule {
+export class ChangeDetectionModule {
 }
