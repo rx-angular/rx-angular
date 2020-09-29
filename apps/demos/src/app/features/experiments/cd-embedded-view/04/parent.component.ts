@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { environment } from '../../../../../../environments/environment';
+import { environment } from '../../../../../environments/environment';
 import { Subject } from 'rxjs';
 import { map, scan, startWith } from 'rxjs/operators';
 

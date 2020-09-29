@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { environment } from '../../../../../../environments/environment';
+import { environment } from '../../../../../environments/environment';
 import { EMPTY, interval, merge, Subject } from 'rxjs';
 import { scan, share, switchMap } from 'rxjs/operators';
 import { immutableArr, immutableIncArr } from '../utils';

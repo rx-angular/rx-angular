@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { environment } from '../../../../../../environments/environment';
+import { environment } from '../../../../../environments/environment';
 import { merge, Subject } from 'rxjs';
 import { share } from 'rxjs/operators';
 import { immutableArr, immutableIncArr } from '../utils';

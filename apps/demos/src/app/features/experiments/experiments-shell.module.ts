@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 const ROUTES: Routes = [
   {
-    path: 'cd',
+    path: 'change-detections',
     loadChildren: () => import('./fundamentals/cd/cd.module').then((mod) => mod.CdModule),
     canActivate: [],
     canActivateChild: []
@@ -39,7 +39,7 @@ const ROUTES: Routes = [
   {
     path: 'embedded-view',
     loadChildren: () =>
-      import('./template/cd-embedded-view/cd-embedded-view.module').then((m) => m.CdEmbeddedViewModule)
+      import('./cd-embedded-view/cd-embedded-view.module').then((m) => m.CdEmbeddedViewModule)
   }
 ];
 
