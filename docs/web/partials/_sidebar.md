@@ -59,5 +59,5 @@
 
 - **Links**
 
-- [![Github](https://icongr.am/simple/github.svg?color=808080&size=16) Github](https://github.com/rx-angular/rx-angular)
-- [![Slack](https://icongr.am/devicon/slack-original.svg?size=16&color=currentColor) Slack](https://rxangular.slack.com/)
+- [![Github](https://icongr.am/simple/github.svg?color=808080&size=24) Github](https://github.com/rx-angular/rx-angular)
+- [![Discord](https://icongr.am/material/discord.svg?size=24&color=7289da) Discord](https://discord.com/invite/vRdEVZ)
