@@ -7,8 +7,8 @@ import { Hooks } from '../../hooks';
   selector: 'rxa-visualizer',
   template: `
     <div class="d-flex">
-      <rxa-dirty-check style="margin-right: 1rem" [color]="checkColor" [radius]="radius"></rxa-dirty-check>
-      <rxa-renders [color]="renderColor" [value$]="valuesO$"></rxa-renders>
+      <rxa-dirty-check style="margin-right: 1rem" [radius]="radius"></rxa-dirty-check>
+      <rxa-renders [value$]="valuesO$"></rxa-renders>
     </div>
     <ng-content select="[visualizerHeader]">
     </ng-content>
@@ -28,10 +28,6 @@ import { Hooks } from '../../hooks';
   }
 })
 export class VisualizerComponent extends Hooks {
-
-  renderColor = 'rgba(255,0,0,0.24)';
-  checkColor = 'rgba(253,255,0,0.24)';
-
   @Input()
   size;
 

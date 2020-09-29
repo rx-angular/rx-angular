@@ -32,9 +32,7 @@ export class RenderingsComponent extends Hooks {
   numRenders$ = this.afterViewInit$.pipe(
     switchMap(() => this.changeO$.pipe(
     switchAll(),
-    tap(v => console.log('rendering', v)),
     distinctUntilChanged(),
-    // scan(n => ++n, 0),
     tap(() => this.rippleOn && this.ripple.launch({ centered: true }))
   )))
 
@@ -45,7 +43,7 @@ export class RenderingsComponent extends Hooks {
   radius = 40;
 
   @Input()
-  color = 'rgba(253,255,0,0.24)'
+  color = 'rgba(255,0,0,0.24)'
 
   @Input()
   set value$(v$: Observable<any> | any) {
