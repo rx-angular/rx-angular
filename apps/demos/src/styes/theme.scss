@@ -10,7 +10,7 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $rx-state-primary: mat-palette($mat-pink);
-$rx-state-accent: mat-palette($mat-pink, A200, A100, A400);
+$rx-state-accent: mat-palette($mat-indigo, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
 $rx-state-warn: mat-palette($mat-red);
