@@ -31,7 +31,7 @@ import { scan, startWith, tap, withLatestFrom } from 'rxjs/operators';
   `,
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class PatchedApisComponent {
+export class ZonePatchedApisComponent {
   btnClick$ = new Subject<Event>();
 
   btnToggle$ = new Subject();

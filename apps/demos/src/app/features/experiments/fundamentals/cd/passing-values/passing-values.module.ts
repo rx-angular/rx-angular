@@ -1,31 +1,28 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ROUTES as CD_ROUTES } from './detect-changes.routes';
+import { ROUTES } from './passing-values.routes';
 import { MatButtonModule } from '@angular/material/button';
+import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
 import { DirtyChecksModule } from '../../../../../shared/debug-helper/dirty-checks';
-import { UnpatchEventsModule } from '@rx-angular/template';
-import { DetectChangesContainerComponent } from './detect-changes.container.component';
-import { CdDefaultModule } from '../../../../../shared/debug-helper/cd-default/cd-default.module';
+import { PassingValuesComponent } from './passing-values.component';
 import { VisualizerModule } from '../../../../../shared/debug-helper/visualizer/visualizer.module';
-import { CdOnPushModule } from '../../../../../shared/debug-helper/cd-on-push/cd-on-push.module';
+import { RecursiveComponent } from './recursive/recursive.component';
 import { CdTriggerModule } from '../../../../../shared/debug-helper/cd-trigger/cd-trigger.module';
 
+
 @NgModule({
-  declarations: [
-    DetectChangesContainerComponent
-  ],
+  declarations: [PassingValuesComponent, RecursiveComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild(CD_ROUTES),
+    RouterModule.forChild(ROUTES),
     MatButtonModule,
     DirtyChecksModule,
     UnpatchEventsModule,
-    CdDefaultModule,
+    PushModule,
     VisualizerModule,
-    CdOnPushModule,
     CdTriggerModule
   ]
 })
-export class DetectChangesModule {
+export class PassingValuesModule {
 }

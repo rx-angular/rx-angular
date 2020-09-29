@@ -9,24 +9,12 @@ export const MENU_ITEMS = [
         label: 'ɵdetectChanges',
       },
       {
-        link: 'ref-detect-changes',
-        label: 'cdRef.detectChanges',
+        link: 'passing-values',
+        label: 'Passing Values',
       },
       {
-        link: 'ref-mark-for-check',
-        label: 'cdRef.markForCheck',
-      },
-      {
-        link: 'mark-dirty',
-        label: 'ɵmarkDirty',
-      },
-      {
-        link: 'app-ref-tick',
-        label: 'ApplicationRef.tick',
-      },
-      {
-        link: 'patched-apis',
-        label: 'Patched Apis',
+        link: 'zone-patched-apis',
+        label: 'Zone Patched Apis',
       }
     ],
   },

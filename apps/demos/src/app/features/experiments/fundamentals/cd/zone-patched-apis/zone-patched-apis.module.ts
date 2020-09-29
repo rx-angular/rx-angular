@@ -1,25 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ROUTES as CD_ROUTES } from './patched-apis.routes';
+import { ROUTES } from './zone-patched-apis.routes';
 import { MatButtonModule } from '@angular/material/button';
 import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
-import { PatchedApisComponent } from './patched-apis.component';
-import { DirtyChecksModule } from '../../../../../shared/debug-helper/dirty-checks/dirty-checks.module';
+import { ZonePatchedApisComponent } from './zone-patched-apis.component';
+import { DirtyChecksModule } from '../../../../../shared/debug-helper/dirty-checks';
 
 
 @NgModule({
   declarations: [
-    PatchedApisComponent
+    ZonePatchedApisComponent
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(CD_ROUTES),
+    RouterModule.forChild(ROUTES),
     MatButtonModule,
     DirtyChecksModule,
     UnpatchEventsModule,
     PushModule
   ]
 })
-export class PatchedApisModule {
+export class ZonePatchedApisModule {
 }
