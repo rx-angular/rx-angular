@@ -4,6 +4,9 @@ import { CdHelper } from '../../../utils/cd-helper';
 @Component({
   selector: 'rxa-cd-trigger',
   template: `
+    <button mat-raised-button (click)="cdHelper.appRef_tick()">
+      tick
+    </button>
     <button mat-raised-button (click)="cdHelper.cdRef_markForCheck()">
       markForCheck
     </button>

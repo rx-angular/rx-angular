@@ -1,12 +1,18 @@
-import { ChangeDetectorRef, Directive, Injectable, ɵdetectChanges, ɵmarkDirty } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, Directive, Injectable, ɵdetectChanges, ɵmarkDirty } from '@angular/core';
 
 
 @Injectable()
 export class CdHelper {
 
-  constructor(protected cdRef: ChangeDetectorRef) {}
+  constructor(
+    protected cdRef: ChangeDetectorRef,
+    protected appRef: ApplicationRef
+  ) {}
 
-  cdRef_detectChanges() {
+  appRef_tick() {
+    this.appRef.tick();
+  }
+ cdRef_detectChanges() {
     this.cdRef.detectChanges();
   }
 
