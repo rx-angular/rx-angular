@@ -38,7 +38,7 @@ import { Subject } from 'rxjs';
               <strong>Current value:</strong> {{ static.int }}
             </div>
             <div class="mb-1">
-              <button mat-mini-fab (click)="static.change$.next($event)">
+              <button mat-mini-fab (click)="static.next$.next($event)">
                 <mat-icon>add</mat-icon>
               </button>
             </div>
@@ -52,7 +52,7 @@ import { Subject } from 'rxjs';
               <strong>Current value:</strong> {{ reactive.int$ | push }}
             </div>
             <div class="mb-1">
-              <button mat-mini-fab unpatch (click)="reactive.change$.next($event)">
+              <button mat-mini-fab unpatch (click)="reactive.next$.next($event)">
                 <mat-icon>add</mat-icon>
               </button>
             </div>

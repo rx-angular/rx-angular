@@ -21,7 +21,9 @@ interface SchedulerConfig { scheduler: string, duration?: number, numEmissions?:
 export class ValueProviderComponent extends RxState<ProvidedValues> {
   private outerChanges = new Subject<Observable<any>>();
 
-  change$ = new Subject<Event>();
+  next$ = new Subject<any>();
+  error$ = new Subject<any>();
+  complete$ = new Subject<any>();
   schedule$ = new Subject<SchedulerConfig>();
 
   float$ = this.select('random');
@@ -59,7 +61,7 @@ export class ValueProviderComponent extends RxState<ProvidedValues> {
       this.outerChanges.pipe(ngInputAll()),
       this.schedule$.pipe(toTick())
     );
-    this.connect('random', merge(this.change$, outerChanges$)
+    this.connect('random', merge(this.next$, outerChanges$)
       .pipe(map(toRandom))
     );
     this.hold(this.float$, this.updateStatic);

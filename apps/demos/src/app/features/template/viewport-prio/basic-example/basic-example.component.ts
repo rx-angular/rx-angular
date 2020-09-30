@@ -8,7 +8,7 @@ import { getStrategies } from '@rx-angular/template';
       <ng-container visualizerHeader>
         <rxa-value-provider #valP="rxaValueProvider">
           <h1>Stop rendering if directive is out of the viewport</h1>
-          <button mat-raised-button [unpatch] (click)="valP.change$.next()">
+          <button mat-raised-button [unpatch] (click)="valP.next$.next()">
             count up
           </button>
           <button mat-raised-button [unpatch]
