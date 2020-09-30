@@ -26,8 +26,7 @@ import { getStrategies } from '@rx-angular/template';
               class="target"
               viewport-prio
               *rxLet="valP.incremental$; let count;">
-              <b>target</b>
-              value: {{ count }}
+              <rxa-renders [value$]="count"></rxa-renders>
             </div>
           </div>
         </div>
@@ -35,8 +34,7 @@ import { getStrategies } from '@rx-angular/template';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [
-      `
+  styles: [`
       .view-port {
         height: 250px;
         overflow-y: scroll;
@@ -59,8 +57,7 @@ import { getStrategies } from '@rx-angular/template';
         align-items: center;
         justify-content: center;
       }
-    `
-  ]
+    `]
 })
 export class BasicExampleComponent {
   running = false;
