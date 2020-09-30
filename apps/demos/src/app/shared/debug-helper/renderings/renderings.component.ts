@@ -33,6 +33,7 @@ export class RenderingsComponent extends Hooks {
     switchMap(() => this.changeO$.pipe(
     switchAll(),
     distinctUntilChanged(),
+    scan(a => ++a, 0),
     tap(() => this.rippleOn && this.ripple.launch({ centered: true }))
   )))
 

@@ -10,6 +10,10 @@ export const MENU_ITEMS = [
       {
         link: 'passing-values',
         label: 'Passing Values',
+      },
+      {
+        link: 'zone-patched-apis',
+        label: 'Zone Patched APIs',
       }
     ]
   },

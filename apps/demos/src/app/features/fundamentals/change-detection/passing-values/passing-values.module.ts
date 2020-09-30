@@ -14,6 +14,7 @@ import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/vis
 import { RecursiveReactiveComponent } from './recursive/recursive-reactive.component';
 import { RecursiveComponent } from './recursive/recursive.component';
 import { CdTriggerModule } from '../../../../shared/debug-helper/cd-trigger/cd-trigger.module';
+import { ValueProviderModule } from '../../../../shared/debug-helper/value-provider/value-provider.module';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { CdTriggerModule } from '../../../../shared/debug-helper/cd-trigger/cd-t
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatIconModule
+    MatIconModule,
+    ValueProviderModule
   ]
 })
 export class PassingValuesModule {
