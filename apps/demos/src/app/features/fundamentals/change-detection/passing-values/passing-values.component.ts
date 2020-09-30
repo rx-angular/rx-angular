@@ -66,6 +66,9 @@ import { scan, startWith } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class PassingValuesComponent {
+  min = 0;
+  max = 5;
+
   btnBothClick$ = new Subject<Event>();
 
   private _level = 3;
@@ -75,7 +78,4 @@ export class PassingValuesComponent {
   get level(): number {
     return this._level;
   }
-
-  min = 0;
-  max = 5;
 }

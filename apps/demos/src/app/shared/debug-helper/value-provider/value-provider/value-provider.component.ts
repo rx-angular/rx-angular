@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RxState } from '../../../../../../../../libs/state/src/lib';
-import { isObservable, merge, Observable, of, Subject } from 'rxjs';
-import { distinctUntilChanged, map, switchAll } from 'rxjs/operators';
+import { from, isObservable, merge, Observable, of, Subject } from 'rxjs';
+import { concatAll, concatMap, distinctUntilChanged, map, scan, switchAll, switchMap } from 'rxjs/operators';
 import { ngInputAll } from '../../../utils/ngInputAll';
+import { animationFrameTick } from '../../../../../../../../libs/template/src/lib/render-strategies/rxjs/scheduling';
 
 interface ProvidedValues {
   random: number
@@ -22,9 +23,11 @@ export class ValueProviderComponent extends RxState<ProvidedValues> {
   private outerChanges = new Subject<Observable<any>>();
 
   change$ = new Subject<Event>();
+  schedule$ = new Subject<Event>();
 
   float$ = this.select('random');
   int$ = this.select(map(s => toInt(s.random, this.min, this.max)));
+  incremental$ = this.select(scan(inc => ++inc, 0));
   boolean$ = this.select(map(s => toBoolean(s.random, this.truthy)));
 
   float: number;
@@ -53,7 +56,13 @@ export class ValueProviderComponent extends RxState<ProvidedValues> {
 
   constructor() {
     super();
-    const outerChanges$ = this.outerChanges.pipe(ngInputAll());
+    const outerChanges$ = merge(
+      this.outerChanges.pipe(ngInputAll()),
+      this.schedule$.pipe(
+        switchMap((_) => from(new Array(10).fill(0).map(v => animationFrameTick()))),
+        concatAll()
+      )
+    );
     this.connect('random', merge(this.change$, outerChanges$)
       .pipe(map(toRandom))
     );

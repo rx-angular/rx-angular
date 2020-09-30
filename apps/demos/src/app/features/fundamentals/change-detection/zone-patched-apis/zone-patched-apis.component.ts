@@ -1,52 +1,22 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { defer, Subject } from 'rxjs';
-import { scan, startWith, tap, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-cd-parent13',
   template: `
-    <h2>
-      CD 13
-      <small>animationFrames triggers zone</small>
-    </h2>
-    <div class="case-info">
-      <span>CD: <b class="cds">Default</b></span>
-      <rxa-dirty-check></rxa-dirty-check>
-    </div>
-    <div class="case-interaction">
-      Value: {{ value$ | push: 'optimistic1' }}<br/>
-      <span
-      >aF:{{
-        (isPatchedAf$ | push: 'optimistic1') ? 'Patched' : 'UnPatched'
-        }}</span
-      ><br/>
-      <button mat-raised-button [unpatch] (click)="btnClick$.next($event)">
-        Run AF for 1 sec
-      </button>
-      <br/>
-      <button mat-raised-button [unpatch] (click)="btnToggle$.next($event)">
-        Toggle Observable
-      </button>
-    </div>
+    <rxa-visualizer>
+      <h2 visualizerHeader>
+        AnimationFrames triggers zone
+      </h2>
+      <rxa-value-provider #valP="rxaValueProvider">
+        <h3>Value: {{ valP.incremental$ | push }}</h3>
+        <button mat-raised-button [unpatch] (click)="valP.schedule$.next($event)">
+          Run AF for 1 sec
+        </button>
+      </rxa-value-provider>
+    </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ZonePatchedApisComponent {
-  btnClick$ = new Subject<Event>();
 
-  btnToggle$ = new Subject();
-
-  isPatchedAf$ = this.btnToggle$.pipe(
-    startWith(true),
-    scan((isPatched) => !isPatched)
-  );
-
-  value$;
-
-  baseEffects$ = defer(() => {
-    return this.btnClick$.pipe(
-      withLatestFrom(this.isPatchedAf$),
-      tap(() => console.error('Not implemented'))
-    );
-  });
 }

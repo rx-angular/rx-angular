@@ -18,7 +18,7 @@ export const ROUTES: Routes = [
     )
   },
   {
-    path: 'patched-apis',
+    path: 'zone-patched-apis',
     loadChildren: () => import('./zone-patched-apis/zone-patched-apis.module').then(
       m => m.ZonePatchedApisModule
     )
