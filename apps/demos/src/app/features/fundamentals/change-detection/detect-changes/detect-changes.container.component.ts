@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CdHelper } from '../../../../../shared/utils/cd-helper';
+import { CdHelper } from '../../../../shared/utils/cd-helper';
 
 @Component({
   selector: 'rxa-cd-parent01',

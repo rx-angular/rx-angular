@@ -22,4 +22,4 @@ const SHOWCASES_ROUTES: Routes = [
     RouterModule.forChild(SHOWCASES_ROUTES)
   ]
 })
-export class ShowcasesShellModule {}
+export class IntegrationsShellModule {}

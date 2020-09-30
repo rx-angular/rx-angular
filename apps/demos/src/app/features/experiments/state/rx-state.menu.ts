@@ -1,7 +1,7 @@
 export const MENU_ITEMS = [
   {
     link: 'rx-base-state',
-    label: 'RxState Overview',
+    label: 'State Problems',
     children: [
       {
         link: 'subscription',

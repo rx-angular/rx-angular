@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { Observable } from 'rxjs';
-import { CdHelper } from '../../../../../../shared/utils/cd-helper';
+import { CdHelper } from '../../../../../shared/utils/cd-helper';
 
 @Component({
   selector: 'rxa-recursive-reactive',

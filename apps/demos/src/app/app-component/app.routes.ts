@@ -7,6 +7,13 @@ export const ROUTES: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'fundamentals',
+    loadChildren: () =>
+      import('../features/fundamentals/fundamentals.module').then(
+        m => m.FundamentalsModule
+      )
+  },
+  {
     path: 'template',
     loadChildren: () =>
       import('../features/template/template-shell.module').then(
@@ -23,8 +30,8 @@ export const ROUTES: Routes = [
   {
     path: 'showcases',
     loadChildren: () =>
-      import('../features/showcases/showcases-shell.module').then(
-        m => m.ShowcasesShellModule
+      import('../features/integrations/integrations-shell.module').then(
+        m => m.IntegrationsShellModule
       )
   },
   {

@@ -8,12 +8,12 @@ import { RouterModule } from '@angular/router';
 import { ROUTES } from './passing-values.routes';
 import { MatButtonModule } from '@angular/material/button';
 import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
-import { DirtyChecksModule } from '../../../../../shared/debug-helper/dirty-checks';
+import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { PassingValuesComponent } from './passing-values.component';
-import { VisualizerModule } from '../../../../../shared/debug-helper/visualizer/visualizer.module';
+import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { RecursiveReactiveComponent } from './recursive/recursive-reactive.component';
 import { RecursiveComponent } from './recursive/recursive.component';
-import { CdTriggerModule } from '../../../../../shared/debug-helper/cd-trigger/cd-trigger.module';
+import { CdTriggerModule } from '../../../../shared/debug-helper/cd-trigger/cd-trigger.module';
 
 
 @NgModule({

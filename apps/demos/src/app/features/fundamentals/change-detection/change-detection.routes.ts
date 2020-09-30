@@ -3,10 +3,10 @@ import { Routes } from '@angular/router';
 export const ROUTES: Routes = [
   {
     path: '',
-    redirectTo: 'detect-changes'
+    redirectTo: 'change-detection-methods'
   },
   {
-    path: 'detect-changes',
+    path: 'change-detection-methods',
     loadChildren: () => import('./detect-changes/detect-changes.module').then(
       m => m.DetectChangesModule
     )

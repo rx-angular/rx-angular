@@ -2,7 +2,7 @@ import { ApplicationRef, Component } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { GrowAnimationState } from './grow/grow.component';
-import { environment } from '../../../../../../environments/environment';
+import { environment } from '../../../../../environments/environment';
 import { RxState } from '@rx-angular/state';
 
 export interface AnimationIndexComponentState {

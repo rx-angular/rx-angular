@@ -3,22 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 const ROUTES: Routes = [
   {
-    path: 'change-detections',
-    loadChildren: () => import('./fundamentals/change-detection/change-detection.module')
-      .then((mod) => mod.ChangeDetectionModule),
-    canActivate: [],
-    canActivateChild: []
-  },
-  /*{
-    path: '',
-    loadChildren: () =>
-      import('./fundamentals/irrelevant-to-test/irrelevant-to-test.module').then(
-        (mod) => mod.IrrelevantToTestModule
-      ),
-    canActivate: [],
-    canActivateChild: []
-  },*/
-  {
     path: 'rx-base-state',
     loadChildren: () =>
       import('./state/rx-state.module').then((mod) => mod.RxStateModule),

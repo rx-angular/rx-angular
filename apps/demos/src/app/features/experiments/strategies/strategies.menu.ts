@@ -1,9 +1,16 @@
 export const STRATEGIES_MENU= [
   {
     link: 'strategies',
-    label: 'Strategies Overview',
+    label: 'Strategies',
     children: [
-      // 01. One single-shot observable bound by one push as template expression
+      {
+        label: 'Coalescing',
+        link: 'coalescing'
+      },
+      {
+        label: 'Scheduling',
+        link: 'scheduling'
+      },
       {
         link: 'strategies/virtual-scroll',
         label: 'Virtual Scroll',

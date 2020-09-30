@@ -1,6 +1,6 @@
 import { MENU_ITEMS as DYNAMIC_COUNTER_MENU } from './dynamic-counter/dynamic-counter.menu';
 
-export const SHOWCASES_MENU_ITEMS = [
+export const INTEGRATIONS_MENU_ITEMS = [
   {
     label: 'Dynamic Counter',
     link: 'dynamic-counter',
