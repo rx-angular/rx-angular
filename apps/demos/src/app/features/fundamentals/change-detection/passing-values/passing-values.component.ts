@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { merge, Subject } from 'rxjs';
-import { scan, startWith } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'rxa-passing-values',
@@ -75,6 +74,7 @@ export class PassingValuesComponent {
   set level(level: number) {
     this._level = level >= 1 ? level : 1;
   }
+
   get level(): number {
     return this._level;
   }

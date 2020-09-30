@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       </h2>
       <rxa-value-provider #valP="rxaValueProvider">
         <h3>Value: {{ valP.incremental$ | push }}</h3>
-        <button mat-raised-button [unpatch] (click)="valP.schedule$.next($event)">
+        <button mat-raised-button [unpatch] (click)="valP.schedule$.next(!running ? scheduleConfig : undefined); running = !running">
           Run AF for 1 sec
         </button>
       </rxa-value-provider>
@@ -18,5 +18,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ZonePatchedApisComponent {
+  running = false;
+  scheduleConfig = {scheduler: 'animationFrame', duration: 2000};
 
 }

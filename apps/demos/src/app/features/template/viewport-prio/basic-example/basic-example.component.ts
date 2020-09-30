@@ -1,42 +1,42 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  NgZone
-} from '@angular/core';
-import { BehaviorSubject, EMPTY, interval, merge, Subject } from 'rxjs';
-import { scan, startWith, switchMap } from 'rxjs/operators';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { getStrategies } from '@rx-angular/template';
 
 @Component({
   selector: 'rxa-let1-container',
   template: `
-    <h1>Stop rendering if directive is out of the viewport</h1>
-    <rxa-dirty-check></rxa-dirty-check><br/>
-    <button mat-raised-button [unpatch] (click)="incrementTrigger.next()">
-      count up
-    </button>
-    <button mat-raised-button [unpatch] (click)="toggleAutoIncrement.next('')">
-      auto
-    </button>
-    <br/>
+    <rxa-visualizer>
+      <ng-container visualizerHeader>
+        <rxa-value-provider #valP="rxaValueProvider">
+          <h1>Stop rendering if directive is out of the viewport</h1>
+          <button mat-raised-button [unpatch] (click)="valP.change$.next()">
+            count up
+          </button>
+          <button mat-raised-button [unpatch]
+                  (click)="valP.schedule$.next(!running ? {scheduler: 'timeout', tickSpeed: 200}: undefined); running = !running">
+            auto
+          </button>
+        </rxa-value-provider>
+      </ng-container>
 
-    <b>viewPort</b>
-    <div #viewPort class="view-port">
-      <div class="view-port-inner">
-        <div
-          class="target"
-          viewport-prio
-          *rxLet="count$; let count;">
-          <b>target</b>
-          value: {{ count }}
+      <div class="row w-100">
+        <h3>View Port</h3>
+        <div #viewPort class="view-port col-sm-12">
+          <div class="view-port-inner">
+            <div
+              class="target"
+              viewport-prio
+              *rxLet="valP.incremental$; let count;">
+              <b>target</b>
+              value: {{ count }}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
-    `
+      `
       .view-port {
         height: 250px;
         overflow-y: scroll;
@@ -59,38 +59,15 @@ import { getStrategies } from '@rx-angular/template';
         align-items: center;
         justify-content: center;
       }
-
-      .noop {
-        border: 1px solid blue;
-      }
     `
   ]
 })
 export class BasicExampleComponent {
-  incrementTrigger = new Subject<Event>();
-  toggleAutoIncrement = new BehaviorSubject<any>(false);
+  running = false;
 
   strategies = Object.keys(getStrategies({ cdRef: this.cdRef }));
 
-  visibleStrategy$ = new BehaviorSubject('local');
-  invisibleStrategy$ = new BehaviorSubject('noop');
-
-  count$ = merge(
-    this.incrementTrigger,
-    this.toggleAutoIncrement.pipe(
-      scan(v => !v, true),
-      switchMap(v => (v ? interval(200) : EMPTY))
-    )
-  ).pipe(
-    startWith(1),
-    scan(v => ++v, 0)
-  );
-
-  constructor(private ngZone: NgZone, private cdRef: ChangeDetectorRef) {}
-
-  numRenders = 0;
-
-  rerenders(): number {
-    return ++this.numRenders;
+  constructor(private ngZone: NgZone, private cdRef: ChangeDetectorRef) {
   }
+
 }

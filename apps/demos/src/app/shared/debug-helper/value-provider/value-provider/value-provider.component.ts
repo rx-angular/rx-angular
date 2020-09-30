@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { RxState } from '../../../../../../../../libs/state/src/lib';
-import { from, isObservable, merge, Observable, of, Subject } from 'rxjs';
-import { concatAll, concatMap, distinctUntilChanged, map, scan, switchAll, switchMap } from 'rxjs/operators';
+import { RxState } from '@rx-angular/state';
+import { EMPTY, merge, Observable, Subject, timer } from 'rxjs';
+import { map, repeat, scan, switchMap, takeUntil } from 'rxjs/operators';
 import { ngInputAll } from '../../../utils/ngInputAll';
 import { animationFrameTick } from '../../../../../../../../libs/template/src/lib/render-strategies/rxjs/scheduling';
 
@@ -9,21 +9,20 @@ interface ProvidedValues {
   random: number
 }
 
+interface SchedulerConfig { scheduler: string, duration?: number, numEmissions?: number, tickSpeed?: number }
+
 @Component({
   selector: 'rxa-value-provider',
   exportAs: 'rxaValueProvider',
   template: `
     <ng-content></ng-content>`,
-  host: {
-    style: 'display: contents'
-  },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValueProviderComponent extends RxState<ProvidedValues> {
   private outerChanges = new Subject<Observable<any>>();
 
   change$ = new Subject<Event>();
-  schedule$ = new Subject<Event>();
+  schedule$ = new Subject<SchedulerConfig>();
 
   float$ = this.select('random');
   int$ = this.select(map(s => toInt(s.random, this.min, this.max)));
@@ -51,17 +50,14 @@ export class ValueProviderComponent extends RxState<ProvidedValues> {
   updateStatic = (float: number): void => {
     this.float = float;
     this.int = toInt(float, this.min, this.max);
-    this.boolean = toBoolean(float,this.truthy);
-  }
+    this.boolean = toBoolean(float, this.truthy);
+  };
 
   constructor() {
     super();
     const outerChanges$ = merge(
       this.outerChanges.pipe(ngInputAll()),
-      this.schedule$.pipe(
-        switchMap((_) => from(new Array(10).fill(0).map(v => animationFrameTick()))),
-        concatAll()
-      )
+      this.schedule$.pipe(toTick())
     );
     this.connect('random', merge(this.change$, outerChanges$)
       .pipe(map(toRandom))
@@ -69,6 +65,29 @@ export class ValueProviderComponent extends RxState<ProvidedValues> {
     this.hold(this.float$, this.updateStatic);
   }
 
+}
+
+function toTick(): (o: Observable<SchedulerConfig>) => Observable<number> {
+  return o => o.pipe(
+    switchMap((scheduleConfig) => {
+      if (!scheduleConfig) {
+        return EMPTY;
+      } else {
+        const stop$ = scheduleConfig.duration ? timer(scheduleConfig.duration) : EMPTY;
+        if (scheduleConfig.scheduler === 'timeout') {
+          return timer(0, scheduleConfig.tickSpeed).pipe(
+            takeUntil(stop$)
+          );
+        } else if (scheduleConfig.scheduler === 'animationFrame') {
+          return animationFrameTick().pipe(
+            repeat(scheduleConfig.numEmissions),
+            takeUntil(stop$)
+          );
+        }
+        throw new Error('Wrong scheduler config');
+      }
+    })
+  );
 }
 
 function toInt(float: number, min = 0, max = 10): number {

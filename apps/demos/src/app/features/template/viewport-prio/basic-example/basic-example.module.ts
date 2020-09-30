@@ -6,6 +6,8 @@ import { BasicExampleComponent } from './basic-example.component';
 import { LetModule, PushModule, UnpatchEventsModule, ViewportPrioModule } from '@rx-angular/template';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { MatButtonModule } from '@angular/material/button';
+import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
+import { ValueProviderModule } from '../../../../shared/debug-helper/value-provider/value-provider.module';
 
 const DECLARATIONS = [BasicExampleComponent];
 
@@ -19,7 +21,9 @@ const DECLARATIONS = [BasicExampleComponent];
     RouterModule.forChild(ROUTES),
     MatButtonModule,
     PushModule,
-    LetModule
+    LetModule,
+    VisualizerModule,
+    ValueProviderModule
   ],
   exports: [DECLARATIONS]
 })

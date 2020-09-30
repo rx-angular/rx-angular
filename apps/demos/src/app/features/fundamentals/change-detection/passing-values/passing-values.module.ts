@@ -33,7 +33,8 @@ import { ValueProviderModule } from '../../../../shared/debug-helper/value-provi
     MatInputModule,
     MatIconModule,
     ValueProviderModule
-  ]
+  ],
+  exports: []
 })
 export class PassingValuesModule {
 }
