@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { EMPTY, merge, Observable, Subject, timer } from 'rxjs';
 import { map, repeat, scan, switchMap, takeUntil } from 'rxjs/operators';
@@ -22,9 +22,11 @@ export class ValueProviderComponent extends RxState<ProvidedValues> {
   private outerChanges = new Subject<Observable<any>>();
 
   next$ = new Subject<any>();
+  schedule$ = new Subject<SchedulerConfig>();
+
   error$ = new Subject<any>();
   complete$ = new Subject<any>();
-  schedule$ = new Subject<SchedulerConfig>();
+  reset$ = new Subject<any>();
 
   float$ = this.select('random');
   int$ = this.select(map(s => toInt(s.random, this.min, this.max)));
@@ -55,16 +57,31 @@ export class ValueProviderComponent extends RxState<ProvidedValues> {
     this.boolean = toBoolean(float, this.truthy);
   };
 
-  constructor() {
+  constructor(cdRef: ChangeDetectorRef) {
     super();
     const outerChanges$ = merge(
       this.outerChanges.pipe(ngInputAll()),
       this.schedule$.pipe(toTick())
     );
-    this.connect('random', merge(this.next$, outerChanges$)
-      .pipe(map(toRandom))
-    );
+    this.connect('random', merge(this.next$, outerChanges$).pipe(map(toRandom)));
     this.hold(this.float$, this.updateStatic);
+
+    this.hold(this.reset$, () => {
+      this.next$ = new Subject();
+      this.schedule$ = new Subject();
+      cdRef.markForCheck();
+    });
+
+    this.hold(this.error$, () => {
+      const e = new Error('Boom!!!');
+      this.next$.error(e);
+      this.schedule$.error(e);
+    });
+
+    this.hold(this.complete$, () => {
+      this.next$.complete();
+      this.schedule$.complete();
+    });
   }
 
 }

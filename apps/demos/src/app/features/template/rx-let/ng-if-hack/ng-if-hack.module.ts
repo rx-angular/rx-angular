@@ -8,6 +8,8 @@ import { NgIfHackComponent } from './ng-if-hack.component';
 import { LetModule, UnpatchEventsModule } from '@rx-angular/template';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatIconModule } from '@angular/material/icon';
+import { ValueProviderModule } from '../../../../shared/debug-helper/value-provider/value-provider.module';
+import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 
 const DECLARATIONS = [
   NgIfHackComponent
@@ -23,7 +25,9 @@ const DECLARATIONS = [
     LetModule,
     UnpatchEventsModule,
     NgxSkeletonLoaderModule,
-    MatIconModule
+    MatIconModule,
+    ValueProviderModule,
+    VisualizerModule
   ]
 })
 export class NgIfHackModule {
