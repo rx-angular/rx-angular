@@ -14,7 +14,7 @@ import { CdHelper } from '../../../../../shared/utils/cd-helper';
       <ng-template #branch>
         <rxa-visualizer>
           <rxa-cd-trigger visualizerHeader [cdHelper]="cdHelper"></rxa-cd-trigger>
-          <rxa-recursive-reactive [level]="level-1" [value$]="value$"></rxa-recursive-reactive>
+          <rxa-recursive-reactive [level]="level-1"></rxa-recursive-reactive>
         </rxa-visualizer>
       </ng-template>
   `,

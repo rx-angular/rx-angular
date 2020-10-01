@@ -54,7 +54,7 @@ import { immutableArr, immutableIncArr } from '../utils';
           ">
           <rxa-visualizer [value$]="array$" key="" size="150">
             <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-              <rxa-visualizer [value$]="i" key="" size="150">
+              <rxa-visualizer>
                 <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
               </rxa-visualizer>
             </ng-container>
@@ -75,7 +75,7 @@ import { immutableArr, immutableIncArr } from '../utils';
          trackBy: trackByKey;
          distinctBy:distinctBy
          let v$ = $value$;">
-              <rxa-visualizer [value$]="v$" key="value" size="50">
+              <rxa-visualizer>
                 <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
               </rxa-visualizer>
             </ng-container>

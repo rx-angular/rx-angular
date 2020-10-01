@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'rxa-demo-basics',
+  selector: 'rxa-ngif-hack',
   template: `
     <rxa-visualizer>
       <div visualizerHeader>
-        <button mat-raised-button [unpatch] (click)="valP.reset$.next()">Reset</button>
-        <button mat-raised-button [unpatch] (click)="valP.next$.next()">Next</button>
-        <button mat-raised-button [unpatch] (click)="valP.error$.next()">Error</button>
-        <button mat-raised-button [unpatch] (click)="valP.complete$.next()">Complete</button>
+        <button mat-raised-button (click)="valP.reset()">Reset</button>
+        <button mat-raised-button [unpatch] (click)="valP.next()">Next</button>
+        <button mat-raised-button [unpatch] (click)="valP.error()">Error</button>
+        <button mat-raised-button [unpatch] (click)="valP.complete()">Complete</button>
       </div>
       <rxa-value-provider #valP="rxaValueProvider"></rxa-value-provider>
 
@@ -35,11 +35,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       </ng-template>
 
       <ng-template #errorView>
-        <mat-icon>delete</mat-icon>
+        <mat-icon color="warn">delete</mat-icon>
       </ng-template>
 
       <ng-template #completeView>
-        <mat-icon>check</mat-icon>
+        <mat-icon color="primary">check</mat-icon>
       </ng-template>
     </rxa-visualizer>
   `,

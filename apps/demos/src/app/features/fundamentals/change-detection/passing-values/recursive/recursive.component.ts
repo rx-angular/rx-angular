@@ -5,14 +5,17 @@ import { CdHelper } from '../../../../../shared/utils/cd-helper';
 @Component({
   selector: 'rxa-recursive',
   template: `
-    <rxa-visualizer [value$]="value">
-      <rxa-cd-trigger visualizerHeader [cdHelper]="cdHelper"></rxa-cd-trigger>
-      <ng-container *ngIf="level === 0; else: branch">
-      </ng-container>
-      <ng-template #branch>
-        <rxa-recursive [level]="level-1" [value]="value"></rxa-recursive>
-      </ng-template>
-    </rxa-visualizer>
+    <ng-container *ngIf="level === 0; else: branch">
+      <rxa-visualizer [value$]="value">
+        <rxa-cd-trigger visualizerHeader [cdHelper]="cdHelper"></rxa-cd-trigger>
+      </rxa-visualizer>
+    </ng-container>
+    <ng-template #branch>
+      <rxa-visualizer>
+        <rxa-cd-trigger visualizerHeader [cdHelper]="cdHelper"></rxa-cd-trigger>
+        <rxa-recursive [level]="level-1"></rxa-recursive>
+      </rxa-visualizer>
+    </ng-template>
   `,
   host: {
     class: 'd-flex w-100'
