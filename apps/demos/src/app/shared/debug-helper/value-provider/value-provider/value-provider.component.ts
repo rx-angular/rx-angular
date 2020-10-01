@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
-import { ConnectableObservable, EMPTY, merge, Observable, Subject, Subscription, timer } from 'rxjs';
-import { distinctUntilChanged, map, publishReplay, repeat, scan, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { RxState } from '@rx-angular/state';
+import { EMPTY, merge, Observable, Subject, timer } from 'rxjs';
+import { map, merge as mergeWith, repeat, scan, switchMap, takeUntil } from 'rxjs/operators';
 import { animationFrameTick } from '../../../../../../../../libs/template/src/lib/render-strategies/rxjs/scheduling';
 import { ngInputFlatten } from '../../../utils/ngInputFlatten';
 
@@ -22,32 +23,23 @@ interface SchedulerConfig {
     <ng-content></ng-content>`,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ValueProviderComponent implements OnDestroy {
+export class ValueProviderComponent extends RxState<ProvidedValues> {
   private outerChanges = new Subject<Observable<any>>();
 
-  private next$: Subject<any>;
-  private schedule$: Subject<SchedulerConfig>;
+  private nextSubject = new Subject<any>();
+  private schedule$ = new Subject<SchedulerConfig>();
 
-  private readonly error$ = new Subject<any>();
-  private readonly complete$ = new Subject<any>();
-  private readonly reset$ = new Subject<any>();
+  private errorSubject = new Subject<any>();
+  private error$ = this.errorSubject.pipe(map(_ => {
+    throw new Error('ERROR');
+  }));
+  private completeSubject = new Subject<any>();
+  private resetSubject = new Subject<any>();
 
-  private _float$: Observable<number>;
-  get float$() {
-    return this._float$;
-  }
-  private _int$: Observable<number>;
-  get int$() {
-    return this._int$;
-  }
-  private _incremental$: Observable<number>;
-  get incremental$() {
-    return this._incremental$;
-  }
-  private _boolean$: Observable<boolean>;
-  get boolean$() {
-    return this._boolean$;
-  }
+  float$;
+  int$;
+  incremental$;
+  boolean$;
 
   float: number;
   int: number;
@@ -67,72 +59,67 @@ export class ValueProviderComponent implements OnDestroy {
     this.outerChanges.next(o$);
   }
 
-  private sub = Subscription.EMPTY;
+  private resetAll = () => {
+    this.resetObservables();
+    this.updateStatic(undefined);
+    this.cdRef.markForCheck();
+  };
+
+  private resetObservables = () => {
+    this.float$ = this.select('random');
+    this.int$ = this.select(
+      map(s => toInt(s.random, this.min, this.max)),
+      withCompleteAndError(this.error$, this.completeSubject)
+    );
+    this.incremental$ = this.select(
+      scan(inc => ++inc, 0),
+      withCompleteAndError(this.error$, this.completeSubject)
+    );
+    this.boolean$ = this.select(map(s => toBoolean(s.random, this.truthy)),
+      withCompleteAndError(this.error$, this.completeSubject)
+    );
+    this.hold(this.float$, this.updateStatic);
+    this.hold(this.resetSubject, this.resetAll);
+  }
+
+  private updateStatic = (float: number): void => {
+    this.float = float;
+    this.int = toInt(float, this.min, this.max);
+    this.boolean = toBoolean(float, this.truthy);
+  };
 
   constructor(private cdRef: ChangeDetectorRef) {
-    this._reset();
-  }
-
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
-  }
-
-  next(): void {
-    this.next$.next();
-  }
-
-  complete(): void {
-    this.complete$.next();
-  }
-
-  error(): void {
-    this.error$.next();
-  }
-
-  reset(): void {
-    this.reset$.next();
-  }
-
-  private _reset(): void {
-    this.next$ = new Subject();
-    this.schedule$ = new Subject();
-    this.sub.unsubscribe();
-    this.sub = new Subscription();
+    super();
     const outerChanges$ = merge(
       this.outerChanges.pipe(ngInputFlatten()),
       this.schedule$.pipe(toTick())
     );
-    const randomFloat$ = merge(this.next$, outerChanges$).pipe(map(toRandom));
-    const stateful = o$ => o$.pipe(distinctUntilChanged(), publishReplay(1));
-    this._float$ = randomFloat$.pipe(tap(v => this._updateStatic(v)), stateful);
-    this._int$ = randomFloat$.pipe(map(s => toInt(s, this.min, this.max)), stateful);
-    this._incremental$ = randomFloat$.pipe(scan(inc => ++inc, 0), stateful);
-    this._boolean$ = randomFloat$.pipe(map(r => toBoolean(r, this.truthy)), stateful);
-    this.sub.add((this.float$ as ConnectableObservable<number>).connect());
-    this.sub.add((this.int$ as ConnectableObservable<number>).connect());
-    this.sub.add((this.incremental$ as ConnectableObservable<number>).connect());
-    this.sub.add((this.boolean$ as ConnectableObservable<boolean>).connect());
-    this.sub.add(this.reset$.subscribe(() => {
-      this._reset();
-      this.cdRef.markForCheck();
-    }));
-    this.sub.add(this.error$.subscribe(() => {
-      const e = new Error('Boom!!!');
-      this.next$.error(e);
-      this.schedule$.error(e);
-    }));
-    this.sub.add(this.complete$.subscribe(() => {
-      this.next$.complete();
-      this.schedule$.complete();
-    }));
+    this.connect('random', merge(this.nextSubject, outerChanges$).pipe(map(toRandom)));
+    this.resetAll()
   }
 
-  private _updateStatic(float: number): void {
-    this.float = float;
-    this.int = toInt(float, this.min, this.max);
-    this.boolean = toBoolean(float, this.truthy);
+  next(): void {
+    this.nextSubject.next();
   }
 
+  error(): void {
+    this.errorSubject.next();
+  }
+
+  complete(): void {
+    this.completeSubject.next();
+  }
+
+  reset(): void {
+    this.resetSubject.next();
+  }
+}
+
+function withCompleteAndError(error$, complete$) {
+  return (o: Observable<unknown>): Observable<unknown> => o.pipe(
+    mergeWith(error$),
+    takeUntil(complete$)
+  );
 }
 
 function toTick(): (o: Observable<SchedulerConfig>) => Observable<number> {
@@ -170,5 +157,3 @@ function toRandom(): number {
 function toBoolean(float: number, truthy: number): boolean {
   return float < truthy;
 }
-
-
