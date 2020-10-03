@@ -26,33 +26,46 @@ import { Subject } from 'rxjs';
                 <mat-icon class="mr-2">add</mat-icon>
                 Increment Both
               </button>
+              <mat-button-toggle-group
+                name="visibleExamples"
+                aria-label="Visible Examples"
+                [value]="displayStates.all"
+                #group="matButtonToggleGroup">
+                <mat-button-toggle [value]="displayStates.nativeStatic">Native Static</mat-button-toggle>
+                <mat-button-toggle [value]="displayStates.rxAngularReactive">RxAngular Reactive</mat-button-toggle>
+                <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
+              </mat-button-toggle-group>
             </div>
           </div>
         </div>
       </ng-container>
       <div class="row w-100">
-        <div class="col-sm-12 col-md-6">
+        <div class="col-sm-12 col-md-6"
+             *ngIf="group.value === displayStates.nativeStatic ||
+                    group.value === displayStates.all">
           <h2 class="mat-subheader">Static Values</h2>
           <rxa-value-provider [min]="min" [max]="max" [changes$]="btnBothClick$" #static="rxaValueProvider">
             <div>
               <strong>Current value:</strong> {{ static.int }}
             </div>
             <div class="mb-1">
-              <button mat-mini-fab (click)="static.next$.next($event)">
+              <button mat-mini-fab (click)="static.next()">
                 <mat-icon>add</mat-icon>
               </button>
             </div>
             <rxa-recursive [level]="level" [value]="static.int"></rxa-recursive>
           </rxa-value-provider>
         </div>
-        <div class="col-sm-12 col-md-6">
+        <div class="col-sm-12 col-md-6"
+             *ngIf="group.value === displayStates.rxAngularReactive ||
+                    group.value === displayStates.all">
           <h2 class="mat-subheader">Reactive Values</h2>
           <rxa-value-provider [changes$]="btnBothClick$" #reactive="rxaValueProvider">
             <div>
               <strong>Current value:</strong> {{ reactive.int$ | push }}
             </div>
             <div class="mb-1">
-              <button mat-mini-fab unpatch (click)="reactive.next$.next($event)">
+              <button mat-mini-fab unpatch (click)="reactive.next()">
                 <mat-icon>add</mat-icon>
               </button>
             </div>
@@ -67,6 +80,13 @@ import { Subject } from 'rxjs';
 export class PassingValuesComponent {
   min = 0;
   max = 5;
+
+  displayStates = {
+    nativeStatic: 0,
+    nativeReactive: 1,
+    rxAngularReactive: 2,
+    all: 3
+  }
 
   btnBothClick$ = new Subject<Event>();
 

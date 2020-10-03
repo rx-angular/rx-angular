@@ -15,6 +15,7 @@ import { RecursiveReactiveComponent } from './recursive/recursive-reactive.compo
 import { RecursiveComponent } from './recursive/recursive.component';
 import { CdTriggerModule } from '../../../../shared/debug-helper/cd-trigger/cd-trigger.module';
 import { ValueProviderModule } from '../../../../shared/debug-helper/value-provider/value-provider.module';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { ValueProviderModule } from '../../../../shared/debug-helper/value-provi
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    ValueProviderModule
+    ValueProviderModule,
+    MatButtonToggleModule
   ],
   exports: []
 })
