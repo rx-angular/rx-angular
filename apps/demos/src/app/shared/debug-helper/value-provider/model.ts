@@ -3,6 +3,9 @@ export interface ProvidedValues {
   array: any[];
 }
 
+/**
+ * id: newIndex
+ */
 export interface Positions {
   [id: number]: number
 }

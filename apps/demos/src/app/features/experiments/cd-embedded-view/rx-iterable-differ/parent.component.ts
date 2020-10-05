@@ -1,8 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
-import { EMPTY, interval, merge, Subject } from 'rxjs';
-import { scan, share, switchMap } from 'rxjs/operators';
-import { immutableArr, immutableIncArr } from '../utils';
 import { ValueProviderService } from '../../../../shared/debug-helper/value-provider';
 
 
@@ -12,15 +9,23 @@ import { ValueProviderService } from '../../../../shared/debug-helper/value-prov
     <rxa-visualizer>
       <ng-container visualizerHeader>
         <h2>Reactive Iterable Differ</h2>
-        <button mat-raised-button [unpatch] (click)="valP.addItems(1)">
+        <button mat-raised-button [unpatch] (click)="valP.addItems()">
           Add
         </button>
-        <button mat-raised-button [unpatch] (click)="valP.updateItems([1])">
+        <button mat-raised-button [unpatch] (click)="valP.moveItems()">
+          Move
+        </button>
+        <button mat-raised-button [unpatch] (click)="valP.updateItems()">
           Update
+        </button>
+        <button mat-raised-button [unpatch] (click)="valP.removeItems()">
+          Remove
         </button>
       </ng-container>
       <div>
-        {{valP.array$ | push | json}}
+        <pre *ngFor="let i of valP.array$ | push">
+          {{i | json}}
+        </pre>
       </div>
     </rxa-visualizer>
   `,

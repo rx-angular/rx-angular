@@ -1,8 +1,17 @@
 import { ChangeDetectorRef, Injectable } from '@angular/core';
-import { insert,update,remove, RxState } from '@rx-angular/state';
+import { insert, remove, RxState, update } from '@rx-angular/state';
 import { merge, Observable, Subject } from 'rxjs';
 import { map, scan } from 'rxjs/operators';
-import { toBoolean, toInt, toRandom, toRandomItems, toTick, withCompleteAndError } from './utils';
+import {
+  getRandomItems,
+  moveItem,
+  toBoolean,
+  toInt,
+  toNewItems,
+  toRandom,
+  toTick,
+  withCompleteAndError
+} from './utils';
 import { Positions, ProvidedValues, SchedulerConfig } from './model';
 import { ngInputFlatten } from '../../utils/ngInputFlatten';
 
@@ -38,10 +47,10 @@ export class ValueProviderService extends RxState<ProvidedValues> {
   min = 0;
   max = 10;
 
-  protected addItemsSubject = new Subject<number>();
-  protected moveItemsSubject = new Subject<Positions>();
-  protected updateItemsSubject = new Subject<number[]>();
-  protected removeItemsSubject = new Subject<number[]>();
+  protected addItemsSubject = new Subject<number | undefined>();
+  protected moveItemsSubject = new Subject<Positions | undefined>();
+  protected updateItemsSubject = new Subject<number[] | undefined>();
+  protected removeItemsSubject = new Subject<number[] | undefined>();
 
   set changes$(o$: Observable<any>) {
     this.outerChanges.next(o$);
@@ -88,20 +97,51 @@ export class ValueProviderService extends RxState<ProvidedValues> {
       this.outerChanges.pipe(ngInputFlatten()),
       this.schedule$.pipe(toTick())
     );
+
     this.connect(
       'random',
       merge(this.nextSubject, outerChanges$).pipe(map(toRandom))
     );
+
     this.connect(
       'array',
-      this.addItemsSubject.pipe(map(numItems => toRandomItems([toInt(Math.random(), 0, 10)]))),
-      (state, item) => insert(state.array, item)
-    );
+      this.addItemsSubject.pipe(map(v => v || 1)),
+      (state, numItems) => {
+        const arr = (state.array || []);
+        const items: any[] = toNewItems(arr, numItems);
+        if (arr.length === 0) {
+          return insert(arr, items);
+        }
+        const newItems = items.filter(ni => arr.some(oi => oi.id !== ni.id));
+        const updateItems = items.filter(ni => arr.some(oi => oi.id === ni.id));
+        return update(insert(arr, newItems), updateItems, 'id');
+      });
+
     this.connect(
       'array',
-      this.updateItemsSubject,
-      (state, itemIds) => update(state.array, toRandomItems([1,2,3]), existingItem => itemIds.some(idToUpdate => existingItem.id === idToUpdate))
+      this.updateItemsSubject.pipe(map(v => v || [toInt()])),
+      (state, itemIds) => update(state.array, getRandomItems(state.array, itemIds.length)
+        .map(i => ({ ...i, value: toRandom() })), 'id')
     );
+
+    this.connect(
+      'array',
+      this.moveItemsSubject,
+      (state, positions) => {
+        let arr = state.array;
+        Object.entries(positions || { 0:1 }).forEach(([id, newIdx]) =>
+          arr = moveItem(arr, arr.findIndex(i => i.id === id), newIdx)
+        );
+        return arr;
+      }
+    );
+
+    this.connect(
+      'array',
+      this.removeItemsSubject,
+      (state, ids) => remove(state.array, ids || getRandomItems(state.array, 1), 'id')
+    );
+
     this.resetAll();
   }
 
@@ -118,19 +158,19 @@ export class ValueProviderService extends RxState<ProvidedValues> {
   }
 
 
-  addItems(numItems: number): void {
+  addItems(numItems?: number): void {
     this.addItemsSubject.next(numItems);
   }
 
-  moveItems(positions: Positions): void {
+  moveItems(positions?: Positions): void {
     this.moveItemsSubject.next(positions);
   }
 
-  updateItems(itemsIds: number[]): void {
+  updateItems(itemsIds?: number[]): void {
     this.updateItemsSubject.next(itemsIds);
   }
 
-  removeItems(itemsIds: number[]): void {
+  removeItems(itemsIds?: number[]): void {
     this.removeItemsSubject.next(itemsIds);
   }
 

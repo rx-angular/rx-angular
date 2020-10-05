@@ -5,9 +5,8 @@ import { PocRxDifferDirective } from './poc-rx-differ.directive';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './poc-rx-differ.routes';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
-import { UnpatchEventsModule } from '../../../../../../../../libs/template/src/lib/experimental/unpatch/events';
+import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
 import { MatButtonModule } from '@angular/material/button';
-import { PushModule } from '../../../../../../../../libs/template/src/lib/push';
 
 @NgModule({
   declarations: [CdEmbeddedViewParentRxDifferComponent, PocRxDifferDirective],
@@ -20,4 +19,5 @@ import { PushModule } from '../../../../../../../../libs/template/src/lib/push';
     PushModule
   ]
 })
-export class PocRxDifferModule { }
+export class PocRxDifferModule {
+}
