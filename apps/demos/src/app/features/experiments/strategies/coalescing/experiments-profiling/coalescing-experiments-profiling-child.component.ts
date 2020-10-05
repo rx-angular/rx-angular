@@ -1,19 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnInit
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
-import {
-  Observable
-} from 'rxjs';
-import {
-  map,
-  tap,
-  withLatestFrom
-} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, tap, withLatestFrom } from 'rxjs/operators';
 import { getStrategies } from '@rx-angular/template';
 import { CoalescingTestService } from './coalescing-test.service';
 import { RxState } from '@rx-angular/state';

@@ -1,21 +1,5 @@
-import {
-  asapScheduler,
-  BehaviorSubject,
-  EMPTY,
-  from,
-  interval,
-  Observable,
-  Subject,
-} from 'rxjs';
-import {
-  concatMap,
-  mergeMap,
-  scan,
-  switchMap,
-  take,
-  takeUntil,
-  tap,
-} from 'rxjs/operators';
+import { asapScheduler, BehaviorSubject, EMPTY, from, interval, Observable, Subject } from 'rxjs';
+import { concatMap, mergeMap, scan, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 export class CoalescingTestService {
   ms = 10;

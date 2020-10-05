@@ -1,17 +1,7 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
-import { ConnectableObservable, isObservable, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged, pluck, publish, scan, switchAll, switchMap, tap } from 'rxjs/operators';
-import { isObject } from 'util';
+import { isObservable, Observable, of, ReplaySubject, Subscription } from 'rxjs';
+import { distinctUntilChanged, scan, switchAll, switchMap, tap } from 'rxjs/operators';
 import { Hooks } from '../hooks';
 
 @Component({

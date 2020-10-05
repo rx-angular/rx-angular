@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RenderingsComponent } from './renderings.component';
 import { CommonModule } from '@angular/common';
 import { MatRippleModule } from '@angular/material/core';
-import { PushModule } from '../../../../../../../libs/template/src/lib/push';
+import { PushModule } from '@rx-angular/template';
 
 const DEPRECATIONS = [RenderingsComponent];
 

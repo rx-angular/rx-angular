@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
-import { ConnectableObservable, Subject, Subscription } from 'rxjs';
-import { publishReplay, scan, shareReplay } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { scan, shareReplay } from 'rxjs/operators';
 import { SourceService } from './source.service';
 
 @Component({

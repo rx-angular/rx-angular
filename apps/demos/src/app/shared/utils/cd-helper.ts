@@ -1,4 +1,4 @@
-import { ApplicationRef, ChangeDetectorRef, Directive, Injectable, ɵdetectChanges, ɵmarkDirty } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, Injectable, ɵdetectChanges, ɵmarkDirty } from '@angular/core';
 
 
 @Injectable()

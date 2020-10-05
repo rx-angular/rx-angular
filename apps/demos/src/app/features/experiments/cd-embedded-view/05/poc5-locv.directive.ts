@@ -15,7 +15,7 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
-import { Observable, ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
+import { ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
 import { distinctUntilChanged, filter, map, switchAll, tap } from 'rxjs/operators';
 
 interface RecordViewTuple<T, U extends NgIterable<T>> {

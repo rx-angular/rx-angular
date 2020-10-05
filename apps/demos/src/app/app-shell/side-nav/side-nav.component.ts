@@ -1,5 +1,5 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { ChangeDetectionStrategy, Component, Input, Output, } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';

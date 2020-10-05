@@ -2,9 +2,7 @@ import { MENU_ITEMS as PUSH_MENU_ITEMS } from './push/push.menu';
 import { MENU_ITEMS as RX_LET_MENU_ITEMS } from './rx-let/rx-let.menu';
 import { MENU_ITEMS as STRATEGIES_MENU_ITEMS } from './strategies/strategies.menu';
 import { MENU_ITEMS as UNPATCH_MENU_ITEMS } from './unpatch/unpatch.menu';
-import {
-  MENU_ITEMS as VIEWPORT_PRIO_MENU_ITEMS
-} from './viewport-prio/viewport-prio.menu';
+import { MENU_ITEMS as VIEWPORT_PRIO_MENU_ITEMS } from './viewport-prio/viewport-prio.menu';
 
 export const TEMPLATE_MENU = [
   {

@@ -1,12 +1,5 @@
-import { Subject, timer, combineLatest, EMPTY } from 'rxjs';
-import {
-  map,
-  startWith,
-  withLatestFrom,
-  switchMap,
-  tap,
-  pluck,
-} from 'rxjs/operators';
+import { combineLatest, EMPTY, Subject, timer } from 'rxjs';
+import { map, pluck, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 

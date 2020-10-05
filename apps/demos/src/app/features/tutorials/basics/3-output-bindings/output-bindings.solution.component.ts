@@ -1,17 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { distinctUntilKeyChanged, map, startWith, switchMap, tap } from 'rxjs/operators';
-import {
-  ListServerItem,
-  ListService,
-} from '../data-access/list-resource';
+import { distinctUntilKeyChanged, map, startWith, tap } from 'rxjs/operators';
+import { ListServerItem, ListService } from '../data-access/list-resource';
 import { interval, Subject, Subscription } from 'rxjs';
 
 export interface DemoBasicsItem {

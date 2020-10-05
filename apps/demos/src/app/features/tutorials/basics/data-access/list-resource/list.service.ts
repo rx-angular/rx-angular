@@ -2,13 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { ListServerItem } from './list.server.model';
-import {
-  catchError,
-  delay,
-  distinctUntilChanged,
-  filter,
-  map,
-} from 'rxjs/operators';
+import { catchError, delay, distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 interface ListServiceState {
   list: any[];

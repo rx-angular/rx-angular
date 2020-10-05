@@ -1,21 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
-import {
-  ConnectableObservable,
-  isObservable,
-  of,
-  Subject,
-  Subscription,
-} from 'rxjs';
-import {
-  map,
-  mergeAll,
-  mergeMap,
-  publishReplay,
-  scan,
-  shareReplay,
-  tap,
-} from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { map, scan } from 'rxjs/operators';
 import { SourceService } from './source.service';
 
 interface ComponentState {

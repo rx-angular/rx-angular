@@ -1,10 +1,4 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ApplicationRef, Component, Input, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';

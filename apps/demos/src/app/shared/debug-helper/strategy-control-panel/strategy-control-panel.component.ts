@@ -5,7 +5,7 @@ import {
   Component,
   Input,
   NgZone,
-  ɵdetectChanges,
+  ɵdetectChanges
 } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { isNgZone, isViewEngineIvy } from '@rx-angular/template';
