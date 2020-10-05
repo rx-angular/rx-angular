@@ -7,6 +7,7 @@ import { ROUTES } from './poc-rx-differ.routes';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
 import { MatButtonModule } from '@angular/material/button';
+import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 
 @NgModule({
   declarations: [CdEmbeddedViewParentRxDifferComponent, PocRxDifferDirective],
@@ -16,7 +17,8 @@ import { MatButtonModule } from '@angular/material/button';
     VisualizerModule,
     UnpatchEventsModule,
     MatButtonModule,
-    PushModule
+    PushModule,
+    DirtyChecksModule
   ]
 })
 export class PocRxDifferModule {

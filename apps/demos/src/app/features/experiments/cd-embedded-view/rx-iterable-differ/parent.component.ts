@@ -7,7 +7,7 @@ import { ValueProviderService } from '../../../../shared/debug-helper/value-prov
   selector: 'rxa-cd-embedded-view-parent-rx-differ',
   template: `
     <rxa-visualizer>
-      <ng-container visualizerHeader>
+      <div visualizerHeader>
         <h2>Reactive Iterable Differ</h2>
         <button mat-raised-button [unpatch] (click)="valP.addItems()">
           Add
@@ -21,11 +21,14 @@ import { ValueProviderService } from '../../../../shared/debug-helper/value-prov
         <button mat-raised-button [unpatch] (click)="valP.removeItems()">
           Remove
         </button>
-      </ng-container>
+      </div>
       <div>
-        <pre *ngFor="let i of valP.array$ | push">
-          {{i | json}}
+        <ng-container *ngFor="let i of valP.array$ | push; trackBy: trackByIdFn">
+          <rxa-dirty-check>{{i | json}}</rxa-dirty-check>
+          <pre>
+            {{i | json}}
         </pre>
+        </ng-container>
       </div>
     </rxa-visualizer>
   `,
@@ -41,5 +44,6 @@ export class CdEmbeddedViewParentRxDifferComponent {
 
   }
 
+  trackByIdFn = (a) => a.id;
 
 }

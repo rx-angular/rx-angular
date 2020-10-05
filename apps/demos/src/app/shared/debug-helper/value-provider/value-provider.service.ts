@@ -4,7 +4,7 @@ import { merge, Observable, Subject } from 'rxjs';
 import { map, scan } from 'rxjs/operators';
 import {
   getRandomItems,
-  moveItem,
+  moveItemMutable,
   toBoolean,
   toInt,
   toNewItems,
@@ -131,7 +131,7 @@ export class ValueProviderService extends RxState<ProvidedValues> {
         let arr = state.array;
         const randItemId = getRandomItems(arr, 1)[0].id;
         Object.entries(positions || { [randItemId]:1 }).forEach(([id, newIdx]) =>
-          arr = moveItem(arr, arr.findIndex(i => +i.id === +id), newIdx)
+          arr = moveItemMutable(arr, arr.findIndex(i => +i.id === +id), newIdx)
         );
         return [...arr];
       }
@@ -140,7 +140,7 @@ export class ValueProviderService extends RxState<ProvidedValues> {
     this.connect(
       'array',
       this.removeItemsSubject,
-      (state, ids) => remove(state.array, ids || getRandomItems(state.array, 1), 'id')
+      (state, ids) => remove(state.array || [], ids || getRandomItems(state.array || [], 1), 'id')
     );
 
     this.resetAll();

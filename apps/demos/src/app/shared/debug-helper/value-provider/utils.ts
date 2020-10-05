@@ -55,9 +55,9 @@ export function toNewItems(arr: any[] = [], numItems: number, maxId = 10): any[]
   const newItems = [];
   // arr.length <= maxId to avoid infinite loops if no new item can be found
   while (newItems.length < numItems && arr.length <= maxId) {
-    const id = toInt(undefined, 0, maxId)
-    if(!ids.includes(id)) {
-      newItems.push(...toRandomItems([id]))
+    const id = toInt(undefined, 0, maxId);
+    if (!ids.includes(id)) {
+      newItems.push(...toRandomItems([id]));
     }
   }
   return newItems;
@@ -78,10 +78,10 @@ export function getRandomItems(arr: any[], numItems: number) {
 }
 
 export function compareIdFn(a, b) {
-  return a.id === b.id
+  return a.id === b.id;
 }
 
-export function moveItem(arr: any[] = [], pos1: number, pos2: number): any[] {
+export function moveItemMutable(arr: any[] = [], pos1: number, pos2: number): any[] {
   // local variables
   let i, tmp;
   console.log(pos1, pos2);
@@ -109,3 +109,6 @@ export function moveItem(arr: any[] = [], pos1: number, pos2: number): any[] {
   return arr;
 }
 
+export function moveItemImmutable(arr: any[] = [], pos1: number, pos2: number): any[] {
+  return moveItemMutable(arr, pos1, pos2);
+}
