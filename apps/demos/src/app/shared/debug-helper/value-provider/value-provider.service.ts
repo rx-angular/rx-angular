@@ -94,13 +94,13 @@ export class ValueProviderService extends RxState<ProvidedValues> {
     );
     this.connect(
       'array',
-      this.addItemsSubject.pipe(map(numItems => toRandomItems(numItems))),
+      this.addItemsSubject.pipe(map(numItems => toRandomItems([toInt(Math.random(), 0, 10)]))),
       (state, item) => insert(state.array, item)
     );
     this.connect(
       'array',
       this.updateItemsSubject,
-      (state, itemIds) => update(state.array, toRandomItems(1), i => itemIds.some(id => i.id === id))
+      (state, itemIds) => update(state.array, toRandomItems([1,2,3]), existingItem => itemIds.some(idToUpdate => existingItem.id === idToUpdate))
     );
     this.resetAll();
   }

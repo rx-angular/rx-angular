@@ -45,7 +45,8 @@ export function toBoolean(float: number, truthy: number): boolean | undefined {
   return float !== undefined ? float < truthy : undefined;
 }
 
-export function toRandomItems(numItems: number): any[] {
-  return new Array(numItems).fill(0).map((v) => ({ id: toInt(Math.random(), 0, 10), value: toRandom()}));
+export function toRandomItems(ids: number[]): any[] {
+  const _ids = [...ids];
+  return new Array(ids.length).fill(0).map((v) => ({ id: _ids.pop(), value: toRandom()}));
 }
 
