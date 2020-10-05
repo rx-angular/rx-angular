@@ -129,10 +129,11 @@ export class ValueProviderService extends RxState<ProvidedValues> {
       this.moveItemsSubject,
       (state, positions) => {
         let arr = state.array;
-        Object.entries(positions || { 0:1 }).forEach(([id, newIdx]) =>
-          arr = moveItem(arr, arr.findIndex(i => i.id === id), newIdx)
+        const randItemId = getRandomItems(arr, 1)[0].id;
+        Object.entries(positions || { [randItemId]:1 }).forEach(([id, newIdx]) =>
+          arr = moveItem(arr, arr.findIndex(i => +i.id === +id), newIdx)
         );
-        return arr;
+        return [...arr];
       }
     );
 
