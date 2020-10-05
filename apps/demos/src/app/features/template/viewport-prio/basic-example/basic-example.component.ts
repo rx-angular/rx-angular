@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  NgZone,
+} from '@angular/core';
 import { getStrategies } from '@rx-angular/template';
 
 @Component({
@@ -8,11 +13,19 @@ import { getStrategies } from '@rx-angular/template';
       <ng-container visualizerHeader>
         <rxa-value-provider #valP="rxaValueProvider">
           <h1>Stop rendering if directive is out of the viewport</h1>
-          <button mat-raised-button [unpatch] (click)="valP.next$.next()">
+          <button mat-raised-button [unpatch] (click)="valP.next()">
             count up
           </button>
-          <button mat-raised-button [unpatch]
-                  (click)="valP.schedule$.next(!running ? {scheduler: 'timeout', tickSpeed: 200}: undefined); running = !running">
+          <button
+            mat-raised-button
+            [unpatch]
+            (click)="
+              valP.schedule$.next(
+                !running ? { scheduler: 'timeout', tickSpeed: 200 } : undefined
+              );
+              running = !running
+            "
+          >
             auto
           </button>
         </rxa-value-provider>
@@ -25,7 +38,8 @@ import { getStrategies } from '@rx-angular/template';
             <div
               class="target"
               viewport-prio
-              *rxLet="valP.incremental$; let count;">
+              *rxLet="valP.incremental$; let count"
+            >
               <rxa-renders [value$]="count"></rxa-renders>
             </div>
           </div>
@@ -34,7 +48,8 @@ import { getStrategies } from '@rx-angular/template';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [`
+  styles: [
+    `
       .view-port {
         height: 250px;
         overflow-y: scroll;
@@ -57,14 +72,13 @@ import { getStrategies } from '@rx-angular/template';
         align-items: center;
         justify-content: center;
       }
-    `]
+    `,
+  ],
 })
 export class BasicExampleComponent {
   running = false;
 
   strategies = Object.keys(getStrategies({ cdRef: this.cdRef }));
 
-  constructor(private ngZone: NgZone, private cdRef: ChangeDetectorRef) {
-  }
-
+  constructor(private ngZone: NgZone, private cdRef: ChangeDetectorRef) {}
 }

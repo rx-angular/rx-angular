@@ -5,7 +5,7 @@ import { CdHelper } from '../../../../../shared/utils/cd-helper';
 @Component({
   selector: 'rxa-recursive',
   template: `
-    <ng-container *ngIf="level === 0; else: branch">
+    <ng-container *ngIf="level === 0; else branch">
       <rxa-visualizer [value$]="value">
         <rxa-cd-trigger visualizerHeader [cdHelper]="cdHelper"></rxa-cd-trigger>
       </rxa-visualizer>
@@ -13,24 +13,24 @@ import { CdHelper } from '../../../../../shared/utils/cd-helper';
     <ng-template #branch>
       <rxa-visualizer>
         <rxa-cd-trigger visualizerHeader [cdHelper]="cdHelper"></rxa-cd-trigger>
-        <rxa-recursive [level]="level-1"></rxa-recursive>
+        <rxa-recursive [level]="level - 1"></rxa-recursive>
       </rxa-visualizer>
     </ng-template>
   `,
   host: {
-    class: 'd-flex w-100'
+    class: 'd-flex w-100',
   },
   providers: [CdHelper],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecursiveComponent extends RxState<any> {
-
   @Input()
   level = 0;
 
   @Input()
   value;
 
-  constructor(public cdHelper: CdHelper) {super();}
-
+  constructor(public cdHelper: CdHelper) {
+    super();
+  }
 }

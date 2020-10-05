@@ -7,25 +7,31 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./state/rx-state.module').then((mod) => mod.RxStateModule),
     canActivate: [],
-    canActivateChild: []
+    canActivateChild: [],
   },
   {
     path: 'strategies',
     loadChildren: () =>
-      import('./strategies/strategies.module').then((m) => m.StrategiesModule)
+      import('./strategies/strategies.module').then((m) => m.StrategiesModule),
   },
   {
     path: 'embedded-view',
     loadChildren: () =>
-      import('./cd-embedded-view/cd-embedded-view.module').then((m) => m.CdEmbeddedViewModule)
-  }
+      import('./cd-embedded-view/cd-embedded-view.module').then(
+        (m) => m.CdEmbeddedViewModule
+      ),
+  },
+  {
+    path: 'rx-let-vs-push',
+    loadChildren: () =>
+      import('./rx-let-vs-push/rx-let-vs-push.module').then(
+        (m) => m.RxLetVsPushModule
+      ),
+  },
 ];
-
 
 @NgModule({
   declarations: [],
-  imports: [
-    RouterModule.forChild(ROUTES)
-  ]
+  imports: [RouterModule.forChild(ROUTES)],
 })
 export class ExperimentsShellModule {}
