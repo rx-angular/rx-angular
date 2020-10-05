@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Observable, Subject, throwError } from 'rxjs';
-import { concatMap, share, tap } from 'rxjs/operators';
+import { concatMap, share } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RxState } from '@rx-angular/state';
 

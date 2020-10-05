@@ -5,7 +5,6 @@ import { VisualizerModule } from '../visualizer/visualizer.module';
 import { CdTriggerModule } from '../cd-trigger/cd-trigger.module';
 
 
-
 @NgModule({
   declarations: [CdDefaultComponent],
   imports: [

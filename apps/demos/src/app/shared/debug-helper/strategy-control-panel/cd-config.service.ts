@@ -1,4 +1,4 @@
-import { ApplicationRef, ChangeDetectorRef, Injectable, NgZone, ɵdetectChanges, ɵmarkDirty } from '@angular/core';
+import { ApplicationRef, Injectable, NgZone } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 
 export interface CdConfig {

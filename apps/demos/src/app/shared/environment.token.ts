@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, InjectionToken } from '@angular/core';
+
 export interface EnvironmentSettings {
   production: boolean;
   changeDetection: ChangeDetectionStrategy

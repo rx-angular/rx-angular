@@ -1,13 +1,7 @@
 import { Component } from '@angular/core';
 import { BehaviorSubject, interval, Subject, throwError } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import {
-  map,
-  share,
-  switchMap,
-  takeUntil,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { map, share, switchMap, takeUntil, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-let-template-binding-http-example',

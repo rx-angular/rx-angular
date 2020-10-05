@@ -1,17 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 import { Observable, of, Subject } from 'rxjs';
 import { scan, tap } from 'rxjs/operators';
-import {
-  getStrategies,
-  priorityTickMap,
-  SchedulingPriority
-} from '@rx-angular/template';
+import { getStrategies, priorityTickMap, SchedulingPriority } from '@rx-angular/template';
 
 @Component({
   selector: 'rxa-scheduling',

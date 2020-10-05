@@ -10,12 +10,13 @@ import {
   NgIterable,
   OnDestroy,
   OnInit,
-  TemplateRef, TrackByFunction,
+  TemplateRef,
+  TrackByFunction,
   ViewContainerRef
 } from '@angular/core';
 
 import { ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
-import { distinctUntilChanged, filter, groupBy, map, mergeAll, mergeMap, switchAll, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, switchAll, tap } from 'rxjs/operators';
 
 export class PocForViewContext<T, U extends NgIterable<T> = NgIterable<T>> {
 

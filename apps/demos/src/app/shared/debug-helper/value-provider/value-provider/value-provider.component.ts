@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@a
 import { RxState } from '@rx-angular/state';
 import { EMPTY, merge, Observable, Subject, timer } from 'rxjs';
 import { map, merge as mergeWith, repeat, scan, switchMap, takeUntil } from 'rxjs/operators';
-import { animationFrameTick } from '../../../../../../../../libs/template/src/lib/render-strategies/rxjs/scheduling';
+import { animationFrameTick } from '@rx-angular/template';
 import { ngInputFlatten } from '../../../utils/ngInputFlatten';
 
 interface ProvidedValues {

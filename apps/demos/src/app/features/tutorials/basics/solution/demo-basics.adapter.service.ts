@@ -3,10 +3,7 @@ import { RxState } from '@rx-angular/state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DemoBasicsItem } from './demo-basics.view-model.service';
-import {
-  ListServerItem,
-  ListService,
-} from '../data-access/list-resource';
+import { ListServerItem, ListService } from '../data-access/list-resource';
 import { ActivatedRoute } from '@angular/router';
 
 @Injectable()

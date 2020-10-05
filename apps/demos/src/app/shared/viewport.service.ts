@@ -1,8 +1,4 @@
-import {
-  BreakpointObserver,
-  Breakpoints,
-  BreakpointState,
-} from '@angular/cdk/layout';
+import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { Injectable, OnDestroy } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { distinctUntilChanged, map } from 'rxjs/operators';

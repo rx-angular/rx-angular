@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { mergeAll, takeUntil } from 'rxjs/operators';
+import { mergeAll } from 'rxjs/operators';
 
 @Injectable()
 export class SubscriptionHandlingService implements OnDestroy {

@@ -1,12 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Directive,
-  Input,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewContainerRef
-} from '@angular/core';
+import { ChangeDetectorRef, Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 
 import { ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
 import { distinctUntilChanged, switchAll } from 'rxjs/operators';
