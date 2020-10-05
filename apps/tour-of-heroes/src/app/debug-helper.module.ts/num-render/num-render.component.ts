@@ -3,7 +3,7 @@ import { MatRipple } from '@angular/material/core';
 
 @Component({
   // tslint:disable-next-line:component-selector
-  selector: 'renders',
+  selector: 'rxa-dirty-check',
   templateUrl: './num-render.component.html',
   styleUrls: ['./num-render.component.scss'],
 })

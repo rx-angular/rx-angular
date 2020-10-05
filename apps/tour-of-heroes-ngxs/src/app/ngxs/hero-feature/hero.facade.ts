@@ -2,13 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Hero } from '../../hero';
-import {
-  AddHero,
-  DeleteHero,
-  FetchHero,
-  SearchHero,
-  UpdateHero
-} from './hero.actions';
+import { AddHero, DeleteHero, FetchHero, SearchHero, UpdateHero } from './hero.actions';
 import { HeroesSelectors } from './hero.selectors';
 
 @Injectable({ providedIn: 'root' })

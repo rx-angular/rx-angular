@@ -1,7 +1,7 @@
 import { createSelector, Selector } from '@ngxs/store';
 import { createPropertySelector } from '../../createPropertySelector';
 import { Hero } from '../../hero';
-import { HeroStateModel, HeroState } from './hero.state';
+import { HeroState, HeroStateModel } from './hero.state';
 
 export class HeroesSelectors {
   static props = createPropertySelector<HeroStateModel>(HeroState);

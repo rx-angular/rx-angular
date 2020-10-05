@@ -1,21 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Action, State, StateContext } from '@ngxs/store';
-import {
-  insertItem,
-  patch,
-  removeItem,
-  updateItem
-} from '@ngxs/store/operators';
+import { insertItem, patch, removeItem, updateItem } from '@ngxs/store/operators';
 import { tap } from 'rxjs/operators';
 import { Hero } from '../../hero';
 import { HeroService } from '../../hero.service';
-import {
-  AddHero,
-  DeleteHero,
-  FetchHero,
-  SearchHero,
-  UpdateHero
-} from './hero.actions';
+import { AddHero, DeleteHero, FetchHero, SearchHero, UpdateHero } from './hero.actions';
 
 export interface HeroStateModel {
   heroes: Hero[];

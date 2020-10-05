@@ -5,7 +5,7 @@
     strategy: configService.renderStrategy$
   "
 >
-  <h2>Messages <renders></renders></h2>
+  <h2>Messages <rxa-dirty-check></rxa-dirty-check></h2>
   <button class="clear" (click)="messageService.clear()">clear</button>
   <div *ngFor="let message of messages">{{ message }}</div>
 </div>
