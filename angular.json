@@ -21,8 +21,13 @@
             "polyfills": "apps/demos/src/polyfills.ts",
             "tsConfig": "apps/demos/tsconfig.app.json",
             "aot": true,
-            "assets": ["apps/demos/src/favicon.ico", "apps/demos/src/assets"],
-            "styles": ["apps/demos/src/styles.scss"],
+            "assets": [
+              "apps/demos/src/favicon.ico",
+              "apps/demos/src/assets"
+            ],
+            "styles": [
+              "apps/demos/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -71,6 +76,14 @@
                 }
               ],
               "tsConfig": "apps/demos/tsconfig.app.npm.json"
+            },
+            "zoneless": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/demos/src/environments/environment.ts",
+                  "with": "apps/demos/src/environments/environment.prod.ts"
+                }
+              ]
             }
           }
         },
@@ -85,6 +98,9 @@
             },
             "npm": {
               "browserTarget": "demos:build:npm"
+            },
+            "zoneless": {
+              "browserTarget": "demos:build:zoneless"
             }
           }
         },
@@ -101,7 +117,10 @@
               "apps/demos/tsconfig.app.json",
               "apps/demos/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/demos/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/demos/**/*"
+            ]
           }
         },
         "test": {
@@ -134,8 +153,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/demos-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/demos-e2e/**/*"]
+            "tsConfig": [
+              "apps/demos-e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/demos-e2e/**/*"
+            ]
           }
         }
       }
@@ -179,8 +203,13 @@
             "polyfills": "apps/docs/src/polyfills.ts",
             "tsConfig": "apps/docs/tsconfig.app.json",
             "aot": true,
-            "assets": ["apps/docs/src/favicon.ico", "apps/docs/src/assets"],
-            "styles": ["apps/docs/src/styles.scss"],
+            "assets": [
+              "apps/docs/src/favicon.ico",
+              "apps/docs/src/assets"
+            ],
+            "styles": [
+              "apps/docs/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -238,7 +267,10 @@
               "apps/docs/tsconfig.app.json",
               "apps/docs/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/docs/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/docs/**/*"
+            ]
           }
         },
         "test": {
@@ -346,7 +378,10 @@
               "apps/tour-of-heroes/tsconfig.app.json",
               "apps/tour-of-heroes/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/tour-of-heroes/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/tour-of-heroes/**/*"
+            ]
           }
         },
         "test": {
@@ -382,7 +417,9 @@
               "apps/tour-of-heroes-ngxs/src/favicon.ico",
               "apps/tour-of-heroes-ngxs/src/assets"
             ],
-            "styles": ["apps/tour-of-heroes-ngxs/src/styles.scss"],
+            "styles": [
+              "apps/tour-of-heroes-ngxs/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -415,7 +452,9 @@
               ]
             },
             "zoneless": {
-              "polyfills": ["apps/tour-of-heroes-ngxs/src/polyfills.ts"],
+              "polyfills": [
+                "apps/tour-of-heroes-ngxs/src/polyfills.ts"
+              ],
               "fileReplacements": [
                 {
                   "replace": "apps/tour-of-heroes/src/environments/environment.ts",
@@ -452,7 +491,10 @@
               "apps/tour-of-heroes-ngxs/tsconfig.app.json",
               "apps/tour-of-heroes-ngxs/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/tour-of-heroes-ngxs/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/tour-of-heroes-ngxs/**/*"
+            ]
           }
         },
         "test": {
@@ -477,7 +519,10 @@
               "libs/test-helpers/tsconfig.lib.json",
               "libs/test-helpers/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/test-helpers/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/test-helpers/**/*"
+            ]
           }
         },
         "test": {
@@ -514,7 +559,10 @@
               "libs/state/tsconfig.lib.json",
               "libs/state/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/state/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/state/**/*"
+            ]
           }
         },
         "test": {
@@ -618,7 +666,10 @@
               "libs/template/tsconfig.lib.json",
               "libs/template/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/template/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/template/**/*"
+            ]
           }
         },
         "test": {
