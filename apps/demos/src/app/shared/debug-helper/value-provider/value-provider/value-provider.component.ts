@@ -1,27 +1,38 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+} from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { EMPTY, merge, Observable, Subject, timer } from 'rxjs';
-import { map, merge as mergeWith, repeat, scan, switchMap, takeUntil } from 'rxjs/operators';
+import {
+  map,
+  merge as mergeWith,
+  repeat,
+  scan,
+  switchMap,
+  takeUntil,
+} from 'rxjs/operators';
 import { animationFrameTick } from '@rx-angular/template';
 import { ngInputFlatten } from '../../../utils/ngInputFlatten';
 
 interface ProvidedValues {
-  random: number
+  random: number;
 }
 
 interface SchedulerConfig {
-  scheduler: string,
-  duration?: number,
-  numEmissions?: number,
-  tickSpeed?: number
+  scheduler: string;
+  duration?: number;
+  numEmissions?: number;
+  tickSpeed?: number;
 }
 
 @Component({
   selector: 'rxa-value-provider',
   exportAs: 'rxaValueProvider',
-  template: `
-    <ng-content></ng-content>`,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  template: ` <ng-content></ng-content>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ValueProviderComponent extends RxState<ProvidedValues> {
   private outerChanges = new Subject<Observable<any>>();
@@ -30,9 +41,11 @@ export class ValueProviderComponent extends RxState<ProvidedValues> {
   private schedule$ = new Subject<SchedulerConfig>();
 
   private errorSubject = new Subject<any>();
-  private error$ = this.errorSubject.pipe(map(_ => {
-    throw new Error('ERROR');
-  }));
+  private error$ = this.errorSubject.pipe(
+    map((_) => {
+      throw new Error('ERROR');
+    })
+  );
   private completeSubject = new Subject<any>();
   private resetSubject = new Subject<any>();
 
@@ -68,19 +81,20 @@ export class ValueProviderComponent extends RxState<ProvidedValues> {
   private resetObservables = () => {
     this.float$ = this.select('random');
     this.int$ = this.select(
-      map(s => toInt(s.random, this.min, this.max)),
+      map((s) => toInt(s.random, this.min, this.max)),
       withCompleteAndError(this.error$, this.completeSubject)
     );
     this.incremental$ = this.select(
-      scan(inc => ++inc, 0),
+      scan((inc) => ++inc, 0),
       withCompleteAndError(this.error$, this.completeSubject)
     );
-    this.boolean$ = this.select(map(s => toBoolean(s.random, this.truthy)),
+    this.boolean$ = this.select(
+      map((s) => toBoolean(s.random, this.truthy)),
       withCompleteAndError(this.error$, this.completeSubject)
     );
     this.hold(this.float$, this.updateStatic);
     this.hold(this.resetSubject, this.resetAll);
-  }
+  };
 
   private updateStatic = (float: number): void => {
     this.float = float;
@@ -94,8 +108,11 @@ export class ValueProviderComponent extends RxState<ProvidedValues> {
       this.outerChanges.pipe(ngInputFlatten()),
       this.schedule$.pipe(toTick())
     );
-    this.connect('random', merge(this.nextSubject, outerChanges$).pipe(map(toRandom)));
-    this.resetAll()
+    this.connect(
+      'random',
+      merge(this.nextSubject, outerChanges$).pipe(map(toRandom))
+    );
+    this.resetAll();
   }
 
   next(): void {
@@ -116,33 +133,32 @@ export class ValueProviderComponent extends RxState<ProvidedValues> {
 }
 
 function withCompleteAndError(error$, complete$) {
-  return (o: Observable<unknown>): Observable<unknown> => o.pipe(
-    mergeWith(error$),
-    takeUntil(complete$)
-  );
+  return (o: Observable<unknown>): Observable<unknown> =>
+    o.pipe(mergeWith(error$), takeUntil(complete$));
 }
 
 function toTick(): (o: Observable<SchedulerConfig>) => Observable<number> {
-  return o => o.pipe(
-    switchMap((scheduleConfig) => {
-      if (!scheduleConfig) {
-        return EMPTY;
-      } else {
-        const stop$ = scheduleConfig.duration ? timer(scheduleConfig.duration) : EMPTY;
-        if (scheduleConfig.scheduler === 'timeout') {
-          return timer(0, scheduleConfig.tickSpeed).pipe(
-            takeUntil(stop$)
-          );
-        } else if (scheduleConfig.scheduler === 'animationFrame') {
-          return animationFrameTick().pipe(
-            repeat(scheduleConfig.numEmissions),
-            takeUntil(stop$)
-          );
+  return (o) =>
+    o.pipe(
+      switchMap((scheduleConfig) => {
+        if (!scheduleConfig) {
+          return EMPTY;
+        } else {
+          const stop$ = scheduleConfig.duration
+            ? timer(scheduleConfig.duration)
+            : EMPTY;
+          if (scheduleConfig.scheduler === 'timeout') {
+            return timer(0, scheduleConfig.tickSpeed).pipe(takeUntil(stop$));
+          } else if (scheduleConfig.scheduler === 'animationFrame') {
+            return animationFrameTick().pipe(
+              repeat(scheduleConfig.numEmissions),
+              takeUntil(stop$)
+            );
+          }
+          throw new Error('Wrong scheduler config');
         }
-        throw new Error('Wrong scheduler config');
-      }
-    })
-  );
+      })
+    );
 }
 
 function toInt(float: number, min = 0, max = 10): number {
