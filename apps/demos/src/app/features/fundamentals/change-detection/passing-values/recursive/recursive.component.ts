@@ -6,14 +6,16 @@ import { CdHelper } from '../../../../../shared/utils/cd-helper';
   selector: 'rxa-recursive',
   template: `
     <ng-container *ngIf="level === 0; else: branch">
-      <rxa-visualizer [value$]="value">
-        <rxa-cd-trigger visualizerHeader [cdHelper]="cdHelper"></rxa-cd-trigger>
+      <rxa-visualizer>
+        <rxa-cd-trigger visualizerHeader [cdHelper]="cdHelper">
+        </rxa-cd-trigger>
+        <rxa-renders [value$]="value"></rxa-renders>
       </rxa-visualizer>
     </ng-container>
     <ng-template #branch>
       <rxa-visualizer>
         <rxa-cd-trigger visualizerHeader [cdHelper]="cdHelper"></rxa-cd-trigger>
-        <rxa-recursive [level]="level-1"></rxa-recursive>
+        <rxa-recursive [level]="level-1" [value]="value"></rxa-recursive>
       </rxa-visualizer>
     </ng-template>
   `,

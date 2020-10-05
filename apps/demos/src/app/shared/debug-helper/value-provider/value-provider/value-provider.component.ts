@@ -147,13 +147,13 @@ function toTick(): (o: Observable<SchedulerConfig>) => Observable<number> {
 
 function toInt(float: number, min = 0, max = 10): number {
   // tslint:disable-next-line:no-bitwise
-  return ~~(min + float * (max - min));
+  return float !== undefined ? ~~(min + float * (max - min)) : undefined;
 }
 
 function toRandom(): number {
   return Math.random();
 }
 
-function toBoolean(float: number, truthy: number): boolean {
-  return float < truthy;
+function toBoolean(float: number, truthy: number): boolean | undefined {
+  return float !== undefined ? float < truthy : undefined;
 }

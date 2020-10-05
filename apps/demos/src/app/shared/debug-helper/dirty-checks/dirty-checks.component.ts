@@ -6,7 +6,7 @@ import { Hooks } from '../hooks';
   // tslint:disable-next-line:component-selector
   selector: 'rxa-dirty-check',
   template: `
-    <div class="num-dirty-checks" matRipple [matRippleColor]="color" [matRippleRadius]="radius">
+    <div class="num-dirty-checks" matRipple [matRippleColor]="color">
       {{ numDirtyChecks() }}
     </div>
   `,

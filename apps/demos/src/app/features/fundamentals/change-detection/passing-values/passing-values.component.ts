@@ -24,7 +24,7 @@ import { Subject } from 'rxjs';
             <div>
               <button mat-raised-button color="primary" (click)="btnBothClick$.next($event)">
                 <mat-icon class="mr-2">add</mat-icon>
-                Increment Both
+                Update Both
               </button>
               <mat-button-toggle-group
                 name="visibleExamples"
@@ -44,33 +44,33 @@ import { Subject } from 'rxjs';
              *ngIf="group.value === displayStates.nativeStatic ||
                     group.value === displayStates.all">
           <h2 class="mat-subheader">Static Values</h2>
-          <rxa-value-provider [min]="min" [max]="max" [changes$]="btnBothClick$" #static="rxaValueProvider">
-            <div>
-              <strong>Current value:</strong> {{ static.int }}
-            </div>
-            <div class="mb-1">
-              <button mat-mini-fab (click)="static.next()">
-                <mat-icon>add</mat-icon>
-              </button>
-            </div>
-            <rxa-recursive [level]="level" [value]="static.int"></rxa-recursive>
-          </rxa-value-provider>
+          <rxa-value-provider [min]="min" [max]="max" [changes$]="btnBothClick$"
+                              #staticVal="rxaValueProvider"></rxa-value-provider>
+          <div>
+            <strong>Current value:</strong> {{ staticVal.int }}
+          </div>
+          <div class="mb-1">
+            <button mat-mini-fab (click)="staticVal.next()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <rxa-recursive [level]="level" [value]="staticVal.int"></rxa-recursive>
         </div>
         <div class="col-sm-12 col-md-6"
              *ngIf="group.value === displayStates.rxAngularReactive ||
                     group.value === displayStates.all">
           <h2 class="mat-subheader">Reactive Values</h2>
-          <rxa-value-provider [changes$]="btnBothClick$" #reactive="rxaValueProvider">
-            <div>
-              <strong>Current value:</strong> {{ reactive.int$ | push }}
-            </div>
-            <div class="mb-1">
-              <button mat-mini-fab unpatch (click)="reactive.next()">
-                <mat-icon>add</mat-icon>
-              </button>
-            </div>
-            <rxa-recursive-reactive [level]="level" [value$]="reactive.int$"></rxa-recursive-reactive>
-          </rxa-value-provider>
+          <rxa-value-provider [changes$]="btnBothClick$" #reactiveVal="rxaValueProvider"></rxa-value-provider>
+          <div>
+            <strong>Current value:</strong> {{ reactiveVal.int$ | push }}
+          </div>
+          <div class="mb-1">
+            <button mat-mini-fab unpatch (click)="reactiveVal.next()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <rxa-recursive-reactive [level]="level" [value$]="reactiveVal.int$">
+          </rxa-recursive-reactive>
         </div>
       </div>
     </rxa-visualizer>

@@ -7,7 +7,7 @@ import { Hooks } from '../../hooks';
   selector: 'rxa-visualizer',
   template: `
     <div class="d-flex">
-      <rxa-dirty-check style="margin-right: 1rem" [radius]="radius"></rxa-dirty-check>
+      <rxa-dirty-check style="margin-right: 1rem"></rxa-dirty-check>
       <rxa-renders [value$]="valuesO$"></rxa-renders>
     </div>
     <ng-content select="[visualizerHeader]">
@@ -32,7 +32,7 @@ export class VisualizerComponent extends Hooks {
   size;
 
   @Input()
-  radius = 10;
+  radius = 40;
 
   changeO$ = new ReplaySubject<Observable<any>>(1);
 
