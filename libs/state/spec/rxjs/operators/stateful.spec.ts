@@ -48,7 +48,8 @@ describe('stateful', () => {
     });
   });
 
-  it('should replay the last emitted value', () => {});
+  it('should replay the last emitted value', () => {
+  });
 
   it('should accept one operator', () => {
     testScheduler.run(({ cold, expectObservable }) => {

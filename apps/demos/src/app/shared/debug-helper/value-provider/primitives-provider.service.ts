@@ -1,18 +1,9 @@
 import { ChangeDetectorRef, Injectable } from '@angular/core';
-import { insert, remove, RxState, update } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state';
 import { merge, Observable, Subject } from 'rxjs';
-import { map, scan, switchMap } from 'rxjs/operators';
-import {
-  getRandomItems,
-  moveItemMutable,
-  toBoolean,
-  toInt,
-  toNewItems,
-  toRandom,
-  toTick,
-  withCompleteAndError
-} from './utils';
-import { Positions, ProvidedValues, SchedulerConfig } from './model';
+import { map, scan } from 'rxjs/operators';
+import { toBoolean, toInt, toRandom, withCompleteAndError } from './utils';
+import { ProvidedValues } from './model';
 import { ngInputFlatten } from '../../utils/ngInputFlatten';
 
 
@@ -21,7 +12,6 @@ export class PrimitivesProviderService extends RxState<ProvidedValues> {
   protected outerChanges = new Subject<Observable<any>>();
 
   protected nextSubject = new Subject<any>();
-  protected schedule$ = new Subject<SchedulerConfig>();
 
   protected errorSubject = new Subject<any>();
   protected error$ = this.errorSubject.pipe(
@@ -36,7 +26,6 @@ export class PrimitivesProviderService extends RxState<ProvidedValues> {
   int$: Observable<number>;
   incremental$: Observable<number>;
   boolean$: Observable<boolean>;
-  array$: Observable<any[]>;
 
   float: number;
   int: number;
@@ -59,10 +48,6 @@ export class PrimitivesProviderService extends RxState<ProvidedValues> {
 
   private resetObservables = () => {
     this.float$ = this.select('random');
-    this.array$ = this.select(
-      map((s) => s.array),
-      withCompleteAndError(this.error$, this.completeSubject)
-    );
     this.int$ = this.select(
       map((s) => toInt(s.random, this.min, this.max)),
       withCompleteAndError(this.error$, this.completeSubject)
@@ -88,14 +73,10 @@ export class PrimitivesProviderService extends RxState<ProvidedValues> {
 
   constructor(protected cdRef: ChangeDetectorRef) {
     super();
-    const outerChanges$ = merge(
-      this.outerChanges.pipe(ngInputFlatten()),
-      this.schedule$.pipe(switchMap(v => toTick(v)))
-    );
 
     this.connect(
       'random',
-      merge(this.nextSubject, outerChanges$).pipe(map(toRandom))
+      merge(this.nextSubject, this.outerChanges.pipe(ngInputFlatten())).pipe(map(toRandom))
     );
 
     this.resetAll();

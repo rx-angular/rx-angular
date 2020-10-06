@@ -7,9 +7,10 @@ export class MockChangeDetectorRef extends ChangeDetectorRef {
   detach = createSpy('detach');
   reattach = createSpy('reattach');
   checkNoChanges = createSpy('checkNoChanges');
-  context = {a: 'context'};
+  context = { a: 'context' };
 }
 
 export const mockPromise = {
-  then: () => {}
+  then: () => {
+  }
 };

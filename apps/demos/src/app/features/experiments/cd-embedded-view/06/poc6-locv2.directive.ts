@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 
 import { Observable, ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
-import { distinctUntilChanged, groupBy, map, mergeAll, mergeMap, pluck, switchAll, tap } from 'rxjs/operators';
+import { distinctUntilChanged, groupBy, map, mergeAll, mergeMap, pluck, switchAll } from 'rxjs/operators';
 
 export class Poc6Locv2ViewContext<T extends object, K = keyof T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)

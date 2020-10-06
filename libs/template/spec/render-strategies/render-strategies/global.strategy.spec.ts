@@ -1,9 +1,9 @@
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { getStrategies } from '../../../src/lib/render-strategies';
 import * as AngularCore from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CallsExpectations, getMockStrategyConfig, testStrategyMethod } from '../../fixtures';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ChangeDetectorRef, Component } from '@angular/core';
 import { LetDirective } from '@rx-angular/template';
 
 @Component({

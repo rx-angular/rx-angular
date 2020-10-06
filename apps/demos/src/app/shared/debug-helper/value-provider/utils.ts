@@ -1,6 +1,6 @@
 import { EMPTY, Observable, timer } from 'rxjs';
 import { merge as mergeWith, repeat, takeUntil } from 'rxjs/operators';
-import { animationFrameTick } from '@rx-angular/template';
+import { priorityTickMap } from '@rx-angular/template';
 import { SchedulerConfig } from './model';
 
 export function withCompleteAndError<T>(error$, complete$) {
@@ -15,10 +15,8 @@ export function toTick(scheduleConfig: SchedulerConfig): Observable<number> {
     const stop$ = scheduleConfig.duration
       ? timer(scheduleConfig.duration)
       : EMPTY;
-    if (scheduleConfig.scheduler === 'timeout') {
-      return timer(0, scheduleConfig.tickSpeed).pipe(takeUntil(stop$));
-    } else if (scheduleConfig.scheduler === 'animationFrame') {
-      return animationFrameTick().pipe(
+    if (scheduleConfig.scheduler) {
+      return priorityTickMap[scheduleConfig.scheduler].pipe(
         repeat(scheduleConfig.numEmissions),
         takeUntil(stop$)
       );

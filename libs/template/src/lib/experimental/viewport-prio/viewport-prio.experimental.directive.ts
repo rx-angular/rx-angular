@@ -1,13 +1,6 @@
-import { Directive, ElementRef, Input, OnInit, Optional } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
-import {
-  filter,
-  map,
-  mergeAll,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { Directive, ElementRef, OnInit, Optional } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { filter, map, mergeAll, tap, withLatestFrom } from 'rxjs/operators';
 import { getZoneUnPatchedApi } from '../../core';
 import { LetDirective } from '../../let';
 
@@ -51,8 +44,8 @@ function intersectionObserver(
   const subject = new Subject();
   const observer = observerSupported()
     ? new IntersectionObserver((entries) => {
-        entries.forEach((entry) => subject.next(entry));
-      }, options)
+      entries.forEach((entry) => subject.next(entry));
+    }, options)
     : null;
 
   const entries$ = new Observable((subscriber) => {
@@ -67,7 +60,7 @@ function intersectionObserver(
   return {
     entries$,
     observe: observer.observe,
-    unobserve: observer.unobserve,
+    unobserve: observer.unobserve
   };
 }
 
@@ -78,7 +71,7 @@ const observerSupported = () =>
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[viewport-prio]',
+  selector: '[viewport-prio]'
 })
 export class ViewportPrioDirective implements OnInit {
   entriesSubject = new Subject<IntersectionObserverEntry[]>();
@@ -96,8 +89,8 @@ export class ViewportPrioDirective implements OnInit {
 
   private observer: IntersectionObserver | null = observerSupported()
     ? new IntersectionObserver((entries) => this.entriesSubject.next(entries), {
-        threshold: 0,
-      })
+      threshold: 0
+    })
     : null;
 
   visibilityEvents$ = this.entries$.pipe(
@@ -113,7 +106,8 @@ export class ViewportPrioDirective implements OnInit {
   constructor(
     private readonly el: ElementRef,
     @Optional() private letDirective: LetDirective<any>
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     const letStrategyName$ = this.letDirective.renderAware.activeStrategy$.pipe(

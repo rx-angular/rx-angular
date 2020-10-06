@@ -1,3 +1,5 @@
+import { SchedulingPriority } from '@rx-angular/template';
+
 export interface ProvidedValues {
   random: number;
   array: any[];
@@ -11,7 +13,7 @@ export interface Positions {
 }
 
 export interface SchedulerConfig {
-  scheduler: string;
+  scheduler: SchedulingPriority;
   duration?: number;
   numEmissions?: number;
   tickSpeed?: number;

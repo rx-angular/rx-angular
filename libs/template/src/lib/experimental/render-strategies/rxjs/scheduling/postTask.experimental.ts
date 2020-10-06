@@ -17,16 +17,17 @@ export interface SchedulerPostTaskOptions {
 export const postTaskScheduler: PostTaskScheduler =
   typeof window !== 'undefined'
     ? (window as any).scheduler || {
-        postTask<T>(options: SchedulerPostTaskOptions): Promise<T> {
-          const start = Date.now();
-          return new Promise((resolve) => {
-            setTimeout(function () {
-              console.error(
-                'postTask not implemented. Use setTimeout as fallback'
-              );
-              resolve();
-            }, 1);
-          });
-        },
-      }
-    : () => {};
+    postTask<T>(options: SchedulerPostTaskOptions): Promise<T> {
+      const start = Date.now();
+      return new Promise((resolve) => {
+        setTimeout(function() {
+          console.error(
+            'postTask not implemented. Use setTimeout as fallback'
+          );
+          resolve();
+        }, 1);
+      });
+    }
+  }
+    : () => {
+    };

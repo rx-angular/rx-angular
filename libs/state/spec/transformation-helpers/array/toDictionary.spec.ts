@@ -1,4 +1,4 @@
-import { toDictionary } from "@rx-angular/state";
+import { toDictionary } from '@rx-angular/state';
 
 interface Creature {
   id: number;
@@ -13,29 +13,30 @@ let creatures: Creature[];
 const genus = Symbol('genus');
 
 const dictionaryByNumber = {
-  1: {id: 1, type: 'cat', real: true, breeds: ['Persian']},
-  2: {id: 2, type: 'dog', real: true, breeds: ['Doberman']},
-  3: {id: 3, type: 'catDog', real: false, breeds: []}
+  1: { id: 1, type: 'cat', real: true, breeds: ['Persian'] },
+  2: { id: 2, type: 'dog', real: true, breeds: ['Doberman'] },
+  3: { id: 3, type: 'catDog', real: false, breeds: [] }
 };
 
 const dictionaryByString = {
-  cat: {id: 1, type: 'cat', real: true, breeds: ['Persian']},
-  dog: {id: 2, type: 'dog', real: true, breeds: ['Doberman']},
-  catDog: {id: 3, type: 'catDog', real: false, breeds: []}
+  cat: { id: 1, type: 'cat', real: true, breeds: ['Persian'] },
+  dog: { id: 2, type: 'dog', real: true, breeds: ['Doberman'] },
+  catDog: { id: 3, type: 'catDog', real: false, breeds: [] }
 };
 
 const dictionaryBySymbol = {
-  felis: {id: 1, type: 'cat', real: true, breeds: ['Persian'], [genus]: 'felis'},
-  canis: {id: 2, type: 'dog', real: true, breeds: ['Doberman'], [genus]: 'canis'},
-  fake: {id: 3, type: 'catDog', real: false, breeds: [], [genus]: 'fake'}
-}
+  felis: { id: 1, type: 'cat', real: true, breeds: ['Persian'], [genus]: 'felis' },
+  canis: { id: 2, type: 'dog', real: true, breeds: ['Doberman'], [genus]: 'canis' },
+  fake: { id: 3, type: 'catDog', real: false, breeds: [], [genus]: 'fake' }
+};
 
 beforeEach(() => {
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+  jest.spyOn(console, 'warn').mockImplementation(() => {
+  });
   creatures = [
-    {id: 1, type: 'cat', real: true, breeds: ['Persian']},
-    {id: 2, type: 'dog', real: true, breeds: ['Doberman']},
-    {id: 3, type: 'catDog', real: false, breeds: []}
+    { id: 1, type: 'cat', real: true, breeds: ['Persian'] },
+    { id: 2, type: 'dog', real: true, breeds: ['Doberman'] },
+    { id: 3, type: 'catDog', real: false, breeds: [] }
   ];
 });
 
@@ -102,5 +103,5 @@ describe('toDictionary', () => {
       expect(toDictionary(arr, '')).toEqual(null);
       expect(toDictionary(arr2, '')).toEqual(undefined);
     });
-  })
+  });
 });

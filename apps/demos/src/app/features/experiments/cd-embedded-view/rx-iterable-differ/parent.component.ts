@@ -3,7 +3,7 @@ import { environment } from '../../../../../environments/environment';
 import { ArrayProviderService } from '../../../../shared/debug-helper/value-provider';
 import { Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, groupBy, map, mergeAll, mergeMap, tap } from 'rxjs/operators';
-import { toDictionary } from '../../../../../../../../libs/state/src/lib/transformation-helpers/array';
+import { toDictionary } from '@rx-angular/state';
 
 
 @Component({

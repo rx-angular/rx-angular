@@ -1,4 +1,4 @@
-import { valuesComparer } from "../../../src/lib/transformation-helpers/_internals/valuesComparer.util";
+import { valuesComparer } from '../../../src/lib/transformation-helpers/_internals/valuesComparer.util';
 
 interface Creature {
   id: number;
@@ -10,9 +10,9 @@ let clone: Creature;
 let otherItem: Creature;
 
 beforeEach(() => {
-  item = {id: 1, type: 'cat'};
-  clone = {...item};
-  otherItem = {id: 2, type: 'cat'};
+  item = { id: 1, type: 'cat' };
+  clone = { ...item };
+  otherItem = { id: 2, type: 'cat' };
 });
 
 
@@ -27,7 +27,7 @@ describe('valuesComparer', () => {
 
   describe('functionality', () => {
 
-    describe('primitives', () =>  {
+    describe('primitives', () => {
 
       it('should return true if matching', () => {
         expect(valuesComparer(1, 1)).toBeTruthy();
@@ -93,16 +93,16 @@ describe('valuesComparer', () => {
       });
 
       it('should return true if one of provided keys is not a primitive', () => {
-        expect(valuesComparer(item, clone, ['id', {a: 1} as any])).toBeTruthy();
+        expect(valuesComparer(item, clone, ['id', { a: 1 } as any])).toBeTruthy();
       });
 
       it('should compare with defaultCompare if array of provided keys not including strings/numbers/symbols', () => {
-        expect(valuesComparer(item, clone, [[] as any, {a: 1} as any])).toBeFalsy();
+        expect(valuesComparer(item, clone, [[] as any, { a: 1 } as any])).toBeFalsy();
       });
 
       it('should compare with defaultCompare if array of provided keys is empty', () => {
         expect(valuesComparer(item, clone, [])).toBeFalsy();
       });
     });
-  })
+  });
 });

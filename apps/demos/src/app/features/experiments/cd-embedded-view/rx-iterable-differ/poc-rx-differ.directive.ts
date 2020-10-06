@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 
 import { Observable, ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
-import { distinctUntilChanged, groupBy, map, mergeAll, mergeMap, pluck, switchAll, tap } from 'rxjs/operators';
+import { distinctUntilChanged, groupBy, map, mergeAll, mergeMap, switchAll, tap } from 'rxjs/operators';
 
 export class PocRxDifferViewContext<T extends object, K = keyof T> {
   $implicit?: T;

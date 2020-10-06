@@ -29,11 +29,11 @@ export function createNativeStrategy(
     name: 'native',
     detectChanges: () => config.cdRef.markForCheck(),
     rxScheduleCD: (o) => o.pipe(tap(() => {
-      config.cdRef.markForCheck()
+      config.cdRef.markForCheck();
     })),
     scheduleCD: () => {
-      config.cdRef.markForCheck()
+      config.cdRef.markForCheck();
       return new AbortController();
-    },
+    }
   };
 }

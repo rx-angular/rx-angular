@@ -1,10 +1,4 @@
-import {
-  AfterViewInit,
-  Directive,
-  ElementRef,
-  Input,
-  OnDestroy,
-} from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { zonePatchedEvents } from './unpatch-event-list.experimental';
@@ -109,7 +103,8 @@ export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
     });
   }
 
-  constructor(private el: ElementRef) {}
+  constructor(private el: ElementRef) {
+  }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();

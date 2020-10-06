@@ -1,17 +1,11 @@
 import { from } from 'rxjs';
-import {
-  getGlobalThis, getUnpatchedResolvedPromise
-} from '../../src/lib/core';
-import {
-  getStrategies
-} from '../../src/lib/render-strategies';
+import { getGlobalThis, getUnpatchedResolvedPromise } from '../../src/lib/core';
+import { getStrategies } from '../../src/lib/render-strategies';
 import { TestScheduler } from 'rxjs/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher, mockConsole } from '@test-helpers';
 
-import {
-  getMockStrategyConfig
-} from '../fixtures';
+import { getMockStrategyConfig } from '../fixtures';
 import { DEFAULT_STRATEGY_NAME } from '../../src/lib/render-strategies/strategies/strategies-map';
 import { createNativeStrategy } from '../../src/lib/render-strategies/strategies/native.strategy';
 import { createNoopStrategy } from '../../src/lib/render-strategies/strategies/noop.strategy';
@@ -30,6 +24,7 @@ let testScheduler: TestScheduler;
 // In THIS test setup Zone is initiated and __zone_symbol__Promise has already value
 const original__zone_symbol__Promise =
   getGlobalThis().__zone_symbol__Promise || Promise;
+
 function restoreGlobalThis() {
   getGlobalThis().__zone_symbol__Promise = original__zone_symbol__Promise;
 }

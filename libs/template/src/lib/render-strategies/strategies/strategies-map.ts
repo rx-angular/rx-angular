@@ -1,7 +1,4 @@
-import {
-  RenderStrategy,
-  RenderStrategyFactoryConfig,
-} from '../../core/render-aware';
+import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core/render-aware';
 import { createNoopStrategy } from './noop.strategy';
 import { createNativeStrategy } from './native.strategy';
 import { getLocalStrategies } from './local.strategy';

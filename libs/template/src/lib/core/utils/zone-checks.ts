@@ -83,7 +83,9 @@ export function isNgZone(instance: any): boolean {
 
   let calledApply = false;
 
-  function fn() {}
+  function fn() {
+  }
+
   fn.apply = () => (calledApply = true);
 
   instance.runOutsideAngular(fn);

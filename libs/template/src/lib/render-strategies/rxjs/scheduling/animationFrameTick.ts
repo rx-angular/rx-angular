@@ -1,4 +1,4 @@
-import { Observable, SchedulerLike, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { getZoneUnPatchedApi } from '../../../core';
 
 export const animationFrameTick = () =>
