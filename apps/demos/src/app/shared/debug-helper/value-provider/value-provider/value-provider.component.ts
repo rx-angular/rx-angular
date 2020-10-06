@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ValueProviderService } from '../value-provider.service';
+import { PrimitivesProviderService } from '../primitives-provider.service';
 
 @Component({
   selector: 'rxa-value-provider',
@@ -9,7 +9,7 @@ import { ValueProviderService } from '../value-provider.service';
     <ng-content></ng-content>`,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ValueProviderComponent extends ValueProviderService {
+export class ValueProviderComponent extends PrimitivesProviderService {
   @Input()
   truthy = 0.5;
 

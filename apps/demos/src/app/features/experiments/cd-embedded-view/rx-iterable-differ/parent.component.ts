@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
-import { ValueProviderService } from '../../../../shared/debug-helper/value-provider';
+import { ArrayProviderService } from '../../../../shared/debug-helper/value-provider';
 
 
 @Component({
@@ -9,6 +9,15 @@ import { ValueProviderService } from '../../../../shared/debug-helper/value-prov
     <rxa-visualizer>
       <div visualizerHeader>
         <h2>Reactive Iterable Differ</h2>
+        <button mat-raised-button [unpatch] (click)="valP.reset()">
+          Reset
+        </button>
+        <button mat-raised-button [unpatch] (click)="valP.error()">
+          Error
+        </button>
+        <button mat-raised-button [unpatch] (click)="valP.complete()">
+          Complete
+        </button>
         <button mat-raised-button [unpatch] (click)="valP.addItems()">
           Add
         </button>
@@ -34,16 +43,14 @@ import { ValueProviderService } from '../../../../shared/debug-helper/value-prov
   `,
   changeDetection: environment.changeDetection,
   encapsulation: ViewEncapsulation.None,
-  providers: [ValueProviderService]
+  providers: [ArrayProviderService]
 })
 export class CdEmbeddedViewParentRxDifferComponent {
   trackByKey = 'id';
   distinctByKey = 'value';
-
-  constructor(public valP: ValueProviderService) {
-
-  }
-
   trackByIdFn = (a) => a.id;
 
+  constructor(public valP: ArrayProviderService) {
+
+  }
 }

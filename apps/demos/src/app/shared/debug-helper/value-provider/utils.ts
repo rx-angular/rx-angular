@@ -63,7 +63,7 @@ export function toNewItems(arr: any[] = [], numItems: number, maxId = 10): any[]
   return newItems;
 }
 
-export function getRandomItems(arr: any[], numItems: number) {
+export function getRandomItems(arr: any[] = [], numItems: number) {
   const result = new Array(numItems);
   let len = arr.length;
   const taken = new Array(len);
@@ -77,6 +77,13 @@ export function getRandomItems(arr: any[], numItems: number) {
   return result;
 }
 
+export function getItems(arr: any[] = [], itemIds: number[]) {
+  return arr.filter(i => itemIds.includes(i.id));
+}
+export function updateItem(item: any) {
+  return { ...item, value: toRandom() };
+}
+
 export function compareIdFn(a, b) {
   return a.id === b.id;
 }
@@ -84,9 +91,8 @@ export function compareIdFn(a, b) {
 export function moveItemMutable(arr: any[] = [], pos1: number, pos2: number): any[] {
   // local variables
   let i, tmp;
-  console.log(pos1, pos2);
   // if positions are different and inside array
-  if (pos1 !== pos2 && 0 <= pos1 && pos1 <= arr.length && 0 <= pos2 && pos2 <= arr.length) {
+  if (arr.length >= 2 && pos1 !== pos2 && 0 <= pos1 && pos1 <= arr.length && 0 <= pos2 && pos2 <= arr.length) {
     // save element from position 1
     tmp = arr[pos1];
     // move element down and shift other elements up
@@ -110,5 +116,5 @@ export function moveItemMutable(arr: any[] = [], pos1: number, pos2: number): an
 }
 
 export function moveItemImmutable(arr: any[] = [], pos1: number, pos2: number): any[] {
-  return moveItemMutable(arr, pos1, pos2);
+  return [...moveItemMutable(arr, pos1, pos2)];
 }
