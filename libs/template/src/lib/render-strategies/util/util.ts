@@ -1,6 +1,12 @@
 import { fromEvent, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+/**
+ *
+ * convenience method to prevent duplicated code. used in strategies after static coalescing
+ *
+ * @internal
+ */
 export function afterCoalesceAndSchedule<T>(work: () => void, afterCD?: () => T) {
   work();
   if (afterCD) {
@@ -8,6 +14,14 @@ export function afterCoalesceAndSchedule<T>(work: () => void, afterCD?: () => T)
   }
 }
 
+/**
+ *
+ * convenience method to prevent duplicated code.
+ * helper for strategies where we have no direct control over the rendering and thus no information about when
+ * rendering was finished. used in native & global strategy
+ *
+ * @internal
+ */
 export function afterScheduleCD<R>(
   tick: () => Observable<number>
 ) {
