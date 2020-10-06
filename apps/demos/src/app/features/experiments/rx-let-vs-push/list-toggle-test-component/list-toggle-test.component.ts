@@ -4,12 +4,11 @@ import { BehaviorSubject, Subject, timer } from 'rxjs';
 import { finalize, take, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'rxa-list-toggle-test-component',
-  templateUrl: './list-toggle-test-component.component.html',
-  styleUrls: ['./list-toggle-test-component.component.scss'],
+  selector: 'rxa-list-toggle-test',
+  templateUrl: './list-toggle-test.component.html',
   changeDetection: environment.changeDetection,
 })
-export class ListToggleTestComponentComponent implements AfterViewInit {
+export class ListToggleTestComponent implements AfterViewInit {
   private letEmitted = false;
   @Input() type: 'rxLet' | 'push';
   @Input() auto: boolean;
