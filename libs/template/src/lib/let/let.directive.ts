@@ -67,6 +67,7 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  *   `ɵdetectChanges`)
  * - distinct same values in a row (`distinctUntilChanged` operator),
  * - display custom templates for different observable notifications (suspense, next, error, complete)
+ * - notify about after changes got rendered to the template (Rendercallback)
  *
  *
  * ### Binding an Observable and using the view context
@@ -130,6 +131,49 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  * Internally, `*rxLet` is using a simple "view memoization" - it caches all anchored template references and re-uses
  * them whenever the observable notification (next/error/complete) is sent. Then, it only updates the context
  * (e.g. a value from the observable) in the view.
+ *
+ * ### Using the Rendercallback
+ * The rendercallback is an event which emits when the `LetDirective` "rendered" the latest values of the active
+ * template.
+ * At the time the `rendered` callback emits, the DOM should be already updated with the latest changes connected
+ * to this instance.
+ * The callback will emit the latest value rendered to the template.
+ *
+ * Since structural directives currently do not support `@Output` bindings, developers have to use other mechanics
+ * to access this event.
+ *
+ * You can choose between using the [Template syntax](https://angular.io/guide/template-syntax) or injecting the
+ * `LetDirective` as `@ViewChild()` and subscribe the event manually.
+ *
+ * Please note that due to the built in
+ *   [coalescing][https://github.com/rx-angular/rx-angular/blob/master/libs/template/docs/concepts.md] can cause this
+ *   callback different in situations where multiple `LetDirectives` are used to render the same
+ * `Component`. Make sure to subscribe to every instance in your component to make sure you don't miss render
+ * notifications.
+ *
+ * #### Template syntax
+ * ```html
+ * <!-- template syntax with output binding -->
+ * <ng-template let-content
+ *    [rxLet]="content$"
+ *    (rendered)="onTemplateRendered($event)">
+ *  <div class="example-box">
+ *    {{ content }}
+ *  </div>
+ * </ng-template>
+ * ```
+ * #### ViewChild
+ * ```html
+ * <div *rxLet="content$; let content" class="example-box">
+ *  {{ content }}
+ * </div>
+ * ```
+ * ```ts
+ * // inside of your component
+ * @ViewChild(LetDirective) rxLet: LetDirective<string>;
+ * this.rxLet.rendered.subscribe(value => console.log('afterRender', value));
+ * ```
+ *
  *
  * @docsCategory LetDirective
  * @docsPage LetDirective
