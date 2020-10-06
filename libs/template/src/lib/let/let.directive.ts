@@ -21,8 +21,6 @@ export interface LetViewContext<T> extends RxViewContext<T> {
   rxLet: T;
 }
 
-export type LetRenderCallback<T> = (renderedValue: T) => void;
-
 /**
  * @Directive LetDirective
  *
@@ -143,21 +141,8 @@ export type LetRenderCallback<T> = (renderedValue: T) => void;
 })
 export class LetDirective<U> implements OnInit, OnDestroy {
 
-  /**
-   * @internal
-   */
+  /** @internal */
   static ngTemplateGuard_rxLet: 'binding';
-
-  /**
-   * @internal
-   */
-  readonly initialViewContext: LetViewContext<U> = {
-    $implicit: undefined,
-    rxLet: undefined,
-    $error: false,
-    $complete: false,
-    $suspense: false
-  };
 
   /**
    * @description
@@ -346,9 +331,22 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     share()
   ));
 
+  /** @internal */
   private subscription = new Subscription();
+
+  /** @internal */
   private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>, RxNotificationKind>;
 
+  /** @internal */
+  private readonly initialViewContext: LetViewContext<U> = {
+    $implicit: undefined,
+    rxLet: undefined,
+    $error: false,
+    $complete: false,
+    $suspense: false
+  };
+
+  /** @internal */
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => {
       this.displayInitialView();
@@ -387,9 +385,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     },
   };
 
-  /**
-   * @internal
-   */
+  /** @internal */
   static ngTemplateContextGuard<U>(
     dir: LetDirective<U>,
     ctx: unknown | null | undefined
@@ -397,9 +393,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     return true;
   }
 
-  /**
-   * @internal
-   */
+  /** @internal */
   constructor(
     cdRef: ChangeDetectorRef,
     private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
@@ -415,9 +409,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     this.renderAware.nextStrategy(DEFAULT_STRATEGY_NAME);
   }
 
-  /**
-   * @internal
-   */
+  /** @internal */
   ngOnInit() {
     this.templateManager.addTemplateRef('N', this.nextTemplateRef);
     this.displayInitialView();
@@ -425,20 +417,20 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     this.subscribeRenderCallbacks();
   }
 
-  /**
-   * @internal
-   */
+  /** @internal */
   ngOnDestroy() {
     this.subscription.unsubscribe();
     this.templateManager.destroy();
   }
 
+  /** @internal */
   private subscribeRenderCallbacks(): void {
     this.subscription.add(this.rendered.pipe(
       filter(() => !!this._renderObserver)
     ).subscribe(this._renderObserver))
   }
 
+  /** @internal */
   private displayInitialView = () => {
     // Display "suspense" template if provided
     if (this.templateManager.hasTemplateRef('S')) {
