@@ -12,7 +12,7 @@ Used together, you get a powerful tool for developing high-performance angular a
 
 This repository holds a set of helpers to create **fully reactive** as well as **fully zone-less** applications.
 
-![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/apps/template-demo/src/assets/images/rx-angular_logo.png)
+![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/docs/images/rx-angular_logo.png)
 
 ## Links
 
