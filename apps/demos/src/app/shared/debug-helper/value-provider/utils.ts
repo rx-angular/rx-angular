@@ -2,6 +2,12 @@ import { EMPTY, Observable, timer } from 'rxjs';
 import { merge as mergeWith, repeat, takeUntil } from 'rxjs/operators';
 import { priorityTickMap } from '@rx-angular/template';
 import { SchedulerConfig } from './model';
+import { insert, update } from '../../../../../../../libs/state/src/lib/transformation-helpers/array';
+
+
+export function compareIdFn(a, b) {
+  return a.id === b.id;
+}
 
 export function withCompleteAndError<T>(error$, complete$) {
   return (o: Observable<T>): Observable<T> =>
@@ -74,12 +80,30 @@ export function getItems(arr: any[] = [], itemIds: number[]) {
   return arr.filter(i => itemIds.includes(i.id));
 }
 
-export function updateItem(item: any) {
-  return { ...item, value: toRandom() };
+export function updateItemImmutable(item: any) {
+  return { ...updateItemMutable(item) };
 }
 
-export function compareIdFn(a, b) {
-  return a.id === b.id;
+export function updateItemMutable(item: any) {
+  item.value = toRandom();
+  return item;
+}
+
+export function addItemMutable(arr = [], numItems: number) {
+  const items: any[] = toNewItems(arr, numItems);
+  if (arr.length === 0) {
+    arr.push(items);
+    return arr;
+  }
+  const newItems = items.filter(ni => arr.some(oi => oi.id !== ni.id));
+  newItems.forEach(i => arr.push(i));
+  const updateItems = items.filter(ni => arr.some(oi => oi.id === ni.id));
+  updateItems.forEach(i => arr[arr.findIndex(ii => i.id = ii.id)] = i);
+  return arr;
+}
+
+export function addItemImmutable(arr = [], numItems: number) {
+  return [...addItemMutable(arr, numItems)];
 }
 
 export function moveItemMutable(arr: any[] = [], pos1: number, pos2: number): any[] {

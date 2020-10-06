@@ -2,7 +2,15 @@ import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { insert, remove, RxState, update } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { getItems, getRandomItems, moveItemImmutable, toNewItems, updateItem, withCompleteAndError } from './utils';
+import {
+  addItemImmutable,
+  getItems,
+  getRandomItems,
+  moveItemImmutable,
+  toNewItems,
+  updateItemImmutable,
+  withCompleteAndError
+} from './utils';
 import { Positions, ProvidedValues } from './model';
 
 
@@ -43,16 +51,8 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
     this.connect(
       'array',
       this.addItemsSubject,
-      (state, numItems = 1) => {
-        const arr = (state.array || []);
-        const items: any[] = toNewItems(arr, numItems);
-        if (arr.length === 0) {
-          return insert(arr, items);
-        }
-        const newItems = items.filter(ni => arr.some(oi => oi.id !== ni.id));
-        const updateItems = items.filter(ni => arr.some(oi => oi.id === ni.id));
-        return update(insert(arr, newItems), updateItems, 'id');
-      });
+      (state, numItems = 1) => addItemImmutable(state.array, numItems)
+    );
 
     this.connect(
       'array',
@@ -63,7 +63,7 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
           return arr;
         }
         itemIds = itemIds || getRandomItems(arr, 1).map(i => i.id);
-        return update(arr, getItems(arr, itemIds).map(updateItem, 'id'));
+        return update(arr, getItems(arr, itemIds).map(updateItemImmutable), 'id');
       }
     );
 
