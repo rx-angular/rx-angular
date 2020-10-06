@@ -7,62 +7,69 @@ import { environment } from '../../../../environments/environment';
   template: `
     <h1>RxLet vs Push</h1>
     <div style="margin-bottom: 16px">
-      <button mat-raised-button color="primary" (click)="toggleLet()">
-        Toggle let
+      <button mat-raised-button color="primary" (click)="togglePushAutoTest()">
+        Run Auto test for Push pipe (Start performance profiler beforehand)
       </button>
-      <button
-        mat-raised-button
-        color="primary"
-        style="margin-left: 8px"
-        (click)="togglePush()"
-      >
-        Toggle push
+    </div>
+    <div style="margin-bottom: 16px">
+      <button mat-raised-button color="secondary" (click)="togglePush()">
+        Open Manual test for Push pipe
+      </button>
+    </div>
+    <div style="margin-bottom: 16px">
+      <button mat-raised-button color="primary" (click)="toggleLetAutoTest()">
+        Run Auto test for Let directive (Start performance profiler beforehand)
+      </button>
+    </div>
+    <div style="margin-bottom: 16px">
+      <button mat-raised-button color="secondary" (click)="toggleLet()">
+        Open Manual test for Let directive
       </button>
     </div>
 
     <div class="row w-100">
-      <div class="col-sm-12 col-md-6" *ngIf="showPush">
-        <button mat-raised-button color="primary" (click)="toggleLoadingPush()">
-          Toggle loading for Push
-        </button>
-        <p *ngIf="pushLoading$ | push; else pushContent">Loading...</p>
-        <ng-template #pushContent>
-          <rxa-rendering-work [factor]="10"></rxa-rendering-work>
-        </ng-template>
-      </div>
-      <div class="col-sm-12 col-md-6" *ngIf="showLet">
-        <button mat-raised-button color="primary" (click)="toggleLoadingLet()">
-          Toggle loading for Let
-        </button>
-        <ng-container
-          *rxLet="letLoading$; let letLoading; suspense: suspenseTpl"
-        >
-          <rxa-rendering-work [factor]="10"></rxa-rendering-work>
-        </ng-container>
-        <ng-template #suspenseTpl> Loading... </ng-template>
-      </div>
+      <rxa-list-toggle-test-component
+        *ngIf="showPushAutoTest"
+        type="push"
+        [auto]="true"
+      ></rxa-list-toggle-test-component>
+      <rxa-list-toggle-test-component
+        *ngIf="showPush"
+        type="push"
+        [auto]="false"
+      ></rxa-list-toggle-test-component>
+      <rxa-list-toggle-test-component
+        *ngIf="showLetAutoTest"
+        type="let"
+        [auto]="true"
+      ></rxa-list-toggle-test-component>
+      <rxa-list-toggle-test-component
+        *ngIf="showLet"
+        type="let"
+        [auto]="false"
+      ></rxa-list-toggle-test-component>
     </div>
   `,
   changeDetection: environment.changeDetection,
 })
 export class RxLetVsPushComponent {
+  showLetAutoTest = false;
   showLet = false;
+  showPushAutoTest = false;
   showPush = false;
-  pushLoading$ = new BehaviorSubject<boolean>(true);
   letLoading$ = new Subject<boolean>();
-  toggleLet() {
-    this.showLet = !this.showLet;
-  }
 
   togglePush() {
     this.showPush = !this.showPush;
   }
-
-  toggleLoadingLet() {
-    this.letLoading$.next(false);
+  togglePushAutoTest() {
+    this.showPushAutoTest = !this.showPushAutoTest;
   }
 
-  toggleLoadingPush() {
-    this.pushLoading$.next(!this.pushLoading$.getValue());
+  toggleLet() {
+    this.showLet = !this.showLet;
+  }
+  toggleLetAutoTest() {
+    this.showLetAutoTest = !this.showLetAutoTest;
   }
 }
