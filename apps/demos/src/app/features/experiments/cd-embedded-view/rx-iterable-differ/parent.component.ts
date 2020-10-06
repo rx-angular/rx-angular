@@ -1,6 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { ArrayProviderService } from '../../../../shared/debug-helper/value-provider';
+import { Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, groupBy, map, mergeAll, mergeMap, tap } from 'rxjs/operators';
+import { toDictionary } from '../../../../../../../../libs/state/src/lib/transformation-helpers/array';
 
 
 @Component({
@@ -52,5 +55,52 @@ export class CdEmbeddedViewParentRxDifferComponent {
 
   constructor(public valP: ArrayProviderService) {
 
+  }
+}
+
+function rxIterableDiffer<T extends object>(config: { trackByKey: keyof T, distinctByKey: keyof T }): {
+  next: (v: T[]) => void,
+  enter$: Observable<T>,
+  update$: Observable<T>,
+  exit$: Observable<T>
+} {
+  const array$ = new Subject<T[]>();
+  let idMap = {};
+  const item$$ = array$.pipe(
+    tap(a => {
+      // @TODO good idea?? I guess no... :D
+      idMap = toDictionary(a, config.trackByKey as any)
+    }),
+    mergeMap(arr => arr),
+    groupBy(i => i[config.trackByKey])
+  );
+  const enter$ = item$$.pipe(
+    map(o$ => o$
+      .pipe(distinctUntilChanged((a, b) => a[config.distinctByKey] === b[config.distinctByKey]))
+    ),
+    mergeAll()
+  );
+  const update$ = item$$.pipe(
+    map(o$ => o$
+      .pipe(distinctUntilChanged((a, b) => a[config.distinctByKey] === b[config.distinctByKey]))
+    ),
+    mergeAll()
+  );
+  const exit$ = item$$.pipe(
+    map(o$ => o$
+      .pipe(distinctUntilChanged((a, b) => a[config.distinctByKey] === b[config.distinctByKey]))
+    ),
+    mergeAll()
+  );
+
+  return {
+    next,
+    enter$,
+    update$,
+    exit$
+  };
+
+  function next(v: T[]): void {
+    array$.next(v);
   }
 }

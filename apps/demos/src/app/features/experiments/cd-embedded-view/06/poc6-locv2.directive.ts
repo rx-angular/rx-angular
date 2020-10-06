@@ -67,7 +67,6 @@ export class Poc6Locv2Directive<U> implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.values$
       .pipe(
-        tap(),
         mergeMap(arr => arr),
         groupBy(i => i[this.poc6LocV2TrackBy]),
         map(o$ => {
