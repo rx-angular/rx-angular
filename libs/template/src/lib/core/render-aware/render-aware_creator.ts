@@ -1,19 +1,20 @@
 import {
   ConnectableObservable,
-  MonoTypeOperatorFunction, Notification, NotificationKind,
   Observable,
   of,
+  OperatorFunction,
   ReplaySubject,
   Subscribable,
-  Subscriber,
   Subscription
 } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
-  map, materialize,
+  map,
+  materialize,
   publish,
-  shareReplay, startWith,
+  shareReplay,
+  startWith,
   switchMap,
   tap,
   withLatestFrom
@@ -119,7 +120,7 @@ export function createRenderAware<U>(cfg: {
 
 function renderWithLatestStrategy<T>(
   strategyChanges$: Observable<RenderStrategy>
-): MonoTypeOperatorFunction<T> {
+): OperatorFunction<T, RxNotification<T>> {
   const suspenseNotification: RxNotification<T> = {
     kind: 'S',
     value: undefined,

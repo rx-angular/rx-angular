@@ -9,7 +9,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
-import { defer, NextObserver, Observable, ObservableInput, Subscription, Unsubscribable, } from 'rxjs';
+import { defer, NextObserver, Observable, ObservableInput, Subscription, } from 'rxjs';
 import { filter, map, share } from 'rxjs/operators';
 import { createRenderAware, RenderAware, RxNotificationKind, StrategySelection } from '../core';
 import { RxTemplateObserver, RxViewContext } from '../core/model';
@@ -307,7 +307,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   // is assigned
   @Output() readonly rendered = defer(() => this.renderAware.rendered$.pipe(
     filter(({ kind }) => this.templateManager.hasTemplateRef(kind)),
-    map(({ value }) => value as U),
+    map(({ value }) => value),
     share()
   ));
 
