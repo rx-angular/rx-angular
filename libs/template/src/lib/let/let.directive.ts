@@ -9,7 +9,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
-import { defer, NextObserver, Observable, ObservableInput, Subscription, } from 'rxjs';
+import { defer, NextObserver, Observable, ObservableInput, Subscription, Unsubscribable, } from 'rxjs';
 import { filter, map, share } from 'rxjs/operators';
 import { createRenderAware, RenderAware, RxNotificationKind, StrategySelection } from '../core';
 import { RxTemplateObserver, RxViewContext } from '../core/model';
@@ -132,18 +132,21 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  * them whenever the observable notification (next/error/complete) is sent. Then, it only updates the context
  * (e.g. a value from the observable) in the view.
  *
- * ### Using the Rendercallback
- * The rendercallback is an event which emits when the `LetDirective` "rendered" the latest values of the active
- * template.
+ * ### Using the RenderCallback
+ * The RenderCallback notifies users about when the `LetDirective` "rendered" the latest values of the
+ * active template.
  * At the time the `rendered` callback emits, the DOM should be already updated with the latest changes connected
  * to this instance.
  * The callback will emit the latest value rendered to the template.
  *
  * Since structural directives currently do not support `@Output` bindings, developers have to use other mechanics
  * to access this event.
+ * Beyond the traditional approach the `LetDirectives` offers an input property as renderCallback.
+ * This enables developers to bind a `NextObserver` (e.g. `Subject`) to the `LetDirective`which will emit after
+ * rendering happened.
  *
- * You can choose between using the [Template syntax](https://angular.io/guide/template-syntax) or injecting the
- * `LetDirective` as `@ViewChild()` and subscribe the event manually.
+ * You can choose between using the [Template syntax](https://angular.io/guide/template-syntax), injecting the
+ * `LetDirective` as `@ViewChild()` and subscribe the event manually or providing a RenderCallback on your own.
  *
  * Please note that due to the built in
  *   [coalescing][https://github.com/rx-angular/rx-angular/blob/master/libs/template/docs/concepts.md] can cause this
@@ -151,6 +154,18 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  * `Component`. Make sure to subscribe to every instance in your component to make sure you don't miss render
  * notifications.
  *
+ * #### RenderCallback Input
+ * ```html
+ * <ng-container *rxLet="content$; let content; strategy: strategyName$; renderCallback: renderCallback$">
+ *    <div class="example-box">
+ *        {{ content }}
+ *    </div>
+ * </ng-container>
+ * ```
+ * ```ts
+ * // inside component:
+ * readonly renderCallback$ = new Subject<string>();
+ * ```
  * #### Template syntax
  * ```html
  * <!-- template syntax with output binding -->
@@ -170,7 +185,7 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  * ```
  * ```ts
  * // inside of your component
- * @ViewChild(LetDirective) rxLet: LetDirective<string>;
+ * \@ViewChild(LetDirective) rxLet: LetDirective<string>;
  * this.rxLet.rendered.subscribe(value => console.log('afterRender', value));
  * ```
  *
@@ -326,10 +341,42 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     this.templateManager.addTemplateRef('S', templateRef);
   }
 
+  /**
+   *
+   * @internal
+   */
   private _renderObserver: NextObserver<U>;
+  /**
+   * @description
+   * A callback for when the `LetDirective` "rendered" the latest values of the active template.
+   * At the time the `rendered` callback emits, the DOM should be already updated with the latest changes connected
+   * to this instance.
+   * The callback will emit the latest value rendered to the template.
+   *
+   * Since structural directives currently do not support `@Output` bindings, the `LetDirective` offers an input
+   * property as renderCallback. This enables developers to bind a `NextObserver` (e.g. `Subject`) to the `LetDirective`
+   * which will emit after rendering happened.
+   *
+   * Please note that due to the built in
+   *   [coalescing][https://github.com/rx-angular/rx-angular/blob/master/libs/template/docs/concepts.md] can cause this
+   *   callback different in situations where multiple `LetDirectives` are used to render the same
+   * `Component`. Make sure to subscribe to every instance in your component to make sure you don't miss render
+   * notifications.
+   *
+   * @example
+   *  <ng-container *rxLet="content$; let content; strategy: strategyName$; renderCallback: renderCallback$">
+   *    <div class="example-box">
+   *        {{ content }}
+   *    </div>
+   *  </ng-container>
+   *
+   * // inside component:
+   * readonly renderCallback$ = new Subject<string>();
+   */
   @Input()
   set rxLetRenderCallback(callback: NextObserver<U>) {
     this._renderObserver = callback;
+    this.subscribeRenderCallback();
   }
 
   /**
@@ -342,8 +389,9 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * Since structural directives currently do not support `@Output` bindings, developers have to use other mechanics
    * to access this event.
    *
-   * You can choose between using the [Template syntax](https://angular.io/guide/template-syntax) or injecting the
-   * `LetDirective` as `@ViewChild()` and subscribe the event manually.
+   * You can still use this Output event by using either the [Template
+   * syntax](https://angular.io/guide/template-syntax) or
+   * injecting the `LetDirective` as `@ViewChild()` and subscribe the event manually.
    *
    * Please note that due to the built in
    *   [coalescing][https://github.com/rx-angular/rx-angular/blob/master/libs/template/docs/concepts.md] can cause this
@@ -376,7 +424,10 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   ));
 
   /** @internal */
-  private subscription = new Subscription();
+  private subscription: Unsubscribable = Subscription.EMPTY;
+
+  /** @internal */
+  private renderCallBackSubscription = Subscription.EMPTY;
 
   /** @internal */
   private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>, RxNotificationKind>;
@@ -457,21 +508,22 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   ngOnInit() {
     this.templateManager.addTemplateRef('N', this.nextTemplateRef);
     this.displayInitialView();
-    this.subscription.add(this.renderAware.subscribe());
-    this.subscribeRenderCallbacks();
+    this.subscription = this.renderAware.subscribe();
   }
 
   /** @internal */
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.renderCallBackSubscription.unsubscribe();
     this.templateManager.destroy();
   }
 
   /** @internal */
-  private subscribeRenderCallbacks(): void {
-    this.subscription.add(this.rendered.pipe(
-      filter(() => !!this._renderObserver)
-    ).subscribe(this._renderObserver))
+  private subscribeRenderCallback(): void {
+    this.renderCallBackSubscription.unsubscribe();
+    if (this._renderObserver) {
+      this.renderCallBackSubscription = this.rendered.subscribe(this._renderObserver);
+    }
   }
 
   /** @internal */
