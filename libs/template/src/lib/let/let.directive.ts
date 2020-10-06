@@ -303,9 +303,44 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     this._renderObserver = callback;
   }
 
-  // We use defer here as the as otherwise the the `@Output` decorator subscribes earlier than the arnderAware property
-  // is assigned
+  /**
+   * @description
+   * A callback for when the `LetDirective` "rendered" the latest values of the active template.
+   * At the time the `rendered` callback emits, the DOM should be already updated with the latest changes connected
+   * to this instance.
+   * The callback will emit the latest value rendered to the template.
+   *
+   * Since structural directives currently do not support `@Output` bindings, developers have to use other mechanics
+   * to access this event.
+   *
+   * You can choose between using the [Template syntax](https://angular.io/guide/template-syntax) or injecting the
+   * `LetDirective` as `@ViewChild()` and subscribe the event manually.
+   *
+   * Please note that due to the built in
+   *   [coalescing][https://github.com/rx-angular/rx-angular/blob/master/libs/template/docs/concepts.md] can cause this
+   *   callback different in situations where multiple `LetDirectives` are used to render the same
+   * `Component`. Make sure to subscribe to every instance in your component to make sure you don't miss render
+   * notifications.
+   *
+   * @example
+   * <ng-template let-content
+   *    [rxLet]="content$"
+   *    (rendered)="onTemplateRendered($event)">
+   *  <div class="example-box">
+   *    {{ content }}
+   *  </div>
+   * </ng-template>
+   *
+   * <div *rxLet="content$; let content" class="example-box">
+   *  {{ content }}
+   * </div>
+   *
+   * `@ViewChild(LetDirective) rxLet: LetDirective<string>;`
+   * this.rxLet.rendered.subscribe(value => console.log('afterRender', value));
+   */
   @Output() readonly rendered = defer(() => this.renderAware.rendered$.pipe(
+    // We use defer here as the as otherwise the the `@Output` decorator subscribes earlier than the renderAware
+    // property is assigned
     filter(({ kind }) => this.templateManager.hasTemplateRef(kind)),
     map(({ value }) => value),
     share()
