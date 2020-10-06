@@ -3,7 +3,6 @@ import { scan, share, switchAll, switchMap } from 'rxjs/operators';
 import { toTick } from './utils';
 import { SchedulingPriority } from '@rx-angular/template';
 
-
 export const schedulingHelper = () => {
 
   let active = false;
