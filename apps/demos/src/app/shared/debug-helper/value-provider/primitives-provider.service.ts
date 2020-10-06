@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { insert, remove, RxState, update } from '@rx-angular/state';
 import { merge, Observable, Subject } from 'rxjs';
-import { map, scan } from 'rxjs/operators';
+import { map, scan, switchMap } from 'rxjs/operators';
 import {
   getRandomItems,
   moveItemMutable,
@@ -90,7 +90,7 @@ export class PrimitivesProviderService extends RxState<ProvidedValues> {
     super();
     const outerChanges$ = merge(
       this.outerChanges.pipe(ngInputFlatten()),
-      this.schedule$.pipe(toTick())
+      this.schedule$.pipe(switchMap(v => toTick(v)))
     );
 
     this.connect(

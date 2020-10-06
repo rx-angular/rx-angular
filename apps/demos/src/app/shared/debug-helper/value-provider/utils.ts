@@ -1,5 +1,5 @@
 import { EMPTY, Observable, timer } from 'rxjs';
-import { merge as mergeWith, repeat, switchMap, takeUntil } from 'rxjs/operators';
+import { merge as mergeWith, repeat, takeUntil } from 'rxjs/operators';
 import { animationFrameTick } from '@rx-angular/template';
 import { SchedulerConfig } from './model';
 
@@ -8,28 +8,23 @@ export function withCompleteAndError<T>(error$, complete$) {
     o.pipe(mergeWith(error$), takeUntil(complete$));
 }
 
-export function toTick(): (o: Observable<SchedulerConfig>) => Observable<number> {
-  return (o) =>
-    o.pipe(
-      switchMap((scheduleConfig) => {
-        if (!scheduleConfig) {
-          return EMPTY;
-        } else {
-          const stop$ = scheduleConfig.duration
-            ? timer(scheduleConfig.duration)
-            : EMPTY;
-          if (scheduleConfig.scheduler === 'timeout') {
-            return timer(0, scheduleConfig.tickSpeed).pipe(takeUntil(stop$));
-          } else if (scheduleConfig.scheduler === 'animationFrame') {
-            return animationFrameTick().pipe(
-              repeat(scheduleConfig.numEmissions),
-              takeUntil(stop$)
-            );
-          }
-          throw new Error('Wrong scheduler config');
-        }
-      })
-    );
+export function toTick(scheduleConfig: SchedulerConfig): Observable<number> {
+  if (!scheduleConfig) {
+    return EMPTY;
+  } else {
+    const stop$ = scheduleConfig.duration
+      ? timer(scheduleConfig.duration)
+      : EMPTY;
+    if (scheduleConfig.scheduler === 'timeout') {
+      return timer(0, scheduleConfig.tickSpeed).pipe(takeUntil(stop$));
+    } else if (scheduleConfig.scheduler === 'animationFrame') {
+      return animationFrameTick().pipe(
+        repeat(scheduleConfig.numEmissions),
+        takeUntil(stop$)
+      );
+    }
+    throw new Error('Wrong scheduler config');
+  }
 }
 
 export function toInt(float: number = toRandom(), min = 0, max = 10): number {
@@ -80,6 +75,7 @@ export function getRandomItems(arr: any[] = [], numItems: number) {
 export function getItems(arr: any[] = [], itemIds: number[]) {
   return arr.filter(i => itemIds.includes(i.id));
 }
+
 export function updateItem(item: any) {
   return { ...item, value: toRandom() };
 }
