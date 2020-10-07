@@ -19,14 +19,12 @@
     }
   },
   "projects": {
-    "state-demo": {
+    "demos": {
       "tags": ["type:app"]
     },
-    "template-demo": {
-      "tags": ["type:app"]
-    },
-    "experiments": {
-      "tags": ["type:app"]
+    "demos-e2e": {
+      "tags": [],
+      "implicitDependencies": ["demos"]
     },
     "test-helpers": {
       "tags": ["type:util"]

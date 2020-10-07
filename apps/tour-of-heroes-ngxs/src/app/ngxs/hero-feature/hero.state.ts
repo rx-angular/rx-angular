@@ -1,115 +1,77 @@
-import { Action, Actions, State, StateContext, Store } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import {
-  AddHero,
-  DeleteHero,
-  FetchHero,
-  SearchHero,
-  UpdateHero,
-} from './hero.actions';
-import { HeroService } from '../../hero.service';
+import { Action, State, StateContext } from '@ngxs/store';
+import { insertItem, patch, removeItem, updateItem } from '@ngxs/store/operators';
+import { tap } from 'rxjs/operators';
 import { Hero } from '../../hero';
-import { Observable } from 'rxjs';
-import { getHeroes, getHeroesById, getSearch } from './hero.selectors';
+import { HeroService } from '../../hero.service';
+import { AddHero, DeleteHero, FetchHero, SearchHero, UpdateHero } from './hero.actions';
 
-export interface HeroState {
+export interface HeroStateModel {
   heroes: Hero[];
   search: Hero[];
 }
 
-@State<HeroState>({
+@State<HeroStateModel>({
   name: 'hero',
   defaults: {
     heroes: [] as Hero[],
-    search: [] as Hero[],
-  },
+    search: [] as Hero[]
+  }
 })
 @Injectable({ providedIn: 'root' })
-export class HeroStateService {
-  search$ = this.store.select(getSearch);
-  heroes$ = this.store.select(getHeroes);
-  hero$ = (id: number): Observable<Hero> =>
-    this.store.select(getHeroesById(id));
-
-  dispatchFetchHero() {
-    return this.store.dispatch(new FetchHero());
-  }
-
+export class HeroState {
   @Action(FetchHero)
-  private fetchHero(ctx: StateContext<HeroState>, a) {
-    this.heroService.getHeroes().subscribe((heroes) => {
-      ctx.setState({
-        ...ctx.getState(),
-        heroes,
-      });
-    });
-  }
-
-  dispatchAddHero(name: string) {
-    return this.store.dispatch(new AddHero({ name }));
+  private fetchHero(ctx: StateContext<HeroStateModel>) {
+    return this.heroService.getHeroes().pipe(tap(heroes => {
+      ctx.setState(patch({
+        heroes
+      }));
+    }));
   }
 
   @Action(AddHero)
-  private addHero(ctx: StateContext<HeroState>, action: AddHero) {
-    const state = ctx.getState();
-    this.heroService.addHero(action.hero).subscribe((hero) => {
-      ctx.setState({
-        ...state,
-        heroes: [...state.heroes, hero],
-      });
-    });
-  }
-
-  dispatchDeleteHero(hero: Pick<Hero, 'id'>) {
-    return this.store.dispatch(new DeleteHero(hero));
+  private addHero(ctx: StateContext<HeroStateModel>, action: AddHero) {
+    return this.heroService.addHero(action.hero).pipe(tap(hero => {
+      ctx.setState(
+        patch({
+          heroes: insertItem(hero)
+        })
+      );
+    }));
   }
 
   @Action(DeleteHero)
-  private deleteHero(ctx: StateContext<HeroState>, action: DeleteHero) {
-    const state = ctx.getState();
-    this.heroService.deleteHero(action.hero).subscribe(() => {
-      ctx.setState({
-        ...state,
-        heroes: state.heroes.filter((h: Hero) => h.id !== action.hero.id),
-      });
-    });
-  }
-
-  dispatchUpdateHero(hero: Hero) {
-    return this.store.dispatch(new UpdateHero(hero));
+  private deleteHero(ctx: StateContext<HeroStateModel>, action: DeleteHero) {
+    return this.heroService.deleteHero(action.hero).pipe(tap(() => {
+      ctx.setState(
+        patch({
+          heroes: removeItem((h: Hero) => h.id === action.hero.id)
+        })
+      );
+    }));
   }
 
   @Action(UpdateHero)
-  private updateHero(ctx: StateContext<HeroState>, action: UpdateHero) {
-    const state = ctx.getState();
-    this.heroService.updateHero(action.hero).subscribe(() => {
-      ctx.setState({
-        ...state,
-        heroes: state.heroes.map((h: Hero) =>
-          h.id === action.hero.id ? action.hero : h
-        ),
-      });
-    });
-  }
-
-  dispatchSearchHero(name: string) {
-    return this.store.dispatch(new SearchHero(name));
+  private updateHero(ctx: StateContext<HeroStateModel>, action: UpdateHero) {
+    return this.heroService.updateHero(action.hero).pipe(tap(() => {
+      ctx.setState(
+        patch({
+          heroes: updateItem((h: Hero) => h.id === action.hero.id, action.hero)
+        })
+      );
+    }));
   }
 
   @Action(SearchHero)
-  private searchHero(ctx: StateContext<HeroState>, action: SearchHero) {
-    const state = ctx.getState();
-    this.heroService.searchHeroes(action.term).subscribe((heroes) => {
-      ctx.setState({
-        ...state,
-        heroes,
-      });
-    });
+  private searchHero(ctx: StateContext<HeroStateModel>, action: SearchHero) {
+    return this.heroService.searchHeroes(action.term).pipe(tap(heroes => {
+      ctx.setState(
+        patch({
+          heroes
+        })
+      );
+    }));
   }
 
-  constructor(
-    private store: Store,
-    private actions: Actions,
-    private heroService: HeroService
-  ) {}
+  constructor(private heroService: HeroService) {}
 }

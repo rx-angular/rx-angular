@@ -1,8 +1,4 @@
-import {
-  ApplicationRef,
-  ChangeDetectionStrategy,
-  Component
-} from '@angular/core';
+import { ApplicationRef, ChangeDetectionStrategy, Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AppRenderStrategy, ConfigService } from './config.service';

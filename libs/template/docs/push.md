@@ -1,4 +1,4 @@
-# PushPipe
+## PushPipe
 
 The `push` pipe serves as a drop-in replacement for angulars built-in `async` pipe.
 Just like the `*rxLet` Directive, it leverages a `RenderStrategy` under the hood which

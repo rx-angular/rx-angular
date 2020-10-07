@@ -1,14 +1,10 @@
 import { Component } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-
 import { Observable, Subject } from 'rxjs';
-
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ConfigService } from '../config.service';
-
 import { Hero } from '../hero';
-import { HeroStateService } from '../ngxs/hero-feature/hero.state';
-import { HeroService } from '../hero.service';
+import { HeroStateFacade } from '../ngxs/hero-feature/hero.facade';
 
 interface HeroSearchComponentState {
   heroes: Hero[];
@@ -18,7 +14,7 @@ interface HeroSearchComponentState {
   selector: 'app-hero-search',
   templateUrl: './hero-search.component.html',
   styleUrls: ['./hero-search.component.css'],
-  providers: [RxState],
+  providers: [RxState]
 })
 export class HeroSearchComponent {
   readonly heroes$: Observable<Hero[]> = this.state.select('heroes');
@@ -37,7 +33,7 @@ export class HeroSearchComponent {
   );
 
   constructor(
-    public heroState: HeroStateService,
+    public heroState: HeroStateFacade,
     private state: RxState<HeroSearchComponentState>,
     public configService: ConfigService
   ) {
