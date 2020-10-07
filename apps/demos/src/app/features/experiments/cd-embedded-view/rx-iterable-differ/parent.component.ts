@@ -1,7 +1,8 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
-import { ArrayProviderService } from '../../../../shared/debug-helper/value-provider';
-import { diffByKey, diffByIndex } from './rx-differ';
+import { ArrayProviderService, TestItem } from '../../../../shared/debug-helper/value-provider';
+import { diffByKey, diffByIndex, rxIterableDifferFactory } from './rx-differ';
+import { RxState } from '../../../../../../../../libs/state/src/lib';
 
 
 @Component({
@@ -65,15 +66,26 @@ import { diffByKey, diffByIndex } from './rx-differ';
   encapsulation: ViewEncapsulation.None,
   providers: [ArrayProviderService]
 })
-export class CdEmbeddedViewParentRxDifferComponent {
+export class CdEmbeddedViewParentRxDifferComponent extends RxState<any>{
+  rxDiffer = rxIterableDifferFactory({
+    trackBy: 'id',
+    distinctBy: 'value'
+  });
   trackByKey = 'id';
   distinctByKey = 'value';
   trackByIdFn = (a) => a.id;
 
+
   constructor(public valP: ArrayProviderService) {
+    super();
+    this.setupRxDiffer()
+    // this.hold(this.valP.array$, this.setupFunctionalDiffer());
+    this.hold(this.valP.array$, this.rxDiffer.next);
+  }
+
+  setupFunctionalDiffer() {
     let oldData = [];
-    this.valP.array$.subscribe(
-      newData => {
+    return newData => {
         const indexDifferResult = diffByIndex(oldData, newData);
         console.log('##diffByIndex');
         console.log('enter', indexDifferResult.enter);
@@ -86,6 +98,18 @@ export class CdEmbeddedViewParentRxDifferComponent {
         console.log('exit', keyDifferResult.exit);
         oldData = [...newData];
       }
-    );
+  }
+
+  setupRxDiffer() {
+    this.rxDiffer.connect();
+    this.rxDiffer.enter$.subscribe((result) => {
+      console.log('enter', result);
+    });
+    this.rxDiffer.update$.subscribe((result) => {
+      console.log('update', result);
+    });
+    this.rxDiffer.exit$.subscribe((result) => {
+      console.log('exit', result);
+    });
   }
 }

@@ -8,7 +8,7 @@ export interface TestItem {
 
 export interface ProvidedValues {
   random: number;
-  array: any[];
+  array: TestItem[];
 }
 
 /**

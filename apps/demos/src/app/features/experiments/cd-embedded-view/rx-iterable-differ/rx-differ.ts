@@ -1,11 +1,16 @@
-import { Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, groupBy, map, mergeAll, mergeMap, tap } from 'rxjs/operators';
-import { toDictionary } from '@rx-angular/state';
+import { ConnectableObservable, Observable, pipe, Subject, Subscription } from 'rxjs';
+import {
+  bufferCount,
+  distinctUntilChanged,
+  groupBy,
+  map,
+  mergeAll,
+  mergeMap, pairwise,
+  publish,
+  scan, startWith,
+  tap
+} from 'rxjs/operators';
 
-
-function functionalIterableDiffer(data) {
-
-}
 
 export interface DifferResult<T> {
   enter: T[],
@@ -91,7 +96,7 @@ export function diffByKey<T>(oldData: T[], newData: T[], key = (item: T, idx: nu
       // @TODO Why do we delete here??
       dataByKeyValue.delete(keyValue);
     }
-    // If there is not (or the key is a duplicate), add it to enter.
+      // If there is not (or the key is a duplicate), add it to enter.
     // @TODO Why key can be a duplicate??
     else {
       enter[i] = d;
@@ -111,10 +116,10 @@ export function diffByKey<T>(oldData: T[], newData: T[], key = (item: T, idx: nu
 }
 
 /*
-export default function(value, key) {
+export function functionalDiffer<T>(value: T, key, distinct): DifferResult<T> {
   if (!arguments.length) return Array.from(this, value);
 
-  let bind = key ? bindKey : bindIndex,
+  const bind = key ? diffByKey : diffByIndex,
     parents = this._parents,
     groups = this._groups;
 
@@ -151,49 +156,68 @@ export default function(value, key) {
 }
 */
 
-function rxIterableDiffer<T extends object>(config: { trackByKey: keyof T, distinctByKey: keyof T }): {
-  next: (v: T[]) => void,
-  enter$: Observable<T>,
-  update$: Observable<T>,
-  exit$: Observable<T>
-} {
+
+interface RxIterableDiffer<T extends object> {
+  connect: () => Subscription;
+  next: (v: T[]) => void;
+  enter$: Observable<T>;
+  update$: Observable<T>;
+  exit$: Observable<T>;
+}
+
+export function rxIterableDifferFactory<T extends object>(config: { trackBy: keyof T | ((i: T) => any), distinctBy: keyof T | ((i: T) => any) }): RxIterableDiffer<T> {
+  const trackBy = (typeof config.trackBy !== 'function') ? constantPluck(config.trackBy) : config.trackBy;
+  const distinctBy = (typeof  config.distinctBy !== 'function') ? constantPluck(config.distinctBy) : config.distinctBy;
+
   const array$ = new Subject<T[]>();
-  let idMap = {};
-  const item$$ = array$.pipe(
-    tap(a => {
-      // @TODO good idea?? I guess no... :D
-      idMap = toDictionary(a, config.trackByKey as any);
+  const differResult$ = array$.pipe(
+    startWith([]),
+    pairwise(),
+    map(([oldData, newData]) => {
+      return diffByKey(oldData, newData, trackBy, distinctBy)
     }),
-    mergeMap(arr => arr),
-    groupBy(i => i[config.trackByKey])
-  );
-  const enter$ = item$$.pipe(
-    map(o$ => o$
-      .pipe(distinctUntilChanged((a, b) => a[config.distinctByKey] === b[config.distinctByKey]))
-    ),
-    mergeAll()
-  );
-  const update$ = item$$.pipe(
-    map(o$ => o$
-      .pipe(distinctUntilChanged((a, b) => a[config.distinctByKey] === b[config.distinctByKey]))
-    ),
-    mergeAll()
-  );
-  const exit$ = item$$.pipe(
-    map(o$ => o$
-      .pipe(distinctUntilChanged((a, b) => a[config.distinctByKey] === b[config.distinctByKey]))
-    ),
-    mergeAll()
+    tap(console.log),
+    publish()
   );
 
   return {
+    connect,
     next,
-    enter$,
-    update$,
-    exit$
+    enter$: differResult$.pipe(map(r => r.enter), distinctArray(trackBy, distinctBy)),
+    update$: differResult$.pipe(map(r => r.update), distinctArray(trackBy, distinctBy)),
+    exit$: differResult$.pipe(map(r => r.exit), distinctArray(trackBy, distinctBy))
   };
+
+  // ===
+
+  function connect(): Subscription {
+    return (differResult$ as ConnectableObservable<T>).connect();
+  }
 
   function next(v: T[]): void {
     array$.next(v);
   }
 }
+
+
+function constant(x) {
+  return function() {
+    return x;
+  };
+}
+
+function constantPluck<T>(x) {
+  return function(i: T) {
+    return i[x];
+  };
+}
+
+function distinctArray<T>(trackBy: (i: T) => any, distinctBy: (i: T) => any) {
+  return pipe(
+    mergeMap(arr => arr as T[]),
+    groupBy(i => trackBy(i)),
+    map(o$ => o$.pipe(distinctUntilChanged((a, b) => distinctBy(a) === distinctBy(b)))),
+    mergeAll()
+  );
+}
+
