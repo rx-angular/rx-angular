@@ -1,9 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { ArrayProviderService } from '../../../../shared/debug-helper/value-provider';
-import { Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, groupBy, map, mergeAll, mergeMap, tap } from 'rxjs/operators';
-import { toDictionary } from '@rx-angular/state';
+import { diffByKey, diffByIndex } from './rx-differ';
 
 
 @Component({
@@ -12,27 +10,46 @@ import { toDictionary } from '@rx-angular/state';
     <rxa-visualizer>
       <div visualizerHeader>
         <h2>Reactive Iterable Differ</h2>
-        <button mat-raised-button [unpatch] (click)="valP.reset()">
-          Reset
-        </button>
-        <button mat-raised-button [unpatch] (click)="valP.error()">
-          Error
-        </button>
-        <button mat-raised-button [unpatch] (click)="valP.complete()">
-          Complete
-        </button>
-        <button mat-raised-button [unpatch] (click)="valP.addItems()">
-          Add
-        </button>
-        <button mat-raised-button [unpatch] (click)="valP.moveItems()">
-          Move
-        </button>
-        <button mat-raised-button [unpatch] (click)="valP.updateItems()">
-          Update
-        </button>
-        <button mat-raised-button [unpatch] (click)="valP.removeItems()">
-          Remove
-        </button>
+        <div>
+          <button mat-raised-button [unpatch] (click)="valP.reset()">
+            Reset
+          </button>
+          <button mat-raised-button [unpatch] (click)="valP.error()">
+            Error
+          </button>
+          <button mat-raised-button [unpatch] (click)="valP.complete()">
+            Complete
+          </button>
+        </div>
+        <div>
+          <button mat-raised-button [unpatch] (click)="valP.addItemsMutable()">
+            Add
+          </button>
+          <button mat-raised-button [unpatch] (click)="valP.moveItemsMutable()">
+            Move
+          </button>
+          <button mat-raised-button [unpatch] (click)="valP.updateItemsMutable()">
+            Update
+          </button>
+          <button mat-raised-button [unpatch] (click)="valP.removeItemsMutable()">
+            Remove
+          </button>
+        </div>
+        <div>
+          <button mat-raised-button [unpatch] (click)="valP.addItemsImmutable()">
+            Add
+          </button>
+          <button mat-raised-button [unpatch] (click)="valP.moveItemsImmutable()">
+            Move
+          </button>
+          <button mat-raised-button [unpatch] (click)="valP.updateItemsImmutable()">
+            Update
+          </button>
+          <button mat-raised-button [unpatch] (click)="valP.removeItemsImmutable()">
+            Remove
+          </button>
+        </div>
+
       </div>
       <div>
         <ng-container *ngFor="let i of valP.array$ | push; trackBy: trackByIdFn">
@@ -54,53 +71,21 @@ export class CdEmbeddedViewParentRxDifferComponent {
   trackByIdFn = (a) => a.id;
 
   constructor(public valP: ArrayProviderService) {
-
-  }
-}
-
-function rxIterableDiffer<T extends object>(config: { trackByKey: keyof T, distinctByKey: keyof T }): {
-  next: (v: T[]) => void,
-  enter$: Observable<T>,
-  update$: Observable<T>,
-  exit$: Observable<T>
-} {
-  const array$ = new Subject<T[]>();
-  let idMap = {};
-  const item$$ = array$.pipe(
-    tap(a => {
-      // @TODO good idea?? I guess no... :D
-      idMap = toDictionary(a, config.trackByKey as any)
-    }),
-    mergeMap(arr => arr),
-    groupBy(i => i[config.trackByKey])
-  );
-  const enter$ = item$$.pipe(
-    map(o$ => o$
-      .pipe(distinctUntilChanged((a, b) => a[config.distinctByKey] === b[config.distinctByKey]))
-    ),
-    mergeAll()
-  );
-  const update$ = item$$.pipe(
-    map(o$ => o$
-      .pipe(distinctUntilChanged((a, b) => a[config.distinctByKey] === b[config.distinctByKey]))
-    ),
-    mergeAll()
-  );
-  const exit$ = item$$.pipe(
-    map(o$ => o$
-      .pipe(distinctUntilChanged((a, b) => a[config.distinctByKey] === b[config.distinctByKey]))
-    ),
-    mergeAll()
-  );
-
-  return {
-    next,
-    enter$,
-    update$,
-    exit$
-  };
-
-  function next(v: T[]): void {
-    array$.next(v);
+    let oldData = [];
+    this.valP.array$.subscribe(
+      newData => {
+        const indexDifferResult = diffByIndex(oldData, newData);
+        console.log('##diffByIndex');
+        console.log('enter', indexDifferResult.enter);
+        console.log('update', indexDifferResult.update);
+        console.log('exit', indexDifferResult.exit);
+        const keyDifferResult = diffByKey(oldData, newData, (i) => i.id );
+        console.log('##diffByKey');
+        console.log('enter', keyDifferResult.enter);
+        console.log('update', keyDifferResult.update);
+        console.log('exit', keyDifferResult.exit);
+        oldData = [...newData];
+      }
+    );
   }
 }

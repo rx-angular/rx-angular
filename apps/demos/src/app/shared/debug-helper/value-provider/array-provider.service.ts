@@ -3,10 +3,10 @@ import { RxState } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
-  addItemImmutable,
-  moveItemImmutable,
-  removeItemsImmutable,
-  updateItemImmutable,
+  addItemImmutable, addItemMutable,
+  moveItemImmutable, moveItemMutable,
+  removeItemsImmutable, removeItemsMutable,
+  updateItemImmutable, updateItemMutable,
   withCompleteAndError
 } from './utils';
 import { Positions, ProvidedValues } from './model';
@@ -26,10 +26,16 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
   protected completeSubject = new Subject<any>();
   protected resetSubject = new Subject<any>();
 
-  protected addItemsSubject = new Subject<number | undefined>();
-  protected moveItemsSubject = new Subject<Positions | undefined>();
-  protected updateItemsSubject = new Subject<number[] | undefined>();
-  protected removeItemsSubject = new Subject<number[] | undefined>();
+  protected addItemsImmutableSubject = new Subject<number | undefined>();
+  protected moveItemsImmutableSubject = new Subject<Positions | undefined>();
+  protected updateItemsImmutableSubject = new Subject<number[] | undefined>();
+  protected removeItemsImmutableSubject = new Subject<number[] | undefined>();
+
+  protected addItemsMutableSubject = new Subject<number | undefined>();
+  protected moveItemsMutableSubject = new Subject<Positions | undefined>();
+  protected updateItemsMutableSubject = new Subject<number[] | undefined>();
+  protected removeItemsMutableSubject = new Subject<number[] | undefined>();
+
 
   private resetAll = () => {
     this.resetObservables();
@@ -37,7 +43,7 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
   };
 
   private resetObservables = () => {
-    this.array$ = this.select(
+    this.array$ = this.$.pipe(
       map((s) => s.array),
       withCompleteAndError(this.error$, this.completeSubject)
     );
@@ -48,29 +54,85 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
 
     this.connect(
       'array',
-      this.addItemsSubject,
+      this.addItemsImmutableSubject,
       (state, numItems = 1) => addItemImmutable(state.array, numItems)
     );
 
     this.connect(
       'array',
-      this.updateItemsSubject,
+      this.updateItemsImmutableSubject,
       (state, itemIds) => updateItemImmutable(state.array, itemIds)
     );
 
     this.connect(
       'array',
-      this.moveItemsSubject,
+      this.moveItemsImmutableSubject,
       (state, positions) => moveItemImmutable(state.array, positions)
     );
 
     this.connect(
       'array',
-      this.removeItemsSubject,
+      this.removeItemsImmutableSubject,
       (state, ids) => removeItemsImmutable(state.array, ids)
     );
 
+    this.connect(
+      'array',
+      this.addItemsMutableSubject,
+      (state, numItems = 1) => addItemMutable(state.array, numItems)
+    );
+
+    this.connect(
+      'array',
+      this.updateItemsMutableSubject,
+      (state, itemIds) => updateItemMutable(state.array, itemIds)
+    );
+
+    this.connect(
+      'array',
+      this.moveItemsMutableSubject,
+      (state, positions) => moveItemMutable(state.array, positions)
+    );
+
+    this.connect(
+      'array',
+      this.removeItemsMutableSubject,
+      (state, ids) => removeItemsMutable(state.array, ids)
+    );
+
     this.resetAll();
+  }
+
+  addItemsImmutable(numItems?: number): void {
+    this.addItemsImmutableSubject.next(numItems);
+  }
+
+  moveItemsImmutable(positions?: Positions): void {
+    this.moveItemsImmutableSubject.next(positions);
+  }
+
+  updateItemsImmutable(itemsIds?: number[]): void {
+    this.updateItemsImmutableSubject.next(itemsIds);
+  }
+
+  removeItemsImmutable(itemsIds?: number[]): void {
+    this.removeItemsImmutableSubject.next(itemsIds);
+  }
+
+  addItemsMutable(numItems?: number): void {
+    this.addItemsMutableSubject.next(numItems);
+  }
+
+  moveItemsMutable(positions?: Positions): void {
+    this.moveItemsMutableSubject.next(positions);
+  }
+
+  updateItemsMutable(itemsIds?: number[]): void {
+    this.updateItemsMutableSubject.next(itemsIds);
+  }
+
+  removeItemsMutable(itemsIds?: number[]): void {
+    this.removeItemsMutableSubject.next(itemsIds);
   }
 
   error(): void {
@@ -81,24 +143,8 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
     this.completeSubject.next();
   }
 
-
-  addItems(numItems?: number): void {
-    this.addItemsSubject.next(numItems);
-  }
-
-  moveItems(positions?: Positions): void {
-    this.moveItemsSubject.next(positions);
-  }
-
-  updateItems(itemsIds?: number[]): void {
-    this.updateItemsSubject.next(itemsIds);
-  }
-
-  removeItems(itemsIds?: number[]): void {
-    this.removeItemsSubject.next(itemsIds);
-  }
-
   reset(): void {
     this.resetSubject.next();
   }
+
 }
