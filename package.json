@@ -65,6 +65,8 @@
     "ngx-skeleton-loader": "^2.4.4",
     "normalize-css": "^2.3.1",
     "rxjs": "^6.6.3",
+    "templateAlpha0": "npm:@rx-angular/template@1.0.0-alpha.0",
+    "templateAlpha1": "npm:@rx-angular/template@1.0.0-alpha.1",
     "tslib": "^2.0.1",
     "zone.js": "^0.11.1"
   },
