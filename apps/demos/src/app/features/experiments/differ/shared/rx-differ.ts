@@ -7,7 +7,7 @@ import {
   mergeMap,
   pairwise,
   publishReplay,
-  startWith, tap
+  startWith
 } from 'rxjs/operators';
 
 
@@ -55,7 +55,7 @@ export function diffByIndex<T>(oldData: T[], newData: T[]): DifferResult<T> {
 }
 
 // Identify items over a provided key in the array
-export function diffByKey<T>(oldData: T[], newData: T[], key = (item: T, idx: number) => idx, distinctBy = (d: T, idx: number) => d): DifferResult<T> {
+export function diffByKey<T>(oldData: T[], newData: T[], key = (item: T, idx: number) => idx): DifferResult<T> {
   let i,
     keyValue;
   const dataByKeyValue = new Map,
@@ -178,16 +178,19 @@ export function rxIterableDifferFactory<T extends object>(config: RxIterableDiff
   const differResult$: ConnectableObservable<DifferResult<T>> = array$.pipe(
     startWith([]),
     pairwise(),
-    map(([oldData, newData]) => trackBy ? diffByKey<T>(oldData, newData, trackBy, distinctBy) : diffByIndex<T>(oldData, newData)),
+    map(([oldData, newData]) => {
+      console.log(trackBy);
+      return trackBy ? diffByKey<T>(oldData, newData, trackBy) : diffByIndex<T>(oldData, newData)
+    }),
     publishReplay(1)
   ) as ConnectableObservable<DifferResult<T>>;
 
   return {
     connect,
     next,
-    enter$: differResult$.pipe(map(r => r.enter), distinctArray(trackBy, distinctBy)),
+    enter$: differResult$.pipe(map(r => r.enter), distinctArray(trackBy)),
     update$: differResult$.pipe(map(r => r.update), distinctArray(trackBy, distinctBy)),
-    exit$: differResult$.pipe(map(r => r.exit), distinctArray(trackBy, distinctBy))
+    exit$: differResult$.pipe(map(r => r.exit), distinctArray(trackBy))
   } as RxIterableDiffer<T>;
 
   // ===
@@ -214,11 +217,11 @@ export function constantPluck<T>(x) {
   };
 }
 
-function distinctArray<T>(trackBy: (i: T) => any, distinctBy: (i: T) => any) {
+function distinctArray<T>(trackBy: (i: T) => any, distinctBy?: (i: T) => any) {
   return (o$: Observable<T[]>): Observable<T> => o$.pipe(
     mergeMap(arr => arr),
     groupBy(i => trackBy(i)),
-    map(o => o.pipe(distinctUntilChanged((a, b) => distinctBy(a) === distinctBy(b)))),
+    map(o => distinctBy ? o.pipe(distinctUntilChanged((a, b) => distinctBy(a) === distinctBy(b))) : o),
     mergeAll()
   );
 }

@@ -71,8 +71,7 @@ export class RxForDifferDirective<U extends object> extends Hooks {
 
   private setupDiffer() {
     this.rxDiffer = rxIterableDifferFactory<U & object>({
-      trackBy: this.state.get('trackBy'),
-      distinctBy: this.state.get('distinctBy')
+      trackBy: this.state.get('trackBy')
     });
     this.rxDiffer.connect();
   }
@@ -98,8 +97,8 @@ export class RxForDifferDirective<U extends object> extends Hooks {
 
   onUpdate = (item: U): void => {
     const key = this.state.get('trackBy')(item);
-    console.log('onUpdate', item, key);
     const existingItem = this.embeddedViews.has(key) ? this.embeddedViews.get(key) : undefined;
+    console.log('onUpdate', existingItem , key);
     if (existingItem) {
       existingItem.view.context.$implicit = item;
       existingItem.view.detectChanges();
