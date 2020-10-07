@@ -1,8 +1,8 @@
 import { EMPTY, Observable, timer } from 'rxjs';
 import { merge as mergeWith, repeat, takeUntil } from 'rxjs/operators';
 import { priorityTickMap } from '@rx-angular/template';
-import { SchedulerConfig } from './model';
-import { insert, update } from '../../../../../../../libs/state/src/lib/transformation-helpers/array';
+import { SchedulerConfig, TestItem } from './model';
+import { remove } from '../../../../../../../libs/state/src/lib/transformation-helpers/array';
 
 
 export function compareIdFn(a, b) {
@@ -44,25 +44,28 @@ export function toBoolean(float: number, truthy: number): boolean | undefined {
   return float !== undefined ? float < truthy : undefined;
 }
 
-export function toRandomItems(ids: number[]): any[] {
+export function toRandomItems(ids: number[]): TestItem[] {
   const _ids = [...ids];
   return new Array(ids.length).fill(0).map((v) => ({ id: _ids.pop(), value: toRandom() }));
 }
 
-export function toNewItems(arr: any[] = [], numItems: number, maxId = 10): any[] {
+export function toNewItems(arr: TestItem[] = [], numItems: number, maxId = 10): TestItem[] {
   const ids = arr.map(i => i.id);
-  const newItems = [];
+  const newItems: TestItem[] = [];
+  if (arr.length >= maxId) {
+    return newItems;
+  }
   // arr.length <= maxId to avoid infinite loops if no new item can be found
-  while (newItems.length < numItems && arr.length <= maxId) {
+  while (newItems.length < numItems) {
     const id = toInt(undefined, 0, maxId);
-    if (!ids.includes(id)) {
-      newItems.push(...toRandomItems([id]));
+    if (!ids.includes(id) && !newItems.map(i => i.id).includes(id)) {
+      newItems.push(toRandomItems([id])[0]);
     }
   }
   return newItems;
 }
 
-export function getRandomItems(arr: any[] = [], numItems: number) {
+export function getRandomItems(arr: TestItem[] = [], numItems: number) {
   const result = new Array(numItems);
   let len = arr.length;
   const taken = new Array(len);
@@ -76,29 +79,26 @@ export function getRandomItems(arr: any[] = [], numItems: number) {
   return result;
 }
 
-export function getItems(arr: any[] = [], itemIds: number[]) {
+export function getItems(arr: TestItem[] = [], itemIds: number[]) {
   return arr.filter(i => itemIds.includes(i.id));
 }
 
-export function updateItemImmutable(item: any) {
-  return { ...updateItemMutable(item) };
+
+export function updateItemMutable(arr = [], itemIds: number[]) {
+  if (!arr.length) {
+    return arr;
+  }
+  itemIds = itemIds || getRandomItems(arr, 1).map(i => i.id);
+  getItems(arr, itemIds).forEach(i => arr.find(ii => i.id === ii.id).value = toRandom());
+  return arr;
 }
 
-export function updateItemMutable(item: any) {
-  item.value = toRandom();
-  return item;
+export function updateItemImmutable(arr = [], itemIds: number[]) {
+  return [...updateItemMutable(arr, itemIds)];
 }
 
 export function addItemMutable(arr = [], numItems: number) {
-  const items: any[] = toNewItems(arr, numItems);
-  if (arr.length === 0) {
-    arr.push(items);
-    return arr;
-  }
-  const newItems = items.filter(ni => arr.some(oi => oi.id !== ni.id));
-  newItems.forEach(i => arr.push(i));
-  const updateItems = items.filter(ni => arr.some(oi => oi.id === ni.id));
-  updateItems.forEach(i => arr[arr.findIndex(ii => i.id = ii.id)] = i);
+  toNewItems(arr, numItems).forEach(i => arr.push(i));
   return arr;
 }
 
@@ -106,33 +106,54 @@ export function addItemImmutable(arr = [], numItems: number) {
   return [...addItemMutable(arr, numItems)];
 }
 
-export function moveItemMutable(arr: any[] = [], pos1: number, pos2: number): any[] {
-  // local variables
-  let i, tmp;
-  // if positions are different and inside array
-  if (arr.length >= 2 && pos1 !== pos2 && 0 <= pos1 && pos1 <= arr.length && 0 <= pos2 && pos2 <= arr.length) {
-    // save element from position 1
-    tmp = arr[pos1];
-    // move element down and shift other elements up
-    if (pos1 < pos2) {
-      for (i = pos1; i < pos2; i++) {
-        arr[i] = arr[i + 1];
-      }
-    }
-    // move element up and shift other elements down
-    else {
-      for (i = pos1; i > pos2; i--) {
-        arr[i] = arr[i - 1];
-      }
-    }
-    // put element from position 1 to destination
-    arr[pos2] = tmp;
-
+export function moveItemMutable(arr: TestItem[] = [], positions): TestItem[] {
+  if (!arr.length) {
     return arr;
   }
+  const randItemId = getRandomItems(arr, 1)[0].id;
+  Object.entries(positions || { [randItemId]: 1 }).forEach(([id, pos2]) => {
+    // local variables
+    let i, tmp;
+    const pos1 = arr.findIndex(ii => +ii.id === +id);
+    pos2 = +pos2;
+    // if positions are different and inside array
+    if (arr.length >= 2 && pos1 !== pos2 && 0 <= pos1 && pos1 <= arr.length && 0 <= pos2 && pos2 <= arr.length) {
+      // save element from position 1
+      tmp = arr[pos1];
+      // move element down and shift other elements up
+      if (pos1 < pos2) {
+        for (i = pos1; i < pos2; i++) {
+          arr[i] = arr[i + 1];
+        }
+      }
+      // move element up and shift other elements down
+      else {
+        for (i = pos1; i > pos2; i--) {
+          arr[i] = arr[i - 1];
+        }
+      }
+      // put element from position 1 to destination
+      arr[+pos2] = tmp;
+    }
+  });
   return arr;
 }
 
-export function moveItemImmutable(arr: any[] = [], pos1: number, pos2: number): any[] {
-  return [...moveItemMutable(arr, pos1, pos2)];
+export function moveItemImmutable(arr: TestItem[] = [], positions): TestItem[] {
+  return [...moveItemMutable(arr, positions)];
+}
+
+export function removeItemsMutable(arr: TestItem[] = [], ids: number[]) {
+  if (!arr.length) {
+    return arr;
+  }
+  ids = ids || getRandomItems(arr, 1);
+  ids.forEach(id => {
+    arr.splice(arr.findIndex(i => i.id === id), 1);
+  })
+  return arr;
+}
+
+export function removeItemsImmutable(arr: TestItem[] = [], ids: number[]) {
+  return [...removeItemsMutable(arr, ids)];
 }

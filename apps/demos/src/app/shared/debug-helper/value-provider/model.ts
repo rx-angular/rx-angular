@@ -1,5 +1,11 @@
 import { SchedulingPriority } from '@rx-angular/template';
 
+
+export interface TestItem {
+  id: number;
+  value: number;
+}
+
 export interface ProvidedValues {
   random: number;
   array: any[];

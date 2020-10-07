@@ -1,13 +1,11 @@
 import { ChangeDetectorRef, Injectable } from '@angular/core';
-import { insert, remove, RxState, update } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   addItemImmutable,
-  getItems,
-  getRandomItems,
   moveItemImmutable,
-  toNewItems,
+  removeItemsImmutable,
   updateItemImmutable,
   withCompleteAndError
 } from './utils';
@@ -57,43 +55,19 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
     this.connect(
       'array',
       this.updateItemsSubject,
-      (state, itemIds) => {
-        const arr = state.array || [];
-        if (!arr.length) {
-          return arr;
-        }
-        itemIds = itemIds || getRandomItems(arr, 1).map(i => i.id);
-        return update(arr, getItems(arr, itemIds).map(updateItemImmutable), 'id');
-      }
+      (state, itemIds) => updateItemImmutable(state.array, itemIds)
     );
 
     this.connect(
       'array',
       this.moveItemsSubject,
-      (state, positions) => {
-        let arr = state.array || [];
-        if (!arr.length) {
-          return arr;
-        }
-        const randItemId = getRandomItems(arr, 1)[0].id;
-        Object.entries(positions || { [randItemId]: 1 }).forEach(([id, newIdx]) =>
-          arr = moveItemImmutable(arr, arr.findIndex(i => +i.id === +id), newIdx)
-        );
-        return arr;
-      }
+      (state, positions) => moveItemImmutable(state.array, positions)
     );
 
     this.connect(
       'array',
       this.removeItemsSubject,
-      (state, ids) => {
-        const arr = state.array || [];
-        if (!arr.length) {
-          return arr;
-        }
-        ids = ids || getRandomItems(arr, 1);
-        return remove(arr, ids, 'id');
-      }
+      (state, ids) => removeItemsImmutable(state.array, ids)
     );
 
     this.resetAll();
