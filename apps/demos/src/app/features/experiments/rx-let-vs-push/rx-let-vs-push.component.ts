@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -70,7 +69,6 @@ export class RxLetVsPushComponent {
   showLet = false;
   showPushAutoTest = false;
   showPush = false;
-  letLoading$ = new Subject<boolean>();
 
   togglePush() {
     this.showPush = !this.showPush;
