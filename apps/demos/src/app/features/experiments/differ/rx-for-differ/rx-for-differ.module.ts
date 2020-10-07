@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { RxForDifferComponent } from './rx-for-differ/rx-for-differ.component';
 import { SharedModule } from '../shared';
+import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 
 const DECLARATIONS = [RxForDifferComponent];
 
@@ -20,7 +21,8 @@ const DECLARATIONS = [RxForDifferComponent];
     DirtyChecksModule,
     MatButtonModule,
     VisualizerModule,
-    SharedModule
+    SharedModule,
+    ValueProvidersModule
   ]
 })
 export class RxForDifferModule {

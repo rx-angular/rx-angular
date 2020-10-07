@@ -8,7 +8,7 @@ import { ZonePatchedApisComponent } from './zone-patched-apis.component';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { CdDefaultModule } from '../../../../shared/debug-helper/cd-default/cd-default.module';
-import { ValueProviderModule } from '../../../../shared/debug-helper/value-provider/value-provider.module';
+import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 
 
 @NgModule({
@@ -24,7 +24,7 @@ import { ValueProviderModule } from '../../../../shared/debug-helper/value-provi
     PushModule,
     VisualizerModule,
     CdDefaultModule,
-    ValueProviderModule
+    ValueProvidersModule
   ]
 })
 export class ZonePatchedApisModule {

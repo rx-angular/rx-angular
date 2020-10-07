@@ -8,53 +8,12 @@ import { RxState } from '@rx-angular/state';
   selector: 'rxa-rx-for-differ',
   template: `
     <rxa-visualizer>
-      <div visualizerHeader class="row">
+      <ng-container visualizerHeader>
         <div class="col-sm-12"><h2>rxFor with Differ</h2></div>
-        <div class="col-sm-12">
-          <p>Observable Context</p>
-          <button mat-raised-button [unpatch] (click)="valP.reset()">
-            Reset
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.error()">
-            Error
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.complete()">
-            Complete
-          </button>
-        </div>
-        <div class="col-sm-6">
-          <p>Mutable Operations</p>
-          <button mat-raised-button [unpatch] (click)="valP.addItemsMutable()">
-            Add
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.moveItemsMutable()">
-            Move
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.updateItemsMutable()">
-            Update
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.removeItemsMutable()">
-            Remove
-          </button>
-        </div>
-        <div class="col-sm-6">
-          <p>Immutable Operations</p>
-          <button mat-raised-button [unpatch] (click)="valP.addItemsImmutable()">
-            Add
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.moveItemsImmutable()">
-            Move
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.updateItemsImmutable()">
-            Update
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.removeItemsImmutable()">
-            Remove
-          </button>
-        </div>
-      </div>
+        <rxa-array-provider [buttons]="true" #arrayP="rxaArrayProvider"></rxa-array-provider>
+      </ng-container>
       <div>
-        <ng-container *rxForDiffer="valP.array$;
+        <ng-container *rxForDiffer="arrayP.array$;
                       trackBy: trackByKey
                       distinctBy:distinctByKey
                       let i;
@@ -77,8 +36,7 @@ export class RxForDifferComponent extends RxState<any> {
   trackByFn = (a) => a.id;
   distinctByFn = (a) => a.value;
 
-
-  constructor(public valP: ArrayProviderService) {
+  constructor(public arrayP: ArrayProviderService) {
     super();
   }
 

@@ -3,16 +3,17 @@ import { CommonModule } from '@angular/common';
 import { ValueProviderComponent } from './value-provider/value-provider.component';
 import { UnpatchEventsModule } from '@rx-angular/template';
 import { MatButtonModule } from '@angular/material/button';
+import { ArrayProviderComponent } from './array-provider/array-provider.component';
 
 
 @NgModule({
-  declarations: [ValueProviderComponent],
+  declarations: [ValueProviderComponent, ArrayProviderComponent],
   imports: [
     CommonModule,
     UnpatchEventsModule,
     MatButtonModule
   ],
-  exports: [ValueProviderComponent]
+  exports: [ValueProviderComponent, ArrayProviderComponent]
 })
-export class ValueProviderModule {
+export class ValueProvidersModule {
 }
