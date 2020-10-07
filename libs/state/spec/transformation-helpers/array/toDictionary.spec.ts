@@ -78,6 +78,20 @@ describe('toDictionary', () => {
       expect(dictionaryResult).toEqual({});
     });
 
+    it('should not call console.warn when key not found and source is empty', () => {
+      const spy = jest.spyOn(console, 'warn').mockImplementation();
+      toDictionary([] as any, 'fakeKey');
+
+      expect(spy).not.toBeCalled();
+    });
+
+    it('should call console.warn when key not found and source not empty', () => {
+      const spy = jest.spyOn(console, 'warn').mockImplementation();
+      toDictionary([{notFake: 1}] as any, 'fakeKey');
+
+      expect(spy).toBeCalled();
+    });
+
     it('should return empty object if key does not exist', () => {
       expect(toDictionary(creatures, 'fake' as any)).toEqual({});
     });

@@ -69,8 +69,9 @@
 
   ## Tutorials
 
-  - [Basic Tutorial](https://github.com/rx-angular/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics)
-  - [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
+- [Basic Tutorial](https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics)
+- [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
+
 
   ## Snippets
 
