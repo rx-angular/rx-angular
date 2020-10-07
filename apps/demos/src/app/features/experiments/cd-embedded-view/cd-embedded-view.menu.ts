@@ -27,10 +27,6 @@ export const MENU_ITEMS = [
       {
         link: 'cd-embedded-view-06',
         label: 'CD embedded-view 06',
-      },
-      {
-        link: 'rx-differ',
-        label: 'Rx Differ',
       }
     ],
   },

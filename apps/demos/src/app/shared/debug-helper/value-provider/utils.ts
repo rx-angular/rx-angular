@@ -94,7 +94,8 @@ export function updateItemMutable(arr = [], itemIds: number[]) {
 }
 
 export function updateItemImmutable(arr = [], itemIds: number[]) {
-  return [...updateItemMutable(arr, itemIds)];
+  itemIds = itemIds || getRandomItems(arr, 1).map(i => i.id);
+  return [...updateItemMutable(arr, itemIds).map(i => itemIds.find(id => id+'' === i.id+'') ? {...i} : i)];
 }
 
 export function addItemMutable(arr = [], numItems: number) {

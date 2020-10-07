@@ -14,23 +14,23 @@ export const ROUTES: Routes = [
   },
   {
     path: 'cd-embedded-view',
-    component: CdEmbeddedViewOverviewComponent,
+    component: CdEmbeddedViewOverviewComponent
   },
   {
     path: 'cd-embedded-view-01',
-    component: CdEmbeddedViewParent01Component,
+    component: CdEmbeddedViewParent01Component
   },
   {
     path: 'cd-embedded-view-02',
-    component: CdEmbeddedViewParent02Component,
+    component: CdEmbeddedViewParent02Component
   },
   {
     path: 'cd-embedded-view-03',
-    component: CdEmbeddedViewParent03Component,
+    component: CdEmbeddedViewParent03Component
   },
   {
     path: 'cd-embedded-view-04',
-    component: CdEmbeddedViewParent04Component,
+    component: CdEmbeddedViewParent04Component
   },
   {
     path: 'cd-embedded-view-05',
@@ -39,10 +39,5 @@ export const ROUTES: Routes = [
   {
     path: 'cd-embedded-view-06',
     component: CdEmbeddedViewParent06Component
-  },
-  {
-    path: 'rx-differ',
-    loadChildren: () => import('./rx-iterable-differ/poc-rx-differ.module')
-      .then(m => m.PocRxDifferModule)
-  },
+  }
 ];
