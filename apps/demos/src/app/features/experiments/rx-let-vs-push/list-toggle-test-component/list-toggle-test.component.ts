@@ -1,4 +1,5 @@
 import { Component, Input, AfterViewInit } from '@angular/core';
+// tslint:disable-next-line: nx-enforce-module-boundaries
 import { environment } from 'apps/demos/src/environments/environment';
 import { BehaviorSubject, Subject, timer } from 'rxjs';
 import { finalize, take, tap } from 'rxjs/operators';

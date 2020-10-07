@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TemplateModule } from 'templateAlpha0';
 import { Alpha0ToggleComponent } from './alpha-0-toggle.component';
+// tslint:disable-next-line: nx-enforce-module-boundaries
 import { RenderingWorkModule } from 'apps/demos/src/app/shared/debug-helper/rendering-work/rendering-work.module';
 
 @NgModule({
