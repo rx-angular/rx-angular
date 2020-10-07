@@ -1,7 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { environment } from '../../../../../../environments/environment';
-import { ArrayProviderService } from '../../../../../shared/debug-helper/value-provider';
-import { RxState } from '@rx-angular/state';
 
 
 @Component({
@@ -27,17 +25,15 @@ import { RxState } from '@rx-angular/state';
     </rxa-visualizer>
   `,
   changeDetection: environment.changeDetection,
-  encapsulation: ViewEncapsulation.None,
-  providers: [ArrayProviderService]
+  encapsulation: ViewEncapsulation.None
 })
-export class RxForDifferComponent extends RxState<any> {
+export class RxForDifferComponent {
   trackByKey = 'id';
   distinctByKey = 'value';
   trackByFn = (a) => a.id;
   distinctByFn = (a) => a.value;
 
-  constructor(public arrayP: ArrayProviderService) {
-    super();
+  constructor() {
   }
 
 }
