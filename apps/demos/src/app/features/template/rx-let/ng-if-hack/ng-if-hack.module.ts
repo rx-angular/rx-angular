@@ -20,7 +20,6 @@ const DECLARATIONS = [
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    MatButtonModule,
     DirtyChecksModule,
     LetModule,
     UnpatchEventsModule,

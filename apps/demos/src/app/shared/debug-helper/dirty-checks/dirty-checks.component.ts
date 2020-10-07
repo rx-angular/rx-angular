@@ -28,17 +28,23 @@ export class DirtyChecksComponent extends Hooks {
   @Input()
   color = 'rgba(253,255,0,0.24)';
 
+  @Input()
+  rippleEffect = { centered: true };
+
+
+
   constructor(private elementRef: ElementRef, private renderer: Renderer2) {
     super();
     this.afterViewInit$.subscribe(() => {
-      this.ripple.launch({ centered: true });
+      this.ripple.launch(this.rippleEffect);
       this.displayElem = this.elementRef.nativeElement.children[0].children[0];
+      this.numDirtyChecks();
     });
   }
 
   numDirtyChecks() {
     // tslint:disable-next-line:no-unused-expression
-    this.rippleOn && this.ripple && this.ripple.launch({ centered: true });
+    this.rippleOn && this.ripple && this.ripple.launch(this.rippleEffect);
     // tslint:disable-next-line:no-unused-expression
     this.displayElem && this.renderer.setProperty(this.displayElem, 'innerHTML', ++this.dirtyChecks + '');
   }
