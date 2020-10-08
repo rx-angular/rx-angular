@@ -28,6 +28,13 @@ const ROUTES: Routes = [
         (m) => m.RxLetVsPushModule
       ),
   },
+  {
+    path: 'alphas-compare',
+    loadChildren: () =>
+      import('./alphas-compare/alphas-compare.module').then(
+        (m) => m.AlphasCompareModule
+      ),
+  },
 ];
 
 @NgModule({

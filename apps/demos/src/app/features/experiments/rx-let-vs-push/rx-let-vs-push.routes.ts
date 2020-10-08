@@ -5,7 +5,7 @@ export const ROUTES = [
     redirectTo: 'rx-let-vs-push',
   },
   {
-    path: 'rx-let-vs-push',
+    path: 'list-toggle',
     component: RxLetVsPushComponent,
   },
 ];

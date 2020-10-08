@@ -1,68 +1,86 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'rxa-rx-let-vs-push',
   template: `
-    <h1>RxLet vs Push</h1>
-    <div style="margin-bottom: 16px">
-      <button mat-raised-button color="primary" (click)="toggleLet()">
-        Toggle let
-      </button>
-      <button
-        mat-raised-button
-        color="primary"
-        style="margin-left: 8px"
-        (click)="togglePush()"
-      >
-        Toggle push
-      </button>
-    </div>
-
+    <h1>Push vs RxLet</h1>
     <div class="row w-100">
-      <div class="col-sm-12 col-md-6" *ngIf="showPush">
-        <button mat-raised-button color="primary" (click)="toggleLoadingPush()">
-          Toggle loading for Push
-        </button>
-        <p *ngIf="pushLoading$ | push; else pushContent">Loading...</p>
-        <ng-template #pushContent>
-          <rxa-rendering-work [factor]="10"></rxa-rendering-work>
-        </ng-template>
+      <div class="col-sm-12 col-md-6">
+        <div style="margin-bottom: 16px">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="togglePushAutoTest()"
+          >
+            Run Auto test for Push pipe (Start performance profiler beforehand)
+          </button>
+        </div>
+        <div style="margin-bottom: 16px">
+          <button mat-raised-button color="secondary" (click)="togglePush()">
+            Open Manual test for Push pipe
+          </button>
+        </div>
+        <rxa-list-toggle-test
+          *ngIf="showPushAutoTest"
+          type="push"
+          [auto]="true"
+        ></rxa-list-toggle-test>
+        <rxa-list-toggle-test
+          *ngIf="showPush"
+          type="push"
+          [auto]="false"
+        ></rxa-list-toggle-test>
       </div>
-      <div class="col-sm-12 col-md-6" *ngIf="showLet">
-        <button mat-raised-button color="primary" (click)="toggleLoadingLet()">
-          Toggle loading for Let
-        </button>
-        <ng-container
-          *rxLet="letLoading$; let letLoading; suspense: suspenseTpl"
-        >
-          <rxa-rendering-work [factor]="10"></rxa-rendering-work>
-        </ng-container>
-        <ng-template #suspenseTpl> Loading... </ng-template>
+
+      <div class="col-sm-12 col-md-6">
+        <div style="margin-bottom: 16px">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="toggleLetAutoTest()"
+          >
+            Run Auto test for Let directive (Start performance profiler
+            beforehand)
+          </button>
+        </div>
+        <div style="margin-bottom: 16px">
+          <button mat-raised-button color="secondary" (click)="toggleLet()">
+            Open Manual test for Let directive
+          </button>
+        </div>
+        <rxa-list-toggle-test
+          *ngIf="showLetAutoTest"
+          type="rxLet"
+          [auto]="true"
+        ></rxa-list-toggle-test>
+        <rxa-list-toggle-test
+          *ngIf="showLet"
+          type="rxLet"
+          [auto]="false"
+        ></rxa-list-toggle-test>
       </div>
     </div>
   `,
   changeDetection: environment.changeDetection,
 })
 export class RxLetVsPushComponent {
+  showLetAutoTest = false;
   showLet = false;
+  showPushAutoTest = false;
   showPush = false;
-  pushLoading$ = new BehaviorSubject<boolean>(true);
-  letLoading$ = new Subject<boolean>();
-  toggleLet() {
-    this.showLet = !this.showLet;
-  }
 
   togglePush() {
     this.showPush = !this.showPush;
   }
-
-  toggleLoadingLet() {
-    this.letLoading$.next(false);
+  togglePushAutoTest() {
+    this.showPushAutoTest = !this.showPushAutoTest;
   }
 
-  toggleLoadingPush() {
-    this.pushLoading$.next(!this.pushLoading$.getValue());
+  toggleLet() {
+    this.showLet = !this.showLet;
+  }
+  toggleLetAutoTest() {
+    this.showLetAutoTest = !this.showLetAutoTest;
   }
 }
