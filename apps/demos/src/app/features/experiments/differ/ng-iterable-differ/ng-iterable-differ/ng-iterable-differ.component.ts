@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  IterableChanges,
   IterableDiffers,
   ViewChild,
   ViewEncapsulation
@@ -10,9 +9,8 @@ import {
 import { environment } from '../../../../../../environments/environment';
 import { ArrayProviderService } from '../../../../../shared/debug-helper/value-provider';
 import { RxState } from '@rx-angular/state';
-import { map, share, shareReplay } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 import { Hooks } from '../../../../../shared/debug-helper/hooks';
-import { Observable } from 'rxjs';
 import { fromFor } from '../../shared/from-for';
 import { logIterable } from '../../shared/log-iterable';
 
@@ -26,22 +24,36 @@ import { logIterable } from '../../shared/log-iterable';
           <rxa-array-provider [buttons]="true" [unpatched]="[]" #arrayP="rxaArrayProvider"></rxa-array-provider>
         </div>
       </div>
-      <div>
-        <h3>Enter</h3>
-        <div *ngFor="let enterRes of enter$ | push">
-          <pre>{{enterRes | json}}</pre>
+      <div class=" w-100 row">
+        <div class="col-sm-2">
+          <h3>List</h3>
+          <div *ngFor="let enterRes of arrayP.array$ | push">
+            <pre>{{enterRes | json}}</pre>
+          </div>
         </div>
-        <h3>Move</h3>
-        <div *ngFor="let enterRes of move$ | push">
-          <pre>{{enterRes | json}}</pre>
+        <div class="col-sm-2">
+          <h3>Enter</h3>
+          <div *ngFor="let enterRes of enter$ | push">
+            <pre>{{enterRes | json}}</pre>
+          </div>
         </div>
-        <h3>Identity Change</h3>
-        <div *ngFor="let enterRes of identityChange$ | push">
-          <pre>{{enterRes | json}}</pre>
+        <div class="col-sm-2">
+          <h3>Move</h3>
+          <div *ngFor="let enterRes of move$ | push">
+            <pre>{{enterRes | json}}</pre>
+          </div>
         </div>
-        <h3>Exit</h3>
-        <div *ngFor="let enterRes of exit$ | push">
-          <pre>{{enterRes | json}}</pre>
+        <div class="col-sm-2">
+          <h3>Identity Change</h3>
+          <div *ngFor="let enterRes of identityChange$ | push">
+            <pre>{{enterRes | json}}</pre>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <h3>Exit</h3>
+          <div *ngFor="let enterRes of exit$ | push">
+            <pre>{{enterRes | json}}</pre>
+          </div>
         </div>
       </div>
     </rxa-visualizer>
