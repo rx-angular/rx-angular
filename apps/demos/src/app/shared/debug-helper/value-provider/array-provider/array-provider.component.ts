@@ -9,43 +9,44 @@ import { ArrayProviderService } from '../array-provider.service';
       <div class="row">
         <div class="col-sm-12">
           <p>Observable Context</p>
-          <button mat-raised-button [unpatch] (click)="reset()">
+          <button mat-raised-button [unpatch]="unpatched" (click)="reset()">
             Reset
           </button>
-          <button mat-raised-button [unpatch] (click)="error()">
+          <button mat-raised-button [unpatch]="unpatched" (click)="error()">
             Error
           </button>
-          <button mat-raised-button [unpatch] (click)="complete()">
+          <button mat-raised-button [unpatch]="unpatched" (click)="complete()">
             Complete
           </button>
         </div>
         <div class="col-sm-6">
           <p>Mutable Operations</p>
-          <button mat-raised-button [unpatch] (click)="addItemsMutable()">
+          <button mat-raised-button [unpatch]="unpatched" (click)="addItemsMutable()">
             Add
           </button>
-          <button mat-raised-button [unpatch] (click)="moveItemsMutable()">
+          <button mat-raised-button [unpatch]="unpatched" (click)="moveItemsMutable()">
             Move
           </button>
-          <button mat-raised-button [unpatch] (click)="updateItemsMutable()">
+          <button mat-raised-button [unpatch]="unpatched" (click)="updateItemsMutable()">
             Update
           </button>
-          <button mat-raised-button [unpatch] (click)="removeItemsMutable()">
+          <button mat-raised-button [unpatch]="unpatched" (click)="removeItemsMutable()">
             Remove
           </button>
+
         </div>
         <div class="col-sm-6">
           <p>Immutable Operations</p>
-          <button mat-raised-button [unpatch] (click)="addItemsImmutable()">
+          <button mat-raised-button [unpatch]="unpatched" (click)="addItemsImmutable()">
             Add
           </button>
-          <button mat-raised-button [unpatch] (click)="moveItemsImmutable()">
+          <button mat-raised-button [unpatch]="unpatched" (click)="moveItemsImmutable()">
             Move
           </button>
-          <button mat-raised-button [unpatch] (click)="updateItemsImmutable()">
+          <button mat-raised-button [unpatch]="unpatched" (click)="updateItemsImmutable()">
             Update
           </button>
-          <button mat-raised-button [unpatch] (click)="removeItemsImmutable()">
+          <button mat-raised-button [unpatch]="unpatched" (click)="removeItemsImmutable()">
             Remove
           </button>
         </div>
@@ -57,6 +58,8 @@ import { ArrayProviderService } from '../array-provider.service';
 export class ArrayProviderComponent extends ArrayProviderService {
   @Input()
   buttons = false;
+  @Input()
+  unpatched: any[] = undefined;
 
   @Input()
   min = 0;

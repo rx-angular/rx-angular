@@ -5,7 +5,6 @@ import { UnpatchEventsModule } from '@rx-angular/template';
 import { MatButtonModule } from '@angular/material/button';
 import { ArrayProviderComponent } from './array-provider/array-provider.component';
 
-
 @NgModule({
   declarations: [ValueProviderComponent, ArrayProviderComponent],
   imports: [

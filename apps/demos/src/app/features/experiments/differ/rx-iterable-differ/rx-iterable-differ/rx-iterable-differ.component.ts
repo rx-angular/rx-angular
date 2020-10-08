@@ -10,52 +10,13 @@ import { RxState } from '@rx-angular/state';
   template: `
     <rxa-visualizer>
       <div visualizerHeader class="row">
-        <div class="col-sm-12"><h2>Reactive Iterable Differ</h2></div>
         <div class="col-sm-12">
-          <p>Observable Context</p>
-          <button mat-raised-button [unpatch] (click)="valP.reset()">
-            Reset
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.error()">
-            Error
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.complete()">
-            Complete
-          </button>
-        </div>
-        <div class="col-sm-6">
-          <p>Mutable Operations</p>
-          <button mat-raised-button [unpatch] (click)="valP.addItemsMutable()">
-            Add
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.moveItemsMutable()">
-            Move
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.updateItemsMutable()">
-            Update
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.removeItemsMutable()">
-            Remove
-          </button>
-        </div>
-        <div class="col-sm-6">
-          <p>Immutable Operations</p>
-          <button mat-raised-button [unpatch] (click)="valP.addItemsImmutable()">
-            Add
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.moveItemsImmutable()">
-            Move
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.updateItemsImmutable()">
-            Update
-          </button>
-          <button mat-raised-button [unpatch] (click)="valP.removeItemsImmutable()">
-            Remove
-          </button>
+          <h2>Reactive Iterable Differ</h2>
+          <rxa-array-provider [unpatched]="[]" [buttons]="true" #arrayP="rxaArrayProvider"></rxa-array-provider>
         </div>
       </div>
       <div>
-        <ng-container *ngFor="let i of valP.array$ | async; trackBy: trackByIdFn">
+        <ng-container *ngFor="let i of arrayP.array$ | async; trackBy: trackByIdFn">
           <rxa-dirty-check>{{i | json}}</rxa-dirty-check>
           <pre>
             {{i | json}}

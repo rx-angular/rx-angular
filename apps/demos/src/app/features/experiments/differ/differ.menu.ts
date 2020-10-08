@@ -4,12 +4,12 @@ export const MENU_ITEMS = [
     link: 'differ',
     children: [
       {
-        label: 'RxIterableDiffer',
-        link: 'rx-iterable-differ'
-      },
-      {
         label: 'NgIterableDiffer',
         link: 'ng-iterable-differ'
+      },
+      {
+        label: 'RxIterableDiffer',
+        link: 'rx-iterable-differ'
       },
       {
         label: 'rxFor Differ',

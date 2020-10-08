@@ -16,7 +16,7 @@ export class Alpha0ToggleComponent implements AfterViewInit {
   letLoading$ = new BehaviorSubject<boolean>(true);
   done$ = new BehaviorSubject<boolean>(false);
 
-  process$ = timer(1000, 2000);
+  process$ = timer(800, 1000);
 
   constructor() {}
 
