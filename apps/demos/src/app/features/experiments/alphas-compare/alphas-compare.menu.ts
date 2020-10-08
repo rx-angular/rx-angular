@@ -1,7 +1,7 @@
-export const RXLET_VS_PUSH_MENU_ITEMS = [
+export const ALPHAS_COMPARE_MENU_ITEMS = [
   {
-    link: 'rx-let-vs-push',
-    label: 'RxLet vs Push',
+    link: 'alphas-compare',
+    label: 'Alpha 0 vs Alpha 1',
     children: [
       {
         link: 'list-toggle',
