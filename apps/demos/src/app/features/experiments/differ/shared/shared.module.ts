@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RxForDifferDirective } from './rx-for-differ.directive';
+import { RxForDiffer2Directive } from './rx-for-differ2.directive';
 
-const DECLARATIONS = [RxForDifferDirective];
+const DECLARATIONS = [RxForDifferDirective,RxForDiffer2Directive];
 
 @NgModule({
   declarations: [DECLARATIONS],

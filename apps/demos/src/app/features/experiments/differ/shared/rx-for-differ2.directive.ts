@@ -2,29 +2,19 @@ import {
   ChangeDetectorRef,
   Directive,
   EmbeddedViewRef,
-  Input, IterableDiffer,
+  Input,
+  IterableDiffer,
   IterableDiffers,
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
 
 import { Observable, ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
-import {
-  distinctUntilChanged,
-  map,
-  mergeAll,
-  mergeMap,
-  shareReplay,
-  switchAll,
-  switchMapTo,
-  tap
-} from 'rxjs/operators';
+import { distinctUntilChanged, map, mergeMap, shareReplay, switchAll, tap } from 'rxjs/operators';
 import { Hooks } from '../../../../shared/debug-helper/hooks';
 import { RxState } from '@rx-angular/state';
-import { RxIterableDiffer, rxIterableDifferFactory } from './rx-differ';
-import { constantPluck, distinctArray } from './utils';
+import { constantPluck } from './utils';
 import { fromFor } from './from-for';
-import { logIterable } from './log-iterable';
 
 export interface RxForDifferViewContext<T extends object, K = keyof T> {
   $implicit?: T;
@@ -32,13 +22,13 @@ export interface RxForDifferViewContext<T extends object, K = keyof T> {
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[rxForDiffer]',
+  selector: '[rxForDiffer2]',
   providers: [RxState]
 })
-export class RxForDifferDirective<U extends object> extends Hooks {
+export class RxForDiffer2Directive<U extends object> extends Hooks {
   private subscription: Unsubscribable = new Subscription();
   // private rxDiffer: RxIterableDiffer<U>;
-  private rxDiffer: IterableDiffer<U>;
+  private differ: IterableDiffer<U>;
 
   observables$ = new ReplaySubject(1);
   embeddedViews: Map<U, { view: EmbeddedViewRef<any>, item: any }> = new Map();
@@ -55,20 +45,18 @@ export class RxForDifferDirective<U extends object> extends Hooks {
     );
 
   @Input()
-  set rxForDiffer(potentialObservable: ObservableInput<U> | null | undefined) {
+  set rxForDiffer2(potentialObservable: ObservableInput<U> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
 
   @Input()
-  set rxForDifferTrackBy(trackByFnOrKey: string | ((i) => any)) {
-    console.log('rxForDifferTrackBy', trackByFnOrKey);
+  set rxForDiffer2TrackBy(trackByFnOrKey: string | ((i) => any)) {
     const trackBy = typeof trackByFnOrKey !== 'function' ? constantPluck(trackByFnOrKey) : trackByFnOrKey;
     this.state.set({ trackBy });
   }
 
   @Input()
-  rxForDifferDistinctBy(distinctByFnOrKey: string | ((i) => any)) {
-    console.log('rxForDifferDistinctBy', distinctByFnOrKey);
+  rxForDiffer2DistinctBy(distinctByFnOrKey: string | ((i) => any)) {
     const distinctBy = typeof distinctByFnOrKey !== 'function' ? constantPluck(distinctByFnOrKey) : distinctByFnOrKey;
     this.state.set({ distinctBy });
   }
@@ -102,10 +90,10 @@ export class RxForDifferDirective<U extends object> extends Hooks {
   }
 */
   private setupNgDiffer() {
-    this.rxDiffer = this.iterableDiffers.find([]).create((idx, item) => this.state.get('trackBy')(item));
+    this.differ = this.iterableDiffers.find([]).create((idx, item) => this.state.get('trackBy')(item));
 
     const differResult$ = this.array$.pipe(
-      map(newData => this.rxDiffer.diff(newData)),
+      map(newData => this.differ.diff(newData)),
       shareReplay(1)
     );
     this.enter$ = differResult$.pipe(fromFor<U>('forEachAddedItem'), mergeMap(a => a));
@@ -122,9 +110,8 @@ export class RxForDifferDirective<U extends object> extends Hooks {
   }
 
   onEnter = (item: U): void => {
-    console.log('onEnter', item);
     const key = this.state.get('trackBy')(item);
-    console.log('key', key, this.state.get('trackBy'));
+    console.log('key', key, item);
     let existingItem = this.embeddedViews.has(key) ? this.embeddedViews.get(key) : undefined;
     if (!existingItem) {
       const view = this.viewContainerRef

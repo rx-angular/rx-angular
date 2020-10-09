@@ -2,7 +2,6 @@ import { EMPTY, Observable, timer } from 'rxjs';
 import { merge as mergeWith, repeat, takeUntil } from 'rxjs/operators';
 import { priorityTickMap } from '@rx-angular/template';
 import { SchedulerConfig, TestItem } from './model';
-import { remove } from '../../../../../../../libs/state/src/lib/transformation-helpers/array';
 
 
 export function compareIdFn(a, b) {
