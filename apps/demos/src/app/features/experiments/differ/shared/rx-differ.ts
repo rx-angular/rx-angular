@@ -1,6 +1,6 @@
 import { ConnectableObservable, Observable, Subject, Subscription } from 'rxjs';
 import { map, pairwise, publishReplay, startWith, tap } from 'rxjs/operators';
-import { constantPluck, distinctArray } from './utils';
+import { constantPluck } from './utils';
 
 export interface DifferResult<T> {
   enter: T[],
@@ -46,7 +46,7 @@ export function diffByIndex<T>(oldData: T[], newData: T[]): DifferResult<T> {
 }
 
 // Identify items over a provided key in the array
-export function diffByKey<T>(oldData: T[], newData: T[], key = (item: T, idx: number) => idx): DifferResult<T> {
+export function diffByKey<T>(oldData: T[], newData: T[], key = (item: T, idx?: number) => idx, distinct = (item: T, idx?: number) => idx): DifferResult<T> {
   let i,
     keyValue;
   const dataByKeyValue = new Map,
@@ -81,9 +81,17 @@ export function diffByKey<T>(oldData: T[], newData: T[], key = (item: T, idx: nu
     keyValue = key(d, i) + '';
 
     // If there a datum associated with this key, join and add it to update.
-    if (dataByKeyValue.get(keyValue)) {
-      update[i] = d;
-      // @TODO Why do we delete here??
+    const old = dataByKeyValue.get(keyValue);
+    if (old) {
+      // only update items that are distinct
+      if (distinct) {
+        if (distinct(old) !== distinct(d)) {
+          update[i] = d;
+        }
+      } else {
+        update[i] = d;
+      }
+      // we need to delete this here as we dont want to have them included in the next loop
       dataByKeyValue.delete(keyValue);
     }
       // If there is not (or the key is a duplicate), add it to enter.
