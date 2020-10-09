@@ -3,8 +3,9 @@ import { ChangeDetectorRef, Directive, EmbeddedViewRef, Input, TemplateRef, View
 import { Observable, ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
 import { distinctUntilChanged, switchAll, switchMapTo, tap } from 'rxjs/operators';
 import { Hooks } from '../../../../shared/debug-helper/hooks';
-import { RxState } from '../../../../../../../../libs/state/src/lib';
-import { constantPluck, RxIterableDiffer, rxIterableDifferFactory } from './rx-differ';
+import { RxState } from '@rx-angular/state';
+import { RxIterableDiffer, rxIterableDifferFactory } from './rx-differ';
+import { constantPluck } from './utils';
 
 export interface RxForDifferViewContext<T extends object, K = keyof T> {
   $implicit?: T;

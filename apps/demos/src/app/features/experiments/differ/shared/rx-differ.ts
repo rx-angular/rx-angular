@@ -1,15 +1,6 @@
 import { ConnectableObservable, Observable, Subject, Subscription } from 'rxjs';
-import {
-  distinctUntilChanged,
-  groupBy,
-  map,
-  mergeAll,
-  mergeMap,
-  pairwise,
-  publishReplay,
-  startWith
-} from 'rxjs/operators';
-
+import { map, pairwise, publishReplay, startWith, tap } from 'rxjs/operators';
+import { constantPluck, distinctArray } from './utils';
 
 export interface DifferResult<T> {
   enter: T[],
@@ -22,9 +13,9 @@ export function diffByIndex<T>(oldData: T[], newData: T[]): DifferResult<T> {
 
   const oldLength = oldData.length,
     dataLength = newData.length,
-    enter = [],
-    update = [],
-    exit = [];
+    enter = [] as T[],
+    update = [] as T[],
+    exit = [] as T[];
 
   // `i` is defined at the top of the function as it is shared with all `for` loops
   let i = 0;
@@ -51,7 +42,7 @@ export function diffByIndex<T>(oldData: T[], newData: T[]): DifferResult<T> {
     }
   }
 
-  return { enter, update, exit };
+  return { enter, update, exit } as DifferResult<T>;
 }
 
 // Identify items over a provided key in the array
@@ -114,46 +105,11 @@ export function diffByKey<T>(oldData: T[], newData: T[], key = (item: T, idx: nu
   return { enter, update, exit };
 }
 
-/*
-export function functionalDiffer<T>(value: T, key, distinct): DifferResult<T> {
-  if (!arguments.length) return Array.from(this, value);
 
-  const bind = key ? diffByKey : diffByIndex,
-    parents = this._parents,
-    groups = this._groups;
-
-  if (typeof value !== 'function') value = constant(value);
-
-  for (let m = groups.length, update = new Array(m), enter = new Array(m), exit = new Array(m), j = 0; j < m; ++j) {
-    const parent = parents[j],
-      group = groups[j],
-      groupLength = group.length,
-      data = array(value.call(parent, parent && parent.__data__, j, parents)),
-      dataLength = data.length,
-      enterGroup = enter[j] = new Array(dataLength),
-      updateGroup = update[j] = new Array(dataLength),
-      exitGroup = exit[j] = new Array(groupLength);
-
-    bind(parent, group, enterGroup, updateGroup, exitGroup, data, key);
-
-    // Now connect the enter nodes to their following update node, such that
-    // appendChild can insert the materialized enter node before this node,
-    // rather than at the end of the parent node.
-    for (let i0 = 0, i1 = 0, previous, next; i0 < dataLength; ++i0) {
-      if (previous = enterGroup[i0]) {
-        if (i0 >= i1) i1 = i0 + 1;
-        while (!(next = updateGroup[i1]) && ++i1 < dataLength) ;
-        previous._next = next || null;
-      }
-    }
-  }
-
-  update = new Selection(update, parents);
-  update._enter = enter;
-  update._exit = exit;
-  return update;
+export function functionalDiffer<T>(oldData: T[], newData: T[], key?: (item: T, idx: number) => any, distinct?: (item: T, idx: number) => any): DifferResult<T> {
+  const diffFn = key ? (o: T[], n: T[]) => diffByKey(o, n, key) : (o: T[], n: T[]) => diffByIndex(o, n);
+  return diffFn(oldData, newData);
 }
-*/
 
 
 export interface RxIterableDiffer<T extends object> {
@@ -178,9 +134,9 @@ export function rxIterableDifferFactory<T extends object>(config: RxIterableDiff
   const differResult$: ConnectableObservable<DifferResult<T>> = array$.pipe(
     startWith([]),
     pairwise(),
+    tap(console.log),
     map(([oldData, newData]) => {
-      console.log(trackBy);
-      return trackBy ? diffByKey<T>(oldData, newData, trackBy) : diffByIndex<T>(oldData, newData)
+      return functionalDiffer(oldData, newData, trackBy);
     }),
     publishReplay(1)
   ) as ConnectableObservable<DifferResult<T>>;
@@ -188,9 +144,9 @@ export function rxIterableDifferFactory<T extends object>(config: RxIterableDiff
   return {
     connect,
     next,
-    enter$: differResult$.pipe(map(r => r.enter), distinctArray(trackBy)),
-    update$: differResult$.pipe(map(r => r.update), distinctArray(trackBy, distinctBy)),
-    exit$: differResult$.pipe(map(r => r.exit), distinctArray(trackBy))
+    enter$: differResult$.pipe(map(r => r.enter)),
+    update$: differResult$.pipe(map(r => r.update)),
+    exit$: differResult$.pipe(map(r => r.exit))
   } as RxIterableDiffer<T>;
 
   // ===
@@ -203,26 +159,3 @@ export function rxIterableDifferFactory<T extends object>(config: RxIterableDiff
     array$.next(v);
   }
 }
-
-
-export function constant(x) {
-  return function() {
-    return x;
-  };
-}
-
-export function constantPluck<T>(x) {
-  return function(i: T) {
-    return i[x];
-  };
-}
-
-function distinctArray<T>(trackBy: (i: T) => any, distinctBy?: (i: T) => any) {
-  return (o$: Observable<T[]>): Observable<T> => o$.pipe(
-    mergeMap(arr => arr),
-    groupBy(i => trackBy(i)),
-    map(o => distinctBy ? o.pipe(distinctUntilChanged((a, b) => distinctBy(a) === distinctBy(b))) : o),
-    mergeAll()
-  );
-}
-

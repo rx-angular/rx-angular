@@ -1,9 +1,10 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { environment } from '../../../../../../environments/environment';
 import { ArrayProviderService } from '../../../../../shared/debug-helper/value-provider';
-import { diffByIndex, diffByKey, rxIterableDifferFactory } from '../../shared';
+import { rxIterableDifferFactory } from '../../shared';
 import { RxState } from '@rx-angular/state';
-
+import { Hooks } from '../../../../../shared/debug-helper/hooks';
+import { bufferTime, filter, switchMap, switchMapTo } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-differ-rx-iterable-differ',
@@ -15,13 +16,37 @@ import { RxState } from '@rx-angular/state';
           <rxa-array-provider [unpatched]="[]" [buttons]="true" #arrayP="rxaArrayProvider"></rxa-array-provider>
         </div>
       </div>
-      <div>
-        <ng-container *ngFor="let i of arrayP.array$ | async; trackBy: trackByIdFn">
-          <rxa-dirty-check>{{i | json}}</rxa-dirty-check>
-          <pre>
-            {{i | json}}
-        </pre>
-        </ng-container>
+      <div class="w-100 row">
+        <div class="col-sm-2">
+          <h3>List</h3>
+          <div *ngFor="let enterRes of arrayP.array$ | push">
+            <pre>{{enterRes | json}}</pre>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <h3>Enter</h3>
+          <div *ngFor="let enterRes of enter$ | push">
+            <pre>{{enterRes | json}}</pre>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <h3>Move</h3>
+          <div *ngFor="let enterRes of move$ | push">
+            <pre>{{enterRes | json}}</pre>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <h3>Identity Change</h3>
+          <div *ngFor="let enterRes of identityChange$ | push">
+            <pre>{{enterRes | json}}</pre>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <h3>Exit</h3>
+          <div *ngFor="let enterRes of exit$ | push">
+            <pre>{{enterRes | json}}</pre>
+          </div>
+        </div>
       </div>
     </rxa-visualizer>
   `,
@@ -29,36 +54,27 @@ import { RxState } from '@rx-angular/state';
   encapsulation: ViewEncapsulation.None,
   providers: [ArrayProviderService]
 })
-export class RxIterableDifferComponent extends RxState<any> {
+export class RxIterableDifferComponent extends Hooks {
+  @ViewChild('arrayP')
+  arrayP;
+
   rxDiffer = rxIterableDifferFactory({
     trackBy: 'id',
     distinctBy: 'value'
   });
-  trackByIdFn = (a) => a.id;
+  enter$ = this.rxDiffer.enter$;
+  move$ = this.rxDiffer.update$;
+  identityChange$ = this.rxDiffer.update$;
+  exit$ = this.rxDiffer.exit$;
 
-  constructor(public valP: ArrayProviderService) {
+  constructor(public state: RxState<any>,
+              public cdRef: ChangeDetectorRef) {
     super();
-    this.setupRxDiffer();
-    this.hold(this.valP.array$, this.setupFunctionalDiffer());
-    this.hold(this.valP.array$, this.rxDiffer.next);
+    this.state.hold(this.afterViewInit$, () => this.setupRxDiffer())
+    this.state.hold(this.afterViewInit$.pipe(switchMap(_ => this.arrayP.array$)), (v) => this.rxDiffer.next(v as any))
   }
 
-  setupFunctionalDiffer() {
-    let oldData = [];
-    return newData => {
-      const indexDifferResult = diffByIndex(oldData, newData);
-      console.log('##diffByIndex');
-      console.log('enter', indexDifferResult.enter);
-      console.log('update', indexDifferResult.update);
-      console.log('exit', indexDifferResult.exit);
-      const keyDifferResult = diffByKey(oldData, newData, (i) => i.id);
-      console.log('##diffByKey');
-      console.log('enter', keyDifferResult.enter);
-      console.log('update', keyDifferResult.update);
-      console.log('exit', keyDifferResult.exit);
-      oldData = [...newData];
-    };
-  }
+  trackByIdFn = (a) => a.id;
 
   setupRxDiffer() {
     this.rxDiffer.connect();
@@ -71,5 +87,6 @@ export class RxIterableDifferComponent extends RxState<any> {
     this.rxDiffer.exit$.subscribe((result) => {
       console.log('exit', result);
     });
+    this.cdRef.detectChanges();
   }
 }
