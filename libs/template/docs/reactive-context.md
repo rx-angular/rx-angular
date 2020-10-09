@@ -12,7 +12,7 @@ This fits pretty much any process, they just differ in the number of emissions.
 
 Where `next` can have zero to infinite emissions, and `error` and `complete` zero to 1 emissions.
 
-This differentiation works perfect in code, however when we start to project those channels and their changes into HTML
+This differentiation works perfectly in code, however when we start to project those channels and their changes into HTML
 we sometimes end up implementing a hack for another potential state that is not provided by Angular.
  
 In the above example with the http request, we may want to indicates that the process was started, 
