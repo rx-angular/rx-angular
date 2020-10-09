@@ -46,7 +46,7 @@ export function diffByIndex<T>(oldData: T[], newData: T[]): DifferResult<T> {
 }
 
 // Identify items over a provided key in the array
-export function diffByKey<T>(oldData: T[], newData: T[], key = (item: T, idx?: number) => idx, distinct = (item: T, idx?: number) => idx): DifferResult<T> {
+export function diffByKey<T>(oldData: T[], newData: T[], key = (item: T, idx?: number) => idx, distinct = (item: T, idx?: number) => item): DifferResult<T> {
   let i,
     keyValue;
   const dataByKeyValue = new Map,

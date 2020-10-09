@@ -1,7 +1,7 @@
 import {
   AfterViewInit,
   ChangeDetectorRef,
-  Component,
+  Component, IterableDiffer,
   IterableDiffers,
   ViewChild,
   ViewEncapsulation
@@ -62,8 +62,8 @@ import { logIterable } from '../../shared/log-iterable';
   encapsulation: ViewEncapsulation.None,
   providers: [ArrayProviderService, RxState]
 })
-export class NgIterableDifferComponent extends Hooks implements AfterViewInit {
-  ngDiffer;
+export class NgIterableDifferComponent<T> extends Hooks implements AfterViewInit {
+  ngDiffer: IterableDiffer<T>;
 
   @ViewChild('arrayP')
   arrayP;
@@ -84,10 +84,14 @@ export class NgIterableDifferComponent extends Hooks implements AfterViewInit {
 
   ngAfterViewInit() {
     super.ngAfterViewInit();
+    this.setupNgDiffer();
+  }
 
+  private setupNgDiffer() {
     this.ngDiffer = this.iterableDiffers.find([]).create((idx, item) => this.trackByIdFn(item));
 
     this.ngDifferResult$ = this.arrayP.array$.pipe(
+      // @ts-ignore
       map(newData => this.ngDiffer.diff(newData)),
       shareReplay(1)
     );
