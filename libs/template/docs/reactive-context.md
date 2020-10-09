@@ -102,4 +102,4 @@ export type RxNotification<T> = Pick<Notification<T>, NotificationExtract> & { k
 
 As a sum up we now know that `rx-angular/template` provides an extended reactive context with the `suspense` channel.
 Use suspense as a template wherever possible as is reduces rendering work drastically. 
-Also be sure to remember that we have also access on the values of the 4 channels as local-variables in the template and the notifications from the render callback. 
+Also be sure to remember that we have also access on the values of the 4 channels as local-variables in the template and as the notifications from the render callback. 
