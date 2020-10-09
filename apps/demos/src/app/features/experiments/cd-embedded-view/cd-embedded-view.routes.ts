@@ -5,31 +5,32 @@ import { CdEmbeddedViewParent03Component } from './03/parent.component';
 import { CdEmbeddedViewParent04Component } from './04/parent.component';
 import { CdEmbeddedViewParent05Component } from './05/parent.component';
 import { CdEmbeddedViewParent06Component } from './06/parent.component';
+import { Routes } from '@angular/router';
 
-export const ROUTES = [
+export const ROUTES: Routes = [
   {
     path: '',
     redirectTo: 'cd-embedded-view'
   },
   {
     path: 'cd-embedded-view',
-    component: CdEmbeddedViewOverviewComponent,
+    component: CdEmbeddedViewOverviewComponent
   },
   {
     path: 'cd-embedded-view-01',
-    component: CdEmbeddedViewParent01Component,
+    component: CdEmbeddedViewParent01Component
   },
   {
     path: 'cd-embedded-view-02',
-    component: CdEmbeddedViewParent02Component,
+    component: CdEmbeddedViewParent02Component
   },
   {
     path: 'cd-embedded-view-03',
-    component: CdEmbeddedViewParent03Component,
+    component: CdEmbeddedViewParent03Component
   },
   {
     path: 'cd-embedded-view-04',
-    component: CdEmbeddedViewParent04Component,
+    component: CdEmbeddedViewParent04Component
   },
   {
     path: 'cd-embedded-view-05',
@@ -38,5 +39,5 @@ export const ROUTES = [
   {
     path: 'cd-embedded-view-06',
     component: CdEmbeddedViewParent06Component
-  },
+  }
 ];

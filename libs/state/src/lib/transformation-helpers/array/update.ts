@@ -58,7 +58,7 @@ import { isDefined } from '../../core';
  *        'creatures',
  *        this.updateCreature$,
  *        ({ creatures }, creatureToUpdate) => {
- *            return update(creatures, creatureToRemove, (a, b) => a.id === b.id);
+ *            return update(creatures, creatureToUpdate, (a, b) => a.id === b.id);
  *        }
  *      );
  *    }

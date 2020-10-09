@@ -1,8 +1,7 @@
-import { fakeAsync } from '@angular/core/testing';
 import { getStrategies } from '@rx-angular/template';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import { CallsExpectations, getMockStrategyConfig, testStrategyMethod, } from '../../fixtures';
+import { CallsExpectations, getMockStrategyConfig, testStrategyMethod } from '../../fixtures';
 
 /**
  * LOCAL STRATEGY
@@ -27,7 +26,7 @@ describe('local Strategy', () => {
       expect(strategy).toBeDefined();
     });
 
-    it(`should have ${ strategyName } as name`, () => {
+    it(`should have ${strategyName} as name`, () => {
       const strategy = getStrategies(getMockStrategyConfig())[strategyName];
       expect(strategy.name).toBe(strategyName);
     });
@@ -81,7 +80,8 @@ describe('local Strategy', () => {
         strategyMethod: 'scheduleCD',
         singleTime: false,
         callsExpectations
-      }, () => {});
+      }, () => {
+      });
       testStrategyMethod({
         strategyName,
         strategyMethod: 'rxScheduleCD',

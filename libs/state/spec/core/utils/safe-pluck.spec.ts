@@ -3,6 +3,7 @@ import { safePluck } from '../../../src/lib/core/utils';
 interface ISafePluckSpec {
   foo: { bar: string };
 }
+
 describe('safePluck', () => {
   const bar = 'hello';
   const obj: ISafePluckSpec = { foo: { bar } };
@@ -44,7 +45,7 @@ describe('safePluck', () => {
 
     it('should return last value if undefined occurs in state object', () => {
       const stateObj: ISafePluckSpec = { foo: undefined as any };
-      expect(safePluck(stateObj, ['foo','bar'])).toEqual(undefined);
-    })
+      expect(safePluck(stateObj, ['foo', 'bar'])).toEqual(undefined);
+    });
   });
 });

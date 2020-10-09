@@ -1,4 +1,4 @@
-export enum SchedulingPriority {
+export enum SchedulingName {
   animationFrame = 'animationFrame',
   Promise = 'Promise',
   idleCallback = 'idleCallback',
@@ -7,3 +7,18 @@ export enum SchedulingPriority {
   background = 'background',
   setInterval = 'setInterval',
 }
+
+
+export enum SchedulingPriority {
+  sync,
+  animationFrame,
+  Promise,
+  setTimeout,
+  setInterval,
+  postMessage,
+  idleCallback,
+  userBlocking,
+  userVisible,
+  background
+}
+

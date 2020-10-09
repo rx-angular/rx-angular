@@ -7,7 +7,7 @@ import { LetModule, PushModule, UnpatchEventsModule, ViewportPrioModule } from '
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
-import { ValueProviderModule } from '../../../../shared/debug-helper/value-provider/value-provider.module';
+import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { RenderingsModule } from '../../../../shared/debug-helper/renderings';
 
 const DECLARATIONS = [BasicExampleComponent];
@@ -24,7 +24,7 @@ const DECLARATIONS = [BasicExampleComponent];
     PushModule,
     LetModule,
     VisualizerModule,
-    ValueProviderModule,
+    ValueProvidersModule,
     RenderingsModule
   ],
   exports: [DECLARATIONS]

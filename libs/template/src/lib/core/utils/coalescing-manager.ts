@@ -12,11 +12,9 @@ interface CoalescingManager {
 
 export const coalescingManager = createCoalesceManager();
 
-const coalescingContextPropertiesMap = createPropertiesWeakMap<
-  object,
-  CoalescingContextProps
->((ctx) => ({
-  numCoalescingSubscribers: 0,
+const coalescingContextPropertiesMap = createPropertiesWeakMap<object,
+  CoalescingContextProps>((ctx) => ({
+  numCoalescingSubscribers: 0
 }));
 
 /**
@@ -32,7 +30,7 @@ function createCoalesceManager(): CoalescingManager {
   return {
     remove: removeWork,
     add: addWork,
-    isCoalescing,
+    isCoalescing
   };
 
   // Increments the number of subscriptions in a scope e.g. a class instance
@@ -41,7 +39,7 @@ function createCoalesceManager(): CoalescingManager {
       coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers -
       1;
     coalescingContextPropertiesMap.setProps(scope, {
-      numCoalescingSubscribers,
+      numCoalescingSubscribers
     });
   }
 
@@ -51,7 +49,7 @@ function createCoalesceManager(): CoalescingManager {
       coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers +
       1;
     coalescingContextPropertiesMap.setProps(scope, {
-      numCoalescingSubscribers,
+      numCoalescingSubscribers
     });
   }
 

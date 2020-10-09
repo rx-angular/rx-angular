@@ -3,7 +3,6 @@ import { SchedulingPriority } from '../../../src/lib/render-strategies/rxjs/sche
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import createSpy = jasmine.createSpy;
-import { timer } from 'rxjs';
 
 
 describe('staticSchedule', () => {
@@ -13,7 +12,7 @@ describe('staticSchedule', () => {
     let test = 0;
     const doWork = () => {
       test++;
-    }
+    };
     staticSchedule(doWork, false);
     expect(test).toBe(1);
   });
@@ -32,12 +31,12 @@ describe('staticSchedule', () => {
         aborted: true
       }
     } as unknown as AbortController;
-    staticSchedule(doWork,priority , abc);
+    staticSchedule(doWork, priority, abc);
     expect(abc.abort).toHaveBeenCalledTimes(0);
     setTimeout(() => {
       expect(abc.abort).toHaveBeenCalledTimes(1);
       done();
-    })
+    });
   });
 
   it('should change the execution context', (done) => {
@@ -45,7 +44,7 @@ describe('staticSchedule', () => {
     const priority = SchedulingPriority.Promise;
     const doWork = () => {
       test++;
-    }
+    };
     staticSchedule(doWork, priority);
     expect(test).toBe(0);
 
@@ -69,7 +68,7 @@ describe('staticSchedule', () => {
     const priority = SchedulingPriority.Promise;
     const doWork = () => {
       test++;
-    }
+    };
 
     const abC = staticSchedule(doWork, priority);
     expect(test).toBe(0);

@@ -1,14 +1,11 @@
 import { ɵmarkDirty as markDirty } from '@angular/core';
-import {
-  RenderStrategy,
-  RenderStrategyFactoryConfig,
-} from '../../core/render-aware';
+import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core/render-aware';
 
 export function getGlobalStrategies(
   config: RenderStrategyFactoryConfig
 ): { [strategy: string]: RenderStrategy } {
   return {
-    global: createGlobalStrategy(config),
+    global: createGlobalStrategy(config)
   };
 }
 
@@ -42,6 +39,6 @@ export function createGlobalStrategy(
     scheduleCD: () => {
       renderMethod();
       return new AbortController();
-    },
+    }
   };
 }

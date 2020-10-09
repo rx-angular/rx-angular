@@ -9,11 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {
-  LetModule,
-  PushModule,
-  UnpatchEventsModule,
-} from '@rx-angular/template';
+import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
 import { MatBadgeModule } from '@angular/material/badge';
 
 const DECLARATIONS = [

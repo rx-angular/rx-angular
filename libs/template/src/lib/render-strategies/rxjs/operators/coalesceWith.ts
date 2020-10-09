@@ -5,7 +5,7 @@ import {
   SubscribableOrPromise,
   Subscriber,
   Subscription,
-  Unsubscribable,
+  Unsubscribable
 } from 'rxjs';
 import { coalescingManager } from '../../../core/utils/coalescing-manager';
 
@@ -91,11 +91,11 @@ export function coalesceWith<T>(
                   tryEmitLatestValue();
                   actionSubscription = undefined;
                 }
-              },
+              }
             });
             rootSubscription.add(actionSubscription);
           }
-        },
+        }
       };
     }
   };

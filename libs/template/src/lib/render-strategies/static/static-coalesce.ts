@@ -15,7 +15,7 @@ export function staticCoalesce<T>(
     sub = durationSelector.subscribe(() => {
       tryExecuteWork();
     });
-    const abortHandler = function () {
+    const abortHandler = function() {
       sub.unsubscribe();
       abC.signal.removeEventListener('abort', abortHandler, false);
     };

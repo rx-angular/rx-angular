@@ -8,7 +8,7 @@ import { NgIfHackComponent } from './ng-if-hack.component';
 import { LetModule, UnpatchEventsModule } from '@rx-angular/template';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatIconModule } from '@angular/material/icon';
-import { ValueProviderModule } from '../../../../shared/debug-helper/value-provider/value-provider.module';
+import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/value-providers.module';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 
 const DECLARATIONS = [
@@ -20,13 +20,12 @@ const DECLARATIONS = [
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    MatButtonModule,
     DirtyChecksModule,
     LetModule,
     UnpatchEventsModule,
     NgxSkeletonLoaderModule,
     MatIconModule,
-    ValueProviderModule,
+    ValueProvidersModule,
     VisualizerModule
   ]
 })
