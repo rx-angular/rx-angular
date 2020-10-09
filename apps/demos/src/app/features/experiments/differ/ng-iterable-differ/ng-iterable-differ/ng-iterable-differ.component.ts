@@ -24,11 +24,12 @@ import { logIterable } from '../../shared/log-iterable';
           <rxa-array-provider [buttons]="true" [unpatched]="[]" #arrayP="rxaArrayProvider"></rxa-array-provider>
         </div>
       </div>
-      <div class=" w-100 row">
+      <div class="w-100 row">
         <div class="col-sm-2">
           <h3>List</h3>
           <div *ngFor="let enterRes of arrayP.array$ | push">
             <pre>{{enterRes | json}}</pre>
+            <rxa-work [load]="1" [type]="'layouting'"></rxa-work>
           </div>
         </div>
         <div class="col-sm-2">

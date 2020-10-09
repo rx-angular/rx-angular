@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { NgIterableDifferComponent } from './ng-iterable-differ/ng-iterable-differ.component';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
+import { WorkModule } from '../../../../shared/debug-helper/work';
 
 const DECLARATIONS = [NgIterableDifferComponent];
 
@@ -20,7 +21,8 @@ const DECLARATIONS = [NgIterableDifferComponent];
     DirtyChecksModule,
     MatButtonModule,
     VisualizerModule,
-    ValueProvidersModule
+    ValueProvidersModule,
+    WorkModule
   ]
 })
 export class NgIterableDifferModule {
