@@ -1,24 +1,13 @@
 import { OnDestroy } from '@angular/core';
-import {
-  concat,
-  EMPTY,
-  NEVER,
-  NextObserver,
-  Observable,
-  Observer,
-  of,
-  Subject,
-  throwError,
-  Unsubscribable
-} from 'rxjs';
+import { concat, EMPTY, NEVER, Observable, of, Subject, throwError, Unsubscribable } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { createRenderAware, RenderAware, StrategySelection } from '../../../src/lib/core';
 import { DEFAULT_STRATEGY_NAME } from '../../../src/lib/render-strategies/strategies/strategies-map';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher, mockConsole } from '@test-helpers';
-import createSpy = jasmine.createSpy;
 import { RxTemplateObserver } from '../../../src/lib/core/model';
+import createSpy = jasmine.createSpy;
 
 
 // TODO: Add Angular decorator.
@@ -31,7 +20,7 @@ class CdAwareImplementation<U> implements OnDestroy {
 
   templateObserver: RxTemplateObserver<U | undefined | null> = {
     suspense: () => {
-      (this.renderedValue = undefined)
+      (this.renderedValue = undefined);
     },
     next: (n: U | undefined | null) => {
       this.renderedValue = n;
@@ -246,7 +235,7 @@ describe('CdAware', () => {
         const strategy = 'doesNotExist';
         cdAwareImplementation.cdAware.nextStrategy(strategy);
         expectObservable(cdAwareImplementation.cdAware.activeStrategy$).toBe('#', null, new Error(`Strategy ${strategy} does not exist.`));
-      })
+      });
     });
   });
 });

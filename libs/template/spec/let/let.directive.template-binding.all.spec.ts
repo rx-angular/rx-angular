@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LetDirective } from '@rx-angular/template';
-import { EMPTY, interval, Observable, of, Subject, NEVER, throwError } from 'rxjs';
+import { EMPTY, interval, NEVER, Observable, of, Subject, throwError } from 'rxjs';
 import { take } from 'rxjs/operators';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';

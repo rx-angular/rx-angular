@@ -4,9 +4,11 @@ import { mockConsole } from '@test-helpers';
 
 const propertyNameString = 'flag';
 const propertyNameSymbol = Symbol('flag');
+
 interface ManagedProperties {
   flag: boolean;
 }
+
 let contextObject: any;
 const initialContextObjectState = {
   flag: 'original value'
@@ -25,10 +27,8 @@ describe('propertiesWeakMap', () => {
   });
 
   it('should not conflict with properties nor mutate the contextObject when using a weakMap', () => {
-    const propertiesWeakMap = createPropertiesWeakMap<
-      object,
-      ManagedProperties
-    >((o: object) => ({ flag: false }));
+    const propertiesWeakMap = createPropertiesWeakMap<object,
+      ManagedProperties>((o: object) => ({ flag: false }));
 
     expect(contextObject.flag).toBe(initialContextObjectState.flag);
     expect(propertiesWeakMap.getProps(contextObject).flag).toBe(

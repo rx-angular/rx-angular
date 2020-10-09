@@ -26,7 +26,7 @@ describe('native Strategy', () => {
       expect(strategy).toBeDefined();
     });
 
-    it(`should have ${ strategyName } as name`, () => {
+    it(`should have ${strategyName} as name`, () => {
       const strategy = getStrategies(getMockStrategyConfig())[strategyName];
       expect(strategy.name).toBe(strategyName);
     });
@@ -43,7 +43,7 @@ describe('native Strategy', () => {
     });
 
     it(
-      `should call cdRef#markForCheck ${ numMultipleCalls } times when rxScheduleCD is used with multiple sync emissions`,
+      `should call cdRef#markForCheck ${numMultipleCalls} times when rxScheduleCD is used with multiple sync emissions`,
       (done) => {
         testStrategyMethod({
           strategyName,
@@ -66,7 +66,7 @@ describe('native Strategy', () => {
     });
 
     it(
-      `should call cdRef#markForCheck ${ numMultipleCalls } times when scheduleCD is called multiple times sync`,
+      `should call cdRef#markForCheck ${numMultipleCalls} times when scheduleCD is called multiple times sync`,
       done => {
         testStrategyMethod({
           strategyName,
@@ -80,14 +80,15 @@ describe('native Strategy', () => {
 
   describe('combined scheduleCD & rxScheduleCD', () => {
     it(
-      `should call strategy#markForCheck ${ numMultipleCalls } times when scheduleCD or rxScheduleCD is called`,
+      `should call strategy#markForCheck ${numMultipleCalls} times when scheduleCD or rxScheduleCD is called`,
       done => {
         testStrategyMethod({
           strategyName,
           strategyMethod: 'scheduleCD',
           singleTime: false,
           callsExpectations: { ...callsExpectations, markForCheck: numMultipleCalls }
-        }, () => {});
+        }, () => {
+        });
 
         testStrategyMethod({
           strategyName,

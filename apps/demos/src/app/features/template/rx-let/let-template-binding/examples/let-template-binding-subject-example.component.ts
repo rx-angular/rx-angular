@@ -88,7 +88,7 @@ import { scan, startWith } from 'rxjs/operators';
       }
 
       .btn-reset {
-        margin-left: 6rem;
+        margin-left: 2rem;
       }
 
       .card {

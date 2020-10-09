@@ -115,7 +115,7 @@ export function createTemplateManager<C extends object, N extends string = strin
     destroy() {
       viewCache.forEach((view) => view.destroy());
       viewContainerRef.clear();
-    },
+    }
   };
 }
 

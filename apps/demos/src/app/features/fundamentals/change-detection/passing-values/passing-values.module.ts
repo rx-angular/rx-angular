@@ -14,7 +14,7 @@ import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/vis
 import { RecursiveReactiveComponent } from './recursive/recursive-reactive.component';
 import { RecursiveComponent } from './recursive/recursive.component';
 import { CdTriggerModule } from '../../../../shared/debug-helper/cd-trigger/cd-trigger.module';
-import { ValueProviderModule } from '../../../../shared/debug-helper/value-provider/value-provider.module';
+import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RenderingsModule } from '../../../../shared/debug-helper/renderings';
 
@@ -34,7 +34,7 @@ import { RenderingsModule } from '../../../../shared/debug-helper/renderings';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    ValueProviderModule,
+    ValueProvidersModule,
     MatButtonToggleModule,
     RenderingsModule
   ],

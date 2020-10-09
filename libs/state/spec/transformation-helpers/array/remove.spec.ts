@@ -1,20 +1,21 @@
-import { remove } from "@rx-angular/state";
+import { remove } from '@rx-angular/state';
 
 interface Creature {
   id: number;
   type: string;
 }
 
-const creaturesForRemove: Creature[] = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}];
+const creaturesForRemove: Creature[] = [{ id: 1, type: 'cat' }, { id: 2, type: 'dog' }];
 let creatures: Creature[];
 let creaturesAfterSingleItemRemove: Creature[];
 let creaturesAfterMultipleItemsRemove: Creature[];
 
 beforeEach(() => {
-  creatures = [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}, {id: 3, type: 'catDog'}];
-  creaturesAfterSingleItemRemove = [{id: 2, type: 'dog'}, {id: 3, type: 'catDog'}];
-  creaturesAfterMultipleItemsRemove= [{id: 3, type: 'catDog'}];
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+  creatures = [{ id: 1, type: 'cat' }, { id: 2, type: 'dog' }, { id: 3, type: 'catDog' }];
+  creaturesAfterSingleItemRemove = [{ id: 2, type: 'dog' }, { id: 3, type: 'catDog' }];
+  creaturesAfterMultipleItemsRemove = [{ id: 3, type: 'catDog' }];
+  jest.spyOn(console, 'warn').mockImplementation(() => {
+  });
 });
 
 
@@ -39,15 +40,15 @@ describe('remove', () => {
     describe('primitives', () => {
 
       it('should remove single value', () => {
-        expect(remove([1,2], 2)).toEqual([1]);
+        expect(remove([1, 2], 2)).toEqual([1]);
       });
 
       it('should remove multiple values', () => {
-        expect(remove([1,2], [1,2])).toEqual([]);
+        expect(remove([1, 2], [1, 2])).toEqual([]);
       });
 
       it('should remove values with compareFn', () => {
-        expect(remove([1,2], [1,2], (a, b) => a.toString() === b.toString())).toEqual([]);
+        expect(remove([1, 2], [1, 2], (a, b) => a.toString() === b.toString())).toEqual([]);
       });
 
     });
@@ -67,11 +68,11 @@ describe('remove', () => {
       });
 
       it('should remove value if matching by array of keys', () => {
-        expect(remove(creatures, creaturesForRemove, ['id',  'type'])).toEqual(creaturesAfterMultipleItemsRemove);
+        expect(remove(creatures, creaturesForRemove, ['id', 'type'])).toEqual(creaturesAfterMultipleItemsRemove);
       });
 
       it('should remove partials', () => {
-        expect(remove(creatures, {id: 1}, (o, n) => o.id === n.id)).toEqual(creaturesAfterSingleItemRemove);
+        expect(remove(creatures, { id: 1 }, (o, n) => o.id === n.id)).toEqual(creaturesAfterSingleItemRemove);
       });
 
     });
@@ -142,5 +143,5 @@ describe('remove', () => {
       });
 
     });
-  })
+  });
 });

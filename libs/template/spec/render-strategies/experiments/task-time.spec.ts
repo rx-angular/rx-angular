@@ -1,5 +1,5 @@
 // tslint:disable-next-line:nx-enforce-module-boundaries
-import { mockConsole } from "@test-helpers";
+import { mockConsole } from '@test-helpers';
 
 
 /** @test {coalesceWith} */

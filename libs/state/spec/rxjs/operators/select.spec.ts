@@ -5,12 +5,7 @@ import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 
 import { select } from '@rx-angular/state';
-import {
-  initialNestedState,
-  initialPrimitiveState,
-  NestedState,
-  PrimitiveState
-} from '../../fixtures';
+import { initialNestedState, initialPrimitiveState, NestedState, PrimitiveState } from '../../fixtures';
 
 let testScheduler: TestScheduler;
 
@@ -55,7 +50,8 @@ describe('select', () => {
       });
     });
 
-    it('should replay the last emitted value', () => {});
+    it('should replay the last emitted value', () => {
+    });
 
     it('should accept one operator', () => {
       testScheduler.run(({ cold, expectObservable }) => {

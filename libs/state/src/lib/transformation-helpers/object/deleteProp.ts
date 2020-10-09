@@ -1,4 +1,4 @@
-import { isDefined, isObjectGuard, isKeyOf } from '../../core';
+import { isDefined, isKeyOf, isObjectGuard } from '../../core';
 
 /**
  * @description

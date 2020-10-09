@@ -5,13 +5,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   template: `
     <rxa-visualizer>
       <div visualizerHeader>
-        <button mat-raised-button (click)="valP.reset()">Reset</button>
-        <button mat-raised-button [unpatch] (click)="valP.next()">Next</button>
-        <button mat-raised-button [unpatch] (click)="valP.error()">Error</button>
-        <button mat-raised-button [unpatch] (click)="valP.complete()">Complete</button>
+        <rxa-value-provider [buttons]="true" #valP="rxaValueProvider"></rxa-value-provider>
       </div>
-      <rxa-value-provider #valP="rxaValueProvider"></rxa-value-provider>
-
       <ng-container *rxLet="valP.incremental$; let value;
           let e = error;
           let c = complete;

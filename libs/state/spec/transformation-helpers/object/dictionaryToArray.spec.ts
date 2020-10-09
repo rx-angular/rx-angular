@@ -10,7 +10,8 @@ interface Creature {
 }
 
 beforeEach(() => {
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+  jest.spyOn(console, 'warn').mockImplementation(() => {
+  });
 });
 
 
@@ -26,15 +27,15 @@ describe('dictionaryToArray', () => {
 
   describe('functionality', () => {
     it('should create array from dictionary object', () => {
-      const dictionary: {[key: string]: Creature} = {
-        cat: {id: 1, type: 'cat', real: true, breeds: ['Persian']},
-        dog: {id: 2, type: 'dog', real: true, breeds: ['Doberman']},
-        catDog: {id: 3, type: 'catDog', real: false, breeds: []}
+      const dictionary: { [key: string]: Creature } = {
+        cat: { id: 1, type: 'cat', real: true, breeds: ['Persian'] },
+        dog: { id: 2, type: 'dog', real: true, breeds: ['Doberman'] },
+        catDog: { id: 3, type: 'catDog', real: false, breeds: [] }
       };
       const arrayFromDictionary = [
-        {id: 1, type: 'cat', real: true, breeds: ['Persian']},
-        {id: 2, type: 'dog', real: true, breeds: ['Doberman']},
-        {id: 3, type: 'catDog', real: false, breeds: []}
+        { id: 1, type: 'cat', real: true, breeds: ['Persian'] },
+        { id: 2, type: 'dog', real: true, breeds: ['Doberman'] },
+        { id: 3, type: 'catDog', real: false, breeds: [] }
       ];
       const arrayResult = dictionaryToArray(dictionary);
 
@@ -68,5 +69,5 @@ describe('dictionaryToArray', () => {
       expect(dictionaryToArray(false as any)).toEqual([]);
       expect(dictionaryToArray({} as any)).toEqual([]);
     });
-  })
+  });
 });

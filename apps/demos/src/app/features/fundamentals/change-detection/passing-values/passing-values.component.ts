@@ -57,6 +57,7 @@ import { Subject } from 'rxjs';
           <rxa-recursive [level]="level" [value]="staticVal.int"></rxa-recursive>
         </div>
         <div class="col-sm-12 col-md-6"
+             [ngClass]="{'offset-md-6': group.value === displayStates.rxAngularReactive}"
              *ngIf="group.value === displayStates.rxAngularReactive ||
                     group.value === displayStates.all">
           <h2 class="mat-subheader">Reactive Values</h2>

@@ -1,21 +1,5 @@
-import {
-  MonoTypeOperatorFunction,
-  Observable,
-  of,
-  ReplaySubject,
-  Subscribable,
-  Subscription,
-  Subscriber,
-} from 'rxjs';
-import {
-  distinctUntilChanged,
-  filter,
-  map,
-  shareReplay,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { MonoTypeOperatorFunction, Observable, of, ReplaySubject, Subscribable, Subscriber, Subscription } from 'rxjs';
+import { distinctUntilChanged, filter, map, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { RenderStrategy, StrategySelection } from './interfaces';
 import { RxTemplateObserver } from '../model';
 
@@ -107,7 +91,7 @@ export function createRenderAware<U>(cfg: {
     activeStrategy$: strategy$,
     subscribe(): Subscription {
       return new Subscription().add(renderingEffect$.subscribe());
-    },
+    }
   };
 }
 
@@ -135,7 +119,7 @@ function renderWithLatestStrategy<T>(
             console.error(err);
             subscriber.next();
           },
-          complete: () => subscriber.next(),
+          complete: () => subscriber.next()
         });
         return () => subscription.unsubscribe();
       });

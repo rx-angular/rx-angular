@@ -303,6 +303,13 @@
   dependencies:
     tslib "^2.0.0"
 
+"@angular/platform-browser@^10.0.5":
+  version "10.1.5"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-10.1.5.tgz#b166b6f520e34012c91e2586022d00c5e2be8f49"
+  integrity sha512-qMAoPHt6dgXMtieI4zx/s5yX7FFRRUDp1R4GMBCZHPN3p66WdEVxBJo4p5RWhZJioXpUwKz8Xvc+Rrh7r0KDBA==
+  dependencies:
+    tslib "^2.0.0"
+
 "@angular/platform-browser@^10.1.3":
   version "10.1.3"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-10.1.3.tgz#f6a5c5098e878b964cfddc296fb63eb147710211"
@@ -11938,6 +11945,19 @@ tar@^6.0.2:
     minizlib "^2.1.0"
     mkdirp "^1.0.3"
     yallist "^4.0.0"
+
+"templateAlpha0@npm:@rx-angular/template@1.0.0-alpha.0":
+  version "1.0.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@rx-angular/template/-/template-1.0.0-alpha.0.tgz#9d30b7c113e678db100f44b0d20896c0d46ba999"
+  integrity sha512-Hhy4sazAQ5xWxv/KMEc5CFIf1StZgZuhysOflNDSwS3dj70tKJHGEdAfOJP9bydzI7SLXYRZ+MPcmsbE0IUkxA==
+
+"templateAlpha1@npm:@rx-angular/template@1.0.0-alpha.1":
+  version "1.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@rx-angular/template/-/template-1.0.0-alpha.1.tgz#1ae03f75905a2c8a007e3946679e84a3019df8e8"
+  integrity sha512-uCGBv/TX149Q/E9iE5xVC9q+vZiLA9Udu6rMD1ykGYt4gMjzMFAIAtz8PghkQxe3WxoNODCBzz0b5zPvD5/Pew==
+  dependencies:
+    "@angular/platform-browser" "^10.0.5"
+    tslib "^2.0.0"
 
 terminal-link@^2.0.0:
   version "2.1.1"

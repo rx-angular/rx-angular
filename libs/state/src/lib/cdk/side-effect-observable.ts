@@ -1,11 +1,4 @@
-import {
-  merge,
-  Observable,
-  queueScheduler,
-  Subject,
-  Subscribable,
-  Subscription,
-} from 'rxjs';
+import { merge, Observable, queueScheduler, Subject, Subscribable, Subscription } from 'rxjs';
 import { mergeAll, observeOn } from 'rxjs/operators';
 
 export function createSideEffectObservable<T>(
@@ -29,6 +22,6 @@ export function createSideEffectObservable<T>(
   return {
     effects$,
     nextEffectObservable,
-    subscribe,
+    subscribe
   };
 }

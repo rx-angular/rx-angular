@@ -14,17 +14,19 @@ describe('promiseTick', () => {
     @Component({
       // tslint:disable-next-line:component-selector
       selector: 'body',
-      template: '<div></div>',
+      template: '<div></div>'
     })
-    class NgZoneTestComponent {}
+    class NgZoneTestComponent {
+    }
 
     @NgModule({
       declarations: [NgZoneTestComponent],
       exports: [NgZoneTestComponent],
       bootstrap: [NgZoneTestComponent],
-      imports: [NoopAnimationsModule],
+      imports: [NoopAnimationsModule]
     })
-    class MyAppModule {}
+    class MyAppModule {
+    }
 
     const platform = getTestBed().platform;
     const moduleRef = await platform.bootstrapModule(MyAppModule, { ngZone: 'noop' });

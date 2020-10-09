@@ -1,7 +1,4 @@
-import {
-  RenderStrategy,
-  RenderStrategyFactoryConfig,
-} from '../../core/render-aware/interfaces';
+import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core/render-aware/interfaces';
 
 /**
  * @description
@@ -23,8 +20,9 @@ import {
 export function createNoopStrategy(config: RenderStrategyFactoryConfig): RenderStrategy {
   return {
     name: 'noop',
-    detectChanges: () => {},
+    detectChanges: () => {
+    },
     rxScheduleCD: (o) => o,
-    scheduleCD: () => new AbortController(),
+    scheduleCD: () => new AbortController()
   };
 }
