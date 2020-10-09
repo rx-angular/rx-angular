@@ -1,8 +1,8 @@
-import { HttpErrorsComponent } from '../http-errors/http-errors.component';
+import { LetTemplateBindingComponent } from './let-template-binding.component';
 
 export const ROUTES = [
   {
     path: '',
-    component: HttpErrorsComponent
+    component: LetTemplateBindingComponent
   }
 ];

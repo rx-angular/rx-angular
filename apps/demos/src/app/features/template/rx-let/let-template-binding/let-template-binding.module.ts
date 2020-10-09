@@ -15,8 +15,10 @@ import {
   UnpatchEventsModule,
 } from '@rx-angular/template';
 import { MatBadgeModule } from '@angular/material/badge';
+import { ToStringPipe } from './to-string.pipe';
 
 const DECLARATIONS = [
+  ToStringPipe,
   LetTemplateBindingComponent,
   LetTemplateBindingHttpExampleComponent,
   LetTemplateBindingSubjectExampleComponent,
