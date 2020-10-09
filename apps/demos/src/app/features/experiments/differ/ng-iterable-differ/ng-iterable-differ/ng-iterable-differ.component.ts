@@ -29,7 +29,6 @@ import { logIterable } from '../../shared/log-iterable';
           <h3>List</h3>
           <div *ngFor="let enterRes of arrayP.array$ | push">
             <pre>{{enterRes | json}}</pre>
-            <rxa-work [load]="1" [type]="'layouting'"></rxa-work>
           </div>
         </div>
         <div class="col-sm-2">

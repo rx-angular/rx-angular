@@ -1,7 +1,11 @@
-:host {
+
   .layouting-work {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
+    min-height: 1px;
   }
-}
+  .box {
+    height: 1px;
+    width: 1px;
+  }
+  .type {
+    font-size: 8px;
+  }

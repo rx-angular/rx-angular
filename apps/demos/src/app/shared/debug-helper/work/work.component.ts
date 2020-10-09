@@ -1,3 +1,5 @@
+// tslint:disable:no-unused-expression
+
 import { Component, ElementRef, Input, Renderer2 } from '@angular/core';
 import { isObservable, Observable, of, Subject } from 'rxjs';
 import { map, scan, switchMap, tap, withLatestFrom } from 'rxjs/operators';
@@ -10,8 +12,13 @@ type workType = 'scripting' | 'layouting';
   // tslint:disable-next-line:component-selector
   selector: 'rxa-work',
   template: `
-    <div class="w-100 layouting-work"></div>
-    <h3>Work: {{type$ | push}}</h3>
+    <p class="type" *rxLet="state$, let s">
+      Type: {{s.type}}<br/>
+      Base: {{s.base}}<br/>
+      Load: {{s.load}}
+    </p>
+    <div class="w-100 layouting-work">
+    </div>
     {{dirtyCheck()}}
   `,
   styleUrls: ['./work.component.scss'],
@@ -21,7 +28,7 @@ export class WorkComponent extends Hooks {
 
   dirtyCheckSubject = new Subject<number>();
   dirtyCheck$ = this.dirtyCheckSubject.pipe(scan(a => ++a, 0));
-  type$ = this.state.select('type');
+  state$ = this.state.select();
   iterations$ = this.state.select(
     selectSlice(['base', 'load']),
     map(({ base, load }) => base * load)
@@ -55,7 +62,7 @@ export class WorkComponent extends Hooks {
       type: 'scripting'
     });
 
-    this.state.hold(this.type$.pipe(
+    this.state.hold(this.state.select('type').pipe(
       switchMap(t => {
         const ef$ = this.dirtyCheck$.pipe(toLatestWith([this.iterations$]));
         switch (t) {
@@ -70,7 +77,7 @@ export class WorkComponent extends Hooks {
     ));
 
     this.afterViewInit$.subscribe(() => {
-      this.displayElem = this.elementRef.nativeElement.children[0];
+      this.displayElem = this.elementRef.nativeElement.children[1];
     });
   }
 
@@ -88,17 +95,29 @@ export class WorkComponent extends Hooks {
 
   layoutingWork(iterations: number) {
     // https://gist.github.com/paulirish/5d52fb081b3570c81e3a
-    let n = 0;
-    console.log('layoutingWork: ', iterations);
     if (this.displayElem) {
-      while (n < iterations * 5) {
-        // tslint:disable:no-unused-expression
+      this.displayElem.offsetLeft;
+      this.displayElem.style.background = `rgb(${(30) % 255}, ${(15) % 255}, ${(30) % 255})`;
+      for (let x = 0; x < iterations; x++) {
+
+        let c = this.displayElem.children[x];
+        if (!c) {
+          c = document.createElement('DIV');
+          this.displayElem.appendChild(c);
+        }
+        c.className = 'box';
+        c.style.height = '1px';
+        c.style.width = 100 / iterations + '%';
+        c.style.float = 'left';
+        c.style.background = `rgb(${(x + 30) * x % 255}, ${(x + 60) * x % 255}, ${(x + 10) * x % 255})`;
         this.displayElem.offsetLeft;
-        this.displayElem.style.background = '#'+n;
-        n = n + 1;
       }
     }
   }
+}
+
+function toColor(n) {
+  return;
 }
 
 function toLatestWith<I, O>(target$: Observable<O>[]): (o: Observable<I>) => Observable<O> {
