@@ -18,7 +18,7 @@ we sometimes end up implementing a hack for another potential state that is not 
 In the above example with the http request, we may want to indicates that the process was started, 
 but no result, neither a value nor an error or complete arrived yet from the process.
 
-This leads to not only clutter HTML, but more worse to `eager template`.
+This leads not only to a cluttered HTML, but, what's worse, to the `eager template`.
 
 What does it mean?  
 
