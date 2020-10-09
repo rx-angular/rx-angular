@@ -130,7 +130,7 @@ describe('RenderAware', () => {
       cdAwareImplementation.cdAware.nextPotentialObservable(value);
       cdAwareImplementation.cdAware.rendered$.subscribe(renderSignal => {
         expect(renderSignal.value).toBe(42);
-        expect(renderSignal.kind).toBe('N');
+        expect(renderSignal.kind).toBe('rxNext');
         done();
       });
       value.next(42);
@@ -138,10 +138,10 @@ describe('RenderAware', () => {
 
     it('should emit undefined as rendered value on error', done => {
       cdAwareImplementation.cdAware.rendered$
-        .pipe(filter(renderSignal => renderSignal.kind !== 'S'))
+        .pipe(filter(renderSignal => renderSignal.kind !== 'rxSuspense'))
         .subscribe(renderSignal => {
           expect(renderSignal.hasValue).toBeFalsy();
-          expect(renderSignal.kind).toBe('E');
+          expect(renderSignal.kind).toBe('rxError');
           done();
         });
       cdAwareImplementation.cdAware.nextPotentialObservable(throwError('error'));
@@ -152,7 +152,7 @@ describe('RenderAware', () => {
       cdAwareImplementation.cdAware.nextPotentialObservable(value);
       cdAwareImplementation.cdAware.rendered$.subscribe(renderSignal => {
         expect(renderSignal.value).toBeUndefined();
-        expect(renderSignal.kind).toBe('C');
+        expect(renderSignal.kind).toBe('rxComplete');
         done();
       });
       value.complete();

@@ -66,7 +66,7 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  * - triggers change-detection differently if ViewEngine or Ivy is present (`ChangeDetectorRef.detectChanges` or
  *   `ɵdetectChanges`)
  * - distinct same values in a row (`distinctUntilChanged` operator),
- * - display custom templates for different observable notifications (suspense, next, error, complete)
+ * - display custom templates for different observable notifications (rxSuspense, next, error, complete)
  * - notify about after changes got rendered to the template (Rendercallback)
  *
  *
@@ -92,7 +92,7 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  * - complete occurrence
  *
  * ```html
- * <ng-container *rxLet="observableNumber$; let n; let e = $error, let c = $complete">
+ * <ng-container *rxLet="observableNumber$; let n; let e = $rxError, let c = $rxComplete">
  *   <app-number [number]="n" *ngIf="!e && !c"></app-number>
  *   <ng-container *ngIf="e">
  *     There is an error: {{ e }}
@@ -116,9 +116,9 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  *   *rxLet="
  *     observableNumber$;
  *     let n;
- *     error: error;
- *     complete: complete;
- *     suspense: suspense;
+ *     rxError: error;
+ *     rxComplete: complete;
+ *     rxSuspense: suspense;
  *   "
  * >
  *   <app-number [number]="n"></app-number>
@@ -283,7 +283,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * A template to show if the bound Observable is in "complete" state.
    *
    * @example
-   * <ng-container *rxLet="hero$; let hero; complete: completeTemplate">
+   * <ng-container *rxLet="hero$; let hero; rxComplete: completeTemplate">
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    * <ng-template #completeTemplate>
@@ -292,11 +292,11 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    *
    * @param templateRef
    */
-  @Input()
-  set rxLetComplete(
+  @Input('rxLetRxComplete')
+  set rxComplete(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
   ) {
-    this.templateManager.addTemplateRef('C', templateRef);
+    this.templateManager.addTemplateRef('rxComplete', templateRef);
   }
 
   /**
@@ -304,7 +304,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * A template to show if the bound Observable is in "error" state.
    *
    * @example
-   * <ng-container *rxLet="hero$; let hero; error: errorTemplate">
+   * <ng-container *rxLet="hero$; let hero; rxError: errorTemplate">
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    * <ng-template #errorTemplate>
@@ -313,11 +313,11 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    *
    * @param templateRef
    */
-  @Input()
-  set rxLetError(
+  @Input('rxLetRxError')
+  set rxError(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
   ) {
-    this.templateManager.addTemplateRef('E', templateRef);
+    this.templateManager.addTemplateRef('rxError', templateRef);
   }
 
   /**
@@ -325,7 +325,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * A template to show before the first value is emitted from the bound Observable.
    *
    * @example
-   * <ng-container *rxLet="hero$; let hero; suspense: suspenseTemplate">
+   * <ng-container *rxLet="hero$; let hero; rxSuspense: suspenseTemplate">
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    * <ng-template #suspenseTemplate>
@@ -334,11 +334,11 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    *
    * @param templateRef
    */
-  @Input()
-  set rxLetSuspense(
+  @Input('rxLetRxSuspense')
+  set rxSuspense(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
   ) {
-    this.templateManager.addTemplateRef('S', templateRef);
+    this.templateManager.addTemplateRef('rxSuspense', templateRef);
   }
 
   /**
@@ -373,8 +373,8 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * // inside component:
    * readonly renderCallback$ = new Subject<string>();
    */
-  @Input()
-  set rxLetRenderCallback(callback: NextObserver<U>) {
+  @Input('rxLetRenderCallback')
+  set renderCallBack(callback: NextObserver<U>) {
     this._renderObserver = callback;
     this.subscribeRenderCallback();
   }
@@ -436,9 +436,9 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   private readonly initialViewContext: LetViewContext<U> = {
     $implicit: undefined,
     rxLet: undefined,
-    $error: false,
-    $complete: false,
-    $suspense: false
+    $rxError: false,
+    $rxComplete: false,
+    $rxSuspense: false
   };
 
   /** @internal */
@@ -448,34 +448,34 @@ export class LetDirective<U> implements OnInit, OnDestroy {
       this.templateManager.updateViewContext({
         $implicit: undefined,
         rxLet: undefined,
-        $error: false,
-        $complete: false,
-        $suspense: true
+        $rxError: false,
+        $rxComplete: false,
+        $rxSuspense: true
       });
     },
     next: (value: U | null | undefined) => {
-      this.templateManager.displayView('N');
+      this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
         $implicit: value,
         rxLet: value,
       });
     },
     error: (error: Error) => {
-      // fallback to N when there's no template for E
-      this.templateManager.hasTemplateRef('E')
-      ? this.templateManager.displayView('E')
-      : this.templateManager.displayView('N');
+      // fallback to rxNext when there's no template for rxError
+      this.templateManager.hasTemplateRef('rxError')
+      ? this.templateManager.displayView('rxError')
+      : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $error: error,
+        $rxError: error,
       });
     },
     complete: () => {
-      // fallback to N when there's no template for C
-      this.templateManager.hasTemplateRef('C')
-      ? this.templateManager.displayView('C')
-      : this.templateManager.displayView('N');
+      // fallback to rxNext when there's no template for rxComplete
+      this.templateManager.hasTemplateRef('rxComplete')
+      ? this.templateManager.displayView('rxComplete')
+      : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $complete: true,
+        $rxComplete: true,
       });
     },
   };
@@ -506,7 +506,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
 
   /** @internal */
   ngOnInit() {
-    this.templateManager.addTemplateRef('N', this.nextTemplateRef);
+    this.templateManager.addTemplateRef('rxNext', this.nextTemplateRef);
     this.displayInitialView();
     this.subscription = this.renderAware.subscribe();
   }
@@ -529,8 +529,8 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   /** @internal */
   private displayInitialView = () => {
     // Display "suspense" template if provided
-    if (this.templateManager.hasTemplateRef('S')) {
-      this.templateManager.displayView('S');
+    if (this.templateManager.hasTemplateRef('rxSuspense')) {
+      this.templateManager.displayView('rxSuspense');
     }
   };
 }

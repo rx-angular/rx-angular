@@ -9,7 +9,7 @@ import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; $error as error">{{ error }}</ng-container>
+    <ng-container *rxLet="value$; $rxError as error">{{ error }}</ng-container>
   `
 })
 class LetDirectiveTestErrorComponent {

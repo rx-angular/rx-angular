@@ -8,7 +8,9 @@ import { MockChangeDetectorRef } from '../fixtures';
 
 @Component({
   template: `
-    <ng-template let-value [rxLet]="value$" (rendered)="rendered$.next($event)">{{value === undefined ?
+    <ng-template let-value [rxLet]="value$"
+                 [rxLetRenderCallback]="renderCallback$"
+                 (rendered)="rendered$.next($event)">{{value === undefined ?
                                                                                   'undefined' :
                                                                                   value === null ?
                                                                                   'null' :
@@ -18,6 +20,7 @@ import { MockChangeDetectorRef } from '../fixtures';
 class LetDirectiveTestComponent {
   value$: Observable<number> = of(42);
   rendered$ = new Subject<number>();
+  renderCallback$ = new Subject<number>();
 }
 
 let fixtureLetDirectiveTestComponent: any;
@@ -25,6 +28,7 @@ let letDirectiveTestComponent: {
   strategy: any;
   value$: Observable<any> | undefined | null;
   rendered$: Subject<number>;
+  renderCallback$: Subject<number>;
 };
 let componentNativeElement: any;
 
@@ -55,8 +59,18 @@ describe('LetDirective renderCallback', () => {
     expect(componentNativeElement).toBeDefined();
   });
 
-  it('should emit the latest value after rendering', done => {
+  it('should emit the latest value after rendering via output event', done => {
     letDirectiveTestComponent.rendered$.subscribe(renderedValue => {
+      expect(renderedValue).toBe(42);
+      done();
+    });
+    letDirectiveTestComponent.value$ = new BehaviorSubject(42);
+    fixtureLetDirectiveTestComponent.detectChanges();
+    expect(componentNativeElement.textContent).toBe('42');
+  });
+
+  it('should emit the latest value after rendering via renderCallback', done => {
+    letDirectiveTestComponent.renderCallback$.subscribe(renderedValue => {
       expect(renderedValue).toBe(42);
       done();
     });

@@ -11,7 +11,6 @@ import {
   distinctUntilChanged,
   filter,
   map,
-  materialize,
   publish,
   shareReplay,
   startWith,
@@ -19,8 +18,9 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs/operators';
-import { RxTemplateObserver } from '../model';
-import { RenderStrategy, RxNotification, StrategySelection } from './interfaces';
+import { RxNotification, RxTemplateObserver } from '../model';
+import { rxMaterialize } from '../utils/rx-materialize';
+import { RenderStrategy, StrategySelection } from './interfaces';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
@@ -122,25 +122,20 @@ function renderWithLatestStrategy<T>(
   strategyChanges$: Observable<RenderStrategy>
 ): OperatorFunction<T, RxNotification<T>> {
   const suspenseNotification: RxNotification<T> = {
-    kind: 'S',
+    kind: 'rxSuspense',
     value: undefined,
     hasValue: false,
     error: undefined,
   };
   return (o$) => {
     return o$.pipe(
-      materialize(),
+      rxMaterialize(),
       withLatestFrom(strategyChanges$),
       // always use latest strategy on value change
       switchMap(([renderValue, strategy]) =>
         of(renderValue).pipe(strategy.rxScheduleCD)
       ),
       startWith(suspenseNotification),
-      tap(({ kind, error }) => {
-        if (kind === 'E') {
-          console.error(error);
-        }
-      })
     );
   };
 }
