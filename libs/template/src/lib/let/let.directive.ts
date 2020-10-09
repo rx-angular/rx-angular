@@ -374,7 +374,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * readonly renderCallback$ = new Subject<string>();
    */
   @Input('rxLetRenderCallback')
-  set renderCallBack(callback: NextObserver<U>) {
+  set renderCallback(callback: NextObserver<U>) {
     this._renderObserver = callback;
     this.subscribeRenderCallback();
   }
