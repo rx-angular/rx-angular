@@ -5,10 +5,12 @@ import {
   PipeTransform,
 } from '@angular/core';
 import {
+  NextObserver,
   Observable,
-  ObservableInput,
+  ObservableInput, Subject, Subscription,
   Unsubscribable,
 } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { createRenderAware, RenderAware } from '../core';
 import { getStrategies } from '../render-strategies';
 import { DEFAULT_STRATEGY_NAME } from '../render-strategies/strategies/strategies-map';
@@ -63,6 +65,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
 
   private readonly subscription: Unsubscribable;
   private readonly RenderAware: RenderAware<U | null | undefined>;
+  private renderCallbackSubscription: Unsubscribable = Subscription.EMPTY;
 
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => this.renderedValue = undefined,
@@ -81,27 +84,42 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
 
   transform<T>(
     potentialObservable: null,
-    config?: string | Observable<string>
+    config?: string | Observable<string>,
+    renderCallback?: NextObserver<U>
   ): null;
   transform<T>(
     potentialObservable: undefined,
-    config?: string | Observable<string>
+    config?: string | Observable<string>,
+    renderCallback?: NextObserver<U>
   ): undefined;
   transform<T>(
     potentialObservable: ObservableInput<T>,
-    config?: string | Observable<string>
+    config?: string | Observable<string>,
+    renderCallback?: NextObserver<U>
   ): T;
   transform<T>(
     potentialObservable: ObservableInput<T> | null | undefined,
-    config: string | Observable<string> | undefined
+    config: string | Observable<string> | undefined,
+    renderCallback?: NextObserver<U>
   ): T | null | undefined {
     const strategy = config || DEFAULT_STRATEGY_NAME;
     this.RenderAware.nextStrategy(strategy);
     this.RenderAware.nextPotentialObservable(potentialObservable);
+    this.subscribeRenderCallback(renderCallback);
     return this.renderedValue as any;
   }
 
   ngOnDestroy(): void {
+    this.renderCallbackSubscription.unsubscribe();
     this.subscription.unsubscribe();
+  }
+
+  private subscribeRenderCallback( renderCallback?: NextObserver<U>): void {
+    if (renderCallback) {
+      this.renderCallbackSubscription.unsubscribe();
+      this.renderCallbackSubscription = this.RenderAware.rendered$
+        .pipe(map(({ value }) => value))
+        .subscribe(renderCallback);
+    }
   }
 }
