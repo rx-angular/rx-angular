@@ -2,10 +2,7 @@ import { coalesceAndSchedule } from '../static';
 import { SchedulingPriority } from '../rxjs/scheduling/interfaces';
 import { priorityTickMap } from '../rxjs/scheduling/priority-tick-map';
 import { map, switchMap, tap } from 'rxjs/operators';
-import {
-  RenderStrategy,
-  RenderStrategyFactoryConfig,
-} from '../../core/render-aware';
+import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core/render-aware';
 import { coalesceWith } from '../rxjs/operators/coalesceWith';
 import { promiseTick } from '../rxjs/scheduling/promiseTick';
 import { afterCoalesceAndSchedule } from '../util';

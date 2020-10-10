@@ -60,15 +60,19 @@ export function toDictionary<T extends object>(
     return source;
   }
 
-  if (!Array.isArray(source) || !source.length || !isKeyOf<T>(source[0][key])) {
-    console.warn('ToDictionary: unexpected input params.');
+  const sourceEmpty = !source.length;
+
+  if (!Array.isArray(source) || sourceEmpty || !isKeyOf<T>(source[0][key])) {
+    if (!sourceEmpty) {
+      console.warn('ToDictionary: unexpected input params.');
+    }
     return {};
   }
 
   return source.reduce(
     (acc, entity) => ({
       ...acc,
-      [entity[key] as any]: entity,
+      [entity[key] as any]: entity
     }),
     {}
   );

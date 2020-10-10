@@ -1,10 +1,6 @@
 import { MonoTypeOperatorFunction, Observable, OperatorFunction } from 'rxjs';
 import { pluck } from 'rxjs/operators';
-import {
-  isOperateFnArrayGuard,
-  isStringArrayGuard,
-  pipeFromArray,
-} from '../../core/utils';
+import { isOperateFnArrayGuard, isStringArrayGuard, pipeFromArray } from '../../core/utils';
 import { stateful } from './stateful';
 
 /**
@@ -104,33 +100,27 @@ export function select<T, K1 extends keyof T, K2 extends keyof T[K1]>(
 /**
  * @internal
  */
-export function select<
-  T,
+export function select<T,
   K1 extends keyof T,
   K2 extends keyof T[K1],
-  K3 extends keyof T[K1][K2]
->(k1: K1, k2: K2, k3: K3): OperatorFunction<T, T[K1][K2][K3]>;
+  K3 extends keyof T[K1][K2]>(k1: K1, k2: K2, k3: K3): OperatorFunction<T, T[K1][K2][K3]>;
 /**
  * @internal
  */
-export function select<
-  T,
+export function select<T,
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
-  K4 extends keyof T[K1][K2][K3]
->(k1: K1, k2: K2, k3: K3, k4: K4): OperatorFunction<T, T[K1][K2][K3][K4]>;
+  K4 extends keyof T[K1][K2][K3]>(k1: K1, k2: K2, k3: K3, k4: K4): OperatorFunction<T, T[K1][K2][K3][K4]>;
 /**
  * @internal
  */
-export function select<
-  T,
+export function select<T,
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
   K4 extends keyof T[K1][K2][K3],
-  K5 extends keyof T[K1][K2][K3][K4]
->(
+  K5 extends keyof T[K1][K2][K3][K4]>(
   k1: K1,
   k2: K2,
   k3: K3,
@@ -140,15 +130,13 @@ export function select<
 /**
  * @internal
  */
-export function select<
-  T,
+export function select<T,
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
   K4 extends keyof T[K1][K2][K3],
   K5 extends keyof T[K1][K2][K3][K4],
-  K6 extends keyof T[K1][K2][K3][K4][K5]
->(
+  K6 extends keyof T[K1][K2][K3][K4][K5]>(
   k1: K1,
   k2: K2,
   k3: K3,

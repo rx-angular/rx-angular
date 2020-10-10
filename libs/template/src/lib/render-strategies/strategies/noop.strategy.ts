@@ -1,7 +1,4 @@
-import {
-  RenderStrategy,
-  RenderStrategyFactoryConfig,
-} from '../../core/render-aware/interfaces';
+import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core/render-aware/interfaces';
 import { filter } from 'rxjs/operators';
 
 /**
@@ -26,6 +23,6 @@ export function createNoopStrategy(config: RenderStrategyFactoryConfig): RenderS
     name: 'noop',
     detectChanges: () => {},
     rxScheduleCD: (o) => o.pipe(filter(v => false)),
-    scheduleCD: () => new AbortController(),
+    scheduleCD: () => new AbortController()
   };
 }

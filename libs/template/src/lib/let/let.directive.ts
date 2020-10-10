@@ -6,8 +6,7 @@ import {
   OnInit,
   Output,
   TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+  ViewContainerRef} from '@angular/core';
 
 import { defer, NextObserver, Observable, ObservableInput, Subscription, Unsubscribable, } from 'rxjs';
 import { filter, map, share } from 'rxjs/operators';
@@ -196,7 +195,7 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  */
 @Directive({
   selector: '[rxLet]',
-  exportAs: 'renderNotifier',
+  exportAs: 'renderNotifier'
 })
 export class LetDirective<U> implements OnInit, OnDestroy {
 
@@ -457,7 +456,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
       this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
         $implicit: value,
-        rxLet: value,
+        rxLet: value
       });
     },
     error: (error: Error) => {
@@ -466,7 +465,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
       ? this.templateManager.displayView('rxError')
       : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $rxError: error,
+        $rxError: error
       });
     },
     complete: () => {
@@ -475,9 +474,9 @@ export class LetDirective<U> implements OnInit, OnDestroy {
       ? this.templateManager.displayView('rxComplete')
       : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $rxComplete: true,
+        $rxComplete: true
       });
-    },
+    }
   };
 
   /** @internal */
@@ -499,7 +498,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
 
     this.renderAware = createRenderAware({
       strategies: this.strategies,
-      templateObserver: this.templateObserver,
+      templateObserver: this.templateObserver
     });
     this.renderAware.nextStrategy(DEFAULT_STRATEGY_NAME);
   }

@@ -1,16 +1,12 @@
-import {
-  ChangeDetectorRef,
-  OnDestroy,
-  Pipe,
-  PipeTransform,
+import { ChangeDetectorRef, OnDestroy, Pipe, PipeTransform
 } from '@angular/core';
 import {
   NextObserver,
   Observable,
-  ObservableInput, Subject, Subscription,
-  Unsubscribable,
+  ObservableInput, Subscription,
+  Unsubscribable
 } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { createRenderAware, RenderAware } from '../core';
 import { getStrategies } from '../render-strategies';
 import { DEFAULT_STRATEGY_NAME } from '../render-strategies/strategies/strategies-map';
@@ -69,13 +65,13 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
 
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => this.renderedValue = undefined,
-    next: (value: U | null | undefined) => this.renderedValue = value,
+    next: (value: U | null | undefined) => this.renderedValue = value
   };
 
   constructor(cdRef: ChangeDetectorRef) {
     this.RenderAware = createRenderAware<U>({
       strategies: getStrategies({
-        cdRef,
+        cdRef
       }),
       templateObserver: this.templateObserver
     });

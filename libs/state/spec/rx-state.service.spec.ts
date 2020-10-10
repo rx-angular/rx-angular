@@ -3,7 +3,7 @@ import { jestMatcher } from '@test-helpers';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { createStateChecker, initialPrimitiveState, PrimitiveState } from './fixtures';
 import { TestScheduler } from 'rxjs/testing';
-import { select,RxState } from '@rx-angular/state';
+import { RxState, select } from '@rx-angular/state';
 import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
 import { from, interval, of, Subject } from 'rxjs';
 
@@ -126,14 +126,14 @@ describe('RxStateService', () => {
 
     it('should return value when keys are provided as params', () => {
       const val = state.get('num');
-      expect(val).toEqual(initialPrimitiveState.num)
-    })
+      expect(val).toEqual(initialPrimitiveState.num);
+    });
 
     it('should return whole state object when no keys provided', () => {
       const val = state.get();
-      expect(val.num).toEqual(initialPrimitiveState.num)
-    })
-  })
+      expect(val.num).toEqual(initialPrimitiveState.num);
+    });
+  });
 
   describe('select', () => {
     it('should return initial state', () => {
@@ -406,7 +406,7 @@ describe('RxStateService', () => {
         const state = setupState({ initialState: initialPrimitiveState });
         const sub = state.subscribe();
         state.set(initialPrimitiveState);
-        const tick$ = interval(100).pipe(map(num => ({num})));
+        const tick$ = interval(100).pipe(map(num => ({ num })));
         state.connect(tick$);
         sub.unsubscribe();
         expectObservable(state.select()).toBe('');
@@ -432,7 +432,7 @@ describe('RxStateService', () => {
         const sub = state.subscribe();
         state.set(initialPrimitiveState);
         const tick$ = interval(100);
-        state.connect(tick$, (s, v) => ({num: s.num+v}));
+        state.connect(tick$, (s, v) => ({ num: s.num + v }));
         sub.unsubscribe();
         expectObservable(state.select()).toBe('');
       });
@@ -444,7 +444,7 @@ describe('RxStateService', () => {
         const sub = state.subscribe();
         state.set(initialPrimitiveState);
         const tick$ = interval(100);
-        state.connect('num', tick$, (s, v) => s.num+v);
+        state.connect('num', tick$, (s, v) => s.num + v);
         sub.unsubscribe();
         expectObservable(state.select()).toBe('');
       });
@@ -456,7 +456,7 @@ describe('RxStateService', () => {
         const sub = state.subscribe();
         state.set(initialPrimitiveState);
         expectObservable(state.select(
-          switchMap(() => interval(100).pipe(map(num => ({num})), take(3)))
+          switchMap(() => interval(100).pipe(map(num => ({ num })), take(3)))
         )).toBe('');
         sub.unsubscribe();
       });

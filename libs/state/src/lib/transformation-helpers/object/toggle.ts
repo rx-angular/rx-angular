@@ -1,5 +1,6 @@
 import { OnlyKeysOfSpecificType } from '../interfaces/only-keys-of-specific-type';
-import { isObjectGuard, isKeyOf, isDefined } from '../../core';
+import { isDefined, isKeyOf, isObjectGuard } from '../../core';
+
 /**
  * @description
  * Toggles a boolean property in the object.

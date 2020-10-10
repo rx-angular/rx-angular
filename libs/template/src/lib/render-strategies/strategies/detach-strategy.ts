@@ -2,10 +2,7 @@ import { coalesceAndSchedule } from '../static';
 import { SchedulingPriority } from '../rxjs/scheduling/interfaces';
 import { priorityTickMap } from '../rxjs/scheduling/priority-tick-map';
 import { map, switchMap, tap } from 'rxjs/operators';
-import {
-  RenderStrategy,
-  RenderStrategyFactoryConfig,
-} from '../../core/render-aware';
+import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core/render-aware';
 import { coalesceWith } from '../rxjs/operators/coalesceWith';
 import { promiseTick } from '../rxjs/scheduling/promiseTick';
 import { afterCoalesceAndSchedule } from '../util';
@@ -25,7 +22,7 @@ export function getDetachStrategies<T>(
   config: RenderStrategyFactoryConfig
 ): { [strategy: string]: RenderStrategy } {
   return {
-    detach: createDetachStrategy(config),
+    detach: createDetachStrategy(config)
   };
 }
 
@@ -62,11 +59,11 @@ export function createDetachStrategy(
     config.cdRef.detach();
   };
   const behavior = (o) => o.pipe(
-          coalesceWith(promiseDurationSelector, component),
-          // dispose previous render attempts (tick schedules it into the future)
-          switchMap((v) => tick.pipe(map(() => v))),
-          tap(renderMethod)
-    );
+    coalesceWith(promiseDurationSelector, component),
+    // dispose previous render attempts (tick schedules it into the future)
+    switchMap((v) => tick.pipe(map(() => v))),
+    tap(renderMethod)
+  );
   const scheduleCD = <R>(afterCD?: () => R) =>
     coalesceAndSchedule(() => {
       afterCoalesceAndSchedule(renderMethod, afterCD);
@@ -76,6 +73,6 @@ export function createDetachStrategy(
     name: 'detach',
     detectChanges: renderMethod,
     rxScheduleCD: behavior,
-    scheduleCD,
+    scheduleCD
   };
 }

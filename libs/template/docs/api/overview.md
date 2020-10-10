@@ -1,5 +1,5 @@
-# API
+## API
 
-## Directives
+  ## Directives
 
-- [`LetDirective`](./let-directive.md)
+  - [`LetDirective`](./let-directive.md)

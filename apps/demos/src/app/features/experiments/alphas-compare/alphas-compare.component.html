@@ -1,0 +1,76 @@
+<h1>Alpha 0 vs Beta 0 (To enable Alpha 1 check alpha-1-toggle.module)</h1>
+<div class="row w-100">
+  <div class="col-sm-12 col-md-3">
+    <div style="margin-bottom: 16px">
+      <button mat-raised-button color="primary" (click)="toggle0PushAutoTest()">
+        Run Auto test for Push pipe in Alpha 0
+      </button>
+    </div>
+    <div style="margin-bottom: 16px">
+      <button mat-raised-button [unpatch] color="secondary" (click)="toggle0Push()">
+        Open Manual test for Push pipe in Alpha 0
+      </button>
+    </div>
+    <rxa-alpha0
+      *ngIf="show0PushAutoTest"
+      [auto]="true"
+      [type]="'push'"
+    ></rxa-alpha0>
+    <rxa-alpha0 *ngIf="show0Push" [auto]="false" [type]="'push'"></rxa-alpha0>
+  </div>
+  <div class="col-sm-12 col-md-3">
+    <div style="margin-bottom: 16px">
+      <button mat-raised-button color="primary" (click)="toggle0LetAutoTest()">
+        Run Auto test for Let in Alpha 0
+      </button>
+    </div>
+    <div style="margin-bottom: 16px">
+      <button mat-raised-button color="secondary" (click)="toggle0Let()">
+        Open Manual test for Let in Alpha 0
+      </button>
+    </div>
+    <rxa-alpha0
+      *ngIf="show0LetAutoTest"
+      [auto]="true"
+      [type]="'rxLet'"
+    ></rxa-alpha0>
+    <rxa-alpha0 *ngIf="show0Let" [auto]="false" [type]="'rxLet'"></rxa-alpha0>
+  </div>
+
+  <div class="col-sm-12 col-md-3">
+    <div style="margin-bottom: 16px">
+      <button mat-raised-button color="primary" (click)="toggle1PushAutoTest()">
+        Run Auto test for Push in Alpha 1
+      </button>
+    </div>
+    <div style="margin-bottom: 16px">
+      <button mat-raised-button color="secondary" (click)="toggle1Push()">
+        Open Manual test for Push pipe in Alpha 1
+      </button>
+    </div>
+    <rxa-alpha1
+      *ngIf="show1PushAutoTest"
+      [auto]="true"
+      [type]="'push'"
+    ></rxa-alpha1>
+    <rxa-alpha1 *ngIf="show1Push" [auto]="false" [type]="'push'"></rxa-alpha1>
+  </div>
+  <div class="col-sm-12 col-md-3">
+    <div style="margin-bottom: 16px">
+      <button mat-raised-button color="primary" (click)="toggle1LetAutoTest()">
+        Run Auto test for Let in Alpha 1
+      </button>
+    </div>
+    <div style="margin-bottom: 16px">
+      <button mat-raised-button color="secondary" (click)="toggle1Let()">
+        Open Manual test for Let in Alpha 1
+      </button>
+    </div>
+    <rxa-alpha1
+      *ngIf="show1LetAutoTest"
+      [auto]="true"
+      [type]="'rxLet'"
+    ></rxa-alpha1>
+    <rxa-alpha1 *ngIf="show1Let" [auto]="false" [type]="'rxLet'"></rxa-alpha1>
+  </div>
+</div>

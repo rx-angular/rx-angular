@@ -1,7 +1,6 @@
 import { TestScheduler } from 'rxjs/internal/testing/TestScheduler';
 import { mergeMapTo, share } from 'rxjs/operators';
 import { concat, defer, from, of, timer } from 'rxjs';
-
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher, mockConsole } from '@test-helpers';
 import { coalesceWith } from '../../../src/lib/render-strategies/rxjs/operators/coalesceWith';
@@ -341,16 +340,16 @@ describe('coalesce operator additional logic', () => {
     it('should forward errors', (() => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
         const s1 = cold('---a--#------');
-        const s1Subs =  '^-----!      ';
+        const s1Subs = '^-----!      ';
         const n1 = cold('   -----|    ');
-        const n1Subs =  '---^--!      ';
-        const exp1 =    '------#------';
+        const n1Subs = '---^--!      ';
+        const exp1 = '------#------';
 
         const result1 = s1.pipe(coalesceWith(n1));
         expectObservable(result1).toBe(exp1);
         expectSubscriptions(s1.subscriptions).toBe(s1Subs);
         expectSubscriptions(n1.subscriptions).toBe(n1Subs);
       });
-    }))
-  })
+    }));
+  });
 });

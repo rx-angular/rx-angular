@@ -13,20 +13,23 @@ describe('hasZone', () => {
     @Component({
       // tslint:disable-next-line:component-selector
       selector: 'body',
-      template: '<div></div>',
+      template: '<div></div>'
     })
     class NgZoneTestComponent {
       checkNgZone = isNgZone(this.ngZone);
-      constructor(readonly ngZone: NgZone) {}
+
+      constructor(readonly ngZone: NgZone) {
+      }
     }
 
     @NgModule({
       declarations: [NgZoneTestComponent],
       exports: [NgZoneTestComponent],
       bootstrap: [NgZoneTestComponent],
-      imports: [NoopAnimationsModule],
+      imports: [NoopAnimationsModule]
     })
-    class MyAppModule {}
+    class MyAppModule {
+    }
 
     const platform = getTestBed().platform;
     const moduleRef = defaultZone
@@ -52,19 +55,21 @@ describe('isNoopNgZone', () => {
     @Component({
       // tslint:disable-next-line:component-selector
       selector: 'body',
-      template: '<div></div>',
+      template: '<div></div>'
     })
     class NgZoneTestComponent {
-      constructor(readonly ngZone: NgZone) {}
+      constructor(readonly ngZone: NgZone) {
+      }
     }
 
     @NgModule({
       declarations: [NgZoneTestComponent],
       exports: [NgZoneTestComponent],
       bootstrap: [NgZoneTestComponent],
-      imports: [NoopAnimationsModule],
+      imports: [NoopAnimationsModule]
     })
-    class MyAppModule {}
+    class MyAppModule {
+    }
 
     const platform = getTestBed().platform;
     const moduleRef = defaultZone
@@ -98,7 +103,7 @@ describe('envZonePatched', () => {
     @Component({
       // tslint:disable-next-line:component-selector
       selector: 'body',
-      template: '<div></div>',
+      template: '<div></div>'
     })
     class NgZoneTestComponent {
       checkEnvZonePatched = isEnvZonePatched();
@@ -108,9 +113,10 @@ describe('envZonePatched', () => {
       declarations: [NgZoneTestComponent],
       exports: [NgZoneTestComponent],
       bootstrap: [NgZoneTestComponent],
-      imports: [NoopAnimationsModule],
+      imports: [NoopAnimationsModule]
     })
-    class MyAppModule {}
+    class MyAppModule {
+    }
 
     const platform = getTestBed().platform;
     const moduleRef = defaultZone

@@ -28,7 +28,7 @@ describe('detach Strategy', () => {
       expect(strategy).toBeDefined();
     });
 
-    it(`should have ${ strategyName } as name`, () => {
+    it(`should have ${strategyName} as name`, () => {
       const strategy = getStrategies(getMockStrategyConfig())[strategyName];
       expect(strategy.name).toBe(strategyName);
     });
@@ -85,7 +85,8 @@ describe('detach Strategy', () => {
         strategyMethod: 'rxScheduleCD',
         singleTime: false,
         callsExpectations
-      }, () => {});
+      }, () => {
+      });
 
       testStrategyMethod({
         strategyName,

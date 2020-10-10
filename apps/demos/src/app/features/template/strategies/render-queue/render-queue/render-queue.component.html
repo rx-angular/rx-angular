@@ -1,0 +1,17 @@
+<div>
+  <strong>Chunked</strong>
+  <button mat-raised-button [unpatch] (click)="updateChildrenChunked()">
+    updateChildrenChunked
+  </button>
+</div>
+<div>
+  <strong>Blocking</strong>
+
+  <button mat-raised-button [unpatch] (click)="updateChildrenBlocking()">
+    updateChildrenBlocking
+  </button>
+</div>
+<rxa-dirty-check></rxa-dirty-check>
+<div class="render-queue-wrapper">
+  <rxa-child *ngFor="let item of items"></rxa-child>
+</div>

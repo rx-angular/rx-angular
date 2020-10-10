@@ -1,7 +1,6 @@
 import { ɵmarkDirty as markDirty } from '@angular/core';
-import { fromEvent } from 'rxjs';
-import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { RenderStrategy, RenderStrategyFactoryConfig, } from '../../core/render-aware';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core/render-aware';
 import { animationFrameTick } from '../rxjs/scheduling';
 import { afterScheduleCD } from '../util';
 
@@ -9,7 +8,7 @@ export function getGlobalStrategies(
   config: RenderStrategyFactoryConfig
 ): { [strategy: string]: RenderStrategy } {
   return {
-    global: createGlobalStrategy(config),
+    global: createGlobalStrategy(config)
   };
 }
 
@@ -53,6 +52,6 @@ export function createGlobalStrategy(
     scheduleCD: <R>(afterCD?: () => R) => {
       renderMethod();
       return cdScheduler(afterCD);
-    },
+    }
   };
 }

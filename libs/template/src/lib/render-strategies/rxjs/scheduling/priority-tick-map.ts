@@ -1,26 +1,28 @@
-import { Observable } from 'rxjs';
-import { PostTaskSchedulerPriority } from '../../../experimental/render-strategies/rxjs/scheduling/postTask.experimental';
-import { timeoutTick } from '../../../experimental/render-strategies/rxjs/scheduling/timeoutTick.experimental';
-import { idleCallbackTick } from '../../../experimental/render-strategies/rxjs/scheduling/idleCallbackTick.experimental';
-import { postTaskTick } from '../../../experimental/render-strategies/rxjs/scheduling/postTaskTick.experimental';
+import {
+  idleCallbackTick,
+  PostTaskSchedulerPriority,
+  postTaskTick,
+  timeoutTick
+} from '../../../experimental/render-strategies/rxjs/scheduling';
 import { animationFrameTick } from './animationFrameTick';
 import { promiseTick } from './promiseTick';
+import { SchedulingPriority } from './interfaces';
 
-export const priorityTickMap: { [name: string]: Observable<number> } = {
-  animationFrame: animationFrameTick(),
-  Promise: promiseTick(),
+export const priorityTickMap = {
+  [SchedulingPriority.animationFrame]: animationFrameTick(),
+  [SchedulingPriority.Promise]: promiseTick(),
   // @deprecated This is still experimental
-  setInterval: timeoutTick(),
+  [SchedulingPriority.setInterval]: timeoutTick(),
   // @deprecated This is still experimental
-  idleCallback: idleCallbackTick(),
+  [SchedulingPriority.idleCallback]: idleCallbackTick(),
   // @deprecated This is still experimental
-  userBlocking: postTaskTick({
-    priority: PostTaskSchedulerPriority.userBlocking,
+  [SchedulingPriority.userBlocking]: postTaskTick({
+    priority: PostTaskSchedulerPriority.userBlocking
   }),
   // @deprecated This is still experimental
-  userVisible: postTaskTick({
-    priority: PostTaskSchedulerPriority.userVisible,
+  [SchedulingPriority.userVisible]: postTaskTick({
+    priority: PostTaskSchedulerPriority.userVisible
   }),
   // @deprecated This is still experimental
-  background: postTaskTick({ priority: PostTaskSchedulerPriority.background }),
+  [SchedulingPriority.background]: postTaskTick({ priority: PostTaskSchedulerPriority.background })
 };

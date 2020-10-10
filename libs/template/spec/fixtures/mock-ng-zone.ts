@@ -18,14 +18,17 @@ export class MockNgZone {
     return true;
   }
 
-  static assertInAngularZone(): void {}
+  static assertInAngularZone(): void {
+  }
 
-  static assertNotInAngularZone(): void {}
+  static assertNotInAngularZone(): void {
+  }
 
   constructor({
-    enableLongStackTrace = false,
-    shouldCoalesceEventChangeDetection = false,
-  }) {}
+                enableLongStackTrace = false,
+                shouldCoalesceEventChangeDetection = false
+              }) {
+  }
 
   run(fn: Function): any {
     return fn();

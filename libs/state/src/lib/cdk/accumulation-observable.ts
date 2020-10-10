@@ -1,15 +1,16 @@
 import {
   BehaviorSubject,
   ConnectableObservable,
+  EMPTY,
   merge,
   Observable,
   queueScheduler,
   Subject,
   Subscribable,
-  Subscription,
-  EMPTY,
+  Subscription
 } from 'rxjs';
 import {
+  catchError,
   distinctUntilChanged,
   mergeAll,
   observeOn,
@@ -17,8 +18,7 @@ import {
   publishReplay,
   scan,
   tap,
-  withLatestFrom,
-  catchError,
+  withLatestFrom
 } from 'rxjs/operators';
 
 export type AccumulationFn = <T>(st: T, sl: Partial<T>) => T;
@@ -70,7 +70,7 @@ export function createAccumulationObservable<T extends object>(
     nextSlice,
     nextSliceObservable,
     nextAccumulator,
-    subscribe,
+    subscribe
   };
 
   // ======
@@ -92,9 +92,7 @@ export function createAccumulationObservable<T extends object>(
   }
 
   function subscribe(): Subscription {
-    const sub = (compositionObservable.signal$ as ConnectableObservable<
-      T
-    >).connect();
+    const sub = (compositionObservable.signal$ as ConnectableObservable<T>).connect();
     sub.add(
       (compositionObservable.state$ as ConnectableObservable<T>).connect()
     );

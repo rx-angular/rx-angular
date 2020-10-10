@@ -1,4 +1,3 @@
-
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { interval, of, throwError } from 'rxjs';
@@ -206,7 +205,7 @@ describe('createAccumulationObservable', () => {
         acc.nextSlice({ num: 44 });
       });
 
-      expect(numAccCalls).toBe(2)
+      expect(numAccCalls).toBe(2);
     });
   });
 
@@ -227,12 +226,12 @@ describe('createAccumulationObservable', () => {
         const acc = createAccumulationObservable<PrimitiveState>();
         const sub = acc.subscribe();
         acc.nextSlice(initialPrimitiveState);
-        const tick$ = interval(1000).pipe(map(num => ({num})));
-        acc.nextSliceObservable(tick$)
+        const tick$ = interval(1000).pipe(map(num => ({ num })));
+        acc.nextSliceObservable(tick$);
         sub.unsubscribe();
         expectObservable(acc.state$).toBe('');
       });
     });
 
-  })
+  });
 });

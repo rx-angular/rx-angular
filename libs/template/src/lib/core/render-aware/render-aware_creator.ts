@@ -113,7 +113,7 @@ export function createRenderAware<U>(cfg: {
     activeStrategy$: strategy$,
     subscribe(): Subscription {
       return new Subscription().add((renderingEffect$ as ConnectableObservable<U>).connect());
-    },
+    }
   };
 }
 
