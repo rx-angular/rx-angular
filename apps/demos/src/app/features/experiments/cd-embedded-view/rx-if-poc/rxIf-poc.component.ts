@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { scan } from 'rxjs/operators';
 
 @Component({
-  selector: 'rxa-cd-embedded-view-parent02',
+  selector: 'rxa-rx-if-poc',
   template: `
     <rxa-visualizer>
       <div visualizerHeader>
