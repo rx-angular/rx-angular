@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Output } from '@angular/core';
+import { RxState } from '@rx-angular/state';
+import { Observable, Subject } from 'rxjs';
+import { ProvidedValues } from '../model';
 import { PrimitivesProviderService } from '../primitives-provider.service';
 
 @Component({
@@ -33,7 +35,17 @@ export class ValueProviderComponent extends PrimitivesProviderService {
     this.outerChanges.next(o$);
   }
 
-  constructor(protected cdRef: ChangeDetectorRef) {
-    super(cdRef);
+  @Output() resetState = new Subject();
+
+  constructor(
+    protected state: RxState<ProvidedValues>,
+    protected cdRef: ChangeDetectorRef
+  ) {
+    super(state, cdRef);
+  }
+
+  reset() {
+    super.reset();
+    this.resetState.next();
   }
 }
