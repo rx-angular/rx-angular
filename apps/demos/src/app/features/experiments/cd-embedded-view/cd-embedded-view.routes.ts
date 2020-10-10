@@ -1,5 +1,3 @@
-import { CdEmbeddedViewParent03Component } from './03/parent.component';
-import { CdEmbeddedViewParent04Component } from './04/parent.component';
 import { CdEmbeddedViewParent05Component } from './05/parent.component';
 import { CdEmbeddedViewParent06Component } from './06/parent.component';
 import { Routes } from '@angular/router';
@@ -15,15 +13,11 @@ export const ROUTES: Routes = [
   },
   {
     path: 'rx-if-poc',
-    loadChildren: () => import('./rx-if-poc/rxIf-poc.module').then(m => m.RxIfPocModule)
+    loadChildren: () => import('./rx-if-poc/rx-if-poc.module').then(m => m.RxIfPocModule)
   },
   {
-    path: 'cd-embedded-view-03',
-    component: CdEmbeddedViewParent03Component
-  },
-  {
-    path: 'cd-embedded-view-04',
-    component: CdEmbeddedViewParent04Component
+    path: 'rx-swicht-poc',
+    loadChildren: () => import('./rx-switch-poc/rx-swicht-poc.module').then(m => m.RxSwichtPocModule)
   },
   {
     path: 'cd-embedded-view-05',

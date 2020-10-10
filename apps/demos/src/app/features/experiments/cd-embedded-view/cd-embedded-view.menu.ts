@@ -13,8 +13,8 @@ export const MENU_ITEMS = [
         label: 'RxIf Poc',
       },
       {
-        link: 'cd-embedded-view-03',
-        label: 'CD embedded-view 03',
+        link: 'rx-swicht-poc',
+        label: 'RxSwitch POC',
       },
       {
         link: 'cd-embedded-view-04',

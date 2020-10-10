@@ -9,10 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Poc1ForDirective } from './03/poc1-for.directive';
 import { Poc2ForDirective } from './03/poc2-for.directive';
-import { Poc1Switch } from './04/poc1-switch.directive';
 import { CdEmbeddedViewParent03Component } from './03/parent.component';
-import { CdEmbeddedViewParent04Component } from './04/parent.component';
-import { Poc1SwitchCase } from './04/poc1-switch-case.directive';
 import { Poc5Locv5 } from './05/poc5-locv.directive';
 import { CdEmbeddedViewParent05Component } from './05/parent.component';
 import { Poc6Locv2Directive } from './06/poc6-locv2.directive';
@@ -30,11 +27,8 @@ import { ValueProvidersModule } from '../../../shared/debug-helper/value-provide
 @NgModule({
   declarations: [
     CdEmbeddedViewParent03Component,
-    CdEmbeddedViewParent04Component,
     Poc1ForDirective,
     Poc2ForDirective,
-    Poc1Switch,
-    Poc1SwitchCase,
     PocForIterable,
     Poc5Locv5,
     CdEmbeddedViewParent05Component,

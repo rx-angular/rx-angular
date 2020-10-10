@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ROUTES } from './rxIf-poc.routes';
+import { ROUTES } from './rx-if-poc.routes';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { UnpatchEventsModule } from '@rx-angular/template';
 import { Poc1IfDirective } from './poc1-if.directive';
-import { RxIfPocComponent } from './rxIf-poc.component';
+import { RxIfPocComponent } from './rx-if-poc.component';
 import { Poc2IfDirective } from './poc2-if.directive';
 import { MatButtonModule } from '@angular/material/button';
-import { DebugHelperModule } from '../../../../../../../tour-of-heroes/src/app/debug-helper.module.ts/debug-helper.module';
+import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 
 @NgModule({
   declarations: [
@@ -22,7 +22,7 @@ import { DebugHelperModule } from '../../../../../../../tour-of-heroes/src/app/d
     VisualizerModule,
     UnpatchEventsModule,
     MatButtonModule,
-    DebugHelperModule
+    DirtyChecksModule
   ]
 })
 export class RxIfPocModule {
