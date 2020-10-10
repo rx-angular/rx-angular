@@ -427,7 +427,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   private subscription: Unsubscribable = Subscription.EMPTY;
 
   /** @internal */
-  private renderCallBackSubscription = Subscription.EMPTY;
+  private renderCallBackSubscription: Unsubscribable = Subscription.EMPTY;
 
   /** @internal */
   private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>, RxNotificationKind>;
