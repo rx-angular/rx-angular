@@ -66,7 +66,7 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  * - triggers change-detection differently if ViewEngine or Ivy is present (`ChangeDetectorRef.detectChanges` or
  *   `ɵdetectChanges`)
  * - distinct same values in a row (`distinctUntilChanged` operator),
- * - display custom templates for different observable notifications (rxSuspense, next, error, complete)
+ * - display custom templates for different observable notifications (rxSuspense, rxNext, rxError, rxComplete)
  * - notify about after changes got rendered to the template (RenderCallback)
  *
  *
