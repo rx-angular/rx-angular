@@ -30,6 +30,8 @@ import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
 import { RenderingsModule } from '../../../shared/debug-helper/renderings';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visualizer.module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { WorkModule } from '../../../shared/debug-helper/work';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -65,7 +67,9 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     DirtyChecksModule,
     RenderingsModule,
     VisualizerModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    WorkModule,
+    MatInputModule
   ]
 })
 export class CdEmbeddedViewModule {
