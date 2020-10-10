@@ -9,8 +9,8 @@ export const MENU_ITEMS = [
         label: 'View vs EmbeddedView',
       },
       {
-        link: 'cd-embedded-view-02',
-        label: 'CD embedded-view 02',
+        link: 'rx-if-poc',
+        label: 'RxIf Poc',
       },
       {
         link: 'cd-embedded-view-03',

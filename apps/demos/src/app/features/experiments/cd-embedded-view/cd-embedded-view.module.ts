@@ -7,12 +7,9 @@ import { ROUTES as CD_ROUTES } from './cd-embedded-view.routes';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { Poc1IfDirective } from './02/poc1-if.directive';
-import { Poc2IfDirective } from './02/poc2-if.directive';
 import { Poc1ForDirective } from './03/poc1-for.directive';
 import { Poc2ForDirective } from './03/poc2-for.directive';
 import { Poc1Switch } from './04/poc1-switch.directive';
-import { CdEmbeddedViewParent02Component } from './02/parent.component';
 import { CdEmbeddedViewParent03Component } from './03/parent.component';
 import { CdEmbeddedViewParent04Component } from './04/parent.component';
 import { Poc1SwitchCase } from './04/poc1-switch-case.directive';
@@ -32,11 +29,8 @@ import { ValueProvidersModule } from '../../../shared/debug-helper/value-provide
 
 @NgModule({
   declarations: [
-    CdEmbeddedViewParent02Component,
     CdEmbeddedViewParent03Component,
     CdEmbeddedViewParent04Component,
-    Poc1IfDirective,
-    Poc2IfDirective,
     Poc1ForDirective,
     Poc2ForDirective,
     Poc1Switch,

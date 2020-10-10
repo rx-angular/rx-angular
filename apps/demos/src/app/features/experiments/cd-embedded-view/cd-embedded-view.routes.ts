@@ -1,4 +1,3 @@
-import { CdEmbeddedViewParent02Component } from './02/parent.component';
 import { CdEmbeddedViewParent03Component } from './03/parent.component';
 import { CdEmbeddedViewParent04Component } from './04/parent.component';
 import { CdEmbeddedViewParent05Component } from './05/parent.component';
@@ -15,8 +14,8 @@ export const ROUTES: Routes = [
     loadChildren: () => import('./view-vs-embedded-view/view-vs-embedded-view.module').then(m => m.ViewVsEmbeddedViewModule)
   },
   {
-    path: 'cd-embedded-view-02',
-    component: CdEmbeddedViewParent02Component
+    path: 'rx-if-poc',
+    loadChildren: () => import('./rx-if-poc/rxIf-poc.module').then(m => m.RxIfPocModule)
   },
   {
     path: 'cd-embedded-view-03',
