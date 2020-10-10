@@ -3,7 +3,7 @@
 If we think about any process, e. g. a http request, we can differentiate different states in it. 
 The request can start, result in a valid response or throws an error. After that the process is completed.
 
-This fits pretty much any process, they just differ in the number of emissions.
+These states fit pretty much any process, they just differ in the number of emissions.
 
 [`RxJS`](http://www.rxjs.dev) for example, maintains 3 different channels:
 - `next`
