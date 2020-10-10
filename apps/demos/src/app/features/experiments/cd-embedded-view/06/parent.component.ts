@@ -14,21 +14,25 @@ import { immutableArr, immutableIncArr } from '../utils';
           CD EmbeddedView 06
           <small>Nested Structures And Local Variables</small>
         </h2>
-        <mat-button-toggle-group name="visibleExamples"
-                                 aria-label="Visible Examples"
-                                 [value]="displayStates.all"
-                                 #group="matButtonToggleGroup">
-          <mat-button-toggle [value]="displayStates.native">Native</mat-button-toggle>
-          <mat-button-toggle [value]="displayStates.nativeReactive">RxAngular *rxFor trackBy, distinctBy
-          </mat-button-toggle>
-          <mat-button-toggle [value]="displayStates.rxAngularReactive">RxAngular *rxFor trackBy, distinctBy, select
-          </mat-button-toggle>
-          <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
-        </mat-button-toggle-group>
-        <mat-form-field>
-          <label>Work Load</label>
-          <input matInput #load (input)="load$.next(load.value)">
-        </mat-form-field>
+        <div>
+          <mat-button-toggle-group name="visibleExamples"
+                                   aria-label="Visible Examples"
+                                   [value]="displayStates.all"
+                                   #group="matButtonToggleGroup">
+            <mat-button-toggle [value]="displayStates.native">Native</mat-button-toggle>
+            <mat-button-toggle [value]="displayStates.nativeReactive">RxAngular *rxFor trackBy, distinctBy
+            </mat-button-toggle>
+            <mat-button-toggle [value]="displayStates.rxAngularReactive">RxAngular *rxFor trackBy, distinctBy, select
+            </mat-button-toggle>
+            <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
+          </mat-button-toggle-group>
+          <br/>
+          <mat-form-field>
+            <label>Work Load</label>
+            <input matInput #load (input)="load$.next(load.value)">
+          </mat-form-field>
+
+        </div>
       </ng-container>
 
       <div class="row w-100">
@@ -72,7 +76,7 @@ import { immutableArr, immutableIncArr } from '../utils';
           <ng-container
             *poc2For="array$;
           trackBy: trackByKey
-          distinctBy:distinctBy
+          distinctBy: distinctBy
           let value;
           ">
             <rxa-visualizer key="" size="150">

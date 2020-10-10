@@ -5,8 +5,8 @@ export const MENU_ITEMS = [
     children: [
       // 01.
       {
-        link: 'cd-embedded-view-01',
-        label: 'CD embedded-view 01',
+        link: 'view-vs-embedded-view',
+        label: 'View vs EmbeddedView',
       },
       {
         link: 'cd-embedded-view-02',
