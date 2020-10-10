@@ -1,6 +1,8 @@
 import {
   ConnectableObservable,
   Observable,
+  concat,
+  NEVER,
   of,
   OperatorFunction,
   ReplaySubject,
@@ -133,7 +135,7 @@ function renderWithLatestStrategy<T>(
       withLatestFrom(strategyChanges$),
       // always use latest strategy on value change
       switchMap(([renderValue, strategy]) =>
-        of(renderValue).pipe(strategy.rxScheduleCD)
+        concat(of(renderValue), NEVER).pipe(strategy.rxScheduleCD)
       ),
       startWith(suspenseNotification),
     );

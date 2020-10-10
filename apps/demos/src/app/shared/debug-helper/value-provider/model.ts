@@ -22,5 +22,5 @@ export interface SchedulerConfig {
   scheduler: SchedulingPriority;
   duration?: number;
   numEmissions?: number;
-  tickSpeed?: number;
+  tickSpeed?: number|number[];
 }
