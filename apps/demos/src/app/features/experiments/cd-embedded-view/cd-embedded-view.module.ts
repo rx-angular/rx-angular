@@ -29,6 +29,7 @@ import { CdEmbeddedViewParent06Component } from './06/parent.component';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
 import { RenderingsModule } from '../../../shared/debug-helper/renderings';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visualizer.module';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visual
     MatCheckboxModule,
     DirtyChecksModule,
     RenderingsModule,
-    VisualizerModule
+    VisualizerModule,
+    MatButtonToggleModule
   ]
 })
 export class CdEmbeddedViewModule {
