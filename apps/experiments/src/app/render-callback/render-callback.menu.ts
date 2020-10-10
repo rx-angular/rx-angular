@@ -21,6 +21,10 @@ export const MENU_ITEMS: MenuItem[] = [
       {
         link: 'render-callback/render-callback-04',
         label: 'Render Callback 04',
+      },
+      {
+        link: 'render-callback/render-callback-05',
+        label: 'Render Callback 05',
       }
     ],
   },
