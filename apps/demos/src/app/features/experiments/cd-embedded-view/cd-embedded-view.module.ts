@@ -7,19 +7,9 @@ import { ROUTES as CD_ROUTES } from './cd-embedded-view.routes';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { Poc1LetDirective } from './01/poc1-let.directive';
-import { OriginalLetDirective } from './01/original-let.directive';
-import { Poc1IfDirective } from './02/poc1-if.directive';
-import { Poc2IfDirective } from './02/poc2-if.directive';
 import { Poc1ForDirective } from './03/poc1-for.directive';
 import { Poc2ForDirective } from './03/poc2-for.directive';
-import { Poc1Switch } from './04/poc1-switch.directive';
-import { CdEmbeddedViewOverviewComponent } from './cd-embedded-view.overview.component';
-import { CdEmbeddedViewParent01Component } from './01/parent.component';
-import { CdEmbeddedViewParent02Component } from './02/parent.component';
 import { CdEmbeddedViewParent03Component } from './03/parent.component';
-import { CdEmbeddedViewParent04Component } from './04/parent.component';
-import { Poc1SwitchCase } from './04/poc1-switch-case.directive';
 import { Poc5Locv5 } from './05/poc5-locv.directive';
 import { CdEmbeddedViewParent05Component } from './05/parent.component';
 import { Poc6Locv2Directive } from './06/poc6-locv2.directive';
@@ -28,24 +18,17 @@ import { Poc6Locv6 } from './06/poc6-locv.directive';
 import { CdEmbeddedViewParent06Component } from './06/parent.component';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
 import { RenderingsModule } from '../../../shared/debug-helper/renderings';
-import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visualizer.module';
+import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { WorkModule } from '../../../shared/debug-helper/work';
+import { MatInputModule } from '@angular/material/input';
+import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
 
 @NgModule({
   declarations: [
-    CdEmbeddedViewOverviewComponent,
-    CdEmbeddedViewParent01Component,
-    CdEmbeddedViewParent02Component,
     CdEmbeddedViewParent03Component,
-    CdEmbeddedViewParent04Component,
-    OriginalLetDirective,
-    Poc1LetDirective,
-    Poc1IfDirective,
-    Poc2IfDirective,
     Poc1ForDirective,
     Poc2ForDirective,
-    Poc1Switch,
-    Poc1SwitchCase,
     PocForIterable,
     Poc5Locv5,
     CdEmbeddedViewParent05Component,
@@ -65,7 +48,10 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     DirtyChecksModule,
     RenderingsModule,
     VisualizerModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    WorkModule,
+    MatInputModule,
+    ValueProvidersModule
   ]
 })
 export class CdEmbeddedViewModule {

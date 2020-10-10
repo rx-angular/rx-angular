@@ -5,16 +5,16 @@ export const MENU_ITEMS = [
     children: [
       // 01.
       {
-        link: 'cd-embedded-view-01',
-        label: 'CD embedded-view 01',
+        link: 'view-vs-embedded-view',
+        label: 'View vs EmbeddedView',
       },
       {
-        link: 'cd-embedded-view-02',
-        label: 'CD embedded-view 02',
+        link: 'rx-if-poc',
+        label: 'RxIf Poc',
       },
       {
-        link: 'cd-embedded-view-03',
-        label: 'CD embedded-view 03',
+        link: 'rx-swicht-poc',
+        label: 'RxSwitch POC',
       },
       {
         link: 'cd-embedded-view-04',
