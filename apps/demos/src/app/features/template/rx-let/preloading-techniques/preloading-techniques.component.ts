@@ -12,7 +12,12 @@ import { DomSanitizer } from '@angular/platform-browser';
         <button mat-raised-button (click)="sh.tick(1, [500, 0])">
           delayed
         </button>
-        <rxa-value-provider [changes$]="sh.ticks$" [buttons]="true" #valP="rxaValueProvider"></rxa-value-provider>
+        <rxa-value-provider
+          [changes$]="sh.ticks$"
+          [buttons]="true"
+          (resetState)="reset()"
+          #valP="rxaValueProvider"
+        ></rxa-value-provider>
       </div>
       <img [src]="url" *rxLet="valP.imgUrl$; let url; suspense:sV;"/>
       <ng-template #sV><img [src]="placeholder"/></ng-template>
@@ -28,5 +33,7 @@ export class PreloadingTechniquesComponent {
   constructor(public domSanitizer: DomSanitizer) {
   }
 
-
+  reset() {
+    this.sh = schedulingHelper();
+  }
 }
