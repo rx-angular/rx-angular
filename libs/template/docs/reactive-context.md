@@ -1,4 +1,4 @@
-# The Reactive Context 
+# The extended reactive context in RxAngular
 
 If we think about any process, e. g. a http request, we can differentiate different states in it. 
 The request can start, result in a valid response or throws an error. After that the process is completed.
