@@ -67,7 +67,7 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  *   `ɵdetectChanges`)
  * - distinct same values in a row (`distinctUntilChanged` operator),
  * - display custom templates for different observable notifications (rxSuspense, next, error, complete)
- * - notify about after changes got rendered to the template (Rendercallback)
+ * - notify about after changes got rendered to the template (RenderCallback)
  *
  *
  * ### Binding an Observable and using the view context
