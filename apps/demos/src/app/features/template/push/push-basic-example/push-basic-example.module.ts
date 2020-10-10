@@ -1,10 +1,11 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { PushModule } from '@rx-angular/template';
-import { ROUTES } from './push-basic-example.routes';
+import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { PushBasicExampleComponent } from './push-basic-example.component';
+import { ROUTES } from './push-basic-example.routes';
 
 const DECLARATIONS = [PushBasicExampleComponent];
 
@@ -14,7 +15,9 @@ const DECLARATIONS = [PushBasicExampleComponent];
     CommonModule,
     RouterModule.forChild(ROUTES),
     PushModule,
-    DirtyChecksModule
+    DirtyChecksModule,
+    MatButtonModule,
+    UnpatchEventsModule
   ],
   exports: [DECLARATIONS]
 })
