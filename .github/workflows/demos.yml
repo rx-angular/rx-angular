@@ -6,7 +6,7 @@ name: Build Demos
 on: [pull_request]
 
 jobs:
-  build-docs:
+  build-demos:
 
     runs-on: ubuntu-latest
 
