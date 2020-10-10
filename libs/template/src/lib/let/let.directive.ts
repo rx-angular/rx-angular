@@ -30,7 +30,7 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  * you structure view-related models into view context scope (DOM element's scope).
  *
  * Under the hood, it leverages a `RenderStrategy` which in turn takes care of optimizing the change detection
- * of your component. The `LetDirective` will render its template and manage change detection after it got an initial
+ * of your component or embedded view. The `LetDirective` will render its template and manage change detection after it got an initial
  *   value. So if the incoming `Observable` emits its value lazily (e.g. data coming from `Http`), your template will
  *   be rendered lazily as well. This can very positively impact the initial render performance of your application.
  *
