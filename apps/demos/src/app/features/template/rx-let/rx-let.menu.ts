@@ -18,5 +18,9 @@ export const MENU_ITEMS = [
   {
     label: 'Preloading Techniques',
     link: 'preloading-techniques'
+  },
+  {
+    label: 'Lazy Components',
+    link: 'lazy-components'
   }
 ];
