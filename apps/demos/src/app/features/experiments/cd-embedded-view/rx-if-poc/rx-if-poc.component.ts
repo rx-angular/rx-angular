@@ -18,7 +18,7 @@ import { scan } from 'rxjs/operators';
       <div class="row w-100">
         <div class="col">
           <rxa-visualizer>
-            <h3>Render EmbeddedViews directly</h3>
+            <h3 visualizerHeader>Render EmbeddedViews directly</h3>
             <ng-container *poc1If="value1$; let value; falsey: f1">
               <rxa-dirty-check></rxa-dirty-check>
               TRUE
@@ -32,7 +32,7 @@ import { scan } from 'rxjs/operators';
         </div>
         <div class="col">
           <rxa-visualizer>
-            <h3>Display/Hide EmbeddedViews</h3>
+            <h3 visualizerHeader>Display/Hide EmbeddedViews</h3>
             <ng-container *poc2If="value1$; let value; falsey: f1">
               <rxa-dirty-check></rxa-dirty-check>
               TRUE
