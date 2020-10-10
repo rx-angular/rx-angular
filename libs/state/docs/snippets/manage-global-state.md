@@ -125,7 +125,7 @@ import { GLOBAL_RX_STATE } from './rx-state';
 export class AppComponent  {
 constructor(@Inject(GLOBAL_RX_STATE) private state, private tasksService: TasksService) {
     /* Fetch tasks from backend */
-    this.connect("tasks", this.tasksService.fetchTasks());
+    this.state.connect("tasks", this.tasksService.fetchTasks());
 }
 ```
 
