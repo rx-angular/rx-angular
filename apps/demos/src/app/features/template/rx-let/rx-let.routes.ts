@@ -24,5 +24,10 @@ export const ROUTES: Routes = [
     path: 'ng-if-hack',
     loadChildren: () => import('./ng-if-hack/ng-if-hack.module')
       .then(m => m.NgIfHackModule)
+  },
+  {
+    path: 'preloading-techniques',
+    loadChildren: () => import('./preloading-techniques/preloading-techniques.module')
+      .then(m => m.PreloadingTechniquesModule)
   }
 ];

@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { merge, Observable, Subject } from 'rxjs';
 import { map, scan } from 'rxjs/operators';
-import { toBoolean, toInt, toRandom, withCompleteAndError } from './utils';
+import { toBoolean, toImgUrl, toInt, toRandom, withCompleteAndError } from './utils';
 import { ProvidedValues } from './model';
 import { ngInputFlatten } from '../../utils/ngInputFlatten';
 
@@ -26,11 +26,11 @@ export class PrimitivesProviderService extends RxState<ProvidedValues> {
   int$: Observable<number>;
   incremental$: Observable<number>;
   boolean$: Observable<boolean>;
+  imgUrl$: Observable<string>;
 
   float: number;
   int: number;
   boolean: boolean;
-  array: any[];
 
   truthy = 0.5;
   min = 0;
@@ -58,6 +58,10 @@ export class PrimitivesProviderService extends RxState<ProvidedValues> {
     );
     this.boolean$ = this.select(
       map((s) => toBoolean(s.random, this.truthy)),
+      withCompleteAndError(this.error$, this.completeSubject)
+    );
+    this.imgUrl$ = this.select(
+      map((s) => toImgUrl(s.random)),
       withCompleteAndError(this.error$, this.completeSubject)
     );
 

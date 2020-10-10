@@ -14,5 +14,9 @@ export const MENU_ITEMS = [
   {
     label: 'Template Bindings',
     link: 'template-bindings'
+  },
+  {
+    label: 'Preloading Techniques',
+    link: 'preloading-techniques'
   }
 ];
