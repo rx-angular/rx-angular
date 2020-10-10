@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { StrategiesSetupState, DefaultStrategies } from './interfaces';
 import { pluck, distinctUntilChanged } from 'rxjs/operators';
 import { DEFAULT_STRATEGY_NAME } from '../../render-strategies/strategies/strategies-map';
+import { DefaultStrategies } from './default-strategies.interface';
 
 @Injectable({ providedIn: 'root' })
 export class StrategiesSetupService {
@@ -12,7 +12,10 @@ export class StrategiesSetupService {
    * - currentStrategy: 'local'
    * - currentInvisibleStrategy: 'noop'
    */
-  private state$ = new BehaviorSubject<StrategiesSetupState>({
+  private state$ = new BehaviorSubject<{
+    currentStrategy: keyof DefaultStrategies;
+    currentInvisibleStrategy: keyof DefaultStrategies;
+  }>({
     currentStrategy: DEFAULT_STRATEGY_NAME,
     currentInvisibleStrategy: 'noop',
   });

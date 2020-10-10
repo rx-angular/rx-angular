@@ -1,4 +1,4 @@
-import { RenderStrategy } from '../../../core';
+import { RenderStrategy } from '../../core';
 
 export interface DefaultStrategies {
   global: RenderStrategy;

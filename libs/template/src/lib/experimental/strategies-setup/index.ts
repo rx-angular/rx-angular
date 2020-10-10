@@ -1,2 +1,2 @@
 export * from './strategies-setup.service';
-export * from './interfaces';
+export * from './default-strategies.interface';
