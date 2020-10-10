@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SchedulingPriority } from '../../../../../../../../libs/template/src/lib/render-strategies/rxjs/scheduling';
+import { SchedulingPriority } from '@rx-angular/template';
 import { schedulingHelper } from '../../../../shared/debug-helper/value-provider/scheduling-helper';
 import { placeholderImg } from '../../../../shared/debug-helper/value-provider';
 import { DomSanitizer } from '@angular/platform-browser';
