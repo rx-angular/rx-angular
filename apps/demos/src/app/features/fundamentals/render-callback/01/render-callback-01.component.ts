@@ -23,8 +23,8 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 
       <div class="example-result" style="height: 170px; overflow-y: scroll">
         <h4>render callback output</h4>
         <span>rendered$:</span>
-        <rx-notification [notification]="rendered$">
-        </rx-notification>
+        <rxa-notification [notification]="rendered$">
+        </rxa-notification>
       </div>
       <div class="example-result">
         <h4>After value changed</h4>
