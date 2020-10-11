@@ -14,5 +14,13 @@ export const MENU_ITEMS = [
   {
     label: 'Template Bindings',
     link: 'template-bindings'
+  },
+  {
+    label: 'Preloading Techniques',
+    link: 'preloading-techniques'
+  },
+  {
+    label: 'Lazy Components',
+    link: 'lazy-components'
   }
 ];
