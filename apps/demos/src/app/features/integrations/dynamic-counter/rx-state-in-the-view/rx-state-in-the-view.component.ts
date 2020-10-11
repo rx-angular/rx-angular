@@ -36,7 +36,7 @@ import { updateCount } from '../shared/utils';
 
       <mat-form-field>
         <label>Count</label>
-        <input #count type="number" min="0" matInput (input)="countChange.next(count.value)"/>
+        <input #count type="number" min="0" matInput [value]="initialCounterState.count" (input)="countChange.next(count.value)"/>
       </mat-form-field>
       <br/>
 
