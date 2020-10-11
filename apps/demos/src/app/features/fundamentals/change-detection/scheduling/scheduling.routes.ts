@@ -1,4 +1,4 @@
-import { SchedulingComponent } from './experiments-profiling/scheduling.component';
+import { SchedulingComponent } from './scheduling/scheduling.component';
 
 export const ROUTES = [
   {

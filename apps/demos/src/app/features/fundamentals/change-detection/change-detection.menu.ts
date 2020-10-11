@@ -14,6 +14,14 @@ export const MENU_ITEMS = [
       {
         link: 'zone-patched-apis',
         label: 'Zone Patched APIs',
+      },
+      {
+        label: 'Scheduling',
+        link: 'scheduling'
+      },
+      {
+        label: 'Coalescing',
+        link: 'coalescing'
       }
     ]
   },

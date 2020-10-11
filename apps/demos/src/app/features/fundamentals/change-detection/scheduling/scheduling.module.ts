@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { SchedulingComponent } from './experiments-profiling/scheduling.component';
+import { SchedulingComponent } from './scheduling/scheduling.component';
 import { TemplateModule } from '@rx-angular/template';
 import { ROUTES } from './scheduling.routes';
-import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { MatButtonModule } from '@angular/material/button';
+import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 
 const DECLARATIONS = [SchedulingComponent];
 
@@ -15,8 +15,8 @@ const DECLARATIONS = [SchedulingComponent];
     CommonModule,
     RouterModule.forChild(ROUTES),
     TemplateModule,
-    DirtyChecksModule,
-    MatButtonModule
+    MatButtonModule,
+    VisualizerModule
   ],
   exports: [DECLARATIONS]
 })
