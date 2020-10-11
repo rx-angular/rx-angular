@@ -14,7 +14,6 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 
   template: `
     <h1>Render Callback example 01</h1>
     <h4>Height calculation using rendered$ Event</h4>
-    <h4>RenderStrategy: {{strategyName$ | push: 'local'}}</h4>
     <button unpatch (click)="reset()">Reset</button>
     <button unpatch (click)="updateClick.next()">Update content</button>
     <button unpatch (click)="errorClick.next()">Error</button>
@@ -23,24 +22,21 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 
       <div class="example-result" style="height: 170px; overflow-y: scroll">
         <h4>render callback output</h4>
         <span>rendered$:</span>
-        <rxa-notification [notification]="rendered$">
-        </rxa-notification>
       </div>
       <div class="example-result">
         <h4>After value changed</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterValue$ | push
+                                            calculatedAfterValue$ | push: 'local': rendered$
                                           ) + 'px' }}</strong></span>
       </div>
       <div class="example-result">
         <h4>After renderCallback</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterRender$ | push
+                                            calculatedAfterRender$ | push: 'local': rendered$
                                           ) + 'px' }}</strong></span>
       </div>
     </div>
     <ng-template let-content
-                 [rxLetStrategy]="strategyName$"
                  [rxLet]="content$"
                  (rendered)="rendered$.next($event)">
       <div class="example-box"
@@ -79,7 +75,6 @@ export class RenderCallback01Component implements AfterViewInit {
 
   private readonly afterViewInit$ = new Subject();
 
-  readonly strategyName$ = of('local');
   readonly rendered$ = new Subject<number>();
   readonly updateClick = new Subject();
   readonly errorClick = new Subject();

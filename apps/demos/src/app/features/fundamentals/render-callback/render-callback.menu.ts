@@ -19,10 +19,6 @@ export const RENDERCALLBACK_MENU = [
       {
         link: 'render-callback-04',
         label: 'Render Callback 04',
-      },
-      {
-        link: 'render-callback-05',
-        label: 'Render Callback 05',
       }
     ],
   },

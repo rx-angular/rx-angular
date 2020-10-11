@@ -6,8 +6,8 @@ import {
   ElementRef,
   ViewChild
 } from '@angular/core';
-import { merge, of, Subject, throwError } from 'rxjs';
-import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 'rxjs/operators';
+import { concat, merge, NEVER, of, Subject, throwError } from 'rxjs';
+import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-render-callback-03',
@@ -27,17 +27,17 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 
       <div class="example-result">
         <h4>After value changed</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterValue$ | push
+                                            calculatedAfterValue$ | push: 'local': rendered$
                                           ) + 'px' }}</strong></span>
       </div>
       <div class="example-result">
         <h4>After renderCallback</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterRender$ | push
+                                            calculatedAfterRender$ | push: 'local': rendered$
                                           ) + 'px' }}</strong></span>
       </div>
     </div>
-    <ng-container *rxLet="content$; let content; strategy: strategyName$; renderCallback: rendered$">
+    <ng-container *rxLet="content$; let content; renderCallback: rendered$">
       <div class="example-box"
            #box>
         {{ content }}
@@ -74,7 +74,7 @@ export class RenderCallback03Component implements AfterViewInit {
 
   private readonly afterViewInit$ = new Subject();
 
-  readonly strategyName$ = of('local');
+  readonly strategyName$ = concat(of('local'), NEVER);
   readonly rendered$ = new Subject<string>();
   readonly updateClick = new Subject();
   readonly errorClick = new Subject();
@@ -93,6 +93,7 @@ export class RenderCallback03Component implements AfterViewInit {
 
   readonly calculatedAfterRender$ = this.afterViewInit$.pipe(
     switchMap(() => this.rendered$),
+    tap(console.log),
     map(() => this.box.nativeElement.getBoundingClientRect().height)
   );
 

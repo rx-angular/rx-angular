@@ -8,18 +8,18 @@ import {
 } from '@angular/core';
 import { LetDirective } from '@rx-angular/template';
 import { merge, of, Subject, throwError } from 'rxjs';
-import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 'rxjs/operators';
+import { map, scan, shareReplay, skip, switchMap, switchMapTo, take, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-render-callback-02',
   template: `
     <h1>Render Callback example 02</h1>
     <h4>Height calculation using ViewChild</h4>
-    <h4>RenderStrategy: {{strategyName$ | push: 'local'}}</h4>
     <button unpatch (click)="reset()">Reset</button>
     <button unpatch (click)="updateClick.next()">Update content</button>
     <button unpatch (click)="errorClick.next()">Error</button>
     <button unpatch (click)="completeClick.next()">Complete</button>
+    <rxa-dirty-check></rxa-dirty-check>
     <div class="example-results">
       <div class="example-result" style="height: 170px; overflow-y: scroll">
         <h4>render callback output</h4>
@@ -28,17 +28,17 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 
       <div class="example-result">
         <h4>After value changed</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterValue$ | push
+                                            calculatedAfterValue$ | push: 'local': pushRenderCallback
                                           ) + 'px' }}</strong></span>
       </div>
       <div class="example-result">
         <h4>After renderCallback</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterRender$ | push
+                                            calculatedAfterRender$ | push: 'local': pushRenderCallback
                                           ) + 'px' }}</strong></span>
       </div>
     </div>
-    <ng-container *rxLet="content$; let content; strategy: strategyName$">
+    <ng-container *rxLet="content$; let content;">
       <div class="example-box"
            #box>
         {{ content }}
@@ -81,6 +81,7 @@ export class RenderCallback02Component implements AfterViewInit {
   readonly errorClick = new Subject();
   readonly completeClick = new Subject();
   private readonly reset$ = new Subject();
+  readonly pushRenderCallback = new Subject();
   readonly content$ = this.reset$.pipe(
     switchMap(() => merge(
       this.updateClick,
@@ -93,7 +94,7 @@ export class RenderCallback02Component implements AfterViewInit {
   );
 
   readonly calculatedAfterRender$ = this.afterViewInit$.pipe(
-    switchMap(() => this.renderer.rendered),
+    switchMap(() => merge(this.renderer.rendered, this.pushRenderCallback)),
     map(() => this.box.nativeElement.getBoundingClientRect().height)
   );
 
@@ -116,6 +117,7 @@ export class RenderCallback02Component implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    // this.calculatedAfterRender$.subscribe();
     this.afterViewInit$.next();
     this.reset();
   }
