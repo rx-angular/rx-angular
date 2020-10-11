@@ -28,7 +28,7 @@ export const ROUTES: Routes = [
       )
   },
   {
-    path: 'showcases',
+    path: 'integrations',
     loadChildren: () =>
       import('../features/integrations/integrations-shell.module').then(
         m => m.IntegrationsShellModule
