@@ -2,13 +2,12 @@ import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { merge, Observable, Subject } from 'rxjs';
 import { map, scan } from 'rxjs/operators';
-import { toBoolean, toInt, toRandom, withCompleteAndError } from './utils';
-import { ProvidedValues } from './model';
 import { ngInputFlatten } from '../../utils/ngInputFlatten';
-
+import { ProvidedValues } from './model';
+import { toBoolean, toImgUrl, toInt, toRandom, withCompleteAndError } from './utils';
 
 @Injectable()
-export class PrimitivesProviderService extends RxState<ProvidedValues> {
+export class PrimitivesProviderService {
   protected outerChanges = new Subject<Observable<any>>();
 
   protected nextSubject = new Subject<any>();
@@ -26,11 +25,11 @@ export class PrimitivesProviderService extends RxState<ProvidedValues> {
   int$: Observable<number>;
   incremental$: Observable<number>;
   boolean$: Observable<boolean>;
+  imgUrl$: Observable<string>;
 
   float: number;
   int: number;
   boolean: boolean;
-  array: any[];
 
   truthy = 0.5;
   min = 0;
@@ -47,22 +46,36 @@ export class PrimitivesProviderService extends RxState<ProvidedValues> {
   };
 
   private resetObservables = () => {
-    this.float$ = this.select('random');
-    this.int$ = this.select(
+    this.state.ngOnDestroy();
+    this.state = new RxState<ProvidedValues>();
+
+    this.state.connect(
+      'random',
+      merge(this.nextSubject, this.outerChanges.pipe(ngInputFlatten())).pipe(
+        map(toRandom)
+      )
+    );
+
+    this.float$ = this.state.select('random');
+    this.int$ = this.state.select(
       map((s) => toInt(s.random, this.min, this.max)),
       withCompleteAndError(this.error$, this.completeSubject)
     );
-    this.incremental$ = this.select(
+    this.incremental$ = this.state.select(
       scan((inc) => ++inc, 0),
       withCompleteAndError(this.error$, this.completeSubject)
     );
-    this.boolean$ = this.select(
+    this.boolean$ = this.state.select(
       map((s) => toBoolean(s.random, this.truthy)),
       withCompleteAndError(this.error$, this.completeSubject)
     );
+    this.imgUrl$ = this.state.select(
+      map((s) => toImgUrl(s.random)),
+      withCompleteAndError(this.error$, this.completeSubject)
+    );
 
-    this.hold(this.float$, this.updateStatic);
-    this.hold(this.resetSubject, this.resetAll);
+    this.state.hold(this.float$, this.updateStatic);
+    this.state.hold(this.resetSubject, this.resetAll);
   };
 
   private updateStatic = (float: number): void => {
@@ -71,14 +84,10 @@ export class PrimitivesProviderService extends RxState<ProvidedValues> {
     this.boolean = toBoolean(float, this.truthy);
   };
 
-  constructor(protected cdRef: ChangeDetectorRef) {
-    super();
-
-    this.connect(
-      'random',
-      merge(this.nextSubject, this.outerChanges.pipe(ngInputFlatten())).pipe(map(toRandom))
-    );
-
+  constructor(
+    protected state: RxState<ProvidedValues>,
+    protected cdRef: ChangeDetectorRef
+  ) {
     this.resetAll();
   }
 

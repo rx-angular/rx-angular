@@ -35,12 +35,13 @@ export const schedulingHelper = () => {
     schedulerSubject.next(schedulerName);
   };
 
-  const tick = (numTicks: number = 1): void => {
+  const tick = (numEmissions: number = 1, tickSpeed?: number|number[]): void => {
     tickSubject$.next(
       schedulerSubject.pipe(
         switchMap((s) => toTick({
             scheduler: s,
-            numEmissions: numTicks
+            numEmissions,
+            tickSpeed
           })
         )
       )

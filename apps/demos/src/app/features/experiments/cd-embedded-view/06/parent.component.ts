@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
-import { EMPTY, interval, merge, Subject } from 'rxjs';
+import { BehaviorSubject, EMPTY, interval, merge, Subject } from 'rxjs';
 import { scan, share, switchMap } from 'rxjs/operators';
 import { immutableArr, immutableIncArr } from '../utils';
 
@@ -8,82 +8,121 @@ import { immutableArr, immutableIncArr } from '../utils';
 @Component({
   selector: 'rxa-cd-embedded-view-parent06',
   template: `
-    <h2>
-      CD EmbeddedView 06
-      <small>Local Variables</small>
-      <rxa-dirty-check radius="60" [color]="componentColor"></rxa-dirty-check>
-    </h2>
+    <rxa-visualizer>
+      <ng-container visualizerHeader>
+        <h2>
+          CD EmbeddedView 06
+          <small>Nested Structures And Local Variables</small>
+        </h2>
+        <div>
+          <mat-button-toggle-group name="visibleExamples"
+                                   aria-label="Visible Examples"
+                                   [value]="displayStates.all"
+                                   #group="matButtonToggleGroup">
+            <mat-button-toggle [value]="displayStates.native">Native</mat-button-toggle>
+            <mat-button-toggle [value]="displayStates.nativeReactive">RxAngular *rxFor trackBy, distinctBy
+            </mat-button-toggle>
+            <mat-button-toggle [value]="displayStates.rxAngularReactive">RxAngular *rxFor trackBy, distinctBy, select
+            </mat-button-toggle>
+            <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
+          </mat-button-toggle-group>
+          <br/>
+          <mat-form-field>
+            <label>Work Load</label>
+            <input matInput #load (input)="load$.next(load.value)">
+          </mat-form-field>
 
-    <button mat-raised-button [unpatch] (click)="changeOneClick$.next(1)">
-      update
-    </button>
-    <button mat-raised-button [unpatch] (click)="changeAllClick$.next(10)">
-      Change all
-    </button>
-    <button mat-raised-button [unpatch] (click)="toggleIntervalClick$.next(10)">
-      toggel interval
-    </button>
+        </div>
+      </ng-container>
 
-    <!-- <pre>{{array$ | push | json}}</pre> -->
-    <mat-checkbox></mat-checkbox>
-    <div class="row">
-      <!--  -->
-      <div class="col">
-        <h2>Native Angular</h2>
-        <ng-container
-          *ngFor="let value of array$ | async;
-          trackBy: trackById
-          ">
-          <b>Item: </b>
-          <rxa-visualizer [value$]="value.arr" key="" size="150">
-          <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-            <rxa-visualizer [value$]="i" key="" size="150">
-            <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
+      <div class="row w-100">
+        <!--  -->
+        <div class="col-sm-4" *ngIf="group.value === displayStates.native || group.value === displayStates.all">
+          <h2>Native Angular, *ngFor trackBy</h2>
+          <p>
+            <button mat-raised-button (click)="changeOneClick$.next(1)">
+              update
+            </button>
+            <button mat-raised-button (click)="changeAllClick$.next(10)">
+              Change all
+            </button>
+            <button mat-raised-button (click)="toggleIntervalClick$.next(10)">
+              toggel interval
+            </button>
+          </p>
+          <ng-container *ngFor="let value of array$ | async;trackBy: trackById">
+            <rxa-visualizer>
+              <ng-container *ngFor="let i of value.arr; trackBy: trackById">
+                <rxa-visualizer>
+                  <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
+                </rxa-visualizer>
+              </ng-container>
             </rxa-visualizer>
           </ng-container>
-          </rxa-visualizer>
-        </ng-container>
-      </div>
-      <div class="col">
-        <h2>Static Custom Variables</h2>
-        <ng-container
-          *poc2For="array$;
+        </div>
+        <div class="col-sm-4" *ngIf="group.value === displayStates.nativeReactive || group.value === displayStates.all">
+          <h2>RxAngular, *rxFor trackBy, distinctBy</h2>
+          <p>
+            <button mat-raised-button [unpatch] (click)="changeOneClick$.next(1)">
+              update
+            </button>
+            <button mat-raised-button [unpatch] (click)="changeAllClick$.next(10)">
+              Change all
+            </button>
+            <button mat-raised-button [unpatch] (click)="toggleIntervalClick$.next(10)">
+              toggel interval
+            </button>
+          </p>
+          <ng-container
+            *poc2For="array$;
           trackBy: trackByKey
-          distinctBy:distinctBy
+          distinctBy: distinctBy
           let value;
           ">
-          <rxa-visualizer [value$]="array$" key="" size="150">
-            <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-              <rxa-visualizer>
-                <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
-              </rxa-visualizer>
-            </ng-container>
-          </rxa-visualizer>
-        </ng-container>
-      </div>
-
-      <div class="col">
-        <h2>value as stream</h2>
-        <ng-container *poc6LocV2="array$;
+            <rxa-visualizer key="" size="150">
+              <ng-container *ngFor="let i of value.arr; trackBy: trackById">
+                <rxa-visualizer>
+                  <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
+                </rxa-visualizer>
+              </ng-container>
+            </rxa-visualizer>
+          </ng-container>
+        </div>
+        <div class="col-sm-4"
+             *ngIf="group.value === displayStates.rxAngularReactive || group.value === displayStates.all">
+          <h2>RxAngular, *rxFor trackBy, distinctBy, select</h2>
+          <p>
+            <button mat-raised-button [unpatch] (click)="changeOneClick$.next(1)">
+              update
+            </button>
+            <button mat-raised-button [unpatch] (click)="changeAllClick$.next(10)">
+              Change all
+            </button>
+            <button mat-raised-button [unpatch] (click)="toggleIntervalClick$.next(10)">
+              toggel interval
+            </button>
+          </p>
+          <ng-container *poc6LocV2="array$;
         let value$ = $value$;
         let selectSlices = $selectSlices;
         ">
-          <rxa-visualizer [value$]="selectSlices(['arr'])" key="" size="150">
-            <ng-container *poc2For="
+            <rxa-visualizer>
+              <ng-container *poc2For="
          selectSlices(['arr']);
          let i;
          trackBy: trackByKey;
          distinctBy:distinctBy
          let v$ = $value$;">
-              <rxa-visualizer>
-                <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
-              </rxa-visualizer>
-            </ng-container>
-            <!-- -->
-          </rxa-visualizer>
-        </ng-container>
+                <rxa-visualizer>
+                  <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
+                </rxa-visualizer>
+              </ng-container>
+              <!-- -->
+            </rxa-visualizer>
+          </ng-container>
+        </div>
       </div>
-    </div>
+    </rxa-visualizer>
   `,
   changeDetection: environment.changeDetection,
   encapsulation: ViewEncapsulation.None,
@@ -91,6 +130,7 @@ import { immutableArr, immutableIncArr } from '../utils';
     h1, h2, h3 {
       width: 100%;
     }
+
     .red {
       color: red;
     }
@@ -98,30 +138,16 @@ import { immutableArr, immutableIncArr } from '../utils';
     .green {
       color: green;
     }
-
-    .row {
-      display: flex;
-    }
-
-    .col {
-      flex-basis: 33%;
-      display: flex;
-      flex-wrap: wrap;
-    }
   `]
 })
 export class CdEmbeddedViewParent06Component {
   trackByKey = 'id';
 
-  componentColor = 'rgba(255,0,0,0.24)';
-  itemColor = 'rgba(253,255,0,0.24)';
-  childColor = 'rgba(153,255,0,0.24)';
-
-  localVariableProjections = {
-    test: (a) => {
-      // tslint:disable-next-line:no-bitwise
-      return ~~a.$implicit;
-    }
+  displayStates = {
+    native: 0,
+    nativeReactive: 1,
+    rxAngularReactive: 2,
+    all: 3
   };
 
   changeOneClick$ = new Subject<number>();
@@ -143,6 +169,7 @@ export class CdEmbeddedViewParent06Component {
     share()
   );
 
+  load$ = new BehaviorSubject<number>(0);
   trackById = (i) => i.id;
 
   distinctBy = (a, b) => a.value === b.value;

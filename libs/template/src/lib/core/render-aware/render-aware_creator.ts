@@ -1,4 +1,13 @@
-import { MonoTypeOperatorFunction, Observable, of, ReplaySubject, Subscribable, Subscriber, Subscription } from 'rxjs';
+import {
+  concat,
+  MonoTypeOperatorFunction, NEVER,
+  Observable,
+  of,
+  ReplaySubject,
+  Subscribable,
+  Subscriber,
+  Subscription
+} from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { RenderStrategy, StrategySelection } from './interfaces';
 import { RxTemplateObserver } from '../model';
@@ -104,7 +113,7 @@ function renderWithLatestStrategy<T>(
       withLatestFrom(strategyChanges$),
       // always use latest strategy on value change
       switchMap(([renderValue, strategy]) =>
-        of(renderValue).pipe(strategy.rxScheduleCD)
+        concat(of(renderValue), NEVER).pipe(strategy.rxScheduleCD)
       )
     );
   };
