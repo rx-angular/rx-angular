@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { CounterComponent } from './counter.component';
+import { StarterComponent } from './starter.component';
 
 export const ROUTES: Routes = [
   {
     path: '',
-    component: CounterComponent
+    component: StarterComponent
   }
 ];

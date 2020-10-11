@@ -6,7 +6,7 @@ import { RxState } from '@rx-angular/state';
 import { CounterState, INITIAL_STATE } from '../shared/model';
 
 @Component({
-  selector: 'rxa-counter',
+  selector: 'rxa-counter-starter',
   template: `
     <h1>Counter</h1>
     <div class="counter">
@@ -62,7 +62,7 @@ import { CounterState, INITIAL_STATE } from '../shared/model';
     </div>
   `
 })
-export class CounterComponent {
+export class StarterComponent {
   readonly initialCounterState: CounterState = INITIAL_STATE;
 
   readonly count$: Observable<string>;
