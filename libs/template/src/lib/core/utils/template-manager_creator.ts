@@ -21,6 +21,15 @@ export interface TemplateManager<C extends object, N extends string = string> {
 
   /**
    * @description
+   * Returns a template from the internal templateRefCache map.
+   *
+   * @param name
+   * @param templateRef
+   */
+  getEmbeddedView(name: N): EmbeddedViewRef<C> | undefined;
+
+  /**
+   * @description
    * Checks if `TemplateRef` instance is cached under the provided name.
    */
   hasTemplateRef(name: N): boolean;
@@ -83,6 +92,14 @@ export function createTemplateManager<C extends object, N extends string = strin
         throw new Error(
           'Updating an already existing Template is not supported at the moment.'
         );
+      }
+    },
+
+    getEmbeddedView(name: N): EmbeddedViewRef<C> {
+      if (viewCache.has(name)) {
+        return viewCache.get(name);
+      } else {
+        return undefined;
       }
     },
 

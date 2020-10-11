@@ -20,7 +20,7 @@ class TestContainerDirective {
   @Input() private templateB: TemplateRef<TestViewContext>;
 
   constructor(public viewContainerRef: ViewContainerRef) {
-    this.manager = createTemplateManager(this.viewContainerRef, {});
+    this.manager = createTemplateManager(this.viewContainerRef, {} as TestViewContext);
     templateManager = this.manager;
     testViewContainerRef = this.viewContainerRef;
   }
@@ -103,6 +103,18 @@ describe('TemplateManager', () => {
       templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
     })
       .toThrow(new Error('Updating an already existing Template is not supported at the moment.'));
+  });
+
+  it('getEmbeddedView should return the template if given', () => {
+    templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
+    templateManager.displayView('templateRefA');
+    expect(templateManager.getEmbeddedView('templateRefA')).toBeTruthy();
+  });
+
+  it('getEmbeddedView should return undefined if no template is given', () => {
+    templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
+    templateManager.displayView('templateRefA');
+    expect(templateManager.getEmbeddedView('wrongValue')).toBe(undefined);
   });
 
   it('displayView should create and insert a view out of a registered template', () => {
