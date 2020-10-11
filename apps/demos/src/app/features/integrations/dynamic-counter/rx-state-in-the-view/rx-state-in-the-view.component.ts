@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CounterState, INITIAL_STATE } from '../shared/model';
-import { RxState, selectSlice } from '../../../../../../../../libs/state/src/lib';
+import { RxState, selectSlice } from '@rx-angular/state';
 import { EMPTY, Subject, timer } from 'rxjs';
 import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
 import { toInt } from '../../../../shared/utils/to-int';
@@ -36,7 +36,7 @@ import { updateCount } from '../shared/utils';
 
       <mat-form-field>
         <label>Count</label>
-        <input #count type="number" min="0" matInput [value]="count$ | push" (input)="countChange.next(count.value)"/>
+        <input #count type="number" min="0" matInput (input)="countChange.next(count.value)"/>
       </mat-form-field>
       <br/>
 
