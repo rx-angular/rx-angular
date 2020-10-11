@@ -4,17 +4,17 @@ import { RxState, selectSlice } from '../../../../../../../../libs/state/src/lib
 import { EMPTY, Subject, timer } from 'rxjs';
 import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
 import { toInt } from '../../../../shared/utils/to-int';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { updateCount } from '../shared/utils';
 
 
 @Component({
   selector: 'rxa-counter-rx-state-in-the-view',
   template: `
-    <h1>RxState + ReactiveForms</h1>
+    <h1>RxState in the view</h1>
     <div class="counter">
 
-      <rxa-counter-display [count$]="select('count')"></rxa-counter-display>
+      <rxa-counter-display [count$]="count$"></rxa-counter-display>
 
       <button (click)="set({isTicking: true})" mat-raised-button>
         Start
@@ -36,7 +36,7 @@ import { updateCount } from '../shared/utils';
 
       <mat-form-field>
         <label>Count</label>
-        <input #count type="number" min="0" matInput [value]="select('count') | push" (input)="countChange.next(count.value)"/>
+        <input #count type="number" min="0" matInput [value]="count$ | push" (input)="countChange.next(count.value)"/>
       </mat-form-field>
       <br/>
 
@@ -52,12 +52,12 @@ import { updateCount } from '../shared/utils';
 
       <mat-form-field>
         <label>Tick Speed</label>
-        <input #tickSpeed type="number" min="0" matInput [value]="select('tickSpeed') | push" (input)="set({tickSpeed: tickSpeed.value})"/>
+        <input #tickSpeed type="number" min="0" matInput [value]="tickSpeed$ | push" (input)="set({tickSpeed: tickSpeed.value})"/>
       </mat-form-field>
 
       <mat-form-field>
         <label>CountDiff</label>
-        <input #countDiff type="number" min="0" matInput [value]="select('countDiff') | push"(input)="set({countUp: countDiff.value})"/>
+        <input #countDiff type="number" min="0" matInput [value]="countDiff$ | push" (input)="set({countUp: countDiff.value})"/>
       </mat-form-field>
 
     </div>
@@ -66,7 +66,11 @@ import { updateCount } from '../shared/utils';
 export class RxStateInTheViewComponent extends RxState<CounterState> {
   initialCounterState = INITIAL_STATE;
   readonly setToClick = new Subject<Event>();
-  readonly countChange = new Subject<number | string>();
+  readonly countChange = new Subject<string>();
+
+  readonly count$ = this.select(map(s => s.count+''));
+  readonly tickSpeed$ = this.select(map(s => s.tickSpeed+''));
+  readonly countDiff$ = this.select(map(s => s.countDiff+''));
 
   private readonly updateCountTrigger$ = this.select(
     selectSlice(['isTicking', 'tickSpeed']),
@@ -76,7 +80,7 @@ export class RxStateInTheViewComponent extends RxState<CounterState> {
   constructor() {
     super();
     this.set(this.initialCounterState);
-    this.connect('count', this.setToClick.pipe(toLatestFrom(this.countChange), toInt()));
+    this.connect('count', this.setToClick.pipe(toLatestFrom(this.countChange, this.initialCounterState.count+''), toInt()));
     this.connect('count', this.updateCountTrigger$, updateCount);
   }
 
