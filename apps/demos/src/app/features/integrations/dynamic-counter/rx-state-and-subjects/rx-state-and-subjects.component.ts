@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CounterState, INITIAL_STATE } from '../shared/model';
-import { RxState, selectSlice } from '../../../../../../../../libs/state/src/lib';
+import { RxState, selectSlice } from '@rx-angular/state';
 import { EMPTY, Observable, Subject, timer } from 'rxjs';
 import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
 import { map, scan, switchMap } from 'rxjs/operators';
