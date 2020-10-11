@@ -5,7 +5,6 @@ import { DirtyChecksModule } from '../dirty-checks';
 import { RenderingsModule } from '../renderings';
 import { PushModule } from '@rx-angular/template';
 
-
 @NgModule({
   declarations: [VisualizerComponent],
   imports: [

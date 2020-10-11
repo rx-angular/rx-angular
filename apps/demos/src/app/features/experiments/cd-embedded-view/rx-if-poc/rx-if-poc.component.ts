@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { Subject } from 'rxjs';
-import { scan } from 'rxjs/operators';
+import { scan, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-rx-if-poc',
@@ -16,33 +16,45 @@ import { scan } from 'rxjs/operators';
         </button>
       </div>
       <div class="row w-100">
-        <div class="col">
-          <rxa-visualizer>
-            <h3 visualizerHeader>Render EmbeddedViews directly</h3>
-            <ng-container *poc1If="value1$; let value; falsey: f1">
-              <rxa-dirty-check></rxa-dirty-check>
-              TRUE
-              {{value}}
-            </ng-container>
-            <ng-template #f1>
+        <div class="col-sm-4">
+          <h3>Render EmbeddedViews directly</h3>
+          <ng-template #f1>
+            <div class="dh-embedded-view">
               <rxa-dirty-check></rxa-dirty-check>
               FALSE
-            </ng-template>
-          </rxa-visualizer>
+            </div>
+          </ng-template>
+          <div class="dh-embedded-view" *poc1If="value1$; let value; falsey: f1">
+            <rxa-dirty-check></rxa-dirty-check>
+            TRUE
+          </div>
+
         </div>
-        <div class="col">
-          <rxa-visualizer>
-            <h3 visualizerHeader>Display/Hide EmbeddedViews</h3>
-            <ng-container *poc2If="value1$; let value; falsey: f1">
+        <div class="col-sm-4">
+          <h3 visualizerHeader>Display/Hide EmbeddedViews</h3>
+          <ng-template #f2>
+            <div class="dh-embedded-view">
               <rxa-dirty-check></rxa-dirty-check>
-              TRUE
-              {{value}}
-              <ng-template #f2>
-                <rxa-dirty-check></rxa-dirty-check>
-                FALSE
-              </ng-template>
-            </ng-container>
-          </rxa-visualizer>
+              FALSE
+            </div>
+          </ng-template>
+          <div class="dh-embedded-view" *poc2If="value1$; let value; falsey: f2">
+            <rxa-dirty-check></rxa-dirty-check>
+            TRUE
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <h3 visualizerHeader>Display/Hide EmbeddedViews Cached</h3>
+          <ng-template #f3>
+            <div class="dh-embedded-view">
+              <rxa-dirty-check></rxa-dirty-check>
+              FALSE
+            </div>
+          </ng-template>
+          <div class="dh-embedded-view" *poc3If="value1$; let value; falsey: f3">
+            <rxa-dirty-check></rxa-dirty-check>
+            TRUE
+          </div>
         </div>
       </div>
     </rxa-visualizer>
@@ -52,6 +64,7 @@ import { scan } from 'rxjs/operators';
 export class RxIfPocComponent {
   toggleClick$ = new Subject<Event>();
   value1$ = this.toggleClick$.pipe(
-    scan(a => !a, false)
+    scan(a => !a, false),
+    startWith(false)
   );
 }

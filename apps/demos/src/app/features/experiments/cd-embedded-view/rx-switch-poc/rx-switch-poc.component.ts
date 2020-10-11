@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { map, scan, startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'rx-switch-poc',
+  selector: 'rxa-switch-poc',
   template: `
     <rxa-visualizer>
       <div visualizerHeader>

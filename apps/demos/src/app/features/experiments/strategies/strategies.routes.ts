@@ -8,14 +8,6 @@ export const STRATEGY_ROUTES: Routes = [
     path: '',
     component: StrategiesOverviewComponent,
   },
-
-  {
-    path: 'scheduling',
-    loadChildren: () =>
-      import('../../experiments/strategies/scheduling/scheduling.module').then(
-        m => m.SchedulingModule
-      )
-  },
   {
     path: 'coalescing',
     loadChildren: () =>
