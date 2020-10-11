@@ -26,7 +26,7 @@ export class DirtyChecksComponent extends Hooks {
 
 
   @Input()
-  radius = 40;
+  radius = 20;
 
   @Input()
   color = 'rgba(253,255,0,0.24)';

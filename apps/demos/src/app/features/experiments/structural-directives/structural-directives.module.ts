@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
 import { RouterModule } from '@angular/router';
 import { PocForIterable } from './03/poc3-for.directive';
-import { ROUTES as CD_ROUTES } from './cd-embedded-view.routes';
+import { ROUTES as CD_ROUTES } from './structural-directives.routes';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -54,5 +54,5 @@ import { ValueProvidersModule } from '../../../shared/debug-helper/value-provide
     ValueProvidersModule
   ]
 })
-export class CdEmbeddedViewModule {
+export class StructuralDirectivesModule {
 }
