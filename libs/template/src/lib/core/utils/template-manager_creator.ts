@@ -24,7 +24,6 @@ export interface TemplateManager<C extends object, N extends string = string> {
    * Returns a template from the internal templateRefCache map.
    *
    * @param name
-   * @param templateRef
    */
   getEmbeddedView(name: N): EmbeddedViewRef<C> | undefined;
 
