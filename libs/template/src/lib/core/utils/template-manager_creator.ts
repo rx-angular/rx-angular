@@ -95,7 +95,7 @@ export function createTemplateManager<C extends object, N extends string = strin
     },
 
     getEmbeddedView(name: N): EmbeddedViewRef<C> {
- return viewCache.get(name);
+        return viewCache.get(name);
     },
 
     displayView(name: N) {
