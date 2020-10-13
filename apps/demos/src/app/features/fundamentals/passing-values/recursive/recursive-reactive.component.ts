@@ -19,9 +19,6 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
         </rxa-visualizer>
       </ng-template>
   `,
-  host: {
-    class: 'd-flex w-100'
-  },
   providers: [CdHelper],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
