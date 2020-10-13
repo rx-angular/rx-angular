@@ -49,7 +49,7 @@ const setupLetDirectiveTestComponent = (): void => {
   componentNativeElement = fixtureLetDirectiveTestComponent.nativeElement;
 };
 
-describe('LetDirective renderCallback', () => {
+xdescribe('LetDirective renderCallback', () => {
   beforeAll(() => mockConsole());
   beforeEach((setupLetDirectiveTestComponent));
 
