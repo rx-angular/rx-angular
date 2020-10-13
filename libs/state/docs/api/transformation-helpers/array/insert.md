@@ -1,102 +1,99 @@
 ## insert
 
-  Inserts one or multiple items to an array T[].
-  Returns a shallow copy of the updated array T[], and does not mutate the original one.
+Inserts one or multiple items to an array T[].
+Returns a shallow copy of the updated array T[], and does not mutate the original one.
 
-  _Example_
+_Example_
 
-  ```typescript
-  // Inserting single value
+```typescript
+// Inserting single value
 
-  const creatures = [
+const creatures = [
   { id: 1, type: 'cat' },
   { id: 2, type: 'dog' },
-  ];
+];
 
-  const updatedCreatures = insert(creatures, { id: 3, type: 'parrot' });
+const updatedCreatures = insert(creatures, { id: 3, type: 'parrot' });
 
-  // updatedCreatures will be:
-  //  [{id: 1, type: 'cat'}, {id: 2, type: 'dog}, {id: 3, type: 'parrot}];
-  ```
+// updatedCreatures will be:
+//  [{id: 1, type: 'cat'}, {id: 2, type: 'dog}, {id: 3, type: 'parrot}];
+```
 
-  _Example_
+_Example_
 
-  ```typescript
-  // Inserting multiple values
+```typescript
+// Inserting multiple values
 
-  const creatures = [
+const creatures = [
   { id: 1, type: 'cat' },
   { id: 2, type: 'dog' },
-  ];
+];
 
-  const updatedCreatures = insert(creatures, [
+const updatedCreatures = insert(creatures, [
   { id: 3, type: 'parrot' },
   { id: 4, type: 'hamster' },
-  ]);
+]);
 
-  // updatedCreatures will be:
-  // [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}, {id: 3, type: 'parrot'}, {id: 4, type: 'hamster'}];
-  ```
+// updatedCreatures will be:
+// [{id: 1, type: 'cat'}, {id: 2, type: 'dog'}, {id: 3, type: 'parrot'}, {id: 4, type: 'hamster'}];
+```
 
-  _Example_
+_Example_
 
-  ```typescript
-  // Usage with RxState
+```typescript
+// Usage with RxState
 
-  export class ListComponent {
-  readonly insertCreature$ = new Subject
-<void>();
+export class ListComponent {
+  readonly insertCreature$ = new Subject<void>();
 
-  constructor(private state: RxState
-  <ComponentState>) {
+  constructor(private state: RxState<ComponentState>) {
     // Reactive implementation
     state.connect('creatures', this.insertCreature$, ({ creatures }) => {
-    const creatureToAdd = {
-    id: generateId(),
-    name: 'newCreature',
-    type: 'dinosaur',
-    };
-    return insert(creatures, creatureToAdd);
+      const creatureToAdd = {
+        id: generateId(),
+        name: 'newCreature',
+        type: 'dinosaur',
+      };
+      return insert(creatures, creatureToAdd);
     });
-    }
+  }
 
-    // Imperative implementation
-    insertCeature(): void {
+  // Imperative implementation
+  insertCeature(): void {
     const creatureToAdd = {
-    id: generateId(),
-    name: 'newCreature',
-    type: 'dinosaur',
+      id: generateId(),
+      name: 'newCreature',
+      type: 'dinosaur',
     };
     this.state.set({
-    creatures: insert(this.state.get().creatures, creatureToAdd),
+      creatures: insert(this.state.get().creatures, creatureToAdd),
     });
-    }
-    }
-    ```
+  }
+}
+```
 
-    ### Edge cases
+### Edge cases
 
-    ```typescript
-    insert(null as any, items) > items;
-    insert(items, null as any) > items;
-    insert(null as any, null as any) > null;
-    insert(undefined as any, undefined as any) > undefined;
-    insert(nonArray as any, items) > items;
-    ```
+```typescript
+insert(null as any, items) > items;
+insert(items, null as any) > items;
+insert(null as any, null as any) > null;
+insert(undefined as any, undefined as any) > undefined;
+insert(nonArray as any, items) > items;
+```
 
-    ### Signature
+### Signature
 
-    ```typescript
-    function insert
-    <T>(source: T[], updates: T | T[]): T[];
-      ```
+```typescript
+function insert<T>(source: T[], updates: T | T[]): T[];
+```
 
-      ### Parameters
+### Parameters
 
-      #### array
+#### array
 
-      ###### typeof: T[]
+###### typeof: T[]
 
-      #### itemsOrItem
+#### itemsOrItem
 
-      ###### typeof: T | T[]
+###### typeof: T | T[]
