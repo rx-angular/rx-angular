@@ -5,7 +5,7 @@ import { SchedulingComponent } from './scheduling/scheduling.component';
 import { TemplateModule } from '@rx-angular/template';
 import { ROUTES } from './scheduling.routes';
 import { MatButtonModule } from '@angular/material/button';
-import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
+import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 
 const DECLARATIONS = [SchedulingComponent];
 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { schedulingHelper } from '../../../../shared/debug-helper/value-provider/scheduling-helper';
+import { schedulingHelper } from '../../../shared/debug-helper/value-provider/scheduling-helper';
 import { SchedulingPriority } from '@rx-angular/template';
 
 @Component({
