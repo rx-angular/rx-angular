@@ -30,6 +30,7 @@ import { scan, startWith } from 'rxjs/operators';
           <div class="dh-embedded-view" *ngIf="value1$ | async; else: f1">
             <rxa-dirty-check></rxa-dirty-check>
             TRUE
+            <rxa-work></rxa-work>
           </div>
         </div>
         <div class="col-sm-3">
