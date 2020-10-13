@@ -17,7 +17,7 @@ import { Component } from '@angular/core';
       Tutorials for features existing in the <code>@rx-angular</code> packages.
 
       <li><h4>🧮 Integrations</h4></li>
-      ???
+      <code>@rx-angular/state</code> integrated with different libraries and patterns.
 
       <li><h4>🔬 Experiments</h4></li>
       Experiments with features, that are still under development. ⚠️Warning! ⚠️Unstable or broken features may lay ahead!
