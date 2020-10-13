@@ -14,34 +14,34 @@ import { map, shareReplay } from 'rxjs/operators';
   template: `
     <h1>Render Callback example 04</h1>
     <h4>Multiple rendercallbacks</h4>
-    <h4>RenderStrategy: {{strategyName$ | push: 'local'}}</h4>
+    <h4>RenderStrategy: {{strategyName$ | pushRcb: 'local'}}</h4>
     <button unpatch (click)="updateClick.next()">Update</button>
     <div class="example-results">
       <div class="example-result">
         <div class="example-box">
           <h4 class="mat-headline">Value</h4>
-          {{ content$ | push: 'local': rendered$ }}
+          {{ content$ | pushRcb: 'local': rendered$ }}
           <mat-divider></mat-divider>
           <h4 class="mat-headline">Callback Value</h4>
-          {{ rendered$ | push: 'local' }}
+          {{ rendered$ | pushRcb: 'local' }}
         </div>
       </div>
       <div class="example-result">
         <div class="example-box">
           <h4 class="mat-headline">Value</h4>
-          {{ content$ | push: 'local': rendered2$ }}
+          {{ content$ | pushRcb: 'local': rendered2$ }}
           <mat-divider></mat-divider>
           <h4 class="mat-headline">Callback Value</h4>
-          {{ rendered2$ | push: 'local' }}
+          {{ rendered2$ | pushRcb: 'local' }}
         </div>
       </div>
       <div class="example-result">
         <div class="example-box">
           <h4 class="mat-headline">Value</h4>
-          {{ content$ | push: 'local': rendered3$ }}
+          {{ content$ | pushRcb: 'local': rendered3$ }}
           <mat-divider></mat-divider>
           <h4 class="mat-headline">Callback Value</h4>
-          {{ rendered3$ | push: 'local' }}
+          {{ rendered3$ | pushRcb: 'local' }}
         </div>
       </div>
     </div>

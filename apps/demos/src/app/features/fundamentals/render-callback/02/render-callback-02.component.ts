@@ -6,9 +6,9 @@ import {
   ElementRef,
   ViewChild
 } from '@angular/core';
-import { LetDirective } from '@rx-angular/template';
 import { merge, of, Subject, throwError } from 'rxjs';
-import { map, scan, shareReplay, skip, switchMap, switchMapTo, take, takeUntil, tap } from 'rxjs/operators';
+import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 'rxjs/operators';
+import { LetRcbDirective } from '../components/let.directive';
 
 @Component({
   selector: 'rxa-render-callback-02',
@@ -28,17 +28,17 @@ import { map, scan, shareReplay, skip, switchMap, switchMapTo, take, takeUntil, 
       <div class="example-result">
         <h4>After value changed</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterValue$ | push: 'local': pushRenderCallback
+                                            calculatedAfterValue$ | pushRcb: 'local': pushRenderCallback
                                           ) + 'px' }}</strong></span>
       </div>
       <div class="example-result">
         <h4>After renderCallback</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterRender$ | push: 'local': pushRenderCallback
+                                            calculatedAfterRender$ | pushRcb: 'local': pushRenderCallback
                                           ) + 'px' }}</strong></span>
       </div>
     </div>
-    <ng-container *rxLet="content$; let content;">
+    <ng-container *rxLetRcb="content$; let content;">
       <div class="example-box"
            #box>
         {{ content }}
@@ -72,7 +72,7 @@ import { map, scan, shareReplay, skip, switchMap, switchMapTo, take, takeUntil, 
 export class RenderCallback02Component implements AfterViewInit {
 
   @ViewChild('box') box: ElementRef<HTMLElement>;
-  @ViewChild(LetDirective) renderer: LetDirective<string>;
+  @ViewChild(LetRcbDirective) renderer: LetRcbDirective<string>;
 
   private readonly afterViewInit$ = new Subject();
 

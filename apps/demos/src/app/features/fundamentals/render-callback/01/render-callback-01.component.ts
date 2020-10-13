@@ -26,18 +26,18 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 
       <div class="example-result">
         <h4>After value changed</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterValue$ | push: 'local': rendered$
+                                            calculatedAfterValue$ | pushRcb: 'local': rendered$
                                           ) + 'px' }}</strong></span>
       </div>
       <div class="example-result">
         <h4>After renderCallback</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterRender$ | push: 'local': rendered$
+                                            calculatedAfterRender$ | pushRcb: 'local': rendered$
                                           ) + 'px' }}</strong></span>
       </div>
     </div>
     <ng-template let-content
-                 [rxLet]="content$"
+                 [rxLetRcb]="content$"
                  (rendered)="rendered$.next($event)">
       <div class="example-box"
            #box>
