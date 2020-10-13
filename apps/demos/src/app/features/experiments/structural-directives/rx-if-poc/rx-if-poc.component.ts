@@ -11,7 +11,7 @@ import { scan, startWith } from 'rxjs/operators';
         <h2>
           rxIf POC
         </h2>
-        <button mat-raised-button (click)="toggleClick$.next($event)">
+        <button mat-raised-button (click)="toggleClick$.next($event)" class="mr-1">
           toggle
         </button>
         <button mat-raised-button [unpatch] (click)="toggleClick$.next($event)">
