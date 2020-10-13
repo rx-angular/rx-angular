@@ -49,7 +49,7 @@ constructor(...) {
 }
 ```
 
-## Select and display state
+### Select and display state
 
 Lets setup a component property `model$` which holds all data we wish to display in the template.
 

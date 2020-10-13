@@ -20,6 +20,13 @@ export { isViewEngineIvy } from './lib/experimental/core/utils/view-engine-check
 
 // STABLE
 export {
+ TemplateManager, createTemplateManager
+} from './lib/core/utils/template-manager_creator';
+export {
+  RxViewContext, RxTemplateObserver
+} from './lib/core/model';
+
+export {
   getStrategies,
   priorityTickMap,
   SchedulingPriority

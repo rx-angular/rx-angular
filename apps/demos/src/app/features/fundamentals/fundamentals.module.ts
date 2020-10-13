@@ -14,15 +14,6 @@ const ROUTES: Routes = [
     loadChildren: () => import('./render-callback/render-callback.module')
       .then(m => m.RenderCallbackModule)
   }
-  /*{
-    path: '',
-    loadChildren: () =>
-      import('./fundamentals/irrelevant-to-test/irrelevant-to-test.module').then(
-        (mod) => mod.IrrelevantToTestModule
-      ),
-    canActivate: [],
-    canActivateChild: []
-  },*/
 ];
 
 

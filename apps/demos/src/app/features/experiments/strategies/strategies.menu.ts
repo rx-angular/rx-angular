@@ -8,10 +8,6 @@ export const STRATEGIES_MENU= [
         link: 'coalescing'
       },
       {
-        label: 'Scheduling',
-        link: 'scheduling'
-      },
-      {
         link: 'strategies/virtual-scroll',
         label: 'Virtual Scroll',
       },

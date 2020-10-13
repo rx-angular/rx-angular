@@ -6,11 +6,14 @@ import { Hooks } from '../hooks';
   // tslint:disable-next-line:component-selector
   selector: 'rxa-dirty-check',
   template: `
-    <div class="num-dirty-checks" matRipple [matRippleColor]="color">
-      <span>{{ numDirtyChecks() }}</span>
+    <div class="indicator-ripple" [ngStyle]="{width: radius+'px',height: radius+'px'}" matRipple [matRippleColor]="color" [matRippleRadius]="radius">
+      <span>{{ numDirtyChecks() }}{{radius}}</span>
     </div>
   `,
-  styleUrls: ['./dirty-checks.component.scss']
+  styles: [`
+    :host .indicator-ripple {
+      border: 1px solid #ffff005f;
+    }`]
 })
 export class DirtyChecksComponent extends Hooks {
   @ViewChild(MatRipple) ripple: MatRipple;
@@ -23,7 +26,7 @@ export class DirtyChecksComponent extends Hooks {
 
 
   @Input()
-  radius = 40;
+  radius = 20;
 
   @Input()
   color = 'rgba(253,255,0,0.24)';

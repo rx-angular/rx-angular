@@ -6,9 +6,9 @@ import { Hooks } from '../../hooks';
 @Component({
   selector: 'rxa-visualizer',
   template: `
-    <div class="d-flex">
-      <rxa-dirty-check style="margin-right: 1rem"></rxa-dirty-check>
-      <rxa-renders [value$]="valuesO$"></rxa-renders>
+    <div class="d-flex w-100">
+      <rxa-dirty-check style="margin-right: 1rem" [radius]="radius"></rxa-dirty-check>
+      <rxa-renders *ngIf="renderingsOn" [value$]="valuesO$" [radius]="radius"></rxa-renders>
     </div>
     <ng-content select="[visualizerHeader]">
     </ng-content>
@@ -17,22 +17,32 @@ import { Hooks } from '../../hooks';
       </ng-content>
     </div>
   `,
-  styles: [`
-    :host {
-      outline: 1px solid green;
-    }
-  `],
   host: {
     '[style.width.px]': 'size',
-    class: 'd-flex flex-column w-100 m-1 p-1'
+    '[class]': 'classNames'
   }
 })
 export class VisualizerComponent extends Hooks {
   @Input()
   size;
 
+
+  classNames = 'd-flex flex-column w-100 m-1 p-1 dh-l-view';
+
   @Input()
-  radius = 40;
+  set viewType(type: string) {
+    if (type == null) {
+      type = 'l-view';
+    }
+    console.log(this.classNames , this.classNames.split(' ').filter(c => c.indexOf('dh-') === -1), type);
+    this.classNames = [...this.classNames.split(' ').filter(c => c.indexOf('dh-') !== -1), ' dh-' + type].join(' ');
+  }
+
+  @Input()
+  radius = 20;
+
+  @Input()
+  renderingsOn = false;
 
   changeO$ = new ReplaySubject<Observable<any>>(1);
 
@@ -41,7 +51,12 @@ export class VisualizerComponent extends Hooks {
     if (isObservable(v$)) {
       this.changeO$.next(v$);
     } else {
-      this.changeO$.next(of(v$));
+      if (v$ != null) {
+        this.renderingsOn = true;
+        this.changeO$.next(of(v$));
+      } else {
+        this.renderingsOn = false;
+      }
     }
   };
 
