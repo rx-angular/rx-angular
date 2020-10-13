@@ -9,15 +9,6 @@ const ROUTES: Routes = [
     canActivate: [],
     canActivateChild: []
   }
-  /*{
-    path: '',
-    loadChildren: () =>
-      import('./fundamentals/irrelevant-to-test/irrelevant-to-test.module').then(
-        (mod) => mod.IrrelevantToTestModule
-      ),
-    canActivate: [],
-    canActivateChild: []
-  },*/
 ];
 
 

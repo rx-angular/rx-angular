@@ -9,15 +9,18 @@ import { PrimitivesProviderService } from '../primitives-provider.service';
   exportAs: 'rxaValueProvider',
   template: `
     <ng-container *ngIf="buttons">
-      <button mat-raised-button (click)="reset()">Reset</button>
-      <button mat-raised-button [unpatch] (click)="next()">Next</button>
-      <button mat-raised-button [unpatch] (click)="error()">Error</button>
-      <button mat-raised-button [unpatch] (click)="complete()">Complete</button>
+      <button mat-raised-button (click)="reset()">Reset (patched)</button>
+      <button mat-raised-button [unpatch]="unpatched" (click)="next()">Next ({{unpatched?.length === 0 ? 'patched' : 'unpatched'}})</button>
+      <button mat-raised-button [unpatch]="unpatched" (click)="error()">Error ({{unpatched?.length === 0 ? 'patched' : 'unpatched'}})</button>
+      <button mat-raised-button [unpatch]="unpatched" (click)="complete()">Complete ({{unpatched?.length === 0 ? 'patched' : 'unpatched'}})</button>
     </ng-container>
     <ng-content></ng-content>`,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValueProviderComponent extends PrimitivesProviderService {
+  @Input()
+  unpatched;
+
   @Input()
   buttons = false;
 
