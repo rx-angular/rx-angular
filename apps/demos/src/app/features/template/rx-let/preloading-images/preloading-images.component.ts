@@ -10,7 +10,7 @@ import { DomSanitizer } from '@angular/platform-browser';
     <rxa-visualizer>
       <div visualizerHeader>
         <button mat-raised-button (click)="sh.tick(1, [500, 0])">
-          delayed
+          Delayed
         </button>
         <rxa-value-provider
           [changes$]="sh.ticks$"
@@ -25,7 +25,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PreloadingTechniquesComponent {
+export class PreloadingImagesComponent {
   p = SchedulingPriority;
   sh = schedulingHelper();
   placeholder = this.domSanitizer.bypassSecurityTrustUrl(placeholderImg);

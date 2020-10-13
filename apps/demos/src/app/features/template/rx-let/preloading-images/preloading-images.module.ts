@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
-import { ROUTES } from './preloading-techniques.routes';
-import { PreloadingTechniquesComponent } from './preloading-techniques.component';
+import { ROUTES } from './preloading-images.routes';
+import { PreloadingImagesComponent } from './preloading-images.component';
 import { LetModule, UnpatchEventsModule } from '@rx-angular/template';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,7 +12,7 @@ import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { MatButtonModule } from '@angular/material/button';
 
 const DECLARATIONS = [
-  PreloadingTechniquesComponent
+  PreloadingImagesComponent
 ];
 
 @NgModule({
@@ -30,6 +30,6 @@ const DECLARATIONS = [
     MatButtonModule
   ]
 })
-export class PreloadingTechniquesModule {
+export class PreloadingImagesModule {
 
 }

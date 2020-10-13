@@ -54,7 +54,7 @@ export class Poc1SwitchCase implements OnInit, OnDestroy {
       .pipe(
         map(([caseValue, switchValue]) => caseValue === switchValue),
         distinctUntilChanged(),
-        tap(matched => {
+        tap((matched: boolean) => {
           if (matched) {
             if (!this.inserted) {
               this.viewContainer.insert(this._view, 0);
@@ -70,7 +70,7 @@ export class Poc1SwitchCase implements OnInit, OnDestroy {
           this._view.detectChanges();
         })
       )
-      .subscribe();
+      .subscribe(null, console.log);
   }
 
   ngOnDestroy(): void {
