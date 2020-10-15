@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+import { Observable } from 'rxjs';
 
 export interface StrategySelection {
   [strategy: string]: RenderStrategy;
@@ -36,5 +36,6 @@ export interface RenderStrategy {
    * @property
    * Calls the render method directly
    */
+  // @TODO This is needed in situations like
   detectChanges: () => void;
 }

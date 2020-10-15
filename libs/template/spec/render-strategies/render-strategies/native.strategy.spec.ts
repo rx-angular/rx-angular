@@ -2,6 +2,7 @@
 import { mockConsole } from '@test-helpers';
 import { getStrategies } from '../../../src/lib/render-strategies';
 import { CallsExpectations, getMockStrategyConfig, numMultipleCalls, testStrategyMethod } from '../../fixtures';
+import createSpy = jasmine.createSpy;
 
 /**
  * NATIVE STRATEGY
@@ -14,7 +15,8 @@ const callsExpectations: CallsExpectations = {
   detectChanges: 0,
   markForCheck: 1,
   detach: 0,
-  reattach: 0
+  reattach: 0,
+  afterCD: 1
 };
 
 describe('native Strategy', () => {
@@ -56,22 +58,24 @@ describe('native Strategy', () => {
   });
 
   describe('scheduleCD', () => {
-    it(`should call cdRef#markForCheck 1 times when scheduleCD is called a single time`, done => {
+    it(`should call cdRef#markForCheck 1 times and afterCD 1 time when scheduleCD is called a single time`, done => {
       testStrategyMethod({
         strategyName,
         strategyMethod: 'scheduleCD',
         singleTime: true,
+        afterCD: createSpy('afterCD'),
         callsExpectations
       }, done);
     });
 
     it(
-      `should call cdRef#markForCheck ${numMultipleCalls} times when scheduleCD is called multiple times sync`,
+      `should call cdRef#markForCheck ${numMultipleCalls} times and afterCD 1 time when scheduleCD is called multiple times sync`,
       done => {
         testStrategyMethod({
           strategyName,
           strategyMethod: 'scheduleCD',
           singleTime: false,
+          afterCD: createSpy('afterCD'),
           callsExpectations: { ...callsExpectations, markForCheck: numMultipleCalls }
         }, done);
       }

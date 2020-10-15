@@ -1,3 +1,5 @@
+import { RENDERCALLBACK_MENU } from './render-callback/render-callback.menu';
+
 export const FUNDAMENTALS_MENU = [
   {
     link: 'change-detection-methods',
@@ -18,5 +20,6 @@ export const FUNDAMENTALS_MENU = [
   {
     label: 'Coalescing',
     link: 'coalescing'
-  }
+  },
+  ...RENDERCALLBACK_MENU
 ];

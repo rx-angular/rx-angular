@@ -31,6 +31,11 @@ const ROUTES: Routes = [
     loadChildren: () => import('./coalescing/coalescing.module').then(
       m => m.CoalescingModule
     )
+  },
+  {
+    path: 'render-callback',
+    loadChildren: () => import('./render-callback/render-callback.module')
+      .then(m => m.RenderCallbackModule)
   }
 ];
 

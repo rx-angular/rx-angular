@@ -8,11 +8,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         <rxa-value-provider [buttons]="true" #valP="rxaValueProvider"></rxa-value-provider>
       </div>
       <ng-container *rxLet="valP.incremental$; let value;
-          let e = error;
-          let c = complete;
-          suspense: suspenseView;
-          error: errorView;
-          complete: completeView
+          let e = rxError;
+          let c = rxComplete;
+          rxSuspense: suspenseView;
+          rxError: errorView;
+          rxComplete: completeView
         ">
         next: {{ value | json }}<br/>
       </ng-container>
