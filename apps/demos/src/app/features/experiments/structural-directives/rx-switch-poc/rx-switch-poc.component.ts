@@ -11,7 +11,7 @@ import { stateful } from '@rx-angular/state';
     <rxa-visualizer>
       <div visualizerHeader>
         <h2>
-          rxSwitch POCa <small *poc1Let="switchValue$; let switchValue">{{switchValue}}</small>
+          rxSwitch POCa <small *rxLet="switchValue$; let switchValue">{{switchValue}}</small>
         </h2>
         <mat-button-toggle-group name="visibleExamples"
                                  aria-label="Visible Examples"
@@ -30,54 +30,53 @@ import { stateful } from '@rx-angular/state';
         <br/>
         <button mat-raised-button [unpatch] (click)="updateCase1$.next($event)">
           Case1:
-          <ng-container *poc1Let="case1Value$; let case1Value">{{case1Value}}</ng-container>
+          <ng-container *rxLet="case1Value$; let case1Value">{{case1Value}}</ng-container>
         </button>
         <button mat-raised-button [unpatch] (click)="updateCase2$.next($event)">
           Case2: :
-          <ng-container *poc1Let="case2Value$; let case2Value">{{case2Value}}</ng-container>
+          <ng-container *rxLet="case2Value$; let case2Value">{{case2Value}}</ng-container>
         </button>
         <button mat-raised-button [unpatch] (click)="updateCase3$.next($event)">
           Case3:
-          <ng-container *poc1Let="case3Value$; let case3Value">{{case3Value}}</ng-container>
+          <ng-container *rxLet="case3Value$; let case3Value">{{case3Value}}</ng-container>
         </button>
       </div>
       <div class="w-100 col">
-        <div *poc3If="ngSwitchVisible$ | push">
-            <div class="row" [ngSwitch]="switchValue$ | push">
-              <div class="col-sm-4">
-                <rxa-visualizer *ngSwitchCase="case1Value$ | push">
-                  <p>CaseValue {{case1Value$ | push}}</p>
-                </rxa-visualizer>
-              </div>
-              <div class="col-sm-4">
-                <rxa-visualizer *ngSwitchCase="case2Value$ | push">
-                  <p>CaseValue {{case2Value$ | push}}</p>
-                </rxa-visualizer>
-              </div>
-              <div class="col-sm-4">
-                <rxa-visualizer *ngSwitchCase="case3Value$ | push">
-                  <p>CaseValue {{case3Value$ | push}}</p>
-                </rxa-visualizer>
-              </div>
-            </div>
-        </div>
-{{ngSwitchVisible$ | push}}, {{rxSwitchVisible$| push}}
-        <ng-container *ngIf="rxSwitchVisible$ | push">
-          <div class="row" *poc1Switch="switchValue$; let value">
+        <div *ngIf="ngSwitchVisible$ | push">
+          <div class="row" [ngSwitch]="switchValue$ | push">
             <div class="col-sm-4">
-              <rxa-visualizer *poc1SwitchCase="case1Value$; let rxCaseValue1">
+              <rxa-visualizer *ngSwitchCase="case1Value$ | push">
+                <p>CaseValue {{case1Value$ | push}}</p>
+              </rxa-visualizer>
+            </div>
+            <div class="col-sm-4">
+              <rxa-visualizer *ngSwitchCase="case2Value$ | push">
+                <p>CaseValue {{case2Value$ | push}}</p>
+              </rxa-visualizer>
+            </div>
+            <div class="col-sm-4">
+              <rxa-visualizer *ngSwitchCase="case3Value$ | push">
+                <p>CaseValue {{case3Value$ | push}}</p>
+              </rxa-visualizer>
+            </div>
+          </div>
+        </div>
+        <ng-container *rxIf="rxSwitchVisible$">
+          <div class="row" *rxSwitch="switchValue$; let value">
+            <div class="col-sm-4">
+              <rxa-visualizer *rxSwitchCase="case1Value$; let rxCaseValue1">
                 <p>rxSwitchValue: {{value}}<br/>
                   CaseValue: {{rxCaseValue1}}</p>
               </rxa-visualizer>
             </div>
             <div class="col-sm-4">
-              <rxa-visualizer *poc1SwitchCase="case2Value$; let rxCaseValue2">
+              <rxa-visualizer *rxSwitchCase="case2Value$; let rxCaseValue2">
                 <p>rxSwitchValue: {{value}}<br/>
                   CaseValue: {{rxCaseValue2}}</p>
               </rxa-visualizer>
             </div>
             <div class="col-sm-4">
-              <rxa-visualizer *poc1SwitchCase="case3Value$; let rxCaseValue3">
+              <rxa-visualizer *rxSwitchCase="case3Value$; let rxCaseValue3">
                 <p>rxSwitchValue: {{value}}<br/>
                   CaseValue: {{rxCaseValue3}}</p>
               </rxa-visualizer>
@@ -106,7 +105,7 @@ export class RxSwitchPocComponent {
     map(visibleExample => this.isVisible(visibleExample, this.displayStates.ngSwitch))
   );
 
-  switchValueChange = new BehaviorSubject<string | number>(1);
+  switchValueChange = new Subject<string | number>();
   updateCase1$ = new Subject<Event>();
   updateCase2$ = new Subject<Event>();
   updateCase3$ = new Subject<Event>();
@@ -130,7 +129,6 @@ export class RxSwitchPocComponent {
   );
 
   isVisible(visibleExample: number, displayId: number): boolean {
-    console.log('isVisible', visibleExample, displayId);
     return visibleExample === displayId || visibleExample === this.displayStates.all;
   }
 

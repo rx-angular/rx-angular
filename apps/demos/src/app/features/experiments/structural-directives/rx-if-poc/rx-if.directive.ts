@@ -9,9 +9,9 @@ type RxIfTemplateNames = 'truthy' | 'falsey';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[poc3If]'
+  selector: '[rxIf]'
 })
-export class Poc3IfDirective<U> implements OnInit, OnDestroy {
+export class RxIfDirective<U> implements OnInit, OnDestroy {
   private activeName: RxIfTemplateNames;
   private subscription: Unsubscribable = new Subscription();
   private readonly templateManager: TemplateManager<{ $implicit: U | undefined | null }, RxIfTemplateNames>;
@@ -20,16 +20,17 @@ export class Poc3IfDirective<U> implements OnInit, OnDestroy {
   private readonly values$ = this.observables$
     .pipe(
       distinctUntilChanged(),
-      switchAll()
+      switchAll(),
+      distinctUntilChanged()
     );
 
   @Input()
-  set poc3If(potentialObservable: ObservableInput<U> | null | undefined) {
+  set rxIf(potentialObservable: ObservableInput<U> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
 
   @Input()
-  set poc3IfFalsey(templateRef: TemplateRef<any>) {
+  set rxIfFalsey(templateRef: TemplateRef<any>) {
     if (templateRef) {
       this.templateManager.addTemplateRef('falsey', templateRef);
     }

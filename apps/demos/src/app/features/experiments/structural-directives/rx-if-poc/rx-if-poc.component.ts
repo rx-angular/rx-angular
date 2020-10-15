@@ -67,7 +67,7 @@ import { scan, startWith } from 'rxjs/operators';
               FALSE
             </div>
           </ng-template>
-          <div class="dh-embedded-view" *poc3If="value1$; let value;">
+          <div class="dh-embedded-view" *rxIf="value1$; let value;">
             <rxa-dirty-check></rxa-dirty-check>
             TRUE
           </div>

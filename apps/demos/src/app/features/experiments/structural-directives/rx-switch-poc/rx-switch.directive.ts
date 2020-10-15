@@ -5,9 +5,9 @@ import { distinctUntilChanged, switchAll } from 'rxjs/operators';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[poc1Switch]'
+  selector: '[rxSwitch]'
 })
-export class Poc1Switch<U> implements OnInit, OnDestroy {
+export class RxSwitch<U> implements OnInit, OnDestroy {
   private subscription = new Subscription();
   observables$ = new ReplaySubject(1);
   viewContext = { $implicit: undefined };
@@ -22,7 +22,7 @@ export class Poc1Switch<U> implements OnInit, OnDestroy {
     );
 
   @Input()
-  set poc1Switch(potentialObservable: ObservableInput<U> | null | undefined) {
+  set rxSwitch(potentialObservable: ObservableInput<U> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
 

@@ -12,11 +12,11 @@ import {
 } from '@angular/core';
 import { combineLatest, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
 import { distinctUntilChanged, map, switchAll, tap } from 'rxjs/operators';
-import { Poc1Switch } from './poc1-switch.directive';
+import { RxSwitch } from './rx-switch.directive';
 
 // tslint:disable-next-line:directive-selector
-@Directive({ selector: '[poc1SwitchCase]' })
-export class Poc1SwitchCase implements OnInit, OnDestroy {
+@Directive({ selector: '[rxSwitchCase]' })
+export class RxSwitchCase implements OnInit, OnDestroy {
   private subscription: Unsubscribable = new Subscription();
   private _view: EmbeddedViewRef<any>;
   private inserted = false;
@@ -32,12 +32,12 @@ export class Poc1SwitchCase implements OnInit, OnDestroy {
     );
 
   @Input()
-  set poc1SwitchCaseValue(o$) {
+  set rxSwitchCaseValue(o$) {
     this.observables$.next(o$);
   };
 
   @Input()
-  set poc1SwitchCase(o$) {
+  set rxSwitchCase(o$) {
     this.observables$.next(o$);
   };
 
@@ -45,7 +45,7 @@ export class Poc1SwitchCase implements OnInit, OnDestroy {
     private viewContainer: ViewContainerRef,
     public templateRef: TemplateRef<Object>,
     private cdRef: ChangeDetectorRef,
-    @Inject(forwardRef(() => Poc1Switch)) private poc1Switch: Poc1Switch<any>
+    @Inject(forwardRef(() => RxSwitch)) private rxSwitch: RxSwitch<any>
   ) {
 
   }
@@ -54,15 +54,13 @@ export class Poc1SwitchCase implements OnInit, OnDestroy {
     this.createView();
     this.subscription = combineLatest([
       this.caseValues$,
-      this.poc1Switch.values$,
+      this.rxSwitch.values$
     ])
       .pipe(
-        tap(console.log),
         // tslint:disable-next-line:triple-equals
         map(([caseValue, switchValue]) => caseValue == switchValue),
         distinctUntilChanged(),
         tap((matched: boolean) => {
-          console.log('matched', matched);
           if (matched) {
             if (!this.inserted) {
               this.viewContainer.insert(this._view, 0);
@@ -78,7 +76,7 @@ export class Poc1SwitchCase implements OnInit, OnDestroy {
           this._view.detectChanges();
         })
       )
-      .subscribe(null, console.log);
+      .subscribe({ error: console.log });
   }
 
   ngOnDestroy(): void {
