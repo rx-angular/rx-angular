@@ -8,6 +8,11 @@ const ROUTES: Routes = [
       .then((mod) => mod.ChangeDetectionModule),
     canActivate: [],
     canActivateChild: []
+  },
+  {
+    path: 'render-callback',
+    loadChildren: () => import('./render-callback/render-callback.module')
+      .then(m => m.RenderCallbackModule)
   }
 ];
 

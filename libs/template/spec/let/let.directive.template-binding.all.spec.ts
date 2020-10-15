@@ -8,7 +8,7 @@ import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value; suspense: suspense; complete: complete; error: error">{{
+    <ng-container *rxLet="value$; let value; rxSuspense: suspense; rxError: error; rxComplete: complete">{{
       value === undefined
         ? 'undefined'
         : value === null

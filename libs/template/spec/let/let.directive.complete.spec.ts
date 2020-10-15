@@ -8,7 +8,7 @@ import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; $complete as complete">{{
+    <ng-container *rxLet="value$; $rxComplete as complete">{{
       complete
       }}</ng-container>
   `

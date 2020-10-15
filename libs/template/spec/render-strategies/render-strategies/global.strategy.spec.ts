@@ -5,6 +5,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { CallsExpectations, getMockStrategyConfig, testStrategyMethod } from '../../fixtures';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LetDirective } from '@rx-angular/template';
+import createSpy = jasmine.createSpy;
 
 @Component({
   template: ``
@@ -41,7 +42,8 @@ const callsExpectations: CallsExpectations = {
   detectChanges: 0,
   markForCheck: 0,
   detach: 0,
-  reattach: 0
+  reattach: 0,
+  afterCD: 1
 };
 
 describe('global Strategy', () => {
@@ -91,22 +93,26 @@ describe('global Strategy', () => {
   });
 
   describe('scheduleCD', () => {
-    it('should call cdRef#detectChanges & cdRef#markForCheck 0 times when scheduleCD is called a single time', (done) => {
+    it('should call cdRef#detectChanges & cdRef#markForCheck 0 times and afterCD 1 time when scheduleCD is called a' +
+      ' single' +
+      ' time', (done) => {
       testStrategyMethod({
         strategyName,
         strategyMethod: 'scheduleCD',
         flushMicrotask: true,
         singleTime: true,
+        afterCD: createSpy('afterCD'),
         callsExpectations
       }, done);
     });
 
-    it(`should call cdRef#detectChanges  0 times when scheduleCD is called multiple times sync`, (done) => {
+    it(`should call cdRef#detectChanges  0 times and afterCD 1 time when scheduleCD is called multiple times sync`, (done) => {
       testStrategyMethod({
         strategyName,
         strategyMethod: 'scheduleCD',
         flushMicrotask: true,
         singleTime: false,
+        afterCD: createSpy('afterCD'),
         callsExpectations
       }, done);
     });
