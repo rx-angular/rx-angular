@@ -140,8 +140,9 @@ describe('TemplateManager', () => {
   it('displayView should throw if an unregistered registered template is used', () => {
     expect(templateManager.hasTemplateRef('templateRefA')).toBe(false);
     expect(testViewContainerRef.length).toBe(0);
-    expect(() => templateManager.displayView('templateRefA'))
-      .toThrowError(new Error('A non-existing view was tried to insert templateRefA'));
+    console.error = createSpy('error')
+    templateManager.displayView('templateRefA')
+    expect(console.error).toBeCalledWith('A non-existing view was tried to insert templateRefA')
     expect(templateManager.hasTemplateRef('templateRefA')).toBe(false);
     expect(testViewContainerRef.length).toBe(0);
   });
