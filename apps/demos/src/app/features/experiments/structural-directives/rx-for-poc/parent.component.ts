@@ -11,7 +11,7 @@ import { immutableArr, immutableIncArr } from '../utils';
     <rxa-visualizer>
       <ng-container visualizerHeader>
         <h2>
-          CD EmbeddedView 06
+          rxFor POC
           <small>Nested Structures And Local Variables</small>
         </h2>
         <div>
@@ -74,7 +74,7 @@ import { immutableArr, immutableIncArr } from '../utils';
             </button>
           </p>
           <ng-container
-            *poc2For="array$;
+            *poc6LocV2="array$;
           trackBy: trackByKey
           distinctBy: distinctBy
           let value;
@@ -107,7 +107,7 @@ import { immutableArr, immutableIncArr } from '../utils';
         let selectSlices = $selectSlices;
         ">
             <rxa-visualizer>
-              <ng-container *poc2For="
+              <ng-container *poc6LocV2="
          selectSlices(['arr']);
          let i;
          trackBy: trackByKey;
@@ -140,7 +140,7 @@ import { immutableArr, immutableIncArr } from '../utils';
     }
   `]
 })
-export class CdEmbeddedViewParent06Component {
+export class RxForContainerComponent {
   trackByKey = 'id';
 
   displayStates = {

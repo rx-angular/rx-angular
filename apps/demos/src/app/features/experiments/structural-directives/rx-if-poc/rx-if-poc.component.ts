@@ -47,7 +47,7 @@ import { scan, startWith } from 'rxjs/operators';
 
         </div>
         <div class="col-sm-3">
-          <h3 visualizerHeader>Create/Destroy EmbeddedViews</h3>
+          <h3>Create/Destroy EmbeddedViews</h3>
           <ng-template #f2>
             <div class="dh-embedded-view">
               <rxa-dirty-check></rxa-dirty-check>
@@ -60,7 +60,7 @@ import { scan, startWith } from 'rxjs/operators';
           </div>
         </div>
         <div class="col-sm-3">
-          <h3 visualizerHeader>Display/Hide EmbeddedViews</h3>
+          <h3>Display/Hide EmbeddedViews</h3>
           <ng-template #f3>
             <div class="dh-embedded-view">
               <rxa-dirty-check></rxa-dirty-check>

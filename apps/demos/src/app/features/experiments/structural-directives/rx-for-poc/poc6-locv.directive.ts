@@ -63,7 +63,7 @@ interface CustomVariablesProjectors {
   // tslint:disable-next-line:directive-selector
   selector: '[poc6LocV]'
 })
-export class Poc6Locv6<T, U extends NgIterable<T> = NgIterable<T>> implements OnInit, OnDestroy {
+export class Poc6Locv6Directive<T, U extends NgIterable<T> = NgIterable<T>> implements OnInit, OnDestroy {
   private differ: IterableDiffer<T> | null = null;
   private subscription: Unsubscribable = new Subscription();
 

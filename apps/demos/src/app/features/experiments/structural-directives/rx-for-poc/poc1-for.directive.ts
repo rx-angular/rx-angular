@@ -17,16 +17,17 @@ import { distinctUntilChanged, switchAll } from 'rxjs/operators';
   selector: '[poc1For]'
 })
 export class Poc1ForDirective<U> implements OnInit, OnDestroy {
-  observables$ = new ReplaySubject(1);
+  observables$ = new ReplaySubject<Observable<U[]>>(1);
   embeddedViews: Map<U, { view: EmbeddedViewRef<any>, item: any }> = new Map();
 
   values$: Observable<U[]> = this.observables$.pipe(
-      distinctUntilChanged(),
-      switchAll()
-    );
+    distinctUntilChanged(),
+    switchAll(),
+    distinctUntilChanged()
+  );
 
   @Input()
-  set poc1For(potentialObservable: ObservableInput<U> | null | undefined) {
+  set poc1For(potentialObservable: Observable<U[]> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
 
@@ -56,14 +57,14 @@ export class Poc1ForDirective<U> implements OnInit, OnDestroy {
     if (!existingItem) {
       const view = this.viewContainerRef
         .createEmbeddedView(this.templateRef, { $implicit: item }, idx);
-      existingItem = { view, item};
+      existingItem = { view, item };
       this.embeddedViews.set(key, existingItem);
 
     } else {
       existingItem.view.context.$implicit = item;
     }
     existingItem.view.detectChanges();
-  }
+  };
 
   ngOnDestroy() {
     this.viewContainerRef.clear();
