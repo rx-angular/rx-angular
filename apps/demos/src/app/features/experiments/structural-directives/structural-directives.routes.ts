@@ -1,4 +1,3 @@
-import { CdEmbeddedViewParent05Component } from './05/parent.component';
 import { Routes } from '@angular/router';
 
 export const ROUTES: Routes = [
@@ -21,9 +20,5 @@ export const ROUTES: Routes = [
   {
     path: 'rx-for-poc',
     loadChildren: () => import('./rx-for-poc/rx-for-poc.routed.module').then(m => m.RxForPocRoutedModule)
-  },
-  {
-    path: 'cd-embedded-view-05',
-    component: CdEmbeddedViewParent05Component
   }
 ];
