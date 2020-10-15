@@ -95,17 +95,15 @@ export function createTemplateManager<C extends object, N extends string = strin
     },
 
     getEmbeddedView(name: N): EmbeddedViewRef<C> {
-      return viewCache.get(name);
+        return viewCache.get(name);
     },
 
     displayView(name: N) {
-      // Detach currently inserted view from the container
-      // The view is still visible, but .detectChanges will have no effect
-      viewContainerRef.detach();
-
       if (activeView !== name) {
-
         if (templateCache.has(name)) {
+          // Detach currently inserted view from the container
+          viewContainerRef.detach();
+
           if (viewCache.has(name)) {
             viewContainerRef.insert(viewCache.get(name));
           } else {

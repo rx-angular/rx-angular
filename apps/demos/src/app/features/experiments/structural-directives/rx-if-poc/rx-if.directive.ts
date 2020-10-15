@@ -52,6 +52,8 @@ export class RxIfDirective<U> implements OnInit, OnDestroy {
     } else {
       const activeViewEmbeddedView = this.templateManager.getEmbeddedView(this.activeName);
       if (this.activeName && activeViewEmbeddedView) {
+        // Detach currently inserted view from the container
+        this.viewContainerRef.detach();
         activeViewEmbeddedView.detectChanges();
         this.activeName = templateName;
       }
