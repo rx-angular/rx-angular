@@ -4,6 +4,7 @@
 
   🃏 Demos:
      - ./apps/demos/*
+     - ./apps/demos/**/*
 
   "{ } State":
      - libs/state/*
