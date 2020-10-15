@@ -6,6 +6,8 @@ import { LazyLoadingComponentsComponent } from './lazy-loading-components.compon
 import { LetModule, UnpatchEventsModule } from '@rx-angular/template';
 import { GhostElementsModule } from '../../../../shared/ghost-elements';
 import { MatButtonModule } from '@angular/material/button';
+import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 const DECLARATIONS = [
   LazyLoadingComponentsComponent
@@ -19,7 +21,9 @@ const DECLARATIONS = [
     LetModule,
     UnpatchEventsModule,
     GhostElementsModule,
-    MatButtonModule
+    MatButtonModule,
+    VisualizerModule,
+    MatButtonToggleModule
   ]
 })
 export class LazyLoadingComponentsModule {

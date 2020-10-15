@@ -117,7 +117,7 @@ export function createTemplateManager<C extends object, N extends string = strin
         } else {
           // @NOTICE this is here to cause errors and see in which situations we would throw.
           // In CDK it should work different.
-          throw new Error(`A non-existing view was tried to insert ${name}`);
+          console.error(`A non-existing view was tried to insert ${name}`);
         }
 
         activeView = name;

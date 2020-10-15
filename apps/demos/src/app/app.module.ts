@@ -6,7 +6,7 @@ import { AppComponent, AppComponentModule } from './app-component';
 import { ENVIRONMENT_SETTINGS } from './shared/environment.token';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './features/home/home.component';
 
 @NgModule({
   imports: [

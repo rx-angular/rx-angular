@@ -37,7 +37,7 @@ import { scan } from 'rxjs/operators';
       <div class="col-sm-6">
         <h3>*rxLet EmbeddedView cdRef#detectChanges</h3>
         <ng-container *poc1Let="value1$; let value">
-          <rxa-visualizer>
+          <rxa-visualizer [viewType]="'embedded-view'">
             {{value}}
           </rxa-visualizer>
         </ng-container>

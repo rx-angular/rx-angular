@@ -9,23 +9,27 @@ import { RxIfPocComponent } from './rx-if-poc.component';
 import { Poc2IfDirective } from './poc2-if.directive';
 import { MatButtonModule } from '@angular/material/button';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
-import { Poc3IfDirective } from './poc3-if.directive';
+import { RxIfDirective } from './rx-if.directive';
+import { WorkModule } from '../../../../shared/debug-helper/work';
+
+const DECLARATIONS = [
+  Poc1IfDirective,
+  Poc2IfDirective,
+  RxIfDirective,
+  RxIfPocComponent
+];
 
 @NgModule({
-  declarations: [
-    Poc1IfDirective,
-    Poc2IfDirective,
-    Poc3IfDirective,
-    RxIfPocComponent
-  ],
+  declarations: DECLARATIONS,
   imports: [
     CommonModule,
-    RouterModule.forChild(ROUTES),
     VisualizerModule,
     UnpatchEventsModule,
     MatButtonModule,
-    DirtyChecksModule
-  ]
+    DirtyChecksModule,
+    WorkModule
+  ],
+  exports: DECLARATIONS
 })
 export class RxIfPocModule {
 }

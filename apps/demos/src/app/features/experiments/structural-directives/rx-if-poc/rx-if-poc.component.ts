@@ -11,12 +11,28 @@ import { scan, startWith } from 'rxjs/operators';
         <h2>
           rxIf POC
         </h2>
-        <button mat-raised-button [unpatch] (click)="toggleClick$.next($event)">
+        <button mat-raised-button (click)="toggleClick$.next($event)" class="mr-1">
           toggle
+        </button>
+        <button mat-raised-button [unpatch] (click)="toggleClick$.next($event)">
+          toggle (unpatched)
         </button>
       </div>
       <div class="row w-100">
-        <div class="col-sm-4">
+        <div class="col-sm-3">
+          <h3>Angular Native</h3>
+          <ng-template #f1>
+            <div class="dh-embedded-view">
+              <rxa-dirty-check></rxa-dirty-check>
+              FALSE
+            </div>
+          </ng-template>
+          <div class="dh-embedded-view" *ngIf="value1$ | async; else: f1">
+            <rxa-dirty-check></rxa-dirty-check>
+            TRUE
+          </div>
+        </div>
+        <div class="col-sm-3">
           <h3>Render EmbeddedViews directly</h3>
           <ng-template #f1>
             <div class="dh-embedded-view">
@@ -30,8 +46,8 @@ import { scan, startWith } from 'rxjs/operators';
           </div>
 
         </div>
-        <div class="col-sm-4">
-          <h3 visualizerHeader>Display/Hide EmbeddedViews</h3>
+        <div class="col-sm-3">
+          <h3 visualizerHeader>Create/Destroy EmbeddedViews</h3>
           <ng-template #f2>
             <div class="dh-embedded-view">
               <rxa-dirty-check></rxa-dirty-check>
@@ -43,15 +59,15 @@ import { scan, startWith } from 'rxjs/operators';
             TRUE
           </div>
         </div>
-        <div class="col-sm-4">
-          <h3 visualizerHeader>Display/Hide EmbeddedViews Cached</h3>
+        <div class="col-sm-3">
+          <h3 visualizerHeader>Display/Hide EmbeddedViews</h3>
           <ng-template #f3>
             <div class="dh-embedded-view">
               <rxa-dirty-check></rxa-dirty-check>
               FALSE
             </div>
           </ng-template>
-          <div class="dh-embedded-view" *poc3If="value1$; let value; falsey: f3">
+          <div class="dh-embedded-view" *rxIf="value1$; let value; falsey: f3">
             <rxa-dirty-check></rxa-dirty-check>
             TRUE
           </div>
