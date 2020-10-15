@@ -131,6 +131,4 @@ export class RxSwitchPocComponent {
   isVisible(visibleExample: number, displayId: number): boolean {
     return visibleExample === displayId || visibleExample === this.displayStates.all;
   }
-
-  condition = (v, from, to) => ((v === 0) ? v > from : v >= from) && v <= to;
 }
