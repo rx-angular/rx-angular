@@ -12,6 +12,7 @@ type RxIfTemplateNames = 'truthy' | 'falsey';
   selector: '[poc3If]'
 })
 export class Poc3IfDirective<U> implements OnInit, OnDestroy {
+  private activeName: RxIfTemplateNames;
   private subscription: Unsubscribable = new Subscription();
   private readonly templateManager: TemplateManager<{ $implicit: U | undefined | null }, RxIfTemplateNames>;
 
@@ -40,21 +41,20 @@ export class Poc3IfDirective<U> implements OnInit, OnDestroy {
 
   updateView = ($implicit) => {
     const templateName = ($implicit != null && !!$implicit) ? 'truthy' : 'falsey';
-    const activeName = this.templateManager.activeView();
-    const templateNameExists = this.templateManager.hasTemplateRef(templateName);
 
-    if (templateNameExists) {
-      this.templateManager.displayView(templateName);
+    this.templateManager.displayView(templateName);
+
+    if (this.templateManager.hasTemplateRef(templateName)) {
       this.templateManager.updateViewContext({ $implicit });
       this.templateManager.getEmbeddedView(templateName).detectChanges();
+      this.activeName = templateName;
     } else {
-      const activeViewEmbeddedView = this.templateManager.getEmbeddedView(activeName);
-      if (activeName && activeViewEmbeddedView) {
-        this.templateManager.displayView(templateName);
+      const activeViewEmbeddedView = this.templateManager.getEmbeddedView(this.activeName);
+      if (this.activeName && activeViewEmbeddedView) {
         activeViewEmbeddedView.detectChanges();
+        this.activeName = templateName;
       }
     }
-
 
   };
 

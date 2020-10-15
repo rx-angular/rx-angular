@@ -146,6 +146,15 @@ describe('TemplateManager', () => {
     expect(testViewContainerRef.length).toBe(0);
   });
 
+  it('activeView should return name of the active view after activated', () => {
+    expect(templateManager.activeView()).toBe(undefined);
+  });
+
+  it('activeView should return name of the view if set', () => {
+    expect(() => templateManager.displayView('templateRefA'))
+    expect(templateManager.activeView()).toBe('templateRefA');
+  });
+
   it('should ensure that the Maintainer understands `ViewContainerRef`', () => {
     const viewContainerRef: any = testViewContainerRef;
     expect(viewContainerRef.length).toBe(0);
