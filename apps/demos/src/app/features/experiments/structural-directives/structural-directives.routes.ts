@@ -9,11 +9,11 @@ export const ROUTES: Routes = [
   },
   {
     path: 'view-vs-embedded-view',
-    loadChildren: () => import('./view-vs-embedded-view/view-vs-embedded-view.module').then(m => m.ViewVsEmbeddedViewModule)
+    loadChildren: () => import('./view-vs-embedded-view/view-vs-embedded-view.routed.module').then(m => m.ViewVsEmbeddedViewRoutedModule)
   },
   {
     path: 'rx-if-poc',
-    loadChildren: () => import('./rx-if-poc/rx-if-poc.module').then(m => m.RxIfPocModule)
+    loadChildren: () => import('./rx-if-poc/rx-if-poc.routed.module').then(m => m.RxIfPocRoutedModule)
   },
   {
     path: 'rx-swicht-poc',

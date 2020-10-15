@@ -15,9 +15,11 @@ import { MatButtonModule } from '@angular/material/button';
     Poc1LetDirective,
     ViewVsEmbeddedViewComponent
   ],
+  exports: [
+    Poc1LetDirective
+  ],
   imports: [
     CommonModule,
-    RouterModule.forChild(ROUTES),
     VisualizerModule,
     UnpatchEventsModule,
     MatButtonModule

@@ -12,22 +12,24 @@ import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks'
 import { Poc3IfDirective } from './poc3-if.directive';
 import { WorkModule } from '../../../../shared/debug-helper/work';
 
+const DECLARATIONS = [
+  Poc1IfDirective,
+  Poc2IfDirective,
+  Poc3IfDirective,
+  RxIfPocComponent
+];
+
 @NgModule({
-  declarations: [
-    Poc1IfDirective,
-    Poc2IfDirective,
-    Poc3IfDirective,
-    RxIfPocComponent
-  ],
+  declarations: DECLARATIONS,
   imports: [
     CommonModule,
-    RouterModule.forChild(ROUTES),
     VisualizerModule,
     UnpatchEventsModule,
     MatButtonModule,
     DirtyChecksModule,
     WorkModule
-  ]
+  ],
+  exports: DECLARATIONS
 })
 export class RxIfPocModule {
 }

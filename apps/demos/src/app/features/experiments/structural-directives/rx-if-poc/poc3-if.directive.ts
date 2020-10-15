@@ -4,13 +4,16 @@ import { ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rx
 import { distinctUntilChanged, switchAll } from 'rxjs/operators';
 import { createTemplateManager, RxTemplateObserver, TemplateManager } from '@rx-angular/template';
 
+
+type RxIfTemplateNames = 'truthy' | 'falsey';
+
 @Directive({
   // tslint:disable-next-line:directive-selector
   selector: '[poc3If]'
 })
 export class Poc3IfDirective<U> implements OnInit, OnDestroy {
   private subscription: Unsubscribable = new Subscription();
-  private readonly templateManager: TemplateManager<{ $implicit: U | undefined | null }>;
+  private readonly templateManager: TemplateManager<{ $implicit: U | undefined | null }, RxIfTemplateNames>;
 
   private readonly observables$ = new ReplaySubject(1);
   private readonly values$ = this.observables$
@@ -26,7 +29,9 @@ export class Poc3IfDirective<U> implements OnInit, OnDestroy {
 
   @Input()
   set poc3IfFalsey(templateRef: TemplateRef<any>) {
-    this.templateManager.addTemplateRef('falsey', templateRef);
+    if (templateRef) {
+      this.templateManager.addTemplateRef('falsey', templateRef);
+    }
   }
 
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
@@ -35,9 +40,22 @@ export class Poc3IfDirective<U> implements OnInit, OnDestroy {
 
   updateView = ($implicit) => {
     const templateName = ($implicit != null && !!$implicit) ? 'truthy' : 'falsey';
-    this.templateManager.displayView(templateName);
-    this.templateManager.updateViewContext({ $implicit });
-    this.templateManager.getEmbeddedView(templateName).detectChanges();
+    const activeName = this.templateManager.activeView();
+    const templateNameExists = this.templateManager.hasTemplateRef(templateName);
+
+    if (templateNameExists) {
+      this.templateManager.displayView(templateName);
+      this.templateManager.updateViewContext({ $implicit });
+      this.templateManager.getEmbeddedView(templateName).detectChanges();
+    } else {
+      const activeViewEmbeddedView = this.templateManager.getEmbeddedView(activeName);
+      if (activeName && activeViewEmbeddedView) {
+        this.templateManager.displayView(templateName);
+        activeViewEmbeddedView.detectChanges();
+      }
+    }
+
+
   };
 
   constructor(

@@ -2,6 +2,7 @@ import { EmbeddedViewRef, TemplateRef, ViewContainerRef } from '@angular/core';
 
 export interface TemplateManager<C extends object, N extends string = string> {
 
+  activeView(): N;
   /**
    * @description
    * Mutates the inner viewContext with the passed object slice.
@@ -72,6 +73,10 @@ export function createTemplateManager<C extends object, N extends string = strin
   let activeView: N;
 
   return {
+    activeView: () => {
+      return activeView;
+    },
+
     hasTemplateRef(name: N): boolean {
       return templateCache.has(name);
     },
@@ -100,10 +105,11 @@ export function createTemplateManager<C extends object, N extends string = strin
 
     displayView(name: N) {
       if (activeView !== name) {
-        if (templateCache.has(name)) {
-          // Detach currently inserted view from the container
-          viewContainerRef.detach();
+        // Detach currently inserted view from the container
+        // The view is still visible, but .detectChanges will have no effect
+        viewContainerRef.detach();
 
+        if (templateCache.has(name)) {
           if (viewCache.has(name)) {
             viewContainerRef.insert(viewCache.get(name));
           } else {
@@ -117,7 +123,7 @@ export function createTemplateManager<C extends object, N extends string = strin
         } else {
           // @NOTICE this is here to cause errors and see in which situations we would throw.
           // In CDK it should work different.
-          throw new Error(`A non-existing view was tried to insert ${name}`);
+          console.error(`A non-existing view was tried to insert ${name}`);
         }
 
         activeView = name;

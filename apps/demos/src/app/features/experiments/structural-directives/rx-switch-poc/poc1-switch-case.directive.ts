@@ -32,6 +32,11 @@ export class Poc1SwitchCase implements OnInit, OnDestroy {
     );
 
   @Input()
+  set poc1SwitchCaseValue(o$) {
+    this.observables$.next(o$);
+  };
+
+  @Input()
   set poc1SwitchCase(o$) {
     this.observables$.next(o$);
   };
@@ -52,9 +57,12 @@ export class Poc1SwitchCase implements OnInit, OnDestroy {
       this.poc1Switch.values$,
     ])
       .pipe(
-        map(([caseValue, switchValue]) => caseValue === switchValue),
+        tap(console.log),
+        // tslint:disable-next-line:triple-equals
+        map(([caseValue, switchValue]) => caseValue == switchValue),
         distinctUntilChanged(),
         tap((matched: boolean) => {
+          console.log('matched', matched);
           if (matched) {
             if (!this.inserted) {
               this.viewContainer.insert(this._view, 0);
