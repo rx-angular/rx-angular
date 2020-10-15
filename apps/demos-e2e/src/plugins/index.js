@@ -6,8 +6,20 @@ const fs = require('fs');
 let port = 0;
 let client = null;
 let tracingEvents = [];
-const TRACE_CATEGORIES = ["-*", "devtools.timeline", "disabled-by-default-devtools.timeline", "disabled-by-default-devtools.timeline.frame", "toplevel", "blink.console", "disabled-by-default-devtools.timeline.stack", "disabled-by-default-devtools.screenshot", "disabled-by-default-v8.cpu_profile", "disabled-by-default-v8.cpu_profiler", "disabled-by-default-v8.cpu_profiler.hires"];
-
+// copied from https://github.com/paulirish/automated-chrome-profiling/blob/master/get-timeline-trace.js#L5
+const TRACE_CATEGORIES = [
+  '-*',
+  'devtools.timeline',
+  'disabled-by-default-devtools.timeline',
+  'disabled-by-default-devtools.timeline.frame',
+  'toplevel',
+  'blink.console',
+  'disabled-by-default-devtools.timeline.stack',
+  'disabled-by-default-devtools.screenshot',
+  'disabled-by-default-v8.cpu_profile',
+  'disabled-by-default-v8.cpu_profiler',
+  'disabled-by-default-v8.cpu_profiler.hires',
+];
 
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
@@ -22,8 +34,8 @@ module.exports = (on, config) => {
       ? launchOptionsOrArgs
       : launchOptionsOrArgs.args;
 
-    port = ensureRdpPort(args);
-    debug('ensureRdpPort %d', port);
+    port = ensureRemoteDebuggingPort(args);
+    debug('ensureRemoteDebuggingPort %d', port);
     debug('Chrome arguments %o', args);
   });
 
@@ -38,30 +50,9 @@ module.exports = (on, config) => {
       return Promise.resolve(true);
     },
 
-    getPerformanceMetrics: async () => {
-      debug('getPerformanceMetrics');
-      client = client || await CDP({ port });
-
-      return client.Performance.getMetrics();
-    },
-
-    enablePerformanceMetrics: async () => {
-      debug('enablePerformanceMetrics');
-      client = client || await CDP({ port });
-
-      return client.Performance.enable();
-    },
-
-    disablePerformanceMetrics: async () => {
-      debug('disablePerformanceMetrics');
-      client = client || await CDP({ port });
-
-      return client.Performance.disable();
-    },
-
     enableProfiler: async () => {
       debug('enableProfiler');
-      client = client || await CDP({ port });
+      client = client || (await CDP({ port }));
 
       const { Profiler } = client;
       await Profiler.setSamplingInterval({ interval: 100 });
@@ -71,32 +62,35 @@ module.exports = (on, config) => {
 
     disableProfiler: async () => {
       debug('disableProfiler');
-      client = client || await CDP({ port });
+      client = client || (await CDP({ port }));
 
       return client.Profiler.disable();
     },
 
     startProfiler: async () => {
       debug('startProfiler');
-      client = client || await CDP({ port });
+      client = client || (await CDP({ port }));
 
       return client.Profiler.start();
     },
 
-    stopProfiler: async () => {
+    stopProfiler: async (params) => {
       debug('stopProfiler');
-      client = client || await CDP({ port });
+      client = client || (await CDP({ port }));
 
       const profilerResults = await client.Profiler.stop();
 
-      fs.writeFileSync('./profiler-results.cpuprofile', JSON.stringify(profilerResults.profile || 'Profile not found'));
+      fs.writeFileSync(
+        `./profiling_${params.title}_${currentDateString()}.cpuprofile`,
+        JSON.stringify(profilerResults.profile || 'Profile not found')
+      );
 
       return Promise.resolve(profilerResults);
     },
 
     startTracing: async () => {
       debug('startTracing');
-      client = client || await CDP({ port });
+      client = client || (await CDP({ port }));
       const { Page, Tracing } = client;
 
       await Page.enable();
@@ -107,25 +101,28 @@ module.exports = (on, config) => {
 
       return Tracing.start({
         categories: TRACE_CATEGORIES.join(','),
-        options: 'sampling-frequency=10000'
+        options: 'sampling-frequency=10000',
       });
     },
 
-    endTracing: async () => {
+    endTracing: async (params) => {
       debug('endTracing');
-      client = client || await CDP({ port });
+      client = client || (await CDP({ port }));
 
       await client.Tracing.end();
       const tracingComplete = await client.Tracing.tracingComplete();
 
-      fs.writeFileSync('./tracing-results.json', JSON.stringify(tracingEvents));
+      fs.writeFileSync(
+        `./tracing_${params.title}_${currentDateString()}.json`,
+        JSON.stringify(tracingEvents)
+      );
 
       return Promise.resolve(tracingComplete);
-    }
+    },
   });
 };
 
-function ensureRdpPort(args) {
+function ensureRemoteDebuggingPort(args) {
   const existing = args.find(
     (arg) => arg.slice(0, 23) === '--remote-debugging-port'
   );
@@ -139,4 +136,19 @@ function ensureRdpPort(args) {
   args.push(`--remote-debugging-port=${port}`);
 
   return port;
+}
+
+function currentDateString() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = formatNumbers(date.getMonth() + 1);
+  const day = formatNumbers(date.getDate());
+  const hours = formatNumbers(date.getHours());
+  const minutes = formatNumbers(date.getMinutes());
+  const seconds = formatNumbers(date.getSeconds());
+  return `${year}${month}${day}-${hours}${minutes}${seconds}`;
+
+  function formatNumbers(number) {
+    return number > 9 ? `${number}` : `0${number}`;
+  }
 }

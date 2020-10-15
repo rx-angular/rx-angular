@@ -1,70 +1,18 @@
-import { getGreeting } from '../support/app.po';
+const WAIT_DURATION = 1000;
 
-describe('demos', () => {
+describe('RxLet vs Push demo', () => {
   beforeEach(() => cy.task('resetCRI').visit('/experiments/rx-let-vs-push/list-toggle'));
 
-  xdescribe('test with Performance', () => {
-    it('should check performance of push pipe on 1st try', () => {
-      cy.get('button').contains('Open Manual test for Push').click();
-      cy.task('enablePerformanceMetrics');
-      cy.get('button').contains('Toggle').click();
-      cy.get('rxa-rendering-work').contains('0').task('getPerformanceMetrics');
-      cy.task('disablePerformanceMetrics');
-    });
-
-    it('should check performance of push pipe on 2nd try', () => {
-      cy.get('button').contains('Open Manual test for Push').click();
-
-      cy.get('button').contains('Toggle').click();
-      cy.get('rxa-rendering-work').contains('0');
-      cy.get('button').contains('Toggle').click();
-      cy.wait(500);
-
-      cy.task('enablePerformanceMetrics');
-      cy.get('button').contains('Toggle').click();
-      cy.get('rxa-rendering-work').contains('0').task('getPerformanceMetrics');
-      cy.task('disablePerformanceMetrics');
-    });
-
-    it('should check performance of let directive on 1st try', () => {
-      cy.get('button').contains('Open Manual test for Let').click();
-
-      cy.task('enablePerformanceMetrics');
-      cy.get('button').contains('Toggle').click();
-      cy.get('rxa-rendering-work').contains('0').task('getPerformanceMetrics');
-      cy.task('disablePerformanceMetrics');
-    });
-
-    it('should check performance of let directive on 2nd try', () => {
-      cy.get('button').contains('Open Manual test for Let').click();
-
-      cy.get('button').contains('Toggle').click();
-      cy.get('rxa-rendering-work').contains('0');
-      cy.get('button').contains('Toggle').click();
-      cy.wait(500);
-
-      cy.task('enablePerformanceMetrics');
-      cy.get('button').contains('Toggle').click();
-      cy.get('rxa-rendering-work').contains('0').task('getPerformanceMetrics');
-      cy.task('disablePerformanceMetrics');
-    });
-  });
-
-  xdescribe('test with Profiler', () => {
+  describe('test and generate Profiler reports', () => {
     it('should check performance of push pipe', () => {
       cy.get('button').contains('Open Manual test for Push').click();
 
       cy.task('enableProfiler');
       cy.task('startProfiler');
 
-      cy.get('button').contains('Toggle').click();
-      cy.get('rxa-rendering-work').contains('0');
-      cy.get('button').contains('Toggle').click();
-      cy.wait(2000);
-      cy.get('button').contains('Toggle').click();
-      cy.get('rxa-rendering-work').contains('0');
+      testOpeningAndClosingToggleThreeTimes();
 
-      cy.task('stopProfiler');
+      cy.task('stopProfiler', { title: 'push-pipe' });
       cy.task('disableProfiler');
     });
 
@@ -74,45 +22,32 @@ describe('demos', () => {
       cy.task('enableProfiler');
       cy.task('startProfiler');
 
-      cy.get('button').contains('Toggle').click();
-      cy.get('rxa-rendering-work').contains('0');
-      cy.get('button').contains('Toggle').click();
-      cy.wait(2000);
-      cy.get('button').contains('Toggle').click();
-      cy.get('rxa-rendering-work').contains('0');
+      testOpeningAndClosingToggleThreeTimes();
 
-      cy.task('stopProfiler');
+      cy.task('stopProfiler', { title: 'let-directive' });
       cy.task('disableProfiler');
     });
   });
 
-  describe('test with Tracing', () => {
+  describe('test and generate Tracing reports', () => {
     it('should check performance of push pipe', () => {
       cy.get('button').contains('Open Manual test for Push').click();
 
       cy.task('startTracing');
 
-      openAndCloseToggle();
-      openAndCloseToggle();
-      cy.get('button').contains('Toggle').click();
-      cy.get('rxa-rendering-work').contains('0');
-      cy.wait(2000);
+      testOpeningAndClosingToggleThreeTimes();
 
-      cy.task('endTracing');
+      cy.task('endTracing', { title: 'push-pipe' });
     });
 
-    xit('should check performance of let directive', () => {
+    it('should check performance of let directive', () => {
       cy.get('button').contains('Open Manual test for Let').click();
 
       cy.task('startTracing');
 
-      openAndCloseToggle();
-      openAndCloseToggle();
-      cy.get('button').contains('Toggle').click();
-      cy.get('rxa-rendering-work').contains('0');
-      cy.wait(2000);
+      testOpeningAndClosingToggleThreeTimes();
 
-      cy.task('endTracing');
+      cy.task('endTracing', { title: 'let-directive' });
     });
   });
 });
@@ -120,7 +55,13 @@ describe('demos', () => {
 function openAndCloseToggle() {
   cy.get('button').contains('Toggle').click();
   cy.get('rxa-rendering-work').contains('0');
-  cy.wait(2000);
+  cy.wait(WAIT_DURATION);
   cy.get('button').contains('Toggle').click();
-  cy.wait(2000);
+  cy.wait(WAIT_DURATION);
+}
+
+function testOpeningAndClosingToggleThreeTimes() {
+  openAndCloseToggle();
+  openAndCloseToggle();
+  openAndCloseToggle();
 }
