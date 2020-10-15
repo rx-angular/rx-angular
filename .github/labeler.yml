@@ -5,11 +5,11 @@
   🃏 Demos:
      - ./apps/demos/*
 
-  { } State:
+  "{ } State":
      - libs/state/*
      - libs/state/**/*
 
-  </> Template:
+  "</> Template":
      - libs/template/*
      - libs/template/**/*
 
