@@ -14,10 +14,10 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 
   template: `
     <h1>Render Callback example 01</h1>
     <h4>Height calculation using rendered$ Event</h4>
-    <button unpatch (click)="reset()">Reset</button>
-    <button unpatch (click)="updateClick.next()">Update content</button>
-    <button unpatch (click)="errorClick.next()">Error</button>
-    <button unpatch (click)="completeClick.next()">Complete</button>
+    <button mat-raised-button [unpatch] (click)="reset()">Reset</button>
+    <button mat-raised-button [unpatch] (click)="updateClick.next()">Update content</button>
+    <button mat-raised-button [unpatch] (click)="errorClick.next()">Error</button>
+    <button mat-raised-button [unpatch] (click)="completeClick.next()">Complete</button>
     <div class="example-results">
       <div class="example-result" style="height: 170px; overflow-y: scroll">
         <h4>render callback output</h4>

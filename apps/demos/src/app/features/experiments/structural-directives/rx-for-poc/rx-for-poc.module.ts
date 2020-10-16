@@ -4,7 +4,7 @@ import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { UnpatchEventsModule } from '@rx-angular/template';
 import { MatButtonModule } from '@angular/material/button';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
-import { WorkModule } from '../../../../shared/debug-helper/work';
+import { ValueModule } from '../../../../shared/debug-helper/work';
 import { RxForContainerComponent } from './parent.component';
 import { RxForDirective } from './rx-for.directive';
 import { Poc6Locv2Directive } from './poc6-locv2.directive';
@@ -35,7 +35,7 @@ const DECLARATIONS = [
     UnpatchEventsModule,
     MatButtonModule,
     DirtyChecksModule,
-    WorkModule,
+    ValueModule,
     MatButtonToggleModule,
     MatFormFieldModule,
     MatInputModule,

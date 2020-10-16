@@ -50,15 +50,13 @@ import { immutableArr, immutableIncArr } from '../utils';
               toggel interval
             </button>
           </p>
-          <ng-container *ngFor="let value of array$ | async;trackBy: trackById">
-            <rxa-visualizer>
-              <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-                <rxa-visualizer>
-                  <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
-                </rxa-visualizer>
-              </ng-container>
+
+          <rxa-visualizer *ngFor="let value of array$ | async;trackBy: trackById">
+            <rxa-visualizer *ngFor="let i of value.arr; trackBy: trackById">
+              <rxa-value [value]="i"></rxa-value>
             </rxa-visualizer>
-          </ng-container>
+          </rxa-visualizer>
+
         </div>
         <div class="col-sm-4" *ngIf="group.value === displayStates.nativeReactive || group.value === displayStates.all">
           <h2>RxAngular, *rxFor trackBy, distinctBy</h2>
@@ -75,16 +73,12 @@ import { immutableArr, immutableIncArr } from '../utils';
           </p>
           <ng-container
             *poc6LocV2="array$;
-          trackBy: trackByKey
-          distinctBy: distinctBy
+          trackBy: tK
+          distinctBy: dK
           let value;
           ">
-            <rxa-visualizer key="" size="150">
-              <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-                <rxa-visualizer>
-                  <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
-                </rxa-visualizer>
-              </ng-container>
+            <rxa-visualizer size="150" *ngFor="let i of value.arr; trackBy: trackById">
+              <rxa-value [value]="i"></rxa-value>
             </rxa-visualizer>
           </ng-container>
         </div>
@@ -102,24 +96,11 @@ import { immutableArr, immutableIncArr } from '../utils';
               toggel interval
             </button>
           </p>
-          <ng-container *poc6LocV2="array$;
-        let value$ = $value$;
-        let selectSlices = $selectSlices;
-        ">
-            <rxa-visualizer>
-              <ng-container *poc6LocV2="
-         selectSlices(['arr']);
-         let i;
-         trackBy: trackByKey;
-         distinctBy:distinctBy
-         let v$ = $value$;">
-                <rxa-visualizer>
-                  <mat-icon [ngClass]="{red:!i.value, green:i.value}">{{i.value ? 'check' : 'highlight_off'}}</mat-icon>
-                </rxa-visualizer>
-              </ng-container>
-              <!-- -->
+          <rxa-visualizer *poc6LocV2="array$; let select = $selectSlices;">
+            <rxa-visualizer *poc6LocV2="select(['arr']); trackBy: tK; distinctBy:dK; let v$ = $value$;">
+              <rxa-value [value]="v$"></rxa-value>
             </rxa-visualizer>
-          </ng-container>
+          </rxa-visualizer>
         </div>
       </div>
     </rxa-visualizer>
@@ -127,21 +108,11 @@ import { immutableArr, immutableIncArr } from '../utils';
   changeDetection: environment.changeDetection,
   encapsulation: ViewEncapsulation.None,
   styles: [`
-    h1, h2, h3 {
-      width: 100%;
-    }
 
-    .red {
-      color: red;
-    }
-
-    .green {
-      color: green;
-    }
   `]
 })
 export class RxForContainerComponent {
-  trackByKey = 'id';
+  tK = 'id';
 
   displayStates = {
     native: 0,
@@ -172,6 +143,6 @@ export class RxForContainerComponent {
   load$ = new BehaviorSubject<number>(0);
   trackById = (i) => i.id;
 
-  distinctBy = (a, b) => a.value === b.value;
+  dK = (a, b) => a.value === b.value;
 
 }

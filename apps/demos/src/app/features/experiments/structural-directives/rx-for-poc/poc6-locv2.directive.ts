@@ -22,7 +22,7 @@ export class Poc6Locv2ViewContext<T extends object, K = keyof T> {
     this.$prop_arr$ = $value$.pipe(pluck('arr'), distinctUntilChanged());
   }
 
-  $selectSlices = (props: K[]): Observable<any> => {
+  $select = (props: K[]): Observable<any> => {
     return this.$value$.pipe(
      pluck(...props as any)
   );
@@ -92,7 +92,6 @@ export class Poc6Locv2Directive<U> implements OnInit, OnDestroy {
       existingItem.view.detectChanges();
     }
   };
-
 
   ngOnDestroy() {
     this.viewContainerRef.clear();

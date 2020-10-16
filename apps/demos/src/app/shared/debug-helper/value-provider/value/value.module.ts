@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
-import { WorkComponent } from './work.component';
+import { ValueComponent } from './value.component';
 import { CommonModule } from '@angular/common';
 import { MatRippleModule } from '@angular/material/core';
 import { LetModule, PushModule } from '@rx-angular/template';
 import { UtilsModule } from '../../../utils/utils.module';
+import { MatIconModule } from '@angular/material/icon';
 
-const DEPRECATIONS = [WorkComponent];
+const DEPRECATIONS = [ValueComponent];
 
 @NgModule({
   declarations: [...DEPRECATIONS],
@@ -14,10 +15,11 @@ const DEPRECATIONS = [WorkComponent];
     MatRippleModule,
     PushModule,
     UtilsModule,
-    LetModule
+    LetModule,
+    MatIconModule
   ],
   exports: [...DEPRECATIONS]
 })
-export class WorkModule {
+export class ValueModule {
 
 }

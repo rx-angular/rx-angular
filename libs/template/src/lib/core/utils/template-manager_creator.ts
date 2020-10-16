@@ -67,9 +67,9 @@ export function createTemplateManager<C extends object, N extends string = strin
   initialViewContext: C
 ): TemplateManager<C, N> {
   const templateCache = new Map<N, TemplateRef<C>>();
-  const viewCache = new Map<N, EmbeddedViewRef<C>>();
+  const viewCache = new Map<string, EmbeddedViewRef<C>>();
   const viewContext = { ...initialViewContext };
-  let activeView: N;
+  let activeView: string;
 
   return {
     hasTemplateRef(name: N): boolean {
@@ -94,33 +94,35 @@ export function createTemplateManager<C extends object, N extends string = strin
       }
     },
 
-    getEmbeddedView(name: N): EmbeddedViewRef<C> {
-        return viewCache.get(name);
+    getEmbeddedView(vID: string): EmbeddedViewRef<C> {
+      return viewCache.get(vID);
     },
+    displayView(name: N, id: string | number | Symbol = '') {
+      const vID = name + id;
+      if (activeView !== vID) {
 
-    displayView(name: N) {
-      if (activeView !== name) {
         if (templateCache.has(name)) {
           // Detach currently inserted view from the container
           viewContainerRef.detach();
 
-          if (viewCache.has(name)) {
-            viewContainerRef.insert(viewCache.get(name));
+
+          if (viewCache.has(vID)) {
+            viewContainerRef.insert(viewCache.get(vID));
           } else {
             // Creates and inserts view to the view container
             const newView = viewContainerRef.createEmbeddedView(
               templateCache.get(name),
               viewContext
             );
-            viewCache.set(name, newView);
+            viewCache.set(vID, newView);
           }
         } else {
           // @NOTICE this is here to cause errors and see in which situations we would throw.
           // In CDK it should work different.
-          console.error(`A non-existing view was tried to insert ${name}`);
+          console.error(`A non-existing view was tried to insert. Template name ${name} was used to create EmbeddedView ${vID}`);
         }
 
-        activeView = name;
+        activeView = vID;
       }
     },
 

@@ -10,7 +10,7 @@ import { Poc2IfDirective } from './poc2-if.directive';
 import { MatButtonModule } from '@angular/material/button';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { RxIfDirective } from './rx-if.directive';
-import { WorkModule } from '../../../../shared/debug-helper/work';
+import { ValueModule } from '../../../../shared/debug-helper/work';
 
 const DECLARATIONS = [
   Poc1IfDirective,
@@ -27,7 +27,7 @@ const DECLARATIONS = [
     UnpatchEventsModule,
     MatButtonModule,
     DirtyChecksModule,
-    WorkModule
+    ValueModule
   ],
   exports: DECLARATIONS
 })
