@@ -94,35 +94,35 @@ export function createTemplateManager<C extends object, N extends string = strin
       }
     },
 
-    getEmbeddedView(vID: string): EmbeddedViewRef<C> {
-      return viewCache.get(vID);
+    getEmbeddedView(vId: string): EmbeddedViewRef<C> {
+      return viewCache.get(vId);
     },
     displayView(name: N, id: string | number | Symbol = '') {
-      const vID = name + id;
-      if (activeView !== vID) {
+      const vId = name + id;
+      if (activeView !== vId) {
 
         if (templateCache.has(name)) {
           // Detach currently inserted view from the container
           viewContainerRef.detach();
 
 
-          if (viewCache.has(vID)) {
-            viewContainerRef.insert(viewCache.get(vID));
+          if (viewCache.has(vId)) {
+            viewContainerRef.insert(viewCache.get(vId));
           } else {
             // Creates and inserts view to the view container
             const newView = viewContainerRef.createEmbeddedView(
               templateCache.get(name),
               viewContext
             );
-            viewCache.set(vID, newView);
+            viewCache.set(vId, newView);
           }
         } else {
           // @NOTICE this is here to cause errors and see in which situations we would throw.
           // In CDK it should work different.
-          console.error(`A non-existing view was tried to insert. Template name ${name} was used to create EmbeddedView ${vID}`);
+          console.error(`A non-existing view was tried to insert. Template name ${name} was used to create EmbeddedView ${vId}`);
         }
 
-        activeView = vID;
+        activeView = vId;
       }
     },
 
