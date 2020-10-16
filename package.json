@@ -29,8 +29,7 @@
     "chanelog": "nx changelog state",
     "generate-typescript-docs": "ts-node -P tools/tsconfig.tools.json tools/scripts/docs/generate-typescript-docs.ts",
     "help": "nx help",
-    "state:publish": "nx publish state",
-    "template:publish": "nx publish template",
+    "timeline-viewer": "yarn http-server ./docs/timeline-viewer -a localhost -p 4200 -s",
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points && node ./decorate-angular-cli.js"
   },
   "husky": {
