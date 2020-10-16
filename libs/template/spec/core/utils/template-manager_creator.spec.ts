@@ -142,7 +142,7 @@ describe('TemplateManager', () => {
     expect(testViewContainerRef.length).toBe(0);
     console.error = createSpy('error')
     templateManager.displayView('templateRefA')
-    expect(console.error).toBeCalledWith('A non-existing view was tried to insert templateRefA')
+    expect(console.error).toBeCalledWith('A non-existing view was tried to insert. Template name templateRefA was used to create EmbeddedView templateRefA')
     expect(templateManager.hasTemplateRef('templateRefA')).toBe(false);
     expect(testViewContainerRef.length).toBe(0);
   });
