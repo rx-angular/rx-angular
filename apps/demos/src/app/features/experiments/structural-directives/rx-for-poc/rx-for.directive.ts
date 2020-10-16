@@ -14,8 +14,18 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
-import { NEVER, ObservableInput, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, filter, map, shareReplay, switchAll, take } from 'rxjs/operators';
+import { defer, NEVER, ObservableInput, ReplaySubject } from 'rxjs';
+import {
+  distinctUntilChanged,
+  filter,
+  groupBy,
+  map,
+  scan,
+  shareReplay,
+  startWith,
+  switchAll,
+  take, tap
+} from 'rxjs/operators';
 import { RecordViewTuple, RxForViewContext } from './model';
 import { RxEffects } from '../../../../shared/rx-effects.service';
 import { createTemplateManager, TemplateManager } from '@rx-angular/template';
@@ -38,6 +48,16 @@ export class RxForDirective<T extends object, U extends NgIterable<T> = NgIterab
       switchAll(),
       distinctUntilChanged()
     );
+
+  private readonly records$ = defer(() => this.values$.pipe(
+    tap(console.log),
+    groupBy(r => r[this._rxTrackBy]),
+    scan((records, o$) => ({
+      ...records,
+      [o$.key]: o$.pipe(distinctUntilChanged(this.rxForDistinctBy))
+    }), {}),
+    shareReplay({ refCount: true, bufferSize: 1})
+  ))
 
   @Input()
   set rxFor(potentialObservable: ObservableInput<U> | null | undefined) {
@@ -65,26 +85,23 @@ export class RxForDirective<T extends object, U extends NgIterable<T> = NgIterab
     private readonly viewContainerRef: ViewContainerRef,
     private iterableDiffers: IterableDiffers
   ) {
-    const initialViewContext: RxForViewContext<T, U> = new RxForViewContext<T, U>(null, [] as U, -1, -1, NEVER);
+    const initialViewContext: RxForViewContext<T, U> = new RxForViewContext<T, U>(null, [] as U, -1, -1);
     this.templateManager = createTemplateManager(this.viewContainerRef, initialViewContext);
   }
 
-  initDiffer(iterable: U) {
-    if (!this.differ && iterable) {
-      this.differ = this.iterableDiffers.find(iterable).create((index: number, item: T) => item[this._rxTrackBy]);
-    }
-
+  initDiffer(iterable: U = [] as U) {
+    this.differ = this.iterableDiffers.find(iterable).create((index: number, item: T) => item[this._rxTrackBy]);
     this.rxEffects.hold(this.values$.pipe(
+      startWith(iterable),
       map(i => ({diff: this.differ.diff(i), iterable: i})),
       filter(r => r.diff != null),
       shareReplay(1)
-    ), (r) => this.applyChanges(r[0], r[1]));
+    ), (r) => this.applyChanges(r.diff, r.iterable));
   }
 
   ngOnInit() {
     this.templateManager.addTemplateRef('rxNext', this.templateRef);
     this.rxEffects.hold(this.values$.pipe(take(1)), (value) => this.initDiffer(value));
-
   }
 
   ngOnDestroy() {
@@ -137,6 +154,8 @@ export class RxForDirective<T extends object, U extends NgIterable<T> = NgIterab
       viewRef.context.index = i;
       viewRef.context.count = ilen;
       viewRef.context.rxFor = iterable;
+      viewRef.context.record$ =
+        this.records$.pipe(map(records => records[i[this._rxTrackBy]]));
     }
 
     changes.forEachIdentityChange((record: IterableChangeRecord<T>) => {

@@ -1,12 +1,14 @@
 import { EmbeddedViewRef, NgIterable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { pluck } from 'rxjs/operators';
+import { Observable, ReplaySubject } from 'rxjs';
+import { pluck, switchAll, tap } from 'rxjs/operators';
 
 export class RxForViewContext<T extends object, U extends NgIterable<T> = NgIterable<T>, K = keyof T> {
 
   localVariableProjections: CustomVariablesProjectors = {};
 
-  constructor(public $implicit: T, public rxFor: U, public index: number, public count: number, private $value$: Observable<T>) {
+  private readonly _record = new ReplaySubject<Observable<T>>(1);
+
+  constructor(public $implicit: T, public rxFor: U, public index: number, public count: number) {
   }
 
   get first(): boolean {
@@ -32,8 +34,15 @@ export class RxForViewContext<T extends object, U extends NgIterable<T> = NgIter
       }, {});
   }
 
-  $select = (props: K[]): Observable<any> => {
-    return this.$value$.pipe(
+  set record$(o$: Observable<T>) {
+    this._record.next(o$);
+  }
+
+  $select$ = (props: K[]): Observable<any> => {
+    console.log(props);
+    return this._record.pipe(
+      switchAll(),
+      tap(console.log),
       pluck(...props as any)
     );
   };

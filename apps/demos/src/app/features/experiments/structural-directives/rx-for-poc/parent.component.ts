@@ -51,28 +51,23 @@ import { immutableArr, immutableIncArr } from '../utils';
             </button>
           </p>
 
-          <rxa-visualizer *ngFor="let value of array$ | async;trackBy: trackById">
-            <rxa-visualizer *ngFor="let i of value.arr; trackBy: trackById">
-              <rxa-value [value]="i"></rxa-value>
-            </rxa-visualizer>
-          </rxa-visualizer>
-
         </div>
         <div class="col-sm-6"
              *ngIf="group.value === displayStates.rxAngularReactive || group.value === displayStates.all">
           <h2>RxAngular, *rxFor trackBy, distinctBy, select</h2>
           <p>
             <button mat-raised-button [unpatch] (click)="changeOneClick$.next(1)">
-              update
+              unpatched update
             </button>
             <button mat-raised-button [unpatch] (click)="changeAllClick$.next(10)">
-              Change all
+              unpatched Change all
             </button>
             <button mat-raised-button [unpatch] (click)="toggleIntervalClick$.next(10)">
-              toggel interval
+              unpatched toggel interval
             </button>
           </p>
-          <rxa-visualizer *rxFor="array$; let select = $selectSlices;">
+          <rxa-visualizer *rxFor="array$; let i; let select = $select$;">
+            <span *rxLet="select(['arr']); let s">{{ s | json }}</span>
             <rxa-visualizer *rxFor="select(['arr']); trackBy: tK; distinctBy:dK; let v$ = $value$;">
               <rxa-value [value]="v$"></rxa-value>
             </rxa-visualizer>
