@@ -1,13 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="hide-devtools">
   <head>
     <meta charset="utf-8" />
-    <title>Docs</title>
+    <title>Performance App</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
   </head>
   <body>
-    <rx-angular-root></rx-angular-root>
+  <div class="top-message-container">
+    <div class="top-message info-message" id="info-message" hidden></div>
+    <div class="top-message online-status-message bg-green" id="online-status" hidden>Online</div>
+    <div class="top-message offline-status-message bg-orange" id="offline-status" hidden>Offline</div>
+  </div>
+  <div class="status"></div>
+  <div class="w-100" id="dropbox">
+    <h1>DevTools Timeline Viewer</h1>
+    <div class="w-100 center">
+      <form>
+        <input type="text" name=url id="enterurl" placeholder="Drag and Drop">
+      </form>
+    </div>
+
+  </div>
+  <script src="https://chrome-devtools-frontend.appspot.com/serve_file/@675968a8c657a3bd9c1c2c20c5d2935577bbc5e6/shell.js"
+          id="devtoolsscript"></script>
+  <script
+    src="https://chrome-devtools-frontend.appspot.com/serve_file/@675968a8c657a3bd9c1c2c20c5d2935577bbc5e6/devtools_app.js"></script>
+
+  <body class="undocked" id="-blink-dev-tools"></body>
+
   </body>
 </html>

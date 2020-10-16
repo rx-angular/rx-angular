@@ -1,1 +1,34 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~normalize-css';
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+html.hide-devtools {
+  overflow: initial;
+  height: initial;
+}
+
+#enterurl {
+  width: 400px;
+  height: 100px;
+  margin: auto;
+}
+
+.hide-devtools body {
+  overflow: auto;
+  height: initial;
+  cursor: initial;
+  position: initial;
+  margin: initial;
+  width: initial;
+  font-size: initial;
+  tab-size: initial;
+  -webkit-user-select: initial;
+  font-family: initial;
+  color: initial;
+}
+
+.hide-devtools .root-view {
+  display: none;
+  visibility: hidden;
+  overflow: hidden;
+}
