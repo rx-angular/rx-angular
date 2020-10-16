@@ -3,46 +3,40 @@ import {
   Directive,
   EmbeddedViewRef,
   Input,
+  IterableChangeRecord,
+  IterableChanges,
+  IterableDiffer,
+  IterableDiffers,
+  NgIterable,
   OnDestroy,
   OnInit,
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
 
-import { Observable, ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
-import { distinctUntilChanged, groupBy, map, mergeAll, mergeMap, pluck, switchAll } from 'rxjs/operators';
+import { NEVER, ObservableInput, ReplaySubject } from 'rxjs';
+import { distinctUntilChanged, filter, map, shareReplay, switchAll, take } from 'rxjs/operators';
+import { RecordViewTuple, RxForViewContext } from './model';
+import { RxEffects } from '../../../../shared/rx-effects.service';
+import { createTemplateManager, TemplateManager } from '@rx-angular/template';
 
-export class RxForViewContext<T extends object, K = keyof T> {
-  // to enable `as` syntax we have to assign the directives selector (var as v)
-  rxFor?: T;
-  $prop_arr$: any;
-  $implicit?: T;
-
-  constructor(private $value$: Observable<T>) {
-    this.$prop_arr$ = $value$.pipe(pluck('arr'), distinctUntilChanged());
-  }
-
-  $selectSlices = (props: K[]): Observable<any> => {
-    return this.$value$.pipe(
-     pluck(...props as any)
-  );
-  }
-}
+type RxForTemplateNames = 'rxSuspense' | 'rxNext' | 'rxError' | 'rxComplete';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[rxFor]'
+  selector: '[rxFor]',
+  providers: [RxEffects]
 })
-export class RxForDirective<U> implements OnInit, OnDestroy {
-  private subscription: Unsubscribable = new Subscription();
+export class RxForDirective<T extends object, U extends NgIterable<T> = NgIterable<T>> implements OnInit, OnDestroy {
+  private differ: IterableDiffer<T> | null = null;
+  private observables$ = new ReplaySubject<ObservableInput<U>>(1)
+  private readonly templateManager: TemplateManager<RxForViewContext<T, U>, RxForTemplateNames>;
 
-  observables$ = new ReplaySubject(1);
-  embeddedViews: Map<U, { view: EmbeddedViewRef<any>, item: any }> = new Map();
-
-  values$: Observable<U[]> = this.observables$
+  values$ = this.observables$
     .pipe(
       distinctUntilChanged(),
-      switchAll()
+      switchAll(),
+      distinctUntilChanged()
     );
 
   @Input()
@@ -50,53 +44,114 @@ export class RxForDirective<U> implements OnInit, OnDestroy {
     this.observables$.next(potentialObservable);
   }
 
+  _rxTrackBy = 'id';
+
   @Input()
-  rxForTrackBy = 'id';
+  set rxForTrackBy(key: string) {
+    if (key) {
+      this._rxTrackBy = key;
+    } else {
+      this._rxTrackBy = 'id';
+    }
+  }
 
   @Input()
   rxForDistinctBy = (a, b) => a.value === b.value;
 
   constructor(
+    private rxEffects: RxEffects,
     private cdRef: ChangeDetectorRef,
-    private readonly templateRef: TemplateRef<RxForViewContext<any>>,
-    private readonly viewContainerRef: ViewContainerRef
+    private readonly templateRef: TemplateRef<RxForViewContext<T, U>>,
+    private readonly viewContainerRef: ViewContainerRef,
+    private iterableDiffers: IterableDiffers
   ) {
+    const initialViewContext: RxForViewContext<T, U> = new RxForViewContext<T, U>(null, [] as U, -1, -1, NEVER);
+    this.templateManager = createTemplateManager(this.viewContainerRef, initialViewContext);
+  }
 
+  initDiffer(iterable: U) {
+    if (!this.differ && iterable) {
+      this.differ = this.iterableDiffers.find(iterable).create((index: number, item: T) => item[this._rxTrackBy]);
+    }
+
+    this.rxEffects.hold(this.values$.pipe(
+      map(i => ({diff: this.differ.diff(i), iterable: i})),
+      filter(r => r.diff != null),
+      shareReplay(1)
+    ), (r) => this.applyChanges(r[0], r[1]));
   }
 
   ngOnInit() {
-    this.subscription = this.values$
-      .pipe(
-        mergeMap(arr => arr),
-        groupBy(i => i[this.rxForTrackBy]),
-        map(o$ => {
-          const distincted$ = o$.pipe(
-            distinctUntilChanged(this.rxForDistinctBy)
-          );
-          this.updateItem(o$.key, distincted$)
-          return distincted$;
-          }
-        ),
-        mergeAll()
-      )
-      .subscribe();
+    this.templateManager.addTemplateRef('rxNext', this.templateRef);
+    this.rxEffects.hold(this.values$.pipe(take(1)), (value) => this.initDiffer(value));
+
   }
-
-  updateItem = (key, $value$): void => {
-    let existingItem = this.embeddedViews.has(key) ? this.embeddedViews.get(key) : undefined;
-    if (!existingItem) {
-      const view = this.viewContainerRef
-    .createEmbeddedView(this.templateRef, new RxForViewContext<any>($value$));
-      existingItem = { view, item: $value$ };
-      this.embeddedViews.set(key, existingItem);
-      existingItem.view.detectChanges();
-    }
-  };
-
 
   ngOnDestroy() {
     this.viewContainerRef.clear();
-    this.subscription.unsubscribe();
   }
+  private applyChanges(changes: IterableChanges<T>, iterable: U) {
+    // behavior like *ngFor
+    const tuplesToDetectChanges: RecordViewTuple<T, U>[] = [];
+    // TODO: dig into `IterableDiffer`
+    changes.forEachOperation(
+      (
+        changeRecord: IterableChangeRecord<T>,
+        previousIndex: number | null,
+        currentIndex: number | null
+      ) => {
+        const id = changeRecord.item[this._rxTrackBy];
+        // Insert
+        if (changeRecord.previousIndex == null) {
+          const evName = 'rxNext' + id;
+          // this is basically the first run
+          // create the embedded view for each value with default values
+          this.templateManager.displayView('rxNext', id);
+          tuplesToDetectChanges.push({
+            view: this.templateManager.getEmbeddedView(evName),
+            record: changeRecord
+          });
+
+        } else if (currentIndex == null) {
+
+          this.viewContainerRef.remove(
+            previousIndex === null ? undefined : previousIndex);
+
+        } else if (previousIndex !== null) {
+
+          const view = <EmbeddedViewRef<RxForViewContext<T, U>>>this.viewContainerRef.get(previousIndex);
+          this.viewContainerRef.move(view, currentIndex);
+          tuplesToDetectChanges.push({
+            view,
+            record: changeRecord
+          });
+        }
+      });
+
+    for (let i = 0; i < tuplesToDetectChanges.length; i++) {
+      this._perViewChange(tuplesToDetectChanges[i].view, tuplesToDetectChanges[i].record);
+    }
+
+    for (let i = 0, ilen = this.viewContainerRef.length; i < ilen; i++) {
+      const viewRef = <EmbeddedViewRef<RxForViewContext<T, U>>>this.viewContainerRef.get(i);
+      viewRef.context.index = i;
+      viewRef.context.count = ilen;
+      viewRef.context.rxFor = iterable;
+    }
+
+    changes.forEachIdentityChange((record: IterableChangeRecord<T>) => {
+      const viewRef =
+        <EmbeddedViewRef<RxForViewContext<T, U>>>this.viewContainerRef.get(record.currentIndex);
+      viewRef.context.$implicit = record.item;
+      viewRef.detectChanges();
+    });
+  }
+
+  private _perViewChange(
+    view: EmbeddedViewRef<RxForViewContext<T, U>>, record: IterableChangeRecord<T>) {
+    view.context.$implicit = record.item;
+    view.detectChanges();
+  }
+
 
 }

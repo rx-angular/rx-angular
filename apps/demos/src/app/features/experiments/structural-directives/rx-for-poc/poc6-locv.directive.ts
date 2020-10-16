@@ -72,7 +72,8 @@ export class Poc6Locv6Directive<T, U extends NgIterable<T> = NgIterable<T>> impl
   values$ = this.observables$
     .pipe(
       distinctUntilChanged(),
-      switchAll()
+      switchAll(),
+      distinctUntilChanged()
     );
 
   private _trackByFn: TrackByFunction<T>;

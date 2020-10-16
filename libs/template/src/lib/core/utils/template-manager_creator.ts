@@ -25,7 +25,7 @@ export interface TemplateManager<C extends object, N extends string = string> {
    *
    * @param name
    */
-  getEmbeddedView(name: N): EmbeddedViewRef<C> | undefined;
+  getEmbeddedView(name: string | number | Symbol): EmbeddedViewRef<C> | undefined;
 
   /**
    * @description
@@ -40,7 +40,7 @@ export interface TemplateManager<C extends object, N extends string = string> {
    *
    * @param name name of the cached view
    */
-  displayView(name: N): void;
+  displayView(name: N, id?: string | number | Symbol): void;
 
   /**
    * @description

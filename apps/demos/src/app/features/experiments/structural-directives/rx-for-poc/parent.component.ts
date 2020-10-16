@@ -37,7 +37,7 @@ import { immutableArr, immutableIncArr } from '../utils';
 
       <div class="row w-100">
         <!--  -->
-        <div class="col-sm-4" *ngIf="group.value === displayStates.native || group.value === displayStates.all">
+        <div class="col-sm-6" *ngIf="group.value === displayStates.native || group.value === displayStates.all">
           <h2>Native Angular, *ngFor trackBy</h2>
           <p>
             <button mat-raised-button (click)="changeOneClick$.next(1)">
@@ -58,31 +58,7 @@ import { immutableArr, immutableIncArr } from '../utils';
           </rxa-visualizer>
 
         </div>
-        <div class="col-sm-4" *ngIf="group.value === displayStates.nativeReactive || group.value === displayStates.all">
-          <h2>RxAngular, *rxFor trackBy, distinctBy</h2>
-          <p>
-            <button mat-raised-button [unpatch] (click)="changeOneClick$.next(1)">
-              update
-            </button>
-            <button mat-raised-button [unpatch] (click)="changeAllClick$.next(10)">
-              Change all
-            </button>
-            <button mat-raised-button [unpatch] (click)="toggleIntervalClick$.next(10)">
-              toggel interval
-            </button>
-          </p>
-          <ng-container
-            *poc6LocV2="array$;
-          trackBy: tK
-          distinctBy: dK
-          let value;
-          ">
-            <rxa-visualizer size="150" *ngFor="let i of value.arr; trackBy: trackById">
-              <rxa-value [value]="i"></rxa-value>
-            </rxa-visualizer>
-          </ng-container>
-        </div>
-        <div class="col-sm-4"
+        <div class="col-sm-6"
              *ngIf="group.value === displayStates.rxAngularReactive || group.value === displayStates.all">
           <h2>RxAngular, *rxFor trackBy, distinctBy, select</h2>
           <p>
@@ -96,8 +72,8 @@ import { immutableArr, immutableIncArr } from '../utils';
               toggel interval
             </button>
           </p>
-          <rxa-visualizer *poc6LocV2="array$; let select = $selectSlices;">
-            <rxa-visualizer *poc6LocV2="select(['arr']); trackBy: tK; distinctBy:dK; let v$ = $value$;">
+          <rxa-visualizer *rxFor="array$; let select = $selectSlices;">
+            <rxa-visualizer *rxFor="select(['arr']); trackBy: tK; distinctBy:dK; let v$ = $value$;">
               <rxa-value [value]="v$"></rxa-value>
             </rxa-visualizer>
           </rxa-visualizer>
