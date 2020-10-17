@@ -48,10 +48,11 @@ import { immutableArr, immutableIncArr } from '../utils';
               toggel interval
             </button>
           </p>
-          <rxa-visualizer *ngFor="let value of array$ | async;trackBy: trackById">
-            <rxa-visualizer *ngFor="let i of value.arr; trackBy: trackById">
-              <rxa-value [value]="i"></rxa-value>
-            </rxa-visualizer>
+          <rxa-visualizer viewType="embedded-view" *ngFor="let value of array$ | async;trackBy: trackById">
+
+              <ng-container *ngFor="let i of value.arr; trackBy: trackById">
+                <rxa-rx-for-value [value]="i"></rxa-rx-for-value>
+              </ng-container>
           </rxa-visualizer>
         </div>
         <div class="col-sm-6"
@@ -68,9 +69,7 @@ import { immutableArr, immutableIncArr } from '../utils';
               unpatched toggel interval
             </button>
           </p>
-          <rxa-visualizer *rxFor="array$; let i; let r$ = record$; let select = select">
-<!--            <span>{{  r$ | push | json }}</span>-->
-            <span *poc1Let="r$; let r">{{ r | json }}</span>
+          <rxa-visualizer viewType="embedded-view" *rxFor="array$; let i; let r$ = record$; let select = select">
             <ng-container *rxFor="select(['arr']); trackBy: tK; distinctBy:dK; let v$ = record$;">
               <rxa-rx-for-value [value]="v$"></rxa-rx-for-value>
             </ng-container>

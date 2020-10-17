@@ -8,16 +8,16 @@ import { CdHelper } from '../../../utils/cd-helper';
       tick
     </button>
     <button mat-raised-button (click)="cdHelper.cdRef_markForCheck()">
-      markForCheck
+      markForCheck <rxa-zone-patched-icon class="mat-icon"></rxa-zone-patched-icon>
     </button>
     <button mat-raised-button [unpatch] (click)="cdHelper.cdRef_detectChanges()">
-      detectChanges
+      detectChanges <rxa-zone-patched-icon class="mat-icon" [zoneState]="'unpatched'"></rxa-zone-patched-icon>
     </button>
     <button mat-raised-button [unpatch] (click)="cdHelper.markDirty()">
-      ɵmarkDirty
+      ɵmarkDirty <rxa-zone-patched-icon class="mat-icon" [zoneState]="'unpatched'"></rxa-zone-patched-icon>
     </button>
     <button mat-raised-button [unpatch] (click)="cdHelper.detectChanges()">
-      ɵdetectChanges
+      ɵdetectChanges <rxa-zone-patched-icon class="mat-icon" [zoneState]="'unpatched'"></rxa-zone-patched-icon>
     </button>
   `,
   host: {

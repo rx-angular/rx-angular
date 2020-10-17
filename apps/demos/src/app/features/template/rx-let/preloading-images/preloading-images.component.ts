@@ -19,7 +19,7 @@ import { DomSanitizer } from '@angular/platform-browser';
           #valP="rxaValueProvider"
         ></rxa-value-provider>
       </div>
-      <img [src]="url" *rxLet="valP.imgUrl$; let url; suspense:sV;"/>
+      <img [src]="url" *rxLet="valP.imgUrl$; let url; rxSuspense:sV;"/>
       <ng-template #sV><img [src]="placeholder"/></ng-template>
     </rxa-visualizer>
   `,

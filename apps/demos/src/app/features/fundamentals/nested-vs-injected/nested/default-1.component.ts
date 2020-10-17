@@ -6,11 +6,11 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
   template: `
     <rxa-visualizer>
       <ng-container visualizerHeader>
-        <h3>Default 1</h3>
+        <h3>Default</h3>
         <rxa-cd-trigger [cdHelper]="cdHelper"></rxa-cd-trigger>
         <ng-content select="[cdDefaultHeader]"></ng-content>
       </ng-container>
-      <div class="row w-100">
+      <div class="row">
         <div class="col-sm-12 col-md-6">
           <rxa-cd-default-2>
           </rxa-cd-default-2>
