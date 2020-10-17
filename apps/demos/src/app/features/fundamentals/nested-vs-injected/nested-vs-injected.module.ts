@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ROUTES } from './detect-changes.routes';
+import { ROUTES } from './nested-vs-injected.routes';
 import { MatButtonModule } from '@angular/material/button';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
 import { UnpatchEventsModule } from '@rx-angular/template';
@@ -17,7 +17,7 @@ import { CdDefault3Component } from './nested/default-3.component';
 import { CdOnPush1Component } from './nested/push-1.component';
 import { CdOnPush2Component } from './nested/push-2.component';
 import { CdOnPush3Component } from './nested/push-3.component';
-import { DetectChangesComponent } from './detect-changes.component';
+import { NestedVsInjectedComponent } from './nested-vs-injected.component';
 import { CdDefault4Component } from './nested/default-4.component';
 
 @NgModule({
@@ -31,7 +31,7 @@ import { CdDefault4Component } from './nested/default-4.component';
     CdOnPush3Component,
     DetectChangesInjectedComponent,
     DetectChangesNestedComponent,
-    DetectChangesComponent
+    NestedVsInjectedComponent
   ],
   imports: [
     CommonModule,
@@ -45,5 +45,5 @@ import { CdDefault4Component } from './nested/default-4.component';
     CdTriggerModule
   ]
 })
-export class DetectChangesModule {
+export class NestedVsInjectedModule {
 }

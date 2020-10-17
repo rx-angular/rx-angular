@@ -16,6 +16,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   `,
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class DetectChangesComponent {
+export class NestedVsInjectedComponent {
 
 }

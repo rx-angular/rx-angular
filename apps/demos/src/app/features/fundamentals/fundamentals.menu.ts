@@ -2,8 +2,8 @@ import { RENDERCALLBACK_MENU } from './render-callback/render-callback.menu';
 
 export const FUNDAMENTALS_MENU = [
   {
-    link: 'change-detection-methods',
-    label: 'ChangeDetection Methods'
+    link: 'nested-vs-injected',
+    label: 'Nested vs Injected'
   },
   {
     link: 'passing-values',
