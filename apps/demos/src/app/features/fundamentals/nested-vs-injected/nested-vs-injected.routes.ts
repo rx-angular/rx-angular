@@ -1,8 +1,8 @@
-import { NestedVsInjectedComponent } from './nested-vs-injected.component';
+import { NestedVsProjectedComponent } from './nested-vs-projected.component';
 
 export const ROUTES = [
   {
     path: '',
-    component: NestedVsInjectedComponent
+    component: NestedVsProjectedComponent
   }
 ];

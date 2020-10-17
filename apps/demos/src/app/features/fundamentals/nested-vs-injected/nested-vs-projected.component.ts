@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CdHelper } from '../../../shared/utils/cd-helper';
 
 @Component({
   selector: 'rxa-cd',
@@ -9,13 +10,14 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         <rxa-cd-nested></rxa-cd-nested>
       </div>
       <div class="col-sm-6">
-        <h3>Injected</h3>
+        <h3>Projected</h3>
         <rxa-cd-injected></rxa-cd-injected>
       </div>
     </div>
   `,
+  providers: [CdHelper],
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class NestedVsInjectedComponent {
+export class NestedVsProjectedComponent {
 
 }

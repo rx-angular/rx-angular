@@ -17,7 +17,7 @@ import { CdDefault3Component } from './nested/default-3.component';
 import { CdOnPush1Component } from './nested/push-1.component';
 import { CdOnPush2Component } from './nested/push-2.component';
 import { CdOnPush3Component } from './nested/push-3.component';
-import { NestedVsInjectedComponent } from './nested-vs-injected.component';
+import { NestedVsProjectedComponent } from './nested-vs-projected.component';
 import { CdDefault4Component } from './nested/default-4.component';
 
 @NgModule({
@@ -31,7 +31,7 @@ import { CdDefault4Component } from './nested/default-4.component';
     CdOnPush3Component,
     DetectChangesInjectedComponent,
     DetectChangesNestedComponent,
-    NestedVsInjectedComponent
+    NestedVsProjectedComponent
   ],
   imports: [
     CommonModule,
