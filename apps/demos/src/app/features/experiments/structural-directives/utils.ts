@@ -13,8 +13,6 @@ export const randArray = (n: number = 6): any[] => {
   return Array(n).fill(0).map((_, idx) => ({ id: idx % n, value: rand() }));
 };
 
-
-
 export const immutableIncArr = (n: number = children1) => (o$: Observable<number>) => o$.pipe(
   scan((a, i, idx) => {
     const arr = randArray(children2);
@@ -22,7 +20,7 @@ export const immutableIncArr = (n: number = children1) => (o$: Observable<number
     if(i === 1) {
       a[idx % n] = { id: idx % n, value, arr };
     } else if(i === 0) {
-      const id = rand(a.length);
+      const id = rand(1);
       a[id] = { id, value, arr };
     } else {
       a.splice(idx % n, 1);

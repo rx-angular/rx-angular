@@ -8,7 +8,7 @@ export interface TemplateManager<C extends object, N extends string = string> {
    *
    * @param viewContextSlice - the object holding the new state
    */
-  updateViewContext(viewContextSlice: Partial<C>): void;
+  updateViewContext(viewContextSlice: Partial<C>, name?: string): void;
 
   /**
    * @description
@@ -76,13 +76,15 @@ export function createTemplateManager<C extends object, N extends string = strin
       return templateCache.has(name);
     },
 
-    updateViewContext(viewContextSlice: Partial<C>) {
+    updateViewContext(viewContextSlice: Partial<C>, name?: string) {
+      const eV = name ? this.getEmbeddedView(name) : viewContext
       Object.entries(viewContextSlice).forEach(([key, value]) => {
-        viewContext[key] = value;
+        eV[key] = value;
       });
     },
 
     addTemplateRef(name: N, templateRef: TemplateRef<C>) {
+      console.log('addTemplateRef', name);
       assertTemplate(name, templateRef);
       if (!templateCache.has(name)) {
         templateCache.set(name, templateRef);
@@ -98,13 +100,13 @@ export function createTemplateManager<C extends object, N extends string = strin
       return viewCache.get(vID);
     },
     displayView(name: N, id: string | number | Symbol = '') {
+
       const vID = name + id;
       if (activeView !== vID) {
 
         if (templateCache.has(name)) {
           // Detach currently inserted view from the container
           viewContainerRef.detach();
-
 
           if (viewCache.has(vID)) {
             viewContainerRef.insert(viewCache.get(vID));

@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Poc1ForDirective } from './poc1-for.directive';
 import { Poc2ForDirective } from './poc2-for.directive';
 import { Poc5Locv5 } from './poc5-locv.directive';
+import { ViewVsEmbeddedViewModule } from '../view-vs-embedded-view/view-vs-embedded-view.module';
 
 const DECLARATIONS = [
   RxForContainerComponent,
@@ -40,7 +41,8 @@ const DECLARATIONS = [
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    TemplateModule
+    TemplateModule,
+    ViewVsEmbeddedViewModule
   ],
   exports: DECLARATIONS
 })

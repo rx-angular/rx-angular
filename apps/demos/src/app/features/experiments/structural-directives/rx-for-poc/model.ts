@@ -1,48 +1,33 @@
 import { EmbeddedViewRef, NgIterable } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
-import { pluck, switchAll, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
+import { pluck, share, switchAll, tap } from 'rxjs/operators';
 
 export class RxForViewContext<T extends object, U extends NgIterable<T> = NgIterable<T>, K = keyof T> {
 
-  localVariableProjections: CustomVariablesProjectors = {};
-
   private readonly _record = new ReplaySubject<Observable<T>>(1);
+  private readonly _record$ = this._record.pipe(switchAll(), share());
+  private readonly _index = new BehaviorSubject<number>(-1);
 
-  constructor(public $implicit: T, public rxFor: U, public index: number, public count: number) {
+  constructor(public $implicit: T, public rxFor: U) {
+    // tslint:disable-next-line:no-unused-expression
+
   }
 
-  get first(): boolean {
-    return this.index === 0;
-  }
-
-  get last(): boolean {
-    return this.index === this.count - 1;
-  }
-
-  get even(): boolean {
-    return this.index % 2 === 0;
-  }
-
-  get odd(): boolean {
-    return !this.even;
-  }
-
-  get customVariable(): unknown {
-    return Object.entries(this.localVariableProjections)
-      .reduce((acc, [name, fn]) => {
-        return { ...acc, [name]: fn(this) };
-      }, {});
+  set index(index: number | any) {
+    this._index.next(index);
   }
 
   set record$(o$: Observable<T>) {
     this._record.next(o$);
   }
 
-  $select$ = (props: K[]): Observable<any> => {
-    console.log(props);
-    return this._record.pipe(
-      switchAll(),
-      tap(console.log),
+  get record$() {
+    return this._record$;
+  }
+
+  select = (props: K[]): Observable<any> => {
+    console.log('select', props);
+    return this._record$.pipe(
       pluck(...props as any)
     );
   };

@@ -66,11 +66,11 @@ import { immutableArr, immutableIncArr } from '../utils';
               unpatched toggel interval
             </button>
           </p>
-          <rxa-visualizer *rxFor="array$; let i; let select = $select$;">
-            <span *rxLet="select(['arr']); let s">{{ s | json }}</span>
-            <rxa-visualizer *rxFor="select(['arr']); trackBy: tK; distinctBy:dK; let v$ = $value$;">
+          <rxa-visualizer *rxFor="array$; let i; let r$ = record$;">
+            <span>{{  r$ | push | json }}</span>
+           <!--  <rxa-visualizer *rxFor="select(['arr']); trackBy: tK; distinctBy:dK; let v$ = $value$;">
               <rxa-value [value]="v$"></rxa-value>
-            </rxa-visualizer>
+            </rxa-visualizer> -->
           </rxa-visualizer>
         </div>
       </div>
