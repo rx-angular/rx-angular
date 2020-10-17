@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ValueModule } from '../../../../shared/debug-helper/work';
 import { RxForContainerComponent } from './parent.component';
+import { RxForValueComponent } from './rx-for-value.component';
 import { RxForDirective } from './rx-for.directive';
 import { Poc6Locv2Directive } from './poc6-locv2.directive';
 import { Poc6Locv6Directive } from './poc6-locv.directive';
@@ -25,7 +26,8 @@ const DECLARATIONS = [
   Poc5Locv5,
   Poc6Locv2Directive,
   Poc6Locv6Directive,
-  RxForDirective
+  RxForDirective,
+  RxForValueComponent
 ];
 
 @NgModule({
@@ -42,7 +44,7 @@ const DECLARATIONS = [
     MatInputModule,
     MatIconModule,
     TemplateModule,
-    ViewVsEmbeddedViewModule
+    ViewVsEmbeddedViewModule,
   ],
   exports: DECLARATIONS
 })

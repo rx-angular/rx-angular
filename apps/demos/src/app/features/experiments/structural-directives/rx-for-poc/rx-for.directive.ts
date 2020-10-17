@@ -122,18 +122,31 @@ export class RxForDirective<T extends object, U extends NgIterable<T> = NgIterab
 
       // enter
       if (r.previousIndex == null) {
-        const evc = new RxForViewContext(r.item, iterable);
-        evc.record$ = this.records$.pipe(map(set => set[recordId]));
+
+        const evc = new RxForViewContext(r.item, iterable, this.rxForDistinctBy);
         const view = this.viewContainerRef
           .createEmbeddedView(this.templateRef, evc, idx);
         this.evMap.set(evName, view);
         view.detectChanges();
-      }
-      // move
-      if (previousIndex !== null) {
+
+      } else if (currentIndex == null) {
+
+        this.viewContainerRef.remove(
+          previousIndex === null ? undefined : previousIndex);
+
+      } else if (previousIndex !== null) {
+
         const view = <EmbeddedViewRef<RxForViewContext<T, U>>>this.viewContainerRef.get(previousIndex);
         this.viewContainerRef.move(view, idx);
+        view.context.$implicit = r.item;
+
       }
+    });
+
+    changes.forEachIdentityChange((record: IterableChangeRecord<T>) => {
+      const viewRef =
+        <EmbeddedViewRef<RxForViewContext<T, U>>>this.viewContainerRef.get(record.currentIndex);
+      viewRef.context.$implicit = record.item;
     });
     /*
     // behavior like *ngFor

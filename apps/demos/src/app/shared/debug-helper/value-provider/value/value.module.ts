@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { DirtyChecksModule } from '../../dirty-checks';
 import { ValueComponent } from './value.component';
 import { CommonModule } from '@angular/common';
 import { MatRippleModule } from '@angular/material/core';
@@ -10,14 +11,15 @@ const DEPRECATIONS = [ValueComponent];
 
 @NgModule({
   declarations: [...DEPRECATIONS],
-  imports: [
-    CommonModule,
-    MatRippleModule,
-    PushModule,
-    UtilsModule,
-    LetModule,
-    MatIconModule
-  ],
+    imports: [
+        CommonModule,
+        MatRippleModule,
+        PushModule,
+        UtilsModule,
+        LetModule,
+        MatIconModule,
+        DirtyChecksModule
+    ],
   exports: [...DEPRECATIONS]
 })
 export class ValueModule {

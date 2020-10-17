@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { map, scan, share } from 'rxjs/operators';
+import { map, scan, share, tap } from 'rxjs/operators';
 
 const children1 = 10;
 const children2 = 3;
@@ -16,7 +16,7 @@ export const randArray = (n: number = 6): any[] => {
 export const immutableIncArr = (n: number = children1) => (o$: Observable<number>) => o$.pipe(
   scan((a, i, idx) => {
     const arr = randArray(children2);
-    const value = rand();
+    const value = rand(100);
     if(i === 1) {
       a[idx % n] = { id: idx % n, value, arr };
     } else if(i === 0) {
@@ -27,6 +27,7 @@ export const immutableIncArr = (n: number = children1) => (o$: Observable<number
     }
     return a;
   }, []),
+  tap(console.log),
   share()
 );
 export const mutableIncArr = (n: number = children1) => {

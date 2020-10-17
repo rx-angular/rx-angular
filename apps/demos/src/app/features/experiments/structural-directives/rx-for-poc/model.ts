@@ -1,24 +1,31 @@
 import { EmbeddedViewRef, NgIterable } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
-import { pluck, share, switchAll, tap } from 'rxjs/operators';
+import { distinctUntilChanged, pluck, share, switchAll, tap } from 'rxjs/operators';
 
 export class RxForViewContext<T extends object, U extends NgIterable<T> = NgIterable<T>, K = keyof T> {
 
-  private readonly _record = new ReplaySubject<Observable<T>>(1);
-  private readonly _record$ = this._record.pipe(switchAll(), share());
+  private readonly _record = new ReplaySubject<T>(1);
+  private readonly _record$ = this._record.pipe(distinctUntilChanged(this.distinctBy), share());
   private readonly _index = new BehaviorSubject<number>(-1);
+  private _implicit: T;
 
-  constructor(public $implicit: T, public rxFor: U) {
+
+  constructor(private _$implicit: T, public rxFor: U, private distinctBy: (a: T, b: T) => boolean = (a, b) => a === b) {
     // tslint:disable-next-line:no-unused-expression
-
+    this._record.next(_$implicit);
   }
 
   set index(index: number | any) {
     this._index.next(index);
   }
 
-  set record$(o$: Observable<T>) {
-    this._record.next(o$);
+  set $implicit(record: T) {
+    this._implicit = record;
+    this._record.next(record);
+  }
+
+  get $implicit(): T {
+    return this._implicit;
   }
 
   get record$() {
@@ -26,7 +33,6 @@ export class RxForViewContext<T extends object, U extends NgIterable<T> = NgIter
   }
 
   select = (props: K[]): Observable<any> => {
-    console.log('select', props);
     return this._record$.pipe(
       pluck(...props as any)
     );
