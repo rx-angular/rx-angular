@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CdHelper } from '../../../shared/utils/cd-helper';
+import { CdHelper } from '../../../../shared/utils/cd-helper';
 
 @Component({
-  selector: 'rxa-cd-parent01',
+  selector: 'rxa-cd-injected',
   template: `
     <rxa-cd-default>
       <div class="row w-100">
@@ -14,6 +14,7 @@ import { CdHelper } from '../../../shared/utils/cd-helper';
         </div>
         <div class="col-sm-12 col-md-6">
           <rxa-cd-on-push>
+            <rxa-cd-default></rxa-cd-default>
           </rxa-cd-on-push>
         </div>
       </div>
@@ -22,6 +23,6 @@ import { CdHelper } from '../../../shared/utils/cd-helper';
   changeDetection: ChangeDetectionStrategy.Default,
   providers: [CdHelper]
 })
-export class DetectChangesContainerComponent {
+export class DetectChangesInjectedComponent {
 
 }

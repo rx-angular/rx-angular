@@ -3,9 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 
 const ROUTES: Routes = [
   {
-    path: 'change-detection-methods',
-    loadChildren: () => import('./detect-changes/detect-changes.module').then(
-      m => m.DetectChangesModule
+    path: 'nested-vs-injected',
+    loadChildren: () => import('./nested-vs-injected/nested-vs-injected.module').then(
+      m => m.NestedVsInjectedModule
     )
   },
   {
