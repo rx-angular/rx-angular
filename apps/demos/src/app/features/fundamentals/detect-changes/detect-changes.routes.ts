@@ -1,8 +1,8 @@
-import { DetectChangesContainerComponent } from './detect-changes.container.component';
+import { DetectChangesComponent } from './detect-changes.component';
 
 export const ROUTES = [
   {
     path: '',
-    component: DetectChangesContainerComponent
+    component: DetectChangesComponent
   }
 ];
