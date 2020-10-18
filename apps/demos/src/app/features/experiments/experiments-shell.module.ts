@@ -17,11 +17,6 @@ const ROUTES: Routes = [
     canActivateChild: []
   },
   {
-    path: 'strategies',
-    loadChildren: () =>
-      import('./strategies/strategies.module').then((m) => m.StrategiesModule)
-  },
-  {
     path: 'structural-directives',
     loadChildren: () =>
       import('./structural-directives/structural-directives.module').then(

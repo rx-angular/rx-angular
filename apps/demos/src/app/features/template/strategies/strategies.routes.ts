@@ -11,5 +11,12 @@ export const ROUTES: Routes = [
       import('./render-queue/render-queue.module').then(
         m => m.RenderQueueModule
       )
+  },
+  {
+    path: 'virtual-scroll-demo',
+    loadChildren: () =>
+      import('./virtual-scroll-demo/virtual-scroll-demo.module').then(
+        m => m.VirtualScrollDemoModule
+      )
   }
 ];

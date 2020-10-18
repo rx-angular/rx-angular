@@ -7,19 +7,20 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
     <h1>Virtual Scroll Viewport</h1>
     <cdk-virtual-scroll-viewport [itemSize]="50" style="height: 500px;">
       <div *cdkVirtualFor="let item of items; let index = index">
-        <ngx-rx-scroll-item>
+        <rxa-scroll-item>
           <span>Item: {{ item }}</span>
-        </ngx-rx-scroll-item>
+        </rxa-scroll-item>
       </div>
     </cdk-virtual-scroll-viewport>
-  `,
+  `
 })
 export class VirtualScrollDemoComponent implements AfterViewInit {
   readonly items = this.getItems();
 
   @ViewChild(CdkVirtualScrollViewport) scrollViewPort: CdkVirtualScrollViewport;
 
-  constructor() {}
+  constructor() {
+  }
 
   ngAfterViewInit(): void {
     this.scrollViewPort.checkViewportSize();

@@ -5,7 +5,13 @@ import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-scroll-item',
-  styleUrls: ['scroll-item.component.scss'],
+  styles: [`:host {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    outline: 1px solid gray;
+    padding: 1rem;
+  }`],
   template: `
     <span style="margin: 0 1rem;">Val: {{ val$ | push: strategy$ }}</span>
   `,

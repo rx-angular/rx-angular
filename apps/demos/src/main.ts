@@ -8,6 +8,7 @@ if (environment.production) {
   enableProdMode();
 }
 
+const compilerOptions = environment.zoneless ? {ngZone: "noop"} as any : undefined;
 platformBrowserDynamic()
-  .bootstrapModule(AppModule)
+  .bootstrapModule(AppModule, compilerOptions)
   .catch((err) => console.error(err));
