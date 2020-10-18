@@ -31,8 +31,8 @@ import { Subject } from 'rxjs';
                 <mat-button-toggle [value]="displayStates.observable">Observable</mat-button-toggle>
                 <mat-button-toggle [value]="displayStates.async">Async</mat-button-toggle>
                 <mat-button-toggle [value]="displayStates.push">Push</mat-button-toggle>
-                <mat-button-toggle [value]="displayStates.let">C Let</mat-button-toggle>
-                <mat-button-toggle [value]="displayStates.let">Ev Let</mat-button-toggle>
+                <mat-button-toggle [value]="displayStates.clet">C Let</mat-button-toggle>
+                <mat-button-toggle [value]="displayStates.evlet">Ev Let</mat-button-toggle>
                 <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
               </mat-button-toggle-group>
               <button mat-raised-button class="ml-2" (click)="isVisible = !isVisible;">
@@ -92,7 +92,7 @@ import { Subject } from 'rxjs';
           </rxa-recursive-push>
         </div>
         <div class="col"
-             *ngIf="visible(group, displayStates.let)">
+             *ngIf="visible(group, displayStates.clet)">
           <h2 class="mat-subheader">Let - <small>Component CD</small></h2>
           <rxa-value-provider [changes$]="btnBothClick$" #letVal="rxaValueProvider"></rxa-value-provider>
           <div class="mb-1">
@@ -104,7 +104,7 @@ import { Subject } from 'rxjs';
           </rxa-recursive-component-let>
         </div>
         <div class="col"
-             *ngIf="visible(group, displayStates.let)">
+             *ngIf="visible(group, displayStates.evlet)">
           <h2 class="mat-subheader">Let - <small>EmbeddedView CD</small></h2>
           <rxa-value-provider [changes$]="btnBothClick$" #letVal="rxaValueProvider"></rxa-value-provider>
           <div class="mb-1">
@@ -131,7 +131,8 @@ export class PassingValuesComponent {
     observable: 3,
     async: 4,
     push: 5,
-    let: 6
+    clet: 6,
+    evlet: 7
   };
   isVisible = true;
   btnBothClick$ = new Subject<Event>();

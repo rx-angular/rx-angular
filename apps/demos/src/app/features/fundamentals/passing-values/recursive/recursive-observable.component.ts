@@ -1,23 +1,21 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { RxState } from '@rx-angular/state';
 import { Observable } from 'rxjs';
-import { CdHelper } from '../../../../shared/utils/cd-helper';
 
 @Component({
   selector: 'rxa-recursive-observable',
   template: `
-      <ng-container *ngIf="level === 0; else: branch">
-        <rxa-visualizer>
-          <p visualizerHeader>Level {{total-level}}</p>
-          <rxa-renders [value$]="value$"></rxa-renders>
-        </rxa-visualizer>
-      </ng-container>
-      <ng-template #branch>
-        <rxa-visualizer>
-          <p visualizerHeader>Level {{total-level}}</p>
-          <rxa-recursive-observable [total]="total" [level]="level-1" [value$]="value$"></rxa-recursive-observable>
-        </rxa-visualizer>
-      </ng-template>
+    <ng-container *ngIf="level === 0; else: branch">
+      <rxa-visualizer>
+        <p visualizerHeader>Level {{total - level}}</p>
+        <rxa-renders [value$]="value$"></rxa-renders>
+      </rxa-visualizer>
+    </ng-container>
+    <ng-template #branch>
+      <rxa-visualizer>
+        <p visualizerHeader>Level {{total - level}}</p>
+        <rxa-recursive-observable [total]="total" [level]="level-1" [value$]="value$"></rxa-recursive-observable>
+      </rxa-visualizer>
+    </ng-template>
   `,
   host: {
     class: 'd-flex w-100'
@@ -27,9 +25,9 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
 export class RecursiveObservableComponent {
 
   @Input()
-  set depth(d){
+  set depth(d) {
     this.total = d;
-    this.level = this.total -1;
+    this.level = this.total - 1;
   }
 
   @Input()
