@@ -1,11 +1,12 @@
-.dh-l-view, .dh-embedded-view  {
+.dh-l-view, .dh-embedded-view {
   padding: 3px;
 }
+
 .dh-l-view {
   outline: 1px solid green;
 }
 
-.dh-embedded-view  {
+.dh-embedded-view {
   outline: 1px dashed green;
 }
 
@@ -19,9 +20,9 @@
   &mat-ripple:not(:empty) {
     transform: translateZ(0);
   }
+
   &.mat-ripple {
     overflow: hidden;
     position: relative;
   }
 }
-

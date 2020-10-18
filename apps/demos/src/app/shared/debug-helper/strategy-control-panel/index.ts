@@ -1,3 +1,5 @@
 export {CdConfig, CdConfigService} from './cd-config.service'
 export {StrategyControlPanelComponent} from './strategy-control-panel.component'
 export {StrategyControlPanelModule} from './strategy-control-panel.module'
+export {StrategyIconModule} from './strategy-icon/strategy-icon.module'
+export {ZonePatchedIconModule} from './zone-patched-icon/zone-patched-icon.module'

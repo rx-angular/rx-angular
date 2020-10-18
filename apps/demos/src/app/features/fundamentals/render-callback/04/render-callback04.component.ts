@@ -15,7 +15,7 @@ import { map, shareReplay } from 'rxjs/operators';
     <h1>Render Callback example 04</h1>
     <h4>Multiple rendercallbacks</h4>
     <h4>RenderStrategy: {{strategyName$ | pushRcb: 'local'}}</h4>
-    <button unpatch (click)="updateClick.next()">Update</button>
+    <button mat-raised-button unpatch (click)="updateClick.next()">Update</button>
     <div class="example-results">
       <div class="example-result">
         <div class="example-box">

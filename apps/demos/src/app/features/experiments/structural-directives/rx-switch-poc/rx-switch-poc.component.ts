@@ -11,7 +11,7 @@ import { stateful } from '@rx-angular/state';
     <rxa-visualizer>
       <div visualizerHeader>
         <h2>
-          rxSwitch POCa <small *rxLet="switchValue$; let switchValue">{{switchValue}}</small>
+          rxSwitch POCa <small *poc1Let="switchValue$; let switchValue">{{switchValue}}</small>
         </h2>
         <mat-button-toggle-group name="visibleExamples"
                                  aria-label="Visible Examples"
@@ -42,20 +42,20 @@ import { stateful } from '@rx-angular/state';
         </button>
       </div>
       <div class="w-100 col">
-        <div *ngIf="ngSwitchVisible$ | push">
-          <div class="row" [ngSwitch]="switchValue$ | push">
+        <div *rxIf="ngSwitchVisible$;">
+          <div class="row" [ngSwitch]="switchValue$ | async">
             <div class="col-sm-4">
-              <rxa-visualizer *ngSwitchCase="case1Value$ | push">
+              <rxa-visualizer viewType="embedded-view" *ngSwitchCase="case1Value$ | async">
                 <p>CaseValue {{case1Value$ | push}}</p>
               </rxa-visualizer>
             </div>
             <div class="col-sm-4">
-              <rxa-visualizer *ngSwitchCase="case2Value$ | push">
+              <rxa-visualizer viewType="embedded-view" *ngSwitchCase="case2Value$ | async">
                 <p>CaseValue {{case2Value$ | push}}</p>
               </rxa-visualizer>
             </div>
             <div class="col-sm-4">
-              <rxa-visualizer *ngSwitchCase="case3Value$ | push">
+              <rxa-visualizer viewType="embedded-view" *ngSwitchCase="case3Value$ | async">
                 <p>CaseValue {{case3Value$ | push}}</p>
               </rxa-visualizer>
             </div>
@@ -64,19 +64,19 @@ import { stateful } from '@rx-angular/state';
         <ng-container *rxIf="rxSwitchVisible$">
           <div class="row" *rxSwitch="switchValue$; let value">
             <div class="col-sm-4">
-              <rxa-visualizer *rxSwitchCase="case1Value$; let rxCaseValue1">
+              <rxa-visualizer viewType="embedded-view" *rxSwitchCase="case1Value$; let rxCaseValue1">
                 <p>rxSwitchValue: {{value}}<br/>
                   CaseValue: {{rxCaseValue1}}</p>
               </rxa-visualizer>
             </div>
             <div class="col-sm-4">
-              <rxa-visualizer *rxSwitchCase="case2Value$; let rxCaseValue2">
+              <rxa-visualizer viewType="embedded-view" *rxSwitchCase="case2Value$; let rxCaseValue2">
                 <p>rxSwitchValue: {{value}}<br/>
                   CaseValue: {{rxCaseValue2}}</p>
               </rxa-visualizer>
             </div>
             <div class="col-sm-4">
-              <rxa-visualizer *rxSwitchCase="case3Value$; let rxCaseValue3">
+              <rxa-visualizer viewType="embedded-view" *rxSwitchCase="case3Value$; let rxCaseValue3">
                 <p>rxSwitchValue: {{value}}<br/>
                   CaseValue: {{rxCaseValue3}}</p>
               </rxa-visualizer>
@@ -84,7 +84,6 @@ import { stateful } from '@rx-angular/state';
           </div>
         </ng-container>
       </div>
-
     </rxa-visualizer>
   `,
   changeDetection: environment.changeDetection

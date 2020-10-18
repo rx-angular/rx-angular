@@ -19,8 +19,8 @@ import { RxState } from '@rx-angular/state';
           [ngClass]="{'let-error': e}"
           *rxLet="numbers$;
             let r;
-            let e = $error;
-            suspense: suspenseView
+            let e = $rxError;
+            rxSuspense: suspenseView
             "
         >
           <div *ngIf="e" class="error-message">

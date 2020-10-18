@@ -12,6 +12,8 @@ import { LetRcbDirective } from './components/let.directive';
 import { PushRcbPipe } from './components/push.pipe';
 import { RenderCallbackOverviewComponent } from './render-callback-overview.component';
 import { RENDER_CALLBACK_ROUTES } from './render-callback.routes';
+import { MatButtonModule } from '@angular/material/button';
+import { UnpatchEventsModule } from '@rx-angular/template';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { RENDER_CALLBACK_ROUTES } from './render-callback.routes';
     RouterModule.forChild(RENDER_CALLBACK_ROUTES),
     MatProgressSpinnerModule,
     MatDividerModule,
-    DirtyChecksModule
+    DirtyChecksModule,
+    MatButtonModule,
+    UnpatchEventsModule
   ]
 })
 export class RenderCallbackModule {}

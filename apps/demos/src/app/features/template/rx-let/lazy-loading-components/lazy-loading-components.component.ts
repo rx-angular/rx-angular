@@ -34,7 +34,7 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
           <ng-template #suspenseView>
             <rxa-list-item-ghost></rxa-list-item-ghost>
           </ng-template>
-          <ng-container [ngComponentOutlet]="c" *rxLet="component$; let c; suspense:suspenseView"></ng-container>
+          <ng-container [ngComponentOutlet]="c" *rxLet="component$; let c; rxSuspense:suspenseView"></ng-container>
         </div>
       </div>
     </rxa-visualizer>

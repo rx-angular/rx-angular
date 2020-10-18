@@ -12,15 +12,7 @@ export const MENU_ITEMS = [
     label: 'RxSwitch POC'
   },
   {
-    link: 'cd-embedded-view-04',
-    label: 'CD embedded-view 04'
-  },
-  {
-    link: 'cd-embedded-view-05',
-    label: 'CD embedded-view 05'
-  },
-  {
-    link: 'cd-embedded-view-06',
-    label: 'CD embedded-view 06'
+    link: 'rx-for-poc',
+    label: 'RxFor POC'
   }
 ];

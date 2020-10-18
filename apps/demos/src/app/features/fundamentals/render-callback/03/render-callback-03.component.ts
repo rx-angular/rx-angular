@@ -15,10 +15,10 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil, tap } 
     <h1>Render Callback example 03</h1>
     <h4>Height calculation using LetRenderCallback</h4>
     <h4>RenderStrategy: {{strategyName$ | pushRcb: 'local'}}</h4>
-    <button unpatch (click)="reset()">Reset</button>
-    <button unpatch (click)="updateClick.next()">Update content</button>
-    <button unpatch (click)="errorClick.next()">Error</button>
-    <button unpatch (click)="completeClick.next()">Complete</button>
+    <button mat-raised-button unpatch (click)="reset()">Reset</button>
+    <button mat-raised-button unpatch (click)="updateClick.next()">Update content</button>
+    <button mat-raised-button unpatch (click)="errorClick.next()">Error</button>
+    <button mat-raised-button unpatch (click)="completeClick.next()">Complete</button>
     <div class="example-results">
       <div class="example-result" style="height: 170px; overflow-y: scroll">
         <h4>render callback output</h4>

@@ -1,0 +1,24 @@
+<div class="col-sm-12 col-md-6">
+  <ng-container *ngIf="auto">
+    <p>List of 2000 elements will be toggled 10 times</p>
+  </ng-container>
+  <ng-container *ngIf="!auto">
+    <button color="secondary" (click)="toggleList()">Reset</button>
+  </ng-container>
+
+  <ng-container *ngIf="type === 'push'">
+    <p *ngIf="pushLoading$ | push; else pushContent">Loading...</p>
+    <ng-template #pushContent>
+      <rxa-rendering-work [factor]="20"></rxa-rendering-work>
+    </ng-template>
+  </ng-container>
+
+  <ng-container *ngIf="type === 'rxLet'">
+    <ng-container *rxLet="letLoading$; let letLoading; suspense: suspenseTpl">
+      <rxa-rendering-work [factor]="20"></rxa-rendering-work>
+    </ng-container>
+    <ng-template #suspenseTpl> <p>Loading...</p> </ng-template>
+  </ng-container>
+
+  <p *ngIf="done$ | push">Done</p>
+</div>
