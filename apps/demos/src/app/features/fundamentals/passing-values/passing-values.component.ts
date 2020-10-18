@@ -31,7 +31,8 @@ import { Subject } from 'rxjs';
                 <mat-button-toggle [value]="displayStates.observable">Observable</mat-button-toggle>
                 <mat-button-toggle [value]="displayStates.async">Async</mat-button-toggle>
                 <mat-button-toggle [value]="displayStates.push">Push</mat-button-toggle>
-                <mat-button-toggle [value]="displayStates.let">Let</mat-button-toggle>
+                <mat-button-toggle [value]="displayStates.let">C Let</mat-button-toggle>
+                <mat-button-toggle [value]="displayStates.let">Ev Let</mat-button-toggle>
                 <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
               </mat-button-toggle-group>
               <button mat-raised-button class="ml-2" (click)="isVisible = !isVisible;">
@@ -92,15 +93,27 @@ import { Subject } from 'rxjs';
         </div>
         <div class="col"
              *ngIf="visible(group, displayStates.let)">
-          <h2 class="mat-subheader">Let</h2>
+          <h2 class="mat-subheader">Let - <small>Component CD</small></h2>
           <rxa-value-provider [changes$]="btnBothClick$" #letVal="rxaValueProvider"></rxa-value-provider>
           <div class="mb-1">
             <button mat-mini-fab [unpatch] (click)="letVal.next()">
               <mat-icon>add</mat-icon>
             </button>
           </div>
-          <rxa-recursive-let [depth]="depth" [value]="letVal.int$">
-          </rxa-recursive-let>
+          <rxa-recursive-component-let [depth]="depth" [value]="letVal.int$">
+          </rxa-recursive-component-let>
+        </div>
+        <div class="col"
+             *ngIf="visible(group, displayStates.let)">
+          <h2 class="mat-subheader">Let - <small>EmbeddedView CD</small></h2>
+          <rxa-value-provider [changes$]="btnBothClick$" #letVal="rxaValueProvider"></rxa-value-provider>
+          <div class="mb-1">
+            <button mat-mini-fab [unpatch] (click)="letVal.next()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <rxa-recursive-embedded-view-let [depth]="depth" [value]="letVal.int$">
+          </rxa-recursive-embedded-view-let>
         </div>
       </div>
     </rxa-visualizer>

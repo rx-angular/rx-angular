@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { RxState } from '@rx-angular/state';
-import { CdHelper } from '../../../../shared/utils/cd-helper';
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 
 @Component({
-  selector: 'rxa-recursive-let',
+  selector: 'rxa-recursive-component-let',
   template: `
     <ng-container *ngIf="level === 0; else: branch">
       <rxa-visualizer>
@@ -15,7 +13,7 @@ import { ReplaySubject, Subject } from 'rxjs';
     <ng-template #branch>
       <rxa-visualizer>
         <p visualizerHeader>Level {{total-level}}</p>
-        <rxa-recursive-let [total]="total" *poc1Let="value$; let v" [level]="level-1" [value]="v"></rxa-recursive-let>
+        <rxa-recursive-component-let [total]="total" *rxLet="value$; let v" [level]="level-1" [value]="v"></rxa-recursive-component-let>
       </rxa-visualizer>
     </ng-template>
   `,
@@ -24,7 +22,7 @@ import { ReplaySubject, Subject } from 'rxjs';
   },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RecursiveLetComponent {
+export class RecursiveComponentLetComponent {
   @Input()
   set depth(d){
     this.total = d;

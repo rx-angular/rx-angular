@@ -19,8 +19,9 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RenderingsModule } from '../../../shared/debug-helper/renderings';
 import { RecursiveAsyncComponent } from './recursive/recursive-async.component';
 import { RecursivePushComponent } from './recursive/recursive-push.component';
-import { RecursiveLetComponent } from './recursive/recursive-let.component';
+import { RecursiveEmbeddedViewLetComponent } from './recursive/recursive-embedded-view-let.component';
 import { ViewVsEmbeddedViewModule } from '../../experiments/structural-directives/view-vs-embedded-view/view-vs-embedded-view.module';
+import { RecursiveComponentLetComponent } from './recursive/recursive-component-let.component';
 
 
 @NgModule({
@@ -29,8 +30,9 @@ import { ViewVsEmbeddedViewModule } from '../../experiments/structural-directive
     RecursiveObservableComponent,
     RecursiveAsyncComponent,
     RecursivePushComponent,
-    RecursiveLetComponent,
-    PassingValuesComponent
+    PassingValuesComponent,
+    RecursiveComponentLetComponent,
+    RecursiveEmbeddedViewLetComponent
   ],
   imports: [
     CommonModule,
