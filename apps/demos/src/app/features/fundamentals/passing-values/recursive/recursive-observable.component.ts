@@ -4,31 +4,40 @@ import { Observable } from 'rxjs';
 import { CdHelper } from '../../../../shared/utils/cd-helper';
 
 @Component({
-  selector: 'rxa-recursive-reactive',
+  selector: 'rxa-recursive-observable',
   template: `
       <ng-container *ngIf="level === 0; else: branch">
         <rxa-visualizer>
-          <rxa-cd-trigger visualizerHeader [cdHelper]="cdHelper"></rxa-cd-trigger>
+          <p visualizerHeader>Level {{total-level}}</p>
           <rxa-renders [value$]="value$"></rxa-renders>
         </rxa-visualizer>
       </ng-container>
       <ng-template #branch>
         <rxa-visualizer>
-          <rxa-cd-trigger visualizerHeader [cdHelper]="cdHelper"></rxa-cd-trigger>
-          <rxa-recursive-reactive [level]="level-1" [value$]="value$"></rxa-recursive-reactive>
+          <p visualizerHeader>Level {{total-level}}</p>
+          <rxa-recursive-observable [total]="total" [level]="level-1" [value$]="value$"></rxa-recursive-observable>
         </rxa-visualizer>
       </ng-template>
   `,
-  providers: [CdHelper],
+  host: {
+    class: 'd-flex w-100'
+  },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RecursiveReactiveComponent extends RxState<any> {
+export class RecursiveObservableComponent {
+
+  @Input()
+  set depth(d){
+    this.total = d;
+    this.level = this.total -1;
+  }
+
+  @Input()
+  total = 0;
 
   @Input()
   level = 0;
 
   @Input() value$: Observable<any>;
-
-  constructor(public cdHelper: CdHelper) {super();}
 
 }

@@ -1,21 +1,19 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { RxState } from '@rx-angular/state';
 import { CdHelper } from '../../../../shared/utils/cd-helper';
 
 @Component({
-  selector: 'rxa-recursive',
+  selector: 'rxa-recursive-static',
   template: `
     <ng-container *ngIf="level === 0; else: branch">
       <rxa-visualizer>
-        <rxa-cd-trigger visualizerHeader [cdHelper]="cdHelper">
-        </rxa-cd-trigger>
+        <p visualizerHeader>Level {{total-level}}</p>
         <rxa-renders [value$]="value"></rxa-renders>
       </rxa-visualizer>
     </ng-container>
     <ng-template #branch>
       <rxa-visualizer>
-        <rxa-cd-trigger visualizerHeader [cdHelper]="cdHelper"></rxa-cd-trigger>
-        <rxa-recursive [level]="level-1" [value]="value"></rxa-recursive>
+        <p visualizerHeader>Level {{total-level}}</p>
+        <rxa-recursive-static [total]="total" [level]="level-1" [value]="value"></rxa-recursive-static>
       </rxa-visualizer>
     </ng-template>
   `,
@@ -25,14 +23,21 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
   providers: [CdHelper],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RecursiveComponent extends RxState<any> {
+export class RecursiveStaticComponent {
+
+  @Input()
+  set depth(d){
+    this.total = d;
+    this.level = this.total -1;
+  }
+
+  @Input()
+  total = 0;
 
   @Input()
   level = 0;
 
   @Input()
   value;
-
-  constructor(public cdHelper: CdHelper) {super();}
 
 }

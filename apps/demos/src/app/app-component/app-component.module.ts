@@ -11,6 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './app.routes';
+import { DirtyChecksModule } from '../shared/debug-helper/dirty-checks';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { ROUTES } from './app.routes';
     MatIconModule,
     AppShellModule,
     RouterModule.forRoot(ROUTES),
+    DirtyChecksModule
   ],
   declarations: [AppComponent],
   exports: [],
