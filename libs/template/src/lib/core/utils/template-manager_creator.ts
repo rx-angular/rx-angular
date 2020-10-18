@@ -8,7 +8,7 @@ export interface TemplateManager<C extends object, N extends string = string> {
    *
    * @param viewContextSlice - the object holding the new state
    */
-  updateViewContext(viewContextSlice: Partial<C>, name?: string): void;
+  updateViewContext(viewContextSlice: Partial<C>): void;
 
   /**
    * @description
@@ -25,7 +25,7 @@ export interface TemplateManager<C extends object, N extends string = string> {
    *
    * @param name
    */
-  getEmbeddedView(name: string | number | Symbol): EmbeddedViewRef<C> | undefined;
+  getEmbeddedView(name: N): EmbeddedViewRef<C> | undefined;
 
   /**
    * @description
@@ -40,7 +40,7 @@ export interface TemplateManager<C extends object, N extends string = string> {
    *
    * @param name name of the cached view
    */
-  displayView(name: N, id?: string | number | Symbol): void;
+  displayView(name: N): void;
 
   /**
    * @description
@@ -67,24 +67,22 @@ export function createTemplateManager<C extends object, N extends string = strin
   initialViewContext: C
 ): TemplateManager<C, N> {
   const templateCache = new Map<N, TemplateRef<C>>();
-  const viewCache = new Map<string, EmbeddedViewRef<C>>();
+  const viewCache = new Map<N, EmbeddedViewRef<C>>();
   const viewContext = { ...initialViewContext };
-  let activeView: string;
+  let activeView: N;
 
   return {
     hasTemplateRef(name: N): boolean {
       return templateCache.has(name);
     },
 
-    updateViewContext(viewContextSlice: Partial<C>, name?: string) {
-      const eV = name ? this.getEmbeddedView(name) : viewContext
+    updateViewContext(viewContextSlice: Partial<C>) {
       Object.entries(viewContextSlice).forEach(([key, value]) => {
-        eV[key] = value;
+        viewContext[key] = value;
       });
     },
 
     addTemplateRef(name: N, templateRef: TemplateRef<C>) {
-      console.log('addTemplateRef', name);
       assertTemplate(name, templateRef);
       if (!templateCache.has(name)) {
         templateCache.set(name, templateRef);
@@ -96,35 +94,33 @@ export function createTemplateManager<C extends object, N extends string = strin
       }
     },
 
-    getEmbeddedView(vID: string): EmbeddedViewRef<C> {
-      return viewCache.get(vID);
+    getEmbeddedView(name: N): EmbeddedViewRef<C> {
+        return viewCache.get(name);
     },
-    displayView(name: N, id: string | number | Symbol = '') {
 
-      const vID = name + id;
-      if (activeView !== vID) {
-
+    displayView(name: N) {
+      if (activeView !== name) {
         if (templateCache.has(name)) {
           // Detach currently inserted view from the container
           viewContainerRef.detach();
 
-          if (viewCache.has(vID)) {
-            viewContainerRef.insert(viewCache.get(vID));
+          if (viewCache.has(name)) {
+            viewContainerRef.insert(viewCache.get(name));
           } else {
             // Creates and inserts view to the view container
             const newView = viewContainerRef.createEmbeddedView(
               templateCache.get(name),
               viewContext
             );
-            viewCache.set(vID, newView);
+            viewCache.set(name, newView);
           }
         } else {
           // @NOTICE this is here to cause errors and see in which situations we would throw.
           // In CDK it should work different.
-          console.error(`A non-existing view was tried to insert. Template name ${name} was used to create EmbeddedView ${vID}`);
+          console.error(`A non-existing view was tried to insert ${name}`);
         }
 
-        activeView = vID;
+        activeView = name;
       }
     },
 
