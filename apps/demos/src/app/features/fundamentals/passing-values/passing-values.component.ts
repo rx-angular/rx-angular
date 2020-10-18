@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'rxa-passing-values',
@@ -135,8 +135,7 @@ export class PassingValuesComponent {
     evlet: 7
   };
   isVisible = true;
-  btnBothClick$ = new Subject<Event>();
-
+  btnBothClick$ = new BehaviorSubject<any>(1);
 
   private _depth = 5;
   set depth(depth: number) {

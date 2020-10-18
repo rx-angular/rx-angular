@@ -38,7 +38,7 @@ export class RecursivePushComponent {
   @Input()
   level = 0;
 
-  value$ = new Subject();
+  value$ = new ReplaySubject(1);
   @Input()
   set value(v) {
     this.value$.next(v)
