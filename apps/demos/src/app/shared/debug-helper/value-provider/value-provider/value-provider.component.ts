@@ -10,9 +10,15 @@ import { PrimitivesProviderService } from '../primitives-provider.service';
   template: `
     <ng-container *ngIf="buttons">
       <button mat-raised-button (click)="reset()">Reset (patched)</button>
-      <button mat-raised-button [unpatch]="unpatched" (click)="next()">Next ({{unpatched?.length === 0 ? 'patched' : 'unpatched'}})</button>
-      <button mat-raised-button [unpatch]="unpatched" (click)="error()">Error ({{unpatched?.length === 0 ? 'patched' : 'unpatched'}})</button>
-      <button mat-raised-button [unpatch]="unpatched" (click)="complete()">Complete ({{unpatched?.length === 0 ? 'patched' : 'unpatched'}})</button>
+      <button mat-raised-button [unpatch]="unpatched" (click)="next()">
+        Next  <rxa-zone-patched-icon class="mat-icon" [zoneState]="unpatched?.length === 0 ? 'patched' : 'unpatched'"></rxa-zone-patched-icon>
+      </button>
+      <button mat-raised-button [unpatch]="unpatched" (click)="error()">
+        Error  <rxa-zone-patched-icon class="mat-icon" [zoneState]="unpatched?.length === 0 ? 'patched' : 'unpatched'"></rxa-zone-patched-icon>
+      </button>
+      <button mat-raised-button [unpatch]="unpatched" (click)="complete()">
+        Complete  <rxa-zone-patched-icon class="mat-icon" [zoneState]="unpatched?.length === 0 ? 'patched' : 'unpatched'"></rxa-zone-patched-icon>
+      </button>
     </ng-container>
     <ng-content></ng-content>`,
   changeDetection: ChangeDetectionStrategy.OnPush

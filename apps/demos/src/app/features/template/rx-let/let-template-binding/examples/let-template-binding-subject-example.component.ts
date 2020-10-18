@@ -19,9 +19,9 @@ import { scan, startWith } from 'rxjs/operators';
             signals$;
             let count;
             strategy: visibleStrategy;
-            complete: complete;
-            error: error;
-            suspense: suspense
+            rxComplete: complete;
+            rxError: error;
+            rxSuspense: suspense
           "
         >
           value emitted

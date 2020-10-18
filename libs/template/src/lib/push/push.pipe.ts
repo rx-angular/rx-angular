@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, OnDestroy, Pipe, PipeTransform } from '@angular/core';
-import { Observable, ObservableInput, Unsubscribable } from 'rxjs';
+import { NextObserver, Observable, ObservableInput, Unsubscribable } from 'rxjs';
 import { createRenderAware, RenderAware } from '../core';
+import { RxTemplateObserver } from '../core/model';
 import { getStrategies } from '../render-strategies';
 import { DEFAULT_STRATEGY_NAME } from '../render-strategies/strategies/strategies-map';
-import { RxTemplateObserver } from '../core/model';
 
 /**
  * @Pipe PushPipe
@@ -72,19 +72,23 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
 
   transform<T>(
     potentialObservable: null,
-    config?: string | Observable<string>
+    config?: string | Observable<string>,
+    renderCallback?: NextObserver<U>
   ): null;
   transform<T>(
     potentialObservable: undefined,
-    config?: string | Observable<string>
+    config?: string | Observable<string>,
+    renderCallback?: NextObserver<U>
   ): undefined;
   transform<T>(
     potentialObservable: ObservableInput<T>,
-    config?: string | Observable<string>
+    config?: string | Observable<string>,
+    renderCallback?: NextObserver<U>
   ): T;
   transform<T>(
     potentialObservable: ObservableInput<T> | null | undefined,
-    config: string | Observable<string> | undefined
+    config: string | Observable<string> | undefined,
+    renderCallback?: NextObserver<U>
   ): T | null | undefined {
     const strategy = config || DEFAULT_STRATEGY_NAME;
     this.RenderAware.nextStrategy(strategy);

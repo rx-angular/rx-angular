@@ -25,7 +25,8 @@ const DECLARATIONS = [BasicExampleComponent];
     LetModule,
     VisualizerModule,
     ValueProvidersModule,
-    RenderingsModule
+    RenderingsModule,
+    ViewportPrioModule
   ],
   exports: [DECLARATIONS]
 })

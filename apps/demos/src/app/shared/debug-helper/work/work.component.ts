@@ -4,7 +4,7 @@ import { Component, ElementRef, Input, Renderer2 } from '@angular/core';
 import { isObservable, Observable, of, Subject } from 'rxjs';
 import { map, scan, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { RxState, selectSlice } from '@rx-angular/state';
-import { Hooks } from '../hooks';
+import { Hooks } from '../../hooks';
 
 type workType = 'scripting' | 'layouting';
 
@@ -12,14 +12,12 @@ type workType = 'scripting' | 'layouting';
   // tslint:disable-next-line:component-selector
   selector: 'rxa-work',
   template: `
-    <p class="type" *rxLet="state$, let s">
-      Type: {{s.type}}<br/>
-      Base: {{s.base}}<br/>
-      Load: {{s.load}}
-    </p>
-    <div class="w-100 layouting-work">
+    <div class="work" [ngClass]="s.type" *rxLet="state$, let s">
+      {{s.load}}
+      <div class="w-100 layouting-work">
+      </div>
+      {{dirtyCheck()}}
     </div>
-    {{dirtyCheck()}}
   `,
   styleUrls: ['./work.component.scss'],
   providers: [RxState]

@@ -1,21 +1,34 @@
 import {
-  concat,
-  MonoTypeOperatorFunction, NEVER,
+  ConnectableObservable,
   Observable,
+  concat,
+  NEVER,
   of,
+  OperatorFunction,
   ReplaySubject,
   Subscribable,
-  Subscriber,
   Subscription
 } from 'rxjs';
-import { distinctUntilChanged, filter, map, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  filter,
+  map,
+  publish,
+  shareReplay,
+  startWith,
+  switchMap,
+  tap,
+  withLatestFrom
+} from 'rxjs/operators';
+import { RxNotification, RxTemplateObserver } from '../model';
+import { rxMaterialize } from '../utils/rx-materialize';
 import { RenderStrategy, StrategySelection } from './interfaces';
-import { RxTemplateObserver } from '../model';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
   nextStrategy: (config: string | Observable<string>) => void;
   activeStrategy$: Observable<RenderStrategy>;
+  rendered$: Observable<RxNotification<U>>;
 }
 
 /**
@@ -37,15 +50,15 @@ export function createRenderAware<U>(cfg: {
     distinctUntilChanged(),
     switchMap((stringOrObservable) =>
       typeof stringOrObservable === 'string'
-        ? of(stringOrObservable)
-        : stringOrObservable
+      ? of(stringOrObservable)
+      : stringOrObservable
     ),
     map((strategy: string): RenderStrategy => {
         const s = cfg.strategies[strategy];
         if (!!s) {
           return s;
         }
-        throw new Error(`Strategy ${strategy} does not exist.`);
+        throw new Error(`Strategy ${ strategy } does not exist.`);
       }
     ),
     tap((s) => (currentStrategy = s)),
@@ -87,7 +100,8 @@ export function createRenderAware<U>(cfg: {
           tap(cfg.templateObserver),
           renderWithLatestStrategy(strategy$)
         )
-    )
+    ),
+    publish()
   );
 
   return {
@@ -97,40 +111,33 @@ export function createRenderAware<U>(cfg: {
     nextStrategy(nextConfig: string | Observable<string>): void {
       strategyName$.next(nextConfig);
     },
+    rendered$: renderingEffect$,
     activeStrategy$: strategy$,
     subscribe(): Subscription {
-      return new Subscription().add(renderingEffect$.subscribe());
+      return new Subscription().add((renderingEffect$ as ConnectableObservable<U>).connect());
     }
   };
 }
 
+
 function renderWithLatestStrategy<T>(
   strategyChanges$: Observable<RenderStrategy>
-): MonoTypeOperatorFunction<T> {
+): OperatorFunction<T, RxNotification<T>> {
+  const suspenseNotification: RxNotification<T> = {
+    kind: 'rxSuspense',
+    value: undefined,
+    hasValue: false,
+    error: undefined,
+  };
   return (o$) => {
     return o$.pipe(
-      handleErrorAndComplete(),
+      rxMaterialize(),
       withLatestFrom(strategyChanges$),
       // always use latest strategy on value change
       switchMap(([renderValue, strategy]) =>
         concat(of(renderValue), NEVER).pipe(strategy.rxScheduleCD)
-      )
+      ),
+      startWith(suspenseNotification),
     );
   };
-
-  function handleErrorAndComplete<U>(): MonoTypeOperatorFunction<U> {
-    return (o$: Observable<U>) =>
-      new Observable((subscriber: Subscriber<U>) => {
-        const subscription = o$.subscribe({
-          next: (val) => subscriber.next(val),
-          // make "error" and "complete" notifications comply with `rxScheduleCD`
-          error: (err) => {
-            console.error(err);
-            subscriber.next();
-          },
-          complete: () => subscriber.next()
-        });
-        return () => subscription.unsubscribe();
-      });
-  }
 }

@@ -4,13 +4,15 @@ import { ValueProviderComponent } from './value-provider/value-provider.componen
 import { UnpatchEventsModule } from '@rx-angular/template';
 import { MatButtonModule } from '@angular/material/button';
 import { ArrayProviderComponent } from './array-provider/array-provider.component';
+import { ZonePatchedIconModule } from '../strategy-control-panel';
 
 @NgModule({
   declarations: [ValueProviderComponent, ArrayProviderComponent],
   imports: [
     CommonModule,
     UnpatchEventsModule,
-    MatButtonModule
+    MatButtonModule,
+    ZonePatchedIconModule
   ],
   exports: [ValueProviderComponent, ArrayProviderComponent]
 })

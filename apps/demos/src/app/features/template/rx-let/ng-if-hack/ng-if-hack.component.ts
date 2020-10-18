@@ -7,15 +7,23 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       <div visualizerHeader>
         <rxa-value-provider [buttons]="true" #valP="rxaValueProvider"></rxa-value-provider>
       </div>
-      <ng-container *rxLet="valP.incremental$; let value;
-          let e = error;
-          let c = complete;
-          suspense: suspenseView;
-          error: errorView;
-          complete: completeView
-        ">
-        next: {{ value | json }}<br/>
-      </ng-container>
+
+      {{ valP.boolean$ | push | json }}
+      <!--
+       <ng-container *ngIf="valP.boolean$ | push as value">
+         next: {{ value | json }}<br/>
+       </ng-container>
+
+             <ng-container *rxLet="valP.boolean$; let value;
+                 let e = rxError;
+                 let c = rxComplete;
+                 rxSuspense: suspenseView;
+                 rxError: errorView;
+                 rxComplete: completeView
+               ">
+               next: {{ value | json }}<br/>
+             </ng-container>
+       -->
       <ng-template #suspenseView>
         <ngx-skeleton-loader
           [count]="3"

@@ -34,8 +34,8 @@ export class VisualizerComponent extends Hooks {
     if (type == null) {
       type = 'l-view';
     }
-    console.log(this.classNames , this.classNames.split(' ').filter(c => c.indexOf('dh-') === -1), type);
-    this.classNames = [...this.classNames.split(' ').filter(c => c.indexOf('dh-') !== -1), ' dh-' + type].join(' ');
+    this.classNames = [...this.classNames.split(' ').filter(c => c.indexOf('dh-') === -1), 'dh-' + type]
+      .join(' ');
   }
 
   @Input()

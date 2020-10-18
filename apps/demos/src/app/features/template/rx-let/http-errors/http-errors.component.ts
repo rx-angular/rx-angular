@@ -15,7 +15,7 @@ import { RxState } from '@rx-angular/state';
       <mat-card-content>
         <div *rxLet="httpResponse$;
             let r;
-            let e = $error;
+            let e = $rxError;
             ">
           <h2>Default Template</h2>
           R: {{ r | json }}

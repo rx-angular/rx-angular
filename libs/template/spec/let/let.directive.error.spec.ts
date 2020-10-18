@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let';
 import { MockChangeDetectorRef } from '../fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
@@ -9,7 +9,7 @@ import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; $error as error">{{ error }}</ng-container>
+    <ng-container *rxLet="value$; $rxError as error">{{ error }}</ng-container>
   `
 })
 class LetDirectiveTestErrorComponent {
@@ -43,7 +43,7 @@ let componentNativeElement: any;
 
 describe('LetDirective when error', () => {
   beforeAll(() => mockConsole());
-  beforeEach(async(setupLetDirectiveTestComponentError));
+  beforeEach(waitForAsync(setupLetDirectiveTestComponentError));
 
   it('should render the error to false if next or complete', () => {
     letDirectiveTestComponent.value$ = of(1);

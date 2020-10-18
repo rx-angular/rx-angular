@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LetDirective } from '@rx-angular/template';
 import { Observable, of, Subject } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
@@ -7,7 +7,7 @@ import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value; suspense: suspense; complete: complete">{{
+    <ng-container *rxLet="value$; let value; rxSuspense: suspense; rxComplete: complete">{{
       value === undefined
         ? 'undefined'
         : value === null
@@ -41,7 +41,7 @@ const setUpFixture = () => {
 
 describe('LetDirective when template binding without "error" template', () => {
   beforeAll(() => mockConsole());
-  beforeEach(async(setupTestComponent));
+  beforeEach(waitForAsync(setupTestComponent));
   beforeEach(setUpFixture);
 
   it('should be initiated', () => {
