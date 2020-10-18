@@ -4,20 +4,49 @@ import { CdHelper } from '../../../shared/utils/cd-helper';
 @Component({
   selector: 'rxa-cd',
   template: `
-    <div class="row">
-      <div class="col-sm-6">
-        <h3>Nested</h3>
-        <rxa-cd-nested></rxa-cd-nested>
+    <rxa-visualizer>
+      <div visualizerHeader>
+        <h1>Nested vs Projected Components</h1>
+        <mat-button-toggle-group
+          name="visibleExamples"
+          aria-label="Visible Examples"
+          [value]="displayStates.all"
+          #group="matButtonToggleGroup">
+          <mat-button-toggle [value]="displayStates.nested">Nested</mat-button-toggle>
+          <mat-button-toggle [value]="displayStates.projected">Projected</mat-button-toggle>
+          <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
+        </mat-button-toggle-group>
+        <button mat-raised-button class="ml-2" (click)="isVisible = !isVisible;">
+          Toggle visibility to reset
+        </button>
       </div>
-      <div class="col-sm-6">
-        <h3>Projected</h3>
-        <rxa-cd-injected></rxa-cd-injected>
+
+      <div class="row" *ngIf="isVisible">
+        <div class="col" *ngIf="visible(group, displayStates.nested)">
+          <h3>Nested</h3>
+          <rxa-cd-nested></rxa-cd-nested>
+        </div>
+        <div class="col" *ngIf="visible(group, displayStates.projected)">
+          <h3>Projected</h3>
+          <rxa-cd-injected></rxa-cd-injected>
+        </div>
       </div>
-    </div>
+    </rxa-visualizer>
   `,
   providers: [CdHelper],
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class NestedVsProjectedComponent {
 
+  displayStates = {
+    none: 0,
+    all: 1,
+    nested: 2,
+    projected: 3
+  };
+  isVisible = true;
+
+  visible(group, choice) {
+    return group.value === choice || group.value === this.displayStates.all;
+  }
 }

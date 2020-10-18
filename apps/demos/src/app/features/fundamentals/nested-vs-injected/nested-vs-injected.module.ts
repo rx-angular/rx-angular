@@ -19,6 +19,7 @@ import { CdOnPush2Component } from './nested/push-2.component';
 import { CdOnPush3Component } from './nested/push-3.component';
 import { NestedVsProjectedComponent } from './nested-vs-projected.component';
 import { CdDefault4Component } from './nested/default-4.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { CdDefault4Component } from './nested/default-4.component';
     CdDefaultModule,
     VisualizerModule,
     CdOnPushModule,
-    CdTriggerModule
+    CdTriggerModule,
+    MatButtonToggleModule
   ]
 })
 export class NestedVsInjectedModule {

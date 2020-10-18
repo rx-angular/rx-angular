@@ -133,9 +133,9 @@ export class PassingValuesComponent {
     push: 5,
     let: 6
   };
-
-  btnBothClick$ = new Subject<Event>();
   isVisible = true;
+  btnBothClick$ = new Subject<Event>();
+
 
   private _depth = 5;
   set depth(depth: number) {
