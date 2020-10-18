@@ -23,11 +23,11 @@ import { CdHelper } from '../../../shared/utils/cd-helper';
 
       <div class="row" *ngIf="isVisible">
         <div class="col" *ngIf="visible(group, displayStates.nested)">
-          <h3>Nested</h3>
+          <h2>Nested</h2>
           <rxa-cd-nested></rxa-cd-nested>
         </div>
         <div class="col" *ngIf="visible(group, displayStates.projected)">
-          <h3>Projected</h3>
+          <h2>Projected</h2>
           <rxa-cd-injected></rxa-cd-injected>
         </div>
       </div>
