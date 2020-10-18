@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { isObservable, Observable, of, ReplaySubject, Subscription } from 'rxjs';
 import { distinctUntilChanged, scan, switchAll, switchMap, tap } from 'rxjs/operators';
@@ -17,7 +17,8 @@ import { Hooks } from '../hooks';
     :host .indicator-ripple {
       border: 1px solid #ff00005f;
     }
-  `]
+  `],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RenderingsComponent extends Hooks {
   sub: Subscription;
