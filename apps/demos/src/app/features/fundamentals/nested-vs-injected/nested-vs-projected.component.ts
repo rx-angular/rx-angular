@@ -20,7 +20,6 @@ import { CdHelper } from '../../../shared/utils/cd-helper';
           Toggle visibility to reset
         </button>
       </div>
-
       <div class="row" *ngIf="isVisible">
         <div class="col" *ngIf="visible(group, displayStates.nested)">
           <h2>Nested</h2>

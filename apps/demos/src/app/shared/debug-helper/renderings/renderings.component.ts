@@ -8,10 +8,7 @@ import { Hooks } from '../hooks';
   // tslint:disable-next-line:component-selector
   selector: 'rxa-renders',
   template: `
-    <div class="indicator-ripple" [ngStyle]="{minWidth: radius+'px',minHeight: radius+'px'}" matRipple
-         [matRippleColor]="color" [matRippleRadius]="radius">
-      {{ numRenders$ | push | json }}
-    </div>
+
   `,
   styles: [`
     :host .indicator-ripple {
