@@ -17,7 +17,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { UnpatchEventsModule } from '@rx-angular/template';
+// tslint:disable-next-line: nx-enforce-module-boundaries
 import { DirtyChecksModule } from 'apps/demos/src/app/shared/debug-helper/dirty-checks';
+// tslint:disable-next-line: nx-enforce-module-boundaries
 import { RenderingsModule } from 'apps/demos/src/app/shared/debug-helper/renderings';
 
 const DECLARATIONS = [RxLetPocComponent, DemoCounterComponent, LetPocDirective];
