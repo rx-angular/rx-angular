@@ -6,12 +6,12 @@ export const EXPERIMENTS_MENU = [
   {
     label: 'Differ',
     link: 'differ',
-    children: DIFFER_MENU_ITEMS
+    children: DIFFER_MENU_ITEMS,
   },
   {
     link: 'structural-directives',
     label: 'Structural Directives',
-    children: STRUCTURAL_DIRECTIVES
+    children: STRUCTURAL_DIRECTIVES,
   },
-  ...RX_STATE_MENU_ITEMS
+  ...RX_STATE_MENU_ITEMS,
 ];

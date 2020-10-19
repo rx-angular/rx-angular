@@ -1,36 +1,33 @@
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { pluck, distinctUntilChanged } from 'rxjs/operators';
-import { DEFAULT_STRATEGY_NAME } from '../../render-strategies/strategies/strategies-map';
+import { pluck, distinctUntilChanged, filter } from 'rxjs/operators';
 import { DefaultStrategies } from './default-strategies.interface';
 
-@Injectable({ providedIn: 'root' })
-export class StrategiesSetupService {
-  /**
-   * Holds current visible and invisible strategies.
-   * Default values
-   * - currentStrategy: 'local'
-   * - currentInvisibleStrategy: 'noop'
-   */
+@Injectable()
+export class RxLetPocService {
   private state$ = new BehaviorSubject<{
     currentStrategy: keyof DefaultStrategies;
     currentInvisibleStrategy: keyof DefaultStrategies;
   }>({
-    currentStrategy: DEFAULT_STRATEGY_NAME,
-    currentInvisibleStrategy: 'noop',
+    currentStrategy: null,
+    currentInvisibleStrategy: null,
   });
 
   strategy$: Observable<keyof DefaultStrategies> = this.state$.pipe(
     pluck('currentStrategy'),
+    filter<keyof DefaultStrategies>(Boolean),
     distinctUntilChanged()
   );
+
   outOfViewportStrategy$: Observable<
     keyof DefaultStrategies
   > = this.state$.pipe(
     pluck('currentInvisibleStrategy'),
+    filter<keyof DefaultStrategies>(Boolean),
     distinctUntilChanged()
   );
-  constructor() {}
+
+  constructor(public cdRef: ChangeDetectorRef) {}
 
   setStrategy(strategy: keyof DefaultStrategies) {
     const snapshot = this.snapshot;
