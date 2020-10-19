@@ -16,6 +16,20 @@ const ROUTES: Routes = [
         (m) => m.AlphasCompareModule
       ),
   },
+  {
+    path: 'nested-component-structure',
+    loadChildren: () =>
+      import('./nested-component-structure/nested-component-structure.module').then(
+        (m) => m.NestedComponentStructureModule
+      ),
+  },
+  {
+    path: 'sibling-component-structure',
+    loadChildren: () =>
+      import('./sibling-component-structure/sibling-component-structure.module').then(
+        (m) => m.SiblingComponentStructureModule
+      ),
+  }
 ];
 
 @NgModule({

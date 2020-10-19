@@ -1,18 +1,17 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { CdHelper } from '../../../../shared/utils/cd-helper';
 
 @Component({
   selector: 'rxa-recursive-static',
   template: `
     <ng-container *ngIf="level === 0; else: branch">
       <rxa-visualizer>
-        <p visualizerHeader>Level {{total-level}}</p>
+        <p visualizerHeader>Level {{total - level}}</p>
         <rxa-renders [value$]="value"></rxa-renders>
       </rxa-visualizer>
     </ng-container>
     <ng-template #branch>
       <rxa-visualizer>
-        <p visualizerHeader>Level {{total-level}}</p>
+        <p visualizerHeader>Level {{total - level}}</p>
         <rxa-recursive-static [total]="total" [level]="level-1" [value]="value"></rxa-recursive-static>
       </rxa-visualizer>
     </ng-template>
@@ -20,15 +19,14 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
   host: {
     class: 'd-flex w-100'
   },
-  providers: [CdHelper],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecursiveStaticComponent {
 
   @Input()
-  set depth(d){
+  set depth(d) {
     this.total = d;
-    this.level = this.total -1;
+    this.level = this.total - 1;
   }
 
   @Input()

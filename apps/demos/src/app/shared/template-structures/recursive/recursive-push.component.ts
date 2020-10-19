@@ -1,20 +1,19 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { RxState } from '@rx-angular/state';
-import { CdHelper } from '../../../../shared/utils/cd-helper';
-import { ReplaySubject, Subject } from 'rxjs';
+import { CdHelper } from '../../utils/cd-helper';
+import { ReplaySubject } from 'rxjs';
 
 @Component({
   selector: 'rxa-recursive-push',
   template: `
     <ng-container *ngIf="level === 0; else: branch">
       <rxa-visualizer>
-        <p visualizerHeader>Level {{total-level}}</p>
+        <p visualizerHeader>Level {{total - level}}</p>
         <rxa-renders [value$]="value$ | push"></rxa-renders>
       </rxa-visualizer>
     </ng-container>
     <ng-template #branch>
       <rxa-visualizer>
-        <p visualizerHeader>Level {{total-level}}</p>
+        <p visualizerHeader>Level {{total - level}}</p>
         <rxa-recursive-push [total]="total" [level]="level-1" [value]="value$ | push"></rxa-recursive-push>
       </rxa-visualizer>
     </ng-template>
@@ -22,14 +21,13 @@ import { ReplaySubject, Subject } from 'rxjs';
   host: {
     class: 'd-flex w-100'
   },
-  providers: [CdHelper],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecursivePushComponent {
   @Input()
-  set depth(d){
+  set depth(d) {
     this.total = d;
-    this.level = this.total -1;
+    this.level = this.total - 1;
   }
 
   @Input()
@@ -39,9 +37,10 @@ export class RecursivePushComponent {
   level = 0;
 
   value$ = new ReplaySubject(1);
+
   @Input()
   set value(v) {
-    this.value$.next(v)
+    this.value$.next(v);
   };
 
 }

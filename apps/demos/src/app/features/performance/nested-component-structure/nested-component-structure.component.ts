@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
-  selector: 'rxa-passing-values',
+  selector: 'rxa-nested-component-structure',
   template: `
     <rxa-visualizer>
       <ng-container visualizerHeader>
-        <h1 class="mat-headline">Passing Values</h1>
+        <h1 class="mat-headline">Nested Component Structure</h1>
         <div class="row">
           <div class="col-sm-12 col-md-12">
             <mat-form-field>
@@ -29,6 +29,10 @@ import { BehaviorSubject } from 'rxjs';
                 #group="matButtonToggleGroup">
                 <mat-button-toggle [value]="displayStates.static">Static</mat-button-toggle>
                 <mat-button-toggle [value]="displayStates.observable">Observable</mat-button-toggle>
+                <mat-button-toggle [value]="displayStates.async">Async</mat-button-toggle>
+                <mat-button-toggle [value]="displayStates.push">Push</mat-button-toggle>
+                <mat-button-toggle [value]="displayStates.clet">C Let</mat-button-toggle>
+                <mat-button-toggle [value]="displayStates.evlet">Ev Let</mat-button-toggle>
                 <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
               </mat-button-toggle-group>
               <button mat-raised-button class="ml-2" (click)="isVisible = !isVisible;">
@@ -63,12 +67,60 @@ import { BehaviorSubject } from 'rxjs';
           </div>
           <rxa-recursive-observable [depth]="depth" [value$]="observableVal.int$"></rxa-recursive-observable>
         </div>
+        <div class="col"
+             *ngIf="visible(group, displayStates.async)">
+          <h2 class="mat-subheader">Async</h2>
+          <rxa-value-provider [changes$]="btnBothClick$" #asyncVal="rxaValueProvider"></rxa-value-provider>
+          <div class="mb-1">
+            <button mat-mini-fab (click)="asyncVal.next()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <rxa-recursive-async [depth]="depth" [value]="asyncVal.int$ | async">
+          </rxa-recursive-async>
+        </div>
+        <div class="col"
+             *ngIf="visible(group, displayStates.push)">
+          <h2 class="mat-subheader">Push</h2>
+          <rxa-value-provider [changes$]="btnBothClick$" #pushVal="rxaValueProvider"></rxa-value-provider>
+          <div class="mb-1">
+            <button mat-mini-fab [unpatch] (click)="pushVal.next()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <rxa-recursive-push [depth]="depth" [value]="pushVal.int$ | push">
+          </rxa-recursive-push>
+        </div>
+        <div class="col"
+             *ngIf="visible(group, displayStates.clet)">
+          <h2 class="mat-subheader">Let - <small>Component CD</small></h2>
+          <rxa-value-provider [changes$]="btnBothClick$" #letVal="rxaValueProvider"></rxa-value-provider>
+          <div class="mb-1">
+            <button mat-mini-fab [unpatch] (click)="letVal.next()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <rxa-recursive-component-let [depth]="depth" [value]="letVal.int$">
+          </rxa-recursive-component-let>
+        </div>
+        <div class="col"
+             *ngIf="visible(group, displayStates.evlet)">
+          <h2 class="mat-subheader">Let - <small>EmbeddedView CD</small></h2>
+          <rxa-value-provider [changes$]="btnBothClick$" #letVal="rxaValueProvider"></rxa-value-provider>
+          <div class="mb-1">
+            <button mat-mini-fab [unpatch] (click)="letVal.next()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <rxa-recursive-embedded-view-let [depth]="depth" [value]="letVal.int$">
+          </rxa-recursive-embedded-view-let>
+        </div>
       </div>
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class PassingValuesComponent {
+export class NestedComponentStructureComponent {
   min = 0;
   max = 5;
 
@@ -76,7 +128,11 @@ export class PassingValuesComponent {
     none: 0,
     all: 1,
     static: 2,
-    observable: 3
+    observable: 3,
+    async: 4,
+    push: 5,
+    clet: 6,
+    evlet: 7
   };
   isVisible = true;
   btnBothClick$ = new BehaviorSubject<any>(1);

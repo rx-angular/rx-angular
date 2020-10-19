@@ -198,3 +198,4 @@ Drawbacks:
 Explain how multiple people would actively working on the suggested code base.
 If needed include branching suggestions or the way code interacts
 -->
+>>>>>>> master
