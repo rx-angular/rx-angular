@@ -1,8 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { ReplaySubject, timer } from 'rxjs';
-import { concatMap, mapTo, mergeMap, scan } from 'rxjs/operators';
-import { insert } from '@rx-angular/state';
-import { intervalTick } from '../../../../../../../libs/template/src/lib/experimental/render-strategies/rxjs/scheduling';
+import { ReplaySubject } from 'rxjs';
 
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
 
@@ -10,7 +7,7 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   selector: 'rxa-sibling-async',
   template: `
     <rxa-visualizer>
-      <p visualizerHeader>{{siblings.length}} Siblings Async</p>
+      <p visualizerHeader>{{siblings.length}}  Async</p>
       <div class="w-100">
         <span class="sibling" *ngFor="let sibling of siblings$ | async; trackBy:trackBy">
           &nbsp;
