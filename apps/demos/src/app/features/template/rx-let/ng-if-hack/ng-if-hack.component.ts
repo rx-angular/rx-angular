@@ -9,21 +9,20 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       </div>
 
       {{ valP.boolean$ | push | json }}
+      <ng-container *rxLet="valP.boolean$; let value;
+               rxSuspense: suspenseView;
+               rxError: errorView;
+               rxComplete: completeView
+             ">
+        *rxLet: {{ value | json }}<br/>
+      </ng-container>
+
       <!--
        <ng-container *ngIf="valP.boolean$ | push as value">
-         next: {{ value | json }}<br/>
+         *ngIf: {{ value | json }}<br/>
        </ng-container>
 
-             <ng-container *rxLet="valP.boolean$; let value;
-                 let e = rxError;
-                 let c = rxComplete;
-                 rxSuspense: suspenseView;
-                 rxError: errorView;
-                 rxComplete: completeView
-               ">
-               next: {{ value | json }}<br/>
-             </ng-container>
-       -->
+           -->
       <ng-template #suspenseView>
         <ngx-skeleton-loader
           [count]="3"

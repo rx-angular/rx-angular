@@ -8,8 +8,14 @@ import { GhostElementsModule } from '../../../../shared/ghost-elements';
 import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { LazyLoadingComponentsObservableComponent } from './lazy-loading-components-observable.component';
+import { LazyLoadingComponentsPromiseComponent } from './lazy-loading-components-promise.component';
+import { LazyLoadingComponentsAsyncAwaitComponent } from './lazy-loading-components-async-await.component';
 
 const DECLARATIONS = [
+  LazyLoadingComponentsObservableComponent,
+  LazyLoadingComponentsPromiseComponent,
+  LazyLoadingComponentsAsyncAwaitComponent,
   LazyLoadingComponentsComponent
 ];
 

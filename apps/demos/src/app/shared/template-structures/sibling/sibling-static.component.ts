@@ -1,15 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
-
-const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
 
 @Component({
-  selector: 'rxa-sibling-async',
+  selector: 'rxa-sibling-static',
   template: `
     <rxa-visualizer>
-      <p visualizerHeader>{{siblings.length}}  Async</p>
+      <p visualizerHeader>{{siblings.length}} Siblings Static</p>
       <div class="w-100">
-        <span class="sibling" *ngFor="let sibling of siblings$ | async; trackBy:trackBy">
+        <span class="sibling" *ngFor="let sibling of siblings; trackBy:trackBy">
           &nbsp;
         </span>
       </div>
@@ -29,21 +26,17 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SiblingAsyncComponent {
-
+export class SiblingStaticComponent {
   siblings = [];
-  siblings$ = new ReplaySubject<any[]>(1);
 
   @Input()
   set count(num: number) {
     this.siblings = new Array(num).fill(0).map((_, idx) => idx);
-    this.siblings$.next(this.siblings);
   };
 
   @Input()
   value: any;
 
-  trackBy = i => i;
+  trackBy = i => i
 
 }
-

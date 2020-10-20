@@ -8,9 +8,15 @@ import { ValueProvidersModule } from '../../debug-helper/value-provider';
 import { RenderingsModule } from '../../debug-helper/renderings';
 import { SiblingAsyncComponent } from './sibling-async.component';
 import { ViewVsEmbeddedViewModule } from '../../../features/experiments/structural-directives/view-vs-embedded-view/view-vs-embedded-view.module';
+import { SiblingStaticComponent } from './sibling-static.component';
+import { SiblingPushComponent } from './sibling-push.component';
+import { SiblingProgressiveComponent } from './sibling-progressive.component';
 
 const DECLARATIONS = [
-  SiblingAsyncComponent
+  SiblingStaticComponent,
+  SiblingAsyncComponent,
+  SiblingPushComponent,
+  SiblingProgressiveComponent
 ];
 
 @NgModule({
