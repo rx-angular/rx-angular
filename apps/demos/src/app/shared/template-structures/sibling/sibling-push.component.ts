@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { ReplaySubject, timer } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 import { concatMap, mapTo, mergeMap, scan } from 'rxjs/operators';
 import { insert } from '@rx-angular/state';
-import { intervalTick } from '../../../../../../../libs/template/src/lib/experimental/render-strategies/rxjs/scheduling';
+import { priorityTickMap, SchedulingPriority } from '@rx-angular/template';
 
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
 
 @Component({
-  selector: 'rxa-sibling-async',
+  selector: 'rxa-sibling-push',
   template: `
     <rxa-visualizer>
-      <p visualizerHeader>{{siblings.length}} Siblings Async</p>
+      <p visualizerHeader>{{siblings.length}} Siblings Push</p>
       <div class="w-100">
-        <span class="sibling" *ngFor="let sibling of siblings$ | async; trackBy:trackBy">
+        <span class="sibling" *ngFor="let sibling of siblings$ | push; trackBy:trackBy">
           &nbsp;
         </span>
       </div>
@@ -32,7 +32,7 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SiblingAsyncComponent {
+export class SiblingPushComponent {
 
   siblings = [];
   siblings$ = new ReplaySubject<any[]>(1);

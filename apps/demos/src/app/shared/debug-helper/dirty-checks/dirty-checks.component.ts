@@ -6,7 +6,9 @@ import { Hooks } from '../hooks';
   // tslint:disable-next-line:component-selector
   selector: 'rxa-dirty-check',
   template: `
-
+    <div class="indicator-ripple" [ngStyle]="{width: radius+'px',height: radius+'px'}" matRipple [matRippleColor]="color" [matRippleRadius]="radius">
+      <span>{{ numDirtyChecks() }}{{radius}}</span>
+    </div>
   `,
   styles: [`
     :host .indicator-ripple {

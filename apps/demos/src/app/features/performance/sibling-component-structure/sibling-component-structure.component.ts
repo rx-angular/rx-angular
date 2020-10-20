@@ -21,8 +21,8 @@ import { BehaviorSubject } from 'rxjs';
                 #group="matButtonToggleGroup">
                 <mat-button-toggle [value]="displayStates.static">Static</mat-button-toggle>
                 <mat-button-toggle [value]="displayStates.async">Async</mat-button-toggle>
-                <mat-button-toggle [value]="displayStates.clet">C Let</mat-button-toggle>
-                <mat-button-toggle [value]="displayStates.evlet">Ev Let</mat-button-toggle>
+                <mat-button-toggle [value]="displayStates.push">Push</mat-button-toggle>
+                <mat-button-toggle [value]="displayStates.progressive">Progressive</mat-button-toggle>
                 <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
               </mat-button-toggle-group>
               <button mat-raised-button class="ml-2" (click)="isVisible = !isVisible;">
@@ -36,14 +36,22 @@ import { BehaviorSubject } from 'rxjs';
         <div class="col"
              *ngIf="visible(group, displayStates.static)">
           <h2 class="mat-subheader">Static</h2>
-          <rxa-value-provider [min]="min" [max]="max" [changes$]="btnBothClick$"
-                              #staticVal="rxaValueProvider"></rxa-value-provider>
-          <div class="mb-1">
-            <button mat-mini-fab (click)="staticVal.next()">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
-          <rxa-sibling-async [count]="count" [value]="staticVal.int"></rxa-sibling-async>
+          <rxa-sibling-static [count]="count"></rxa-sibling-static>
+        </div>
+        <div class="col"
+             *ngIf="visible(group, displayStates.async)">
+          <h2 class="mat-subheader">Async</h2>
+          <rxa-sibling-async [count]="count"></rxa-sibling-async>
+        </div>
+        <div class="col"
+             *ngIf="visible(group, displayStates.push)">
+          <h2 class="mat-subheader">Push</h2>
+          <rxa-sibling-push [count]="count"></rxa-sibling-push>
+        </div>
+        <div class="col"
+             *ngIf="visible(group, displayStates.progressive)">
+          <h2 class="mat-subheader">Progressive</h2>
+          <rxa-sibling-progressive [count]="count"></rxa-sibling-progressive>
         </div>
       </div>
     </rxa-visualizer>
@@ -58,8 +66,7 @@ export class SiblingComponentStructureComponent {
     observable: 3,
     async: 4,
     push: 5,
-    clet: 6,
-    evlet: 7
+    progressive: 6
   };
   isVisible = true;
   btnBothClick$ = new BehaviorSubject<any>(1);

@@ -2,17 +2,16 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ReplaySubject, timer } from 'rxjs';
 import { concatMap, mapTo, mergeMap, scan } from 'rxjs/operators';
 import { insert } from '@rx-angular/state';
-import { intervalTick } from '../../../../../../../libs/template/src/lib/experimental/render-strategies/rxjs/scheduling';
 
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
 
 @Component({
-  selector: 'rxa-sibling-async',
+  selector: 'rxa-sibling-progressive',
   template: `
     <rxa-visualizer>
-      <p visualizerHeader>{{siblings.length}} Siblings Async</p>
+      <p visualizerHeader>{{siblings.length}} Siblings Progressive</p>
       <div class="w-100">
-        <span class="sibling" *ngFor="let sibling of siblings$ | async; trackBy:trackBy">
+        <span class="sibling" *ngFor="let sibling of siblings$ | push; trackBy:trackBy">
           &nbsp;
         </span>
       </div>
@@ -32,15 +31,20 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SiblingAsyncComponent {
+export class SiblingProgressiveComponent {
 
   siblings = [];
-  siblings$ = new ReplaySubject<any[]>(1);
+  siblingsSubject = new ReplaySubject<any[]>(1);
+  siblings$ = this.siblingsSubject.pipe(
+    mergeMap(arr => chunk(arr, arr.length / 10)),
+    concatMap(v => timer(0).pipe(mapTo(v))),
+    scan(insert)
+  );
 
   @Input()
   set count(num: number) {
     this.siblings = new Array(num).fill(0).map((_, idx) => idx);
-    this.siblings$.next(this.siblings);
+    this.siblingsSubject.next(this.siblings);
   };
 
   @Input()
