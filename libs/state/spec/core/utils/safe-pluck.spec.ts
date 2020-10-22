@@ -18,8 +18,8 @@ describe('safePluck', () => {
     expect(safePluck(obj, 'foo')).toEqual(obj.foo);
   });
 
-  it('should return null if key does not exist', () => {
-    expect(safePluck(obj, 'wasd' as any)).toEqual(null);
+  it('should return undefined if key does not exist', () => {
+    expect(safePluck(obj, 'doesNotExist' as any)).toEqual(undefined);
   });
 
   describe('edge cases', () => {
