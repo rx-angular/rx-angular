@@ -20,6 +20,8 @@ You will sometimes (aka situational) need:
 - a subset of the state (derivations)
 - compose the state with other Observables or change the Observables behaviour
 
+Note that `RxState#connect` already applies the `stateful` operator under the hood.
+
 _Example_
 
 ```typescript
