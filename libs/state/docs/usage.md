@@ -149,18 +149,18 @@ Often it is needed to get the previous state to calculate the new one.
    providers: [RxState]
 })
 export class StatefulComponent {
-   readonly items$ = this.state.select('items');
-   readonly btnClick$ = new Subject();
+  readonly items$ = this.state.select('list');
+  readonly btnClick$ = new Subject();
 
-   constructor(private state: RxState<{list: {id: number}}>) {
-     this.state.connect(
-       this.btnClick$, (state, id) => {
-         return {
-           ...state,
-           list: state.list.filter(i => i.id !== id)
-       }
-     );
-   }
+  constructor(private state: RxState<{ list: { id: number }[] }>) {
+    this.state.connect(
+      this.btnClick$, (state, id) => {
+        return {
+          ...state,
+          list: state.list.filter(i => i.id !== id)
+        }
+    );
+  }
 }
 ```
 
@@ -200,7 +200,35 @@ export class StatefulComponent {
 }
 ```
 
-## setAccumulator and deep-copying state 
+## Manage side effects
+
+```typescript
+@Component({
+  selector: 'app-stateful',
+  template: `<ul>
+               <li *ngFor="let item of items$ | async">
+                 {{ item }} <button (click)="deleteClick$.next(item.id)">remove<button>
+               </li>
+             </ul>
+   `,
+  providers: [RxState],
+})
+export class StatefulComponent {
+  readonly items$ = this.state.select('list');
+  readonly deleteClick$ = new Subject<number>();
+
+  constructor(
+    private state: RxState<{ list: { id: number }[] }>,
+    private apiService: ApiService
+  ) {
+    this.state.hold(
+      this.deleteClick$.pipe(switchMap((id) => this.apiService.delete(id)))
+    );
+  }
+}
+```
+
+## setAccumulator and deep-copying state
 
 Use `setAccumulator` to update state via deep-copies.
 
@@ -209,7 +237,6 @@ const myAccumulator = (state: MyState, slice: Partial<MyState>) => deepCopy(stat
 this.state.setAccumulator(myAccumulator);
 ```
 
-This can be done at runtime. 
-
+This can be done at runtime.
 
 _disclaimer_: this doc is work in progress. Not every use case has found it's way into the docs. We encourage you to contribute :).
