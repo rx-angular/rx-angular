@@ -48,7 +48,7 @@ import {
 import { tap } from 'rxjs/operators';
 import { DefaultStrategies } from './default-strategies.interface';
 
-import { RxLetPocService } from './rx-let-poc.service';
+import { RxChangeDetectorRef } from './rx-change-detector-ref.service';
 
 export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
@@ -175,7 +175,7 @@ export interface LetViewContext<T> extends RxViewContext<T> {
 @Directive({
   selector: '[rxLet]',
   exportAs: 'renderNotifier',
-  providers: [RxLetPocService],
+  providers: [RxChangeDetectorRef],
 })
 export class LetPocDirective<U> implements OnInit, OnDestroy {
   /** @internal */
@@ -188,7 +188,6 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
    *
    * @see {@link strategy}
    */
-  readonly strategies: StrategySelection;
 
   /**
    * @description
@@ -322,7 +321,7 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     this.templateManager.addTemplateRef('rxSuspense', templateRef);
   }
 
-  public currentStrategy: keyof DefaultStrategies;
+  public currentStrategy: string;
 
   /** @internal */
   private subscription: Unsubscribable = Subscription.EMPTY;
@@ -394,11 +393,12 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
 
   /** @internal */
   constructor(
-    public cdRefService: RxLetPocService,
+    public cdRefService: RxChangeDetectorRef,
     private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
-    this.strategies = getStrategies({ cdRef: cdRefService.cdRef });
+    this.cdRefService.assignStrategies();
+    this.cdRefService.setStrategy(DEFAULT_STRATEGY_NAME);
 
     this.templateManager = createTemplateManager(
       this.viewContainerRef,
@@ -406,11 +406,9 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     );
 
     this.renderAware = createRenderAware({
-      strategies: this.strategies,
+      strategies: this.cdRefService.get('strategies'),
       templateObserver: this.templateObserver,
     });
-
-    this.cdRefService.setStrategy(DEFAULT_STRATEGY_NAME);
   }
 
   public changeStrategy(strategy: keyof DefaultStrategies) {
@@ -426,8 +424,8 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     this.strategyChangeSubscription = this.cdRefService.strategy$
       .pipe(
         tap((strategy) => {
-          this.currentStrategy = strategy;
-          this.renderAware.nextStrategy(strategy);
+          this.currentStrategy = strategy.name;
+          this.renderAware.nextStrategy(strategy.name);
         })
       )
       .subscribe();

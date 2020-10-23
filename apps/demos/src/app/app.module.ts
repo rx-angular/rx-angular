@@ -13,17 +13,16 @@ import { HomeComponent } from './features/home/home.component';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    AppComponentModule
+    AppComponentModule,
   ],
   providers: [
     {
       provide: ENVIRONMENT_SETTINGS,
-      useValue: environment
-    }
+      useValue: environment,
+    },
   ],
   declarations: [HomeComponent],
   exports: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}

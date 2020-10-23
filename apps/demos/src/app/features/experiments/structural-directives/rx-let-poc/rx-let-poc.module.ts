@@ -21,6 +21,8 @@ import { UnpatchEventsModule } from '@rx-angular/template';
 import { DirtyChecksModule } from 'apps/demos/src/app/shared/debug-helper/dirty-checks';
 // tslint:disable-next-line: nx-enforce-module-boundaries
 import { RenderingsModule } from 'apps/demos/src/app/shared/debug-helper/renderings';
+import { StrategyTokenProvider } from './strategy.token';
+import { filter } from 'rxjs/operators';
 
 const DECLARATIONS = [RxLetPocComponent, DemoCounterComponent, LetPocDirective];
 
@@ -45,5 +47,17 @@ const DECLARATIONS = [RxLetPocComponent, DemoCounterComponent, LetPocDirective];
     RouterModule.forChild(ROUTES),
   ],
   exports: DECLARATIONS,
+  providers: [
+    {
+      provide: StrategyTokenProvider,
+      useValue: {
+        name: 'rxLetPocModuleStrategy',
+        detectChanges: () => {},
+        rxScheduleCD: (o) => o.pipe(filter((v) => false)),
+        scheduleCD: () => new AbortController(),
+      },
+      multi: true,
+    },
+  ],
 })
 export class RxLetPocModule {}
