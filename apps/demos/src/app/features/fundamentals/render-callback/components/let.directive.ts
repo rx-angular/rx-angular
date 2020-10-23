@@ -6,9 +6,17 @@ import {
   OnInit,
   Output,
   TemplateRef,
-  ViewContainerRef} from '@angular/core';
+  ViewContainerRef,
+} from '@angular/core';
 
-import { defer, NextObserver, Observable, ObservableInput, Subscription, Unsubscribable, } from 'rxjs';
+import {
+  defer,
+  NextObserver,
+  Observable,
+  ObservableInput,
+  Subscription,
+  Unsubscribable,
+} from 'rxjs';
 import { filter, map, share } from 'rxjs/operators';
 import {
   createTemplateManager,
@@ -16,16 +24,17 @@ import {
   LetDirective,
   RxTemplateObserver,
   RxViewContext,
-  TemplateManager
+  TemplateManager,
 } from '@rx-angular/template';
 // tslint:disable:nx-enforce-module-boundaries
 import {
   createRenderAware,
   RenderAware,
   RxNotificationKind,
-  StrategySelection
+  StrategySelection,
 } from '../../../../../../../../libs/template/src/lib/core/render-aware';
 import { DEFAULT_STRATEGY_NAME } from '../../../../../../../../libs/template/src/lib/render-strategies/strategies/strategies-map';
+import { getEnsureStrategy } from 'libs/template/src/lib/render-strategies/util';
 
 export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
@@ -208,10 +217,9 @@ export interface LetViewContext<T> extends RxViewContext<T> {
 @Directive({
   // tslint:disable-next-line:directive-selector
   selector: '[rxLetRcb]',
-  exportAs: 'renderNotifier'
+  exportAs: 'renderNotifier',
 })
 export class LetRcbDirective<U> implements OnInit, OnDestroy {
-
   /** @internal */
   static ngTemplateGuard_rxLet: 'binding';
 
@@ -287,7 +295,9 @@ export class LetRcbDirective<U> implements OnInit, OnDestroy {
    */
   @Input('rxLetRcbStrategy')
   set strategy(strategy: string | Observable<string> | undefined) {
-    this.renderAware.nextStrategy(strategy || DEFAULT_STRATEGY_NAME);
+    this.renderAware.nextStrategy(
+      this.ensureStrategy(strategy || DEFAULT_STRATEGY_NAME)
+    );
   }
 
   /**
@@ -427,13 +437,16 @@ export class LetRcbDirective<U> implements OnInit, OnDestroy {
    * `@ViewChild(LetDirective) rxLet: LetDirective<string>;`
    * this.rxLet.rendered.subscribe(value => console.log('afterRender', value));
    */
-  @Output() readonly rendered = defer(() => this.renderAware.rendered$.pipe(
-    // We use defer here as the as otherwise the the `@Output` decorator subscribes earlier than the renderAware
-    // property is assigned
-    filter(({ kind }) => this.templateManager.hasTemplateRef(kind)),
-    map(({ value }) => value),
-    share()
-  ));
+  @Output() readonly rendered = defer(() =>
+    this.renderAware.rendered$.pipe(
+      // We use defer here as the as otherwise the the `@Output` decorator subscribes earlier than the renderAware
+      // property is assigned
+      filter(({ kind }) => this.templateManager.hasTemplateRef(kind)),
+      map(({ value }) => value),
+      share()
+    )
+  );
+  ensureStrategy;
 
   /** @internal */
   private subscription: Unsubscribable = Subscription.EMPTY;
@@ -442,7 +455,10 @@ export class LetRcbDirective<U> implements OnInit, OnDestroy {
   private renderCallBackSubscription: Unsubscribable = Subscription.EMPTY;
 
   /** @internal */
-  private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>, RxNotificationKind>;
+  private readonly templateManager: TemplateManager<
+    LetViewContext<U | undefined | null>,
+    RxNotificationKind
+  >;
 
   /** @internal */
   private readonly initialViewContext: LetViewContext<U> = {
@@ -450,11 +466,13 @@ export class LetRcbDirective<U> implements OnInit, OnDestroy {
     rxLet: undefined,
     $rxError: false,
     $rxComplete: false,
-    $rxSuspense: false
+    $rxSuspense: false,
   };
 
   /** @internal */
-  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
+  private readonly templateObserver: RxTemplateObserver<
+    U | null | undefined
+  > = {
     suspense: () => {
       this.displayInitialView();
       this.templateManager.updateViewContext({
@@ -462,34 +480,34 @@ export class LetRcbDirective<U> implements OnInit, OnDestroy {
         rxLet: undefined,
         $rxError: false,
         $rxComplete: false,
-        $rxSuspense: true
+        $rxSuspense: true,
       });
     },
     next: (value: U | null | undefined) => {
       this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
         $implicit: value,
-        rxLet: value
+        rxLet: value,
       });
     },
     error: (error: Error) => {
       // fallback to rxNext when there's no template for rxError
       this.templateManager.hasTemplateRef('rxError')
-      ? this.templateManager.displayView('rxError')
-      : this.templateManager.displayView('rxNext');
+        ? this.templateManager.displayView('rxError')
+        : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $rxError: error
+        $rxError: error,
       });
     },
     complete: () => {
       // fallback to rxNext when there's no template for rxComplete
       this.templateManager.hasTemplateRef('rxComplete')
-      ? this.templateManager.displayView('rxComplete')
-      : this.templateManager.displayView('rxNext');
+        ? this.templateManager.displayView('rxComplete')
+        : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $rxComplete: true
+        $rxComplete: true,
       });
-    }
+    },
   };
 
   /** @internal */
@@ -506,14 +524,17 @@ export class LetRcbDirective<U> implements OnInit, OnDestroy {
     private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
+    this.ensureStrategy = getEnsureStrategy(getStrategies({ cdRef }));
     this.strategies = getStrategies({ cdRef });
-    this.templateManager = createTemplateManager(this.viewContainerRef, this.initialViewContext);
+    this.templateManager = createTemplateManager(
+      this.viewContainerRef,
+      this.initialViewContext
+    );
 
     this.renderAware = createRenderAware({
-      strategies: this.strategies,
-      templateObserver: this.templateObserver
+      templateObserver: this.templateObserver,
     });
-    this.renderAware.nextStrategy(DEFAULT_STRATEGY_NAME);
+    this.renderAware.nextStrategy(this.ensureStrategy(DEFAULT_STRATEGY_NAME));
   }
 
   /** @internal */
@@ -534,7 +555,9 @@ export class LetRcbDirective<U> implements OnInit, OnDestroy {
   private subscribeRenderCallback(): void {
     this.renderCallBackSubscription.unsubscribe();
     if (this._renderObserver) {
-      this.renderCallBackSubscription = this.rendered.subscribe(this._renderObserver);
+      this.renderCallBackSubscription = this.rendered.subscribe(
+        this._renderObserver
+      );
     }
   }
 

@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RenderStrategy } from '@rx-angular/template';
+import { RxChangeDetectorRef } from 'apps/demos/src/app/shared/rx-change-detector-ref/rx-change-detector-ref.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
@@ -7,25 +9,83 @@ import { BehaviorSubject, Subject } from 'rxjs';
     <rxa-visualizer>
       <div visualizerHeader>
         <mat-card-title>Strategy controlled by directive</mat-card-title>
-        <rxa-strategy-select></rxa-strategy-select>
-        <rxa-value-provider buttons="true" #vP="rxaValueProvider"></rxa-value-provider>
-      </div>
-      <mat-card>
-        <div *rxLet="vP.incremental$; let counter; strategy: strategy$ | push">
-          <mat-card-title>{{ counter }}</mat-card-title>
-        </div>
-      </mat-card>
-    </rxa-visualizer>
+        <br />
 
+        <rxa-strategy-select
+          [strategies]="rxCdRef.strategies$"
+          [currentStrategy]="changeStrategy$"
+          (strategyChange)="changeStrategy$.next({ name: $event })"
+        ></rxa-strategy-select>
+        <br />
+
+        <rxa-value-provider
+          buttons="true"
+          #vP="rxaValueProvider"
+        ></rxa-value-provider>
+        <br />
+        <mat-button-toggle-group
+          name="visibleExamples"
+          aria-label="Visible Examples"
+          [value]="displayStates.all"
+          #group="matButtonToggleGroup"
+        >
+          <mat-button-toggle [value]="displayStates.none"
+            >None</mat-button-toggle
+          >
+          <mat-button-toggle [value]="displayStates.provided"
+            >Own provider</mat-button-toggle
+          >
+          <mat-button-toggle [value]="displayStates.inherited"
+            >Inherited provider</mat-button-toggle
+          >
+          <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div class="row w-100">
+        <div class="col" *ngIf="visible(group, displayStates.provided)">
+          <div
+            *rxLet="
+              vP.incremental$;
+              let counter;
+              strategy: (changeStrategy$ | push).name
+            "
+          >
+            <mat-card-title>{{ counter }}</mat-card-title>
+            <rxa-dirty-check></rxa-dirty-check>
+          </div>
+        </div>
+        <div class="col" *ngIf="visible(group, displayStates.inherited)">
+          <!-- <div
+            *rxLetNoProvider="
+              vP.incremental$;
+              let counter;
+              strategy: (changeStrategy$ | push).name
+            "
+          >
+            <mat-card-title>{{ counter }}</mat-card-title>
+          </div> -->
+        </div>
+      </div>
+    </rxa-visualizer>
   `,
   host: {
     class: 'm-1 p-1',
-    style: 'display: block;'
+    style: 'display: block;',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: []
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class StrategyControlDirectiveComponent {
-  changeStrategy$ = new Subject();
-  strategy$ = this.changeStrategy$;
+  changeStrategy$ = new BehaviorSubject<Partial<RenderStrategy>>({
+    name: 'local',
+  });
+  displayStates = {
+    none: 0,
+    all: 1,
+    provided: 2,
+    inherited: 3,
+  };
+  constructor(public rxCdRef: RxChangeDetectorRef) {}
+  visible(group, choice) {
+    return group.value === choice || group.value === this.displayStates.all;
+  }
 }

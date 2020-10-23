@@ -17,24 +17,12 @@ import {
 import {
   createRenderAware,
   RenderAware,
-  renderWithLatestStrategy,
   RxNotificationKind,
 } from 'libs/template/src/lib/core';
 // tslint:disable-next-line: nx-enforce-module-boundaries
-import {
-  DEFAULT_STRATEGY_NAME,
-  getStrategies,
-} from 'libs/template/src/lib/render-strategies/strategies/strategies-map';
-import {
-  isObservable,
-  ObservableInput,
-  of,
-  ReplaySubject,
-  Subject,
-  Subscription,
-  Unsubscribable,
-} from 'rxjs';
-import { distinctUntilChanged, switchAll, tap } from 'rxjs/operators';
+import { DEFAULT_STRATEGY_NAME } from 'libs/template/src/lib/render-strategies/strategies/strategies-map';
+import { ObservableInput, Subscription, Unsubscribable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { RxChangeDetectorRef } from '../../../../shared/rx-change-detector-ref/rx-change-detector-ref.service';
 import { DefaultStrategies } from '../../../../shared/rx-change-detector-ref/default-strategies.interface';
 
@@ -177,11 +165,10 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  */
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[rxLet]',
+  selector: '[rxLetNoProvider]',
   exportAs: 'renderNotifier',
-  providers: [RxChangeDetectorRef],
 })
-export class LetPocDirective<U> implements OnInit, OnDestroy {
+export class LetPocDirectiveNoProvider<U> implements OnInit, OnDestroy {
   /** @internal */
   static ngTemplateGuard_rxLet: 'binding';
 
@@ -213,13 +200,10 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
    * @param potentialObservable
    */
   @Input()
-  set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
-    this.observableSubject$.next(
-      isObservable(potentialObservable)
-        ? potentialObservable
-        : of(potentialObservable)
-    );
-    // this.renderAware.nextPotentialObservable(potentialObservable);
+  set rxLetNoProvider(
+    potentialObservable: ObservableInput<U> | null | undefined
+  ) {
+    this.renderAware.nextPotentialObservable(potentialObservable);
   }
 
   /**
@@ -259,12 +243,12 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
    * @param strategy
    * @see {@link strategies}
    */
-  @Input('rxLetStrategy')
+  @Input('rxLetNoProviderStrategy')
 
   // NOTE: I'll skip Observable<string> part for POC.
   // set strategy(strategy: string | Observable<string> | undefined) {
   set strategy(strategy: keyof DefaultStrategies | undefined) {
-    this.cdRefServiceNext.setStrategy(strategy || DEFAULT_STRATEGY_NAME);
+    this.cdRefService.setStrategy(strategy || DEFAULT_STRATEGY_NAME);
   }
 
   /**
@@ -281,7 +265,7 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
    *
    * @param templateRef
    */
-  @Input('rxLetRxComplete')
+  @Input('rxLetNoProviderRxComplete')
   set rxComplete(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
   ) {
@@ -302,7 +286,7 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
    *
    * @param templateRef
    */
-  @Input('rxLetRxError')
+  @Input('rxLetNoProviderRxError')
   set rxError(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
   ) {
@@ -323,7 +307,7 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
    *
    * @param templateRef
    */
-  @Input('rxLetRxSuspense')
+  @Input('rxLetNoProviderRxSuspense')
   set rxSuspense(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
   ) {
@@ -394,62 +378,41 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
 
   /** @internal */
   static ngTemplateContextGuard<U>(
-    dir: LetPocDirective<U>,
+    dir: LetPocDirectiveNoProvider<U>,
     ctx: unknown | null | undefined
   ): ctx is LetViewContext<U> {
     return true;
   }
 
-  observableSubject$ = new ReplaySubject(1);
-  observable$ = this.observableSubject$.pipe(
-    distinctUntilChanged(),
-    switchAll(),
-    distinctUntilChanged()
-  );
-
   /** @internal */
   constructor(
     public cdRef: ChangeDetectorRef,
-    public cdRefServiceNext: RxChangeDetectorRef,
+    public cdRefService: RxChangeDetectorRef,
     private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
-    //  this.changeStrategy(DEFAULT_STRATEGY_NAME);
+    this.cdRefService.setStrategies(this.cdRef);
 
     this.templateManager = createTemplateManager(
       this.viewContainerRef,
       this.initialViewContext
     );
 
-    // this.renderAware = createRenderAware({
-    //   templateObserver: this.templateObserver,
-    // });
+    this.renderAware = createRenderAware({
+      templateObserver: this.templateObserver,
+    });
   }
 
   public changeStrategy(strategy: keyof DefaultStrategies) {
-    this.cdRefServiceNext.setStrategy(strategy);
+    this.cdRefService.setStrategy(strategy);
   }
 
   /** @internal */
   ngOnInit() {
     this.templateManager.addTemplateRef('rxNext', this.nextTemplateRef);
     this.displayInitialView();
-    this.subscription = this.observable$
-      .pipe(
-        tap((value: any) => {
-          this.templateObserver.next(value);
-          this.cdRefServiceNext.setStrategies(
-            this.templateManager.getEmbeddedView('rxNext')
-            // getStrategies({
-            //   cdRef: this.templateManager.getEmbeddedView('rxNext'),
-            // }).local.scheduleCD();
-          );
-        }),
-        renderWithLatestStrategy(this.cdRefServiceNext.strategy$)
-      )
-      .subscribe();
-
-    // this.renderAware.nextStrategy(this.cdRefServiceNext.strategy$);
+    this.subscription = this.renderAware.subscribe();
+    this.renderAware.nextStrategy(this.cdRefService.strategy$);
   }
 
   /** @internal */
@@ -467,20 +430,3 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     }
   };
 }
-
-/**
- * VIEW RENDERING
- *
- * Global - only works with component,
- * Noop - fine,
- * Native - works only with ChangeDetectorRef,
- * Local - needs to coalesce embeddedViews, scoping is not necessary,
- * Detach - could be a problem in switching from and to it,
- *
- * SCHEDULING
- *
- * Global - not yet configurable,
- * Noop - not needed,
- * Native - not configurable,
- * Local - fully configurable
- */

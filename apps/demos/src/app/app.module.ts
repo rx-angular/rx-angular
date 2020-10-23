@@ -23,14 +23,14 @@ import { getGlobalRenderingStrategies } from './shared/render-stragegies/render-
       provide: ENVIRONMENT_SETTINGS,
       useValue: environment,
     },
-    {
-      provide: StrategyTokenProvider,
-      useValue: {
-        name: 'appModuleLevel_renderQueue',
-        factory: getGlobalRenderingStrategies
-      },
-      multi: true,
-    },
+    // {
+    //   provide: StrategyTokenProvider,
+    //   useValue: {
+    //     name: 'appModuleLevel_renderQueue',
+    //     factory: getGlobalRenderingStrategies
+    //   },
+    //   multi: true,
+    // },
   ],
   declarations: [HomeComponent],
   exports: [],

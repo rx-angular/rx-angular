@@ -4,6 +4,7 @@ import { RxLetPocComponent } from './components/rx-let-poc/rx-let-poc.component'
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './rx-let-poc.routes';
 import { LetPocDirective } from './rx-let-poc.directive';
+import { LetPocDirectiveNoProvider } from './rx-let-poc.no-provider.directive';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -15,7 +16,11 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { TemplateModule, UnpatchEventsModule } from '@rx-angular/template';
+import {
+  PushModule,
+  TemplateModule,
+  UnpatchEventsModule,
+} from '@rx-angular/template';
 // tslint:disable-next-line: nx-enforce-module-boundaries
 import { DirtyChecksModule } from 'apps/demos/src/app/shared/debug-helper/dirty-checks';
 // tslint:disable-next-line: nx-enforce-module-boundaries
@@ -26,9 +31,20 @@ import { StrategyControlCustomComponent } from './components/strategy-control/st
 import { StrategyControlInheritComponent } from './components/strategy-control/strategy-control-inherit.component';
 import { StrategyControlDirectiveComponent } from './components/strategy-control/strategy-control-directive.component';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
+import {
+  MatButtonToggle,
+  MatButtonToggleGroup,
+  MatButtonToggleModule,
+} from '@angular/material/button-toggle';
 
-
-const DECLARATIONS = [RxLetPocComponent, StrategyControlCustomComponent, StrategyControlInheritComponent, StrategyControlDirectiveComponent, LetPocDirective];
+const DECLARATIONS = [
+  RxLetPocComponent,
+  StrategyControlCustomComponent,
+  StrategyControlInheritComponent,
+  StrategyControlDirectiveComponent,
+  LetPocDirective,
+  LetPocDirectiveNoProvider,
+];
 
 @NgModule({
   declarations: DECLARATIONS,
@@ -49,10 +65,12 @@ const DECLARATIONS = [RxLetPocComponent, StrategyControlCustomComponent, Strateg
     DirtyChecksModule,
     RenderingsModule,
     RouterModule.forChild(ROUTES),
-    TemplateModule,
+    // TemplateModule,
     VisualizerModule,
     StrategySelectModule,
-    ValueProvidersModule
+    ValueProvidersModule,
+    MatButtonToggleModule,
+    PushModule,
   ],
   exports: DECLARATIONS,
   providers: [
@@ -75,7 +93,6 @@ const DECLARATIONS = [RxLetPocComponent, StrategyControlCustomComponent, Strateg
       },
       multi: true,
     },*/
-  ]
+  ],
 })
-export class RxLetPocModule {
-}
+export class RxLetPocModule {}

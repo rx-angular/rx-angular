@@ -1,16 +1,25 @@
-import { ChangeDetectorRef, OnDestroy, Pipe, PipeTransform
+import {
+  ChangeDetectorRef,
+  OnDestroy,
+  Pipe,
+  PipeTransform,
 } from '@angular/core';
 import {
   NextObserver,
   Observable,
-  ObservableInput, Subscription,
-  Unsubscribable
+  ObservableInput,
+  Subscription,
+  Unsubscribable,
 } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getStrategies, RxTemplateObserver } from '@rx-angular/template';
 // tslint:disable:nx-enforce-module-boundaries
-import { createRenderAware, RenderAware } from '../../../../../../../../libs/template/src/lib/core/render-aware';
+import {
+  createRenderAware,
+  RenderAware,
+} from '../../../../../../../../libs/template/src/lib/core/render-aware';
 import { DEFAULT_STRATEGY_NAME } from '../../../../../../../../libs/template/src/lib/render-strategies/strategies/strategies-map';
+import { getEnsureStrategy } from 'libs/template/src/lib/render-strategies/util';
 
 /**
  * @Pipe PushPipe
@@ -58,22 +67,23 @@ import { DEFAULT_STRATEGY_NAME } from '../../../../../../../../libs/template/src
 @Pipe({ name: 'pushRcb', pure: false })
 export class PushRcbPipe<U> implements PipeTransform, OnDestroy {
   private renderedValue: U | null | undefined;
+  private readonly ensureStrategy;
 
   private readonly subscription: Unsubscribable;
   private readonly RenderAware: RenderAware<U | null | undefined>;
   private renderCallbackSubscription: Unsubscribable = Subscription.EMPTY;
 
-  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
-    suspense: () => this.renderedValue = undefined,
-    next: (value: U | null | undefined) => this.renderedValue = value
+  private readonly templateObserver: RxTemplateObserver<
+    U | null | undefined
+  > = {
+    suspense: () => (this.renderedValue = undefined),
+    next: (value: U | null | undefined) => (this.renderedValue = value),
   };
 
   constructor(cdRef: ChangeDetectorRef) {
+    this.ensureStrategy = getEnsureStrategy(getStrategies({ cdRef }));
     this.RenderAware = createRenderAware<U>({
-      strategies: getStrategies({
-        cdRef
-      }),
-      templateObserver: this.templateObserver
+      templateObserver: this.templateObserver,
     });
     this.subscription = this.RenderAware.subscribe();
   }
@@ -98,8 +108,8 @@ export class PushRcbPipe<U> implements PipeTransform, OnDestroy {
     config: string | Observable<string> | undefined,
     renderCallback?: NextObserver<U>
   ): T | null | undefined {
-    const strategy = config || DEFAULT_STRATEGY_NAME;
-    this.RenderAware.nextStrategy(strategy);
+    const strategyName = config || DEFAULT_STRATEGY_NAME;
+    this.RenderAware.nextStrategy(this.ensureStrategy(strategyName));
     this.RenderAware.nextPotentialObservable(potentialObservable);
     this.subscribeRenderCallback(renderCallback);
     return this.renderedValue as any;
@@ -110,7 +120,7 @@ export class PushRcbPipe<U> implements PipeTransform, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  private subscribeRenderCallback( renderCallback?: NextObserver<U>): void {
+  private subscribeRenderCallback(renderCallback?: NextObserver<U>): void {
     if (renderCallback) {
       this.renderCallbackSubscription.unsubscribe();
       this.renderCallbackSubscription = this.RenderAware.rendered$

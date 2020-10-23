@@ -8,7 +8,7 @@ import {
   OperatorFunction,
   ReplaySubject,
   Subscribable,
-  Subscription
+  Subscription,
 } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -19,7 +19,7 @@ import {
   startWith,
   switchMap,
   tap,
-  withLatestFrom
+  withLatestFrom,
 } from 'rxjs/operators';
 import { RxNotification, RxTemplateObserver } from '../model';
 import { rxMaterialize } from '../utils/rx-materialize';
@@ -44,7 +44,9 @@ export interface RenderAware<U> extends Subscribable<U> {
 export function createRenderAware<U>(cfg: {
   templateObserver: RxTemplateObserver<U>;
 }): RenderAware<U | undefined | null> {
-  const strategyName$ = new ReplaySubject<RenderStrategy | Observable<RenderStrategy>>(1);
+  const strategyName$ = new ReplaySubject<
+    RenderStrategy | Observable<RenderStrategy>
+  >(1);
   let currentStrategy: RenderStrategy;
   const strategy$: Observable<RenderStrategy> = strategyName$.pipe(
     distinctUntilChanged(),
@@ -100,26 +102,29 @@ export function createRenderAware<U>(cfg: {
     nextPotentialObservable(value: any): void {
       observablesFromTemplate$.next(value);
     },
-    nextStrategy(nextConfig: RenderStrategy | Observable<RenderStrategy>): void {
+    nextStrategy(
+      nextConfig: RenderStrategy | Observable<RenderStrategy>
+    ): void {
       strategyName$.next(nextConfig);
     },
     rendered$: renderingEffect$,
     activeStrategy$: strategy$,
     subscribe(): Subscription {
-      return new Subscription().add((renderingEffect$ as ConnectableObservable<U>).connect());
-    }
+      return new Subscription().add(
+        (renderingEffect$ as ConnectableObservable<U>).connect()
+      );
+    },
   };
 }
 
-
-function renderWithLatestStrategy<T>(
+export function renderWithLatestStrategy<T>(
   strategyChanges$: Observable<RenderStrategy>
 ): OperatorFunction<T, RxNotification<T>> {
   const suspenseNotification: RxNotification<T> = {
     kind: 'rxSuspense',
     value: undefined,
     hasValue: false,
-    error: undefined
+    error: undefined,
   };
   return (o$) => {
     return o$.pipe(

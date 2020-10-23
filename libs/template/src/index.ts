@@ -4,18 +4,19 @@ export {
   RenderStrategyFactory,
   RenderStrategyFactoryConfig,
   RxNotification,
-  StrategySelection
+  StrategySelection,
+  renderWithLatestStrategy,
 } from './lib/core/render-aware';
 export { coalesceWith } from './lib/render-strategies/rxjs/operators/coalesceWith';
 export { staticCoalesce } from './lib/render-strategies/static';
 export { DEFAULT_STRATEGY_NAME } from './lib/render-strategies/strategies/strategies-map';
 export {
   UnpatchEventsDirective,
-  UnpatchEventsModule
+  UnpatchEventsModule,
 } from './lib/experimental/unpatch/events';
 export {
   ViewportPrioModule,
-  ViewportPrioDirective
+  ViewportPrioDirective,
 } from './lib/experimental/viewport-prio';
 // @TODO clarify if we should exports this
 export { getZoneUnPatchedApi, isNgZone } from './lib/core';
@@ -23,16 +24,15 @@ export { isViewEngineIvy } from './lib/experimental/core/utils/view-engine-check
 
 // STABLE
 export {
- TemplateManager, createTemplateManager
+  TemplateManager,
+  createTemplateManager,
 } from './lib/core/utils/template-manager_creator';
-export {
-  RxViewContext, RxTemplateObserver
-} from './lib/core/model';
+export { RxViewContext, RxTemplateObserver } from './lib/core/model';
 
 export {
   getStrategies,
   priorityTickMap,
-  SchedulingPriority
+  SchedulingPriority,
 } from './lib/render-strategies';
 
 export { PushPipe, PushModule } from './lib/push';

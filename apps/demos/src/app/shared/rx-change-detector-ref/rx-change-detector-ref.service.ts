@@ -1,12 +1,21 @@
-import { ChangeDetectorRef, Inject, Injectable } from '@angular/core';
+import { ChangeDetectorRef, Inject, Injectable, Optional } from '@angular/core';
 import { RxState, selectSlice } from '@rx-angular/state';
-import { DEFAULT_STRATEGY_NAME, getStrategies, RenderStrategy } from '@rx-angular/template';
+import {
+  DEFAULT_STRATEGY_NAME,
+  getStrategies,
+  RenderStrategy,
+} from '@rx-angular/template';
 // tslint:disable-next-line: nx-enforce-module-boundaries
-import { StrategyTokenProvider, StrategyTokenProviderMap } from './strategy.token';
+import {
+  StrategyTokenProvider,
+  StrategyTokenProviderMap,
+} from './strategy.token';
 import { Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class RxChangeDetectorRef extends RxState<{
   currentStrategy: string;
   currentInvisibleStrategy: string;
@@ -28,19 +37,17 @@ export class RxChangeDetectorRef extends RxState<{
   strategies$ = this.select(pluck('strategies'));
 
   constructor(
+    @Optional()
     @Inject(StrategyTokenProvider)
-    private customStrategy: StrategyTokenProviderMap[],
-    public cdRef: ChangeDetectorRef
+    private customStrategy: StrategyTokenProviderMap[]
   ) {
     super();
-    this.initStrategies();
-    this.set({ 'currentStrategy': DEFAULT_STRATEGY_NAME });
-    this.hold(this.$, console.log);
+    this.set({ currentStrategy: DEFAULT_STRATEGY_NAME });
   }
 
   setStrategy(currentStrategy: string) {
     this.set({
-      currentStrategy
+      currentStrategy,
     });
   }
 
@@ -48,13 +55,17 @@ export class RxChangeDetectorRef extends RxState<{
     this.set({ currentInvisibleStrategy });
   }
 
-  initStrategies() {
+  setStrategies(cdRef: ChangeDetectorRef) {
+    if (this.customStrategy) {
+      return this.set({
+        strategies: this.customStrategy.reduce(
+          (acc, o) => ({ ...acc, ...o.factory({ cdRef: cdRef }) }),
+          getStrategies({ cdRef: cdRef })
+        ),
+      });
+    }
     this.set({
-      strategies: this.customStrategy
-        .reduce((acc, o) => ({ ...acc, ...o.factory({ cdRef: this.cdRef }) }),
-          getStrategies({ cdRef: this.cdRef })
-        )
+      strategies: getStrategies({ cdRef: cdRef }),
     });
   }
-
 }
