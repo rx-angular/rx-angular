@@ -1,28 +1,14 @@
-import {
-  ChangeDetectorRef,
-  Directive,
-  Input,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
-import {
-  RxViewContext,
-  TemplateManager,
-  RxTemplateObserver,
-  getStrategies,
-  createTemplateManager,
-} from '@rx-angular/template';
+import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { createTemplateManager, RxTemplateObserver, RxViewContext, TemplateManager } from '@rx-angular/template';
 // tslint:disable-next-line: nx-enforce-module-boundaries
-import {
-  StrategySelection,
-  RenderAware,
-  RxNotificationKind,
-  createRenderAware,
-} from 'libs/template/src/lib/core';
+import { createRenderAware, RenderAware, RxNotificationKind } from 'libs/template/src/lib/core';
 // tslint:disable-next-line: nx-enforce-module-boundaries
 import { DEFAULT_STRATEGY_NAME } from 'libs/template/src/lib/render-strategies/strategies/strategies-map';
+import { ObservableInput, Subscription, Unsubscribable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { RxChangeDetectorRef } from '../../../../shared/rx-change-detector-ref/rx-change-detector-ref.service';
+import { DefaultStrategies } from '../../../../shared/rx-change-detector-ref/default-strategies.interface';
+
 // import { createRenderAware, RenderAware, StrategySelection } from './core';
 // import {
 //   RxTemplateObserver,
@@ -37,18 +23,6 @@ import { DEFAULT_STRATEGY_NAME } from 'libs/template/src/lib/render-strategies/s
 //   DEFAULT_STRATEGY_NAME,
 //   getStrategies,
 // } from './render-strategies/strategies/strategies-map';
-
-import {
-  merge,
-  Observable,
-  ObservableInput,
-  Subscription,
-  Unsubscribable,
-} from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { DefaultStrategies } from './default-strategies.interface';
-
-import { RxChangeDetectorRef } from './rx-change-detector-ref.service';
 
 export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
@@ -173,9 +147,10 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  * @publicApi
  */
 @Directive({
+  // tslint:disable-next-line:directive-selector
   selector: '[rxLet]',
   exportAs: 'renderNotifier',
-  providers: [RxChangeDetectorRef],
+  providers: [RxChangeDetectorRef]
 })
 export class LetPocDirective<U> implements OnInit, OnDestroy {
   /** @internal */
@@ -328,10 +303,8 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
   private strategyChangeSubscription: Unsubscribable = Subscription.EMPTY;
 
   /** @internal */
-  private readonly templateManager: TemplateManager<
-    LetViewContext<U | undefined | null>,
-    RxNotificationKind
-  >;
+  private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>,
+    RxNotificationKind>;
 
   /** @internal */
   private readonly initialViewContext: LetViewContext<U> = {
@@ -339,13 +312,11 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     rxLet: undefined,
     $rxError: false,
     $rxComplete: false,
-    $rxSuspense: false,
+    $rxSuspense: false
   };
 
   /** @internal */
-  private readonly templateObserver: RxTemplateObserver<
-    U | null | undefined
-  > = {
+  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => {
       this.displayInitialView();
       this.templateManager.updateViewContext({
@@ -353,14 +324,14 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
         rxLet: undefined,
         $rxError: false,
         $rxComplete: false,
-        $rxSuspense: true,
+        $rxSuspense: true
       });
     },
     next: (value: U | null | undefined) => {
       this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
         $implicit: value,
-        rxLet: value,
+        rxLet: value
       });
     },
     error: (error: Error) => {
@@ -369,7 +340,7 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
         ? this.templateManager.displayView('rxError')
         : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $rxError: error,
+        $rxError: error
       });
     },
     complete: () => {
@@ -378,9 +349,9 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
         ? this.templateManager.displayView('rxComplete')
         : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $rxComplete: true,
+        $rxComplete: true
       });
-    },
+    }
   };
 
   /** @internal */
@@ -397,8 +368,7 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
-    this.cdRefService.assignStrategies();
-    this.cdRefService.setStrategy(DEFAULT_STRATEGY_NAME);
+  //  this.changeStrategy(DEFAULT_STRATEGY_NAME);
 
     this.templateManager = createTemplateManager(
       this.viewContainerRef,
@@ -406,8 +376,7 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     );
 
     this.renderAware = createRenderAware({
-      strategies: this.cdRefService.get('strategies'),
-      templateObserver: this.templateObserver,
+      templateObserver: this.templateObserver
     });
   }
 
@@ -420,15 +389,7 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     this.templateManager.addTemplateRef('rxNext', this.nextTemplateRef);
     this.displayInitialView();
     this.subscription = this.renderAware.subscribe();
-
-    this.strategyChangeSubscription = this.cdRefService.strategy$
-      .pipe(
-        tap((strategy) => {
-          this.currentStrategy = strategy.name;
-          this.renderAware.nextStrategy(strategy.name);
-        })
-      )
-      .subscribe();
+    this.renderAware.nextStrategy(this.cdRefService.strategy$);
   }
 
   /** @internal */

@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Inject, Injectable } from '@angular/core';
-import { patch, RxState, selectSlice, toDictionary } from '@rx-angular/state';
-import { getStrategies, RenderStrategy } from '@rx-angular/template';
+import { RxState, selectSlice } from '@rx-angular/state';
+import { DEFAULT_STRATEGY_NAME, getStrategies, RenderStrategy } from '@rx-angular/template';
 // tslint:disable-next-line: nx-enforce-module-boundaries
-import { StrategyTokenProvider } from './strategy.token';
+import { StrategyTokenProvider, StrategyTokenProviderMap } from './strategy.token';
 import { Observable } from 'rxjs';
-import { pluck, map } from 'rxjs/operators';
+import { map, pluck } from 'rxjs/operators';
 
 @Injectable()
 export class RxChangeDetectorRef extends RxState<{
@@ -29,16 +29,18 @@ export class RxChangeDetectorRef extends RxState<{
 
   constructor(
     @Inject(StrategyTokenProvider)
-    private customStrategy: RenderStrategy[],
+    private customStrategy: StrategyTokenProviderMap[],
     public cdRef: ChangeDetectorRef
   ) {
     super();
+    this.initStrategies();
+    this.set({ 'currentStrategy': DEFAULT_STRATEGY_NAME });
     this.hold(this.$, console.log);
   }
 
   setStrategy(currentStrategy: string) {
     this.set({
-      currentStrategy,
+      currentStrategy
     });
   }
 
@@ -46,12 +48,13 @@ export class RxChangeDetectorRef extends RxState<{
     this.set({ currentInvisibleStrategy });
   }
 
-  assignStrategies() {
+  initStrategies() {
     this.set({
-      strategies: patch(
-        getStrategies({ cdRef: this.cdRef }),
-        toDictionary(this.customStrategy, 'name')
-      ),
+      strategies: this.customStrategy
+        .reduce((acc, o) => ({ ...acc, ...o.factory({ cdRef: this.cdRef }) }),
+          getStrategies({ cdRef: this.cdRef })
+        )
     });
   }
+
 }

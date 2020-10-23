@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { getGlobalRenderingStrategies } from '../core/global-render.strategy';
+
 import { Renderable } from '../interfaces';
+import { getGlobalRenderingStrategies } from '../../../../../shared/render-stragegies/render-queue/global-render.strategy';
 
 @Component({
   selector: 'rxa-child',
@@ -60,6 +61,7 @@ export class ChildComponent extends RxState<Renderable<ChildComponent>>
   }
 
   ngOnInit() {
+    // @ts-ignore
     this.strategies = getGlobalRenderingStrategies({ cdRef: this.cdRef });
     this.hold(
       this.doRenderBlocking.pipe(

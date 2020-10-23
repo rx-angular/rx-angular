@@ -1,8 +1,9 @@
 import {
-  ConnectableObservable,
-  Observable,
   concat,
+  ConnectableObservable,
+  isObservable,
   NEVER,
+  Observable,
   of,
   OperatorFunction,
   ReplaySubject,
@@ -22,11 +23,11 @@ import {
 } from 'rxjs/operators';
 import { RxNotification, RxTemplateObserver } from '../model';
 import { rxMaterialize } from '../utils/rx-materialize';
-import { RenderStrategy, StrategySelection } from './interfaces';
+import { RenderStrategy } from './interfaces';
 
 export interface RenderAware<U> extends Subscribable<U> {
   nextPotentialObservable: (value: any) => void;
-  nextStrategy: (config: string | Observable<string>) => void;
+  nextStrategy: (config: RenderStrategy | Observable<RenderStrategy>) => void;
   activeStrategy$: Observable<RenderStrategy>;
   rendered$: Observable<RxNotification<U>>;
 }
@@ -41,25 +42,16 @@ export interface RenderAware<U> extends Subscribable<U> {
  * Also custom behaviour is something you need to implement in the extending class
  */
 export function createRenderAware<U>(cfg: {
-  strategies: StrategySelection;
   templateObserver: RxTemplateObserver<U>;
 }): RenderAware<U | undefined | null> {
-  const strategyName$ = new ReplaySubject<string | Observable<string>>(1);
+  const strategyName$ = new ReplaySubject<RenderStrategy | Observable<RenderStrategy>>(1);
   let currentStrategy: RenderStrategy;
   const strategy$: Observable<RenderStrategy> = strategyName$.pipe(
     distinctUntilChanged(),
-    switchMap((stringOrObservable) =>
-      typeof stringOrObservable === 'string'
-      ? of(stringOrObservable)
-      : stringOrObservable
-    ),
-    map((strategy: string): RenderStrategy => {
-        const s = cfg.strategies[strategy];
-        if (!!s) {
-          return s;
-        }
-        throw new Error(`Strategy ${ strategy } does not exist.`);
-      }
+    switchMap((strategyOrObservable) =>
+      isObservable(strategyOrObservable)
+        ? strategyOrObservable
+        : of(strategyOrObservable)
     ),
     tap((s) => (currentStrategy = s)),
     // do not repeat the steps before for each subscriber
@@ -108,7 +100,7 @@ export function createRenderAware<U>(cfg: {
     nextPotentialObservable(value: any): void {
       observablesFromTemplate$.next(value);
     },
-    nextStrategy(nextConfig: string | Observable<string>): void {
+    nextStrategy(nextConfig: RenderStrategy | Observable<RenderStrategy>): void {
       strategyName$.next(nextConfig);
     },
     rendered$: renderingEffect$,
@@ -127,7 +119,7 @@ function renderWithLatestStrategy<T>(
     kind: 'rxSuspense',
     value: undefined,
     hasValue: false,
-    error: undefined,
+    error: undefined
   };
   return (o$) => {
     return o$.pipe(
@@ -137,7 +129,7 @@ function renderWithLatestStrategy<T>(
       switchMap(([renderValue, strategy]) =>
         concat(of(renderValue), NEVER).pipe(strategy.rxScheduleCD)
       ),
-      startWith(suspenseNotification),
+      startWith(suspenseNotification)
     );
   };
 }

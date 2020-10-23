@@ -3,9 +3,10 @@ import { RxState } from '@rx-angular/state';
 
 import { Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { getGlobalRenderingStrategies } from '../core/global-render.strategy';
+
 import { Renderable } from '../interfaces';
 import { ChildComponent } from './child.component';
+import { getGlobalRenderingStrategies } from '../../../../../shared/render-stragegies/render-queue/global-render.strategy';
 
 @Component({
   selector: 'rxa-render-queue',

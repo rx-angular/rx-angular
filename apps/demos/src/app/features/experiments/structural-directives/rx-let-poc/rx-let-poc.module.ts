@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RxLetPocComponent } from './components/rx-let-poc/rx-let-poc.component';
-import { DemoCounterComponent } from './components/demo-counter/demo-counter.component';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './rx-let-poc.routes';
 import { LetPocDirective } from './rx-let-poc.directive';
@@ -16,15 +15,20 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { UnpatchEventsModule } from '@rx-angular/template';
+import { TemplateModule, UnpatchEventsModule } from '@rx-angular/template';
 // tslint:disable-next-line: nx-enforce-module-boundaries
 import { DirtyChecksModule } from 'apps/demos/src/app/shared/debug-helper/dirty-checks';
 // tslint:disable-next-line: nx-enforce-module-boundaries
 import { RenderingsModule } from 'apps/demos/src/app/shared/debug-helper/renderings';
-import { StrategyTokenProvider } from './strategy.token';
-import { filter } from 'rxjs/operators';
+import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
+import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
+import { StrategyControlCustomComponent } from './components/strategy-control/strategy-control-custom.component';
+import { StrategyControlInheritComponent } from './components/strategy-control/strategy-control-inherit.component';
+import { StrategyControlDirectiveComponent } from './components/strategy-control/strategy-control-directive.component';
+import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 
-const DECLARATIONS = [RxLetPocComponent, DemoCounterComponent, LetPocDirective];
+
+const DECLARATIONS = [RxLetPocComponent, StrategyControlCustomComponent, StrategyControlInheritComponent, StrategyControlDirectiveComponent, LetPocDirective];
 
 @NgModule({
   declarations: DECLARATIONS,
@@ -45,9 +49,22 @@ const DECLARATIONS = [RxLetPocComponent, DemoCounterComponent, LetPocDirective];
     DirtyChecksModule,
     RenderingsModule,
     RouterModule.forChild(ROUTES),
+    TemplateModule,
+    VisualizerModule,
+    StrategySelectModule,
+    ValueProvidersModule
   ],
   exports: DECLARATIONS,
   providers: [
+    /*{
+      provide: RxChangeDetectorRef,
+      useFactory: (t, r) => {
+        const i = new RxChangeDetectorRef(t, r);
+        console.log('new RxChangeDetectorRef');
+        return i;
+      },
+      deps: [StrategyTokenProvider, ChangeDetectorRef]
+    },
     {
       provide: StrategyTokenProvider,
       useValue: {
@@ -57,7 +74,8 @@ const DECLARATIONS = [RxLetPocComponent, DemoCounterComponent, LetPocDirective];
         scheduleCD: () => new AbortController(),
       },
       multi: true,
-    },
-  ],
+    },*/
+  ]
 })
-export class RxLetPocModule {}
+export class RxLetPocModule {
+}
