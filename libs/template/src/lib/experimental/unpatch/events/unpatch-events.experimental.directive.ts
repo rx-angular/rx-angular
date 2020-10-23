@@ -90,7 +90,7 @@ export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
    */
   @Input('unpatch')
   set events(events: string[]) {
-    if (events && events.length > 0) {
+    if (events && Array.isArray(events)) {
       this.events$.next(events);
     } else {
       this.events$.next(zonePatchedEvents);

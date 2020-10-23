@@ -9,15 +9,22 @@ import { PrimitivesProviderService } from '../primitives-provider.service';
   exportAs: 'rxaValueProvider',
   template: `
     <ng-container *ngIf="buttons">
-      <button mat-raised-button (click)="reset()">Reset (patched)</button>
+
+      <button mat-raised-button (click)="reset()">
+        Reset
+        <rxa-zone-patched-icon class="mat-icon" zoneState="patched"></rxa-zone-patched-icon>
+      </button>
       <button mat-raised-button [unpatch]="unpatched" (click)="next()">
-        Next  <rxa-zone-patched-icon class="mat-icon" [zoneState]="unpatched?.length === 0 ? 'patched' : 'unpatched'"></rxa-zone-patched-icon>
+        Next
+        <rxa-zone-patched-icon class="mat-icon" [zoneState]="getZoneState()"></rxa-zone-patched-icon>
       </button>
       <button mat-raised-button [unpatch]="unpatched" (click)="error()">
-        Error  <rxa-zone-patched-icon class="mat-icon" [zoneState]="unpatched?.length === 0 ? 'patched' : 'unpatched'"></rxa-zone-patched-icon>
+        Error
+        <rxa-zone-patched-icon class="mat-icon" [zoneState]="getZoneState()"></rxa-zone-patched-icon>
       </button>
       <button mat-raised-button [unpatch]="unpatched" (click)="complete()">
-        Complete  <rxa-zone-patched-icon class="mat-icon" [zoneState]="unpatched?.length === 0 ? 'patched' : 'unpatched'"></rxa-zone-patched-icon>
+        Complete
+        <rxa-zone-patched-icon class="mat-icon" [zoneState]="getZoneState()"></rxa-zone-patched-icon>
       </button>
     </ng-container>
     <ng-content></ng-content>`,
@@ -56,5 +63,9 @@ export class ValueProviderComponent extends PrimitivesProviderService {
   reset() {
     super.reset();
     this.resetState.next();
+  }
+
+  getZoneState() {
+    return this.unpatched?.length === 0 ? 'patched' : 'unpatched';
   }
 }
