@@ -16,4 +16,7 @@ jobs:
     steps:
     - uses: actions/labeler@v2
       with:
+        ref: ${{ github.event.pull_request.head.ref }}
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
+        fetch-depth: 0
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
