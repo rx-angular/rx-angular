@@ -171,36 +171,10 @@ export interface LetViewContext<T> extends RxViewContext<T> {
   providers: [RxChangeDetectorRef]
 })
 export class LetPocDirective<U> implements OnInit, OnDestroy {
-  /** @internal */
   static ngTemplateGuard_rxLet: 'binding';
 
-  /**
-   * @description
-   * All strategies initialized and registered for the `LetDirective`. Pass a name of one the
-   * `strategies` to the `strategy` input to switch between them on the fly.
-   *
-   * @see {@link strategy}
-   */
-
-  /**
-   * @description
-   * Object holding logic for managing strategies and change detection for the `LetDirective`.
-   *
-   * @internal
-   */
   readonly renderAware: RenderAware<U | null | undefined>;
 
-  /**
-   * @description
-   * The Observable to be bound to the context of a template.
-   *
-   * @example
-   * <ng-container *rxLet="hero$; let hero">
-   *   <app-hero [hero]="hero"></app-hero>
-   * </ng-container>
-   *
-   * @param potentialObservable
-   */
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
     this.observable$Subject$.next(
@@ -208,68 +182,15 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
         ? potentialObservable
         : of(potentialObservable)
     );
-    // this.renderAware.nextPotentialObservable(potentialObservable);
   }
 
-  /**
-   * @description
-   * The rendering strategy to be used when rendering with the reactive context within a template.
-   * Use it to dynamically manage your rendering strategy. You can switch the strategies
-   * imperatively (with a string) or by bounding an Observable.
-   * The default strategy is `'local'`.
-   *
-   * @example
-   * \@Component({
-   *   selector: 'app-root',
-   *   template: `
-   *     <ng-container *rxLet="hero$; let hero; strategy: strategy">
-   *       <app-hero [hero]="hero"></app-hero>
-   *     </ng-container>
-   *   `
-   * })
-   * export class AppComponent {
-   *   strategy = 'local';
-   * }
-   *
-   * // OR
-   *
-   * \@Component({
-   *   selector: 'app-root',
-   *   template: `
-   *     <ng-container *rxLet="hero$; let hero; strategy: strategy$">
-   *       <app-hero [hero]="hero"></app-hero>
-   *     </ng-container>
-   *   `
-   * })
-   * export class AppComponent {
-   *   strategy$ = new BehaviorSubject('local');
-   * }
-   *
-   * @param strategy
-   * @see {@link strategies}
-   */
   @Input('rxLetStrategy')
 
-  // NOTE: I'll skip Observable<string> part for POC.
   set strategy(strategy: string | Observable<string> | undefined) {
     const o$: Observable<string> = isObservable(strategy) ? strategy : of(strategy || DEFAULT_STRATEGY_NAME);
     this.strategy$Subject$.next(o$);
   }
 
-  /**
-   * @description
-   * A template to show if the bound Observable is in "complete" state.
-   *
-   * @example
-   * <ng-container *rxLet="hero$; let hero; rxComplete: completeTemplate">
-   *   <app-hero [hero]="hero"></app-hero>
-   * </ng-container>
-   * <ng-template #completeTemplate>
-   *   <mat-icon>thumb_up</mat-icon>
-   * </ng-template>
-   *
-   * @param templateRef
-   */
   @Input('rxLetRxComplete')
   set rxComplete(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
@@ -277,20 +198,6 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     this.templateManager.addTemplateRef('rxComplete', templateRef);
   }
 
-  /**
-   * @description
-   * A template to show if the bound Observable is in "error" state.
-   *
-   * @example
-   * <ng-container *rxLet="hero$; let hero; rxError: errorTemplate">
-   *   <app-hero [hero]="hero"></app-hero>
-   * </ng-container>
-   * <ng-template #errorTemplate>
-   *   <mat-icon>thumb_down</mat-icon>
-   * </ng-template>
-   *
-   * @param templateRef
-   */
   @Input('rxLetRxError')
   set rxError(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
@@ -298,20 +205,6 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     this.templateManager.addTemplateRef('rxError', templateRef);
   }
 
-  /**
-   * @description
-   * A template to show before the first value is emitted from the bound Observable.
-   *
-   * @example
-   * <ng-container *rxLet="hero$; let hero; rxSuspense: suspenseTemplate">
-   *   <app-hero [hero]="hero"></app-hero>
-   * </ng-container>
-   * <ng-template #suspenseTemplate>
-   *   <mat-progress-spinner></mat-progress-spinner>
-   * </ng-template>
-   *
-   * @param templateRef
-   */
   @Input('rxLetRxSuspense')
   set rxSuspense(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
@@ -321,15 +214,12 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
 
   public currentStrategy: string;
 
-  /** @internal */
   private subscription: Unsubscribable = Subscription.EMPTY;
   private strategyChangeSubscription: Unsubscribable = Subscription.EMPTY;
 
-  /** @internal */
   private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>,
     RxNotificationKind>;
 
-  /** @internal */
   private readonly initialViewContext: LetViewContext<U> = {
     $implicit: undefined,
     rxLet: undefined,
@@ -351,8 +241,6 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     distinctUntilChanged()
   );
 
-
-  /** @internal */
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => {
       this.displayInitialView();
@@ -399,30 +287,22 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     return true;
   }
 
-  /** @internal */
   constructor(
     public cdRef: ChangeDetectorRef,
     public cdRefServiceNext: RxChangeDetectorRef,
     private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
-    //  this.changeStrategy(DEFAULT_STRATEGY_NAME);
-
     this.templateManager = createTemplateManager(
       this.viewContainerRef,
       this.initialViewContext
     );
-
-    // this.renderAware = createRenderAware({
-    //   templateObserver: this.templateObserver,
-    // });
   }
 
   public changeStrategy(strategy: keyof DefaultStrategies) {
     this.cdRefServiceNext.setStrategy(strategy);
   }
 
-  /** @internal */
   ngOnInit() {
     this.templateManager.addTemplateRef('rxNext', this.nextTemplateRef);
     this.displayInitialView();
@@ -434,8 +314,6 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
         applyStrategy(this.strategy$, (this.cdRef as any).context)
       )
       .subscribe();
-
-    // this.renderAware.nextStrategy(this.cdRefServiceNext.strategy$);
   }
 
   /** @internal */
@@ -479,11 +357,21 @@ function renderByStrategyName(strategyName: string, evCdRef, context): void {
       evCdRef.detach();
       break;
     case 'global':
+      // could be solved with intermediate last strategy
       evCdRef.reattach();
       markDirty(context);
       break;
+    case 'native':
+      // could be solved with intermediate last strategy
+      evCdRef.reattach();
+      evCdRef.markForCheck();
+      break;
+    case 'noop':
+      // do nothing
+
   }
 }
+
 function scheduleByStrategyName<T>(strategyName: string): (o$: Observable<T>) => Observable<T> {
   return o$ => {
     switch (strategyName) {
@@ -492,7 +380,7 @@ function scheduleByStrategyName<T>(strategyName: string): (o$: Observable<T>) =>
       default:
         return o$;
     }
-  }
+  };
 }
 
 function applyStrategy<T>(strategyName$: Observable<string>, context): (o$: Observable<T>) => Observable<T> {
@@ -501,7 +389,7 @@ function applyStrategy<T>(strategyName$: Observable<string>, context): (o$: Obse
       switchMap(strategyName => v$.pipe(
         scheduleByStrategyName(strategyName),
         tap((evcDRef) => renderByStrategyName(strategyName, evcDRef, context))
-        ),
+        )
       ))
     )
   );
