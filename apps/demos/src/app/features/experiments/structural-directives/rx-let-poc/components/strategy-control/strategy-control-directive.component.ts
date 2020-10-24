@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RenderStrategy } from '@rx-angular/template';
-import { RxChangeDetectorRef } from 'apps/demos/src/app/shared/rx-change-detector-ref/rx-change-detector-ref.service';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { RxChangeDetectorRef } from '../../../../../../shared/rx-change-detector-ref/rx-change-detector-ref.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'rxa-strategy-control-directive',
@@ -9,20 +9,20 @@ import { BehaviorSubject, Subject } from 'rxjs';
     <rxa-visualizer>
       <div visualizerHeader>
         <mat-card-title>Strategy controlled by directive</mat-card-title>
-        <br />
+        <br/>
 
         <rxa-strategy-select
           [strategies]="rxCdRef.strategies$"
           [currentStrategy]="changeStrategy$"
           (strategyChange)="changeStrategy$.next({ name: $event })"
         ></rxa-strategy-select>
-        <br />
+        <br/>
 
         <rxa-value-provider
           buttons="true"
           #vP="rxaValueProvider"
         ></rxa-value-provider>
-        <br />
+        <br/>
         <mat-button-toggle-group
           name="visibleExamples"
           aria-label="Visible Examples"
@@ -30,13 +30,16 @@ import { BehaviorSubject, Subject } from 'rxjs';
           #group="matButtonToggleGroup"
         >
           <mat-button-toggle [value]="displayStates.none"
-            >None</mat-button-toggle
+          >None
+          </mat-button-toggle
           >
           <mat-button-toggle [value]="displayStates.provided"
-            >Own provider</mat-button-toggle
+          >Own provider
+          </mat-button-toggle
           >
           <mat-button-toggle [value]="displayStates.inherited"
-            >Inherited provider</mat-button-toggle
+          >Inherited provider
+          </mat-button-toggle
           >
           <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
         </mat-button-toggle-group>
@@ -70,21 +73,24 @@ import { BehaviorSubject, Subject } from 'rxjs';
   `,
   host: {
     class: 'm-1 p-1',
-    style: 'display: block;',
+    style: 'display: block;'
   },
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class StrategyControlDirectiveComponent {
   changeStrategy$ = new BehaviorSubject<Partial<RenderStrategy>>({
-    name: 'local',
+    name: 'local'
   });
   displayStates = {
     none: 0,
     all: 1,
     provided: 2,
-    inherited: 3,
+    inherited: 3
   };
-  constructor(public rxCdRef: RxChangeDetectorRef) {}
+
+  constructor(public rxCdRef: RxChangeDetectorRef) {
+  }
+
   visible(group, choice) {
     return group.value === choice || group.value === this.displayStates.all;
   }

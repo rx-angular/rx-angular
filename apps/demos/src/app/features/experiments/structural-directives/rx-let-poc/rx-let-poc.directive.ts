@@ -1,40 +1,20 @@
+import { ChangeDetectorRef, Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import {
-  ChangeDetectorRef,
-  Directive,
-  Input,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
-import {
+  coalesceWith,
   createTemplateManager,
+  priorityTickMap,
+  rxMaterialize,
   RxTemplateObserver,
   RxViewContext,
-  TemplateManager,
+  SchedulingPriority,
+  TemplateManager
 } from '@rx-angular/template';
 // tslint:disable-next-line: nx-enforce-module-boundaries
-import {
-  createRenderAware,
-  RenderAware,
-  renderWithLatestStrategy,
-  RxNotificationKind,
-} from 'libs/template/src/lib/core';
+import { RenderAware, RxNotificationKind } from 'libs/template/src/lib/core';
 // tslint:disable-next-line: nx-enforce-module-boundaries
-import {
-  DEFAULT_STRATEGY_NAME,
-  getStrategies,
-} from 'libs/template/src/lib/render-strategies/strategies/strategies-map';
-import {
-  isObservable,
-  ObservableInput,
-  of,
-  ReplaySubject,
-  Subject,
-  Subscription,
-  Unsubscribable,
-} from 'rxjs';
-import { distinctUntilChanged, switchAll, tap } from 'rxjs/operators';
+import { DEFAULT_STRATEGY_NAME } from 'libs/template/src/lib/render-strategies/strategies/strategies-map';
+import { isObservable, Observable, ObservableInput, of, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
+import { distinctUntilChanged, map, publish, switchAll, switchMap, tap } from 'rxjs/operators';
 import { RxChangeDetectorRef } from '../../../../shared/rx-change-detector-ref/rx-change-detector-ref.service';
 import { DefaultStrategies } from '../../../../shared/rx-change-detector-ref/default-strategies.interface';
 
@@ -179,7 +159,7 @@ export interface LetViewContext<T> extends RxViewContext<T> {
   // tslint:disable-next-line:directive-selector
   selector: '[rxLet]',
   exportAs: 'renderNotifier',
-  providers: [RxChangeDetectorRef],
+  providers: [RxChangeDetectorRef]
 })
 export class LetPocDirective<U> implements OnInit, OnDestroy {
   /** @internal */
@@ -214,7 +194,7 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
    */
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
-    this.observableSubject$.next(
+    this.observable$Subject$.next(
       isObservable(potentialObservable)
         ? potentialObservable
         : of(potentialObservable)
@@ -262,9 +242,9 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
   @Input('rxLetStrategy')
 
   // NOTE: I'll skip Observable<string> part for POC.
-  // set strategy(strategy: string | Observable<string> | undefined) {
-  set strategy(strategy: keyof DefaultStrategies | undefined) {
-    this.cdRefServiceNext.setStrategy(strategy || DEFAULT_STRATEGY_NAME);
+  set strategy(strategy: string | Observable<string> | undefined) {
+    const o$: Observable<string> = isObservable(strategy) ? strategy : of(strategy || DEFAULT_STRATEGY_NAME);
+    this.strategy$Subject$.next(o$);
   }
 
   /**
@@ -337,10 +317,8 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
   private strategyChangeSubscription: Unsubscribable = Subscription.EMPTY;
 
   /** @internal */
-  private readonly templateManager: TemplateManager<
-    LetViewContext<U | undefined | null>,
-    RxNotificationKind
-  >;
+  private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>,
+    RxNotificationKind>;
 
   /** @internal */
   private readonly initialViewContext: LetViewContext<U> = {
@@ -348,13 +326,25 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     rxLet: undefined,
     $rxError: false,
     $rxComplete: false,
-    $rxSuspense: false,
+    $rxSuspense: false
   };
 
+  observable$Subject$ = new ReplaySubject(1);
+  observable$ = this.observable$Subject$.pipe(
+    distinctUntilChanged(),
+    switchAll(),
+    distinctUntilChanged()
+  );
+  strategy$Subject$ = new ReplaySubject<Observable<string>>(1);
+  strategy$: Observable<string> = this.strategy$Subject$.pipe(
+    distinctUntilChanged(),
+    switchAll(),
+    distinctUntilChanged()
+  );
+
+
   /** @internal */
-  private readonly templateObserver: RxTemplateObserver<
-    U | null | undefined
-  > = {
+  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => {
       this.displayInitialView();
       this.templateManager.updateViewContext({
@@ -362,14 +352,14 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
         rxLet: undefined,
         $rxError: false,
         $rxComplete: false,
-        $rxSuspense: true,
+        $rxSuspense: true
       });
     },
     next: (value: U | null | undefined) => {
       this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
         $implicit: value,
-        rxLet: value,
+        rxLet: value
       });
     },
     error: (error: Error) => {
@@ -378,7 +368,7 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
         ? this.templateManager.displayView('rxError')
         : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $rxError: error,
+        $rxError: error
       });
     },
     complete: () => {
@@ -387,9 +377,9 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
         ? this.templateManager.displayView('rxComplete')
         : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $rxComplete: true,
+        $rxComplete: true
       });
-    },
+    }
   };
 
   /** @internal */
@@ -399,13 +389,6 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
   ): ctx is LetViewContext<U> {
     return true;
   }
-
-  observableSubject$ = new ReplaySubject(1);
-  observable$ = this.observableSubject$.pipe(
-    distinctUntilChanged(),
-    switchAll(),
-    distinctUntilChanged()
-  );
 
   /** @internal */
   constructor(
@@ -436,16 +419,16 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     this.displayInitialView();
     this.subscription = this.observable$
       .pipe(
-        tap((value: any) => {
-          this.templateObserver.next(value);
-          this.cdRefServiceNext.setStrategies(
-            this.templateManager.getEmbeddedView('rxNext')
-            // getStrategies({
-            //   cdRef: this.templateManager.getEmbeddedView('rxNext'),
-            // }).local.scheduleCD();
-          );
-        }),
-        renderWithLatestStrategy(this.cdRefServiceNext.strategy$)
+        tap((value: any) => this.templateObserver.next(value)),
+        rxMaterialize(),
+        map((n) => this.templateManager.getEmbeddedView(n.kind) as ChangeDetectorRef),
+        publish((view$) => this.strategy$.pipe(
+            switchMap(strName => view$.pipe(
+              tap((evcDRef) => renderByStrategyName(strName, this.cdRef, evcDRef)))
+            ),
+            getScheduleByStrategyName(this.strategy$)
+          )
+        ),
       )
       .subscribe();
 
@@ -472,9 +455,9 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
  * VIEW RENDERING
  *
  * Global - only works with component,
- * Noop - fine,
+ * Noop - not needed,
  * Native - works only with ChangeDetectorRef,
- * Local - needs to coalesce embeddedViews, scoping is not necessary,
+ * Local - needs to coalesce embeddedViews, scoping is not necessary (only in pipes)
  * Detach - could be a problem in switching from and to it,
  *
  * SCHEDULING
@@ -484,3 +467,28 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
  * Native - not configurable,
  * Local - fully configurable
  */
+
+function renderByStrategyName(strategyName: string, compCdRef, evCdRef?): void {
+    switch (strategyName) {
+      case 'local':
+        evCdRef ? evCdRef.detectChanges() : compCdRef.detectChanges();
+        break;
+      case 'global':
+        compCdRef.detectChanges();
+        break;
+    }
+}
+
+function getScheduleByStrategyName<T>(strategyName$: Observable<string>): (o$: Observable<T>) => Observable<T> {
+  return view$ => view$.pipe(
+    publish(v$ => strategyName$.pipe(
+      switchMap(strategyName => v$.pipe(
+        strategyName === 'local' ?
+          coalesceWith(priorityTickMap[SchedulingPriority.animationFrame]) :
+          (_) => _
+        )
+      ))
+    )
+  );
+}
+

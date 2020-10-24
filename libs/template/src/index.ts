@@ -8,6 +8,7 @@ export {
   renderWithLatestStrategy,
 } from './lib/core/render-aware';
 export { coalesceWith } from './lib/render-strategies/rxjs/operators/coalesceWith';
+export { rxMaterialize } from './lib/core/utils/rx-materialize';
 export { staticCoalesce } from './lib/render-strategies/static';
 export { DEFAULT_STRATEGY_NAME } from './lib/render-strategies/strategies/strategies-map';
 export {
