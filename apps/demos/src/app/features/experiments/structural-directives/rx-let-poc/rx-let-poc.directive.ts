@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Directive,
+  Input,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewContainerRef,
+  ɵmarkDirty as markDirty
+} from '@angular/core';
 import {
   coalesceWith,
   createTemplateManager,
@@ -422,13 +431,7 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
         tap((value: any) => this.templateObserver.next(value)),
         rxMaterialize(),
         map((n) => this.templateManager.getEmbeddedView(n.kind) as ChangeDetectorRef),
-        publish((view$) => this.strategy$.pipe(
-            switchMap(strName => view$.pipe(
-              tap((evcDRef) => renderByStrategyName(strName, this.cdRef, evcDRef)))
-            ),
-            getScheduleByStrategyName(this.strategy$)
-          )
-        ),
+        applyStrategy(this.strategy$, (this.cdRef as any).context)
       )
       .subscribe();
 
@@ -468,25 +471,37 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
  * Local - fully configurable
  */
 
-function renderByStrategyName(strategyName: string, compCdRef, evCdRef?): void {
+function renderByStrategyName(strategyName: string, evCdRef, context): void {
+  switch (strategyName) {
+    case 'local':
+      evCdRef.reattach();
+      evCdRef.detectChanges();
+      evCdRef.detach();
+      break;
+    case 'global':
+      evCdRef.reattach();
+      markDirty(context);
+      break;
+  }
+}
+function scheduleByStrategyName<T>(strategyName: string): (o$: Observable<T>) => Observable<T> {
+  return o$ => {
     switch (strategyName) {
       case 'local':
-        evCdRef ? evCdRef.detectChanges() : compCdRef.detectChanges();
-        break;
-      case 'global':
-        compCdRef.detectChanges();
-        break;
+        return o$.pipe(coalesceWith(priorityTickMap[SchedulingPriority.animationFrame]));
+      default:
+        return o$;
     }
+  }
 }
 
-function getScheduleByStrategyName<T>(strategyName$: Observable<string>): (o$: Observable<T>) => Observable<T> {
+function applyStrategy<T>(strategyName$: Observable<string>, context): (o$: Observable<T>) => Observable<T> {
   return view$ => view$.pipe(
     publish(v$ => strategyName$.pipe(
       switchMap(strategyName => v$.pipe(
-        strategyName === 'local' ?
-          coalesceWith(priorityTickMap[SchedulingPriority.animationFrame]) :
-          (_) => _
-        )
+        scheduleByStrategyName(strategyName),
+        tap((evcDRef) => renderByStrategyName(strategyName, evcDRef, context))
+        ),
       ))
     )
   );
