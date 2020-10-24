@@ -38,6 +38,7 @@ import { RxEffects } from '../../../../../../shared/rx-effects.service';
   providers: [RxEffects],
 })
 export class RxLetPocComponent implements OnInit {
+
   constructor(public rxCdRef: RxChangeDetectorRef) {}
 
   ngOnInit(): void {}

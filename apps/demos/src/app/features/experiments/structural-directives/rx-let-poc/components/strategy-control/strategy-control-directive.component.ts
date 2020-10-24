@@ -1,7 +1,34 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RenderStrategy } from '@rx-angular/template';
+import { RenderStrategy, SchedulingPriority } from '@rx-angular/template';
 import { RxChangeDetectorRef } from '../../../../../../shared/rx-change-detector-ref/rx-change-detector-ref.service';
 import { BehaviorSubject } from 'rxjs';
+import { StrategyCredentials } from '../../rx-let-poc.directive';
+import { map } from 'rxjs/operators';
+
+const localCredentials: StrategyCredentials = {
+  renderMethod: 'detectChanges',
+  priority: SchedulingPriority.animationFrame,
+  detach: false,
+  queued: false
+}
+const globalCredentials: StrategyCredentials = {
+  renderMethod: 'markDirty',
+  priority: SchedulingPriority.sync,
+  detach: false,
+  queued: false
+}
+const noopCredentials: StrategyCredentials = {
+  renderMethod: 'noop',
+  priority: SchedulingPriority.sync,
+  detach: false,
+  queued: false
+}
+const nativeCredentials: StrategyCredentials = {
+  renderMethod: 'markForCheck',
+  priority: SchedulingPriority.sync,
+  detach: false,
+  queued: false
+}
 
 @Component({
   selector: 'rxa-strategy-control-directive',
@@ -50,9 +77,10 @@ import { BehaviorSubject } from 'rxjs';
             *rxLet="
               vP.incremental$;
               let counter;
-              strategy: (changeStrategy$ | push).name
+              strategy: strategyCredentials$
             "
           >
+            {{strategyCredentials$ | push | json}}
             <mat-card-title>{{ counter }}</mat-card-title>
             <rxa-dirty-check></rxa-dirty-check>
           </div>
@@ -81,6 +109,21 @@ export class StrategyControlDirectiveComponent {
   changeStrategy$ = new BehaviorSubject<Partial<RenderStrategy>>({
     name: 'local'
   });
+  strategyCredentials$ = this.changeStrategy$.pipe(
+    map(s => {
+      switch (s.name) {
+        case'global':
+          return globalCredentials;
+        case'native':
+          return nativeCredentials;
+        case'noop':
+          return noopCredentials;
+        case'local':
+        default:
+          return localCredentials;
+      }
+    })
+  );
   displayStates = {
     none: 0,
     all: 1,
