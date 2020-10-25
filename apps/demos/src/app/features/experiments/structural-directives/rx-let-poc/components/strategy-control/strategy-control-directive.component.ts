@@ -11,6 +11,18 @@ const localCredentials: StrategyCredentials = {
   detach: false,
   queued: false
 }
+const queuedCredentials: StrategyCredentials = {
+  renderMethod: 'detectChanges',
+  priority: SchedulingPriority.sync,
+  detach: false,
+  queued: true
+}
+const queuedDetachCredentials: StrategyCredentials = {
+  renderMethod: 'detectChanges',
+  priority: SchedulingPriority.sync,
+  detach: true,
+  queued: true
+}
 const globalCredentials: StrategyCredentials = {
   renderMethod: 'markDirty',
   priority: SchedulingPriority.sync,
@@ -118,6 +130,10 @@ export class StrategyControlDirectiveComponent {
           return nativeCredentials;
         case'noop':
           return noopCredentials;
+        case 'chunk':
+          return queuedCredentials;
+        case 'chunkDetach':
+          return queuedDetachCredentials;
         case'local':
         default:
           return localCredentials;

@@ -55,6 +55,10 @@ export class RxChangeDetectorRef extends RxState<{
     this.set({ currentInvisibleStrategy });
   }
 
+  setCustomStrategy(customStrategy: StrategyTokenProviderMap) {
+    this.customStrategy = [customStrategy];
+  }
+
   setStrategies(cdRef: ChangeDetectorRef) {
     if (this.customStrategy) {
       return this.set({

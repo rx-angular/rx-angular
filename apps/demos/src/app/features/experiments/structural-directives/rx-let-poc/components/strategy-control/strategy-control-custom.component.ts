@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { createChunkStrategy } from '../../../../../../shared/render-stragegies/render-queue/global-render.strategy';
 import { RxChangeDetectorRef } from '../../../../../../shared/rx-change-detector-ref/rx-change-detector-ref.service';
 
 @Component({
@@ -72,6 +73,12 @@ export class StrategyControlCustomComponent {
   };
 
   constructor(public rxCdRef: RxChangeDetectorRef) {
+    rxCdRef.setCustomStrategy({
+      name: 'chunk',
+      factory: cdRef => ({
+        chunk: createChunkStrategy(cdRef)
+      })
+    })
   }
 
   visible(group, choice) {

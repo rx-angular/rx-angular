@@ -1,10 +1,18 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 // tslint:disable-next-line: nx-enforce-module-boundaries
 import { environment } from 'apps/demos/src/environments/environment';
+import {
+  createChunkStrategy,
+  getGlobalRenderingStrategies
+} from '../../../../../../shared/render-stragegies/render-queue/global-render.strategy';
 import { RxChangeDetectorRef } from '../../../../../../shared/rx-change-detector-ref/rx-change-detector-ref.service';
 import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { dictionaryToArray } from '@rx-angular/state';
+import {
+  StrategyTokenProvider,
+  StrategyTokenProviderMap
+} from '../../../../../../shared/rx-change-detector-ref/strategy.token';
 import { RxEffects } from '../../../../../../shared/rx-effects.service';
 
 @Component({
@@ -35,11 +43,20 @@ import { RxEffects } from '../../../../../../shared/rx-effects.service';
     class: 'm-1 p-1',
     style: 'display: block;',
   },
-  providers: [RxEffects],
+  providers: [
+    RxEffects
+  ],
 })
 export class RxLetPocComponent implements OnInit {
 
-  constructor(public rxCdRef: RxChangeDetectorRef) {}
+  constructor(public rxCdRef: RxChangeDetectorRef) {
+    rxCdRef.setCustomStrategy({
+      name: 'chunk',
+      factory: cdRef => ({
+        chunk: createChunkStrategy(cdRef)
+      })
+    })
+  }
 
   ngOnInit(): void {}
 }

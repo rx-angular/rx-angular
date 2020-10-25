@@ -21,11 +21,14 @@ import {
 // tslint:disable-next-line: nx-enforce-module-boundaries
 import { RenderAware, RxNotificationKind } from 'libs/template/src/lib/core';
 // tslint:disable-next-line: nx-enforce-module-boundaries
-import { DEFAULT_STRATEGY_NAME } from 'libs/template/src/lib/render-strategies/strategies/strategies-map';
 import { isObservable, Observable, ObservableInput, of, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
 import { distinctUntilChanged, map, publish, switchAll, switchMap, tap } from 'rxjs/operators';
-import { RxChangeDetectorRef } from '../../../../shared/rx-change-detector-ref/rx-change-detector-ref.service';
+import {
+  globalTaskManager,
+  GlobalTaskPriority
+} from '../../../../shared/render-stragegies/render-queue/global-task-manager';
 import { DefaultStrategies } from '../../../../shared/rx-change-detector-ref/default-strategies.interface';
+import { RxChangeDetectorRef } from '../../../../shared/rx-change-detector-ref/rx-change-detector-ref.service';
 
 export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
@@ -222,15 +225,26 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
  * Local - fully configurable
  */
 
-function renderByStrategyName(renderMethod: string, detach: boolean, evCdRef, context): void {
+function renderByStrategyName(renderMethod: string, detach: boolean, queued: boolean, evCdRef, context): void {
   switch (renderMethod) {
     case 'detectChanges':
-      if(detach) {
-        evCdRef.reattach();
+      const work = () => {
+        if(detach) {
+          evCdRef.reattach();
+        }
+        evCdRef.detectChanges();
+        if(detach) {
+          evCdRef.detach();
+        }
       }
-      evCdRef.detectChanges();
-      if(detach) {
-        evCdRef.detach();
+      if (queued) {
+        globalTaskManager.scheduleTask({
+          priority: GlobalTaskPriority.chunk,
+          scope: evCdRef,
+          work
+        });
+      } else {
+        work();
       }
       break;
     case 'markDirty':
@@ -264,10 +278,10 @@ function applyStrategy<T>(strategyCredentials$: Observable<StrategyCredentials>,
   return view$ => view$.pipe(
     publish(v$ => strategyCredentials$.pipe(
       switchMap(strategyCredentials => {
-        const {priority, renderMethod, detach} = strategyCredentials;
+        const {priority, renderMethod, detach, queued} = strategyCredentials;
         return v$.pipe(
             scheduleByPriority(priority),
-            tap((evcDRef) => renderByStrategyName(renderMethod, detach, evcDRef, context))
+            tap((evcDRef) => renderByStrategyName(renderMethod, detach, queued, evcDRef, context))
           )
         }
       ))
