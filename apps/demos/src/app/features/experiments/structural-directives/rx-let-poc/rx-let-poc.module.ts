@@ -18,6 +18,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
   PushModule,
+  SchedulingPriority,
   TemplateModule,
   UnpatchEventsModule,
 } from '@rx-angular/template';
@@ -36,6 +37,9 @@ import {
   MatButtonToggleGroup,
   MatButtonToggleModule,
 } from '@angular/material/button-toggle';
+import { filter } from 'rxjs/operators';
+import { RX_CUSTOM_STRATEGIES } from './custom-strategies-token';
+import { RX_DEFAULT_STRATEGY } from './default-strategy-token';
 
 const DECLARATIONS = [
   RxLetPocComponent,
@@ -74,25 +78,20 @@ const DECLARATIONS = [
   ],
   exports: DECLARATIONS,
   providers: [
-    /*{
-      provide: RxChangeDetectorRef,
-      useFactory: (t, r) => {
-        const i = new RxChangeDetectorRef(t, r);
-        console.log('new RxChangeDetectorRef');
-        return i;
-      },
-      deps: [StrategyTokenProvider, ChangeDetectorRef]
-    },
     {
-      provide: StrategyTokenProvider,
+      provide: RX_CUSTOM_STRATEGIES,
       useValue: {
         name: 'rxLetPocModuleStrategy',
-        detectChanges: () => {},
-        rxScheduleCD: (o) => o.pipe(filter((v) => false)),
-        scheduleCD: () => new AbortController(),
+        renderMethod: '',
+        priority: SchedulingPriority.animationFrame,
+        detach: true,
       },
       multi: true,
-    },*/
+    },
+    {
+      provide: RX_DEFAULT_STRATEGY,
+      useValue: 'global',
+    },
   ],
 })
 export class RxLetPocModule {}

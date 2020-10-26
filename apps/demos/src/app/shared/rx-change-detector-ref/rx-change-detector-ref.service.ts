@@ -6,10 +6,7 @@ import {
   RenderStrategy,
 } from '@rx-angular/template';
 // tslint:disable-next-line: nx-enforce-module-boundaries
-import {
-  StrategyTokenProvider,
-  StrategyTokenProviderMap,
-} from './strategy.token';
+
 import { Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 
@@ -36,11 +33,10 @@ export class RxChangeDetectorRef extends RxState<{
 
   strategies$ = this.select(pluck('strategies'));
 
-  constructor(
-    @Optional()
-    @Inject(StrategyTokenProvider)
-    private customStrategy: StrategyTokenProviderMap[]
-  ) {
+  constructor() // @Optional()
+  // @Inject(StrategyTokenProvider)
+  // private customStrategy: StrategyTokenProviderMap[]
+  {
     super();
     this.set({ currentStrategy: DEFAULT_STRATEGY_NAME });
   }
@@ -55,19 +51,19 @@ export class RxChangeDetectorRef extends RxState<{
     this.set({ currentInvisibleStrategy });
   }
 
-  setCustomStrategy(customStrategy: StrategyTokenProviderMap) {
-    this.customStrategy = [customStrategy];
+  setCustomStrategy(customStrategy: any) {
+    // this.customStrategy = [customStrategy];
   }
 
   setStrategies(cdRef: ChangeDetectorRef) {
-    if (this.customStrategy) {
-      return this.set({
-        strategies: this.customStrategy.reduce(
-          (acc, o) => ({ ...acc, ...o.factory({ cdRef: cdRef }) }),
-          getStrategies({ cdRef: cdRef })
-        ),
-      });
-    }
+    // if (this.customStrategy) {
+    //   return this.set({
+    //     strategies: this.customStrategy.reduce(
+    //       (acc, o) => ({ ...acc, ...o.factory({ cdRef: cdRef }) }),
+    //       getStrategies({ cdRef: cdRef })
+    //     ),
+    //   });
+    // }
     this.set({
       strategies: getStrategies({ cdRef: cdRef }),
     });
