@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { concatMap, mapTo, mergeMap, scan } from 'rxjs/operators';
-import { insert } from '@rx-angular/state';
-import { priorityTickMap, SchedulingPriority } from '@rx-angular/template';
+import { toBooleanArray } from './utils';
 
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
 
@@ -12,7 +10,7 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
     <rxa-visualizer>
       <p visualizerHeader>{{siblings.length}} Siblings Push</p>
       <div class="w-100">
-        <span class="sibling" *ngFor="let sibling of siblings$ | push; trackBy:trackBy">
+        <span class="sibling" [ngClass]="{filled: sibling}" *ngFor="let sibling of siblings$ | push; trackBy:trackBy">
           &nbsp;
         </span>
       </div>
@@ -21,15 +19,7 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   host: {
     class: 'd-flex w-100'
   },
-  styles: [`
-    .sibling {
-      width: 3px;
-      height: 3px;
-      float: left;
-      margin: 0 1px 1px 0;
-      background-color: #fafbfc;
-    }
-  `],
+  styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SiblingPushComponent {
@@ -39,7 +29,8 @@ export class SiblingPushComponent {
 
   @Input()
   set count(num: number) {
-    this.siblings = new Array(num).fill(0).map((_, idx) => idx);
+    this.siblings = toBooleanArray(num);
+    ;
     this.siblings$.next(this.siblings);
   };
 

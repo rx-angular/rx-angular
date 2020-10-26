@@ -45,7 +45,7 @@ export function toRandom(): number {
   return Math.random();
 }
 
-export function toBoolean(float: number, truthy: number): boolean | undefined {
+export function toBoolean(float: number, truthy: number = 0.5): boolean | undefined {
   return float !== undefined ? float < truthy : undefined;
 }
 
