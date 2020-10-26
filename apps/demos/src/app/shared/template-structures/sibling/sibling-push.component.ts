@@ -30,7 +30,6 @@ export class SiblingPushComponent {
   @Input()
   set count(num: number) {
     this.siblings = toBooleanArray(num);
-    ;
     this.siblings$.next(this.siblings);
   };
 
