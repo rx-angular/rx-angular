@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
+import { toBooleanArray } from './utils';
 
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
 
@@ -9,7 +10,7 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
     <rxa-visualizer>
       <p visualizerHeader>{{siblings.length}}  Async</p>
       <div class="w-100">
-        <span class="sibling" *ngFor="let sibling of siblings$ | async; trackBy:trackBy">
+        <span class="sibling" [ngClass]="{filled: sibling}" *ngFor="let sibling of siblings$ | async; trackBy:trackBy;">
           &nbsp;
         </span>
       </div>
@@ -18,15 +19,7 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   host: {
     class: 'd-flex w-100'
   },
-  styles: [`
-    .sibling {
-      width: 3px;
-      height: 3px;
-      float: left;
-      margin: 0 1px 1px 0;
-      background-color: #fafbfc;
-    }
-  `],
+  styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SiblingAsyncComponent {
@@ -36,7 +29,7 @@ export class SiblingAsyncComponent {
 
   @Input()
   set count(num: number) {
-    this.siblings = new Array(num).fill(0).map((_, idx) => idx);
+    this.siblings = toBooleanArray(num);
     this.siblings$.next(this.siblings);
   };
 

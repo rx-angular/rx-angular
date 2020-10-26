@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './app.routes';
 import { DirtyChecksModule } from '../shared/debug-helper/dirty-checks';
+import { StrategyControlPanelModule } from '../shared/debug-helper/strategy-control-panel';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { DirtyChecksModule } from '../shared/debug-helper/dirty-checks';
     MatIconModule,
     AppShellModule,
     RouterModule.forRoot(ROUTES),
-    DirtyChecksModule
+    DirtyChecksModule,
+    StrategyControlPanelModule
   ],
   declarations: [AppComponent],
   exports: [],

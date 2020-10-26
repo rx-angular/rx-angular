@@ -32,23 +32,22 @@ import { RxState } from '@rx-angular/state';
               {{ zoneEnv }}</mat-chip
             >
             <mat-chip>
-              <mat-icon>image</mat-icon> &nbsp; {{ engine }}</mat-chip>
+              <mat-icon>image</mat-icon> {{ engine }}</mat-chip>
             <mat-chip>
               <mat-icon>{{
                 changeDetection === 'Default'
                   ? 'autorenew'
                   : 'youtube_searched_for'
-                }}</mat-icon
-              >&nbsp; {{ changeDetection }}
+                }}</mat-icon>&nbsp; {{ changeDetection }}
             </mat-chip>
-            <mat-chip>
-              <mat-icon>settings</mat-icon>&nbsp; {{ strategyName$ | push:'local' }}</mat-chip
-            >
+            <mat-chip *rxLet="strategyName$; let s">
+              <mat-icon>settings</mat-icon>&nbsp;{{s}}
+            </mat-chip>
           </mat-chip-list>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <form [formGroup]="" ]="configForm">
+      <form [formGroup]="configForm">
         <mat-form-field>
           <mat-label>Change Detection Strategy</mat-label>
           <mat-select formControlName="strategy" id="strategy">
@@ -97,13 +96,13 @@ export class StrategyControlPanelComponent
     fromEvent(document.getElementById('btnDetectChanges'), 'click')
   );
 
-  expanded = isNgZone(this.ngZone) ? false : true;
+  expanded = !isNgZone(this.ngZone);
   @Input()
   appComponentRef;
 
   readonly env = environment;
   readonly hasZone = isNgZone(this.ngZone);
-  readonly zoneEnv = isNgZone(this.ngZone) ? 'NgZone' : 'NgNoopZone';
+  readonly zoneEnv = this.hasZone ? 'NgZone' : 'NgNoopZone';
   readonly changeDetection =
     this.env.changeDetection === 1 ? 'Default' : 'OnPush';
   readonly engine = isViewEngineIvy() ? 'Ivy' : 'ViewEngine';

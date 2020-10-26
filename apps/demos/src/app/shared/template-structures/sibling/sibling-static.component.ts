@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { toBooleanArray } from './utils';
 
 @Component({
   selector: 'rxa-sibling-static',
@@ -6,7 +7,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
     <rxa-visualizer>
       <p visualizerHeader>{{siblings.length}} Siblings Static</p>
       <div class="w-100">
-        <span class="sibling" *ngFor="let sibling of siblings; trackBy:trackBy">
+        <span class="sibling" [ngClass]="{filled: sibling}" *ngFor="let sibling of siblings; trackBy:trackBy">
           &nbsp;
         </span>
       </div>
@@ -15,15 +16,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   host: {
     class: 'd-flex w-100'
   },
-  styles: [`
-    .sibling {
-      width: 3px;
-      height: 3px;
-      float: left;
-      margin: 0 1px 1px 0;
-      background-color: #fafbfc;
-    }
-  `],
+  styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SiblingStaticComponent {
@@ -31,7 +24,7 @@ export class SiblingStaticComponent {
 
   @Input()
   set count(num: number) {
-    this.siblings = new Array(num).fill(0).map((_, idx) => idx);
+    this.siblings = toBooleanArray(num);
   };
 
   @Input()
