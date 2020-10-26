@@ -4,7 +4,8 @@ import { Component, ElementRef, Input, Renderer2 } from '@angular/core';
 import { isObservable, Observable, of, Subject } from 'rxjs';
 import { map, scan, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { RxState, selectSlice } from '@rx-angular/state';
-import { Hooks } from '../../hooks';
+import { Hooks } from '../hooks';
+
 
 type workType = 'scripting' | 'layouting';
 
@@ -35,13 +36,11 @@ export class WorkComponent extends Hooks {
 
   @Input()
   set load(o: Observable<number> | number) {
-    console.log('load', o);
     this.state.connect('load', isObservable(o) ? o : of(o));
   }
 
   @Input()
   set type(o: Observable<workType> | workType) {
-    console.log('type', o);
     this.state.connect('type', isObservable(o) ? o : of(o));
   }
 
@@ -84,7 +83,6 @@ export class WorkComponent extends Hooks {
   }
 
   scriptingWork(iterations: number) {
-    console.log('scriptingWork: ', iterations);
     let n = 0;
     while (n < iterations * 10000) {
       n = n + 1;

@@ -14,7 +14,7 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
       <p visualizerHeader>{{siblings.length}} Siblings Progressive</p>
       <div class="w-100">
         <span class="sibling" [ngClass]="{filled: sibling}" *ngFor="let sibling of siblings$ | push; trackBy:trackBy">
-          &nbsp;
+          &nbsp;<rxa-work style="visibility: hidden" *ngIf="sibling"></rxa-work>
         </span>
       </div>
     </rxa-visualizer>
