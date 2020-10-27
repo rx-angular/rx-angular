@@ -81,7 +81,7 @@ module.exports = (on, config) => {
       const profilerResults = await client.Profiler.stop();
 
       fs.writeFileSync(
-        `./profiling_${params.title}_${currentDateString()}.cpuprofile`,
+        `./profiling${params.suffix ? '_' + params.suffix : ''}_${currentDateString()}.cpuprofile`,
         JSON.stringify(profilerResults.profile || 'Profile not found')
       );
 
@@ -113,7 +113,7 @@ module.exports = (on, config) => {
       const tracingComplete = await client.Tracing.tracingComplete();
 
       fs.writeFileSync(
-        `./tracing_${params.title}_${currentDateString()}.json`,
+        `./tracing${params.suffix ? '_' + params.suffix : ''}_${currentDateString()}.json`,
         JSON.stringify(tracingEvents)
       );
 

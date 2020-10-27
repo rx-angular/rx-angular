@@ -1,31 +1,25 @@
+import * as Performance from '../support/performance.util';
+
 const WAIT_DURATION = 1000;
 
 describe('RxLet vs Push demo', () => {
-  beforeEach(() => cy.task('resetCRI').visit('/experiments/rx-let-vs-push/list-toggle'));
+  beforeEach(() => cy.task('resetCRI').visit('/performance/rx-let-vs-push/list-toggle'));
 
   describe('test and generate Profiler reports', () => {
     it('should check performance of push pipe', () => {
       cy.get('button').contains('Open Manual test for Push').click();
 
-      cy.task('enableProfiler');
-      cy.task('startProfiler');
-
+      Performance.startProfiler();
       testOpeningAndClosingToggleThreeTimes();
-
-      cy.task('stopProfiler', { title: 'push-pipe' });
-      cy.task('disableProfiler');
+      Performance.stopProfiler('push-pipe');
     });
 
     it('should check performance of let directive', () => {
       cy.get('button').contains('Open Manual test for Let').click();
 
-      cy.task('enableProfiler');
-      cy.task('startProfiler');
-
+      Performance.startProfiler();
       testOpeningAndClosingToggleThreeTimes();
-
-      cy.task('stopProfiler', { title: 'let-directive' });
-      cy.task('disableProfiler');
+      Performance.stopProfiler('let-directive');
     });
   });
 
@@ -33,21 +27,17 @@ describe('RxLet vs Push demo', () => {
     it('should check performance of push pipe', () => {
       cy.get('button').contains('Open Manual test for Push').click();
 
-      cy.task('startTracing');
-
+      Performance.startTracing();
       testOpeningAndClosingToggleThreeTimes();
-
-      cy.task('endTracing', { title: 'push-pipe' });
+      Performance.stopTracing('push-pipe');
     });
 
     it('should check performance of let directive', () => {
       cy.get('button').contains('Open Manual test for Let').click();
 
-      cy.task('startTracing');
-
+      Performance.startTracing();
       testOpeningAndClosingToggleThreeTimes();
-
-      cy.task('endTracing', { title: 'let-directive' });
+      Performance.stopTracing('let-directive');
     });
   });
 });

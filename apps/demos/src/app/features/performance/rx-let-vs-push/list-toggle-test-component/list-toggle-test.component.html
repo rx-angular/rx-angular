@@ -14,7 +14,7 @@
   </ng-container>
 
   <ng-container *ngIf="type === 'rxLet'">
-    <ng-container *rxLet="letLoading$; let letLoading; suspense: suspenseTpl">
+    <ng-container *rxLet="letLoading$; let letLoading; rxSuspense: suspenseTpl">
       <rxa-rendering-work [factor]="100"></rxa-rendering-work>
     </ng-container>
     <ng-template #suspenseTpl> <p>Loading...</p> </ng-template>
