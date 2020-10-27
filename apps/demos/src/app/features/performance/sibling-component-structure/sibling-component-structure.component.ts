@@ -34,6 +34,11 @@ import { BehaviorSubject } from 'rxjs';
       </ng-container>
       <div class="row w-100" *ngIf="isVisible">
         <div class="col"
+             *ngIf="visible(group, displayStates.progressive)">
+          <h2 class="mat-subheader">Progressive</h2>
+          <rxa-sibling-progressive [count]="count"></rxa-sibling-progressive>
+        </div>
+        <div class="col"
              *ngIf="visible(group, displayStates.static)">
           <h2 class="mat-subheader">Static</h2>
           <rxa-sibling-static [count]="count"></rxa-sibling-static>
@@ -47,11 +52,6 @@ import { BehaviorSubject } from 'rxjs';
              *ngIf="visible(group, displayStates.push)">
           <h2 class="mat-subheader">Push</h2>
           <rxa-sibling-push [count]="count"></rxa-sibling-push>
-        </div>
-        <div class="col"
-             *ngIf="visible(group, displayStates.progressive)">
-          <h2 class="mat-subheader">Progressive</h2>
-          <rxa-sibling-progressive [count]="count"></rxa-sibling-progressive>
         </div>
       </div>
     </rxa-visualizer>
