@@ -7,22 +7,19 @@ import { ENVIRONMENT_SETTINGS } from './shared/environment.token';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './features/home/home.component';
-import { filter } from 'rxjs/operators';
-import { StrategyTokenProvider } from './shared/rx-change-detector-ref/strategy.token';
-import { getGlobalRenderingStrategies } from './shared/render-stragegies/render-queue/global-render.strategy';
 
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    AppComponentModule,
+    AppComponentModule
   ],
   providers: [
     {
       provide: ENVIRONMENT_SETTINGS,
-      useValue: environment,
-    },
+      useValue: environment
+    }
     // {
     //   provide: StrategyTokenProvider,
     //   useValue: {
@@ -34,6 +31,7 @@ import { getGlobalRenderingStrategies } from './shared/render-stragegies/render-
   ],
   declarations: [HomeComponent],
   exports: [],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+}

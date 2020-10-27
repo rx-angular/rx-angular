@@ -10,11 +10,7 @@ import { RxChangeDetectorRef } from '../../../../../../shared/rx-change-detector
         <mat-card-title>Strategy controlled by parent component</mat-card-title>
         <br/>
 
-        <rxa-strategy-select
-          [strategies]="rxCdRef.strategies$"
-          [currentStrategy]="rxCdRef.strategy$"
-          (strategyChange)="rxCdRef.setStrategy($event)"
-        ></rxa-strategy-select>
+        <rxa-strategy-select (strategyChange)="rxCdRef.setStrategy($event)"></rxa-strategy-select>
         <br/>
 
         <rxa-value-provider

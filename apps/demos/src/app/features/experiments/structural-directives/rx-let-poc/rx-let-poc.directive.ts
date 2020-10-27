@@ -8,82 +8,61 @@ import {
   Optional,
   TemplateRef,
   ViewContainerRef,
-  ɵmarkDirty as markDirty,
+  ɵmarkDirty as markDirty
 } from '@angular/core';
 import {
   coalesceWith,
   createTemplateManager,
   priorityTickMap,
   rxMaterialize,
+  RxNotification,
   RxTemplateObserver,
   RxViewContext,
   SchedulingPriority,
-  TemplateManager,
+  TemplateManager
 } from '@rx-angular/template';
 // tslint:disable-next-line: nx-enforce-module-boundaries
-import { RenderAware, RxNotificationKind } from 'libs/template/src/lib/core';
-// tslint:disable-next-line: nx-enforce-module-boundaries
-import {
-  isObservable,
-  Observable,
-  ObservableInput,
-  of,
-  ReplaySubject,
-  Subscription,
-  Unsubscribable,
-} from 'rxjs';
-import {
-  distinctUntilChanged,
-  map,
-  publish,
-  switchAll,
-  switchMap,
-  tap,
-} from 'rxjs/operators';
+import { Observable, ObservableInput, of, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
+import { publish, switchMap, tap } from 'rxjs/operators';
 import {
   globalTaskManager,
-  GlobalTaskPriority,
+  GlobalTaskPriority
 } from '../../../../shared/render-stragegies/render-queue/global-task-manager';
-import { DefaultStrategies } from '../../../../shared/rx-change-detector-ref/default-strategies.interface';
 import { RxChangeDetectorRef } from '../../../../shared/rx-change-detector-ref/rx-change-detector-ref.service';
 import { RX_CUSTOM_STRATEGIES } from './custom-strategies-token';
 import { RX_DEFAULT_STRATEGY } from './default-strategy-token';
+import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
+import { nameToStrategyConfig, RenderBehavior } from './strategy-handling';
+import { RxNotificationKind } from '../../../../../../../../libs/template/src/lib/core';
 
 export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
   rxLet: T;
 }
+
 export interface StrategyCredentials {
   name: string;
-  renderMethod: string;
-  priority: SchedulingPriority;
-  detach: boolean;
-  queued: boolean;
+  work: (cdRef, context) => void
+  behavior?: RenderBehavior
 }
 
 @Directive({
   // tslint:disable-next-line:directive-selector
   selector: '[rxLet]',
   exportAs: 'renderNotifier',
-  providers: [RxChangeDetectorRef],
+  providers: [RxChangeDetectorRef]
 })
 export class LetPocDirective<U> implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
 
-  readonly renderAware: RenderAware<U | null | undefined>;
-
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
-    this.observable$Subject$.next(
-      isObservable(potentialObservable)
-        ? potentialObservable
-        : of(potentialObservable)
-    );
+    this.observable$Subject$.next(potentialObservable);
   }
 
   @Input('rxLetStrategy')
-  set strategy(strategyCredentials: Observable<StrategyCredentials>) {
-    this.strategy$Subject$.next(strategyCredentials);
+  set strategy(strategyName: string | Observable<string>) {
+    this.strategy$Subject$.next(strategyName);
   }
 
   @Input('rxLetRxComplete')
@@ -107,40 +86,31 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     this.templateManager.addTemplateRef('rxSuspense', templateRef);
   }
 
-  public currentStrategy: string;
-
   private subscription: Unsubscribable = Subscription.EMPTY;
   private strategyChangeSubscription: Unsubscribable = Subscription.EMPTY;
 
-  private readonly templateManager: TemplateManager<
-    LetViewContext<U | undefined | null>,
-    RxNotificationKind
-  >;
+  private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>,
+    RxNotificationKind>;
 
   private readonly initialViewContext: LetViewContext<U> = {
     $implicit: undefined,
     rxLet: undefined,
     $rxError: false,
     $rxComplete: false,
-    $rxSuspense: false,
+    $rxSuspense: false
   };
 
   observable$Subject$ = new ReplaySubject(1);
   observable$ = this.observable$Subject$.pipe(
-    distinctUntilChanged(),
-    switchAll(),
-    distinctUntilChanged()
+    ngInputFlatten()
   );
-  strategy$Subject$ = new ReplaySubject<Observable<StrategyCredentials>>(1);
+  strategy$Subject$ = new ReplaySubject<string | Observable<string>>(1);
   strategy$: Observable<StrategyCredentials> = this.strategy$Subject$.pipe(
-    distinctUntilChanged(),
-    switchAll(),
-    distinctUntilChanged()
+    ngInputFlatten(),
+    nameToStrategyConfig()
   );
 
-  private readonly templateObserver: RxTemplateObserver<
-    U | null | undefined
-  > = {
+  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => {
       this.displayInitialView();
       this.templateManager.updateViewContext({
@@ -148,14 +118,14 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
         rxLet: undefined,
         $rxError: false,
         $rxComplete: false,
-        $rxSuspense: true,
+        $rxSuspense: true
       });
     },
     next: (value: U | null | undefined) => {
       this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
         $implicit: value,
-        rxLet: value,
+        rxLet: value
       });
     },
     error: (error: Error) => {
@@ -164,7 +134,7 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
         ? this.templateManager.displayView('rxError')
         : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $rxError: error,
+        $rxError: error
       });
     },
     complete: () => {
@@ -173,9 +143,9 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
         ? this.templateManager.displayView('rxComplete')
         : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $rxComplete: true,
+        $rxComplete: true
       });
-    },
+    }
   };
 
   /** @internal */
@@ -192,7 +162,6 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     private customStrategies: StrategyCredentials[],
     @Inject(RX_DEFAULT_STRATEGY) private defaultStrategy: string,
     public cdRef: ChangeDetectorRef,
-    public cdRefServiceNext: RxChangeDetectorRef,
     private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
@@ -202,10 +171,6 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     );
   }
 
-  public changeStrategy(strategy: keyof DefaultStrategies) {
-    this.cdRefServiceNext.setStrategy(strategy);
-  }
-
   ngOnInit() {
     this.templateManager.addTemplateRef('rxNext', this.nextTemplateRef);
     this.displayInitialView();
@@ -213,11 +178,7 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
       .pipe(
         tap((value: any) => this.templateObserver.next(value)),
         rxMaterialize(),
-        map(
-          (n) =>
-            this.templateManager.getEmbeddedView(n.kind) as ChangeDetectorRef
-        ),
-        applyStrategy(this.strategy$, (this.cdRef as any).context)
+        applyStrategy(this.strategy$, (this.cdRef as any).context, this.templateManager.getEmbeddedView)
       )
       .subscribe();
   }
@@ -277,7 +238,7 @@ function renderByStrategyName(
         globalTaskManager.scheduleTask({
           priority: GlobalTaskPriority.chunk,
           scope: evCdRef,
-          work,
+          work
         });
       } else {
         work();
@@ -312,34 +273,21 @@ function scheduleByPriority<T>(
 }
 
 function applyStrategy<T>(
-  strategyCredentials$: Observable<StrategyCredentials>,
-  context
-): (o$: Observable<T>) => Observable<T> {
-  return (view$) =>
-    view$.pipe(
-      publish((v$) =>
-        strategyCredentials$.pipe(
-          switchMap((strategyCredentials) => {
-            const {
-              priority,
-              renderMethod,
-              detach,
-              queued,
-            } = strategyCredentials;
-            return v$.pipe(
-              scheduleByPriority(priority),
-              tap((evcDRef) =>
-                renderByStrategyName(
-                  renderMethod,
-                  detach,
-                  queued,
-                  evcDRef,
-                  context
-                )
-              )
-            );
+  credentials$: Observable<StrategyCredentials>,
+  context,
+  getEmbeddedView
+): (o$: Observable<RxNotification<T>>) => Observable<RxNotification<T>> {
+  return notification$ => notification$.pipe(
+    publish((n$) =>
+      credentials$.pipe(
+        switchMap((credentials) => n$.pipe(
+          switchMap(n => {
+            const work = () => credentials.work(getEmbeddedView(n.kind), context);
+            return of(n).pipe(credentials.behavior(work, context));
           })
+          )
         )
       )
-    );
+    )
+  );
 }

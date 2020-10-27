@@ -1,5 +1,5 @@
 import { distinctUntilChanged, map, switchAll } from 'rxjs/operators';
-import { isObservable, of } from 'rxjs';
+import { isObservable, Observable, of } from 'rxjs';
 
 export function ngInputFlatten() {
   return o$ => o$.pipe(

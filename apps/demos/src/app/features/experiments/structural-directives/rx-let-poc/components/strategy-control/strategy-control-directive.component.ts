@@ -1,46 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RenderStrategy, SchedulingPriority } from '@rx-angular/template';
 import { RxChangeDetectorRef } from '../../../../../../shared/rx-change-detector-ref/rx-change-detector-ref.service';
 import { BehaviorSubject } from 'rxjs';
-import { StrategyCredentials } from '../../rx-let-poc.directive';
-import { map } from 'rxjs/operators';
-
-const localCredentials: StrategyCredentials = {
-  renderMethod: 'detectChanges',
-  priority: SchedulingPriority.animationFrame,
-  detach: false,
-  queued: false
-}
-const queuedCredentials: StrategyCredentials = {
-  renderMethod: 'detectChanges',
-  priority: SchedulingPriority.sync,
-  detach: false,
-  queued: true
-}
-const queuedDetachCredentials: StrategyCredentials = {
-  renderMethod: 'detectChanges',
-  priority: SchedulingPriority.sync,
-  detach: true,
-  queued: true
-}
-const globalCredentials: StrategyCredentials = {
-  renderMethod: 'markDirty',
-  priority: SchedulingPriority.sync,
-  detach: false,
-  queued: false
-}
-const noopCredentials: StrategyCredentials = {
-  renderMethod: 'noop',
-  priority: SchedulingPriority.sync,
-  detach: false,
-  queued: false
-}
-const nativeCredentials: StrategyCredentials = {
-  renderMethod: 'markForCheck',
-  priority: SchedulingPriority.sync,
-  detach: false,
-  queued: false
-}
+import { nameToStrategyConfig } from '../../strategy-handling';
 
 @Component({
   selector: 'rxa-strategy-control-directive',
@@ -50,11 +11,7 @@ const nativeCredentials: StrategyCredentials = {
         <mat-card-title>Strategy controlled by directive</mat-card-title>
         <br/>
 
-        <rxa-strategy-select
-          [strategies]="rxCdRef.strategies$"
-          [currentStrategy]="changeStrategy$"
-          (strategyChange)="changeStrategy$.next({ name: $event })"
-        ></rxa-strategy-select>
+        <rxa-strategy-select (strategyChange)="changeStrategy$.next($event)"></rxa-strategy-select>
         <br/>
 
         <rxa-value-provider
@@ -89,7 +46,7 @@ const nativeCredentials: StrategyCredentials = {
             *rxLet="
               vP.incremental$;
               let counter;
-              strategy: strategyCredentials$
+              strategy: changeStrategy$
             "
           >
             {{strategyCredentials$ | push | json}}
@@ -118,27 +75,9 @@ const nativeCredentials: StrategyCredentials = {
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class StrategyControlDirectiveComponent {
-  changeStrategy$ = new BehaviorSubject<Partial<RenderStrategy>>({
-    name: 'local'
-  });
+  changeStrategy$ = new BehaviorSubject<string>('local');
   strategyCredentials$ = this.changeStrategy$.pipe(
-    map(s => {
-      switch (s.name) {
-        case'global':
-          return globalCredentials;
-        case'native':
-          return nativeCredentials;
-        case'noop':
-          return noopCredentials;
-        case 'chunk':
-          return queuedCredentials;
-        case 'chunkDetach':
-          return queuedDetachCredentials;
-        case'local':
-        default:
-          return localCredentials;
-      }
-    })
+    nameToStrategyConfig()
   );
   displayStates = {
     none: 0,

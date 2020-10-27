@@ -89,8 +89,18 @@ const DECLARATIONS = [
       multi: true,
     },
     {
+      provide: RX_CUSTOM_STRATEGIES,
+      useValue: {
+        name: 'postTask',
+        renderMethod: '',
+        priority: SchedulingPriority.animationFrame,
+        detach: true,
+      },
+      multi: true,
+    },
+    {
       provide: RX_DEFAULT_STRATEGY,
-      useValue: 'global',
+      useValue: 'local',
     },
   ],
 })

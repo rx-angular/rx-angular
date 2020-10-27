@@ -1,20 +1,12 @@
-import {
-  AfterViewInit,
-  ApplicationRef,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  NgZone,
-  ɵdetectChanges
-} from '@angular/core';
+import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, Input, NgZone } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { isNgZone, isViewEngineIvy } from '@rx-angular/template';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
 import { CdConfigService } from './cd-config.service';
 import { FormBuilder } from '@angular/forms';
-import { defer, fromEvent, merge, Observable } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
+import { fromEvent, merge, Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 
 @Component({
@@ -41,14 +33,14 @@ import { RxState } from '@rx-angular/state';
                 }}</mat-icon
               >&nbsp; {{ changeDetection }}
             </mat-chip>
-            <mat-chip>
-              <mat-icon>settings</mat-icon>&nbsp; {{ strategyName$ | push:'local' }}</mat-chip
-            >
+            <mat-chip *rxLet="strategyName$; let s">
+              <mat-icon>settings</mat-icon>&nbsp;{{s}}
+            </mat-chip>
           </mat-chip-list>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <form [formGroup]="" ]="configForm">
+      <form [formGroup]="configForm">
         <mat-form-field>
           <mat-label>Change Detection Strategy</mat-label>
           <mat-select formControlName="strategy" id="strategy">
@@ -93,11 +85,8 @@ export class StrategyControlPanelComponent
     { name: 'noop', icon: 'block' },
     { name: 'native', icon: 'find_replace' }
   ];
-  detectChangeClick$ = defer(() =>
-    fromEvent(document.getElementById('btnDetectChanges'), 'click')
-  );
 
-  expanded = isNgZone(this.ngZone) ? false : true;
+  expanded = !isNgZone(this.ngZone);
   @Input()
   appComponentRef;
 
@@ -129,7 +118,7 @@ export class StrategyControlPanelComponent
     super();
     this.set({ expanded: true });
 
-    this.hold(this.coalesceConfigService.strategyName$, (strategy) => this.configForm.setValue({strategy}));
+    this.hold(this.coalesceConfigService.strategyName$, (strategy) => this.configForm.setValue({ strategy }));
     this.hold(this.configForm$.pipe(tap(() => appRef.tick())));
     this.coalesceConfigService
       .connect('strategy', this.configForm$
@@ -140,10 +129,6 @@ export class StrategyControlPanelComponent
       );
   }
 
-  detectChanges() {
-    ɵdetectChanges(this.appComponentRef);
-  }
-
   tick() {
     this.appRef.tick();
   }
@@ -152,8 +137,7 @@ export class StrategyControlPanelComponent
     merge(
       fromEvent(document.getElementById('btnAppTick'), 'click').pipe(
         tap(() => this.tick())
-      ),
-      this.detectChangeClick$.pipe(tap(() => this.detectChanges()))
+      )
     ).subscribe();
   }
 }

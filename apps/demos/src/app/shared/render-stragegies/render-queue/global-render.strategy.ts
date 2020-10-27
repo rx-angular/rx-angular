@@ -22,152 +22,152 @@ import { coalesceAndScheduleGlobal } from './static-schedule-and-coalesce-global
  */
 
 export function getGlobalRenderingStrategies<T>(
-    config: RenderStrategyFactoryConfig
+  config: RenderStrategyFactoryConfig
 ): { [strategy: string]: RenderStrategy } {
-    return {
-        chunk: createChunkStrategy(config),
-        blocking: createBlockingStrategy(config),
-        detach: createDetachChunkStrategy(config),
-        detachChunk: createDetachChunkStrategy(config),
-        detachBlocking: createDetachBlockingStrategy(config)
-    };
+  return {
+    chunk: createChunkStrategy(config),
+    blocking: createBlockingStrategy(config),
+    detach: createDetachChunkStrategy(config),
+    detachChunk: createDetachChunkStrategy(config),
+    detachBlocking: createDetachBlockingStrategy(config)
+  };
 }
 
 function afterCoalesceAndSchedule<R>(work: () => void, afterCD?: () => R) {
-    work();
-    if (afterCD) {
-        afterCD();
-    }
+  work();
+  if (afterCD) {
+    afterCD();
+  }
 }
 
 export function createBlockingStrategy<T>(
-    config: RenderStrategyFactoryConfig
+  config: RenderStrategyFactoryConfig
 ): RenderStrategy {
-    const component = config.cdRef;
-    const taskPriority = GlobalTaskPriority.blocking;
+  const component = config.cdRef;
+  const taskPriority = GlobalTaskPriority.blocking;
 
-    const renderMethod = () => {
-        config.cdRef.detectChanges();
-    };
-    const behavior = o =>
-        o.pipe(
-            scheduleOnGlobalTick(() => ({
-                priority: taskPriority,
-                work: renderMethod,
-                scope: component
-            }))
-        );
+  const renderMethod = () => {
+    config.cdRef.detectChanges();
+  };
+  const behavior = o =>
+    o.pipe(
+      scheduleOnGlobalTick(() => ({
+        priority: taskPriority,
+        work: renderMethod,
+        scope: component
+      }))
+    );
 
-    const scheduleCD = <R>(afterCD?: () => R) =>
-        coalesceAndScheduleGlobal(() => {
-            afterCoalesceAndSchedule(renderMethod, afterCD);
-        }, taskPriority, component);
+  const scheduleCD = <R>(afterCD?: () => R) =>
+    coalesceAndScheduleGlobal(() => {
+      afterCoalesceAndSchedule(renderMethod, afterCD);
+    }, taskPriority, component);
 
-    return {
-        name: 'blocking',
-        detectChanges: renderMethod,
-        rxScheduleCD: behavior,
-        scheduleCD
-    };
+  return {
+    name: 'blocking',
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
+    scheduleCD
+  };
 }
 
 export function createChunkStrategy<T>(
-    config: RenderStrategyFactoryConfig
+  config: RenderStrategyFactoryConfig
 ): RenderStrategy {
-    const taskPriority = GlobalTaskPriority.chunk;
-    const component = config.cdRef;
+  const taskPriority = GlobalTaskPriority.chunk;
+  const component = config.cdRef;
 
-    const renderMethod = () => {
-        config.cdRef.detectChanges();
-    };
-    const behavior = o =>
-        o.pipe(
-            scheduleOnGlobalTick(() => ({
-                priority: taskPriority,
-                work: renderMethod,
-                scope: component
-            }))
-        );
+  const renderMethod = () => {
+    config.cdRef.detectChanges();
+  };
+  const behavior = o =>
+    o.pipe(
+      scheduleOnGlobalTick(() => ({
+        priority: taskPriority,
+        work: renderMethod,
+        scope: component
+      }))
+    );
 
-    const scheduleCD = <R>(afterCD?: () => R) =>
-        coalesceAndScheduleGlobal(() => {
-            afterCoalesceAndSchedule(renderMethod, afterCD);
-        }, taskPriority, component);
+  const scheduleCD = <R>(afterCD?: () => R) =>
+    coalesceAndScheduleGlobal(() => {
+      afterCoalesceAndSchedule(renderMethod, afterCD);
+    }, taskPriority, component);
 
-    return {
-        name: 'chunk',
-        detectChanges: renderMethod,
-        rxScheduleCD: behavior,
-        scheduleCD
-    };
+  return {
+    name: 'chunk',
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
+    scheduleCD
+  };
 }
 
 export function createDetachChunkStrategy<T>(
-    config: RenderStrategyFactoryConfig
+  config: RenderStrategyFactoryConfig
 ): RenderStrategy {
-    const component = config.cdRef;
-    const taskPriority = GlobalTaskPriority.chunk;
-    const renderMethod = () => {
-        config.cdRef.reattach();
-        config.cdRef.detectChanges();
-        config.cdRef.detach();
-    };
-    const behavior = o =>
-        o.pipe(
-            tap(() => config.cdRef.detach()),
-            scheduleOnGlobalTick(() => ({
-                priority: taskPriority,
-                work: renderMethod,
-                scope: component
-            }))
-        );
+  const component = config.cdRef;
+  const taskPriority = GlobalTaskPriority.chunk;
+  const renderMethod = () => {
+    config.cdRef.reattach();
+    config.cdRef.detectChanges();
+    config.cdRef.detach();
+  };
+  const behavior = o =>
+    o.pipe(
+      tap(() => config.cdRef.detach()),
+      scheduleOnGlobalTick(() => ({
+        priority: taskPriority,
+        work: renderMethod,
+        scope: component
+      }))
+    );
 
-    const scheduleCD = <R>(afterCD?: () => R) => {
-        config.cdRef.detach();
-        return  coalesceAndScheduleGlobal(() => {
-            afterCoalesceAndSchedule(renderMethod, afterCD);
-        }, taskPriority, component);
-    }
+  const scheduleCD = <R>(afterCD?: () => R) => {
+    config.cdRef.detach();
+    return coalesceAndScheduleGlobal(() => {
+      afterCoalesceAndSchedule(renderMethod, afterCD);
+    }, taskPriority, component);
+  };
 
-    return {
-        name: 'detachChunk',
-        detectChanges: renderMethod,
-        rxScheduleCD: behavior,
-        scheduleCD
-    };
+  return {
+    name: 'detachChunk',
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
+    scheduleCD
+  };
 }
 
 export function createDetachBlockingStrategy<T>(
-    config: RenderStrategyFactoryConfig
+  config: RenderStrategyFactoryConfig
 ): RenderStrategy {
-    const component = config.cdRef;
-    const taskPriority = GlobalTaskPriority.blocking;
-    const renderMethod = () => {
-        config.cdRef.reattach();
-        config.cdRef.detectChanges();
-        config.cdRef.detach();
-    };
-    const behavior = o =>
-        o.pipe(
-            tap(() => config.cdRef.detach()),
-            scheduleOnGlobalTick(() => ({
-                priority: taskPriority,
-                work: renderMethod,
-                scope: component
-            }))
-        );
+  const component = config.cdRef;
+  const taskPriority = GlobalTaskPriority.blocking;
+  const renderMethod = () => {
+    config.cdRef.reattach();
+    config.cdRef.detectChanges();
+    config.cdRef.detach();
+  };
+  const behavior = o =>
+    o.pipe(
+      tap(() => config.cdRef.detach()),
+      scheduleOnGlobalTick(() => ({
+        priority: taskPriority,
+        work: renderMethod,
+        scope: component
+      }))
+    );
 
-    const scheduleCD = <R>(afterCD?: () => R) => {
-        config.cdRef.detach();
-        return  coalesceAndScheduleGlobal(() => {
-            afterCoalesceAndSchedule(renderMethod, afterCD);
-        }, taskPriority, component);
-    }
+  const scheduleCD = <R>(afterCD?: () => R) => {
+    config.cdRef.detach();
+    return coalesceAndScheduleGlobal(() => {
+      afterCoalesceAndSchedule(renderMethod, afterCD);
+    }, taskPriority, component);
+  };
 
-    return {
-        name: 'detachBlocking',
-        detectChanges: renderMethod,
-        rxScheduleCD: behavior,
-        scheduleCD
-    };
+  return {
+    name: 'detachBlocking',
+    detectChanges: renderMethod,
+    rxScheduleCD: behavior,
+    scheduleCD
+  };
 }

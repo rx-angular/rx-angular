@@ -1,17 +1,13 @@
-import { ChangeDetectorRef, Inject, Injectable, Optional } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { RxState, selectSlice } from '@rx-angular/state';
-import {
-  DEFAULT_STRATEGY_NAME,
-  getStrategies,
-  RenderStrategy,
-} from '@rx-angular/template';
-// tslint:disable-next-line: nx-enforce-module-boundaries
-
+import { DEFAULT_STRATEGY_NAME, getStrategies, RenderStrategy } from '@rx-angular/template';
 import { Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 
+// tslint:disable-next-line: nx-enforce-module-boundaries
+
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class RxChangeDetectorRef extends RxState<{
   currentStrategy: string;
@@ -43,7 +39,7 @@ export class RxChangeDetectorRef extends RxState<{
 
   setStrategy(currentStrategy: string) {
     this.set({
-      currentStrategy,
+      currentStrategy
     });
   }
 
@@ -65,7 +61,7 @@ export class RxChangeDetectorRef extends RxState<{
     //   });
     // }
     this.set({
-      strategies: getStrategies({ cdRef: cdRef }),
+      strategies: getStrategies({ cdRef: cdRef })
     });
   }
 }
