@@ -24,14 +24,13 @@ import { RxState } from '@rx-angular/state';
               {{ zoneEnv }}</mat-chip
             >
             <mat-chip>
-              <mat-icon>image</mat-icon> &nbsp; {{ engine }}</mat-chip>
+              <mat-icon>image</mat-icon> {{ engine }}</mat-chip>
             <mat-chip>
               <mat-icon>{{
                 changeDetection === 'Default'
                   ? 'autorenew'
                   : 'youtube_searched_for'
-                }}</mat-icon
-              >&nbsp; {{ changeDetection }}
+                }}</mat-icon>&nbsp; {{ changeDetection }}
             </mat-chip>
             <mat-chip *rxLet="strategyName$; let s">
               <mat-icon>settings</mat-icon>&nbsp;{{s}}
@@ -92,7 +91,7 @@ export class StrategyControlPanelComponent
 
   readonly env = environment;
   readonly hasZone = isNgZone(this.ngZone);
-  readonly zoneEnv = isNgZone(this.ngZone) ? 'NgZone' : 'NgNoopZone';
+  readonly zoneEnv = this.hasZone ? 'NgZone' : 'NgNoopZone';
   readonly changeDetection =
     this.env.changeDetection === 1 ? 'Default' : 'OnPush';
   readonly engine = isViewEngineIvy() ? 'Ivy' : 'ViewEngine';

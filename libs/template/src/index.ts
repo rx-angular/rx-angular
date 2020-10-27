@@ -28,7 +28,7 @@ export {
   TemplateManager,
   createTemplateManager,
 } from './lib/core/utils/template-manager_creator';
-export { RxViewContext, RxTemplateObserver } from './lib/core/model';
+export { RxViewContext, RxTemplateObserver, RxNotificationKind } from './lib/core/model';
 
 export {
   getStrategies,

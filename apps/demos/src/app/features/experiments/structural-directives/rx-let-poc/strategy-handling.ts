@@ -3,10 +3,10 @@ import { map, tap } from 'rxjs/operators';
 import { StrategyCredentials } from './rx-let-poc.directive';
 import {
   priorityTickMap,
-  SchedulingPriority
-} from '../../../../../../../../libs/template/src/lib/render-strategies/rxjs/scheduling';
+  SchedulingPriority,
+  coalesceWith
+} from '@rx-angular/template';
 import { Observable } from 'rxjs';
-import { coalesceWith } from '../../../../../../../../libs/template/src/lib/render-strategies/rxjs/operators';
 import { scheduleOnGlobalTick } from '../../../../shared/render-stragegies/render-queue/globalAnimationFrameTick';
 
 export type RenderBehavior = <T = unknown>(work: any, context: any) => (o: Observable<T>) => Observable<T>;

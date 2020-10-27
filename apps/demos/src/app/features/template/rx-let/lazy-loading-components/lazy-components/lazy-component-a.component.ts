@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, TemplateRef } from '@angular/core';
-import { LazyComponentBComponent } from './lazy-component-b.component';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'rxa-lazy-component-a',

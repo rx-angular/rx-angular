@@ -17,7 +17,7 @@ export const MENU_ITEMS = [
   },
   {
     label: 'Preloading Techniques',
-    link: 'preloading-techniques'
+    link: 'preloading-images'
   },
   {
     label: 'Lazy Components',

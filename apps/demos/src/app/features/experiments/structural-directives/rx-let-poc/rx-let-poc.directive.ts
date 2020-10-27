@@ -19,7 +19,8 @@ import {
   RxTemplateObserver,
   RxViewContext,
   SchedulingPriority,
-  TemplateManager
+  TemplateManager,
+  RxNotificationKind
 } from '@rx-angular/template';
 // tslint:disable-next-line: nx-enforce-module-boundaries
 import { Observable, ObservableInput, of, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
@@ -33,7 +34,6 @@ import { RX_CUSTOM_STRATEGIES } from './custom-strategies-token';
 import { RX_DEFAULT_STRATEGY } from './default-strategy-token';
 import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
 import { nameToStrategyConfig, RenderBehavior } from './strategy-handling';
-import { RxNotificationKind } from '../../../../../../../../libs/template/src/lib/core';
 
 export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
