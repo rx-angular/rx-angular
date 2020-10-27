@@ -1,11 +1,33 @@
+.work {
+  display: block;
+  position: relative;
+  margin: 2px;
+  width: 15px;
+  height: 15px;
+  font-size: 10px;
+  text-align: center;
+}
 
-  .layouting-work {
-    min-height: 1px;
-  }
-  .box {
-    height: 1px;
-    width: 1px;
-  }
-  .type {
-    font-size: 8px;
-  }
+.work.scripting {
+  border: 1px solid darkorange;
+  background-color: orange;
+}
+.work.layouting {
+  border: 1px solid purple;
+  background-color: darkorchid;
+}
+
+.layouting-work {
+  bottom: 0px;
+  position: absolute;
+  min-height: 1px;
+}
+
+.box {
+  height: 1px;
+  width: 1px;
+}
+
+.type {
+  font-size: 8px;
+}

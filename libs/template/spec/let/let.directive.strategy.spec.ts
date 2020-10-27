@@ -11,7 +11,7 @@ import { mockConsole } from '@test-helpers';
 @Component({
   template: `
     <ng-container
-      *rxLet="value$; let value; strategy: strategy; $error as error; $complete as complete"
+      *rxLet="value$; let value; strategy: strategy; $rxError as error; $rxComplete as complete"
     >{{ (value | json) || 'undefined' }}</ng-container
     >
   `

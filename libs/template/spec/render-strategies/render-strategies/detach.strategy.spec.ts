@@ -2,6 +2,7 @@
 import { mockConsole } from '@test-helpers';
 import { getStrategies } from '../../../src/lib/render-strategies';
 import { CallsExpectations, getMockStrategyConfig, testStrategyMethod } from '../../fixtures';
+import createSpy = jasmine.createSpy;
 
 /**
  * DETACH STRATEGY
@@ -14,7 +15,8 @@ const callsExpectations: CallsExpectations = {
   detectChanges: 1,
   markForCheck: 0,
   detach: 1,
-  reattach: 1
+  reattach: 1,
+  afterCD: 1
 };
 
 describe('detach Strategy', () => {
@@ -55,20 +57,22 @@ describe('detach Strategy', () => {
   });
 
   describe('scheduleCD', () => {
-    it('should call cdRef#detectChanges 1 times when scheduleCD is called a single time', done => {
+    it('should call cdRef#detectChanges 1 times when and afterCD 1 time scheduleCD is called a single time', done => {
       testStrategyMethod({
         strategyName,
         strategyMethod: 'scheduleCD',
         singleTime: true,
+        afterCD: createSpy('afterCD'),
         callsExpectations
       }, done);
     });
 
-    it(`should call cdRef#detectChanges 1 times when scheduleCD is called multiple times sync`, done => {
+    it(`should call cdRef#detectChanges 1 times when and afterCD 1 time scheduleCD is called multiple times sync`, done => {
       testStrategyMethod({
         strategyName,
         strategyMethod: 'scheduleCD',
         singleTime: false,
+        afterCD: createSpy('afterCD'),
         callsExpectations
       }, done);
     });

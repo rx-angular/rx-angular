@@ -26,9 +26,9 @@ export const ROUTES: Routes = [
       .then(m => m.NgIfHackModule)
   },
   {
-    path: 'preloading-techniques',
-    loadChildren: () => import('./preloading-techniques/preloading-techniques.module')
-      .then(m => m.PreloadingTechniquesModule)
+    path: 'preloading-images',
+    loadChildren: () => import('./preloading-images/preloading-images.module')
+      .then(m => m.PreloadingImagesModule)
   },
   {
     path: 'lazy-components',

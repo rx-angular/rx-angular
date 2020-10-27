@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { getStrategies } from '@rx-angular/template';
+import { BehaviorSubject, interval, NEVER, Subject } from 'rxjs';
+import { scan, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-let1-container',
   template: `
     <rxa-visualizer>
       <ng-container visualizerHeader>
-        <rxa-value-provider #valP="rxaValueProvider">
+        <rxa-value-provider [changes$]="running$" #valP="rxaValueProvider">
           <h1>Stop rendering if directive is out of the viewport</h1>
           <button mat-raised-button [unpatch] (click)="valP.next()">
             count up
@@ -14,13 +16,7 @@ import { getStrategies } from '@rx-angular/template';
           <button
             mat-raised-button
             [unpatch]
-            (click)="
-              valP.schedule$.next(
-                !running ? { scheduler: 'timeout', tickSpeed: 200 } : undefined
-              );
-              running = !running
-            "
-          >
+            (click)="runningToggle$.next();">
             auto
           </button>
         </rxa-value-provider>
@@ -71,9 +67,11 @@ import { getStrategies } from '@rx-angular/template';
   ],
 })
 export class BasicExampleComponent {
-  running = false;
+  runningToggle$ = new Subject<boolean>();
+  running$ = this.runningToggle$.pipe(
+    scan(b => !b, false),
+    switchMap(b => b ? interval(200):NEVER)
+  );
 
-  strategies = Object.keys(getStrategies({ cdRef: this.cdRef }));
-
-  constructor(private ngZone: NgZone, private cdRef: ChangeDetectorRef) {}
+  constructor() {}
 }

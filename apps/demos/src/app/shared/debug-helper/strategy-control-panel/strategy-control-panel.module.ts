@@ -8,6 +8,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { LetModule } from '@rx-angular/template';
+import { MatListModule } from '@angular/material/list';
+
 
 
 @NgModule({
@@ -20,7 +23,9 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    LetModule,
+    MatListModule
   ],
   exports: [StrategyControlPanelComponent]
 })

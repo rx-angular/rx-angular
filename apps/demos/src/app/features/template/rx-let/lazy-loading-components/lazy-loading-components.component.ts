@@ -1,41 +1,46 @@
-import { ChangeDetectionStrategy, Component, ComponentFactoryResolver } from '@angular/core';
-import { defer, Subject } from 'rxjs';
-import { delay, scan, switchMap } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RxEffects } from '../../../../shared/rx-effects.service';
 
 @Component({
   selector: 'rxa-lazy-loading-components',
   template: `
-    <div>
-      Lazy Loading Components
-    </div>
-    <button mat-raised-button (click)="toggle$.next()">Toggle</button>
-    <ng-container [ngComponentOutlet]="c" *rxLet="component$; let c; suspense:suspenseView"></ng-container>
-    <ng-template #suspenseView>
-      <rxa-list-item-ghost></rxa-list-item-ghost>
-    </ng-template>
+    <rxa-visualizer>
+      <div visualizerHeader>
+        <h2>Lazy Loading Components</h2>
+        <mat-button-toggle-group name="visibleExamples"
+                                 aria-label="Visible Examples"
+                                 [value]="displayStates.all"
+                                 #group="matButtonToggleGroup">
+          <mat-button-toggle [value]="displayStates.await">Async Await</mat-button-toggle>
+          <mat-button-toggle [value]="displayStates.promise">Promise</mat-button-toggle>
+          <mat-button-toggle [value]="displayStates.observable">Observable</mat-button-toggle>
+          <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
+        </mat-button-toggle-group>
+        <br/>
+      </div>
+      <div class="w-100 row">
+        <div class="col" *ngIf="group.value === displayStates.await || group.value === displayStates.all">
+          <rxa-lazy-loading-components-async-await></rxa-lazy-loading-components-async-await>
+        </div>
+        <div class="col" *ngIf="group.value === displayStates.promise || group.value === displayStates.all">
+          <rxa-lazy-loading-components-promise></rxa-lazy-loading-components-promise>
+        </div>
+        <div class="col" *ngIf="group.value === displayStates.observable || group.value === displayStates.all">
+          <rxa-lazy-loading-components-observable></rxa-lazy-loading-components-observable>
+        </div>
+      </div>
+    </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LazyLoadingComponentsComponent {
-  toggle$ = new Subject<boolean>();
+export class LazyLoadingComponentsComponent extends RxEffects {
 
-  component$ = defer(() => this.toggle$.pipe(
-    scan(b => !b, false),
-    delay(1000),
-    switchMap(b => b ? this.cA$() : this.cB$())
-  ));
-
-  cA$ = () => import('./lazy-component-a.component').then(c => c.component);
-  cB$ = () => import('./lazy-component-b.component').then(c => c.component);
-
-  constructor(private _componentFactoryResolver: ComponentFactoryResolver) {
-
-  }
+  displayStates = {
+    none: 0,
+    all: 1,
+    await: 2,
+    promise: 3,
+    observable: 4
+  };
 
 }
-
-
-/*
-
-
-* */

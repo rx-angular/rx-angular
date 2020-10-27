@@ -17,9 +17,9 @@ import { map, share, switchMap, takeUntil, withLatestFrom } from 'rxjs/operators
             heroes$;
             let hero;
             strategy: visibleStrategy;
-            complete: complete;
-            error: error;
-            suspense: suspense
+            rxComplete: complete;
+            rxError: error;
+            rxSuspense: suspense
           "
         >
           random Star Wars character fetched!

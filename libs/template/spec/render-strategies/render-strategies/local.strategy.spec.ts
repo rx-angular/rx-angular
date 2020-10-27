@@ -2,6 +2,7 @@ import { getStrategies } from '@rx-angular/template';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { CallsExpectations, getMockStrategyConfig, testStrategyMethod } from '../../fixtures';
+import createSpy = jasmine.createSpy;
 
 /**
  * LOCAL STRATEGY
@@ -14,7 +15,8 @@ const callsExpectations: CallsExpectations = {
   detectChanges: 1,
   markForCheck: 0,
   detach: 0,
-  reattach: 0
+  reattach: 0,
+  afterCD: 1
 };
 
 describe('local Strategy', () => {
@@ -53,21 +55,23 @@ describe('local Strategy', () => {
   });
 
   describe('scheduleCD', () => {
-    it('should call cdRef#detectChanges 1 times when scheduleCD is called a single time', (done) => {
+    it('should call cdRef#detectChanges 1 times and afterCD 1 time when scheduleCD is called a single time', (done) => {
       testStrategyMethod({
         strategyName,
         strategyMethod: 'scheduleCD',
         flushMicrotask: true,
         singleTime: true,
+        afterCD: createSpy('afterCD'),
         callsExpectations
       }, done);
     });
 
-    it(`should call cdRef#detectChanges 1 times when scheduleCD is called multiple times sync`, (done) => {
+    it(`should call cdRef#detectChanges 1 times and afterCD 1 time when scheduleCD is called multiple times sync`, (done) => {
       testStrategyMethod({
         strategyName,
         strategyMethod: 'scheduleCD',
         singleTime: false,
+        afterCD: createSpy('afterCD'),
         callsExpectations
       }, done);
     });

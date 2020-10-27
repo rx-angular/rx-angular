@@ -1,14 +1,14 @@
-import { NextObserver } from 'rxjs';
+import { NextObserver, Notification } from 'rxjs';
 
 export interface RxViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
   $implicit: T;
   // set context var complete to true (var$; let e = $error)
-  $error: false | Error;
+  $rxError: false | Error;
   // set context var complete to true (var$; let c = $complete)
-  $complete: boolean;
+  $rxComplete: boolean;
   // set context var suspense to true (var$; let c = $suspense)
-  $suspense: boolean;
+  $rxSuspense: boolean;
 }
 
 /**
@@ -19,3 +19,7 @@ export interface RxViewContext<T> {
 export interface RxTemplateObserver<T> extends NextObserver<T> {
   suspense?: () => void;
 }
+
+export type RxNotificationKind = 'rxSuspense' | 'rxNext' | 'rxError' | 'rxComplete';
+type NotificationExtract = 'value' | 'hasValue' | 'error';
+export type RxNotification<T> = Pick<Notification<T>, NotificationExtract> & { kind: RxNotificationKind };

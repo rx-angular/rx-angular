@@ -38,14 +38,14 @@ export function toTick(scheduleConfig: SchedulerConfig): Observable<number> {
 
 export function toInt(float: number = toRandom(), min = 0, max = 10): number {
   // tslint:disable-next-line:no-bitwise
-  return float !== undefined ? ~~(min + float * (max - min)) : undefined;
+  return float !== undefined ? ~~(min + float * (max+1 - min)) : undefined;
 }
 
 export function toRandom(): number {
   return Math.random();
 }
 
-export function toBoolean(float: number, truthy: number): boolean | undefined {
+export function toBoolean(float: number, truthy: number = 0.5): boolean | undefined {
   return float !== undefined ? float < truthy : undefined;
 }
 

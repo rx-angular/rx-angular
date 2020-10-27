@@ -1,12 +1,10 @@
 import { ChangeDetectorRef, Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 
-import { Observable, ObservableInput, Subscription, Unsubscribable } from 'rxjs';
-import { createRenderAware, RenderAware, StrategySelection } from '../core';
-import { createTemplateManager, TemplateManager } from '../core/utils/template-manager_creator';
-import { DEFAULT_STRATEGY_NAME, getStrategies } from '../render-strategies/strategies/strategies-map';
+import { Observable, ObservableInput, Subscription, Unsubscribable, } from 'rxjs';
+import { createRenderAware, RenderAware, RxNotificationKind, StrategySelection } from '../core';
 import { RxTemplateObserver, RxViewContext } from '../core/model';
-
-type RxTemplateName = 'rxNext' | 'rxComplete' | 'rxError' | 'rxSuspense';
+import { createTemplateManager, TemplateManager, } from '../core/utils/template-manager_creator';
+import { DEFAULT_STRATEGY_NAME, getStrategies, } from '../render-strategies/strategies/strategies-map';
 
 export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
@@ -22,9 +20,10 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  * you structure view-related models into view context scope (DOM element's scope).
  *
  * Under the hood, it leverages a `RenderStrategy` which in turn takes care of optimizing the change detection
- * of your component. The `LetDirective` will render its template and manage change detection after it got an initial value.
- * So if the incoming `Observable` emits its value lazily (e.g. data coming from `Http`), your template will be
- * rendered lazily as well. This can very positively impact the initial render performance of your application.
+ * of your component or embedded view. The `LetDirective` will render its template and manage change detection after it
+ *   got an initial value. So if the incoming `Observable` emits its value lazily (e.g. data coming from `Http`), your
+ *   template will be rendered lazily as well. This can very positively impact the initial render performance of your
+ *   application.
  *
  *
  * ### Problems with `async` and `*ngIf`
@@ -58,7 +57,8 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  * - triggers change-detection differently if ViewEngine or Ivy is present (`ChangeDetectorRef.detectChanges` or
  *   `ɵdetectChanges`)
  * - distinct same values in a row (`distinctUntilChanged` operator),
- * - display custom templates for different observable notifications (suspense, next, error, complete)
+ * - display custom templates for different observable notifications (rxSuspense, rxNext, rxError, rxComplete)
+ * - notify about after changes got rendered to the template (RenderCallback)
  *
  *
  * ### Binding an Observable and using the view context
@@ -83,7 +83,7 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  * - complete occurrence
  *
  * ```html
- * <ng-container *rxLet="observableNumber$; let n; let e = $error, let c = $complete">
+ * <ng-container *rxLet="observableNumber$; let n; let e = $rxError, let c = $rxComplete">
  *   <app-number [number]="n" *ngIf="!e && !c"></app-number>
  *   <ng-container *ngIf="e">
  *     There is an error: {{ e }}
@@ -107,9 +107,9 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  *   *rxLet="
  *     observableNumber$;
  *     let n;
- *     error: error;
- *     complete: complete;
- *     suspense: suspense;
+ *     rxError: error;
+ *     rxComplete: complete;
+ *     rxSuspense: suspense;
  *   "
  * >
  *   <app-number [number]="n"></app-number>
@@ -123,6 +123,7 @@ export interface LetViewContext<T> extends RxViewContext<T> {
  * them whenever the observable notification (next/error/complete) is sent. Then, it only updates the context
  * (e.g. a value from the observable) in the view.
  *
+ *
  * @docsCategory LetDirective
  * @docsPage LetDirective
  * @publicApi
@@ -133,21 +134,8 @@ export interface LetViewContext<T> extends RxViewContext<T> {
 })
 export class LetDirective<U> implements OnInit, OnDestroy {
 
-  /**
-   * @internal
-   */
+  /** @internal */
   static ngTemplateGuard_rxLet: 'binding';
-
-  /**
-   * @internal
-   */
-  readonly initialViewContext: LetViewContext<U> = {
-    $implicit: undefined,
-    rxLet: undefined,
-    $error: false,
-    $complete: false,
-    $suspense: false
-  };
 
   /**
    * @description
@@ -229,7 +217,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * A template to show if the bound Observable is in "complete" state.
    *
    * @example
-   * <ng-container *rxLet="hero$; let hero; complete: completeTemplate">
+   * <ng-container *rxLet="hero$; let hero; rxComplete: completeTemplate">
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    * <ng-template #completeTemplate>
@@ -238,8 +226,8 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    *
    * @param templateRef
    */
-  @Input()
-  set rxLetComplete(
+  @Input('rxLetRxComplete')
+  set rxComplete(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
   ) {
     this.templateManager.addTemplateRef('rxComplete', templateRef);
@@ -250,7 +238,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * A template to show if the bound Observable is in "error" state.
    *
    * @example
-   * <ng-container *rxLet="hero$; let hero; error: errorTemplate">
+   * <ng-container *rxLet="hero$; let hero; rxError: errorTemplate">
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    * <ng-template #errorTemplate>
@@ -259,8 +247,8 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    *
    * @param templateRef
    */
-  @Input()
-  set rxLetError(
+  @Input('rxLetRxError')
+  set rxError(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
   ) {
     this.templateManager.addTemplateRef('rxError', templateRef);
@@ -271,7 +259,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * A template to show before the first value is emitted from the bound Observable.
    *
    * @example
-   * <ng-container *rxLet="hero$; let hero; suspense: suspenseTemplate">
+   * <ng-container *rxLet="hero$; let hero; rxSuspense: suspenseTemplate">
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    * <ng-template #suspenseTemplate>
@@ -280,26 +268,38 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    *
    * @param templateRef
    */
-  @Input()
-  set rxLetSuspense(
+  @Input('rxLetRxSuspense')
+  set rxSuspense(
     templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>
   ) {
     this.templateManager.addTemplateRef('rxSuspense', templateRef);
   }
 
-  private subscription: Unsubscribable = new Subscription();
-  private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>,
-    RxTemplateName>;
+  /** @internal */
+  private subscription: Unsubscribable = Subscription.EMPTY;
 
+  /** @internal */
+  private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>, RxNotificationKind>;
+
+  /** @internal */
+  private readonly initialViewContext: LetViewContext<U> = {
+    $implicit: undefined,
+    rxLet: undefined,
+    $rxError: false,
+    $rxComplete: false,
+    $rxSuspense: false
+  };
+
+  /** @internal */
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => {
       this.displayInitialView();
       this.templateManager.updateViewContext({
         $implicit: undefined,
         rxLet: undefined,
-        $error: false,
-        $complete: false,
-        $suspense: true
+        $rxError: false,
+        $rxComplete: false,
+        $rxSuspense: true
       });
     },
     next: (value: U | null | undefined) => {
@@ -312,26 +312,24 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     error: (error: Error) => {
       // fallback to rxNext when there's no template for rxError
       this.templateManager.hasTemplateRef('rxError')
-        ? this.templateManager.displayView('rxError')
-        : this.templateManager.displayView('rxNext');
+      ? this.templateManager.displayView('rxError')
+      : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $error: error
+        $rxError: error
       });
     },
     complete: () => {
       // fallback to rxNext when there's no template for rxComplete
       this.templateManager.hasTemplateRef('rxComplete')
-        ? this.templateManager.displayView('rxComplete')
-        : this.templateManager.displayView('rxNext');
+      ? this.templateManager.displayView('rxComplete')
+      : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
-        $complete: true
+        $rxComplete: true
       });
     }
   };
 
-  /**
-   * @internal
-   */
+  /** @internal */
   static ngTemplateContextGuard<U>(
     dir: LetDirective<U>,
     ctx: unknown | null | undefined
@@ -339,9 +337,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     return true;
   }
 
-  /**
-   * @internal
-   */
+  /** @internal */
   constructor(
     cdRef: ChangeDetectorRef,
     private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
@@ -357,23 +353,20 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     this.renderAware.nextStrategy(DEFAULT_STRATEGY_NAME);
   }
 
-  /**
-   * @internal
-   */
+  /** @internal */
   ngOnInit() {
     this.templateManager.addTemplateRef('rxNext', this.nextTemplateRef);
     this.displayInitialView();
     this.subscription = this.renderAware.subscribe();
   }
 
-  /**
-   * @internal
-   */
+  /** @internal */
   ngOnDestroy() {
     this.subscription.unsubscribe();
     this.templateManager.destroy();
   }
 
+  /** @internal */
   private displayInitialView = () => {
     // Display "suspense" template if provided
     if (this.templateManager.hasTemplateRef('rxSuspense')) {
