@@ -222,7 +222,7 @@ export class StatefulComponent {
     private apiService: ApiService
   ) {
     this.state.hold(
-      this.deleteClick$.pipe(switchMap((id) => this.apiService.delete(id)))
+      this.deleteClick$.pipe(concatMap((id) => this.apiService.delete(id)))
     );
   }
 }
