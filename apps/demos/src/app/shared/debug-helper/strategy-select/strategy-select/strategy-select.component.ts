@@ -4,7 +4,10 @@ import { dictionaryToArray, RxState, toDictionary } from '@rx-angular/state';
 import { RX_CUSTOM_STRATEGIES } from '../../../../features/experiments/structural-directives/rx-let-poc/custom-strategies-token';
 import { RX_DEFAULT_STRATEGY } from '../../../../features/experiments/structural-directives/rx-let-poc/default-strategy-token';
 import { StrategyCredentials } from '../../../../features/experiments/structural-directives/rx-let-poc/rx-let-poc.directive';
-import { internalStrategies } from '../../../../features/experiments/structural-directives/rx-let-poc/strategy-handling';
+import {
+  internalStrategies,
+  mergeStrategies
+} from '../../../../features/experiments/structural-directives/rx-let-poc/strategy-handling';
 
 @Component({
   selector: 'rxa-strategy-select',
@@ -32,13 +35,12 @@ export class StrategySelectComponent {
   constructor(
     @Optional()
     @Inject(RX_CUSTOM_STRATEGIES)
-    private customStrategies: StrategyCredentials[],
+    private customStrategies: { [name: string]: StrategyCredentials }[],
     @Inject(RX_DEFAULT_STRATEGY)
     private defaultStrategy: string
   ) {
     this.currentStrategyName = this.defaultStrategy;
-    const _customStrategies = Array.isArray(this.customStrategies) ? toDictionary(this.customStrategies, 'name') : {};
-    this.strategies = { ...internalStrategies, ..._customStrategies };
+    this.strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), internalStrategies);
     this.strategyNames = dictionaryToArray(this.strategies).map((str: any) => str.name);
   }
 

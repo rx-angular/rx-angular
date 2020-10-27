@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RxChangeDetectorRef } from '../../../../../../shared/rx-change-detector-ref/rx-change-detector-ref.service';
 import { BehaviorSubject } from 'rxjs';
-import { nameToStrategyConfig } from '../../strategy-handling';
 
 @Component({
   selector: 'rxa-strategy-control-directive',
@@ -49,7 +47,6 @@ import { nameToStrategyConfig } from '../../strategy-handling';
               strategy: changeStrategy$
             "
           >
-            {{strategyCredentials$ | push | json}}
             <mat-card-title>{{ counter }}</mat-card-title>
             <rxa-dirty-check></rxa-dirty-check>
           </div>
@@ -76,18 +73,12 @@ import { nameToStrategyConfig } from '../../strategy-handling';
 })
 export class StrategyControlDirectiveComponent {
   changeStrategy$ = new BehaviorSubject<string>('local');
-  strategyCredentials$ = this.changeStrategy$.pipe(
-    nameToStrategyConfig()
-  );
   displayStates = {
     none: 0,
     all: 1,
     provided: 2,
     inherited: 3
   };
-
-  constructor(public rxCdRef: RxChangeDetectorRef) {
-  }
 
   visible(group, choice) {
     return group.value === choice || group.value === this.displayStates.all;

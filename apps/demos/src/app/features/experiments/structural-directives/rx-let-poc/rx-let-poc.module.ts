@@ -16,12 +16,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import {
-  PushModule,
-  SchedulingPriority,
-  TemplateModule,
-  UnpatchEventsModule,
-} from '@rx-angular/template';
+import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
 // tslint:disable-next-line: nx-enforce-module-boundaries
 import { DirtyChecksModule } from 'apps/demos/src/app/shared/debug-helper/dirty-checks';
 // tslint:disable-next-line: nx-enforce-module-boundaries
@@ -32,12 +27,7 @@ import { StrategyControlCustomComponent } from './components/strategy-control/st
 import { StrategyControlInheritComponent } from './components/strategy-control/strategy-control-inherit.component';
 import { StrategyControlDirectiveComponent } from './components/strategy-control/strategy-control-directive.component';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
-import {
-  MatButtonToggle,
-  MatButtonToggleGroup,
-  MatButtonToggleModule,
-} from '@angular/material/button-toggle';
-import { filter } from 'rxjs/operators';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RX_CUSTOM_STRATEGIES } from './custom-strategies-token';
 import { RX_DEFAULT_STRATEGY } from './default-strategy-token';
 import { customStrategies } from './strategy-handling';
@@ -48,7 +38,7 @@ const DECLARATIONS = [
   StrategyControlInheritComponent,
   StrategyControlDirectiveComponent,
   LetPocDirective,
-  LetPocDirectiveNoProvider,
+  LetPocDirectiveNoProvider
 ];
 
 @NgModule({
@@ -75,19 +65,20 @@ const DECLARATIONS = [
     StrategySelectModule,
     ValueProvidersModule,
     MatButtonToggleModule,
-    PushModule,
+    PushModule
   ],
   exports: DECLARATIONS,
   providers: [
     {
       provide: RX_CUSTOM_STRATEGIES,
       useValue: customStrategies,
-      multi: true,
+      multi: true
     },
     {
       provide: RX_DEFAULT_STRATEGY,
-      useValue: 'local',
-    },
-  ],
+      useValue: 'local'
+    }
+  ]
 })
-export class RxLetPocModule {}
+export class RxLetPocModule {
+}

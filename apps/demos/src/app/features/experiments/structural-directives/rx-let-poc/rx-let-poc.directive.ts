@@ -23,8 +23,8 @@ import {
   RxNotificationKind
 } from '@rx-angular/template';
 // tslint:disable-next-line: nx-enforce-module-boundaries
-import { Observable, ObservableInput, of, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
-import { publish, switchMap, tap } from 'rxjs/operators';
+import { defer, Observable, ObservableInput, of, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
+import { publish, startWith, switchMap, tap } from 'rxjs/operators';
 import {
   globalTaskManager,
   GlobalTaskPriority
@@ -33,7 +33,7 @@ import { RxChangeDetectorRef } from '../../../../shared/rx-change-detector-ref/r
 import { RX_CUSTOM_STRATEGIES } from './custom-strategies-token';
 import { RX_DEFAULT_STRATEGY } from './default-strategy-token';
 import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
-import { nameToStrategyConfig, RenderBehavior } from './strategy-handling';
+import { internalStrategies, mergeStrategies, nameToStrategyCredentials, RenderBehavior } from './strategy-handling';
 
 export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
@@ -54,6 +54,8 @@ export interface StrategyCredentials {
 })
 export class LetPocDirective<U> implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
+
+  strategies: { [name: string]: StrategyCredentials };
 
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
@@ -105,10 +107,11 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     ngInputFlatten()
   );
   strategy$Subject$ = new ReplaySubject<string | Observable<string>>(1);
-  strategy$: Observable<StrategyCredentials> = this.strategy$Subject$.pipe(
+  strategy$: Observable<StrategyCredentials> = defer(() => this.strategy$Subject$.pipe(
     ngInputFlatten(),
-    nameToStrategyConfig()
-  );
+    startWith(this.defaultStrategy),
+    nameToStrategyCredentials(this.strategies, this.defaultStrategy)
+  ));
 
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => {
@@ -159,8 +162,9 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
   constructor(
     @Optional()
     @Inject(RX_CUSTOM_STRATEGIES)
-    private customStrategies: StrategyCredentials[],
-    @Inject(RX_DEFAULT_STRATEGY) private defaultStrategy: string,
+    private customStrategies: {[name: string]: StrategyCredentials}[],
+    @Inject(RX_DEFAULT_STRATEGY)
+    private defaultStrategy: string,
     public cdRef: ChangeDetectorRef,
     private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
@@ -168,7 +172,8 @@ export class LetPocDirective<U> implements OnInit, OnDestroy {
     this.templateManager = createTemplateManager(
       this.viewContainerRef,
       this.initialViewContext
-    );
+    )
+    this.strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), internalStrategies);
   }
 
   ngOnInit() {

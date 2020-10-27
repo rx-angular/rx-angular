@@ -1,11 +1,7 @@
 import { ɵmarkDirty as markDirty } from '@angular/core';
 import { map, tap } from 'rxjs/operators';
 import { StrategyCredentials } from './rx-let-poc.directive';
-import {
-  priorityTickMap,
-  SchedulingPriority,
-  coalesceWith
-} from '@rx-angular/template';
+import { coalesceWith, priorityTickMap, SchedulingPriority } from '@rx-angular/template';
 import { Observable } from 'rxjs';
 import { scheduleOnGlobalTick } from '../../../../shared/render-stragegies/render-queue/globalAnimationFrameTick';
 
@@ -82,24 +78,17 @@ const postTaskCredentials: StrategyCredentials = {
   behavior: nativeBehavior
 };
 
-export function nameToStrategyConfig() {
-  return (o$: Observable<string | Observable<string>>): Observable<StrategyCredentials> => o$.pipe(
-    map(name => {
-      switch (name) {
-        case'global':
-          return globalCredentials;
-        case'native':
-          return nativeCredentials;
-        case'noop':
-          return noopCredentials;
-        case 'chunk':
-          return queuedCredentials;
-        case'local':
-        default:
-          return localCredentials;
-      }
-    })
+export function nameToStrategyCredentials(strategies: { [name: string]: StrategyCredentials }, defaultStrategyName: string) {
+  return (o$: Observable<string>): Observable<StrategyCredentials> => o$.pipe(
+    map(name => Object.keys(strategies).includes(name) ? strategies[name] : strategies[defaultStrategyName])
   );
+}
+
+export function mergeStrategies(...strategiesArray: Array<{ [name: string]: StrategyCredentials }>): { [name: string]: StrategyCredentials } {
+  return strategiesArray.reduce((c, a) => {
+    const _a = Array.isArray(a) ? strategiesArray.reduce((_c, __a) => ({ ..._c, ...__a }), {}) : a || {};
+    return { ...c, ..._a };
+  }, {});
 }
 
 export const internalStrategies: { [name: string]: StrategyCredentials } = {

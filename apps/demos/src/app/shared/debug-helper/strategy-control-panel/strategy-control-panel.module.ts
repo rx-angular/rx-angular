@@ -11,8 +11,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { LetModule } from '@rx-angular/template';
 
-
-
 @NgModule({
   declarations: [StrategyControlPanelComponent],
   imports: [
