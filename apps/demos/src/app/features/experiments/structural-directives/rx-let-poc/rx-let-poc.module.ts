@@ -40,6 +40,7 @@ import {
 import { filter } from 'rxjs/operators';
 import { RX_CUSTOM_STRATEGIES } from './custom-strategies-token';
 import { RX_DEFAULT_STRATEGY } from './default-strategy-token';
+import { customStrategies } from './strategy-handling';
 
 const DECLARATIONS = [
   RxLetPocComponent,
@@ -80,22 +81,7 @@ const DECLARATIONS = [
   providers: [
     {
       provide: RX_CUSTOM_STRATEGIES,
-      useValue: {
-        name: 'rxLetPocModuleStrategy',
-        renderMethod: '',
-        priority: SchedulingPriority.animationFrame,
-        detach: true,
-      },
-      multi: true,
-    },
-    {
-      provide: RX_CUSTOM_STRATEGIES,
-      useValue: {
-        name: 'postTask',
-        renderMethod: '',
-        priority: SchedulingPriority.animationFrame,
-        detach: true,
-      },
+      useValue: customStrategies,
       multi: true,
     },
     {
