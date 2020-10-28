@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { interval } from 'rxjs';
-import { CdConfigService } from '../../../../shared/debug-helper/strategy-control-panel';
+import { AppConfigService } from '../../../../shared/debug-helper/strategy-control-panel';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -22,5 +22,5 @@ export class ScrollItemComponent {
 
   readonly strategy$ = this.cdConfig.$.pipe(map((s) => s.strategy));
 
-  constructor(private cdConfig: CdConfigService) {}
+  constructor(private cdConfig: AppConfigService) {}
 }

@@ -3,6 +3,9 @@ import { MatRipple } from '@angular/material/core';
 import { isObservable, Observable, of, ReplaySubject, Subscription } from 'rxjs';
 import { distinctUntilChanged, scan, switchAll, switchMap, tap } from 'rxjs/operators';
 import { Hooks } from '../hooks';
+import { AppConfigService } from '../strategy-control-panel';
+import { RxEffects } from '../../rx-effects.service';
+import { select } from '../../../../../../../libs/state/src/lib/rxjs/operators';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -18,7 +21,8 @@ import { Hooks } from '../hooks';
       border: 1px solid #ff00005f;
     }
   `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [RxEffects]
 })
 export class RenderingsComponent extends Hooks {
   sub: Subscription;
@@ -53,9 +57,24 @@ export class RenderingsComponent extends Hooks {
     }
   };
 
-  constructor() {
+  constructor(
+    private configService: AppConfigService,
+    private rxEf: RxEffects
+  ) {
     super();
-    this.afterViewInit$.subscribe(() => this.ripple.launch({ centered: true }));
+    this.rxEf.hold(this.configService.$.pipe(select('rippleOn')), (r) => {
+      this.rippleOn = r;
+    });
+
+    this.rxEf.hold(this.afterViewInit$, () => {
+      this.launchRipple();
+    });
+  }
+
+  launchRipple(options: object = { centered: true }) {
+    if (this.rippleOn) {
+      this.ripple.launch(options);
+    }
   }
 
 }

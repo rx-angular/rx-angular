@@ -67,18 +67,7 @@ const DECLARATIONS = [
     MatButtonToggleModule,
     PushModule
   ],
-  exports: DECLARATIONS,
-  providers: [
-    {
-      provide: RX_CUSTOM_STRATEGIES,
-      useValue: customStrategies,
-      multi: true
-    },
-    {
-      provide: RX_DEFAULT_STRATEGY,
-      useValue: 'local'
-    }
-  ]
+  exports: DECLARATIONS
 })
 export class RxLetPocModule {
 }

@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { LetModule } from '@rx-angular/template';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [StrategyControlPanelComponent],
@@ -23,7 +24,8 @@ import { LetModule } from '@rx-angular/template';
     MatSelectModule,
     MatButtonModule,
     LetModule,
-    MatListModule
+    MatListModule,
+    MatCheckboxModule
   ],
   exports: [StrategyControlPanelComponent]
 })

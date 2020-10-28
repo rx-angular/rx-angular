@@ -3,11 +3,11 @@ import { environment } from '../../../../environments/environment';
 import { isNgZone, isViewEngineIvy } from '@rx-angular/template';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
-import { CdConfigService } from './cd-config.service';
+import { AppConfigService } from './app-config.service';
 import { FormBuilder } from '@angular/forms';
 import { fromEvent, merge, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
+import { RxState, selectSlice } from '@rx-angular/state';
 
 @Component({
   selector: 'rxa-config-panel',
@@ -40,6 +40,7 @@ import { RxState } from '@rx-angular/state';
       </mat-expansion-panel-header>
 
       <form [formGroup]="configForm">
+        <mat-checkbox formControlName="rippleOn" value="true"></mat-checkbox>
         <mat-form-field>
           <mat-label>Change Detection Strategy</mat-label>
           <mat-select formControlName="strategy" id="strategy">
@@ -98,10 +99,12 @@ export class StrategyControlPanelComponent
   readonly renderTechnique;
 
   readonly configForm = this.fb.group({
-    strategy: []
+    strategy: [],
+    rippleOn: []
   });
   readonly configForm$: Observable<{
     strategy: string;
+    rippleOn: boolean;
   }> = this.configForm.valueChanges;
   strategyName$ = this.coalesceConfigService.strategyName$;
 
@@ -112,18 +115,17 @@ export class StrategyControlPanelComponent
     private cdRef: ChangeDetectorRef,
     private appRef: ApplicationRef,
     private ngZone: NgZone,
-    public coalesceConfigService: CdConfigService
+    public coalesceConfigService: AppConfigService
   ) {
     super();
     this.set({ expanded: true });
 
-    this.hold(this.coalesceConfigService.strategyName$, (strategy) => this.configForm.setValue({ strategy }));
+    this.hold(this.coalesceConfigService.$, (s) => this.configForm.setValue(s));
     this.hold(this.configForm$.pipe(tap(() => appRef.tick())));
     this.coalesceConfigService
-      .connect('strategy', this.configForm$
+      .connect(this.configForm$
         .pipe(
-          map(f => f.strategy),
-          tap(v => console.log('cscsc', v))
+          selectSlice(['strategy', 'rippleOn']),
         )
       );
   }

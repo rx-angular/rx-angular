@@ -3,23 +3,23 @@ import { RxState } from '@rx-angular/state';
 
 export interface CdConfig {
   strategy: string;
+  rippleOn: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
-export class CdConfigService extends RxState<CdConfig> {
+export class AppConfigService extends RxState<CdConfig> {
   public readonly strategyName$ = this.select('strategy');
+  public readonly $ = this.select();
 
   constructor(  protected appRef: ApplicationRef,
                 protected ngZone: NgZone) {
     super();
     this.set({
+      rippleOn: true,
       strategy: 'local',
     });
   }
 
-  getConfig(prop?: keyof CdConfig): CdConfig | string {
-    return prop ? this.get(prop) : '';
-  }
 
   appRef_tick() {
     this.appRef.tick();

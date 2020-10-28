@@ -7,6 +7,9 @@ import { ENVIRONMENT_SETTINGS } from './shared/environment.token';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './features/home/home.component';
+import { RX_CUSTOM_STRATEGIES } from './features/experiments/structural-directives/rx-let-poc/custom-strategies-token';
+import { customStrategies } from './features/experiments/structural-directives/rx-let-poc/strategy-handling';
+import { RX_DEFAULT_STRATEGY } from './features/experiments/structural-directives/rx-let-poc/default-strategy-token';
 
 @NgModule({
   imports: [
@@ -19,7 +22,7 @@ import { HomeComponent } from './features/home/home.component';
     {
       provide: ENVIRONMENT_SETTINGS,
       useValue: environment
-    }
+    },
     // {
     //   provide: StrategyTokenProvider,
     //   useValue: {
@@ -28,6 +31,15 @@ import { HomeComponent } from './features/home/home.component';
     //   },
     //   multi: true,
     // },
+    {
+      provide: RX_CUSTOM_STRATEGIES,
+      useValue: customStrategies,
+      multi: true
+    },
+    {
+      provide: RX_DEFAULT_STRATEGY,
+      useValue: 'local'
+    }
   ],
   declarations: [HomeComponent],
   exports: [],

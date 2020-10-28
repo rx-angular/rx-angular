@@ -12,12 +12,15 @@ import { SiblingStaticComponent } from './sibling-static.component';
 import { SiblingPushComponent } from './sibling-push.component';
 import { SiblingProgressiveComponent } from './sibling-progressive.component';
 import { WorkModule } from '../../debug-helper/work/work.module';
+import { SiblingCustomComponent } from './sibling-custom.component';
+import { StrategySelectModule } from '../../debug-helper/strategy-select';
 
 const DECLARATIONS = [
   SiblingStaticComponent,
   SiblingAsyncComponent,
   SiblingPushComponent,
-  SiblingProgressiveComponent
+  SiblingProgressiveComponent,
+  SiblingCustomComponent
 ];
 
 @NgModule({
@@ -33,7 +36,8 @@ const DECLARATIONS = [
     RenderingsModule,
     TemplateModule,
     ViewVsEmbeddedViewModule,
-    WorkModule
+    WorkModule,
+    StrategySelectModule
   ],
   exports: DECLARATIONS
 })
