@@ -1,6 +1,6 @@
 /**
- * Run Cypress task that enables and starts Profiler as per the `Profiler.enable`
- * and `Profiler.start` methods from Chrome Devtools Protocol.
+ * Runs Cypress tasks that enable and start Profiler as per the `Profiler.enable`
+ * and `Profiler.start` methods from the Chrome Devtools Protocol.
  *
  * @see https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-enable
  * @see https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-start
@@ -11,8 +11,8 @@ export function startProfiler() {
 }
 
 /**
- * Run Cypress task that stops and disables Profiler as per the `Profiler.stop`
- * and `Profiler.disable` methods from Chrome Devtools Protocol and writes results to a file.
+ * Runs Cypress tasks that stop and disable Profiler as per the `Profiler.stop`
+ * and `Profiler.disable` methods from the Chrome Devtools Protocol and writes results to a file.
  *
  * @param fileNameSuffix - Optional suffix for a file name of the file with results. Helps with distinguishing
  * results per tests.
@@ -26,7 +26,7 @@ export function stopProfiler(fileNameSuffix?: string) {
 }
 
 /**
- * Run Cypress task that starts Tracing as per the `Tracing.start` method from Chrome Devtools Protocol.
+ * Runs Cypress task that starts Tracing as per the `Tracing.start` method from the Chrome Devtools Protocol.
  *
  * @see https://chromedevtools.github.io/devtools-protocol/tot/Tracing/#method-start
  */
@@ -35,7 +35,7 @@ export function startTracing() {
 }
 
 /**
- * Run Cypress task that ends Tracing as per the `Tracing.end` method from Chrome Devtools Protocol
+ * Runs Cypress task that ends Tracing as per the `Tracing.end` method from the Chrome Devtools Protocol
  * and writes to a file.
  *
  * @param fileNameSuffix - Optional suffix for a file name of the file with results. Helps with distinguishing

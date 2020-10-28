@@ -1,4 +1,4 @@
-import * as Performance from '../support/performance.util';
+import * as Devtools from '../support/devtools-protocol-tasks.utils';
 
 const WAIT_DURATION = 1000;
 
@@ -9,17 +9,17 @@ describe('RxLet vs Push demo', () => {
     it('should check performance of push pipe', () => {
       cy.get('button').contains('Open Manual test for Push').click();
 
-      Performance.startProfiler();
+      Devtools.startProfiler();
       testOpeningAndClosingToggleThreeTimes();
-      Performance.stopProfiler('push-pipe');
+      Devtools.stopProfiler('push-pipe');
     });
 
     it('should check performance of let directive', () => {
       cy.get('button').contains('Open Manual test for Let').click();
 
-      Performance.startProfiler();
+      Devtools.startProfiler();
       testOpeningAndClosingToggleThreeTimes();
-      Performance.stopProfiler('let-directive');
+      Devtools.stopProfiler('let-directive');
     });
   });
 
@@ -27,17 +27,17 @@ describe('RxLet vs Push demo', () => {
     it('should check performance of push pipe', () => {
       cy.get('button').contains('Open Manual test for Push').click();
 
-      Performance.startTracing();
+      Devtools.startTracing();
       testOpeningAndClosingToggleThreeTimes();
-      Performance.stopTracing('push-pipe');
+      Devtools.stopTracing('push-pipe');
     });
 
     it('should check performance of let directive', () => {
       cy.get('button').contains('Open Manual test for Let').click();
 
-      Performance.startTracing();
+      Devtools.startTracing();
       testOpeningAndClosingToggleThreeTimes();
-      Performance.stopTracing('let-directive');
+      Devtools.stopTracing('let-directive');
     });
   });
 });
