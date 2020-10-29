@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RxLetPocComponent } from './components/rx-let-poc/rx-let-poc.component';
 import { RouterModule } from '@angular/router';
+import { RxLetPocDirectiveModule } from './rx-let-poc.directive.module';
 import { ROUTES } from './rx-let-poc.routes';
 import { LetPocDirective } from './rx-let-poc.directive';
 import { LetPocDirectiveNoProvider } from './rx-let-poc.no-provider.directive';
@@ -37,13 +38,13 @@ const DECLARATIONS = [
   StrategyControlCustomComponent,
   StrategyControlInheritComponent,
   StrategyControlDirectiveComponent,
-  LetPocDirective,
   LetPocDirectiveNoProvider
 ];
 
 @NgModule({
   declarations: DECLARATIONS,
   imports: [
+    RxLetPocDirectiveModule,
     MatListModule,
     MatTableModule,
     MatCheckboxModule,
