@@ -70,7 +70,7 @@ export const chunkedBehavior: RenderBehavior = <T>(work: any, context: any) => {
   return o$ => o$.pipe(
     scheduleOnGlobalTick(() => ({
       priority: 0,
-      work: work(),
+      work: work,
       scope: context
     }))
   );
@@ -83,7 +83,7 @@ const localCredentials: StrategyCredentials = {
 };
 
 const queuedCredentials: StrategyCredentials = {
-  name: 'queue',
+  name: 'chunk',
   work: (cdRef) => cdRef.detectChanges(),
   behavior: chunkedBehavior
 };
