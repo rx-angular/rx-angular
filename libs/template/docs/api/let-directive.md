@@ -44,7 +44,7 @@ Included features for `*rxLet`:
 
 ### Binding an Observable and using the view context
 
-The `*rxLet` directive takes over several things and makes it more convenient and save to work with streams in the
+The `*rxLet` directive takes over several things and makes it more convenient and safe to work with streams in the
 template:
 
 ```html
