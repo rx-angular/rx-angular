@@ -1,5 +1,6 @@
 import { ɵmarkDirty as markDirty } from '@angular/core';
 import { map, mapTo, switchMap, tap } from 'rxjs/operators';
+import { scheduleLikeReact } from '../../../../shared/render-stragegies/react/react-scheduler';
 import { StrategyCredentials } from './rx-let-poc.directive';
 import { coalesceWith, priorityTickMap, SchedulingPriority } from '@rx-angular/template';
 import { Observable } from 'rxjs';
@@ -77,6 +78,16 @@ export const chunkedBehavior: RenderBehavior = <T>(work: any, context: any) => {
   );
 };
 
+export const reactBehavior: RenderBehavior = <T>(work: any, context: any) => {
+  return o$ => o$.pipe(
+    scheduleLikeReact(() => ({
+      priority: 2,
+      work: work,
+      scope: context
+    }))
+  );
+};
+
 const localCredentials: StrategyCredentials = {
   name: 'local',
   work: (cdRef) => cdRef.detectChanges(),
@@ -125,6 +136,12 @@ const postTaskBackgroundCredentials: StrategyCredentials = {
   behavior: postTaskBehavior(PostTaskSchedulerPriority.background)
 };
 
+const reactLikeCredentials: StrategyCredentials = {
+  name: 'reactLike',
+  work: (cdRef) => cdRef.detectChanges(),
+  behavior: reactBehavior
+};
+
 export function nameToStrategyCredentials(strategies: { [name: string]: StrategyCredentials }, defaultStrategyName: string) {
   return (o$: Observable<string>): Observable<StrategyCredentials> => o$.pipe(
     map(name => Object.keys(strategies).includes(name) ? strategies[name] : strategies[defaultStrategyName])
@@ -150,6 +167,7 @@ export const customStrategies: { [name: string]: StrategyCredentials } = {
   'postTaskUserBlocking': postTaskUserBlockingCredentials,
   'postTaskUserVisible': postTaskUserVisibleCredentials,
   'postTaskBackground': postTaskBackgroundCredentials,
-  'chunk': queuedCredentials
+  'chunk': queuedCredentials,
+  'reactLike': reactLikeCredentials
 };
 
