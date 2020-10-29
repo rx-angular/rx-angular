@@ -5,7 +5,8 @@ import { coalesceWith, priorityTickMap, SchedulingPriority } from '@rx-angular/t
 import { Observable } from 'rxjs';
 import { scheduleOnGlobalTick } from '../../../../shared/render-stragegies/render-queue/globalAnimationFrameTick';
 import {
-  postTaskScheduler, PostTaskSchedulerPriority,
+  postTaskScheduler,
+  PostTaskSchedulerPriority,
   SchedulerPostTaskOptions
 } from '../../../../../../../../libs/template/src/lib/experimental/render-strategies/rxjs/scheduling';
 
@@ -61,8 +62,8 @@ export const nativeBehavior: RenderBehavior = <T>(work: any) => {
   return o$ => o$.pipe(tap(() => work()));
 };
 
-export const postTaskBehavior: RenderBehavior = <T>(work: any) => {
-  return o$ => o$.pipe(switchMap(v => postTaskTick({ priority: PostTaskSchedulerPriority.userVisible }, work).pipe(mapTo(v))));
+export const postTaskBehavior = (priority: PostTaskSchedulerPriority = PostTaskSchedulerPriority.userVisible): RenderBehavior => <T>(work: any) => {
+  return o$ => o$.pipe(switchMap(v => postTaskTick({ priority }, work).pipe(mapTo(v))));
 };
 
 
@@ -106,10 +107,22 @@ const nativeCredentials: StrategyCredentials = {
   behavior: nativeBehavior
 };
 
-const postTaskCredentials: StrategyCredentials = {
-  name: 'postTask',
+const postTaskUserVisibleCredentials: StrategyCredentials = {
+  name: 'postTaskUserVisible',
   work: (cdRef) => cdRef.detectChanges(),
-  behavior: postTaskBehavior
+  behavior: postTaskBehavior(PostTaskSchedulerPriority.userVisible)
+};
+
+const postTaskUserBlockingCredentials: StrategyCredentials = {
+  name: 'postTaskUserBlocking',
+  work: (cdRef) => cdRef.detectChanges(),
+  behavior: postTaskBehavior(PostTaskSchedulerPriority.userBlocking)
+};
+
+const postTaskBackgroundCredentials: StrategyCredentials = {
+  name: 'postTaskBackground',
+  work: (cdRef) => cdRef.detectChanges(),
+  behavior: postTaskBehavior(PostTaskSchedulerPriority.background)
 };
 
 export function nameToStrategyCredentials(strategies: { [name: string]: StrategyCredentials }, defaultStrategyName: string) {
@@ -134,7 +147,9 @@ export const internalStrategies: { [name: string]: StrategyCredentials } = {
 
 export const customStrategies: { [name: string]: StrategyCredentials } = {
   'local': localCredentials,
-  'postTask': postTaskCredentials,
+  'postTaskUserBlocking': postTaskUserBlockingCredentials,
+  'postTaskUserVisible': postTaskUserVisibleCredentials,
+  'postTaskBackground': postTaskBackgroundCredentials,
   'chunk': queuedCredentials
 };
 
