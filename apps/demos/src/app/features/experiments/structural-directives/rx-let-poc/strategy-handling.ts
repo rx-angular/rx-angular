@@ -78,10 +78,60 @@ export const chunkedBehavior: RenderBehavior = <T>(work: any, context: any) => {
   );
 };
 
-export const reactBehavior: RenderBehavior = <T>(work: any, context: any) => {
+export const reactNoPrioBehavior: RenderBehavior = <T>(work: any, context: any) => {
+  return o$ => o$.pipe(
+    scheduleLikeReact(() => ({
+      priority: 0,
+      work: work,
+      scope: context
+    }))
+  );
+};
+
+export const reactImmediateBehavior: RenderBehavior = <T>(work: any, context: any) => {
+  return o$ => o$.pipe(
+    scheduleLikeReact(() => ({
+      priority: 1,
+      work: work,
+      scope: context
+    }))
+  );
+};
+
+export const reactUserBlockingBehavior: RenderBehavior = <T>(work: any, context: any) => {
   return o$ => o$.pipe(
     scheduleLikeReact(() => ({
       priority: 2,
+      work: work,
+      scope: context
+    }))
+  );
+};
+
+export const reactNormalBehavior: RenderBehavior = <T>(work: any, context: any) => {
+  return o$ => o$.pipe(
+    scheduleLikeReact(() => ({
+      priority: 3,
+      work: work,
+      scope: context
+    }))
+  );
+};
+
+export const reactLowBehavior: RenderBehavior = <T>(work: any, context: any) => {
+  return o$ => o$.pipe(
+    scheduleLikeReact(() => ({
+      priority: 4,
+      work: work,
+      scope: context
+    }))
+  );
+};
+
+export const reactIdleBehavior: RenderBehavior = <T>(work: any, context: any) => {
+  return o$ => o$.pipe(
+    scheduleLikeReact(() => ({
+      priority: 5,
       work: work,
       scope: context
     }))
@@ -136,10 +186,40 @@ const postTaskBackgroundCredentials: StrategyCredentials = {
   behavior: postTaskBehavior(PostTaskSchedulerPriority.background)
 };
 
-const reactLikeCredentials: StrategyCredentials = {
-  name: 'reactLike',
+const reactNoPrioCredentials: StrategyCredentials = {
+  name: 'reactNoPrio',
   work: (cdRef) => cdRef.detectChanges(),
-  behavior: reactBehavior
+  behavior: reactNoPrioBehavior
+};
+
+const reactImmediateCredentials: StrategyCredentials = {
+  name: 'reactImmediate',
+  work: (cdRef) => cdRef.detectChanges(),
+  behavior: reactImmediateBehavior
+};
+
+const reactUserBlockingCredentials: StrategyCredentials = {
+  name: 'reactUserBlocking',
+  work: (cdRef) => cdRef.detectChanges(),
+  behavior: reactUserBlockingBehavior
+};
+
+const reactNormalCredentials: StrategyCredentials = {
+  name: 'reactNormal',
+  work: (cdRef) => cdRef.detectChanges(),
+  behavior: reactNormalBehavior
+};
+
+const reactLowCredentials: StrategyCredentials = {
+  name: 'reactLow',
+  work: (cdRef) => cdRef.detectChanges(),
+  behavior: reactLowBehavior
+};
+
+const reactIdleCredentials: StrategyCredentials = {
+  name: 'reactIdle',
+  work: (cdRef) => cdRef.detectChanges(),
+  behavior: reactIdleBehavior
 };
 
 export function nameToStrategyCredentials(strategies: { [name: string]: StrategyCredentials }, defaultStrategyName: string) {
@@ -168,6 +248,11 @@ export const customStrategies: { [name: string]: StrategyCredentials } = {
   'postTaskUserVisible': postTaskUserVisibleCredentials,
   'postTaskBackground': postTaskBackgroundCredentials,
   'chunk': queuedCredentials,
-  'reactLike': reactLikeCredentials
+  'reactNoPrio': reactNoPrioCredentials,
+  'reactImmediate': reactImmediateCredentials,
+  'reactUserBlocking': reactUserBlockingCredentials,
+  'reactNormal': reactNormalCredentials,
+  'reactLow': reactLowCredentials,
+  'reactIdle': reactIdleCredentials,
 };
 

@@ -1,5 +1,5 @@
 import { MonoTypeOperatorFunction, Observable, Subject } from 'rxjs';
-import { switchMap, switchMapTo } from 'rxjs/operators';
+import { filter, switchMap, switchMapTo, tap } from 'rxjs/operators';
 import { unstable_cancelCallback, unstable_scheduleCallback } from './scheduler';
 import { ReactSchedulerTask } from './schedulerMinHeap';
 import { PriorityLevel } from './schedulerPriorities';
@@ -16,14 +16,17 @@ export function scheduleLikeReact<T>(
 ): MonoTypeOperatorFunction<T> {
   // Local queue of references of the work function needed to dispose their execution
   let scheduledTask: ReactSchedulerTask;
-  let scope: any;
+  let workDefinition: ReactSchedulerWorkDefinition;
   const depleteQueue$ = new Observable<void>(subscriber => {
     subscriber.next();
     return () => {
-      coalescingManager.remove(scope)
+      if (workDefinition) {
+        coalescingManager.remove(workDefinition.scope);
+      }
       if (scheduledTask) {
         unstable_cancelCallback(scheduledTask);
         scheduledTask = null;
+        workDefinition = null;
       }
     };
   });
@@ -39,21 +42,24 @@ export function scheduleLikeReact<T>(
     // meaning maintaining the order of emission?
     return depleteQueue$.pipe(
       switchMapTo(o$),
+      tap(() => workDefinition = workDefinitionFn()),
+      filter(() => !coalescingManager.isCoalescing(workDefinition.scope)),
       switchMap(val => {
-        const inputTask = workDefinitionFn();
-        scope = inputTask.scope;
-        coalescingManager.add(scope);
         if (scheduledTask) {
           unstable_cancelCallback(scheduledTask);
         }
         const workDone = new Subject<T>();
+        coalescingManager.add(workDefinition.scope);
         scheduledTask = unstable_scheduleCallback(
-          inputTask.priority,
+          workDefinition.priority,
           () => {
-            coalescingManager.remove(scope);
+            const w = workDefinition.work;
+            const s = workDefinition.scope;
             scheduledTask = null;
-            if (!coalescingManager.isCoalescing(scope)) {
-              inputTask.work();
+            workDefinition = null;
+            coalescingManager.remove(s);
+            if (!coalescingManager.isCoalescing(s)) {
+              w();
               workDone.next(val);
             }
           },
