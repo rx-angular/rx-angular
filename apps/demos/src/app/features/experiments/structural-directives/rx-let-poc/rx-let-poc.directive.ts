@@ -287,8 +287,9 @@ function applyStrategy<T>(
       credentials$.pipe(
         switchMap((credentials) => n$.pipe(
           switchMap(n => {
-            const work = () => credentials.work(getEmbeddedView(n.kind), context);
-            return of(n).pipe(credentials.behavior(work, context));
+            const embeddedView = getEmbeddedView(n.kind);
+            const work = () => credentials.work(embeddedView, context);
+            return of(n).pipe(credentials.behavior(work, embeddedView));
           })
           )
         )
