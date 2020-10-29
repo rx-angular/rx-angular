@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { StrategySelectModule } from '../strategy-select/strategy-select.module';
 import { StrategyControlPanelComponent } from './strategy-control-panel.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
@@ -14,19 +15,20 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [StrategyControlPanelComponent],
-  imports: [
-    CommonModule,
-    MatExpansionModule,
-    MatChipsModule,
-    MatIconModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule,
-    LetModule,
-    MatListModule,
-    MatCheckboxModule
-  ],
+    imports: [
+        CommonModule,
+        MatExpansionModule,
+        MatChipsModule,
+        MatIconModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatButtonModule,
+        LetModule,
+        MatListModule,
+        MatCheckboxModule,
+        StrategySelectModule
+    ],
   exports: [StrategyControlPanelComponent]
 })
 export class StrategyControlPanelModule { }

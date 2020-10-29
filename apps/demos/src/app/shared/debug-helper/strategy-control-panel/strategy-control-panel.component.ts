@@ -1,90 +1,46 @@
-import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, Input, NgZone } from '@angular/core';
-import { environment } from '../../../../environments/environment';
+import { ApplicationRef, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, NgZone } from '@angular/core';
+import { RxState } from '@rx-angular/state';
 import { isNgZone, isViewEngineIvy } from '@rx-angular/template';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { Router } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 import { AppConfigService } from './app-config.service';
-import { FormBuilder } from '@angular/forms';
-import { fromEvent, merge, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { RxState, selectSlice } from '@rx-angular/state';
 
 @Component({
   selector: 'rxa-config-panel',
   template: `
-    <mat-expansion-panel
-      class="mat-background-primary config-panel"
-      [expanded]="expanded"
-    >
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-chip-list class="config-display">
-            <mat-chip>
-              <mat-icon disabled="zoneEnv === 'NgZone'">snooze</mat-icon>&nbsp;
-              {{ zoneEnv }}</mat-chip
-            >
-            <mat-chip>
-              <mat-icon>image</mat-icon> {{ engine }}</mat-chip>
-            <mat-chip>
-              <mat-icon>{{
-                changeDetection === 'Default'
-                  ? 'autorenew'
-                  : 'youtube_searched_for'
-                }}</mat-icon>&nbsp; {{ changeDetection }}
-            </mat-chip>
-            <mat-chip *rxLet="strategyName$; let s">
-              <mat-icon>settings</mat-icon>&nbsp;{{s}}
-            </mat-chip>
-          </mat-chip-list>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-
-      <form [formGroup]="configForm">
-        <mat-checkbox formControlName="rippleOn" value="true"></mat-checkbox>
-        <mat-form-field>
-          <mat-label>Change Detection Strategy</mat-label>
-          <mat-select formControlName="strategy" id="strategy">
-            <mat-option
-              [value]="s.name"
-              *ngFor="let s of strategies">
-              <mat-icon mat-list-icon [ngClass]="{ rot180: s.name === 'local' }">{{s.icon}}</mat-icon>
-              {{ s.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </form>
-      <button id="btnAppTick" mat-raised-button>ApplicationRef.tick()</button>
-      <button id="btnDetectChanges" mat-raised-button>
-        ɵdetectChanges(appRef)
+    <div class="d-flex align-items-center">
+      <mat-chip-list>
+        <mat-chip color="primary" [selected]="hasZone">
+          <mat-icon matChipAvatar>snooze</mat-icon>
+          {{ zoneEnv }}</mat-chip>
+        <mat-chip color="primary" [selected]="true">
+          <mat-icon matChipAvatar>image</mat-icon>
+          {{ engine }}
+        </mat-chip>
+      </mat-chip-list>
+      <button class="mx-2"
+              unpatch
+              mat-button
+              (click)="tick()">
+        <mat-icon>account_tree</mat-icon>
+        ApplicationRef.tick()
       </button>
-    </mat-expansion-panel>
+      <rxa-strategy-select
+        *rxLet="strategyName$; let strategy"
+        (strategyChange)="appConfigService.set({ strategy: $event })"
+        [strategy]="strategy"></rxa-strategy-select>
+    </div>
   `,
   styles: [
-      `
-      .config-panel {
-        background: #c2185b;
-      }
-
-      .config-display .mat-chip {
-        background: transparent;
-        font-weight: normal;
+    `
+      rxa-strategy-select {
+        font-size: 14px;
+        margin-top: 18px;
       }
     `
   ],
-  changeDetection: environment.changeDetection
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StrategyControlPanelComponent
-  extends RxState<{
-    expanded: boolean;
-  }>
-  implements AfterViewInit {
-  strategies = [
-    { name: 'local', icon: 'call_split' },
-    { name: 'global', icon: 'vertical_align_bottom' },
-    { name: 'detach', icon: 'play_for_work' },
-    { name: 'noop', icon: 'block' },
-    { name: 'native', icon: 'find_replace' }
-  ];
+export class StrategyControlPanelComponent extends RxState<any> {
 
   expanded = !isNgZone(this.ngZone);
   @Input()
@@ -93,52 +49,21 @@ export class StrategyControlPanelComponent
   readonly env = environment;
   readonly hasZone = isNgZone(this.ngZone);
   readonly zoneEnv = this.hasZone ? 'NgZone' : 'NgNoopZone';
-  readonly changeDetection =
-    this.env.changeDetection === 1 ? 'Default' : 'OnPush';
   readonly engine = isViewEngineIvy() ? 'Ivy' : 'ViewEngine';
-  readonly renderTechnique;
 
-  readonly configForm = this.fb.group({
-    strategy: [],
-    rippleOn: []
-  });
-  readonly configForm$: Observable<{
-    strategy: string;
-    rippleOn: boolean;
-  }> = this.configForm.valueChanges;
-  strategyName$ = this.coalesceConfigService.strategyName$;
+  strategyName$ = this.appConfigService.strategyName$;
 
   constructor(
-    private fb: FormBuilder,
-    private breakPointObserver: BreakpointObserver,
-    private router: Router,
     private cdRef: ChangeDetectorRef,
     private appRef: ApplicationRef,
     private ngZone: NgZone,
-    public coalesceConfigService: AppConfigService
+    public appConfigService: AppConfigService
   ) {
     super();
-    this.set({ expanded: true });
-
-    this.hold(this.coalesceConfigService.$, (s) => this.configForm.setValue(s));
-    this.hold(this.configForm$.pipe(tap(() => appRef.tick())));
-    this.coalesceConfigService
-      .connect(this.configForm$
-        .pipe(
-          selectSlice(['strategy', 'rippleOn']),
-        )
-      );
   }
 
   tick() {
     this.appRef.tick();
   }
 
-  ngAfterViewInit(): void {
-    merge(
-      fromEvent(document.getElementById('btnAppTick'), 'click').pipe(
-        tap(() => this.tick())
-      )
-    ).subscribe();
-  }
 }
