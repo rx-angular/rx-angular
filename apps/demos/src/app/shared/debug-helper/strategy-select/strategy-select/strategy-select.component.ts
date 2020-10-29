@@ -16,7 +16,7 @@ const strategiesUiConfig = {
   detach: { name: 'detach', icon: 'play_for_work' },
   noop: { name: 'noop', icon: 'block' },
   postTask: { name: 'postTask', icon: 'science' },
-  queue: { name: 'queue', icon: 'link' },
+  chunk: { name: 'chunk', icon: 'link' },
   native: { name: 'native', icon: 'find_replace' }
 }
 
