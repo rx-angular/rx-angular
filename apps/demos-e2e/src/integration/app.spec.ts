@@ -1,6 +1,5 @@
 import * as Devtools from '../support/devtools-protocol-tasks.utils';
-
-const WAIT_DURATION = 1000;
+import { testOpeningAndClosingToggleThreeTimes } from '../support/rx-let-vs-push.po';
 
 describe('RxLet vs Push demo', () => {
   beforeEach(() => cy.task('resetCRI').visit('/performance/rx-let-vs-push/list-toggle'));
@@ -41,17 +40,3 @@ describe('RxLet vs Push demo', () => {
     });
   });
 });
-
-function openAndCloseToggle() {
-  cy.get('button').contains('Toggle').click();
-  cy.get('rxa-rendering-work').contains('0');
-  cy.wait(WAIT_DURATION);
-  cy.get('button').contains('Toggle').click();
-  cy.wait(WAIT_DURATION);
-}
-
-function testOpeningAndClosingToggleThreeTimes() {
-  openAndCloseToggle();
-  openAndCloseToggle();
-  openAndCloseToggle();
-}

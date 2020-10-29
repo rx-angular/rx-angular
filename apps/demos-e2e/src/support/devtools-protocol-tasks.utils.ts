@@ -1,9 +1,6 @@
 /**
  * Runs Cypress tasks that enable and start Profiler as per the `Profiler.enable`
  * and `Profiler.start` methods from the Chrome Devtools Protocol.
- *
- * @see https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-enable
- * @see https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-start
  */
 export function startProfiler() {
   cy.task('enableProfiler');
@@ -16,9 +13,6 @@ export function startProfiler() {
  *
  * @param fileNameSuffix - Optional suffix for a file name of the file with results. Helps with distinguishing
  * results per tests.
- *
- * @see https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-stop
- * @see https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-disable
  */
 export function stopProfiler(fileNameSuffix?: string) {
   cy.task('stopProfiler', { suffix: fileNameSuffix });
@@ -27,8 +21,6 @@ export function stopProfiler(fileNameSuffix?: string) {
 
 /**
  * Runs Cypress task that starts Tracing as per the `Tracing.start` method from the Chrome Devtools Protocol.
- *
- * @see https://chromedevtools.github.io/devtools-protocol/tot/Tracing/#method-start
  */
 export function startTracing() {
   cy.task('startTracing');
@@ -40,8 +32,6 @@ export function startTracing() {
  *
  * @param fileNameSuffix - Optional suffix for a file name of the file with results. Helps with distinguishing
  * results per tests.
- *
- * @see https://chromedevtools.github.io/devtools-protocol/tot/Tracing/#method-end
  */
 export function stopTracing(fileNameSuffix?: string) {
   cy.task('endTracing', { suffix: fileNameSuffix });

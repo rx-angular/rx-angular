@@ -40,6 +40,10 @@ module.exports = (on, config) => {
   });
 
   on('task', {
+    /**
+     * Task for resetting Chrome Remote Interface. Suggested to be run before each test running CDP-related Cypress tasks.
+     * @returns {Promise<boolean>}
+     */
     resetCRI: async () => {
       if (client) {
         debug('resetting CRI client');
@@ -50,6 +54,11 @@ module.exports = (on, config) => {
       return Promise.resolve(true);
     },
 
+    /**
+     * Task for running CDP's `Profiler.enable` method.
+     * @returns {Promise<*>}
+     * @see https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-enable
+     */
     enableProfiler: async () => {
       debug('enableProfiler');
       client = client || (await CDP({ port }));
@@ -60,6 +69,11 @@ module.exports = (on, config) => {
       return Profiler.enable();
     },
 
+    /**
+     * Task for running CDP's `Profiler.disable` method.
+     * @returns {Promise<*>}
+     * @see https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-disable
+     */
     disableProfiler: async () => {
       debug('disableProfiler');
       client = client || (await CDP({ port }));
@@ -67,6 +81,11 @@ module.exports = (on, config) => {
       return client.Profiler.disable();
     },
 
+    /**
+     * Task for running CDP's `Profiler.start` method.
+     * @returns {Promise<*>}
+     * @see https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-start
+     */
     startProfiler: async () => {
       debug('startProfiler');
       client = client || (await CDP({ port }));
@@ -74,6 +93,11 @@ module.exports = (on, config) => {
       return client.Profiler.start();
     },
 
+    /**
+     * Task for running CDP's `Profiler.stop` method and saving results to a `.cpuprofile` file.
+     * @returns {Promise<*>}
+     * @see https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-stop
+     */
     stopProfiler: async (params) => {
       debug('stopProfiler');
       client = client || (await CDP({ port }));
@@ -88,6 +112,11 @@ module.exports = (on, config) => {
       return Promise.resolve(profilerResults);
     },
 
+    /**
+     * Task for running CDP's `Tracing.start` method.
+     * @returns {Promise<*>}
+     * @see https://chromedevtools.github.io/devtools-protocol/tot/Tracing/#method-start
+     */
     startTracing: async () => {
       debug('startTracing');
       client = client || (await CDP({ port }));
@@ -99,12 +128,18 @@ module.exports = (on, config) => {
         tracingEvents.push(...value);
       });
 
+      // copied from https://github.com/paulirish/automated-chrome-profiling/blob/206a6512af1f59fb51fd82f5df4b9bd462a6d4b6/get-timeline-trace.js#L12
       return Tracing.start({
         categories: TRACE_CATEGORIES.join(','),
         options: 'sampling-frequency=10000',
       });
     },
 
+    /**
+     * Task for running CDP's `Tracing.end` method and saving results to a `.json` file.
+     * @returns {Promise<*>}
+     * @see https://chromedevtools.github.io/devtools-protocol/tot/Tracing/#method-end
+     */
     endTracing: async (params) => {
       debug('endTracing');
       client = client || (await CDP({ port }));
@@ -122,6 +157,12 @@ module.exports = (on, config) => {
   });
 };
 
+/**
+ * Sets and returns (or just returns existing) port number for remote browser debugging.
+ * @param args - Arguments provided when launching a browser.
+ * @returns {number}
+ * @see http://chromedevtools.github.io/devtools-protocol/#remote
+ */
 function ensureRemoteDebuggingPort(args) {
   const existing = args.find(
     (arg) => arg.slice(0, 23) === '--remote-debugging-port'
@@ -132,12 +173,14 @@ function ensureRemoteDebuggingPort(args) {
   }
 
   const port = 40000 + Math.round(Math.random() * 25000);
-
   args.push(`--remote-debugging-port=${port}`);
-
   return port;
 }
 
+/**
+ * Returns current date in the YYYYMMDD-HHmmSS format.
+ * @returns {string}
+ */
 function currentDateString() {
   const date = new Date();
   const year = date.getFullYear();
