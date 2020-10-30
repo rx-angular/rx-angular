@@ -12,6 +12,9 @@ import { AppConfigService } from './app-config.service';
         <mat-chip color="primary" [selected]="hasZone">
           <mat-icon matChipAvatar>snooze</mat-icon>
           {{ zoneEnv }}</mat-chip>
+        <mat-chip color="primary" [selected]="devMode">
+          <mat-icon matChipAvatar>build_circle</mat-icon>
+          {{ devMode ? 'Development' : 'Production' }}</mat-chip>
         <mat-chip color="primary" [selected]="true">
           <mat-icon matChipAvatar>image</mat-icon>
           {{ engine }}
@@ -24,10 +27,6 @@ import { AppConfigService } from './app-config.service';
         <mat-icon>account_tree</mat-icon>
         ApplicationRef.tick()
       </button>
-      <rxa-strategy-select
-        *rxLet="strategyName$; let strategy"
-        (strategyChange)="appConfigService.set({ strategy: $event })"
-        [strategy]="strategy"></rxa-strategy-select>
     </div>
   `,
   styles: [
@@ -48,6 +47,7 @@ export class StrategyControlPanelComponent extends RxState<any> {
 
   readonly env = environment;
   readonly hasZone = isNgZone(this.ngZone);
+  readonly devMode = !environment.production;
   readonly zoneEnv = this.hasZone ? 'NgZone' : 'NgNoopZone';
   readonly engine = isViewEngineIvy() ? 'Ivy' : 'ViewEngine';
 
