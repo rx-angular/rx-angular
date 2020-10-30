@@ -6,7 +6,6 @@ export interface StrategySelection {
 }
 
 export type RenderStrategyFactory = (config: RenderStrategyFactoryConfig) => StrategySelection
-
 export interface RenderStrategyFactoryConfig {
   cdRef: ChangeDetectorRef;
 }
