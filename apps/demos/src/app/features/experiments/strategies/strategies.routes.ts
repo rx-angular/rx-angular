@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { StrategyTokensInheritComponent } from './strategy-tokens/strategy-tokens-inherit.component';
+import { StrategyTokensRootInheritComponent } from './strategy-tokens/strategy-tokens-root-inherit.component';
 import { StrategyTokensProvideComponent } from './strategy-tokens/strategy-tokens-provide.component';
 
 export const ROUTES: Routes = [
@@ -9,7 +9,7 @@ export const ROUTES: Routes = [
   },
   {
     path: 'inherit',
-    component: StrategyTokensInheritComponent
+    component: StrategyTokensRootInheritComponent
   },
   {
     path: 'provide',

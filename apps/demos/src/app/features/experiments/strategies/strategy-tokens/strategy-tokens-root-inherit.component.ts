@@ -1,17 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-
 @Component({
-  selector: 'rxa-strategy-tokens-inherit',
+  selector: 'rxa-strategy-tokens-root-inherit',
   template: `
     <rxa-visualizer>
       <div visualizerHeader>
-        <h2>Strategy controlled by parent component</h2>
+        <h2>Strategy inherited from app module</h2>
         <br/>
         <rxa-value-provider
           buttons="true"
-          #vP="rxaValueProvider"
-        ></rxa-value-provider>
+          #vP="rxaValueProvider">
+        </rxa-value-provider>
       </div>
       <div class="row w-100">
         <div class="col">
@@ -28,6 +27,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StrategyTokensInheritComponent {
+export class StrategyTokensRootInheritComponent {
 
 }

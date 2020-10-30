@@ -2,16 +2,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES as CD_ROUTES } from './strategies.routes';
-import { StrategyTokensInheritComponent } from './strategy-tokens/strategy-tokens-inherit.component';
+import { StrategyTokensRootInheritComponent } from './strategy-tokens/strategy-tokens-root-inherit.component';
 import { StrategyTokensProvideComponent } from './strategy-tokens/strategy-tokens-provide.component';
 import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
 import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 
 @NgModule({
-  declarations: [StrategyTokensInheritComponent, StrategyTokensProvideComponent],
+  declarations: [StrategyTokensRootInheritComponent, StrategyTokensProvideComponent],
   exports: [
-    StrategyTokensInheritComponent
+    StrategyTokensRootInheritComponent
   ],
   imports: [
     CommonModule,
