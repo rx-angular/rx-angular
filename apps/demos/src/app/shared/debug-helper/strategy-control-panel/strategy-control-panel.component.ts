@@ -1,8 +1,6 @@
 import { ApplicationRef, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, NgZone } from '@angular/core';
-import { RxState } from '@rx-angular/state';
 import { isNgZone, isViewEngineIvy } from '@rx-angular/template';
 import { environment } from '../../../../environments/environment';
-import { AppConfigService } from './app-config.service';
 
 @Component({
   selector: 'rxa-config-panel',
@@ -30,7 +28,7 @@ import { AppConfigService } from './app-config.service';
     </div>
   `,
   styles: [
-    `
+      `
       rxa-strategy-select {
         font-size: 14px;
         margin-top: 18px;
@@ -39,7 +37,7 @@ import { AppConfigService } from './app-config.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StrategyControlPanelComponent extends RxState<any> {
+export class StrategyControlPanelComponent {
 
   expanded = !isNgZone(this.ngZone);
   @Input()
@@ -51,15 +49,11 @@ export class StrategyControlPanelComponent extends RxState<any> {
   readonly zoneEnv = this.hasZone ? 'NgZone' : 'NgNoopZone';
   readonly engine = isViewEngineIvy() ? 'Ivy' : 'ViewEngine';
 
-  strategyName$ = this.appConfigService.strategyName$;
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private appRef: ApplicationRef,
-    private ngZone: NgZone,
-    public appConfigService: AppConfigService
+    private ngZone: NgZone
   ) {
-    super();
   }
 
   tick() {
