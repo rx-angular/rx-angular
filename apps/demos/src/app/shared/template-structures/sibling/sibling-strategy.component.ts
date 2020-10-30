@@ -6,14 +6,11 @@ import { RX_DEFAULT_STRATEGY } from '../../render-stragegies';
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
 
 @Component({
-  selector: 'rxa-sibling-custom',
+  selector: 'rxa-sibling-strategy',
   template: `
     <rxa-visualizer>
       <div visualizerHeader>
-        <h3>{{siblings.length}} Siblings Custom Strategy</h3>
-        <rxa-strategy-select *ngIf="enabled" (strategyChange)="strategyChange$.next($event)"></rxa-strategy-select>
-        {{strategyChange$ | push}}
-        <button mat-button unpatch (click)="filled$.next(!filled$.getValue())">DoChange</button>
+        <h3>{{siblings.length}} Siblings Strategy: {{strategyChange$ | push}}</h3>
       </div>
       <div class="w-100">
         <ng-container *ngFor="let sibling of siblings; trackBy:trackBy">
@@ -28,15 +25,15 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SiblingCustomComponent {
+export class SiblingStrategyComponent {
 
   siblings = [];
   filled$ = new BehaviorSubject<boolean>(false);
   strategyChange$ = new BehaviorSubject<string>(this.defaultStrategy);
 
   @Input()
-  set count(num: number) {
-    this.siblings = toBooleanArray(num);
+  set count(num: number | string) {
+    this.siblings = toBooleanArray(parseInt(num as any, 10));
     this.filled$.next(!this.filled$.getValue());
   };
 

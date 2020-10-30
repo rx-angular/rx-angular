@@ -41,6 +41,7 @@ const strategiesUiConfig = {
 export class StrategySelectComponent {
   readonly strategiesUiConfig = strategiesUiConfig;
 
+
   @Output() strategyChange = this.strategyProvider.primaryStrategy$.pipe(map(s => s.name))
 
   constructor(

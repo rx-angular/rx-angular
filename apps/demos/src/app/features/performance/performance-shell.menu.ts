@@ -11,5 +11,9 @@ export const MENU_ITEMS = [
   {
     label: 'Sibling Component Structure',
     link: 'sibling-component-structure'
+  },
+  {
+    label: 'Concurrent Strategies',
+    link: 'concurrent-strategies'
   }
 ];
