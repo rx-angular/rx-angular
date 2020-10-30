@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
-import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
-import { RX_DEFAULT_STRATEGY } from '../../../features/experiments/structural-directives/rx-let-poc/default-strategy-token';
+import { BehaviorSubject} from 'rxjs';
 import { toBooleanArray } from './utils';
+import { RX_DEFAULT_STRATEGY } from '../../render-stragegies';
 
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
 
@@ -12,6 +12,7 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
       <div visualizerHeader>
         <h3>{{siblings.length}} Siblings Custom Strategy</h3>
         <rxa-strategy-select (strategyChange)="strategyChange$.next($event)"></rxa-strategy-select>
+        {{strategyChange$ | push}}
         <button mat-button unpatch (click)="filled$.next(!filled$.getValue())">DoChange</button>
       </div>
       <div class="w-100">

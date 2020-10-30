@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
-import { RxLetPocDirectiveModule } from '../../../features/experiments/structural-directives/rx-let-poc/rx-let-poc.directive.module';
 import { ViewVsEmbeddedViewModule } from '../../../features/experiments/structural-directives/view-vs-embedded-view/view-vs-embedded-view.module';
 import { DirtyChecksModule } from '../../debug-helper/dirty-checks';
 import { RenderingsModule } from '../../debug-helper/renderings';
@@ -15,6 +14,7 @@ import { SiblingCustomComponent } from './sibling-custom.component';
 import { SiblingProgressiveComponent } from './sibling-progressive.component';
 import { SiblingPushComponent } from './sibling-push.component';
 import { SiblingStaticComponent } from './sibling-static.component';
+import { RxLetModule } from '../../let/rx-let.module';
 
 const DECLARATIONS = [
   SiblingStaticComponent,
@@ -35,7 +35,7 @@ const DECLARATIONS = [
     VisualizerModule,
     ValueProvidersModule,
     RenderingsModule,
-    RxLetPocDirectiveModule,
+    RxLetModule,
     ViewVsEmbeddedViewModule,
     WorkModule,
     StrategySelectModule

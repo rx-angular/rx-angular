@@ -5,7 +5,7 @@ import { distinctUntilChanged, scan, switchAll, switchMap, tap } from 'rxjs/oper
 import { Hooks } from '../hooks';
 import { AppConfigService } from '../strategy-control-panel';
 import { RxEffects } from '../../rx-effects.service';
-import { select } from '../../../../../../../libs/state/src/lib/rxjs/operators';
+import { select } from '@rx-angular/state';
 
 @Component({
   // tslint:disable-next-line:component-selector

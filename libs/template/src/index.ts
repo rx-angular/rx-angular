@@ -20,7 +20,7 @@ export {
   ViewportPrioDirective,
 } from './lib/experimental/viewport-prio';
 // @TODO clarify if we should exports this
-export { getZoneUnPatchedApi, isNgZone } from './lib/core';
+export { getZoneUnPatchedApi, isNgZone, coalescingManager } from './lib/core';
 export { isViewEngineIvy } from './lib/experimental/core/utils/view-engine-checks.experimental';
 
 // STABLE

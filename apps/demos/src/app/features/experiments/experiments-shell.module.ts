@@ -10,6 +10,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'strategies',
+    loadChildren: () =>
+      import('./strategies/strategies.module').then(
+        (m) => m.StrategiesModule
+      )
+  },
+  {
     path: 'rx-base-state',
     loadChildren: () =>
       import('./state/rx-state.module').then((mod) => mod.RxStateModule),
