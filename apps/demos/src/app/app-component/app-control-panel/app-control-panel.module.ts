@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StrategySelectModule } from '../strategy-select/strategy-select.module';
-import { StrategyControlPanelComponent } from './strategy-control-panel.component';
+import { AppControlPanelComponent } from './app-control-panel.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,23 +11,26 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { LetModule } from '@rx-angular/template';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { StrategySelectModule } from '../../shared/debug-helper/strategy-select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
-  declarations: [StrategyControlPanelComponent],
-    imports: [
-        CommonModule,
-        MatExpansionModule,
-        MatChipsModule,
-        MatIconModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatButtonModule,
-        LetModule,
-        MatListModule,
-        MatCheckboxModule,
-        StrategySelectModule
-    ],
-  exports: [StrategyControlPanelComponent]
+  declarations: [AppControlPanelComponent],
+  imports: [
+    CommonModule,
+    MatExpansionModule,
+    MatChipsModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatButtonModule,
+    LetModule,
+    MatListModule,
+    MatCheckboxModule,
+    StrategySelectModule,
+    MatSlideToggleModule
+  ],
+  exports: [AppControlPanelComponent]
 })
-export class StrategyControlPanelModule { }
+export class AppControlPanelModule { }

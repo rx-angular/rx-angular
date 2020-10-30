@@ -1,10 +1,9 @@
 import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { Hooks } from '../hooks';
-import { AppConfigService } from '../strategy-control-panel';
-import { combineLatest } from 'rxjs/operators';
 import { select } from '@rx-angular/state';
 import { RxEffects } from '../../rx-effects.service';
+import { AppConfigService } from '../../../app-config.service';
 
 @Component({
   // tslint:disable-next-line:component-selector

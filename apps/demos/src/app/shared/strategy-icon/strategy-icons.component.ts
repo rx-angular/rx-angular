@@ -10,7 +10,6 @@ export class StrategyIconComponent extends RxState<{ strategy: string }> {
   strategies = {
     'local': 'call_split',
     'global': 'vertical_align_bottom',
-    'detach': 'play_for_work',
     'noop': 'block',
     'native': 'find_replace'
   };
@@ -23,6 +22,5 @@ export class StrategyIconComponent extends RxState<{ strategy: string }> {
     }
     this.set({ strategy: this.strategies.local });
   }
-
 
 }

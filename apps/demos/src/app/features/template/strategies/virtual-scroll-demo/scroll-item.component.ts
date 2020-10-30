@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { interval } from 'rxjs';
-import { AppConfigService } from '../../../../shared/debug-helper/strategy-control-panel';
 import { map } from 'rxjs/operators';
+import { AppConfigService } from '../../../../app-config.service';
 
 @Component({
   selector: 'rxa-scroll-item',
