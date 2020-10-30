@@ -122,20 +122,40 @@ describe('RxStateService', () => {
   });
 
   describe('get', () => {
-    const state = setupState({ initialState: initialPrimitiveState });
+
+    it('should return undefined as initial value', () => {
+      const state = setupState({ initialState: undefined });
+      const val = state.get();
+      expect(val).toEqual(undefined);
+    });
+
+    it('should return undefined for an undefined property', () => {
+      const state = setupState<{ num: number }>({ initialState: undefined });
+      const val = state.get('num');
+      expect(val).toEqual(undefined);
+    });
 
     it('should return value when keys are provided as params', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
       const val = state.get('num');
       expect(val).toEqual(initialPrimitiveState.num);
     });
 
     it('should return whole state object when no keys provided', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
       const val = state.get();
       expect(val.num).toEqual(initialPrimitiveState.num);
     });
   });
 
   describe('select', () => {
+    it('should return undefined as initial value', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const state = setupState({ initialState: undefined });
+        expectObservable(state.select()).toBe('-');
+      });
+    });
+
     it('should return initial state', () => {
       testScheduler.run(({ expectObservable }) => {
         const state = setupState({ initialState: initialPrimitiveState });
