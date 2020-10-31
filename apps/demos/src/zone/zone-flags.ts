@@ -100,9 +100,7 @@ export const globalAPIs = [
   'timers'
 ];
 
-
 type targetSet = [any, string[]];
-
 
 export function setupTargets(targets: targetSet[]): void {
   (window as any).__Zone_ignore_on_properties = targets
@@ -120,15 +118,14 @@ export enum zoneSymbols {
   unpatchedEvents = '__zone_symbol__UNPATCHED_EVENTS',
 }
 
-
 export interface ZoneConfigurator {
-  disable: <T>(...optionSet: flagAndOption) => void
+  disable: <T>(...optionSet: flagOptions) => void
 }
 
-type flagAndOption = [zoneSymbols.requestAnimationFrame, boolean] |
+type flagOptions = [zoneSymbols.requestAnimationFrame, boolean] |
   [zoneSymbols.setInterval, boolean] |
   [zoneSymbols.setTimeout, boolean] |
-  [zoneSymbols.unpatchedEvents, string[]]
+  [zoneSymbols.unpatchedEvents, string[], any?]
   ;
 
 function getZoneConfigurator(): ZoneConfigurator {
@@ -136,8 +133,8 @@ function getZoneConfigurator(): ZoneConfigurator {
     disable
   };
 
-  function disable<T>(...optionSet: flagAndOption) {
-    (window as any)[optionSet[0]] = optionSet[1];
+  function disable<T>(...optionSet: flagOptions) {
+    (optionSet[2] || window)[optionSet[0]] = optionSet[1];
   }
 }
 
