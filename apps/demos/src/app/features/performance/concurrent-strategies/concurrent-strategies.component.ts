@@ -27,8 +27,8 @@ import { StrategyProvider } from '../../../shared/render-stragegies/strategy-pro
         <ng-container *ngFor="let strategy of strategyProvider.strategyNames">
           <div class="col"
                *ngIf="visible(strategy)">
-            <h2 class="mat-subheader">Custom</h2>
-            <rxa-sibling-strategy [strategy]="" [count]="count$ | push"></rxa-sibling-strategy>
+            <h2 class="mat-subheader">{{strategy}}</h2>
+            <rxa-sibling-strategy [strategy]="strategy" [count]="count$"></rxa-sibling-strategy>
           </div>
         </ng-container>
       </div>
@@ -39,7 +39,7 @@ import { StrategyProvider } from '../../../shared/render-stragegies/strategy-pro
 export class ConcurrentStrategiesComponent {
   selectedStrategies: { [name: string]: boolean } = {};
 
-  count$ = new BehaviorSubject<string>('100');
+  count$ = new BehaviorSubject<string>('1000');
 
   constructor(public strategyProvider: StrategyProvider) {
   }

@@ -11,7 +11,7 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
     <rxa-visualizer>
       <div visualizerHeader>
         <h3>{{siblings.length}} Siblings Custom Strategy</h3>
-        <rxa-strategy-select *ngIf="enabled" (strategyChange)="strategyChange$.next($event)"></rxa-strategy-select>
+        <rxa-strategy-select (strategyChange)="strategyChange$.next($event)"></rxa-strategy-select>
         {{strategyChange$ | push}}
         <button mat-button unpatch (click)="filled$.next(!filled$.getValue())">DoChange</button>
       </div>
