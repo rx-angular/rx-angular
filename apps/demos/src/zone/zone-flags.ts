@@ -1,3 +1,5 @@
+import { zoneConfigurator } from './zone-configurator';
+
 export const mouseEvent = [
   // (MouseEvent)[https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent]
   'mousedown',
@@ -110,32 +112,3 @@ export function setupTargets(targets: targetSet[]): void {
     }), {});
   console.log((window as any).__Zone_ignore_on_properties);
 }
-
-export enum zoneSymbols {
-  requestAnimationFrame = '__Zone_disable_requestAnimationFrame',
-  setTimeout = '__Zone_disable_setTimeout',
-  setInterval = '__Zone_disable_setInterval',
-  unpatchedEvents = '__zone_symbol__UNPATCHED_EVENTS',
-}
-
-export interface ZoneConfigurator {
-  disable: <T>(...optionSet: flagOptions) => void
-}
-
-type flagOptions = [zoneSymbols.requestAnimationFrame, boolean] |
-  [zoneSymbols.setInterval, boolean] |
-  [zoneSymbols.setTimeout, boolean] |
-  [zoneSymbols.unpatchedEvents, string[], any?]
-  ;
-
-function getZoneConfigurator(): ZoneConfigurator {
-  return {
-    disable
-  };
-
-  function disable<T>(...optionSet: flagOptions) {
-    (optionSet[2] || window)[optionSet[0]] = optionSet[1];
-  }
-}
-
-export const zoneConfigurator = getZoneConfigurator();

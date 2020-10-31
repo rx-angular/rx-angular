@@ -52,8 +52,8 @@
  *
  */
 
-import { zoneConfigurator, zoneSymbols } from './zone/zone-flags'; // Included with Angular CLI.
-zoneConfigurator.disable(zoneSymbols.requestAnimationFrame, false)
+import './configure-zone'; // Included before zone.js
+
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
