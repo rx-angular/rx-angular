@@ -1,7 +1,11 @@
+.siblings {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .sibling {
   width: 4px;
   height: 4px;
-  float: left;
   margin: 0 1px 1px 0;
   border: 1px solid green;
   background-color: transparent;

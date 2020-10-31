@@ -18,7 +18,7 @@ import { Subject } from 'rxjs';
           {{ appConfig.engine }}
         </mat-chip>
       </mat-chip-list>
-      <mat-slide-toggle (change)="toggleRipple$.next($event.checked)">Ripple</mat-slide-toggle>
+      <mat-slide-toggle [checked]="rippleOn" *rxLet="rippleOn$; let rippleOn" (change)="toggleRipple$.next($event.checked)">Ripple</mat-slide-toggle>
       <button class="mx-2"
               unpatch
               mat-button
@@ -41,10 +41,10 @@ import { Subject } from 'rxjs';
 export class AppControlPanelComponent {
 
   toggleRipple$ = new Subject<boolean>();
+  rippleOn$ =  this.appConfig.select('rippleOn');
 
   constructor(public appConfig: AppConfigService) {
     this.appConfig.connect('rippleOn', this.toggleRipple$);
-    this.toggleRipple$.subscribe(console.log)
   }
 
   tick() {

@@ -14,10 +14,10 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
       <div visualizerHeader>
         <h3>{{siblings.length}} Siblings</h3>
       </div>
-      <div class="w-100">
-        <ng-container *ngFor="let sibling of siblings; trackBy:trackBy">
-          <div class="sibling" *rxLet="filled$; let f; strategy: strategy$" [ngClass]="{filled: f}">&nbsp;</div>
-        </ng-container>
+      <div class="w-100 siblings">
+        <div class="sibling" *ngFor="let sibling of siblings; trackBy:trackBy">
+          <div *rxLet="filled$; let f; strategy: strategy$" [ngClass]="{filled: f}">&nbsp;</div>
+        </div>
       </div>
     </rxa-visualizer>
   `,

@@ -21,12 +21,13 @@ export class AppConfigService extends RxState<CdConfig> {
   readonly zoneEnv = this.hasZone ? 'NgZone' : 'NgNoopZone';
   readonly engine = isViewEngineIvy() ? 'Ivy' : 'ViewEngine';
 
-  constructor(protected appRef: ApplicationRef,
-              protected ngZone: NgZone
+  constructor(
+    protected appRef: ApplicationRef,
+    protected ngZone: NgZone
   ) {
     super();
     this.set({
-      rippleOn: true,
+      rippleOn: false,
       strategy: 'local'
     });
   }

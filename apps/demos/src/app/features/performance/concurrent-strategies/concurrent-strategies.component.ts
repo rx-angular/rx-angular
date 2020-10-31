@@ -14,7 +14,7 @@ import { StrategyProvider } from '../../../shared/render-stragegies/strategy-pro
               <mat-label>Num Siblings</mat-label>
               <input matInput #i [unpatch] type="number" [value]="count$ | push" (input)="count$.next(i.value)">
             </mat-form-field>
-            <div>
+            <div class="w-100 strategy-multiselect">
               <mat-checkbox #c *ngFor="let strategy of strategyProvider.strategyNames"
                             (change)="selectedStrategies[strategy] = c.checked">
                 {{strategy}}
@@ -34,12 +34,23 @@ import { StrategyProvider } from '../../../shared/render-stragegies/strategy-pro
       </div>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
+  styles: [`
+    .strategy-multiselect {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .strategy-multiselect .mat-checkbox {
+      flex-grow: 1;
+      width: 200px;
+    }
+  `]
 })
 export class ConcurrentStrategiesComponent {
   selectedStrategies: { [name: string]: boolean } = {};
 
-  count$ = new BehaviorSubject<string>('1000');
+  count$ = new BehaviorSubject<string>('500');
 
   constructor(public strategyProvider: StrategyProvider) {
   }
