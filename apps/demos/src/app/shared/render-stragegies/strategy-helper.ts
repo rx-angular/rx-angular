@@ -19,16 +19,16 @@ export function mergeStrategies(...strategiesArray: Array<StrategyCredentialsMap
 export function applyStrategy<T>(
   credentials$: Observable<StrategyCredentials>,
   context,
-  getEmbeddedView
+  getCdRef
 ): (o$: Observable<RxNotification<T>>) => Observable<RxNotification<T>> {
   return notification$ => notification$.pipe(
     publish((n$) =>
       credentials$.pipe(
         switchMap((credentials) => n$.pipe(
           switchMap(n => {
-            const embeddedView = getEmbeddedView(n.kind);
-            const work = () => credentials.work(embeddedView, context);
-            return of(n).pipe(credentials.behavior(work, embeddedView));
+            const cdRef = getCdRef(n.kind);
+            const work = () => credentials.work(cdRef, context);
+            return of(n).pipe(credentials.behavior(work, cdRef));
           })
           )
         )

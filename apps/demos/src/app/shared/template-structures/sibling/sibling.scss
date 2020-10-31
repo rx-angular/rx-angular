@@ -11,7 +11,8 @@
   background-color: transparent;
 }
 
-.sibling.filled {
-  border: 1px dashed green;
+.sibling .filled {
   background-color: orange;
+  width: 100%;
+  height: 100%;
 }
