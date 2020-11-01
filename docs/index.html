@@ -97,10 +97,8 @@
         coverpage: './web/partials/_coverpage.md',
         // Prevents multiple downloads of sidebar
         alias: {
-          '/.*/_sidebar.md':
-            'https://raw.githubusercontent.com/rx-angular/rx-angular/master/docs/web/partials/_sidebar.md',
-          '/_sidebar.md':
-            'https://raw.githubusercontent.com/rx-angular/rx-angular/master/docs/web/partials/_sidebar.md',
+          '/.*/_sidebar.md': '/web/partials/_sidebar.md',
+          '/_sidebar.md': '/web/partials/_sidebar.md',
         },
         routerMode: 'history',
         // Autoscroll content to the top when changing page
