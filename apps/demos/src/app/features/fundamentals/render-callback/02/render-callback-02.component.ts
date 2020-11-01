@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { merge, of, Subject, throwError } from 'rxjs';
 import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 'rxjs/operators';
-import { LetDirective } from '../../../../shared/let/rx-let.directive';
+import { LetDirective } from '../../../../shared/rx-angular-pocs/let/rx-let.directive';
 
 @Component({
   selector: 'rxa-render-callback-02',

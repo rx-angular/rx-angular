@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { StrategyProvider } from '../../../shared/render-stragegies/strategy-provider.service';
+import { StrategyProvider } from '../../../shared/rx-angular-pocs/render-stragegies/strategy-provider.service';
 
 @Component({
   selector: 'rxa-concurrent-strategies',

@@ -23,7 +23,7 @@ import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-s
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RxLetPocComponent } from './rx-let-poc.component';
-import { RxLetModule } from '../../../../shared/let/rx-let.module';
+import { RxLetModule } from '../../../../shared/rx-angular-pocs/let/rx-let.module';
 
 const DECLARATIONS = [
   RxLetPocComponent

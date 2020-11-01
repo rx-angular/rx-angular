@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { toBooleanArray } from './utils';
-import { RX_PRIMARY_STRATEGY } from '../../render-stragegies';
+import { RX_PRIMARY_STRATEGY } from '../../rx-angular-pocs/render-stragegies';
 import { RxState } from '@rx-angular/state';
 import { map } from 'rxjs/operators';
 

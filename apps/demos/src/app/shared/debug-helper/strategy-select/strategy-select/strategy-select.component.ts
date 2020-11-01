@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, Output } from '@angular/core';
-import { Subject } from 'rxjs';
+import { ChangeDetectionStrategy, Component, Output } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { StrategyProvider } from '../../../render-stragegies/strategy-provider.service';
+import { StrategyProvider } from '../../../rx-angular-pocs/render-stragegies/strategy-provider.service';
 import { map } from 'rxjs/operators';
 
 const strategiesUiConfig = {
@@ -18,7 +17,8 @@ const strategiesUiConfig = {
   selector: 'rxa-strategy-select',
   template: `
     <mat-form-field appearance="fill">
-      <mat-select #i [value]="strategyProvider.primaryStrategy" (valueChange)="strategyProvider.primaryStrategy = i.value">
+      <mat-select #i [value]="strategyProvider.primaryStrategy"
+                  (valueChange)="strategyProvider.primaryStrategy = i.value">
         <mat-select-trigger>
           {{ strategyProvider.primaryStrategy }}
         </mat-select-trigger>
@@ -42,7 +42,7 @@ export class StrategySelectComponent {
   readonly strategiesUiConfig = strategiesUiConfig;
 
 
-  @Output() strategyChange = this.strategyProvider.primaryStrategy$.pipe(map(s => s.name))
+  @Output() strategyChange = this.strategyProvider.primaryStrategy$.pipe(map(s => s.name));
 
   constructor(
     public strategyProvider: StrategyProvider

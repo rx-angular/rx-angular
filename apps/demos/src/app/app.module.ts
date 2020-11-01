@@ -7,7 +7,7 @@ import { ENVIRONMENT_SETTINGS } from './shared/environment.token';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './features/home/home.component';
-import { getCustomStrategyCredentialsMap, RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from './shared/render-stragegies';
+import { getCustomStrategyCredentialsMap, RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from './shared/rx-angular-pocs/render-stragegies';
 
 
 @NgModule({

@@ -44,8 +44,8 @@ import {
   StrategyCredentialsMap
 } from '../render-stragegies';
 import { StrategyProvider } from '../render-stragegies/strategy-provider.service';
-import { ngInputFlatten } from '../utils/ngInputFlatten';
-import { Hooks } from '../debug-helper/hooks';
+import { ngInputFlatten } from '../../utils/ngInputFlatten';
+import { Hooks } from '../../debug-helper/hooks';
 
 export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)

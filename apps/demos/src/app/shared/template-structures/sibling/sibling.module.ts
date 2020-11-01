@@ -14,7 +14,7 @@ import { SiblingCustomComponent } from './sibling-custom.component';
 import { SiblingProgressiveComponent } from './sibling-progressive.component';
 import { SiblingPushComponent } from './sibling-push.component';
 import { SiblingStaticComponent } from './sibling-static.component';
-import { RxLetModule } from '../../let/rx-let.module';
+import { RxLetModule } from '../../rx-angular-pocs/let/rx-let.module';
 import { SiblingStrategyComponent } from './sibling-strategy.component';
 
 const DECLARATIONS = [
