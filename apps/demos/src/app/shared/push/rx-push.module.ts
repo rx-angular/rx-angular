@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { LetDirective } from './rx-let.directive';
+import { PushPipe } from './push.pipe';
 
 const DECLARATIONS = [
-  LetDirective
+  PushPipe
 ];
 
 @NgModule({
@@ -10,5 +10,5 @@ const DECLARATIONS = [
   imports: [],
   exports: DECLARATIONS
 })
-export class RxLetModule {
+export class RxPushModule {
 }

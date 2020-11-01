@@ -6,10 +6,13 @@ export {
   RxNotification,
   StrategySelection,
   renderWithLatestStrategy,
+  createRenderAware,
+  RenderAware,
 } from './lib/core/render-aware';
 export { coalesceWith } from './lib/render-strategies/rxjs/operators/coalesceWith';
 export { rxMaterialize } from './lib/core/utils/rx-materialize';
 export { staticCoalesce } from './lib/render-strategies/static';
+export { getEnsureStrategy } from './lib/render-strategies/util';
 export { DEFAULT_STRATEGY_NAME } from './lib/render-strategies/strategies/strategies-map';
 export {
   UnpatchEventsDirective,

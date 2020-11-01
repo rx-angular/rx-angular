@@ -18,7 +18,7 @@ const strategiesUiConfig = {
   selector: 'rxa-strategy-select',
   template: `
     <mat-form-field appearance="fill">
-      <mat-select #i (valueChange)="strategyProvider.primaryStrategy = i.value">
+      <mat-select #i [value]="strategyProvider.primaryStrategy" (valueChange)="strategyProvider.primaryStrategy = i.value">
         <mat-select-trigger>
           {{ strategyProvider.primaryStrategy }}
         </mat-select-trigger>

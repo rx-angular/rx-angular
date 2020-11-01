@@ -1,25 +1,9 @@
-import {
-  ChangeDetectorRef,
-  OnDestroy,
-  Pipe,
-  PipeTransform,
-} from '@angular/core';
-import {
-  NextObserver,
-  Observable,
-  ObservableInput,
-  Subscription,
-  Unsubscribable,
-} from 'rxjs';
+import { ChangeDetectorRef, OnDestroy, Pipe, PipeTransform } from '@angular/core';
+import { NextObserver, Observable, ObservableInput, Subscription, Unsubscribable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getStrategies, RxTemplateObserver } from '@rx-angular/template';
 // tslint:disable:nx-enforce-module-boundaries
-import {
-  createRenderAware,
-  RenderAware,
-} from '../../../../../../../../libs/template/src/lib/core/render-aware';
-import { DEFAULT_STRATEGY_NAME } from '../../../../../../../../libs/template/src/lib/render-strategies/strategies/strategies-map';
-import { getEnsureStrategy } from 'libs/template/src/lib/render-strategies/util';
+import { getEnsureStrategy, createRenderAware, RenderAware, DEFAULT_STRATEGY_NAME } from '@rx-angular/template';
 
 /**
  * @Pipe PushPipe
@@ -64,26 +48,27 @@ import { getEnsureStrategy } from 'libs/template/src/lib/render-strategies/util'
  *
  * @publicApi
  */
-@Pipe({ name: 'pushRcb', pure: false })
-export class PushRcbPipe<U> implements PipeTransform, OnDestroy {
+@Pipe({ name: 'push', pure: false })
+export class PushPipe<U> implements PipeTransform, OnDestroy {
   private renderedValue: U | null | undefined;
   private readonly ensureStrategy;
 
+  private readonly strategies;
   private readonly subscription: Unsubscribable;
   private readonly RenderAware: RenderAware<U | null | undefined>;
   private renderCallbackSubscription: Unsubscribable = Subscription.EMPTY;
 
-  private readonly templateObserver: RxTemplateObserver<
-    U | null | undefined
-  > = {
+  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => (this.renderedValue = undefined),
-    next: (value: U | null | undefined) => (this.renderedValue = value),
+    next: (value: U | null | undefined) => (this.renderedValue = value)
   };
 
   constructor(cdRef: ChangeDetectorRef) {
+    this.strategies = getStrategies({ cdRef });
     this.ensureStrategy = getEnsureStrategy(getStrategies({ cdRef }));
     this.RenderAware = createRenderAware<U>({
       templateObserver: this.templateObserver,
+      strategies: this.strategies
     });
     this.subscription = this.RenderAware.subscribe();
   }

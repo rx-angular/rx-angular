@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { merge, of, Subject, throwError } from 'rxjs';
 import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 'rxjs/operators';
-import { LetRcbDirective } from '../components/let.directive';
+import { LetDirective } from '../../../../shared/let/rx-let.directive';
 
 @Component({
   selector: 'rxa-render-callback-02',
@@ -28,13 +28,13 @@ import { LetRcbDirective } from '../components/let.directive';
       <div class="example-result">
         <h4>After value changed</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterValue$ | pushRcb: 'local': pushRenderCallback
+                                            calculatedAfterValue$ | push: 'local': pushRenderCallback
                                           ) + 'px' }}</strong></span>
       </div>
       <div class="example-result">
         <h4>After renderCallback</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterRender$ | pushRcb: 'local': pushRenderCallback
+                                            calculatedAfterRender$ | push: 'local': pushRenderCallback
                                           ) + 'px' }}</strong></span>
       </div>
     </div>
@@ -72,7 +72,7 @@ import { LetRcbDirective } from '../components/let.directive';
 export class RenderCallback02Component implements AfterViewInit {
 
   @ViewChild('box') box: ElementRef<HTMLElement>;
-  @ViewChild(LetRcbDirective) renderer: LetRcbDirective<string>;
+  @ViewChild(LetDirective) renderer: LetDirective<string>;
 
   private readonly afterViewInit$ = new Subject();
 

@@ -1,11 +1,10 @@
 import { ChangeDetectorRef, Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 
-import { Observable, ObservableInput, Subscription, Unsubscribable } from 'rxjs';
+import { Observable, ObservableInput, Subscription, Unsubscribable, } from 'rxjs';
 import { createRenderAware, RenderAware, RxNotificationKind, StrategySelection } from '../core';
 import { RxTemplateObserver, RxViewContext } from '../core/model';
-import { createTemplateManager, TemplateManager } from '../core/utils/template-manager_creator';
-import { DEFAULT_STRATEGY_NAME, getStrategies } from '../render-strategies/strategies/strategies-map';
-import { getEnsureStrategy } from '../render-strategies/util';
+import { createTemplateManager, TemplateManager, } from '../core/utils/template-manager_creator';
+import { DEFAULT_STRATEGY_NAME, getStrategies, } from '../render-strategies/strategies/strategies-map';
 
 export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
@@ -138,8 +137,6 @@ export class LetDirective<U> implements OnInit, OnDestroy {
   /** @internal */
   static ngTemplateGuard_rxLet: 'binding';
 
-  ensureStrategy;
-
   /**
    * @description
    * All strategies initialized and registered for the `LetDirective`. Pass a name of one the
@@ -212,7 +209,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    */
   @Input('rxLetStrategy')
   set strategy(strategy: string | Observable<string> | undefined) {
-    this.renderAware.nextStrategy(this.ensureStrategy(strategy || DEFAULT_STRATEGY_NAME));
+    this.renderAware.nextStrategy(strategy || DEFAULT_STRATEGY_NAME);
   }
 
   /**
@@ -315,8 +312,8 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     error: (error: Error) => {
       // fallback to rxNext when there's no template for rxError
       this.templateManager.hasTemplateRef('rxError')
-        ? this.templateManager.displayView('rxError')
-        : this.templateManager.displayView('rxNext');
+      ? this.templateManager.displayView('rxError')
+      : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
         $rxError: error
       });
@@ -324,8 +321,8 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     complete: () => {
       // fallback to rxNext when there's no template for rxComplete
       this.templateManager.hasTemplateRef('rxComplete')
-        ? this.templateManager.displayView('rxComplete')
-        : this.templateManager.displayView('rxNext');
+      ? this.templateManager.displayView('rxComplete')
+      : this.templateManager.displayView('rxNext');
       this.templateManager.updateViewContext({
         $rxComplete: true
       });
@@ -346,13 +343,14 @@ export class LetDirective<U> implements OnInit, OnDestroy {
     private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
-    this.ensureStrategy = getEnsureStrategy(getStrategies({ cdRef }));
+    this.strategies = getStrategies({ cdRef });
     this.templateManager = createTemplateManager(this.viewContainerRef, this.initialViewContext);
 
     this.renderAware = createRenderAware({
+      strategies: this.strategies,
       templateObserver: this.templateObserver
     });
-    this.renderAware.nextStrategy(this.ensureStrategy(DEFAULT_STRATEGY_NAME));
+    this.renderAware.nextStrategy(DEFAULT_STRATEGY_NAME);
   }
 
   /** @internal */

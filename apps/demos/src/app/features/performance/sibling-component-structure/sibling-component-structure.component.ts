@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
   template: `
     <rxa-visualizer>
       <ng-container visualizerHeader>
-        <h1 class="mat-headline">Nested Component Structure</h1>
+        <h1 class="mat-headline">Sibling Component Structure</h1>
         <div class="row">
           <div class="col-sm-12 col-md-12">
             <mat-form-field>

@@ -6,7 +6,7 @@ import {
   getDefaultStrategyCredentialsMap,
   mergeStrategies,
   RX_CUSTOM_STRATEGIES,
-  RX_DEFAULT_STRATEGY,
+  RX_PRIMARY_STRATEGY,
   StrategyCredentials,
   StrategyCredentialsMap
 } from '../render-stragegies';
@@ -59,7 +59,7 @@ export class StrategyProvider extends RxState<{
   constructor(@Optional()
               @Inject(RX_CUSTOM_STRATEGIES)
               private customStrategies: StrategyCredentialsMap[],
-              @Inject(RX_DEFAULT_STRATEGY)
+              @Inject(RX_PRIMARY_STRATEGY)
               private defaultStrategy: string) {
     super();
     this._strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), getDefaultStrategyCredentialsMap());

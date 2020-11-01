@@ -12,9 +12,9 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   template: `
     <rxa-visualizer>
       <p visualizerHeader>{{siblings.length}} Siblings Progressive</p>
-      <div class="w-100">
-        <span class="sibling" [ngClass]="{filled: sibling}" *ngFor="let sibling of siblings$ | push; trackBy:trackBy">
-          &nbsp;<rxa-work style="visibility: hidden" *ngIf="sibling"></rxa-work>
+      <div class="w-100 siblings">
+        <span class="sibling" *ngFor="let sibling of siblings$ | push; trackBy:trackBy">
+          <div [ngClass]="{filled: filled}">&nbsp;</div>
         </span>
       </div>
     </rxa-visualizer>
@@ -28,12 +28,13 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
 export class SiblingProgressiveComponent {
 
   siblings = [];
+  filled = false;
   siblingsSubject = new ReplaySubject<any[]>(1);
   siblings$ = this.siblingsSubject.pipe(
     switchMap(a => concat([],chunk(a, a.length / 10)).pipe(
       concatMap(v => timer(0).pipe(mapTo(v))),
       scan(insert),
-      // as rendering is sync it will be included (parts missing) in the measurement
+      // as rendering is sync it will be included in the measurement (init parts missing)
       measure$('progressive rendering '+a.length + ': ')
     ))
   );
@@ -42,6 +43,7 @@ export class SiblingProgressiveComponent {
   set count(num: number) {
     this.siblings = toBooleanArray(num);
     this.siblingsSubject.next(this.siblings);
+    this.filled = !this.filled;
   };
 
   @Input()

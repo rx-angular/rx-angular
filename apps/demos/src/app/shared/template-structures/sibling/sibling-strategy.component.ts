@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { toBoolean, toRandom } from '../../debug-helper/value-provider/utils';
+import { Observable } from 'rxjs';
 import { toBooleanArray } from './utils';
-import { RX_DEFAULT_STRATEGY } from '../../render-stragegies';
-import { RxState } from '../../../../../../../libs/state/src/lib';
+import { RX_PRIMARY_STRATEGY } from '../../render-stragegies';
+import { RxState } from '@rx-angular/state';
 import { map } from 'rxjs/operators';
 
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
@@ -28,7 +27,7 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SiblingStrategyComponent extends RxState<{ siblings: any[], strategy: string,  filled: boolean }> {
+export class SiblingStrategyComponent extends RxState<{ siblings: any[], strategy: string, filled: boolean }> {
 
   filled$ = this.select('filled').pipe(
     //map(() => toBoolean(toRandom()))
@@ -57,13 +56,13 @@ export class SiblingStrategyComponent extends RxState<{ siblings: any[], strateg
 
   @Input()
   set strategy(strategy: string) {
-    this.set({strategy});
+    this.set({ strategy });
   };
 
   trackBy = i => i;
 
   constructor(
-    @Inject(RX_DEFAULT_STRATEGY) private defaultStrategy: string
+    @Inject(RX_PRIMARY_STRATEGY) private defaultStrategy: string
   ) {
     super();
     this.set({

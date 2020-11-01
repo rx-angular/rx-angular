@@ -14,7 +14,7 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil, tap } 
   template: `
     <h1>Render Callback example 03</h1>
     <h4>Height calculation using LetRenderCallback</h4>
-    <h4>RenderStrategy: {{strategyName$ | pushRcb: 'local'}}</h4>
+    <h4>RenderStrategy: {{strategyName$ | push: 'local'}}</h4>
     <button mat-raised-button unpatch (click)="reset()">Reset</button>
     <button mat-raised-button unpatch (click)="updateClick.next()">Update content</button>
     <button mat-raised-button unpatch (click)="errorClick.next()">Error</button>
@@ -27,17 +27,17 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil, tap } 
       <div class="example-result">
         <h4>After value changed</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterValue$ | pushRcb: 'local': rendered$
+                                            calculatedAfterValue$ | push: 'local': rendered$
                                           ) + 'px' }}</strong></span>
       </div>
       <div class="example-result">
         <h4>After renderCallback</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterRender$ | pushRcb: 'local': rendered$
+                                            calculatedAfterRender$ | push: 'local': rendered$
                                           ) + 'px' }}</strong></span>
       </div>
     </div>
-    <ng-container *rxLetRcb="content$; let content; renderCallback: rendered$">
+    <ng-container *rxLet="content$; let content; renderCallback: rendered$">
       <div class="example-box"
            #box>
         {{ content }}
