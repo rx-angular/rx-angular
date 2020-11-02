@@ -21,7 +21,7 @@ export const focusEvent = [
 
 // Mouse Events
 // (MouseEvent)[https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent]
-export const mouseEvent = [
+export const mouseEvent: (keyof WindowEventMap)[] = [
   'mousedown',
   'dblclick',
   'mouseenter',
@@ -34,19 +34,19 @@ export const mouseEvent = [
 ];
 
 // Wheel Events
-export const wheelEvent = [
+export const wheelEvent: (keyof WindowEventMap)[] = [
   // (WheelEvent)[https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent]
   'wheel'
 ];
 
 // Input Events
-export const inputEvent = [
-  'beforeinput',
+export const inputEvent: (keyof WindowEventMap)[] = [
+  // 'beforeinput',
   'input'
 ];
 
 // Keyboard Events
-export const keyboardEvent = [
+export const keyboardEvent: (keyof WindowEventMap)[] = [
   'keydown',
   'keyup'
 ];
@@ -58,15 +58,13 @@ export const compositionEvent = [
   'compositionend'
 ];
 
-
-
-export const touchEvents = [
+export const touchEvents: (keyof WindowEventMap)[] = [
   // [PointerEvent](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent)
   'pointerover',
   'pointerenter',
   'pointerdown',
   'pointermove',
-  'pointerrawupdate',
+  // 'pointerrawupdate',
   'pointerup',
   'pointercancel',
   'pointerout',
@@ -90,7 +88,7 @@ export const touchEvents = [
   'drop'
 ];
 
-export const formControlsEvents = [
+export const formControlsEvents: (keyof WindowEventMap)[] = [
   'change',
   'blur',
   'focus',
@@ -98,26 +96,23 @@ export const formControlsEvents = [
   'input'
 ];
 
-export const globalEvents = [
+export const globalEvents: (keyof WindowEventMap)[] = [
   // window
   'scroll',
   'load',
   'error'
 ];
 
-export const eventGroups = {
-  mouseEvent,
-  touchEvents,
-  formControlsEvents,
-  globalEvents
-};
-
-
-export const standardEvents = [
-
+export const websocketEvents: (keyof WebSocketEventMap)[] = [
+  'close',
+  'error',
+  'message',
+  'open'
 ];
 
-export const allEvents = [
+export const standardEvents: (keyof WindowEventMap)[] = [];
+
+export const allEvents: (keyof WindowEventMap)[] = [
   ...mouseEvent,
   ...touchEvents,
   ...formControlsEvents,

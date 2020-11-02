@@ -84,7 +84,8 @@
                   "replace": "apps/demos/src/environments/environment.ts",
                   "with": "apps/demos/src/environments/environment.zoneless.ts"
                 }
-              ]
+              ],
+              "polyfills": ""
             }
           }
         },

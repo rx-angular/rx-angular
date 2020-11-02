@@ -7,12 +7,15 @@
  */
 
 /**
+ * @description
  * Interface of `zone.js` configurations.
  *
  * You can define the following configurations on the `window/global` object before
  * importing `zone.js` to change `zone.js` default behaviors.
  */
 export interface ZoneGlobalConfigurations {
+  __Zone_ignore_on_properties?: {target: any, ignoreProperties: string[]}[],
+
   /**
    * Disable the monkey patch of the `Node.js` `EventEmitter` API.
    *
@@ -295,6 +298,8 @@ export interface ZoneGlobalConfigurations {
   __Zone_disable_requestAnimationFrame?: boolean;
 
   /**
+   * @public
+   * @description
    *
    * Disable the monkey patch of the browser blocking APIs(`alert()`/`prompt()`/`confirm()`).
    */

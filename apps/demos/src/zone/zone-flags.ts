@@ -1,40 +1,32 @@
-export const eventTargets = [
-  window,
-  Document,
-  HTMLBodyElement,
-  HTMLBodyElement.prototype,
-  HTMLElement,
-  HTMLElement.prototype
-];
+import { ZoneGlobalConfigurations, ZoneRuntimeConfigurations } from './model/zone.configurations.api';
 
-export const allTargets: targetSet[] = [
-  [window, allEvents],
-  [Document, allEvents],
-  [HTMLBodyElement, allEvents],
-  [HTMLBodyElement.prototype, allEvents],
-  [HTMLBodyElement.prototype, allEvents],
-  [HTMLElement.prototype, allEvents]
-];
+type targetSet = [WebSocket, (keyof WebSocketEventMap)[]] |
+[any, (keyof WindowEventMap)[]];
 
-
-export const globalAPIs = [
-  'ZoneAwarePromise',
-  'requestAnimationFrame',
-  'on_property',
-  'toString',
-  'EventTarget',
-  'XHR',
-  'mediaQuery',
-  'timers'
-];
-
-type targetSet = [any, string[]];
-
-export function setupTargets(targets: targetSet[]): void {
-  (window as any).__Zone_ignore_on_properties = targets
-    .reduce((a, [target, ignoreProperties]) => ({
-      ...a,
-      [target]: ignoreProperties
-    }), {});
-  console.log((window as any).__Zone_ignore_on_properties);
+export interface ZoneFlagsConfigurator {
+  global: ZoneGlobalConfigurations,
+  runtime: ZoneRuntimeConfigurations,
+  target: {
+    add: (...args: targetSet) => void
+  }
 }
+
+function getZoneFlagsConfigurator(): ZoneFlagsConfigurator {
+  const cfg = window as ZoneGlobalConfigurations;
+  if(!Array.isArray(cfg.__Zone_ignore_on_properties)) {
+    cfg.__Zone_ignore_on_properties = [];
+  }
+
+  return {
+    global: cfg,
+    target: {
+      add: (target: any, ignoreProperties: string[]) => {
+        cfg.__Zone_ignore_on_properties.push({ target, ignoreProperties })
+      }
+    },
+    runtime: cfg as ZoneRuntimeConfigurations
+  }
+}
+
+export const zoneFlags = getZoneFlagsConfigurator();
+

@@ -58,7 +58,7 @@ export const globalEvents = [
 ];
 
 export const eventGroups = {
-  mouseEvent,
+  mouseEvents: mouseEvent,
   touchEvents,
   formControlsEvents,
   globalEvents
