@@ -16,7 +16,7 @@ This repository holds a set of helpers to create **fully reactive** as well as *
 
 ## Links
 
-- [📚 Official docs](https://rx-angular.io)
+- [📚 Official docs](https://www.rx-angular.io/)
 - [![Discord](https://icongr.am/material/discord.svg?size=16&color=7289da) Discord channel](https://discord.com/invite/XWWGZsQ)
 
 ## Packages
