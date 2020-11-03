@@ -1,7 +1,10 @@
-import { zoneFlags } from './zone/zone-flags';
-import { touchEvents, websocketEvents } from './zone/event-names';
+import { zoneFlagsConfigurator } from './zone/zone-flags-configurator';
+import { mouseEvent } from './zone/event-names';
+import { ZoneGlobalConfigurations } from './zone/model/zone.configurations.api';
 
-zoneFlags.global.__Zone_disable_blocking = true;
-zoneFlags.runtime.__zone_symbol__ignoreConsoleErrorUncaughtError = true;
-zoneFlags.target.add(WebSocket.prototype, websocketEvents);
-zoneFlags.target.add(HTMLElement.prototype, [...touchEvents]);
+// zoneFlagsConfigurator.global.__Zone_disable_requestAnimationFrame = true;
+// zoneFlagsConfigurator.target.add(HTMLElement.prototype, [...mouseEvent]);
+const cfg = (window as ZoneGlobalConfigurations);
+cfg.__Zone_disable_requestAnimationFrame = true;
+cfg.__zone_symbol__UNPATCHED_EVENTS = mouseEvent;
+

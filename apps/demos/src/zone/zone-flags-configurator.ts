@@ -28,5 +28,5 @@ function getZoneFlagsConfigurator(): ZoneFlagsConfigurator {
   }
 }
 
-export const zoneFlags = getZoneFlagsConfigurator();
+export const zoneFlagsConfigurator = getZoneFlagsConfigurator();
 

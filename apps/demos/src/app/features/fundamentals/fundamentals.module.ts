@@ -33,6 +33,12 @@ const ROUTES: Routes = [
     )
   },
   {
+    path: 'zone-flags',
+    loadChildren: () => import('./zone-flags/zone-flags.module').then(
+      m => m.ZoneFlagsModule
+    )
+  },
+  {
     path: 'render-callback',
     loadChildren: () => import('./render-callback/render-callback.module')
       .then(m => m.RenderCallbackModule)
