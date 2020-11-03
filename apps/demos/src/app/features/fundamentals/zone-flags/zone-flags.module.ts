@@ -7,9 +7,10 @@ import { ROUTES } from './zone-flags.routes';
 import { ZoneFlagsComponent } from './zone-flags/zone-flags.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { DragNDropComponent } from './drag-n-drop/drag-n-drop.component';
 
 const DECLARATIONS = [
-  ZoneFlagsComponent
+  ZoneFlagsComponent, DragNDropComponent
 ];
 
 @NgModule({

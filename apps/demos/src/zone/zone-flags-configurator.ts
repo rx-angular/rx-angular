@@ -61,7 +61,7 @@ function getZoneFlagsConfigurator(): ZoneFlagsConfigurator {
     },
     events: {
       disable: zoneGlobalEventsConfigurationsKeys
-        .map(prop => ({ [prop]: (eventNames: string[]) => cfg[zoneSymbol + prop] = [...cfg[zoneSymbol + prop], ...eventNames] }))
+        .map(prop => ({ [prop]: (eventNames: string[]) => cfg[zoneSymbol + prop] = [...(Array.isArray(cfg[zoneSymbol + prop]) ? cfg[zoneSymbol + prop] : []), ...eventNames] }))
         .reduce((map, item) => ({ ...map, ...item }), {} as ZoneGlobalEventsConfigurationsMethods)
     },
     runtime: {

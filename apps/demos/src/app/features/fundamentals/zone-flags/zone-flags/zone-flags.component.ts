@@ -4,7 +4,7 @@ import { end, start } from '../../../../shared/utils/measure';
 @Component({
   selector: 'rxa-zone-flags',
   template: `
-    <rxa-visualizer>
+    <rxa-visualizer style="position: relative">
       <div visualizerHeader>
         <h1>Maps example configured wit zone flags</h1>
       </div>
