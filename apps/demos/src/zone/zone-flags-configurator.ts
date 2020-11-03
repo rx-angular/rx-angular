@@ -38,7 +38,7 @@ const zoneDisable = '__Zone_disable_';
 const zoneSymbol = '__zone_symbol__';
 
 function getZoneFlagsConfigurator(): ZoneFlagsConfigurator {
-  const cfg = window as unknown as ZoneGlobalConfigurations & { __Zone_ignore_on_properties: { target: any, ignoreProperties: string[] }[] };
+  const cfg = window as unknown as ZoneGlobalConfigurations;
 
   return {
     global: {
@@ -73,7 +73,6 @@ function getZoneFlagsConfigurator(): ZoneFlagsConfigurator {
     }
   };
 }
-
 
 export interface ZoneFlagsConfigurator {
   global: {

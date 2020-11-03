@@ -1,11 +1,4 @@
-/**
- * @license
- * Copyright Google LLC All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
- */
-
+// prefix: __Zone_disable_
 export interface ZoneGlobalDisableConfigurations {
   EventEmitter?: boolean;
   fs?: boolean;
@@ -29,7 +22,6 @@ export interface ZoneGlobalDisableConfigurations {
   canvas?: boolean;
   ZoneAwarePromise?: boolean;
 }
-
 export type ZoneGlobalDisableConfigurationsKey = keyof ZoneGlobalDisableConfigurations;
 export const zoneGlobalDisableConfigurationsKeys: ZoneGlobalDisableConfigurationsKey[] = [
   'EventEmitter',
