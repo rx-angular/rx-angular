@@ -1,6 +1,10 @@
 import {
   ZoneGlobalDisableConfigurationsKey,
   zoneGlobalDisableConfigurationsKeys,
+  ZoneGlobalEventsConfigurationsKey,
+  zoneGlobalEventsConfigurationsKeys,
+  ZoneGlobalSettingsConfigurationsKey,
+  zoneGlobalSettingsConfigurationsKeys,
   ZoneRuntimeConfigurationsKey,
   zoneRuntimeConfigurationsKeys,
   ZoneTestDisableConfigurationsKey,
@@ -12,6 +16,8 @@ import { ZoneGlobalConfigurations } from './model/zone.configurations.api';
 
 type GlobalDisableConfigurationMethods = {
   [disabledFlag in ZoneGlobalDisableConfigurationsKey]: (isDisabled?: boolean) => void;
+} & {
+  [symbolFlag in ZoneGlobalSettingsConfigurationsKey]: (isDisabled?: boolean) => void;
 };
 
 type TestDisableConfigurationMethods = {
@@ -20,32 +26,16 @@ type TestDisableConfigurationMethods = {
   [symbolFlag in ZoneTestSettingsConfigurationsKey]: (isDisabled?: boolean) => void
 };
 
-type targetSet = [WebSocket, (keyof WebSocketEventMap)[]] |
-  [any, (keyof WindowEventMap)[]];
-type GlobalTargetConfigurationMethod = (...args: targetSet) => void;
+type ZoneGlobalEventsConfigurationsMethods = {
+  [disabledFlag in ZoneGlobalEventsConfigurationsKey]: (eventNames: string[]) => void;
+}
+
 type RuntimeConfigurationMethods = {
   [disabledFlag in ZoneRuntimeConfigurationsKey]: (isDisabled?: boolean) => void;
 }
 
 const zoneDisable = '__Zone_disable_';
-const zoneIgnore = '__Zone_ignore';
 const zoneSymbol = '__zone_symbol__';
-
-
-export interface ZoneFlagsConfigurator {
-  global: {
-    disable: GlobalDisableConfigurationMethods
-  },
-  test: {
-    disable: TestDisableConfigurationMethods
-  },
-  target: {
-    disable: GlobalTargetConfigurationMethod
-  }
-  runtime: {
-    disable: RuntimeConfigurationMethods
-  },
-}
 
 function getZoneFlagsConfigurator(): ZoneFlagsConfigurator {
   const cfg = window as unknown as ZoneGlobalConfigurations & { __Zone_ignore_on_properties: { target: any, ignoreProperties: string[] }[] };
@@ -53,10 +43,12 @@ function getZoneFlagsConfigurator(): ZoneFlagsConfigurator {
   return {
     global: {
       disable: zoneGlobalDisableConfigurationsKeys
-        .reduce((map, prop) => ({
-          ...map,
-          [prop]: (isDisabled: boolean = true) => cfg[zoneDisable + prop] = isDisabled
-        }), {} as GlobalDisableConfigurationMethods)
+        .map(prop => ({ [prop]: (isDisabled: boolean = true) => cfg[zoneDisable + prop] = isDisabled }))
+        .concat(
+          zoneGlobalSettingsConfigurationsKeys
+            .map(prop => ({ [prop]: (isDisabled: boolean = true) => cfg[zoneSymbol + prop] = isDisabled }))
+        )
+        .reduce((map, item) => ({ ...map, ...item }), {} as GlobalDisableConfigurationMethods)
     },
     test: {
       disable: zoneTestDisableConfigurationsKeys
@@ -66,16 +58,11 @@ function getZoneFlagsConfigurator(): ZoneFlagsConfigurator {
             .map(prop => ({ [prop]: (isDisabled: boolean = true) => cfg[zoneSymbol + prop] = isDisabled }))
         )
         .reduce((map, item) => ({ ...map, ...item }), {} as TestDisableConfigurationMethods)
-
     },
-    target: {
-      disable: (target: any, ignoreProperties: string[]) => {
-        const onProps = zoneIgnore + 'on_properties';
-        if (!Array.isArray(cfg[onProps])) {
-          cfg[onProps] = [];
-        }
-        cfg[onProps].push({ target, ignoreProperties });
-      }
+    events: {
+      disable: zoneGlobalEventsConfigurationsKeys
+        .map(prop => ({ [prop]: (eventNames: string[]) => cfg[zoneSymbol + prop] = [...cfg[zoneSymbol + prop], ...eventNames] }))
+        .reduce((map, item) => ({ ...map, ...item }), {} as ZoneGlobalEventsConfigurationsMethods)
     },
     runtime: {
       disable: zoneRuntimeConfigurationsKeys
@@ -85,6 +72,22 @@ function getZoneFlagsConfigurator(): ZoneFlagsConfigurator {
         }), {} as RuntimeConfigurationMethods)
     }
   };
+}
+
+
+export interface ZoneFlagsConfigurator {
+  global: {
+    disable: GlobalDisableConfigurationMethods
+  },
+  test: {
+    disable: TestDisableConfigurationMethods
+  },
+  events: {
+    disable: ZoneGlobalEventsConfigurationsMethods
+  }
+  runtime: {
+    disable: RuntimeConfigurationMethods
+  },
 }
 
 export const zoneFlagsConfigurator = getZoneFlagsConfigurator();

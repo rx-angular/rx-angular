@@ -29,8 +29,9 @@ export interface ZoneGlobalDisableConfigurations {
   canvas?: boolean;
   ZoneAwarePromise?: boolean;
 }
+
 export type ZoneGlobalDisableConfigurationsKey = keyof ZoneGlobalDisableConfigurations;
-export const zoneGlobalDisableConfigurationsKeys: ZoneGlobalDisableConfigurationsKey[]  = [
+export const zoneGlobalDisableConfigurationsKeys: ZoneGlobalDisableConfigurationsKey[] = [
   'EventEmitter',
   'fs',
   'node_timers',
@@ -54,31 +55,33 @@ export const zoneGlobalDisableConfigurationsKeys: ZoneGlobalDisableConfiguration
   'ZoneAwarePromise'
 ];
 
-export interface ZoneGlobalEventsConfigurations {
-  __zone_symbol__UNPATCHED_EVENTS?: string[];
-  __zone_symbol__PASSIVE_EVENTS?: string[];
-}
-
 // prefix: __zone_symbol__
-export interface ZoneGlobalTargetsConfigurations {
-  on_properties?: { target: any, ignoreProperties: string[] }[],
+export interface ZoneGlobalEventsConfigurations {
+  UNPATCHED_EVENTS?: string[];
+  PASSIVE_EVENTS?: string[];
 }
-export type ZoneGlobalTargetsConfigurationsKey = keyof ZoneGlobalTargetsConfigurations;
-export const zoneGlobalTargetsConfigurationsKeys: ZoneGlobalTargetsConfigurationsKey[]  = [
-  'on_properties',
+export type ZoneGlobalEventsConfigurationsKey = keyof ZoneGlobalEventsConfigurations;
+export const zoneGlobalEventsConfigurationsKeys: ZoneGlobalEventsConfigurationsKey[] = [
+  'UNPATCHED_EVENTS',
+  'PASSIVE_EVENTS'
 ];
+
 // prefix: __zone_symbol__
 export interface ZoneGlobalSettingsConfigurations {
   DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION?: boolean;
 }
+export type ZoneGlobalSettingsConfigurationsKey = keyof ZoneGlobalSettingsConfigurations;
+export const zoneGlobalSettingsConfigurationsKeys: ZoneGlobalSettingsConfigurationsKey[] = [
+  'DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION'
+];
 
 // prefix: __zone_symbol__
 export interface ZoneRuntimeConfigurations {
   ignoreConsoleErrorUncaughtError?: boolean;
 }
 export type ZoneRuntimeConfigurationsKey = keyof ZoneRuntimeConfigurations;
-export const zoneRuntimeConfigurationsKeys: ZoneRuntimeConfigurationsKey[]  = [
-  'ignoreConsoleErrorUncaughtError',
+export const zoneRuntimeConfigurationsKeys: ZoneRuntimeConfigurationsKey[] = [
+  'ignoreConsoleErrorUncaughtError'
 ];
 
 // prefix: __Zone_disable_
@@ -88,10 +91,10 @@ export interface ZoneTestDisableConfigurations {
   jest?: boolean;
 }
 export type ZoneTestDisableConfigurationsKey = keyof ZoneTestDisableConfigurations;
-export const zoneTestDisableConfigurationsKeys: ZoneTestDisableConfigurationsKey[]  = [
+export const zoneTestDisableConfigurationsKeys: ZoneTestDisableConfigurationsKey[] = [
   'jasmine',
   'mocha',
-  'jest',
+  'jest'
 ];
 
 // prefix: __zone_symbol__
@@ -101,7 +104,7 @@ export interface ZoneTestSettingsConfigurations {
   supportWaitUnResolvedChainedPromise?: boolean;
 }
 export type ZoneTestSettingsConfigurationsKey = keyof ZoneTestSettingsConfigurations;
-export const zoneTestSettingsConfigurationsKeys: ZoneTestSettingsConfigurationsKey[]  = [
+export const zoneTestSettingsConfigurationsKeys: ZoneTestSettingsConfigurationsKey[] = [
   'fakeAsyncDisablePatchingClock',
   'fakeAsyncAutoFakeAsyncWhenClockPatched',
   'supportWaitUnResolvedChainedPromise'
