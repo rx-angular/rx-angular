@@ -89,4 +89,4 @@ export interface ZoneFlagsConfigurator {
   },
 }
 
-export const zoneFlagsConfigurator = getZoneFlagsConfigurator();
+export const zoneFlagsConfigurator = createZoneFlagsConfigurator();
