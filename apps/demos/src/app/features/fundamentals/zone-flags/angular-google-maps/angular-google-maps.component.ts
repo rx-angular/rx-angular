@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, O
 import { end, start } from '../../../../shared/utils/measure';
 
 @Component({
-  selector: 'rxa-zone-flags',
+  selector: 'rxa-angular-google-maps',
   template: `
     <rxa-visualizer style="position: relative">
       <div visualizerHeader>
@@ -15,7 +15,7 @@ import { end, start } from '../../../../shared/utils/measure';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZoneFlagsComponent implements AfterViewInit {
+export class AngularGoogleMapsComponent implements AfterViewInit {
 
   center: google.maps.LatLngLiteral = {lat: 24, lng: 12};
   markers: google.maps.LatLngLiteral[] = [

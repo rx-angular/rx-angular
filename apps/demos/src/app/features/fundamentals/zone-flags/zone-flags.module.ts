@@ -1,28 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { TemplateModule } from '@rx-angular/template';
 
 import { ROUTES } from './zone-flags.routes';
-import { ZoneFlagsComponent } from './zone-flags/zone-flags.component';
-import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
-import { GoogleMapsModule } from '@angular/google-maps';
-import { DragNDropComponent } from './drag-n-drop/drag-n-drop.component';
-
-const DECLARATIONS = [
-  ZoneFlagsComponent, DragNDropComponent
-];
+import { AgmGoogleMapsModule } from './agm-google-maps/agm-google-maps.module';
+import { AngularGoogleMapsModule } from './angular-google-maps/angular-google-maps.module';
 
 @NgModule({
-  declarations: [DECLARATIONS],
+  declarations: [],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    TemplateModule,
-    VisualizerModule,
-    GoogleMapsModule
+    AgmGoogleMapsModule,
+    AngularGoogleMapsModule
   ],
-  exports: [DECLARATIONS]
+  exports: []
 })
 export class ZoneFlagsModule {
 }

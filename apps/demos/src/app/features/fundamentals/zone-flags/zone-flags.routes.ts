@@ -1,17 +1,17 @@
-import { ZoneFlagsComponent } from './zone-flags/zone-flags.component';
-import { DragNDropComponent } from './drag-n-drop/drag-n-drop.component';
+import { AgmGoogleMapsComponent } from './agm-google-maps/agm-google-maps.component';
+import { AngularGoogleMapsComponent } from './angular-google-maps/angular-google-maps.component';
 
 export const ROUTES = [
   {
     path: '',
-    component: DragNDropComponent
+    component: AgmGoogleMapsComponent
   },
   {
-    path: 'dnd',
-    component: DragNDropComponent
+    path: 'angular-maps',
+    component: AngularGoogleMapsComponent
   },
   {
-    path: 'maps',
-    component: ZoneFlagsComponent
+    path: 'agm-maps',
+    component: AgmGoogleMapsComponent
   }
 ];

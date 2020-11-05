@@ -1,5 +1,6 @@
-import { mouseEvent } from './zone/event-names';
+import { mouseEvent, touchEvents } from './zone/event-names';
 import { zoneFlagsConfigurator } from './zone/zone-flags-configurator';
 
 zoneFlagsConfigurator.global.disable.requestAnimationFrame();
-zoneFlagsConfigurator.events.disable.UNPATCHED_EVENTS(mouseEvent);
+zoneFlagsConfigurator.global.disable.timers();
+zoneFlagsConfigurator.events.disable.UNPATCHED_EVENTS([...mouseEvent, ...touchEvents]);
