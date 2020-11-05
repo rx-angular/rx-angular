@@ -37,7 +37,7 @@ type RuntimeConfigurationMethods = {
 const zoneDisable = '__Zone_disable_';
 const zoneSymbol = '__zone_symbol__';
 
-function getZoneFlagsConfigurator(): ZoneFlagsConfigurator {
+function createZoneFlagsConfigurator(): ZoneFlagsConfigurator {
   const cfg = window as unknown as ZoneGlobalConfigurations;
 
   return {
