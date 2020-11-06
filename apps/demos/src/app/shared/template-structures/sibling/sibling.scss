@@ -4,11 +4,12 @@
 }
 
 .sibling {
-  width: 4px;
+  position: relative;
+ width: 4px;
   height: 4px;
   margin: 0 2px 2px 0;
   padding: 0px;
-  position: relative;
+
   outline: 1px solid green;
   background-color: transparent;
 }
@@ -17,7 +18,6 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: transparent;
 }
 .sibling div.filled {
   background-color: orange;

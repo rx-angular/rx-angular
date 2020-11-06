@@ -1,8 +1,18 @@
-import { ConcurrentStrategiesComponent } from './concurrent-strategies.component';
+import { Routes } from '@angular/router';
 
-export const ROUTES = [
+export const ROUTES: Routes = [
   {
     path: '',
-    component: ConcurrentStrategiesComponent
+    redirectTo: 'comparison'
+  },
+  {
+    path: 'comparison',
+    loadChildren: () => import('./comparison/comparison.module')
+      .then(m => m.ComparisonModule)
+  },
+  {
+    path: 'pixel-priority',
+    loadChildren: () => import('./pixel-priority/pixel-priority.module')
+      .then(m => m.PixelPriorityModule)
   }
 ];

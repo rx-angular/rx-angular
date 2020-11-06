@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { StrategyProvider } from '../../../shared/rx-angular-pocs/render-stragegies/strategy-provider.service';
+import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stragegies/strategy-provider.service';
 
 @Component({
   selector: 'rxa-concurrent-strategies',
@@ -52,10 +52,10 @@ import { StrategyProvider } from '../../../shared/rx-angular-pocs/render-strageg
     }
   `]
 })
-export class ConcurrentStrategiesComponent {
+export class ComparisonComponent {
   selectedStrategies: { [name: string]: boolean } = {};
 
-  count$ = new BehaviorSubject<string>('500');
+  count$ = new BehaviorSubject<string | number[][]>('500');
   filled$ = new BehaviorSubject<boolean>(false);
 
   constructor(public strategyProvider: StrategyProvider) {

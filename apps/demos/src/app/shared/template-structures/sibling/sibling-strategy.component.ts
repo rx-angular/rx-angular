@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { toBooleanArray } from './utils';
-import { RX_PRIMARY_STRATEGY } from '../../rx-angular-pocs/render-stragegies';
+import { RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from '../../rx-angular-pocs/render-stragegies';
 import { RxState } from '@rx-angular/state';
 import { map } from 'rxjs/operators';
+import { toInt } from '../../debug-helper/value-provider';
 
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
 
@@ -14,9 +15,11 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
       <div visualizerHeader>
         <h3>{{siblings.length}} Siblings</h3>
       </div>
-      <div class="w-100 siblings">
+      <div class="siblings">
         <div class="sibling" *ngFor="let sibling of siblings$ | push; trackBy:trackBy">
-          <div *rxLet="filled$; let f; strategy: strategy$" [ngClass]="{filled: f}">&nbsp;</div>
+          <div *rxLet="filled$; let f; strategy: strategy$" [ngClass]="{filled: f}">
+
+          </div>
         </div>
       </div>
     </rxa-visualizer>
@@ -28,14 +31,18 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SiblingStrategyComponent extends RxState<{ siblings: any[], strategy: string, filled: boolean }> {
-
   filled$ = this.select('filled').pipe(
     //map(() => toBoolean(toRandom()))
   );
   siblings$ = this.select('siblings');
   siblings = [];
-  strategy$ = this.select('strategy');
-  m$ = this.$;
+
+  strategy$ = this.select('strategy').pipe(map(v => {
+    if (this.strategies) {
+      return Object.keys(this.strategies[0])[toInt(undefined, 0, this.strategies.length)];
+    }
+    return v;
+  }));
 
   @Input()
   set count(num$: Observable<number | string>) {
@@ -43,7 +50,6 @@ export class SiblingStrategyComponent extends RxState<{ siblings: any[], strateg
       this.siblings = toBooleanArray(parseInt(num as any, 10));
       return this.siblings;
     })));
-
   };
 
   @Input()
@@ -62,6 +68,7 @@ export class SiblingStrategyComponent extends RxState<{ siblings: any[], strateg
   trackBy = i => i;
 
   constructor(
+    @Inject(RX_CUSTOM_STRATEGIES) private strategies: string,
     @Inject(RX_PRIMARY_STRATEGY) private defaultStrategy: string
   ) {
     super();

@@ -16,6 +16,8 @@ import { SiblingPushComponent } from './sibling-push.component';
 import { SiblingStaticComponent } from './sibling-static.component';
 import { RxLetModule } from '../../rx-angular-pocs/let/rx-let.module';
 import { SiblingStrategyComponent } from './sibling-strategy.component';
+import { ImageArrayModule } from '../../image-array/image-array.module';
+import { SiblingPixelImgComponent } from './sibling-pixel-img.component';
 
 const DECLARATIONS = [
   SiblingStaticComponent,
@@ -23,7 +25,8 @@ const DECLARATIONS = [
   SiblingPushComponent,
   SiblingProgressiveComponent,
   SiblingCustomComponent,
-  SiblingStrategyComponent
+  SiblingStrategyComponent,
+  SiblingPixelImgComponent
 ];
 
 @NgModule({
@@ -40,7 +43,8 @@ const DECLARATIONS = [
     RxLetModule,
     ViewVsEmbeddedViewModule,
     WorkModule,
-    StrategySelectModule
+    StrategySelectModule,
+    ImageArrayModule
   ],
   exports: DECLARATIONS
 })
