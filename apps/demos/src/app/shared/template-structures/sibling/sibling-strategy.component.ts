@@ -37,12 +37,7 @@ export class SiblingStrategyComponent extends RxState<{ siblings: any[], strateg
   siblings$ = this.select('siblings');
   siblings = [];
 
-  strategy$ = this.select('strategy').pipe(map(v => {
-    if (this.strategies) {
-      return Object.keys(this.strategies[0])[toInt(undefined, 0, this.strategies.length)];
-    }
-    return v;
-  }));
+  strategy$ = this.select('strategy');
 
   @Input()
   set count(num$: Observable<number | string>) {

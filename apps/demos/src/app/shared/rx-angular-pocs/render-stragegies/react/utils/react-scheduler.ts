@@ -2,10 +2,31 @@ import { MonoTypeOperatorFunction, Observable, Subject } from 'rxjs';
 import { filter, switchMap, switchMapTo, tap } from 'rxjs/operators';
 import { unstable_cancelCallback, unstable_scheduleCallback } from './react-source-code/scheduler';
 import { ReactSchedulerTask } from './react-source-code/schedulerMinHeap';
-import { coalescingManager } from '@rx-angular/template';
-import { ReactSchedulerWorkDefinition } from './model';
+import { coalesceWith, coalescingManager } from '@rx-angular/template';
+import { ReactPriorityLevel, ReactSchedulerWorkDefinition } from './model';
 
-export function scheduleLikeReact<T>(
+
+export const reactSchedulerTick = (priority: ReactPriorityLevel, work: () => void, options?: any): Observable<number> =>
+  new Observable<number>((subscriber) => {
+    const _work = () => {
+      work();
+      subscriber.next(0);
+    };
+    const task = unstable_scheduleCallback(priority, _work, options);
+    return () => {
+      unstable_cancelCallback(task);
+    };
+  });
+
+
+// RenderBehavior
+export function scheduleLikeReact<T>(priority: ReactPriorityLevel, work: any, context: any) {
+  return (o$: Observable<T>): Observable<T> => o$.pipe(
+    coalesceWith(reactSchedulerTick(priority, work), context)
+  );
+}
+
+export function _scheduleLikeReact<T>(
   workDefinitionFn: () => ReactSchedulerWorkDefinition
 ): MonoTypeOperatorFunction<T> {
   // Local queue of references of the work function needed to dispose their execution

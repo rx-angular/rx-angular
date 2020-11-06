@@ -1,5 +1,6 @@
 import { StrategyCredentials, StrategyCredentialsMap } from '../model';
 import { scheduleLikeReact } from './utils/react-scheduler';
+import { ReactPriorityLevel } from './utils/model';
 
 /**
  * Strategies
@@ -31,11 +32,7 @@ export function createReactNoPrioStrategyCredentials(): StrategyCredentials {
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: any, context: any) => {
       return o$ => o$.pipe(
-        scheduleLikeReact(() => ({
-          priority: 0,
-          work: work,
-          scope: context
-        }))
+        scheduleLikeReact(ReactPriorityLevel.NoPriority, work, context)
       );
     }
   };
@@ -47,11 +44,7 @@ export function createReactImmediateStrategyCredentials(): StrategyCredentials {
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: any, context: any) => {
       return o$ => o$.pipe(
-        scheduleLikeReact(() => ({
-          priority: 1,
-          work: work,
-          scope: context
-        }))
+        scheduleLikeReact(ReactPriorityLevel.ImmediatePriority, work, context)
       );
     }
   };
@@ -63,11 +56,7 @@ export function createReactUserBlockingStrategyCredentials(): StrategyCredential
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: any, context: any) => {
       return o$ => o$.pipe(
-        scheduleLikeReact(() => ({
-          priority: 2,
-          work: work,
-          scope: context
-        }))
+        scheduleLikeReact(ReactPriorityLevel.UserBlockingPriority, work, context)
       );
     }
   };
@@ -79,11 +68,7 @@ export function createReactNormalStrategyCredentials(): StrategyCredentials {
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: any, context: any) => {
       return o$ => o$.pipe(
-        scheduleLikeReact(() => ({
-          priority: 3,
-          work: work,
-          scope: context
-        }))
+        scheduleLikeReact(ReactPriorityLevel.NormalPriority, work, context)
       );
     }
   };
@@ -95,11 +80,7 @@ export function createReactLowStrategyCredentials(): StrategyCredentials {
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: any, context: any) => {
       return o$ => o$.pipe(
-        scheduleLikeReact(() => ({
-          priority: 4,
-          work: work,
-          scope: context
-        }))
+        scheduleLikeReact(ReactPriorityLevel.LowPriority, work, context)
       );
     }
   };
@@ -111,11 +92,7 @@ export function createReactIdleStrategyCredentials(): StrategyCredentials {
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: any, context: any) => {
       return o$ => o$.pipe(
-        scheduleLikeReact(() => ({
-          priority: 5,
-          work: work,
-          scope: context
-        }))
+        scheduleLikeReact(ReactPriorityLevel.IdlePriority, work, context)
       );
     }
   };

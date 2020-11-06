@@ -5,3 +5,14 @@ export interface ReactSchedulerWorkDefinition {
   priority: PriorityLevel;
   scope: any;
 }
+
+export type ReactCallBackCredentials = [ReactPriorityLevel, () => void, any]
+
+export enum ReactPriorityLevel {
+  NoPriority = 0,
+  ImmediatePriority = 1,
+  UserBlockingPriority = 2,
+  NormalPriority = 3,
+  LowPriority = 4,
+  IdlePriority = 5
+}
