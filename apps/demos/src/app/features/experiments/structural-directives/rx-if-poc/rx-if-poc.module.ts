@@ -11,6 +11,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { RxIfDirective } from './rx-if.directive';
 import { ValueModule } from '../../../../shared/debug-helper/work';
+import { GhostElementsModule } from '../../../../shared/ghost-elements';
+import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
+import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 
 const DECLARATIONS = [
   Poc1IfDirective,
@@ -27,7 +30,10 @@ const DECLARATIONS = [
     UnpatchEventsModule,
     MatButtonModule,
     DirtyChecksModule,
-    ValueModule
+    ValueModule,
+    GhostElementsModule,
+    ValueProvidersModule,
+    StrategySelectModule
   ],
   exports: DECLARATIONS
 })

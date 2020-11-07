@@ -1,7 +1,8 @@
 import { map, publish, switchMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { StrategyCredentials, StrategyCredentialsMap } from './model';
-import { RxNotification } from '@rx-angular/template';
+import { RxNotification, RxNotificationKind } from '@rx-angular/template';
+import { ChangeDetectorRef, EmbeddedViewRef } from '@angular/core';
 
 export function nameToStrategyCredentials(strategies: StrategyCredentialsMap, defaultStrategyName: string) {
   return (o$: Observable<string>): Observable<StrategyCredentials> => o$.pipe(
@@ -18,15 +19,15 @@ export function mergeStrategies(...strategiesArray: Array<StrategyCredentialsMap
 
 export function applyStrategy<T>(
   credentials$: Observable<StrategyCredentials>,
-  context,
-  getCdRef
+  context: any,
+  getCdRef: (k: RxNotification<T>) => ChangeDetectorRef
 ): (o$: Observable<RxNotification<T>>) => Observable<RxNotification<T>> {
   return notification$ => notification$.pipe(
     publish((n$) =>
       credentials$.pipe(
         switchMap((credentials) => n$.pipe(
           switchMap(n => {
-            const cdRef = getCdRef(n.kind);
+            const cdRef = getCdRef(n);
             const work = () => credentials.work(cdRef, context);
             return of(n).pipe(credentials.behavior(work, cdRef));
           })

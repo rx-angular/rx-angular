@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Directive,
   Inject,
@@ -11,21 +12,10 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
+import { defer, NextObserver, Observable, ObservableInput, Subscription, Unsubscribable } from 'rxjs';
+import { filter, pluck } from 'rxjs/operators';
 import {
-  ConnectableObservable,
-  defer,
-  NextObserver,
-  Observable,
-  ObservableInput,
-  ReplaySubject,
-  Subscription,
-  Unsubscribable
-} from 'rxjs';
-import { filter, map, pluck, publish, share, startWith, switchMap, tap } from 'rxjs/operators';
-import {
-  createTemplateManager,
-  getStrategies,
-  rxMaterialize,
+  createTemplateManager, RxNotification,
   RxNotificationKind,
   RxTemplateObserver,
   RxViewContext,
@@ -33,19 +23,15 @@ import {
 } from '@rx-angular/template';
 
 import {
-  applyStrategy,
   getDefaultStrategyCredentialsMap,
   mergeStrategies,
-  nameToStrategyCredentials,
   RX_CUSTOM_STRATEGIES,
   RX_PRIMARY_STRATEGY,
-  StrategyCredentials,
   StrategyCredentialsMap
 } from '../render-stragegies';
 import { StrategyProvider } from '../render-stragegies/strategy-provider.service';
-import { ngInputFlatten } from '../../utils/ngInputFlatten';
 import { Hooks } from '../../debug-helper/hooks';
-import { getEnsureStrategy } from '../utils';
+import { createRenderAware, RenderAware } from '../cdk/render-aware';
 
 export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
@@ -58,19 +44,20 @@ export interface LetViewContext<T> extends RxViewContext<T> {
   exportAs: 'renderNotifier',
   providers: [StrategyProvider]
 })
-export class LetDirective<U> extends Hooks implements OnInit, OnDestroy {
+export class LetDirective<U> extends Hooks implements OnInit, AfterViewInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
 
+  readonly renderAware: RenderAware<U>;
   readonly strategies: StrategyCredentialsMap;
 
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
-    this.observable$Subject$.next(potentialObservable);
+    this.renderAware.nextPotentialObservable(potentialObservable);
   }
 
   @Input('rxLetStrategy')
-  set strategy(strategy: string | Observable<string> | undefined) {
-    this.strategy$Subject$.next(strategy);
+  set strategy(strategyName: string | Observable<string> | undefined) {
+    this.renderAware.nextStrategy(strategyName);
   }
 
   @Input('rxLetRxComplete')
@@ -103,14 +90,13 @@ export class LetDirective<U> extends Hooks implements OnInit, OnDestroy {
   }
 
   @Output() readonly rendered = defer(() => this.rendered$.pipe(
-      filter(({ kind }) => this.templateManager.hasTemplateRef(kind)),
-      pluck('value')
+    filter(({ kind }) => this.templateManager.hasTemplateRef(kind)),
+    pluck('value')
     )
   );
   ensureStrategy;
 
   private subscription: Unsubscribable = Subscription.EMPTY;
-  private strategyChangeSubscription: Unsubscribable = Subscription.EMPTY;
   private renderCallBackSubscription: Unsubscribable = Subscription.EMPTY;
 
   private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>,
@@ -124,25 +110,7 @@ export class LetDirective<U> extends Hooks implements OnInit, OnDestroy {
     $rxSuspense: false
   };
 
-  private readonly observable$Subject$ = new ReplaySubject(1);
-  private readonly observable$ = this.observable$Subject$.pipe(
-    ngInputFlatten()
-  );
-  private readonly strategy$Subject$ = new ReplaySubject<string | Observable<string>>(1);
-  private readonly strategy$: Observable<StrategyCredentials> = defer(() => this.strategy$Subject$.pipe(
-    ngInputFlatten(),
-    startWith(this.defaultStrategy),
-    nameToStrategyCredentials(this.strategies, this.defaultStrategy)
-  ));
-  private rendered$ = this.afterViewInit$.pipe(
-    switchMap(() => this.observable$.pipe(
-      tap((value: any) => this.templateObserver.next(value)),
-      rxMaterialize(),
-      applyStrategy(this.strategy$, (this.cdRef as any).context, this.templateManager.getEmbeddedView)
-      )
-    ),
-    publish()
-  );
+  private rendered$ = defer(() => this.renderAware.rendered$);
 
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => {
@@ -156,11 +124,7 @@ export class LetDirective<U> extends Hooks implements OnInit, OnDestroy {
       });
     },
     next: (value: U | null | undefined) => {
-      this.templateManager.displayView('rxNext');
-      this.templateManager.updateViewContext({
-        $implicit: value,
-        rxLet: value
-      });
+      this.rxLetObserveNext(value);
     },
     error: (error: Error) => {
       // fallback to rxNext when there's no template for rxError
@@ -182,6 +146,14 @@ export class LetDirective<U> extends Hooks implements OnInit, OnDestroy {
     }
   };
 
+  private rxLetObserveNext(value: U) {
+    this.templateManager.displayView('rxNext');
+    this.templateManager.updateViewContext({
+      $implicit: value,
+      rxLet: value
+    });
+  }
+
   /** @internal */
   static ngTemplateContextGuard<U>(
     dir: LetDirective<U>,
@@ -195,29 +167,37 @@ export class LetDirective<U> extends Hooks implements OnInit, OnDestroy {
     @Inject(RX_CUSTOM_STRATEGIES)
     private customStrategies: StrategyCredentialsMap[],
     @Inject(RX_PRIMARY_STRATEGY)
-    private defaultStrategy: string,
+    private defaultStrategyName: string,
     public cdRef: ChangeDetectorRef,
     private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
     super();
-    this.ensureStrategy = getEnsureStrategy(getStrategies({ cdRef }));
     this.templateManager = createTemplateManager(
       this.viewContainerRef,
       this.initialViewContext
     );
     this.strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), getDefaultStrategyCredentialsMap());
+    this.renderAware = createRenderAware<U>({
+      templateObserver: this.templateObserver,
+      context: (cdRef as any).context,
+      strategies: this.strategies,
+      defaultStrategyName: this.defaultStrategyName,
+      getCdRef: (notification: RxNotification<U>) => this.templateManager.getEmbeddedView(notification.kind)
+    });
   }
 
   ngOnInit() {
     this.templateManager.addTemplateRef('rxNext', this.nextTemplateRef);
     this.displayInitialView();
-    this.subscription = (this.rendered$ as ConnectableObservable<any>).connect();
+  }
+
+  ngAfterViewInit() {
+    this.subscription = this.renderAware.rendered$.subscribe();
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-    this.strategyChangeSubscription.unsubscribe();
     this.renderCallBackSubscription.unsubscribe();
     this.templateManager.destroy();
   }
