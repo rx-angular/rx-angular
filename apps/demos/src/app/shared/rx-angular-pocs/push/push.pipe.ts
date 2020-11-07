@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Inject, OnDestroy, Optional, Pipe, PipeTransform } f
 import { NextObserver, Observable, ObservableInput, Subscription, Unsubscribable } from 'rxjs';
 import { map } from 'rxjs/operators';
 // tslint:disable:nx-enforce-module-boundaries
-import { createRenderAware, getEnsureStrategy, RenderAware, RxTemplateObserver } from '@rx-angular/template';
+import { createRenderAware, RenderAware, RxTemplateObserver } from '@rx-angular/template';
 import {
   getDefaultStrategyCredentialsMap,
   mergeStrategies,
@@ -10,6 +10,7 @@ import {
   RX_PRIMARY_STRATEGY,
   StrategyCredentialsMap
 } from '../render-stragegies';
+import { getEnsureStrategy } from '../utils';
 
 /**
  * @Pipe PushPipe

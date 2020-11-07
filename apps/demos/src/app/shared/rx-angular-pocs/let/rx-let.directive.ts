@@ -24,7 +24,6 @@ import {
 import { filter, map, pluck, publish, share, startWith, switchMap, tap } from 'rxjs/operators';
 import {
   createTemplateManager,
-  getEnsureStrategy,
   getStrategies,
   rxMaterialize,
   RxNotificationKind,
@@ -46,6 +45,7 @@ import {
 import { StrategyProvider } from '../render-stragegies/strategy-provider.service';
 import { ngInputFlatten } from '../../utils/ngInputFlatten';
 import { Hooks } from '../../debug-helper/hooks';
+import { getEnsureStrategy } from '../utils';
 
 export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
