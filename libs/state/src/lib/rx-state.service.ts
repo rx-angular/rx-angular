@@ -160,10 +160,12 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     | T[K1][K2][K3][K4][K5]
     | T[K1][K2][K3][K4][K5][K6] {
     const hasStateAnyKeys = Object.keys(this.accumulator.state).length > 0;
-    if (hasStateAnyKeys && !!keys && keys.length > 0) {
+    if (!!keys && keys.length) {
       return safePluck(this.accumulator.state, keys);
     } else {
-      return this.accumulator.state;
+      return hasStateAnyKeys ?
+             this.accumulator.state :
+              undefined as unknown as T;
     }
   }
 

@@ -25,6 +25,7 @@
   - https://github.com/krausest/js-framework-benchmark
   - https://arkit.pro/svg/UDfDp34EW20C0C2zh-YeWrym37waaQe4sf82-dqTdI-vq3fv7r80MavQoKbGJ6s_t8In--2Vj8kYFKbFFAWq1jZuvcAL7PSL9_AS-WmGMEDtlbU28LS0
   - https://github.com/angular/angular/blob/master/docs/TOOLS.md
+  - https://github.com/angular/angular/issues/14033#issuecomment-612841032
 
   ## Articles
 
