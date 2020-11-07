@@ -1,14 +1,13 @@
-import { ConnectableObservable, Observable, ReplaySubject, Subscribable, Subscription } from 'rxjs';
-import { publish, startWith, tap } from 'rxjs/operators';
-import { rxMaterialize, RxNotification, RxNotificationKind } from '../../../../../../../libs/template/src/lib/core';
+import { Observable, ReplaySubject, Subscribable, Subscription } from 'rxjs';
+import { startWith, tap } from 'rxjs/operators';
+import { rxMaterialize, RxNotification, RxTemplateObserver } from '@rx-angular/template';
 import {
   applyStrategy,
   nameToStrategyCredentials,
   StrategyCredentials,
   StrategyCredentialsMap
 } from '../render-stragegies';
-import { RxTemplateObserver } from '../../../../../../../libs/template/src';
-import { ChangeDetectorRef, EmbeddedViewRef } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { ngInputFlatten } from '../../utils/ngInputFlatten';
 
 export interface RenderAware<U> extends Subscribable<U> {
@@ -49,7 +48,7 @@ export function createRenderAware<U>(cfg: {
   );
 
   return {
-    nextPotentialObservable(value: any): void {
+    nextPotentialObservable(value: Observable<U>): void {
       observablesFromTemplate$.next(value);
     },
     nextStrategy(nextConfig: Observable<string>): void {

@@ -13,32 +13,28 @@ import {
 
 import { Observable, ObservableInput, Subscription, Unsubscribable } from 'rxjs';
 import {
-  createTemplateManager, RxNotification,
-  RxNotificationKind,
+  createTemplateManager,
+  RxNotification,
   RxTemplateObserver,
   RxViewContext,
   TemplateManager
 } from '@rx-angular/template';
-import { createRenderAware, RenderAware } from '../../../../shared/rx-angular-pocs/cdk/render-aware';
+import { createRenderAware, RenderAware, RxBaseTemplateNames } from '../cdk';
 import {
   getDefaultStrategyCredentialsMap,
   mergeStrategies,
   RX_CUSTOM_STRATEGIES,
   RX_PRIMARY_STRATEGY,
   StrategyCredentialsMap
-} from '../../../../shared/rx-angular-pocs/render-stragegies';
-import { RxBaseTemplateNames } from '../../../../shared/rx-angular-pocs/cdk/model';
-
+} from '../render-stragegies';
 
 type RxIfTemplateNames = 'rxThen' | 'rxElse' | RxBaseTemplateNames;
-
 
 export interface IfViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
   rxIf: T;
   rxElse: boolean;
 }
-
 
 @Directive({
   // tslint:disable-next-line:directive-selector
@@ -56,7 +52,6 @@ export class RxIfDirective<U> implements OnInit, AfterViewInit, OnDestroy {
     $rxComplete: false,
     $rxSuspense: false
   };
-
 
   private subscription: Unsubscribable = new Subscription();
   private readonly templateManager: TemplateManager<IfViewContext<U | undefined | null>,
@@ -123,6 +118,7 @@ export class RxIfDirective<U> implements OnInit, AfterViewInit, OnDestroy {
         $rxError: error
       });
     },
+
     complete: () => {
       // fallback to rxNext when there's no template for rxComplete
       this.templateManager.hasTemplateRef('rxComplete')
@@ -150,7 +146,7 @@ export class RxIfDirective<U> implements OnInit, AfterViewInit, OnDestroy {
     @Inject(RX_PRIMARY_STRATEGY)
     private defaultStrategyName: string,
     private cdRef: ChangeDetectorRef,
-    private readonly truthyTemplateRef: TemplateRef<any>,
+    private readonly thenTemplateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
     this.templateManager = createTemplateManager(this.viewContainerRef, this.initialViewContext);
@@ -162,19 +158,20 @@ export class RxIfDirective<U> implements OnInit, AfterViewInit, OnDestroy {
       defaultStrategyName: this.defaultStrategyName,
       getCdRef: (notification: RxNotification<U>) => {
         let templateName: RxIfTemplateNames | 'rxNext' = notification.kind;
-        if(templateName === 'rxNext') {
+        if (templateName === 'rxNext') {
           templateName = notification.value ? 'rxThen' : 'rxElse';
-          return this.templateManager.getEmbeddedView(templateName)
+          return this.templateManager.getEmbeddedView(templateName);
         }
-        return this.templateManager.getEmbeddedView(templateName)
+        return this.templateManager.getEmbeddedView(templateName);
       }
     });
   }
 
   ngOnInit() {
-    this.templateManager.addTemplateRef('rxThen', this.truthyTemplateRef);
+    this.templateManager.addTemplateRef('rxThen', this.thenTemplateRef);
     this.displayInitialView();
   }
+
   ngAfterViewInit() {
     this.subscription = this.renderAware.rendered$.subscribe();
   }

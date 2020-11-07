@@ -14,7 +14,7 @@ import { SiblingCustomComponent } from './sibling-custom.component';
 import { SiblingProgressiveComponent } from './sibling-progressive.component';
 import { SiblingPushComponent } from './sibling-push.component';
 import { SiblingStaticComponent } from './sibling-static.component';
-import { RxLetModule } from '../../rx-angular-pocs/let/rx-let.module';
+import { LetModule } from '../../rx-angular-pocs/let/let.module';
 import { SiblingStrategyComponent } from './sibling-strategy.component';
 import { ImageArrayModule } from '../../image-array/image-array.module';
 import { SiblingPixelImgComponent } from './sibling-pixel-img.component';
@@ -40,7 +40,7 @@ const DECLARATIONS = [
     VisualizerModule,
     ValueProvidersModule,
     RenderingsModule,
-    RxLetModule,
+    LetModule,
     ViewVsEmbeddedViewModule,
     WorkModule,
     StrategySelectModule,

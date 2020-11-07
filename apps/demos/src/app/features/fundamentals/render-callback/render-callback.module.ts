@@ -13,7 +13,7 @@ import { RENDER_CALLBACK_ROUTES } from './render-callback.routes';
 import { MatButtonModule } from '@angular/material/button';
 import { UnpatchEventsModule } from '@rx-angular/template';
 import { RxPushModule } from '../../../shared/rx-angular-pocs/push/rx-push.module';
-import { RxLetModule } from '../../../shared/rx-angular-pocs/let/rx-let.module';
+import { LetModule } from '../../../shared/rx-angular-pocs/let/let.module';
 
 @NgModule({
   declarations: [
@@ -32,7 +32,7 @@ import { RxLetModule } from '../../../shared/rx-angular-pocs/let/rx-let.module';
     MatButtonModule,
     UnpatchEventsModule,
     RxPushModule,
-    RxLetModule
+    LetModule
   ]
 })
 export class RenderCallbackModule {}

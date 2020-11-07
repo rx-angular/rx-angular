@@ -22,8 +22,8 @@ export const ROUTES: Routes = [
   {
     path: 'rx-swicht-poc',
     loadChildren: () =>
-      import('./rx-switch-poc/rx-swicht-poc.module').then(
-        (m) => m.RxSwichtPocModule
+      import('./rx-switch-poc/rx-swich-poc.module').then(
+        (m) => m.RxSwichPocModule
       ),
   },
   {

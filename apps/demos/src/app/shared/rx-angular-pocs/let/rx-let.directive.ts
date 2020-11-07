@@ -12,10 +12,11 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
-import { defer, NextObserver, Observable, ObservableInput, Subscription, Unsubscribable } from 'rxjs';
-import { filter, pluck } from 'rxjs/operators';
+import { defer, isObservable, NextObserver, Observable, ObservableInput, of, Subscription, Unsubscribable } from 'rxjs';
+import { distinctUntilChanged, filter, pluck, switchAll } from 'rxjs/operators';
 import {
-  createTemplateManager, RxNotification,
+  createTemplateManager,
+  RxNotification,
   RxNotificationKind,
   RxTemplateObserver,
   RxViewContext,
@@ -32,6 +33,9 @@ import {
 import { StrategyProvider } from '../render-stragegies/strategy-provider.service';
 import { Hooks } from '../../debug-helper/hooks';
 import { createRenderAware, RenderAware } from '../cdk/render-aware';
+import { ngInputFlatten } from '../../utils/ngInputFlatten';
+
+type RxLetTemplateNames = RxNotificationKind;
 
 export interface LetViewContext<T> extends RxViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
@@ -100,7 +104,7 @@ export class LetDirective<U> extends Hooks implements OnInit, AfterViewInit, OnD
   private renderCallBackSubscription: Unsubscribable = Subscription.EMPTY;
 
   private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>,
-    RxNotificationKind>;
+    RxLetTemplateNames>;
 
   private readonly initialViewContext: LetViewContext<U> = {
     $implicit: undefined,
@@ -145,6 +149,13 @@ export class LetDirective<U> extends Hooks implements OnInit, AfterViewInit, OnD
       });
     }
   };
+  /** @internal */
+  static ngTemplateContextGuard<U>(
+    dir: LetDirective<U>,
+    ctx: unknown | null | undefined
+  ): ctx is LetViewContext<U> {
+    return true;
+  }
 
   private rxLetObserveNext(value: U) {
     this.templateManager.displayView('rxNext');
@@ -152,14 +163,6 @@ export class LetDirective<U> extends Hooks implements OnInit, AfterViewInit, OnD
       $implicit: value,
       rxLet: value
     });
-  }
-
-  /** @internal */
-  static ngTemplateContextGuard<U>(
-    dir: LetDirective<U>,
-    ctx: unknown | null | undefined
-  ): ctx is LetViewContext<U> {
-    return true;
   }
 
   constructor(

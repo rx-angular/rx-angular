@@ -14,7 +14,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ViewVsEmbeddedViewModule } from '../view-vs-embedded-view/view-vs-embedded-view.module';
 import { MatInputModule } from '@angular/material/input';
-import { RxIfPocModule } from '../rx-if-poc/rx-if-poc.module';
+import { IfModule } from '../../../../shared/rx-angular-pocs/If/if.module';
 
 @NgModule({
   declarations: [
@@ -36,8 +36,8 @@ import { RxIfPocModule } from '../rx-if-poc/rx-if-poc.module';
     MatButtonToggleModule,
     MatInputModule,
     ViewVsEmbeddedViewModule,
-    RxIfPocModule
+    IfModule
   ]
 })
-export class RxSwichtPocModule {
+export class RxSwichPocModule {
 }

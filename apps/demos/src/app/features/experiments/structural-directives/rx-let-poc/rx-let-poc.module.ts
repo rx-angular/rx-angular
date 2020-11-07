@@ -3,7 +3,8 @@ import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { RxLetPocComponent } from './rx-let-poc.component';
-import { RxLetModule } from '../../../../shared/rx-angular-pocs/let/rx-let.module';
+import { LetModule } from '../../../../shared/rx-angular-pocs/let/let.module';
+import { GhostElementsModule } from '../../../../shared/ghost-elements';
 
 const DECLARATIONS = [
   RxLetPocComponent
@@ -12,10 +13,11 @@ const DECLARATIONS = [
 @NgModule({
   declarations: DECLARATIONS,
   imports: [
-    RxLetModule,
+    LetModule,
     VisualizerModule,
     ValueProvidersModule,
-    StrategySelectModule
+    StrategySelectModule,
+    GhostElementsModule
   ],
   exports: DECLARATIONS,
   providers: []

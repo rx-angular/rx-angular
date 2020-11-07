@@ -9,16 +9,15 @@ import { RxIfPocComponent } from './rx-if-poc.component';
 import { Poc2IfDirective } from './poc2-if.directive';
 import { MatButtonModule } from '@angular/material/button';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
-import { RxIfDirective } from './rx-if.directive';
 import { ValueModule } from '../../../../shared/debug-helper/work';
 import { GhostElementsModule } from '../../../../shared/ghost-elements';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
+import { IfModule } from '../../../../shared/rx-angular-pocs/If/if.module';
 
 const DECLARATIONS = [
   Poc1IfDirective,
   Poc2IfDirective,
-  RxIfDirective,
   RxIfPocComponent
 ];
 
@@ -33,7 +32,8 @@ const DECLARATIONS = [
     ValueModule,
     GhostElementsModule,
     ValueProvidersModule,
-    StrategySelectModule
+    StrategySelectModule,
+    IfModule
   ],
   exports: DECLARATIONS
 })

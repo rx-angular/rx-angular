@@ -5,13 +5,18 @@ import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stra
   selector: 'rxa-rx-let-poc',
   template: `
     <rxa-visualizer>
-      <rxa-value-provider [buttons]="true" #v="rxaValueProvider"></rxa-value-provider>
-      <rxa-strategy-select
-        visualizerHeader (strategyChange)="strategyProvider.primaryStrategy = $event">
-      </rxa-strategy-select>
-      <div class="mat-row">
-        <div class="padding">
-          <div *rxLet="v.incremental$; let i">
+      <div visualizerHeader>
+        <rxa-strategy-select (strategyChange)="strategyProvider.primaryStrategy = $event">
+        </rxa-strategy-select>
+        <br/>
+        <rxa-value-provider [buttons]="true" #v="rxaValueProvider"></rxa-value-provider>
+      </div>
+      <div class="mt-5 row w-100 d-flex">
+        <div class="col dh-embedded-view p-2">
+          <ng-template #suspense>
+            <rxa-list-item-ghost></rxa-list-item-ghost>
+          </ng-template>
+          <div *rxLet="v.incremental$; let i; rxSuspense: suspense">
             i: {{i}}
           </div>
         </div>
