@@ -6,7 +6,7 @@ export interface ReactSchedulerWorkDefinition {
   scope: any;
 }
 
-export type ReactCallBackCredentials = [ReactPriorityLevel, () => void, any]
+export type ReactCallBackCredentials = [ReactPriorityLevel, () => void, any?]
 
 export enum ReactPriorityLevel {
   NoPriority = 0,
