@@ -1,12 +1,10 @@
-import { initialNestedState, initialPrimitiveState, NestedState, PrimitiveState } from '../../fixtures';
+import { initialPrimitiveState, PrimitiveState } from '../../fixtures';
 import { extract } from '@rx-angular/state';
 
 let primitiveState: PrimitiveState;
-let nestedState: NestedState;
 
 beforeEach(() => {
   primitiveState = initialPrimitiveState;
-  nestedState = initialNestedState;
   jest.spyOn(console, 'warn').mockImplementation(() => {
   });
 });
