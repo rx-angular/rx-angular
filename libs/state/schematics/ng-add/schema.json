@@ -1,0 +1,8 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "ngAdd",
+  "title": "Add @rx-angular/state to the project.",
+  "type": "object",
+  "properties": {},
+  "required": []
+}

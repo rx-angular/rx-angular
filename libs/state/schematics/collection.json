@@ -1,0 +1,12 @@
+{
+  "extends": ["@schematics/angular"],
+  "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "ng-add": {
+      "aliases": ["init"],
+      "schema": "./ng-add/schema.json",
+      "factory": "./ng-add/index#ngAdd",
+      "description": "Add @rx-angular/state to the project."
+    }
+  }
+}

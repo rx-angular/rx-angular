@@ -1,4 +1,5 @@
 {
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "projects": {
     "demos": {
@@ -454,9 +455,7 @@
               ]
             },
             "zoneless": {
-              "polyfills": [
-                "apps/tour-of-heroes-ngxs/src/polyfills.ts"
-              ],
+              "polyfills": "apps/tour-of-heroes-ngxs/src/polyfills.ts",
               "fileReplacements": [
                 {
                   "replace": "apps/tour-of-heroes/src/environments/environment.ts",
@@ -542,7 +541,7 @@
       "sourceRoot": "libs/state/src",
       "prefix": "rx",
       "architect": {
-        "build": {
+        "build-lib": {
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/state/tsconfig.lib.json",
@@ -552,6 +551,27 @@
             "production": {
               "tsConfig": "libs/state/tsconfig.lib.prod.json"
             }
+          }
+        },
+        "build-schematics": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              { "command": "tsc -p libs/state/tsconfig.schematics.json" },
+              { "command": "cpx libs/state/schematics/**/{collection.json,schema.json,files/**} dist/libs/state/schematics" }
+            ],
+            "parallel": false
+          }
+        },
+        "build": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              { "command": "rimraf dist/libs/state" },
+              { "command": "nx run state:build-lib" },
+              { "command": "nx run state:build-schematics" }
+            ],
+            "parallel": false
           }
         },
         "lint": {
