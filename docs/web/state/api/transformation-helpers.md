@@ -43,3 +43,7 @@ You can use the transformation helpers without RxState but expect the behavior t
 ---
 
 [toggle.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/object/toggle.md ':include')
+
+---
+
+[extract.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/object/extract.md ':include')
