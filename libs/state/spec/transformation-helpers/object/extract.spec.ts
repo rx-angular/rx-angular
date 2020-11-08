@@ -72,6 +72,7 @@ describe('extract', () => {
       expect(extract(primitiveState, null as any)).toEqual(undefined);
       expect(extract(primitiveState, undefined as any)).toEqual(undefined);
       expect(extract(primitiveState, (() => null) as any)).toEqual(undefined);
+      expect(extract(primitiveState, ['nonExisting', 1] as any)).toEqual(undefined);
     });
   });
 });

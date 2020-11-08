@@ -46,11 +46,11 @@ export function extract<T extends object, K extends keyof T>(
     return undefined as any;
   }
 
-  const sanitizedKeys = (Array.isArray(keys) ? keys : [keys])?.filter(
+  const sanitizedKeys = (Array.isArray(keys) ? keys : [keys]).filter(
     (k) => isKeyOf<T>(k) && k in object
   );
 
-  if (!sanitizedKeys?.length) {
+  if (!sanitizedKeys.length) {
     console.warn(`Extract: provided keys not found`);
     return undefined as any;
   }
