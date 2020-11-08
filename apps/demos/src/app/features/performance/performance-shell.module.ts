@@ -19,17 +19,24 @@ const ROUTES: Routes = [
   {
     path: 'nested-component-structure',
     loadChildren: () =>
-      import('./nested-component-structure/nested-component-structure.module').then(
-        (m) => m.NestedComponentStructureModule
-      ),
+      import(
+        './nested-component-structure/nested-component-structure.module'
+      ).then((m) => m.NestedComponentStructureModule),
   },
   {
     path: 'sibling-component-structure',
     loadChildren: () =>
-      import('./sibling-component-structure/sibling-component-structure.module').then(
-        (m) => m.SiblingComponentStructureModule
+      import(
+        './sibling-component-structure/sibling-component-structure.module'
+      ).then((m) => m.SiblingComponentStructureModule),
+  },
+  {
+    path: 'bootstrap-time',
+    loadChildren: () =>
+      import('./bootstrap-time/bootstrap-time.module').then(
+        (m) => m.BootstrapTimeModule
       ),
-  }
+  },
 ];
 
 @NgModule({
