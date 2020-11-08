@@ -10,5 +10,5 @@ const DECLARATIONS = [
   imports: [],
   exports: DECLARATIONS
 })
-export class RxPushModule {
+export class PushModule {
 }

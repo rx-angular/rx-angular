@@ -1,4 +1,4 @@
-import { Observable, ReplaySubject, Subscribable, Subscription } from 'rxjs';
+import { Observable, ReplaySubject, Subscribable } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
 import { rxMaterialize, RxNotification, RxTemplateObserver } from '@rx-angular/template';
 import {
@@ -10,7 +10,7 @@ import {
 import { ChangeDetectorRef } from '@angular/core';
 import { ngInputFlatten } from '../../utils/ngInputFlatten';
 
-export interface RenderAware<U> extends Subscribable<U> {
+export interface RenderAware<U> {
   nextPotentialObservable: (value: any) => void;
   nextStrategy: (config: string | Observable<string>) => void;
   rendered$: Observable<RxNotification<U>>;
@@ -54,9 +54,6 @@ export function createRenderAware<U>(cfg: {
     nextStrategy(nextConfig: Observable<string>): void {
       strategyName$.next(nextConfig);
     },
-    rendered$: renderingEffect$ as any,
-    subscribe(): Subscription {
-      return new Subscription();
-    }
+    rendered$: renderingEffect$ as any
   };
 }
