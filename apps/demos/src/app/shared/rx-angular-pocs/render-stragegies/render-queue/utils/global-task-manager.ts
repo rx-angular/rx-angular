@@ -33,6 +33,102 @@ const rescheduleMax = 3;
 
 function createGlobalTaskManager(): GlobalTaskManager {
   const queue = new Map<GlobalTaskScope, ScheduledGlobalTask>();
+  const chunkedQueue = new Map<GlobalTaskScope, ScheduledGlobalTask>();
+  const tick = new Subject<void>();
+  const tick$ = tick.asObservable();
+  let isScheduled = false;
+
+  return {
+    scheduleTask,
+    tick: () => tick$,
+    deleteTask
+  };
+
+  function deleteTask(taskDefinition: GlobalTask) {
+    // only delete this task if this is the latest one queued
+    queue.delete(taskDefinition.scope);
+    chunkedQueue.delete(taskDefinition.scope);
+  }
+
+  function scheduleTask(taskDefinition: GlobalTask) {
+    (taskDefinition as ScheduledGlobalTask).rescheduled = 0;
+    deleteTask(taskDefinition);
+    if (taskDefinition.priority === GlobalTaskPriority.chunk) {
+      chunkedQueue.set(taskDefinition.scope, taskDefinition);
+    } else {
+      queue.set(taskDefinition.scope, taskDefinition);
+    }
+    if (!isScheduled) {
+      isScheduled = true;
+      const finishScheduling = () => (isScheduled = false);
+      scheduleAndExhaust$().subscribe({
+        next: () => tick.next(),
+        error: finishScheduling,
+        complete: finishScheduling
+      });
+    }
+  }
+
+  function size(): number {
+    return queue.size + chunkedQueue.size;
+  }
+
+  function runTask(task: () => void): number {
+    const start = performance.now();
+    task();
+    const end = performance.now();
+    return end - start;
+  }
+
+  function scheduleAndExhaust$(): Observable<void> {
+    return new Observable<void>(subscriber => {
+      let frameId;
+      function exhaust() {
+        if (size() > 0) {
+          let runtime = 0;
+          for (const blockingEntry of queue.entries()) {
+            const task = blockingEntry[1];
+            runtime += runTask(task.work);
+            deleteTask(task);
+          }
+          if (runtime <= frameThresh) {
+            for (const chunkEntry of chunkedQueue.entries()) {
+              if (runtime > frameThresh) {
+                break;
+              }
+              const task = chunkEntry[1];
+              runtime += runTask(task.work);
+              deleteTask(task);
+            }
+          }
+          if (size() > 0) {
+            // queue has entries left -> reschedule
+            cancelAnimFrame(frameId);
+            // console.warn('rescheduling:', size());
+            frameId = animFrame(exhaust);
+            subscriber.next();
+          } else {
+            // queue is empty -> exhaust completed
+            cancelAnimFrame(frameId);
+            // console.warn('exhaust completed');
+            subscriber.next();
+            subscriber.complete();
+          }
+        } else {
+          cancelAnimFrame(frameId);
+          // queue is empty -> exhaust completed
+          subscriber.next();
+          subscriber.complete();
+        }
+      }
+      // https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
+      frameId = animFrame(exhaust);
+    });
+  }
+}
+
+function _createGlobalTaskManager(): GlobalTaskManager {
+  const queue = new Map<GlobalTaskScope, ScheduledGlobalTask>();
   const tick = new Subject<void>();
   const tick$ = tick;
   let isScheduled = false;
