@@ -1,12 +1,5 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  ViewChild
-} from '@angular/core';
-import { merge, of, Subject, throwError } from 'rxjs';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { concat, merge, Subject, throwError } from 'rxjs';
 import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -19,34 +12,39 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 
     <button mat-raised-button [unpatch] (click)="errorClick.next()">Error</button>
     <button mat-raised-button [unpatch] (click)="completeClick.next()">Complete</button>
     <div class="example-results">
-      <div class="example-result" style="height: 170px; overflow-y: scroll">
-        <h4>render callback output</h4>
-        <span>rendered$:</span>
-      </div>
       <div class="example-result">
         <h4>After value changed</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterValue$ | push: 'local': rendered$
+                                            calculatedAfterValue$ | push
                                           ) + 'px' }}</strong></span>
       </div>
       <div class="example-result">
         <h4>After renderCallback</h4>
         <span>calculated size: <strong>{{ (
-                                            calculatedAfterRender$ | push: 'local': rendered$
+                                            calculatedAfterRender$ | push
                                           ) + 'px' }}</strong></span>
       </div>
     </div>
-    <ng-template let-content
-                 [rxLet]="content$"
-                 (rendered)="rendered$.next($event)">
-      <div class="example-box"
-           #box>
-        {{ content }}
-      </div>
-    </ng-template>
+    <h4>Value</h4>
+    <div class="example-value p-4">
+      <ng-template let-content
+                   [rxLet]="content$"
+                   [rxLetStrategy]="'chunk'"
+                   (rendered)="rendered$.next($event)">
+        <div id="box" class="example-box">
+          {{ content }}
+        </div>
+      </ng-template>
+    </div>
   `,
   styles: [
-      `
+    `
+      .example-value {
+        width: 400px;
+        max-height: 500px;
+        overflow: auto;
+      }
+
       .example-results {
         display: flex;
         width: 100%;
@@ -71,7 +69,13 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 
 })
 export class RenderCallback01Component implements AfterViewInit {
 
-  @ViewChild('box') box: ElementRef<HTMLElement>;
+  private _box: HTMLElement;
+  get box(): HTMLElement {
+    if (!this._box) {
+      this._box = document.getElementById('box');
+    }
+    return this._box;
+  }
 
   private readonly afterViewInit$ = new Subject();
 
@@ -88,20 +92,24 @@ export class RenderCallback01Component implements AfterViewInit {
     scan(a => !a, false),
     map(b => b ? sentence() : paragraph()),
     takeUntil(this.completeClick),
-    shareReplay(1)
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   readonly calculatedAfterRender$ = this.afterViewInit$.pipe(
     switchMap(() => this.rendered$),
-    map(() => this.box.nativeElement.getBoundingClientRect().height)
+    map(() => this.box.getBoundingClientRect().height)
   );
 
   // afterViewInit$ is needed, otherwise the ViewChild would not be ready
   readonly calculatedAfterValue$ = this.afterViewInit$.pipe(
-    switchMap(() => this.rendered$.pipe(take(1))),
-    switchMap(() => this.content$.pipe(
-      map(() => this.box.nativeElement.getBoundingClientRect().height)
-    )),
+    take(1),
+    switchMapTo(concat(
+      this.rendered$.pipe(take(1)),
+      this.content$.pipe(
+        map(() => this.box.getBoundingClientRect().height)
+      )
+      )
+    )
   );
 
   constructor(
