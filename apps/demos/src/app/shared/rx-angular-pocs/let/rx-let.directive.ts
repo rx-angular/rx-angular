@@ -12,8 +12,16 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
-import { defer, isObservable, NextObserver, Observable, ObservableInput, of, Subscription, Unsubscribable } from 'rxjs';
-import { distinctUntilChanged, filter, pluck, switchAll } from 'rxjs/operators';
+import {
+  defer,
+  NextObserver,
+  Observable,
+  ObservableInput,
+  Subject,
+  Subscription,
+  Unsubscribable
+} from 'rxjs';
+import { filter, pluck } from 'rxjs/operators';
 import {
   createTemplateManager,
   RxNotification,
@@ -33,7 +41,6 @@ import {
 import { StrategyProvider } from '../render-stragegies/strategy-provider.service';
 import { Hooks } from '../../debug-helper/hooks';
 import { createRenderAware, RenderAware } from '../cdk/render-aware';
-import { ngInputFlatten } from '../../utils/ngInputFlatten';
 
 type RxLetTemplateNames = RxNotificationKind;
 
@@ -94,8 +101,8 @@ export class LetDirective<U> extends Hooks implements OnInit, AfterViewInit, OnD
   }
 
   @Output() readonly rendered = defer(() => this.rendered$.pipe(
-    filter(({ kind }) => this.templateManager.hasTemplateRef(kind)),
-    pluck('value')
+      filter(({ kind }) => this.templateManager.hasTemplateRef(kind)),
+      pluck('value')
     )
   );
   ensureStrategy;
@@ -114,7 +121,7 @@ export class LetDirective<U> extends Hooks implements OnInit, AfterViewInit, OnD
     $rxSuspense: false
   };
 
-  private rendered$ = defer(() => this.renderAware.rendered$);
+  private rendered$ = new Subject<RxNotification<U>>();
 
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => {
@@ -196,7 +203,7 @@ export class LetDirective<U> extends Hooks implements OnInit, AfterViewInit, OnD
   }
 
   ngAfterViewInit() {
-    this.subscription = this.renderAware.rendered$.subscribe();
+    this.subscription = this.renderAware.rendered$.subscribe(this.rendered$);
   }
 
   ngOnDestroy() {
