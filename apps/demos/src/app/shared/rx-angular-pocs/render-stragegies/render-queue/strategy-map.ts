@@ -13,11 +13,11 @@ export function createRenderQueueStrategyCredentials(): StrategyCredentials {
     name: 'chunk',
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: () => void, context: any) => o$ => o$.pipe(
-      scheduleOnGlobalTick(() => ({
+      scheduleOnGlobalTick({
         priority: 0,
         work: work,
         scope: context
-      }))
+      })
     )
   };
 }

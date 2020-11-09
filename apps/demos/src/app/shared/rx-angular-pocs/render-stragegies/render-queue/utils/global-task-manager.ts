@@ -45,13 +45,15 @@ function createGlobalTaskManager(): GlobalTaskManager {
 
   function deleteTask(taskDefinition: GlobalTask) {
     // only delete this task if this is the latest one queued
-    if (queue.get(taskDefinition.scope) === taskDefinition) {
+    queue.delete(taskDefinition.scope);
+    /*if (queue.get(taskDefinition.scope) === taskDefinition) {
       queue.delete(taskDefinition.scope);
-    }
+    }*/
   }
 
   function scheduleTask(taskDefinition: GlobalTask) {
     (taskDefinition as ScheduledGlobalTask).rescheduled = 0;
+    queue.delete(taskDefinition);
     queue.set(taskDefinition.scope, taskDefinition);
     if (!isScheduled) {
       isScheduled = true;
