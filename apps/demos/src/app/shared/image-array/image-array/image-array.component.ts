@@ -242,4 +242,28 @@ function fileReaderFromBlob() {
         }
       }
     ));
+
 }
+function getRatio(img: HTMLImageElement, maxWidth: number = 50, maxHeight: number = 50): [number, number] {
+  let ratio = 0;
+  const width = img.width;
+  const height = img.height;
+  const out = [] as unknown as [number, number];
+
+  if (width > maxWidth && width > height) {
+    ratio = width / height;
+    out.push(maxWidth);
+    out.push(maxWidth / ratio);
+  } else if (height > maxHeight && height > width) {
+    ratio = height / width;
+    out.push(maxHeight / ratio);
+    out.push(maxHeight);
+  } else {
+    out.push(maxWidth);
+    out.push(maxHeight);
+  }
+
+  return out;
+}
+
+

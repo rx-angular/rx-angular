@@ -16,4 +16,8 @@ export function getEnsureStrategy(strategies: StrategyCredentialsMap): (strategy
   };
 }
 
+export const toRxErrorNotification = (error) => ({ kind: 'rxError', hasValue: true, error });
+export const toRxSuspenseNotification = (value) => ({ kind: 'rxSuspense', hasValue: true, value });
+export const toRxCompleteNotification = () => ({ kind: 'rxComplete', hasValue: false, complete: true });
+
 

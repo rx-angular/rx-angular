@@ -1,7 +1,7 @@
-import { map, publish, switchMap } from 'rxjs/operators';
+import { map, publish, switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { StrategyCredentials, StrategyCredentialsMap } from './model';
-import { RxNotification, RxNotificationKind } from '@rx-angular/template';
+import { RxNotification, RxNotificationKind, RxTemplateObserver } from '@rx-angular/template';
 import { ChangeDetectorRef, EmbeddedViewRef } from '@angular/core';
 
 export function nameToStrategyCredentials(strategies: StrategyCredentialsMap, defaultStrategyName: string) {
@@ -15,6 +15,20 @@ export function mergeStrategies(...strategiesArray: Array<StrategyCredentialsMap
     const _a = Array.isArray(a) ? strategiesArray.reduce((_c, __a) => ({ ..._c, ...__a }), {}) : a || {};
     return { ...c, ..._a };
   }, {});
+}
+
+export function observeTemplateByNotificationKind<U>(templateObserver: RxTemplateObserver<U>) {
+  return o$ => o$.pipe(tap((n: RxNotification<U>) => {
+    if (n.kind === 'rxError') {
+      templateObserver.error(n.error);
+    } else if (n.kind === 'rxComplete') {
+      templateObserver.complete();
+    } else if (n.kind === 'rxNext') {
+      templateObserver.next(n.value);
+    } else if (n.kind === 'rxSuspense') {
+      templateObserver.suspense();
+    }
+  }));
 }
 
 export function applyStrategy<T>(

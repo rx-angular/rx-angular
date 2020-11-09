@@ -1,9 +1,10 @@
-import { Observable, ReplaySubject, Subscribable } from 'rxjs';
-import { startWith, tap } from 'rxjs/operators';
+import { EMPTY, isObservable, NEVER, Observable, of, ReplaySubject } from 'rxjs';
+import { catchError, distinctUntilChanged, map, merge, startWith, switchAll } from 'rxjs/operators';
 import { rxMaterialize, RxNotification, RxTemplateObserver } from '@rx-angular/template';
 import {
   applyStrategy,
   nameToStrategyCredentials,
+  observeTemplateByNotificationKind,
   StrategyCredentials,
   StrategyCredentialsMap
 } from '../render-stragegies';
@@ -30,6 +31,7 @@ export function createRenderAware<U>(cfg: {
   context: any;
   defaultStrategyName: string;
   strategies: StrategyCredentialsMap;
+  templateTrigger?: Observable<RxNotification<U>>;
   getCdRef: (k: RxNotification<U>) => ChangeDetectorRef;
 }): RenderAware<U | undefined | null> {
   const strategyName$ = new ReplaySubject<Observable<string>>(1);
@@ -40,12 +42,21 @@ export function createRenderAware<U>(cfg: {
   );
 
   const observablesFromTemplate$ = new ReplaySubject<Observable<U>>(1);
-  const renderingEffect$ = observablesFromTemplate$.pipe(
-    ngInputFlatten(),
-    tap((value: any) => cfg.templateObserver.next(value)),
-    rxMaterialize(),
-    applyStrategy(strategy$, cfg.context, cfg.getCdRef)
-  );
+  const renderingEffect$ =
+    observablesFromTemplate$.pipe(
+      map(o => isObservable(o) ? o : of(o)),
+      distinctUntilChanged(),
+      switchAll(),
+      distinctUntilChanged(),
+      rxMaterialize(),
+      merge(cfg?.templateTrigger || EMPTY),
+      observeTemplateByNotificationKind(cfg.templateObserver),
+      applyStrategy(strategy$, cfg.context, cfg.getCdRef),
+      catchError(e => {
+        console.log(e);
+        return EMPTY;
+      })
+    );
 
   return {
     nextPotentialObservable(value: Observable<U>): void {

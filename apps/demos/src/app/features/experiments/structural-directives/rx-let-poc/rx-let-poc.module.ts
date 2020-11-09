@@ -5,9 +5,18 @@ import { ValueProvidersModule } from '../../../../shared/debug-helper/value-prov
 import { RxLetPocComponent } from './rx-let-poc.component';
 import { LetModule } from '../../../../shared/rx-angular-pocs/let/let.module';
 import { GhostElementsModule } from '../../../../shared/ghost-elements';
+import { LetDirectiveTriggered } from './rx-let-suspense-trigger.directive';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { TriggerProviderModule } from '../../../../shared/debug-helper/trigger-provider/trigger-provider.module';
+import { RxQueryComponent } from './rx-query.component';
+import { MatInputModule } from '@angular/material/input';
+import { RouterModule } from '@angular/router';
 
 const DECLARATIONS = [
-  RxLetPocComponent
+  RxLetPocComponent,
+  LetDirectiveTriggered,
+  RxQueryComponent
 ];
 
 @NgModule({
@@ -17,7 +26,12 @@ const DECLARATIONS = [
     VisualizerModule,
     ValueProvidersModule,
     StrategySelectModule,
-    GhostElementsModule
+    GhostElementsModule,
+    MatButtonModule,
+    MatProgressBarModule,
+    TriggerProviderModule,
+    MatInputModule,
+    RouterModule
   ],
   exports: DECLARATIONS,
   providers: []

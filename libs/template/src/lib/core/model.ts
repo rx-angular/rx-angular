@@ -18,7 +18,7 @@ export interface RxViewContext<T> {
  * Callbacks for the templates main states: suspense, next, error, complete
  */
 export type RxTemplateObserver<T> = {
-  suspense?: () => void;
+  suspense?: (value?: any) => void;
 } & PartialObserver<T>
 
 export type RxNotificationKind = 'rxSuspense' | 'rxNext' | 'rxError' | 'rxComplete';
