@@ -54,8 +54,5 @@
   "dependencies": {
     "tslib": "^2.0.0"
   },
-  "schematics": "./schematics/collection.json",
-  "ng-add": {
-    "save": "devDependencies"
-  }
+  "schematics": "./schematics/collection.json"
 }

@@ -3,10 +3,12 @@
   "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "ng-add": {
-      "aliases": ["init"],
+      "aliases": ["install"],
       "schema": "./ng-add/schema.json",
       "factory": "./ng-add/index#ngAdd",
       "description": "Add @rx-angular/state to the project."
     }
-  }
+  },
+  "required": [],
+  "additionalProperties": false
 }
