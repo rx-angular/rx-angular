@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { concat, merge, Subject, throwError } from 'rxjs';
-import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 'rxjs/operators';
+import { map, scan, shareReplay, startWith, switchMap, switchMapTo, take, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-render-callback-01',
@@ -13,20 +13,26 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 
     <button mat-raised-button [unpatch] (click)="completeClick.next()">Complete</button>
     <div class="example-results">
       <div class="example-result">
-        <h4>After value changed</h4>
-        <span>calculated size: <strong>{{ (
-                                            calculatedAfterValue$ | push
-                                          ) + 'px' }}</strong></span>
+        <h4>Calculated after renderCallback</h4>
+        <strong>{{ (
+                     calculatedAfterRender$ | push
+                   ) + 'px' }}</strong>
       </div>
       <div class="example-result">
-        <h4>After renderCallback</h4>
-        <span>calculated size: <strong>{{ (
-                                            calculatedAfterRender$ | push
-                                          ) + 'px' }}</strong></span>
+        <h4>Calculated after value changed</h4>
+        <strong>{{ (
+          calculatedAfterValue$ | push
+          ) + 'px' }}</strong>
       </div>
     </div>
     <h4>Value</h4>
     <div class="example-value p-4">
+      <ng-container *rxLet="content$; strategy: 'chunk'; let content; renderCallback: rendered$">
+        <div id="box" class="example-box">
+          {{ content }}
+        </div>
+      </ng-container>
+      <!-- TEMPLATE SYNTAX:
       <ng-template let-content
                    [rxLet]="content$"
                    [rxLetStrategy]="'chunk'"
@@ -34,7 +40,7 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 
         <div id="box" class="example-box">
           {{ content }}
         </div>
-      </ng-template>
+      </ng-template>-->
     </div>
   `,
   styles: [
@@ -67,7 +73,7 @@ import { map, scan, shareReplay, switchMap, switchMapTo, take, takeUntil } from 
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RenderCallback01Component implements AfterViewInit {
+export class RenderCallbackComponent implements AfterViewInit {
 
   private _box: HTMLElement;
   get box(): HTMLElement {
@@ -89,6 +95,7 @@ export class RenderCallback01Component implements AfterViewInit {
       this.updateClick,
       this.errorClick.pipe(switchMapTo(throwError(new Error('Boom!'))))
     )),
+    startWith(false),
     scan(a => !a, false),
     map(b => b ? sentence() : paragraph()),
     takeUntil(this.completeClick),

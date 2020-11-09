@@ -1,5 +1,5 @@
 import { map, publish, switchMap, tap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { concat, NEVER, Observable, of } from 'rxjs';
 import { StrategyCredentials, StrategyCredentialsMap } from './model';
 import { RxNotification, RxNotificationKind, RxTemplateObserver } from '@rx-angular/template';
 import { ChangeDetectorRef, EmbeddedViewRef } from '@angular/core';
@@ -41,10 +41,10 @@ export function applyStrategy<T>(
       credentials$.pipe(
         switchMap((credentials) => n$.pipe(
           switchMap(n => {
-            const cdRef = getCdRef(n);
-            const work = () => credentials.work(cdRef, context);
-            return of(n).pipe(credentials.behavior(work, cdRef));
-          })
+              const cdRef = getCdRef(n);
+              const work = () => credentials.work(cdRef, context);
+              return of(n).pipe(credentials.behavior(work, cdRef));
+            })
           )
         )
       )
