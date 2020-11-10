@@ -28,13 +28,10 @@ import { filter, map, pluck } from 'rxjs/operators';
           </div>
 
           <div *rxLetTriggered="characters$; let characters;
-            let errormessage = rxError;
             let mode = rxSuspense;
             suspenseTrigger: suspense$;
             errorTrigger: error$">
-            mode{{mode}}mode
             <mat-progress-bar *ngIf="mode" [mode]="mode"></mat-progress-bar>
-            <p *ngIf="errormessage"> Error: {{errormessage}}</p>
             <ul>
               <li *ngFor="let character of characters">
                 <a [routerLink]="character.id">{{ character.name }}</a>
