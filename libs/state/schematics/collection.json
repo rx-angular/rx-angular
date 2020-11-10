@@ -4,8 +4,8 @@
   "schematics": {
     "ng-add": {
       "aliases": ["install"],
-      "schema": "./ng-add/schema.json",
-      "factory": "./ng-add/index#ngAdd",
+      "schema": "./commands/ng-add/schema.json",
+      "factory": "./commands/ng-add/index#ngAdd",
       "description": "Add @rx-angular/state to the project."
     }
   },

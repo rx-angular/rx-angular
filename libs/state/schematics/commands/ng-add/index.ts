@@ -4,8 +4,8 @@ import { addPackageJsonDependency, NodeDependency, NodeDependencyType } from '@s
 import { of } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
 
-import { packageName } from '../consts';
-import { getLatestNodeVersion } from '../utils/npm';
+import { packageName } from '../../consts';
+import { getLatestNodeVersion } from '../../utils/npm';
 
 function addPackageJsonDependencies(): Rule {
   return (tree, ctx): any => {
