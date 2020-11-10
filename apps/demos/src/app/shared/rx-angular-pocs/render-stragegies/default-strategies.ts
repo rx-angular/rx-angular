@@ -19,9 +19,9 @@ export function getDefaultStrategyCredentialsMap(): StrategyCredentialsMap {
 const localCredentials: StrategyCredentials = {
   name: 'local',
   work: (cdRef) => cdRef.detectChanges(),
-  behavior: (work: any) => {
+  behavior: (work: any, scope) => {
     return o$ => o$.pipe(
-      coalesceWith(priorityTickMap[SchedulingPriority.animationFrame]),
+      coalesceWith(priorityTickMap[SchedulingPriority.animationFrame], scope),
       tap(() => work())
     );
   }
@@ -29,7 +29,7 @@ const localCredentials: StrategyCredentials = {
 
 const globalCredentials: StrategyCredentials = {
   name: 'global',
-  work: (_, context) => markDirty(context),
+  work: (cdRef) => markDirty((cdRef as any).context),
   behavior: (work: any) => o$ => o$.pipe(tap(() => work()))
 };
 

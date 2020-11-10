@@ -22,7 +22,7 @@ import {
   Subscription,
   Unsubscribable
 } from 'rxjs';
-import { filter, map, mapTo, mergeAll, tap } from 'rxjs/operators';
+import { filter, map, mapTo, mergeAll, publish, switchAll, tap } from 'rxjs/operators';
 import {
   createTemplateManager,
   RxNotification,
@@ -65,12 +65,8 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, AfterView
 
   readonly renderAware: RenderAware<U>;
   private readonly strategies: StrategyCredentialsMap;
-  private readonly templateTriggerSubject = new ReplaySubject<Observable<RxNotification<U>>>(1);
-  private readonly templateTrigger$ = this.templateTriggerSubject.pipe(
-    mergeAll()
-  );
-  private _renderObserver: NextObserver<any>;
 
+  private _renderObserver: NextObserver<any>;
 
   @Input()
   set rxLetTriggered(potentialObservable: ObservableInput<U> | null | undefined) {
@@ -101,17 +97,20 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, AfterView
 
   @Input('rxLetTriggeredCompleteTrigger')
   set rxCompleteTrigger(trigger$: Observable<any>) {
-    this.templateTriggerSubject.next(trigger$.pipe(mapTo(toRxCompleteNotification() as any)));
+    console.log('rxComplete', trigger$);
+    this.renderAware.nextTemplateTrigger(trigger$.pipe(mapTo(toRxCompleteNotification() as any)));
   }
 
   @Input('rxLetTriggeredErrorTrigger')
   set rxErrorTrigger(error$: Observable<any>) {
-    this.templateTriggerSubject.next(error$.pipe(map(toRxErrorNotification as any)));
+    console.log('rxError', error$);
+    this.renderAware.nextTemplateTrigger(error$.pipe(map(toRxErrorNotification as any)));
   }
 
   @Input('rxLetTriggeredSuspenseTrigger')
   set rxSuspenseTrigger(trigger$: Observable<any>) {
-    this.templateTriggerSubject.next(trigger$.pipe(map(toRxSuspenseNotification as any)));
+    console.log('rxSuspense', trigger$);
+    this.renderAware.nextTemplateTrigger(trigger$.pipe(map(toRxSuspenseNotification as any)));
   }
 
   @Input('rxLetTriggeredRenderCallback')
@@ -140,10 +139,11 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, AfterView
   private rendered$ = new Subject<RxNotification<U>>();
 
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
-    suspense: (value) => {
+    suspense: (value?: any) => {
       this.displayInitialView();
       this.templateManager.updateViewContext({
-        $rxSuspense: value,
+        // if a custom value is provided take it, otherwise assign true
+        $rxSuspense: value !== undefined ? value : true,
         $rxError: false,
         $rxComplete: false
       });
@@ -194,12 +194,15 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, AfterView
     this.strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), getDefaultStrategyCredentialsMap());
     this.renderAware = createRenderAware<U>({
       templateObserver: this.templateObserver,
-      context: (cdRef as any).context,
+      context: undefined,
       strategies: this.strategies,
       defaultStrategyName: this.defaultStrategyName,
-      templateTrigger: this.templateTrigger$ as any,
-      getCdRef: (notification: RxNotification<U>) => this.templateManager.getEmbeddedView(this.getSuspenseTemplateName(notification.kind as any))
+      // @NOTICE this is checked every emmit. Templates are IMHO statically assigned, so we could find a way to check only once?
+      getCdRef: (notification: RxNotification<U>) => this.templateManager.getEmbeddedView(this.getTemplateName(notification.kind as any))
     });
+    this.subscription = this.renderAware.rendered$.pipe(
+      tap(this?._renderObserver)
+    ).subscribe(this.rendered$);
   }
 
   ngOnInit() {
@@ -208,9 +211,7 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, AfterView
   }
 
   ngAfterViewInit() {
-    this.subscription = this.renderAware.rendered$.pipe(
-      tap(this?._renderObserver)
-    ).subscribe(this.rendered$);
+
   }
 
   ngOnDestroy() {
@@ -218,7 +219,7 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, AfterView
     this.templateManager.destroy();
   }
 
-  getSuspenseTemplateName(nK: RxBaseTemplateNames) {
+  getTemplateName(nK: RxBaseTemplateNames) {
     return nK === 'rxSuspense' ? this.templateManager.hasTemplateRef('rxSuspense') ? 'rxSuspense' : 'rxNext' : nK;
   }
 

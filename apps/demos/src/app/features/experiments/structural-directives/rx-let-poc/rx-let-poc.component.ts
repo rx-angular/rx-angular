@@ -19,7 +19,10 @@ import { Subject } from 'rxjs';
             <rxa-list-item-ghost></rxa-list-item-ghost>
           </ng-template>
           <div *rxLetTriggered="v.incremental$; let n;
-          suspenseTrigger: suspense$;
+          suspenseTrigger: triggers.suspense$;
+          errorTrigger: triggers.error$;
+          completeTrigger: triggers.complete$;
+
           let s = $rxSuspense;
           let e = $rxError;
           let c = $rxComplete;">
@@ -56,6 +59,7 @@ import { Subject } from 'rxjs';
 })
 export class RxLetPocComponent implements OnInit {
   suspense$ = new Subject();
+
   constructor(public strategyProvider: StrategyProvider) {
 
   }

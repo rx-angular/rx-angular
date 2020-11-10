@@ -3,7 +3,7 @@ import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stra
 import { RickAndMortyService } from './rick-and-morty.service';
 import { query } from 'rx-query';
 import { Observable, Subject } from 'rxjs';
-import { filter, map, pluck, shareReplay } from 'rxjs/operators';
+import { filter, map, pluck } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-rx-query',
@@ -27,22 +27,24 @@ import { filter, map, pluck, shareReplay } from 'rxjs/operators';
             <p>qr.retries: {{qr?.retries}}</p>
           </div>
 
-    <div *rxLetTriggered="characters$; let characters;
-            rxError: error;
+          <div *rxLetTriggered="characters$; let characters;
+            let errormessage = rxError;
             let mode = rxSuspense;
             suspenseTrigger: suspense$;
             errorTrigger: error$">
             mode{{mode}}mode
             <mat-progress-bar *ngIf="mode" [mode]="mode"></mat-progress-bar>
+            <p *ngIf="errormessage"> Error: {{errormessage}}</p>
             <ul>
               <li *ngFor="let character of characters">
                 <a [routerLink]="character.id">{{ character.name }}</a>
               </li>
             </ul>
           </div>
-          <ng-template #suspense><rxa-list-item-ghost></rxa-list-item-ghost></ng-template>
-          <ng-template #error>ERROR</ng-template>
-          <!--  -->
+          <!-- Templates -->
+          <ng-template>
+            <rxa-list-item-ghost></rxa-list-item-ghost>
+          </ng-template>
         </div>
       </div>
     </rxa-visualizer>
@@ -59,20 +61,19 @@ export class RxQueryComponent {
   charactersQueryResult$: Observable<any> = query(
     'character',
     this.search$,
-    (name: string) => this.service.getCharacter({ name })
-  ).pipe(shareReplay(1));
+    (search: string) => this.service.getCharacter({ name: search })
+  );
 
-  loadingModes = {
+  rxQueryStatusToMaterialProgressbarMode = {
     'loading': 'query',
     'refreshing': 'buffer'
-  }
-  suspense$ = this.charactersQueryResult$.pipe(pluck('status'), filter(status => Object.keys(this.loadingModes).some(s => s === status)), map(s => this.loadingModes[s]));
+  };
+  suspense$ = this.charactersQueryResult$.pipe(pluck('status'), map(s => this.rxQueryStatusToMaterialProgressbarMode[s]), filter(s => !!s));
   characters$ = this.charactersQueryResult$.pipe(map(res => res?.data?.results), filter(v => !!v));
   error$ = this.charactersQueryResult$.pipe(map(res => res?.error), filter(v => !!v));
 
   constructor(public strategyProvider: StrategyProvider,
               public service: RickAndMortyService) {
-
   }
 
 }
