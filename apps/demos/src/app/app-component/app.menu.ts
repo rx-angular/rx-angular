@@ -1,4 +1,4 @@
-import { FUNDAMENTALS_MENU } from '../features/fundamentals/fundamentals.menu';
+import { FUNDAMENTALS_MENU } from '../features/concepts/fundamentals.menu';
 import { TEMPLATE_MENU } from '../features/template/template-shell.menu';
 import { TUTORIALS_MENU } from '../features/tutorials/tutorials-shell.menu';
 import { INTEGRATIONS_MENU_ITEMS } from '../features/integrations/integrations-shell.menu';
@@ -7,14 +7,14 @@ import { MENU_ITEMS as PERFORMANCE_MENU_ITEMS } from '../features/performance/pe
 
 export const MENU_ITEMS = [
   {
-    label: '🏁 Fundamentals',
-    link: 'fundamentals',
-    children: FUNDAMENTALS_MENU
-  },
-  {
     label: '🧰 Template',
     link: 'template',
     children: TEMPLATE_MENU
+  },
+  {
+    label: '🏁 Concepts',
+    link: 'concepts',
+    children: FUNDAMENTALS_MENU
   },
   {
     label: '📋 Tutorials',

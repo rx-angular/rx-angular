@@ -106,7 +106,7 @@ export class SiblingPixelImgComponent extends RxState<{ pixelColorStyles: string
     ].includes([r, g, b].join(''));
     const rand = Object.keys(this.strategies[0])[toInt(undefined, 0, this.strategies.length)];
 
-    return transparency ? 'postTaskBackground' : black ? 'postTaskUserBlocking' : 'postTaskUserVisible';
+    return transparency ? 'reactIdle' : black ? 'reactImmediate' : 'reactNormal';
   }
 
 }

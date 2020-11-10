@@ -5,7 +5,7 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
   selector: 'rxa-cd-injected',
   template: `
     <rxa-cd-default>
-      <div class="row w-100">
+      <div class="row">
         <div class="col-sm-12 col-md-6">
           <rxa-cd-default>
             <rxa-cd-on-push>

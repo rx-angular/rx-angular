@@ -12,12 +12,5 @@ export const ROUTES: Routes = [
       import('./comparison/unpatch-comparison.module').then(
         m => m.UnpatchComparisonModule
       )
-  },
-  {
-    path: 'routing',
-    loadChildren: () =>
-      import('./routing/unpatch-routing.module').then(
-        m => m.UnpatchRoutingModule
-      )
   }
 ];

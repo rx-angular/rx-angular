@@ -1,16 +1,13 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { concat, merge, Subject, throwError } from 'rxjs';
-import { map, scan, shareReplay, startWith, switchMap, switchMapTo, take, takeUntil } from 'rxjs/operators';
+import { concat, Subject } from 'rxjs';
+import { map, scan, shareReplay, startWith, switchMap, switchMapTo, take } from 'rxjs/operators';
 
 @Component({
-  selector: 'rxa-render-callback-01',
+  selector: 'rxa-render-callback',
   template: `
-    <h1>Render Callback example 01</h1>
-    <h4>Height calculation using rendered$ Event</h4>
-    <button mat-raised-button [unpatch] (click)="reset()">Reset</button>
+    <h1 class="mat-header">Render Callback</h1>
+    <h4 class="mat-subheader">Height calculation using rendered$ Event</h4>
     <button mat-raised-button [unpatch] (click)="updateClick.next()">Update content</button>
-    <button mat-raised-button [unpatch] (click)="errorClick.next()">Error</button>
-    <button mat-raised-button [unpatch] (click)="completeClick.next()">Complete</button>
     <div class="example-results">
       <div class="example-result">
         <h4>Calculated after renderCallback</h4>
@@ -21,8 +18,8 @@ import { map, scan, shareReplay, startWith, switchMap, switchMapTo, take, takeUn
       <div class="example-result">
         <h4>Calculated after value changed</h4>
         <strong>{{ (
-          calculatedAfterValue$ | push
-          ) + 'px' }}</strong>
+                     calculatedAfterValue$ | push
+                   ) + 'px' }}</strong>
       </div>
     </div>
     <h4>Value</h4>
@@ -87,18 +84,10 @@ export class RenderCallbackComponent implements AfterViewInit {
 
   readonly rendered$ = new Subject<number>();
   readonly updateClick = new Subject();
-  readonly errorClick = new Subject();
-  readonly completeClick = new Subject();
-  private readonly reset$ = new Subject();
-  readonly content$ = this.reset$.pipe(
-    switchMap(() => merge(
-      this.updateClick,
-      this.errorClick.pipe(switchMapTo(throwError(new Error('Boom!'))))
-    )),
+  readonly content$ = this.updateClick.pipe(
     startWith(false),
     scan(a => !a, false),
     map(b => b ? sentence() : paragraph()),
-    takeUntil(this.completeClick),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
@@ -125,7 +114,6 @@ export class RenderCallbackComponent implements AfterViewInit {
   }
 
   reset() {
-    this.reset$.next();
     this.cdRef.detectChanges();
   }
 

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
-import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
+import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks/index';
 import { RenderCallbackComponent } from './render-callback.component';
 import { RENDER_CALLBACK_ROUTES } from './render-callback.routes';
 import { MatButtonModule } from '@angular/material/button';
