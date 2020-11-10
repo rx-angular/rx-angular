@@ -1,6 +1,6 @@
 ## extract
 
-Accepts an object of type T and single key or array of keys (K extends keyof T).
+Accepts an object of type T and a single key or an array of keys (`K extends keyof T`).
 Constructs new object based on provided keys.
 
 _Example_
