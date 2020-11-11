@@ -36,6 +36,13 @@ const ROUTES: Routes = [
       import('./structural-directives/structural-directives.module').then(
         (m) => m.StructuralDirectivesModule
       )
+  },
+  {
+    path: 'input-bindings',
+    loadChildren: () =>
+      import('./input-bindings/input-bindings.module').then(
+        (m) => m.InputBindingsModule
+      )
   }
 ];
 
