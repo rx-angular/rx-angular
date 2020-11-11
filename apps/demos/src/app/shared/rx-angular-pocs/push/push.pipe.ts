@@ -11,7 +11,7 @@ import {
   StrategyCredentialsMap
 } from '../render-stragegies';
 import { createRenderAware, RenderAware } from '../cdk/render-aware';
-let i = 0;
+
 @Pipe({ name: 'push', pure: false })
 export class PushPipe<U> implements PipeTransform, OnDestroy {
   private renderedValue: U | null | undefined;
