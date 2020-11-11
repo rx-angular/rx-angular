@@ -1,0 +1,14 @@
+{
+  "extends": ["@schematics/angular"],
+  "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "ng-add": {
+      "aliases": ["install"],
+      "schema": "./commands/ng-add/schema.json",
+      "factory": "./commands/ng-add/index#ngAdd",
+      "description": "Add @rx-angular/template to the project."
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

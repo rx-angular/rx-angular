@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/schema",
   "id": "ngAdd",
-  "title": "@rx-angular/state ng-add schematic",
+  "title": "@rx-angular/template ng-add schematic",
   "type": "object",
   "properties": {},
   "required": []

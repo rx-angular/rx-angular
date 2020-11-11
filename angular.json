@@ -669,7 +669,7 @@
       "sourceRoot": "libs/template/src",
       "prefix": "rx",
       "architect": {
-        "build": {
+        "build-lib": {
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/template/tsconfig.lib.json",
@@ -679,6 +679,27 @@
             "production": {
               "tsConfig": "libs/template/tsconfig.lib.prod.json"
             }
+          }
+        },
+        "build-schematics": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              { "command": "tsc -p libs/template/tsconfig.schematics.json" },
+              { "command": "cpx libs/template/schematics/**/{collection.json,schema.json,files/**} dist/libs/template/schematics" }
+            ],
+            "parallel": false
+          }
+        },
+        "build": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              { "command": "rimraf dist/libs/template" },
+              { "command": "nx run template:build-lib" },
+              { "command": "nx run template:build-schematics" }
+            ],
+            "parallel": false
           }
         },
         "lint": {
