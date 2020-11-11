@@ -41,7 +41,7 @@ describe('ng-add schematic', () => {
       .toPromise();
   });
 
-  it('should add proper packages to dependencies', async () => {
+  it('should add proper package to dependencies', async () => {
     const tree = await schematicRunner
       .runSchematicAsync('ng-add', undefined, appTree)
       .toPromise();

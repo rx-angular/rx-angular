@@ -3,6 +3,16 @@
   "id": "ngAdd",
   "title": "@rx-angular/template ng-add schematic",
   "type": "object",
-  "properties": {},
+  "properties": {
+    "project": {
+      "description": "The project name.",
+      "type": "string"
+    },
+    "module": {
+      "description": "The root module name.",
+      "type": "string",
+      "default": "app"
+    }
+  },
   "required": []
 }
