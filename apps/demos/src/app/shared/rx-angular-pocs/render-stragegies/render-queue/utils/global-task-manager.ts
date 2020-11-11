@@ -40,7 +40,6 @@ function createGlobalTaskManager(cfg: {frameRate: number}): GlobalTaskManager {
   const chunkedQueue = new Map<GlobalTaskScope, ScheduledGlobalTask>();
   const tick = new Subject<void>();
   const tick$ = tick.asObservable();
-  let isScheduled = false;
 
   const taskDefinition$ = new Subject<GlobalTask>();
 
