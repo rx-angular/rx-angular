@@ -12,7 +12,7 @@ import {
   Subscription,
   timer
 } from 'rxjs';
-import { debounce, delay, filter, map, mapTo, pluck, publish, share, startWith, switchMap } from 'rxjs/operators';
+import { debounce, delay, filter, map, mapTo, pluck, publish, share, startWith, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-rx-query',
@@ -75,7 +75,7 @@ import { debounce, delay, filter, map, mapTo, pluck, publish, share, startWith, 
           </div>
           <!-- Templates -->
           <ng-template #suspenseTpl>
-            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            <rxa-list-item-ghost [count]="3"></rxa-list-item-ghost>
           </ng-template>
           <ng-template #errorTpl>
             <mat-card>

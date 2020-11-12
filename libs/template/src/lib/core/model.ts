@@ -8,7 +8,7 @@ export interface RxViewContext<T> {
   $rxError: false | Error;
   // set context var complete to true (var$; let c = $complete)
   $rxComplete: boolean;
-  // set context var suspense to true (var$; let c = $suspense)
+  // set context var suspense to true (var$; let s = $suspense)
   $rxSuspense: any;
 }
 
