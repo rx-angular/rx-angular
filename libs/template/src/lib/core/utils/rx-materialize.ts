@@ -15,9 +15,10 @@ export function rxMaterialize<T>(): OperatorFunction<T, RxNotification<T>> {
       hasValue,
       error,
       kind: notificationKindToRxNotificationKind(kind)
-    })),
+    }))
   );
 }
+
 export function notificationKindToRxNotificationKind(kind: 'N' | 'E' | 'C'): RxNotificationKind {
   switch (kind) {
     case 'C':

@@ -9,9 +9,9 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   template: `
     <rxa-visualizer>
       <p visualizerHeader>{{siblings.length}} Siblings Push</p>
-      <div class="w-100">
-        <span class="sibling" [ngClass]="{filled: sibling}" *ngFor="let sibling of siblings$ | push; trackBy:trackBy">
-          &nbsp;
+      <div class="w-100 siblings">
+        <span class="sibling" *ngFor="let sibling of siblings$ | push; trackBy:trackBy">
+            <div [ngClass]="{filled: filled}">&nbsp;</div>
         </span>
       </div>
     </rxa-visualizer>
@@ -25,12 +25,14 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
 export class SiblingPushComponent {
 
   siblings = [];
+  filled = false;
   siblings$ = new ReplaySubject<any[]>(1);
 
   @Input()
   set count(num: number) {
     this.siblings = toBooleanArray(num);
     this.siblings$.next(this.siblings);
+    this.filled = !this.filled;
   };
 
   @Input()

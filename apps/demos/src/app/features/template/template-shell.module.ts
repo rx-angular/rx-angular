@@ -8,13 +8,6 @@ const ROUTES: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'strategies',
-    loadChildren: () =>
-      import('./strategies/strategies.module').then(
-        m => m.StrategiesDemoModule
-      )
-  },
-  {
     path: 'rx-let',
     loadChildren: () =>
       import('./rx-let/rx-let-demo.module').then(
@@ -41,6 +34,11 @@ const ROUTES: Routes = [
       import('./viewport-prio/viewport-prio-demo.module').then(
         m => m.ViewportPrioModule
       )
+  },
+  {
+    path: 'render-callback',
+    loadChildren: () => import('./render-callback/render-callback.module')
+      .then(m => m.RenderCallbackModule)
   }
 ];
 

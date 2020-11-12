@@ -11,7 +11,7 @@ import { stateful } from '@rx-angular/state';
     <rxa-visualizer>
       <div visualizerHeader>
         <h2>
-          rxSwitch POCa <small *poc1Let="switchValue$; let switchValue">{{switchValue}}</small>
+          rxSwitch POC <small *poc1Let="switchValue$; let switchValue">{{switchValue}}</small>
         </h2>
         <mat-button-toggle-group name="visibleExamples"
                                  aria-label="Visible Examples"

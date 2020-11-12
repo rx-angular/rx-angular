@@ -31,3 +31,6 @@
 
   - https://codeburst.io/painting-and-rendering-optimization-techniques-in-browser-2e53a70e7ee
   - https://codeburst.io/javascript-compiler-optimization-techniques-only-for-experts-58d6f5f958ca
+
+  ## Code 
+  - https://github.com/facebook/react/blob/master/packages/scheduler/src/Scheduler.js

@@ -1,5 +1,0 @@
-.render-queue-wrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 150px);
-  grid-gap: 0.5em;
-}
