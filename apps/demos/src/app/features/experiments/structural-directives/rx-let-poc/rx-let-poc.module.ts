@@ -12,6 +12,7 @@ import { TriggerProviderModule } from '../../../../shared/debug-helper/trigger-p
 import { RxQueryComponent } from './rx-query.component';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
 
 const DECLARATIONS = [
   RxLetPocComponent,
@@ -31,7 +32,8 @@ const DECLARATIONS = [
     MatProgressBarModule,
     TriggerProviderModule,
     MatInputModule,
-    RouterModule
+    RouterModule,
+    MatCardModule
   ],
   exports: DECLARATIONS,
   providers: []

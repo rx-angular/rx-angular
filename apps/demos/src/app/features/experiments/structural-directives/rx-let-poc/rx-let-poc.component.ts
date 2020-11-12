@@ -19,25 +19,24 @@ import { Subject } from 'rxjs';
             <rxa-list-item-ghost></rxa-list-item-ghost>
           </ng-template>
           <div *rxLetTriggered="v.incremental$; let n;
-          suspenseTrigger: triggers.suspense$;
-          errorTrigger: triggers.error$;
-          completeTrigger: triggers.complete$;
-
-          let s = $rxSuspense;
-          let e = $rxError;
-          let c = $rxComplete;">
-            <mat-progress-bar *ngIf="s" color="primary" mode="buffer"></mat-progress-bar>
+          suspenseTrg: triggers.suspense$;
+          errorTrg: triggers.error$;
+          completeTrg: triggers.complete$;
+          let s = $suspenseVal;
+          let e = $errorVal;
+          let c = $completeVal;">
+            <mat-progress-bar *ngIf="s" color="primary" mode="indeterminate"></mat-progress-bar>
             n: {{n}} s: {{s}}, e: {{e}}, c: {{c}}
           </div>
         </div>
         <div class="col-6 dh-embedded-view p-2">
           <div *rxLetTriggered="v.incremental$; let n;
-          rxError: error;
-          rxComplete: complete;
-          rxSuspense: suspense;
-          suspenseTrigger: triggers.suspense$;
-          errorTrigger: triggers.error$;
-          completeTrigger: triggers.complete$;"
+          errorTpl: error;
+          completeTpl: complete;
+          suspenseTpl: suspense;
+          suspenseTrg: triggers.suspense$;
+          errorTrg: triggers.error$;
+          completeTrg: triggers.complete$;"
           >
             n: {{n}}
           </div>
@@ -58,7 +57,6 @@ import { Subject } from 'rxjs';
   providers: [StrategyProvider]
 })
 export class RxLetPocComponent implements OnInit {
-  suspense$ = new Subject();
 
   constructor(public strategyProvider: StrategyProvider) {
 

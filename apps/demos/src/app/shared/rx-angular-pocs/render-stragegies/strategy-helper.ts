@@ -26,7 +26,7 @@ export function observeTemplateByNotificationKind<U>(templateObserver: RxTemplat
     } else if (n.kind === 'rxNext') {
       templateObserver.next(n.value);
     } else if (n.kind === 'rxSuspense') {
-      templateObserver.suspense();
+      templateObserver.suspense(n.value);
     }
   }));
 }

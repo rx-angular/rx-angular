@@ -12,17 +12,8 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
-import {
-  defer,
-  NextObserver,
-  Observable,
-  ObservableInput,
-  ReplaySubject,
-  Subject,
-  Subscription,
-  Unsubscribable
-} from 'rxjs';
-import { filter, map, mapTo, mergeAll, publish, switchAll, tap } from 'rxjs/operators';
+import { defer, NextObserver, Observable, ObservableInput, Subject, Subscription, Unsubscribable } from 'rxjs';
+import { filter, map, mapTo, tap } from 'rxjs/operators';
 import {
   createTemplateManager,
   RxNotification,
@@ -50,9 +41,17 @@ import {
 
 type rxLetTriggeredTemplateNames = RxNotificationKind;
 
-export interface LetTriggerViewContext<T> extends RxViewContext<T> {
+export interface LetTriggerViewContext<T>{
   // to enable `as` syntax we have to assign the directives selector (var as v)
   rxLetTriggered: T;
+
+  $implicit: T;
+  // set context var complete to true (var$; let e = $error)
+  $errorVal: false | Error;
+  // set context var complete to true (var$; let c = $complete)
+  $completeVal: boolean;
+  // set context var suspense to true (var$; let c = $suspense)
+  $suspenseVal: any;
 }
 
 @Directive({
@@ -78,36 +77,34 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, AfterView
     this.renderAware.nextStrategy(strategyName);
   }
 
-  @Input('rxLetTriggeredRxComplete')
+  @Input('rxLetTriggeredCompleteTpl')
   set rxComplete(templateRef: TemplateRef<LetTriggerViewContext<U | undefined | null> | null>) {
     this.templateManager.addTemplateRef('rxComplete', templateRef);
   }
 
-  @Input('rxLetTriggeredRxError')
+  @Input('rxLetTriggeredErrorTpl')
   set rxError(templateRef: TemplateRef<LetTriggerViewContext<U | undefined | null> | null>) {
     this.templateManager.addTemplateRef('rxError', templateRef);
   }
 
-  @Input('rxLetTriggeredRxSuspense')
+  @Input('rxLetTriggeredSuspenseTpl')
   set rxSuspense(
     templateRef: TemplateRef<LetTriggerViewContext<U | undefined | null> | null>
   ) {
     this.templateManager.addTemplateRef('rxSuspense', templateRef);
   }
 
-  @Input('rxLetTriggeredCompleteTrigger')
+  @Input('rxLetTriggeredCompleteTrg')
   set rxCompleteTrigger(trigger$: Observable<any>) {
-    console.log('rxComplete', trigger$);
     this.renderAware.nextTemplateTrigger(trigger$.pipe(mapTo(toRxCompleteNotification() as any)));
   }
 
-  @Input('rxLetTriggeredErrorTrigger')
+  @Input('rxLetTriggeredErrorTrg')
   set rxErrorTrigger(error$: Observable<any>) {
-    console.log('rxError', error$);
     this.renderAware.nextTemplateTrigger(error$.pipe(map(toRxErrorNotification as any)));
   }
 
-  @Input('rxLetTriggeredSuspenseTrigger')
+  @Input('rxLetTriggeredSuspenseTrg')
   set rxSuspenseTrigger(trigger$: Observable<any>) {
     console.log('rxSuspense', trigger$);
     this.renderAware.nextTemplateTrigger(trigger$.pipe(map(toRxSuspenseNotification as any)));
@@ -131,9 +128,9 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, AfterView
   private readonly initialViewContext: LetTriggerViewContext<U> = {
     $implicit: undefined,
     rxLetTriggered: undefined,
-    $rxError: false,
-    $rxComplete: false,
-    $rxSuspense: false
+    $errorVal: false,
+    $completeVal: false,
+    $suspenseVal: false
   };
 
   private rendered$ = new Subject<RxNotification<U>>();
@@ -143,9 +140,9 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, AfterView
       this.displayInitialView();
       this.templateManager.updateViewContext({
         // if a custom value is provided take it, otherwise assign true
-        $rxSuspense: value !== undefined ? value : true,
-        $rxError: false,
-        $rxComplete: false
+        $suspenseVal: value !== undefined ? value : true,
+        $errorVal: false,
+        $completeVal: false
       });
     },
     next: (value: U | null | undefined) => {
@@ -153,18 +150,21 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, AfterView
       this.templateManager.updateViewContext({
         $implicit: value,
         rxLetTriggered: value,
-        $rxSuspense: false,
-        $rxError: false,
-        $rxComplete: false
+        $suspenseVal: false,
+        $errorVal: false,
+        $completeVal: false
       });
     },
     error: (error: Error) => {
       this.templateManager.displayView(this.displayWithFallback('rxError'));
-      this.templateManager.updateViewContext({ $rxError: error });
+      this.templateManager.updateViewContext({
+        $errorVal: error,
+        $suspenseVal: false
+      });
     },
     complete: () => {
       this.templateManager.displayView(this.displayWithFallback('rxComplete'));
-      this.templateManager.updateViewContext({ $rxComplete: true });
+      this.templateManager.updateViewContext({ $completeVal: true });
     }
   };
 
@@ -198,7 +198,7 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, AfterView
       strategies: this.strategies,
       defaultStrategyName: this.defaultStrategyName,
       // @NOTICE this is checked every emmit. Templates are IMHO statically assigned, so we could find a way to check only once?
-      getCdRef: (notification: RxNotification<U>) => this.templateManager.getEmbeddedView(this.getTemplateName(notification.kind as any))
+      getCdRef: (notification: RxNotification<U>) => this.templateManager.getEmbeddedView(this.displayWithFallback(notification.kind as any))
     });
     this.subscription = this.renderAware.rendered$.pipe(
       tap(this?._renderObserver)
@@ -233,4 +233,5 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, AfterView
       this.templateManager.displayView('rxSuspense');
     }
   };
+
 }

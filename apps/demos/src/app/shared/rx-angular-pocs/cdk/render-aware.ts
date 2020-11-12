@@ -58,7 +58,7 @@ export function createRenderAware<U>(cfg: {
       observeTemplateByNotificationKind(cfg.templateObserver),
       applyStrategy(strategy$, cfg.context, cfg.getCdRef),
       catchError(e => {
-        console.log(e);
+        console.error(e);
         return EMPTY;
       })
     );

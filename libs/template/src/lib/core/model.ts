@@ -9,7 +9,7 @@ export interface RxViewContext<T> {
   // set context var complete to true (var$; let c = $complete)
   $rxComplete: boolean;
   // set context var suspense to true (var$; let c = $suspense)
-  $rxSuspense: boolean;
+  $rxSuspense: any;
 }
 
 /**
