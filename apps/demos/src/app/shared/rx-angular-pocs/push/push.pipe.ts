@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, EmbeddedViewRef, Inject, OnDestroy, Optional, Pipe, PipeTransform } from '@angular/core';
 import { NextObserver, Observable, ObservableInput, Subscription, Unsubscribable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-// tslint:disable:nx-enforce-module-boundaries
+import { map } from 'rxjs/operators';
 import { RxTemplateObserver } from '@rx-angular/template';
 import {
   getDefaultStrategyCredentialsMap,
@@ -10,7 +9,7 @@ import {
   RX_PRIMARY_STRATEGY,
   StrategyCredentialsMap
 } from '../render-stragegies';
-import { createRenderAware, RenderAware } from '../cdk/render-aware';
+import { createRenderAware, RenderAware } from '../cdk';
 
 @Pipe({ name: 'push', pure: false })
 export class PushPipe<U> implements PipeTransform, OnDestroy {
