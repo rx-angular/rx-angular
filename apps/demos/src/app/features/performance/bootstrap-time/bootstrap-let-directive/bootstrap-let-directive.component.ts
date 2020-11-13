@@ -1,4 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  AfterViewInit,
+} from '@angular/core';
 import { of } from 'rxjs';
 
 @Component({
@@ -6,9 +10,20 @@ import { of } from 'rxjs';
   template: `<p *rxLet="text$; let text">{{ text }}</p>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BootstrapLetDirectiveComponent {
+export class BootstrapLetDirectiveComponent implements AfterViewInit {
   text$;
   constructor() {
     this.text$ = of('Let directive value');
+
+    performance.mark('Let Component Bootstrap');
+  }
+
+  ngAfterViewInit() {
+    performance.mark('Let Component Ready');
+    performance.measure(
+      '#letDirective',
+      'Let Component Bootstrap',
+      'Let Component Ready'
+    );
   }
 }

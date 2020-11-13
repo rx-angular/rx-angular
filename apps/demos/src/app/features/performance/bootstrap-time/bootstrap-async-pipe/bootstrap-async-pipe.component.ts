@@ -1,4 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  AfterViewInit,
+} from '@angular/core';
 import { of } from 'rxjs';
 
 @Component({
@@ -6,9 +10,20 @@ import { of } from 'rxjs';
   template: `<p>{{ text$ | async }}</p>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BootstrapAsyncPipeComponent {
+export class BootstrapAsyncPipeComponent implements AfterViewInit {
   text$;
   constructor() {
     this.text$ = of('Async pipe value');
+
+    performance.mark('Async Component Bootstrap');
+  }
+
+  ngAfterViewInit() {
+    performance.mark('Async Component Ready');
+    performance.measure(
+      '#asyncPipe',
+      'Async Component Bootstrap',
+      'Async Component Ready'
+    );
   }
 }

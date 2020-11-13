@@ -1,4 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  AfterViewInit,
+} from '@angular/core';
 import { of } from 'rxjs';
 
 @Component({
@@ -6,9 +10,20 @@ import { of } from 'rxjs';
   template: `<p>{{ text$ | push }}</p>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BootstrapPushPipeComponent {
+export class BootstrapPushPipeComponent implements AfterViewInit {
   text$;
   constructor() {
     this.text$ = of('Push pipe value');
+
+    performance.mark('Push Component Bootstrap');
+  }
+
+  ngAfterViewInit() {
+    performance.mark('Push Component Ready');
+    performance.measure(
+      '#pushPipe',
+      'Push Component Bootstrap',
+      'Push Component Ready'
+    );
   }
 }

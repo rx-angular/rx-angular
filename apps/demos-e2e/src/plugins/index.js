@@ -154,6 +154,12 @@ module.exports = (on, config) => {
 
       return Promise.resolve(tracingComplete);
     },
+
+    writeAverage: async ({ result, id }) => {
+      fs.writeFileSync(`./average_${id}_${currentDateString()}.txt`, result);
+
+      return null;
+    },
   });
 };
 

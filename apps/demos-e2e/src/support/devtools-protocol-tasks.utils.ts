@@ -36,3 +36,7 @@ export function startTracing() {
 export function stopTracing(fileNameSuffix?: string) {
   cy.task('endTracing', { suffix: fileNameSuffix });
 }
+
+export function writeAverage(id: string, result: string) {
+  cy.task('writeAverage', { id, result });
+}

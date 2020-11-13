@@ -1,4 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  AfterViewInit,
+} from '@angular/core';
 import { RxState } from '@rx-angular/state';
 
 @Component({
@@ -7,10 +11,20 @@ import { RxState } from '@rx-angular/state';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
 })
-export class BootstrapStateInjectComponent {
+export class BootstrapStateInjectComponent implements AfterViewInit {
   constructor(public state: RxState<any>) {
     this.state.set({
       text: 'Injecting RxState',
     });
+    performance.mark('InjectState Component Bootstrap');
+  }
+
+  ngAfterViewInit() {
+    performance.mark('InjectState Component Ready');
+    performance.measure(
+      '#injectState',
+      'InjectState Component Bootstrap',
+      'InjectState Component Ready'
+    );
   }
 }
