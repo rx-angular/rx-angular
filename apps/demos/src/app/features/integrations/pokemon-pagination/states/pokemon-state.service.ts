@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RxState } from '@rx-angular/state';
+import { RxState, selectSlice } from '@rx-angular/state';
 import { combineLatest } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -23,30 +23,18 @@ export interface PokemonState {
 
 @Injectable()
 export class PokemonStateService extends RxState<PokemonState> {
-  readonly originalResult$ = this.select('originalResult');
-  readonly total$ = this.select('total');
-  readonly limit$ = this.select('limit');
-  readonly offset$ = this.select('offset');
-
   /**
    * Construct the ViewModel that the Presentation Layer will use
    */
-  readonly vm$ = combineLatest([
-    this.select('status'),
-    this.select('filteredResult'),
-    this.select('currentPage'),
-    this.total$,
-    this.limit$,
-    this.offset$,
-  ]).pipe(
-    map(([status, filteredResult, currentPage, total, limit, offset]) => ({
-      status,
-      filteredResult,
-      total,
-      currentPage,
-      limit,
-      offset,
-    }))
+  readonly vm$ = this.select(
+    selectSlice([
+      'status',
+      'filteredResult',
+      'currentPage',
+      'total',
+      'limit',
+      'offset',
+    ])
   );
 
   constructor(private readonly pokemonService: PokemonService) {
@@ -76,9 +64,9 @@ export class PokemonStateService extends RxState<PokemonState> {
   }
 
   private effect$() {
-    return combineLatest([this.limit$, this.offset$]) // combine limit$ and offset$ which effectively watches for changes on these two
+    return combineLatest([this.select('limit'), this.select('offset')]) // combine limit$ and offset$ which effectively watches for changes on these two
       .pipe(
-        withLatestFrom(this.total$, this.originalResult$), // grab the latest values of total$ and originalResult$
+        withLatestFrom(this.select('total'), this.select('originalResult')), // grab the latest values of total$ and originalResult$
         switchMap(
           (
             [[limit, offset], total, original] // switch to getPokemon to fetch the pokemon with the new limit and offset
@@ -104,7 +92,7 @@ export class PokemonStateService extends RxState<PokemonState> {
     return this.select('query') // watch for query changed
       .pipe(
         distinctUntilChanged(), // rate limiting
-        withLatestFrom(this.originalResult$), // grab latest value from originalResult$
+        withLatestFrom(this.select('originalResult')), // grab latest value from originalResult$
         map(([query, data]) => (!query ? data : this.filter(data, query))) // check condition and call filter if needed
       );
   }
