@@ -8,6 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { PushModule, TemplateModule, UnpatchEventsModule } from '@rx-angular/template';
 import { DirtyChecksModule } from '../../debug-helper/dirty-checks';
 import { VisualizerModule } from '../../debug-helper/visualizer';
+import { RecursiveObservableWorkAsyncComponent } from './recursive-observable-work-async.component';
+import { RecursiveObservableWorkPushComponent } from './recursive-observable-work-push.component';
 import { RecursiveObservableComponent } from './recursive-observable.component';
 import { RecursiveStaticComponent } from './recursive-static.component';
 import { CdTriggerModule } from '../../debug-helper/cd-trigger/cd-trigger.module';
@@ -27,7 +29,9 @@ const DECLARATIONS = [
   RecursiveAsyncComponent,
   RecursivePushComponent,
   RecursiveComponentLetComponent,
-  RecursiveEmbeddedViewLetComponent
+  RecursiveEmbeddedViewLetComponent,
+  RecursiveObservableWorkPushComponent,
+  RecursiveObservableWorkAsyncComponent
 ];
 
 @NgModule({

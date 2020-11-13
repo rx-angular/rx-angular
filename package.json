@@ -31,6 +31,7 @@
     "help": "nx help",
     "state:publish": "nx publish state",
     "template:publish": "nx publish template",
+    "tracebench": "tracerbench compare --controlURL http://localhost:4200/rx-angular/demos --experimentURL http://localhost:4242/rx-angular/demos --markers startRouting,endRouting --headless --report",
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points && node ./decorate-angular-cli.js"
   },
   "husky": {
@@ -64,6 +65,7 @@
     "core-js": "^3.6.5",
     "ngx-skeleton-loader": "^2.4.4",
     "normalize-css": "^2.3.1",
+    "rx-query": "^0.0.15",
     "rxjs": "^6.6.3",
     "templateAlpha0": "npm:@rx-angular/template@1.0.0-alpha.0",
     "templateAlpha1": "npm:@rx-angular/template@1.0.0-alpha.1",

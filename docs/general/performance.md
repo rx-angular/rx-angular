@@ -25,8 +25,12 @@
   - https://github.com/krausest/js-framework-benchmark
   - https://arkit.pro/svg/UDfDp34EW20C0C2zh-YeWrym37waaQe4sf82-dqTdI-vq3fv7r80MavQoKbGJ6s_t8In--2Vj8kYFKbFFAWq1jZuvcAL7PSL9_AS-WmGMEDtlbU28LS0
   - https://github.com/angular/angular/blob/master/docs/TOOLS.md
+  - https://github.com/angular/angular/issues/14033#issuecomment-612841032
 
   ## Articles
 
   - https://codeburst.io/painting-and-rendering-optimization-techniques-in-browser-2e53a70e7ee
   - https://codeburst.io/javascript-compiler-optimization-techniques-only-for-experts-58d6f5f958ca
+
+  ## Code 
+  - https://github.com/facebook/react/blob/master/packages/scheduler/src/Scheduler.js

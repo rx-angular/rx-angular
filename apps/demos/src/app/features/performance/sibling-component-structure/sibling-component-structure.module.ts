@@ -18,6 +18,7 @@ import { RenderingsModule } from '../../../shared/debug-helper/renderings';
 import { ViewVsEmbeddedViewModule } from '../../experiments/structural-directives/view-vs-embedded-view/view-vs-embedded-view.module';
 import { RecursiveModule } from '../../../shared/template-structures/recursive/recursive.module';
 import { SiblingModule } from '../../../shared/template-structures/sibling/sibling.module';
+import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { SiblingModule } from '../../../shared/template-structures/sibling/sibli
     TemplateModule,
     ViewVsEmbeddedViewModule,
     RecursiveModule,
-    SiblingModule
+    SiblingModule,
+    StrategySelectModule
   ],
   exports: []
 })

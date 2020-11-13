@@ -9,9 +9,9 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   template: `
     <rxa-visualizer>
       <p visualizerHeader>{{siblings.length}}  Async</p>
-      <div class="w-100">
+      <div class="w-100 siblings">
         <span class="sibling" [ngClass]="{filled: sibling}" *ngFor="let sibling of siblings$ | async; trackBy:trackBy;">
-          &nbsp;
+          <div [ngClass]="{filled: filled}">&nbsp;</div>
         </span>
       </div>
     </rxa-visualizer>
@@ -26,11 +26,13 @@ export class SiblingAsyncComponent {
 
   siblings = [];
   siblings$ = new ReplaySubject<any[]>(1);
+  filled = false;
 
   @Input()
   set count(num: number) {
     this.siblings = toBooleanArray(num);
     this.siblings$.next(this.siblings);
+    this.filled = !this.filled;
   };
 
   @Input()
