@@ -12,6 +12,13 @@ export const ROUTES = [
       import('./push-poc/push-poc.module').then(
         m => m.PushPocModule
       )
+  },
+  {
+    path: 'memo',
+    loadChildren: () =>
+      import('./memo-poc/memo-poc.module').then(
+        m => m.MemoPocModule
+      )
   }
 ];
 
