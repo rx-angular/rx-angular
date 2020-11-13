@@ -21,6 +21,6 @@ export {
   deleteProp,
   dictionaryToArray,
   toggle,
-  extract,
+  slice,
 } from './transformation-helpers/object/index';
 export { KeyCompareMap, CompareFn } from './rxjs/interfaces';

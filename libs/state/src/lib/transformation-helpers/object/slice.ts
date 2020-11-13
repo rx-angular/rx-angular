@@ -9,7 +9,7 @@ import { isDefined, isKeyOf, isObjectGuard } from '../../core';
  *
  * const cat = {id: 1, type: 'cat', name: 'Fluffy'};
  *
- * const catWithoutType = extract(cat, ['name', 'id']);
+ * const catWithoutType = slice(cat, ['name', 'id']);
  *
  * // catWithoutType will be:
  * // {id: 1, name: 'Fluffy'};
@@ -24,7 +24,7 @@ import { isDefined, isKeyOf, isObjectGuard } from '../../core';
  *        'animals'
  *        this.api.getAnimals(),
  *        (state, animals) => {
- *            return animals.map(animal => extract(animal, ['id', 'name']));
+ *            return animals.map(animal => slice(animal, ['id', 'name']));
  *        }
  *      );
  *    }
@@ -32,17 +32,17 @@ import { isDefined, isKeyOf, isObjectGuard } from '../../core';
  *
  * @returns T
  *
- * @docsPage extract
+ * @docsPage slice
  * @docsCategory transformation-helpers
  */
-export function extract<T extends object, K extends keyof T>(
+export function slice<T extends object, K extends keyof T>(
   object: T,
   keys: K | K[]
 ): Pick<T, K> {
   const objectIsObject = isDefined(object) && isObjectGuard(object);
 
   if (!objectIsObject) {
-    console.warn(`Extract: original value (${object}) is not an object.`);
+    console.warn(`slice: original value (${object}) is not an object.`);
     return undefined as any;
   }
 
@@ -51,7 +51,7 @@ export function extract<T extends object, K extends keyof T>(
   );
 
   if (!sanitizedKeys.length) {
-    console.warn(`Extract: provided keys not found`);
+    console.warn(`slice: provided keys not found`);
     return undefined as any;
   }
 

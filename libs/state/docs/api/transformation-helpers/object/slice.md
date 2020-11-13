@@ -1,4 +1,4 @@
-## extract
+## slice
 
 Accepts an object of type T and a single key or an array of keys (`K extends keyof T`).
 Constructs new object based on provided keys.
@@ -8,7 +8,7 @@ _Example_
 ```typescript
 const cat = { id: 1, type: 'cat', name: 'Fluffy' };
 
-const catWithoutType = extract(cat, ['name', 'id']);
+const catWithoutType = slice(cat, ['name', 'id']);
 
 // catWithoutType will be:
 // {id: 1, name: 'Fluffy'};
@@ -27,7 +27,7 @@ export class AnimalsListComponent {
          'animals'
          this.api.getAnimals(),
          (state, animals) => {
-             return animals.map(animal => extract(animal, ['id', 'name']));
+             return animals.map(animal => slice(animal, ['id', 'name']));
          }
        );
      }
@@ -37,20 +37,20 @@ export class AnimalsListComponent {
 ### Edge cases
 
 ```typescript
-extract(nonObject, 'prop' as any) > undefined;
-extract(null as any, 'prop') > undefined;
-extract(null as any, null as any) > undefined;
-extract([state], 'concat') > undefined;
-extract(state, 'nonExisting' as any) > undefined;
-extract(state, null as any) > undefined;
-extract(state, ['stateProp1', 'nonExistingProp']) >
+slice(nonObject, 'prop' as any) > undefined;
+slice(null as any, 'prop') > undefined;
+slice(null as any, null as any) > undefined;
+slice([state], 'concat') > undefined;
+slice(state, 'nonExisting' as any) > undefined;
+slice(state, null as any) > undefined;
+slice(state, ['stateProp1', 'nonExistingProp']) >
   { stateProp1: stateProp1Value };
 ```
 
 ### Signature
 
 ```typescript
-function extract<T extends object, K extends keyof T>(
+function slice<T extends object, K extends keyof T>(
   object: T,
   keys: K | K[]
 ): Pick<T, K>;
