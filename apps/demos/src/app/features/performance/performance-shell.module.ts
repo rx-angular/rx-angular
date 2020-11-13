@@ -37,6 +37,13 @@ const ROUTES: Routes = [
         (m) => m.BootstrapTimeModule
       ),
   },
+  {
+    path: 'concurrent-strategies',
+    loadChildren: () =>
+      import('./concurrent-strategies/concurrent-strategies.module').then(
+        (m) => m.ConcurrentStrategiesModule
+      ),
+  },
 ];
 
 @NgModule({

@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
-import { Subject } from 'rxjs';
-import { scan, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-rx-if-poc',
@@ -11,10 +9,12 @@ import { scan, startWith } from 'rxjs/operators';
         <h2>
           rxIf POC
         </h2>
-        <button mat-raised-button (click)="toggleClick$.next($event)" class="mr-1">
+        <rxa-strategy-select (strategyChange)="strategy = $event"></rxa-strategy-select>
+        <rxa-value-provider #v="rxaValueProvider" [buttons]="true"></rxa-value-provider>
+        <button mat-raised-button (click)="v.next()" class="mr-1">
           toggle
         </button>
-        <button mat-raised-button [unpatch] (click)="toggleClick$.next($event)">
+        <button mat-raised-button [unpatch] (click)="v.next()">
           toggle (unpatched)
         </button>
       </div>
@@ -27,7 +27,7 @@ import { scan, startWith } from 'rxjs/operators';
               FALSE
             </div>
           </ng-template>
-          <div class="dh-embedded-view" *ngIf="value1$ | async; else: f1">
+          <div class="dh-embedded-view" *ngIf="v.boolean$ | async; else: f1">
             <rxa-dirty-check></rxa-dirty-check>
             TRUE
           </div>
@@ -40,7 +40,7 @@ import { scan, startWith } from 'rxjs/operators';
               FALSE
             </div>
           </ng-template>
-          <div class="dh-embedded-view" *poc1If="value1$; let value; falsey: f1">
+          <div class="dh-embedded-view" *poc1If="v.boolean$; let value; falsey: f1">
             <rxa-dirty-check></rxa-dirty-check>
             TRUE
           </div>
@@ -54,7 +54,7 @@ import { scan, startWith } from 'rxjs/operators';
               FALSE
             </div>
           </ng-template>
-          <div class="dh-embedded-view" *poc2If="value1$; let value; falsey: f2">
+          <div class="dh-embedded-view" *poc2If="v.boolean$; let value; falsey: f2">
             <rxa-dirty-check></rxa-dirty-check>
             TRUE
           </div>
@@ -67,7 +67,10 @@ import { scan, startWith } from 'rxjs/operators';
               FALSE
             </div>
           </ng-template>
-          <div class="dh-embedded-view" *rxIf="value1$; let value; falsey: f3">
+          <ng-template #suspense>
+            <rxa-list-item-ghost></rxa-list-item-ghost>
+          </ng-template>
+          <div class="dh-embedded-view" *rxIf="v.boolean$; let value; else: f3; strategy: strategy; rxSuspense: suspense">
             <rxa-dirty-check></rxa-dirty-check>
             TRUE
           </div>
@@ -78,9 +81,5 @@ import { scan, startWith } from 'rxjs/operators';
   changeDetection: environment.changeDetection
 })
 export class RxIfPocComponent {
-  toggleClick$ = new Subject<Event>();
-  value1$ = this.toggleClick$.pipe(
-    scan(a => !a, false),
-    startWith(false)
-  );
+  strategy;
 }

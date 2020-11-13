@@ -6,9 +6,9 @@ import { toBooleanArray } from './utils';
   template: `
     <rxa-visualizer>
       <p visualizerHeader>{{siblings.length}} Siblings Static</p>
-      <div class="w-100">
+      <div class="w-100 siblings">
         <span class="sibling" [ngClass]="{filled: sibling}" *ngFor="let sibling of siblings; trackBy:trackBy">
-          &nbsp;
+           <div [ngClass]="{filled: filled}">&nbsp;</div>
         </span>
       </div>
     </rxa-visualizer>
@@ -21,10 +21,11 @@ import { toBooleanArray } from './utils';
 })
 export class SiblingStaticComponent {
   siblings = [];
-
+  filled = false;
   @Input()
   set count(num: number) {
     this.siblings = toBooleanArray(num);
+    this.filled = !this.filled;
   };
 
   @Input()
