@@ -14,6 +14,7 @@ export {
   remove,
   toDictionary,
   update,
+  extract,
 } from './transformation-helpers/array/index';
 export {
   setProp,
