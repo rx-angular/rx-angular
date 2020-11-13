@@ -12,6 +12,13 @@ export const ROUTES = [
       import('./push-poc/push-poc.module').then(
         m => m.PushPocModule
       )
+  },
+  {
+    path: 'pipe',
+    loadChildren: () =>
+      import('./pipe-poc/pipe-poc.module').then(
+        m => m.PipePocModule
+      )
   }
 ];
 
