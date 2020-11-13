@@ -59,7 +59,7 @@ export interface LetTriggerViewContext<T>{
   selector: '[rxLetTriggered]',
   providers: [StrategyProvider]
 })
-export class LetDirectiveTriggered<U> extends Hooks implements OnInit, AfterViewInit, OnDestroy {
+export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLetTriggered: 'binding';
 
   readonly renderAware: RenderAware<U>;
@@ -210,17 +210,9 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, AfterView
     this.displayInitialView();
   }
 
-  ngAfterViewInit() {
-
-  }
-
   ngOnDestroy() {
     this.subscription.unsubscribe();
     this.templateManager.destroy();
-  }
-
-  getTemplateName(nK: RxBaseTemplateNames) {
-    return nK === 'rxSuspense' ? this.templateManager.hasTemplateRef('rxSuspense') ? 'rxSuspense' : 'rxNext' : nK;
   }
 
   displayWithFallback(templateName: rxLetTriggeredTemplateNames, fallback: rxLetTriggeredTemplateNames = 'rxNext') {
