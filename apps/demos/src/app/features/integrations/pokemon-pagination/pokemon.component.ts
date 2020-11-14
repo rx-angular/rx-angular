@@ -121,7 +121,7 @@ export class PokemonComponent {
       limit: pageSize,
       offset: pageIndex === 0 ? 0 : pageSize * pageIndex,
     });
-    
+
     /**
      * Reset query on page changed
      */

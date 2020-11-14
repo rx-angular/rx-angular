@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RxState, selectSlice } from '@rx-angular/state';
 import { combineLatest } from 'rxjs';
-import {
-  distinctUntilChanged,
-  map,
-  switchMap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Pokemon } from '../models/pokemon.model';
 import { PokemonService } from '../services/pokemon.service';
 
@@ -91,7 +86,6 @@ export class PokemonStateService extends RxState<PokemonState> {
   private queryEffect$() {
     return this.select('query') // watch for query changed
       .pipe(
-        distinctUntilChanged(), // rate limiting
         withLatestFrom(this.select('originalResult')), // grab latest value from originalResult$
         map(([query, data]) => (!query ? data : this.filter(data, query))) // check condition and call filter if needed
       );
