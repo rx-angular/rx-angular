@@ -19,4 +19,8 @@ export const MENU_ITEMS = [
     link: 'rx-let-poc',
     label: 'RxLet POC',
   },
+  {
+    link: 'if-visible',
+    label: 'ifVisible POC',
+  },
 ];

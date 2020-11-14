@@ -22,7 +22,7 @@ import { isObservable, Observable, of } from 'rxjs';
 export class InputBindingsProxyComponent {
 
   @Input()
-  value$;
+  value$: number | Observable<number>;
 
   constructor() {
     return proxyProps(['value$'], this);

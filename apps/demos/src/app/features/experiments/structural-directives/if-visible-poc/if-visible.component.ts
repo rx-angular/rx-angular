@@ -1,0 +1,35 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stragegies/strategy-provider.service';
+
+@Component({
+  selector: 'rxa-rx-let-poc',
+  template: `
+    <rxa-visualizer>
+      <div visualizerHeader>
+        <rxa-value-provider [buttons]="true" #v="rxaValueProvider"></rxa-value-provider>
+      </div>
+      <div class="mt-5 row w-100 d-flex">
+        <div style="margin-top: 300px" class="col-6 dh-embedded-view p-2">
+          <div *ifVisible>
+            <p *rxLet="v.incremental$; let n">n: {{log(n)}}</p>
+          </div>
+        </div>
+      </div>
+    </rxa-visualizer>
+  `,
+  changeDetection: ChangeDetectionStrategy.Default,
+  host: {
+    class: 'm-1 p-1',
+    style: 'display: block;'
+  },
+  providers: [StrategyProvider]
+})
+export class IfVisibleComponent {
+
+
+  log(n) {
+    console.log('render', n);
+    return n;
+  }
+
+}

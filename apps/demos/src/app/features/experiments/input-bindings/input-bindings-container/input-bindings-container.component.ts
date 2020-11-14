@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       </div>
       <div class="row w-100">
         <div class="col-6">
-          <rxa-input-bindings-proxy [value$]="vP.incremental$"></rxa-input-bindings-proxy>
+          <rxa-input-bindings-proxy [value$]="3"></rxa-input-bindings-proxy>
         </div>
         <div class="col-6">
           <rxa-input-bindings-decorator [value$]="vP.incremental$"></rxa-input-bindings-decorator>
