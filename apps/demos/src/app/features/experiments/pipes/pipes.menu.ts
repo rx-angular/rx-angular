@@ -6,5 +6,9 @@ export const MENU_ITEMS = [
   {
     label: 'Memo Pipe Poc',
     link: 'memo'
+  },
+  {
+    label: 'Pipe Pipe Poc',
+    link: 'pipe'
   }
 ];
