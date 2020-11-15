@@ -25,10 +25,6 @@ import { immutableArr, immutableIncArr } from '../utils';
             <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
           </mat-button-toggle-group>
           <br/>
-          <mat-form-field>
-            <label>Work Load</label>
-            <input matInput #load (input)="load$.next(load.value)">
-          </mat-form-field>
 
         </div>
       </ng-container>
@@ -68,10 +64,11 @@ import { immutableArr, immutableIncArr } from '../utils';
             <button mat-raised-button [unpatch] (click)="toggleIntervalClick$.next(10)">
               unpatched toggel interval
             </button>
+            <rxa-strategy-select (strategyChange)="strategy$.next($event)"></rxa-strategy-select>
           </p>
           <rxa-visualizer viewType="embedded-view" *rxFor="array$; let i; let r$ = record$; let select = select">
             <ng-container *rxFor="select(['arr']); trackBy: tK; distinctBy:dK; let v$ = record$;">
-              <rxa-rx-for-value [value]="v$"></rxa-rx-for-value>
+              <rxa-rx-for-value [strategy$]="strategy$" [value]="v$"></rxa-rx-for-value>
             </ng-container>
           </rxa-visualizer>
         </div>
@@ -94,9 +91,11 @@ export class RxForContainerComponent {
     all: 3
   };
 
+  strategy$ = new Subject<string>();
   changeOneClick$ = new Subject<number>();
   changeAllClick$ = new Subject<number>();
   toggleIntervalClick$ = new Subject<number>();
+
 
   array$ = merge(
     this.changeOneClick$.pipe(immutableIncArr()),
