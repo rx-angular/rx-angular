@@ -109,7 +109,6 @@ export class RxForDirective<T extends object, U extends NgIterable<T> = NgIterab
   }
 
   private applyChanges(changes: IterableChanges<T>, iterable: U) {
-    console.log('changes', changes);
     changes.forEachOperation((
       r: IterableChangeRecord<T>,
       previousIndex: number | null,
