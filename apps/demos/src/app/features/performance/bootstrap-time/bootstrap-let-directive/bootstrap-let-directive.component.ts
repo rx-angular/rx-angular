@@ -15,15 +15,10 @@ export class BootstrapLetDirectiveComponent implements AfterViewInit {
   constructor() {
     this.text$ = of('Let directive value');
 
-    performance.mark('Let Component Bootstrap');
+    performance.mark('#letDirectiveBootstrap');
   }
 
   ngAfterViewInit() {
-    performance.mark('Let Component Ready');
-    performance.measure(
-      '#letDirective',
-      'Let Component Bootstrap',
-      'Let Component Ready'
-    );
+    performance.mark('#letDirectiveReady');
   }
 }

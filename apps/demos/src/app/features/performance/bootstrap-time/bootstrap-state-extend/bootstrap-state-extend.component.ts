@@ -19,15 +19,10 @@ export class BootstrapStateExtendComponent
     this.set({
       text: 'Extending RxState',
     });
-    performance.mark('ExtendState Component Bootstrap');
+    performance.mark('#extendStateBootstrap');
   }
 
   ngAfterViewInit() {
-    performance.mark('ExtendState Component Ready');
-    performance.measure(
-      '#extendState',
-      'ExtendState Component Bootstrap',
-      'ExtendState Component Ready'
-    );
+    performance.mark('#extendStateReady');
   }
 }

@@ -16,15 +16,10 @@ export class BootstrapStateInjectComponent implements AfterViewInit {
     this.state.set({
       text: 'Injecting RxState',
     });
-    performance.mark('InjectState Component Bootstrap');
+    performance.mark('#injectStateBootstrap');
   }
 
   ngAfterViewInit() {
-    performance.mark('InjectState Component Ready');
-    performance.measure(
-      '#injectState',
-      'InjectState Component Bootstrap',
-      'InjectState Component Ready'
-    );
+    performance.mark('#injectStateReady');
   }
 }

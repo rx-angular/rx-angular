@@ -17,15 +17,10 @@ export class BootstrapServiceExtendComponent
     super();
     this.text = 'Extending service';
 
-    performance.mark('ExtendService Component Bootstrap');
+    performance.mark('#extendServiceBootstrap');
   }
 
   ngAfterViewInit() {
-    performance.mark('ExtendService Component Ready');
-    performance.measure(
-      '#extendService',
-      'ExtendService Component Bootstrap',
-      'ExtendService Component Ready'
-    );
+    performance.mark('#extendServiceReady');
   }
 }

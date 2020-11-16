@@ -15,15 +15,10 @@ export class BootstrapPushPipeComponent implements AfterViewInit {
   constructor() {
     this.text$ = of('Push pipe value');
 
-    performance.mark('Push Component Bootstrap');
+    performance.mark('#pushPipeBootstrap');
   }
 
   ngAfterViewInit() {
-    performance.mark('Push Component Ready');
-    performance.measure(
-      '#pushPipe',
-      'Push Component Bootstrap',
-      'Push Component Ready'
-    );
+    performance.mark('#pushPipeReady');
   }
 }

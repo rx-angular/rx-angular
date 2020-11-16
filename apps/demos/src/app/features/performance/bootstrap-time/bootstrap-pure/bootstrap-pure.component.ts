@@ -15,15 +15,10 @@ export class BootstrapPureComponent implements AfterViewInit {
   observer2: PerformanceObserver;
   constructor() {
     this.text = 'No service';
-    performance.mark('Pure Component Bootstrap');
+    performance.mark('#pureComponentBootstrap');
   }
 
   ngAfterViewInit() {
-    performance.mark('Pure Component Ready');
-    performance.measure(
-      '#pureComponent',
-      'Pure Component Bootstrap',
-      'Pure Component Ready'
-    );
+    performance.mark('#pureComponentReady');
   }
 }

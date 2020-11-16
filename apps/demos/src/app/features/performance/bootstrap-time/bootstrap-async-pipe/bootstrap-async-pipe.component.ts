@@ -15,15 +15,10 @@ export class BootstrapAsyncPipeComponent implements AfterViewInit {
   constructor() {
     this.text$ = of('Async pipe value');
 
-    performance.mark('Async Component Bootstrap');
+    performance.mark('#asyncPipeBootstrap');
   }
 
   ngAfterViewInit() {
-    performance.mark('Async Component Ready');
-    performance.measure(
-      '#asyncPipe',
-      'Async Component Bootstrap',
-      'Async Component Ready'
-    );
+    performance.mark('#asyncPipeReady');
   }
 }
