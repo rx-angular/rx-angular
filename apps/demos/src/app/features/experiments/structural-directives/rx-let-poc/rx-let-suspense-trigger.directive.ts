@@ -88,9 +88,7 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy
   }
 
   @Input('rxLetTriggeredSuspenseTpl')
-  set rxSuspense(
-    templateRef: TemplateRef<LetTriggerViewContext<U | undefined | null> | null>
-  ) {
+  set rxSuspense(templateRef: TemplateRef<LetTriggerViewContext<U | undefined | null> | null>) {
     this.templateManager.addTemplateRef('rxSuspense', templateRef);
   }
 
@@ -116,7 +114,7 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy
   }
 
   @Output() readonly rendered = defer(() => this.rendered$.pipe(
-    filter(({ kind }) => this.templateManager.hasTemplateRef(kind))
+      filter(({ kind }) => this.templateManager.hasTemplateRef(kind))
     )
   );
 
@@ -156,15 +154,22 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy
       });
     },
     error: (error: Error) => {
-      this.templateManager.displayView(this.displayWithFallback('rxError'));
+      const templateName = this.getDisplayNameWithFallback('rxError');
+      this.templateManager.displayView(templateName);
       this.templateManager.updateViewContext({
         $errorVal: error,
         $suspenseVal: false
       });
+      this.templateManager.getEmbeddedView(templateName).detach();
     },
     complete: () => {
-      this.templateManager.displayView(this.displayWithFallback('rxComplete'));
-      this.templateManager.updateViewContext({ $completeVal: true });
+      const templateName = this.getDisplayNameWithFallback('rxComplete');
+      this.templateManager.displayView(templateName);
+      this.templateManager.updateViewContext({
+        $completeVal: true,
+        $suspenseVal: false
+      });
+     this.templateManager.getEmbeddedView(templateName).detach();
     }
   };
 
@@ -198,7 +203,7 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy
       strategies: this.strategies,
       defaultStrategyName: this.defaultStrategyName,
       // @NOTICE this is checked every emmit. Templates are IMHO statically assigned, so we could find a way to check only once?
-      getCdRef: (notification: RxNotification<U>) => this.templateManager.getEmbeddedView(this.displayWithFallback(notification.kind as any))
+      getCdRef: (notification: RxNotification<U>) => this.templateManager.getEmbeddedView(this.getDisplayNameWithFallback(notification.kind as any))
     });
     this.subscription = this.renderAware.rendered$.pipe(
       tap(this?._renderObserver)
@@ -215,7 +220,7 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy
     this.templateManager.destroy();
   }
 
-  displayWithFallback(templateName: rxLetTriggeredTemplateNames, fallback: rxLetTriggeredTemplateNames = 'rxNext') {
+  getDisplayNameWithFallback(templateName: rxLetTriggeredTemplateNames, fallback: rxLetTriggeredTemplateNames = 'rxNext'): RxNotificationKind {
     return this.templateManager.hasTemplateRef(templateName) ? templateName : fallback;
   }
 

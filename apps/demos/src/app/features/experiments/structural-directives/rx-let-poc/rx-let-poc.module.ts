@@ -13,6 +13,7 @@ import { RxQueryComponent } from './rx-query.component';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
+import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 
 const DECLARATIONS = [
   RxLetPocComponent,
@@ -33,7 +34,8 @@ const DECLARATIONS = [
     TriggerProviderModule,
     MatInputModule,
     RouterModule,
-    MatCardModule
+    MatCardModule,
+    DirtyChecksModule
   ],
   exports: DECLARATIONS,
   providers: []

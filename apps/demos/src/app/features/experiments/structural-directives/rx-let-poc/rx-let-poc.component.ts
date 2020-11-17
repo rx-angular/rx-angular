@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stragegies/strategy-provider.service';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'rxa-rx-let-poc',
@@ -26,6 +25,7 @@ import { Subject } from 'rxjs';
           let e = $errorVal;
           let c = $completeVal;">
             <mat-progress-bar *ngIf="s" color="primary" mode="indeterminate"></mat-progress-bar>
+            <rxa-dirty-check></rxa-dirty-check>
             n: {{n}} s: {{s}}, e: {{e}}, c: {{c}}
           </div>
         </div>
@@ -38,13 +38,20 @@ import { Subject } from 'rxjs';
           errorTrg: triggers.error$;
           completeTrg: triggers.complete$;"
           >
+            <rxa-dirty-check></rxa-dirty-check>
             n: {{n}}
           </div>
           <ng-template #suspense>
             <rxa-list-item-ghost></rxa-list-item-ghost>
           </ng-template>
-          <ng-template #error>ERROR</ng-template>
-          <ng-template #complete>COMPLETE</ng-template>
+          <ng-template #error>
+            <rxa-dirty-check></rxa-dirty-check>
+            ERROR
+          </ng-template>
+          <ng-template #complete>
+            <rxa-dirty-check></rxa-dirty-check>
+            COMPLETE
+          </ng-template>
         </div>
       </div>
     </rxa-visualizer>
@@ -56,13 +63,10 @@ import { Subject } from 'rxjs';
   },
   providers: [StrategyProvider]
 })
-export class RxLetPocComponent implements OnInit {
+export class RxLetPocComponent {
 
   constructor(public strategyProvider: StrategyProvider) {
 
-  }
-
-  ngOnInit(): void {
   }
 
 }
