@@ -1,7 +1,6 @@
 import {
-  AfterViewInit,
   ChangeDetectorRef,
-  Directive,
+  Directive, EmbeddedViewRef,
   Inject,
   Input,
   OnDestroy,
@@ -19,7 +18,6 @@ import {
   RxNotification,
   RxNotificationKind,
   RxTemplateObserver,
-  RxViewContext,
   TemplateManager
 } from '@rx-angular/template';
 
@@ -41,7 +39,7 @@ import {
 
 type rxLetTriggeredTemplateNames = RxNotificationKind;
 
-export interface LetTriggerViewContext<T>{
+export interface LetViewContext<T>{
   // to enable `as` syntax we have to assign the directives selector (var as v)
   rxLetTriggered: T;
 
@@ -78,17 +76,17 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy
   }
 
   @Input('rxLetTriggeredCompleteTpl')
-  set rxComplete(templateRef: TemplateRef<LetTriggerViewContext<U | undefined | null> | null>) {
+  set rxComplete(templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>) {
     this.templateManager.addTemplateRef('rxComplete', templateRef);
   }
 
   @Input('rxLetTriggeredErrorTpl')
-  set rxError(templateRef: TemplateRef<LetTriggerViewContext<U | undefined | null> | null>) {
+  set rxError(templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>) {
     this.templateManager.addTemplateRef('rxError', templateRef);
   }
 
   @Input('rxLetTriggeredSuspenseTpl')
-  set rxSuspense(templateRef: TemplateRef<LetTriggerViewContext<U | undefined | null> | null>) {
+  set rxSuspense(templateRef: TemplateRef<LetViewContext<U | undefined | null> | null>) {
     this.templateManager.addTemplateRef('rxSuspense', templateRef);
   }
 
@@ -120,10 +118,10 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy
 
   private subscription: Unsubscribable = Subscription.EMPTY;
 
-  private readonly templateManager: TemplateManager<LetTriggerViewContext<U | undefined | null>,
+  private readonly templateManager: TemplateManager<LetViewContext<U | undefined | null>,
     rxLetTriggeredTemplateNames>;
 
-  private readonly initialViewContext: LetTriggerViewContext<U> = {
+  private readonly initialViewContext: LetViewContext<U> = {
     $implicit: undefined,
     rxLetTriggered: undefined,
     $errorVal: false,
@@ -160,7 +158,6 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy
         $errorVal: error,
         $suspenseVal: false
       });
-      this.templateManager.getEmbeddedView(templateName).detach();
     },
     complete: () => {
       const templateName = this.getDisplayNameWithFallback('rxComplete');
@@ -169,7 +166,6 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy
         $completeVal: true,
         $suspenseVal: false
       });
-     this.templateManager.getEmbeddedView(templateName).detach();
     }
   };
 
@@ -177,7 +173,7 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy
   static ngTemplateContextGuard<U>(
     dir: LetDirectiveTriggered<U>,
     ctx: unknown | null | undefined
-  ): ctx is LetTriggerViewContext<U> {
+  ): ctx is LetViewContext<U> {
     return true;
   }
 
@@ -188,7 +184,7 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy
     @Inject(RX_PRIMARY_STRATEGY)
     private defaultStrategyName: string,
     public cdRef: ChangeDetectorRef,
-    private readonly nextTemplateRef: TemplateRef<LetTriggerViewContext<U>>,
+    private readonly nextTemplateRef: TemplateRef<LetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
     super();
@@ -203,7 +199,7 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy
       strategies: this.strategies,
       defaultStrategyName: this.defaultStrategyName,
       // @NOTICE this is checked every emmit. Templates are IMHO statically assigned, so we could find a way to check only once?
-      getCdRef: (notification: RxNotification<U>) => this.templateManager.getEmbeddedView(this.getDisplayNameWithFallback(notification.kind as any))
+      getCdRef: (notification: RxNotification<U>): ChangeDetectorRef => this.templateManager.getEmbeddedView(this.getDisplayNameWithFallback(notification.kind as any))
     });
     this.subscription = this.renderAware.rendered$.pipe(
       tap(this?._renderObserver)

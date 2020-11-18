@@ -1,7 +1,8 @@
 import { Observable } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+import { RxNotification } from '@rx-angular/template';
 
-export type RenderWork = <T = unknown>(cdRef: ChangeDetectorRef, context: any) => void;
+export type RenderWork = <T = unknown>(cdRef: ChangeDetectorRef, context?: any, notification?: RxNotification<T>) => void;
 export type RenderBehavior = <T = unknown>(work: any, context: any) => (o: Observable<T>) => Observable<T>;
 
 export interface StrategyCredentials {
