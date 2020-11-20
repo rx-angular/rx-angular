@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from '../../rx-angular-pocs/render-stragegies';
-import { RxState } from '@rx-angular/state';
-import { map } from 'rxjs/operators';
+import { RxState, selectSlice } from '@rx-angular/state';
+import { map, tap } from 'rxjs/operators';
 import { toInt } from '../../debug-helper/value-provider';
 
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
@@ -14,7 +14,7 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
       <div visualizerHeader>
         <h3>{{pixelColors.length}} Pixels</h3>
       </div>
-      <div class="pixel-map" [style.width.px]="vm.imgWidth" *rxLet="$, let vm;">
+      <div class="pixel-map" [style.width.px]="vm.imgWidth" *rxLet="imageState, let vm;">
         <div class="pixel" [style.width.px]="vm.pixelSize" [style.height.px]="vm.pixelSize"
              *ngFor="let sibling of vm.pixelColorStyles; trackBy:trackBy">
           <div *rxLet="filled$; let f; strategy: getStrategy(sibling)" [ngStyle]="{background: f ? sibling : 'red'}">
@@ -51,26 +51,26 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SiblingPixelImgComponent extends RxState<{ pixelColorStyles: string[], filled: boolean, pixelSize: number, imgWidth: number }> {
-  $ = this.select();
+  imageState = this.select(selectSlice(['pixelColorStyles', 'pixelSize', 'imgWidth']));
 
   filled$ = this.select('filled');
   pixelColors = [];
 
   @Input()
-  set pixelArray(pixelArray$: Observable<number[][]>) {
-    this.connect('pixelColorStyles', pixelArray$.pipe(map(arr => arr.map(v => 'rgba(' + v[0] + ',' + v[1] + ',' + v[2] + ',' + v[3] + ')'))));
+  set pixelArray(pixelArray$: Observable<string[]>) {
+    this.connect('pixelColorStyles', pixelArray$);
   };
 
   @Input()
-  set imgWidth(imgWidth$: Observable<number>) {
+  set imgWidth(imgWidth$: Observable<number | string>) {
     // tslint:disable-next-line:no-bitwise
-    this.connect('imgWidth', combineLatest([imgWidth$, this.select('pixelSize')]).pipe(map(([imgWidth, pixelSize]) => ~~(imgWidth * pixelSize))));
+    this.connect('imgWidth', combineLatest([imgWidth$, this.select('pixelSize')]).pipe(map(([imgWidth, pixelSize]) => ~~(+imgWidth * pixelSize))));
   }
 
   @Input()
-  set pixelSize(pixelSize$: Observable<number>) {
+  set pixelSize(pixelSize$: Observable<number | string>) {
     // tslint:disable-next-line:no-bitwise
-    this.connect('pixelSize', pixelSize$);
+    this.connect('pixelSize', pixelSize$.pipe(map(v => +v)));
   }
 
   @Input()

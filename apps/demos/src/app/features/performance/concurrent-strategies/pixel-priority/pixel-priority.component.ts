@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stragegies/strategy-provider.service';
-import { PixelArrayData } from '../../../../shared/image-array/image-array/image-array.component';
 import { map } from 'rxjs/operators';
+import { ImgInfo } from './pixel-image';
 
 @Component({
   selector: 'rxa-concurrent-strategies',
   template: `
     <rxa-visualizer>
       <ng-container visualizerHeader>
-        <h1 class="mat-headline">Concurrent Strategies</h1>
+        <h1 class="mat-headline">Pixels with priorities</h1>
         <div class="row">
           <div class="col-12 d-flex">
             <mat-form-field class="mr-2">
@@ -25,30 +25,30 @@ import { map } from 'rxjs/operators';
 
 
           </div>
-          <div class="col-12">
-            <!--
-             <div style="width: 15px; height: 15px;" *ngFor="let c of colors$ | push" [style.background]="c">
-            &nbsp;{{ c }}
+          <div class="col-12 d-flex flex-wrap">
+             <div style="width: 15px; height: 15px;" *ngFor="let i of colors$ | push | keyvalue" [style.background]="i.key">
+            &nbsp;{{ i.value }}
           </div>
-            <div class="w-100 strategy-multiselect">
-              <mat-select #i [value]="strategyProvider.primaryStrategy" *ngFor="let color of colors$ | push"
-                          (valueChange)="strategyProvider.primaryStrategy = i.value">
-                <mat-select-trigger>
-                  {{ color }}
-                  <div [style.background]="color">{{ color }}</div>
-                </mat-select-trigger>
-                <mat-option
-                  [value]="s"
-                  *ngFor="let s of strategyProvider.strategyNames">
-                 {{ s }}
-                </mat-option>
-              </mat-select>
-              <mat-selection-list #c *ngFor="let strategy of strategyProvider.strategyNames"
-                            (change)="selectedStrategies[strategy] = c.checked">
-                {{strategy}}
-              </mat-selection-list>
-            </div>
-            -->
+            <!--
+          <div class="w-100 strategy-multiselect">
+            <mat-select #i [value]="strategyProvider.primaryStrategy" *ngFor="let color of colors$ | push"
+                        (valueChange)="strategyProvider.primaryStrategy = i.value">
+              <mat-select-trigger>
+                {{ color }}
+                <div [style.background]="color">{{ color }}</div>
+              </mat-select-trigger>
+              <mat-option
+                [value]="s"
+                *ngFor="let s of strategyProvider.strategyNames">
+               {{ s }}
+              </mat-option>
+            </mat-select>
+            <mat-selection-list #c *ngFor="let strategy of strategyProvider.strategyNames"
+                          (change)="selectedStrategies[strategy] = c.checked">
+              {{strategy}}
+            </mat-selection-list>
+          </div>
+          -->
           </div>
         </div>
       </ng-container>
@@ -80,12 +80,11 @@ import { map } from 'rxjs/operators';
 export class PixelPriorityComponent {
   selectedStrategies: { [name: string]: boolean } = {};
 
-  colors$ = new BehaviorSubject<number[][]>([]);
-  pixelDataChange$ = new Subject<PixelArrayData>();
-
+  pixelDataChange$ = new Subject<ImgInfo>();
 
   pixelSize$ = new BehaviorSubject<string>('3');
   imgWidth$ = this.pixelDataChange$.pipe(map(d => d.width));
+  colors$ = this.pixelDataChange$.pipe(map(d => d.colors));
   pixelArray$ = this.pixelDataChange$.pipe(map(d => d.pixelArray));
   filled$ = new BehaviorSubject<boolean>(true);
 
