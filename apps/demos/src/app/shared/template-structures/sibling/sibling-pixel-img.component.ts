@@ -10,8 +10,6 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
 @Component({
   selector: 'rxa-sibling-pixel-img',
   template: `
-    <h4>{{(pixelColorStyles$ | push)?.length}} Components</h4>
-
     <div class="pixel-map" [style.width.px]="imgWidth" *rxLet="imgWidth$, let imgWidth; strategy:'reactNormal'">
       <ng-container *ngFor="let sibling of pixelColorStyles$ | push; trackBy:trackBy">
         <div class="pixel"

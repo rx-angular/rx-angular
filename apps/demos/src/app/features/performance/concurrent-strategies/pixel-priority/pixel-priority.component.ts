@@ -25,8 +25,8 @@ import { computeColorPrio } from '../../../../shared/image-array/pixel-image';
         </div>
       </ng-container>
       <div class="w-100">
-        <button style="width: 200px" mat-raised-button color="primary" [unpatch] (click)="filled$.next(!filled$.getValue())">
-          Repaint
+        <button *rxLet="pixelArray$; let a" style="width: 200px" mat-raised-button color="primary" [unpatch] (click)="filled$.next(!filled$.getValue())">
+          Repaint {{a?.length}} Components
         </button>
         <rxa-sibling-pixel-img [pixelSize]="pixelSize$"
                                [imgWidth]="imgWidth$"
