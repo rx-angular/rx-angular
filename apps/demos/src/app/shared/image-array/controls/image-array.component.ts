@@ -22,40 +22,28 @@ interface ComponentState {
   template: `
     <div class="d-flex align-items-center">
       <mat-card>
-        <mat-card-image>
-          <img (click)="imgSelectionChange$.next($event.target)" src="assets/worrior.png" width="auto" height="auto">
-        </mat-card-image>
+          <img mat-card-image (click)="imgSelectionChange$.next($event.target)" src="assets/worrior.png" width="auto" height="auto">
       </mat-card>
       <mat-card>
-        <mat-card-image>
-          <img (click)="imgSelectionChange$.next($event.target)" src="assets/sonic.png" width="auto" height="auto">
-        </mat-card-image>
+          <img mat-card-image (click)="imgSelectionChange$.next($event.target)" src="assets/sonic.png" width="auto" height="auto">
       </mat-card>
       <mat-card>
-        <mat-card-image>
-          <img (click)="imgSelectionChange$.next($event.target)" src="assets/duck.png" width="auto" height="auto">
-        </mat-card-image>
+          <img mat-card-image (click)="imgSelectionChange$.next($event.target)" src="assets/duck.png" width="auto" height="auto">
       </mat-card>
       <mat-card>
-        <mat-card-image>
-          <img (click)="imgSelectionChange$.next($event.target)" src="assets/pokemon.png" width="auto" height="auto">
-        </mat-card-image>
+          <img  mat-card-image (click)="imgSelectionChange$.next($event.target)" src="assets/pokemon.png" width="auto" height="auto">
       </mat-card>
       <mat-card>
-        <mat-card-image>
-          <img (click)="imgSelectionChange$.next($event.target)" src="assets/knight.png" width="auto" height="auto">
-        </mat-card-image>
+          <img mat-card-image (click)="imgSelectionChange$.next($event.target)" src="assets/knight.png" width="auto" height="auto">
       </mat-card>
       <button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
       <input hidden #fileInput (change)="filesChange$.next(fileInput.files[0])" type="file">
       <a href="http://pixelartmaker.com" target="_blank">Custom</a>
       <!-- <a href="http://pixelartmaker.com/gallery">Gallery</a> -->
       <mat-card style="background: #fff">
-        <mat-card-image>
-          <div #display class="display">
+          <div mat-card-image #display class="display">
             <!-- canvas bootstrapped here-->
           </div>
-        </mat-card-image>
       </mat-card>
     </div>
     <mat-progress-bar [mode]="'buffer'" *ngIf="imgConverter?.loading$ | push"></mat-progress-bar>
