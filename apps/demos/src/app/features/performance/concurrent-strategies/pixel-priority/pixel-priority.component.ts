@@ -17,19 +17,17 @@ import { computeColorPrio } from '../../../../shared/image-array/pixel-image';
               <mat-label>Pixel Size</mat-label>
               <input matInput #i type="number" *rxLet="pixelSize$; let size" [value]="size" (input)="pixelSize$.next(i.value)">
             </mat-form-field> -->
-            <rxa-image-array
-              (imageChange)="imgInfoChange$.next($event)"></rxa-image-array>
-            <button mat-button [unpatch] (click)="filled$.next(!filled$.getValue())">
-              do change
-            </button>
-
+            <rxa-image-array (imageChange)="imgInfoChange$.next($event)"></rxa-image-array>
           </div>
-          <div class="col-12">
+          <div class="col-12 d-flex">
             <rxa-color-prio [colors$]="colors$"></rxa-color-prio>
           </div>
         </div>
       </ng-container>
       <div class="w-100">
+        <button style="width: 200px" mat-raised-button color="primary" [unpatch] (click)="filled$.next(!filled$.getValue())">
+          Repaint
+        </button>
         <rxa-sibling-pixel-img [pixelSize]="pixelSize$"
                                [imgWidth]="imgWidth$"
                                [colorPriority]="colors$"

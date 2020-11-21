@@ -9,6 +9,7 @@ import { RxAngularPriorityLevel } from '../../rx-angular-pocs/render-stragegies'
   template: `
     <mat-expansion-panel *rxLet="colorArr$; let colors">
       <mat-expansion-panel-header>
+        <span class="mr-1">Total: {{colors.length}}</span>
         <div class="mr-1" style="
         width: 15px;
         height: 15px;

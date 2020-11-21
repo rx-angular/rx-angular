@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Output, ViewChild } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { RxEffects } from '../../rx-effects.service';
@@ -20,16 +20,45 @@ interface ComponentState {
 @Component({
   selector: 'rxa-image-array',
   template: `
-    <input #fileInput (change)="filesChange$.next(fileInput.files[0])" type="file">
-    <mat-progress-bar [mode]="'buffer'" *ngIf="imgConverter?.loading$ | push"></mat-progress-bar>
-    <br>
-    <div class="display">
-      <!-- canvas bootstrapped here-->
+    <div class="d-flex align-items-center">
+      <mat-card>
+        <mat-card-image>
+          <img (click)="imgSelectionChange$.next($event.target)" src="assets/worrior.png" width="auto" height="auto">
+        </mat-card-image>
+      </mat-card>
+      <mat-card>
+        <mat-card-image>
+          <img (click)="imgSelectionChange$.next($event.target)" src="assets/sonic.png" width="auto" height="auto">
+        </mat-card-image>
+      </mat-card>
+      <mat-card>
+        <mat-card-image>
+          <img (click)="imgSelectionChange$.next($event.target)" src="assets/duck.png" width="auto" height="auto">
+        </mat-card-image>
+      </mat-card>
+      <mat-card>
+        <mat-card-image>
+          <img (click)="imgSelectionChange$.next($event.target)" src="assets/pokemon.png" width="auto" height="auto">
+        </mat-card-image>
+      </mat-card>
+      <mat-card>
+        <mat-card-image>
+          <img (click)="imgSelectionChange$.next($event.target)" src="assets/knight.png" width="auto" height="auto">
+        </mat-card-image>
+      </mat-card>
+      <button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
+      <input hidden #fileInput (change)="filesChange$.next(fileInput.files[0])" type="file">
+      <a href="http://pixelartmaker.com" target="_blank">Custom</a>
+      <!-- <a href="http://pixelartmaker.com/gallery">Gallery</a> -->
+      <mat-card style="background: #fff">
+        <mat-card-image>
+          <div #display class="display">
+            <!-- canvas bootstrapped here-->
+          </div>
+        </mat-card-image>
+      </mat-card>
     </div>
-    <!--
-        http://pixelartmaker.com
-    http://pixelartmaker.com/gallery
-    -->
+    <mat-progress-bar [mode]="'buffer'" *ngIf="imgConverter?.loading$ | push"></mat-progress-bar>
   `,
   styles: [`
     .pixel-canvas {
@@ -41,9 +70,12 @@ interface ComponentState {
 export class ImageArrayComponent extends Hooks implements AfterViewInit {
 
   filesChange$ = new Subject<any>();
+  imgSelectionChange$ = new Subject<any>();
   canvas: HTMLCanvasElement;
   imgConverter: ImgConverter;
 
+  @ViewChild('display')
+  display;
 
   @Output()
   imageChange: Observable<ImgInfo> = this.afterViewInit$.pipe(
@@ -57,10 +89,11 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
   ) {
     super();
     this.state.connect('image', this.filesChange$.pipe(fileReaderFromBlob(), imageFromFileReader()));
+    this.state.connect('image', this.imgSelectionChange$);
     this.rxEf.hold(this.state.select(map(s => s.image)), (img: CanvasImageSource) => this.imgConverter.renderImage(img));
 
     this.rxEf.hold(this.afterViewInit$, () => {
-      this.setupCanvas(this.elemRef.nativeElement.children[2], 50, 50);
+      this.setupCanvas(this.display.nativeElement, 50, 50);
       this.setupConverter();
     });
   }

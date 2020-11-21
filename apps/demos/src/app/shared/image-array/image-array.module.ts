@@ -7,6 +7,8 @@ import { PushModule } from '@rx-angular/template';
 import { ColorPrioComponent } from './controls/color-prio.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { LetModule } from '../rx-angular-pocs/let/let.module';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 
 
@@ -21,7 +23,9 @@ import { LetModule } from '../rx-angular-pocs/let/let.module';
     MatProgressBarModule,
     PushModule,
     MatExpansionModule,
-    LetModule
+    LetModule,
+    MatButtonModule,
+    MatCardModule
   ]
 })
 export class ImageArrayModule { }
