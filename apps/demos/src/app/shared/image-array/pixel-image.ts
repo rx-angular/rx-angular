@@ -1,12 +1,15 @@
 import { fromEvent, Observable, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { ImgInfo, RGBA } from './model';
+import { CMYK, ImgInfo, RGBA } from './model';
 import { getMemoizedFn } from '../rx-angular-pocs/memo';
 
 
 export const rgbaToStyle = getMemoizedFn(
-  (rgba) => ('rgba(' + rgba.join(',') + ')')
-);
+  (rgba: RGBA) => ('rgba(' + rgba.join(',') + ')')
+) as (RGBA) => string;
+export const styleToRgba = getMemoizedFn(
+  (rgbaStyle: string) => rgbaStyle.slice(5, -1).split(',').map(s => +s)
+) as (string) => RGBA;
 
 export function rgbToHsl(r: number, g: number, b: number): number[] {
   r /= 255, g /= 255, b /= 255;
@@ -36,6 +39,26 @@ export function rgbToHsl(r: number, g: number, b: number): number[] {
   return [h, s, l];
 }
 
+export function rgbaToCmyk(rgba: RGBA): number[] {
+  const cmyk: CMYK = [0, 0, 0, 0];
+
+  const r = rgba[0] / 255;
+  const g = rgba[1] / 255;
+  const b = rgba[2] / 255;
+
+  cmyk[0] = (1 - r - cmyk[3]) / (1 - cmyk[3]);
+  cmyk[1] = (1 - g - cmyk[3]) / (1 - cmyk[3]);
+  cmyk[2] = (1 - b - cmyk[3]) / (1 - cmyk[3]);
+  cmyk[3] = Math.min(1 - r, 1 - g, 1 - b);
+
+  cmyk[0] = Math.round(cmyk[0] * 100);
+  cmyk[1] = Math.round(cmyk[1] * 100);
+  cmyk[2] = Math.round(cmyk[2] * 100);
+  cmyk[3] = Math.round(cmyk[3] * 100);
+
+  return cmyk;
+}
+
 export function getPixelLuminance(pixel: RGBA): number {
   return (pixel[0] * 0.2126) + (pixel[1] * 0.7152) + (pixel[2] * 0.0722);
 }
@@ -60,6 +83,31 @@ export function pixelToHexString(pixel: RGBA): string {
   return hexString;
 }
 
+
+export function computeColorPrio(colorCount: Map<string, number>): Map<string, string> {
+  const prioMap = new Map<string, string>();
+  return Array.from(colorCount.entries())
+    .sort((a, b) => {
+      const _a = rgbaToCmyk(styleToRgba(a[0]))[3];
+      const _b = rgbaToCmyk(styleToRgba(b[0]))[3];
+      return _a < _b ? 1 : _a > _b ? -1 : 0;
+    })
+    .reduce((acc, entry, idx) => {
+      const style = entry[0];
+      // transparent
+      if (style.slice(style.length - 2, -1) === '0') {
+        acc.set(style, 'reactIdle');
+      } else {
+        if (idx < colorCount.size / 2) {
+          acc.set(style, 'reactImmediate');
+        } else {
+          acc.set(style, 'chunked');
+        }
+      }
+      return prioMap;
+    }, prioMap);
+}
+
 // @TODO decide on transparency handling
 export function computeAverageColor(pixels: RGBA[], ignoreTransparentColors = true): RGBA {
   const totalRed = pixels
@@ -77,12 +125,13 @@ export function computeAverageColor(pixels: RGBA[], ignoreTransparentColors = tr
     (totalBlue / pixels.length),
     // @TODO decide on transparency handling
     255
-  ];
+  ] as RGBA;
 }
 
 export function imageDataToImgInfo(imgData: ImageData): ImgInfo {
   const data = imgData.data;
   const pixelArray = [];
+  const rgbaArray = [];
   const colors = new Map<string, number>();
   for (let x = 0; x < imgData.data.length; x += 4) {
     const rgba = [
@@ -91,11 +140,10 @@ export function imageDataToImgInfo(imgData: ImageData): ImgInfo {
       data[x + 2],
       data[x + 3]
     ];
-
+    rgbaArray.push(rgba);
     const color = rgbaToStyle(rgba);
     const colorCount = colors.get(color) || 0;
     colors.set(color, colorCount + 1);
-
     pixelArray.push(color);
   }
   return { pixelArray, colors, width: imgData.width };

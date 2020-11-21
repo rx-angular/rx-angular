@@ -3,7 +3,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stragegies/strategy-provider.service';
 import { map } from 'rxjs/operators';
 import { ImgInfo } from '../../../../shared/image-array';
-
+import { computeColorPrio } from '../../../../shared/image-array/pixel-image';
 
 @Component({
   selector: 'rxa-concurrent-strategies',
@@ -19,64 +19,26 @@ import { ImgInfo } from '../../../../shared/image-array';
             </mat-form-field>
             <rxa-image-array
               (imageChange)="imgInfoChange$.next($event)"></rxa-image-array>
-            <img width="32px" height="32px" src="./assets/aaa.png">
             <button mat-button [unpatch] (click)="filled$.next(!filled$.getValue())">
               do change
             </button>
 
           </div>
-          <div class="col-12 d-flex flex-wrap">
-            <div style="width: 15px; height: 15px;" *ngFor="let i of colors$ | push"
-                 [style.background]="i[0]">
-              &nbsp;{{ i[1] }}
-            </div>
-            <!--
-          <div class="w-100 strategy-multiselect">
-            <mat-select #i [value]="strategyProvider.primaryStrategy" *ngFor="let color of colors$ | push"
-                        (valueChange)="strategyProvider.primaryStrategy = i.value">
-              <mat-select-trigger>
-                {{ color }}
-                <div [style.background]="color">{{ color }}</div>
-              </mat-select-trigger>
-              <mat-option
-                [value]="s"
-                *ngFor="let s of strategyProvider.strategyNames">
-               {{ s }}
-              </mat-option>
-            </mat-select>
-            <mat-selection-list #c *ngFor="let strategy of strategyProvider.strategyNames"
-                          (change)="selectedStrategies[strategy] = c.checked">
-              {{strategy}}
-            </mat-selection-list>
-          </div>
-          -->
+          <div class="col-12">
+            <rxa-color-prio [colors$]="colors$"></rxa-color-prio>
           </div>
         </div>
       </ng-container>
       <div class="w-100">
-        <h2 class="mat-subheader">Image</h2>
-        <div class="d-flex w-100 flex-wrap">
-
-        </div>
         <rxa-sibling-pixel-img [pixelSize]="pixelSize$"
                                [imgWidth]="imgWidth$"
+                               [colorPriority]="colors$"
                                [pixelArray]="pixelArray$"
                                [filled]="filled$"></rxa-sibling-pixel-img>
       </div>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.Default,
-  styles: [`
-    .strategy-multiselect {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .strategy-multiselect .mat-checkbox {
-      flex-grow: 1;
-      width: 200px;
-    }
-  `]
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class PixelPriorityComponent {
   selectedStrategies: { [name: string]: boolean } = {};
@@ -85,10 +47,7 @@ export class PixelPriorityComponent {
 
   pixelSize$ = new BehaviorSubject<string>('3');
   imgWidth$ = this.imgInfoChange$.pipe(map(d => d.width));
-  colors$ = this.imgInfoChange$.pipe(
-    map(d => Array.from(d.colors.entries())
-      .sort((a, b) => a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0))
-  );
+  colors$ = this.imgInfoChange$.pipe(map(r => computeColorPrio(r.colors)));
   pixelArray$ = this.imgInfoChange$.pipe(map(d => d.pixelArray));
   filled$ = new BehaviorSubject<boolean>(true);
 

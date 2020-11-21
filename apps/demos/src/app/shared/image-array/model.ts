@@ -4,4 +4,5 @@ export interface ImgInfo {
   colors: Map<string, number>
 }
 export type RGBA = [number, number, number, number];
+export type CMYK = [number, number, number, number];
 export type RGBAs = RGBA[];

@@ -1,4 +1,4 @@
-import { computeAverageColor } from '../pixel-image';
+import { computeAverageColor, rgbaToStyle } from '../pixel-image';
 import { RGBA, RGBAs } from '../model';
 
 const RERUN_COUNT = 10;
@@ -25,6 +25,11 @@ interface KMeansResult {
 }
 
 class KMeansRunner {
+
+  palette(result: KMeansResult): RGBAs {
+    // tslint:disable-next-line:no-bitwise
+    return result.clusters.map(rgba => computeAverageColor(rgba).map(v => ~~v) as RGBA)
+  }
 
   run(k: number, pixels: RGBAs): KMeansResult {
     let clusters = null;
@@ -101,6 +106,7 @@ class KMeansRunner {
     pixels.forEach((pixel) => {
       let bestGroupIndex;
       let bestGroupError = Infinity;
+
       means.forEach((mean, index) => {
         const error = this.distance([pixel[0], pixel[1], pixel[2]], [mean[0], mean[1], mean[2]]);
         if (error < bestGroupError) {
@@ -127,3 +133,5 @@ class KMeansRunner {
   }
 
 }
+
+export const kMeansRunner = new KMeansRunner();

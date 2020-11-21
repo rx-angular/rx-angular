@@ -4,7 +4,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { RxEffects } from '../../rx-effects.service';
 import { Hooks } from '../../debug-helper/hooks';
 import { RxState } from '@rx-angular/state';
-import { fileReaderFromBlob, imageFromFileReader} from '../pixel-image';
+import { fileReaderFromBlob, imageFromFileReader } from '../pixel-image';
 import { ImgInfo } from '../model';
 import { createImageConverter, ImgConverter } from '../image-converter';
 
@@ -27,8 +27,10 @@ interface ComponentState {
     <div class="display">
       <!-- canvas bootstrapped here-->
     </div>
-    http://pixelartmaker.com
+    <!--
+        http://pixelartmaker.com
     http://pixelartmaker.com/gallery
+    -->
   `,
   styles: [`
     .pixel-canvas {

@@ -50,7 +50,14 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SiblingPixelImgComponent extends RxState<{ pixelColorStyles: string[], filled: boolean, pixelSize: number, imgWidth: number }> {
+export class SiblingPixelImgComponent extends RxState<{
+  pixelColorStyles: string[],
+  filled: boolean,
+  pixelSize: number,
+  colorPriority: Map<string, string>,
+  imgWidth: number
+}> {
+
   imageState = this.select(selectSlice(['pixelColorStyles', 'pixelSize', 'imgWidth']));
 
   filled$ = this.select('filled');
@@ -67,6 +74,11 @@ export class SiblingPixelImgComponent extends RxState<{ pixelColorStyles: string
     this.connect('imgWidth', combineLatest([imgWidth$, this.select('pixelSize')]).pipe(map(([imgWidth, pixelSize]) => ~~(+imgWidth * pixelSize))));
   }
 
+  @Input()
+  set colorPriority(colorPriority$: Observable<Map<string, string>>) {
+    // tslint:disable-next-line:no-bitwise
+    this.connect('colorPriority', colorPriority$);
+  }
   @Input()
   set pixelSize(pixelSize$: Observable<number | string>) {
     // tslint:disable-next-line:no-bitwise
@@ -93,6 +105,7 @@ export class SiblingPixelImgComponent extends RxState<{ pixelColorStyles: string
   }
 
   getStrategy(color: any) {
+    return this.get('colorPriority').get(color);
     const [r, g, b, a] = color.replaceAll(')', '').replaceAll('rgba(', '').split(',');
     const transparency = a === '0';
     const black = [
