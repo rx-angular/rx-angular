@@ -87,20 +87,27 @@ export function pixelToHexString(pixel: RGBA): string {
 export function computeColorPrio(colorCount: Map<string, number>): Map<string, string> {
   const prioMap = new Map<string, string>();
   return Array.from(colorCount.entries())
+    .map(s => ([...s, rgbaToCmyk(styleToRgba(s[0]))] as [string, number, CMYK]))
     .sort((a, b) => {
-      const _a = rgbaToCmyk(styleToRgba(a[0]))[3];
-      const _b = rgbaToCmyk(styleToRgba(b[0]))[3];
+      const _a = a[2][3];
+      const _b = b[2][3];
       return _a < _b ? 1 : _a > _b ? -1 : 0;
     })
     .reduce((acc, entry, idx) => {
       const style = entry[0];
+      const k = entry[2][3];
       // transparent
       if (style.slice(style.length - 2, -1) === '0') {
         acc.set(style, 'reactIdle');
       } else {
-        if (idx < colorCount.size / 3) {
+        // Dark color prio
+        if (k > 76) {
           acc.set(style, 'reactImmediate');
-        } else {
+        }
+        else if (idx < colorCount.size / 3) {
+          acc.set(style, 'reactImmediate');
+        }
+        else {
           acc.set(style, 'reactNormal');
         }
       }
