@@ -5,6 +5,9 @@ import { exhaustMap, publish, tap } from 'rxjs/operators';
 export const animFrame = getZoneUnPatchedApi('requestAnimationFrame');
 const cancelAnimFrame = getZoneUnPatchedApi('cancelAnimationFrame');
 
+/*export const animFrame = getZoneUnPatchedApi('setTimeout');
+const cancelAnimFrame = getZoneUnPatchedApi('clearTimeout');*/
+
 export enum GlobalTaskPriority {
   chunk,
   blocking
@@ -34,12 +37,17 @@ interface GlobalTaskManager {
 // PLAY AROUND WITH THIS IF YOU WANT TO CHANGE FRAME SIZE!
 const rescheduleMax = 3;
 
-function createGlobalTaskManager(cfg: {frameRate: number}): GlobalTaskManager {
+function createGlobalTaskManager(cfg: {frameRate: number, pendingInput?: { enabled: boolean, options?: { includeContinuous: boolean } }}): GlobalTaskManager {
   const frameRate = cfg.frameRate || 16;
+  const respectPendingInput = cfg?.pendingInput?.enabled || false;
+  const pendingInputOptions = cfg?.pendingInput?.options || { includeContinuous: true };
   const queue = new Map<GlobalTaskScope, ScheduledGlobalTask>();
   const chunkedQueue = new Map<GlobalTaskScope, ScheduledGlobalTask>();
   const tick = new Subject<void>();
   const tick$ = tick.asObservable();
+  const canRun = respectPendingInput ?
+                 (o) => !navigator['scheduling'].isInputPending(o) :
+                 () => true;
 
   const taskDefinition$ = new Subject<GlobalTask>();
 
@@ -90,6 +98,12 @@ function createGlobalTaskManager(cfg: {frameRate: number}): GlobalTaskManager {
     return new Observable<void>(subscriber => {
       let frameId;
       function exhaust() {
+        if (!canRun(pendingInputOptions)) {
+          cancelAnimFrame(frameId);
+          // queue is empty -> exhaust completed
+          frameId = animFrame(exhaust);
+          subscriber.next();
+        }
         if (size() > 0) {
           let runtime = 0;
           for (const blockingEntry of queue.entries()) {
