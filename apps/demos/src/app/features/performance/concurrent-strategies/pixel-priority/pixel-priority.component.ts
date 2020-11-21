@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stragegies/strategy-provider.service';
 import { map } from 'rxjs/operators';
-import { ImgInfo } from './pixel-image';
+import { ImgInfo } from '../../../../shared/image-array';
+
 
 @Component({
   selector: 'rxa-concurrent-strategies',
@@ -17,18 +18,18 @@ import { ImgInfo } from './pixel-image';
               <input matInput #i type="number" [value]="pixelSize$ | push" (input)="pixelSize$.next(i.value)">
             </mat-form-field>
             <rxa-image-array
-              (imageChange)="pixelDataChange$.next($event)"></rxa-image-array>
+              (imageChange)="imgInfoChange$.next($event)"></rxa-image-array>
             <img width="32px" height="32px" src="./assets/aaa.png">
             <button mat-button [unpatch] (click)="filled$.next(!filled$.getValue())">
               do change
             </button>
 
-
           </div>
           <div class="col-12 d-flex flex-wrap">
-             <div style="width: 15px; height: 15px;" *ngFor="let i of colors$ | push | keyvalue" [style.background]="i.key">
-            &nbsp;{{ i.value }}
-          </div>
+            <div style="width: 15px; height: 15px;" *ngFor="let i of colors$ | push"
+                 [style.background]="i[0]">
+              &nbsp;{{ i[1] }}
+            </div>
             <!--
           <div class="w-100 strategy-multiselect">
             <mat-select #i [value]="strategyProvider.primaryStrategy" *ngFor="let color of colors$ | push"
@@ -80,12 +81,15 @@ import { ImgInfo } from './pixel-image';
 export class PixelPriorityComponent {
   selectedStrategies: { [name: string]: boolean } = {};
 
-  pixelDataChange$ = new Subject<ImgInfo>();
+  imgInfoChange$ = new Subject<ImgInfo>();
 
   pixelSize$ = new BehaviorSubject<string>('3');
-  imgWidth$ = this.pixelDataChange$.pipe(map(d => d.width));
-  colors$ = this.pixelDataChange$.pipe(map(d => d.colors));
-  pixelArray$ = this.pixelDataChange$.pipe(map(d => d.pixelArray));
+  imgWidth$ = this.imgInfoChange$.pipe(map(d => d.width));
+  colors$ = this.imgInfoChange$.pipe(
+    map(d => Array.from(d.colors.entries())
+      .sort((a, b) => a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0))
+  );
+  pixelArray$ = this.imgInfoChange$.pipe(map(d => d.pixelArray));
   filled$ = new BehaviorSubject<boolean>(true);
 
   constructor(public strategyProvider: StrategyProvider) {

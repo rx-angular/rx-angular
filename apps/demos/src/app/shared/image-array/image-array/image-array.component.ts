@@ -1,21 +1,12 @@
 import { AfterViewInit, Component, ElementRef, Output } from '@angular/core';
-import {
-  animationFrameScheduler,
-  asyncScheduler, BehaviorSubject,
-  fromEvent,
-  Observable,
-  Subject,
-  Subscription,
-  throwError
-} from 'rxjs';
-import { map, observeOn, switchMap, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { RxEffects } from '../../rx-effects.service';
 import { Hooks } from '../../debug-helper/hooks';
 import { RxState } from '@rx-angular/state';
-import {
-  createImageConverter,
-  fileReaderFromBlob, imageFromFileReader, ImgConverter, ImgInfo
-} from '../../../features/performance/concurrent-strategies/pixel-priority/pixel-image';
+import { fileReaderFromBlob, imageFromFileReader} from '../pixel-image';
+import { ImgInfo } from '../model';
+import { createImageConverter, ImgConverter } from '../image-converter';
 
 interface ComponentState {
   loading: boolean;
@@ -34,7 +25,7 @@ interface ComponentState {
     <mat-progress-bar [mode]="'buffer'" *ngIf="imgConverter?.loading$ | push"></mat-progress-bar>
     <br>
     <div class="display">
-      <!-- convas bootstraped here-->
+      <!-- canvas bootstrapped here-->
     </div>
     http://pixelartmaker.com
     http://pixelartmaker.com/gallery
@@ -55,7 +46,7 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
 
   @Output()
   imageChange: Observable<ImgInfo> = this.afterViewInit$.pipe(
-    switchMap(() => this.imgConverter.pixelArrayChange$)
+    switchMap(() => this.imgConverter.imgInfoChange$)
   );
 
   constructor(
@@ -64,7 +55,6 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
     private state: RxState<ComponentState>
   ) {
     super();
-
     this.state.connect('image', this.filesChange$.pipe(fileReaderFromBlob(), imageFromFileReader()));
     this.rxEf.hold(this.state.select(map(s => s.image)), (img: CanvasImageSource) => this.imgConverter.renderImage(img));
 
