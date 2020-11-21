@@ -98,10 +98,10 @@ export function computeColorPrio(colorCount: Map<string, number>): Map<string, s
       if (style.slice(style.length - 2, -1) === '0') {
         acc.set(style, 'reactIdle');
       } else {
-        if (idx < colorCount.size / 2) {
+        if (idx < colorCount.size / 3) {
           acc.set(style, 'reactImmediate');
         } else {
-          acc.set(style, 'chunked');
+          acc.set(style, 'reactNormal');
         }
       }
       return prioMap;

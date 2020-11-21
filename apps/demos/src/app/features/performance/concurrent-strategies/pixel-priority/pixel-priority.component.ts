@@ -13,10 +13,10 @@ import { computeColorPrio } from '../../../../shared/image-array/pixel-image';
         <h1 class="mat-headline">Pixels with priorities</h1>
         <div class="row">
           <div class="col-12 d-flex">
-            <mat-form-field class="mr-2">
+            <!-- <mat-form-field class="mr-2">
               <mat-label>Pixel Size</mat-label>
-              <input matInput #i type="number" [value]="pixelSize$ | push" (input)="pixelSize$.next(i.value)">
-            </mat-form-field>
+              <input matInput #i type="number" *rxLet="pixelSize$; let size" [value]="size" (input)="pixelSize$.next(i.value)">
+            </mat-form-field> -->
             <rxa-image-array
               (imageChange)="imgInfoChange$.next($event)"></rxa-image-array>
             <button mat-button [unpatch] (click)="filled$.next(!filled$.getValue())">
@@ -34,7 +34,8 @@ import { computeColorPrio } from '../../../../shared/image-array/pixel-image';
                                [imgWidth]="imgWidth$"
                                [colorPriority]="colors$"
                                [pixelArray]="pixelArray$"
-                               [filled]="filled$"></rxa-sibling-pixel-img>
+                               [filled]="filled$">
+        </rxa-sibling-pixel-img>
       </div>
     </rxa-visualizer>
   `,

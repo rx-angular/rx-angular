@@ -6,6 +6,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PushModule } from '@rx-angular/template';
 import { ColorPrioComponent } from './controls/color-prio.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { LetModule } from '../rx-angular-pocs/let/let.module';
 
 
 
@@ -19,7 +20,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatInputModule,
     MatProgressBarModule,
     PushModule,
-    MatExpansionModule
+    MatExpansionModule,
+    LetModule
   ]
 })
 export class ImageArrayModule { }

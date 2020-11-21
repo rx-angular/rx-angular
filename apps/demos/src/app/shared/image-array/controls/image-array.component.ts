@@ -20,7 +20,6 @@ interface ComponentState {
 @Component({
   selector: 'rxa-image-array',
   template: `
-
     <input #fileInput (change)="filesChange$.next(fileInput.files[0])" type="file">
     <mat-progress-bar [mode]="'buffer'" *ngIf="imgConverter?.loading$ | push"></mat-progress-bar>
     <br>
