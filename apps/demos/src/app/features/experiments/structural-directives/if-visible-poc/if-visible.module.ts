@@ -12,6 +12,7 @@ import { TriggerProviderModule } from '../../../../shared/debug-helper/trigger-p
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
+import { RxLetPocModule } from '../rx-let-poc/rx-let-poc.module';
 
 const DECLARATIONS = [
   IfVisibleComponent,
@@ -21,17 +22,10 @@ const DECLARATIONS = [
 @NgModule({
   declarations: DECLARATIONS,
   imports: [
-    LetModule,
     VisualizerModule,
     ValueProvidersModule,
-    StrategySelectModule,
-    GhostElementsModule,
-    MatButtonModule,
-    MatProgressBarModule,
-    TriggerProviderModule,
-    MatInputModule,
-    RouterModule,
-    MatCardModule
+    RxLetPocModule
+
   ],
   exports: DECLARATIONS,
   providers: []

@@ -4,6 +4,9 @@ import { ROUTES } from './if-visible.routes';
 import { IfVisibleModule } from './if-visible.module';
 
 @NgModule({
-  imports: [IfVisibleModule, RouterModule.forChild(ROUTES)],
+  imports: [
+    IfVisibleModule,
+    RouterModule.forChild(ROUTES)
+  ],
 })
 export class IfVisibleRoutedModule {}
