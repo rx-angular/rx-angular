@@ -22,11 +22,11 @@ interface ComponentState {
   template: `
     <div class="row img-row">
       <div class="col-12 d-flex flex-wrap align-items-center">
-        <img (click)="imgSelectionChange$.next($event.target)" src="assets/worrior.png" width="auto" height="auto">
-        <img (click)="imgSelectionChange$.next($event.target)" src="assets/sonic.png" width="auto" height="auto">
-        <img (click)="imgSelectionChange$.next($event.target)" src="assets/duck.png" width="auto" height="auto">
-        <img (click)="imgSelectionChange$.next($event.target)" src="assets/pokemon.png" width="auto" height="auto">
-        <img (click)="imgSelectionChange$.next($event.target)" src="assets/knight.png" width="auto" height="auto">
+        <img (click)="imgSelectionChange$.next($event.target)" src="assets/worrior.png">
+        <img (click)="imgSelectionChange$.next($event.target)" src="assets/sonic.png">
+        <img (click)="imgSelectionChange$.next($event.target)" src="assets/duck.png">
+        <img (click)="imgSelectionChange$.next($event.target)" src="assets/pokemon.png" >
+        <img (click)="imgSelectionChange$.next($event.target)" src="assets/knight.png">
         <div #display class="upload-display">
           <!-- canvas bootstrapped here-->
         </div>
