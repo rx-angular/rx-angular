@@ -12,22 +12,24 @@ import { computeColorPrio } from '../../../../shared/image-array/pixel-image';
       <ng-container visualizerHeader>
         <h1 class="mat-headline">Pixels with priorities</h1>
         <div class="row">
-          <div class="col-12 d-flex mb-2">
+
             <!-- <mat-form-field class="mr-2">
               <mat-label>Pixel Size</mat-label>
               <input matInput #i type="number" *rxLet="pixelSize$; let size" [value]="size" (input)="pixelSize$.next(i.value)">
             </mat-form-field> -->
-            <rxa-image-array (imageChange)="imgInfoChange$.next($event)"></rxa-image-array>
-          </div>
+            <rxa-image-array class="col-12 d-flex mb-2" (imageChange)="imgInfoChange$.next($event)"></rxa-image-array>
+
           <div class="col-12 d-flex flex-wrap">
             <rxa-color-prio class="w-100" [colors$]="colors$"></rxa-color-prio>
           </div>
         </div>
       </ng-container>
       <div class="col-12 d-flex mt-2">
-        <button class="mr-2" *rxLet="pixelArray$; let a" style="width: 200px" mat-raised-button color="primary" [unpatch] (click)="filled$.next(!filled$.getValue())">
+        <div class="mr-2">
+        <button *rxLet="pixelArray$; let a" style="width: 200px" mat-raised-button color="primary" [unpatch] (click)="filled$.next(!filled$.getValue())">
           Repaint {{a?.length}} Components
         </button>
+        </div>
         <rxa-sibling-pixel-img
           [pixelSize]="pixelSize$"
                                [imgWidth]="imgWidth$"

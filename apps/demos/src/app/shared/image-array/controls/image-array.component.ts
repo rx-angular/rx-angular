@@ -20,52 +20,57 @@ interface ComponentState {
 @Component({
   selector: 'rxa-image-array',
   template: `
-    <div class="row img-row">
+    <div class="row img-row w-100">
+      <div class="col-12">
+        <mat-progress-bar *ngIf="imgConverter?.loading$ | push" [mode]="'buffer'"></mat-progress-bar>
+      </div>
       <div class="col-12 d-flex flex-wrap align-items-center">
-        <img (click)="imgSelectionChange$.next($event.target)" src="assets/worrior.png">
-        <img (click)="imgSelectionChange$.next($event.target)" src="assets/sonic.png">
-        <img (click)="imgSelectionChange$.next($event.target)" src="assets/duck.png">
-        <img (click)="imgSelectionChange$.next($event.target)" src="assets/pokemon.png" >
-        <img (click)="imgSelectionChange$.next($event.target)" src="assets/knight.png">
-        <div #display class="upload-display">
+        <div class="w-100 d-flex flex-row align-items-center flex-wrap mb-3">
+          <img [alt]="name" class="mr-2" (click)="imgSelectionChange$.next($event.target)" [src]="'assets/'+name"
+               *ngFor="let name of images">
+          <button type="button" class="mr-2" mat-raised-button (click)="fileInput.click()">Choose File</button>
+          <input hidden #fileInput (change)="filesChange$.next(fileInput.files[0])" type="file">
+
+          <button mat-raised-button class="btn-link" href="http://pixelartmaker.com" target="_blank">Create</button>
+
+        </div>
+        <div #display class="dh-embedded-view">
           <!-- canvas bootstrapped here-->
         </div>
       </div>
-    </div>
-    <div class="row progress-bar-row my-2">
-      <div class="col-12">
-        <mat-progress-bar *ngIf="imgConverter?.loading$ | push" [mode]="'buffer'" ></mat-progress-bar>
-      </div>
-    </div>
-    <div class=" d-flex align-items-center">
-      <button type="button" class="mr-2" mat-raised-button (click)="fileInput.click()">Choose File</button>
-      <input hidden #fileInput (change)="filesChange$.next(fileInput.files[0])" type="file">
-      <a href="http://pixelartmaker.com" target="_blank">Custom</a>
     </div>
   `,
   styles: [`
     .progress-bar-row {
       height: 4px;
     }
+
     .progress-bar-row mat-progress-bar {
       width: 200px;
     }
+
     .img-row img, .img-row .upload-display {
       max-height: 100px;
       width: auto;
       cursor: pointer;
-    }
-    .upload-display {
-      outline: 1px dotted green;
-    }
-    .pixel-canvas {
-      border: 1px solid red;
     }
   `],
   providers: [RxEffects, RxState]
 })
 export class ImageArrayComponent extends Hooks implements AfterViewInit {
 
+  images = [
+    'warrior.png',
+    'sonic2.png',
+    'dragon.png',
+    'pokemon.png',
+    'duck.png',
+    'knight.png',
+    'ice-cream.png',
+    'sure.png',
+    'bowser-jr.png',
+    'maroon.png',
+  ];
   filesChange$ = new Subject<any>();
   imgSelectionChange$ = new Subject<any>();
   canvas: HTMLCanvasElement;

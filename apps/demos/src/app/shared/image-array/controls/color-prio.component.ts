@@ -33,15 +33,10 @@ import { RxAngularPriorityLevel } from '../../rx-angular-pocs/render-stragegies'
   styles: [`
     .color {
       width: 15px;
-      height: 15px;
+      max-height: 15px;
       font-size: 13px;
       text-align: center;
       box-shadow: 1px 1px 1px #0006;
-    }
-
-    .strategy {
-      line-height: 15px;
-      font-size: 10px;
     }
   `]
 })
