@@ -40,10 +40,10 @@ export function applyStrategy<T>(
     publish((n$) =>
       credentials$.pipe(
         switchMap((credentials) => n$.pipe(
-          switchMap(n => {
-            const cdRef = getCdRef(n);
-            const work = () => credentials.work(cdRef, context);
-            return concat(of(n), NEVER).pipe(credentials.behavior(work, cdRef));
+          switchMap(notification => {
+            const activeEmbeddedView = getCdRef(notification);
+            const work = () => credentials.work(activeEmbeddedView, context, notification);
+            return concat(of(notification), NEVER).pipe(credentials.behavior(work, activeEmbeddedView));
           })
           )
         )

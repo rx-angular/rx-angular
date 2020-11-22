@@ -3,10 +3,6 @@ import { ɵmarkDirty as markDirty } from '@angular/core';
 import { coalesceWith, priorityTickMap, SchedulingPriority } from '@rx-angular/template';
 import { tap } from 'rxjs/operators';
 
-export function getDefaultStrategyNames(): string[] {
-  return Object.keys(getDefaultStrategyCredentialsMap());
-}
-
 export function getDefaultStrategyCredentialsMap(): StrategyCredentialsMap {
   return {
     'global': globalCredentials,
@@ -18,7 +14,14 @@ export function getDefaultStrategyCredentialsMap(): StrategyCredentialsMap {
 
 const localCredentials: StrategyCredentials = {
   name: 'local',
-  work: (cdRef) => cdRef.detectChanges(),
+  work: (cdRef, _, notification) => {
+    if(['rxComplete', 'rxError'].includes(notification.kind)) {
+      cdRef.detach();
+    } else {
+      cdRef.reattach();
+      cdRef.detectChanges();
+    }
+  },
   behavior: (work: any, scope) => o$ => o$.pipe(
       coalesceWith(priorityTickMap[SchedulingPriority.animationFrame], scope),
       tap(() => work())
