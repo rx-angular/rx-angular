@@ -1,6 +1,6 @@
 import { memo } from '../memoizerific';
 
-export const memoFac = memo(50);
+export const memoFac = memo(500);
 export const memoFnMap = new Map<Function, Function>();
 
 export function getMemoizedFn(fn: any): Function  {

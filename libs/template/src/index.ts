@@ -34,7 +34,7 @@ export { RxViewContext, RxTemplateObserver, RxNotificationKind } from './lib/cor
 export {
   getStrategies,
   priorityTickMap,
-  SchedulingPriority,
+  SchedulingPriority
 } from './lib/render-strategies';
 
 export { PushPipe, PushModule } from './lib/push';
