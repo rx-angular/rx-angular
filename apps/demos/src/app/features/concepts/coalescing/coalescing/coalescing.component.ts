@@ -12,7 +12,7 @@ import { mergeMap } from 'rxjs/operators';
           <rxa-strategy-select (strategyChange)="strategy$.next($event)"></rxa-strategy-select>
           <br>
           <button mat-raised-button (click)="click$.next($event)">UpdateValue</button>
-          <button mat-raised-button [unpatch]="" (click)="click$.next($event)">UpdateValue (unpatched)</button>
+          <button mat-raised-button [unpatch] (click)="click$.next($event)">UpdateValue (unpatched)</button>
         </div>
       </ng-container>
       <rxa-visualizer class="w-100">
@@ -21,23 +21,20 @@ import { mergeMap } from 'rxjs/operators';
           <br/>
           {{ incremental$ | push: strategy$ }}<br/>
         </div>
-        <rxa-visualizer viewType="embedded-view" *rxLet="incremental$; let value; strategy: strategy$" class="col-sm-3">
-          <h3 visualizerHeader>rxLet 1</h3>
-          {{ value }}
-        </rxa-visualizer>
         <div class="col-sm-3">
           <h3>Push 2</h3>
           <br/>
           {{ incremental$ | push: strategy$ }}
         </div>
-        <rxa-visualizer viewType="embedded-view" *rxLet="incremental$; let value; strategy: strategy$" class="col-sm-3">
-          <h3 visualizerHeader>rxLet 2</h3>
-          {{ value }}
-        </rxa-visualizer>
+        <div class="col-sm-3">
+          <h3>Push 2</h3>
+          <br/>
+          {{ incremental$ | push: strategy$ }}
+        </div>
       </rxa-visualizer>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CoalescingComponent {
   click$ = new Subject<any>();

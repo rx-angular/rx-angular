@@ -11,7 +11,7 @@ import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stra
       <div class="mt-5 row w-100 d-flex">
         <div style="margin-top: 300px" class="col-6 dh-embedded-view p-2">
           <div *ifVisible>
-            <p *rxLetTriggered="v.incremental$; let n">n: {{log(n)}}</p>
+
           </div>
         </div>
       </div>

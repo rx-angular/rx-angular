@@ -39,10 +39,9 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
       context: (cdRef as any).context,
       strategies: this.strategies,
       defaultStrategyName: this.defaultStrategyName,
-      getCdRef: () => cdRef as EmbeddedViewRef<any>
+      getCdRef: () => cdRef
     });
     this.subscription = this.renderAware.rendered$.subscribe();
-
   }
 
   transform<T>(
