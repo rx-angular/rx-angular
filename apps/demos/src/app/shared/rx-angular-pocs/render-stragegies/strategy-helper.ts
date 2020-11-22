@@ -43,7 +43,6 @@ export function applyStrategy<T>(
           switchMap(notification => {
             const activeEmbeddedView = getCdRef(notification);
             const context = getContext(notification);
-            console.log(context)
             const work = () => credentials.work(activeEmbeddedView, context, notification);
             return concat(of(notification), NEVER).pipe(
               credentials.behavior(work, context),

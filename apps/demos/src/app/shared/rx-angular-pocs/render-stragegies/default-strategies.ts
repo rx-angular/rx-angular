@@ -15,14 +15,7 @@ export function getDefaultStrategyCredentialsMap(): StrategyCredentialsMap {
 const localCredentials: StrategyCredentials = {
   name: 'local',
   work: (cdRef, _, notification) => {
-  /*  if(['rxComplete', 'rxError'].includes(notification.kind)) {
-      cdRef.detach();
-    } else {
-      cdRef.reattach();
       cdRef.detectChanges();
-    }*/
-    console.log('work cdRef', cdRef, notification);
-    cdRef.detectChanges();
   },
   behavior: (work: any, scope) => o$ => o$.pipe(
       coalesceWith(priorityTickMap[SchedulingPriority.Promise], scope),

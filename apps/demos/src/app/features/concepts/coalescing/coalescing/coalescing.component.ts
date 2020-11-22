@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Subject } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
+import { RX_CUSTOM_STRATEGIES } from '../../../../shared/rx-angular-pocs/render-stragegies';
+import { getTestStrategyCredentialsMap } from '../strategies/strategy-map';
 
 @Component({
   selector: 'rxa-demo-basics',

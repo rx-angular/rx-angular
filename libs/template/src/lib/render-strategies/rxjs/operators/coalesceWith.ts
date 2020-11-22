@@ -65,8 +65,10 @@ export function coalesceWith<T>(
       let latestValue: T | undefined;
 
       const tryEmitLatestValue = () => {
-        coalescingManager.remove(_scope);
-        console.log('try', coalescingManager.isCoalescing(_scope));
+        // We only decrement the number if it is greater than 0 (isCoalescing)
+        if (coalescingManager.isCoalescing(_scope)) {
+          coalescingManager.remove(_scope);
+        }
         if (!coalescingManager.isCoalescing(_scope)) {
           outerObserver.next(latestValue);
         }
@@ -81,25 +83,26 @@ export function coalesceWith<T>(
         error: (error) => outerObserver.error(error),
         next: (value) => {
           latestValue = value;
-
-          if (!actionSubscription) {
+          if (!actionSubscription && !coalescingManager.isCoalescing(_scope)) {
             // tslint:disable-next-line:no-unused-expression
             coalescingManager.add(_scope);
             actionSubscription = durationSelector.subscribe({
               next: () => {
-                console.log('after', coalescingManager.isCoalescing(_scope));
                 tryEmitLatestValue();
                 actionSubscription = undefined;
               },
               complete: () => {
                 if (actionSubscription) {
-                  console.log('cpl', coalescingManager.isCoalescing(_scope));
                   tryEmitLatestValue();
                   actionSubscription = undefined;
                 }
               }
             });
-            rootSubscription.add(actionSubscription);
+            rootSubscription.add(new Subscription(() => {
+              tryEmitLatestValue();
+              // tslint:disable-next-line:no-unused-expression
+              actionSubscription && actionSubscription.unsubscribe()
+            }));
           }
         }
       };

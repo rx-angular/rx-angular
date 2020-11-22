@@ -69,6 +69,7 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
     'ice-cream.png',
     'sure.png',
     'bowser-jr.png',
+    'dry-bowser-jr.png',
     'maroon.png',
   ];
   filesChange$ = new Subject<any>();
