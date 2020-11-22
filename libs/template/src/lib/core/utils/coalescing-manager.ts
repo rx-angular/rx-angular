@@ -55,6 +55,7 @@ function createCoalesceManager(): CoalescingManager {
 
   // Checks if anybody else is already coalescing atm
   function isCoalescing(scope: object): boolean {
+    console.log(coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers);
     return (
       coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers >
       0

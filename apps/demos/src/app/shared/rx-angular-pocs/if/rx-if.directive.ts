@@ -153,18 +153,20 @@ export class RxIfDirective<U> implements OnInit, AfterViewInit, OnDestroy {
     this.strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), getDefaultStrategyCredentialsMap());
     this.renderAware = createRenderAware<U>({
       templateObserver: this.templateObserver,
-      context: (cdRef as any).context,
       strategies: this.strategies,
       defaultStrategyName: this.defaultStrategyName,
-      getCdRef: (notification: RxNotification<U>) => {
-        let templateName: RxIfTemplateNames | 'rxNext' = notification.kind;
-        if (templateName === 'rxNext') {
-          templateName = notification.value ? 'rxThen' : 'rxElse';
-          return this.templateManager.getEmbeddedView(templateName);
-        }
-        return this.templateManager.getEmbeddedView(templateName);
-      }
+      getContext: (notification: RxNotification<U>) => this.getActiveView(notification),
+      getCdRef: (notification: RxNotification<U>) => this.getActiveView(notification)
     });
+  }
+
+  getActiveView(notification: RxNotification<U>) {
+    let templateName: RxIfTemplateNames | 'rxNext' = notification.kind;
+    if (templateName === 'rxNext') {
+      templateName = notification.value ? 'rxThen' : 'rxElse';
+      return this.templateManager.getEmbeddedView(templateName);
+    }
+    return this.templateManager.getEmbeddedView(templateName);
   }
 
   ngOnInit() {

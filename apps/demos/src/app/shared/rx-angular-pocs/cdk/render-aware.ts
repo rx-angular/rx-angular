@@ -1,5 +1,5 @@
 import { EMPTY, isObservable, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { catchError, distinctUntilChanged, map, merge, mergeAll, startWith, switchAll } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map, merge, mergeAll, startWith, switchAll, tap } from 'rxjs/operators';
 import { rxMaterialize, RxNotification, RxTemplateObserver } from '@rx-angular/template';
 import {
   applyStrategy,
@@ -29,10 +29,10 @@ export interface RenderAware<U> {
  */
 export function createRenderAware<U>(cfg: {
   templateObserver: RxTemplateObserver<U>;
-  context: any;
   defaultStrategyName: string;
   strategies: StrategyCredentialsMap;
   getCdRef: (k: RxNotification<U>) => ChangeDetectorRef;
+  getContext: (k?: RxNotification<U>) => any;
 }): RenderAware<U | undefined | null> {
 
   const strategyName$ = new ReplaySubject<Observable<string>>(1);
@@ -56,7 +56,7 @@ export function createRenderAware<U>(cfg: {
       rxMaterialize(),
       merge(templateTrigger$ || EMPTY),
       observeTemplateByNotificationKind(cfg.templateObserver),
-      applyStrategy(strategy$, cfg.context, cfg.getCdRef),
+      applyStrategy(strategy$, cfg.getContext, cfg.getCdRef),
       catchError(e => {
         console.error(e);
         return EMPTY;

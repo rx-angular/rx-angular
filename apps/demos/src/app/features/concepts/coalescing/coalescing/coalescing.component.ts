@@ -11,11 +11,11 @@ import { mergeMap } from 'rxjs/operators';
         <div>
           <rxa-strategy-select (strategyChange)="strategy$.next($event)"></rxa-strategy-select>
           <br>
-          <button mat-raised-button (click)="click$.next($event)">UpdateValue</button>
-          <button mat-raised-button [unpatch] (click)="click$.next($event)">UpdateValue (unpatched)</button>
+          <button [unpatch] mat-raised-button (click)="click$.next($event)">UpdateValue</button>
+
         </div>
       </ng-container>
-      <rxa-visualizer class="w-100">
+
         <div class="col-sm-3">
           <h3>Push 1</h3>
           <br/>
@@ -31,7 +31,7 @@ import { mergeMap } from 'rxjs/operators';
           <br/>
           {{ incremental$ | push: strategy$ }}
         </div>
-      </rxa-visualizer>
+
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush

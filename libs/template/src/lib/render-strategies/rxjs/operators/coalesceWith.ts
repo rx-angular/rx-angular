@@ -45,6 +45,7 @@ export function coalesceWith<T>(
   scope?: object
 ): MonoTypeOperatorFunction<T> {
   const _scope = scope || {};
+
   return (source) => {
     const o$ = new Observable<T>((observer) => {
       const rootSubscription = new Subscription();
@@ -65,6 +66,7 @@ export function coalesceWith<T>(
 
       const tryEmitLatestValue = () => {
         coalescingManager.remove(_scope);
+        console.log('try', coalescingManager.isCoalescing(_scope));
         if (!coalescingManager.isCoalescing(_scope)) {
           outerObserver.next(latestValue);
         }
@@ -79,15 +81,19 @@ export function coalesceWith<T>(
         error: (error) => outerObserver.error(error),
         next: (value) => {
           latestValue = value;
+
           if (!actionSubscription) {
+            // tslint:disable-next-line:no-unused-expression
             coalescingManager.add(_scope);
             actionSubscription = durationSelector.subscribe({
               next: () => {
+                console.log('after', coalescingManager.isCoalescing(_scope));
                 tryEmitLatestValue();
                 actionSubscription = undefined;
               },
               complete: () => {
                 if (actionSubscription) {
+                  console.log('cpl', coalescingManager.isCoalescing(_scope));
                   tryEmitLatestValue();
                   actionSubscription = undefined;
                 }

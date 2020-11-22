@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ROUTES } from './rx-if-poc.routes';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { UnpatchEventsModule } from '@rx-angular/template';
 import { Poc1IfDirective } from './poc1-if.directive';

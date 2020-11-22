@@ -26,7 +26,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
   };
 
   constructor(
-    cdRef: ChangeDetectorRef,
+    private cdRef: ChangeDetectorRef,
     @Optional()
     @Inject(RX_CUSTOM_STRATEGIES)
     private customStrategies: StrategyCredentialsMap[],
@@ -35,11 +35,11 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
   ) {
     this.strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), getDefaultStrategyCredentialsMap());
     this.renderAware = createRenderAware<U>({
-      templateObserver: this.templateObserver,
-      context: (cdRef as any).context,
       strategies: this.strategies,
       defaultStrategyName: this.defaultStrategyName,
-      getCdRef: () => cdRef
+      templateObserver: this.templateObserver,
+      getContext: () => (this.cdRef as any).context,
+      getCdRef: () => this.cdRef
     });
     this.subscription = this.renderAware.rendered$.subscribe();
   }

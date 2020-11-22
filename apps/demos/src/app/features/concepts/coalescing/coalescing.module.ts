@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
 import { PushModule } from '../../../shared/rx-angular-pocs/push/push.module';
+// import { PushModule } from '@rx-angular/template';
 
 const DECLARATIONS = [
   CoalescingComponent
@@ -19,11 +20,11 @@ const DECLARATIONS = [
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    PushModule,
     VisualizerModule,
     StrategySelectModule,
     UnpatchEventsModule,
-    MatButtonModule
+    MatButtonModule,
+    PushModule
   ],
   providers: [],
   exports: [DECLARATIONS]
