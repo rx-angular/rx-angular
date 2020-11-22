@@ -27,7 +27,7 @@ import { RxAngularPriorityLevel } from '../../rx-angular-pocs/render-stragegies'
           <div class="mr-1" style="width: 15px; height: 15px;" [style.background]="i[0]">
             &nbsp;
           </div>
-          <span class="pt-1" style="line-height: 15px; font-size: 10px">{{ i[1] }}</span>
+          <span class="pt-1" style="line-height: 15px; font-size: 10px">{{ i[1] }} {{ i | json }}</span>
         </div>
       </div>
     </mat-expansion-panel>

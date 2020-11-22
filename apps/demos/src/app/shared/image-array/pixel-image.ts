@@ -104,6 +104,7 @@ export function computeColorPrio(colorCount: Map<string, number>): Map<string, s
         if (k > 76) {
           acc.set(style, 'reactImmediate');
         }
+        // if there is space add most used colors until a third of all colors are prioritized
         else if (idx < colorCount.size / 3) {
           acc.set(style, 'reactImmediate');
         }
