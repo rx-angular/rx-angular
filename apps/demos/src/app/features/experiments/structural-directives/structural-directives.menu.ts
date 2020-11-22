@@ -1,23 +1,23 @@
 export const MENU_ITEMS = [
   {
     link: 'view-vs-embedded-view',
-    label: 'View vs EmbeddedView',
-  },
-  {
-    link: 'rx-if-poc',
-    label: 'RxIf Poc',
-  },
-  {
-    link: 'rx-swicht-poc',
-    label: 'RxSwitch POC',
-  },
-  {
-    link: 'rx-for-poc',
-    label: 'RxFor POC',
+    label: 'Component vs EmbeddedView',
   },
   {
     link: 'rx-let-poc',
-    label: 'RxLet POC',
+    label: 'RxLet',
+  },
+  {
+    link: 'rx-if-poc',
+    label: 'RxIf',
+  },
+  {
+    link: 'rx-swicht-poc',
+    label: 'RxSwitch',
+  },
+  {
+    link: 'rx-for-poc',
+    label: 'RxFor',
   },
   {
     link: 'if-visible',

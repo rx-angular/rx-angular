@@ -18,6 +18,8 @@ import { Poc1ForDirective } from './poc1-for.directive';
 import { Poc2ForDirective } from './poc2-for.directive';
 import { Poc5Locv5 } from './poc5-locv.directive';
 import { ViewVsEmbeddedViewModule } from '../view-vs-embedded-view/view-vs-embedded-view.module';
+import { LetModule } from '../../../../shared/rx-angular-pocs/let/let.module';
+import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 
 const DECLARATIONS = [
   RxForContainerComponent,
@@ -43,8 +45,9 @@ const DECLARATIONS = [
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    TemplateModule,
+    LetModule,
     ViewVsEmbeddedViewModule,
+    StrategySelectModule
   ],
   exports: DECLARATIONS
 })
