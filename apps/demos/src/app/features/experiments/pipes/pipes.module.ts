@@ -14,6 +14,13 @@ export const ROUTES = [
       )
   },
   {
+    path: 'memo',
+    loadChildren: () =>
+      import('./memo-poc/memo-poc.module').then(
+        m => m.MemoPocModule
+      )
+  },
+  {
     path: 'pipe',
     loadChildren: () =>
       import('./pipe-poc/pipe-poc.module').then(
