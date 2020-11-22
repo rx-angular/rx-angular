@@ -1,31 +1,10 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Directive, ElementRef,
-  Inject,
-  OnDestroy,
-  OnInit,
-  Optional,
-  TemplateRef,
-  ViewContainerRef
-} from '@angular/core';
-
-import { Observable, Subject, Subscription, Unsubscribable } from 'rxjs';
-
-import {
-  getDefaultStrategyCredentialsMap,
-  mergeStrategies,
-  RX_CUSTOM_STRATEGIES,
-  RX_PRIMARY_STRATEGY,
-  StrategyCredentialsMap
-} from '../../../../shared/rx-angular-pocs/render-stragegies';
+import { ChangeDetectorRef, Directive, ElementRef, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Hooks } from '../../../../shared/debug-helper/hooks';
 import { intersectionObserver } from '../../../../shared/rx-angular-pocs/cdk/intersection-observer';
-import { mergeAll, switchMapTo } from 'rxjs/operators';
 import { RxEffects } from '../../../../shared/rx-effects.service';
-import { createTemplateManager, TemplateManager } from '../../../../../../../../libs/template/src';
-import { IfViewContext } from '../../../../shared/rx-angular-pocs/If/rx-if.directive';
-import { coalesceWith, priorityTickMap, SchedulingPriority } from '@rx-angular/template';
+import { IfViewContext } from '../../../../shared/rx-angular-pocs/if/rx-if.directive';
+import { priorityTickMap, SchedulingPriority, createTemplateManager, TemplateManager } from '@rx-angular/template';
+
 export interface IfVisibleViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
   rxIfVisible: T;
@@ -63,7 +42,7 @@ export class IfVisibleDirective<U> extends Hooks {
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if(entry.isIntersecting && !this.displayed) {
+        if (entry.isIntersecting && !this.displayed) {
           this.displayed = true;
           observer.unobserve(this.elemRef.nativeElement.parentElement);
           observer.disconnect();
@@ -71,14 +50,14 @@ export class IfVisibleDirective<U> extends Hooks {
             this.templateManager.addTemplateRef('view', this.templateRef);
             this.templateManager.displayView('view');
             this.templateManager.getEmbeddedView('view').detectChanges();
-          })
+          });
         }
       });
-    } );
+    });
 
     this.afterViewInit$.subscribe(() => {
-      observer.observe(this.elemRef.nativeElement.parentElement)
-    })
+      observer.observe(this.elemRef.nativeElement.parentElement);
+    });
 
   }
 
