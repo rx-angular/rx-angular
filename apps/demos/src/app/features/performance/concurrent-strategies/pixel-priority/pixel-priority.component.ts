@@ -12,7 +12,7 @@ import { computeColorPrio } from '../../../../shared/image-array/pixel-image';
       <ng-container visualizerHeader>
         <h1 class="mat-headline">Pixels with priorities</h1>
         <div class="row">
-          <div class="col-12 d-flex">
+          <div class="col-12 d-flex mb-2">
             <!-- <mat-form-field class="mr-2">
               <mat-label>Pixel Size</mat-label>
               <input matInput #i type="number" *rxLet="pixelSize$; let size" [value]="size" (input)="pixelSize$.next(i.value)">

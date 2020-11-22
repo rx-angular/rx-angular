@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatRippleModule } from '@angular/material/core';
 import { ImageArrayComponent } from './controls/image-array.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -17,15 +18,16 @@ import { MatCardModule } from '@angular/material/card';
   exports: [
     ImageArrayComponent, ColorPrioComponent
   ],
-  imports: [
-    CommonModule,
-    MatInputModule,
-    MatProgressBarModule,
-    PushModule,
-    MatExpansionModule,
-    LetModule,
-    MatButtonModule,
-    MatCardModule
-  ]
+    imports: [
+        CommonModule,
+        MatInputModule,
+        MatProgressBarModule,
+        PushModule,
+        MatExpansionModule,
+        LetModule,
+        MatButtonModule,
+        MatCardModule,
+        MatRippleModule
+    ]
 })
 export class ImageArrayModule { }

@@ -20,35 +20,44 @@ interface ComponentState {
 @Component({
   selector: 'rxa-image-array',
   template: `
-    <div class="d-flex align-items-center">
-      <mat-card>
-          <img mat-card-image (click)="imgSelectionChange$.next($event.target)" src="assets/worrior.png" width="auto" height="auto">
-      </mat-card>
-      <mat-card>
-          <img mat-card-image (click)="imgSelectionChange$.next($event.target)" src="assets/sonic.png" width="auto" height="auto">
-      </mat-card>
-      <mat-card>
-          <img mat-card-image (click)="imgSelectionChange$.next($event.target)" src="assets/duck.png" width="auto" height="auto">
-      </mat-card>
-      <mat-card>
-          <img  mat-card-image (click)="imgSelectionChange$.next($event.target)" src="assets/pokemon.png" width="auto" height="auto">
-      </mat-card>
-      <mat-card>
-          <img mat-card-image (click)="imgSelectionChange$.next($event.target)" src="assets/knight.png" width="auto" height="auto">
-      </mat-card>
-      <button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
+    <div class="row img-row">
+      <div class="col-12 d-flex flex-wrap align-items-center">
+        <img (click)="imgSelectionChange$.next($event.target)" src="assets/worrior.png" width="auto" height="auto">
+        <img (click)="imgSelectionChange$.next($event.target)" src="assets/sonic.png" width="auto" height="auto">
+        <img (click)="imgSelectionChange$.next($event.target)" src="assets/duck.png" width="auto" height="auto">
+        <img (click)="imgSelectionChange$.next($event.target)" src="assets/pokemon.png" width="auto" height="auto">
+        <img (click)="imgSelectionChange$.next($event.target)" src="assets/knight.png" width="auto" height="auto">
+        <div #display class="upload-display">
+          <!-- canvas bootstrapped here-->
+        </div>
+      </div>
+    </div>
+    <div class="row progress-bar-row my-2">
+      <div class="col-12">
+        <mat-progress-bar *ngIf="imgConverter?.loading$ | push" [mode]="'buffer'" ></mat-progress-bar>
+      </div>
+    </div>
+    <div class=" d-flex align-items-center">
+      <button type="button" class="mr-2" mat-raised-button (click)="fileInput.click()">Choose File</button>
       <input hidden #fileInput (change)="filesChange$.next(fileInput.files[0])" type="file">
       <a href="http://pixelartmaker.com" target="_blank">Custom</a>
-      <!-- <a href="http://pixelartmaker.com/gallery">Gallery</a> -->
-      <mat-card style="background: #fff">
-          <div mat-card-image #display class="display">
-            <!-- canvas bootstrapped here-->
-          </div>
-      </mat-card>
     </div>
-    <mat-progress-bar [mode]="'buffer'" *ngIf="imgConverter?.loading$ | push"></mat-progress-bar>
   `,
   styles: [`
+    .progress-bar-row {
+      height: 4px;
+    }
+    .progress-bar-row mat-progress-bar {
+      width: 200px;
+    }
+    .img-row img, .img-row .upload-display {
+      max-height: 100px;
+      width: auto;
+      cursor: pointer;
+    }
+    .upload-display {
+      outline: 1px dotted green;
+    }
     .pixel-canvas {
       border: 1px solid red;
     }
