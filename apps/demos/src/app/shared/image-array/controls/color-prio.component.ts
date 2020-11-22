@@ -9,29 +9,41 @@ import { RxAngularPriorityLevel } from '../../rx-angular-pocs/render-stragegies'
   template: `
     <mat-expansion-panel *rxLet="colorArr$; let colors">
       <mat-expansion-panel-header>
-        <span class="mr-1">Total: {{colors.length}}</span>
-        <div class="mr-1" style="
-        width: 15px;
-        height: 15px;
-        font-size: 13px;
-        text-align: center;
-        "
-             [style.background]="i[0]"
-             [title]="i[0]"
-             *ngFor="let i of colors">
-          {{prioMap[i[1]]}}
+        <p class="mr-1">Total: {{colors.length}}</p>
+        <div class="d-flex align-items-center">
+          <div class="color m-1" style=""
+               [style.background]="i[0]"
+               [title]="i[0]"
+               *ngFor="let i of colors">
+            {{prioMap[i[1]]}}
+          </div>
         </div>
       </mat-expansion-panel-header>
-      <div class="w-100 d-flex flex-wrap strategy-multiselect">
-        <div class="d-flex w-25" *ngFor="let i of colors">
-          <div class="mr-1" style="width: 15px; height: 15px;" [style.background]="i[0]">
+      <div class="w-100 d-flex flex-wrap">
+        <div class="d-flex align-items-center w-25 mb-1" *ngFor="let i of colors">
+          <div class="mr-1 color" style="width: 15px; height: 15px;"
+               [style.background]="i[0]">
             &nbsp;
           </div>
-          <span class="pt-1" style="line-height: 15px; font-size: 10px">{{ i[1] }} {{ i | json }}</span>
+          <span class="priority">{{ i[1] }}</span>
         </div>
       </div>
     </mat-expansion-panel>
-  `
+  `,
+  styles: [`
+    .color {
+      width: 15px;
+      height: 15px;
+      font-size: 13px;
+      text-align: center;
+      box-shadow: 1px 1px 1px #0006;
+    }
+
+    .strategy {
+      line-height: 15px;
+      font-size: 10px;
+    }
+  `]
 })
 export class ColorPrioComponent extends RxState<{
   colors: [string, string][]
