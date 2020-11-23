@@ -23,10 +23,15 @@ import { RxEffects } from '../../../../shared/rx-effects.service';
           <div class="d-flex flex-wrap mr-2" style="width: 300px">
             <rxa-canvas-view style="width: 100px" [img$]="imgChange$"></rxa-canvas-view>
 
-            <mat-form-field class="mr-2 w-100">
-              <mat-label>Pixel Size {{pixelSize$ | push}}</mat-label>
-              <input matInput [unpatch] #i type="number" *rxLet="pixelSize$; let size" [value]="size"
-                     (input)="pixelSize$.next(i.value)">
+            <mat-form-field class="mr-2 w-100" *rxLet="pixelSize$; let size">
+              <mat-label>Pixel Size {{size}}</mat-label>
+              <input matInput [unpatch] #i type="number"
+                     (input)="pixelSize$.next(i.value)" [value]="size">
+            </mat-form-field>
+            <mat-form-field class="mr-2 w-100" *rxLet="fillColor$; let fillColor">
+              <mat-label>Overlay Color {{fillColor}}</mat-label>
+              <input matInput [unpatch] #i type="color" [value]="fillColor"
+                     (input)="fillColor$.next(i.value)">
             </mat-form-field>
             <button *rxLet="pixelArray$; let a" style="width: 200px" mat-raised-button color="primary" [unpatch]
                     (click)="filled$.next(!filled$.getValue())">
@@ -37,7 +42,8 @@ import { RxEffects } from '../../../../shared/rx-effects.service';
             <rxa-sibling-pixel-img
               [pixelSize]="pixelSize$"
               [imgInfo]="imgInfoChange$"
-              [filled]="filled$">
+              [filled]="filled$"
+              [fillColor]="fillColor$">
             </rxa-sibling-pixel-img>
           </div>
         </div>
@@ -51,6 +57,7 @@ export class PixelPriorityComponent {
   selectedStrategies: { [name: string]: boolean } = {};
 
   filled$ = new BehaviorSubject<boolean>(true);
+  fillColor$ = new BehaviorSubject<string>('#ff0000');
   pixelSize$ = new BehaviorSubject<string>('3');
 
   imgChange$ = new Subject<HTMLImageElement>();

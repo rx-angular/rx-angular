@@ -4,7 +4,6 @@ import { RxEffects } from '../../rx-effects.service';
 import { Hooks } from '../../debug-helper/hooks';
 import { RxState } from '@rx-angular/state';
 import { fileReaderFromBlob, imageFromFileReader } from '../pixel-image';
-import { ImgConverter } from '../image-converter';
 
 interface ComponentState {
   loading: boolean;
@@ -21,12 +20,26 @@ interface ComponentState {
     <div class="row img-row w-100">
       <div class="col-12 d-flex flex-wrap align-items-center">
         <div class="w-100 d-flex flex-row align-items-center flex-wrap mb-3">
-          <img [alt]="name" class="mr-2" (click)="imgSelectionChange$.next($event.target)" [src]="'assets/'+name"
-               *ngFor="let name of koopas">
-          <button type="button" class="mr-2" mat-raised-button (click)="fileInput.click()">Choose File</button>
-          <input hidden #fileInput (change)="filesChange$.next(fileInput.files[0])" type="file">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <div class="d-flex align-items-center" *rxLet="imgSelectionChange$; let img; rxSuspense: empty">
+                <img [alt]="img.src" class="mr-2" [src]="img.src">
+              </div>
+              <ng-template #empty>Select Image</ng-template>
+            </mat-expansion-panel-header>
+            <div class=" w-100 d-flex align-items-center" *ngFor="let imgSet of all | keyvalue; let setIdx = index">
+              <img [tabindex]="0" (keyup.enter)="imgSelectionChange$.next($event.target)" [alt]="name" class="mr-2"
+                   (click)="imgSelectionChange$.next($event.target)" [src]="'assets/'+name"
+                   *ngFor="let name of imgSet.value; let idx = index">
+            </div>
 
-          <button mat-raised-button class="btn-link" href="http://pixelartmaker.com" target="_blank">Create</button>
+            <button type="button" class="mr-2" mat-raised-button (click)="fileInput.click()">Choose File</button>
+            <input hidden #fileInput (change)="filesChange$.next(fileInput.files[0])" type="file">
+
+            <button mat-raised-button class="btn-link" href="http://pixelartmaker.com" target="_blank">Create</button>
+
+          </mat-expansion-panel>
+
 
         </div>
 
@@ -36,8 +49,13 @@ interface ComponentState {
   providers: [RxEffects, RxState]
 })
 export class ImageArrayComponent extends Hooks implements AfterViewInit {
-
-  images = [
+  monster = [
+    'monster-1.png',
+    'monster-2.png',
+    'monster-3.png',
+    'monster-4.png',
+  ].map(n => 'monster/'+n);
+  random = [
     'warrior.png',
     'sonic2.png',
     'dragon.png',
@@ -47,7 +65,7 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
     'sure.png',
     'maroon.png'
   ];
-  koopas = [
+  koopa = [
     'bowser-jr.png',
     'bowser-jr-clown-car.png',
     'dry-bowser-jr.png',
@@ -62,7 +80,46 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
     'parallel-larry.png',
     'parallel-wendy.png',
     'wendy-koopa.png'
-  ].map(n => 'koopas/'+n);
+  ].map(n => 'koopa/'+n);
+  pokemon = [
+    'pokemon-1.png',
+    'pokemon-2.png',
+    'pokemon-3.png',
+    'pokemon-4.png',
+    'pokemon-5.png',
+    'pokemon-6.png',
+    'pokemon-7.png',
+    'pokemon-8.png',
+    'pokemon-9.png',
+  ].map(n => 'pokemon/'+n);
+  zombi = [
+    'zombi-1.png',
+    'zombi-2.png',
+    'zombi-3.png',
+    'zombi-4.png',
+    'zombi-5.png',
+    'zombi-6.png'
+  ].map(n => 'zombi/'+n);
+  superMario = [
+    'super-mario-1.png',
+    'super-mario-2.png',
+    'super-mario-3.png',
+    'super-mario-4.png',
+    'super-mario-5.png',
+    'super-mario-6.png',
+    'super-mario-7.png',
+    'super-mario-8.png',
+    'super-mario-9.png',
+  ].map(n => 'super-mario/'+n);
+
+  all = {
+      superMario: this.superMario,
+      pokemon: this.pokemon,
+      koopa: this.koopa,
+      monster: this.monster,
+      // random: this.random,
+    }
+
   filesChange$ = new Subject<any>();
   imgSelectionChange$ = new Subject<any>();
 

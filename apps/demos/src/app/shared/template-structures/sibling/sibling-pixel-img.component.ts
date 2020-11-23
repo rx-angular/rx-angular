@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from '../../rx-angular-pocs/render-stragegies';
-import { RxState } from '@rx-angular/state';
-import { combineLatest, map } from 'rxjs/operators';
+import { RxState, selectSlice } from '@rx-angular/state';
+import { map } from 'rxjs/operators';
 import { toInt } from '../../debug-helper/value-provider';
 import { ImgInfo } from '../../image-array';
 import { computeColorPrio } from '../../image-array/pixel-image';
@@ -17,8 +17,8 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
         <div class="pixel"
              [style.width.px]="pixelSize$ | push"
              [style.height.px]="pixelSize$ | push">
-          <div *rxLet="filled$; let f; strategy: get('colorPriority').get(sibling)"
-               [ngStyle]="{background: f ? sibling : 'red'}">
+          <div *rxLet="color$; let c; strategy: get('colorPriority').get(sibling)"
+               [ngStyle]="{background: c ? c : sibling}">
           </div>
         </div>
       </ng-container>
@@ -57,12 +57,16 @@ export class SiblingPixelImgComponent extends RxState<{
   width: number,
   colorPriority: Map<string, string>,
   filled: boolean
+  fillColor: string
 } & ImgInfo> {
 
   width$ = this.select(map(s => s.width * s.pixelSize));
   pixelArray$ = this.select('pixelArray');
   pixelSize$ = this.select('pixelSize');
-  filled$ = this.select('filled');
+  fillColor$ = this.select('fillColor');
+  color$ = this.select(selectSlice(['filled', 'fillColor']),
+    map(({ filled, fillColor }) => filled ? fillColor : '')
+  );
 
   @Input()
   set imgInfo(imgInfo$: Observable<ImgInfo>) {
@@ -81,6 +85,11 @@ export class SiblingPixelImgComponent extends RxState<{
   @Input()
   set filled(filled$: Observable<boolean>) {
     this.connect('filled', filled$);
+  }
+
+  @Input()
+  set fillColor(fillColor$: Observable<string>) {
+    this.connect('fillColor', fillColor$);
   }
 
   trackBy = i => i;
