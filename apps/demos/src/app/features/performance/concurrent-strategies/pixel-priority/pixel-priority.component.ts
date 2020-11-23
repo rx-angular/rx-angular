@@ -19,7 +19,7 @@ import { RxEffects } from '../../../../shared/rx-effects.service';
 
           <rxa-color-prio class="w-100" [colors$]="colors$"></rxa-color-prio>
         </div>
-        <div class="w-100 d-flex flex-fill">
+        <div class="w-100 d-flex flex-fill mb-5">
           <div class="d-flex flex-wrap mr-2" style="width: 300px">
             <rxa-canvas-view style="width: 100px" [img$]="imgChange$"></rxa-canvas-view>
 

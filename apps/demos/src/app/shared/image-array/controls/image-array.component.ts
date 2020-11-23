@@ -33,21 +33,6 @@ interface ComponentState {
       </div>
     </div>
   `,
-  styles: [`
-    .progress-bar-row {
-      height: 4px;
-    }
-
-    .progress-bar-row mat-progress-bar {
-      width: 200px;
-    }
-
-    .img-row img, .img-row .upload-display {
-      max-height: 100px;
-      width: auto;
-      cursor: pointer;
-    }
-  `],
   providers: [RxEffects, RxState]
 })
 export class ImageArrayComponent extends Hooks implements AfterViewInit {
@@ -67,20 +52,19 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
     'bowser-jr-clown-car.png',
     'dry-bowser-jr.png',
     'dry-lemmy.png',
+    'dry-morton.png',
     'dry-roy.png',
     'iggy-koopa.png',
+    'larry-koopa.png',
     'lemmy-koopa.png',
-    'motron-koopa-jr.png',
-    'roy-koopa.png',
     'ludwig-von-koopa.png',
-    'wendy-koopa.png',
+    'motron-koopa-jr.png',
     'parallel-larry.png',
-    'parallel-wendy.png'
-  ];
+    'parallel-wendy.png',
+    'wendy-koopa.png'
+  ].map(n => 'koopas/'+n);
   filesChange$ = new Subject<any>();
   imgSelectionChange$ = new Subject<any>();
-  canvas: HTMLCanvasElement;
-  imgConverter: ImgConverter;
 
   @ViewChild('display')
   display;
