@@ -17,12 +17,12 @@ import { ReactPriorityLevel } from './utils/model';
 
 export function getReactStrategyCredentialsMap(): StrategyCredentialsMap {
   return {
-    reactNoPrio: createReactNoPrioStrategyCredentials(),
-    reactImmediate: createReactImmediateStrategyCredentials(),
-    reactUserBlocking: createReactUserBlockingStrategyCredentials(),
-    reactNormal: createReactNormalStrategyCredentials(),
-    reactLow: createReactLowStrategyCredentials(),
     reactIdle: createReactIdleStrategyCredentials(),
+    reactLow: createReactLowStrategyCredentials(),
+    reactNormal: createReactNormalStrategyCredentials(),
+    reactUserBlocking: createReactUserBlockingStrategyCredentials(),
+    reactImmediate: createReactImmediateStrategyCredentials(),
+    reactNoPrio: createReactNoPrioStrategyCredentials(),
   };
 }
 

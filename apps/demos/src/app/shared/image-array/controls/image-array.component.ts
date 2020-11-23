@@ -22,17 +22,17 @@ interface ComponentState {
         <div class="w-100 d-flex flex-row align-items-center flex-wrap mb-3">
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <div class="d-flex align-items-center" *rxLet="imgSelectionChange$; let img; rxSuspense: empty">
-                <img [alt]="img.src" class="mr-2" [src]="img.src">
-              </div>
-              <ng-template #empty>Select Image</ng-template>
+              Select Image
             </mat-expansion-panel-header>
             <div class=" w-100 d-flex align-items-center" *ngFor="let imgSet of all | keyvalue; let setIdx = index">
               <img [tabindex]="0" (keyup.enter)="imgSelectionChange$.next($event.target)" [alt]="name" class="mr-2"
                    (click)="imgSelectionChange$.next($event.target)" [src]="'assets/'+name"
                    *ngFor="let name of imgSet.value; let idx = index">
             </div>
-
+            <div style="width:20px" >
+            <img [tabindex]="0" (keyup.enter)="imgSelectionChange$.next($event.target)" alt="doom-hunter-2.png" class="mr-2"
+                 (click)="imgSelectionChange$.next($event.target)" [src]="'assets/doom-hunter-2.png'">
+            </div>
             <button type="button" class="mr-2" mat-raised-button (click)="fileInput.click()">Choose File</button>
             <input hidden #fileInput (change)="filesChange$.next(fileInput.files[0])" type="file">
 
@@ -54,6 +54,7 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
     'monster-2.png',
     'monster-3.png',
     'monster-4.png',
+    'darth-maul-1.png'
   ].map(n => 'monster/'+n);
   random = [
     'warrior.png',

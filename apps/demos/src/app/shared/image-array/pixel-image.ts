@@ -87,6 +87,9 @@ export function pixelToHexString(pixel: RGBA): string {
 
 export function computeColorPrio(colorCount: Map<string, number>): Map<string, string> {
   const prioMap = new Map<string, string>();
+  let lowAndHigh = 0;
+  const numPrios = 3;
+
   return Array.from(colorCount.entries())
     .map(s => ([...s, rgbaToCmyk(styleToRgba(s[0]))] as [string, number, CMYK]))
     .sort((a, b) => {
@@ -97,23 +100,38 @@ export function computeColorPrio(colorCount: Map<string, number>): Map<string, s
     .reduce((acc, entry, idx) => {
       const style = entry[0];
       const k = entry[2][3];
+      const remaining = colorCount.size - lowAndHigh;
+
+
+      /*
+        NoPriority = 0;
+        ImmediatePriority = 1;
+        UserBlockingPriority = 2;
+        NormalPriority = 3;
+        LowPriority = 4;
+        IdlePriority = 5;
+      */
       // transparent
       if (style.slice(style.length - 2, -1) === '0') {
         acc.set(style, 'reactIdle');
+        lowAndHigh += 1;
       } else {
         // Dark color prio
         if (k > 76) {
           acc.set(style, 'reactImmediate');
+          lowAndHigh += 1;
         }
         // if there is space add most used colors until a third of all colors are prioritized
-        else if (idx < colorCount.size / 3) {
-          acc.set(style, 'reactImmediate');
-        }
-        else {
+        else if (idx < remaining / numPrios * 1) {
+          acc.set(style, 'reactUserBlocking');
+
+        } else if (idx < remaining / numPrios * 2) {
           acc.set(style, 'reactNormal');
+        } else {
+          acc.set(style, 'reactLow');
         }
       }
-      return prioMap;
+      return acc;
     }, prioMap);
 }
 
