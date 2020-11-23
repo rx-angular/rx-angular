@@ -27,14 +27,14 @@ interface ComponentState {
       <div class="col-12 d-flex flex-wrap align-items-center">
         <div class="w-100 d-flex flex-row align-items-center flex-wrap mb-3">
           <img [alt]="name" class="mr-2" (click)="imgSelectionChange$.next($event.target)" [src]="'assets/'+name"
-               *ngFor="let name of images">
+               *ngFor="let name of koopas">
           <button type="button" class="mr-2" mat-raised-button (click)="fileInput.click()">Choose File</button>
           <input hidden #fileInput (change)="filesChange$.next(fileInput.files[0])" type="file">
 
           <button mat-raised-button class="btn-link" href="http://pixelartmaker.com" target="_blank">Create</button>
 
         </div>
-        <div #display class="dh-embedded-view">
+        <div #display class="dh-embedded-view mb-5">
           <!-- canvas bootstrapped here-->
         </div>
       </div>
@@ -66,11 +66,23 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
     'pokemon.png',
     'duck.png',
     'knight.png',
-    'ice-cream.png',
     'sure.png',
-    'bowser-jr.png',
-    'dry-bowser-jr.png',
     'maroon.png',
+  ];
+  koopas = [
+    'bowser-jr.png',
+    'bowser-jr-clown-car.png',
+    'dry-bowser-jr.png',
+    'dry-lemmy.png',
+    'dry-roy.png',
+    'iggy-koopa.png',
+    'lemmy-koopa.png',
+    'motron-koopa-jr.png',
+    'roy-koopa.png',
+    'ludwig-von-koopa.png',
+    'wendy-koopa.png',
+    'parallel-larry.png',
+    'parallel-wendy.png',
   ];
   filesChange$ = new Subject<any>();
   imgSelectionChange$ = new Subject<any>();
