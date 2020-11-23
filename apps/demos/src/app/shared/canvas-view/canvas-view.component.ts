@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Hooks } from '../debug-helper/hooks';
-import { RxEffects } from '../rx-effects.service';
 import { Observable } from 'rxjs';
 import { RxState } from '../../../../../../libs/state/src/lib';
 
@@ -23,7 +22,7 @@ export class CanvasViewComponent extends Hooks {
 
   @Input()
   set img$(img$: Observable<HTMLImageElement>) {
-    this.rxState.connect('img', img$)
+    this.rxState.connect('img', img$);
   }
 
   @ViewChild('display')

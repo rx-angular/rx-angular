@@ -1,12 +1,10 @@
 import { AfterViewInit, Component, ElementRef, Output, ViewChild } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
 import { RxEffects } from '../../rx-effects.service';
 import { Hooks } from '../../debug-helper/hooks';
 import { RxState } from '@rx-angular/state';
 import { fileReaderFromBlob, imageFromFileReader } from '../pixel-image';
-import { ImgInfo } from '../model';
-import { createImageConverter, ImgConverter } from '../image-converter';
+import { ImgConverter } from '../image-converter';
 
 interface ComponentState {
   loading: boolean;
@@ -62,7 +60,7 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
     'duck.png',
     'knight.png',
     'sure.png',
-    'maroon.png',
+    'maroon.png'
   ];
   koopas = [
     'bowser-jr.png',
@@ -77,7 +75,7 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
     'ludwig-von-koopa.png',
     'wendy-koopa.png',
     'parallel-larry.png',
-    'parallel-wendy.png',
+    'parallel-wendy.png'
   ];
   filesChange$ = new Subject<any>();
   imgSelectionChange$ = new Subject<any>();
