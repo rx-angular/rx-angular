@@ -1,6 +1,6 @@
 import { animationFrameScheduler, asyncScheduler, BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { ImgInfo } from './model';
-import { map, observeOn, tap } from 'rxjs/operators';
+import { map, observeOn, shareReplay, tap } from 'rxjs/operators';
 import { imageDataToImgInfo } from './pixel-image';
 
 export interface ImgConverter {
@@ -13,8 +13,8 @@ export interface ImgConverter {
   imgInfoChange$: Observable<ImgInfo>
 }
 
-export function createImageConverter(canvas: HTMLCanvasElement): ImgConverter {
-
+export function createImageConverter(canvas?: HTMLCanvasElement): ImgConverter {
+  canvas = canvas || document.createElement('CANVAS') as HTMLCanvasElement;
   // FileReader support
   if (!FileReader) {
     throw new Error('No FileReader supported.');
@@ -44,7 +44,9 @@ export function createImageConverter(canvas: HTMLCanvasElement): ImgConverter {
       tap(() => loading$.next(true)),
       map(imageDataToImgInfo),
       observeOn(asyncScheduler),
-      tap(() => loading$.next(false)))
+      tap(() => loading$.next(false)),
+      shareReplay(1)
+    )
   };
 
   // ---

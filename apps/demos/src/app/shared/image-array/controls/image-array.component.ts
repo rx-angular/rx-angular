@@ -10,7 +10,7 @@ import { createImageConverter, ImgConverter } from '../image-converter';
 
 interface ComponentState {
   loading: boolean;
-  image: CanvasImageSource;
+  image: HTMLImageElement;
   pixelArray: number[][];
   width: number;
   height: number;
@@ -21,9 +21,6 @@ interface ComponentState {
   selector: 'rxa-image-array',
   template: `
     <div class="row img-row w-100">
-      <div class="col-12">
-        <mat-progress-bar *ngIf="imgConverter?.loading$ | push" [mode]="'buffer'"></mat-progress-bar>
-      </div>
       <div class="col-12 d-flex flex-wrap align-items-center">
         <div class="w-100 d-flex flex-row align-items-center flex-wrap mb-3">
           <img [alt]="name" class="mr-2" (click)="imgSelectionChange$.next($event.target)" [src]="'assets/'+name"
@@ -91,9 +88,8 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
   display;
 
   @Output()
-  imageChange: Observable<ImgInfo> = this.afterViewInit$.pipe(
-    switchMap(() => this.imgConverter.imgInfoChange$)
-  );
+  img: Observable<HTMLImageElement> = this.state.select('image');
+
 
   constructor(
     private elemRef: ElementRef,
@@ -103,24 +99,6 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
     super();
     this.state.connect('image', this.filesChange$.pipe(fileReaderFromBlob(), imageFromFileReader()));
     this.state.connect('image', this.imgSelectionChange$);
-    this.rxEf.hold(this.state.select(map(s => s.image)), (img: CanvasImageSource) => this.imgConverter.renderImage(img));
-
-    this.rxEf.hold(this.afterViewInit$, () => {
-      this.setupCanvas(this.display.nativeElement, 50, 50);
-      this.setupConverter();
-    });
-  }
-
-  setupCanvas(parent: HTMLElement, w: number, h: number) {
-    this.canvas = document.createElement('canvas') as HTMLCanvasElement;
-    this.canvas.width = w;
-    this.canvas.height = h;
-    this.canvas.className = 'pixel-canvas';
-    parent.appendChild(this.canvas);
-  }
-
-  setupConverter(): void {
-    this.imgConverter = createImageConverter(this.canvas);
   }
 
 }
