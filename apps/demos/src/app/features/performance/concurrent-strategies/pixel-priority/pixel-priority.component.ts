@@ -19,25 +19,27 @@ import { RxEffects } from '../../../../shared/rx-effects.service';
 
           <rxa-color-prio class="w-100" [colors$]="colors$"></rxa-color-prio>
         </div>
-        <div class="d-flex flex-wrap mr-2" style="width: 300px">
-          <rxa-canvas-view style="width: 100px" [img$]="imgChange$"></rxa-canvas-view>
+        <div class="w-100 d-flex flex-fill">
+          <div class="d-flex flex-wrap mr-2" style="width: 300px">
+            <rxa-canvas-view style="width: 100px" [img$]="imgChange$"></rxa-canvas-view>
 
-          <mat-form-field class="mr-2 w-100">
-            <mat-label>Pixel Size {{pixelSize$ | push}}</mat-label>
-            <input matInput [unpatch] #i type="number" *rxLet="pixelSize$; let size" [value]="size"
-                   (input)="pixelSize$.next(i.value)">
-          </mat-form-field>
-          <button *rxLet="pixelArray$; let a" style="width: 200px" mat-raised-button color="primary" [unpatch]
-                  (click)="filled$.next(!filled$.getValue())">
-            Repaint {{a?.length}} Components
-          </button>
-        </div>
-        <div>
-          <rxa-sibling-pixel-img
-            [pixelSize]="pixelSize$"
-            [imgInfo]="imgInfoChange$"
-            [filled]="filled$">
-          </rxa-sibling-pixel-img>
+            <mat-form-field class="mr-2 w-100">
+              <mat-label>Pixel Size {{pixelSize$ | push}}</mat-label>
+              <input matInput [unpatch] #i type="number" *rxLet="pixelSize$; let size" [value]="size"
+                     (input)="pixelSize$.next(i.value)">
+            </mat-form-field>
+            <button *rxLet="pixelArray$; let a" style="width: 200px" mat-raised-button color="primary" [unpatch]
+                    (click)="filled$.next(!filled$.getValue())">
+              Repaint {{a?.length}} Components
+            </button>
+          </div>
+          <div>
+            <rxa-sibling-pixel-img
+              [pixelSize]="pixelSize$"
+              [imgInfo]="imgInfoChange$"
+              [filled]="filled$">
+            </rxa-sibling-pixel-img>
+          </div>
         </div>
       </div>
     </rxa-visualizer>
