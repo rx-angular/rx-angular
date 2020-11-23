@@ -11,7 +11,7 @@ import { ValueModule } from '../../../../shared/debug-helper/work';
 import { GhostElementsModule } from '../../../../shared/ghost-elements';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
-import { IfModule } from '../../../../shared/rx-angular-pocs/If/if.module';
+import { IfModule } from '../../../../shared/rx-angular-pocs/if/if.module';
 
 const DECLARATIONS = [
   Poc1IfDirective,
