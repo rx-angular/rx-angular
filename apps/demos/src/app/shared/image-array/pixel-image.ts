@@ -155,7 +155,8 @@ export function imageDataToImgInfo(imgData: ImageData): ImgInfo {
     colors.set(color, colorCount + 1);
     pixelArray.push(color);
   }
-  return { pixelArray, colors, width: imgData.width };
+
+  return { pixelArray, colors, width: imgData.width, colorPrios: computeColorPrio(colors) };
 }
 
 export function imageFromFileReader() {

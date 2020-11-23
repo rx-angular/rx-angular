@@ -34,9 +34,7 @@ interface ComponentState {
           <button mat-raised-button class="btn-link" href="http://pixelartmaker.com" target="_blank">Create</button>
 
         </div>
-        <div #display class="dh-embedded-view mb-5">
-          <!-- canvas bootstrapped here-->
-        </div>
+
       </div>
     </div>
   `,

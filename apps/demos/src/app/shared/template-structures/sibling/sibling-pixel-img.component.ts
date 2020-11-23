@@ -1,20 +1,22 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
-import { combineLatest, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from '../../rx-angular-pocs/render-stragegies';
 import { RxState } from '@rx-angular/state';
-import { map } from 'rxjs/operators';
+import { combineLatest, map } from 'rxjs/operators';
 import { toInt } from '../../debug-helper/value-provider';
+import { ImgInfo } from '../../image-array';
+import { computeColorPrio } from '../../image-array/pixel-image';
 
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
 
 @Component({
   selector: 'rxa-sibling-pixel-img',
   template: `
-    <div class="pixel-map" [style.width.px]="imgWidth" *rxLet="imgWidth$, let imgWidth; strategy:'reactNormal'">
-      <ng-container *ngFor="let sibling of pixelColorStyles$ | push; trackBy:trackBy">
+    <div class="pixel-map" [style.width.px]="width" *rxLet="width$, let width; strategy:'reactNormal'">
+      <ng-container *ngFor="let sibling of pixelArray$ | push; trackBy:trackBy">
         <div class="pixel"
-             [style.width.px]="pixelSize$ | push:'reactNormal'"
-             [style.height.px]="pixelSize$ | push:'reactNormal'">
+             [style.width.px]="pixelSize$ | push"
+             [style.height.px]="pixelSize$ | push">
           <div *rxLet="filled$; let f; strategy: get('colorPriority').get(sibling)"
                [ngStyle]="{background: f ? sibling : 'red'}">
           </div>
@@ -30,8 +32,8 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
 
     .pixel {
       position: relative;
-      width: 3px;
-      height: 3px;
+      min-width: 3px;
+      min-height: 3px;
       padding: 0px;
       background-color: transparent;
     }
@@ -50,34 +52,25 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SiblingPixelImgComponent extends RxState<{
-  pixelColorStyles: string[],
-  filled: boolean,
+  pixelArray: string[],
   pixelSize: number,
+  width: number,
   colorPriority: Map<string, string>,
-  imgWidth: number
-}> {
-  imgWidth$ = this.select('imgWidth');
-  pixelColorStyles$ = this.select('pixelColorStyles');
+  filled: boolean
+} & ImgInfo> {
+
+  width$ = this.select(map(s => s.width * s.pixelSize));
+  pixelArray$ = this.select('pixelArray');
   pixelSize$ = this.select('pixelSize');
   filled$ = this.select('filled');
-  pixelColors = [];
 
   @Input()
-  set pixelArray(pixelArray$: Observable<string[]>) {
-    this.connect('pixelColorStyles', pixelArray$);
+  set imgInfo(imgInfo$: Observable<ImgInfo>) {
+    this.connect(imgInfo$.pipe(map(i => ({
+      ...i,
+      colorPriority: computeColorPrio(i.colors)
+    }))));
   };
-
-  @Input()
-  set imgWidth(imgWidth$: Observable<number | string>) {
-    // tslint:disable-next-line:no-bitwise
-    this.connect('imgWidth', combineLatest([imgWidth$, this.select('pixelSize')]).pipe(map(([imgWidth, pixelSize]) => ~~(+imgWidth * pixelSize))));
-  }
-
-  @Input()
-  set colorPriority(colorPriority$: Observable<Map<string, string>>) {
-    // tslint:disable-next-line:no-bitwise
-    this.connect('colorPriority', colorPriority$);
-  }
 
   @Input()
   set pixelSize(pixelSize$: Observable<number | string>) {
@@ -100,7 +93,7 @@ export class SiblingPixelImgComponent extends RxState<{
     this.set({
       filled: false,
       pixelSize: 5,
-      imgWidth: 5
+      width: 5
     });
   }
 
