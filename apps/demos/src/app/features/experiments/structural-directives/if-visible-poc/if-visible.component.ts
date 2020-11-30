@@ -6,12 +6,12 @@ import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stra
   template: `
     <rxa-visualizer>
       <div visualizerHeader>
-        <rxa-value-provider [buttons]="true" #v="rxaValueProvider"></rxa-value-provider>
+        <h1>*ifVisible and under the fold optimizations</h1>
       </div>
       <div class="mt-5 row w-100 d-flex">
         <div style="margin-top: 300px" class="col-6 dh-embedded-view p-2">
           <div *ifVisible>
-
+            Content Under The Fold
           </div>
         </div>
       </div>
