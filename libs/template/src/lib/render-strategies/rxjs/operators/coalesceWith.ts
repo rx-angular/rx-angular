@@ -65,25 +65,25 @@ export function coalesceWith<T>(
       let latestValue: T | undefined;
 
       const tryEmitLatestValue = () => {
-        // We only decrement the number if it is greater than 0 (isCoalescing)
-        if (coalescingManager.isCoalescing(_scope)) {
-          coalescingManager.remove(_scope);
-        }
-        if (!coalescingManager.isCoalescing(_scope)) {
-          outerObserver.next(latestValue);
+        if (actionSubscription) {
+          // We only decrement the number if it is greater than 0 (isCoalescing)
+          if (coalescingManager.isCoalescing(_scope)) {
+            coalescingManager.remove(_scope);
+          }
+          if (!coalescingManager.isCoalescing(_scope)) {
+            outerObserver.next(latestValue);
+          }
         }
       };
       return {
         complete: () => {
-          if (actionSubscription) {
-            tryEmitLatestValue();
-          }
+          tryEmitLatestValue();
           outerObserver.complete();
         },
         error: (error) => outerObserver.error(error),
         next: (value) => {
           latestValue = value;
-          if (!actionSubscription && !coalescingManager.isCoalescing(_scope)) {
+          if (!actionSubscription) {
             // tslint:disable-next-line:no-unused-expression
             coalescingManager.add(_scope);
             actionSubscription = durationSelector.subscribe({
@@ -92,16 +92,16 @@ export function coalesceWith<T>(
                 actionSubscription = undefined;
               },
               complete: () => {
-                if (actionSubscription) {
-                  tryEmitLatestValue();
-                  actionSubscription = undefined;
-                }
+                tryEmitLatestValue();
+                actionSubscription = undefined;
               }
             });
             rootSubscription.add(new Subscription(() => {
               tryEmitLatestValue();
-              // tslint:disable-next-line:no-unused-expression
-              actionSubscription && actionSubscription.unsubscribe()
+              if (actionSubscription) {
+                actionSubscription.unsubscribe();
+                actionSubscription = undefined;
+              }
             }));
           }
         }
