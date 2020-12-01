@@ -1,4 +1,5 @@
 import { coalescingManager } from '../../../src/lib/core/utils';
+
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
@@ -25,6 +26,17 @@ describe('coalescingManager', () => {
     expect(coalescingManager.isCoalescing(scope)).toBeTruthy();
     coalescingManager.remove(scope);
     expect(coalescingManager.isCoalescing(scope)).toBeFalsy();
+  });
+
+  it('should not have less than zero numCoalescing', () => {
+    coalescingManager.add(scope);
+    expect(coalescingManager.isCoalescing(scope)).toBeTruthy();
+    coalescingManager.remove(scope);
+    expect(coalescingManager.isCoalescing(scope)).toBeFalsy();
+    coalescingManager.remove(scope);
+    expect(coalescingManager.isCoalescing(scope)).toBeFalsy();
+    coalescingManager.add(scope);
+    expect(coalescingManager.isCoalescing(scope)).toBeTruthy();
   });
 
 });

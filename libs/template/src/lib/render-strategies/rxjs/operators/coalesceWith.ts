@@ -67,9 +67,7 @@ export function coalesceWith<T>(
       const tryEmitLatestValue = () => {
         if (actionSubscription) {
           // We only decrement the number if it is greater than 0 (isCoalescing)
-          if (coalescingManager.isCoalescing(_scope)) {
-            coalescingManager.remove(_scope);
-          }
+          coalescingManager.remove(_scope);
           if (!coalescingManager.isCoalescing(_scope)) {
             outerObserver.next(latestValue);
           }
@@ -87,8 +85,10 @@ export function coalesceWith<T>(
             // tslint:disable-next-line:no-unused-expression
             coalescingManager.add(_scope);
             actionSubscription = durationSelector.subscribe({
+              error: (error) => outerObserver.error(error),
               next: () => {
                 tryEmitLatestValue();
+                actionSubscription.unsubscribe();
                 actionSubscription = undefined;
               },
               complete: () => {

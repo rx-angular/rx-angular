@@ -23,7 +23,7 @@ describe('coalesce operator additional logic', () => {
       const s1 = cold('---a---------|', values);
       const s1Subs = '^------------!';
       const n1 = cold('   ------a|  ');
-      const n1Subs = ['---^------!'];
+      const n1Subs = ['---^-----!'];
       const exp = '---------a---|';
       const result = s1.pipe(coalesceWith(n1));
       expectObservable(result).toBe(exp, values);
@@ -53,7 +53,7 @@ describe('coalesce operator additional logic', () => {
         const s1 = cold('---abcdef---|');
         const s1Subs = '^-----------!';
         const n1 = cold('   -----x|    ');
-        const n1Subs = ['---^-----!    '];
+        const n1Subs = ['---^----!    '];
         const exp = '--------f---|';
 
         const result = s1.pipe(coalesceWith(n1));
