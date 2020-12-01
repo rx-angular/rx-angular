@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of, Subject } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-a',
@@ -8,16 +9,16 @@ import { BehaviorSubject } from 'rxjs';
       <ng-container visualizerHeader>
         <h1 class="mat-headline">Component A (Parent)</h1>
       </ng-container>
+      <button mat-button unpatch (click)="update()">
+        update
+      </button>
       <div class="row w-100">
-        <div class="col-12">
-          {{prop}}
-        </div>
-        <div class="col">
-          <rxa-b [prop]="prop"></rxa-b>
-        </div>
-        <div class="col">
-          <rxa-c [prop]="prop"></rxa-c>
-        </div>
+        <rxa-children>
+          <rxa-c [prop]="20"></rxa-c>
+          <rxa-c
+            *rxLet="values$; let v"
+            [prop]="v"></rxa-c>
+        </rxa-children>
       </div>
     </rxa-visualizer>
   `,
@@ -25,6 +26,13 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class AComponent {
 
+
+  values$ = new Subject();
+
   prop = 'value';
+
+  update(): void {
+    this.values$.next((new Array(100).fill(20)));
+  }
 
 }
