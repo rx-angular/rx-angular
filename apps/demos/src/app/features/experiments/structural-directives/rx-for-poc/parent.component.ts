@@ -1,8 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
-import { BehaviorSubject, EMPTY, interval, merge, Subject } from 'rxjs';
-import { scan, share, switchMap } from 'rxjs/operators';
-import { immutableArr, immutableIncArr } from '../utils';
+import { BehaviorSubject, combineLatest, EMPTY, interval, merge, of, Subject } from 'rxjs';
+import { scan, share, switchMap, withLatestFrom } from 'rxjs/operators';
+import { immutableArr } from '../utils';
+import { RxState } from '../../../../../../../../libs/state/src/lib';
 
 
 @Component({
@@ -15,6 +16,16 @@ import { immutableArr, immutableIncArr } from '../utils';
           <small>Nested Structures And Local Variables</small>
         </h2>
         <div>
+          <p *rxLet="table$; let table">
+          <mat-form-field>
+            <mat-label>Rows</mat-label>
+            <input matInput min="1" #r type="number" unpatch [value]="table?.rows" (input)="set({rows: +r.value})">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Colums</mat-label>
+            <input matInput min="1" #c type="number" unpatch [value]="table?.columns" (input)="set({columns: +c.value})">
+          </mat-form-field>
+          </p>
           <mat-button-toggle-group name="visibleExamples"
                                    aria-label="Visible Examples"
                                    [value]="displayStates.all"
@@ -31,7 +42,7 @@ import { immutableArr, immutableIncArr } from '../utils';
 
       <div class="row w-100">
         <!--  -->
-        <div class="col-sm-6" *ngIf="group.value === displayStates.native || group.value === displayStates.all">
+        <div class="col" *ngIf="group.value === displayStates.native || group.value === displayStates.all">
           <h2>Native Angular, *ngFor trackBy</h2>
           <p>
             <button mat-raised-button (click)="changeOneClick$.next(1)">
@@ -46,12 +57,12 @@ import { immutableArr, immutableIncArr } from '../utils';
           </p>
           <rxa-visualizer viewType="embedded-view" *ngFor="let value of array$ | async;trackBy: trackById">
 
-              <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-                <rxa-rx-for-value [value]="i"></rxa-rx-for-value>
-              </ng-container>
+            <ng-container *ngFor="let i of value.arr; trackBy: trackById">
+              <rxa-rx-for-value [value]="i"></rxa-rx-for-value>
+            </ng-container>
           </rxa-visualizer>
         </div>
-        <div class="col-sm-6"
+        <div class="col"
              *ngIf="group.value === displayStates.rxAngularReactive || group.value === displayStates.all">
           <h2>RxAngular, *rxFor trackBy, distinctBy, select</h2>
           <p>
@@ -76,12 +87,9 @@ import { immutableArr, immutableIncArr } from '../utils';
     </rxa-visualizer>
   `,
   changeDetection: environment.changeDetection,
-  encapsulation: ViewEncapsulation.None,
-  styles: [`
-
-  `]
+  encapsulation: ViewEncapsulation.None
 })
-export class RxForContainerComponent {
+export class RxForContainerComponent extends RxState<{ rows: number, columns: number }> {
   tK = 'id';
 
   displayStates = {
@@ -91,22 +99,27 @@ export class RxForContainerComponent {
     all: 3
   };
 
+  table$ = this.select();
+
   strategy$ = new Subject<string>();
   changeOneClick$ = new Subject<number>();
   changeAllClick$ = new Subject<number>();
   toggleIntervalClick$ = new Subject<number>();
 
+  changesFromTick$ = this.toggleIntervalClick$.pipe(
+    scan(a => !a, false),
+    switchMap(b => b ? interval(100) : EMPTY)
+  );
 
   array$ = merge(
-    this.changeOneClick$.pipe(immutableIncArr()),
-    merge(
-      this.toggleIntervalClick$.pipe(
-        scan(a => !a, false),
-        switchMap(b => b ? interval(100) : EMPTY)
-      ),
-      this.changeAllClick$
+    combineLatest(this.changeOneClick$, this.table$).pipe(
+      switchMap(([_, { rows, columns }]) => immutableArr(rows, columns)(of(1)))
+    ),
+    combineLatest(
+      merge(this.changesFromTick$, this.changeAllClick$),
+      this.table$
     ).pipe(
-      immutableArr()
+      switchMap(([_, { rows, columns }]) => immutableArr(rows, columns)(of(rows)))
     )
   ).pipe(
     share()
@@ -116,5 +129,10 @@ export class RxForContainerComponent {
   trackById = (i) => i.id;
 
   dK = (a, b) => a.value === b.value;
+
+  constructor() {
+    super();
+    this.set({ columns: 5, rows: 10 });
+  }
 
 }
