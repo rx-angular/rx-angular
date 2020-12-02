@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
         <h1 class="mat-headline">Component A (Parent)</h1>
         <div>
           <rxa-value-provider [changes$]="changes$" #v="rxaValueProvider"></rxa-value-provider>
-          <rxa-ripple [name]="'A generate random'" [value]="v.incremental$">random</rxa-ripple>
+          <rxa-ripple [name]="'A generate random'">random</rxa-ripple>
         </div>
       </ng-container>
       <div class="row w-100">
