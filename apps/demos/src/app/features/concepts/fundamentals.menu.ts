@@ -20,7 +20,7 @@ export const FUNDAMENTALS_MENU = [
     link: 'coalescing'
   },
   {
-    label: 'Global Orde',
+    label: 'Global Order',
     link: 'global-order'
   },
 ];
