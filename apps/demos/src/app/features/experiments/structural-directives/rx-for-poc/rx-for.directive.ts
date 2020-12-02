@@ -61,6 +61,11 @@ export class RxForDirective<T extends object, U extends NgIterable<T> = NgIterab
   ));
 
   @Input()
+  set rxFor(potentialObservable: ObservableInput<U> | null | undefined) {
+    this.observables$.next(potentialObservable);
+  }
+
+  @Input()
   set rxForOf(potentialObservable: ObservableInput<U> | null | undefined) {
     this.observables$.next(potentialObservable);
   }

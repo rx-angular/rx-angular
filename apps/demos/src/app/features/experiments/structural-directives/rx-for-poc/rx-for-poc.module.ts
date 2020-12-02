@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
-import { TemplateModule, UnpatchEventsModule } from '@rx-angular/template';
+import { UnpatchEventsModule } from '@rx-angular/template';
 import { MatButtonModule } from '@angular/material/button';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ValueModule } from '../../../../shared/debug-helper/work';

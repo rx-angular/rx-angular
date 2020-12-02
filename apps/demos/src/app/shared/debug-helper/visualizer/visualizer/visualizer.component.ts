@@ -9,12 +9,11 @@ import { Hooks } from '../../hooks';
     <div class="d-flex w-100">
       <rxa-dirty-check style="margin-right: 1rem" [radius]="radius"></rxa-dirty-check>
       <rxa-renders *ngIf="renderingsOn" [value$]="valuesO$" [radius]="radius"></rxa-renders>
+      <span *ngIf="cDS">{{cDS}}</span>
     </div>
-    <ng-content select="[visualizerHeader]">
-    </ng-content>
+    <ng-content select="[visualizerHeader]"></ng-content>
     <div class="w-100 h-100 d-flex align-items-center justify-content-center flex-grow-1">
-      <ng-content>
-      </ng-content>
+      <ng-content></ng-content>
     </div>
   `,
   host: {
@@ -26,7 +25,6 @@ export class VisualizerComponent extends Hooks {
   @Input()
   size;
 
-
   classNames = 'd-flex flex-column w-100 m-1 p-1 dh-l-view';
 
   @Input()
@@ -37,6 +35,9 @@ export class VisualizerComponent extends Hooks {
     this.classNames = [...this.classNames.split(' ').filter(c => c.indexOf('dh-') === -1), 'dh-' + type]
       .join(' ');
   }
+
+  @Input()
+  cDS: string;
 
   @Input()
   radius = 20;
