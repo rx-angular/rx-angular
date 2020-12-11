@@ -3,7 +3,8 @@ import { isDefined, isKeyOf } from '../../core';
 /**
  * @description
  * Accepts an array of objects of type T and single key or array of keys (K extends keyof T).
- * Constructs new array of objects based on provided keys.
+ * The `exctract` method is pure and immutable, thus not touching the input values and returning a shallow 
+ * copy of the extracted source.
  *
  * @example
  *
