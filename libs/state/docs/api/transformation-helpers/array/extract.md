@@ -1,7 +1,7 @@
 ## slice
 
-Accepts an array of objects of type T and single key or array of keys (K extends keyof T).
-Constructs new array of objects based on provided keys.
+Accepts an array of T `extends object` and a single key or an array of keys (`K extends keyof T`).
+The `slice` method is pure and immutable, thus not touching the input values and returning a shallow copy of the selected slice.
 
 _Example_
 
