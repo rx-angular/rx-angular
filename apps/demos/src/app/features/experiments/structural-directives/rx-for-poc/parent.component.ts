@@ -1,9 +1,17 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
+import {
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  ElementRef,
+  QueryList,
+  ViewChildren,
+  ViewEncapsulation
+} from '@angular/core';
 import { BehaviorSubject, combineLatest, EMPTY, interval, merge, of, Subject } from 'rxjs';
-import { scan, share, switchMap, withLatestFrom } from 'rxjs/operators';
-import { immutableArr } from '../utils';
+import { map, scan, share, startWith, switchMap } from 'rxjs/operators';
 import { RxState } from '../../../../../../../../libs/state/src/lib';
+import { environment } from '../../../../../environments/environment';
+import { immutableArr } from '../utils';
 
 
 @Component({
@@ -17,14 +25,20 @@ import { RxState } from '../../../../../../../../libs/state/src/lib';
         </h2>
         <div>
           <p *rxLet="table$; let table">
-          <mat-form-field>
-            <mat-label>Rows</mat-label>
-            <input matInput min="1" #r type="number" unpatch [value]="table?.rows" (input)="set({rows: +r.value})">
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Colums</mat-label>
-            <input matInput min="1" #c type="number" unpatch [value]="table?.columns" (input)="set({columns: +c.value})">
-          </mat-form-field>
+            <mat-form-field>
+              <mat-label>Rows</mat-label>
+              <input matInput min="1" #r type="number" unpatch [value]="table?.rows" (input)="set({rows: +r.value})">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Colums</mat-label>
+              <input matInput
+                     min="1"
+                     #c
+                     type="number"
+                     unpatch
+                     [value]="table?.columns"
+                     (input)="set({columns: +c.value})">
+            </mat-form-field>
           </p>
           <mat-button-toggle-group name="visibleExamples"
                                    aria-label="Visible Examples"
@@ -77,8 +91,22 @@ import { RxState } from '../../../../../../../../libs/state/src/lib';
             </button>
             <rxa-strategy-select (strategyChange)="strategy$.next($event)"></rxa-strategy-select>
           </p>
-          <rxa-visualizer viewType="embedded-view" *rxFor="array$; let i; let r$ = record$; let select = select">
-            <ng-container *rxFor="select(['arr']); trackBy: tK; distinctBy:dK; let v$ = record$;">
+          <ng-container *rxLet="childrenRendered$; let childrenRendered; strategy: strategy$">
+            Rendercallback: <strong>{{ childrenRendered }}</strong>
+          </ng-container>
+          <rxa-visualizer
+            viewType="embedded-view"
+            *rxFor="
+              let a of array$;
+              let i;
+              let r$ = item$;
+              renderCallback: childrenRendered;
+              strategy: 'chunk';
+              trackBy: trackById; let select = select
+            "
+          >
+            <span #spanChild></span>
+            <ng-container *rxFor="select(['arr']); trackBy: trackById; let o; let v$ = item$; strategy: 'chunk';">
               <rxa-rx-for-value [strategy$]="strategy$" [value]="v$"></rxa-rx-for-value>
             </ng-container>
           </rxa-visualizer>
@@ -89,7 +117,7 @@ import { RxState } from '../../../../../../../../libs/state/src/lib';
   changeDetection: environment.changeDetection,
   encapsulation: ViewEncapsulation.None
 })
-export class RxForContainerComponent extends RxState<{ rows: number, columns: number }> {
+export class RxForContainerComponent extends RxState<{ rows: number, columns: number }> implements AfterViewInit {
   tK = 'id';
 
   displayStates = {
@@ -98,6 +126,13 @@ export class RxForContainerComponent extends RxState<{ rows: number, columns: nu
     rxAngularReactive: 2,
     all: 3
   };
+
+  childrenRendered = new Subject<void>();
+  private numChildrenRendered = 0;
+  childrenRendered$ = this.childrenRendered.pipe(
+    startWith(null),
+    map(() => this.numChildrenRendered++)
+  )
 
   table$ = this.select();
 
@@ -126,13 +161,19 @@ export class RxForContainerComponent extends RxState<{ rows: number, columns: nu
   );
 
   load$ = new BehaviorSubject<number>(0);
-  trackById = (i) => i.id;
+  trackById = (i, v) => v.id;
 
   dK = (a, b) => a.value === b.value;
+
+  @ViewChildren('spanChild') spanChildren: QueryList<ElementRef>;
 
   constructor() {
     super();
     this.set({ columns: 5, rows: 10 });
+  }
+
+  ngAfterViewInit() {
+    this.hold(this.spanChildren.changes, console.log);
   }
 
 }
