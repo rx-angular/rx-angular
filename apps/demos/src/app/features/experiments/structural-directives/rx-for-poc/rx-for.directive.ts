@@ -17,7 +17,17 @@ import {
   ViewContainerRef, ɵdetectChanges as detectChanges
 } from '@angular/core';
 
-import { combineLatest, forkJoin, Observable, ObservableInput, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import {
+  combineLatest,
+  forkJoin,
+  merge,
+  Observable,
+  ObservableInput,
+  of,
+  ReplaySubject,
+  Subject,
+  Subscription
+} from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
@@ -127,7 +137,6 @@ export class RxForOf<T, U extends NgIterable<T> = NgIterable<T>>
           map(i => this.differ.diff(i)),
           filter(diff => !!diff),
           switchMap(diff => this.applyChanges(diff)),
-          tap(console.log),
           tap(this?._renderCallback)
         )
         .subscribe()
@@ -160,8 +169,27 @@ export class RxForOf<T, U extends NgIterable<T> = NgIterable<T>>
 
   private applyChanges(changes: IterableChanges<T>): Observable<any[]> {
     let detectParent = false;
-    const detectChanges$: Observable<any>[] = [];
+    // cache for duplication check so that we dont schedule multiple times for a single view. I am not even sure if
+    // this is possible, but just in case
+    const viewBehaviorCache = new WeakSet<EmbeddedViewRef<any>>();
+    const behaviors$: Observable<any>[] = [];
     const strat = this.strategies[this.strategy];
+    const scheduleCD = (view: EmbeddedViewRef<any>) => {
+      if (!viewBehaviorCache.has(view)) {
+        viewBehaviorCache.add(view);
+        // detach the view so that the parent cd cycle does not render this view
+        view.detach();
+        const work = () => {
+          view.reattach();
+          strat.work(view);
+        };
+        behaviors$.push(of(null)
+          .pipe(
+            strat.behavior(work, view),
+            take(1)
+          ))
+      }
+    }
     changes.forEachOperation(
       (
         r: IterableChangeRecord<T>,
@@ -170,8 +198,9 @@ export class RxForOf<T, U extends NgIterable<T> = NgIterable<T>>
       ) => {
         const idx = currentIndex == null ? undefined : currentIndex;
         // insert
+        let view: EmbeddedViewRef<RxForViewContext<T, U>>;
         if (r.previousIndex == null) {
-          const view =  this.viewContainerRef.createEmbeddedView(
+          view = this.viewContainerRef.createEmbeddedView(
             this.templateRef,
             new RxForViewContext(
               r.item,
@@ -180,37 +209,23 @@ export class RxForOf<T, U extends NgIterable<T> = NgIterable<T>>
             ),
             idx
           );
+          // the view got inserted, so the parent has to get notified about this change
           detectParent = true;
-          // TODO: refactor
-          const work = () => {
-            strat.work(view);
-          };
-          detectChanges$.push(of(null)
-            .pipe(
-              strat.behavior(work, view),
-              take(1)
-            ));
         } else if (currentIndex == null) {  // remove
           this.viewContainerRef.remove(
             previousIndex === null ? undefined : previousIndex
           );
-          detectChanges$.push(of(null));
+          // a view got removed, notify parent about the change
           detectParent = true;
         } else if (previousIndex !== null) { // move
-          const view = <EmbeddedViewRef<RxForViewContext<T, U>>>(
+          view = <EmbeddedViewRef<RxForViewContext<T, U>>>(
             this.viewContainerRef.get(previousIndex)
           );
           this.viewContainerRef.move(view, idx);
           view.context.$implicit = r.item;
-          // TODO: refactor
-          const work = () => {
-            strat.work(view);
-          };
-          detectChanges$.push(of(null)
-            .pipe(
-              strat.behavior(work, view),
-              take(1)
-            ));
+        }
+        if (view) {
+          scheduleCD(view);
         }
       }
     );
@@ -222,27 +237,21 @@ export class RxForOf<T, U extends NgIterable<T> = NgIterable<T>>
         this.viewContainerRef.get(record.currentIndex)
       );
       view.context.$implicit = record.item;
-      // TODO: refactor
-      const work = () => {
-        strat.work(view);
-      };
-      detectChanges$.push(of(null)
-        .pipe(
-          strat.behavior(work, view),
-          take(1)
-        ));
+      scheduleCD(view);
     });
-    // TODO: find a way to properly update ViewChildren/ContentChildren of the respective parent(s) of the rendered
-    //  templates
-    /*if (detectParent) {
+    if (detectParent) {
       const work = () => {
+        // reattach the parent in case it is detached. if the strategy is set to detach, it will get detached
+        // afterwards anyway
+        this.cdRef.reattach();
         strat.work(this.cdRef);
       }
-      detectChanges$.unshift(
-        of(null).pipe(strat.behavior(work, (this.cdRef as any).context), take(1))
-      )
-    }*/
-    return forkJoin(detectChanges$);
+      return merge(
+        of(null).pipe(strat.behavior(work, (this.cdRef as any).context), take(1)),
+        forkJoin(behaviors$)
+      ).pipe(filter(v => v != null), take(1));
+    }
+    return forkJoin(behaviors$);
   }
 
   /** Update the `VirtualForOfContext` for all views. */
