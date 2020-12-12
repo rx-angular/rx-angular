@@ -9,6 +9,8 @@ import { LetDirectiveTriggered } from './rx-let-suspense-trigger.directive';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TriggerProviderModule } from '../../../../shared/debug-helper/trigger-provider/trigger-provider.module';
+import { RxQueryChildrenComponent } from './rx-query-children.component';
+import { RxQueryContentComponent, RxQueryContentTestDirective } from './rx-query-content.component';
 import { RxQueryComponent } from './rx-query.component';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
@@ -18,7 +20,10 @@ import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks'
 const DECLARATIONS = [
   RxLetPocComponent,
   LetDirectiveTriggered,
-  RxQueryComponent
+  RxQueryComponent,
+  RxQueryChildrenComponent,
+  RxQueryContentComponent,
+  RxQueryContentTestDirective
 ];
 
 @NgModule({

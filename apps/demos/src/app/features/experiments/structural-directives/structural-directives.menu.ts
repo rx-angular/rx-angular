@@ -8,6 +8,10 @@ export const MENU_ITEMS = [
     label: 'RxLet',
   },
   {
+    link: 'rx-let-poc/rx-query-children',
+    label: 'RxLet ViewChildren',
+  },
+  {
     link: 'rx-if-poc',
     label: 'RxIf',
   },
