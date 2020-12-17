@@ -1,22 +1,80 @@
 // tslint:disable:no-console
-import { finalize } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
+/**
+ * @NOTICE GENERAL INFORMATION ON MEASUREMENT NOISE
+ * Notes on measurement overhead console.time vs. performance.mark cn be found here:
+ * https://gist.github.com/paulirish/2fad3834e2617fb199bc12e17058dde4
+ */
+
+export const PREFIX = 'RXA-MEASURE';
+const POSTFIX_START = 'START';
+const POSTFIX_END = 'END';
 let i = 0;
 
-export function start(label: string = ++i + '') {
-  console.time(label);
-  return () => end(label);
+const rxaDebug = {
+  getEntries,
+  measure
+};
+
+(window as any).rxaDebug = rxaDebug;
+
+
+/**
+ * Used performance.mark to generate a TimingMark
+ * @param label
+ */
+export function mark(label: string = ++i + ''): void {
+  performance.mark(`${PREFIX}-${label}`);
 }
 
-export function end(str: string = ++i + '') {
-  console.timeEnd(str);
+/**
+ * Used performance.mark to generate a postfixes TimingMark for a starting mark
+ * @param label
+ * @return A function that marks the end of the respective measurement
+ */
+export function start(label: string = ++i + ''): () => () => void {
+  const startLabel = `${label}-${POSTFIX_START}`;
+  const endLabel = `${label}-${POSTFIX_END}`
+  mark(startLabel);
+  return () => {
+    end(label);
+    return () =>  {
+      measure(startLabel, endLabel)
+    }
+  }
 }
 
+/**
+ * Used performance.mark to generate a postfixes TimingMark for a ending mark
+ * @param label
+ * @return A function that measures the start to end timing
+ */
+export function end(label: string = ++i + ''): void {
+  mark(`${label}-${POSTFIX_END}`);
+}
 
-// Create a variety of measurements.
-//   performance.measure("measure a to b", markerNameA, markerNameB);
+/**
+ * Used performance.measure to generate a measurement for 2 TimingMarks
+ */
+export function measure(startLabel: string, endLabel: string, measureName?: string): void {
+  measureName = measureName ? measureName : `${PREFIX}-${startLabel}--${endLabel}`;
+  performance.measure(measureName, `${PREFIX}-${startLabel}`, `${PREFIX}-${endLabel}`);
+  const { name, duration } = performance.getEntriesByName(measureName)[0];
+  console.log(`${name}: ${duration}`);
+}
 
+export function getEntries(): { }[] {
+  return performance.getEntries().filter(e => e.name.indexOf(PREFIX) === 0);
+}
+
+/**
+ * Measures the observable lifecycle based on the generated marks
+ *
+ * @example
+ *
+ * @param label
+ */
 const observableMarkerFactory = (label: string) => {
   const observableMarks = {
     subscribe: () => label + '$subscribe',
@@ -33,33 +91,38 @@ const observableMarkerFactory = (label: string) => {
 
   return ({
     subscribe: () => {
-      performance.mark(observableMarks.subscribe());
+      mark(observableMarks.subscribe());
     },
     next: (v: any) => {
-      performance.mark(observableMarks.next(v));
+      mark(observableMarks.next(v));
     },
     error: (e: Error) => {
-      performance.mark(observableMarks.error(e));
+      mark(observableMarks.error(e));
     },
     complete: () => {
-      performance.mark(observableMarks.complete());
+      mark(observableMarks.complete());
     },
     unsubscribe: () => {
-      performance.mark(observableMarks.unsubscribe());
+      mark(observableMarks.unsubscribe());
     },
     teardown: () => {
-      performance.mark(observableMarks.teardown());
+      mark(observableMarks.teardown());
     },
     eval: () => {
       console.log('eval');
       // @ts-ignore
-      performance.measure(...observableMeasures.total);
+      measure(...observableMeasures.total);
       const { name, duration } = performance.getEntriesByName(observableMeasures.total[0])[0];
       console.log(`${name}: ${duration}`);
     }
   });
 }
 
+/**
+ * Marks the observable lifecycle with TimingMarks
+ *
+ * @param label
+ */
 export function measure$(label: string = ++i + '') {
   const marker = observableMarkerFactory(label);
   return o$ => new Observable((subscriber) => {
@@ -92,37 +155,35 @@ export function measure$(label: string = ++i + '') {
 
 export function promiseMarkerFactory(label: string) {
   const promiseMarks = {
-    start: () => label+'Pstart',
-    then: (r) =>  label+'Pthen' + r + '',
-    catch: (e) =>  label+'Pcatch'+e+'',
-    finally: () => label+'Pfinally'
+    start: () => label+'-Pstart',
+    then: (r) =>  label+'-Pthen',
+    catch: (e) =>  label+'-Pcatch',
+    finally: () => label+'-Pfinally'
   };
   const promiseMeasures = {
-    total: [label+'total', promiseMarks.start(), promiseMarks.finally()]
+    total: [promiseMarks.start(), promiseMarks.finally(), label+'total']
   };
 
 
   function _then(r) {
-    performance.mark(promiseMarks.then(r));
+    mark(promiseMarks.then(r));
   }
 
   function _start() {
-    performance.mark(promiseMarks.start());
+    mark(promiseMarks.start());
   }
 
   function _catch(e: Error) {
-    performance.mark(promiseMarks.catch(e));
+    mark(promiseMarks.catch(e));
   }
 
   function _finally() {
-    performance.mark(promiseMarks.finally());
+    mark(promiseMarks.finally());
   }
 
   function _eval() {
     // @ts-ignore
-    performance.measure(...promiseMeasures.total);
-    const { name, duration } = performance.getEntriesByName(promiseMeasures.total[0])[0];
-    console.log(`${name}: ${duration}`);
+    measure(...promiseMeasures.total);
   }
 
   return {
@@ -144,7 +205,3 @@ export function promiseMarkerFactory(label: string) {
     }
   };
 }
-
-
-
-
