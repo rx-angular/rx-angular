@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ValueModule } from '../../../../shared/debug-helper/work';
 import { RxForContainerComponent } from './parent.component';
+import { RxMinimalForOf } from './rx-for-minimal.directive';
+
 import { RxForValueComponent } from './rx-for-value.component';
 import { RxForOf } from './rx-for.directive';
 import { Poc6Locv2Directive } from './poc6-locv2.directive';
@@ -29,6 +31,7 @@ const DECLARATIONS = [
   Poc6Locv2Directive,
   Poc6Locv6Directive,
   RxForOf,
+  RxMinimalForOf,
   RxForValueComponent
 ];
 

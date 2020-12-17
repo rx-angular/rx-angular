@@ -35,10 +35,10 @@ type RxForTemplateNames = 'rxSuspense' | 'rxNext' | 'rxError' | 'rxComplete';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[rxFor]',
+  selector: '[rxMinimalFor]',
   providers: [RxEffects]
 })
-export class RxForDirective<T extends object, U extends NgIterable<T> = NgIterable<T>> implements OnInit, OnDestroy {
+export class RxMinimalForOf<T extends object, U extends NgIterable<T> = NgIterable<T>> implements OnInit, OnDestroy {
   private evMap: Map<string, EmbeddedViewRef<RxForViewContext<T, U>>> = new Map();
   private differ: IterableDiffer<T> | null = null;
   private observables$ = new ReplaySubject<ObservableInput<U>>(1);
@@ -54,28 +54,28 @@ export class RxForDirective<T extends object, U extends NgIterable<T> = NgIterab
     groupBy(r => r[this._rxTrackBy]),
     scan((records, o$) => ({
       ...records,
-      [o$.key]: o$.pipe(distinctUntilChanged(this.rxForDistinctBy))
+      [o$.key]: o$.pipe(distinctUntilChanged(this.rxMinimalForDistinctBy))
     }), {}),
     mergeAll(),
     shareReplay({ refCount: true, bufferSize: 1 })
   ));
 
   @Input()
-  set rxFor(potentialObservable: ObservableInput<U> | null | undefined) {
+  set rxMinimalFor(potentialObservable: ObservableInput<U> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
 
   @Input()
-  set rxForOf(potentialObservable: ObservableInput<U> | null | undefined) {
+  set rxMinimalForOf(potentialObservable: ObservableInput<U> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
 
   _rxTrackBy = 'id';
   @Input()
-  rxForDistinctBy = (a, b) => a.value === b.value;
+  rxMinimalForDistinctBy = (a, b) => a.value === b.value;
 
   @Input()
-  set rxForTrackBy(key: string) {
+  set rxMinimalForTrackBy(key: string) {
     if (key) {
       this._rxTrackBy = key;
     } else {
@@ -127,7 +127,7 @@ export class RxForDirective<T extends object, U extends NgIterable<T> = NgIterab
       // enter
       if (r.previousIndex == null) {
 
-        const evc = new RxForViewContext(r.item, iterable, this.rxForDistinctBy);
+        const evc = new RxForViewContext(r.item, iterable, this.rxMinimalForDistinctBy);
         const view = this.viewContainerRef
           .createEmbeddedView(this.templateRef, evc, idx);
         this.evMap.set(evName, view);
