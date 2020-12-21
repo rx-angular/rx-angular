@@ -1,7 +1,7 @@
-import { Inject, Injectable, Optional } from '@angular/core';
+import { ChangeDetectorRef, Inject, Injectable, Optional } from '@angular/core';
 import { RxState, selectSlice } from '@rx-angular/state';
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { fromEvent, Observable, of } from 'rxjs';
+import { map, shareReplay, takeUntil } from 'rxjs/operators';
 import {
   getDefaultStrategyCredentialsMap,
   mergeStrategies,
@@ -71,6 +71,25 @@ export class StrategyProvider extends RxState<{
     this.hold(this.strategies$, s => this._strategies = s);
     this.hold(this.primaryStrategy$, s => this._primaryStrategy = s);
     this.hold(this.secondaryStrategy$, s => this._secondaryStrategy = s);
+  }
+
+  scheduleCD(cdRef: ChangeDetectorRef, options?: {
+    context?: any, strategy?: string, afterCD?: () => void, abortCtrl?: AbortController
+  }): AbortController {
+    const strategy = this.strategies[options?.strategy] || this._primaryStrategy;
+    const context = options?.context || cdRef;
+    const abC = options?.abortCtrl || new AbortController();
+    const work = () => {
+      strategy.work(cdRef, context);
+      if (options?.afterCD) {
+        options.afterCD();
+      }
+    };
+    of(null).pipe(
+      strategy.behavior(work, context),
+      takeUntil(fromEvent(abC.signal, 'abort'))
+    ).subscribe();
+    return abC;
   }
 
   registerStrategies(customStrategies: StrategyCredentialsMap) {

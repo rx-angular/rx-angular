@@ -11,16 +11,14 @@ import {
   NgIterable,
   OnDestroy,
   OnInit,
-  Optional,
   TemplateRef,
   TrackByFunction,
-  ViewContainerRef, ɵdetectChanges as detectChanges
+  ViewContainerRef
 } from '@angular/core';
 
 import {
-  combineLatest,
+  concat,
   forkJoin,
-  merge,
   Observable,
   ObservableInput,
   of,
@@ -29,21 +27,18 @@ import {
   Subscription
 } from 'rxjs';
 import {
+  catchError,
   distinctUntilChanged,
   filter,
   map,
-  shareReplay,
-  startWith,
+  shareReplay, skip,
   switchAll,
   switchMap,
   take,
   tap
 } from 'rxjs/operators';
-import { RX_CUSTOM_STRATEGIES } from '../../../../shared/rx-angular-pocs/render-stragegies/custom-strategies-token';
 import { RX_PRIMARY_STRATEGY } from '../../../../shared/rx-angular-pocs/render-stragegies/default-primary-strategy-token';
-import { getDefaultStrategyCredentialsMap } from '../../../../shared/rx-angular-pocs/render-stragegies/default-strategies';
-import { StrategyCredentialsMap } from '../../../../shared/rx-angular-pocs/render-stragegies/model';
-import { mergeStrategies } from '../../../../shared/rx-angular-pocs/render-stragegies/strategy-helper';
+import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stragegies/strategy-provider.service';
 import { RxForViewContext } from './rx-for-context';
 
 @Directive({
@@ -55,7 +50,7 @@ export class RxForOf<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, OnDestroy {
   private differ: IterableDiffer<T> | null = null;
   private observables$ = new ReplaySubject<ObservableInput<U>>(1);
-  private readonly strategies: StrategyCredentialsMap;
+  private readonly strategies = this.strategyProvider.strategies;
 
   values$ = this.observables$.pipe(
     switchAll(),
@@ -113,47 +108,47 @@ export class RxForOf<T, U extends NgIterable<T> = NgIterable<T>>
   rxForDistinctBy = (a, b) => a.value === b.value;
 
   constructor(
-    @Optional()
-    @Inject(RX_CUSTOM_STRATEGIES)
-    private customStrategies: StrategyCredentialsMap[],
     @Inject(RX_PRIMARY_STRATEGY)
     private defaultStrategyName: string,
+    private strategyProvider: StrategyProvider,
     private cdRef: ChangeDetectorRef,
     private readonly templateRef: TemplateRef<RxForViewContext<T, U>>,
     private readonly viewContainerRef: ViewContainerRef,
     private iterableDiffers: IterableDiffers
-  ) {
-    this.strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), getDefaultStrategyCredentialsMap());
-  }
+  ) {}
 
   initDiffer(iterable: U = [] as U) {
     this.differ = this.iterableDiffers
       .find(iterable)
       .create(this._trackByFn);
+  }
+
+  ngOnInit() {
+    this.initDiffer();
+    /*this.sub.add(
+      this.values$.pipe(take(1)).subscribe(values => {
+        this.initDiffer(values || ([] as any));
+      })
+    );*/
     this.sub.add(
-      this.values$
-        .pipe(
-          startWith(iterable),
+      this.values$.pipe(
           map(i => this.differ.diff(i)),
           filter(diff => !!diff),
-          switchMap(diff => this.applyChanges(diff)),
+          switchMap(diff => this.applyChanges(diff).pipe(
+            catchError(e => {
+              console.error(e);
+              return of(null);
+            })
+          )),
           tap(this?._renderCallback)
         )
         .subscribe()
     );
   }
 
-  ngOnInit() {
-    this.sub.add(
-      this.values$
-        .pipe(take(1))
-        .subscribe(value => this.initDiffer(value))
-    );
-  }
-
   ngOnDestroy() {
-    this.viewContainerRef.clear();
     this.sub.unsubscribe();
+    this.viewContainerRef.clear();
   }
 
   /**
@@ -162,34 +157,75 @@ export class RxForOf<T, U extends NgIterable<T> = NgIterable<T>>
    * The presence of this method is a signal to the Ivy template type-check compiler that the
    * `NgForOf` structural directive renders its template with a specific context type.
    */
-  static ngTemplateContextGuard<T, U extends NgIterable<T>>(dir: RxForOf<T, U>, ctx: any):
-    ctx is RxForViewContext<T, U> {
+  static ngTemplateContextGuard<T, U extends NgIterable<T>>(
+    dir: RxForOf<T, U>,
+    ctx: any
+  ): ctx is RxForViewContext<T, U> {
     return true;
   }
 
   private applyChanges(changes: IterableChanges<T>): Observable<any[]> {
     let detectParent = false;
-    // cache for duplication check so that we dont schedule multiple times for a single view. I am not even sure if
-    // this is possible, but just in case
-    const viewBehaviorCache = new WeakSet<EmbeddedViewRef<any>>();
     const behaviors$: Observable<any>[] = [];
     const strat = this.strategies[this.strategy];
-    const scheduleCD = (view: EmbeddedViewRef<any>) => {
-      if (!viewBehaviorCache.has(view)) {
-        viewBehaviorCache.add(view);
-        // detach the view so that the parent cd cycle does not render this view
-        view.detach();
+
+    const insertMap = new Map<number, RxForViewContext<T, U>>();
+    const scheduleInsert = (idx: number, ctx: RxForViewContext<T, U>) => {
+      if (!insertMap.has(idx)) {
+        insertMap.set(idx, ctx);
+        const insert = new Subject<void>();
         const work = () => {
-          view.reattach();
-          strat.work(view);
+          try {
+            const view = this.viewContainerRef.createEmbeddedView(
+              this.templateRef,
+              insertMap.get(idx),
+              idx
+            );
+            strat.work(view);
+          } catch (e) {
+            // console.error(e);
+            // console.error('destroyed', this.destroyed);
+          }
         };
-        behaviors$.push(of(null)
-          .pipe(
-            strat.behavior(work, view),
-            take(1)
-          ))
+        this.sub.add(
+          of(null)
+            .pipe(strat.behavior(work, insertMap.get(idx)), take(1))
+            .subscribe(insert)
+        );
+        behaviors$.push(insert);
       }
-    }
+    };
+    const updateMap = new WeakMap<
+      EmbeddedViewRef<any>,
+      ((context: RxForViewContext<T, U>) => void)[]
+      >();
+    const scheduleUpdate = (
+      idx: number,
+      update: (context: RxForViewContext<T, U>) => void
+    ) => {
+      const view = this.viewContainerRef.get(idx) as EmbeddedViewRef<any>;
+      if (view) {
+        if (updateMap.has(view)) {
+          updateMap.get(view).push(update);
+          // update(updateMap.get(view));
+        } else {
+          view.detach();
+          updateMap.set(view, [update]);
+          // detach the view so that the parent cd cycle does not render this view
+          const work = () => {
+            view.reattach();
+            updateMap.get(view).forEach(u => u(view.context));
+            strat.work(view);
+          };
+          behaviors$.push(
+            of(null).pipe(strat.behavior(work, view), take(1))
+          );
+        }
+      } else if (insertMap.has(idx)) {
+        update(insertMap.get(idx));
+      }
+    };
+
     changes.forEachOperation(
       (
         r: IterableChangeRecord<T>,
@@ -198,58 +234,89 @@ export class RxForOf<T, U extends NgIterable<T> = NgIterable<T>>
       ) => {
         const idx = currentIndex == null ? undefined : currentIndex;
         // insert
-        let view: EmbeddedViewRef<RxForViewContext<T, U>>;
         if (r.previousIndex == null) {
-          view = this.viewContainerRef.createEmbeddedView(
-            this.templateRef,
-            new RxForViewContext(
-              r.item,
-              this._rxFor,
-              this.rxForDistinctBy
-            ),
-            idx
+          const context = new RxForViewContext(
+            r.item,
+            this._rxFor,
+            this.rxForDistinctBy
           );
+          // console.log('scheduleInsert', idx);
+          scheduleInsert(idx, context);
           // the view got inserted, so the parent has to get notified about this change
           detectParent = true;
-        } else if (currentIndex == null) {  // remove
-          this.viewContainerRef.remove(
-            previousIndex === null ? undefined : previousIndex
-          );
-          // a view got removed, notify parent about the change
-          detectParent = true;
-        } else if (previousIndex !== null) { // move
-          view = <EmbeddedViewRef<RxForViewContext<T, U>>>(
+        } else if (currentIndex == null) {
+          // remove
+          const idx =
+            previousIndex === null ? undefined : previousIndex;
+          if (this.viewContainerRef.get(idx)) {
+            this.viewContainerRef.remove(idx);
+            // a view got removed, notify parent about the change
+            detectParent = true;
+          }
+        } else if (previousIndex !== null) {
+          // move
+          const view = <EmbeddedViewRef<RxForViewContext<T, U>>>(
             this.viewContainerRef.get(previousIndex)
           );
           this.viewContainerRef.move(view, idx);
-          view.context.$implicit = r.item;
-        }
-        if (view) {
-          scheduleCD(view);
+          const $implicit = r.item;
+          scheduleUpdate(idx, ctx => {
+            ctx.$implicit = $implicit;
+          });
         }
       }
     );
-    // update view contexts (index, count, odd/even and stuff)
-    this._updateContext();
     // if views only had identityChanges, update the $implict value
     changes.forEachIdentityChange((record: IterableChangeRecord<T>) => {
-      const view = <EmbeddedViewRef<RxForViewContext<T, U>>>(
-        this.viewContainerRef.get(record.currentIndex)
+      const $implicit = record.item;
+      scheduleUpdate(
+        record.currentIndex,
+        ctx => (ctx.$implicit = $implicit)
       );
-      view.context.$implicit = record.item;
-      scheduleCD(view);
     });
+    // update view contexts (index, count, odd/even and stuff)
+    // this._updateContext();
+    const count = this.viewContainerRef.length + insertMap.size;
+    for (const [index] of insertMap.entries()) {
+      const even = index % 2 === 0;
+      const newCtx = {
+        index,
+        count,
+        first: index === 0,
+        last: index === count - 1,
+        even,
+        odd: !even
+      };
+      scheduleUpdate(index, ctx => {
+        ctx.rxForOf = this.values$;
+        ctx.setComputedContext(newCtx);
+      });
+    }
+    for (let index = 0; index < this.viewContainerRef.length; index++) {
+      const even = index % 2 === 0;
+      const newCtx = {
+        index,
+        count,
+        first: index === 0,
+        last: index === count - 1,
+        even,
+        odd: !even
+      };
+      scheduleUpdate(index, ctx => {
+        ctx.rxForOf = this.values$;
+        ctx.setComputedContext(newCtx);
+      });
+    }
     if (detectParent) {
-      const work = () => {
-        // reattach the parent in case it is detached. if the strategy is set to detach, it will get detached
-        // afterwards anyway
-        this.cdRef.reattach();
-        strat.work(this.cdRef);
-      }
-      return merge(
-        of(null).pipe(strat.behavior(work, (this.cdRef as any).context), take(1)),
-        forkJoin(behaviors$)
-      ).pipe(filter(v => v != null), take(1));
+      Promise.resolve().then(() => {
+        this.strategyProvider.scheduleCD(this.cdRef, {
+          afterCD: () => {
+            // console.log('parent notified');
+          },
+          strategy: this.strategy,
+          context: (this.cdRef as any).context
+        });
+      });
     }
     return forkJoin(behaviors$);
   }
