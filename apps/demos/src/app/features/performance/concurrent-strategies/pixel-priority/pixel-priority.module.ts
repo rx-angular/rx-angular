@@ -6,7 +6,7 @@ import { ImageArrayModule } from '../../../../shared/image-array/image-array.mod
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SiblingModule } from '../../../../shared/template-structures/sibling/sibling.module';
 import { RouterModule } from '@angular/router';
-import { TemplateModule } from 'templateAlpha0';
+import { LetModule, PushModule } from 'templateAlpha0';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -28,7 +28,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     }]),
     MatCheckboxModule,
     SiblingModule,
-    TemplateModule,
+    LetModule, PushModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
