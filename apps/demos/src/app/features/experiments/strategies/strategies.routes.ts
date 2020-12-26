@@ -14,5 +14,10 @@ export const ROUTES: Routes = [
   {
     path: 'provide',
     component: StrategyTokensProvideComponent
+  },
+  {
+    path: 'partial-tree-update',
+    loadChildren: () => import('./partial-tree-update/partial-tree-update.module')
+      .then(m => m.PartialTreeUpdateModule)
   }
 ];
