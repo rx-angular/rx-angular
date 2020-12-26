@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@agm/core@^3.0.0-beta.0":
+  version "3.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@agm/core/-/core-3.0.0-beta.0.tgz#a9cfbe10a435142076a74687856b1adcccdcbac1"
+  integrity sha512-KNmKbe89Nen7s7+mX63RgX88jBfajUZCFqkHIQ8Fd+Lf/ko/IY6yw4kPh0iYGxgPVPjpsHJ06GZ5m3ZxpEVX9A==
+  dependencies:
+    tslib "^2.0.0"
+
 "@angular-devkit/architect@0.1000.4", "@angular-devkit/architect@~0.1000.0":
   version "0.1000.4"
   resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.1000.4.tgz#2effe58361bea2a77d11671743568ab4d50b1554"
@@ -282,6 +289,14 @@
   resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-10.1.3.tgz#c48a9c79bc50b21017685037ad628ff0bc8d5e61"
   integrity sha512-ntLnIZnEo+9ziajnjQPYvVR5m0gRfQBbXx5dug4EuUI5SzE2WzcTEZTnltgw4cLqOy/fOt8cXMiW0YeRBHsjKA==
   dependencies:
+    tslib "^2.0.0"
+
+"@angular/google-maps@^10.2.7":
+  version "10.2.7"
+  resolved "https://registry.yarnpkg.com/@angular/google-maps/-/google-maps-10.2.7.tgz#1fffdfd379b68d6b221016ff6043596b33a36abc"
+  integrity sha512-3ONJVvuymuecGZKjp7sXS7y6uivKVC0FMX8ZgclLxMY7xQUhOLQc1BTt1C9OxDSULWrMWPn1jDocd7CWEBjgVQ==
+  dependencies:
+    "@types/googlemaps" "^3.39.3"
     tslib "^2.0.0"
 
 "@angular/language-service@^10.1.1":
@@ -2598,6 +2613,11 @@
     "@types/events" "*"
     "@types/minimatch" "*"
     "@types/node" "*"
+
+"@types/googlemaps@^3.39.3":
+  version "3.40.3"
+  resolved "https://registry.yarnpkg.com/@types/googlemaps/-/googlemaps-3.40.3.tgz#04420bba5b60ca599a9b7d7a49e38c4242fd5a69"
+  integrity sha512-ivlG5S0LlnQgpgPnQCUNAs7kjBtO367ZwDmuK+ggsQfW+w4N0RyWbxWZ6vPwegDe50Du3Xbb5+QVwJuB/U1XpA==
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.3"
@@ -13279,9 +13299,9 @@ yn@3.1.1:
   integrity sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
 
 zone.js@^0.11.1:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.11.1.tgz#0301d00d26febb2722f074c46aac4a948698ce39"
-  integrity sha512-KcZawpmVgS+3U2rzKTM6fLKaCX1QDv3//NxiSOOsqpQY/r5hl+xpYikPwY93Sp7CAB+J5mZJpb/YubxEYLGK5g==
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.11.2.tgz#bde87c9523f46a71b04f0f02b87af3edbb99b534"
+  integrity sha512-JUpNKmWIovqRZlqkX6pFdBVlOU42n5Mt1n2yEaJdy+msBant/l2L1hTG6BFxCzM+KV3SX4XQOcwbhnwsPAeUTA==
   dependencies:
     tslib "^2.0.0"
 
