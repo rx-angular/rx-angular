@@ -21,9 +21,5 @@ export const FUNDAMENTALS_MENU = [
     label: 'Coalescing',
     link: 'coalescing'
   },
-  {
-    label: 'Zone Flags',
-    link: 'zone-flags'
-  },
   ...RENDERCALLBACK_MENU
 ];

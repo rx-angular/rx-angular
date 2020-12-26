@@ -1,6 +1,5 @@
-import { mouseEvent, touchEvents } from './zone/event-names';
-import { zoneFlagsConfigurator } from './zone/zone-flags-configurator';
+import { mouseEvent, touchEvents, zoneConfig } from './app/shared/rx-angular-pocs/zone-configuration';
 
-zoneFlagsConfigurator.global.disable.requestAnimationFrame();
-zoneFlagsConfigurator.global.disable.timers();
-zoneFlagsConfigurator.events.disable.UNPATCHED_EVENTS([...mouseEvent, ...touchEvents]);
+zoneConfig.global.disable.requestAnimationFrame();
+zoneConfig.global.disable.timers();
+zoneConfig.events.disable.UNPATCHED_EVENTS([...mouseEvent, ...touchEvents]);

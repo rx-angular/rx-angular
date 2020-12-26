@@ -22,7 +22,7 @@ export interface ZoneGlobalConfigurations {
    * Consider the following example:
    *
    * ```
-   * const EventEmitter = require('events');
+   * const EventEmitter = require('unpatch');
    * class MyEmitter extends EventEmitter {}
    * const myEmitter = new MyEmitter();
    *

@@ -3,21 +3,13 @@
 // User Interface Events
 
 // UIEvent
-export const uiEvent = [
-  'load',
-  'unload',
-  'abort',
-  'error',
-  'select'
-];
+export const uiEvent = ['load', 'unload', 'abort', 'error', 'select'];
 
 // Focus Events
-export const focusEvent = [
-  'blur',
-  'focus',
-  'focusin',
-  'focusout'
-];
+export const focusEvent = ['blur', 'focus', 'focusin', 'focusout'];
+
+// Selection Events
+export const selectionEvent = ['selectionchange'];
 
 // Mouse Events
 // (MouseEvent)[https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent]
@@ -46,10 +38,7 @@ export const inputEvent: (keyof WindowEventMap)[] = [
 ];
 
 // Keyboard Events
-export const keyboardEvent: (keyof WindowEventMap)[] = [
-  'keydown',
-  'keyup'
-];
+export const keyboardEvent: (keyof WindowEventMap)[] = ['keydown', 'keyup'];
 
 // Composition Events
 export const compositionEvent = [
@@ -103,6 +92,9 @@ export const globalEvents: (keyof WindowEventMap)[] = [
   'error'
 ];
 
+// XHREvent
+export const xhrEvent = ['XHR'];
+
 export const websocketEvents: (keyof WebSocketEventMap)[] = [
   'close',
   'error',
@@ -110,11 +102,18 @@ export const websocketEvents: (keyof WebSocketEventMap)[] = [
   'open'
 ];
 
-export const standardEvents: (keyof WindowEventMap)[] = [];
-
-export const allEvents: (keyof WindowEventMap)[] = [
+export const allEvents: string[] = [
+  ...uiEvent,
+  ...focusEvent,
+  ...selectionEvent,
   ...mouseEvent,
+  ...wheelEvent,
+  ...inputEvent,
+  ...keyboardEvent,
+  ...compositionEvent,
   ...touchEvents,
   ...formControlsEvents,
-  ...globalEvents
+  ...globalEvents,
+  ...xhrEvent,
+  ...websocketEvents
 ];
