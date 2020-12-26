@@ -1,3 +1,12 @@
+# [1.0.0-beta.3](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.2...template@1.0.0-beta.3) (2020-12-26)
+
+
+### Bug Fixes
+
+* **public-api:** removed template manager from public api ([32c58f5](https://github.com/rx-angular/rx-angular/commit/32c58f5bfbd5883c79b40a883cb9ca487319fd54))
+
+
+
 # [1.0.0-beta.2](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.1...template@1.0.0-beta.2) (2020-12-26)
 
 
