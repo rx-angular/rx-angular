@@ -104,7 +104,7 @@ describe('coalesce operator additional logic', () => {
       });
     });
 
-    it('should emit debounce sync values', () => {
+    it('should emit coalesce sync values', () => {
       // Test case inspired by https://github.com/cartant/rxjs-etc/blob/main/source/operators/debounceSync-spec.ts
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
         const durationSelector = new Observable(subscriber => {
