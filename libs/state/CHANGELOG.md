@@ -1,3 +1,11 @@
+## [1.4.2](https://github.com/rx-angular/rx-angular/compare/state@1.4.1...state@1.4.2) (2020-12-26)
+
+### Bug Fixes
+
+* **state:** fixed return value of get when state is empty ([#391](https://github.com/rx-angular/rx-angular/issues/391)) ([ec1efa8](https://github.com/rx-angular/rx-angular/commit/ec1efa8c5e34989ce243435f6db82476b18f38ed))
+* **transformation-helpers:** log warning only if source is not empty. ([#349](https://github.com/rx-angular/rx-angular/issues/349)) ([291a834](https://github.com/rx-angular/rx-angular/commit/291a83468bec574397ef6aa88b93afbec10d4d12))
+* **cdk-folder:** intro cdk folder ([#296](https://github.com/rx-angular/rx-angular/issues/296)) ([72e315f](https://github.com/rx-angular/rx-angular/commit/72e315f98980e599186324681a05c992ac130c3f))
+
 ## [1.4.1](https://github.com/rx-angular/rx-angular/compare/state@1.4.0...state@1.4.1) (2020-09-03)
 
 ### Bug Fixes
