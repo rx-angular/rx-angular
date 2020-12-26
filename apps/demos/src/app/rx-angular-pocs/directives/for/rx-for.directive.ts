@@ -74,18 +74,15 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
         this._trackByFn = fn;
     }
 
-    /**
-     * Asserts the correct type of the context for the template that `NgForOf` will render.
-     *
-     * The presence of this method is a signal to the Ivy template type-check compiler that the
-     * `NgForOf` structural directive renders its template with a specific context type.
-     */
-    static ngTemplateContextGuard<T, U extends NgIterable<T>>(
-        dir: RxFor<T, U>,
-        ctx: any
-    ): ctx is RxForViewContext<T, U> {
-        return true;
-    }
+    constructor(
+        @Inject(RX_PRIMARY_STRATEGY)
+        private defaultStrategyName: string,
+        private strategyProvider: StrategyProvider,
+        private cdRef: ChangeDetectorRef,
+        private readonly templateRef: TemplateRef<RxForViewContext<T, U>>,
+        private readonly viewContainerRef: ViewContainerRef,
+        private iterableDiffers: IterableDiffers
+    ) {}
 
 
     private differ: IterableDiffer<T> | null = null;
@@ -116,15 +113,18 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
     private sub = new Subscription();
 
-    constructor(
-        @Inject(RX_PRIMARY_STRATEGY)
-        private defaultStrategyName: string,
-        private strategyProvider: StrategyProvider,
-        private cdRef: ChangeDetectorRef,
-        private readonly templateRef: TemplateRef<RxForViewContext<T, U>>,
-        private readonly viewContainerRef: ViewContainerRef,
-        private iterableDiffers: IterableDiffers
-    ) {}
+    /**
+     * Asserts the correct type of the context for the template that `NgForOf` will render.
+     *
+     * The presence of this method is a signal to the Ivy template type-check compiler that the
+     * `NgForOf` structural directive renders its template with a specific context type.
+     */
+    static ngTemplateContextGuard<T, U extends NgIterable<T>>(
+        dir: RxFor<T, U>,
+        ctx: any
+    ): ctx is RxForViewContext<T, U> {
+        return true;
+    }
 
     @Input()
     rxForDistinctBy = (a, b) => a.value === b.value;
