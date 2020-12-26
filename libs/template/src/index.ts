@@ -25,10 +25,6 @@ export { getZoneUnPatchedApi, isNgZone, coalescingManager } from './lib/core';
 export { isViewEngineIvy } from './lib/experimental/core/utils/view-engine-checks.experimental';
 
 // STABLE
-export {
-  TemplateManager,
-  createTemplateManager,
-} from './lib/core/utils/template-manager_creator';
 export { RxViewContext, RxTemplateObserver, RxNotificationKind } from './lib/core/model';
 
 export {
