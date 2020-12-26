@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } 
 import { ListServerItem, ListService } from '../data-access/list-resource';
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
-import { RxState } from '../../../../../../../../libs/state/src/lib';
+import { RxState } from '@rx-angular/state';
 
 export interface DemoBasicsItem {
   id: string;

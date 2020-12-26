@@ -143,6 +143,9 @@ import { immutableArr } from '../utils';
   encapsulation: ViewEncapsulation.None
 })
 export class RxForContainerComponent extends RxState<{ rows: number, columns: number }> implements AfterViewInit {
+
+  @ViewChildren('spanChild') spanChildren: QueryList<ElementRef>;
+
   tK = 'id';
 
   displayStates = {
@@ -191,7 +194,6 @@ export class RxForContainerComponent extends RxState<{ rows: number, columns: nu
 
   dK = (a, b) => a.value === b.value;
 
-  @ViewChildren('spanChild') spanChildren: QueryList<ElementRef>;
 
   constructor() {
     super();
