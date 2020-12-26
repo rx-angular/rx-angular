@@ -35,5 +35,3 @@ export {
 
 export { PushPipe, PushModule } from './lib/push';
 export { LetDirective, LetModule } from './lib/let';
-
-export { TemplateModule } from './lib/template.module';
