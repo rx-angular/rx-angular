@@ -631,7 +631,7 @@
           "options": {
             "commands": [
               {
-                "command": "nx changelog template && nx test template && nx build template --prod && cd ./dist/libs/template && npm publish"
+                "command": "nx test state && nx build state --prod && cd ./dist/libs/state && npm publish"
               }
             ]
           }

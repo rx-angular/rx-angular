@@ -10,6 +10,20 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'strategies',
+    loadChildren: () =>
+      import('./strategies/strategies.module').then(
+        (m) => m.StrategiesModule
+      )
+  },
+  {
+  path: 'pipes',
+    loadChildren: () =>
+      import('./pipes/pipes.module').then(
+        (m) => m.PipesModule
+      )
+  },
+  {
     path: 'rx-base-state',
     loadChildren: () =>
       import('./state/rx-state.module').then((mod) => mod.RxStateModule),
@@ -21,6 +35,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./structural-directives/structural-directives.module').then(
         (m) => m.StructuralDirectivesModule
+      )
+  },
+  {
+    path: 'input-bindings',
+    loadChildren: () =>
+      import('./input-bindings/input-bindings.module').then(
+        (m) => m.InputBindingsModule
       )
   }
 ];

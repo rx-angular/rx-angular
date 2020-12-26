@@ -1,3 +1,25 @@
+# [1.0.0-beta.1](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.0...template@1.0.0-beta.1) (2020-12-26)
+
+
+### Features
+
+* **template-manager:** Add optional id to embeddedView name ([#384](https://github.com/rx-angular/rx-angular/issues/384)) ([a3cba73](https://github.com/rx-angular/rx-angular/commit/a3cba7309288a65b88bc2f52651f11180e57b400))
+* **templateManager:** add getEmbeddedView tests, fix selector ([#369](https://github.com/rx-angular/rx-angular/issues/369)) ([f33ba6b](https://github.com/rx-angular/rx-angular/commit/f33ba6b9dee2243d4facb4cb0feb16be26529f72))
+* **typing:** harmonize channel naming  ([a7285f9](https://github.com/rx-angular/rx-angular/commit/a7285f9723fd7be3cc1ee7b0901f0422849694e1))
+
+
+
+# [1.0.0-beta.0](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.0...template@1.0.0-beta.0) (2020-12-26)
+
+
+### Features
+
+* **template-manager:** Add optional id to embeddedView name ([#384](https://github.com/rx-angular/rx-angular/issues/384)) ([a3cba73](https://github.com/rx-angular/rx-angular/commit/a3cba7309288a65b88bc2f52651f11180e57b400))
+* **templateManager:** add getEmbeddedView tests, fix selector ([#369](https://github.com/rx-angular/rx-angular/issues/369)) ([f33ba6b](https://github.com/rx-angular/rx-angular/commit/f33ba6b9dee2243d4facb4cb0feb16be26529f72))
+* **typing:** harmonize channel naming  ([a7285f9](https://github.com/rx-angular/rx-angular/commit/a7285f9723fd7be3cc1ee7b0901f0422849694e1))
+
+
+
 # [1.0.0-alpha.4](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-alpha.2...template@1.0.0-alpha.4) (2020-08-25)
 
 

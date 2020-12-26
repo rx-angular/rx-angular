@@ -7,9 +7,9 @@ export const ROUTES: Routes = [
     component: HomeComponent
   },
   {
-    path: 'fundamentals',
+    path: 'concepts',
     loadChildren: () =>
-      import('../features/fundamentals/fundamentals.module').then(
+      import('../features/concepts/fundamentals.module').then(
         (m) => m.FundamentalsModule
       )
   },

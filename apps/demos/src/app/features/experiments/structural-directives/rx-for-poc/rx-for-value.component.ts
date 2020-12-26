@@ -7,9 +7,12 @@ import { TestItem, toBoolean } from '../../../../shared/debug-helper/value-provi
 @Component({
   selector: 'rxa-rx-for-value',
   template: `
-    <mat-icon class="item" [ngClass]="{red:!v, green:v}" *rxLet="value$; let v">
-      {{v ? 'check' : 'highlight_off'}}</mat-icon>
+    <ng-container *rxLet="value$; let v;  strategy:strategy$">
+    <mat-icon class="item" [ngClass]="{red:!v, green:v}">
+      {{v ? 'check' : 'highlight_off'}}
+    </mat-icon>
     <rxa-dirty-check></rxa-dirty-check>
+    </ng-container>
   `,
   styles: [`
     .item.red {
@@ -40,6 +43,8 @@ export class RxForValueComponent {
   set value(o: Observable<TestItem> | TestItem) {
     this.state.connect('item', isObservable(o) ? o : of(o));
   }
+  @Input()
+  strategy$: Observable<string>;
 
   constructor(public state: RxState<{ item: TestItem }>) { }
 

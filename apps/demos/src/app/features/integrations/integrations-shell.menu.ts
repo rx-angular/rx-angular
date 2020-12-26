@@ -4,6 +4,10 @@ export const INTEGRATIONS_MENU_ITEMS = [
   {
     label: 'Dynamic Counter',
     link: 'dynamic-counter',
-    children: DYNAMIC_COUNTER_MENU
-  }
+    children: DYNAMIC_COUNTER_MENU,
+  },
+  {
+    label: 'Pokemon API w/ Pagination',
+    link: 'pokemon-pagination',
+  },
 ];

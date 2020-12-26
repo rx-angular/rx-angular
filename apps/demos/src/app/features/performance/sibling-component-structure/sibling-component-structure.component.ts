@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
   template: `
     <rxa-visualizer>
       <ng-container visualizerHeader>
-        <h1 class="mat-headline">Nested Component Structure</h1>
+        <h1 class="mat-headline">Sibling Component Structure</h1>
         <div class="row">
           <div class="col-sm-12 col-md-12">
             <mat-form-field>
@@ -17,12 +17,13 @@ import { BehaviorSubject } from 'rxjs';
               <mat-button-toggle-group
                 name="visibleExamples"
                 aria-label="Visible Examples"
-                [value]="displayStates.all"
+                [value]="displayStates.custom"
                 #group="matButtonToggleGroup">
                 <mat-button-toggle [value]="displayStates.static">Static</mat-button-toggle>
                 <mat-button-toggle [value]="displayStates.async">Async</mat-button-toggle>
                 <mat-button-toggle [value]="displayStates.push">Push</mat-button-toggle>
                 <mat-button-toggle [value]="displayStates.progressive">Progressive</mat-button-toggle>
+                <mat-button-toggle [value]="displayStates.custom">Custom</mat-button-toggle>
                 <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
               </mat-button-toggle-group>
               <button mat-raised-button class="ml-2" (click)="isVisible = !isVisible;">
@@ -53,6 +54,11 @@ import { BehaviorSubject } from 'rxjs';
           <h2 class="mat-subheader">Push</h2>
           <rxa-sibling-push [count]="count"></rxa-sibling-push>
         </div>
+        <div class="col"
+             *ngIf="visible(group, displayStates.custom)">
+          <h2 class="mat-subheader">Custom</h2>
+          <rxa-sibling-custom [count]="count"></rxa-sibling-custom>
+        </div>
       </div>
     </rxa-visualizer>
   `,
@@ -66,7 +72,8 @@ export class SiblingComponentStructureComponent {
     observable: 3,
     async: 4,
     push: 5,
-    progressive: 6
+    progressive: 6,
+    custom: 7
   };
   isVisible = true;
   btnBothClick$ = new BehaviorSubject<any>(1);

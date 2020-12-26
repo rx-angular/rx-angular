@@ -119,8 +119,7 @@ export function createRenderAware<U>(cfg: {
   };
 }
 
-
-function renderWithLatestStrategy<T>(
+export function renderWithLatestStrategy<T>(
   strategyChanges$: Observable<RenderStrategy>
 ): OperatorFunction<T, RxNotification<T>> {
   const suspenseNotification: RxNotification<T> = {
