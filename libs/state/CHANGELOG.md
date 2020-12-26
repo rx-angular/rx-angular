@@ -1,3 +1,12 @@
+## [1.4.3](https://github.com/rx-angular/rx-angular/compare/state@1.4.2...state@1.4.3) (2020-12-26)
+
+
+### Bug Fixes
+
+* **RxState#hold:** stop stream when throw error in hold method ([#437](https://github.com/rx-angular/rx-angular/issues/437)) ([6ca27b1](https://github.com/rx-angular/rx-angular/commit/6ca27b1f6f75eb80b7193529035ead70f52e77c8))
+
+
+
 ## [1.4.2](https://github.com/rx-angular/rx-angular/compare/state@1.4.1...state@1.4.2) (2020-12-26)
 
 ### Bug Fixes
