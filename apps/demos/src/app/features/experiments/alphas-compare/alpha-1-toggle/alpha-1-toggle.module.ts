@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// import { LetModule, PushModule } from 'templateAlpha1';
+import {LetModule, PushModule} from 'templateAlpha1';
 import { Alpha1ToggleComponent } from './alpha-1-toggle.component';
 import { RenderingWorkModule } from '../../../../shared/debug-helper/rendering-work/rendering-work.module';
-import { LetModule, PushModule } from '@rx-angular/template';
 
 @NgModule({
   declarations: [Alpha1ToggleComponent],

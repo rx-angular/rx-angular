@@ -1,4 +1,4 @@
-import { computeAverageColor, rgbaToStyle } from '../pixel-image';
+import { computeAverageColor } from '../pixel-image';
 import { RGBA, RGBAs } from '../model';
 
 const RERUN_COUNT = 10;

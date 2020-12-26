@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { concat, ReplaySubject, timer } from 'rxjs';
-import { concatMap, finalize, mapTo, mergeMap, scan, startWith, switchMap, tap } from 'rxjs/operators';
+import { concatMap, mapTo, scan, switchMap } from 'rxjs/operators';
 import { insert } from '@rx-angular/state';
 import { toBooleanArray } from './utils';
 import { measure$ } from '../../utils/measure';

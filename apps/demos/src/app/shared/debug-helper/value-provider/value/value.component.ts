@@ -2,7 +2,7 @@
 
 import { Component, Input } from '@angular/core';
 import { isObservable, Observable, of } from 'rxjs';
-import { map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 import { toBoolean } from '../utils';
 import { TestItem } from '../model';

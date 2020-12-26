@@ -1,4 +1,4 @@
-import { Component, ContentChild, ElementRef, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { defer, isObservable, Observable, of, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, pluck, switchMap, tap } from 'rxjs/operators';
 import { Hooks } from '../../hooks';

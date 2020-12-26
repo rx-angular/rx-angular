@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './sibling-component-structure.routes';
 import { MatButtonModule } from '@angular/material/button';
-import { PushModule, LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { PushModule, LetModule, UnpatchEventsModule } from '@rx-angular/template';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
 import { SiblingComponentStructureComponent } from './sibling-component-structure.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';

@@ -3,10 +3,14 @@ import { RxState } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
-  addItemImmutable, addItemMutable,
-  moveItemImmutable, moveItemMutable,
-  removeItemsImmutable, removeItemsMutable,
-  updateItemImmutable, updateItemMutable,
+  addItemImmutable,
+  addItemMutable,
+  moveItemImmutable,
+  moveItemMutable,
+  removeItemsImmutable,
+  removeItemsMutable,
+  updateItemImmutable,
+  updateItemMutable,
   withCompleteAndError
 } from './utils';
 import { Positions, ProvidedValues } from './model';

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { PushModule, LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
 import { DirtyChecksModule } from '../../debug-helper/dirty-checks';
 import { VisualizerModule } from '../../debug-helper/visualizer';
 import { RecursiveObservableWorkAsyncComponent } from './recursive-observable-work-async.component';

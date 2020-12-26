@@ -4,7 +4,6 @@ import { toBooleanArray } from './utils';
 import { RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from '../../../rx-angular-pocs';
 import { RxState } from '@rx-angular/state';
 import { map } from 'rxjs/operators';
-import { toInt } from '../../debug-helper/value-provider';
 
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
 

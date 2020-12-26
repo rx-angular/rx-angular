@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
-import { BehaviorSubject} from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { toBooleanArray } from './utils';
 import { RX_PRIMARY_STRATEGY } from '../../../rx-angular-pocs';
 
