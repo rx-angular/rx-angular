@@ -1,4 +1,4 @@
-import { memo } from '../cdk/memoizerific';
+import { memo } from '../../cdk';
 
 export const memoFac = memo(500);
 export const memoFnMap = new Map<Function, Function>();

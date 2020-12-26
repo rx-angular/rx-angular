@@ -14,24 +14,70 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
-import { defer, ObservableInput, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, defer, Observable, ObservableInput, ReplaySubject } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
   groupBy,
   map, mergeAll,
-  mergeMap,
-  scan,
+  mergeMap, pluck,
+  scan, share,
   shareReplay,
   startWith,
   switchAll,
   take,
   tap
 } from 'rxjs/operators';
-import { RxForViewContext } from './model';
 import { RxEffects } from '../../../../shared/rx-effects.service';
 
 type RxForTemplateNames = 'rxSuspense' | 'rxNext' | 'rxError' | 'rxComplete';
+
+export class RxForViewContext<T extends object, U extends NgIterable<T> = NgIterable<T>, K = keyof T> {
+
+  private readonly _record = new ReplaySubject<T>(1);
+  private readonly _record$ = this._record.pipe(distinctUntilChanged(this.distinctBy), share());
+  private readonly _index = new BehaviorSubject<number>(-1);
+  private _implicit: T;
+
+
+  constructor(private _$implicit: T, public rxFor: U, private distinctBy: (a: T, b: T) => boolean = (a, b) => a === b) {
+    // tslint:disable-next-line:no-unused-expression
+    this._record.next(_$implicit);
+  }
+
+  set index(index: number | any) {
+    this._index.next(index);
+  }
+
+  set $implicit(record: T) {
+    this._implicit = record;
+    this._record.next(record);
+  }
+
+  get $implicit(): T {
+    return this._implicit;
+  }
+
+  get record$() {
+    return this._record$;
+  }
+
+  select = (props: K[]): Observable<any> => {
+    return this._record$.pipe(
+      pluck(...props as any)
+    );
+  };
+}
+
+export interface CustomVariablesProjectors {
+  [variableName: string]: (context) => unknown;
+}
+
+export interface RecordViewTuple<T extends object, U extends NgIterable<T>> {
+  record: any;
+  view: EmbeddedViewRef<RxForViewContext<T, U>>;
+}
+
 
 @Directive({
   // tslint:disable-next-line:directive-selector

@@ -1,4 +1,4 @@
-import { mouseEvent, touchEvents, zoneConfig } from './app/shared/rx-angular-pocs/zone-configuration';
+import { mouseEvent, touchEvents, zoneConfig } from './app/rx-angular-pocs/zone-configuration';
 
 zoneConfig.global.disable.requestAnimationFrame();
 zoneConfig.global.disable.timers();

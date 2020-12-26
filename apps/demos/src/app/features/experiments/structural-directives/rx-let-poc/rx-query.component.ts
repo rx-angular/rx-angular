@@ -1,18 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stragegies/strategy-provider.service';
+import { StrategyProvider } from '../../../../rx-angular-pocs';
 import { RickAndMortyService } from './rick-and-morty.service';
 import { query } from 'rx-query';
-import {
-  ConnectableObservable,
-  merge,
-  MonoTypeOperatorFunction,
-  Observable,
-  SchedulerLike,
-  Subject,
-  Subscription,
-  timer
-} from 'rxjs';
-import { debounce, delay, filter, map, mapTo, pluck, publish, share, startWith, switchMap, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { delay, filter, map, mapTo, pluck, share } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-rx-query',

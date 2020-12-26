@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
 import { BehaviorSubject} from 'rxjs';
 import { toBooleanArray } from './utils';
-import { RX_PRIMARY_STRATEGY } from '../../rx-angular-pocs/render-stragegies';
+import { RX_PRIMARY_STRATEGY } from '../../../rx-angular-pocs';
 
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
 

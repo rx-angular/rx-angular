@@ -37,7 +37,14 @@ const ROUTES: Routes = [
     loadChildren: () => import('./global-order/global-order.module').then(
       m => m.GlobalOrderModule
     )
-  }
+  },
+  {
+    path: 'view-vs-embedded-view',
+    loadChildren: () =>
+      import(
+        './view-vs-embedded-view/view-vs-embedded-view.routed.module'
+        ).then((m) => m.ViewVsEmbeddedViewRoutedModule),
+  },
 ];
 
 

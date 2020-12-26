@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Directive, ElementRef, TemplateRef, ViewContainerRef } from '@angular/core';
-import { Hooks } from '../cdk/hooks';
-import { RxEffects } from '../rx-effects/rx-effects.service';
-import { TemplateManager, createTemplateManager } from '../cdk/utils/template-manager_creator';
-import { SchedulingPriority } from '../cdk/rxjs/scheduling/interfaces';
-import { priorityTickMap } from '../cdk/rxjs/scheduling/priority-tick-map';
-import { intersectionObserver } from '../cdk/intersection-observer';
+import { Hooks } from '../../cdk/hooks';
+import { RxEffects } from '../../state';
+import { TemplateManager, createTemplateManager } from '../../cdk/utils';
+import { SchedulingPriority } from '../../cdk/rxjs/scheduling/interfaces';
+import { priorityTickMap } from '../../cdk/rxjs/scheduling/priority-tick-map';
+import { intersectionObserver } from '../../cdk';
 
 export interface IfVisibleViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)

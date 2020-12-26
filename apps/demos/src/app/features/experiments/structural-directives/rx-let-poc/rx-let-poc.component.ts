@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stragegies/strategy-provider.service';
+import { StrategyProvider } from '../../../../rx-angular-pocs/render-strategies';
 
 @Component({
   selector: 'rxa-rx-let-poc',
@@ -17,7 +17,7 @@ import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stra
           <ng-template #suspense>
             <rxa-list-item-ghost></rxa-list-item-ghost>
           </ng-template>
-          <div *rxLetTriggered="v.incremental$; let n;
+          <div *rxLet="v.incremental$; let n;
           suspenseTrg: triggers.suspense$;
           errorTrg: triggers.error$;
           completeTrg: triggers.complete$;
@@ -30,7 +30,7 @@ import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stra
           </div>
         </div>
         <div class="col-6 dh-embedded-view p-2">
-          <div *rxLetTriggered="v.incremental$; let n;
+          <div *rxLet="v.incremental$; let n;
           errorTpl: error;
           completeTpl: complete;
           suspenseTpl: suspense;

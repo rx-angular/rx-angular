@@ -7,9 +7,9 @@ import {
   RX_CUSTOM_STRATEGIES,
   RX_PRIMARY_STRATEGY,
   StrategyCredentialsMap
-} from '../render-strategies';
-import { RxTemplateObserver } from '../cdk/model';
-import { createRenderAware,RenderAware } from '../cdk/render-aware/render-aware';
+} from '../../render-strategies';
+import { createRenderAware,RenderAware } from '../../cdk/render-aware/render-aware';
+import { RxTemplateObserver } from '../../cdk';
 
 @Pipe({ name: 'push', pure: true })
 export class PushPipe<U> implements PipeTransform, OnDestroy {

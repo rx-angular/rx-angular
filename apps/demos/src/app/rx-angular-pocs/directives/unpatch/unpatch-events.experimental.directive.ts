@@ -1,8 +1,8 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { mouseEvent, inputEvent, focusEvent, formControlsEvents } from '../zone-configuration/event-names';
-import {getZoneUnPatchedApi} from "../cdk/utils/zone-checks";
+import { mouseEvent, inputEvent, focusEvent, formControlsEvents } from '../../cdk/zone-configuration';
+import {getZoneUnPatchedApi} from "../../cdk/utils";
 
 /**
  *

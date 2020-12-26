@@ -151,7 +151,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
 
   @Output() readonly rendered = defer(() => this.rendered$.pipe(
-    filter(({ kind }) => this.templateManager.hasTemplateRef(kind))
+    filter(({ kind }) => this.templateManager.hasTemplateRef(kind as any))
     )
   );
 

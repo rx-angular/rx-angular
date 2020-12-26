@@ -15,7 +15,6 @@ import { CdTriggerModule } from '../../../shared/debug-helper/cd-trigger/cd-trig
 import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RenderingsModule } from '../../../shared/debug-helper/renderings';
-import { ViewVsEmbeddedViewModule } from '../../experiments/structural-directives/view-vs-embedded-view/view-vs-embedded-view.module';
 import { RecursiveModule } from '../../../shared/template-structures/recursive/recursive.module';
 import { SiblingModule } from '../../../shared/template-structures/sibling/sibling.module';
 import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
@@ -42,7 +41,6 @@ import { StrategySelectModule } from '../../../shared/debug-helper/strategy-sele
     MatButtonToggleModule,
     RenderingsModule,
     TemplateModule,
-    ViewVsEmbeddedViewModule,
     RecursiveModule,
     SiblingModule,
     StrategySelectModule

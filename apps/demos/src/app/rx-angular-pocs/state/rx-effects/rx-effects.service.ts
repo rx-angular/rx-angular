@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { createSideEffectObservable } from '../cdk/side-effect-observable';
+import { createSideEffectObservable } from '../../cdk/side-effect-observable';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 

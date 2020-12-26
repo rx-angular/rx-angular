@@ -12,5 +12,5 @@ import { RxSwitchCase } from './rx-switch-case.directive';
     CommonModule
   ]
 })
-export class RxSwichPocModule {
+export class RxSwichModule {
 }

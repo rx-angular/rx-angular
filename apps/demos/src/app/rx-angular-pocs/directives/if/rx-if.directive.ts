@@ -98,7 +98,7 @@ export class RxIf<U> implements OnInit, AfterViewInit, OnDestroy {
     },
     error: (error: Error) => {
       // fallback to rxNext when there's no template for rxError
-      this.templateManager.displayView(RxIfTemplateNames.error, RxIfTemplateNames.then;
+      this.templateManager.displayView(RxIfTemplateNames.error, RxIfTemplateNames.then);
       this.templateManager.updateViewContext({
         $error: error
       });
@@ -112,7 +112,6 @@ export class RxIf<U> implements OnInit, AfterViewInit, OnDestroy {
       });
     }
   };
-
 
   constructor(
     @Optional()

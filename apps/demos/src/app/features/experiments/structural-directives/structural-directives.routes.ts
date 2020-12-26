@@ -3,14 +3,7 @@ import { Routes } from '@angular/router';
 export const ROUTES: Routes = [
   {
     path: '',
-    redirectTo: 'view-vs-embedded-view',
-  },
-  {
-    path: 'view-vs-embedded-view',
-    loadChildren: () =>
-      import(
-        './view-vs-embedded-view/view-vs-embedded-view.routed.module'
-      ).then((m) => m.ViewVsEmbeddedViewRoutedModule),
+    redirectTo: 'rx-if-poc',
   },
   {
     path: 'rx-if-poc',
