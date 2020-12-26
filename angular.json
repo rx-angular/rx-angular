@@ -630,7 +630,7 @@
           "options": {
             "commands": [
               {
-                "command": "nx changelog state && nx test state && nx build state --prod && cd ./dist/libs/state && npm publish"
+                "command": "nx test state && nx build state --prod && cd ./dist/libs/state && npm publish"
               }
             ]
           }
