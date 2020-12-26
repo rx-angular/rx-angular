@@ -29,6 +29,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     MatIconModule,
     RecursiveModule,
+    FormsModule,
     UnpatchEventsModule,
     MatButtonModule,
     PushModule

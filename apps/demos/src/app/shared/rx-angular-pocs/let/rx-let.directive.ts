@@ -190,9 +190,9 @@ export class LetDirective<U> extends Hooks implements OnInit, AfterViewInit, OnD
     this.strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), getDefaultStrategyCredentialsMap());
     this.renderAware = createRenderAware<U>({
       templateObserver: this.templateObserver,
-      context: (cdRef as any).context,
       strategies: this.strategies,
       defaultStrategyName: this.defaultStrategyName,
+      getContext: (notification: RxNotification<U>) => this.templateManager.getEmbeddedView(notification.kind),
       getCdRef: (notification: RxNotification<U>) => this.templateManager.getEmbeddedView(notification.kind)
     });
   }

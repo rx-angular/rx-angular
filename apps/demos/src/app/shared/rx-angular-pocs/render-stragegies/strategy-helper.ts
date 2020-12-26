@@ -33,7 +33,7 @@ export function observeTemplateByNotificationKind<U>(templateObserver: RxTemplat
 
 export function applyStrategy<T>(
   credentials$: Observable<StrategyCredentials>,
-  context: any,
+  getContext: (v?: any) => any,
   getCdRef: (k: RxNotification<T>) => ChangeDetectorRef
 ): (o$: Observable<RxNotification<T>>) => Observable<RxNotification<T>> {
   return notification$ => notification$.pipe(
@@ -42,8 +42,11 @@ export function applyStrategy<T>(
         switchMap((credentials) => n$.pipe(
           switchMap(notification => {
             const activeEmbeddedView = getCdRef(notification);
+            const context = getContext(notification);
             const work = () => credentials.work(activeEmbeddedView, context, notification);
-            return concat(of(notification), NEVER).pipe(credentials.behavior(work, activeEmbeddedView));
+            return concat(of(notification), NEVER).pipe(
+              credentials.behavior(work, context),
+            );
           })
           )
         )

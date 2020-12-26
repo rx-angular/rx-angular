@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { RxState } from '@rx-angular/state';
 import { isObservable, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
 import { TestItem, toBoolean } from '../../../../shared/debug-helper/value-provider';
 
 @Component({
@@ -33,7 +33,8 @@ import { TestItem, toBoolean } from '../../../../shared/debug-helper/value-provi
   host: {
     class: 'd-flex justify-content-center align-items-center flex-column w-100 m-1 p-1 dh-embedded-view'
   },
-  providers: [RxState]
+  providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RxForValueComponent {
 

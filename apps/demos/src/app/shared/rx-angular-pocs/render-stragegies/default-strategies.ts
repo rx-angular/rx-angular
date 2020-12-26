@@ -1,7 +1,7 @@
-import { StrategyCredentials, StrategyCredentialsMap } from './model';
 import { ɵmarkDirty as markDirty } from '@angular/core';
 import { coalesceWith, priorityTickMap, SchedulingPriority } from '@rx-angular/template';
 import { tap } from 'rxjs/operators';
+import { StrategyCredentials, StrategyCredentialsMap } from './model';
 
 export function getDefaultStrategyCredentialsMap(): StrategyCredentialsMap {
   return {
@@ -15,17 +15,12 @@ export function getDefaultStrategyCredentialsMap(): StrategyCredentialsMap {
 const localCredentials: StrategyCredentials = {
   name: 'local',
   work: (cdRef, _, notification) => {
-    if(['rxComplete', 'rxError'].includes(notification.kind)) {
-      cdRef.detach();
-    } else {
-      cdRef.reattach();
-      cdRef.detectChanges();
-    }
+    cdRef.detectChanges();
   },
   behavior: (work: any, scope) => o$ => o$.pipe(
-      coalesceWith(priorityTickMap[SchedulingPriority.animationFrame], scope),
-      tap(() => work())
-    )
+    coalesceWith(priorityTickMap[SchedulingPriority.Promise], scope),
+    tap(() => work())
+  )
 };
 
 const globalCredentials: StrategyCredentials = {

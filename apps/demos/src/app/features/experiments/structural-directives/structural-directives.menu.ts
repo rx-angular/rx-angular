@@ -8,6 +8,10 @@ export const MENU_ITEMS = [
     label: 'RxLet',
   },
   {
+    link: 'rx-let-poc/rx-query-children',
+    label: 'RxLet ViewChildren',
+  },
+  {
     link: 'rx-if-poc',
     label: 'RxIf',
   },
@@ -18,5 +22,9 @@ export const MENU_ITEMS = [
   {
     link: 'rx-for-poc',
     label: 'RxFor',
+  },
+  {
+    link: 'if-visible',
+    label: 'ifVisible POC',
   },
 ];

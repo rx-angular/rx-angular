@@ -19,4 +19,8 @@ export const FUNDAMENTALS_MENU = [
     label: 'Coalescing',
     link: 'coalescing'
   },
+  {
+    label: 'Global Order',
+    link: 'global-order'
+  },
 ];

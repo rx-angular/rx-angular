@@ -11,33 +11,31 @@ import { mergeMap } from 'rxjs/operators';
         <div>
           <rxa-strategy-select (strategyChange)="strategy$.next($event)"></rxa-strategy-select>
           <br>
-          <button mat-raised-button (click)="click$.next($event)">UpdateValue</button>
-          <button mat-raised-button [unpatch]="" (click)="click$.next($event)">UpdateValue (unpatched)</button>
+          <button mat-raised-button (click)="click$.next($event)">UpdateValue (native)</button>
+          <button [unpatch] mat-raised-button (click)="click$.next($event)">UpdateValue</button>
+
         </div>
       </ng-container>
-      <rxa-visualizer class="w-100">
-        <div class="col-sm-3">
-          <h3>Push 1</h3>
-          <br/>
-          {{ incremental$ | push: strategy$ }}<br/>
-        </div>
-        <rxa-visualizer viewType="embedded-view" *rxLet="incremental$; let value; strategy: strategy$" class="col-sm-3">
-          <h3 visualizerHeader>rxLet 1</h3>
-          {{ value }}
-        </rxa-visualizer>
-        <div class="col-sm-3">
-          <h3>Push 2</h3>
-          <br/>
-          {{ incremental$ | push: strategy$ }}
-        </div>
-        <rxa-visualizer viewType="embedded-view" *rxLet="incremental$; let value; strategy: strategy$" class="col-sm-3">
-          <h3 visualizerHeader>rxLet 2</h3>
-          {{ value }}
-        </rxa-visualizer>
-      </rxa-visualizer>
+
+      <div class="col-sm-3">
+        <h3>Push 1</h3>
+        <br/>
+        {{ incremental$ | push: strategy$ }}<br/>
+      </div>
+      <div class="col-sm-3">
+        <h3>Push 2</h3>
+        <br/>
+        {{ incremental$ | push: strategy$ }}
+      </div>
+      <div class="col-sm-3">
+        <h3>Push 2</h3>
+        <br/>
+        {{ incremental$ | push: strategy$ }}
+      </div>
+
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CoalescingComponent {
   click$ = new Subject<any>();

@@ -1,8 +1,9 @@
-import { StrategyCredentials, StrategyCredentialsMap } from '../model';
-import { audit, buffer, bufferCount, concatMap, tap } from 'rxjs/operators';
-import { coalesceWith, priorityTickMap, SchedulingPriority } from '@rx-angular/template';
 
-export function testStrategyCredentialsMap(): StrategyCredentialsMap {
+import { audit, tap } from 'rxjs/operators';
+import { coalesceWith, priorityTickMap, SchedulingPriority } from '@rx-angular/template';
+import { StrategyCredentials, StrategyCredentialsMap } from '../../../../shared/rx-angular-pocs/render-stragegies';
+
+export function getTestStrategyCredentialsMap(): StrategyCredentialsMap {
   return {
     localSync: localSync(),
     localCoalescing: localCoalescing(),

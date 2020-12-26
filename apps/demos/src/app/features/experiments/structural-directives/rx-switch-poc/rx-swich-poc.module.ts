@@ -14,7 +14,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ViewVsEmbeddedViewModule } from '../view-vs-embedded-view/view-vs-embedded-view.module';
 import { MatInputModule } from '@angular/material/input';
-import { IfModule } from '../../../../shared/rx-angular-pocs/If/if.module';
+import { IfModule } from '../../../../shared/rx-angular-pocs/if/if.module';
 
 @NgModule({
   declarations: [

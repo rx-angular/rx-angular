@@ -9,46 +9,46 @@ export const rand = (n: number = 2): number => {
   return ~~(Math.random() * n);
 };
 
-export const randArray = (n: number = 6): any[] => {
-  return Array(n).fill(0).map((_, idx) => ({ id: idx % n, value: rand() }));
+export const randArray = (items: number = children1): any[] => {
+  return Array(items).fill(0).map((_, idx) => ({ id: idx % items, value: rand() }));
 };
 
-export const immutableIncArr = (n: number = children1) => (o$: Observable<number>) => o$.pipe(
+export const immutableIncArr = (rows: number = children1, columns: number = children2) => (o$: Observable<number>) => o$.pipe(
   scan((a, i, idx) => {
     const arr = randArray(children2);
     const value = rand(100);
     if(i === 1) {
-      a[idx % n] = { id: idx % n, value, arr };
+      a[idx % rows] = { id: idx % rows, value, arr };
     } else if(i === 0) {
       const id = rand(1);
       a[id] = { id, value, arr };
     } else {
-      a.splice(idx % n, 1);
+      a.splice(idx % rows, 1);
     }
     return a;
   }, []),
   tap(console.log),
   share()
 );
-export const mutableIncArr = (n: number = children1) => {
+export const mutableIncArr = (rows: number = children1, columns: number = children2) => {
   return (o$: Observable<number>) => o$.pipe(
     scan((a, i, idx) => {
       const arr = randArray(children2);
-      a[idx % n].value = rand();
-      a[idx % n].arr = arr;
+      a[idx % rows].value = rand();
+      a[idx % rows].arr = arr;
       return a;
     }, []),
     share()
   );
 }
 
-export const immutableArr = (n: number = children1) => (o$: Observable<number>) => o$.pipe(
-  map(v => Array(n).fill(0).map((_, idx) => ({ id: idx % n, value: rand(), arr: randArray(children2) }))),
+export const immutableArr = (rows: number = children1, columns: number = children2) => (o$: Observable<number>) => o$.pipe(
+  map(() => randArray(rows).map((r) => ({ ...r, arr: randArray(columns) }))),
   share()
 );
 
-export const mutableArr = (n: number = children1) => {
-  const arr = Array(n);
+export const mutableArr = (rows: number = children1, columns: number = children2) => {
+  const arr = Array(rows);
   return (o$: Observable<number>) => o$.pipe(
     map(v => arr.forEach((i, idx) => {
       i.value = rand();

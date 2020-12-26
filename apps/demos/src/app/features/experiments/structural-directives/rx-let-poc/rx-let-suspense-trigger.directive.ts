@@ -1,6 +1,6 @@
 import {
   ChangeDetectorRef,
-  Directive, EmbeddedViewRef,
+  Directive,
   Inject,
   Input,
   OnDestroy,
@@ -30,7 +30,7 @@ import {
 } from '../../../../shared/rx-angular-pocs/render-stragegies';
 import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stragegies/strategy-provider.service';
 import { Hooks } from '../../../../shared/debug-helper/hooks';
-import { createRenderAware, RenderAware, RxBaseTemplateNames } from '../../../../shared/rx-angular-pocs/cdk';
+import { createRenderAware, RenderAware } from '../../../../shared/rx-angular-pocs/cdk';
 import {
   toRxCompleteNotification,
   toRxErrorNotification,
@@ -39,7 +39,7 @@ import {
 
 type rxLetTriggeredTemplateNames = RxNotificationKind;
 
-export interface LetViewContext<T>{
+export interface LetViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
   rxLetTriggered: T;
 
@@ -112,7 +112,7 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy
   }
 
   @Output() readonly rendered = defer(() => this.rendered$.pipe(
-      filter(({ kind }) => this.templateManager.hasTemplateRef(kind))
+    filter(({ kind }) => this.templateManager.hasTemplateRef(kind))
     )
   );
 
@@ -195,11 +195,11 @@ export class LetDirectiveTriggered<U> extends Hooks implements OnInit, OnDestroy
     this.strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), getDefaultStrategyCredentialsMap());
     this.renderAware = createRenderAware<U>({
       templateObserver: this.templateObserver,
-      context: undefined,
       strategies: this.strategies,
       defaultStrategyName: this.defaultStrategyName,
       // @NOTICE this is checked every emmit. Templates are IMHO statically assigned, so we could find a way to check only once?
-      getCdRef: (notification: RxNotification<U>): ChangeDetectorRef => this.templateManager.getEmbeddedView(this.getDisplayNameWithFallback(notification.kind as any))
+      getCdRef: (notification: RxNotification<U>): ChangeDetectorRef => this.templateManager.getEmbeddedView(this.getDisplayNameWithFallback(notification.kind as any)),
+      getContext: (notification: RxNotification<U>): ChangeDetectorRef => this.templateManager.getEmbeddedView(this.getDisplayNameWithFallback(notification.kind as any))
     });
     this.subscription = this.renderAware.rendered$.pipe(
       tap(this?._renderObserver)

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } 
 import { ListServerItem, ListService } from '../data-access/list-resource';
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
+import { RxState } from '@rx-angular/state';
 
 export interface DemoBasicsItem {
   id: string;
@@ -18,7 +19,7 @@ interface ComponentState {
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
-  list: [],
+  list: []
 };
 
 @Component({
@@ -37,7 +38,7 @@ const initComponentState = {
         </mat-panel-title>
         <mat-panel-description>
           <span
-            >{{ (storeList$ | async)?.length }} Repositories Updated every:
+          >{{ (storeList$ | async)?.length }} Repositories Updated every:
             {{ _refreshInterval }} ms
           </span>
         </mat-panel-description>
@@ -67,7 +68,7 @@ const initComponentState = {
     </mat-expansion-panel>
   `,
   styles: [
-    `
+      `
       .list .mat-expansion-panel-header {
         position: relative;
       }
@@ -81,9 +82,10 @@ const initComponentState = {
       .list .mat-expansion-panel-content .mat-expansion-panel-body {
         padding-top: 10px;
       }
-    `,
+    `
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [RxState]
 })
 export class SetupStart implements OnInit, OnDestroy {
   intervalSubscription = new Subscription();
@@ -106,7 +108,14 @@ export class SetupStart implements OnInit, OnDestroy {
   @Output()
   listExpandedChange = this.listExpandedChanges;
 
-  constructor(private listService: ListService) {}
+  constructor(
+    private state: RxState<ComponentState>,
+    private listService: ListService
+  ) {
+    this.state.set(initComponentState);
+    this.state.connect('list', this.listService.list$);
+
+  }
 
   ngOnDestroy(): void {
     this.intervalSubscription.unsubscribe();

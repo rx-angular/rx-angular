@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
-import { TemplateModule, UnpatchEventsModule } from '@rx-angular/template';
+import { UnpatchEventsModule } from '@rx-angular/template';
 import { MatButtonModule } from '@angular/material/button';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ValueModule } from '../../../../shared/debug-helper/work';
 import { RxForContainerComponent } from './parent.component';
+import { RxMinimalForOf } from './rx-for-minimal.directive';
+
 import { RxForValueComponent } from './rx-for-value.component';
-import { RxForDirective } from './rx-for.directive';
+import { RxForOf } from './rx-for.directive';
 import { Poc6Locv2Directive } from './poc6-locv2.directive';
 import { Poc6Locv6Directive } from './poc6-locv.directive';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -28,7 +30,8 @@ const DECLARATIONS = [
   Poc5Locv5,
   Poc6Locv2Directive,
   Poc6Locv6Directive,
-  RxForDirective,
+  RxForOf,
+  RxMinimalForOf,
   RxForValueComponent
 ];
 

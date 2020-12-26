@@ -6,8 +6,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     <rxa-visualizer>
       <div visualizerHeader>
         <h3>*rxLet Directive</h3>
-        <rxa-value-provider [buttons]="true" #valP="rxaValueProvider"></rxa-value-provider>
+        <rxa-value-provider [unpatched]="false" [buttons]="true" #valP="rxaValueProvider"></rxa-value-provider>
       </div>
+
       <ng-container *rxLet="valP.boolean$; let value;
                rxSuspense: suspenseView;
                rxError: errorView;
@@ -27,6 +28,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       <ng-template #completeView>
         <mat-icon color="primary">check</mat-icon>
       </ng-template>
+
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush

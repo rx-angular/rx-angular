@@ -3,7 +3,8 @@ import { getIdleCallbackStrategyCredentialsMap } from './idle-callback';
 import { getPostTaskStrategyCredentialsMap } from './post-task';
 import { getReactStrategyCredentialsMap } from './react';
 import { getChunkStrategyCredentialsMap } from './render-queue/strategy-map';
-import { testStrategyCredentialsMap } from './testing';
+import { getDetachStrategyCredentialsMap } from './detach/strategy-map';
+import { getTestStrategyCredentialsMap } from '../../../features/concepts/coalescing/strategies/strategy-map';
 
 export function getCustomStrategyCredentialsMap(): StrategyCredentialsMap {
   return {
@@ -11,6 +12,7 @@ export function getCustomStrategyCredentialsMap(): StrategyCredentialsMap {
     ...getPostTaskStrategyCredentialsMap(),
     ...getReactStrategyCredentialsMap(),
     ...getChunkStrategyCredentialsMap(),
-    ...testStrategyCredentialsMap()
+    ...getDetachStrategyCredentialsMap(),
+    ...getTestStrategyCredentialsMap()
   };
 }

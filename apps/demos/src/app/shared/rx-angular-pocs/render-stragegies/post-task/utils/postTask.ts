@@ -1,5 +1,7 @@
 import { PostTaskScheduler, SchedulerPostTaskOptions } from './model';
 
+(window as any).__postTaskScheduler__present = typeof window !== 'undefined' ? (window as any).scheduler : false;
+
 export const postTaskScheduler: PostTaskScheduler =
   typeof window !== 'undefined'
     ? (window as any).scheduler || {

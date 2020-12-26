@@ -21,11 +21,11 @@ import { postTaskTick } from './utils/postTaskTick';
  */
 
 export function getPostTaskStrategyCredentialsMap(): StrategyCredentialsMap {
-  return {
+  return (window as any).__postTaskScheduler__present ? {
     postTaskUserVisible: createUserVisibleStrategy(),
     postTaskUserBlocking: createUserBlockingStrategy(),
     postTaskBackground: createBackgroundStrategy()
-  };
+  } : {};
 }
 
 const postTaskBehavior = (priority: PostTaskSchedulerPriority = PostTaskSchedulerPriority.userVisible): RenderBehavior => <T>(work: any) => {

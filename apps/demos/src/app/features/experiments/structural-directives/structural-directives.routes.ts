@@ -40,4 +40,11 @@ export const ROUTES: Routes = [
         (m) => m.RxLetPocRoutedModule
       ),
   },
+  {
+    path: 'if-visible',
+    loadChildren: () =>
+      import('./if-visible-poc/if-visible-routed.module').then(
+        (m) => m.IfVisibleRoutedModule
+      ),
+  },
 ];

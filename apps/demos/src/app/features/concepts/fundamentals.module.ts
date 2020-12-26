@@ -31,6 +31,12 @@ const ROUTES: Routes = [
     loadChildren: () => import('./coalescing/coalescing.module').then(
       m => m.CoalescingModule
     )
+  },
+  {
+    path: 'global-order',
+    loadChildren: () => import('./global-order/global-order.module').then(
+      m => m.GlobalOrderModule
+    )
   }
 ];
 

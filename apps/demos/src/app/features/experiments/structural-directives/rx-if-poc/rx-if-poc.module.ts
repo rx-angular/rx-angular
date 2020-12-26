@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ROUTES } from './rx-if-poc.routes';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { UnpatchEventsModule } from '@rx-angular/template';
 import { Poc1IfDirective } from './poc1-if.directive';
@@ -13,7 +11,7 @@ import { ValueModule } from '../../../../shared/debug-helper/work';
 import { GhostElementsModule } from '../../../../shared/ghost-elements';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
-import { IfModule } from '../../../../shared/rx-angular-pocs/If/if.module';
+import { IfModule } from '../../../../shared/rx-angular-pocs/if/if.module';
 
 const DECLARATIONS = [
   Poc1IfDirective,

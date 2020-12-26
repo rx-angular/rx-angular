@@ -12,6 +12,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
+import { CanvasViewModule } from '../../../../shared/canvas-view/canvas-view.module';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 
 @NgModule({
@@ -31,7 +33,9 @@ import { MatSelectModule } from '@angular/material/select';
     MatFormFieldModule,
     MatInputModule,
     MatListModule,
-    MatSelectModule
+    MatSelectModule,
+    CanvasViewModule,
+    MatProgressBarModule
   ]
 })
 export class PixelPriorityModule {
