@@ -1,3 +1,12 @@
+# [1.0.0-beta.2](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.1...template@1.0.0-beta.2) (2020-12-26)
+
+
+### Bug Fixes
+
+* **template:** adjust coalescing logic and tests ([6f2d966](https://github.com/rx-angular/rx-angular/commit/6f2d966782f7b1a36a3b7fd95d002cda0a377bbb))
+
+
+
 # [1.0.0-beta.1](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.0...template@1.0.0-beta.1) (2020-12-26)
 
 
