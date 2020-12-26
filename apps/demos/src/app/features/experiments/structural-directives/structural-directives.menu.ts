@@ -20,7 +20,7 @@ export const MENU_ITEMS = [
     label: 'RxSwitch',
   },
   {
-    link: 'rx-for-poc',
+    link: 'for',
     label: 'RxFor',
   },
   {

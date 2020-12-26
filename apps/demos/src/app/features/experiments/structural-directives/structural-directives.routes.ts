@@ -27,7 +27,7 @@ export const ROUTES: Routes = [
       ),
   },
   {
-    path: 'rx-for-poc',
+    path: 'for',
     loadChildren: () =>
       import('./rx-for-poc/rx-for-poc.routed.module').then(
         (m) => m.RxForPocRoutedModule
