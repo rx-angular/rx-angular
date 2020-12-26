@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { TemplateModule } from '@rx-angular/template';
+import { LetModule, PushModule } from '@rx-angular/template';
 import { ROUTES } from './rx-iterable-differ.routes';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,7 +16,7 @@ const DECLARATIONS = [RxIterableDifferComponent];
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    TemplateModule,
+    LetModule, PushModule,
     DirtyChecksModule,
     MatButtonModule,
     VisualizerModule,

@@ -8,8 +8,7 @@ import { InputBindingsProxyComponent } from './input-bindings-container/input-bi
 import { InputBindingsDecoratorComponent } from './input-bindings-container/input-bindings-decorator/input-bindings-docorator.component';
 import { InputBindingsContainerComponent } from './input-bindings-container/input-bindings-container.component';
 import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
-import { PushModule } from '../../../shared/rx-angular-pocs/push/push.module';
-import { LetModule } from '../../../shared/rx-angular-pocs/let/let.module';
+import { PushModule, RxLetModule } from '../../../rx-angular-pocs';
 
 
 @NgModule({
@@ -21,7 +20,7 @@ import { LetModule } from '../../../shared/rx-angular-pocs/let/let.module';
     ValueProvidersModule,
     StrategySelectModule,
     VisualizerModule,
-    LetModule,
+    RxLetModule,
     PushModule
   ]
 })

@@ -6,20 +6,15 @@ import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
 import { MatButtonModule } from '@angular/material/button';
 import { RxSwitchPocComponent } from './rx-switch-poc.component';
-import { RxSwitch } from './rx-switch.directive';
-import { RxSwitchCase } from './rx-switch-case.directive';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { ViewVsEmbeddedViewModule } from '../view-vs-embedded-view/view-vs-embedded-view.module';
 import { MatInputModule } from '@angular/material/input';
-import { IfModule } from '../../../../shared/rx-angular-pocs/if/if.module';
+import { RxIfModule, RxSwichModule } from '../../../../rx-angular-pocs/';
 
 @NgModule({
   declarations: [
-    RxSwitch,
-    RxSwitchCase,
     RxSwitchPocComponent
   ],
   imports: [
@@ -35,8 +30,8 @@ import { IfModule } from '../../../../shared/rx-angular-pocs/if/if.module';
     MatSliderModule,
     MatButtonToggleModule,
     MatInputModule,
-    ViewVsEmbeddedViewModule,
-    IfModule
+    RxIfModule,
+    RxSwichModule
   ]
 })
 export class RxSwichPocModule {

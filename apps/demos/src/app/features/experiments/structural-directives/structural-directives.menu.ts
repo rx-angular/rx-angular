@@ -1,9 +1,5 @@
 export const MENU_ITEMS = [
   {
-    link: 'view-vs-embedded-view',
-    label: 'Component vs EmbeddedView',
-  },
-  {
     link: 'rx-let-poc',
     label: 'RxLet',
   },
@@ -20,7 +16,7 @@ export const MENU_ITEMS = [
     label: 'RxSwitch',
   },
   {
-    link: 'rx-for-poc',
+    link: 'for',
     label: 'RxFor',
   },
   {

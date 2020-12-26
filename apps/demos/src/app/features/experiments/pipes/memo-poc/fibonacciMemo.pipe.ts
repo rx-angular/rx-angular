@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { fibonacci } from '../../../../shared/debug-helper/work';
-import { getMemoizedFn } from '../../../../shared/rx-angular-pocs/memo';
+import { getMemoizedFn } from '../../../../rx-angular-pocs';
 
 @Pipe({
   name: 'fibonacciMemo',

@@ -2,13 +2,10 @@ import { NgModule } from '@angular/core';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { IfVisibleComponent } from './if-visible.component';
-import { LetModule } from '../../../../shared/rx-angular-pocs/let/let.module';
-import { IfVisibleDirective } from './if-visible.directive';
-import { RxLetPocModule } from '../rx-let-poc/rx-let-poc.module';
+import { RxLetModule, RxIfModule } from '../../../../rx-angular-pocs';
 
 const DECLARATIONS = [
   IfVisibleComponent,
-  IfVisibleDirective
 ];
 
 @NgModule({
@@ -16,8 +13,8 @@ const DECLARATIONS = [
   imports: [
     VisualizerModule,
     ValueProvidersModule,
-    RxLetPocModule,
-    LetModule
+    RxLetModule,
+    RxIfModule
   ],
   exports: DECLARATIONS,
   providers: []

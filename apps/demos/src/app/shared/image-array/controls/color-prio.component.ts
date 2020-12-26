@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
-import { RxAngularPriorityLevel } from '../../rx-angular-pocs/render-stragegies';
+import { RxAngularPriorityLevel } from '../../../rx-angular-pocs';
 
 @Component({
   selector: 'rxa-color-prio',

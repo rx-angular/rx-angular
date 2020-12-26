@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PushModule, TemplateModule, UnpatchEventsModule } from '@rx-angular/template';
+import { PushModule, LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ListItemGhostComponent } from './list-item-ghost/list-item-ghost.component';
 import { FormGhostComponent } from './form-ghost/form-ghost.component';
@@ -11,7 +11,7 @@ const DECLARATIONS = [
 ];
 const IMPORTS = [
   CommonModule,
-  TemplateModule,
+  LetModule, PushModule,
   UnpatchEventsModule,
   PushModule,
   NgxSkeletonLoaderModule

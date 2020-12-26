@@ -6,9 +6,7 @@ import { UnpatchEventsModule } from '@rx-angular/template';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { PipePocComponent } from './pipe-poc.component';
 import { ROUTES } from './pipe-poc.routes';
-import { PipeModule } from '../../../../shared/rx-angular-pocs/pipe/pipe.module';
-import { PushModule } from '../../../../shared/rx-angular-pocs/push/push.module';
-import { LetModule } from '../../../../shared/rx-angular-pocs/let/let.module';
+import { PipeModule, PushModule,RxLetModule } from '../../../../rx-angular-pocs';
 
 const DECLARATIONS = [PipePocComponent];
 
@@ -22,7 +20,7 @@ const DECLARATIONS = [PipePocComponent];
     MatButtonModule,
     UnpatchEventsModule,
     PushModule,
-    LetModule
+    RxLetModule
   ],
   exports: [DECLARATIONS]
 })

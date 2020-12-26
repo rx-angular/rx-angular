@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
 import { MatButtonModule } from '@angular/material/button';
-import { LetModule } from '../../../../shared/rx-angular-pocs/let/let.module';
+import { RxLetModule } from '../../../../rx-angular-pocs';
 import { RxLetPocModule } from '../../../experiments/structural-directives/rx-let-poc/rx-let-poc.module';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { RippleModule } from '../../../../shared/debug-helper/ripple';
@@ -23,7 +23,7 @@ import { B1Component } from './b1/b1.component';
     UnpatchEventsModule,
     RxLetPocModule,
     MatButtonModule,
-    LetModule,
+    RxLetModule,
     RippleModule,
     ValueProvidersModule,
     DirtyChecksModule

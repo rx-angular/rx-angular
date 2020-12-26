@@ -7,10 +7,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PushModule } from '@rx-angular/template';
 import { ColorPrioComponent } from './controls/color-prio.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { LetModule } from '../rx-angular-pocs/let/let.module';
+import { RxLetModule } from '../../rx-angular-pocs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-
 
 
 @NgModule({
@@ -18,16 +17,17 @@ import { MatCardModule } from '@angular/material/card';
   exports: [
     ImageArrayComponent, ColorPrioComponent
   ],
-    imports: [
-        CommonModule,
-        MatInputModule,
-        MatProgressBarModule,
-        PushModule,
-        MatExpansionModule,
-        LetModule,
-        MatButtonModule,
-        MatCardModule,
-        MatRippleModule
-    ]
+  imports: [
+    CommonModule,
+    MatInputModule,
+    MatProgressBarModule,
+    PushModule,
+    MatExpansionModule,
+    RxLetModule,
+    MatButtonModule,
+    MatCardModule,
+    MatRippleModule
+  ]
 })
-export class ImageArrayModule { }
+export class ImageArrayModule {
+}

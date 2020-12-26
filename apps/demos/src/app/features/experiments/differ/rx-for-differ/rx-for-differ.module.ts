@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { TemplateModule } from '@rx-angular/template';
+import { LetModule, PushModule } from '@rx-angular/template';
 import { ROUTES } from './rx-for-differ.routes';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +17,7 @@ const DECLARATIONS = [RxForDifferComponent];
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    TemplateModule,
+    LetModule, PushModule,
     DirtyChecksModule,
     MatButtonModule,
     VisualizerModule,

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { toBooleanArray } from './utils';
-import { RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from '../../rx-angular-pocs/render-stragegies';
+import { RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from '../../../rx-angular-pocs';
 import { RxState } from '@rx-angular/state';
 import { map } from 'rxjs/operators';
 import { toInt } from '../../debug-helper/value-provider';

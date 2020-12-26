@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Output } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { StrategyProvider } from '../../../rx-angular-pocs/render-stragegies/strategy-provider.service';
+import { StrategyProvider } from '../../../../rx-angular-pocs';
 import { map } from 'rxjs/operators';
 
 const strategiesUiConfig = {

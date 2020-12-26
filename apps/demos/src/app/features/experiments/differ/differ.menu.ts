@@ -9,6 +9,6 @@ export const MENU_ITEMS = [
   },
   {
     label: 'rxFor Differ',
-    link: 'rx-for-differ'
+    link: 'for-differ'
   }
 ];

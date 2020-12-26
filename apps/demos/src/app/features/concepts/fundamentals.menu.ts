@@ -23,4 +23,8 @@ export const FUNDAMENTALS_MENU = [
     label: 'Global Order',
     link: 'global-order'
   },
+  {
+    link: 'view-vs-embedded-view',
+    label: 'Component vs EmbeddedView',
+  },
 ];

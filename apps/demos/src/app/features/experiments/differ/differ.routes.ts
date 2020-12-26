@@ -15,7 +15,7 @@ export const ROUTES: Routes = [
           .then(m => m.RxIterableDifferModule)
       },
       {
-        path: 'rx-for-differ',
+        path: 'for-differ',
         loadChildren: () => import('./rx-for-differ/rx-for-differ.module')
           .then(m => m.RxForDifferModule)
       }

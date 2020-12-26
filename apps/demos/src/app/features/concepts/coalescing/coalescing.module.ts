@@ -8,7 +8,7 @@ import { CoalescingComponent } from './coalescing/coalescing.component';
 import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
-import { PushModule } from '../../../shared/rx-angular-pocs/push/push.module';
+import { PushModule } from '../../../rx-angular-pocs';
 
 const DECLARATIONS = [
   CoalescingComponent

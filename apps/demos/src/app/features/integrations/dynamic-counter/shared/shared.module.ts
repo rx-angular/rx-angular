@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { TemplateModule } from '@rx-angular/template';
+import { LetModule, PushModule } from '@rx-angular/template';
 import { CounterDisplayComponent } from './counter-display.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ const DECLARATIONS = [CounterDisplayComponent];
   declarations: DECLARATIONS,
   imports: [
     CommonModule,
-    TemplateModule,
+    LetModule, PushModule,
     UtilsModule
   ],
   exports: [
@@ -24,7 +24,7 @@ const DECLARATIONS = [CounterDisplayComponent];
     MatInputModule,
     MatButtonModule,
     MatFormFieldModule,
-    TemplateModule,
+    LetModule, PushModule,
     UtilsModule
   ]
 })
