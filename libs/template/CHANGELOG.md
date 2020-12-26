@@ -1,3 +1,12 @@
+# [1.0.0-beta.4](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.3...template@1.0.0-beta.4) (2020-12-26)
+
+
+### Bug Fixes
+
+* **public-api:** remove TemplateModule from public API ([b462c3d](https://github.com/rx-angular/rx-angular/commit/b462c3d585ac3c8facc8ffa96e1476fcdb3bb444))
+
+
+
 # [1.0.0-beta.3](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.2...template@1.0.0-beta.3) (2020-12-26)
 
 
