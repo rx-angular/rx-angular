@@ -48,17 +48,6 @@ import { RxForViewContext } from './rx-for-context';
 })
 export class RxForOf<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, OnDestroy {
-  private differ: IterableDiffer<T> | null = null;
-  private observables$ = new ReplaySubject<ObservableInput<U>>(1);
-  private readonly strategies = this.strategyProvider.strategies;
-
-  values$ = this.observables$.pipe(
-    switchAll(),
-    distinctUntilChanged(),
-    shareReplay({ refCount: true, bufferSize: 1 })
-  );
-
-  private _rxFor: ObservableInput<U> | null | undefined;
   @Input()
   set rxFor(potentialObservable: ObservableInput<U> | null | undefined) {
     this._rxFor = potentialObservable;
@@ -70,42 +59,21 @@ export class RxForOf<T, U extends NgIterable<T> = NgIterable<T>>
     this._rxFor = potentialObservable;
     this.observables$.next(potentialObservable);
   }
-
-  // true if affects view
-  // private readonly __renderCallback = new Subject<any>();
-  private _renderCallback: Subject<any>;
   @Input('rxForRenderCallback') set renderCallback(
     renderCallback: Subject<void>
   ) {
     this._renderCallback = renderCallback;
   }
-
-  /* private readonly strategyName$ = new ReplaySubject<Observable<string>>(1);
-   private readonly strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
-   ngInputFlatten(),
-   startWith(this.defaultStrategyName),
-   nameToStrategyCredentials(this.strategies, cfg.defaultStrategyName)
-   );*/
-
-  // TODO: handle observable as strategy input
-  private _strategy: string;
   @Input('rxForStrategy') set strategy(strategy: string) {
     this._strategy = strategy;
   }
   get strategy(): string {
     return this._strategy || this.defaultStrategyName;
   }
-
-  private _trackByFn;
   @Input()
   set rxForTrackBy(fn: TrackByFunction<T>) {
     this._trackByFn = fn;
   }
-
-  private sub = new Subscription();
-
-  @Input()
-  rxForDistinctBy = (a, b) => a.value === b.value;
 
   constructor(
     @Inject(RX_PRIMARY_STRATEGY)
@@ -116,6 +84,51 @@ export class RxForOf<T, U extends NgIterable<T> = NgIterable<T>>
     private readonly viewContainerRef: ViewContainerRef,
     private iterableDiffers: IterableDiffers
   ) {}
+  private differ: IterableDiffer<T> | null = null;
+  private observables$ = new ReplaySubject<ObservableInput<U>>(1);
+  private readonly strategies = this.strategyProvider.strategies;
+
+  values$ = this.observables$.pipe(
+    switchAll(),
+    distinctUntilChanged(),
+    shareReplay({ refCount: true, bufferSize: 1 })
+  );
+
+  private _rxFor: ObservableInput<U> | null | undefined;
+
+  // true if affects view
+  // private readonly __renderCallback = new Subject<any>();
+  private _renderCallback: Subject<any>;
+
+  /* private readonly strategyName$ = new ReplaySubject<Observable<string>>(1);
+   private readonly strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
+   ngInputFlatten(),
+   startWith(this.defaultStrategyName),
+   nameToStrategyCredentials(this.strategies, cfg.defaultStrategyName)
+   );*/
+
+  // TODO: handle observable as strategy input
+  private _strategy: string;
+
+  private _trackByFn;
+
+  private sub = new Subscription();
+
+  /**
+   * Asserts the correct type of the context for the template that `NgForOf` will render.
+   *
+   * The presence of this method is a signal to the Ivy template type-check compiler that the
+   * `NgForOf` structural directive renders its template with a specific context type.
+   */
+  static ngTemplateContextGuard<T, U extends NgIterable<T>>(
+    dir: RxForOf<T, U>,
+    ctx: any
+  ): ctx is RxForViewContext<T, U> {
+    return true;
+  }
+
+  @Input()
+  rxForDistinctBy = (a, b) => a.value === b.value;
 
   initDiffer(iterable: U = [] as U) {
     this.differ = this.iterableDiffers
@@ -149,19 +162,6 @@ export class RxForOf<T, U extends NgIterable<T> = NgIterable<T>>
   ngOnDestroy() {
     this.sub.unsubscribe();
     this.viewContainerRef.clear();
-  }
-
-  /**
-   * Asserts the correct type of the context for the template that `NgForOf` will render.
-   *
-   * The presence of this method is a signal to the Ivy template type-check compiler that the
-   * `NgForOf` structural directive renders its template with a specific context type.
-   */
-  static ngTemplateContextGuard<T, U extends NgIterable<T>>(
-    dir: RxForOf<T, U>,
-    ctx: any
-  ): ctx is RxForViewContext<T, U> {
-    return true;
   }
 
   private applyChanges(changes: IterableChanges<T>): Observable<any[]> {
@@ -246,10 +246,10 @@ export class RxForOf<T, U extends NgIterable<T> = NgIterable<T>>
           detectParent = true;
         } else if (currentIndex == null) {
           // remove
-          const idx =
+          const _idx =
             previousIndex === null ? undefined : previousIndex;
-          if (this.viewContainerRef.get(idx)) {
-            this.viewContainerRef.remove(idx);
+          if (this.viewContainerRef.get(_idx)) {
+            this.viewContainerRef.remove(_idx);
             // a view got removed, notify parent about the change
             detectParent = true;
           }

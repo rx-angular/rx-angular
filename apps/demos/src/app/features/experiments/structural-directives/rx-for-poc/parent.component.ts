@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { BehaviorSubject, combineLatest, EMPTY, interval, merge, of, Subject } from 'rxjs';
 import { map, scan, share, startWith, switchMap } from 'rxjs/operators';
-import { RxState } from '../../../../../../../../libs/state/src/lib';
+import { RxState } from '@rx-angular/state';
 import { environment } from '../../../../../environments/environment';
 import { immutableArr } from '../utils';
 

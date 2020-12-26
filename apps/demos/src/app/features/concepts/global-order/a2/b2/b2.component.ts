@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { RxState } from '../../../../../../../../../libs/state/src/lib';
+import { RxState } from '@rx-angular/state';
 
 @Component({
   selector: 'rxa-b2',
