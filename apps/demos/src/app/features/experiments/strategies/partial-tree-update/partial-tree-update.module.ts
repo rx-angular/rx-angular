@@ -4,10 +4,18 @@ import { RouterModule } from '@angular/router';
 import { ROUTES as CD_ROUTES } from './partial-tree-update.routes';
 import { PartialTreeUpdateContainerComponent } from './partial-tree-update.container.component';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
-import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { NativeVModule } from './native-v/native-v.module';
+import { RxLetVModule } from './rx-let-v/rx-let-v.module';
+import { MatButtonModule } from '@angular/material/button';
+import { UnpatchEventsModule } from '../../../../rx-angular-pocs/directives/unpatch';
+import { RxLetModule } from '../../../../rx-angular-pocs/directives/let';
+import { PushModule } from '../../../../rx-angular-pocs/pipes/push';
 
-const DECLARATIONS = [PartialTreeUpdateContainerComponent];
+const DECLARATIONS = [
+  PartialTreeUpdateContainerComponent
+];
+
 @NgModule({
   declarations: [DECLARATIONS],
   exports: [],
@@ -15,8 +23,13 @@ const DECLARATIONS = [PartialTreeUpdateContainerComponent];
     CommonModule,
     RouterModule.forChild(CD_ROUTES),
     VisualizerModule,
-    ValueProvidersModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    NativeVModule,
+    RxLetVModule,
+    MatButtonModule,
+    UnpatchEventsModule,
+    RxLetModule,
+    PushModule
   ]
 })
 export class PartialTreeUpdateModule {

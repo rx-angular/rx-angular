@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { DataService } from './shared/data.service';
 
 @Component({
   selector: 'rxa-custom-strategy',
@@ -9,7 +10,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         <br/>
         <mat-button-toggle-group name="visibleExamples"
                                  aria-label="Visible Examples"
-                                 [value]="displayStates.all"
+                                 [value]="displayStates.none"
         #group="matButtonToggleGroup">
           <mat-button-toggle [value]="displayStates.none">None</mat-button-toggle>
           <mat-button-toggle [value]="displayStates.native">Angular Native</mat-button-toggle>
@@ -19,16 +20,20 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
           </mat-button-toggle>
           <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
         </mat-button-toggle-group>
+        <br/>
+        <button mat-raised-button [unpatch] (click)="data.increment(1)">increment</button>
+        <button mat-raised-button [unpatch] (click)="data.decrement(1)">decrement</button>
+        <span>count: {{data.count$ | async}}</span>
       </div>
       <div class="row w-100">
         <div class="col" *ngIf="group.value === displayStates.native || group.value === displayStates.all">
-
+            <rxa-v1-a></rxa-v1-a>
         </div>
         <div class="col" *ngIf="group.value === displayStates.rxLet || group.value === displayStates.all">
-
+          <rxa-v2-a></rxa-v2-a>
         </div>
         <div class="col" *ngIf="group.value === displayStates.pushCustomStrategy || group.value === displayStates.all">
-
+          <rxa-v2-a></rxa-v2-a>
         </div>
       </div>
     </rxa-visualizer>
@@ -43,4 +48,7 @@ export class PartialTreeUpdateContainerComponent {
     rxLet: 2,
     pushCustomStrategy: 3,
   };
+
+  constructor(public data: DataService) {
+  }
 }
