@@ -10,6 +10,8 @@ import { V2EComponent } from './v2-e.component';
 import { V2FComponent } from './v2-f.component';
 import { V2HComponent } from './v2-h.component';
 import { SharedModule } from '../shared/shared.module';
+import { MatButtonModule } from '@angular/material/button';
+import { UnpatchEventsModule } from '../../../../../rx-angular-pocs/directives/unpatch';
 
 
 
@@ -28,7 +30,9 @@ import { SharedModule } from '../shared/shared.module';
     CommonModule,
     VisualizerModule,
     SharedModule,
-    RxLetModule
+    RxLetModule,
+    MatButtonModule,
+    UnpatchEventsModule
   ],
   exports: [V2AComponent]
 })

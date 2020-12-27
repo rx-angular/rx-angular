@@ -9,6 +9,7 @@ import { V1CComponent } from './v1-c.component';
 import { V1EComponent } from './v1-e.component';
 import { V1FComponent } from './v1-f.component';
 import { V1HComponent } from './v1-h.component';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { V1HComponent } from './v1-h.component';
   imports: [
     CommonModule,
     VisualizerModule,
-    SharedModule
+    SharedModule,
+    MatButtonModule
   ],
   exports: [
     V1AComponent

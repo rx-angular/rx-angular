@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DataService } from '../shared/data.service';
 
 @Component({
   selector: 'rxa-v2-a',
@@ -6,6 +7,9 @@ import { Component } from '@angular/core';
     <rxa-visualizer>
       <div visualizerHeader>
         <h1>A<small>v2</small></h1>
+        <button [unpatch] mat-raised-button (click)="data.increment(1)">increment</button>
+        <button [unpatch] mat-raised-button (click)="data.decrement(1)">decrement</button>
+        <span *rxLet="data.count$; let count">count: {{count}}</span>
       </div>
       <div class="row w-100">
         <div class="col">
@@ -23,7 +27,7 @@ import { Component } from '@angular/core';
 })
 export class V2AComponent {
 
-  constructor() {
+  constructor(public data: DataService) {
   }
 
 }

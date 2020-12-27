@@ -20,10 +20,6 @@ import { DataService } from './shared/data.service';
           </mat-button-toggle>
           <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
         </mat-button-toggle-group>
-        <br/>
-        <button mat-raised-button [unpatch] (click)="data.increment(1)">increment</button>
-        <button mat-raised-button [unpatch] (click)="data.decrement(1)">decrement</button>
-        <span>count: {{data.count$ | async}}</span>
       </div>
       <div class="row w-100">
         <div class="col" *ngIf="group.value === displayStates.native || group.value === displayStates.all">
