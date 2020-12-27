@@ -88,7 +88,7 @@ export function createRenderAware<U>(cfg: {
       templateTriggerSubject.next(trigger$);
     },
     subscribe: () => {
-      (renderingEffect$ as ConnectableObservable<any>).connect();
+      return (renderingEffect$ as ConnectableObservable<any>).connect();
     },
     rendered$: renderingEffect$ as any
   };

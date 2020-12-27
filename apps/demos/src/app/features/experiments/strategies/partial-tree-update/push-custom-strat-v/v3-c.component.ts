@@ -9,8 +9,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';import { Data
       </div>
       <div class=" w-100">
         <div class="row">
-          <mat-icon class="item">{{(data.count$ | push) ? 'check' : 'highlight_off'}}</mat-icon>
-
+          {{(data.count$ | push) ? 'check' : 'highlight_off'}}
         </div>
         <div class="row">
           <div class="col">

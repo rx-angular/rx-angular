@@ -80,7 +80,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit{
 
   ngOnDestroy(): void {
     this.renderCallbackSubscription.unsubscribe();
-    this.subscription.unsubscribe();
+    this.subscription?.unsubscribe();
   }
 
   private subscribeRenderCallback(renderCallback?: NextObserver<U>): void {
