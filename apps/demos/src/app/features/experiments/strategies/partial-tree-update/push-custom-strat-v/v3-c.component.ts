@@ -1,22 +1,23 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';import { DataService } from '../shared/data.service';
 
 @Component({
-  selector: 'rxa-v1-f',
+  selector: 'rxa-v3-c',
   template: `
     <rxa-visualizer>
       <div visualizerHeader>
-        <h1>F<small>v1</small></h1>
+        <h1>C<small>v3</small></h1>
       </div>
       <div class=" w-100">
         <div class="row">
-          <div class="col">
-            <rxa-value-display [value]="data.count$ | async"></rxa-value-display>
-          </div>
+          <mat-icon class="item">{{(data.count$ | push) ? 'check' : 'highlight_off'}}</mat-icon>
+
         </div>
-        <div class="row w-100">
+        <div class="row">
           <div class="col">
-            <rxa-v1-h>
-            </rxa-v1-h>
+            <rxa-v3-e></rxa-v3-e>
+          </div>
+          <div class="col">
+            <rxa-v3-f></rxa-v3-f>
           </div>
         </div>
       </div>
@@ -24,9 +25,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';import { Data
   `,
   host: { class: 'w-100' }, changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class V1FComponent {
+export class V3CComponent {
 
   constructor(public data: DataService) {
+
   }
 
 }

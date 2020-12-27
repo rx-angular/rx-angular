@@ -1,6 +1,4 @@
-import { Component } from '@angular/core';
-
-@Component({
+import { ChangeDetectionStrategy, Component } from '@angular/core';@Component({
   selector: 'rxa-v2-d',
   template: `
     <rxa-visualizer>
@@ -10,7 +8,7 @@ import { Component } from '@angular/core';
 
     </rxa-visualizer>
   `,
-  host: { class: 'w-100' }
+  host: { class: 'w-100' }, changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class V2DComponent {
 

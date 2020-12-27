@@ -1,5 +1,15 @@
-import { EMPTY, isObservable, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { catchError, distinctUntilChanged, map, merge, mergeAll, startWith, switchAll, } from 'rxjs/operators';
+import { ConnectableObservable, EMPTY, isObservable, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import {
+  catchError,
+  distinctUntilChanged,
+  map,
+  merge,
+  mergeAll,
+  publishReplay,
+  startWith,
+  switchAll,
+  tap
+} from 'rxjs/operators';
 
 import { ChangeDetectorRef } from '@angular/core';
 import { rxMaterialize } from '../utils/rx-materialize';
@@ -17,6 +27,7 @@ export interface RenderAware<U> {
   nextStrategy: (config: string | Observable<string>) => void;
   nextTemplateTrigger: (trigger$: Observable<RxNotification<U>>) => void;
   rendered$: Observable<RxNotification<U>>;
+  subscribe: () => void;
 }
 
 /**
@@ -40,7 +51,8 @@ export function createRenderAware<U>(cfg: {
   const strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
     ngInputFlatten(),
     startWith(cfg.defaultStrategyName),
-    nameToStrategyCredentials(cfg.strategies, cfg.defaultStrategyName)
+    nameToStrategyCredentials(cfg.strategies, cfg.defaultStrategyName),
+    tap(console.log)
   );
   const templateTriggerSubject = new Subject<Observable<RxNotification<U>>>();
   const templateTrigger$ = templateTriggerSubject.pipe(
@@ -61,7 +73,8 @@ export function createRenderAware<U>(cfg: {
       catchError(e => {
         console.error(e);
         return EMPTY;
-      })
+      }),
+      publishReplay()
     );
 
   return {
@@ -73,6 +86,9 @@ export function createRenderAware<U>(cfg: {
     },
     nextTemplateTrigger(trigger$: Observable<RxNotification<U>>) {
       templateTriggerSubject.next(trigger$);
+    },
+    subscribe: () => {
+      (renderingEffect$ as ConnectableObservable<any>).connect();
     },
     rendered$: renderingEffect$ as any
   };

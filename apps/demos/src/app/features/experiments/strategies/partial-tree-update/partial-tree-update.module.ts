@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { UnpatchEventsModule } from '../../../../rx-angular-pocs/directives/unpatch';
 import { RxLetModule } from '../../../../rx-angular-pocs/directives/let';
 import { PushModule } from '../../../../rx-angular-pocs/pipes/push';
+import { PushCustomStratVModule } from './push-custom-strat-v/push-custom-strat-v.module';
 
 const DECLARATIONS = [
   PartialTreeUpdateContainerComponent
@@ -26,6 +27,7 @@ const DECLARATIONS = [
     MatButtonToggleModule,
     NativeVModule,
     RxLetVModule,
+    PushCustomStratVModule,
     MatButtonModule,
     UnpatchEventsModule,
     RxLetModule,

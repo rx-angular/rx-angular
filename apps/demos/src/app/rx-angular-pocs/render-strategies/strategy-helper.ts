@@ -25,6 +25,7 @@ export function observeTemplateByNotificationKind<U>(templateObserver: RxTemplat
     } else if (n.kind === 'rxComplete') {
       templateObserver.complete();
     } else if (n.kind === 'rxNext') {
+      console.log('obs', n, templateObserver);
       templateObserver.next(n.value);
     } else if (n.kind === 'rxSuspense') {
       templateObserver.suspense(n.value);
@@ -47,6 +48,7 @@ export function applyStrategy<T>(
             const work = () => credentials.work(activeEmbeddedView, context, notification);
             return concat(of(notification), NEVER).pipe(
               credentials.behavior(work, context),
+              tap(v => console.log('ssdsd', activeEmbeddedView)),
             );
           })
           )

@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'rxa-value-display',
-  template: `<mat-icon class="item" [ngClass]="{red:value%2 === 1, green:value%2 === 0}">{{value%2  === 0 ? 'check' : 'highlight_off'}}</mat-icon>`,
+  template: `<mat-icon class="item" [ngClass]="{red:!isTrue, green:isTrue}">{{isTrue ? 'check' : 'highlight_off'}}</mat-icon>`,
   styles: [`
     .item.red {
       color: red;
@@ -15,7 +15,11 @@ import { Component, Input } from '@angular/core';
 })
 export class ValueDisplayComponent {
 
+  isTrue: boolean = false;
+
   @Input()
-  value: number
+  set value(value: number){
+    this.isTrue = Math.abs(value%2)<1
+  }
 
 }

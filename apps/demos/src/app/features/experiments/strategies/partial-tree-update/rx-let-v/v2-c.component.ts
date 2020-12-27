@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { DataService } from '../shared/data.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';import { DataService } from '../shared/data.service';
 
 @Component({
   selector: 'rxa-v2-c',
@@ -25,7 +24,7 @@ import { DataService } from '../shared/data.service';
       </div>
     </rxa-visualizer>
   `,
-  host: { class: 'w-100' }
+  host: { class: 'w-100' }, changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class V2CComponent {
 

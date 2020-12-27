@@ -29,7 +29,7 @@ import { DataService } from './shared/data.service';
           <rxa-v2-a></rxa-v2-a>
         </div>
         <div class="col" *ngIf="group.value === displayStates.pushCustomStrategy || group.value === displayStates.all">
-          <rxa-v2-a></rxa-v2-a>
+          <rxa-v3-a></rxa-v3-a>
         </div>
       </div>
     </rxa-visualizer>
