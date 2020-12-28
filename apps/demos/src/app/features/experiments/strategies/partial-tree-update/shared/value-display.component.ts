@@ -15,7 +15,7 @@ import { Component, Input } from '@angular/core';
 })
 export class ValueDisplayComponent {
 
-  isTrue: boolean = false;
+  isTrue = false;
 
   @Input()
   set value(value: number){
