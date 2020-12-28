@@ -11,6 +11,7 @@ import { getPartialTreeCredentials } from './partial-tree.strategy';
         <h1>A<small>v3</small></h1>
         <button [unpatch] mat-raised-button (click)="data.decrement(1)">decrement</button>
         <button [unpatch] mat-raised-button (click)="data.increment(1)">increment</button>
+        <span *rxLet="data.count$; let count">count: {{count}}</span>
       </div>
       <div class="row w-100">
         <div class="col">

@@ -52,7 +52,6 @@ export function createRenderAware<U>(cfg: {
     ngInputFlatten(),
     startWith(cfg.defaultStrategyName),
     nameToStrategyCredentials(cfg.strategies, cfg.defaultStrategyName),
-    tap(console.log)
   );
   const templateTriggerSubject = new Subject<Observable<RxNotification<U>>>();
   const templateTrigger$ = templateTriggerSubject.pipe(

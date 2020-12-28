@@ -11,7 +11,7 @@ import {
 import { createRenderAware,RenderAware } from '../../cdk/render-aware/render-aware';
 import { RxTemplateObserver } from '../../cdk';
 
-@Pipe({ name: 'push', pure: true })
+@Pipe({ name: 'push', pure: false })
 export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit{
   private renderedValue: U | null | undefined;
 
@@ -23,7 +23,6 @@ export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit{
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => (this.renderedValue = undefined),
     next: (value: U | null | undefined) => {
-      console.log('tobs', value);
       (this.renderedValue = value)
     }
   };
@@ -43,10 +42,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit{
       defaultStrategyName: this.defaultStrategyName,
       templateObserver: this.templateObserver,
       getContext: () => (this.cdRef as any).context,
-      getCdRef: () => {
-        console.log('this.cdRef', this.cdRef);
-        return this.cdRef
-      }
+      getCdRef: () => this.cdRef
     });
     this.renderAware.subscribe();
   }
@@ -71,7 +67,6 @@ export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit{
     strategyName: string | Observable<string> | undefined,
     renderCallback?: NextObserver<U>
   ): T | null | undefined {
-    console.log('strategyName', strategyName);
     this.renderAware.nextStrategy(strategyName);
     this.renderAware.nextPotentialObservable(potentialObservable);
     this.subscribeRenderCallback(renderCallback);

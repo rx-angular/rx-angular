@@ -9,8 +9,9 @@ if (environment.production) {
   enableProdMode();
 }
 
-const compilerOptions = environment.zoneless ? {ngZone: "noop"} as any : undefined;
-const mP = promiseMarkerFactory('Bootstrap');
-mP.wrap(platformBrowserDynamic()
-  .bootstrapModule(AppModule, {...compilerOptions, ngZoneEventCoalescing: true})
-).catch((err) => console.error(err))
+  const compilerOptions = environment.zoneless ? {ngZone: "noop"} as any : undefined;
+  const mP = promiseMarkerFactory('Bootstrap');
+  mP.wrap(platformBrowserDynamic()
+    .bootstrapModule(AppModule, {...compilerOptions, ngZoneEventCoalescing: true})
+  ).catch((err) => console.error(err))
+

@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';import { Data
       </div>
       <div class=" w-100">
         <div class="row">
-          {{(data.count$ | push) ? 'check' : 'highlight_off'}}
+          <rxa-value-display class="col" [value]="data.count$ | push"></rxa-value-display>
         </div>
         <div class="row">
           <div class="col">
