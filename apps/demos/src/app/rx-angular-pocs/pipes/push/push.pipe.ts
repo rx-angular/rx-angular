@@ -36,7 +36,6 @@ export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit{
     private defaultStrategyName: string
   ) {
     this.strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), getDefaultStrategyCredentialsMap());
-    console.log('strategies: ', this.strategies);
     this.renderAware = createRenderAware<U>({
       strategies: this.strategies,
       defaultStrategyName: this.defaultStrategyName,
