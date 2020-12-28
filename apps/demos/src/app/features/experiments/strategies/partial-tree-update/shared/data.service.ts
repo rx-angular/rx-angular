@@ -7,7 +7,6 @@ type actions = { inc: number } | { dec: number };
 
 function unwrapAction<T>(prop: string) {
   return (o$: Observable<T>) => o$.pipe(
-    tap(console.log),
     filter(action => Object.keys(action).includes(prop)),
     map(action => action[prop])
   );
@@ -24,8 +23,8 @@ export class DataService extends RxState<{ count: number }> {
   constructor() {
     super();
     this.set({count: 0});
-    this.connect('count', this.action$.pipe(unwrapAction('inc')), (s, num) => s.count !== undefined ? s.count + num : num);
-    this.connect('count', this.action$.pipe(unwrapAction('dec')), (s, num) => s.count !== undefined ? s.count - num : num);
+    this.connect('count', this.action$.pipe(unwrapAction('inc')), (s, num) => s?.count + num);
+    this.connect('count', this.action$.pipe(unwrapAction('dec')), (s, num) => s?.count - num);
   }
 
   increment(inc: number) {
