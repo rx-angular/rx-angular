@@ -102,7 +102,6 @@ export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
   events$ = new BehaviorSubject<string[]>(eventsToUnpatch);
 
   constructor(private el: ElementRef) {
-    console.log('UNPATCH');
   }
 
   reapplyEventListenersZoneUnPatched(events) {

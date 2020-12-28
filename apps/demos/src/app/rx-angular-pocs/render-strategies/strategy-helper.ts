@@ -46,7 +46,7 @@ export function applyStrategy<T>(
             const context = getContext(notification);
             const work = () => credentials.work(activeEmbeddedView, context, notification);
             return concat(of(notification), NEVER).pipe(
-              credentials.behavior(work, context),
+              credentials.behavior(work, context)
             );
           })
           )

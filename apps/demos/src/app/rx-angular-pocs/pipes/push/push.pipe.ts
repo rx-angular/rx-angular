@@ -1,6 +1,6 @@
-import { ChangeDetectorRef,Inject, OnDestroy, Optional, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, Inject, OnDestroy, OnInit, Optional, Pipe, PipeTransform } from '@angular/core';
 import { NextObserver, Observable, ObservableInput, Subscription, Unsubscribable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import {
   getDefaultStrategyCredentialsMap,
   mergeStrategies,
@@ -11,18 +11,20 @@ import {
 import { createRenderAware,RenderAware } from '../../cdk/render-aware/render-aware';
 import { RxTemplateObserver } from '../../cdk';
 
-@Pipe({ name: 'push', pure: true })
-export class PushPipe<U> implements PipeTransform, OnDestroy {
+@Pipe({ name: 'push', pure: false })
+export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit{
   private renderedValue: U | null | undefined;
 
   private readonly strategies: StrategyCredentialsMap;
-  private readonly subscription: Unsubscribable;
   private readonly renderAware: RenderAware<U | null | undefined>;
+  private subscription: Unsubscribable;
   private renderCallbackSubscription: Unsubscribable = Subscription.EMPTY;
 
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
     suspense: () => (this.renderedValue = undefined),
-    next: (value: U | null | undefined) => (this.renderedValue = value)
+    next: (value: U | null | undefined) => {
+      (this.renderedValue = value)
+    }
   };
 
   constructor(
@@ -41,7 +43,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
       getContext: () => (this.cdRef as any).context,
       getCdRef: () => this.cdRef
     });
-    this.subscription = this.renderAware.rendered$.subscribe();
+    this.renderAware.subscribe();
   }
 
   transform<T>(
@@ -72,7 +74,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
 
   ngOnDestroy(): void {
     this.renderCallbackSubscription.unsubscribe();
-    this.subscription.unsubscribe();
+    this.subscription?.unsubscribe();
   }
 
   private subscribeRenderCallback(renderCallback?: NextObserver<U>): void {
@@ -82,5 +84,9 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
         .pipe(map(({ value }) => value))
         .subscribe(renderCallback);
     }
+  }
+
+  ngOnInit(): void {
+    this.subscription = this.renderAware.rendered$.subscribe();
   }
 }

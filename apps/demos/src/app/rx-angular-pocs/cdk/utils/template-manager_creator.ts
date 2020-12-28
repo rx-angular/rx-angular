@@ -31,9 +31,22 @@ export interface TemplateManager<C extends object, N extends string = string> {
 
   /**
    * @description
+   *
+   * @param name
+   */
+  createEmbeddedView(name: N): EmbeddedViewRef<C>;
+
+  /**
+   * @description
    * Checks if `TemplateRef` instance is cached under the provided name.
    */
+
   hasTemplateRef(name: N): boolean;
+  /**
+   * @description
+   * Checks if view instance is cached under the provided name.
+   */
+  hasViewCache(name: N): boolean;
 
   /**
    * @description
@@ -82,6 +95,10 @@ export function createTemplateManager<C extends object, N extends string = strin
       return this.hasTemplateRef(templateName) ? templateName : fallback;
     },
 
+    hasViewCache(name: N): boolean {
+      return viewCache.has(name);
+    },
+
     updateViewContext(viewContextSlice: Partial<C>) {
       Object.entries(viewContextSlice).forEach(([key, value]) => {
         viewContext[key] = value;
@@ -101,7 +118,27 @@ export function createTemplateManager<C extends object, N extends string = strin
     },
 
     getEmbeddedView(name: N): EmbeddedViewRef<C> {
-        return viewCache.get(name);
+      if (this.hasTemplateRef(name)) {
+        if (this.hasViewCache(name)) {
+          return viewCache.get(name);
+        } else {
+          return this.createEmbeddedView(name)
+        }
+      } else {
+        throw new Error(`no template registered to derive EmbeddedView ${name} from.`);
+       }
+    },
+
+    createEmbeddedView(name: N): EmbeddedViewRef<C> {
+      const idx = 0;
+      const newView = viewContainerRef.createEmbeddedView(
+        templateCache.get(name),
+        { ...initialViewContext },
+        idx
+      );
+      viewCache.set(name, newView);
+      viewContainerRef.detach(idx);
+      return newView;
     },
 
     displayView(name: N, fallback?: N) {
