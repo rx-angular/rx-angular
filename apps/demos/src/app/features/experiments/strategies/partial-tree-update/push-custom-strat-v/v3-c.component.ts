@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';import { DataService } from '../shared/data.service';
+import { RxEffects } from '../../../../../rx-angular-pocs/state/rx-effects';
 
 @Component({
   selector: 'rxa-v3-c',
@@ -22,12 +23,15 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';import { Data
       </div>
     </rxa-visualizer>
   `,
-  host: { class: 'w-100' }, changeDetection: ChangeDetectionStrategy.OnPush
+  host: { class: 'w-100' },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [RxEffects]
 })
 export class V3CComponent {
 
-  constructor(public data: DataService) {
-
+  constructor(public data: DataService,
+              private rxEf: RxEffects) {
+      this.rxEf.hold(this.data.count$, v => console.log('C next: ', v));
   }
 
 }

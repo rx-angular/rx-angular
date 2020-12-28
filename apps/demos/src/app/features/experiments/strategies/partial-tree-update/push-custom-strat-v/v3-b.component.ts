@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';@Component({
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
   selector: 'rxa-v3-b',
   template: `
     <rxa-visualizer>

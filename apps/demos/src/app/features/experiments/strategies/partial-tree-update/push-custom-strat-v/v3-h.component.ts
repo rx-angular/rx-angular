@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';import { DataService } from '../shared/data.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { DataService } from '../shared/data.service';
+import { RxEffects } from '../../../../../rx-angular-pocs/state/rx-effects';
 
 @Component({
   selector: 'rxa-v3-h',
@@ -6,17 +8,20 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';import { Data
     <rxa-visualizer>
       <div visualizerHeader>
         <h1>H<small>v3</small></h1>
-      </div>
-      <div class="row w-100">
-        <rxa-value-display class="col" [value]="data.count$ | push"></rxa-value-display>
+        <ng-container *ngIf="data.count$ | push as v">
+          <p>Value is: {{v}}</p>
+        </ng-container>
       </div>
     </rxa-visualizer>
   `,
-  host: { class: 'w-100' }, changeDetection: ChangeDetectionStrategy.OnPush
+  host: { class: 'w-100' },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [RxEffects]
 })
 export class V3HComponent {
-
-  constructor(public data: DataService) {
+    constructor(public data: DataService,
+                private rxEf: RxEffects) {
+      this.rxEf.hold(this.data.count$, v => console.log('H next: ', v));
   }
 
 }

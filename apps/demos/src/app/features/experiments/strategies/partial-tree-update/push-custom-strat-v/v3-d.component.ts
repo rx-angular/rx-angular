@@ -8,7 +8,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';@Component({
 
     </rxa-visualizer>
   `,
-  host: { class: 'w-100' }, changeDetection: ChangeDetectionStrategy.OnPush
+  host: { class: 'w-100' },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class V3DComponent {
 

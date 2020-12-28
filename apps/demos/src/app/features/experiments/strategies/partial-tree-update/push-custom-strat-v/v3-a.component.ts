@@ -9,8 +9,8 @@ import { getPartialTreeCredentials } from './partial-tree.strategy';
     <rxa-visualizer>
       <div visualizerHeader>
         <h1>A<small>v3</small></h1>
-        <button [unpatch] mat-raised-button (click)="data.decrement(1)">decrement</button>
-        <button [unpatch] mat-raised-button (click)="data.increment(1)">increment</button>
+        <button [unpatch] mat-raised-button (click)="data.increment(1)">decrement</button>
+        <button [unpatch] mat-raised-button (click)="data.decrement(1)">increment</button>
         <span *rxLet="data.count$; let count">count: {{count}}</span>
       </div>
       <div class="row w-100">
@@ -34,12 +34,19 @@ import { getPartialTreeCredentials } from './partial-tree.strategy';
       provide: RX_CUSTOM_STRATEGIES,
       useValue: { partialTree2: getPartialTreeCredentials(undefined) },
       multi: true
-    }
+    },
+    DataService
   ]
 })
 export class V3AComponent {
 
   constructor(public data: DataService) {
-  }
+    setTimeout(() => {
+      this.data.increment(3);
 
+      setTimeout(() => {
+        this.data.increment(5);
+      }, 2000);
+    }, 2000);
+  }
 }
