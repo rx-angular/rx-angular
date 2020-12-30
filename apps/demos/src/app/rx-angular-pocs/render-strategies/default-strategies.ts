@@ -20,7 +20,7 @@ const localCredentials: StrategyCredentials = {
     cdRef.detectChanges();
   },
   behavior: (work: any, scope) => o$ => o$.pipe(
-    coalesceWith(priorityTickMap[SchedulingPriority.Promise], scope),
+    coalesceWith(priorityTickMap[SchedulingPriority.animationFrame], scope),
     tap(() => work())
   )
 };

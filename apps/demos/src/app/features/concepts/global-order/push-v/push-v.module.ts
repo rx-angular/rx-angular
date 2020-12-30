@@ -13,6 +13,7 @@ import { V2HComponent } from './v2-h.component';
 import { SharedModule } from '../shared/shared.module';
 import { MatButtonModule } from '@angular/material/button';
 import { PushModule } from '../../../../rx-angular-pocs/pipes/push';
+import { DirtyChecksModule } from '../../../../rx-angular-pocs/debug/dirty-check';
 
 
 
@@ -36,7 +37,8 @@ import { PushModule } from '../../../../rx-angular-pocs/pipes/push';
     UnpatchEventsModule,
     UnpatchEventsModule,
     RxLetModule,
-    PushModule
+    PushModule,
+    DirtyChecksModule
   ],
   exports: [V2AComponent]
 })
