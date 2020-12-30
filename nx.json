@@ -43,6 +43,13 @@
     },
     "tour-of-heroes-ngxs": {
       "tags": ["type:app"]
+    },
+    "vanilla-case-studies": {
+      "tags": []
+    },
+    "vanilla-case-studies-e2e": {
+      "tags": [],
+      "implicitDependencies": ["vanilla-case-studies"]
     }
   },
   "affected": {

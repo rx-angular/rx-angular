@@ -22,13 +22,8 @@
             "polyfills": "apps/demos/src/polyfills.ts",
             "tsConfig": "apps/demos/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "apps/demos/src/favicon.ico",
-              "apps/demos/src/assets"
-            ],
-            "styles": [
-              "apps/demos/src/styles.scss"
-            ],
+            "assets": ["apps/demos/src/favicon.ico", "apps/demos/src/assets"],
+            "styles": ["apps/demos/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -119,10 +114,7 @@
               "apps/demos/tsconfig.app.json",
               "apps/demos/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/demos/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/demos/**/*"]
           }
         },
         "test": {
@@ -155,13 +147,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/demos-e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/demos-e2e/**/*"
-            ]
+            "tsConfig": ["apps/demos-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/demos-e2e/**/*"]
           }
         }
       }
@@ -205,13 +192,8 @@
             "polyfills": "apps/docs/src/polyfills.ts",
             "tsConfig": "apps/docs/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "apps/docs/src/favicon.ico",
-              "apps/docs/src/assets"
-            ],
-            "styles": [
-              "apps/docs/src/styles.scss"
-            ],
+            "assets": ["apps/docs/src/favicon.ico", "apps/docs/src/assets"],
+            "styles": ["apps/docs/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -269,10 +251,7 @@
               "apps/docs/tsconfig.app.json",
               "apps/docs/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/docs/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/docs/**/*"]
           }
         },
         "test": {
@@ -380,10 +359,7 @@
               "apps/tour-of-heroes/tsconfig.app.json",
               "apps/tour-of-heroes/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/tour-of-heroes/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/tour-of-heroes/**/*"]
           }
         },
         "test": {
@@ -419,9 +395,7 @@
               "apps/tour-of-heroes-ngxs/src/favicon.ico",
               "apps/tour-of-heroes-ngxs/src/assets"
             ],
-            "styles": [
-              "apps/tour-of-heroes-ngxs/src/styles.scss"
-            ],
+            "styles": ["apps/tour-of-heroes-ngxs/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -454,9 +428,7 @@
               ]
             },
             "zoneless": {
-              "polyfills": [
-                "apps/tour-of-heroes-ngxs/src/polyfills.ts"
-              ],
+              "polyfills": ["apps/tour-of-heroes-ngxs/src/polyfills.ts"],
               "fileReplacements": [
                 {
                   "replace": "apps/tour-of-heroes/src/environments/environment.ts",
@@ -493,10 +465,7 @@
               "apps/tour-of-heroes-ngxs/tsconfig.app.json",
               "apps/tour-of-heroes-ngxs/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/tour-of-heroes-ngxs/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/tour-of-heroes-ngxs/**/*"]
           }
         },
         "test": {
@@ -521,10 +490,7 @@
               "libs/test-helpers/tsconfig.lib.json",
               "libs/test-helpers/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/test-helpers/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/test-helpers/**/*"]
           }
         },
         "test": {
@@ -561,10 +527,7 @@
               "libs/state/tsconfig.lib.json",
               "libs/state/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/state/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/state/**/*"]
           }
         },
         "test": {
@@ -668,10 +631,7 @@
               "libs/template/tsconfig.lib.json",
               "libs/template/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/template/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/template/**/*"]
           }
         },
         "test": {
@@ -734,6 +694,129 @@
       "schematics": {
         "@nrwl/angular:component": {
           "style": "scss"
+        }
+      }
+    },
+    "vanilla-case-studies": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "apps/vanilla-case-studies",
+      "sourceRoot": "apps/vanilla-case-studies/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/vanilla-case-studies",
+            "index": "apps/vanilla-case-studies/src/index.html",
+            "main": "apps/vanilla-case-studies/src/main.ts",
+            "polyfills": "apps/vanilla-case-studies/src/polyfills.ts",
+            "tsConfig": "apps/vanilla-case-studies/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/vanilla-case-studies/src/favicon.ico",
+              "apps/vanilla-case-studies/src/assets",
+              "apps/vanilla-case-studies/src/case-studies"
+            ],
+            "styles": ["apps/vanilla-case-studies/src/styles.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/vanilla-case-studies/src/environments/environment.ts",
+                  "with": "apps/vanilla-case-studies/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "vanilla-case-studies:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "vanilla-case-studies:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "vanilla-case-studies:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/vanilla-case-studies/tsconfig.app.json",
+              "apps/vanilla-case-studies/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/vanilla-case-studies/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/vanilla-case-studies/jest.config.js",
+            "tsConfig": "apps/vanilla-case-studies/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "apps/vanilla-case-studies/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "vanilla-case-studies-e2e": {
+      "root": "apps/vanilla-case-studies-e2e",
+      "sourceRoot": "apps/vanilla-case-studies-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/vanilla-case-studies-e2e/cypress.json",
+            "tsConfig": "apps/vanilla-case-studies-e2e/tsconfig.e2e.json",
+            "devServerTarget": "vanilla-case-studies:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "vanilla-case-studies:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/vanilla-case-studies-e2e/tsconfig.e2e.json"],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/vanilla-case-studies-e2e/**/*"
+            ]
+          }
         }
       }
     }
