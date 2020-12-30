@@ -67,7 +67,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
         this._strategy = strategy;
     }
     get strategy(): string {
-        return this._strategy || this.defaultStrategyName;
+        return this._strategy || this.defaultStrategyName || 'local';
     }
     @Input()
     set rxForTrackBy(fn: TrackByFunction<T>) {

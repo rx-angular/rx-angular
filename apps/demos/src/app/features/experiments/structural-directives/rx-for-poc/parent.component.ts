@@ -126,12 +126,12 @@ import { immutableArr } from '../utils';
               let i;
               let r$ = item$;
               renderCallback: childrenRendered;
-              strategy: 'chunk';
+              strategy: 'reactUserBlocking';
               trackBy: trackById; let select = select
             "
           >
             <span #spanChild></span>
-            <ng-container *rxFor="select(['arr']); trackBy: trackById; let o; let v$ = item$; strategy: 'chunk';">
+            <ng-container *rxFor="select(['arr']); trackBy: trackById; let o; let v$ = item$; strategy: 'reactUserBlocking';">
               <rxa-rx-for-value [strategy$]="strategy$" [value]="v$"></rxa-rx-for-value>
             </ng-container>
           </rxa-visualizer>
