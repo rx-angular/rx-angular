@@ -115,8 +115,8 @@ function installDependencies(): Rule {
 }
 
 export function ngAdd(options: SchemaOptions): Rule {
-  return (tree: Tree, ctx: SchematicContext) => {
-    const project = getProject(tree, options.project);
+  return async (tree: Tree) => {
+    const project = await getProject(tree, options.project);
     const sourceRoot = (project && project.sourceRoot) ?? 'src';
     options.module = findRootModule(tree, options.module, sourceRoot) as string;
 
@@ -137,6 +137,6 @@ export function ngAdd(options: SchemaOptions): Rule {
       ),
       addDependency(),
       installDependencies(),
-    ])(tree, ctx);
+    ]);
   };
 }
