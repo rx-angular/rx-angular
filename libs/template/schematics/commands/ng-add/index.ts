@@ -1,15 +1,10 @@
-import { branchAndMerge, chain, Rule, SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
-import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
-import { addPackageJsonDependency, NodeDependency, NodeDependencyType } from '@schematics/angular/utility/dependencies';
-import { of } from 'rxjs';
-import { concatMap, map } from 'rxjs/operators';
+import { chain, Rule, SchematicsException, Tree } from '@angular-devkit/schematics';
 import * as ts from 'typescript';
 
 import { packageName } from '../../consts';
 import { addImportToModule, insertImport } from '../../utils/ast';
 import { InsertChange } from '../../utils/change';
 import { findRootModule } from '../../utils/find-module';
-import { getLatestNodeVersion } from '../../utils/npm';
 import { getProject } from '../../utils/projects';
 import { SchemaOptions } from './schema';
 
@@ -54,7 +49,7 @@ function applyChanges(
 function addImportsToModuleFile(
   options: SchemaOptions,
   imports: string[],
-  file = packageName
+  importName = packageName
 ): Rule {
   return (tree) => {
     const module = getModuleFile(tree, options);
@@ -62,7 +57,7 @@ function addImportsToModuleFile(
       module,
       options.module,
       imports.join(', '),
-      file
+      importName
     );
 
     return applyChanges(tree, options.module, [
@@ -85,35 +80,6 @@ function addImportsToModuleDeclaration(
   };
 }
 
-function addDependency(): Rule {
-  return (tree, ctx): any => {
-    return of(packageName).pipe(
-      concatMap((dep) => getLatestNodeVersion(dep)),
-      map(({ name, version }) => {
-        ctx.logger.info(
-          `✅️ Added ${name}@${version} to ${NodeDependencyType.Default}`
-        );
-        const nodeDependency: NodeDependency = {
-          name,
-          version,
-          type: NodeDependencyType.Default,
-          overwrite: false,
-        };
-        addPackageJsonDependency(tree, nodeDependency);
-        return tree;
-      })
-    );
-  };
-}
-
-function installDependencies(): Rule {
-  return (tree: Tree, ctx: SchematicContext) => {
-    ctx.addTask(new NodePackageInstallTask());
-    ctx.logger.debug('✅️ Dependencies installed');
-    return tree;
-  };
-}
-
 export function ngAdd(options: SchemaOptions): Rule {
   return async (tree: Tree) => {
     const project = await getProject(tree, options.project);
@@ -121,22 +87,16 @@ export function ngAdd(options: SchemaOptions): Rule {
     options.module = findRootModule(tree, options.module, sourceRoot) as string;
 
     return chain([
-      branchAndMerge(
-        chain([
-          addImportsToModuleFile(options, [
-            'LetModule',
-            'PushModule',
-            'ViewportPrioModule',
-          ]),
-          addImportsToModuleDeclaration(options, [
-            'LetModule',
-            'PushModule',
-            'ViewportPrioModule',
-          ]),
-        ])
-      ),
-      addDependency(),
-      installDependencies(),
+      addImportsToModuleFile(options, [
+        'LetModule',
+        'PushModule',
+        'ViewportPrioModule',
+      ]),
+      addImportsToModuleDeclaration(options, [
+        'LetModule',
+        'PushModule',
+        'ViewportPrioModule',
+      ]),
     ]);
   };
 }

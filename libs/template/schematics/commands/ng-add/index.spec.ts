@@ -46,22 +46,14 @@ describe('ng-add schematic', () => {
       .toPromise();
   });
 
-  it('should add proper package to dependencies', async () => {
-    const tree = await schematicRunner
-      .runSchematicAsync('ng-add', options, appTree)
-      .toPromise();
-
-    const packageJson = tree.readContent('/package.json');
-    expect(packageJson).toBeTruthy();
-    expect(packageJson).toContain('@rx-angular/template');
-  });
-
   it('should import into a specified module', async () => {
     const tree = await schematicRunner
       .runSchematicAsync('ng-add', options, appTree)
       .toPromise();
 
+
     const content = tree.readContent(`${projectPath}/src/app/app.module.ts`);
+
     expect(content).toMatch(
       /import { LetModule, PushModule, ViewportPrioModule } from '@rx-angular\/template';/
     );
