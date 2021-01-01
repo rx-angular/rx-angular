@@ -13,7 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
-import { RxLetModule } from '../../../../rx-angular-pocs/directives/let';
+import { RxForModule, RxLetModule } from '../../../../rx-angular-pocs';
 
 const DECLARATIONS = [
   RxForContainerComponent,
@@ -35,6 +35,7 @@ const DECLARATIONS = [
     MatInputModule,
     MatIconModule,
     RxLetModule,
+    RxForModule,
     StrategySelectModule
   ],
   exports: DECLARATIONS

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';import { DataService } from '../shared/data.service';
-import { RxEffects } from '../../../../../rx-angular-pocs/state/rx-effects';
+import { RxEffects } from '../../../../../rx-angular-pocs';
 
 @Component({
   selector: 'rxa-v3-c',

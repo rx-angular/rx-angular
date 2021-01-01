@@ -1,5 +1,4 @@
 import {
-  AfterContentInit,
   AfterViewInit,
   Component,
   ElementRef,
@@ -12,7 +11,6 @@ import { map, scan, share, startWith, switchMap } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 import { environment } from '../../../../../environments/environment';
 import { immutableArr } from '../utils';
-
 
 @Component({
   selector: 'rxa-cd-embedded-view-parent06',
@@ -27,7 +25,7 @@ import { immutableArr } from '../utils';
           <p *rxLet="table$; let table">
             <mat-form-field>
               <mat-label>Rows</mat-label>
-              <input matInput min="1" #r type="number" unpatch [value]="table?.rows" (input)="set({rows: +r.value})">
+              <input matInput min="1" #r type="number" unpatch [value]="table?.rows+''" (input)="set({rows: +r.value})">
             </mat-form-field>
             <mat-form-field>
               <mat-label>Colums</mat-label>
@@ -36,7 +34,7 @@ import { immutableArr } from '../utils';
                      #c
                      type="number"
                      unpatch
-                     [value]="table?.columns"
+                     [value]="table?.columns+''"
                      (input)="set({columns: +c.value})">
             </mat-form-field>
           </p>

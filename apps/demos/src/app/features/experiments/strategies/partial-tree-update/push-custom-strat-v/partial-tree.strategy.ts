@@ -1,11 +1,8 @@
-import { StrategyCredentials } from '../../../../../rx-angular-pocs/render-strategies';
-import { coalesceWith } from '../../../../../rx-angular-pocs/cdk/rxjs/operators';
-import { priorityTickMap } from '../../../../../rx-angular-pocs/cdk/rxjs/scheduling/priority-tick-map';
-import { SchedulingPriority } from '../../../../../rx-angular-pocs/cdk/rxjs/scheduling/interfaces';
+import { StrategyCredentials, coalesceWith, PriorityNameToLevel,  PriorityToObservable } from '../../../../../rx-angular-pocs';
 import { tap } from 'rxjs/operators';
 
 const behavior1 = (work: any, scope) => o$ => o$.pipe(
-  coalesceWith(priorityTickMap[SchedulingPriority.animationFrame], scope),
+  coalesceWith(PriorityToObservable[PriorityNameToLevel.normal](), scope),
   tap(() => {
     console.log('In strategy partialTree => behavior1: ', scope);
     work();

@@ -18,7 +18,7 @@ import { SiblingStaticComponent } from './sibling-static.component';
 import { SiblingStrategyComponent } from './sibling-strategy.component';
 import { ImageArrayModule } from '../../image-array/image-array.module';
 import { SiblingPixelImgComponent } from './sibling-pixel-img.component';
-import { RxLetModule } from '../../../rx-angular-pocs/directives/let';
+import { RxLetModule } from '../../../rx-angular-pocs';
 
 const DECLARATIONS = [
   SiblingStaticComponent,

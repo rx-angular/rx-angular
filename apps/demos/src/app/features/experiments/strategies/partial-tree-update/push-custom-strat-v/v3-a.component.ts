@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DataService } from '../shared/data.service';
-import { RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from '../../../../../rx-angular-pocs/render-strategies';
+import { RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from '../../../../../rx-angular-pocs';
 import { getPartialTreeCredentials } from './partial-tree.strategy';
 
 @Component({

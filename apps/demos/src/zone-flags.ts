@@ -2,7 +2,7 @@ import {
   globalEvents,
   xhrEvent,
   zoneConfig
-} from './app/rx-angular-pocs/cdk/zone-configuration';
+} from './app/rx-angular-pocs';
 
 zoneConfig.global.disable.requestAnimationFrame();
 zoneConfig.global.disable.timers();

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
-import { RxAngularPriorityLevel } from '../../../rx-angular-pocs';
+import { PriorityNames } from '../../../rx-angular-pocs';
 
 @Component({
   selector: 'rxa-color-prio',
@@ -46,25 +46,11 @@ export class ColorPrioComponent extends RxState<{
   colorArr$ = this.select('colors');
 
   prioMap = {
-    local: RxAngularPriorityLevel.NoPriority,
-    global: RxAngularPriorityLevel.NoPriority,
-    native: RxAngularPriorityLevel.NoPriority,
-    noop: RxAngularPriorityLevel.Exclude,
-
-    idleCallback: RxAngularPriorityLevel.IdlePriority,
-
-    postTaskUserVisible: RxAngularPriorityLevel.NormalPriority,
-    postTaskUserBlocking: RxAngularPriorityLevel.UserBlockingPriority,
-    postTaskBackground: RxAngularPriorityLevel.NoPriority,
-
-    reactNoPrio: RxAngularPriorityLevel.NoPriority,
-    reactImmediate: RxAngularPriorityLevel.ImmediatePriority,
-    reactUserBlocking: RxAngularPriorityLevel.UserBlockingPriority,
-    reactNormal: RxAngularPriorityLevel.NormalPriority,
-    reactLow: RxAngularPriorityLevel.LowPriority,
-    reactIdle: RxAngularPriorityLevel.IdlePriority,
-
-    chunk: RxAngularPriorityLevel.NormalPriority
+    local: PriorityNames.noPriority,
+    global: PriorityNames.noPriority,
+    native: PriorityNames.noPriority,
+    noop: PriorityNames.noop,
+    ...PriorityNames
   };
 
   @Input()

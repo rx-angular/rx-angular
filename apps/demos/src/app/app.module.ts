@@ -7,7 +7,11 @@ import { ENVIRONMENT_SETTINGS } from './shared/environment.token';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './features/home/home.component';
-import { getCustomStrategyCredentialsMap, RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from './rx-angular-pocs';
+import {
+  getConcurrentSchedulerStrategyCredentialsMap,
+  RX_CUSTOM_STRATEGIES,
+  RX_PRIMARY_STRATEGY
+} from './rx-angular-pocs';
 
 
 @NgModule({
@@ -24,7 +28,7 @@ import { getCustomStrategyCredentialsMap, RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRAT
     },
     {
       provide: RX_CUSTOM_STRATEGIES,
-      useValue: getCustomStrategyCredentialsMap(),
+      useValue: getConcurrentSchedulerStrategyCredentialsMap(),
       multi: true
     },
     {

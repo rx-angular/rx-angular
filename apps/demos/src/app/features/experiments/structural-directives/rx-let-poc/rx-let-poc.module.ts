@@ -14,7 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
-import { RxLetModule } from '../../../../rx-angular-pocs/directives/let';
+import { RxLetModule } from '../../../../rx-angular-pocs';
 
 const DECLARATIONS = [
   RxLetPocComponent,
