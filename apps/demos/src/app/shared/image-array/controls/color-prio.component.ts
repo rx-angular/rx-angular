@@ -15,7 +15,7 @@ import { PriorityNames } from '../../../rx-angular-pocs';
                [style.background]="i[0]"
                [title]="i[0]"
                *ngFor="let i of colors">
-            {{prioMap[i[1]]}}
+            &nbsp;
           </div>
         </div>
       </mat-expansion-panel-header>
