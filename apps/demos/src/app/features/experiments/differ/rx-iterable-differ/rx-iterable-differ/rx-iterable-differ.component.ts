@@ -13,10 +13,17 @@ import { bufferTime, filter, switchMap, switchMapTo } from 'rxjs/operators';
       <div visualizerHeader class="row">
         <div class="col-sm-12">
           <h2>Reactive Iterable Differ</h2>
-          <rxa-array-provider [unpatched]="[]" [buttons]="true" #arrayP="rxaArrayProvider"></rxa-array-provider>
+          <rxa-array-provider
+            [unpatched]="[]" [buttons]="true" #arrayP="rxaArrayProvider"></rxa-array-provider>
         </div>
       </div>
-      <div class="w-100 row">
+      <div>
+        {{ arrayP.array$ | async | json }}
+      </div>
+      <div *rxForViewContainerRef="arrayP.array$; let a; trackBy: trackById">
+        {{ a | json }}
+      </div>
+      <!--<div class="w-100 row">
         <div class="col-sm-2">
           <h3>List</h3>
           <div *ngFor="let enterRes of arrayP.array$ | push">
@@ -47,7 +54,7 @@ import { bufferTime, filter, switchMap, switchMapTo } from 'rxjs/operators';
             <pre>{{enterRes | json}}</pre>
           </div>
         </div>
-      </div>
+      </div>-->
     </rxa-visualizer>
   `,
   changeDetection: environment.changeDetection,
@@ -67,11 +74,15 @@ export class RxIterableDifferComponent extends Hooks {
   identityChange$ = this.rxDiffer.update$;
   exit$ = this.rxDiffer.exit$;
 
+  trackById = item => {
+    return item.id;
+  };
+
   constructor(public state: RxState<any>,
               public cdRef: ChangeDetectorRef) {
     super();
-    this.state.hold(this.afterViewInit$, () => this.setupRxDiffer())
-    this.state.hold(this.afterViewInit$.pipe(switchMap(_ => this.arrayP.array$)), (v) => this.rxDiffer.next(v as any))
+    // this.state.hold(this.afterViewInit$, () => this.setupRxDiffer())
+    // this.state.hold(this.afterViewInit$.pipe(switchMap(_ => this.arrayP.array$)), (v) => this.rxDiffer.next(v as any))
   }
 
   trackByIdFn = (a) => a.id;

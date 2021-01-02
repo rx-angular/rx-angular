@@ -59,49 +59,49 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
     this.connect(
       'array',
       this.addItemsImmutableSubject,
-      (state, numItems = 1) => addItemImmutable(state.array, numItems)
+      (state, numItems = 1) => addItemImmutable(state?.array || [], numItems)
     );
 
     this.connect(
       'array',
       this.updateItemsImmutableSubject,
-      (state, itemIds) => updateItemImmutable(state.array, itemIds)
+      (state, itemIds) => updateItemImmutable(state?.array || [], itemIds)
     );
 
     this.connect(
       'array',
       this.moveItemsImmutableSubject,
-      (state, positions) => moveItemImmutable(state.array, positions)
+      (state, positions) => moveItemImmutable(state?.array || [], positions)
     );
 
     this.connect(
       'array',
       this.removeItemsImmutableSubject,
-      (state, ids) => removeItemsImmutable(state.array, ids)
+      (state, ids) => removeItemsImmutable(state?.array || [], ids)
     );
 
     this.connect(
       'array',
       this.addItemsMutableSubject,
-      (state, numItems = 1) => addItemMutable(state.array, numItems)
+      (state, numItems = 1) => addItemMutable(state?.array || [], numItems)
     );
 
     this.connect(
       'array',
       this.updateItemsMutableSubject,
-      (state, itemIds) => updateItemMutable(state.array, itemIds)
+      (state, itemIds) => updateItemMutable(state?.array || [], itemIds)
     );
 
     this.connect(
       'array',
       this.moveItemsMutableSubject,
-      (state, positions) => moveItemMutable(state.array, positions)
+      (state, positions) => moveItemMutable(state?.array || [], positions)
     );
 
     this.connect(
       'array',
       this.removeItemsMutableSubject,
-      (state, ids) => removeItemsMutable(state.array, ids)
+      (state, ids) => removeItemsMutable(state?.array || [], ids)
     );
 
     this.resetAll();
