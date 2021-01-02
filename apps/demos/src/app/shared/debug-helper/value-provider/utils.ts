@@ -8,6 +8,8 @@ export function compareIdFn(a, b) {
   return a.id === b.id;
 }
 
+const theMax = 10000;
+
 export function withCompleteAndError<T>(error$, complete$) {
   return (o: Observable<T>): Observable<T> =>
     o.pipe(mergeWith(error$), takeUntil(complete$));
@@ -36,7 +38,7 @@ export function toTick(scheduleConfig: SchedulerConfig): Observable<number> {
   }
 }
 
-export function toInt(float: number = toRandom(), min = 0, max = 10): number {
+export function toInt(float: number = toRandom(), min = 0, max = theMax): number {
   // tslint:disable-next-line:no-bitwise
   return float !== undefined ? ~~(min + float * (max+1 - min)) : undefined;
 }
@@ -58,7 +60,7 @@ export function toRandomItems(ids: number[]): TestItem[] {
   return new Array(ids.length).fill(0).map((v) => ({ id: _ids.pop(), value: toRandom() }));
 }
 
-export function toNewItems(arr: TestItem[] = [], numItems: number, maxId = 10): TestItem[] {
+export function toNewItems(arr: TestItem[] = [], numItems: number, maxId = theMax): TestItem[] {
   const ids = arr.map(i => i.id);
   const newItems: TestItem[] = [];
   if (arr.length >= maxId) {

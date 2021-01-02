@@ -42,6 +42,10 @@ export class RxForViewContainerRefDirective<T extends object, U extends NgIterab
   set rxForViewContainerRef(potentialObservable: Observable<U> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
+  @Input()
+  set rxForViewContainerRefOf(potentialObservable: Observable<U> | null | undefined) {
+    this.observables$.next(potentialObservable);
+  }
   _trackBy = a => a;
   @Input()
   set rxForViewContainerRefTrackBy(trackByFnOrKey: string | ((i) => any)) {
@@ -55,6 +59,7 @@ export class RxForViewContainerRefDirective<T extends object, U extends NgIterab
     private readonly viewContainerRef: ViewContainerRef
   ) {
     this.rxViewContainerRef = createViewContainerRef<T>({
+      cdRef,
       viewContainerRef,
       templateRef,
       createViewContext,
@@ -90,6 +95,7 @@ function createViewContext<T, U extends NgIterable<T> = NgIterable<T>>(
   record: IterableChangeRecord<T>
 ): RxForViewContainerRefContext<T> {
   const ctx = new RxForViewContainerRefContext<T>(record.item);
+  console.log('ctx', ctx);
   // create uses the current index
   ctx.setComputedContext({ index: record.currentIndex });
   return ctx;

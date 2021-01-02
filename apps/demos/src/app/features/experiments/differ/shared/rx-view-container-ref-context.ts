@@ -40,6 +40,10 @@ export class RxForViewContainerRefContext<
     this._item.next($implicit);
   }
 
+  get $implicit(): T {
+    return this._$implicit;
+  }
+
   get $complete(): boolean {
     return this._$complete;
   }

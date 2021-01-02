@@ -84,7 +84,7 @@ export const ImmediatePriority = 1;
  * @TODO
  *
  * possible Browser APIs are:
- * - requestAnimationFrame
+ * - next requestAnimationFrame
  *
  */
 export const UserBlockingPriority = 2;

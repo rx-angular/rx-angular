@@ -33,6 +33,10 @@ import { ArrayProviderService } from '../array-provider.service';
           <button mat-raised-button [unpatch]="unpatched" (click)="removeItemsMutable()">
             Remove
           </button>
+          <br/>
+          <button mat-raised-button [unpatch]="unpatched" (click)="addItemsMutable(5)">
+            Add Many
+          </button>
 
         </div>
         <div class="col-sm-6">
@@ -48,6 +52,10 @@ import { ArrayProviderService } from '../array-provider.service';
           </button>
           <button mat-raised-button [unpatch]="unpatched" (click)="removeItemsImmutable()">
             Remove
+          </button>
+          <br/>
+          <button mat-raised-button [unpatch]="unpatched" (click)="addItemsImmutable(500)">
+            Add Many
           </button>
         </div>
       </div>
@@ -65,7 +73,7 @@ export class ArrayProviderComponent extends ArrayProviderService {
   min = 0;
 
   @Input()
-  max = 10;
+  max = 1000;
 
   constructor(protected cdRef: ChangeDetectorRef) {
     super(cdRef);

@@ -1,17 +1,20 @@
-import { concat, EMPTY, isObservable, merge, NEVER, Observable, ObservableInput, of, Subject } from 'rxjs';
+import { EMPTY, from, Observable, scheduled, Subject } from 'rxjs';
 import {
   ChangeDetectorRef,
   EmbeddedViewRef,
   IterableChangeRecord,
-  IterableChanges, NgIterable,
+  IterableChanges,
+  NgIterable,
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { distinctUntilChanged, map, mergeMap, publish, switchAll, switchMap } from 'rxjs/operators';
+import { concatMap, last, map, mergeMap, switchAll, switchMap, tap } from 'rxjs/operators';
 import { StrategyCredentials } from '../../../../rx-angular-pocs/cdk/render-strategies/model/strategy-credentials';
-import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
-import { RxNotification } from '../../../../../../../../libs/template/src/lib/core';
 import { RxForViewContainerRefContext } from './rx-view-container-ref-context';
+import { observeOnPriority } from '../../../../rx-angular-pocs/cdk/utils/rxjs/operators/observeOnPriority';
+import { concurrent } from '../../../../rx-angular-pocs/cdk/utils/rxjs/scheduler/concurrent';
+import { PriorityNameToLevel } from '../../../../rx-angular-pocs/cdk/render-strategies/model';
+import { scheduleLikeReact } from '../../../../rx-angular-pocs/cdk/utils/scheduling/concurrent-scheduler';
 
 
 export interface RxForOfComputedViewContext {
@@ -55,6 +58,7 @@ const forEachRemoveToArray = forEachToArray('forEachRemovedItem');
 const forEachUpdateToArray = forEachToArray('forEachIdentityChange');
 
 export function createViewContainerRef<T>(config: {
+  cdRef: ChangeDetectorRef,
   viewContainerRef: ViewContainerRef,
   templateRef: TemplateRef<RxForViewContainerRefContext<T>>,
   createViewContext: CreateViewContext<T>,
@@ -75,7 +79,7 @@ export function createViewContainerRef<T>(config: {
 
   const changesSubject = new Subject<Observable<IterableChanges<T>>>();
   const changes$ = changesSubject.pipe(
-    switchAll(),
+    switchAll()
   );
   const containerUpdate$ = EMPTY;
 
@@ -105,15 +109,19 @@ export function createViewContainerRef<T>(config: {
         insert: forEachInsertToArray(change)
           .map(record => {
             ++count;
-            const context = createViewContext(record);
+
             return {
               ev: {} as any, // no embeddedViewRef available, this view will get inserted after work is done
-              index: record.previousIndex, // actually no clue
-              context, // context to be inserted into ev
-              work: () => viewContainerRef.createEmbeddedView(
-                templateRef,
-                context
-              )
+              index: record.currentIndex, // actually no clue
+              context: {}, // context to be inserted into ev
+              work: () => {
+                const ev = viewContainerRef.createEmbeddedView(
+                  templateRef,
+                  createViewContext(record)
+                );
+                ev.detectChanges();
+                ev.detach();
+              }
             };
           }),
         move: forEachMoveToArray(change)
@@ -189,9 +197,34 @@ export function createViewContainerRef<T>(config: {
   };
 
   function subscribe(): void {
-    domStructureChange2$.subscribe(we => {
-      console.log('domStructureChange2$', we);
-    })
+
+    // prepare work and views and context
+    domStructureChange2$.pipe(
+      tap(we => console.log('domStructureChange2$', we)),
+      // inters/remove items
+      // observeOnPriority(concurrent(PriorityNameToLevel.normal)),
+      mergeMap(s => scheduled([...s.works.insert.map(i => i), ...s.works.remove.map(i => i)], concurrent(PriorityNameToLevel.normal))
+        .pipe(
+          tap(i => {
+            function WORK1 () {
+              i.work();
+            }
+            // create EV and insert
+           // const WORK1 = i.work;
+            WORK1();
+          })
+        )
+      ),
+      tap(() => {
+        console.log('PARENT');
+        // Notify parent about new EV
+        // cdRef is container of items which is the component that instantiates the directive
+        // this is needed to trigger the ViewQueries (@NOTICE perf bottle neck)
+        // View Queries emit for insert or remove only!!
+        config.cdRef.detectChanges();
+      })
+    )
+      .subscribe();
   }
 
   //

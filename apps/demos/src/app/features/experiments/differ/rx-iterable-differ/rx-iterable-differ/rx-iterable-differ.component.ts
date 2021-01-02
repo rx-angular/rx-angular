@@ -14,14 +14,13 @@ import { bufferTime, filter, switchMap, switchMapTo } from 'rxjs/operators';
         <div class="col-sm-12">
           <h2>Reactive Iterable Differ</h2>
           <rxa-array-provider
-            [unpatched]="[]" [buttons]="true" #arrayP="rxaArrayProvider"></rxa-array-provider>
+            [unpatched]="" [buttons]="true" #arrayP="rxaArrayProvider"></rxa-array-provider>
         </div>
       </div>
       <div>
-        {{ arrayP.array$ | async | json }}
-      </div>
-      <div *rxForViewContainerRef="arrayP.array$; let a; trackBy: trackById">
-        {{ a | json }}
+        <p *rxForViewContainerRef="let a of arrayP.array$; trackBy: trackById">
+          test: {{ a | json }}
+        </p>
       </div>
       <!--<div class="w-100 row">
         <div class="col-sm-2">
