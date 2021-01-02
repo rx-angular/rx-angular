@@ -8,10 +8,12 @@ import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './features/home/home.component';
 import {
-  getConcurrentSchedulerStrategyCredentialsMap,
+  getConcurrentSchedulerStrategyCredentialsMap, PriorityNameToLevel,
   RX_CUSTOM_STRATEGIES,
-  RX_PRIMARY_STRATEGY
+  RX_PRIMARY_STRATEGY, StrategyCredentials
 } from './rx-angular-pocs';
+import { observeOn, tap } from 'rxjs/operators';
+import { concurrent } from './rx-angular-pocs/cdk/utils/rxjs/scheduler/concurrent';
 
 
 @NgModule({
@@ -28,7 +30,21 @@ import {
     },
     {
       provide: RX_CUSTOM_STRATEGIES,
-      useValue: getConcurrentSchedulerStrategyCredentialsMap(),
+      useValue: {
+        ...getConcurrentSchedulerStrategyCredentialsMap(),
+        test: {
+            name: 'test',
+            work: (cdRef) => {
+              cdRef.detectChanges()
+            },
+            behavior: (work: any, context: any) => {
+              return o$ => o$.pipe(
+                observeOn(concurrent(PriorityNameToLevel.low)),
+                tap(work)
+              );
+            }
+        }
+      },
       multi: true
     },
     {

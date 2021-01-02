@@ -84,7 +84,7 @@ if (
       console['error'](
         "This browser doesn't support requestAnimationFrame. " +
         'Make sure that you load a ' +
-        'polyfill in older browsers. https://reactjs.org/link/react-polyfills',
+        'polyfill in older browsers. https://www.npmjs.com/package/raf',
       );
     }
     if (typeof cancelAnimationFrame !== 'function') {
@@ -92,7 +92,7 @@ if (
       console['error'](
         "This browser doesn't support cancelAnimationFrame. " +
         'Make sure that you load a ' +
-        'polyfill in older browsers. https://reactjs.org/link/react-polyfills',
+        'polyfill in older browsers. https://www.npmjs.com/package/raf',
       );
     }
   }
