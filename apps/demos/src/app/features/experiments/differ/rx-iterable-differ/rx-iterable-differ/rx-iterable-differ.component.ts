@@ -18,8 +18,9 @@ import { bufferTime, filter, switchMap, switchMapTo } from 'rxjs/operators';
         </div>
       </div>
       <div>
-        <p *rxForViewContainerRef="let a of arrayP.array$; trackBy: trackById">
-          test: {{ a | json }}
+        <p *rxForViewContainerRef="let a of arrayP.array$; let index = index; trackBy: trackById"
+        [ngStyle]="{background: color(a.id)}">
+          test: {{ a | json }} ,index: {{index}}
         </p>
       </div>
       <!--<div class="w-100 row">
@@ -64,6 +65,8 @@ export class RxIterableDifferComponent extends Hooks {
   @ViewChild('arrayP')
   arrayP;
 
+  colors = new Map<number, string>()
+
   rxDiffer = rxIterableDifferFactory({
     trackBy: 'id',
     distinctBy: 'value'
@@ -98,5 +101,17 @@ export class RxIterableDifferComponent extends Hooks {
       console.log('exit', result);
     });
     this.cdRef.detectChanges();
+  }
+
+  color(idx) {
+    let c = this.colors.get(idx)
+    if(c) {
+      return c;
+    } else {
+      c = '#' +Math.floor(Math.random()*16777215).toString(16)
+      this.colors.set(idx, c);
+      return c
+    }
+
   }
 }

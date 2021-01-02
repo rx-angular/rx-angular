@@ -16,7 +16,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { distinctUntilChanged, filter, map, startWith, switchAll, take, tap } from 'rxjs/operators';
 import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
 import { RxEffects } from '../../../../rx-angular-pocs/state/rx-effects/rx-effects.service';
-import { createViewContainerRef, RxViewContainerRef } from './rx-view-container-ref';
+import { createViewContainerRef, DomStructureChanges, RxViewContainerRef } from './rx-view-container-ref';
 import { RxForViewContainerRefContext } from './rx-view-container-ref-context';
 import { constantPluck } from './utils';
 
@@ -63,7 +63,7 @@ export class RxForViewContainerRefDirective<T extends object, U extends NgIterab
       viewContainerRef,
       templateRef,
       createViewContext,
-      updateInsertedViewContext: updateInsertedAndMovedViewContext
+      // updateInsertedViewContext: updateInsertedAndMovedViewContext
     });
   }
 
@@ -99,28 +99,4 @@ function createViewContext<T, U extends NgIterable<T> = NgIterable<T>>(
   // create uses the current index
   ctx.setComputedContext({ index: record.currentIndex });
   return ctx;
-}
-
-function updateInsertedAndMovedViewContext(insertsAndMoveAndUnchanged, count) {
-  const result = [];
-  for (const insert of insertsAndMoveAndUnchanged) {
-    const index = insert.context.index;
-    const even = index % 2 === 0;
-    const newCtx = {
-      index,
-      count,
-      first: index === 0,
-      last: index === count - 1,
-      even,
-      odd: !even
-    };
-    const old = insert.work;
-    insert.work = () => {
-      insert.context.setComputedContext(newCtx);
-      // tslint:disable-next-line:no-unused-expression
-      old && old();
-    };
-    result.push(insert);
-  }
-  return result;
 }

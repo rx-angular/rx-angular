@@ -1,7 +1,8 @@
 import { NgIterable } from '@angular/core';
-import { BehaviorSubject, Observable, ObservableInput, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, pluck } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, ObservableInput, ReplaySubject } from 'rxjs';
+import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
 import { RxViewContext } from '../../../../rx-angular-pocs/cdk/template-manager/model';
+import { selectSlice } from '../../../../../../../../libs/state/src/lib/rxjs/operators';
 
 export interface RxForOfComputedViewContext {
   index: number;
@@ -98,28 +99,29 @@ export class RxForViewContainerRefContext<
   }
 
   get first$(): Observable<boolean> {
-    return this._computedContext.pipe(
-      pluck('first'),
+    return this.index$.pipe(
+      map(index => index === 0),
       distinctUntilChanged()
     );
   }
 
   get last$(): Observable<boolean> {
     return this._computedContext.pipe(
-      pluck('last'),
+      selectSlice(['count', 'index']),
+      map(({count, index}) => index === count - 1),
       distinctUntilChanged()
     );
   }
 
   get even$(): Observable<boolean> {
-    return this._computedContext.pipe(
-      pluck('even'),
+    return this.index$.pipe(
+      map(index => index % 2 === 0),
       distinctUntilChanged()
     );
   }
 
   get odd$(): Observable<boolean> {
-    return this._computedContext.pipe(pluck('odd'), distinctUntilChanged());
+    return this.even$.pipe(map(even => !even), distinctUntilChanged());
   }
 
   constructor(private item: T) {
@@ -127,10 +129,10 @@ export class RxForViewContainerRefContext<
     this.$implicit = item;
   }
 
-  setComputedContext(context: Partial<RxForOfComputedViewContext>): void {
+  setComputedContext(newProps: Partial<RxForOfComputedViewContext>): void {
     this._computedContext.next({
       ...this._computedContext.getValue(),
-      ...context
+      ...newProps
     });
   }
 

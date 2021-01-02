@@ -54,7 +54,7 @@ import { ArrayProviderService } from '../array-provider.service';
             Remove
           </button>
           <br/>
-          <button mat-raised-button [unpatch]="unpatched" (click)="addItemsImmutable(500)">
+          <button mat-raised-button [unpatch]="unpatched" (click)="addItemsImmutable(20)">
             Add Many
           </button>
         </div>
