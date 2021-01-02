@@ -8,7 +8,7 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { map, mergeMap, share, switchAll, tap } from 'rxjs/operators';
+import { map, mergeMap, share, switchAll, switchMap, tap } from 'rxjs/operators';
 import { StrategyCredentials } from '../../../../rx-angular-pocs/cdk/render-strategies/model/strategy-credentials';
 import { RxForViewContainerRefContext } from './rx-view-container-ref-context';
 import { concurrent } from '../../../../rx-angular-pocs/cdk/utils/rxjs/scheduler/concurrent';
@@ -99,8 +99,8 @@ export function createViewContainerRef<T>(config: {
               ), // no embeddedViewRef available, this view will get inserted after work is done
               index: record.currentIndex, // actually no clue
               context: {}, // context to be inserted into ev
-              work: () => () => {
-                console.log('insert', record.currentIndex);
+              work: () => {
+                // console.log('insert', record.currentIndex);
               }
             };
           }),
@@ -109,21 +109,21 @@ export function createViewContainerRef<T>(config: {
             const ev = viewContainerRef.get(record.previousIndex);
             return {
               ev: () => viewContainerRef.move(ev, record.currentIndex) as EmbeddedViewRef<RxForViewContainerRefContext<T>>, // reference
-              index: record.previousIndex, // index to current position in viewContainer
+              index: record.currentIndex, // index to current position in viewContainer
               context: (ev as any).context,
-              work: () => () => {
-                console.log('move', record.currentIndex);
+              work: () => {
+                // console.log('move', record.currentIndex);
               }// move view from prev to currentIndex
             };
           }),
         remove: forEachRemoveToArray(change)
           .map(record => {
             return {
-              ev: () => viewContainerRef.remove(record.previousIndex) as any, // remove view from container (returns null)
+              ev: () => null, // remove view from container (returns null)
               index: record.previousIndex, // index to current ev
               context: null,
-              work: () => () => {
-                console.log('remove', record.previousIndex);
+              work: () => {
+                viewContainerRef.remove(record.previousIndex);
               }
             };
           }),
@@ -134,9 +134,8 @@ export function createViewContainerRef<T>(config: {
               ev: () => ev,
               index: record.currentIndex,
               context: null,
-              work: () => () => {
-                console.log('update', record.currentIndex);
-                ev.context.$implicit = record.item
+              work: () => {
+                ev.context.$implicit = record.item;
               }
             };
           })
@@ -150,30 +149,51 @@ export function createViewContainerRef<T>(config: {
     }),
     map(s => {
 
-      const workMap = new Map<number, any>();
+      const workMap = new Map<number, () => void>();
       const count = s.count;
+      s.works.remove.forEach(i => workMap.set(i.index, i.work));
       // All insert
-      s.works.insert.map(i => workMap.set(i.index, prepWork(i, count, 'insert')));
+      s.works.insert.forEach(i => workMap.set(
+        i.index,
+          () => {
+            const e = i.ev();
+            e.context.setComputedContext({ index: i.index, count });
+            e.detectChanges();
+          }
+        )
+      );
       // All move
-      s.works.move.map(i => workMap.set(i.index, prepWork(i, count, 'move')));
+      s.works.move.forEach(i => workMap.set(i.index,
+        () => {
+          const e = i.ev();
+          e.context.setComputedContext({ index: i.index, count });
+          e.detectChanges();
+        }
+      ));
       // All update
-      s.works.update.map(i => workMap.set(i.index, prepWork(i, count, 'update')));
+      s.works.update.forEach(i => workMap.set(i.index,  () => {
+        const e = i.ev();
+        i.work();
+        e.context.setComputedContext({ index: i.index, count });
+        e.detectChanges();
+      }));
+
       // All unchanged
-      const t = toDictionary(s.works.remove, 'index');
+      const t = [...s.works.remove, ...s.works.update, ...s.works.move]
+        .reduce((acc, cur) => {
+          acc.add(cur.index);
+          return acc;
+        }, new Set<number>());
       for (let index = 0; index < viewContainerRef.length; index++) {
         // tslint:disable-next-line:no-unused-expression
-        if(t[index]){
+        if(t.has(index)){
           continue;
         }
         const ev = viewContainerRef.get(index) as any;
-        workMap.set(index, prepWork({
-          ev: () => ev,
-          index,
-          context: null,
-          work: () => {
-            console.log('unchanged', index);
-          }
-        }, count, 'unchanged'));
+        workMap.set(index, () => {
+          ev.context.setComputedContext({ index, count });
+          ev.detectChanges();
+        });
       }
 
       const works = Array.from(workMap.values());
@@ -199,7 +219,7 @@ export function createViewContainerRef<T>(config: {
     domStructureChange2$.pipe(
       // inters/remove items
       // observeOnPriority(concurrent(PriorityNameToLevel.normal)),
-      mergeMap(works => works.length > 0 ? scheduled(works, concurrent(PriorityNameToLevel.normal))
+      switchMap(works => works.length > 0 ? scheduled(works, concurrent(PriorityNameToLevel.normal))
         .pipe(
           tap(work => {
             function WORK1() {
@@ -217,21 +237,21 @@ export function createViewContainerRef<T>(config: {
 
   }
 
-// , getE: (idx: number) => RxForViewContainerRefContext<T>
   function prepWork(i: RxViewContainerRefSpecialWork<T>, count, type) {
-    console.log('type', type);
+    // console.log('type', type);
     const w = i.work;
     const index = i.index;
     i.work = () => {
       const e = i.ev();
       e.context.setComputedContext({ index, count });
       w();
-     // if(type === 'update' || type === 'unchanged') {
-        e.detectChanges()
-     // }
+      /*// if(type === 'update' || type === 'unchanged') {
+        e.detectChanges();
+        // console.log('detectedChanges', e, e.context);
+     // }*/
     };
     return i.work;
-  };
+  }
 
 }
 

@@ -11,12 +11,11 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
-import { ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
+import { ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { distinctUntilChanged, filter, map, startWith, switchAll, take, tap } from 'rxjs/operators';
+import { filter, map, startWith, take } from 'rxjs/operators';
 import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
-import { RxEffects } from '../../../../rx-angular-pocs/state/rx-effects/rx-effects.service';
-import { createViewContainerRef, DomStructureChanges, RxViewContainerRef } from './rx-view-container-ref';
+import { createViewContainerRef, RxViewContainerRef } from './rx-view-container-ref';
 import { RxForViewContainerRefContext } from './rx-view-container-ref-context';
 import { constantPluck } from './utils';
 
@@ -72,8 +71,7 @@ export class RxForViewContainerRefDirective<T extends object, U extends NgIterab
     this.values$.pipe(
       take(1)
     ).subscribe((value) => {
-      console.log('initDiffer', value);
-      this.initDiffer(value)
+      this.initDiffer(value);
     });
   }
 
@@ -83,8 +81,7 @@ export class RxForViewContainerRefDirective<T extends object, U extends NgIterab
       startWith(iterable),
       map(i => ({ diff: this.differ.diff(i), iterable: i })),
       filter(r => r.diff != null),
-      map(r => r.diff),
-      tap(console.log)
+      map(r => r.diff)
     );
     this.rxViewContainerRef.connectChanges(changes$);
   }
@@ -95,7 +92,6 @@ function createViewContext<T, U extends NgIterable<T> = NgIterable<T>>(
   record: IterableChangeRecord<T>
 ): RxForViewContainerRefContext<T> {
   const ctx = new RxForViewContainerRefContext<T>(record.item);
-  console.log('ctx', ctx);
   // create uses the current index
   ctx.setComputedContext({ index: record.currentIndex });
   return ctx;

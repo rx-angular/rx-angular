@@ -17,11 +17,11 @@ import { bufferTime, filter, switchMap, switchMapTo } from 'rxjs/operators';
             [unpatched]="" [buttons]="true" #arrayP="rxaArrayProvider"></rxa-array-provider>
         </div>
       </div>
-      <div>
-        <p *rxForViewContainerRef="let a of arrayP.array$; let index = index; trackBy: trackById"
-        [ngStyle]="{background: color(a.id)}">
-          test: {{ a | json }} ,index: {{index}}
-        </p>
+      <div class="d-flex flex-wrap w-100">
+        <div class="work-child"
+             *rxForViewContainerRef="let a of arrayP.array$; let index = index; trackBy: trackById">
+          <div [ngStyle]="{background: color(a.id)}" ></div>
+        </div>
       </div>
       <!--<div class="w-100 row">
         <div class="col-sm-2">
@@ -59,7 +59,24 @@ import { bufferTime, filter, switchMap, switchMapTo } from 'rxjs/operators';
   `,
   changeDetection: environment.changeDetection,
   encapsulation: ViewEncapsulation.None,
-  providers: [ArrayProviderService]
+  providers: [ArrayProviderService],
+  styles: [`
+    .work-child {
+      position: relative;
+      width: 4px;
+      height: 4px;
+      margin: 0 2px 2px 0;
+      padding: 0px;
+      outline: 1px solid green;
+      background-color: transparent;
+    }
+
+    .work-child div {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+  `]
 })
 export class RxIterableDifferComponent extends Hooks {
   @ViewChild('arrayP')
