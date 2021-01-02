@@ -104,7 +104,7 @@ export const UserBlockingPriority = 2;
  * NOTE: while it may make sense to kick off fetches in input-handler, handling fetch responses in microtasks can be problematic, and could block user input & urgent rendering work.
  *
  * Use Case:
- * @TODO
+ * e.g. live client side precessing of image, data, etc..
  *
  * Scheduling Technique:
  * @TODO
@@ -123,7 +123,7 @@ export const NormalPriority = 3;
  * @TODO
  *
  * Use Case:
- * @TODO
+ *
  *
  * Scheduling Technique:
  * @TODO
@@ -203,8 +203,8 @@ export const SchedulingNameAsPriorityLevelNumber: {[name: string]: priorityLevel
   [setIntervalSchedulingName]: LowPriority,
   [setTimeoutSchedulingName]: LowPriority,
 
-   [backgroundSchedulingName]: BackgroundPriority,
-   [requestIdleCallbackSchedulingName]: BackgroundPriority
+  [backgroundSchedulingName]: BackgroundPriority,
+  [requestIdleCallbackSchedulingName]: BackgroundPriority
 }
 
 

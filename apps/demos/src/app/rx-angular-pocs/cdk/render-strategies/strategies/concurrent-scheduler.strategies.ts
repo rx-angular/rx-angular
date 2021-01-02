@@ -1,8 +1,10 @@
 import { PriorityNameToLevel } from '../../render-strategies/model/priority';
 import { StrategyCredentials, StrategyCredentialsMap } from '../../render-strategies/model/strategy-credentials';
 import { tap } from 'rxjs/operators';
-import { observeOnPriority } from '../../utils/rxjs/operators/observeOn';
+import { observeOnPriority } from '../../utils/rxjs/operators/observeOnPriority';
 import { concurrent } from '../../utils/rxjs/scheduler/concurrent';
+import { ConcurrentQueueHandler } from '../../utils/rxjs/scheduler/concurrent/concurrent.queue-handler';
+import { scheduleLikeReact } from '../../utils/scheduling/concurrent-scheduler';
 
 export function getConcurrentSchedulerStrategyCredentialsMap(): StrategyCredentialsMap {
   return {
@@ -10,10 +12,13 @@ export function getConcurrentSchedulerStrategyCredentialsMap(): StrategyCredenti
     immediate: createImmediateStrategyCredentials(),
     userBlocking: createUserBlockingStrategyCredentials(),
     normal: createNormalStrategyCredentials(),
+    normal2: createNormal2StrategyCredentials(),
     low: createLowStrategyCredentials(),
     background: createBackgroundStrategyCredentials()
   };
 }
+
+const qh = new ConcurrentQueueHandler();
 
 export function createNoPriorityStrategyCredentials(): StrategyCredentials {
   return {
@@ -21,8 +26,7 @@ export function createNoPriorityStrategyCredentials(): StrategyCredentials {
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: any, context: any) => {
       return o$ => o$.pipe(
-        observeOnPriority(concurrent(PriorityNameToLevel.noPriority)),
-        tap(work)
+        scheduleLikeReact(PriorityNameToLevel.noPriority, work, context)
       );
     }
   };
@@ -34,8 +38,7 @@ export function createImmediateStrategyCredentials(): StrategyCredentials {
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: any, context: any) => {
       return o$ => o$.pipe(
-        observeOnPriority(concurrent(PriorityNameToLevel.immediate)),
-        tap(work)
+        scheduleLikeReact(PriorityNameToLevel.immediate, work, context)
       );
     }
   };
@@ -47,8 +50,7 @@ export function createUserBlockingStrategyCredentials(): StrategyCredentials {
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: any, context: any) => {
       return o$ => o$.pipe(
-        observeOnPriority(concurrent(PriorityNameToLevel.userBlocking)),
-        tap(work)
+        scheduleLikeReact(PriorityNameToLevel.userBlocking, work, context)
       );
     }
   };
@@ -57,6 +59,18 @@ export function createUserBlockingStrategyCredentials(): StrategyCredentials {
 export function createNormalStrategyCredentials(): StrategyCredentials {
   return {
     name: 'normal',
+    work: (cdRef) => cdRef.detectChanges(),
+    behavior: (work: any, context: any) => {
+      return o$ => o$.pipe(
+        scheduleLikeReact(PriorityNameToLevel.userBlocking, work, context)
+      );
+    }
+  };
+}
+
+export function createNormal2StrategyCredentials(): StrategyCredentials {
+  return {
+    name: 'normal2',
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: any, context: any) => {
       return o$ => o$.pipe(
@@ -86,7 +100,7 @@ export function createBackgroundStrategyCredentials(): StrategyCredentials {
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: any, context: any) => {
       return o$ => o$.pipe(
-        observeOnPriority(concurrent(PriorityNameToLevel.idle)),
+        observeOnPriority(concurrent(PriorityNameToLevel.background)),
         tap(work)
       );
     }

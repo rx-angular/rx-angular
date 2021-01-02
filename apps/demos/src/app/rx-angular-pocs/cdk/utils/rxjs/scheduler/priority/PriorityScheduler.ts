@@ -13,6 +13,7 @@ export abstract class PriorityScheduler<P, T> extends AsapScheduler {
 
   // @ts-ignore
   schedule<S>(work: (this: PriorityAction<S, P>, state?: S) => void, options?: O, state?: S): Subscription {
-    return super.schedule(work, options?.delay, state);
+    // options get passed to action schedule. the scheduler holds the fallback priority
+    return super.schedule(work, {priority: this.priority, ...options}, state);
   }
 }

@@ -14,6 +14,7 @@ import {
 } from './rx-angular-pocs';
 import { observeOn, tap } from 'rxjs/operators';
 import { concurrent } from './rx-angular-pocs/cdk/utils/rxjs/scheduler/concurrent';
+import { observeOnPriority } from './rx-angular-pocs/cdk/utils/rxjs/operators/observeOnPriority';
 
 
 @NgModule({
@@ -39,7 +40,7 @@ import { concurrent } from './rx-angular-pocs/cdk/utils/rxjs/scheduler/concurren
             },
             behavior: (work: any, context: any) => {
               return o$ => o$.pipe(
-                observeOn(concurrent(PriorityNameToLevel.low)),
+                observeOnPriority(concurrent(PriorityNameToLevel.low)),
                 tap(work)
               );
             }

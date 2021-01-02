@@ -1,15 +1,15 @@
-import { RxaSchedulingOptions } from './model';
+import { PrioritySchedulingOptions } from './model';
 
 let nextHandle = 1;
 const activeHandles: { [key: number]: any } = {};
 
 export abstract class TaskQueue<P, T> {
 
-  _queTask: (cb: () => void, options: RxaSchedulingOptions<P>) => [T, number];
+  _queTask: (cb: () => void, options: PrioritySchedulingOptions<P>) => [T, number];
   _dequeTask: (handle: any) => void;
 
-  queueTask(cb: () => void, options: RxaSchedulingOptions<P>): number {
-    const [task, id, ] = this._queTask(cb, options);
+  queueTask(cb: () => void, options: PrioritySchedulingOptions<P>): number {
+    const [task, id] = this._queTask(cb, options);
     this.addTask(id, task);
     return id;
   };

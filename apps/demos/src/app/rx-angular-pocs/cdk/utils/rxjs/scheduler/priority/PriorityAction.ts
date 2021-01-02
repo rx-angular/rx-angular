@@ -11,8 +11,25 @@ export class PriorityAction<S, P, T> extends AsyncAction<S> {
     super(scheduler, work);
   }
 
-  schedule(state?: S, options?: any): Subscription {
-    return super.schedule(state, options.delay);
+  // @ts-ignore
+  public schedule(state?: S, options?: RxaSchedulingOptions<P>): Subscription {
+    if (this.closed) {
+      return this;
+    }
+
+    this.state = state;
+
+    const id = this.id;
+    const scheduler = this.scheduler;
+    if (id != null) {
+      this.id = this.recycleAsyncId(scheduler, id, options);
+    }
+
+    this.pending = true;
+    this.delay = options.delay;
+    this.id = this.id || this.requestAsyncId(scheduler, this.id, options);
+
+    return this;
   }
 
   // @ts-ignore
