@@ -8,7 +8,7 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { concatMap, last, map, mergeMap, switchAll, switchMap, tap } from 'rxjs/operators';
+import { audit, auditTime, concatMap, last, map, mergeMap, switchAll, switchMap, tap } from 'rxjs/operators';
 import { StrategyCredentials } from '../../../../rx-angular-pocs/cdk/render-strategies/model/strategy-credentials';
 import { RxForViewContainerRefContext } from './rx-view-container-ref-context';
 import { observeOnPriority } from '../../../../rx-angular-pocs/cdk/utils/rxjs/operators/observeOnPriority';
@@ -212,16 +212,19 @@ export function createViewContainerRef<T>(config: {
             // create EV and insert
            // const WORK1 = i.work;
             WORK1();
-          })
+          }),
+          last()
         )
       ),
       tap(() => {
-        console.log('PARENT');
         // Notify parent about new EV
         // cdRef is container of items which is the component that instantiates the directive
         // this is needed to trigger the ViewQueries (@NOTICE perf bottle neck)
         // View Queries emit for insert or remove only!!
-        config.cdRef.detectChanges();
+        function WORK2 () {
+          config.cdRef.detectChanges();
+        }
+        WORK2();
       })
     )
       .subscribe();
