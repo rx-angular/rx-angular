@@ -34,6 +34,13 @@ export const ROUTES: Routes = [
       ),
   },
   {
+    path: 'rx-context',
+    loadChildren: () =>
+      import('./rx-context-poc/rx-context-poc.routed.module').then(
+        (m) => m.RxContextPocRoutedModule
+      ),
+  },
+  {
     path: 'if-visible',
     loadChildren: () =>
       import('./if-visible-poc/if-visible-routed.module').then(

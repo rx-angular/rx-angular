@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Directive,
+  Input,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewContainerRef
+} from '@angular/core';
 
 import { isObservable, Observable, of, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
 import {
@@ -16,37 +25,28 @@ import { RxContextTemplateNames, rxContextTemplateNames, RxContextViewContext } 
 import { distinctUntilChanged, filter, map, mapTo, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 
-@Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: '[rxContext]',
+@Component({
+  // tslint:disable-next-line:directive-selector component-selector
+  selector: 'rxContextContainer',
+  template: `
+  <ng-content></ng-content>
+  <ng-content select="rxSuspenseTpl"></ng-content>
+  <ng-content select="rxErrorTpl"></ng-content>
+  <ng-content select="rxCompleteTpl"></ng-content>
+  `,
   providers: [RxState]
 })
 // tslint:disable-next-line:directive-class-suffix
-export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
+export class RxContextContainer<U> extends Hooks implements OnInit, OnDestroy {
 
   @Input()
-  set rxContext(potentialObservable: Observable<U> | null | undefined) {
+  set rxContextContainer(potentialObservable: Observable<U> | null | undefined) {
     this.rxState.connect('templateName', potentialObservable.pipe(toTemplateName()));
   }
 
   @Input('rxContextStrategy')
   set strategy(strategyName$: string | Observable<string> | undefined) {
     this.rxState.connect('strategyName', isObservable(strategyName$) ? strategyName$ : of(strategyName$));
-  }
-
-  @Input('rxContextCompleteTpl')
-  set rxComplete(templateRef: TemplateRef<RxContextViewContext<U | undefined | null> | null>) {
-    this.templateManager.addTemplateRef(RxContextTemplateNames.complete, templateRef);
-  }
-
-  @Input('rxContextErrorTpl')
-  set rxError(templateRef: TemplateRef<RxContextViewContext<U | undefined | null> | null>) {
-    this.templateManager.addTemplateRef(RxContextTemplateNames.error, templateRef);
-  }
-
-  @Input('rxContextSuspenseTpl')
-  set rxSuspense(templateRef: TemplateRef<RxContextViewContext<U | undefined | null> | null>) {
-    this.templateManager.addTemplateRef(RxContextTemplateNames.suspense, templateRef);
   }
 
   @Input('rxContextCompleteTrg')
@@ -108,7 +108,7 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
 
   /** @internal */
   static ngTemplateContextGuard<U>(
-    dir: RxContext<U>,
+    dir: RxContextContainer<U>,
     ctx: unknown | null | undefined
   ): ctx is RxContextViewContext<U> {
     return true;

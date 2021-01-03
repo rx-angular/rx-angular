@@ -10,32 +10,25 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { combineLatest, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
-import { distinctUntilChanged, map, switchAll, tap } from 'rxjs/operators';
+import { Subscription, Unsubscribable } from 'rxjs';
+import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 import { RxSwitch } from './rx-switch.directive';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[rxSwitchCase]' })
 export class RxSwitchCase implements OnInit, OnDestroy {
 
+
   @Input()
-  set rxSwitchCaseValue(o$) {
-    this.observables$.next(o$);
+  set rxSwitchCaseValue(v) {
+    this.caseValue = v;
   };
 
   @Input()
-  set rxSwitchCase(o$) {
-    this.observables$.next(o$);
+  set rxSwitchCase(v) {
+    this.caseValue = v;
   };
-  observables$ = new ReplaySubject(1);
 
-  caseValues$ = this.observables$
-    .pipe(
-      distinctUntilChanged(),
-      switchAll(),
-      distinctUntilChanged(),
-      tap(v => this.caseValue = v)
-    );
   private subscription: Unsubscribable = new Subscription();
   private _view: EmbeddedViewRef<any>;
   private inserted = false;
@@ -52,13 +45,10 @@ export class RxSwitchCase implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.createView();
-    this.subscription = combineLatest([
-      this.caseValues$,
-      this.rxSwitch.values$
-    ])
+    this.subscription = this.rxSwitch.values$
       .pipe(
         // tslint:disable-next-line:triple-equals
-        map(([caseValue, switchValue]) => caseValue == switchValue),
+        map((switchValue) => this.caseValue == switchValue),
         distinctUntilChanged(),
         tap((matched: boolean) => {
           if (matched) {

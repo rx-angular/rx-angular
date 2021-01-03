@@ -16,9 +16,8 @@ import { rxMaterialize } from '../utils/rxjs/operators/rx-materialize';
 import { ngInputFlatten } from '../utils/rxjs/operators/ngInputFlatten';
 import {
   applyStrategy,
-  nameToStrategyCredentials,
-  observeTemplateByNotificationKind,
-} from '../render-strategies/utils/strategy-helper'
+  nameToStrategyCredentials, observeTemplateByNotificationKind
+} from '../render-strategies/utils/strategy-helper';
 import { StrategyCredentials, StrategyCredentialsMap } from '../render-strategies/model/strategy-credentials';
 import { RxNotification, RxTemplateObserver } from '../utils/rxjs/Notification';
 

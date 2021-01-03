@@ -1,32 +1,15 @@
-import { OperatorFunction } from 'rxjs';
+import { Observable, OperatorFunction } from 'rxjs';
 import { map, materialize, tap } from 'rxjs/operators';
-import { RxNotification, rxNotificationKind } from '../Notification';
+import { notificationToRxNotification, RxNotification } from '../Notification';
 
 export function rxMaterialize<T>(): OperatorFunction<T, RxNotification<T>> {
-  return o$ => o$.pipe(
+  return (o$: Observable<T>): Observable<RxNotification<T>> => o$.pipe(
     materialize(),
     tap(({ kind, error }) => {
       if (kind === 'E') {
         console.error(error);
       }
     }),
-    map(({ value, hasValue, error, kind }) => ({
-      value,
-      hasValue,
-      error,
-      kind: notificationKindToRxNotificationKind(kind)
-    }))
+    map(notificationToRxNotification)
   );
-}
-
-export function notificationKindToRxNotificationKind(kind: 'N' | 'E' | 'C'): rxNotificationKind {
-  switch (kind) {
-    case 'C':
-      return 'rxComplete';
-    case 'E':
-      return 'rxError';
-    case 'N':
-    default:
-      return 'rxNext';
-  }
 }

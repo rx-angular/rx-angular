@@ -40,7 +40,7 @@ const forEachMoveToArray = forEachToArray('forEachMovedItem');
 const forEachRemoveToArray = forEachToArray('forEachRemovedItem');
 const forEachUpdateToArray = forEachToArray('forEachIdentityChange');
 
-export function createViewContainerRef<T, C extends RxListViewContext<T>>(config: {
+export function createListManager<T, C extends RxListViewContext<T>>(config: {
   cdRef: ChangeDetectorRef,
   strategies: StrategyCredentialsMap,
   defaultStrategyName: string,

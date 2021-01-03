@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { StrategyProvider } from '../../../../rx-angular-pocs';
 
 @Component({
-  selector: 'rxa-rx-let-poc',
+  selector: 'rxa-rx-context-poc',
   template: `
     <rxa-visualizer>
       <div visualizerHeader>
@@ -14,23 +14,10 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
       </div>
       <div class="mt-5 row w-100 d-flex">
         <div class="col-6 dh-embedded-view p-2">
-          <ng-template #suspense>
-            <rxa-list-item-ghost></rxa-list-item-ghost>
-          </ng-template>
-          <div *rxLet="v.incremental$; let n;
-          suspenseTrg: triggers.suspense$;
-          errorTrg: triggers.error$;
-          completeTrg: triggers.complete$;
-          let s = $suspenseVal;
-          let e = $errorVal;
-          let c = $completeVal;">
-            <mat-progress-bar *ngIf="s" color="primary" mode="indeterminate"></mat-progress-bar>
-            <rxa-dirty-check></rxa-dirty-check>
-            n: {{n}} s: {{s}}, e: {{e}}, c: {{c}}
-          </div>
-        </div>
-        <div class="col-6 dh-embedded-view p-2">
-          <div *rxLet="v.incremental$; let n;
+          <div *rxContext="v.incremental$;
+          let error = error;
+          let suspense = suspense;
+          let complete = complete;
           errorTpl: error;
           completeTpl: complete;
           suspenseTpl: suspense;
@@ -38,20 +25,45 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
           errorTrg: triggers.error$;
           completeTrg: triggers.complete$;"
           >
-            <rxa-dirty-check></rxa-dirty-check>
-            n: {{n}}
+            <div *rxLet="v.incremental$; let n;">
+              <rxa-dirty-check></rxa-dirty-check>
+              {{n}}
+            </div>
+
           </div>
+
           <ng-template #suspense>
             <rxa-list-item-ghost></rxa-list-item-ghost>
           </ng-template>
+
           <ng-template #error>
-            <rxa-dirty-check></rxa-dirty-check>
             ERROR
           </ng-template>
+
           <ng-template #complete>
-            <rxa-dirty-check></rxa-dirty-check>
             COMPLETE
           </ng-template>
+
+          ------------------
+
+
+
+          <div [rxContextContainer]="v.incremental$"
+               [suspenseTrg]="triggers.suspense$"
+               [errorTrg]="triggers.error$"
+               [completeTrg]="triggers.complete$"
+          >
+            <div *rxLet="v.incremental$; let n;">
+              <rxa-dirty-check></rxa-dirty-check>
+              {{n}}
+            </div>
+
+            <div rxCompleteTpl>
+              COMPLETE
+            </div>
+
+          </div>
+
         </div>
       </div>
     </rxa-visualizer>
@@ -63,7 +75,7 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
   },
   providers: [StrategyProvider]
 })
-export class RxLetPocComponent {
+export class RxContextPocComponent {
 
   constructor(public strategyProvider: StrategyProvider) {
 

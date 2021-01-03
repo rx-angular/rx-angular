@@ -16,7 +16,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { filter, map } from 'rxjs/operators';
 import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
 import { StrategyProvider } from '../../../cdk/render-strategies/strategy-provider.service';
-import { createViewContainerRef, ListManager } from '../../../cdk/template-management/list-manager';
+import { createListManager, ListManager } from '../../../cdk/template-management/list-manager';
 import { RxEffects } from '../../../state/rx-effects';
 import { RxForViewContext } from './model/view-context';
 
@@ -74,7 +74,7 @@ export class RxFor<T extends object, U extends NgIterable<T> = NgIterable<T>> im
     private strategyProvider: StrategyProvider
   ) {
 
-    this.listManager = createViewContainerRef<T, RxForViewContext<T>>({
+    this.listManager = createListManager<T, RxForViewContext<T>>({
       cdRef,
       strategies: strategyProvider.strategies,
       defaultStrategyName: strategyProvider.primaryStrategy,
