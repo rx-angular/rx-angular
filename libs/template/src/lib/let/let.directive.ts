@@ -292,11 +292,11 @@ export class LetDirective<U> implements OnInit, OnDestroy {
 
   /** @internal */
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
-    suspense: () => {
+    suspense: (value) => {
       this.displayInitialView();
       this.templateManager.updateViewContext({
-        $implicit: undefined,
-        rxLet: undefined,
+        $implicit: value,
+        rxLet: value,
         $rxError: false,
         $rxComplete: false,
         $rxSuspense: true
