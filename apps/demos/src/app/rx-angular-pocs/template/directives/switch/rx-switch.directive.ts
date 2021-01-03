@@ -1,6 +1,7 @@
 import { Directive, EmbeddedViewRef, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 
-import { ObservableInput, ReplaySubject, Subscription } from 'rxjs';
+import { ReplaySubject, Subscription } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
 import { distinctUntilChanged, switchAll } from 'rxjs/operators';
 
 @Directive({
@@ -10,7 +11,7 @@ import { distinctUntilChanged, switchAll } from 'rxjs/operators';
 export class RxSwitch<U> implements OnInit, OnDestroy {
 
   @Input()
-  set rxSwitch(potentialObservable: ObservableInput<U> | null | undefined) {
+  set rxSwitch(potentialObservable: Observable<U> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
   observables$ = new ReplaySubject(1);
@@ -26,26 +27,17 @@ export class RxSwitch<U> implements OnInit, OnDestroy {
     );
   private subscription = new Subscription();
 
-  constructor(
-    private viewContainerRef: ViewContainerRef,
-    private templateRef: TemplateRef<any>
-  ) {
-
-  }
 
   ngOnInit() {
-    this.defaultEmbeddedView = this.viewContainerRef.createEmbeddedView(
-      this.templateRef,
-      { $implicit: undefined }
-    );
-    this.subscription.add(this.values$.subscribe(value => {
+
+    /*this.subscription.add(this.values$.subscribe(value => {
       this.defaultEmbeddedView.context.$implicit = value;
       this.defaultEmbeddedView.detectChanges();
-    }));
+    }));*/
   }
 
   ngOnDestroy() {
-    this.defaultEmbeddedView.destroy();
+    // this.defaultEmbeddedView.destroy();
     this.subscription.unsubscribe();
   }
 

@@ -2,7 +2,7 @@ import {
   ChangeDetectorRef,
   Directive,
   EmbeddedViewRef,
-  forwardRef,
+  forwardRef, Host,
   Inject,
   Input,
   OnDestroy,
@@ -38,7 +38,7 @@ export class RxSwitchCase implements OnInit, OnDestroy {
     private viewContainer: ViewContainerRef,
     public templateRef: TemplateRef<Object>,
     private cdRef: ChangeDetectorRef,
-    @Inject(forwardRef(() => RxSwitch)) private rxSwitch: RxSwitch<any>
+    @Host() private rxSwitch: RxSwitch<any>
   ) {
 
   }

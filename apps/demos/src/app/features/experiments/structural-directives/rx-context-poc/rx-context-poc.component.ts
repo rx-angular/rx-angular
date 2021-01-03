@@ -14,40 +14,6 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
       </div>
       <div class="mt-5 row w-100 d-flex">
         <div class="col-6 dh-embedded-view p-2">
-          <div *rxContext="v.incremental$;
-          let error = error;
-          let suspense = suspense;
-          let complete = complete;
-          errorTpl: error;
-          completeTpl: complete;
-          suspenseTpl: suspense;
-          suspenseTrg: triggers.suspense$;
-          errorTrg: triggers.error$;
-          completeTrg: triggers.complete$;"
-          >
-            <div *rxLet="v.incremental$; let n;">
-              <rxa-dirty-check></rxa-dirty-check>
-              {{n}}
-            </div>
-
-          </div>
-
-          <ng-template #suspense>
-            <rxa-list-item-ghost></rxa-list-item-ghost>
-          </ng-template>
-
-          <ng-template #error>
-            ERROR
-          </ng-template>
-
-          <ng-template #complete>
-            COMPLETE
-          </ng-template>
-
-          ------------------
-
-
-
           <div [rxContextContainer]="v.incremental$"
                [suspenseTrg]="triggers.suspense$"
                [errorTrg]="triggers.error$"
@@ -57,11 +23,15 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
               <rxa-dirty-check></rxa-dirty-check>
               {{n}}
             </div>
-
-            <div rxCompleteTpl>
-              COMPLETE
+            <div rxSuspense>
+              SUSPENSE TEMPLATE TRIGGERED
             </div>
-
+            <div rxComplete>
+              COMPLETE TEMPLATE TRIGGERED
+            </div>
+            <div rxError>
+              ERROR TEMPLATE TRIGGERED
+            </div>
           </div>
 
         </div>

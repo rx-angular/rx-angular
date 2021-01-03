@@ -4,13 +4,8 @@ import { RxSwitch } from './rx-switch.directive';
 import { RxSwitchCase } from './rx-switch-case.directive';
 
 @NgModule({
-  declarations: [
-    RxSwitch,
-    RxSwitchCase
-  ],
-  imports: [
-    CommonModule
-  ]
+  declarations: [RxSwitch, RxSwitchCase],
+  exports: [RxSwitch, RxSwitchCase],
+  imports: [CommonModule],
 })
-export class RxSwichModule {
-}
+export class RxSwichModule {}
