@@ -1,6 +1,6 @@
 import {
   ChangeDetectorRef,
-  Directive,
+  Directive, Inject,
   Input,
   IterableChangeRecord,
   IterableDiffer,
@@ -13,9 +13,17 @@ import {
 
 import { EMPTY, ReplaySubject, Subject, Subscription, Unsubscribable } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, map, mapTo, tap } from 'rxjs/operators';
 import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
+import { StrategyProvider } from '../../../cdk/render-strategies/strategy-provider.service';
 import { createViewContainerRef, ListManager } from '../../../cdk/template-management/list-manager';
+import {
+  toRxCompleteNotification,
+  toRxErrorNotification,
+  toRxSuspenseNotification
+} from '../../../cdk/utils/rxjs/Notification';
+import { RxLetTemplateNames } from '../let/model/template-names';
+import { RxLetViewContext } from '../let/model/view-context';
 import { RxForViewContext } from './model/view-context';
 import { RxEffects } from '../../../state/rx-effects';
 
@@ -47,6 +55,11 @@ export class RxFor<T extends object, U extends NgIterable<T> = NgIterable<T>> im
     this.observables$.next(potentialObservable);
   }
 
+  @Input('rxForStrategy')
+  set strategy(strategyName: string | Observable<string> | undefined) {
+    this.listManager.nextStrategy(strategyName);
+  }
+
   _trackBy = (i, a) => a;
   @Input()
   set rxForTrackBy(trackByFnOrKey: string | ((i) => any)) {
@@ -62,14 +75,16 @@ export class RxFor<T extends object, U extends NgIterable<T> = NgIterable<T>> im
   constructor(
     private iterableDiffers: IterableDiffers,
     private cdRef: ChangeDetectorRef,
-    private readonly templateRef: TemplateRef<RxForViewContext<any>>,
+    private readonly templateRef: TemplateRef<RxForViewContext<T>>,
     private readonly viewContainerRef: ViewContainerRef,
-    private readonly rxEf: RxEffects
+    private readonly rxEf: RxEffects,
+    private strategyProvider: StrategyProvider
   ) {
 
     this.listManager = createViewContainerRef<T, RxForViewContext<T>>({
       cdRef,
-      strategy$: EMPTY,
+      strategies: strategyProvider.strategies,
+      defaultStrategyName: strategyProvider.primaryStrategy,
       viewContainerRef,
       templateRef,
       createViewContext

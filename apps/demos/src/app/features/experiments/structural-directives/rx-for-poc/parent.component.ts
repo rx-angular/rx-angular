@@ -166,14 +166,14 @@ import { immutableArr } from '../utils';
               let a of array$;
               let i;
               let r$ = item$;
-
+              strategy: strategy$;
               trackBy: trackById; let select = select
             "
           >
             <span #spanChild></span>
             <ng-container *rxFor="
             select(['arr']);
-
+            strategy: strategy$;
             trackBy: trackById;
             let o; let v$ = item$;">
               <rxa-rx-for-value [strategy$]="strategy$" [value]="v$"></rxa-rx-for-value>
