@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Subject } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
 import { ArrayProviderService } from '../../../../../shared/debug-helper/value-provider';
 import { rxIterableDifferFactory } from '../../shared';
 import { RxState } from '@rx-angular/state';
 import { Hooks } from '../../../../../shared/debug-helper/hooks';
-import { bufferTime, filter, switchMap, switchMapTo } from 'rxjs/operators';
+import { bufferTime, filter, map, mapTo, startWith, switchMap, switchMapTo } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-differ-rx-iterable-differ',
@@ -17,9 +18,15 @@ import { bufferTime, filter, switchMap, switchMapTo } from 'rxjs/operators';
             [unpatched]="" [buttons]="true" #arrayP="rxaArrayProvider"></rxa-array-provider>
         </div>
       </div>
+      <p *rxLet="rendered$; let rendered;"><strong>Rendered</strong> {{ rendered }}</p>
       <div class="d-flex flex-wrap w-100">
         <div class="work-child"
-             *rxFor="let a of arrayP.array$; let index = index; trackBy: trackById">
+             *rxFor="
+                let a of arrayP.array$;
+                let index = index;
+                renderCallback: renderCallback;
+                trackBy: trackById
+             ">
           <div [ngStyle]="{background: color(a)}" ></div>
         </div>
       </div>
@@ -82,7 +89,12 @@ export class RxIterableDifferComponent extends Hooks {
   @ViewChild('arrayP')
   arrayP;
 
-  colors = new Map<number, string>()
+  private numRendered = 0;
+  readonly renderCallback = new Subject();
+  readonly rendered$ = this.renderCallback.pipe(
+    startWith(null),
+    map(() => ++this.numRendered)
+  )
 
   rxDiffer = rxIterableDifferFactory({
     trackBy: 'id',

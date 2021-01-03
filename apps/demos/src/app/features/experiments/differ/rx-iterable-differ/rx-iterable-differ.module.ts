@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { LetModule, PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template';
+import { RxLetModule } from '../../../../rx-angular-pocs/template/directives/let/let.module';
+
 import { SharedModule } from '../shared/shared.module';
 import { ROUTES } from './rx-iterable-differ.routes';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
@@ -18,7 +20,8 @@ const DECLARATIONS = [RxIterableDifferComponent];
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    LetModule, PushModule,
+    PushModule,
+    RxLetModule,
     DirtyChecksModule,
     MatButtonModule,
     VisualizerModule,

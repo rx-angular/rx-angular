@@ -50,7 +50,7 @@ import { observeOnPriority } from './rx-angular-pocs/cdk/utils/rxjs/operators/ob
     },
     {
       provide: RX_PRIMARY_STRATEGY,
-      useValue: 'local'
+      useValue: 'normal'
     }
   ],
   declarations: [HomeComponent],

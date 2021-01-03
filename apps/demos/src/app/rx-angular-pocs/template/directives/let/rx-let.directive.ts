@@ -36,7 +36,7 @@ import { RxLetTemplateNames, rxLetTemplateNames, RxLetViewContext } from './mode
 @Directive({
   // tslint:disable-next-line:directive-selector
   selector: '[rxLet]',
-  providers: [StrategyProvider]
+  providers: []
 })
 // tslint:disable-next-line:directive-class-suffix
 export class RxLet<U> extends Hooks implements OnInit, OnDestroy {

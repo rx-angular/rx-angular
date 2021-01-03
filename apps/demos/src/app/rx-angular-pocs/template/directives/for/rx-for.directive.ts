@@ -86,6 +86,7 @@ export class RxFor<T extends object, U extends NgIterable<T> = NgIterable<T>> im
 
     this.rxEf.hold(
       this.listManager.render(changes$), (v) => {
+        console.log(v);
         this._renderCallback?.next(v);
       }
     );
