@@ -25,8 +25,7 @@ export class IfVisibleDirective<U> extends Hooks {
   displayed = false;
   private observer = intersectionObserver();
 
-  private readonly templateManager: TemplateManager<IfVisibleViewContext<U | undefined | null>,
-    'view'>;
+  private readonly templateManager: TemplateManager<IfVisibleViewContext<U | undefined | null>, 'view'>;
 
   constructor(
     rxEf: RxEffects,

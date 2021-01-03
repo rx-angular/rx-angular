@@ -130,7 +130,7 @@ export class RxContextContainer<U> extends Hooks implements OnInit, OnDestroy {
         return of(templateName).pipe(
           strategy.behavior(() => {
             const name = this.templateManager.getTemplateName(templateName as any, RxContextTemplateNames.content);
-            this.templateManager.displayContextView(name);
+            // this.templateManager.displayContextView(name);
             strategy.work(this.templateManager.getEmbeddedView(name), this.templateManager.getEmbeddedView(name));
             strategy.work(this.cdRef, (this.cdRef as any)?.context || this.cdRef);
           }, this)

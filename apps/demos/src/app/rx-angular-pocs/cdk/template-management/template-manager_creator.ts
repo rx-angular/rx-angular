@@ -1,8 +1,10 @@
 import { EmbeddedViewRef, TemplateRef, ViewContainerRef } from '@angular/core';
 import { RxBaseTemplateNames } from './model';
 
-export interface TemplateManager<C extends object, N extends RxBaseTemplateNames | string> {
-
+export interface TemplateManager<
+  C extends object,
+  N = (RxBaseTemplateNames | string)
+> {
   getTemplateName(templateName: N, fallback: N): N;
 
   /**
@@ -60,15 +62,6 @@ export interface TemplateManager<C extends object, N extends RxBaseTemplateNames
 
   /**
    * @description
-   * Creates and inserts view out of registered templates and caches it for the later
-   * re-usage.
-   *
-   * @param name name of the cached view
-   */
-  displayContextView(name: N): void;
-
-  /**
-   * @description
    * Clears all cached views. This should be called if the instance that holds the template manager dies.
    */
   destroy(): void;
@@ -87,12 +80,13 @@ export interface TemplateManager<C extends object, N extends RxBaseTemplateNames
  * @param viewContainerRef reference to a top-level view container where passed templates will be attached
  * @param initialViewContext initial view context state
  */
-export function createTemplateManager<C extends object, N extends RxBaseTemplateNames & string>(
+export function createTemplateManager<
+  C extends object,
+  N = (RxBaseTemplateNames | string)
+>(
   viewContainerRef: ViewContainerRef,
   initialViewContext: C
 ): TemplateManager<C, N> {
-  let contextIndex = 0;
-  let contentIndex = 1;
   const templateCache = new Map<N, TemplateRef<C>>();
   const viewCache = new Map<N, EmbeddedViewRef<C>>();
   const viewContext = { ...initialViewContext };
@@ -106,16 +100,15 @@ export function createTemplateManager<C extends object, N extends RxBaseTemplate
     addTemplateRef,
     getEmbeddedView,
     createEmbeddedView,
-    displayContextView,
     displayView: displayContentView,
-    destroy
+    destroy,
   };
 
   function hasViewCache(name: N): boolean {
     return viewCache.has(name);
   }
 
-  function  updateViewContext(viewContextSlice: Partial<C>) {
+  function updateViewContext(viewContextSlice: Partial<C>) {
     Object.entries(viewContextSlice).forEach(([key, value]) => {
       viewContext[key] = value;
     });
@@ -138,46 +131,44 @@ export function createTemplateManager<C extends object, N extends RxBaseTemplate
       if (hasViewCache(name)) {
         return viewCache.get(name);
       } else {
-        return createEmbeddedView(name)
+        return createEmbeddedView(name);
       }
     } else {
-      throw new Error(`no template registered to derive EmbeddedView ${name} from.`);
+      throw new Error(
+        `no template registered to derive EmbeddedView ${name} from.`
+      );
     }
   }
 
-
   function createEmbeddedView(name: N): EmbeddedViewRef<C> {
-    const idx = contentIndex;
     const newView = viewContainerRef.createEmbeddedView(
       templateCache.get(name),
-      { ...initialViewContext },
-      idx
+      { ...initialViewContext }
     );
     viewCache.set(name, newView);
-    viewContainerRef.detach(idx);
+    newView.detach();
+    // viewContainerRef.detach();
     return newView;
   }
 
   function displayContextView(name: N) {
-    contextIndex = viewContainerRef.get(contentIndex)
+    // contextIndex = viewContainerRef.get(contentIndex)
 
     name = getTemplateName(name);
     if (activeContentView !== name) {
       if (templateCache.has(name)) {
         if (viewCache.has(name)) {
-          viewContainerRef.insert(viewCache.get(name), contextIndex);
+          viewContainerRef.insert(viewCache.get(name));
         } else {
           // Creates and inserts view to the view container
           const newView = viewContainerRef.createEmbeddedView(
             templateCache.get(name),
-            viewContext,
-            contextIndex
+            viewContext
           );
           viewCache.set(name, newView);
         }
         // Detach currently inserted view from the container
-     //   viewContainerRef.detach(contextIndex);
-
+        //   viewContainerRef.detach(contextIndex);
       } else {
         // @NOTICE this is here to cause errors and see in which situations we would throw.
         // In CDK it should work different.
@@ -192,19 +183,17 @@ export function createTemplateManager<C extends object, N extends RxBaseTemplate
     name = getTemplateName(name, fallback);
     if (activeContentView !== name) {
       if (templateCache.has(name)) {
-       if (viewCache.has(name)) {
-          viewContainerRef.insert(viewCache.get(name), contentIndex);
+        viewContainerRef.detach();
+        if (viewCache.has(name)) {
+          viewContainerRef.insert(viewCache.get(name));
         } else {
           // Creates and inserts view to the view container
           const newView = viewContainerRef.createEmbeddedView(
             templateCache.get(name),
-            viewContext,
-            contentIndex
+            viewContext
           );
           viewCache.set(name, newView);
         }
-        // Detach currently inserted view from the container
-     //   viewContainerRef.detach(contentIndex);
       } else {
         // @NOTICE this is here to cause errors and see in which situations we would throw.
         // In CDK it should work different.
@@ -212,16 +201,6 @@ export function createTemplateManager<C extends object, N extends RxBaseTemplate
       }
 
       activeContentView = name;
-    }
-  }
-
-  function displayView(name: N, isContext: boolean) {
-
-    // 0: Context
-    // 1: Content
-    if(isContext) {
-      // check if ANY thing is present in 0
-      // check if activeContentView === n && contentIndex === 0 ==> No nothing
     }
   }
 
