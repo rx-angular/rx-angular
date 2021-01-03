@@ -30,7 +30,7 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
           </div>
         </div>
         <div class="col-6 dh-embedded-view p-2">
-          <div *rxLet="v.incremental$; let n;
+          <div *rxContext="v.incremental$;
           errorTpl: error;
           completeTpl: complete;
           suspenseTpl: suspense;
@@ -38,8 +38,10 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
           errorTrg: triggers.error$;
           completeTrg: triggers.complete$;"
           >
-            <rxa-dirty-check></rxa-dirty-check>
-            n: {{n}}
+            <div *rxLet="v.incremental$; let n;">
+              <rxa-dirty-check></rxa-dirty-check>
+                {{n}}
+            </div>
           </div>
           <ng-template #suspense>
             <rxa-list-item-ghost></rxa-list-item-ghost>

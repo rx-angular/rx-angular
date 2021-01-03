@@ -20,13 +20,13 @@ import { delay, filter, map, mapTo, pluck, share } from 'rxjs/operators';
       </div>
       <div class="mt-5 row w-100 d-flex">
         <div class="col-4 dh-embedded-view p-2">
-          <p *rxLetTriggered="suspenseTrg$; let n;">
+          <p *rxLet="suspenseTrg$; let n;">
             suspenseTrigger: {{n}}
           </p>
-          <p *rxLetTriggered="errorTrg$; let n;">
+          <p *rxLet="errorTrg$; let n;">
             errorTrigger: {{n}}
           </p>
-          <div *rxLetTriggered="charactersQueryResult$; let qr;">
+          <div *rxLet="charactersQueryResult$; let qr;">
             <p>qr.status: {{qr.status}}</p>
             <p>qr.data: {{qr?.data?.results?.length}}</p>
             <p>qr.error: {{qr?.error?.message}}</p>
@@ -34,25 +34,33 @@ import { delay, filter, map, mapTo, pluck, share } from 'rxjs/operators';
           </div>
         </div>
         <div class="col-4 dh-embedded-view p-2">
-          <div *rxLetTriggered="characters$; let characters;
+          <div *rxContext="characters$;
+           suspenseTpl: suspenseTpl;
+            errorTpl: errorTpl;
+            suspenseTrg: suspenseTrg$
+            errorTrg: errorTrg$
+            ">
+            <div *rxLet="characters$; let characters;
             let suspenseVal = $suspenseVal;
             let errorVal = $errorVal;
             suspenseTrg: suspenseTrg$
             errorTrg: errorTrg$
-            ">
-            <mat-progress-bar *ngIf="suspenseVal" [mode]="suspenseVal"></mat-progress-bar>
-            <mat-card *ngIf="errorVal">
-              <mat-card-title>Error</mat-card-title>
-            </mat-card>
-            <ul>
-              <li *ngFor="let character of characters">
-                <a [routerLink]="character.id">{{ character.name }}</a>
-              </li>
-            </ul>
+            ">suspenseVal : {{suspenseVal}}            <mat-progress-bar *ngIf="suspenseVal" [mode]="suspenseVal"></mat-progress-bar>
+              <mat-card *ngIf="errorVal">
+                <mat-card-title>Error</mat-card-title>
+              </mat-card>
+              <ul>
+                <li *ngFor="let character of characters">
+                  <a [routerLink]="character.id">{{ character.name }}</a>
+                </li>
+              </ul>
+            </div>
           </div>
+
+
         </div>
         <div class="col-4 dh-embedded-view p-2">
-          <div *rxLetTriggered="characters$; let characters;
+          <div *rxLet="characters$; let characters;
             suspenseTpl: suspenseTpl;
             errorTpl: errorTpl;
             suspenseTrg: suspenseTrg$
