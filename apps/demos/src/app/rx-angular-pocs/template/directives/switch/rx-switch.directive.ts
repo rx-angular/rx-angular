@@ -1,8 +1,12 @@
 import { Directive, EmbeddedViewRef, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 
-import { ReplaySubject, Subscription } from 'rxjs';
+import { ReplaySubject, Subject, Subscription } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { distinctUntilChanged, switchAll } from 'rxjs/operators';
+import { distinctUntilChanged, startWith, switchAll } from 'rxjs/operators';
+import { StrategyCredentials } from '../../../cdk/render-strategies/model/strategy-credentials';
+import { StrategyProvider } from '../../../cdk/render-strategies/strategy-provider.service';
+import { nameToStrategyCredentials } from '../../../cdk/render-strategies/utils/strategy-helper';
+import { ngInputFlatten } from '../../../cdk/utils/rxjs/operators/ngInputFlatten';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
@@ -14,6 +18,17 @@ export class RxSwitch<U> implements OnInit, OnDestroy {
   set rxSwitch(potentialObservable: Observable<U> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
+  private strategyName$ = new Subject<string | Observable<string>>();
+  readonly strategy$: Observable<StrategyCredentials> = this.strategyName$.pipe(
+    ngInputFlatten(),
+    startWith(this.strategyProvider.primaryStrategy),
+    nameToStrategyCredentials(this.strategyProvider.strategies, this.strategyProvider.primaryStrategy),
+  );
+  @Input('rxLetStrategy')
+  set strategy(strategyName: string | Observable<string> | undefined) {
+    this.strategyName$.next(strategyName);
+  }
+
   observables$ = new ReplaySubject(1);
   viewContext = { $implicit: undefined };
 
@@ -26,6 +41,10 @@ export class RxSwitch<U> implements OnInit, OnDestroy {
       distinctUntilChanged()
     );
   private subscription = new Subscription();
+
+  constructor(
+    private strategyProvider: StrategyProvider
+  ) {}
 
 
   ngOnInit() {

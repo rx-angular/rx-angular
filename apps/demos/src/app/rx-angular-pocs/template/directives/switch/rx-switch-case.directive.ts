@@ -10,14 +10,13 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { Subscription, Unsubscribable } from 'rxjs';
-import { distinctUntilChanged, map, tap } from 'rxjs/operators';
+import { of, Subscription, Unsubscribable } from 'rxjs';
+import { distinctUntilChanged, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { RxSwitch } from './rx-switch.directive';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[rxSwitchCase]' })
 export class RxSwitchCase implements OnInit, OnDestroy {
-
 
   @Input()
   set rxSwitchCaseValue(v) {
@@ -48,9 +47,10 @@ export class RxSwitchCase implements OnInit, OnDestroy {
     this.subscription = this.rxSwitch.values$
       .pipe(
         // tslint:disable-next-line:triple-equals
-        map((switchValue) => this.caseValue == switchValue),
+        map((switchValue) => this.caseValue === switchValue),
         distinctUntilChanged(),
-        tap((matched: boolean) => {
+        withLatestFrom(this.rxSwitch.strategy$),
+        switchMap(([matched, strategy]) => {
           if (matched) {
             if (!this.inserted) {
               this.viewContainer.insert(this._view, 0);
@@ -62,14 +62,21 @@ export class RxSwitchCase implements OnInit, OnDestroy {
               this.inserted = false;
             }
           }
-          this._view.context.$implicit = this.caseValue;
-          this._view.detectChanges();
-        })
+          return strategy.behavior(
+            () => {
+              this._view.context.$implicit = this.caseValue
+              strategy.work(this._view, this._view);
+              strategy.work(this.cdRef, (this.cdRef as any)?.context || this.cdRef);
+            },
+            this._view
+          )(of(matched));
+        }),
       )
       .subscribe({ error: console.log });
   }
 
   ngOnDestroy(): void {
+    this.viewContainer.clear();
     this.subscription.unsubscribe();
   }
 
