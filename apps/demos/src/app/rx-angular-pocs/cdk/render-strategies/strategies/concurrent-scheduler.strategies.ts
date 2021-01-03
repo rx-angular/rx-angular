@@ -11,10 +11,13 @@ export function getConcurrentSchedulerStrategyCredentialsMap(): StrategyCredenti
     noPriority: createNoPriorityStrategyCredentials(),
     immediate: createImmediateStrategyCredentials(),
     userBlocking: createUserBlockingStrategyCredentials(),
+    userBlocking2: createUserBlocking2StrategyCredentials(),
     normal: createNormalStrategyCredentials(),
     normal2: createNormal2StrategyCredentials(),
     low: createLowStrategyCredentials(),
-    background: createBackgroundStrategyCredentials()
+    low2: createLow2StrategyCredentials(),
+    background: createBackgroundStrategyCredentials(),
+    background2: createBackground2StrategyCredentials()
   };
 }
 
@@ -56,6 +59,19 @@ export function createUserBlockingStrategyCredentials(): StrategyCredentials {
   };
 }
 
+export function createUserBlocking2StrategyCredentials(): StrategyCredentials {
+  return {
+    name: 'userBlocking2',
+    work: (cdRef) => cdRef.detectChanges(),
+    behavior: (work: any, context: any) => {
+      return o$ => o$.pipe(
+        observeOnPriority(concurrent(PriorityNameToLevel.userBlocking)),
+        tap(work)
+      );
+    }
+  };
+}
+
 export function createNormalStrategyCredentials(): StrategyCredentials {
   return {
     name: 'normal',
@@ -87,6 +103,18 @@ export function createLowStrategyCredentials(): StrategyCredentials {
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: any, context: any) => {
       return o$ => o$.pipe(
+        scheduleLikeReact(PriorityNameToLevel.low, work, context),
+      );
+    }
+  };
+}
+
+export function createLow2StrategyCredentials(): StrategyCredentials {
+  return {
+    name: 'low2',
+    work: (cdRef) => cdRef.detectChanges(),
+    behavior: (work: any, context: any) => {
+      return o$ => o$.pipe(
         observeOnPriority(concurrent(PriorityNameToLevel.low)),
         tap(work)
       );
@@ -97,6 +125,18 @@ export function createLowStrategyCredentials(): StrategyCredentials {
 export function createBackgroundStrategyCredentials(): StrategyCredentials {
   return {
     name: 'background',
+    work: (cdRef) => cdRef.detectChanges(),
+    behavior: (work: any, context: any) => {
+      return o$ => o$.pipe(
+        scheduleLikeReact(PriorityNameToLevel.background, work, context),
+      );
+    }
+  };
+}
+
+export function createBackground2StrategyCredentials(): StrategyCredentials {
+  return {
+    name: 'background2',
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: any, context: any) => {
       return o$ => o$.pipe(

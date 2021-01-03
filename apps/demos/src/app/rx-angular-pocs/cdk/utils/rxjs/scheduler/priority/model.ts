@@ -3,7 +3,8 @@ export interface PrioritySchedulingOptions<P> {
 }
 
 export interface DefaultSchedulingOptions {
-  delay: number,
+  delay: number;
+  context: any;
 }
 
 export type RxaSchedulingOptions<P> = PrioritySchedulingOptions<P> & DefaultSchedulingOptions

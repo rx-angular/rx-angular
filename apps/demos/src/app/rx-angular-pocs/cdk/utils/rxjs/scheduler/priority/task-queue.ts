@@ -6,7 +6,7 @@ const activeHandles: { [key: number]: any } = {};
 export abstract class TaskQueue<P, T> {
 
   _queTask: (cb: () => void, options: PrioritySchedulingOptions<P>) => [T, number];
-  _dequeTask: (handle: any) => void;
+  _dequeTask: (handle: any, scope?: any) => void;
 
   queueTask(cb: () => void, options: PrioritySchedulingOptions<P>): number {
     const [task, id] = this._queTask(cb, options);
@@ -14,8 +14,8 @@ export abstract class TaskQueue<P, T> {
     return id;
   };
 
-  dequeueTask(id: number): void {
-    this.clearTask(id);
+  dequeueTask(id: number, scope?: any): void {
+    this.clearTask(id, scope);
   }
 
   getTaskId(): number {
@@ -26,9 +26,9 @@ export abstract class TaskQueue<P, T> {
     activeHandles[id] = handle;
   }
 
-  clearTask(id: number): boolean {
+  clearTask(id: number, scope: any): boolean {
     if (id in activeHandles) {
-      this._dequeTask(activeHandles[id]);
+      this._dequeTask(activeHandles[id], scope);
       delete activeHandles[id];
       return true;
     }

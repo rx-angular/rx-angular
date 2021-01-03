@@ -1,6 +1,6 @@
 import {
   ChangeDetectorRef,
-  Directive, Inject,
+  Directive,
   Input,
   IterableChangeRecord,
   IterableDiffer,
@@ -11,21 +11,14 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
-import { EMPTY, ReplaySubject, Subject, Subscription, Unsubscribable } from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { filter, map, mapTo, tap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
 import { StrategyProvider } from '../../../cdk/render-strategies/strategy-provider.service';
 import { createViewContainerRef, ListManager } from '../../../cdk/template-management/list-manager';
-import {
-  toRxCompleteNotification,
-  toRxErrorNotification,
-  toRxSuspenseNotification
-} from '../../../cdk/utils/rxjs/Notification';
-import { RxLetTemplateNames } from '../let/model/template-names';
-import { RxLetViewContext } from '../let/model/view-context';
-import { RxForViewContext } from './model/view-context';
 import { RxEffects } from '../../../state/rx-effects';
+import { RxForViewContext } from './model/view-context';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
