@@ -1,7 +1,15 @@
-import { map, publish, switchMap, tap } from 'rxjs/operators';
+import { map, publish, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { concat, NEVER, Observable, of } from 'rxjs';
-import { StrategyCredentials, StrategyCredentialsMap } from '../model/strategy-credentials';
-import { RxNotification, RxNotificationKind, RxTemplateObserver } from '../../utils/rxjs/Notification';
+import {
+  RenderWork,
+  StrategyCredentials,
+  StrategyCredentialsMap,
+} from '../model/strategy-credentials';
+import {
+  RxNotification,
+  RxNotificationKind,
+  RxTemplateObserver,
+} from '../../utils/rxjs/Notification';
 import { ChangeDetectorRef } from '@angular/core';
 
 export function nameToStrategyCredentials(strategies: StrategyCredentialsMap, defaultStrategyName: string) {
@@ -54,4 +62,21 @@ export function applyStrategy<T>(
       )
     )
   );
+}
+
+export function applyStrategy2<T>(
+  strategy$: Observable<StrategyCredentials>,
+  workFactory: (value: T, work: RenderWork) => void,
+  context: any
+) {
+  return (o$: Observable<T>) =>
+    o$.pipe(
+      withLatestFrom(strategy$),
+      switchMap(([matched, strategy]) => {
+        return strategy.behavior(
+          () => workFactory(matched, strategy.work),
+          context
+        )(of(matched));
+      })
+    );
 }

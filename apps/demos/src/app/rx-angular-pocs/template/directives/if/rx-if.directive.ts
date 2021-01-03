@@ -1,71 +1,80 @@
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Directive,
-  Inject,
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 
-import { Observable, ObservableInput, Subscription, Unsubscribable } from 'rxjs';
+import {
+  ConnectableObservable,
+  EMPTY,
+  isObservable,
+  Observable,
+  of,
+  ReplaySubject,
+  Subscription,
+} from 'rxjs';
 
-import { getDefaultStrategyCredentialsMap, RX_PRIMARY_STRATEGY, mergeStrategies, RX_CUSTOM_STRATEGIES, StrategyCredentialsMap, createRenderAware, RenderAware, RxNotification, RxNotificationKind, RxTemplateObserver, createTemplateManager, TemplateManager  } from '../../../cdk';
-import { RxIfTemplateNames, rxIfTemplateNames, RxIfViewContext, } from './model';
-
+import {
+  applyStrategy2,
+  createTemplateManager,
+  nameToStrategyCredentials,
+  RenderWork,
+  select,
+  StrategyCredentialsMap,
+  StrategyProvider,
+  TemplateManager,
+} from '../../../cdk';
+import { RxIfTemplateNames, rxIfTemplateNames, RxIfViewContext } from './model';
+import {
+  catchError,
+  distinctUntilChanged,
+  map,
+  mergeAll,
+  publishReplay,
+  scan,
+} from 'rxjs/operators';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[rxIf]'
+  selector: '[rxIf]',
 })
-export class RxIf<U> implements OnInit, AfterViewInit, OnDestroy {
-  readonly renderAware: RenderAware<U>;
+export class RxIf<U> implements OnInit, OnDestroy {
   readonly strategies: StrategyCredentialsMap;
 
-  private readonly initialViewContext: RxIfViewContext<U> = {
-    $implicit: undefined,
-    rxIf: undefined,
-    rxElse: undefined,
-    $error: false,
-    $complete: false,
-    $suspense: false
-  };
+  observablesSubject$ = new ReplaySubject<
+    Observable<{ isTrue: boolean; strategyName: string }>
+  >(1);
 
-  private subscription: Unsubscribable = new Subscription();
-  private readonly templateManager: TemplateManager<RxIfViewContext<U | undefined | null>, rxIfTemplateNames>;
+  private subscription = new Subscription();
+  private readonly templateManager: TemplateManager<
+    RxIfViewContext<boolean | undefined | null>,
+    rxIfTemplateNames
+  >;
+
+  state$ = this.observablesSubject$
+    .pipe(distinctUntilChanged(), mergeAll())
+    .pipe(
+      scan((state, slice) => ({ ...state, ...slice }), {} as any),
+      catchError((e) => {
+        console.error(e);
+        return EMPTY;
+      }),
+      publishReplay(1)
+    );
 
   @Input()
-  set rxIf(potentialObservable: ObservableInput<U> | null | undefined) {
-    this.renderAware.nextPotentialObservable(potentialObservable);
+  set rxIf(potentialObservable: Observable<boolean> | null | undefined) {
+    this.connect('isTrue', potentialObservable);
   }
 
   @Input('rxIfStrategy')
   set strategy(strategyName: Observable<string> | null | undefined) {
-    this.renderAware.nextStrategy(strategyName);
-  }
-
-  @Input('rxIfRxComplete')
-  set rxComplete(
-    templateRef: TemplateRef<RxIfViewContext<U | undefined | null> | null>
-  ) {
-    this.templateManager.addTemplateRef(RxIfTemplateNames.complete, templateRef);
-  }
-
-  @Input('rxIfRxError')
-  set rxError(
-    templateRef: TemplateRef<RxIfViewContext<U | undefined | null> | null>
-  ) {
-    this.templateManager.addTemplateRef(RxIfTemplateNames.error, templateRef);
-  }
-
-  @Input('rxIfRxSuspense')
-  set rxSuspense(
-    templateRef: TemplateRef<RxIfViewContext<U | undefined | null> | null>
-  ) {
-    this.templateManager.addTemplateRef(RxIfTemplateNames.suspense, templateRef);
+    this.connect('strategyName', strategyName);
   }
 
   @Input('rxIfElse')
@@ -75,74 +84,62 @@ export class RxIf<U> implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
-    suspense: () => {
-      this.displayInitialView();
-      this.templateManager.updateViewContext({
-        $implicit: undefined,
-        rxIf: undefined,
-        $error: false,
-        $complete: false,
-        $suspense: true
-      });
-    },
-    next: (value: U | null | undefined) => {
-      this.rxIfObserverNext(value);
-    },
-    error: (error: Error) => {
-      // fallback to rxNext when there's no template for rxError
-      this.templateManager.displayView(RxIfTemplateNames.error, RxIfTemplateNames.then);
-      this.templateManager.updateViewContext({
-        $error: error
-      });
-    },
-
-    complete: () => {
-      // fallback to rxNext when there's no template for rxComplete
-      this.templateManager.displayView(RxIfTemplateNames.complete, RxIfTemplateNames.then);
-      this.templateManager.updateViewContext({
-        $complete: true
-      });
-    }
-  };
+  private readonly isTrue$ = this.state$.pipe(select('isTrue'));
+  private readonly strategy$ = this.state$.pipe(
+    select('strategyName'),
+    nameToStrategyCredentials(
+      this.strategyProvider.strategies,
+      this.strategyProvider.primaryStrategy
+    )
+  );
 
   constructor(
-    @Optional()
-    @Inject(RX_CUSTOM_STRATEGIES)
-    private customStrategies: StrategyCredentialsMap[],
-    @Inject(RX_PRIMARY_STRATEGY)
-    private defaultStrategyName: string,
+    private strategyProvider: StrategyProvider,
     private cdRef: ChangeDetectorRef,
     private readonly thenTemplateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
-    this.templateManager = createTemplateManager(this.viewContainerRef, this.initialViewContext);
-    this.strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), getDefaultStrategyCredentialsMap());
-    this.renderAware = createRenderAware<U>({
-      templateObserver: this.templateObserver,
-      strategies: this.strategies,
-      defaultStrategyName: this.defaultStrategyName,
-      getContext: (notification: RxNotification<U>) => this.getActiveView(notification),
-      getCdRef: (notification: RxNotification<U>) => this.getActiveView(notification)
-    });
-  }
-
-  getActiveView(notification: RxNotification<U>) {
-    let templateName: rxIfTemplateNames | RxNotificationKind.next = notification.kind as any;
-    if (templateName === RxNotificationKind.next) {
-      templateName = notification.value ? RxIfTemplateNames.then : RxIfTemplateNames.else;
-      return this.templateManager.getEmbeddedView(templateName);
-    }
-    return this.templateManager.getEmbeddedView(templateName);
+    this.templateManager = createTemplateManager(
+      this.viewContainerRef,
+      {} as any
+    );
+    this.subscription.add(
+      (this.state$ as ConnectableObservable<any>).connect()
+    );
+    this.connect('strategyName', this.strategyProvider.primaryStrategy);
+    this.isTrue$.subscribe(console.log);
   }
 
   ngOnInit() {
-    this.templateManager.addTemplateRef(RxIfTemplateNames.then, this.thenTemplateRef);
-    this.displayInitialView();
+    this.templateManager.addTemplateRef(
+      RxIfTemplateNames.then,
+      this.thenTemplateRef
+    );
+    this.subscription.add(
+      this.isTrue$
+        .pipe(
+          // tslint:disable-next-line:triple-equals
+          map(coerceBooleanProperty),
+          distinctUntilChanged(),
+          applyStrategy2(
+            this.strategy$,
+            this.rxIfWorkFactory,
+            this.viewContainerRef
+          )
+        )
+        .subscribe()
+    );
   }
 
-  ngAfterViewInit() {
-    this.subscription = this.renderAware.rendered$.subscribe();
+  private connect<T>(
+    key: 'strategyName' | 'isTrue',
+    slice$: Observable<string | boolean> | string
+  ) {
+    this.observablesSubject$.next(
+      (isObservable(slice$) ? slice$ : of(slice$)).pipe(
+        map((value) => ({ ...{}, [key]: value }))
+      ) as any
+    );
   }
 
   ngOnDestroy() {
@@ -150,20 +147,17 @@ export class RxIf<U> implements OnInit, AfterViewInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  private rxIfObserverNext(value: U) {
-    const templateName = value ? RxIfTemplateNames.then : RxIfTemplateNames.else;
+  rxIfWorkFactory = (value: any, work: RenderWork) => {
+    const templateName = value
+      ? RxIfTemplateNames.then
+      : RxIfTemplateNames.else;
     this.templateManager.displayView(templateName);
     this.templateManager.updateViewContext({
       $implicit: value,
-      rxIf: value
+      rxIf: value,
     });
-  }
-
-  private displayInitialView = () => {
-    // Display "suspense" template if provided
-    if (this.templateManager.hasTemplateRef(RxIfTemplateNames.suspense)) {
-      this.templateManager.displayView(RxIfTemplateNames.suspense);
-    }
+    const view = this.templateManager.getEmbeddedView(templateName);
+    work(view, view);
+    work(this.cdRef, (this.cdRef as any)?.context || this.cdRef);
   };
-
 }
