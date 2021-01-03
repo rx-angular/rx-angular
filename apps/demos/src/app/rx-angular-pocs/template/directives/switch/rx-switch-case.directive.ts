@@ -51,19 +51,19 @@ export class RxSwitchCase implements OnInit, OnDestroy {
         distinctUntilChanged(),
         withLatestFrom(this.rxSwitch.strategy$),
         switchMap(([matched, strategy]) => {
-          if (matched) {
-            if (!this.inserted) {
-              this.viewContainer.insert(this._view, 0);
-              this.inserted = true;
-            }
-          } else {
-            if (this._view && this.inserted) {
-              this.viewContainer.detach(0);
-              this.inserted = false;
-            }
-          }
           return strategy.behavior(
             () => {
+              if (matched) {
+                if (!this.inserted) {
+                  this.viewContainer.insert(this._view, 0);
+                  this.inserted = true;
+                }
+              } else {
+                if (this._view && this.inserted) {
+                  this.viewContainer.detach(0);
+                  this.inserted = false;
+                }
+              }
               this._view.context.$implicit = this.caseValue
               strategy.work(this._view, this._view);
               strategy.work(this.cdRef, (this.cdRef as any)?.context || this.cdRef);
