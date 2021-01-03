@@ -5,14 +5,13 @@ import { coalescingManager } from '../../coalescing-manager';
 import { ReactCallBackCredentials } from './model';
 import { priorityLevel } from '../../../render-strategies/model/priority';
 
-export const reactSchedulerTick = (credentials: ReactCallBackCredentials, context: any): Observable<number> =>
+export const reactSchedulerTick = (credentials: ReactCallBackCredentials, context: any): Observable<any> =>
   new Observable<number>((subscriber) => {
     if (!coalescingManager.isCoalescing(context)) {
       const _work = () => {
         coalescingManager.decrement(context);
         if (!coalescingManager.isCoalescing(context)) {
-          credentials[1]();
-          subscriber.next(0);
+          subscriber.next(credentials[1]());
         }
       };
       const task = scheduleCallback(credentials[0], _work, credentials[2]);

@@ -11,30 +11,31 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
-import { EMPTY, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
+import { EMPTY, ReplaySubject, Subject, Subscription, Unsubscribable } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { filter, map, startWith, take } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
 import { createViewContainerRef, ListManager } from '../../../cdk/template-management/list-manager';
 import { RxForViewContext } from './model/view-context';
+import { RxEffects } from '../../../state/rx-effects';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
   selector: '[rxFor]',
-  providers: []
+  providers: [RxEffects]
 })
 export class RxFor<T extends object, U extends NgIterable<T> = NgIterable<T>> implements OnInit {
-  private subscription: Unsubscribable = new Subscription();
-
   private differ: IterableDiffer<T> | null = null;
   private observables$ = new ReplaySubject<Observable<U>>(1);
+
+  private _renderCallback: Subject<any>;
 
   values$ = this.observables$
     .pipe(
       ngInputFlatten()
     );
 
-  private readonly rxViewContainerRef: ListManager<T, RxForViewContext<T>>;
+  private readonly listManager: ListManager<T, RxForViewContext<T>>;
 
   @Input()
   set rxFor(potentialObservable: Observable<U> | null | undefined) {
@@ -47,19 +48,26 @@ export class RxFor<T extends object, U extends NgIterable<T> = NgIterable<T>> im
   }
 
   _trackBy = (i, a) => a;
-
   @Input()
   set rxForTrackBy(trackByFnOrKey: string | ((i) => any)) {
     this._trackBy = typeof trackByFnOrKey !== 'function' ? (i, a) => a[trackByFnOrKey] : trackByFnOrKey;
+  }
+
+  @Input('rxForRenderCallback') set renderCallback(
+    renderCallback: Subject<void>
+  ) {
+    this._renderCallback = renderCallback;
   }
 
   constructor(
     private iterableDiffers: IterableDiffers,
     private cdRef: ChangeDetectorRef,
     private readonly templateRef: TemplateRef<RxForViewContext<any>>,
-    private readonly viewContainerRef: ViewContainerRef
+    private readonly viewContainerRef: ViewContainerRef,
+    private readonly rxEf: RxEffects
   ) {
-    this.rxViewContainerRef = createViewContainerRef<T, RxForViewContext<T>>({
+
+    this.listManager = createViewContainerRef<T, RxForViewContext<T>>({
       cdRef,
       strategy$: EMPTY,
       viewContainerRef,
@@ -69,23 +77,18 @@ export class RxFor<T extends object, U extends NgIterable<T> = NgIterable<T>> im
   }
 
   ngOnInit() {
-    this.rxViewContainerRef.subscribe();
-    this.values$.pipe(
-      take(1)
-    ).subscribe((value) => {
-      this.initDiffer(value);
-    });
-  }
-
-  initDiffer(iterable: U = [] as U) {
-    this.differ = this.iterableDiffers.find(iterable).create(this._trackBy);
+    this.differ = this.iterableDiffers.find([]).create(this._trackBy);
     const changes$ = this.values$.pipe(
-      startWith(iterable),
       map(i => ({ diff: this.differ.diff(i), iterable: i })),
       filter(r => r.diff != null),
       map(r => r.diff)
     );
-    this.rxViewContainerRef.connectChanges(changes$);
+
+    this.rxEf.hold(
+      this.listManager.render(changes$), (v) => {
+        this._renderCallback?.next(v);
+      }
+    );
   }
 
 }

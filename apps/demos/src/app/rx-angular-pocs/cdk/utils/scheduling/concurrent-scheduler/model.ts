@@ -6,5 +6,5 @@ export interface ReactSchedulerWorkDefinition {
   scope: any;
 }
 
-export type ReactCallBackCredentials = [priorityLevel, () => void, any?]
+export type ReactCallBackCredentials = [priorityLevel, () => any, any?]
 

@@ -45,7 +45,10 @@ export class RxEffects implements OnDestroy {
       this.effectObservable.nextEffectObservable(
         obsOrObsWithSideEffectOrSubscription.pipe(
           tap(sideEffectFn),
-          catchError((e) => EMPTY)
+          catchError((e) => {
+            console.error(e);
+            return EMPTY;
+          })
         )
       );
       return;

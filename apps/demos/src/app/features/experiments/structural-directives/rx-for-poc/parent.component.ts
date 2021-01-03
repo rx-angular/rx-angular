@@ -7,7 +7,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { BehaviorSubject, combineLatest, EMPTY, interval, merge, of, Subject } from 'rxjs';
-import { map, scan, share, startWith, switchMap } from 'rxjs/operators';
+import { map, scan, share, startWith, switchMap, tap } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 import { environment } from '../../../../../environments/environment';
 import { immutableArr } from '../utils';
@@ -116,16 +116,17 @@ import { immutableArr } from '../utils';
             </button>
             <rxa-strategy-select (strategyChange)="strategy$.next($event)"></rxa-strategy-select>
           </p>
+          <!--
           <ng-container *rxLet="childrenRendered$; let childrenRendered; strategy: strategy$">
             Rendercallback: <strong>{{ childrenRendered }}</strong>
           </ng-container>
+          -->
           <rxa-visualizer
             viewType="embedded-view"
             *rxForNormal="
               let a of array$;
               let i;
               let r$ = item$;
-              renderCallback: childrenRendered;
               strategy: 'normal';
               trackBy: trackById; let select = select
             "
@@ -151,20 +152,30 @@ import { immutableArr } from '../utils';
             </button>
             <rxa-strategy-select (strategyChange)="strategy$.next($event)"></rxa-strategy-select>
           </p>
+          <!--
           <ng-container *rxLet="childrenRendered$; let childrenRendered; strategy: strategy$">
             Rendercallback: <strong>{{ childrenRendered }}</strong>
           </ng-container>
+          <ng-container *rxLet="childrenRendered2$; let childrenRendered2; strategy: strategy$">
+            Rendercallback2: <strong>{{ childrenRendered2 }}</strong>
+          </ng-container>
+          -->
           <rxa-visualizer
             viewType="embedded-view"
             *rxFor="
               let a of array$;
               let i;
               let r$ = item$;
+
               trackBy: trackById; let select = select
             "
           >
             <span #spanChild></span>
-            <ng-container *rxFor="select(['arr']); trackBy: trackById; let o; let v$ = item$;">
+            <ng-container *rxFor="
+            select(['arr']);
+
+            trackBy: trackById;
+            let o; let v$ = item$;">
               <rxa-rx-for-value [strategy$]="strategy$" [value]="v$"></rxa-rx-for-value>
             </ng-container>
           </rxa-visualizer>
@@ -192,11 +203,15 @@ export class RxForContainerComponent extends RxState<{ rows: number, columns: nu
 
   };
 
-  childrenRendered = new Subject<void>();
+  childrenRendered = new Subject<string>();
   private numChildrenRendered = 0;
   childrenRendered$ = this.childrenRendered.pipe(
-    startWith(null),
-    map(() => this.numChildrenRendered++)
+   // tap(v => console.log('rcb', v))
+  )
+  childrenRendered2 = new Subject<string>();
+  private numChildrenRendered2 = 0;
+  childrenRendered2$ = this.childrenRendered2.pipe(
+//    tap(v => console.log('rcb2', v))
   )
 
   table$ = this.select();
