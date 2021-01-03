@@ -1,4 +1,4 @@
-import { EMPTY, Observable, scheduled, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import {
   ChangeDetectorRef,
   EmbeddedViewRef,
@@ -8,25 +8,20 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { map, mergeMap, share, switchAll, switchMap, tap } from 'rxjs/operators';
-import { StrategyCredentials } from '../../../../rx-angular-pocs/cdk/render-strategies/model/strategy-credentials';
+import { groupBy, map, mergeAll, mergeMap, share, switchAll, switchMap } from 'rxjs/operators';
+import { StrategyCredentials } from '../render-strategies/model';
 import { RxForViewContainerRefContext } from './rx-view-container-ref-context';
-import { concurrent } from '../../../../rx-angular-pocs/cdk/utils/rxjs/scheduler/concurrent';
-import { PriorityNameToLevel } from '../../../../rx-angular-pocs/cdk/render-strategies/model';
-import { toDictionary } from '../../../../../../../../libs/state/src/lib/transformation-helpers/array';
+import { PriorityNameToLevel } from '../render-strategies/model';
+import { reactSchedulerTick } from '../utils/scheduling/concurrent-scheduler';
 
 
 export interface RxForOfComputedViewContext {
   index: number;
-  //count: number;
-  //first: boolean;
-  // last: boolean;
-  odd: boolean;
-  even: boolean;
+  count: number;
 }
 
-export interface RxViewContainerRef<T, C> {
-  embeddedViewChanged$: Observable<EmbeddedViewRef<C>>;
+export interface ListManager<T, C> {
+  renderCallback$: Observable<EmbeddedViewRef<C>>;
 
   connectChanges(changes$: Observable<IterableChanges<T>>): void;
 
@@ -43,13 +38,8 @@ export interface RxViewContainerRefSpecialWork<T> {
   type?: RxViewContainerRefChangeType,
 }
 
-export type DomStructureChanges<T> =
-  Record<RxViewContainerRefChangeType, RxViewContainerRefSpecialWork<T>[]>;
-
 export type CreateViewContext<T, U extends NgIterable<T> = NgIterable<T>> =
   (record: IterableChangeRecord<T>) => RxForViewContainerRefContext<T>;
-export type UpdateInsertedViewContext<T> =
-  (context: RxForViewContainerRefContext<T>, count: number) => RxForViewContainerRefContext<T>;
 
 const forEachInsertToArray = forEachToArray('forEachAddedItem');
 const forEachMoveToArray = forEachToArray('forEachMovedItem');
@@ -58,28 +48,23 @@ const forEachUpdateToArray = forEachToArray('forEachIdentityChange');
 
 export function createViewContainerRef<T>(config: {
   cdRef: ChangeDetectorRef,
+  strategy$: Observable<StrategyCredentials>,
   viewContainerRef: ViewContainerRef,
   templateRef: TemplateRef<RxForViewContainerRefContext<T>>,
-  createViewContext: CreateViewContext<T>,
-  // updateInsertedViewContext: UpdateInsertedViewContext<T>
-}): RxViewContainerRef<T, RxForViewContainerRefContext<T>> {
+  createViewContext: CreateViewContext<T>
+}): ListManager<T, RxForViewContainerRefContext<T>> {
   const {
     viewContainerRef,
     templateRef,
     createViewContext
-    // updateInsertedViewContext
   } = config;
 
-  const strat = {} as StrategyCredentials;
-
-  const containerToUpdate$ = new Subject<ViewContainerRef>();
-  const embeddedViewToUpdate$ = new Subject<EmbeddedViewRef<RxForViewContainerRefContext<T>>>();
+  const renderCallback$ = new Subject<any>();
 
   const changesSubject = new Subject<Observable<IterableChanges<T>>>();
   const changes$ = changesSubject.pipe(
     switchAll()
   );
-  const containerUpdate$ = EMPTY;
 
   /*
   * divides changes into types (update, insert,...) and prepares work functions
@@ -87,7 +72,6 @@ export function createViewContainerRef<T>(config: {
   * needed for updating the context of all existing items in the viewContainer
   */
   const domStructureChange2$ = changes$.pipe(
-    // array
     map((change) => {
       const works = {
         insert: forEachInsertToArray(change)
@@ -148,35 +132,34 @@ export function createViewContainerRef<T>(config: {
       };
     }),
     map(s => {
-
-      const workMap = new Map<number, () => void>();
+      const workMap = new Map<number, [() => void, string]>();
       const count = s.count;
-      s.works.remove.forEach(i => workMap.set(i.index, i.work));
+      s.works.remove.forEach(i => workMap.set(i.index, [i.work, 'remove']));
       // All insert
       s.works.insert.forEach(i => workMap.set(
         i.index,
-          () => {
-            const e = i.ev();
-            e.context.setComputedContext({ index: i.index, count });
-            e.detectChanges();
-          }
+        [() => {
+          const e = i.ev();
+          e.context.setComputedContext({ index: i.index, count });
+          e.detectChanges();
+        }, 'insert']
         )
       );
       // All move
       s.works.move.forEach(i => workMap.set(i.index,
-        () => {
+        [() => {
           const e = i.ev();
           e.context.setComputedContext({ index: i.index, count });
           e.detectChanges();
-        }
+        }, 'move']
       ));
       // All update
-      s.works.update.forEach(i => workMap.set(i.index,  () => {
+      s.works.update.forEach(i => workMap.set(i.index, [() => {
         const e = i.ev();
         i.work();
         e.context.setComputedContext({ index: i.index, count });
         e.detectChanges();
-      }));
+      }, 'update']));
 
       // All unchanged
       const t = [...s.works.remove, ...s.works.update, ...s.works.move]
@@ -186,20 +169,20 @@ export function createViewContainerRef<T>(config: {
         }, new Set<number>());
       for (let index = 0; index < viewContainerRef.length; index++) {
         // tslint:disable-next-line:no-unused-expression
-        if(t.has(index)){
+        if (t.has(index)) {
           continue;
         }
         const ev = viewContainerRef.get(index) as any;
-        workMap.set(index, () => {
+        workMap.set(index, [() => {
           ev.context.setComputedContext({ index, count });
           ev.detectChanges();
-        });
+        }, 'unchanged']);
       }
-
-      const works = Array.from(workMap.values());
+      // [i.index, [i.work, 'remove']] => [i.index, i.work, 'remove']
+      const works = Array.from(workMap.entries()).map(e => [e[0], ...e[1]]);
       // Parent Flag
       if (s.works.insert.length + s.works.remove.length > 0) {
-        works.push(() => config.cdRef.detectChanges());
+        works.push(['p', () => config.cdRef.detectChanges(), 'parent']);
       }
       return works;
     }),
@@ -210,47 +193,39 @@ export function createViewContainerRef<T>(config: {
     connectChanges(newChanges: Observable<IterableChanges<T>>): void {
       changesSubject.next(newChanges);
     },
-    embeddedViewChanged$: embeddedViewToUpdate$,
+    renderCallback$: renderCallback$,
     subscribe
   };
 
   function subscribe(): void {
-
+    // const sched = concurrent(PriorityNameToLevel.normal);
     domStructureChange2$.pipe(
-      // inters/remove items
-      // observeOnPriority(concurrent(PriorityNameToLevel.normal)),
-      switchMap(works => works.length > 0 ? scheduled(works, concurrent(PriorityNameToLevel.normal))
-        .pipe(
-          tap(work => {
-            function WORK1() {
-              work();
-            }
-
-            // create EV and insert
-            // const WORK1 = i.work;
-            WORK1();
-          })
-        ) : EMPTY
-      )
+      mergeMap(i => i),
+      groupBy((i) => i[0] + '-' + i[2]),
+      map((i$: Observable<any>) => {
+        const [id, type] = (i$ as any).key.split('-');
+        const INSERT_REMOVE = i => {
+          return reactSchedulerTick([PriorityNameToLevel.normal, i[1]], i$);
+        };
+        const REST = i => {
+          return reactSchedulerTick([PriorityNameToLevel.normal, i[1]], i$);
+        }
+        // insert/remove merge
+        if (type === 'insert' || type === 'remove') {
+          return i$.pipe(
+            mergeMap(INSERT_REMOVE)
+          );
+        } else {
+          // update switchMap
+          return i$.pipe(
+            switchMap(REST)
+          );
+        }
+      }),
+      mergeAll()
     )
       .subscribe();
 
-  }
-
-  function prepWork(i: RxViewContainerRefSpecialWork<T>, count, type) {
-    // console.log('type', type);
-    const w = i.work;
-    const index = i.index;
-    i.work = () => {
-      const e = i.ev();
-      e.context.setComputedContext({ index, count });
-      w();
-      /*// if(type === 'update' || type === 'unchanged') {
-        e.detectChanges();
-        // console.log('detectedChanges', e, e.context);
-     // }*/
-    };
-    return i.work;
   }
 
 }

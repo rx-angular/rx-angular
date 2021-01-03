@@ -20,7 +20,7 @@ import { bufferTime, filter, switchMap, switchMapTo } from 'rxjs/operators';
       <div class="d-flex flex-wrap w-100">
         <div class="work-child"
              *rxForViewContainerRef="let a of arrayP.array$; let index = index; trackBy: trackById">
-          <div [ngStyle]="{background: color(a.id)}" ></div>
+          <div [ngStyle]="{background: color(a)}" ></div>
         </div>
       </div>
       <!--<div class="w-100 row">
@@ -63,8 +63,8 @@ import { bufferTime, filter, switchMap, switchMapTo } from 'rxjs/operators';
   styles: [`
     .work-child {
       position: relative;
-      width: 4px;
-      height: 4px;
+      width: 10px;
+      height: 10px;
       margin: 0 2px 2px 0;
       padding: 0px;
       outline: 1px solid green;
@@ -120,15 +120,15 @@ export class RxIterableDifferComponent extends Hooks {
     this.cdRef.detectChanges();
   }
 
-  color(idx) {
-    let c = this.colors.get(idx)
+  color(a) {
+   /* let c = this.colors.get(a.id)
     if(c) {
       return c;
     } else {
-      c = '#' +Math.floor(Math.random()*16777215).toString(16)
-      this.colors.set(idx, c);
+      c = '#' +Math.floor(a.value*16777215).toString(16)
+      this.colors.set(a.id, c);
       return c
-    }
-
+    }*/
+return '#' +Math.floor(a.value*16777215).toString(16);
   }
 }

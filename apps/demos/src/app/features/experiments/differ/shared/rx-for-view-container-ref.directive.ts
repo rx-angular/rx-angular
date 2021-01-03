@@ -15,7 +15,7 @@ import { ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { filter, map, startWith, take } from 'rxjs/operators';
 import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
-import { createViewContainerRef, RxViewContainerRef } from './rx-view-container-ref';
+import { createViewContainerRef, RxListManager } from './rx-list-manager';
 import { RxForViewContainerRefContext } from './rx-view-container-ref-context';
 import { constantPluck } from './utils';
 
@@ -35,7 +35,7 @@ export class RxForViewContainerRefDirective<T extends object, U extends NgIterab
       ngInputFlatten()
     );
 
-  private readonly rxViewContainerRef: RxViewContainerRef<T, RxForViewContainerRefContext<T>>;
+  private readonly rxViewContainerRef: RxListManager<T, RxForViewContainerRefContext<T>>;
 
   @Input()
   set rxForViewContainerRef(potentialObservable: Observable<U> | null | undefined) {
@@ -45,10 +45,10 @@ export class RxForViewContainerRefDirective<T extends object, U extends NgIterab
   set rxForViewContainerRefOf(potentialObservable: Observable<U> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
-  _trackBy = a => a;
+  _trackBy = (i, a) => a;
   @Input()
   set rxForViewContainerRefTrackBy(trackByFnOrKey: string | ((i) => any)) {
-    this._trackBy = typeof trackByFnOrKey !== 'function' ? constantPluck(trackByFnOrKey) : trackByFnOrKey;
+    this._trackBy = typeof trackByFnOrKey !== 'function' ? (i, a) => a[trackByFnOrKey] : trackByFnOrKey;
   }
 
   constructor(
@@ -76,7 +76,7 @@ export class RxForViewContainerRefDirective<T extends object, U extends NgIterab
   }
 
   initDiffer(iterable: U = [] as U) {
-    this.differ = this.iterableDiffers.find(iterable).create((index: number, item: T) => this._trackBy(item));
+    this.differ = this.iterableDiffers.find(iterable).create(this._trackBy);
     const changes$ = this.values$.pipe(
       startWith(iterable),
       map(i => ({ diff: this.differ.diff(i), iterable: i })),
