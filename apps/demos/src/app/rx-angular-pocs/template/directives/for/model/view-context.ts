@@ -1,22 +1,20 @@
-import { RxViewContext } from '../../../../cdk';
 import { NgIterable } from '@angular/core';
-import { BehaviorSubject, Observable, ObservableInput, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, pluck } from 'rxjs/operators';
+import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
+import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
+import { RxViewContext } from '../../../../cdk/template-management/model';
 
 export interface RxForOfComputedViewContext {
   index: number;
   count: number;
-  first: boolean;
-  last: boolean;
-  odd: boolean;
-  even: boolean;
 }
 
-export class RxForViewContext<
-  T extends Record<string | number | symbol, any>,
+const computeFirst = ({ count, index }) => index === 0;
+const computeLast = ({ count, index }) => index === count - 1;
+const computeEven = ({ count, index }) => index % 2 === 0;
+
+export class RxForViewContext<T extends Record<string | number | symbol, any>,
   U extends NgIterable<T> = NgIterable<T>,
-  K = keyof T
-  > implements RxViewContext<T> {
+  K = keyof T> implements RxViewContext<T> {
 
   readonly _item = new ReplaySubject<T>(1);
   item$ = this._item.asObservable();
@@ -24,20 +22,18 @@ export class RxForViewContext<
   private _$complete: boolean;
   private _$error: false | Error;
   private _$suspense: any;
-  private readonly _computedContext = new BehaviorSubject<
-    RxForOfComputedViewContext
-    >({
+  private readonly _context$ = new BehaviorSubject<RxForOfComputedViewContext>({
     index: -1,
-    count: -1,
-    first: false,
-    last: false,
-    odd: false,
-    even: false
+    count: -1
   });
 
   set $implicit($implicit: T) {
     this._$implicit = $implicit;
     this._item.next($implicit);
+  }
+
+  get $implicit(): T {
+    return this._$implicit;
   }
 
   get $complete(): boolean {
@@ -51,86 +47,81 @@ export class RxForViewContext<
   get $suspense(): any {
     return this._$suspense;
   }
-  get context(): Observable<RxForOfComputedViewContext> {
-    return this._computedContext.asObservable();
-  }
 
   get index(): number {
-    return this._computedContext.getValue().index;
+    return this._context$.getValue().index;
   }
 
   get count(): number {
-    return this._computedContext.getValue().count;
+    return this._context$.getValue().count;
   }
 
   get first(): boolean {
-    return this._computedContext.getValue().first;
+    return computeFirst(this._context$.getValue());
   }
 
   get last(): boolean {
-    return this._computedContext.getValue().last;
+    return computeLast(this._context$.getValue());
   }
 
   get even(): boolean {
-    return this._computedContext.getValue().even;
+    return computeEven(this._context$.getValue());
   }
 
   get odd(): boolean {
-    return this._computedContext.getValue().odd;
+    return !this.even;
   }
 
   get index$(): Observable<number> {
-    return this._computedContext.pipe(
+    return this._context$.pipe(
       pluck('index'),
       distinctUntilChanged()
     );
   }
 
   get count$(): Observable<number> {
-    return this._computedContext.pipe(
+    return this._context$.pipe(
       pluck('count'),
       distinctUntilChanged()
     );
   }
 
   get first$(): Observable<boolean> {
-    return this._computedContext.pipe(
-      pluck('first'),
+    return this._context$.pipe(
+      map(computeFirst),
       distinctUntilChanged()
     );
   }
 
   get last$(): Observable<boolean> {
-    return this._computedContext.pipe(
-      pluck('last'),
+    return this._context$.pipe(
+      map(computeLast),
       distinctUntilChanged()
     );
   }
 
   get even$(): Observable<boolean> {
-    return this._computedContext.pipe(
-      pluck('even'),
+    return this._context$.pipe(
+      map(computeEven),
       distinctUntilChanged()
     );
   }
 
   get odd$(): Observable<boolean> {
-    return this._computedContext.pipe(pluck('odd'), distinctUntilChanged());
+    return this.even$.pipe(
+      map(even => !even)
+    );
   }
 
-  constructor(
-    private item: T,
-    public rxForOf: ObservableInput<U>,
-    private distinctBy: (a: T, b: T) => boolean = (a, b) => a === b
-  ) {
+  constructor(private item: T) {
     // tslint:disable-next-line:no-unused-expression
     this.$implicit = item;
   }
 
-  setComputedContext(context: Partial<RxForOfComputedViewContext>): void {
-    this._computedContext.next({
-      ...this._computedContext.getValue(),
-      ...context
+  setComputedContext(newProps: Partial<RxForOfComputedViewContext>): void {
+    this._context$.next({
+      ...this._context$.getValue(),
+      ...newProps
     });
   }
 

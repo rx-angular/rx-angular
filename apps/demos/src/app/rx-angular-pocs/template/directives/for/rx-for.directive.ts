@@ -234,11 +234,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
                 const idx = currentIndex == null ? undefined : currentIndex;
                 // insert
                 if (r.previousIndex == null) {
-                    const context = new RxForViewContext(
-                        r.item,
-                        this._rxFor,
-                        this.rxForDistinctBy
-                    );
+                    const context = new RxForViewContext(r.item);
                     // console.log('scheduleInsert', idx);
                     scheduleInsert(idx, context);
                     // the view got inserted, so the parent has to get notified about this change
@@ -302,11 +298,10 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
                 odd: !even
             };
             scheduleUpdate(index, ctx => {
-                ctx.rxForOf = this.values$;
                 ctx.setComputedContext(newCtx);
             });
         }
-        /*if (detectParent) {
+        if (detectParent) {
             Promise.resolve().then(() => {
                 this.strategyProvider.scheduleCD(this.cdRef, {
                     afterCD: () => {
@@ -316,30 +311,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
                     context: (this.cdRef as any).context
                 });
             });
-        }*/
+        }
         return forkJoin(behaviors$);
     }
 
-    /** Update the `VirtualForOfContext` for all views. */
-    private _updateContext() {
-        for (
-            let index = 0, count = this.viewContainerRef.length;
-            index < count;
-            index++
-        ) {
-            const viewRef = <EmbeddedViewRef<RxForViewContext<T, U>>>(
-                this.viewContainerRef.get(index)
-            );
-            const even = index % 2 === 0;
-            viewRef.context.rxForOf = this.values$;
-            viewRef.context.setComputedContext({
-                index,
-                count,
-                first: index === 0,
-                last: index === count - 1,
-                even,
-                odd: !even
-            });
-        }
-    }
 }

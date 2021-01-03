@@ -48,6 +48,8 @@ import { immutableArr } from '../utils';
             </mat-button-toggle>
             <mat-button-toggle [value]="displayStates.rxAngularReactive">RxAngular *rxFor trackBy, distinctBy, select
             </mat-button-toggle>
+            <mat-button-toggle [value]="displayStates.rxAngularReactive2">RxAngular2 *rxFor trackBy, distinctBy, select
+            </mat-button-toggle>
             <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
           </mat-button-toggle-group>
           <br/>
@@ -124,12 +126,45 @@ import { immutableArr } from '../utils';
               let i;
               let r$ = item$;
               renderCallback: childrenRendered;
-              strategy: 'chunk';
+              strategy: 'normal';
               trackBy: trackById; let select = select
             "
           >
             <span #spanChild></span>
-            <ng-container *rxFor="select(['arr']); trackBy: trackById; let o; let v$ = item$; strategy: 'chunk';">
+            <ng-container *rxFor="select(['arr']); trackBy: trackById; let o; let v$ = item$; strategy: 'normal';">
+              <rxa-rx-for-value [strategy$]="strategy$" [value]="v$"></rxa-rx-for-value>
+            </ng-container>
+          </rxa-visualizer>
+        </div>
+        <div class="col"
+             *ngIf="group.value === displayStates.rxAngularReactive2 || group.value === displayStates.all">
+          <h2>RxAngular, *rxFor2 trackBy, distinctBy, select</h2>
+          <p>
+            <button mat-raised-button [unpatch] (click)="changeOneClick$.next(1)">
+              unpatched update
+            </button>
+            <button mat-raised-button [unpatch] (click)="changeAllClick$.next(10)">
+              unpatched Change all
+            </button>
+            <button mat-raised-button [unpatch] (click)="toggleIntervalClick$.next(10)">
+              unpatched toggel interval
+            </button>
+            <rxa-strategy-select (strategyChange)="strategy$.next($event)"></rxa-strategy-select>
+          </p>
+          <ng-container *rxLet="childrenRendered$; let childrenRendered; strategy: strategy$">
+            Rendercallback: <strong>{{ childrenRendered }}</strong>
+          </ng-container>
+          <rxa-visualizer
+            viewType="embedded-view"
+            *rxForViewContainerRef="
+              let a of array$;
+              let i;
+              let r$ = item$;
+              trackBy: trackById; let select = select
+            "
+          >
+            <span #spanChild></span>
+            <ng-container *rxForViewContainerRef="select(['arr']); trackBy: trackById; let o; let v$ = item$;">
               <rxa-rx-for-value [strategy$]="strategy$" [value]="v$"></rxa-rx-for-value>
             </ng-container>
           </rxa-visualizer>
@@ -147,11 +182,14 @@ export class RxForContainerComponent extends RxState<{ rows: number, columns: nu
   tK = 'id';
 
   displayStates = {
-    native: 0,
-    nativeReactive: 1,
-    rxAngularReactive: 2,
-    rxAngularMinimalReactive: 3,
-    all: 4
+    none: -1,
+    all: 0,
+    native: 1,
+    nativeReactive: 2,
+    rxAngularReactive: 3,
+    rxAngularReactive2: 4,
+    rxAngularMinimalReactive: 5
+
   };
 
   childrenRendered = new Subject<void>();
