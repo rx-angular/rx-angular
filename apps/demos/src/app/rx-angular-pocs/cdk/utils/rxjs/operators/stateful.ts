@@ -1,6 +1,7 @@
 import { MonoTypeOperatorFunction, Observable, OperatorFunction } from 'rxjs';
 import { distinctUntilChanged, filter, shareReplay } from 'rxjs/operators';
-import { isOperateFnArrayGuard, pipeFromArray } from '../../core/utils';
+import { pipeFromArray } from '../../pipe-from-array';
+import { isOperateFnArrayGuard } from '../../guards';
 
 /**
  * @description

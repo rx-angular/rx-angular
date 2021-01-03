@@ -15,10 +15,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 import { PushModule, RxForModule, RxLetModule } from '../../../../rx-angular-pocs';
 import { SharedModule } from '../../differ/shared';
+import { RxForNormal } from './rx-for-normal.directive';
 
 const DECLARATIONS = [
   RxForContainerComponent,
   RxMinimalForOf,
+  RxForNormal,
   RxForValueComponent
 ];
 

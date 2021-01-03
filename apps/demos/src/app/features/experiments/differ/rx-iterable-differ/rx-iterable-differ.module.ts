@@ -9,20 +9,22 @@ import { MatButtonModule } from '@angular/material/button';
 import { RxIterableDifferComponent } from './rx-iterable-differ/rx-iterable-differ.component';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
+import { RxForModule } from '../../../../rx-angular-pocs/template/directives/for';
 
 const DECLARATIONS = [RxIterableDifferComponent];
 
 @NgModule({
   declarations: [DECLARATIONS],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(ROUTES),
-        LetModule, PushModule,
-        DirtyChecksModule,
-        MatButtonModule,
-        VisualizerModule,
-        ValueProvidersModule, SharedModule
-    ]
+  imports: [
+    CommonModule,
+    RouterModule.forChild(ROUTES),
+    LetModule, PushModule,
+    DirtyChecksModule,
+    MatButtonModule,
+    VisualizerModule,
+    ValueProvidersModule, SharedModule,
+    RxForModule
+  ]
 })
 export class RxIterableDifferModule {
 }

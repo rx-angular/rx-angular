@@ -10,15 +10,10 @@ import {
 } from '@angular/core';
 import { groupBy, map, mergeAll, mergeMap, share, switchAll, switchMap } from 'rxjs/operators';
 import { StrategyCredentials } from '../render-strategies/model';
-import { RxForViewContainerRefContext } from './rx-view-container-ref-context';
 import { PriorityNameToLevel } from '../render-strategies/model';
 import { reactSchedulerTick } from '../utils/scheduling/concurrent-scheduler';
+import { RxListViewContext } from './model';
 
-
-export interface RxForOfComputedViewContext {
-  index: number;
-  count: number;
-}
 
 export interface ListManager<T, C> {
   renderCallback$: Observable<EmbeddedViewRef<C>>;
@@ -30,29 +25,29 @@ export interface ListManager<T, C> {
 
 export type RxViewContainerRefChangeType = 'update' | 'insert' | 'remove' | 'move';
 
-export interface RxViewContainerRefSpecialWork<T> {
-  ev: () => EmbeddedViewRef<RxForViewContainerRefContext<T>>,
+export interface RxViewContainerRefSpecialWork<T, C> {
+  ev: () => EmbeddedViewRef<C>,
   index: number,
   context: any,
   work: (...args: any[]) => void
   type?: RxViewContainerRefChangeType,
 }
 
-export type CreateViewContext<T, U extends NgIterable<T> = NgIterable<T>> =
-  (record: IterableChangeRecord<T>) => RxForViewContainerRefContext<T>;
+export type CreateViewContext<T, C, U extends NgIterable<T> = NgIterable<T>> =
+  (record: IterableChangeRecord<T>) => C;
 
 const forEachInsertToArray = forEachToArray('forEachAddedItem');
 const forEachMoveToArray = forEachToArray('forEachMovedItem');
 const forEachRemoveToArray = forEachToArray('forEachRemovedItem');
 const forEachUpdateToArray = forEachToArray('forEachIdentityChange');
 
-export function createViewContainerRef<T>(config: {
+export function createViewContainerRef<T, C extends RxListViewContext<T>>(config: {
   cdRef: ChangeDetectorRef,
   strategy$: Observable<StrategyCredentials>,
   viewContainerRef: ViewContainerRef,
-  templateRef: TemplateRef<RxForViewContainerRefContext<T>>,
-  createViewContext: CreateViewContext<T>
-}): ListManager<T, RxForViewContainerRefContext<T>> {
+  templateRef: TemplateRef<C>,
+  createViewContext: CreateViewContext<T, C>
+}): ListManager<T, C> {
   const {
     viewContainerRef,
     templateRef,
@@ -92,7 +87,7 @@ export function createViewContainerRef<T>(config: {
           .map(record => {
             const ev = viewContainerRef.get(record.previousIndex);
             return {
-              ev: () => viewContainerRef.move(ev, record.currentIndex) as EmbeddedViewRef<RxForViewContainerRefContext<T>>, // reference
+              ev: () => viewContainerRef.move(ev, record.currentIndex) as EmbeddedViewRef<C>, // reference
               index: record.currentIndex, // index to current position in viewContainer
               context: (ev as any).context,
               work: () => {

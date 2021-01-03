@@ -1,3 +1,6 @@
+import { NgIterable } from '@angular/core';
+import { Observable } from 'rxjs';
+
 export type rxBaseTemplateNames = 'rxError' | 'rxComplete' | 'rxSuspense';
 
 export enum RxBaseTemplateNames {
@@ -15,4 +18,16 @@ export interface RxViewContext<T> {
   $complete: boolean;
   // set context var suspense to true (var$; let s = $suspense)
   $suspense: any;
+}
+
+export interface RxListViewComputedContext {
+  index: number;
+  count: number;
+}
+
+export interface RxListViewContext<T extends Record<string | number | symbol, any>,
+  U extends NgIterable<T> = NgIterable<T>,
+  K = keyof T> extends RxViewContext<T> {
+  item$: Observable<T>;
+  setComputedContext(newProps: RxListViewComputedContext): void;
 }

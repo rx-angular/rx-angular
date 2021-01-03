@@ -121,7 +121,7 @@ import { immutableArr } from '../utils';
           </ng-container>
           <rxa-visualizer
             viewType="embedded-view"
-            *rxFor="
+            *rxForNormal="
               let a of array$;
               let i;
               let r$ = item$;
@@ -131,7 +131,7 @@ import { immutableArr } from '../utils';
             "
           >
             <span #spanChild></span>
-            <ng-container *rxFor="select(['arr']); trackBy: trackById; let o; let v$ = item$; strategy: 'normal';">
+            <ng-container *rxForNormal="select(['arr']); trackBy: trackById; let o; let v$ = item$; strategy: 'normal';">
               <rxa-rx-for-value [strategy$]="strategy$" [value]="v$"></rxa-rx-for-value>
             </ng-container>
           </rxa-visualizer>
@@ -156,7 +156,7 @@ import { immutableArr } from '../utils';
           </ng-container>
           <rxa-visualizer
             viewType="embedded-view"
-            *rxForViewContainerRef="
+            *rxFor="
               let a of array$;
               let i;
               let r$ = item$;
@@ -164,7 +164,7 @@ import { immutableArr } from '../utils';
             "
           >
             <span #spanChild></span>
-            <ng-container *rxForViewContainerRef="select(['arr']); trackBy: trackById; let o; let v$ = item$;">
+            <ng-container *rxFor="select(['arr']); trackBy: trackById; let o; let v$ = item$;">
               <rxa-rx-for-value [strategy$]="strategy$" [value]="v$"></rxa-rx-for-value>
             </ng-container>
           </rxa-visualizer>

@@ -1,12 +1,7 @@
 import { NgIterable } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
-import { RxViewContext } from '../../../../cdk/template-management/model';
-
-export interface RxForOfComputedViewContext {
-  index: number;
-  count: number;
-}
+import { RxListViewComputedContext, RxListViewContext } from '../../../../cdk/template-management/model';
 
 const computeFirst = ({ count, index }) => index === 0;
 const computeLast = ({ count, index }) => index === count - 1;
@@ -14,7 +9,7 @@ const computeEven = ({ count, index }) => index % 2 === 0;
 
 export class RxForViewContext<T extends Record<string | number | symbol, any>,
   U extends NgIterable<T> = NgIterable<T>,
-  K = keyof T> implements RxViewContext<T> {
+  K = keyof T> implements RxListViewContext<T> {
 
   readonly _item = new ReplaySubject<T>(1);
   item$ = this._item.asObservable();
@@ -22,7 +17,7 @@ export class RxForViewContext<T extends Record<string | number | symbol, any>,
   private _$complete: boolean;
   private _$error: false | Error;
   private _$suspense: any;
-  private readonly _context$ = new BehaviorSubject<RxForOfComputedViewContext>({
+  private readonly _context$ = new BehaviorSubject<RxListViewComputedContext>({
     index: -1,
     count: -1
   });
@@ -118,7 +113,7 @@ export class RxForViewContext<T extends Record<string | number | symbol, any>,
     this.$implicit = item;
   }
 
-  setComputedContext(newProps: Partial<RxForOfComputedViewContext>): void {
+  setComputedContext(newProps: RxListViewComputedContext): void {
     this._context$.next({
       ...this._context$.getValue(),
       ...newProps

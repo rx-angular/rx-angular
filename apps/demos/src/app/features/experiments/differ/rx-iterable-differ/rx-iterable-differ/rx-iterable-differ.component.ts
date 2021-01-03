@@ -19,7 +19,7 @@ import { bufferTime, filter, switchMap, switchMapTo } from 'rxjs/operators';
       </div>
       <div class="d-flex flex-wrap w-100">
         <div class="work-child"
-             *rxForViewContainerRef="let a of arrayP.array$; let index = index; trackBy: trackById">
+             *rxFor="let a of arrayP.array$; let index = index; trackBy: trackById">
           <div [ngStyle]="{background: color(a)}" ></div>
         </div>
       </div>
