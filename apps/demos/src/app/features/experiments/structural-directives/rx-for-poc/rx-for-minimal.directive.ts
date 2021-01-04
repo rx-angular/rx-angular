@@ -141,7 +141,6 @@ export class RxMinimalForOf<T extends object, U extends NgIterable<T> = NgIterab
   }
 
   initDiffer(iterable: U = [] as U) {
-    console.log('initDiffer');
     this.differ = this.iterableDiffers.find(iterable).create((index: number, item: T) => item[this._rxTrackBy]);
     this.rxEffects.hold(this.values$.pipe(
       startWith(iterable),

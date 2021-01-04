@@ -6,6 +6,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';import { Data
     <rxa-visualizer>
       <div visualizerHeader>
         <h1>A<small>v2</small></h1>
+        <rxa-dirty-check log="A"></rxa-dirty-check>
         <span>count: {{data.count$ | push}}</span>
       </div>
       <div class="row w-100">

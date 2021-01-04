@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 import { RxLetModule } from '../../../../rx-angular-pocs/directives/let';
+import { RxForModule } from '../../../../rx-angular-pocs/directives/for';
 
 const DECLARATIONS = [
   RxForContainerComponent,
@@ -35,7 +36,8 @@ const DECLARATIONS = [
     MatInputModule,
     MatIconModule,
     RxLetModule,
-    StrategySelectModule
+    StrategySelectModule,
+    RxForModule
   ],
   exports: DECLARATIONS
 })
