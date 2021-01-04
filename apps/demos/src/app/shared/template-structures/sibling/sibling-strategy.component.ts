@@ -1,38 +1,47 @@
-import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  Input,
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import { toBooleanArray } from './utils';
-import { RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from '../../../rx-angular-pocs';
+import {
+  RX_CUSTOM_STRATEGIES,
+  RX_PRIMARY_STRATEGY,
+} from '../../../rx-angular-pocs';
 import { RxState } from '@rx-angular/state';
 import { map } from 'rxjs/operators';
 
-const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
+const chunk = (arr, n) =>
+  arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
 
 @Component({
   selector: 'rxa-sibling-strategy',
   template: `
-    <rxa-visualizer>
-      <div visualizerHeader>
-        <h3>{{siblings.length}} Siblings</h3>
-      </div>
-      <div class="siblings">
-        <div class="sibling" *rxFor="let item of siblings$; strategy: strategy$; trackBy:trackBy">
-          <div [ngClass]="{filled: item.filled}">
+    <h3>{{ siblings.length }} Siblings</h3>
 
-          </div>
-        </div>
-      </div>
-    </rxa-visualizer>
+    <div
+      class="sibling"
+      *rxFor="let item of siblings$; strategy: strategy$; trackBy: trackBy">
+      <div [ngClass]="{ filled: item.filled }"></div>
+    </div>
   `,
   host: {
-    class: 'd-flex w-100'
+    class: 'd-flex w-100',
   },
   styleUrls: ['./sibling.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SiblingStrategyComponent extends RxState<{ siblings: {filled: boolean, id:number}[], strategy: string, filled: boolean }> {
-  filled$ = this.select('filled').pipe(
+export class SiblingStrategyComponent extends RxState<{
+  siblings: { filled: boolean; id: number }[];
+  strategy: string;
+  filled: boolean;
+}> {
+  filled$ = this.select('filled')
+    .pipe
     //map(() => toBoolean(toRandom()))
-  );
+    ();
   state$ = this.select();
   siblings$ = this.select('siblings');
   siblings = [];
@@ -41,11 +50,18 @@ export class SiblingStrategyComponent extends RxState<{ siblings: {filled: boole
 
   @Input()
   set count(num$: Observable<number | string>) {
-    this.connect('siblings', num$.pipe(map(num => {
-      this.siblings = toBooleanArray(parseInt(num as any, 10)).map((filled,id) => ({filled, id}));
-      return this.siblings;
-    })));
-  };
+    this.connect(
+      'siblings',
+      num$.pipe(
+        map((num) => {
+          this.siblings = toBooleanArray(
+            parseInt(num as any, 10)
+          ).map((filled, id) => ({ filled, id }));
+          return this.siblings;
+        })
+      )
+    );
+  }
 
   @Input()
   set filled(filled$: Observable<boolean>) {
@@ -58,9 +74,9 @@ export class SiblingStrategyComponent extends RxState<{ siblings: {filled: boole
   @Input()
   set strategy(strategy: string) {
     this.set({ strategy });
-  };
+  }
 
-  trackBy = (idx: number, i: {id: number}) => i.id;
+  trackBy = (idx: number, i: { id: number }) => i.id;
 
   constructor(
     @Inject(RX_CUSTOM_STRATEGIES) private strategies: string,
@@ -69,9 +85,8 @@ export class SiblingStrategyComponent extends RxState<{ siblings: {filled: boole
     super();
     this.set({
       strategy: defaultStrategy,
-      filled: true
+      filled: true,
     });
   }
-
 }
 
