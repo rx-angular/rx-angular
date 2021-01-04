@@ -33,11 +33,11 @@ import { map, tap } from 'rxjs/operators';
         </div>
       </ng-container>
       <div class="row w-100">
-        <ng-container *rxFor="let strategy of strategyProvider.strategyNames">
+        <ng-container *rxFor="let strategy of strategies$; trackBy:trackByStrategyName">
           <div class="col"
-               *rxIf="selectedStrategies$ | pipe:visible(strategy)">
-            <h2 class="mat-subheader">{{strategy}}</h2>
-            <rxa-sibling-strategy [strategy]="strategy" [count]="count$" [filled]="filled$"></rxa-sibling-strategy>
+               *ngIf="strategy.checked">
+            <h2 class="mat-subheader">{{strategy.name}}</h2>
+            <rxa-sibling-strategy [strategy]="strategy.name" [count]="count$" [filled]="filled$"></rxa-sibling-strategy>
           </div>
         </ng-container>
       </div>
@@ -58,7 +58,12 @@ import { map, tap } from 'rxjs/operators';
 })
 export class ComparisonComponent {
 
-  selectedStrategies$ = new BehaviorSubject<{ [strategy: string]: boolean }>({});
+  selectedStrategies$ = new BehaviorSubject<{ [strategy: string]: boolean }>(
+    /*this.strategyProvider.strategyNames.reduce((selectedStrategies, strategy) => {
+      selectedStrategies[strategy] = true;
+      return selectedStrategies;
+    }, {})*/{}
+  );
   strategies$ = this.selectedStrategies$.pipe(
     map((selectedStrategies) => this.strategyProvider.strategyNames.map(strategy => ({name: strategy, checked: selectedStrategies[strategy] || false})))
   );

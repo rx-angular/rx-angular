@@ -20,11 +20,12 @@ const chunk = (arr, n) =>
   selector: 'rxa-sibling-strategy',
   template: `
     <h3>{{ siblings.length }} Siblings</h3>
-
-    <div
-      class="sibling"
-      *rxFor="let item of siblings$; strategy: strategy$; trackBy: trackBy">
-      <div [ngClass]="{ filled: item.filled }"></div>
+    <div class="d-flex flex-wrap">
+      <div
+        class="sibling"
+        *rxFor="let item of siblings$; strategy: strategy$; trackBy: trackBy">
+        <div [ngStyle]="{background: item.color}" ></div>
+      </div>
     </div>
   `,
   host: {
@@ -34,7 +35,7 @@ const chunk = (arr, n) =>
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SiblingStrategyComponent extends RxState<{
-  siblings: { filled: boolean; id: number }[];
+  siblings: { filled: boolean; id: number; color: string; }[];
   strategy: string;
   filled: boolean;
 }> {
@@ -56,7 +57,7 @@ export class SiblingStrategyComponent extends RxState<{
         map((num) => {
           this.siblings = toBooleanArray(
             parseInt(num as any, 10)
-          ).map((filled, id) => ({ filled, id }));
+          ).map((filled, id) => ({ color: this.color(Math.random()), filled, id }));
           return this.siblings;
         })
       )
@@ -77,6 +78,10 @@ export class SiblingStrategyComponent extends RxState<{
   }
 
   trackBy = (idx: number, i: { id: number }) => i.id;
+
+  color(a: any) {
+    return '#' +Math.floor(a*16777215).toString(16);
+  }
 
   constructor(
     @Inject(RX_CUSTOM_STRATEGIES) private strategies: string,

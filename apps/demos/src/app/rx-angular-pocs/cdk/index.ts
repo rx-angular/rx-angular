@@ -4,3 +4,4 @@ export * from './template-management';
 export * from './utils';
 export * from './zone-configuration';
 export * from './hooks';
+export * from './decorators';

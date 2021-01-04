@@ -46,7 +46,10 @@ export class IfVisibleDirective<U> extends Hooks {
          animationFrameTick().subscribe(() => {
             this.templateManager.addTemplateRef('view', this.templateRef);
             this.templateManager.displayView('view');
-            this.templateManager.getEmbeddedView('view').detectChanges();
+            const view = this.templateManager.getEmbeddedView('view');
+            if (view) {
+              view.detectChanges();
+            }
           });
         }
       });

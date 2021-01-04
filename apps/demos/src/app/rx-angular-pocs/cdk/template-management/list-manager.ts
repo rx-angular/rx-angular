@@ -112,7 +112,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
           }
         });
         moves.forEach(record => {
-        //  viewContainerRef.get(record.previousIndex)?.detach();
+         viewContainerRef.get(record.previousIndex)?.detach();
           const w = () => {
             const currentView = viewContainerRef.get(record.previousIndex) as EmbeddedViewRef<C>;
             const newView = viewContainerRef.move(currentView, record.currentIndex) as EmbeddedViewRef<C>;
@@ -129,7 +129,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
           }
         });
         updates.forEach(record => {
-      //    viewContainerRef.get(record.currentIndex)?.detach();
+         viewContainerRef.get(record.currentIndex)?.detach();
           const w = () => {
             const currentView = viewContainerRef.get(record.currentIndex) as EmbeddedViewRef<C>;
             currentView.context.$implicit = record.item;
@@ -152,7 +152,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             continue;
           }
           const e = viewContainerRef.get(index) as EmbeddedViewRef<C>;
-       //   e.detach();
+         e.detach();
           _leWork.set(index, [() => {
             e.context.setComputedContext({ index, count });
             return e;
@@ -191,7 +191,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                   if (ev) {
                     ev.reattach();
                     ev.detectChanges();
-                    //ev.detach();
+                    ev.detach();
                   }
                   _leWork.delete(e[0]);
                 },
