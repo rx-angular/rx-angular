@@ -1,34 +1,54 @@
-import { ChangeDetectorRef, ɵɵdirectiveInject as directiveInject } from '@angular/core';
+import {
+  ɵɵdirectiveInject as directiveInject,
+  ChangeDetectorRef, Type
+} from '@angular/core';
+import { fromEvent, of } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { StrategyCredentials } from '../render-strategies/model/strategy-credentials';
 import { StrategyProvider } from '../render-strategies/strategy-provider.service';
 
-export function RxStateful() {
+export function renderOnChange<T = Type<any>>(
+  component: T,
+  keys: (keyof T)[],
+  config: {
+    cdRef: ChangeDetectorRef,
+    strategyName?: string
+  }
+) {
 
-  return function(target, key) {
-    let value;
-    const getter = function() {
-      console.log(`Get => ${key}`);
-      return value;
-    };
+  const strategyProvider: StrategyProvider = directiveInject(StrategyProvider);
+  const strategyName = config?.strategyName || strategyProvider.primaryStrategy;
+  const strategy = strategyProvider.strategies[strategyName];
 
-    const setter = function(newVal) {
-      console.log(target);
-      console.log(`Set: ${key} => ${newVal}`);
-      value = newVal;
-      // strategyProvider.scheduleCD()
-    };
+  function scheduleCD(s: StrategyCredentials, work: () => void): AbortController {
+    const abC = new AbortController();
+    of(null).pipe(
+      s.behavior(work, component),
+      takeUntil(fromEvent(abC.signal, 'abort'))
+    ).subscribe();
+    return abC;
+  }
 
-    Object.defineProperty(target, key, {
+  let workScheduled: AbortController;
+
+  const values = new Map<keyof T, any>();
+  keys.forEach(key => {
+    Object.defineProperty(component, key, {
       get: function() {
-        return value;
+        return values.get(key);
       },
       set: function(newVal: any) {
-        console.log(target);
-        console.log(`Set: ${key} => ${newVal}`);
-        console.log(this)
-        value = newVal;
+        values.set(key, newVal);
+        if (workScheduled) {
+          workScheduled.abort();
+        }
+        const work = () => {
+          strategy.work(config.cdRef, component);
+        };
+        workScheduled = scheduleCD(strategy, work);
       },
-      /*enumerable: true,
-      configurable: true*/
+      enumerable: true,
+      configurable: true
     });
-  }
+  })
 }

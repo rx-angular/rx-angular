@@ -141,6 +141,6 @@ export class RxIterableDifferComponent extends Hooks {
       this.colors.set(a.id, c);
       return c
     }*/
-return '#' +Math.floor(a.value*16777215).toString(16);
+    return '#' +Math.floor(a.value*16777215).toString(16);
   }
 }
