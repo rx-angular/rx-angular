@@ -46,8 +46,8 @@ import { immutableArr } from '../utils';
             <mat-button-toggle [value]="displayStates.rxAngularMinimalReactive">RxAngular *rxMinimalFor trackBy,
               distinctBy, select
             </mat-button-toggle>
-            <mat-button-toggle [value]="displayStates.rxAngularReactive">RxAngular *rxFor trackBy, distinctBy, select
-            </mat-button-toggle>
+           <!-- <mat-button-toggle [value]="displayStates.rxAngularReactive">RxAngular *rxFor trackBy, distinctBy, select
+            </mat-button-toggle> -->
             <mat-button-toggle [value]="displayStates.rxAngularReactive2">RxAngular2 *rxFor trackBy, distinctBy, select
             </mat-button-toggle>
             <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
@@ -101,7 +101,7 @@ import { immutableArr } from '../utils';
             </ng-container>
           </rxa-visualizer>
         </div>
-        <div class="col"
+        <!--<div class="col"
              *ngIf="group.value === displayStates.rxAngularReactive || group.value === displayStates.all">
           <h2>RxAngular, *rxFor trackBy, distinctBy, select</h2>
           <p>
@@ -116,12 +116,12 @@ import { immutableArr } from '../utils';
             </button>
             <rxa-strategy-select (strategyChange)="strategy$.next($event)"></rxa-strategy-select>
           </p>
-          <!--
+
           <ng-container *rxLet="childrenRendered$; let childrenRendered; strategy: strategy$">
             Rendercallback: <strong>{{ childrenRendered }}</strong>
           </ng-container>
-          -->
-          <rxa-visualizer
+
+                  <rxa-visualizer
             viewType="embedded-view"
             *rxForNormal="
               let a of array$;
@@ -137,6 +137,7 @@ import { immutableArr } from '../utils';
             </ng-container>
           </rxa-visualizer>
         </div>
+        -->
         <div class="col"
              *ngIf="group.value === displayStates.rxAngularReactive2 || group.value === displayStates.all">
           <h2>RxAngular, *rxFor2 trackBy, distinctBy, select</h2>
@@ -152,14 +153,11 @@ import { immutableArr } from '../utils';
             </button>
             <rxa-strategy-select (strategyChange)="strategy$.next($event)"></rxa-strategy-select>
           </p>
-          <!--
+   <!--
           <ng-container *rxLet="childrenRendered$; let childrenRendered; strategy: strategy$">
             Rendercallback: <strong>{{ childrenRendered }}</strong>
           </ng-container>
-          <ng-container *rxLet="childrenRendered2$; let childrenRendered2; strategy: strategy$">
-            Rendercallback2: <strong>{{ childrenRendered2 }}</strong>
-          </ng-container>
-          -->
+-->
           <rxa-visualizer
             viewType="embedded-view"
             *rxFor="
@@ -167,7 +165,9 @@ import { immutableArr } from '../utils';
               let i;
               let r$ = item$;
               strategy: strategy$;
-              trackBy: trackById; let select = select
+              trackBy: trackById;
+              let select = select
+              renderCallback: childrenRendered$
             "
           >
             <span #spanChild></span>
@@ -211,7 +211,7 @@ export class RxForContainerComponent extends RxState<{ rows: number, columns: nu
   childrenRendered2 = new Subject<string>();
   private numChildrenRendered2 = 0;
   childrenRendered2$ = this.childrenRendered2.pipe(
-//    tap(v => console.log('rcb2', v))
+    tap(v => console.log('rcb2', v))
   )
 
   table$ = this.select();
