@@ -25,6 +25,8 @@ export class DataService extends RxState<{ count: number }> {
     this.set({count: 0});
     this.connect('count', this.action$.pipe(unwrapAction('inc')), (s, num) => s?.count + num);
     this.connect('count', this.action$.pipe(unwrapAction('dec')), (s, num) => s?.count - num);
+
+    this.hold(this.count$, (c) => console.log('update count', c));
   }
 
   increment(inc: number) {

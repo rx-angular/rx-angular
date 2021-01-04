@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { map, scan, share, tap } from 'rxjs/operators';
+import { toInt } from '../../../shared/debug-helper/value-provider';
 
 const children1 = 10;
 const children2 = 3;
@@ -43,7 +44,7 @@ export const mutableIncArr = (rows: number = children1, columns: number = childr
 }
 
 export const immutableArr = (rows: number = children1, columns: number = children2) => (o$: Observable<number>) => o$.pipe(
-  map(() => randArray(rows).map((r) => ({ ...r, arr: randArray(columns) }))),
+  map(() => randArray(rows).map((r) => toInt(1) ? ({ ...r, arr: randArray(columns) }) : r) ),
   share()
 );
 

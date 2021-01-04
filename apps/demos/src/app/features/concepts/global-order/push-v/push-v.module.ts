@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RxLetModule } from '../../../../rx-angular-pocs';
-import { UnpatchEventsModule } from '../../../../rx-angular-pocs';
+import { RxLetModule } from '../../../../rx-angular-pocs/directives/let';
+import { UnpatchEventsModule } from '../../../../rx-angular-pocs/directives/unpatch';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { V2AComponent } from './v2-a.component';
 import { V2BComponent } from './v2-b.component';
@@ -12,7 +12,8 @@ import { V2FComponent } from './v2-f.component';
 import { V2HComponent } from './v2-h.component';
 import { SharedModule } from '../shared/shared.module';
 import { MatButtonModule } from '@angular/material/button';
-import { PushModule } from '../../../../rx-angular-pocs';
+import { PushModule } from '../../../../rx-angular-pocs/pipes/push';
+import { DirtyChecksModule } from '../../../../rx-angular-pocs/debug/dirty-check';
 
 
 
@@ -36,7 +37,8 @@ import { PushModule } from '../../../../rx-angular-pocs';
     UnpatchEventsModule,
     UnpatchEventsModule,
     RxLetModule,
-    PushModule
+    PushModule,
+    DirtyChecksModule
   ],
   exports: [V2AComponent]
 })
