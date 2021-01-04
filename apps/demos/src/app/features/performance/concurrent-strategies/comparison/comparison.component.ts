@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { StrategyProvider } from '../../../../rx-angular-pocs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-concurrent-strategies',
@@ -12,7 +13,8 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
           <div class="col-12 d-flex">
             <mat-form-field class="mr-2">
               <mat-label>Num Siblings</mat-label>
-              <input matInput #i [unpatch] type="number" [value]="count$ | push" (input)="count$.next(i.value)">
+              <input *rxLet="count$; let count" matInput #i [unpatch] type="number" [value]="count"
+                     (input)="count$.next(i.value)">
             </mat-form-field>
             <button mat-button unpatch (click)="filled$.next(!filled$.getValue())">
               do change
@@ -20,8 +22,8 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
           </div>
           <div class="col-12">
             <div class="w-100 strategy-multiselect">
-              <mat-checkbox #c *ngFor="let strategy of strategyProvider.strategyNames"
-                            (change)="selectedStrategies[strategy] = c.checked">
+              <mat-checkbox #c *rxFor="let strategy of strategyProvider.strategyNames"
+                            (change)="setStrategy(strategy, c.checked)">
                 {{strategy}}
               </mat-checkbox>
             </div>
@@ -29,9 +31,9 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
         </div>
       </ng-container>
       <div class="row w-100">
-        <ng-container *ngFor="let strategy of strategyProvider.strategyNames">
+        <ng-container *rxFor="let strategy of strategyProvider.strategyNames">
           <div class="col"
-               *ngIf="visible(strategy)">
+               *rxIf="selectedStrategies$ | pipe:visible(strategy)">
             <h2 class="mat-subheader">{{strategy}}</h2>
             <rxa-sibling-strategy [strategy]="strategy" [count]="count$" [filled]="filled$"></rxa-sibling-strategy>
           </div>
@@ -53,16 +55,21 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
   `]
 })
 export class ComparisonComponent {
-  selectedStrategies: { [name: string]: boolean } = {};
+  selectedStrategies$ = new BehaviorSubject<{ [name: string]: boolean }>({});
 
-  count$ = new BehaviorSubject<string | number[][]>('500');
+  count$ = new BehaviorSubject<string | number>('500');
   filled$ = new BehaviorSubject<boolean>(false);
 
   constructor(public strategyProvider: StrategyProvider) {
   }
 
-  visible(choice) {
-    return this.selectedStrategies[choice] === true;
+  setStrategy(strategy, state) {
+    const old = this.selectedStrategies$.getValue();
+    this.selectedStrategies$.next({ ...old, [strategy]: state });
+  }
+
+  visible(choice: string) {
+    return (o$: Observable<{ [name: string]: boolean }>) => o$.pipe(map((s) => s[choice] === true))
   }
 
 }

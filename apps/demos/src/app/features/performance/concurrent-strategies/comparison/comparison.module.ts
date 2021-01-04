@@ -13,12 +13,11 @@ import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { SiblingModule } from '../../../../shared/template-structures/sibling/sibling.module';
 import { ImageArrayModule } from '../../../../shared/image-array/image-array.module';
 import { ROUTES } from './comparison.routes';
+import { RxLetModule, RxForModule, RxIfModule, PipeModule } from '../../../../rx-angular-pocs';
 
 
 @NgModule({
-  declarations: [
-    ComparisonComponent
-  ],
+  declarations: [ComparisonComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
@@ -31,9 +30,12 @@ import { ROUTES } from './comparison.routes';
     FormsModule,
     MatInputModule,
     PushModule,
-    ImageArrayModule
+    ImageArrayModule,
+    RxLetModule,
+    RxForModule,
+    RxIfModule,
+    PipeModule,
   ],
-  exports: []
+  exports: [],
 })
-export class ComparisonModule {
-}
+export class ComparisonModule {}

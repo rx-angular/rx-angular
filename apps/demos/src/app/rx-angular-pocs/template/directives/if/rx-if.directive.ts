@@ -68,7 +68,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
     );
 
   @Input()
-  set rxIf(potentialObservable: Observable<boolean> | null | undefined) {
+  set rxIf(potentialObservable: Observable<boolean> | boolean | null | undefined) {
     this.connect('isTrue', potentialObservable);
   }
 
@@ -133,7 +133,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
 
   private connect<T>(
     key: 'strategyName' | 'isTrue',
-    slice$: Observable<string | boolean> | string
+    slice$: Observable<string | boolean> | string |  boolean
   ) {
     this.observablesSubject$.next(
       (isObservable(slice$) ? slice$ : of(slice$)).pipe(
@@ -151,13 +151,17 @@ export class RxIf<U> implements OnInit, OnDestroy {
     const templateName = value
       ? RxIfTemplateNames.then
       : RxIfTemplateNames.else;
-    this.templateManager.displayView(templateName);
-    this.templateManager.updateViewContext({
-      $implicit: value,
-      rxIf: value,
-    });
-    const view = this.templateManager.getEmbeddedView(templateName);
-    work(view, view);
+    const elseView = this.templateManager.getEmbeddedView(templateName)
+    if(elseView) {
+      this.templateManager.displayView(templateName);
+      this.templateManager.updateViewContext({
+        $implicit: value,
+        rxIf: value,
+      });
+      work(elseView, elseView);
+    } else {
+      this.viewContainerRef.remove()
+    }
     work(this.cdRef, (this.cdRef as any)?.context || this.cdRef);
   };
 }

@@ -25,9 +25,9 @@ import { RxForViewContext } from './model/view-context';
   selector: '[rxFor]',
   providers: [RxEffects]
 })
-export class RxFor<T extends object, U extends NgIterable<T> = NgIterable<T>> implements OnInit {
+export class RxFor<T, U extends NgIterable<T> = NgIterable<T>> implements OnInit {
   private differ: IterableDiffer<T> | null = null;
-  private observables$ = new ReplaySubject<Observable<U>>(1);
+  private observables$ = new ReplaySubject<Observable<U> | U>(1);
 
   private _renderCallback: Subject<any>;
 
@@ -39,12 +39,12 @@ export class RxFor<T extends object, U extends NgIterable<T> = NgIterable<T>> im
   private readonly listManager: ListManager<T, RxForViewContext<T>>;
 
   @Input()
-  set rxFor(potentialObservable: Observable<U> | null | undefined) {
+  set rxFor(potentialObservable: Observable<U> | U | null | undefined) {
     this.observables$.next(potentialObservable);
   }
 
   @Input()
-  set rxForOf(potentialObservable: Observable<U> | null | undefined) {
+  set rxForOf(potentialObservable: Observable<U> | U | null | undefined) {
     this.observables$.next(potentialObservable);
   }
 

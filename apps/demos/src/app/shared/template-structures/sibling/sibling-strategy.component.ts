@@ -15,7 +15,7 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
         <h3>{{siblings.length}} Siblings</h3>
       </div>
       <div class="siblings">
-        <div class="sibling" *ngFor="let sibling of siblings$ | push; trackBy:trackBy">
+        <div class="sibling" *rxFor="let sibling of siblings$; trackBy:trackBy">
           <div *rxLet="filled$; let f; strategy: strategy$" [ngClass]="{filled: f}">
 
           </div>

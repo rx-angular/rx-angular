@@ -30,7 +30,7 @@ export interface TemplateManager<
    *
    * @param name
    */
-  getEmbeddedView(name: N): EmbeddedViewRef<C> | undefined;
+  getEmbeddedView(name: N): false | EmbeddedViewRef<C>;
 
   /**
    * @description
@@ -126,7 +126,7 @@ export function createTemplateManager<
     }
   }
 
-  function getEmbeddedView(name: N): EmbeddedViewRef<C> {
+  function getEmbeddedView(name: N): false | EmbeddedViewRef<C> {
     if (hasTemplateRef(name)) {
       if (hasViewCache(name)) {
         return viewCache.get(name);
@@ -134,9 +134,7 @@ export function createTemplateManager<
         return createEmbeddedView(name);
       }
     } else {
-      throw new Error(
-        `no template registered to derive EmbeddedView ${name} from.`
-      );
+      return false
     }
   }
 

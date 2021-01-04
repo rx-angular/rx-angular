@@ -4,6 +4,6 @@ export type rxIfTemplateNames = 'rxThen' | 'rxElse' | rxBaseTemplateNames;
 
 export const RxIfTemplateNames = {
   ...RxBaseTemplateNames,
-  then: 'rxError',
-  else: 'rxComplete'
+  then: 'rxThen',
+  else: 'rxElse'
 } as const;
