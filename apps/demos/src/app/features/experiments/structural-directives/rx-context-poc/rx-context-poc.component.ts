@@ -72,16 +72,16 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
             <div class="tpl rx-suspense-tpl d-flex justify-content-center align-items-center" rxSuspense>
               <mat-progress-spinner
                 [diameter]="80"
-                [color]="'primary'"
+                [color]="'accent'"
                 [mode]="'indeterminate'"
               ></mat-progress-spinner>
             </div>
 
-            <div class="rx-error-tpl" rxComplete>
+            <div class="tpl rx-complete-tpl  d-flex justify-content-center align-items-center" rxComplete>
               <mat-icon>thumb_up</mat-icon>
             </div>
-            <div class="tpl rx-complete-tpl" rxComplete>
-              <mat-icon>thumb_up</mat-icon>
+            <div class="tpl rx-error-tpl  d-flex justify-content-center align-items-center" rxError>
+              <mat-icon>thumb_down</mat-icon>
             </div>
           </div>
         </div>
@@ -146,8 +146,8 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
 
       .ctx.before .rx-suspense-tpl,
       .ctx.after .rx-suspense-tpl {
-        border-color: #0074d9;
-        color: #0074d9;
+        border-color: #536dfe;
+        color: #536dfe;
       }
 
       .ctx.before .rx-error-tpl,
@@ -166,7 +166,10 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
         position: relative;
         min-height: 100px;
       }
+      .ctx.custom .rx-error-tpl,
+      .ctx.custom .rx-complete-tpl,
       .ctx.custom .rx-suspense-tpl {
+        background-color: rgba(0,0,0,0.75);
         position: absolute;
         top: 0;
         left: 0;
@@ -174,14 +177,29 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
         bottom: 0;
       }
 
-      .ctx.custom .rx-error-tpl,
-      .ctx.custom .rx-complete-tpl,
-      .ctx.custom .rx-complete-tpl {
+      .ctx.custom .mat-icon,
+      .ctx.custom .mat-icon,
+      .ctx.custom .mat-icon {
         margin: 20px auto;
         font-size: 5rem;
         height: initial;
         width: initial;
       }
+      .ctx.custom .rx-suspense-tpl .mat-progress-spinner circle,
+      .ctx.custom .rx-suspense-tpl > .mat-spinner circle,
+      .ctx.custom .rx-suspense-tpl {
+        color: #536dfe;
+        stroke: #536dfe !important;
+      }
+
+      .ctx.custom .rx-error-tpl{
+        color: #dc0030;
+      }
+
+      .ctx.custom .rx-complete-tpl{
+        color: #008800;
+      }
+
     `,
   ],
 })
