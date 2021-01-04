@@ -8,7 +8,7 @@ import {
   NgIterable,
   OnInit,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 
 import { ReplaySubject, Subject } from 'rxjs';
@@ -16,35 +16,27 @@ import { Observable } from 'rxjs/internal/Observable';
 import { filter, map } from 'rxjs/operators';
 import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
 import { StrategyProvider } from '../../../cdk/render-strategies/strategy-provider.service';
-import { createListManager, ListManager } from '../../../cdk/template-management/list-manager';
+import {
+  createListManager,
+  ListManager,
+} from '../../../cdk/template-management/list-manager';
 import { RxEffects } from '../../../state/rx-effects';
 import { RxForViewContext } from './model/view-context';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
   selector: '[rxFor]',
-  providers: [RxEffects]
+  providers: [RxEffects],
 })
-export class RxFor<T, U extends NgIterable<T> = NgIterable<T>> implements OnInit {
-  private differ: IterableDiffer<T> | null = null;
-  private observables$ = new ReplaySubject<Observable<U> | U>(1);
-
-  private _renderCallback: Subject<any>;
-
-  values$ = this.observables$
-    .pipe(
-      ngInputFlatten()
-    );
-
-  private readonly listManager: ListManager<T, RxForViewContext<T>>;
-
+export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
+  implements OnInit {
   @Input()
-  set rxFor(potentialObservable: Observable<U> | U | null | undefined) {
+  set rxFor(potentialObservable: Observable<NgIterable<T>> | NgIterable<T> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
 
   @Input()
-  set rxForOf(potentialObservable: Observable<U> | U | null | undefined) {
+  set rxForOf(potentialObservable: Observable<NgIterable<T>> | NgIterable<T> | null | undefined) {
     this.observables$.next(potentialObservable);
   }
 
@@ -53,10 +45,12 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>> implements OnInit
     this.listManager.nextStrategy(strategyName);
   }
 
-  _trackBy = (i, a) => a;
   @Input()
-  set rxForTrackBy(trackByFnOrKey: string | ((i) => any)) {
-    this._trackBy = typeof trackByFnOrKey !== 'function' ? (i, a) => a[trackByFnOrKey] : trackByFnOrKey;
+  set rxForTrackBy(trackByFnOrKey: string | ((idx: number, i: T) => any)) {
+    this._trackBy =
+      typeof trackByFnOrKey !== 'function'
+        ? (i, a) => a[trackByFnOrKey]
+        : trackByFnOrKey;
   }
 
   @Input('rxForRenderCallback') set renderCallback(
@@ -73,33 +67,48 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>> implements OnInit
     private readonly rxEf: RxEffects,
     private strategyProvider: StrategyProvider
   ) {
-
     this.listManager = createListManager<T, RxForViewContext<T>>({
       cdRef,
       strategies: strategyProvider.strategies,
       defaultStrategyName: strategyProvider.primaryStrategy,
       viewContainerRef,
       templateRef,
-      createViewContext
+      createViewContext,
     });
   }
+
+  static ngTemplateGuard_rxFor: 'binding';
+  private differ: IterableDiffer<T> | null = null;
+  private observables$ = new ReplaySubject<Observable<NgIterable<T>> | NgIterable<T>>(1);
+
+  private _renderCallback: Subject<any>;
+
+  values$ = this.observables$.pipe(ngInputFlatten());
+
+  private readonly listManager: ListManager<T, RxForViewContext<T>>;
+
+  /** @internal */
+  static ngTemplateContextGuard<U>(
+    dir: RxFor<U>,
+    ctx: unknown | null | undefined
+  ): ctx is RxForViewContext<U> {
+    return true;
+  }
+
+  _trackBy = (i, a) => a;
 
   ngOnInit() {
     this.differ = this.iterableDiffers.find([]).create(this._trackBy);
     const changes$ = this.values$.pipe(
-      map(i => ({ diff: this.differ.diff(i), iterable: i })),
-      filter(r => r.diff != null),
-      map(r => r.diff)
+      map((i) => ({ diff: this.differ.diff(i), iterable: i })),
+      filter((r) => r.diff != null),
+      map((r) => r.diff)
     );
 
-    this.rxEf.hold(
-      this.listManager.render(changes$), (v) => {
-        console.log(v);
-        this._renderCallback?.next(v);
-      }
-    );
+    this.rxEf.hold(this.listManager.render(changes$), (v) => {
+      this._renderCallback?.next(v);
+    });
   }
-
 }
 
 function createViewContext<T, U extends NgIterable<T> = NgIterable<T>>(

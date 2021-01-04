@@ -107,7 +107,6 @@ export class RxIf<U> implements OnInit, OnDestroy {
       (this.state$ as ConnectableObservable<any>).connect()
     );
     this.connect('strategyName', this.strategyProvider.primaryStrategy);
-    this.isTrue$.subscribe(console.log);
   }
 
   ngOnInit() {

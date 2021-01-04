@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { StrategyProvider } from '../../../../rx-angular-pocs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-concurrent-strategies',
@@ -22,10 +22,12 @@ import { map } from 'rxjs/operators';
           </div>
           <div class="col-12">
             <div class="w-100 strategy-multiselect">
-              <mat-checkbox #c *rxFor="let strategy of strategyProvider.strategyNames"
-                            (change)="setStrategy(strategy, c.checked)">
-                {{strategy}}
+              <mat-checkbox #c *rxFor="let strategy of strategies$; trackBy:trackByStrategyName"
+                            [checked]="strategy.checked"
+                            (change)="setStrategy(strategy.name, c.checked)">
+                {{strategy.name}}
               </mat-checkbox>
+
             </div>
           </div>
         </div>
@@ -55,8 +57,11 @@ import { map } from 'rxjs/operators';
   `]
 })
 export class ComparisonComponent {
-  selectedStrategies$ = new BehaviorSubject<{ [name: string]: boolean }>({});
 
+  selectedStrategies$ = new BehaviorSubject<{ [strategy: string]: boolean }>({});
+  strategies$ = this.selectedStrategies$.pipe(
+    map((selectedStrategies) => this.strategyProvider.strategyNames.map(strategy => ({name: strategy, checked: selectedStrategies[strategy] || false})))
+  );
   count$ = new BehaviorSubject<string | number>('500');
   filled$ = new BehaviorSubject<boolean>(false);
 
@@ -71,5 +76,7 @@ export class ComparisonComponent {
   visible(choice: string) {
     return (o$: Observable<{ [name: string]: boolean }>) => o$.pipe(map((s) => s[choice] === true))
   }
+
+  trackByStrategyName = (idx, v: {name: string}) => v.name
 
 }

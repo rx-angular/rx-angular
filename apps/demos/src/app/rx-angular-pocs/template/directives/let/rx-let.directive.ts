@@ -200,7 +200,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
 
   private getEmbeddeViewByNotification = (notification: RxNotification<U>): ChangeDetectorRef => {
     const name = this.templateManager.getTemplateName(notification.kind as any, RxLetTemplateNames.next);
-    return this.templateManager.getEmbeddedView(name);
+    return this.templateManager.getEmbeddedView(name) as ChangeDetectorRef;
   };
 
   private displayInitialView = () => {
