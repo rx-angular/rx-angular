@@ -11,7 +11,9 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
-import { RxContextModule, RxLetModule } from '../../../../rx-angular-pocs';
+import { RxContextModule, RxForModule, RxLetModule } from '../../../../rx-angular-pocs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 const DECLARATIONS = [
   RxContextPocComponent
@@ -32,10 +34,12 @@ const DECLARATIONS = [
     RouterModule,
     MatCardModule,
     DirtyChecksModule,
-    RxContextModule
+    RxForModule,
+    RxContextModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
   ],
   exports: DECLARATIONS,
-  providers: []
+  providers: [],
 })
-export class RxContextPocModule {
-}
+export class RxContextPocModule {}

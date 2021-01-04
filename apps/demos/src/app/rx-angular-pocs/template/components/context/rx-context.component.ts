@@ -1,8 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 
 import { isObservable, Observable, of } from 'rxjs';
 import { Hooks, RxNotificationKind, StrategyProvider } from '../../../cdk';
-import { filter, mapTo } from 'rxjs/operators';
+import { mapTo } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 import { observableToRxTemplateName } from '../../../cdk/utils/rxjs/operators/observable-to-rx-template-name';
 
@@ -10,7 +15,9 @@ import { observableToRxTemplateName } from '../../../cdk/utils/rxjs/operators/ob
   // tslint:disable-next-line:directive-selector component-selector
   selector: '[rxContextContainer]',
   template: `
+    <!-- Everything but content with selectors -->
     <ng-content></ng-content>
+    <!-- Context information -->
     <ng-container [rxSwitch]="templateName$">
       <ng-content
         *rxSwitchCase="rxSuspenseTpl"
@@ -22,9 +29,11 @@ import { observableToRxTemplateName } from '../../../cdk/utils/rxjs/operators/ob
         select="[rxComplete]"
       ></ng-content>
     </ng-container>
-    <ng-content select="[rxContextAfter]"></ng-content>
+    <!-- Content After the context information -->
+    <ng-content select="[rxAfterContext]"> </ng-content>
   `,
   providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 // tslint:disable-next-line:directive-class-suffix
 export class RxContextContainer<U> extends Hooks implements OnInit {
@@ -34,7 +43,7 @@ export class RxContextContainer<U> extends Hooks implements OnInit {
   ) {
     this.rxState.connect(
       'templateName',
-      potentialObservable.pipe(observableToRxTemplateName(), filter((kind) => kind !== RxNotificationKind.next))
+      potentialObservable.pipe(observableToRxTemplateName())
     );
   }
 
