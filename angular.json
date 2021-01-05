@@ -541,7 +541,7 @@
       "sourceRoot": "libs/state/src",
       "prefix": "rx",
       "architect": {
-        "build-lib": {
+        "build": {
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/state/tsconfig.lib.json",
@@ -551,27 +551,6 @@
             "production": {
               "tsConfig": "libs/state/tsconfig.lib.prod.json"
             }
-          }
-        },
-        "build-schematics": {
-          "builder": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              { "command": "tsc -p libs/state/tsconfig.schematics.json" },
-              { "command": "cpx libs/state/schematics/**/{collection.json,schema.json,files/**} dist/libs/state/schematics" }
-            ],
-            "parallel": false
-          }
-        },
-        "build": {
-          "builder": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              { "command": "rimraf dist/libs/state" },
-              { "command": "nx run state:build-lib" },
-              { "command": "nx run state:build-schematics" }
-            ],
-            "parallel": false
           }
         },
         "lint": {
@@ -685,8 +664,8 @@
           "builder": "@nrwl/workspace:run-commands",
           "options": {
             "commands": [
-              { "command": "tsc -p libs/template/tsconfig.schematics.json" },
-              { "command": "cpx libs/template/schematics/**/{collection.json,schema.json,files/**} dist/libs/template/schematics" }
+              { "command": "npx tsc -p libs/template/tsconfig.schematics.json" },
+              { "command": "npx cpx libs/template/schematics/**/{collection.json,schema.json,files/**} dist/libs/template/schematics" }
             ],
             "parallel": false
           }
