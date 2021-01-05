@@ -11,5 +11,12 @@
  *  @return {globalThis} - A reference to globalThis. `window` in the Browser.
  */
 export function getGlobalThis(): any {
-  return ((window as any) || (self as any) || (globalThis as any)) as any;
+  return 
+    'undefined' != typeof globalThis
+      ? globalThis
+      : 'undefined' != typeof window
+      ? window
+      : 'undefined' != typeof self
+      ? self
+      : {};
 }
