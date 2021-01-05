@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RxLetModule } from '../../../../rx-angular-pocs/directives/let';
-import { UnpatchEventsModule } from '../../../../rx-angular-pocs/directives/unpatch';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { V2AComponent } from './v2-a.component';
 import { V2BComponent } from './v2-b.component';
@@ -12,11 +10,10 @@ import { V2FComponent } from './v2-f.component';
 import { V2HComponent } from './v2-h.component';
 import { SharedModule } from '../shared/shared.module';
 import { MatButtonModule } from '@angular/material/button';
-import { PushModule } from '../../../../rx-angular-pocs/pipes/push';
-import { DirtyChecksModule } from '../../../../rx-angular-pocs/debug/dirty-check';
-
-
-
+import { RxLetModule } from '../../../../rx-angular-pocs/template/directives/let';
+import { UnpatchEventsModule } from '../../../../rx-angular-pocs/template/directives/unpatch';
+import { PushModule } from '../../../../rx-angular-pocs/template/pipes/push';
+import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 
 @NgModule({
   declarations: [
@@ -34,7 +31,6 @@ import { DirtyChecksModule } from '../../../../rx-angular-pocs/debug/dirty-check
     SharedModule,
     RxLetModule,
     MatButtonModule,
-    UnpatchEventsModule,
     UnpatchEventsModule,
     RxLetModule,
     PushModule,
