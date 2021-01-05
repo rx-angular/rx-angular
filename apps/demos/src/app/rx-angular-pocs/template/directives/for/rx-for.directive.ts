@@ -19,7 +19,7 @@ import { StrategyProvider } from '../../../cdk/render-strategies/strategy-provid
 import {
   createListManager,
   ListManager,
-} from '../../../cdk/template-management/list-manager';
+} from '../../../cdk/template-management';
 import { RxEffects } from '../../../state/rx-effects';
 import { RxForViewContext } from './model/view-context';
 
@@ -73,7 +73,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       defaultStrategyName: strategyProvider.primaryStrategy,
       viewContainerRef,
       templateRef,
-      createViewContext,
+      differ: this.iterableDiffers.find([]).create(this._trackBy),
+      createViewContext: createViewContext as any,
     });
   }
 
@@ -99,20 +100,15 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   ngOnInit() {
     this.differ = this.iterableDiffers.find([]).create(this._trackBy);
-    const changes$ = this.values$.pipe(
-      map((i) => ({ diff: this.differ.diff(i), iterable: i })),
-      filter((r) => r.diff != null),
-      map((r) => r.diff)
-    );
 
-    this.rxEf.hold(this.listManager.render(changes$), (v) => {
+    this.rxEf.hold(this.listManager.render(this.values$), (v) => {
       this._renderCallback?.next(v);
     });
   }
 }
 
-function createViewContext<T, U extends NgIterable<T> = NgIterable<T>>(
-  record: IterableChangeRecord<T>
+function createViewContext<T>(
+  item: T
 ): RxForViewContext<T> {
-  return new RxForViewContext<T>(record.item);
+  return new RxForViewContext<T>(item);
 }
