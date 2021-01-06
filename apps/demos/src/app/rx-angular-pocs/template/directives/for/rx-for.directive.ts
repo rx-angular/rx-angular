@@ -67,15 +67,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     private readonly rxEf: RxEffects,
     private strategyProvider: StrategyProvider
   ) {
-    this.listManager = createListManager<T, RxForViewContext<T>>({
-      cdRef,
-      strategies: strategyProvider.strategies,
-      defaultStrategyName: strategyProvider.primaryStrategy,
-      viewContainerRef,
-      templateRef,
-      differ: this.iterableDiffers.find([]).create(this._trackBy),
-      createViewContext: createViewContext as any,
-    });
   }
 
   static ngTemplateGuard_rxFor: 'binding';
@@ -86,7 +77,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   values$ = this.observables$.pipe(ngInputFlatten());
 
-  private readonly listManager: ListManager<T, RxForViewContext<T>>;
+  private listManager: ListManager<T, RxForViewContext<T>>;
 
   /** @internal */
   static ngTemplateContextGuard<U>(
@@ -99,8 +90,16 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   _trackBy = (i, a) => a;
 
   ngOnInit() {
-    this.differ = this.iterableDiffers.find([]).create(this._trackBy);
-
+    // this.differ = this.iterableDiffers.find([]).create(this._trackBy);
+    this.listManager = createListManager<T, RxForViewContext<T>>({
+      cdRef: this.cdRef,
+      strategies: this.strategyProvider.strategies,
+      defaultStrategyName: this.strategyProvider.primaryStrategy,
+      viewContainerRef: this.viewContainerRef,
+      templateRef: this.templateRef,
+      differ: this.iterableDiffers.find([]).create(this._trackBy) as any,
+      createViewContext: createViewContext as any,
+    });
     this.rxEf.hold(this.listManager.render(this.values$), (v) => {
       this._renderCallback?.next(v);
     });

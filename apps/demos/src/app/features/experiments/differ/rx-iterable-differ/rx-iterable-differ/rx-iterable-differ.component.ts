@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
 import { ArrayProviderService } from '../../../../../shared/debug-helper/value-provider';
 import { rxIterableDifferFactory } from '../../shared';
@@ -18,18 +18,36 @@ import { bufferTime, filter, map, mapTo, startWith, switchMap, switchMapTo } fro
             [unpatched]="" [buttons]="true" #arrayP="rxaArrayProvider"></rxa-array-provider>
         </div>
       </div>
-      <p *rxLet="rendered$; let rendered;"><strong>Rendered</strong> {{ rendered }}</p>
-      <div class="d-flex flex-wrap w-100">
-        <div class="work-child"
-             *rxFor="
+      <div class="d-flex flex-column justify-content-start w-100">
+        <p *rxLet="rendered$; let rendered;"><strong>Rendered</strong> {{ rendered }}</p>
+        <mat-button-toggle-group name="visibleExamples"
+                                 *rxLet="view; let viewMode"
+                                 aria-label="Visible Examples"
+                                 [value]="viewMode"
+                                 #group="matButtonToggleGroup">
+          <mat-button-toggle value="tile" (click)="view.next('tile')">Tile</mat-button-toggle>
+          <mat-button-toggle value="list" (click)="view.next('list')">List</mat-button-toggle>
+        </mat-button-toggle-group>
+        <div class="work-container d-flex flex-wrap w-100"
+             [class.list-view]="viewMode === 'list'"
+             *rxLet="view; let viewMode">
+          <div class="work-child d-flex"
+               *rxFor="
                 let a of arrayP.array$;
                 let index = index;
                 renderCallback: renderCallback;
                 trackBy: trackById
              ">
-          <div [ngStyle]="{background: color(a)}" ></div>
+            <div class="child-bg" [ngStyle]="{background: color(a)}" ></div>
+            <div class="child-context ">
+              <small>id: {{ a.id }}</small>
+              <small>value: {{ a.value }}</small>
+              <small>index: {{ index }}</small>
+            </div>
+          </div>
         </div>
       </div>
+
       <!--<div class="w-100 row">
         <div class="col-sm-2">
           <h3>List</h3>
@@ -68,6 +86,30 @@ import { bufferTime, filter, map, mapTo, startWith, switchMap, switchMapTo } fro
   encapsulation: ViewEncapsulation.None,
   providers: [ArrayProviderService],
   styles: [`
+    .work-container.list-view {
+      flex-direction: column;
+    }
+
+    .work-container.list-view .work-child {
+      width: 100%;
+      height: 50px;
+      margin: .5rem 0;
+      background-color: transparent !important;
+    }
+    .child-context {
+      display: none;
+    }
+    .work-container.list-view .work-child .child-context {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .work-container.list-view .work-child .child-bg {
+      margin-right: .5rem;
+      width: 50px;
+      position: relative;
+    }
+
     .work-child {
       position: relative;
       width: 10px;
@@ -78,7 +120,7 @@ import { bufferTime, filter, map, mapTo, startWith, switchMap, switchMapTo } fro
       background-color: transparent;
     }
 
-    .work-child div {
+    .work-child .child-bg {
       position: absolute;
       width: 100%;
       height: 100%;
@@ -90,6 +132,7 @@ export class RxIterableDifferComponent extends Hooks {
   arrayP;
 
   private numRendered = 0;
+  readonly view = new BehaviorSubject<'list' | 'tile'>('tile');
   readonly renderCallback = new Subject();
   readonly rendered$ = this.renderCallback.pipe(
     startWith(null),
@@ -105,7 +148,7 @@ export class RxIterableDifferComponent extends Hooks {
   identityChange$ = this.rxDiffer.update$;
   exit$ = this.rxDiffer.exit$;
 
-  trackById = item => {
+  trackById = (idx, item) => {
     return item.id;
   };
 
@@ -133,14 +176,6 @@ export class RxIterableDifferComponent extends Hooks {
   }
 
   color(a) {
-   /* let c = this.colors.get(a.id)
-    if(c) {
-      return c;
-    } else {
-      c = '#' +Math.floor(a.value*16777215).toString(16)
-      this.colors.set(a.id, c);
-      return c
-    }*/
     return '#' +Math.floor(a.value*16777215).toString(16);
   }
 }

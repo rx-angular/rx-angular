@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RouterModule } from '@angular/router';
 import { PushModule } from '@rx-angular/template';
 import { RxLetModule } from '../../../../rx-angular-pocs/template/directives/let/let.module';
@@ -25,9 +26,10 @@ const DECLARATIONS = [RxIterableDifferComponent];
     DirtyChecksModule,
     MatButtonModule,
     VisualizerModule,
-    ValueProvidersModule, SharedModule,
-    RxForModule
-  ]
+    ValueProvidersModule,
+    SharedModule,
+    RxForModule,
+    MatButtonToggleModule,
+  ],
 })
-export class RxIterableDifferModule {
-}
+export class RxIterableDifferModule {}

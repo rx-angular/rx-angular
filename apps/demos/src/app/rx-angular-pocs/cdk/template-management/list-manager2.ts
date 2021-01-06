@@ -10,10 +10,11 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {
+  distinctUntilChanged,
   filter,
   map,
   startWith,
-  switchMap,
+  switchMap, tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import {
@@ -44,7 +45,7 @@ export interface RxViewContainerRefSpecialWork<T, C> {
   type?: RxViewContainerRefChangeType;
 }
 
-export type CreateViewContext<T, C> = (record: IterableChangeRecord<T>) => C;
+export type CreateViewContext<T, C> = (item: T) => C;
 
 type K = string | number | symbol;
 
@@ -53,38 +54,42 @@ export interface ChangeSet<T> {
   update?: boolean;
   move?: boolean;
   remove?: boolean;
-  item: IterableChangeRecord<T>;
+  record: IterableChangeRecord<T>;
 }
 
 function addInsert<T>(
   changeSet: ChangeSet<T>,
-  item: IterableChangeRecord<T>
+  record: IterableChangeRecord<T>
 ): ChangeSet<T> {
-  return { insert: true, item };
+  return { insert: true, record };
 }
 
 function addUpdate<T>(
   changeSet: ChangeSet<T>,
-  item: IterableChangeRecord<T>
+  record: IterableChangeRecord<T>
 ): ChangeSet<T> {
-  return { ...(changeSet || {}), update: true, item };
+  return { ...(changeSet || {}), update: true, record };
 }
 
 function addMove<T>(
   changeSet: ChangeSet<T>,
-  item: IterableChangeRecord<T>
+  record: IterableChangeRecord<T>
 ): ChangeSet<T> {
-  return { ...(changeSet || {}), move: true, item };
+  return { move: true, record };
 }
 
 function addRemove<T>(
   changeSet: ChangeSet<T>,
-  item: IterableChangeRecord<T>
+  record: IterableChangeRecord<T>
 ): ChangeSet<T> {
-  return { remove: true, item };
+  return { remove: true, record };
 }
 
 export type ChangeMap<T> = Record<K, ChangeSet<T>>;
+
+function resetChange<T>(changeMap: ChangeMap<T>, record: IterableChangeRecord<T>): void {
+  return changeMap[record.trackById] = { } as any;
+}
 
 const forEachInsertToArray = forEachToArray('forEachAddedItem');
 const forEachMoveToArray = forEachToArray('forEachMovedItem');
@@ -108,9 +113,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     strategies,
   } = config;
 
-  let diff: IterableChanges<T>;
   const changeMap: ChangeMap<T> = {};
-  const _leWork = new Map<number, (() => EmbeddedViewRef<C>)[]>();
 
   const strategyName$ = new ReplaySubject<Observable<string>>(1);
   const strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
@@ -141,7 +144,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     return (o$: Observable<IterableChanges<T>>) =>
       o$.pipe(
         map((change) => {
-          diff = change;
+          console.log('change', change);
           const insertions = forEachInsertToArray(change);
           const removals = forEachRemoveToArray(change);
           const moves = forEachMoveToArray(change);
@@ -152,6 +155,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               changeMap[record.trackById],
               record
             );
+            // console.log('insertions', record);
             changedItems.push(record.trackById);
           });
           removals.forEach((record) => {
@@ -183,21 +187,72 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             ...changedItems.map((trackById) => {
               return of(trackById).pipe(
                 strategy.behavior(() => {
-                  const record = changeMap[trackById].item;
-
-                  // Insert
-                  const ev = viewContainerRef.createEmbeddedView(
-                    templateRef,
-                    createViewContext(record)
-                  );
-                  ev.context.setComputedContext({
-                    index: record.currentIndex,
-                    count: config.differ.collection.length,
-                  });
-                  ev.reattach();
-                  ev.detectChanges();
-                  ev.detach();
-                }, null)
+                  const change = changeMap[trackById];
+                  const record = change.record;
+                  const count = config.differ.collection.length;
+                  if (change.insert) {
+                    // Insert
+                    const ev = viewContainerRef.createEmbeddedView(
+                      templateRef,
+                      createViewContext(record.item)
+                    );
+                    ev.context.setComputedContext({
+                      index: record.currentIndex,
+                      count,
+                    });
+                    ev.reattach();
+                    ev.detectChanges();
+                    ev.detach();
+                    resetChange(changeMap, record);
+                    return;
+                  }
+                  if (change.remove) {
+                    // remove
+                    if (viewContainerRef.get(record.previousIndex)) {
+                      viewContainerRef.remove(record.previousIndex);
+                    }
+                    resetChange(changeMap, record);
+                    return;
+                  }
+                  if (change.update) {
+                    // update
+                    const currentView = viewContainerRef.get(
+                      record.currentIndex
+                    ) as EmbeddedViewRef<C>;
+                    currentView.context.$implicit = record.item;
+                    currentView.context.setComputedContext({
+                      index: record.currentIndex,
+                      count,
+                    });
+                    currentView.reattach();
+                    currentView.detectChanges();
+                    currentView.detach();
+                    resetChange(changeMap, record);
+                    return;
+                  }
+                  if (change.move) {
+                    const currentView = viewContainerRef.get(record.previousIndex) as EmbeddedViewRef<C>;
+                    const newView = viewContainerRef.move(currentView, record.currentIndex) as EmbeddedViewRef<C>;
+                    newView.context.setComputedContext({ index: record.currentIndex, count });
+                    newView.reattach();
+                    newView.detectChanges();
+                    newView.detach();
+                    console.log('move', record);
+                    console.log('newView', newView);
+                   /* // All unchanged
+                    for (let index = 0; index < viewContainerRef.length; index++) {
+                      // tslint:disable-next-line:no-unused-expression
+                      if (index === record.currentIndex) continue;
+                      const e = viewContainerRef.get(index) as EmbeddedViewRef<C>;
+                      e.context.setComputedContext({ index, count });
+                      e.reattach();
+                      e.detectChanges();
+                      e.detach();
+                    }*/
+                    resetChange(changeMap, record);
+                    return;
+                  }
+                }, changeMap[trackById].record.item)
                 // map(id => id === -1 ? 'rendered' : 'rendering')
               );
             }),
