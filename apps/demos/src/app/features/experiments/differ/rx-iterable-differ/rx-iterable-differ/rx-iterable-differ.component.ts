@@ -132,7 +132,7 @@ export class RxIterableDifferComponent extends Hooks {
   arrayP;
 
   private numRendered = 0;
-  readonly view = new BehaviorSubject<'list' | 'tile'>('tile');
+  readonly view = new BehaviorSubject<'list' | 'tile'>('list');
   readonly renderCallback = new Subject();
   readonly rendered$ = this.renderCallback.pipe(
     startWith(null),

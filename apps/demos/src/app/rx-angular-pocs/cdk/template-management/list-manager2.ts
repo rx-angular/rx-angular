@@ -7,7 +7,7 @@ import {
   IterableDiffer,
   NgIterable,
   TemplateRef,
-  ViewContainerRef,
+  ViewContainerRef, ViewRef
 } from '@angular/core';
 import {
   distinctUntilChanged,
@@ -55,6 +55,7 @@ export interface ChangeSet<T> {
   move?: boolean;
   remove?: boolean;
   record: IterableChangeRecord<T>;
+  vRef?: ViewRef;
 }
 
 function addInsert<T>(
@@ -73,9 +74,10 @@ function addUpdate<T>(
 
 function addMove<T>(
   changeSet: ChangeSet<T>,
-  record: IterableChangeRecord<T>
+  record: IterableChangeRecord<T>,
+  vRef: ViewRef,
 ): ChangeSet<T> {
-  return { move: true, record };
+  return { move: true, record, vRef };
 }
 
 function addRemove<T>(
@@ -114,6 +116,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
   } = config;
 
   const changeMap: ChangeMap<T> = {};
+  const diff: any = {};
 
   const strategyName$ = new ReplaySubject<Observable<string>>(1);
   const strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
@@ -168,7 +171,8 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
           moves.forEach((record) => {
             changeMap[record.trackById] = addMove(
               changeMap[record.trackById],
-              record
+              record,
+              config.viewContainerRef.get(record.previousIndex)
             );
             changedItems.push(record.trackById);
           });
@@ -191,75 +195,68 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                   const record = change.record;
                   const count = config.differ.collection.length;
                   if (change.insert) {
-                    // Insert
-                    const ev = viewContainerRef.createEmbeddedView(
-                      templateRef,
-                      createViewContext(record.item)
-                    );
-                    ev.context.setComputedContext({
-                      index: record.currentIndex,
-                      count,
-                    });
-                    ev.reattach();
-                    ev.detectChanges();
-                    ev.detach();
+                    insertWork(record, count);
                     resetChange(changeMap, record);
                     return;
                   }
                   if (change.remove) {
-                    // remove
-                    if (viewContainerRef.get(record.previousIndex)) {
-                      viewContainerRef.remove(record.previousIndex);
-                    }
+                    removeWork(record, count);
                     resetChange(changeMap, record);
                     return;
                   }
                   if (change.update) {
-                    // update
-                    const currentView = viewContainerRef.get(
-                      record.currentIndex
-                    ) as EmbeddedViewRef<C>;
-                    currentView.context.$implicit = record.item;
-                    currentView.context.setComputedContext({
-                      index: record.currentIndex,
-                      count,
-                    });
-                    currentView.reattach();
-                    currentView.detectChanges();
-                    currentView.detach();
+                    updateWork(record, count);
                     resetChange(changeMap, record);
                     return;
                   }
                   if (change.move) {
-                    const currentView = viewContainerRef.get(record.previousIndex) as EmbeddedViewRef<C>;
-                    const newView = viewContainerRef.move(currentView, record.currentIndex) as EmbeddedViewRef<C>;
-                    newView.context.setComputedContext({ index: record.currentIndex, count });
-                    newView.reattach();
-                    newView.detectChanges();
-                    newView.detach();
-                    console.log('move', record);
-                    console.log('newView', newView);
-                   /* // All unchanged
-                    for (let index = 0; index < viewContainerRef.length; index++) {
-                      // tslint:disable-next-line:no-unused-expression
-                      if (index === record.currentIndex) continue;
-                      const e = viewContainerRef.get(index) as EmbeddedViewRef<C>;
-                      e.context.setComputedContext({ index, count });
-                      e.reattach();
-                      e.detectChanges();
-                      e.detach();
-                    }*/
+                    moveWork(record, count, change.vRef);
                     resetChange(changeMap, record);
                     return;
                   }
                 }, changeMap[trackById].record.item)
-                // map(id => id === -1 ? 'rendered' : 'rendering')
               );
             }),
           ]);
         })
       );
   }
+
+  function moveWork(record: IterableChangeRecord<T>, count: number, vRef: ViewRef) {
+    const newView = viewContainerRef.move(vRef, record.currentIndex) as EmbeddedViewRef<C>;
+    newView.context.setComputedContext({ index: record.currentIndex, count });
+    newView.reattach();
+    newView.detectChanges();
+    newView.detach();
+  }
+  function updateWork(record: IterableChangeRecord<T>, count: number) {
+    const currentView = viewContainerRef.get(
+      record.currentIndex
+    ) as EmbeddedViewRef<C>;
+    currentView.context.$implicit = record.item;
+    currentView.context.setComputedContext({
+      index: record.currentIndex,
+      count,
+    });
+    currentView.reattach();
+    currentView.detectChanges();
+    currentView.detach();
+  }
+  function removeWork(record: IterableChangeRecord<T>, count: number) {
+    if (viewContainerRef.get(record.previousIndex)) {
+      viewContainerRef.remove(record.previousIndex);
+    }
+  }
+  function insertWork(record: IterableChangeRecord<T>, count: number) {
+    const currentView = viewContainerRef.createEmbeddedView(
+      templateRef,
+      createViewContext(record.item)
+    );
+    currentView.context.setComputedContext({ index: record.currentIndex, count });
+    currentView.detectChanges();
+    currentView.detach();
+  }
+
 }
 
 function forEachToArray<T>(
