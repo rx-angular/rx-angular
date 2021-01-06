@@ -7,40 +7,6 @@ import { ArrayProviderService } from '../array-provider.service';
   template: `
     <ng-container *ngIf="buttons">
       <div class="row">
-        <!-- <div class="col-sm-12">
-         <p>Observable Context</p>
-
-         <button mat-raised-button [unpatch]="unpatched" (click)="reset()">
-           Reset
-         </button>
-         <button mat-raised-button [unpatch]="unpatched" (click)="error()">
-           Error
-         </button>
-         <button mat-raised-button [unpatch]="unpatched" (click)="complete()">
-           Complete
-         </button>
-       </div>
-       <div class="col-sm-6">
-         <p>Mutable Operations</p>
-         <button mat-raised-button [unpatch]="unpatched" (click)="addItemsMutable()">
-           Add
-         </button>
-         <button mat-raised-button [unpatch]="unpatched" (click)="moveItemsMutable()">
-           Move
-         </button>
-         <button mat-raised-button [unpatch]="unpatched" (click)="updateItemsMutable()">
-           Update
-         </button>
-         <button mat-raised-button [unpatch]="unpatched" (click)="removeItemsMutable()">
-           Remove
-         </button>
-         <br/>
-         <button mat-raised-button [unpatch]="unpatched" (click)="addItemsMutable(5)">
-           Add Many
-         </button>
-
-       </div>
-       -->
         <div class="col">
           <p>Immutable Operations</p>
           <button mat-raised-button [unpatch]="unpatched" (click)="addItemsImmutable(1)">
@@ -59,7 +25,7 @@ import { ArrayProviderService } from '../array-provider.service';
           <button mat-raised-button [unpatch]="unpatched" (click)="addItemsImmutable(200)">
             Add Many
           </button>
-          <button mat-raised-button [unpatch]="unpatched" (click)="moveItemsImmutable(2)">
+          <button mat-raised-button [unpatch]="unpatched" (click)="moveItemsImmutable(5)">
             Move Many
           </button>
           <button mat-raised-button [unpatch]="unpatched" (click)="updateItemsImmutable(20)">

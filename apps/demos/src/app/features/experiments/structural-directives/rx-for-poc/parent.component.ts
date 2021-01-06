@@ -28,7 +28,7 @@ import { immutableArr } from '../utils';
               <input matInput min="1" #r type="number" unpatch [value]="table?.rows+''" (input)="set({rows: +r.value})">
             </mat-form-field>
             <mat-form-field>
-              <mat-label>Colums</mat-label>
+              <mat-label>Columns</mat-label>
               <input matInput
                      min="1"
                      #c
@@ -36,6 +36,10 @@ import { immutableArr } from '../utils';
                      unpatch
                      [value]="table?.columns+''"
                      (input)="set({columns: +c.value})">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Changes</mat-label>
+              <input matInput max="table?.rows" #c type="number" unpatch [value]="table?.changes+''" (input)="set({changes: +c.value})">
             </mat-form-field>
           </p>
           <mat-button-toggle-group name="visibleExamples"
@@ -141,12 +145,12 @@ import { immutableArr } from '../utils';
         <div class="col"
              *ngIf="group.value === displayStates.rxAngularReactive2 || group.value === displayStates.all">
           <h2>RxAngular, *rxFor2 trackBy, distinctBy, select</h2>
-          <p>
+          <p *rxLet="table$; let t">
             <button mat-raised-button [unpatch] (click)="changeOneClick$.next(1)">
-              unpatched update
+              update
             </button>
-            <button mat-raised-button [unpatch] (click)="changeAllClick$.next(10)">
-              unpatched Change all
+            <button mat-raised-button [unpatch] (click)="changeAllClick$.next(t.changes)">
+              Change many
             </button>
             <button mat-raised-button [unpatch] (click)="toggleIntervalClick$.next(10)">
               unpatched toggel interval
@@ -186,7 +190,7 @@ import { immutableArr } from '../utils';
   changeDetection: environment.changeDetection,
   encapsulation: ViewEncapsulation.None
 })
-export class RxForContainerComponent extends RxState<{ rows: number, columns: number }> implements AfterViewInit {
+export class RxForContainerComponent extends RxState<{ rows: number, columns: number, changes: number }> implements AfterViewInit {
 
   @ViewChildren('spanChild') spanChildren: QueryList<ElementRef>;
 
@@ -234,7 +238,7 @@ export class RxForContainerComponent extends RxState<{ rows: number, columns: nu
       merge(this.changesFromTick$, this.changeAllClick$),
       this.table$
     ).pipe(
-      switchMap(([_, { rows, columns }]) => immutableArr(rows, columns)(of(rows)))
+      switchMap(([_, { rows, columns, changes }]) => immutableArr(rows, columns)(of(rows)))
     )
   ).pipe(
     share()
