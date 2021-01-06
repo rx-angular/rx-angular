@@ -30,6 +30,7 @@ import { RxForViewContext } from './model/view-context';
 })
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit {
+
   @Input()
   set rxFor(potentialObservable: Observable<NgIterable<T>> | NgIterable<T> | null | undefined) {
     this.observables$.next(potentialObservable);
@@ -42,7 +43,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   @Input('rxForStrategy')
   set strategy(strategyName: string | Observable<string> | undefined) {
-    this.listManager.nextStrategy(strategyName);
+    this.strategyInput$.next(strategyName);
   }
 
   @Input()
@@ -70,12 +71,15 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   static ngTemplateGuard_rxFor: 'binding';
+
+  private strategyInput$ = new ReplaySubject<string | Observable<string>>(1);
   private differ: IterableDiffer<T> | null = null;
   private observables$ = new ReplaySubject<Observable<NgIterable<T>> | NgIterable<T>>(1);
-
   private _renderCallback: Subject<any>;
 
   values$ = this.observables$.pipe(ngInputFlatten());
+
+  strategy$ = this.strategyInput$.pipe(ngInputFlatten());
 
   private listManager: ListManager<T, RxForViewContext<T>>;
 
@@ -100,6 +104,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       differ: this.iterableDiffers.find([]).create(this._trackBy) as any,
       createViewContext: createViewContext as any,
     });
+    this.listManager.nextStrategy(this.strategy$);
     this.rxEf.hold(this.listManager.render(this.values$), (v) => {
       this._renderCallback?.next(v);
     });

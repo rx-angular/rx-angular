@@ -147,7 +147,6 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     return (o$: Observable<IterableChanges<T>>) =>
       o$.pipe(
         map((change) => {
-          console.log('change', change);
           const insertions = forEachInsertToArray(change);
           const removals = forEachRemoveToArray(change);
           const moves = forEachMoveToArray(change);
@@ -158,7 +157,6 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               changeMap[record.trackById],
               record
             );
-            // console.log('insertions', record);
             changedItems.push(record.trackById);
           });
           removals.forEach((record) => {
