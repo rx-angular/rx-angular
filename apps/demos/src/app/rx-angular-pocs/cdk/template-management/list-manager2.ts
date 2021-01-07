@@ -147,26 +147,22 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     return (o$: Observable<IterableChanges<T>>) =>
       o$.pipe(
         map((change) => {
-          const insertions = forEachInsertToArray(change);
-          const removals = forEachRemoveToArray(change);
-          const moves = forEachMoveToArray(change);
-          const updates = forEachUpdateToArray(change);
           const changedItems = [];
-          insertions.forEach((record) => {
+          forEachInsertToArray(change).forEach((record) => {
             changeMap[record.trackById] = addInsert(
               changeMap[record.trackById],
               record
             );
             changedItems.push(record.trackById);
           });
-          removals.forEach((record) => {
+          forEachRemoveToArray(change).forEach((record) => {
             changeMap[record.trackById] = addRemove(
               changeMap[record.trackById],
               record
             );
             changedItems.push(record.trackById);
           });
-          moves.forEach((record) => {
+          forEachMoveToArray(change).forEach((record) => {
             changeMap[record.trackById] = addMove(
               changeMap[record.trackById],
               record,
@@ -174,7 +170,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             );
             changedItems.push(record.trackById);
           });
-          updates.forEach((record) => {
+          forEachUpdateToArray(change).forEach((record) => {
             changeMap[record.trackById] = addUpdate(
               changeMap[record.trackById],
               record
@@ -190,6 +186,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               return of(trackById).pipe(
                 strategy.behavior(() => {
                   const change = changeMap[trackById];
+
                   const record = change.record;
                   const count = config.differ.collection.length;
                   if (change.insert) {

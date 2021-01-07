@@ -24,6 +24,7 @@ import { map, startWith } from 'rxjs/operators';
             [buttons]="true"
             #arrayP="rxaArrayProvider"
           ></rxa-array-provider>
+          <rxa-strategy-select (strategyChange)="strategy$.next($event)"></rxa-strategy-select>
         </div>
       </div>
       <div class="d-flex flex-column justify-content-start w-100">
@@ -55,7 +56,8 @@ import { map, startWith } from 'rxjs/operators';
               let a of arrayP.array$;
               let index = index;
               renderCallback: renderCallback;
-              trackBy: trackById
+              trackBy: trackById;
+              strategy: strategy$
             "
           >
             <div class="child-bg" [ngStyle]="{ background: color(a) }"></div>
@@ -156,12 +158,14 @@ export class RxIterableDifferComponent extends Hooks {
   arrayP;
 
   private numRendered = 0;
+
   readonly view = new BehaviorSubject<'list' | 'tile'>('list');
   readonly renderCallback = new Subject();
   readonly rendered$ = this.renderCallback.pipe(
     startWith(null),
     map(() => ++this.numRendered)
   );
+  strategy$ = new Subject<string>();
 
   rxDiffer = rxIterableDifferFactory({
     trackBy: 'id',

@@ -37,10 +37,6 @@ import { immutableArr } from '../utils';
                      [value]="table?.columns+''"
                      (input)="set({columns: +c.value})">
             </mat-form-field>
-            <mat-form-field>
-              <mat-label>Changes</mat-label>
-              <input matInput max="table?.rows" #c type="number" unpatch [value]="table?.changes+''" (input)="set({changes: +c.value})">
-            </mat-form-field>
           </p>
           <mat-button-toggle-group name="visibleExamples"
                                    aria-label="Visible Examples"

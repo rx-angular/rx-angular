@@ -13,6 +13,7 @@ import { RxIterableDifferComponent } from './rx-iterable-differ/rx-iterable-diff
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { RxForModule } from '../../../../rx-angular-pocs/template/directives/for';
+import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 
 const DECLARATIONS = [RxIterableDifferComponent];
 
@@ -30,6 +31,7 @@ const DECLARATIONS = [RxIterableDifferComponent];
     SharedModule,
     RxForModule,
     MatButtonToggleModule,
+    StrategySelectModule,
   ],
 })
 export class RxIterableDifferModule {}
