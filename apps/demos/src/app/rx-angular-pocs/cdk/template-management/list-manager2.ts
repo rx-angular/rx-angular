@@ -10,12 +10,13 @@ import {
   ViewContainerRef, ViewRef
 } from '@angular/core';
 import {
+  audit, auditTime,
   distinctUntilChanged,
   filter,
   map,
   startWith,
   switchMap, tap,
-  withLatestFrom,
+  withLatestFrom
 } from 'rxjs/operators';
 import {
   StrategyCredentials,
@@ -148,21 +149,21 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
       o$.pipe(
         map((change) => {
           const changedItems = [];
-          forEachInsertToArray(change).forEach((record) => {
+          change.forEachAddedItem((record) => {
             changeMap[record.trackById] = addInsert(
               changeMap[record.trackById],
               record
             );
             changedItems.push(record.trackById);
           });
-          forEachRemoveToArray(change).forEach((record) => {
+          change.forEachRemovedItem((record) => {
             changeMap[record.trackById] = addRemove(
               changeMap[record.trackById],
               record
             );
             changedItems.push(record.trackById);
           });
-          forEachMoveToArray(change).forEach((record) => {
+          change.forEachMovedItem((record) => {
             changeMap[record.trackById] = addMove(
               changeMap[record.trackById],
               record,
@@ -170,7 +171,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             );
             changedItems.push(record.trackById);
           });
-          forEachUpdateToArray(change).forEach((record) => {
+          change.forEachIdentityChange((record) => {
             changeMap[record.trackById] = addUpdate(
               changeMap[record.trackById],
               record
@@ -186,7 +187,6 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               return of(trackById).pipe(
                 strategy.behavior(() => {
                   const change = changeMap[trackById];
-
                   const record = change.record;
                   const count = config.differ.collection.length;
                   if (change.insert) {
@@ -213,7 +213,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               );
             }),
           ]);
-        })
+        }),
       );
   }
 

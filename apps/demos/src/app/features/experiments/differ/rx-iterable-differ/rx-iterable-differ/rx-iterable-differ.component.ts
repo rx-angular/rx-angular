@@ -12,6 +12,18 @@ import { RxState } from '@rx-angular/state';
 import { Hooks } from '../../../../../shared/debug-helper/hooks';
 import { map, startWith } from 'rxjs/operators';
 
+
+
+const item0 = {id: 0, value: '0000'};
+const item1 = {id: 1, value: '1111'};
+const item2 = {id: 2, value: '2222'};
+const item3 = {id: 3, value: '3333'};
+const customChangeSet = [
+  [item0, item1, item2, item3],
+  [item0, {...item2, value: '2232'}, item1, item3]
+];
+
+
 @Component({
   selector: 'rxa-differ-rx-iterable-differ',
   template: `
@@ -166,6 +178,8 @@ export class RxIterableDifferComponent extends Hooks {
     map(() => ++this.numRendered)
   );
   strategy$ = new Subject<string>();
+  customChangeSet = customChangeSet;
+  customChangeSet$ = new Subject<any>();
 
   rxDiffer = rxIterableDifferFactory({
     trackBy: 'id',
@@ -206,3 +220,4 @@ export class RxIterableDifferComponent extends Hooks {
     return '#' + Math.floor(a.value * 16777215).toString(16);
   }
 }
+
