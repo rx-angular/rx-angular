@@ -59,8 +59,6 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     nameToStrategyCredentials(strategies, defaultStrategyName)
   );
 
-  const positions = new Map<T, number>();
-
   const notifyParent$ = new Subject<boolean>();
 
   return {
@@ -87,39 +85,39 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
       );
     },
   };
-
-  /*
-   * divides changes into types (update, insert,...) and prepares work functions
-   * additionally calculates the new 'virtualCount' => new count after work is applied,
-   * needed for updating the context of all existing items in the viewContainer
-   */
-
   function _render() {
+    let count = 0;
+    const positions = new Map<T, number>();
+
     return (o$: Observable<NgIterable<T>>) =>
       o$.pipe(
         map((items) => (items ? Array.from(items) : [])),
         withLatestFrom(strategy$),
         switchMap(([items, strategy]) => {
+
           const viewLength = viewContainerRef.length;
           let toRemoveCount = viewLength - items.length;
+          const notifyParent = toRemoveCount > 0  || count !== items.length;
+          count = items.length;
+
           const remove$ = [];
-          let i = viewContainerRef.length;
+          let i = viewLength;
           while (i > 0 && toRemoveCount > 0) {
             toRemoveCount--;
             i--;
             remove$.push(
               of(null).pipe(
-                strategy.behavior(() => {
-                  viewContainerRef.remove(i);
-                }, {})
+                strategy.behavior(() => {viewContainerRef.remove(i);}, {})
               )
             );
           }
-          let notifyParent = false;
+
           return combineLatest([
             // support for Iterable<T> (e.g. `Map#values`)
             ...items.map((item, index) => {
               positions.set(item, index);
+              const context = { count, index};
+
               return of(item).pipe(
                 strategy.behavior(() => {
                   let view = viewContainerRef.get(index) as EmbeddedViewRef<C>;
@@ -130,6 +128,8 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                       createViewContext(item),
                       index
                     );
+                    view.context.setComputedContext(context);
+
                     view.reattach();
                     view.detectChanges();
                     view.detach();
@@ -142,9 +142,10 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                     const moved = trackById !== currentId;
                     const updated = !distinctBy(view.context.$implicit, item);
                     if (moved || updated) {
+
                       if (moved) {
                         const oldPosition = positions.get(item);
-                        if (positions.has(item)) {
+                        if (positions.has(item) && positions.get(item) !== index) {
                           const oldView = viewContainerRef.get(oldPosition);
                           if (oldView) {
                             // console.log(oldView);
@@ -152,20 +153,24 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                               oldView,
                               index
                             ) as EmbeddedViewRef<C>;
+                            view.context.setComputedContext(context);
                           }
                         }
                       }
                       view.context.$implicit = item;
+
                       view.reattach();
                       view.detectChanges();
                       view.detach();
+
+                    } else {
+
+                      if(notifyParent) {
+                        view.context.setComputedContext(context);
+                      }
                     }
                   }
-                  /*// Update viewContext variable props
-                  view.context.setComputedContext({
-                    count: items.length,
-                    index,
-                  });*/
+
                 }, item)
               );
             }),
@@ -174,7 +179,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             tap(() => notifyParent$.next(notifyParent))
           );
         })
-        // tap(() => {notifyParent$.next(notifyParent);})
       );
   }
+
 }
