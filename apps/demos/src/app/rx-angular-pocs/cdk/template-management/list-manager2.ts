@@ -6,7 +6,7 @@ import {
   IterableChanges,
   IterableDiffer,
   NgIterable,
-  TemplateRef,
+  TemplateRef, TrackByFunction,
   ViewContainerRef, ViewRef
 } from '@angular/core';
 import {
@@ -43,49 +43,76 @@ const enum ChangeType {
   remove,
 }
 
+type VirtualIterableChangeRecord<T> = IterableChangeRecord<T> & {
+  adjustedPreviousIndex: number | undefined;
+  futureIndex: number | undefined;
+}
+
 export interface ChangeSet<T> {
   insert?: boolean;
   update?: boolean;
   move?: boolean;
   remove?: boolean;
   noop?: boolean;
-  record: IterableChangeRecord<T> & { adjustedPreviousIndex: number | undefined };
+  record: VirtualIterableChangeRecord<T>;
   vRef?: ViewRef;
 }
 
 function addInsert<T>(
   changeSet: ChangeSet<T>,
-  record: IterableChangeRecord<T> & { adjustedPreviousIndex: number | undefined }
+  record: VirtualIterableChangeRecord<T>
 ): ChangeSet<T> {
+  console.log('schedule insert', record);
+  if (changeSet?.move) {
+    console.error('should not happen?');
+  }
   return { insert: true, record };
 }
 
 function addUpdate<T>(
   changeSet: ChangeSet<T>,
-  record: IterableChangeRecord<T> & { adjustedPreviousIndex: number | undefined }
+  record: VirtualIterableChangeRecord<T>
 ): ChangeSet<T> {
+  console.log('schedule update', record);
   return { ...(changeSet || {}), update: true, record };
 }
 
 function addMove<T>(
   changeSet: ChangeSet<T>,
-  record: IterableChangeRecord<T> & { adjustedPreviousIndex: number | undefined },
+  record: VirtualIterableChangeRecord<T>,
   vRef: ViewRef,
 ): ChangeSet<T> {
+  console.log('schedule move', record);
+  console.log(changeSet);
+  if (changeSet && changeSet.insert) {
+    console.log('overwrite insert', record);
+    return {
+      insert: true,
+      record
+    }
+  }
   return { move: true, record, vRef };
 }
 function addNoop<T>(
   changeSet: ChangeSet<T>,
-  record: IterableChangeRecord<T> & { adjustedPreviousIndex: number | undefined },
+  record: VirtualIterableChangeRecord<T>,
   vRef: ViewRef,
 ): ChangeSet<T> {
+  if (changeSet) {
+    return {
+      ...changeSet,
+      record,
+      noop: true
+    }
+  }
   return { noop: true, record, vRef };
 }
 
 function addRemove<T>(
   changeSet: ChangeSet<T>,
-  record: IterableChangeRecord<T> & { adjustedPreviousIndex: number | undefined }
+  record: VirtualIterableChangeRecord<T>
 ): ChangeSet<T> {
+  console.log('schedule remove', record);
   return { remove: true, record };
 }
 
@@ -93,9 +120,9 @@ export type ChangeMap<T> = Record<K, ChangeSet<T>>;
 
 function resetChange<T>(
   changeMap: ChangeMap<T>,
-  record: IterableChangeRecord<T>
+  record: VirtualIterableChangeRecord<T>
 ): void {
-  return (changeMap[record.trackById] = {} as any);
+  delete changeMap[record.trackById];
 }
 
 export function createListManager<T, C extends RxListViewContext<T>>(config: {
@@ -105,6 +132,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
   viewContainerRef: ViewContainerRef;
   templateRef: TemplateRef<C>;
   createViewContext: CreateViewContext<T, C>;
+  trackBy: TrackByFunction<T>,
   differ: (items: NgIterable<T>) => IterableDiffer<T> & { collection: any };
 }): ListManager<T, C> {
   const {
@@ -170,9 +198,8 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
       o$.pipe(
         map((change) => {
           const changedItems = [];
-          let indexUpdate = false;
-          change.forEachOperation((record: IterableChangeRecord<T> & { adjustedPreviousIndex: number | undefined }, adjustedPreviousIndex: number|null, currentIndex: number|null) => {
-            indexUpdate = true;
+          const changedItemsSet = new Set<any>();
+          change.forEachOperation((record: VirtualIterableChangeRecord<T>, adjustedPreviousIndex: number|null, currentIndex: number|null) => {
             // Insert
             if (record.previousIndex == null) {
               record.adjustedPreviousIndex = adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex;
@@ -181,16 +208,18 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                 record
               );
               changedItems.push(record.trackById);
+              changedItemsSet.add(record.trackById);
               }
             // Remove
             else if (currentIndex == null) {
               record.adjustedPreviousIndex = adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex;
-                changeMap[record.trackById] = addRemove(
+              changeMap[record.trackById] = addRemove(
                 changeMap[record.trackById],
                 record
               );
               changedItems.push(record.trackById);
-              }
+              changedItemsSet.add(record.trackById);
+            }
             // Move
             else if (adjustedPreviousIndex !== null) {
               record.adjustedPreviousIndex = adjustedPreviousIndex;
@@ -199,9 +228,11 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                 record,
                 config.viewContainerRef.get(record.previousIndex)
               );
-              }
+              changedItems.push(record.trackById);
+              changedItemsSet.add(record.trackById);
+            }
             });
-
+          const updateNoops = !!changedItemsSet.size;
           // Update
           change.forEachIdentityChange((record: any) => {
             changeMap[record.trackById] = addUpdate(
@@ -209,21 +240,32 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               record
             );
             changedItems.push(record.trackById);
+            changedItemsSet.add(record.trackById);
           });
 
-          // Unchanged
-          for (let i = 0, ilen = viewContainerRef.length; i < ilen; i++) {
-            const vRef = <EmbeddedViewRef<C>>viewContainerRef.get(i);
-            const trackById = (vRef.context.$implicit as any)?.id;
-            addNoop({vRef} as any, {trackById} as any, vRef);
-            changedItems.push(trackById);
+          if (updateNoops) {
+            // Unchanged
+            for (let i = 0, ilen = viewContainerRef.length; i < ilen; i++) {
+              const vRef = <EmbeddedViewRef<C>>viewContainerRef.get(i);
+              const trackById = config.trackBy(i, vRef.context.$implicit);
+              if (!changedItemsSet.has(trackById)) {
+                changeMap[trackById] = addNoop(
+                  {vRef} as any,
+                  {trackById} as any,
+                  vRef
+                );
+                changedItems.push(trackById);
+              }
+            }
           }
-
           // ---------------------------------
 
           console.log('changedItems', changedItems);
-          return changedItems;
+          return Object.keys(changeMap).sort((idA, idB) => {
+            return changeMap[idA].record.currentIndex - changeMap[idB].record.currentIndex;
+          });
         }),
+        tap(console.log),
         withLatestFrom(strategy$),
         switchMap(([changedItems, strategy]) => {
           return combineLatest([
@@ -231,6 +273,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               return of(trackById).pipe(
                 strategy.behavior(() => {
                   const change = changeMap[trackById];
+                  console.log('do Change', change);
                   const record = change.record;
                   const count = activeDiffer.collection.length;
                   if (change.insert) {
@@ -247,6 +290,10 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                   }
                   if (change.move) {
                     moveWork(record, count, change.vRef);
+                    resetChange(changeMap, record);
+                  }
+                  if (change.noop) {
+                    unchangedWork(record, count);
                     resetChange(changeMap, record);
                   }
                   return;

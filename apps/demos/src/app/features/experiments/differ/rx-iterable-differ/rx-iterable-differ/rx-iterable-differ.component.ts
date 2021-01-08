@@ -4,25 +4,23 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, from, Subject } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
 import { ArrayProviderService } from '../../../../../shared/debug-helper/value-provider';
 import { rxIterableDifferFactory } from '../../shared';
 import { RxState } from '@rx-angular/state';
 import { Hooks } from '../../../../../shared/debug-helper/hooks';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap, switchMapTo, tap } from 'rxjs/operators';
 
-
-
-const item0 = {id: 0, value: '0000'};
-const item1 = {id: 1, value: '1111'};
-const item2 = {id: 2, value: '2222'};
-const item3 = {id: 3, value: '3333'};
+const item0 = { id: '0', value: '0000' };
+const item1 = { id: '1', value: '1111' };
+const item2 = { id: '2', value: '2222' };
+const item3 = { id: '3', value: '3333' };
 const customChangeSet = [
   [item0, item1, item2, item3],
-  [item0, {...item2, value: '2232'}, item1, item3]
+  [item0, item2, item1],
+  [item0, item3, { ...item2, value: '2232' }],
 ];
-
 
 @Component({
   selector: 'rxa-differ-rx-iterable-differ',
@@ -36,27 +34,32 @@ const customChangeSet = [
             [buttons]="true"
             #arrayP="rxaArrayProvider"
           ></rxa-array-provider>
-          <rxa-strategy-select (strategyChange)="strategy$.next($event)"></rxa-strategy-select>
+          <rxa-strategy-select
+            (strategyChange)="strategy$.next($event)"
+          ></rxa-strategy-select>
+          <mat-button-toggle-group
+            name="visibleExamples"
+            *rxLet="view; let viewMode"
+            aria-label="Visible Examples"
+            [value]="viewMode"
+            #group="matButtonToggleGroup"
+          >
+            <mat-button-toggle value="tile" (click)="view.next('tile')"
+              >Tile</mat-button-toggle
+            >
+            <mat-button-toggle value="list" (click)="view.next('list')"
+              >List</mat-button-toggle
+            >
+          </mat-button-toggle-group>
+          <button mat-raised-button (click)="triggerChangeSet.next()">
+            ChangeSet
+          </button>
+          <p *rxLet="rendered$; let rendered">
+            <strong>Rendered</strong> {{ rendered }}
+          </p>
         </div>
       </div>
       <div class="d-flex flex-column justify-content-start w-100">
-        <p *rxLet="rendered$; let rendered">
-          <strong>Rendered</strong> {{ rendered }}
-        </p>
-        <mat-button-toggle-group
-          name="visibleExamples"
-          *rxLet="view; let viewMode"
-          aria-label="Visible Examples"
-          [value]="viewMode"
-          #group="matButtonToggleGroup"
-        >
-          <mat-button-toggle value="tile" (click)="view.next('tile')"
-            >Tile</mat-button-toggle
-          >
-          <mat-button-toggle value="list" (click)="view.next('list')"
-            >List</mat-button-toggle
-          >
-        </mat-button-toggle-group>
         <div
           class="work-container d-flex flex-wrap w-100"
           [class.list-view]="viewMode === 'list'"
@@ -179,6 +182,16 @@ export class RxIterableDifferComponent extends Hooks {
   private numRendered = 0;
 
   readonly view = new BehaviorSubject<'list' | 'tile'>('list');
+  readonly triggerChangeSet = new Subject<void>();
+  readonly activeChangeSet$ = this.triggerChangeSet.pipe(
+    switchMap(() => [
+      [item0, item1, item2, item3],
+      [item0, item2, item1, item3],
+      [item2, item1, {...item3, value: '283942'}],
+    ]),
+    // switchMapTo([customChangeSet[0]]),
+    tap(data => console.log(data))
+  )
   readonly renderCallback = new Subject();
   readonly rendered$ = this.renderCallback.pipe(
     startWith(null),
@@ -227,4 +240,3 @@ export class RxIterableDifferComponent extends Hooks {
     return '#' + Math.floor(a.value * 16777215).toString(16);
   }
 }
-

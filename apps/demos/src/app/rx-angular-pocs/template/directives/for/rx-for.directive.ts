@@ -7,7 +7,7 @@ import {
   IterableDiffers,
   NgIterable, OnDestroy,
   OnInit,
-  TemplateRef,
+  TemplateRef, TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
 
@@ -103,7 +103,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     return true;
   }
 
-  _trackBy = (i, a) => a;
+  _trackBy: TrackByFunction<T> = (i, a) => a;
 
   ngOnInit() {
     // this.differ = this.iterableDiffers.find([]).create(this._trackBy);
@@ -113,6 +113,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       defaultStrategyName: this.strategyProvider.primaryStrategy,
       viewContainerRef: this.viewContainerRef,
       templateRef: this.templateRef,
+      trackBy: this._trackBy,
       differ: items => this.iterableDiffers.find(items || []).create(this._trackBy) as any,
       createViewContext: createViewContext as any,
     });
