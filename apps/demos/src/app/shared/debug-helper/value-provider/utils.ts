@@ -185,6 +185,10 @@ export function moveItemsImmutable(arr: TestItem[] = [], num: number): TestItem[
   return [...moveItemMutable(arr, num)];
 }
 
+export function shuffleItemsImmutable(arr: TestItem[] = []): TestItem[] {
+  return [...arr.sort(() => Math.random() - .5)];
+}
+
 export function removeItemsMutable(arr: TestItem[] = [], ids: number[]) {
   if (!arr.length) {
     return arr;

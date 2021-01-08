@@ -88,7 +88,7 @@ function resetChange<T>(
   changeMap: ChangeMap<T>,
   record: IterableChangeRecord<T>
 ): void {
-  return (changeMap[record.trackById] = {} as any);
+  delete changeMap[record.trackById];
 }
 
 function createWorkMap<T, C extends RxListViewContext<T>>(
@@ -226,9 +226,11 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                     (config.cdRef as any).context || config.cdRef
                   );
                   notifyParent = false;
+                console.log('parent notified', (config.cdRef as any).context);
                 }, (config.cdRef as any).context || config.cdRef)(of(null))
               : of(null)
-          )
+          ),
+          filter(v => v !== null)
         )
       );
     },

@@ -22,11 +22,14 @@ import { ArrayProviderService } from '../array-provider.service';
             Remove
           </button>
           <br/>
-          <button mat-raised-button [unpatch]="unpatched" (click)="addItemsImmutable(200)">
+          <button mat-raised-button [unpatch]="unpatched" (click)="addItemsImmutable(250)">
             Add Many
           </button>
           <button mat-raised-button [unpatch]="unpatched" (click)="moveItemsImmutable(5)">
             Move Many
+          </button>
+          <button mat-raised-button [unpatch]="unpatched" (click)="shuffleItemsImmutable(5)">
+            Shuffle
           </button>
           <button mat-raised-button [unpatch]="unpatched" (click)="updateItemsImmutable(20)">
             Update Many

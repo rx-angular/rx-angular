@@ -7,6 +7,7 @@ import {
   addItemMutable,
   moveItemMutable,
   moveItemsImmutable,
+  shuffleItemsImmutable,
   removeItemsImmutable,
   removeItemsMutable,
   updateItemImmutable,
@@ -30,6 +31,7 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
 
   protected addItemsImmutableSubject = new Subject<number | undefined>();
   protected moveItemsImmutableSubject = new Subject<number | undefined>();
+  protected shuffleItemsImmutableSubject = new Subject<void>();
   protected updateItemsImmutableSubject = new Subject<number>();
   protected removeItemsImmutableSubject = new Subject<number>();
 
@@ -67,6 +69,10 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
       moveItemsImmutable(state?.array || [], positions)
     );
 
+    this.connect('array', this.shuffleItemsImmutableSubject, (state) =>
+      shuffleItemsImmutable(state?.array || [])
+    );
+
     this.connect('array', this.removeItemsImmutableSubject, (state, num) =>
       removeItemsImmutable(state?.array || [], num)
     );
@@ -96,6 +102,10 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
 
   moveItemsImmutable(numPositions: number = 1): void {
     this.moveItemsImmutableSubject.next(numPositions);
+  }
+
+  shuffleItemsImmutable(): void {
+    this.shuffleItemsImmutableSubject.next();
   }
 
   updateItemsImmutable(num: number): void {

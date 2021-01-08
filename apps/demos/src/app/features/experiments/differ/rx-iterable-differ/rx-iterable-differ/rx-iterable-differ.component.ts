@@ -67,16 +67,20 @@ const customChangeSet = [
             *rxFor="
               let a of arrayP.array$;
               let index = index;
+              let count = count;
+              let even = even;
               renderCallback: renderCallback;
               trackBy: trackById;
               strategy: strategy$
             "
           >
-            <div class="child-bg" [ngStyle]="{ background: color(a) }"></div>
+            <!--<div class="child-bg" [class.even]="even" [ngStyle]="{ background: color(a) }"></div>-->
+            <div class="child-bg" [class.even]="even"></div>
             <div class="child-context ">
               <small>id: {{ a.id }}</small>
               <small>value: {{ a.value }}</small>
               <small>index: {{ index }}</small>
+              <small>count: {{ count }}</small>
             </div>
           </div>
         </div>
@@ -127,7 +131,7 @@ const customChangeSet = [
 
       .work-container.list-view .work-child {
         width: 100%;
-        height: 50px;
+        height: 65px;
         margin: 0.5rem 0;
         background-color: transparent !important;
       }
@@ -161,6 +165,9 @@ const customChangeSet = [
         position: absolute;
         width: 100%;
         height: 100%;
+      }
+      .work-child .child-bg.even {
+        background-color: red;
       }
     `,
   ],
