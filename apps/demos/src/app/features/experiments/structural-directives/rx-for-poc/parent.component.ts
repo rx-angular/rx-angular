@@ -166,6 +166,7 @@ import { immutableArr } from '../utils';
               let r$ = item$;
               strategy: strategy$;
               trackBy: trackById;
+              distinctBy:
               let select = select
               renderCallback: childrenRendered$
             "

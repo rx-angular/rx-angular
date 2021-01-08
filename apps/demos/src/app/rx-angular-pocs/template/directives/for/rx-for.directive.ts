@@ -64,6 +64,11 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
         : trackByFnOrKey;
   }
 
+  @Input()
+  set rxForDistinctBy(distinctBy: (a: T, b: T) => boolean) {
+    this._distinctBy = distinctBy;
+  }
+
   @Input('rxForRenderCallback') set renderCallback(
     renderCallback: Subject<void>
   ) {
@@ -103,6 +108,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   _trackBy: TrackByFunction<T> = (i, a) => a;
+  _distinctBy = (a:T, b:T) => a === b;
 
   ngOnInit() {
     // this.differ = this.iterableDiffers.find([]).create(this._trackBy);
@@ -113,7 +119,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       viewContainerRef: this.viewContainerRef,
       templateRef: this.templateRef,
       trackBy: this._trackBy,
-      differ: items => this.iterableDiffers.find(items || []).create(this._trackBy) as any,
+      distinctBy: this._distinctBy,
       createViewContext: createViewContext as any,
     });
     this.listManager.nextStrategy(this.strategy$);
