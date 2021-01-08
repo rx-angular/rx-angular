@@ -180,8 +180,11 @@ export function createTemplateManager<
   function displayContentView(name: N, fallback?: N) {
     name = getTemplateName(name, fallback);
     if (activeContentView !== name) {
+      if (viewCache.has(activeContentView)) {
+        viewContainerRef.detach(0);
+        viewCache.delete(activeContentView);
+      }
       if (templateCache.has(name)) {
-        viewContainerRef.detach();
         if (viewCache.has(name)) {
           viewContainerRef.insert(viewCache.get(name));
         } else {

@@ -47,7 +47,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
   readonly strategies: StrategyCredentialsMap;
 
   observablesSubject$ = new ReplaySubject<
-    Observable<{ isTrue: boolean; strategyName: string }>
+    Observable<{ isTrue: U; strategyName: string }>
   >(1);
 
   private subscription = new Subscription();
@@ -68,7 +68,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
     );
 
   @Input()
-  set rxIf(potentialObservable: Observable<boolean> | boolean | null | undefined) {
+  set rxIf(potentialObservable: Observable<U> | U | null | undefined) {
     this.connect('isTrue', potentialObservable);
   }
 
@@ -118,8 +118,8 @@ export class RxIf<U> implements OnInit, OnDestroy {
       this.isTrue$
         .pipe(
           // tslint:disable-next-line:triple-equals
-          map(coerceBooleanProperty),
           distinctUntilChanged(),
+          map(coerceBooleanProperty),
           applyStrategy2(
             this.strategy$,
             this.rxIfWorkFactory,
@@ -132,7 +132,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
 
   private connect<T>(
     key: 'strategyName' | 'isTrue',
-    slice$: Observable<string | boolean> | string |  boolean
+    slice$: Observable<string | U> | string |  U
   ) {
     this.observablesSubject$.next(
       (isObservable(slice$) ? slice$ : of(slice$)).pipe(

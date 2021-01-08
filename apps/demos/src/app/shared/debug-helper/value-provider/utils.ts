@@ -81,7 +81,7 @@ export function getRandomItems<T>(arr: T[] = [], numItems: number, exclude?: (i:
   let len = arr.length;
   const taken = new Array(len);
   if (numItems > len) {
-    throw new RangeError('getRandom: more elements taken than available');
+    numItems = len - 1;
   }
   while (numItems--) {
     const x = Math.floor(Math.random() * len);
@@ -139,6 +139,10 @@ export function moveItemMutable(arr: TestItem[] = [], num: number): TestItem[] {
     return arr;
   }
   const numItems = arr.length - 1;
+
+  if (num > numItems) {
+    num = numItems;
+  }
 
   for (let i = 0; i<num; i++) {
 
