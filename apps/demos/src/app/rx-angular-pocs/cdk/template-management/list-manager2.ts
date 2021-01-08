@@ -28,13 +28,13 @@ import { RxListViewContext } from './model';
 
 export interface ListManager<T, C> {
   nextStrategy: (config: string | Observable<string>) => void;
-
   render(changes$: Observable<NgIterable<T>>): Observable<any>;
 }
 
 export type CreateViewContext<T, C> = (item: T) => C;
 
 type K = string | number | symbol;
+export type ChangeMap<T> = Record<K, ChangeSet<T>>;
 
 const enum ChangeType {
   insert,
@@ -58,73 +58,6 @@ export interface ChangeSet<T> {
   vRef?: ViewRef;
 }
 
-function addInsert<T>(
-  changeSet: ChangeSet<T>,
-  record: VirtualIterableChangeRecord<T>
-): ChangeSet<T> {
-  console.log('schedule insert', record);
-  if (changeSet?.move) {
-    console.error('should not happen?');
-  }
-  return { insert: true, record };
-}
-
-function addUpdate<T>(
-  changeSet: ChangeSet<T>,
-  record: VirtualIterableChangeRecord<T>
-): ChangeSet<T> {
-  console.log('schedule update', record);
-  return { ...(changeSet || {}), update: true, record };
-}
-
-function addMove<T>(
-  changeSet: ChangeSet<T>,
-  record: VirtualIterableChangeRecord<T>,
-  vRef: ViewRef,
-): ChangeSet<T> {
-  console.log('schedule move', record);
-  console.log(changeSet);
-  if (changeSet && changeSet.insert) {
-    console.log('overwrite insert', record);
-    return {
-      insert: true,
-      record
-    }
-  }
-  return { move: true, record, vRef };
-}
-
-function addNoop<T>(
-  changeSet: ChangeSet<T>,
-  record: VirtualIterableChangeRecord<T>,
-  vRef: ViewRef,
-): ChangeSet<T> {
-  if (changeSet) {
-    return {
-      ...changeSet,
-      record,
-      noop: true
-    }
-  }
-  return { noop: true, record, vRef };
-}
-
-function addRemove<T>(
-  changeSet: ChangeSet<T>,
-  record: VirtualIterableChangeRecord<T>
-): ChangeSet<T> {
-  console.log('schedule remove', record);
-  return { remove: true, record };
-}
-
-export type ChangeMap<T> = Record<K, ChangeSet<T>>;
-
-function resetChange<T>(
-  changeMap: ChangeMap<T>,
-  record: VirtualIterableChangeRecord<T>
-): void {
-  delete changeMap[record.trackById];
-}
 
 export function createListManager<T, C extends RxListViewContext<T>>(config: {
   cdRef: ChangeDetectorRef;
@@ -154,6 +87,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
   );
 
   let activeDiffer: IterableDiffer<T> & { collection: any };
+  let collection;
   //const notifyParent$ = new Subject<boolean>();
 
   return {
@@ -162,6 +96,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     },
     render(newChanges$: Observable<NgIterable<T>>): Observable<any> {
       const d = (i: NgIterable<T>) => {
+        collection = i;
         return activeDiffer || (activeDiffer = config.differ(i));
       };
       return merge(
@@ -252,7 +187,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               if (!changedItemsSet.has(trackById)) {
                 changeMap[trackById] = addNoop(
                   {vRef} as any,
-                  {trackById} as any,
+                  {trackById, currentIndex:  i} as any,
                   vRef
                 );
                 changedItems.push(trackById);
@@ -276,27 +211,44 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                   const change = changeMap[trackById];
                   console.log('do Change', change);
                   const record = change.record;
-                  const count = activeDiffer.collection.length;
-                  if (change.insert) {
-                    insertWork(record, count);
-                    resetChange(changeMap, record);
+
+                  if(change.insert && change.remove) {
+                    throw new Error('change.insert && change.remove => can never happen');
                   }
                   if (change.remove) {
-                    removeWork(record, count);
+                    removeWork(record, collection);
                     resetChange(changeMap, record);
+                    return;
                   }
+
+                  if (change.insert) {
+                    insertWork(record, collection);
+                  }
+
+
                   if (change.update) {
-                    updateWork(record, count);
-                    resetChange(changeMap, record);
+                    updateWork(record, collection);
                   }
                   if (change.move) {
-                    moveWork(record, count, change.vRef);
-                    resetChange(changeMap, record);
+                      moveWork(record, collection);
+                   /* updateWork({
+                      ...record,
+                      currentIndex: record.previousIndex
+                    }, collection);
+                    const newRecord = collection[record.currentIndex];
+                    if(newRecord) {
+
+                      updateWork({
+                        ...newRecord,
+                      }, collection);
+                    }*/
+
+
                   }
                   if (change.noop) {
-                    unchangedWork(record, count);
-                    resetChange(changeMap, record);
+                    unchangedWork(record, collection, change.vRef);
                   }
+                  resetChange(changeMap, record);
                   return;
                 }, {})
               );
@@ -307,54 +259,188 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
       );
   }
 
-  function moveWork(record: IterableChangeRecord<T>, count: number, vRef: ViewRef) {
-    const newView = viewContainerRef.move(vRef, record.currentIndex) as EmbeddedViewRef<C>;
+
+  function addInsert(
+    changeSet: ChangeSet<T>,
+    record: VirtualIterableChangeRecord<T>
+  ): ChangeSet<T> {
+    console.log('schedule insert', record, changeSet);
+    if (changeSet?.move) {
+      console.error('should not happen?');
+    }
+
+    const currentView = viewContainerRef.get(record.previousIndex) as any;
+    if(currentView) {
+      console.log('switch insert to move', record, changeSet);
+      return {
+        ...changeSet,
+        insert: false,
+        move: true,
+        record
+      }
+    }
+    return { insert: true, record };
+  }
+
+  function addNoop(
+    changeSet: ChangeSet<T>,
+    record: VirtualIterableChangeRecord<T>,
+    vRef: ViewRef,
+  ): ChangeSet<T> {
+    if (changeSet) {
+      if (changeSet.insert && !changeSet.remove) {
+        console.log('overwrite insert from noop', record);
+        return {
+          insert: true,
+          record
+        }
+      } else if (changeSet.insert && changeSet.remove) {
+        console.error('overwrite insert from noop', record);
+      }
+      console.log('new insert from noop', record);
+      return {
+        ...changeSet,
+        record,
+        noop: true
+      }
+    }
+
+    return { noop: true, record, vRef };
+  }
+
+  function addRemove(
+    changeSet: ChangeSet<T>,
+    record: VirtualIterableChangeRecord<T>
+  ): ChangeSet<T> {
+    console.log('schedule remove', record);
+    return { ...changeSet || {}, remove: true, insert: false, record };
+  }
+
+  function resetChange(
+    _changeMap: ChangeMap<T>,
+    record: VirtualIterableChangeRecord<T>
+  ): void {
+    delete _changeMap[record.trackById];
+  }
+
+  function addMove(
+    changeSet: ChangeSet<T>,
+    record: VirtualIterableChangeRecord<T>,
+    vRef: ViewRef,
+  ): ChangeSet<T> {
+    console.log('schedule move', record);
+    console.log(changeSet);
+    if (changeSet && changeSet.insert) {
+      console.log('overwrite insert from move', record);
+      const currentView = viewContainerRef.get(record.previousIndex) as any;
+
+      if(currentView) {
+        return {
+          ...changeSet,
+          insert: false,
+          move: true,
+          record,
+          vRef
+        }
+      }
+      return {
+        insert: true,
+        record
+      }
+    }
+
+    const currentView2 = viewContainerRef.get(record.currentIndex) as any;
+    if(currentView2) {
+      return { update: true, record: collection[record.currentIndex] };
+    }
+    return { move: true, record: collection[record.currentIndex] };
+  }
+
+
+  function addUpdate(
+    changeSet: ChangeSet<T>,
+    record: VirtualIterableChangeRecord<T>
+  ): ChangeSet<T> {
+    console.log('schedule update', record);
+    if (changeSet && changeSet.insert) {
+      console.log('overwrite insert from update', record);
+      const currentView = viewContainerRef.get(record.currentIndex) as any;
+
+      if(currentView) {
+        return {
+          ...changeSet,
+          insert: false,
+          update: true,
+          record
+        }
+      }
+      return {
+        insert: true,
+        record
+      }
+    }
+    return { ...(changeSet || {}), update: true, record };
+  }
+
+  function moveWork(record: IterableChangeRecord<T>, _collection: any[]) {
+    console.log(viewContainerRef.get(record.previousIndex), record.previousIndex);
+    const newView = viewContainerRef.move(viewContainerRef.get(record.previousIndex), record.currentIndex) as EmbeddedViewRef<C>;
     newView.context.$implicit = record.item;
-    newView.context.setComputedContext({ index: record.currentIndex, count });
+    newView.context.setComputedContext({ index: record.currentIndex, count: _collection.length });
     newView.reattach();
     newView.detectChanges();
     newView.detach();
   }
 
-  function updateWork(record: IterableChangeRecord<T>, count: number) {
+  function updateWork(record: IterableChangeRecord<T>, _collection: any[]) {
     const currentView = viewContainerRef.get(
       record.currentIndex
     ) as EmbeddedViewRef<C>;
     currentView.context.$implicit = record.item;
     currentView.context.setComputedContext({
       index: record.currentIndex,
-      count,
+      count: _collection.length,
     });
     currentView.reattach();
     currentView.detectChanges();
     currentView.detach();
   }
 
-  function unchangedWork(record: IterableChangeRecord<T>, count?: number) {
-    const currentView = viewContainerRef.get(
-      record.currentIndex
-    ) as EmbeddedViewRef<C>;
+  function unchangedWork(record: IterableChangeRecord<T>, _collection: any[], currentView?: any) {
+    console.log('unchanged record', record);
     currentView.context.setComputedContext({
       index: record.currentIndex,
-      count,
+      count: _collection.length,
     });
     currentView.reattach();
     currentView.detectChanges();
     currentView.detach();
   }
 
-  function removeWork(record: IterableChangeRecord<T>, count: number) {
+  function removeWork(record: IterableChangeRecord<T>, _collection: any[]) {
     if (viewContainerRef.get(record.previousIndex)) {
       viewContainerRef.remove(record.previousIndex);
     }
   }
 
-  function insertWork(record: IterableChangeRecord<T>, count: number) {
-    const currentView = viewContainerRef.createEmbeddedView(
-      templateRef,
-      createViewContext(record.item),
-      record.currentIndex === null ? undefined : record.currentIndex
-    );
+  function insertWork(record: IterableChangeRecord<T>, _collection: any[]) {
+    const count = _collection.length;
+    const currentIndex = record.currentIndex == null ? undefined : record.currentIndex;
+
+    let currentView = viewContainerRef.get(currentIndex) as any;
+
+    if(!currentView) {
+      console.warn('insert new view')
+    } else {
+      console.error('insert existing view')
+    }
+      currentView = viewContainerRef.createEmbeddedView(
+        templateRef,
+        createViewContext(record.item),
+        currentIndex
+      );
+
+
     currentView.context.setComputedContext({ index: record.currentIndex, count });
     currentView.detectChanges();
     currentView.detach();

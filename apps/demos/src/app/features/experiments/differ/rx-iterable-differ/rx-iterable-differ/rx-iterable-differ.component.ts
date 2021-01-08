@@ -12,14 +12,31 @@ import { RxState } from '@rx-angular/state';
 import { Hooks } from '../../../../../shared/debug-helper/hooks';
 import { map, startWith, switchMap, switchMapTo, tap } from 'rxjs/operators';
 
-const item0 = { id: '0', value: '0000' };
-const item1 = { id: '1', value: '1111' };
-const item2 = { id: '2', value: '2222' };
-const item3 = { id: '3', value: '3333' };
+let itemIdx = 0;
+function getNewItem() {
+  const _idx = itemIdx.toString();
+  const i =  { id: _idx, value: new Array(4).fill(null).map(_ => itemIdx).join('') };
+  ++itemIdx;
+  return i;
+}
+
+function getItems(num: number) {
+  return  new Array(num).fill(null).map(_ => getNewItem());
+}
+
+
+const item0 = getNewItem();
+const item1 = getNewItem();
+const item2 = getNewItem();
+const item3 = getNewItem();
+const items5 = getItems(1);
+
 const customChangeSet = [
-  [item0, item1, item2, item3],
-  [item0, item2, item1],
-  [item0, item3, { ...item2, value: '2232' }],
+  [],
+  // insert 0,1,2,3,4
+  [item0, item1, item2, item3, ...items5],
+  // unchanged 0, remove 1, update 2 => 2232, move 3,2
+  [item0, item3, { ...item2, value: '2232' }, ...items5],
 ];
 
 @Component({
@@ -68,7 +85,7 @@ const customChangeSet = [
           <div
             class="work-child d-flex"
             *rxFor="
-              let a of arrayP.array$;
+              let a of activeChangeSet$;
               let index = index;
               let count = count;
               let even = even;
@@ -184,12 +201,7 @@ export class RxIterableDifferComponent extends Hooks {
   readonly view = new BehaviorSubject<'list' | 'tile'>('list');
   readonly triggerChangeSet = new Subject<void>();
   readonly activeChangeSet$ = this.triggerChangeSet.pipe(
-    switchMap(() => [
-      [item0, item1, item2, item3],
-      [item0, item2, item1, item3],
-      [item2, item1, {...item3, value: '283942'}],
-    ]),
-    // switchMapTo([customChangeSet[0]]),
+    switchMapTo(customChangeSet),
     tap(data => console.log(data))
   )
   readonly renderCallback = new Subject();
