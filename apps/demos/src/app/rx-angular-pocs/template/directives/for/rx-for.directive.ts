@@ -101,7 +101,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       defaultStrategyName: this.strategyProvider.primaryStrategy,
       viewContainerRef: this.viewContainerRef,
       templateRef: this.templateRef,
-      differ: this.iterableDiffers.find([]).create(this._trackBy) as any,
+      differ: items => this.iterableDiffers.find(items || []).create(this._trackBy) as any,
       createViewContext: createViewContext as any,
     });
     this.listManager.nextStrategy(this.strategy$);
