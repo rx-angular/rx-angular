@@ -4,13 +4,13 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { BehaviorSubject, from, Subject } from 'rxjs';
+import { asyncScheduler, BehaviorSubject, from, scheduled, Subject } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
 import { ArrayProviderService } from '../../../../../shared/debug-helper/value-provider';
 import { rxIterableDifferFactory } from '../../shared';
 import { RxState } from '@rx-angular/state';
 import { Hooks } from '../../../../../shared/debug-helper/hooks';
-import { map, startWith, switchMap, switchMapTo, tap } from 'rxjs/operators';
+import { delay, map, startWith, switchMap, switchMapTo, tap } from 'rxjs/operators';
 
 let itemIdx = 0;
 function getNewItem() {
@@ -29,7 +29,7 @@ const item0 = getNewItem();
 const item1 = getNewItem();
 const item2 = getNewItem();
 const item3 = getNewItem();
-const items5 = getItems(1);
+const items5 = getItems(500);
 
 const customChangeSet = [
   [],
@@ -37,6 +37,7 @@ const customChangeSet = [
   [item0, item1, item2, item3, ...items5],
   // unchanged 0, remove 1, update 2 => 2232, move 3,2
   [item0, item3, { ...item2, value: '2232' }, ...items5],
+  [item0, item3, { ...item2, value: '2232' }],
 ];
 
 @Component({
@@ -85,7 +86,7 @@ const customChangeSet = [
           <div
             class="work-child d-flex"
             *rxFor="
-              let a of activeChangeSet$;
+              let a of arrayP.array$;
               let index = index;
               let count = count;
               let even = even;
@@ -93,9 +94,10 @@ const customChangeSet = [
               trackBy: trackById;
               strategy: strategy$
             "
+            [class.even]="even"
           >
-            <!--<div class="child-bg" [class.even]="even" [ngStyle]="{ background: color(a) }"></div>-->
-            <div class="child-bg" [class.even]="even"></div>
+            <div class="child-bg" [ngStyle]="{ background: color(a) }"></div>
+            <!--<div class="child-bg" [class.even]="even"></div>-->
             <div class="child-context ">
               <small>id: {{ a.id }}</small>
               <small>value: {{ a.value }}</small>
@@ -181,6 +183,10 @@ const customChangeSet = [
         background-color: transparent;
       }
 
+      .work-child.even {
+        outline: 1px solid magenta;
+      }
+
       .work-child .child-bg {
         position: absolute;
         width: 100%;
@@ -201,7 +207,7 @@ export class RxIterableDifferComponent extends Hooks {
   readonly view = new BehaviorSubject<'list' | 'tile'>('list');
   readonly triggerChangeSet = new Subject<void>();
   readonly activeChangeSet$ = this.triggerChangeSet.pipe(
-    switchMapTo(customChangeSet),
+    switchMapTo(scheduled(customChangeSet, asyncScheduler)),
     tap(data => console.log(data))
   )
   readonly renderCallback = new Subject();

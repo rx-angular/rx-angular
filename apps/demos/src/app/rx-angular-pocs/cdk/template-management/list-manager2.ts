@@ -1,4 +1,4 @@
-import { combineLatest, merge, Observable, of, ReplaySubject } from 'rxjs';
+import { combineLatest, merge, Observable, of, ReplaySubject, scheduled } from 'rxjs';
 import {
   ChangeDetectorRef,
   EmbeddedViewRef,
@@ -94,16 +94,17 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     nextStrategy(nextConfig: Observable<string>): void {
       strategyName$.next(nextConfig);
     },
-    render(newChanges$: Observable<NgIterable<T>>): Observable<any> {
+    render(values$: Observable<NgIterable<T>>): Observable<any> {
       const d = (i: NgIterable<T>) => {
         collection = i;
         return activeDiffer || (activeDiffer = config.differ(i));
       };
       return merge(
-        newChanges$.pipe(
-          map((a) => d(a).diff(a)),
+        values$.pipe(
+          _leRender2()
+         /* map((a) => d(a).diff(a)),
           filter((r) => r != null),
-          _leRender()
+          _leRender()*/
         )
         /* notifyParent$.pipe(
           withLatestFrom(strategy$),
@@ -129,6 +130,75 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
    * additionally calculates the new 'virtualCount' => new count after work is applied,
    * needed for updating the context of all existing items in the viewContainer
    */
+  function _leRender2() {
+    return (o$: Observable<NgIterable<T>>) =>
+      o$.pipe(
+        map(items => items ? Array.from(items) : []),
+        withLatestFrom(strategy$),
+        switchMap(([items, strategy]) => {
+          const viewLength = viewContainerRef.length;
+          let toRemoveCount = viewLength - items.length;
+          const remove$ = [];
+          let i = viewContainerRef.length;
+          while (i > 0 && toRemoveCount > 0) {
+            toRemoveCount--;
+            i--;
+            remove$.push(
+              of(null).pipe(
+                strategy.behavior(() => {
+                  console.log('i', i);
+                  console.log('toRemoveCount', toRemoveCount);
+                  viewContainerRef.remove(i);
+                }, {})
+              )
+            );
+          }
+
+          for (let removeI = 0; removeI < toRemoveCount; removeI++) {
+            remove$.push(
+              of(null).pipe(
+                strategy.behavior(() => {
+                  viewContainerRef.remove((removeI + viewLength) - 1);
+                }, {})
+              )
+            )
+          }
+          return combineLatest([
+            // support for Iterable<T> (e.g. `Map#values`)
+            ...items.map((item, i) => {
+              return of(item).pipe(
+                strategy.behavior(() => {
+                  let view = viewContainerRef.get(i) as EmbeddedViewRef<C>;
+                  if (!view) {
+                    view = viewContainerRef.createEmbeddedView(
+                      templateRef,
+                      createViewContext(item),
+                      i
+                    );
+                  } else {
+                    const entity = view.context.$implicit;
+                    const trackById = config.trackBy(i, entity);
+                    const currentId = config.trackBy(i, item);
+                    if (trackById !== currentId || view.context.$implicit !== item) {
+                      view.context.$implicit = item;
+                    }
+                  }
+                  view.context.setComputedContext({
+                    count: items.length,
+                    index: i
+                  });
+                  view.reattach();
+                  view.detectChanges();
+                  view.detach();
+                }, item)
+              );
+            }),
+            ...remove$
+          ]);
+        })
+        // tap(() => {notifyParent$.next(notifyParent);})
+      );
+  }
   function _leRender() {
     return (o$: Observable<IterableChanges<T>>) =>
       o$.pipe(
