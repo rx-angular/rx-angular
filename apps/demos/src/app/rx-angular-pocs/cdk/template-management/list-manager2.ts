@@ -1,4 +1,4 @@
-import { combineLatest, Observable, of, ReplaySubject } from 'rxjs';
+import { combineLatest, merge, Observable, of, ReplaySubject } from 'rxjs';
 import {
   ChangeDetectorRef,
   EmbeddedViewRef,
