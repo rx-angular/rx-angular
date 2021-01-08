@@ -2,10 +2,10 @@ import {
   ChangeDetectorRef,
   Directive,
   Input,
-  IterableChangeRecord,
   IterableDiffer,
   IterableDiffers,
-  NgIterable, OnDestroy,
+  NgIterable,
+  OnDestroy,
   OnInit,
   TemplateRef, TrackByFunction,
   ViewContainerRef,
@@ -13,7 +13,6 @@ import {
 
 import { ReplaySubject, Subject } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { filter, map } from 'rxjs/operators';
 import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
 import { StrategyProvider } from '../../../cdk/render-strategies/strategy-provider.service';
 import {
@@ -128,8 +127,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 }
 
-function createViewContext<T>(
-  item: T
-): RxForViewContext<T> {
+function createViewContext<T>(item: T): RxForViewContext<T> {
   return new RxForViewContext<T>(item);
 }

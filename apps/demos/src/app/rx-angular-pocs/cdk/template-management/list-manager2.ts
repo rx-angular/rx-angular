@@ -6,17 +6,17 @@ import {
   IterableChanges,
   IterableDiffer,
   NgIterable,
-  TemplateRef, TrackByFunction,
-  ViewContainerRef, ViewRef
+ TrackByFunction,
+  TemplateRef,
+  ViewContainerRef,
+  ViewRef,
 } from '@angular/core';
 import {
-  audit, auditTime,
-  distinctUntilChanged,
   filter,
   map,
   startWith,
-  switchMap, tap,
-  withLatestFrom
+  switchMap,tap,
+  withLatestFrom,
 } from 'rxjs/operators';
 import {
   StrategyCredentials,
@@ -93,6 +93,7 @@ function addMove<T>(
   }
   return { move: true, record, vRef };
 }
+
 function addNoop<T>(
   changeSet: ChangeSet<T>,
   record: VirtualIterableChangeRecord<T>,
@@ -168,7 +169,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
           map((a) => d(a).diff(a)),
           filter((r) => r != null),
           _leRender()
-        ),
+        )
         /* notifyParent$.pipe(
           withLatestFrom(strategy$),
           switchMap(([_, strategy]) =>
@@ -301,7 +302,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               );
             }),
           ]);
-        }),
+        })
         // tap(() => {notifyParent$.next(notifyParent);})
       );
   }
@@ -314,6 +315,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     newView.detectChanges();
     newView.detach();
   }
+
   function updateWork(record: IterableChangeRecord<T>, count: number) {
     const currentView = viewContainerRef.get(
       record.currentIndex
@@ -327,6 +329,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     currentView.detectChanges();
     currentView.detach();
   }
+
   function unchangedWork(record: IterableChangeRecord<T>, count?: number) {
     const currentView = viewContainerRef.get(
       record.currentIndex
@@ -339,11 +342,13 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     currentView.detectChanges();
     currentView.detach();
   }
+
   function removeWork(record: IterableChangeRecord<T>, count: number) {
     if (viewContainerRef.get(record.previousIndex)) {
       viewContainerRef.remove(record.previousIndex);
     }
   }
+
   function insertWork(record: IterableChangeRecord<T>, count: number) {
     const currentView = viewContainerRef.createEmbeddedView(
       templateRef,
@@ -354,7 +359,6 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     currentView.detectChanges();
     currentView.detach();
   }
-
 }
 
 function forEachToArray<T>(
