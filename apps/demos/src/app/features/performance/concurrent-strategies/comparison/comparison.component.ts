@@ -33,9 +33,10 @@ import { map, tap } from 'rxjs/operators';
         </div>
       </ng-container>
       <div class="row w-100">
-        <ng-container *rxFor="let strategy of strategies$; trackBy:trackByStrategyName">
+        <ng-container
+          *rxFor="let strategy of strategies$; strategy: 'immediate'; trackBy:trackByStrategyName">
           <div class="col"
-               *ngIf="strategy.checked">
+               *rxIf="strategy.checked; strategy: 'immediate'">
             <h2 class="mat-subheader">{{strategy.name}}</h2>
             <rxa-sibling-strategy [strategy]="strategy.name" [count]="count$" [filled]="filled$"></rxa-sibling-strategy>
           </div>

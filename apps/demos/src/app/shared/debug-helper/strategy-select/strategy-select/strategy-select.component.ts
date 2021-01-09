@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Output } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { StrategyProvider } from '../../../../rx-angular-pocs';
-import { map } from 'rxjs/operators';
+import { delay, map } from 'rxjs/operators';
 
 const strategiesUiConfig = {
   local: { name: 'local', icon: 'call_split' },
@@ -24,7 +24,7 @@ const strategiesUiConfig = {
         </mat-select-trigger>
         <mat-option
           [value]="s"
-          *ngFor="let s of strategyProvider.strategyNames">
+          *rxFor="let s of stratNames$; strategy: 'global'">
           <mat-icon class="mr-2">{{ strategiesUiConfig[s]?.icon }}</mat-icon>
           {{ s }}
         </mat-option>
@@ -41,7 +41,7 @@ const strategiesUiConfig = {
 export class StrategySelectComponent {
   readonly strategiesUiConfig = strategiesUiConfig;
 
-
+  readonly stratNames$ = this.strategyProvider.strategyNames$;
   @Output() strategyChange = this.strategyProvider.primaryStrategy$.pipe(map(s => s.name));
 
   constructor(

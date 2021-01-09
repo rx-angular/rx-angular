@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Inject, Injectable, Optional } from '@angular/core';
 import { RxState, selectSlice } from '@rx-angular/state';
 import { fromEvent, Observable, of } from 'rxjs';
-import { map, shareReplay, takeUntil } from 'rxjs/operators';
+import { map, shareReplay, takeUntil, tap } from 'rxjs/operators';
 
 import {RX_CUSTOM_STRATEGIES } from './tokens/custom-strategies-token';
 import {RX_PRIMARY_STRATEGY} from './tokens/default-primary-strategy-token';
@@ -53,6 +53,9 @@ export class StrategyProvider extends RxState<{
   );
 
   strategies$ = this.select('strategies');
+  strategyNames$ = this.strategies$.pipe(
+    map(strategies => Object.values(strategies).map(s => s.name))
+  )
 
   constructor(@Optional()
               @Inject(RX_CUSTOM_STRATEGIES)

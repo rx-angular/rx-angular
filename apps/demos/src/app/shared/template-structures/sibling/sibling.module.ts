@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
 
 import { DirtyChecksModule } from '../../debug-helper/dirty-checks';
@@ -18,7 +19,7 @@ import { SiblingStaticComponent } from './sibling-static.component';
 import { SiblingStrategyComponent } from './sibling-strategy.component';
 import { ImageArrayModule } from '../../image-array/image-array.module';
 import { SiblingPixelImgComponent } from './sibling-pixel-img.component';
-import { RxForModule, RxLetModule } from '../../../rx-angular-pocs';
+import { RxContextModule, RxForModule, RxLetModule } from '../../../rx-angular-pocs';
 
 const DECLARATIONS = [
   SiblingStaticComponent,
@@ -45,9 +46,10 @@ const DECLARATIONS = [
     WorkModule,
     StrategySelectModule,
     ImageArrayModule,
-    RxForModule
+    RxForModule,
+    RxContextModule,
+    MatProgressSpinnerModule,
   ],
-  exports: DECLARATIONS
+  exports: DECLARATIONS,
 })
-export class SiblingModule {
-}
+export class SiblingModule {}

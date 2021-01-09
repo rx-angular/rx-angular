@@ -181,7 +181,7 @@ export function createTemplateManager<
     name = getTemplateName(name, fallback);
     if (activeContentView !== name) {
       if (viewCache.has(activeContentView)) {
-        viewContainerRef.detach(0);
+        viewContainerRef.remove(0);
         viewCache.delete(activeContentView);
       }
       if (templateCache.has(name)) {
@@ -198,7 +198,7 @@ export function createTemplateManager<
       } else {
         // @NOTICE this is here to cause errors and see in which situations we would throw.
         // In CDK it should work different.
-        console.error(`A non-existing view was tried to insert ${name}`);
+        // console.error(`A non-existing view was tried to insert ${name}`);
       }
 
       activeContentView = name;

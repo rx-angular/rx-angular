@@ -1,12 +1,14 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
-  Component,
-  ViewChild,
+  Component, ElementRef, QueryList,
+  ViewChild, ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
-import { asyncScheduler, BehaviorSubject, from, scheduled, Subject } from 'rxjs';
+import { asyncScheduler, BehaviorSubject, defer, from, merge, scheduled, Subject } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
 import { ArrayProviderService } from '../../../../../shared/debug-helper/value-provider';
+import { ArrayProviderComponent } from '../../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { rxIterableDifferFactory } from '../../shared';
 import { RxState } from '@rx-angular/state';
 import { Hooks } from '../../../../../shared/debug-helper/hooks';
@@ -35,6 +37,18 @@ const customChangeSet = [
   [],
   // insert 0,1,2,3,4
   [item0, item1, item2, item3, ...items5],
+  // unchanged 0, remove 1, update 2 => 2232, move 3,2
+  [item0, item3, { ...item2, value: '2232' }, ...items5],
+  [item0, item3, { ...item2, value: '2232' }],
+  [],
+  // insert 0,1,2,3,4
+  [item0, item3, { ...item2, value: '2232' }, ...items5],
+  // unchanged 0, remove 1, update 2 => 2232, move 3,2
+  [item0, item1, item2, item3, ...items5],
+  [item0, item3, { ...item2, value: '2232' }],
+  [],
+  // insert 0,1,2,3,4
+  [item0, ...items5, item1, item2, item3],
   // unchanged 0, remove 1, update 2 => 2232, move 3,2
   [item0, item3, { ...item2, value: '2232' }, ...items5],
   [item0, item3, { ...item2, value: '2232' }],
@@ -81,15 +95,19 @@ const customChangeSet = [
         <div
           class="work-container d-flex flex-wrap w-100"
           [class.list-view]="viewMode === 'list'"
-          *rxLet="view; let viewMode"
+          *rxLet="view; let viewMode;"
         >
           <div
+            #workChild
             class="work-child d-flex"
             *rxFor="
-              let a of arrayP.array$;
+              let a of data$;
               let index = index;
               let count = count;
               let even = even;
+              let odd = odd;
+              let first = first;
+              let last = last;
               renderCallback: renderCallback;
               trackBy: trackById;
               strategy: strategy$
@@ -98,11 +116,15 @@ const customChangeSet = [
           >
             <div class="child-bg" [ngStyle]="{ background: color(a) }"></div>
             <!--<div class="child-bg" [class.even]="even"></div>-->
-            <div class="child-context ">
+            <div class="child-context flex-column flex-wrap">
               <small>id: {{ a.id }}</small>
               <small>value: {{ a.value }}</small>
               <small>index: {{ index }}</small>
               <small>count: {{ count }}</small>
+              <small>even: {{ even }}</small>
+              <small>odd: {{ odd }}</small>
+              <small>first: {{ first }}</small>
+              <small>last: {{ last }}</small>
             </div>
           </div>
         </div>
@@ -164,7 +186,6 @@ const customChangeSet = [
 
       .work-container.list-view .work-child .child-context {
         display: flex;
-        flex-direction: column;
       }
 
       .work-container.list-view .work-child .child-bg {
@@ -198,9 +219,10 @@ const customChangeSet = [
     `,
   ],
 })
-export class RxIterableDifferComponent extends Hooks {
-  @ViewChild('arrayP')
-  arrayP;
+export class RxIterableDifferComponent extends Hooks implements AfterViewInit {
+  @ViewChild('arrayP', { read: ArrayProviderComponent, static: true }) arrayP;
+
+  @ViewChildren('workChild') workChildren: QueryList<ElementRef<HTMLElement>>;
 
   private numRendered = 0;
 
@@ -208,9 +230,15 @@ export class RxIterableDifferComponent extends Hooks {
   readonly triggerChangeSet = new Subject<void>();
   readonly activeChangeSet$ = this.triggerChangeSet.pipe(
     switchMapTo(scheduled(customChangeSet, asyncScheduler)),
-    tap(data => console.log(data))
-  )
+    tap((data) => console.log(data))
+  );
+
+  readonly data$ = defer(() => merge(
+    this.arrayP.array$,
+    this.activeChangeSet$
+  ));
   readonly renderCallback = new Subject();
+  readonly renderCallback2 = new Subject();
   readonly rendered$ = this.renderCallback.pipe(
     startWith(null),
     map(() => ++this.numRendered)
@@ -236,6 +264,16 @@ export class RxIterableDifferComponent extends Hooks {
     super();
     // this.state.hold(this.afterViewInit$, () => this.setupRxDiffer())
     // this.state.hold(this.afterViewInit$.pipe(switchMap(_ => this.arrayP.array$)), (v) => this.rxDiffer.next(v as any))
+  }
+
+  ngAfterViewInit(): void {
+    super.ngAfterViewInit();
+    this.state.hold(
+      this.workChildren.changes,
+      workChildren => {
+        console.log('workChildren', this.workChildren.toArray());
+      }
+    )
   }
 
   trackByIdFn = (a) => a.id;

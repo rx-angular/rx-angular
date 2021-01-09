@@ -35,7 +35,7 @@ import {
   map,
   mergeAll,
   publishReplay,
-  scan,
+  scan, tap,
 } from 'rxjs/operators';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
@@ -57,8 +57,8 @@ export class RxIf<U> implements OnInit, OnDestroy {
   >;
 
   state$ = this.observablesSubject$
-    .pipe(distinctUntilChanged(), mergeAll())
     .pipe(
+      distinctUntilChanged(), mergeAll(),
       scan((state, slice) => ({ ...state, ...slice }), {} as any),
       catchError((e) => {
         console.error(e);
@@ -73,7 +73,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
   }
 
   @Input('rxIfStrategy')
-  set strategy(strategyName: Observable<string> | null | undefined) {
+  set strategy(strategyName: Observable<string> | string | null | undefined) {
     this.connect('strategyName', strategyName);
   }
 
@@ -150,7 +150,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
     const templateName = value
       ? RxIfTemplateNames.then
       : RxIfTemplateNames.else;
-    const elseView = this.templateManager.getEmbeddedView(templateName)
+    const elseView = this.templateManager.getEmbeddedView(templateName);
     if(elseView) {
       this.templateManager.displayView(templateName);
       this.templateManager.updateViewContext({
@@ -159,7 +159,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
       });
       work(elseView, elseView);
     } else {
-      this.viewContainerRef.remove()
+      this.templateManager.displayView(null);
     }
     work(this.cdRef, (this.cdRef as any)?.context || this.cdRef);
   };

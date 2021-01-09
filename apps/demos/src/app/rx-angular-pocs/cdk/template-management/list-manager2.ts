@@ -59,30 +59,12 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     nameToStrategyCredentials(strategies, defaultStrategyName)
   );
 
-  const notifyParent$ = new Subject<boolean>();
-
   return {
     nextStrategy(nextConfig: Observable<string>): void {
       strategyName$.next(nextConfig);
     },
     render(values$: Observable<NgIterable<T>>): Observable<any> {
-      return merge(
-        values$.pipe(_render()),
-        notifyParent$.pipe(
-          withLatestFrom(strategy$),
-          switchMap(([notify, strategy]) =>
-            notify
-              ? strategy.behavior(() => {
-                  strategy.work(
-                    config.cdRef,
-                    (config.cdRef as any).context || config.cdRef
-                  );
-                }, (config.cdRef as any).context || config.cdRef)(of(null))
-              : of(null)
-          ),
-          filter(v => v != null)
-        )
-      );
+      return values$.pipe(_render());
     },
   };
   function _render() {
@@ -106,14 +88,23 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             toRemoveCount--;
             i--;
             remove$.push(
-              of(null).pipe(
+              of(i).pipe(
                 strategy.behavior(() => {viewContainerRef.remove(i);}, {})
               )
             );
           }
-
+          const parentNotify$ = notifyParent
+                                ? strategy.behavior(() => {
+              console.log('notify parent', (config.cdRef as any).context);
+              strategy.work(
+                config.cdRef,
+                (config.cdRef as any).context || config.cdRef
+              );
+            }, (config.cdRef as any).context || config.cdRef)(of(null))
+                                : of(null);
           return combineLatest([
             // support for Iterable<T> (e.g. `Map#values`)
+            // parentNotify$,
             ...items.map((item, index) => {
               positions.set(item, index);
               const context = { count, index};
@@ -123,6 +114,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                   let view = viewContainerRef.get(index) as EmbeddedViewRef<C>;
                   // The items view is not created yet => create view + update context
                   if (!view) {
+                    console.log('insert');
                     view = viewContainerRef.createEmbeddedView(
                       templateRef,
                       createViewContext(item),
@@ -144,6 +136,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                     if (moved || updated) {
 
                       if (moved) {
+                        console.log('move');
                         const oldPosition = positions.get(item);
                         if (positions.has(item) && positions.get(item) !== index) {
                           const oldView = viewContainerRef.get(oldPosition);
@@ -153,31 +146,31 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                               oldView,
                               index
                             ) as EmbeddedViewRef<C>;
-                            view.context.setComputedContext(context);
+                            console.log('real move');
                           }
                         }
                       }
+                      view.context.setComputedContext(context);
                       view.context.$implicit = item;
-
                       view.reattach();
                       view.detectChanges();
                       view.detach();
-
                     } else {
-
                       if(notifyParent) {
                         view.context.setComputedContext(context);
+                        view.reattach();
+                        view.detectChanges();
+                        view.detach();
                       }
                     }
                   }
 
-                }, item)
+                }, {})
               );
             }),
             ...remove$,
-          ]).pipe(
-            tap(() => notifyParent$.next(notifyParent))
-          );
+            parentNotify$
+          ]).pipe(filter(v => v != null))
         })
       );
   }

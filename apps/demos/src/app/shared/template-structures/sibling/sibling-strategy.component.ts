@@ -4,14 +4,14 @@ import {
   Inject,
   Input,
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { toBooleanArray } from './utils';
 import {
   RX_CUSTOM_STRATEGIES,
   RX_PRIMARY_STRATEGY,
 } from '../../../rx-angular-pocs';
 import { RxState } from '@rx-angular/state';
-import { map } from 'rxjs/operators';
+import { delay, map } from 'rxjs/operators';
 
 const chunk = (arr, n) =>
   arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
@@ -20,12 +20,21 @@ const chunk = (arr, n) =>
   selector: 'rxa-sibling-strategy',
   template: `
     <h3>{{ siblings.length }} Siblings</h3>
-    <div class="d-flex flex-wrap">
+    <div class="d-flex flex-wrap"
+         [rxContextContainer]="siblings$">
       <div
         class="sibling"
-        *rxFor="let item of siblings$; strategy: strategy$; trackBy: trackBy">
-        <div [ngStyle]="{background: item.color}" ></div>
+        *rxFor="
+          let item of siblings$;
+          strategy: strategy$;
+          trackBy: trackBy;
+          renderCallback: rendered$
+        "
+      >
+        <div [ngStyle]="{ background: item.color }"></div>
       </div>
+      <mat-progress-spinner rxSuspense [diameter]="50">
+      </mat-progress-spinner>
     </div>
   `,
   host: {
@@ -35,7 +44,7 @@ const chunk = (arr, n) =>
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SiblingStrategyComponent extends RxState<{
-  siblings: { filled: boolean; id: number; color: string; }[];
+  siblings: { filled: boolean; id: number; color: string }[];
   strategy: string;
   filled: boolean;
 }> {
@@ -44,10 +53,12 @@ export class SiblingStrategyComponent extends RxState<{
     //map(() => toBoolean(toRandom()))
     ();
   state$ = this.select();
-  siblings$ = this.select('siblings');
+  siblings$ = this.select('siblings').pipe(delay(1000));
   siblings = [];
 
   strategy$ = this.select('strategy');
+
+  readonly rendered$ = new Subject<any>();
 
   @Input()
   set count(num$: Observable<number | string>) {
@@ -57,7 +68,11 @@ export class SiblingStrategyComponent extends RxState<{
         map((num) => {
           this.siblings = toBooleanArray(
             parseInt(num as any, 10)
-          ).map((filled, id) => ({ color: this.color(Math.random()), filled, id }));
+          ).map((filled, id) => ({
+            color: this.color(Math.random()),
+            filled,
+            id,
+          }));
           return this.siblings;
         })
       )
@@ -80,7 +95,7 @@ export class SiblingStrategyComponent extends RxState<{
   trackBy = (idx: number, i: { id: number }) => i.id;
 
   color(a: any) {
-    return '#' +Math.floor(a*16777215).toString(16);
+    return '#' + Math.floor(a * 16777215).toString(16);
   }
 
   constructor(
@@ -94,4 +109,3 @@ export class SiblingStrategyComponent extends RxState<{
     });
   }
 }
-
