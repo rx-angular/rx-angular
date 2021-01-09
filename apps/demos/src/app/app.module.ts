@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent, AppComponentModule } from './app-component';
 import {
   getChunkStrategyCredentialsMap,
-  getConcurrentSchedulerStrategyCredentialsMap,
+  getConcurrentSchedulerStrategyCredentialsMap, getFreStrategyCredentialsMap,
   PriorityNameToLevel,
   RX_CUSTOM_STRATEGIES,
   RX_PRIMARY_STRATEGY,
@@ -35,6 +35,7 @@ import { concurrent } from './rx-angular-pocs/cdk/render-strategies/scheduling/s
       useValue: {
         ...getConcurrentSchedulerStrategyCredentialsMap(),
         ...getChunkStrategyCredentialsMap(),
+        ...getFreStrategyCredentialsMap(),
         test: {
           name: 'test',
           work: (cdRef) => {

@@ -96,7 +96,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
           }
           const parentNotify$ = notifyParent
             ? strategy.behavior(() => {
-                console.log('notify parent', (config.cdRef as any).context);
+                // console.log('notify parent', (config.cdRef as any).context);
                 strategy.work(
                   config.cdRef,
                   (config.cdRef as any).context || config.cdRef
@@ -115,7 +115,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                   let view = viewContainerRef.get(index) as EmbeddedViewRef<C>;
                   // The items view is not created yet => create view + update context
                   if (!view) {
-                    console.log('insert');
+                    // console.log('insert');
                     view = viewContainerRef.createEmbeddedView(
                       templateRef,
                       createViewContext(item),
@@ -136,7 +136,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                     const updated = !distinctBy(view.context.$implicit, item);
                     if (moved || updated) {
                       if (moved) {
-                        console.log('move');
+                        // console.log('move');
                         const oldPosition = positions.get(item);
                         if (
                           positions.has(item) &&
@@ -149,7 +149,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                               oldView,
                               index
                             ) as EmbeddedViewRef<C>;
-                            console.log('real move');
+                            // console.log('real move');
                           }
                         }
                       }

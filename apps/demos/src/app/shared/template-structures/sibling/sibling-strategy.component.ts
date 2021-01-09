@@ -20,8 +20,7 @@ const chunk = (arr, n) =>
   selector: 'rxa-sibling-strategy',
   template: `
     <h3>{{ siblings.length }} Siblings</h3>
-    <div class="d-flex flex-wrap"
-         [rxContextContainer]="siblings$">
+    <div class="d-flex flex-wrap">
       <div
         class="sibling"
         *rxFor="
@@ -33,8 +32,6 @@ const chunk = (arr, n) =>
       >
         <div [ngStyle]="{ background: item.color }"></div>
       </div>
-      <mat-progress-spinner rxSuspense [diameter]="50">
-      </mat-progress-spinner>
     </div>
   `,
   host: {
@@ -53,7 +50,7 @@ export class SiblingStrategyComponent extends RxState<{
     //map(() => toBoolean(toRandom()))
     ();
   state$ = this.select();
-  siblings$ = this.select('siblings').pipe(delay(1000));
+  siblings$ = this.select('siblings');
   siblings = [];
 
   strategy$ = this.select('strategy');

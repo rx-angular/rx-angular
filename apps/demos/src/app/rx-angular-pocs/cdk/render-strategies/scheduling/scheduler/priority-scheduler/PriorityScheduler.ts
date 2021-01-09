@@ -5,7 +5,7 @@ import { PriorityAction } from './PriorityAction';
 import { TaskQueue } from './task-queue';
 
 export abstract class PriorityScheduler<P, T> extends AsapScheduler {
-  public queueHandler: TaskQueue<P, T>;
+  public queueHandler: TaskQueue<T, PrioritySchedulerOptions<P>>;
 
   constructor(
     schedulerAction: typeof PriorityAction,

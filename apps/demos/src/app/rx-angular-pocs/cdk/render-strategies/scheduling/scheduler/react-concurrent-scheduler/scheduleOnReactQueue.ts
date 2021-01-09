@@ -10,7 +10,7 @@ function scheduleTask(
   options: {
     priority: PriorityLevel;
     scope: object;
-    delay: number;
+    delay?: number;
   }
 ) {
   return scheduleCallback(options.priority, work, { delay: options.delay });
@@ -30,6 +30,7 @@ export function scheduleOnReactQueue<T>(
   options: {
     priority: PriorityLevel;
     scope: object;
+    delay?: number;
   }
 ): MonoTypeOperatorFunction<T> {
   return (o$: Observable<T>): Observable<T> =>

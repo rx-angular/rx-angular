@@ -2,6 +2,7 @@ import { StrategyCredentials, StrategyCredentialsMap } from '../model';
 import {
   GlobalTaskPriority,
   rxaScheduler,
+  scheduleOnRxaQueue,
 } from '../scheduling/scheduler/rxa-chunked-scheduler';
 import { observeOnPriority } from '../scheduling/operators';
 import { tap } from 'rxjs/operators';
@@ -22,12 +23,12 @@ export function createRenderQueueStrategyCredentials(): StrategyCredentials {
     },
     behavior: (work: () => void, scope: any) => (o$) =>
       o$.pipe(
-        observeOnPriority(rxaScheduler(GlobalTaskPriority.blocking, scope)),
-        tap(work)
-        /*, scheduleOnReactQueue(work, {
+        /*observeOnPriority(rxaScheduler(GlobalTaskPriority.blocking, scope)),
+        tap(work)*/
+        scheduleOnRxaQueue(work, {
           priority: GlobalTaskPriority.chunk,
-          scope
-        })*/
+          scope,
+        })
       ),
   };
 }
@@ -41,12 +42,10 @@ export function createBlockingStrategyCredentials(): StrategyCredentials {
     },
     behavior: (work: () => void, scope: any) => (o$) =>
       o$.pipe(
-        observeOnPriority(rxaScheduler(GlobalTaskPriority.blocking, scope)),
-        tap(work)
-        /*, scheduleOnReactQueue(work, {
-           priority: GlobalTaskPriority.blocking,
-           scope
-         })*/
+        scheduleOnRxaQueue(work, {
+          priority: GlobalTaskPriority.blocking,
+          scope,
+        })
       ),
   };
 }

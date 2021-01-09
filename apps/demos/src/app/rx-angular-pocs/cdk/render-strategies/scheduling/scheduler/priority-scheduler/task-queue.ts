@@ -1,21 +1,23 @@
-import { PrioritySchedulingOptions } from './model';
-
 let nextHandle = 1;
 const activeHandles: { [key: number]: any } = {};
 
-export abstract class TaskQueue<P, T> {
+export abstract class TaskQueue<T, O> {
 
-  _queTask: (cb: () => void, options: PrioritySchedulingOptions<P>) => [T, number];
-  _dequeTask: (handle: any, scope?: any) => void;
+  protected abstract _queTask: (cb: () => void, options: O) => [T, number];
+  protected abstract _dequeTask: (handle: T) => void;
 
-  queueTask(cb: () => void, options: PrioritySchedulingOptions<P>): number {
+  // mental model queueTask is similar to setTimeout:
+  // add a callback to be executed in the future and return an async id  as handle
+  queueTask(cb: () => void, options: O): number {
     const [task, id] = this._queTask(cb, options);
     this.addTask(id, task);
     return id;
   };
 
-  dequeueTask(id: number, scope?: any): void {
-    this.clearTask(id, scope);
+  // mental model dequeueTask is similar to clearTimeout:
+  // remove the once scheduled task async handle id
+  dequeueTask(id: number): void {
+    this.clearTask(id);
   }
 
   getTaskId(): number {
@@ -26,9 +28,9 @@ export abstract class TaskQueue<P, T> {
     activeHandles[id] = handle;
   }
 
-  clearTask(id: number, scope: any): boolean {
+  clearTask(id: number): boolean {
     if (id in activeHandles) {
-      this._dequeTask(activeHandles[id], scope);
+      this._dequeTask(activeHandles[id]);
       delete activeHandles[id];
       return true;
     }

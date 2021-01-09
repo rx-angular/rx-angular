@@ -1,40 +1,32 @@
-import { coalescingManager } from '../../../../utils/coalescing-manager';
-import { GlobalTaskPriority, RxaSchedulerOptions } from './model';
-import { rxaQueueManager } from './rxa-scheduler/rxa-queue-manager';
+import { RxaSchedulerOptions } from './model';
+import { GlobalTask, rxaQueueManager } from './rxa-scheduler/rxa-queue-manager';
 import { TaskQueue } from '../priority-scheduler/task-queue';
 
 /**
  * Helper functions to schedule and unschedule tasks in a global queue.
  */
 export class RxaSchedulerQueueHandler extends TaskQueue<
-  GlobalTaskPriority,
-  undefined
+  GlobalTask,
+  RxaSchedulerOptions
 > {
-  _queTask = (
+  protected _queTask = (
     work: () => void,
     options: RxaSchedulerOptions
   ): [undefined, number] => {
     const id = this.getTaskId();
     const {scope, priority} = options;
     let task;
-    if (!coalescingManager.isCoalescing(scope)) {
-      coalescingManager.increment(scope);
-      task = rxaQueueManager.scheduleTask({
-        work: () => {
-          coalescingManager.decrement(scope);
-          this.clearTask(id, scope);
-          work();
-
-        },
-        priority,
-        scope,
-      });
-    }
-
+    task = rxaQueueManager.scheduleTask({
+      work: () => {
+        work();
+        this.clearTask(id);
+      },
+      priority,
+      scope,
+    });
     return [task, id];
   };
-  _dequeTask = (handle: any, scope): void => {
-    coalescingManager.decrement(scope);
+  protected _dequeTask = (handle: GlobalTask): void => {
     rxaQueueManager.deleteTask(handle);
   };
 }
