@@ -22,21 +22,25 @@ import { ArrayProviderService } from '../array-provider.service';
             Remove
           </button>
           <br/>
-          <button mat-raised-button [unpatch]="unpatched" (click)="addItemsImmutable(250)">
+          <button mat-raised-button [unpatch]="unpatched" (click)="addItemsImmutable(numberOfItems)">
             Add Many
           </button>
-          <button mat-raised-button [unpatch]="unpatched" (click)="moveItemsImmutable(5)">
+          <button mat-raised-button [unpatch]="unpatched" (click)="moveItemsImmutable(numberOfItems/2)">
             Move Many
           </button>
-          <button mat-raised-button [unpatch]="unpatched" (click)="shuffleItemsImmutable(5)">
+          <button mat-raised-button [unpatch]="unpatched" (click)="shuffleItemsImmutable()">
             Shuffle
           </button>
-          <button mat-raised-button [unpatch]="unpatched" (click)="updateItemsImmutable(20)">
+          <button mat-raised-button [unpatch]="unpatched" (click)="updateItemsImmutable(numberOfItems/2)">
             Update Many
           </button>
-          <button mat-raised-button [unpatch]="unpatched" (click)="removeItemsImmutable(4)">
+          <button mat-raised-button [unpatch]="unpatched" (click)="removeItemsImmutable(numberOfItems/2)">
             Remove Many
           </button>
+          <mat-form-field>
+            <mat-label>Number of items</mat-label>
+            <input matInput [(ngModel)]="numberOfItems" type="number">
+          </mat-form-field>
         </div>
       </div>
     </ng-container>
@@ -44,6 +48,8 @@ import { ArrayProviderService } from '../array-provider.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArrayProviderComponent extends ArrayProviderService {
+  numberOfItems = 10
+
   @Input()
   buttons = false;
   @Input()

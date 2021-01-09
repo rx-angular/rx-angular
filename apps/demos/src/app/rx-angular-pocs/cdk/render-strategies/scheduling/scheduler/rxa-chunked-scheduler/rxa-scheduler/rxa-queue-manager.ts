@@ -138,7 +138,7 @@ function createGlobalTaskManager(): GlobalTaskManager {
             // queue has entries left -> reschedule
             cancelAnimFrame(frameId);
             // console.warn('rescheduling:', size());
-            frameId = animFrame(exhaust);
+            frameId = postMessage(exhaust)();
             subscriber.next();
           } else {
             // queue is empty -> exhaust completed
