@@ -1,24 +1,25 @@
 import { ITask, ITaskCallback } from './model'
 
-const queue: ITask[] = []
+const macroTask: ITask[] = []
+let deadline = 0
 const threshold: number = 1000 / 60
-const unit = []
-let deadline: number = 0
+const callbacks = []
 
-export const schedule = (cb) => unit.push(cb) === 1 && postMessage()
+export const schedule = (cb) => callbacks.push(cb) === 1 && postMessage()
 
-export const scheduleWork = (callback: ITaskCallback, time: number): ITask => {
-  const job = {
+export const scheduleWork = (callback: ITaskCallback): ITask => {
+  const currentTime = getTime()
+  const newTask = {
     callback,
-    time,
+    time: currentTime + 3000,
   }
-  queue.push(job)
+  macroTask.push(newTask)
   schedule(flushWork)
-  return job;
+  return newTask;
 }
 
 const postMessage = (() => {
-  const cb = () => unit.splice(0, unit.length).forEach((c) => c())
+  const cb = () => callbacks.splice(0, callbacks.length).forEach((c) => c())
   if (typeof MessageChannel !== 'undefined') {
     const { port1, port2 } = new MessageChannel()
     port1.onmessage = cb
@@ -29,22 +30,27 @@ const postMessage = (() => {
 
 const flush = (initTime: number): boolean => {
   let currentTime = initTime
-  let job = peek(queue)
-  while (job) {
-    const timeout = false
-    if (shouldYield()) break
-    const callback = job.callback as any
-    job.callback = null
-    const next = callback()
-    if (next) {
-      job.callback = next as any
-    } else {
-      queue.shift()
-    }
-    job = peek(queue)
+  let currentTask = peek(macroTask)
+
+  while (currentTask) {
+    const timeout = currentTask.time <= currentTime
+    if (!timeout && shouldYield()) break
+
+    const callback = currentTask.callback
+    currentTask.callback = null
+
+    const next = callback(timeout)
+    next ? (currentTask.callback = next as any) : macroTask.shift()
+
+    currentTask = peek(macroTask)
     currentTime = getTime()
   }
-  return !!job
+  return !!currentTask
+}
+
+const peek = (queue: ITask[]) => {
+  queue.sort((a, b) => a.time - b.time)
+  return queue[0]
 }
 
 const flushWork = (): void => {
@@ -58,6 +64,4 @@ export const shouldYield = (): boolean => {
   return getTime() >= deadline
 }
 
-export const getTime = () => performance.now()
-
-const peek = (queue: ITask[]) => queue.sort((a, b) => a.time - b.time)[0]
+const getTime = () => performance.now()

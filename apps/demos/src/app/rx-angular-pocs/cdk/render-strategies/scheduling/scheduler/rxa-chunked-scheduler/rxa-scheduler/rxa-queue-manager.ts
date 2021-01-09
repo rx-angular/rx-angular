@@ -15,6 +15,15 @@ const cancelAnimFrame =
   (window as any).mozCancelAnimationFrame ||
   function (callback) {};
 
+const postMessage = (cb) => (() => {
+  if (typeof MessageChannel !== 'undefined') {
+    const { port1, port2 } = new MessageChannel()
+    port1.onmessage = cb
+    return () => port2.postMessage(null)
+  }
+  return () => setTimeout(cb)
+})()
+
 /*export const animFrame = getZoneUnPatchedApi('setTimeout');
 const cancelAnimFrame = getZoneUnPatchedApi('clearTimeout');*/
 
@@ -147,7 +156,7 @@ function createGlobalTaskManager(): GlobalTaskManager {
       }
 
       // https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
-      frameId = animFrame(exhaust);
+      frameId = postMessage(exhaust)();
     });
   }
 }

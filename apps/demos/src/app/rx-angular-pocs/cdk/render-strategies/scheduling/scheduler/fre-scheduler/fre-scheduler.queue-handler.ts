@@ -1,9 +1,7 @@
 import { coalescingManager } from '../../../../utils/coalescing-manager';
 import { TaskQueue } from '../priority-scheduler/task-queue';
 import { FreSchedulerOptions, ITask } from './model';
-import { getTime, scheduleWork } from './scheduler';
-
-let prio = 0;
+import { scheduleWork } from './scheduler';
 
 /**
  * Helper functions to schedule and unschedule tasks in a global queue.
@@ -17,18 +15,16 @@ export class FreSchedulerQueueHandler extends TaskQueue<
     options: FreSchedulerOptions
   ): [ITask & { scope: any }, number] => {
     const id = this.getTaskId();
-    const {scope, priority} = options;
+    const {scope} = options;
     let task;
     if (!coalescingManager.isCoalescing(scope)) {
       coalescingManager.increment(scope);
-      const _work = (time: boolean) => {
-        console.log(time);
+      const _work = () => {
         work();
         this.clearTask(id);
         return false;
       };
-      console.log(prio);
-      task = scheduleWork(_work, getTime());
+      task = scheduleWork(_work);
       task.scope = scope;
     }
     return [task, id];
