@@ -11,4 +11,5 @@ export interface CoalescingSchedulingOptions {
 }
 
 export type PrioritySchedulerOptions<P> = PrioritySchedulingOptions<P> &
-  DefaultSchedulingOptions;
+  DefaultSchedulingOptions & CoalescingSchedulingOptions;
+export type PriorityOperatorOptions<P> = PrioritySchedulingOptions<P> & CoalescingSchedulingOptions

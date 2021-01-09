@@ -4,21 +4,20 @@ import { Subscriber } from 'rxjs/internal/Subscriber';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { Notification } from 'rxjs/internal/Notification';
 import { MonoTypeOperatorFunction, PartialObserver, SchedulerAction, TeardownLogic } from 'rxjs/internal/types';
-import { PriorityScheduler } from '../scheduler/priority-scheduler';
-import { PrioritySchedulingOptions } from '../scheduler/priority-scheduler/model';
+import { PriorityScheduler, PrioritySchedulerOptions } from '../scheduler/priority-scheduler';
 
 /**
  *
  * Re-emits all notifications from source Observable with specified prioritized scheduler.
  */
-export function observeOnPriority<S, P, T>(scheduler: PriorityScheduler<P, T>, options?: PrioritySchedulingOptions<P>): MonoTypeOperatorFunction<S> {
+export function observeOnPriority<S, P, T>(scheduler: PriorityScheduler<P, T>, options?: PrioritySchedulerOptions<P>): MonoTypeOperatorFunction<S> {
   return function observeOnOperatorFunction(source: Observable<S>): Observable<S> {
     return source.lift(new ObserveOnOperator(scheduler, options));
   };
 }
 
 class ObserveOnOperator<S, P, T> implements Operator<S, S> {
-  constructor(private scheduler: PriorityScheduler<P, T>, private options: PrioritySchedulingOptions<P>) {
+  constructor(private scheduler: PriorityScheduler<P, T>, private options: PrioritySchedulerOptions<P>) {
   }
 
   call(subscriber: Subscriber<S>, source: any): TeardownLogic {
@@ -35,7 +34,7 @@ class ObserveOnSubscriber<S, P, T> extends Subscriber<S> {
 
   constructor(destination: Subscriber<S>,
               private scheduler: PriorityScheduler<P, T>,
-              private options: PrioritySchedulingOptions<P>) {
+              private options: PrioritySchedulerOptions<P>) {
     super(destination);
   }
 

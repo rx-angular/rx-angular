@@ -11,12 +11,11 @@ export class RxaSchedulerQueueHandler extends TaskQueue<
   undefined
 > {
   _queTask = (
-    cb: () => void,
+    work: () => void,
     options: RxaSchedulerOptions
   ): [undefined, number] => {
     const id = this.getTaskId();
-    const scope = options.scope;
-    const priority = options.priority;
+    const {scope, priority} = options;
     let task;
     if (!coalescingManager.isCoalescing(scope)) {
       coalescingManager.increment(scope);
@@ -24,7 +23,7 @@ export class RxaSchedulerQueueHandler extends TaskQueue<
         work: () => {
           coalescingManager.decrement(scope);
           this.clearTask(id, scope);
-          cb();
+          work();
 
         },
         priority,
