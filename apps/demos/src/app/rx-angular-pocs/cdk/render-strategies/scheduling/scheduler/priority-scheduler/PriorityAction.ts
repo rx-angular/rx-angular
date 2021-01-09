@@ -2,17 +2,18 @@ import { AsyncAction } from 'rxjs/internal/scheduler/AsyncAction';
 import { SchedulerAction } from 'rxjs/internal/types';
 import { Subscription } from 'rxjs';
 import { PriorityScheduler } from './PriorityScheduler';
-import { RxaSchedulingOptions } from './model';
+import { PrioritySchedulerOptions } from './model';
 
 export class PriorityAction<S, P, T> extends AsyncAction<S> {
 
   constructor(protected scheduler: PriorityScheduler<P, T>,
               protected work: (this: SchedulerAction<S>, state?: S) => void) {
+    // @ts-ignore
     super(scheduler, work);
   }
 
   // @ts-ignore
-  public schedule(state?: S, options?: RxaSchedulingOptions<P>): Subscription {
+  public schedule(state?: S, options?: PrioritySchedulerOptions<P>): Subscription {
     if (this.closed) {
       return this;
     }

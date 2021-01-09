@@ -4,8 +4,8 @@ import { Subscriber } from 'rxjs/internal/Subscriber';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { Notification } from 'rxjs/internal/Notification';
 import { MonoTypeOperatorFunction, PartialObserver, SchedulerAction, TeardownLogic } from 'rxjs/internal/types';
-import { PrioritySchedulingOptions, RxaSchedulingOptions } from '../scheduler/priority/model';
-import { PriorityScheduler } from '../scheduler/priority/PriorityScheduler';
+import { PriorityScheduler } from '../scheduler/priority-scheduler';
+import { PrioritySchedulingOptions } from '../scheduler/priority-scheduler/model';
 
 /**
  *
@@ -42,6 +42,7 @@ class ObserveOnSubscriber<S, P, T> extends Subscriber<S> {
   private scheduleMessage(notification: Notification<any>): void {
     const destination = this.destination as Subscription;
     destination.add(this.scheduler.schedule(
+      // @ts-ignore
       ObserveOnSubscriber.dispatch,
       this.options,
       new ObserveOnMessage(notification, this.destination)

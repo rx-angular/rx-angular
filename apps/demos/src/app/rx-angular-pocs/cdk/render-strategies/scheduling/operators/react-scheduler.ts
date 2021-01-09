@@ -1,11 +1,12 @@
 import { Observable } from 'rxjs';
 import { mapTo, switchMap } from 'rxjs/operators';
-import { cancelCallback, scheduleCallback } from './react-source-code/scheduler';
-import { coalescingManager } from '../../coalescing-manager';
-import { ReactCallBackCredentials } from './model';
+import { coalescingManager } from '../../../utils/coalescing-manager';
 import { priorityLevel } from '../../../render-strategies/model/priority';
+import { cancelCallback, scheduleCallback } from '../scheduler/react-concurrent-scheduler/react-scheduler/scheduler';
 
-export const reactSchedulerTick = (credentials: ReactCallBackCredentials, context: any): Observable<any> =>
+type ReactCallBackCredentials = [priorityLevel, () => any, any?]
+
+const reactSchedulerTick = (credentials: ReactCallBackCredentials, context: any): Observable<any> =>
   new Observable<number>((subscriber) => {
     if (!coalescingManager.isCoalescing(context)) {
       const _work = () => {
@@ -27,13 +28,5 @@ export const reactSchedulerTick = (credentials: ReactCallBackCredentials, contex
 export function scheduleLikeReact<T>(priority: priorityLevel, work: any, context: any) {
   return (o$: Observable<T>): Observable<T> => o$.pipe(
     switchMap(v => reactSchedulerTick([priority, work], context).pipe(mapTo(v)))
-  );
-}
-
-export function getConcurrentScheduler<T>(priority: priorityLevel) {
-  const  work: any = undefined;
-  const context: any = undefined;
-  return (o$: Observable<T>): Observable<T> => o$.pipe(
-    switchMap((v) => reactSchedulerTick([priority, work], context).pipe(mapTo(v)))
   );
 }

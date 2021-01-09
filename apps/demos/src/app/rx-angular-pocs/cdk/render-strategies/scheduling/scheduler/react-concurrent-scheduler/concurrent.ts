@@ -3,4 +3,4 @@ import { ConcurrentScheduler } from './ConcurrentScheduler';
 import { priorityLevel } from '../../../../render-strategies/model';
 
 export const concurrent = (priority?: priorityLevel) =>
-  new ConcurrentScheduler(ConcurrentAction, { priority, context: {}, delay: 0 });
+  new ConcurrentScheduler(ConcurrentAction, { priority, scope: {}, delay: 0 });

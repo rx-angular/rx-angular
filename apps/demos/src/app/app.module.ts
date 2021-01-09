@@ -3,33 +3,32 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent, AppComponentModule } from './app-component';
-import { getChunkStrategyCredentialsMap } from './rx-angular-pocs/cdk/render-strategies/strategies/render-queue/strategy-map';
+import {
+  getChunkStrategyCredentialsMap,
+  getConcurrentSchedulerStrategyCredentialsMap,
+  PriorityNameToLevel,
+  RX_CUSTOM_STRATEGIES,
+  RX_PRIMARY_STRATEGY,
+} from './rx-angular-pocs';
 import { ENVIRONMENT_SETTINGS } from './shared/environment.token';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './features/home/home.component';
-import {
-  createRenderQueueStrategyCredentials,
-  getConcurrentSchedulerStrategyCredentialsMap, PriorityNameToLevel,
-  RX_CUSTOM_STRATEGIES,
-  RX_PRIMARY_STRATEGY, StrategyCredentials
-} from './rx-angular-pocs';
-import { observeOn, tap } from 'rxjs/operators';
-import { concurrent } from './rx-angular-pocs/cdk/utils/rxjs/scheduler/concurrent';
-import { observeOnPriority } from './rx-angular-pocs/cdk/utils/rxjs/operators/observeOnPriority';
-
+import { tap } from 'rxjs/operators';
+import { observeOnPriority } from './rx-angular-pocs/cdk/render-strategies/scheduling/operators';
+import { concurrent } from './rx-angular-pocs/cdk/render-strategies/scheduling/scheduler/react-concurrent-scheduler/concurrent';
 
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    AppComponentModule
+    AppComponentModule,
   ],
   providers: [
     {
       provide: ENVIRONMENT_SETTINGS,
-      useValue: environment
+      useValue: environment,
     },
     {
       provide: RX_CUSTOM_STRATEGIES,
@@ -37,28 +36,28 @@ import { observeOnPriority } from './rx-angular-pocs/cdk/utils/rxjs/operators/ob
         ...getConcurrentSchedulerStrategyCredentialsMap(),
         ...getChunkStrategyCredentialsMap(),
         test: {
-            name: 'test',
-            work: (cdRef) => {
-              cdRef.detectChanges()
-            },
-            behavior: (work: any, context: any) => {
-              return o$ => o$.pipe(
+          name: 'test',
+          work: (cdRef) => {
+            cdRef.detectChanges();
+          },
+          behavior: (work: any, context: any) => {
+            return (o$) =>
+              o$.pipe(
                 observeOnPriority(concurrent(PriorityNameToLevel.low)),
                 tap(work)
               );
-            }
-        }
+          },
+        },
       },
-      multi: true
+      multi: true,
     },
     {
       provide: RX_PRIMARY_STRATEGY,
-      useValue: 'normal'
-    }
+      useValue: 'normal',
+    },
   ],
   declarations: [HomeComponent],
   exports: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}

@@ -1,6 +1,6 @@
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { mapTo, switchMap } from 'rxjs/operators';
-import { GlobalTask, globalTaskManager } from './global-task-manager';
+import { GlobalTask, GlobalTaskPriority, GlobalTaskScope, rxaQueueManager } from './rxa-queue-manager';
 
 export const globalQueueTick = (credentials: GlobalTask): Observable<number> =>
   new Observable<number>((subscriber) => {
@@ -12,16 +12,21 @@ export const globalQueueTick = (credentials: GlobalTask): Observable<number> =>
       },
       scope: credentials.scope
     };
-    globalTaskManager.scheduleTask(task);
+    rxaQueueManager.scheduleTask(task);
     return () => {
-      globalTaskManager.deleteTask(task);
+      rxaQueueManager.deleteTask(task);
     };
   });
 
-export function scheduleOnGlobalTick<T>(
-  workDefinition: GlobalTask
+export function scheduleOnRxaQueue<T>(
+  work: (...args: any[]) => void,
+  options: {
+    priority: GlobalTaskPriority,
+    scope: GlobalTaskScope
+  }
 ): MonoTypeOperatorFunction<T> {
-  return (o$: Observable<T>): Observable<T> => o$.pipe(
-    switchMap(v => globalQueueTick(workDefinition).pipe(mapTo(v)))
-  );
+  return (o$: Observable<T>): Observable<T> =>
+    o$.pipe(
+      switchMap((v) => globalQueueTick({ work, ...options }).pipe(mapTo(v)))
+    );
 }

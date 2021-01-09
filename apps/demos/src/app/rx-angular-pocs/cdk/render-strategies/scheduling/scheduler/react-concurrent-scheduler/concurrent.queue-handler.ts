@@ -1,17 +1,19 @@
-import { coalescingManager } from '../../../coalescing-manager';
-import { scheduleCallback, cancelCallback } from '../../../scheduling/concurrent-scheduler/react-source-code/scheduler';
 import { priorityLevel, PriorityNameToLevel } from '../../../../render-strategies/model/priority';
-import { RxaSchedulingOptions } from '../../scheduler/priority/model';
-import { TaskQueue } from '../priority/task-queue';
-import { ReactSchedulerTask } from '../../../scheduling/concurrent-scheduler/react-source-code/schedulerMinHeap';
+import { ReactSchedulerOptions } from './model';
+
+
+import { coalescingManager } from '../../../../utils/coalescing-manager';
+import { ReactSchedulerTask } from './react-scheduler/schedulerMinHeap';
+import { cancelCallback, scheduleCallback } from './react-scheduler/scheduler';
+import { TaskQueue } from '../priority-scheduler/task-queue';
 
 /**
  * Helper functions to schedule and unschedule tasks in a global queue.
  */
 export class ConcurrentQueueHandler extends TaskQueue<priorityLevel, ReactSchedulerTask> {
-  _queTask = (cb: () => void, options: RxaSchedulingOptions<priorityLevel>): [ReactSchedulerTask, number] => {
+  _queTask = (cb: () => void, options: ReactSchedulerOptions): [ReactSchedulerTask, number] => {
     const id = this.getTaskId();
-    const scope = options.context;
+    const scope = options.scope;
     let task;
     if (!coalescingManager.isCoalescing(scope)) {
       coalescingManager.increment(scope);

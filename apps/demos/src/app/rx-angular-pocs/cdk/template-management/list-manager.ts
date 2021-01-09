@@ -1,217 +1,179 @@
-import { combineLatest, from, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, Observable, of, OperatorFunction, ReplaySubject } from 'rxjs';
 import {
   ChangeDetectorRef,
   EmbeddedViewRef,
-  IterableChangeRecord,
-  IterableChanges,
   NgIterable,
   TemplateRef,
-  ViewContainerRef
+  TrackByFunction,
+  ViewContainerRef,
 } from '@angular/core';
-import { groupBy, map, mergeAll, mergeMap, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { PriorityNameToLevel, StrategyCredentials, StrategyCredentialsMap } from '../render-strategies/model';
+import {
+  filter,
+  map,
+  startWith,
+  switchMap,
+  withLatestFrom,
+} from 'rxjs/operators';
+import {
+  StrategyCredentials,
+  StrategyCredentialsMap,
+} from '../render-strategies/model';
 import { nameToStrategyCredentials } from '../render-strategies/utils/strategy-helper';
-import { RxNotification } from '../utils/rxjs/Notification';
 import { ngInputFlatten } from '../utils/rxjs/operators/ngInputFlatten';
-import { reactSchedulerTick } from '../utils/scheduling/concurrent-scheduler';
 import { RxListViewContext } from './model';
-
 
 export interface ListManager<T, C> {
   nextStrategy: (config: string | Observable<string>) => void;
-  render(changes$: Observable<IterableChanges<T>>): Observable<any>;
+
+  render(changes$: Observable<NgIterable<T>>): Observable<any>;
 }
 
-export type RxViewContainerRefChangeType = 'update' | 'insert' | 'remove' | 'move';
-
-export interface RxViewContainerRefSpecialWork<T, C> {
-  ev: () => EmbeddedViewRef<C>,
-  index: number,
-  context: any,
-  work: (...args: any[]) => void
-  type?: RxViewContainerRefChangeType,
-}
-
-export type CreateViewContext<T, C, U extends NgIterable<T> = NgIterable<T>> =
-  (record: IterableChangeRecord<T>) => C;
-
-const forEachInsertToArray = forEachToArray('forEachAddedItem');
-const forEachMoveToArray = forEachToArray('forEachMovedItem');
-const forEachRemoveToArray = forEachToArray('forEachRemovedItem');
-const forEachUpdateToArray = forEachToArray('forEachIdentityChange');
+export type CreateViewContext<T, C> = (item: T) => C;
+export type DistinctByFunction<T> = (oldItem: T, newItem: T) => any;
 
 export function createListManager<T, C extends RxListViewContext<T>>(config: {
-  cdRef: ChangeDetectorRef,
-  strategies: StrategyCredentialsMap,
-  defaultStrategyName: string,
-  viewContainerRef: ViewContainerRef,
-  templateRef: TemplateRef<C>,
-  createViewContext: CreateViewContext<T, C>
+  cdRef: ChangeDetectorRef;
+  strategies: StrategyCredentialsMap;
+  defaultStrategyName: string;
+  viewContainerRef: ViewContainerRef;
+  templateRef: TemplateRef<C>;
+  createViewContext: CreateViewContext<T, C>;
+  trackBy: TrackByFunction<T>;
+  distinctBy?: DistinctByFunction<T>;
 }): ListManager<T, C> {
   const {
     viewContainerRef,
     templateRef,
     createViewContext,
     defaultStrategyName,
-    strategies
+    strategies,
+    trackBy,
   } = config;
-
-  const _leWork = new Map<number, (() => EmbeddedViewRef<C>)[]>();
+  const distinctBy = config?.distinctBy || ((a: T, b: T) => a === b);
 
   const strategyName$ = new ReplaySubject<Observable<string>>(1);
   const strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
     ngInputFlatten(),
     startWith(defaultStrategyName),
-    nameToStrategyCredentials(strategies, defaultStrategyName),
+    nameToStrategyCredentials(strategies, defaultStrategyName)
   );
 
   return {
     nextStrategy(nextConfig: Observable<string>): void {
       strategyName$.next(nextConfig);
     },
-    render(newChanges$: Observable<IterableChanges<T>>): Observable<any> {
-      return newChanges$.pipe(
-        _leRender()
-      );
-    }
+    render(values$: Observable<NgIterable<T>>): Observable<any> {
+      return values$.pipe(render());
+    },
   };
 
-  /*
-   * divides changes into types (update, insert,...) and prepares work functions
-   * additionally calculates the new 'virtualCount' => new count after work is applied,
-   * needed for updating the context of all existing items in the viewContainer
-   */
-  function _leRender() {
-    return (o$: Observable<IterableChanges<T>>) => o$.pipe(
-      map((change) => {
-        const insertions = forEachInsertToArray(change);
-        const removals = forEachRemoveToArray(change);
-        const moves = forEachMoveToArray(change);
-        const updates = forEachUpdateToArray(change);
-        const count = viewContainerRef.length + insertions.length - removals.length;
-        insertions.forEach(record => {
-          _leWork.set(record.currentIndex, [() => {
-            const e = viewContainerRef.createEmbeddedView(
-              templateRef,
-              createViewContext(record)
+  function render(): OperatorFunction<NgIterable<T>, any> {
+    let count = 0;
+    const positions = new Map<T, number>();
+
+    return (o$: Observable<NgIterable<T>>): Observable<any>  =>
+      o$.pipe(
+        map((items) => (items ? Array.from(items) : [])),
+        withLatestFrom(strategy$),
+        switchMap(([items, strategy]) => {
+          const viewLength = viewContainerRef.length;
+          let toRemoveCount = viewLength - items.length;
+          const notifyParent = toRemoveCount > 0 || count !== items.length;
+          count = items.length;
+
+          const remove$ = [];
+          let i = viewLength;
+          while (i > 0 && toRemoveCount > 0) {
+            toRemoveCount--;
+            i--;
+            remove$.push(
+              of(i).pipe(
+                strategy.behavior(() => {
+                  viewContainerRef.remove(i);
+                }, {})
+              )
             );
-            e.context.setComputedContext({ index: record.currentIndex, count });
-            return e;
-          }])
-        });
-        removals.forEach(record => {
-          const currentView = viewContainerRef.get(record.previousIndex);
-          if (currentView) {
-            currentView.detach();
-            _leWork.set(record.previousIndex, [() => {
-              if (viewContainerRef.get(record.previousIndex)) {
-                viewContainerRef.remove(record.previousIndex);
-              }
-              return null;
-            }])
           }
-        });
-        moves.forEach(record => {
-         viewContainerRef.get(record.previousIndex)?.detach();
-          const w = () => {
-            const currentView = viewContainerRef.get(record.previousIndex) as EmbeddedViewRef<C>;
-            const newView = viewContainerRef.move(currentView, record.currentIndex) as EmbeddedViewRef<C>;
-            newView.context.setComputedContext({ index: record.currentIndex, count });
-            return newView;
-          }
-          if (_leWork.has(record.currentIndex)) {
-            _leWork.set(record.currentIndex, [
-              ..._leWork.get(record.currentIndex),
-              w
-            ]);
-          } else {
-            _leWork.set(record.currentIndex, [w]);
-          }
-        });
-        updates.forEach(record => {
-         viewContainerRef.get(record.currentIndex)?.detach();
-          const w = () => {
-            const currentView = viewContainerRef.get(record.currentIndex) as EmbeddedViewRef<C>;
-            currentView.context.$implicit = record.item;
-            currentView.context.setComputedContext({ index: record.currentIndex, count });
-            return currentView;
-          }
-          if (_leWork.has(record.currentIndex)) {
-            _leWork.set(record.currentIndex, [
-              ..._leWork.get(record.currentIndex),
-              w
-            ]);
-          } else {
-            _leWork.set(record.currentIndex, [w]);
-          }
-        });
-        // All unchanged
-        for (let index = 0; index < viewContainerRef.length; index++) {
-          // tslint:disable-next-line:no-unused-expression
-          if (_leWork.has(index)) {
-            continue;
-          }
-          const e = viewContainerRef.get(index) as EmbeddedViewRef<C>;
-         e.detach();
-          _leWork.set(index, [() => {
-            e.context.setComputedContext({ index, count });
-            return e;
-          }]);
-        }
-        return insertions.length + removals.length > 0;
-      }),
-      withLatestFrom(strategy$),
-      map(([informParent, strategy]) => {
-        const works = Array.from(_leWork.entries());
-        // this is to ensure that the parent notification happens
-        // as the last step after all other eVs applied their changes
-        if (informParent && !_leWork.has(-1)) {
-          works.push([-1, [() => {
-            strategy.work(
-              config.cdRef,
-              (config.cdRef as any)?.context || config.cdRef
-            );
-            return null;
-          }]]);
-          _leWork.set(-1, []);
-        }
-        return {
-          works,
-          strategy
-        }
-      }),
-      switchMap(({ works, strategy}) => {
-        return combineLatest([
-          ...works.map(e => {
-            return of(e[0]).pipe(
-              strategy.behavior(
-                () => {
-                  let ev;
-                  e[1].forEach(fn => ev = fn());
-                  if (ev) {
-                    ev.reattach();
-                    ev.detectChanges();
-                    ev.detach();
+          const parentNotify$ = notifyParent
+            ? strategy.behavior(() => {
+                console.log('notify parent', (config.cdRef as any).context);
+                strategy.work(
+                  config.cdRef,
+                  (config.cdRef as any).context || config.cdRef
+                );
+              }, (config.cdRef as any).context || config.cdRef)(of(null))
+            : of(null);
+          return combineLatest([
+            // support for Iterable<T> (e.g. `Map#values`)
+            // parentNotify$,
+            ...items.map((item, index) => {
+              positions.set(item, index);
+              const context = { count, index };
+
+              return of(item).pipe(
+                strategy.behavior(() => {
+                  let view = viewContainerRef.get(index) as EmbeddedViewRef<C>;
+                  // The items view is not created yet => create view + update context
+                  if (!view) {
+                    console.log('insert');
+                    view = viewContainerRef.createEmbeddedView(
+                      templateRef,
+                      createViewContext(item),
+                      index
+                    );
+                    view.context.setComputedContext(context);
+
+                    view.reattach();
+                    view.detectChanges();
+                    view.detach();
                   }
-                  _leWork.delete(e[0]);
-                },
-                e
-              ),
-              // map(id => id === -1 ? 'rendered' : 'rendering')
-            )
-          })
-        ]);
-      })
-    );
+                  // The items view is present => update context
+                  else {
+                    const entity = view.context.$implicit;
+                    const trackById = trackBy(index, entity);
+                    const currentId = trackBy(index, item);
+                    const moved = trackById !== currentId;
+                    const updated = !distinctBy(view.context.$implicit, item);
+                    if (moved || updated) {
+                      if (moved) {
+                        console.log('move');
+                        const oldPosition = positions.get(item);
+                        if (
+                          positions.has(item) &&
+                          positions.get(item) !== index
+                        ) {
+                          const oldView = viewContainerRef.get(oldPosition);
+                          if (oldView) {
+                            // console.log(oldView);
+                            view = viewContainerRef.move(
+                              oldView,
+                              index
+                            ) as EmbeddedViewRef<C>;
+                            console.log('real move');
+                          }
+                        }
+                      }
+                      view.context.setComputedContext(context);
+                      view.context.$implicit = item;
+                      view.reattach();
+                      view.detectChanges();
+                      view.detach();
+                    } else {
+                      if (notifyParent) {
+                        view.context.setComputedContext(context);
+                        view.reattach();
+                        view.detectChanges();
+                        view.detach();
+                      }
+                    }
+                  }
+                }, {})
+              );
+            }),
+            ...remove$,
+            parentNotify$,
+          ]).pipe(filter((v) => v != null));
+        })
+      );
   }
-
-}
-
-
-function forEachToArray<T>(method: string): (changes: IterableChanges<any>) => IterableChangeRecord<any>[] {
-  return (changes: IterableChanges<any>) => {
-    const arr = [];
-    changes[method]((record: IterableChangeRecord<any>) => arr.push(record));
-    return arr;
-  };
 }

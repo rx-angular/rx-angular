@@ -1,5 +1,4 @@
 export * from './rxjs';
-export * from './scheduling';
 export * from './zone-agnostic';
 export * from './coalescing-manager';
 export * from './get-global-this';

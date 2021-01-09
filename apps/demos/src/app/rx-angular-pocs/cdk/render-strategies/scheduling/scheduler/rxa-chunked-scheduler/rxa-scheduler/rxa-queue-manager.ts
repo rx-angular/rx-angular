@@ -1,4 +1,3 @@
-
 import { Observable, Subject } from 'rxjs';
 
 // TODO: fetch the unpatched version but keep the fallbacks!
@@ -20,8 +19,8 @@ const cancelAnimFrame =
 const cancelAnimFrame = getZoneUnPatchedApi('clearTimeout');*/
 
 export enum GlobalTaskPriority {
-  chunk,
-  blocking
+  blocking,
+  chunk
 }
 
 export type GlobalTaskScope = object;
@@ -148,4 +147,4 @@ function createGlobalTaskManager(): GlobalTaskManager {
     }
 }
 
-export const globalTaskManager = createGlobalTaskManager();
+export const rxaQueueManager = createGlobalTaskManager();

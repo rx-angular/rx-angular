@@ -1,10 +1,8 @@
 import { PriorityNameToLevel } from '../../render-strategies/model/priority';
 import { StrategyCredentials, StrategyCredentialsMap } from '../../render-strategies/model/strategy-credentials';
 import { tap } from 'rxjs/operators';
-import { observeOnPriority } from '../../utils/rxjs/operators/observeOnPriority';
-import { concurrent } from '../../utils/rxjs/scheduler/concurrent';
-import { ConcurrentQueueHandler } from '../../utils/rxjs/scheduler/concurrent/concurrent.queue-handler';
-import { scheduleLikeReact } from '../../utils/scheduling/concurrent-scheduler';
+import { observeOnPriority, scheduleLikeReact } from '../scheduling/operators';
+import { concurrent } from '../scheduling/scheduler/react-concurrent-scheduler';
 
 export function getConcurrentSchedulerStrategyCredentialsMap(): StrategyCredentialsMap {
   return {
@@ -21,7 +19,7 @@ export function getConcurrentSchedulerStrategyCredentialsMap(): StrategyCredenti
   };
 }
 
-const qh = new ConcurrentQueueHandler();
+
 
 export function createNoPriorityStrategyCredentials(): StrategyCredentials {
   return {
