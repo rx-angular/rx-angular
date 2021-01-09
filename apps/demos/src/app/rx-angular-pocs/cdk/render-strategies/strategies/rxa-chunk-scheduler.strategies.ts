@@ -3,6 +3,7 @@ import { scheduleOnRxaQueue } from '../scheduling/scheduler/rxa-chunked-schedule
 import { GlobalTaskPriority } from '../scheduling/scheduler/rxa-chunked-scheduler';
 import { observeOnPriority } from '../scheduling/operators';
 import { rxaScheduler } from '../scheduling/scheduler/rxa-chunked-scheduler';
+import { tap } from 'rxjs/operators';
 
 export function getChunkStrategyCredentialsMap(): StrategyCredentialsMap {
   return {
@@ -20,7 +21,8 @@ export function createRenderQueueStrategyCredentials(): StrategyCredentials {
     },
     behavior: (work: () => void, scope: any) => o$ =>
       o$.pipe(
-        observeOnPriority(rxaScheduler(GlobalTaskPriority.blocking))
+        observeOnPriority(rxaScheduler(GlobalTaskPriority.blocking, scope)),
+        tap(work)
         /*scheduleOnRxaQueue(work, {
           priority: GlobalTaskPriority.chunk,
           scope
@@ -38,7 +40,8 @@ export function createBlockingStrategyCredentials(): StrategyCredentials {
     },
     behavior: (work: () => void, scope: any) => o$ =>
       o$.pipe(
-        observeOnPriority(rxaScheduler(GlobalTaskPriority.blocking))
+        observeOnPriority(rxaScheduler(GlobalTaskPriority.blocking, scope)),
+        tap(work)
        /* scheduleOnRxaQueue(work, {
           priority: GlobalTaskPriority.blocking,
           scope

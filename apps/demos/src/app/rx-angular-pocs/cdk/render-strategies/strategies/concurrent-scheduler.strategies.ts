@@ -19,8 +19,6 @@ export function getConcurrentSchedulerStrategyCredentialsMap(): StrategyCredenti
   };
 }
 
-
-
 export function createNoPriorityStrategyCredentials(): StrategyCredentials {
   return {
     name: 'noPriority',
@@ -134,7 +132,7 @@ export function createBackgroundStrategyCredentials(): StrategyCredentials {
 
 export function createBackground2StrategyCredentials(): StrategyCredentials {
   return {
-    name: 'background2',
+    name: 'background',
     work: (cdRef) => cdRef.detectChanges(),
     behavior: (work: any, context: any) => {
       return o$ => o$.pipe(

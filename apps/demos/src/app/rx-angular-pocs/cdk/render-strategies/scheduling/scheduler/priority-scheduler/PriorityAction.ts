@@ -34,7 +34,7 @@ export class PriorityAction<S, P, T> extends AsyncAction<S> {
   }
 
   // @ts-ignore
-  protected requestAsyncId(scheduler: PriorityScheduler<P>, id?: any, options: RxaSchedulingOptions<P>): any {
+  protected requestAsyncId(scheduler: PriorityScheduler<P>, id?: any, options: PrioritySchedulerOptions<P>): any {
     // Push the action to the end of the scheduler queue.
     // @ts-ignore
     scheduler.actions.push(this);
@@ -47,7 +47,7 @@ export class PriorityAction<S, P, T> extends AsyncAction<S> {
   }
 
   // @ts-ignore
-  protected recycleAsyncId(scheduler: PriorityScheduler<P>, id?: any, options: RxaSchedulingOptions<P>): any {
+  protected recycleAsyncId(scheduler: PriorityScheduler<P>, id?: any, options: PrioritySchedulerOptions<P>): any {
     // If delay exists and is greater than 0, or if the delay is null (the
     // action wasn't rescheduled) but was originally scheduled as an async
     // action, then recycle as an async action.

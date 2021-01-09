@@ -25,6 +25,7 @@ export class RxaSchedulerQueueHandler extends TaskQueue<
           coalescingManager.decrement(scope);
           this.clearTask(id, scope);
           cb();
+
         },
         priority,
         scope,
