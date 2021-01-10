@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { StrategyProvider } from '../../../../rx-angular-pocs';
+import { StrategyProvider } from '../../../rx-angular-pocs';
 
 @Component({
-  selector: 'rxa-rx-context-poc',
+  selector: 'rxa-rx-context',
   template: `
     <rxa-visualizer>
       <div visualizerHeader>
@@ -203,6 +203,6 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
     `,
   ],
 })
-export class RxContextPocComponent {
+export class RxContextComponent {
   constructor(public strategyProvider: StrategyProvider) {}
 }

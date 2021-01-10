@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
-import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
-import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
-import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
-import { RxContextPocComponent } from './rx-context-poc.component';
-import { GhostElementsModule } from '../../../../shared/ghost-elements';
+import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
+import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
+import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
+import { RxContextComponent } from './rx-context.component';
+import { GhostElementsModule } from '../../../shared/ghost-elements';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { TriggerProviderModule } from '../../../../shared/debug-helper/trigger-provider/trigger-provider.module';
+import { TriggerProviderModule } from '../../../shared/debug-helper/trigger-provider/trigger-provider.module';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
-import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
-import { RxContextModule, RxForModule, RxLetModule } from '../../../../rx-angular-pocs';
+import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
+import { RxContextModule, RxForModule, RxLetModule } from '../../../rx-angular-pocs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 const DECLARATIONS = [
-  RxContextPocComponent
+  RxContextComponent
 ];
 
 @NgModule({
@@ -42,4 +42,4 @@ const DECLARATIONS = [
   exports: DECLARATIONS,
   providers: [],
 })
-export class RxContextPocModule {}
+export class RxContextDemoModule {}

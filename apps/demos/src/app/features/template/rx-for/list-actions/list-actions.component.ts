@@ -1,18 +1,27 @@
 import {
   AfterViewInit,
   ChangeDetectorRef,
-  Component, ElementRef, QueryList,
-  ViewChild, ViewChildren,
+  Component,
+  ElementRef,
+  QueryList,
+  ViewChild,
+  ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
-import { asyncScheduler, BehaviorSubject, defer, from, merge, scheduled, Subject } from 'rxjs';
-import { environment } from '../../../../../../environments/environment';
-import { ArrayProviderService } from '../../../../../shared/debug-helper/value-provider';
-import { ArrayProviderComponent } from '../../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
-import { rxIterableDifferFactory } from '../../shared';
+import {
+  asyncScheduler,
+  BehaviorSubject,
+  defer,
+  merge,
+  scheduled,
+  Subject,
+} from 'rxjs';
+import { environment } from '../../../../../environments/environment';
+import { ArrayProviderService } from '../../../../shared/debug-helper/value-provider';
+import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { RxState } from '@rx-angular/state';
-import { Hooks } from '../../../../../shared/debug-helper/hooks';
-import { delay, map, startWith, switchMap, switchMapTo, tap } from 'rxjs/operators';
+import { Hooks } from '../../../../shared/debug-helper/hooks';
+import { map, startWith, switchMapTo, tap } from 'rxjs/operators';
 
 let itemIdx = 0;
 function getNewItem() {
@@ -55,7 +64,7 @@ const customChangeSet = [
 ];
 
 @Component({
-  selector: 'rxa-differ-rx-iterable-differ',
+  selector: 'rxa-rx-for-list-actions',
   template: `
     <rxa-visualizer>
       <div visualizerHeader class="row">
@@ -95,7 +104,7 @@ const customChangeSet = [
         <div
           class="work-container d-flex flex-wrap w-100"
           [class.list-view]="viewMode === 'list'"
-          *rxLet="view; let viewMode;"
+          *rxLet="view; let viewMode"
         >
           <div
             #workChild
@@ -129,39 +138,6 @@ const customChangeSet = [
           </div>
         </div>
       </div>
-
-      <!--<div class="w-100 row">
-        <div class="col-sm-2">
-          <h3>List</h3>
-          <div *ngFor="let enterRes of arrayP.array$ | push">
-            <pre>{{enterRes | json}}</pre>
-          </div>
-        </div>
-        <div class="col-sm-2">
-          <h3>Enter</h3>
-          <div *ngFor="let enterRes of enter$ | push">
-            <pre>{{enterRes | json}}</pre>
-          </div>
-        </div>
-        <div class="col-sm-2">
-          <h3>Move</h3>
-          <div *ngFor="let enterRes of move$ | push">
-            <pre>{{enterRes | json}}</pre>
-          </div>
-        </div>
-        <div class="col-sm-2">
-          <h3>Identity Change</h3>
-          <div *ngFor="let enterRes of identityChange$ | push">
-            <pre>{{enterRes | json}}</pre>
-          </div>
-        </div>
-        <div class="col-sm-2">
-          <h3>Exit</h3>
-          <div *ngFor="let enterRes of exit$ | push">
-            <pre>{{enterRes | json}}</pre>
-          </div>
-        </div>
-      </div>-->
     </rxa-visualizer>
   `,
   changeDetection: environment.changeDetection,
@@ -219,7 +195,7 @@ const customChangeSet = [
     `,
   ],
 })
-export class RxIterableDifferComponent extends Hooks implements AfterViewInit {
+export class ListActionsComponent extends Hooks implements AfterViewInit {
   @ViewChild('arrayP', { read: ArrayProviderComponent, static: true }) arrayP;
 
   @ViewChildren('workChild') workChildren: QueryList<ElementRef<HTMLElement>>;
@@ -233,12 +209,10 @@ export class RxIterableDifferComponent extends Hooks implements AfterViewInit {
     tap((data) => console.log(data))
   );
 
-  readonly data$ = defer(() => merge(
-    this.arrayP.array$,
-    this.activeChangeSet$
-  ));
+  readonly data$ = defer(() =>
+    merge(this.arrayP.array$, this.activeChangeSet$)
+  );
   readonly renderCallback = new Subject();
-  readonly renderCallback2 = new Subject();
   readonly rendered$ = this.renderCallback.pipe(
     startWith(null),
     map(() => ++this.numRendered)
@@ -247,50 +221,22 @@ export class RxIterableDifferComponent extends Hooks implements AfterViewInit {
   customChangeSet = customChangeSet;
   customChangeSet$ = new Subject<any>();
 
-  rxDiffer = rxIterableDifferFactory({
-    trackBy: 'id',
-    distinctBy: 'value',
-  });
-  enter$ = this.rxDiffer.enter$;
-  move$ = this.rxDiffer.update$;
-  identityChange$ = this.rxDiffer.update$;
-  exit$ = this.rxDiffer.exit$;
-
   trackById = (idx, item) => {
     return item.id;
   };
 
   constructor(public state: RxState<any>, public cdRef: ChangeDetectorRef) {
     super();
-    // this.state.hold(this.afterViewInit$, () => this.setupRxDiffer())
-    // this.state.hold(this.afterViewInit$.pipe(switchMap(_ => this.arrayP.array$)), (v) => this.rxDiffer.next(v as any))
   }
 
   ngAfterViewInit(): void {
     super.ngAfterViewInit();
-    this.state.hold(
-      this.workChildren.changes,
-      workChildren => {
-        console.log('workChildren', this.workChildren.toArray());
-      }
-    )
+    this.state.hold(this.workChildren.changes, (workChildren) => {
+      console.log('workChildren', this.workChildren.toArray());
+    });
   }
 
   trackByIdFn = (a) => a.id;
-
-  setupRxDiffer() {
-    this.rxDiffer.connect();
-    this.rxDiffer.enter$.subscribe((result) => {
-      console.log('enter', result);
-    });
-    this.rxDiffer.update$.subscribe((result) => {
-      console.log('update', result);
-    });
-    this.rxDiffer.exit$.subscribe((result) => {
-      console.log('exit', result);
-    });
-    this.cdRef.detectChanges();
-  }
 
   color(a) {
     return '#' + Math.floor(a.value * 16777215).toString(16);

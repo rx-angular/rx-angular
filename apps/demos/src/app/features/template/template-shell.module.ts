@@ -15,6 +15,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'rx-for',
+    loadChildren: () =>
+      import('./rx-for/rx-for.module').then(
+        m => m.RxForDemoModule
+      )
+  },
+  {
     path: 'push',
     loadChildren: () =>
       import('./push/push.module').then(
@@ -26,6 +33,20 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./unpatch/unpatch.module').then(
         m => m.UnpatchModule
+      )
+  },
+  {
+    path: 'rx-context',
+    loadChildren: () =>
+      import('./rx-context/rx-context.routed.module').then(
+        m => m.RxContextRoutedModule
+      )
+  },
+  {
+    path: 'strategies',
+    loadChildren: () =>
+      import('./strategies/strategies.module').then(
+        m => m.StrategiesModule
       )
   },
   {

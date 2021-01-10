@@ -5,7 +5,7 @@ import { UnpatchEventsModule } from '@rx-angular/template';
 import { MatButtonModule } from '@angular/material/button';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ValueModule } from '../../../../shared/debug-helper/work';
-import { RxForContainerComponent } from './parent.component';
+import { RxForNestedListsComponent } from './nested-lists.component';
 import { RxMinimalForOf } from './rx-for-minimal.directive';
 import { RxForValueComponent } from './rx-for-value.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -14,11 +14,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 import { PushModule, RxForModule, RxLetModule } from '../../../../rx-angular-pocs';
-import { SharedModule } from '../../differ/shared';
 import { RxForNormal } from './rx-for-normal.directive';
 
 const DECLARATIONS = [
-  RxForContainerComponent,
+  RxForNestedListsComponent,
   RxMinimalForOf,
   RxForNormal,
   RxForValueComponent
@@ -40,10 +39,9 @@ const DECLARATIONS = [
     RxLetModule,
     RxForModule,
     StrategySelectModule,
-    SharedModule,
     PushModule
   ],
   exports: DECLARATIONS
 })
-export class RxForPocModule {
+export class NestedListsModule {
 }

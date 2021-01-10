@@ -8,5 +8,5 @@ import { ROUTES } from './concurrent-strategies.routes';
   ],
   exports: []
 })
-export class ConcurrentStrategiesModule {
+export class StrategiesModule {
 }
