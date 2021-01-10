@@ -1,6 +1,6 @@
 import {
   ChangeDetectorRef,
-  Directive,
+  Directive, ElementRef,
   Input,
   IterableDiffer,
   IterableDiffers,
@@ -78,6 +78,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   constructor(
     private iterableDiffers: IterableDiffers,
     private cdRef: ChangeDetectorRef,
+    private eRef: ElementRef,
     private readonly templateRef: TemplateRef<RxForViewContext<T>>,
     private readonly viewContainerRef: ViewContainerRef,
     private readonly rxEf: RxEffects,
@@ -114,6 +115,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     // this.differ = this.iterableDiffers.find([]).create(this._trackBy);
     this.listManager = createListManager<T, RxForViewContext<T>>({
       cdRef: this.cdRef,
+      eRef: this.eRef,
       strategies: this.strategyProvider.strategies,
       defaultStrategyName: this.strategyProvider.primaryStrategy,
       viewContainerRef: this.viewContainerRef,

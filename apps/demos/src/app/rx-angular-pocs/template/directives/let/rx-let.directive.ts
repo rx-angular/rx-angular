@@ -253,11 +253,6 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
       .pipe(tap(this?._renderObserver))
       .subscribe(this.rendered$);
     this.displayInitialView();
-
-    (window as any).aaa = (this.cdRef as any)._cdRefInjectingView;
-    (window as any).letTpl = this.eRef.nativeElement;
-    (window as any).detectChanges = detectChanges;
-    console.log('rxLet onInit: ', (window as any).aaa);
   }
 
   ngOnDestroy() {

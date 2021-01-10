@@ -24,7 +24,7 @@ const strategiesUiConfig = {
         </mat-select-trigger>
         <mat-option
           [value]="s"
-          *rxFor="let s of stratNames$; strategy: 'global'">
+          *rxFor="let s of stratNames$">
           <mat-icon class="mr-2">{{ strategiesUiConfig[s]?.icon }}</mat-icon>
           {{ s }}
         </mat-option>

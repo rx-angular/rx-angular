@@ -1,15 +1,16 @@
-import { combineLatest, Observable, of, OperatorFunction, ReplaySubject } from 'rxjs';
+import { combineLatest, merge, Observable, of, OperatorFunction, ReplaySubject } from 'rxjs';
 import {
-  ChangeDetectorRef,
+  ChangeDetectorRef, ElementRef,
   EmbeddedViewRef,
   NgIterable,
   TemplateRef,
   TrackByFunction,
-  ViewContainerRef,
+  ViewContainerRef, ɵdetectChanges as detectChanges,
 } from '@angular/core';
 import {
+  delay,
   filter,
-  map,
+  map, mapTo,
   startWith,
   switchMap,
   withLatestFrom,
@@ -21,6 +22,8 @@ import {
 import { nameToStrategyCredentials } from '../render-strategies/utils/strategy-helper';
 import { ngInputFlatten } from '../utils/rxjs/operators/ngInputFlatten';
 import { RxListViewContext } from './model';
+import { extractParentElements } from './utils';
+import { asap } from '../utils/zone-agnostic/rxjs/scheduler/asap';
 
 export interface ListManager<T, C> {
   nextStrategy: (config: string | Observable<string>) => void;
@@ -33,6 +36,7 @@ export type DistinctByFunction<T> = (oldItem: T, newItem: T) => any;
 
 export function createListManager<T, C extends RxListViewContext<T>>(config: {
   cdRef: ChangeDetectorRef;
+  eRef: ElementRef;
   strategies: StrategyCredentialsMap;
   defaultStrategyName: string;
   viewContainerRef: ViewContainerRef;
@@ -95,13 +99,13 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             );
           }
           const parentNotify$ = notifyParent
-            ? strategy.behavior(() => {
+            ? of(null).pipe(strategy.behavior(() => {
                 // console.log('notify parent', (config.cdRef as any).context);
                 strategy.work(
                   config.cdRef,
                   (config.cdRef as any).context || config.cdRef
                 );
-              }, (config.cdRef as any).context || config.cdRef)(of(null))
+              }, (config.cdRef as any).context || config.cdRef), startWith(null))
             : of(null);
           return combineLatest([
             // support for Iterable<T> (e.g. `Map#values`)
@@ -172,7 +176,31 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             }),
             ...remove$,
             parentNotify$,
-          ]).pipe(filter((v) => v != null));
+          ]).pipe(
+            delay(0, asap),
+            switchMap(v => {
+              const parentElements = extractParentElements(config.cdRef, config.eRef);
+              console.log(parentElements)
+              return combineLatest([
+                ...Array.from(parentElements).map((el) => {
+                  return of(null).pipe(
+                    strategy.behavior(() => {
+                      if (el) detectChanges(el);
+                    }, el)
+                  );
+                }),
+                of(null).pipe(
+                  strategy.behavior(() => {
+                    strategy.work(config.cdRef);
+                  }, (config.cdRef as any).context)
+                )
+              ]).pipe(
+                map(() => null),
+                startWith(v),
+              );
+            }),
+            filter(v => v != null)
+          );
         })
       );
   }
