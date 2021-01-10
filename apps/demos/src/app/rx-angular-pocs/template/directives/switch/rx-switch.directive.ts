@@ -15,7 +15,7 @@ import { ngInputFlatten } from '../../../cdk/utils/rxjs/operators/ngInputFlatten
 export class RxSwitch<U> {
   @Input()
   set rxSwitch(potentialObservable: Observable<U> | null | undefined) {
-    this.observables$.next(potentialObservable.pipe(tap(v => console.log(v))));
+    this.observables$.next(potentialObservable);
   }
 
   private strategyName$ = new Subject<string | Observable<string>>();

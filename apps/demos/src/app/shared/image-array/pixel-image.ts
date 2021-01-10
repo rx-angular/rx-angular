@@ -113,7 +113,7 @@ export function computeColorPrio(colorCount: Map<string, number>): Map<string, s
       */
       // transparent
       if (style.slice(style.length - 2, -1) === '0') {
-        acc.set(style, PriorityNames.idle);
+        acc.set(style, PriorityNames.background);
         lowAndHigh += 1;
       } else {
         // Dark color prio
