@@ -72,11 +72,25 @@ export function applyStrategy2<T>(
   return (o$: Observable<T>) =>
     o$.pipe(
       withLatestFrom(strategy$),
-      switchMap(([matched, strategy]) => {
+      switchMap(([value, strategy]) => {
         return strategy.behavior(
-          () => workFactory(matched, strategy.work),
+          () => workFactory(value, strategy.work),
           context
-        )(of(matched));
+        )(of(value));
       })
+    );
+}
+
+export function onStrategy<T>(
+  value: T,
+  strategy: StrategyCredentials,
+  workFactory: (value: T, work: RenderWork) => void,
+  context: any
+) {
+  return of(value).pipe(
+        strategy.behavior(
+          () => workFactory(value, strategy.work),
+          context
+        )
     );
 }

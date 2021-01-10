@@ -200,12 +200,12 @@ const customChangeSet = [
         height: 10px;
         margin: 0 2px 2px 0;
         padding: 0px;
-        outline: 1px solid green;
+        outline: 1px solid white;
         background-color: transparent;
       }
 
       .work-child.even {
-        outline: 1px solid magenta;
+        outline: 1px solid black;
       }
 
       .work-child .child-bg {

@@ -115,7 +115,6 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             ...items.map((item, index) => {
               positions.set(item, index);
               const context: RxListViewComputedContext = { count, index };
-              let doWork = false;
               return of(item).pipe(
                 strategy.behavior(() => {
                   let view = viewContainerRef.get(index) as EmbeddedViewRef<C>;
@@ -123,7 +122,10 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                   if (!view) {
                     // console.log('insert');
                     view = insertView(item, index, context);
-                    doWork = true;
+
+                    view.reattach();
+                    view.detectChanges();
+                    view.detach();
                   }
                   // The items view is present => update context
                   else {
@@ -150,18 +152,17 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                       }
                       view.context.setComputedContext(context);
                       view.context.$implicit = item;
-                      doWork = true;
+                      view.reattach();
+                      view.detectChanges();
+                      view.detach();
                     } else {
                       if (notifyParent) {
                         view.context.setComputedContext(context);
-                        doWork = true;
+                        view.reattach();
+                        view.detectChanges();
+                        view.detach();
                       }
                     }
-                  }
-                  if(doWork) {
-                    view.reattach();
-                    view.detectChanges();
-                    view.detach();
                   }
                 }, {})
               );
@@ -210,12 +211,6 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
           );
         })
       );
-  }
-
-
-  function updateViewContext(view: ViewRef, context, item): void {
-    (view as any).context.setComputedContext(context);
-    (view as any).context.$implicit = item;
   }
 
   function moveView(view: ViewRef, index: number): EmbeddedViewRef<C> {

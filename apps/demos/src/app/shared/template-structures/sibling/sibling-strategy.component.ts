@@ -91,7 +91,7 @@ export class SiblingStrategyComponent extends RxState<{
 
   trackBy = (idx: number, i: { id: number }) => i.id;
 
-  color(a: any) {
+  color(a: number) {
     return '#' + Math.floor(a * 16777215).toString(16);
   }
 
