@@ -108,7 +108,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             toRemoveCount--;
             i--;
             remove$.push(
-              onStrategy(i, strategy, (value, work) => removeView(value), {})
+              onStrategy(i, strategy, (value, work, options) => removeView(value), {})
             );
           }
           return combineLatest([
@@ -121,7 +121,6 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                   let view = viewContainerRef.get(index) as EmbeddedViewRef<C>;
                   // The items view is not created yet => create view + update context
                   if (!view) {
-                    // console.log('insert');
                     view = insertView(item, index, context);
                     doWork = true;
                   }
@@ -134,7 +133,6 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                     const updated = !distinctBy(view.context.$implicit, item);
                     if (moved || updated) {
                       if (moved) {
-                        // console.log('move');
                         const oldPosition = positions.get(item);
                         if (
                           positions.has(item) &&
@@ -142,18 +140,15 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                         ) {
                           const oldView = viewContainerRef.get(oldPosition);
                           if (oldView) {
-                            // console.log(oldView);
                             view = moveView(oldView, index);
-                            // console.log('real move');
                           }
                         }
                       }
-                      view.context.setComputedContext(context);
-                      view.context.$implicit = item;
+                      updateViewContext(view, context, item);
                       doWork = true;
                     } else {
                       if (notifyParent) {
-                        view.context.setComputedContext(context);
+                        updateViewContext(view, context, item);
                         doWork = true;
                       }
                     }
@@ -171,38 +166,39 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               ? onStrategy(
               i,
               strategy,
-              (value, work) => strategy.work(cdRef, scope),
-              scope
-              ).pipe(startWith(null))
+              (value, work, options) => work(cdRef, options.scope),
+              { scope }
+              )
               : []
           ]).pipe(
             // @NOTICE: dirty hack to do ??? ask @HoebblesB
             delay(0, asap),
             switchMap((v) => {
               const parentElements = extractParentElements(cdRef, eRef);
+              // @TODO What does it mean?? notifyParent is falsey?
               return notifyParent
                 ? combineLatest([
-                  // ViewQuery Notification
-                  ...Array.from(parentElements).map((el) =>
+                    // ViewQuery Notification
+                    ...Array.from(parentElements).map((el) =>
+                      onStrategy(
+                        el,
+                        strategy,
+                        (value, work, options) => el && detectChanges(el),
+                        { scope }
+                      )
+                    ),
+                    // Parent Notification
                     onStrategy(
-                      el,
+                      null,
                       strategy,
-                      (value, work) => el && detectChanges(el),
-                      scope
-                    )
-                  ),
-                  // Parent Notification
-                  onStrategy(
-                    null,
-                    strategy,
-                    (value, work) => strategy.work(cdRef),
-                    scope
+                      (value, work, options) => work(cdRef, options.scope),
+                      { scope }
+                    ),
+                  ]).pipe(
+                    map(() => null),
+                    filter((_v) => _v !== null),
+                    startWith(v)
                   )
-                ]).pipe(
-                  map(() => null),
-                  filter((v) => v !== null),
-                  startWith(v)
-                )
                 : of(v);
             }),
             filter((v) => v != null),
@@ -230,7 +226,6 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     const existingView: EmbeddedViewRef<C> = viewCache.pop();
     let newView = existingView;
     if (existingView) {
-      existingView.context.setComputedContext(context as any);
       viewContainerRef.insert(existingView, index);
     } else {
       newView = viewContainerRef.createEmbeddedView(
@@ -239,9 +234,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
         index
       );
     }
-    newView.context.setComputedContext(context);
+    updateViewContext(newView, context, item)
     return newView;
   }
 }
-
-

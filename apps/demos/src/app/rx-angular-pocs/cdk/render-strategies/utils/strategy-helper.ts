@@ -84,13 +84,13 @@ export function applyStrategy2<T>(
 export function onStrategy<T>(
   value: T,
   strategy: StrategyCredentials,
-  workFactory: (value: T, work: RenderWork) => void,
-  context: any
+  workFactory: (value: T, work: RenderWork, options: {scope?: any}) => void,
+  options: {scope?: any}
 ) {
   return of(value).pipe(
         strategy.behavior(
-          () => workFactory(value, strategy.work),
-          context
+          () => workFactory(value, strategy.work, options),
+          options.scope || {}
         )
     );
 }
