@@ -1,47 +1,52 @@
 import {
   ChangeDetectorRef,
   Directive,
-  Inject,
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
+  ɵmarkDirty as markDirty,
+  ɵdetectChanges as detectChanges
 } from '@angular/core';
 
-import { defer, NextObserver, Observable, ObservableInput, Subject, Subscription, Unsubscribable } from 'rxjs';
-import { filter, map, mapTo, tap } from 'rxjs/operators';
+import {
+  defer,
+  NextObserver,
+  Observable,
+  ObservableInput,
+  of,
+  Subject,
+  Subscription,
+} from 'rxjs';
+import { filter, map, mapTo, switchMap, tap } from 'rxjs/operators';
 import {
   createRenderAware,
   createTemplateManager,
-  getDefaultStrategyCredentialsMap,
   Hooks,
-  mergeStrategies,
   RenderAware,
-  RX_CUSTOM_STRATEGIES,
-  RX_PRIMARY_STRATEGY,
   RxNotification,
   RxTemplateObserver,
-  StrategyCredentialsMap,
   StrategyProvider,
   TemplateManager,
   toRxCompleteNotification,
   toRxErrorNotification,
-  toRxSuspenseNotification
+  toRxSuspenseNotification,
 } from '../../../cdk';
-import { RxLetTemplateNames, rxLetTemplateNames, RxLetViewContext } from './model';
+import {
+  RxLetTemplateNames,
+  rxLetTemplateNames,
+  RxLetViewContext,
+} from './model';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
   selector: '[rxLet]',
-  providers: []
+  providers: [],
 })
 // tslint:disable-next-line:directive-class-suffix
 export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
-
-
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
     this.renderAware.nextPotentialObservable(potentialObservable);
@@ -53,34 +58,52 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   }
 
   @Input('rxLetCompleteTpl')
-  set rxComplete(templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>) {
-    this.templateManager.addTemplateRef(RxLetTemplateNames.complete, templateRef);
+  set rxComplete(
+    templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>
+  ) {
+    this.templateManager.addTemplateRef(
+      RxLetTemplateNames.complete,
+      templateRef
+    );
   }
 
   @Input('rxLetErrorTpl')
-  set rxError(templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>) {
+  set rxError(
+    templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>
+  ) {
     this.templateManager.addTemplateRef(RxLetTemplateNames.error, templateRef);
   }
 
   @Input('rxLetSuspenseTpl')
-  set rxSuspense(templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>) {
-    this.templateManager.addTemplateRef(RxLetTemplateNames.suspense, templateRef);
+  set rxSuspense(
+    templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>
+  ) {
+    this.templateManager.addTemplateRef(
+      RxLetTemplateNames.suspense,
+      templateRef
+    );
   }
 
   @Input('rxLetCompleteTrg')
   set rxCompleteTrigger(trigger$: Observable<any>) {
-    this.renderAware.nextTemplateTrigger(trigger$.pipe(mapTo(toRxCompleteNotification() as any)));
+    this.renderAware.nextTemplateTrigger(
+      trigger$.pipe(mapTo(toRxCompleteNotification() as any))
+    );
   }
 
   @Input('rxLetErrorTrg')
   set rxErrorTrigger(error$: Observable<any>) {
-    this.renderAware.nextTemplateTrigger(error$.pipe(map(toRxErrorNotification as any)));
+    this.renderAware.nextTemplateTrigger(
+      error$.pipe(map(toRxErrorNotification as any))
+    );
   }
 
   @Input('rxLetSuspenseTrg')
   set rxSuspenseTrigger(trigger$: Observable<any>) {
     console.log('rxSuspense', trigger$);
-    this.renderAware.nextTemplateTrigger(trigger$.pipe(map(toRxSuspenseNotification as any)));
+    this.renderAware.nextTemplateTrigger(
+      trigger$.pipe(map(toRxSuspenseNotification as any))
+    );
   }
 
   @Input('rxLetRenderCallback')
@@ -89,11 +112,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   }
 
   constructor(
-    @Optional()
-    @Inject(RX_CUSTOM_STRATEGIES)
-    private customStrategies: StrategyCredentialsMap[],
-    @Inject(RX_PRIMARY_STRATEGY)
-    private defaultStrategyName: string,
+    private strategyProvider: StrategyProvider,
     public cdRef: ChangeDetectorRef,
     private readonly nextTemplateRef: TemplateRef<RxLetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
@@ -103,33 +122,52 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
       this.viewContainerRef,
       this.initialViewContext
     );
-    this.strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), getDefaultStrategyCredentialsMap());
     this.renderAware = createRenderAware<U>({
       templateObserver: this.templateObserver,
-      strategies: this.strategies,
-      defaultStrategyName: this.defaultStrategyName,
+      strategies: this.strategyProvider.strategies,
+      defaultStrategyName: this.strategyProvider.primaryStrategy,
       // @NOTICE this is checked every emmit. Templates are IMHO statically assigned, so we could find a way to check only once?
-      getCdRef: (notification: RxNotification<U>): ChangeDetectorRef => this.getEmbeddeViewByNotification(notification),
-      getContext: (notification: RxNotification<U>): ChangeDetectorRef => this.getEmbeddeViewByNotification(notification)
+      getCdRef: (notification: RxNotification<U>): ChangeDetectorRef =>
+        this.getEmbeddeViewByNotification(notification),
+      getContext: (notification: RxNotification<U>): ChangeDetectorRef =>
+        this.getEmbeddeViewByNotification(notification),
     });
+    this.subscription.add(
+      this.templateManager.templateChanged$
+        .pipe(
+          switchMap((v) => {
+            const strategy = this.strategyProvider.strategies[
+              this.strategyProvider.primaryStrategy
+              ];
+
+            return of(null).pipe(
+              strategy.behavior(() => {
+                // strategy.work(this.cdRef)
+                console.log('this.cdRef.context', (this.cdRef as any).context);
+                markDirty((this.cdRef as any).context);
+              }, (this.cdRef as any).context)
+            );
+          })
+        )
+        .subscribe()
+    );
   }
 
   static ngTemplateGuard_rxLet: 'binding';
 
-  private readonly strategies: StrategyCredentialsMap;
-
   private _renderObserver: NextObserver<any>;
 
-  private subscription: Unsubscribable = Subscription.EMPTY;
+  private subscription: Subscription = new Subscription();
 
-  private readonly templateManager: TemplateManager<RxLetViewContext<U | undefined | null>, rxLetTemplateNames>;
+  private readonly templateManager: TemplateManager<RxLetViewContext<U | undefined | null>,
+    rxLetTemplateNames>;
 
   private readonly initialViewContext: RxLetViewContext<U> = {
     $implicit: undefined,
     rxLet: undefined,
     $error: false,
     $complete: false,
-    $suspense: false
+    $suspense: false,
   };
 
   private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
@@ -139,7 +177,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
         // if a custom value is provided take it, otherwise assign true
         $suspense: value !== undefined ? value : true,
         $error: false,
-        $complete: false
+        $complete: false,
       });
     },
     next: (value: U | null | undefined) => {
@@ -149,30 +187,37 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
         rxLet: value,
         $suspense: false,
         $error: false,
-        $complete: false
+        $complete: false,
       });
     },
     error: (error: Error) => {
-      this.templateManager.displayView(RxLetTemplateNames.error, RxLetTemplateNames.next);
+      this.templateManager.displayView(
+        RxLetTemplateNames.error,
+        RxLetTemplateNames.next
+      );
       this.templateManager.updateViewContext({
         $error: error,
-        $suspense: false
+        $suspense: false,
       });
     },
     complete: () => {
-      this.templateManager.displayView(RxLetTemplateNames.complete, RxLetTemplateNames.next);
+      this.templateManager.displayView(
+        RxLetTemplateNames.complete,
+        RxLetTemplateNames.next
+      );
       this.templateManager.updateViewContext({
         $complete: true,
-        $suspense: false
+        $suspense: false,
       });
-    }
+    },
   };
 
   private rendered$ = new Subject<RxNotification<U>>();
   readonly renderAware: RenderAware<U>;
 
-  @Output() readonly rendered = defer(() => this.rendered$.pipe(
-    filter(({ kind }) => this.templateManager.hasTemplateRef(kind as any))
+  @Output() readonly rendered = defer(() =>
+    this.rendered$.pipe(
+      filter(({ kind }) => this.templateManager.hasTemplateRef(kind as any))
     )
   );
 
@@ -185,12 +230,19 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.templateManager.addTemplateRef(RxLetTemplateNames.next, this.nextTemplateRef);
+    this.templateManager.addTemplateRef(
+      RxLetTemplateNames.next,
+      this.nextTemplateRef
+    );
     this.renderAware.subscribe();
-    this.subscription = this.renderAware.rendered$.pipe(
-      tap(this?._renderObserver)
-    ).subscribe(this.rendered$);
+    this.subscription = this.renderAware.rendered$
+      .pipe(tap(this?._renderObserver))
+      .subscribe(this.rendered$);
     this.displayInitialView();
+
+    (window as any).aaa = (this.cdRef as any)._cdRefInjectingView;
+    (window as any).detectChanges = detectChanges;
+    console.log('rxLet onInit: ', (window as any).aaa);
   }
 
   ngOnDestroy() {
@@ -198,8 +250,13 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
     this.templateManager.destroy();
   }
 
-  private getEmbeddeViewByNotification = (notification: RxNotification<U>): ChangeDetectorRef => {
-    const name = this.templateManager.getTemplateName(notification.kind as any, RxLetTemplateNames.next);
+  private getEmbeddeViewByNotification = (
+    notification: RxNotification<U>
+  ): ChangeDetectorRef => {
+    const name = this.templateManager.getTemplateName(
+      notification.kind as any,
+      RxLetTemplateNames.next
+    );
     return this.templateManager.getEmbeddedView(name) as ChangeDetectorRef;
   };
 
@@ -209,5 +266,4 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
       this.templateManager.displayView(RxLetTemplateNames.suspense);
     }
   };
-
 }

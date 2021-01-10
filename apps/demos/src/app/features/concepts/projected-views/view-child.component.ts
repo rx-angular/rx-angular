@@ -14,7 +14,7 @@ import { ContentChildComponent } from './content-child.component';
 export class ViewChildComponent {
   @ContentChild(ContentChildComponent)
   set cc(v) {
-    console.log('ContentChild: ', v)
+    console.log('ContentChild in ViewChildComponent of type ContentChildComponent: ', v)
   };
 
 }

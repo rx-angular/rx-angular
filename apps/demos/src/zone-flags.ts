@@ -15,6 +15,6 @@ zoneConfig.events.disable.UNPATCHED_EVENTS([...globalEvents, ...xhrEvent]);
   'XHR'
 ];
 // requestAnimationFrame
-(window as any).__Zone_disable_requestAnimationFrame = true;
+//(window as any).__Zone_disable_requestAnimationFrame = true;
 // setTimeout, setInterval
-(window as any).__Zone_disable_timers = true;
+//(window as any).__Zone_disable_timers = true;

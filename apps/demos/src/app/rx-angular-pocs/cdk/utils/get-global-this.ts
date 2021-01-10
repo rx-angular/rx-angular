@@ -11,9 +11,8 @@
  *  @return {globalThis} - A reference to globalThis. `window` in the Browser.
  */
 export function getGlobalThis(): any {
-  return
   // tslint:disable-next-line:no-unused-expression triple-equals
-    'undefined' != typeof globalThis
+  return 'undefined' != typeof globalThis
       ? globalThis
       // tslint:disable-next-line:no-unused-expression triple-equals
       : 'undefined' != typeof window

@@ -26,11 +26,11 @@ import { ViewChildComponent } from './view-child.component';
 export class ProjectedViewsComponent {
   @ViewChild(ViewChildComponent)
   set vcVc(v) {
-    console.log('ViewChild of type ViewChildComponent: ', v)
+    console.log('ViewChild in ProjectedViewsComponent of type ViewChildComponent: ', v)
   }
   @ViewChild(ContentChildComponent)
   set vcCc(v) {
-    console.log('ViewChild of type ContentChildComponent: ', v)
+    console.log('ViewChild in ProjectedViewsComponent of type ContentChildComponent: ', v)
   };
 
   trigger$ = new Subject<any>();
