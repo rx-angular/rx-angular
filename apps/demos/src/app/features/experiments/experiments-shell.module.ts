@@ -10,13 +10,6 @@ const ROUTES: Routes = [
       )
   },
   {
-  path: 'pipes',
-    loadChildren: () =>
-      import('./pipes/pipes.module').then(
-        (m) => m.PipesModule
-      )
-  },
-  {
     path: 'rx-base-state',
     loadChildren: () =>
       import('./state/rx-state.module').then((mod) => mod.RxStateModule),

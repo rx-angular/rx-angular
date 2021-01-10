@@ -3,11 +3,14 @@ import { MENU_ITEMS as RX_CONTEXT_MENU_ITEMS } from './rx-context/rx-context.men
 import { MENU_ITEMS as RX_FOR_MENU_ITEMS } from './rx-for/rx-for.menu';
 import { MENU_ITEMS as VIEWPORT_PRIO_MENU_ITEMS } from './viewport-prio/viewport-prio.menu';
 import { MENU_ITEMS as STRATEGY_MENU_ITEMS } from './strategies/concurrent-strategies.menu';
+import { MENU_ITEMS as PIPES_MENU_ITEMS } from './pipes/pipes.menu';
 
 export const TEMPLATE_MENU = [
+
   {
-    label: 'Push',
-    link: 'push/basic-example'
+    label: 'Pipes',
+    link: 'pipes',
+    children: PIPES_MENU_ITEMS,
   },
   {
     label: 'rxContext',

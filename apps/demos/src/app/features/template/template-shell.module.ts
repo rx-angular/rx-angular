@@ -22,10 +22,10 @@ const ROUTES: Routes = [
       )
   },
   {
-    path: 'push',
+    path: 'pipes',
     loadChildren: () =>
-      import('./push/push.module').then(
-        m => m.PushDemoModule
+      import('./pipes/pipes.module').then(
+        m => m.PipesModule
       )
   },
   {
