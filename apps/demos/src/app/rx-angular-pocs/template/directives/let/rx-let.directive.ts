@@ -8,11 +8,12 @@ import {
   TemplateRef,
   ViewContainerRef,
   ɵmarkDirty as markDirty,
-  ɵdetectChanges as detectChanges, ElementRef
+  ɵdetectChanges as detectChanges, ElementRef, Type
 } from '@angular/core';
 
 import {
-  defer,
+  combineLatest,
+  defer, merge,
   NextObserver,
   Observable,
   ObservableInput,
@@ -33,6 +34,7 @@ import {
   toRxCompleteNotification,
   toRxErrorNotification,
   toRxSuspenseNotification,
+  setTimeout, QUERIES, HEADER_OFFSET, extractParentElements
 } from '../../../cdk';
 import {
   RxLetTemplateNames,
@@ -139,14 +141,21 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
           switchMap((v) => {
             const strategy = this.strategyProvider.strategies[
               this.strategyProvider.primaryStrategy
-              ];
-
-            return of(null).pipe(
-              strategy.behavior(() => {
-                // strategy.work(this.cdRef)
-                console.log('this.cdRef.context', (this.cdRef as any).context);
-                markDirty((this.cdRef as any).context);
-              }, (this.cdRef as any).context)
+            ];
+            const parentElements = extractParentElements(this.cdRef, this.eRef);
+            return merge(
+              ...Array.from(parentElements).map((el) => {
+                return of(null).pipe(
+                  strategy.behavior(() => {
+                    detectChanges(el);
+                  }, el)
+                );
+              }),
+              of(null).pipe(
+                strategy.behavior(() => {
+                  strategy.work(this.cdRef);
+                }, (this.cdRef as any).context)
+              )
             );
           })
         )
@@ -160,8 +169,10 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
 
   private subscription: Subscription = new Subscription();
 
-  private readonly templateManager: TemplateManager<RxLetViewContext<U | undefined | null>,
-    rxLetTemplateNames>;
+  private readonly templateManager: TemplateManager<
+    RxLetViewContext<U | undefined | null>,
+    rxLetTemplateNames
+  >;
 
   private readonly initialViewContext: RxLetViewContext<U> = {
     $implicit: undefined,
@@ -171,7 +182,9 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
     $suspense: false,
   };
 
-  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
+  private readonly templateObserver: RxTemplateObserver<
+    U | null | undefined
+  > = {
     suspense: (value?: any) => {
       this.displayInitialView();
       this.templateManager.updateViewContext({
