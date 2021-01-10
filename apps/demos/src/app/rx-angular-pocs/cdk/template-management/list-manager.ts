@@ -179,6 +179,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
           ]).pipe(
             delay(0, asap),
             switchMap(v => {
+              // TODO: ONLY DO ON PARENT NOTIFY
               const parentElements = extractParentElements(config.cdRef, config.eRef);
               console.log(parentElements)
               return combineLatest([
