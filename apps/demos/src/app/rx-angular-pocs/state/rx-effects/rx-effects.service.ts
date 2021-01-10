@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { createSideEffectObservable } from '../../cdk/side-effect-observable';
-import { EMPTY, Observable } from 'rxjs';
+import { isSubscription } from '../../cdk/utils/rxjs/util/isSubscription';
+import { createSideEffectObservable } from '../../cdk/utils/rxjs/observable/side-effect-observable';
+import { EMPTY, Observable, Subscription } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable()
@@ -30,23 +31,29 @@ export class RxEffects implements OnDestroy {
    * const localStorageEffectFn = changes => storeChanges(changes);
    * state.hold(changes$, localStorageEffectFn);
    *
-   * @param {Observable<S>} obsOrObsWithSideEffect
+   * @param {Observable<S>} obsOrObsWithSideEffectOrSubscription
    * @param {function} [sideEffectFn]
    */
   hold<S>(
-    obsOrObsWithSideEffect: Observable<S>,
+    obsOrObsWithSideEffectOrSubscription: Observable<S> | Subscription,
     sideEffectFn?: (arg: S) => void
   ): void {
-    if (typeof sideEffectFn === 'function') {
+    if (isSubscription(obsOrObsWithSideEffectOrSubscription)) {
+      this.subscription.add(obsOrObsWithSideEffectOrSubscription);
+      return;
+    } else if (typeof sideEffectFn === 'function') {
       this.effectObservable.nextEffectObservable(
-        obsOrObsWithSideEffect.pipe(
+        obsOrObsWithSideEffectOrSubscription.pipe(
           tap(sideEffectFn),
-          catchError((e) => EMPTY)
+          catchError((e) => {
+            console.error(e);
+            return EMPTY;
+          })
         )
       );
       return;
     }
-    this.effectObservable.nextEffectObservable(obsOrObsWithSideEffect);
+    this.effectObservable.nextEffectObservable(obsOrObsWithSideEffectOrSubscription);
   }
 
   ngOnDestroy() {

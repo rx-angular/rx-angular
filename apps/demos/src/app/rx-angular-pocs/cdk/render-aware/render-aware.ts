@@ -12,15 +12,14 @@ import {
 } from 'rxjs/operators';
 
 import { ChangeDetectorRef } from '@angular/core';
-import { rxMaterialize } from '../utils/rx-materialize';
-import { ngInputFlatten } from '../utils/ngInputFlatten';
-import {RxNotification, RxTemplateObserver} from "../model";
+import { rxMaterialize } from '../utils/rxjs/operators/rx-materialize';
+import { ngInputFlatten } from '../utils/rxjs/operators/ngInputFlatten';
 import {
   applyStrategy,
-  nameToStrategyCredentials,
-  observeTemplateByNotificationKind,
-} from '../../render-strategies/strategy-helper'
-import { StrategyCredentials, StrategyCredentialsMap } from '../../render-strategies/model';
+  nameToStrategyCredentials, observeTemplateByNotificationKind
+} from '../render-strategies/utils/strategy-helper';
+import { StrategyCredentials, StrategyCredentialsMap } from '../render-strategies/model/strategy-credentials';
+import { RxNotification, RxTemplateObserver } from '../utils/rxjs/Notification';
 
 export interface RenderAware<U> {
   nextPotentialObservable: (value: any) => void;

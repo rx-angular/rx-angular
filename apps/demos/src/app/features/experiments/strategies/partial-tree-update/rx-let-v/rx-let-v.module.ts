@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RxLetModule } from '../../../../../rx-angular-pocs/directives/let';
+import { RxLetModule } from '../../../../../rx-angular-pocs';
 import { VisualizerModule } from '../../../../../shared/debug-helper/visualizer';
 import { V2AComponent } from './v2-a.component';
 import { V2BComponent } from './v2-b.component';
@@ -11,7 +11,7 @@ import { V2FComponent } from './v2-f.component';
 import { V2HComponent } from './v2-h.component';
 import { SharedModule } from '../shared/shared.module';
 import { MatButtonModule } from '@angular/material/button';
-import { UnpatchEventsModule } from '../../../../../rx-angular-pocs/directives/unpatch';
+import { UnpatchEventsModule } from '../../../../../rx-angular-pocs';
 
 
 

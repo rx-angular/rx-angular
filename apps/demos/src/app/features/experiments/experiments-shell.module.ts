@@ -43,6 +43,13 @@ const ROUTES: Routes = [
       import('./input-bindings/input-bindings.module').then(
         (m) => m.InputBindingsModule
       )
+  },
+  {
+    path: 'decorators',
+    loadChildren: () =>
+      import('./decorators/decorators.module').then(
+        (m) => m.DecoratorsModule
+      )
   }
 ];
 

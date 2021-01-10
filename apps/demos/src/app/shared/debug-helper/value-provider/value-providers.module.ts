@@ -5,6 +5,9 @@ import { UnpatchEventsModule } from '@rx-angular/template';
 import { MatButtonModule } from '@angular/material/button';
 import { ArrayProviderComponent } from './array-provider/array-provider.component';
 import { ZonePatchedIconModule } from '../../zone-patched-icon/zone-patched-icon.module';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [ValueProviderComponent, ArrayProviderComponent],
@@ -12,9 +15,11 @@ import { ZonePatchedIconModule } from '../../zone-patched-icon/zone-patched-icon
     CommonModule,
     UnpatchEventsModule,
     MatButtonModule,
-    ZonePatchedIconModule
+    ZonePatchedIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
   ],
-  exports: [ValueProviderComponent, ArrayProviderComponent]
+  exports: [ValueProviderComponent, ArrayProviderComponent],
 })
-export class ValueProvidersModule {
-}
+export class ValueProvidersModule {}

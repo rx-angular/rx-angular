@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RxLetModule } from '../../../../rx-angular-pocs/directives/let';
-import { UnpatchEventsModule } from '../../../../rx-angular-pocs/directives/unpatch';
+import { RxLetModule } from '../../../../rx-angular-pocs';
+import { UnpatchEventsModule } from '../../../../rx-angular-pocs';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { V4AComponent } from './v4-a.component';
 import { V4BComponent } from './v4-b.component';
@@ -12,7 +12,7 @@ import { V4FComponent } from './v4-f.component';
 import { V4HComponent } from './v4-h.component';
 import { SharedModule } from '../shared/shared.module';
 import { MatButtonModule } from '@angular/material/button';
-import { PushModule } from '../../../../rx-angular-pocs/pipes/push';
+import { PushModule } from '../../../../rx-angular-pocs';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ReactiveFormsModule } from '@angular/forms';
 

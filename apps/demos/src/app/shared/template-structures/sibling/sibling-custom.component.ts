@@ -15,7 +15,7 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
         <button mat-button [unpatch] (click)="filled$.next(!filled$.getValue())">DoChange</button>
       </div>
       <div class="w-100 siblings">
-        <div class="sibling" *ngFor="let sibling of siblings; trackBy:trackBy">
+        <div class="sibling" *rxFor="let sibling of siblings; trackBy:trackBy">
           <div *rxLet="filled$; let f; strategy: strategyChange$" [ngClass]="{filled: f}" >&nbsp;</div>
         </div>
       </div>

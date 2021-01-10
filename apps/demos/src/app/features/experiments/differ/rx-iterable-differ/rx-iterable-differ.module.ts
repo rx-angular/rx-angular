@@ -1,13 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RouterModule } from '@angular/router';
-import { LetModule, PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template';
+import { RxLetModule } from '../../../../rx-angular-pocs/template/directives/let/let.module';
+
+import { SharedModule } from '../shared/shared.module';
 import { ROUTES } from './rx-iterable-differ.routes';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { MatButtonModule } from '@angular/material/button';
 import { RxIterableDifferComponent } from './rx-iterable-differ/rx-iterable-differ.component';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
+import { RxForModule } from '../../../../rx-angular-pocs/template/directives/for';
+import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 
 const DECLARATIONS = [RxIterableDifferComponent];
 
@@ -16,12 +22,16 @@ const DECLARATIONS = [RxIterableDifferComponent];
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    LetModule, PushModule,
+    PushModule,
+    RxLetModule,
     DirtyChecksModule,
     MatButtonModule,
     VisualizerModule,
-    ValueProvidersModule
-  ]
+    ValueProvidersModule,
+    SharedModule,
+    RxForModule,
+    MatButtonToggleModule,
+    StrategySelectModule,
+  ],
 })
-export class RxIterableDifferModule {
-}
+export class RxIterableDifferModule {}

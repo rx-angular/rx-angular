@@ -19,6 +19,7 @@ import { environment } from '../../../../../environments/environment';
         </button>
       </div>
       <div class="row w-100">
+       <!--
         <div class="col-sm-3">
           <h3>Angular Native</h3>
           <ng-template #f1>
@@ -59,20 +60,18 @@ import { environment } from '../../../../../environments/environment';
             TRUE
           </div>
         </div>
+        -->
         <div class="col-sm-3">
-          <h3>Display/Hide EmbeddedViews</h3>
+          <h3>RxIf</h3>
           <ng-template #f3>
             <div class="dh-embedded-view">
               <rxa-dirty-check></rxa-dirty-check>
-              FALSE
+              FALSE TEMPLATE
             </div>
           </ng-template>
-          <ng-template #suspense>
-            <rxa-list-item-ghost></rxa-list-item-ghost>
-          </ng-template>
-          <div class="dh-embedded-view" *rxIf="v.boolean$; let value; else: f3; strategy: strategy; rxSuspense: suspense">
+          <div class="dh-embedded-view" *rxIf="v.boolean$; let value; else: f3; strategy: strategy;">
             <rxa-dirty-check></rxa-dirty-check>
-            TRUE
+            TRUE TEMPLATE
           </div>
         </div>
       </div>

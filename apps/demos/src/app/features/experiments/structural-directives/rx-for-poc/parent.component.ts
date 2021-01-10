@@ -1,5 +1,4 @@
 import {
-  AfterContentInit,
   AfterViewInit,
   Component,
   ElementRef,
@@ -8,11 +7,10 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { BehaviorSubject, combineLatest, EMPTY, interval, merge, of, Subject } from 'rxjs';
-import { map, scan, share, startWith, switchMap } from 'rxjs/operators';
+import { map, scan, share, startWith, switchMap, tap } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 import { environment } from '../../../../../environments/environment';
 import { immutableArr } from '../utils';
-
 
 @Component({
   selector: 'rxa-cd-embedded-view-parent06',
@@ -27,16 +25,16 @@ import { immutableArr } from '../utils';
           <p *rxLet="table$; let table">
             <mat-form-field>
               <mat-label>Rows</mat-label>
-              <input matInput min="1" #r type="number" unpatch [value]="table?.rows" (input)="set({rows: +r.value})">
+              <input matInput min="1" #r type="number" unpatch [value]="table?.rows+''" (input)="set({rows: +r.value})">
             </mat-form-field>
             <mat-form-field>
-              <mat-label>Colums</mat-label>
+              <mat-label>Columns</mat-label>
               <input matInput
                      min="1"
                      #c
                      type="number"
                      unpatch
-                     [value]="table?.columns"
+                     [value]="table?.columns+''"
                      (input)="set({columns: +c.value})">
             </mat-form-field>
           </p>
@@ -48,7 +46,9 @@ import { immutableArr } from '../utils';
             <mat-button-toggle [value]="displayStates.rxAngularMinimalReactive">RxAngular *rxMinimalFor trackBy,
               distinctBy, select
             </mat-button-toggle>
-            <mat-button-toggle [value]="displayStates.rxAngularReactive">RxAngular *rxFor trackBy, distinctBy, select
+           <!-- <mat-button-toggle [value]="displayStates.rxAngularReactive">RxAngular *rxFor trackBy, distinctBy, select
+            </mat-button-toggle> -->
+            <mat-button-toggle [value]="displayStates.rxAngularReactive2">RxAngular2 *rxFor trackBy, distinctBy, select
             </mat-button-toggle>
             <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
           </mat-button-toggle-group>
@@ -101,7 +101,7 @@ import { immutableArr } from '../utils';
             </ng-container>
           </rxa-visualizer>
         </div>
-        <div class="col"
+        <!--<div class="col"
              *ngIf="group.value === displayStates.rxAngularReactive || group.value === displayStates.all">
           <h2>RxAngular, *rxFor trackBy, distinctBy, select</h2>
           <p>
@@ -116,22 +116,67 @@ import { immutableArr } from '../utils';
             </button>
             <rxa-strategy-select (strategyChange)="strategy$.next($event)"></rxa-strategy-select>
           </p>
+
           <ng-container *rxLet="childrenRendered$; let childrenRendered; strategy: strategy$">
             Rendercallback: <strong>{{ childrenRendered }}</strong>
           </ng-container>
+
+                  <rxa-visualizer
+            viewType="embedded-view"
+            *rxForNormal="
+              let a of array$;
+              let i;
+              let r$ = item$;
+              strategy: 'normal';
+              trackBy: trackById; let select = select
+            "
+          >
+            <span #spanChild></span>
+            <ng-container *rxForNormal="select(['arr']); trackBy: trackById; let o; let v$ = item$; strategy: 'normal';">
+              <rxa-rx-for-value [strategy$]="strategy$" [value]="v$"></rxa-rx-for-value>
+            </ng-container>
+          </rxa-visualizer>
+        </div>
+        -->
+        <div class="col"
+             *ngIf="group.value === displayStates.rxAngularReactive2 || group.value === displayStates.all">
+          <h2>RxAngular, *rxFor2 trackBy, distinctBy, select</h2>
+          <p *rxLet="table$; let t">
+            <button mat-raised-button [unpatch] (click)="changeOneClick$.next(1)">
+              update
+            </button>
+            <button mat-raised-button [unpatch] (click)="changeAllClick$.next(t.changes)">
+              Change many
+            </button>
+            <button mat-raised-button [unpatch] (click)="toggleIntervalClick$.next(10)">
+              unpatched toggel interval
+            </button>
+            <rxa-strategy-select (strategyChange)="strategy$.next($event)"></rxa-strategy-select>
+          </p>
+   <!--
+          <ng-container *rxLet="childrenRendered$; let childrenRendered; strategy: strategy$">
+            Rendercallback: <strong>{{ childrenRendered }}</strong>
+          </ng-container>
+-->
           <rxa-visualizer
             viewType="embedded-view"
             *rxFor="
               let a of array$;
               let i;
               let r$ = item$;
-              renderCallback: childrenRendered;
-              strategy: 'reactUserBlocking';
-              trackBy: trackById; let select = select
+              strategy: strategy$;
+              trackBy: trackById;
+              distinctBy:
+              let select = select
+              renderCallback: childrenRendered$
             "
           >
             <span #spanChild></span>
-            <ng-container *rxFor="select(['arr']); trackBy: trackById; let o; let v$ = item$; strategy: 'reactUserBlocking';">
+            <ng-container *rxFor="
+            select(['arr']);
+            strategy: strategy$;
+            trackBy: trackById;
+            let o; let v$ = item$;">
               <rxa-rx-for-value [strategy$]="strategy$" [value]="v$"></rxa-rx-for-value>
             </ng-container>
           </rxa-visualizer>
@@ -142,25 +187,32 @@ import { immutableArr } from '../utils';
   changeDetection: environment.changeDetection,
   encapsulation: ViewEncapsulation.None
 })
-export class RxForContainerComponent extends RxState<{ rows: number, columns: number }> implements AfterViewInit {
+export class RxForContainerComponent extends RxState<{ rows: number, columns: number, changes: number }> implements AfterViewInit {
 
   @ViewChildren('spanChild') spanChildren: QueryList<ElementRef>;
 
   tK = 'id';
 
   displayStates = {
-    native: 0,
-    nativeReactive: 1,
-    rxAngularReactive: 2,
-    rxAngularMinimalReactive: 3,
-    all: 4
+    none: -1,
+    all: 0,
+    native: 1,
+    nativeReactive: 2,
+    rxAngularReactive: 3,
+    rxAngularReactive2: 4,
+    rxAngularMinimalReactive: 5
+
   };
 
-  childrenRendered = new Subject<void>();
+  childrenRendered = new Subject<string>();
   private numChildrenRendered = 0;
   childrenRendered$ = this.childrenRendered.pipe(
-    startWith(null),
-    map(() => this.numChildrenRendered++)
+   // tap(v => console.log('rcb', v))
+  )
+  childrenRendered2 = new Subject<string>();
+  private numChildrenRendered2 = 0;
+  childrenRendered2$ = this.childrenRendered2.pipe(
+    tap(v => console.log('rcb2', v))
   )
 
   table$ = this.select();
@@ -183,7 +235,7 @@ export class RxForContainerComponent extends RxState<{ rows: number, columns: nu
       merge(this.changesFromTick$, this.changeAllClick$),
       this.table$
     ).pipe(
-      switchMap(([_, { rows, columns }]) => immutableArr(rows, columns)(of(rows)))
+      switchMap(([_, { rows, columns, changes }]) => immutableArr(rows, columns)(of(rows)))
     )
   ).pipe(
     share()

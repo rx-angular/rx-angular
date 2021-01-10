@@ -65,6 +65,7 @@
     "benchmark": "^2.1.4",
     "bootstrap": "^4.5.2",
     "core-js": "^3.6.5",
+    "diff": "^5.0.0",
     "ngx-skeleton-loader": "^2.4.4",
     "normalize-css": "^2.3.1",
     "rx-query": "^0.0.15",
