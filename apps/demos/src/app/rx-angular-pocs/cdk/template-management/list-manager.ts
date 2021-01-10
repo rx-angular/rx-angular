@@ -20,8 +20,8 @@ import {
   filter,
   map,
   startWith,
-  switchMap,
-  withLatestFrom,
+  switchMap, tap,
+  withLatestFrom
 } from 'rxjs/operators';
 
 import { nameToStrategyCredentials } from '../render-strategies/utils/strategy-helper';
@@ -186,20 +186,18 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             ...remove$,
             parentNotify$,
           ]).pipe(
+            // @NOTICE: dirty hack to ??? ask @HoebblesB
             delay(0, asap),
             switchMap((v) => {
-
               const parentElements = extractParentElements(
                 config.cdRef,
                 config.eRef
               );
-              // TODO: ONLY DO ON PARENT NOTIFY
               return notifyParent ? combineLatest([
                 ...Array.from(parentElements).map((el) => {
                   return of(null).pipe(
                     strategy.behavior(() => {
                       if (el) {
-                        console.log('el', el);
                         detectChanges(el);
                       }
                     }, el)
@@ -212,10 +210,12 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                 ),
               ]).pipe(
                 map(() => null),
+                filter(v => v !== null),
                 startWith(v)
               ) : of(v);
             }),
-            filter((v) => v != null)
+            filter((v) => v != null),
+            tap(v => console.log('end', v))
           );
         })
       );

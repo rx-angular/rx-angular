@@ -12,6 +12,9 @@ export function extractParentElements(cdRef: any, eRef: ElementRef): Type<any>[]
   for (const query of queries) {
     if (query['queryList']['_results']?.length > 0) {
       const comp = query['queryList']['_results'][0];
+      if(!comp['__ngContext__'] || !comp['__ngContext__'][HEADER_OFFSET]) {
+        continue;
+      }
       const el = comp['__ngContext__'][HEADER_OFFSET][0];
       if (comp.__proto__?.constructor?.ɵcmp && el?.contains(eRef.nativeElement)) {
         parentElements.add(comp);
