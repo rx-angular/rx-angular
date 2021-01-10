@@ -8,7 +8,7 @@ import { map, tap } from 'rxjs/operators';
   template: `
     <rxa-visualizer>
       <ng-container visualizerHeader>
-        <h1 class="mat-headline">Concurrent Strategies</h1>
+        <h1 class="mat-headline">Strategy Comparison</h1>
         <div class="row">
           <div class="col-12 d-flex">
             <mat-form-field class="mr-2">
