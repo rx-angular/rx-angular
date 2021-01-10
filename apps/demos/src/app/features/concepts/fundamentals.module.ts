@@ -9,6 +9,12 @@ const ROUTES: Routes = [
     )
   },
   {
+    path: 'projected-views',
+    loadChildren: () => import('./projected-views/projected-views.module').then(
+      m => m.ProjectedViewsModule
+    )
+  },
+  {
     path: 'passing-values',
     loadChildren: () => import('./passing-values/passing-values.module').then(
       m => m.PassingValuesModule

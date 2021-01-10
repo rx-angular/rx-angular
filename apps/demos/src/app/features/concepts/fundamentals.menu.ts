@@ -4,6 +4,10 @@ export const FUNDAMENTALS_MENU = [
     label: 'Nested vs Projected'
   },
   {
+    link: 'projected-views',
+    label: 'Projected Views'
+  },
+  {
     link: 'passing-values',
     label: 'Passing Values'
   },
