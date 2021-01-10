@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { StrategyProvider } from '../../../../rx-angular-pocs/render-strategies';
+import { StrategyProvider } from '../../../../rx-angular-pocs';
 
 @Component({
   selector: 'rxa-rx-let-poc',

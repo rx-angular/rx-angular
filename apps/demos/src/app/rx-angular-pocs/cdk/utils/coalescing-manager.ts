@@ -5,8 +5,8 @@ interface CoalescingContextProps {
 }
 
 interface CoalescingManager {
-  remove: (scope: object) => void,
-  add: (scope: object) => void,
+  decrement: (scope: object) => void,
+  increment: (scope: object) => void,
   isCoalescing: (scope: object) => boolean,
 }
 
@@ -28,34 +28,33 @@ const coalescingContextPropertiesMap = createPropertiesWeakMap<object,
  */
 function createCoalesceManager(): CoalescingManager {
   return {
-    remove: removeWork,
-    add: addWork,
+    decrement,
+    increment,
     isCoalescing
   };
 
-  // Increments the number of subscriptions in a scope e.g. a class instance
-  function removeWork(scope: object): void {
-    const numCoalescingSubscribers = coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers - 1;
-    coalescingContextPropertiesMap.setProps(scope, {
-      numCoalescingSubscribers: numCoalescingSubscribers >= 0 ? numCoalescingSubscribers : 0
-    });
-  }
-
   // Decrements the number of subscriptions in a scope e.g. a class instance
-  function addWork(scope: object): void {
-    const numCoalescingSubscribers =
-      coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers +
-      1;
-    coalescingContextPropertiesMap.setProps(scope, {
-      numCoalescingSubscribers
-    });
+  function decrement(scope: object): void {
+    const numCoalescingSubscribers = coalescingContextPropertiesMap
+      .getProps(scope).numCoalescingSubscribers - 1;
+    coalescingContextPropertiesMap
+      .setProps(scope, { numCoalescingSubscribers: numCoalescingSubscribers >= 0 ? numCoalescingSubscribers : 0 });
   }
 
-  // Checks if anybody else is already coalescing atm
+  // Increments the number of subscriptions in a scope e.g. a class instance
+  function increment(scope: object): void {
+    const numCoalescingSubscribers =
+      coalescingContextPropertiesMap
+        .getProps(scope).numCoalescingSubscribers + 1;
+    coalescingContextPropertiesMap
+      .setProps(scope, { numCoalescingSubscribers });
+  }
+
+  // Checks if anybody else is already coalescing atm (number > 0)
   function isCoalescing(scope: object): boolean {
     return (
-      coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers >
-      0
+      coalescingContextPropertiesMap
+        .getProps(scope).numCoalescingSubscribers > 0
     );
   }
 }

@@ -20,7 +20,11 @@ export const MENU_ITEMS = [
     label: 'RxFor',
   },
   {
+    link: 'rx-context',
+    label: 'RxContext',
+  },
+  {
     link: 'if-visible',
     label: 'ifVisible POC',
-  },
+  }
 ];

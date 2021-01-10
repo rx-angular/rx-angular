@@ -1,7 +1,7 @@
 import { fromEvent, Observable, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { CMYK, ImgInfo, RGBA } from './model';
-import { getMemoizedFn } from '../../rx-angular-pocs';
+import { getMemoizedFn, PriorityNames } from '../../rx-angular-pocs';
 
 // http://pixelartmaker.com/art/556d215ebf25e7f
 
@@ -104,31 +104,30 @@ export function computeColorPrio(colorCount: Map<string, number>): Map<string, s
 
 
       /*
-        NoPriority = 0;
-        ImmediatePriority = 1;
-        UserBlockingPriority = 2;
-        NormalPriority = 3;
-        LowPriority = 4;
-        IdlePriority = 5;
+        noPriority = 0;
+        immediate = 1;
+        userBlocking = 2;
+        normal = 3;
+        low = 4;
+        background = 5;
       */
       // transparent
       if (style.slice(style.length - 2, -1) === '0') {
-        acc.set(style, 'reactIdle');
+        acc.set(style, PriorityNames.idle);
         lowAndHigh += 1;
       } else {
         // Dark color prio
         if (k > 76) {
-          acc.set(style, 'reactImmediate');
+          acc.set(style, PriorityNames.immediate);
           lowAndHigh += 1;
         }
         // if there is space add most used colors until a third of all colors are prioritized
         else if (idx < remaining / numPrios * 1) {
-          acc.set(style, 'reactUserBlocking');
-
+          acc.set(style, PriorityNames.userBlocking);
         } else if (idx < remaining / numPrios * 2) {
-          acc.set(style, 'reactNormal');
+          acc.set(style, PriorityNames.normal);
         } else {
-          acc.set(style, 'reactLow');
+          acc.set(style, PriorityNames.low);
         }
       }
       return acc;

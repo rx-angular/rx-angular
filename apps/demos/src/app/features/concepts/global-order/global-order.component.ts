@@ -1,60 +1,54 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { DataService } from './shared/data.service';
 
 @Component({
   selector: 'rxa-global-order',
   template: `
     <rxa-visualizer>
-      <ng-container visualizerHeader>
-        <h1 class="mat-headline">Global Order</h1>
-        <mat-button-toggle-group
-          name="visibleExamples"
-          aria-label="Visible Examples"
-          [value]="displayStates.all"
-          #group="matButtonToggleGroup">
-          <mat-button-toggle [value]="displayStates.native">Native</mat-button-toggle>
-          <mat-button-toggle [value]="displayStates.rxa">RxA</mat-button-toggle>
+      <div visualizerHeader>
+        <h2>Custom Strategy - Parent component</h2>
+        <br/>
+        <mat-button-toggle-group name="visibleExamples"
+                                 aria-label="Visible Examples"
+                                  [value]="displayStates.none"
+        #group="matButtonToggleGroup">
+          <mat-button-toggle [value]="displayStates.none">None</mat-button-toggle>
+          <mat-button-toggle [value]="displayStates.native">Angular Native</mat-button-toggle>
+          <mat-button-toggle [value]="displayStates.push">RxAngular push
+          </mat-button-toggle>
+          <mat-button-toggle [value]="displayStates.rxLet">RxAngular *rxLet</mat-button-toggle>
+          <mat-button-toggle [value]="displayStates.rxForm">Angular Reactive Forms</mat-button-toggle>
           <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
         </mat-button-toggle-group>
-      </ng-container>
+      </div>
       <div class="row w-100">
-        <div class="col" *ngIf="visible(group, displayStates.native)">
-          <rxa-a1></rxa-a1>
+        <div class="col" *ngIf="group.value === displayStates.native || group.value === displayStates.all">
+            <rxa-v1-a></rxa-v1-a>
         </div>
-        <div class="col" *ngIf="visible(group, displayStates.rxa)">
-          <rxa-a2></rxa-a2>
+        <div class="col" *ngIf="group.value === displayStates.push || group.value === displayStates.all">
+          <rxa-v2-a></rxa-v2-a>
+        </div>
+        <div class="col" *ngIf="group.value === displayStates.rxLet || group.value === displayStates.all">
+          <rxa-v3-a></rxa-v3-a>
+        </div>
+        <div class="col" *ngIf="group.value === displayStates.rxForm || group.value === displayStates.all">
+          <rxa-v4-a></rxa-v4-a>
         </div>
       </div>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GlobalOrderComponent {
-
   displayStates = {
-    none: 0,
-    all: 1,
-    native: 2,
-    rxa: 3
+    none: -1,
+    all: 0,
+    native: 1,
+    push: 2,
+    rxLet: 3,
+    rxForm: 4,
   };
-  isVisible = true;
-  btnBothClick$ = new BehaviorSubject<any>(1);
 
-  private _depth = 5;
-  set depth(depth: number) {
-    this._depth = depth >= 1 ? depth : 1;
+  constructor(public data: DataService) {
   }
-
-  get depth(): number {
-    return this._depth;
-  }
-
-  selected(group, choice) {
-    return group.value === choice;
-  }
-
-  visible(group, choice) {
-    return group.value === choice || group.value === this.displayStates.all;
-  }
-
 }

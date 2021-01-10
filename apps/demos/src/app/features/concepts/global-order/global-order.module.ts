@@ -4,9 +4,11 @@ import { RouterModule } from '@angular/router';
 import { ROUTES } from './global-order.routes';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { GlobalOrderComponent } from './global-order.component';
-import { A2Module } from './a2/a2.module';
-import { A1Module } from './a1/a1.module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { NativeVModule } from './native-v/native-v.module';
+import { RxLetVModule } from './rx-let-v/rx-let-v.module';
+import { PushVModule } from './push-v/push-v.module';
+import { RxFormVModule } from './rx-form-v/rx-form-v.module';
 
 @NgModule({
   declarations: [
@@ -16,10 +18,12 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    A1Module,
-    A2Module,
     VisualizerModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    NativeVModule,
+    RxLetVModule,
+    PushVModule,
+    RxFormVModule
   ],
   exports: []
 })
