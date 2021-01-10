@@ -1,29 +1,35 @@
-import { combineLatest, merge, Observable, of, OperatorFunction, ReplaySubject } from 'rxjs';
 import {
-  ChangeDetectorRef, ElementRef,
+  combineLatest,
+  Observable,
+  of,
+  OperatorFunction,
+  ReplaySubject,
+} from 'rxjs';
+import {
+  ChangeDetectorRef,
+  ElementRef,
   EmbeddedViewRef,
   NgIterable,
   TemplateRef,
   TrackByFunction,
-  ViewContainerRef, ɵdetectChanges as detectChanges,
+  ViewContainerRef,
+  ɵdetectChanges as detectChanges,
 } from '@angular/core';
 import {
   delay,
   filter,
-  map, mapTo,
+  map,
   startWith,
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
-import {
-  StrategyCredentials,
-  StrategyCredentialsMap,
-} from '../render-strategies/model';
+
 import { nameToStrategyCredentials } from '../render-strategies/utils/strategy-helper';
 import { ngInputFlatten } from '../utils/rxjs/operators/ngInputFlatten';
 import { RxListViewContext } from './model';
 import { extractParentElements } from './utils';
 import { asap } from '../utils/zone-agnostic/rxjs/scheduler/asap';
+import { StrategyCredentials, StrategyCredentialsMap } from '../render-strategies/model';
 
 export interface ListManager<T, C> {
   nextStrategy: (config: string | Observable<string>) => void;
@@ -75,7 +81,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     let count = 0;
     const positions = new Map<T, number>();
 
-    return (o$: Observable<NgIterable<T>>): Observable<any>  =>
+    return (o$: Observable<NgIterable<T>>): Observable<any> =>
       o$.pipe(
         map((items) => (items ? Array.from(items) : [])),
         withLatestFrom(strategy$),
@@ -99,13 +105,16 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             );
           }
           const parentNotify$ = notifyParent
-            ? of(null).pipe(strategy.behavior(() => {
-                // console.log('notify parent', (config.cdRef as any).context);
-                strategy.work(
-                  config.cdRef,
-                  (config.cdRef as any).context || config.cdRef
-                );
-              }, (config.cdRef as any).context || config.cdRef), startWith(null))
+            ? of(null).pipe(
+                strategy.behavior(() => {
+                  // console.log('notify parent', (config.cdRef as any).context);
+                  strategy.work(
+                    config.cdRef,
+                    (config.cdRef as any).context || config.cdRef
+                  );
+                }, (config.cdRef as any).context || config.cdRef),
+                startWith(null)
+              )
             : of(null);
           return combineLatest([
             // support for Iterable<T> (e.g. `Map#values`)
@@ -178,15 +187,21 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             parentNotify$,
           ]).pipe(
             delay(0, asap),
-            switchMap(v => {
+            switchMap((v) => {
+
+              const parentElements = extractParentElements(
+                config.cdRef,
+                config.eRef
+              );
               // TODO: ONLY DO ON PARENT NOTIFY
-              const parentElements = extractParentElements(config.cdRef, config.eRef);
-              console.log(parentElements)
-              return combineLatest([
+              return notifyParent ? combineLatest([
                 ...Array.from(parentElements).map((el) => {
                   return of(null).pipe(
                     strategy.behavior(() => {
-                      if (el) detectChanges(el);
+                      if (el) {
+                        console.log('el', el);
+                        detectChanges(el);
+                      }
                     }, el)
                   );
                 }),
@@ -194,13 +209,13 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                   strategy.behavior(() => {
                     strategy.work(config.cdRef);
                   }, (config.cdRef as any).context)
-                )
+                ),
               ]).pipe(
                 map(() => null),
-                startWith(v),
-              );
+                startWith(v)
+              ) : of(v);
             }),
-            filter(v => v != null)
+            filter((v) => v != null)
           );
         })
       );

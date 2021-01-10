@@ -6,7 +6,6 @@ import { AppComponent, AppComponentModule } from './app-component';
 import {
   getChunkStrategyCredentialsMap,
   getConcurrentSchedulerStrategyCredentialsMap, getFreStrategyCredentialsMap,
-  PriorityNameToLevel,
   RX_CUSTOM_STRATEGIES,
   RX_PRIMARY_STRATEGY,
 } from './rx-angular-pocs';
@@ -15,7 +14,6 @@ import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './features/home/home.component';
 import { tap } from 'rxjs/operators';
-import { observeOnPriority } from './rx-angular-pocs/cdk/render-strategies/scheduling/operators';
 import { concurrent } from './rx-angular-pocs/cdk/render-strategies/scheduling/scheduler/react-concurrent-scheduler/concurrent';
 
 @NgModule({
@@ -34,21 +32,7 @@ import { concurrent } from './rx-angular-pocs/cdk/render-strategies/scheduling/s
       provide: RX_CUSTOM_STRATEGIES,
       useValue: {
         ...getConcurrentSchedulerStrategyCredentialsMap(),
-        ...getChunkStrategyCredentialsMap(),
-        ...getFreStrategyCredentialsMap(),
-        test: {
-          name: 'test',
-          work: (cdRef) => {
-            cdRef.detectChanges();
-          },
-          behavior: (work: any, context: any) => {
-            return (o$) =>
-              o$.pipe(
-                observeOnPriority(concurrent(PriorityNameToLevel.low)),
-                tap(work)
-              );
-          },
-        },
+        ...getChunkStrategyCredentialsMap()
       },
       multi: true,
     },
