@@ -9,7 +9,6 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  asyncScheduler,
   BehaviorSubject,
   defer,
   merge,
@@ -22,6 +21,7 @@ import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-pr
 import { RxState } from '@rx-angular/state';
 import { Hooks } from '../../../../shared/debug-helper/hooks';
 import { map, startWith, switchMapTo, tap } from 'rxjs/operators';
+import { asyncScheduler } from '../../../../rx-angular-pocs';
 
 let itemIdx = 0;
 function getNewItem() {
