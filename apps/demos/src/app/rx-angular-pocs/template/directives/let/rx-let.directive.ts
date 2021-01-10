@@ -8,7 +8,7 @@ import {
   TemplateRef,
   ViewContainerRef,
   ɵmarkDirty as markDirty,
-  ɵdetectChanges as detectChanges
+  ɵdetectChanges as detectChanges, ElementRef
 } from '@angular/core';
 
 import {
@@ -114,6 +114,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   constructor(
     private strategyProvider: StrategyProvider,
     public cdRef: ChangeDetectorRef,
+    public eRef: ElementRef,
     private readonly nextTemplateRef: TemplateRef<RxLetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
@@ -241,6 +242,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
     this.displayInitialView();
 
     (window as any).aaa = (this.cdRef as any)._cdRefInjectingView;
+    (window as any).letTpl = this.eRef.nativeElement;
     (window as any).detectChanges = detectChanges;
     console.log('rxLet onInit: ', (window as any).aaa);
   }
