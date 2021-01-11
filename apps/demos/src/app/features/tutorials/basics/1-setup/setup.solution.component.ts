@@ -11,7 +11,6 @@ export interface DemoBasicsItem {
 
 interface ComponentState {
   refreshInterval: number;
-  list: DemoBasicsItem[];
   listExpanded: boolean;
 }
 

@@ -11,7 +11,6 @@ export interface DemoBasicsItem {
 
 interface ComponentState {
   refreshInterval: number;
-  list: DemoBasicsItem[];
   listExpanded: boolean;
 }
 
@@ -113,8 +112,6 @@ export class SetupStart implements OnInit, OnDestroy {
     private listService: ListService
   ) {
     this.state.set(initComponentState);
-    this.state.connect('list', this.listService.list$);
-
   }
 
   ngOnDestroy(): void {
