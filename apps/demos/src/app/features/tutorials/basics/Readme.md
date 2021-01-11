@@ -31,3 +31,7 @@ Topics we will discuss are:
 - [Presenter Pattern](./6-presenter-pattern)
 
 you can also visit the full solution after applying all of the above steps in [here] (https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/solution)
+
+# How to use this tutorial
+
+each chapter has two files. one with `.start.ts` (showing the initial state) and `.solution.ts` (after applying all the changes). You can compare them against each other to see what changes is made.
