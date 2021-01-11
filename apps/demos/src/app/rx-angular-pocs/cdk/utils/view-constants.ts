@@ -9,6 +9,7 @@ export const NEXT = 4;
 export const TRANSPLANTED_VIEWS_TO_REFRESH = 5;
 export const T_HOST = 6;
 export const CLEANUP = 7;
+export const L_CONTAINER_NATIVE = 7;
 export const CONTEXT = 8;
 export const INJECTOR = 9;
 export const RENDERER_FACTORY = 10;
@@ -30,3 +31,24 @@ export const QUERIES = 19;
  * there should be no need to refer to `HEADER_OFFSET` anywhere else.
  */
 export const HEADER_OFFSET = 20;
+
+export const enum TViewType {
+  /**
+   * Root `TView` is the used to bootstrap components into. It is used in conjunction with
+   * `LView` which takes an existing DOM node not owned by Angular and wraps it in `TView`/`LView`
+   * so that other components can be loaded into it.
+   */
+  Root = 0,
+
+  /**
+   * `TView` associated with a Component. This would be the `TView` directly associated with the
+   * component view (as opposed an `Embedded` `TView` which would be a child of `Component` `TView`)
+   */
+  Component = 1,
+
+  /**
+   * `TView` associated with a template. Such as `*ngIf`, `<ng-template>` etc... A `Component`
+   * can have zero or more `Embedede` `TView`s.
+   */
+  Embedded = 2,
+}

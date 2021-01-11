@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select/strategy-select.module';
 import { ROUTES } from './projected-views.routes';
 import { ProjectedViewsComponent } from './projected-views.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visualizer.module';
 import { ContentChildComponent } from './content-child.component';
 import { ViewChildComponent } from './view-child.component';
-import { RxLetModule, UnpatchEventsModule } from '../../../rx-angular-pocs';
+import { RxForModule, RxLetModule, UnpatchEventsModule } from '../../../rx-angular-pocs';
 import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
@@ -22,6 +23,8 @@ import { MatButtonModule } from '@angular/material/button';
     UnpatchEventsModule,
     MatButtonModule,
     RxLetModule,
+    StrategySelectModule,
+    RxForModule,
   ],
 })
 export class ProjectedViewsModule {}

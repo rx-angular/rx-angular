@@ -1,4 +1,4 @@
-import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChild } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild } from '@angular/core';
 import { ContentChildComponent } from './content-child.component';
 
 @Component({
@@ -12,9 +12,19 @@ import { ContentChildComponent } from './content-child.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewChildComponent {
+
+  _renders = 0;
+
+  renders() {
+    return this._renders++;
+  }
+
   @ContentChild(ContentChildComponent)
   set cc(v) {
     console.log('ContentChild in ViewChildComponent of type ContentChildComponent: ', v)
   };
+
+
+  constructor(private cdRef: ChangeDetectorRef) {}
 
 }

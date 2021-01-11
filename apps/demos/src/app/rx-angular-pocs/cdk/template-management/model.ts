@@ -23,7 +23,6 @@ export interface RxViewContext<T> {
 export interface RxListViewComputedContext {
   index: number;
   count: number;
-  $implicit?: any
 }
 
 export interface RxListViewContext<T extends Record<string | number | symbol, any>,

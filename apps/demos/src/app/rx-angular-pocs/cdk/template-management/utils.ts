@@ -1,25 +1,80 @@
-import { ElementRef, Type } from '@angular/core';
-import { HEADER_OFFSET, QUERIES } from '../utils/view-constants';
+import { Type, ɵdetectChanges as detectChanges } from '@angular/core';
+import { merge, OperatorFunction } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
+import { switchMap, withLatestFrom } from 'rxjs/operators';
+import { StrategyCredentials } from '../render-strategies/model/strategy-credentials';
+import { onStrategy } from '../render-strategies/utils/strategy-helper';
+import { CONTEXT, HEADER_OFFSET, L_CONTAINER_NATIVE, T_HOST } from '../utils/view-constants';
 
-export function extractParentElements(cdRef: any, eRef: ElementRef): Type<any>[] {
-  const parentDetectorView = (cdRef as any)._cdRefInjectingView;
-  const parentElements = new Set<Type<any>>();
-  if(parentDetectorView[QUERIES] === null) {
-   return [];
-  }
-  const queries = parentDetectorView[QUERIES]['queries'];
-
-  for (const query of queries) {
-    if (query['queryList']['_results']?.length > 0) {
-      const comp = query['queryList']['_results'][0];
-      if(!comp['__ngContext__'] || !comp['__ngContext__'][HEADER_OFFSET]) {
-        continue;
-      }
-      const el = comp['__ngContext__'][HEADER_OFFSET][0];
-      if (comp.__proto__?.constructor?.ɵcmp && el?.contains(eRef.nativeElement)) {
-        parentElements.add(comp);
-      }
+export function getTNode(cdRef: any, native: any /*Comment*/) {
+  const lView = cdRef._cdRefInjectingView;
+  const tView = lView[1];
+  let i = HEADER_OFFSET;
+  let lContainer;
+  while (!lContainer && i <= tView['bindingStartIndex']) {
+    const candidate = lView[i];
+    if (candidate && candidate[L_CONTAINER_NATIVE] === native) {
+      lContainer = candidate;
     }
+    i++;
   }
-  return Array.from(parentElements);
+  return lContainer[T_HOST];
+}
+
+export function extractProjectionParentViewSet(cdRef: any, tNode: any): Set<Type<any>> {
+  const injectingLView = (cdRef as any)._cdRefInjectingView;
+  const injectingTView = injectingLView[1];
+  const components = new Set<number>(injectingTView['components']);
+  const parentElements = new Set<Type<any>>();
+  let parent = tNode['parent'];
+  while (parent != null && components.size > 0) {
+    const idx = parent['index'];
+    if (components.has(idx)) {
+      components.clear();
+      parentElements.add(injectingLView[idx][CONTEXT]);
+    }
+    parent = parent['parent'];
+  }
+  return parentElements;
+}
+
+export function extractProjectionViews(cdRef: any, tNode: any): Type<any>[] {
+  return Array.from(extractProjectionParentViewSet(cdRef, tNode));
+}
+
+export function renderProjectionParents(
+  cdRef: any,
+  tNode: any,
+  strategy$: Observable<StrategyCredentials>)
+  : OperatorFunction<any, any> {
+
+  return o$ => o$.pipe(
+    withLatestFrom(strategy$),
+    switchMap(([_, strategy]) => {
+      const parentElements = extractProjectionParentViewSet(cdRef, tNode);
+      const behaviors = [];
+      for (const el of parentElements.values()) {
+        behaviors.push(
+          onStrategy(
+            el,
+            strategy,
+            (value, work, options) => {
+              detectChanges(el);
+            },
+            { scope: el }
+          )
+        )
+      }
+      behaviors.push(
+        onStrategy(
+          null,
+          strategy,
+          (value, work, options) => work(cdRef, options.scope),
+          { scope: (cdRef as any).context || cdRef }
+        )
+      );
+
+      return merge(...behaviors);
+    })
+  )
 }

@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RxFor } from './rx-for.directive';
 
 const DECLARATIONS = [
@@ -8,7 +7,7 @@ const DECLARATIONS = [
 
 @NgModule({
   declarations: DECLARATIONS,
-  imports: [CommonModule],
+  imports: [],
   exports: DECLARATIONS
 })
 export class RxForModule {

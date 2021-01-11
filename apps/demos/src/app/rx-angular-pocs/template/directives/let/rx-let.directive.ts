@@ -21,7 +21,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import { filter, map, mapTo, switchMap, tap } from 'rxjs/operators';
+import { delay, filter, map, mapTo, switchMap, tap } from 'rxjs/operators';
 import {
   createRenderAware,
   createTemplateManager,
@@ -34,7 +34,7 @@ import {
   toRxCompleteNotification,
   toRxErrorNotification,
   toRxSuspenseNotification,
-  setTimeout, QUERIES, HEADER_OFFSET, extractParentElements
+  setTimeout, QUERIES, HEADER_OFFSET, extractProjectionViews, asap, asyncScheduler, getTNode, renderProjectionParents
 } from '../../../cdk';
 import {
   RxLetTemplateNames,
@@ -53,6 +53,8 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
     this.renderAware.nextPotentialObservable(potentialObservable);
   }
+
+  @Input('rxLetParent') renderParent = false;
 
   @Input('rxLetStrategy')
   set strategy(strategyName: string | Observable<string> | undefined) {
@@ -135,32 +137,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
       getContext: (notification: RxNotification<U>): ChangeDetectorRef =>
         this.getEmbeddeViewByNotification(notification),
     });
-    this.subscription.add(
-      this.templateManager.templateChanged$
-        .pipe(
-          switchMap((v) => {
-            const strategy = this.strategyProvider.strategies[
-              this.strategyProvider.primaryStrategy
-            ];
-            const parentElements = extractParentElements(this.cdRef, this.eRef);
-            return merge(
-              ...Array.from(parentElements).map((el) => {
-                return of(null).pipe(
-                  strategy.behavior(() => {
-                    detectChanges(el);
-                  }, el)
-                );
-              }),
-              of(null).pipe(
-                strategy.behavior(() => {
-                  strategy.work(this.cdRef);
-                }, (this.cdRef as any).context)
-              )
-            );
-          })
-        )
-        .subscribe()
-    );
+
   }
 
   static ngTemplateGuard_rxLet: 'binding';
@@ -244,6 +221,16 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    const tNode = getTNode(this.cdRef, this.eRef.nativeElement);
+    this.subscription.add(
+      this.templateManager.templateChanged$
+        .pipe(
+          delay(0, asap),
+          filter(() => this.renderParent),
+          renderProjectionParents(this.cdRef, tNode, this.renderAware.strategy$),
+        )
+        .subscribe()
+    );
     this.templateManager.addTemplateRef(
       RxLetTemplateNames.next,
       this.nextTemplateRef

@@ -1,17 +1,17 @@
 import {
   ChangeDetectorRef,
-  Directive,
+  Directive, ElementRef,
   Input,
   OnDestroy,
   OnInit,
   TemplateRef,
-  ViewContainerRef,
+  ViewContainerRef, ɵdetectChanges as detectChanges,
 } from '@angular/core';
 
 import {
   ConnectableObservable,
   EMPTY,
-  isObservable,
+  isObservable, merge,
   Observable,
   of,
   ReplaySubject,
@@ -19,9 +19,9 @@ import {
 } from 'rxjs';
 
 import {
-  applyStrategy2,
-  createTemplateManager,
-  nameToStrategyCredentials,
+  applyStrategy2, asap,
+  createTemplateManager, extractProjectionViews, getTNode,
+  nameToStrategyCredentials, renderProjectionParents, onStrategy,
   RenderWork,
   select,
   StrategyCredentialsMap,
@@ -30,12 +30,12 @@ import {
 } from '../../../cdk';
 import { RxIfTemplateNames, rxIfTemplateNames, RxIfViewContext } from './model';
 import {
-  catchError,
-  distinctUntilChanged,
+  catchError, delay,
+  distinctUntilChanged, filter,
   map,
   mergeAll,
   publishReplay,
-  scan, tap,
+  scan, switchMap, tap, withLatestFrom,
 } from 'rxjs/operators';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
@@ -72,6 +72,8 @@ export class RxIf<U> implements OnInit, OnDestroy {
     this.connect('isTrue', potentialObservable);
   }
 
+  @Input('rxIfParent') renderParent = true;
+
   @Input('rxIfStrategy')
   set strategy(strategyName: Observable<string> | string | null | undefined) {
     this.connect('strategyName', strategyName);
@@ -96,6 +98,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
   constructor(
     private strategyProvider: StrategyProvider,
     private cdRef: ChangeDetectorRef,
+    private eRef: ElementRef<Comment>,
     private readonly thenTemplateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
@@ -110,6 +113,16 @@ export class RxIf<U> implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    const tNode = getTNode(this.cdRef, this.eRef.nativeElement);
+    this.subscription.add(
+      this.templateManager.templateChanged$
+        .pipe(
+          delay(0, asap),
+          filter(() => this.renderParent),
+          renderProjectionParents(this.cdRef, tNode, this.strategy$)
+        )
+        .subscribe()
+    );
     this.templateManager.addTemplateRef(
       RxIfTemplateNames.then,
       this.thenTemplateRef

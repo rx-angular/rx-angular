@@ -35,7 +35,7 @@ import { map, tap } from 'rxjs/operators';
       <div class="row w-100">
         <ng-container
           *rxFor="let strategy of strategies$; strategy: 'immediate'; trackBy:trackByStrategyName">
-          <div class="col"
+          <div class="col d-flex flex-column"
                *rxIf="strategy.checked; strategy: 'immediate'">
             <h2 class="mat-subheader">{{strategy.name}}</h2>
             <rxa-sibling-strategy [strategy]="strategy.name" [count]="count$" [filled]="filled$"></rxa-sibling-strategy>
@@ -44,7 +44,7 @@ import { map, tap } from 'rxjs/operators';
       </div>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     .strategy-multiselect {
       display: flex;

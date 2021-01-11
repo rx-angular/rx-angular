@@ -56,6 +56,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     this.strategyInput$.next(strategyName);
   }
 
+  @Input('rxForParent') renderParent = false;
+
   @Input()
   set rxForTrackBy(trackByFnOrKey: string | ((idx: number, i: T) => any)) {
     this._trackBy =
@@ -116,6 +118,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     this.listManager = createListManager<T, RxForViewContext<T>>({
       cdRef: this.cdRef,
       eRef: this.eRef,
+      renderParent: this.renderParent,
       strategies: this.strategyProvider.strategies,
       defaultStrategyName: this.strategyProvider.primaryStrategy,
       viewContainerRef: this.viewContainerRef,

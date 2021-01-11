@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, ContentChild, ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
+import { ChangeDetectionStrategy, Component, ContentChild, ViewChild, ViewChildren } from '@angular/core';
+import { combineLatest, Subject } from 'rxjs';
 import { ContentChildComponent } from './content-child.component';
 import { ViewChildComponent } from './view-child.component';
 
@@ -12,12 +12,18 @@ import { ViewChildComponent } from './view-child.component';
         <h2>Parent</h2>
         <button mat-raised-button [unpatch] (click)="trigger$.next($event.timeStamp)">tick</button>
       </div>
+      <!--<rxa-strategy-select></rxa-strategy-select>-->
       test1
       <rxa-view-child>
-        test2
-        <rxa-content-child *rxLet="trigger$;let value">
-            {{value}}
-        </rxa-content-child>
+        <div>
+          <div *rxLet="trigger$;let value; parent: true">
+            <rxa-content-child>
+              <div #test>{{value}}</div>
+            </rxa-content-child>
+          </div>
+
+        </div>
+
       </rxa-view-child>
 
     </rxa-visualizer>
@@ -25,6 +31,9 @@ import { ViewChildComponent } from './view-child.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectedViewsComponent {
+  @ViewChildren('test') set test(t) {
+    console.log('ViewChild in ProjectedViewsComponent of type div', t)
+  }
   @ViewChild(ViewChildComponent)
   set vcVc(v) {
     console.log('ViewChild in ProjectedViewsComponent of type ViewChildComponent: ', v)
@@ -35,4 +44,6 @@ export class ProjectedViewsComponent {
   };
 
   trigger$ = new Subject<any>();
+
+  triggerArr$ = combineLatest([this.trigger$]);
 }

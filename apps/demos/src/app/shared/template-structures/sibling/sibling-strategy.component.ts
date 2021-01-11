@@ -35,7 +35,7 @@ const chunk = (arr, n) =>
     </div>
   `,
   host: {
-    class: 'd-flex w-100',
+    class: 'd-flex flex-column w-100',
   },
   styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
