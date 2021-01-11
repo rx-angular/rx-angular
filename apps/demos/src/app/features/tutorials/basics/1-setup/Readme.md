@@ -1,7 +1,7 @@
 # Setup a reactive
 
-In this section we start with an imperative code base and will refactor
-it's state management to a reactive setup.
+In this section we start with an [imperative code base] (./setup.start.component.ts) and will refactor
+it's state management to a [reactive setup](./setup.solution.component.ts) .
 
 We will setup `RxState` in the component, initialize the components local state,  
 and render it in the template.
@@ -24,20 +24,20 @@ e.g. `this.select('prop')`.
 To do so, we have to extend our class and use the already existing `ComponentState` interface:
 
 ```typescript
+
+// 1- import RxState
 import { RxState } from '@rx-angular/state';
 
-// Displayed shape of the list item (this is a reduced version of the server object)
-export interface DemoBasicsItem {
-  id: string;
-  name: string;
-}
+...
 
+// 2- add a component state
 interface ComponentState {
   refreshInterval: number;
   list: DemoBasicsItem[];
   listExpanded: boolean;
 }
 
+// 3- extend the component or alternatively register a local provider
 export class SetupReactiveComponentStateContainerComponent extends RxState<ComponentState> ... {
 ```
 
@@ -49,6 +49,8 @@ constructor(...) {
 }
 ```
 
+for the sake of the example we added the state in the same file, but for a more robust architecture consider to have it in a different file with `.state.ts` postfix.
+
 ### Select and display state
 
 Lets setup a component property `model$` which holds all data we wish to display in the template.
@@ -58,10 +60,9 @@ By assigning the `model$` to the `$` property of the `RxState` class we get the 
 ```typescript
 
 @Component({
-  selector: 'rxa-demo-basics-1',
+  selector: 'rxa-setup-solution',
   template: `
     model$: <pre>{{model$ | async | json}}</pre>
-    <h3>Demo Basic 1 - Setup and Retrieving State</h3>
     ...
   `,
   ...

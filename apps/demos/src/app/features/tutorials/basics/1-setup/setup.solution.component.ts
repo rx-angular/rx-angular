@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { RxState } from '@rx-angular/state';
+import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
-import { interval, Subject, Subscription } from 'rxjs';
 
 export interface DemoBasicsItem {
   id: string;
@@ -12,6 +12,7 @@ export interface DemoBasicsItem {
 interface ComponentState {
   refreshInterval: number;
   listExpanded: boolean;
+  list: DemoBasicsItem[];
 }
 
 const initComponentState = {
@@ -81,7 +82,7 @@ const initComponentState = {
       .list .mat-expansion-panel-content .mat-expansion-panel-body {
         padding-top: 10px;
       }
-    `,
+    `
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
