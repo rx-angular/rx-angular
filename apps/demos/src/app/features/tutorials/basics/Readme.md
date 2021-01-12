@@ -13,7 +13,7 @@ you can find the working application in `http://localhost:4200/rx-angular/demos`
 
 The source can be found under `apps/demos/src/app/features/tutorials`
 
-The example shows a simple component setup od a parent container and a child component displaying the data.
+The example shows a simple component setup of a parent container and a child component displaying the data.
 
 In the child component an expansion-panel is used to display the data. this panel can be opened and closed by clicking on the title.
 The open/close state of the expansion-panel is forwarded to the parent component as output binding.
