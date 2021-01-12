@@ -1,5 +1,7 @@
 # Handle Input Bindings
 
+In this chapter we will remove `this._refreshInterval` (which define how frequent our product list should refresh) and save its data inside the component state
+
 ---
 
 ## Setup `@Input` bindings
