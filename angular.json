@@ -567,7 +567,7 @@
       "prefix": "rx",
       "architect": {
         "build": {
-          "builder": "@nrwl/angular:package",
+          "builder": "@nrwl/angular:ng-packagr-lite",
           "options": {
             "tsConfig": "libs/state/tsconfig.lib.json",
             "project": "libs/state/ng-package.json"
@@ -683,7 +683,7 @@
       "prefix": "rx",
       "architect": {
         "build-lib": {
-          "builder": "@nrwl/angular:package",
+          "builder": "@nrwl/angular:ng-packagr-lite",
           "options": {
             "tsConfig": "libs/template/tsconfig.lib.json",
             "project": "libs/template/ng-package.json"
@@ -947,7 +947,7 @@
       "prefix": "rx-angular",
       "architect": {
         "build": {
-          "builder": "@nrwl/angular:package",
+          "builder": "@nrwl/angular:ng-packagr-lite",
           "options": {
             "tsConfig": "libs/cdk/tsconfig.lib.json",
             "project": "libs/cdk/ng-package.json"
