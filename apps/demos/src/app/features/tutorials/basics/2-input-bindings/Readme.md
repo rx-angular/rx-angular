@@ -17,11 +17,11 @@ As no previous state is needed to calculate the new value we provide the slice i
 Notice `{refreshInterval}` is the short form of `{refreshInterval: refreshInterval}`.
 
 ```diff
- @Input()
+@Input()
 set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 100) {
--       this._refreshInterval = refreshInterval;
 +       this.set({refreshInterval});
+-       this._refreshInterval = refreshInterval;
         this.resetRefreshInterval();
     }
 }
@@ -31,12 +31,13 @@ after removing the `_refreshInterval`, We also have to adopt the related method 
 As `refreshInterval` already is part of the components' state,
 we can easily select the value with `this.get('refreshInterval')` and use the `interval` operator to create the new interval.
 
-```typescript
+```diff
 resetRefreshTick() {
     this.intervalSubscription.unsubscribe();
-    this.intervalSubscription = interval(this.get('refreshInterval'))
-      .pipe(tap((_) => this.listService.refetchList()))
-      .subscribe();
++    this.intervalSubscription = interval(this.get('refreshInterval'))
+-    this.intervalSubscription = interval(this._refreshInterval)
+       .pipe(tap((_) => this.listService.refetchList()))
+       .subscribe();
 }
 ```
 
