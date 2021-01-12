@@ -3,8 +3,7 @@
 In this section we start with an [imperative code base][setup.start.component.ts] and will refactor
 it's state management to a [reactive setup][setup.solution.component.ts].
 
-We will setup `RxState` in the component, initialize the components local state,  
-and render it in the template.
+We will setup `RxState` in the component, initialize the components local state, and render it in the template.
 
 As a nice side effect we introduced automated subscription handling, the possibility for imperative interaction
 over input bindings and a clean separation of concerns.
@@ -14,8 +13,7 @@ over input bindings and a clean separation of concerns.
 ## Implement RxState Service
 
 Let's start with introducing a reactive state to our component by using the `RxState` class.
-This can be done over inheritance, we extend form the state service,  
-or composition, we inject the service in the constructor and add the service to the component `providers` section.
+This can be done over inheritance, we extend form the state service, or composition, we inject the service in the constructor and add the service to the component `providers` section.
 
 In this article we simply extend from the service.
 The benefit and disadvantage here is, we can access the services API directly over `this`.  
@@ -30,7 +28,7 @@ import { RxState } from '@rx-angular/state';
 
 ...
 
-// 2- add a component state
+// 2- define a component state
 interface ComponentState {
   refreshInterval: number;
   list: DemoBasicsItem[];
