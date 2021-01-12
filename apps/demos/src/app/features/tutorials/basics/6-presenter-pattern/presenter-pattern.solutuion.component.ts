@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { filter } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 import { RxState } from '@rx-angular/state';
-import { Presenter } from './presenter';
-import { Adapter } from './adapter';
+import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { Adapter } from "./adapter";
+import { Presenter } from "./presenter";
 
 export interface DemoBasicsItem {
   id: string;
@@ -56,7 +56,7 @@ export interface DemoBasicsItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [Presenter, Adapter]
 })
-export class PresenterPatternStart extends RxState<any> {
+export class PresenterPatternSolution extends RxState<any> {
 
   @Input()
   set refreshInterval(refreshInterval$: Observable<number>) {
