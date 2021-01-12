@@ -42,7 +42,7 @@ Each chapter has three files:
 - `.solution.component.ts` demonstrating the state of the file after applying all the changes discussed in that chapter
 - `.container.component.ts`: here we always use the `.start.component.ts` in the template, change it to the solution one and you can see the result of the solution component
 
-?> You can compare them against each other to see what changes is made.
+> You can compare them against each other to see what changes is made.
 
 > in VSCode to compare two files against each other: <br> <br>
 > 1- open the first file (in our case the `.start.component.ts`) <br>
