@@ -23,15 +23,21 @@ Furthermore, there is a refresh button. A click on it also refreshes the list da
 
 Topics we will discuss are:
 
-- [Setup a reactive state, selections and, UI interactions](./1-setup)
-- [handle @Inputs reactively](./2-input-bindings)
-- [handle @Output reactively](./3-output-bindings)
-- [Create a global state and attach it to components](4-global-state)
-- [Handing Side Effects reactively](./5-side-effects)
-- [Presenter Pattern](./6-presenter-pattern)
+- [Setup a reactive state, selections and, UI interactions][1-setup]
+- [handle @Inputs reactively][2-input-bindings]
+- [handle @Output reactively][3-output-bindings]
+- [Create a global state and attach it to components][4-global-state]
+- [Handing Side Effects reactively][5-side-effects]
+<!-- - [Presenter Pattern][6-presenter-pattern] -->
 
 you can also visit the full solution after applying all of the above steps in [here] (https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/solution)
 
 # How to use this tutorial
 
 each chapter has two files. one with `.start.ts` (showing the initial state) and `.solution.ts` (after applying all the changes). You can compare them against each other to see what changes is made.
+
+[1-setup]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/1-setup
+[2-input-bindings]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/2-input-bindings
+[3-output-bindings]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/3-output-bindings
+[4-global-state]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/4-global-state
+[5-side-effects]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/5-side-effects
