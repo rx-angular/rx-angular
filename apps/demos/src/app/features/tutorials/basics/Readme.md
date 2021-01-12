@@ -9,6 +9,8 @@ To setup the project locally run following steps:
 - `npm install` or `yarn install`
 - `npm start demos` or `yarn nx serve demos`
 
+you can find the working application in `http://localhost:4200/rx-angular/demos`
+
 The source can be found under `apps/demos/src/app/features/tutorials`
 
 The example shows a simple component setup od a parent container and a child component displaying the data.
@@ -34,7 +36,18 @@ you can also visit the full solution after applying all of the above steps in [h
 
 # How to use this tutorial
 
-each chapter has two files. one with `.start.ts` (showing the initial state) and `.solution.ts` (after applying all the changes). You can compare them against each other to see what changes is made.
+Each chapter has three files:
+
+- `.start.component.ts`: showing the initial state of the file
+- `.solution.component.ts` demonstrating the state of the file after applying all the changes discussed in that chapter
+- `.container.component.ts`: here we always use the `.start.component.ts` in the template, change it to the solution one and you can see the result of the solution component
+
+?> You can compare them against each other to see what changes is made.
+
+> in VSCode to compare two files against each other: <br> <br>
+> 1- open the first file (in our case the `.start.component.ts`) <br>
+> 2- press Ctrl(Cmd)+shift+P then choose `File: Compare Active file with ...` <br>
+> 3- choose the second file (in our case the `.solution.component.ts`)
 
 [1-setup]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/1-setup
 [2-input-bindings]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/2-input-bindings
