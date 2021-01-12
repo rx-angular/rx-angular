@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ListServerItem, ListService } from '../data-access/list-resource';
+import { RxState } from '@rx-angular/state';
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
+import { ListServerItem, ListService } from '../data-access/list-resource';
 
 export interface DemoBasicsItem {
   id: string;
@@ -15,7 +15,6 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
-// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
