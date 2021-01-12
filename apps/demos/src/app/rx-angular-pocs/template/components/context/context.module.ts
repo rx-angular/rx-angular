@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { RxSwichModule } from '../../directives/switch/rx-swich.module';
 import { RxContext } from './rx-context.directive';
 import { RxContextContainer } from './rx-context.component';
-import { CommonModule } from '@angular/common';
 
 const DECLARATIONS = [
   RxContext, RxContextContainer
@@ -11,7 +10,7 @@ const DECLARATIONS = [
 
 @NgModule({
   declarations: DECLARATIONS,
-  imports: [CommonModule, RxSwichModule],
+  imports: [RxSwichModule],
   exports: DECLARATIONS,
 })
 export class RxContextModule {}

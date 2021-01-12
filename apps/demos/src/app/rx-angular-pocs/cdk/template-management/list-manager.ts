@@ -183,19 +183,19 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               );
             }),
             ...remove$,
-            renderParent
+            insertedOrRemoved
               ? onStrategy(
                   i,
                   strategy,
                   (value, work, options) => work(cdRef, options.scope),
                   { scope }
-                )
+                ).pipe(map(() => null), filter(v => v != null), startWith(null))
               : [],
           ]).pipe(
             // @NOTICE: dirty hack to do ??? ask @HoebblesB
             delay(0, asap),
             switchMap((v) => {
-              if (!renderParent) {
+              if (!notifyParent) {
                 return of(v);
               }
               const parentElements = extractProjectionParentViewSet(cdRef, tNode);

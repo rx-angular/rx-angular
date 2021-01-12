@@ -4,11 +4,11 @@ import { Observable } from 'rxjs/internal/Observable';
 import { switchMap, withLatestFrom } from 'rxjs/operators';
 import { StrategyCredentials } from '../render-strategies/model/strategy-credentials';
 import { onStrategy } from '../render-strategies/utils/strategy-helper';
-import { CONTEXT, HEADER_OFFSET, L_CONTAINER_NATIVE, T_HOST } from '../utils/view-constants';
+import { CONTEXT, HEADER_OFFSET, L_CONTAINER_NATIVE, T_HOST, TVIEW } from '../utils/view-constants';
 
 export function getTNode(cdRef: any, native: any /*Comment*/) {
   const lView = cdRef._cdRefInjectingView;
-  const tView = lView[1];
+  const tView = lView[TVIEW];
   let i = HEADER_OFFSET;
   let lContainer;
   while (!lContainer && i <= tView['bindingStartIndex']) {
