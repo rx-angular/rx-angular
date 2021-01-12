@@ -1,7 +1,7 @@
 # Setup a reactive
 
-In this section we start with an [imperative code base] (./setup.start.component.ts) and will refactor
-it's state management to a [reactive setup](./setup.solution.component.ts) .
+In this section we start with an [imperative code base][setup.start.component.ts] and will refactor
+it's state management to a [reactive setup][setup.solution.component.ts].
 
 We will setup `RxState` in the component, initialize the components local state,  
 and render it in the template.
@@ -37,11 +37,11 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
-// 3- extend the component or alternatively register a local provider
+// 3- extend the component or alternatively register a local provider and inject it
 export class SetupReactiveComponentStateContainerComponent extends RxState<ComponentState> ... {
 ```
 
-Also, a `super` in the constructor is needed as we extend from another class.
+Since we decided to extend the component, a `super` in the constructor is needed as we extend from another class.
 
 ```typescript
 constructor(...) {
@@ -49,7 +49,7 @@ constructor(...) {
 }
 ```
 
-for the sake of the example we added the state in the same file, but for a more robust architecture consider to have it in a different file with `.state.ts` postfix.
+for the sake of the example we added the state in the same file, but for a more robust architecture consider to have it in a different file with `.state.ts` extension.
 
 ### Select and display state
 
@@ -87,3 +87,6 @@ We will use `set` as we already have initial values as `initComponentState` obje
 ```
 
 We should see the initial state in the template.
+
+[setup.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/master/apps/demos/src/app/features/tutorials/basics/1-setup/setup.start.component.ts
+[setup.solution.component.ts]: https://github.com/rx-angular/rx-angular/blob/master/apps/demos/src/app/features/tutorials/basics/1-setup/setup.solution.component.ts
