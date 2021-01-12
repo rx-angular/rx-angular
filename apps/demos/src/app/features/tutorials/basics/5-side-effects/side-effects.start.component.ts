@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { RxState } from '@rx-angular/state';
+import { interval, Subject, Subscription } from 'rxjs';
 import { distinctUntilKeyChanged, map, startWith, tap } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
-import { interval, Subject, Subscription } from 'rxjs';
 
 export interface DemoBasicsItem {
   id: string;
@@ -82,7 +82,7 @@ export class SideEffectsStart extends RxState<ComponentState>
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 4000) {
-      this.set({refreshInterval});
+      this.set({ refreshInterval });
       this.resetRefreshTick();
     }
   }
@@ -94,8 +94,8 @@ export class SideEffectsStart extends RxState<ComponentState>
   constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
-
-    this.connect('listExpanded', this.listExpandedChanges)
+    this.connect('listExpanded', this.listExpandedChanges);
+    this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
   }
 
   ngOnDestroy(): void {
