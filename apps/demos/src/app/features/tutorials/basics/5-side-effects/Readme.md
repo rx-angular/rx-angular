@@ -78,7 +78,7 @@ The interval also gets reset whenever the input binding for `refreshInterval` ch
 ```typescript
    @Input()
     set refreshInterval(refreshInterval: number) {
-      if (refreshInterval > 100) {
+      if (refreshInterval > 4000) {
         this.set({ refreshInterval });
         this.resetRefreshTick()
       }
@@ -95,13 +95,13 @@ Another side-effect is contained in the `onRefreshClicks` callback. Here we disp
 
 Lets refactor those and handle them in a clean and reactive way.
 
-### Refactor to a reactive UI
+# Refactor to a reactive UI
 
-As RxJS is providing us a very powerful way of composing the emitted events we will refactor oue UI interaction the streams.
+As RxJS is providing us a very powerful way of composing the emitted events, we will refactor our UI interaction with the streams.
 
 UI interaction in general can come from buttons, inputs, forms, scroll or resize events etc.
 
-In our case we have the refresh button as UI interaction. To get its interaction as `Observable` we create a `Subject` in the component class and fire its `next` method on every button click.
+In our case we have the refresh button as UI interaction. To get its interaction as an `Observable` we create a `Subject` in the component class and fire its `next` method on every button click.
 
 ```html
 <button mat-raised-button color="primary" (click)="refreshClicks.next($event)">
@@ -110,7 +110,8 @@ In our case we have the refresh button as UI interaction. To get its interaction
 ```
 
 ```typescript
-export class DemoBasicsComponent2 extends RxState<ComponentState>
+export class DemoBasicsComponent2
+  extends RxState<ComponentState>
   implements OnInit, OnDestroy {
   refreshClicks$ = new Subject<Event>();
   //...
@@ -119,12 +120,12 @@ export class DemoBasicsComponent2 extends RxState<ComponentState>
 
 This is the trigger for our side-effect.
 
-### `hold` the side-effect
+## `hold` the side-effect
 
 From the `resetRefreshTick` method we now move the logic that starts the tick,  
 and place it in the `hold` method as callback parameter.
 
-`hold` as the name implies "holds" something. It holds a subscription to a side effect and takes care of its initialisation.
+`hold` as the name implies "holds" something. It holds a subscription to a side effect and takes care of its initialization.
 Furthermore, it automatically handles the subscription management and unsubscribes if the component gets destroyed.
 
 ```typescript
@@ -145,8 +146,7 @@ refreshListSideEffect$ = this.refreshClicks$.pipe(
 );
 ```
 
-and hold it directly: 
-
+and hold it directly:
 
 ```typescript
 constructor(...) {
@@ -154,7 +154,7 @@ constructor(...) {
 }
 ```
 
-### Refactor background process side-effect
+## Refactor background process side-effect
 
 The other side-effect in this component is the background process that dispatches the refresh action in an interval defined over the `refreshInterval` input binding.
 
@@ -173,7 +173,7 @@ intervalRefreshTick$ = this.select(
 ```
 
 If we think about it, both, the button click, and the interval are trigger for the same side-effect.
-Furthermore, their emitted value is irrelevant for the side-effect and only serves as a trigger to exectue it.
+Furthermore, their emitted value is irrelevant for the side-effect and only serves as a trigger to execute it.
 
 This means we could simply merge their outputs together.
 
@@ -187,9 +187,9 @@ refreshListSideEffect$ = merge(
 As a last step we could use another overload of the `hold` method to get better readability of the code.
 
 The second overload of the `hold` method takes a trigger Observable and a separate function that is executed whenever the trigger fires.
-It looks like that `hold(o$: Obsserable<T>, sideEffect: (v: T) => void)`
+It looks like that `hold(o$: Observable<T>, sideEffect: (v: T) => void)`
 
-In our coustructor we can use it as following:
+In our constructor we can use it as following:
 
 ```typescript
 constructor(...) {
@@ -237,6 +237,6 @@ In the example we can get rid of the following snippets:
 We can say without any doubt say we did an excellent job. :)
 
 Side-effect's are now organized in a structured and readable way and the subscription handling gets done automatically by the state layer.
-Furthermore, we could get rid of all implemented lifecycles as well as the callback function for the button cick.
+Furthermore, we could get rid of all implemented lifecycles as well as the callback function for the button click.
 
 All in all an amazing job!

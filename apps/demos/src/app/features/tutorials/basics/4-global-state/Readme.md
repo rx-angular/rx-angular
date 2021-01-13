@@ -2,11 +2,10 @@
 
 ---
 
-
 ## Connect Global state to the `list` slice.
 
-In components, we often need to transform global state into local state. Most often you also need to map the global object into a new shape that fits the view. That state gets provided as `Observable`
-In the current implementation we use ta method called `parseListItems` to achieve that.
+In components, we often need to transform global state into local state. Most often you also need to map the global object into a new shape that fits the view. That state gets provided as an `Observable`
+In the current implementation we use a method called `parseListItems` to achieve that.
 
 We already used the `connect` method to connect child component state.
 Now lets use another overload of it to connect the global state.
@@ -39,9 +38,7 @@ Now we can delete the `storeList$` property in our class and refactore the templ
 
 <div *ngIf="vm.list?.length; else noList">
   <mat-list>
-    <mat-list-item *ngFor="let item of list">
-      {{ item.name }}
-    </mat-list-item>
+    <mat-list-item *ngFor="let item of list"> {{ item.name }} </mat-list-item>
   </mat-list>
 </div>
 ```

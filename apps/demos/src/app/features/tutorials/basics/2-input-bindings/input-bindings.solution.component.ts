@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { RxState } from '@rx-angular/state';
+import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
-import { interval, Subject, Subscription } from 'rxjs';
 
 export interface DemoBasicsItem {
   id: string;
@@ -68,10 +68,26 @@ const initComponentState = {
       </ng-template>
     </mat-expansion-panel>
   `,
+  styles: [
+    `
+        .list .mat-expansion-panel-header {
+          position: relative;
+        }
+  
+        .list .mat-expansion-panel-header mat-progress-bar {
+          position: absolute;
+          top: 0px;
+          left: 0;
+        }
+  
+        .list .mat-expansion-panel-content .mat-expansion-panel-body {
+          padding-top: 10px;
+        }
+      `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputBindingsSolution extends RxState<ComponentState>
-  implements OnInit, OnDestroy {
+export class InputBindingsSolution extends RxState<ComponentState> implements OnInit, OnDestroy {
   model$ = this.select();
 
   intervalSubscription = new Subscription();
@@ -84,7 +100,7 @@ export class InputBindingsSolution extends RxState<ComponentState>
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 4000) {
-      this.set({refreshInterval});
+      this.set({ refreshInterval });
       this.resetRefreshTick();
     }
   }
