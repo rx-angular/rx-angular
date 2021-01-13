@@ -7,21 +7,16 @@ To setup the project locally run following steps:
 - `git clone https://github.com/rx-angular/rx-angular.git rx-angular`
 - `cd rx-angular`
 - `npm install` or `yarn install`
-- `npm run nx serve state-demo` or `yarn nx serve state-demo`
+- `npm run nx serve demos` or `yarn nx serve demos`
 
-The source can be found under `apps/state-demo/src/app/examples/demo-basics`
+The source can be found under `apps/demos/src/app/features/tutorials/basics`
 
-The example shows a simple component setup od a parent container and a child component displaying the data.
+The example shows a simple component setup of a parent container and a child component displaying the data.
 
-In the child component an expansion-panel is used to display the data. this panel can be opened and closed by clicking on the title.
+In the child component an expansion-panel is used to display the data. This panel can be opened and closed by clicking on the title.
 The open/close state of the expansion-panel is forwarded to the parent component as output binding.
 
-As input binding the parent container maintains a number over an input box. Every change od the number gets forwarded to the child component over an input binding.
+As input binding the parent container maintains a number over an input box. Every change of the number gets forwarded to the child component over an input binding.
 
-In the child component there is a background process running. the input value from the parent gets used to start an interval and refresh the list data every [n] milliseconds.
+In the child component there is a background process running. The input value from the parent gets used to start an interval and refresh the list data every [n] milliseconds.
 Furthermore, there is a refresh button. A click on it also refreshes the list data.
-
-Chapters we will discuss are:
-
-- [Setup a reactive state, selections and, UI interactions](https://github.com/rx-angular/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics/1)
-- [Handing Side Effects reactively](https://github.com/rx-angular/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics/2)
