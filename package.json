@@ -97,7 +97,7 @@
     "cypress": "^5.2.0",
     "debug": "^4.2.0",
     "dotenv": "8.2.0",
-    "eslint": "7.10.0",
+    "eslint": "7.17.0",
     "husky": "^4.3.0",
     "jest": "26.4.2",
     "jest-preset-angular": "8.3.1",
