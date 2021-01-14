@@ -12,7 +12,7 @@
     "yarn": ">=1.9.2"
   },
   "author": "Michael Hladky <michael@hladky.at>",
-  "homepage": "https://rx-angular.github.io/rx-angular/#/",
+  "homepage": "https://rx-angular.io/",
   "keywords": [
     "angular",
     "rxjs",
