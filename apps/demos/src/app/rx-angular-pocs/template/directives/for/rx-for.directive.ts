@@ -27,7 +27,7 @@ import { RxForViewContext } from './model/view-context';
  *
  * @description
  *
- * The `*rxFor` structural directive provides a convenient and very performance optimised way for rendering
+ * The `*rxFor` structural directive provides a convenient and performant way for rendering
 * templates out of a list of items.
  * Input values can be provided either as `Observable` or `static` values. Just as the `*ngFor` directive, the
  * `*rxFor` is placed on an
