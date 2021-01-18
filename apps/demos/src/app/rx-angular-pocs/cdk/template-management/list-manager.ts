@@ -85,6 +85,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     nameToStrategyCredentials(strategies, defaultStrategyName)
   );
   let tNode: any;
+  let notifyParent = false;
 
   return {
     nextStrategy(nextConfig: Observable<string>): void {
@@ -98,17 +99,29 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
 
   function render(): OperatorFunction<NgIterable<T>, any> {
     let count = 0;
-    const positions = new Map<T, number>();
+    const positions = new Map<any, number>();
 
     return (o$: Observable<NgIterable<T>>): Observable<any> =>
       o$.pipe(
-        map((items) => (items ? Array.from(items) : [])),
+        // without moving:
+        map((items) => (items ? Array.isArray(items) ? items : Array.from(items) : [])),
+        // with moving:
+       /* map((items) => {
+          const itemArr = [];
+          // let i = 0;
+          for (const item of (items || [])) {
+            itemArr.push(item);
+            /!* positions.set(trackBy(i, item), i);
+             i++;*!/
+          }
+          return itemArr;
+        }),*/
         withLatestFrom(strategy$),
         switchMap(([items, strategy]) => {
           const viewLength = viewContainerRef.length;
           let toRemoveCount = viewLength - items.length;
           const insertedOrRemoved = toRemoveCount > 0 || count !== items.length;
-          const notifyParent = insertedOrRemoved && renderParent;
+          notifyParent = notifyParent || (insertedOrRemoved && renderParent);
           count = items.length;
           const remove$ = [];
           let i = viewLength;
@@ -125,8 +138,8 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             );
           }
           return combineLatest([
+            ...remove$,
             ...items.map((item, index) => {
-              positions.set(item, index);
               const context: RxListViewComputedContext = { count, index };
               // flag which tells if a view needs to be updated
               let doWork = false;
@@ -150,18 +163,28 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                     // current item `T`
                     const moved = trackById !== currentId;
                     if (moved) {
-                      const oldPosition = positions.get(item);
-                      if (
-                        positions.has(item) &&
-                        positions.get(item) !== index
-                      ) {
-                        const oldView = <EmbeddedViewRef<C>>(
-                          viewContainerRef.get(oldPosition)
-                        );
-                        if (oldView) {
-                          view = moveView(oldView, index);
-                        }
-                      }
+                      /* const oldPosition = positions.get(trackById);
+                       if (
+                       positions.has(trackById) &&
+                       oldPosition !== index
+                       ) {
+                       const oldView = <EmbeddedViewRef<C>>(
+                       viewContainerRef.get(oldPosition)
+                       );
+                       if (oldView) {
+                       view = moveView(oldView, index);
+                       /!* updateViewContext(view, {
+                       count, index: oldPosition
+                       }, entity);
+                       oldView.detectChanges();*!/
+                       }
+                       positions.set(trackById, index);
+                       positions.set(currentId, oldPosition);
+                       }*/
+                      // TODO: notify parent when items got moved?
+                      /*if (!notifyParent && renderParent) {
+                        notifyParent = true;
+                      }*/
                       updateViewContext(view, context, item);
                       doWork = true;
                     } else {
@@ -177,12 +200,10 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                   if (doWork) {
                     view.reattach();
                     view.detectChanges();
-                    view.detach();
                   }
                 }, {})
               );
             }),
-            ...remove$,
             insertedOrRemoved
               ? onStrategy(
                   i,
@@ -198,6 +219,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               if (!notifyParent) {
                 return of(v);
               }
+              notifyParent = false;
               const parentElements = extractProjectionParentViewSet(cdRef, tNode);
               const behaviors = [];
               for (const el of parentElements.values()) {
@@ -210,7 +232,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                     },
                     { scope: el }
                   )
-                )
+                );
               }
               if (behaviors.length === 0) {
                 return of(v);
@@ -220,7 +242,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                   null,
                   strategy,
                   (value, work, options) => work(cdRef, options.scope),
-                  { scope: (cdRef as any).context || cdRef }
+                  { scope }
                 )
               );
               return combineLatest(behaviors).pipe(
