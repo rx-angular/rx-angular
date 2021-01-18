@@ -76,7 +76,7 @@ import { RxForViewContext } from './model/view-context';
  *
  *  ```html
  * <ul>
- *   <li *rxFor="let hero of heroes$; trackBy: trackItem; let select: select;">
+ *   <li *rxFor="let hero of heroes$; trackBy: trackItem; let select = select;">
  *     <div>
  *       <strong>{{ hero.name }}</strong></br>
  *       Defeated enemies:
@@ -104,6 +104,9 @@ import { RxForViewContext } from './model/view-context';
  * Included features for `*rxFor`:
  * - Push based architecture
  * - Immutable as well as mutable data structures (with `trackBy` & `distinctBy`)
+ * - Provide a comprehensive set of context variables for each view
+ * - Provide a way to fix `ChangeDetection` issues in `Projected Views` scenarios
+ * - Notify about when rendering of child templates is finished (`renderCallback`)
  * - Fine-control template updates via the `distinctBy` function
  * - Reactive as well as imperative values in the template (`ngFor` drop-in replacement)
  * - `ListManager`: special logic for differ mechanism to avoid over-rendering; abstracts away low level logic
@@ -145,8 +148,6 @@ import { RxForViewContext } from './model/view-context';
  *       let even = even;
  *       let odd = odd;
  *       trackBy: trackItem;
- *       strategy: 'normal';
- *       parent: true;
  *     "
  *   >
  *     <div>{{ count }}</div>
