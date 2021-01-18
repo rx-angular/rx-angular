@@ -165,7 +165,7 @@ import { RxForViewContext } from './model/view-context';
  * combination with `CD OnPush` see here: (https://github.com/angular/angular/pull/35428)
  * `RxFor` solves this issue for you by providing a simple input parameter `parent: boolean`.
  * If set to `true`, `*rxFor` will automatically detect every other `Component` where its
- * `EmbeddedView`s where inserted into. Those `Components` will get `Changedetected` as well in order to force
+ * `EmbeddedView`s were inserted into. Those components will get change detected as well in order to force
  * update their state accordingly.
  *
  * The usage of `AppListComponent` looks like this:
