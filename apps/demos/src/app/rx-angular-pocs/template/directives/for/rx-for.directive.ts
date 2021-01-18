@@ -42,7 +42,8 @@ import { RxForViewContext } from './model/view-context';
  * This way the rendering behavior of each instance of `RxFor` can be configured individually.
  *
  * `StrategyCredentials` and `EmbeddedView Rendering` together build the basis for the `concurrent mode`. Based on
- * the configured strategy every template will get processed in an individual task.
+ * the configured strategy every template will get processed in an individual task, which enables chunked and
+ * cancellable rendering of the list.
  *
  * As further improvement compared to the basic `*ngFor` implementation, `*rxFor` is able to take care of
  * `ChangeDetection` for `projected views` (aka `@ContentChild` or `@ViewChild`).
@@ -53,21 +54,35 @@ import { RxForViewContext } from './model/view-context';
  *
  * The following context variables are available for each template:
  *
- * - $implicit: `T`
- * - item$: `Observable<T>`
- * - index: `number`
- * - count: `number`
- * - first: `boolean`
- * - last: `boolean`
- * - even: `boolean`
- * - odd: `boolean`
- * - index$: `Observable<number>`
- * - count$: `Observable<number>`
- * - first$: `Observable<boolean>`
- * - last$: `Observable<boolean>`
- * - even$: `Observable<boolean>`
- * - odd$: `Observable<boolean>`
- * - select: (keys: string[], distinctByMap): Observable<Partial<T>> (reactivity in the embedded view)
+ * - $implicit: `T` // the default variable accessed by `let val`
+ * - item$: `Observable<T>` // the same value as $implicit, but as `Observable`
+ * - index: `number` // current index of the item
+ * - count: `number` // count of all items in the list
+ * - first: `boolean` // true if the item is the first in the list
+ * - last: `boolean` // true if the item is the last in the list
+ * - even: `boolean` // true if the item has on even index (index % 2 === 0)
+ * - odd: `boolean` // the opposite of even
+ * - index$: `Observable<number>` // index as `Observable`
+ * - count$: `Observable<number>` // count as `Observable`
+ * - first$: `Observable<boolean>` // first as `Observable`
+ * - last$: `Observable<boolean>` // last as `Observable`
+ * - even$: `Observable<boolean>` // even as `Observable`
+ * - odd$: `Observable<boolean>` // odd as `Observable`
+ * - select: `(keys: (keyof T)[], distinctByMap) => Observable<Partial<T>>` // returns a selection function which
+ * accepts an array of properties to pluck out of every list item. The function returns the selected properties of
+ * the current list item as distinct `Observable` key-value-pair. See the example below:
+ *
+ * This example showcases the `select` view-context function used for deeply nested lists.
+ *
+ *  ```html
+ * <ul>
+ *   <li *rxFor="let item of observableItems$; trackBy: trackItem; let select: select;">
+ *      <span *rxFor="let subItem of select(['subItems']); trackBy: trackSubItem;">
+ *        {{ subItem }}
+ *      </span>
+ *   </li>
+ * </ul>
+ *  ```
  *
  * ### Input properties
  *
@@ -76,8 +91,8 @@ import { RxForViewContext } from './model/view-context';
  *  - distinctBy: `(item: T, item: T) => boolean`
  *  - strategy: `string`
  *  - strategy: `Observable<string>`
- *  - parent: boolean;
- *  - renderCallback: Subject<T[]>
+ *  - parent: `boolean`;
+ *  - renderCallback: `Subject<T[]>`
  *
  *
  * ### Features of `*rxFor`
@@ -85,13 +100,12 @@ import { RxForViewContext } from './model/view-context';
  * Included features for `*rxFor`:
  * - Push based architecture
  * - Immutable as well as mutable data structures (with `trackBy` & `distinctBy`)
- * - Control `updates` via `distinctBy` and `moves` via `trackBy`
+ * - Fine-control template updates via the `distinctBy` function
  * - Reactive as well as imperative values in the template (`ngFor` drop-in replacement)
  * - `ListManager`: special logic for differ mechanism to avoid over-rendering; abstracts away low level logic
- * - render every EmbeddedView on its own while applying the configured StrategyCredentials#behavior
- * - detach EmbeddedView to avoid ChangeDetection top-down rendering interference when scheduling
- * - cancel any scheduled work if a remove was triggered for an `trackById` / `distinctById`
- * - cancel an update if a new update was triggered for the same `trackById` / `distinctById`
+ * - render every `EmbeddedView` on its own while applying the configured `StrategyCredentials#behavior`
+ * - cancel any scheduled work if a remove was triggered for a `trackById`
+ * - cancel any update if a new update was triggered for the same `trackById`
  *
  *
  * ### Simple example using `*rxFor` with `Observable` values
