@@ -46,7 +46,7 @@ import { RxForViewContext } from './model/view-context';
  * cancellable rendering of the list.
  *
  * As further improvement compared to the basic `*ngFor` implementation, `*rxFor` is able to take care of
- * `ChangeDetection` for `projected views` (aka `@ContentChild` or `@ViewChild`).
+ * `ChangeDetection` in situations which include `projected views` (aka `@ContentChild` or `@ViewChild`).
  *
  * Read more about this in the example section
  *
@@ -76,9 +76,13 @@ import { RxForViewContext } from './model/view-context';
  *
  *  ```html
  * <ul>
- *   <li *rxFor="let item of observableItems$; trackBy: trackItem; let select: select;">
- *      <span *rxFor="let subItem of select(['subItems']); trackBy: trackSubItem;">
- *        {{ subItem }}
+ *   <li *rxFor="let hero of heroes$; trackBy: trackItem; let select: select;">
+ *     <div>
+ *       <strong>{{ hero.name }}</strong></br>
+ *       Defeated enemies:
+ *     </div>
+ *      <span *rxFor="let enemy of select(['defeatedEnemies']); trackBy: trackEnemy;">
+ *        {{ enemy.name }}
  *      </span>
  *   </li>
  * </ul>
@@ -174,7 +178,7 @@ import { RxForViewContext } from './model/view-context';
  *
  * `AppListComponent` has a `contentOutlet` where it expects `AppListItemComponents` to be inserted into. In this case
  * `AppListComponent`s state is dependent on its `ContentChildren`.
- * This situation leads to the problem that `AppListComponent` needs to get informed updates of its child views.
+ * This situation leads to the problem that `AppListComponent` needs to get informed about updates of its child views.
  * This is a known issue which has never been solved for `ngFor` (or other structural directives) especially in
  * combination with `CD OnPush` see here: (https://github.com/angular/angular/pull/35428)
  * `RxFor` solves this issue for you by providing a simple input parameter `parent: boolean`.

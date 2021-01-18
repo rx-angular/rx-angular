@@ -30,6 +30,8 @@ export function extractProjectionParentViewSet(cdRef: any, tNode: any): Set<Type
   while (parent != null && components.size > 0) {
     const idx = parent['index'];
     if (components.has(idx)) {
+      // TODO: we should discuss about this. currently only the first Component will get returned, not a list of
+      //  components. Maybe we should make the parent notification configurable regarding the level of `deepness`?
       components.clear();
       parentElements.add(injectingLView[idx][CONTEXT]);
     }
