@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import {
   BehaviorSubject,
-  defer,
+  defer, from,
   merge,
   scheduled,
   Subject,
@@ -20,7 +20,7 @@ import { ArrayProviderService } from '../../../../shared/debug-helper/value-prov
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { RxState } from '@rx-angular/state';
 import { Hooks } from '../../../../shared/debug-helper/hooks';
-import { map, startWith, switchMapTo, tap } from 'rxjs/operators';
+import { map, startWith, switchMap, switchMapTo, tap } from 'rxjs/operators';
 import { asyncScheduler } from '../../../../rx-angular-pocs';
 
 let itemIdx = 0;
@@ -41,6 +41,14 @@ const item1 = getNewItem();
 const item2 = getNewItem();
 const item3 = getNewItem();
 const items5 = getItems(500);
+const items5k = getItems(250);
+const firstItems5k = items5k[0];
+const lastItems5k = items5k[249];
+const items5kSwapped = [
+  ...items5k
+];
+items5kSwapped[0] = lastItems5k;
+items5kSwapped[249] = firstItems5k;
 
 const customChangeSet = [
   [],
@@ -61,6 +69,10 @@ const customChangeSet = [
   // unchanged 0, remove 1, update 2 => 2232, move 3,2
   [item0, item3, { ...item2, value: '2232' }, ...items5],
   [item0, item3, { ...item2, value: '2232' }],
+];
+
+const moveChangeSet1 = [
+  items5k
 ];
 
 @Component({
@@ -95,6 +107,12 @@ const customChangeSet = [
           <button mat-raised-button (click)="triggerChangeSet.next()">
             ChangeSet
           </button>
+          <button mat-raised-button (click)="triggerMoveSet.next()">
+            MoveSet
+          </button>
+          <button mat-raised-button (click)="triggerMoveSetSwapped.next()">
+            MoveSet Swapped
+          </button>
           <p *rxLet="rendered$; let rendered">
             <strong>Rendered</strong> {{ rendered }}
           </p>
@@ -121,6 +139,7 @@ const customChangeSet = [
               trackBy: trackById;
               strategy: strategy$
             "
+            [title]="a.id + '_' + index + '_' + count"
             [class.even]="even"
           >
             <div class="child-bg" [ngStyle]="{ background: color(a) }"></div>
@@ -209,8 +228,19 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
     tap((data) => console.log(data))
   );
 
+  readonly triggerMoveSet = new Subject<void>();
+  readonly triggerMoveSetSwapped = new Subject<void>();
+  readonly activeMoveSet$ = merge(
+    this.triggerMoveSet.pipe(
+      switchMap(() => [items5k])
+    ),
+    this.triggerMoveSetSwapped.pipe(
+      switchMap(() => [items5kSwapped])
+    )
+  );
+
   readonly data$ = defer(() =>
-    merge(this.arrayP.array$, this.activeChangeSet$)
+    merge(this.arrayP.array$, this.activeChangeSet$, this.activeMoveSet$)
   );
   readonly renderCallback = new Subject();
   readonly rendered$ = this.renderCallback.pipe(

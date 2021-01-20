@@ -99,7 +99,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
 
   function render(): OperatorFunction<NgIterable<T>, any> {
     let count = 0;
-    const positions = new Map<any, number>();
+    const itemViewPositionCache = new Map<any, number>();
 
     return (o$: Observable<NgIterable<T>>): Observable<any> =>
       o$.pipe(
@@ -118,6 +118,8 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
         }),*/
         withLatestFrom(strategy$),
         switchMap(([items, strategy]) => {
+          /*console.log('items',  items);
+          console.log('itemViewPositionCache',  itemViewPositionCache.values());*/
           const viewLength = viewContainerRef.length;
           let toRemoveCount = viewLength - items.length;
           const insertedOrRemoved = toRemoveCount > 0 || count !== items.length;
@@ -145,6 +147,8 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               let doWork = false;
               return of(item).pipe(
                 strategy.behavior(() => {
+                  // the `identity` of the current item `T`
+                  const itemTrackById = trackBy(index, item);
                   // get the reference of the current `EmbeddedViewRef` at the index of the item
                   let view = viewContainerRef.get(index) as EmbeddedViewRef<C>;
                   if (!view) {
@@ -156,47 +160,73 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                     // the current `T` of the `EmbeddedViewRef`
                     const entity = view.context.$implicit;
                     // the `identity` of the `EmbeddedViewRef`
-                    const trackById = trackBy(index, entity);
-                    // the `identity` of the current item `T`
-                    const currentId = trackBy(index, item);
+                    const viewTrackById = trackBy(index, entity);
                     // an item is moved if the current `identity` of the `EmbeddedView` is not the same as the
                     // current item `T`
-                    const moved = trackById !== currentId;
+                    const moved = viewTrackById !== itemTrackById;
                     if (moved) {
-                      /* const oldPosition = positions.get(trackById);
-                       if (
-                       positions.has(trackById) &&
-                       oldPosition !== index
-                       ) {
-                       const oldView = <EmbeddedViewRef<C>>(
-                       viewContainerRef.get(oldPosition)
-                       );
-                       if (oldView) {
-                       view = moveView(oldView, index);
-                       /!* updateViewContext(view, {
-                       count, index: oldPosition
-                       }, entity);
-                       oldView.detectChanges();*!/
-                       }
-                       positions.set(trackById, index);
-                       positions.set(currentId, oldPosition);
-                       }*/
-                      // TODO: notify parent when items got moved?
-                      /*if (!notifyParent && renderParent) {
-                        notifyParent = true;
-                      }*/
-                      updateViewContext(view, context, item);
+                      const oldPosition = itemViewPositionCache.get(
+                        itemTrackById
+                      );
                       doWork = true;
+                      if (
+                        itemViewPositionCache.has(itemTrackById)
+                      ) {
+                        console.log(moved, [oldPosition, index]);
+                        const oldView = <
+                          EmbeddedViewRef<C>
+                          >viewContainerRef.get(
+                          oldPosition
+                        );
+                        if (
+                          oldView &&
+                          trackBy(
+                            index,
+                            oldView.context
+                              .$implicit
+                          ) === itemTrackById
+                        ) {
+                          view = moveView(
+                            oldView,
+                            index
+                          );
+                          // console.log('moved');
+                          /*itemViewPositionCache.delete(
+                            viewTrackById
+                          );*/
+                          /*updateViewContext(oldView, {
+                           count, index: oldPosition
+                           }, entity);
+                           oldView.detectChanges();*/
+                        }
+                        /* positions.set(
+                         trackById,
+                         oldPosition
+                         );*/
+                      }
+                      updateViewContext(view, context, item);
                     } else {
                       const updated = !distinctBy(view.context.$implicit, item);
                       if (updated) {
                         updateViewContext(view, context, item);
                         doWork = true;
-                      } else if (insertedOrRemoved) {
-                        view.context.setComputedContext(context);
+                      } else {
+                        if ((view.context as any).count !== count ||
+                          (view.context as any).index !== index) {
+                          view.context.setComputedContext(context);
+                          doWork = true;
+                        }
                       }
                     }
                   }
+                  /*console.log('context', view.context.$implicit);
+                  console.log('contextCount', (view.context as any).count);
+                  console.log('contextIndex', (view.context as any).index);
+                  console.log('index', index);*/
+                  /*itemViewPositionCache.set(
+                    itemTrackById,
+                    index
+                  );*/
                   if (doWork) {
                     view.reattach();
                     view.detectChanges();
