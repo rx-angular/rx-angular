@@ -217,6 +217,18 @@ import { RxForViewContext } from './model/view-context';
 })
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, OnDestroy {
+
+  /**
+   * @description
+   * The iterable input
+   *
+   * @example
+   * <ng-container *rxFor="heroes$; let hero">
+   *   <app-hero [hero]="hero"></app-hero>
+   * </ng-container>
+   *
+   * @param potentialObservable
+   */
   @Input()
   set rxFor(
     potentialObservable:
@@ -228,6 +240,17 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     this.observables$.next(potentialObservable);
   }
 
+  /**
+   * @description
+   * The iterable input
+   *
+   * @example
+   * <ng-container *rxFor="let hero of heroes$">
+   *   <app-hero [hero]="hero"></app-hero>
+   * </ng-container>
+   *
+   * @param potentialObservable
+   */
   @Input()
   set rxForOf(
     potentialObservable:
@@ -239,11 +262,52 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     this.observables$.next(potentialObservable);
   }
 
+  /**
+   * @description
+   * The rendering strategy to be used for each template of the list of items.
+   * Use it to dynamically manage your rendering strategy. You can switch the strategies
+   * imperatively (with a string) or by binding an Observable.
+   * The default strategy is `'normal'`.
+   *
+   * @example
+   * \@Component({
+   *   selector: 'app-root',
+   *   template: `
+   *     <ng-container *rxFor="let hero of heroes$; strategy: strategy">
+   *       <app-hero [hero]="hero"></app-hero>
+   *     </ng-container>
+   *   `
+   * })
+   * export class AppComponent {
+   *   strategy = 'low';
+   * }
+   *
+   * // OR
+   *
+   * \@Component({
+   *   selector: 'app-root',
+   *   template: `
+   *     <ng-container *rxFor="let hero of heroes$; strategy: strategy$">
+   *       <app-hero [hero]="hero"></app-hero>
+   *     </ng-container>
+   *   `
+   * })
+   * export class AppComponent {
+   *   strategy$ = new BehaviorSubject('immediate');
+   * }
+   *
+   * @param strategyName
+   * @see {@link strategies}
+   */
   @Input('rxForStrategy')
   set strategy(strategyName: string | Observable<string> | undefined) {
     this.strategyInput$.next(strategyName);
   }
 
+  /**
+   * @description
+   *
+   */
   @Input('rxForParent') renderParent = false;
 
   @Input()
@@ -275,19 +339,27 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     private strategyProvider: StrategyProvider
   ) {}
 
+  /** @internal */
   static ngTemplateGuard_rxFor: 'binding';
 
+  /** @internal */
   private strategyInput$ = new ReplaySubject<string | Observable<string>>(1);
-  private differ: IterableDiffer<T> | null = null;
+
+  /** @internal */
   private observables$ = new ReplaySubject<
     Observable<NgIterable<T>> | NgIterable<T>
   >(1);
+
+  /** @internal */
   private _renderCallback: Subject<any>;
 
-  values$ = this.observables$.pipe(ngInputFlatten());
+  /** @internal */
+  private readonly values$ = this.observables$.pipe(ngInputFlatten());
 
-  strategy$ = this.strategyInput$.pipe(ngInputFlatten());
+  /** @internal */
+  private readonly strategy$ = this.strategyInput$.pipe(ngInputFlatten());
 
+  /** @internal */
   private listManager: ListManager<T, RxForViewContext<T>>;
 
   /** @internal */
@@ -298,9 +370,12 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     return true;
   }
 
+  /** @internal */
   _trackBy: TrackByFunction<T> = (i, a) => a;
+  /** @internal */
   _distinctBy = (a:T, b:T) => a === b;
 
+  /** @internal */
   ngOnInit() {
     // this.differ = this.iterableDiffers.find([]).create(this._trackBy);
     this.listManager = createListManager<T, RxForViewContext<T>>({
@@ -321,12 +396,13 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     });
   }
 
+  /** @internal */
   ngOnDestroy() {
     this.viewContainerRef.clear();
     console.log('onDestroy');
   }
 }
-
+/** @internal */
 function createViewContext<T>(item: T): RxForViewContext<T> {
   return new RxForViewContext<T>(item);
 }
