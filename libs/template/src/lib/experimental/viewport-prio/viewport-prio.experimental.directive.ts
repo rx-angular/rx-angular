@@ -134,6 +134,8 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.observer && this.observer.disconnect();
+    if (this.observer) {
+      this.observer.disconnect();
+    }
   }
 }
