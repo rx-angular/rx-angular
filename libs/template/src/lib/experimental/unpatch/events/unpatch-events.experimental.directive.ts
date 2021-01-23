@@ -40,6 +40,7 @@ export function unpatchEventListener(
   ).bind(element);
   eventListeners.forEach((listener) => {
     // Remove and reapply listeners with patched API
+    // @TODO use (elem as any).removeAllListeners?(eventName?: string): void;
     element.removeEventListener(event, listener);
     // Reapply listeners with un-patched API
     addEventListener(event, listener);
