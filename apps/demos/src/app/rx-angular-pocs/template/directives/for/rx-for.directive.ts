@@ -47,8 +47,8 @@ import { RxForViewContext } from './model/view-context';
  *
  * As further improvement compared to the basic `*ngFor` implementation, `*rxFor` is able to take care of
  * `ChangeDetection` in situations which include `projected views` (aka `@ContentChild` or `@ViewChild`).
+ * Learn more about this in the example section.
  *
- * Read more about this in the example section
  *
  * ### Context Variables
  *
@@ -199,10 +199,9 @@ import { RxForViewContext } from './model/view-context';
  *       parent: true;
  *     "
  *   >
- *     <div>{{ count }}</div>
- *     <div>{{ index }}</div>
- *   </li>
- * </ul>
+ *     <div>{{ item.name }}</div>
+ *   </app-list-item>
+ * </app-list-component>
  * ```
  *
  *
@@ -217,6 +216,9 @@ import { RxForViewContext } from './model/view-context';
 })
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, OnDestroy {
+
+  /** @internal */
+  static ngTemplateGuard_rxFor: 'binding';
 
   /**
    * @description
@@ -306,10 +308,93 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /**
    * @description
+   * If set to `true`, `*rxFor` will automatically detect every other `Component` where its
+   * `EmbeddedView`s were inserted into. Those components will get change detected as well in order to force
+   * update their state accordingly. In the given example, `AppListComponent` will get notified about which insert
+   * or remove any `AppListItemComponent`.
    *
+   * @example
+   * \@Component({
+   *   selector: 'app-root',
+   *   template: `
+   *    <app-list-component>
+   *      <app-list-item
+   *        *rxFor="
+   *          let item of items$;
+   *          trackBy: trackItem;
+   *          parent: true;
+   *        "
+   *      >
+   *        <div>{{ item.name }}</div>
+   *      </app-list-item>
+   *    </app-list-component>
+   *   `
+   * })
+   * export class AppComponent {
+   *   items$ = itemService.getItems();
+   * }
+   *
+   * @param renderParent
    */
+    // tslint:disable-next-line:no-input-rename
   @Input('rxForParent') renderParent = false;
 
+  /**
+   * @description
+   * A function or key that defines how to track changes for items in the iterable.
+   *
+   * When items are added, moved, or removed in the iterable,
+   * the directive must re-render the appropriate DOM nodes.
+   * To minimize churn in the DOM, only nodes that have changed
+   * are re-rendered.
+   *
+   * By default, rxFor assumes that the object instance identifies the node in the iterable (equality check `===`).
+   * When a function or key is supplied, rxFor uses the result to identify the item node.
+   *
+   * @example
+   * \@Component({
+   *   selector: 'app-root',
+   *   template: `
+   *    <app-list-component>
+   *      <app-list-item
+   *        *rxFor="
+   *          let item of items$;
+   *          trackBy: 'id';
+   *        "
+   *      >
+   *        <div>{{ item.name }}</div>
+   *      </app-list-item>
+   *    </app-list-component>
+   *   `
+   * })
+   * export class AppComponent {
+   *   items$ = itemService.getItems();
+   * }
+   *
+   * // OR
+   *
+   * \@Component({
+   *   selector: 'app-root',
+   *   template: `
+   *    <app-list-component>
+   *      <app-list-item
+   *        *rxFor="
+   *          let item of items$;
+   *          trackBy: trackItem;
+   *        "
+   *      >
+   *        <div>{{ item.name }}</div>
+   *      </app-list-item>
+   *    </app-list-component>
+   *   `
+   * })
+   * export class AppComponent {
+   *   items$ = itemService.getItems();
+   *   trackItem = (idx, item) => item.id;
+   * }
+   *
+   * @param trackByFnOrKey
+   */
   @Input()
   set rxForTrackBy(trackByFnOrKey: string | ((idx: number, i: T) => any)) {
     this._trackBy =
@@ -318,13 +403,89 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
         : trackByFnOrKey;
   }
 
+  /**
+   * @description
+   * A function that defines how to track `updates` of items.
+   * In addition to track when items are added, moved, or removed you can provide a function that determines if any
+   * updates happened to an item. Use this is if you want to have even more control about what changes lead to
+   * re-renderings of the DOM.
+   *
+   * By default, rxFor identifies if an update happens by doing an (equality check `===`).
+   * When a function supplied, rxFor uses the result to identify the item node.
+   *
+   * @example
+   * \@Component({
+   *   selector: 'app-root',
+   *   template: `
+   *    <app-list-component>
+   *      <app-list-item
+   *        *rxFor="
+   *          let item of items$;
+   *          trackBy: trackItem;
+   *          distinctBy: distinctItem;
+   *        "
+   *      >
+   *        <div>{{ item.name }}</div>
+   *      </app-list-item>
+   *    </app-list-component>
+   *   `
+   * })
+   * export class AppComponent {
+   *   items$ = itemService.getItems();
+   *   trackItem = (idx, item) => item.id;
+   *   // only changes to the name lead to a re-rendering of a child template
+   *   distinctItem = (itemA, itemB) => itemA.name === itemB.name;
+   * }
+   *
+   * @param distinctBy
+   */
   @Input()
   set rxForDistinctBy(distinctBy: (a: T, b: T) => boolean) {
     this._distinctBy = distinctBy;
   }
 
+  /**
+   * @description
+   * A `Subject` which emits whenever *rxFor finished rendering a set changes to the view.
+   * This enables developers to perform actions when a list has finished rendering.
+   * The `renderCallback` is useful in situations where you rely on specific DOM properties like the `height` a
+   * table after all items got rendered.
+   * It is also possible to use the renderCallback in order to determine if a view should be visible or not. This
+   * way developers can hide a list as long as it has not finished rendering.
+   *
+   * The result of the `renderCallback` will contain the currently rendered set of items in the iterable.
+   *
+   * @example
+   * \@Component({
+   *   selector: 'app-root',
+   *   template: `
+   *    <app-list-component>
+   *      <app-list-item
+   *        *rxFor="
+   *          let item of items$;
+   *          trackBy: trackItem;
+   *          distinctBy: distinctItem;
+   *          renderCallback: itemsRendered;
+   *        "
+   *      >
+   *        <div>{{ item.name }}</div>
+   *      </app-list-item>
+   *    </app-list-component>
+   *   `
+   * })
+   * export class AppComponent {
+   *   items$: Observable<Item[]> = itemService.getItems();
+   *   trackItem = (idx, item) => item.id;
+   *   // only changes to the name lead to a re-rendering of a child template
+   *   distinctItem = (itemA, itemB) => itemA.name === itemB.name;
+   *   // this emits whenever rxFor finished rendering changes
+   *   itemsRendered = new Subject<Item[]>();
+   * }
+   *
+   * @param renderCallback
+   */
   @Input('rxForRenderCallback') set renderCallback(
-    renderCallback: Subject<void>
+    renderCallback: Subject<U>
   ) {
     this._renderCallback = renderCallback;
   }
@@ -338,9 +499,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     private readonly rxEf: RxEffects,
     private strategyProvider: StrategyProvider
   ) {}
-
-  /** @internal */
-  static ngTemplateGuard_rxFor: 'binding';
 
   /** @internal */
   private strategyInput$ = new ReplaySubject<string | Observable<string>>(1);
@@ -377,7 +535,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /** @internal */
   ngOnInit() {
-    // this.differ = this.iterableDiffers.find([]).create(this._trackBy);
     this.listManager = createListManager<T, RxForViewContext<T>>({
       cdRef: this.cdRef,
       eRef: this.eRef,
