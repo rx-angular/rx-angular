@@ -242,17 +242,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     this.observables$.next(potentialObservable);
   }
 
-  /**
-   * @description
-   * The iterable input
-   *
-   * @example
-   * <ng-container *rxFor="let hero of heroes$">
-   *   <app-hero [hero]="hero"></app-hero>
-   * </ng-container>
-   *
-   * @param potentialObservable
-   */
+  /** @internal */
   @Input()
   set rxForOf(
     potentialObservable:
@@ -395,8 +385,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param trackByFnOrKey
    */
-  @Input()
-  set rxForTrackBy(trackByFnOrKey: string | ((idx: number, i: T) => any)) {
+  @Input('rxForTrackBy')
+  set trackBy(trackByFnOrKey: string | ((idx: number, i: T) => any)) {
     this._trackBy =
       typeof trackByFnOrKey !== 'function'
         ? (i, a) => a[trackByFnOrKey]
@@ -439,8 +429,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param distinctBy
    */
-  @Input()
-  set rxForDistinctBy(distinctBy: (a: T, b: T) => boolean) {
+  @Input('rxForDistinctBy')
+  set distinctBy(distinctBy: (a: T, b: T) => boolean) {
     this._distinctBy = distinctBy;
   }
 
@@ -490,6 +480,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     this._renderCallback = renderCallback;
   }
 
+  /** @internal */
   constructor(
     private iterableDiffers: IterableDiffers,
     private cdRef: ChangeDetectorRef,
