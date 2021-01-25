@@ -28,7 +28,7 @@ import { RxForViewContext } from './model/view-context';
  * @description
  *
  * The `*rxFor` structural directive provides a convenient and performant way for rendering
-* templates out of a list of items.
+ * templates out of a list of items.
  * Input values can be provided either as `Observable`, `Promise` or `static` values. Just as the `*ngFor` directive, the
  * `*rxFor` is placed on an
  * element, which becomes the parent of the cloned templates.
@@ -556,7 +556,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   ngOnDestroy() {
     this.viewContainerRef.clear();
-    console.log('onDestroy');
   }
 }
 /** @internal */
