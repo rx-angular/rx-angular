@@ -27,8 +27,12 @@ Find details in the linked readme files below for installation and setup instruc
 
 ## Install
 
+
+`ng add @rx-angular/state`
+`ng add @rx-angular/template`
+or
 `npm install --save @rx-angular/state`  
 `npm install --save @rx-angular/template`  
-or  
+or
 `yarn add @rx-angular/state`  
 `yarn add @rx-angular/template`
