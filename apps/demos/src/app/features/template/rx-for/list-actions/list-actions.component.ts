@@ -262,7 +262,7 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
   ngAfterViewInit(): void {
     super.ngAfterViewInit();
     this.state.hold(this.workChildren.changes, (workChildren) => {
-      console.log('workChildren', this.workChildren.toArray());
+      // console.log('workChildren', this.workChildren.toArray());
     });
   }
 
