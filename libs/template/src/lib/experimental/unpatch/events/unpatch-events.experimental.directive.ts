@@ -23,20 +23,32 @@ import { getZoneUnPatchedApi } from '../../../core/utils';
  *
  * @returns void
  */
-export function unpatchEventListener(elem: HTMLElement, event: string): void {
-  const eventListeners = (elem as any).eventListeners(event);
+export function unpatchEventListener(
+  element: HTMLElement & {
+    eventListeners?: (event: string) => EventListenerOrEventListenerObject[];
+  },
+  event: string
+): void {
+  // `EventTarget` is patched only in the browser environment, thus
+  // running this code on the server-side will throw an exception:
+  // `TypeError: element.eventListeners is not a function`.
+  if (typeof element.eventListeners !== 'function') {
+    return;
+  }
+  const eventListeners = element.eventListeners(event);
   // Return if no event listeners are present
   if (!eventListeners) {
     return;
   }
 
-  const addEventListener = getZoneUnPatchedApi('addEventListener', elem).bind(
-    elem
-  );
+  const addEventListener = getZoneUnPatchedApi(
+    'addEventListener',
+    element
+  ).bind(element);
   eventListeners.forEach((listener) => {
     // Remove and reapply listeners with patched API
     // @TODO use (elem as any).removeAllListeners?(eventName?: string): void;
-    elem.removeEventListener(event, listener);
+    element.removeEventListener(event, listener);
     // Reapply listeners with un-patched API
     addEventListener(event, listener);
   });
