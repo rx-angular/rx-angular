@@ -40,6 +40,7 @@ const item0 = getNewItem();
 const item1 = getNewItem();
 const item2 = getNewItem();
 const item3 = getNewItem();
+const item4 = getNewItem();
 const items5 = getItems(500);
 const items5k = getItems(250);
 const firstItems5k = items5k[0];
@@ -50,7 +51,7 @@ const items5kSwapped = [
 items5kSwapped[0] = lastItems5k;
 items5kSwapped[249] = firstItems5k;
 
-const customChangeSet = [
+/*const customChangeSet = [
   [],
   // insert 0,1,2,3,4
   [item0, item1, item2, item3, ...items5],
@@ -69,6 +70,14 @@ const customChangeSet = [
   // unchanged 0, remove 1, update 2 => 2232, move 3,2
   [item0, item3, { ...item2, value: '2232' }, ...items5],
   [item0, item3, { ...item2, value: '2232' }],
+];*/
+
+const customChangeSet = [
+  // [],
+  [item0, item1, item2, item3, item4],
+  [item2, item1, item3, item4, item0],
+  // [item0, item1, item2, item3, item4],
+  // [item2, item1, item3, item4, item0],
 ];
 
 const moveChangeSet1 = [
@@ -145,6 +154,7 @@ const moveChangeSet1 = [
             <div class="child-bg" [ngStyle]="{ background: color(a) }"></div>
             <!--<div class="child-bg" [class.even]="even"></div>-->
             <div class="child-context flex-column flex-wrap">
+              <button (click)="clickMe()">click me</button>
               <small>id: {{ a.id }}</small>
               <small>value: {{ a.value }}</small>
               <small>index: {{ index }}</small>
@@ -264,6 +274,10 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
     this.state.hold(this.workChildren.changes, (workChildren) => {
       // console.log('workChildren', this.workChildren.toArray());
     });
+  }
+
+  clickMe() {
+    console.log('clicked me');
   }
 
   trackByIdFn = (a) => a.id;

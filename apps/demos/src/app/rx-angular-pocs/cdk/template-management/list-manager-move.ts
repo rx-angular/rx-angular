@@ -8,8 +8,8 @@ import {
 import {
   ChangeDetectorRef,
   ElementRef,
-  EmbeddedViewRef,
-  NgIterable,
+  EmbeddedViewRef, IterableChangeRecord, IterableDiffer, IterableDiffers,
+  NgIterable, NgZone,
   TemplateRef,
   TrackByFunction,
   ViewContainerRef,
@@ -61,6 +61,8 @@ const enum ListChange {
 
 export function createListManager<T, C extends RxListViewContext<T>>(config: {
   cdRef: ChangeDetectorRef;
+  ngZone: NgZone;
+  iterableDiffers: IterableDiffers;
   eRef: ElementRef;
   renderParent: boolean;
   strategies: StrategyCredentialsMap;
@@ -79,6 +81,8 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     strategies,
     trackBy,
     cdRef,
+    ngZone,
+    iterableDiffers,
     renderParent,
     eRef,
   } = config;
@@ -95,7 +99,9 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
   let notifyParent = false;
   let isObjectType = false;
   const itemViewCache = new Map<any, EmbeddedViewRef<C>>();
+  const itemPositionCache = new Map<any, number>();
   const itemCache = new Map<any, T>();
+  const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
 
   return {
     nextStrategy(nextConfig: Observable<string>): void {
@@ -112,20 +118,13 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     return (o$: Observable<NgIterable<T>>): Observable<any> =>
       o$.pipe(
         // without moving:
-        map((items) => (items ? Array.isArray(items) ? items : Array.from(items) : [])),
-        // with moving:
-       /* map((items) => {
-          const itemArr = [];
-          // let i = 0;
-          for (const item of (items || [])) {
-            itemArr.push(item);
-            /!* positions.set(trackBy(i, item), i);
-             i++;*!/
-          }
-          return itemArr;
-        }),*/
+        map(iterable => ({
+          changes: differ.diff(iterable),
+          items: iterable != null && Array.isArray(iterable) ? iterable : []
+        })),
         withLatestFrom(strategy$),
-        switchMap(([items, strategy]) => {
+        filter(([{ changes }]) => !!changes),
+        switchMap(([{changes, items}, strategy]) => {
           /*console.log('items',  items);
           console.log('itemViewPositionCache',  itemViewPositionCache.values());*/
           const viewLength = viewContainerRef.length;
@@ -137,63 +136,45 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
           const inserts: number[] = [];
           const updates: number[] = [];
           const contexts: number[] = [];
-          const moves: number[] = [];
-          let i = viewLength;
-          while (i > 0 && toRemoveCount > 0) {
-            toRemoveCount--;
-            i--;
-            remove$.push(
-              onStrategy(
-                i,
-                strategy,
-                (value, work, options) => removeView(value),
-                {}
-              )
-            );
-          }
-          const changes: [number, ListChange][] = [];
-          items.forEach((item, index) => {
-            if (index === 0) {
-              isObjectType = isObjectGuard(item);
+          const moves: [number, number][] = [];
+          const changedIdxs = new Set<number>();
+          changes.forEachOperation((record, adjustedPreviousIndex, currentIndex) => {
+            const view = viewContainerRef.get(record.currentIndex) as EmbeddedViewRef<C>;
+            if (record.previousIndex == null || !view) {
+              changedIdxs.add(record.currentIndex);
+              inserts.push(record.currentIndex);
+            } else if (currentIndex == null) {
+              remove$.push(
+                onStrategy(
+                  record.currentIndex,
+                  strategy,
+                  (value, work, options) => removeView(value),
+                  {}
+                )
+              );
+            } else if (adjustedPreviousIndex !== null) {
+              changedIdxs.add(currentIndex);
+              moves.push([currentIndex, adjustedPreviousIndex]);
             }
-            const itemTrackById = trackBy(index, item);
-            const view = viewContainerRef.get(index) as EmbeddedViewRef<C>;
-            itemCache.set(itemTrackById, clone(item));
-            if (!view) {
-              inserts.push(index);
-              changes.push([index, ListChange.insert]);
-            } else {
-              // The items view is present => check what to do
-              // the current `T` of the `EmbeddedViewRef`
-              const entity = view.context.$implicit;
-              // the `identity` of the `EmbeddedViewRef`
-              const viewTrackById = trackBy(index, entity);
-              // an item is moved if the current `identity` of the `EmbeddedView` is not the same as the
-              // current item `T`
-              const viewMoved = viewTrackById !== itemTrackById;
-              if (viewMoved) {
-                // insertedOrRemoved = true;
-                moves.push(index);
-                changes.push([index, ListChange.move]);
+          });
+          items.forEach((item, index) => {
+            if (!changedIdxs.has(index)) {
+              const view = viewContainerRef.get(index) as EmbeddedViewRef<C>;
+              // TODO: fix distinct bug
+              const updated = !distinctBy(view.context.$implicit, item);
+              if (updated) {
+                updates.push(index);
               } else {
-                const updated = !distinctBy(view.context.$implicit, item);
-                if (updated) {
-                  changes.push([index, ListChange.update]);
-                  updates.push(index);
-                } else {
-                  if ((view.context as any).count !== count ||
-                    (view.context as any).index !== index) {
-                    contexts.push(index);
-                    changes.push([index, ListChange.context]);
-                  }
+                if ((view.context as any).count !== count ||
+                  (view.context as any).index !== index) {
+                  contexts.push(index);
                 }
               }
             }
           });
-          // changes.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
           return combineLatest([
             ...remove$,
-            /*...inserts.map(index => {
+            ...inserts.map(index => {
               const item = items[index];
               const context: RxListViewComputedContext = { count, index };
               return onStrategy(
@@ -203,30 +184,24 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                   const view = insertView(item, index, context);
                   const itemTrackById = trackBy(index, item);
                   itemViewCache.set(itemTrackById, view);
+                  itemPositionCache.set(itemTrackById, index);
                   view.detectChanges();
                 },
                 {}
               );
             }),
-            ...moves.map(index => {
+            ...moves.map(([index, oldIndex]) => {
               const item = items[index];
               const context: RxListViewComputedContext = { count, index };
               return onStrategy(
                 index,
                 strategy,
                 (value, work, options) => {
-                  const itemTrackById = trackBy(index, item);
-                  let view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
-                  const oldView = itemViewCache.get(itemTrackById);
-                  const oldViewIndex = viewContainerRef.indexOf(oldView);
-                  if (oldViewIndex !== -1 && oldViewIndex !== index) {
-                    view = moveView(
-                      oldView,
-                      index
-                    );
-                    // console.log('moved', [oldViewIndex, index]);
-                    itemViewCache.set(itemTrackById, view);
-                  }
+                  const oldView = <EmbeddedViewRef<C>>viewContainerRef.get(oldIndex);
+                  const view = moveView(
+                    oldView,
+                    index
+                  );
                   updateViewContext(view, context, item);
                   view.detectChanges();
                 },
@@ -259,47 +234,14 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                 },
                 {}
               );
-            })*/
-            ...changes.map(([index, type]) => {
-              // flag which tells if a view needs to be updated
-              const item = items[index];
-              return of(item).pipe(
-                strategy.behavior(() => {
-                  const context: RxListViewComputedContext = { count, index };
-                  const itemTrackById = trackBy(index, item);
-                  let view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
-                  switch (type) {
-                    case ListChange.insert:
-                      view = insertView(item, index, context);
-                      break;
-                    case ListChange.move:
-                      const oldView = itemViewCache.get(itemTrackById);
-                      const oldViewIndex = viewContainerRef.indexOf(oldView);
-                      if (oldViewIndex !== index) {
-                        view = moveView(
-                          oldView,
-                          index
-                        );
-                      }
-                      updateViewContext(view, context, item);
-                      break;
-                    case ListChange.update:
-                      updateViewContext(view, context, item);
-                      break;
-                    case ListChange.context:
-
-                      break;
-                  }
-                  itemViewCache.set(itemTrackById, view);
-                  view.detectChanges();
-                }, {})
-              );
             }),
             insertedOrRemoved
               ? onStrategy(
-                  i,
+                  2,
                   strategy,
-                  (value, work, options) => work(cdRef, options.scope),
+                  (value, work, options) => {
+                    work(cdRef, options.scope)
+                  },
                   { scope }
                 ).pipe(map(() => null), filter(v => v != null), startWith(null))
               : [],

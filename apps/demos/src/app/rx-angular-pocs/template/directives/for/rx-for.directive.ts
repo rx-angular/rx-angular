@@ -4,7 +4,7 @@ import {
   Input,
   IterableDiffer,
   IterableDiffers,
-  NgIterable,
+  NgIterable, NgZone,
   OnDestroy,
   OnInit,
   TemplateRef, TrackByFunction,
@@ -13,6 +13,7 @@ import {
 
 import { ReplaySubject, Subject } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
+import { map } from 'rxjs/operators';
 import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
 import { StrategyProvider } from '../../../cdk/render-strategies/strategy-provider.service';
 import {
@@ -484,6 +485,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   constructor(
     private iterableDiffers: IterableDiffers,
     private cdRef: ChangeDetectorRef,
+    private ngZone: NgZone,
     private eRef: ElementRef,
     private readonly templateRef: TemplateRef<RxForViewContext<T>>,
     private readonly viewContainerRef: ViewContainerRef,
@@ -528,6 +530,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   ngOnInit() {
     this.listManager = createListManager<T, RxForViewContext<T>>({
       cdRef: this.cdRef,
+      ngZone: this.ngZone,
+      iterableDiffers: this.iterableDiffers,
       eRef: this.eRef,
       renderParent: this.renderParent,
       strategies: this.strategyProvider.strategies,
