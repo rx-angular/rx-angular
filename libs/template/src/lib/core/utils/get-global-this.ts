@@ -1,3 +1,5 @@
+import { ɵglobal } from '@angular/core';
+
 /**
  * @description
  *
@@ -11,5 +13,5 @@
  *  @return {globalThis} - A reference to globalThis. `window` in the Browser.
  */
 export function getGlobalThis(): any {
-  return ((window as any) || (self as any) || (globalThis as any)) as any;
+  return ɵglobal;
 }
