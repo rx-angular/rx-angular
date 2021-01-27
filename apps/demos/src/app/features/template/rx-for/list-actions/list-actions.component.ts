@@ -16,17 +16,22 @@ import {
   Subject,
 } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { ArrayProviderService } from '../../../../shared/debug-helper/value-provider';
+import {
+  ArrayProviderService,
+  removeItemsImmutable,
+  shuffleItemsImmutable,
+  TestItem
+} from '../../../../shared/debug-helper/value-provider';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { RxState } from '@rx-angular/state';
 import { Hooks } from '../../../../shared/debug-helper/hooks';
-import { map, startWith, switchMap, switchMapTo, tap } from 'rxjs/operators';
+import { map, share, startWith, switchMap, switchMapTo, tap } from 'rxjs/operators';
 import { asyncScheduler } from '../../../../rx-angular-pocs';
 
 let itemIdx = 0;
-function getNewItem() {
-  const _idx = itemIdx.toString();
-  const i =  { id: _idx, value: new Array(4).fill(null).map(_ => itemIdx).join('') };
+function getNewItem(): TestItem {
+  const _idx = itemIdx;
+  const i =  { id: _idx, value: (itemIdx + 1) * 10 };
   ++itemIdx;
   return i;
 }
@@ -41,8 +46,27 @@ const item1 = getNewItem();
 const item2 = getNewItem();
 const item3 = getNewItem();
 const item4 = getNewItem();
+const item5 = getNewItem();
+const item6 = getNewItem();
+const item7 = getNewItem();
+const item8 = getNewItem();
+const item9 = getNewItem();
+const item10 = getNewItem();
+const items10 = [
+  item0,
+  item1,
+  item2,
+  item3,
+  item4,
+  item5,
+  item6,
+  item7,
+  item8,
+  item9,
+  item10
+]
 const items5 = getItems(500);
-const items5k = getItems(250);
+const items5k = getItems(10);
 const firstItems5k = items5k[0];
 const lastItems5k = items5k[249];
 const items5kSwapped = [
@@ -72,10 +96,40 @@ items5kSwapped[249] = firstItems5k;
   [item0, item3, { ...item2, value: '2232' }],
 ];*/
 
+/*
+ [141, 8191, 8970]
+ [8191, 141, 8970]
+ [8191, 8970, 141]
+ [141, 8970, 8191]
+ */
+// const items5k
+const items5k2 = shuffleItemsImmutable(items5k);
+const items5k3 = shuffleItemsImmutable(items5k2);
+const items5k4 = shuffleItemsImmutable(items5k3);
+const items5k5 = removeItemsImmutable(items5k4, 5);
+// const items5k6 = removeItemsImmutable(items5k5, 10);
 const customChangeSet = [
   // [],
-  [item0, item1, item2, item3, item4],
-  [item2, item1, item3, item4, item0],
+  [
+    item0, item1, item2, item3, item4,
+    // item5, item6, item7,item8, item9
+  ],
+  [
+    item0, item4, item2, item3, item1,
+    // item5, item1, item2, item8, item0
+  ],/*
+  [
+    item2, item4, item0, item3, item1,
+    // item7, item1, item2, item4, item0
+  ],*/
+  [
+    item0, item1,
+    // item5, item6, item7,item8, item9
+  ],
+  /*[],
+  [...items5k],
+  [],*/
+  // [item0, item1, item3, item4],
   // [item0, item1, item2, item3, item4],
   // [item2, item1, item3, item4, item0],
 ];
@@ -125,6 +179,11 @@ const moveChangeSet1 = [
           <p *rxLet="rendered$; let rendered">
             <strong>Rendered</strong> {{ rendered }}
           </p>
+          <p *rxLet="viewBroken$; let viewBroken">
+            <ng-container>
+              <span [ngStyle]="{color: viewBroken ? 'red' : 'green'}">VIEW BROKEN {{ viewBroken }}</span>
+            </ng-container>
+          </p>
         </div>
       </div>
       <div class="d-flex flex-column justify-content-start w-100">
@@ -155,6 +214,7 @@ const moveChangeSet1 = [
             <!--<div class="child-bg" [class.even]="even"></div>-->
             <div class="child-context flex-column flex-wrap">
               <button (click)="clickMe()">click me</button>
+              <!--<small>{{ a }}</small>-->
               <small>id: {{ a.id }}</small>
               <small>value: {{ a.value }}</small>
               <small>index: {{ index }}</small>
@@ -257,6 +317,23 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
     startWith(null),
     map(() => ++this.numRendered)
   );
+  readonly viewBroken$ = this.renderCallback.pipe(
+    map(() => {
+      const children = Array.from(document.getElementsByClassName('work-child'));
+      let broken = false;
+      let i = 0;
+      for (const child of children) {
+        const even = i % 2 === 0;
+        if ((even && !child.classList.contains('even')) ||
+          (!even && child.classList.contains('even'))) {
+          broken = true;
+          break;
+        }
+        i++;
+      }
+      return broken;
+    })
+  )
   strategy$ = new Subject<string>();
   customChangeSet = customChangeSet;
   customChangeSet$ = new Subject<any>();

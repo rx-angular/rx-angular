@@ -186,7 +186,10 @@ export function moveItemsImmutable(arr: TestItem[] = [], num: number): TestItem[
 }
 
 export function shuffleItemsImmutable(arr: TestItem[] = []): TestItem[] {
-  return [...arr.sort(() => Math.random() - .5)];
+  // console.log(arr.map(i => i.id));
+  const shuffled = [...arr.sort(() => Math.random() - .5)];
+  // console.log(shuffled.map(i => i.id));
+  return shuffled;
 }
 
 export function removeItemsMutable(arr: TestItem[] = [], ids: number[]) {
