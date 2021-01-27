@@ -1,6 +1,13 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+} from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { zonePatchedEvents } from './unpatch-event-list.experimental';
 import { getZoneUnPatchedApi } from '../../../core/utils';
 
@@ -68,15 +75,15 @@ export function unpatchEventListener(elem: HTMLElement, event: string): void {
  *
  * The `unpatch` directive can be used like shown here:
  * ```html
- * <button [unoatch] (click)="triggerSomeMethod($event)">click me</button>
- * <button [unoatch]="['mousemove']" (mousemove)="doStuff2($event)" (click)="doStuff($event)">click me</button>
+ * <button [unpatch] (click)="triggerSomeMethod($event)">click me</button>
+ * <button [unpatch]="['mousemove']" (mousemove)="doStuff2($event)" (click)="doStuff($event)">click me</button>
  * ```
  *
  * @publicApi
  */
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[unpatch]' })
-export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
+export class UnpatchEventsDirective implements OnChanges, AfterViewInit, OnDestroy {
   subscription = new Subscription();
   events$ = new BehaviorSubject<string[]>(zonePatchedEvents);
 
@@ -89,33 +96,29 @@ export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
    * [this document](https://github.com/angular/angular/blob/master/packages/zone.js/STANDARD-APIS.md#browser).
    *
    */
-  @Input('unpatch')
-  set events(events: string[]) {
-    if (events && Array.isArray(events)) {
-      this.events$.next(events);
-    } else {
-      this.events$.next(zonePatchedEvents);
-    }
-  }
+  @Input('unpatch') events?: string[];
 
-  reapplyEventListenersZoneUnPatched(events) {
+  reapplyEventListenersZoneUnPatched(events: string[]) {
     events.forEach((ev) => {
       unpatchEventListener(this.el.nativeElement, ev);
     });
   }
 
-  constructor(private el: ElementRef) {
+  constructor(private el: ElementRef) {}
+
+  ngOnChanges({ events }: SimpleChanges): void {
+    if (events && Array.isArray(this.events)) {
+      this.events$.next(this.events);
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.subscription = this.events$.subscribe((eventList) => {
+      this.reapplyEventListenersZoneUnPatched(eventList);
+    });
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-  }
-
-  ngAfterViewInit(): void {
-    this.subscription = this.events$
-      .pipe(
-        tap((eventList) => this.reapplyEventListenersZoneUnPatched(eventList))
-      )
-      .subscribe();
   }
 }
