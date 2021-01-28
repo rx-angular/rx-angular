@@ -1,3 +1,4 @@
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectorRef,
   Directive,
@@ -299,12 +300,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /**
    * @description
-   * A set of flags to configure rendering behavior.
-   *
-   * If `unpatch` is set to `true` (default to `false`), `*rxFor` will create its EmbeddedViews outside zone.
-   * This drastically speeds up rendering and helps to create a zone agnostic template.
-   *
-   * @TODO mention github issues in the rxFor RCF issue
    *  If `parent` is set to `true` (default to `false`), `*rxFor` will automatically detect every other `Component` where its
    * `EmbeddedView`s were inserted into. Those components will get change detected as well in order to force
    * update their state accordingly. In the given example, `AppListComponent` will get notified about which insert
@@ -319,7 +314,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *        *rxFor="
    *          let item of items$;
    *          trackBy: trackItem;
-   *          renderConfig: {unpatch: true, parent: true};
+   *          parent: true;
    *        "
    *      >
    *        <div>{{ item.name }}</div>
@@ -331,16 +326,43 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *   items$ = itemService.getItems();
    * }
    *
-   * @param renderConfig
+   * @param renderParent
+   */
+    // tslint:disable-next-line:no-input-rename
+  @Input('rxForParent') renderParent = false;
+
+  /**
+   * @description
+   * A flag to control whether *rxFor templates are created within `NgZone` or not.
+   * By default `*rxFor` will create it's `EmbeddedViews` outside of `NgZone` which drastically speeds up the
+   * performance. This comes with a drawback though. // @TODO: describe drawback in detail (e.g. EventListeners)
+   * If `patchZone` is set to `true` (defaults to `false`), `*rxFor` will create its EmbeddedViews inside of `NgZone`.
+   *
+   * @example
+   * \@Component({
+   *   selector: 'app-root',
+   *   template: `
+   *    <app-list-component>
+   *      <app-list-item
+   *        *rxFor="
+   *          let item of items$;
+   *          trackBy: trackItem;
+   *          patchZone: true;
+   *        "
+   *      >
+   *        <div>{{ item.name }}</div>
+   *      </app-list-item>
+   *    </app-list-component>
+   *   `
+   * })
+   * export class AppComponent {
+   *   items$ = itemService.getItems();
+   * }
+   *
+   * @param patchZone
    */
   // tslint:disable-next-line:no-input-rename
-  @Input('rxForRenderConfig') renderConfig: {
-    unpatched?: boolean;
-    parent?: boolean;
-  } = {
-    unpatched: false,
-    parent: false,
-  };
+  @Input('rxForPatchZone') patchZone = false;
 
   /**
    * @description
@@ -544,14 +566,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       iterableDiffers: this.iterableDiffers,
       eRef: this.eRef,
       renderConfig: {
-        parent:
-          this.renderConfig.parent !== undefined
-            ? this.renderConfig.parent
-            : false,
-        unpatched:
-          this.renderConfig.unpatched !== undefined
-            ? this.renderConfig.unpatched
-            : false,
+        parent: coerceBooleanProperty(this.renderParent),
+        unpatched: !coerceBooleanProperty(this.patchZone)
       },
       strategies: this.strategyProvider.strategies,
       defaultStrategyName: this.strategyProvider.primaryStrategy,

@@ -20,6 +20,7 @@ import {
   ɵdetectChanges as detectChanges,
 } from '@angular/core';
 import {
+  delay,
   filter,
   ignoreElements,
   map,
@@ -34,6 +35,7 @@ import {
   onStrategy,
 } from '../render-strategies/utils/strategy-helper';
 import { ngInputFlatten } from '../utils/rxjs/operators/ngInputFlatten';
+import { asyncScheduler } from '../utils/zone-agnostic/rxjs/scheduler/async';
 import { RxListViewComputedContext, RxListViewContext } from './model';
 import { extractProjectionParentViewSet, getTNode } from './utils';
 import {
@@ -102,6 +104,9 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
   //               type,  payload
   let changesArr: [ListChange, any][];
   let partiallyFinished = false;
+  let insertViewPatch = (fn: () => void) => {
+    fn();
+  };
 
   return {
     nextStrategy(nextConfig: Observable<string>): void {
@@ -109,6 +114,12 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     },
     render(values$: Observable<NgIterable<T>>): Observable<any> {
       tNode = getTNode(injectingViewCdRef, eRef.nativeElement);
+      if (!unpatched) {
+        // @Notice: to have zone aware eventListeners work we create the view in ngZone.run
+        insertViewPatch = (fn: () => void) => {
+          ngZone.run(() => fn());
+        }
+      }
       return values$.pipe(render());
     },
   };
@@ -156,6 +167,8 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             startWith(null)(getParentNotifiers(insertedOrRemoved, strategy)),
           ]).pipe(
             tap(() => (partiallyFinished = false)),
+            // somehow this makes the strategySelect work
+            delay(0, asyncScheduler),
             switchMap((v) => {
               if (!notifyParent) {
                 return of(v);
@@ -173,15 +186,12 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                     strategy,
                     // Here we CD the parent to update their projected views scenarios
                     (value, work, options) => {
-                      console.log('parentComponent', parentComponent);
+                      // console.log('parentComponent', parentComponent);
                       detectChanges(parentComponent);
                     },
                     { scope: parentComponent }
                   )
                 );
-              }
-              if (behaviors.length === 0) {
-                return of(v);
               }
               behaviors.push(
                 onStrategy(
@@ -189,9 +199,12 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                   strategy,
                   (value, work, options) =>
                     work(injectingViewCdRef, options.scope),
-                  scopeOnInjectingViewContext
+                  // scopeOnInjectingViewContext
                 )
               );
+              if (behaviors.length === 1) {
+                return of(v);
+              }
               return combineLatest(behaviors).pipe(
                 ignoreElements(),
                 startWith(v)
@@ -199,7 +212,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             }),
             filter((v) => v != null)
           );
-        })
+        }),
       );
   }
 
@@ -283,13 +296,13 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     insertedOrRemoved: boolean,
     strategy
   ): Observable<never> {
-    console.log('in injectingView', insertedOrRemoved);
+    // console.log('in injectingView', insertedOrRemoved);
     return insertedOrRemoved
       ? onStrategy(
           null,
           strategy,
           (value, work, options) => {
-            console.log('notify injectingView', injectingViewCdRef);
+            // console.log('notify injectingView', injectingViewCdRef);
             work(injectingViewCdRef, options.scope);
           }
           //  scopeOnInjectingViewContext
@@ -312,12 +325,13 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               const payload = _change[1];
               switch (type) {
                 case ListChange.insert:
-                  unpatched
+                  insertViewPatch(() => insertView(payload[0], payload[1], count))
+                  /*unpatched
                     ? insertView(payload[0], payload[1], count)
                     // @Notice: to have zone aware eventListeners work we create the view in ngZone.run
                     : ngZone.run(() =>
                         insertView(payload[0], payload[1], count)
-                      );
+                      );*/
                   break;
                 case ListChange.move:
                   moveView(payload[2], payload[0], payload[1], count);

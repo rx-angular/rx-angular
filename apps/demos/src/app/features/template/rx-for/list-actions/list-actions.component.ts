@@ -204,7 +204,6 @@ const moveChangeSet1 = [items5k];
               let odd = odd;
               let first = first;
               let last = last;
-              renderConfig: {unpatched: false};
               renderCallback: renderCallback;
               trackBy: trackById;
               strategy: strategy$
@@ -313,8 +312,7 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
   );
   readonly renderCallback = new Subject();
   readonly rendered$ = this.renderCallback.pipe(
-    startWith(null),
-    map(() => ++this.numRendered)
+    map(() => ++this.numRendered),
   );
   readonly viewBroken$ = this.renderCallback.pipe(
     map(() => {

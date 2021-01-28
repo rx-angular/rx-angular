@@ -33,7 +33,7 @@ import { ViewChildComponent } from './view-child.component';
        </div>  -->
 
 
-          <div *rxFor="trigger$; let value; renderConfig: {parent: true}">
+          <div *rxFor="trigger$; let value; parent: true">
             <rxa-content-child>
               <div #test>{{ value }}</div>
             </rxa-content-child>
