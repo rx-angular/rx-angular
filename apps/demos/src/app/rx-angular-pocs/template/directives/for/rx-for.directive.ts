@@ -271,8 +271,6 @@ import { RxForViewContext } from './model/view-context';
  * }
  * ```
  *
- * This comes with a drawback though. // @TODO: describe drawback in detail (e.g. EventListeners)
- * If `patchZone` is set to `true` (defaults to `false`), `*rxFor` will create its EmbeddedViews inside of `NgZone`.
  *
  * @docsCategory RxFor
  * @docsPage RxFor
@@ -395,13 +393,13 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param renderParent
    */
     // tslint:disable-next-line:no-input-rename
-  @Input('rxForParent') renderParent = false;
+  @Input('rxForParent') renderParent: boolean;
 
   /**
    * @description
    * A flag to control whether *rxFor templates are created within `NgZone` or not.
    * By default `*rxFor` will create it's `EmbeddedViews` outside of `NgZone` which drastically speeds up the
-   * performance. This comes with a drawback though. // @TODO: describe drawback in detail (e.g. EventListeners)
+   * performance.
    * If `patchZone` is set to `true` (defaults to `false`), `*rxFor` will create its EmbeddedViews inside of `NgZone`.
    *
    * @example
@@ -428,7 +426,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param patchZone
    */
   // tslint:disable-next-line:no-input-rename
-  @Input('rxForPatchZone') patchZone = false;
+  @Input('rxForPatchZone') patchZone: boolean;
 
   /**
    * @description
