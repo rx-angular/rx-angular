@@ -65,7 +65,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
   ngZone: NgZone;
   iterableDiffers: IterableDiffers;
   eRef: ElementRef;
-  renderConfig: { parent: boolean; unpatched: boolean };
+  renderConfig: { parent: boolean; patchZone: boolean };
   strategies: StrategyCredentialsMap;
   defaultStrategyName: string;
   viewContainerRef: ViewContainerRef;
@@ -87,10 +87,9 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     iterableDiffers,
     eRef,
   } = config;
-  const { parent, unpatched } = renderConfig;
+  const { parent, patchZone } = renderConfig;
   const injectingViewContext =
     (injectingViewCdRef as any).context || injectingViewCdRef;
-  const scopeOnInjectingViewContext = { scope: injectingViewContext };
 
   const strategyName$ = new ReplaySubject<Observable<string>>(1);
   const strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
@@ -114,7 +113,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     },
     render(values$: Observable<NgIterable<T>>): Observable<any> {
       tNode = getTNode(injectingViewCdRef, eRef.nativeElement);
-      if (!unpatched) {
+      if (patchZone) {
         // @Notice: to have zone aware eventListeners work we create the view in ngZone.run
         insertViewPatch = (fn: () => void) => {
           ngZone.run(() => fn());
@@ -199,7 +198,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                   strategy,
                   (value, work, options) =>
                     work(injectingViewCdRef, options.scope),
-                  // scopeOnInjectingViewContext
+                  { scope: injectingViewContext }
                 )
               );
               if (behaviors.length === 1) {

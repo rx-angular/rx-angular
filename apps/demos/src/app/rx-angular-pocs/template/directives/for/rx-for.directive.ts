@@ -95,7 +95,6 @@ import { RxForViewContext } from './model/view-context';
  *
  *  - trackBy: `(index: number, item: T) => any`
  *  - trackBy: `keyof T`
- *  - distinctBy: `(item: T, item: T) => boolean`
  *  - strategy: `string`
  *  - strategy: `Observable<string>`
  *  - parent: `boolean`;
@@ -106,11 +105,11 @@ import { RxForViewContext } from './model/view-context';
  *
  * Included features for `*rxFor`:
  * - Push based architecture
- * - Immutable as well as mutable data structures (with `trackBy` & `distinctBy`)
+ * - Immutable as well as mutable data structures (`trackBy`)
  * - Provide a comprehensive set of context variables for each view
  * - Provide a way to fix `ChangeDetection` issues in `Projected Views` scenarios
+ * - automatically runs out of `NgZone`, provide an easy way to opt-in (`patchZone`)
  * - Notify about when rendering of child templates is finished (`renderCallback`)
- * - Fine-control template updates via the `distinctBy` function
  * - Reactive as well as imperative values in the template (`ngFor` drop-in replacement)
  * - `ListManager`: special logic for differ mechanism to avoid over-rendering; abstracts away low level logic
  * - render every `EmbeddedView` on its own while applying the configured `StrategyCredentials#behavior`
@@ -197,16 +196,83 @@ import { RxForViewContext } from './model/view-context';
  *   <app-list-item
  *     *rxFor="
  *       let item of observableItems$;
- *       trackBy: trackItem;
- *       strategy: 'normal';
  *       parent: true;
  *     "
  *   >
- *     <div>{{ item.name }}</div>
+ *     <div>{{ item }}</div>
  *   </app-list-item>
  * </app-list-component>
  * ```
+ * ### `NgZone` patch
  *
+ * By default `*rxFor` will create it's `EmbeddedViews` outside of `NgZone` which drastically speeds up the
+ * performance.
+ * There are scenarios where you want to opt-in to `NgZone` though. If views are created out of `NgZone`, all
+ * `EventListeners` attached to them run out `NgZone` as well.
+ *
+ * Take a look at the following example:
+ *
+ * ```ts
+ * \@Component({
+ *   selector: 'app-root',
+ *   template: `
+ *     <!-- clickedHeroName won't get updated due to `NgZone` not noticing the click -->
+ *     {{ clickedHeroName }}
+ *     <ng-container *rxFor="let hero of heroes$; trackBy: trackHero">
+ *       <!-- click runs out of `NgZone` -->
+ *       <button (click)="heroClicked(hero)">{{ hero.name }}</button>
+ *     </ng-container>
+ *   `
+ * })
+ * export class AppComponent {
+ *   clickedHeroName = '';
+ *
+ *   heroClicked(hero: Hero) {
+ *     // this will run out of `NgZone` and thus not update the DOM
+ *     this.clickedHeroName = hero.name;
+ *   }
+ * }
+ * ```
+ *
+ * There are several ways to get around this issue.
+ * `*rxFor` can be configured to create views inside of `NgZone` with the `patchZone` flag:
+ *
+ * ```html
+ * <ng-container *rxFor="let hero of heroes$; trackBy: trackHero; patchZone: true">
+ *   <!-- click now gets detected by `NgZone` -->
+ *   <button (click)="heroClicked(hero)">{{ hero.name }}</button>
+ * </ng-container>
+ * ```
+ *
+ * However, `patchZone: true` can in some cases have a negative impact on the performance of the `*rxFor` Directive.
+ * Since the creation of the `EmbeddedViews` will most likely happen in batches, every batch will result in one
+ * `NgZone` cycle resulting in a possible re-rendering of many other `Components`.
+ *
+ * Another approach would be to manually detect changes coming from `unpatched` EventListeners or wrapping them in
+ * `NgZone`.
+ *
+ * ```ts
+ * export class AppComponent {
+ *   clickedHeroName = '';
+ *
+ *   constructor(
+ *     private cdRef: ChangeDetectorRef, // option1
+ *     private ngZone: NgZone // option 2
+ *   ) {}
+ *
+ *   heroClicked(hero: Hero) {
+ *     // this will run out of `NgZone` and thus not update the DOM
+ *     this.clickedHeroName = hero.name;
+ *     this.cdRef.markForCheck(); // option 1
+ *
+ *     // option 2
+ *     this.ngZone.run(() => this.clickedHeroName = hero.name);
+ *   }
+ * }
+ * ```
+ *
+ * This comes with a drawback though. // @TODO: describe drawback in detail (e.g. EventListeners)
+ * If `patchZone` is set to `true` (defaults to `false`), `*rxFor` will create its EmbeddedViews inside of `NgZone`.
  *
  * @docsCategory RxFor
  * @docsPage RxFor
@@ -429,7 +495,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   /**
-   * @description
+   * @internal
    * A function that defines how to track `updates` of items.
    * In addition to track when items are added, moved, or removed you can provide a function that determines if any
    * updates happened to an item. Use this is if you want to have even more control about what changes lead to
@@ -438,7 +504,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * By default, rxFor identifies if an update happens by doing an (equality check `===`).
    * When a function supplied, rxFor uses the result to identify the item node.
    *
-   * @example
+   * @internal
    * \@Component({
    *   selector: 'app-root',
    *   template: `
@@ -464,7 +530,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param distinctBy
    */
-  @Input('rxForDistinctBy')
+  /*@Input('rxForDistinctBy')*/
   set distinctBy(distinctBy: (a: T, b: T) => boolean) {
     this._distinctBy = distinctBy;
   }
@@ -489,7 +555,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *        *rxFor="
    *          let item of items$;
    *          trackBy: trackItem;
-   *          distinctBy: distinctItem;
    *          renderCallback: itemsRendered;
    *        "
    *      >
@@ -567,14 +632,13 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       eRef: this.eRef,
       renderConfig: {
         parent: coerceBooleanProperty(this.renderParent),
-        unpatched: !coerceBooleanProperty(this.patchZone)
+        patchZone: coerceBooleanProperty(this.patchZone)
       },
       strategies: this.strategyProvider.strategies,
       defaultStrategyName: this.strategyProvider.primaryStrategy,
       viewContainerRef: this.viewContainerRef,
       templateRef: this.templateRef,
       trackBy: this._trackBy,
-      distinctBy: this._distinctBy,
       createViewContext: createViewContext as any,
     });
     this.listManager.nextStrategy(this.strategy$);
