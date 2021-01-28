@@ -85,7 +85,7 @@ export function onStrategy<T>(
   value: T,
   strategy: StrategyCredentials,
   workFactory: (value: T, work: RenderWork, options: {scope?: any}) => void,
-  options: {scope?: any}
+  options: {scope?: any} = {}
 ) {
   return of(value).pipe(
         strategy.behavior(

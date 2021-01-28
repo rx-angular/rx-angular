@@ -1,19 +1,20 @@
 import {
   ChangeDetectorRef,
-  Directive, ElementRef,
+  Directive,
+  ElementRef,
   Input,
-  IterableDiffer,
   IterableDiffers,
-  NgIterable, NgZone,
+  NgIterable,
+  NgZone,
   OnDestroy,
   OnInit,
-  TemplateRef, TrackByFunction,
+  TemplateRef,
+  TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
 
 import { ReplaySubject, Subject } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { map } from 'rxjs/operators';
 import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
 import { StrategyProvider } from '../../../cdk/render-strategies/strategy-provider.service';
 import {
@@ -217,7 +218,6 @@ import { RxForViewContext } from './model/view-context';
 })
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, OnDestroy {
-
   /** @internal */
   static ngTemplateGuard_rxFor: 'binding';
 
@@ -299,7 +299,13 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /**
    * @description
-   * If set to `true`, `*rxFor` will automatically detect every other `Component` where its
+   * A set of flags to configure rendering behavior.
+   *
+   * If `unpatch` is set to `true` (default to `false`), `*rxFor` will create its EmbeddedViews outside zone.
+   * This drastically speeds up rendering and helps to create a zone agnostic template.
+   *
+   * @TODO mention github issues in the rxFor RCF issue
+   *  If `parent` is set to `true` (default to `false`), `*rxFor` will automatically detect every other `Component` where its
    * `EmbeddedView`s were inserted into. Those components will get change detected as well in order to force
    * update their state accordingly. In the given example, `AppListComponent` will get notified about which insert
    * or remove any `AppListItemComponent`.
@@ -313,7 +319,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *        *rxFor="
    *          let item of items$;
    *          trackBy: trackItem;
-   *          parent: true;
+   *          renderConfig: {unpatch: true, parent: true};
    *        "
    *      >
    *        <div>{{ item.name }}</div>
@@ -325,10 +331,16 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *   items$ = itemService.getItems();
    * }
    *
-   * @param renderParent
+   * @param renderConfig
    */
-    // tslint:disable-next-line:no-input-rename
-  @Input('rxForParent') renderParent = false;
+  // tslint:disable-next-line:no-input-rename
+  @Input('rxForRenderConfig') renderConfig: {
+    unpatched?: boolean;
+    parent?: boolean;
+  } = {
+    unpatched: false,
+    parent: false,
+  };
 
   /**
    * @description
@@ -475,9 +487,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param renderCallback
    */
-  @Input('rxForRenderCallback') set renderCallback(
-    renderCallback: Subject<U>
-  ) {
+  @Input('rxForRenderCallback') set renderCallback(renderCallback: Subject<U>) {
     this._renderCallback = renderCallback;
   }
 
@@ -524,7 +534,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   _trackBy: TrackByFunction<T> = (i, a) => a;
   /** @internal */
-  _distinctBy = (a:T, b:T) => a === b;
+  _distinctBy = (a: T, b: T) => a === b;
 
   /** @internal */
   ngOnInit() {
@@ -533,7 +543,16 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       ngZone: this.ngZone,
       iterableDiffers: this.iterableDiffers,
       eRef: this.eRef,
-      renderParent: this.renderParent,
+      renderConfig: {
+        parent:
+          this.renderConfig.parent !== undefined
+            ? this.renderConfig.parent
+            : false,
+        unpatched:
+          this.renderConfig.unpatched !== undefined
+            ? this.renderConfig.unpatched
+            : false,
+      },
       strategies: this.strategyProvider.strategies,
       defaultStrategyName: this.strategyProvider.primaryStrategy,
       viewContainerRef: this.viewContainerRef,
@@ -553,6 +572,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     this.viewContainerRef.clear();
   }
 }
+
 /** @internal */
 function createViewContext<T>(item: T): RxForViewContext<T> {
   return new RxForViewContext<T>(item);

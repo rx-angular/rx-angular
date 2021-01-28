@@ -8,38 +8,32 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  BehaviorSubject,
-  defer, from,
-  merge,
-  scheduled,
-  Subject,
-} from 'rxjs';
+import { BehaviorSubject, defer, merge, scheduled, Subject } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import {
   ArrayProviderService,
   removeItemsImmutable,
   shuffleItemsImmutable,
-  TestItem
+  TestItem,
 } from '../../../../shared/debug-helper/value-provider';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { RxState } from '@rx-angular/state';
 import { Hooks } from '../../../../shared/debug-helper/hooks';
-import { map, share, startWith, switchMap, switchMapTo, tap } from 'rxjs/operators';
+import { map, startWith, switchMap, switchMapTo, tap } from 'rxjs/operators';
 import { asyncScheduler } from '../../../../rx-angular-pocs';
 
 let itemIdx = 0;
+
 function getNewItem(): TestItem {
   const _idx = itemIdx;
-  const i =  { id: _idx, value: (itemIdx + 1) * 10 };
+  const i = { id: _idx, value: (itemIdx + 1) * 10 };
   ++itemIdx;
   return i;
 }
 
 function getItems(num: number) {
-  return  new Array(num).fill(null).map(_ => getNewItem());
+  return new Array(num).fill(null).map((_) => getNewItem());
 }
-
 
 const item0 = getNewItem();
 const item1 = getNewItem();
@@ -63,15 +57,13 @@ const items10 = [
   item7,
   item8,
   item9,
-  item10
-]
+  item10,
+];
 const items5 = getItems(500);
 const items5k = getItems(10);
 const firstItems5k = items5k[0];
 const lastItems5k = items5k[249];
-const items5kSwapped = [
-  ...items5k
-];
+const items5kSwapped = [...items5k];
 items5kSwapped[0] = lastItems5k;
 items5kSwapped[249] = firstItems5k;
 
@@ -111,19 +103,28 @@ const items5k5 = removeItemsImmutable(items5k4, 5);
 const customChangeSet = [
   // [],
   [
-    item0, item1, item2, item3, item4,
+    item0,
+    item1,
+    item2,
+    item3,
+    item4,
     // item5, item6, item7,item8, item9
   ],
   [
-    item0, item4, item2, item3, item1,
+    item0,
+    item4,
+    item2,
+    item3,
+    item1,
     // item5, item1, item2, item8, item0
-  ],/*
+  ] /*
   [
     item2, item4, item0, item3, item1,
     // item7, item1, item2, item4, item0
-  ],*/
+  ],*/,
   [
-    item0, item1,
+    item0,
+    item1,
     // item5, item6, item7,item8, item9
   ],
   /*[],
@@ -134,9 +135,7 @@ const customChangeSet = [
   // [item2, item1, item3, item4, item0],
 ];
 
-const moveChangeSet1 = [
-  items5k
-];
+const moveChangeSet1 = [items5k];
 
 @Component({
   selector: 'rxa-rx-for-list-actions',
@@ -161,11 +160,11 @@ const moveChangeSet1 = [
             #group="matButtonToggleGroup"
           >
             <mat-button-toggle value="tile" (click)="view.next('tile')"
-              >Tile</mat-button-toggle
-            >
+              >Tile
+            </mat-button-toggle>
             <mat-button-toggle value="list" (click)="view.next('list')"
-              >List</mat-button-toggle
-            >
+              >List
+            </mat-button-toggle>
           </mat-button-toggle-group>
           <button mat-raised-button (click)="triggerChangeSet.next()">
             ChangeSet
@@ -181,7 +180,9 @@ const moveChangeSet1 = [
           </p>
           <p *rxLet="viewBroken$; let viewBroken">
             <ng-container>
-              <span [ngStyle]="{color: viewBroken ? 'red' : 'green'}">VIEW BROKEN {{ viewBroken }}</span>
+              <span [ngStyle]="{ color: viewBroken ? 'red' : 'green' }"
+                >VIEW BROKEN {{ viewBroken }}</span
+              >
             </ng-container>
           </p>
         </div>
@@ -203,6 +204,7 @@ const moveChangeSet1 = [
               let odd = odd;
               let first = first;
               let last = last;
+              renderConfig: {unpatched: false};
               renderCallback: renderCallback;
               trackBy: trackById;
               strategy: strategy$
@@ -278,6 +280,7 @@ const moveChangeSet1 = [
         width: 100%;
         height: 100%;
       }
+
       .work-child .child-bg.even {
         background-color: red;
       }
@@ -301,12 +304,8 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
   readonly triggerMoveSet = new Subject<void>();
   readonly triggerMoveSetSwapped = new Subject<void>();
   readonly activeMoveSet$ = merge(
-    this.triggerMoveSet.pipe(
-      switchMap(() => [items5k])
-    ),
-    this.triggerMoveSetSwapped.pipe(
-      switchMap(() => [items5kSwapped])
-    )
+    this.triggerMoveSet.pipe(switchMap(() => [items5k])),
+    this.triggerMoveSetSwapped.pipe(switchMap(() => [items5kSwapped]))
   );
 
   readonly data$ = defer(() =>
@@ -319,13 +318,17 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
   );
   readonly viewBroken$ = this.renderCallback.pipe(
     map(() => {
-      const children = Array.from(document.getElementsByClassName('work-child'));
+      const children = Array.from(
+        document.getElementsByClassName('work-child')
+      );
       let broken = false;
       let i = 0;
       for (const child of children) {
         const even = i % 2 === 0;
-        if ((even && !child.classList.contains('even')) ||
-          (!even && child.classList.contains('even'))) {
+        if (
+          (even && !child.classList.contains('even')) ||
+          (!even && child.classList.contains('even'))
+        ) {
           broken = true;
           break;
         }
@@ -333,7 +336,7 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
       }
       return broken;
     })
-  )
+  );
   strategy$ = new Subject<string>();
   customChangeSet = customChangeSet;
   customChangeSet$ = new Subject<any>();

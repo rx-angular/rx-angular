@@ -1,6 +1,5 @@
 import {
   combineLatest,
-  concat,
   Observable,
   of,
   OperatorFunction,
@@ -21,7 +20,6 @@ import {
   ɵdetectChanges as detectChanges,
 } from '@angular/core';
 import {
-  delay,
   filter,
   ignoreElements,
   map,
@@ -38,7 +36,6 @@ import {
 import { ngInputFlatten } from '../utils/rxjs/operators/ngInputFlatten';
 import { RxListViewComputedContext, RxListViewContext } from './model';
 import { extractProjectionParentViewSet, getTNode } from './utils';
-import { asap } from '../utils/zone-agnostic/rxjs/scheduler/asap';
 import {
   StrategyCredentials,
   StrategyCredentialsMap,
@@ -66,7 +63,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
   ngZone: NgZone;
   iterableDiffers: IterableDiffers;
   eRef: ElementRef;
-  renderParent: boolean;
+  renderConfig: { parent: boolean; unpatched: boolean };
   strategies: StrategyCredentialsMap;
   defaultStrategyName: string;
   viewContainerRef: ViewContainerRef;
@@ -84,10 +81,11 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     trackBy,
     cdRef: injectingViewCdRef,
     ngZone,
+    renderConfig,
     iterableDiffers,
-    renderParent,
     eRef,
   } = config;
+  const { parent, unpatched } = renderConfig;
   const injectingViewContext =
     (injectingViewCdRef as any).context || injectingViewCdRef;
   const scopeOnInjectingViewContext = { scope: injectingViewContext };
@@ -147,18 +145,17 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             count
           );
           partiallyFinished = true;
-          notifyParent = notifyParent || (insertedOrRemoved && renderParent);
+          // @TODO ??? just => notifyParent = (insertedOrRemoved && parent);
+          notifyParent = notifyParent || (insertedOrRemoved && parent);
           count = items.length;
 
-          return concat(
+          return combineLatest([
             // emit after all changes are rendered
-            combineLatest([...applyChanges$]),
+            ...applyChanges$,
             // emit if parent needs notification
-            getParentNotifiers(insertedOrRemoved, strategy)
-          ).pipe(
+            startWith(null)(getParentNotifiers(insertedOrRemoved, strategy)),
+          ]).pipe(
             tap(() => (partiallyFinished = false)),
-            // @NOTICE: dirty hack to do TNode thingy ??? ask @HoebblesB
-            delay(0, asap),
             switchMap((v) => {
               if (!notifyParent) {
                 return of(v);
@@ -175,7 +172,10 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                     parentComponent,
                     strategy,
                     // Here we CD the parent to update their projected views scenarios
-                    (value, work, options) => detectChanges(parentComponent),
+                    (value, work, options) => {
+                      console.log('parentComponent', parentComponent);
+                      detectChanges(parentComponent);
+                    },
                     { scope: parentComponent }
                   )
                 );
@@ -283,14 +283,16 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     insertedOrRemoved: boolean,
     strategy
   ): Observable<never> {
+    console.log('in injectingView', insertedOrRemoved);
     return insertedOrRemoved
       ? onStrategy(
           null,
           strategy,
           (value, work, options) => {
+            console.log('notify injectingView', injectingViewCdRef);
             work(injectingViewCdRef, options.scope);
-          },
-          scopeOnInjectingViewContext
+          }
+          //  scopeOnInjectingViewContext
         ).pipe(ignoreElements())
       : (([] as unknown) as Observable<never>);
   }
@@ -310,7 +312,12 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               const payload = _change[1];
               switch (type) {
                 case ListChange.insert:
-                  insertView(payload[0], payload[1], count);
+                  unpatched
+                    ? insertView(payload[0], payload[1], count)
+                    // @Notice: to have zone aware eventListeners work we create the view in ngZone.run
+                    : ngZone.run(() =>
+                        insertView(payload[0], payload[1], count)
+                      );
                   break;
                 case ListChange.move:
                   moveView(payload[2], payload[0], payload[1], count);
@@ -329,7 +336,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             {}
           );
         })
-      : [of(null)];
+      : [];
   }
 
   function updateViewContext(

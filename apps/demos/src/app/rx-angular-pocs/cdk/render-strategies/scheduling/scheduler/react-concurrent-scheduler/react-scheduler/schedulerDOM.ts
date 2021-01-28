@@ -367,7 +367,7 @@ let taskTimeoutID = -1;
 // thread, like user events. By default, it yields multiple times per frame.
 // It does not attempt to align with frame boundaries, since most tasks don't
 // need to be frame aligned; for those that do, use requestAnimationFrame.
-let yieldInterval = 5;
+let yieldInterval = 40;
 let deadline = 0;
 
 // TODO: Make this configurable
