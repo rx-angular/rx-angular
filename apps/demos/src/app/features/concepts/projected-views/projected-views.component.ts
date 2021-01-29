@@ -28,7 +28,7 @@ import { ViewChildComponent } from './view-child.component';
         <div>
           <div *rxLet="trigger$; let value; parent: true">
             <rxa-content-child>
-              <div #test>{{ value | json }}</div>
+              <div #test>{{ value }}</div>
             </rxa-content-child>
           </div>
           <!--

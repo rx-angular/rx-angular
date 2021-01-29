@@ -322,7 +322,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     } else {
       newView = viewContainerRef.createEmbeddedView(
         templateRef,
-        createViewContext(item),
+        notificationKindToViewContext(item),
         index
       );
     }*/

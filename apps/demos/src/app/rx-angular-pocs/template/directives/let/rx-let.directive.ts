@@ -1,3 +1,4 @@
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectorRef,
   Directive,
@@ -129,7 +130,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   private observablesHandler = getHotMerged<U>();
   private strategyHandler = getHotMerged<string>();
 
-  @Input('rxLetParent') renderParent = false;
+  @Input('rxLetParent') renderParent: boolean;
 
   private _renderObserver: NextObserver<any>;
 
@@ -164,19 +165,10 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
       cdRef: this.cdRef,
       eRef: this.eRef,
       ngZone: this.ngZone,
-      createViewContext: (value: U) => {
-        return {
-          $implicit: value,
-          rxLet: value,
-          $suspense: false,
-          $error: false,
-          $complete: false,
-        };
-      },
-      renderConfig: { parent: false, patchZone: false },
+      customContext: (rxLet) => ({ rxLet }),
+      renderConfig: { parent: coerceBooleanProperty(this.renderParent), patchZone: false },
       defaultStrategyName: this.strategyProvider.primaryStrategy,
       strategies: this.strategyProvider.strategies,
-      customContext: (rxLet) => ({ rxLet }),
       notificationToTemplateName: {
         [RxNotificationKind.suspense]: RxLetTemplateNames.suspense,
         [RxNotificationKind.next]: RxLetTemplateNames.next,

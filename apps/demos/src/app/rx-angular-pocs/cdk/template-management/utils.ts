@@ -13,7 +13,7 @@ import {
   ReplaySubject,
   Subject
 } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs';
 import {
   mergeAll,
   share,
@@ -39,8 +39,7 @@ import {
 import { RxBaseTemplateNames, RxViewContext } from './model';
 import { CreateViewContext } from './list-manager-move';
 import { ngInputFlatten } from '../utils/rxjs/operators';
-import { RxNotification, RxTemplateObserver } from '../utils/rxjs';
-import { CompletionObserver, ErrorObserver } from 'rxjs/src/internal/types';
+import { RxNotification, RxNotificationKind, RxTemplateObserver } from '../utils/rxjs';
 
 export type TNode = any;
 
@@ -125,67 +124,65 @@ export function renderProjectionParents(
     );
 }
 
-export function getContextUpdate<T>(
-  viewContext,
+export type RxViewContextMap<T> =
+  Record<
+    RxNotificationKind,
+    (value?: any) => RxViewContext<T>
+  >
+
+export function notificationKindToViewContext<T>(
   customContext: (value: T) => object
-): RxTemplateObserver<T> {
+): RxViewContextMap<T> {
   // @TODO rethink overrides
   return {
     suspense: (value?: any) => {
-      updateViewContext({
+      return {
+        $implicit: undefined,
         // if a custom value is provided take it, otherwise assign true
         $suspense: value !== undefined ? value : true,
         $error: false,
         $complete: false,
-      });
+      };
     },
     next: (value: T | null | undefined) => {
-      console.log('value1', value);
-      console.log('vC', viewContext);
-      updateViewContext({
+      return {
         ...customContext(value),
-        $implicit: undefined,
+        $implicit: value,
         $suspense: false,
         $error: false,
         $complete: false,
-      });
-      console.log('value2', value);
+      };
     },
     error: (error: Error) => {
-      updateViewContext({
+      return {
+        $implicit: undefined,
+        $complete: false,
         $error: error,
         $suspense: false,
-      });
+      };
     },
     complete: () => {
-      updateViewContext({
+      return {
+        $implicit: undefined,
+        $error: false,
         $complete: true,
         $suspense: false,
-      });
+      };
     },
   };
-
-  function updateViewContext(viewContextSlice: Partial<RxViewContext<T>>) {
-    Object.entries(viewContextSlice).forEach(([key, value]) => {
-      viewContext[key] = value;
-    });
-  }
 }
 
 export function getEmbeddedViewCreator<C, T>(
   viewContainerRef: ViewContainerRef,
-  createViewContext: CreateViewContext<T, C>,
   patchZone: NgZone | false
 ) {
-  return (templateRef: TemplateRef<C>, value: any) => {
-    const context = createViewContext(value);
+  return (templateRef: TemplateRef<C>) => {
     if (patchZone) {
       return patchZone.run(() =>
-        viewContainerRef.createEmbeddedView(templateRef, context)
+        viewContainerRef.createEmbeddedView(templateRef)
       );
     } else {
-      console.log('viewContainerRef,,,', templateRef, viewContainerRef.createEmbeddedView);
-      return viewContainerRef.createEmbeddedView(templateRef, context);
+      return viewContainerRef.createEmbeddedView(templateRef);
     }
   };
 }

@@ -1,7 +1,7 @@
 import { Directive, Input } from '@angular/core';
 
 import { ReplaySubject, Subject } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs';
 import { distinctUntilChanged, startWith, switchAll, tap } from 'rxjs/operators';
 import { StrategyCredentials } from '../../../cdk/render-strategies/model/strategy-credentials';
 import { StrategyProvider } from '../../../cdk/render-strategies/strategy-provider.service';

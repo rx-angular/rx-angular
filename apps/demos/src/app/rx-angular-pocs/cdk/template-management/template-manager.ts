@@ -1,6 +1,6 @@
 import {
   ChangeDetectorRef,
-  ElementRef,
+  ElementRef, EmbeddedViewRef,
   NgZone,
   TemplateRef,
   ViewContainerRef,
@@ -10,7 +10,7 @@ import { EMPTY, isObservable, merge, Observable, of } from 'rxjs';
 import { RenderWork, StrategyCredentialsMap } from '../render-strategies/model';
 import { CreateViewContext } from './list-manager-move';
 import {
-  getContextUpdate,
+  notificationKindToViewContext,
   getEmbeddedViewCreator,
   getParentNotifications$,
   getTNode,
@@ -60,13 +60,11 @@ export function createTemplateManager2<
   ngZone: NgZone;
   templateTrigger$: Observable<N>;
   renderConfig: { parent: boolean; patchZone: NgZone | false };
-  createViewContext: CreateViewContext<T, C>;
   notificationToTemplateName: { [rxKind: string]: N };
   customContext: (value: T) => object;
 }): TemplateManager2<T, C, N> {
   const {
     viewContainerRef,
-    createViewContext,
     defaultStrategyName,
     strategies,
     cdRef,
@@ -78,10 +76,9 @@ export function createTemplateManager2<
   const injectingViewCdRef = cdRef;
   const { parent, patchZone } = renderConfig;
   const tNode: TNode = parent
-    ? getTNode(this.cdRef, eRef.nativeElement)
+    ? getTNode(injectingViewCdRef, eRef.nativeElement)
     : false;
 
-  const viewContext: C = createViewContext(undefined);
   let activeTemplate: N;
 
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
@@ -89,14 +86,10 @@ export function createTemplateManager2<
 
   const createEmbeddedView = getEmbeddedViewCreator(
     viewContainerRef,
-    createViewContext,
     patchZone
   );
   const triggerHandling = templateTriggerHandling();
-  const contextUpdate = getContextUpdate(viewContext, customContext);
-
-  // @TODO implement
-  //  renderProjectionParents(this.cdRef, tNode, this.renderAware.strategy$)
+  const getContext = notificationKindToViewContext(customContext);
 
   return {
     addTemplateRef: templates.add,
@@ -127,11 +120,14 @@ export function createTemplateManager2<
                   if (viewContainerRef.length > 0) {
                     viewContainerRef.remove();
                   }
-                  createEmbeddedView(template, viewContext);
+                  createEmbeddedView(template);
                 }
-                console.log('c kind', kind);
-                contextUpdate[kind](value);
-                work(viewContainerRef.get(0), options.scope, notification);
+                const context = getContext[kind](value);
+                const view = <EmbeddedViewRef<C>>viewContainerRef.get(0);
+                Object.keys(context).forEach(k => {
+                  view.context[k] = context[k];
+                });
+                work(view, options.scope, notification);
                 activeTemplate = templateName;
               }
               // { scope: viewContainerRef.get(0) }
@@ -145,7 +141,6 @@ export function createTemplateManager2<
           console.error(e);
           return EMPTY;
         }),
-        tap(console.log),
       );
     },
   };

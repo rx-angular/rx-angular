@@ -1,8 +1,8 @@
-import { Observable } from 'rxjs/internal/Observable';
-import { Operator } from 'rxjs/internal/Operator';
-import { Subscriber } from 'rxjs/internal/Subscriber';
-import { Subscription } from 'rxjs/internal/Subscription';
-import { Notification } from 'rxjs/internal/Notification';
+import { Observable } from 'rxjs';
+import { Operator } from 'rxjs';
+import { Subscriber } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { Notification } from 'rxjs';
 import { MonoTypeOperatorFunction, PartialObserver, SchedulerAction, TeardownLogic } from 'rxjs/internal/types';
 import { PriorityScheduler, PrioritySchedulerOptions } from '../scheduler/priority-scheduler';
 
