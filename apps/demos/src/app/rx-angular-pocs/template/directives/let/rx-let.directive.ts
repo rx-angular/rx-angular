@@ -2,34 +2,30 @@ import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
-  Input, NgIterable,
+  Input,
   NgZone,
   OnDestroy,
   OnInit,
   Output,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 
 import {
   defer,
   NextObserver,
   Observable,
-  ObservableInput, ReplaySubject,
+  ObservableInput,
   Subject,
-  Subscription
+  Subscription,
 } from 'rxjs';
-import { delay, filter, map, mapTo, tap } from 'rxjs/operators';
+import { map, mapTo } from 'rxjs/operators';
 import {
-  asap,
-  createRenderAware,
-  getTNode,
+  getHotMerged,
   Hooks,
   RenderAware,
-  renderProjectionParents,
   RxNotification,
   RxNotificationKind,
-  RxTemplateObserver,
   StrategyProvider,
   toRxCompleteNotification,
   toRxErrorNotification,
@@ -44,7 +40,6 @@ import {
   createTemplateManager2,
   TemplateManager2,
 } from '../../../cdk/template-management/template-manager';
-import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
@@ -53,15 +48,14 @@ import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
 })
 // tslint:disable-next-line:directive-class-suffix
 export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
-
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
-    this.observables$.next(potentialObservable);
+    this.observablesHandler.next(potentialObservable);
   }
 
   @Input('rxLetStrategy')
   set strategy(strategyName: string | Observable<string> | undefined) {
-    this.templateManager.nextStrategy(strategyName);
+    this.strategyHandler.next(strategyName);
   }
 
   @Input('rxLetCompleteTpl')
@@ -127,8 +121,45 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
     private readonly viewContainerRef: ViewContainerRef
   ) {
     super();
+  }
 
-    this.templateManager = createTemplateManager2<U, RxLetViewContext<U>, rxLetTemplateNames>({
+  static ngTemplateGuard_rxLet: 'binding';
+
+  /** @internal */
+  private observablesHandler = getHotMerged<U>();
+  private strategyHandler = getHotMerged<string>();
+
+  @Input('rxLetParent') renderParent = false;
+
+  private _renderObserver: NextObserver<any>;
+
+  private subscription: Subscription = new Subscription();
+
+  private templateManager: TemplateManager2<
+    U,
+    RxLetViewContext<U | undefined | null>,
+    rxLetTemplateNames
+  >;
+
+  private rendered$ = new Subject<RxNotification<U>>();
+  readonly renderAware: RenderAware<U>;
+
+  @Output() readonly rendered = defer(() => this.rendered$.pipe());
+
+  /** @internal */
+  static ngTemplateContextGuard<U>(
+    dir: RxLet<U>,
+    ctx: unknown | null | undefined
+  ): ctx is RxLetViewContext<U> {
+    return true;
+  }
+
+  ngOnInit() {
+    this.templateManager = createTemplateManager2<
+      U,
+      RxLetViewContext<U>,
+      rxLetTemplateNames
+    >({
       viewContainerRef: this.viewContainerRef,
       cdRef: this.cdRef,
       eRef: this.eRef,
@@ -146,58 +177,27 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
       defaultStrategyName: this.strategyProvider.primaryStrategy,
       strategies: this.strategyProvider.strategies,
       customContext: (rxLet) => ({ rxLet }),
-      notificationToTemplateName: (n: RxNotificationKind): rxLetTemplateNames => n as rxLetTemplateNames,
-      templateTrigger$: [] as any
+      notificationToTemplateName: {
+        [RxNotificationKind.suspense]: RxLetTemplateNames.suspense,
+        [RxNotificationKind.next]: RxLetTemplateNames.next,
+        [RxNotificationKind.error]: RxLetTemplateNames.error,
+        [RxNotificationKind.complete]: RxLetTemplateNames.complete,
+      },
+      templateTrigger$: [] as any,
     });
-  }
-
-  static ngTemplateGuard_rxLet: 'binding';
-
-  /** @internal */
-  private observables$ = new ReplaySubject<
-    ObservableInput<U> | U
-    >(1);
-  /** @internal */
-  private readonly values$ = this.observables$.pipe(ngInputFlatten()) as Observable<U>;
-
-  @Input('rxLetParent') renderParent = false;
-
-  private _renderObserver: NextObserver<any>;
-
-  private subscription: Subscription = new Subscription();
-
-  private readonly templateManager: TemplateManager2<
-    U,
-    RxLetViewContext<U | undefined | null>,
-    rxLetTemplateNames
-  >;
-
-  private rendered$ = new Subject<RxNotification<U>>();
-  readonly renderAware: RenderAware<U>;
-
-  @Output() readonly rendered = defer(() =>
-    this.rendered$.pipe(
-
-    )
-  );
-
-  /** @internal */
-  static ngTemplateContextGuard<U>(
-    dir: RxLet<U>,
-    ctx: unknown | null | undefined
-  ): ctx is RxLetViewContext<U> {
-    return true;
-  }
-
-  ngOnInit() {
-    this.subscription
-      .add(
-        this.templateManager.render(this.values$).subscribe(n => this.rendered$.next(n))
-      );
+    this.templateManager.addTemplateRef(
+      RxLetTemplateNames.next,
+      this.nextTemplateRef
+    );
+    this.templateManager.nextStrategy(this.strategyHandler.values$);
+    this.subscription.add(
+      this.templateManager
+        .render(this.observablesHandler.values$)
+        .subscribe((n) => this.rendered$.next(n))
+    );
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
-
 }

@@ -6,17 +6,18 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { RxBaseTemplateNames, RxViewContext } from './model';
-import { EMPTY, from, isObservable, Observable, of, merge } from 'rxjs';
+import { EMPTY, isObservable, merge, Observable, of } from 'rxjs';
 import { RenderWork, StrategyCredentialsMap } from '../render-strategies/model';
 import { CreateViewContext } from './list-manager-move';
 import {
   getContextUpdate,
   getEmbeddedViewCreator,
-  getParentNotifications$, getTNode,
+  getParentNotifications$,
+  getTNode,
   strategyHandling,
   templateHandling,
   templateTriggerHandling,
-  TNode
+  TNode,
 } from './utils';
 import { rxMaterialize } from '../utils/rxjs/operators';
 import {
@@ -25,8 +26,9 @@ import {
   map,
   merge as mergeWith,
   switchAll,
-  switchMap, tap,
-  withLatestFrom
+  switchMap,
+  tap,
+  withLatestFrom,
 } from 'rxjs/operators';
 import { onStrategy } from '../render-strategies';
 import { RxNotification, RxNotificationKind } from '../utils/rxjs';
@@ -59,7 +61,7 @@ export function createTemplateManager2<
   templateTrigger$: Observable<N>;
   renderConfig: { parent: boolean; patchZone: NgZone | false };
   createViewContext: CreateViewContext<T, C>;
-  notificationToTemplateName: (n: RxNotificationKind) => N;
+  notificationToTemplateName: { [rxKind: string]: N };
   customContext: (value: T) => object;
 }): TemplateManager2<T, C, N> {
   const {
@@ -75,13 +77,16 @@ export function createTemplateManager2<
   } = config;
   const injectingViewCdRef = cdRef;
   const { parent, patchZone } = renderConfig;
-  const tNode: TNode = parent ? getTNode(this.cdRef, eRef.nativeElement) : false;
+  const tNode: TNode = parent
+    ? getTNode(this.cdRef, eRef.nativeElement)
+    : false;
 
   const viewContext: C = createViewContext(undefined);
   let activeTemplate: N;
 
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   const templates = templateHandling<N, C>();
+
   const createEmbeddedView = getEmbeddedViewCreator(
     viewContainerRef,
     createViewContext,
@@ -110,7 +115,7 @@ export function createTemplateManager2<
         switchMap(([notification, strategy]) => {
           const kind: RxNotificationKind = notification.kind;
           const value: T = notification.value as T;
-          const templateName = notificationToTemplateName(kind);
+          const templateName = notificationToTemplateName[kind];
           const template = templates.get(templateName);
           const isNewTemplate = activeTemplate !== templateName;
           return merge(
@@ -118,29 +123,29 @@ export function createTemplateManager2<
               value,
               strategy,
               (v: T, work: RenderWork, options: { scope?: any }) => {
-                console.log('sa', v);
                 if (isNewTemplate) {
                   if (viewContainerRef.length > 0) {
                     viewContainerRef.remove();
                   }
                   createEmbeddedView(template, viewContext);
                 }
+                console.log('c kind', kind);
                 contextUpdate[kind](value);
                 work(viewContainerRef.get(0), options.scope, notification);
                 activeTemplate = templateName;
-              },
-             // { scope: viewContainerRef.get(0) }
+              }
+              // { scope: viewContainerRef.get(0) }
             ),
             ...(isNewTemplate && parent
               ? getParentNotifications$(tNode, cdRef, strategy)
-              : []),
+              : [])
           );
         }),
-        tap(console.log),
         catchError((e) => {
           console.error(e);
           return EMPTY;
-        })
+        }),
+        tap(console.log),
       );
     },
   };
