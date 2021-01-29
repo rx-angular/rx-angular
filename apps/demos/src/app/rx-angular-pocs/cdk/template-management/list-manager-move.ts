@@ -1,9 +1,9 @@
 import {
-  combineLatest,
+  combineLatest, merge,
   Observable,
   of,
   OperatorFunction,
-  ReplaySubject,
+  ReplaySubject
 } from 'rxjs';
 import {
   ChangeDetectorRef,
@@ -49,7 +49,7 @@ export interface ListManager<T, C> {
   render(changes$: Observable<NgIterable<T>>): Observable<any>;
 }
 
-export type CreateViewContext<T, C> = (item: T) => C;
+export type CreateViewContext<T, C> = (value: T) => C;
 export type DistinctByFunction<T> = (oldItem: T, newItem: T) => any;
 
 const enum ListChange {
@@ -97,7 +97,6 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     startWith(defaultStrategyName),
     nameToStrategyCredentials(strategies, defaultStrategyName)
   );
-  let tNode: any;
   let notifyParent = false;
   const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
   //               type,  payload
@@ -106,19 +105,19 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
   let insertViewPatch = (fn: () => void) => {
     fn();
   };
+  const tNode: any = getTNode(injectingViewCdRef, eRef.nativeElement);
+  if (patchZone) {
+    // @Notice: to have zone aware eventListeners work we create the view in ngZone.run
+    insertViewPatch = (fn: () => void) => {
+      ngZone.run(() => fn());
+    }
+  }
 
   return {
     nextStrategy(nextConfig: Observable<string>): void {
       strategyName$.next(nextConfig);
     },
     render(values$: Observable<NgIterable<T>>): Observable<any> {
-      tNode = getTNode(injectingViewCdRef, eRef.nativeElement);
-      if (patchZone) {
-        // @Notice: to have zone aware eventListeners work we create the view in ngZone.run
-        insertViewPatch = (fn: () => void) => {
-          ngZone.run(() => fn());
-        }
-      }
       return values$.pipe(render());
     },
   };
@@ -204,7 +203,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               if (behaviors.length === 1) {
                 return of(v);
               }
-              return combineLatest(behaviors).pipe(
+              return merge(behaviors).pipe(
                 ignoreElements(),
                 startWith(v)
               );

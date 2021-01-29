@@ -17,7 +17,7 @@ import { ViewChildComponent } from './view-child.component';
         <button
           mat-raised-button
           [unpatch]
-          (click)="trigger$.next([$event.timeStamp])"
+          (click)="trigger$.next($event.timeStamp)"
         >
           tick
         </button>
@@ -26,19 +26,18 @@ import { ViewChildComponent } from './view-child.component';
       test1
       <rxa-view-child>
         <div>
-          <!--  <div *rxLet="trigger$;let value; parent: true">
-         <rxa-content-child>
-           <div #test>{{value}}</div>
-         </rxa-content-child>
-       </div>  -->
-
-
+          <div *rxLet="trigger$; let value; parent: true">
+            <rxa-content-child>
+              <div #test>{{ value }}</div>
+            </rxa-content-child>
+          </div>
+          <!--
           <div *rxFor="trigger$; let value; parent: true">
             <rxa-content-child>
               <div #test>{{ value }}</div>
             </rxa-content-child>
           </div>
-
+          -->
         </div>
       </rxa-view-child>
     </rxa-visualizer>

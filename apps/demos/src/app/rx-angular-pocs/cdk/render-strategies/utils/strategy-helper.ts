@@ -27,7 +27,8 @@ export function mergeStrategies(...strategiesArray: Array<StrategyCredentialsMap
 }
 
 export function observeTemplateByNotificationKind<U>(templateObserver: RxTemplateObserver<U>) {
-  return o$ => o$.pipe(tap((n: RxNotification<U>) => {
+  return (o$: Observable<RxNotification<U>>): Observable<RxNotification<U>> => o$.pipe(
+    tap((n: RxNotification<U>) => {
     if (n.kind === RxNotificationKind.error) {
       templateObserver.error(n.error);
     } else if (n.kind === RxNotificationKind.complete) {
@@ -37,7 +38,8 @@ export function observeTemplateByNotificationKind<U>(templateObserver: RxTemplat
     } else if (n.kind === RxNotificationKind.suspense) {
       templateObserver.suspense(n.value);
     }
-  }));
+  })
+  );
 }
 
 export function applyStrategy<T>(

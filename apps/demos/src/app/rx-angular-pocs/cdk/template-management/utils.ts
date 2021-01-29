@@ -1,13 +1,27 @@
-import { Type, ɵdetectChanges as detectChanges } from '@angular/core';
-import { merge, OperatorFunction } from 'rxjs';
+import {
+  ChangeDetectorRef,
+  EmbeddedViewRef,
+  NgZone,
+  TemplateRef,
+  Type,
+  ViewContainerRef,
+  ɵdetectChanges as detectChanges
+} from '@angular/core';
+import { merge, OperatorFunction, ReplaySubject, Subject } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { switchMap, withLatestFrom } from 'rxjs/operators';
-import { StrategyCredentials } from '../render-strategies/model/strategy-credentials';
-import { onStrategy } from '../render-strategies/utils/strategy-helper';
+import { mergeAll, share, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
+import { StrategyCredentials, StrategyCredentialsMap } from '../render-strategies/model/strategy-credentials';
+import { nameToStrategyCredentials, onStrategy } from '../render-strategies/utils/strategy-helper';
 import { CONTEXT, HEADER_OFFSET, L_CONTAINER_NATIVE, T_HOST, TVIEW } from '../utils/view-constants';
+import { RxViewContext } from './model';
+import { CreateViewContext } from './list-manager-move';
+import { ngInputFlatten } from '../utils/rxjs/operators';
+import { RxNotification } from '../utils/rxjs';
 
-export function getTNode(cdRef: any, native: any /*Comment*/) {
-  const lView = cdRef._cdRefInjectingView;
+export type TNode = any;
+
+export function getTNode(cdRef: ChangeDetectorRef, native: Node) {
+  const lView = (cdRef as any)._cdRefInjectingView;
   const tView = lView[TVIEW];
   let i = HEADER_OFFSET;
   let lContainer;
@@ -21,7 +35,7 @@ export function getTNode(cdRef: any, native: any /*Comment*/) {
   return lContainer[T_HOST];
 }
 
-export function extractProjectionParentViewSet(cdRef: any, tNode: any): Set<Type<any>> {
+export function extractProjectionParentViewSet(cdRef: ChangeDetectorRef, tNode: any): Set<Type<any>> {
   const injectingLView = (cdRef as any)._cdRefInjectingView;
   const injectingTView = injectingLView[1];
   const components = new Set<number>(injectingTView['components']);
@@ -41,12 +55,12 @@ export function extractProjectionParentViewSet(cdRef: any, tNode: any): Set<Type
   return parentElements;
 }
 
-export function extractProjectionViews(cdRef: any, tNode: any): Type<any>[] {
+export function extractProjectionViews(cdRef: ChangeDetectorRef, tNode: any): Type<any>[] {
   return Array.from(extractProjectionParentViewSet(cdRef, tNode));
 }
 
 export function renderProjectionParents(
-  cdRef: any,
+  cdRef: ChangeDetectorRef,
   tNode: any,
   strategy$: Observable<StrategyCredentials>)
   : OperatorFunction<any, any> {
@@ -80,4 +94,163 @@ export function renderProjectionParents(
       return merge(...behaviors);
     })
   )
+}
+
+
+export function getContextUpdate<T>(viewContext, customContext: (value: T) => object) {
+  // @TODO rethink overrides
+  return {
+    suspense: (value?: any) => {
+      updateViewContext({
+        // if a custom value is provided take it, otherwise assign true
+        $suspense: value !== undefined ? value : true,
+        $error: false,
+        $complete: false,
+      });
+    },
+    next: (value: T | null | undefined) => {
+      updateViewContext({
+        ...customContext(value),
+        $implicit: undefined,
+        $suspense: false,
+        $error: false,
+        $complete: false
+      });
+    },
+    error: (error: Error) => {
+      updateViewContext({
+        $error: error,
+        $suspense: false,
+      });
+    },
+    complete: () => {
+      updateViewContext({
+        $complete: true,
+        $suspense: false,
+      });
+    },
+  };
+
+  function updateViewContext(viewContextSlice: Partial<RxViewContext<T>>) {
+    Object.entries(viewContextSlice).forEach(([key, value]) => {
+      viewContext[key] = value;
+    });
+  }
+
+}
+
+export function getEmbeddedViewCreator<C, T>(viewContainerRef: ViewContainerRef, createViewContext: CreateViewContext<T, C>, patchZone: NgZone | false) {
+  const exec = getInsertViewExecutionContext<EmbeddedViewRef<C>>(patchZone);
+  return (templateRef: TemplateRef<C>, value: any) => {
+    return exec(() => viewContainerRef.createEmbeddedView(templateRef, createViewContext(value)))
+  }
+}
+
+export function getParentNotifications$(
+  tNode: TNode,
+  injectingViewCdRef: ChangeDetectorRef,
+  strategy: StrategyCredentials
+) {
+
+  const parentElements = extractProjectionParentViewSet(
+    injectingViewCdRef,
+    tNode
+  );
+  const behaviors = [];
+  for (const parentComponent of parentElements.values()) {
+    behaviors.push(
+      onStrategy(
+        parentComponent,
+        strategy,
+        // Here we CD the parent to update their projected views scenarios
+        (value, work, options) => {
+          // console.log('parentComponent', parentComponent);
+          detectChanges(parentComponent);
+        },
+        { scope: parentComponent }
+      )
+    );
+  }
+  return behaviors;
+}
+
+export function getInsertViewExecutionContext<T>(ngZone: NgZone | false) {
+  let insertViewExecutionContext = (fn: () => T): T => {
+    return fn();
+  };
+  if (ngZone) {
+    // @Notice: to have zone aware eventListeners work we create the view in ngZone.run
+    insertViewExecutionContext = (fn: () => T) => {
+      return ngZone.run(() => fn());
+    };
+  }
+  return insertViewExecutionContext;
+}
+
+export function templateHandling<N, C>() {
+  const templateCache = new Map<N, TemplateRef<C>>();
+
+  return {
+    add(name: N, templateRef: TemplateRef<C>): void {
+      assertTemplate(name, templateRef);
+      if (!templateCache.has(name)) {
+        templateCache.set(name, templateRef);
+      } else {
+        throw new Error(
+          'Updating an already existing Template is not supported at the moment.'
+        );
+      }
+    },
+    get(name: N): TemplateRef<C> {
+      return templateCache.get(name);
+    }
+  };
+
+  //
+  function assertTemplate<T>(
+    property: any,
+    templateRef: TemplateRef<T> | null
+  ): templateRef is TemplateRef<T> {
+    const isTemplateRefOrNull = !!(
+      !templateRef || templateRef.createEmbeddedView
+    );
+    if (!isTemplateRefOrNull) {
+      throw new Error(
+        `${property} must be a TemplateRef, but received something else.`
+      );
+    }
+    return isTemplateRefOrNull;
+  }
+}
+
+export function strategyHandling(
+  defaultStrategyName: string,
+  strategies: StrategyCredentialsMap
+) {
+  const strategyName$ = new ReplaySubject<string | Observable<string>>(1);
+  const strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
+    ngInputFlatten(),
+    startWith(defaultStrategyName),
+    nameToStrategyCredentials(strategies, defaultStrategyName),
+    share()
+  );
+  return {
+    next(name: string | Observable<string>) {
+      strategyName$.next(name);
+    },
+    strategy$,
+  };
+}
+
+export function templateTriggerHandling<T>() {
+  const templateTriggerSubject = new Subject<Observable<RxNotification<T>>>();
+  const trigger$ = templateTriggerSubject.pipe(
+    mergeAll()
+  );
+  return {
+    next(templateName: Observable<RxNotification<T>>) {
+      templateTriggerSubject.next(templateName);
+    },
+    trigger$
+  };
 }
