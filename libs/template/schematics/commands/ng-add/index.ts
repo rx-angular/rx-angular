@@ -1,14 +1,14 @@
 import { chain, Rule, SchematicsException, Tree } from '@angular-devkit/schematics';
+import { addImportToModule, insertImport } from '@schematics/angular/utility/ast-utils';
 import * as ts from 'typescript';
 
 import { packageName } from '../../consts';
-import { addImportToModule, insertImport } from '../../utils/ast';
 import { InsertChange } from '../../utils/change';
 import { findRootModule } from '../../utils/find-module';
 import { getProject } from '../../utils/projects';
 import { SchemaOptions } from './schema';
 
-function getModuleFile(tree: Tree, options: any): ts.SourceFile {
+function getModuleFile(tree: Tree, options: SchemaOptions): ts.SourceFile {
   const modulePath = options.module;
 
   if (!tree.exists(modulePath)) {
@@ -37,10 +37,9 @@ function applyChanges(
   const recorder = tree.beginUpdate(path);
 
   for (const change of changes) {
-    if (change instanceof InsertChange) {
-      recorder.insertLeft(change.pos, change.toAdd);
-    }
+    recorder.insertLeft(change.pos, change.toAdd);
   }
+
   tree.commitUpdate(recorder);
 
   return tree;
@@ -76,6 +75,7 @@ function addImportsToModuleDeclaration(
     const importChanges = imports.map(
       (imp) => addImportToModule(module, options.module, imp, packageName)[0]
     );
+
     return applyChanges(tree, options.module, importChanges as InsertChange[]);
   };
 }
@@ -84,19 +84,13 @@ export function ngAdd(options: SchemaOptions): Rule {
   return async (tree: Tree) => {
     const project = await getProject(tree, options.project);
     const sourceRoot = (project && project.sourceRoot) ?? 'src';
+    const modulesToAdd = ['LetModule', 'PushModule', 'ViewportPrioModule'];
+
     options.module = findRootModule(tree, options.module, sourceRoot) as string;
 
     return chain([
-      addImportsToModuleFile(options, [
-        'LetModule',
-        'PushModule',
-        'ViewportPrioModule',
-      ]),
-      addImportsToModuleDeclaration(options, [
-        'LetModule',
-        'PushModule',
-        'ViewportPrioModule',
-      ]),
+      addImportsToModuleFile(options, modulesToAdd),
+      addImportsToModuleDeclaration(options, modulesToAdd),
     ]);
   };
 }
