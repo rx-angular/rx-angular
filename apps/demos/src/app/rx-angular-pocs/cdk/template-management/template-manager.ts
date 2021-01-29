@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
-  ElementRef, EmbeddedViewRef,
+  ElementRef,
+  EmbeddedViewRef,
   NgZone,
   TemplateRef,
   ViewContainerRef,
@@ -8,12 +9,11 @@ import {
 import { RxBaseTemplateNames, RxViewContext } from './model';
 import { EMPTY, isObservable, merge, Observable, of } from 'rxjs';
 import { RenderWork, StrategyCredentialsMap } from '../render-strategies/model';
-import { CreateViewContext } from './list-manager-move';
 import {
-  notificationKindToViewContext,
   getEmbeddedViewCreator,
   getParentNotifications$,
   getTNode,
+  notificationKindToViewContext,
   strategyHandling,
   templateHandling,
   templateTriggerHandling,
@@ -27,7 +27,6 @@ import {
   merge as mergeWith,
   switchAll,
   switchMap,
-  tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import { onStrategy } from '../render-strategies';
@@ -58,9 +57,14 @@ export function createTemplateManager2<
   cdRef: ChangeDetectorRef;
   eRef: ElementRef;
   ngZone: NgZone;
-  templateTrigger$: Observable<N>;
+  templateTrigger$?: Observable<RxNotificationKind>;
   renderConfig: { parent: boolean; patchZone: NgZone | false };
-  notificationToTemplateName: { [rxKind: string]: N };
+  notificationToTemplateName: {
+    [rxKind: string]: (
+      value: T,
+      templates: { get: (name: N) => TemplateRef<C> }
+    ) => N;
+  };
   customContext: (value: T) => object;
 }): TemplateManager2<T, C, N> {
   const {
@@ -108,7 +112,10 @@ export function createTemplateManager2<
         switchMap(([notification, strategy]) => {
           const kind: RxNotificationKind = notification.kind;
           const value: T = notification.value as T;
-          const templateName = notificationToTemplateName[kind];
+          const templateName = notificationToTemplateName[kind](
+            value,
+            templates
+          );
           const template = templates.get(templateName);
           const isNewTemplate = activeTemplate !== templateName;
           return merge(
@@ -120,14 +127,18 @@ export function createTemplateManager2<
                   if (viewContainerRef.length > 0) {
                     viewContainerRef.remove();
                   }
-                  createEmbeddedView(template);
+                  if (template) {
+                    createEmbeddedView(template);
+                  }
                 }
-                const context = getContext[kind](value);
-                const view = <EmbeddedViewRef<C>>viewContainerRef.get(0);
-                Object.keys(context).forEach(k => {
-                  view.context[k] = context[k];
-                });
-                work(view, options.scope, notification);
+                if (template) {
+                  const context = getContext[kind](value);
+                  const view = <EmbeddedViewRef<C>>viewContainerRef.get(0);
+                  Object.keys(context).forEach((k) => {
+                    view.context[k] = context[k];
+                  });
+                  work(view, options.scope, notification);
+                }
                 activeTemplate = templateName;
               }
               // { scope: viewContainerRef.get(0) }
@@ -140,7 +151,7 @@ export function createTemplateManager2<
         catchError((e) => {
           console.error(e);
           return EMPTY;
-        }),
+        })
       );
     },
   };

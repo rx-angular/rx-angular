@@ -15,6 +15,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'rx-if',
+    loadChildren: () =>
+      import('./rx-if/rx-if-demo.module').then(
+        m => m.RxIfDemoModule
+      )
+  },
+  {
     path: 'rx-for',
     loadChildren: () =>
       import('./rx-for/rx-for.module').then(

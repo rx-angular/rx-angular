@@ -3,27 +3,13 @@ import { Routes } from '@angular/router';
 export const ROUTES: Routes = [
   {
     path: '',
-    redirectTo: 'rx-if-poc',
+    redirectTo: 'rx-switch-poc',
   },
   {
-    path: 'rx-if-poc',
+    path: 'rx-switch-poc',
     loadChildren: () =>
-      import('./rx-if-poc/rx-if-poc.routed.module').then(
-        (m) => m.RxIfPocRoutedModule
-      ),
-  },
-  {
-    path: 'rx-swicht-poc',
-    loadChildren: () =>
-      import('./rx-switch-poc/rx-swich-poc.module').then(
-        (m) => m.RxSwichPocModule
-      ),
-  },
-  {
-    path: 'rx-let-poc',
-    loadChildren: () =>
-      import('./rx-let-poc/rx-let-poc.routed.module').then(
-        (m) => m.RxLetPocRoutedModule
+      import('./rx-switch-poc/rx-switch-poc.module').then(
+        (m) => m.RxSwitchPocModule
       ),
   },
   {

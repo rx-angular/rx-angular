@@ -88,14 +88,14 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
 
   @Input('rxLetCompleteTrg')
   set rxCompleteTrigger(trigger$: Observable<any>) {
-    this.renderAware.nextTemplateTrigger(
+    this.triggerHandler.next(
       trigger$.pipe(mapTo(toRxCompleteNotification() as any))
     );
   }
 
   @Input('rxLetErrorTrg')
   set rxErrorTrigger(error$: Observable<any>) {
-    this.renderAware.nextTemplateTrigger(
+    this.triggerHandler.next(
       error$.pipe(map(toRxErrorNotification as any))
     );
   }
@@ -103,7 +103,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   @Input('rxLetSuspenseTrg')
   set rxSuspenseTrigger(trigger$: Observable<any>) {
     console.log('rxSuspense', trigger$);
-    this.renderAware.nextTemplateTrigger(
+    this.triggerHandler.next(
       trigger$.pipe(map(toRxSuspenseNotification as any))
     );
   }
@@ -129,6 +129,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   /** @internal */
   private observablesHandler = getHotMerged<U>();
   private strategyHandler = getHotMerged<string>();
+  private triggerHandler = getHotMerged<RxNotificationKind>();
 
   @Input('rxLetParent') renderParent: boolean;
 
@@ -143,7 +144,6 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   >;
 
   private rendered$ = new Subject<RxNotification<U>>();
-  readonly renderAware: RenderAware<U>;
 
   @Output() readonly rendered = defer(() => this.rendered$.pipe());
 
@@ -170,12 +170,12 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
       defaultStrategyName: this.strategyProvider.primaryStrategy,
       strategies: this.strategyProvider.strategies,
       notificationToTemplateName: {
-        [RxNotificationKind.suspense]: RxLetTemplateNames.suspense,
-        [RxNotificationKind.next]: RxLetTemplateNames.next,
-        [RxNotificationKind.error]: RxLetTemplateNames.error,
-        [RxNotificationKind.complete]: RxLetTemplateNames.complete,
+        [RxNotificationKind.suspense]: () => RxLetTemplateNames.suspense,
+        [RxNotificationKind.next]: () => RxLetTemplateNames.next,
+        [RxNotificationKind.error]: () => RxLetTemplateNames.error,
+        [RxNotificationKind.complete]: () => RxLetTemplateNames.complete,
       },
-      templateTrigger$: [] as any,
+      templateTrigger$: this.triggerHandler.values$,
     });
     this.templateManager.addTemplateRef(
       RxLetTemplateNames.next,

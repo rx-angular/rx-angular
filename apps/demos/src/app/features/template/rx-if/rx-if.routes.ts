@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { RxIfPocComponent } from './rx-if-poc.component';
+import { RxIfBasicComponent } from './rx-if-basic.component';
 
 export const ROUTES: Routes = [
   {
     path: '',
-    component: RxIfPocComponent
+    component: RxIfBasicComponent
   }
 ];
