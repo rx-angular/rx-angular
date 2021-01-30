@@ -213,7 +213,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                       } else {
                         if ((view.context as any).count !== count ||
                           (view.context as any).index !== index) {
-                          view.context.setComputedContext(context);
+                          view.context.updateContext(context);
                           doWork = true;
                         }
                       }
@@ -293,7 +293,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     context: RxListViewComputedContext,
     item: T
   ): void {
-    view.context.setComputedContext(context);
+    view.context.updateContext(context);
     view.context.$implicit = item;
   }
 

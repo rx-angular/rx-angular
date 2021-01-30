@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
+  EmbeddedViewRef,
   Input,
   NgZone,
   OnDestroy,
@@ -18,19 +19,17 @@ import {
   RxNotificationKind,
   StrategyProvider,
 } from '../../../cdk';
-import { RxIfTemplateNames, rxIfTemplateNames } from './model';
+import { RxIfTemplateNames, rxIfTemplateNames, RxIfViewContext } from './model';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { createTemplateManager2 } from '../../../cdk/template-management/template-manager';
-import { RxLetViewContext } from '../let/model';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[rxIf]'
+  selector: '[rxIf]',
 })
 export class RxIf<U> implements OnInit, OnDestroy {
   private subscription = new Subscription();
   private templateManager;
-  private isVisible = true;
 
   @Input()
   set rxIf(potentialObservable: Observable<U> | U | null | undefined) {
@@ -65,23 +64,31 @@ export class RxIf<U> implements OnInit, OnDestroy {
   ) {
     this.templateManager = createTemplateManager2<
       U,
-      RxLetViewContext<U>,
+      RxIfViewContext<U>,
       rxIfTemplateNames
     >({
-      viewContainerRef: this.viewContainerRef,
-      cdRef: this.cdRef,
-      eRef: this.eRef,
-      ngZone: this.ngZone,
-      customContext: (rxLet) => ({ rxLet }),
-      renderConfig: {
+      templateSettings: {
+        viewContainerRef: this.viewContainerRef,
+        createViewContext,
+        updateViewContext,
+        customContext: (rxIf) => ({ rxIf }),
+      },
+      renderSettings: {
+        cdRef: this.cdRef,
+        eRef: this.eRef,
         parent: coerceBooleanProperty(this.renderParent),
         patchZone: false,
+        defaultStrategyName: this.strategyProvider.primaryStrategy,
+        strategies: this.strategyProvider.strategies,
       },
-      defaultStrategyName: this.strategyProvider.primaryStrategy,
-      strategies: this.strategyProvider.strategies,
       notificationToTemplateName: {
-        [RxNotificationKind.next]: (value, templates) => value ? RxIfTemplateNames.then : templates.get(RxIfTemplateNames.else) ? RxIfTemplateNames.else : undefined
-      }
+        [RxNotificationKind.next]: (value, templates) =>
+          value
+            ? RxIfTemplateNames.then
+            : templates.get(RxIfTemplateNames.else)
+            ? RxIfTemplateNames.else
+            : undefined,
+      },
     });
   }
 
@@ -101,4 +108,25 @@ export class RxIf<U> implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
+}
+
+function createViewContext<T>(value: T): RxIfViewContext<T> {
+  return {
+    rxIf: value,
+    rxElse: false,
+    $implicit: value,
+    $error: false,
+    $complete: false,
+    $suspense: false,
+  };
+}
+
+function updateViewContext<T>(
+  value: T,
+  view: EmbeddedViewRef<RxIfViewContext<T>>,
+  context: RxIfViewContext<T>
+): void {
+  Object.keys(context).forEach((k) => {
+    view.context[k] = context[k];
+  });
 }

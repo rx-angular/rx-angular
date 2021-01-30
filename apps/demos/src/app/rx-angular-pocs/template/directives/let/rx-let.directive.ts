@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
+  EmbeddedViewRef,
   Input,
   NgZone,
   OnDestroy,
@@ -24,7 +25,6 @@ import { map, mapTo } from 'rxjs/operators';
 import {
   getHotMerged,
   Hooks,
-  RenderAware,
   RxNotification,
   RxNotificationKind,
   StrategyProvider,
@@ -95,9 +95,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
 
   @Input('rxLetErrorTrg')
   set rxErrorTrigger(error$: Observable<any>) {
-    this.triggerHandler.next(
-      error$.pipe(map(toRxErrorNotification as any))
-    );
+    this.triggerHandler.next(error$.pipe(map(toRxErrorNotification as any)));
   }
 
   @Input('rxLetSuspenseTrg')
@@ -161,14 +159,20 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
       RxLetViewContext<U>,
       rxLetTemplateNames
     >({
-      viewContainerRef: this.viewContainerRef,
-      cdRef: this.cdRef,
-      eRef: this.eRef,
-      ngZone: this.ngZone,
-      customContext: (rxLet) => ({ rxLet }),
-      renderConfig: { parent: coerceBooleanProperty(this.renderParent), patchZone: false },
-      defaultStrategyName: this.strategyProvider.primaryStrategy,
-      strategies: this.strategyProvider.strategies,
+      templateSettings: {
+        viewContainerRef: this.viewContainerRef,
+        createViewContext,
+        updateViewContext,
+        customContext: (rxLet) => ({ rxLet }),
+      },
+      renderSettings: {
+        cdRef: this.cdRef,
+        eRef: this.eRef,
+        parent: coerceBooleanProperty(this.renderParent),
+        patchZone: false,
+        defaultStrategyName: this.strategyProvider.primaryStrategy,
+        strategies: this.strategyProvider.strategies,
+      },
       notificationToTemplateName: {
         [RxNotificationKind.suspense]: () => RxLetTemplateNames.suspense,
         [RxNotificationKind.next]: () => RxLetTemplateNames.next,
@@ -193,3 +197,24 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 }
+
+function createViewContext<T>(value: T): RxLetViewContext<T> {
+  return {
+    rxLet: value,
+    $implicit: value,
+    $error: false,
+    $complete: false,
+    $suspense: false,
+  };
+}
+
+function updateViewContext<T>(
+  value: T,
+  view: EmbeddedViewRef<RxLetViewContext<T>>,
+  context: RxLetViewContext<T>
+): void {
+  Object.keys(context).forEach((k) => {
+    view.context[k] = context[k];
+  });
+}
+

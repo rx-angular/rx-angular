@@ -1,19 +1,20 @@
 import {
   ChangeDetectorRef,
+  EmbeddedViewRef, IterableChanges,
   NgZone,
   TemplateRef,
   Type,
   ViewContainerRef,
-  ɵdetectChanges as detectChanges,
+  ɵdetectChanges as detectChanges
 } from '@angular/core';
 import {
-  merge, NextObserver,
-  ObservableInput, Observer,
+  merge,
+  Observable,
+  ObservableInput,
   OperatorFunction,
   ReplaySubject,
-  Subject
+  Subject,
 } from 'rxjs';
-import { Observable } from 'rxjs';
 import {
   mergeAll,
   share,
@@ -36,10 +37,10 @@ import {
   T_HOST,
   TVIEW,
 } from '../utils/view-constants';
-import { RxBaseTemplateNames, RxViewContext } from './model';
-import { CreateViewContext } from './list-manager-move';
+import { ListChange, RxListViewComputedContext, RxViewContext } from './model';
+import { CreateViewContext, UpdateViewContext } from './list-manager-move';
 import { ngInputFlatten } from '../utils/rxjs/operators';
-import { RxNotification, RxNotificationKind, RxTemplateObserver } from '../utils/rxjs';
+import { RxNotification, RxNotificationKind } from '../utils/rxjs';
 
 export type TNode = any;
 
@@ -124,11 +125,10 @@ export function renderProjectionParents(
     );
 }
 
-export type RxViewContextMap<T> =
-  Record<
-    RxNotificationKind,
-    (value?: any) => RxViewContext<T>
-  >
+export type RxViewContextMap<T> = Record<
+  RxNotificationKind,
+  (value?: any) => RxViewContext<T>
+>;
 
 export function notificationKindToViewContext<T>(
   customContext: (value: T) => object
@@ -172,19 +172,23 @@ export function notificationKindToViewContext<T>(
   };
 }
 
-export function getEmbeddedViewCreator<C, T>(
+export function getEmbeddedViewCreator(
   viewContainerRef: ViewContainerRef,
   patchZone: NgZone | false
-) {
-  return (templateRef: TemplateRef<C>) => {
-    if (patchZone) {
-      return patchZone.run(() =>
-        viewContainerRef.createEmbeddedView(templateRef)
+): <C, T>(
+  templateRef: TemplateRef<C>,
+  context?: C,
+  index?: number
+) => EmbeddedViewRef<C> {
+  let create = <C, T>(templateRef: TemplateRef<C>, context: C, index: number) =>
+    viewContainerRef.createEmbeddedView(templateRef, context, index);
+  if (patchZone) {
+    create = <C, T>(templateRef: TemplateRef<C>, context: C, index: number) =>
+      patchZone.run(() =>
+        viewContainerRef.createEmbeddedView(templateRef, context, index)
       );
-    } else {
-      return viewContainerRef.createEmbeddedView(templateRef);
-    }
-  };
+  }
+  return create;
 }
 
 export function getParentNotifications$(
@@ -212,19 +216,6 @@ export function getParentNotifications$(
     );
   }
   return behaviors;
-}
-
-export function getInsertViewExecutionContext<T>(ngZone: NgZone | false) {
-  let insertViewExecutionContext = (fn: () => T): T => {
-    return fn();
-  };
-  if (ngZone) {
-    // @Notice: to have zone aware eventListeners work we create the view in ngZone.run
-    insertViewExecutionContext = (fn: () => T) => {
-      return ngZone.run(() => fn());
-    };
-  }
-  return insertViewExecutionContext;
 }
 
 export function templateHandling<N, C>() {
@@ -303,4 +294,162 @@ export function getHotMerged<U>() {
     },
     values$,
   };
+}
+
+export function getListTemplateManager<
+  C extends { updateContext: (context: RxListViewComputedContext<T>) => void },
+  T
+>(templateSettings: {
+  viewContainerRef: ViewContainerRef;
+  templateRef: TemplateRef<C>;
+  createViewContext: CreateViewContext<T, C>;
+  updateViewContext: UpdateViewContext<T, C>;
+  patchZone: NgZone | false;
+}) {
+  const {
+    viewContainerRef,
+    templateRef,
+    createViewContext,
+    updateViewContext,
+    patchZone,
+  } = templateSettings;
+  const createEmbeddedView = getEmbeddedViewCreator(
+    viewContainerRef,
+    patchZone
+  );
+
+  return {
+    updateUnchangedContext,
+    insertView,
+    moveView,
+    updateView,
+    removeView,
+  };
+
+  function updateUnchangedContext(index: number, count: number) {
+    const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
+    view.context.updateContext({
+      count,
+      index,
+      insertView,
+    } as any);
+    view.detectChanges();
+  }
+
+  function moveView(
+    oldIndex: number,
+    item: T,
+    index: number,
+    count: number
+  ): void {
+    const oldView = viewContainerRef.get(oldIndex);
+    const view = viewContainerRef.move(oldView, index);
+    updateViewContext(
+      item,
+      // @ts-ignore
+      view,
+      {
+        count,
+        index,
+      }
+    );
+    view.detectChanges();
+  }
+
+  function updateView(item: T, index: number, count: number): void {
+    const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
+    updateViewContext(item, view, {
+      count,
+      index,
+    } as any);
+    view.detectChanges();
+  }
+
+  function removeView(index: number): void {
+    viewContainerRef.remove(index);
+  }
+
+  function insertView(item: T, index: number, count: number): void {
+    const newView = createEmbeddedView(
+      templateRef,
+      createViewContext(item, {
+        count,
+        index,
+      }),
+      index
+    );
+    newView.detectChanges();
+  }
+}
+
+export function getChangesArray<T>(
+  changes: IterableChanges<T>,
+  items: T[]
+): [ListChange, any][] {
+  const changedIdxs = new Set<T>();
+  const changesArr = [];
+  changes.forEachOperation((record, adjustedPreviousIndex, currentIndex) => {
+    const item = record.item;
+    if (record.previousIndex == null) {
+      // insert
+      changesArr.push(getInsertChange(item, currentIndex));
+      changedIdxs.add(item);
+    } else if (currentIndex == null) {
+      // remove
+      changesArr.push(getRemoveChange(item, adjustedPreviousIndex));
+      changedIdxs.add(item);
+    } else if (adjustedPreviousIndex !== null) {
+      // move
+      changesArr.push(
+        getMoveChange(item, currentIndex, adjustedPreviousIndex)
+      );
+      changedIdxs.add(item);
+    }
+  });
+  changes.forEachIdentityChange((record) => {
+    const item = record.item;
+    changesArr.push(getUpdateChange(item, record.currentIndex));
+    changedIdxs.add(item);
+  });
+  items.forEach((item, index) => {
+    if (!changedIdxs.has(item)) {
+      changesArr.push(getUnchangedChange(item, index));
+    }
+  });
+  return changesArr;
+
+  // ==========
+
+  function getMoveChange(
+    item: T,
+    currentIndex: number,
+    adjustedPreviousIndex: number
+  ): [ListChange, any] {
+    return [ListChange.move, [item, currentIndex, adjustedPreviousIndex]];
+  }
+
+  function getUpdateChange(item: T, currentIndex: number): [ListChange, any] {
+    return [ListChange.update, [item, currentIndex]];
+  }
+
+  function getUnchangedChange(item: T, index: number): [ListChange, any] {
+    return [ListChange.context, [item, index]];
+  }
+
+  function getInsertChange(item: T, currentIndex: number): [ListChange, any] {
+    return [
+      ListChange.insert,
+      [item, currentIndex === null ? undefined : currentIndex],
+    ];
+  }
+
+  function getRemoveChange(
+    item: T,
+    adjustedPreviousIndex: number
+  ): [ListChange, any] {
+    return [
+      ListChange.remove,
+      adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex,
+    ];
+  }
 }

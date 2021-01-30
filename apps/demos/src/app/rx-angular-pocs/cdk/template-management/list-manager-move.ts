@@ -1,23 +1,11 @@
+import { combineLatest, merge, Observable, of, OperatorFunction } from 'rxjs';
 import {
-  combineLatest, merge,
-  Observable,
-  of,
-  OperatorFunction,
-  ReplaySubject
-} from 'rxjs';
-import {
-  ChangeDetectorRef,
-  ElementRef,
   EmbeddedViewRef,
-  IterableChanges,
   IterableDiffer,
   IterableDiffers,
   NgIterable,
-  NgZone,
   TemplateRef,
   TrackByFunction,
-  ViewContainerRef,
-  ɵdetectChanges as detectChanges,
 } from '@angular/core';
 import {
   delay,
@@ -30,18 +18,24 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 
-import {
-  nameToStrategyCredentials,
-  onStrategy,
-} from '../render-strategies/utils/strategy-helper';
-import { ngInputFlatten } from '../utils/rxjs/operators/ngInputFlatten';
+import { onStrategy } from '../render-strategies/utils/strategy-helper';
 import { asyncScheduler } from '../utils/zone-agnostic/rxjs/scheduler/async';
-import { RxListViewComputedContext, RxListViewContext } from './model';
-import { extractProjectionParentViewSet, getTNode } from './utils';
 import {
-  StrategyCredentials,
-  StrategyCredentialsMap,
-} from '../render-strategies/model';
+  ListChange,
+  NgViewContext,
+  RenderSettings,
+  RxListViewContext,
+  TemplateSettings,
+} from './model';
+import {
+  getChangesArray,
+  getListTemplateManager,
+  getParentNotifications$,
+  getTNode,
+  strategyHandling,
+  TNode,
+} from './utils';
+import { StrategyCredentials } from '../render-strategies/model';
 
 export interface ListManager<T, C> {
   nextStrategy: (config: string | Observable<string>) => void;
@@ -49,73 +43,55 @@ export interface ListManager<T, C> {
   render(changes$: Observable<NgIterable<T>>): Observable<any>;
 }
 
-export type CreateViewContext<T, C> = (value: T) => C;
+export type CreateViewContext<T, C> = (value: T, customProps?: object) => C;
+export type UpdateViewContext<T, C> = (
+  value: T,
+  view: EmbeddedViewRef<C>,
+  context: C
+) => void;
 export type DistinctByFunction<T> = (oldItem: T, newItem: T) => any;
 
-const enum ListChange {
-  insert,
-  remove,
-  move,
-  update,
-  context,
-}
-
-export function createListManager<T, C extends RxListViewContext<T>>(config: {
-  cdRef: ChangeDetectorRef;
-  ngZone: NgZone;
-  iterableDiffers: IterableDiffers;
-  eRef: ElementRef;
-  renderConfig: { parent: boolean; patchZone: boolean };
-  strategies: StrategyCredentialsMap;
-  defaultStrategyName: string;
-  viewContainerRef: ViewContainerRef;
-  templateRef: TemplateRef<C>;
-  createViewContext: CreateViewContext<T, C>;
+export function createListManager<
+  T,
+  C extends RxListViewContext<T> & NgViewContext<T>
+>(config: {
+  renderSettings: RenderSettings<T, C>;
+  templateSettings: TemplateSettings<T, C> & { templateRef: TemplateRef<C> };
+  //
   trackBy: TrackByFunction<T>;
+  iterableDiffers: IterableDiffers;
   distinctBy?: DistinctByFunction<T>;
 }): ListManager<T, C> {
+  const { templateSettings, renderSettings, trackBy, iterableDiffers } = config;
   const {
-    viewContainerRef,
-    templateRef,
-    createViewContext,
     defaultStrategyName,
     strategies,
-    trackBy,
     cdRef: injectingViewCdRef,
-    ngZone,
-    renderConfig,
-    iterableDiffers,
+    patchZone,
+    parent,
     eRef,
-  } = config;
-  const { parent, patchZone } = renderConfig;
+  } = renderSettings;
   const injectingViewContext =
     (injectingViewCdRef as any).context || injectingViewCdRef;
-
-  const strategyName$ = new ReplaySubject<Observable<string>>(1);
-  const strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
-    ngInputFlatten(),
-    startWith(defaultStrategyName),
-    nameToStrategyCredentials(strategies, defaultStrategyName)
-  );
-  let notifyParent = false;
+  const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
   //               type,  payload
+  const tNode: TNode = parent
+    ? getTNode(injectingViewCdRef, eRef.nativeElement)
+    : false;
+  const listTemplateManager = getListTemplateManager({
+    ...templateSettings,
+    patchZone,
+  });
+  const viewContainerRef = templateSettings.viewContainerRef;
+
+  let notifyParent = false;
   let changesArr: [ListChange, any][];
   let partiallyFinished = false;
-  let insertViewPatch = (fn: () => void) => {
-    fn();
-  };
-  const tNode: any = getTNode(injectingViewCdRef, eRef.nativeElement);
-  if (patchZone) {
-    // @Notice: to have zone aware eventListeners work we create the view in ngZone.run
-    insertViewPatch = (fn: () => void) => {
-      ngZone.run(() => fn());
-    }
-  }
 
   return {
     nextStrategy(nextConfig: Observable<string>): void {
-      strategyName$.next(nextConfig);
+      strategyHandling$.next(nextConfig);
     },
     render(values$: Observable<NgIterable<T>>): Observable<any> {
       return values$.pipe(render());
@@ -141,15 +117,16 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
             items: iterable != null && Array.isArray(iterable) ? iterable : [],
           };
         }),
-        withLatestFrom(strategy$),
+        withLatestFrom(strategyHandling$.strategy$),
         // Cancel old renders
         switchMap(([{ changes, items }, strategy]) => {
           if (!changes) {
             return [];
           }
+          changesArr = getChangesArray(changes, items);
           const insertedOrRemoved = getInsertOrRemoveState(items, count);
           const applyChanges$ = getObservablesFromChangesArray(
-            getChangesArray(changes, items),
+            changesArr,
             strategy,
             count
           );
@@ -172,25 +149,11 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
                 return of(v);
               }
               notifyParent = false;
-              const parentElements = extractProjectionParentViewSet(
+              const behaviors = getParentNotifications$(
+                tNode,
                 injectingViewCdRef,
-                tNode
+                strategy
               );
-              const behaviors = [];
-              for (const parentComponent of parentElements.values()) {
-                behaviors.push(
-                  onStrategy(
-                    parentComponent,
-                    strategy,
-                    // Here we CD the parent to update their projected views scenarios
-                    (value, work, options) => {
-                      // console.log('parentComponent', parentComponent);
-                      detectChanges(parentComponent);
-                    },
-                    { scope: parentComponent }
-                  )
-                );
-              }
               behaviors.push(
                 onStrategy(
                   null,
@@ -203,14 +166,11 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               if (behaviors.length === 1) {
                 return of(v);
               }
-              return merge(behaviors).pipe(
-                ignoreElements(),
-                startWith(v)
-              );
+              return merge(behaviors).pipe(ignoreElements(), startWith(v));
             }),
             filter((v) => v != null)
           );
-        }),
+        })
       );
   }
 
@@ -218,76 +178,6 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
     const viewLength = viewContainerRef.length;
     const toRemoveCount = viewLength - items.length;
     return toRemoveCount > 0 || count !== items.length;
-  }
-
-  function getInsertChange(item: T, currentIndex: number): [ListChange, any] {
-    return [
-      ListChange.insert,
-      [item, currentIndex === null ? undefined : currentIndex],
-    ];
-  }
-
-  function getRemoveChange(
-    item: T,
-    adjustedPreviousIndex: number
-  ): [ListChange, any] {
-    return [
-      ListChange.remove,
-      adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex,
-    ];
-  }
-
-  function getMoveChange(
-    item: T,
-    currentIndex: number,
-    adjustedPreviousIndex: number
-  ): [ListChange, any] {
-    return [ListChange.move, [item, currentIndex, adjustedPreviousIndex]];
-  }
-
-  function getUpdateChange(item: T, currentIndex: number): [ListChange, any] {
-    return [ListChange.update, [item, currentIndex]];
-  }
-
-  function getUnchangedChange(item: T, index: number): [ListChange, any] {
-    return [ListChange.context, [item, index]];
-  }
-
-  function getChangesArray(
-    changes: IterableChanges<T>,
-    items: T[]
-  ): [ListChange, any][] {
-    const changedIdxs = new Set<T>();
-    changesArr = [];
-    changes.forEachOperation((record, adjustedPreviousIndex, currentIndex) => {
-      const item = record.item;
-      if (record.previousIndex == null) {
-        // insert
-        changesArr.push(getInsertChange(item, currentIndex));
-        changedIdxs.add(item);
-      } else if (currentIndex == null) {
-        // remove
-        changesArr.push(getRemoveChange(item, adjustedPreviousIndex));
-        changedIdxs.add(item);
-      } else if (adjustedPreviousIndex !== null) {
-        // move
-        changesArr.push(
-          getMoveChange(item, currentIndex, adjustedPreviousIndex)
-        );
-        changedIdxs.add(item);
-      }
-    });
-    changes.forEachIdentityChange((record) => {
-      const item = record.item;
-      changesArr.push(getUpdateChange(item, record.currentIndex));
-      changedIdxs.add(item);
-    });
-    items.forEach((item, index) => {
-      if (!changedIdxs.has(item)) {
-        changesArr.push(getUnchangedChange(item, index));
-      }
-    });
-    return changesArr;
   }
 
   function getParentNotifiers(
@@ -323,25 +213,24 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
               const payload = _change[1];
               switch (type) {
                 case ListChange.insert:
-                  insertViewPatch(() => insertView(payload[0], payload[1], count))
-                  /*unpatched
-                    ? insertView(payload[0], payload[1], count)
-                    // @Notice: to have zone aware eventListeners work we create the view in ngZone.run
-                    : ngZone.run(() =>
-                        insertView(payload[0], payload[1], count)
-                      );*/
+                  listTemplateManager.insertView(payload[0], payload[1], count);
                   break;
                 case ListChange.move:
-                  moveView(payload[2], payload[0], payload[1], count);
+                  listTemplateManager.moveView(
+                    payload[2],
+                    payload[0],
+                    payload[1],
+                    count
+                  );
                   break;
                 case ListChange.remove:
-                  removeView(payload);
+                  listTemplateManager.removeView(payload);
                   break;
                 case ListChange.update:
-                  updateView(payload[0], payload[1], count);
+                  listTemplateManager.updateView(payload[0], payload[1], count);
                   break;
                 case ListChange.context:
-                  updateUnchangedContext(payload[1], count);
+                  listTemplateManager.updateUnchangedContext(payload[1], count);
                   break;
               }
             },
@@ -349,76 +238,5 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
           );
         })
       : [];
-  }
-
-  function updateViewContext(
-    view: EmbeddedViewRef<C>,
-    context: RxListViewComputedContext,
-    item: T
-  ): void {
-    view.context.setComputedContext(context);
-    view.context.$implicit = item;
-  }
-
-  function updateUnchangedContext(index: number, count: number) {
-    const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
-    view.context.setComputedContext({
-      count,
-      index,
-    });
-    view.detectChanges();
-  }
-
-  function moveView(
-    oldIndex: number,
-    item: T,
-    index: number,
-    count: number
-  ): void {
-    const oldView = <EmbeddedViewRef<C>>viewContainerRef.get(oldIndex);
-    const view = viewContainerRef.move(oldView, index) as EmbeddedViewRef<C>;
-    updateViewContext(
-      view,
-      {
-        count,
-        index,
-      },
-      item
-    );
-    view.detectChanges();
-  }
-
-  function updateView(item: T, index: number, count: number): void {
-    const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
-    updateViewContext(
-      <EmbeddedViewRef<C>>viewContainerRef.get(index),
-      {
-        count,
-        index,
-      },
-      item
-    );
-    view.detectChanges();
-  }
-
-  function removeView(index: number): void {
-    viewContainerRef.remove(index);
-  }
-
-  function insertView(item: T, index: number, count: number): void {
-    const newView = viewContainerRef.createEmbeddedView(
-      templateRef,
-      createViewContext(item),
-      index
-    );
-    updateViewContext(
-      newView,
-      {
-        count,
-        index,
-      },
-      item
-    );
-    newView.detectChanges();
   }
 }

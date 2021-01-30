@@ -1,14 +1,12 @@
+import { EmbeddedViewRef, TemplateRef } from '@angular/core';
 import {
-  ChangeDetectorRef,
-  ElementRef,
-  EmbeddedViewRef,
-  NgZone,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
-import { RxBaseTemplateNames, RxViewContext } from './model';
+  RenderSettings,
+  RxBaseTemplateNames,
+  RxViewContext,
+  TemplateSettings,
+} from './model';
 import { EMPTY, isObservable, merge, Observable, of } from 'rxjs';
-import { RenderWork, StrategyCredentialsMap } from '../render-strategies/model';
+import { RenderWork } from '../render-strategies/model';
 import {
   getEmbeddedViewCreator,
   getParentNotifications$,
@@ -51,34 +49,30 @@ export function createTemplateManager2<
   C extends RxViewContext<T>,
   N = RxBaseTemplateNames | string
 >(config: {
-  viewContainerRef: ViewContainerRef;
-  defaultStrategyName: string;
-  strategies: StrategyCredentialsMap;
-  cdRef: ChangeDetectorRef;
-  eRef: ElementRef;
-  ngZone: NgZone;
+  renderSettings: RenderSettings<T, C>;
+  templateSettings: TemplateSettings<T, C>;
   templateTrigger$?: Observable<RxNotificationKind>;
-  renderConfig: { parent: boolean; patchZone: NgZone | false };
   notificationToTemplateName: {
     [rxKind: string]: (
       value: T,
       templates: { get: (name: N) => TemplateRef<C> }
     ) => N;
   };
-  customContext: (value: T) => object;
 }): TemplateManager2<T, C, N> {
   const {
-    viewContainerRef,
+    renderSettings,
+    notificationToTemplateName,
+    templateSettings,
+  } = config;
+  const {
     defaultStrategyName,
     strategies,
-    cdRef,
-    renderConfig,
-    notificationToTemplateName,
+    cdRef: injectingViewCdRef,
+    patchZone,
+    parent,
     eRef,
-    customContext,
-  } = config;
-  const injectingViewCdRef = cdRef;
-  const { parent, patchZone } = renderConfig;
+  } = renderSettings;
+
   const tNode: TNode = parent
     ? getTNode(injectingViewCdRef, eRef.nativeElement)
     : false;
@@ -87,13 +81,16 @@ export function createTemplateManager2<
 
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   const templates = templateHandling<N, C>();
+  const viewContainerRef = templateSettings.viewContainerRef;
 
   const createEmbeddedView = getEmbeddedViewCreator(
     viewContainerRef,
     patchZone
   );
   const triggerHandling = templateTriggerHandling();
-  const getContext = notificationKindToViewContext(customContext);
+  const getContext = notificationKindToViewContext(
+    templateSettings.customContext
+  );
 
   return {
     addTemplateRef: templates.add,
@@ -144,7 +141,7 @@ export function createTemplateManager2<
               // { scope: viewContainerRef.get(0) }
             ),
             ...(isNewTemplate && parent
-              ? getParentNotifications$(tNode, cdRef, strategy)
+              ? getParentNotifications$(tNode, injectingViewCdRef, strategy)
               : [])
           );
         }),

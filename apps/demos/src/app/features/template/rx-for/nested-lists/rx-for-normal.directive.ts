@@ -282,7 +282,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
         odd: !even
       };
       scheduleUpdate(index, ctx => {
-        ctx.setComputedContext(newCtx);
+        ctx.updateContext(newCtx);
       });
     }
     for (let index = 0; index < this.viewContainerRef.length; index++) {
@@ -296,7 +296,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
         odd: !even
       };
       scheduleUpdate(index, ctx => {
-        ctx.setComputedContext(newCtx);
+        ctx.updateContext(newCtx);
       });
     }
     if (detectParent) {

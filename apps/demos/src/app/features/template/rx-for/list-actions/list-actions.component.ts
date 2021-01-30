@@ -207,6 +207,7 @@ const moveChangeSet1 = [items5k];
               renderCallback: renderCallback;
               trackBy: trackById;
               strategy: strategy$
+              patchZone: true
             "
             [title]="a.id + '_' + index + '_' + count"
             [class.even]="even"
