@@ -1,18 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ListServerItem, ListService } from '../data-access/list-resource';
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
+import { ListServerItem, ListService } from '../data-access/list-resource';
 
 export interface DemoBasicsItem {
   id: string;
   name: string;
-}
-
-interface ComponentState {
-  refreshInterval: number;
-  list: DemoBasicsItem[];
-  listExpanded: boolean;
 }
 
 // The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
@@ -68,7 +61,7 @@ const initComponentState = {
     </mat-expansion-panel>
   `,
   styles: [
-      `
+    `
       .list .mat-expansion-panel-header {
         position: relative;
       }
@@ -84,8 +77,7 @@ const initComponentState = {
       }
     `
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [RxState]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SetupStart implements OnInit, OnDestroy {
   intervalSubscription = new Subscription();
@@ -109,12 +101,8 @@ export class SetupStart implements OnInit, OnDestroy {
   listExpandedChange = this.listExpandedChanges;
 
   constructor(
-    private state: RxState<ComponentState>,
     private listService: ListService
   ) {
-    this.state.set(initComponentState);
-    this.state.connect('list', this.listService.list$);
-
   }
 
   ngOnDestroy(): void {

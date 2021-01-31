@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { RxState } from '@rx-angular/state';
+import { Subject } from 'rxjs';
 import { distinctUntilKeyChanged, map, startWith } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
-import { Subject } from 'rxjs';
 
 export interface DemoBasicsItem {
   id: string;
@@ -77,7 +77,7 @@ export class SideEffectsSolution extends RxState<ComponentState>
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 4000) {
-      this.set({refreshInterval});
+      this.set({ refreshInterval });
     }
   }
 
@@ -88,7 +88,6 @@ export class SideEffectsSolution extends RxState<ComponentState>
   constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
-
     this.connect('listExpanded', this.listExpandedChanges);
     this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
     this.hold(this.refreshClicks$.pipe(startWith(true)), () => this.listService.refetchList())

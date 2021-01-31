@@ -55,7 +55,11 @@ with very little effort in any component.
 
 ## Install
 
+`ng add @rx-angular/state`
+or
 `npm install @rx-angular/state`
+or
+`yarn add @rx-angular/state`
 
 ## API
 

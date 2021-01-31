@@ -12,8 +12,7 @@ Used together, you get a powerful tool for developing high-performance angular a
 
 This repository holds a set of helpers to create **fully reactive** as well as **fully zone-less** applications.
 
-![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/docs/images/rx-angular_logo.png)
-
+[![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/docs/images/rx-angular_logo.png)](https://www.rx-angular.io/)
 ## Links
 
 - [📚 Official docs](https://www.rx-angular.io/)
@@ -28,8 +27,12 @@ Find details in the linked readme files below for installation and setup instruc
 
 ## Install
 
+
+`ng add @rx-angular/state`
+`ng add @rx-angular/template`
+or
 `npm install --save @rx-angular/state`  
 `npm install --save @rx-angular/template`  
-or  
+or
 `yarn add @rx-angular/state`  
 `yarn add @rx-angular/template`

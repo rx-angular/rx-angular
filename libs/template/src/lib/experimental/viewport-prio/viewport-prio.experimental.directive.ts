@@ -1,4 +1,4 @@
-import { Directive, ElementRef, OnInit, Optional } from '@angular/core';
+import { Directive, ElementRef, OnDestroy, OnInit, Optional } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, mergeAll, tap, withLatestFrom } from 'rxjs/operators';
 import { getZoneUnPatchedApi } from '../../core';
@@ -73,7 +73,7 @@ const observerSupported = () =>
   // tslint:disable-next-line:directive-selector
   selector: '[viewport-prio]'
 })
-export class ViewportPrioDirective implements OnInit {
+export class ViewportPrioDirective implements OnInit, OnDestroy {
   entriesSubject = new Subject<IntersectionObserverEntry[]>();
   entries$: Observable<IntersectionObserverEntry> = this.entriesSubject.pipe(
     mergeAll()
@@ -131,5 +131,11 @@ export class ViewportPrioDirective implements OnInit {
         })
       )
       .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
   }
 }
