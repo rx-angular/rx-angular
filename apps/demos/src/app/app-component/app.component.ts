@@ -1,8 +1,11 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef } from '@angular/core';
 import { AppPresenter } from './app-presenter.service';
 import { MENU_ITEMS } from './app.menu';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, take, tap } from 'rxjs/operators';
+import { RippleRenderer } from '../shared/ripple/rxa-responsive-meter';
+import { interval } from 'rxjs';
+import { Platform } from '@angular/cdk/platform';
 
 @Component({
   selector: 'rxa-root',
