@@ -1,6 +1,6 @@
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { mapTo, switchMap } from 'rxjs/operators';
-import { cancelCallback, scheduleCallback } from './react-scheduler/scheduler';
+import { cancelCallback, scheduleCallback } from './react-scheduler/schedulerDOM';
 import { scheduleOnQueueOperatorFactory } from '../priority-scheduler';
 import { PriorityLevel } from './react-scheduler/schedulerPriorities';
 import { ReactSchedulerTask } from './react-scheduler/schedulerMinHeap';

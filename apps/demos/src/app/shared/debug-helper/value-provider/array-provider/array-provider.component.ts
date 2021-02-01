@@ -31,6 +31,9 @@ import { ArrayProviderService } from '../array-provider.service';
           <button mat-raised-button [unpatch]="unpatched" (click)="shuffleItemsImmutable()">
             Shuffle
           </button>
+          <button mat-raised-button [unpatch]="unpatched" (click)="shuffleAttack()">
+            Shuffle Attack
+          </button>
           <button mat-raised-button [unpatch]="unpatched" (click)="updateItemsImmutable(numberOfItems/2)">
             Update Many
           </button>

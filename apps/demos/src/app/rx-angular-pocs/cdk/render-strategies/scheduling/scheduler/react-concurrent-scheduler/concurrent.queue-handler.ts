@@ -4,7 +4,7 @@ import { ReactSchedulerOptions } from './model';
 
 import { coalescingManager } from '../../../../utils/coalescing-manager';
 import { ReactSchedulerTask } from './react-scheduler/schedulerMinHeap';
-import { cancelCallback, scheduleCallback } from './react-scheduler/scheduler';
+import { cancelCallback, scheduleCallback } from './react-scheduler/schedulerDOM';
 import { TaskQueue } from '../priority-scheduler/task-queue';
 
 /**

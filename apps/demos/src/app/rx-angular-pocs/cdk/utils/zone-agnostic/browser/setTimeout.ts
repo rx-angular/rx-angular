@@ -1,6 +1,6 @@
 import { getZoneUnPatchedApi } from '../zone-checks';
 
-export function setTimeout(cb: () => void, ms: number = 0): void {
+export function setTimeout(cb: Function, ms: number = 0): void {
   return getZoneUnPatchedApi('setTimeout')(cb, ms);
 }
 

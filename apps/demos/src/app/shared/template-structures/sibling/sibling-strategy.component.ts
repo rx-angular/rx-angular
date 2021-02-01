@@ -35,7 +35,7 @@ const chunk = (arr, n) =>
     </div>
   `,
   host: {
-    class: 'd-flex w-100',
+    class: 'd-flex flex-column w-100',
   },
   styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -91,7 +91,7 @@ export class SiblingStrategyComponent extends RxState<{
 
   trackBy = (idx: number, i: { id: number }) => i.id;
 
-  color(a: any) {
+  color(a: number) {
     return '#' + Math.floor(a * 16777215).toString(16);
   }
 

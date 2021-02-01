@@ -136,19 +136,19 @@ function createGlobalTaskManager(): GlobalTaskManager {
           }
           if (size() > 0) {
             // queue has entries left -> reschedule
-            cancelAnimFrame(frameId);
+            // cancelAnimFrame(frameId);
             // console.warn('rescheduling:', size());
             frameId = postMessage(exhaust)();
             subscriber.next();
           } else {
             // queue is empty -> exhaust completed
-            cancelAnimFrame(frameId);
+            // cancelAnimFrame(frameId);
             // console.warn('exhaust completed');
             subscriber.next();
             subscriber.complete();
           }
         } else {
-          cancelAnimFrame(frameId);
+          // cancelAnimFrame(frameId);
           // queue is empty -> exhaust completed
           subscriber.next();
           subscriber.complete();

@@ -5,7 +5,7 @@ import {
   map,
   merge,
   mergeAll,
-  publishReplay,
+  publishReplay, shareReplay,
   startWith,
   switchAll,
   tap
@@ -22,6 +22,7 @@ import { StrategyCredentials, StrategyCredentialsMap } from '../render-strategie
 import { RxNotification, RxTemplateObserver } from '../utils/rxjs/Notification';
 
 export interface RenderAware<U> {
+  strategy$: Observable<StrategyCredentials>;
   nextPotentialObservable: (value: any) => void;
   nextStrategy: (config: string | Observable<string>) => void;
   nextTemplateTrigger: (trigger$: Observable<RxNotification<U>>) => void;
@@ -51,6 +52,7 @@ export function createRenderAware<U>(cfg: {
     ngInputFlatten(),
     startWith(cfg.defaultStrategyName),
     nameToStrategyCredentials(cfg.strategies, cfg.defaultStrategyName),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
   const templateTriggerSubject = new Subject<Observable<RxNotification<U>>>();
   const templateTrigger$ = templateTriggerSubject.pipe(
@@ -76,6 +78,7 @@ export function createRenderAware<U>(cfg: {
     );
 
   return {
+    strategy$,
     nextPotentialObservable(value: Observable<U>): void {
       observablesFromTemplate$.next(value);
     },

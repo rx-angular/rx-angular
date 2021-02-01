@@ -29,13 +29,6 @@ const ROUTES: Routes = [
       import('./sibling-component-structure/sibling-component-structure.module').then(
         (m) => m.SiblingComponentStructureModule
       ),
-  },
-  {
-    path: 'concurrent-strategies',
-    loadChildren: () =>
-      import('./concurrent-strategies/concurrent-strategies.module').then(
-        (m) => m.ConcurrentStrategiesModule
-      ),
   }
 ];
 

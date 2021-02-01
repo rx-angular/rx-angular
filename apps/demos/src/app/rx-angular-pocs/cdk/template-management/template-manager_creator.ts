@@ -1,10 +1,14 @@
 import { EmbeddedViewRef, TemplateRef, ViewContainerRef } from '@angular/core';
 import { RxBaseTemplateNames } from './model';
+import { Observable, Subject } from 'rxjs';
 
 export interface TemplateManager<
   C extends object,
   N = (RxBaseTemplateNames | string)
 > {
+
+  templateChanged$: Observable<N>
+
   getTemplateName(templateName: N, fallback: N): N;
 
   /**
@@ -65,6 +69,7 @@ export interface TemplateManager<
    * Clears all cached views. This should be called if the instance that holds the template manager dies.
    */
   destroy(): void;
+
 }
 
 /**
@@ -91,6 +96,7 @@ export function createTemplateManager<
   const viewCache = new Map<N, EmbeddedViewRef<C>>();
   const viewContext = { ...initialViewContext };
   let activeContentView: N;
+  const templateChanged$ = new Subject<N>()
 
   return {
     hasTemplateRef,
@@ -102,6 +108,7 @@ export function createTemplateManager<
     createEmbeddedView,
     displayView: displayContentView,
     destroy,
+    templateChanged$
   };
 
   function hasViewCache(name: N): boolean {
@@ -194,6 +201,7 @@ export function createTemplateManager<
             viewContext
           );
           viewCache.set(name, newView);
+          templateChanged$.next(name);
         }
       } else {
         // @NOTICE this is here to cause errors and see in which situations we would throw.

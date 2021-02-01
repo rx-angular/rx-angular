@@ -23,7 +23,8 @@ const sections: DocsSectionConfig[] = [
   {
     sourceDirs: [
       'libs/state/src/',
-      'libs/template/src/'
+      'libs/template/src/',
+      'apps/demos/src/app/rx-angular-pocs/template/directives/for'
     ],
     exclude: [],
     outputPath: 'generated',

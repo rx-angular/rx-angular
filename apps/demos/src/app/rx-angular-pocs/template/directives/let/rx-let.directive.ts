@@ -1,86 +1,110 @@
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectorRef,
   Directive,
-  Inject,
+  ElementRef,
+  EmbeddedViewRef,
   Input,
+  NgZone,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 
-import { defer, NextObserver, Observable, ObservableInput, Subject, Subscription, Unsubscribable } from 'rxjs';
-import { filter, map, mapTo, tap } from 'rxjs/operators';
 import {
-  createRenderAware,
-  createTemplateManager,
-  getDefaultStrategyCredentialsMap,
+  defer,
+  NextObserver,
+  Observable,
+  ObservableInput,
+  Subject,
+  Subscription,
+} from 'rxjs';
+import { map, mapTo } from 'rxjs/operators';
+import {
+  getHotMerged,
   Hooks,
-  mergeStrategies,
-  RenderAware,
-  RX_CUSTOM_STRATEGIES,
-  RX_PRIMARY_STRATEGY,
   RxNotification,
-  RxTemplateObserver,
-  StrategyCredentialsMap,
+  RxNotificationKind,
   StrategyProvider,
-  TemplateManager,
   toRxCompleteNotification,
   toRxErrorNotification,
-  toRxSuspenseNotification
+  toRxSuspenseNotification,
 } from '../../../cdk';
-import { RxLetTemplateNames, rxLetTemplateNames, RxLetViewContext } from './model';
+import {
+  RxLetTemplateNames,
+  rxLetTemplateNames,
+  RxLetViewContext,
+} from './model';
+import {
+  createTemplateManager2,
+  TemplateManager2,
+} from '../../../cdk/template-management/template-manager';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[rxLet]',
-  providers: []
+  providers: [],
 })
-// tslint:disable-next-line:directive-class-suffix
 export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
 
+  static ngTemplateGuard_rxLet: 'binding';
 
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
-    this.renderAware.nextPotentialObservable(potentialObservable);
+    this.observablesHandler.next(potentialObservable);
   }
 
   @Input('rxLetStrategy')
   set strategy(strategyName: string | Observable<string> | undefined) {
-    this.renderAware.nextStrategy(strategyName);
+    this.strategyHandler.next(strategyName);
   }
 
   @Input('rxLetCompleteTpl')
-  set rxComplete(templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>) {
-    this.templateManager.addTemplateRef(RxLetTemplateNames.complete, templateRef);
+  set rxComplete(
+    templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>
+  ) {
+    this.templateManager.addTemplateRef(
+      RxLetTemplateNames.complete,
+      templateRef
+    );
   }
 
   @Input('rxLetErrorTpl')
-  set rxError(templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>) {
+  set rxError(
+    templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>
+  ) {
     this.templateManager.addTemplateRef(RxLetTemplateNames.error, templateRef);
   }
 
   @Input('rxLetSuspenseTpl')
-  set rxSuspense(templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>) {
-    this.templateManager.addTemplateRef(RxLetTemplateNames.suspense, templateRef);
+  set rxSuspense(
+    templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>
+  ) {
+    this.templateManager.addTemplateRef(
+      RxLetTemplateNames.suspense,
+      templateRef
+    );
   }
 
   @Input('rxLetCompleteTrg')
   set rxCompleteTrigger(trigger$: Observable<any>) {
-    this.renderAware.nextTemplateTrigger(trigger$.pipe(mapTo(toRxCompleteNotification() as any)));
+    this.triggerHandler.next(
+      trigger$.pipe(mapTo(toRxCompleteNotification() as any))
+    );
   }
 
   @Input('rxLetErrorTrg')
   set rxErrorTrigger(error$: Observable<any>) {
-    this.renderAware.nextTemplateTrigger(error$.pipe(map(toRxErrorNotification as any)));
+    this.triggerHandler.next(error$.pipe(map(toRxErrorNotification as any)));
   }
 
   @Input('rxLetSuspenseTrg')
   set rxSuspenseTrigger(trigger$: Observable<any>) {
-    console.log('rxSuspense', trigger$);
-    this.renderAware.nextTemplateTrigger(trigger$.pipe(map(toRxSuspenseNotification as any)));
+    // console.log('rxSuspense', trigger$);
+    this.triggerHandler.next(
+      trigger$.pipe(map(toRxSuspenseNotification as any))
+    );
   }
 
   @Input('rxLetRenderCallback')
@@ -88,93 +112,40 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
     this._renderObserver = callback;
   }
 
+  @Input('rxLetParent') renderParent: boolean;
+
+  @Input('rxLetPatchZone') patchZone: boolean;
+
+
   constructor(
-    @Optional()
-    @Inject(RX_CUSTOM_STRATEGIES)
-    private customStrategies: StrategyCredentialsMap[],
-    @Inject(RX_PRIMARY_STRATEGY)
-    private defaultStrategyName: string,
+    private strategyProvider: StrategyProvider,
     public cdRef: ChangeDetectorRef,
+    public eRef: ElementRef,
+    private ngZone: NgZone,
     private readonly nextTemplateRef: TemplateRef<RxLetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
     super();
-    this.templateManager = createTemplateManager(
-      this.viewContainerRef,
-      this.initialViewContext
-    );
-    this.strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), getDefaultStrategyCredentialsMap());
-    this.renderAware = createRenderAware<U>({
-      templateObserver: this.templateObserver,
-      strategies: this.strategies,
-      defaultStrategyName: this.defaultStrategyName,
-      // @NOTICE this is checked every emmit. Templates are IMHO statically assigned, so we could find a way to check only once?
-      getCdRef: (notification: RxNotification<U>): ChangeDetectorRef => this.getEmbeddeViewByNotification(notification),
-      getContext: (notification: RxNotification<U>): ChangeDetectorRef => this.getEmbeddeViewByNotification(notification)
-    });
   }
 
-  static ngTemplateGuard_rxLet: 'binding';
-
-  private readonly strategies: StrategyCredentialsMap;
+  /** @internal */
+  private observablesHandler = getHotMerged<U>();
+  private strategyHandler = getHotMerged<string>();
+  private triggerHandler = getHotMerged<RxNotificationKind>();
 
   private _renderObserver: NextObserver<any>;
 
-  private subscription: Unsubscribable = Subscription.EMPTY;
+  private subscription: Subscription = new Subscription();
 
-  private readonly templateManager: TemplateManager<RxLetViewContext<U | undefined | null>, rxLetTemplateNames>;
-
-  private readonly initialViewContext: RxLetViewContext<U> = {
-    $implicit: undefined,
-    rxLet: undefined,
-    $error: false,
-    $complete: false,
-    $suspense: false
-  };
-
-  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
-    suspense: (value?: any) => {
-      this.displayInitialView();
-      this.templateManager.updateViewContext({
-        // if a custom value is provided take it, otherwise assign true
-        $suspense: value !== undefined ? value : true,
-        $error: false,
-        $complete: false
-      });
-    },
-    next: (value: U | null | undefined) => {
-      this.templateManager.displayView(RxLetTemplateNames.next);
-      this.templateManager.updateViewContext({
-        $implicit: value,
-        rxLet: value,
-        $suspense: false,
-        $error: false,
-        $complete: false
-      });
-    },
-    error: (error: Error) => {
-      this.templateManager.displayView(RxLetTemplateNames.error, RxLetTemplateNames.next);
-      this.templateManager.updateViewContext({
-        $error: error,
-        $suspense: false
-      });
-    },
-    complete: () => {
-      this.templateManager.displayView(RxLetTemplateNames.complete, RxLetTemplateNames.next);
-      this.templateManager.updateViewContext({
-        $complete: true,
-        $suspense: false
-      });
-    }
-  };
+  private templateManager: TemplateManager2<
+    U,
+    RxLetViewContext<U | undefined | null>,
+    rxLetTemplateNames
+  >;
 
   private rendered$ = new Subject<RxNotification<U>>();
-  readonly renderAware: RenderAware<U>;
 
-  @Output() readonly rendered = defer(() => this.rendered$.pipe(
-    filter(({ kind }) => this.templateManager.hasTemplateRef(kind as any))
-    )
-  );
+  @Output() readonly rendered = defer(() => this.rendered$.pipe());
 
   /** @internal */
   static ngTemplateContextGuard<U>(
@@ -185,29 +156,70 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.templateManager.addTemplateRef(RxLetTemplateNames.next, this.nextTemplateRef);
-    this.renderAware.subscribe();
-    this.subscription = this.renderAware.rendered$.pipe(
-      tap(this?._renderObserver)
-    ).subscribe(this.rendered$);
-    this.displayInitialView();
+    this.templateManager = createTemplateManager2<
+      U,
+      RxLetViewContext<U>,
+      rxLetTemplateNames
+    >({
+      templateSettings: {
+        viewContainerRef: this.viewContainerRef,
+        createViewContext,
+        updateViewContext,
+        customContext: (rxLet) => ({ rxLet }),
+      },
+      renderSettings: {
+        cdRef: this.cdRef,
+        eRef: this.eRef,
+        parent: coerceBooleanProperty(this.renderParent),
+        patchZone: this.patchZone ? this.ngZone : false,
+        defaultStrategyName: this.strategyProvider.primaryStrategy,
+        strategies: this.strategyProvider.strategies,
+      },
+      notificationToTemplateName: {
+        [RxNotificationKind.suspense]: () => RxLetTemplateNames.suspense,
+        [RxNotificationKind.next]: () => RxLetTemplateNames.next,
+        [RxNotificationKind.error]: () => RxLetTemplateNames.error,
+        [RxNotificationKind.complete]: () => RxLetTemplateNames.complete,
+      },
+      templateTrigger$: this.triggerHandler.values$,
+    });
+    this.templateManager.addTemplateRef(
+      RxLetTemplateNames.next,
+      this.nextTemplateRef
+    );
+    this.templateManager.nextStrategy(this.strategyHandler.values$);
+    this.subscription.add(
+      this.templateManager
+        .render(this.observablesHandler.values$)
+        .subscribe((n) => {
+          this.rendered$.next(n);
+          this._renderObserver?.next(n);
+        })
+    );
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-    this.templateManager.destroy();
   }
-
-  private getEmbeddeViewByNotification = (notification: RxNotification<U>): ChangeDetectorRef => {
-    const name = this.templateManager.getTemplateName(notification.kind as any, RxLetTemplateNames.next);
-    return this.templateManager.getEmbeddedView(name) as ChangeDetectorRef;
-  };
-
-  private displayInitialView = () => {
-    // Display "suspense" template if provided
-    if (this.templateManager.hasTemplateRef(RxLetTemplateNames.suspense)) {
-      this.templateManager.displayView(RxLetTemplateNames.suspense);
-    }
-  };
-
 }
+
+function createViewContext<T>(value: T): RxLetViewContext<T> {
+  return {
+    rxLet: value,
+    $implicit: value,
+    $error: false,
+    $complete: false,
+    $suspense: false,
+  };
+}
+
+function updateViewContext<T>(
+  value: T,
+  view: EmbeddedViewRef<RxLetViewContext<T>>,
+  context: RxLetViewContext<T>
+): void {
+  Object.keys(context).forEach((k) => {
+    view.context[k] = context[k];
+  });
+}
+

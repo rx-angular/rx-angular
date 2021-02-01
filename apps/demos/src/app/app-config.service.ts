@@ -6,6 +6,7 @@ import { environment } from '../environments/environment';
 export interface CdConfig {
   strategy: string;
   rippleOn: boolean;
+  rippleResponsiveOn: boolean;
 }
 
 @Injectable({ providedIn: 'root' })

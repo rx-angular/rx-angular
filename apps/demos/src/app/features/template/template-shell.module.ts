@@ -15,10 +15,24 @@ const ROUTES: Routes = [
       )
   },
   {
-    path: 'push',
+    path: 'rx-if',
     loadChildren: () =>
-      import('./push/push.module').then(
-        m => m.PushDemoModule
+      import('./rx-if/rx-if-demo.module').then(
+        m => m.RxIfDemoModule
+      )
+  },
+  {
+    path: 'rx-for',
+    loadChildren: () =>
+      import('./rx-for/rx-for.module').then(
+        m => m.RxForDemoModule
+      )
+  },
+  {
+    path: 'pipes',
+    loadChildren: () =>
+      import('./pipes/pipes.module').then(
+        m => m.PipesModule
       )
   },
   {
@@ -26,6 +40,20 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./unpatch/unpatch.module').then(
         m => m.UnpatchModule
+      )
+  },
+  {
+    path: 'rx-context',
+    loadChildren: () =>
+      import('./rx-context/rx-context.routed.module').then(
+        m => m.RxContextRoutedModule
+      )
+  },
+  {
+    path: 'strategies',
+    loadChildren: () =>
+      import('./strategies/strategies.module').then(
+        m => m.StrategiesModule
       )
   },
   {

@@ -1,7 +1,6 @@
 <mat-sidenav-container
   class="app-shell-container"
-  *ngIf="viewState$ | async as state"
->
+  *rxLet="viewState$; let state">
   <mat-sidenav
     #drawer
     class="app-shell-sidenav"

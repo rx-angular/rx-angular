@@ -1,5 +1,9 @@
 export const MENU_ITEMS = [
   {
+    label: 'Basic',
+    link: 'basic'
+  },
+  {
     label: 'Error Handling',
     link: 'error-handling'
   },

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { Observable, Subject } from 'rxjs';
+import { from, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   addItemImmutable,
@@ -102,6 +102,12 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
 
   moveItemsImmutable(numPositions: number = 1): void {
     this.moveItemsImmutableSubject.next(numPositions);
+  }
+
+  shuffleAttack(): void {
+    from([0, 1, 2]).subscribe(v => {
+      this.shuffleItemsImmutable();
+    })
   }
 
   shuffleItemsImmutable(): void {

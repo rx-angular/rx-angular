@@ -17,7 +17,7 @@ export class RxForViewContext<T extends Record<string | number | symbol, any>,
   private _$complete: boolean;
   private _$error: false | Error;
   private _$suspense: any;
-  private readonly _context$ = new BehaviorSubject<RxListViewComputedContext>({
+  private readonly _context$ = new BehaviorSubject<RxListViewComputedContext<T>>({
     index: -1,
     count: -1
   });
@@ -108,12 +108,15 @@ export class RxForViewContext<T extends Record<string | number | symbol, any>,
     );
   }
 
-  constructor(private item: T) {
+  constructor(private item: T, customProps?: {count: number, index: number}) {
     // tslint:disable-next-line:no-unused-expression
     this.$implicit = item;
+    if(customProps) {
+      this.updateContext(customProps)
+    }
   }
 
-  setComputedContext(newProps: RxListViewComputedContext): void {
+  updateContext(newProps: Partial<RxListViewComputedContext<T>>): void {
     this._context$.next({
       ...this._context$.getValue(),
       ...newProps

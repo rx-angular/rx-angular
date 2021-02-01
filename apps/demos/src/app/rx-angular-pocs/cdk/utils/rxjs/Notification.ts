@@ -12,10 +12,10 @@ export type RxTemplateObserver<T> = {
 } & PartialObserver<T>
 
 export enum RxNotificationKind {
-  suspense = 'rxSuspense',
-  next = 'rxNext',
-  error = 'rxError',
-  complete = 'rxComplete'
+  suspense = 'suspense',
+  next = 'next',
+  error = 'error',
+  complete = 'complete'
 }
 
 type NotificationExtract = 'value' | 'hasValue';
