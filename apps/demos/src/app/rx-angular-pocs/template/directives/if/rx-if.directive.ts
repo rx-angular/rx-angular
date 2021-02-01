@@ -11,7 +11,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
-import { Observable, Subject, Subscription } from 'rxjs';
+import { NextObserver, Observable, Subject, Subscription } from 'rxjs';
 
 import {
   getHotMerged,
@@ -29,6 +29,7 @@ import { createTemplateManager2 } from '../../../cdk/template-management/templat
 })
 export class RxIf<U> implements OnInit, OnDestroy {
   private subscription = new Subscription();
+  private _renderObserver: NextObserver<any>;
   private templateManager;
 
   @Input()
@@ -49,16 +50,21 @@ export class RxIf<U> implements OnInit, OnDestroy {
   }
 
   // tslint:disable-next-line:no-input-rename
-  @Input('rxLetParent') renderParent: boolean;
+  @Input('rxIfParent') renderParent: boolean;
 
 
-  @Input('rxLetPatchZone') patchZone: boolean;
+  @Input('rxIfPatchZone') patchZone: boolean;
+
+  @Input('rxIfRenderCallback')
+  set renderCallback(callback: NextObserver<U>) {
+    this._renderObserver = callback;
+  }
 
 
 
   private readonly observablesHandler = getHotMerged<U>();
   private readonly strategyHandler = getHotMerged<string>();
-  private readonly rendered$ = new Subject<RxNotification<U>>();
+  private readonly rendered$ = new Subject<U>();
 
   constructor(
     private strategyProvider: StrategyProvider,
@@ -107,7 +113,10 @@ export class RxIf<U> implements OnInit, OnDestroy {
     this.subscription.add(
       this.templateManager
         .render(this.observablesHandler.values$)
-        .subscribe((n) => this.rendered$.next(n))
+        .subscribe((n) => {
+          this.rendered$.next(n);
+          this._renderObserver?.next(n);
+        })
     );
   }
 

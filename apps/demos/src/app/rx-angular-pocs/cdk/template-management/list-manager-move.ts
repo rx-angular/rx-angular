@@ -1,4 +1,3 @@
-import { combineLatest, merge, Observable, of, OperatorFunction } from 'rxjs';
 import {
   EmbeddedViewRef,
   IterableDiffer,
@@ -7,19 +6,11 @@ import {
   TemplateRef,
   TrackByFunction,
 } from '@angular/core';
-import {
-  delay,
-  filter,
-  ignoreElements,
-  map,
-  startWith,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { combineLatest, Observable, OperatorFunction } from 'rxjs';
+import { filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { StrategyCredentials } from '../render-strategies/model';
 
 import { onStrategy } from '../render-strategies/utils/strategy-helper';
-import { asyncScheduler } from '../utils/zone-agnostic/rxjs/scheduler/async';
 import {
   ListChange,
   NgViewContext,
@@ -30,12 +21,12 @@ import {
 import {
   getChangesArray,
   getListTemplateManager,
-  getVirtualParentNotifications$,
   getTNode,
+  notifyAllParentsIfNeeded,
+  notifyInjectingParentIfNeeded,
   strategyHandling,
   TNode,
 } from './utils';
-import { StrategyCredentials } from '../render-strategies/model';
 
 export interface ListManager<T, C> {
   nextStrategy: (config: string | Observable<string>) => void;
@@ -71,8 +62,6 @@ export function createListManager<
     parent,
     eRef,
   } = renderSettings;
-  const injectingViewContext =
-    (injectingViewCdRef as any).context || injectingViewCdRef;
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
   //               type,  payload
@@ -131,45 +120,28 @@ export function createListManager<
             count
           );
           partiallyFinished = true;
-          // @TODO ??? just => notifyParent = (insertedOrRemoved && parent);
-          notifyParent = notifyParent || (insertedOrRemoved && parent);
+          // @TODO we need to know if we need to notifyParent on move aswell
+          notifyParent = insertedOrRemoved && parent;
           count = items.length;
 
           return combineLatest([
             // emit after all changes are rendered
             ...applyChanges$,
-            // emit if parent needs notification
-            // @TODO naming of getParentNotifiers and projectionParentsNotifier is bad!
-            startWith(null)(getParentNotifiers(insertedOrRemoved, strategy)),
+            // emit injectingParent if needed
+            notifyInjectingParentIfNeeded(
+              injectingViewCdRef,
+              strategy,
+              insertedOrRemoved
+            ),
           ]).pipe(
             tap(() => (partiallyFinished = false)),
             // somehow this makes the strategySelect work
-            delay(0, asyncScheduler),
-            switchMap((v) => {
-              if (!notifyParent) {
-                return of(v);
-              }
-              notifyParent = false;
-              const behaviors = getVirtualParentNotifications$(
-                tNode,
-                injectingViewCdRef,
-                strategy
-              );
-              // @TODO remove this CD on parent if possible
-              behaviors.push(
-                onStrategy(
-                  null,
-                  strategy,
-                  (value, work, options) =>
-                    work(injectingViewCdRef, options.scope),
-                  { scope: injectingViewContext }
-                )
-              );
-              if (behaviors.length === 1) {
-                return of(v);
-              }
-              return combineLatest(behaviors).pipe(ignoreElements(), startWith(v));
-            }),
+            notifyAllParentsIfNeeded(
+              tNode,
+              injectingViewCdRef,
+              strategy,
+              () => notifyParent
+            ),
             filter((v) => v != null)
           );
         })
@@ -180,24 +152,6 @@ export function createListManager<
     const viewLength = viewContainerRef.length;
     const toRemoveCount = viewLength - items.length;
     return toRemoveCount > 0 || count !== items.length;
-  }
-
-  function getParentNotifiers(
-    insertedOrRemoved: boolean,
-    strategy
-  ): Observable<never> {
-    // console.log('in injectingView', insertedOrRemoved);
-    return insertedOrRemoved
-      ? onStrategy(
-          null,
-          strategy,
-          (value, work, options) => {
-            // console.log('notify injectingView', injectingViewCdRef);
-            work(injectingViewCdRef, options.scope);
-          }
-          //  scopeOnInjectingViewContext
-        ).pipe(ignoreElements())
-      : (([] as unknown) as Observable<never>);
   }
 
   function getObservablesFromChangesArray(

@@ -8,14 +8,18 @@ import {
   ɵdetectChanges as detectChanges
 } from '@angular/core';
 import {
+  combineLatest,
   merge,
   Observable,
-  ObservableInput,
+  ObservableInput, of,
   OperatorFunction,
   ReplaySubject,
   Subject,
 } from 'rxjs';
+import { MonoTypeOperatorFunction } from 'rxjs/internal/types';
 import {
+  delay,
+  ignoreElements,
   mergeAll,
   share,
   startWith,
@@ -37,6 +41,7 @@ import {
   T_HOST,
   TVIEW,
 } from '../utils/view-constants';
+import { asyncScheduler } from '../utils/zone-agnostic/rxjs/scheduler/async';
 import { ListChange, RxListViewComputedContext, RxViewContext } from './model';
 import { CreateViewContext, UpdateViewContext } from './list-manager-move';
 import { ngInputFlatten } from '../utils/rxjs/operators';
@@ -189,6 +194,70 @@ export function getEmbeddedViewCreator(
       );
   }
   return create;
+}
+
+export function notifyAllParentsIfNeeded<T>(
+  tNode: TNode,
+  injectingViewCdRef: ChangeDetectorRef,
+  strategy: StrategyCredentials,
+  notifyNeeded: () => boolean
+): MonoTypeOperatorFunction<T> {
+
+  return o$ => o$.pipe(
+    delay(0, asyncScheduler),
+    switchMap(v => {
+      const notifyParent = notifyNeeded();
+      if (!notifyParent) {
+        return of(v);
+      }
+      const behaviors = getVirtualParentNotifications$(
+        tNode,
+        injectingViewCdRef,
+        strategy
+      );
+      // @TODO remove this CD on parent if possible
+      behaviors.push(
+        onStrategy(
+          null,
+          strategy,
+          (_v, work, options) =>
+            work(injectingViewCdRef, options.scope),
+          { scope: (injectingViewCdRef as any).context || injectingViewCdRef }
+        )
+      );
+      if (behaviors.length === 1) {
+        return of(v);
+      }
+      return combineLatest(behaviors).pipe(ignoreElements(), startWith(v));
+    })
+  )
+}
+
+export function notifyInjectingParentIfNeeded(
+  injectingViewCdRef: ChangeDetectorRef,
+  strategy: StrategyCredentials,
+  notify: boolean,
+): Observable<null> {
+  return startWith<null>(null)(getParentNotifiers(injectingViewCdRef, notify, strategy));
+}
+
+export function getParentNotifiers(
+  injectingViewCdRef: ChangeDetectorRef,
+  insertedOrRemoved: boolean,
+  strategy
+): Observable<never> {
+  // console.log('in injectingView', insertedOrRemoved);
+  return insertedOrRemoved
+         ? onStrategy(
+      null,
+      strategy,
+      (value, work, options) => {
+        // console.log('notify injectingView', injectingViewCdRef);
+        work(injectingViewCdRef, options.scope);
+      }
+      //  scopeOnInjectingViewContext
+    ).pipe(ignoreElements())
+         : (([] as unknown) as Observable<never>);
 }
 
 // TNode is a component that was projected into another component (virtual parent)

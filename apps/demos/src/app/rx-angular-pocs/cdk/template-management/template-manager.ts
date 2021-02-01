@@ -1,26 +1,9 @@
 import { EmbeddedViewRef, TemplateRef } from '@angular/core';
-import {
-  RenderSettings,
-  RxBaseTemplateNames,
-  RxViewContext,
-  TemplateSettings,
-} from './model';
-import { EMPTY, isObservable, merge, Observable, of } from 'rxjs';
-import { RenderWork } from '../render-strategies/model';
-import {
-  getEmbeddedViewCreator,
-  getVirtualParentNotifications$,
-  getTNode,
-  notificationKindToViewContext,
-  strategyHandling,
-  templateHandling,
-  templateTriggerHandling,
-  TNode,
-} from './utils';
-import { rxMaterialize } from '../utils/rxjs/operators';
+import { combineLatest, EMPTY, isObservable, Observable, of } from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
+  filter,
   map,
   merge as mergeWith,
   switchAll,
@@ -28,7 +11,26 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { onStrategy } from '../render-strategies';
+import { RenderWork } from '../render-strategies/model';
 import { RxNotification, RxNotificationKind } from '../utils/rxjs';
+import { rxMaterialize } from '../utils/rxjs/operators';
+import {
+  RenderSettings,
+  RxBaseTemplateNames,
+  RxViewContext,
+  TemplateSettings,
+} from './model';
+import {
+  getEmbeddedViewCreator,
+  getTNode,
+  notificationKindToViewContext,
+  notifyAllParentsIfNeeded,
+  notifyInjectingParentIfNeeded,
+  strategyHandling,
+  templateHandling,
+  templateTriggerHandling,
+  TNode,
+} from './utils';
 
 export interface RenderAware<T> {
   nextStrategy: (nextConfig: string | Observable<string>) => void;
@@ -116,9 +118,8 @@ export function createTemplateManager2<
 
           const template = templates.get(templateName);
           const isNewTemplate = activeTemplate !== templateName;
-          console.log('newTemplate', templateName);
-          console.log('activeTemplate', activeTemplate);
-          return merge(
+          const notifyParent = isNewTemplate || parent;
+          return combineLatest([
             onStrategy(
               value,
               strategy,
@@ -126,7 +127,6 @@ export function createTemplateManager2<
                 if (isNewTemplate) {
                   if (viewContainerRef.length > 0) {
                     viewContainerRef.clear();
-                    console.log('remove', activeTemplate);
                   }
                   if (template) {
                     createEmbeddedView(template);
@@ -144,9 +144,19 @@ export function createTemplateManager2<
               }
               // { scope: viewContainerRef.get(0) }
             ),
-            ...(isNewTemplate && parent
-              ? getVirtualParentNotifications$(tNode, injectingViewCdRef, strategy)
-              : [])
+            notifyInjectingParentIfNeeded(
+              injectingViewCdRef,
+              strategy,
+              isNewTemplate
+            ),
+          ]).pipe(
+            notifyAllParentsIfNeeded(
+              tNode,
+              injectingViewCdRef,
+              strategy,
+              () => notifyParent
+            ),
+            filter((v) => v != null)
           );
         }),
         catchError((e) => {

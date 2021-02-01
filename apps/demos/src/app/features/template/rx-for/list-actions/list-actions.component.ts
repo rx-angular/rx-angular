@@ -207,7 +207,6 @@ const moveChangeSet1 = [items5k];
               renderCallback: renderCallback;
               trackBy: trackById;
               strategy: strategy$
-              patchZone: true
             "
             [title]="a.id + '_' + index + '_' + count"
             [class.even]="even"
@@ -298,7 +297,7 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
   readonly triggerChangeSet = new Subject<void>();
   readonly activeChangeSet$ = this.triggerChangeSet.pipe(
     switchMapTo(scheduled(customChangeSet, asyncScheduler)),
-    tap((data) => console.log(data))
+    // tap((data) => console.log(data))
   );
 
   readonly triggerMoveSet = new Subject<void>();

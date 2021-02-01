@@ -100,7 +100,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
 
   @Input('rxLetSuspenseTrg')
   set rxSuspenseTrigger(trigger$: Observable<any>) {
-    console.log('rxSuspense', trigger$);
+    // console.log('rxSuspense', trigger$);
     this.triggerHandler.next(
       trigger$.pipe(map(toRxSuspenseNotification as any))
     );
@@ -194,7 +194,10 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
     this.subscription.add(
       this.templateManager
         .render(this.observablesHandler.values$)
-        .subscribe((n) => this.rendered$.next(n))
+        .subscribe((n) => {
+          this.rendered$.next(n);
+          this._renderObserver?.next(n);
+        })
     );
   }
 
