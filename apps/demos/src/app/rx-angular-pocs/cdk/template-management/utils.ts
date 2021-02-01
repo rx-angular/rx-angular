@@ -191,7 +191,8 @@ export function getEmbeddedViewCreator(
   return create;
 }
 
-export function getParentNotifications$(
+// TNode is a component that was projected into another component (virtual parent)
+export function getVirtualParentNotifications$(
   tNode: TNode,
   injectingViewCdRef: ChangeDetectorRef,
   strategy: StrategyCredentials

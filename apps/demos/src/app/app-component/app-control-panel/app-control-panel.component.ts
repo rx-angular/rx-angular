@@ -4,10 +4,11 @@ import {
   Component, ElementRef
 } from '@angular/core';
 import { AppConfigService } from '../../app-config.service';
-import { BehaviorSubject, EMPTY, interval, Subject } from 'rxjs';
+import { BehaviorSubject, EMPTY } from 'rxjs';
 import { RippleRenderer } from '../../shared/ripple/rxa-responsive-meter';
 import { Platform } from '@angular/cdk/platform';
 import { filter, switchMap } from 'rxjs/operators';
+ import { interval } from '../../rx-angular-pocs';
 
 @Component({
   selector: 'rxa-config-panel',
@@ -73,7 +74,10 @@ export class AppControlPanelComponent implements AfterViewInit {
         switchMap((isOn) => (isOn ? interval(300) : EMPTY)),
         filter(() => !!this.rp)
       ),
-      () => this.rp.fadeInRipple(0, 0)
+      (v) => {
+        console.log('v', v);
+        this.rp.fadeInRipple(0, 0)
+      }
     );
   }
 

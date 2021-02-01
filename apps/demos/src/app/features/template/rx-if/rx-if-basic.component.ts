@@ -27,7 +27,7 @@ import { environment } from '../../../../environments/environment';
               FALSE TEMPLATE
             </div>
           </ng-template>
-          <div class="dh-embedded-view" *rxIf="v.boolean$; let value; else: elseTpl; strategy: strategy;">
+          <div class="dh-embedded-view" *rxIf="v.boolean$; let value; strategy: strategy;">
             <rxa-dirty-check></rxa-dirty-check>
             TRUE TEMPLATE
           </div>

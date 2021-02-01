@@ -9,7 +9,7 @@ import { EMPTY, isObservable, merge, Observable, of } from 'rxjs';
 import { RenderWork } from '../render-strategies/model';
 import {
   getEmbeddedViewCreator,
-  getParentNotifications$,
+  getVirtualParentNotifications$,
   getTNode,
   notificationKindToViewContext,
   strategyHandling,
@@ -113,8 +113,11 @@ export function createTemplateManager2<
             value,
             templates
           );
+
           const template = templates.get(templateName);
           const isNewTemplate = activeTemplate !== templateName;
+          console.log('newTemplate', templateName);
+          console.log('activeTemplate', activeTemplate);
           return merge(
             onStrategy(
               value,
@@ -122,7 +125,8 @@ export function createTemplateManager2<
               (v: T, work: RenderWork, options: { scope?: any }) => {
                 if (isNewTemplate) {
                   if (viewContainerRef.length > 0) {
-                    viewContainerRef.remove();
+                    viewContainerRef.clear();
+                    console.log('remove', activeTemplate);
                   }
                   if (template) {
                     createEmbeddedView(template);
@@ -141,7 +145,7 @@ export function createTemplateManager2<
               // { scope: viewContainerRef.get(0) }
             ),
             ...(isNewTemplate && parent
-              ? getParentNotifications$(tNode, injectingViewCdRef, strategy)
+              ? getVirtualParentNotifications$(tNode, injectingViewCdRef, strategy)
               : [])
           );
         }),

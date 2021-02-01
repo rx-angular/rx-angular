@@ -36,8 +36,6 @@ export class RxIf<U> implements OnInit, OnDestroy {
     this.observablesHandler.next(potentialObservable);
   }
 
-  @Input('rxIfParent') renderParent = true;
-
   @Input('rxIfStrategy')
   set strategy(strategyName: Observable<string> | string | null | undefined) {
     this.strategyHandler.next(strategyName);
@@ -49,6 +47,14 @@ export class RxIf<U> implements OnInit, OnDestroy {
       this.templateManager.addTemplateRef(RxIfTemplateNames.else, templateRef);
     }
   }
+
+  // tslint:disable-next-line:no-input-rename
+  @Input('rxLetParent') renderParent: boolean;
+
+
+  @Input('rxLetPatchZone') patchZone: boolean;
+
+
 
   private readonly observablesHandler = getHotMerged<U>();
   private readonly strategyHandler = getHotMerged<string>();
@@ -77,7 +83,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
         cdRef: this.cdRef,
         eRef: this.eRef,
         parent: coerceBooleanProperty(this.renderParent),
-        patchZone: false,
+        patchZone: this.patchZone ? this.ngZone : false,
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         strategies: this.strategyProvider.strategies,
       },

@@ -30,7 +30,7 @@ import {
 import {
   getChangesArray,
   getListTemplateManager,
-  getParentNotifications$,
+  getVirtualParentNotifications$,
   getTNode,
   strategyHandling,
   TNode,
@@ -139,6 +139,7 @@ export function createListManager<
             // emit after all changes are rendered
             ...applyChanges$,
             // emit if parent needs notification
+            // @TODO naming of getParentNotifiers and projectionParentsNotifier is bad!
             startWith(null)(getParentNotifiers(insertedOrRemoved, strategy)),
           ]).pipe(
             tap(() => (partiallyFinished = false)),
@@ -149,11 +150,12 @@ export function createListManager<
                 return of(v);
               }
               notifyParent = false;
-              const behaviors = getParentNotifications$(
+              const behaviors = getVirtualParentNotifications$(
                 tNode,
                 injectingViewCdRef,
                 strategy
               );
+              // @TODO remove this CD on parent if possible
               behaviors.push(
                 onStrategy(
                   null,
@@ -166,7 +168,7 @@ export function createListManager<
               if (behaviors.length === 1) {
                 return of(v);
               }
-              return merge(behaviors).pipe(ignoreElements(), startWith(v));
+              return combineLatest(behaviors).pipe(ignoreElements(), startWith(v));
             }),
             filter((v) => v != null)
           );

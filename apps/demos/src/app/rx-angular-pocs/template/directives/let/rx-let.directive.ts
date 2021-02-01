@@ -111,6 +111,13 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
     this._renderObserver = callback;
   }
 
+    // tslint:disable-next-line:no-input-rename
+  @Input('rxLetParent') renderParent: boolean;
+
+
+  @Input('rxLetPatchZone') patchZone: boolean;
+
+
   constructor(
     private strategyProvider: StrategyProvider,
     public cdRef: ChangeDetectorRef,
@@ -128,8 +135,6 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   private observablesHandler = getHotMerged<U>();
   private strategyHandler = getHotMerged<string>();
   private triggerHandler = getHotMerged<RxNotificationKind>();
-
-  @Input('rxLetParent') renderParent: boolean;
 
   private _renderObserver: NextObserver<any>;
 
@@ -169,7 +174,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
         cdRef: this.cdRef,
         eRef: this.eRef,
         parent: coerceBooleanProperty(this.renderParent),
-        patchZone: false,
+        patchZone: this.patchZone ? this.ngZone : false,
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         strategies: this.strategyProvider.strategies,
       },
