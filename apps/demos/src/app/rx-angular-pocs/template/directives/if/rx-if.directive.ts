@@ -24,7 +24,6 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { createTemplateManager2 } from '../../../cdk/template-management/template-manager';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[rxIf]',
 })
 export class RxIf<U> implements OnInit, OnDestroy {
@@ -49,9 +48,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
     }
   }
 
-  // tslint:disable-next-line:no-input-rename
   @Input('rxIfParent') renderParent: boolean;
-
 
   @Input('rxIfPatchZone') patchZone: boolean;
 
@@ -59,8 +56,6 @@ export class RxIf<U> implements OnInit, OnDestroy {
   set renderCallback(callback: NextObserver<U>) {
     this._renderObserver = callback;
   }
-
-
 
   private readonly observablesHandler = getHotMerged<U>();
   private readonly strategyHandler = getHotMerged<string>();

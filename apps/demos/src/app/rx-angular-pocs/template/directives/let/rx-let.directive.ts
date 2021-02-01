@@ -43,12 +43,13 @@ import {
 } from '../../../cdk/template-management/template-manager';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[rxLet]',
   providers: [],
 })
-// tslint:disable-next-line:directive-class-suffix
 export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
+
+  static ngTemplateGuard_rxLet: 'binding';
+
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
     this.observablesHandler.next(potentialObservable);
@@ -111,9 +112,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
     this._renderObserver = callback;
   }
 
-    // tslint:disable-next-line:no-input-rename
   @Input('rxLetParent') renderParent: boolean;
-
 
   @Input('rxLetPatchZone') patchZone: boolean;
 
@@ -128,8 +127,6 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   ) {
     super();
   }
-
-  static ngTemplateGuard_rxLet: 'binding';
 
   /** @internal */
   private observablesHandler = getHotMerged<U>();

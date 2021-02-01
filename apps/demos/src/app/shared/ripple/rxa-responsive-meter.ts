@@ -47,7 +47,7 @@ export interface RippleAnimationConfig {
 }
 
 
-let isTouch: boolean;
+// let isTouch: boolean;
 
 /**
  * Reference to a previously launched ripple element.
