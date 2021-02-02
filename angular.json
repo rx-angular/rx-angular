@@ -514,11 +514,6 @@
           "options": {
             "tsConfig": "libs/state/tsconfig.lib.json",
             "project": "libs/state/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/state/tsconfig.lib.prod.json"
-            }
           }
         },
         "lint": {
@@ -595,7 +590,7 @@
           "options": {
             "commands": [
               {
-                "command": "nx test state && nx build state --prod && cd ./dist/libs/state && npm publish"
+                "command": "nx test state && nx build state && cd ./dist/libs/state && npm publish"
               }
             ]
           }
@@ -618,11 +613,6 @@
           "options": {
             "tsConfig": "libs/template/tsconfig.lib.json",
             "project": "libs/template/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/template/tsconfig.lib.prod.json"
-            }
           }
         },
         "build-schematics": {
@@ -707,7 +697,7 @@
           "options": {
             "commands": [
               {
-                "command": "nx test template && nx build template --prod && cd ./dist/libs/template && npm publish"
+                "command": "nx test template && nx build template && cd ./dist/libs/template && npm publish"
               }
             ]
           }
