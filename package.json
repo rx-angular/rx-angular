@@ -64,7 +64,7 @@
     "angular-in-memory-web-api": "^0.11.0",
     "benchmark": "^2.1.4",
     "bootstrap": "^4.5.2",
-    "core-js": "^3.6.5",
+    "core-js": "^3.8.3",
     "diff": "^5.0.0",
     "ngx-skeleton-loader": "^2.6.2",
     "normalize-css": "^2.3.1",
