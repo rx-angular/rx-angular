@@ -1,4 +1,10 @@
-import { Directive, ElementRef, OnDestroy, OnInit, Optional } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  Optional,
+} from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, mergeAll, tap, withLatestFrom } from 'rxjs/operators';
 import { getZoneUnPatchedApi } from '../../core';
@@ -71,13 +77,18 @@ const observerSupported = () =>
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[viewport-prio]'
+  selector: '[viewport-prio]',
 })
 export class ViewportPrioDirective implements OnInit, OnDestroy {
-  entriesSubject = new Subject<IntersectionObserverEntry[]>();
-  entries$: Observable<IntersectionObserverEntry> = this.entriesSubject.pipe(
-    mergeAll()
-  );
+  // Note that we're picking only the `intersectionRatio` property
+  // since this is the only property that we're intersted in.
+  entriesSubject = new Subject<
+    Pick<IntersectionObserverEntry, 'intersectionRatio'>[]
+  >();
+
+  entries$: Observable<
+    Pick<IntersectionObserverEntry, 'intersectionRatio'>
+  > = this.entriesSubject.pipe(mergeAll());
 
   _viewportPrio = 'noop';
   /* @Input('viewport-prio')
@@ -88,9 +99,14 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
   }*/
 
   private observer: IntersectionObserver | null = observerSupported()
-    ? new IntersectionObserver((entries) => this.entriesSubject.next(entries), {
-      threshold: 0
-    })
+    ? new IntersectionObserver(
+        (entries) => {
+          this.entriesSubject.next(entries);
+        },
+        {
+          threshold: 0,
+        }
+      )
     : null;
 
   visibilityEvents$ = this.entries$.pipe(
@@ -104,10 +120,9 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
   );
 
   constructor(
-    private readonly el: ElementRef,
+    private readonly el: ElementRef<HTMLElement>,
     @Optional() private letDirective: LetDirective<any>
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     const letStrategyName$ = this.letDirective.renderAware.activeStrategy$.pipe(
@@ -115,22 +130,31 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
       filter((name) => name !== this._viewportPrio)
     );
 
-    this.observer.observe(this.el.nativeElement);
-
     this.visibilityEvents$
       .pipe(
         withLatestFrom(letStrategyName$),
         map(([visibility, strategyName]) =>
           visibility === 'visible' ? strategyName : this._viewportPrio
-        ),
-        tap((strategyName) => {
-          this.letDirective.strategy = strategyName;
-          // render actual state on viewport enter
-          // @TODO this doesnt catch unsubscribe (cant be cancelled)
-          this.letDirective.strategies[strategyName].scheduleCD();
-        })
+        )
       )
-      .subscribe();
+      .subscribe((strategyName) => {
+        this.letDirective.strategy = strategyName;
+        // render actual state on viewport enter
+        // @TODO this doesnt catch unsubscribe (cant be cancelled)
+        this.letDirective.strategies[strategyName].scheduleCD();
+      });
+
+    // If the browser doesn't support the `IntersectionObserver` or we're inside
+    // the Node.js environment, then this will throw an exception that property
+    // `observe` doesn't exist on `null`.
+    if (this.observer !== null) {
+      this.observer.observe(this.el.nativeElement);
+    } else {
+      // If we're inside the Node.js environment then this should be
+      // rendered (e.g. for SEO purposes), and when running this code in browser
+      // it will decide itself to render it or not.
+      this.entriesSubject.next([{ intersectionRatio: 1 }]);
+    }
   }
 
   ngOnDestroy(): void {
