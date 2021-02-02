@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@an
 import { RenderStrategy } from '../../src/lib/core/render-aware/interfaces';
 import { Observable, of } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
-import { LetDirective } from '../../src/lib/let';
+import { LetDirective } from '../../src/lib/let/let.directive';
 import { DEFAULT_STRATEGY_NAME } from '../../src/lib/render-strategies/strategies/strategies-map';
 import { MockChangeDetectorRef } from '../fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries

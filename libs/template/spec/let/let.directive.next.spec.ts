@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
 import { EMPTY, interval, NEVER, Observable, of } from 'rxjs';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { LetDirective } from '../../src/lib/let';
+import { LetDirective } from '../../src/lib/let/let.directive';
 import { take } from 'rxjs/operators';
 import { MockChangeDetectorRef } from '../fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries

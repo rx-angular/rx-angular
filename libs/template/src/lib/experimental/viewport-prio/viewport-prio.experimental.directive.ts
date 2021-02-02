@@ -2,7 +2,7 @@ import { Directive, ElementRef, OnInit, Optional } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, mergeAll, tap, withLatestFrom } from 'rxjs/operators';
 import { getZoneUnPatchedApi } from '../../core';
-import { LetDirective } from '../../let';
+import { LetDirective } from '../../let/let.directive';
 
 /**
  *
