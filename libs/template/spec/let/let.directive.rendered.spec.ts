@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { LetDirective } from '../../src/lib/let';
+import { LetDirective } from '../../src/lib/let/let.directive';
 import { MockChangeDetectorRef } from '../fixtures';
 
 @Component({
