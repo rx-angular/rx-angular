@@ -43,7 +43,6 @@ export class ShareEventManager extends EventManager {
       ).pipe(share());
       this.container[target].set(eventName, sharedEvent);
     }
-    const keyS = `shared:${target}:${eventName}`;
     const subscription = sharedEvent.subscribe((event) => handler(event));
     return () => {
       subscription.unsubscribe();
