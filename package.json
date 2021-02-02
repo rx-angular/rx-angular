@@ -68,7 +68,7 @@
     "diff": "^5.0.0",
     "ngx-skeleton-loader": "^2.6.2",
     "normalize-css": "^2.3.1",
-    "rx-query": "^0.0.15",
+    "rx-query": "^1.0.1",
     "rxjs": "^6.6.3",
     "templateAlpha0": "npm:@rx-angular/template@1.0.0-alpha.0",
     "templateAlpha1": "npm:@rx-angular/template@1.0.0-alpha.1",
