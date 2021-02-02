@@ -59,7 +59,7 @@
     "@angular/platform-browser-dynamic": "^10.1.3",
     "@angular/router": "^10.1.3",
     "@ngxs/store": "3.7.0",
-    "@types/benchmark": "^1.0.33",
+    "@types/benchmark": "^2.1.0",
     "@types/lodash": "^4.14.161",
     "angular-in-memory-web-api": "^0.11.0",
     "benchmark": "^2.1.4",
