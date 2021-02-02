@@ -619,8 +619,12 @@
           "builder": "@nrwl/workspace:run-commands",
           "options": {
             "commands": [
-              { "command": "npx tsc -p libs/template/tsconfig.schematics.json" },
-              { "command": "npx cpx libs/template/schematics/**/{collection.json,schema.json,files/**} dist/libs/template/schematics" }
+              {
+                "command": "npx tsc -p libs/template/tsconfig.schematics.json"
+              },
+              {
+                "command": "npx cpx libs/template/schematics/**/{collection.json,schema.json,files/**} dist/libs/template/schematics"
+              }
             ],
             "parallel": false
           }
@@ -629,9 +633,15 @@
           "builder": "@nrwl/workspace:run-commands",
           "options": {
             "commands": [
-              { "command": "rimraf dist/libs/template" },
-              { "command": "nx run template:build-lib" },
-              { "command": "nx run template:build-schematics" }
+              {
+                "command": "rimraf dist/libs/template"
+              },
+              {
+                "command": "nx run template:build-lib"
+              },
+              {
+                "command": "nx run template:build-schematics"
+              }
             ],
             "parallel": false
           }
@@ -829,6 +839,50 @@
               "!apps/vanilla-case-studies-e2e/**/*"
             ]
           }
+        }
+      }
+    },
+    "cdk": {
+      "projectType": "library",
+      "root": "libs/cdk",
+      "sourceRoot": "libs/cdk/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:package",
+          "options": {
+            "tsConfig": "libs/cdk/tsconfig.lib.json",
+            "project": "libs/cdk/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/cdk/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/cdk/tsconfig.lib.json",
+              "libs/cdk/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/cdk/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/cdk/jest.config.js",
+            "tsConfig": "libs/cdk/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/cdk/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
         }
       }
     }
