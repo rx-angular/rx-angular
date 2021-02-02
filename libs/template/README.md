@@ -45,11 +45,19 @@ are several techniques that need to be known and considered.
 
 ## Installation
 
-`ng add @rx-angular/template`
-or
-`npm install --save @rx-angular/template`  
-or  
-`yarn add @rx-angular/template`
+Using schematics:
+
+```bash
+ng add @rx-angular/template --project my-project
+```
+
+Manually:
+
+```bash
+npm install --save @rx-angular/template
+# or
+yarn add @rx-angular/template
+```
 
 ## API
 

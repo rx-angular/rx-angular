@@ -55,11 +55,19 @@ with very little effort in any component.
 
 ## Install
 
-`ng add @rx-angular/state`
-or
-`npm install @rx-angular/state`
-or
-`yarn add @rx-angular/state`
+Using schematics:
+
+```bash
+ng add @rx-angular/state
+```
+
+Manually:
+
+```bash
+npm install --save @rx-angular/template
+# or
+yarn add @rx-angular/template
+```
 
 ## API
 

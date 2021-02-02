@@ -1,4 +1,7 @@
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import {
+  SchematicTestRunner,
+  UnitTestTree,
+} from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 
 import { SchemaOptions } from './schema';
@@ -26,13 +29,13 @@ describe('ng-add schematic', () => {
   beforeEach(async () => {
     schematicRunner = new SchematicTestRunner(
       'rx-angular-schematics',
-      collectionPath,
+      collectionPath
     );
     appTree = await schematicRunner
       .runExternalSchematicAsync(
         '@schematics/angular',
         'workspace',
-        workspaceOptions,
+        workspaceOptions
       )
       .toPromise();
 
@@ -41,7 +44,7 @@ describe('ng-add schematic', () => {
         '@schematics/angular',
         'application',
         defaultAppOptions,
-        appTree,
+        appTree
       )
       .toPromise();
   });
@@ -51,11 +54,30 @@ describe('ng-add schematic', () => {
       .runSchematicAsync('ng-add', options, appTree)
       .toPromise();
 
-
     const content = tree.readContent(`${projectPath}/src/app/app.module.ts`);
 
-    expect(content).toMatch(
-      /import { LetModule, PushModule, ViewportPrioModule } from '@rx-angular\/template';/
-    );
+    expect(content).toMatchInlineSnapshot(`
+      "import { BrowserModule } from '@angular/platform-browser';
+      import { NgModule } from '@angular/core';
+
+      import { AppComponent } from './app.component';
+      import { LetModule, PushModule, ViewportPrioModule } from '@rx-angular/template';
+
+      @NgModule({
+        declarations: [
+          AppComponent
+        ],
+        imports: [
+          BrowserModule,
+          LetModule,
+          PushModule,
+          ViewportPrioModule
+        ],
+        providers: [],
+        bootstrap: [AppComponent]
+      })
+      export class AppModule { }
+      "
+    `);
   });
 });
