@@ -42,6 +42,9 @@
   "lint-staged": {
     "libs/**/!(images)/**/*.{ts,html,scss,md,json}": [
       "yarn affected:lint -- --uncommitted --fix --parallel"
+    ],
+    "libs/**/*.{ts,html,scss,md,json}": [
+      "prettier --write"
     ]
   },
   "private": true,
