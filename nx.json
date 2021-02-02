@@ -29,6 +29,9 @@
     "test-helpers": {
       "tags": ["type:util"]
     },
+    "cdk": {
+      "tags": ["type:lib"]
+    },
     "state": {
       "tags": ["type:lib"]
     },
