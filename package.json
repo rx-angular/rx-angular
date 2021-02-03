@@ -103,7 +103,7 @@
     "debug": "^4.2.0",
     "dotenv": "8.2.0",
     "eslint": "7.19.0",
-    "husky": "^4.3.0",
+    "husky": "^4.3.8",
     "jest": "26.4.2",
     "jest-preset-angular": "8.3.1",
     "klaw-sync": "^6.0.0",
