@@ -32,7 +32,7 @@ import {
 export interface ListManager<T, C> {
   nextStrategy: (config: string | Observable<string>) => void;
 
-  render(changes$: Observable<NgIterable<T>>): Observable<any>;
+  render(changes$: Observable<NgIterable<T>>): Observable<C>;
 }
 
 
