@@ -1,12 +1,12 @@
 import {
-  ChangeDetectorRef,
+  ChangeDetectorRef, Component,
   EmbeddedViewRef,
   IterableChanges,
   NgZone,
   TemplateRef,
   Type,
   ViewContainerRef,
-  ɵdetectChanges as detectChanges,
+  ɵdetectChanges as detectChanges
 } from '@angular/core';
 import {
   asyncScheduler,
@@ -62,7 +62,7 @@ const HEADER_OFFSET = 20;
 
 export type TNode = any;
 
-export function getTNode(cdRef: ChangeDetectorRef, native: Node) {
+export function getTNode(cdRef: ChangeDetectorRef, native: Node): TNode {
   const lView = (cdRef as any)._cdRefInjectingView;
   const tView = lView[TVIEW];
   let i = HEADER_OFFSET;
@@ -79,12 +79,12 @@ export function getTNode(cdRef: ChangeDetectorRef, native: Node) {
 
 export function extractProjectionParentViewSet(
   cdRef: ChangeDetectorRef,
-  tNode: any
-): Set<Type<any>> {
+  tNode: TNode
+): Set<Type<Component>> {
   const injectingLView = (cdRef as any)._cdRefInjectingView;
   const injectingTView = injectingLView[1];
   const components = new Set<number>(injectingTView['components']);
-  const parentElements = new Set<Type<any>>();
+  const parentElements = new Set<Type<Component>>();
   let parent = tNode['parent'];
   while (parent != null && components.size > 0) {
     const idx = parent['index'];
@@ -102,14 +102,14 @@ export function extractProjectionParentViewSet(
 
 export function extractProjectionViews(
   cdRef: ChangeDetectorRef,
-  tNode: any
+  tNode: TNode
 ): Type<any>[] {
   return Array.from(extractProjectionParentViewSet(cdRef, tNode));
 }
 
 export function renderProjectionParents(
   cdRef: ChangeDetectorRef,
-  tNode: any,
+  tNode: TNode,
   strategy$: Observable<StrategyCredentials>
 ): OperatorFunction<any, any> {
   return (o$) =>
@@ -279,7 +279,7 @@ export function getVirtualParentNotifications$(
   tNode: TNode,
   injectingViewCdRef: ChangeDetectorRef,
   strategy: StrategyCredentials
-) {
+): Observable<Comment>[] {
   const parentElements = extractProjectionParentViewSet(
     injectingViewCdRef,
     tNode
