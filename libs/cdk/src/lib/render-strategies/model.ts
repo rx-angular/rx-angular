@@ -18,12 +18,12 @@ export type RxNotification<T> = RxNextNotification<T> | RxSuspenseNotification |
 
 export type RenderWork = <T = unknown>(
   cdRef: ChangeDetectorRef,
-  scope?: any,
+  scope?: object,
   notification?: RxNotification<T>
 ) => void;
 export type RenderBehavior = <T = unknown>(
   work: any,
-  scope: any
+  scope: object
 ) => (o: Observable<T>) => Observable<T>;
 
 export interface StrategyCredentials {

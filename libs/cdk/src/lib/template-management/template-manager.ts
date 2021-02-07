@@ -29,6 +29,7 @@ import {
   templateTriggerHandling,
   TNode,
 } from './utils';
+import { CoalescingOptions } from '../model';
 
 export interface RenderAware<T> {
   nextStrategy: (nextConfig: string | Observable<string>) => void;
@@ -121,7 +122,7 @@ export function createTemplateManager<
             onStrategy(
               value,
               strategy,
-              (v: T, work: RenderWork, options: { scope?: any }) => {
+              (v: T, work: RenderWork, options: CoalescingOptions) => {
                 if (isNewTemplate) {
                   if (viewContainerRef.length > 0) {
                     viewContainerRef.clear();
@@ -140,7 +141,7 @@ export function createTemplateManager<
                 }
                 activeTemplate = templateName;
               }
-              // { scope: viewContainerRef.get(0) }
+              // @TODO specify scoping
             ),
             notifyInjectingParentIfNeeded(
               injectingViewCdRef,

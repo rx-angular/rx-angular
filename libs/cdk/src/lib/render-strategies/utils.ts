@@ -9,6 +9,7 @@ import {
   RxErrorNotification,
   RxCompleteNotification
 } from './model';
+import { CoalescingOptions } from '../model';
 
 
 const rxJsToRxA = {
@@ -70,8 +71,8 @@ export function nameToStrategyCredentials(
 export function onStrategy<T>(
   value: T,
   strategy: StrategyCredentials,
-  workFactory: (value: T, work: RenderWork, options: { scope?: any }) => void,
-  options: { scope?: any } = {}
+  workFactory: (value: T, work: RenderWork, options: CoalescingOptions) => void,
+  options: CoalescingOptions = {}
 ) {
   return of(value).pipe(
     strategy.behavior(
