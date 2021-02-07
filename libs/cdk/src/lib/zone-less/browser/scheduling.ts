@@ -1,4 +1,4 @@
-import { getZoneUnPatchedApi } from '../zone';
+import { getZoneUnPatchedApi } from '../utils';
 
 export const Promise: PromiseConstructor = getZoneUnPatchedApi('Promise');
 

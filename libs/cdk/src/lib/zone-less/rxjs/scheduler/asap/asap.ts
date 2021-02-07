@@ -38,4 +38,4 @@ import { AsapScheduler } from './AsapScheduler';
  * // ... but 'asap' goes first!
  * ```
  */
-export const asapScheduler = new AsapScheduler(AsapAction);
+export const asap = new AsapScheduler(AsapAction);

@@ -35,6 +35,4 @@ import { AnimationFrameScheduler } from './AnimationFrameScheduler';
  * // You will see a div element growing in height
  * ```
  */
-export const animationFrameScheduler = new AnimationFrameScheduler(
-  AnimationFrameAction
-);
+export const animationFrame = new AnimationFrameScheduler(AnimationFrameAction);

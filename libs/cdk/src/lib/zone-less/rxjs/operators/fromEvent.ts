@@ -1,7 +1,7 @@
 // tslint:disable
 import { Observable, Subscriber } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { getZoneUnPatchedApi } from '../utils';
+import { getZoneUnPatchedApi } from '../../utils';
 
 // @ts-ignore
 const isFunction = (fn) => typeof fn === 'function';

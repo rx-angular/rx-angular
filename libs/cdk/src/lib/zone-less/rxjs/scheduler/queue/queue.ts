@@ -66,4 +66,4 @@ import { QueueScheduler } from './QueueScheduler';
  * // "after", 1
  * ```
  */
-export const queueScheduler = new QueueScheduler(QueueAction);
+export const queue = new QueueScheduler(QueueAction);

@@ -50,4 +50,4 @@ import { AsyncScheduler } from './AsyncScheduler';
  * // 3 after 6s
  * ```
  */
-export const asyncScheduler = new AsyncScheduler(AsyncAction);
+export const async = new AsyncScheduler(AsyncAction);
