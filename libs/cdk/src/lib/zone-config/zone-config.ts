@@ -51,6 +51,19 @@ type RuntimeConfigurationMethods = {
 const zoneDisable = '__Zone_disable_';
 const zoneSymbol = '__zone_symbol__';
 
+/**
+ * factory function to create a `ZoneConfig` object.
+ *
+ * @Example
+ * import { globalEvents,xhrEvent, zoneConfig} from '@rx-angular/cdk/zone-flags';
+ *
+ * const zoneConfig = createZoneFlagsConfigurator();
+ *
+ * zoneConfig.global.disable.requestAnimationFrame();
+ * zoneConfig.global.disable.timers();
+ * zoneConfig.events.disable.UNPATCHED_EVENTS([...globalEvents, ...xhrEvent]);
+ *
+ */
 function createZoneFlagsConfigurator(): ZoneConfig {
   const cfg = (window as unknown) as ZoneGlobalConfigurations;
   const configProps = [
@@ -152,6 +165,19 @@ function createZoneFlagsConfigurator(): ZoneConfig {
   };
 }
 
+/**
+ * An object for typed zone-flags configuratin.
+ *
+ * @Example
+ * import { globalEvents,xhrEvent, zoneConfig} from '@rx-angular/cdk/zone-flags';
+ *
+ * const zoneConfig = createZoneFlagsConfigurator();
+ *
+ * zoneConfig.global.disable.requestAnimationFrame();
+ * zoneConfig.global.disable.timers();
+ * zoneConfig.events.disable.UNPATCHED_EVENTS([...globalEvents, ...xhrEvent]);
+ *
+ */
 export interface ZoneConfig {
   global: {
     disable: GlobalDisableConfigurationMethods;
