@@ -1,42 +1,55 @@
 import {
   ChangeDetectorRef,
-  EmbeddedViewRef, IterableChanges,
+  EmbeddedViewRef,
+  IterableChanges,
   NgZone,
   TemplateRef,
   Type,
   ViewContainerRef,
-  ɵdetectChanges as detectChanges
+  ɵdetectChanges as detectChanges,
 } from '@angular/core';
 import {
   asyncScheduler,
-  combineLatest, isObservable,
+  combineLatest,
+  isObservable,
   merge,
   Observable,
-  ObservableInput, of,
+  ObservableInput,
+  of,
   OperatorFunction,
   ReplaySubject,
-  Subject
+  Subject,
 } from 'rxjs';
 import { MonoTypeOperatorFunction } from 'rxjs/internal/types';
 import {
-  delay, distinctUntilChanged,
-  ignoreElements, map,
+  delay,
+  distinctUntilChanged,
+  ignoreElements,
+  map,
   mergeAll,
   share,
-  startWith, switchAll,
+  startWith,
+  switchAll,
   switchMap,
-  withLatestFrom
+  withLatestFrom,
 } from 'rxjs/operators';
 import {
+  RxNotification,
+  RxNotificationKind,
   StrategyCredentials,
   StrategyCredentialsMap,
-  RxNotification, RxNotificationKind
 } from '../render-strategies/model';
 import {
   nameToStrategyCredentials,
   onStrategy,
 } from '../render-strategies/utils';
-import { ListChange, RxListViewComputedContext, RxViewContext, CreateViewContext, UpdateViewContext } from './model';
+import {
+  CreateViewContext,
+  ListChange,
+  RxListViewComputedContext,
+  RxViewContext,
+  UpdateViewContext,
+} from './model';
 
 // Below are constants for LView indices to help us look up LView members
 // without having to remember the specific indices.
@@ -46,7 +59,6 @@ const T_HOST = 6;
 const L_CONTAINER_NATIVE = 7;
 const CONTEXT = 8;
 const HEADER_OFFSET = 20;
-
 
 export type TNode = any;
 
@@ -203,43 +215,44 @@ export function notifyAllParentsIfNeeded<T>(
   strategy: StrategyCredentials,
   notifyNeeded: () => boolean
 ): MonoTypeOperatorFunction<T> {
-
-  return o$ => o$.pipe(
-    delay(0, asyncScheduler),
-    switchMap(v => {
-      const notifyParent = notifyNeeded();
-      if (!notifyParent) {
-        return of(v);
-      }
-      const behaviors = getVirtualParentNotifications$(
-        tNode,
-        injectingViewCdRef,
-        strategy
-      );
-      // @TODO remove this CD on parent if possible
-      behaviors.push(
-        onStrategy(
-          null,
-          strategy,
-          (_v, work, options) =>
-            work(injectingViewCdRef, options.scope),
-          { scope: (injectingViewCdRef as any).context || injectingViewCdRef }
-        )
-      );
-      if (behaviors.length === 1) {
-        return of(v);
-      }
-      return combineLatest(behaviors).pipe(ignoreElements(), startWith(v));
-    })
-  )
+  return (o$) =>
+    o$.pipe(
+      delay(0, asyncScheduler),
+      switchMap((v) => {
+        const notifyParent = notifyNeeded();
+        if (!notifyParent) {
+          return of(v);
+        }
+        const behaviors = getVirtualParentNotifications$(
+          tNode,
+          injectingViewCdRef,
+          strategy
+        );
+        // @TODO remove this CD on parent if possible
+        behaviors.push(
+          onStrategy(
+            null,
+            strategy,
+            (_v, work, options) => work(injectingViewCdRef, options.scope),
+            { scope: (injectingViewCdRef as any).context || injectingViewCdRef }
+          )
+        );
+        if (behaviors.length === 1) {
+          return of(v);
+        }
+        return combineLatest(behaviors).pipe(ignoreElements(), startWith(v));
+      })
+    );
 }
 
 export function notifyInjectingParentIfNeeded(
   injectingViewCdRef: ChangeDetectorRef,
   strategy: StrategyCredentials,
-  notify: boolean,
+  notify: boolean
 ): Observable<null> {
-  return startWith<null>(null)(getParentNotifiers(injectingViewCdRef, notify, strategy));
+  return startWith<null>(null)(
+    getParentNotifiers(injectingViewCdRef, notify, strategy)
+  );
 }
 
 export function getParentNotifiers(
@@ -249,16 +262,16 @@ export function getParentNotifiers(
 ): Observable<never> {
   // console.log('in injectingView', insertedOrRemoved);
   return insertedOrRemoved
-         ? onStrategy(
-      null,
-      strategy,
-      (value, work, options) => {
-        // console.log('notify injectingView', injectingViewCdRef);
-        work(injectingViewCdRef, options.scope);
-      }
-      //  scopeOnInjectingViewContext
-    ).pipe(ignoreElements())
-         : (([] as unknown) as Observable<never>);
+    ? onStrategy(
+        null,
+        strategy,
+        (value, work, options) => {
+          // console.log('notify injectingView', injectingViewCdRef);
+          work(injectingViewCdRef, options.scope);
+        }
+        //  scopeOnInjectingViewContext
+      ).pipe(ignoreElements())
+    : (([] as unknown) as Observable<never>);
 }
 
 // TNode is a component that was projected into another component (virtual parent)
@@ -289,7 +302,10 @@ export function getVirtualParentNotifications$(
   return behaviors;
 }
 
-export function templateHandling<N, C>() {
+export function templateHandling<N, C>(): {
+  add(name: N, templateRef: TemplateRef<C>): void;
+  get(name: N): TemplateRef<C>;
+} {
   const templateCache = new Map<N, TemplateRef<C>>();
 
   return {
@@ -328,7 +344,10 @@ export function templateHandling<N, C>() {
 export function strategyHandling(
   defaultStrategyName: string,
   strategies: StrategyCredentialsMap
-) {
+): {
+  strategy$: Observable<StrategyCredentials>;
+  next(name: string | Observable<string>): void;
+} {
   const strategyName$ = new ReplaySubject<string | Observable<string>>(1);
   const strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
     coerceAndFlatten(),
@@ -337,14 +356,17 @@ export function strategyHandling(
     share()
   );
   return {
+    strategy$,
     next(name: string | Observable<string>) {
       strategyName$.next(name);
     },
-    strategy$,
   };
 }
 
-export function templateTriggerHandling<T>() {
+export function templateTriggerHandling<T>(): {
+  trigger$: Observable<RxNotification<T>>;
+  next(templateName: Observable<RxNotification<T>>): void;
+} {
   const templateTriggerSubject = new Subject<Observable<RxNotification<T>>>();
   const trigger$ = templateTriggerSubject.pipe(mergeAll());
   return {
@@ -355,7 +377,10 @@ export function templateTriggerHandling<T>() {
   };
 }
 
-export function getHotMerged<U>() {
+export function getHotMerged<U>(): {
+  values$: Observable<U>
+  next(observable: ObservableInput<U> | U): void;
+}{
   const observablesSubject = new ReplaySubject<ObservableInput<U> | U>(1);
   const values$ = observablesSubject.pipe(coerceAndFlatten()) as Observable<U>;
 
@@ -471,9 +496,7 @@ export function getChangesArray<T>(
       changedIdxs.add(item);
     } else if (adjustedPreviousIndex !== null) {
       // move
-      changesArr.push(
-        getMoveChange(item, currentIndex, adjustedPreviousIndex)
-      );
+      changesArr.push(getMoveChange(item, currentIndex, adjustedPreviousIndex));
       changedIdxs.add(item);
     }
   });
@@ -525,12 +548,19 @@ export function getChangesArray<T>(
   }
 }
 
+function coerceObservable() {
+  return (o$) =>
+    o$.pipe(
+      map((o) => (isObservable(o) ? o : of(o))),
+    );
+}
 
 function coerceAndFlatten() {
-  return o$ => o$.pipe(
-    map(o => isObservable(o) ? o : of(o)),
-    distinctUntilChanged(),
-    switchAll(),
-    distinctUntilChanged()
-  );
+  return (o$) =>
+    o$.pipe(
+      coerceObservable(),
+      distinctUntilChanged(),
+      switchAll(),
+      distinctUntilChanged()
+    );
 }

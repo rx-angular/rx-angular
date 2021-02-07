@@ -63,6 +63,7 @@ export interface  TemplateSettings<T, C> {
   createViewContext: CreateViewContext<T, C>;
   updateViewContext: UpdateViewContext<T, C>;
 }
+
 export interface  RenderSettings<T, C> {
   cdRef: ChangeDetectorRef;
   eRef: ElementRef;
@@ -71,3 +72,4 @@ export interface  RenderSettings<T, C> {
   strategies: StrategyCredentialsMap;
   defaultStrategyName: string;
 }
+
