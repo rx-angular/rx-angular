@@ -26,22 +26,15 @@ export const enum ListChange {
   context,
 }
 
-export interface NgViewContext<T> {
-  // to enable `let` syntax we have to use $implicit (var; let v = var)
+export interface RxViewContext<T> {
+// to enable `let` syntax we have to use $implicit (var; let v = var)
   $implicit: T;
-}
-
-interface RxContext {
   // set context var complete to true (var$; let e = $error)
   $error: false | Error;
   // set context var complete to true (var$; let c = $complete)
   $complete: boolean;
   // set context var suspense to true (var$; let s = $suspense)
   $suspense: any;
-}
-
-export interface RxViewContext<T> extends NgViewContext<T>, RxContext {
-
 }
 
 export interface RxListViewComputedContext<T> {
