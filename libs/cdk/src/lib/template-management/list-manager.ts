@@ -14,7 +14,6 @@ import { onStrategy } from '../render-strategies/utils';
 import {
   DistinctByFunction,
   ListChange,
-  NgViewContext,
   RenderSettings,
   RxListViewContext,
   TemplateSettings
@@ -31,15 +30,11 @@ import {
 
 export interface ListManager<T, C> {
   nextStrategy: (config: string | Observable<string>) => void;
-
   render(changes$: Observable<NgIterable<T>>): Observable<C>;
 }
 
 
-export function createListManager<
-  T,
-  C extends RxListViewContext<T> & NgViewContext<T>
->(config: {
+export function createListManager<T, C extends RxListViewContext<T>>(config: {
   renderSettings: RenderSettings<T, C>;
   templateSettings: TemplateSettings<T, C> & { templateRef: TemplateRef<C> };
   //

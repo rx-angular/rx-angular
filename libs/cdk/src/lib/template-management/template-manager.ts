@@ -36,7 +36,7 @@ export interface RenderAware<T> {
   render: (values$: Observable<T>) => Observable<any>;
 }
 
-export interface TemplateManager2<
+export interface TemplateManager<
   T,
   C extends RxViewContext<T>,
   N = RxBaseTemplateNames | string
@@ -59,7 +59,7 @@ export function createTemplateManager<
       templates: { get: (name: N) => TemplateRef<C> }
     ) => N;
   };
-}): TemplateManager2<T, C, N> {
+}): TemplateManager<T, C, N> {
   const {
     renderSettings,
     notificationToTemplateName,

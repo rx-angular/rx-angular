@@ -392,6 +392,14 @@ export function getHotMerged<U>(): {
   };
 }
 
+export interface ListManager<T> {
+  updateUnchangedContext(index: number, count: number): void;
+  insertView(item: T, index: number, count: number): void;
+  moveView(oldIndex: number, item: T, index: number, count: number): void;
+  updateView(item: T, index: number, count: number): void;
+  removeView(index: number): void;
+}
+
 export function getListTemplateManager<
   C extends { updateContext: (context: RxListViewComputedContext<T>) => void },
   T
@@ -401,7 +409,8 @@ export function getListTemplateManager<
   createViewContext: CreateViewContext<T, C>;
   updateViewContext: UpdateViewContext<T, C>;
   patchZone: NgZone | false;
-}) {
+}): ListManager<T> {
+
   const {
     viewContainerRef,
     templateRef,
@@ -421,6 +430,8 @@ export function getListTemplateManager<
     updateView,
     removeView,
   };
+
+  // =====
 
   function updateUnchangedContext(index: number, count: number) {
     const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
@@ -548,15 +559,15 @@ export function getChangesArray<T>(
   }
 }
 
-function coerceObservable() {
-  return (o$) =>
+function coerceObservable<T>()  {
+  return (o$: Observable<Observable<T> | T>) =>
     o$.pipe(
-      map((o) => (isObservable(o) ? o : of(o))),
+      map((o) => (isObservable(o) ? o : of(o) as Observable<T>)),
     );
 }
 
-function coerceAndFlatten() {
-  return (o$) =>
+function coerceAndFlatten<T>() {
+  return (o$: Observable<Observable<T> | T>) =>
     o$.pipe(
       coerceObservable(),
       distinctUntilChanged(),
