@@ -169,6 +169,9 @@ function createZoneFlagsConfigurator(): ZoneConfig {
  * An object for typed zone-flags configuratin.
  *
  * @Example
+ *
+ * create file `zone-flags.ts` parallel to your `polyfills.ts` and insert following content:
+ * ```typescript
  * import { globalEvents,xhrEvent, zoneConfig} from '@rx-angular/cdk/zone-flags';
  *
  * const zoneConfig = createZoneFlagsConfigurator();
@@ -176,6 +179,14 @@ function createZoneFlagsConfigurator(): ZoneConfig {
  * zoneConfig.global.disable.requestAnimationFrame();
  * zoneConfig.global.disable.timers();
  * zoneConfig.events.disable.UNPATCHED_EVENTS([...globalEvents, ...xhrEvent]);
+ * ```
+ * In `polyfills.ts` above the zone import, import `zone-flags.ts`
+ *
+ * ```typescript
+ * import './zone-flags';
+ * // Zone JS is required by default for Angular itself.
+ * import 'zone.js/dist/zone';
+ * ```
  *
  */
 export interface ZoneConfig {
