@@ -1,12 +1,13 @@
 import {
-  ChangeDetectorRef, Component,
+  ChangeDetectorRef,
+  Component,
   EmbeddedViewRef,
   IterableChanges,
   NgZone,
   TemplateRef,
   Type,
   ViewContainerRef,
-  ɵdetectChanges as detectChanges
+  ɵdetectChanges as detectChanges,
 } from '@angular/core';
 import {
   asyncScheduler,
@@ -62,6 +63,14 @@ const HEADER_OFFSET = 20;
 
 export type TNode = any;
 
+/**
+ * @internal
+ *
+ * Returns the TNode of the passed node form TVIEW of passed cdRef
+ *
+ * @param cdRef
+ * @param native
+ */
 export function getTNode(cdRef: ChangeDetectorRef, native: Node): TNode {
   const lView = (cdRef as any)._cdRefInjectingView;
   const tView = lView[TVIEW];
@@ -77,6 +86,15 @@ export function getTNode(cdRef: ChangeDetectorRef, native: Node): TNode {
   return lContainer[T_HOST];
 }
 
+/**
+ * @internal
+ *
+ * Returns a set of references to parent views
+ *
+ *
+ * @param cdRef
+ * @param tNode
+ */
 export function extractProjectionParentViewSet(
   cdRef: ChangeDetectorRef,
   tNode: TNode
@@ -107,6 +125,15 @@ export function extractProjectionViews(
   return Array.from(extractProjectionParentViewSet(cdRef, tNode));
 }
 
+/**
+ * A side effect operator similar to `tap` but with a static logic
+ *
+ *
+ *
+ * @param cdRef
+ * @param tNode
+ * @param strategy$
+ */
 export function renderProjectionParents(
   cdRef: ChangeDetectorRef,
   tNode: TNode,
@@ -145,11 +172,18 @@ export function renderProjectionParents(
 
 export type RxViewContextMap<T> = Record<
   RxNotificationKind,
-  (value?: any) => RxViewContext<T>
+  (value?: any) => Partial<RxViewContext<T>>
 >;
 
+/**
+ * @internal
+ *
+ * A factory function that returns a map of projections to turn a notification of a Observable (next, error, complete)
+ *
+ * @param customNextContext - projection function to provide custom properties as well as override existing
+ */
 export function notificationKindToViewContext<T>(
-  customContext: (value: T) => object
+  customNextContext: (value: T) => object
 ): RxViewContextMap<T> {
   // @TODO rethink overrides
   return {
@@ -164,16 +198,15 @@ export function notificationKindToViewContext<T>(
     },
     next: (value: T | null | undefined) => {
       return {
-        ...customContext(value),
         $implicit: value,
         $suspense: false,
         $error: false,
         $complete: false,
+        ...customNextContext(value),
       };
     },
     error: (error: Error) => {
       return {
-        $implicit: undefined,
         $complete: false,
         $error: error,
         $suspense: false,
@@ -181,7 +214,6 @@ export function notificationKindToViewContext<T>(
     },
     complete: () => {
       return {
-        $implicit: undefined,
         $error: false,
         $complete: true,
         $suspense: false,
@@ -190,6 +222,19 @@ export function notificationKindToViewContext<T>(
   };
 }
 
+/**
+ * @internal
+ *
+ * A factory for the createEmbeddedView function used in `TemplateManager` and `ListManager`.
+ * It handles the creation of views in and outside of zone depending on the setting.
+ *
+ * Both ways of creating EmbeddedViews have pros and cons,
+ * - create it outside out zone disables all event listener patching of the view, is fast, but you may need patched event listeners in some cases.
+ * - create it inside of zone created many change detections as the creation may get chunked up and rendered over multiple ticks by a strategy used in `TemplateManager` or `ListManager`.
+ *
+ * @param viewContainerRef
+ * @param patchZone
+ */
 export function getEmbeddedViewCreator(
   viewContainerRef: ViewContainerRef,
   patchZone: NgZone | false
@@ -209,6 +254,17 @@ export function getEmbeddedViewCreator(
   return create;
 }
 
+/**
+ * @internal
+ *
+ * A side effect operator similar to `tap` but with a static internal logic.
+ * It calls detect changes on the 'VirtualParent' and the injectingViewCdRef.
+ *
+ * @param tNode
+ * @param injectingViewCdRef
+ * @param strategy
+ * @param notifyNeeded
+ */
 export function notifyAllParentsIfNeeded<T>(
   tNode: TNode,
   injectingViewCdRef: ChangeDetectorRef,
@@ -228,7 +284,7 @@ export function notifyAllParentsIfNeeded<T>(
           injectingViewCdRef,
           strategy
         );
-        // @TODO remove this CD on parent if possible
+        // @TODO remove this CD on injectingViewCdRef if possible
         behaviors.push(
           onStrategy(
             null,
@@ -245,36 +301,44 @@ export function notifyAllParentsIfNeeded<T>(
     );
 }
 
+/**
+ * @internal
+ *
+ * returns a Observable executing side effects for change detection of parents
+ *
+ * @param injectingViewCdRef
+ * @param strategy
+ * @param notify
+ */
 export function notifyInjectingParentIfNeeded(
   injectingViewCdRef: ChangeDetectorRef,
   strategy: StrategyCredentials,
   notify: boolean
 ): Observable<null> {
   return startWith<null>(null)(
-    getParentNotifiers(injectingViewCdRef, notify, strategy)
+    notify
+      ? onStrategy(
+          null,
+          strategy,
+          (value, work, options) => {
+            // console.log('notify injectingView', injectingViewCdRef);
+            work(injectingViewCdRef, options.scope);
+          }
+          //  scopeOnInjectingViewContext
+        ).pipe(ignoreElements())
+      : (([] as unknown) as Observable<never>)
   );
 }
 
-export function getParentNotifiers(
-  injectingViewCdRef: ChangeDetectorRef,
-  insertedOrRemoved: boolean,
-  strategy
-): Observable<never> {
-  // console.log('in injectingView', insertedOrRemoved);
-  return insertedOrRemoved
-    ? onStrategy(
-        null,
-        strategy,
-        (value, work, options) => {
-          // console.log('notify injectingView', injectingViewCdRef);
-          work(injectingViewCdRef, options.scope);
-        }
-        //  scopeOnInjectingViewContext
-      ).pipe(ignoreElements())
-    : (([] as unknown) as Observable<never>);
-}
-
-// TNode is a component that was projected into another component (virtual parent)
+/**
+ * @internal
+ *
+ * Returns an array of observables triggering `detectChanges` on the __virtual parent__  (parent of the projected view)
+ *
+ * @param tNode - is a component that was projected into another component (virtual parent)
+ * @param injectingViewCdRef - is needed to get the
+ * @param strategy - the strategy to run the change detection
+ */
 export function getVirtualParentNotifications$(
   tNode: TNode,
   injectingViewCdRef: ChangeDetectorRef,
@@ -302,6 +366,13 @@ export function getVirtualParentNotifications$(
   return behaviors;
 }
 
+/**
+ * @internal
+ *
+ * A factory function returning an object to handle `TemplateRef`'s.
+ * You can add and get a `TemplateRef`.
+ *
+ */
 export function templateHandling<N, C>(): {
   add(name: N, templateRef: TemplateRef<C>): void;
   get(name: N): TemplateRef<C>;
@@ -341,6 +412,15 @@ export function templateHandling<N, C>(): {
   }
 }
 
+/**
+ * @internal
+ *
+ * A factory function returning an object to handle the process of turning strategy names into `StrategyCredentials`
+ * You can next a strategy name as Observable or string and get an Observable of `StrategyCredentials`
+ *
+ * @param defaultStrategyName
+ * @param strategies
+ */
 export function strategyHandling(
   defaultStrategyName: string,
   strategies: StrategyCredentialsMap
@@ -350,7 +430,7 @@ export function strategyHandling(
 } {
   const strategyName$ = new ReplaySubject<string | Observable<string>>(1);
   const strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
-    coerceAndFlatten(),
+    coerceAndSwitchDistinct(),
     startWith(defaultStrategyName),
     nameToStrategyCredentials(strategies, defaultStrategyName),
     share()
@@ -363,6 +443,13 @@ export function strategyHandling(
   };
 }
 
+/**
+ * @internal
+ *
+ * A factory function returning an object to handle the process of switching templates by Notification channel.
+ * You can next a Observable of `RxNotification` multiple times and merge them into the Observable exposed under `trigger$`
+ *
+ */
 export function templateTriggerHandling<T>(): {
   trigger$: Observable<RxNotification<T>>;
   next(templateName: Observable<RxNotification<T>>): void;
@@ -377,12 +464,24 @@ export function templateTriggerHandling<T>(): {
   };
 }
 
+
+/**
+ * @internal
+ *
+ * A factory function returning an object to handle the process of merging Observable next notifications into one Observable.
+ * This API takes away the clumsy handling of static values and Observable, reduces the number of emissions by:
+ * - only merging distinct Observables
+ * - only emit distingt values of the merged result
+ *
+ * You can next a Observable of `U` multiple times and merge them into the Observable exposed under one optimized `values$`
+ *
+ */
 export function getHotMerged<U>(): {
-  values$: Observable<U>
+  values$: Observable<U>;
   next(observable: ObservableInput<U> | U): void;
-}{
+} {
   const observablesSubject = new ReplaySubject<ObservableInput<U> | U>(1);
-  const values$ = observablesSubject.pipe(coerceAndFlatten()) as Observable<U>;
+  const values$ = observablesSubject.pipe(coerceAndSwitchDistinct()) as Observable<U>;
 
   return {
     next(observable: ObservableInput<U> | U) {
@@ -392,14 +491,30 @@ export function getHotMerged<U>(): {
   };
 }
 
-export interface ListManager<T> {
+/**
+ * @internal
+ *
+ * An object that holds methods needed to introduce actions to a list e.g. move, remove, insert
+ */
+export interface ListTemplateManager<T> {
   updateUnchangedContext(index: number, count: number): void;
+
   insertView(item: T, index: number, count: number): void;
+
   moveView(oldIndex: number, item: T, index: number, count: number): void;
+
   updateView(item: T, index: number, count: number): void;
+
   removeView(index: number): void;
 }
 
+/**
+ * @internal
+ *
+ * Factory that returns a `ListTemplateManager` for the passed params.
+ *
+ * @param templateSettings
+ */
 export function getListTemplateManager<
   C extends { updateContext: (context: RxListViewComputedContext<T>) => void },
   T
@@ -409,8 +524,7 @@ export function getListTemplateManager<
   createViewContext: CreateViewContext<T, C>;
   updateViewContext: UpdateViewContext<T, C>;
   patchZone: NgZone | false;
-}): ListManager<T> {
-
+}): ListTemplateManager<T> {
   const {
     viewContainerRef,
     templateRef,
@@ -559,14 +673,13 @@ export function getChangesArray<T>(
   }
 }
 
-function coerceObservable<T>()  {
+
+function coerceObservable<T>() {
   return (o$: Observable<Observable<T> | T>) =>
-    o$.pipe(
-      map((o) => (isObservable(o) ? o : of(o) as Observable<T>)),
-    );
+    o$.pipe(map((o) => (isObservable(o) ? o : (of(o) as Observable<T>))));
 }
 
-function coerceAndFlatten<T>() {
+function coerceAndSwitchDistinct<T>() {
   return (o$: Observable<Observable<T> | T>) =>
     o$.pipe(
       coerceObservable(),
