@@ -42,7 +42,7 @@ export interface RxListViewComputedContext<T> {
   count: number;
 }
 
-export interface RxListViewContext<T extends Record<string | number | symbol, any>, U extends NgIterable<T> = NgIterable<T>, K = keyof T> extends RxListViewComputedContext<T> {
+export interface RxListViewContext<T extends Record<string | number | symbol, unknown>, U extends NgIterable<T> = NgIterable<T>, K = keyof T> extends RxListViewComputedContext<T> {
   $implicit: T;
   item$: Observable<T>;
   updateContext(newProps: RxListViewComputedContext<T>): void;
@@ -72,4 +72,3 @@ export interface  RenderSettings<T, C> {
   strategies: StrategyCredentialsMap;
   defaultStrategyName: string;
 }
-
