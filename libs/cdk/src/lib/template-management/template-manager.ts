@@ -45,6 +45,11 @@ export interface TemplateManager<
   addTrigger: (trigger$: Observable<RxNotification<T>>) => void;
 }
 
+export type NotificationTemplateNameMap<T, C, N> = Record<RxNotificationKind, (
+  value: T,
+  templates: { get: (name: N) => TemplateRef<C> }
+) => N>
+
 export function createTemplateManager<
   T,
   C extends RxViewContext<T>,
@@ -53,12 +58,7 @@ export function createTemplateManager<
   renderSettings: RenderSettings<T, C>;
   templateSettings: TemplateSettings<T, C>;
   templateTrigger$?: Observable<RxNotificationKind>;
-  notificationToTemplateName: {
-    [rxKind: string]: (
-      value: T,
-      templates: { get: (name: N) => TemplateRef<C> }
-    ) => N;
-  };
+  notificationToTemplateName: NotificationTemplateNameMap<T, C, N>;
 }): TemplateManager<T, C, N> {
   const {
     renderSettings,
