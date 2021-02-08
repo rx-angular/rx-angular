@@ -72,3 +72,8 @@ export interface  RenderSettings<T, C> {
   strategies: StrategyCredentialsMap;
   defaultStrategyName: string;
 }
+
+export interface RenderAware<T> {
+  nextStrategy: (nextConfig: string | Observable<string>) => void;
+  render: (values$: Observable<T>) => Observable<any>;
+}

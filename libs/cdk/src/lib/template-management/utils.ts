@@ -674,12 +674,12 @@ export function getChangesArray<T>(
 }
 
 
-function coerceObservable<T>() {
+export function coerceObservable<T>() {
   return (o$: Observable<Observable<T> | T>) =>
     o$.pipe(map((o) => (isObservable(o) ? o : (of(o) as Observable<T>))));
 }
 
-function coerceAndSwitchDistinct<T>() {
+export function coerceAndSwitchDistinct<T>() {
   return (o$: Observable<Observable<T> | T>) =>
     o$.pipe(
       coerceObservable(),

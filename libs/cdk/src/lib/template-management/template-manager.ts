@@ -1,24 +1,27 @@
 import { EmbeddedViewRef, TemplateRef } from '@angular/core';
-import { combineLatest, EMPTY, isObservable, Observable, of } from 'rxjs';
+import { combineLatest, EMPTY, Observable } from 'rxjs';
 import {
   catchError,
-  distinctUntilChanged,
   filter,
-  map,
   merge as mergeWith,
-  switchAll,
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
 import { onStrategy, rxMaterialize } from '../render-strategies/utils';
-import { RenderWork, RxNotification, RxNotificationKind } from '../render-strategies/model';
 import {
+  RenderWork,
+  RxNotification,
+  RxNotificationKind,
+} from '../render-strategies/model';
+import {
+  RenderAware,
   RenderSettings,
   RxBaseTemplateNames,
   RxViewContext,
-  TemplateSettings,
+  TemplateSettings
 } from './model';
 import {
+  coerceAndSwitchDistinct,
   getEmbeddedViewCreator,
   getTNode,
   notificationKindToViewContext,
@@ -31,11 +34,6 @@ import {
 } from './utils';
 import { CoalescingOptions } from '../model';
 
-export interface RenderAware<T> {
-  nextStrategy: (nextConfig: string | Observable<string>) => void;
-  render: (values$: Observable<T>) => Observable<any>;
-}
-
 export interface TemplateManager<
   T,
   C extends RxViewContext<T>,
@@ -45,10 +43,10 @@ export interface TemplateManager<
   addTrigger: (trigger$: Observable<RxNotification<T>>) => void;
 }
 
-export type NotificationTemplateNameMap<T, C, N> = Record<RxNotificationKind, (
-  value: T,
-  templates: { get: (name: N) => TemplateRef<C> }
-) => N>
+export type NotificationTemplateNameMap<T, C, N> = Record<
+  RxNotificationKind,
+  (value: T, templates: { get: (name: N) => TemplateRef<C> }) => N
+>;
 
 export function createTemplateManager<
   T,
@@ -99,10 +97,7 @@ export function createTemplateManager<
     nextStrategy: strategyHandling$.next,
     render(values$: Observable<T>): Observable<any> {
       return values$.pipe(
-        map((o) => (isObservable(o) ? o : of(o))),
-        distinctUntilChanged(),
-        switchAll(),
-        distinctUntilChanged(),
+        coerceAndSwitchDistinct(),
         rxMaterialize(),
         mergeWith(triggerHandling.trigger$ || EMPTY),
         withLatestFrom(strategyHandling$.strategy$),
