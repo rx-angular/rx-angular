@@ -34,7 +34,7 @@ import {
 } from './utils';
 import { CoalescingOptions } from '../model';
 
-export interface TemplateManager<
+export interface RxTemplateManager<
   T,
   C extends RxViewContext<T>,
   N = RxBaseTemplateNames | string
@@ -57,7 +57,7 @@ export function createTemplateManager<
   templateSettings: TemplateSettings<T, C>;
   templateTrigger$?: Observable<RxNotificationKind>;
   notificationToTemplateName: NotificationTemplateNameMap<T, C, N>;
-}): TemplateManager<T, C, N> {
+}): RxTemplateManager<T, C, N> {
   const {
     renderSettings,
     notificationToTemplateName,

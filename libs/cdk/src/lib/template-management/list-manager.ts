@@ -4,7 +4,7 @@ import {
   IterableDiffers,
   NgIterable,
   TemplateRef,
-  TrackByFunction,
+  TrackByFunction
 } from '@angular/core';
 import { combineLatest, Observable, OperatorFunction } from 'rxjs';
 import { filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
@@ -28,11 +28,10 @@ import {
   TNode,
 } from './utils';
 
-export interface ListManager<T, C> {
+export interface RxListManager<T, C> {
   nextStrategy: (config: string | Observable<string>) => void;
   render(changes$: Observable<NgIterable<T>>): Observable<C>;
 }
-
 
 export function createListManager<T, C extends RxListViewContext<T>>(config: {
   renderSettings: RenderSettings<T, C>;
@@ -41,7 +40,7 @@ export function createListManager<T, C extends RxListViewContext<T>>(config: {
   trackBy: TrackByFunction<T>;
   iterableDiffers: IterableDiffers;
   distinctBy?: DistinctByFunction<T>;
-}): ListManager<T, C> {
+}): RxListManager<T, C> {
   const { templateSettings, renderSettings, trackBy, iterableDiffers } = config;
   const {
     defaultStrategyName,

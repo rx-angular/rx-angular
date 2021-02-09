@@ -304,7 +304,7 @@ export function notifyAllParentsIfNeeded<T>(
 /**
  * @internal
  *
- * returns a Observable executing side effects for change detection of parents
+ * returns an Observable executing a side effects for change detection of parents
  *
  * @param injectingViewCdRef
  * @param strategy
