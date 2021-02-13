@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {
   asyncScheduler,
-  combineLatest,
+  combineLatest, from,
   isObservable,
   merge,
   Observable,
@@ -19,7 +19,7 @@ import {
   of,
   OperatorFunction,
   ReplaySubject,
-  Subject,
+  Subject
 } from 'rxjs';
 import { MonoTypeOperatorFunction } from 'rxjs/internal/types';
 import {
@@ -430,7 +430,7 @@ export function strategyHandling(
 } {
   const strategyName$ = new ReplaySubject<string | Observable<string>>(1);
   const strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
-    coerceAndSwitchDistinct(),
+    coerceDistinctWith(),
     startWith(defaultStrategyName),
     nameToStrategyCredentials(strategies, defaultStrategyName),
     share()
@@ -481,7 +481,7 @@ export function getHotMerged<U>(): {
   next(observable: ObservableInput<U> | U): void;
 } {
   const observablesSubject = new ReplaySubject<ObservableInput<U> | U>(1);
-  const values$ = observablesSubject.pipe(coerceAndSwitchDistinct()) as Observable<U>;
+  const values$ = observablesSubject.pipe(coerceDistinctWith()) as Observable<U>;
 
   return {
     next(observable: ObservableInput<U> | U) {
@@ -521,6 +521,7 @@ export function getListTemplateManager<
 >(templateSettings: {
   viewContainerRef: ViewContainerRef;
   templateRef: TemplateRef<C>;
+  createView: () => EmbeddedViewRef<C>,
   createViewContext: CreateViewContext<T, C>;
   updateViewContext: UpdateViewContext<T, C>;
   patchZone: NgZone | false;
@@ -674,17 +675,61 @@ export function getChangesArray<T>(
 }
 
 
-export function coerceObservable<T>() {
-  return (o$: Observable<Observable<T> | T>) =>
-    o$.pipe(map((o) => (isObservable(o) ? o : (of(o) as Observable<T>))));
+/**
+ * This Observable factory creates an Observable out of a static value or ObservableInput.
+ *
+ * @param o - the value to coerce
+ */
+export function coerceObservable<T>(o: ObservableInput<T | null | undefined> | T | null | undefined): Observable<T | null | undefined> {
+  return isObservable<T>(o) ? o : of(o as T| null | undefined);
 }
 
-export function coerceAndSwitchDistinct<T>() {
-  return (o$: Observable<Observable<T> | T>) =>
-    o$.pipe(
-      coerceObservable(),
+
+/**
+ * This operator maps an Observable out of a static value or ObservableInput.
+ *
+ */
+export function coerceObservableWith<T>(): OperatorFunction<Observable<T | null | undefined>| T | null | undefined, Observable<T | null | undefined>> {
+  return (o$: Observable<Observable<T> | T>) => map(coerceObservable)(o$);
+}
+
+/**
+ * This Observable factory creates an Observable out of a static value or ObservableInput.
+ * It forwards only distinct values from distinct incoming Observables or values.
+ * This comes in handy in any environment where you handle processing of incoming dynamic values and their state.
+ *
+ * Optionally you can pass a flatten strategy to get find grained control of the flattening process. E.g. mergeAll, switchAll
+ *
+ * @param o$ - The Observable to coerce and map to a Observable with distinct values
+ * @param flattenOperator - determines the flattening strategy e.g. mergeAll, concatAll, exhaust, switchAll. default is switchAll
+ */
+export function coerceDistinct<T>(o$: Observable<Observable<T> | T>, flattenOperator?: OperatorFunction<ObservableInput<T>, T>) {
+  flattenOperator = flattenOperator || switchAll();
+  return coerceObservable(o$).pipe(
       distinctUntilChanged(),
-      switchAll(),
+      flattenOperator,
       distinctUntilChanged()
     );
 }
+
+/**
+ * This operator takes an Observable of values ot Observables aof values and
+ * It forwards only distinct values from distinct incoming Observables or values.
+ * This comes in handy in any environment where you handle processing of incoming dynamic values and their state.
+ *
+ * Optionally you can pass a flatten strategy to get find grained control of the flattening process. E.g. mergeAll, switchAll
+ *
+ * @param flattenOperator - determines the flattening strategy e.g. mergeAll, concatAll, exhaust, switchAll. default is switchAll
+ *
+ */
+export function coerceDistinctWith<T>(flattenOperator?: OperatorFunction<ObservableInput<T>, T>) {
+  flattenOperator = flattenOperator || switchAll();
+  return (o$: Observable<Observable<T> | T>) =>
+    o$.pipe(
+      coerceObservableWith(),
+      distinctUntilChanged(),
+      flattenOperator,
+      distinctUntilChanged()
+    );
+}
+

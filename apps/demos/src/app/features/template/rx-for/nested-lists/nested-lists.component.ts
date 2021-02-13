@@ -165,10 +165,10 @@ import { immutableArr } from './utils';
                 let v$ = item$
               "
             >
-              <rxa-rx-for-value
-                [strategy$]="strategy$"
-                [value]="v$"
-              ></rxa-rx-for-value>
+              <mat-icon class="item" [ngClass]="{red:!o, green:o}">
+                {{o ? 'check' : 'highlight_off'}}
+              </mat-icon>
+              <rxa-dirty-check></rxa-dirty-check>
             </ng-container>
           </rxa-visualizer>
         </div>

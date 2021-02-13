@@ -48,7 +48,7 @@ export interface RxListViewContext<T extends Record<string | number | symbol, un
   updateContext(newProps: RxListViewComputedContext<T>): void;
 }
 
-export type CreateViewContext<T, C> = (value: T, customProps?: Partial<C>) => C;
+export type CreateViewContext<T, C> = (value: T, customProps?: object) => C;
 export type UpdateViewContext<T, C> = (
   value: T,
   view: EmbeddedViewRef<C>,
