@@ -563,7 +563,7 @@ export interface ZoneGlobalConfigurations {
  * You can define the following configurations on the `window` or `global` object before
  * importing `zone-testing.js` to change `zone-testing.js` default behaviors in the test runner.
  */
-interface ZoneTestConfigurations {
+export interface ZoneTestConfigurations {
   /**
    * Disable the Jasmine integration.
    *
@@ -748,7 +748,7 @@ interface ZoneTestConfigurations {
  * You can change the value of this configuration at runtime.
  *
  */
-interface ZoneRuntimeConfigurations {
+export interface ZoneRuntimeConfigurations {
   /**
    * Ignore outputting errors to the console when uncaught Promise errors occur.
    *

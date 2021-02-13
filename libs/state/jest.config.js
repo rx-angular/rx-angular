@@ -1,4 +1,6 @@
 module.exports = {
+  name: 'state',
+  displayName: 'state',
   preset: '../../jest.preset.js',
   coverageReporters: ['lcov', 'cobertura'],
   coverageDirectory: '../../docs/test-coverage/state',
@@ -24,5 +26,4 @@ module.exports = {
       },
     },
   },
-  displayName: 'state',
 };
