@@ -64,9 +64,9 @@ ng add @rx-angular/state
 Manually:
 
 ```bash
-npm install --save @rx-angular/template
+npm install --save @rx-angular/state
 # or
-yarn add @rx-angular/template
+yarn add @rx-angular/state
 ```
 
 ## API
