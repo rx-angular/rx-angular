@@ -21,7 +21,7 @@ import {
   TemplateSettings
 } from './model';
 import {
-  coerceAndSwitchDistinct,
+  coerceDistinctWith,
   getEmbeddedViewCreator,
   getTNode,
   notificationKindToViewContext,
@@ -97,7 +97,7 @@ export function createTemplateManager<
     nextStrategy: strategyHandling$.next,
     render(values$: Observable<T>): Observable<any> {
       return values$.pipe(
-        coerceAndSwitchDistinct(),
+        coerceDistinctWith(),
         rxMaterialize(),
         mergeWith(triggerHandling.trigger$ || EMPTY),
         withLatestFrom(strategyHandling$.strategy$),
