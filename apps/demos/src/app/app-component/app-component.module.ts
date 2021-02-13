@@ -24,7 +24,7 @@ import { AppControlPanelModule } from './app-control-panel/';
     MatListModule,
     MatIconModule,
     AppShellModule,
-    RouterModule.forRoot(ROUTES),
+    RouterModule.forRoot(ROUTES, { relativeLinkResolution: 'legacy' }),
     DirtyChecksModule,
     AppControlPanelModule
   ],

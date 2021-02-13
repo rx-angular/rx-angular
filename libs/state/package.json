@@ -1,7 +1,7 @@
 {
   "name": "@rx-angular/state",
   "version": "1.4.3",
-  "description": "RxState is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in angular",
+  "description": "@rx-angular/state is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state and side effects in angular",
   "main": "index.js",
   "publishConfig": {
     "access": "public"
