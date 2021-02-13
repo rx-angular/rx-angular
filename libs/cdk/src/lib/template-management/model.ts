@@ -8,7 +8,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { Observable } from 'rxjs';
-import { StrategyCredentialsMap } from '../render-strategies/model';
+import { StrategyCredentialsMap } from '../model';
 
 export type rxBaseTemplateNames = 'rxError' | 'rxComplete' | 'rxSuspense';
 
@@ -72,6 +72,9 @@ export interface RenderAware<T> {
   render: (values$: Observable<T>) => Observable<any>;
 }
 
+
+export type CreateEmbeddedView<C> = (viewContainerRef: ViewContainerRef, patchZone: NgZone | false) => (templateRef: TemplateRef<C>, context: C, index: number) => EmbeddedViewRef<C>;
+export type DistinctByFunction<T> = (oldItem: T, newItem: T) => any;
 export type CreateViewContext<T, C> = (value: T) => C;
 export type UpdateViewContext<T, C> = (
   value: T,

@@ -7,11 +7,9 @@ import {
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { onStrategy, rxMaterialize } from '../render-strategies/utils';
+import { onStrategy } from '../render-strategies/utils';
 import {
-  RenderWork,
-  RxNotification,
-  RxNotificationKind,
+  RenderWork
 } from '../render-strategies/model';
 import {
   RenderAware,
@@ -32,7 +30,8 @@ import {
   templateTriggerHandling,
   TNode,
 } from './utils';
-import { CoalescingOptions } from '../model';
+import { CoalescingOptions, RxNotification, RxNotificationKind } from '../model';
+import { rxMaterialize } from '../utils/rxMaterialize';
 
 export interface RxTemplateManager<
   T,

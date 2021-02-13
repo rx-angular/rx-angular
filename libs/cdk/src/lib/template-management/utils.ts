@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {
   asyncScheduler,
-  combineLatest, from,
+  combineLatest,
   isObservable,
   merge,
   Observable,
@@ -19,7 +19,7 @@ import {
   of,
   OperatorFunction,
   ReplaySubject,
-  Subject
+  Subject,
 } from 'rxjs';
 import { MonoTypeOperatorFunction } from 'rxjs/internal/types';
 import {
@@ -35,8 +35,6 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import {
-  RxNotification,
-  RxNotificationKind,
   StrategyCredentials,
   StrategyCredentialsMap,
 } from '../render-strategies/model';
@@ -45,13 +43,15 @@ import {
   onStrategy,
 } from '../render-strategies/utils';
 import {
+  CreateEmbeddedView,
   CreateListViewContext,
   CreateViewContext,
   RxListTemplateChange, RxListTemplateChanges,
   RxListViewComputedContext, RxListViewContext,
   RxViewContext, UpdateListViewContext,
-  UpdateViewContext,
+  UpdateViewContext
 } from './model';
+import { RxNotification, RxNotificationKind } from '../model';
 
 // Below are constants for LView indices to help us look up LView members
 // without having to remember the specific indices.
@@ -413,36 +413,6 @@ export function templateHandling<N, C>(): {
   }
 }
 
-/**
- * @internal
- *
- * A factory function returning an object to handle the process of turning strategy names into `StrategyCredentials`
- * You can next a strategy name as Observable or string and get an Observable of `StrategyCredentials`
- *
- * @param defaultStrategyName
- * @param strategies
- */
-export function strategyHandling(
-  defaultStrategyName: string,
-  strategies: StrategyCredentialsMap
-): {
-  strategy$: Observable<StrategyCredentials>;
-  next(name: string | Observable<string>): void;
-} {
-  const strategyName$ = new ReplaySubject<string | Observable<string>>(1);
-  const strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
-    coerceDistinctWith(),
-    startWith(defaultStrategyName),
-    nameToStrategyCredentials(strategies, defaultStrategyName),
-    share()
-  );
-  return {
-    strategy$,
-    next(name: string | Observable<string>) {
-      strategyName$.next(name);
-    },
-  };
-}
 
 /**
  * @internal
@@ -465,7 +435,6 @@ export function templateTriggerHandling<T>(): {
   };
 }
 
-
 /**
  * @internal
  *
@@ -482,7 +451,9 @@ export function getHotMerged<U>(): {
   next(observable: ObservableInput<U> | U): void;
 } {
   const observablesSubject = new ReplaySubject<ObservableInput<U> | U>(1);
-  const values$ = observablesSubject.pipe(coerceDistinctWith()) as Observable<U>;
+  const values$ = observablesSubject.pipe(
+    coerceDistinctWith()
+  ) as Observable<U>;
 
   return {
     next(observable: ObservableInput<U> | U) {
@@ -521,11 +492,11 @@ export function getListTemplateManager<
   T
 >(templateSettings: {
   viewContainerRef: ViewContainerRef;
+  patchZone: NgZone | false;
   templateRef: TemplateRef<C>;
-  createView: () => EmbeddedViewRef<C>,
+  createViewFactory?: CreateEmbeddedView<C>,
   createViewContext: CreateListViewContext<T, C, RxListViewComputedContext>;
   updateViewContext: UpdateListViewContext<T, C, RxListViewComputedContext>;
-  patchZone: NgZone | false;
 }): ListTemplateManager<T> {
   const {
     viewContainerRef,
@@ -533,8 +504,9 @@ export function getListTemplateManager<
     createViewContext,
     updateViewContext,
     patchZone,
+    createViewFactory
   } = templateSettings;
-  const createEmbeddedView = getEmbeddedViewCreator(
+  const createEmbeddedView = createViewFactory ? createViewFactory(viewContainerRef, patchZone) : getEmbeddedViewCreator(
     viewContainerRef,
     patchZone
   );
@@ -685,22 +657,25 @@ export function getListChanges<T>(
   }
 }
 
-
 /**
  * This Observable factory creates an Observable out of a static value or ObservableInput.
  *
  * @param o - the value to coerce
  */
-export function coerceObservable<T>(o: ObservableInput<T | null | undefined> | T | null | undefined): Observable<T | null | undefined> {
-  return isObservable<T>(o) ? o : of(o as T| null | undefined);
+export function coerceObservable<T>(
+  o: ObservableInput<T | null | undefined> | T | null | undefined
+): Observable<T | null | undefined> {
+  return isObservable<T>(o) ? o : of(o as T | null | undefined);
 }
-
 
 /**
  * This operator maps an Observable out of a static value or ObservableInput.
  *
  */
-export function coerceObservableWith<T>(): OperatorFunction<Observable<T | null | undefined>| T | null | undefined, Observable<T | null | undefined>> {
+export function coerceObservableWith<T>(): OperatorFunction<
+  Observable<T | null | undefined> | T | null | undefined,
+  Observable<T | null | undefined>
+> {
   return (o$: Observable<Observable<T> | T>) => map(coerceObservable)(o$);
 }
 
@@ -714,13 +689,16 @@ export function coerceObservableWith<T>(): OperatorFunction<Observable<T | null 
  * @param o$ - The Observable to coerce and map to a Observable with distinct values
  * @param flattenOperator - determines the flattening strategy e.g. mergeAll, concatAll, exhaust, switchAll. default is switchAll
  */
-export function coerceDistinct<T>(o$: Observable<Observable<T> | T>, flattenOperator?: OperatorFunction<ObservableInput<T>, T>) {
+export function coerceDistinct<T>(
+  o$: Observable<Observable<T> | T>,
+  flattenOperator?: OperatorFunction<ObservableInput<T>, T>
+) {
   flattenOperator = flattenOperator || switchAll();
   return coerceObservable(o$).pipe(
-      distinctUntilChanged(),
-      flattenOperator,
-      distinctUntilChanged()
-    );
+    distinctUntilChanged(),
+    flattenOperator,
+    distinctUntilChanged()
+  );
 }
 
 /**
@@ -733,7 +711,9 @@ export function coerceDistinct<T>(o$: Observable<Observable<T> | T>, flattenOper
  * @param flattenOperator - determines the flattening strategy e.g. mergeAll, concatAll, exhaust, switchAll. default is switchAll
  *
  */
-export function coerceDistinctWith<T>(flattenOperator?: OperatorFunction<ObservableInput<T>, T>) {
+export function coerceDistinctWith<T>(
+  flattenOperator?: OperatorFunction<ObservableInput<T>, T>
+) {
   flattenOperator = flattenOperator || switchAll();
   return (o$: Observable<Observable<T> | T>) =>
     o$.pipe(
@@ -743,4 +723,3 @@ export function coerceDistinctWith<T>(flattenOperator?: OperatorFunction<Observa
       distinctUntilChanged()
     );
 }
-
