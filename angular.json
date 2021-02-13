@@ -621,16 +621,6 @@
             ]
           }
         },
-        "changelog": {
-          "builder": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              {
-                "command": "npx conventional-changelog-cli -p angular -k ./libs/state/package.json -i ./libs/state/CHANGELOG.md -s --commit-path ./libs/state --tagPrefix state@"
-              }
-            ]
-          }
-        },
         "test-coverage": {
           "builder": "@nrwl/jest:jest",
           "options": {
@@ -657,6 +647,16 @@
           "builder": "@nrwl/node:execute",
           "options": {
             "buildTarget": "state:perfBuild"
+          }
+        },
+        "changelog": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx conventional-changelog-cli -p angular -k ./libs/state/package.json -i ./libs/state/CHANGELOG.md -s --commit-path ./libs/state --tagPrefix state@"
+              }
+            ]
           }
         },
         "publish": {
@@ -975,6 +975,26 @@
             "tsConfig": "libs/cdk/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "libs/cdk/src/test-setup.ts"
+          }
+        },
+        "changelog": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx conventional-changelog-cli -p angular -k ./libs/cdk/package.json -i ./libs/cdk/CHANGELOG.md -s --commit-path ./libs/cdk --tagPrefix cdk@"
+              }
+            ]
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "nx test cdk && nx build cdk && cd ./dist/libs/cdk && npm publish"
+              }
+            ]
           }
         }
       },
