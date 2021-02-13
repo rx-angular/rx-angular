@@ -604,6 +604,12 @@ export function getListTemplateManager<
   }
 }
 
+/**
+ * @internal
+ *
+ * @param changes
+ * @param items
+ */
 export function getChangesArray<T>(
   changes: IterableChanges<T>,
   items: T[]
