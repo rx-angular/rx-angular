@@ -53,8 +53,12 @@ export function createListTemplateManager<
   const tNode: TNode = parent
                        ? getTNode(injectingViewCdRef, eRef.nativeElement)
                        : false;
+  /* TODO (regarding createView): this is currently not in use. for the list-manager this would mean to provide
+   functions for not only create. developers than should have to provide create, move, remove,... the whole thing.
+   i don't know if this is the right decision for a first RC */
   const listTemplateManager = getListTemplateManager({
     ...templateSettings,
+    createView: null,
     patchZone,
   });
   const viewContainerRef = templateSettings.viewContainerRef;
