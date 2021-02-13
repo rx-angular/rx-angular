@@ -956,6 +956,16 @@
             ]
           }
         },
+        "build-docs": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "nx test-coverage cdk && nx build-test-coverage-badge cdk"
+              }
+            ]
+          }
+        },
         "build-lib": {
           "builder": "@nrwl/angular:ng-packagr-lite",
           "options": {

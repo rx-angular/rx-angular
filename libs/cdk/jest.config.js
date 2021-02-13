@@ -1,6 +1,7 @@
 module.exports = {
   name: 'cdk',
-  preset: '../../jest.config.js',
+  displayName: 'cdk',
+  preset: '../../jest.preset.js',
   coverageReporters: ['lcov', 'cobertura'],
   coverageDirectory: '../../docs/test-coverage/cdk',
   collectCoverageFrom: [
@@ -23,5 +24,4 @@ module.exports = {
     'jest-preset-angular/build/AngularSnapshotSerializer.js',
     'jest-preset-angular/build/HTMLCommentSerializer.js',
   ],
-  displayName: 'cdk',
 };
