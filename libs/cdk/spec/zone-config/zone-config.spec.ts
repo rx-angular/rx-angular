@@ -1,7 +1,17 @@
-import { zoneConfig, ZoneGlobalConfigurations } from '@rx-angular/cdk';
+import {
+  zoneConfig,
+  ZoneGlobalConfigurations,
+  ZoneTestConfigurations,
+  ZoneRuntimeConfigurations,
+  ZoneFlagsHelperFunctions
+} from '@rx-angular/cdk';
+import createSpy = jasmine.createSpy;
 
 describe('zone-config', () => {
-  const w = window as ZoneGlobalConfigurations;
+  const w = window as ZoneGlobalConfigurations &
+    ZoneTestConfigurations &
+    ZoneRuntimeConfigurations &
+    ZoneFlagsHelperFunctions & { console: {log: () => void} };
   it('should be created', () => {
     expect(zoneConfig).toBeTruthy();
   });
@@ -74,7 +84,6 @@ describe('zone-config', () => {
       zoneConfig.global.disable.timers();
       expect(w.__Zone_disable_timers).toBe(true);
     });
-
 
     it('should have blocking present', () => {
       expect(typeof zoneConfig.global.disable.blocking).toBe('function');
@@ -153,23 +162,121 @@ describe('zone-config', () => {
       expect(w.__Zone_disable_ZoneAwarePromise).toBe(true);
     });
 
+    it('should have DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION present', () => {
+      expect(typeof zoneConfig.global.disable.DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION).toBe('function');
+      expect(w.__zone_symbol__DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION).toBe(undefined);
+      zoneConfig.global.disable.DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION();
+      expect(w.__zone_symbol__DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION).toBe(true);
+    });
+
   });
 
   describe('test flags', () => {
     it('should have test flags present', () => {
       expect(typeof zoneConfig.test).toBe('object');
     });
+
+    it('should have test and disable flags present', () => {
+      expect(typeof zoneConfig.test.disable).toBe('object');
+    });
+
+    it('should have fakeAsyncAutoFakeAsyncWhenClockPatched present', () => {
+      expect(typeof zoneConfig.test.disable.fakeAsyncAutoFakeAsyncWhenClockPatched).toBe('function');
+      expect(w.__zone_symbol__fakeAsyncAutoFakeAsyncWhenClockPatched).toBe(undefined);
+      zoneConfig.test.disable.fakeAsyncAutoFakeAsyncWhenClockPatched();
+      expect(w.__zone_symbol__fakeAsyncAutoFakeAsyncWhenClockPatched).toBe(true);
+    });
+
+    it('should have fakeAsyncDisablePatchingClock present', () => {
+      expect(typeof zoneConfig.test.disable.fakeAsyncDisablePatchingClock).toBe('function');
+      expect(w.__zone_symbol__fakeAsyncDisablePatchingClock).toBe(undefined);
+      zoneConfig.test.disable.fakeAsyncDisablePatchingClock();
+      expect(w.__zone_symbol__fakeAsyncDisablePatchingClock).toBe(true);
+    });
+
+    it('should have supportWaitUnResolvedChainedPromise present', () => {
+      expect(typeof zoneConfig.test.disable.supportWaitUnResolvedChainedPromise).toBe('function');
+      expect(w.__zone_symbol__supportWaitUnResolvedChainedPromise).toBe(undefined);
+      zoneConfig.test.disable.supportWaitUnResolvedChainedPromise();
+      expect(w.__zone_symbol__supportWaitUnResolvedChainedPromise).toBe(true);
+    });
+
+    it('should have jasmine present', () => {
+      expect(typeof zoneConfig.test.disable.jasmine).toBe('function');
+      expect(w.__Zone_disable_jasmine).toBe(undefined);
+      zoneConfig.test.disable.jasmine();
+      expect(w.__Zone_disable_jasmine).toBe(true);
+    });
+
+    it('should have jest present', () => {
+      expect(typeof zoneConfig.test.disable.jest).toBe('function');
+      expect(w.__Zone_disable_jest).toBe(undefined);
+      zoneConfig.test.disable.jest();
+      expect(w.__Zone_disable_jest).toBe(true);
+    });
+
+    it('should have mocha( present', () => {
+      expect(typeof zoneConfig.test.disable.mocha).toBe('function');
+      expect(w.__Zone_disable_mocha).toBe(undefined);
+      zoneConfig.test.disable.mocha();
+      expect(w.__Zone_disable_mocha).toBe(true);
+    });
+
   });
 
   describe('events flags', () => {
     it('should have events flags present', () => {
       expect(typeof zoneConfig.events).toBe('object');
     });
+
+    it('should have runtime and disable flags present', () => {
+      expect(typeof zoneConfig.runtime.disable).toBe('object');
+    });
+
+    it('should have PASSIVE_EVENTS present', () => {
+      expect(typeof zoneConfig.events.disable.PASSIVE_EVENTS).toBe('function');
+      expect(w.__zone_symbol__PASSIVE_EVENTS).toBe(undefined);
+      zoneConfig.events.disable.PASSIVE_EVENTS(['test']);
+      expect(w.__zone_symbol__PASSIVE_EVENTS).toBe(['test']);
+    });
+
+    it('should have UNPATCHED_EVENTS present', () => {
+      expect(typeof zoneConfig.events.disable.UNPATCHED_EVENTS).toBe('function');
+      expect(w.__zone_symbol__UNPATCHED_EVENTS).toBe(undefined);
+      zoneConfig.events.disable.UNPATCHED_EVENTS(['test']);
+      expect(w.__zone_symbol__UNPATCHED_EVENTS).toBe(['test']);
+    });
+
   });
 
   describe('runtime flags', () => {
     it('should have runtime flags present', () => {
       expect(typeof zoneConfig.runtime).toBe('object');
     });
+
+    it('should have test and disable flags present', () => {
+      expect(typeof zoneConfig.runtime.disable).toBe('object');
+    });
+
+    it('should have ignoreConsoleErrorUncaughtError present', () => {
+      expect(typeof zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError).toBe('function');
+      expect(w.__zone_symbol__ignoreConsoleErrorUncaughtError).toBe(undefined);
+      zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError();
+      expect(w.__zone_symbol__ignoreConsoleErrorUncaughtError).toBe(true);
+    });
+
+  });
+
+  describe('zone-flags log', () => {
+    it('should have log function present', () => {
+      expect(typeof w.__rax_zone_config__log).toBe('function');
+    });
+
+    it('should log zone-flags if called', () => {
+      w.console.log = createSpy('console.log');
+      w.__rax_zone_config__log()
+      expect(w.console.log).toHaveBeenCalledTimes(28);
+    });
+
   });
 });

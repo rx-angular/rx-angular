@@ -101,3 +101,7 @@ export const zoneTestSettingsConfigurationsKeys: ZoneTestSettingsConfigurationsK
   'fakeAsyncAutoFakeAsyncWhenClockPatched',
   'supportWaitUnResolvedChainedPromise',
 ];
+
+export interface ZoneFlagsHelperFunctions {
+  __rax_zone_config__log?: () => void;
+}

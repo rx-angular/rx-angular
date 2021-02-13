@@ -147,26 +147,11 @@ function createZoneFlagsConfigurator(): ZoneConfig {
         {} as RuntimeConfigurationMethods
       ),
     },
-    getCompilerOptions(
-      noop = true,
-      coalescing = true
-    ): { ngZone?: 'noop'; ngZoneEventCoalescing?: true } {
-      const zoneRelevantCompilerOption: any = {};
-      // tslint:disable-next-line:no-unused-expression
-      // tslint:disable-next-line:no-unused-expression
-      if (noop) {
-        zoneRelevantCompilerOption.ngZone = 'noop';
-      }
-      if (coalescing) {
-        zoneRelevantCompilerOption.ngZoneEventCoalescing = true;
-      }
-      return zoneRelevantCompilerOption;
-    },
   };
 }
 
 /**
- * An object for typed zone-flags configuratin.
+ * An object for typed zone-flags configuration.
  *
  * @Example
  *
@@ -202,10 +187,6 @@ export interface ZoneConfig {
   runtime: {
     disable: RuntimeConfigurationMethods;
   };
-  getCompilerOptions(
-    noop?: boolean,
-    coalescing?: boolean
-  ): { ngZone?: 'noop'; ngZoneEventCoalescing?: true };
 }
 
 export const zoneConfig = createZoneFlagsConfigurator();
