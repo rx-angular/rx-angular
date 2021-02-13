@@ -45,10 +45,11 @@ import {
   onStrategy,
 } from '../render-strategies/utils';
 import {
+  CreateListViewContext,
   CreateViewContext,
-  ListChange,
-  RxListViewComputedContext,
-  RxViewContext,
+  RxListTemplateChange, RxListTemplateChanges,
+  RxListViewComputedContext, RxListViewContext,
+  RxViewContext, UpdateListViewContext,
   UpdateViewContext,
 } from './model';
 
@@ -516,13 +517,13 @@ export interface ListTemplateManager<T> {
  * @param templateSettings
  */
 export function getListTemplateManager<
-  C extends { updateContext: (context: RxListViewComputedContext<T>) => void },
+  C extends RxListViewContext<T>,
   T
 >(templateSettings: {
   viewContainerRef: ViewContainerRef;
   templateRef: TemplateRef<C>;
-  createViewContext: CreateViewContext<T, C>;
-  updateViewContext: UpdateViewContext<T, C>;
+  createViewContext: CreateListViewContext<T, C, RxListViewComputedContext>;
+  updateViewContext: UpdateListViewContext<T, C, RxListViewComputedContext>;
   patchZone: NgZone | false;
 }): ListTemplateManager<T> {
   const {
@@ -551,9 +552,8 @@ export function getListTemplateManager<
     const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
     view.context.updateContext({
       count,
-      index,
-      insertView,
-    } as any);
+      index
+    });
     view.detectChanges();
   }
 
@@ -564,10 +564,9 @@ export function getListTemplateManager<
     count: number
   ): void {
     const oldView = viewContainerRef.get(oldIndex);
-    const view = viewContainerRef.move(oldView, index);
+    const view = <EmbeddedViewRef<C>>viewContainerRef.move(oldView, index);
     updateViewContext(
       item,
-      // @ts-ignore
       view,
       {
         count,
@@ -582,7 +581,7 @@ export function getListTemplateManager<
     updateViewContext(item, view, {
       count,
       index,
-    } as any);
+    });
     view.detectChanges();
   }
 
@@ -603,26 +602,32 @@ export function getListTemplateManager<
   }
 }
 
-export function getChangesArray<T>(
+export function getListChanges<T>(
   changes: IterableChanges<T>,
   items: T[]
-): [ListChange, any][] {
+): RxListTemplateChanges {
   const changedIdxs = new Set<T>();
   const changesArr = [];
+  let notifyParent = false;
   changes.forEachOperation((record, adjustedPreviousIndex, currentIndex) => {
     const item = record.item;
     if (record.previousIndex == null) {
       // insert
       changesArr.push(getInsertChange(item, currentIndex));
       changedIdxs.add(item);
+      notifyParent = true;
     } else if (currentIndex == null) {
       // remove
       changesArr.push(getRemoveChange(item, adjustedPreviousIndex));
       changedIdxs.add(item);
+      notifyParent = true;
     } else if (adjustedPreviousIndex !== null) {
       // move
-      changesArr.push(getMoveChange(item, currentIndex, adjustedPreviousIndex));
+      changesArr.push(
+        getMoveChange(item, currentIndex, adjustedPreviousIndex)
+      );
       changedIdxs.add(item);
+      notifyParent = true;
     }
   });
   changes.forEachIdentityChange((record) => {
@@ -635,7 +640,7 @@ export function getChangesArray<T>(
       changesArr.push(getUnchangedChange(item, index));
     }
   });
-  return changesArr;
+  return [changesArr, notifyParent];
 
   // ==========
 
@@ -643,21 +648,21 @@ export function getChangesArray<T>(
     item: T,
     currentIndex: number,
     adjustedPreviousIndex: number
-  ): [ListChange, any] {
-    return [ListChange.move, [item, currentIndex, adjustedPreviousIndex]];
+  ): [RxListTemplateChange, any] {
+    return [RxListTemplateChange.move, [item, currentIndex, adjustedPreviousIndex]];
   }
 
-  function getUpdateChange(item: T, currentIndex: number): [ListChange, any] {
-    return [ListChange.update, [item, currentIndex]];
+  function getUpdateChange(item: T, currentIndex: number): [RxListTemplateChange, any] {
+    return [RxListTemplateChange.update, [item, currentIndex]];
   }
 
-  function getUnchangedChange(item: T, index: number): [ListChange, any] {
-    return [ListChange.context, [item, index]];
+  function getUnchangedChange(item: T, index: number): [RxListTemplateChange, any] {
+    return [RxListTemplateChange.context, [item, index]];
   }
 
-  function getInsertChange(item: T, currentIndex: number): [ListChange, any] {
+  function getInsertChange(item: T, currentIndex: number): [RxListTemplateChange, any] {
     return [
-      ListChange.insert,
+      RxListTemplateChange.insert,
       [item, currentIndex === null ? undefined : currentIndex],
     ];
   }
@@ -665,9 +670,9 @@ export function getChangesArray<T>(
   function getRemoveChange(
     item: T,
     adjustedPreviousIndex: number
-  ): [ListChange, any] {
+  ): [RxListTemplateChange, any] {
     return [
-      ListChange.remove,
+      RxListTemplateChange.remove,
       adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex,
     ];
   }

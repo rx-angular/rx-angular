@@ -1,6 +1,13 @@
-import { ChangeDetectorRef, ElementRef, NgIterable, NgZone, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  ElementRef,
+  EmbeddedViewRef,
+  NgIterable,
+  NgZone,
+  TemplateRef,
+  ViewContainerRef
+} from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateViewContext, UpdateViewContext } from './list-manager-move';
 import { StrategyCredentialsMap } from '../render-strategies/model';
 
 export type rxBaseTemplateNames = 'rxError' | 'rxComplete' | 'rxSuspense';
@@ -18,7 +25,8 @@ export const enum ListChange {
   update,
   context,
 }
-
+// [[changeType, changePayload][], notifyParent]
+export type ListChanges = [[ListChange, any][], boolean];
 
 export interface NgViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
@@ -64,4 +72,17 @@ export interface  RenderSettings<T, C> {
   strategies: StrategyCredentialsMap;
   defaultStrategyName: string;
 }
+
+export interface ListManager<T, C> {
+  nextStrategy: (config: string | Observable<string>) => void;
+
+  render(changes$: Observable<NgIterable<T>>): Observable<any>;
+}
+
+export type CreateViewContext<T, C> = (value: T, customProps?: object) => C;
+export type UpdateViewContext<T, C> = (
+  value: T,
+  view: EmbeddedViewRef<C>,
+  context: C
+) => void;
 

@@ -15,7 +15,7 @@ import {
 } from '../render-strategies/model';
 import {
   RenderAware,
-  RenderSettings,
+  RxRenderSettings,
   RxBaseTemplateNames,
   RxViewContext,
   TemplateSettings
@@ -53,7 +53,7 @@ export function createTemplateManager<
   C extends RxViewContext<T>,
   N = RxBaseTemplateNames | string
 >(config: {
-  renderSettings: RenderSettings<T, C>;
+  renderSettings: RxRenderSettings<T, C>;
   templateSettings: TemplateSettings<T, C>;
   templateTrigger$?: Observable<RxNotificationKind>;
   notificationToTemplateName: NotificationTemplateNameMap<T, C, N>;

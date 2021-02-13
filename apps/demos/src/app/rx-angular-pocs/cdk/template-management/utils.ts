@@ -42,8 +42,14 @@ import {
   TVIEW,
 } from '../utils/view-constants';
 import { asyncScheduler } from '../utils/zone-agnostic/rxjs/scheduler/async';
-import { ListChange, RxListViewComputedContext, RxViewContext } from './model';
-import { CreateViewContext, UpdateViewContext } from './list-manager-move';
+import {
+  CreateViewContext,
+  ListChange,
+  ListChanges,
+  RxListViewComputedContext,
+  RxViewContext,
+  UpdateViewContext
+} from './model';
 import { ngInputFlatten } from '../utils/rxjs/operators';
 import { RxNotification, RxNotificationKind } from '../utils/rxjs';
 
@@ -452,28 +458,32 @@ export function getListTemplateManager<
   }
 }
 
-export function getChangesArray<T>(
+export function getListChanges<T>(
   changes: IterableChanges<T>,
   items: T[]
-): [ListChange, any][] {
+): ListChanges {
   const changedIdxs = new Set<T>();
   const changesArr = [];
+  let notifyParent = false;
   changes.forEachOperation((record, adjustedPreviousIndex, currentIndex) => {
     const item = record.item;
     if (record.previousIndex == null) {
       // insert
       changesArr.push(getInsertChange(item, currentIndex));
       changedIdxs.add(item);
+      notifyParent = true;
     } else if (currentIndex == null) {
       // remove
       changesArr.push(getRemoveChange(item, adjustedPreviousIndex));
       changedIdxs.add(item);
+      notifyParent = true;
     } else if (adjustedPreviousIndex !== null) {
       // move
       changesArr.push(
         getMoveChange(item, currentIndex, adjustedPreviousIndex)
       );
       changedIdxs.add(item);
+      notifyParent = true;
     }
   });
   changes.forEachIdentityChange((record) => {
@@ -486,7 +496,7 @@ export function getChangesArray<T>(
       changesArr.push(getUnchangedChange(item, index));
     }
   });
-  return changesArr;
+  return [changesArr, notifyParent];
 
   // ==========
 

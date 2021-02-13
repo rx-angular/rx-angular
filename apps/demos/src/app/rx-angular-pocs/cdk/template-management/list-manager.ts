@@ -1,337 +1,181 @@
 import {
-  combineLatest,
-  Observable,
-  of,
-  OperatorFunction,
-  ReplaySubject,
-} from 'rxjs';
-import {
-  ChangeDetectorRef,
-  ElementRef,
   EmbeddedViewRef,
+  IterableDiffer,
+  IterableDiffers,
   NgIterable,
   TemplateRef,
   TrackByFunction,
-  ViewContainerRef,
-  ViewRef,
-  ɵdetectChanges as detectChanges,
-  ɵmarkDirty as markDirty,
 } from '@angular/core';
+import { combineLatest, merge, Observable, of, OperatorFunction } from 'rxjs';
+import { filter, ignoreElements, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { StrategyCredentials } from '../render-strategies/model';
+
+import { onStrategy } from '../render-strategies/utils/strategy-helper';
 import {
-  delay,
-  filter,
-  map,
-  observeOn,
-  startWith,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from 'rxjs/operators';
-
+  ListChange, ListManager,
+  NgViewContext,
+  RenderSettings,
+  RxListViewContext,
+  TemplateSettings,
+} from './model';
 import {
-  nameToStrategyCredentials,
-  onStrategy,
-} from '../render-strategies/utils/strategy-helper';
-import { ngInputFlatten } from '../utils/rxjs/operators/ngInputFlatten';
-import { asyncScheduler } from '../utils/zone-agnostic/rxjs/scheduler/async';
-import { RxListViewComputedContext, RxListViewContext } from './model';
-import { extractProjectionParentViewSet, extractProjectionViews, getTNode, renderProjectionParents } from './utils';
-import { asap } from '../utils/zone-agnostic/rxjs/scheduler/asap';
-import {
-  StrategyCredentials,
-  StrategyCredentialsMap,
-} from '../render-strategies/model';
+  getListChanges,
+  getListTemplateManager,
+  getTNode,
+  notifyAllParentsIfNeeded,
+  notifyInjectingParentIfNeeded,
+  strategyHandling,
+  TNode,
+} from './utils';
 
-export interface ListManager<T, C> {
-  nextStrategy: (config: string | Observable<string>) => void;
 
-  render(changes$: Observable<NgIterable<T>>): Observable<any>;
-}
 
-export type CreateViewContext<T, C> = (item: T) => C;
-export type DistinctByFunction<T> = (oldItem: T, newItem: T) => any;
-
-export function createListManager<T, C extends RxListViewContext<T>>(config: {
-  cdRef: ChangeDetectorRef;
-  eRef: ElementRef;
-  renderParent: boolean;
-  strategies: StrategyCredentialsMap;
-  defaultStrategyName: string;
-  viewContainerRef: ViewContainerRef;
-  templateRef: TemplateRef<C>;
-  createViewContext: CreateViewContext<T, C>;
+export function createListManager<
+  T,
+  C extends RxListViewContext<T> & NgViewContext<T>
+>(config: {
+  renderSettings: RenderSettings<T, C>;
+  templateSettings: TemplateSettings<T, C> & { templateRef: TemplateRef<C> };
+  //
   trackBy: TrackByFunction<T>;
-  distinctBy?: DistinctByFunction<T>;
+  iterableDiffers: IterableDiffers;
 }): ListManager<T, C> {
+  const { templateSettings, renderSettings, trackBy, iterableDiffers } = config;
   const {
-    viewContainerRef,
-    templateRef,
-    createViewContext,
     defaultStrategyName,
     strategies,
-    trackBy,
-    cdRef,
-    renderParent,
+    cdRef: injectingViewCdRef,
+    patchZone,
+    parent,
     eRef,
-  } = config;
-  const distinctBy = config?.distinctBy || ((a: T, b: T) => a === b);
-  const scope = (cdRef as any).context || cdRef;
-  const viewCache = [];
+  } = renderSettings;
+  const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
+  const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
+  //               type,  payload
+  const tNode: TNode = parent
+    ? getTNode(injectingViewCdRef, eRef.nativeElement)
+    : false;
+  const listTemplateManager = getListTemplateManager({
+    ...templateSettings,
+    patchZone,
+  });
+  const viewContainerRef = templateSettings.viewContainerRef;
 
-  const strategyName$ = new ReplaySubject<Observable<string>>(1);
-  const strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
-    ngInputFlatten(),
-    startWith(defaultStrategyName),
-    nameToStrategyCredentials(strategies, defaultStrategyName)
-  );
-  let tNode: any;
   let notifyParent = false;
+  let changesArr: [ListChange, any][];
+  let partiallyFinished = false;
 
   return {
     nextStrategy(nextConfig: Observable<string>): void {
-      strategyName$.next(nextConfig);
+      strategyHandling$.next(nextConfig);
     },
     render(values$: Observable<NgIterable<T>>): Observable<any> {
-      tNode = getTNode(cdRef, eRef.nativeElement);
       return values$.pipe(render());
     },
   };
 
   function render(): OperatorFunction<NgIterable<T>, any> {
     let count = 0;
-    const itemViewPositionCache = new Map<any, number>();
-
     return (o$: Observable<NgIterable<T>>): Observable<any> =>
       o$.pipe(
-        // without moving:
-        map((items) => (items ? Array.isArray(items) ? items : Array.from(items) : [])),
-        // with moving:
-       /* map((items) => {
-          const itemArr = [];
-          // let i = 0;
-          for (const item of (items || [])) {
-            itemArr.push(item);
-            /!* positions.set(trackBy(i, item), i);
-             i++;*!/
+        // map iterable to latest diff
+        map((iterable) => {
+          if (partiallyFinished) {
+            const currentIterable = [];
+            for (let i = 0, ilen = viewContainerRef.length; i < ilen; i++) {
+              const viewRef = <EmbeddedViewRef<C>>viewContainerRef.get(i);
+              currentIterable[i] = viewRef.context.$implicit;
+            }
+            differ.diff(currentIterable);
           }
-          return itemArr;
-        }),*/
-        withLatestFrom(strategy$),
-        switchMap(([items, strategy]) => {
-          /*console.log('items',  items);
-          console.log('itemViewPositionCache',  itemViewPositionCache.values());*/
-          const viewLength = viewContainerRef.length;
-          let toRemoveCount = viewLength - items.length;
-          const insertedOrRemoved = toRemoveCount > 0 || count !== items.length;
-          notifyParent = notifyParent || (insertedOrRemoved && renderParent);
+          return {
+            changes: differ.diff(iterable),
+            items: iterable != null && Array.isArray(iterable) ? iterable : [],
+          };
+        }),
+        withLatestFrom(strategyHandling$.strategy$),
+        // Cancel old renders
+        switchMap(([{ changes, items }, strategy]) => {
+          if (!changes) {
+            return [];
+          }
+          const listChanges = getListChanges(changes, items);
+          changesArr = listChanges[0];
+          const insertedOrRemoved = listChanges[1];
+          const applyChanges$ = getObservablesFromChangesArray(
+            changesArr,
+            strategy,
+            count
+          );
+          partiallyFinished = true;
+          // @TODO we need to know if we need to notifyParent on move aswell
+          notifyParent = insertedOrRemoved && parent;
           count = items.length;
-          const remove$ = [];
-          let i = viewLength;
-          while (i > 0 && toRemoveCount > 0) {
-            toRemoveCount--;
-            i--;
-            remove$.push(
-              onStrategy(
-                i,
+
+          return merge(
+            combineLatest(
+              // emit after all changes are rendered
+              applyChanges$.length > 0 ? [...applyChanges$] : [of(items)]
+              // emit injectingParent if needed
+            ).pipe(
+              tap(() => partiallyFinished = false),
+              // somehow this makes the strategySelect work
+              notifyAllParentsIfNeeded(
+                tNode,
+                injectingViewCdRef,
                 strategy,
-                (value, work, options) => removeView(value),
-                {}
+                () => notifyParent
               )
-            );
-          }
-          return combineLatest([
-            ...remove$,
-            ...items.map((item, index) => {
-              const context: RxListViewComputedContext = { count, index };
-              // flag which tells if a view needs to be updated
-              let doWork = false;
-              return of(item).pipe(
-                strategy.behavior(() => {
-                  // the `identity` of the current item `T`
-                  const itemTrackById = trackBy(index, item);
-                  // get the reference of the current `EmbeddedViewRef` at the index of the item
-                  let view = viewContainerRef.get(index) as EmbeddedViewRef<C>;
-                  if (!view) {
-                    // The items view is not created yet => create view + update context
-                    view = insertView(item, index, context);
-                    doWork = true;
-                  } else {
-                    // The items view is present => check what to do
-                    // the current `T` of the `EmbeddedViewRef`
-                    const entity = view.context.$implicit;
-                    // the `identity` of the `EmbeddedViewRef`
-                    const viewTrackById = trackBy(index, entity);
-                    // an item is moved if the current `identity` of the `EmbeddedView` is not the same as the
-                    // current item `T`
-                    const moved = viewTrackById !== itemTrackById;
-                    if (moved) {
-                      const oldPosition = itemViewPositionCache.get(
-                        itemTrackById
-                      );
-                      doWork = true;
-                      if (
-                        itemViewPositionCache.has(itemTrackById)
-                      ) {
-                        console.log(moved, [oldPosition, index]);
-                        const oldView = <
-                          EmbeddedViewRef<C>
-                          >viewContainerRef.get(
-                          oldPosition
-                        );
-                        if (
-                          oldView &&
-                          trackBy(
-                            index,
-                            oldView.context
-                              .$implicit
-                          ) === itemTrackById
-                        ) {
-                          view = moveView(
-                            oldView,
-                            index
-                          );
-                          // console.log('moved');
-                          /*itemViewPositionCache.delete(
-                            viewTrackById
-                          );*/
-                          /*updateViewContext(oldView, {
-                           count, index: oldPosition
-                           }, entity);
-                           oldView.detectChanges();*/
-                        }
-                        /* positions.set(
-                         trackById,
-                         oldPosition
-                         );*/
-                      }
-                      updateViewContext(view, context, item);
-                    } else {
-                      const updated = !distinctBy(view.context.$implicit, item);
-                      if (updated) {
-                        updateViewContext(view, context, item);
-                        doWork = true;
-                      } else {
-                        if ((view.context as any).count !== count ||
-                          (view.context as any).index !== index) {
-                          view.context.updateContext(context);
-                          doWork = true;
-                        }
-                      }
-                    }
-                  }
-                  /*console.log('context', view.context.$implicit);
-                  console.log('contextCount', (view.context as any).count);
-                  console.log('contextIndex', (view.context as any).index);
-                  console.log('index', index);*/
-                  /*itemViewPositionCache.set(
-                    itemTrackById,
-                    index
-                  );*/
-                  if (doWork) {
-                    view.reattach();
-                    view.detectChanges();
-                  }
-                }, {})
-              );
-            }),
-            insertedOrRemoved
-              ? onStrategy(
-                  i,
-                  strategy,
-                  (value, work, options) => work(cdRef, options.scope),
-                  { scope }
-                ).pipe(map(() => null), filter(v => v != null), startWith(null))
-              : [],
-          ]).pipe(
-            // @NOTICE: dirty hack to do ??? ask @HoebblesB
-            delay(0, asap),
-            switchMap((v) => {
-              if (!notifyParent) {
-                return of(v);
-              }
-              notifyParent = false;
-              const parentElements = extractProjectionParentViewSet(cdRef, tNode);
-              const behaviors = [];
-              for (const el of parentElements.values()) {
-                behaviors.push(
-                  onStrategy(
-                    el,
-                    strategy,
-                    (value, work, options) => {
-                      detectChanges(el);
-                    },
-                    { scope: el }
-                  )
-                );
-              }
-              if (behaviors.length === 0) {
-                return of(v);
-              }
-              behaviors.push(
-                onStrategy(
-                  null,
-                  strategy,
-                  (value, work, options) => work(cdRef, options.scope),
-                  { scope }
-                )
-              );
-              return combineLatest(behaviors).pipe(
-                map(() => null),
-                filter((_v) => _v !== null),
-                startWith(v)
-              );
-            }),
-            filter((v) => v != null),
-            // tap((v) => console.log('end', v))
+            ),
+            notifyInjectingParentIfNeeded(
+              injectingViewCdRef,
+              strategy,
+              insertedOrRemoved
+            ).pipe(ignoreElements()),
           );
         })
       );
   }
 
-  function updateViewContext(
-    view: EmbeddedViewRef<C>,
-    context: RxListViewComputedContext,
-    item: T
-  ): void {
-    view.context.updateContext(context);
-    view.context.$implicit = item;
-  }
-
-  function moveView(
-    view: EmbeddedViewRef<C>,
-    index: number
-  ): EmbeddedViewRef<C> {
-    return viewContainerRef.move(view, index) as EmbeddedViewRef<C>;
-  }
-
-  function removeView(index: number): void {
-    // TODO: evaluate viewCache with `detach` instead of `remove` viewCache.push();
-    viewContainerRef.remove(index);
-  }
-
-  function insertView(
-    item: T,
-    index: number,
-    context: RxListViewComputedContext
-  ): EmbeddedViewRef<C> {
-    // TODO: evaluate viewCache with `detach` instead of `remove` viewCache.push();
-    /*const existingView: EmbeddedViewRef<C> = viewCache.pop();
-    let newView = existingView;
-    if (existingView) {
-      viewContainerRef.insert(existingView, index);
-    } else {
-      newView = viewContainerRef.createEmbeddedView(
-        templateRef,
-        notificationKindToViewContext(item),
-        index
-      );
-    }*/
-    const newView = viewContainerRef.createEmbeddedView(
-      templateRef,
-      createViewContext(item),
-      index
-    );
-    updateViewContext(newView, context, item);
-    return newView;
+  function getObservablesFromChangesArray(
+    changes: [ListChange, any][],
+    strategy: StrategyCredentials,
+    count: number
+  ) {
+    return changes.length > 0
+      ? changes.map((change) => {
+          return onStrategy(
+            change,
+            strategy,
+            (_change) => {
+              const type = _change[0];
+              const payload = _change[1];
+              switch (type) {
+                case ListChange.insert:
+                  listTemplateManager.insertView(payload[0], payload[1], count);
+                  break;
+                case ListChange.move:
+                  listTemplateManager.moveView(
+                    payload[2],
+                    payload[0],
+                    payload[1],
+                    count
+                  );
+                  break;
+                case ListChange.remove:
+                  listTemplateManager.removeView(payload);
+                  break;
+                case ListChange.update:
+                  listTemplateManager.updateView(payload[0], payload[1], count);
+                  break;
+                case ListChange.context:
+                  listTemplateManager.updateUnchangedContext(payload[1], count);
+                  break;
+              }
+            },
+            {}
+          );
+        })
+      : [];
   }
 }
