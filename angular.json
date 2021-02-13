@@ -946,7 +946,17 @@
       "sourceRoot": "libs/cdk/src",
       "prefix": "rx-angular",
       "architect": {
-        "build": {
+        "build-test-coverage-badge": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/cdk/cobertura-coverage.xml -d docs/test-coverage/cdk"
+              }
+            ]
+          }
+        },
+        "build-lib": {
           "builder": "@nrwl/angular:ng-packagr-lite",
           "options": {
             "tsConfig": "libs/cdk/tsconfig.lib.json",
@@ -956,6 +966,37 @@
             "production": {
               "tsConfig": "libs/cdk/tsconfig.lib.prod.json"
             }
+          }
+        },
+        "build-schematics": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx tsc -p libs/cdk/tsconfig.schematics.json"
+              },
+              {
+                "command": "npx cpx libs/cdk/schematics/**/{collection.json,schema.json,files/**} dist/libs/cdk/schematics"
+              }
+            ],
+            "parallel": false
+          }
+        },
+        "build": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "rimraf dist/libs/cdk"
+              },
+              {
+                "command": "nx run cdk:build-lib"
+              },
+              {
+                "command": "nx run cdk:build-schematics"
+              }
+            ],
+            "parallel": false
           }
         },
         "lint": {
@@ -972,10 +1013,22 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/cdk/jest.config.js",
-            "tsConfig": "libs/cdk/tsconfig.spec.json",
+            "passWithNoTests": true
+          },
+          "outputs": [
+            "coverage/libs/cdk"
+          ]
+        },
+        "test-coverage": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/cdk/jest.config.js",
             "passWithNoTests": true,
-            "setupFile": "libs/cdk/src/test-setup.ts"
-          }
+            "codeCoverage": true
+          },
+          "outputs": [
+            "coverage/libs/cdk"
+          ]
         },
         "changelog": {
           "builder": "@nrwl/workspace:run-commands",
