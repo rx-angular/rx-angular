@@ -19,13 +19,19 @@ export const ROUTES = [
       import('./nested-lists/nested-lists.routed.module').then(
         m => m.NestedListsRoutedModule
       )
+  },
+  {
+    path: 'route-change',
+    loadChildren: () =>
+      import('./route-change/route-change.module').then(
+        m => m.RouteChangeModule
+      )
   }
 ];
 
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(ROUTES)
-  ],
+  imports: [RouterModule.forChild(ROUTES)],
+  declarations: [],
 })
 export class RxForDemoModule {}
