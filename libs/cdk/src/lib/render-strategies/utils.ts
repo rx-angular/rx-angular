@@ -7,7 +7,7 @@ import {
 } from '../model';
 import { coerceDistinctWith } from '../template-management';
 
-const rxJsToRxA = {
+const rxJsToRxA: Record<'N' | 'E' | 'C', RxNotificationKind> = {
   C: RxNotificationKind.complete,
   E: RxNotificationKind.error,
   N: RxNotificationKind.next,
