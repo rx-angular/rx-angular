@@ -12,24 +12,16 @@ import {
 import {
   asyncScheduler,
   combineLatest,
-  isObservable,
   merge,
   Observable,
-  ObservableInput,
   of,
   OperatorFunction,
-  ReplaySubject,
-  Subject,
 } from 'rxjs';
 import { MonoTypeOperatorFunction } from 'rxjs/internal/types';
 import {
   delay,
-  distinctUntilChanged,
   ignoreElements,
-  map,
-  mergeAll,
   startWith,
-  switchAll,
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
@@ -41,11 +33,7 @@ import {
   RxViewContext,
   TemplateSettings,
 } from './model';
-import {
-  RxNotification,
-  RxNotificationKind,
-  StrategyCredentials,
-} from '../model';
+import { RxNotificationKind, StrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 
 // Below are constants for LView indices to help us look up LView members
@@ -422,55 +410,6 @@ export function templateHandling<N, C>(
 /**
  * @internal
  *
- * A factory function returning an object to handle the process of switching templates by Notification channel.
- * You can next a Observable of `RxNotification` multiple times and merge them into the Observable exposed under `trigger$`
- *
- */
-export function templateTriggerHandling<T>(): {
-  trigger$: Observable<RxNotification<T>>;
-  next(templateName: Observable<RxNotification<T>>): void;
-} {
-  const templateTriggerSubject = new Subject<Observable<RxNotification<T>>>();
-  const trigger$ = templateTriggerSubject.pipe(mergeAll());
-  return {
-    next(templateName: Observable<RxNotification<T>>) {
-      templateTriggerSubject.next(templateName);
-    },
-    trigger$,
-  };
-}
-
-/**
- * @internal
- *
- * A factory function returning an object to handle the process of merging Observable next notifications into one Observable.
- * This API takes away the clumsy handling of static values and Observable, reduces the number of emissions by:
- * - only merging distinct Observables
- * - only emit distingt values of the merged result
- *
- * You can next a Observable of `U` multiple times and merge them into the Observable exposed under one optimized `values$`
- *
- */
-export function getHotMerged<U>(): {
-  values$: Observable<U>;
-  next(observable: ObservableInput<U> | U): void;
-} {
-  const observablesSubject = new ReplaySubject<ObservableInput<U> | U>(1);
-  const values$ = observablesSubject.pipe(
-    coerceDistinctWith()
-  ) as Observable<U>;
-
-  return {
-    next(observable: ObservableInput<U> | U) {
-      observablesSubject.next(observable);
-    },
-    values$,
-  };
-}
-
-/**
- * @internal
- *
  * An object that holds methods needed to introduce actions to a list e.g. move, remove, insert
  */
 export interface ListTemplateManager<T> {
@@ -659,71 +598,4 @@ export function getListChanges<T>(
       adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex,
     ];
   }
-}
-
-/**
- * This Observable factory creates an Observable out of a static value or ObservableInput.
- *
- * @param o - the value to coerce
- */
-export function coerceObservable<T>(
-  o: ObservableInput<T | null | undefined> | T | null | undefined
-): Observable<T | null | undefined> {
-  return isObservable<T>(o) ? o : of(o as T | null | undefined);
-}
-
-/**
- * This operator maps an Observable out of a static value or ObservableInput.
- *
- */
-export function coerceObservableWith<T>(): OperatorFunction<
-  Observable<T | null | undefined> | T | null | undefined,
-  Observable<T | null | undefined>
-> {
-  return (o$: Observable<Observable<T> | T>) => map(coerceObservable)(o$);
-}
-
-/**
- * This Observable factory creates an Observable out of a static value or ObservableInput.
- * It forwards only distinct values from distinct incoming Observables or values.
- * This comes in handy in any environment where you handle processing of incoming dynamic values and their state.
- *
- * Optionally you can pass a flatten strategy to get find grained control of the flattening process. E.g. mergeAll, switchAll
- *
- * @param o$ - The Observable to coerce and map to a Observable with distinct values
- * @param flattenOperator - determines the flattening strategy e.g. mergeAll, concatAll, exhaust, switchAll. default is switchAll
- */
-export function coerceDistinct<T>(
-  o$: Observable<Observable<T> | T>,
-  flattenOperator?: OperatorFunction<ObservableInput<T>, T>
-) {
-  flattenOperator = flattenOperator || switchAll();
-  return coerceObservable(o$).pipe(
-    distinctUntilChanged(),
-    flattenOperator,
-    distinctUntilChanged()
-  );
-}
-
-/**
- * This operator takes an Observable of values ot Observables aof values and
- * It forwards only distinct values from distinct incoming Observables or values.
- * This comes in handy in any environment where you handle processing of incoming dynamic values and their state.
- *
- * Optionally you can pass a flatten strategy to get find grained control of the flattening process. E.g. mergeAll, switchAll
- *
- * @param flattenOperator - determines the flattening strategy e.g. mergeAll, concatAll, exhaust, switchAll. default is switchAll
- *
- */
-export function coerceDistinctWith<T>(
-  flattenOperator?: OperatorFunction<ObservableInput<T>, T>
-) {
-  flattenOperator = flattenOperator || switchAll();
-  return (o$: Observable<Observable<T> | T>) =>
-    o$.pipe(
-      coerceObservableWith(),
-      distinctUntilChanged(),
-      flattenOperator,
-      distinctUntilChanged()
-    );
 }

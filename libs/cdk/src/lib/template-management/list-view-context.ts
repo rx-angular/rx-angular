@@ -7,10 +7,11 @@ const computeFirst = ({ count, index }) => index === 0;
 const computeLast = ({ count, index }) => index === count - 1;
 const computeEven = ({ count, index }) => index % 2 === 0;
 
-export class RxDefaultListViewContext<T extends Record<string | number | symbol, any>,
+export class RxDefaultListViewContext<
+  T extends Record<string | number | symbol, unknown>,
   U extends NgIterable<T> = NgIterable<T>,
-  K = keyof T> implements RxListViewContext<T> {
-
+  K = keyof T
+> implements RxListViewContext<T> {
   readonly _item = new ReplaySubject<T>(1);
   item$ = this._item.asObservable();
   private _$implicit: T;
@@ -19,7 +20,7 @@ export class RxDefaultListViewContext<T extends Record<string | number | symbol,
   private _$suspense: any;
   private readonly _context$ = new BehaviorSubject<RxListViewComputedContext>({
     index: -1,
-    count: -1
+    count: -1,
   });
 
   set $implicit($implicit: T) {
@@ -68,63 +69,45 @@ export class RxDefaultListViewContext<T extends Record<string | number | symbol,
   }
 
   get index$(): Observable<number> {
-    return this._context$.pipe(
-      pluck('index'),
-      distinctUntilChanged()
-    );
+    return this._context$.pipe(pluck('index'), distinctUntilChanged());
   }
 
   get count$(): Observable<number> {
-    return this._context$.pipe(
-      pluck('count'),
-      distinctUntilChanged()
-    );
+    return this._context$.pipe(pluck('count'), distinctUntilChanged());
   }
 
   get first$(): Observable<boolean> {
-    return this._context$.pipe(
-      map(computeFirst),
-      distinctUntilChanged()
-    );
+    return this._context$.pipe(map(computeFirst), distinctUntilChanged());
   }
 
   get last$(): Observable<boolean> {
-    return this._context$.pipe(
-      map(computeLast),
-      distinctUntilChanged()
-    );
+    return this._context$.pipe(map(computeLast), distinctUntilChanged());
   }
 
   get even$(): Observable<boolean> {
-    return this._context$.pipe(
-      map(computeEven),
-      distinctUntilChanged()
-    );
+    return this._context$.pipe(map(computeEven), distinctUntilChanged());
   }
 
   get odd$(): Observable<boolean> {
-    return this.even$.pipe(
-      map(even => !even)
-    );
+    return this.even$.pipe(map((even) => !even));
   }
 
-  constructor(private item: T, customProps?: {count: number, index: number}) {
+  constructor(private item: T, customProps?: { count: number; index: number }) {
     // tslint:disable-next-line:no-unused-expression
     this.$implicit = item;
-    if(customProps) {
-      this.updateContext(customProps)
+    if (customProps) {
+      this.updateContext(customProps);
     }
   }
 
   updateContext(newProps: Partial<RxListViewComputedContext>): void {
     this._context$.next({
       ...this._context$.getValue(),
-      ...newProps
+      ...newProps,
     });
   }
 
   select = (props: K[]): Observable<any> => {
     return this.item$.pipe(pluck(...(props as any)));
   };
-
 }

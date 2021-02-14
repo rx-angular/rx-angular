@@ -14,7 +14,6 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { strategyHandling } from '../render-strategies/utils';
 
 import {
   RxListManager,
@@ -34,6 +33,7 @@ import {
 } from './utils';
 import { StrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
+import { strategyHandling } from '../utils/strategy-handling';
 
 export function createListTemplateManager<
   T,

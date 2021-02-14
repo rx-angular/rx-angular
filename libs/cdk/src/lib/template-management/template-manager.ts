@@ -12,11 +12,9 @@ import {
   RxRenderSettings,
   RxBaseTemplateNames,
   RxViewContext,
-  TemplateSettings
+  TemplateSettings,
 } from './model';
 import {
-  coerceDistinctWith,
-  getEmbeddedViewCreator,
   getTNode,
   notificationKindToViewContext,
   notifyAllParentsIfNeeded,
@@ -25,10 +23,16 @@ import {
   templateTriggerHandling,
   TNode,
 } from './utils';
-import { CoalescingOptions, RenderWork, RxNotification, RxNotificationKind } from '../model';
+import {
+  CoalescingOptions,
+  RenderWork,
+  RxNotification,
+  RxNotificationKind,
+} from '../model';
 import { rxMaterialize } from '../utils/rxMaterialize';
-import { strategyHandling } from '../render-strategies';
 import { onStrategy } from '../utils/onStrategy';
+import { coerceDistinctWith } from '../utils/coerceDistinctObservableWith';
+import { strategyHandling } from '../utils/strategy-handling';
 
 export interface RxTemplateManager<
   T,
@@ -75,7 +79,11 @@ export function createTemplateManager<
   let activeTemplate: N;
 
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
-  const templates = templateHandling<N, C>(templateSettings.viewContainerRef, patchZone, templateSettings.createViewFactory);
+  const templates = templateHandling<N, C>(
+    templateSettings.viewContainerRef,
+    patchZone,
+    templateSettings.createViewFactory
+  );
   const viewContainerRef = templateSettings.viewContainerRef;
 
   const triggerHandling = templateTriggerHandling();
