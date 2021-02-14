@@ -10,12 +10,12 @@ import {
 import { Observable } from 'rxjs';
 import { StrategyCredentialsMap } from '../model';
 
-export type rxBaseTemplateNames = 'rxError' | 'rxComplete' | 'rxSuspense';
+export type rxBaseTemplateNames = 'errorTpl' | 'completeTpl' | 'suspenseTpl';
 
 export enum RxBaseTemplateNames {
-  error = 'rxError',
-  complete = 'rxComplete',
-  suspense = 'rxSuspense',
+  error = 'errorTpl',
+  complete = 'completeTpl',
+  suspense = 'suspenseTpl',
 }
 
 export const enum RxListTemplateChange {
@@ -44,10 +44,8 @@ export interface RxListViewComputedContext {
   count: number;
 }
 
-export interface RxListViewContext<
-  T,
-  U = RxListViewComputedContext
-> extends RxListViewComputedContext {
+export interface RxListViewContext<T, U = RxListViewComputedContext>
+  extends RxListViewComputedContext {
   $implicit: T;
   item$: Observable<T>;
   updateContext(newProps: Partial<U>): void;
@@ -72,9 +70,19 @@ export interface RxRenderSettings<T, C> {
   defaultStrategyName: string;
 }
 
-export type CreateEmbeddedView<C> = (viewContainerRef: ViewContainerRef, patchZone: NgZone | false) => (templateRef: TemplateRef<C>, context?: C, index?: number) => EmbeddedViewRef<C>;
+export type CreateEmbeddedView<C> = (
+  viewContainerRef: ViewContainerRef,
+  patchZone: NgZone | false
+) => (
+  templateRef: TemplateRef<C>,
+  context?: C,
+  index?: number
+) => EmbeddedViewRef<C>;
 export type DistinctByFunction<T> = (oldItem: T, newItem: T) => any;
-export type CreateViewContext<T, C, U = unknown> = (value: T, computedContext: U) => C;
+export type CreateViewContext<T, C, U = unknown> = (
+  value: T,
+  computedContext: U
+) => C;
 export type UpdateViewContext<T, C, U = unknown> = (
   value: T,
   view: EmbeddedViewRef<C>,
@@ -87,6 +95,6 @@ export interface TemplateSettings<T, C, U = unknown> {
   createViewContext: CreateViewContext<T, C, U>;
   updateViewContext: UpdateViewContext<T, C, U>;
   initialTemplateRef?: TemplateRef<C>;
-  customContext?: (value: T) => any,
+  customContext?: (value: T) => any;
   createViewFactory?: CreateEmbeddedView<C>;
 }
