@@ -7,14 +7,22 @@ import {
   TrackByFunction,
 } from '@angular/core';
 import { combineLatest, merge, Observable, of, OperatorFunction } from 'rxjs';
-import { ignoreElements, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { StrategyCredentials } from '../render-strategies/model';
-import { onStrategy } from '../render-strategies/utils';
+import {
+  ignoreElements,
+  map,
+  switchMap,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
+import { strategyHandling } from '../render-strategies/utils';
 
 import {
-  RxListTemplateChange, RxListTemplateSettings,
-  RxRenderSettings, RxListManager, RxListViewComputedContext,
+  RxListManager,
+  RxListTemplateChange,
+  RxListViewComputedContext,
   RxListViewContext,
+  RxRenderSettings,
+  TemplateSettings,
 } from './model';
 import {
   getListChanges,
@@ -22,22 +30,23 @@ import {
   getTNode,
   notifyAllParentsIfNeeded,
   notifyInjectingParentIfNeeded,
-  strategyHandling,
   TNode,
 } from './utils';
-
-
+import { StrategyCredentials } from '../model';
+import { onStrategy } from '../utils/onStrategy';
 
 export function createListTemplateManager<
   T,
   C extends RxListViewContext<T>
-  >(config: {
+>(config: {
   renderSettings: RxRenderSettings<T, C>;
-  templateSettings: RxListTemplateSettings<T, C, RxListViewComputedContext> & { templateRef: TemplateRef<C> };
+  templateSettings: TemplateSettings<T, C, RxListViewComputedContext> & {
+    templateRef: TemplateRef<C>;
+  };
   //
   trackBy: TrackByFunction<T>;
   iterableDiffers: IterableDiffers;
-}): RxListManager<T, C> {
+}): RxListManager<T> {
   const { templateSettings, renderSettings, trackBy, iterableDiffers } = config;
   const {
     defaultStrategyName,
@@ -51,14 +60,13 @@ export function createListTemplateManager<
   const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
   //               type,  payload
   const tNode: TNode = parent
-                       ? getTNode(injectingViewCdRef, eRef.nativeElement)
-                       : false;
+    ? getTNode(injectingViewCdRef, eRef.nativeElement)
+    : false;
   /* TODO (regarding createView): this is currently not in use. for the list-manager this would mean to provide
    functions for not only create. developers than should have to provide create, move, remove,... the whole thing.
    i don't know if this is the right decision for a first RC */
   const listTemplateManager = getListTemplateManager({
     ...templateSettings,
-    createView: null,
     patchZone,
   });
   const viewContainerRef = templateSettings.viewContainerRef;
@@ -119,7 +127,7 @@ export function createListTemplateManager<
               // emit after all changes are rendered
               applyChanges$.length > 0 ? [...applyChanges$] : [of(items)]
             ).pipe(
-              tap(() => partiallyFinished = false),
+              tap(() => (partiallyFinished = false)),
               // somehow this makes the strategySelect work
               notifyAllParentsIfNeeded(
                 tNode,
@@ -133,7 +141,7 @@ export function createListTemplateManager<
               injectingViewCdRef,
               strategy,
               insertedOrRemoved
-            ).pipe(ignoreElements()),
+            ).pipe(ignoreElements())
           );
         })
       );
@@ -145,39 +153,39 @@ export function createListTemplateManager<
     count: number
   ) {
     return changes.length > 0
-           ? changes.map((change) => {
-        return onStrategy(
-          change,
-          strategy,
-          (_change) => {
-            const type = _change[0];
-            const payload = _change[1];
-            switch (type) {
-              case RxListTemplateChange.insert:
-                listTemplateManager.insertView(payload[0], payload[1], count);
-                break;
-              case RxListTemplateChange.move:
-                listTemplateManager.moveView(
-                  payload[2],
-                  payload[0],
-                  payload[1],
-                  count
-                );
-                break;
-              case RxListTemplateChange.remove:
-                listTemplateManager.removeView(payload);
-                break;
-              case RxListTemplateChange.update:
-                listTemplateManager.updateView(payload[0], payload[1], count);
-                break;
-              case RxListTemplateChange.context:
-                listTemplateManager.updateUnchangedContext(payload[1], count);
-                break;
-            }
-          },
-          {}
-        );
-      })
-           : [];
+      ? changes.map((change) => {
+          return onStrategy(
+            change,
+            strategy,
+            (_change) => {
+              const type = _change[0];
+              const payload = _change[1];
+              switch (type) {
+                case RxListTemplateChange.insert:
+                  listTemplateManager.insertView(payload[0], payload[1], count);
+                  break;
+                case RxListTemplateChange.move:
+                  listTemplateManager.moveView(
+                    payload[2],
+                    payload[0],
+                    payload[1],
+                    count
+                  );
+                  break;
+                case RxListTemplateChange.remove:
+                  listTemplateManager.removeView(payload);
+                  break;
+                case RxListTemplateChange.update:
+                  listTemplateManager.updateView(payload[0], payload[1], count);
+                  break;
+                case RxListTemplateChange.context:
+                  listTemplateManager.updateUnchangedContext(payload[1], count);
+                  break;
+              }
+            },
+            {}
+          );
+        })
+      : [];
   }
 }

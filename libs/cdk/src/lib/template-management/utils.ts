@@ -28,30 +28,25 @@ import {
   ignoreElements,
   map,
   mergeAll,
-  share,
   startWith,
   switchAll,
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
 import {
-  StrategyCredentials,
-  StrategyCredentialsMap,
-} from '../render-strategies/model';
-import {
-  nameToStrategyCredentials,
-  onStrategy,
-} from '../render-strategies/utils';
-import {
   CreateEmbeddedView,
-  CreateListViewContext,
-  CreateViewContext,
-  RxListTemplateChange, RxListTemplateChanges,
-  RxListViewComputedContext, RxListViewContext,
-  RxViewContext, UpdateListViewContext,
-  UpdateViewContext
+  RxListTemplateChange,
+  RxListTemplateChanges,
+  RxListViewContext,
+  RxViewContext,
+  TemplateSettings,
 } from './model';
-import { RxNotification, RxNotificationKind } from '../model';
+import {
+  RxNotification,
+  RxNotificationKind,
+  StrategyCredentials,
+} from '../model';
+import { onStrategy } from '../utils/onStrategy';
 
 // Below are constants for LView indices to help us look up LView members
 // without having to remember the specific indices.
@@ -374,12 +369,23 @@ export function getVirtualParentNotifications$(
  * You can add and get a `TemplateRef`.
  *
  */
-export function templateHandling<N, C>(): {
+export function templateHandling<N, C>(
+  viewContainerRef: ViewContainerRef,
+  patchZone: false | NgZone,
+  createViewFactory?: CreateEmbeddedView<C>
+): {
   add(name: N, templateRef: TemplateRef<C>): void;
   get(name: N): TemplateRef<C>;
+  createEmbeddedView(name: N, context?: C, index?: number): EmbeddedViewRef<C>;
 } {
   const templateCache = new Map<N, TemplateRef<C>>();
+  const createView = createViewFactory
+    ? createViewFactory(viewContainerRef, patchZone)
+    : getEmbeddedViewCreator(viewContainerRef, patchZone);
 
+  const get = (name: N): TemplateRef<C> => {
+    return templateCache.get(name);
+  };
   return {
     add(name: N, templateRef: TemplateRef<C>): void {
       assertTemplate(name, templateRef);
@@ -391,9 +397,9 @@ export function templateHandling<N, C>(): {
         );
       }
     },
-    get(name: N): TemplateRef<C> {
-      return templateCache.get(name);
-    },
+    get,
+    createEmbeddedView: (name: N, context?: C) =>
+      createView(get(name), context),
   };
 
   //
@@ -412,7 +418,6 @@ export function templateHandling<N, C>(): {
     return isTemplateRefOrNull;
   }
 }
-
 
 /**
  * @internal
@@ -487,28 +492,21 @@ export interface ListTemplateManager<T> {
  *
  * @param templateSettings
  */
-export function getListTemplateManager<
-  C extends RxListViewContext<T>,
-  T
->(templateSettings: {
-  viewContainerRef: ViewContainerRef;
-  patchZone: NgZone | false;
-  templateRef: TemplateRef<C>;
-  createViewFactory?: CreateEmbeddedView<C>,
-  createViewContext: CreateListViewContext<T, C, RxListViewComputedContext>;
-  updateViewContext: UpdateListViewContext<T, C, RxListViewComputedContext>;
-}): ListTemplateManager<T> {
+export function getListTemplateManager<C extends RxListViewContext<T>, T>(
+  templateSettings: TemplateSettings<T, C>
+): ListTemplateManager<T> {
   const {
     viewContainerRef,
-    templateRef,
+    initialTemplateRef,
     createViewContext,
     updateViewContext,
+    createViewFactory,
+    patchZone,
+  } = templateSettings;
+  const templates = templateHandling(
+    viewContainerRef,
     patchZone,
     createViewFactory
-  } = templateSettings;
-  const createEmbeddedView = createViewFactory ? createViewFactory(viewContainerRef, patchZone) : getEmbeddedViewCreator(
-    viewContainerRef,
-    patchZone
   );
 
   return {
@@ -525,7 +523,7 @@ export function getListTemplateManager<
     const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
     view.context.updateContext({
       count,
-      index
+      index,
     });
     view.detectChanges();
   }
@@ -538,14 +536,10 @@ export function getListTemplateManager<
   ): void {
     const oldView = viewContainerRef.get(oldIndex);
     const view = <EmbeddedViewRef<C>>viewContainerRef.move(oldView, index);
-    updateViewContext(
-      item,
-      view,
-      {
-        count,
-        index,
-      }
-    );
+    updateViewContext(item, view, {
+      count,
+      index,
+    });
     view.detectChanges();
   }
 
@@ -563,8 +557,8 @@ export function getListTemplateManager<
   }
 
   function insertView(item: T, index: number, count: number): void {
-    const newView = createEmbeddedView(
-      templateRef,
+    const newView = templates.createEmbeddedView(
+      initialTemplateRef,
       createViewContext(item, {
         count,
         index,
@@ -602,9 +596,7 @@ export function getListChanges<T>(
       notifyParent = true;
     } else if (adjustedPreviousIndex !== null) {
       // move
-      changesArr.push(
-        getMoveChange(item, currentIndex, adjustedPreviousIndex)
-      );
+      changesArr.push(getMoveChange(item, currentIndex, adjustedPreviousIndex));
       changedIdxs.add(item);
       notifyParent = true;
     }
@@ -628,18 +620,30 @@ export function getListChanges<T>(
     currentIndex: number,
     adjustedPreviousIndex: number
   ): [RxListTemplateChange, any] {
-    return [RxListTemplateChange.move, [item, currentIndex, adjustedPreviousIndex]];
+    return [
+      RxListTemplateChange.move,
+      [item, currentIndex, adjustedPreviousIndex],
+    ];
   }
 
-  function getUpdateChange(item: T, currentIndex: number): [RxListTemplateChange, any] {
+  function getUpdateChange(
+    item: T,
+    currentIndex: number
+  ): [RxListTemplateChange, any] {
     return [RxListTemplateChange.update, [item, currentIndex]];
   }
 
-  function getUnchangedChange(item: T, index: number): [RxListTemplateChange, any] {
+  function getUnchangedChange(
+    item: T,
+    index: number
+  ): [RxListTemplateChange, any] {
     return [RxListTemplateChange.context, [item, index]];
   }
 
-  function getInsertChange(item: T, currentIndex: number): [RxListTemplateChange, any] {
+  function getInsertChange(
+    item: T,
+    currentIndex: number
+  ): [RxListTemplateChange, any] {
     return [
       RxListTemplateChange.insert,
       [item, currentIndex === null ? undefined : currentIndex],

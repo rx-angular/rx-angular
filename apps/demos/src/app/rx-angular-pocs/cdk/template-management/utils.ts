@@ -46,7 +46,7 @@ import {
   CreateViewContext,
   ListChange,
   ListChanges,
-  RxListViewComputedContext,
+  RxListViewContextComputed,
   RxViewContext,
   UpdateViewContext
 } from './model';
@@ -373,7 +373,7 @@ export function getHotMerged<U>() {
 }
 
 export function getListTemplateManager<
-  C extends { updateContext: (context: RxListViewComputedContext<T>) => void },
+  C extends { updateContext: (context: RxListViewContextComputed<T>) => void },
   T
 >(templateSettings: {
   viewContainerRef: ViewContainerRef;

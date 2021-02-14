@@ -7,10 +7,6 @@ import {
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { onStrategy } from '../render-strategies/utils';
-import {
-  RenderWork
-} from '../render-strategies/model';
 import {
   RenderAware,
   RxRenderSettings,
@@ -25,13 +21,14 @@ import {
   notificationKindToViewContext,
   notifyAllParentsIfNeeded,
   notifyInjectingParentIfNeeded,
-  strategyHandling,
   templateHandling,
   templateTriggerHandling,
   TNode,
 } from './utils';
-import { CoalescingOptions, RxNotification, RxNotificationKind } from '../model';
+import { CoalescingOptions, RenderWork, RxNotification, RxNotificationKind } from '../model';
 import { rxMaterialize } from '../utils/rxMaterialize';
+import { strategyHandling } from '../render-strategies';
+import { onStrategy } from '../utils/onStrategy';
 
 export interface RxTemplateManager<
   T,
@@ -78,13 +75,9 @@ export function createTemplateManager<
   let activeTemplate: N;
 
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
-  const templates = templateHandling<N, C>();
+  const templates = templateHandling<N, C>(templateSettings.viewContainerRef, patchZone, templateSettings.createViewFactory);
   const viewContainerRef = templateSettings.viewContainerRef;
 
-  const createEmbeddedView = getEmbeddedViewCreator(
-    viewContainerRef,
-    patchZone
-  );
   const triggerHandling = templateTriggerHandling();
   const getContext = notificationKindToViewContext(
     templateSettings.customContext
@@ -122,7 +115,7 @@ export function createTemplateManager<
                     viewContainerRef.clear();
                   }
                   if (template) {
-                    createEmbeddedView(template);
+                    templates.createEmbeddedView(templateName);
                   }
                 }
                 if (template) {

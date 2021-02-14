@@ -13,12 +13,12 @@ export enum RxNotificationKind {
   complete = 'complete'
 }
 
-type NotificationExtract = 'value' | 'hasValue';
+type NotificationValue = 'value' | 'hasValue';
 
-export type RxNextNotification<T> = Pick<Notification<T>, NotificationExtract> & { kind: RxNotificationKind } & {error: boolean} & {complete: boolean};
-export type RxSuspenseNotification = Pick<Notification<unknown>, NotificationExtract> & { kind: RxNotificationKind.suspense } & {error: false} & {complete: false};
-export type RxErrorNotification = Pick<Notification<unknown>, NotificationExtract> & { kind: RxNotificationKind.error } & {error: any} & {complete: false};
-export type RxCompleteNotification = Pick<Notification<unknown>, NotificationExtract> & { kind: RxNotificationKind.complete } & {complete: boolean} & {error: false};
+export type RxNextNotification<T> = Pick<Notification<T>, NotificationValue> & { kind: RxNotificationKind } & {error: boolean} & {complete: boolean};
+export type RxSuspenseNotification = Pick<Notification<unknown>, NotificationValue> & { kind: RxNotificationKind.suspense } & {error: false} & {complete: false};
+export type RxErrorNotification = Pick<Notification<unknown>, NotificationValue> & { kind: RxNotificationKind.error } & {error: any} & {complete: false};
+export type RxCompleteNotification = Pick<Notification<unknown>, NotificationValue> & { kind: RxNotificationKind.complete } & {complete: boolean} & {error: false};
 export type RxNotification<T> = RxNextNotification<T> | RxSuspenseNotification | RxErrorNotification | RxCompleteNotification;
 
 export type RenderWork = <T = unknown>(
