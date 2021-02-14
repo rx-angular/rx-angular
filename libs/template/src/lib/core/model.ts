@@ -1,5 +1,4 @@
-import { Notification } from 'rxjs';
-import { PartialObserver } from 'rxjs/internal/types';
+import { Notification, PartialObserver } from 'rxjs';
 
 export interface RxViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
