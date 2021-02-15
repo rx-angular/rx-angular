@@ -1,1 +1,1 @@
-export { ShareEventManager } from './shared-event-manager';
+export { SharedEventManager } from './shared-event-manager';
