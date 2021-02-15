@@ -95,7 +95,7 @@
     "@types/jest": "26.0.13",
     "@types/klaw-sync": "^6.0.0",
     "@types/node": "~12.12.38",
-    "chrome-remote-interface": "^0.28.2",
+    "chrome-remote-interface": "^0.29.0",
     "codelyzer": "^6.0.1",
     "coveralls": "^3.1.0",
     "cpx": "^1.5.0",
