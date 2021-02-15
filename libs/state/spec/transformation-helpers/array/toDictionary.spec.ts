@@ -73,6 +73,7 @@ describe('toDictionary', () => {
 
   describe('edge cases', () => {
     it('should work with empty initial array', () => {
+      // @ts-ignore
       const dictionaryResult = toDictionary([] as any, 'fakeKey');
 
       expect(dictionaryResult).toEqual({});
@@ -80,6 +81,7 @@ describe('toDictionary', () => {
 
     it('should not call console.warn when key not found and source is empty', () => {
       const spy = jest.spyOn(console, 'warn').mockImplementation();
+      // @ts-ignore
       toDictionary([] as any, 'fakeKey');
 
       expect(spy).not.toBeCalled();
@@ -87,6 +89,7 @@ describe('toDictionary', () => {
 
     it('should call console.warn when key not found and source not empty', () => {
       const spy = jest.spyOn(console, 'warn').mockImplementation();
+      // @ts-ignore
       toDictionary([{notFake: 1}] as any, 'fakeKey');
 
       expect(spy).toBeCalled();
@@ -105,9 +108,13 @@ describe('toDictionary', () => {
     });
 
     it('should return empty object when first argument is not array', () => {
+      // @ts-ignore
       expect(toDictionary('' as any, '')).toEqual({});
+      // @ts-ignore
       expect(toDictionary({} as any, '')).toEqual({});
+      // @ts-ignore
       expect(toDictionary(1 as any, '')).toEqual({});
+      // @ts-ignore
       expect(toDictionary(false as any, '')).toEqual({});
     });
 
