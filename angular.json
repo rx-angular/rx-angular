@@ -978,20 +978,6 @@
             }
           }
         },
-        "build-schematics": {
-          "builder": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              {
-                "command": "npx tsc -p libs/cdk/tsconfig.schematics.json"
-              },
-              {
-                "command": "npx cpx libs/cdk/schematics/**/{collection.json,schema.json,files/**} dist/libs/cdk/schematics"
-              }
-            ],
-            "parallel": false
-          }
-        },
         "build": {
           "builder": "@nrwl/workspace:run-commands",
           "options": {
