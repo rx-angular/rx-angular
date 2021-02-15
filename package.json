@@ -89,7 +89,7 @@
     "@nrwl/cli": "11.1.2",
     "@nrwl/cypress": "11.2.12",
     "@nrwl/jest": "11.1.2",
-    "@nrwl/node": "11.1.2",
+    "@nrwl/node": "11.2.12",
     "@nrwl/tao": "11.2.12",
     "@nrwl/workspace": "11.1.2",
     "@types/jest": "26.0.13",
