@@ -291,12 +291,12 @@
   dependencies:
     tslib "^2.0.0"
 
-"@angular/google-maps@^10.2.7":
-  version "10.2.7"
-  resolved "https://registry.yarnpkg.com/@angular/google-maps/-/google-maps-10.2.7.tgz#1fffdfd379b68d6b221016ff6043596b33a36abc"
-  integrity sha512-3ONJVvuymuecGZKjp7sXS7y6uivKVC0FMX8ZgclLxMY7xQUhOLQc1BTt1C9OxDSULWrMWPn1jDocd7CWEBjgVQ==
+"@angular/google-maps@^11.2.0":
+  version "11.2.0"
+  resolved "https://registry.yarnpkg.com/@angular/google-maps/-/google-maps-11.2.0.tgz#378a32f6bed60f2e3cb36fb4487306e873ecc4a1"
+  integrity sha512-mgGXSzBgkyTCigY/644iBIXUkHUjHPiDUMx0lZ7sYzuBI02f6uw1UASTBTWIQUD1OBd612EODJrH8Bx4pWJEVg==
   dependencies:
-    "@types/googlemaps" "^3.39.3"
+    "@types/googlemaps" "^3.43.0"
     tslib "^2.0.0"
 
 "@angular/language-service@11.2.0":
@@ -2149,10 +2149,10 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/googlemaps@^3.39.3":
-  version "3.40.3"
-  resolved "https://registry.yarnpkg.com/@types/googlemaps/-/googlemaps-3.40.3.tgz#04420bba5b60ca599a9b7d7a49e38c4242fd5a69"
-  integrity sha512-ivlG5S0LlnQgpgPnQCUNAs7kjBtO367ZwDmuK+ggsQfW+w4N0RyWbxWZ6vPwegDe50Du3Xbb5+QVwJuB/U1XpA==
+"@types/googlemaps@^3.43.0":
+  version "3.43.3"
+  resolved "https://registry.yarnpkg.com/@types/googlemaps/-/googlemaps-3.43.3.tgz#70cf962154a160fe78bcd69d6ccc296dd9175b1f"
+  integrity sha512-ZWNoz/O8MPEpiajvj7QiqCY8tTLFNqNZ/a+s+zTV58wFVNAvvqV4bdGfnsjTb5Cs4V6wEsLrX8XRhmnyYJ2Tdg==
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.3"
