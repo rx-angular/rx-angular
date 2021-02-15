@@ -27,7 +27,7 @@ export function requestAnimationFrame(cb: Function): number {
  *
  * @description
  *
- * This function is a zone un-patched implementation of Window requestAnimationFrame() method
+ * This function is a zone un-patched implementation of Window cancelAnimationFrame() method
  *
  * The cancelAnimationFrame() method clears a timer set with the requestAnimationFrame() method.
  * The ID value returned by requestAnimationFrame() is used as the parameter for the cancelAnimationFrame() method.
