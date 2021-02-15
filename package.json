@@ -92,7 +92,7 @@
     "@nrwl/node": "11.1.2",
     "@nrwl/tao": "11.2.12",
     "@nrwl/workspace": "11.1.2",
-    "@types/jest": "26.0.13",
+    "@types/jest": "26.0.20",
     "@types/klaw-sync": "^6.0.0",
     "@types/node": "~12.12.38",
     "chrome-remote-interface": "^0.28.2",
