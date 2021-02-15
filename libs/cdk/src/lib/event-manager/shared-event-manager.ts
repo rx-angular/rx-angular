@@ -15,7 +15,7 @@ interface SharedEventsContainer {
 }
 
 @Injectable()
-export class ShareEventManager extends EventManager {
+export class SharedEventManager extends EventManager {
   private container: SharedEventsContainer = {
     window: new Map(),
     document: new Map(),
