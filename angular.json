@@ -987,9 +987,6 @@
               },
               {
                 "command": "nx run cdk:build-lib"
-              },
-              {
-                "command": "nx run cdk:build-schematics"
               }
             ],
             "parallel": false
