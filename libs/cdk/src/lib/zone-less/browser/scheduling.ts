@@ -7,7 +7,7 @@ export const Promise: PromiseConstructor = getZoneUnPatchedApi('Promise');
  *
  * @description
  *
- * This function is a zone un-patched implementation of Window setInterval() method
+ * This function is a zone un-patched implementation of Window requestAnimationFrame() method
  *
  * The requestAnimationFrame() method calls a function or evaluates an expression on the next animationFrame.
  * The requestAnimationFrame() method will not continue calling the function after executed once.
