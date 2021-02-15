@@ -56,7 +56,7 @@
     "@angular/compiler": "^11.0.8",
     "@angular/core": "^11.0.8",
     "@angular/forms": "^11.0.8",
-    "@angular/google-maps": "^10.2.7",
+    "@angular/google-maps": "^11.2.0",
     "@angular/material": "^10.2.2",
     "@angular/platform-browser": "^11.0.8",
     "@angular/platform-browser-dynamic": "^11.0.8",
