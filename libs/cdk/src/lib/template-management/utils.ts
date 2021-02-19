@@ -2,7 +2,6 @@ import {
   ChangeDetectorRef,
   Component,
   EmbeddedViewRef,
-  IterableChanges,
   NgZone,
   TemplateRef,
   Type,
@@ -25,15 +24,8 @@ import {
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
-import {
-  CreateEmbeddedView,
-  RxListTemplateChange,
-  RxListTemplateChanges,
-  RxListViewContext,
-  RxViewContext,
-  TemplateSettings,
-} from './model';
-import { RxNotificationKind, StrategyCredentials } from '../model';
+import { CreateEmbeddedView } from './model';
+import { StrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 
 // Below are constants for LView indices to help us look up LView members
@@ -154,58 +146,6 @@ export function renderProjectionParents(
     );
 }
 
-export type RxViewContextMap<T> = Record<
-  RxNotificationKind,
-  (value?: any) => Partial<RxViewContext<T>>
->;
-
-/**
- * @internal
- *
- * A factory function that returns a map of projections to turn a notification of a Observable (next, error, complete)
- *
- * @param customNextContext - projection function to provide custom properties as well as override existing
- */
-export function notificationKindToViewContext<T>(
-  customNextContext: (value: T) => object
-): RxViewContextMap<T> {
-  // @TODO rethink overrides
-  return {
-    suspense: (value?: any) => {
-      return {
-        $implicit: undefined,
-        // if a custom value is provided take it, otherwise assign true
-        $suspense: value !== undefined ? value : true,
-        $error: false,
-        $complete: false,
-      };
-    },
-    next: (value: T | null | undefined) => {
-      return {
-        $implicit: value,
-        $suspense: false,
-        $error: false,
-        $complete: false,
-        ...customNextContext(value),
-      };
-    },
-    error: (error: Error) => {
-      return {
-        $complete: false,
-        $error: error,
-        $suspense: false,
-      };
-    },
-    complete: () => {
-      return {
-        $error: false,
-        $complete: true,
-        $suspense: false,
-      };
-    },
-  };
-}
-
 /**
  * @internal
  *
@@ -236,6 +176,63 @@ export function getEmbeddedViewCreator(
       );
   }
   return create;
+}
+
+/**
+ * @internal
+ *
+ * A factory function returning an object to handle `TemplateRef`'s.
+ * You can add and get a `TemplateRef`.
+ *
+ */
+export function templateHandling<N, C>(
+  viewContainerRef: ViewContainerRef,
+  patchZone: false | NgZone,
+  createViewFactory?: CreateEmbeddedView<C>
+): {
+  add(name: N, templateRef: TemplateRef<C>): void;
+  get(name: N): TemplateRef<C>;
+  createEmbeddedView(name: N, context?: C, index?: number): EmbeddedViewRef<C>;
+} {
+  const templateCache = new Map<N, TemplateRef<C>>();
+  const createView = createViewFactory
+    ? createViewFactory(viewContainerRef, patchZone)
+    : getEmbeddedViewCreator(viewContainerRef, patchZone);
+
+  const get = (name: N): TemplateRef<C> => {
+    return templateCache.get(name);
+  };
+  return {
+    add(name: N, templateRef: TemplateRef<C>): void {
+      assertTemplate(name, templateRef);
+      if (!templateCache.has(name)) {
+        templateCache.set(name, templateRef);
+      } else {
+        throw new Error(
+          'Updating an already existing Template is not supported at the moment.'
+        );
+      }
+    },
+    get,
+    createEmbeddedView: (name: N, context?: C) =>
+      createView(get(name), context),
+  };
+
+  //
+  function assertTemplate<T>(
+    property: any,
+    templateRef: TemplateRef<T> | null
+  ): templateRef is TemplateRef<T> {
+    const isTemplateRefOrNull = !!(
+      !templateRef || templateRef.createEmbeddedView
+    );
+    if (!isTemplateRefOrNull) {
+      throw new Error(
+        `${property} must be a TemplateRef, but received something else.`
+      );
+    }
+    return isTemplateRefOrNull;
+  }
 }
 
 /**
@@ -349,254 +346,4 @@ export function getVirtualParentNotifications$(
     );
   }
   return behaviors;
-}
-
-/**
- * @internal
- *
- * A factory function returning an object to handle `TemplateRef`'s.
- * You can add and get a `TemplateRef`.
- *
- */
-export function templateHandling<N, C>(
-  viewContainerRef: ViewContainerRef,
-  patchZone: false | NgZone,
-  createViewFactory?: CreateEmbeddedView<C>
-): {
-  add(name: N, templateRef: TemplateRef<C>): void;
-  get(name: N): TemplateRef<C>;
-  createEmbeddedView(name: N, context?: C, index?: number): EmbeddedViewRef<C>;
-} {
-  const templateCache = new Map<N, TemplateRef<C>>();
-  const createView = createViewFactory
-    ? createViewFactory(viewContainerRef, patchZone)
-    : getEmbeddedViewCreator(viewContainerRef, patchZone);
-
-  const get = (name: N): TemplateRef<C> => {
-    return templateCache.get(name);
-  };
-  return {
-    add(name: N, templateRef: TemplateRef<C>): void {
-      assertTemplate(name, templateRef);
-      if (!templateCache.has(name)) {
-        templateCache.set(name, templateRef);
-      } else {
-        throw new Error(
-          'Updating an already existing Template is not supported at the moment.'
-        );
-      }
-    },
-    get,
-    createEmbeddedView: (name: N, context?: C) =>
-      createView(get(name), context),
-  };
-
-  //
-  function assertTemplate<T>(
-    property: any,
-    templateRef: TemplateRef<T> | null
-  ): templateRef is TemplateRef<T> {
-    const isTemplateRefOrNull = !!(
-      !templateRef || templateRef.createEmbeddedView
-    );
-    if (!isTemplateRefOrNull) {
-      throw new Error(
-        `${property} must be a TemplateRef, but received something else.`
-      );
-    }
-    return isTemplateRefOrNull;
-  }
-}
-
-/**
- * @internal
- *
- * An object that holds methods needed to introduce actions to a list e.g. move, remove, insert
- */
-export interface ListTemplateManager<T> {
-  updateUnchangedContext(index: number, count: number): void;
-
-  insertView(item: T, index: number, count: number): void;
-
-  moveView(oldIndex: number, item: T, index: number, count: number): void;
-
-  updateView(item: T, index: number, count: number): void;
-
-  removeView(index: number): void;
-}
-
-/**
- * @internal
- *
- * Factory that returns a `ListTemplateManager` for the passed params.
- *
- * @param templateSettings
- */
-export function getListTemplateManager<C extends RxListViewContext<T>, T>(
-  templateSettings: TemplateSettings<T, C>
-): ListTemplateManager<T> {
-  const {
-    viewContainerRef,
-    initialTemplateRef,
-    createViewContext,
-    updateViewContext,
-    createViewFactory,
-    patchZone,
-  } = templateSettings;
-  const templates = templateHandling(
-    viewContainerRef,
-    patchZone,
-    createViewFactory
-  );
-
-  return {
-    updateUnchangedContext,
-    insertView,
-    moveView,
-    updateView,
-    removeView,
-  };
-
-  // =====
-
-  function updateUnchangedContext(index: number, count: number) {
-    const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
-    view.context.updateContext({
-      count,
-      index,
-    });
-    view.detectChanges();
-  }
-
-  function moveView(
-    oldIndex: number,
-    item: T,
-    index: number,
-    count: number
-  ): void {
-    const oldView = viewContainerRef.get(oldIndex);
-    const view = <EmbeddedViewRef<C>>viewContainerRef.move(oldView, index);
-    updateViewContext(item, view, {
-      count,
-      index,
-    });
-    view.detectChanges();
-  }
-
-  function updateView(item: T, index: number, count: number): void {
-    const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
-    updateViewContext(item, view, {
-      count,
-      index,
-    });
-    view.detectChanges();
-  }
-
-  function removeView(index: number): void {
-    viewContainerRef.remove(index);
-  }
-
-  function insertView(item: T, index: number, count: number): void {
-    const newView = templates.createEmbeddedView(
-      initialTemplateRef,
-      createViewContext(item, {
-        count,
-        index,
-      }),
-      index
-    );
-    newView.detectChanges();
-  }
-}
-
-/**
- * @internal
- *
- * @param changes
- * @param items
- */
-export function getListChanges<T>(
-  changes: IterableChanges<T>,
-  items: T[]
-): RxListTemplateChanges {
-  const changedIdxs = new Set<T>();
-  const changesArr = [];
-  let notifyParent = false;
-  changes.forEachOperation((record, adjustedPreviousIndex, currentIndex) => {
-    const item = record.item;
-    if (record.previousIndex == null) {
-      // insert
-      changesArr.push(getInsertChange(item, currentIndex));
-      changedIdxs.add(item);
-      notifyParent = true;
-    } else if (currentIndex == null) {
-      // remove
-      changesArr.push(getRemoveChange(item, adjustedPreviousIndex));
-      changedIdxs.add(item);
-      notifyParent = true;
-    } else if (adjustedPreviousIndex !== null) {
-      // move
-      changesArr.push(getMoveChange(item, currentIndex, adjustedPreviousIndex));
-      changedIdxs.add(item);
-      notifyParent = true;
-    }
-  });
-  changes.forEachIdentityChange((record) => {
-    const item = record.item;
-    changesArr.push(getUpdateChange(item, record.currentIndex));
-    changedIdxs.add(item);
-  });
-  items.forEach((item, index) => {
-    if (!changedIdxs.has(item)) {
-      changesArr.push(getUnchangedChange(item, index));
-    }
-  });
-  return [changesArr, notifyParent];
-
-  // ==========
-
-  function getMoveChange(
-    item: T,
-    currentIndex: number,
-    adjustedPreviousIndex: number
-  ): [RxListTemplateChange, any] {
-    return [
-      RxListTemplateChange.move,
-      [item, currentIndex, adjustedPreviousIndex],
-    ];
-  }
-
-  function getUpdateChange(
-    item: T,
-    currentIndex: number
-  ): [RxListTemplateChange, any] {
-    return [RxListTemplateChange.update, [item, currentIndex]];
-  }
-
-  function getUnchangedChange(
-    item: T,
-    index: number
-  ): [RxListTemplateChange, any] {
-    return [RxListTemplateChange.context, [item, index]];
-  }
-
-  function getInsertChange(
-    item: T,
-    currentIndex: number
-  ): [RxListTemplateChange, any] {
-    return [
-      RxListTemplateChange.insert,
-      [item, currentIndex === null ? undefined : currentIndex],
-    ];
-  }
-
-  function getRemoveChange(
-    item: T,
-    adjustedPreviousIndex: number
-  ): [RxListTemplateChange, any] {
-    return [
-      RxListTemplateChange.remove,
-      adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex,
-    ];
-  }
 }

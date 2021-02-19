@@ -17,7 +17,6 @@ import {
 } from './model';
 import {
   getTNode,
-  notificationKindToViewContext,
   notifyAllParentsIfNeeded,
   notifyInjectingParentIfNeeded,
   templateHandling,
@@ -47,6 +46,57 @@ export interface RxTemplateManager<
 export type NotificationTemplateNameMap<T, C, N> = Record<
   RxNotificationKind,
   (value: T, templates: { get: (name: N) => TemplateRef<C> }) => N
+>;
+
+/**
+ * @internal
+ *
+ * A factory function that returns a map of projections to turn a notification of a Observable (next, error, complete)
+ *
+ * @param customNextContext - projection function to provide custom properties as well as override existing
+ */
+export function notificationKindToViewContext<T>(
+  customNextContext: (value: T) => object
+): RxViewContextMap<T> {
+  // @TODO rethink overrides
+  return {
+    suspense: (value?: any) => {
+      return {
+        $implicit: undefined,
+        // if a custom value is provided take it, otherwise assign true
+        $suspense: value !== undefined ? value : true,
+        $error: false,
+        $complete: false,
+      };
+    },
+    next: (value: T | null | undefined) => {
+      return {
+        $implicit: value,
+        $suspense: false,
+        $error: false,
+        $complete: false,
+        ...customNextContext(value),
+      };
+    },
+    error: (error: Error) => {
+      return {
+        $complete: false,
+        $error: error,
+        $suspense: false,
+      };
+    },
+    complete: () => {
+      return {
+        $error: false,
+        $complete: true,
+        $suspense: false,
+      };
+    },
+  };
+}
+export type RxViewContextMap<T> = Record<
+  RxNotificationKind,
+  (value?: any) => Partial<RxViewContext<T>>
 >;
 
 export function createTemplateManager<

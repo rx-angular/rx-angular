@@ -2,7 +2,6 @@ import {
   ChangeDetectorRef,
   ElementRef,
   EmbeddedViewRef,
-  NgIterable,
   NgZone,
   TemplateRef,
   ViewContainerRef,
@@ -18,16 +17,6 @@ export enum RxBaseTemplateNames {
   suspense = 'suspenseTpl',
 }
 
-export const enum RxListTemplateChange {
-  insert,
-  remove,
-  move,
-  update,
-  context,
-}
-
-export type RxListTemplateChanges = [[RxListTemplateChange, any][], boolean];
-
 export interface RxViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
   $implicit: T;
@@ -37,23 +26,6 @@ export interface RxViewContext<T> {
   $complete: boolean;
   // set context var suspense to true (var$; let s = $suspense)
   $suspense: any;
-}
-
-export interface RxListViewComputedContext {
-  index: number;
-  count: number;
-}
-
-export interface RxListViewContext<T, U = RxListViewComputedContext>
-  extends RxListViewComputedContext {
-  $implicit: T;
-  item$: Observable<T>;
-  updateContext(newProps: Partial<U>): void;
-}
-
-export interface RxListManager<T> {
-  nextStrategy: (config: string | Observable<string>) => void;
-  render(changes$: Observable<NgIterable<T>>): Observable<void>;
 }
 
 export interface RenderAware<T> {
@@ -78,11 +50,12 @@ export type CreateEmbeddedView<C> = (
   context?: C,
   index?: number
 ) => EmbeddedViewRef<C>;
-export type DistinctByFunction<T> = (oldItem: T, newItem: T) => any;
+
 export type CreateViewContext<T, C, U = unknown> = (
   value: T,
   computedContext: U
 ) => C;
+
 export type UpdateViewContext<T, C, U = unknown> = (
   value: T,
   view: EmbeddedViewRef<C>,

@@ -1,7 +1,18 @@
 import { NgIterable } from '@angular/core';
-import { RxListViewComputedContext, RxListViewContext } from './model';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
+
+export interface RxListViewComputedContext {
+  index: number;
+  count: number;
+}
+
+export interface RxListViewContext<T, U = RxListViewComputedContext>
+  extends RxListViewComputedContext {
+  $implicit: T;
+  item$: Observable<T>;
+  updateContext(newProps: Partial<U>): void;
+}
 
 const computeFirst = ({ count, index }) => index === 0;
 const computeLast = ({ count, index }) => index === count - 1;

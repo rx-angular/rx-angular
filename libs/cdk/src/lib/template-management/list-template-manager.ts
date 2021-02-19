@@ -14,18 +14,8 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-
+import { RxRenderSettings, TemplateSettings } from './model';
 import {
-  RxListManager,
-  RxListTemplateChange,
-  RxListViewComputedContext,
-  RxListViewContext,
-  RxRenderSettings,
-  TemplateSettings,
-} from './model';
-import {
-  getListChanges,
-  getListTemplateManager,
   getTNode,
   notifyAllParentsIfNeeded,
   notifyInjectingParentIfNeeded,
@@ -34,6 +24,25 @@ import {
 import { StrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 import { strategyHandling } from '../utils/strategy-handling';
+import {
+  RxListViewComputedContext,
+  RxListViewContext,
+} from './list-view-context';
+import { getTemplateHandler } from './list-view-handler';
+
+const enum RxListTemplateChange {
+  insert,
+  remove,
+  move,
+  update,
+  context,
+}
+
+export interface RxListManager<T> {
+  nextStrategy: (config: string | Observable<string>) => void;
+
+  render(changes$: Observable<NgIterable<T>>): Observable<void>;
+}
 
 export function createListTemplateManager<
   T,
@@ -65,7 +74,7 @@ export function createListTemplateManager<
   /* TODO (regarding createView): this is currently not in use. for the list-manager this would mean to provide
    functions for not only create. developers than should have to provide create, move, remove,... the whole thing.
    i don't know if this is the right decision for a first RC */
-  const listTemplateManager = getListTemplateManager({
+  const listViewHandler = getTemplateHandler({
     ...templateSettings,
     patchZone,
   });
@@ -109,7 +118,7 @@ export function createListTemplateManager<
           if (!changes) {
             return [];
           }
-          const listChanges = getListChanges(changes, items);
+          const listChanges = listViewHandler.getListChanges(changes, items);
           changesArr = listChanges[0];
           const insertedOrRemoved = listChanges[1];
           const applyChanges$ = getObservablesFromChangesArray(
@@ -162,10 +171,10 @@ export function createListTemplateManager<
               const payload = _change[1];
               switch (type) {
                 case RxListTemplateChange.insert:
-                  listTemplateManager.insertView(payload[0], payload[1], count);
+                  listViewHandler.insertView(payload[0], payload[1], count);
                   break;
                 case RxListTemplateChange.move:
-                  listTemplateManager.moveView(
+                  listViewHandler.moveView(
                     payload[2],
                     payload[0],
                     payload[1],
@@ -173,13 +182,13 @@ export function createListTemplateManager<
                   );
                   break;
                 case RxListTemplateChange.remove:
-                  listTemplateManager.removeView(payload);
+                  listViewHandler.removeView(payload);
                   break;
                 case RxListTemplateChange.update:
-                  listTemplateManager.updateView(payload[0], payload[1], count);
+                  listViewHandler.updateView(payload[0], payload[1], count);
                   break;
                 case RxListTemplateChange.context:
-                  listTemplateManager.updateUnchangedContext(payload[1], count);
+                  listViewHandler.updateUnchangedContext(payload[1], count);
                   break;
               }
             },
