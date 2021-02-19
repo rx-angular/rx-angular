@@ -1,7 +1,6 @@
 import { StrategyCredentials, StrategyCredentialsMap } from '../model';
 import { Observable, ReplaySubject } from 'rxjs';
-import { mergeAll, share, startWith } from 'rxjs/operators';
-import { nameToStrategyCredentials } from '@rx-angular/cdk';
+import { map, mergeAll, share, startWith } from 'rxjs/operators';
 import { hotFlatten } from './hotFlatten';
 
 /**
@@ -34,4 +33,23 @@ export function strategyHandling(
       hotFlattened.next(name);
     },
   };
+}
+
+/**
+ * @internal
+ */
+function nameToStrategyCredentials(
+  strategies: StrategyCredentialsMap,
+  defaultStrategyName: string
+) {
+  return (
+    o$: Observable<string | null | undefined>
+  ): Observable<StrategyCredentials> =>
+    o$.pipe(
+      map((name) =>
+        name && Object.keys(strategies).includes(name)
+          ? strategies[name]
+          : strategies[defaultStrategyName]
+      )
+    );
 }

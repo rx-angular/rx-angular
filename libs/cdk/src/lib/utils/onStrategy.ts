@@ -1,5 +1,4 @@
-import { RenderWork, StrategyCredentials } from '@rx-angular/cdk';
-import { CoalescingOptions } from '../model';
+import { RenderWork, StrategyCredentials, CoalescingOptions } from '../model';
 import { Observable, of } from 'rxjs';
 
 /**
