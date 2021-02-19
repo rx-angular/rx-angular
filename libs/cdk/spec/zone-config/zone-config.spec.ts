@@ -237,14 +237,14 @@ describe('zone-config', () => {
       expect(typeof zoneConfig.events.disable.PASSIVE_EVENTS).toBe('function');
       expect(w.__zone_symbol__PASSIVE_EVENTS).toBe(undefined);
       zoneConfig.events.disable.PASSIVE_EVENTS(['test']);
-      expect(w.__zone_symbol__PASSIVE_EVENTS).toBe(['test']);
+      expect(w.__zone_symbol__PASSIVE_EVENTS).toStrictEqual(['test']);
     });
 
     it('should have UNPATCHED_EVENTS present', () => {
       expect(typeof zoneConfig.events.disable.UNPATCHED_EVENTS).toBe('function');
       expect(w.__zone_symbol__UNPATCHED_EVENTS).toBe(undefined);
       zoneConfig.events.disable.UNPATCHED_EVENTS(['test']);
-      expect(w.__zone_symbol__UNPATCHED_EVENTS).toBe(['test']);
+      expect(w.__zone_symbol__UNPATCHED_EVENTS).toStrictEqual(['test']);
     });
 
   });
@@ -275,7 +275,7 @@ describe('zone-config', () => {
     it('should log zone-flags if called', () => {
       w.console.log = createSpy('console.log');
       w.__rax_zone_config__log()
-      expect(w.console.log).toHaveBeenCalledTimes(28);
+      expect(w.console.log).toHaveBeenCalledTimes(30);
     });
 
   });
