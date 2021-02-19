@@ -69,7 +69,7 @@
     "bootstrap": "^4.5.2",
     "core-js": "^3.8.3",
     "diff": "^5.0.0",
-    "ngx-skeleton-loader": "^2.6.2",
+    "ngx-skeleton-loader": "^2.8.0",
     "normalize-css": "^2.3.1",
     "rx-query": "^1.0.1",
     "rxjs": "^6.6.3",
