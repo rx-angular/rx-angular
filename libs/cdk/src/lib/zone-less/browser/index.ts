@@ -6,4 +6,4 @@ export {
   clearInterval,
   setTimeout,
   clearTimeout,
-} from './scheduling';
+} from './browser';
