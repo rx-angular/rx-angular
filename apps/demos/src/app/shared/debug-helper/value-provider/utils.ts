@@ -12,7 +12,11 @@ const theMax = 10000;
 
 export function withCompleteAndError<T>(error$, complete$) {
   return (o: Observable<T>): Observable<T> =>
-    o.pipe(mergeWith(error$), takeUntil(complete$));
+    o.pipe(
+      /* tslint:disable */
+      mergeWith(error$),
+      /* tslint:enable */
+      takeUntil(complete$));
 }
 
 export function toTick(scheduleConfig: SchedulerConfig): Observable<number> {

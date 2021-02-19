@@ -7,13 +7,12 @@ import {
   TrackByFunction,
 } from '@angular/core';
 import { combineLatest, merge, Observable, of, OperatorFunction } from 'rxjs';
-import { filter, ignoreElements, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { ignoreElements, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { StrategyCredentials } from '../render-strategies/model';
 
 import { onStrategy } from '../render-strategies/utils/strategy-helper';
 import {
   ListChange, ListManager,
-  NgViewContext,
   RenderSettings,
   RxListViewContext,
   TemplateSettings,
@@ -27,12 +26,14 @@ import {
   strategyHandling,
   TNode,
 } from './utils';
+import { RxViewContext } from '@rx-angular/cdk';
+import { getTableUnknownColumnError } from '@angular/cdk/table/table-errors';
 
-
+type r<T> = Record<string | number | symbol, T>
 
 export function createListManager<
   T,
-  C extends RxListViewContext<T> & NgViewContext<T>
+  C extends RxListViewContext<r<T>> & RxViewContext<T>
 >(config: {
   renderSettings: RenderSettings<T, C>;
   templateSettings: TemplateSettings<T, C> & { templateRef: TemplateRef<C> };
@@ -112,12 +113,14 @@ export function createListManager<
           notifyParent = insertedOrRemoved && parent;
           count = items.length;
 
+
+          const observableChanges: Observable<unknown>[] =  applyChanges$.length > 0 ? [...applyChanges$] : [of(items)];
           return merge(
             combineLatest(
               // emit after all changes are rendered
-              applyChanges$.length > 0 ? [...applyChanges$] : [of(items)]
-              // emit injectingParent if needed
+              observableChanges
             ).pipe(
+              // emit injectingParent if needed
               tap(() => partiallyFinished = false),
               // somehow this makes the strategySelect work
               notifyAllParentsIfNeeded(

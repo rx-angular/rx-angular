@@ -1,37 +1,6 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import {
-  RxCompleteNotification,
-  RxErrorNotification,
-  RxNotificationKind,
-  StrategyCredentials,
-  StrategyCredentialsMap,
-} from '../model';
-
-const rxJsToRxA: Record<'N' | 'E' | 'C', RxNotificationKind> = {
-  C: RxNotificationKind.complete,
-  E: RxNotificationKind.error,
-  N: RxNotificationKind.next,
-};
-
-const toRxErrorNotification = (
-  error?: any,
-  value?: any
-): RxErrorNotification => ({
-  kind: RxNotificationKind.error,
-  hasValue: value || false,
-  value: value || undefined,
-  complete: false,
-  error: error || true,
-});
-// const toRxSuspenseNotification = (value?: any): RxSuspenseNotification => ({kind: RxNotificationKind.suspense, hasValue: value || false, value, complete: false, error: false});
-const toRxCompleteNotification = (value?: any): RxCompleteNotification => ({
-  kind: RxNotificationKind.complete,
-  hasValue: value || false,
-  value,
-  complete: true,
-  error: false,
-});
+import { StrategyCredentials, StrategyCredentialsMap } from '../model';
 
 export function nameToStrategyCredentials(
   strategies: StrategyCredentialsMap,

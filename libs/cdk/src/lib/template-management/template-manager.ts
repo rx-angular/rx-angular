@@ -3,6 +3,7 @@ import { combineLatest, EMPTY, Observable } from 'rxjs';
 import {
   catchError,
   filter,
+  // @NOTICE in RxJS v7 it is renamed to `mergeWith`
   merge as mergeWith,
   switchMap,
   withLatestFrom,
@@ -20,7 +21,6 @@ import {
   notifyAllParentsIfNeeded,
   notifyInjectingParentIfNeeded,
   templateHandling,
-  templateTriggerHandling,
   TNode,
 } from './utils';
 import {
@@ -33,6 +33,7 @@ import { rxMaterialize } from '../utils/rxMaterialize';
 import { onStrategy } from '../utils/onStrategy';
 import { coerceDistinctWith } from '../utils/coerceDistinctObservableWith';
 import { strategyHandling } from '../utils/strategy-handling';
+import { templateTriggerHandling } from '../utils/template-trigger-handling';
 
 export interface RxTemplateManager<
   T,
@@ -99,7 +100,9 @@ export function createTemplateManager<
       return values$.pipe(
         coerceDistinctWith(),
         rxMaterialize(),
+        /* tslint:disable */
         mergeWith(triggerHandling.trigger$ || EMPTY),
+        /* tslint:enable */
         withLatestFrom(strategyHandling$.strategy$),
         // Cancel old renders
         switchMap(([notification, strategy]) => {

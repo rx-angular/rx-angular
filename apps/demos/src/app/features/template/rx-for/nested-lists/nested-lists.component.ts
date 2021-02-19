@@ -220,13 +220,13 @@ export class RxForNestedListsComponent
   );
 
   array$ = merge(
-    combineLatest(this.changeOneClick$, this.table$).pipe(
+    combineLatest([this.changeOneClick$, this.table$]).pipe(
       switchMap(([_, { rows, columns }]) => immutableArr(rows, columns)(of(1)))
     ),
-    combineLatest(
+    combineLatest([
       merge(this.changesFromTick$, this.changeAllClick$),
       this.table$
-    ).pipe(
+    ]).pipe(
       switchMap(([_, { rows, columns, changes }]) =>
         immutableArr(rows, columns)(of(rows))
       )

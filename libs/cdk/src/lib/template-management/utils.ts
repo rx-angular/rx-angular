@@ -12,6 +12,7 @@ import {
 import {
   asyncScheduler,
   combineLatest,
+  concat,
   merge,
   Observable,
   of,
@@ -21,7 +22,6 @@ import { MonoTypeOperatorFunction } from 'rxjs/internal/types';
 import {
   delay,
   ignoreElements,
-  startWith,
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
@@ -280,7 +280,7 @@ export function notifyAllParentsIfNeeded<T>(
         if (behaviors.length === 1) {
           return of(v);
         }
-        return combineLatest(behaviors).pipe(ignoreElements(), startWith(v));
+        return concat(of(v), combineLatest(behaviors).pipe(ignoreElements()));
       })
     );
 }
@@ -299,7 +299,8 @@ export function notifyInjectingParentIfNeeded(
   strategy: StrategyCredentials,
   notify: boolean
 ): Observable<null> {
-  return startWith<null>(null)(
+  return concat(
+    of(null),
     notify
       ? onStrategy(
           null,

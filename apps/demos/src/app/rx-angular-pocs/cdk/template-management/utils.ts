@@ -8,13 +8,13 @@ import {
   ɵdetectChanges as detectChanges
 } from '@angular/core';
 import {
-  combineLatest,
+  combineLatest, concat,
   merge,
   Observable,
   ObservableInput, of,
   OperatorFunction,
   ReplaySubject,
-  Subject,
+  Subject
 } from 'rxjs';
 import { MonoTypeOperatorFunction } from 'rxjs/internal/types';
 import {
@@ -41,17 +41,17 @@ import {
   T_HOST,
   TVIEW,
 } from '../utils/view-constants';
-import { asyncScheduler } from '../utils/zone-agnostic/rxjs/scheduler/async';
+import { asyncScheduler } from '../utils/zone-agnostic/rxjs/schedulers';
 import {
   CreateViewContext,
   ListChange,
   ListChanges,
   RxListViewContextComputed,
-  RxViewContext,
   UpdateViewContext
 } from './model';
 import { ngInputFlatten } from '../utils/rxjs/operators';
 import { RxNotification, RxNotificationKind } from '../utils/rxjs';
+import { RxViewContext } from '@rx-angular/cdk';
 
 export type TNode = any;
 
@@ -234,7 +234,7 @@ export function notifyAllParentsIfNeeded<T>(
       if (behaviors.length === 1) {
         return of(v);
       }
-      return combineLatest(behaviors).pipe(ignoreElements(), startWith(v));
+      return concat(of(v), combineLatest(behaviors).pipe(ignoreElements()));
     })
   )
 }
@@ -244,7 +244,7 @@ export function notifyInjectingParentIfNeeded(
   strategy: StrategyCredentials,
   notify: boolean,
 ): Observable<null> {
-  return startWith<null>(null)(getParentNotifiers(injectingViewCdRef, notify, strategy));
+  return concat(of<null>(null),getParentNotifiers(injectingViewCdRef, notify, strategy));
 }
 
 export function getParentNotifiers(

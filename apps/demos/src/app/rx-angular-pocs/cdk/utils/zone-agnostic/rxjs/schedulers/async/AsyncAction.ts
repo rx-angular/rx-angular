@@ -1,10 +1,9 @@
+// tslint:disable
 import { Subscription } from 'rxjs';
-import { SchedulerAction } from 'rxjs/internal/types';
-import { Action } from 'rxjs/internal/scheduler/Action';
-import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
-import { setInterval, clearInterval } from '../../browser/setInterval';
-
-// tslint:disable:no-non-null-assertion
+import { Action } from '../Action';
+import { SchedulerAction } from '../types';
+import { AsyncScheduler } from './AsyncScheduler';
+import { setInterval, clearInterval } from '../../../browser';
 
 /**
  * We need this JSDoc comment for affecting ESDoc.
@@ -12,20 +11,20 @@ import { setInterval, clearInterval } from '../../browser/setInterval';
  * @extends {Ignored}
  */
 export class AsyncAction<T> extends Action<T> {
-
   public id: any;
   public state?: T;
   // @ts-ignore: Property has no initializer and is not definitely assigned
   public delay: number;
   protected pending = false;
 
-  constructor(protected scheduler: AsyncScheduler,
-              protected work: (this: SchedulerAction<T>, state?: T) => void) {
+  constructor(
+    protected scheduler: AsyncScheduler,
+    protected work: (this: SchedulerAction<T>, state?: T) => void
+  ) {
     super(scheduler, work);
   }
 
   public schedule(state?: T, delay: number = 0): Subscription {
-
     if (this.closed) {
       return this;
     }
@@ -72,11 +71,19 @@ export class AsyncAction<T> extends Action<T> {
     return this;
   }
 
-  protected requestAsyncId(scheduler: AsyncScheduler, id?: any, delay: number = 0): any {
+  protected requestAsyncId(
+    scheduler: AsyncScheduler,
+    id?: any,
+    delay: number = 0
+  ): any {
     return setInterval(scheduler.flush.bind(scheduler, this), delay);
   }
 
-  protected recycleAsyncId(scheduler: AsyncScheduler, id: any, delay: number | null = 0): any {
+  protected recycleAsyncId(
+    scheduler: AsyncScheduler,
+    id: any,
+    delay: number | null = 0
+  ): any {
     // If this action is rescheduled with the same delay time, don't clear the interval id.
     if (delay !== null && this.delay === delay && this.pending === false) {
       return id;
@@ -92,7 +99,6 @@ export class AsyncAction<T> extends Action<T> {
    * @return {any}
    */
   public execute(state: T, delay: number): any {
-
     if (this.closed) {
       return new Error('executing a cancelled action');
     }
@@ -126,7 +132,7 @@ export class AsyncAction<T> extends Action<T> {
       this.work(state);
     } catch (e) {
       errored = true;
-      errorValue = !!e && e || new Error(e);
+      errorValue = (!!e && e) || new Error(e);
     }
     if (errored) {
       this.unsubscribe();
@@ -136,15 +142,13 @@ export class AsyncAction<T> extends Action<T> {
 
   /** @deprecated This is an internal implementation detail, do not use. */
   _unsubscribe() {
-
     const id = this.id;
     const scheduler = this.scheduler;
     const actions = scheduler.actions;
     // @ts-ignore
     const index = actions.indexOf(this);
 
-
-    this.work  = null!;
+    this.work = null!;
     this.state = null!;
     this.pending = false;
     this.scheduler = null!;
