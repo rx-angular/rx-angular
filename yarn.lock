@@ -8732,10 +8732,10 @@ ng-packagr@11.2.1:
     sync-rpc "^1.3.6"
     terser "^5.5.1"
 
-ngx-skeleton-loader@^2.6.2:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/ngx-skeleton-loader/-/ngx-skeleton-loader-2.6.2.tgz#6f1d3879f5e9b9f09cd2147e4f62af29c66a11d7"
-  integrity sha512-jMuzSfRIYL2rj23q7QMWpjSKkFq2LdJReb7nIS1XxLGmuqpHcFwkvi4fK25VIEIE6wEx4A0+C614NPsqikPHUw==
+ngx-skeleton-loader@^2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/ngx-skeleton-loader/-/ngx-skeleton-loader-2.8.0.tgz#70d56b18d4864a1d4d246ddc2003d0892847ff50"
+  integrity sha512-8jw/cAqMFubeKw7meY1ftKp8a+tv65fnkVMldymeBJ+mq/J6NLQPBh9RcFdYMIyQ6j0ahm3quS6dRIHxbMjwpg==
   dependencies:
     perf-marks "^1.13.4"
     tslib "^1.10.0"
@@ -13055,10 +13055,10 @@ yn@3.1.1:
   resolved "https://registry.yarnpkg.com/yn/-/yn-3.1.1.tgz#1e87401a09d767c1d5eab26a6e4c185182d2eb50"
   integrity sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
 
-zone.js@^0.11.3:
-  version "0.11.3"
-  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.11.3.tgz#255a6313174731cc014d63233ef04fd9858da375"
-  integrity sha512-Y4hTHoh4VcxU5BDGAqEoOnOiyT254w6CiHtpQxAJUSMZPyVgdbKf+5R7Mwz6xsPhMIeBXk5rTopRZDpjssTCUg==
+zone.js@^0.11.4:
+  version "0.11.4"
+  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.11.4.tgz#0f70dcf6aba80f698af5735cbb257969396e8025"
+  integrity sha512-DDh2Ab+A/B+9mJyajPjHFPWfYU1H+pdun4wnnk0OcQTNjem1XQSZ2CDW+rfZEUDjv5M19SBqAkjZi0x5wuB5Qw==
   dependencies:
     tslib "^2.0.0"
 
