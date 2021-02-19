@@ -18,8 +18,14 @@ export interface RxViewContext<T> {
  */
 export type RxTemplateObserver<T> = {
   suspense?: (value?: any) => void;
-} & PartialObserver<T>
+} & PartialObserver<T>;
 
-export type RxNotificationKind = 'rxSuspense' | 'rxNext' | 'rxError' | 'rxComplete';
+export type RxNotificationKind =
+  | 'rxSuspense'
+  | 'rxNext'
+  | 'rxError'
+  | 'rxComplete';
 type NotificationExtract = 'value' | 'hasValue' | 'error';
-export type RxNotification<T> = Pick<Notification<T>, NotificationExtract> & { kind: RxNotificationKind };
+export type RxNotification<T> = Pick<Notification<T>, NotificationExtract> & {
+  kind: RxNotificationKind;
+};
