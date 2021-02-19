@@ -8732,10 +8732,10 @@ ng-packagr@11.2.1:
     sync-rpc "^1.3.6"
     terser "^5.5.1"
 
-ngx-skeleton-loader@^2.6.2:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/ngx-skeleton-loader/-/ngx-skeleton-loader-2.6.2.tgz#6f1d3879f5e9b9f09cd2147e4f62af29c66a11d7"
-  integrity sha512-jMuzSfRIYL2rj23q7QMWpjSKkFq2LdJReb7nIS1XxLGmuqpHcFwkvi4fK25VIEIE6wEx4A0+C614NPsqikPHUw==
+ngx-skeleton-loader@^2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/ngx-skeleton-loader/-/ngx-skeleton-loader-2.8.0.tgz#70d56b18d4864a1d4d246ddc2003d0892847ff50"
+  integrity sha512-8jw/cAqMFubeKw7meY1ftKp8a+tv65fnkVMldymeBJ+mq/J6NLQPBh9RcFdYMIyQ6j0ahm3quS6dRIHxbMjwpg==
   dependencies:
     perf-marks "^1.13.4"
     tslib "^1.10.0"
