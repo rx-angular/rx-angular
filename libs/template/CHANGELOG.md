@@ -1,3 +1,15 @@
+# [1.0.0-beta.6](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.5...template@1.0.0-beta.5) (2021-02-19)
+
+### Bug Fixes
+
+- **template:** remove schematics from package.json ([2844d21](https://github.com/rx-angular/rx-angular/commit/2844d21d74c0cfa1d0d9058e348ea68602c9c93c))
+
+# [1.0.0-beta.5](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.5...template@1.0.0-beta.5) (2021-02-19)
+
+### Bug Fixes
+
+- **template:** remove schematics from package.json ([2844d21](https://github.com/rx-angular/rx-angular/commit/2844d21d74c0cfa1d0d9058e348ea68602c9c93c))
+
 # [1.0.0-beta.5](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.4...template@1.0.0-beta.5) (2021-02-19)
 
 ### Bug Fixes
