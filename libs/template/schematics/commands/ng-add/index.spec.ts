@@ -57,8 +57,8 @@ describe('ng-add schematic', () => {
     const content = tree.readContent(`${projectPath}/src/app/app.module.ts`);
 
     expect(content).toMatchInlineSnapshot(`
-      "import { BrowserModule } from '@angular/platform-browser';
-      import { NgModule } from '@angular/core';
+      "import { NgModule } from '@angular/core';
+      import { BrowserModule } from '@angular/platform-browser';
 
       import { AppComponent } from './app.component';
       import { LetModule, PushModule, ViewportPrioModule } from '@rx-angular/template';

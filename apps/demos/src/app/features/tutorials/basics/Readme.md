@@ -32,7 +32,7 @@ Topics we will discuss are:
 - [Handing Side Effects reactively][5-side-effects]
 <!-- - [Presenter Pattern][6-presenter-pattern] -->
 
-you can also visit the full solution after applying all of the above steps in [here] (https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/solution)
+you can also visit the full solution after applying all of the above steps in [here](https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/solution)
 
 # How to use this tutorial
 

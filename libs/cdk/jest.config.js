@@ -1,6 +1,13 @@
 module.exports = {
   name: 'cdk',
-  preset: '../../jest.config.js',
+  displayName: 'cdk',
+  preset: '../../jest.preset.js',
+  coverageReporters: ['lcov', 'cobertura'],
+  coverageDirectory: '../../docs/test-coverage/cdk',
+  collectCoverageFrom: [
+    './src/**/!(index).ts',
+    '!./src/lib/experimental/**/*.ts',
+  ],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
     'ts-jest': {
@@ -12,7 +19,6 @@ module.exports = {
       ],
     },
   },
-  coverageDirectory: '../../coverage/libs/cdk',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',

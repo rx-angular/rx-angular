@@ -6,5 +6,9 @@ export const MENU_ITEMS = [
   {
     label: 'Nested Lists',
     link: 'nested-lists'
+  },
+  {
+    label: 'Route Change',
+    link: 'route-change'
   }
 ];
