@@ -1,5 +1,9 @@
 import { getZoneUnPatchedApi } from '../utils';
 
+/**
+ * This file provides unpatched versions of APIs patched in the following file: https://github.com/angular/angular/blob/master/packages/zone.js/lib/browser/browser.ts
+ */
+
 export const Promise: PromiseConstructor = getZoneUnPatchedApi('Promise');
 
 /**
