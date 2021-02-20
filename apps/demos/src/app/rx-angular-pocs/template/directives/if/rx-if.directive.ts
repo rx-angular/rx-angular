@@ -10,12 +10,23 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { NextObserver, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import {
+  NextObserver,
+  Observable,
+  ReplaySubject,
+  Subject,
+  Subscription,
+} from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
 import { RxIfTemplateNames, rxIfTemplateNames, RxIfViewContext } from './model';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { hotFlatten, createTemplateManager, RxNotificationKind, RxTemplateManager, StrategyProvider } from '@rx-angular/cdk';
-import { rxLetTemplateNames } from '../let/model';
+import {
+  createTemplateManager,
+  hotFlatten,
+  RxNotificationKind,
+  RxTemplateManager,
+  StrategyProvider,
+} from '@rx-angular/cdk';
 
 @Directive({
   selector: '[rxIf]',
@@ -23,10 +34,11 @@ import { rxLetTemplateNames } from '../let/model';
 export class RxIf<U> implements OnInit, OnDestroy {
   private subscription = new Subscription();
   private _renderObserver: NextObserver<any>;
-  private templateManager: RxTemplateManager<U,
+  private templateManager: RxTemplateManager<
+    U,
     RxIfViewContext<U>,
     rxIfTemplateNames
-    >;
+  >;
 
   @Input()
   set rxIf(potentialObservable: Observable<U> | U | null | undefined) {
@@ -71,16 +83,14 @@ export class RxIf<U> implements OnInit, OnDestroy {
     private ngZone: NgZone,
     private readonly thenTemplateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
     this.templateManager = createTemplateManager<
       U,
       RxIfViewContext<U>,
       rxIfTemplateNames
-      >({
+    >({
       templateSettings: {
         viewContainerRef: this.viewContainerRef,
         createViewContext,
@@ -99,15 +109,15 @@ export class RxIf<U> implements OnInit, OnDestroy {
       notificationToTemplateName: {
         [RxNotificationKind.suspense]: () => RxIfTemplateNames.suspense,
         [RxNotificationKind.next]: (value, templates) => {
-          return value ?
-            RxIfTemplateNames.then as rxIfTemplateNames
-            : templates.get(RxIfTemplateNames.else) ?
-              RxIfTemplateNames.then
-              : undefined
+          return value
+            ? (RxIfTemplateNames.then as rxIfTemplateNames)
+            : templates.get(RxIfTemplateNames.else)
+            ? RxIfTemplateNames.then
+            : undefined;
         },
         [RxNotificationKind.error]: () => RxIfTemplateNames.error,
-        [RxNotificationKind.complete]: () => RxIfTemplateNames.complete
-      }
+        [RxNotificationKind.complete]: () => RxIfTemplateNames.complete,
+      },
     });
     this.templateManager.addTemplateRef(
       RxIfTemplateNames.then,
