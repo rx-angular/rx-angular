@@ -58,6 +58,7 @@ export interface StrategyCredentials<S = string> {
   behavior: RenderBehavior;
 }
 
-export type CustomStrategyCredentialsMap<
-  T extends string | number | symbol
-> = Record<T, StrategyCredentials>;
+export type CustomStrategyCredentialsMap<T extends string> = Record<
+  T,
+  StrategyCredentials
+>;
