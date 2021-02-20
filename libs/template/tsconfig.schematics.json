@@ -11,19 +11,14 @@
     "noImplicitThis": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
-    "rootDir": "schematics",
-    "outDir": "../../dist/libs/template",
+    "rootDir": "schematics/src",
+    "outDir": "../../dist/libs/template/schematics",
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "sourceMap": false,
     "strictNullChecks": true,
     "target": "es6",
-    "types": ["node"],
-    "paths": {
-      "@rx-angular/template/schematics-common": [
-        "libs/template/schematics-common/src/index.ts"
-      ]
-    }
+    "types": ["node"]
   },
   "include": ["schematics/**/*"],
   "exclude": ["schematics/*/files/**/*", "schematics/**/*.spec.ts"]

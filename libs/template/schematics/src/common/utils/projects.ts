@@ -9,6 +9,13 @@ export async function getProject(
 
   if (workspace.projects.has(projectName)) {
     return workspace.projects.get(projectName);
+  } else if (
+    workspace.extensions?.defaultProject &&
+    workspace.projects.has(workspace.extensions.defaultProject as string)
+  ) {
+    return workspace.projects.get(
+      workspace.extensions.defaultProject as string
+    );
   }
 
   throw new SchematicsException('Could not find project "' + projectName + '"');

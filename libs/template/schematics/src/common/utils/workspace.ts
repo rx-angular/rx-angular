@@ -6,7 +6,7 @@ export async function getWorkspace(tree: Tree, path = '/') {
 
   const { workspace } = await workspaces.readWorkspace(path, host);
 
-  return workspace;
+  return workspace as workspaces.WorkspaceDefinition;
 }
 
 function createHost(tree: Tree): workspaces.WorkspaceHost {

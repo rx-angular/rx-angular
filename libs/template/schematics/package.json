@@ -1,13 +1,7 @@
 {
   "ngPackage": {
     "lib": {
-      "entryFile": "public-api.ts",
-      "umdModuleIds": {
-        "@rx-angular/template/schematics-common": "@rx-angular/template/schematics-common"
-      }
+      "entryFile": "./src/index.ts"
     }
-  },
-  "peerDependencies": {
-    "@rx-angular/template/schematics-common": "*"
   }
 }

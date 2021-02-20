@@ -15,7 +15,7 @@ import {
   InsertChange,
   findRootModule,
   getProject,
-} from '@rx-angular/template/schematics-common';
+} from '../../common';
 import { SchemaOptions } from './schema';
 
 function getModuleFile(tree: Tree, options: SchemaOptions): ts.SourceFile {
@@ -90,7 +90,7 @@ export function ngAdd(options: SchemaOptions): Rule {
   return async (tree: Tree) => {
     const project = await getProject(tree, options.project);
     const sourceRoot = (project && project.sourceRoot) ?? 'src';
-    const modulesToAdd = ['LetModule', 'PushModule', 'ViewportPrioModule'];
+    const modulesToAdd = ['LetModule', 'PushModule'];
 
     options.module = findRootModule(tree, options.module, sourceRoot) as string;
 

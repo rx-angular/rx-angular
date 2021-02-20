@@ -13,15 +13,14 @@ import { ENVIRONMENT_SETTINGS } from './shared/environment.token';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './features/home/home.component';
-import { tap } from 'rxjs/operators';
-import { concurrent } from './rx-angular-pocs/cdk/render-strategies/scheduling/scheduler/react-concurrent-scheduler/concurrent';
+import { LetModule, PushModule, ViewportPrioModule } from '@rx-angular/template';
 
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    AppComponentModule,
+    AppComponentModule
   ],
   providers: [
     {

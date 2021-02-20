@@ -699,13 +699,13 @@
           "options": {
             "commands": [
               {
-                "command": "npx tsc -p libs/template/tsconfig.schematics-common.json"
-              },
-              {
                 "command": "npx tsc -p libs/template/tsconfig.schematics.json"
               },
               {
-                "command": "npx cpx libs/template/schematics/**/{collection.json,schema.json,files/**} dist/libs/template/schematics"
+                "command": "npx cpx libs/template/schematics/collection.json dist/libs/template/schematics"
+              },
+              {
+                "command": "npx cpx libs/template/schematics/src/**/{schema.json,files/**} dist/libs/template/schematics"
               }
             ],
             "parallel": false
@@ -789,6 +789,16 @@
             "commands": [
               {
                 "command": "npx conventional-changelog-cli -p angular -k ./libs/template/package.json -i ./libs/template/CHANGELOG.md -s --commit-path ./libs/template --tagPrefix template@"
+              }
+            ]
+          }
+        },
+        "link": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "cd ./dist/libs/template && npm link"
               }
             ]
           }
