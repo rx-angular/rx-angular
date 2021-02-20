@@ -1,7 +1,8 @@
-import { AsyncAction } from './AsyncAction';
-import { AnimationFrameScheduler } from 'rxjs/internal/scheduler/AnimationFrameScheduler';
-import { SchedulerAction } from 'rxjs/internal/types';
-import { requestAnimationFrame, cancelAnimationFrame } from '../../browser/requestAnimationFrame';
+// tslint:disable
+import { AsyncAction } from '../async/AsyncAction';
+import { AnimationFrameScheduler } from './AnimationFrameScheduler';
+import { SchedulerAction } from '../types';
+import { requestAnimationFrame, cancelAnimationFrame } from '../../../browser';
 
 /**
  * We need this JSDoc comment for affecting ESDoc.
@@ -9,13 +10,18 @@ import { requestAnimationFrame, cancelAnimationFrame } from '../../browser/reque
  * @extends {Ignored}
  */
 export class AnimationFrameAction<T> extends AsyncAction<T> {
-
-  constructor(protected scheduler: AnimationFrameScheduler,
-              protected work: (this: SchedulerAction<T>, state?: T) => void) {
+  constructor(
+    protected scheduler: AnimationFrameScheduler,
+    protected work: (this: SchedulerAction<T>, state?: T) => void
+  ) {
     super(scheduler, work);
   }
 
-  protected requestAsyncId(scheduler: AnimationFrameScheduler, id?: any, delay: number = 0): any {
+  protected requestAsyncId(
+    scheduler: AnimationFrameScheduler,
+    id?: any,
+    delay: number = 0
+  ): any {
     // If delay is greater than 0, request as an async action.
     if (delay !== null && delay > 0) {
       return super.requestAsyncId(scheduler, id, delay);
@@ -26,10 +32,18 @@ export class AnimationFrameAction<T> extends AsyncAction<T> {
     // If an animation frame has already been requested, don't request another
     // one. If an animation frame hasn't been requested yet, request one. Return
     // the current animation frame request id.
-    return scheduler.scheduled || (scheduler.scheduled = requestAnimationFrame(
-      () => scheduler.flush(undefined)));
+    return (
+      scheduler.scheduled ||
+      (scheduler.scheduled = requestAnimationFrame(() =>
+        scheduler.flush(undefined)
+      ))
+    );
   }
-  protected recycleAsyncId(scheduler: AnimationFrameScheduler, id?: any, delay: number = 0): any {
+  protected recycleAsyncId(
+    scheduler: AnimationFrameScheduler,
+    id?: any,
+    delay: number = 0
+  ): any {
     // If delay exists and is greater than 0, or if the delay is null (the
     // action wasn't rescheduled) but was originally scheduled as an async
     // action, then recycle as an async action.

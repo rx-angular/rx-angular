@@ -17,7 +17,6 @@ import { rxMaterialize } from '../utils/rxjs/operators';
 import {
   RenderSettings,
   RxBaseTemplateNames,
-  RxViewContext,
   TemplateSettings,
 } from './model';
 import {
@@ -31,6 +30,7 @@ import {
   templateTriggerHandling,
   TNode,
 } from './utils';
+import { RxViewContext } from '@rx-angular/cdk';
 
 export interface RenderAware<T> {
   nextStrategy: (nextConfig: string | Observable<string>) => void;
@@ -105,7 +105,9 @@ export function createTemplateManager2<
         switchAll(),
         distinctUntilChanged(),
         rxMaterialize(),
+        /* tslint:disable */
         mergeWith(triggerHandling.trigger$ || EMPTY),
+        /* tslint:enable */
         withLatestFrom(strategyHandling$.strategy$),
         // Cancel old renders
         switchMap(([notification, strategy]) => {

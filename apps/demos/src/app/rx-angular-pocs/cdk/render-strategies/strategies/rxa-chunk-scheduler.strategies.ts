@@ -1,11 +1,8 @@
 import { StrategyCredentials, StrategyCredentialsMap } from '../model';
 import {
   GlobalTaskPriority,
-  rxaScheduler,
   scheduleOnRxaQueue,
 } from '../scheduling/scheduler/rxa-chunked-scheduler';
-import { observeOnPriority } from '../scheduling/operators';
-import { tap } from 'rxjs/operators';
 
 export function getChunkStrategyCredentialsMap(): StrategyCredentialsMap {
   return {

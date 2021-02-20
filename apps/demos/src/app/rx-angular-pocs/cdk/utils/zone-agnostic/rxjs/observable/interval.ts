@@ -1,5 +1,5 @@
 import { Observable, SchedulerAction, SchedulerLike, Subscriber } from 'rxjs';
-import { asyncScheduler } from '../scheduler';
+import { asyncScheduler } from '../schedulers';
 
 /**
  * Creates an Observable that emits sequential numbers every specified

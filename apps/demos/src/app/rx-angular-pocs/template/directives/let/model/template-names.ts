@@ -1,8 +1,8 @@
-import { RxBaseTemplateNames } from '../../../../cdk';
+import { RxBaseTemplateNames } from '@rx-angular/cdk';
 
-export type rxLetTemplateNames = 'rxNext' | RxBaseTemplateNames;
+export type rxLetTemplateNames = 'nextTpl' | RxBaseTemplateNames;
 
 export const RxLetTemplateNames = {
   ...RxBaseTemplateNames,
-  next: 'rxNext',
+  next: 'nextTpl',
 } as const;

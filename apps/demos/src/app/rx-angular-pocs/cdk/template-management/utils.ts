@@ -8,13 +8,13 @@ import {
   ɵdetectChanges as detectChanges
 } from '@angular/core';
 import {
-  combineLatest,
+  combineLatest, concat,
   merge,
   Observable,
   ObservableInput, of,
   OperatorFunction,
   ReplaySubject,
-  Subject,
+  Subject
 } from 'rxjs';
 import { MonoTypeOperatorFunction } from 'rxjs/internal/types';
 import {
@@ -41,11 +41,17 @@ import {
   T_HOST,
   TVIEW,
 } from '../utils/view-constants';
-import { asyncScheduler } from '../utils/zone-agnostic/rxjs/scheduler/async';
-import { ListChange, RxListViewComputedContext, RxViewContext } from './model';
-import { CreateViewContext, UpdateViewContext } from './list-manager-move';
+import { asyncScheduler } from '../utils/zone-agnostic/rxjs/schedulers';
+import {
+  CreateViewContext,
+  ListChange,
+  ListChanges,
+  RxListViewContextComputed,
+  UpdateViewContext
+} from './model';
 import { ngInputFlatten } from '../utils/rxjs/operators';
 import { RxNotification, RxNotificationKind } from '../utils/rxjs';
+import { RxViewContext } from '@rx-angular/cdk';
 
 export type TNode = any;
 
@@ -228,7 +234,7 @@ export function notifyAllParentsIfNeeded<T>(
       if (behaviors.length === 1) {
         return of(v);
       }
-      return combineLatest(behaviors).pipe(ignoreElements(), startWith(v));
+      return concat(of(v), combineLatest(behaviors).pipe(ignoreElements()));
     })
   )
 }
@@ -238,7 +244,7 @@ export function notifyInjectingParentIfNeeded(
   strategy: StrategyCredentials,
   notify: boolean,
 ): Observable<null> {
-  return startWith<null>(null)(getParentNotifiers(injectingViewCdRef, notify, strategy));
+  return concat(of<null>(null),getParentNotifiers(injectingViewCdRef, notify, strategy));
 }
 
 export function getParentNotifiers(
@@ -367,7 +373,7 @@ export function getHotMerged<U>() {
 }
 
 export function getListTemplateManager<
-  C extends { updateContext: (context: RxListViewComputedContext<T>) => void },
+  C extends { updateContext: (context: RxListViewContextComputed<T>) => void },
   T
 >(templateSettings: {
   viewContainerRef: ViewContainerRef;
@@ -452,28 +458,32 @@ export function getListTemplateManager<
   }
 }
 
-export function getChangesArray<T>(
+export function getListChanges<T>(
   changes: IterableChanges<T>,
   items: T[]
-): [ListChange, any][] {
+): ListChanges {
   const changedIdxs = new Set<T>();
   const changesArr = [];
+  let notifyParent = false;
   changes.forEachOperation((record, adjustedPreviousIndex, currentIndex) => {
     const item = record.item;
     if (record.previousIndex == null) {
       // insert
       changesArr.push(getInsertChange(item, currentIndex));
       changedIdxs.add(item);
+      notifyParent = true;
     } else if (currentIndex == null) {
       // remove
       changesArr.push(getRemoveChange(item, adjustedPreviousIndex));
       changedIdxs.add(item);
+      notifyParent = true;
     } else if (adjustedPreviousIndex !== null) {
       // move
       changesArr.push(
         getMoveChange(item, currentIndex, adjustedPreviousIndex)
       );
       changedIdxs.add(item);
+      notifyParent = true;
     }
   });
   changes.forEachIdentityChange((record) => {
@@ -486,7 +496,7 @@ export function getChangesArray<T>(
       changesArr.push(getUnchangedChange(item, index));
     }
   });
-  return changesArr;
+  return [changesArr, notifyParent];
 
   // ==========
 
