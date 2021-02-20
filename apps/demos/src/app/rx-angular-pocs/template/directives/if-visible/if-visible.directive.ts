@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Hooks, intersectionObserver, StrategyProvider } from '../../../cdk';
-import { RxEffects } from '../../../state';
+
 import {
   createTemplateManager,
   hotFlatten,
@@ -25,6 +25,7 @@ import {
   rxIfVisibleTemplateNames,
   RxIfVisibleViewContext,
 } from './model';
+import { RxEffects } from '../../../state/rx-effects';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
@@ -106,7 +107,7 @@ export class IfVisibleDirective<U> extends Hooks implements OnInit {
           this.observer.unobserve(this.eRef.nativeElement.parentElement);
         })
     );
-    this.afterViewInit$.subscribe(() => {
+    this.onAfterViewInit$.subscribe(() => {
       this.observer.observe(this.eRef.nativeElement.parentElement);
     });
   }
