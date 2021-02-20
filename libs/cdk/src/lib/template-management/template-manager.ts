@@ -188,7 +188,11 @@ export function createTemplateManager<
                 }
                 activeTemplate = templateName;
               }
-              // @TODO specify scoping
+              // we don't need to specify any scope here. The template manager is the only one
+              // who will call `viewRef#detectChanges` on any of the templates it manages.
+              // whenever a new value comes in, any pre-scheduled work of this taskManager will
+              // be nooped before a new work will be scheduled. This happens because of the implementation
+              // of `StrategyCredential#behavior`
             ),
             notifyInjectingParentIfNeeded(
               injectingViewCdRef,
