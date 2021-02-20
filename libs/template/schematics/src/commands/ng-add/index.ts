@@ -1,11 +1,21 @@
-import { chain, Rule, SchematicsException, Tree } from '@angular-devkit/schematics';
-import { addImportToModule, insertImport } from '@schematics/angular/utility/ast-utils';
+import {
+  chain,
+  Rule,
+  SchematicsException,
+  Tree,
+} from '@angular-devkit/schematics';
+import {
+  addImportToModule,
+  insertImport,
+} from '@schematics/angular/utility/ast-utils';
 import * as ts from 'typescript';
 
-import { packageName } from '../../consts';
-import { InsertChange } from '../../utils/change';
-import { findRootModule } from '../../utils/find-module';
-import { getProject } from '../../utils/projects';
+import {
+  packageName,
+  InsertChange,
+  findRootModule,
+  getProject,
+} from '@rx-angular/template/schematics-common';
 import { SchemaOptions } from './schema';
 
 function getModuleFile(tree: Tree, options: SchemaOptions): ts.SourceFile {
@@ -29,11 +39,7 @@ function getModuleFile(tree: Tree, options: SchemaOptions): ts.SourceFile {
   );
 }
 
-function applyChanges(
-  tree: Tree,
-  path: string,
-  changes: InsertChange[]
-): Tree {
+function applyChanges(tree: Tree, path: string, changes: InsertChange[]): Tree {
   const recorder = tree.beginUpdate(path);
 
   for (const change of changes) {

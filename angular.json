@@ -699,6 +699,9 @@
           "options": {
             "commands": [
               {
+                "command": "npx tsc -p libs/template/tsconfig.schematics-common.json"
+              },
+              {
                 "command": "npx tsc -p libs/template/tsconfig.schematics.json"
               },
               {

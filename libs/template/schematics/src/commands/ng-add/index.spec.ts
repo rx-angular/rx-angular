@@ -6,7 +6,7 @@ import * as path from 'path';
 
 import { SchemaOptions } from './schema';
 
-const collectionPath = path.join(__dirname, '../../collection.json');
+const collectionPath = path.join(__dirname, '../../../collection.json');
 
 const workspaceOptions = {
   name: 'workspace',
