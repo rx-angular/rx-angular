@@ -1,24 +1,21 @@
 import { map, publish, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { concat, NEVER, Observable, of } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 import {
-  RenderWork,
   StrategyCredentials,
-  StrategyCredentialsMap,
-} from '../model/strategy-credentials';
-import {
   RxNotification,
   RxNotificationKind,
-  RxTemplateObserver,
-} from '../../utils/rxjs/Notification';
-import { ChangeDetectorRef } from '@angular/core';
+  CustomStrategyCredentialsMap, RenderWork
+} from '@rx-angular/cdk';
+import { RxTemplateObserver } from '@rx-angular/template';
 
-export function nameToStrategyCredentials(strategies: StrategyCredentialsMap, defaultStrategyName: string) {
+export function nameToStrategyCredentials(strategies: CustomStrategyCredentialsMap<string>, defaultStrategyName: string) {
   return (o$: Observable<string>): Observable<StrategyCredentials> => o$.pipe(
     map(name => Object.keys(strategies).includes(name) ? strategies[name] : strategies[defaultStrategyName])
   );
 }
 
-export function mergeStrategies(...strategiesArray: Array<StrategyCredentialsMap>): StrategyCredentialsMap {
+export function mergeStrategies(...strategiesArray: Array<CustomStrategyCredentialsMap<string>>): CustomStrategyCredentialsMap<string> {
   return strategiesArray.reduce((c, a) => {
     // tslint:disable-next-line:variable-name
     const _a = Array.isArray(a) ? strategiesArray.reduce((_c, __a) => ({ ..._c, ...__a }), {}) : a || {};

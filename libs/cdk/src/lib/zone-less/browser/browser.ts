@@ -122,7 +122,7 @@ export function setTimeout(cb: Function, ms: number = 0): void {
  *
  * @description
  *
- * This function is a zone un-patched implementation of Window clearTimeout() method
+ * This function is a zone un-patched implementation of Window#clearTimeout() method
  *
  * The clearTimeout() method clears a timer set with the setTimeout() method.
  * The ID value returned by setTimeout() is used as the parameter for the clearTimeout() method.
@@ -137,4 +137,15 @@ export function setTimeout(cb: Function, ms: number = 0): void {
  */
 export function clearTimeout(id: number): void {
   return getZoneUnPatchedApi('clearTimeout')(id);
+}
+
+/**
+ * This function is a zone un-patched implementation of Element#addEventListener() method.
+ * @param elem
+ */
+export function addEventListener(elem) {
+  elem.addEventListener = getZoneUnPatchedApi('addEventListener', elem).bind(
+    elem
+  );
+  return elem;
 }
