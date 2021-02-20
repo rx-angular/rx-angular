@@ -143,7 +143,7 @@ export function clearTimeout(id: number): void {
  * This function is a zone un-patched implementation of Element#addEventListener() method.
  * @param elem
  */
-export function addEventListener(elem) {
+export function unpatchAddEventListener(elem) {
   elem.addEventListener = getZoneUnPatchedApi('addEventListener', elem).bind(
     elem
   );

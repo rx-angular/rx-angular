@@ -1,7 +1,7 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { mouseEvent, inputEvent, focusEvent, formControlsEvents, getZoneUnPatchedApi } from '@rx-angular/cdk';
+import { mouseEvent, inputEvent, focusEvent, formControlsEvents, unpatchAddEventListener } from '@rx-angular/cdk';
 
 /**
  *
@@ -22,14 +22,11 @@ export function unpatchEventListener(elem: HTMLElement, event: string): void {
     return;
   }
 
-  const addEventListener = getZoneUnPatchedApi('addEventListener', elem).bind(
-    elem
-  );
   eventListeners.forEach((listener) => {
     // Remove and reapply listeners with patched API
     elem.removeEventListener(event, listener);
     // Reapply listeners with un-patched API
-    addEventListener(event, listener);
+    unpatchAddEventListener(event).addEventListener(listener);
   });
 }
 

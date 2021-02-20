@@ -190,6 +190,20 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
   }
 
   /**
+   * Fires a sideEffect when the instances `OnDestroy` hook is fired.
+   *
+   * @example
+   * effects.registerOnDestroy(mode => localStorage.setItem('colorMode', mode));
+   *
+   * @param sideEffect
+   */
+  registerOnDestroy(
+    sideEffect: (value: boolean) => void
+  ): number | void {
+    return this.register(this.onDestroy$, sideEffect);
+  }
+
+  /**
    * Operator that unsubscribes based on emission of an registered effect.
    *
    * @example
