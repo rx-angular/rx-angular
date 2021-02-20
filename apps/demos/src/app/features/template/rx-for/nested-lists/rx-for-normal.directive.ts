@@ -15,6 +15,7 @@ import {
   TrackByFunction,
   ViewContainerRef
 } from '@angular/core';
+import { RxDefaultListViewContext } from '@rx-angular/cdk';
 
 import {
   concat,
@@ -38,7 +39,6 @@ import {
   tap
 } from 'rxjs/operators';
 import { RX_PRIMARY_STRATEGY, StrategyProvider } from '../../../../rx-angular-pocs/cdk';
-import { RxForViewContext } from '../../../../rx-angular-pocs/template/directives/for/model';
 
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector
@@ -79,7 +79,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
     private defaultStrategyName: string,
     private strategyProvider: StrategyProvider,
     private cdRef: ChangeDetectorRef,
-    private readonly templateRef: TemplateRef<RxForViewContext<T, U>>,
+    private readonly templateRef: TemplateRef<RxDefaultListViewContext<T, U>>,
     private readonly viewContainerRef: ViewContainerRef,
     private iterableDiffers: IterableDiffers
   ) {}
@@ -122,7 +122,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
   static ngTemplateContextGuard<T, U extends NgIterable<T>>(
     dir: RxForNormal<T, U>,
     ctx: any
-  ): ctx is RxForViewContext<T, U> {
+  ): ctx is RxDefaultListViewContext<T, U> {
     return true;
   }
 
@@ -168,8 +168,8 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
     const behaviors$: Observable<any>[] = [];
     const strat = this.strategies[this.strategy];
 
-    const insertMap = new Map<number, RxForViewContext<T, U>>();
-    const scheduleInsert = (idx: number, ctx: RxForViewContext<T, U>) => {
+    const insertMap = new Map<number, RxDefaultListViewContext<T, U>>();
+    const scheduleInsert = (idx: number, ctx: RxDefaultListViewContext<T, U>) => {
       if (!insertMap.has(idx)) {
         insertMap.set(idx, ctx);
         const insert = new Subject<void>();
@@ -196,11 +196,11 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
     };
     const updateMap = new WeakMap<
       EmbeddedViewRef<any>,
-      ((context: RxForViewContext<T, U>) => void)[]
+      ((context: RxDefaultListViewContext<T, U>) => void)[]
       >();
     const scheduleUpdate = (
       idx: number,
-      update: (context: RxForViewContext<T, U>) => void
+      update: (context: RxDefaultListViewContext<T, U>) => void
     ) => {
       const view = this.viewContainerRef.get(idx) as EmbeddedViewRef<any>;
       if (view) {
@@ -234,7 +234,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
         const idx = currentIndex == null ? undefined : currentIndex;
         // insert
         if (r.previousIndex == null) {
-          const context = new RxForViewContext(r.item);
+          const context = new RxDefaultListViewContext(r.item);
           // console.log('scheduleInsert', idx);
           scheduleInsert(idx, context);
           // the view got inserted, so the parent has to get notified about this change
@@ -250,7 +250,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
           }
         } else if (previousIndex !== null) {
           // move
-          const view = <EmbeddedViewRef<RxForViewContext<T, U>>>(
+          const view = <EmbeddedViewRef<RxDefaultListViewContext<T, U>>>(
             this.viewContainerRef.get(previousIndex)
           );
           this.viewContainerRef.move(view, idx);

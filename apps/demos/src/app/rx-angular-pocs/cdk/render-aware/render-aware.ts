@@ -3,7 +3,8 @@ import {
   catchError,
   distinctUntilChanged,
   map,
-  merge,
+  // @NOTICE in RxJS v7 it will be renamed to `mergeWith`
+  merge as mergeWith,
   mergeAll,
   publishReplay, shareReplay,
   startWith,
@@ -67,7 +68,9 @@ export function createRenderAware<U>(cfg: {
       switchAll(),
       distinctUntilChanged(),
       rxMaterialize(),
-      merge(templateTrigger$ || EMPTY),
+      /* tslint:disable */
+      mergeWith(templateTrigger$ || EMPTY),
+      /* tslint:enable */
       observeTemplateByNotificationKind(cfg.templateObserver),
       applyStrategy(strategy$, cfg.getContext, cfg.getCdRef),
       catchError(e => {

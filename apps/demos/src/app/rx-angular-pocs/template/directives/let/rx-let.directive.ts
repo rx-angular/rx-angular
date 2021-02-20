@@ -42,6 +42,8 @@ import {
   TemplateManager2,
 } from '../../../cdk/template-management/template-manager';
 
+
+
 @Directive({
   selector: '[rxLet]',
   providers: [],
@@ -101,7 +103,6 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
 
   @Input('rxLetSuspenseTrg')
   set rxSuspenseTrigger(trigger$: Observable<any>) {
-    // console.log('rxSuspense', trigger$);
     this.triggerHandler.next(
       trigger$.pipe(map(toRxSuspenseNotification as any))
     );
@@ -115,7 +116,6 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   @Input('rxLetParent') renderParent: boolean;
 
   @Input('rxLetPatchZone') patchZone: boolean;
-
 
   constructor(
     private strategyProvider: StrategyProvider,

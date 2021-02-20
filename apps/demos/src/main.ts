@@ -14,8 +14,5 @@ const compilerOptions = environment.zoneless
   : undefined;
 const mP = promiseMarkerFactory('Bootstrap');
 mP.wrap(
-  platformBrowserDynamic().bootstrapModule(AppModule, {
-    ...compilerOptions,
-    ngZoneEventCoalescing: true,
-  })
+  platformBrowserDynamic().bootstrapModule(AppModule)
 ).catch((err) => console.error(err));
