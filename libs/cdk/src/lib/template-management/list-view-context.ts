@@ -19,7 +19,7 @@ const computeLast = ({ count, index }) => index === count - 1;
 const computeEven = ({ count, index }) => index % 2 === 0;
 
 export class RxDefaultListViewContext<
-  T extends Record<string | number | symbol, unknown>,
+  T,
   U extends NgIterable<T> = NgIterable<T>,
   K = keyof T
 > implements RxListViewContext<T> {

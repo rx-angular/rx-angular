@@ -9,7 +9,6 @@ import {
   ɵdetectChanges as detectChanges,
 } from '@angular/core';
 import {
-  asyncScheduler,
   combineLatest,
   concat,
   merge,
@@ -24,6 +23,7 @@ import {
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
+import { asyncScheduler } from '../zone-less/rxjs/scheduler/index';
 import { CreateEmbeddedView } from './model';
 import { StrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';

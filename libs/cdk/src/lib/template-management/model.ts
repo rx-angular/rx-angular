@@ -17,6 +17,19 @@ export enum RxBaseTemplateNames {
   suspense = 'suspenseTpl',
 }
 
+export const enum RxListTemplateChangeType {
+  insert,
+  remove,
+  move,
+  update,
+  context,
+}
+export type RxListTemplateChange<T = any> = [RxListTemplateChangeType, T];
+export type RxListTemplateChanges<T = any> = [
+  RxListTemplateChange<T>[],
+  boolean
+];
+
 export interface RxViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
   $implicit: T;

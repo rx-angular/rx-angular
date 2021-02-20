@@ -14,7 +14,12 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { RxRenderSettings, TemplateSettings } from './model';
+import {
+  RxListTemplateChange,
+  RxListTemplateChangeType,
+  RxRenderSettings,
+  TemplateSettings,
+} from './model';
 import {
   getTNode,
   notifyAllParentsIfNeeded,
@@ -30,14 +35,6 @@ import {
 } from './list-view-context';
 import { getTemplateHandler } from './list-view-handler';
 
-const enum RxListTemplateChange {
-  insert,
-  remove,
-  move,
-  update,
-  context,
-}
-
 export interface RxListManager<T> {
   nextStrategy: (config: string | Observable<string>) => void;
 
@@ -49,7 +46,10 @@ export function createListTemplateManager<
   C extends RxListViewContext<T>
 >(config: {
   renderSettings: RxRenderSettings<T, C>;
-  templateSettings: TemplateSettings<T, C, RxListViewComputedContext> & {
+  templateSettings: Omit<
+    TemplateSettings<T, C, RxListViewComputedContext>,
+    'patchZone'
+  > & {
     templateRef: TemplateRef<C>;
   };
   //
@@ -81,7 +81,7 @@ export function createListTemplateManager<
   const viewContainerRef = templateSettings.viewContainerRef;
 
   let notifyParent = false;
-  let changesArr: [RxListTemplateChange, any][];
+  let changesArr: RxListTemplateChange[];
   let partiallyFinished = false;
 
   return {
@@ -157,7 +157,7 @@ export function createListTemplateManager<
   }
 
   function getObservablesFromChangesArray(
-    changes: [RxListTemplateChange, any][],
+    changes: RxListTemplateChange[],
     strategy: StrategyCredentials,
     count: number
   ) {
@@ -170,10 +170,10 @@ export function createListTemplateManager<
               const type = _change[0];
               const payload = _change[1];
               switch (type) {
-                case RxListTemplateChange.insert:
+                case RxListTemplateChangeType.insert:
                   listViewHandler.insertView(payload[0], payload[1], count);
                   break;
-                case RxListTemplateChange.move:
+                case RxListTemplateChangeType.move:
                   listViewHandler.moveView(
                     payload[2],
                     payload[0],
@@ -181,13 +181,13 @@ export function createListTemplateManager<
                     count
                   );
                   break;
-                case RxListTemplateChange.remove:
+                case RxListTemplateChangeType.remove:
                   listViewHandler.removeView(payload);
                   break;
-                case RxListTemplateChange.update:
+                case RxListTemplateChangeType.update:
                   listViewHandler.updateView(payload[0], payload[1], count);
                   break;
-                case RxListTemplateChange.context:
+                case RxListTemplateChangeType.context:
                   listViewHandler.updateUnchangedContext(payload[1], count);
                   break;
               }

@@ -14,4 +14,7 @@ export {
   RxListManager,
   createListTemplateManager,
 } from './list-template-manager';
-export { RxListViewComputedContext } from './list-view-context';
+export {
+  RxListViewComputedContext,
+  RxDefaultListViewContext,
+} from './list-view-context';

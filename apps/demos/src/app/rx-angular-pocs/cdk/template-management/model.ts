@@ -49,7 +49,7 @@ export interface RxListViewContextComputed<T> {
   count: number;
 }
 
-export interface RxListViewContext<T extends Record<string | number | symbol, unknown>, U extends NgIterable<T> = NgIterable<T>, K = keyof T> extends RxListViewContextComputed<T> {
+export interface RxListViewContext<T, U extends NgIterable<T> = NgIterable<T>, K = keyof T> extends RxListViewContextComputed<T> {
   $implicit: T;
   item$: Observable<T>;
   updateContext(newProps: RxListViewContextComputed<T>): void;
