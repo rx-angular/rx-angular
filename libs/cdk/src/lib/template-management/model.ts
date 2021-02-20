@@ -26,8 +26,8 @@ export const enum RxListTemplateChangeType {
 }
 export type RxListTemplateChange<T = any> = [RxListTemplateChangeType, T];
 export type RxListTemplateChanges<T = any> = [
-  RxListTemplateChange<T>[],
-  boolean
+  RxListTemplateChange<T>[], // changes to apply
+  boolean // notify parent
 ];
 
 export interface RxViewContext<T> {
@@ -82,5 +82,4 @@ export interface TemplateSettings<T, C, U = unknown> {
   updateViewContext: UpdateViewContext<T, C, U>;
   initialTemplateRef?: TemplateRef<C>;
   customContext?: (value: T) => any;
-  createViewFactory?: CreateEmbeddedView<C>;
 }

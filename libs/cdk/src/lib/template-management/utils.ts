@@ -24,7 +24,6 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { asyncScheduler } from '../zone-less/rxjs/scheduler/index';
-import { CreateEmbeddedView } from './model';
 import { StrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 
@@ -187,17 +186,14 @@ export function getEmbeddedViewCreator(
  */
 export function templateHandling<N, C>(
   viewContainerRef: ViewContainerRef,
-  patchZone: false | NgZone,
-  createViewFactory?: CreateEmbeddedView<C>
+  patchZone: false | NgZone
 ): {
   add(name: N, templateRef: TemplateRef<C>): void;
   get(name: N): TemplateRef<C>;
   createEmbeddedView(name: N, context?: C, index?: number): EmbeddedViewRef<C>;
 } {
   const templateCache = new Map<N, TemplateRef<C>>();
-  const createView = createViewFactory
-    ? createViewFactory(viewContainerRef, patchZone)
-    : getEmbeddedViewCreator(viewContainerRef, patchZone);
+  const createView = getEmbeddedViewCreator(viewContainerRef, patchZone);
 
   const get = (name: N): TemplateRef<C> => {
     return templateCache.get(name);

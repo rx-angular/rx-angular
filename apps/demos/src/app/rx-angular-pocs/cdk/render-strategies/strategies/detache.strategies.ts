@@ -1,9 +1,9 @@
-import { StrategyCredentials, StrategyCredentialsMap } from '../model';
+import { CustomStrategyCredentialsMap, StrategyCredentials, StrategyCredentialsMap } from '../model';
 import { tap } from 'rxjs/operators';
 import { coalesceWith } from '../../../cdk/utils/rxjs/operators/coalesceWith';
 import { animationFrameTick } from '../../utils/rxjs/observable';
 
-export function getDetachStrategyCredentialsMap(): StrategyCredentialsMap {
+export function getDetachStrategyCredentialsMap(): CustomStrategyCredentialsMap<'detachOnComplete' | 'detach'> {
   return {
     detachOnComplete,
     detach

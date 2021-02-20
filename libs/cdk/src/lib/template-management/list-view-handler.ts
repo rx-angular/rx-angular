@@ -23,14 +23,9 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
     initialTemplateRef,
     createViewContext,
     updateViewContext,
-    createViewFactory,
     patchZone,
   } = templateSettings;
-  const templates = templateHandling(
-    viewContainerRef,
-    patchZone,
-    createViewFactory
-  );
+  const templates = templateHandling(viewContainerRef, patchZone);
 
   return {
     updateUnchangedContext,

@@ -16,16 +16,13 @@ import {
 import {
   createListTemplateManager,
   RxListManager,
-  RxListViewComputedContext
+  RxListViewComputedContext, RxListViewContext, RxDefaultListViewContext, coerceDistinctWith
 } from '@rx-angular/cdk';
 
 import { ReplaySubject, Subject, Observable } from 'rxjs';
-import { RxDefaultListViewContext } from '@rx-angular/cdk';
-import { ngInputFlatten } from '../../../../shared/utils/ngInputFlatten';
 import { StrategyProvider } from '../../../cdk/render-strategies/strategy-provider.service';
 
 import { RxEffects } from '../../../state/rx-effects';
-import { RenderSettings, RxListViewContext } from '../../../cdk/template-management/model';
 
 /**
  * @Directive RxFor
@@ -602,10 +599,10 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   private _renderCallback: Subject<any>;
 
   /** @internal */
-  private readonly values$ = this.observables$.pipe(ngInputFlatten());
+  private readonly values$ = this.observables$.pipe(coerceDistinctWith());
 
   /** @internal */
-  private readonly strategy$ = this.strategyInput$.pipe(ngInputFlatten());
+  private readonly strategy$ = this.strategyInput$.pipe(coerceDistinctWith());
 
   /** @internal */
   private listManager: RxListManager<T>;

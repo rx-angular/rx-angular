@@ -132,8 +132,7 @@ export function createTemplateManager<
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   const templates = templateHandling<N, C>(
     templateSettings.viewContainerRef,
-    patchZone,
-    templateSettings.createViewFactory
+    patchZone
   );
   const viewContainerRef = templateSettings.viewContainerRef;
 

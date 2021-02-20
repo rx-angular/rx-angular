@@ -17,4 +17,5 @@ export {
 export {
   RxListViewComputedContext,
   RxDefaultListViewContext,
+  RxListViewContext,
 } from './list-view-context';

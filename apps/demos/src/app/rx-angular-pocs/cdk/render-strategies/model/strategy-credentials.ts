@@ -12,6 +12,16 @@ export interface StrategyCredentials {
   behavior?: RenderBehavior
 }
 
-export interface StrategyCredentialsMap {
-  [name: string]: StrategyCredentials
-}
+export type ConcurrentStrategyNames =
+  'none' | 'immediate' | 'userBlocking' | 'normal' | 'low' | 'background';
+
+export type NativeStrategyNames = 'native' | 'local' | 'global' | 'noop';
+
+export type ChunkStrategyNames = 'chunk' | 'blocking';
+
+export type CustomStrategyCredentialsMap<T extends string | number | symbol> = Record<T, StrategyCredentials>;
+
+export type StrategyCredentialsMap = CustomStrategyCredentialsMap<ConcurrentStrategyNames | string>; // TODO: remove
+export type NativeStrategies = CustomStrategyCredentialsMap<NativeStrategyNames>;
+export type ChunkStrategies = CustomStrategyCredentialsMap<ChunkStrategyNames>;
+export type ConcurrentStrategies = CustomStrategyCredentialsMap<ConcurrentStrategyNames>;
