@@ -57,11 +57,17 @@ export class StrategyProvider<T extends string = string> {
     defaultStrategy: StrategyNames<T>,
     @Optional()
     @Inject(RX_CUSTOM_STRATEGIES)
-    customStrategies: CustomStrategyCredentialsMap<T>
+    customStrategies: CustomStrategyCredentialsMap<T>[]
   ) {
     const strats = {
       ...DEFAULT_STRATEGIES,
-      ...(customStrategies || ({} as any)),
+      ...(customStrategies || []).reduce(
+        (acc, curr) => ({
+          ...acc,
+          ...curr,
+        }),
+        {} as any
+      ),
     };
     this._strategies$.next(strats);
     this.primaryStrategy = defaultStrategy;

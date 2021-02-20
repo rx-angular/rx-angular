@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from '@rx-angular/cdk';
+import { CONCURRENT_STRATEGIES, RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from '@rx-angular/cdk';
 import { AppComponent, AppComponentModule } from './app-component';
 import { ENVIRONMENT_SETTINGS } from './shared/environment.token';
 import { environment } from '../environments/environment';
@@ -23,10 +23,7 @@ import { HomeComponent } from './features/home/home.component';
     },
     {
       provide: RX_CUSTOM_STRATEGIES,
-      useValue: {
-        /*...getConcurrentSchedulerStrategyCredentialsMap(),
-        ...getChunkStrategyCredentialsMap()*/
-      },
+      useValue: CONCURRENT_STRATEGIES,
       multi: true,
     },
     {
