@@ -52,28 +52,12 @@ export type RenderBehavior = <T = unknown>(
   scope?: coalescingObj
 ) => (o: Observable<T>) => Observable<T>;
 
-export interface StrategyCredentials {
-  name: string;
+export interface StrategyCredentials<S = string> {
+  name: S;
   work: RenderWork;
   behavior: RenderBehavior;
 }
 
-export type ConcurrentStrategyNames =
-  | 'none'
-  | 'immediate'
-  | 'userBlocking'
-  | 'normal'
-  | 'low'
-  | 'background';
-
-export type NativeStrategyNames = 'native' | 'local' | 'global' | 'noop';
-
 export type CustomStrategyCredentialsMap<
   T extends string | number | symbol
 > = Record<T, StrategyCredentials>;
-
-export type StrategyCredentialsMap = CustomStrategyCredentialsMap<
-  ConcurrentStrategyNames | string
->; // TODO: remove
-export type NativeStrategies = CustomStrategyCredentialsMap<NativeStrategyNames>;
-export type ConcurrentStrategies = CustomStrategyCredentialsMap<ConcurrentStrategyNames>;

@@ -1,18 +1,9 @@
 import { ɵmarkDirty as markDirty } from '@angular/core';
 import { tap } from 'rxjs/operators';
-import { StrategyCredentials, StrategyCredentialsMap } from '../model';
+import { CustomStrategyCredentialsMap, StrategyCredentials } from '../model';
 import { coalesceWith } from '../utils';
 import { Observable } from 'rxjs';
 import { cancelAnimationFrame, requestAnimationFrame } from '../zone-less';
-
-export function getDefaultStrategyCredentialsMap(): StrategyCredentialsMap {
-  return {
-    global: globalCredentials,
-    native: nativeCredentials,
-    noop: noopCredentials,
-    local: localCredentials,
-  };
-}
 
 const animationFrameTick = () =>
   new Observable<number>((subscriber) => {
@@ -53,4 +44,13 @@ const nativeCredentials: StrategyCredentials = {
   name: 'native',
   work: (cdRef) => cdRef.markForCheck(),
   behavior: (work: any) => (o$) => o$.pipe(tap(() => work())),
+};
+
+export type DefaultStrategyNames = 'native' | 'local' | 'global' | 'noop';
+export type DefaultStrategies = CustomStrategyCredentialsMap<DefaultStrategyNames>;
+export const DEFAULT_STRATEGIES: DefaultStrategies = {
+  global: globalCredentials,
+  native: nativeCredentials,
+  noop: noopCredentials,
+  local: localCredentials,
 };
