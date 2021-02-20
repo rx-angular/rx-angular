@@ -8,8 +8,8 @@ import {
 import {
   BehaviorSubject,
   fromEvent,
-  Observable,
   MonoTypeOperatorFunction,
+  Observable,
 } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import { CustomStrategyCredentialsMap, StrategyCredentials } from '../model';
@@ -29,6 +29,7 @@ export class StrategyProvider<T extends string = string> {
   get strategies(): Strategies<T> {
     return this._strategies$.getValue();
   }
+
   get strategyNames(): string[] {
     return Object.values(this.strategies).map((s) => s.name);
   }
@@ -36,6 +37,7 @@ export class StrategyProvider<T extends string = string> {
   get primaryStrategy(): StrategyNames<T> {
     return this._primaryStrategy$.getValue().name;
   }
+
   set primaryStrategy(strategyName: StrategyNames<T>) {
     this._primaryStrategy$.next(
       <StrategyCredentials<StrategyNames<T>>>this.strategies[strategyName]
@@ -57,15 +59,12 @@ export class StrategyProvider<T extends string = string> {
     @Inject(RX_CUSTOM_STRATEGIES)
     customStrategies: CustomStrategyCredentialsMap<T>
   ) {
-    this._strategies$.next({
+    const strats = {
       ...DEFAULT_STRATEGIES,
       ...(customStrategies || ({} as any)),
-    });
+    };
+    this._strategies$.next(strats);
     this.primaryStrategy = defaultStrategy;
-  }
-
-  registerStrategies(customStrategies: CustomStrategyCredentialsMap<string>) {
-    // todo: implement
   }
 
   scheduleWith<R>(
