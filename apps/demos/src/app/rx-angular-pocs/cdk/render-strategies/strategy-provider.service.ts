@@ -1,22 +1,25 @@
 import { ChangeDetectorRef, Inject, Injectable, Optional } from '@angular/core';
 import { RxState, selectSlice } from '@rx-angular/state';
 import { fromEvent, Observable, of } from 'rxjs';
-import { map, shareReplay, takeUntil, tap } from 'rxjs/operators';
+import { map, shareReplay, takeUntil } from 'rxjs/operators';
 
-import {RX_CUSTOM_STRATEGIES } from './tokens/custom-strategies-token';
-import {RX_PRIMARY_STRATEGY} from './tokens/default-primary-strategy-token';
-import {getDefaultStrategyCredentialsMap} from './strategies/default.strategies';
-import {mergeStrategies} from './utils/strategy-helper';
-import { StrategyCredentials, StrategyCredentialsMap } from './model/strategy-credentials';
+import {
+  RX_CUSTOM_STRATEGIES,
+  RX_PRIMARY_STRATEGY,
+  DEFAULT_STRATEGIES,
+  mergeStrategies,
+  StrategyCredentials,
+  DefaultStrategies, CustomStrategyCredentialsMap
+} from '@rx-angular/cdk';
 
 @Injectable({providedIn: 'root'})
 export class StrategyProvider extends RxState<{
   primaryStrategy: StrategyCredentials;
   secondaryStrategy: StrategyCredentials;
-  strategies: StrategyCredentialsMap
+  strategies: DefaultStrategies | CustomStrategyCredentialsMap<string>
 }> {
 
-  _strategies: StrategyCredentialsMap;
+  _strategies: CustomStrategyCredentialsMap<string>;
   get strategies() {
     return this._strategies
   }
@@ -59,11 +62,11 @@ export class StrategyProvider extends RxState<{
 
   constructor(@Optional()
               @Inject(RX_CUSTOM_STRATEGIES)
-              private customStrategies: StrategyCredentialsMap[],
+              private customStrategies: [],
               @Inject(RX_PRIMARY_STRATEGY)
               private defaultStrategy: string) {
     super();
-    this._strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), getDefaultStrategyCredentialsMap());
+    this._strategies = this.customStrategies.reduce((a, i): CustomStrategyCredentialsMap<string> => mergeStrategies(a, i), DEFAULT_STRATEGIES);
     this.set({
       primaryStrategy: this.strategies[defaultStrategy],
       secondaryStrategy: this.strategies['noop'],
@@ -74,7 +77,7 @@ export class StrategyProvider extends RxState<{
     this.hold(this.secondaryStrategy$, s => this._secondaryStrategy = s);
   }
 
-  registerStrategies(customStrategies: StrategyCredentialsMap) {
+  registerStrategies(customStrategies: CustomStrategyCredentialsMap<string>) {
     this.set({ strategies: { ...customStrategies } });
   }
 

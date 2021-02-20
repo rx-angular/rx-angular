@@ -1,3 +1,5 @@
+export { mergeStrategies } from './utils';
+export { RX_PRIMARY_STRATEGY, RX_CUSTOM_STRATEGIES } from './tokens';
 export {
   DefaultStrategies,
   DefaultStrategyNames,
