@@ -108,9 +108,9 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
     this._renderObserver = callback;
   }
 
-  @Input('rxLetParent') renderParent: boolean;
+  @Input('rxLetParent') renderParent = true;
 
-  @Input('rxLetPatchZone') patchZone: boolean;
+  @Input('rxLetPatchZone') patchZone = true;
 
   constructor(
     private strategyProvider: StrategyProvider,

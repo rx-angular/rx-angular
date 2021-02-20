@@ -389,7 +389,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param renderParent
    */
     // tslint:disable-next-line:no-input-rename
-  @Input('rxForParent') renderParent: boolean;
+  @Input('rxForParent') renderParent = true;
 
   /**
    * @description
@@ -422,7 +422,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param patchZone
    */
   // tslint:disable-next-line:no-input-rename
-  @Input('rxForPatchZone') patchZone: boolean;
+  @Input('rxForPatchZone') patchZone = true;
 
   /**
    * @description
