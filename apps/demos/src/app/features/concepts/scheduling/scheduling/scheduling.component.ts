@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 
 import { Observable, of, Subject } from 'rxjs';
 import { scan, tap } from 'rxjs/operators';
-import { getStrategies, priorityTickMap, SchedulingPriority } from '@rx-angular/template';
+import { StrategyProvider } from '../../../../rx-angular-pocs/cdk/render-strategies';
+import { priorityTickMap, SchedulingPriority } from './utils';
 
 @Component({
   selector: 'rxa-scheduling',
@@ -65,7 +66,7 @@ export class SchedulingComponent implements OnInit {
   );
   value;
 
-  constructor(private cdRef: ChangeDetectorRef) {
+  constructor(private cdRef: ChangeDetectorRef, private strategyProvider: StrategyProvider) {
   }
 
   scheduleAllPrios() {
@@ -98,6 +99,7 @@ export class SchedulingComponent implements OnInit {
     };
 
     sync();
+    this.strategyProvider.scheduleCD(this.cdRef, {strategy: ''})
     priorityTickMap[SchedulingPriority.Promise].subscribe(micro);
     priorityTickMap[SchedulingPriority.setTimeout].subscribe(setTimeout);
     priorityTickMap[SchedulingPriority.setInterval].subscribe(setInterval);
@@ -120,7 +122,6 @@ export class SchedulingComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.strategies = getStrategies({ cdRef: this.cdRef });
-    console.log(this.strategies, this.cdRef);
+    this.strategies = this.strategyProvider.strategies;
   }
 }

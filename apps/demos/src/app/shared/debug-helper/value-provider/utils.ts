@@ -1,8 +1,24 @@
 import { EMPTY, from, Observable, of, timer } from 'rxjs';
 import { merge as mergeWith, share, switchMap, take, takeUntil } from 'rxjs/operators';
-import { priorityTickMap } from '@rx-angular/template';
 import { SchedulerConfig, TestItem } from './model';
 import { fromFetch } from 'rxjs/fetch';
+import {
+  animationFrameTick,
+  promiseTick,
+  SchedulingPriority
+} from '../../../../../../../libs/template/src/lib/render-strategies/rxjs/scheduling';
+import {
+  intervalTick,
+  timeoutTick
+} from '../../../../../../../libs/template/src/lib/experimental/render-strategies/rxjs/scheduling';
+
+
+export const priorityTickMap = {
+  [SchedulingPriority.animationFrame]: animationFrameTick(),
+  [SchedulingPriority.Promise]: promiseTick(),
+  [SchedulingPriority.setInterval]: intervalTick(),
+  [SchedulingPriority.setTimeout]: timeoutTick(),
+};
 
 export function compareIdFn(a, b) {
   return a.id === b.id;
