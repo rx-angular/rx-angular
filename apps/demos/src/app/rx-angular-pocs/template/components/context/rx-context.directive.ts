@@ -76,7 +76,7 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
 
   static ngTemplateGuard_rxContext: 'binding';
 
-  strategy$: Observable<StrategyCredentials> = this.rxState.select(
+  strategy$: Observable<any/*StrategyCredentials*/> = this.rxState.select(
     // ngInputFlatten(),
     startWith(this.strategyProvider.primaryStrategy),
     // nameToStrategyCredentials(this.strategyProvider.strategies, this.strategyProvider.primaryStrategy)
@@ -89,7 +89,7 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
 
   private subscription: Unsubscribable = Subscription.EMPTY;
 
-  private readonly templateManager: RxTemplateManager<RxContextViewContext<U | undefined | null>, rxContextTemplateNames>;
+  private readonly templateManager: RxTemplateManager<U, RxContextViewContext<U | undefined | null>, rxContextTemplateNames>;
 
   private readonly initialViewContext: RxContextViewContext<U> = {
     $implicit: undefined,

@@ -31,7 +31,7 @@ import { HomeComponent } from './features/home/home.component';
     },
     {
       provide: RX_PRIMARY_STRATEGY,
-      useValue: 'normal',
+      useValue: 'local',
     },
   ],
   declarations: [HomeComponent],

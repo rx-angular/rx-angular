@@ -128,9 +128,9 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
     () => new ReplaySubject<U | Observable<U>>(1),
     mergeAll()
   );
-  private strategyHandler = hotFlatten<string>(undefined, mergeAll());
+  private strategyHandler = hotFlatten<string>(() => new Subject(), mergeAll());
   private triggerHandler = hotFlatten<RxNotificationKind>(
-    undefined,
+    () => new Subject(),
     mergeAll()
   );
 

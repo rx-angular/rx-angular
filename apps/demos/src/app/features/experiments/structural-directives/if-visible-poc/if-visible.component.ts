@@ -22,7 +22,7 @@ import { StrategyProvider } from '@rx-angular/cdk';
     class: 'm-1 p-1',
     style: 'display: block;'
   },
-  providers: [StrategyProvider]
+  providers: []
 })
 export class IfVisibleComponent {
 

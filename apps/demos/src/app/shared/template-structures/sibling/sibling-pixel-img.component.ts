@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
+import { StrategyProvider } from '@rx-angular/cdk';
 import { Observable } from 'rxjs';
-import { RX_CUSTOM_STRATEGIES, RX_PRIMARY_STRATEGY } from '../../../rx-angular-pocs';
 import { RxState, selectSlice } from '@rx-angular/state';
 import { map } from 'rxjs/operators';
 import { toInt } from '../../debug-helper/value-provider';
@@ -95,8 +95,7 @@ export class SiblingPixelImgComponent extends RxState<{
   trackBy = i => i;
 
   constructor(
-    @Inject(RX_CUSTOM_STRATEGIES) private strategies: string,
-    @Inject(RX_PRIMARY_STRATEGY) private defaultStrategy: string
+    private strategyProvider: StrategyProvider
   ) {
     super();
     this.set({
@@ -119,7 +118,7 @@ export class SiblingPixelImgComponent extends RxState<{
       '858585',
       '206206206'
     ].includes([r, g, b].join(''));
-    const rand = Object.keys(this.strategies[0])[toInt(undefined, 0, this.strategies.length)];
+    const rand = Object.keys(this.strategyProvider.strategies[this.strategyProvider.primaryStrategy])[toInt(undefined, 0, this.strategyProvider.strategyNames.length)];
 
     return transparency ? 'reactIdle' : black ? 'reactImmediate' : 'reactNormal';
   }
