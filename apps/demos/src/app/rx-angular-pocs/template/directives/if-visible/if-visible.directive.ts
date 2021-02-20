@@ -1,64 +1,135 @@
-import { ChangeDetectorRef, Directive, ElementRef, TemplateRef, ViewContainerRef } from '@angular/core';
-import { animationFrameTick, Hooks } from '../../../cdk';
+import { Subscription } from 'rxjs';
+import { filter, mergeAll } from 'rxjs/operators';
+import {
+  ChangeDetectorRef,
+  Directive,
+  ElementRef,
+  EmbeddedViewRef,
+  Input,
+  NgZone,
+  OnInit,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { Hooks, intersectionObserver, StrategyProvider } from '../../../cdk';
 import { RxEffects } from '../../../state';
-import { TemplateManager, createTemplateManager,intersectionObserver  } from '../../../cdk';
-
-export interface IfVisibleViewContext<T> {
-  // to enable `as` syntax we have to assign the directives selector (var as v)
-  rxIfVisible: T;
-
-  $implicit: T;
-  // set context var complete to true (var$; let e = $error)
-  $errorVal: false | Error;
-  // set context var complete to true (var$; let c = $complete)
-  $completeVal: boolean;
-  // set context var suspense to true (var$; let c = $suspense)
-  $suspenseVal: any;
-}
+import {
+  createTemplateManager,
+  hotFlatten,
+  RxNotificationKind,
+  RxTemplateManager,
+} from '@rx-angular/cdk';
+import {
+  RxIfVisibleTemplateNames,
+  rxIfVisibleTemplateNames,
+  RxIfVisibleViewContext,
+} from './model';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
   selector: '[ifVisible]',
-  providers: [RxEffects]
+  providers: [RxEffects],
 })
-export class IfVisibleDirective<U> extends Hooks {
+export class IfVisibleDirective<U> extends Hooks implements OnInit {
   displayed = false;
   private observer = intersectionObserver();
+  private subscription: Subscription = new Subscription();
 
-  private readonly templateManager: TemplateManager<IfVisibleViewContext<U | undefined | null>, 'view'>;
+  private strategyHandler = hotFlatten<string>(undefined, mergeAll());
+
+  private templateManager: RxTemplateManager<
+    U,
+    RxIfVisibleViewContext<U>,
+    rxIfVisibleTemplateNames
+  >;
+  @Input('rxIfParent') renderParent: boolean;
+
+  @Input('rxIfPatchZone') patchZone: boolean;
 
   constructor(
-    rxEf: RxEffects,
-    public cdRef: ChangeDetectorRef,
-    public viewContainerRef: ViewContainerRef,
+    private rxEf: RxEffects,
     public templateRef: TemplateRef<any>,
-    private readonly elemRef: ElementRef
+    private strategyProvider: StrategyProvider,
+    private cdRef: ChangeDetectorRef,
+    private eRef: ElementRef<Comment>,
+    private ngZone: NgZone,
+    private readonly viewTemplateRef: TemplateRef<any>,
+    private readonly viewContainerRef: ViewContainerRef
   ) {
     super();
-    this.templateManager = createTemplateManager(this.viewContainerRef, {} as any);
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && !this.displayed) {
-          this.displayed = true;
-          observer.unobserve(this.elemRef.nativeElement.parentElement);
-          observer.disconnect();
-         animationFrameTick().subscribe(() => {
-            this.templateManager.addTemplateRef('view', this.templateRef);
-            this.templateManager.displayView('view');
-            const view = this.templateManager.getEmbeddedView('view');
-            if (view) {
-              view.detectChanges();
-            }
-          });
-        }
-      });
-    });
-
-    this.afterViewInit$.subscribe(() => {
-      observer.observe(this.elemRef.nativeElement.parentElement);
-    });
-
   }
 
+  ngOnInit() {
+    this.templateManager = createTemplateManager<
+      U,
+      RxIfVisibleViewContext<U>,
+      rxIfVisibleTemplateNames
+    >({
+      templateSettings: {
+        viewContainerRef: this.viewContainerRef,
+        createViewContext,
+        updateViewContext,
+        customContext: (rxIf) => ({ rxIf }),
+        patchZone: this.patchZone ? this.ngZone : false,
+      },
+      renderSettings: {
+        cdRef: this.cdRef,
+        eRef: this.eRef,
+        parent: coerceBooleanProperty(this.renderParent),
+        patchZone: this.patchZone ? this.ngZone : false,
+        defaultStrategyName: this.strategyProvider.primaryStrategy,
+        strategies: this.strategyProvider.strategies,
+      },
+      notificationToTemplateName: {
+        [RxNotificationKind.suspense]: () => RxIfVisibleTemplateNames.suspense,
+        [RxNotificationKind.next]: () => RxIfVisibleTemplateNames.view,
+        [RxNotificationKind.error]: () => RxIfVisibleTemplateNames.error,
+        [RxNotificationKind.complete]: () => RxIfVisibleTemplateNames.complete,
+      },
+    });
+    this.templateManager.addTemplateRef(
+      RxIfVisibleTemplateNames.view,
+      this.viewTemplateRef
+    );
+    this.templateManager.nextStrategy(this.strategyHandler.values$);
+    this.subscription.add(
+      this.templateManager
+        .render(
+          this.observer.entries$.pipe(
+            filter((entry) => entry.isIntersecting && !this.displayed),
+            this.rxEf.untilDestroy()
+          )
+        )
+        .subscribe(() => {
+          this.displayed = true;
+          this.observer.unobserve(this.eRef.nativeElement.parentElement);
+        })
+    );
+    this.afterViewInit$.subscribe(() => {
+      this.observer.observe(this.eRef.nativeElement.parentElement);
+    });
+  }
 }
+
+function createViewContext<T>(value: T): RxIfVisibleViewContext<T> {
+  return {
+    rxIfVisible: value,
+    $implicit: value,
+    $error: false,
+    $complete: false,
+    $suspense: false,
+  };
+}
+
+function updateViewContext<T>(
+  value: T,
+  view: EmbeddedViewRef<RxIfVisibleViewContext<T>>,
+  context: RxIfVisibleViewContext<T>
+): void {
+  Object.keys(context).forEach((k) => {
+    view.context[k] = context[k];
+  });
+}
+
+

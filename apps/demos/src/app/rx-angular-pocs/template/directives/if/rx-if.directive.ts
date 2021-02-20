@@ -10,18 +10,15 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-
-import { NextObserver, Observable, Subject, Subscription } from 'rxjs';
-
+import { NextObserver, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { mergeAll } from 'rxjs/operators';
 import {
-  getHotMerged,
-  RxNotification,
-  RxNotificationKind,
-  StrategyProvider,
+  StrategyProvider
 } from '../../../cdk';
 import { RxIfTemplateNames, rxIfTemplateNames, RxIfViewContext } from './model';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { createTemplateManager2 } from '../../../cdk/template-management/template-manager';
+import { hotFlatten, createTemplateManager, RxNotificationKind, RxTemplateManager } from '@rx-angular/cdk';
+import { rxLetTemplateNames } from '../let/model';
 
 @Directive({
   selector: '[rxIf]',
@@ -29,7 +26,10 @@ import { createTemplateManager2 } from '../../../cdk/template-management/templat
 export class RxIf<U> implements OnInit, OnDestroy {
   private subscription = new Subscription();
   private _renderObserver: NextObserver<any>;
-  private templateManager;
+  private templateManager: RxTemplateManager<U,
+    RxIfViewContext<U>,
+    rxIfTemplateNames
+    >;
 
   @Input()
   set rxIf(potentialObservable: Observable<U> | U | null | undefined) {
@@ -57,9 +57,15 @@ export class RxIf<U> implements OnInit, OnDestroy {
     this._renderObserver = callback;
   }
 
-  private readonly observablesHandler = getHotMerged<U>();
-  private readonly strategyHandler = getHotMerged<string>();
-  private readonly rendered$ = new Subject<U>();
+  private readonly observablesHandler = hotFlatten<U>(
+    () => new ReplaySubject<U | Observable<U>>(1),
+    mergeAll()
+  );
+  private readonly strategyHandler = hotFlatten<string>(
+    () => new ReplaySubject<string | Observable<string>>(1),
+    mergeAll()
+  );
+  private readonly rendered$ = new Subject<void>();
 
   constructor(
     private strategyProvider: StrategyProvider,
@@ -69,16 +75,21 @@ export class RxIf<U> implements OnInit, OnDestroy {
     private readonly thenTemplateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
-    this.templateManager = createTemplateManager2<
+
+  }
+
+  ngOnInit() {
+    this.templateManager = createTemplateManager<
       U,
       RxIfViewContext<U>,
       rxIfTemplateNames
-    >({
+      >({
       templateSettings: {
         viewContainerRef: this.viewContainerRef,
         createViewContext,
         updateViewContext,
         customContext: (rxIf) => ({ rxIf }),
+        patchZone: this.patchZone ? this.ngZone : false,
       },
       renderSettings: {
         cdRef: this.cdRef,
@@ -89,17 +100,18 @@ export class RxIf<U> implements OnInit, OnDestroy {
         strategies: this.strategyProvider.strategies,
       },
       notificationToTemplateName: {
-        [RxNotificationKind.next]: (value, templates) =>
-          value
-            ? RxIfTemplateNames.then
-            : templates.get(RxIfTemplateNames.else)
-            ? RxIfTemplateNames.else
-            : undefined,
-      },
+        [RxNotificationKind.suspense]: () => RxIfTemplateNames.suspense,
+        [RxNotificationKind.next]: (value, templates) => {
+          return value ?
+            RxIfTemplateNames.then as rxIfTemplateNames
+            : templates.get(RxIfTemplateNames.else) ?
+              RxIfTemplateNames.then
+              : undefined
+        },
+        [RxNotificationKind.error]: () => RxIfTemplateNames.error,
+        [RxNotificationKind.complete]: () => RxIfTemplateNames.complete
+      }
     });
-  }
-
-  ngOnInit() {
     this.templateManager.addTemplateRef(
       RxIfTemplateNames.then,
       this.thenTemplateRef

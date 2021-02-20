@@ -1,17 +1,33 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { isSubscription } from '../../cdk/utils/rxjs/util/isSubscription';
 import { createSideEffectObservable } from '../../cdk/utils/rxjs/observable/side-effect-observable';
-import { EMPTY, Observable, Subscription } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { EMPTY, Observable, Subject, Subscription } from 'rxjs';
+import {
+  catchError,
+  filter,
+  map,
+  shareReplay,
+  take,
+  tap,
+} from 'rxjs/operators';
+import { OnDestroy$, untilDestroyed } from './until-destroy';
 
 @Injectable()
-export class RxEffects implements OnDestroy {
+export class RxEffects implements OnDestroy, OnDestroy$ {
   private readonly subscription;
   private readonly effectObservable = createSideEffectObservable();
+  private readonly hooks$ = new Subject<{ destroy: boolean }>();
 
   constructor() {
     this.subscription = this.effectObservable.subscribe();
   }
+
+  onDestroy$: Observable<boolean> = this.hooks$.pipe(
+    map((h) => h.destroy),
+    filter((destroy) => destroy),
+    take(1),
+    shareReplay()
+  );
 
   /**
    * @description
@@ -53,10 +69,17 @@ export class RxEffects implements OnDestroy {
       );
       return;
     }
-    this.effectObservable.nextEffectObservable(obsOrObsWithSideEffectOrSubscription);
+    this.effectObservable.nextEffectObservable(
+      obsOrObsWithSideEffectOrSubscription
+    );
+  }
+
+  untilDestroy() {
+   return <V>(source: Observable<V>) => source.pipe(untilDestroyed(this))
   }
 
   ngOnDestroy() {
+    this.hooks$.next({ destroy: undefined });
     // tslint:disable-next-line:no-unused-expression
     this.subscription && this.subscription.unsubscribe();
   }

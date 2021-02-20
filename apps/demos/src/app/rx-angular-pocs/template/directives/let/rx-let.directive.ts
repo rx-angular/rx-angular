@@ -17,39 +17,27 @@ import {
   defer,
   NextObserver,
   Observable,
-  ObservableInput,
+  ObservableInput, ReplaySubject,
   Subject,
-  Subscription,
+  Subscription
 } from 'rxjs';
-import { map, mapTo } from 'rxjs/operators';
+import { map, mapTo, mergeAll } from 'rxjs/operators';
 import {
-  getHotMerged,
   Hooks,
-  RxNotification,
-  RxNotificationKind,
-  StrategyProvider,
-  toRxCompleteNotification,
-  toRxErrorNotification,
-  toRxSuspenseNotification,
+  StrategyProvider
 } from '../../../cdk';
 import {
   RxLetTemplateNames,
   rxLetTemplateNames,
   RxLetViewContext,
 } from './model';
-import {
-  createTemplateManager2,
-  TemplateManager2,
-} from '../../../cdk/template-management/template-manager';
-
-
+import { hotFlatten, createTemplateManager, RxNotificationKind, RxTemplateManager, toRxErrorNotification, toRxCompleteNotification, toRxSuspenseNotification } from '@rx-angular/cdk';
 
 @Directive({
   selector: '[rxLet]',
   providers: [],
 })
 export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
-
   static ngTemplateGuard_rxLet: 'binding';
 
   @Input()
@@ -129,21 +117,24 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   }
 
   /** @internal */
-  private observablesHandler = getHotMerged<U>();
-  private strategyHandler = getHotMerged<string>();
-  private triggerHandler = getHotMerged<RxNotificationKind>();
+  private observablesHandler = hotFlatten<U>(
+    () => new ReplaySubject<U | Observable<U>>(1),
+    mergeAll()
+  );
+  private strategyHandler = hotFlatten<string>(undefined, mergeAll());
+  private triggerHandler = hotFlatten<RxNotificationKind>(undefined, mergeAll());
 
   private _renderObserver: NextObserver<any>;
 
   private subscription: Subscription = new Subscription();
 
-  private templateManager: TemplateManager2<
+  private templateManager: RxTemplateManager<
     U,
     RxLetViewContext<U | undefined | null>,
     rxLetTemplateNames
   >;
 
-  private rendered$ = new Subject<RxNotification<U>>();
+  private rendered$ = new Subject<void>();
 
   @Output() readonly rendered = defer(() => this.rendered$.pipe());
 
@@ -156,7 +147,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.templateManager = createTemplateManager2<
+    this.templateManager = createTemplateManager<
       U,
       RxLetViewContext<U>,
       rxLetTemplateNames
@@ -166,6 +157,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
         createViewContext,
         updateViewContext,
         customContext: (rxLet) => ({ rxLet }),
+        patchZone: this.patchZone ? this.ngZone : false,
       },
       renderSettings: {
         cdRef: this.cdRef,

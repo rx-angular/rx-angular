@@ -47,12 +47,12 @@ export interface RenderAware<T> {
   render: (values$: Observable<T>) => Observable<void>;
 }
 
-export interface RxRenderSettings<T, C, S extends string | number | symbol> {
+export interface RxRenderSettings<T, C> {
   cdRef: ChangeDetectorRef;
   eRef: ElementRef;
   parent: boolean;
   patchZone: NgZone | false;
-  strategies: DefaultStrategies & CustomStrategyCredentialsMap<S>;
+  strategies: DefaultStrategies & CustomStrategyCredentialsMap<string>;
   defaultStrategyName: string;
 }
 
