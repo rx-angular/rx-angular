@@ -24,6 +24,7 @@ import {
   getTNode,
   notifyAllParentsIfNeeded,
   notifyInjectingParentIfNeeded,
+  templateHandling,
   TNode,
 } from './utils';
 import { StrategyCredentials } from '../model';
@@ -76,6 +77,7 @@ export function createListTemplateManager<
    i don't know if this is the right decision for a first RC */
   const listViewHandler = getTemplateHandler({
     ...templateSettings,
+    initialTemplateRef: templateSettings.templateRef,
     patchZone,
   });
   const viewContainerRef = templateSettings.viewContainerRef;
