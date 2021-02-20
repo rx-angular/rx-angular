@@ -12,13 +12,13 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Hooks, intersectionObserver, StrategyProvider } from '../../../cdk';
+import { Hooks, intersectionObserver } from '../../../cdk';
 
 import {
   createTemplateManager,
   hotFlatten,
   RxNotificationKind,
-  RxTemplateManager,
+  RxTemplateManager, StrategyProvider,
 } from '@rx-angular/cdk';
 import {
   RxIfVisibleTemplateNames,

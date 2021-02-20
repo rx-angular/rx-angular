@@ -5,31 +5,19 @@ import {
   NgZone,
   Optional,
 } from '@angular/core';
-
 import {
-  CustomStrategyCredentialsMap,
-  DEFAULT_STRATEGIES,
-  DefaultStrategyNames,
-  onStrategy,
-  RX_CUSTOM_STRATEGIES,
-  RX_PRIMARY_STRATEGY,
-  StrategyCredentials,
-} from '@rx-angular/cdk';
-import { BehaviorSubject, fromEvent, Observable } from 'rxjs';
-import { MonoTypeOperatorFunction } from 'rxjs/internal/types';
+  BehaviorSubject,
+  fromEvent,
+  Observable,
+  MonoTypeOperatorFunction,
+} from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
-
-type StrategyNames<T> = DefaultStrategyNames | T;
-type Strategies<T extends string> = CustomStrategyCredentialsMap<
-  StrategyNames<T>
->;
-
-// TODO: move to model file if we decided where we store models
-export interface ScheduleOnStrategyOptions {
-  scope?: {};
-  strategy?: string;
-  patchZone?: false | NgZone;
-}
+import { CustomStrategyCredentialsMap, StrategyCredentials } from '../model';
+import { onStrategy } from '../utils/onStrategy';
+import { DEFAULT_STRATEGIES } from './default-strategies';
+import { ScheduleOnStrategyOptions, Strategies, StrategyNames } from './model';
+import { RX_CUSTOM_STRATEGIES } from './tokens/custom-strategies-token';
+import { RX_PRIMARY_STRATEGY } from './tokens/default-primary-strategy-token';
 
 @Injectable({ providedIn: 'root' })
 export class StrategyProvider<T extends string = string> {

@@ -12,12 +12,9 @@ import {
 } from '@angular/core';
 import { NextObserver, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
-import {
-  StrategyProvider
-} from '../../../cdk';
 import { RxIfTemplateNames, rxIfTemplateNames, RxIfViewContext } from './model';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { hotFlatten, createTemplateManager, RxNotificationKind, RxTemplateManager } from '@rx-angular/cdk';
+import { hotFlatten, createTemplateManager, RxNotificationKind, RxTemplateManager, StrategyProvider } from '@rx-angular/cdk';
 import { rxLetTemplateNames } from '../let/model';
 
 @Directive({

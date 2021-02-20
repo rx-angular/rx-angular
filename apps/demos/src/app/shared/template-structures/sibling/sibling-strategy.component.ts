@@ -4,12 +4,9 @@ import {
   Inject,
   Input,
 } from '@angular/core';
+import { StrategyProvider } from '@rx-angular/cdk';
 import { Observable, Subject } from 'rxjs';
 import { toBooleanArray } from './utils';
-import {
-  RX_CUSTOM_STRATEGIES,
-  RX_PRIMARY_STRATEGY,
-} from '../../../rx-angular-pocs';
 import { RxState } from '@rx-angular/state';
 import { delay, map } from 'rxjs/operators';
 
@@ -96,12 +93,11 @@ export class SiblingStrategyComponent extends RxState<{
   }
 
   constructor(
-    @Inject(RX_CUSTOM_STRATEGIES) private strategies: string,
-    @Inject(RX_PRIMARY_STRATEGY) private defaultStrategy: string
+    private strategyProvider: StrategyProvider
   ) {
     super();
     this.set({
-      strategy: defaultStrategy,
+      strategy: strategyProvider.primaryStrategy,
       filled: true,
     });
   }

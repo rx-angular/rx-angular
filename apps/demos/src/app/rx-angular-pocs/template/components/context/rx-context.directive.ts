@@ -3,7 +3,7 @@ import { createTemplateManager, RxNotificationKind, RxTemplateManager, StrategyC
 
 import { isObservable, Observable, of, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
 import { Hooks } from '../../../cdk/hooks/hooks';
-import { StrategyProvider } from '../../../cdk/render-strategies/strategy-provider.service';
+import { StrategyProvider } from '@rx-angular/cdk';
 import { RxContextTemplateNames, rxContextTemplateNames, RxContextViewContext } from './model';
 import { distinctUntilChanged, filter, map, mapTo, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';

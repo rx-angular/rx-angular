@@ -3,7 +3,8 @@ import { ChangeDetectorRef, Type } from '@angular/core';
 
 export type coalescingObj =
   | Record<string | number | symbol, unknown>
-  | Type<unknown>;
+  | Type<unknown>
+  | object;
 export interface CoalescingOptions {
   scope?: coalescingObj;
 }

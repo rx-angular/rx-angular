@@ -12,26 +12,33 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
+import {
+  createTemplateManager,
+  hotFlatten,
+  RxNotificationKind,
+  RxTemplateManager,
+  toRxCompleteNotification,
+  toRxErrorNotification,
+  toRxSuspenseNotification,
+  StrategyProvider
+} from '@rx-angular/cdk';
 
 import {
   defer,
   NextObserver,
   Observable,
-  ObservableInput, ReplaySubject,
+  ObservableInput,
+  ReplaySubject,
   Subject,
-  Subscription
+  Subscription,
 } from 'rxjs';
 import { map, mapTo, mergeAll } from 'rxjs/operators';
-import {
-  Hooks,
-  StrategyProvider
-} from '../../../cdk';
+import { Hooks } from '../../../cdk';
 import {
   RxLetTemplateNames,
   rxLetTemplateNames,
   RxLetViewContext,
 } from './model';
-import { hotFlatten, createTemplateManager, RxNotificationKind, RxTemplateManager, toRxErrorNotification, toRxCompleteNotification, toRxSuspenseNotification } from '@rx-angular/cdk';
 
 @Directive({
   selector: '[rxLet]',
@@ -122,7 +129,10 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
     mergeAll()
   );
   private strategyHandler = hotFlatten<string>(undefined, mergeAll());
-  private triggerHandler = hotFlatten<RxNotificationKind>(undefined, mergeAll());
+  private triggerHandler = hotFlatten<RxNotificationKind>(
+    undefined,
+    mergeAll()
+  );
 
   private _renderObserver: NextObserver<any>;
 
