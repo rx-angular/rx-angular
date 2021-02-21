@@ -1,11 +1,12 @@
 import { EmbeddedViewRef, TemplateRef } from '@angular/core';
-import { combineLatest, EMPTY, Observable } from 'rxjs';
+import { combineLatest, EMPTY, merge, Observable } from 'rxjs';
 import {
   catchError,
   filter,
   // @NOTICE in RxJS v7 it is renamed to `mergeWith`
   merge as mergeWith,
   switchMap,
+  tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import {
@@ -40,7 +41,8 @@ export interface RxTemplateManager<
   N = RxBaseTemplateNames | string
 > extends RenderAware<T> {
   addTemplateRef: (name: N, templateRef: TemplateRef<C>) => void;
-  addTrigger: (trigger$: Observable<RxNotification<T>>) => void;
+  // addTrigger: (trigger$: Observable<RxNotification<T>>) => void;
+  activeTemplate: N;
 }
 
 export type NotificationTemplateNameMap<T, C, N> = Record<
@@ -106,7 +108,7 @@ export function createTemplateManager<
 >(config: {
   renderSettings: RxRenderSettings<T, C>;
   templateSettings: TemplateSettings<T, C>;
-  templateTrigger$?: Observable<RxNotificationKind>;
+  templateTrigger$?: Observable<RxNotification<unknown>>;
   notificationToTemplateName: NotificationTemplateNameMap<T, C, N>;
 }): RxTemplateManager<T, C, N> {
   const {
@@ -136,21 +138,25 @@ export function createTemplateManager<
   );
   const viewContainerRef = templateSettings.viewContainerRef;
 
-  const triggerHandling = templateTriggerHandling();
+  const triggerHandling = config.templateTrigger$ || EMPTY;
   const getContext = notificationKindToViewContext(
     templateSettings.customContext
   );
 
   return {
     addTemplateRef: templates.add,
-    addTrigger: triggerHandling.next,
+    // addTrigger: triggerHandling.next,
     nextStrategy: strategyHandling$.next,
+    activeTemplate,
     render(values$: Observable<T>): Observable<any> {
-      return values$.pipe(
-        coerceDistinctWith(),
-        rxMaterialize(),
+      triggerHandling.subscribe((v) => console.log(v));
+      return merge(
+        values$.pipe(coerceDistinctWith(), rxMaterialize()),
+        triggerHandling.pipe(tap((v) => console.log('trigger', v))) || EMPTY
+      ).pipe(
+        tap((v) => console.log('After merge', v)),
         /* tslint:disable */
-        mergeWith(triggerHandling.trigger$ || EMPTY),
+        // mergeWith(triggerHandling.trigger$ || EMPTY),
         /* tslint:enable */
         withLatestFrom(strategyHandling$.strategy$),
         // Cancel old renders
@@ -165,6 +171,8 @@ export function createTemplateManager<
           const template = templates.get(templateName);
           const isNewTemplate = activeTemplate !== templateName;
           const notifyParent = isNewTemplate || parent;
+          // console.trace();
+          console.log({ template, templateName });
           return combineLatest([
             onStrategy(
               value,

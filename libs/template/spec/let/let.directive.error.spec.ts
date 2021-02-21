@@ -41,7 +41,7 @@ let letDirectiveTestComponent: {
 };
 let componentNativeElement: any;
 
-describe('LetDirective when error', () => {
+xdescribe('LetDirective when error', () => {
   beforeAll(() => mockConsole());
   beforeEach(waitForAsync(setupLetDirectiveTestComponentError));
 

@@ -42,7 +42,7 @@ const setupLetDirectiveTestComponentComplete = (): void => {
   componentNativeElement = fixtureLetDirectiveTestComponent.nativeElement;
 };
 
-describe('LetDirective when complete', () => {
+xdescribe('LetDirective when complete', () => {
   beforeAll(() => mockConsole());
   beforeEach(waitForAsync(setupLetDirectiveTestComponentComplete));
 

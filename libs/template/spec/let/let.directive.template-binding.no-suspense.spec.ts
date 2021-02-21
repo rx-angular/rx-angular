@@ -4,6 +4,7 @@ import { LetDirective } from '@rx-angular/template';
 import { Observable, of, Subject } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { RX_PRIMARY_STRATEGY } from '@rx-angular/cdk';
 
 @Component({
   template: `
@@ -17,7 +18,7 @@ import { mockConsole } from '@test-helpers';
 
     <ng-template #complete>complete</ng-template>
     <ng-template #error>error</ng-template>
-  `
+  `,
 })
 class LetDirectiveNoSuspenseTemplateTestComponent {
   value$: Observable<number> = of(1);
@@ -30,7 +31,13 @@ let nativeElement: HTMLElement;
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
     declarations: [LetDirectiveNoSuspenseTemplateTestComponent, LetDirective],
-    providers: []
+
+  providers: [
+    {
+      provide: RX_PRIMARY_STRATEGY,
+      useValue: 'local'
+    }
+  ],
   }).compileComponents();
 };
 

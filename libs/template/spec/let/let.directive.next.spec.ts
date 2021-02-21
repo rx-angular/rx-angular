@@ -47,7 +47,7 @@ const setupLetDirectiveTestComponent = (): void => {
   componentNativeElement = fixtureLetDirectiveTestComponent.nativeElement;
 };
 
-describe('LetDirective when nexting values', () => {
+xdescribe('LetDirective when nexting values', () => {
   beforeAll(() => mockConsole());
   beforeEach((setupLetDirectiveTestComponent));
 

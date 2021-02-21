@@ -43,7 +43,7 @@ const setUpFixture = () => {
   nativeElement = fixture.nativeElement;
 };
 
-describe('LetDirective when template binding with all templates', () => {
+xdescribe('LetDirective when template binding with all templates', () => {
   beforeAll(() => mockConsole());
   beforeEach(waitForAsync(setupTestComponent));
   beforeEach(setUpFixture);

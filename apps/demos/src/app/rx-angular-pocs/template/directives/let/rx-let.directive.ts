@@ -20,7 +20,7 @@ import {
   toRxCompleteNotification,
   toRxErrorNotification,
   toRxSuspenseNotification,
-  StrategyProvider
+  StrategyProvider,
 } from '@rx-angular/cdk';
 
 import {
@@ -163,7 +163,6 @@ import {
 })
 export class RxLet<U> implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
-
 
   /**
    * @description
@@ -389,7 +388,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
         [RxNotificationKind.error]: () => RxLetTemplateNames.error,
         [RxNotificationKind.complete]: () => RxLetTemplateNames.complete,
       },
-      templateTrigger$: this.triggerHandler.values$,
+      templateTrigger$: this.triggerHandler.values$ as any,
     });
     this.templateManager.addTemplateRef(
       RxLetTemplateNames.next,
@@ -430,4 +429,3 @@ function updateViewContext<T>(
     view.context[k] = context[k];
   });
 }
-
