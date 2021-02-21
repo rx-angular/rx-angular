@@ -4,10 +4,10 @@ export {
   DefaultStrategyNames,
   DEFAULT_STRATEGIES,
 } from './default-strategies';
-/*export {
+export {
   ConcurrentStrategies,
   ConcurrentStrategyNames,
   CONCURRENT_STRATEGIES,
-} from './concurrent-strategies';*/
+} from './concurrent-strategies';
 export { StrategyProvider } from './strategy-provider.service';
 export { Strategies, StrategyNames, ScheduleOnStrategyOptions } from './model';
