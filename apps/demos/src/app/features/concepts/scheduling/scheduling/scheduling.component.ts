@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { StrategyProvider } from '@rx-angular/cdk';
 
 import { Observable, of, Subject } from 'rxjs';
 import { scan, tap } from 'rxjs/operators';
-import { StrategyProvider } from '../../../../rx-angular-pocs/cdk/render-strategies';
 import { priorityTickMap, SchedulingPriority } from './utils';
 
 @Component({

@@ -6,12 +6,6 @@ export { ViewportPrioModule } from './lib/experimental/viewport-prio/viewport-pr
 export { ViewportPrioDirective } from './lib/experimental/viewport-prio/viewport-prio.experimental.directive';
 
 // STABLE
-export {
-  RxViewContext,
-  RxTemplateObserver,
-  RxNotificationKind,
-} from './lib/core/model';
-
 export { PushPipe } from './lib/push/push.pipe';
 export { PushModule } from './lib/push/push.module';
 
