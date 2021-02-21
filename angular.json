@@ -705,7 +705,7 @@
                 "command": "npx cpx libs/template/schematics/collection.json dist/libs/template/schematics"
               },
               {
-                "command": "npx cpx libs/template/schematics/src/**/{schema.json,files/**} dist/libs/template/schematics"
+                "command": "npx cpx libs/template/schematics/**/{schema.json,files/**} dist/libs/template/schematics"
               }
             ],
             "parallel": false
