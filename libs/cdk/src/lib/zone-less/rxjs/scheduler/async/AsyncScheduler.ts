@@ -6,7 +6,7 @@ import { SchedulerAction } from '../types';
 import { Subscription } from 'rxjs';
 
 export class AsyncScheduler extends Scheduler {
-  public static delegate?: Scheduler;
+  public static delegate?: Scheduler = null;
   public actions: Array<AsyncAction<any>> = [];
   /**
    * A flag to indicate whether the Scheduler is currently executing a batch of

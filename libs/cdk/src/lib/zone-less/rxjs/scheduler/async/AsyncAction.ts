@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { Action } from '../Action';
 import { SchedulerAction } from '../types';
 import { AsyncScheduler } from './AsyncScheduler';
-import { setInterval, clearInterval } from '../../../browser';
+import { setInterval, clearInterval } from '../../../browser/browser';
 
 /**
  * We need this JSDoc comment for affecting ESDoc.
