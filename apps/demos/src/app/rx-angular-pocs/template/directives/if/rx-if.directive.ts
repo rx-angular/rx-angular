@@ -10,12 +10,19 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { NextObserver, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { NextObserver, Observable, ReplaySubject,
+  Subject,
+  Subscription,} from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
 import { RxIfTemplateNames, rxIfTemplateNames, RxIfViewContext } from './model';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { hotFlatten, createTemplateManager, RxNotificationKind, RxTemplateManager, StrategyProvider } from '@rx-angular/cdk';
-import { rxLetTemplateNames } from '../let/model';
+import {
+  createTemplateManager,
+  hotFlatten,
+  RxNotificationKind,
+  RxTemplateManager,
+  StrategyProvider,
+} from '@rx-angular/cdk';
 
 @Directive({
   selector: '[rxIf]',

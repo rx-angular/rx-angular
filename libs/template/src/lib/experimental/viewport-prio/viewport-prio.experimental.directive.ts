@@ -5,6 +5,7 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
+import { StrategyProvider } from '@rx-angular/cdk';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, mergeAll, tap, withLatestFrom } from 'rxjs/operators';
 import { getZoneUnPatchedApi } from '../../core';
@@ -50,8 +51,8 @@ function intersectionObserver(
   const subject = new Subject();
   const observer = observerSupported()
     ? new IntersectionObserver((entries) => {
-      entries.forEach((entry) => subject.next(entry));
-    }, options)
+        entries.forEach((entry) => subject.next(entry));
+      }, options)
     : null;
 
   const entries$ = new Observable((subscriber) => {
@@ -66,7 +67,7 @@ function intersectionObserver(
   return {
     entries$,
     observe: observer.observe,
-    unobserve: observer.unobserve
+    unobserve: observer.unobserve,
   };
 }
 
@@ -121,12 +122,12 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
 
   constructor(
     private readonly el: ElementRef<HTMLElement>,
+    private strategyProvider: StrategyProvider,
     @Optional() private letDirective: LetDirective<any>
   ) {}
 
   ngOnInit() {
-    const letStrategyName$ = this.letDirective.renderAware.activeStrategy$.pipe(
-      map((s) => s.name),
+    const letStrategyName$ = this.letDirective['strategyHandler'].values$.pipe(
       filter((name) => name !== this._viewportPrio)
     );
 
@@ -141,7 +142,8 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
         this.letDirective.strategy = strategyName;
         // render actual state on viewport enter
         // @TODO this doesnt catch unsubscribe (cant be cancelled)
-        this.letDirective.strategies[strategyName].scheduleCD();
+        // @TODO: we need to fetch the current template of the letDirective here
+        // this.strategyProvider.scheduleCD()
       });
 
     // If the browser doesn't support the `IntersectionObserver` or we're inside

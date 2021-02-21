@@ -1,11 +1,21 @@
-import { chain, Rule, SchematicsException, Tree } from '@angular-devkit/schematics';
-import { addImportToModule, insertImport } from '@schematics/angular/utility/ast-utils';
+import {
+  chain,
+  Rule,
+  SchematicsException,
+  Tree,
+} from '@angular-devkit/schematics';
+import {
+  addImportToModule,
+  insertImport,
+} from '@schematics/angular/utility/ast-utils';
 import * as ts from 'typescript';
 
-import { packageName } from '../../consts';
-import { InsertChange } from '../../utils/change';
-import { findRootModule } from '../../utils/find-module';
-import { getProject } from '../../utils/projects';
+import {
+  packageName,
+  InsertChange,
+  findRootModule,
+  getProject,
+} from '../../common';
 import { SchemaOptions } from './schema';
 
 function getModuleFile(tree: Tree, options: SchemaOptions): ts.SourceFile {
@@ -29,11 +39,7 @@ function getModuleFile(tree: Tree, options: SchemaOptions): ts.SourceFile {
   );
 }
 
-function applyChanges(
-  tree: Tree,
-  path: string,
-  changes: InsertChange[]
-): Tree {
+function applyChanges(tree: Tree, path: string, changes: InsertChange[]): Tree {
   const recorder = tree.beginUpdate(path);
 
   for (const change of changes) {
@@ -84,7 +90,7 @@ export function ngAdd(options: SchemaOptions): Rule {
   return async (tree: Tree) => {
     const project = await getProject(tree, options.project);
     const sourceRoot = (project && project.sourceRoot) ?? 'src';
-    const modulesToAdd = ['LetModule', 'PushModule', 'ViewportPrioModule'];
+    const modulesToAdd = ['LetModule', 'PushModule'];
 
     options.module = findRootModule(tree, options.module, sourceRoot) as string;
 

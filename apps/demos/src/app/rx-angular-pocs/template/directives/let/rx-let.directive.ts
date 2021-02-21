@@ -33,6 +33,7 @@ import {
   Subscription,
 } from 'rxjs';
 import { map, mapTo, mergeAll } from 'rxjs/operators';
+import { Hooks } from '../../../cdk';
 import {
   RxLetTemplateNames,
   rxLetTemplateNames,

@@ -2,7 +2,6 @@ import { NgZone } from '@angular/core';
 import { CustomStrategyCredentialsMap } from '../model';
 import { DefaultStrategyNames } from './default-strategies';
 
-
 export type StrategyNames<T> = DefaultStrategyNames | T;
 export type Strategies<T extends string> = CustomStrategyCredentialsMap<
   StrategyNames<T>

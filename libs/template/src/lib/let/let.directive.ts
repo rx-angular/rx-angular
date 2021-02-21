@@ -20,7 +20,7 @@ import {
   toRxCompleteNotification,
   toRxErrorNotification,
   toRxSuspenseNotification,
-  StrategyProvider
+  StrategyProvider,
 } from '@rx-angular/cdk';
 
 import {
@@ -160,9 +160,8 @@ import {
   selector: '[rxLet]',
   providers: [],
 })
-export class RxLet<U> implements OnInit, OnDestroy {
+export class LetDirective<U> implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
-
 
   /**
    * @description
@@ -347,7 +346,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
     U,
     RxLetViewContext<U | undefined | null>,
     rxLetTemplateNames
-    >;
+  >;
 
   private rendered$ = new Subject<void>();
 
@@ -355,7 +354,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
 
   /** @internal */
   static ngTemplateContextGuard<U>(
-    dir: RxLet<U>,
+    dir: LetDirective<U>,
     ctx: unknown | null | undefined
   ): ctx is RxLetViewContext<U> {
     return true;
@@ -366,7 +365,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
       U,
       RxLetViewContext<U>,
       rxLetTemplateNames
-      >({
+    >({
       templateSettings: {
         viewContainerRef: this.viewContainerRef,
         createViewContext,
@@ -429,4 +428,3 @@ function updateViewContext<T>(
     view.context[k] = context[k];
   });
 }
-

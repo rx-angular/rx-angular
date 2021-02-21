@@ -22,7 +22,7 @@ import { filter, map, startWith, tap } from 'rxjs/operators';
         <a mat-tab-link
            [routerLink]="['rx-for', { count: items}]"
            [active]="activeRoute.indexOf('rx-for') !== -1">
-          rxFor
+          concurrent
         </a>
       </nav>
     </div>
