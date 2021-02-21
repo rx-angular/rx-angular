@@ -1,3 +1,9 @@
+# [1.0.0-beta.10](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta...template@1.0.0-beta.10) (2021-02-21)
+
+### Bug Fixes
+
+- ng-add for rx-tempalte ([#535](https://github.com/rx-angular/rx-angular/issues/535)) ([307c36e](https://github.com/rx-angular/rx-angular/commit/307c36e01b7fd97be3020af1728bcecf0ba4bfdc))
+
 # [1.0.0-beta.9](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta...template@1.0.0-beta.9) (2021-02-21)
 
 ### Bug Fixes
