@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { StrategyProvider } from '../../../../rx-angular-pocs';
+import { StrategyProvider } from '@rx-angular/cdk';
 
 @Component({
   selector: 'rxa-rx-let-poc',
@@ -61,7 +61,7 @@ import { StrategyProvider } from '../../../../rx-angular-pocs';
     class: 'm-1 p-1',
     style: 'display: block;'
   },
-  providers: [StrategyProvider]
+  providers: []
 })
 export class RxLetPocComponent {
 

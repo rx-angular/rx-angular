@@ -5,18 +5,17 @@ const observerSupported = () =>
     ? !!(window as any).IntersectionObserver
     : false;
 
-export function intersectionObserver(
-  options?: object
-): {
+export function intersectionObserver(options?: object): {
   observe: (target: Element) => void;
   unobserve: (target: Element) => void;
   entries$: Observable<any>;
+
 } {
   const subject = new Subject();
   const observer = observerSupported()
     ? new IntersectionObserver((entries) => {
-      entries.forEach((entry) => subject.next(entry));
-    }, options)
+        entries.forEach((entry) => subject.next(entry));
+      }, options)
     : null;
 
   const entries$ = new Observable((subscriber) => {
@@ -31,6 +30,6 @@ export function intersectionObserver(
   return {
     entries$,
     observe: observer.observe,
-    unobserve: observer.unobserve
+    unobserve: observer.unobserve,
   };
 }

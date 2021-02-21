@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { StrategyProvider } from '../../../../rx-angular-pocs';
+import { StrategyProvider } from '@rx-angular/cdk';
 import { RickAndMortyService } from './rick-and-morty.service';
 import { query } from 'rx-query';
 import { Observable, Subject } from 'rxjs';
@@ -90,7 +90,7 @@ import { delay, filter, map, mapTo, pluck, share } from 'rxjs/operators';
     class: 'm-1 p-1',
     style: 'display: block;'
   },
-  providers: [StrategyProvider]
+  providers: []
 })
 export class RxQueryComponent {
   search$ = new Subject<string>();

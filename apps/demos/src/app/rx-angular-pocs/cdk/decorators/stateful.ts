@@ -2,10 +2,9 @@ import {
   ɵɵdirectiveInject as directiveInject,
   ChangeDetectorRef, Type
 } from '@angular/core';
+import { StrategyCredentials, StrategyProvider } from '@rx-angular/cdk';
 import { fromEvent, of } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { StrategyCredentials } from '../render-strategies/model/strategy-credentials';
-import { StrategyProvider } from '../render-strategies/strategy-provider.service';
 
 export function renderOnChange<T = Type<any>>(
   component: T,
@@ -23,7 +22,7 @@ export function renderOnChange<T = Type<any>>(
   function scheduleCD(s: StrategyCredentials, work: () => void): AbortController {
     const abC = new AbortController();
     of(null).pipe(
-      s.behavior(work, component),
+      s.behavior(work, component as any),
       takeUntil(fromEvent(abC.signal, 'abort'))
     ).subscribe();
     return abC;
@@ -43,7 +42,7 @@ export function renderOnChange<T = Type<any>>(
           workScheduled.abort();
         }
         const work = () => {
-          strategy.work(config.cdRef, component);
+          strategy.work(config.cdRef, component as any);
         };
         workScheduled = scheduleCD(strategy, work);
       },

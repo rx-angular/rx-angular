@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
+import { StrategyProvider } from '@rx-angular/cdk';
 import { BehaviorSubject } from 'rxjs';
 import { toBooleanArray, toFloatArray, toIntArray } from './utils';
-import { RX_PRIMARY_STRATEGY } from '../../../rx-angular-pocs';
 import { map } from 'rxjs/operators';
 
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
@@ -33,7 +33,7 @@ export class SiblingCustomComponent {
   num = 0;
   siblings = [];
   filled$ = new BehaviorSubject<number>(this.num);
-  strategyChange$ = new BehaviorSubject<string>(this.defaultStrategy);
+  strategyChange$ = new BehaviorSubject<string>(this.strategyProvider.primaryStrategy);
   siblings$ = this.filled$.pipe(
     map(num =>  toIntArray(num))
   )
@@ -55,7 +55,7 @@ export class SiblingCustomComponent {
   trackBy = i => i;
 
   constructor(
-    @Inject(RX_PRIMARY_STRATEGY) private defaultStrategy: string
+    private strategyProvider: StrategyProvider
   ) {
 
   }

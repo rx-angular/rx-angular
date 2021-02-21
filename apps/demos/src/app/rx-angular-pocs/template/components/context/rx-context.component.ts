@@ -4,9 +4,10 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
+import { StrategyProvider } from '@rx-angular/cdk';
 
 import { isObservable, Observable, of } from 'rxjs';
-import { Hooks, RxNotificationKind, StrategyProvider } from '../../../cdk';
+import { Hooks, RxNotificationKind } from '../../../cdk';
 import { mapTo } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 import { observableToRxTemplateName } from '../../../cdk/utils/rxjs/operators/observable-to-rx-template-name';

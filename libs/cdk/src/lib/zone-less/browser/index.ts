@@ -6,4 +6,5 @@ export {
   clearInterval,
   setTimeout,
   clearTimeout,
+  unpatchAddEventListener,
 } from './browser';
