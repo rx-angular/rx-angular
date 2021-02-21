@@ -13,13 +13,13 @@ import { coerceDistinctWith } from './coerceDistinctObservableWith';
  *
  */
 export function hotFlatten<U>(
-  subjectFactory: () => Subject<ObservableInput<U> | U>,
+  subjectFactory?: () => Subject<ObservableInput<U> | U>,
   flattenOperator?: OperatorFunction<ObservableInput<U>, U>
 ): {
   values$: Observable<U>;
   next(observable: ObservableInput<U> | U): void;
 } {
-  const observablesSubject = subjectFactory();
+  const observablesSubject = subjectFactory ? subjectFactory() : new Subject();
   const values$ = observablesSubject.pipe(
     coerceDistinctWith(flattenOperator)
   ) as Observable<U>;

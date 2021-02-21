@@ -9,11 +9,10 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
+import { RenderWork } from '@rx-angular/cdk';
 import { Subscription, Unsubscribable } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { RxSwitch } from './rx-switch.directive';
-import { RenderWork } from '../../../cdk/render-strategies/model';
-import { applyStrategy2 } from '../../../cdk/render-strategies';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[rxSwitchCase]' })
@@ -47,7 +46,7 @@ export class RxSwitchCase implements OnInit, OnDestroy {
         // tslint:disable-next-line:triple-equals
         map((switchValue) => this.caseValue === switchValue),
         distinctUntilChanged(),
-        applyStrategy2(this.rxSwitch.strategy$, this.rxSwitchCaseWorkFactory, this._view)
+        // applyStrategy2(this.rxSwitch.strategy$, this.rxSwitchCaseWorkFactory, this._view)
       )
       .subscribe({ error: console.log });
   }

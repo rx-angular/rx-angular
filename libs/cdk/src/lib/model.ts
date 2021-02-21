@@ -1,7 +1,10 @@
 import { Notification, Observable } from 'rxjs';
 import { ChangeDetectorRef, Type } from '@angular/core';
 
-export type coalescingObj = Record<string | number | symbol, unknown> | Type<unknown>;
+export type coalescingObj =
+  | Record<string | number | symbol, unknown>
+  | Type<unknown>
+  | object;
 export interface CoalescingOptions {
   scope?: coalescingObj;
 }
@@ -10,16 +13,35 @@ export enum RxNotificationKind {
   suspense = 'suspense',
   next = 'next',
   error = 'error',
-  complete = 'complete'
+  complete = 'complete',
 }
 
 type NotificationValue = 'value' | 'hasValue';
 
-export type RxNextNotification<T> = Pick<Notification<T>, NotificationValue> & { kind: RxNotificationKind } & {error: boolean} & {complete: boolean};
-export type RxSuspenseNotification = Pick<Notification<unknown>, NotificationValue> & { kind: RxNotificationKind.suspense } & {error: false} & {complete: false};
-export type RxErrorNotification = Pick<Notification<unknown>, NotificationValue> & { kind: RxNotificationKind.error } & {error: any} & {complete: false};
-export type RxCompleteNotification = Pick<Notification<unknown>, NotificationValue> & { kind: RxNotificationKind.complete } & {complete: boolean} & {error: false};
-export type RxNotification<T> = RxNextNotification<T> | RxSuspenseNotification | RxErrorNotification | RxCompleteNotification;
+export type RxNextNotification<T> = Pick<Notification<T>, NotificationValue> & {
+  kind: RxNotificationKind;
+} & { error: boolean } & { complete: boolean };
+export type RxSuspenseNotification = Pick<
+  Notification<unknown>,
+  NotificationValue
+> & { kind: RxNotificationKind.suspense } & { error: false } & {
+  complete: false;
+};
+export type RxErrorNotification = Pick<
+  Notification<unknown>,
+  NotificationValue
+> & { kind: RxNotificationKind.error } & { error: any } & { complete: false };
+export type RxCompleteNotification = Pick<
+  Notification<unknown>,
+  NotificationValue
+> & { kind: RxNotificationKind.complete } & { complete: boolean } & {
+  error: false;
+};
+export type RxNotification<T> =
+  | RxNextNotification<T>
+  | RxSuspenseNotification
+  | RxErrorNotification
+  | RxCompleteNotification;
 
 export type RenderWork = <T = unknown>(
   cdRef: ChangeDetectorRef,
@@ -31,12 +53,13 @@ export type RenderBehavior = <T = unknown>(
   scope?: coalescingObj
 ) => (o: Observable<T>) => Observable<T>;
 
-export interface StrategyCredentials {
-  name: string;
+export interface StrategyCredentials<S = string> {
+  name: S;
   work: RenderWork;
   behavior: RenderBehavior;
 }
 
-export interface StrategyCredentialsMap {
-  [name: string]: StrategyCredentials;
-}
+export type CustomStrategyCredentialsMap<T extends string> = Record<
+  T,
+  StrategyCredentials
+>;

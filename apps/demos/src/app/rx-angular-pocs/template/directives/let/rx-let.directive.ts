@@ -12,44 +12,39 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
+import {
+  createTemplateManager,
+  hotFlatten,
+  RxNotificationKind,
+  RxTemplateManager,
+  toRxCompleteNotification,
+  toRxErrorNotification,
+  toRxSuspenseNotification,
+  StrategyProvider
+} from '@rx-angular/cdk';
 
 import {
   defer,
   NextObserver,
   Observable,
   ObservableInput,
+  ReplaySubject,
   Subject,
   Subscription,
 } from 'rxjs';
-import { map, mapTo } from 'rxjs/operators';
-import {
-  getHotMerged,
-  Hooks,
-  RxNotification,
-  RxNotificationKind,
-  StrategyProvider,
-  toRxCompleteNotification,
-  toRxErrorNotification,
-  toRxSuspenseNotification,
-} from '../../../cdk';
+import { map, mapTo, mergeAll } from 'rxjs/operators';
+import { Hooks } from '../../../cdk';
 import {
   RxLetTemplateNames,
   rxLetTemplateNames,
   RxLetViewContext,
 } from './model';
-import {
-  createTemplateManager2,
-  TemplateManager2,
-} from '../../../cdk/template-management/template-manager';
-
-
 
 @Directive({
   selector: '[rxLet]',
   providers: [],
 })
 export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
-
   static ngTemplateGuard_rxLet: 'binding';
 
   @Input()
@@ -113,9 +108,9 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
     this._renderObserver = callback;
   }
 
-  @Input('rxLetParent') renderParent: boolean;
+  @Input('rxLetParent') renderParent = true;
 
-  @Input('rxLetPatchZone') patchZone: boolean;
+  @Input('rxLetPatchZone') patchZone = true;
 
   constructor(
     private strategyProvider: StrategyProvider,
@@ -129,21 +124,27 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   }
 
   /** @internal */
-  private observablesHandler = getHotMerged<U>();
-  private strategyHandler = getHotMerged<string>();
-  private triggerHandler = getHotMerged<RxNotificationKind>();
+  private observablesHandler = hotFlatten<U>(
+    () => new ReplaySubject<U | Observable<U>>(1),
+    mergeAll()
+  );
+  private strategyHandler = hotFlatten<string>(() => new Subject(), mergeAll());
+  private triggerHandler = hotFlatten<RxNotificationKind>(
+    () => new Subject(),
+    mergeAll()
+  );
 
   private _renderObserver: NextObserver<any>;
 
   private subscription: Subscription = new Subscription();
 
-  private templateManager: TemplateManager2<
+  private templateManager: RxTemplateManager<
     U,
     RxLetViewContext<U | undefined | null>,
     rxLetTemplateNames
   >;
 
-  private rendered$ = new Subject<RxNotification<U>>();
+  private rendered$ = new Subject<void>();
 
   @Output() readonly rendered = defer(() => this.rendered$.pipe());
 
@@ -156,7 +157,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.templateManager = createTemplateManager2<
+    this.templateManager = createTemplateManager<
       U,
       RxLetViewContext<U>,
       rxLetTemplateNames
@@ -166,6 +167,7 @@ export class RxLet<U> extends Hooks implements OnInit, OnDestroy {
         createViewContext,
         updateViewContext,
         customContext: (rxLet) => ({ rxLet }),
+        patchZone: this.patchZone ? this.ngZone : false,
       },
       renderSettings: {
         cdRef: this.cdRef,

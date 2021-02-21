@@ -1,48 +1,49 @@
-import { ChangeDetectorRef, Inject, OnDestroy, OnInit, Optional, Pipe, PipeTransform } from '@angular/core';
-import { NextObserver, Observable, ObservableInput, Subscription, Unsubscribable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import {
-  getDefaultStrategyCredentialsMap,
-  mergeStrategies,
-  RX_CUSTOM_STRATEGIES,
-  RX_PRIMARY_STRATEGY,
-  StrategyCredentialsMap,
-  createRenderAware,RenderAware,
-  RxTemplateObserver
-} from '../../../cdk';
-
+  ChangeDetectorRef,
+  OnDestroy,
+  OnInit,
+  Pipe,
+  PipeTransform,
+} from '@angular/core';
+import { StrategyProvider } from '@rx-angular/cdk';
+import { RxTemplateObserver } from '@rx-angular/template';
+import {
+  NextObserver,
+  Observable,
+  ObservableInput,
+  Subscription,
+  Unsubscribable,
+} from 'rxjs';
+import { map } from 'rxjs/operators';
+import { createRenderAware, RenderAware } from '../../../cdk/render-aware/render-aware';
 
 @Pipe({ name: 'push', pure: false })
-export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit{
+export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit {
   private renderedValue: U | null | undefined;
 
-  private readonly strategies: StrategyCredentialsMap;
   private readonly renderAware: RenderAware<U | null | undefined>;
   private subscription: Unsubscribable;
   private renderCallbackSubscription: Unsubscribable = Subscription.EMPTY;
 
-  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
+  private readonly templateObserver: RxTemplateObserver<
+    U | null | undefined
+  > = {
     suspense: () => (this.renderedValue = undefined),
     next: (value: U | null | undefined) => {
-      (this.renderedValue = value)
-    }
+      this.renderedValue = value;
+    },
   };
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    @Optional()
-    @Inject(RX_CUSTOM_STRATEGIES)
-    private customStrategies: StrategyCredentialsMap[],
-    @Inject(RX_PRIMARY_STRATEGY)
-    private defaultStrategyName: string
+    strategyProvider: StrategyProvider
   ) {
-    this.strategies = this.customStrategies.reduce((a, i) => mergeStrategies(a, i), getDefaultStrategyCredentialsMap());
     this.renderAware = createRenderAware<U>({
-      strategies: this.strategies,
-      defaultStrategyName: this.defaultStrategyName,
+      strategies: strategyProvider.strategies,
+      defaultStrategyName: strategyProvider.primaryStrategy,
       templateObserver: this.templateObserver,
       getContext: () => (this.cdRef as any).context,
-      getCdRef: () => this.cdRef
+      getCdRef: () => this.cdRef,
     });
     this.renderAware.subscribe();
   }

@@ -45,7 +45,7 @@ export interface RxTemplateManager<
 
 export type NotificationTemplateNameMap<T, C, N> = Record<
   RxNotificationKind,
-  (value: T, templates: { get: (name: N) => TemplateRef<C> }) => N
+  (value?: T, templates?: { get: (name: N) => TemplateRef<C> }) => N
 >;
 
 /**

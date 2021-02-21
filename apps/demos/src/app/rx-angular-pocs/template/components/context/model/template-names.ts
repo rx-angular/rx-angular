@@ -1,4 +1,4 @@
-import { RxBaseTemplateNames } from '../../../../cdk';
+import { RxBaseTemplateNames } from '@rx-angular/cdk';
 
 export type rxContextTemplateNames = 'rxContent' | RxBaseTemplateNames;
 

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, tap } from 'rxjs/operators';
-import { StrategyProvider } from '../../../../rx-angular-pocs';
+import { StrategyProvider } from '@rx-angular/cdk';
 
 @Component({
   selector: 'rxa-rx-query-children',

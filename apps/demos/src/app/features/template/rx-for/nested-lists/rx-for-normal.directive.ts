@@ -15,7 +15,7 @@ import {
   TrackByFunction,
   ViewContainerRef
 } from '@angular/core';
-import { RxDefaultListViewContext } from '@rx-angular/cdk';
+import { RX_PRIMARY_STRATEGY, RxDefaultListViewContext, StrategyProvider } from '@rx-angular/cdk';
 
 import {
   concat,
@@ -38,7 +38,6 @@ import {
   take,
   tap
 } from 'rxjs/operators';
-import { RX_PRIMARY_STRATEGY, StrategyProvider } from '../../../../rx-angular-pocs/cdk';
 
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector
@@ -306,7 +305,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
             // console.log('parent notified');
           },
           strategy: this.strategy,
-          context: (this.cdRef as any).context
+          scope: (this.cdRef as any).context
         });
       });
     }

@@ -4,6 +4,17 @@ import { getZoneUnPatchedApi } from '../utils';
  * This file provides unpatched versions of APIs patched in the following file: https://github.com/angular/angular/blob/master/packages/zone.js/lib/browser/browser.ts
  */
 
+/**
+ * This function is a zone un-patched implementation of Window#queueMicrotask() method.
+ * It is which is exposed on the Window or Worker interface,
+ * queues a microtask to be executed at a safe time prior to control returning to the browser's event loop.
+ * The microtask is a short function which will run after the current task has completed its
+ * work and when there is no other code waiting to be run before control of the execution context is returned to the browser's event loop.
+ */
+export function queueMicrotask() {
+  return getZoneUnPatchedApi('queueMicrotask');
+}
+
 export const Promise: PromiseConstructor = getZoneUnPatchedApi('Promise');
 
 /**
@@ -11,7 +22,7 @@ export const Promise: PromiseConstructor = getZoneUnPatchedApi('Promise');
  *
  * @description
  *
- * This function is a zone un-patched implementation of Window requestAnimationFrame() method
+ * This function is a zone un-patched implementation of Window#requestAnimationFrame() method
  *
  * The requestAnimationFrame() method calls a function or evaluates an expression on the next animationFrame.
  * The requestAnimationFrame() method will not continue calling the function after executed once.
@@ -122,7 +133,7 @@ export function setTimeout(cb: Function, ms: number = 0): void {
  *
  * @description
  *
- * This function is a zone un-patched implementation of Window clearTimeout() method
+ * This function is a zone un-patched implementation of Window#clearTimeout() method
  *
  * The clearTimeout() method clears a timer set with the setTimeout() method.
  * The ID value returned by setTimeout() is used as the parameter for the clearTimeout() method.
@@ -137,4 +148,15 @@ export function setTimeout(cb: Function, ms: number = 0): void {
  */
 export function clearTimeout(id: number): void {
   return getZoneUnPatchedApi('clearTimeout')(id);
+}
+
+/**
+ * This function is a zone un-patched implementation of Element#addEventListener() method.
+ * @param elem
+ */
+export function unpatchAddEventListener(elem) {
+  elem.addEventListener = getZoneUnPatchedApi('addEventListener', elem).bind(
+    elem
+  );
+  return elem;
 }
