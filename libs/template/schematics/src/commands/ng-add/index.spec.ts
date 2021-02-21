@@ -6,7 +6,7 @@ import * as path from 'path';
 
 import { SchemaOptions } from './schema';
 
-const collectionPath = path.join(__dirname, '../../collection.json');
+const collectionPath = path.join(__dirname, '../../../collection.json');
 
 const workspaceOptions = {
   name: 'workspace',
@@ -61,7 +61,7 @@ describe('ng-add schematic', () => {
       import { BrowserModule } from '@angular/platform-browser';
 
       import { AppComponent } from './app.component';
-      import { LetModule, PushModule, ViewportPrioModule } from '@rx-angular/template';
+      import { LetModule, PushModule } from '@rx-angular/template';
 
       @NgModule({
         declarations: [
@@ -70,8 +70,7 @@ describe('ng-add schematic', () => {
         imports: [
           BrowserModule,
           LetModule,
-          PushModule,
-          ViewportPrioModule
+          PushModule
         ],
         providers: [],
         bootstrap: [AppComponent]

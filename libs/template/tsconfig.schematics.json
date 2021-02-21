@@ -1,10 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "lib": [
-      "es2018",
-      "dom"
-    ],
+    "lib": ["es2018", "dom"],
     "declaration": true,
     "module": "commonjs",
     "moduleResolution": "node",
@@ -14,22 +11,15 @@
     "noImplicitThis": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
-    "rootDir": "schematics",
+    "rootDir": "schematics/src",
     "outDir": "../../dist/libs/template/schematics",
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "sourceMap": false,
     "strictNullChecks": true,
     "target": "es6",
-    "types": [
-      "node"
-    ],
+    "types": ["node"]
   },
-  "include": [
-    "schematics/**/*"
-  ],
-  "exclude": [
-    "schematics/*/files/**/*",
-    "schematics/**/*.spec.ts",
-  ]
+  "include": ["schematics/**/*"],
+  "exclude": ["schematics/*/files/**/*", "schematics/**/*.spec.ts"]
 }
