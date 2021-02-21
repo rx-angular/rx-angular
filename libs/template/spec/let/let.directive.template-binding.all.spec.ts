@@ -8,13 +8,15 @@ import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value; rxSuspense: suspense; rxError: error; rxComplete: complete">{{
-      value === undefined
-        ? 'undefined'
-        : value === null
-        ? 'null'
-        : (value | json)
-    }}</ng-container>
+    <ng-container *rxLet="value$; let value; suspenseTpl: suspense; errorTpl: error; completeTpl: complete">
+      {{
+        value === undefined
+          ? 'undefined'
+          : value === null
+          ? 'null'
+          : (value | json)
+      }}
+    </ng-container>
 
     <ng-template #complete>complete</ng-template>
     <ng-template #error>error</ng-template>

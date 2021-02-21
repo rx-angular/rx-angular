@@ -226,7 +226,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * A template to show if the bound Observable is in "complete" state.
    *
    * @example
-   * <ng-container *rxLet="hero$; let hero; rxComplete: completeTemplate">
+   * <ng-container *rxLet="hero$; let hero; completeTpl: completeTemplate">
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    * <ng-template #completeTemplate>
@@ -250,7 +250,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * A template to show if the bound Observable is in "error" state.
    *
    * @example
-   * <ng-container *rxLet="hero$; let hero; rxError: errorTemplate">
+   * <ng-container *rxLet="hero$; let hero; errorTpl: errorTemplate">
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    * <ng-template #errorTemplate>
@@ -271,7 +271,7 @@ export class LetDirective<U> implements OnInit, OnDestroy {
    * A template to show before the first value is emitted from the bound Observable.
    *
    * @example
-   * <ng-container *rxLet="hero$; let hero; rxSuspense: suspenseTemplate">
+   * <ng-container *rxLet="hero$; let hero; suspenseTpl: suspenseTemplate">
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    * <ng-template #suspenseTemplate>

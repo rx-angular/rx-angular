@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { LetDirective } from '@rx-angular/template';
+import { LetDirective, LetModule } from '@rx-angular/template';
 import { Observable, of, Subject } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value; rxSuspense: suspense; rxComplete: complete">{{
+    <ng-container *rxLet="value$; let value; suspenseTpl: suspense; completeTpl: complete">{{
       value === undefined
         ? 'undefined'
         : value === null
@@ -29,7 +29,8 @@ let nativeElement: HTMLElement;
 
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveNoErrorTemplateTestComponent, LetDirective]
+    imports: [LetModule],
+    declarations: [LetDirectiveNoErrorTemplateTestComponent]
   }).compileComponents();
 };
 
