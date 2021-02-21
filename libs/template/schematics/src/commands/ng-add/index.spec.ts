@@ -70,8 +70,7 @@ describe('ng-add schematic', () => {
         imports: [
           BrowserModule,
           LetModule,
-          PushModule,
-          ViewportPrioModule
+          PushModule
         ],
         providers: [],
         bootstrap: [AppComponent]
