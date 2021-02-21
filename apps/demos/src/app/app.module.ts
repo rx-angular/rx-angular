@@ -14,7 +14,7 @@ import { HomeComponent } from './features/home/home.component';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    AppComponentModule,
+    AppComponentModule
   ],
   providers: [
     {
