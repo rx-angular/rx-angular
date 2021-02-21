@@ -1,6 +1,6 @@
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import { getStrategies } from '../../../src/lib/render-strategies';
+import { getStrategies } from '../../../src/lib/render-strategies/strategies/strategies-map';
 import { CallsExpectations, getMockStrategyConfig, numMultipleCalls, testStrategyMethod } from '../../fixtures';
 import createSpy = jasmine.createSpy;
 

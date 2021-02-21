@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone } from '@angular/core';
-import { getStrategies } from '@rx-angular/template';
-import { BehaviorSubject, interval, NEVER, Subject } from 'rxjs';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { interval, NEVER, Subject } from 'rxjs';
 import { scan, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -13,10 +12,7 @@ import { scan, switchMap } from 'rxjs/operators';
           <button mat-raised-button [unpatch] (click)="valP.next()">
             count up
           </button>
-          <button
-            mat-raised-button
-            [unpatch]
-            (click)="runningToggle$.next();">
+          <button mat-raised-button [unpatch] (click)="runningToggle$.next()">
             auto
           </button>
         </rxa-value-provider>
@@ -69,8 +65,8 @@ import { scan, switchMap } from 'rxjs/operators';
 export class BasicExampleComponent {
   runningToggle$ = new Subject<boolean>();
   running$ = this.runningToggle$.pipe(
-    scan(b => !b, false),
-    switchMap(b => b ? interval(200):NEVER)
+    scan((b) => !b, false),
+    switchMap((b) => (b ? interval(200) : NEVER))
   );
 
   constructor() {}

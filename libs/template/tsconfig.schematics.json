@@ -11,7 +11,7 @@
     "noImplicitThis": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
-    "rootDir": "schematics",
+    "rootDir": "schematics/src",
     "outDir": "../../dist/libs/template/schematics",
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,

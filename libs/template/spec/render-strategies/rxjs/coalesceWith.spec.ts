@@ -1,4 +1,3 @@
-import { coalescingManager } from '@rx-angular/template';
 import { TestScheduler } from 'rxjs/internal/testing/TestScheduler';
 import { mergeMapTo, share, tap } from 'rxjs/operators';
 import { asapScheduler, concat, defer, from, Observable, of, timer } from 'rxjs';

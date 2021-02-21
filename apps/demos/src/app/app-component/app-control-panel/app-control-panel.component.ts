@@ -23,10 +23,6 @@ import { filter, switchMap } from 'rxjs/operators';
           <mat-icon matChipAvatar>build_circle</mat-icon>
           {{ appConfig.devMode ? 'Development' : 'Production' }}</mat-chip
         >
-        <mat-chip color="primary" [selected]="true">
-          <mat-icon matChipAvatar>image</mat-icon>
-          {{ appConfig.engine }}
-        </mat-chip>
       </mat-chip-list>
       <mat-slide-toggle
         [checked]="rippleOn"

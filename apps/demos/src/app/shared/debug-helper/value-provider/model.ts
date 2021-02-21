@@ -1,4 +1,15 @@
-import { SchedulingPriority } from '@rx-angular/template';
+export enum SchedulingPriority {
+  sync,
+  animationFrame,
+  Promise,
+  setTimeout,
+  setInterval,
+  postMessage,
+  idleCallback,
+  userBlocking,
+  userVisible,
+  background
+}
 
 
 export interface TestItem {

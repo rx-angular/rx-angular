@@ -1,6 +1,5 @@
 import { EMPTY, from, Observable, of, timer } from 'rxjs';
 import { merge as mergeWith, share, switchMap, take, takeUntil } from 'rxjs/operators';
-import { priorityTickMap } from '@rx-angular/template';
 import { SchedulerConfig, TestItem } from './model';
 import { fromFetch } from 'rxjs/fetch';
 
@@ -34,7 +33,7 @@ export function toTick(scheduleConfig: SchedulerConfig): Observable<number> {
     if (scheduleConfig.scheduler) {
       return timer(timerConfig.dueTime, timerConfig.period).pipe(
         take(scheduleConfig.numEmissions),
-        switchMap(t => priorityTickMap[scheduleConfig.scheduler]),
+       // switchMap(t => priorityTickMap[scheduleConfig.scheduler]),
         takeUntil(stop$)
       ) as Observable<number>;
     }

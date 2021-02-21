@@ -1,4 +1,4 @@
-import { getStrategies } from '@rx-angular/template';
+import { getStrategies } from '../../../src/lib/render-strategies/strategies/strategies-map';
 import { CallsExpectations, getMockStrategyConfig, testStrategyMethod } from '../../fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
