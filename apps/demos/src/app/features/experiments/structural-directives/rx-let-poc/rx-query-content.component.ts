@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { StrategyProvider } from '../../../../rx-angular-pocs';
+import { StrategyProvider } from '@rx-angular/cdk';
 import { RxEffects } from '../../../../shared/rx-effects.service';
 
 @Directive({

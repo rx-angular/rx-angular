@@ -1,12 +1,8 @@
 import { Directive, Input } from '@angular/core';
 
-import { ReplaySubject, Subject } from 'rxjs';
-import { Observable } from 'rxjs';
-import { distinctUntilChanged, startWith, switchAll, tap } from 'rxjs/operators';
-import { StrategyCredentials } from '../../../cdk/render-strategies/model/strategy-credentials';
-import { StrategyProvider } from '../../../cdk/render-strategies/strategy-provider.service';
-import { nameToStrategyCredentials } from '../../../cdk/render-strategies/utils/strategy-helper';
-import { ngInputFlatten } from '../../../cdk/utils/rxjs/operators/ngInputFlatten';
+import { Observable, ReplaySubject } from 'rxjs';
+import { distinctUntilChanged, mergeAll, switchAll } from 'rxjs/operators';
+import { hotFlatten } from '@rx-angular/cdk';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
@@ -18,19 +14,11 @@ export class RxSwitch<U> {
     this.observables$.next(potentialObservable);
   }
 
-  private strategyName$ = new Subject<string | Observable<string>>();
-  readonly strategy$: Observable<StrategyCredentials> = this.strategyName$.pipe(
-    ngInputFlatten(),
-    startWith(this.strategyProvider.primaryStrategy),
-    nameToStrategyCredentials(
-      this.strategyProvider.strategies,
-      this.strategyProvider.primaryStrategy
-    )
-  );
+  private strategyHandler = hotFlatten<string>(undefined, mergeAll());
 
   @Input('rxLetStrategy')
   set strategy(strategyName: string | Observable<string> | undefined) {
-    this.strategyName$.next(strategyName);
+    this.strategyHandler.next(strategyName);
   }
 
   observables$ = new ReplaySubject(1);
@@ -41,6 +29,4 @@ export class RxSwitch<U> {
     switchAll(),
     distinctUntilChanged()
   );
-
-  constructor(private strategyProvider: StrategyProvider) {}
 }

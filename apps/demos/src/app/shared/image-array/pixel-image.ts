@@ -1,7 +1,7 @@
 import { fromEvent, Observable, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { CMYK, ImgInfo, RGBA } from './model';
-import { getMemoizedFn, PriorityNames } from '../../rx-angular-pocs';
+import { getMemoizedFn } from '../../rx-angular-pocs';
 
 // http://pixelartmaker.com/art/556d215ebf25e7f
 
@@ -113,21 +113,21 @@ export function computeColorPrio(colorCount: Map<string, number>): Map<string, s
       */
       // transparent
       if (style.slice(style.length - 2, -1) === '0') {
-        acc.set(style, PriorityNames.background);
+        acc.set(style, 'background');
         lowAndHigh += 1;
       } else {
         // Dark color prio
         if (k > 76) {
-          acc.set(style, PriorityNames.immediate);
+          acc.set(style, 'immediate');
           lowAndHigh += 1;
         }
         // if there is space add most used colors until a third of all colors are prioritized
         else if (idx < remaining / numPrios * 1) {
-          acc.set(style, PriorityNames.userBlocking);
+          acc.set(style, 'userBlocking');
         } else if (idx < remaining / numPrios * 2) {
-          acc.set(style, PriorityNames.normal);
+          acc.set(style, 'normal');
         } else {
-          acc.set(style, PriorityNames.low);
+          acc.set(style, 'low');
         }
       }
       return acc;

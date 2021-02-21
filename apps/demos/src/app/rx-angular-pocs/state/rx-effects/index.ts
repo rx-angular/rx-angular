@@ -1,1 +1,2 @@
-export { RxEffects } from './rx-effects.service';
+export * from './effects.service';
+export * from './until-destroy';

@@ -1,3 +1,4 @@
+import { CustomStrategyCredentialsMap, StrategyCredentials, strategyHandling } from '@rx-angular/cdk';
 import { ConnectableObservable, EMPTY, isObservable, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import {
   catchError,
@@ -15,11 +16,6 @@ import {
 import { ChangeDetectorRef } from '@angular/core';
 import { rxMaterialize } from '../utils/rxjs/operators/rx-materialize';
 import { ngInputFlatten } from '../utils/rxjs/operators/ngInputFlatten';
-import {
-  applyStrategy,
-  nameToStrategyCredentials, observeTemplateByNotificationKind
-} from '../render-strategies/utils/strategy-helper';
-import { StrategyCredentials, StrategyCredentialsMap } from '../render-strategies/model/strategy-credentials';
 import { RxNotification, RxTemplateObserver } from '../utils/rxjs/Notification';
 
 export interface RenderAware<U> {
@@ -43,17 +39,15 @@ export interface RenderAware<U> {
 export function createRenderAware<U>(cfg: {
   templateObserver: RxTemplateObserver<U>;
   defaultStrategyName: string;
-  strategies: StrategyCredentialsMap;
+  strategies: CustomStrategyCredentialsMap<string>;
   getCdRef: (k: RxNotification<U>) => ChangeDetectorRef;
   getContext: (k?: RxNotification<U>) => any;
 }): RenderAware<U | undefined | null> {
 
   const strategyName$ = new ReplaySubject<Observable<string>>(1);
-  const strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
-    ngInputFlatten(),
-    startWith(cfg.defaultStrategyName),
-    nameToStrategyCredentials(cfg.strategies, cfg.defaultStrategyName),
-    shareReplay({ bufferSize: 1, refCount: true })
+  const strategyHandling$ = strategyHandling(
+    cfg.defaultStrategyName,
+    cfg.strategies
   );
   const templateTriggerSubject = new Subject<Observable<RxNotification<U>>>();
   const templateTrigger$ = templateTriggerSubject.pipe(
@@ -71,8 +65,8 @@ export function createRenderAware<U>(cfg: {
       /* tslint:disable */
       mergeWith(templateTrigger$ || EMPTY),
       /* tslint:enable */
-      observeTemplateByNotificationKind(cfg.templateObserver),
-      applyStrategy(strategy$, cfg.getContext, cfg.getCdRef),
+      /*observeTemplateByNotificationKind(cfg.templateObserver),
+      applyStrategy(strategy$, cfg.getContext, cfg.getCdRef),*/
       catchError(e => {
         console.error(e);
         return EMPTY;
@@ -81,7 +75,7 @@ export function createRenderAware<U>(cfg: {
     );
 
   return {
-    strategy$,
+    strategy$: strategyHandling$.strategy$,
     nextPotentialObservable(value: Observable<U>): void {
       observablesFromTemplate$.next(value);
     },

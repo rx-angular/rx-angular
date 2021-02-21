@@ -6,7 +6,7 @@ import {
 } from './model';
 import { EmbeddedViewRef, IterableChanges } from '@angular/core';
 import { RxListViewContext } from './list-view-context';
-import { templateHandling } from './utils';
+import { getEmbeddedViewCreator } from './utils';
 
 /**
  * @internal
@@ -25,7 +25,7 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
     updateViewContext,
     patchZone,
   } = templateSettings;
-  const templates = templateHandling(viewContainerRef, patchZone);
+  const viewCreator = getEmbeddedViewCreator(viewContainerRef, patchZone);
 
   return {
     updateUnchangedContext,
@@ -76,7 +76,7 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
   }
 
   function insertView(item: T, index: number, count: number): void {
-    const newView = templates.createEmbeddedView(
+    const newView = viewCreator(
       initialTemplateRef,
       createViewContext(item, {
         count,

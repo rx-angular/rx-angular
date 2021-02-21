@@ -1,4 +1,4 @@
-import { RxBaseTemplateNames, rxBaseTemplateNames } from '../../../../cdk';
+import { RxBaseTemplateNames, rxBaseTemplateNames } from '@rx-angular/cdk';
 
 export type rxIfTemplateNames = 'rxThen' | 'rxElse' | rxBaseTemplateNames;
 

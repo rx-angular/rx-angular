@@ -16,13 +16,11 @@ import {
 import {
   createListTemplateManager,
   RxListManager,
-  RxListViewComputedContext, RxListViewContext, RxDefaultListViewContext, coerceDistinctWith
+  RxListViewComputedContext, RxListViewContext, RxDefaultListViewContext, coerceDistinctWith, StrategyProvider
 } from '@rx-angular/cdk';
 
-import { ReplaySubject, Subject, Observable } from 'rxjs';
-import { StrategyProvider } from '../../../cdk/render-strategies/strategy-provider.service';
-
-import { RxEffects } from '../../../state/rx-effects';
+import { ReplaySubject, Subject, Observable, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 /**
  * @Directive RxFor
@@ -277,8 +275,7 @@ import { RxEffects } from '../../../state/rx-effects';
  */
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[rxFor]',
-  providers: [RxEffects],
+  selector: '[rxFor]'
 })
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, OnDestroy {
@@ -392,7 +389,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param renderParent
    */
     // tslint:disable-next-line:no-input-rename
-  @Input('rxForParent') renderParent: boolean;
+  @Input('rxForParent') renderParent = true;
 
   /**
    * @description
@@ -425,7 +422,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param patchZone
    */
   // tslint:disable-next-line:no-input-rename
-  @Input('rxForPatchZone') patchZone: boolean;
+  @Input('rxForPatchZone') patchZone = true;
 
   /**
    * @description
@@ -583,7 +580,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     private eRef: ElementRef,
     private readonly templateRef: TemplateRef<RxDefaultListViewContext<T>>,
     private readonly viewContainerRef: ViewContainerRef,
-    private readonly rxEf: RxEffects,
     private strategyProvider: StrategyProvider
   ) {}
 
@@ -606,6 +602,9 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /** @internal */
   private listManager: RxListManager<T>;
+
+  /** @internal */
+  private _subscription = Subscription.EMPTY;
 
   /** @internal */
   static ngTemplateContextGuard<U>(
@@ -641,9 +640,12 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       trackBy: this._trackBy
     });
     this.listManager.nextStrategy(this.strategy$);
-    this.rxEf.hold(this.listManager.render(this.values$), (v) => {
-      this._renderCallback?.next(v);
-    });
+    this._subscription = this.listManager.render(this.values$)
+      .pipe(
+        tap((v) => {
+          this._renderCallback?.next(v);
+        })
+      ).subscribe();
   }
   /** @internal */
   createViewContext(item: T, computedContext: RxListViewComputedContext): RxDefaultListViewContext<T> {
@@ -662,6 +664,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /** @internal */
   ngOnDestroy() {
+    this._subscription.unsubscribe();
     this.viewContainerRef.clear();
   }
 }

@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
-import { PriorityNames } from '../../../rx-angular-pocs';
 
 @Component({
   selector: 'rxa-color-prio',
@@ -44,14 +43,6 @@ export class ColorPrioComponent extends RxState<{
   colors: [string, string][]
 }> {
   colorArr$ = this.select('colors');
-
-  prioMap = {
-    local: PriorityNames.noPriority,
-    global: PriorityNames.noPriority,
-    native: PriorityNames.noPriority,
-    noop: PriorityNames.noop,
-    ...PriorityNames
-  };
 
   @Input()
   set colors$(color$: Observable<Map<string, any>>) {

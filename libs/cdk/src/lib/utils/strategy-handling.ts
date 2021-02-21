@@ -1,4 +1,4 @@
-import { StrategyCredentials, StrategyCredentialsMap } from '../model';
+import { StrategyCredentials, CustomStrategyCredentialsMap } from '../model';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map, mergeAll, share, startWith } from 'rxjs/operators';
 import { hotFlatten } from './hotFlatten';
@@ -14,7 +14,7 @@ import { hotFlatten } from './hotFlatten';
  */
 export function strategyHandling(
   defaultStrategyName: string,
-  strategies: StrategyCredentialsMap
+  strategies: CustomStrategyCredentialsMap<string>
 ): {
   strategy$: Observable<StrategyCredentials>;
   next(name: string | Observable<string>): void;
@@ -39,7 +39,7 @@ export function strategyHandling(
  * @internal
  */
 function nameToStrategyCredentials(
-  strategies: StrategyCredentialsMap,
+  strategies: CustomStrategyCredentialsMap<string>,
   defaultStrategyName: string
 ) {
   return (
