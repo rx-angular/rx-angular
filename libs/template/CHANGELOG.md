@@ -1,3 +1,9 @@
+# [1.0.0-beta.7](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.6...template@1.0.0-beta.7) (2021-02-21)
+
+### Features
+
+- **template:** add ng-add, setup sub packages ([#532](https://github.com/rx-angular/rx-angular/issues/532)) ([11b888b](https://github.com/rx-angular/rx-angular/commit/11b888b37979273e95568a37e82f4967eca65c5f)), closes [#534](https://github.com/rx-angular/rx-angular/issues/534)
+
 # [1.0.0-beta.6](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.5...template@1.0.0-beta.5) (2021-02-19)
 
 ### Bug Fixes
