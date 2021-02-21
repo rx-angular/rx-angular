@@ -1,3 +1,5 @@
+# [1.0.0-beta.11](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.10...template@1.0.0-beta.11) (2021-02-21)
+
 # [1.0.0-beta.10](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta...template@1.0.0-beta.10) (2021-02-21)
 
 ### Bug Fixes
