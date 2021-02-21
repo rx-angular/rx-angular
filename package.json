@@ -61,7 +61,6 @@
     "@angular/platform-browser": "^11.2.0",
     "@angular/platform-browser-dynamic": "^11.2.0",
     "@angular/router": "^11.2.0",
-    "@ngrx/store": "^11.0.1",
     "@ngxs/store": "3.7.1",
     "@types/benchmark": "^2.1.0",
     "@types/lodash": "^4.14.168",
