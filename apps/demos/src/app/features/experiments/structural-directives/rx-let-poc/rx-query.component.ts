@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import { RickAndMortyService } from './rick-and-morty.service';
 import { query } from 'rx-query';
 import { Observable, Subject } from 'rxjs';
@@ -111,7 +111,7 @@ export class RxQueryComponent {
   characters$ = this.charactersQueryResult$.pipe(map(res => res?.data?.results));
   errorTrg$ = this.charactersQueryResult$.pipe(filter(res => res?.status === 'error'), mapTo(true));
 
-  constructor(public strategyProvider: StrategyProvider,
+  constructor(public strategyProvider: RxStrategyProvider,
               public service: RickAndMortyService) {
   }
 

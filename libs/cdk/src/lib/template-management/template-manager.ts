@@ -1,19 +1,27 @@
 import { EmbeddedViewRef, TemplateRef } from '@angular/core';
-import { combineLatest, EMPTY, Observable } from 'rxjs';
+import { EMPTY, merge, Observable } from 'rxjs';
 import {
   catchError,
   filter,
-  // @NOTICE in RxJS v7 it is renamed to `mergeWith`
-  merge as mergeWith,
+  ignoreElements,
   switchMap,
+  tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import {
-  RenderAware,
+  RxCoalescingOptions,
+  RxRenderWork,
+  RxNotification,
+  RxNotificationKind,
+} from '../model';
+import { onStrategy } from '../utils/onStrategy';
+import { strategyHandling } from '../utils/strategy-handling';
+import {
+  RxRenderAware,
+  rxBaseTemplateNames,
   RxRenderSettings,
-  RxBaseTemplateNames,
   RxViewContext,
-  TemplateSettings,
+  RxTemplateSettings,
 } from './model';
 import {
   getTNode,
@@ -22,31 +30,16 @@ import {
   templateHandling,
   TNode,
 } from './utils';
-import {
-  CoalescingOptions,
-  RenderWork,
-  RxNotification,
-  RxNotificationKind,
-} from '../model';
-import { rxMaterialize } from '../utils/rxMaterialize';
-import { onStrategy } from '../utils/onStrategy';
-import { coerceDistinctWith } from '../utils/coerceDistinctObservableWith';
-import { strategyHandling } from '../utils/strategy-handling';
-import { templateTriggerHandling } from '../utils/template-trigger-handling';
 
 export interface RxTemplateManager<
   T,
   C extends RxViewContext<T>,
-  N = RxBaseTemplateNames | string
-> extends RenderAware<T> {
+  N = rxBaseTemplateNames | string
+> extends RxRenderAware<T> {
   addTemplateRef: (name: N, templateRef: TemplateRef<C>) => void;
-  addTrigger: (trigger$: Observable<RxNotification<T>>) => void;
+  // addTrigger: (trigger$: Observable<RxNotification<T>>) => void;
+  // activeTemplate: N;
 }
-
-export type NotificationTemplateNameMap<T, C, N> = Record<
-  RxNotificationKind,
-  (value?: T, templates?: { get: (name: N) => TemplateRef<C> }) => N
->;
 
 /**
  * @internal
@@ -99,15 +92,20 @@ export type RxViewContextMap<T> = Record<
   (value?: any) => Partial<RxViewContext<T>>
 >;
 
+export type RxNotificationTemplateNameMap<T, C, N> = Record<
+  RxNotificationKind,
+  (value?: T, templates?: { get: (name: N) => TemplateRef<C> }) => N
+>;
+
 export function createTemplateManager<
   T,
   C extends RxViewContext<T>,
-  N = RxBaseTemplateNames | string
+  N = rxBaseTemplateNames | string
 >(config: {
   renderSettings: RxRenderSettings<T, C>;
-  templateSettings: TemplateSettings<T, C>;
-  templateTrigger$?: Observable<RxNotificationKind>;
-  notificationToTemplateName: NotificationTemplateNameMap<T, C, N>;
+  templateSettings: RxTemplateSettings<T, C>;
+  templateTrigger$?: Observable<RxNotification<unknown>>;
+  notificationToTemplateName: RxNotificationTemplateNameMap<T, C, N>;
 }): RxTemplateManager<T, C, N> {
   const {
     renderSettings,
@@ -136,21 +134,19 @@ export function createTemplateManager<
   );
   const viewContainerRef = templateSettings.viewContainerRef;
 
-  const triggerHandling = templateTriggerHandling();
+  const triggerHandling = config.templateTrigger$ || EMPTY;
   const getContext = notificationKindToViewContext(
     templateSettings.customContext
   );
 
   return {
     addTemplateRef: templates.add,
-    addTrigger: triggerHandling.next,
+    // addTrigger: triggerHandling.next,
     nextStrategy: strategyHandling$.next,
-    render(values$: Observable<T>): Observable<any> {
+    render(values$: Observable<RxNotification<T>>): Observable<any> {
       return values$.pipe(
-        coerceDistinctWith(),
-        rxMaterialize(),
         /* tslint:disable */
-        mergeWith(triggerHandling.trigger$ || EMPTY),
+        // mergeWith(triggerHandling.trigger$ || EMPTY),
         /* tslint:enable */
         withLatestFrom(strategyHandling$.strategy$),
         // Cancel old renders
@@ -164,12 +160,12 @@ export function createTemplateManager<
 
           const template = templates.get(templateName);
           const isNewTemplate = activeTemplate !== templateName;
-          const notifyParent = isNewTemplate || parent;
-          return combineLatest([
+          const notifyParent = isNewTemplate && parent;
+          return merge(
             onStrategy(
               value,
               strategy,
-              (v: T, work: RenderWork, options: CoalescingOptions) => {
+              (v: T, work: RxRenderWork, options: RxCoalescingOptions) => {
                 if (isNewTemplate) {
                   if (viewContainerRef.length > 0) {
                     viewContainerRef.clear();
@@ -193,20 +189,19 @@ export function createTemplateManager<
               // whenever a new value comes in, any pre-scheduled work of this taskManager will
               // be nooped before a new work will be scheduled. This happens because of the implementation
               // of `StrategyCredential#behavior`
+            ).pipe(
+              notifyAllParentsIfNeeded(
+                tNode,
+                injectingViewCdRef,
+                strategy,
+                () => notifyParent
+              )
             ),
             notifyInjectingParentIfNeeded(
               injectingViewCdRef,
               strategy,
               isNewTemplate
-            ),
-          ]).pipe(
-            notifyAllParentsIfNeeded(
-              tNode,
-              injectingViewCdRef,
-              strategy,
-              () => notifyParent
-            ),
-            filter((v) => v != null)
+            ).pipe(ignoreElements())
           );
         }),
         catchError((e) => {

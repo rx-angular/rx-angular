@@ -1,11 +1,13 @@
 <rxa-app-shell>
   <rxa-side-nav [navItems]="menuItems"> </rxa-side-nav>
   <ng-container rxaAppShellSidenavTitle>
-    <a style="color: inherit; text-decoration: none;" routerLink="/">RxAngular Demos</a>
+    <a style="color: inherit; text-decoration: none" routerLink="/"
+      >RxAngular Demos</a
+    >
   </ng-container>
   <ng-container rxaAppShellHeaderContent>
-    <rxa-dirty-check [color]="'#3700ff1f'" radius="40"></rxa-dirty-check>
-    <rxa-config-panel></rxa-config-panel>
+    <!--<rxa-dirty-check [color]="'#3700ff1f'" radius="40"></rxa-dirty-check> -->
+    <!-- <rxa-config-panel></rxa-config-panel> -->
   </ng-container>
   <router-outlet></router-outlet>
 </rxa-app-shell>

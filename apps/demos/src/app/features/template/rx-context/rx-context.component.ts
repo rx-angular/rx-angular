@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 
 @Component({
   selector: 'rxa-rx-context',
@@ -129,7 +129,7 @@ import { StrategyProvider } from '@rx-angular/cdk';
     class: 'm-1 p-1',
     style: 'display: block;',
   },
-  providers: [StrategyProvider],
+  providers: [RxStrategyProvider],
   styles: [
     `
       .ctx {
@@ -204,5 +204,5 @@ import { StrategyProvider } from '@rx-angular/cdk';
   ],
 })
 export class RxContextComponent {
-  constructor(public strategyProvider: StrategyProvider) {}
+  constructor(public strategyProvider: RxStrategyProvider) {}
 }

@@ -1,4 +1,4 @@
-import { CustomStrategyCredentialsMap, StrategyCredentials, strategyHandling } from '@rx-angular/cdk';
+import { RxCustomStrategyCredentials, RxStrategyCredentials, strategyHandling } from '@rx-angular/cdk';
 import { ConnectableObservable, EMPTY, isObservable, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import {
   catchError,
@@ -19,7 +19,7 @@ import { ngInputFlatten } from '../utils/rxjs/operators/ngInputFlatten';
 import { RxNotification, RxTemplateObserver } from '../utils/rxjs/Notification';
 
 export interface RenderAware<U> {
-  strategy$: Observable<StrategyCredentials>;
+  strategy$: Observable<RxStrategyCredentials>;
   nextPotentialObservable: (value: any) => void;
   nextStrategy: (config: string | Observable<string>) => void;
   nextTemplateTrigger: (trigger$: Observable<RxNotification<U>>) => void;
@@ -39,7 +39,7 @@ export interface RenderAware<U> {
 export function createRenderAware<U>(cfg: {
   templateObserver: RxTemplateObserver<U>;
   defaultStrategyName: string;
-  strategies: CustomStrategyCredentialsMap<string>;
+  strategies: RxCustomStrategyCredentials<string>;
   getCdRef: (k: RxNotification<U>) => ChangeDetectorRef;
   getContext: (k?: RxNotification<U>) => any;
 }): RenderAware<U | undefined | null> {

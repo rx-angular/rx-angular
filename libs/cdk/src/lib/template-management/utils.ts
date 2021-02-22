@@ -24,7 +24,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { asyncScheduler } from '../zone-less/rxjs/scheduler/index';
-import { StrategyCredentials } from '../model';
+import { RxStrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 
 // Below are constants for LView indices to help us look up LView members
@@ -48,6 +48,9 @@ export type TNode = any;
  */
 export function getTNode(cdRef: ChangeDetectorRef, native: Node): TNode {
   const lView = (cdRef as any)._cdRefInjectingView;
+  if (!lView) {
+    return undefined;
+  }
   const tView = lView[TVIEW];
   let i = HEADER_OFFSET;
   let lContainer;
@@ -112,7 +115,7 @@ export function extractProjectionViews(
 export function renderProjectionParents(
   cdRef: ChangeDetectorRef,
   tNode: TNode,
-  strategy$: Observable<StrategyCredentials>
+  strategy$: Observable<RxStrategyCredentials>
 ): OperatorFunction<any, any> {
   return (o$) =>
     o$.pipe(
@@ -245,7 +248,7 @@ export function templateHandling<N, C>(
 export function notifyAllParentsIfNeeded<T>(
   tNode: TNode,
   injectingViewCdRef: ChangeDetectorRef,
-  strategy: StrategyCredentials,
+  strategy: RxStrategyCredentials,
   notifyNeeded: () => boolean
 ): MonoTypeOperatorFunction<T> {
   return (o$) =>
@@ -256,11 +259,9 @@ export function notifyAllParentsIfNeeded<T>(
         if (!notifyParent) {
           return of(v);
         }
-        const behaviors = getVirtualParentNotifications$(
-          tNode,
-          injectingViewCdRef,
-          strategy
-        );
+        const behaviors = tNode
+          ? getVirtualParentNotifications$(tNode, injectingViewCdRef, strategy)
+          : [];
         // @TODO remove this CD on injectingViewCdRef if possible
         behaviors.push(
           onStrategy(
@@ -289,7 +290,7 @@ export function notifyAllParentsIfNeeded<T>(
  */
 export function notifyInjectingParentIfNeeded(
   injectingViewCdRef: ChangeDetectorRef,
-  strategy: StrategyCredentials,
+  strategy: RxStrategyCredentials,
   notify: boolean
 ): Observable<null> {
   return concat(
@@ -320,7 +321,7 @@ export function notifyInjectingParentIfNeeded(
 export function getVirtualParentNotifications$(
   tNode: TNode,
   injectingViewCdRef: ChangeDetectorRef,
-  strategy: StrategyCredentials
+  strategy: RxStrategyCredentials
 ): Observable<Comment>[] {
   const parentElements = extractProjectionParentViewSet(
     injectingViewCdRef,

@@ -2,7 +2,7 @@ import {
   RxListTemplateChange,
   RxListTemplateChanges,
   RxListTemplateChangeType,
-  TemplateSettings,
+  RxTemplateSettings,
 } from './model';
 import { EmbeddedViewRef, IterableChanges } from '@angular/core';
 import { RxListViewContext } from './list-view-context';
@@ -16,7 +16,7 @@ import { getEmbeddedViewCreator } from './utils';
  * @param templateSettings
  */
 export function getTemplateHandler<C extends RxListViewContext<T>, T>(
-  templateSettings: TemplateSettings<T, C>
+  templateSettings: RxTemplateSettings<T, C>
 ): ListTemplateManager<T> {
   const {
     viewContainerRef,

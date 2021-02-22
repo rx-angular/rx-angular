@@ -1,6 +1,6 @@
 import { ApplicationRef, ChangeDetectionStrategy, Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import { filter } from 'rxjs/operators';
 import { AppRenderStrategy, ConfigService } from './config.service';
 
@@ -14,12 +14,12 @@ import { AppRenderStrategy, ConfigService } from './config.service';
 export class AppComponent {
   title = 'Tour of Heroes';
 
-  strategies = this.strategyProvider.strategies;
+  strategies = this.rxStrategyProvider.strategies;
 
   constructor(
     private router: Router,
     private appRef: ApplicationRef,
-    private strategyProvider: StrategyProvider,
+    private rxStrategyProvider: RxStrategyProvider,
     public configService: ConfigService
   ) {
     configService.setStrategy(AppRenderStrategy.native);

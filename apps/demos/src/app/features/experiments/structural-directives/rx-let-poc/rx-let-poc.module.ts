@@ -8,7 +8,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TriggerProviderModule } from '../../../../shared/debug-helper/trigger-provider/trigger-provider.module';
 import { RxQueryChildrenComponent } from './rx-query-children.component';
-import { RxQueryContentComponent, RxQueryContentTestDirective } from './rx-query-content.component';
+import {
+  RxQueryContentComponent,
+  RxQueryContentTestDirective,
+} from './rx-query-content.component';
 import { RxQueryComponent } from './rx-query.component';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
@@ -21,7 +24,7 @@ const DECLARATIONS = [
   RxQueryComponent,
   RxQueryChildrenComponent,
   RxQueryContentComponent,
-  RxQueryContentTestDirective
+  RxQueryContentTestDirective,
 ];
 
 @NgModule({
@@ -39,10 +42,9 @@ const DECLARATIONS = [
     RouterModule,
     MatCardModule,
     DirtyChecksModule,
-    RxContextModule
+    RxContextModule,
   ],
   exports: DECLARATIONS,
-  providers: []
+  providers: [],
 })
-export class RxLetPocModule {
-}
+export class RxLetPocModule {}

@@ -9,7 +9,7 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { RenderWork } from '@rx-angular/cdk';
+import { RxRenderWork } from '@rx-angular/cdk';
 import { Subscription, Unsubscribable } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { RxSwitch } from './rx-switch.directive';
@@ -65,7 +65,7 @@ export class RxSwitchCase implements OnInit, OnDestroy {
     this.viewContainer.detach(0);
   }
 
-  rxSwitchCaseWorkFactory = (value: any, work: RenderWork) => {
+  rxSwitchCaseWorkFactory = (value: any, work: RxRenderWork) => {
     if (value) {
       if (!this.inserted) {
         this.viewContainer.insert(this._view, 0);

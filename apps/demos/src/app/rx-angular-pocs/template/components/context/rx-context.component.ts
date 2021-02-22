@@ -4,7 +4,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 
 import { isObservable, Observable, of } from 'rxjs';
 import { Hooks, RxNotificationKind } from '../../../cdk';
@@ -81,7 +81,7 @@ export class RxContextContainer<U> extends Hooks implements OnInit {
   }
 
   constructor(
-    private strategyProvider: StrategyProvider,
+    private strategyProvider: RxStrategyProvider,
     private readonly rxState: RxState<{
       templateName: RxNotificationKind;
       strategyName: string;

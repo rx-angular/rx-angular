@@ -16,7 +16,7 @@ import { ViewChildComponent } from './view-child.component';
         <h2>Parent</h2>
         <button
           mat-raised-button
-          [unpatch]
+          [unpatch]="['click']"
           (click)="trigger$.next($event.timeStamp)"
         >
           tick
@@ -26,7 +26,10 @@ import { ViewChildComponent } from './view-child.component';
       test1
       <rxa-view-child>
         <div>
-          <div *rxLet="trigger$; let value; parent: true">
+          <div *rxLet="renderCallback$; let renderCbVal; parent: false; patchZone: false">
+            renderCallback: {{ renderCbVal }}
+          </div>
+          <div *rxLet="trigger$; renderCallback: renderCallback$;let value; parent: true; patchZone: false">
             <rxa-content-child>
               <div #test>{{ value }}</div>
             </rxa-content-child>
@@ -66,6 +69,7 @@ export class ProjectedViewsComponent {
   }
 
   trigger$ = new Subject<any>();
+  renderCallback$ = new Subject<any>();
 
   triggerArr$ = combineLatest([this.trigger$]);
 }

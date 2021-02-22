@@ -7,8 +7,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { Observable } from 'rxjs';
-import { StrategyCredentials, CustomStrategyCredentialsMap } from '../model';
-import { DefaultStrategies, DefaultStrategyNames } from '../render-strategies';
+import { RxNotification, RxStrategies } from '../model';
 
 export type rxBaseTemplateNames = 'errorTpl' | 'completeTpl' | 'suspenseTpl';
 
@@ -42,9 +41,9 @@ export interface RxViewContext<T> {
   $suspense: any;
 }
 
-export interface RenderAware<T> {
+export interface RxRenderAware<T> {
   nextStrategy: (nextConfig: string | Observable<string>) => void;
-  render: (values$: Observable<T>) => Observable<void>;
+  render: (values$: Observable<RxNotification<T>>) => Observable<void>;
 }
 
 export interface RxRenderSettings<T, C> {
@@ -52,7 +51,7 @@ export interface RxRenderSettings<T, C> {
   eRef: ElementRef;
   parent: boolean;
   patchZone: NgZone | false;
-  strategies: DefaultStrategies & CustomStrategyCredentialsMap<string>;
+  strategies: RxStrategies<string>;
   defaultStrategyName: string;
 }
 
@@ -76,7 +75,7 @@ export type UpdateViewContext<T, C, U = unknown> = (
   computedContext?: U
 ) => void;
 
-export interface TemplateSettings<T, C, U = unknown> {
+export interface RxTemplateSettings<T, C, U = unknown> {
   patchZone: NgZone | false;
   viewContainerRef: ViewContainerRef;
   createViewContext: CreateViewContext<T, C, U>;

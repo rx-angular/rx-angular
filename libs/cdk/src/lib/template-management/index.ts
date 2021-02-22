@@ -1,14 +1,14 @@
 export { templateHandling } from './utils';
 export {
   RxBaseTemplateNames,
-  RenderAware,
+  RxRenderAware,
   RxViewContext,
   rxBaseTemplateNames,
 } from './model';
 export {
   RxTemplateManager,
   createTemplateManager,
-  NotificationTemplateNameMap,
+  RxNotificationTemplateNameMap,
 } from './template-manager';
 export {
   RxListManager,
