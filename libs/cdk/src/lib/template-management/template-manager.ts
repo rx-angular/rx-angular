@@ -1,9 +1,9 @@
 import { EmbeddedViewRef, TemplateRef } from '@angular/core';
-import { combineLatest, EMPTY, merge, Observable } from 'rxjs';
+import { EMPTY, merge, Observable } from 'rxjs';
 import {
   catchError,
   filter,
-  map,
+  ignoreElements,
   switchMap,
   tap,
   withLatestFrom,
@@ -14,15 +14,11 @@ import {
   RxNotification,
   RxNotificationKind,
 } from '../model';
-import { coerceDistinctWith } from '../utils/coerceDistinctObservableWith';
-import { toRxSuspenseNotification } from '../utils/notification-transforms';
 import { onStrategy } from '../utils/onStrategy';
-import { rxMaterialize } from '../utils/rxMaterialize';
 import { strategyHandling } from '../utils/strategy-handling';
 import {
   RenderAware,
   rxBaseTemplateNames,
-  RxBaseTemplateNames,
   RxRenderSettings,
   RxViewContext,
   TemplateSettings,
@@ -42,7 +38,7 @@ export interface RxTemplateManager<
 > extends RenderAware<T> {
   addTemplateRef: (name: N, templateRef: TemplateRef<C>) => void;
   // addTrigger: (trigger$: Observable<RxNotification<T>>) => void;
-  activeTemplate: N;
+  // activeTemplate: N;
 }
 
 export type NotificationTemplateNameMap<T, C, N> = Record<
@@ -147,7 +143,6 @@ export function createTemplateManager<
     addTemplateRef: templates.add,
     // addTrigger: triggerHandling.next,
     nextStrategy: strategyHandling$.next,
-    activeTemplate,
     render(values$: Observable<RxNotification<T>>): Observable<any> {
       return values$.pipe(
         /* tslint:disable */
@@ -156,7 +151,6 @@ export function createTemplateManager<
         withLatestFrom(strategyHandling$.strategy$),
         // Cancel old renders
         switchMap(([notification, strategy]) => {
-          console.log(notification);
           const kind: RxNotificationKind = notification.kind;
           const value: T = notification.value as T;
           const templateName = notificationToTemplateName[kind](
@@ -166,8 +160,8 @@ export function createTemplateManager<
 
           const template = templates.get(templateName);
           const isNewTemplate = activeTemplate !== templateName;
-          const notifyParent = isNewTemplate || parent;
-          return combineLatest([
+          const notifyParent = isNewTemplate && parent;
+          return merge(
             onStrategy(
               value,
               strategy,
@@ -195,20 +189,19 @@ export function createTemplateManager<
               // whenever a new value comes in, any pre-scheduled work of this taskManager will
               // be nooped before a new work will be scheduled. This happens because of the implementation
               // of `StrategyCredential#behavior`
+            ).pipe(
+              notifyAllParentsIfNeeded(
+                tNode,
+                injectingViewCdRef,
+                strategy,
+                () => notifyParent
+              )
             ),
             notifyInjectingParentIfNeeded(
               injectingViewCdRef,
               strategy,
               isNewTemplate
-            ),
-          ]).pipe(
-            notifyAllParentsIfNeeded(
-              tNode,
-              injectingViewCdRef,
-              strategy,
-              () => notifyParent
-            ),
-            filter((v) => v != null)
+            ).pipe(ignoreElements())
           );
         }),
         catchError((e) => {

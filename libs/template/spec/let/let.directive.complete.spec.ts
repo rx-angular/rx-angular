@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import { RX_PRIMARY_STRATEGY } from '@rx-angular/cdk';
 import { EMPTY, Observable, of } from 'rxjs';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let/let.directive';
@@ -8,7 +9,7 @@ import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; $rxComplete as complete">{{
+    <ng-container *rxLet="value$; $complete as complete">{{
       complete
       }}</ng-container>
   `
@@ -29,6 +30,10 @@ const setupLetDirectiveTestComponentComplete = (): void => {
     declarations: [LetDirectiveTestCompleteComponent, LetDirective],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
+      {
+        provide: RX_PRIMARY_STRATEGY,
+        useValue: 'local'
+      },
       TemplateRef,
       ViewContainerRef
     ]

@@ -1,22 +1,22 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { RX_PRIMARY_STRATEGY } from '@rx-angular/cdk';
 import { LetDirective } from '@rx-angular/template';
 import { EMPTY, interval, NEVER, Observable, of, Subject, throwError } from 'rxjs';
 import { take } from 'rxjs/operators';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { MockChangeDetectorRef } from '../fixtures/fixtures';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value; suspenseTpl: suspense; errorTpl: error; completeTpl: complete">
-      {{
+    <ng-container *rxLet="value$; let value; suspenseTpl: suspense; errorTpl: error; completeTpl: complete">{{
         value === undefined
           ? 'undefined'
           : value === null
           ? 'null'
           : (value | json)
-      }}
-    </ng-container>
+      }}</ng-container>
 
     <ng-template #complete>complete</ng-template>
     <ng-template #error>error</ng-template>
@@ -33,7 +33,16 @@ let nativeElement: HTMLElement;
 
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveAllTemplatesTestComponent, LetDirective]
+    declarations: [LetDirectiveAllTemplatesTestComponent, LetDirective],
+    providers: [
+      { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
+      {
+        provide: RX_PRIMARY_STRATEGY,
+        useValue: 'local'
+      },
+      TemplateRef,
+      ViewContainerRef
+    ]
   }).compileComponents();
 };
 
@@ -43,7 +52,7 @@ const setUpFixture = () => {
   nativeElement = fixture.nativeElement;
 };
 
-xdescribe('LetDirective when template binding with all templates', () => {
+describe('LetDirective when template binding with all templates', () => {
   beforeAll(() => mockConsole());
   beforeEach(waitForAsync(setupTestComponent));
   beforeEach(setUpFixture);

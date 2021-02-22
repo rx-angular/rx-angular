@@ -1,18 +1,22 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
-import { RenderStrategy } from '../../src/lib/core/render-aware/interfaces';
+import { ChangeDetectorRef, Component, ElementRef, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let/let.directive';
-import { DEFAULT_STRATEGY_NAME } from '../../src/lib/render-strategies/strategies/strategies-map';
-import { MockChangeDetectorRef } from '../fixtures';
+import { MockChangeDetectorRef, MockElementRef } from '../fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import { DefaultStrategyNames, StrategyCredentials, StrategyNames } from '@rx-angular/cdk';
+import {
+  DefaultStrategyNames,
+  RX_PRIMARY_STRATEGY,
+  StrategyCredentials,
+  StrategyNames,
+  StrategyProvider
+} from '@rx-angular/cdk';
 
 @Component({
   template: `
     <ng-container
-      *rxLet="value$; let value; strategy: strategy; $rxError as error; $rxComplete as complete"
+      *rxLet="value$; let value; strategy: strategy;"
     >{{ (value | json) || 'undefined' }}</ng-container
     >
   `
@@ -32,7 +36,13 @@ const setupLetDirectiveTestComponentStrategy = (): void => {
   TestBed.configureTestingModule({
     declarations: [LetDirectiveTestComponentStrategy, LetDirective],
     providers: [
+      StrategyProvider,
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
+      { provide: ElementRef, useValue: new MockElementRef({}) },
+      {
+        provide: RX_PRIMARY_STRATEGY,
+        useValue: 'local'
+      },
       TemplateRef,
       ViewContainerRef,
       LetDirective
@@ -44,17 +54,20 @@ const setupLetDirectiveTestComponentStrategy = (): void => {
   letDirectiveTestComponent =
     fixtureLetDirectiveTestComponent.componentInstance;
   letDirective = fixtureLetDirectiveTestComponent.debugElement.injector.get(LetDirective);
-  letDirective['strategyHandler'].values$.subscribe((as: any) => activeStrategy = as);
+  activeStrategy = letDirective['strategyProvider'].primaryStrategy as any;
+  letDirective['strategyHandler'].values$.subscribe((as: any) => {
+    activeStrategy = as
+  });
   componentNativeElement = fixtureLetDirectiveTestComponent.nativeElement;
 };
 
-xdescribe('LetDirective when using strategy', () => {
+describe('LetDirective when using strategy', () => {
   beforeAll(() => mockConsole());
   beforeEach(setupLetDirectiveTestComponentStrategy);
 
   it('should work with different if a strategy other than the default', () => {
     letDirectiveTestComponent.value$ = of(1, 2, 3, 4, 5);
-    letDirectiveTestComponent.strategy = 'detach';
+    letDirectiveTestComponent.strategy = 'native';
     fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('5');
   });

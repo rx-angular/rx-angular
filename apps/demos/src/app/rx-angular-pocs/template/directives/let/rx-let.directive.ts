@@ -20,7 +20,7 @@ import {
   toRxCompleteNotification,
   toRxErrorNotification,
   toRxSuspenseNotification,
-  StrategyProvider, RxNotification, flatToNotification,
+  StrategyProvider, templateNotifier,
 } from '@rx-angular/cdk';
 
 import {
@@ -329,10 +329,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
   ) {}
 
   /** @internal */
-  private observablesHandler = hotFlatten<U, RxNotification<U>>(
-    () => new ReplaySubject<U | Observable<U>>(1),
-    flatToNotification()
-  );
+  private observablesHandler = templateNotifier<U>();
   private strategyHandler = hotFlatten<string>(() => new Subject(), mergeAll());
   private triggerHandler = hotFlatten<RxNotificationKind>(
     () => new Subject(),

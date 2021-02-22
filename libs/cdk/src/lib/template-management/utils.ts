@@ -259,11 +259,9 @@ export function notifyAllParentsIfNeeded<T>(
         if (!notifyParent) {
           return of(v);
         }
-        const behaviors = getVirtualParentNotifications$(
-          tNode,
-          injectingViewCdRef,
-          strategy
-        );
+        const behaviors = tNode
+          ? getVirtualParentNotifications$(tNode, injectingViewCdRef, strategy)
+          : [];
         // @TODO remove this CD on injectingViewCdRef if possible
         behaviors.push(
           onStrategy(

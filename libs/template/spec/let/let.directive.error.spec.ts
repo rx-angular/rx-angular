@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import { RX_PRIMARY_STRATEGY } from '@rx-angular/cdk';
 import { Observable, of, throwError } from 'rxjs';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let/let.directive';
@@ -9,7 +10,7 @@ import { mockConsole } from '@test-helpers';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; $rxError as error">{{ error }}</ng-container>
+    <ng-container *rxLet="value$; $error as error">{{ error }}</ng-container>
   `
 })
 class LetDirectiveTestErrorComponent {
@@ -21,6 +22,10 @@ const setupLetDirectiveTestComponentError = (): void => {
     declarations: [LetDirectiveTestErrorComponent, LetDirective],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
+      {
+        provide: RX_PRIMARY_STRATEGY,
+        useValue: 'local'
+      },
       TemplateRef,
       ViewContainerRef
     ]
@@ -41,7 +46,7 @@ let letDirectiveTestComponent: {
 };
 let componentNativeElement: any;
 
-xdescribe('LetDirective when error', () => {
+describe('LetDirective when error', () => {
   beforeAll(() => mockConsole());
   beforeEach(waitForAsync(setupLetDirectiveTestComponentError));
 

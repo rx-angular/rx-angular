@@ -17,11 +17,12 @@ import { mergeAll } from 'rxjs/operators';
 import { RxIfTemplateNames, rxIfTemplateNames, RxIfViewContext } from './model';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-  createTemplateManager, flatToNotification,
+  coerceObservable,
+  createTemplateManager,
   hotFlatten, RxNotification,
   RxNotificationKind,
   RxTemplateManager,
-  StrategyProvider,
+  StrategyProvider, templateNotifier,
 } from '@rx-angular/cdk';
 
 @Directive({
@@ -37,7 +38,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
 
   @Input()
   set rxIf(potentialObservable: Observable<U> | U | null | undefined) {
-    this.observablesHandler.next(potentialObservable);
+    this.observablesHandler.next(coerceObservable(potentialObservable));
   }
 
   @Input('rxIfStrategy')
@@ -61,10 +62,8 @@ export class RxIf<U> implements OnInit, OnDestroy {
     this._renderObserver = callback;
   }
 
-  private observablesHandler = hotFlatten<U, RxNotification<U>>(
-    () => new ReplaySubject<U | Observable<U>>(1),
-    flatToNotification()
-  );
+  /** @internal */
+  private observablesHandler = templateNotifier<U>();
   private readonly strategyHandler = hotFlatten<string>(
     () => new ReplaySubject<string | Observable<string>>(1),
     mergeAll()

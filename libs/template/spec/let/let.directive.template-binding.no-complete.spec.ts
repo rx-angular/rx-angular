@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { RX_PRIMARY_STRATEGY } from '@rx-angular/cdk';
 import { LetDirective } from '@rx-angular/template';
 import { EMPTY, Observable, of } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { MockChangeDetectorRef } from '../fixtures/fixtures';
 
 @Component({
   template: `
@@ -29,7 +31,16 @@ let nativeElement: HTMLElement;
 
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveNoCompleteTemplateTestComponent, LetDirective]
+    declarations: [LetDirectiveNoCompleteTemplateTestComponent, LetDirective],
+    providers: [
+      { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
+      {
+        provide: RX_PRIMARY_STRATEGY,
+        useValue: 'local'
+      },
+      TemplateRef,
+      ViewContainerRef
+    ]
   }).compileComponents();
 };
 
@@ -39,7 +50,7 @@ const setUpFixture = () => {
   nativeElement = fixture.nativeElement;
 };
 
-xdescribe('LetDirective when template binding without "complete" template', () => {
+describe('LetDirective when template binding without "complete" template', () => {
   beforeAll(() => mockConsole());
   beforeEach(waitForAsync(setupTestComponent));
   beforeEach(setUpFixture);

@@ -10,7 +10,6 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  SimpleChange,
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
@@ -18,44 +17,41 @@ import {
 import {
   createTemplateManager,
   hotFlatten,
+  templateNotifier,
+  RxNotification,
   RxNotificationKind,
   RxTemplateManager,
-  toRxCompleteNotification,
-  toRxErrorNotification,
-  toRxSuspenseNotification,
+  StrategyNames,
   StrategyProvider,
-  RxNotification,
-  flatToNotification,
-  hotTemplateNotificationFlatten,
+  RxBaseTemplateNames,
+  RxViewContext,
 } from '@rx-angular/cdk';
 
 import {
-  BehaviorSubject,
   defer,
-  from,
   NextObserver,
   Observable,
   ObservableInput,
-  OperatorFunction,
   ReplaySubject,
   Subject,
   Subscription,
 } from 'rxjs';
-import {
-  map,
-  mapTo,
-  mergeAll,
-  shareReplay,
-  startWith,
-  switchAll,
-  switchMap,
-  tap,
-} from 'rxjs/operators';
-import {
-  RxLetTemplateNames,
-  rxLetTemplateNames,
-  RxLetViewContext,
-} from './model';
+import { mergeAll } from 'rxjs/operators';
+
+/** @internal */
+type rxLetTemplateNames = 'nextTpl' | RxBaseTemplateNames;
+
+/** @internal */
+const RxLetTemplateNames = {
+  ...RxBaseTemplateNames,
+  next: 'nextTpl',
+} as const;
+
+/** @internal */
+export interface RxLetViewContext<T> extends RxViewContext<T> {
+  // to enable `as` syntax we have to assign the directives selector (var as v)
+  rxLet: T;
+}
 
 /**
  * @Directive LetDirective
@@ -290,25 +286,6 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   @Input('rxLetSuspenseTpl')
   rxSuspense: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
 
-  @Input('rxLetCompleteTrg')
-  set rxCompleteTrigger(trigger$: Observable<any>) {
-    this.triggerHandler.next(
-      trigger$.pipe(mapTo(toRxCompleteNotification() as any))
-    );
-  }
-
-  @Input('rxLetErrorTrg')
-  set rxErrorTrigger(error$: Observable<any>) {
-    this.triggerHandler.next(error$.pipe(map(toRxErrorNotification as any)));
-  }
-
-  @Input('rxLetSuspenseTrg')
-  set rxSuspenseTrigger(trigger$: Observable<any>) {
-    this.triggerHandler.next(
-      trigger$.pipe(map(toRxSuspenseNotification as any))
-    );
-  }
-
   @Input('rxLetRenderCallback')
   set renderCallback(callback: NextObserver<U>) {
     this._renderObserver = callback;
@@ -317,6 +294,26 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   @Input('rxLetParent') renderParent = true;
 
   @Input('rxLetPatchZone') patchZone = true;
+
+  // TODO: enable when tested and documented properly
+  /* @Input('rxLetShowComplete')
+   set showComplete(trigger$: Observable<any>) {
+   this.triggerHandler.next(
+   trigger$.pipe(mapTo(toRxCompleteNotification() as any))
+   );
+   }
+
+   @Input('rxLetShowError')
+   set showError(error$: Observable<any>) {
+   this.triggerHandler.next(error$.pipe(map(toRxErrorNotification as any)));
+   }
+
+   @Input('rxLetShowSuspense')
+   set showSuspense(trigger$: Observable<any>) {
+   this.triggerHandler.next(
+   trigger$.pipe(map(toRxSuspenseNotification as any))
+   );
+   }*/
 
   constructor(
     private strategyProvider: StrategyProvider,
@@ -328,8 +325,10 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   ) {}
 
   /** @internal */
-  private observablesHandler = hotTemplateNotificationFlatten<U>();
-  private strategyHandler = hotFlatten<string>(() => new Subject());
+  private observablesHandler = templateNotifier<U>(() => !!this.rxSuspense);
+  private strategyHandler = hotFlatten<string>(
+    () => new ReplaySubject<StrategyNames<string>>(1)
+  );
   private triggerHandler = hotFlatten<RxNotification<unknown>>(
     () => new Subject(),
     mergeAll()
