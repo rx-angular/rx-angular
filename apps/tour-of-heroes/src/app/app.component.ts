@@ -1,6 +1,6 @@
 import { ApplicationRef, ChangeDetectionStrategy, Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import { filter } from 'rxjs/operators';
 import { AppRenderStrategy, ConfigService } from './config.service';
 
@@ -19,7 +19,7 @@ export class AppComponent {
   constructor(
     private router: Router,
     private appRef: ApplicationRef,
-    private strategyProvider: StrategyProvider,
+    private strategyProvider: RxStrategyProvider,
     public configService: ConfigService
   ) {
     configService.setStrategy(AppRenderStrategy.native);

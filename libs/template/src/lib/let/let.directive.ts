@@ -21,7 +21,7 @@ import {
   RxNotification,
   RxNotificationKind,
   RxTemplateManager,
-  StrategyProvider,
+  RxStrategyProvider,
   RxBaseTemplateNames,
   RxViewContext,
   RxStrategies,
@@ -317,7 +317,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    }*/
 
   constructor(
-    private strategyProvider: StrategyProvider,
+    private strategyProvider: RxStrategyProvider,
     public cdRef: ChangeDetectorRef,
     public eRef: ElementRef,
     private ngZone: NgZone,

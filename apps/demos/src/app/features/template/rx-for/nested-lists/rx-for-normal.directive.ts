@@ -15,7 +15,7 @@ import {
   TrackByFunction,
   ViewContainerRef
 } from '@angular/core';
-import { RxDefaultListViewContext, StrategyProvider } from '@rx-angular/cdk';
+import { RxDefaultListViewContext, RxStrategyProvider } from '@rx-angular/cdk';
 
 import {
   concat,
@@ -74,7 +74,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   constructor(
-    private strategyProvider: StrategyProvider,
+    private strategyProvider: RxStrategyProvider,
     private cdRef: ChangeDetectorRef,
     private readonly templateRef: TemplateRef<RxDefaultListViewContext<T, U>>,
     private readonly viewContainerRef: ViewContainerRef,

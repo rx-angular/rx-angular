@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import {
   strategyHandling,
-  StrategyProvider,
+  RxStrategyProvider,
   templateNotifier,
 } from '@rx-angular/cdk';
 import {
@@ -74,7 +74,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
   );
 
   constructor(
-    private strategyProvider: StrategyProvider,
+    private strategyProvider: RxStrategyProvider,
     private ngZone: NgZone,
     cdRef: ChangeDetectorRef
   ) {

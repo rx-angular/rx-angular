@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import { RxState } from '@rx-angular/state';
 
 export enum AppRenderStrategy {
@@ -22,7 +22,7 @@ export class ConfigService {
 
   readonly renderStrategy$ = this.state.select('renderStrategy');
   constructor(
-    private strategyProvider: StrategyProvider
+    private strategyProvider: RxStrategyProvider
   ) {}
 
   setStrategy(renderStrategy: AppRenderStrategy) {

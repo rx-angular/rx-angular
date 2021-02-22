@@ -2,7 +2,7 @@ import {
   ɵɵdirectiveInject as directiveInject,
   ChangeDetectorRef, Type
 } from '@angular/core';
-import { RxStrategyCredentials, StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyCredentials, RxStrategyProvider } from '@rx-angular/cdk';
 import { fromEvent, of } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -15,7 +15,7 @@ export function renderOnChange<T = Type<any>>(
   }
 ) {
 
-  const strategyProvider: StrategyProvider = directiveInject(StrategyProvider);
+  const strategyProvider: RxStrategyProvider = directiveInject(RxStrategyProvider);
   const strategyName = config?.strategyName || strategyProvider.primaryStrategy;
   const strategy = strategyProvider.strategies[strategyName];
 
