@@ -3,5 +3,5 @@ export {
   ConcurrentStrategies,
   RX_CONCURRENT_STRATEGIES,
 } from './concurrent-strategies';
-export { StrategyProvider } from './strategy-provider.service';
+export { RxStrategyProvider } from './strategy-provider.service';
 export { ScheduleOnStrategyOptions } from './model';

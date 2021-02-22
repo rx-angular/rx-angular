@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import { RxEffects } from '../../../../shared/rx-effects.service';
 
 @Directive({
@@ -25,7 +25,7 @@ export class RxQueryContentComponent implements OnInit {
   @Input() value: Observable<any>;
 
   constructor(
-    public strategyProvider: StrategyProvider,
+    public strategyProvider: RxStrategyProvider,
     private effects: RxEffects
   ) {
   }

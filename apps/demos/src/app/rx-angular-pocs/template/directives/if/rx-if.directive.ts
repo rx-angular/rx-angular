@@ -22,7 +22,7 @@ import {
   hotFlatten, RxNotification,
   RxNotificationKind,
   RxTemplateManager,
-  StrategyProvider, templateNotifier,
+  RxStrategyProvider, templateNotifier,
 } from '@rx-angular/cdk';
 
 @Directive({
@@ -71,7 +71,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
   private readonly rendered$ = new Subject<void>();
 
   constructor(
-    private strategyProvider: StrategyProvider,
+    private strategyProvider: RxStrategyProvider,
     private cdRef: ChangeDetectorRef,
     private eRef: ElementRef<Comment>,
     private ngZone: NgZone,

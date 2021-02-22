@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import { Observable } from 'rxjs';
 import { RxState, selectSlice } from '@rx-angular/state';
 import { map } from 'rxjs/operators';
@@ -95,7 +95,7 @@ export class SiblingPixelImgComponent extends RxState<{
   trackBy = i => i;
 
   constructor(
-    private strategyProvider: StrategyProvider
+    private strategyProvider: RxStrategyProvider
   ) {
     super();
     this.set({

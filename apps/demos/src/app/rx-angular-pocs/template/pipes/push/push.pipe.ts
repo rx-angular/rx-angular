@@ -5,7 +5,7 @@ import {
   Pipe,
   PipeTransform,
 } from '@angular/core';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import {
   NextObserver,
   Observable,
@@ -36,7 +36,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    strategyProvider: StrategyProvider
+    strategyProvider: RxStrategyProvider
   ) {
     this.renderAware = createRenderAware<U>({
       strategies: strategyProvider.strategies,

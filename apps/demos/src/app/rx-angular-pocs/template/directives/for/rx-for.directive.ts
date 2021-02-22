@@ -16,7 +16,7 @@ import {
 import {
   createListTemplateManager,
   RxListManager,
-  RxListViewComputedContext, RxListViewContext, RxDefaultListViewContext, coerceDistinctWith, StrategyProvider
+  RxListViewComputedContext, RxListViewContext, RxDefaultListViewContext, coerceDistinctWith, RxStrategyProvider
 } from '@rx-angular/cdk';
 
 import { ReplaySubject, Subject, Observable, Subscription } from 'rxjs';
@@ -580,7 +580,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     private eRef: ElementRef,
     private readonly templateRef: TemplateRef<RxDefaultListViewContext<T>>,
     private readonly viewContainerRef: ViewContainerRef,
-    private strategyProvider: StrategyProvider
+    private strategyProvider: RxStrategyProvider
   ) {}
 
   /** @internal */

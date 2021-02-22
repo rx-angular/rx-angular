@@ -20,7 +20,7 @@ import {
   toRxCompleteNotification,
   toRxErrorNotification,
   toRxSuspenseNotification,
-  StrategyProvider, templateNotifier,
+  RxStrategyProvider, templateNotifier,
 } from '@rx-angular/cdk';
 
 import {
@@ -320,7 +320,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
   @Input('rxLetPatchZone') patchZone = true;
 
   constructor(
-    private strategyProvider: StrategyProvider,
+    private strategyProvider: RxStrategyProvider,
     public cdRef: ChangeDetectorRef,
     public eRef: ElementRef,
     private ngZone: NgZone,

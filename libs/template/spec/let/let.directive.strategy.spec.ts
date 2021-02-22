@@ -8,7 +8,7 @@ import { mockConsole } from '@test-helpers';
 import {
   RxDefaultStrategyNames,
   RX_ANGULAR_CONFIG,
-  StrategyProvider
+  RxStrategyProvider
 } from '@rx-angular/cdk';
 
 @Component({
@@ -34,7 +34,7 @@ const setupLetDirectiveTestComponentStrategy = (): void => {
   TestBed.configureTestingModule({
     declarations: [LetDirectiveTestComponentStrategy, LetDirective],
     providers: [
-      StrategyProvider,
+      RxStrategyProvider,
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       { provide: ElementRef, useValue: new MockElementRef({}) },
       TemplateRef,

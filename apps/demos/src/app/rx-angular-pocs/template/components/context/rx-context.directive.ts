@@ -3,7 +3,7 @@ import { createTemplateManager, RxNotificationKind, RxTemplateManager, RxStrateg
 
 import { isObservable, Observable, of, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
 import { Hooks } from '../../../cdk/hooks/hooks';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import { RxContextTemplateNames, rxContextTemplateNames, RxContextViewContext } from './model';
 import { distinctUntilChanged, filter, map, mapTo, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
@@ -57,7 +57,7 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
   }
 
   constructor(
-    private strategyProvider: StrategyProvider,
+    private strategyProvider: RxStrategyProvider,
     public cdRef: ChangeDetectorRef,
     private readonly nextTemplateRef: TemplateRef<RxContextViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef,

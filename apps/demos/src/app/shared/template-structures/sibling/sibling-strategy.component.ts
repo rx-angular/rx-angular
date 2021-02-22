@@ -4,7 +4,7 @@ import {
   Inject,
   Input,
 } from '@angular/core';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import { Observable, Subject } from 'rxjs';
 import { toBooleanArray } from './utils';
 import { RxState } from '@rx-angular/state';
@@ -93,7 +93,7 @@ export class SiblingStrategyComponent extends RxState<{
   }
 
   constructor(
-    private strategyProvider: StrategyProvider
+    private strategyProvider: RxStrategyProvider
   ) {
     super();
     this.set({

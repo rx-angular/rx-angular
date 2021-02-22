@@ -22,8 +22,15 @@ import {
 import { onStrategy } from '../utils/onStrategy';
 import { ScheduleOnStrategyOptions } from './model';
 
+/**
+ *
+ *
+ * @docsCategory RenderStrategies
+ * @docsPage RenderStrategies
+ * @publicApi
+ */
 @Injectable({ providedIn: 'root' })
-export class StrategyProvider<T extends string = string> {
+export class RxStrategyProvider<T extends string = string> {
   private _strategies$ = new BehaviorSubject<RxStrategies<T>>(undefined);
   private _primaryStrategy$ = new BehaviorSubject<
     RxStrategyCredentials<RxStrategyNames<T>>

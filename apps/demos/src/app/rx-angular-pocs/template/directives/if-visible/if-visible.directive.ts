@@ -18,7 +18,7 @@ import {
   createTemplateManager,
   hotFlatten,
   RxNotificationKind,
-  RxTemplateManager, StrategyProvider,
+  RxTemplateManager, RxStrategyProvider,
 } from '@rx-angular/cdk';
 import {
   RxIfVisibleTemplateNames,
@@ -51,7 +51,7 @@ export class IfVisibleDirective<U> extends Hooks implements OnInit {
   constructor(
     private rxEf: RxEffects,
     public templateRef: TemplateRef<any>,
-    private strategyProvider: StrategyProvider,
+    private strategyProvider: RxStrategyProvider,
     private cdRef: ChangeDetectorRef,
     private eRef: ElementRef<Comment>,
     private ngZone: NgZone,
