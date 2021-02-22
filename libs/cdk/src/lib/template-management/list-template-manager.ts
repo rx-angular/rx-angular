@@ -27,7 +27,7 @@ import {
   templateHandling,
   TNode,
 } from './utils';
-import { StrategyCredentials } from '../model';
+import { RxStrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 import { strategyHandling } from '../utils/strategy-handling';
 import {
@@ -160,7 +160,7 @@ export function createListTemplateManager<
 
   function getObservablesFromChangesArray(
     changes: RxListTemplateChange[],
-    strategy: StrategyCredentials,
+    strategy: RxStrategyCredentials,
     count: number
   ) {
     return changes.length > 0

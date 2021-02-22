@@ -9,8 +9,8 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import {
-  CoalescingOptions,
-  RenderWork,
+  RxCoalescingOptions,
+  RxRenderWork,
   RxNotification,
   RxNotificationKind,
 } from '../model';
@@ -165,7 +165,7 @@ export function createTemplateManager<
             onStrategy(
               value,
               strategy,
-              (v: T, work: RenderWork, options: CoalescingOptions) => {
+              (v: T, work: RxRenderWork, options: RxCoalescingOptions) => {
                 if (isNewTemplate) {
                   if (viewContainerRef.length > 0) {
                     viewContainerRef.clear();

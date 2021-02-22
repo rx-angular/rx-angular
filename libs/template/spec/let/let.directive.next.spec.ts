@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
-import { RX_PRIMARY_STRATEGY } from '@rx-angular/cdk';
 import { EMPTY, interval, NEVER, Observable, of } from 'rxjs';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let/let.directive';
@@ -36,10 +35,6 @@ const setupLetDirectiveTestComponent = (): void => {
     declarations: [LetDirectiveTestComponent, LetDirective],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
-      {
-        provide: RX_PRIMARY_STRATEGY,
-        useValue: 'local'
-      },
       TemplateRef,
       ViewContainerRef
     ]

@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, TemplateRef, ViewContainerRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { RX_PRIMARY_STRATEGY } from '@rx-angular/cdk';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
@@ -31,10 +30,6 @@ const setupLetDirectiveTestComponent = (): void => {
     declarations: [LetDirectiveTestComponent, LetDirective],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
-      {
-        provide: RX_PRIMARY_STRATEGY,
-        useValue: 'local'
-      },
       TemplateRef,
       ViewContainerRef
     ]

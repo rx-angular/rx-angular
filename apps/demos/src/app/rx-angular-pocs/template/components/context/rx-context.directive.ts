@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
-import { createTemplateManager, RxNotificationKind, RxTemplateManager, StrategyCredentials } from '@rx-angular/cdk';
+import { createTemplateManager, RxNotificationKind, RxTemplateManager, RxStrategyCredentials } from '@rx-angular/cdk';
 
 import { isObservable, Observable, of, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
 import { Hooks } from '../../../cdk/hooks/hooks';
@@ -76,7 +76,7 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
 
   static ngTemplateGuard_rxContext: 'binding';
 
-  strategy$: Observable<any/*StrategyCredentials*/> = this.rxState.select(
+  strategy$: Observable<any/*RxStrategyCredentials*/> = this.rxState.select(
     // ngInputFlatten(),
     startWith(this.strategyProvider.primaryStrategy),
     // nameToStrategyCredentials(this.strategyProvider.strategies, this.strategyProvider.primaryStrategy)

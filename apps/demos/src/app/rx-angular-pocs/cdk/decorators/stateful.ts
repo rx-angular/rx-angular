@@ -2,7 +2,7 @@ import {
   ɵɵdirectiveInject as directiveInject,
   ChangeDetectorRef, Type
 } from '@angular/core';
-import { StrategyCredentials, StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyCredentials, StrategyProvider } from '@rx-angular/cdk';
 import { fromEvent, of } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -19,7 +19,7 @@ export function renderOnChange<T = Type<any>>(
   const strategyName = config?.strategyName || strategyProvider.primaryStrategy;
   const strategy = strategyProvider.strategies[strategyName];
 
-  function scheduleCD(s: StrategyCredentials, work: () => void): AbortController {
+  function scheduleCD(s: RxStrategyCredentials, work: () => void): AbortController {
     const abC = new AbortController();
     of(null).pipe(
       s.behavior(work, component as any),

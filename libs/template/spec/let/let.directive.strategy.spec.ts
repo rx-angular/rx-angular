@@ -6,10 +6,7 @@ import { MockChangeDetectorRef, MockElementRef } from '../fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import {
-  DefaultStrategyNames,
-  RX_PRIMARY_STRATEGY,
-  StrategyCredentials,
-  StrategyNames,
+  RxDefaultStrategyNames,
   StrategyProvider
 } from '@rx-angular/cdk';
 
@@ -29,7 +26,7 @@ class LetDirectiveTestComponentStrategy {
 let fixtureLetDirectiveTestComponent: any;
 let letDirectiveTestComponent: LetDirectiveTestComponentStrategy;
 let letDirective: LetDirective<number>;
-let activeStrategy: DefaultStrategyNames;
+let activeStrategy: RxDefaultStrategyNames;
 let componentNativeElement: any;
 
 const setupLetDirectiveTestComponentStrategy = (): void => {
@@ -39,10 +36,6 @@ const setupLetDirectiveTestComponentStrategy = (): void => {
       StrategyProvider,
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       { provide: ElementRef, useValue: new MockElementRef({}) },
-      {
-        provide: RX_PRIMARY_STRATEGY,
-        useValue: 'local'
-      },
       TemplateRef,
       ViewContainerRef,
       LetDirective

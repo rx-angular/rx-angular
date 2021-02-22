@@ -1,4 +1,8 @@
-import { RenderWork, StrategyCredentials, CoalescingOptions } from '../model';
+import {
+  RxRenderWork,
+  RxStrategyCredentials,
+  RxCoalescingOptions,
+} from '../model';
 import { Observable, of } from 'rxjs';
 
 /**
@@ -11,9 +15,13 @@ import { Observable, of } from 'rxjs';
  */
 export function onStrategy<T>(
   value: T,
-  strategy: StrategyCredentials,
-  workFactory: (value: T, work: RenderWork, options: CoalescingOptions) => void,
-  options: CoalescingOptions = {}
+  strategy: RxStrategyCredentials,
+  workFactory: (
+    value: T,
+    work: RxRenderWork,
+    options: RxCoalescingOptions
+  ) => void,
+  options: RxCoalescingOptions = {}
 ): Observable<T> {
   return of(value).pipe(
     strategy.behavior(

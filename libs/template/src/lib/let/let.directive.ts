@@ -21,10 +21,11 @@ import {
   RxNotification,
   RxNotificationKind,
   RxTemplateManager,
-  StrategyNames,
   StrategyProvider,
   RxBaseTemplateNames,
   RxViewContext,
+  RxStrategies,
+  RxStrategyNames,
 } from '@rx-angular/cdk';
 
 import {
@@ -293,7 +294,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
 
   @Input('rxLetParent') renderParent = true;
 
-  @Input('rxLetPatchZone') patchZone = true;
+  @Input('rxLetPatchZone') patchZone = this.strategyProvider.config.patchZone;
 
   // TODO: enable when tested and documented properly
   /* @Input('rxLetShowComplete')
@@ -327,7 +328,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   /** @internal */
   private observablesHandler = templateNotifier<U>(() => !!this.rxSuspense);
   private strategyHandler = hotFlatten<string>(
-    () => new ReplaySubject<StrategyNames<string>>(1)
+    () => new ReplaySubject<RxStrategyNames<string>>(1)
   );
   private triggerHandler = hotFlatten<RxNotification<unknown>>(
     () => new Subject(),

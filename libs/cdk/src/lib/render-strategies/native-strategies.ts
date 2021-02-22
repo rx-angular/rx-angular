@@ -1,8 +1,12 @@
 import { ɵmarkDirty as markDirty } from '@angular/core';
-import { tap } from 'rxjs/operators';
-import { CustomStrategyCredentialsMap, StrategyCredentials } from '../model';
-import { coalesceWith } from '../utils/coalesceWith';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import {
+  RxCustomStrategyCredentials,
+  RxNativeStrategyNames,
+  RxStrategyCredentials,
+} from '../model';
+import { coalesceWith } from '../utils/coalesceWith';
 import {
   cancelAnimationFrame,
   requestAnimationFrame,
@@ -19,7 +23,7 @@ const animationFrameTick = () =>
     };
   });
 
-const localCredentials: StrategyCredentials = {
+const localCredentials: RxStrategyCredentials = {
   name: 'local',
   work: (cdRef, _, notification) => {
     cdRef.detectChanges();
@@ -31,27 +35,26 @@ const localCredentials: StrategyCredentials = {
     ),
 };
 
-const globalCredentials: StrategyCredentials = {
+const globalCredentials: RxStrategyCredentials = {
   name: 'global',
   work: (_, context) => markDirty(context),
   behavior: (work: any) => (o$) => o$.pipe(tap(() => work())),
 };
 
-const noopCredentials: StrategyCredentials = {
+const noopCredentials: RxStrategyCredentials = {
   name: 'noop',
   work: () => void 0,
   behavior: () => (o$) => o$,
 };
 
-const nativeCredentials: StrategyCredentials = {
+const nativeCredentials: RxStrategyCredentials = {
   name: 'native',
   work: (cdRef) => cdRef.markForCheck(),
   behavior: (work: any) => (o$) => o$.pipe(tap(() => work())),
 };
 
-export type DefaultStrategyNames = 'native' | 'local' | 'global' | 'noop';
-export type DefaultStrategies = CustomStrategyCredentialsMap<DefaultStrategyNames>;
-export const DEFAULT_STRATEGIES: DefaultStrategies = {
+export type NativeStrategies = RxCustomStrategyCredentials<RxNativeStrategyNames>;
+export const RX_NATIVE_STRATEGIES: NativeStrategies = {
   global: globalCredentials,
   native: nativeCredentials,
   noop: noopCredentials,

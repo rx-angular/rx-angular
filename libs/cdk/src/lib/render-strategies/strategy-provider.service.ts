@@ -12,21 +12,29 @@ import {
   Observable,
 } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
-import { CustomStrategyCredentialsMap, StrategyCredentials } from '../model';
+import { mergeDefaultConfig, RX_ANGULAR_CONFIG } from '../cdk-config';
+import {
+  RxAngularConfig,
+  RxStrategies,
+  RxStrategyNames,
+  RxStrategyCredentials,
+} from '../model';
 import { onStrategy } from '../utils/onStrategy';
-import { DEFAULT_STRATEGIES } from './default-strategies';
-import { ScheduleOnStrategyOptions, Strategies, StrategyNames } from './model';
-import { RX_CUSTOM_STRATEGIES } from './tokens/custom-strategies-token';
-import { RX_PRIMARY_STRATEGY } from './tokens/default-primary-strategy-token';
+import { ScheduleOnStrategyOptions } from './model';
 
 @Injectable({ providedIn: 'root' })
 export class StrategyProvider<T extends string = string> {
-  private _strategies$ = new BehaviorSubject<Strategies<T>>(undefined);
+  private _strategies$ = new BehaviorSubject<RxStrategies<T>>(undefined);
   private _primaryStrategy$ = new BehaviorSubject<
-    StrategyCredentials<StrategyNames<T>>
+    RxStrategyCredentials<RxStrategyNames<T>>
   >(undefined);
 
-  get strategies(): Strategies<T> {
+  private _cfg: Required<RxAngularConfig<T>>;
+  get config(): Required<RxAngularConfig<T>> {
+    return this._cfg;
+  }
+
+  get strategies(): RxStrategies<T> {
     return this._strategies$.getValue();
   }
 
@@ -34,17 +42,17 @@ export class StrategyProvider<T extends string = string> {
     return Object.values(this.strategies).map((s) => s.name);
   }
 
-  get primaryStrategy(): StrategyNames<T> {
+  get primaryStrategy(): RxStrategyNames<T> {
     return this._primaryStrategy$.getValue().name;
   }
 
-  set primaryStrategy(strategyName: StrategyNames<T>) {
+  set primaryStrategy(strategyName: RxStrategyNames<T>) {
     this._primaryStrategy$.next(
-      <StrategyCredentials<StrategyNames<T>>>this.strategies[strategyName]
+      <RxStrategyCredentials<RxStrategyNames<T>>>this.strategies[strategyName]
     );
   }
 
-  readonly primaryStrategy$: Observable<StrategyCredentials> = this._primaryStrategy$.asObservable();
+  readonly primaryStrategy$: Observable<RxStrategyCredentials> = this._primaryStrategy$.asObservable();
   readonly strategies$ = this._strategies$.asObservable();
 
   readonly strategyNames$ = this.strategies$.pipe(
@@ -53,24 +61,13 @@ export class StrategyProvider<T extends string = string> {
   );
 
   constructor(
-    @Inject(RX_PRIMARY_STRATEGY)
-    defaultStrategy: StrategyNames<T>,
     @Optional()
-    @Inject(RX_CUSTOM_STRATEGIES)
-    customStrategies: CustomStrategyCredentialsMap<T>[]
+    @Inject(RX_ANGULAR_CONFIG)
+    cfg: RxAngularConfig<T>
   ) {
-    const strats = {
-      ...DEFAULT_STRATEGIES,
-      ...(customStrategies || []).reduce(
-        (acc, curr) => ({
-          ...acc,
-          ...curr,
-        }),
-        {} as any
-      ),
-    };
-    this._strategies$.next(strats);
-    this.primaryStrategy = defaultStrategy;
+    this._cfg = mergeDefaultConfig(cfg);
+    this._strategies$.next(this._cfg.customStrategies as any);
+    this.primaryStrategy = this.config.primaryStrategy;
   }
 
   scheduleWith<R>(

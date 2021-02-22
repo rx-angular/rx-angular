@@ -24,7 +24,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { asyncScheduler } from '../zone-less/rxjs/scheduler/index';
-import { StrategyCredentials } from '../model';
+import { RxStrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 
 // Below are constants for LView indices to help us look up LView members
@@ -115,7 +115,7 @@ export function extractProjectionViews(
 export function renderProjectionParents(
   cdRef: ChangeDetectorRef,
   tNode: TNode,
-  strategy$: Observable<StrategyCredentials>
+  strategy$: Observable<RxStrategyCredentials>
 ): OperatorFunction<any, any> {
   return (o$) =>
     o$.pipe(
@@ -248,7 +248,7 @@ export function templateHandling<N, C>(
 export function notifyAllParentsIfNeeded<T>(
   tNode: TNode,
   injectingViewCdRef: ChangeDetectorRef,
-  strategy: StrategyCredentials,
+  strategy: RxStrategyCredentials,
   notifyNeeded: () => boolean
 ): MonoTypeOperatorFunction<T> {
   return (o$) =>
@@ -290,7 +290,7 @@ export function notifyAllParentsIfNeeded<T>(
  */
 export function notifyInjectingParentIfNeeded(
   injectingViewCdRef: ChangeDetectorRef,
-  strategy: StrategyCredentials,
+  strategy: RxStrategyCredentials,
   notify: boolean
 ): Observable<null> {
   return concat(
@@ -321,7 +321,7 @@ export function notifyInjectingParentIfNeeded(
 export function getVirtualParentNotifications$(
   tNode: TNode,
   injectingViewCdRef: ChangeDetectorRef,
-  strategy: StrategyCredentials
+  strategy: RxStrategyCredentials
 ): Observable<Comment>[] {
   const parentElements = extractProjectionParentViewSet(
     injectingViewCdRef,
