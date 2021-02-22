@@ -8,4 +8,4 @@ export {
   ZoneTestConfigurations,
   ZoneRuntimeConfigurations,
 } from './model/zone.configurations.api';
-export { zoneConfig, ZoneConfig } from './zone-config';
+export { zoneConfig, ZoneConfig } from './zone-cfg';
