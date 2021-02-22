@@ -1,3 +1,9 @@
+# [1.0.0-beta.15](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta-12...template@1.0.0-beta.15) (2021-02-22)
+
+### Features
+
+- **template:** adopt schematics paths
+
 # [1.0.0-beta.14](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta-12...template@1.0.0-beta.14) (2021-02-22)
 
 ### Features
