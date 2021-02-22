@@ -5,7 +5,7 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, mergeAll, tap, withLatestFrom } from 'rxjs/operators';
 import { getZoneUnPatchedApi } from '../../core';
@@ -122,7 +122,7 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
 
   constructor(
     private readonly el: ElementRef<HTMLElement>,
-    private strategyProvider: StrategyProvider,
+    private strategyProvider: RxStrategyProvider,
     @Optional() private letDirective: LetDirective<any>
   ) {}
 
