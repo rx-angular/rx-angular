@@ -82,7 +82,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "0.1102.0",
     "@angular-devkit/build-ng-packagr": "0.1002.0",
-    "@angular/cli": "11.2.0",
+    "@angular/cli": "11.2.1",
     "@angular/compiler-cli": "~11.2.0",
     "@angular/language-service": "11.2.0",
     "@ngxs/devtools-plugin": "^3.7.0",
