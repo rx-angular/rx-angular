@@ -46,7 +46,7 @@ const setUpFixture = () => {
   nativeElement = fixture.nativeElement;
 };
 
-xdescribe('LetDirective when template binding without "error" template', () => {
+describe('LetDirective when template binding without "error" template', () => {
   beforeAll(() => mockConsole());
   beforeEach(waitForAsync(setupTestComponent));
   beforeEach(async () => {

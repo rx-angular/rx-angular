@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import { RX_PRIMARY_STRATEGY } from '@rx-angular/cdk';
 import { EMPTY, interval, NEVER, Observable, of } from 'rxjs';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LetDirective } from '../../src/lib/let/let.directive';
@@ -10,7 +11,7 @@ import { mockConsole } from '@test-helpers';
 @Component({
   template: `
     <ng-container
-      *rxLet="value$ as value; $rxError as error; $rxComplete as complete">{{
+      *rxLet="value$; let value">{{
       value === undefined
         ? 'undefined'
         : value === null
@@ -35,6 +36,10 @@ const setupLetDirectiveTestComponent = (): void => {
     declarations: [LetDirectiveTestComponent, LetDirective],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
+      {
+        provide: RX_PRIMARY_STRATEGY,
+        useValue: 'local'
+      },
       TemplateRef,
       ViewContainerRef
     ]
@@ -47,7 +52,7 @@ const setupLetDirectiveTestComponent = (): void => {
   componentNativeElement = fixtureLetDirectiveTestComponent.nativeElement;
 };
 
-xdescribe('LetDirective when nexting values', () => {
+describe('LetDirective when nexting values', () => {
   beforeAll(() => mockConsole());
   beforeEach((setupLetDirectiveTestComponent));
 

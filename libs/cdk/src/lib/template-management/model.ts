@@ -7,8 +7,8 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { Observable } from 'rxjs';
-import { StrategyCredentials, CustomStrategyCredentialsMap } from '../model';
-import { DefaultStrategies, DefaultStrategyNames } from '../render-strategies';
+import { CustomStrategyCredentialsMap, RxNotification } from '../model';
+import { DefaultStrategies } from '../render-strategies';
 
 export type rxBaseTemplateNames = 'errorTpl' | 'completeTpl' | 'suspenseTpl';
 
@@ -44,7 +44,7 @@ export interface RxViewContext<T> {
 
 export interface RenderAware<T> {
   nextStrategy: (nextConfig: string | Observable<string>) => void;
-  render: (values$: Observable<T>) => Observable<void>;
+  render: (values$: Observable<RxNotification<T>>) => Observable<void>;
 }
 
 export interface RxRenderSettings<T, C> {

@@ -48,6 +48,9 @@ export type TNode = any;
  */
 export function getTNode(cdRef: ChangeDetectorRef, native: Node): TNode {
   const lView = (cdRef as any)._cdRefInjectingView;
+  if (!lView) {
+    return undefined;
+  }
   const tView = lView[TVIEW];
   let i = HEADER_OFFSET;
   let lContainer;

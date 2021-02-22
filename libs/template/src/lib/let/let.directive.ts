@@ -25,18 +25,32 @@ import {
   toRxSuspenseNotification,
   StrategyProvider,
   RxNotification,
+  flatToNotification,
+  hotTemplateNotificationFlatten,
 } from '@rx-angular/cdk';
 
 import {
+  BehaviorSubject,
   defer,
+  from,
   NextObserver,
   Observable,
   ObservableInput,
+  OperatorFunction,
   ReplaySubject,
   Subject,
   Subscription,
 } from 'rxjs';
-import { map, mapTo, mergeAll, switchAll } from 'rxjs/operators';
+import {
+  map,
+  mapTo,
+  mergeAll,
+  shareReplay,
+  startWith,
+  switchAll,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import {
   RxLetTemplateNames,
   rxLetTemplateNames,
@@ -257,11 +271,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * @param templateRef
    */
   @Input('rxLetErrorTpl')
-  set rxError(
-    templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>
-  ) {
-    this.templateManager?.addTemplateRef(RxLetTemplateNames.error, templateRef);
-  }
+  rxError: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
 
   /**
    * @description
@@ -315,14 +325,10 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     private ngZone: NgZone,
     private readonly nextTemplateRef: TemplateRef<RxLetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
-  ) {
-    this.triggerHandler.values$.subscribe(console.log);
-  }
+  ) {}
 
   /** @internal */
-  private observablesHandler = hotFlatten<U>(
-    () => new ReplaySubject<U | Observable<U>>(1)
-  );
+  private observablesHandler = hotTemplateNotificationFlatten<U>();
   private strategyHandler = hotFlatten<string>(() => new Subject());
   private triggerHandler = hotFlatten<RxNotification<unknown>>(
     () => new Subject(),
@@ -351,54 +357,20 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     return true;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.subscription.add(
+      this.templateManager
+        .render(this.observablesHandler.values$)
+        .subscribe((n) => {
+          this.rendered$.next(n);
+          this._renderObserver?.next(n);
+        })
+    );
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!this.templateManager) {
-      console.log('creating templateManager');
-      this.templateManager = createTemplateManager<
-        U,
-        RxLetViewContext<U>,
-        rxLetTemplateNames
-      >({
-        templateSettings: {
-          viewContainerRef: this.viewContainerRef,
-          createViewContext,
-          updateViewContext,
-          customContext: (rxLet) => ({ rxLet }),
-          patchZone: this.patchZone ? this.ngZone : false,
-        },
-        renderSettings: {
-          cdRef: this.cdRef,
-          eRef: this.eRef,
-          parent: coerceBooleanProperty(this.renderParent),
-          patchZone: this.patchZone ? this.ngZone : false,
-          defaultStrategyName: this.strategyProvider.primaryStrategy,
-          strategies: this.strategyProvider.strategies,
-        },
-        notificationToTemplateName: {
-          [RxNotificationKind.suspense]: () => RxLetTemplateNames.suspense,
-          [RxNotificationKind.next]: () => RxLetTemplateNames.next,
-          [RxNotificationKind.error]: () => RxLetTemplateNames.error,
-          [RxNotificationKind.complete]: () => RxLetTemplateNames.complete,
-        },
-        templateTrigger$: this.triggerHandler.values$,
-      });
-
-      this.templateManager.addTemplateRef(
-        RxLetTemplateNames.next,
-        this.nextTemplateRef
-      );
-      this.templateManager.nextStrategy(this.strategyHandler.values$);
-
-      this.subscription.add(
-        this.templateManager
-          .render(this.observablesHandler.values$)
-          .subscribe((n) => {
-            this.rendered$.next(n);
-            this._renderObserver?.next(n);
-          })
-      );
+      this._createTemplateManager();
     }
 
     if (changes.rxComplete) {
@@ -409,21 +381,66 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     }
 
     if (changes.rxSuspense) {
-      console.log('HELLO????!!!!');
-      console.log(this.templateManager);
       this.templateManager.addTemplateRef(
         RxLetTemplateNames.suspense,
         this.rxSuspense
       );
-      // if (!this.templateManager.activeTemplate) {
-      this.triggerHandler.next(toRxSuspenseNotification(null) as any);
-      // }
-      console.log(this.templateManager);
+    }
+
+    if (changes.rxError) {
+      this.templateManager.addTemplateRef(
+        RxLetTemplateNames.error,
+        this.rxError
+      );
     }
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  private _createTemplateManager(): void {
+    this.templateManager = createTemplateManager<
+      U,
+      RxLetViewContext<U>,
+      rxLetTemplateNames
+    >({
+      templateSettings: {
+        viewContainerRef: this.viewContainerRef,
+        createViewContext,
+        updateViewContext,
+        customContext: (rxLet) => ({ rxLet }),
+        patchZone: this.patchZone ? this.ngZone : false,
+      },
+      renderSettings: {
+        cdRef: this.cdRef,
+        eRef: this.eRef,
+        parent: coerceBooleanProperty(this.renderParent),
+        patchZone: this.patchZone ? this.ngZone : false,
+        defaultStrategyName: this.strategyProvider.primaryStrategy,
+        strategies: this.strategyProvider.strategies,
+      },
+      notificationToTemplateName: {
+        [RxNotificationKind.suspense]: () =>
+          this.rxSuspense
+            ? RxLetTemplateNames.suspense
+            : RxLetTemplateNames.next,
+        [RxNotificationKind.next]: () => RxLetTemplateNames.next,
+        [RxNotificationKind.error]: () =>
+          this.rxError ? RxLetTemplateNames.error : RxLetTemplateNames.next,
+        [RxNotificationKind.complete]: () =>
+          this.rxComplete
+            ? RxLetTemplateNames.complete
+            : RxLetTemplateNames.next,
+      },
+      templateTrigger$: this.triggerHandler.values$,
+    });
+
+    this.templateManager.addTemplateRef(
+      RxLetTemplateNames.next,
+      this.nextTemplateRef
+    );
+    this.templateManager.nextStrategy(this.strategyHandler.values$);
   }
 }
 
