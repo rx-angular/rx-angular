@@ -42,7 +42,7 @@ export function templateNotifier<U>(
       }
       const isNull = observable$ == null;
       if (isNull) {
-        return of(observable$);
+        return NEVER.pipe(startWith(observable$));
       }
       return (isObs ? (observable$ as Observable<U>) : from(observable$)).pipe(
         (o$) => {

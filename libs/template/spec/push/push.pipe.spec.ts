@@ -4,6 +4,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { defaultStrategyProvider } from '../fixtures/strategy-provider';
 
 function wrapWithSpace(str: string): string {
   return ' ' + str + ' ';
@@ -39,7 +40,7 @@ let componentNativeElement: any;
 const setupPushPipeComponent = () => {
   TestBed.configureTestingModule({
     declarations: [PushPipe, PushPipeTestComponent],
-    providers: [ChangeDetectorRef]
+    providers: [ChangeDetectorRef, defaultStrategyProvider]
   });
 
   fixturePushPipeTestComponent = TestBed.createComponent(PushPipeTestComponent);

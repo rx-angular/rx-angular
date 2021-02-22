@@ -1,8 +1,9 @@
+import { RX_PRIMARY_STRATEGY } from '@rx-angular/cdk';
 import { PushPipe } from '../../src/lib/push/push.pipe';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { ChangeDetectorRef } from '@angular/core';
 import { EMPTY, NEVER, of } from 'rxjs';
-import { MockChangeDetectorRef } from '../fixtures';
+import { defaultStrategyProvider, MockChangeDetectorRef } from '../fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
@@ -12,7 +13,8 @@ const setupPushPipeComponent = () => {
   TestBed.configureTestingModule({
     providers: [
       PushPipe,
-      { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef }
+      { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
+      defaultStrategyProvider
     ]
   });
   pushPipe = TestBed.inject(PushPipe);

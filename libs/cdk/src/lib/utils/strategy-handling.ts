@@ -1,6 +1,6 @@
 import { StrategyCredentials, CustomStrategyCredentialsMap } from '../model';
 import { Observable, ReplaySubject } from 'rxjs';
-import { map, mergeAll, share, startWith } from 'rxjs/operators';
+import { map, mergeAll, share, startWith, switchAll } from 'rxjs/operators';
 import { hotFlatten } from './hotFlatten';
 
 /**
@@ -21,7 +21,7 @@ export function strategyHandling(
 } {
   const hotFlattened = hotFlatten(
     () => new ReplaySubject<string | Observable<string>>(1),
-    mergeAll()
+    switchAll()
   );
   return {
     strategy$: hotFlattened.values$.pipe(
