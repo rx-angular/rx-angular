@@ -17,8 +17,8 @@ import { mergeAll } from 'rxjs/operators';
 import { RxIfTemplateNames, rxIfTemplateNames, RxIfViewContext } from './model';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-  createTemplateManager,
-  hotFlatten,
+  createTemplateManager, flatToNotification,
+  hotFlatten, RxNotification,
   RxNotificationKind,
   RxTemplateManager,
   StrategyProvider,
@@ -61,9 +61,9 @@ export class RxIf<U> implements OnInit, OnDestroy {
     this._renderObserver = callback;
   }
 
-  private readonly observablesHandler = hotFlatten<U>(
+  private observablesHandler = hotFlatten<U, RxNotification<U>>(
     () => new ReplaySubject<U | Observable<U>>(1),
-    mergeAll()
+    flatToNotification()
   );
   private readonly strategyHandler = hotFlatten<string>(
     () => new ReplaySubject<string | Observable<string>>(1),
