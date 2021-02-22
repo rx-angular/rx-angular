@@ -1,6 +1,18 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { schedulingHelper } from '../../../shared/debug-helper/value-provider/scheduling-helper';
-import { SchedulingPriority } from '@rx-angular/template';
+
+export enum SchedulingPriority {
+  sync,
+  animationFrame,
+  Promise,
+  setTimeout,
+  setInterval,
+  postMessage,
+  idleCallback,
+  userBlocking,
+  userVisible,
+  background
+}
 
 @Component({
   selector: 'rxa-cd-parent13',

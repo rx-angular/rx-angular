@@ -1,3 +1,17 @@
+# [1.0.0-beta.12](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.10...template@1.0.0-beta.12) (2021-02-21)
+
+### Bug Fixes
+
+- **template:** reduce public API ([#533](https://github.com/rx-angular/rx-angular/issues/533)) ([2dd6e05](https://github.com/rx-angular/rx-angular/commit/2dd6e05def6408475f1e5c2083af39587cfad737)), closes [#532](https://github.com/rx-angular/rx-angular/issues/532) [#534](https://github.com/rx-angular/rx-angular/issues/534)
+
+# [1.0.0-beta.11](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.10...template@1.0.0-beta.11) (2021-02-21)
+
+# [1.0.0-beta.10](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta...template@1.0.0-beta.10) (2021-02-21)
+
+### Bug Fixes
+
+- ng-add for rx-tempalte ([#535](https://github.com/rx-angular/rx-angular/issues/535)) ([307c36e](https://github.com/rx-angular/rx-angular/commit/307c36e01b7fd97be3020af1728bcecf0ba4bfdc))
+
 # [1.0.0-beta.9](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta...template@1.0.0-beta.9) (2021-02-21)
 
 ### Bug Fixes

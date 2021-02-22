@@ -6,7 +6,6 @@ import {
   PipeTransform,
 } from '@angular/core';
 import { StrategyProvider } from '@rx-angular/cdk';
-import { RxTemplateObserver } from '@rx-angular/template';
 import {
   NextObserver,
   Observable,
@@ -16,6 +15,7 @@ import {
 } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { createRenderAware, RenderAware } from '../../../cdk/render-aware/render-aware';
+import { RxTemplateObserver } from '../../../cdk/utils/rxjs/Notification';
 
 @Pipe({ name: 'push', pure: false })
 export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit {

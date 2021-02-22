@@ -1,5 +1,6 @@
 import { ChangeDetectorRef } from '@angular/core';
-import { getStrategies, RenderStrategy } from '@rx-angular/template';
+import { getStrategies } from '../../src/lib/render-strategies';
+import { RenderStrategy } from '../../src/lib/core';
 import { from, of } from 'rxjs';
 import { getMockStrategyConfig } from './mock-strategies';
 
@@ -21,7 +22,7 @@ export function testStrategyMethod(
 const testsMap = new Map<keyof RenderStrategy, Function>([
   ['rxScheduleCD', testRxScheduleCD],
   ['scheduleCD', testScheduleCD],
-  ['detectChanges', testDetectChanges]
+  ['detectChanges', testDetectChanges],
 ]);
 
 function testRxScheduleCD(
@@ -38,11 +39,14 @@ function testRxScheduleCD(
       complete: () => {
         checkExpectations(cfg, config, callsExpectations);
         done();
-      }
+      },
     });
 }
 
-function testScheduleCD(config: StrategyTestConfig, done: jest.DoneCallback | any) {
+function testScheduleCD(
+  config: StrategyTestConfig,
+  done: jest.DoneCallback | any
+) {
   const { strategyName, singleTime, callsExpectations } = config;
   const cfg = getMockStrategyConfig();
   const renderStrategy = getStrategies(cfg)[strategyName];
@@ -64,7 +68,10 @@ function testScheduleCD(config: StrategyTestConfig, done: jest.DoneCallback | an
   return cfg;
 }
 
-function testDetectChanges(config: StrategyTestConfig, done: jest.DoneCallback | any) {
+function testDetectChanges(
+  config: StrategyTestConfig,
+  done: jest.DoneCallback | any
+) {
   const { strategyName, singleTime, callsExpectations } = config;
   const cfg = getMockStrategyConfig();
   const renderStrategy = getStrategies(cfg)[strategyName];
@@ -111,11 +118,15 @@ function checkExpectations(
   }
 
   if (expectationDefined(expectations, 'detach')) {
-    expect(strategyConfig.cdRef['detach']).toHaveBeenCalledTimes(expectations.detach);
+    expect(strategyConfig.cdRef['detach']).toHaveBeenCalledTimes(
+      expectations.detach
+    );
   }
 
   if (expectationDefined(expectations, 'reattach')) {
-    expect(strategyConfig.cdRef['reattach']).toHaveBeenCalledTimes(expectations.reattach);
+    expect(strategyConfig.cdRef['reattach']).toHaveBeenCalledTimes(
+      expectations.reattach
+    );
   }
 
   if (expectationDefined(expectations, 'afterCD') && testConfig.afterCD) {
