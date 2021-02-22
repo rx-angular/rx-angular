@@ -1,3 +1,15 @@
+# [1.0.0-beta.14](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta-12...template@1.0.0-beta.14) (2021-02-22)
+
+### Features
+
+- **template:** add schematics ([#545](https://github.com/rx-angular/rx-angular/issues/545)) ([6a0e814](https://github.com/rx-angular/rx-angular/commit/6a0e8148ea38ec28d5e3882c7b7a1789ffbd5a84))
+
+# [1.0.0-beta.13](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta-12...template@1.0.0-beta.13) (2021-02-22)
+
+### Features
+
+- **template:** add cdk dependency ([#545](https://github.com/rx-angular/rx-angular/issues/545)) ([6a0e814](https://github.com/rx-angular/rx-angular/commit/6a0e8148ea38ec28d5e3882c7b7a1789ffbd5a84))
+
 # [1.0.0-beta.12](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.10...template@1.0.0-beta.12) (2021-02-21)
 
 ### Bug Fixes
