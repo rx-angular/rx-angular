@@ -50,10 +50,8 @@ const setUpFixture = () => {
 describe('LetDirective when template binding without "error" template', () => {
   beforeAll(() => mockConsole());
   beforeEach(waitForAsync(setupTestComponent));
-  beforeEach(async () => {
+  beforeEach(() => {
     setUpFixture()
-    await fixture.whenStable();
-    await fixture.whenRenderingDone();
   });
 
   it('should be initiated', () => {
