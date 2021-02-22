@@ -7,6 +7,7 @@ import { MockChangeDetectorRef, MockElementRef } from '../fixtures';
 import { mockConsole } from '@test-helpers';
 import {
   RxDefaultStrategyNames,
+  RX_ANGULAR_CONFIG,
   StrategyProvider
 } from '@rx-angular/cdk';
 
@@ -38,7 +39,12 @@ const setupLetDirectiveTestComponentStrategy = (): void => {
       { provide: ElementRef, useValue: new MockElementRef({}) },
       TemplateRef,
       ViewContainerRef,
-      LetDirective
+      LetDirective,
+      {
+        provide: RX_ANGULAR_CONFIG, useValue: {
+          primaryStrategy: 'native'
+        }
+      }
     ]
   });
   fixtureLetDirectiveTestComponent = TestBed.createComponent(

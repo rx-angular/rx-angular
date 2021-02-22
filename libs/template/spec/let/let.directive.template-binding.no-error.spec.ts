@@ -4,6 +4,7 @@ import { LetDirective, LetModule } from '@rx-angular/template';
 import { Observable, of, Subject } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
@@ -30,7 +31,11 @@ let nativeElement: HTMLElement;
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
     providers: [
-
+      {
+        provide: RX_ANGULAR_CONFIG, useValue: {
+          primaryStrategy: 'native'
+        }
+      }
     ],
     declarations: [LetDirectiveNoErrorTemplateTestComponent, LetDirective],
   }).compileComponents();

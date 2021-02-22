@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, TemplateRef, ViewContainerRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
@@ -31,7 +32,12 @@ const setupLetDirectiveTestComponent = (): void => {
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,
-      ViewContainerRef
+      ViewContainerRef,
+      {
+        provide: RX_ANGULAR_CONFIG, useValue: {
+          primaryStrategy: 'native'
+        }
+      }
     ]
   });
   fixtureLetDirectiveTestComponent = TestBed.createComponent(

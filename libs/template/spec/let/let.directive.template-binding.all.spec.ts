@@ -6,6 +6,7 @@ import { take } from 'rxjs/operators';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { MockChangeDetectorRef } from '../fixtures/fixtures';
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
@@ -36,7 +37,12 @@ const setupTestComponent = () => {
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,
-      ViewContainerRef
+      ViewContainerRef,
+      {
+        provide: RX_ANGULAR_CONFIG, useValue: {
+          primaryStrategy: 'native'
+        }
+      }
     ]
   }).compileComponents();
 };
