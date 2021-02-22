@@ -3,6 +3,7 @@ import { mapTo, switchMap } from 'rxjs/operators';
 import {
   unstable_cancelCallback as cancelCallback,
   unstable_scheduleCallback as scheduleCallback,
+  unstable_forceFrameRate as forceFrameRate,
 } from 'scheduler/cjs/scheduler.production.min.js';
 import {
   RxCustomStrategyCredentials,
@@ -18,6 +19,8 @@ const UserBlockingPriority = 2;
 const NormalPriority = 3;
 const LowPriority = 4;
 const IdlePriority = 5;
+
+forceFrameRate(16);
 
 const noPriorityStrategy: RxStrategyCredentials = {
   name: 'noPriority',
