@@ -15,7 +15,7 @@ import {
   TrackByFunction,
   ViewContainerRef
 } from '@angular/core';
-import { RX_PRIMARY_STRATEGY, RxDefaultListViewContext, StrategyProvider } from '@rx-angular/cdk';
+import { RxDefaultListViewContext, RxStrategyProvider } from '@rx-angular/cdk';
 
 import {
   concat,
@@ -66,7 +66,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
     this._strategy = strategy;
   }
   get strategy(): string {
-    return this._strategy || this.defaultStrategyName;
+    return this._strategy || this.strategyProvider.primaryStrategy;
   }
   @Input()
   set rxForNormalTrackBy(fn: TrackByFunction<T>) {
@@ -74,9 +74,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   constructor(
-    @Inject(RX_PRIMARY_STRATEGY)
-    private defaultStrategyName: string,
-    private strategyProvider: StrategyProvider,
+    private strategyProvider: RxStrategyProvider,
     private cdRef: ChangeDetectorRef,
     private readonly templateRef: TemplateRef<RxDefaultListViewContext<T, U>>,
     private readonly viewContainerRef: ViewContainerRef,
@@ -99,7 +97,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
   private _renderCallback: Subject<any>;
 
   /* private readonly strategyName$ = new ReplaySubject<Observable<string>>(1);
-   private readonly strategy$: Observable<StrategyCredentials> = strategyName$.pipe(
+   private readonly strategy$: Observable<RxStrategyCredentials> = strategyName$.pipe(
    ngInputFlatten(),
    startWith(this.defaultStrategyName),
    nameToStrategyCredentials(this.strategies, cfg.defaultStrategyName)

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import { map, tap } from 'rxjs/operators';
 
 @Component({
@@ -71,7 +71,7 @@ export class ComparisonComponent {
   count$ = new BehaviorSubject<string | number>('500');
   filled$ = new BehaviorSubject<boolean>(false);
 
-  constructor(public strategyProvider: StrategyProvider) {
+  constructor(public strategyProvider: RxStrategyProvider) {
   }
 
   setStrategy(strategy, state) {

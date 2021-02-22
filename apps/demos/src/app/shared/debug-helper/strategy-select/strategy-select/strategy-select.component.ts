@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Output } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import { delay, map } from 'rxjs/operators';
 
 const strategiesUiConfig = {
@@ -45,7 +45,7 @@ export class StrategySelectComponent {
   @Output() strategyChange = this.strategyProvider.primaryStrategy$.pipe(map(s => s.name));
 
   constructor(
-    public strategyProvider: StrategyProvider
+    public strategyProvider: RxStrategyProvider
   ) {
   }
 

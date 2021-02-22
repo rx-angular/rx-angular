@@ -1,13 +1,7 @@
-export { RX_PRIMARY_STRATEGY, RX_CUSTOM_STRATEGIES } from './tokens';
+export { RxStrategyProvider } from './strategy-provider.service';
+export { ScheduleOnStrategyOptions } from './model';
 export {
-  DefaultStrategies,
-  DefaultStrategyNames,
-  DEFAULT_STRATEGIES,
-} from './default-strategies';
-export {
-  ConcurrentStrategies,
-  ConcurrentStrategyNames,
-  CONCURRENT_STRATEGIES,
+  RX_CONCURRENT_STRATEGIES,
+  RxConcurrentStrategies,
 } from './concurrent-strategies';
-export { StrategyProvider } from './strategy-provider.service';
-export { Strategies, StrategyNames, ScheduleOnStrategyOptions } from './model';
+export { RX_NATIVE_STRATEGIES, RxNativeStrategies } from './native-strategies';

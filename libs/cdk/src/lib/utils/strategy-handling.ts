@@ -1,27 +1,27 @@
-import { StrategyCredentials, CustomStrategyCredentialsMap } from '../model';
+import { RxStrategyCredentials, RxCustomStrategyCredentials } from '../model';
 import { Observable, ReplaySubject } from 'rxjs';
-import { map, mergeAll, share, startWith } from 'rxjs/operators';
+import { map, mergeAll, share, startWith, switchAll } from 'rxjs/operators';
 import { hotFlatten } from './hotFlatten';
 
 /**
  * @internal
  *
- * A factory function returning an object to handle the process of turning strategy names into `StrategyCredentials`
- * You can next a strategy name as Observable or string and get an Observable of `StrategyCredentials`
+ * A factory function returning an object to handle the process of turning strategy names into `RxStrategyCredentials`
+ * You can next a strategy name as Observable or string and get an Observable of `RxStrategyCredentials`
  *
  * @param defaultStrategyName
  * @param strategies
  */
 export function strategyHandling(
   defaultStrategyName: string,
-  strategies: CustomStrategyCredentialsMap<string>
+  strategies: RxCustomStrategyCredentials<string>
 ): {
-  strategy$: Observable<StrategyCredentials>;
+  strategy$: Observable<RxStrategyCredentials>;
   next(name: string | Observable<string>): void;
 } {
   const hotFlattened = hotFlatten(
     () => new ReplaySubject<string | Observable<string>>(1),
-    mergeAll()
+    switchAll()
   );
   return {
     strategy$: hotFlattened.values$.pipe(
@@ -39,12 +39,12 @@ export function strategyHandling(
  * @internal
  */
 function nameToStrategyCredentials(
-  strategies: CustomStrategyCredentialsMap<string>,
+  strategies: RxCustomStrategyCredentials<string>,
   defaultStrategyName: string
 ) {
   return (
     o$: Observable<string | null | undefined>
-  ): Observable<StrategyCredentials> =>
+  ): Observable<RxStrategyCredentials> =>
     o$.pipe(
       map((name) =>
         name && Object.keys(strategies).includes(name)

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import { BehaviorSubject } from 'rxjs';
 import { toBooleanArray, toFloatArray, toIntArray } from './utils';
 import { map } from 'rxjs/operators';
@@ -55,7 +55,7 @@ export class SiblingCustomComponent {
   trackBy = i => i;
 
   constructor(
-    private strategyProvider: StrategyProvider
+    private strategyProvider: RxStrategyProvider
   ) {
 
   }

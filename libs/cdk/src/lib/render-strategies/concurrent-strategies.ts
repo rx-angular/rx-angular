@@ -1,10 +1,15 @@
-import { CustomStrategyCredentialsMap, StrategyCredentials } from '../model';
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { mapTo, switchMap } from 'rxjs/operators';
 import {
   unstable_cancelCallback as cancelCallback,
   unstable_scheduleCallback as scheduleCallback,
+  unstable_forceFrameRate as forceFrameRate,
 } from 'scheduler/cjs/scheduler.production.min.js';
+import {
+  RxCustomStrategyCredentials,
+  RxConcurrentStrategyNames,
+  RxStrategyCredentials,
+} from '../model';
 
 type PriorityLevel = 0 | 1 | 2 | 3 | 4 | 5;
 
@@ -15,7 +20,9 @@ const NormalPriority = 3;
 const LowPriority = 4;
 const IdlePriority = 5;
 
-const noPriorityStrategy: StrategyCredentials = {
+forceFrameRate(16);
+
+const noPriorityStrategy: RxStrategyCredentials = {
   name: 'noPriority',
   work: (cdRef) => cdRef.detectChanges(),
   behavior: (work: any, scope: any) => {
@@ -24,7 +31,7 @@ const noPriorityStrategy: StrategyCredentials = {
   },
 };
 
-const immediateStrategy: StrategyCredentials = {
+const immediateStrategy: RxStrategyCredentials = {
   name: 'immediate',
   work: (cdRef) => cdRef.detectChanges(),
   behavior: (work: any, scope: any) => {
@@ -38,7 +45,7 @@ const immediateStrategy: StrategyCredentials = {
   },
 };
 
-const userBlockingStrategy: StrategyCredentials = {
+const userBlockingStrategy: RxStrategyCredentials = {
   name: 'userBlocking',
   work: (cdRef) => cdRef.detectChanges(),
   behavior: (work: any, scope: any) => {
@@ -52,7 +59,7 @@ const userBlockingStrategy: StrategyCredentials = {
   },
 };
 
-const normalStrategy: StrategyCredentials = {
+const normalStrategy: RxStrategyCredentials = {
   name: 'normal',
   work: (cdRef) => cdRef.detectChanges(),
   behavior: (work: any, scope: any) => {
@@ -61,7 +68,7 @@ const normalStrategy: StrategyCredentials = {
   },
 };
 
-const lowStrategy: StrategyCredentials = {
+const lowStrategy: RxStrategyCredentials = {
   name: 'low',
   work: (cdRef) => cdRef.detectChanges(),
   behavior: (work: any, scope: any) => {
@@ -70,7 +77,7 @@ const lowStrategy: StrategyCredentials = {
   },
 };
 
-const idleStrategy: StrategyCredentials = {
+const idleStrategy: RxStrategyCredentials = {
   name: 'idle',
   work: (cdRef) => cdRef.detectChanges(),
   behavior: (work: any, scope: any) => {
@@ -107,15 +114,8 @@ function scheduleOnQueue<T>(
     );
 }
 
-export type ConcurrentStrategyNames =
-  | 'noPriority'
-  | 'immediate'
-  | 'userBlocking'
-  | 'normal'
-  | 'low'
-  | 'idle';
-export type ConcurrentStrategies = CustomStrategyCredentialsMap<ConcurrentStrategyNames>;
-export const CONCURRENT_STRATEGIES: ConcurrentStrategies = {
+export type RxConcurrentStrategies = RxCustomStrategyCredentials<RxConcurrentStrategyNames>;
+export const RX_CONCURRENT_STRATEGIES: RxConcurrentStrategies = {
   noPriority: noPriorityStrategy,
   immediate: immediateStrategy,
   userBlocking: userBlockingStrategy,

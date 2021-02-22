@@ -1,6 +1,6 @@
 import { audit, tap } from 'rxjs/operators';
 import { coalesceWith, priorityTickMap, SchedulingPriority } from '@rx-angular/template';
-import { StrategyCredentials, StrategyCredentialsMap } from '../../../../rx-angular-pocs';
+import { RxStrategyCredentials, StrategyCredentialsMap } from '../../../../rx-angular-pocs';
 
 export function getTestStrategyCredentialsMap(): StrategyCredentialsMap {
   return {

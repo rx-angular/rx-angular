@@ -16,7 +16,7 @@ import {
 import {
   createListTemplateManager,
   RxListManager,
-  RxListViewComputedContext, RxListViewContext, RxDefaultListViewContext, coerceDistinctWith, StrategyProvider
+  RxListViewComputedContext, RxListViewContext, RxDefaultListViewContext, coerceDistinctWith, RxStrategyProvider
 } from '@rx-angular/cdk';
 
 import { ReplaySubject, Subject, Observable, Subscription } from 'rxjs';
@@ -41,7 +41,7 @@ import { tap } from 'rxjs/operators';
  * prioritizing the change detection for each child template (aka item in the list).
  * This way the rendering behavior of each instance of `RxFor` can be configured individually.
  *
- * `StrategyCredentials` and `EmbeddedView Rendering` together build the basis for the `concurrent mode`. Based on
+ * `RxStrategyCredentials` and `EmbeddedView Rendering` together build the basis for the `concurrent mode`. Based on
  * the configured strategy every template will get processed in an individual task, which enables chunked and
  * cancellable rendering of the list.
  *
@@ -109,7 +109,7 @@ import { tap } from 'rxjs/operators';
  * - Notify about when rendering of child templates is finished (`renderCallback`)
  * - Reactive as well as imperative values in the template (`ngFor` drop-in replacement)
  * - `ListManager`: special logic for differ mechanism to avoid over-rendering; abstracts away low level logic
- * - render every `EmbeddedView` on its own while applying the configured `StrategyCredentials#behavior`
+ * - render every `EmbeddedView` on its own while applying the configured `RxStrategyCredentials#behavior`
  * - cancel any scheduled work if a remove was triggered for a `trackById`
  * - cancel any update if a new update was triggered for the same `trackById`
  *
@@ -422,7 +422,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param patchZone
    */
   // tslint:disable-next-line:no-input-rename
-  @Input('rxForPatchZone') patchZone = true;
+  @Input('rxForPatchZone') patchZone = this.strategyProvider.config.patchZone;
 
   /**
    * @description
@@ -580,7 +580,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     private eRef: ElementRef,
     private readonly templateRef: TemplateRef<RxDefaultListViewContext<T>>,
     private readonly viewContainerRef: ViewContainerRef,
-    private strategyProvider: StrategyProvider
+    private strategyProvider: RxStrategyProvider
   ) {}
 
   /** @internal */

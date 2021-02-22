@@ -18,7 +18,7 @@ import {
   RxListTemplateChange,
   RxListTemplateChangeType,
   RxRenderSettings,
-  TemplateSettings,
+  RxTemplateSettings,
 } from './model';
 import {
   getTNode,
@@ -27,7 +27,7 @@ import {
   templateHandling,
   TNode,
 } from './utils';
-import { StrategyCredentials } from '../model';
+import { RxStrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 import { strategyHandling } from '../utils/strategy-handling';
 import {
@@ -48,7 +48,7 @@ export function createListTemplateManager<
 >(config: {
   renderSettings: RxRenderSettings<T, C>;
   templateSettings: Omit<
-    TemplateSettings<T, C, RxListViewComputedContext>,
+    RxTemplateSettings<T, C, RxListViewComputedContext>,
     'patchZone'
   > & {
     templateRef: TemplateRef<C>;
@@ -160,7 +160,7 @@ export function createListTemplateManager<
 
   function getObservablesFromChangesArray(
     changes: RxListTemplateChange[],
-    strategy: StrategyCredentials,
+    strategy: RxStrategyCredentials,
     count: number
   ) {
     return changes.length > 0

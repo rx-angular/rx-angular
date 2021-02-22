@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { StrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 
 import { Observable, of, Subject } from 'rxjs';
 import { scan, tap } from 'rxjs/operators';
@@ -66,7 +66,7 @@ export class SchedulingComponent implements OnInit {
   );
   value;
 
-  constructor(private cdRef: ChangeDetectorRef, private strategyProvider: StrategyProvider) {
+  constructor(private cdRef: ChangeDetectorRef, private strategyProvider: RxStrategyProvider) {
   }
 
   scheduleAllPrios() {
