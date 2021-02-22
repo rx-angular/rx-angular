@@ -53,8 +53,8 @@ const nativeCredentials: RxStrategyCredentials = {
   behavior: (work: any) => (o$) => o$.pipe(tap(() => work())),
 };
 
-export type NativeStrategies = RxCustomStrategyCredentials<RxNativeStrategyNames>;
-export const RX_NATIVE_STRATEGIES: NativeStrategies = {
+export type RxNativeStrategies = RxCustomStrategyCredentials<RxNativeStrategyNames>;
+export const RX_NATIVE_STRATEGIES: RxNativeStrategies = {
   global: globalCredentials,
   native: nativeCredentials,
   noop: noopCredentials,

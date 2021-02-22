@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RxCustomStrategyCredentials, RxNotification } from '../model';
-import { NativeStrategies } from '../render-strategies';
+import { RxNativeStrategies } from '../render-strategies';
 
 export type rxBaseTemplateNames = 'errorTpl' | 'completeTpl' | 'suspenseTpl';
 
@@ -52,7 +52,7 @@ export interface RxRenderSettings<T, C> {
   eRef: ElementRef;
   parent: boolean;
   patchZone: NgZone | false;
-  strategies: NativeStrategies & RxCustomStrategyCredentials<string>;
+  strategies: RxNativeStrategies & RxCustomStrategyCredentials<string>;
   defaultStrategyName: string;
 }
 

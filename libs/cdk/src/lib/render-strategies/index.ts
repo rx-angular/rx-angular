@@ -1,6 +1,6 @@
-export { NativeStrategies, RX_NATIVE_STRATEGIES } from './native-strategies';
+export { RxNativeStrategies, RX_NATIVE_STRATEGIES } from './native-strategies';
 export {
-  ConcurrentStrategies,
+  RxConcurrentStrategies,
   RX_CONCURRENT_STRATEGIES,
 } from './concurrent-strategies';
 export { RxStrategyProvider } from './strategy-provider.service';
