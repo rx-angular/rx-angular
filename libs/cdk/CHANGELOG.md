@@ -1,5 +1,10 @@
 # 1.0.0-alpha.0 (2021-02-21)
 
+### Bug Fixes
+
+- **cdk:** adopt build ([cbc59d3](https://github.com/rx-angular/rx-angular/commit/cbc59d3b05032154ef7829822a6d5fd59ce82010))
+- **cdk:** fix build ([e9b6d2d](https://github.com/rx-angular/rx-angular/commit/e9b6d2d51e85d25335f6ded794450df860badaca))
+
 ### Features
 
 - **cdk:** add zone-config ([#492](https://github.com/rx-angular/rx-angular/issues/492)) ([35f2d9b](https://github.com/rx-angular/rx-angular/commit/35f2d9b703401552318f6be665f3442212e43ae1))
