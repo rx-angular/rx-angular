@@ -2,7 +2,10 @@
 import { AsyncAction } from '../async/AsyncAction';
 import { AnimationFrameScheduler } from './AnimationFrameScheduler';
 import { SchedulerAction } from '../types';
-import { requestAnimationFrame, cancelAnimationFrame } from '../../../browser';
+import {
+  requestAnimationFrame,
+  cancelAnimationFrame,
+} from '../../../browser/browser';
 
 /**
  * We need this JSDoc comment for affecting ESDoc.
