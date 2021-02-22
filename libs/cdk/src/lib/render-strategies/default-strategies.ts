@@ -1,9 +1,12 @@
 import { ɵmarkDirty as markDirty } from '@angular/core';
 import { tap } from 'rxjs/operators';
 import { CustomStrategyCredentialsMap, StrategyCredentials } from '../model';
-import { coalesceWith } from '../utils';
+import { coalesceWith } from '../utils/coalesceWith';
 import { Observable } from 'rxjs';
-import { cancelAnimationFrame, requestAnimationFrame } from '../zone-less';
+import {
+  cancelAnimationFrame,
+  requestAnimationFrame,
+} from '../zone-less/browser/browser';
 
 const animationFrameTick = () =>
   new Observable<number>((subscriber) => {

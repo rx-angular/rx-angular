@@ -1,7 +1,8 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { mouseEvent, inputEvent, focusEvent, formControlsEvents, unpatchAddEventListener } from '@rx-angular/cdk';
+import { unpatchAddEventListener } from '@rx-angular/cdk';
+import { focusEvent, formControlsEvents, inputEvent, mouseEvent } from '../../../cdk/zone-configuration/event-names';
 
 /**
  *

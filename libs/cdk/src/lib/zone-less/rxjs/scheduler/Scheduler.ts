@@ -3,6 +3,11 @@ import { Subscription } from 'rxjs';
 import { Action } from './Action';
 import { SchedulerAction, SchedulerLike } from './types';
 
+export function nowFn() {
+  const fn = () => Date.now();
+  return fn;
+}
+
 /**
  * An execution context and a data structure to order tasks and schedule their
  * execution. Provides a notion of (potentially virtual) time, through the
@@ -28,7 +33,7 @@ export class Scheduler implements SchedulerLike {
    * Date.now easier.
    * @nocollapse
    */
-  public static now: () => number = () => Date.now();
+  public static now: () => number = nowFn();
 
   constructor(
     private SchedulerAction: typeof Action,
