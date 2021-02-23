@@ -249,7 +249,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param templateRef
    */
-  @Input('rxLetCompleteTpl')
+  @Input('rxLetRxComplete') // TODO: rename: rxLetCompleteTpl
   rxComplete: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
 
   /**
@@ -266,7 +266,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param templateRef
    */
-  @Input('rxLetErrorTpl')
+  @Input('rxLetRxError') // TODO: rename: rxLetErrorTpl
   rxError: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
 
   /**
@@ -283,7 +283,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param templateRef
    */
-  @Input('rxLetSuspenseTpl')
+  @Input('rxLetRxSuspense') // TODO: rename: rxLetSuspenseTpl
   rxSuspense: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
 
   @Input('rxLetRenderCallback')

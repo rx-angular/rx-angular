@@ -10,7 +10,7 @@ import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value; suspenseTpl: suspense; errorTpl: error; completeTpl: complete">{{
+    <ng-container *rxLet="value$; let value; rxSuspense: suspense; rxError: error; rxComplete: complete">{{
         value === undefined
           ? 'undefined'
           : value === null

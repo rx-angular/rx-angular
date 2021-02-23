@@ -8,7 +8,7 @@ import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value; completeTpl: complete; errorTpl: error;">{{
+    <ng-container *rxLet="value$; let value; rxComplete: complete; rxError: error;">{{
       value === undefined
         ? 'undefined'
         : value === null
