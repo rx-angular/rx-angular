@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { LetDirective } from '@rx-angular/template';
+import { LetDirective, LetModule } from '@rx-angular/template';
 import { Observable, of, Subject } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
@@ -29,7 +30,14 @@ let nativeElement: HTMLElement;
 
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveNoErrorTemplateTestComponent, LetDirective]
+    providers: [
+      {
+        provide: RX_ANGULAR_CONFIG, useValue: {
+          primaryStrategy: 'native'
+        }
+      }
+    ],
+    declarations: [LetDirectiveNoErrorTemplateTestComponent, LetDirective],
   }).compileComponents();
 };
 
@@ -42,7 +50,9 @@ const setUpFixture = () => {
 describe('LetDirective when template binding without "error" template', () => {
   beforeAll(() => mockConsole());
   beforeEach(waitForAsync(setupTestComponent));
-  beforeEach(setUpFixture);
+  beforeEach(() => {
+    setUpFixture()
+  });
 
   it('should be initiated', () => {
     expect(component).toBeDefined();

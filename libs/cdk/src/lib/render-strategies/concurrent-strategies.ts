@@ -1,5 +1,5 @@
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
-import { mapTo, switchMap } from 'rxjs/operators';
+import { filter, mapTo, switchMap } from 'rxjs/operators';
 import {
   unstable_cancelCallback as cancelCallback,
   unstable_scheduleCallback as scheduleCallback,
@@ -10,6 +10,7 @@ import {
   RxConcurrentStrategyNames,
   RxStrategyCredentials,
 } from '../model';
+import { coalescingManager } from '../utils/coalescingManager';
 
 type PriorityLevel = 0 | 1 | 2 | 3 | 4 | 5;
 
@@ -20,7 +21,7 @@ const NormalPriority = 3;
 const LowPriority = 4;
 const IdlePriority = 5;
 
-forceFrameRate(16);
+forceFrameRate(60);
 
 const noPriorityStrategy: RxStrategyCredentials = {
   name: 'noPriority',
@@ -96,17 +97,21 @@ function scheduleOnQueue<T>(
 ): MonoTypeOperatorFunction<T> {
   return (o$: Observable<T>): Observable<T> =>
     o$.pipe(
+      filter(() => !coalescingManager.isCoalescing(options.scope)),
       switchMap((v) =>
         new Observable<T>((subscriber) => {
+          coalescingManager.add(options.scope);
           const task = scheduleCallback(
             options.priority,
             () => {
               work();
+              coalescingManager.remove(options.scope);
               subscriber.next(v);
             },
             { delay: options.delay }
           );
           return () => {
+            coalescingManager.remove(options.scope);
             cancelCallback(task);
           };
         }).pipe(mapTo(v))

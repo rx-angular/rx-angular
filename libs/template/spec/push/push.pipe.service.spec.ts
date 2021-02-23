@@ -2,7 +2,7 @@ import { PushPipe } from '../../src/lib/push/push.pipe';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { ChangeDetectorRef } from '@angular/core';
 import { EMPTY, NEVER, of } from 'rxjs';
-import { MockChangeDetectorRef } from '../fixtures';
+import {  MockChangeDetectorRef } from '../fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 

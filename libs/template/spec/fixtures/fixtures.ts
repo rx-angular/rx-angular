@@ -1,5 +1,5 @@
 import createSpy = jasmine.createSpy;
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, ElementRef } from '@angular/core';
 
 export class MockChangeDetectorRef extends ChangeDetectorRef {
   markForCheck = createSpy('markForCheck');
@@ -10,7 +10,10 @@ export class MockChangeDetectorRef extends ChangeDetectorRef {
   context = { a: 'context' };
 }
 
+export class MockElementRef<T> extends ElementRef<T> {
+  nativeElement = {} as any;
+}
+
 export const mockPromise = {
-  then: () => {
-  }
+  then: () => {},
 };

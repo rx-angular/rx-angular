@@ -6,11 +6,12 @@ import { take } from 'rxjs/operators';
 import { MockChangeDetectorRef } from '../fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
     <ng-container
-      *rxLet="value$ as value; $rxError as error; $rxComplete as complete">{{
+      *rxLet="value$; let value">{{
       value === undefined
         ? 'undefined'
         : value === null
@@ -36,7 +37,12 @@ const setupLetDirectiveTestComponent = (): void => {
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,
-      ViewContainerRef
+      ViewContainerRef,
+      {
+        provide: RX_ANGULAR_CONFIG, useValue: {
+          primaryStrategy: 'native'
+        }
+      }
     ]
   });
   fixtureLetDirectiveTestComponent = TestBed.createComponent(

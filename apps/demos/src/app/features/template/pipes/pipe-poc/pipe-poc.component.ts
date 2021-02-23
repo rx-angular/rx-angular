@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { interval, pipe, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, share, switchMapTo } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, share, switchMapTo, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-push-basic-example',
@@ -44,7 +44,8 @@ export class PipePocComponent {
   readonly value$ = this.updateClick.pipe(
     map(() => Math.ceil(Math.random() * 100)),
     distinctUntilChanged(),
-    share()
+    tap(console.log),
+    // share()
   );
 
   toRandom = pipe(map(() => Math.random()));

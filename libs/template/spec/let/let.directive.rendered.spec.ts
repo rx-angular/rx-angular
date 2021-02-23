@@ -1,20 +1,15 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, TemplateRef, ViewContainerRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { LetDirective } from '../../src/lib/let/let.directive';
-import { MockChangeDetectorRef } from '../fixtures';
+import { MockChangeDetectorRef, MockElementRef } from '../fixtures';
 
 @Component({
   template: `
-    <ng-template let-value [rxLet]="value$"
-                 [rxLetRenderCallback]="renderCallback$"
-                 (rendered)="rendered$.next($event)">{{value === undefined ?
-                                                                                  'undefined' :
-                                                                                  value === null ?
-                                                                                  'null' :
-                                                                                  value}}</ng-template>
+    <ng-container *rxLet="value$; let value; renderCallback: renderCallback$">{{value === undefined ? 'undefined' : value === null ? 'null' : value}}</ng-container>
   `
 })
 class LetDirectiveTestComponent {
@@ -27,7 +22,6 @@ let fixtureLetDirectiveTestComponent: any;
 let letDirectiveTestComponent: {
   strategy: any;
   value$: Observable<any> | undefined | null;
-  rendered$: Subject<number>;
   renderCallback$: Subject<number>;
 };
 let componentNativeElement: any;
@@ -38,7 +32,12 @@ const setupLetDirectiveTestComponent = (): void => {
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,
-      ViewContainerRef
+      ViewContainerRef,
+      {
+        provide: RX_ANGULAR_CONFIG, useValue: {
+          primaryStrategy: 'native'
+        }
+      }
     ]
   });
   fixtureLetDirectiveTestComponent = TestBed.createComponent(
@@ -49,7 +48,7 @@ const setupLetDirectiveTestComponent = (): void => {
   componentNativeElement = fixtureLetDirectiveTestComponent.nativeElement;
 };
 
-xdescribe('LetDirective renderCallback', () => {
+describe('LetDirective renderCallback', () => {
   beforeAll(() => mockConsole());
   beforeEach((setupLetDirectiveTestComponent));
 
@@ -57,16 +56,6 @@ xdescribe('LetDirective renderCallback', () => {
     expect(fixtureLetDirectiveTestComponent).toBeDefined();
     expect(letDirectiveTestComponent).toBeDefined();
     expect(componentNativeElement).toBeDefined();
-  });
-
-  it('should emit the latest value after rendering via output event', done => {
-    letDirectiveTestComponent.rendered$.subscribe(renderedValue => {
-      expect(renderedValue).toBe(42);
-      done();
-    });
-    letDirectiveTestComponent.value$ = new BehaviorSubject(42);
-    fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('42');
   });
 
   it('should emit the latest value after rendering via renderCallback', done => {

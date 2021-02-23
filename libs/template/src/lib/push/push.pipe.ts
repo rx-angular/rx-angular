@@ -1,9 +1,22 @@
-import { ChangeDetectorRef, OnDestroy, Pipe, PipeTransform } from '@angular/core';
-import { NextObserver, Observable, ObservableInput, Unsubscribable } from 'rxjs';
-import { createRenderAware, RenderAware } from '../core';
-import { RxTemplateObserver } from '../core/model';
-import { getStrategies } from '../render-strategies';
-import { DEFAULT_STRATEGY_NAME } from '../render-strategies/strategies/strategies-map';
+import {
+  ChangeDetectorRef,
+  NgZone,
+  OnDestroy,
+  Pipe,
+  PipeTransform,
+} from '@angular/core';
+import {
+  strategyHandling,
+  RxStrategyProvider,
+  templateNotifier,
+} from '@rx-angular/cdk';
+import {
+  NextObserver,
+  Observable,
+  ObservableInput,
+  Unsubscribable,
+} from 'rxjs';
+import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 
 /**
  * @Pipe PushPipe
@@ -50,52 +63,77 @@ import { DEFAULT_STRATEGY_NAME } from '../render-strategies/strategies/strategie
  */
 @Pipe({ name: 'push', pure: false })
 export class PushPipe<U> implements PipeTransform, OnDestroy {
+  /** @internal */
   private renderedValue: U | null | undefined;
-
+  /** @internal */
   private readonly subscription: Unsubscribable;
-  private readonly RenderAware: RenderAware<U | null | undefined>;
+  /** @internal */
+  private readonly templateObserver = templateNotifier<U>();
+  /** @internal */
+  private readonly strategyHandler = strategyHandling(
+    this.strategyProvider.primaryStrategy,
+    this.strategyProvider.strategies
+  );
 
-  private readonly templateObserver: RxTemplateObserver<U | null | undefined> = {
-    suspense: () => this.renderedValue = undefined,
-    next: (value: U | null | undefined) => this.renderedValue = value
-  };
-
-  constructor(cdRef: ChangeDetectorRef) {
-    this.RenderAware = createRenderAware<U>({
-      strategies: getStrategies({
-        cdRef
-      }),
-      templateObserver: this.templateObserver
-    });
-    this.subscription = this.RenderAware.subscribe();
+  constructor(
+    private strategyProvider: RxStrategyProvider,
+    private ngZone: NgZone,
+    cdRef: ChangeDetectorRef
+  ) {
+    const scope = (cdRef as any).context;
+    this.subscription = this.templateObserver.values$
+      .pipe(
+        filter((n) => n.kind === 'suspense' || n.kind === 'next'),
+        tap((notification) => {
+          this.renderedValue = notification.value as U;
+        }),
+        withLatestFrom(this.strategyHandler.strategy$),
+        switchMap(([v, strategy]) =>
+          this.strategyProvider.schedule(
+            () => {
+              strategy.work(cdRef, scope);
+            },
+            {
+              scope,
+              strategy: strategy.name,
+              patchZone: this.strategyProvider.config.patchZone
+                ? ngZone
+                : false,
+            }
+          )
+        )
+      )
+      .subscribe();
   }
 
-  transform<T>(
+  transform(
     potentialObservable: null,
     config?: string | Observable<string>,
     renderCallback?: NextObserver<U>
   ): null;
-  transform<T>(
+  transform(
     potentialObservable: undefined,
     config?: string | Observable<string>,
     renderCallback?: NextObserver<U>
   ): undefined;
-  transform<T>(
-    potentialObservable: ObservableInput<T>,
+  transform(
+    potentialObservable: ObservableInput<U>,
     config?: string | Observable<string>,
     renderCallback?: NextObserver<U>
-  ): T;
-  transform<T>(
-    potentialObservable: ObservableInput<T> | null | undefined,
+  ): U;
+  transform(
+    potentialObservable: ObservableInput<U> | null | undefined,
     config: string | Observable<string> | undefined,
     renderCallback?: NextObserver<U>
-  ): T | null | undefined {
-    const strategy = config || DEFAULT_STRATEGY_NAME;
-    this.RenderAware.nextStrategy(strategy);
-    this.RenderAware.nextPotentialObservable(potentialObservable);
-    return this.renderedValue as any;
+  ): U | null | undefined {
+    if (config) {
+      this.strategyHandler.next(config);
+    }
+    this.templateObserver.next(potentialObservable);
+    return this.renderedValue as U;
   }
 
+  /** @internal */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }

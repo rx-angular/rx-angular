@@ -5,10 +5,11 @@ import { LetDirective } from '../../src/lib/let/let.directive';
 import { MockChangeDetectorRef } from '../fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; $rxComplete as complete">{{
+    <ng-container *rxLet="value$; $complete as complete">{{
       complete
       }}</ng-container>
   `
@@ -30,7 +31,12 @@ const setupLetDirectiveTestComponentComplete = (): void => {
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,
-      ViewContainerRef
+      ViewContainerRef,
+      {
+        provide: RX_ANGULAR_CONFIG, useValue: {
+          primaryStrategy: 'native'
+        }
+      }
     ]
   });
 

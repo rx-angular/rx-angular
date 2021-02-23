@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LetDirective } from '@rx-angular/template';
 import { EMPTY, Observable, of } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { MockChangeDetectorRef } from '../fixtures/fixtures';
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value; rxSuspense: suspense; rxError: error">{{
+    <ng-container *rxLet="value$; let value; rxSuspense: suspense; rxError: error;">{{
       value === undefined
         ? 'undefined'
         : value === null
@@ -29,7 +31,17 @@ let nativeElement: HTMLElement;
 
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveNoCompleteTemplateTestComponent, LetDirective]
+    declarations: [LetDirectiveNoCompleteTemplateTestComponent, LetDirective],
+    providers: [
+      { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
+      TemplateRef,
+      ViewContainerRef,
+      {
+        provide: RX_ANGULAR_CONFIG, useValue: {
+          primaryStrategy: 'native'
+        }
+      }
+    ]
   }).compileComponents();
 };
 
