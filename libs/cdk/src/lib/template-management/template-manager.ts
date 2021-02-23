@@ -17,11 +17,11 @@ import {
 import { onStrategy } from '../utils/onStrategy';
 import { strategyHandling } from '../utils/strategy-handling';
 import {
-  RenderAware,
+  RxRenderAware,
   rxBaseTemplateNames,
   RxRenderSettings,
   RxViewContext,
-  TemplateSettings,
+  RxTemplateSettings,
 } from './model';
 import {
   getTNode,
@@ -35,16 +35,11 @@ export interface RxTemplateManager<
   T,
   C extends RxViewContext<T>,
   N = rxBaseTemplateNames | string
-> extends RenderAware<T> {
+> extends RxRenderAware<T> {
   addTemplateRef: (name: N, templateRef: TemplateRef<C>) => void;
   // addTrigger: (trigger$: Observable<RxNotification<T>>) => void;
   // activeTemplate: N;
 }
-
-export type NotificationTemplateNameMap<T, C, N> = Record<
-  RxNotificationKind,
-  (value?: T, templates?: { get: (name: N) => TemplateRef<C> }) => N
->;
 
 /**
  * @internal
@@ -97,15 +92,20 @@ export type RxViewContextMap<T> = Record<
   (value?: any) => Partial<RxViewContext<T>>
 >;
 
+export type RxNotificationTemplateNameMap<T, C, N> = Record<
+  RxNotificationKind,
+  (value?: T, templates?: { get: (name: N) => TemplateRef<C> }) => N
+>;
+
 export function createTemplateManager<
   T,
   C extends RxViewContext<T>,
   N = rxBaseTemplateNames | string
 >(config: {
   renderSettings: RxRenderSettings<T, C>;
-  templateSettings: TemplateSettings<T, C>;
+  templateSettings: RxTemplateSettings<T, C>;
   templateTrigger$?: Observable<RxNotification<unknown>>;
-  notificationToTemplateName: NotificationTemplateNameMap<T, C, N>;
+  notificationToTemplateName: RxNotificationTemplateNameMap<T, C, N>;
 }): RxTemplateManager<T, C, N> {
   const {
     renderSettings,

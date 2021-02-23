@@ -8,13 +8,18 @@ import {
   addImportToModule,
   insertImport,
 } from '@schematics/angular/utility/ast-utils';
+import {
+  addPackageJsonDependency,
+  NodeDependency,
+} from '@schematics/angular/utility/dependencies';
 import * as ts from 'typescript';
 
 import {
-  packageName,
-  InsertChange,
   findRootModule,
   getProject,
+  InsertChange,
+  packageName,
+  peerDependencies,
 } from '../../common';
 import { SchemaOptions } from './schema';
 
@@ -86,6 +91,11 @@ function addImportsToModuleDeclaration(
   };
 }
 
+function addPeerDependencies(tree: Tree, dep: NodeDependency): void {
+  addPackageJsonDependency(tree, dep);
+  console.log(`${dep.name} got added as dependency. Update your packages.`);
+}
+
 export function ngAdd(options: SchemaOptions): Rule {
   return async (tree: Tree) => {
     const project = await getProject(tree, options.project);
@@ -93,6 +103,8 @@ export function ngAdd(options: SchemaOptions): Rule {
     const modulesToAdd = ['LetModule', 'PushModule'];
 
     options.module = findRootModule(tree, options.module, sourceRoot) as string;
+
+    addPeerDependencies(tree, peerDependencies);
 
     return chain([
       addImportsToModuleFile(options, modulesToAdd),

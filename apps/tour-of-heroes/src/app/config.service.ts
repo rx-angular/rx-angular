@@ -22,7 +22,7 @@ export class ConfigService {
 
   readonly renderStrategy$ = this.state.select('renderStrategy');
   constructor(
-    private strategyProvider: RxStrategyProvider
+    private rxStrategyProvider: RxStrategyProvider
   ) {}
 
   setStrategy(renderStrategy: AppRenderStrategy) {

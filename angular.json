@@ -576,7 +576,8 @@
             "production": {
               "tsConfig": "libs/state/tsconfig.lib.prod.json"
             }
-          }
+          },
+          "outputs": ["dist/libs/state"]
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
@@ -692,7 +693,8 @@
             "production": {
               "tsConfig": "libs/template/tsconfig.lib.prod.json"
             }
-          }
+          },
+          "outputs": ["dist/libs/template"]
         },
         "build-schematics": {
           "builder": "@nrwl/workspace:run-commands",
@@ -705,7 +707,7 @@
                 "command": "npx cpx libs/template/schematics/collection.json dist/libs/template/schematics"
               },
               {
-                "command": "npx cpx libs/template/schematics/**/{schema.json,files/**} dist/libs/template/schematics"
+                "command": "npx cpx libs/template/schematics/src/**/{schema.json,files/**} dist/libs/template/schematics/src"
               }
             ],
             "parallel": false
@@ -989,7 +991,8 @@
             "production": {
               "tsConfig": "libs/cdk/tsconfig.lib.prod.json"
             }
-          }
+          },
+          "outputs": ["dist/libs/cdk"]
         },
         "build": {
           "builder": "@nrwl/workspace:run-commands",

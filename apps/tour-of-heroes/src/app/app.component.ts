@@ -14,12 +14,12 @@ import { AppRenderStrategy, ConfigService } from './config.service';
 export class AppComponent {
   title = 'Tour of Heroes';
 
-  strategies = this.strategyProvider.strategies;
+  strategies = this.rxStrategyProvider.strategies;
 
   constructor(
     private router: Router,
     private appRef: ApplicationRef,
-    private strategyProvider: RxStrategyProvider,
+    private rxStrategyProvider: RxStrategyProvider,
     public configService: ConfigService
   ) {
     configService.setStrategy(AppRenderStrategy.native);

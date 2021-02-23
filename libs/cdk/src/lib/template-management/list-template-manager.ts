@@ -18,7 +18,7 @@ import {
   RxListTemplateChange,
   RxListTemplateChangeType,
   RxRenderSettings,
-  TemplateSettings,
+  RxTemplateSettings,
 } from './model';
 import {
   getTNode,
@@ -48,7 +48,7 @@ export function createListTemplateManager<
 >(config: {
   renderSettings: RxRenderSettings<T, C>;
   templateSettings: Omit<
-    TemplateSettings<T, C, RxListViewComputedContext>,
+    RxTemplateSettings<T, C, RxListViewComputedContext>,
     'patchZone'
   > & {
     templateRef: TemplateRef<C>;
