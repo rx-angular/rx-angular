@@ -1,3 +1,10 @@
+# [1.0.0-beta.18](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta-12...template@1.0.0-beta.18) (2021-02-22)
+
+### Features
+
+- **template:** add add peer dependencies to template ([7872458](https://github.com/rx-angular/rx-angular/commit/7872458c76dca3a04b471c0737f39f5d04a5d754))
+- **template:** add cdk dependency ([#545](https://github.com/rx-angular/rx-angular/issues/545)) ([6a0e814](https://github.com/rx-angular/rx-angular/commit/6a0e8148ea38ec28d5e3882c7b7a1789ffbd5a84))
+
 # [1.0.0-beta.17](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta-12...template@1.0.0-beta.17) (2021-02-22)
 
 ### Features
