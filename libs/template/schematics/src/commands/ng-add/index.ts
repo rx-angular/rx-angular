@@ -1,6 +1,7 @@
 import {
   chain,
   Rule,
+  SchematicContext,
   SchematicsException,
   Tree,
 } from '@angular-devkit/schematics';
@@ -16,12 +17,15 @@ import * as ts from 'typescript';
 
 import {
   findRootModule,
+  getLatestNodePackage,
   getProject,
   InsertChange,
   packageName,
   peerDependencies,
 } from '../../common';
 import { SchemaOptions } from './schema';
+import { combineLatest, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 function getModuleFile(tree: Tree, options: SchemaOptions): ts.SourceFile {
   const modulePath = options.module;
@@ -91,9 +95,27 @@ function addImportsToModuleDeclaration(
   };
 }
 
-function addPeerDependencies(tree: Tree, dep: NodeDependency): void {
-  addPackageJsonDependency(tree, dep);
-  console.log(`${dep.name} got added as dependency. Update your packages.`);
+function addPackageJsonDependencies(
+  packages: (string | NodeDependency)[]
+): Rule {
+  return (tree: Tree, context: SchematicContext): Observable<Tree> => {
+    const packageNames = packages.map((p) =>
+      typeof p === 'string' ? p : p.name
+    );
+    return combineLatest(
+      packageNames.map((name) => getLatestNodePackage(name))
+    ).pipe(
+      map((nodeDependencies: NodeDependency[]) => {
+        nodeDependencies.forEach((nodeDependency) => {
+          addPackageJsonDependency(tree, nodeDependency);
+          context.logger.info(
+            `✅️Added dependency ${nodeDependency.name}@${nodeDependency.version}`
+          );
+        });
+        return tree;
+      })
+    );
+  };
 }
 
 export function ngAdd(options: SchemaOptions): Rule {
@@ -104,9 +126,8 @@ export function ngAdd(options: SchemaOptions): Rule {
 
     options.module = findRootModule(tree, options.module, sourceRoot) as string;
 
-    addPeerDependencies(tree, peerDependencies);
-
     return chain([
+      addPackageJsonDependencies(peerDependencies),
       addImportsToModuleFile(options, modulesToAdd),
       addImportsToModuleDeclaration(options, modulesToAdd),
     ]);
