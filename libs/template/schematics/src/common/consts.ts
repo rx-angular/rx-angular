@@ -11,4 +11,10 @@ export const peerDependencies: NodeDependency[] = [
     version: '>=1.0.0-alpha.2',
     overwrite: true,
   },
+  {
+    type: NodeDependencyType.Default,
+    name: 'scheduler',
+    version: '^0.20.1',
+    overwrite: true,
+  },
 ];
