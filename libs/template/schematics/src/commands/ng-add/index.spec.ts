@@ -78,5 +78,8 @@ describe('ng-add schematic', () => {
       export class AppModule { }
       "
     `);
-  });
+  },
+    // timeout is needed because request to npmjs registry sometimes takes more than 5 seconds
+   10000
+  );
 });
