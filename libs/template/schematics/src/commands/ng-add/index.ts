@@ -9,15 +9,8 @@ import {
   NodeDependency,
 } from '@schematics/angular/utility/dependencies';
 
-import {
-  findRootModule,
-  getLatestNodePackage,
-  getProject,
-  peerDependencies,
-} from '../../common';
+import { findRootModule, getProject, peerDependencies } from '../../common';
 import { SchemaOptions } from './schema';
-import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 // function getModuleFile(tree: Tree, options: SchemaOptions): ts.SourceFile {
 //   const modulePath = options.module;
@@ -87,26 +80,15 @@ import { map } from 'rxjs/operators';
 //   };
 // }
 
-function addPackageJsonDependencies(
-  packages: (string | NodeDependency)[]
-): Rule {
-  return (tree: Tree, context: SchematicContext): Observable<Tree> => {
-    const packageNames = packages.map((p) =>
-      typeof p === 'string' ? p : p.name
-    );
-    return combineLatest(
-      packageNames.map((name) => getLatestNodePackage(name))
-    ).pipe(
-      map((nodeDependencies: NodeDependency[]) => {
-        nodeDependencies.forEach((nodeDependency) => {
-          addPackageJsonDependency(tree, nodeDependency);
-          context.logger.info(
-            `✅️Added dependency ${nodeDependency.name}@${nodeDependency.version}`
-          );
-        });
-        return tree;
-      })
-    );
+function addPackageJsonDependencies(packages: NodeDependency[]): Rule {
+  return (tree: Tree, context: SchematicContext): Tree => {
+    packages.forEach((nodeDependency) => {
+      addPackageJsonDependency(tree, nodeDependency);
+      context.logger.info(
+        `✅️Added dependency ${nodeDependency.name}@${nodeDependency.version}`
+      );
+    });
+    return tree;
   };
 }
 
