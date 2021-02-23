@@ -61,16 +61,13 @@ describe('ng-add schematic', () => {
       import { BrowserModule } from '@angular/platform-browser';
 
       import { AppComponent } from './app.component';
-      import { LetModule, PushModule } from '@rx-angular/template';
 
       @NgModule({
         declarations: [
           AppComponent
         ],
         imports: [
-          BrowserModule,
-          LetModule,
-          PushModule
+          BrowserModule
         ],
         providers: [],
         bootstrap: [AppComponent]
