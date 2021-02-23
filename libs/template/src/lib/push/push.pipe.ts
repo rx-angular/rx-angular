@@ -63,11 +63,13 @@ import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
  */
 @Pipe({ name: 'push', pure: false })
 export class PushPipe<U> implements PipeTransform, OnDestroy {
+  /** @internal */
   private renderedValue: U | null | undefined;
-
+  /** @internal */
   private readonly subscription: Unsubscribable;
-
+  /** @internal */
   private readonly templateObserver = templateNotifier<U>();
+  /** @internal */
   private readonly strategyHandler = strategyHandling(
     this.strategyProvider.primaryStrategy,
     this.strategyProvider.strategies
@@ -94,7 +96,9 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
             {
               scope,
               strategy: strategy.name,
-              patchZone: ngZone,
+              patchZone: this.strategyProvider.config.patchZone
+                ? ngZone
+                : false,
             }
           )
         )
@@ -122,7 +126,6 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
     config: string | Observable<string> | undefined,
     renderCallback?: NextObserver<U>
   ): U | null | undefined {
-    // const strategy = config || DEFAULT_STRATEGY_NAME;
     if (config) {
       this.strategyHandler.next(config);
     }
@@ -130,6 +133,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
     return this.renderedValue as U;
   }
 
+  /** @internal */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }

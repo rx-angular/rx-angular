@@ -24,7 +24,6 @@ import {
   RxStrategyProvider,
   RxBaseTemplateNames,
   RxViewContext,
-  RxStrategies,
   RxStrategyNames,
 } from '@rx-angular/cdk';
 
@@ -327,24 +326,30 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
 
   /** @internal */
   private observablesHandler = templateNotifier<U>(() => !!this.rxSuspense);
+  /** @internal */
   private strategyHandler = hotFlatten<string>(
     () => new ReplaySubject<RxStrategyNames<string>>(1)
   );
+  /** @internal */
   private triggerHandler = hotFlatten<RxNotification<unknown>>(
     () => new Subject(),
     mergeAll()
   );
 
+  /** @internal */
   private _renderObserver: NextObserver<any>;
 
+  /** @internal */
   private subscription: Subscription = new Subscription();
 
+  /** @internal */
   private templateManager: RxTemplateManager<
     U,
     RxLetViewContext<U | undefined | null>,
     rxLetTemplateNames
   >;
 
+  /** @internal */
   private rendered$ = new Subject<void>();
 
   @Output() readonly rendered = defer(() => this.rendered$.pipe());
@@ -357,6 +362,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     return true;
   }
 
+  /** @internal */
   ngOnInit() {
     this.subscription.add(
       this.templateManager
@@ -368,6 +374,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     );
   }
 
+  /** @internal */
   ngOnChanges(changes: SimpleChanges) {
     if (!this.templateManager) {
       this._createTemplateManager();
@@ -395,10 +402,12 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  /** @internal */
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
+  /** @internal */
   private _createTemplateManager(): void {
     this.templateManager = createTemplateManager<
       U,
@@ -443,7 +452,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     this.templateManager.nextStrategy(this.strategyHandler.values$);
   }
 }
-
+/** @internal */
 function createViewContext<T>(value: T): RxLetViewContext<T> {
   return {
     rxLet: value,
@@ -453,7 +462,7 @@ function createViewContext<T>(value: T): RxLetViewContext<T> {
     $suspense: false,
   };
 }
-
+/** @internal */
 function updateViewContext<T>(
   value: T,
   view: EmbeddedViewRef<RxLetViewContext<T>>,
