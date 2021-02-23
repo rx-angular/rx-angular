@@ -61,16 +61,13 @@ describe('ng-add schematic', () => {
       import { BrowserModule } from '@angular/platform-browser';
 
       import { AppComponent } from './app.component';
-      import { LetModule, PushModule } from '@rx-angular/template';
 
       @NgModule({
         declarations: [
           AppComponent
         ],
         imports: [
-          BrowserModule,
-          LetModule,
-          PushModule
+          BrowserModule
         ],
         providers: [],
         bootstrap: [AppComponent]
@@ -78,5 +75,8 @@ describe('ng-add schematic', () => {
       export class AppModule { }
       "
     `);
-  });
+  },
+    // timeout is needed because request to npmjs registry sometimes takes more than 5 seconds
+   10000
+  );
 });
