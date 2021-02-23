@@ -985,10 +985,13 @@
           }
         },
         "build-lib": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
+          "builder": "@nrwl/workspace:run-commands",
           "options": {
-            "tsConfig": "libs/cdk/tsconfig.lib.json",
-            "project": "libs/cdk/ng-package.json"
+            "commands": [
+              {
+                "command": "npx ng-packagr -p libs/cdk/ng-package.json"
+              }
+            ]
           },
           "configurations": {
             "production": {
