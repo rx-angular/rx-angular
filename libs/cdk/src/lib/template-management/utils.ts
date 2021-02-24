@@ -16,7 +16,7 @@ import {
   of,
   OperatorFunction,
 } from 'rxjs';
-import { MonoTypeOperatorFunction } from 'rxjs/internal/types';
+import { MonoTypeOperatorFunction } from 'rxjs';
 import {
   delay,
   ignoreElements,
