@@ -2,6 +2,9 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/libs/template",
   "lib": {
-    "entryFile": "src/index.ts"
+    "entryFile": "src/public_api.ts",
+    "umdModuleIds": {
+      "@rx-angular/cdk": "rx-angular.cdk"
+    }
   }
 }

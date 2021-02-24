@@ -2009,23 +2009,6 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@rx-angular/cdk@^1.0.0-alpha.1":
-  version "1.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@rx-angular/cdk/-/cdk-1.0.0-alpha.2.tgz#a5f9e0bd06a7c41b22f3a2b3d61523a82850b077"
-  integrity sha512-QfrIJxiXiBG7SlrVTsvX1EHvF/khKbOFJLOKMR6jiEDavWL+e9zJGjEAg6invtOwfU+hFOLuRwhLQcecckQvdg==
-  dependencies:
-    "@rx-angular/cdk" "^1.0.0-alpha.1"
-    rxjs "^6.6.3"
-    tslib "^2.0.0"
-
-"@rx-angular/template@1.0.0-beta.18":
-  version "1.0.0-beta.18"
-  resolved "https://registry.yarnpkg.com/@rx-angular/template/-/template-1.0.0-beta.18.tgz#613db0f0de8c2b94985f9c20f0ef3999b3bea74c"
-  integrity sha512-Y3i1sg++l6gcZZ0fkMVW7awzDRuWhvW4AbQwJ3d7DZP9GnWnpCIzffMLkgJl/wNMCVcVQo/8t3nWMOe2z+aR0Q==
-  dependencies:
-    "@angular/platform-browser" "^11.2.0"
-    tslib "^2.0.0"
-
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.0.tgz#ecdf48d532c58ea477acfcab80348424f8d0662f"
@@ -2232,6 +2215,13 @@
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
+
+"@types/ncp@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@types/ncp/-/ncp-2.0.4.tgz#16c9e7fa2c849d429a1b142648987164b06bf490"
+  integrity sha512-erpimpT1pH8QfeNg77ypnjwz6CGMqrnL4DewVbqFzD9FXzSULjmG3KzjZnLNe7bzTSZm2W9DpkHyqop1g1KmgQ==
+  dependencies:
+    "@types/node" "*"
 
 "@types/node-fetch@^2.5.8":
   version "2.5.8"
@@ -8698,6 +8688,11 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
+
+ncp@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ncp/-/ncp-2.0.0.tgz#195a21d6c46e361d2fb1281ba38b91e9df7bdbb3"
+  integrity sha1-GVoh1sRuNh0vsSgbo4uR6d9727M=
 
 needle@^2.5.2:
   version "2.6.0"

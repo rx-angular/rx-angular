@@ -6,10 +6,8 @@
     "declaration": true,
     "inlineSources": true,
     "types": [],
-    "lib": [
-      "dom",
-      "es2018"
-    ]
+    "module": "umd",
+    "lib": ["dom", "es2018"]
   },
   "angularCompilerOptions": {
     "enableIvy": false,
@@ -17,8 +15,5 @@
     "strictMetadataEmit": true,
     "enableResourceInlining": true
   },
-  "exclude": [
-    "src/test-setup.ts",
-    "**/*.spec.ts"
-  ]
+  "exclude": ["src/test-setup.ts", "**/*.spec.ts"]
 }

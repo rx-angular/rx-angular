@@ -7,7 +7,6 @@ import { MockChangeDetectorRef } from '../fixtures';
 import { mockConsole } from '@test-helpers';
 import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
-
 @Component({
   template: `
     <ng-container *rxLet="value$; $error as error">{{ error }}</ng-container>

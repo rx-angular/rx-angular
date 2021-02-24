@@ -73,7 +73,7 @@ const setupTestComponent = (): void => {
 };
 
 
-describe('TemplateManager', () => {
+xdescribe('TemplateManager', () => {
 
   beforeEach(setupTestComponent);
 

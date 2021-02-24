@@ -1,4 +1,3 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectorRef,
   Directive,
@@ -424,7 +423,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
       renderSettings: {
         cdRef: this.cdRef,
         eRef: this.eRef,
-        parent: coerceBooleanProperty(this.renderParent),
+        parent: !!this.renderParent,
         patchZone: this.patchZone ? this.ngZone : false,
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         strategies: this.strategyProvider.strategies,

@@ -1,10 +1,28 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "extends": "./tsconfig.lib.json",
   "compilerOptions": {
-    "declarationMap": false
+    "baseUrl": "../../",
+    "declaration": true,
+    "experimentalDecorators": true,
+    "module": "es2015",
+    "moduleResolution": "node",
+    "outDir": "../../dist/libs/template",
+    "paths": {},
+    "rootDir": ".",
+    "sourceMap": true,
+    "inlineSources": true,
+    "target": "es2015",
+    "lib": ["es2018", "dom"],
+    "skipLibCheck": true
   },
+  "files": ["public_api.ts"],
+  "include": ["**/*.ts"],
+  "exclude": ["**/*.spec.ts"],
   "angularCompilerOptions": {
+    "annotateForClosureCompiler": true,
+    // Work around for issue: https://github.com/angular/angular/issues/22210
+    "strictMetadataEmit": false,
+    "flatModuleOutFile": "index.js",
+    "flatModuleId": "@rx-angular/template",
     "enableIvy": false
   }
 }
