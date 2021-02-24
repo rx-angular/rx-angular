@@ -1,25 +1,23 @@
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { filter, mapTo, switchMap } from 'rxjs/operators';
 import {
-  unstable_cancelCallback as cancelCallback,
-  unstable_scheduleCallback as scheduleCallback,
-  unstable_forceFrameRate as forceFrameRate,
-} from 'scheduler';
+  cancelCallback,
+  scheduleCallback,
+  forceFrameRate,
+  UserBlockingPriority,
+  ImmediatePriority,
+  NormalPriority,
+  LowPriority,
+  IdlePriority,
+  PriorityLevel,
+  NoPriority,
+} from './scheduler';
 import {
   RxCustomStrategyCredentials,
   RxConcurrentStrategyNames,
   RxStrategyCredentials,
 } from '../model';
 import { coalescingManager } from '../utils/coalescingManager';
-
-type PriorityLevel = 0 | 1 | 2 | 3 | 4 | 5;
-
-const NoPriority = 0;
-const ImmediatePriority = 1;
-const UserBlockingPriority = 2;
-const NormalPriority = 3;
-const LowPriority = 4;
-const IdlePriority = 5;
 
 forceFrameRate(60);
 

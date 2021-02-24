@@ -48,8 +48,7 @@
   },
   "peerDependencies": {
     "@angular/common": "^10.1.1",
-    "@angular/core": "^10.1.1",
-    "scheduler": "^0.20.1"
+    "@angular/core": "^10.1.1"
   },
   "dependencies": {
     "tslib": "^2.0.0"

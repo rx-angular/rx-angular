@@ -2,9 +2,7 @@
   "compilerOptions": {
     "baseUrl": "../../",
     "declaration": true,
-    "stripInternal": true,
     "experimentalDecorators": true,
-    "downlevelIteration": true,
     "module": "es2015",
     "moduleResolution": "node",
     "outDir": "../../dist/libs/template",
