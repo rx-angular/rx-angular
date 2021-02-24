@@ -9,6 +9,8 @@ import {
   strategyHandling,
   RxStrategyProvider,
   templateNotifier,
+  RxNotificationKind,
+  RxNotification,
 } from '@rx-angular/cdk';
 import {
   NextObserver,
@@ -83,8 +85,12 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
     const scope = (cdRef as any).context;
     this.subscription = this.templateObserver.values$
       .pipe(
-        filter((n) => n.kind === 'suspense' || n.kind === 'next'),
-        tap((notification) => {
+        filter<RxNotification<U>>(
+          (n) =>
+            n.kind === RxNotificationKind.suspense ||
+            n.kind === RxNotificationKind.next
+        ),
+        tap<RxNotification<U>>((notification) => {
           this.renderedValue = notification.value as U;
         }),
         withLatestFrom(this.strategyHandler.strategy$),

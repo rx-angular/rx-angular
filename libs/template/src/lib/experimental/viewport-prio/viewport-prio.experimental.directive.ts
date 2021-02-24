@@ -139,7 +139,7 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
         )
       )
       .subscribe((strategyName) => {
-        this.letDirective.strategy = strategyName;
+        this.letDirective.strategy = strategyName as string;
         // render actual state on viewport enter
         // @TODO this doesnt catch unsubscribe (cant be cancelled)
         // @TODO: we need to fetch the current template of the letDirective here

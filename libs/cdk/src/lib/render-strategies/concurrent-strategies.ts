@@ -4,7 +4,7 @@ import {
   unstable_cancelCallback as cancelCallback,
   unstable_scheduleCallback as scheduleCallback,
   unstable_forceFrameRate as forceFrameRate,
-} from 'scheduler/cjs/scheduler.production.min.js';
+} from 'scheduler';
 import {
   RxCustomStrategyCredentials,
   RxConcurrentStrategyNames,

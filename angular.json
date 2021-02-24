@@ -684,17 +684,11 @@
       "prefix": "rx",
       "architect": {
         "build-lib": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": "libs/template/tsconfig.lib.json",
+            "tsConfig": "libs/template/tsconfig.lib.prod.json",
             "project": "libs/template/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/template/tsconfig.lib.prod.json"
-            }
-          },
-          "outputs": ["dist/libs/template"]
+          }
         },
         "build-schematics": {
           "builder": "@nrwl/workspace:run-commands",
@@ -724,12 +718,19 @@
                 "command": "rimraf dist/libs/template"
               },
               {
-                "command": "nx run template:build-lib"
+                "command": "ng run template:build-lib"
               },
               {
                 "command": "nx run template:build-schematics"
+              },
+              {
+                "command": "yarn mkdirp node_modules/@rx-angular/template"
+              },
+              {
+                "command": "ncp dist/libs/template node_modules/@rx-angular/template"
               }
             ],
+            "outputPath": ["dist/libs/template", "node_modules/@rx-angular/template"],
             "parallel": false
           }
         },
@@ -985,20 +986,11 @@
           }
         },
         "build-lib": {
-          "builder": "@nrwl/workspace:run-commands",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "commands": [
-              {
-                "command": "npx ng-packagr -p libs/cdk/ng-package.json"
-              }
-            ]
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/cdk/tsconfig.lib.prod.json"
-            }
-          },
-          "outputs": ["dist/libs/cdk"]
+            "tsConfig": "libs/cdk/tsconfig.lib.prod.json",
+            "project": "libs/cdk/ng-package.json"
+          }
         },
         "build": {
           "builder": "@nrwl/workspace:run-commands",
@@ -1009,8 +1001,15 @@
               },
               {
                 "command": "nx run cdk:build-lib"
+              },
+              {
+                "command": "yarn mkdirp node_modules/@rx-angular/cdk"
+              },
+              {
+                "command": "ncp dist/libs/cdk node_modules/@rx-angular/cdk"
               }
             ],
+            "outputPath": ["dist/libs/cdk", "node_modules/@rx-angular/cdk"],
             "parallel": false
           }
         },
