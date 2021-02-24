@@ -1,3 +1,10 @@
+# [1.0.0-alpha.3](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.2...cdk@1.0.0-alpha.3) (2021-02-24)
+
+### Bug Fixes
+
+- **cdk:** ng-packagr builds ([#553](https://github.com/rx-angular/rx-angular/issues/553)) ([cfd4711](https://github.com/rx-angular/rx-angular/commit/cfd47112c12bf7333e657c2f6b6e79d3d3eccda4))
+  removed imports and dependencies to scheduler
+
 # [1.0.0-alpha.2](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.0...cdk@1.0.0-alpha.2) (2021-02-23)
 
 ### Bug Fixes
