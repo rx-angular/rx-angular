@@ -1,3 +1,9 @@
+# [1.0.0-beta.23](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.21...template@1.0.0-beta.23) (2021-02-24)
+
+### Bug Fixes
+
+- **template:** fix VSCode language service errors ([#553](https://github.com/rx-angular/rx-angular/issues/553)) ([cfd4711](https://github.com/rx-angular/rx-angular/commit/cfd47112c12bf7333e657c2f6b6e79d3d3eccda4))
+
 # [1.0.0-beta.22](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.21...template@1.0.0-beta.22) (2021-02-23)
 
 ### Features
