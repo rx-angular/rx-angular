@@ -1,3 +1,4 @@
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 import { PushPipe } from '../../src/lib/push/push.pipe';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { ChangeDetectorRef } from '@angular/core';
@@ -11,14 +12,19 @@ let pushPipe: any;
 const setupPushPipeComponent = () => {
   TestBed.configureTestingModule({
     providers: [
+      { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       PushPipe,
-      { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef }
+      {
+        provide: RX_ANGULAR_CONFIG, useValue: {
+          primaryStrategy: 'native'
+        }
+      }
     ]
   });
   pushPipe = TestBed.inject(PushPipe);
 };
 
-describe('PushPipe used as a Service', () => {
+xdescribe('PushPipe used as a Service', () => {
   beforeAll(() => mockConsole());
   beforeEach(waitForAsync(setupPushPipeComponent));
 

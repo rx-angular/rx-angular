@@ -79,8 +79,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
 
   constructor(
     private strategyProvider: RxStrategyProvider,
-    private ngZone: NgZone,
-    cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef
   ) {
     const scope = (cdRef as any).context;
     this.subscription = this.templateObserver.values$
@@ -102,9 +101,7 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
             {
               scope,
               strategy: strategy.name,
-              patchZone: this.strategyProvider.config.patchZone
-                ? ngZone
-                : false,
+              patchZone: this.strategyProvider.config.patchZone ? null : false,
             }
           )
         )
