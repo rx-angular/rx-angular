@@ -24,7 +24,7 @@ const setupPushPipeComponent = () => {
   pushPipe = TestBed.inject(PushPipe);
 };
 
-xdescribe('PushPipe used as a Service', () => {
+describe('PushPipe used as a Service', () => {
   beforeAll(() => mockConsole());
   beforeEach(waitForAsync(setupPushPipeComponent));
 
