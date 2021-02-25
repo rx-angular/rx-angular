@@ -33,6 +33,14 @@
     "@angular-devkit/core" "11.2.0"
     rxjs "6.6.3"
 
+"@angular-devkit/architect@0.1102.2":
+  version "0.1102.2"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.1102.2.tgz#3b3eb654ae7c8c204b248bba76982ce8de2f7b6c"
+  integrity sha512-FE7DeT13elqDlELF23QqvEFnT2BkxeC5t31/QW85IN/OR5Tf/q7XEpj7giJXyzKFQ60M3ZzbznZyRz0EqtfaBQ==
+  dependencies:
+    "@angular-devkit/core" "11.2.2"
+    rxjs "6.6.3"
+
 "@angular-devkit/build-angular@0.1102.0":
   version "0.1102.0"
   resolved "https://registry.yarnpkg.com/@angular-devkit/build-angular/-/build-angular-0.1102.0.tgz#7996429000d4a707c8169b801f153819f04a2c24"
@@ -181,6 +189,17 @@
     rxjs "6.6.3"
     source-map "0.7.3"
 
+"@angular-devkit/core@11.2.2":
+  version "11.2.2"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-11.2.2.tgz#c6b40f941b24d2af447831fc958b744316cd7d87"
+  integrity sha512-LUDO1AdIjereiMh0j5p9xJcdr9ifhbWCPxlZqfu5wHzUfhCx9gO2Lvjp6rZXQ3OedXg5IZUnyxHlzkszQOsgiw==
+  dependencies:
+    ajv "6.12.6"
+    fast-json-stable-stringify "2.1.0"
+    magic-string "0.25.7"
+    rxjs "6.6.3"
+    source-map "0.7.3"
+
 "@angular-devkit/schematics@11.0.6", "@angular-devkit/schematics@~11.0.1":
   version "11.0.6"
   resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-11.0.6.tgz#06631190cb22609462597cd6659080fc3313582a"
@@ -190,12 +209,12 @@
     ora "5.1.0"
     rxjs "6.6.3"
 
-"@angular-devkit/schematics@11.2.0":
-  version "11.2.0"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-11.2.0.tgz#82192578ff2a9fb01a9d8c56237f4fc98946e757"
-  integrity sha512-sMDacACJbA4pykiqgJf/RdW0damcf4mDqErGgEqs/bGG+SBUb8+wgt4cQnUwwVX5V2nMdvv7f0A84rgR6I3G2w==
+"@angular-devkit/schematics@11.2.2":
+  version "11.2.2"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-11.2.2.tgz#0c8c4b98a30f00649dcbb7794d3783b9a067209f"
+  integrity sha512-6bIxMwafz/+lwdtcshwOuFfhxTMU4RLma1uxBS34DXupMauPGl0IIXAy5cK9dXPlHLxuGsjeBiOM6eq033RLgw==
   dependencies:
-    "@angular-devkit/core" "11.2.0"
+    "@angular-devkit/core" "11.2.2"
     ora "5.3.0"
     rxjs "6.6.3"
 
@@ -215,16 +234,16 @@
   optionalDependencies:
     parse5 "^5.0.0"
 
-"@angular/cli@11.2.0":
-  version "11.2.0"
-  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-11.2.0.tgz#f611f0851f6f92008f0f5aaaade947751b27687f"
-  integrity sha512-waIR5Nqc2wcYXZh/Mgm+4Iyvu0nzKAhvmKiJjcJ+f2UuPRMLdNAInTvhdpfgKaNdmiArxNa6UntRIu+EavGc9Q==
+"@angular/cli@11.2.2":
+  version "11.2.2"
+  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-11.2.2.tgz#ca56894f1a4d1f4e411408b8185b711614c3195a"
+  integrity sha512-rOVBzDzrMuOgJY43O46/7yYbncx0egGfr+DMJDQdazePGH1H3INN/eA9gkVcVK53ztCYb9X1sbZKOs9TUhF6nw==
   dependencies:
-    "@angular-devkit/architect" "0.1102.0"
-    "@angular-devkit/core" "11.2.0"
-    "@angular-devkit/schematics" "11.2.0"
-    "@schematics/angular" "11.2.0"
-    "@schematics/update" "0.1102.0"
+    "@angular-devkit/architect" "0.1102.2"
+    "@angular-devkit/core" "11.2.2"
+    "@angular-devkit/schematics" "11.2.2"
+    "@schematics/angular" "11.2.2"
+    "@schematics/update" "0.1102.2"
     "@yarnpkg/lockfile" "1.1.0"
     ansi-colors "4.1.1"
     debug "4.3.1"
@@ -2016,13 +2035,13 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@schematics/angular@11.2.0":
-  version "11.2.0"
-  resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-11.2.0.tgz#da903e0fc09e834cf53452a30ea7d2eb78608ebc"
-  integrity sha512-PtbyZ7TEEEae9Y5siSZYigWyk8iOSjZ10ThA7tRxm8gdcLjGimyyKr5TyjufIAvrXIYnBXNLgPkZG6s5CQIEyw==
+"@schematics/angular@11.2.2":
+  version "11.2.2"
+  resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-11.2.2.tgz#ff69a66b6e1acf5aa36ed0795973f3f57d893d0b"
+  integrity sha512-TcxPy58adUnkirGXyZVVSMuKkA0eIz2PWSQWEgB9l7kO+5LvDOn+RMoc6AVx0s/bU9nH+eozBUJ1XAD/E8QnYQ==
   dependencies:
-    "@angular-devkit/core" "11.2.0"
-    "@angular-devkit/schematics" "11.2.0"
+    "@angular-devkit/core" "11.2.2"
+    "@angular-devkit/schematics" "11.2.2"
     jsonc-parser "3.0.0"
 
 "@schematics/angular@~11.0.1":
@@ -2034,13 +2053,13 @@
     "@angular-devkit/schematics" "11.0.6"
     jsonc-parser "2.3.1"
 
-"@schematics/update@0.1102.0":
-  version "0.1102.0"
-  resolved "https://registry.yarnpkg.com/@schematics/update/-/update-0.1102.0.tgz#6aa5e25cd18ab9e99d8cd06752583d1ed21a6a65"
-  integrity sha512-2hFt/2iPe6LqQvzYj4HvQ8us0e0lBU75rSK2yY6VfiZWR/qo7yk99YKI7JWFTLvLsNbhNnSG/9opXJHqqUoc3g==
+"@schematics/update@0.1102.2":
+  version "0.1102.2"
+  resolved "https://registry.yarnpkg.com/@schematics/update/-/update-0.1102.2.tgz#f8aed68bbcefdc8633c7804e47ff891ef06bd5ef"
+  integrity sha512-Nz8kjeixzDnOw00bnZznq3qrbIv8yWEWNb9eDkRBqgOUXQwlhKJY/sYBK58JF2D+conaRVuEqMsBlX08GlFtIA==
   dependencies:
-    "@angular-devkit/core" "11.2.0"
-    "@angular-devkit/schematics" "11.2.0"
+    "@angular-devkit/core" "11.2.2"
+    "@angular-devkit/schematics" "11.2.2"
     "@yarnpkg/lockfile" "1.1.0"
     ini "2.0.0"
     npm-package-arg "^8.0.0"
@@ -6380,13 +6399,6 @@ hosted-git-info@^2.1.4:
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.8.tgz#7539bd4bc1e0e0a895815a2e0262420b12858488"
   integrity sha512-f/wzC2QaWBs7t9IYqB4T3sR1xviIViXJRJTWBlx2Gf3g0Xi5vI7Yy4koXQ1c9OYDGHN9sBy1DQ2AB8fqZBWhUg==
 
-hosted-git-info@^3.0.2:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-3.0.4.tgz#be4973eb1fd2737b11c9c7c19380739bb249f60d"
-  integrity sha512-4oT62d2jwSDBbLLFLZE+1vPuQ1h8p9wjrJ8Mqx5TjsyWmBMV5B13eJqn8pvluqubLf3cJPTfiYCIwNwDNmzScQ==
-  dependencies:
-    lru-cache "^5.1.1"
-
 hosted-git-info@^3.0.6:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-3.0.7.tgz#a30727385ea85acfcee94e0aad9e368c792e036c"
@@ -7690,15 +7702,15 @@ jest@26.4.2:
     import-local "^3.0.2"
     jest-cli "^26.4.2"
 
-"js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
-  integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
-
 js-tokens@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
   integrity sha1-mGbfOVECEw449/mWvOtlRDIJwls=
+
+js-tokens@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
+  integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
 
 js-yaml@^3.13.1, js-yaml@^3.9.0:
   version "3.13.1"
@@ -8184,13 +8196,6 @@ loglevel@^1.6.8:
   version "1.6.8"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.8.tgz#8a25fb75d092230ecd4457270d80b54e28011171"
   integrity sha512-bsU7+gc9AJ2SqpzxwU3+1fedl8zAntbtC5XYlt3s2j1hJcn2PsXSmgN8TaLG/J1/2mod4+cE/3vNL70/c1RNCA==
-
-loose-envify@^1.1.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
-  integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
-  dependencies:
-    js-tokens "^3.0.0 || ^4.0.0"
 
 lru-cache@^5.1.1:
   version "5.1.1"
@@ -8926,21 +8931,12 @@ npm-normalize-package-bin@^1.0.1:
   resolved "https://registry.yarnpkg.com/npm-normalize-package-bin/-/npm-normalize-package-bin-1.0.1.tgz#6e79a41f23fd235c0623218228da7d9c23b8f6e2"
   integrity sha512-EPfafl6JL5/rU+ot6P3gRSCpPDW5VmIzX959Ob1+ySFUuuYHWHekXpwdUZcKP5C+DS4GEtdJluwBjnsNDl+fSA==
 
-npm-package-arg@8.1.0, npm-package-arg@^8.0.1:
+npm-package-arg@8.1.0, npm-package-arg@^8.0.0, npm-package-arg@^8.0.1:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/npm-package-arg/-/npm-package-arg-8.1.0.tgz#b5f6319418c3246a1c38e1a8fbaa06231bc5308f"
   integrity sha512-/ep6QDxBkm9HvOhOg0heitSd7JHA1U7y1qhhlRlteYYAi9Pdb/ZV7FW5aHpkrpM8+P+4p/jjR8zCyKPBMBjSig==
   dependencies:
     hosted-git-info "^3.0.6"
-    semver "^7.0.0"
-    validate-npm-package-name "^3.0.0"
-
-npm-package-arg@^8.0.0:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/npm-package-arg/-/npm-package-arg-8.0.1.tgz#9d76f8d7667b2373ffda60bb801a27ef71e3e270"
-  integrity sha512-/h5Fm6a/exByzFSTm7jAyHbgOqErl9qSNJDQF32Si/ZzgwT2TERVxRxn3Jurw1wflgyVVAxnFR4fRHPM7y1ClQ==
-  dependencies:
-    hosted-git-info "^3.0.2"
     semver "^7.0.0"
     validate-npm-package-name "^3.0.0"
 
@@ -10604,14 +10600,14 @@ resolve-url@^0.2.1:
   resolved "https://registry.yarnpkg.com/resolve-url/-/resolve-url-0.2.1.tgz#2c637fe77c893afd2a663fe21aa9080068e2052a"
   integrity sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
 
-resolve@1.17.0, resolve@^1.1.7, resolve@^1.10.0, resolve@^1.17.0, resolve@^1.3.2:
+resolve@1.17.0:
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.17.0.tgz#b25941b54968231cc2d1bb76a79cb7f2c0bf8444"
   integrity sha512-ic+7JYiV8Vi2yzQGFWOkiZD5Z9z7O2Zhm9XMaTxdJExKasieFCr+yXZ/WmXsckHiKl12ar0y6XiXDx3m4RHn1w==
   dependencies:
     path-parse "^1.0.6"
 
-resolve@1.19.0, resolve@^1.18.1:
+resolve@1.19.0:
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.19.0.tgz#1af5bf630409734a067cae29318aac7fa29a267c"
   integrity sha512-rArEXAgsBG4UgRGcynxWIWKFvh/XZCcS8UJdHhwy91zwAvCZIbcs+vAbflgBnNjYMs/i/i+/Ux6IZhML1yPvxg==
@@ -10619,7 +10615,7 @@ resolve@1.19.0, resolve@^1.18.1:
     is-core-module "^2.1.0"
     path-parse "^1.0.6"
 
-resolve@^1.19.0:
+resolve@^1.1.7, resolve@^1.10.0, resolve@^1.17.0, resolve@^1.18.1, resolve@^1.19.0, resolve@^1.3.2:
   version "1.20.0"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.20.0.tgz#629a013fb3f70755d6f0b7935cc1c2c5378b1975"
   integrity sha512-wENBPt4ySzg4ybFQW2TT1zMQucPK95HSh/nq2CFTZVOGut2+pQvSsgtda4d26YrYcr067wjbmzOG8byDPBX63A==
@@ -10859,14 +10855,6 @@ saxes@^5.0.0:
   integrity sha512-5LBh1Tls8c9xgGjw3QrMwETmTMVk0oFgvrFSvWx62llR2hcEInrKNZ2GZCCuuy2lvWrdl5jhbpeqc5hRYKFOcw==
   dependencies:
     xmlchars "^2.2.0"
-
-scheduler@^0.20.1:
-  version "0.20.1"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.20.1.tgz#da0b907e24026b01181ecbc75efdc7f27b5a000c"
-  integrity sha512-LKTe+2xNJBNxu/QhHvDR14wUXHRQbVY5ZOYpOGWRzhydZUqrLb2JBvLPY7cAqFmqrWuDED0Mjk7013SZiOz6Bw==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
 
 schema-utils@^1.0.0:
   version "1.0.0"
