@@ -1,7 +1,9 @@
 import {
   ChangeDetectorRef,
+  Inject,
   NgZone,
   OnDestroy,
+  Optional,
   Pipe,
   PipeTransform,
 } from '@angular/core';
@@ -11,6 +13,8 @@ import {
   templateNotifier,
   RxNotificationKind,
   RxNotification,
+  RX_ANGULAR_CONFIG,
+  RxAngularConfig,
 } from '@rx-angular/cdk';
 import {
   NextObserver,
@@ -79,34 +83,13 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
 
   constructor(
     private strategyProvider: RxStrategyProvider,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private ngZone: NgZone,
+    @Optional()
+    @Inject(RX_ANGULAR_CONFIG)
+    private config?: RxAngularConfig<string>
   ) {
-    const scope = (cdRef as any).context;
-    this.subscription = this.templateObserver.values$
-      .pipe(
-        filter<RxNotification<U>>(
-          (n) =>
-            n.kind === RxNotificationKind.suspense ||
-            n.kind === RxNotificationKind.next
-        ),
-        tap<RxNotification<U>>((notification) => {
-          this.renderedValue = notification.value as U;
-        }),
-        withLatestFrom(this.strategyHandler.strategy$),
-        switchMap(([v, strategy]) =>
-          this.strategyProvider.schedule(
-            () => {
-              strategy.work(cdRef, scope);
-            },
-            {
-              scope,
-              strategy: strategy.name,
-              patchZone: this.strategyProvider.config.patchZone ? null : false,
-            }
-          )
-        )
-      )
-      .subscribe();
+    this.subscription = this.handleChangeDetection();
   }
 
   transform(
@@ -139,5 +122,39 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
   /** @internal */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  private handleChangeDetection(): Unsubscribable {
+    const scope = (this.cdRef as any).context;
+    const patchZone =
+      this.config?.patchZone != null
+        ? this.config.patchZone
+        : this.strategyProvider.config.patchZone;
+
+    return this.templateObserver.values$
+      .pipe(
+        filter<RxNotification<U>>(
+          (n) =>
+            n.kind === RxNotificationKind.suspense ||
+            n.kind === RxNotificationKind.next
+        ),
+        tap<RxNotification<U>>((notification) => {
+          this.renderedValue = notification.value as U;
+        }),
+        withLatestFrom(this.strategyHandler.strategy$),
+        switchMap(([v, strategy]) =>
+          this.strategyProvider.schedule(
+            () => {
+              strategy.work(this.cdRef, scope);
+            },
+            {
+              scope,
+              strategy: strategy.name,
+              patchZone: patchZone ? this.ngZone : false,
+            }
+          )
+        )
+      )
+      .subscribe();
   }
 }
