@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
   template: `
     <rxa-visualizer>
       <div visualizerHeader>
-        <h2>rxLet POC</h2>
+        <h2>rxLet BASIC</h2>
         <rxa-strategy-select
           (strategyChange)="strategy = $event"
         ></rxa-strategy-select>
