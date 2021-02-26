@@ -13,6 +13,10 @@ import {
   RxRenderWork,
   RxNotification,
   RxNotificationKind,
+  RxSuspenseNotification,
+  RxNextNotification,
+  RxErrorNotification,
+  RxCompleteNotification,
 } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 import { strategyHandling } from '../utils/strategy-handling';
@@ -53,36 +57,44 @@ export function notificationKindToViewContext<T>(
 ): RxViewContextMap<T> {
   // @TODO rethink overrides
   return {
-    suspense: (value?: any) => {
+    suspense: (notification: RxSuspenseNotification<T>) => {
+      const $implicit: T | null | undefined = notification.value as T;
       return {
-        $implicit: undefined,
-        // if a custom value is provided take it, otherwise assign true
-        $suspense: value !== undefined ? value : true,
+        $implicit,
+        $suspense: true,
         $error: false,
         $complete: false,
+        ...customNextContext($implicit),
       };
     },
-    next: (value: T | null | undefined) => {
+    next: (notification: RxNextNotification<T>) => {
+      const $implicit: T | null | undefined = notification.value as T;
       return {
-        $implicit: value,
+        $implicit,
         $suspense: false,
         $error: false,
         $complete: false,
-        ...customNextContext(value),
+        ...customNextContext($implicit),
       };
     },
-    error: (error: Error) => {
+    error: (notification: RxErrorNotification<T>) => {
+      const $implicit: T | null | undefined = notification.value as T;
       return {
+        $implicit,
         $complete: false,
-        $error: error,
+        $error: notification.error,
         $suspense: false,
+        ...customNextContext($implicit),
       };
     },
-    complete: () => {
+    complete: (notification: RxCompleteNotification<T>) => {
+      const $implicit: T | null | undefined = notification.value as T;
       return {
+        $implicit,
         $error: false,
         $complete: true,
         $suspense: false,
+        ...customNextContext($implicit),
       };
     },
   };
@@ -175,7 +187,7 @@ export function createTemplateManager<
                   }
                 }
                 if (template) {
-                  const context = getContext[kind](value);
+                  const context = getContext[kind](notification);
                   const view = <EmbeddedViewRef<C>>viewContainerRef.get(0);
                   Object.keys(context).forEach((k) => {
                     view.context[k] = context[k];
