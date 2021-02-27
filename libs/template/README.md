@@ -49,14 +49,15 @@ Using schematics:
 
 ```bash
 ng add @rx-angular/template --project my-project
+npm i // `ng add` added `@rx-angular/cdk` to package json so we need to install them
 ```
 
 Manually:
 
 ```bash
-npm install --save @rx-angular/template
+npm install --save @rx-angular/template @rx-angular/cdk
 # or
-yarn add @rx-angular/template
+yarn add @rx-angular/template @rx-angular/cdk
 ```
 
 ## API
