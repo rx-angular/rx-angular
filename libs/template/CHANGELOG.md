@@ -1,3 +1,18 @@
+# [1.0.0-beta.24](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.21...template@1.0.0-beta.24) (2021-02-27)
+
+
+### Bug Fixes
+
+* **template:** update readme install ([a51a9a9](https://github.com/rx-angular/rx-angular/commit/a51a9a976399d2522d119f6b5af0dbcc47d39955))
+* ng-packagr builds ([#553](https://github.com/rx-angular/rx-angular/issues/553)) ([cfd4711](https://github.com/rx-angular/rx-angular/commit/cfd47112c12bf7333e657c2f6b6e79d3d3eccda4))
+
+
+### Features
+
+* **cdk:** improve template manager view-context ([#561](https://github.com/rx-angular/rx-angular/issues/561)) ([f58b9a2](https://github.com/rx-angular/rx-angular/commit/f58b9a2f147f3ca3cd89038a4603bd2ea0f2fe25))
+
+
+
 # [1.0.0-beta.23](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.21...template@1.0.0-beta.23) (2021-02-24)
 
 ### Bug Fixes
