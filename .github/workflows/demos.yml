@@ -31,7 +31,7 @@ jobs:
       - run: npm run nx build demos --prod
       - uses: EndBug/add-and-commit@v4 # You can change this to use a specific version
         with:
-          add: 'apps/demos/*'
+          add: 'docs/demos/*'
           force: true
           author_name: Github Action
           message: 'chore(docs): Demos pages generation'
