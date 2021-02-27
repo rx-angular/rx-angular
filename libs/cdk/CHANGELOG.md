@@ -1,3 +1,14 @@
+# [1.0.0-alpha.4](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.2...cdk@1.0.0-alpha.4) (2021-02-27)
+
+### Bug Fixes
+
+- ng-packagr builds ([#553](https://github.com/rx-angular/rx-angular/issues/553)) ([cfd4711](https://github.com/rx-angular/rx-angular/commit/cfd47112c12bf7333e657c2f6b6e79d3d3eccda4))
+- update typings, allow values in template slots
+
+### Features
+
+- **cdk:** improve template manager view-context ([#561](https://github.com/rx-angular/rx-angular/issues/561)) ([f58b9a2](https://github.com/rx-angular/rx-angular/commit/f58b9a2f147f3ca3cd89038a4603bd2ea0f2fe25))
+
 # [1.0.0-alpha.3](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.2...cdk@1.0.0-alpha.3) (2021-02-24)
 
 ### Bug Fixes
