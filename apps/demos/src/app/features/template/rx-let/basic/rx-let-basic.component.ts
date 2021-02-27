@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
   template: `
     <rxa-visualizer>
       <div visualizerHeader>
-        <h2>rxLet POC</h2>
+        <h2>rxLet BASIC</h2>
         <rxa-strategy-select
           (strategyChange)="strategy = $event"
         ></rxa-strategy-select>

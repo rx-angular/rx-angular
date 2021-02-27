@@ -5,31 +5,37 @@ import {
   RxCompleteNotification,
 } from '../model';
 
-export const toRxErrorNotification = (
+export function toRxErrorNotification<T>(
   error?: any,
-  value?: any
-): RxErrorNotification => ({
-  kind: RxNotificationKind.error,
-  hasValue: value || false,
-  value: value || undefined,
-  complete: false,
-  error: error || true,
-});
-export const toRxSuspenseNotification = (
-  value?: any
-): RxSuspenseNotification => ({
-  kind: RxNotificationKind.suspense,
-  hasValue: value || false,
-  value,
-  complete: false,
-  error: false,
-});
-export const toRxCompleteNotification = (
-  value?: any
-): RxCompleteNotification => ({
-  kind: RxNotificationKind.complete,
-  hasValue: value || false,
-  value,
-  complete: true,
-  error: false,
-});
+  value?: T
+): RxErrorNotification<T> {
+  return {
+    kind: RxNotificationKind.error,
+    hasValue: !!value || false,
+    value: value,
+    complete: false,
+    error: error || true,
+  };
+}
+export function toRxSuspenseNotification<T>(
+  value?: T
+): RxSuspenseNotification<T> {
+  return {
+    kind: RxNotificationKind.suspense,
+    hasValue: !!value || false,
+    value,
+    complete: false,
+    error: false,
+  };
+}
+export function toRxCompleteNotification<T>(
+  value?: T
+): RxCompleteNotification<T> {
+  return {
+    kind: RxNotificationKind.complete,
+    hasValue: !!value || false,
+    value,
+    complete: true,
+    error: false,
+  };
+}

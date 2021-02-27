@@ -30,6 +30,7 @@ export function templateNotifier<U>(
 } {
   const observablesSubject = new ReplaySubject<ObservableInput<U>>(1);
   let firstRun = true;
+  let latestNextValue: U;
   const wSuspense = () => withSuspense && withSuspense();
   const values$ = observablesSubject.pipe(
     distinctUntilChanged(),
@@ -60,20 +61,22 @@ export function templateNotifier<U>(
         distinctUntilChanged(),
         rxMaterialize(),
         map((notification) => {
-          const value = notification.value as U;
+          latestNextValue =
+            notification.kind === RxNotificationKind.next
+              ? notification.value
+              : latestNextValue;
           if (
             notification.kind === RxNotificationKind.next &&
-            value === undefined
+            latestNextValue === undefined
           ) {
-            return toRxSuspenseNotification(value) as RxNotification<U>;
+            return toRxSuspenseNotification(
+              latestNextValue
+            ) as RxNotification<U>;
           }
-          if (notification.kind === RxNotificationKind.error) {
-            return {
-              ...notification,
-              value: notification.error,
-            };
-          }
-          return notification;
+          return {
+            ...notification,
+            value: latestNextValue,
+          };
         })
       );
     })
