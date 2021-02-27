@@ -49,7 +49,7 @@
     "url": "https://github.com/rx-angular/rx-angular.git"
   },
   "peerDependencies": {
-    "@angular/core": ">8.0.0",
+    "@angular/core": ">10.1.1",
     "rxjs": "^6.5.5",
     "@rx-angular/cdk": ">=1.0.0-alpha.3"
   },
