@@ -51,7 +51,7 @@
   "peerDependencies": {
     "@angular/core": ">10.1.1",
     "rxjs": "^6.5.5",
-    "@rx-angular/cdk": ">=1.0.0-alpha.3"
+    "@rx-angular/cdk": ">=1.0.0-alpha.4"
   },
   "dependencies": {
     "tslib": "^2.0.0"
