@@ -26,14 +26,14 @@ export const MENU_ITEMS = [
     link: 'integrations',
     children: INTEGRATIONS_MENU_ITEMS
   },
-  {
-    label: '🔬 Experiments',
-    link: 'experiments',
-    children: EXPERIMENTS_MENU_ITEMS
-  },
- /* {
-    label: '🏎️ Performance',
-    link: 'performance',
-    children: PERFORMANCE_MENU_ITEMS
-  }*/
+  /* {
+     label: '🔬 Experiments',
+     link: 'experiments',
+     children: EXPERIMENTS_MENU_ITEMS
+   },
+   {
+     label: '🏎️ Performance',
+     link: 'performance',
+     children: PERFORMANCE_MENU_ITEMS
+   }*/
 ];
