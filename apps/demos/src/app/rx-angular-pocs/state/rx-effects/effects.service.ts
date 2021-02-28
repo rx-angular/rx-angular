@@ -57,21 +57,21 @@ import { DestroyProp, OnDestroy$, toHook, untilDestroyed } from '@rx-angular/cdk
  */
 @Injectable()
 export class RxEffects implements OnDestroy, OnDestroy$ {
-  readonly _hooks$ = new Subject<DestroyProp>();
-  private readonly observables$ = new Subject<Observable<unknown>>();
-  // we have to use publish here to make it hot (composition happens without subscriber)
-  private readonly effects$ = this.observables$.pipe(mergeAll(), publish());
-  onDestroy$: Observable<boolean> = this._hooks$.pipe(toHook('destroy'));
-
-  private static nextId = 0;
-  private readonly destroyers: Record<number, Subject<void>> = {};
-  private readonly subscription = (this.effects$ as ConnectableObservable<any>).connect();
 
   constructor(
     @Optional()
     private readonly errorHandler: ErrorHandler
   ) {
   }
+
+  private static nextId = 0;
+  readonly _hooks$ = new Subject<DestroyProp>();
+  private readonly observables$ = new Subject<Observable<unknown>>();
+  // we have to use publish here to make it hot (composition happens without subscriber)
+  private readonly effects$ = this.observables$.pipe(mergeAll(), publish());
+  onDestroy$: Observable<boolean> = this._hooks$.pipe(toHook('destroy'));
+  private readonly destroyers: Record<number, Subject<void>> = {};
+  private readonly subscription = (this.effects$ as ConnectableObservable<any>).connect();
 
   /**
    * Performs a side-effect whenever a source observable emits, and handles its subscription.
