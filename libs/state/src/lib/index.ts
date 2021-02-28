@@ -1,22 +1,26 @@
-export { createSideEffectObservable, createAccumulationObservable } from './cdk';
+export {
+  createSideEffectObservable,
+  createAccumulationObservable,
+} from './cdk';
 export { RxState } from './rx-state.service';
+export { RxEffects } from './effects';
 export {
   select,
   stateful,
   distinctUntilSomeChanged,
-  selectSlice
+  selectSlice,
 } from './rxjs/operators';
 export {
   insert,
   remove,
   toDictionary,
-  update
+  update,
 } from './transformation-helpers/array/index';
 export {
   setProp,
   patch,
   deleteProp,
   dictionaryToArray,
-  toggle
+  toggle,
 } from './transformation-helpers/object/index';
 export { KeyCompareMap, CompareFn } from './rxjs/interfaces';
