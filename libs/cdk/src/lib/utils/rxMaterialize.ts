@@ -6,6 +6,10 @@ import {
   RxNotificationKind,
 } from '../model';
 import { map, materialize, tap } from 'rxjs/operators';
+import {
+  toRxCompleteNotification,
+  toRxErrorNotification,
+} from './notification-transforms';
 
 const notificationToRxNotification = <T>(
   notification: Notification<T>
@@ -31,25 +35,6 @@ const rxJsToRxA: Record<'N' | 'E' | 'C', RxNotificationKind> = {
   E: RxNotificationKind.error,
   N: RxNotificationKind.next,
 };
-
-const toRxErrorNotification = (
-  error?: any,
-  value?: any
-): RxErrorNotification => ({
-  kind: RxNotificationKind.error,
-  hasValue: value || false,
-  value: value || undefined,
-  complete: false,
-  error: error || true,
-});
-// const toRxSuspenseNotification = (value?: any): RxSuspenseNotification => ({kind: RxNotificationKind.suspense, hasValue: value || false, value, complete: false, error: false});
-const toRxCompleteNotification = (value?: any): RxCompleteNotification => ({
-  kind: RxNotificationKind.complete,
-  hasValue: value || false,
-  value,
-  complete: true,
-  error: false,
-});
 
 export function rxMaterialize<T>(): OperatorFunction<T, RxNotification<T>> {
   return (o$: Observable<T>): Observable<RxNotification<T>> =>

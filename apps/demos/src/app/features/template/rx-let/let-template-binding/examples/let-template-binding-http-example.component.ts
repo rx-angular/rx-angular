@@ -61,10 +61,11 @@ import { map, share, switchMap, takeUntil, withLatestFrom } from 'rxjs/operators
         <h2>Completed!</h2>
       </div>
     </ng-template>
-    <ng-template #error>
+    <ng-template #error let-value let-error="$error">
       <div>
         <mat-icon class="error-icon">thumb_down</mat-icon>
-        <h2>Something went wrong...</h2>
+        <h2>{{ error }}</h2>
+        <strong>Last valid value: {{ value }}</strong>
       </div>
     </ng-template>
     <ng-template #suspense>
