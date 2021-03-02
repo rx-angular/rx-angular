@@ -718,7 +718,7 @@
                 "command": "rimraf dist/libs/template"
               },
               {
-                "command": "ng run template:build-lib"
+                "command": "ng run template:build-lib --with-deps"
               },
               {
                 "command": "nx run template:build-schematics"
