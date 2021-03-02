@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Type } from '@angular/core';
-import { Notification, Observable } from 'rxjs';
+import { NextObserver, Notification, Observable } from 'rxjs';
 
 export type coalescingObj =
   | Record<string | number | symbol, unknown>
@@ -84,6 +84,22 @@ export type RxStrategyNames<T> = RxDefaultStrategyNames | T;
 export type RxStrategies<T extends string> = RxCustomStrategyCredentials<
   RxStrategyNames<T>
 >;
+
+export interface RxComponentInput<T, S> {
+  strategy?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>;
+  renderCallback?: NextObserver<T>;
+  patchZone?: boolean;
+}
+
+export function isRxComponentInput<U, S>(
+  val: any
+): val is RxComponentInput<U, S> {
+  return (
+    val?.hasOwnProperty('strategy') ||
+    val?.hasOwnProperty('renderCallback') ||
+    val?.hasOwnProperty('patchZone')
+  );
+}
 
 export interface RxAngularConfig<T extends string> {
   primaryStrategy?: RxStrategyNames<T>;
