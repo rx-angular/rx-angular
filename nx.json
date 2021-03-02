@@ -31,7 +31,8 @@
       "tags": ["type:util"]
     },
     "cdk": {
-      "tags": ["type:lib", "type:cdk"]
+      "tags": ["type:lib", "type:cdk"],
+      "implicitDependencies": ["template"]
     },
     "state": {
       "tags": ["type:lib"]
