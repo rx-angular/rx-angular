@@ -10,6 +10,7 @@ import { filter, map, startWith, tap } from 'rxjs/operators';
              (blur)="onInputBlur()">
       <nav mat-tab-nav-bar *rxLet="activeRoute$; let activeRoute; patchZone: true">
         <a mat-tab-link
+
            [active]="activeRoute.indexOf('native') === -1 && activeRoute.indexOf('rx-for') === -1"
            [routerLink]="'./'">
           empty
