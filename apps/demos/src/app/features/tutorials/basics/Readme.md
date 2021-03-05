@@ -9,9 +9,9 @@ To setup the project locally run following steps:
 - `npm install` or `yarn install`
 - `npm start demos` or `yarn nx serve demos`
 
-you can find the working application in `http://localhost:4200/rx-angular/demos`
+you can find the working application in `http://localhost:4200/rx-angular/demos`.
 
-The source can be found under `apps/demos/src/app/features/tutorials`
+The source can be found under `apps/demos/src/app/features/tutorials`.
 
 The example shows a simple component setup of a parent container and a child component displaying the data.
 
@@ -24,7 +24,6 @@ In the child component there is a background process running. the input value fr
 Furthermore, there is a refresh button. A click on it also refreshes the list data.
 
 Topics we will discuss are:
-
 - [Setup a reactive state, selections and, UI interactions][1-setup]
 - [handle @Inputs reactively][2-input-bindings]
 - [handle @Output reactively][3-output-bindings]
