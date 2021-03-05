@@ -2,7 +2,7 @@
 
 In this tutorial we will learn how to refactor a component written in imperative style to a fully reactive implementation.
 
-To setup the project locally run following steps:
+To set up the project locally run following steps:
 
 - `git clone https://github.com/rx-angular/rx-angular.git rx-angular`
 - `cd rx-angular`
