@@ -29,16 +29,6 @@ Find details in the linked readme files below for installation and setup instruc
 
 ## Install
 
-
-Using schematics:
-
-```bash
-ng add @rx-angular/state
-ng add @rx-angular/template --project my-project
-```
-
-Manually:
-
 ```bash
 npm install --save @rx-angular/state
 npm install --save @rx-angular/template
