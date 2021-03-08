@@ -178,16 +178,17 @@ export function createTemplateManager<
               value,
               strategy,
               (v: T, work: RxRenderWork, options: RxCoalescingOptions) => {
+                const context = <C>getContext[kind](notification);
+
                 if (isNewTemplate) {
                   if (viewContainerRef.length > 0) {
                     viewContainerRef.clear();
                   }
                   if (template) {
-                    templates.createEmbeddedView(templateName);
+                    templates.createEmbeddedView(templateName, context);
                   }
                 }
                 if (template) {
-                  const context = getContext[kind](notification);
                   const view = <EmbeddedViewRef<C>>viewContainerRef.get(0);
                   Object.keys(context).forEach((k) => {
                     view.context[k] = context[k];
