@@ -1,5 +1,11 @@
-import { combineLatest, Observable } from 'rxjs';
-import { distinctUntilChanged, filter, map, shareReplay } from 'rxjs/operators';
+import { combineLatest, defer, from, Observable } from 'rxjs';
+import {
+  distinctUntilChanged,
+  filter,
+  map,
+  mapTo,
+  shareReplay,
+} from 'rxjs/operators';
 import {
   ArrayReducerFn,
   ExtractObservableValue,
@@ -7,6 +13,10 @@ import {
   PropType,
 } from '../utils/model';
 import { NotEmpty, ObservableMap } from './model';
+import { coalesceWith } from '../utils';
+
+const resolvedPromise = Promise.resolve();
+const resolvedPromise$ = from(resolvedPromise);
 
 /**
  * This Observable creation function helps to accumulate an object of key & Observable of values to an Observable of objects of key & value.
@@ -39,14 +49,19 @@ export function accumulateObservables<T extends ObservableMap & NotEmpty<T>>(
     )
   );
   return combineLatest(observables).pipe(
+    // As combineLatest will emit multiple times for a change in multiple properties we coalesce those emissions together
+    coalesceWith(from(Promise.resolve())),
+    // mapping array of values to object
     map((values) => values.reduce(getEntriesToObjectReducerFn(keys), {})),
-    // by using shareReplay we share the composition work done to create the accumulated object
-    shareReplay()
+    // by using shareReplay we share the last composition work done to create the accumulated object
+    shareReplay(1)
   );
 }
 
 /**
  * @internal
+ *
+ * Used for typing
  */
 function getEntriesToObjectReducerFn<T extends Record<string, any>>(
   keys: PropName<T>[]
