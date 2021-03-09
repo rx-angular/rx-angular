@@ -151,6 +151,10 @@ export function createTemplateManager<
     templateSettings.customContext
   );
 
+  const workFactory = patchZone
+    ? (work: VoidFunction) => patchZone.run(work)
+    : (work: VoidFunction) => work();
+
   return {
     addTemplateRef: templates.add,
     // addTrigger: triggerHandling.next,
@@ -192,7 +196,7 @@ export function createTemplateManager<
                   Object.keys(context).forEach((k) => {
                     view.context[k] = context[k];
                   });
-                  work(view, options.scope, notification);
+                  workFactory(() => work(view, options.scope, notification));
                 }
                 activeTemplate = templateName;
               }

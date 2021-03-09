@@ -161,23 +161,34 @@ export function renderProjectionParents(
  * @param viewContainerRef
  * @param patchZone
  */
-export function getEmbeddedViewCreator(
+export function createEmbeddedViewFactory(
   viewContainerRef: ViewContainerRef,
   patchZone: NgZone | false
-): <C, T>(
+): <C>(
   templateRef: TemplateRef<C>,
   context?: C,
   index?: number
 ) => EmbeddedViewRef<C> {
-  let create = <C, T>(templateRef: TemplateRef<C>, context: C, index: number) =>
-    viewContainerRef.createEmbeddedView(templateRef, context, index);
+  const create = <C>(
+    templateRef: TemplateRef<C>,
+    context: C,
+    index: number
+  ) => {
+    const view = viewContainerRef.createEmbeddedView(
+      templateRef,
+      context,
+      index
+    );
+    view.detectChanges();
+    return view;
+  };
+
   if (patchZone) {
-    create = <C, T>(templateRef: TemplateRef<C>, context: C, index: number) =>
-      patchZone.run(() =>
-        viewContainerRef.createEmbeddedView(templateRef, context, index)
-      );
+    return <C>(templateRef: TemplateRef<C>, context: C, index: number) =>
+      patchZone.run(() => create(templateRef, context, index));
+  } else {
+    return create;
   }
-  return create;
 }
 
 /**
@@ -196,7 +207,10 @@ export function templateHandling<N, C>(
   createEmbeddedView(name: N, context?: C, index?: number): EmbeddedViewRef<C>;
 } {
   const templateCache = new Map<N, TemplateRef<C>>();
-  const createView = getEmbeddedViewCreator(viewContainerRef, patchZone);
+  const createEmbeddedView = createEmbeddedViewFactory(
+    viewContainerRef,
+    patchZone
+  );
 
   const get = (name: N): TemplateRef<C> => {
     return templateCache.get(name);
@@ -214,7 +228,7 @@ export function templateHandling<N, C>(
     },
     get,
     createEmbeddedView: (name: N, context?: C) =>
-      createView(get(name), context),
+      createEmbeddedView(get(name), context),
   };
 
   //

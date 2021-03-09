@@ -6,7 +6,7 @@ import {
 } from './model';
 import { EmbeddedViewRef, IterableChanges } from '@angular/core';
 import { RxListViewContext } from './list-view-context';
-import { getEmbeddedViewCreator } from './utils';
+import { createEmbeddedViewFactory } from './utils';
 
 /**
  * @internal
@@ -25,15 +25,21 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
     updateViewContext,
     patchZone,
   } = templateSettings;
-  const viewCreator = getEmbeddedViewCreator(viewContainerRef, patchZone);
+  const createEmbeddedView = createEmbeddedViewFactory(
+    viewContainerRef,
+    patchZone
+  );
 
   return {
     updateUnchangedContext,
     insertView,
     moveView,
-    updateView,
     removeView,
     getListChanges,
+    updateView: patchZone
+      ? (item: T, index: number, count: number) =>
+          patchZone.run(() => updateView(item, index, count))
+      : updateView,
   };
 
   // =====
@@ -76,7 +82,7 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
   }
 
   function insertView(item: T, index: number, count: number): void {
-    const newView = viewCreator(
+    createEmbeddedView(
       initialTemplateRef,
       createViewContext(item, {
         count,
@@ -84,7 +90,6 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
       }),
       index
     );
-    newView.detectChanges();
   }
 }
 
