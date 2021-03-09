@@ -2,6 +2,14 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } 
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
+// 1- import RxState
+import { RxState } from '@rx-angular/state';
+// 2- define a component state
+interface ComponentState {
+  refreshInterval: number;
+  list: DemoBasicsItem[];
+  listExpanded: boolean;
+}
 
 export interface DemoBasicsItem {
   id: string;
@@ -18,6 +26,8 @@ const initComponentState = {
 @Component({
   selector: 'rxa-setup-start',
   template: `
+    // Set the model property of a component
+    model$: <pre>{{model$ | async | json}}</pre>
     <h3>
       Setup
     </h3>
@@ -79,7 +89,10 @@ const initComponentState = {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SetupStart implements OnInit, OnDestroy {
+// 3- extend the component
+export class SetupStart extends RxState<ComponentState> implements OnInit, OnDestroy {
+  // Set the model property of a component
+  model$ = this.select();
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.listService.list$.pipe(
@@ -99,10 +112,13 @@ export class SetupStart implements OnInit, OnDestroy {
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
   listExpandedChange = this.listExpandedChanges;
-
   constructor(
     private listService: ListService
   ) {
+    // Always call super() first in the constructor
+    super();
+    // Call set() to initialize the state
+    this.set(initComponentState);
   }
 
   ngOnDestroy(): void {

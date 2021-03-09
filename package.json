@@ -76,6 +76,7 @@
     "templateAlpha0": "npm:@rx-angular/template@1.0.0-alpha.0",
     "templateAlpha1": "npm:@rx-angular/template@1.0.0-alpha.1",
     "tslib": "^2.0.1",
+    "yarn": "^1.22.10",
     "zone.js": "^0.11.3"
   },
   "devDependencies": {
