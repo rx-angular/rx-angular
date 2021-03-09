@@ -54,7 +54,7 @@ const zoneSymbol = '__zone_symbol__';
 function assertZoneConfig() {
   if ((window as any).Zone !== undefined) {
     // @TODO link to docs
-    throw console.error('zone-flags need to get imported before zone.js');
+    throw console.error('zone-flags file needs to get imported before zone.js');
   }
 }
 
