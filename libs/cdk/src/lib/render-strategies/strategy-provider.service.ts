@@ -127,14 +127,17 @@ export class RxStrategyProvider<T extends string = string> {
     const strategy = this.strategies[options?.strategy || this.primaryStrategy];
     const scope = options?.scope || cdRef;
     const abC = options?.abortCtrl || new AbortController();
+    const work = getWork(() => {
+      strategy.work(cdRef, scope);
+      if (options?.afterCD) {
+        options.afterCD();
+      }
+    }, options.patchZone);
     onStrategy(
       null,
       strategy,
       () => {
-        strategy.work(cdRef, scope);
-        if (options?.afterCD) {
-          options.afterCD();
-        }
+        work();
       },
       { scope }
     )

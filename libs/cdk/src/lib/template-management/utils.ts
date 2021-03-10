@@ -150,45 +150,23 @@ export function renderProjectionParents(
 
 /**
  * @internal
- *
- * A factory for the createEmbeddedView function used in `TemplateManager` and `ListManager`.
- * It handles the creation of views in and outside of zone depending on the setting.
- *
- * Both ways of creating EmbeddedViews have pros and cons,
- * - create it outside out zone disables all event listener patching of the view, is fast, but you may need patched event listeners in some cases.
- * - create it inside of zone created many change detections as the creation may get chunked up and rendered over multiple ticks by a strategy used in `TemplateManager` or `ListManager`.
+ * creates an embeddedViewRef
  *
  * @param viewContainerRef
- * @param patchZone
+ * @param templateRef
+ * @param context
+ * @param index
+ * @return EmbeddedViewRef<C>
  */
-export function createEmbeddedViewFactory(
+export function createEmbeddedView<C>(
   viewContainerRef: ViewContainerRef,
-  patchZone: NgZone | false
-): <C>(
   templateRef: TemplateRef<C>,
-  context?: C,
-  index?: number
-) => EmbeddedViewRef<C> {
-  const create = <C>(
-    templateRef: TemplateRef<C>,
-    context: C,
-    index: number
-  ) => {
-    const view = viewContainerRef.createEmbeddedView(
-      templateRef,
-      context,
-      index
-    );
-    view.detectChanges();
-    return view;
-  };
-
-  if (patchZone) {
-    return <C>(templateRef: TemplateRef<C>, context: C, index: number) =>
-      patchZone.run(() => create(templateRef, context, index));
-  } else {
-    return create;
-  }
+  context: C,
+  index = 0
+): EmbeddedViewRef<C> {
+  const view = viewContainerRef.createEmbeddedView(templateRef, context, index);
+  view.detectChanges();
+  return view;
 }
 
 /**
@@ -199,18 +177,13 @@ export function createEmbeddedViewFactory(
  *
  */
 export function templateHandling<N, C>(
-  viewContainerRef: ViewContainerRef,
-  patchZone: false | NgZone
+  viewContainerRef: ViewContainerRef
 ): {
   add(name: N, templateRef: TemplateRef<C>): void;
   get(name: N): TemplateRef<C>;
   createEmbeddedView(name: N, context?: C, index?: number): EmbeddedViewRef<C>;
 } {
   const templateCache = new Map<N, TemplateRef<C>>();
-  const createEmbeddedView = createEmbeddedViewFactory(
-    viewContainerRef,
-    patchZone
-  );
 
   const get = (name: N): TemplateRef<C> => {
     return templateCache.get(name);
@@ -228,7 +201,7 @@ export function templateHandling<N, C>(
     },
     get,
     createEmbeddedView: (name: N, context?: C) =>
-      createEmbeddedView(get(name), context),
+      createEmbeddedView(viewContainerRef, get(name), context),
   };
 
   //
