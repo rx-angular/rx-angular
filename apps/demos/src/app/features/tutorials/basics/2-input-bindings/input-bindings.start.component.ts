@@ -53,6 +53,7 @@ const initComponentState = {
         Refresh List
       </button>
 
+      // Bind the state to the view
       <ng-container *ngIf="storeList$ | async as list">
         <div *ngIf="list?.length; else noList">
           <mat-list>
@@ -101,7 +102,7 @@ export class InputBindingsStart extends RxState<ComponentState> implements OnIni
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 4000) {
-      this._refreshInterval = refreshInterval;
+      this._refreshInterval = refreshInterval; // Partially update the state with the state slice
       this.resetRefreshTick();
     }
   }
@@ -125,7 +126,7 @@ export class InputBindingsStart extends RxState<ComponentState> implements OnIni
 
   resetRefreshTick() {
     this.intervalSubscription.unsubscribe();
-    this.intervalSubscription = interval(this._refreshInterval)
+    this.intervalSubscription = interval(this._refreshInterval) // Update the related resetRefreshTick method where _refreshInterval is used
       .pipe(tap((_) => this.listService.refetchList()))
       .subscribe();
   }
