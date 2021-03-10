@@ -1,3 +1,10 @@
+# [1.0.0-alpha.5](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.4...cdk@1.0.0-alpha.5) (2021-03-10)
+
+### Bug Fixes
+
+- Fix change detection not running inside the zone when `patchZone` is truthy https://github.com/rx-angular/rx-angular/pull/590
+  This change should fix a lot of cdnage detection issues related to event listeners. Special THX to @arturovt
+
 # [1.0.0-alpha.4](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.2...cdk@1.0.0-alpha.4) (2021-02-27)
 
 ### Bug Fixes
