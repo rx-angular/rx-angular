@@ -51,6 +51,13 @@ type RuntimeConfigurationMethods = {
 const zoneDisable = '__Zone_disable_';
 const zoneSymbol = '__zone_symbol__';
 
+function assertZoneConfig() {
+  if ((window as any).Zone !== undefined) {
+    // @TODO link to docs
+    throw console.error('zone-flags file needs to get imported before zone.js');
+  }
+}
+
 /**
  * factory function to create a `ZoneConfig` object.
  *
@@ -79,7 +86,7 @@ function createZoneFlagsConfigurator(): ZoneConfig {
     ].map((prop) => zoneSymbol + prop),
   ];
   // append as global method for easy debugging
-  (cfg as any).__rax_zone_config__log = (): void => {
+  (cfg as any).__rxa_zone_config__log = (): void => {
     configProps.forEach((flag) => {
       // tslint:disable-next-line:no-unused-expression
       cfg[flag] && console.log(flag, cfg[flag]);
@@ -90,13 +97,17 @@ function createZoneFlagsConfigurator(): ZoneConfig {
     global: {
       disable: zoneGlobalDisableConfigurationsKeys
         .map((prop) => ({
-          [prop]: (isDisabled: boolean = true) =>
-            (cfg[zoneDisable + prop] = isDisabled),
+          [prop]: (isDisabled: boolean = true) => {
+            assertZoneConfig();
+            return (cfg[zoneDisable + prop] = isDisabled);
+          },
         }))
         .concat(
           zoneGlobalSettingsConfigurationsKeys.map((prop) => ({
-            [prop]: (isDisabled: boolean = true) =>
-              (cfg[zoneSymbol + prop] = isDisabled),
+            [prop]: (isDisabled: boolean = true) => {
+              assertZoneConfig();
+              return (cfg[zoneSymbol + prop] = isDisabled);
+            },
           }))
         )
         .reduce(
@@ -107,13 +118,18 @@ function createZoneFlagsConfigurator(): ZoneConfig {
     test: {
       disable: zoneTestDisableConfigurationsKeys
         .map((prop) => ({
-          [prop]: (isDisabled: boolean = true) =>
-            (cfg[zoneDisable + prop] = isDisabled),
+          [prop]: (isDisabled: boolean = true) => {
+            assertZoneConfig();
+            return (cfg[zoneDisable + prop] = isDisabled);
+          },
         }))
         .concat(
           zoneTestSettingsConfigurationsKeys.map((prop) => ({
-            [prop]: (isDisabled: boolean = true) =>
-              (cfg[zoneSymbol + prop] = isDisabled),
+            [prop]: (isDisabled: boolean = true) => {
+              assertZoneConfig();
+              cfg[zoneSymbol + prop] = isDisabled;
+              return isDisabled;
+            },
           }))
         )
         .reduce(
@@ -124,13 +140,15 @@ function createZoneFlagsConfigurator(): ZoneConfig {
     events: {
       disable: zoneGlobalEventsConfigurationsKeys
         .map((prop) => ({
-          [prop]: (eventNames: string[]) =>
-            (cfg[zoneSymbol + prop] = [
+          [prop]: (eventNames: string[]) => {
+            assertZoneConfig();
+            return (cfg[zoneSymbol + prop] = [
               ...(Array.isArray(cfg[zoneSymbol + prop])
                 ? cfg[zoneSymbol + prop]
                 : []),
               ...eventNames,
-            ]),
+            ]);
+          },
         }))
         .reduce(
           (map, item) => ({ ...map, ...item }),
@@ -141,8 +159,10 @@ function createZoneFlagsConfigurator(): ZoneConfig {
       disable: zoneRuntimeConfigurationsKeys.reduce(
         (map, prop) => ({
           ...map,
-          [prop]: (isDisabled: boolean = true) =>
-            (cfg[zoneSymbol + prop] = isDisabled),
+          [prop]: (isDisabled: boolean = true) => {
+            assertZoneConfig();
+            return (cfg[zoneSymbol + prop] = isDisabled);
+          },
         }),
         {} as RuntimeConfigurationMethods
       ),
