@@ -1,17 +1,19 @@
 # Global State
 
+In this chapter, we will create the global state and attach it to our component (see [global-state.start.component.ts] [global-state.start.component.ts]) to enable reactive state management there.
+
 ---
 
-## Connect Global state to the `list` slice.
+## Connect the global state to the `list` slice
 
-In components, we often need to transform global state into local state. Most often you also need to map the global object into a new shape that fits the view. That state gets provided as an `Observable`
-In the current implementation we use a method called `parseListItems` to achieve that.
+In components, we often need to transform global state into local state. Most often, you also need to map the global object into a new shape that would match the view. This state is provided as an `Observable` here.
+In the current implementation, we use a method called `parseListItems` to achieve that.
 
-We already used the `connect` method to connect child component state.
-Now lets use another overload of it to connect the global state.
+We already used the `connect` method to [connect our child component's state] [3-output-bindings].
+Now let's use another overload to connect the global state to the component.
 
-The used overload takes the property as first value to determine the
-target slice on which we want to connect the global state to. In our case is the `list` slice.
+With this overload, the first value is assigned to the property to determine the
+target slice that we want to connect the global state to. In our case, this is the `list` slice.
 
 ```typescript
 // ...
@@ -24,7 +26,7 @@ constructor(private listService: ListService) {
 }
 ```
 
-Now we can delete the `storeList$` property in our class and refactore the template to this:
+Now that the slice is connected, we can delete the `storeList$` property in our class and refactor the template into the following:
 
 ```html
 ...
@@ -43,7 +45,10 @@ Now we can delete the `storeList$` property in our class and refactore the templ
 </div>
 ```
 
-With this step we refactored the state management from an imperative to a reactive implementation.
+With this step, we're refactoring the state management from an imperative to a reactive implementation.
 
-The benefits here are we have our state centralized, reactive and can also include
-imperative parts of the components like input bindings to the state.
+The benefits we can gain here are that we have our state centralized and reactive but, at the same time, can also include
+imperative parts of our components, like input bindings, into the state.
+
+[global-state.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/master/apps/demos/src/app/features/tutorials/basics/4-global-state/global-state.start.component.ts
+[3-output-bindings]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/3-output-bindings

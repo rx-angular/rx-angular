@@ -91,12 +91,12 @@ export class GlobalStateStart extends RxState<ComponentState>
 
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
-  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));;
+  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
 
   constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
-    this.connect('listExpanded', this.listExpandedChanges);
+    this.connect('listExpanded', this.listExpandedChanges); // Connect the global state to the list slice
   }
 
   ngOnDestroy(): void {
