@@ -27,6 +27,7 @@ const initComponentState = {
     <h3>
       Output Bindings
     </h3>
+    // Refactor the state binding
     <mat-expansion-panel
       *ngIf="model$ | async as vm"
       (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
@@ -96,6 +97,8 @@ export class OutputBindingsStart extends RxState<ComponentState>
   constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
+    // Connect an observable to the state
+    // Pass the projection function to transform the value
   }
 
   ngOnDestroy(): void {

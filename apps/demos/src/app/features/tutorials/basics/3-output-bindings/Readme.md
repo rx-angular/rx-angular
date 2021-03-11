@@ -1,24 +1,26 @@
-# Handle Output Bindings
+# Handling Output Bindings
+
+This section contains an [imperative code base][output-bindings.start.component.ts] for you to refer to and a quick tutorial on how to set up and use output bindings reactively.
 
 ---
 
 ## React to state changes from child components
 
-In this example we use an expand-panel to display the list.
-We identify its' open and close state as part of the components' state.  
-We also have to forward the changes to the components `listExpandedChange` output binding.
+In this example, we will be using an expansion panel to display a list.
+For the purpose of this tutorial, we identify the panel's open and close states as part of the component's state.  
+We will also have to forward the changes to the component's `listExpandedChange` output binding.
 
-As connecting Observables to the state is a very essential part, there is a method on the service, that deals with this specific case.
+As it is essential to connect Observables to the state, there is a service method that deals with this specific case.
 
-The method gets called `connect` and is able to assign values from an Observable in 3 different ways to the component state.
+This method is called `connect`, and it can assign values from an Observable to the component's state in 3 different ways.
 
 One way of using it is passing an Observable of type `Partial<ComponentState>` to the `connect` method directly.
 
-We already have a subject for the user interaction with the open/closed state called `listExpandedChanges`.
-It next the new state whenever we click the expand-panel.
+When choosing this way of connecting an Observable to the component's state, we will also need a subject called `listExpandedChanges` whose job is to ensure stable user interaction with the open/closed state.
+This way, whenever we click the expansion panel, the subject generates a new state using the `next` method.
 
 
-We can use connect with multiple overloads. Here the best usage would look like this:
+We can generally use `connect` with multiple different overloads. In our case, however, the best use case scenario would look like this:
 ```typescript
 constructor() {
   // ...
@@ -26,9 +28,9 @@ constructor() {
 }
 ```
 
-Optionally, we could also provide it as `Partial`.
-Here we need to transform the `boolean` value to fit `Partial<ComponentState>`.
-Here we can use the `map` operator to achieve the transformation and pass following projection function `listExpanded => ({ listExpanded})`
+Optionally, we can also provide it as `Partial`.
+Thus, we will need to transform the `boolean` value to fit `Partial<ComponentState>`.
+We can use the `map` operator here to achieve this transformation and pass the projection function `listExpanded => ({ listExpanded})`.
 
 ```typescript
 import { map } from `rxjs`;
@@ -41,7 +43,7 @@ constructor() {
 
 This overload is especially useful when updating multiple properties at the same time.
 
-Now lets refactor the state binding to the expand-panel.
+Now let's refactor the state binding to the expand-panel.
 
 ```html
 <mat-expansion-panel
@@ -51,18 +53,18 @@ Now lets refactor the state binding to the expand-panel.
 ></mat-expansion-panel>
 ```
 
-If we open and close the expand-panel we should see the change reflected in the state.
+If we open and close the expansion panel, we should see the change reflected in the state.
 
-## Setup Output bindings
+## Set up output bindings
 
-Next lets replace the logic for the output binding of the component.
+Next, we will replace the logic for the output binding of the component.
 
-As the open/closed state is already reflected in the components' state, we can directly derive changes from them.
+Since the open/closed state is already reflected in the component's state, we can derive changes directly from it.
 
-As we are only interested in changes of the slice `listExpanded` we can use the `distinctUntilKeyChanged` operator
-to get the changes.
+As we are only interested in changing the slice `listExpanded`, we can use the `distinctUntilKeyChanged` operator
+to get those changes.
 
-Lets refactor to following and delete the `listExpanded` property in the class and template.
+Let's refactor it into the following and delete the `listExpanded` property in the class and template.
 
 ```typescript
   import { map, distinctUntilKeyChanged } from `rxjs`;
@@ -71,5 +73,7 @@ Lets refactor to following and delete the `listExpanded` property in the class a
   listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
 ```
 
-Here we used `$` which it a 'signal' of the state changes. Signals in comparison to stateful streams don't replay the last value on subscription.
-This is especially handy is the above situation to avoid loops.
+We are using `$` here to 'signal' that the state has been changed. Signals, in comparison to stateful streams, don't replay the last value on subscription.
+This is especially useful as a way to avoid loops.
+
+[output-bindings.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/master/apps/demos/src/app/features/tutorials/basics/3-output-bindings/output-bindings.start.component.ts
