@@ -1,4 +1,5 @@
 import {
+  ZoneFlagsHelperFunctions,
   ZoneGlobalDisableConfigurationsKey,
   zoneGlobalDisableConfigurationsKeys,
   ZoneGlobalEventsConfigurationsKey,
@@ -77,7 +78,7 @@ function createZoneFlagsConfigurator(): ZoneConfig {
     ].map((prop) => zoneSymbol + prop),
   ];
   // append as global method for easy debugging
-  (cfg as any).__rxa_zone_config__log = (): void => {
+  (cfg as ZoneFlagsHelperFunctions).__rxa_zone_config__log = (): void => {
     configProps.forEach((flag) => {
       // tslint:disable-next-line:no-unused-expression
       cfg[flag] && console.log(flag, cfg[flag]);

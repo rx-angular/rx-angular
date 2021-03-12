@@ -269,12 +269,12 @@ describe('zone-config', () => {
 
   describe('zone-flags log', () => {
     it('should have log function present', () => {
-      expect(typeof w.__rax_zone_config__log).toBe('function');
+      expect(typeof w.__rxa_zone_config__log).toBe('function');
     });
 
     it('should log zone-flags if called', () => {
       w.console.log = createSpy('console.log');
-      w.__rax_zone_config__log()
+      w.__rxa_zone_config__log()
       expect(w.console.log).toHaveBeenCalledTimes(30);
     });
 

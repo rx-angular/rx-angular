@@ -62,5 +62,5 @@ export const zoneTestSettingsConfigurationsKeys: readonly string[] = [
 export type ZoneTestSettingsConfigurationsKey = typeof zoneTestSettingsConfigurationsKeys[number];
 
 export interface ZoneFlagsHelperFunctions {
-  __rax_zone_config__log?: () => void;
+  __rxa_zone_config__log?: () => void;
 }
