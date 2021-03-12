@@ -11,7 +11,13 @@ describe('zone-config', () => {
   const w = window as ZoneGlobalConfigurations &
     ZoneTestConfigurations &
     ZoneRuntimeConfigurations &
-    ZoneFlagsHelperFunctions & { console: {log: () => void} };
+    ZoneFlagsHelperFunctions & { console: { log: () => void } }
+    & { Zone?: any };
+
+  beforeAll(() => {
+    w.Zone = undefined;
+  });
+
   it('should be created', () => {
     expect(zoneConfig).toBeTruthy();
   });
@@ -274,7 +280,7 @@ describe('zone-config', () => {
 
     it('should log zone-flags if called', () => {
       w.console.log = createSpy('console.log');
-      w.__rxa_zone_config__log()
+      w.__rxa_zone_config__log();
       expect(w.console.log).toHaveBeenCalledTimes(30);
     });
 
