@@ -12,7 +12,13 @@ describe('zone-config', () => {
   const w = window as ZoneGlobalConfigurations &
     ZoneTestConfigurations &
     ZoneRuntimeConfigurations &
-    ZoneFlagsHelperFunctions & { console: {log: () => void} };
+    ZoneFlagsHelperFunctions & { console: { log: () => void } }
+    & { Zone?: any };
+
+  beforeAll(() => {
+    w.Zone = undefined;
+  });
+
   it('should be created', () => {
     expect(zoneConfig).toBeTruthy();
   });

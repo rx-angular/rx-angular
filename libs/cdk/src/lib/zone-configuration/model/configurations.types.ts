@@ -1,29 +1,5 @@
 // prefix: __Zone_disable_
-export interface ZoneGlobalDisableConfigurations {
-  EventEmitter?: boolean;
-  fs?: boolean;
-  node_timers?: boolean;
-  nextTick?: boolean;
-  crypto?: boolean;
-  defineProperty?: boolean;
-  registerElement?: boolean;
-  EventTargetLegacy?: boolean;
-  timers?: boolean;
-  requestAnimationFrame?: boolean;
-  blocking?: boolean;
-  EventTarget?: boolean;
-  FileReader?: boolean;
-  MutationObserver?: boolean;
-  IntersectionObserver?: boolean;
-  on_property?: boolean;
-  customElements?: boolean;
-  XHR?: boolean;
-  geolocation?: boolean;
-  canvas?: boolean;
-  ZoneAwarePromise?: boolean;
-}
-export type ZoneGlobalDisableConfigurationsKey = keyof ZoneGlobalDisableConfigurations;
-export const zoneGlobalDisableConfigurationsKeys: ZoneGlobalDisableConfigurationsKey[] = [
+export const zoneGlobalDisableConfigurationsKeys: readonly string[] = [
   'EventEmitter',
   'fs',
   'node_timers',
@@ -45,62 +21,45 @@ export const zoneGlobalDisableConfigurationsKeys: ZoneGlobalDisableConfiguration
   'geolocation',
   'canvas',
   'ZoneAwarePromise',
-];
+] as const;
+
+export type ZoneGlobalDisableConfigurationsKey = typeof zoneGlobalDisableConfigurationsKeys[number];
 
 // prefix: __zone_symbol__
-export interface ZoneGlobalEventsConfigurations {
-  UNPATCHED_EVENTS?: string[];
-  PASSIVE_EVENTS?: string[];
-}
-export type ZoneGlobalEventsConfigurationsKey = keyof ZoneGlobalEventsConfigurations;
-export const zoneGlobalEventsConfigurationsKeys: ZoneGlobalEventsConfigurationsKey[] = [
+export const zoneGlobalEventsConfigurationsKeys: readonly string[] = [
   'UNPATCHED_EVENTS',
   'PASSIVE_EVENTS',
-];
+] as const;
+export type ZoneGlobalEventsConfigurationsKey = typeof zoneGlobalEventsConfigurationsKeys[number];
 
 // prefix: __zone_symbol__
-export interface ZoneGlobalSettingsConfigurations {
-  DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION?: boolean;
-}
-export type ZoneGlobalSettingsConfigurationsKey = keyof ZoneGlobalSettingsConfigurations;
-export const zoneGlobalSettingsConfigurationsKeys: ZoneGlobalSettingsConfigurationsKey[] = [
+export const zoneGlobalSettingsConfigurationsKeys: readonly string[] = [
   'DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION',
-];
+] as const;
+export type ZoneGlobalSettingsConfigurationsKey = typeof zoneGlobalSettingsConfigurationsKeys[number];
 
 // prefix: __zone_symbol__
-export interface ZoneRuntimeConfigurations {
-  ignoreConsoleErrorUncaughtError?: boolean;
-}
-export type ZoneRuntimeConfigurationsKey = keyof ZoneRuntimeConfigurations;
-export const zoneRuntimeConfigurationsKeys: ZoneRuntimeConfigurationsKey[] = [
+export const zoneRuntimeConfigurationsKeys: readonly string[] = [
   'ignoreConsoleErrorUncaughtError',
-];
+] as const;
+export type ZoneRuntimeConfigurationsKey = typeof zoneRuntimeConfigurationsKeys[number];
 
 // prefix: __Zone_disable_
-export interface ZoneTestDisableConfigurations {
-  jasmine?: boolean;
-  mocha?: boolean;
-  jest?: boolean;
-}
-export type ZoneTestDisableConfigurationsKey = keyof ZoneTestDisableConfigurations;
-export const zoneTestDisableConfigurationsKeys: ZoneTestDisableConfigurationsKey[] = [
+
+export const zoneTestDisableConfigurationsKeys: readonly string[] = [
   'jasmine',
   'mocha',
   'jest',
-];
+] as const;
+export type ZoneTestDisableConfigurationsKey = typeof zoneTestDisableConfigurationsKeys[number];
 
 // prefix: __zone_symbol__
-export interface ZoneTestSettingsConfigurations {
-  fakeAsyncDisablePatchingClock?: boolean;
-  fakeAsyncAutoFakeAsyncWhenClockPatched?: boolean;
-  supportWaitUnResolvedChainedPromise?: boolean;
-}
-export type ZoneTestSettingsConfigurationsKey = keyof ZoneTestSettingsConfigurations;
-export const zoneTestSettingsConfigurationsKeys: ZoneTestSettingsConfigurationsKey[] = [
+export const zoneTestSettingsConfigurationsKeys: readonly string[] = [
   'fakeAsyncDisablePatchingClock',
   'fakeAsyncAutoFakeAsyncWhenClockPatched',
   'supportWaitUnResolvedChainedPromise',
-];
+] as const;
+export type ZoneTestSettingsConfigurationsKey = typeof zoneTestSettingsConfigurationsKeys[number];
 
 export interface ZoneFlagsHelperFunctions {
   __rxa_zone_config__log?: () => void;
