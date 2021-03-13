@@ -15,25 +15,17 @@ import {
 import { ZoneGlobalConfigurations } from './model/zone.configurations.api';
 
 type GlobalDisableConfigurationMethods = {
-  [disabledFlag in ZoneGlobalDisableConfigurationsKey]: (
-    isDisabled?: boolean
-  ) => void;
+  [disabledFlag in ZoneGlobalDisableConfigurationsKey]: () => void;
 } &
   {
-    [symbolFlag in ZoneGlobalSettingsConfigurationsKey]: (
-      isDisabled?: boolean
-    ) => void;
+    [symbolFlag in ZoneGlobalSettingsConfigurationsKey]: () => void;
   };
 
 type TestDisableConfigurationMethods = {
-  [disabledFlag in ZoneTestDisableConfigurationsKey]: (
-    isDisabled?: boolean
-  ) => void;
+  [disabledFlag in ZoneTestDisableConfigurationsKey]: () => void;
 } &
   {
-    [symbolFlag in ZoneTestSettingsConfigurationsKey]: (
-      isDisabled?: boolean
-    ) => void;
+    [symbolFlag in ZoneTestSettingsConfigurationsKey]: () => void;
   };
 
 type ZoneGlobalEventsConfigurationsMethods = {
@@ -43,9 +35,7 @@ type ZoneGlobalEventsConfigurationsMethods = {
 };
 
 type RuntimeConfigurationMethods = {
-  [disabledFlag in ZoneRuntimeConfigurationsKey]: (
-    isDisabled?: boolean
-  ) => void;
+  [disabledFlag in ZoneRuntimeConfigurationsKey]: () => void;
 };
 
 const zoneDisable = '__Zone_disable_';
@@ -66,7 +56,7 @@ function createZoneFlagsConfigurator(): ZoneConfig {
     ].map((prop) => zoneSymbol + prop),
   ];
   // append as global method for easy debugging
-  (cfg as any).__rax_zone_config__log = (): void => {
+  (cfg as any).__rxa_zone_config__log = (): void => {
     configProps.forEach((flag) => {
       // tslint:disable-next-line:no-unused-expression
       cfg[flag] && console.log(flag, cfg[flag]);
@@ -77,13 +67,13 @@ function createZoneFlagsConfigurator(): ZoneConfig {
     global: {
       disable: zoneGlobalDisableConfigurationsKeys
         .map((prop) => ({
-          [prop]: (isDisabled: boolean = true) =>
-            (cfg[zoneDisable + prop] = isDisabled),
+          [prop]: () =>
+            (cfg[zoneDisable + prop] = true),
         }))
         .concat(
           zoneGlobalSettingsConfigurationsKeys.map((prop) => ({
-            [prop]: (isDisabled: boolean = true) =>
-              (cfg[zoneSymbol + prop] = isDisabled),
+            [prop]: () =>
+              (cfg[zoneSymbol + prop] = true),
           }))
         )
         .reduce(
@@ -94,13 +84,13 @@ function createZoneFlagsConfigurator(): ZoneConfig {
     test: {
       disable: zoneTestDisableConfigurationsKeys
         .map((prop) => ({
-          [prop]: (isDisabled: boolean = true) =>
-            (cfg[zoneDisable + prop] = isDisabled),
+          [prop]: () =>
+            (cfg[zoneDisable + prop] = true),
         }))
         .concat(
           zoneTestSettingsConfigurationsKeys.map((prop) => ({
-            [prop]: (isDisabled: boolean = true) =>
-              (cfg[zoneSymbol + prop] = isDisabled),
+            [prop]: () =>
+              (cfg[zoneSymbol + prop] = true),
           }))
         )
         .reduce(
@@ -128,8 +118,8 @@ function createZoneFlagsConfigurator(): ZoneConfig {
       disable: zoneRuntimeConfigurationsKeys.reduce(
         (map, prop) => ({
           ...map,
-          [prop]: (isDisabled: boolean = true) =>
-            (cfg[zoneSymbol + prop] = isDisabled),
+          [prop]: () =>
+            (cfg[zoneSymbol + prop] = true),
         }),
         {} as RuntimeConfigurationMethods
       ),

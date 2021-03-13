@@ -1,4 +1,5 @@
 import {
+  ZoneFlagsHelperFunctions,
   ZoneGlobalDisableConfigurationsKey,
   zoneGlobalDisableConfigurationsKeys,
   ZoneGlobalEventsConfigurationsKey,
@@ -15,25 +16,17 @@ import {
 import { ZoneGlobalConfigurations } from './model/zone.configurations.api';
 
 type GlobalDisableConfigurationMethods = {
-  [disabledFlag in ZoneGlobalDisableConfigurationsKey]: (
-    isDisabled?: boolean
-  ) => void;
+  [disabledFlag in ZoneGlobalDisableConfigurationsKey]: () => void;
 } &
   {
-    [symbolFlag in ZoneGlobalSettingsConfigurationsKey]: (
-      isDisabled?: boolean
-    ) => void;
+    [symbolFlag in ZoneGlobalSettingsConfigurationsKey]: () => void;
   };
 
 type TestDisableConfigurationMethods = {
-  [disabledFlag in ZoneTestDisableConfigurationsKey]: (
-    isDisabled?: boolean
-  ) => void;
+  [disabledFlag in ZoneTestDisableConfigurationsKey]: () => void;
 } &
   {
-    [symbolFlag in ZoneTestSettingsConfigurationsKey]: (
-      isDisabled?: boolean
-    ) => void;
+    [symbolFlag in ZoneTestSettingsConfigurationsKey]: () => void;
   };
 
 type ZoneGlobalEventsConfigurationsMethods = {
@@ -43,9 +36,7 @@ type ZoneGlobalEventsConfigurationsMethods = {
 };
 
 type RuntimeConfigurationMethods = {
-  [disabledFlag in ZoneRuntimeConfigurationsKey]: (
-    isDisabled?: boolean
-  ) => void;
+  [disabledFlag in ZoneRuntimeConfigurationsKey]: () => void;
 };
 
 const zoneDisable = '__Zone_disable_';
@@ -53,8 +44,9 @@ const zoneSymbol = '__zone_symbol__';
 
 function assertZoneConfig() {
   if ((window as any).Zone !== undefined) {
-    // @TODO link to docs
-    throw console.error('zone-flags file needs to get imported before zone.js');
+    throw console.error(
+      'zone-flags file needs to get imported before zone.js\n Learn more: https://angular.io/guide/zone#setting-up-zonejs'
+    );
   }
 }
 
@@ -86,7 +78,7 @@ function createZoneFlagsConfigurator(): ZoneConfig {
     ].map((prop) => zoneSymbol + prop),
   ];
   // append as global method for easy debugging
-  (cfg as any).__rxa_zone_config__log = (): void => {
+  (cfg as ZoneFlagsHelperFunctions).__rxa_zone_config__log = (): void => {
     configProps.forEach((flag) => {
       // tslint:disable-next-line:no-unused-expression
       cfg[flag] && console.log(flag, cfg[flag]);
@@ -97,16 +89,16 @@ function createZoneFlagsConfigurator(): ZoneConfig {
     global: {
       disable: zoneGlobalDisableConfigurationsKeys
         .map((prop) => ({
-          [prop]: (isDisabled: boolean = true) => {
+          [prop]: () => {
             assertZoneConfig();
-            return (cfg[zoneDisable + prop] = isDisabled);
+            return (cfg[zoneDisable + prop] = true);
           },
         }))
         .concat(
           zoneGlobalSettingsConfigurationsKeys.map((prop) => ({
-            [prop]: (isDisabled: boolean = true) => {
+            [prop]: () => {
               assertZoneConfig();
-              return (cfg[zoneSymbol + prop] = isDisabled);
+              return (cfg[zoneSymbol + prop] = true);
             },
           }))
         )
@@ -118,17 +110,16 @@ function createZoneFlagsConfigurator(): ZoneConfig {
     test: {
       disable: zoneTestDisableConfigurationsKeys
         .map((prop) => ({
-          [prop]: (isDisabled: boolean = true) => {
+          [prop]: () => {
             assertZoneConfig();
-            return (cfg[zoneDisable + prop] = isDisabled);
+            return (cfg[zoneDisable + prop] = true);
           },
         }))
         .concat(
           zoneTestSettingsConfigurationsKeys.map((prop) => ({
-            [prop]: (isDisabled: boolean = true) => {
+            [prop]: () => {
               assertZoneConfig();
-              cfg[zoneSymbol + prop] = isDisabled;
-              return isDisabled;
+              return (cfg[zoneSymbol + prop] = true);
             },
           }))
         )
@@ -159,9 +150,9 @@ function createZoneFlagsConfigurator(): ZoneConfig {
       disable: zoneRuntimeConfigurationsKeys.reduce(
         (map, prop) => ({
           ...map,
-          [prop]: (isDisabled: boolean = true) => {
+          [prop]: () => {
             assertZoneConfig();
-            return (cfg[zoneSymbol + prop] = isDisabled);
+            return (cfg[zoneSymbol + prop] = true);
           },
         }),
         {} as RuntimeConfigurationMethods
@@ -177,9 +168,7 @@ function createZoneFlagsConfigurator(): ZoneConfig {
  *
  * create file `zone-flags.ts` parallel to your `polyfills.ts` and insert following content:
  * ```typescript
- * import { globalEvents,xhrEvent, zoneConfig} from '@rx-angular/cdk/zone-flags';
- *
- * const zoneConfig = createZoneFlagsConfigurator();
+ * import { globalEvents, xhrEvent, zoneConfig} from '@rx-angular/cdk/zone-flags';
  *
  * zoneConfig.global.disable.requestAnimationFrame();
  * zoneConfig.global.disable.timers();
