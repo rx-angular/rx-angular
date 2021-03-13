@@ -1,3 +1,4 @@
+import { ɵglobal } from '@angular/core';
 import {
   ZoneFlagsHelperFunctions,
   ZoneGlobalDisableConfigurationsKey,
@@ -63,7 +64,7 @@ function assertZoneConfig() {
  *
  */
 function createZoneFlagsConfigurator(): ZoneConfig {
-  const cfg = (window as unknown) as ZoneGlobalConfigurations;
+  const cfg = (ɵglobal as unknown) as ZoneGlobalConfigurations;
   const configProps = [
     ...[
       ...zoneGlobalDisableConfigurationsKeys,

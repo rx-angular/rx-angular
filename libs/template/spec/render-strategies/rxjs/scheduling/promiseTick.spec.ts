@@ -1,9 +1,10 @@
 import { ApplicationRef, Component, NgModule } from '@angular/core';
 import { getTestBed } from '@angular/core/testing';
+import { ɵglobal } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 // tslint:disable:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import { getGlobalThis } from '../../../../src/lib/core/utils';
+
 import { promiseTick } from '../../../../src/lib/render-strategies/rxjs/scheduling';
 
 let originalGlobalPromise;
@@ -38,7 +39,7 @@ describe('promiseTick', () => {
 
   beforeAll(() => {
     mockConsole();
-    originalGlobalPromise = getGlobalThis().__zone_symbol__Promise;
+    originalGlobalPromise = ɵglobal.__zone_symbol__Promise;
   });
 
   beforeEach(async () => {
@@ -46,12 +47,12 @@ describe('promiseTick', () => {
   });
 
   afterEach(() => {
-    getGlobalThis().__zone_symbol__Promise = originalGlobalPromise;
+    ɵglobal.__zone_symbol__Promise = originalGlobalPromise;
   });
 
   it('should handle errors', done => {
     const error = new Error('ERROR');
-    getGlobalThis().__zone_symbol__Promise = {
+    ɵglobal.__zone_symbol__Promise = {
       resolve: () => {
         return new Promise<void>((resolve, reject) => {
           throw error;

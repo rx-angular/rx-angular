@@ -1,4 +1,4 @@
-import { getGlobalThis } from '../../../core/utils/get-global-this';
+import { ɵglobal } from '@angular/core';
 
 /**
  * envRunsIvy
@@ -19,7 +19,7 @@ import { getGlobalThis } from '../../../core/utils/get-global-this';
  *
  */
 export function isViewEngineIvy(): boolean {
-  const ng: any = getGlobalThis().ng;
+  const ng: any = ɵglobal.ng;
 
   // Is the global ng object is unavailable?
   // ng === undefined in Ivy production mode
