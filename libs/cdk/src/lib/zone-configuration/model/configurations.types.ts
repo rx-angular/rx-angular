@@ -103,5 +103,5 @@ export const zoneTestSettingsConfigurationsKeys: ZoneTestSettingsConfigurationsK
 ];
 
 export interface ZoneFlagsHelperFunctions {
-  __rax_zone_config__log?: () => void;
+  __rxa_zone_config__log?: () => void;
 }
