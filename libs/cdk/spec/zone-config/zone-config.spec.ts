@@ -8,6 +8,7 @@ import {
 import createSpy = jasmine.createSpy;
 
 describe('zone-config', () => {
+
   const w = window as ZoneGlobalConfigurations &
     ZoneTestConfigurations &
     ZoneRuntimeConfigurations &
@@ -280,7 +281,7 @@ describe('zone-config', () => {
 
     it('should log zone-flags if called', () => {
       w.console.log = createSpy('console.log');
-      w.__rxa_zone_config__log();
+      w.__rxa_zone_config__log()
       expect(w.console.log).toHaveBeenCalledTimes(30);
     });
 

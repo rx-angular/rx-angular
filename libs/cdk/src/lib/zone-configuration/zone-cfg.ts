@@ -44,9 +44,8 @@ const zoneSymbol = '__zone_symbol__';
 
 function assertZoneConfig() {
   if ((window as any).Zone !== undefined) {
-    throw console.error(
-      'zone-flags file needs to get imported before zone.js\n Learn more: https://angular.io/guide/zone#setting-up-zonejs'
-    );
+    // @TODO link to docs
+    console.error('zone-flags file needs to get imported before zone.js');
   }
 }
 
