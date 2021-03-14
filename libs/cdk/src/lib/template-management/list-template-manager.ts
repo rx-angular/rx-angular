@@ -118,7 +118,7 @@ export function createListTemplateManager<
         // Cancel old renders
         switchMap(([{ changes, items }, strategy]) => {
           if (!changes) {
-            return [];
+            return of([]);
           }
           const listChanges = listViewHandler.getListChanges(changes, items);
           changesArr = listChanges[0];
