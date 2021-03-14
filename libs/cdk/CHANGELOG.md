@@ -1,3 +1,11 @@
+# [1.0.0-alpha.6](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.4...cdk@1.0.0-alpha.6) (2021-03-14)
+
+### Bug Fixes
+
+- **zone-config:** Update zone cfg api ([#598](https://github.com/rx-angular/rx-angular/issues/598)) ([8dadf40](https://github.com/rx-angular/rx-angular/commit/8dadf40007c85c8794d21317a702a743100fc1c2))
+- **zone-config:** zone-config tests ([#600](https://github.com/rx-angular/rx-angular/issues/600)) ([517e0cf](https://github.com/rx-angular/rx-angular/commit/517e0cf55e38e068c9127395395d1cc63b7b405b))
+- **list-manager:** fix list manager return value when no changes happened but values arrived ([#588](https://github.com/rx-angular/rx-angular/issues/588)) ([220be51](https://github.com/rx-angular/rx-angular/commit/220be517d65fc70f851cc3a24bddcd28251d85dd))
+
 # [1.0.0-alpha.5](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.4...cdk@1.0.0-alpha.5) (2021-03-10)
 
 ### Bug Fixes
