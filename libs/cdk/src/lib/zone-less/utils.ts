@@ -20,8 +20,7 @@ export function getZoneUnPatchedApi<T extends object, N extends keyof T>(
 ): T[N];
 export function getZoneUnPatchedApi<T extends object, N extends keyof T>(
   name: N,
-  target?: T
+  target: T = ɵglobal
 ): T[N] {
-  target = target || ɵglobal;
   return target['__zone_symbol__' + name] ?? target[name];
 }
