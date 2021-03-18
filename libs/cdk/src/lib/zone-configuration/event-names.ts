@@ -11,8 +11,10 @@ export const focusEvent = ['blur', 'focus', 'focusin', 'focusout'];
 // Selection Events
 export const selectionEvent = ['selectionchange'];
 
-// Mouse Events
-// (MouseEvent)[https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent]
+/**
+ * Mouse Events
+ * (MouseEvent)[https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent]
+ */
 export const mouseEvent: (keyof WindowEventMap)[] = [
   'mousedown',
   'dblclick',
@@ -25,11 +27,11 @@ export const mouseEvent: (keyof WindowEventMap)[] = [
   'click',
 ];
 
-// Wheel Events
-export const wheelEvent: (keyof WindowEventMap)[] = [
-  // (WheelEvent)[https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent]
-  'wheel',
-];
+/**
+ * Wheel Events
+ * (WheelEvent)[https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent]
+ */
+export const wheelEvent: (keyof WindowEventMap)[] = ['wheel'];
 
 // Input Events
 export const inputEvent: (keyof WindowEventMap)[] = [
@@ -47,6 +49,11 @@ export const compositionEvent = [
   'compositionend',
 ];
 
+/**
+ * Touch Events
+ * [PointerEvent](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent)
+ * [TouchEvent](https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent)
+ */
 export const touchEvents: (keyof WindowEventMap)[] = [
   // [PointerEvent](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent)
   'pointerover',
@@ -92,8 +99,13 @@ export const globalEvents: (keyof WindowEventMap)[] = [
   'error',
 ];
 
-// XHREvent
-export const xhrEvent = ['XHR'];
+/**
+ * Basic XHR Events
+ * [Load](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/load_event)
+ * [Error](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/error_event)
+ * There are more events you may want to unpatch https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+ */
+export const xhrEvent = ['load', 'error'];
 
 export const websocketEvents: (keyof WebSocketEventMap)[] = [
   'close',
@@ -102,6 +114,9 @@ export const websocketEvents: (keyof WebSocketEventMap)[] = [
   'open',
 ];
 
+/**
+ * All Events combined
+ */
 export const allEvents: string[] = [
   ...uiEvent,
   ...focusEvent,
