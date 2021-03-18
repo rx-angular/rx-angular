@@ -14,6 +14,7 @@ import {
   zoneTestSettingsConfigurationsKeys,
 } from './model/configurations.types';
 import { ZoneGlobalConfigurations } from './model/zone.configurations.api';
+import { xhrEvent } from './event-names';
 
 type GlobalDisableConfigurationMethods = {
   [disabledFlag in ZoneGlobalDisableConfigurationsKey]: () => void;
@@ -42,12 +43,44 @@ type RuntimeConfigurationMethods = {
 const zoneDisable = '__Zone_disable_';
 const zoneSymbol = '__zone_symbol__';
 
+/**
+ * https://angular.io/guide/zone#setting-up-zonejs
+ **/
 function assertZoneConfig() {
   if ((window as any).Zone !== undefined) {
     // @TODO link to docs
     console.error('zone-flags file needs to get imported before zone.js');
   }
 }
+
+const addDisableFlag = (prop: string) => ({
+  [prop]: () => {
+    assertZoneConfig();
+    return ((window as any)[zoneDisable + prop] = true);
+  },
+});
+
+const addSymbolFlag = (prop: string) => ({
+  [prop]: () => {
+    assertZoneConfig();
+    return ((window as any)[zoneSymbol + prop] = true);
+  },
+});
+
+const addArraySymbolFlag = (prop: string) => ({
+  [prop]: (eventNames: string[]) => {
+    assertZoneConfig();
+    const w: any = window as any;
+    return (w[zoneSymbol + prop] = [
+      ...(Array.isArray(w[zoneSymbol + prop]) ? w[zoneSymbol + prop] : []),
+      ...eventNames,
+    ]);
+  },
+});
+
+const reduceToObject = <T>(methodsArray: any[]): T => {
+  return methodsArray.reduce((map, item) => ({ ...map, ...item }), {} as T);
+};
 
 /**
  * factory function to create a `ZoneConfig` object.
@@ -76,6 +109,7 @@ function createZoneFlagsConfigurator(): ZoneConfig {
       ...zoneRuntimeConfigurationsKeys,
     ].map((prop) => zoneSymbol + prop),
   ];
+
   // append as global method for easy debugging
   (cfg as ZoneFlagsHelperFunctions).__rxa_zone_config__log = (): void => {
     configProps.forEach((flag) => {
@@ -84,79 +118,61 @@ function createZoneFlagsConfigurator(): ZoneConfig {
     });
   };
 
-  return {
+  const config = {
+    /**
+     * Unpatch all related to XHR
+     **/
+    unpatchXHR: () => {
+      config.global.disable.XHR();
+      config.events.disable.UNPATCHED_EVENTS([...xhrEvent]);
+    },
+    /**
+     * Unpatch passive events https://developers.google.com/web/updates/2016/06/passive-event-listeners
+     **/
+    usePassiveScrollEvents: () => {
+      config.events.disable.PASSIVE_EVENTS(['scroll']);
+      config.events.disable.UNPATCHED_EVENTS(['scroll']);
+    },
     global: {
-      disable: zoneGlobalDisableConfigurationsKeys
-        .map((prop) => ({
-          [prop]: () => {
-            assertZoneConfig();
-            return (cfg[zoneDisable + prop] = true);
-          },
-        }))
-        .concat(
-          zoneGlobalSettingsConfigurationsKeys.map((prop) => ({
-            [prop]: () => {
-              assertZoneConfig();
-              return (cfg[zoneSymbol + prop] = true);
-            },
-          }))
-        )
-        .reduce(
-          (map, item) => ({ ...map, ...item }),
-          {} as GlobalDisableConfigurationMethods
-        ),
+      disable: reduceToObject<GlobalDisableConfigurationMethods>([
+        ...zoneGlobalDisableConfigurationsKeys.map(addDisableFlag),
+        ...zoneGlobalSettingsConfigurationsKeys.map(addSymbolFlag),
+      ]),
     },
     test: {
-      disable: zoneTestDisableConfigurationsKeys
-        .map((prop) => ({
-          [prop]: () => {
-            assertZoneConfig();
-            return (cfg[zoneDisable + prop] = true);
-          },
-        }))
-        .concat(
-          zoneTestSettingsConfigurationsKeys.map((prop) => ({
-            [prop]: () => {
-              assertZoneConfig();
-              return (cfg[zoneSymbol + prop] = true);
-            },
-          }))
-        )
-        .reduce(
-          (map, item) => ({ ...map, ...item }),
-          {} as TestDisableConfigurationMethods
-        ),
+      disable: reduceToObject<TestDisableConfigurationMethods>([
+        ...zoneTestDisableConfigurationsKeys.map(addDisableFlag),
+        ...zoneTestSettingsConfigurationsKeys.map(addSymbolFlag),
+      ]),
     },
     events: {
-      disable: zoneGlobalEventsConfigurationsKeys
-        .map((prop) => ({
-          [prop]: (eventNames: string[]) => {
-            assertZoneConfig();
-            return (cfg[zoneSymbol + prop] = [
-              ...(Array.isArray(cfg[zoneSymbol + prop])
-                ? cfg[zoneSymbol + prop]
-                : []),
-              ...eventNames,
-            ]);
-          },
-        }))
-        .reduce(
-          (map, item) => ({ ...map, ...item }),
-          {} as ZoneGlobalEventsConfigurationsMethods
-        ),
-    },
-    runtime: {
-      disable: zoneRuntimeConfigurationsKeys.reduce(
-        (map, prop) => ({
-          ...map,
-          [prop]: () => {
-            assertZoneConfig();
-            return (cfg[zoneSymbol + prop] = true);
-          },
-        }),
-        {} as RuntimeConfigurationMethods
+      disable: reduceToObject<ZoneGlobalEventsConfigurationsMethods>(
+        zoneGlobalEventsConfigurationsKeys.map(addArraySymbolFlag)
       ),
     },
+    runtime: {
+      disable: reduceToObject<RuntimeConfigurationMethods>(
+        zoneRuntimeConfigurationsKeys.map(addSymbolFlag)
+      ),
+    },
+  };
+  return config;
+}
+
+export interface ZoneConfig {
+  unpatchXHR: () => void;
+  usePassiveScrollEvents: () => void;
+  global: {
+    disable: GlobalDisableConfigurationMethods;
+  };
+  test: {
+    disable: TestDisableConfigurationMethods;
+  };
+  events: {
+    disable: ZoneGlobalEventsConfigurationsMethods;
+  };
+  runtime: {
+    disable: RuntimeConfigurationMethods;
   };
 }
 
@@ -182,19 +198,4 @@ function createZoneFlagsConfigurator(): ZoneConfig {
  * ```
  *
  */
-export interface ZoneConfig {
-  global: {
-    disable: GlobalDisableConfigurationMethods;
-  };
-  test: {
-    disable: TestDisableConfigurationMethods;
-  };
-  events: {
-    disable: ZoneGlobalEventsConfigurationsMethods;
-  };
-  runtime: {
-    disable: RuntimeConfigurationMethods;
-  };
-}
-
 export const zoneConfig = createZoneFlagsConfigurator();
