@@ -23,7 +23,7 @@ import {
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { asyncScheduler } from '../zone-less/rxjs/scheduler/index';
+import { asyncScheduler } from '@rx-angular/cdk/zone-less';
 import { RxStrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 import { toRenderError } from './render-error';
