@@ -33,6 +33,12 @@ const ROUTES: Routes = [
     )
   },
   {
+    path: 'read-write-read',
+    loadChildren: () => import('./read-write-read/read-write-read.module').then(
+      m => m.ReadWriteReadModule
+    )
+  },
+  {
     path: 'coalescing',
     loadChildren: () => import('./coalescing/coalescing.module').then(
       m => m.CoalescingModule

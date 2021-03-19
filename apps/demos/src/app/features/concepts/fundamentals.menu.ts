@@ -16,6 +16,10 @@ export const FUNDAMENTALS_MENU = [
     label: 'Zone Patched APIs'
   },
   {
+    label: 'read-write-read',
+    link: 'read-write-read'
+  },
+  {
     label: 'Scheduling',
     link: 'scheduling'
   },
