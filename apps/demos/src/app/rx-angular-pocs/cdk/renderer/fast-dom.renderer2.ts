@@ -5,13 +5,12 @@ import {
   RendererType2,
 } from '@angular/core';
 
-import * as fastDom from 'fastdom';
+import { getQueue } from './dom-operation.queue';
 
 export class FastDomRenderer2 implements Renderer2 {
   readonly data: { [key: string]: any };
 
   constructor(private delegate: Renderer2) {
-    console.log('CTOR FastDomRenderer2');
     this.data = this.delegate.data;
   }
 
@@ -54,7 +53,7 @@ export class FastDomRenderer2 implements Renderer2 {
   }
 
   setAttribute(el: any, name: string, value: string, namespace?: string): void {
-    fastDom.mutate(() => {
+    getQueue().write(() => {
       this.delegate.setAttribute(el, name, value, namespace);
     })
   }
@@ -64,13 +63,13 @@ export class FastDomRenderer2 implements Renderer2 {
   }
 
   addClass(el: any, name: string): void {
-    fastDom.mutate(() => {
+    getQueue().write(() => {
       this.delegate.addClass(el, name);
     })
   }
 
   removeClass(el: any, name: string): void {
-    fastDom.mutate(() => {
+    getQueue().write(() => {
       this.delegate.removeClass(el, name);
     })
   }
@@ -81,10 +80,9 @@ export class FastDomRenderer2 implements Renderer2 {
     value: any,
     flags?: RendererStyleFlags2
   ): void {
-    fastDom.mutate(() => {
-      console.log('fastDom')
+    getQueue().write(() => {
       this.delegate.setStyle(el, style, value, flags);
-    }, this);
+    });
   }
 
   removeStyle(el: any, style: string, flags: RendererStyleFlags2): void {
