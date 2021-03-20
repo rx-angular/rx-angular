@@ -18,7 +18,7 @@ interface ComponentState {
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
-  list: [],
+  list: []
 };
 
 @Component({
@@ -28,12 +28,12 @@ const initComponentState = {
       Side Effects
     </h3>
     <mat-expansion-panel
-      *ngIf="model$ | async as vm"
-      (expandedChange)="listExpandedChanges.next($event)"
-      [expanded]="vm.listExpanded"
+      *ngIf='model$ | async as vm'
+      (expandedChange)='listExpandedChanges.next($event)'
+      [expanded]='vm.listExpanded'
     >
-      <mat-expansion-panel-header class="list">
-        <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
+      <mat-expansion-panel-header class='list'>
+        <mat-progress-bar *ngIf='false' [mode]="'query'"></mat-progress-bar>
         <mat-panel-title>
           List
         </mat-panel-title>
@@ -44,18 +44,18 @@ const initComponentState = {
           </span>
         </mat-panel-description>
       </mat-expansion-panel-header>
-
+      // Add a refresh button
       <button
         mat-raised-button
-        color="primary"
-        (click)="onRefreshClicks($event)"
+        color='primary'
+        (click)='onRefreshClicks($event)'
       >
         Refresh List
       </button>
 
-      <div *ngIf="vm.list?.length; else noList">
+      <div *ngIf='vm.list?.length; else noList'>
         <mat-list>
-          <mat-list-item *ngFor="let item of vm.list">
+          <mat-list-item *ngFor='let item of vm.list'>
             {{ item.name }}
           </mat-list-item>
         </mat-list>
@@ -66,7 +66,7 @@ const initComponentState = {
       </ng-template>
     </mat-expansion-panel>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SideEffectsStart extends RxState<ComponentState>
   implements OnInit, OnDestroy {
@@ -79,6 +79,7 @@ export class SideEffectsStart extends RxState<ComponentState>
     startWith(initComponentState.list)
   );
 
+  // Set the refresh interval
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 4000) {
@@ -95,13 +96,14 @@ export class SideEffectsStart extends RxState<ComponentState>
     super();
     this.set(initComponentState);
     this.connect('listExpanded', this.listExpandedChanges);
-    this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
+    this.connect('list', this.listService.list$.pipe(map(this.parseListItems))); // Add the hold method
   }
 
   ngOnDestroy(): void {
     this.intervalSubscription.unsubscribe();
   }
 
+  // Initialize a background process
   ngOnInit(): void {
     this.resetRefreshTick();
   }
@@ -113,6 +115,7 @@ export class SideEffectsStart extends RxState<ComponentState>
       .subscribe();
   }
 
+  // Dispatch an action to the global store
   onRefreshClicks(event) {
     this.listService.refetchList();
   }

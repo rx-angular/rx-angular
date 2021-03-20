@@ -45,7 +45,7 @@ Now that the slice is connected, we can delete the `storeList$` property in our 
 </div>
 ```
 
-With this step, we're refactoring the state management from an imperative to a reactive implementation.
+With this step, we're refactoring our state management from an imperative to a reactive implementation.
 
 The benefits we can gain here are that we have our state centralized and reactive but, at the same time, can also include
 imperative parts of our components, like input bindings, into the state.

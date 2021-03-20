@@ -34,7 +34,7 @@ const initComponentState = {
     >
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
-        <mat-panel-title>
+        <mat-panel-title> // Refactor state management
           List
         </mat-panel-title>
         <mat-panel-description>
