@@ -288,7 +288,7 @@ describe('zone-config', () => {
     });
 
    it('should have unpatchXHR method', () => {
-      zoneConfig.usePassiveScrollEvents();
+      zoneConfig.useUnpatchedPassiveScrollEvents();
       expect(w.__zone_symbol__UNPATCHED_EVENTS).toEqual(['scroll']);
       expect(w.__zone_symbol__PASSIVE_EVENTS).toEqual(['scroll']);
     });

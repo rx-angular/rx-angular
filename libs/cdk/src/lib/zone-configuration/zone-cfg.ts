@@ -1,44 +1,25 @@
 import {
   ZoneFlagsHelperFunctions,
-  ZoneGlobalDisableConfigurationsKey,
   zoneGlobalDisableConfigurationsKeys,
-  ZoneGlobalEventsConfigurationsKey,
   zoneGlobalEventsConfigurationsKeys,
-  ZoneGlobalSettingsConfigurationsKey,
   zoneGlobalSettingsConfigurationsKeys,
-  ZoneRuntimeConfigurationsKey,
   zoneRuntimeConfigurationsKeys,
-  ZoneTestDisableConfigurationsKey,
   zoneTestDisableConfigurationsKeys,
-  ZoneTestSettingsConfigurationsKey,
   zoneTestSettingsConfigurationsKeys,
 } from './model/configurations.types';
 import { ZoneGlobalConfigurations } from './model/zone.configurations.api';
-import { xhrEvent } from './event-names';
-
-type GlobalDisableConfigurationMethods = {
-  [disabledFlag in ZoneGlobalDisableConfigurationsKey]: () => void;
-} &
-  {
-    [symbolFlag in ZoneGlobalSettingsConfigurationsKey]: () => void;
-  };
-
-type TestDisableConfigurationMethods = {
-  [disabledFlag in ZoneTestDisableConfigurationsKey]: () => void;
-} &
-  {
-    [symbolFlag in ZoneTestSettingsConfigurationsKey]: () => void;
-  };
-
-type ZoneGlobalEventsConfigurationsMethods = {
-  [disabledFlag in ZoneGlobalEventsConfigurationsKey]: (
-    eventNames: string[]
-  ) => void;
-};
-
-type RuntimeConfigurationMethods = {
-  [disabledFlag in ZoneRuntimeConfigurationsKey]: () => void;
-};
+import {
+  ZoneConfigConfiguration,
+  ZoneConfig,
+  GlobalDisableConfigurationMethods,
+  TestDisableConfigurationMethods,
+  ZoneGlobalEventsConfigurationsMethods,
+  RuntimeConfigurationMethods,
+} from './model/zone-cfg.types';
+import {
+  unpatchXHR,
+  useUnpatchedPassiveScrollEvents,
+} from './convenience-methods';
 
 const zoneDisable = '__Zone_disable_';
 const zoneSymbol = '__zone_symbol__';
@@ -118,21 +99,7 @@ function createZoneFlagsConfigurator(): ZoneConfig {
     });
   };
 
-  const config = {
-    /**
-     * Unpatch all related to XHR
-     **/
-    unpatchXHR: () => {
-      config.global.disable.XHR();
-      config.events.disable.UNPATCHED_EVENTS([...xhrEvent]);
-    },
-    /**
-     * Unpatch passive events https://developers.google.com/web/updates/2016/06/passive-event-listeners
-     **/
-    usePassiveScrollEvents: () => {
-      config.events.disable.PASSIVE_EVENTS(['scroll']);
-      config.events.disable.UNPATCHED_EVENTS(['scroll']);
-    },
+  const zoneConfigObj: ZoneConfigConfiguration = {
     global: {
       disable: reduceToObject<GlobalDisableConfigurationMethods>([
         ...zoneGlobalDisableConfigurationsKeys.map(addDisableFlag),
@@ -156,26 +123,12 @@ function createZoneFlagsConfigurator(): ZoneConfig {
       ),
     },
   };
-  return config;
-}
-
-export interface ZoneConfig {
-  /**
-   * Unpatch all related to XHR
-   **/
-  unpatchXHR: () => void;
-  usePassiveScrollEvents: () => void;
-  global: {
-    disable: GlobalDisableConfigurationMethods;
-  };
-  test: {
-    disable: TestDisableConfigurationMethods;
-  };
-  events: {
-    disable: ZoneGlobalEventsConfigurationsMethods;
-  };
-  runtime: {
-    disable: RuntimeConfigurationMethods;
+  return {
+    unpatchXHR: unpatchXHR(zoneConfigObj),
+    useUnpatchedPassiveScrollEvents: useUnpatchedPassiveScrollEvents(
+      zoneConfigObj
+    ),
+    ...zoneConfigObj,
   };
 }
 
