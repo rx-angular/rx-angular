@@ -100,7 +100,7 @@ Let's refactor those parts and handle them in a clean and reactive way.
 
 # Refactor to a reactive UI
 
-As RxJS provides us with a very powerful way of composing the emitted events, we will refactor our UI interaction with the streams.
+As RxJS provides us with a very powerful way of composing emitted events, we will refactor our UI interaction with the streams.
 
 UI interaction, in general, can come from buttons, inputs, forms, scroll or resize events, etc.
 
@@ -136,7 +136,7 @@ constructor(...) {
 }
 ```
 
-This should dispatch an action on every button click.
+With this implementation, we should be able to dispatch an action on every button click.
 
 Optionally, we could also put the side effect into a tap operator. To that end, we create a new property in our class called `refreshListSideEffect$` and assign the newly created click `Observable` to it:
 

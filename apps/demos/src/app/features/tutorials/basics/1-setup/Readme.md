@@ -5,7 +5,7 @@ its state management to a [reactive setup][setup.solution.component.ts].
 
 We will set up `RxState` in the component, initialize the component's local state, and render it in the template.
 
-In addition, we introduced automated subscription handling, the possibility for imperative interaction
+In addition, we've introduced automated subscription handling, the possibility for imperative interaction
 over component's input bindings, and a clean separation of concerns.
 
 ---
@@ -15,9 +15,8 @@ over component's input bindings, and a clean separation of concerns.
 The first step is to introduce a reactive state to our component by using the `RxState` class.
 This can be done either through inheritance, which means we extend the state service; or through composition, in which case we inject the service into the constructor and add the service to the component's `providers` section.
 
-In this tutorial, we will simply extend the service.
-One distinct feature of this method, which is both its benefit and disadvantage, is that we can directly access the service's API using `this`.  
-e.g. `this.select('prop')`.
+In this case, we will simply extend the service.
+One distinct feature of this method, which is both its benefit and disadvantage, is that we can directly access the service's API using `this` (e.g., `this.select('prop')`.)
 
 To this end, we have to extend our class and use the already existing `ComponentState` interface (see
 [setup.start.component.ts] [setup.start.component.ts].)

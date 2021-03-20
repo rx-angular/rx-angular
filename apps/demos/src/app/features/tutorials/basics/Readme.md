@@ -24,14 +24,14 @@ There is a background process running in the child component. The input value fr
 Furthermore, there is a refresh button. A click on it also refreshes the list data.
 
 The topics we will discuss in this tutorial include:
-- [Set up a reactive state, selections, and UI interactions][1-setup]
-- [Handle @Inputs reactively][2-input-bindings]
-- [Handle @Output reactively][3-output-bindings]
-- [Create a global state and attach it to components][4-global-state]
-- [Handle Side Effects reactively][5-side-effects]
+- [Setting up a reactive state, selections, and UI interactions][1-setup]
+- [Handling @Inputs reactively][2-input-bindings]
+- [Handling @Output reactively][3-output-bindings]
+- [Creating a global state and attach it to components][4-global-state]
+- [Handling Side Effects reactively][5-side-effects]
 <!-- - [Presenter Pattern][6-presenter-pattern] -->
 
-You can also check out the full solution after applying all the above steps in [here](https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/solution)
+You can also check out the full solution after applying all the above steps [here](https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/solution).
 
 # How to use this tutorial
 
@@ -41,11 +41,11 @@ Each chapter contains three files:
 - `.solution.component.ts` demonstrating the state of the file after applying all the changes discussed in that chapter
 - `.container.component.ts`, a container where you can check the result of the solution; by default, it uses the `.start.component.ts` in the template, so change it by using the `.solution.component.ts` to see the difference
 
-> You can compare the `.start.component.ts` and `.solution.component.ts` against each other to see what changes are being made.
+> You can compare the `.start.component.ts` and `.solution.component.ts` against each other to see what changes have been made.
 
 > To compare two files against each other in VSCode, you have to: <br> <br>
 > 1- open the first file (in our case, the `.start.component.ts`) <br>
-> 2- press Ctrl(Cmd)+shift+P and choose `File: Compare Active file with ...` <br>
+> 2- press Ctrl(Cmd)+Shift+P and choose `File: Compare Active file with ...` <br>
 > 3- choose the second file (in our case, the `.solution.component.ts`)
 
 [1-setup]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/1-setup

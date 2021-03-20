@@ -10,14 +10,14 @@ In this example, we will be using an expansion panel to display a list.
 For the purpose of this tutorial, we identify the panel's open and close states as part of the component's state.  
 We will also have to forward the changes to the component's `listExpandedChange` output binding.
 
-As it is essential to connect Observables to the state, there is a service method that deals with this specific case.
+As it is essential to connect Observables to the state, there is a service method that deals with this specific issue.
 
 This method is called `connect`, and it can assign values from an Observable to the component's state in 3 different ways.
 
 One way of using it is passing an Observable of type `Partial<ComponentState>` to the `connect` method directly.
 
 When choosing this way of connecting an Observable to the component's state, we will also need a subject called `listExpandedChanges` whose job is to ensure stable user interaction with the open/closed state.
-This way, whenever we click the expansion panel, the subject generates a new state using the `next` method.
+This way, whenever we click on the expansion panel, the subject generates a new state using the `next` method.
 
 
 We can generally use `connect` with multiple different overloads. In our case, however, the best use case scenario would look like this:
