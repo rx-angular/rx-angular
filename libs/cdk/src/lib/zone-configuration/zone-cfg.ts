@@ -16,10 +16,7 @@ import {
   ZoneGlobalEventsConfigurationsMethods,
   RuntimeConfigurationMethods,
 } from './model/zone-cfg.types';
-import {
-  unpatchXHR,
-  useUnpatchedPassiveScrollEvents,
-} from './convenience-methods';
+import { convenienceMethods } from './convenience-methods';
 
 const zoneDisable = '__Zone_disable_';
 const zoneSymbol = '__zone_symbol__';
@@ -123,12 +120,10 @@ function createZoneFlagsConfigurator(): ZoneConfig {
       ),
     },
   };
+
   return {
-    unpatchXHR: unpatchXHR(zoneConfigObj),
-    useUnpatchedPassiveScrollEvents: useUnpatchedPassiveScrollEvents(
-      zoneConfigObj
-    ),
     ...zoneConfigObj,
+    ...convenienceMethods(zoneConfigObj),
   };
 }
 
