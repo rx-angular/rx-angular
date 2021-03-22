@@ -41,8 +41,8 @@ jobs:
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       env:
         HUSKY_SKIP_INSTALL: 'true'
-      run: yarn --pure-lockfile --no-progress --non-interactive
+      run: yarn --frozen-lockfile --no-progress --non-interactive
 
-    - run: yarn nx affected:lint --base=origin/master --head=${{ github.event.pull_request.head.ref }}
-    - run: yarn nx affected:build --base=origin/master --head=${{ github.event.pull_request.head.ref }}
-    - run: yarn nx affected:test --base=origin/master --head=${{ github.event.pull_request.head.ref }}
+    - run: yarn nx affected:lint --base=origin/master
+    - run: yarn nx affected:build --base=origin/master
+    - run: yarn nx affected:test --base=origin/master
