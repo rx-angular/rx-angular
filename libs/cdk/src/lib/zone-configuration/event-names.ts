@@ -3,7 +3,10 @@
 // Focus Events
 export const focusEvents = ['blur', 'focus', 'focusin', 'focusout'];
 
-// (MouseEvent)[https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent]
+/**
+ * Mouse Events
+ * (MouseEvent)[https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent]
+ */
 export const mouseEvents: (keyof WindowEventMap)[] = [
   'mousedown',
   'dblclick',
@@ -16,7 +19,10 @@ export const mouseEvents: (keyof WindowEventMap)[] = [
   'click',
 ];
 
-// Wheel Events
+/**
+ * Wheel Events
+ * (WheelEvent)[https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent]
+ */
 export const wheelEvents: (keyof WindowEventMap)[] = [
   // (WheelEvent)[https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent]
   'wheel',
@@ -102,6 +108,11 @@ export const compositionEvents = [
   'compositionend',
 ];
 
+/**
+ * Touch Events
+ * [PointerEvent](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent)
+ * [TouchEvent](https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent)
+ */
 export const touchEvents: (keyof WindowEventMap)[] = [
   // [PointerEvent](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent)
   'pointerover',
@@ -156,8 +167,14 @@ export const websocketEvents: (keyof WebSocketEventMap)[] = [
   'open',
 ];
 
-// XHREvent (group is here to make it easier to target HXR in angular applications. It contains redundant events e.g. 'error')
-export const xhrEvents = ['XHR', 'load', 'error'];
+/**
+ * Basic XHR Events
+ * [Load](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/load_event)
+ * [Error](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/error_event)
+ * There are more events you may want to unpatch https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+ */
+// XHREvent (group is here to make it easier to target XHR in angular applications. It contains redundant events e.g. 'error')
+export const xhrEvents = ['load', 'error'];
 
 // @TODO
 export const windowEvents: (keyof WindowEventMap)[] = [
@@ -179,6 +196,9 @@ export const windowEvents: (keyof WindowEventMap)[] = [
   'waiting',
 ];
 
+/**
+ * All Events combined
+ */
 export const allEvents: string[] = Array.from(
   new Set([
     ...focusEvents,
