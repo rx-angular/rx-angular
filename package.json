@@ -67,7 +67,7 @@
     "angular-in-memory-web-api": "^0.11.0",
     "benchmark": "^2.1.4",
     "bootstrap": "^4.6.0",
-    "core-js": "^3.8.3",
+    "core-js": "^3.9.1",
     "diff": "^5.0.0",
     "ngx-skeleton-loader": "^2.8.0",
     "normalize-css": "^2.3.1",
@@ -79,7 +79,7 @@
     "zone.js": "^0.11.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.1102.0",
+    "@angular-devkit/build-angular": "0.1102.5",
     "@angular-devkit/build-ng-packagr": "0.1002.0",
     "@angular/cli": "11.2.0",
     "@angular/compiler-cli": "~11.2.0",
