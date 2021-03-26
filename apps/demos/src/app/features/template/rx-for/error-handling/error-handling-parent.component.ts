@@ -7,32 +7,40 @@ import { Subject } from 'rxjs';
     <div class="container pt-5">
       <div class="d-flex">
         <rxa-array-provider
-          [unpatched]=""
+          [unpatched]="[]"
           [buttons]="true"
           #arrayP="rxaArrayProvider"
         ></rxa-array-provider>
       </div>
-      <div class="d-flex flex-wrap">
-        <rxa-error-handling-child
-          *rxFor="let child of arrayP.array$; let i = index; trackBy: 'id'"
-          [index]="i"
-        ></rxa-error-handling-child>
+      <div class="d-flex justify-content-between">
+        <div>
+          <h2 class="mat-subheading-1">*rxFor</h2>
+          <div class="d-flex flex-wrap">
+            <rxa-error-handling-child
+              *rxFor="let child of arrayP.array$; let i = index; trackBy: trackItem"
+              [index]="i"
+            ></rxa-error-handling-child>
+          </div>
+        </div>
+        <div>
+          <h2 class="mat-subheading-1">*ngFor</h2>
+          <div class="d-flex flex-wrap">
+            <rxa-error-handling-child
+              *ngFor="let child of arrayP.array$ | async; let i = index; trackBy: trackItem"
+              [index]="i"
+            ></rxa-error-handling-child>
+          </div>
+        </div>
       </div>
+
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
   ]
 })
-export class ErrorHandlingParentComponent implements OnInit {
+export class ErrorHandlingParentComponent {
 
-  children = new Array(50).map((v, i) => i + 1);
-
-  constructor() {
-    console.log(this.children);
-  }
-
-  ngOnInit(): void {
-  }
+  trackItem = (i: number, item: any) => item.id;
 
 }
