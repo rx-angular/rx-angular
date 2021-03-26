@@ -24,7 +24,6 @@ import {
   getTNode,
   notifyAllParentsIfNeeded,
   notifyInjectingParentIfNeeded,
-  templateHandling,
   TNode,
 } from './utils';
 import { RxStrategyCredentials } from '../model';
@@ -145,7 +144,8 @@ export function createListTemplateManager<
                 injectingViewCdRef,
                 strategy,
                 () => notifyParent
-              )
+              ),
+              map(() => items)
             ),
             // emit injectingParent if needed
             notifyInjectingParentIfNeeded(
@@ -158,45 +158,67 @@ export function createListTemplateManager<
       );
   }
 
+  /**
+   * @internal
+   *
+   * returns an array of streams which process all of the view updates needed to reflect the latest diff to the
+   * viewContainer.
+   * I
+   *
+   * @param changes
+   * @param strategy
+   * @param count
+   */
   function getObservablesFromChangesArray(
     changes: RxListTemplateChange[],
     strategy: RxStrategyCredentials,
     count: number
-  ) {
+  ): Observable<null | false | RxListTemplateChange<T>[]>[] {
+    let error = false;
     return changes.length > 0
       ? changes.map((change) => {
           return onStrategy(
-            change,
+            change[1],
             strategy,
-            (_change) => {
-              const type = _change[0];
-              const payload = _change[1];
-              switch (type) {
-                case RxListTemplateChangeType.insert:
-                  listViewHandler.insertView(payload[0], payload[1], count);
-                  break;
-                case RxListTemplateChangeType.move:
-                  listViewHandler.moveView(
-                    payload[2],
-                    payload[0],
-                    payload[1],
-                    count
+            () => {
+              if (!error) {
+                try {
+                  const type = change[0];
+                  const payload = change[1];
+                  switch (type) {
+                    case RxListTemplateChangeType.insert:
+                      listViewHandler.insertView(payload[0], payload[1], count);
+                      break;
+                    case RxListTemplateChangeType.move:
+                      listViewHandler.moveView(
+                        payload[2],
+                        payload[0],
+                        payload[1],
+                        count
+                      );
+                      break;
+                    case RxListTemplateChangeType.remove:
+                      listViewHandler.removeView(payload);
+                      break;
+                    case RxListTemplateChangeType.update:
+                      listViewHandler.updateView(payload[0], payload[1], count);
+                      break;
+                    case RxListTemplateChangeType.context:
+                      listViewHandler.updateUnchangedContext(payload[1], count);
+                      break;
+                  }
+                } catch (e) {
+                  error = true;
+                  console.error(
+                    'RxListManager received an error during operations:',
+                    e
                   );
-                  break;
-                case RxListTemplateChangeType.remove:
-                  listViewHandler.removeView(payload);
-                  break;
-                case RxListTemplateChangeType.update:
-                  listViewHandler.updateView(payload[0], payload[1], count);
-                  break;
-                case RxListTemplateChangeType.context:
-                  listViewHandler.updateUnchangedContext(payload[1], count);
-                  break;
+                }
               }
             },
             {}
           );
         })
-      : [];
+      : [of(null)];
   }
 }
