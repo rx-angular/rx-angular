@@ -4,7 +4,7 @@ import {
   ZoneTestConfigurations,
   ZoneRuntimeConfigurations,
   ZoneFlagsHelperFunctions
-} from '@rx-angular/cdk';
+} from '@rx-angular/cdk/zone-configurations';
 import createSpy = jasmine.createSpy;
 
 describe('zone-config', () => {

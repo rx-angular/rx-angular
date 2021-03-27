@@ -1,3 +1,11 @@
+# Zone Configurations with ZoneFlags
+
+---
+
+#### Enhance your applications performance by disabling `zone.js` partially
+
+---
+
 # Resources
 
 **Example applications:**
@@ -8,7 +16,7 @@ A demo application is available on [stackblitz](https://stackblitz.com/edit/angu
 **How zone.js works by default**
 
 By default `zone.js` wraps almost all browser events – like mouse events, XHR events, timers and so on.
-Every time event is invoked, zone initiates app re-render. This is cool feature of a framework – every time data has a ****chance**** to update, Angular checks and re-renders the app.
+Every time event is invoked, zone initiates app re-render. This is cool feature of a framework – every time data has a \***\*chance\*\*** to update, Angular checks and re-renders the app.
 
 ![Angular change-detection based on zone](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-change-detection_michael-hladky.png)
 
@@ -27,14 +35,12 @@ RxAngular should be our go-to approach as it serves as a more convenient way to 
 
 **The Benefits**
 
-✅ Good documentation and maintenance
-✅ Typed methods
-✅ IDE autocompletion
-
-<!-- ✅ IDE inline documentation @Todo => get internal docs into IDE -->
-
-✅ Predefined event names
-✅ Assertion if zone-flags are not correctly used
+✅ Good documentation and maintenance  
+✅ Typed methods  
+✅ IDE autocompletion  
+✅ IDE inline documentation  
+✅ Predefined event names  
+✅ Assertion if zone-flags are not correctly used  
 ✅ Convenience methods
 
 # Impact
