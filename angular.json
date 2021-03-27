@@ -575,7 +575,9 @@
               "tsConfig": "libs/state/tsconfig.lib.prod.json"
             }
           },
-          "outputs": ["dist/libs/state"]
+          "outputs": [
+            "dist/libs/state"
+          ]
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
@@ -987,7 +989,10 @@
               "libs/cdk/tsconfig.lib.json",
               "libs/cdk/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/cdk/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/cdk/**/*"
+            ]
           }
         },
         "test": {
@@ -1037,21 +1042,64 @@
           "style": "scss"
         }
       }
-    }
-  },
-  "cli": {
-    "defaultCollection": "@nrwl/angular",
-    "analytics": false,
-    "packageManager": "yarn"
-  },
-  "schematics": {
-    "@nrwl/angular:application": {
-      "unitTestRunner": "jest",
-      "e2eTestRunner": "cypress"
     },
-    "@nrwl/angular:library": {
-      "unitTestRunner": "jest"
+    "cdk-zone-configurations": {
+      "projectType": "library",
+      "root": "libs/cdk/zone-configurations",
+      "sourceRoot": "libs/cdk/zone-configurations/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "libs/cdk/zone-configurations/tsconfig.lib.json",
+            "project": "libs/cdk/zone-configurations/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/cdk/zone-configurations/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/cdk/zone-configurations/tsconfig.lib.json",
+              "libs/cdk/zone-configurations/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/cdk/zone-configurations/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/cdk/zone-configurations"
+          ],
+          "options": {
+            "jestConfig": "libs/cdk/zone-configurations/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
-  "defaultProject": "demos"
+    "cli": {
+      "defaultCollection": "@nrwl/angular",
+      "analytics": false,
+      "packageManager": "yarn"
+    },
+    "schematics": {
+      "@nrwl/angular:application": {
+        "unitTestRunner": "jest",
+        "e2eTestRunner": "cypress"
+      },
+      "@nrwl/angular:library": {
+        "unitTestRunner": "jest"
+      }
+    },
+    "defaultProject": "demos"
 }
