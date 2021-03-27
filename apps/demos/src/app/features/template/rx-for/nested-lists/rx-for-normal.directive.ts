@@ -15,7 +15,7 @@ import {
   TrackByFunction,
   ViewContainerRef
 } from '@angular/core';
-import { RxDefaultListViewContext, RxStrategyProvider } from '@rx-angular/cdk';
+import { RxDefaultListViewContext, RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 
 import {
   concat,
