@@ -26,7 +26,7 @@ since the rendering gets brute-forced on any change, making REALLY sure anything
 Heavy dynamic and interactive UIs suffer pretty bad from `zone.js ChangeDetection`.
 This can lead to very bad performance or even unusable applications.
 Furthermore, it turns out the `async` pipe does not work in zone-less environments as well as many third party
-software as well.
+software.
 
 The comprehensive toolset of `@rx-angular/template` solves most of those issues with or without `zone.js`.
 
