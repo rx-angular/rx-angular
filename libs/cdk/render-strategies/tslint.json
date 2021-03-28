@@ -7,8 +7,7 @@
   "linterOptions": {
     "exclude": [
       "!**/*",
-      "render-strategies/src/scheduler/**/*",
-      "zone-less/src/rxjs/**/*"
+      "src/scheduler/**/*"
     ]
   }
 }

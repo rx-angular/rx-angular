@@ -20,9 +20,9 @@ import {
   coerceObservable,
   coerceAllFactory
 } from '@rx-angular/cdk/coercing';
-import { RxNotificationKind } from '@rx-angular/cdk/notifications';
+import { RxNotificationKind, templateNotifier } from '@rx-angular/cdk/notifications';
 import { createTemplateManager, RxTemplateManager } from '@rx-angular/cdk/template-management';
-import {  RxStrategyProvider, RxStrategyCredentials } from '@rx-angular/cdk/render-strategies';
+import {  RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 
 @Directive({
   selector: '[rxIf]',

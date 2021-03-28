@@ -1,6 +1,10 @@
 {
   "root": true,
-  "ignorePatterns": ["**/*"],
+  "ignorePatterns": [
+    "**/*",
+    "/libs/cdk/render-strategies/src/scheduler/**/*",
+    "/libs/cdk/zone-less/src/rxjs/**/*"
+  ],
   "plugins": ["@nrwl/nx"],
   "overrides": [
     {

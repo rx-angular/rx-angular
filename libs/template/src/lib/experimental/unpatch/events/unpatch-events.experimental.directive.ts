@@ -8,9 +8,8 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
-// @TODO use cdk/zone-configuration here
 import { allEvents } from '@rx-angular/cdk/zone-configurations';
-import { getZoneUnPatchedApi } from '../../../core/utils';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/zone-less';
 
 /**
  *

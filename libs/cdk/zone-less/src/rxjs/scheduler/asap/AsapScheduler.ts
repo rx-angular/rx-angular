@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint:disable
 import { AsyncAction } from '../async/AsyncAction';
 import { AsyncScheduler } from '../async/AsyncScheduler';
 
@@ -9,8 +10,8 @@ export class AsapScheduler extends AsyncScheduler {
 
     const { actions } = this;
     let error: any;
-    let index: number = -1;
-    let count: number = actions.length;
+    let index = -1;
+    const count: number = actions.length;
     action = action || actions.shift();
 
     do {

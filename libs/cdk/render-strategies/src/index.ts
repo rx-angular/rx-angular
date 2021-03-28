@@ -1,5 +1,8 @@
 export { RxStrategyProvider } from './strategy-provider.service';
-export { ScheduleOnStrategyOptions, RxConcurrentStrategyNames, RxCustomStrategyCredentials, RxDefaultStrategyNames, RxNativeStrategyNames, RxRenderBehavior, RxRenderWork, RxStrategies, RxStrategyCredentials, RxStrategyNames } from './model';
+export { ScheduleOnStrategyOptions, RxConcurrentStrategyNames,
+  RxCustomStrategyCredentials, RxDefaultStrategyNames, RxNativeStrategyNames,
+  RxRenderBehavior, RxRenderWork, RxStrategies, RxStrategyCredentials,
+  RxStrategyNames } from './model';
 export {
   RX_CONCURRENT_STRATEGIES,
   RxConcurrentStrategies,

@@ -1,8 +1,21 @@
 // EXPERIMENTAL
+/**
+ * @deprecated import most probably moves to @rx-angular/cdk
+ */
 export { UnpatchEventsModule } from './lib/experimental/unpatch/events/unpatch-events.experimental.module';
+/**
+ * @deprecated import most probably moves to @rx-angular/cdk
+ */
 export { UnpatchEventsDirective } from './lib/experimental/unpatch/events/unpatch-events.experimental.directive';
-
+/**
+ * @internal
+ * @deprecated
+ */
 export { ViewportPrioModule } from './lib/experimental/viewport-prio/viewport-prio.module';
+/**
+ * @internal
+ * @deprecated
+ */
 export { ViewportPrioDirective } from './lib/experimental/viewport-prio/viewport-prio.experimental.directive';
 
 // STABLE

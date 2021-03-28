@@ -13,12 +13,16 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {
-  coerceObservable,
   coerceAllFactory
 } from '@rx-angular/cdk/coercing';
-import { RxNotificationKind } from '@rx-angular/cdk/notifications';
+import {
+  RxNotificationKind,
+  templateNotifier, toRxCompleteNotification,
+  toRxErrorNotification,
+  toRxSuspenseNotification
+} from '@rx-angular/cdk/notifications';
 import { createTemplateManager, RxTemplateManager } from '@rx-angular/cdk/template-management';
-import {  RxStrategyProvider, RxStrategyCredentials } from '@rx-angular/cdk/render-strategies';
+import {  RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 
 
 import {
@@ -26,7 +30,6 @@ import {
   NextObserver,
   Observable,
   ObservableInput,
-  ReplaySubject,
   Subject,
   Subscription,
 } from 'rxjs';
@@ -312,7 +315,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
     this._renderObserver = callback;
   }
 
-  @Input('rxLetParent') renderParent = true;
+  @Input('rxLetParent') parent = true;
 
   @Input('rxLetPatchZone') patchZone = true;
 
@@ -371,7 +374,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
       renderSettings: {
         cdRef: this.cdRef,
         eRef: this.eRef,
-        parent: coerceBooleanProperty(this.renderParent),
+        parent: coerceBooleanProperty(this.parent),
         patchZone: this.patchZone ? this.ngZone : false,
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         strategies: this.strategyProvider.strategies,

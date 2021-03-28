@@ -3,7 +3,6 @@ import { Observable, Subscriber } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getZoneUnPatchedApi } from '../../utils';
 
-// @ts-ignore
 const isFunction = (fn) => typeof fn === 'function';
 const isArray = Array.isArray;
 const toString: Function = (() => Object.prototype.toString)();
@@ -101,7 +100,7 @@ export function fromEvent<T>(
 ): Observable<T> {
   if (isFunction(options)) {
     // DEPRECATED PATH
-    // @ts-ignore
+
     resultSelector = options;
     options = undefined;
   }

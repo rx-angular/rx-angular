@@ -2,6 +2,7 @@ import { TestScheduler } from 'rxjs/internal/testing/TestScheduler';
 import { mergeMapTo, share, tap } from 'rxjs/operators';
 import { asapScheduler, concat, defer, from, Observable, of, timer } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { jestMatcher, mockConsole } from '@test-helpers';
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
 
@@ -111,9 +112,9 @@ describe('coalesce operator additional logic', () => {
             subscriber.next();
           });
         });
-        const source = cold("   (ab)-(cd)---(ef)----|");
-        const sourceSubs = "      ^-------------------!";
-        const expected = " b----d------f-------|";
+        const source = cold('   (ab)-(cd)---(ef)----|');
+        const sourceSubs = '      ^-------------------!';
+        const expected = ' b----d------f-------|';
 
         const result = source.pipe(coalesceWith(durationSelector));
         expectObservable(result).toBe(expected);

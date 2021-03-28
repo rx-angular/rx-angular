@@ -1,7 +1,8 @@
 import { getZoneUnPatchedApi } from '../utils';
 
 /**
- * This file provides unpatched versions of APIs patched in the following file: https://github.com/angular/angular/blob/master/packages/zone.js/lib/browser/browser.ts
+ * This file provides unpatched versions of APIs patched in the following file:
+ * https://github.com/angular/angular/blob/master/packages/zone.js/lib/browser/browser.ts
  */
 
 /**
@@ -9,7 +10,8 @@ import { getZoneUnPatchedApi } from '../utils';
  * It is which is exposed on the Window or Worker interface,
  * queues a microtask to be executed at a safe time prior to control returning to the browser's event loop.
  * The microtask is a short function which will run after the current task has completed its
- * work and when there is no other code waiting to be run before control of the execution context is returned to the browser's event loop.
+ * work and when there is no other code waiting to be run
+ * before control of the execution context is returned to the browser's event loop.
  */
 export function queueMicrotask() {
   return getZoneUnPatchedApi('queueMicrotask');
@@ -22,11 +24,11 @@ export const Promise: PromiseConstructor = getZoneUnPatchedApi('Promise');
  *
  * @description
  *
- * This function is a zone un-patched implementation of Window#requestAnimationFrame() method
+ * This function is a zone un-patched implementation of `Window#requestAnimationFrame()` method
  *
- * The requestAnimationFrame() method calls a function or evaluates an expression on the next animationFrame.
- * The requestAnimationFrame() method will not continue calling the function after executed once.
- * The ID value returned by requestAnimationFrame() is used as the parameter for the cancelAnimationFrame() method.
+ * The `requestAnimationFrame()` method calls a function or evaluates an expression on the next animationFrame.
+ * The `requestAnimationFrame()` method will not continue calling the function after executed once.
+ * The ID value returned by `requestAnimationFrame()` is used as the parameter for the `cancelAnimationFrame()` method.
  *
  * requestAnimationFrame(cb, ms);
  *
@@ -47,7 +49,8 @@ export function requestAnimationFrame(cb: FrameRequestCallback): number {
  * The cancelAnimationFrame() method clears a timer set with the requestAnimationFrame() method.
  * The ID value returned by requestAnimationFrame() is used as the parameter for the cancelAnimationFrame() method.
  *
- * To be able to use the cancelAnimationFrame() method, you must use a variable when creating the requestAnimationFrame method:
+ * To be able to use the cancelAnimationFrame() method,
+ * you must use a variable when creating the requestAnimationFrame method:
  *
  * const id = requestAnimationFrame("javascript function");
  * Then you will be able to stop the execution by calling the cancelAnimationFrame() method.
@@ -76,7 +79,8 @@ export function cancelAnimationFrame(id: number): void {
  * setInterval(cb, ms);
  *
  * @param cb - Required. The function that will be executed
- * @param ms - Required. The intervals (in milliseconds) on how often to execute the code. If the value is less than 10, the value 10 is used
+ * @param ms - Required. The intervals (in milliseconds) on how often to execute the code. If the value is less than 10,
+ * the value 10 is used
  *
  */
 export function setInterval(cb: TimerHandler, ms: number = 0): number {

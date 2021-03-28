@@ -16,7 +16,6 @@ import { Hooks, intersectionObserver } from '../../../cdk';
 
 import { RxNotificationKind } from '@rx-angular/cdk/notifications';
 import { createTemplateManager, RxTemplateManager } from '@rx-angular/cdk/template-management';
-import {  RxStrategyCredentials } from '@rx-angular/cdk/render-strategies';
 
 import {
   RxIfVisibleTemplateNames,
@@ -24,6 +23,8 @@ import {
   RxIfVisibleViewContext,
 } from './model';
 import { RxEffects } from '../../../state/rx-effects';
+import { coerceAllFactory } from '@rx-angular/cdk/coercing';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 
 @Directive({
   // tslint:disable-next-line:directive-selector

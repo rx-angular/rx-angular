@@ -26,8 +26,7 @@ import {
   notifyInjectingParentIfNeeded,
   TNode,
 } from './utils';
-import { strategyHandling, RxStrategyCredentials } from '@rx-angular/cdk/render-strategies';
-import { onStrategy } from '../../src/lib/utils/onStrategy';
+import { strategyHandling, RxStrategyCredentials, onStrategy } from '@rx-angular/cdk/render-strategies';
 import {
   RxListViewComputedContext,
   RxListViewContext,

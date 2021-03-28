@@ -14,7 +14,7 @@ export class AsyncScheduler extends Scheduler {
    * @type {boolean}
    * @deprecated internal use only
    */
-  public active: boolean = false;
+  public active = false;
   /**
    * An internal ID used to track the latest asynchronous task such as those
    * coming from `setTimeout`, `setInterval`, `requestAnimationFrame`, and
@@ -64,13 +64,11 @@ export class AsyncScheduler extends Scheduler {
       if ((error = action.execute(action.state, action.delay))) {
         break;
       }
-      // @ts-ignore
     } while ((action = actions.shift())); // exhaust the scheduler queue
 
     this.active = false;
 
     if (error) {
-      // @ts-ignore
       while ((action = actions.shift())) {
         action.unsubscribe();
       }

@@ -159,7 +159,6 @@
       "projectType": "application",
       "root": "apps/docs",
       "sourceRoot": "apps/docs",
-      "prefix": "rx-angular",
       "architect": {
         "serve-admin": {
           "builder": "@nrwl/workspace:run-commands",
@@ -874,7 +873,6 @@
       "projectType": "library",
       "root": "libs/cdk",
       "sourceRoot": "libs/cdk/src",
-      "prefix": "rx-angular",
       "architect": {
         "build-test-coverage-badge": {
           "builder": "@nrwl/workspace:run-commands",
@@ -961,7 +959,6 @@
       "projectType": "library",
       "root": "libs/cdk/zone-configurations",
       "sourceRoot": "libs/cdk/zone-configurations/src",
-      "prefix": "rx-angular",
       "architect": {
         "build": {
           "builder": "@nrwl/angular:ng-packagr-lite",
@@ -1002,7 +999,6 @@
       "projectType": "library",
       "root": "libs/cdk/render-strategies",
       "sourceRoot": "libs/cdk/render-strategies/src",
-      "prefix": "rx-angular",
       "architect": {
         "build": {
           "builder": "@nrwl/angular:ng-packagr-lite",
@@ -1039,7 +1035,6 @@
       "projectType": "library",
       "root": "libs/cdk/template-management",
       "sourceRoot": "libs/cdk/template-management/src",
-      "prefix": "rx-angular",
       "architect": {
         "build": {
           "builder": "@nrwl/angular:package",
@@ -1076,7 +1071,6 @@
       "projectType": "library",
       "root": "libs/cdk/notifications",
       "sourceRoot": "libs/cdk/notifications/src",
-      "prefix": "rx-angular",
       "architect": {
         "build": {
           "builder": "@nrwl/angular:package",
@@ -1113,7 +1107,6 @@
       "projectType": "library",
       "root": "libs/cdk/coalescing",
       "sourceRoot": "libs/cdk/coalescing/src",
-      "prefix": "rx-angular",
       "architect": {
         "build": {
           "builder": "@nrwl/angular:package",
@@ -1150,7 +1143,6 @@
       "projectType": "library",
       "root": "libs/cdk/coercing",
       "sourceRoot": "libs/cdk/coercing/src",
-      "prefix": "rx-angular",
       "architect": {
         "build": {
           "builder": "@nrwl/angular:package",
@@ -1187,7 +1179,6 @@
       "projectType": "library",
       "root": "libs/cdk/zone-less",
       "sourceRoot": "libs/cdk/zone-less/src",
-      "prefix": "rx-angular",
       "architect": {
         "build": {
           "builder": "@nrwl/angular:package",
@@ -1224,7 +1215,7 @@
       "projectType": "library",
       "root": "libs/template/rx-let",
       "sourceRoot": "libs/template/rx-let/src",
-      "prefix": "rx-angular",
+      "prefix": "rx",
       "architect": {
         "build": {
           "builder": "@nrwl/angular:package",
@@ -1261,7 +1252,6 @@
       "projectType": "library",
       "root": "libs/template/push",
       "sourceRoot": "libs/template/push/src",
-      "prefix": "rx-angular",
       "architect": {
         "build": {
           "builder": "@nrwl/angular:package",

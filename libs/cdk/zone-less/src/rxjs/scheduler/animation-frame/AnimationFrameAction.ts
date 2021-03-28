@@ -30,7 +30,6 @@ export class AnimationFrameAction<T> extends AsyncAction<T> {
       return super.requestAsyncId(scheduler, id, delay);
     }
     // Push the action to the end of the scheduler queue.
-    // @ts-ignore
     scheduler.actions.push(this);
     // If an animation frame has already been requested, don't request another
     // one. If an animation frame hasn't been requested yet, request one. Return
