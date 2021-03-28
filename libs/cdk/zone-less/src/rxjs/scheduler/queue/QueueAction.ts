@@ -17,7 +17,7 @@ export class QueueAction<T> extends AsyncAction<T> {
     super(scheduler, work);
   }
 
-  public schedule(state?: T, delay: number = 0): Subscription {
+  public schedule(state?: T, delay = 0): Subscription {
     if (delay > 0) {
       return super.schedule(state, delay);
     }
@@ -36,7 +36,7 @@ export class QueueAction<T> extends AsyncAction<T> {
   protected requestAsyncId(
     scheduler: QueueScheduler,
     id?: any,
-    delay: number = 0
+    delay = 0
   ): any {
     // If delay exists and is greater than 0, or if the delay is null (the
     // action wasn't rescheduled) but was originally scheduled as an async

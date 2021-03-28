@@ -83,7 +83,7 @@ export function cancelAnimationFrame(id: number): void {
  * the value 10 is used
  *
  */
-export function setInterval(cb: TimerHandler, ms: number = 0): number {
+export function setInterval(cb: TimerHandler, ms = 0): number {
   return getZoneUnPatchedApi('setInterval')(cb, ms);
 }
 
@@ -128,7 +128,7 @@ export function clearInterval(id: number): void {
  * @param ms - Optional. The number of milliseconds to wait before executing the code. If omitted, the value 0 is used
  *
  */
-export function setTimeout(cb: TimerHandler, ms: number = 0): number {
+export function setTimeout(cb: TimerHandler, ms = 0): number {
   return getZoneUnPatchedApi('setTimeout')(cb, ms);
 }
 

@@ -23,7 +23,7 @@ export class AsyncAction<T> extends Action<T> {
     super(scheduler, work);
   }
 
-  public schedule(state?: T, delay: number = 0): Subscription {
+  public schedule(state?: T, delay = 0): Subscription {
     if (this.closed) {
       return this;
     }
@@ -73,7 +73,7 @@ export class AsyncAction<T> extends Action<T> {
   protected requestAsyncId(
     scheduler: AsyncScheduler,
     id?: any,
-    delay: number = 0
+    delay = 0
   ): any {
     return setInterval(scheduler.flush.bind(scheduler, this), delay);
   }

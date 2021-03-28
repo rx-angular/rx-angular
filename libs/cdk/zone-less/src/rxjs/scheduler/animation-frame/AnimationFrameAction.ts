@@ -23,7 +23,7 @@ export class AnimationFrameAction<T> extends AsyncAction<T> {
   protected requestAsyncId(
     scheduler: AnimationFrameScheduler,
     id?: any,
-    delay: number = 0
+    delay = 0
   ): any {
     // If delay is greater than 0, request as an async action.
     if (delay !== null && delay > 0) {
@@ -44,7 +44,7 @@ export class AnimationFrameAction<T> extends AsyncAction<T> {
   protected recycleAsyncId(
     scheduler: AnimationFrameScheduler,
     id?: any,
-    delay: number = 0
+    delay = 0
   ): any {
     // If delay exists and is greater than 0, or if the delay is null (the
     // action wasn't rescheduled) but was originally scheduled as an async

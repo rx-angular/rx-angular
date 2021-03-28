@@ -39,7 +39,7 @@ export class AsyncScheduler extends Scheduler {
 
   public schedule<T>(
     work: (this: SchedulerAction<T>, state?: T) => void,
-    delay: number = 0,
+    delay = 0,
     state?: T
   ): Subscription {
     if (AsyncScheduler.delegate && AsyncScheduler.delegate !== this) {

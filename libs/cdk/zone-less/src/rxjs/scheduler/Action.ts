@@ -34,7 +34,7 @@ export class Action<T> extends Subscription {
    * time unit is implicit and defined by the Scheduler.
    * @return {void}
    */
-  public schedule(state?: T, delay: number = 0): Subscription {
+  public schedule(state?: T, delay = 0): Subscription {
     return this;
   }
 }

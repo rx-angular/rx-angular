@@ -17,11 +17,7 @@ export class AsapAction<T> extends AsyncAction<T> {
     super(scheduler, work);
   }
 
-  protected requestAsyncId(
-    scheduler: AsapScheduler,
-    id?: any,
-    delay: number = 0
-  ): any {
+  protected requestAsyncId(scheduler: AsapScheduler, id?: any, delay = 0): any {
     // If delay is greater than 0, request as an async action.
     if (delay !== null && delay > 0) {
       return super.requestAsyncId(scheduler, id, delay);
@@ -38,11 +34,7 @@ export class AsapAction<T> extends AsyncAction<T> {
       ))
     );
   }
-  protected recycleAsyncId(
-    scheduler: AsapScheduler,
-    id?: any,
-    delay: number = 0
-  ): any {
+  protected recycleAsyncId(scheduler: AsapScheduler, id?: any, delay = 0): any {
     // If delay exists and is greater than 0, or if the delay is null (the
     // action wasn't rescheduled) but was originally scheduled as an async
     // action, then recycle as an async action.
