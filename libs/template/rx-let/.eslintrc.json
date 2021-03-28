@@ -12,12 +12,9 @@
       "rules": {
         "@angular-eslint/directive-selector": [
           "error",
-          { "type": "attribute", "prefix": "rx-angular", "style": "camelCase" }
+          { "type": "attribute", "prefix": "rx", "style": "camelCase" }
         ],
-        "@angular-eslint/component-selector": [
-          "error",
-          { "type": "element", "prefix": "rx-angular", "style": "kebab-case" }
-        ]
+        "@angular-eslint/no-input-rename": "off"
       }
     },
     {

@@ -15,29 +15,29 @@
     }
   },
   "projects": {
-    "demos": { "tags": ["type:app"] },
+    "demos": { "tags": ["type:app", "scope:demos"] },
     "demos-e2e": { "tags": [], "implicitDependencies": ["demos"] },
-    "test-helpers": { "tags": ["type:util"] },
-    "cdk": { "tags": ["type:lib", "type:cdk"] },
-    "cdk-zone-configurations": { "tags": ["type:lib", "type:cdk"] },
-    "state": { "tags": ["type:lib"] },
-    "template": { "tags": ["type:lib"] },
-    "docs": { "tags": ["type:app"] },
-    "tour-of-heroes": { "tags": ["type:app"] },
-    "tour-of-heroes-ngxs": { "tags": ["type:app"] },
-    "vanilla-case-studies": { "tags": [] },
+    "test-helpers": { "tags": ["type:lib", "scope:shared"] },
+    "cdk": { "tags": ["type:lib", "scope:shared"] },
+    "cdk-zone-configurations": { "tags": ["type:lib", "scope:shared"] },
+    "state": { "tags": ["type:lib", "scope:state"] },
+    "template": { "tags": ["type:lib", "scope:template"] },
+    "docs": { "tags": ["type:app", "scope:docs"] },
+    "tour-of-heroes": { "tags": ["type:app", "scope:tour-of-heroes"] },
+    "tour-of-heroes-ngxs": { "tags": ["type:app", "scope:tour-of-heroes-ngxs"] },
+    "vanilla-case-studies": { "tags": ["type:app", "scope:vanilla-case-studies"] },
     "vanilla-case-studies-e2e": {
       "tags": [],
       "implicitDependencies": ["vanilla-case-studies"]
     },
-    "cdk-render-strategies": { "tags": ["type:lib", "type:cdk"] },
-    "cdk-template-management": { "tags": [] },
-    "cdk-notifications": { "tags": [] },
-    "cdk-coalescing": { "tags": [] },
-    "cdk-coercing": { "tags": [] },
-    "cdk-zone-less": { "tags": [] },
-    "template-rx-let": { "tags": [] },
-    "template-push": { "tags": [] }
+    "cdk-render-strategies": { "tags": ["type:lib", "scope:shared"] },
+    "cdk-template-management": { "tags": ["type:lib", "scope:shared"] },
+    "cdk-notifications": { "tags": ["type:lib", "scope:shared"] },
+    "cdk-coalescing": { "tags": ["type:lib", "scope:shared"] },
+    "cdk-coercing": { "tags": ["type:lib", "scope:shared"] },
+    "cdk-zone-less": { "tags": ["type:lib", "scope:shared"] },
+    "template-rx-let": { "tags": ["type:lib", "scope:let"] },
+    "template-push": { "tags": ["type:lib", "scope:push"] }
   },
   "affected": { "defaultBase": "master" }
 }

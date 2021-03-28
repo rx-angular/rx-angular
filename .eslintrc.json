@@ -13,10 +13,37 @@
         "@nrwl/nx/enforce-module-boundaries": [
           "error",
           {
-            "enforceBuildableLibDependency": true,
+            "enforceBuildableLibDependency": false,
             "allow": [],
             "depConstraints": [
-              { "sourceTag": "*", "onlyDependOnLibsWithTags": ["*"] }
+              {
+                "sourceTag": "type:app",
+                "onlyDependOnLibsWithTags": ["type:lib"]
+              },
+              {
+                "sourceTag": "type:lib",
+                "onlyDependOnLibsWithTags": ["type:lib"]
+              },
+              {
+                "sourceTag": "scope:template",
+                "onlyDependOnLibsWithTags": ["scope:shared","scope:template"]
+              },
+              {
+                "sourceTag": "scope:state",
+                "onlyDependOnLibsWithTags": ["scope:shared","scope:state"]
+              },
+              {
+                "sourceTag": "scope:let",
+                "onlyDependOnLibsWithTags": ["scope:shared","scope:let"]
+              },
+              {
+                "sourceTag": "scope:push",
+                "onlyDependOnLibsWithTags": ["scope:shared","scope:push"]
+              },
+              {
+                "sourceTag": "scope:shared",
+                "onlyDependOnLibsWithTags": ["scope:shared"]
+              }
             ]
           }
         ]
@@ -26,7 +53,15 @@
       "files": ["*.ts", "*.tsx"],
       "extends": ["plugin:@nrwl/nx/typescript"],
       "parserOptions": { "project": "./tsconfig.*?.json" },
-      "rules": {}
+      "rules": {
+        "no-prototype-builtins": "off",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/ban-types": "warn",
+        "@typescript-eslint/no-empty-function": "warn",
+        "no-extra-boolean-cast": "warn",
+        "prefer-rest-params": "warn",
+        "@typescript-eslint/no-inferrable-types": "warn"
+      }
     },
     {
       "files": ["*.js", "*.jsx"],

@@ -108,16 +108,6 @@
             "browserTarget": "demos:build"
           }
         },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/demos/tsconfig.app.json",
-              "apps/demos/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/demos/**/*"]
-          }
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
@@ -144,13 +134,6 @@
             "production": {
               "devServerTarget": "demos:serve:production"
             }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["apps/demos-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/demos-e2e/**/*"]
           }
         }
       }
@@ -243,16 +226,6 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "docs:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/docs/tsconfig.app.json",
-              "apps/docs/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/docs/**/*"]
           }
         },
         "test": {
@@ -354,16 +327,6 @@
             "browserTarget": "tour-of-heroes:build"
           }
         },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/tour-of-heroes/tsconfig.app.json",
-              "apps/tour-of-heroes/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/tour-of-heroes/**/*"]
-          }
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
@@ -461,16 +424,6 @@
             "browserTarget": "tour-of-heroes-ngxs:build"
           }
         },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/tour-of-heroes-ngxs/tsconfig.app.json",
-              "apps/tour-of-heroes-ngxs/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/tour-of-heroes-ngxs/**/*"]
-          }
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
@@ -488,13 +441,12 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "tsConfig": [
-              "libs/test-helpers/tsconfig.lib.json",
-              "libs/test-helpers/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/test-helpers/**/*"]
+            "lintFilePatterns": [
+              "libs/test-helpers/src/**/*.ts",
+              "libs/test-helpers/src/**/*.html"
+            ]
           }
         },
         "test": {
@@ -527,13 +479,12 @@
           "outputs": ["dist/libs/state"]
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "tsConfig": [
-              "libs/state/tsconfig.lib.json",
-              "libs/state/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/state/**/*"]
+            "lintFilePatterns": [
+              "libs/state/src/**/*.ts",
+              "libs/state/src/**/*.html"
+            ]
           }
         },
         "test": {
@@ -660,16 +611,6 @@
               }
             ],
             "parallel": false
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/template/tsconfig.lib.json",
-              "libs/template/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/template/**/*"]
           }
         },
         "test": {
@@ -819,16 +760,6 @@
             "browserTarget": "vanilla-case-studies:build"
           }
         },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/vanilla-case-studies/tsconfig.app.json",
-              "apps/vanilla-case-studies/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/vanilla-case-studies/**/*"]
-          }
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
@@ -855,16 +786,6 @@
             "production": {
               "devServerTarget": "vanilla-case-studies:serve:production"
             }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["apps/vanilla-case-studies-e2e/tsconfig.e2e.json"],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/vanilla-case-studies-e2e/**/*"
-            ]
           }
         }
       }
@@ -899,16 +820,6 @@
           "options": {
             "tsConfig": "libs/cdk/tsconfig.lib.json",
             "project": "libs/cdk/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/cdk/tsconfig.lib.json",
-              "libs/cdk/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/cdk/**/*"]
           }
         },
         "test": {
@@ -973,15 +884,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "tsConfig": [
-              "libs/cdk/zone-configurations/tsconfig.lib.json",
-              "libs/cdk/zone-configurations/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/cdk/zone-configurations/**/*"
+            "lintFilePatterns": [
+              "libs/cdk/zone-configurations/src/**/*.ts",
+              "libs/cdk/zone-configurations/src/**/*.html"
             ]
           }
         },

@@ -5,7 +5,9 @@
     {
       "files": ["*.ts"],
       "extends": [],
-      "parserOptions": { "project": ["libs/cdk/zone-less/tsconfig.*?.json"] },
+      "parserOptions": {
+        "project": ["libs/cdk/zone-configurations/tsconfig.*?.json"]
+      },
       "rules": {}
     }
   ]

@@ -1,11 +1,13 @@
 {
-  "extends": ["../../../.eslintrc.json"],
+  "extends": ["../../.eslintrc.json"],
   "ignorePatterns": ["!**/*"],
   "overrides": [
     {
       "files": ["*.ts"],
       "extends": [],
-      "parserOptions": { "project": ["libs/cdk/zone-less/tsconfig.*?.json"] },
+      "parserOptions": {
+        "project": ["libs/state/tsconfig.*?.json"]
+      },
       "rules": {}
     }
   ]
