@@ -26,7 +26,7 @@ import {
   notifyInjectingParentIfNeeded,
   TNode,
 } from './utils';
-import { strategyHandling, RxStrategyCredentials, onStrategy } from '@rx-angular/cdk/render-strategies';
+import { createStrategyHandler, RxStrategyCredentials, onStrategy } from '@rx-angular/cdk/render-strategies';
 import {
   RxListViewComputedContext,
   RxListViewContext,
@@ -63,7 +63,7 @@ export function createListTemplateManager<
     parent,
     eRef,
   } = renderSettings;
-  const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
+  const strategyHandling$ = createStrategyHandler(defaultStrategyName, strategies);
   const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
   //               type,  payload
   const tNode: TNode = parent

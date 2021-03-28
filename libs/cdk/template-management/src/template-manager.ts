@@ -28,10 +28,10 @@ import {
   getTNode,
   notifyAllParentsIfNeeded,
   notifyInjectingParentIfNeeded,
-  templateHandling,
+  createTemplateHandler,
   TNode,
 } from './utils';
-import { RxStrategyCredentials, onStrategy, strategyHandling, RxRenderWork } from '@rx-angular/cdk/render-strategies';
+import { RxStrategyCredentials, onStrategy, createStrategyHandler, RxRenderWork } from '@rx-angular/cdk/render-strategies';
 
 export interface RxTemplateManager<
   T,
@@ -138,8 +138,8 @@ export function createTemplateManager<
 
   let activeTemplate: N;
 
-  const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
-  const templates = templateHandling<N, C>(templateSettings.viewContainerRef);
+  const strategyHandling$ = createStrategyHandler(defaultStrategyName, strategies);
+  const templates = createTemplateHandler<N, C>(templateSettings.viewContainerRef);
   const viewContainerRef = templateSettings.viewContainerRef;
 
   const triggerHandling = config.templateTrigger$ || EMPTY;

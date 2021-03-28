@@ -1,4 +1,4 @@
-export { templateHandling } from './utils';
+export { createTemplateHandler } from './utils';
 export {
   RxBaseTemplateNames,
   RxRenderAware,

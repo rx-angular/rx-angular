@@ -8,6 +8,6 @@ export {
   RxConcurrentStrategies,
 } from './concurrent-strategies';
 export { RX_NATIVE_STRATEGIES, RxNativeStrategies } from './native-strategies';
-export { strategyHandling } from './strategy-handling';
+export { createStrategyHandler } from './create-strategy-handler';
 export { onStrategy } from './onStrategy';
 export { RX_ANGULAR_RENDERING_CONFIG } from './render-config';

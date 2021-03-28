@@ -12,7 +12,7 @@ import { coerceAllFactory } from '@rx-angular/cdk/coercing';
  * @param defaultStrategyName
  * @param strategies
  */
-export function strategyHandling(
+export function createStrategyHandler(
   defaultStrategyName: string,
   strategies: RxCustomStrategyCredentials<string>
 ): {

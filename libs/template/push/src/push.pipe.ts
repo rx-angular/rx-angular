@@ -11,8 +11,8 @@ import {
   Unsubscribable,
 } from 'rxjs';
 import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { RxStrategyProvider, strategyHandling } from '@rx-angular/cdk/render-strategies';
-import { RxNotification, RxNotificationKind, templateNotifier } from '@rx-angular/cdk/notifications';
+import { RxStrategyProvider, createStrategyHandler } from '@rx-angular/cdk/render-strategies';
+import { RxNotification, RxNotificationKind, createTemplateNotifier } from '@rx-angular/cdk/notifications';
 
 /**
  * @Pipe PushPipe
@@ -64,9 +64,9 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
   /** @internal */
   private readonly subscription: Unsubscribable;
   /** @internal */
-  private readonly templateObserver = templateNotifier<U>();
+  private readonly templateObserver = createTemplateNotifier<U>();
   /** @internal */
-  private readonly strategyHandler = strategyHandling(
+  private readonly strategyHandler = createStrategyHandler(
     this.strategyProvider.primaryStrategy,
     this.strategyProvider.strategies
   );

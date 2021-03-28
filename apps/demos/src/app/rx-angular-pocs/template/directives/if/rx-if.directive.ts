@@ -20,7 +20,7 @@ import {
   coerceObservable,
   coerceAllFactory
 } from '@rx-angular/cdk/coercing';
-import { RxNotificationKind, templateNotifier } from '@rx-angular/cdk/notifications';
+import { RxNotificationKind, createTemplateNotifier } from '@rx-angular/cdk/notifications';
 import { createTemplateManager, RxTemplateManager } from '@rx-angular/cdk/template-management';
 import {  RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 
@@ -62,7 +62,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
   }
 
   /** @internal */
-  private observablesHandler = templateNotifier<U>();
+  private observablesHandler = createTemplateNotifier<U>();
   private readonly strategyHandler = coerceAllFactory<string>(
     () => new ReplaySubject<string | Observable<string>>(1),
     mergeAll()

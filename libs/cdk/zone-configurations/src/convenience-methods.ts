@@ -1,12 +1,12 @@
 import {
-  ZoneConfigConfiguration,
-  ZoneConfigConvenienceMethods,
+  RxZoneConfigConfiguration,
+  RxZoneConfigConvenienceMethods,
 } from './model/zone-cfg.types';
 import { xhrEvents } from './event-names';
 
 export const convenienceMethods = (
-  config: ZoneConfigConfiguration
-): ZoneConfigConvenienceMethods => ({
+  config: RxZoneConfigConfiguration
+): RxZoneConfigConvenienceMethods => ({
   unpatchXHR: () => {
     config.global.disable.XHR();
     config.events.disable.UNPATCHED_EVENTS([...xhrEvents]);

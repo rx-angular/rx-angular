@@ -21,7 +21,7 @@ import { rxMaterialize } from './rxMaterialize';
 /**
  * @internal
  */
-export function templateNotifier<U>(
+export function createTemplateNotifier<U>(
   withSuspense?: () => boolean
 ): {
   values$: Observable<RxNotification<U>>;

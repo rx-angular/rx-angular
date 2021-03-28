@@ -12,7 +12,7 @@
  * You can define the following configurations on the `window/global` object before
  * importing `zone.js` to change `zone.js` default behaviors.
  */
-export interface ZoneGlobalConfigurations {
+export interface RxZoneGlobalConfigurations {
   /**
    * Disable the monkey patch of the `Node.js` `EventEmitter` API.
    *
@@ -563,7 +563,7 @@ export interface ZoneGlobalConfigurations {
  * You can define the following configurations on the `window` or `global` object before
  * importing `zone-testing.js` to change `zone-testing.js` default behaviors in the test runner.
  */
-export interface ZoneTestConfigurations {
+export interface RxZoneTestConfigurations {
   /**
    * Disable the Jasmine integration.
    *
@@ -739,16 +739,16 @@ export interface ZoneTestConfigurations {
  *
  * These configurations can be defined on the `Zone` object after
  * importing zone.js to change behaviors. The differences between
- * the `ZoneRuntimeConfigurations` and the `ZoneGlobalConfigurations` are,
+ * the `RxZoneRuntimeConfigurations` and the `RxZoneGlobalConfigurations` are,
  *
- * 1. `ZoneGlobalConfigurations` must be defined on the `global/window` object before importing
+ * 1. `RxZoneGlobalConfigurations` must be defined on the `global/window` object before importing
  * `zone.js`. The value of the configuration cannot be changed at runtime.
  *
- * 2. `ZoneRuntimeConfigurations` must be defined on the `Zone` object after importing `zone.js`.
+ * 2. `RxZoneRuntimeConfigurations` must be defined on the `Zone` object after importing `zone.js`.
  * You can change the value of this configuration at runtime.
  *
  */
-export interface ZoneRuntimeConfigurations {
+export interface RxZoneRuntimeConfigurations {
   /**
    * Ignore outputting errors to the console when uncaught Promise errors occur.
    *

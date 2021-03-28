@@ -17,7 +17,7 @@ import {
 } from '@rx-angular/cdk/coercing';
 import {
   RxNotificationKind,
-  templateNotifier, toRxCompleteNotification,
+  createTemplateNotifier, toRxCompleteNotification,
   toRxErrorNotification,
   toRxSuspenseNotification
 } from '@rx-angular/cdk/notifications';
@@ -329,7 +329,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
   ) {}
 
   /** @internal */
-  private observablesHandler = templateNotifier<U>();
+  private observablesHandler = createTemplateNotifier<U>();
   private strategyHandler = coerceAllFactory<string>(() => new Subject(), mergeAll());
   private triggerHandler = coerceAllFactory<RxNotificationKind>(
     () => new Subject(),

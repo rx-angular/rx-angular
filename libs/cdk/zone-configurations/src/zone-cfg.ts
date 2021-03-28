@@ -1,6 +1,6 @@
 import { ɵglobal } from '@angular/core';
 import {
-  ZoneFlagsHelperFunctions,
+  RxZoneFlagsHelperFunctions,
   zoneGlobalDisableConfigurationsKeys,
   zoneGlobalEventsConfigurationsKeys,
   zoneGlobalSettingsConfigurationsKeys,
@@ -8,14 +8,14 @@ import {
   zoneTestDisableConfigurationsKeys,
   zoneTestSettingsConfigurationsKeys,
 } from './model/configurations.types';
-import { ZoneGlobalConfigurations } from './model/zone.configurations.api';
+import { RxZoneGlobalConfigurations } from './model/zone.configurations.api';
 import {
-  ZoneConfigConfiguration,
-  ZoneConfig,
-  GlobalDisableConfigurationMethods,
-  TestDisableConfigurationMethods,
-  ZoneGlobalEventsConfigurationsMethods,
-  RuntimeConfigurationMethods,
+  RxZoneConfigConfiguration,
+  RxZoneConfig,
+  RxGlobalDisableConfigurationMethods,
+  RxTestDisableConfigurationMethods,
+  RxZoneGlobalEventsConfigurationsMethods,
+  RxRuntimeConfigurationMethods,
 } from './model/zone-cfg.types';
 import { convenienceMethods } from './convenience-methods';
 
@@ -62,7 +62,7 @@ const reduceToObject = <T>(methodsArray: any[]): T => {
 };
 
 /**
- * factory function to create a `ZoneConfig` object.
+ * factory function to create a `RxZoneConfig` object.
  *
  * @Example
  * import { globalEvents,xhrEvent, zoneConfig} from '@rx-angular/cdk/zone-flags';
@@ -74,8 +74,8 @@ const reduceToObject = <T>(methodsArray: any[]): T => {
  * zoneConfig.events.disable.UNPATCHED_EVENTS([...globalEvents, ...xhrEvent]);
  *
  */
-function createZoneFlagsConfigurator(): ZoneConfig {
-  const cfg = (ɵglobal as unknown) as ZoneGlobalConfigurations;
+function createZoneFlagsConfigurator(): RxZoneConfig {
+  const cfg = (ɵglobal as unknown) as RxZoneGlobalConfigurations;
   const configProps = [
     ...[
       ...zoneGlobalDisableConfigurationsKeys,
@@ -90,33 +90,33 @@ function createZoneFlagsConfigurator(): ZoneConfig {
   ];
 
   // append as global method for easy debugging
-  (cfg as ZoneFlagsHelperFunctions).__rxa_zone_config__log = (): void => {
+  (cfg as RxZoneFlagsHelperFunctions).__rxa_zone_config__log = (): void => {
     configProps.forEach((flag) => {
       // tslint:disable-next-line:no-unused-expression
       cfg[flag] && console.log(flag, cfg[flag]);
     });
   };
 
-  const zoneConfigObj: ZoneConfigConfiguration = {
+  const zoneConfigObj: RxZoneConfigConfiguration = {
     global: {
-      disable: reduceToObject<GlobalDisableConfigurationMethods>([
+      disable: reduceToObject<RxGlobalDisableConfigurationMethods>([
         ...zoneGlobalDisableConfigurationsKeys.map(addDisableFlag),
         ...zoneGlobalSettingsConfigurationsKeys.map(addSymbolFlag),
       ]),
     },
     test: {
-      disable: reduceToObject<TestDisableConfigurationMethods>([
+      disable: reduceToObject<RxTestDisableConfigurationMethods>([
         ...zoneTestDisableConfigurationsKeys.map(addDisableFlag),
         ...zoneTestSettingsConfigurationsKeys.map(addSymbolFlag),
       ]),
     },
     events: {
-      disable: reduceToObject<ZoneGlobalEventsConfigurationsMethods>(
+      disable: reduceToObject<RxZoneGlobalEventsConfigurationsMethods>(
         zoneGlobalEventsConfigurationsKeys.map(addArraySymbolFlag)
       ),
     },
     runtime: {
-      disable: reduceToObject<RuntimeConfigurationMethods>(
+      disable: reduceToObject<RxRuntimeConfigurationMethods>(
         zoneRuntimeConfigurationsKeys.map(addSymbolFlag)
       ),
     },

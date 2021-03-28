@@ -14,4 +14,4 @@ export {
 } from './notification-transforms';
 export { templateTriggerHandling } from './template-trigger-handling';
 export { rxMaterialize } from './rxMaterialize';
-export { templateNotifier } from './templateNotifier';
+export { createTemplateNotifier } from './create-template-notifier';

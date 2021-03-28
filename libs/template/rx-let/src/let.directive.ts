@@ -33,7 +33,7 @@ import {
   RxViewContext
 } from '@rx-angular/cdk/template-management';
 import { RxStrategyNames, RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { RxNotificationKind, templateNotifier, RxNotification } from '@rx-angular/cdk/notifications';
+import { RxNotificationKind, createTemplateNotifier, RxNotification } from '@rx-angular/cdk/notifications';
 
 /** @internal */
 type rxLetTemplateNames = 'nextTpl' | RxBaseTemplateNames;
@@ -322,7 +322,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   ) {}
 
   /** @internal */
-  private observablesHandler = templateNotifier<U>(() => !!this.rxSuspense);
+  private observablesHandler = createTemplateNotifier<U>(() => !!this.rxSuspense);
   /** @internal */
   private strategyHandler = coerceAllFactory<string>(
     () => new ReplaySubject<RxStrategyNames<string>>(1)

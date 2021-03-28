@@ -174,7 +174,7 @@ export function createEmbeddedView<C>(
  * You can add and get a `TemplateRef`.
  *
  */
-export function templateHandling<N, C>(
+export function createTemplateHandler<N, C>(
   viewContainerRef: ViewContainerRef
 ): {
   add(name: N, templateRef: TemplateRef<C>): void;
