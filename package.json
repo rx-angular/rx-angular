@@ -91,7 +91,7 @@
     "@nrwl/jest": "11.2.12",
     "@nrwl/node": "11.5.1",
     "@nrwl/tao": "11.2.12",
-    "@nrwl/workspace": "11.2.12",
+    "@nrwl/workspace": "11.6.0",
     "@types/jest": "26.0.20",
     "@types/klaw-sync": "^6.0.0",
     "@types/ncp": "^2.0.4",
