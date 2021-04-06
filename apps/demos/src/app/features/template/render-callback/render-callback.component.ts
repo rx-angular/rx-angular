@@ -1,6 +1,13 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { concat, Subject } from 'rxjs';
-import { map, scan, shareReplay, startWith, switchMap, switchMapTo, take } from 'rxjs/operators';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
+import { concat, defer, Subject } from 'rxjs';
+import { map, scan, shareReplay, startWith, switchMap, switchMapTo, take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-render-callback',
@@ -24,8 +31,8 @@ import { map, scan, shareReplay, startWith, switchMap, switchMapTo, take } from 
     </div>
     <h4>Value</h4>
     <div class="example-value p-4">
-      <ng-container *rxLet="content$; strategy: 'chunk'; let content; renderCallback: rendered$">
-        <div id="box" class="example-box">
+      <ng-container *rxLet="content$; let content; renderCallback: rendered$">
+        <div #box class="example-box">
           {{ content }}
         </div>
       </ng-container>
@@ -72,15 +79,7 @@ import { map, scan, shareReplay, startWith, switchMap, switchMapTo, take } from 
 })
 export class RenderCallbackComponent implements AfterViewInit {
 
-  private _box: HTMLElement;
-  get box(): HTMLElement {
-    if (!this._box) {
-      this._box = document.getElementById('box');
-    }
-    return this._box;
-  }
-
-  private readonly afterViewInit$ = new Subject();
+  @ViewChild('box') box: ElementRef<HTMLElement>;
 
   readonly rendered$ = new Subject<number>();
   readonly updateClick = new Subject();
@@ -91,19 +90,18 @@ export class RenderCallbackComponent implements AfterViewInit {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  readonly calculatedAfterRender$ = this.afterViewInit$.pipe(
-    switchMap(() => this.rendered$),
-    map(() => this.box.getBoundingClientRect().height)
+  readonly calculatedAfterRender$ = defer(() =>
+    this.rendered$.pipe(
+      map(() => this.box.nativeElement.getBoundingClientRect().height),
+      tap(v => console.log('height', v))
+    )
   );
 
-  // afterViewInit$ is needed, otherwise the ViewChild would not be ready
-  readonly calculatedAfterValue$ = this.afterViewInit$.pipe(
-    take(1),
-    switchMapTo(concat(
+  readonly calculatedAfterValue$ = defer(() =>
+    concat(
       this.rendered$.pipe(take(1)),
       this.content$.pipe(
-        map(() => this.box.getBoundingClientRect().height)
-      )
+        map(() => this.box.nativeElement.getBoundingClientRect().height)
       )
     )
   );
@@ -114,11 +112,9 @@ export class RenderCallbackComponent implements AfterViewInit {
   }
 
   reset() {
-    this.cdRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
-    this.afterViewInit$.next();
     this.reset();
   }
 
