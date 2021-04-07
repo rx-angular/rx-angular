@@ -7,7 +7,7 @@ import { TestItem, toBoolean } from '../../../../shared/debug-helper/value-provi
 @Component({
   selector: 'rxa-rx-for-value',
   template: `
-    <ng-container *rxLet="value$; let v;  strategy:strategy$">
+    <ng-container *rxLet="value$; let v;  strategy:strategy$; parent: false; patchZone: false">
     <mat-icon class="item" [ngClass]="{red:!v, green:v}">
       {{v ? 'check' : 'highlight_off'}}
     </mat-icon>
