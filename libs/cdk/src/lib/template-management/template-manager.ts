@@ -140,16 +140,17 @@ export function createTemplateManager<
   let activeTemplate: N;
 
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
-  const templates = templateHandling<N, C>(
-    templateSettings.viewContainerRef,
-    patchZone
-  );
+  const templates = templateHandling<N, C>(templateSettings.viewContainerRef);
   const viewContainerRef = templateSettings.viewContainerRef;
 
   const triggerHandling = config.templateTrigger$ || EMPTY;
   const getContext = notificationKindToViewContext(
     templateSettings.customContext
   );
+
+  const workFactory = patchZone
+    ? (work: VoidFunction) => patchZone.run(work)
+    : (work: VoidFunction) => work();
 
   return {
     addTemplateRef: templates.add,
@@ -178,21 +179,31 @@ export function createTemplateManager<
               value,
               strategy,
               (v: T, work: RxRenderWork, options: RxCoalescingOptions) => {
+                const context = <C>getContext[kind](notification);
                 if (isNewTemplate) {
+                  // template has changed (undefined => next; suspense => next; ...)
+                  // handle remove & insert
+                  // remove current view if there is any
                   if (viewContainerRef.length > 0) {
-                    viewContainerRef.clear();
+                    // patch removal if needed
+                    workFactory(() => viewContainerRef.clear());
                   }
+                  // create new view if any
                   if (template) {
-                    templates.createEmbeddedView(templateName);
+                    // createEmbeddedView is already patched, no need for workFactory
+                    workFactory(() =>
+                      templates.createEmbeddedView(templateName, context)
+                    );
                   }
-                }
-                if (template) {
-                  const context = getContext[kind](notification);
+                } else if (template) {
+                  // template didn't change, update it
+                  // handle update
                   const view = <EmbeddedViewRef<C>>viewContainerRef.get(0);
                   Object.keys(context).forEach((k) => {
                     view.context[k] = context[k];
                   });
-                  work(view, options.scope, notification);
+                  // update view context, patch if needed
+                  workFactory(() => work(view, options.scope, notification));
                 }
                 activeTemplate = templateName;
               }

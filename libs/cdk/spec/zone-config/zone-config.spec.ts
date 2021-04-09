@@ -8,10 +8,23 @@ import {
 import createSpy = jasmine.createSpy;
 
 describe('zone-config', () => {
+
   const w = window as ZoneGlobalConfigurations &
     ZoneTestConfigurations &
     ZoneRuntimeConfigurations &
-    ZoneFlagsHelperFunctions & { console: {log: () => void} };
+    ZoneFlagsHelperFunctions & { console: { log: () => void } }
+    & { Zone?: any };
+
+  beforeAll(() => {
+    w.Zone = undefined;
+  });
+
+  beforeEach(() => {
+    Object.keys(w).filter(key=>key.toLowerCase().startsWith('__zone')).forEach(key=>{
+      delete w[key]
+    })
+  });
+
   it('should be created', () => {
     expect(zoneConfig).toBeTruthy();
   });
@@ -267,15 +280,35 @@ describe('zone-config', () => {
 
   });
 
+  describe('convenience methods', () => {
+    it('should have unpatchXHR method', () => {
+      zoneConfig.unpatchXHR();
+      expect(w.__Zone_disable_XHR).toBe(true);
+      expect(w.__zone_symbol__UNPATCHED_EVENTS).toEqual(['load', 'error']);
+    });
+
+   it('should have unpatchXHR method', () => {
+      zoneConfig.useUnpatchedPassiveScrollEvents();
+      expect(w.__zone_symbol__UNPATCHED_EVENTS).toEqual(['scroll']);
+      expect(w.__zone_symbol__PASSIVE_EVENTS).toEqual(['scroll']);
+    });
+
+  });
+
   describe('zone-flags log', () => {
     it('should have log function present', () => {
-      expect(typeof w.__rax_zone_config__log).toBe('function');
+      expect(typeof w.__rxa_zone_config__log).toBe('function');
     });
 
     it('should log zone-flags if called', () => {
       w.console.log = createSpy('console.log');
-      w.__rax_zone_config__log()
-      expect(w.console.log).toHaveBeenCalledTimes(30);
+      zoneConfig.events.disable.UNPATCHED_EVENTS(['test']);
+      zoneConfig.events.disable.PASSIVE_EVENTS(['test']);
+      zoneConfig.global.disable.XHR();
+      zoneConfig.global.disable.timers();
+      w.__rxa_zone_config__log();
+
+      expect(w.console.log).toHaveBeenCalledTimes(4);
     });
 
   });

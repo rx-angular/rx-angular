@@ -23,14 +23,6 @@ applications
 
 ## Install
 
-Using schematics:
-
-```bash
-ng add @rx-angular/cdk
-```
-
-Manually:
-
 ```bash
 npm install --save @rx-angular/cdk
 # or
