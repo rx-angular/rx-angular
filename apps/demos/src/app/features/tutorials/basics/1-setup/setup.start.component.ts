@@ -26,7 +26,7 @@ const initComponentState = {
 @Component({
   selector: 'rxa-setup-start',
   template: `
-    // Set the model property of a component
+    // Render the model property of the component
     model$: <pre>{{model$ | async | json}}</pre>
     <h3>
       Setup
