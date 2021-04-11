@@ -146,13 +146,15 @@ function setupSubscription<T>(
   let unsubscribe: () => void;
   if (isEventTarget(sourceObj)) {
     const source = sourceObj;
-    getZoneUnPatchedApi('addEventListener', sourceObj)(
+    getZoneUnPatchedApi('addEventListener', sourceObj).call(
+      sourceObj,
       eventName,
       handler,
       options
     );
     unsubscribe = () =>
-      getZoneUnPatchedApi('removeEventListener', source)(
+      getZoneUnPatchedApi('removeEventListener', source).call(
+        source,
         eventName,
         handler,
         options
