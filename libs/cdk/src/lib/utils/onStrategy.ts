@@ -5,7 +5,10 @@ import {
   RxCoalescingOptions,
 } from '../model';
 import { Observable, Observer, of, throwError } from 'rxjs';
-import { RxRenderError, RxRenderErrorFactory } from '../template-management/render-error';
+import {
+  RxRenderError,
+  RxRenderErrorFactory,
+} from '../template-management/render-error';
 
 /**
  * @internal
@@ -33,7 +36,6 @@ import { RxRenderError, RxRenderErrorFactory } from '../template-management/rend
   );
 }*/
 
-
 /**
  * @internal
  *
@@ -52,20 +54,19 @@ export function onStrategy<T>(
     options: RxCoalescingOptions
   ) => void,
   options: RxCoalescingOptions = {},
-  errorFactory: RxRenderErrorFactory<T, any> = (error, value) => ([error, value])
+  errorFactory: RxRenderErrorFactory<T, any> = (e, v) => [e, v]
 ): Observable<T> {
   let error: Error;
   return of(value).pipe(
-    strategy.behavior(
-      () => {
-        try {
-          workFactory(value, strategy.work, options);
-        } catch (e) {
-          error = e;
-        }
-      },
-      options.scope || {}
-    ),
-    switchMap(() => error ? throwError(errorFactory(error, value)) : of(value))
+    strategy.behavior(() => {
+      try {
+        workFactory(value, strategy.work, options);
+      } catch (e) {
+        error = e;
+      }
+    }, options.scope || {}),
+    switchMap(() =>
+      error ? throwError(errorFactory(error, value)) : of(value)
+    )
   );
 }
