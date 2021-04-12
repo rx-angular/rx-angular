@@ -6,8 +6,9 @@ import {
   TemplateRef,
   TrackByFunction,
 } from '@angular/core';
-import { combineLatest, merge, Observable, of, OperatorFunction } from 'rxjs';
+import { forkJoin, merge, Observable, of, OperatorFunction } from 'rxjs';
 import {
+  catchError,
   ignoreElements,
   map,
   switchMap,
@@ -16,10 +17,10 @@ import {
 } from 'rxjs/operators';
 import {
   RxListTemplateChange,
-  RxListTemplateChangeType,
-  RxRenderSettings,
+  RxListTemplateChangeType, RxRenderSettings,
   RxTemplateSettings,
 } from './model';
+import { createDefaultErrorHandler, toRenderError } from './render-error';
 import {
   getTNode,
   notifyAllParentsIfNeeded,
@@ -63,11 +64,12 @@ export function createListTemplateManager<
     cdRef: injectingViewCdRef,
     patchZone,
     parent,
-    eRef,
+    eRef
   } = renderSettings;
+  const errorHandler = createDefaultErrorHandler(renderSettings.errorHandler);
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
-  //               type,  payload
+  //               type,  context
   const tNode: TNode = parent
     ? getTNode(injectingViewCdRef, eRef.nativeElement)
     : false;
@@ -133,7 +135,7 @@ export function createListTemplateManager<
           count = items.length;
 
           return merge(
-            combineLatest(
+            forkJoin(
               // emit after all changes are rendered
               applyChanges$.length > 0 ? [...applyChanges$] : [of(items)]
             ).pipe(
@@ -153,6 +155,12 @@ export function createListTemplateManager<
               strategy,
               insertedOrRemoved
             ).pipe(ignoreElements())
+          ).pipe(
+            catchError(e => {
+              partiallyFinished = false;
+              errorHandler.handleError(e);
+              return e;
+            })
           );
         })
       );
@@ -170,54 +178,44 @@ export function createListTemplateManager<
    * @param count
    */
   function getObservablesFromChangesArray(
-    changes: RxListTemplateChange[],
+    changes: RxListTemplateChange<T>[],
     strategy: RxStrategyCredentials,
     count: number
   ): Observable<null | false | RxListTemplateChange<T>[]>[] {
-    let error = false;
     return changes.length > 0
       ? changes.map((change) => {
           return onStrategy(
             change[1],
             strategy,
             () => {
-              if (!error) {
-                try {
-                  const type = change[0];
-                  const payload = change[1];
-                  switch (type) {
-                    case RxListTemplateChangeType.insert:
-                      listViewHandler.insertView(payload[0], payload[1], count);
-                      break;
-                    case RxListTemplateChangeType.move:
-                      listViewHandler.moveView(
-                        payload[2],
-                        payload[0],
-                        payload[1],
-                        count
-                      );
-                      break;
-                    case RxListTemplateChangeType.remove:
-                      listViewHandler.removeView(payload);
-                      break;
-                    case RxListTemplateChangeType.update:
-                      listViewHandler.updateView(payload[0], payload[1], count);
-                      break;
-                    case RxListTemplateChangeType.context:
-                      listViewHandler.updateUnchangedContext(payload[1], count);
-                      break;
-                  }
-                } catch (e) {
-                  error = true;
-                  console.error(
-                    'RxListManager received an error during operations:',
-                    e
+              const type = change[0];
+              const payload = change[1];
+              switch (type) {
+                case RxListTemplateChangeType.insert:
+                  listViewHandler.insertView(payload[0], payload[1], count);
+                  break;
+                case RxListTemplateChangeType.move:
+                  listViewHandler.moveView(
+                    payload[2],
+                    payload[0],
+                    payload[1],
+                    count
                   );
-                }
+                  break;
+                case RxListTemplateChangeType.remove:
+                  listViewHandler.removeView(payload[1]);
+                  break;
+                case RxListTemplateChangeType.update:
+                  listViewHandler.updateView(payload[0], payload[1], count);
+                  break;
+                case RxListTemplateChangeType.context:
+                  listViewHandler.updateUnchangedContext(payload[1], count);
+                  break;
               }
             },
-            {}
-          );
+            {},
+            (e, v) => toRenderError(e, v[0])
+          )
         })
       : [of(null)];
   }

@@ -27,6 +27,7 @@ import {
   RxViewContext,
   RxTemplateSettings,
 } from './model';
+import { createDefaultErrorHandler } from './render-error';
 import {
   getTNode,
   notifyAllParentsIfNeeded,
@@ -133,6 +134,7 @@ export function createTemplateManager<
     eRef,
   } = renderSettings;
 
+  const errorHandler = createDefaultErrorHandler(renderSettings.errorHandler);
   const tNode: TNode = parent
     ? getTNode(injectingViewCdRef, eRef.nativeElement)
     : false;
@@ -228,7 +230,7 @@ export function createTemplateManager<
           );
         }),
         catchError((e) => {
-          console.error(e);
+          errorHandler.handleError(e);
           return EMPTY;
         })
       );

@@ -2,7 +2,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectorRef,
   Directive,
-  ElementRef, EmbeddedViewRef,
+  ElementRef, EmbeddedViewRef, ErrorHandler,
   Input,
   IterableDiffers,
   NgIterable,
@@ -580,7 +580,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     private eRef: ElementRef,
     private readonly templateRef: TemplateRef<RxDefaultListViewContext<T>>,
     private readonly viewContainerRef: ViewContainerRef,
-    private strategyProvider: RxStrategyProvider
+    private strategyProvider: RxStrategyProvider,
+    private errorHandler: ErrorHandler
   ) {}
 
   /** @internal */
@@ -630,6 +631,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         parent: coerceBooleanProperty(this.renderParent),
         patchZone: this.patchZone ? this.ngZone : false,
+        errorHandler: this.errorHandler
       },
       templateSettings: {
         viewContainerRef: this.viewContainerRef,

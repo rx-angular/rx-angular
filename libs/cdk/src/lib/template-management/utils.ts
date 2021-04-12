@@ -26,6 +26,7 @@ import {
 import { asyncScheduler } from '../zone-less/rxjs/scheduler/index';
 import { RxStrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
+import { toRenderError } from './render-error';
 
 // Below are constants for LView indices to help us look up LView members
 // without having to remember the specific indices.
@@ -255,7 +256,8 @@ export function notifyAllParentsIfNeeded<T>(
             null,
             strategy,
             (_v, work, options) => work(injectingViewCdRef, options.scope),
-            { scope: (injectingViewCdRef as any).context || injectingViewCdRef }
+            { scope: (injectingViewCdRef as any).context || injectingViewCdRef },
+            error => toRenderError(error, injectingViewCdRef)
           )
         );
         if (behaviors.length === 1) {
@@ -289,8 +291,9 @@ export function notifyInjectingParentIfNeeded(
           (value, work, options) => {
             // console.log('notify injectingView', injectingViewCdRef);
             work(injectingViewCdRef, options.scope);
-          }
-          //  scopeOnInjectingViewContext
+          },
+          {},
+          error => toRenderError(error, injectingViewCdRef)
         ).pipe(ignoreElements())
       : (([] as unknown) as Observable<never>)
   );
@@ -325,7 +328,8 @@ export function getVirtualParentNotifications$(
           // console.log('parentComponent', parentComponent);
           detectChanges(parentComponent);
         },
-        { scope: parentComponent }
+        { scope: parentComponent },
+        error => toRenderError(error, injectingViewCdRef)
       )
     );
   }
