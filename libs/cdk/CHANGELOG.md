@@ -1,3 +1,14 @@
+# [1.0.0-alpha.7](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.6...cdk@1.0.0-alpha.7) (2021-03-27)
+
+### Bug Fixes
+
+- **cdk, template:** remove window object access ([#599](https://github.com/rx-angular/rx-angular/issues/599)) ([47b6dbb](https://github.com/rx-angular/rx-angular/commit/47b6dbb66deac7b44cb7aa0f348bc45cd64541fb)), closes [#579](https://github.com/rx-angular/rx-angular/issues/579)
+
+### Features
+
+- **cdk:** infer `getZoneUnPatchedApi` return type and fix types for existing functions ([#603](https://github.com/rx-angular/rx-angular/issues/603)) ([1692653](https://github.com/rx-angular/rx-angular/commit/1692653c8c6cada97fb37af176ca9a41ef93e35d))
+- **zone-config:** update zone-config docs and linking ([#627](https://github.com/rx-angular/rx-angular/issues/627)) ([adb613d](https://github.com/rx-angular/rx-angular/commit/adb613daed5767e184135ddd2efe48fa9522a5dd))
+
 # [1.0.0-alpha.6](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.4...cdk@1.0.0-alpha.6) (2021-03-14)
 
 ### Bug Fixes

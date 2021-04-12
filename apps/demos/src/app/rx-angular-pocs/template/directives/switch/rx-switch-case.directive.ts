@@ -9,9 +9,9 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { RxRenderWork } from '@rx-angular/cdk';
+import { onStrategy, RxRenderWork, RxStrategyNames, RxStrategyProvider } from '@rx-angular/cdk';
 import { Subscription, Unsubscribable } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { distinctUntilChanged, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { RxSwitch } from './rx-switch.directive';
 
 // tslint:disable-next-line:directive-selector
@@ -36,6 +36,7 @@ export class RxSwitchCase implements OnInit, OnDestroy {
     private viewContainer: ViewContainerRef,
     public templateRef: TemplateRef<Object>,
     private cdRef: ChangeDetectorRef,
+    private strategyProvider: RxStrategyProvider<RxStrategyNames<string>>,
     @Host() private rxSwitch: RxSwitch<any>
   ) {}
 
@@ -46,6 +47,8 @@ export class RxSwitchCase implements OnInit, OnDestroy {
         // tslint:disable-next-line:triple-equals
         map((switchValue) => this.caseValue === switchValue),
         distinctUntilChanged(),
+        withLatestFrom(this.rxSwitch.strategies$),
+        switchMap(([v, strategyName]) => onStrategy(v, this.strategyProvider.strategies[strategyName], this.rxSwitchCaseWorkFactory))
         // applyStrategy2(this.rxSwitch.strategy$, this.rxSwitchCaseWorkFactory, this._view)
       )
       .subscribe({ error: console.log });

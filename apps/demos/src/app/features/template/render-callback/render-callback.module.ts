@@ -7,8 +7,7 @@ import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks/ind
 import { RenderCallbackComponent } from './render-callback.component';
 import { RENDER_CALLBACK_ROUTES } from './render-callback.routes';
 import { MatButtonModule } from '@angular/material/button';
-import { UnpatchEventsModule } from '@rx-angular/template';
-import { PushModule, RxLetModule } from '../../../rx-angular-pocs';
+import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
 
 @NgModule({
   declarations: [
@@ -23,7 +22,7 @@ import { PushModule, RxLetModule } from '../../../rx-angular-pocs';
     MatButtonModule,
     UnpatchEventsModule,
     PushModule,
-    RxLetModule
+    LetModule
   ]
 })
 export class RenderCallbackModule {}
