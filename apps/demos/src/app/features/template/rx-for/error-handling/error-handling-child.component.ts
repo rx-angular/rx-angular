@@ -16,7 +16,7 @@ export class ErrorHandlingChildComponent implements OnInit, DoCheck {
   @Input() set index(index: number) {
     console.log(index);
     this._index = index;
-    /*if (index > 20) {
+   /* if (index > 20) {
       throw new Error('erororororo');
     }*/
   }

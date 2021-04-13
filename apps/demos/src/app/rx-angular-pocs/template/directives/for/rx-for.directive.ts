@@ -642,12 +642,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       trackBy: this._trackBy
     });
     this.listManager.nextStrategy(this.strategy$);
-    this._subscription = this.listManager.render(this.values$)
-      .pipe(
-        tap((v) => {
-          this._renderCallback?.next(v);
-        })
-      ).subscribe();
+    this._subscription = this.listManager.render(this.values$).subscribe(v => this._renderCallback?.next(v));
   }
   /** @internal */
   createViewContext(item: T, computedContext: RxListViewComputedContext): RxDefaultListViewContext<T> {
