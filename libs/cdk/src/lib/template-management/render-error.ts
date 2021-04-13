@@ -17,7 +17,7 @@ export function isRxRenderError<T>(e: any): e is RxRenderError<T> {
 }
 
 /** @internal **/
-export function createDefaultErrorHandler(
+export function createErrorHandler(
   _handler?: ErrorHandler
 ): ErrorHandler {
   const _handleError = _handler

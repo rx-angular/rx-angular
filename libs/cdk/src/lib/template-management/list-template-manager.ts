@@ -22,7 +22,7 @@ import {
   RxRenderSettings,
   RxTemplateSettings,
 } from './model';
-import { createDefaultErrorHandler, toRenderError } from './render-error';
+import { createErrorHandler, toRenderError } from './render-error';
 import {
   getTNode,
   notifyAllParentsIfNeeded,
@@ -68,7 +68,7 @@ export function createListTemplateManager<
     parent,
     eRef,
   } = renderSettings;
-  const errorHandler = createDefaultErrorHandler(renderSettings.errorHandler);
+  const errorHandler = createErrorHandler(renderSettings.errorHandler);
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
   //               type,  context
