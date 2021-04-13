@@ -1,31 +1,29 @@
 import { EmbeddedViewRef, TemplateRef } from '@angular/core';
-import { EMPTY, merge, Observable } from 'rxjs';
+import { EMPTY, merge, Observable, of } from 'rxjs';
 import {
   catchError,
-  filter,
   ignoreElements,
   switchMap,
-  tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import {
   RxCoalescingOptions,
-  RxRenderWork,
+  RxCompleteNotification,
+  RxErrorNotification,
+  RxNextNotification,
   RxNotification,
   RxNotificationKind,
+  RxRenderWork,
   RxSuspenseNotification,
-  RxNextNotification,
-  RxErrorNotification,
-  RxCompleteNotification,
 } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 import { strategyHandling } from '../utils/strategy-handling';
 import {
-  RxRenderAware,
   rxBaseTemplateNames,
+  RxRenderAware,
   RxRenderSettings,
-  RxViewContext,
   RxTemplateSettings,
+  RxViewContext,
 } from './model';
 import { createErrorHandler } from './render-error';
 import {
@@ -230,7 +228,7 @@ export function createTemplateManager<
           ).pipe(
             catchError((e) => {
               errorHandler.handleError(e);
-              return EMPTY;
+              return of(e);
             })
           );
         })
