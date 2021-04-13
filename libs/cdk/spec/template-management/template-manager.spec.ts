@@ -6,7 +6,7 @@ import {
   EmbeddedViewRef,
   ErrorHandler,
   Input,
-  IterableDiffers,
+  IterableDiffers, OnDestroy,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
@@ -25,7 +25,7 @@ import {
 } from '@rx-angular/cdk';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject, Subscription } from 'rxjs';
 import createSpy = jasmine.createSpy;
 
 @Component({
@@ -59,7 +59,7 @@ const TestTemplateNames = {
     <span #host></span>
   `,
 })
-class TemplateManagerSpecComponent implements AfterViewInit {
+class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
   @ViewChild('tmpl', { read: TemplateRef })
   templateRef: TemplateRef<RxViewContext<number>>;
 
@@ -74,6 +74,8 @@ class TemplateManagerSpecComponent implements AfterViewInit {
 
   latestRenderedValue: any;
 
+  private sub = new Subscription();
+
   constructor(
     private iterableDiffers: IterableDiffers,
     private cdRef: ChangeDetectorRef,
@@ -81,7 +83,9 @@ class TemplateManagerSpecComponent implements AfterViewInit {
     private vcRef: ViewContainerRef,
     private strategyProvider: RxStrategyProvider,
     public errorHandler: ErrorHandler
-  ) {}
+  ) {
+    this.observablesHandler.next(this.values$);
+  }
 
   ngAfterViewInit() {
     this.templateManager = createTemplateManager<any, RxViewContext<number>>({
@@ -111,12 +115,17 @@ class TemplateManagerSpecComponent implements AfterViewInit {
       TestTemplateNames.next,
       this.templateRef
     );
-    this.observablesHandler.next(this.values$);
-    this.templateManager
-      .render(this.observablesHandler.values$)
-      .subscribe((n) => {
-        this.latestRenderedValue = n;
-      });
+    this.sub.add(
+      this.templateManager
+        .render(this.observablesHandler.values$)
+        .subscribe((n) => {
+          this.latestRenderedValue = n;
+        })
+    );
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }
 

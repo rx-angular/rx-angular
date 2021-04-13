@@ -145,7 +145,7 @@ export function createTemplateManager<
 
   const triggerHandling = config.templateTrigger$ || EMPTY;
   const getContext = notificationKindToViewContext(
-    templateSettings.customContext
+    templateSettings.customContext || ((v) => {})
   );
 
   const workFactory = patchZone
