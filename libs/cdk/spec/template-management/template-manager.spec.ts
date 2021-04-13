@@ -158,7 +158,7 @@ let componentInstance: {
   templateManager: RxTemplateManager<number, any>;
   errorHandler: ErrorHandler;
   templateRef: TemplateRef<any>;
-  values$: ReplaySubject<any[]>;
+  values$: ReplaySubject<number>;
   latestRenderedValue: any;
 };
 let componentNativeElement: any;
@@ -207,7 +207,7 @@ describe('template-manager', () => {
 
   it('should render items', () => {
     fixtureComponent.detectChanges();
-    componentInstance.values$.next([1]);
+    componentInstance.values$.next(1);
     fixtureComponent.detectChanges();
     const componentContent = componentNativeElement.textContent;
     expect(componentContent).toEqual('1');
@@ -216,7 +216,7 @@ describe('template-manager', () => {
   describe('exception handling', () => {
     it('should capture errors with errorHandler', () => {
       fixtureComponent.detectChanges();
-      componentInstance.values$.next([2]);
+      componentInstance.values$.next(2);
       try {
         fixtureComponent.detectChanges();
       } catch (e) {}
@@ -225,7 +225,7 @@ describe('template-manager', () => {
 
     it('should emit error and payload via renderCallback', () => {
       fixtureComponent.detectChanges();
-      const items = [2];
+      const items = 2;
       componentInstance.values$.next(items);
       try {
         fixtureComponent.detectChanges();
@@ -237,15 +237,15 @@ describe('template-manager', () => {
 
     it('should work after an error has been thrown', () => {
       fixtureComponent.detectChanges();
-      componentInstance.values$.next([2]);
+      componentInstance.values$.next(2);
       try {
         fixtureComponent.detectChanges();
       } catch (e) {}
       expect(customErrorHandler.handleError).toHaveBeenCalled();
-      componentInstance.values$.next([1, 3]);
+      componentInstance.values$.next(1);
       fixtureComponent.detectChanges();
       const componentContent = componentNativeElement.textContent;
-      expect(componentContent).toEqual('1,3');
+      expect(componentContent).toEqual('1');
     });
   });
 });
