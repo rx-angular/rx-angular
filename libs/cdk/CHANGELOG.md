@@ -1,3 +1,9 @@
+# [1.0.0-alpha.8](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.7...cdk@1.0.0-alpha.8) (2021-04-13)
+
+### Features
+
+- **cdk:** improve rendering error handling ([#626](https://github.com/rx-angular/rx-angular/issues/626)) ([0437438](https://github.com/rx-angular/rx-angular/commit/0437438112c42b8f072b219d599d5ea8d68b30bc))
+
 # [1.0.0-alpha.7](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.6...cdk@1.0.0-alpha.7) (2021-03-27)
 
 ### Bug Fixes
