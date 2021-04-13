@@ -12,12 +12,14 @@ import {
   ignoreElements,
   map,
   switchMap,
+  take,
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import {
   RxListTemplateChange,
-  RxListTemplateChangeType, RxRenderSettings,
+  RxListTemplateChangeType,
+  RxRenderSettings,
   RxTemplateSettings,
 } from './model';
 import { createDefaultErrorHandler, toRenderError } from './render-error';
@@ -64,7 +66,7 @@ export function createListTemplateManager<
     cdRef: injectingViewCdRef,
     patchZone,
     parent,
-    eRef
+    eRef,
   } = renderSettings;
   const errorHandler = createDefaultErrorHandler(renderSettings.errorHandler);
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
@@ -133,11 +135,10 @@ export function createListTemplateManager<
           // @TODO we need to know if we need to notifyParent on move aswell
           notifyParent = insertedOrRemoved && parent;
           count = items.length;
-
           return merge(
             forkJoin(
               // emit after all changes are rendered
-              applyChanges$.length > 0 ? [...applyChanges$] : [of(items)]
+              applyChanges$.length > 0 ? applyChanges$ : [of(items)]
             ).pipe(
               tap(() => (partiallyFinished = false)),
               // somehow this makes the strategySelect work
@@ -146,8 +147,7 @@ export function createListTemplateManager<
                 injectingViewCdRef,
                 strategy,
                 () => notifyParent
-              ),
-              map(() => items)
+              )
             ),
             // emit injectingParent if needed
             notifyInjectingParentIfNeeded(
@@ -156,10 +156,11 @@ export function createListTemplateManager<
               insertedOrRemoved
             ).pipe(ignoreElements())
           ).pipe(
-            catchError(e => {
+            map(() => items),
+            catchError((e) => {
               partiallyFinished = false;
               errorHandler.handleError(e);
-              return e;
+              return of(e);
             })
           );
         })
@@ -215,7 +216,7 @@ export function createListTemplateManager<
             },
             {},
             (e, v) => toRenderError(e, v[0])
-          )
+          ).pipe(take(1));
         })
       : [of(null)];
   }
