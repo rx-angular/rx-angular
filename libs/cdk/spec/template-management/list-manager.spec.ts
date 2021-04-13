@@ -1,3 +1,4 @@
+import 'jest-preset-angular'; // TODO: move this into test-setup when zone-config.spec is in its own lib
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -11,7 +12,7 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import {
   createListTemplateManager,
@@ -158,7 +159,7 @@ const setupListManagerComponent = (): void => {
 describe('list-manager', () => {
   beforeAll(() => mockConsole());
 
-  beforeEach(waitForAsync(setupListManagerComponent));
+  beforeEach(() => setupListManagerComponent());
 
   it('should be created', () => {
     expect(fixtureComponent).toBeTruthy();
@@ -203,9 +204,9 @@ describe('list-manager', () => {
       try {
         fixtureComponent.detectChanges();
       } catch (e) {
-        expect(customErrorHandler.handleError).toHaveBeenCalled();
         expect(componentInstance.latestRenderedValue[0]).toEqual(e);
       }
+      expect(customErrorHandler.handleError).toHaveBeenCalled();
     });
 
     it('should work after an error has been thrown', () => {

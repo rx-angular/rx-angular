@@ -1,3 +1,4 @@
+import 'jest-preset-angular'; // TODO: move this into test-setup when zone-config.spec is in its own lib
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -6,19 +7,19 @@ import {
   EmbeddedViewRef,
   ErrorHandler,
   Input,
-  IterableDiffers, OnDestroy,
+  IterableDiffers,
+  OnDestroy,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import {
   createTemplateManager,
   RX_ANGULAR_CONFIG,
   RxBaseTemplateNames,
-  RxNotificationKind,
-  RxStrategyProvider,
+  RxNotificationKind, RxStrategyProvider,
   RxTemplateManager,
   RxViewContext,
   templateNotifier,
@@ -102,7 +103,7 @@ class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
         viewContainerRef: this.host,
         patchZone: false,
         createViewContext,
-        updateViewContext
+        updateViewContext,
       },
       notificationToTemplateName: {
         [RxNotificationKind.suspense]: () => TestTemplateNames.next,
@@ -185,7 +186,7 @@ const setupTemplateManagerComponent = (): void => {
 describe('template-manager', () => {
   beforeAll(() => mockConsole());
 
-  beforeEach(waitForAsync(setupTemplateManagerComponent));
+  beforeEach(() => setupTemplateManagerComponent());
 
   it('should be created', () => {
     expect(fixtureComponent).toBeTruthy();
@@ -230,9 +231,9 @@ describe('template-manager', () => {
       try {
         fixtureComponent.detectChanges();
       } catch (e) {
-        expect(customErrorHandler.handleError).toHaveBeenCalled();
         expect(componentInstance.latestRenderedValue[0]).toEqual(e);
       }
+      expect(customErrorHandler.handleError).toHaveBeenCalled();
     });
 
     it('should work after an error has been thrown', () => {
