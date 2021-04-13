@@ -34,9 +34,10 @@ const initComponentState = {
     >
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
-        <mat-panel-title> // Refactor state management
+        <mat-panel-title>
           List
         </mat-panel-title>
+        <!--👇 Refactor state management -->
         <mat-panel-description>
           <span
           >{{ (storeList$ | async)?.length }} Repositories Updated every:
@@ -92,11 +93,11 @@ export class GlobalStateStart extends RxState<ComponentState>
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
   listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
-
+  //👇 Connect the global state to the list slice
   constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
-    this.connect('listExpanded', this.listExpandedChanges); // Connect the global state to the list slice
+    this.connect('listExpanded', this.listExpandedChanges);
   }
 
   ngOnDestroy(): void {

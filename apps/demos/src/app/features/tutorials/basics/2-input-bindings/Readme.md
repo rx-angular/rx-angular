@@ -63,7 +63,7 @@ The implementation in our expansion panel will look as follows:
 <mat-expansion-panel *ngIf="model$ | async as vm"> </mat-expansion-panel>
 ```
 
-Now we can replace the `_refreshInterval` in the template with `vm.refreshInterval`.
+Now we can replace the `_refreshInterval` component in the template with `vm.refreshInterval`.
 
 ```html
 <span>

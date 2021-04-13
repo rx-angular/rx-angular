@@ -44,7 +44,7 @@ const initComponentState = {
           </span>
         </mat-panel-description>
       </mat-expansion-panel-header>
-      // Add a refresh button
+      <!--👇 Change the refresh button -->
       <button
         mat-raised-button
         color='primary'
@@ -70,6 +70,8 @@ const initComponentState = {
 })
 export class SideEffectsStart extends RxState<ComponentState>
   implements OnInit, OnDestroy {
+  //👇 Create a new Subject
+
   model$ = this.select();
 
   intervalSubscription = new Subscription();
@@ -79,7 +81,7 @@ export class SideEffectsStart extends RxState<ComponentState>
     startWith(initComponentState.list)
   );
 
-  // Set the refresh interval
+  //👇 Set the refresh interval
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 4000) {
@@ -103,7 +105,7 @@ export class SideEffectsStart extends RxState<ComponentState>
     this.intervalSubscription.unsubscribe();
   }
 
-  // Initialize a background process
+  //👇 Initialize a background process
   ngOnInit(): void {
     this.resetRefreshTick();
   }
@@ -115,7 +117,7 @@ export class SideEffectsStart extends RxState<ComponentState>
       .subscribe();
   }
 
-  // Dispatch an action to the global store
+  //👇 Dispatch an action to the global store
   onRefreshClicks(event) {
     this.listService.refetchList();
   }

@@ -16,6 +16,8 @@ A function has a *side effect* if:
 - There's a mutation of local static variables, e.g. `this.prop = value`
 - Non-local variables are used
 
+---
+
 ## Examples
 
 Let's look at a couple of examples that will make the above definitions easier to understand.
@@ -113,7 +115,7 @@ In our case, we have the refresh button as UI interaction. To get this interacti
 ```
 
 ```typescript
-export class DemoBasicsComponent2
+export class SideEffectsStart
   extends RxState<ComponentState>
   implements OnInit, OnDestroy {
   refreshClicks$ = new Subject<Event>();

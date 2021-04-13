@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } 
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
-// 1- import RxState
+//👇 1- import RxState
 import { RxState } from '@rx-angular/state';
-// 2- define a component state
+//👇 2- define a component state
 interface ComponentState {
   refreshInterval: number;
   list: DemoBasicsItem[];
@@ -16,7 +16,7 @@ export interface DemoBasicsItem {
   name: string;
 }
 
-// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
+//👇 The  initial base-state is normally derived from somewhere else automatically but could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
@@ -25,8 +25,8 @@ const initComponentState = {
 
 @Component({
   selector: 'rxa-setup-start',
+  //👇 Render the model property of the component
   template: `
-    // Set the model property of a component
     model$: <pre>{{model$ | async | json}}</pre>
     <h3>
       Setup
@@ -89,9 +89,9 @@ const initComponentState = {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-// 3- extend the component
+//👇 3- extend the component
 export class SetupStart extends RxState<ComponentState> implements OnInit, OnDestroy {
-  // Set the model property of a component
+  //👇 Set up the model property of the component
   model$ = this.select();
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
@@ -115,9 +115,9 @@ export class SetupStart extends RxState<ComponentState> implements OnInit, OnDes
   constructor(
     private listService: ListService
   ) {
-    // Always call super() first in the constructor
+    //👇 Always call super() first in the constructor
     super();
-    // Call set() to initialize the state
+    //👇 Call set() to initialize the state
     this.set(initComponentState);
   }
 
