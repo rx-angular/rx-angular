@@ -13,10 +13,14 @@ import { ɵglobal } from '@angular/core';
  * @return {Function} - The zone un-patched API in question.
  *
  */
-export function getZoneUnPatchedApi<T = Function>(name: string, elem: object = ɵglobal): T {
-  return isApiZonePatched(name, elem) ? elem['__zone_symbol__' + name] : elem[name];
+export function getZoneUnPatchedApi<T = Function>(
+  name: string,
+  elem: object = ɵglobal
+): T {
+  return isApiZonePatched(name, elem)
+    ? elem['__zone_symbol__' + name]
+    : elem[name];
 }
-
 
 /**
  * envZonePatched
@@ -82,8 +86,7 @@ export function isNgZone(instance: any): boolean {
 
   let calledApply = false;
 
-  function fn() {
-  }
+  function fn() {}
 
   fn.apply = () => (calledApply = true);
 
@@ -110,4 +113,3 @@ export function isNgZone(instance: any): boolean {
 export function isNoopNgZone(instance: any): boolean {
   return !isNgZone(instance);
 }
-

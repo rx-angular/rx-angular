@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { interval, Subject, Subscription } from 'rxjs';
+//👇 Import { map }
 import { map, startWith, tap } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
 
@@ -27,6 +28,7 @@ const initComponentState = {
     <h3>
       Output Bindings
     </h3>
+    <!--👇 Refactor the state binding -->
     <mat-expansion-panel
       *ngIf="model$ | async as vm"
       (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
@@ -92,7 +94,7 @@ export class OutputBindingsStart extends RxState<ComponentState>
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
   listExpandedChange = this.listExpandedChanges;
-
+  //👇 Connect an observable to the state
   constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
