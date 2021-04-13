@@ -227,11 +227,12 @@ export function createTemplateManager<
               strategy,
               isNewTemplate
             ).pipe(ignoreElements())
+          ).pipe(
+            catchError((e) => {
+              errorHandler.handleError(e);
+              return EMPTY;
+            })
           );
-        }),
-        catchError((e) => {
-          errorHandler.handleError(e);
-          return EMPTY;
         })
       );
     },
