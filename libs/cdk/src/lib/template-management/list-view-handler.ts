@@ -205,7 +205,7 @@ function getListChanges<T>(
   ): RxListTemplateChange {
     return [
       RxListTemplateChangeType.remove,
-      adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex,
+      [item, adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex],
     ];
   }
 }

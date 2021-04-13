@@ -2,7 +2,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectorRef,
   Directive,
-  ElementRef, EmbeddedViewRef,
+  ElementRef, EmbeddedViewRef, ErrorHandler,
   Input,
   IterableDiffers,
   NgIterable,
@@ -580,7 +580,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     private eRef: ElementRef,
     private readonly templateRef: TemplateRef<RxDefaultListViewContext<T>>,
     private readonly viewContainerRef: ViewContainerRef,
-    private strategyProvider: RxStrategyProvider
+    private strategyProvider: RxStrategyProvider,
+    private errorHandler: ErrorHandler
   ) {}
 
   /** @internal */
@@ -630,6 +631,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         parent: coerceBooleanProperty(this.renderParent),
         patchZone: this.patchZone ? this.ngZone : false,
+        errorHandler: this.errorHandler
       },
       templateSettings: {
         viewContainerRef: this.viewContainerRef,
@@ -640,12 +642,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       trackBy: this._trackBy
     });
     this.listManager.nextStrategy(this.strategy$);
-    this._subscription = this.listManager.render(this.values$)
-      .pipe(
-        tap((v) => {
-          this._renderCallback?.next(v);
-        })
-      ).subscribe();
+    this._subscription = this.listManager.render(this.values$).subscribe(v => this._renderCallback?.next(v));
   }
   /** @internal */
   createViewContext(item: T, computedContext: RxListViewComputedContext): RxDefaultListViewContext<T> {

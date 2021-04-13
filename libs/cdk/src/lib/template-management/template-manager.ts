@@ -1,32 +1,31 @@
 import { EmbeddedViewRef, TemplateRef } from '@angular/core';
-import { EMPTY, merge, Observable } from 'rxjs';
+import { EMPTY, merge, Observable, of } from 'rxjs';
 import {
   catchError,
-  filter,
   ignoreElements,
   switchMap,
-  tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import {
   RxCoalescingOptions,
-  RxRenderWork,
+  RxCompleteNotification,
+  RxErrorNotification,
+  RxNextNotification,
   RxNotification,
   RxNotificationKind,
+  RxRenderWork,
   RxSuspenseNotification,
-  RxNextNotification,
-  RxErrorNotification,
-  RxCompleteNotification,
 } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 import { strategyHandling } from '../utils/strategy-handling';
 import {
-  RxRenderAware,
   rxBaseTemplateNames,
+  RxRenderAware,
   RxRenderSettings,
-  RxViewContext,
   RxTemplateSettings,
+  RxViewContext,
 } from './model';
+import { createErrorHandler } from './render-error';
 import {
   getTNode,
   notifyAllParentsIfNeeded,
@@ -133,6 +132,7 @@ export function createTemplateManager<
     eRef,
   } = renderSettings;
 
+  const errorHandler = createErrorHandler(renderSettings.errorHandler);
   const tNode: TNode = parent
     ? getTNode(injectingViewCdRef, eRef.nativeElement)
     : false;
@@ -145,7 +145,7 @@ export function createTemplateManager<
 
   const triggerHandling = config.templateTrigger$ || EMPTY;
   const getContext = notificationKindToViewContext(
-    templateSettings.customContext
+    templateSettings.customContext || ((v) => {})
   );
 
   const workFactory = patchZone
@@ -225,11 +225,12 @@ export function createTemplateManager<
               strategy,
               isNewTemplate
             ).pipe(ignoreElements())
+          ).pipe(
+            catchError((e) => {
+              errorHandler.handleError(e);
+              return of(e);
+            })
           );
-        }),
-        catchError((e) => {
-          console.error(e);
-          return EMPTY;
         })
       );
     },

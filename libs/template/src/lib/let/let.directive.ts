@@ -3,6 +3,7 @@ import {
   Directive,
   ElementRef,
   EmbeddedViewRef,
+  ErrorHandler,
   Input,
   NgZone,
   OnChanges,
@@ -320,7 +321,8 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     public eRef: ElementRef,
     private ngZone: NgZone,
     private readonly nextTemplateRef: TemplateRef<RxLetViewContext<U>>,
-    private readonly viewContainerRef: ViewContainerRef
+    private readonly viewContainerRef: ViewContainerRef,
+    private errorHandler: ErrorHandler
   ) {}
 
   /** @internal */
@@ -427,6 +429,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
         patchZone: this.patchZone ? this.ngZone : false,
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         strategies: this.strategyProvider.strategies,
+        errorHandler: this.errorHandler,
       },
       notificationToTemplateName: {
         [RxNotificationKind.suspense]: () =>
