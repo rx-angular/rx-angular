@@ -6,16 +6,23 @@ import {
   TemplateRef,
   TrackByFunction,
 } from '@angular/core';
-import { forkJoin, merge, Observable, of, OperatorFunction } from 'rxjs';
+import { combineLatest, merge, Observable, of, OperatorFunction } from 'rxjs';
 import {
   catchError,
   ignoreElements,
   map,
   switchMap,
-  take,
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
+import { RxStrategyCredentials } from '../model';
+import { onStrategy } from '../utils/onStrategy';
+import { strategyHandling } from '../utils/strategy-handling';
+import {
+  RxListViewComputedContext,
+  RxListViewContext,
+} from './list-view-context';
+import { getTemplateHandler } from './list-view-handler';
 import {
   RxListTemplateChange,
   RxListTemplateChangeType,
@@ -29,14 +36,6 @@ import {
   notifyInjectingParentIfNeeded,
   TNode,
 } from './utils';
-import { RxStrategyCredentials } from '../model';
-import { onStrategy } from '../utils/onStrategy';
-import { strategyHandling } from '../utils/strategy-handling';
-import {
-  RxListViewComputedContext,
-  RxListViewContext,
-} from './list-view-context';
-import { getTemplateHandler } from './list-view-handler';
 
 export interface RxListManager<T> {
   nextStrategy: (config: string | Observable<string>) => void;
@@ -136,7 +135,7 @@ export function createListTemplateManager<
           notifyParent = insertedOrRemoved && parent;
           count = items.length;
           return merge(
-            forkJoin(
+            combineLatest(
               // emit after all changes are rendered
               applyChanges$.length > 0 ? applyChanges$ : [of(items)]
             ).pipe(
@@ -216,7 +215,7 @@ export function createListTemplateManager<
             },
             {},
             (e, v) => toRenderError(e, v[0])
-          ).pipe(take(1));
+          );
         })
       : [of(null)];
   }

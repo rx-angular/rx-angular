@@ -4,7 +4,8 @@ import {
   Component,
   ElementRef,
   EmbeddedViewRef,
-  ErrorHandler, Input,
+  ErrorHandler,
+  Input,
   IterableDiffers,
   TemplateRef,
   ViewChild,
@@ -28,14 +29,14 @@ import createSpy = jasmine.createSpy;
 
 @Component({
   selector: 'rx-angular-error-test',
-  template: `{{value}}`
+  template: `{{ value }}`,
 })
 class ErrorTestComponent {
   private _value: number;
   @Input()
   set value(value: number) {
     this._value = value;
-    if (value %2 === 0) {
+    if (value % 2 === 0) {
       throw new Error('isEven');
     }
   }
@@ -46,7 +47,9 @@ class ErrorTestComponent {
 
 @Component({
   template: `
-    <ng-template #tmpl let-v><rx-angular-error-test [value]="v"></rx-angular-error-test></ng-template>
+    <ng-template #tmpl let-v>
+      <rx-angular-error-test [value]="v"></rx-angular-error-test>
+    </ng-template>
     <span #host></span>
   `,
 })
@@ -120,8 +123,8 @@ const updateViewContext = (
 };
 
 const customErrorHandler: ErrorHandler = {
-  handleError: createSpy('handleError')
-}
+  handleError: createSpy('handleError'),
+};
 
 let fixtureComponent: any;
 let componentInstance: {
@@ -136,7 +139,7 @@ const setupListManagerComponent = (): void => {
   TestBed.configureTestingModule({
     declarations: [ListTemplateManagerSpecComponent, ErrorTestComponent],
     providers: [
-      { provide: ErrorHandler, useValue: customErrorHandler},
+      { provide: ErrorHandler, useValue: customErrorHandler },
       ViewContainerRef,
       {
         provide: RX_ANGULAR_CONFIG,
@@ -180,11 +183,10 @@ describe('list-manager', () => {
     componentInstance.values$.next([1]);
     fixtureComponent.detectChanges();
     const componentContent = componentNativeElement.textContent;
-    expect(componentContent).toEqual('1')
+    expect(componentContent).toEqual('1');
   });
 
   describe('exception handling', () => {
-
     it('should capture errors with errorHandler', () => {
       fixtureComponent.detectChanges();
       componentInstance.values$.next([2]);
@@ -201,6 +203,7 @@ describe('list-manager', () => {
       try {
         fixtureComponent.detectChanges();
       } catch (e) {
+        expect(customErrorHandler.handleError).toHaveBeenCalled();
         expect(componentInstance.latestRenderedValue[0]).toEqual(e);
       }
     });
@@ -211,11 +214,11 @@ describe('list-manager', () => {
       try {
         fixtureComponent.detectChanges();
       } catch (e) {}
-      componentInstance.values$.next([1,3]);
+      componentInstance.values$.next([1, 3]);
       fixtureComponent.detectChanges();
+      expect(customErrorHandler.handleError).toHaveBeenCalled();
       const componentContent = componentNativeElement.textContent;
       expect(componentContent).toEqual('13');
     });
-  })
-
+  });
 });
