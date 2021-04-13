@@ -6,6 +6,7 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import {
   BehaviorSubject,
   combineLatest,
@@ -27,7 +28,7 @@ import { immutableArr } from './utils';
       <ng-container visualizerHeader>
         <h2>Nested Lists</h2>
         <div>
-          <p *rxLet="table$; let table">
+          <p *rxLet="table$; let table; patchZone: false">
             <mat-form-field>
               <mat-label>Rows</mat-label>
               <input
@@ -99,7 +100,7 @@ import { immutableArr } from './utils';
             *ngFor="let value of array$ | async; trackBy: trackById"
           >
             <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-              <rxa-rx-for-value [value]="i"></rxa-rx-for-value>
+              <rxa-rx-for-value [value]="i" [strategy$]="native$"></rxa-rx-for-value>
             </ng-container>
           </rxa-visualizer>
         </div>
@@ -111,7 +112,7 @@ import { immutableArr } from './utils';
           "
         >
           <h2>*rxFor</h2>
-          <p *rxLet="table$; let t; patchZone: true">
+          <p *rxLet="table$; let t;">
             <button
               mat-raised-button
               [unpatch]
@@ -151,6 +152,7 @@ import { immutableArr } from './utils';
               strategy: strategy$;
               trackBy: trackById;
               parent: true;
+              patchZone: false;
               let select = select;
               renderCallback: childrenRendered$
             "
@@ -161,14 +163,13 @@ import { immutableArr } from './utils';
                 select(['arr']);
                 strategy: strategy$;
                 trackBy: trackById;
+                 parent: false;
+                patchZone: false;
                 let o;
                 let v$ = item$
               "
             >
-              <mat-icon class="item" [ngClass]="{red:!o, green:o}">
-                {{o ? 'check' : 'highlight_off'}}
-              </mat-icon>
-              <rxa-dirty-check></rxa-dirty-check>
+              <rxa-rx-for-value [strategy$]="strategy$" [value]="v$"></rxa-rx-for-value>
             </ng-container>
           </rxa-visualizer>
         </div>
@@ -184,6 +185,8 @@ export class RxForNestedListsComponent
   @ViewChildren('spanChild') spanChildren: QueryList<ElementRef>;
 
   tK = 'id';
+
+  native$ = of('native');
 
   displayStates = {
     none: -1,
@@ -209,7 +212,7 @@ export class RxForNestedListsComponent
 
   table$ = this.select();
 
-  strategy$ = new Subject<string>();
+  strategy$ = new BehaviorSubject<string>(this.strategyProvider.primaryStrategy);
   changeOneClick$ = new Subject<number>();
   changeAllClick$ = new Subject<number>();
   toggleIntervalClick$ = new Subject<number>();
@@ -238,7 +241,9 @@ export class RxForNestedListsComponent
 
   dK = (a, b) => a.value === b.value;
 
-  constructor() {
+  constructor(
+    private strategyProvider: RxStrategyProvider
+  ) {
     super();
     this.set({ columns: 5, rows: 10 });
   }

@@ -1,4 +1,5 @@
 // tslint:disable
+import { ɵglobal } from '@angular/core';
 import { enableIsInputPending } from './schedulerFeatureFlags';
 
 export let requestHostCallback;
@@ -70,15 +71,15 @@ if (
   requestPaint = forceFrameRate = function () {};
 } else {
   // Capture local references to native APIs, in case a polyfill overrides them.
-  const setTimeout = window.setTimeout;
-  const clearTimeout = window.clearTimeout;
+  const setTimeout = ɵglobal.setTimeout;
+  const clearTimeout = ɵglobal.clearTimeout;
 
   if (typeof console !== 'undefined') {
     // TODO: Scheduler no longer requires these methods to be polyfilled. But
     // maybe we want to continue warning if they don't exist, to preserve the
     // option to rely on it in the future?
-    const requestAnimationFrame = window.requestAnimationFrame;
-    const cancelAnimationFrame = window.cancelAnimationFrame;
+    const requestAnimationFrame = ɵglobal.requestAnimationFrame;
+    const cancelAnimationFrame = ɵglobal.cancelAnimationFrame;
 
     if (typeof requestAnimationFrame !== 'function') {
       // Using console['error'] to evade Babel and ESLint
@@ -195,12 +196,12 @@ if (
         } else {
           // If there's more work, schedule the next message event at the end
           // of the preceding one.
-          port.postMessage(null);
+          port && port.postMessage(null);
         }
       } catch (error) {
         // If a scheduler task throws, exit the current browser task so the
         // error can be observed.
-        port.postMessage(null);
+        port && port.postMessage(null);
         throw error;
       }
     } else {
@@ -219,7 +220,7 @@ if (
     scheduledHostCallback = callback;
     if (!isMessageLoopRunning) {
       isMessageLoopRunning = true;
-      port.postMessage(null);
+      port && port.postMessage(null);
     }
   };
 
