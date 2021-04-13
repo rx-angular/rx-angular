@@ -40,11 +40,11 @@ export function rxMaterialize<T>(): OperatorFunction<T, RxNotification<T>> {
   return (o$: Observable<T>): Observable<RxNotification<T>> =>
     o$.pipe(
       materialize(),
-      tap(({ kind, error }) => {
+      /*tap(({ kind, error }) => {
         if (kind === 'E') {
           console.error(error);
         }
-      }),
+      }),*/
       map(notificationToRxNotification)
     );
 }

@@ -1,55 +1,65 @@
+import { ɵglobal } from '@angular/core';
 import {
-  ZoneGlobalDisableConfigurationsKey,
+  ZoneFlagsHelperFunctions,
   zoneGlobalDisableConfigurationsKeys,
-  ZoneGlobalEventsConfigurationsKey,
   zoneGlobalEventsConfigurationsKeys,
-  ZoneGlobalSettingsConfigurationsKey,
   zoneGlobalSettingsConfigurationsKeys,
-  ZoneRuntimeConfigurationsKey,
   zoneRuntimeConfigurationsKeys,
-  ZoneTestDisableConfigurationsKey,
   zoneTestDisableConfigurationsKeys,
-  ZoneTestSettingsConfigurationsKey,
   zoneTestSettingsConfigurationsKeys,
 } from './model/configurations.types';
 import { ZoneGlobalConfigurations } from './model/zone.configurations.api';
-
-type GlobalDisableConfigurationMethods = {
-  [disabledFlag in ZoneGlobalDisableConfigurationsKey]: (
-    isDisabled?: boolean
-  ) => void;
-} &
-  {
-    [symbolFlag in ZoneGlobalSettingsConfigurationsKey]: (
-      isDisabled?: boolean
-    ) => void;
-  };
-
-type TestDisableConfigurationMethods = {
-  [disabledFlag in ZoneTestDisableConfigurationsKey]: (
-    isDisabled?: boolean
-  ) => void;
-} &
-  {
-    [symbolFlag in ZoneTestSettingsConfigurationsKey]: (
-      isDisabled?: boolean
-    ) => void;
-  };
-
-type ZoneGlobalEventsConfigurationsMethods = {
-  [disabledFlag in ZoneGlobalEventsConfigurationsKey]: (
-    eventNames: string[]
-  ) => void;
-};
-
-type RuntimeConfigurationMethods = {
-  [disabledFlag in ZoneRuntimeConfigurationsKey]: (
-    isDisabled?: boolean
-  ) => void;
-};
+import {
+  ZoneConfigConfiguration,
+  ZoneConfig,
+  GlobalDisableConfigurationMethods,
+  TestDisableConfigurationMethods,
+  ZoneGlobalEventsConfigurationsMethods,
+  RuntimeConfigurationMethods,
+} from './model/zone-cfg.types';
+import { convenienceMethods } from './convenience-methods';
 
 const zoneDisable = '__Zone_disable_';
 const zoneSymbol = '__zone_symbol__';
+
+/**
+ * https://angular.io/guide/zone#setting-up-zonejs
+ **/
+function assertZoneConfig() {
+  if ((window as any).Zone !== undefined) {
+    // @TODO link to docs
+    console.error('zone-flags file needs to get imported before zone.js');
+  }
+}
+
+const addDisableFlag = (prop: string) => ({
+  [prop]: () => {
+    assertZoneConfig();
+    return ((window as any)[zoneDisable + prop] = true);
+  },
+});
+
+const addSymbolFlag = (prop: string) => ({
+  [prop]: () => {
+    assertZoneConfig();
+    return ((window as any)[zoneSymbol + prop] = true);
+  },
+});
+
+const addArraySymbolFlag = (prop: string) => ({
+  [prop]: (eventNames: string[]) => {
+    assertZoneConfig();
+    const w: any = window as any;
+    return (w[zoneSymbol + prop] = [
+      ...(Array.isArray(w[zoneSymbol + prop]) ? w[zoneSymbol + prop] : []),
+      ...eventNames,
+    ]);
+  },
+});
+
+const reduceToObject = <T>(methodsArray: any[]): T => {
+  return methodsArray.reduce((map, item) => ({ ...map, ...item }), {} as T);
+};
 
 /**
  * factory function to create a `ZoneConfig` object.
@@ -65,7 +75,7 @@ const zoneSymbol = '__zone_symbol__';
  *
  */
 function createZoneFlagsConfigurator(): ZoneConfig {
-  const cfg = (window as unknown) as ZoneGlobalConfigurations;
+  const cfg = (ɵglobal as unknown) as ZoneGlobalConfigurations;
   const configProps = [
     ...[
       ...zoneGlobalDisableConfigurationsKeys,
@@ -78,75 +88,43 @@ function createZoneFlagsConfigurator(): ZoneConfig {
       ...zoneRuntimeConfigurationsKeys,
     ].map((prop) => zoneSymbol + prop),
   ];
+
   // append as global method for easy debugging
-  (cfg as any).__rax_zone_config__log = (): void => {
+  (cfg as ZoneFlagsHelperFunctions).__rxa_zone_config__log = (): void => {
     configProps.forEach((flag) => {
       // tslint:disable-next-line:no-unused-expression
       cfg[flag] && console.log(flag, cfg[flag]);
     });
   };
 
-  return {
+  const zoneConfigObj: ZoneConfigConfiguration = {
     global: {
-      disable: zoneGlobalDisableConfigurationsKeys
-        .map((prop) => ({
-          [prop]: (isDisabled: boolean = true) =>
-            (cfg[zoneDisable + prop] = isDisabled),
-        }))
-        .concat(
-          zoneGlobalSettingsConfigurationsKeys.map((prop) => ({
-            [prop]: (isDisabled: boolean = true) =>
-              (cfg[zoneSymbol + prop] = isDisabled),
-          }))
-        )
-        .reduce(
-          (map, item) => ({ ...map, ...item }),
-          {} as GlobalDisableConfigurationMethods
-        ),
+      disable: reduceToObject<GlobalDisableConfigurationMethods>([
+        ...zoneGlobalDisableConfigurationsKeys.map(addDisableFlag),
+        ...zoneGlobalSettingsConfigurationsKeys.map(addSymbolFlag),
+      ]),
     },
     test: {
-      disable: zoneTestDisableConfigurationsKeys
-        .map((prop) => ({
-          [prop]: (isDisabled: boolean = true) =>
-            (cfg[zoneDisable + prop] = isDisabled),
-        }))
-        .concat(
-          zoneTestSettingsConfigurationsKeys.map((prop) => ({
-            [prop]: (isDisabled: boolean = true) =>
-              (cfg[zoneSymbol + prop] = isDisabled),
-          }))
-        )
-        .reduce(
-          (map, item) => ({ ...map, ...item }),
-          {} as TestDisableConfigurationMethods
-        ),
+      disable: reduceToObject<TestDisableConfigurationMethods>([
+        ...zoneTestDisableConfigurationsKeys.map(addDisableFlag),
+        ...zoneTestSettingsConfigurationsKeys.map(addSymbolFlag),
+      ]),
     },
     events: {
-      disable: zoneGlobalEventsConfigurationsKeys
-        .map((prop) => ({
-          [prop]: (eventNames: string[]) =>
-            (cfg[zoneSymbol + prop] = [
-              ...(Array.isArray(cfg[zoneSymbol + prop])
-                ? cfg[zoneSymbol + prop]
-                : []),
-              ...eventNames,
-            ]),
-        }))
-        .reduce(
-          (map, item) => ({ ...map, ...item }),
-          {} as ZoneGlobalEventsConfigurationsMethods
-        ),
-    },
-    runtime: {
-      disable: zoneRuntimeConfigurationsKeys.reduce(
-        (map, prop) => ({
-          ...map,
-          [prop]: (isDisabled: boolean = true) =>
-            (cfg[zoneSymbol + prop] = isDisabled),
-        }),
-        {} as RuntimeConfigurationMethods
+      disable: reduceToObject<ZoneGlobalEventsConfigurationsMethods>(
+        zoneGlobalEventsConfigurationsKeys.map(addArraySymbolFlag)
       ),
     },
+    runtime: {
+      disable: reduceToObject<RuntimeConfigurationMethods>(
+        zoneRuntimeConfigurationsKeys.map(addSymbolFlag)
+      ),
+    },
+  };
+
+  return {
+    ...zoneConfigObj,
+    ...convenienceMethods(zoneConfigObj),
   };
 }
 
@@ -157,9 +135,7 @@ function createZoneFlagsConfigurator(): ZoneConfig {
  *
  * create file `zone-flags.ts` parallel to your `polyfills.ts` and insert following content:
  * ```typescript
- * import { globalEvents,xhrEvent, zoneConfig} from '@rx-angular/cdk/zone-flags';
- *
- * const zoneConfig = createZoneFlagsConfigurator();
+ * import { globalEvents, xhrEvent, zoneConfig} from '@rx-angular/cdk/zone-flags';
  *
  * zoneConfig.global.disable.requestAnimationFrame();
  * zoneConfig.global.disable.timers();
@@ -174,19 +150,4 @@ function createZoneFlagsConfigurator(): ZoneConfig {
  * ```
  *
  */
-export interface ZoneConfig {
-  global: {
-    disable: GlobalDisableConfigurationMethods;
-  };
-  test: {
-    disable: TestDisableConfigurationMethods;
-  };
-  events: {
-    disable: ZoneGlobalEventsConfigurationsMethods;
-  };
-  runtime: {
-    disable: RuntimeConfigurationMethods;
-  };
-}
-
 export const zoneConfig = createZoneFlagsConfigurator();

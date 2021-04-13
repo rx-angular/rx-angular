@@ -8,16 +8,31 @@ export interface ZoneGlobalDisableConfigurations {
   defineProperty?: boolean;
   registerElement?: boolean;
   EventTargetLegacy?: boolean;
+  /**
+   * Don't patch timing API – setTimeout ans setInterval
+   **/
   timers?: boolean;
+  /**
+   * Don't patch requestAnimationFrame
+   **/
   requestAnimationFrame?: boolean;
   blocking?: boolean;
   EventTarget?: boolean;
+  /**
+   ** Don't patch FileReaded API calls
+   **/
   FileReader?: boolean;
   MutationObserver?: boolean;
   IntersectionObserver?: boolean;
   on_property?: boolean;
   customElements?: boolean;
+  /**
+   * Don't patch XHR requests(better be used through unpatchXHR() method)
+   **/
   XHR?: boolean;
+  /**
+   * Don't patch geolocation API calls
+   **/
   geolocation?: boolean;
   canvas?: boolean;
   ZoneAwarePromise?: boolean;
@@ -49,6 +64,9 @@ export const zoneGlobalDisableConfigurationsKeys: ZoneGlobalDisableConfiguration
 
 // prefix: __zone_symbol__
 export interface ZoneGlobalEventsConfigurations {
+  /**
+   * Array of events which should be unpatched. i.e. 'click', 'scroll', 'load'
+   **/
   UNPATCHED_EVENTS?: string[];
   PASSIVE_EVENTS?: string[];
 }
@@ -103,5 +121,5 @@ export const zoneTestSettingsConfigurationsKeys: ZoneTestSettingsConfigurationsK
 ];
 
 export interface ZoneFlagsHelperFunctions {
-  __rax_zone_config__log?: () => void;
+  __rxa_zone_config__log?: () => void;
 }

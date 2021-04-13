@@ -26,6 +26,7 @@ import {
 import { asyncScheduler } from '../zone-less/rxjs/scheduler/index';
 import { RxStrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
+import { toRenderError } from './render-error';
 
 // Below are constants for LView indices to help us look up LView members
 // without having to remember the specific indices.
@@ -150,34 +151,23 @@ export function renderProjectionParents(
 
 /**
  * @internal
- *
- * A factory for the createEmbeddedView function used in `TemplateManager` and `ListManager`.
- * It handles the creation of views in and outside of zone depending on the setting.
- *
- * Both ways of creating EmbeddedViews have pros and cons,
- * - create it outside out zone disables all event listener patching of the view, is fast, but you may need patched event listeners in some cases.
- * - create it inside of zone created many change detections as the creation may get chunked up and rendered over multiple ticks by a strategy used in `TemplateManager` or `ListManager`.
+ * creates an embeddedViewRef
  *
  * @param viewContainerRef
- * @param patchZone
+ * @param templateRef
+ * @param context
+ * @param index
+ * @return EmbeddedViewRef<C>
  */
-export function getEmbeddedViewCreator(
+export function createEmbeddedView<C>(
   viewContainerRef: ViewContainerRef,
-  patchZone: NgZone | false
-): <C, T>(
   templateRef: TemplateRef<C>,
-  context?: C,
-  index?: number
-) => EmbeddedViewRef<C> {
-  let create = <C, T>(templateRef: TemplateRef<C>, context: C, index: number) =>
-    viewContainerRef.createEmbeddedView(templateRef, context, index);
-  if (patchZone) {
-    create = <C, T>(templateRef: TemplateRef<C>, context: C, index: number) =>
-      patchZone.run(() =>
-        viewContainerRef.createEmbeddedView(templateRef, context, index)
-      );
-  }
-  return create;
+  context: C,
+  index = 0
+): EmbeddedViewRef<C> {
+  const view = viewContainerRef.createEmbeddedView(templateRef, context, index);
+  view.detectChanges();
+  return view;
 }
 
 /**
@@ -188,15 +178,13 @@ export function getEmbeddedViewCreator(
  *
  */
 export function templateHandling<N, C>(
-  viewContainerRef: ViewContainerRef,
-  patchZone: false | NgZone
+  viewContainerRef: ViewContainerRef
 ): {
   add(name: N, templateRef: TemplateRef<C>): void;
   get(name: N): TemplateRef<C>;
   createEmbeddedView(name: N, context?: C, index?: number): EmbeddedViewRef<C>;
 } {
   const templateCache = new Map<N, TemplateRef<C>>();
-  const createView = getEmbeddedViewCreator(viewContainerRef, patchZone);
 
   const get = (name: N): TemplateRef<C> => {
     return templateCache.get(name);
@@ -214,7 +202,7 @@ export function templateHandling<N, C>(
     },
     get,
     createEmbeddedView: (name: N, context?: C) =>
-      createView(get(name), context),
+      createEmbeddedView(viewContainerRef, get(name), context),
   };
 
   //
@@ -268,7 +256,8 @@ export function notifyAllParentsIfNeeded<T>(
             null,
             strategy,
             (_v, work, options) => work(injectingViewCdRef, options.scope),
-            { scope: (injectingViewCdRef as any).context || injectingViewCdRef }
+            { scope: (injectingViewCdRef as any).context || injectingViewCdRef },
+            error => toRenderError(error, injectingViewCdRef)
           )
         );
         if (behaviors.length === 1) {
@@ -302,8 +291,9 @@ export function notifyInjectingParentIfNeeded(
           (value, work, options) => {
             // console.log('notify injectingView', injectingViewCdRef);
             work(injectingViewCdRef, options.scope);
-          }
-          //  scopeOnInjectingViewContext
+          },
+          {},
+          error => toRenderError(error, injectingViewCdRef)
         ).pipe(ignoreElements())
       : (([] as unknown) as Observable<never>)
   );
@@ -338,7 +328,8 @@ export function getVirtualParentNotifications$(
           // console.log('parentComponent', parentComponent);
           detectChanges(parentComponent);
         },
-        { scope: parentComponent }
+        { scope: parentComponent },
+        error => toRenderError(error, injectingViewCdRef)
       )
     );
   }
