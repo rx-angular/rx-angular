@@ -87,7 +87,7 @@
     "@angular/language-service": "11.2.0",
     "@ngxs/devtools-plugin": "^3.7.0",
     "@nrwl/angular": "11.2.12",
-    "@nrwl/cli": "11.2.12",
+    "@nrwl/cli": "12.0.4",
     "@nrwl/cypress": "11.2.12",
     "@nrwl/jest": "11.2.12",
     "@nrwl/node": "11.5.1",
