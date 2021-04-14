@@ -2,7 +2,7 @@ import { TestScheduler } from 'rxjs/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 // tslint:disable-next-line:nx-enforce-module-boundaries
-import { createAccumulationObservable } from '@rx-angular/state';
+import { createAccumulationObservable } from '../../../state/src/lib/cdk/accumulation-observable';
 import { accumulateObservables, coalesceWith } from '@rx-angular/cdk';
 import { from, Observable, of } from 'rxjs';
 
