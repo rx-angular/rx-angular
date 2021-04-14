@@ -1,9 +1,10 @@
 import { TestScheduler } from 'rxjs/testing';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { createAccumulationObservable } from '@rx-angular/state';
-import { accumulateObservables } from '@rx-angular/cdk';
+import { accumulateObservables, coalesceWith } from '@rx-angular/cdk';
 import { from, Observable, of } from 'rxjs';
-import { coalesceWith } from '../../../template/src/lib/render-strategies/rxjs/operators';
 
 let testScheduler: TestScheduler;
 
