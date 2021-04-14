@@ -112,7 +112,7 @@
     "klaw-sync": "^6.0.0",
     "lint-staged": "^10.4.0",
     "ncp": "^2.0.0",
-    "ng-packagr": "11.2.1",
+    "ng-packagr": "11.2.4",
     "node-fetch": "^2.6.1",
     "prettier": "2.2.1",
     "ts-jest": "26.4.0",
