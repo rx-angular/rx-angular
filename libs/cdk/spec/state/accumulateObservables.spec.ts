@@ -1,13 +1,8 @@
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers';
-import {
-  createAccumulationObservable,
-  selectSlice,
-  stateful,
-} from '@rx-angular/state';
+import { createAccumulationObservable } from '@rx-angular/state';
 import { accumulateObservables } from '@rx-angular/cdk';
 import { from, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { coalesceWith } from '../../../template/src/lib/render-strategies/rxjs/operators';
 
 let testScheduler: TestScheduler;
@@ -28,33 +23,67 @@ const h = 0;
 const i = 1;
 const j = 2;
 
+/**
+ * {
+ *  prop1: h,
+ *  prop2: a,
+ *  prop3: f,
+ * }
+ */
 const u = {
   prop1: h,
   prop2: a,
   prop3: f,
 };
+/**
+ * {
+ *  prop1: i,
+ *  prop2: a,
+ *  prop3: f,
+ * }
+ */
 const v = {
   prop1: i,
   prop2: a,
   prop3: f,
 };
+/**
+ * {
+ *  prop1: i,
+ *  prop2: b,
+ *  prop3: f,
+ * }
+ */
 const w = {
   prop1: i,
   prop2: b,
   prop3: f,
 };
+/**
+ * {
+ *  prop1: i,
+ *  prop2: b,
+ *  prop3: t,
+ * }
+ */
 const x = {
   prop1: i,
   prop2: b,
-  prop3: t
+  prop3: t,
 };
 
+/**
+ * {
+ *  prop1: h,
+ *  prop2: a,
+ *  prop3: t,
+ * }
+ */
 const viewModel1 = {
   prop1: h,
   prop2: a,
   prop3: t,
 };
-
 
 beforeEach(() => {
   testScheduler = new TestScheduler(jestMatcher);
@@ -63,13 +92,15 @@ beforeEach(() => {
 // tslint:disable: no-duplicate-string
 describe('createAccumulationObservable', () => {
   it('should return an observable', () => {
-    const vm$: Observable<ViewModelTest> = accumulateObservables({
-      prop1: of(1),
-      prop2: of('42'),
-      prop3: of(true),
+    testScheduler.run(({ cold, expectObservable }) => {
+      const vm$: Observable<ViewModelTest> = accumulateObservables({
+        prop1: of(1),
+        prop2: of('42'),
+        prop3: of(true)
+      });
+      expect(vm$.subscribe).toBeDefined();
+      expect(vm$.subscribe().unsubscribe).toBeDefined();
     });
-    expect(vm$.subscribe).toBeDefined();
-    expect(vm$.subscribe().unsubscribe).toBeDefined();
   });
 
   it('should return observable that emits when all sources emitted at least once', () => {
@@ -77,8 +108,8 @@ describe('createAccumulationObservable', () => {
       const vm$: Observable<ViewModelTest> = accumulateObservables({
         prop1: cold('h-h-i-', { h, i }),
         prop2: cold('--a-b-', { a, b }),
-        prop3: cold('----t-', { t })
-      });
+        prop3: cold('----t-', { t }),
+      }, cold(      's'))
       const expected = '----x-';
       expectObservable(vm$).toBe(expected, { x });
     });
@@ -86,22 +117,21 @@ describe('createAccumulationObservable', () => {
 
   it('should emit last for sync values when durationSelector is a Promise', () => {
     testScheduler.run(({ cold, expectObservable }) => {
-      const durationSelector = from(Promise.resolve());
+      const durationSelector = from(Promise.resolve(1));
       const s1 = cold('(abcdef|)');
-      const exp = '--------(f|)';
+      const exp = '(f|)';
 
       const result = s1.pipe(coalesceWith(durationSelector));
       expectObservable(result).toBe(exp);
     });
   });
 
-
   it('should return observable that does not emits when not all sources emitted at least once', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const vm$: Observable<ViewModelTest> = accumulateObservables({
         prop1: cold('h-h-i-', { h, i }),
         prop2: cold('--a-b-', { a, b }),
-        prop3: cold<boolean>('------')
+        prop3: cold<boolean>('------'),
       });
       const expected = '------';
       expectObservable(vm$).toBe(expected);
@@ -112,11 +142,11 @@ describe('createAccumulationObservable', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const values = { u, v, w, x };
       const vm$: Observable<ViewModelTest> = accumulateObservables({
-            prop1: cold('h-h-i-i-i-i', { h, i }),
-            prop2: cold('a-a-a-b-b-b', { a, b }),
-            prop3: cold('f-f-f-f-t-t', { f, t }),
-      });
-      const expected =  'u---v-w-x--';
+        prop1: cold('h-h-i-i-i-i', { h, i }),
+        prop2: cold('a-a-a-b-b-b', { a, b }),
+        prop3: cold('f-f-f-f-t-t', { f, t }),
+      }, cold('s'));
+      const expected = 'u---v-w-x--';
       expectObservable(vm$).toBe(expected, values);
     });
   });
@@ -125,11 +155,11 @@ describe('createAccumulationObservable', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const values = { u, v, w, x };
       const vm$: Observable<ViewModelTest> = accumulateObservables({
-            prop1: cold('h-h-i-i-i-i-i', { h, i }),
-            prop2: cold('_-a-a-_-b-_-b', { _, a, b }),
-            prop3: cold('f-f-f-f-f-t-t', { f, t }),
-      });
-      const expected =  '--u-v---w-x--';
+        prop1: cold('h-h-i-i-i-i-i', { h, i }),
+        prop2: cold('_-a-a-_-b-_-b', { _, a, b }),
+        prop3: cold('f-f-f-f-f-t-t', { f, t }),
+      }, cold('s'));
+      const expected = '--u-v---w-x--';
       expectObservable(vm$).toBe(expected, values);
     });
   });
@@ -137,16 +167,16 @@ describe('createAccumulationObservable', () => {
   it('should return observable that shares the composition', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { u, v, w, x };
-      const prop1$ = cold('--h--', { h, i })
-      const prop2$ = cold('--a--', { a, b })
-      const prop3$ = cold('--f--', { f })
+      const prop1$ = cold('--h--', { h, i });
+      const prop2$ = cold('--a--', { a, b });
+      const prop3$ = cold('--f--', { f });
       const vm$: Observable<ViewModelTest> = accumulateObservables({
-            prop1: prop1$,
-            prop2: prop2$,
-            prop3: prop3$
-      });
-      const psubs =      '^----';
-      const expected =   '--u--';
+        prop1: prop1$,
+        prop2: prop2$,
+        prop3: prop3$,
+      }, cold('s'));
+      const psubs = '^----';
+      const expected = '--u--';
 
       expectObservable(vm$).toBe(expected, values);
       expectSubscriptions(prop1$.subscriptions).toBe(psubs);
@@ -156,24 +186,22 @@ describe('createAccumulationObservable', () => {
   });
 
   it('should replay the last emitted value', () => {
-    testScheduler.run(({ cold, expectObservable }) => {
-
-    });
+    testScheduler.run(({ cold, expectObservable }) => {});
   });
 
-  it('should return observable that coalesce sync emissions (over emitting)', () => {
+  it('should return observable that coalesce sync emissions caused by combineLatest (over emitting)', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { u, v, w, x };
-      const prop1$ = cold('--h--i-', { h, i })
-      const prop2$ = cold('--a--b-', { a, b })
-      const prop3$ = cold('--f--f-', { f })
+      const prop1$ = cold('--h--i-', { h, i });
+      const prop2$ = cold('--a--b-', { a, b });
+      const prop3$ = cold('--f--t-', { f, t });
       const vm$: Observable<ViewModelTest> = accumulateObservables({
         prop1: prop1$,
         prop2: prop2$,
-        prop3: prop3$
-      });
-      const psubs =      '^-----!';
-      const expected =   '--u--v-';
+        prop3: prop3$,
+      }, cold('s'));
+      const psubs =    '^------';
+      const expected = '--u--x-';
 
       expectObservable(vm$).toBe(expected, values);
       expectSubscriptions(prop1$.subscriptions).toBe(psubs);
@@ -182,4 +210,45 @@ describe('createAccumulationObservable', () => {
     });
   });
 
+  it('should return observable that coalesce sync emissions caused by sync emissions (over emitting)', () => {
+    testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+      const values = { u, v, w, x };
+      const prop1$ = cold('(hhi)', { h, i });
+      const prop2$ = cold('(abb)', { a, b });
+      const prop3$ = cold('(fft)', { f, t });
+      const vm$: Observable<ViewModelTest> = accumulateObservables({
+        prop1: prop1$,
+        prop2: prop2$,
+        prop3: prop3$,
+      }, cold('s'));
+      const psubs =    '^------';
+      const expected = 'x';
+
+      expectObservable(vm$).toBe(expected, values);
+      expectSubscriptions(prop1$.subscriptions).toBe(psubs);
+      expectSubscriptions(prop2$.subscriptions).toBe(psubs);
+      expectSubscriptions(prop3$.subscriptions).toBe(psubs);
+    });
+  });
+
+  it('should return observable that coalesce by a custom duration (edge-case)', () => {
+      testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+        const values = { u, v, w, x };
+        const prop1$ = cold('h--i', { h, i });
+        const prop2$ = cold('a--b', { a, b });
+        const prop3$ = cold('f--t', { f, t });
+        const vm$: Observable<ViewModelTest> = accumulateObservables({
+          prop1: prop1$,
+          prop2: prop2$,
+          prop3: prop3$,
+        },          cold('-----s'));
+        const psubs =    '^-----';
+        const expected = '-----x';
+
+        expectObservable(vm$).toBe(expected, values);
+        expectSubscriptions(prop1$.subscriptions).toBe(psubs);
+        expectSubscriptions(prop2$.subscriptions).toBe(psubs);
+        expectSubscriptions(prop3$.subscriptions).toBe(psubs);
+      });
+  });
 });
