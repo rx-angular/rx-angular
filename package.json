@@ -88,7 +88,7 @@
     "@ngxs/devtools-plugin": "^3.7.0",
     "@nrwl/angular": "11.2.12",
     "@nrwl/cli": "11.2.12",
-    "@nrwl/cypress": "11.2.12",
+    "@nrwl/cypress": "12.0.7",
     "@nrwl/jest": "11.2.12",
     "@nrwl/node": "11.5.1",
     "@nrwl/tao": "11.2.12",
