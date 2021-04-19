@@ -169,7 +169,7 @@ rendering over the course of next new frames, as fetches complete and data becom
 
 ### Immediate
 
-Urgent work that must happen immediately. This occurs right after current task and has the highes priority.
+Urgent work that must happen immediately is initiated and visible by the user. This occurs right after current task and has the highes priority.
 
 
 |   Render Method   |   Scheduling   | Render Deadline |
@@ -224,7 +224,7 @@ export class RenderCallbackComponent {
 
 ### User Blocking
 
-Urgent rendering work that must happen in the limited time within the current frame. This is typically work in requestAnimationFrame: i.e. rendering work for ongoing animations and dom manipulation that needs to render right away. Tasks posted at this priority can delay rendering of the current frame, and therefore should finish quickly (otherwise use "default" priority).
+Critical work that must be done in the current frame, is initiated and visible by the user. DOM manipulations that should be rendered quickly. Tasks with this priority can delay current frame rendering, so this is the place for lightweight work (otherwise use "normal" priority).
 
 
 |   Render Method   |   Scheduling   | Render Deadline |
@@ -233,8 +233,12 @@ Urgent rendering work that must happen in the limited time within the current fr
 
 **Usecase:**
 
-
 ![userBlocking-example](https://user-images.githubusercontent.com/15088626/115313646-550f1300-a17c-11eb-8430-87eda6855822.png)
+
+A good example here would be a dropdown menu.
+
+Dropdowns should be displayed right away on user interaction.
+
 
 ```typescript
 @Component({
@@ -271,114 +275,40 @@ export class RenderCallbackComponent {
 
 ### Normal
 
-2. "default" priority (or render-normal?)
-User visible work that is needed to prepare for the next frame (or future frames). Normal work that is important, but can take a while to finish. This is typically rendering that is needed in response to user interaction, but has dependency on network or I/O, and should be rendered over next couple frames - as the needed data becomes available. This work should not delay current frame rendering, but should execute immediately afterwards to pipeline and target the next frame.
 
-
-Eg. user zooms into a map, fetching of the maps tiles OR atleast post-processing of fetch responses should be posted as "default" priority work to render over subsequent frames. Eg. user clicks a (long) comment list, it can take a while to fetch all the comments from the server; the fetches should be handled as "default" priority (and potentially start a spinner or animation, posted at "render-blocking" priority).
-
-NOTE: while it may make sense to kick off fetches in input-handler, handling fetch responses in microtasks can be problematic, and could block user input & urgent rendering work.
-
+Heavy work visible to the user. For example since it has higher timeout it is more suitable for rendering of data lists.
 
 |   Render Method   |   Scheduling   | Render Deadline |
 | ----------------- | -------------- | --------------- |
-| 🠗 `detectChanges` | `postMessage`  | 0ms             |
+| 🠗 `detectChanges` | `postMessage`  | 5000ms          |
+
+<!-- In most cases it is a rendering from user interaction that depends on network and can be delayed by the couple of frames to the point where requested data is available. It should not delay current frame but should target next available frame. -->
+
 
 **Usecase:**
 
-
-
-```typescript
-@Component({
-  selector: 'immediate',
-  template: `
-   <button id="btn"
-   (mouseenter)="showTooltip()"
-   (mouseleave)="hideTooltip()">
-      Button with Tooltip
-   </button>
-  `
-})
-export class RenderCallbackComponent {
-
-  constructor(
-    private strategyPrivider: StrategyPrivider
-  ) {  
-  }
-  
-  showTooltip() {
-    this.StrategyProvider.schedule(() => {
-      // create tooltip
-    }, {strategy: 'immediate'});
-  }
-  
-  hideTooltip() {
-    this.StrategyProvider.schedule(() => {
-      // destroy tooltip
-    }, {strategy: 'immediate'});
-  }
-  
-}
-``` 
-
-![]()
-
-> Notice
-> This is essentially setTimeout(0) without clamping; see other workarounds used today
-
-
-
+@TODO: List example 
 
 ### low
 
 Work that is typically not visible to the user or initiated by the user, and is not time critical. Eg. analytics, backups, syncs, indexing, etc.
 
+Work that is typically not visible to the user or initiated by the user. For example getting scrollbar position form `localStorage`.
+
 
 |   Render Method   |   Scheduling   | Render Deadline |
 | ----------------- | -------------- | --------------- |
-| 🠗 `detectChanges` | `postMessage`  | 250ms           |
+| 🠗 `detectChanges` | `postMessage`  | 10000ms         |
 
 **Usecase:**
 
+![low-example](https://user-images.githubusercontent.com/15088626/115315764-a7523300-a180-11eb-9231-1376bda540a4.png)
+
+@TODO: Get scrollbar position
 
 
-```typescript
-@Component({
-  selector: 'userBlocking',
-  template: `
-   <div id="collapse"
-   (mouseenter)="showTooltip()"
-   (mouseleave)="hideTooltip()">
-      Button with Tooltip
-   </div>
-  `
-})
-export class RenderCallbackComponent {
 
-  constructor(
-    private strategyPrivider: StrategyPrivider
-  ) {  
-  }
-  
-  showTooltip() {
-    this.StrategyProvider.schedule(() => {
-      // create tooltip
-    }, {strategy: 'immediate'});
-  }
-  
-  hideTooltip() {
-    this.StrategyProvider.schedule(() => {
-      // destroy tooltip
-    }, {strategy: 'userBlocking'});
-  }
-  
-}
-``` 
-
-![]()
-
-
-### Name
+### Idle
 
 <!-- 
 - Descriptoin of the strategies behavior
