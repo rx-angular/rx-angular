@@ -143,6 +143,7 @@ if blocked => laggy
 
 - Chunking
   - Threshhold 
+  - Render Deadline
 
 - Priority
 Input handlers (tap, click etc) often need to schedule a combination of different kinds of work:
