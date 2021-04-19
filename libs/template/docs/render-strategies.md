@@ -327,6 +327,7 @@ Urgent work that should happen in the background and is not initiated but visibl
 | ----------------- | -------------- | --------------------------- |
 | 🠗 `detectChanges` | `postMessage`  | ❌                          |
 
+![rx-angular-cdk-render-strategies__idle_example](https://user-images.githubusercontent.com/10064416/115316774-49225180-a17a-11eb-9045-3cdd38217b4d.PNG)
 
 
 ### Custom Strategies
