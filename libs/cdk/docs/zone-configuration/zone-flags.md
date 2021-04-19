@@ -30,7 +30,7 @@ RxAngular should be our go-to approach as it serves as a more convenient way to 
 - ✅ Good documentation and maintenance
 - ✅ Typed methods
 - ✅ IDE autocompletion
-- ✅ IDE inline documentation @Todo => get internal docs into IDE
+- ✅ IDE inline documentation
 - ✅ Predefined event names
 - ✅ Assertion if zone-flags are not correctly used
 - ✅ Convenience methods
