@@ -158,12 +158,15 @@ rendering over the course of next new frames, as fetches complete and data becom
 
 |       Name       |   Priority   |    Render Method  |   Scheduling   | Render Deadline     |
 | ---------------- | ------------ | ----------------- | -------------- | ------------------- |
-| `"onPriority"`   | 0            | 🠗 `detectChanges` | `postMessage`  | ❌                 |
+| `"noPriority"`   | 0            | 🠗 `detectChanges` | `postMessage`  | ❌                 |
 | `"immediate"`    | 2            | 🠗 `detectChanges` | `postMessage`  | 0ms                 |
 | `"userBlocking"` | 3            | 🠗 `detectChanges` | `postMessage`  | 250ms               |
 | `"normal"`       | 4            | 🠗 `detectChanges` | `postMessage`  | 5000ms              |
 | `"low"`          | 5            | 🠗 `detectChanges` | `postMessage`  | 10000ms             |
 | `"idle"`         | 6            | 🠗 `detectChanges` | `postMessage`  | `maxSigned31BitInt` |
+
+![Uploading render-strategy-comparison.gif…]()
+
 
 ### Immediate
 
