@@ -1,5 +1,21 @@
 ## Render Strategies
 
+
+|       Name       |   Priority   |    Render Method  |   Scheduling             | Render Deadline     |
+| ---------------- | ------------ | ----------------- | ------------------------ | ------------------- |
+| `"noop"`         | ❌           | - `noop`          | `requestAnimationFrame`  | N/A                 |
+| `"native"`       | ❌           | ⮁ `markForCheck` | `requestAnimationFrame`  | N/A                 |
+| `"global"`       | ❌           | ⮁ `ɵmarkDirty`   | `requestAnimationFrame`  | N/A                 |
+| `"local"`        | ❌           | 🠗 `detectChanges` | `requestAnimationFrame`  | N/A                 |
+|                  |              |                   |                          |                     |
+| `"noPriority"`   | 0            | 🠗 `detectChanges` | `postMessage`            | ❌                  |
+| `"immediate"`    | 2            | 🠗 `detectChanges` | `postMessage`            | 0ms                 |
+| `"userBlocking"` | 3            | 🠗 `detectChanges` | `postMessage`            | 250ms               |
+| `"normal"`       | 4            | 🠗 `detectChanges` | `postMessage`            | 5000ms              |
+| `"low"`          | 5            | 🠗 `detectChanges` | `postMessage`            | 10000ms             |
+| `"idle"`         | 6            | 🠗 `detectChanges` | `postMessage`            | ❌                  |
+
+
 ### Motivation 
 Why are they here?
 What are they doing?
