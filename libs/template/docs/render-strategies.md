@@ -178,6 +178,8 @@ Urgent work that must happen immediately. This occurs right after current task a
 
 **Usecase:**
 
+![immediate-example](https://user-images.githubusercontent.com/15088626/115313764-8b4c9280-a17c-11eb-812e-98354c7090ba.png)
+
 A good example here would be a tool-tip.
 
 Tooltips should be displayed immediately on mouse over. Any delay will be very noticeable.
@@ -215,7 +217,6 @@ export class RenderCallbackComponent {
 }
 ``` 
 
-![]()
 
 > Notice
 > Be aware to avoid scheduling large or non-urgent work with immediate priority as it blocks rendering
@@ -233,6 +234,7 @@ Urgent rendering work that must happen in the limited time within the current fr
 **Usecase:**
 
 
+![userBlocking-example](https://user-images.githubusercontent.com/15088626/115313646-550f1300-a17c-11eb-8430-87eda6855822.png)
 
 ```typescript
 @Component({
@@ -266,8 +268,6 @@ export class RenderCallbackComponent {
   
 }
 ``` 
-
-![]()
 
 ### Normal
 
