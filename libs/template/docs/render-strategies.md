@@ -158,18 +158,18 @@ rendering over the course of next new frames, as fetches complete and data becom
 
 |       Name       |   Priority   |    Render Method  |   Scheduling   | Render Deadline     |
 | ---------------- | ------------ | ----------------- | -------------- | ------------------- |
-| `"noPriority"`   | 0            | 🠗 `detectChanges` | `postMessage`  | ❌                 |
+| `"noPriority"`   | 0            | 🠗 `detectChanges` | `postMessage`  | ❌                  |
 | `"immediate"`    | 2            | 🠗 `detectChanges` | `postMessage`  | 0ms                 |
 | `"userBlocking"` | 3            | 🠗 `detectChanges` | `postMessage`  | 250ms               |
 | `"normal"`       | 4            | 🠗 `detectChanges` | `postMessage`  | 5000ms              |
 | `"low"`          | 5            | 🠗 `detectChanges` | `postMessage`  | 10000ms             |
-| `"idle"`         | 6            | 🠗 `detectChanges` | `postMessage`  | `maxSigned31BitInt` |
+| `"idle"`         | 6            | 🠗 `detectChanges` | `postMessage`  | ❌                  |
 
 ![render-strategy-comparison](https://user-images.githubusercontent.com/10064416/115313442-8f27e700-a173-11eb-817d-9868180305d5.gif)
 
 ### Immediate
 
-Urgent work that must happen immediately is initiated and visible by the user. This occurs right after current task and has the highes priority.
+Urgent work that must happen immediately is initiated and visible by the user. This occurs right after current task and has the highest priority.
 
 
 |   Render Method   |   Scheduling   | Render Deadline |
@@ -294,10 +294,7 @@ Heavy work visible to the user. For example since it has higher timeout it is mo
 
 ### low
 
-Work that is typically not visible to the user or initiated by the user, and is not time critical. Eg. analytics, backups, syncs, indexing, etc.
-
 Work that is typically not visible to the user or initiated by the user. For example getting scrollbar position form `localStorage`.
-
 
 |   Render Method   |   Scheduling   | Render Deadline |
 | ----------------- | -------------- | --------------- |
@@ -308,8 +305,6 @@ Work that is typically not visible to the user or initiated by the user. For exa
 ![low-example](https://user-images.githubusercontent.com/15088626/115315764-a7523300-a180-11eb-9231-1376bda540a4.png)
 
 @TODO: Get scrollbar position
-
-
 
 ### Idle
 
@@ -326,9 +321,12 @@ Work that is typically not visible to the user or initiated by the user. For exa
 - 
 -->
 
-| Render Method | Scheduling | Render Deadline |
-| ------------- | ---------- | --------------- |
-|               |            |                 |
+Urgent work that should happen in the background and is not initiated but visible by the user. This occurs right after current task and has the lowest priority. For example background sync.
+
+|   Render Method   |   Scheduling   | Render Deadline             |
+| ----------------- | -------------- | --------------------------- |
+| 🠗 `detectChanges` | `postMessage`  | ❌                          |
+
 
 
 ### Custom Strategies
