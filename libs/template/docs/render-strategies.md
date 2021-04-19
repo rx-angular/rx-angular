@@ -142,7 +142,7 @@ if blocked => laggy
  https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel
 
 - Chunking
-  - Threshhold 
+  - Threshhold => 60 FPS default
   - Render Deadline
 
 - Priority
@@ -174,7 +174,7 @@ Urgent work that must happen immediately. This occurs right after current task a
 
 |   Render Method   |   Scheduling   | Render Deadline |
 | ----------------- | -------------- | --------------- |
-| 🠗 `detectChanges` | `postMessage`  | 16ms by default |
+| 🠗 `detectChanges` | `postMessage`  | 0ms             |
 
 **Usecase:**
 
@@ -217,28 +217,216 @@ export class RenderCallbackComponent {
 
 ![]()
 
-NOTE: we've seen bad cases where developers accidentally do large, non-urgent work in microtasks -- with promise.then and await, without realizing it blocks rendering.
+> Notice
+> Be aware to avoid scheduling large or non-urgent work with immediate priority as it blocks rendering
 
-2. "render-blocking" priority (render-immediate?)
+
+### User Blocking
+
 Urgent rendering work that must happen in the limited time within the current frame. This is typically work in requestAnimationFrame: i.e. rendering work for ongoing animations and dom manipulation that needs to render right away. Tasks posted at this priority can delay rendering of the current frame, and therefore should finish quickly (otherwise use "default" priority).
+
+
+|   Render Method   |   Scheduling   | Render Deadline |
+| ----------------- | -------------- | --------------- |
+| 🠗 `detectChanges` | `postMessage`  | 250ms           |
+
+**Usecase:**
+
+
+
+```typescript
+@Component({
+  selector: 'userBlocking',
+  template: `
+   <div id="collapse"
+   (mouseenter)="showTooltip()"
+   (mouseleave)="hideTooltip()">
+      Button with Tooltip
+   </div>
+  `
+})
+export class RenderCallbackComponent {
+
+  constructor(
+    private strategyPrivider: StrategyPrivider
+  ) {  
+  }
+  
+  showTooltip() {
+    this.StrategyProvider.schedule(() => {
+      // create tooltip
+    }, {strategy: 'immediate'});
+  }
+  
+  hideTooltip() {
+    this.StrategyProvider.schedule(() => {
+      // destroy tooltip
+    }, {strategy: 'userBlocking'});
+  }
+  
+}
+``` 
+
+![]()
+
+### Normal
 
 2. "default" priority (or render-normal?)
 User visible work that is needed to prepare for the next frame (or future frames). Normal work that is important, but can take a while to finish. This is typically rendering that is needed in response to user interaction, but has dependency on network or I/O, and should be rendered over next couple frames - as the needed data becomes available. This work should not delay current frame rendering, but should execute immediately afterwards to pipeline and target the next frame.
 
-NOTE: This is essentially setTimeout(0) without clamping; see other workarounds used today
 
 Eg. user zooms into a map, fetching of the maps tiles OR atleast post-processing of fetch responses should be posted as "default" priority work to render over subsequent frames. Eg. user clicks a (long) comment list, it can take a while to fetch all the comments from the server; the fetches should be handled as "default" priority (and potentially start a spinner or animation, posted at "render-blocking" priority).
 
 NOTE: while it may make sense to kick off fetches in input-handler, handling fetch responses in microtasks can be problematic, and could block user input & urgent rendering work.
 
-3. "idle"
+
+|   Render Method   |   Scheduling   | Render Deadline |
+| ----------------- | -------------- | --------------- |
+| 🠗 `detectChanges` | `postMessage`  | 0ms             |
+
+**Usecase:**
+
+
+
+```typescript
+@Component({
+  selector: 'immediate',
+  template: `
+   <button id="btn"
+   (mouseenter)="showTooltip()"
+   (mouseleave)="hideTooltip()">
+      Button with Tooltip
+   </button>
+  `
+})
+export class RenderCallbackComponent {
+
+  constructor(
+    private strategyPrivider: StrategyPrivider
+  ) {  
+  }
+  
+  showTooltip() {
+    this.StrategyProvider.schedule(() => {
+      // create tooltip
+    }, {strategy: 'immediate'});
+  }
+  
+  hideTooltip() {
+    this.StrategyProvider.schedule(() => {
+      // destroy tooltip
+    }, {strategy: 'immediate'});
+  }
+  
+}
+``` 
+
+![]()
+
+> Notice
+> This is essentially setTimeout(0) without clamping; see other workarounds used today
+
+
+
+
+### low
+
 Work that is typically not visible to the user or initiated by the user, and is not time critical. Eg. analytics, backups, syncs, indexing, etc.
 
-requestIdleCallback (rIC) is the API for idle priority work.
+
+|   Render Method   |   Scheduling   | Render Deadline |
+| ----------------- | -------------- | --------------- |
+| 🠗 `detectChanges` | `postMessage`  | 250ms           |
+
+**Usecase:**
+
+
+
+```typescript
+@Component({
+  selector: 'userBlocking',
+  template: `
+   <div id="collapse"
+   (mouseenter)="showTooltip()"
+   (mouseleave)="hideTooltip()">
+      Button with Tooltip
+   </div>
+  `
+})
+export class RenderCallbackComponent {
+
+  constructor(
+    private strategyPrivider: StrategyPrivider
+  ) {  
+  }
+  
+  showTooltip() {
+    this.StrategyProvider.schedule(() => {
+      // create tooltip
+    }, {strategy: 'immediate'});
+  }
+  
+  hideTooltip() {
+    this.StrategyProvider.schedule(() => {
+      // destroy tooltip
+    }, {strategy: 'userBlocking'});
+  }
+  
+}
+``` 
+
+![]()
+
+
+### low
+
+Work that is typically not visible to the user or initiated by the user, and is not time critical. Eg. analytics, backups, syncs, indexing, etc.
+
+
+|   Render Method   |   Scheduling   | Render Deadline |
+| ----------------- | -------------- | --------------- |
+| 🠗 `detectChanges` | `postMessage`  | 250ms           |
+
+**Usecase:**
+
+
+
+```typescript
+@Component({
+  selector: 'userBlocking',
+  template: `
+   <div id="collapse"
+   (mouseenter)="showTooltip()"
+   (mouseleave)="hideTooltip()">
+      Button with Tooltip
+   </div>
+  `
+})
+export class RenderCallbackComponent {
+
+  constructor(
+    private strategyPrivider: StrategyPrivider
+  ) {  
+  }
+  
+  showTooltip() {
+    this.StrategyProvider.schedule(() => {
+      // create tooltip
+    }, {strategy: 'immediate'});
+  }
+  
+  hideTooltip() {
+    this.StrategyProvider.schedule(() => {
+      // destroy tooltip
+    }, {strategy: 'userBlocking'});
+  }
+  
+}
+``` 
+
+![]()
 
 ### Name
-
-
 
 <!-- 
 - Descriptoin of the strategies behavior
