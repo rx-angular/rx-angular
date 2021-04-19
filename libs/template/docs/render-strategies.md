@@ -165,12 +165,12 @@ rendering over the course of next new frames, as fetches complete and data becom
 
 |      Name      |   Render Method   |   Scheduling   | Render Deadline     |
 | -------------- | ----------------- | -------------- | ------------------- |
-| `onPriority`   | 🠗 `detectChanges` | `postMessage`  | ❌                 |
-| `immediate`    | 🠗 `detectChanges` | `postMessage`  | 0ms                 |
-| `userBlocking` | 🠗 `detectChanges` | `postMessage`  | 250ms               |
-| `normal`       | 🠗 `detectChanges` | `postMessage`  | 5000ms              |
-| `low`          | 🠗 `detectChanges` | `postMessage`  | 10000ms             |
-| `idle`         | 🠗 `detectChanges` | `postMessage`  | `maxSigned31BitInt` |
+| `"onPriority"`   | 🠗 `detectChanges` | `postMessage`  | ❌                 |
+| `"immediate"`    | 🠗 `detectChanges` | `postMessage`  | 0ms                 |
+| `"userBlocking"` | 🠗 `detectChanges` | `postMessage`  | 250ms               |
+| `"normal"`       | 🠗 `detectChanges` | `postMessage`  | 5000ms              |
+| `"low"`          | 🠗 `detectChanges` | `postMessage`  | 10000ms             |
+| `"idle"`         | 🠗 `detectChanges` | `postMessage`  | `maxSigned31BitInt` |
 
 
 ### Immediate
