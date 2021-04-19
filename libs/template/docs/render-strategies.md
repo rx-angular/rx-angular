@@ -1,4 +1,3 @@
-![render-strategy-comparison](https://user-images.githubusercontent.com/10064416/115313426-88996f80-a173-11eb-9a3c-807256800ab9.gif)
 ## Render Strategies
 
 ### Motivation 
