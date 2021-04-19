@@ -6,9 +6,20 @@ What are they doing?
 
 
 ### Setup 
+
 What to install?
+
+```typescript
+
+
+``` 
+
 Where to put stuff?
 
+```typescript
+
+
+``` 
 
 The `RenderStrategies` can be seen as the _core_ of the performance optimization layer. They utilize all
 [`Concepts`](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/concepts.md) explained above in order to provide a streamlined and focused API to master
@@ -115,32 +126,95 @@ as the internally called function [`markViewDirty`](https://github.com/angular/a
 
 ### Built-in2 Strategies
 
+If your app provides user feedback within less then 16ms (less then 60 frames per second) it feels laggy to the user and leads to bad UX.
+
+Based on the [RAIL model](https://web.dev/rail/), a user experiences motion as laggy if the frame rate is lower then 60 frames per second (~16ms per task).
+
+
+
+From perspec UX => app should give feedback => 
+
+if blocked => laggy 
+
+
 #### Concepts
-- threshhold 
-- chunking
+- Scheduling
+ https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel
 
-#### Priority:
+- Chunking
+  - Threshhold 
 
-1. Immediate 
-2. User Blocking
-3. Normal
-4. Low
-5. Idle
-6. No Priroity
-
-Priorities for tasks
-For work that the user has initiated by interacting with the app, the app developer would have to determine what action needs to be taken, and how to schedule work to target appropritate timing that is compatible with browser's rendering pipeline.
-
+- Priority
 Input handlers (tap, click etc) often need to schedule a combination of different kinds of work:
 
 kicking off some immediate work as microtasks eg. fetching from local cache
 scheduling data fetches over the network
 rendering in the current frame eg. to respond to user typing, toggle the like button, start an animation when clicking on a comment list etc.
 rendering over the course of next new frames, as fetches complete and data becomes available to prepare and render results.
-1. "Immediate" priority
-Urgent work that must happen immediately. This is essentially microtask timing: occurs right after current task and does not yield to the browser's event loop.
 
-NOTE: queueMicrotask provides a direct API for submitting microtasks.
+
+#### Priority:
+
+1. No Priroity
+2. Immediate 
+3. User Blocking
+4. Normal
+5. Low
+6. Idle
+
+
+
+
+
+### Immediate
+
+Urgent work that must happen immediately. This occurs right after current task and has the highes priority.
+
+
+|   Render Method   |   Scheduling   | Render Deadline |
+| ----------------- | -------------- | --------------- |
+| 🠗 `detectChanges` | `postMessage`  | 16ms by default |
+
+**Usecase:**
+
+A good example here would be a tool-tip.
+
+Tooltips should be displayed immediately on mouse over. Any delay will be very noticeable.
+
+```typescript
+@Component({
+  selector: 'immediate',
+  template: `
+   <button id="btn"
+   (mouseenter)="showTooltip()"
+   (mouseleave)="hideTooltip()">
+      Button with Tooltip
+   </button>
+  `
+})
+export class RenderCallbackComponent {
+
+  constructor(
+    private strategyPrivider: StrategyPrivider
+  ) {  
+  }
+  
+  showTooltip() {
+    this.StrategyProvider.schedule(() => {
+      // create tooltip
+    }, {strategy: 'immediate'});
+  }
+  
+  hideTooltip() {
+    this.StrategyProvider.schedule(() => {
+      // destroy tooltip
+    }, {strategy: 'immediate'});
+  }
+  
+}
+``` 
+
+![]()
 
 NOTE: we've seen bad cases where developers accidentally do large, non-urgent work in microtasks -- with promise.then and await, without realizing it blocks rendering.
 
