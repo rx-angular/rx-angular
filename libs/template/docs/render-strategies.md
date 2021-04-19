@@ -156,22 +156,14 @@ rendering over the course of next new frames, as fetches complete and data becom
 
 #### Priority:
 
-1. No Priroity
-2. Immediate 
-3. User Blocking
-4. Normal
-5. Low
-6. Idle
-
-|      Name      |   Render Method   |   Scheduling   | Render Deadline     |
-| -------------- | ----------------- | -------------- | ------------------- |
-| `"onPriority"`   | 🠗 `detectChanges` | `postMessage`  | ❌                 |
-| `"immediate"`    | 🠗 `detectChanges` | `postMessage`  | 0ms                 |
-| `"userBlocking"` | 🠗 `detectChanges` | `postMessage`  | 250ms               |
-| `"normal"`       | 🠗 `detectChanges` | `postMessage`  | 5000ms              |
-| `"low"`          | 🠗 `detectChanges` | `postMessage`  | 10000ms             |
-| `"idle"`         | 🠗 `detectChanges` | `postMessage`  | `maxSigned31BitInt` |
-
+|       Name       |   Priority   |    Render Method  |   Scheduling   | Render Deadline     |
+| ---------------- | ------------ | ----------------- | -------------- | ------------------- |
+| `"onPriority"`   | 0            | 🠗 `detectChanges` | `postMessage`  | ❌                 |
+| `"immediate"`    | 2            | 🠗 `detectChanges` | `postMessage`  | 0ms                 |
+| `"userBlocking"` | 3            | 🠗 `detectChanges` | `postMessage`  | 250ms               |
+| `"normal"`       | 4            | 🠗 `detectChanges` | `postMessage`  | 5000ms              |
+| `"low"`          | 5            | 🠗 `detectChanges` | `postMessage`  | 10000ms             |
+| `"idle"`         | 6            | 🠗 `detectChanges` | `postMessage`  | `maxSigned31BitInt` |
 
 ### Immediate
 
