@@ -19,7 +19,7 @@ applications
 
 ## Demos:
 
-- https://stackblitz.com/edit/rx-angular-cdk-rxfor
+- https://stackblitz.com/edit/rx-angular-cdk-demos-c52q34
 
 ## Install
 
