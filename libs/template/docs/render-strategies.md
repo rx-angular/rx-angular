@@ -289,6 +289,9 @@ Heavy work visible to the user. For example since it has higher timeout it is mo
 
 @TODO: List example 
 
+![rx-angular-cdk-render-strategies__normal_example](https://user-images.githubusercontent.com/10064416/115315848-7837c380-a178-11eb-985e-b639f034fcb4.PNG)
+
+
 ### low
 
 Work that is typically not visible to the user or initiated by the user, and is not time critical. Eg. analytics, backups, syncs, indexing, etc.
