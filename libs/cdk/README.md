@@ -29,6 +29,6 @@ npm install --save @rx-angular/cdk
 yarn add @rx-angular/cdk
 ```
 
-## Zone Config
+## Zone Configuration
 
-[Zone Config](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/docs/zone-config/overview.md)
+[Zone Flags](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/zone-configuration/zone-flags.md)
