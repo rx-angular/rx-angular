@@ -163,8 +163,14 @@ rendering over the course of next new frames, as fetches complete and data becom
 5. Low
 6. Idle
 
-
-
+|      Name      |   Render Method   |   Scheduling   | Render Deadline     |
+| -------------- | ----------------- | -------------- | ------------------- |
+| `onPriority`   | 🠗 `detectChanges` | `postMessage`  | ❌                 |
+| `immediate`    | 🠗 `detectChanges` | `postMessage`  | 0ms                 |
+| `userBlocking` | 🠗 `detectChanges` | `postMessage`  | 250ms               |
+| `normal`       | 🠗 `detectChanges` | `postMessage`  | 5000ms              |
+| `low`          | 🠗 `detectChanges` | `postMessage`  | 10000ms             |
+| `idle`         | 🠗 `detectChanges` | `postMessage`  | `maxSigned31BitInt` |
 
 
 ### Immediate
@@ -377,54 +383,6 @@ export class RenderCallbackComponent {
 
 ![]()
 
-
-### low
-
-Work that is typically not visible to the user or initiated by the user, and is not time critical. Eg. analytics, backups, syncs, indexing, etc.
-
-
-|   Render Method   |   Scheduling   | Render Deadline |
-| ----------------- | -------------- | --------------- |
-| 🠗 `detectChanges` | `postMessage`  | 250ms           |
-
-**Usecase:**
-
-
-
-```typescript
-@Component({
-  selector: 'userBlocking',
-  template: `
-   <div id="collapse"
-   (mouseenter)="showTooltip()"
-   (mouseleave)="hideTooltip()">
-      Button with Tooltip
-   </div>
-  `
-})
-export class RenderCallbackComponent {
-
-  constructor(
-    private strategyPrivider: StrategyPrivider
-  ) {  
-  }
-  
-  showTooltip() {
-    this.StrategyProvider.schedule(() => {
-      // create tooltip
-    }, {strategy: 'immediate'});
-  }
-  
-  hideTooltip() {
-    this.StrategyProvider.schedule(() => {
-      // destroy tooltip
-    }, {strategy: 'userBlocking'});
-  }
-  
-}
-``` 
-
-![]()
 
 ### Name
 
