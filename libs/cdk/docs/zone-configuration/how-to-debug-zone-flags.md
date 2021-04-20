@@ -3,7 +3,7 @@
 ## Resources
 
 **Example application:**
-A demo application is available on [stackblitz](https://stackblitz.com/edit/angular-zone-flags).
+A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-cdk-zone-configuration).
 
 As zone-flags mingle with the patching mechanism of zone.js and its usage in Angular it is not always trivial to understand the introduced changes and the impact.
 
