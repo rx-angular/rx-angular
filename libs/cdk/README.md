@@ -9,6 +9,9 @@
 `@rx-angular/cdk` was specifically designed to help developers build directives, components and services for ergonomic and high performant Angular UI libs as well as large scale
 applications
 
+![rx-angular-cdk](https://user-images.githubusercontent.com/10064416/115325340-b8ed0800-a18b-11eb-9896-28c91c9e7801.png)
+
+
 ## Sub Modules
 
 - ⛔ Zone Configuration
