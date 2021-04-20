@@ -19,7 +19,8 @@ applications
 
 ## Demos:
 
-- https://stackblitz.com/edit/rx-angular-cdk-demos-c52q34
+- [Zone Configuration](https://github.com/BioPhoton/rx-angular-cdk-zone-configuration)
+- [Template Management](https://stackblitz.com/edit/rx-angular-cdk-demos-c52q34)
 
 ## Install
 
