@@ -11,16 +11,16 @@ applications
 
 ## Key features
 
-- Typed Zone-Flags Configuration
+- ⛔ Typed Zone-Flags Configuration
 - RxJS operators and functions
-- Template Management
+- 🔳 Template Management
 - ChangeDetection and Render-Strategies
 - ZoneAgnostic APIs
 
 ## Demos:
 
-- [Zone Configuration](https://github.com/BioPhoton/rx-angular-cdk-zone-configuration)
-- [Template Management](https://stackblitz.com/edit/rx-angular-cdk-demos-c52q34)
+- ⛔ [Zone Configuration](https://github.com/BioPhoton/rx-angular-cdk-zone-configuration)
+- 🔳 [Template Management](https://stackblitz.com/edit/rx-angular-cdk-demos-c52q34)
 
 ## Install
 
