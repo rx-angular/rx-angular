@@ -192,6 +192,8 @@ rendering over the course of next new frames, as fetches complete and data becom
 | `"low"`          | 5            | 🠗 `detectChanges` | `postMessage`  | 10000ms          |
 | `"idle"`         | 6            | 🠗 `detectChanges` | `postMessage`  | ❌              |
 
+![rx-angular-cdk-render-strategies__example](https://user-images.githubusercontent.com/10064416/115321372-f483d400-a183-11eb-810b-2df59f56794f.PNG)
+
 ![render-strategy-comparison](https://user-images.githubusercontent.com/10064416/115313442-8f27e700-a173-11eb-817d-9868180305d5.gif)
 
 ### Immediate
