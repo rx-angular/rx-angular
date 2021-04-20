@@ -18,11 +18,11 @@ TODO:
 | `"local"`        | ❌           | 🠗 `detectChanges` | `requestAnimationFrame`  | N/A                 |
 |                  |              |                   |                          |                     |
 | `"noPriority"`   | 0            | 🠗 `detectChanges` | `postMessage`            | ❌                  |
-| `"immediate"`    | 2            | 🠗 `detectChanges` | `postMessage`            | 0ms                 |
-| `"userBlocking"` | 3            | 🠗 `detectChanges` | `postMessage`            | 250ms               |
-| `"normal"`       | 4            | 🠗 `detectChanges` | `postMessage`            | 5000ms              |
-| `"low"`          | 5            | 🠗 `detectChanges` | `postMessage`            | 10000ms             |
-| `"idle"`         | 6            | 🠗 `detectChanges` | `postMessage`            | ❌                  |
+| `"immediate"`    | 1            | 🠗 `detectChanges` | `postMessage`            | 0ms                 |
+| `"userBlocking"` | 2            | 🠗 `detectChanges` | `postMessage`            | 250ms               |
+| `"normal"`       | 3            | 🠗 `detectChanges` | `postMessage`            | 5000ms              |
+| `"low"`          | 4            | 🠗 `detectChanges` | `postMessage`            | 10000ms             |
+| `"idle"`         | 5            | 🠗 `detectChanges` | `postMessage`            | ❌                  |
 
 
 ### Motivation 
