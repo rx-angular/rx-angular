@@ -3,7 +3,9 @@ TODO:
 - Explain config object
 - Explain strategy provider
 - Explain directives
+- One example at the top
 -->
+
 
 ## Render Strategies
 
