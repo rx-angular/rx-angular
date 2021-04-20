@@ -9,18 +9,20 @@
 `@rx-angular/cdk` was specifically designed to help developers build directives, components and services for ergonomic and high performant Angular UI libs as well as large scale
 applications
 
-## Key features
+## Sub Modules
 
-- ⛔ Typed Zone-Flags Configuration
-- RxJS operators and functions
+- ⛔ Zone Configuration
+- ⛔ Zone Less
+- 🛠 Coercing
+- 🛠 Coalescing
+- 📡 Notification
 - 🔳 Template Management
-- ChangeDetection and Render-Strategies
-- ZoneAgnostic APIs
+- 🖌 Render-Strategies
 
 ## Demos:
 
-- ⛔ [Zone Configuration](https://github.com/BioPhoton/rx-angular-cdk-zone-configuration)
-- 🔳 [Template Management](https://stackblitz.com/edit/rx-angular-cdk-demos-c52q34)
+- ⛔ [Zone Flags](https://github.com/BioPhoton/rx-angular-cdk-zone-configuration)
+- 🔳 [rxFor](https://stackblitz.com/edit/rx-angular-cdk-demos-c52q34)
 
 ## Install
 
@@ -30,6 +32,6 @@ npm install --save @rx-angular/cdk
 yarn add @rx-angular/cdk
 ```
 
-## Zone Configuration
+## ⛔ Zone Configuration
 
 [Zone Flags](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/zone-configuration/zone-flags.md)
