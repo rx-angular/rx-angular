@@ -39,10 +39,12 @@ What to install?
 
 ``` 
 
-Where to put stuff?
+How to configure it?
 
 ```typescript
-
+- globally -> config providers
+- component -> config providers
+- directives -> strategy
 
 ``` 
 
