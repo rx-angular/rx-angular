@@ -10,7 +10,7 @@ TODO:
 ## Render Strategies
 
 
-|       Name       |   Priority   |    Render Method  |   Scheduling             | Render Deadline     |
+|       Name       |   Priority   |    Render Method  |       Scheduling         |   Render Deadline   |
 | ---------------- | ------------ | ----------------- | ------------------------ | ------------------- |
 | `"noop"`         | ❌           | - `noop`          | `requestAnimationFrame`  | N/A                 |
 | `"native"`       | ❌           | ⮁ `markForCheck` | `requestAnimationFrame`  | N/A                 |
@@ -90,12 +90,12 @@ export class PerformanceAwareComponent {
 
 ![Template - RenderStrategies](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/docs/images/template_rendering-strategies.png)
 
-| Name     | Zone Agnostic | Render Method     | Coalescing         | Scheduling              |
-| -------- | ------------- | ----------------- | ------------------ | ----------------------- |
-| `local`  | ✔             | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame` |
-| `global` | ✔             | ⮁ `ɵmarkDirty`    | ✔ RootContext      | `requestAnimationFrame` |
-| `noop`   | ✔             | - `noop`          | ❌                 | ❌                      |
-| `native` | ❌            | ⮁ `markForCheck`  | ✔ RootContext      | `requestAnimationFrame` |
+|       Name       |   Priority   |    Render Method  |       Scheduling         |   Render Deadline   |
+| ---------------- | ------------ | ----------------- | ------------------------ | ------------------- |
+| `"noop"`         | ❌           | - `noop`          | `requestAnimationFrame`  | N/A                 |
+| `"native"`       | ❌           | ⮁ `markForCheck` | `requestAnimationFrame`  | N/A                 |
+| `"global"`       | ❌           | ⮁ `ɵmarkDirty`   | `requestAnimationFrame`  | N/A                 |
+| `"local"`        | ❌           | 🠗 `detectChanges` | `requestAnimationFrame`  | N/A                 |
 
 ### Local Strategy
 
@@ -183,14 +183,14 @@ rendering over the course of next new frames, as fetches complete and data becom
 
 #### Priority:
 
-|       Name       |   Priority   |    Render Method  |   Scheduling   | Render Deadline     |
-| ---------------- | ------------ | ----------------- | -------------- | ------------------- |
-| `"noPriority"`   | 0            | 🠗 `detectChanges` | `postMessage`  | ❌                  |
-| `"immediate"`    | 2            | 🠗 `detectChanges` | `postMessage`  | 0ms                 |
-| `"userBlocking"` | 3            | 🠗 `detectChanges` | `postMessage`  | 250ms               |
-| `"normal"`       | 4            | 🠗 `detectChanges` | `postMessage`  | 5000ms              |
-| `"low"`          | 5            | 🠗 `detectChanges` | `postMessage`  | 10000ms             |
-| `"idle"`         | 6            | 🠗 `detectChanges` | `postMessage`  | ❌                  |
+|       Name       |   Priority   |    Render Method  |   Scheduling   | Render Deadline |
+| ---------------- | ------------ | ----------------- | -------------- | --------------- |
+| `"noPriority"`   | 0            | 🠗 `detectChanges` | `postMessage`  | ❌              |
+| `"immediate"`    | 2            | 🠗 `detectChanges` | `postMessage`  | 0ms             |
+| `"userBlocking"` | 3            | 🠗 `detectChanges` | `postMessage`  | 250ms           |
+| `"normal"`       | 4            | 🠗 `detectChanges` | `postMessage`  | 5000ms           |
+| `"low"`          | 5            | 🠗 `detectChanges` | `postMessage`  | 10000ms          |
+| `"idle"`         | 6            | 🠗 `detectChanges` | `postMessage`  | ❌              |
 
 ![render-strategy-comparison](https://user-images.githubusercontent.com/10064416/115313442-8f27e700-a173-11eb-817d-9868180305d5.gif)
 
