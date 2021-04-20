@@ -1,3 +1,10 @@
+<!--
+TODO:
+- Explain config object
+- Explain strategy provider
+- Explain directives
+-->
+
 ## Render Strategies
 
 
