@@ -1,6 +1,6 @@
 # Resources
 
-**Example applications:**
+**Example applications:**  
 A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-cdk-zone-configuration).
 
 # Motivation
