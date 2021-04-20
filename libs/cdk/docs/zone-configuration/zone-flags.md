@@ -1,7 +1,7 @@
 # Resources
 
 **Example applications:**
-A demo application is available on [stackblitz](https://stackblitz.com/edit/angular-zone-flags).
+A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-cdk-zone-configuration).
 
 # Motivation
 
