@@ -10,6 +10,16 @@ TODO:
 ## Render Strategies
 
 
+Angular's change detection is pull based and implicite.
+
+Render strategies provie a way to control them explicitely and also drive them push based.
+The rendering logic it self is extracted as strategy. This enables us to turn Angulars change detection on and off, or even replace it completely.
+
+The listed set of strategies provide a basic set which is very helpful when migrating to better performance or interrupting it e.g. based on the view port visibility.
+The second set are concurrent strategies. This means they know of each other and have a specific priority in execution. 
+Furthermore the work it self is processed in chunks which enables a fully non-blocking application from route changes to state updates. 
+
+
 |       Name       |   Priority   |    Render Method  |       Scheduling         |   Render Deadline   |
 | ---------------- | ------------ | ----------------- | ------------------------ | ------------------- |
 | `"noop"`         | ❌           | - `noop`          | `requestAnimationFrame`  | N/A                 |
