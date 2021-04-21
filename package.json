@@ -72,7 +72,7 @@
     "ngx-skeleton-loader": "^2.9.1",
     "normalize-css": "^2.3.1",
     "rx-query": "^1.0.1",
-    "rxjs": "^6.6.3",
+    "rxjs": "^6.6.7",
     "templateAlpha0": "npm:@rx-angular/template@1.0.0-alpha.0",
     "templateAlpha1": "npm:@rx-angular/template@1.0.0-alpha.1",
     "tslib": "^2.0.1",
