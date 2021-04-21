@@ -20,6 +20,7 @@ The second set are concurrent strategies. This means they know of each other and
 Furthermore the work it self is processed in chunks which enables a fully non-blocking application from route changes to state updates. 
 
 
+
 |       Name       |   Priority   |    Render Method  |       Scheduling         |   Render Deadline   |
 | ---------------- | ------------ | ----------------- | ------------------------ | ------------------- |
 | `"noop"`         | ❌           | - `noop`          | `requestAnimationFrame`  | N/A                 |
