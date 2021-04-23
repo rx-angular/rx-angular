@@ -38,6 +38,12 @@ We can rendering with notion of the frame budget (long task) in mind, prioritize
 
 All in all it makes a partial migration to fully zone-less applications possible and the creation of truely non-blocking application from route changes to state updates becomes a brise. 
 
+<!--
+TODO:
+- One good and shiny example here
+-->
+
+
 ### Features
 
 The sub-package provides the following features:
@@ -61,13 +67,6 @@ The sub-package provides the following features:
 | `"low"`          | 4            | 🠗 `detectChanges` | `postMessage`            | 10000ms             |
 | `"idle"`         | 5            | 🠗 `detectChanges` | `postMessage`            | ❌                  |
 
-<!--
-TODO:
-- Explain config object
-- Explain strategy provider
-- Explain directives
-- One example at the top
--->
 
 ### Setup 
 
@@ -77,51 +76,61 @@ npm i @rx-angular/cdk
 ``` 
 2. 
 
-
-
 ```typescript
 - globally -> config providers
 - component -> config providers
 - directives -> strategy
-
-``` 
-
-The `RenderStrategies` can be seen as the _core_ of the performance optimization layer. They utilize all
-[`Concepts`](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/concepts.md) explained above in order to provide a streamlined and focused API to master
-angular rendering and `ChangeDetection`.
+```
 
 ### Usage
 
-Use the corresponding `RenderStrategy#name` as parameter or Input with the `PushPipe` or `LetDirective`.
-By default, they will use the [Local Strategy](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/render-strategies.md#local-strategy).
+Render strategies can be used over the `StrategyProvider` or `Directive` like `push`, `rxLet` or `rxFor`. 
 
-```html
-<div *rxLet="list$; let list; strategy: 'global'"></div>
-<hero-list heroes="list$ | push: 'global'"></hero-list>
-```
+#### Usage in the Component
 
-When you want to handle `ChangeDetection` manually inside a `Component`, `Directive` or `Service`, you can
-simply use the built-in `StrategySelection`.
+The second best place to control rendering is the component.
 
-_imperative approach_
-
+To do so you have to import `StrategyProvider`, use one of the scheduling APIs and name a strategy tou o use. 
 
 ```typescript
-import { Component, ChangeDetectorRef } from '@angular/core';
-import { getStrategies } from '@rx-angular/template';
+@Component({
+  selector: 'any-component',
+  template: `
+    {{value}}
+  `
+})
+export class AnyComponent {
 
-@Component()
-export class PerformanceAwareComponent {
-  constructor(private cdRef: ChangeDetectorRef) {
-    const strategies = getStrategies({ cdRef });
-    // now select your desired strategy:
-    const localStrategy = strategies.local;
-    // schedule a re-render:
-    localStrategy.scheduleCD();
-    // render synchronously:
-    localStrategy.renderMethod();
+  value = 42;
+  
+  constructor(
+    public strategyProvider: RxStrategyProvider
+  ) {
+    this.strategyProvider.schedule(() => {
+      
+    })
   }
+
 }
+```
+
+> **Notice:**
+> As the component which introduces the change does not know ehere in the template it sits the whole template needs to be reevaluated. 
+
+#### Usage in the template
+
+The best place and most efficient place to control rendering is the template. To be more specific the `EmbeddedView`.
+
+All features in `@rx-angular/template` are driven by strategies and fine-grained configurable.
+
+```html
+<div *rxLet="list$; let list; strategy: 'userBlocking'"></div>
+```
+
+> **Notice:**
+> Even if the push pipe lives in the template, the performance is still the same as controling rendering in the component because it reevaluates the whole template. 
+```html
+<hero-list heroes="list$ | push: 'global'"></hero-list>
 ```
 
 ### Built-in1 Strategies
