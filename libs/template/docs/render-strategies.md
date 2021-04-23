@@ -245,6 +245,9 @@ if blocked => laggy
 ![rx-angular-cdk-render-strategies__chunked-rendering](https://user-images.githubusercontent.com/10064416/115894730-e2db4e80-a459-11eb-914c-e6a376012a49.png)
 
 - Priority
+![rx-angular-cdk-render-strategies__concurrent-scheduling](https://user-images.githubusercontent.com/10064416/115897522-cc82c200-a45c-11eb-84de-a6fc02a1bcca.png)
+
+
 Input handlers (tap, click etc) often need to schedule a combination of different kinds of work:
 
 kicking off some immediate work as microtasks eg. fetching from local cache
