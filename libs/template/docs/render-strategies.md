@@ -16,7 +16,6 @@ Directives and other parts of the application can leverage those strategies and 
 
 This architecture enables modern features like:
 - [x] ⛑ Partial migration to a 🚫 zone-less application
-- [x] Lazy load on interaction
 - [x] Fine-grained configuration of change detection
 - [x] Coalescing of change detection runs on `Component` or even `EmbeddedView` level
 - [x] Progressive rendering
