@@ -384,6 +384,10 @@ export class RenderCallbackComponent {
 }
 ``` 
 
+
+> ⚠ Notice:  
+> Be aware to avoid scheduling large or non-urgent work with userBlocking priority as it blocks rendering after 250ms
+
 ### Normal
 
 
@@ -442,3 +446,8 @@ Urgent work that should happen in the background and is not initiated but visibl
 
 
 ### Custom Strategies
+
+### Future ideas to discuss
+
+- is there a consistent way to do the prioritization out of the code bas it self?
+- 
