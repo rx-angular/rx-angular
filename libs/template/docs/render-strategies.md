@@ -1,5 +1,5 @@
 ## Render Strategies
-##### Explicite fine-grained control of rendering in Angular
+##### Explicite fine-grained control of change detection in Angular
 
 ![Template - RenderStrategies](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/docs/images/template_rendering-strategies.png)
 
