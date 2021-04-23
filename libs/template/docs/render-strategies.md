@@ -203,7 +203,7 @@ The no-operation strategy does nothing. It can be a useful tool for performance 
 
 | Name   | Zone Agnostic | Render Method | Coalescing | Scheduling |
 | ------ | ------------- | ------------- | ---------- | ---------- |
-| `noop` | ✔             | - `noop`      | ❌         | ❌         |
+| `noop` | ✔             | - `noop`      | ❌         | ❌        |
 
 ### Native
 
@@ -220,13 +220,11 @@ as the internally called function [`markViewDirty`](https://github.com/angular/a
 
 
 
-### Built-in2 Strategies
+### Concurrent Strategies
 
 If your app provides user feedback within less then 16ms (less then 60 frames per second) it feels laggy to the user and leads to bad UX.
 
 Based on the [RAIL model](https://web.dev/rail/), a user experiences motion as laggy if the frame rate is lower then 60 frames per second (~16ms per task).
-
-
 
 From perspec UX => app should give feedback => 
 
@@ -236,10 +234,15 @@ if blocked => laggy
 #### Concepts
 - Scheduling
  https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel
+- Frame budget
+![rx-angular-cdk-render-strategies__frame-budget](https://user-images.githubusercontent.com/10064416/115894224-4f098280-a459-11eb-9abf-9a902d66d380.png)
+
 
 - Chunking
   - Threshhold => 60 FPS default
   - Render Deadline
+
+![rx-angular-cdk-render-strategies__chunked-rendering](https://user-images.githubusercontent.com/10064416/115894730-e2db4e80-a459-11eb-914c-e6a376012a49.png)
 
 - Priority
 Input handlers (tap, click etc) often need to schedule a combination of different kinds of work:
