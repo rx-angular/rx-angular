@@ -1,6 +1,8 @@
 ## Render Strategies
 ##### Explicite fine-grained control of rendering in Angular
 
+![Template - RenderStrategies](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/docs/images/template_rendering-strategies.png)
+
 ### Motivation
 
 Angular's change detection is pull based and implicite. 
@@ -51,7 +53,7 @@ The sub-package provides the following features:
 - [x] RenderStrategyConfig
 - [x] RxStrategyProvider
 
-#### Strategies
+**Available Strategies:**
 
 |       Name       |   Priority   |    Render Method  |       Scheduling         |   Render Deadline   |
 | ---------------- | ------------ | ----------------- | ------------------------ | ------------------- |
@@ -114,7 +116,7 @@ export class AnyComponent {
 }
 ```
 
-> **Notice:**
+> **⚠ Notice:**
 > As the component which introduces the change does not know ehere in the template it sits the whole template needs to be reevaluated. 
 
 #### Usage in the template
@@ -127,15 +129,13 @@ All features in `@rx-angular/template` are driven by strategies and fine-grained
 <div *rxLet="list$; let list; strategy: 'userBlocking'"></div>
 ```
 
-> **Notice:**
+> **⚠ Notice:**
 > Even if the push pipe lives in the template, the performance is still the same as controling rendering in the component because it reevaluates the whole template. 
 ```html
 <hero-list heroes="list$ | push: 'global'"></hero-list>
 ```
 
-### Built-in1 Strategies
-
-![Template - RenderStrategies](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/docs/images/template_rendering-strategies.png)
+### Strategies
 
 |       Name       |   Priority   |    Render Method  |       Scheduling         |   Render Deadline   |
 | ---------------- | ------------ | ----------------- | ------------------------ | ------------------- |
