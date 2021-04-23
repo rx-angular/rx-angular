@@ -141,6 +141,14 @@ Before we go into detail with the provided strategies lets understand angulars v
 
 ![rx-angular-cdk-render-strategies__strategy-angular](https://user-images.githubusercontent.com/10064416/115839355-daafee80-a41a-11eb-8383-12eb58ed3905.png)
 
+This strategy is rendering the actual component and all it's children that are on a path
+that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
+
+In the diagrams components that are marked as dirty show up with a red triangle. Those get always re-rendered.
+Components with a gray triangle are untouched from reevanuation of template or rerendering.
+Black triangles show us a component with change deection `onPush` was evanluated and no changes where detected
+
+
 
 |       Name       |   Priority   |    Render Method  |       Scheduling         |   Render Deadline   |
 | ---------------- | ------------ | ----------------- | ------------------------ | ------------------- |
@@ -151,8 +159,7 @@ Before we go into detail with the provided strategies lets understand angulars v
 
 ### Local
 
-This strategy is rendering the actual component and
-all it's children that are on a path
+This strategy is rendering the actual component and all it's children that are on a path
 that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
 
 ![rx-angular-cdk-render-strategies__strategy-local](https://user-images.githubusercontent.com/10064416/115839410-eb606480-a41a-11eb-910e-4a2db16a1ed8.png)
