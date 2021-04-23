@@ -329,7 +329,7 @@ export class RenderCallbackComponent {
 ``` 
 
 
-> Notice
+> ⚠ Notice:  
 > Be aware to avoid scheduling large or non-urgent work with immediate priority as it blocks rendering
 
 
