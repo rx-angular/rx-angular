@@ -1,25 +1,51 @@
-<!--
-TODO:
-- Explain config object
-- Explain strategy provider
-- Explain directives
-- One example at the top
--->
-
-
 ## Render Strategies
+##### Explicite fine-grained control of rendering in Angular
 
+### Motivation
 
-Angular's change detection is pull based and implicite.
+Angular's change detection is pull based and implicite. 
+This affects not only the performance but also forces us into specific ways of architecting as well as thinking.
 
-Render strategies provie a way to control them explicitely and also drive them push based.
-The rendering logic it self is extracted as strategy. This enables us to turn Angulars change detection on and off, or even replace it completely.
+Render strategies serve as the core of the new change detection system.
+They enable new scalable and performance architectures give us new options as explicitely state management truly push based architctures and highly responsive UI's.
 
-The listed set of strategies provide a basic set which is very helpful when migrating to better performance or interrupting it e.g. based on the view port visibility.
-The second set are concurrent strategies. This means they know of each other and have a specific priority in execution. 
-Furthermore the work it self is processed in chunks which enables a fully non-blocking application from route changes to state updates. 
+The rendering logic it self, the strategy, is extracted and exposed to the developer for configuration. 
+Directives and other parts of the application can leverage those strategies and enrich functionality with specifitc behavior.
 
+This architecture enables modern features like:
+- [x] Partial migration to a zone-less application
+- [x] Lazy load on interaction
+- [x] Fine-grained configuration of change detection
+- [x] Coalescing of change detection runs on `Component` or even `EmbeddedView` level
+- [x] Progressive rendering
+- [x] Prioritized rendering
+- [x] Render Callback
+- [x] Performance best practices as default
 
+At the moment render strategies serve 2 sets of strategies.
+
+The first set can be considered as a basic set.
+It leverages modern ivy API's like `ɵmarkDirty` and `ɵdetectChanges` as well as a strategy to "noop" changedetection.
+As fallback for the migration process or comparison testing, Angulars default change detection behaviour is also provided as strategy.
+
+With this set of strategies and the possibility of switching them at runtime we can create tools that align with performance best pratices and implement expert level optimizations. We can control rendering based on view port visibility, measure the DOM _AFTER_ rendering or only rerender perts of a component. 
+
+The second set is leveraging the latest technologies for performant scheduling and combines change detection with priority and non-blocking render.
+They are named **concurrent strategies** to point out the fact that concepts of react concurrent mode are backed into those strategies.
+
+Those strategies enable upcoming browser features already today and brint fresh air into Angular.
+We can rendering with notion of the frame budget (long task) in mind, prioritize rendering of `Component`'s and `EmbeddedView`'s and provide a performance focused UX. 
+
+All in all it makes a partial migration to fully zone-less applications possible and the creation of truely non-blocking application from route changes to state updates becomes a brise. 
+
+### Features
+
+The sub-package provides the following features:
+- [x] Strategies
+- [x] RenderStrategyConfig
+- [x] RxStrategyProvider
+
+#### Strategies
 
 |       Name       |   Priority   |    Render Method  |       Scheduling         |   Render Deadline   |
 | ---------------- | ------------ | ----------------- | ------------------------ | ------------------- |
@@ -35,22 +61,23 @@ Furthermore the work it self is processed in chunks which enables a fully non-bl
 | `"low"`          | 4            | 🠗 `detectChanges` | `postMessage`            | 10000ms             |
 | `"idle"`         | 5            | 🠗 `detectChanges` | `postMessage`            | ❌                  |
 
-
-### Motivation 
-Why are they here?
-What are they doing?
-
+<!--
+TODO:
+- Explain config object
+- Explain strategy provider
+- Explain directives
+- One example at the top
+-->
 
 ### Setup 
 
-What to install?
-
-```typescript
-
-
+1. Install `@rx-angular/cdk`
+```bash
+npm i @rx-angular/cdk
 ``` 
+2. 
 
-How to configure it?
+
 
 ```typescript
 - globally -> config providers
