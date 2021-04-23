@@ -15,7 +15,7 @@ The rendering logic it self, the strategy, is extracted and exposed to the devel
 Directives and other parts of the application can leverage those strategies and enrich functionality with specifitc behavior.
 
 This architecture enables modern features like:
-- [x] Partial migration to a zone-less application
+- [x] ⛑ Partial migration to a 🚫 zone-less application
 - [x] Lazy load on interaction
 - [x] Fine-grained configuration of change detection
 - [x] Coalescing of change detection runs on `Component` or even `EmbeddedView` level
@@ -30,7 +30,7 @@ The first set can be considered as a basic set.
 It leverages modern ivy API's like `ɵmarkDirty` and `ɵdetectChanges` as well as a strategy to "noop" changedetection.
 As fallback for the migration process or comparison testing, Angulars default change detection behaviour is also provided as strategy.
 
-With this set of strategies and the possibility of switching them at runtime we can create tools that align with performance best pratices and implement expert level optimizations. We can control rendering based on view port visibility, measure the DOM _AFTER_ rendering or only rerender perts of a component. 
+With this set of strategies and the possibility of switching them at runtime we can create tools that align with performance best pratices and implement expert level optimizations. We can control rendering based on view port visibility, measure the DOM _after_ rendering or only rerender perts of a component. 
 
 The second set is leveraging the latest technologies for performant scheduling and combines change detection with priority and non-blocking render.
 They are named **concurrent strategies** to point out the fact that concepts of react concurrent mode are backed into those strategies.
@@ -38,7 +38,8 @@ They are named **concurrent strategies** to point out the fact that concepts of 
 Those strategies enable upcoming browser features already today and brint fresh air into Angular.
 We can rendering with notion of the frame budget (long task) in mind, prioritize rendering of `Component`'s and `EmbeddedView`'s and provide a performance focused UX. 
 
-All in all it makes a partial migration to fully zone-less applications possible and the creation of truely non-blocking application from route changes to state updates becomes a brise. 
+All in all it makes a partial migration to fully 
+- Less applications possible and the creation of truely non-blocking application from route changes to state updates becomes a brise. 
 
 <!--
 TODO:
@@ -131,6 +132,7 @@ All features in `@rx-angular/template` are driven by strategies and fine-grained
 
 > **⚠ Notice:**  
 > Even if the push pipe lives in the template, the performance is still the same as controling rendering in the component because it reevaluates the whole template. 
+
 ```html
 <hero-list heroes="list$ | push: 'global'"></hero-list>
 ```
@@ -186,7 +188,7 @@ both accessed over the context over `ChangeDetectorRef#context`.
 
 This strategy leverages Angular's internal [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) render method.
 It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) but works also zone-less.
-`markDirty` in comparison to `markForCheck` also calls [`scheduleTick`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1863) which is the reason why it also works in zone-less environments.
+`markDirty` in comparison to `markForCheck` also calls [`scheduleTick`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1863) which is the reason why it also works in 🚫 zone-less environments.
 
 ![rx-angular-cdk-render-strategies__strategy-global](https://user-images.githubusercontent.com/10064416/115839499-00d58e80-a41b-11eb-982b-359c1d1fd4c9.png)
 
