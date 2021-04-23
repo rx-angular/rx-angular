@@ -116,7 +116,7 @@ export class AnyComponent {
 }
 ```
 
-> **⚠ Notice:**
+> **⚠ Notice:**  
 > As the component which introduces the change does not know ehere in the template it sits the whole template needs to be reevaluated. 
 
 #### Usage in the template
@@ -129,7 +129,7 @@ All features in `@rx-angular/template` are driven by strategies and fine-grained
 <div *rxLet="list$; let list; strategy: 'userBlocking'"></div>
 ```
 
-> **⚠ Notice:**
+> **⚠ Notice:**  
 > Even if the push pipe lives in the template, the performance is still the same as controling rendering in the component because it reevaluates the whole template. 
 ```html
 <hero-list heroes="list$ | push: 'global'"></hero-list>
