@@ -15,7 +15,7 @@ applications
 ## Sub Modules
 
 - ⛔ Zone Configuration
-- ⛔ Zone Less
+- 🚫 Zone Less
 - 🛠 Coercing
 - 🛠 Coalescing
 - 📡 Notification
