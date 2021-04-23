@@ -135,7 +135,12 @@ All features in `@rx-angular/template` are driven by strategies and fine-grained
 <hero-list heroes="list$ | push: 'global'"></hero-list>
 ```
 
-### Strategies
+## Strategies
+
+Before we go into detail with the provided strategies lets understand angulars vanilla behavior first.
+
+![rx-angular-cdk-render-strategies__strategy-angular](https://user-images.githubusercontent.com/10064416/115839355-daafee80-a41a-11eb-8383-12eb58ed3905.png)
+
 
 |       Name       |   Priority   |    Render Method  |       Scheduling         |   Render Deadline   |
 | ---------------- | ------------ | ----------------- | ------------------------ | ------------------- |
@@ -144,11 +149,14 @@ All features in `@rx-angular/template` are driven by strategies and fine-grained
 | `"global"`       | ❌           | ⮁ `ɵmarkDirty`   | `requestAnimationFrame`  | N/A                 |
 | `"local"`        | ❌           | 🠗 `detectChanges` | `requestAnimationFrame`  | N/A                 |
 
-### Local Strategy
+### Local
 
 This strategy is rendering the actual component and
 all it's children that are on a path
 that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
+
+![rx-angular-cdk-render-strategies__strategy-local](https://user-images.githubusercontent.com/10064416/115839410-eb606480-a41a-11eb-910e-4a2db16a1ed8.png)
+
 
 As detectChanges has no coalescing of render calls
 like [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) or [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) have, we apply our own coalescing, 'scoped' on
@@ -173,6 +181,9 @@ This strategy leverages Angular's internal [`ɵmarkDirty`](https://github.com/an
 It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) but works also zone-less.
 `markDirty` in comparison to `markForCheck` also calls [`scheduleTick`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1863) which is the reason why it also works in zone-less environments.
 
+![rx-angular-cdk-render-strategies__strategy-global](https://user-images.githubusercontent.com/10064416/115839499-00d58e80-a41b-11eb-982b-359c1d1fd4c9.png)
+
+
 | Name     | Zone Agnostic | Render Method  | Coalescing      | Scheduling                                                                                                                                            |
 | -------- | ------------- | -------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `global` | ✔             | ⮁ `ɵmarkDirty` | ✔ `RootContext` | [`animationFrame`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/util/misc_utils.ts#L39) |
@@ -181,11 +192,15 @@ It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angul
 
 The no-operation strategy does nothing. It can be a useful tool for performance improvements as well as debugging.
 
+![rx-angular-cdk-render-strategies__strategy-noop](https://user-images.githubusercontent.com/10064416/115839587-15b22200-a41b-11eb-8208-e93bdfae4bb6.png)
+
 | Name   | Zone Agnostic | Render Method | Coalescing | Scheduling |
 | ------ | ------------- | ------------- | ---------- | ---------- |
 | `noop` | ✔             | - `noop`      | ❌         | ❌         |
 
 ### Native
+
+![rx-angular-cdk-render-strategies__strategy-native](https://user-images.githubusercontent.com/10064416/115839651-25ca0180-a41b-11eb-818f-2fb7909fb929.png)
 
 This strategy mirrors Angular's built-in `async` pipe.
 This means for every emitted value [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) is called.
@@ -242,6 +257,13 @@ rendering over the course of next new frames, as fetches complete and data becom
 ![rx-angular-cdk-render-strategies__example](https://user-images.githubusercontent.com/10064416/115321372-f483d400-a183-11eb-810b-2df59f56794f.PNG)
 
 ![render-strategy-comparison](https://user-images.githubusercontent.com/10064416/115313442-8f27e700-a173-11eb-817d-9868180305d5.gif)
+
+
+
+### noPriority
+
+![rx-angular-cdk-render-strategies__strategy-noPriority](https://user-images.githubusercontent.com/10064416/115839785-4d20ce80-a41b-11eb-9cdc-26048b27a16c.png)
+
 
 ### Immediate
 
