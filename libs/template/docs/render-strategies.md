@@ -37,16 +37,15 @@ As fallback for the migration process or comparison testing, Angulars default ch
 The ConcurrentStrategies utilize the latest technologies to enable priority based change detection for non-blocking rendering and smooth user experiences. It combines the most performant scheduling techniques with a highly performant queueing mechanism.
 Read more about the internal techniques [here](https://www.npmjs.com/package/scheduler) or [here](https://github.com/WICG/scheduling-apis).
 
-They are named **ConcurrentStrategies** to point out the fact that concepts of react concurrent mode are baked into those strategies.
+They are named **ConcurrentStrategies** to point out the fact that concepts of [react concurrent mode](https://reactjs.org/docs/concurrent-mode-intro.html) are baked into these strategies.
 
-Those strategies enable upcoming browser features already today and brint fresh air into Angular.
-We can rendering with notion of the frame budget (long task) in mind, prioritize rendering of `Component`'s and `EmbeddedView`'s and provide a performance focused UX. 
+ConcurrentStrategies implement [not yet released browser features](https://www.chromestatus.com/feature/6031161734201344) already today.
 
-With these sets of strategies and the possibility of switching them at runtime we can create tools that align with performance best pratices and implement expert level optimizations. We can control rendering based on view port visibility, measure the DOM _after_ rendering or only rerender perts of a component. 
+Rendering can be executed with the frame budget [long task](https://developer.mozilla.org/en-US/docs/Web/API/Long_Tasks_API) in mind, prioritized at the level of `Component`'s or even `EmbeddedView`'s and provide an excellent tool to improve performance. 
 
+With these sets of strategies and the possibility of switching them at runtime we can create tools that align with performance best pratices (e.g. [RAIL](https://web.dev/rail/)) and implement expert level optimizations. We can control rendering based on view port visibility, measure the DOM _after_ rendering or re-render only parts of a component.
 
-All in all it makes a partial migration to fully 
-- Less applications possible and the creation of truely non-blocking application from route changes to state updates becomes a brise. 
+Render strategies pave the way for truly non-blocking applications, targeted for any device or platform 🚀
 
 <!--
 TODO:
