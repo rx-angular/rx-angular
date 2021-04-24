@@ -41,7 +41,7 @@ Read more about the internal techniques [here](https://www.npmjs.com/package/sch
 
 The name **ConcurrentStrategies** implies that concepts of [react concurrent mode](https://reactjs.org/docs/concurrent-mode-intro.html) are transported into the world of Angular.
 
-ConcurrentStrategies implement [not yet released browser features](https://www.chromestatus.com/feature/6031161734201344) already today.
+ConcurrentStrategies implement not yet released browser features ([Chrome Canary postTask scheduling](https://www.chromestatus.com/feature/6031161734201344)) already today.
 
 Rendering can be executed with the frame budget [long task](https://developer.mozilla.org/en-US/docs/Web/API/Long_Tasks_API) in mind, prioritized at the level of `Component`'s or even `EmbeddedView`'s and provide an excellent tool to improve performance. 
 
