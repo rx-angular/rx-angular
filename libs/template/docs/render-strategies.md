@@ -30,14 +30,16 @@ This architecture enables modern features like:
 `@rx-angular/cdk` comes preconfigured with two sets of strategies.
 
 **BasicStrategies**
+
 BasicStrategies wrap modern ivy API's like `ɵmarkDirty` and `ɵdetectChanges` as well as a strategy to "noop" change detection.
 As fallback for the migration process or comparison testing, Angulars default change detection behaviour is also provided as a strategy.
 
 **ConcurrentStrategies**
+
 The ConcurrentStrategies utilize the latest technologies to enable priority based change detection for non-blocking rendering and smooth user experiences. It combines the most performant scheduling techniques with a highly performant queueing mechanism.
 Read more about the internal techniques [here](https://www.npmjs.com/package/scheduler) or [here](https://github.com/WICG/scheduling-apis).
 
-They are named **ConcurrentStrategies** to point out the fact that concepts of [react concurrent mode](https://reactjs.org/docs/concurrent-mode-intro.html) are baked into these strategies.
+The name **ConcurrentStrategies** implies that concepts of [react concurrent mode](https://reactjs.org/docs/concurrent-mode-intro.html) are transported into the world of Angular.
 
 ConcurrentStrategies implement [not yet released browser features](https://www.chromestatus.com/feature/6031161734201344) already today.
 
