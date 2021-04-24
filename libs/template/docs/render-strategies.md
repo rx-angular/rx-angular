@@ -1,18 +1,22 @@
 ## Render Strategies
-##### Explicite fine-grained control of change detection in Angular
+##### Explicit fine-grained control of change detection in Angular
 
 ![Template - RenderStrategies](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/docs/images/template_rendering-strategies.png)
 
 ### Motivation
 
-Angular's change detection is pull based and implicite. 
+Angulars change detection is pull based and implicit. 
 This affects not only the performance but also forces us into specific ways of architecting as well as thinking.
+Read more about performance issues [here](https://github.com/rx-angular/rx-angular/blob/master/libs/template/docs/performance-issues.md#ngzone).
 
 Render strategies serve as the core of the new change detection system.
-They enable new scalable and performance architectures give us new options as explicitely state management truly push based architctures and highly responsive UI's.
+This enables us to build scalable and highly performant applications.
+Furthermore they provide new ways of explicitely tying truly push based state management solutions to the change detection for highly responsive UI's.
 
-The rendering logic it self, the strategy, is extracted and exposed to the developer for configuration. 
-Directives and other parts of the application can leverage those strategies and enrich functionality with specifitc behavior.
+
+A strategy exposes the work to perform (e.g. `cdRef#markForCheck`, `cdRef#detectChanges`) as well as the scheduling mechanism via the interface `RxStrategyCredentials` to developers for configuration & customization.
+
+`Directive`s, `Service`s or `Component`s of your application can make use of these strategies as an easy API for the key [concepts](https://github.com/rx-angular/rx-angular/blob/master/libs/template/docs/concepts.md) of rendering performance.
 
 This architecture enables modern features like:
 - [x] ⛑ Partial migration to a 🚫 zone-less application
@@ -20,22 +24,26 @@ This architecture enables modern features like:
 - [x] Coalescing of change detection runs on `Component` or even `EmbeddedView` level
 - [x] Progressive rendering
 - [x] Prioritized rendering
-- [x] Render Callback
+- [x] 💡 Render Callback
 - [x] Performance best practices as default
 
-At the moment render strategies serve 2 sets of strategies.
+`@rx-angular/cdk` comes preconfigured with two sets of strategies.
 
-The first set can be considered as a basic set.
-It leverages modern ivy API's like `ɵmarkDirty` and `ɵdetectChanges` as well as a strategy to "noop" changedetection.
-As fallback for the migration process or comparison testing, Angulars default change detection behaviour is also provided as strategy.
+**BasicStrategies**
+BasicStrategies wrap modern ivy API's like `ɵmarkDirty` and `ɵdetectChanges` as well as a strategy to "noop" change detection.
+As fallback for the migration process or comparison testing, Angulars default change detection behaviour is also provided as a strategy.
 
-With this set of strategies and the possibility of switching them at runtime we can create tools that align with performance best pratices and implement expert level optimizations. We can control rendering based on view port visibility, measure the DOM _after_ rendering or only rerender perts of a component. 
+**ConcurrentStrategies**
+The ConcurrentStrategies utilize the latest technologies to enable priority based change detection for non-blocking rendering and smooth user experiences. It combines the most performant scheduling techniques with a highly performant queueing mechanism.
+Read more about the internal techniques [here](https://www.npmjs.com/package/scheduler) or [here](https://github.com/WICG/scheduling-apis).
 
-The second set is leveraging the latest technologies for performant scheduling and combines change detection with priority and non-blocking render.
-They are named **concurrent strategies** to point out the fact that concepts of react concurrent mode are backed into those strategies.
+They are named **ConcurrentStrategies** to point out the fact that concepts of react concurrent mode are baked into those strategies.
 
 Those strategies enable upcoming browser features already today and brint fresh air into Angular.
 We can rendering with notion of the frame budget (long task) in mind, prioritize rendering of `Component`'s and `EmbeddedView`'s and provide a performance focused UX. 
+
+With these sets of strategies and the possibility of switching them at runtime we can create tools that align with performance best pratices and implement expert level optimizations. We can control rendering based on view port visibility, measure the DOM _after_ rendering or only rerender perts of a component. 
+
 
 All in all it makes a partial migration to fully 
 - Less applications possible and the creation of truely non-blocking application from route changes to state updates becomes a brise. 
@@ -447,6 +455,54 @@ Urgent work that should happen in the background and is not initiated but visibl
 
 
 ### Custom Strategies
+
+```typescript
+export type RxRenderWork = <T = unknown>(
+  cdRef: ChangeDetectorRef,
+  scope?: coalescingObj,
+  notification?: RxNotification<T>
+) => void;
+
+export type RxRenderBehavior = <T = unknown>(
+  work: any,
+  scope?: coalescingObj
+) => (o: Observable<T>) => Observable<T>;
+
+export interface RxStrategyCredentials<S = string> {
+  name: S;
+  work: RxRenderWork;
+  behavior: RxRenderBehavior;
+}
+
+export type RxCustomStrategyCredentials<T extends string> = Record<
+  T,
+  RxStrategyCredentials
+>;
+export type RxNativeStrategyNames = 'native' | 'local' | 'global' | 'noop';
+
+export type RxConcurrentStrategyNames =
+  | 'noPriority'
+  | 'immediate'
+  | 'userBlocking'
+  | 'normal'
+  | 'low'
+  | 'idle';
+
+export type RxDefaultStrategyNames =
+  | RxNativeStrategyNames
+  | RxConcurrentStrategyNames;
+
+export type RxStrategyNames<T> = RxDefaultStrategyNames | T;
+export type RxStrategies<T extends string> = RxCustomStrategyCredentials<
+  RxStrategyNames<T>
+>;
+
+export interface RxAngularConfig<T extends string> {
+  primaryStrategy?: RxStrategyNames<T>;
+  customStrategies?: RxCustomStrategyCredentials<T>;
+  patchZone?: boolean;
+}
+```
 
 ### Future ideas to discuss
 
