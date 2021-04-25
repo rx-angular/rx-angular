@@ -18,10 +18,37 @@ Black triangles show us a component with change deection `onPush` was evanluated
 
 |       Name       |   Priority   |    Render Method  |       Scheduling         |   Render Deadline   |
 | ---------------- | ------------ | ----------------- | ------------------------ | ------------------- |
-| `"noop"`         | ❌           | - `noop`          | `requestAnimationFrame`  | N/A                 |
 | `"native"`       | ❌           | ⮁ `markForCheck` | `requestAnimationFrame`  | N/A                 |
 | `"global"`       | ❌           | ⮁ `ɵmarkDirty`   | `requestAnimationFrame`  | N/A                 |
 | `"local"`        | ❌           | 🠗 `detectChanges` | `requestAnimationFrame`  | N/A                 |
+| `"noop"`         | ❌           | - `noop`          | `requestAnimationFrame`  | N/A                 |
+
+### Native
+
+![rx-angular-cdk-render-strategies__strategy-native](https://user-images.githubusercontent.com/10064416/116009720-78720c00-a61b-11eb-9702-82361d782a46.png)
+
+This strategy mirrors Angular's built-in `async` pipe.
+This means for every emitted value [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) is called.
+Angular still needs zone.js to trigger the [`ApplicationRef#tick`](https://github.com/angular/angular/blob/7d8dce11c0726cdba999fc59a83295d19e5e92e6/packages/core/src/application_ref.ts#L719) to re-render,
+as the internally called function [`markViewDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1837) is only responsible for dirty marking and not rendering.
+
+| Name     | Zone Agnostic | Render Method    | Coalescing    | Scheduling              |
+| -------- | ------------- | ---------------- | ------------- | ----------------------- |
+| `native` | ❌            | ⮁ `markForCheck` | ✔ RootContext | `requestAnimationFrame` |
+
+
+### Global Strategy
+
+This strategy leverages Angular's internal [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) render method.
+  It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) but works also 🚫 zone-less.
+`markDirty` in comparison to `markForCheck` also calls [`scheduleTick`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1863) which is the reason why it also works in 🚫 zone-less environments.
+
+![rx-angular-cdk-render-strategies__strategy-global](https://user-images.githubusercontent.com/10064416/116009680-59737a00-a61b-11eb-8c97-394b72ddbc95.png)
+
+
+| Name     | Zone Agnostic | Render Method  | Coalescing      | Scheduling                                                                                                                                            |
+| -------- | ------------- | -------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `global` | ✔             | ⮁ `ɵmarkDirty` | ✔ `RootContext` | [`animationFrame`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/util/misc_utils.ts#L39) |
 
 ### Local
 
@@ -32,8 +59,7 @@ that is marked as dirty or has components with `ChangeDetectionStrategy.Default`
 
 
 As detectChanges has no coalescing of render calls
-like [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) or [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) have, we apply our own coalescing, 'scoped' on
-component level.
+like [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) or [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) have, we apply our own coalescing, 'scoped' oncomponent level.
 
 Coalescing, in this very manner, means _collecting all events_ in the same
 [EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render. Then execute re-rendering only _once_.
@@ -50,19 +76,6 @@ both accessed over the context over `ChangeDetectorRef#context`.
 
 <!-- @TODO Julian - full screen animation of slide fo template vs EV -->
 
-### Global Strategy
-
-This strategy leverages Angular's internal [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) render method.
-  It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) but works also 🚫 zone-less.
-`markDirty` in comparison to `markForCheck` also calls [`scheduleTick`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1863) which is the reason why it also works in 🚫 zone-less environments.
-
-![rx-angular-cdk-render-strategies__strategy-global](https://user-images.githubusercontent.com/10064416/116009680-59737a00-a61b-11eb-8c97-394b72ddbc95.png)
-
-
-| Name     | Zone Agnostic | Render Method  | Coalescing      | Scheduling                                                                                                                                            |
-| -------- | ------------- | -------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `global` | ✔             | ⮁ `ɵmarkDirty` | ✔ `RootContext` | [`animationFrame`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/util/misc_utils.ts#L39) |
-
 ### Noop
 
 The no-operation strategy does nothing. It can be a useful tool for performance improvements as well as debugging.
@@ -72,20 +85,6 @@ The no-operation strategy does nothing. It can be a useful tool for performance 
 | Name   | Zone Agnostic | Render Method | Coalescing | Scheduling |
 | ------ | ------------- | ------------- | ---------- | ---------- |
 | `noop` | ✔             | - `noop`      | ❌         | ❌        |
-
-### Native
-
-![rx-angular-cdk-render-strategies__strategy-native](https://user-images.githubusercontent.com/10064416/116009720-78720c00-a61b-11eb-9702-82361d782a46.png)
-
-This strategy mirrors Angular's built-in `async` pipe.
-This means for every emitted value [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) is called.
-Angular still needs zone.js to trigger the [`ApplicationRef#tick`](https://github.com/angular/angular/blob/7d8dce11c0726cdba999fc59a83295d19e5e92e6/packages/core/src/application_ref.ts#L719) to re-render,
-as the internally called function [`markViewDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1837) is only responsible for dirty marking and not rendering.
-
-| Name     | Zone Agnostic | Render Method    | Coalescing    | Scheduling              |
-| -------- | ------------- | ---------------- | ------------- | ----------------------- |
-| `native` | ❌            | ⮁ `markForCheck` | ✔ RootContext | `requestAnimationFrame` |
-
 
 
 ## Concurrent Strategies
