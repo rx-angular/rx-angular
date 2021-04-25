@@ -143,8 +143,7 @@ export class AnyComponent {
 }
 ```
 
-> **⚠ Notice:**  ![rx-angular-cdk_render-strategies_template-vs-embeddedview](https://user-images.githubusercontent.com/10064416/115993000-e47b5280-a5d0-11eb-93cf-7c23421030de.png)
-
+> **⚠ Notice:**  
 > As the component which introduces the change does not know ehere in the template it sits the whole template needs to be reevaluated. 
 
 #### Usage in the template
