@@ -174,3 +174,35 @@ They own a `EmbeddedView` and RxAngular we realize it and apply the re-evaluatio
 
 > **⚠ Notice:**  
 > Even if the push pipe lives in the template, the performance is still the same as controling rendering in the component because it reevaluates the whole template. 
+
+
+### Usage in a service
+
+The scheduling logic of the strategies is not only useful to schedule rendering but work in general.
+A good example usecase is HTTP requests and response processing. As this logic is not directly reflected in the UI the user will not realize if it is done a little bit later.
+In this case we can use a low priority.
+
+Again, `StrategyProvider` needs to get imported, and the scheduling APIs needs to be used. 
+
+```typescript
+@Injectable({
+  profidedIn: 'root'
+})
+export class AnyService {
+
+  constructor(
+    public strategyProvider: RxStrategyProvider
+  ) {
+  }
+  
+  getData() {
+    this.strategyProvider.schedule(() => {
+      
+    })
+  }
+
+}
+```
+
+> **⚠ Notice:**  
+> As the component which introduces the change does not know ehere in the template it sits the whole template needs to be reevaluated. 
