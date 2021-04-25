@@ -180,6 +180,7 @@ They own a `EmbeddedView` and RxAngular we realize it and apply the re-evaluatio
 
 Before we go into detail with the provided strategies lets understand angulars vanilla behavior first.
 
+<!-- @TODO Julian - full screen animation of slide -->
 ![rx-angular-cdk-render-strategies__strategy-angular](https://user-images.githubusercontent.com/10064416/115839355-daafee80-a41a-11eb-8383-12eb58ed3905.png)
 
 This strategy is rendering the actual component and all it's children that are on a path
@@ -222,6 +223,8 @@ both accessed over the context over `ChangeDetectorRef#context`.
 | Name    | Zone Agnostic | Render Method     | Coalescing         | Scheduling              |
 | ------- | ------------- | ----------------- | ------------------ | ----------------------- |
 | `local` | ✔             | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame` |
+
+<!-- @TODO Julian - full screen animation of slide fo template vs EV -->
 
 ### Global Strategy
 
@@ -278,10 +281,12 @@ if blocked => laggy
 - Frame budget
 ![rx-angular-cdk-render-strategies__frame-budget](https://user-images.githubusercontent.com/10064416/115894224-4f098280-a459-11eb-9abf-9a902d66d380.png)
 
+**Chunking**
+![rx-angular-cdk-render-strategies__concurrent-strategies-non-chunked-vs-chuked-work](https://user-images.githubusercontent.com/10064416/116007117-705f9f80-a60e-11eb-879c-87746ba677f6.png)
 
-- Chunking
-  - Threshhold => 60 FPS default
-  - Render Deadline
+**Render Deadline**
+
+![rx-angular-cdk-render-strategies__concurrent-strategies-render-deadline](https://user-images.githubusercontent.com/10064416/116008121-42308e80-a613-11eb-90da-c3299bbf8c0a.png)
 
 ![rx-angular-cdk-render-strategies__chunked-rendering](https://user-images.githubusercontent.com/10064416/115894730-e2db4e80-a459-11eb-914c-e6a376012a49.png)
 
