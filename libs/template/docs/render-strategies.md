@@ -180,8 +180,8 @@ They own a `EmbeddedView` and RxAngular we realize it and apply the re-evaluatio
 
 Before we go into detail with the provided strategies lets understand angulars vanilla behavior first.
 
-<!-- @TODO Julian - full screen animation of slide -->
-![rx-angular-cdk-render-strategies__strategy-angular](https://user-images.githubusercontent.com/10064416/115839355-daafee80-a41a-11eb-8383-12eb58ed3905.png)
+![rx-angular-cdk-render-strategies__strategy-angular](https://user-images.githubusercontent.com/4904455/116009556-ac98fd00-a61a-11eb-9fce-866995582943.gif)
+
 
 This strategy is rendering the actual component and all it's children that are on a path
 that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
