@@ -7,7 +7,6 @@
 
 Angulars change detection is pull based and implicit. 
 This affects not only the performance but also forces us into specific ways of architecting as well as thinking.
-Read more about performance issues [here](https://github.com/rx-angular/rx-angular/blob/master/libs/template/docs/performance-issues.md#ngzone).
 
 Render strategies serve as the core of the new change detection system.
 This enables us to build scalable and highly performant applications.
@@ -47,7 +46,7 @@ Rendering can be executed with the frame budget [long task](https://developer.mo
 
 With these sets of strategies and the possibility of switching them at runtime we can create tools that align with performance best pratices (e.g. [RAIL](https://web.dev/rail/)) and implement expert level optimizations. We can control rendering based on view port visibility, measure the DOM _after_ rendering or re-render only parts of a component.
 
-Render strategies pave the way for truly non-blocking applications, targeted for any device or platform 🚀
+**Render strategies pave the way for truly non-blocking applications, targeted for any device or platform 🚀**
 
 <!--
 TODO:
