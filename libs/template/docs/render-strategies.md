@@ -13,7 +13,7 @@ This enables us to build scalable and highly performant applications.
 Furthermore they provide new ways of explicitely tying truly push based state management solutions to the change detection for highly responsive UI's.
 
 
-A strategy exposes the work to perform (e.g. `cdRef#markForCheck`, `cdRef#detectChanges`) as well as the scheduling mechanism via the interface `RxStrategyCredentials` to developers for configuration & customization.
+A strategy exposes the work to perform (e.g. `cdRef#markForCheck`, `cdRef#detectChanges`) as well as the scheduling mechanism to developers for configuration & customization via the interface `RxStrategyCredentials`.
 
 `Directive`s, `Service`s or `Component`s of your application can make use of these strategies as an easy API for the key [concepts](https://github.com/rx-angular/rx-angular/blob/master/libs/template/docs/concepts.md) of rendering performance.
 
@@ -21,8 +21,8 @@ This architecture enables modern features like:
 - [x] ⛑ Partial migration to a 🚫 zone-less application
 - [x] Fine-grained configuration of change detection
 - [x] Coalescing of change detection runs on `Component` or even `EmbeddedView` level
-- [x] Progressive rendering
-- [x] Prioritized rendering
+- [x] 💡 Progressive rendering
+- [x] 💡 Prioritized rendering
 - [x] 💡 Render Callback
 - [x] Performance best practices as default
 
@@ -80,11 +80,29 @@ The sub-package provides the following features:
 
 ### Setup 
 
+The render strategies can be used directly from the `cdk` package or indirectly through the `template` package.
+To do so install the the cdk package and if needed the packages depending on it.
+
 1. Install `@rx-angular/cdk`
 ```bash
 npm i @rx-angular/cdk
 ``` 
-2. 
+2. Module Import
+```typescript
+...
+import {LetModule} from '@rx-angular/template';
+@Module({
+  imports: [
+    LetModule
+  ],
+  declarations: [
+    AnyComponent
+  ]
+})
+export class AnyModule {
+  value$ = of(42);
+}
+```
 
 ```typescript
 - globally -> config providers
@@ -114,7 +132,8 @@ export class AnyComponent {
   value = 42;
   
   constructor(
-    public strategyProvider: RxStrategyProvider
+    public strategyProvider: RxStrategyProvider,
+    public changeDetectorRef: ChangeDetectorRef
   ) {
     this.strategyProvider.schedule(() => {
       
@@ -129,20 +148,33 @@ export class AnyComponent {
 
 #### Usage in the template
 
-The best place and most efficient place to control rendering is the template. To be more specific the `EmbeddedView`.
+The best place and most efficient place to control rendering is the template.
+Here we again have 2 ways to do it. Over `Pipe`'s or `Directive`'s. 
 
-All features in `@rx-angular/template` are driven by strategies and fine-grained configurable.
+In general, all features in `@rx-angular/template` have strategies backed in and are fine-grained configurable.
 
-```html
-<div *rxLet="list$; let list; strategy: 'userBlocking'"></div>
-```
-
-> **⚠ Notice:**  
-> Even if the push pipe lives in the template, the performance is still the same as controling rendering in the component because it reevaluates the whole template. 
+The second best way of using stragegies in the template is by using the `push` pipe.
 
 ```html
 <hero-list heroes="list$ | push: 'global'"></hero-list>
 ```
+
+As pipes don't own a specific part in the template they still trigger a full re-evaluation of the template, including all other template expressions or bindings.
+
+The best and most performant way to use strategies in the template is by structural directives.
+
+To be more specific the `EmbeddedView`.
+```html
+<div *rxLet="list$; let list; strategy: 'userBlocking'"></div>
+```
+They own a `EmbeddedView` and RxAngular we realize it and apply the re-evaluation only to the very HTML snippet it is used on.  
+
+![rx-angular-cdk_render-strategies_template-vs-embeddedview](https://user-images.githubusercontent.com/10064416/115992896-4b4c3c00-a5d0-11eb-8959-d8d226452ce4.png)
+
+
+> **⚠ Notice:**  
+> Even if the push pipe lives in the template, the performance is still the same as controling rendering in the component because it reevaluates the whole template. 
+
 
 ## Strategies
 
