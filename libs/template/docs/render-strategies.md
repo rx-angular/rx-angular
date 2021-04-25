@@ -351,7 +351,7 @@ export class RenderCallbackComponent {
 
   constructor(
     private strategyPrivider: StrategyPrivider
-  ) {  
+    ) {  
   }
   
   showTooltip() {
@@ -370,7 +370,7 @@ export class RenderCallbackComponent {
 ``` 
 
 
-> ⚠ Notice:  
+> **⚠ Notice:**
 > Be aware to avoid scheduling large or non-urgent work with immediate priority as it blocks rendering
 
 
@@ -426,7 +426,7 @@ export class RenderCallbackComponent {
 ``` 
 
 
-> ⚠ Notice:  
+> **⚠ Notice:**   
 > Be aware to avoid scheduling large or non-urgent work with userBlocking priority as it blocks rendering after 250ms
 
 ### Normal
@@ -462,6 +462,10 @@ Work that is typically not visible to the user or initiated by the user. For exa
 
 @TODO: Get scrollbar position
 
+
+> **⚠ Notice:**   
+> This strategy is especially useful for sending request and and preprocessing their responses. As they are not directly visible a low priority is best.
+
 ### Idle
 
 <!-- 
@@ -485,6 +489,8 @@ Urgent work that should happen in the background and is not initiated but visibl
 
 ![rx-angular-cdk-render-strategies__idle_example](https://user-images.githubusercontent.com/10064416/115316774-49225180-a17a-11eb-9045-3cdd38217b4d.PNG)
 
+> **⚠ Notice:**   
+> This strategy is especially useful for logic ment to run in the backgroung. As they are not directly visible a low priority is best. 
 
 ### Custom Strategies
 
