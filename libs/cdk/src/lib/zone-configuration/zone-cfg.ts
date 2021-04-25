@@ -98,23 +98,52 @@ function createZoneFlagsConfigurator(): ZoneConfig {
   };
 
   const zoneConfigObj: ZoneConfigConfiguration = {
+    /**
+     * Interface of `zone.js` configurations.
+     *
+     * You can define the following configurations on the `window/global` object before
+     * importing `zone.js` to change `zone.js` default behaviors.
+     */
     global: {
       disable: reduceToObject<GlobalDisableConfigurationMethods>([
         ...zoneGlobalDisableConfigurationsKeys.map(addDisableFlag),
         ...zoneGlobalSettingsConfigurationsKeys.map(addSymbolFlag),
       ]),
     },
+    /**
+     * Interface of `zone-testing.js` test configurations.
+     *
+     * You can define the following configurations on the `window` or `global` object before
+     * importing `zone-testing.js` to change `zone-testing.js` default behaviors in the test runner.
+     */
     test: {
       disable: reduceToObject<TestDisableConfigurationMethods>([
         ...zoneTestDisableConfigurationsKeys.map(addDisableFlag),
         ...zoneTestSettingsConfigurationsKeys.map(addSymbolFlag),
       ]),
     },
+    /**
+     * Interface of `zone-testing.js` test configurations, but just the event related part.
+     */
     events: {
       disable: reduceToObject<ZoneGlobalEventsConfigurationsMethods>(
         zoneGlobalEventsConfigurationsKeys.map(addArraySymbolFlag)
       ),
     },
+    /**
+     * The interface of the `zone.js` runtime configurations.
+     *
+     * These configurations can be defined on the `Zone` object after
+     * importing zone.js to change behaviors. The differences between
+     * the `ZoneRuntimeConfigurations` and the `ZoneGlobalConfigurations` are,
+     *
+     * 1. `ZoneGlobalConfigurations` must be defined on the `global/window` object before importing
+     * `zone.js`. The value of the configuration cannot be changed at runtime.
+     *
+     * 2. `ZoneRuntimeConfigurations` must be defined on the `Zone` object after importing `zone.js`.
+     * You can change the value of this configuration at runtime.
+     *
+     */
     runtime: {
       disable: reduceToObject<RuntimeConfigurationMethods>(
         zoneRuntimeConfigurationsKeys.map(addSymbolFlag)
