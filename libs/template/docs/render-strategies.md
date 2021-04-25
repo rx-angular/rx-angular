@@ -204,7 +204,7 @@ Black triangles show us a component with change deection `onPush` was evanluated
 This strategy is rendering the actual component and all it's children that are on a path
 that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
 
-![rx-angular-cdk-render-strategies__strategy-local](https://user-images.githubusercontent.com/10064416/115839410-eb606480-a41a-11eb-910e-4a2db16a1ed8.png)
+![rx-angular-cdk-render-strategies__strategy-local](https://user-images.githubusercontent.com/10064416/116009674-52e50280-a61b-11eb-9971-07f8117ec399.png)
 
 
 As detectChanges has no coalescing of render calls
@@ -232,7 +232,7 @@ This strategy leverages Angular's internal [`ɵmarkDirty`](https://github.com/an
   It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) but works also 🚫 zone-less.
 `markDirty` in comparison to `markForCheck` also calls [`scheduleTick`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1863) which is the reason why it also works in 🚫 zone-less environments.
 
-![rx-angular-cdk-render-strategies__strategy-global](https://user-images.githubusercontent.com/10064416/115839499-00d58e80-a41b-11eb-982b-359c1d1fd4c9.png)
+![rx-angular-cdk-render-strategies__strategy-global](https://user-images.githubusercontent.com/10064416/116009680-59737a00-a61b-11eb-8c97-394b72ddbc95.png)
 
 
 | Name     | Zone Agnostic | Render Method  | Coalescing      | Scheduling                                                                                                                                            |
@@ -243,7 +243,7 @@ This strategy leverages Angular's internal [`ɵmarkDirty`](https://github.com/an
 
 The no-operation strategy does nothing. It can be a useful tool for performance improvements as well as debugging.
 
-![rx-angular-cdk-render-strategies__strategy-noop](https://user-images.githubusercontent.com/10064416/115839587-15b22200-a41b-11eb-8208-e93bdfae4bb6.png)
+![rx-angular-cdk-render-strategies__strategy-noop](https://user-images.githubusercontent.com/10064416/116009707-6d1ee080-a61b-11eb-83e8-5df2e8081b7a.png)
 
 | Name   | Zone Agnostic | Render Method | Coalescing | Scheduling |
 | ------ | ------------- | ------------- | ---------- | ---------- |
@@ -251,7 +251,7 @@ The no-operation strategy does nothing. It can be a useful tool for performance 
 
 ### Native
 
-![rx-angular-cdk-render-strategies__strategy-native](https://user-images.githubusercontent.com/10064416/115839651-25ca0180-a41b-11eb-818f-2fb7909fb929.png)
+![rx-angular-cdk-render-strategies__strategy-native](https://user-images.githubusercontent.com/10064416/116009720-78720c00-a61b-11eb-9702-82361d782a46.png)
 
 This strategy mirrors Angular's built-in `async` pipe.
 This means for every emitted value [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) is called.
@@ -321,7 +321,7 @@ rendering over the course of next new frames, as fetches complete and data becom
 
 ### noPriority
 
-![rx-angular-cdk-render-strategies__strategy-noPriority](https://user-images.githubusercontent.com/10064416/115839785-4d20ce80-a41b-11eb-9cdc-26048b27a16c.png)
+![rx-angular-cdk-render-strategies__strategy-noPriority](https://user-images.githubusercontent.com/10064416/116009734-84f66480-a61b-11eb-89f4-a57b90573b9b.png)
 
 
 ### Immediate
