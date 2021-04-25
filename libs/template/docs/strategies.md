@@ -106,12 +106,12 @@ if blocked => laggy
 
 **Chunking**
 ![rx-angular-cdk-render-strategies__concurrent-strategies-non-chunked-vs-chuked-work](https://user-images.githubusercontent.com/10064416/116007117-705f9f80-a60e-11eb-879c-87746ba677f6.png)
+![rx-angular-cdk-render-strategies__concurrent-strategies-chuked-work](https://user-images.githubusercontent.com/10064416/116010261-2c749680-a61e-11eb-9e92-3bd032045fdf.png)
+
 
 **Render Deadline**
 
 ![rx-angular-cdk-render-strategies__concurrent-strategies-render-deadline](https://user-images.githubusercontent.com/10064416/116008121-42308e80-a613-11eb-90da-c3299bbf8c0a.png)
-
-![rx-angular-cdk-render-strategies__concurrent-strategies-userBlocking](https://user-images.githubusercontent.com/10064416/116010241-1070f500-a61e-11eb-8f20-bae282fd349e.png)
 
 - Priority
 ![rx-angular-cdk-render-strategies__concurrent-scheduling](https://user-images.githubusercontent.com/10064416/115897522-cc82c200-a45c-11eb-84de-a6fc02a1bcca.png)
