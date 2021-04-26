@@ -37,7 +37,7 @@ yarn add @rx-angular/cdk
 
 ## ⛔ Zone Configuration
 
-[Zone Flags](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/zone-configuration/zone-flags.md)C
+[Zone Flags](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/zone-configuration/zone-flags.md)
 
 ## 🛠 Coalescing
 
