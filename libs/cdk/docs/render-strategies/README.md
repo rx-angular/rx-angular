@@ -35,6 +35,8 @@ As fallback for the migration process or comparison testing, Angulars default ch
 
 This set aims to get a first option for zone-less rendering (`ɵmarkDirty`), more control on the top down process and already improve performance drastically by only rendering components that received updates.
 
+![rx-angular-cdk-render-strategies__reduced-render-work](https://user-images.githubusercontent.com/10064416/116158910-9ad55980-a6ef-11eb-8ad2-62532a3e6b6e.png)
+
 **ConcurrentStrategies**
 
 The ConcurrentStrategies utilize the latest technologies to enable priority based change detection for non-blocking rendering and smooth user experiences. It combines the most performant scheduling techniques with a highly performant queueing mechanism.
