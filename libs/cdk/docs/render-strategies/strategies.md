@@ -111,6 +111,9 @@ if blocked => laggy
 - Frame budget
 ![rx-angular-cdk-render-strategies__frame-budget](https://user-images.githubusercontent.com/10064416/115894224-4f098280-a459-11eb-9abf-9a902d66d380.png)
 
+![rx-angular-cdk-render-strategies__concurrent-strategies-anatomy](https://user-images.githubusercontent.com/10064416/116157149-bee36b80-a6ec-11eb-965a-9fbe34a8eca4.png)
+
+
 **Chunking**
 ![rx-angular-cdk-render-strategies__concurrent-strategies-un-chuked-work](https://user-images.githubusercontent.com/10064416/116010309-7cebf400-a61e-11eb-8715-a6428e5f16a3.png)
 ![rx-angular-cdk-render-strategies__concurrent-strategies-chuked-work](https://user-images.githubusercontent.com/10064416/116010261-2c749680-a61e-11eb-9e92-3bd032045fdf.png)
