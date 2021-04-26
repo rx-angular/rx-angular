@@ -5,13 +5,20 @@ Before we go into detail with the provided strategies lets understand angulars v
 ![rx-angular-cdk-render-strategies__strategy-angular](https://user-images.githubusercontent.com/4904455/116009556-ac98fd00-a61a-11eb-9fce-866995582943.gif)
 
 
-This strategy is rendering the actual component and all it's children that are on a path
+This diagram is rendering the actual component where the change goit introduced and all it's children that are on a path
 that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
 
-In the diagrams components that are marked as dirty show up with a red triangle. Those get always re-rendered.
+A present triangles shows that `Changedetection#OnPush` is used on the component. 
+In the components that are marked as dirty show up with a red triangle. Those get always re-rendered.
 Components with a gray triangle are untouched from reevanuation of template or rerendering.
-Black triangles show us a component with change deection `onPush` was evanluated and no changes where detected
+Black triangles show us a component with change detection `onPush` was evanluated and no changes where detected.
 
+![rx-angular-cdk-render-strategies__vanilla-angular-overrendering](https://user-images.githubusercontent.com/10064416/116155426-5bf0d500-a6ea-11eb-9cbc-5274a3bd0578.png)
+
+As we can see in the diagram the yellowish components get re-evaluated (if no re-rendered). This obviously is unneeded work which slows down the performance of Angular.
+In many cases this fact leads to heavy refactorings to get the performance flaw out, or even end up in situations where we can't fix the performance issues.
+
+Strategies give us a way to control how Angular's rendering is executed and which render method is used.
 
 ## Basic Strategies
 
