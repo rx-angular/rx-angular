@@ -30,8 +30,10 @@ This architecture enables modern features like:
 
 **BasicStrategies**
 
-BasicStrategies wrap modern ivy API's like `ɵmarkDirty` and `ɵdetectChanges` as well as a strategy to "noop" change detection.
+BasicStrategies wrap modern ivy API's like `ɵmarkDirty` and `ɵdetectChanges` as well as a strategy to "noop" change detection.  
 As fallback for the migration process or comparison testing, Angulars default change detection behaviour is also provided as a strategy.
+
+This set aims to get a first option for zone-less rendering (`ɵmarkDirty`), more control on the top down process and already improve performance drastically by only rendering components that received updates.
 
 **ConcurrentStrategies**
 
