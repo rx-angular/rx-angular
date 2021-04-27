@@ -1,7 +1,7 @@
 # Render Strategies
 ##### Explicit fine-grained control of change detection in Angular
 
-![Template - RenderStrategies](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/docs/images/template_rendering-strategies.png)
+![RenderStrategies - Overview](https://user-images.githubusercontent.com/10064416/116306287-2b21a600-a7a5-11eb-997b-5c2e847821a2.png)
 
 ## Motivation
 
