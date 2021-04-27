@@ -93,28 +93,45 @@ To do so install the the cdk package and if needed the packages depending on it.
 1. Install `@rx-angular/cdk`
 ```bash
 npm i @rx-angular/cdk
+// or
+yarn add @rx-angular/cdk
 ``` 
-2. Module Import
+
+## Configuration
+
+By default RxAngular render strategies are preconfigures in a way they are still way more performant then native Angular, but focusing on being as non breaking as possible.
+In the majority of cases you can just drop in the new features and everything works as before.
+
+You can then partially enable more performance features on RxAngular.
+
+Configurations is done with Angular best practies and based on `InjectionToken`'s.
+We can configure on the following levels:
+- globally
+- feature module
+- component
+- directive
+
+1. Module Import
 ```typescript
 ...
-import {LetModule} from '@rx-angular/template';
+import {RxAngularConfig, RX_ANGULAR_CONFIG} from '@rx-angular/cdk';
+
+const CUSTOM_RX_ANGULAR_CONFIG: RxAngularConfig<string> {
+  primaryStrategy: 'global';
+  patchZone: false
+}
+
 @Module({
-  imports: [
-    LetModule
-  ],
-  declarations: [
-    AnyComponent
+  providers: [
+    {
+      provide: RX_ANGULAR_CONFIG,
+      useValue: CUSTOM_RX_ANGULAR_CONFIG    
+    }
   ]
 })
 export class AnyModule {
-  value$ = of(42);
+  
 }
-```
-
-```typescript
-- globally -> config providers
-- component -> config providers
-- directives -> strategy
 ```
 
 ## Usage
