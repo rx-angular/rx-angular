@@ -72,7 +72,7 @@ The sub-package provides the following features:
 
 |       Name       |   Priority   |    Render Method  |       Scheduling         |   Render Deadline   |
 | ---------------- | ------------ | ----------------- | ------------------------ | ------------------- |
-| `"noop"`         | ❌           | - `noop`          | `requestAnimationFrame`  | N/A                 |
+| `"noop"`         | ❌           | - `noop`          | ❌                      | N/A                 |
 | `"native"`       | ❌           | ⮁ `markForCheck` | `requestAnimationFrame`  | N/A                 |
 | `"global"`       | ❌           | ⮁ `ɵmarkDirty`   | `requestAnimationFrame`  | N/A                 |
 | `"local"`        | ❌           | 🠗 `detectChanges` | `requestAnimationFrame`  | N/A                 |
