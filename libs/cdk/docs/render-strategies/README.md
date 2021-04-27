@@ -110,6 +110,12 @@ We can configure on the following levels:
 - feature module
 - component
 
+### Default configuration
+
+By default the following configurations are set:
+- primaryStrategy: `normal`
+- patchZone: `true`
+
 ### Global
 
 1. Module Import
@@ -189,34 +195,49 @@ Render strategies can be used with the `StrategyProvider` or `Directive` like `p
 ### Usage in the component
 
 The second best place to control rendering is the component.
+Whenevery you have places in your application that uses `ChangeDetectorRef#markForCheck`, `ChangeDetectorRef#markForCheck` or `ApplicationRef#tick` to trigger change detection,
+you can refactor that part with strategies.
 
-To do so you have to import `StrategyProvider`, use one of the scheduling APIs and name a strategy tou o use. 
+Some of the cases wayh you might have to use custom change detection are:
+- projected content
+- changes not triggered by user interaction
+- integration of third-party libraries
+- detached components
+
+
+To replace that logic you have to import `StrategyProvider` and use the `scheduleCD` API. 
+You can configure a strategy by name. Otherwise the default one is used. 
+This API takes the components `ChangeDetectorRef` and uses one of the registered strategies to render the change. 
+You can also configure the used strategy per call.
+
+In this case we span an overlay with the `immediate` strategy to get the best UX. 
+The reason for the strategy choice is primarly because user interaction needs give feedback instantly to align with the users expectations. 
+
 
 ```typescript
 @Component({
   selector: 'any-component',
   template: `
-    {{value}}
+   ...
   `
 })
 export class AnyComponent {
-
-  value = 42;
   
   constructor(
     public strategyProvider: RxStrategyProvider,
     public changeDetectorRef: ChangeDetectorRef
   ) {
-    this.strategyProvider.schedule(() => {
-      
-    })
   }
-
-}
+  
+  openDialog() {
+    this.strategyProvider.scheduleCD(this.changeDetectorRef, {strategy: 'immediate'});
+  }
+  
+} 
 ```
 
 > **⚠ Notice:**  
-> As the component which introduces the change does not know ehere in the template it sits the whole template needs to be reevaluated. 
+> As the component which introduces the change does not know where in the template the change got introduced, the whole template needs to be re-evaluated. 
 
 ### Usage in the template
 
