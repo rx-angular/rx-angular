@@ -109,7 +109,8 @@ We can configure on the following levels:
 - globally
 - feature module
 - component
-- directive
+
+### Global
 
 1. Module Import
 ```typescript
@@ -134,11 +135,58 @@ export class AnyModule {
 }
 ```
 
+### Feature Module
+```typescript
+...
+import {RxAngularConfig, RX_ANGULAR_CONFIG} from '@rx-angular/cdk';
+
+const FEATURE_RX_ANGULAR_CONFIG: RxAngularConfig<string> {
+  primaryStrategy: 'global';
+  patchZone: false
+}
+
+@Module({
+  providers: [
+    {
+      provide: RX_ANGULAR_CONFIG,
+      useValue: FEATURE_RX_ANGULAR_CONFIG    
+    }
+  ]
+})
+export class AnyFeatureModule {
+  
+}
+```
+
+### Component 
+```typescript
+...
+import {RxAngularConfig, RX_ANGULAR_CONFIG} from '@rx-angular/cdk';
+
+const COMPONENT_RX_ANGULAR_CONFIG: RxAngularConfig<string> {
+  primaryStrategy: 'global';
+  patchZone: false
+}
+
+@Component({
+  selector: 'any-component',
+  providers: [
+    {
+      provide: RX_ANGULAR_CONFIG,
+      useValue: COMPONENT_RX_ANGULAR_CONFIG    
+    }
+  ]
+})
+export class AnyComponent {
+  
+}
+```
+
 ## Usage
 
-Render strategies can be used over the `StrategyProvider` or `Directive` like `push`, `rxLet` or `rxFor`. 
+Render strategies can be used with the `StrategyProvider` or `Directive` like `push`, `rxLet` or `rxFor`. 
 
-### Usage in the Component
+### Usage in the component
 
 The second best place to control rendering is the component.
 
