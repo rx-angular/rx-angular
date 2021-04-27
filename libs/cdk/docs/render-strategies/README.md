@@ -176,7 +176,7 @@ To be more specific the `EmbeddedView`.
 ```
 They own a `EmbeddedView` and RxAngular realized it and applyed the re-evaluation only to the very HTML snippet it is used on.  
 
-![rx-angular-cdk_render-strategies_template-vs-embeddedview](https://user-images.githubusercontent.com/10064416/115993215-25c03200-a5d2-11eb-8919-14e5859aeef2.png)
+![rx-angular-cdk_render-strategies_template-vs-embeddedview](https://user-images.githubusercontent.com/10064416/116314957-1c8cbc00-a7b0-11eb-91e8-cb6f5de038db.png)
 
 
 > **⚠ Notice:**  
