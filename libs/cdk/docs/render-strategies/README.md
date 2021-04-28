@@ -21,9 +21,9 @@ This architecture enables modern features like:
 - [x] ⛑ Partial migration to a 🚫 zone-less application
 - [x] Fine-grained configuration of change detection
 - [x] Coalescing of change detection runs on `Component` or even `EmbeddedView` level
-- [x] 💡 Progressive rendering
-- [x] 💡 Prioritized rendering
-- [x] 💡 Render Callback
+- [x] Progressive rendering
+- [x] Prioritized rendering
+- [x] Render Callback
 - [x] Performance best practices as default
 
 `@rx-angular/cdk` comes preconfigured with two sets of strategies.
