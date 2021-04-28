@@ -64,13 +64,13 @@ import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
  * @publicApi
  */
 @Pipe({ name: 'push', pure: false })
-export class PushPipe<U> implements PipeTransform, OnDestroy {
+export class PushPipe implements PipeTransform, OnDestroy {
   /** @internal */
-  private renderedValue: U | null | undefined;
+  private renderedValue: any | null | undefined;
   /** @internal */
   private readonly subscription: Unsubscribable;
   /** @internal */
-  private readonly templateObserver = templateNotifier<U>();
+  private readonly templateObserver = templateNotifier<any>();
   /** @internal */
   private readonly strategyHandler = strategyHandling(
     this.strategyProvider.primaryStrategy,
@@ -84,13 +84,13 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
     const scope = (cdRef as any).context;
     this.subscription = this.templateObserver.values$
       .pipe(
-        filter<RxNotification<U>>(
+        filter<RxNotification<any>>(
           (n) =>
             n.kind === RxNotificationKind.suspense ||
             n.kind === RxNotificationKind.next
         ),
-        tap<RxNotification<U>>((notification) => {
-          this.renderedValue = notification.value as U;
+        tap<RxNotification<any>>((notification) => {
+          this.renderedValue = notification.value as any;
         }),
         withLatestFrom(this.strategyHandler.strategy$),
         switchMap(([v, strategy]) =>
@@ -109,22 +109,22 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
       .subscribe();
   }
 
-  transform(
+  transform<U>(
     potentialObservable: null,
     config?: string | Observable<string>,
     renderCallback?: NextObserver<U>
   ): null;
-  transform(
+  transform<U>(
     potentialObservable: undefined,
     config?: string | Observable<string>,
     renderCallback?: NextObserver<U>
   ): undefined;
-  transform(
+  transform<U>(
     potentialObservable: ObservableInput<U>,
     config?: string | Observable<string>,
     renderCallback?: NextObserver<U>
   ): U;
-  transform(
+  transform<U>(
     potentialObservable: ObservableInput<U> | null | undefined,
     config: string | Observable<string> | undefined,
     renderCallback?: NextObserver<U>
