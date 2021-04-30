@@ -1037,6 +1037,44 @@
           "style": "scss"
         }
       }
+    },
+    "cdk-zone-less": {
+      "projectType": "library",
+      "root": "libs/cdk/zone-less",
+      "sourceRoot": "libs/cdk/zone-less/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "libs/cdk/zone-less/tsconfig.lib.json",
+            "project": "libs/cdk/zone-less/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/cdk/zone-less/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/cdk/zone-less/tsconfig.lib.json",
+              "libs/cdk/zone-less/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/cdk/zone-less/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/cdk/zone-less"],
+          "options": {
+            "jestConfig": "libs/cdk/zone-less/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {
@@ -1046,11 +1084,18 @@
   },
   "schematics": {
     "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "tslint",
       "unitTestRunner": "jest",
       "e2eTestRunner": "cypress"
     },
     "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "tslint",
       "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
     }
   },
   "defaultProject": "demos"

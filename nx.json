@@ -30,8 +30,12 @@
     "test-helpers": {
       "tags": ["type:util"]
     },
-    "cdk": {
+    "cdk-zone-less": {
       "tags": ["type:lib", "type:cdk"]
+    },
+    "cdk": {
+      "tags": ["type:lib", "type:cdk"],
+      "implicitDependencies": ["cdk-zone-less"]
     },
     "state": {
       "tags": ["type:lib"]
