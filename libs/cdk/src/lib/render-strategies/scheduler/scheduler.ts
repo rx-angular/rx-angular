@@ -1,6 +1,7 @@
 // see https://raw.githubusercontent.com/facebook/react/master/packages/scheduler/src/forks/SchedulerDOM.js
 
 import { push, pop, peek, ReactSchedulerTask } from './schedulerMinHeap';
+import { ɵglobal } from '@angular/core';
 
 // TODO: Use symbols?
 import {
@@ -60,15 +61,15 @@ let isHostCallbackScheduled = false;
 let isHostTimeoutScheduled = false;
 
 // Capture local references to native APIs, in case a polyfill overrides them.
-const setTimeout = window.setTimeout;
-const clearTimeout = window.clearTimeout;
+const setTimeout = ɵglobal.setTimeout;
+const clearTimeout = ɵglobal.clearTimeout;
 
 if (typeof console !== 'undefined') {
   // TODO: Scheduler no longer requires these methods to be polyfilled. But
   // maybe we want to continue warning if they don't exist, to preserve the
   // option to rely on it in the future?
-  const requestAnimationFrame = window.requestAnimationFrame;
-  const cancelAnimationFrame = window.cancelAnimationFrame;
+  const requestAnimationFrame = ɵglobal.requestAnimationFrame;
+  const cancelAnimationFrame = ɵglobal.cancelAnimationFrame;
 
   if (typeof requestAnimationFrame !== 'function') {
     // Using console['error'] to evade Babel and ESLint
@@ -462,7 +463,8 @@ const performWorkUntilDeadline = () => {
       if (hasMoreWork) {
         // If there's more work, schedule the next message event at the end
         // of the preceding one.
-        port.postMessage(null);
+        // tslint:disable-next-line: no-unused-expression
+        port && port.postMessage(null);
       } else {
         isMessageLoopRunning = false;
         scheduledHostCallback = null;
@@ -476,15 +478,19 @@ const performWorkUntilDeadline = () => {
   needsPaint = false;
 };
 
-const channel = new MessageChannel();
-const port = channel.port2;
-channel.port1.onmessage = performWorkUntilDeadline;
+const channel = ɵglobal.MessageChannel && new ɵglobal.MessageChannel();
+const port = channel && channel.port2;
+
+if (channel) {
+  channel.port1.onmessage = performWorkUntilDeadline;
+}
 
 function requestHostCallback(callback) {
   scheduledHostCallback = callback;
   if (!isMessageLoopRunning) {
     isMessageLoopRunning = true;
-    port.postMessage(null);
+    // tslint:disable-next-line: no-unused-expression
+    port && port.postMessage(null);
   }
 }
 

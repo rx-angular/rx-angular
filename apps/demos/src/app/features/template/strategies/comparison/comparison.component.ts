@@ -11,9 +11,9 @@ import { map, tap } from 'rxjs/operators';
         <h1 class="mat-headline">Strategy Comparison</h1>
         <div class="row">
           <div class="col-12 d-flex">
-            <mat-form-field class="mr-2">
+            <mat-form-field class="mr-2" *rxLet="count$; let count">
               <mat-label>Num Siblings</mat-label>
-              <input *rxLet="count$; let count" matInput #i [unpatch] type="number" [value]="count"
+              <input matInput #i [unpatch] type="number" [value]="count"
                      (input)="count$.next(i.value)">
             </mat-form-field>
             <button mat-button unpatch (click)="filled$.next(!filled$.getValue())">
@@ -36,7 +36,7 @@ import { map, tap } from 'rxjs/operators';
         <ng-container
           *rxFor="let strategy of strategies$; strategy: 'immediate'; trackBy:trackByStrategyName">
           <div class="col d-flex flex-column"
-               *rxIf="strategy.checked; strategy: 'immediate'">
+               *ngIf="strategy.checked">
             <h2 class="mat-subheader">{{strategy.name}}</h2>
             <rxa-sibling-strategy [strategy]="strategy.name" [count]="count$" [filled]="filled$"></rxa-sibling-strategy>
           </div>
@@ -66,6 +66,7 @@ export class ComparisonComponent {
     }, {})*/{}
   );
   strategies$ = this.selectedStrategies$.pipe(
+    tap(() => console.log(this.strategyProvider.strategyNames)),
     map((selectedStrategies) => this.strategyProvider.strategyNames.map(strategy => ({name: strategy, checked: selectedStrategies[strategy] || false})))
   );
   count$ = new BehaviorSubject<string | number>('500');

@@ -3,7 +3,7 @@ import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
-  EmbeddedViewRef,
+  EmbeddedViewRef, ErrorHandler,
   Input,
   NgZone,
   OnDestroy,
@@ -325,7 +325,8 @@ export class RxLet<U> implements OnInit, OnDestroy {
     public eRef: ElementRef,
     private ngZone: NgZone,
     private readonly nextTemplateRef: TemplateRef<RxLetViewContext<U>>,
-    private readonly viewContainerRef: ViewContainerRef
+    private readonly viewContainerRef: ViewContainerRef,
+    private errorHandler: ErrorHandler
   ) {}
 
   /** @internal */
@@ -378,6 +379,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
         patchZone: this.patchZone ? this.ngZone : false,
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         strategies: this.strategyProvider.strategies,
+        errorHandler: this.errorHandler
       },
       notificationToTemplateName: {
         [RxNotificationKind.suspense]: () => RxLetTemplateNames.suspense,

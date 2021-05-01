@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Output } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { RxStrategyProvider } from '@rx-angular/cdk';
-import { delay, map } from 'rxjs/operators';
+import { RxStrategyCredentials, RxStrategyProvider } from '@rx-angular/cdk';
+import { delay, map, skip } from 'rxjs/operators';
+import { EventEmitter } from '@angular/core';
 
 const strategiesUiConfig = {
   local: { name: 'local', icon: 'call_split' },
@@ -42,11 +43,19 @@ export class StrategySelectComponent {
   readonly strategiesUiConfig = strategiesUiConfig;
 
   readonly stratNames$ = this.strategyProvider.strategyNames$;
-  @Output() strategyChange = this.strategyProvider.primaryStrategy$.pipe(map(s => s.name));
+  @Output() strategyChange = new EventEmitter<string>();
 
   constructor(
-    public strategyProvider: RxStrategyProvider
+    public strategyProvider: RxStrategyProvider,
+    private state: RxState<any>
   ) {
+    state.hold(
+      this.strategyProvider.primaryStrategy$.pipe(
+        map(s => s.name),
+        skip(1) // skip(1) to make it "COLD"...
+      ),
+      primaryStrategyChanged => this.strategyChange.next(primaryStrategyChanged)
+    )
   }
 
 }

@@ -16,6 +16,11 @@ export const ROUTES: Routes = [
       .then(m => m.ErrorHandingModule)
   },
   {
+    path: 'exception-handling',
+    loadChildren: () => import('./exception-handling/rx-let-exception-handling.module')
+      .then(m => m.RxLetExceptionHandlingModule)
+  },
+  {
     path: 'http-errors',
     loadChildren: () => import('./http-errors/http-error.module')
       .then(m => m.HttpErrorModule)

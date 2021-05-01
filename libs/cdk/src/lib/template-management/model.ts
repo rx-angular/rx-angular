@@ -1,7 +1,7 @@
 import {
   ChangeDetectorRef,
   ElementRef,
-  EmbeddedViewRef,
+  EmbeddedViewRef, ErrorHandler,
   NgZone,
   TemplateRef,
   ViewContainerRef,
@@ -24,7 +24,7 @@ export const enum RxListTemplateChangeType {
   update,
   context,
 }
-export type RxListTemplateChange<T = any> = [RxListTemplateChangeType, T];
+export type RxListTemplateChange<T = any> = [RxListTemplateChangeType, [T, number, number?]];
 export type RxListTemplateChanges<T = any> = [
   RxListTemplateChange<T>[], // changes to apply
   boolean // notify parent
@@ -53,6 +53,7 @@ export interface RxRenderSettings<T, C> {
   patchZone: NgZone | false;
   strategies: RxStrategies<string>;
   defaultStrategyName: string;
+  errorHandler?: ErrorHandler;
 }
 
 export type CreateEmbeddedView<C> = (

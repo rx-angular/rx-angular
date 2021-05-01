@@ -8,6 +8,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
+// @TODO use cdk/zone-configuration here
 import { zonePatchedEvents } from './unpatch-event-list.experimental';
 import { getZoneUnPatchedApi } from '../../../core/utils';
 
@@ -95,7 +96,8 @@ export function unpatchEventListener(
  */
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[unpatch]' })
-export class UnpatchEventsDirective implements OnChanges, AfterViewInit, OnDestroy {
+export class UnpatchEventsDirective
+  implements OnChanges, AfterViewInit, OnDestroy {
   subscription = new Subscription();
   events$ = new BehaviorSubject<string[]>(zonePatchedEvents);
 

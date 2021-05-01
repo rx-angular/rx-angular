@@ -1,8 +1,8 @@
 import { Directive, Input } from '@angular/core';
 
-import { Observable, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, mergeAll, switchAll } from 'rxjs/operators';
-import { hotFlatten } from '@rx-angular/cdk';
+import { hotFlatten, RxStrategyProvider } from '@rx-angular/cdk';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
@@ -14,7 +14,8 @@ export class RxSwitch<U> {
     this.observables$.next(potentialObservable);
   }
 
-  private strategyHandler = hotFlatten<string>(undefined, mergeAll());
+  private strategyHandler = hotFlatten<string>(() => new BehaviorSubject(this.strategyProvider.primaryStrategy), mergeAll());
+  readonly strategies$ = this.strategyHandler.values$;
 
   @Input('rxLetStrategy')
   set strategy(strategyName: string | Observable<string> | undefined) {
@@ -29,4 +30,6 @@ export class RxSwitch<U> {
     switchAll(),
     distinctUntilChanged()
   );
+
+  constructor(private strategyProvider: RxStrategyProvider) {}
 }

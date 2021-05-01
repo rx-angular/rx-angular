@@ -1,8 +1,7 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { unpatchAddEventListener } from '@rx-angular/cdk';
-import { focusEvent, formControlsEvents, inputEvent, mouseEvent } from '../../../cdk/zone-configuration/event-names';
+import { unpatchAddEventListener, focusEvents, inputEvents, mouseEvents, formControlsEvents } from '@rx-angular/cdk';
 
 /**
  *
@@ -32,7 +31,7 @@ export function unpatchEventListener(elem: HTMLElement, event: string): void {
 }
 
 const eventsToUnpatch: string[] = [
-  ...mouseEvent, ...inputEvent, ...focusEvent, ...formControlsEvents
+  ...mouseEvents, ...inputEvents, ...focusEvents, ...formControlsEvents
 ];
 
 /**
