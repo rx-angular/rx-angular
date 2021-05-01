@@ -33,36 +33,44 @@ import { delay, filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
  *
  * @description
  *
- * The `push` pipe serves as a drop-in replacement for the `async` pipe.
- * It contains intelligent handling of change detection to enable us
- * running in zone-full as well as zone-less mode without any changes to the code.
+ * The push pipe serves as a drop-in replacement for angulars built-in async pipe.
+ * Just like the *rxLet Directive, it leverages a
+ * [RenderStrategy](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/render-strategies/README.md) under the hood which takes care of optimizing the ChangeDetection of your
+ * component.
+ * The rendering behavior can be configured per PushPipe instance using either a strategy name or provide a
+ * `RxComponentInput` config.
  *
- * The current way of binding an observable to the view looks like that:
- *  ```html
- *  {{observable$ | async}}
- * <ng-container *ngIf="observable$ | async as o">{{o}}</ng-container>
- * <component [value]="observable$ | async"></component>
+ * Usage in the template
+ *
+ * ```html
+ * <hero-search [term]="searchTerm$ | push"> </hero-search>
+ * <hero-list-component [heroes]="heroes$ | push"> </hero-list-component>
  * ```
  *
- * The problem is `async` pipe just marks the component and all its ancestors as dirty.
- * It needs zone.js microtask queue to exhaust until `ApplicationRef.tick` is called to render all dirty marked
- *     components.
+ * Using different strategies
  *
- * Heavy dynamic and interactive UIs suffer from zones change detection a lot and can
- * lean to bad performance or even unusable applications, but the `async` pipe does not work in zone-less mode.
+ * ```html
+ * <hero-search [term]="searchTerm$ | push: 'immediate'"> </hero-search>
+ * <hero-list-component [heroes]="heroes$ | push: 'normal'"> </hero-list-component>
+ * ```
  *
- * `push` pipe solves that problem.
+ * Provide a config object
  *
- * Included Features:
- *  - Take observables or promises, retrieve their values and render the value to the template
- *  - Handling null and undefined values in a clean unified/structured way
- *  - Triggers change-detection differently if `zone.js` is present or not (`detectChanges` or `markForCheck`)
- *  - Distinct same values in a row to increase performance
- *  - Coalescing of change detection calls to boost performance
+ * ```html
+ * <hero-search [term]="searchTerm$ | push: { strategy: 'immediate' }"> </hero-search>
+ * <hero-list-component [heroes]="heroes$ | push: { strategy: 'normal' }"> </hero-list-component>
+ * ```
+ *
+ * Other Features:
+ *
+ * - lazy rendering (see
+ *  [LetDirective](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/api/let-directive.md))
+ * - Take observables or promises, retrieve their values and render the value to the template
+ * - a unified/structured way of handling null, undefined or error
+ * - distinct same values in a row skip not needed re-renderings
  *
  * @usageNotes
  *
- * `push` pipe solves that problem. It can be used like shown here:
  * ```html
  * {{observable$ | push}}
  * <ng-container *ngIf="observable$ | push as o">{{o}}</ng-container>
