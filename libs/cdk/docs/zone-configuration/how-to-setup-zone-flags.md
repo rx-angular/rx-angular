@@ -116,7 +116,7 @@ import './zone-flags';
 import 'zone.js/dist/zone';
 ```
 
-> **💡 Pro Tipps:** > `@rx-angular/cdk/zone-configuration` errors if it is used incorrectly.
+> **💡 Pro Tip:** > `@rx-angular/cdk/zone-configuration` errors if it is used incorrectly.
 > If you used zone-flags wrong (not executing it before zone.js runs) you should see the following error in the console:
 > ![Log zone-flags](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_log-zone-flags_michael-hladky.png)
 
