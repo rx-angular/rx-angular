@@ -86,7 +86,7 @@ import 'zone.js/dist/zone';
 
 ## Set up using `@rx-angular/cdk/zone-configuration` helpers
 
-1. Create file `zone-flags.ts` parallel to your `polyfills.ts` and insert the following content:
+1. Create file `zone-flags.ts` next to your `polyfills.ts` and insert the following content:
 
 ```typescript
 import { zoneConfig } from '@rx-angular/cdk/zone-flags';
