@@ -1,4 +1,4 @@
-import { isDefined, isObjectGuard } from '../../core/utils/guards';
+import { isObjectGuard } from '../../core/utils/guards';
 import { valuesComparer } from '../_internals/valuesComparer.util';
 import { ComparableData } from '../interfaces/comparable-data-type';
 
@@ -97,15 +97,11 @@ export function upsert<T>(
   compare?: ComparableData<T>
 ): T[] {
   // check inputs for validity
-  const updatesAsArray = isDefined(update)
-                         ? Array.isArray(update)
-                           ? update
-                           : [update]
-                         : [];
+  const updatesAsArray =
+    update != null ? (Array.isArray(update) ? update : [update]) : [];
   // check inputs for validity
-  const sourceDefined = isDefined(source);
   const sourceIsArray = Array.isArray(source);
-  const invalidInput = !sourceIsArray && !isDefined(update);
+  const invalidInput = !sourceIsArray && updatesAsArray.length === 0;
   // if the source value is not an Array or the input is not defined return the original source
   // this is the case for any edge case:
   // '', null, undefined, CustomObjectOfDoomAndDarkness, ...
@@ -115,15 +111,17 @@ export function upsert<T>(
 
   // if source is empty array or not an array, but the updates are valid:
   // return a shallow copy of the updates as result
-  if (!sourceDefined || !source.length || !sourceIsArray) {
+  if (!sourceIsArray || source.length === 0) {
     return [...updatesAsArray] as T[];
   }
 
   const inserts: T[] = [];
   const updates: Record<number, Partial<T>> = {};
   // process updates/inserts
-  updatesAsArray.forEach(item => {
-    const match = source.findIndex(sourceItem => valuesComparer(item as T, sourceItem, compare));
+  updatesAsArray.forEach((item) => {
+    const match = source.findIndex((sourceItem) =>
+      valuesComparer(item as T, sourceItem, compare)
+    );
     // if item already exists, save it as update
     if (match !== -1) {
       updates[match] = item;
@@ -131,7 +129,7 @@ export function upsert<T>(
       // otherwise consider this as insert
       if (isObjectGuard(item)) {
         // create a shallow copy if item is an object
-        inserts.push({ ...item as T });
+        inserts.push({ ...(item as T) });
       } else {
         // otherwise just push it
         inserts.push(item);
@@ -144,7 +142,7 @@ export function upsert<T>(
     updated = updated.map((item, i) => {
       const updatedItem = updates[i];
       // process the updated
-      if (isDefined(updatedItem)) {
+      if (updatedItem != null) {
         if (isObjectGuard(item)) {
           return { ...item, ...updatedItem };
         } else {
