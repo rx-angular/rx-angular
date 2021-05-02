@@ -14,6 +14,13 @@ export const ROUTES = [
       )
   },
   {
+    path: 'error-handling',
+    loadChildren: () =>
+      import('./error-handling/rx-for-error-handling.module').then(
+        m => m.RxForErrorHandlingModule
+      )
+  },
+  {
     path: 'nested-lists',
     loadChildren: () =>
       import('./nested-lists/nested-lists.routed.module').then(

@@ -8,25 +8,13 @@ import {
 } from '@angular/core';
 import { combineLatest, merge, Observable, of, OperatorFunction } from 'rxjs';
 import {
+  catchError,
   ignoreElements,
   map,
   switchMap,
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import {
-  RxListTemplateChange,
-  RxListTemplateChangeType,
-  RxRenderSettings,
-  RxTemplateSettings,
-} from './model';
-import {
-  getTNode,
-  notifyAllParentsIfNeeded,
-  notifyInjectingParentIfNeeded,
-  templateHandling,
-  TNode,
-} from './utils';
 import { RxStrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 import { strategyHandling } from '../utils/strategy-handling';
@@ -35,6 +23,19 @@ import {
   RxListViewContext,
 } from './list-view-context';
 import { getTemplateHandler } from './list-view-handler';
+import {
+  RxListTemplateChange,
+  RxListTemplateChangeType,
+  RxRenderSettings,
+  RxTemplateSettings,
+} from './model';
+import { createErrorHandler, toRenderError } from './render-error';
+import {
+  getTNode,
+  notifyAllParentsIfNeeded,
+  notifyInjectingParentIfNeeded,
+  TNode,
+} from './utils';
 
 export interface RxListManager<T> {
   nextStrategy: (config: string | Observable<string>) => void;
@@ -66,9 +67,10 @@ export function createListTemplateManager<
     parent,
     eRef,
   } = renderSettings;
+  const errorHandler = createErrorHandler(renderSettings.errorHandler);
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
-  //               type,  payload
+  //               type,  context
   const tNode: TNode = parent
     ? getTNode(injectingViewCdRef, eRef.nativeElement)
     : false;
@@ -118,7 +120,7 @@ export function createListTemplateManager<
         // Cancel old renders
         switchMap(([{ changes, items }, strategy]) => {
           if (!changes) {
-            return [];
+            return of([]);
           }
           const listChanges = listViewHandler.getListChanges(changes, items);
           changesArr = listChanges[0];
@@ -132,11 +134,10 @@ export function createListTemplateManager<
           // @TODO we need to know if we need to notifyParent on move aswell
           notifyParent = insertedOrRemoved && parent;
           count = items.length;
-
           return merge(
             combineLatest(
               // emit after all changes are rendered
-              applyChanges$.length > 0 ? [...applyChanges$] : [of(items)]
+              applyChanges$.length > 0 ? applyChanges$ : [of(items)]
             ).pipe(
               tap(() => (partiallyFinished = false)),
               // somehow this makes the strategySelect work
@@ -153,24 +154,42 @@ export function createListTemplateManager<
               strategy,
               insertedOrRemoved
             ).pipe(ignoreElements())
+          ).pipe(
+            map(() => items),
+            catchError((e) => {
+              partiallyFinished = false;
+              errorHandler.handleError(e);
+              return of(e);
+            })
           );
         })
       );
   }
 
+  /**
+   * @internal
+   *
+   * returns an array of streams which process all of the view updates needed to reflect the latest diff to the
+   * viewContainer.
+   * I
+   *
+   * @param changes
+   * @param strategy
+   * @param count
+   */
   function getObservablesFromChangesArray(
-    changes: RxListTemplateChange[],
+    changes: RxListTemplateChange<T>[],
     strategy: RxStrategyCredentials,
     count: number
-  ) {
+  ): Observable<null | false | RxListTemplateChange<T>[]>[] {
     return changes.length > 0
       ? changes.map((change) => {
           return onStrategy(
-            change,
+            change[1],
             strategy,
-            (_change) => {
-              const type = _change[0];
-              const payload = _change[1];
+            () => {
+              const type = change[0];
+              const payload = change[1];
               switch (type) {
                 case RxListTemplateChangeType.insert:
                   listViewHandler.insertView(payload[0], payload[1], count);
@@ -184,7 +203,7 @@ export function createListTemplateManager<
                   );
                   break;
                 case RxListTemplateChangeType.remove:
-                  listViewHandler.removeView(payload);
+                  listViewHandler.removeView(payload[1]);
                   break;
                 case RxListTemplateChangeType.update:
                   listViewHandler.updateView(payload[0], payload[1], count);
@@ -194,9 +213,10 @@ export function createListTemplateManager<
                   break;
               }
             },
-            {}
+            {},
+            (e, v) => toRenderError(e, v[0])
           );
         })
-      : [];
+      : [of(null)];
   }
 }

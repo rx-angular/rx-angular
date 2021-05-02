@@ -8,6 +8,10 @@ export const MENU_ITEMS = [
     link: 'error-handling'
   },
   {
+    label: 'Exception Handling',
+    link: 'exception-handling'
+  },
+  {
     label: 'Http Errors',
     link: 'http-errors'
   },

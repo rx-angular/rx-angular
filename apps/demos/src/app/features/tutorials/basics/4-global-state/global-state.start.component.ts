@@ -37,6 +37,7 @@ const initComponentState = {
         <mat-panel-title>
           List
         </mat-panel-title>
+        <!--👇 Refactor state management -->
         <mat-panel-description>
           <span
           >{{ (storeList$ | async)?.length }} Repositories Updated every:
@@ -91,8 +92,8 @@ export class GlobalStateStart extends RxState<ComponentState>
 
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
-  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));;
-
+  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
+  //👇 Connect the global state to the list slice
   constructor(private listService: ListService) {
     super();
     this.set(initComponentState);

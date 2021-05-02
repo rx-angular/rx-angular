@@ -55,14 +55,6 @@ with very little effort in any component.
 
 ## Install
 
-Using schematics:
-
-```bash
-ng add @rx-angular/state
-```
-
-Manually:
-
 ```bash
 npm install --save @rx-angular/state
 # or

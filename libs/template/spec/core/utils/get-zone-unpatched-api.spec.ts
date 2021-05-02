@@ -1,4 +1,5 @@
-import { getGlobalThis, getZoneUnPatchedApi } from '../../../src/lib/core/utils';
+import { ɵglobal } from '@angular/core';
+import { getZoneUnPatchedApi } from '../../../src/lib/core/utils';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
@@ -9,14 +10,14 @@ let originalZoneSymboWinAddEventListener;
 describe('getZoneUnPatchedApi', () => {
   beforeAll(() => {
     mockConsole();
-    originalWinRemoveEventListener = getGlobalThis()['win-removeEventListener'];
-    originalWinAddEventListener = getGlobalThis()['win-addEventListener'];
-    originalZoneSymboWinAddEventListener = getGlobalThis()['__zone_symbol__win-addEventListener'];
+    originalWinRemoveEventListener = ɵglobal['win-removeEventListener'];
+    originalWinAddEventListener = ɵglobal['win-addEventListener'];
+    originalZoneSymboWinAddEventListener = ɵglobal['__zone_symbol__win-addEventListener'];
   });
   afterEach(() => {
-    getGlobalThis()['win-removeEventListener'] = originalWinRemoveEventListener;
-    getGlobalThis()['win-addEventListener'] = originalWinAddEventListener;
-    getGlobalThis()['__zone_symbol__win-addEventListener'] = originalZoneSymboWinAddEventListener;
+    ɵglobal['win-removeEventListener'] = originalWinRemoveEventListener;
+    ɵglobal['win-addEventListener'] = originalWinAddEventListener;
+    ɵglobal['__zone_symbol__win-addEventListener'] = originalZoneSymboWinAddEventListener;
   });
 
   it('should execute', async () => {
@@ -24,13 +25,13 @@ describe('getZoneUnPatchedApi', () => {
   });
 
   it('should get original Api from window', async () => {
-    getGlobalThis()['win-removeEventListener'] = 'win-removeEventListener';
+    ɵglobal['win-removeEventListener'] = 'win-removeEventListener';
     expect(getZoneUnPatchedApi('win-removeEventListener')).toBe('win-removeEventListener');
   });
 
   it('should get unpatched Api from window', async () => {
-    getGlobalThis()['win-addEventListener'] = 'win-addEventListener';
-    getGlobalThis()['__zone_symbol__win-addEventListener'] = '__zone_symbol__win-addEventListener';
+    ɵglobal['win-addEventListener'] = 'win-addEventListener';
+    ɵglobal['__zone_symbol__win-addEventListener'] = '__zone_symbol__win-addEventListener';
     expect(getZoneUnPatchedApi('win-addEventListener')).toBe('__zone_symbol__win-addEventListener');
   });
 

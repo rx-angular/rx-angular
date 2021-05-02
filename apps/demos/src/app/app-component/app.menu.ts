@@ -3,7 +3,7 @@ import { TEMPLATE_MENU } from '../features/template/template-shell.menu';
 import { TUTORIALS_MENU } from '../features/tutorials/tutorials-shell.menu';
 import { INTEGRATIONS_MENU_ITEMS } from '../features/integrations/integrations-shell.menu';
 import { EXPERIMENTS_MENU as EXPERIMENTS_MENU_ITEMS } from '../features/experiments/experiments-shell.menu';
-import { MENU_ITEMS as PERFORMANCE_MENU_ITEMS } from '../features/performance/performance-shell.menu';
+// import { MENU_ITEMS as PERFORMANCE_MENU_ITEMS } from '../features/performance/performance-shell.menu';
 
 export const MENU_ITEMS = [
   {
@@ -26,14 +26,14 @@ export const MENU_ITEMS = [
     link: 'integrations',
     children: INTEGRATIONS_MENU_ITEMS
   },
-  {
-    label: '🔬 Experiments',
-    link: 'experiments',
-    children: EXPERIMENTS_MENU_ITEMS
-  },
-  {
-    label: '🏎️ Performance',
-    link: 'performance',
-    children: PERFORMANCE_MENU_ITEMS
-  }
+  /* {
+     label: '🔬 Experiments',
+     link: 'experiments',
+     children: EXPERIMENTS_MENU_ITEMS
+   },
+   {
+     label: '🏎️ Performance',
+     link: 'performance',
+     children: PERFORMANCE_MENU_ITEMS
+   }*/
 ];
