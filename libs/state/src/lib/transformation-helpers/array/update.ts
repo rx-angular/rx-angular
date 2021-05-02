@@ -93,12 +93,8 @@ export function update<T extends object>(
     console.warn(`Update: Original value (${source}) is not an array.`);
   }
 
-  if (invalidInput) {
+  if (invalidInput || !sourceDefined || !sourceIsArray) {
     return source;
-  }
-
-  if (!sourceDefined || !source.length || !sourceIsArray) {
-    return [...updatesAsArray] as T[];
   }
 
   return source.map((existingItem) => {

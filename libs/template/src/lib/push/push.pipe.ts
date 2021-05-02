@@ -7,6 +7,7 @@ import {
   Pipe,
   PipeTransform,
 } from '@angular/core';
+import { asyncScheduler } from '@rx-angular/cdk/zone-less';
 import {
   strategyHandling,
   RxStrategyProvider,
@@ -15,7 +16,6 @@ import {
   RxNotification,
   RX_ANGULAR_CONFIG,
   RxAngularConfig,
-  asyncScheduler,
   RxStrategyNames,
 } from '@rx-angular/cdk';
 import {
