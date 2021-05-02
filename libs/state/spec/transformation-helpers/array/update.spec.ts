@@ -53,8 +53,7 @@ describe('update', () => {
 
     it('should not return same reference', () => {
       const originalCreatures = [...creatures];
-      const result = update(originalCreatures, creaturesForUpdate[0], (o, n) => o.id === n.id);
-      const result2 = update(null as any, originalCreatures);
+      const result = update(originalCreatures, creaturesForUpdate[0], (o, n) => o.id === n.id);      
 
       originalCreatures[0] = null as any;
 
@@ -64,7 +63,6 @@ describe('update', () => {
         name: 'Cat-Dog'
       }]);
       expect(result).toEqual(creaturesAfterSingleItemUpdate);
-      expect(result2).toEqual(creatures);
     });
   });
 
@@ -88,10 +86,10 @@ describe('update', () => {
 
   describe('edge cases', () => {
 
-    describe('emtpy values', () => {
-      it('should return updates if original array is empty', () => {
+    describe('empty values', () => {
+      it('should leave original array empty if calling update on empty array', () => {
         const emptyObjectsArray: Creature[] = [];
-        expect(update(emptyObjectsArray, creatures)).toEqual(creatures);
+        expect(update(emptyObjectsArray, creatures)).toEqual(emptyObjectsArray);
       });
 
       it('should return original array if updates array is empty', () => {
@@ -105,8 +103,8 @@ describe('update', () => {
     });
 
     describe('undefined values', () => {
-      it('should return updates if original array is undefined', () => {
-        expect(update(undefined as any, creatures)).toEqual(creatures);
+      it('should return source if source is undefined', () => {
+        expect(update(undefined as any, creatures)).toEqual(undefined);
       });
 
       it('should return original array if updates are undefined', () => {
@@ -123,8 +121,8 @@ describe('update', () => {
     });
 
     describe('null values', () => {
-      it('should return updates if original array is null', () => {
-        expect(update(null as any, creatures)).toEqual(creatures);
+      it('should return source if source is null', () => {
+        expect(update(null as any, creatures)).toEqual(null);
       });
 
       it('should return original array if updates are null', () => {
@@ -141,8 +139,8 @@ describe('update', () => {
     });
 
     describe('unexpected value types', () => {
-      it('should return updates if original array not an array', () => {
-        expect(update(1 as any, creatures)).toEqual(creatures);
+      it('should return source if source not an array', () => {
+        expect(update(1 as any, creatures)).toEqual(1);
       });
 
       it('should return original array if updates not matching expected type', () => {
