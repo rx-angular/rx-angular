@@ -12,7 +12,7 @@ describe('zone-config', () => {
   const w = window as ZoneGlobalConfigurations &
     ZoneTestConfigurations &
     ZoneRuntimeConfigurations &
-    ZoneFlagsHelperFunctions & { console: { log: () => void } }
+    ZoneFlagsHelperFunctions & { console: { log: () => void,  error: () => void } }
     & { Zone?: any };
 
   beforeAll(() => {
@@ -277,6 +277,19 @@ describe('zone-config', () => {
       zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError();
       expect(w.__zone_symbol__ignoreConsoleErrorUncaughtError).toBe(true);
     });
+
+    it('should assert if used before', () => {
+      w.console.error = createSpy('console.error');
+      zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError();
+      expect(w.__zone_symbol__ignoreConsoleErrorUncaughtError).toBe(true);
+      expect(w.console.error).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not assert if used after', () => {
+      w.console.error = createSpy('console.error');
+      expect(w.console.error).toHaveBeenCalledTimes(0);
+    });
+
 
   });
 

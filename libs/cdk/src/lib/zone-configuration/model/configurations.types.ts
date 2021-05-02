@@ -564,6 +564,15 @@ export const zoneGlobalSettingsConfigurationsKeys: ZoneGlobalSettingsConfigurati
 
 // prefix: __zone_symbol__
 export interface ZoneRuntimeConfigurations {
+  /**
+   * Ignore outputting errors to the console when uncaught Promise errors occur.
+   *
+   * By default, if an uncaught Promise error occurs, `zone.js` outputs the
+   * error to the console by calling `console.error()`.
+   *
+   * If you set `__zone_symbol__ignoreConsoleErrorUncaughtError = true`, `zone.js` does not output
+   * the uncaught error to `console.error()`.
+   */
   ignoreConsoleErrorUncaughtError?: boolean;
 }
 export type ZoneRuntimeConfigurationsKey = keyof ZoneRuntimeConfigurations;
