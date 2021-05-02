@@ -10,7 +10,7 @@ import { coalesceWith } from '../utils/coalesceWith';
 import {
   cancelAnimationFrame,
   requestAnimationFrame,
-} from '../zone-less/browser/browser';
+} from '@rx-angular/cdk/zone-less';
 
 const animationFrameTick = () =>
   new Observable<number>((subscriber) => {

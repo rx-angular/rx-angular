@@ -1,5 +1,5 @@
 import { Observable, SchedulerAction, SchedulerLike, Subscriber } from 'rxjs';
-import { asyncScheduler } from '../scheduler';
+import { async } from '../scheduler/async/async';
 import { isNumeric } from './utils';
 
 /**
@@ -52,14 +52,14 @@ import { isNumeric } from './utils';
  */
 export function interval(
   period = 0,
-  scheduler: SchedulerLike = asyncScheduler
+  scheduler: SchedulerLike = async
 ): Observable<number> {
   if (!isNumeric(period) || period < 0) {
     period = 0;
   }
 
   if (!scheduler || typeof scheduler.schedule !== 'function') {
-    scheduler = asyncScheduler;
+    scheduler = async;
   }
 
   return new Observable<number>((subscriber) => {
