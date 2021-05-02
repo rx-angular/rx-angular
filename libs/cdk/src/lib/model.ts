@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Type } from '@angular/core';
-import { Notification, Observable } from 'rxjs';
+import { NextObserver, Notification, Observable } from 'rxjs';
 
 export type coalescingObj =
   | Record<string | number | symbol, unknown>

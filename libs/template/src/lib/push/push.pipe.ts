@@ -1,7 +1,9 @@
 import {
   ChangeDetectorRef,
+  Inject,
   NgZone,
   OnDestroy,
+  Optional,
   Pipe,
   PipeTransform,
 } from '@angular/core';
@@ -11,6 +13,10 @@ import {
   templateNotifier,
   RxNotificationKind,
   RxNotification,
+  RX_ANGULAR_CONFIG,
+  RxAngularConfig,
+  asyncScheduler,
+  RxStrategyNames,
 } from '@rx-angular/cdk';
 import {
   NextObserver,
@@ -18,43 +24,51 @@ import {
   ObservableInput,
   Unsubscribable,
 } from 'rxjs';
-import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { delay, filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 
 /**
  * @Pipe PushPipe
  *
  * @description
  *
- * The `push` pipe serves as a drop-in replacement for the `async` pipe.
- * It contains intelligent handling of change detection to enable us
- * running in zone-full as well as zone-less mode without any changes to the code.
+ * The push pipe serves as a drop-in replacement for angulars built-in async pipe.
+ * Just like the *rxLet Directive, it leverages a
+ * [RenderStrategy](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/render-strategies/README.md) under the hood which takes care of optimizing the ChangeDetection of your
+ * component.
+ * The rendering behavior can be configured per PushPipe instance using either a strategy name or provide a
+ * `RxComponentInput` config.
  *
- * The current way of binding an observable to the view looks like that:
- *  ```html
- *  {{observable$ | async}}
- * <ng-container *ngIf="observable$ | async as o">{{o}}</ng-container>
- * <component [value]="observable$ | async"></component>
+ * Usage in the template
+ *
+ * ```html
+ * <hero-search [term]="searchTerm$ | push"> </hero-search>
+ * <hero-list-component [heroes]="heroes$ | push"> </hero-list-component>
  * ```
  *
- * The problem is `async` pipe just marks the component and all its ancestors as dirty.
- * It needs zone.js microtask queue to exhaust until `ApplicationRef.tick` is called to render all dirty marked
- *     components.
+ * Using different strategies
  *
- * Heavy dynamic and interactive UIs suffer from zones change detection a lot and can
- * lean to bad performance or even unusable applications, but the `async` pipe does not work in zone-less mode.
+ * ```html
+ * <hero-search [term]="searchTerm$ | push: 'immediate'"> </hero-search>
+ * <hero-list-component [heroes]="heroes$ | push: 'normal'"> </hero-list-component>
+ * ```
  *
- * `push` pipe solves that problem.
+ * Provide a config object
  *
- * Included Features:
- *  - Take observables or promises, retrieve their values and render the value to the template
- *  - Handling null and undefined values in a clean unified/structured way
- *  - Triggers change-detection differently if `zone.js` is present or not (`detectChanges` or `markForCheck`)
- *  - Distinct same values in a row to increase performance
- *  - Coalescing of change detection calls to boost performance
+ * ```html
+ * <hero-search [term]="searchTerm$ | push: { strategy: 'immediate' }"> </hero-search>
+ * <hero-list-component [heroes]="heroes$ | push: { strategy: 'normal' }"> </hero-list-component>
+ * ```
+ *
+ * Other Features:
+ *
+ * - lazy rendering (see
+ *  [LetDirective](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/api/let-directive.md))
+ * - Take observables or promises, retrieve their values and render the value to the template
+ * - a unified/structured way of handling null, undefined or error
+ * - distinct same values in a row skip not needed re-renderings
  *
  * @usageNotes
  *
- * `push` pipe solves that problem. It can be used like shown here:
  * ```html
  * {{observable$ | push}}
  * <ng-container *ngIf="observable$ | push as o">{{o}}</ng-container>
@@ -64,7 +78,8 @@ import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
  * @publicApi
  */
 @Pipe({ name: 'push', pure: false })
-export class PushPipe<U> implements PipeTransform, OnDestroy {
+export class PushPipe<U, S extends string = string>
+  implements PipeTransform, OnDestroy {
   /** @internal */
   private renderedValue: U | null | undefined;
   /** @internal */
@@ -76,13 +91,81 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
     this.strategyProvider.primaryStrategy,
     this.strategyProvider.strategies
   );
+  /** @internal */
+  private patchZone: false | NgZone;
+  /** @internal */
+  private _renderCallback: NextObserver<U>;
 
   constructor(
     private strategyProvider: RxStrategyProvider,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private ngZone: NgZone,
+    @Optional()
+    @Inject(RX_ANGULAR_CONFIG)
+    private config?: RxAngularConfig<S>
   ) {
-    const scope = (cdRef as any).context;
-    this.subscription = this.templateObserver.values$
+    this.subscription = this.handleChangeDetection();
+  }
+
+  transform(
+    potentialObservable: null,
+    config?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>,
+    renderCallback?: NextObserver<U>
+  ): null;
+  transform(
+    potentialObservable: undefined,
+    config?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>,
+    renderCallback?: NextObserver<U>
+  ): undefined;
+  transform(
+    potentialObservable: ObservableInput<U>,
+    config?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>,
+    renderCallback?: NextObserver<U>
+  ): U;
+  transform(
+    potentialObservable: ObservableInput<U>,
+    config?: PushInput<U, S>
+  ): U;
+  transform(
+    potentialObservable: ObservableInput<U> | null | undefined,
+    config:
+      | PushInput<U, S>
+      | RxStrategyNames<S>
+      | Observable<RxStrategyNames<S>>
+      | undefined,
+    renderCallback?: NextObserver<U>
+  ): U | null | undefined {
+    this._renderCallback = renderCallback;
+    if (config) {
+      if (isRxComponentInput(config)) {
+        this.strategyHandler.next(config.strategy as string);
+        this._renderCallback = config.renderCallback;
+        // set fallback if patchZone is not set
+        this.setPatchZone(config.patchZone);
+      } else {
+        this.strategyHandler.next(config as string);
+      }
+    }
+    this.templateObserver.next(potentialObservable);
+    return this.renderedValue as U;
+  }
+
+  /** @internal */
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  /** @internal */
+  private setPatchZone(patch?: boolean): void {
+    const doPatch =
+      patch == null ? this.strategyProvider.config.patchZone : patch;
+    this.patchZone = doPatch ? this.ngZone : false;
+  }
+
+  /** @internal */
+  private handleChangeDetection(): Unsubscribable {
+    const scope = (this.cdRef as any).context;
+    return this.templateObserver.values$
       .pipe(
         filter<RxNotification<U>>(
           (n) =>
@@ -93,51 +176,38 @@ export class PushPipe<U> implements PipeTransform, OnDestroy {
           this.renderedValue = notification.value as U;
         }),
         withLatestFrom(this.strategyHandler.strategy$),
-        switchMap(([v, strategy]) =>
-          this.strategyProvider.schedule(
-            () => {
-              strategy.work(cdRef, scope);
-            },
-            {
-              scope,
-              strategy: strategy.name,
-              patchZone: this.strategyProvider.config.patchZone ? null : false,
-            }
-          )
+        switchMap(([notification, strategy]) =>
+          this.strategyProvider
+            .schedule(
+              () => {
+                strategy.work(this.cdRef, scope);
+              },
+              {
+                scope,
+                strategy: strategy.name,
+                patchZone: this.patchZone,
+              }
+            )
+            .pipe(
+              delay(0, asyncScheduler),
+              tap(() => this._renderCallback?.next(notification.value as U))
+            )
         )
       )
       .subscribe();
   }
+}
 
-  transform(
-    potentialObservable: null,
-    config?: string | Observable<string>,
-    renderCallback?: NextObserver<U>
-  ): null;
-  transform(
-    potentialObservable: undefined,
-    config?: string | Observable<string>,
-    renderCallback?: NextObserver<U>
-  ): undefined;
-  transform(
-    potentialObservable: ObservableInput<U>,
-    config?: string | Observable<string>,
-    renderCallback?: NextObserver<U>
-  ): U;
-  transform(
-    potentialObservable: ObservableInput<U> | null | undefined,
-    config: string | Observable<string> | undefined,
-    renderCallback?: NextObserver<U>
-  ): U | null | undefined {
-    if (config) {
-      this.strategyHandler.next(config);
-    }
-    this.templateObserver.next(potentialObservable);
-    return this.renderedValue as U;
-  }
+interface PushInput<T, S> {
+  strategy?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>;
+  renderCallback?: NextObserver<T>;
+  patchZone?: boolean;
+}
 
-  /** @internal */
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
+function isRxComponentInput<U, S>(val: any): val is PushInput<U, S> {
+  return (
+    val?.hasOwnProperty('strategy') ||
+    val?.hasOwnProperty('renderCallback') ||
+    val?.hasOwnProperty('patchZone')
+  );
 }
