@@ -1,6 +1,7 @@
 // tslint:disable file-name-casing
+import * as rxjs from 'rxjs';
 import { AsapAction } from './AsapAction';
-import { AsapScheduler } from './AsapScheduler';
+import { createScheduler } from '../create-scheduler';
 
 /**
  *
@@ -38,4 +39,4 @@ import { AsapScheduler } from './AsapScheduler';
  * // ... but 'asap' goes first!
  * ```
  */
-export const asap = new AsapScheduler(AsapAction);
+export const asapScheduler = createScheduler(rxjs.asapScheduler, AsapAction);

@@ -1,5 +1,5 @@
 import { Observable, SchedulerAction, SchedulerLike, Subscriber } from 'rxjs';
-import { async } from '../scheduler/async/async';
+import { asyncScheduler } from '../scheduler/async/async';
 import { isNumeric, isScheduler } from './utils';
 
 /**
@@ -65,7 +65,7 @@ export function timer(
   }
 
   if (!isScheduler(scheduler)) {
-    scheduler = async;
+    scheduler = asyncScheduler;
   }
 
   return new Observable((subscriber) => {

@@ -1,4 +1,4 @@
 // tslint:disable
 import { AsyncScheduler } from '../async/AsyncScheduler';
 
-export class QueueScheduler extends AsyncScheduler {}
+export interface QueueScheduler extends AsyncScheduler {}
