@@ -140,5 +140,5 @@ import './zone-runtime';
 ```
 
 > **💡 Pro Tipps:** > `@rx-angular/cdk/zone-configuration` errors if it is used incorrectly.
-> If you used zone-flags wrong (not executing it before zone.js runs) you should see the following error in the console:
-> ![Log zone-flags](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_log-zone-flags-runtime_michael-hladky.png)
+> If you used zone-runtime configurations wrong (not executing it after zone.js runs) you should see the following error in the console:
+> ![Log zone-runtime](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_log-zone-flags-runtime_michael-hladky.png)
