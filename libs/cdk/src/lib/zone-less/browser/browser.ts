@@ -30,10 +30,10 @@ export const Promise: PromiseConstructor = getZoneUnPatchedApi('Promise');
  *
  * requestAnimationFrame(cb, ms);
  *
- * @param cb {Function} - Required. The function that will be executed
+ * @param cb - Required. The function that will be executed
  *
  */
-export function requestAnimationFrame(cb: Function): number {
+export function requestAnimationFrame(cb: FrameRequestCallback): number {
   return getZoneUnPatchedApi('requestAnimationFrame')(cb);
 }
 
@@ -75,11 +75,11 @@ export function cancelAnimationFrame(id: number): void {
  *
  * setInterval(cb, ms);
  *
- * @param cb {Function} - Required. The function that will be executed
- * @param ms {number} - Required. The intervals (in milliseconds) on how often to execute the code. If the value is less than 10, the value 10 is used
+ * @param cb - Required. The function that will be executed
+ * @param ms - Required. The intervals (in milliseconds) on how often to execute the code. If the value is less than 10, the value 10 is used
  *
  */
-export function setInterval(cb: Function, ms: number = 0): void {
+export function setInterval(cb: TimerHandler, ms: number = 0): number {
   return getZoneUnPatchedApi('setInterval')(cb, ms);
 }
 
@@ -120,11 +120,11 @@ export function clearInterval(id: number): void {
  *
  * setTimeout(cb, ms);
  *
- * @param cb {Function} - Required. The function that will be executed
- * @param ms {number} - Optional. The number of milliseconds to wait before executing the code. If omitted, the value 0 is used
+ * @param cb - Required. The function that will be executed
+ * @param ms - Optional. The number of milliseconds to wait before executing the code. If omitted, the value 0 is used
  *
  */
-export function setTimeout(cb: Function, ms: number = 0): void {
+export function setTimeout(cb: TimerHandler, ms: number = 0): number {
   return getZoneUnPatchedApi('setTimeout')(cb, ms);
 }
 
@@ -147,7 +147,7 @@ export function setTimeout(cb: Function, ms: number = 0): void {
  *
  */
 export function clearTimeout(id: number): void {
-  return getZoneUnPatchedApi('clearTimeout')(id);
+  getZoneUnPatchedApi('clearTimeout')(id);
 }
 
 /**

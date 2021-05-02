@@ -1,4 +1,4 @@
-import { Observable,Subscriber } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getZoneUnPatchedApi } from '../../zone-checks';
 
@@ -47,16 +47,20 @@ export interface AddEventListenerOptions extends EventListenerOptions {
 }
 
 /* tslint:disable:max-line-length */
+/* tslint:disable:unified-signatures */
 export function fromEvent<T>(target: FromEventTarget<T>, eventName: string): Observable<T>;
 /** @deprecated resultSelector no longer supported, pipe to map instead */
-// tslint:disable-next-line:unified-signatures
-export function fromEvent<T>(target: FromEventTarget<T>, eventName: string, resultSelector: (...args: any[]) => T): Observable<T>;
-// tslint:disable-next-line:unified-signatures
-export function fromEvent<T>(target: FromEventTarget<T>, eventName: string, options: EventListenerOptions): Observable<T>;
+export function fromEvent<T>(
+  target: FromEventTarget<T>, eventName: string, resultSelector: (...args: any[]) => T): Observable<T>;
+export function fromEvent<T>(
+  target: FromEventTarget<T>, eventName: string, options: EventListenerOptions): Observable<T>;
 /** @deprecated resultSelector no longer supported, pipe to map instead */
-// tslint:disable-next-line:unified-signatures
-export function fromEvent<T>(target: FromEventTarget<T>, eventName: string, options: EventListenerOptions, resultSelector: (...args: any[]) => T): Observable<T>;
+export function fromEvent<T>(
+  target: FromEventTarget<T>, eventName: string, options: EventListenerOptions,
+  resultSelector: (...args: any[]) => T): Observable<T>;
 /* tslint:enable:max-line-length */
+/* tslint:enable:unified-signatures */
+
 
 export function fromEvent<T>(
   target: FromEventTarget<T>,
@@ -96,8 +100,16 @@ function setupSubscription<T>(sourceObj: FromEventTarget<T>, eventName: string,
   let unsubscribe: () => void;
   if (isEventTarget(sourceObj)) {
     const source = sourceObj;
-    getZoneUnPatchedApi('addEventListener', sourceObj)(eventName, handler, options);
-    unsubscribe = () => getZoneUnPatchedApi('removeEventListener', source)(eventName, handler, options);
+    getZoneUnPatchedApi('addEventListener', sourceObj).call(sourceObj,
+      eventName,
+      handler,
+      options
+    );
+    unsubscribe = () => getZoneUnPatchedApi('removeEventListener', source).call(source,
+      eventName,
+      handler,
+      options
+    );
   } else if (isJQueryStyleEventEmitter(sourceObj)) {
     const source = sourceObj;
     sourceObj.on(eventName, handler);

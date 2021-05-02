@@ -9,27 +9,25 @@
 `@rx-angular/cdk` was specifically designed to help developers build directives, components and services for ergonomic and high performant Angular UI libs as well as large scale
 applications
 
-## Key features
+![rx-angular-cdk](https://user-images.githubusercontent.com/10064416/115325340-b8ed0800-a18b-11eb-9896-28c91c9e7801.png)
 
-- Typed Zone-Flags Configuration
-- RxJS operators and functions
-- Template Management
-- ChangeDetection and Render-Strategies
-- ZoneAgnostic APIs
+
+## Sub Modules
+
+- ⛔ Zone Configuration
+- 🚫 Zone Less
+- 🛠 Coercing
+- 🛠 Coalescing
+- 📡 Notification
+- 🔳 Template Management
+- 🖌 Render-Strategies
 
 ## Demos:
 
-- https://stackblitz.com/edit/rx-angular-cdk-demos
+- ⛔ [Zone Flags](https://github.com/BioPhoton/rx-angular-cdk-zone-configuration)
+- 🔳 [rxFor](https://stackblitz.com/edit/rx-angular-cdk-demos-c52q34)
 
 ## Install
-
-Using schematics:
-
-```bash
-ng add @rx-angular/cdk
-```
-
-Manually:
 
 ```bash
 npm install --save @rx-angular/cdk
@@ -37,6 +35,11 @@ npm install --save @rx-angular/cdk
 yarn add @rx-angular/cdk
 ```
 
-## Zone Config
+## ⛔ Zone Configuration
 
-[Zone Config](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/docs/zone-config/overview.md)
+[Zone Flags](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/zone-configuration/zone-flags.md)
+
+## 🛠 Coalescing
+
+[Coalescing](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/docs/coalescing)
+

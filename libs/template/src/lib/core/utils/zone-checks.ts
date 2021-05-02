@@ -1,4 +1,4 @@
-import { getGlobalThis } from './get-global-this';
+import { ɵglobal } from '@angular/core';
 
 /**
  * getZoneUnPatchedApi
@@ -13,11 +13,14 @@ import { getGlobalThis } from './get-global-this';
  * @return {Function} - The zone un-patched API in question.
  *
  */
-export function getZoneUnPatchedApi<T = Function>(name: string, elem?: object): T {
-  elem = elem || getGlobalThis();
-  return isApiZonePatched(name, elem) ? elem['__zone_symbol__' + name] : elem[name];
+export function getZoneUnPatchedApi<T = Function>(
+  name: string,
+  elem: object = ɵglobal
+): T {
+  return isApiZonePatched(name, elem)
+    ? elem['__zone_symbol__' + name]
+    : elem[name];
 }
-
 
 /**
  * envZonePatched
@@ -33,7 +36,7 @@ export function getZoneUnPatchedApi<T = Function>(name: string, elem?: object): 
  *
  */
 export function isEnvZonePatched(): boolean {
-  return getGlobalThis().Zone !== undefined;
+  return ɵglobal.Zone !== undefined;
 }
 
 /**
@@ -83,8 +86,7 @@ export function isNgZone(instance: any): boolean {
 
   let calledApply = false;
 
-  function fn() {
-  }
+  function fn() {}
 
   fn.apply = () => (calledApply = true);
 
@@ -111,4 +113,3 @@ export function isNgZone(instance: any): boolean {
 export function isNoopNgZone(instance: any): boolean {
   return !isNgZone(instance);
 }
-

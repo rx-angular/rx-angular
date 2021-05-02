@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
 import { ComparisonComponent } from './comparison.component';
 
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -13,7 +13,7 @@ import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { SiblingModule } from '../../../../shared/template-structures/sibling/sibling.module';
 import { ImageArrayModule } from '../../../../shared/image-array/image-array.module';
 import { ROUTES } from './comparison.routes';
-import { RxLetModule, RxForModule, RxIfModule, PipeModule } from '../../../../rx-angular-pocs';
+import { RxForModule, RxIfModule, PipeModule } from '../../../../rx-angular-pocs';
 
 
 @NgModule({
@@ -31,7 +31,7 @@ import { RxLetModule, RxForModule, RxIfModule, PipeModule } from '../../../../rx
     MatInputModule,
     PushModule,
     ImageArrayModule,
-    RxLetModule,
+    LetModule,
     RxForModule,
     RxIfModule,
     PipeModule,

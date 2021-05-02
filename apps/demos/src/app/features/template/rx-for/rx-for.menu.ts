@@ -8,6 +8,10 @@ export const MENU_ITEMS = [
     link: 'nested-lists'
   },
   {
+    label: 'Error handling',
+    link: 'error-handling'
+  },
+  {
     label: 'Route Change',
     link: 'route-change'
   }

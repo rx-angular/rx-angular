@@ -1,5 +1,6 @@
 import { from } from 'rxjs';
-import { getGlobalThis, getUnpatchedResolvedPromise } from '../../src/lib/core';
+import { ɵglobal } from '@angular/core';
+import { getUnpatchedResolvedPromise } from '../../src/lib/core';
 import { getStrategies } from '../../src/lib/render-strategies';
 import { TestScheduler } from 'rxjs/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
@@ -23,10 +24,10 @@ let testScheduler: TestScheduler;
 
 // In THIS test setup Zone is initiated and __zone_symbol__Promise has already value
 const original__zone_symbol__Promise =
-  getGlobalThis().__zone_symbol__Promise || Promise;
+  ɵglobal.__zone_symbol__Promise || Promise;
 
 function restoreGlobalThis() {
-  getGlobalThis().__zone_symbol__Promise = original__zone_symbol__Promise;
+  ɵglobal.__zone_symbol__Promise = original__zone_symbol__Promise;
 }
 
 function tickFromUnPatchedPromise() {
@@ -40,7 +41,7 @@ describe('getZoneUnPatchedDurationSelector', () => {
   beforeEach(restoreGlobalThis);
 
   it('should return the the native/un-patched Promise from globalThis.Promise if zone didnt patch it', () => {
-    getGlobalThis().__zone_symbol__Promise = undefined;
+    ɵglobal.__zone_symbol__Promise = undefined;
     const originalThen: Function = Promise.prototype.then;
     let called = false;
     Promise.prototype.then = function() {
@@ -56,10 +57,10 @@ describe('getZoneUnPatchedDurationSelector', () => {
   });
 
   it('should return the the native/un-patched Promise from globalThis.__zone_symbol__Promise', () => {
-    const originalThen: Function = getGlobalThis().__zone_symbol__Promise
+    const originalThen: Function = ɵglobal.__zone_symbol__Promise
       .prototype.then;
     let called = false;
-    getGlobalThis().__zone_symbol__Promise.prototype.then = function() {
+    ɵglobal.__zone_symbol__Promise.prototype.then = function() {
       const chained = originalThen.apply(this, arguments);
       called = true;
       return chained;

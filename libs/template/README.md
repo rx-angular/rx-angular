@@ -25,11 +25,11 @@ on template rendering, the coordination and optimization of `ChangeDetection` cy
 straight **drop in replacement** for the `AsyncPipe (async)`, the `LetDirective` will often provide a more
 convenient way of managing reactive sources and lazy rendering of the view.
 
-Using those with the default strategy ([Local Strategy](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/render-strategies.md#local-strategy)) should already improve the rendering performance of
+Using those with the default strategy ([Local Strategy](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/render-strategies/strategies.md#local)) should already improve the rendering performance of
 your application by a decent amount.
 
 The applied optimization behavior is fully customizable by using built-in or
-custom provided (_coming soon_) [RenderStrategies](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/render-strategies.md).  
+custom provided (_coming soon_) [RenderStrategies](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/docs/render-strategies).  
 However, `RenderStrategies` are also meant to be as a tool developers can interact with inside
 their components, giving you an even broader access to the rendering mechanisms of your application.
 The API comes with imperative as well as reactive ways to manage renderings.

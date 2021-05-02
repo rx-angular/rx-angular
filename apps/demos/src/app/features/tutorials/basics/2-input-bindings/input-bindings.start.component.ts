@@ -28,6 +28,7 @@ const initComponentState = {
      Input Bindings
     </h3>
     {{model$  | async | json}}
+    <!--👇 Bind the state to the view -->
     <mat-expansion-panel
       (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
       [expanded]="listExpanded"
@@ -37,6 +38,7 @@ const initComponentState = {
         <mat-panel-title>
           List
         </mat-panel-title>
+        <!--👇 Replace the refreshInterval component -->
         <mat-panel-description>
           <span
             >{{ (storeList$ | async)?.length }} Repositories Updated every:
@@ -101,6 +103,7 @@ export class InputBindingsStart extends RxState<ComponentState> implements OnIni
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 4000) {
+      //👇 Partially update the state with the state slice
       this._refreshInterval = refreshInterval;
       this.resetRefreshTick();
     }
@@ -122,7 +125,7 @@ export class InputBindingsStart extends RxState<ComponentState> implements OnIni
   ngOnInit(): void {
     this.resetRefreshTick();
   }
-
+  //👇 Update the resetRefreshTick method
   resetRefreshTick() {
     this.intervalSubscription.unsubscribe();
     this.intervalSubscription = interval(this._refreshInterval)
