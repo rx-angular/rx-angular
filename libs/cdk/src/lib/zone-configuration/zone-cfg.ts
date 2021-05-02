@@ -25,7 +25,7 @@ const zoneSymbol = '__zone_symbol__';
 /**
  * https://angular.io/guide/zone#setting-up-zonejs
  **/
-function assertZoneObjectPresentBeforeZoneJs() {
+function assertZoneObjectExistsBeforeZoneJs() {
   if ((window as any).Zone !== undefined) {
     console.error(
       'zone configuration file for global configuration needs to get imported before zone.js. https://angular.io/guide/zone#setting-up-zonejs'
@@ -36,7 +36,7 @@ function assertZoneObjectPresentBeforeZoneJs() {
 /**
  * https://github.com/angular/angular/blob/master/packages/zone.js/lib/zone.configurations.api.ts#L775-L776
  **/
-function assertZoneObjectPresentAfterZoneJs() {
+function assertZoneObjectExistsAfterZoneJs() {
   if ((window as any).Zone === undefined) {
     console.error(
       'zone configuration file for runtime configuration needs to get imported/used after zone.js. https://github.com/angular/angular/blob/master/packages/zone.js/lib/zone.configurations.api.ts#L775-L776'
@@ -46,28 +46,28 @@ function assertZoneObjectPresentAfterZoneJs() {
 
 const addDisableFlagBeforeZoneJs = (prop: string) => ({
   [prop]: () => {
-    assertZoneObjectPresentBeforeZoneJs();
+    assertZoneObjectExistsBeforeZoneJs();
     return ((window as any)[zoneDisable + prop] = true);
   },
 });
 
 const addSymbolBeforeZoneJs = (prop: string) => ({
   [prop]: () => {
-    assertZoneObjectPresentBeforeZoneJs();
+    assertZoneObjectExistsBeforeZoneJs();
     return ((window as any)[zoneSymbol + prop] = true);
   },
 });
 
 const addSymbolAfterZoneJs = (prop: string) => ({
   [prop]: () => {
-    assertZoneObjectPresentAfterZoneJs();
+    assertZoneObjectExistsAfterZoneJs();
     return ((window as any)[zoneSymbol + prop] = true);
   },
 });
 
 const addArraySymbolFlagBeforeZoneJs = (prop: string) => ({
   [prop]: (eventNames: string[]) => {
-    assertZoneObjectPresentBeforeZoneJs();
+    assertZoneObjectExistsBeforeZoneJs();
     const w: any = window as any;
     return (w[zoneSymbol + prop] = [
       ...(Array.isArray(w[zoneSymbol + prop]) ? w[zoneSymbol + prop] : []),
