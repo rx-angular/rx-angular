@@ -1,6 +1,5 @@
 import { ComparableData } from '../interfaces/comparable-data-type';
 import { valuesComparer } from '../_internals/valuesComparer.util';
-import { isDefined } from '../../core';
 
 /**
  * @description
@@ -79,21 +78,23 @@ export function update<T extends object>(
   updates: Partial<T>[] | Partial<T>,
   compare?: ComparableData<T>
 ): T[] {
-  const updatesAsArray = updates
+  const updatesDefined = updates != null;
+  const updatesAsArray = updatesDefined
     ? Array.isArray(updates)
       ? updates
       : [updates]
     : [];
 
-  const sourceDefined = isDefined(source);
+  const sourceDefined = source != null;
   const sourceIsArray = Array.isArray(source);
-  const invalidInput = !sourceIsArray && !isDefined(updates);
+  const invalidInput =
+    !sourceIsArray || source.length === 0 || updatesAsArray.length === 0;
 
   if (sourceDefined && !sourceIsArray) {
     console.warn(`Update: Original value (${source}) is not an array.`);
   }
 
-  if (invalidInput || !sourceDefined || !sourceIsArray) {
+  if (invalidInput) {
     return source;
   }
 
