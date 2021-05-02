@@ -1,6 +1,5 @@
 import { EMPTY, from, Observable, of, timer } from 'rxjs';
 import { merge as mergeWith, share, switchMap, take, takeUntil } from 'rxjs/operators';
-import { priorityTickMap } from '@rx-angular/template';
 import { SchedulerConfig, TestItem } from './model';
 import { fromFetch } from 'rxjs/fetch';
 
@@ -8,9 +7,15 @@ export function compareIdFn(a, b) {
   return a.id === b.id;
 }
 
+const theMax = 10000;
+
 export function withCompleteAndError<T>(error$, complete$) {
   return (o: Observable<T>): Observable<T> =>
-    o.pipe(mergeWith(error$), takeUntil(complete$));
+    o.pipe(
+      /* tslint:disable */
+      mergeWith(error$),
+      /* tslint:enable */
+      takeUntil(complete$));
 }
 
 export function toTick(scheduleConfig: SchedulerConfig): Observable<number> {
@@ -28,7 +33,7 @@ export function toTick(scheduleConfig: SchedulerConfig): Observable<number> {
     if (scheduleConfig.scheduler) {
       return timer(timerConfig.dueTime, timerConfig.period).pipe(
         take(scheduleConfig.numEmissions),
-        switchMap(t => priorityTickMap[scheduleConfig.scheduler]),
+       // switchMap(t => priorityTickMap[scheduleConfig.scheduler]),
         takeUntil(stop$)
       ) as Observable<number>;
     }
@@ -36,9 +41,9 @@ export function toTick(scheduleConfig: SchedulerConfig): Observable<number> {
   }
 }
 
-export function toInt(float: number = toRandom(), min = 0, max = 10): number {
+export function toInt(float: number = toRandom(), min = 0, max = theMax): number {
   // tslint:disable-next-line:no-bitwise
-  return float !== undefined ? ~~(min + float * (max+1 - min)) : undefined;
+  return ~~(min + float * (max+1 - min));
 }
 
 export function toRandom(): number {
@@ -58,7 +63,7 @@ export function toRandomItems(ids: number[]): TestItem[] {
   return new Array(ids.length).fill(0).map((v) => ({ id: _ids.pop(), value: toRandom() }));
 }
 
-export function toNewItems(arr: TestItem[] = [], numItems: number, maxId = 10): TestItem[] {
+export function toNewItems(arr: TestItem[] = [], numItems: number, maxId = theMax): TestItem[] {
   const ids = arr.map(i => i.id);
   const newItems: TestItem[] = [];
   if (arr.length >= maxId) {
@@ -74,19 +79,35 @@ export function toNewItems(arr: TestItem[] = [], numItems: number, maxId = 10): 
   return newItems;
 }
 
-export function getRandomItems(arr: TestItem[] = [], numItems: number) {
+export function getRandomItems<T>(arr: T[] = [], numItems: number, exclude?: (i: T) => boolean) {
   const result = new Array(numItems);
   let len = arr.length;
   const taken = new Array(len);
-  if (numItems > len)
-    throw new RangeError('getRandom: more elements taken than available');
+  if (numItems > len) {
+    numItems = len - 1;
+  }
   while (numItems--) {
     const x = Math.floor(Math.random() * len);
-    result[numItems] = arr[x in taken ? taken[x] : x];
+    const i = arr[x in taken ? taken[x] : x];
+      if(exclude && exclude(i)) {
+        numItems++;
+        continue;
+      }
+    result[numItems] = i;
     taken[x] = --len in taken ? taken[len] : len;
   }
   return result;
 }
+
+export function getRandomRecords(arr: TestItem[] = [], numItems: number) {
+  numItems = Math.abs(Math.max(numItems, arr.length-1));
+  const randomItems = new Map<number, TestItem>();
+  while(randomItems.size < numItems) {
+    randomItems.set(numItems, arr[toInt(0, arr.length-1)]);
+  }
+  return randomItems;
+}
+
 
 export function getItems(arr: TestItem[] = [], itemIds: number[]) {
   return arr.filter(i => itemIds.includes(i.id));
@@ -102,8 +123,8 @@ export function updateItemMutable(arr = [], itemIds: number[]) {
   return arr;
 }
 
-export function updateItemImmutable(arr = [], itemIds: number[]) {
-  itemIds = itemIds || getRandomItems(arr, 1).map(i => i.id);
+export function updateItemImmutable(arr = [], num: number) {
+  const itemIds = getRandomItems(arr, num).map(i => i.id);
   return [...updateItemMutable(arr, itemIds).map(i => itemIds.find(id => id + '' === i.id + '') ? { ...i } : i)];
 }
 
@@ -116,16 +137,26 @@ export function addItemImmutable(arr = [], numItems: number) {
   return [...addItemMutable(arr, numItems)];
 }
 
-export function moveItemMutable(arr: TestItem[] = [], positions): TestItem[] {
+export function moveItemMutable(arr: TestItem[] = [], num: number): TestItem[] {
   if (!arr.length) {
     return arr;
   }
-  const randItemId = getRandomItems(arr, 1)[0].id;
-  Object.entries(positions || { [randItemId]: 1 }).forEach(([id, pos2]) => {
+  const numItems = arr.length - 1;
+
+  if (num > numItems) {
+    num = numItems;
+  }
+
+  for (let i = 0; i<num; i++) {
+
     // local variables
-    let i, tmp;
-    const pos1 = arr.findIndex(ii => +ii.id === +id);
-    pos2 = +pos2;
+    const id1 = getRandomItems(arr, 1)[0].id;
+    const id2 = getRandomItems(arr, 1, (it) => it.id === id1)[0].id;
+
+    let tmp;
+    const pos1 = arr.findIndex(ii => +ii.id === id1);
+    const pos2 = arr.findIndex(ii => +ii.id === id2);
+    console.log('id1', id1, pos1, pos2);
     // if positions are different and inside array
     if (arr.length >= 2 && pos1 !== pos2 && 0 <= pos1 && pos1 <= arr.length && 0 <= pos2 && pos2 <= arr.length) {
       // save element from position 1
@@ -145,12 +176,23 @@ export function moveItemMutable(arr: TestItem[] = [], positions): TestItem[] {
       // put element from position 1 to destination
       arr[+pos2] = tmp;
     }
-  });
-  return arr;
+  }
+
+return arr;
 }
 
-export function moveItemImmutable(arr: TestItem[] = [], positions): TestItem[] {
-  return [...moveItemMutable(arr, positions)];
+export function moveItemImmutable(arr: TestItem[] = []): TestItem[] {
+  return [...moveItemMutable(arr, 1)];
+}
+export function moveItemsImmutable(arr: TestItem[] = [], num: number): TestItem[] {
+  return [...moveItemMutable(arr, num)];
+}
+
+export function shuffleItemsImmutable(arr: TestItem[] = []): TestItem[] {
+  // console.log(arr.map(i => i.id));
+  const shuffled = [...arr.sort(() => Math.random() - .5)];
+  // console.log(shuffled.map(i => i.id));
+  return shuffled;
 }
 
 export function removeItemsMutable(arr: TestItem[] = [], ids: number[]) {
@@ -164,8 +206,8 @@ export function removeItemsMutable(arr: TestItem[] = [], ids: number[]) {
   return arr;
 }
 
-export function removeItemsImmutable(arr: TestItem[] = [], ids: number[]) {
-  return [...removeItemsMutable(arr, ids)];
+export function removeItemsImmutable(arr: TestItem[] = [], num: number) {
+  return [...removeItemsMutable(arr, getRandomItems(arr,num).map(i => i.id))];
 }
 
 export class GliphyApi {

@@ -6,5 +6,5 @@ export const MENU_ITEMS = [
   {
     link: 'provide',
     label: 'Provide',
-  },
+  }
 ];

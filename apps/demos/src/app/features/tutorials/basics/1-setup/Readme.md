@@ -1,47 +1,44 @@
-# Setup a reactive
+# Setting up a Reactive State
 
-In this section we start with an imperative code base and will refactor
-it's state management to a reactive setup.
+In this section, we will be working with an [imperative code base][setup.start.component.ts] to refactor
+its state management to a [reactive setup][setup.solution.component.ts].
 
-We will setup `RxState` in the component, initialize the components local state,  
-and render it in the template.
+We will set up `RxState` in the component, initialize the component's local state, and render it in the template.
 
-As a nice side effect we introduced automated subscription handling, the possibility for imperative interaction
-over input bindings and a clean separation of concerns.
+In addition, we've introduced automated subscription handling, the possibility for imperative interaction
+over component's input bindings, and a clean separation of concerns.
 
 ---
 
-## Implement RxState Service
+## Implement RxState service
 
-Let's start with introducing a reactive state to our component by using the `RxState` class.
-This can be done over inheritance, we extend form the state service,  
-or composition, we inject the service in the constructor and add the service to the component `providers` section.
+The first step is to introduce a reactive state to our component by using the `RxState` class.
+This can be done either through inheritance, which means we extend the state service; or through composition, in which case we inject the service into the constructor and add the service to the component's `providers` section.
 
-In this article we simply extend from the service.
-The benefit and disadvantage here is, we can access the services API directly over `this`.  
-e.g. `this.select('prop')`.
+In this case, we will simply extend the service.
+One distinct feature of this method, which is both its benefit and disadvantage, is that we can directly access the service's API using `this` (e.g., `this.select('prop')`.)
 
-To do so, we have to extend our class and use the already existing `ComponentState` interface:
-
+To this end, we have to extend our class and use the already existing `ComponentState` interface (see
+[setup.start.component.ts] [setup.start.component.ts].)
 ```typescript
+
+// 1- import RxState
 import { RxState } from '@rx-angular/state';
 
-// Displayed shape of the list item (this is a reduced version of the server object)
-export interface DemoBasicsItem {
-  id: string;
-  name: string;
-}
+...
 
+// 2- define a component state
 interface ComponentState {
   refreshInterval: number;
   list: DemoBasicsItem[];
   listExpanded: boolean;
 }
 
-export class SetupReactiveComponentStateContainerComponent extends RxState<ComponentState> ... {
+// 3- extend the component, or alternatively, register a local provider and inject it
+export class SetupStart implements OnInit, OnDestroy extends RxState<ComponentState> ... {
 ```
 
-Also, a `super` in the constructor is needed as we extend from another class.
+Since we decided to create a reactive state by extending an existing component, we will need to extend its class definition and call `super()` in the constructor.
 
 ```typescript
 constructor(...) {
@@ -49,19 +46,20 @@ constructor(...) {
 }
 ```
 
+For the sake of example, we added the state to the same file, but for a more robust architecture, consider having it in a separate file with the `.state.ts` extension.
+
 ### Select and display state
 
-Lets setup a component property `model$` which holds all data we wish to display in the template.
+The next step is to set up `model$`, a component property that holds all data we wish to display in the template.
 
-By assigning the `model$` to the `$` property of the `RxState` class we get the full state object as `Observable<ComponentState>`
+By assigning the `model$` to the `$` property of the `RxState` class, we get the full state object as `Observable<ComponentState>`.
 
 ```typescript
 
 @Component({
-  selector: 'rxa-demo-basics-1',
+  selector: 'rxa-setup-solution',
   template: `
     model$: <pre>{{model$ | async | json}}</pre>
-    <h3>Demo Basic 1 - Setup and Retrieving State</h3>
     ...
   `,
   ...
@@ -71,12 +69,12 @@ export class SetupReactiveComponentStateContainerComponent extends RxState<Compo
 }
 ```
 
-## Initialize component state
+## Initialize the state
 
-As `RxState` is empty and thus lazy on initialization, we can decide which and if we put values to state initially.
-We can initialize the state imperatively over `set` or over a observable and the `connect()` method.
+As `RxState` is empty and thus lazy at initialization, we can decide if we want to assign initial values to the state and which values these will be.
+We can initialize the state imperatively by calling `set()` or by using an observable and the `connect()` method.
 
-We will use `set` as we already have initial values as `initComponentState` object.
+We will use `set()` as we already have initial values assigned to the `initComponentState` object's properties.
 
 ```typescript
  constructor(...) {
@@ -85,4 +83,7 @@ We will use `set` as we already have initial values as `initComponentState` obje
 }
 ```
 
-We should see the initial state in the template.
+After we have completed all these steps, we should see the initial state in the template.
+
+[setup.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/master/apps/demos/src/app/features/tutorials/basics/1-setup/setup.start.component.ts
+[setup.solution.component.ts]: https://github.com/rx-angular/rx-angular/blob/master/apps/demos/src/app/features/tutorials/basics/1-setup/setup.solution.component.ts

@@ -1,11 +1,12 @@
 import { ApplicationRef, Injectable, Input, NgZone } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { isNgZone, isViewEngineIvy } from '@rx-angular/template';
 import { environment } from '../environments/environment';
+import { isNgZone } from './rx-angular-pocs/cdk/utils/zone-agnostic';
 
 export interface CdConfig {
   strategy: string;
   rippleOn: boolean;
+  rippleResponsiveOn: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -19,7 +20,6 @@ export class AppConfigService extends RxState<CdConfig> {
   readonly hasZone = isNgZone(this.ngZone);
   readonly devMode = !environment.production;
   readonly zoneEnv = this.hasZone ? 'NgZone' : 'NgNoopZone';
-  readonly engine = isViewEngineIvy() ? 'Ivy' : 'ViewEngine';
 
   constructor(
     protected appRef: ApplicationRef,

@@ -1,4 +1,5 @@
 {
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "projects": {
     "demos": {
@@ -22,13 +23,8 @@
             "polyfills": "apps/demos/src/polyfills.ts",
             "tsConfig": "apps/demos/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "apps/demos/src/favicon.ico",
-              "apps/demos/src/assets"
-            ],
-            "styles": [
-              "apps/demos/src/styles.scss"
-            ],
+            "assets": ["apps/demos/src/favicon.ico", "apps/demos/src/assets"],
+            "styles": ["apps/demos/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -42,7 +38,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -84,9 +79,11 @@
                   "replace": "apps/demos/src/environments/environment.ts",
                   "with": "apps/demos/src/environments/environment.zoneless.ts"
                 }
-              ]
+              ],
+              "polyfills": ""
             }
-          }
+          },
+          "outputs": ["{options.outputPath}"]
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -118,10 +115,7 @@
               "apps/demos/tsconfig.app.json",
               "apps/demos/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/demos/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/demos/**/*"]
           }
         },
         "test": {
@@ -129,7 +123,8 @@
           "options": {
             "jestConfig": "apps/demos/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/apps/demos"]
         }
       }
     },
@@ -154,13 +149,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/demos-e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/demos-e2e/**/*"
-            ]
+            "tsConfig": ["apps/demos-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/demos-e2e/**/*"]
           }
         }
       }
@@ -204,13 +194,8 @@
             "polyfills": "apps/docs/src/polyfills.ts",
             "tsConfig": "apps/docs/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "apps/docs/src/favicon.ico",
-              "apps/docs/src/assets"
-            ],
-            "styles": [
-              "apps/docs/src/styles.scss"
-            ],
+            "assets": ["apps/docs/src/favicon.ico", "apps/docs/src/assets"],
+            "styles": ["apps/docs/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -224,7 +209,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -242,7 +226,8 @@
                 }
               ]
             }
-          }
+          },
+          "outputs": ["{options.outputPath}"]
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -268,10 +253,7 @@
               "apps/docs/tsconfig.app.json",
               "apps/docs/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/docs/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/docs/**/*"]
           }
         },
         "test": {
@@ -279,7 +261,8 @@
           "options": {
             "jestConfig": "apps/docs/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/apps/docs"]
         }
       }
     },
@@ -324,7 +307,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -350,7 +332,8 @@
                 }
               ]
             }
-          }
+          },
+          "outputs": ["{options.outputPath}"]
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -379,10 +362,7 @@
               "apps/tour-of-heroes/tsconfig.app.json",
               "apps/tour-of-heroes/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/tour-of-heroes/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/tour-of-heroes/**/*"]
           }
         },
         "test": {
@@ -390,7 +370,8 @@
           "options": {
             "jestConfig": "apps/tour-of-heroes/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/apps/tour-of-heroes"]
         }
       }
     },
@@ -418,9 +399,7 @@
               "apps/tour-of-heroes-ngxs/src/favicon.ico",
               "apps/tour-of-heroes-ngxs/src/assets"
             ],
-            "styles": [
-              "apps/tour-of-heroes-ngxs/src/styles.scss"
-            ],
+            "styles": ["apps/tour-of-heroes-ngxs/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -434,7 +413,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -453,9 +431,7 @@
               ]
             },
             "zoneless": {
-              "polyfills": [
-                "apps/tour-of-heroes-ngxs/src/polyfills.ts"
-              ],
+              "polyfills": "apps/tour-of-heroes-ngxs/src/polyfills.ts",
               "fileReplacements": [
                 {
                   "replace": "apps/tour-of-heroes/src/environments/environment.ts",
@@ -463,7 +439,8 @@
                 }
               ]
             }
-          }
+          },
+          "outputs": ["{options.outputPath}"]
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -492,10 +469,7 @@
               "apps/tour-of-heroes-ngxs/tsconfig.app.json",
               "apps/tour-of-heroes-ngxs/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/tour-of-heroes-ngxs/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/tour-of-heroes-ngxs/**/*"]
           }
         },
         "test": {
@@ -503,7 +477,8 @@
           "options": {
             "jestConfig": "apps/tour-of-heroes-ngxs/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/apps/tour-of-heroes-ngxs"]
         }
       }
     },
@@ -520,10 +495,7 @@
               "libs/test-helpers/tsconfig.lib.json",
               "libs/test-helpers/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/test-helpers/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/test-helpers/**/*"]
           }
         },
         "test": {
@@ -531,7 +503,8 @@
           "options": {
             "jestConfig": "libs/test-helpers/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/libs/test-helpers"]
         }
       }
     },
@@ -542,7 +515,7 @@
       "prefix": "rx",
       "architect": {
         "build": {
-          "builder": "@nrwl/angular:package",
+          "builder": "@nrwl/angular:ng-packagr-lite",
           "options": {
             "tsConfig": "libs/state/tsconfig.lib.json",
             "project": "libs/state/ng-package.json"
@@ -551,7 +524,8 @@
             "production": {
               "tsConfig": "libs/state/tsconfig.lib.prod.json"
             }
-          }
+          },
+          "outputs": ["dist/libs/state"]
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
@@ -560,10 +534,7 @@
               "libs/state/tsconfig.lib.json",
               "libs/state/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/state/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/state/**/*"]
           }
         },
         "test": {
@@ -571,7 +542,8 @@
           "options": {
             "jestConfig": "libs/state/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/libs/state"]
         },
         "build-docs": {
           "builder": "@nrwl/workspace:run-commands",
@@ -593,6 +565,30 @@
             ]
           }
         },
+        "test-coverage": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/state/jest.config.js",
+            "passWithNoTests": true,
+            "codeCoverage": true
+          },
+          "outputs": ["coverage/libs/state"]
+        },
+        "perfBuild": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "main": "libs/state/perf/index.ts",
+            "outputPath": "dist/libs/state-perf/dist",
+            "tsConfig": "libs/state/tsconfig.perf.json"
+          },
+          "outputs": ["{options.outputPath}"]
+        },
+        "perf": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "state:perfBuild"
+          }
+        },
         "changelog": {
           "builder": "@nrwl/workspace:run-commands",
           "options": {
@@ -603,34 +599,12 @@
             ]
           }
         },
-        "test-coverage": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/state/jest.config.js",
-            "passWithNoTests": true,
-            "codeCoverage": true
-          }
-        },
-        "perfBuild": {
-          "builder": "@nrwl/node:build",
-          "options": {
-            "main": "libs/state/perf/index.ts",
-            "outputPath": "dist/libs/state-perf/dist",
-            "tsConfig": "libs/state/tsconfig.perf.json"
-          }
-        },
-        "perf": {
-          "builder": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "state:perfBuild"
-          }
-        },
         "publish": {
           "builder": "@nrwl/workspace:run-commands",
           "options": {
             "commands": [
               {
-                "command": "nx changelog template && nx test template && nx build template --prod && cd ./dist/libs/template && npm publish"
+                "command": "nx test state && nx build state && cd ./dist/libs/state && npm publish"
               }
             ]
           }
@@ -653,11 +627,40 @@
           "options": {
             "tsConfig": "libs/template/tsconfig.lib.json",
             "project": "libs/template/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/template/tsconfig.lib.prod.json"
-            }
+          }
+        },
+        "build-schematics": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx tsc -p libs/template/tsconfig.schematics.json"
+              },
+              {
+                "command": "npx cpx libs/template/schematics/collection.json dist/libs/template/schematics"
+              },
+              {
+                "command": "npx cpx libs/template/schematics/src/**/files/** dist/libs/template/schematics/src"
+              },
+              {
+                "command": "npx cpx libs/template/schematics/src/**/schema.json dist/libs/template/schematics/src"
+              }
+            ],
+            "parallel": false
+          }
+        },
+        "build-lib": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "nx run template:build --with-deps"
+              },
+              {
+                "command": "nx run template:build-schematics"
+              }
+            ],
+            "parallel": false
           }
         },
         "lint": {
@@ -667,10 +670,7 @@
               "libs/template/tsconfig.lib.json",
               "libs/template/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/template/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/template/**/*"]
           }
         },
         "test": {
@@ -678,7 +678,8 @@
           "options": {
             "jestConfig": "libs/template/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/libs/template"]
         },
         "build-docs": {
           "builder": "@nrwl/workspace:run-commands",
@@ -707,7 +708,8 @@
             "jestConfig": "libs/template/jest.config.js",
             "passWithNoTests": true,
             "codeCoverage": true
-          }
+          },
+          "outputs": ["coverage/libs/template"]
         },
         "changelog": {
           "builder": "@nrwl/workspace:run-commands",
@@ -719,12 +721,22 @@
             ]
           }
         },
+        "link": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "cd ./dist/libs/template && npm link"
+              }
+            ]
+          }
+        },
         "publish": {
           "builder": "@nrwl/workspace:run-commands",
           "options": {
             "commands": [
               {
-                "command": "nx test template && nx build template --prod && cd ./dist/libs/template && npm publish"
+                "command": "nx test template && nx build template && cd ./dist/libs/template && npm publish"
               }
             ]
           }
@@ -733,6 +745,355 @@
       "schematics": {
         "@nrwl/angular:component": {
           "style": "scss"
+        }
+      }
+    },
+    "vanilla-case-studies": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "apps/vanilla-case-studies",
+      "sourceRoot": "apps/vanilla-case-studies/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/vanilla-case-studies",
+            "index": "apps/vanilla-case-studies/src/index.html",
+            "main": "apps/vanilla-case-studies/src/main.ts",
+            "polyfills": "apps/vanilla-case-studies/src/polyfills.ts",
+            "tsConfig": "apps/vanilla-case-studies/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/vanilla-case-studies/src/favicon.ico",
+              "apps/vanilla-case-studies/src/assets",
+              "apps/vanilla-case-studies/src/case-studies"
+            ],
+            "styles": ["apps/vanilla-case-studies/src/styles.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/vanilla-case-studies/src/environments/environment.ts",
+                  "with": "apps/vanilla-case-studies/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          },
+          "outputs": ["{options.outputPath}"]
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "vanilla-case-studies:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "vanilla-case-studies:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "vanilla-case-studies:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/vanilla-case-studies/tsconfig.app.json",
+              "apps/vanilla-case-studies/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/vanilla-case-studies/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/vanilla-case-studies/jest.config.js",
+            "passWithNoTests": true
+          },
+          "outputs": ["coverage/apps/vanilla-case-studies"]
+        }
+      }
+    },
+    "vanilla-case-studies-e2e": {
+      "root": "apps/vanilla-case-studies-e2e",
+      "sourceRoot": "apps/vanilla-case-studies-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/vanilla-case-studies-e2e/cypress.json",
+            "tsConfig": "apps/vanilla-case-studies-e2e/tsconfig.e2e.json",
+            "devServerTarget": "vanilla-case-studies:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "vanilla-case-studies:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/vanilla-case-studies-e2e/tsconfig.e2e.json"],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/vanilla-case-studies-e2e/**/*"
+            ]
+          }
+        }
+      }
+    },
+    "cdk": {
+      "projectType": "library",
+      "root": "libs/cdk",
+      "sourceRoot": "libs/cdk/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build-test-coverage-badge": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/cdk/cobertura-coverage.xml -d docs/test-coverage/cdk"
+              }
+            ]
+          }
+        },
+        "build-docs": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "nx test-coverage cdk && nx build-test-coverage-badge cdk"
+              }
+            ]
+          }
+        },
+        "build": {
+          "builder": "@nrwl/angular:package",
+          "options": {
+            "tsConfig": "libs/cdk/tsconfig.lib.json",
+            "project": "libs/cdk/ng-package.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/cdk/tsconfig.lib.json",
+              "libs/cdk/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/cdk/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/cdk/jest.config.js",
+            "passWithNoTests": true
+          },
+          "outputs": ["coverage/libs/cdk"]
+        },
+        "test-coverage": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/cdk/jest.config.js",
+            "passWithNoTests": true,
+            "codeCoverage": true
+          },
+          "outputs": ["coverage/libs/cdk"]
+        },
+        "changelog": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx conventional-changelog-cli -p angular -k ./libs/cdk/package.json -i ./libs/cdk/CHANGELOG.md -s --commit-path ./libs/cdk --tagPrefix cdk@"
+              }
+            ]
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "nx test cdk && nx build cdk && cd ./dist/libs/cdk && npm publish"
+              }
+            ]
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
+    "ssr": {
+      "projectType": "application",
+      "root": "apps/ssr",
+      "sourceRoot": "apps/ssr/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/ssr/browser",
+            "index": "apps/ssr/src/index.html",
+            "main": "apps/ssr/src/main.ts",
+            "polyfills": "apps/ssr/src/polyfills.ts",
+            "tsConfig": "apps/ssr/tsconfig.app.json",
+            "aot": true,
+            "assets": ["apps/ssr/src/favicon.ico", "apps/ssr/src/assets"],
+            "styles": ["apps/ssr/src/styles.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/ssr/src/environments/environment.ts",
+                  "with": "apps/ssr/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "ssr:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ssr:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ssr:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/ssr/src/**/*.ts",
+              "apps/ssr/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/ssr"],
+          "options": {
+            "jestConfig": "apps/ssr/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/apps/ssr/server",
+            "main": "apps/ssr/server.ts",
+            "tsConfig": "apps/ssr/tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "apps/ssr/src/environments/environment.ts",
+                  "with": "apps/ssr/src/environments/environment.prod.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            }
+          }
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "options": {
+            "browserTarget": "ssr:build",
+            "serverTarget": "ssr:server"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ssr:build:production",
+              "serverTarget": "ssr:server:production"
+            }
+          }
+        }
+      }
+    },
+    "ssr-e2e": {
+      "root": "apps/ssr-e2e",
+      "sourceRoot": "apps/ssr-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/ssr-e2e/cypress.json",
+            "tsConfig": "apps/ssr-e2e/tsconfig.e2e.json",
+            "baseUrl": "https://localhost:4200"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/ssr-e2e/**/*.{js,ts}"]
+          }
         }
       }
     }
@@ -744,11 +1105,18 @@
   },
   "schematics": {
     "@nrwl/angular:application": {
+      "style": "css",
+      "linter": "eslint",
       "unitTestRunner": "jest",
       "e2eTestRunner": "cypress"
     },
     "@nrwl/angular:library": {
+      "style": "css",
+      "linter": "eslint",
       "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "css"
     }
   },
   "defaultProject": "demos"

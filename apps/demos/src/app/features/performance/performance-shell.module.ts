@@ -9,34 +9,6 @@ const ROUTES: Routes = [
         (m) => m.RxLetVsPushModule
       ),
   },
-  {
-    path: 'alphas-compare',
-    loadChildren: () =>
-      import('./alphas-compare/alphas-compare.module').then(
-        (m) => m.AlphasCompareModule
-      ),
-  },
-  {
-    path: 'nested-component-structure',
-    loadChildren: () =>
-      import('./nested-component-structure/nested-component-structure.module').then(
-        (m) => m.NestedComponentStructureModule
-      ),
-  },
-  {
-    path: 'sibling-component-structure',
-    loadChildren: () =>
-      import('./sibling-component-structure/sibling-component-structure.module').then(
-        (m) => m.SiblingComponentStructureModule
-      ),
-  },
-  {
-    path: 'concurrent-strategies',
-    loadChildren: () =>
-      import('./concurrent-strategies/concurrent-strategies.module').then(
-        (m) => m.ConcurrentStrategiesModule
-      ),
-  }
 ];
 
 @NgModule({

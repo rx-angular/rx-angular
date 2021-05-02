@@ -18,6 +18,6 @@
 
 .app-shell-content-container {
   height: calc(100vh - 64px);
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }

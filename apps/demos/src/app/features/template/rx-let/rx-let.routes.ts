@@ -3,12 +3,22 @@ import { Routes } from '@angular/router';
 export const ROUTES: Routes = [
   {
     path: '',
-    redirectTo: 'error-handling'
+    redirectTo: 'basic'
+  },
+  {
+    path: 'basic',
+    loadChildren: () => import('./basic/rx-let-basic.module')
+      .then(m => m.RxLetBasicModule)
   },
   {
     path: 'error-handling',
     loadChildren: () => import('./error-handling/error-handing.module')
       .then(m => m.ErrorHandingModule)
+  },
+  {
+    path: 'exception-handling',
+    loadChildren: () => import('./exception-handling/rx-let-exception-handling.module')
+      .then(m => m.RxLetExceptionHandlingModule)
   },
   {
     path: 'http-errors',

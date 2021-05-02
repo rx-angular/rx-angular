@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
-import { BehaviorSubject} from 'rxjs';
-import { toBooleanArray } from './utils';
-import { RX_PRIMARY_STRATEGY } from '../../rx-angular-pocs/render-stragegies';
+import { RxStrategyProvider } from '@rx-angular/cdk';
+import { BehaviorSubject } from 'rxjs';
+import { toBooleanArray, toFloatArray, toIntArray } from './utils';
+import { map } from 'rxjs/operators';
 
 const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
 
@@ -12,11 +13,11 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
       <div visualizerHeader>
         <h3>{{siblings.length}} Siblings Custom Strategy</h3>
         <rxa-strategy-select (strategyChange)="strategyChange$.next($event)"></rxa-strategy-select>
-        <button mat-button [unpatch] (click)="filled$.next(!filled$.getValue())">DoChange</button>
+        <button mat-button [unpatch] (click)="filled$.next(num)">DoChange</button>
       </div>
       <div class="w-100 siblings">
-        <div class="sibling" *ngFor="let sibling of siblings; trackBy:trackBy">
-          <div *rxLet="filled$; let f; strategy: strategyChange$" [ngClass]="{filled: f}" >&nbsp;</div>
+        <div class="sibling" *rxFor="let sibling of siblings$; trackBy:trackBy">
+          <rxa-work [load]="sibling"></rxa-work>
         </div>
       </div>
     </rxa-visualizer>
@@ -29,14 +30,18 @@ const chunk = (arr, n) => arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), 
 })
 export class SiblingCustomComponent {
 
+  num = 0;
   siblings = [];
-  filled$ = new BehaviorSubject<boolean>(false);
-  strategyChange$ = new BehaviorSubject<string>(this.defaultStrategy);
+  filled$ = new BehaviorSubject<number>(this.num);
+  strategyChange$ = new BehaviorSubject<string>(this.strategyProvider.primaryStrategy);
+  siblings$ = this.filled$.pipe(
+    map(num =>  toIntArray(num))
+  )
 
   @Input()
   set count(num: number) {
-    this.siblings = toBooleanArray(num);
-    this.filled$.next(!this.filled$.getValue());
+    this.num = num;
+    this.filled$.next(num);
   };
 
   @Input()
@@ -50,7 +55,7 @@ export class SiblingCustomComponent {
   trackBy = i => i;
 
   constructor(
-    @Inject(RX_PRIMARY_STRATEGY) private defaultStrategy: string
+    private strategyProvider: RxStrategyProvider
   ) {
 
   }

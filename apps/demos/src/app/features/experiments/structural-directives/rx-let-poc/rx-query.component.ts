@@ -1,18 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { StrategyProvider } from '../../../../shared/rx-angular-pocs/render-stragegies/strategy-provider.service';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import { RickAndMortyService } from './rick-and-morty.service';
 import { query } from 'rx-query';
-import {
-  ConnectableObservable,
-  merge,
-  MonoTypeOperatorFunction,
-  Observable,
-  SchedulerLike,
-  Subject,
-  Subscription,
-  timer
-} from 'rxjs';
-import { debounce, delay, filter, map, mapTo, pluck, publish, share, startWith, switchMap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { delay, filter, map, mapTo, pluck, share } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-rx-query',
@@ -29,13 +20,13 @@ import { debounce, delay, filter, map, mapTo, pluck, publish, share, startWith, 
       </div>
       <div class="mt-5 row w-100 d-flex">
         <div class="col-4 dh-embedded-view p-2">
-          <p *rxLetTriggered="suspenseTrg$; let n;">
+          <p *rxLet="suspenseTrg$; let n;">
             suspenseTrigger: {{n}}
           </p>
-          <p *rxLetTriggered="errorTrg$; let n;">
+          <p *rxLet="errorTrg$; let n;">
             errorTrigger: {{n}}
           </p>
-          <div *rxLetTriggered="charactersQueryResult$; let qr;">
+          <div *rxLet="charactersQueryResult$; let qr;">
             <p>qr.status: {{qr.status}}</p>
             <p>qr.data: {{qr?.data?.results?.length}}</p>
             <p>qr.error: {{qr?.error?.message}}</p>
@@ -43,25 +34,33 @@ import { debounce, delay, filter, map, mapTo, pluck, publish, share, startWith, 
           </div>
         </div>
         <div class="col-4 dh-embedded-view p-2">
-          <div *rxLetTriggered="characters$; let characters;
+          <div *rxContext="characters$;
+           suspenseTpl: suspenseTpl;
+            errorTpl: errorTpl;
+            suspenseTrg: suspenseTrg$
+            errorTrg: errorTrg$
+            ">
+            <div *rxLet="characters$; let characters;
             let suspenseVal = $suspenseVal;
             let errorVal = $errorVal;
             suspenseTrg: suspenseTrg$
             errorTrg: errorTrg$
-            ">
-            <mat-progress-bar *ngIf="suspenseVal" [mode]="suspenseVal"></mat-progress-bar>
-            <mat-card *ngIf="errorVal">
-              <mat-card-title>Error</mat-card-title>
-            </mat-card>
-            <ul>
-              <li *ngFor="let character of characters">
-                <a [routerLink]="character.id">{{ character.name }}</a>
-              </li>
-            </ul>
+            ">suspenseVal : {{suspenseVal}}            <mat-progress-bar *ngIf="suspenseVal" [mode]="suspenseVal"></mat-progress-bar>
+              <mat-card *ngIf="errorVal">
+                <mat-card-title>Error</mat-card-title>
+              </mat-card>
+              <ul>
+                <li *ngFor="let character of characters">
+                  <a [routerLink]="character.id">{{ character.name }}</a>
+                </li>
+              </ul>
+            </div>
           </div>
+
+
         </div>
         <div class="col-4 dh-embedded-view p-2">
-          <div *rxLetTriggered="characters$; let characters;
+          <div *rxLet="characters$; let characters;
             suspenseTpl: suspenseTpl;
             errorTpl: errorTpl;
             suspenseTrg: suspenseTrg$
@@ -75,7 +74,7 @@ import { debounce, delay, filter, map, mapTo, pluck, publish, share, startWith, 
           </div>
           <!-- Templates -->
           <ng-template #suspenseTpl>
-            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            <rxa-list-item-ghost [count]="3"></rxa-list-item-ghost>
           </ng-template>
           <ng-template #errorTpl>
             <mat-card>
@@ -91,7 +90,7 @@ import { debounce, delay, filter, map, mapTo, pluck, publish, share, startWith, 
     class: 'm-1 p-1',
     style: 'display: block;'
   },
-  providers: [StrategyProvider]
+  providers: []
 })
 export class RxQueryComponent {
   search$ = new Subject<string>();
@@ -112,7 +111,7 @@ export class RxQueryComponent {
   characters$ = this.charactersQueryResult$.pipe(map(res => res?.data?.results));
   errorTrg$ = this.charactersQueryResult$.pipe(filter(res => res?.status === 'error'), mapTo(true));
 
-  constructor(public strategyProvider: StrategyProvider,
+  constructor(public strategyProvider: RxStrategyProvider,
               public service: RickAndMortyService) {
   }
 

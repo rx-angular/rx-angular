@@ -1,5 +1,5 @@
 // tslint:disable-next-line:nx-enforce-module-boundaries
-import { getStrategies } from '../../../src/lib/render-strategies';
+import { getStrategies } from '../../../src/lib/render-strategies/strategies/strategies-map';
 import * as AngularCore from '@angular/core';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { CallsExpectations, getMockStrategyConfig, testStrategyMethod } from '../../fixtures';

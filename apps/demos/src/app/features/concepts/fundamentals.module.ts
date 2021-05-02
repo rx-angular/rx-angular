@@ -9,6 +9,12 @@ const ROUTES: Routes = [
     )
   },
   {
+    path: 'projected-views',
+    loadChildren: () => import('./projected-views/projected-views.module').then(
+      m => m.ProjectedViewsModule
+    )
+  },
+  {
     path: 'passing-values',
     loadChildren: () => import('./passing-values/passing-values.module').then(
       m => m.PassingValuesModule
@@ -31,7 +37,20 @@ const ROUTES: Routes = [
     loadChildren: () => import('./coalescing/coalescing.module').then(
       m => m.CoalescingModule
     )
-  }
+  },
+  {
+    path: 'global-order',
+    loadChildren: () => import('./global-order/global-order.module').then(
+      m => m.GlobalOrderModule
+    )
+  },
+  {
+    path: 'view-vs-embedded-view',
+    loadChildren: () =>
+      import(
+        './view-vs-embedded-view/view-vs-embedded-view.routed.module'
+        ).then((m) => m.ViewVsEmbeddedViewRoutedModule),
+  },
 ];
 
 

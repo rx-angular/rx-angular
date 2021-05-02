@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
   exportAs: 'rxaTriggerProvider',
   template: `
       <button mat-raised-button (click)="suspense$.next()">
-        Suspense
+        Suspense <mat-icon></mat-icon>
         <rxa-zone-patched-icon class="mat-icon" [zoneState]="getZoneState()"></rxa-zone-patched-icon>
       </button>
       <button mat-raised-button [unpatch]="unpatched" (click)="error$.next(error)">

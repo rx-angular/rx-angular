@@ -1,9 +1,11 @@
-import { PushPipe } from '../../src/lib/push';
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
+import { PushPipe } from '../../src/lib/push/push.pipe';
 import { TestBed } from '@angular/core/testing';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { MockNgZone } from '../fixtures/mock-ng-zone';
 
 function wrapWithSpace(str: string): string {
   return ' ' + str + ' ';
@@ -39,7 +41,11 @@ let componentNativeElement: any;
 const setupPushPipeComponent = () => {
   TestBed.configureTestingModule({
     declarations: [PushPipe, PushPipeTestComponent],
-    providers: [ChangeDetectorRef]
+    providers: [ChangeDetectorRef, {
+      provide: RX_ANGULAR_CONFIG, useValue: {
+        primaryStrategy: 'native'
+      }
+    }]
   });
 
   fixturePushPipeTestComponent = TestBed.createComponent(PushPipeTestComponent);

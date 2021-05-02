@@ -35,11 +35,9 @@ function createCoalesceManager(): CoalescingManager {
 
   // Increments the number of subscriptions in a scope e.g. a class instance
   function removeWork(scope: object): void {
-    const numCoalescingSubscribers =
-      coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers -
-      1;
+    const numCoalescingSubscribers = coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers - 1;
     coalescingContextPropertiesMap.setProps(scope, {
-      numCoalescingSubscribers
+      numCoalescingSubscribers: numCoalescingSubscribers >= 0 ? numCoalescingSubscribers : 0
     });
   }
 

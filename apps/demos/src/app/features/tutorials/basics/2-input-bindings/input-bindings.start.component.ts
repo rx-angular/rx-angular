@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ListServerItem, ListService } from '../data-access/list-resource';
+import { RxState } from '@rx-angular/state';
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
+import { ListServerItem, ListService } from '../data-access/list-resource';
 
 export interface DemoBasicsItem {
   id: string;
@@ -15,7 +15,6 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
-// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
@@ -29,6 +28,7 @@ const initComponentState = {
      Input Bindings
     </h3>
     {{model$  | async | json}}
+    <!--👇 Bind the state to the view -->
     <mat-expansion-panel
       (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
       [expanded]="listExpanded"
@@ -38,6 +38,7 @@ const initComponentState = {
         <mat-panel-title>
           List
         </mat-panel-title>
+        <!--👇 Replace the refreshInterval component -->
         <mat-panel-description>
           <span
             >{{ (storeList$ | async)?.length }} Repositories Updated every:
@@ -102,6 +103,7 @@ export class InputBindingsStart extends RxState<ComponentState> implements OnIni
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 4000) {
+      //👇 Partially update the state with the state slice
       this._refreshInterval = refreshInterval;
       this.resetRefreshTick();
     }
@@ -123,7 +125,7 @@ export class InputBindingsStart extends RxState<ComponentState> implements OnIni
   ngOnInit(): void {
     this.resetRefreshTick();
   }
-
+  //👇 Update the resetRefreshTick method
   resetRefreshTick() {
     this.intervalSubscription.unsubscribe();
     this.intervalSubscription = interval(this._refreshInterval)

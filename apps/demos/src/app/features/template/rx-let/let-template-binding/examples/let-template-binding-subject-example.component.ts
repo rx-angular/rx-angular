@@ -48,16 +48,18 @@ import { scan, startWith } from 'rxjs/operators';
       </mat-card-actions>
     </mat-card>
 
-    <ng-template #complete>
+    <ng-template #complete let-value>
       <div>
         <mat-icon class="notification-icon complete-icon">thumb_up</mat-icon>
         <h2>Completed!</h2>
+        <strong>Last valid value: {{ value }}</strong>
       </div>
     </ng-template>
-    <ng-template #error>
+    <ng-template #error let-value let-error="$error">
       <div>
-        <mat-icon class="notification-icon error-icon">thumb_down</mat-icon>
-        <h2>Something went wrong...</h2>
+        <mat-icon class="error-icon">thumb_down</mat-icon>
+        <h2>{{ error }}</h2>
+        <strong>Last valid value: {{ value }}</strong>
       </div>
     </ng-template>
     <ng-template #suspense>

@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx-for.module';
 import { StrategySelectComponent } from './strategy-select/strategy-select.component';
 
 @NgModule({
@@ -12,9 +13,10 @@ import { StrategySelectComponent } from './strategy-select/strategy-select.compo
     UnpatchEventsModule,
     PushModule,
     MatIconModule,
-    MatSelectModule
+    MatSelectModule,
+    RxForModule,
+    LetModule,
   ],
-  exports: [StrategySelectComponent]
+  exports: [StrategySelectComponent],
 })
-export class StrategySelectModule {
-}
+export class StrategySelectModule {}

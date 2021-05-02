@@ -1,16 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { TemplateModule } from '@rx-angular/template';
+import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
 
 import { ROUTES } from './coalescing.routes';
 import { CoalescingComponent } from './coalescing/coalescing.component';
-import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
-import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
+import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
+import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
 
 const DECLARATIONS = [
   CoalescingComponent
@@ -21,14 +18,13 @@ const DECLARATIONS = [
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    TemplateModule,
     VisualizerModule,
-    MatFormFieldModule,
+    StrategySelectModule,
+    UnpatchEventsModule,
     MatButtonModule,
-    MatSelectModule,
-    DirtyChecksModule,
-    ValueProvidersModule
+    PushModule
   ],
+  providers: [],
   exports: [DECLARATIONS]
 })
 export class CoalescingModule {

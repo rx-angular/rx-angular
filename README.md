@@ -3,8 +3,9 @@
 RxAngular offers a comprehensive toolset for handling fully reactive Angular applications with the main focus on runtime
 performance and template rendering.
 
-RxAngular is divided into two initially independent packages:
+RxAngular is divided into different packages:
 
+- [📦@rx-angular/cdk](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/README.md)
 - [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/README.md)
 - [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/master/libs/template/README.md)
 
@@ -12,8 +13,7 @@ Used together, you get a powerful tool for developing high-performance angular a
 
 This repository holds a set of helpers to create **fully reactive** as well as **fully zone-less** applications.
 
-![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/docs/images/rx-angular_logo.png)
-
+[![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/docs/images/rx-angular_logo.png)](https://www.rx-angular.io/)
 ## Links
 
 - [📚 Official docs](https://www.rx-angular.io/)
@@ -23,13 +23,23 @@ This repository holds a set of helpers to create **fully reactive** as well as *
 
 Find details in the linked readme files below for installation and setup instructions, examples and resources.
 
-- [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/README.md) - Reactive Component State-Management
+- [📦@rx-angular/cdk](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/README.md) - Component Development Kit
+- [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/README.md) - Imperative&Reactive Component State-Management
 - [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/master/libs/template/README.md) - High-Performance Reactive Rendering
 
 ## Install
 
-`npm install --save @rx-angular/state`  
-`npm install --save @rx-angular/template`  
-or  
-`yarn add @rx-angular/state`  
-`yarn add @rx-angular/template`
+Using schematics:
+
+```bash
+ng add @rx-angular/template --project my-project
+npm install --save @rx-angular/state 
+```
+
+```bash
+npm install --save @rx-angular/state
+npm install --save @rx-angular/template @rx-angular/cdk
+# or
+yarn add @rx-angular/state
+yarn add @rx-angular/template @rx-angular/cdk
+```

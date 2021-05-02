@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ListServerItem, ListService } from '../data-access/list-resource';
-import { interval, Subject, Subscription } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
+import { interval, Subject, Subscription } from 'rxjs';
+import { distinctUntilKeyChanged, map, startWith, tap } from 'rxjs/operators';
+import { ListServerItem, ListService } from '../data-access/list-resource';
 
 export interface DemoBasicsItem {
   id: string;
@@ -15,11 +15,10 @@ interface ComponentState {
   listExpanded: boolean;
 }
 
-// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
-  list: [],
+  list: []
 };
 
 @Component({
@@ -38,6 +37,7 @@ const initComponentState = {
         <mat-panel-title>
           List
         </mat-panel-title>
+        <!--👇 Refactor state management -->
         <mat-panel-description>
           <span
           >{{ (storeList$ | async)?.length }} Repositories Updated every:
@@ -85,18 +85,19 @@ export class GlobalStateStart extends RxState<ComponentState>
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 4000) {
-      this.set({refreshInterval});
+      this.set({ refreshInterval });
       this.resetRefreshTick();
     }
   }
 
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
-  listExpandedChange = this.listExpandedChanges;
-
+  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
+  //👇 Connect the global state to the list slice
   constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
+    this.connect('listExpanded', this.listExpandedChanges);
   }
 
   ngOnDestroy(): void {

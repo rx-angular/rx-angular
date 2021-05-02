@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { distinctUntilKeyChanged, map, startWith, tap } from 'rxjs/operators';
-import { ListServerItem, ListService } from '../data-access/list-resource';
 import { interval, Subject, Subscription } from 'rxjs';
+import { distinctUntilKeyChanged, map, tap } from 'rxjs/operators';
+import { ListServerItem, ListService } from '../data-access/list-resource';
 
 export interface DemoBasicsItem {
   id: string;
@@ -25,7 +25,7 @@ const initComponentState = {
   selector: 'rxa-presenter-pattern-start',
   template: `
     <h3>
-      Side Effects
+      Presenter Pattern
     </h3>
     <mat-expansion-panel
       *ngIf="model$ | async as vm"
@@ -74,10 +74,6 @@ export class PresenterPatternStart extends RxState<ComponentState>
 
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
-  storeList$ = this.listService.list$.pipe(
-    map(this.parseListItems),
-    startWith(initComponentState.list)
-  );
 
   @Input()
   set refreshInterval(refreshInterval: number) {
@@ -94,8 +90,8 @@ export class PresenterPatternStart extends RxState<ComponentState>
   constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
-
     this.connect('listExpanded', this.listExpandedChanges);
+    this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
   }
 
   ngOnDestroy(): void {

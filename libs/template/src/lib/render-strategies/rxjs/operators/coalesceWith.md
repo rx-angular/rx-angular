@@ -68,7 +68,7 @@
   import { coalesceWith } from '@rx-angular/template';
   import { range } from 'rxjs';
 
-  const source$ = range(1, 4); // synchronous emitted values
+  const source$ = range(1, 10); // synchronous emitted values
   source$
   .pipe(coalesceWith({ leading: true, tailing: true }))
   .subscribe((v) => console.log(v)); // 1, 10

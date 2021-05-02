@@ -1,8 +1,15 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-
-import { Observable } from 'rxjs';
-import { getStrategies } from '@rx-angular/template';
-import { CoalescingTestService } from './coalescing-test.service';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+} from '@angular/core';
+import { interval, Subject } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+import { RippleRenderer } from '../../../../shared/ripple/rxa-responsive-meter';
+import { Platform } from '@angular/cdk/platform';
+import { fromEvent } from '../../../../rx-angular-pocs/cdk/utils/zone-agnostic/rxjs/operators';
+import { coerceElement } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'rxa-demo-basics',
@@ -10,65 +17,49 @@ import { CoalescingTestService } from './coalescing-test.service';
     <rxa-visualizer>
       <ng-container visualizerHeader>
         <h2>Coalescing Tests</h2>
-        <rxa-value-provider [buttons]="true" [unpatched]="[]" #vP="rxaValueProvider"></rxa-value-provider>
         <div>
-          <mat-form-field>
-            <label>Render Strategy: {{ strategy$ | push | json}}</label>
-            <mat-select #select formControlName="strategy" id="strategy" (selectionChange)="strategy$.next(select.value)">
-              <mat-option
-                [value]="s"
-                *ngFor="let s of strategies">
-                {{ s }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <br>
-          <button mat-raised-button (click)="vP.next()">UpdateValue</button>
-          <button mat-raised-button [unpatch] (click)="vP.next()">UpdateValue (unpatched)</button>
+          <rxa-strategy-select
+            (strategyChange)="strategy$.next($event)"
+          ></rxa-strategy-select>
+          <br />
+          <button mat-raised-button (click)="click$.next($event)">
+            UpdateValue (native)
+          </button>
+          <button [unpatch] mat-raised-button (click)="click$.next($event)">
+            UpdateValue
+          </button>
         </div>
       </ng-container>
-      <rxa-visualizer class="w-100">
-        <div class="col-sm-3">
-          <h3>Push 1</h3>
-          <br/>
-          {{ vP.incremental$ | push: strategy$ }}<br/>
-        </div>
-        <rxa-visualizer viewType="embedded-view" *rxLet="vP.incremental$; let value; strategy: strategy$" class="col-sm-3">
-          <h3 visualizerHeader>rxLet 1</h3>
-          {{ value }}
-        </rxa-visualizer>
-        <div class="col-sm-3">
-          <h3>Push 2</h3>
-          <br/>
-          {{ vP.incremental$ | push: strategy$ }}
-        </div>
-        <rxa-visualizer viewType="embedded-view" *rxLet="vP.incremental$; let value; strategy: strategy$" class="col-sm-3">
-          <h3 visualizerHeader>rxLet 2</h3>
-          {{ value }}
-        </rxa-visualizer>
-      </rxa-visualizer>
+
+      <div class="col-sm-3">
+        <h3>Push 1</h3>
+        <br />
+        {{ incremental$ | push: strategy$ }}<br />
+      </div>
+      <div class="col-sm-3">
+        <h3>Push 2</h3>
+        <br />
+        {{ incremental$ | push: strategy$ }}
+      </div>
+      <div class="col-sm-3">
+        <h3>Push 2</h3>
+        <br />
+        {{ incremental$ | push: strategy$ }}
+      </div>
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [CoalescingTestService]
 })
-export class CoalescingComponent implements OnInit {
-  strategy$ = this.s.strategy$;
-
-  strategies = Object.keys(getStrategies({ cdRef: { context: {} } } as any));
+export class CoalescingComponent {
+  click$ = new Subject<any>();
+  strategy$ = new Subject<string>();
+  triggerRipple$ = new Subject<any>();
+  incremental$ = this.click$.pipe(mergeMap(() => [1, 2, Math.random()]));
 
   constructor(
-    private cdRef: ChangeDetectorRef,
-    public s: CoalescingTestService
-  ) {
-  }
+    private readonly elRef: ElementRef,
+    private readonly platform: Platform
+  ) {}
 
-  updateValue() {
-    this.s.updateValue();
-  }
-
-  ngOnInit() {
-    this.s.toggleTick.subscribe();
-  }
 }
 

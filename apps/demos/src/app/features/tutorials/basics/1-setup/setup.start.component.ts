@@ -1,29 +1,33 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ListServerItem, ListService } from '../data-access/list-resource';
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
-
-export interface DemoBasicsItem {
-  id: string;
-  name: string;
-}
-
+import { ListServerItem, ListService } from '../data-access/list-resource';
+//👇 1- import RxState
+import { RxState } from '@rx-angular/state';
+//👇 2- define a component state
 interface ComponentState {
   refreshInterval: number;
   list: DemoBasicsItem[];
   listExpanded: boolean;
 }
 
-// The  initial base-state is normally derived form somewhere else automatically. But could also get specified statically here.
+export interface DemoBasicsItem {
+  id: string;
+  name: string;
+}
+
+//👇 The  initial base-state is normally derived from somewhere else automatically but could also get specified statically here.
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
-  list: [],
+  list: []
 };
 
 @Component({
   selector: 'rxa-setup-start',
+  //👇 Render the model property of the component
   template: `
+    model$: <pre>{{model$ | async | json}}</pre>
     <h3>
       Setup
     </h3>
@@ -37,7 +41,7 @@ const initComponentState = {
         </mat-panel-title>
         <mat-panel-description>
           <span
-            >{{ (storeList$ | async)?.length }} Repositories Updated every:
+          >{{ (storeList$ | async)?.length }} Repositories Updated every:
             {{ _refreshInterval }} ms
           </span>
         </mat-panel-description>
@@ -81,11 +85,14 @@ const initComponentState = {
       .list .mat-expansion-panel-content .mat-expansion-panel-body {
         padding-top: 10px;
       }
-    `,
+    `
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SetupStart implements OnInit, OnDestroy {
+//👇 3- extend the component
+export class SetupStart extends RxState<ComponentState> implements OnInit, OnDestroy {
+  //👇 Set up the model property of the component
+  model$ = this.select();
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.listService.list$.pipe(
@@ -105,8 +112,14 @@ export class SetupStart implements OnInit, OnDestroy {
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
   listExpandedChange = this.listExpandedChanges;
-
-  constructor(private listService: ListService) {}
+  constructor(
+    private listService: ListService
+  ) {
+    //👇 Always call super() first in the constructor
+    super();
+    //👇 Call set() to initialize the state
+    this.set(initComponentState);
+  }
 
   ngOnDestroy(): void {
     this.intervalSubscription.unsubscribe();

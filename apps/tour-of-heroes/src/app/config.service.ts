@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { RxStrategyProvider } from '@rx-angular/cdk';
 import { RxState } from '@rx-angular/state';
-import { getStrategies } from '@rx-angular/template';
 
 export enum AppRenderStrategy {
   noop = 'noop',
@@ -10,7 +10,7 @@ export enum AppRenderStrategy {
 }
 
 export interface AppConfig {
-  renderStrategy: AppRenderStrategy;
+  renderStrategy: string;
 }
 
 @Injectable({
@@ -21,14 +21,15 @@ export class ConfigService {
   private readonly state = new RxState<AppConfig>();
 
   readonly renderStrategy$ = this.state.select('renderStrategy');
-  strategies = Object.keys(getStrategies({ cdRef: { context: {} } } as any));
-  constructor() {}
+  constructor(
+    private rxStrategyProvider: RxStrategyProvider
+  ) {}
 
   setStrategy(renderStrategy: AppRenderStrategy) {
     this.state.set({ renderStrategy });
   }
 
   setStrategyByName(renderStrategyName: string) {
-    this.state.set({ renderStrategy: this.strategies[renderStrategyName] });
+    this.state.set({ renderStrategy: renderStrategyName });
   }
 }

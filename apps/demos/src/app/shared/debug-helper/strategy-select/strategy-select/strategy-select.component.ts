@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Output } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { StrategyProvider } from '../../../rx-angular-pocs/render-stragegies/strategy-provider.service';
-import { map } from 'rxjs/operators';
+import { RxStrategyCredentials, RxStrategyProvider } from '@rx-angular/cdk';
+import { delay, map, skip } from 'rxjs/operators';
+import { EventEmitter } from '@angular/core';
 
 const strategiesUiConfig = {
   local: { name: 'local', icon: 'call_split' },
@@ -24,7 +25,7 @@ const strategiesUiConfig = {
         </mat-select-trigger>
         <mat-option
           [value]="s"
-          *ngFor="let s of strategyProvider.strategyNames">
+          *rxFor="let s of stratNames$; parent: true;">
           <mat-icon class="mr-2">{{ strategiesUiConfig[s]?.icon }}</mat-icon>
           {{ s }}
         </mat-option>
@@ -41,12 +42,20 @@ const strategiesUiConfig = {
 export class StrategySelectComponent {
   readonly strategiesUiConfig = strategiesUiConfig;
 
-
-  @Output() strategyChange = this.strategyProvider.primaryStrategy$.pipe(map(s => s.name));
+  readonly stratNames$ = this.strategyProvider.strategyNames$;
+  @Output() strategyChange = new EventEmitter<string>();
 
   constructor(
-    public strategyProvider: StrategyProvider
+    public strategyProvider: RxStrategyProvider,
+    private state: RxState<any>
   ) {
+    state.hold(
+      this.strategyProvider.primaryStrategy$.pipe(
+        map(s => s.name),
+        skip(1) // skip(1) to make it "COLD"...
+      ),
+      primaryStrategyChanged => this.strategyChange.next(primaryStrategyChanged)
+    )
   }
 
 }
