@@ -93,7 +93,7 @@ import { ComparableData } from '../interfaces/comparable-data-type';
  */
 export function upsert<T>(
   source: T[],
-  update: T | T[] | Partial<T>[] | Partial<T>,
+  update: Partial<T>[] | Partial<T>,
   compare?: ComparableData<T>
 ): T[] {
   // check inputs for validity
@@ -111,7 +111,7 @@ export function upsert<T>(
 
   // if source is empty array or not an array, but the updates are valid:
   // return a shallow copy of the updates as result
-  if (!sourceIsArray || source.length === 0) {
+  if (updatesAsArray.length > 0 && (!sourceIsArray || source.length === 0)) {
     return [...updatesAsArray] as T[];
   }
 
@@ -152,6 +152,6 @@ export function upsert<T>(
       return item;
     });
   }
-  // return the combination of the updated source the inserts as new array
+  // return the combination of the updated source & the inserts as new array
   return [...updated, ...inserts];
 }
