@@ -1,5 +1,5 @@
 import { TestScheduler } from 'rxjs/testing';
-import { toHook, untilDestroyed, DestroyProp, OnDestroy$ } from '@rx-angular/cdk';
+import { toHook, untilDestroyed, DestroyProp, OnDestroy$ } from '../../src/lib/life-cycle-hooks';
 import { EMPTY, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { jestMatcher } from '@test-helpers';
