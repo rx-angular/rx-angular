@@ -11,6 +11,8 @@ import { RouteChangeComponent } from './route-change.component';
 import { RoutedNgForComponent } from './routed-ng-for.component';
 import { RoutedRxForComponent } from './routed-rx-for.component';
 import { BgColorPipe } from './bg-color.pipe';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
 
 const routes: Routes = [
   {
@@ -45,6 +47,8 @@ const routes: Routes = [
     FormsModule,
     MatButtonModule,
     MatIconModule,
+    MatCheckboxModule,
+    MatSelectModule,
   ],
 })
 export class RouteChangeModule {}
