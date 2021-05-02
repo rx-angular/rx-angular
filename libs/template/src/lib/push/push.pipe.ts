@@ -17,8 +17,6 @@ import {
   RxAngularConfig,
   asyncScheduler,
   RxStrategyNames,
-  RxComponentInput,
-  isRxComponentInput,
 } from '@rx-angular/cdk';
 import {
   NextObserver,
@@ -126,12 +124,12 @@ export class PushPipe<U, S extends string = string>
   ): U;
   transform(
     potentialObservable: ObservableInput<U>,
-    config?: RxComponentInput<U, S>
+    config?: PushInput<U, S>
   ): U;
   transform(
     potentialObservable: ObservableInput<U> | null | undefined,
     config:
-      | RxComponentInput<U, S>
+      | PushInput<U, S>
       | RxStrategyNames<S>
       | Observable<RxStrategyNames<S>>
       | undefined,
@@ -198,4 +196,18 @@ export class PushPipe<U, S extends string = string>
       )
       .subscribe();
   }
+}
+
+interface PushInput<T, S> {
+  strategy?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>;
+  renderCallback?: NextObserver<T>;
+  patchZone?: boolean;
+}
+
+function isRxComponentInput<U, S>(val: any): val is PushInput<U, S> {
+  return (
+    val?.hasOwnProperty('strategy') ||
+    val?.hasOwnProperty('renderCallback') ||
+    val?.hasOwnProperty('patchZone')
+  );
 }
