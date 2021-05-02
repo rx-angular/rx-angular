@@ -8,7 +8,7 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 **How zone.js works by default**
 
 By default `zone.js` wraps almost all browser events – like mouse events, XHR events, timers and so on.
-Every time event is invoked, zone initiates app re-render. This is cool feature of a framework – every time data has a \***\*chance\*\*** to update, Angular checks and re-renders the app.
+Every time event is invoked, zone initiates app re-render. This is cool feature of the Angular framework – every time data has a \***\*chance\*\*** to update, Angular checks and re-renders the app.
 
 ![Angular change-detection based on zone](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-change-detection_michael-hladky.png)
 
@@ -56,7 +56,7 @@ With some specific local state management, it is manageable to fix possible bugs
 
 Another risk with zone flags is it will also affect **third-party libs** that rely on change detection through the zone flagged APIs.
 
-In general, if you turn off one-two flags, nothing may break cause others are still present. And only when 70% of flags would be turned off, you'd see some major regression in UI.
+In general, if you turn off some flags, nothing may break cause others are still present. And only when 70% of flags would be turned off, you'd see some major regression in UI.
 That's why important not only to disable the flag and check that app is ok but also to go over the codebase checking that change detection would be triggered correctly without zone.
 
 # Migration and Precondition
