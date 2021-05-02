@@ -56,7 +56,7 @@ export interface ZoneConfigConfiguration {
    * Interface of `zone-testing.js` test configurations.
    *
    * You can define the following configurations on the `window` or `global` object before
-   * importing `zone-testing.js` to change `zone-testing.js` default behaviors in the test runner.
+   * importing `zone-testing.js` to change its default behaviors in the test runner.
    */
   test: {
     disable: TestDisableConfigurationMethods;
