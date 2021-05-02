@@ -11589,10 +11589,10 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   dependencies:
     aproba "^1.1.1"
 
-rx-query@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/rx-query/-/rx-query-1.0.1.tgz#42310d74be195a7b59f8ff8a3ddfd3bdd4a12e93"
-  integrity sha512-7+WDZRq+Jfd5rmc50qu/iy4C5mSXPxRIHLbkGmE5hi2Bwbo7BbMecLivu+9586W/V96i84fSzwfFhIiztIQXXg==
+rx-query@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/rx-query/-/rx-query-1.0.2.tgz#9382f41097a584dd0c0a4a97771f142852b8f54e"
+  integrity sha512-58g9GIpkGFrIC1muG67fKOOnvJhnF9wkFhvjs1GOczDoKXq3kSA5APHnleEfQw7+aWJYZ2zRwwuy7zSE0CANQA==
 
 rx@4.1.0:
   version "4.1.0"
