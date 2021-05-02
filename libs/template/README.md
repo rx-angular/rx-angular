@@ -48,8 +48,9 @@ are several techniques that need to be known and considered.
 Using schematics:
 
 ```bash
-ng add @rx-angular/template --project my-project
-npm i // `ng add` added `@rx-angular/cdk` to package json so we need to install them
+ng add @rx-angular/template
+# or
+nx add @rx-angular/template
 ```
 
 Manually:
