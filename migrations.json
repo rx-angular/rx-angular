@@ -1,0 +1,11 @@
+{
+  "migrations": [
+    {
+      "version": "11.0.0-0",
+      "description": "Updates Angular Material to v11",
+      "factory": "./ng-update/index#updateToV11",
+      "package": "@angular/material",
+      "name": "migration-v11"
+    }
+  ]
+}

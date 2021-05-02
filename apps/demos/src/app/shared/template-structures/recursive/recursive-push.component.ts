@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { CdHelper } from '../../utils/cd-helper';
 import { ReplaySubject } from 'rxjs';
 
 @Component({

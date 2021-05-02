@@ -32,7 +32,7 @@ the bound Observable.
 
 Included features for `*rxLet`:
 
-- binding is always present. (see "Problems with `async` and `*ngIf`" section below)
+- binding is always present. (see "Problems with `async` and `*ngIf`" section above)
 - it takes away the multiple usages of the `async` or `push` pipe
 - a unified/structured way of handling null and undefined
 - triggers change-detection differently if `zone.js` is present or not (`ChangeDetectorRef.detectChanges` or
@@ -44,7 +44,7 @@ Included features for `*rxLet`:
 
 ### Binding an Observable and using the view context
 
-The `*rxLet` directive takes over several things and makes it more convenient and save to work with streams in the
+The `*rxLet` directive takes over several things and makes it more convenient and safe to work with streams in the
 template:
 
 ```html

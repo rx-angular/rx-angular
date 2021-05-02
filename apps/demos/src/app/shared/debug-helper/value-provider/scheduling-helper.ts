@@ -1,7 +1,7 @@
 import { BehaviorSubject, EMPTY, Observable, Subject } from 'rxjs';
 import { scan, share, switchAll, switchMap } from 'rxjs/operators';
 import { toTick } from './utils';
-import { SchedulingPriority } from '@rx-angular/template';
+import { SchedulingPriority } from './model';
 
 export const schedulingHelper = () => {
 

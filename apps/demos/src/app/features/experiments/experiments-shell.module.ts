@@ -3,10 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 
 const ROUTES: Routes = [
   {
-    path: 'differ',
+    path: 'strategies',
     loadChildren: () =>
-      import('./differ/differ.module').then(
-        (m) => m.DifferModule
+      import('./strategies/strategies.module').then(
+        (m) => m.StrategiesModule
       )
   },
   {
@@ -21,6 +21,20 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./structural-directives/structural-directives.module').then(
         (m) => m.StructuralDirectivesModule
+      )
+  },
+  {
+    path: 'input-bindings',
+    loadChildren: () =>
+      import('./input-bindings/input-bindings.module').then(
+        (m) => m.InputBindingsModule
+      )
+  },
+  {
+    path: 'decorators',
+    loadChildren: () =>
+      import('./decorators/decorators.module').then(
+        (m) => m.DecoratorsModule
       )
   }
 ];

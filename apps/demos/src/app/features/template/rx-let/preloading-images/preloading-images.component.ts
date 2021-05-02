@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SchedulingPriority } from '@rx-angular/template';
 import { schedulingHelper } from '../../../../shared/debug-helper/value-provider/scheduling-helper';
 import { placeholderImg } from '../../../../shared/debug-helper/value-provider';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -19,19 +18,17 @@ import { DomSanitizer } from '@angular/platform-browser';
           #valP="rxaValueProvider"
         ></rxa-value-provider>
       </div>
-      <img [src]="url" *rxLet="valP.imgUrl$; let url; rxSuspense:sV;"/>
-      <ng-template #sV><img [src]="placeholder"/></ng-template>
+      <img [src]="url" *rxLet="valP.imgUrl$; let url; rxSuspense: sV" />
+      <ng-template #sV><img [src]="placeholder" /></ng-template>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreloadingImagesComponent {
-  p = SchedulingPriority;
   sh = schedulingHelper();
   placeholder = this.domSanitizer.bypassSecurityTrustUrl(placeholderImg);
 
-  constructor(public domSanitizer: DomSanitizer) {
-  }
+  constructor(public domSanitizer: DomSanitizer) {}
 
   reset() {
     this.sh = schedulingHelper();

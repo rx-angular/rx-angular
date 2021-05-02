@@ -6,6 +6,10 @@
      - ./apps/demos/*
      - ./apps/demos/**/*
 
+  "🛠️ CDK":
+    - libs/cdk/*
+    - libs/cdk/**/*
+
   "{ } State":
      - libs/state/*
      - libs/state/**/*

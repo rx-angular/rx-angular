@@ -1,6 +1,6 @@
 import { TestScheduler } from 'rxjs/internal/testing/TestScheduler';
-import { mergeMapTo, share } from 'rxjs/operators';
-import { concat, defer, from, of, timer } from 'rxjs';
+import { mergeMapTo, share, tap } from 'rxjs/operators';
+import { asapScheduler, concat, defer, from, Observable, of, timer } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher, mockConsole } from '@test-helpers';
 import { coalesceWith } from '../../../src/lib/render-strategies/rxjs/operators/coalesceWith';
@@ -22,7 +22,7 @@ describe('coalesce operator additional logic', () => {
       const s1 = cold('---a---------|', values);
       const s1Subs = '^------------!';
       const n1 = cold('   ------a|  ');
-      const n1Subs = ['---^------!'];
+      const n1Subs = ['---^-----!'];
       const exp = '---------a---|';
       const result = s1.pipe(coalesceWith(n1));
       expectObservable(result).toBe(exp, values);
@@ -34,10 +34,10 @@ describe('coalesce operator additional logic', () => {
   it('should emit last value if source completes before durationSelector', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const s1 = cold('---abcdef---|');
-      const s1Subs = '^-----------!';
+      const s1Subs =  '^-----------!';
       const n1 = cold('   ----------');
       const n1Subs = ['---^--------!'];
-      const exp = '------------(f|)';
+      const exp =     '------------(f|)';
 
       const result = s1.pipe(coalesceWith(n1));
       expectObservable(result).toBe(exp);
@@ -52,7 +52,7 @@ describe('coalesce operator additional logic', () => {
         const s1 = cold('---abcdef---|');
         const s1Subs = '^-----------!';
         const n1 = cold('   -----x|    ');
-        const n1Subs = ['---^-----!    '];
+        const n1Subs = ['---^----!    '];
         const exp = '--------f---|';
 
         const result = s1.pipe(coalesceWith(n1));
@@ -100,6 +100,24 @@ describe('coalesce operator additional logic', () => {
 
         const result = s1.pipe(coalesceWith(durationSelector));
         expectObservable(result).toBe(exp);
+      });
+    });
+
+    it('should emit coalesce sync values', () => {
+      // Test case inspired by https://github.com/cartant/rxjs-etc/blob/main/source/operators/debounceSync-spec.ts
+      testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+        const durationSelector = new Observable(subscriber => {
+          asapScheduler.schedule(() => {
+            subscriber.next();
+          });
+        });
+        const source = cold("   (ab)-(cd)---(ef)----|");
+        const sourceSubs = "      ^-------------------!";
+        const expected = " b----d------f-------|";
+
+        const result = source.pipe(coalesceWith(durationSelector));
+        expectObservable(result).toBe(expected);
+        expectSubscriptions(source.subscriptions).toBe(sourceSubs);
       });
     });
 

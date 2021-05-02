@@ -4,17 +4,11 @@ import { CommonModule } from '@angular/common';
 import { MatRippleModule } from '@angular/material/core';
 import { PushModule } from '@rx-angular/template';
 
-const DEPRECATIONS = [RenderingsComponent];
+const DECLARATIONS = [RenderingsComponent];
 
 @NgModule({
-  declarations: [...DEPRECATIONS],
-  imports: [
-    CommonModule,
-    MatRippleModule,
-    PushModule
-  ],
-  exports: [...DEPRECATIONS]
+  declarations: [...DECLARATIONS],
+  imports: [CommonModule, MatRippleModule, PushModule],
+  exports: [...DECLARATIONS],
 })
-export class RenderingsModule {
-
-}
+export class RenderingsModule {}

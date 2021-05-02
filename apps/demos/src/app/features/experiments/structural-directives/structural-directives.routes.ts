@@ -3,22 +3,20 @@ import { Routes } from '@angular/router';
 export const ROUTES: Routes = [
   {
     path: '',
-    redirectTo: 'view-vs-embedded-view'
+    redirectTo: 'rx-switch-poc',
   },
   {
-    path: 'view-vs-embedded-view',
-    loadChildren: () => import('./view-vs-embedded-view/view-vs-embedded-view.routed.module').then(m => m.ViewVsEmbeddedViewRoutedModule)
+    path: 'rx-switch-poc',
+    loadChildren: () =>
+      import('./rx-switch-poc/rx-switch-poc.module').then(
+        (m) => m.RxSwitchPocModule
+      ),
   },
   {
-    path: 'rx-if-poc',
-    loadChildren: () => import('./rx-if-poc/rx-if-poc.routed.module').then(m => m.RxIfPocRoutedModule)
+    path: 'if-visible',
+    loadChildren: () =>
+      import('./if-visible-poc/if-visible-routed.module').then(
+        (m) => m.IfVisibleRoutedModule
+      ),
   },
-  {
-    path: 'rx-swicht-poc',
-    loadChildren: () => import('./rx-switch-poc/rx-swicht-poc.module').then(m => m.RxSwichtPocModule)
-  },
-  {
-    path: 'rx-for-poc',
-    loadChildren: () => import('./rx-for-poc/rx-for-poc.routed.module').then(m => m.RxForPocRoutedModule)
-  }
 ];

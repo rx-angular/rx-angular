@@ -9,13 +9,13 @@
   <ng-container *ngIf="type === 'push'">
     <p *ngIf="pushLoading$ | push; else pushContent">Loading...</p>
     <ng-template #pushContent>
-      <rxa-rendering-work [factor]="10"></rxa-rendering-work>
+      <rxa-rendering-work [factor]="100"></rxa-rendering-work>
     </ng-template>
   </ng-container>
 
   <ng-container *ngIf="type === 'rxLet'">
-    <ng-container *rxLet="letLoading$; let letLoading; suspense: suspenseTpl">
-      <rxa-rendering-work [factor]="10"></rxa-rendering-work>
+    <ng-container *rxLet="letLoading$; let letLoading; rxSuspense: suspenseTpl">
+      <rxa-rendering-work [factor]="100"></rxa-rendering-work>
     </ng-container>
     <ng-template #suspenseTpl> <p>Loading...</p> </ng-template>
   </ng-container>

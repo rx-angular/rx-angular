@@ -18,6 +18,10 @@ describe('safePluck', () => {
     expect(safePluck(obj, 'foo')).toEqual(obj.foo);
   });
 
+  it('should return undefined if key does not exist', () => {
+    expect(safePluck(obj, 'doesNotExist' as any)).toEqual(undefined);
+  });
+
   describe('edge cases', () => {
     it('should return undefined when object is not valid', () => {
       expect(safePluck([undefined] as any, ['prop1'] as any)).toEqual(undefined);

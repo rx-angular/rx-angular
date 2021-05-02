@@ -2,50 +2,35 @@
   "npmScope": "rx-angular",
   "implicitDependencies": {
     "angular.json": "*",
-    "package.json": {
-      "dependencies": "*",
-      "devDependencies": "*"
-    },
+    "package.json": { "dependencies": "*", "devDependencies": "*" },
     "tsconfig.json": "*",
     "tslint.json": "*",
-    "nx.json": "*"
+    "nx.json": "*",
+    ".eslintrc.json": "*"
   },
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
-      "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
-      }
+      "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
     }
   },
   "projects": {
-    "demos": {
-      "tags": ["type:app"]
-    },
-    "demos-e2e": {
+    "demos": { "tags": ["type:app"] },
+    "demos-e2e": { "tags": [], "implicitDependencies": ["demos"] },
+    "test-helpers": { "tags": ["type:util"] },
+    "cdk": { "tags": ["type:lib", "type:cdk"] },
+    "state": { "tags": ["type:lib"] },
+    "template": { "tags": ["type:lib"] },
+    "docs": { "tags": ["type:app"] },
+    "tour-of-heroes": { "tags": ["type:app"] },
+    "tour-of-heroes-ngxs": { "tags": ["type:app"] },
+    "vanilla-case-studies": { "tags": [] },
+    "vanilla-case-studies-e2e": {
       "tags": [],
-      "implicitDependencies": ["demos"]
+      "implicitDependencies": ["vanilla-case-studies"]
     },
-    "test-helpers": {
-      "tags": ["type:util"]
-    },
-    "state": {
-      "tags": ["type:lib"]
-    },
-    "template": {
-      "tags": ["type:lib"]
-    },
-    "docs": {
-      "tags": ["type:app"]
-    },
-    "tour-of-heroes": {
-      "tags": ["type:app"]
-    },
-    "tour-of-heroes-ngxs": {
-      "tags": ["type:app"]
-    }
+    "ssr": { "tags": [] },
+    "ssr-e2e": { "tags": [], "implicitDependencies": ["ssr"] }
   },
-  "affected": {
-    "defaultBase": "master"
-  }
+  "affected": { "defaultBase": "master" }
 }

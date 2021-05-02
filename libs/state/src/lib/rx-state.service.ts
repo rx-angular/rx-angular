@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { isObservable, Observable, OperatorFunction, Subscribable, Subscription, Unsubscribable } from 'rxjs';
-import { map, pluck, tap } from 'rxjs/operators';
+import { EMPTY, isObservable, Observable, OperatorFunction, Subscribable, Subscription, Unsubscribable } from 'rxjs';
+import { catchError, map, pluck, tap } from 'rxjs/operators';
 import { isKeyOf, isOperateFnArrayGuard, isStringArrayGuard, pipeFromArray, safePluck } from './core';
 import { AccumulationFn, createAccumulationObservable, createSideEffectObservable } from './cdk';
 import { stateful } from './rxjs/operators';
@@ -160,10 +160,12 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     | T[K1][K2][K3][K4][K5]
     | T[K1][K2][K3][K4][K5][K6] {
     const hasStateAnyKeys = Object.keys(this.accumulator.state).length > 0;
-    if (hasStateAnyKeys && !!keys && keys.length > 0) {
+    if (!!keys && keys.length) {
       return safePluck(this.accumulator.state, keys);
     } else {
-      return this.accumulator.state;
+      return hasStateAnyKeys ?
+             this.accumulator.state :
+              undefined as unknown as T;
     }
   }
 
@@ -545,13 +547,14 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     obsOrObsWithSideEffect: Observable<S>,
     sideEffectFn?: (arg: S) => void
   ): void {
+    const sideEffect = obsOrObsWithSideEffect.pipe(catchError(e => EMPTY))
     if (typeof sideEffectFn === 'function') {
       this.effectObservable.nextEffectObservable(
-        obsOrObsWithSideEffect.pipe(tap(sideEffectFn))
+        sideEffect.pipe(tap(sideEffectFn))
       );
       return;
     }
-    this.effectObservable.nextEffectObservable(obsOrObsWithSideEffect);
+    this.effectObservable.nextEffectObservable(sideEffect);
   }
 
   /**

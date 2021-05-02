@@ -8,7 +8,7 @@
 
 RxState is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in angular.
 
-![state logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/images/state_logo.png)
+![state logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/images/state_logo.png)
 
 ## Description
 
@@ -38,8 +38,8 @@ Using this library allows you to implement things like:
 with very little effort in any component.
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/images/state_API-names.png" width="49%" />
-  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/images/state_API-types.png" width="49%" />
+  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/images/state_API-names.png" width="49%" />
+  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/images/state_API-types.png" width="49%" />
 </p>
 
 ## Key features
@@ -55,7 +55,11 @@ with very little effort in any component.
 
 ## Install
 
-`npm install @rx-angular/state`
+```bash
+npm install --save @rx-angular/state
+# or
+yarn add @rx-angular/state
+```
 
 ## API
 
