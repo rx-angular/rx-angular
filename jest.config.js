@@ -10,5 +10,6 @@ module.exports = {
     '<rootDir>/libs/template',
     '<rootDir>/libs/cdk',
     '<rootDir>/libs/cdk/zone-less',
+    '<rootDir>/apps/ssr',
   ],
 };

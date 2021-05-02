@@ -1038,6 +1038,146 @@
         }
       }
     },
+    "ssr": {
+      "projectType": "application",
+      "root": "apps/ssr",
+      "sourceRoot": "apps/ssr/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/ssr/browser",
+            "index": "apps/ssr/src/index.html",
+            "main": "apps/ssr/src/main.ts",
+            "polyfills": "apps/ssr/src/polyfills.ts",
+            "tsConfig": "apps/ssr/tsconfig.app.json",
+            "aot": true,
+            "assets": ["apps/ssr/src/favicon.ico", "apps/ssr/src/assets"],
+            "styles": ["apps/ssr/src/styles.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/ssr/src/environments/environment.ts",
+                  "with": "apps/ssr/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "ssr:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ssr:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ssr:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/ssr/src/**/*.ts",
+              "apps/ssr/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/ssr"],
+          "options": {
+            "jestConfig": "apps/ssr/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/apps/ssr/server",
+            "main": "apps/ssr/server.ts",
+            "tsConfig": "apps/ssr/tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "apps/ssr/src/environments/environment.ts",
+                  "with": "apps/ssr/src/environments/environment.prod.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            }
+          }
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "options": {
+            "browserTarget": "ssr:build",
+            "serverTarget": "ssr:server"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ssr:build:production",
+              "serverTarget": "ssr:server:production"
+            }
+          }
+        }
+      }
+    },
+    "ssr-e2e": {
+      "root": "apps/ssr-e2e",
+      "sourceRoot": "apps/ssr-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/ssr-e2e/cypress.json",
+            "tsConfig": "apps/ssr-e2e/tsconfig.e2e.json",
+            "baseUrl": "https://localhost:4200"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/ssr-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    },
     "cdk-zone-less": {
       "projectType": "library",
       "root": "libs/cdk/zone-less",

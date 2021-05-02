@@ -58,9 +58,9 @@
     "vanilla-case-studies-e2e": {
       "tags": [],
       "implicitDependencies": ["vanilla-case-studies"]
-    }
+    },
+    "ssr": { "tags": [] },
+    "ssr-e2e": { "tags": [], "implicitDependencies": ["ssr"] }
   },
-  "affected": {
-    "defaultBase": "master"
-  }
+  "affected": { "defaultBase": "master" }
 }

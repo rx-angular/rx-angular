@@ -1,9 +1,8 @@
-import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/model';
+import { SortingPresenter } from './sorting.presenter';
+import { coerceNumberProperty } from '@angular/cdk/coercion';
 
 let itemIdx = 0;
 
@@ -24,30 +23,60 @@ function getItems(num: number) {
     <div
       class="d-flex py-3 w-100 align-items-center justify-content-around header"
     >
-      <div>ID</div>
+      <div>Selected</div>
+      <div class="d-flex align-items-center">
+        <span class="mr-2">ID</span>
+        <button
+          mat-icon-button
+          (click)="sorting.toggleSortBy('id')"
+        >
+
+            <mat-icon *ngIf="sorting.isAsc()">arrow_upward</mat-icon>
+            <mat-icon *ngIf="sorting.isDesc()">arrow_downward</mat-icon>
+
+        </button>
+      </div>
       <div class="d-flex align-items-center">
         <span class="mr-2">Value</span>
-        <button mat-icon-button (click)="toggleSortDir()">
-          <mat-icon *ngIf="sortDir.getValue() === 1">arrow_upward</mat-icon>
-          <mat-icon *ngIf="sortDir.getValue() === -1">arrow_downward</mat-icon>
+        <button
+          mat-icon-button
+          (click)="sorting.toggleSortBy('value')"
+        >
+            <mat-icon *ngIf="sorting.isAsc()">arrow_upward</mat-icon>
+            <mat-icon *ngIf="sorting.isDesc()">arrow_downward</mat-icon>
+
         </button>
       </div>
       <div>Index</div>
       <div>Action</div>
     </div>
     <div
+      [style.height.px]="item.value * 300 + 40"
       class="d-flex py-3 w-100 align-items-center justify-content-around item"
       *ngFor="
-        let item of items$ | async;
+        let item of items;
         let i = index;
         let c = count;
         trackBy: trackById
       "
     >
+      <div>
+        <mat-checkbox></mat-checkbox>
+      </div>
       <div>{{ item.id }}</div>
-      <div>{{ item.value }}</div>
+      <div class="d-flex align-items-center">
+        <span class="box" [style.background]="item.value | bgColor"></span
+        >{{ item.value }}
+      </div>
       <div>{{ i }}</div>
-      <button mat-raised-button><mat-icon>delete</mat-icon> CLICK</button>
+      <button mat-raised-button>
+        <mat-icon>delete</mat-icon>
+        Delete
+      </button>
+      <button mat-raised-button>
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
     </div>
   `,
   styles: [
@@ -56,12 +85,27 @@ function getItems(num: number) {
         flex-grow: 1;
         overflow: auto;
       }
+
       .item {
         border: 1px solid magenta;
       }
+
       .item:hover {
         background: rgba(0, 0, 0, 0.35);
       }
+
+      .item .value {
+        width: 5px;
+        height: 5px;
+      }
+
+      .item .box {
+        width: 20px;
+        height: 20px;
+        margin: 5px;
+        box-shadow: 1px 1px #ffffff;
+      }
+
       .header {
         font-weight: bold;
         position: sticky;
@@ -72,24 +116,21 @@ function getItems(num: number) {
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SortingPresenter],
 })
 export class RoutedNgForComponent {
-  sortDir = new BehaviorSubject<number>(1);
+  items = [] as TestItem[];
 
-  items$ = this.activeRoute.params.pipe(
-    map((params) => getItems(coerceNumberProperty(params.count, 1000))),
-    switchMap((items) =>
-      this.sortDir.pipe(
-        map((dir) => items.sort((a, b) => (a.value - b.value) * dir))
-      )
-    )
-  );
+  constructor(
+    private activeRoute: ActivatedRoute,
+    public sorting: SortingPresenter<TestItem>
+  ) {
+    this.sorting.property = 'id';
+    this.activeRoute.params.subscribe(({ count }: { count: number }) => {
+      const items = getItems(coerceNumberProperty(count, 1000));
+      this.items = this.sorting.getSortedItems(items);
+    });
+  }
 
   trackById = (i, v) => v.id;
-
-  constructor(private activeRoute: ActivatedRoute) {}
-
-  toggleSortDir(): void {
-    this.sortDir.next(this.sortDir.getValue() * -1);
-  }
 }
