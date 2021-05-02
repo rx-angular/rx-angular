@@ -47,7 +47,7 @@ export interface ZoneConfigConfiguration {
    * Interface of `zone.js` configurations.
    *
    * You can define the following configurations on the `window/global` object before
-   * importing `zone.js` to change `zone.js` default behaviors.
+   * importing `zone.js` to change its default behaviors.
    */
   global: {
     disable: GlobalDisableConfigurationMethods;
