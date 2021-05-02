@@ -25,30 +25,49 @@ const zoneSymbol = '__zone_symbol__';
 /**
  * https://angular.io/guide/zone#setting-up-zonejs
  **/
-function assertZoneConfig() {
+function assertZoneObjectPresentBeforeZoneJs() {
   if ((window as any).Zone !== undefined) {
-    // @TODO link to docs
-    console.error('zone-flags file needs to get imported before zone.js');
+    console.error(
+      'zone configuration file for global configuration needs to get imported before zone.js. https://angular.io/guide/zone#setting-up-zonejs'
+    );
   }
 }
 
-const addDisableFlag = (prop: string) => ({
+/**
+ * https://github.com/angular/angular/blob/master/packages/zone.js/lib/zone.configurations.api.ts#L775-L776
+ **/
+function assertZoneObjectPresentAfterZoneJs() {
+  if ((window as any).Zone === undefined) {
+    console.error(
+      'zone configuration file for runtime configuration needs to get imported/used after zone.js. https://github.com/angular/angular/blob/master/packages/zone.js/lib/zone.configurations.api.ts#L775-L776'
+    );
+  }
+}
+
+const addDisableFlagBeforeZoneJs = (prop: string) => ({
   [prop]: () => {
-    assertZoneConfig();
+    assertZoneObjectPresentBeforeZoneJs();
     return ((window as any)[zoneDisable + prop] = true);
   },
 });
 
-const addSymbolFlag = (prop: string) => ({
+const addSymbolBeforeZoneJs = (prop: string) => ({
   [prop]: () => {
-    assertZoneConfig();
+    assertZoneObjectPresentBeforeZoneJs();
     return ((window as any)[zoneSymbol + prop] = true);
   },
 });
 
-const addArraySymbolFlag = (prop: string) => ({
+const addSymbolAfterZoneJs = (prop: string) => ({
+  [prop]: () => {
+    assertZoneObjectPresentAfterZoneJs();
+    return ((window as any)[zoneSymbol + prop] = true);
+  },
+});
+
+const addArraySymbolFlagBeforeZoneJs = (prop: string) => ({
   [prop]: (eventNames: string[]) => {
-    assertZoneConfig();
+    assertZoneObjectPresentBeforeZoneJs();
     const w: any = window as any;
     return (w[zoneSymbol + prop] = [
       ...(Array.isArray(w[zoneSymbol + prop]) ? w[zoneSymbol + prop] : []),
@@ -98,55 +117,26 @@ function createZoneFlagsConfigurator(): ZoneConfig {
   };
 
   const zoneConfigObj: ZoneConfigConfiguration = {
-    /**
-     * Interface of `zone.js` configurations.
-     *
-     * You can define the following configurations on the `window/global` object before
-     * importing `zone.js` to change `zone.js` default behaviors.
-     */
     global: {
       disable: reduceToObject<GlobalDisableConfigurationMethods>([
-        ...zoneGlobalDisableConfigurationsKeys.map(addDisableFlag),
-        ...zoneGlobalSettingsConfigurationsKeys.map(addSymbolFlag),
+        ...zoneGlobalDisableConfigurationsKeys.map(addDisableFlagBeforeZoneJs),
+        ...zoneGlobalSettingsConfigurationsKeys.map(addSymbolBeforeZoneJs),
       ]),
     },
-    /**
-     * Interface of `zone-testing.js` test configurations.
-     *
-     * You can define the following configurations on the `window` or `global` object before
-     * importing `zone-testing.js` to change `zone-testing.js` default behaviors in the test runner.
-     */
     test: {
       disable: reduceToObject<TestDisableConfigurationMethods>([
-        ...zoneTestDisableConfigurationsKeys.map(addDisableFlag),
-        ...zoneTestSettingsConfigurationsKeys.map(addSymbolFlag),
+        ...zoneTestDisableConfigurationsKeys.map(addDisableFlagBeforeZoneJs),
+        ...zoneTestSettingsConfigurationsKeys.map(addSymbolBeforeZoneJs),
       ]),
     },
-    /**
-     * Interface of `zone-testing.js` test configurations, but just the event related part.
-     */
     events: {
       disable: reduceToObject<ZoneGlobalEventsConfigurationsMethods>(
-        zoneGlobalEventsConfigurationsKeys.map(addArraySymbolFlag)
+        zoneGlobalEventsConfigurationsKeys.map(addArraySymbolFlagBeforeZoneJs)
       ),
     },
-    /**
-     * The interface of the `zone.js` runtime configurations.
-     *
-     * These configurations can be defined on the `Zone` object after
-     * importing zone.js to change behaviors. The differences between
-     * the `ZoneRuntimeConfigurations` and the `ZoneGlobalConfigurations` are,
-     *
-     * 1. `ZoneGlobalConfigurations` must be defined on the `global/window` object before importing
-     * `zone.js`. The value of the configuration cannot be changed at runtime.
-     *
-     * 2. `ZoneRuntimeConfigurations` must be defined on the `Zone` object after importing `zone.js`.
-     * You can change the value of this configuration at runtime.
-     *
-     */
     runtime: {
       disable: reduceToObject<RuntimeConfigurationMethods>(
-        zoneRuntimeConfigurationsKeys.map(addSymbolFlag)
+        zoneRuntimeConfigurationsKeys.map(addSymbolAfterZoneJs)
       ),
     },
   };
@@ -158,7 +148,11 @@ function createZoneFlagsConfigurator(): ZoneConfig {
 }
 
 /**
- * An object for typed zone-flags configuration.
+ * An object for typed zone-flags configuration. It exposes flags under the following scopes:
+ * - global (global environment API)
+ * - events (event listener names and behavior)
+ * - runtime (configurable behaviour at runtime)
+ * - test (patches for testing libs like jasmine, jest etc)
  *
  * @Example
  *
