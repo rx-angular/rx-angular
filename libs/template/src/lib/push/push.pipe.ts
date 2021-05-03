@@ -89,8 +89,8 @@ export class PushPipe implements PipeTransform, OnDestroy {
             n.kind === RxNotificationKind.suspense ||
             n.kind === RxNotificationKind.next
         ),
-        tap<RxNotification<any>>((notification) => {
-          this.renderedValue = notification.value as any;
+        tap(notification => {
+          this.renderedValue = notification.value;
         }),
         withLatestFrom(this.strategyHandler.strategy$),
         switchMap(([v, strategy]) =>
