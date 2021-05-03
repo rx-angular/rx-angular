@@ -65,7 +65,12 @@ import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
  */
 @Pipe({ name: 'push', pure: false })
 export class PushPipe implements PipeTransform, OnDestroy {
-  /** @internal */
+  /**
+   * @internal
+   * This is typed as `any` because the type cannot be inferred
+   * without a class-level generic argument, which was removed to
+   * fix https://github.com/rx-angular/rx-angular/pull/684
+  */
   private renderedValue: any | null | undefined;
   /** @internal */
   private readonly subscription: Unsubscribable;
