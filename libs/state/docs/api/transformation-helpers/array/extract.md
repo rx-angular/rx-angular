@@ -1,17 +1,20 @@
-## slice
+## extract
 
 Accepts an array of T `extends object` and a single key or an array of keys (`K extends keyof T`).
-The `slice` method is pure and immutable, thus not touching the input values and returning a shallow copy of the selected slice.
+Returns a new array of objects constructed from provided key or keys.
 
 _Example_
 
 ```typescript
- const cats = [{id: 1, type: 'cat', name: 'Fluffy'}, {id: 2, type: 'cat', name: 'Emma'}];
+const cats = [
+  { id: 1, type: 'cat', name: 'Fluffy' },
+  { id: 2, type: 'cat', name: 'Emma' },
+];
 
- const catsWithoutTypes = extract(cats, ['name', 'id']);
- 
- // catsWithoutTypes will be:
- // [{id: 1, name: 'Fluffy'}, {id: 2, name: 'Emma'}];
+const catsWithoutTypes = extract(cats, ['name', 'id']);
+
+// catsWithoutTypes will be:
+// [{id: 1, name: 'Fluffy'}, {id: 2, name: 'Emma'}];
 ```
 
 _Example_
@@ -35,8 +38,26 @@ export class AnimalsListComponent {
 ### Edge cases
 
 ```typescript
-extract([{ id: 1, type: 'cat', name: 'Emma' }, { id: 2, type: 'dog' }], ['name', 'id', 'type']) > [{ id: 1, type: 'cat', name: 'Emma' }, { id: 2, type: 'dog', name: undefined }]; // dog has no name
-extract([{id: 1, type: 'cat', name: 'Emma'}, 1, 'string'] as any, ['id', 'name'] as any) > [{ id: 1,  name: 'Emma' }, { id: undefined, name: undefined }, { id: undefined, name: undefined }]; // cat had properties but they are not found in 1 and 'string'
+extract(
+  [
+    { id: 1, type: 'cat', name: 'Emma' },
+    { id: 2, type: 'dog' },
+  ],
+  ['name', 'id', 'type']
+) >
+  [
+    { id: 1, type: 'cat', name: 'Emma' },
+    { id: 2, type: 'dog', name: undefined },
+  ]; // dog has no name
+extract(
+  [{ id: 1, type: 'cat', name: 'Emma' }, 1, 'string'] as any,
+  ['id', 'name'] as any
+) >
+  [
+    { id: 1, name: 'Emma' },
+    { id: undefined, name: undefined },
+    { id: undefined, name: undefined },
+  ]; // cat had properties but they are not found in 1 and 'string'
 extract(null as any, 'prop') > undefined;
 extract(items, {} as any) > undefined;
 extract(items, [] as any) > undefined;
