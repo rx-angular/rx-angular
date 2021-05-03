@@ -15,6 +15,7 @@ export {
   toDictionary,
   update,
   extract,
+  upsert,
 } from './transformation-helpers/array/index';
 export {
   setProp,
