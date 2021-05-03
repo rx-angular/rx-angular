@@ -84,7 +84,7 @@ export class PushPipe implements PipeTransform, OnDestroy {
     const scope = (cdRef as any).context;
     this.subscription = this.templateObserver.values$
       .pipe(
-        filter<RxNotification<any>>(
+        filter(
           (n) =>
             n.kind === RxNotificationKind.suspense ||
             n.kind === RxNotificationKind.next
