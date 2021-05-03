@@ -31,12 +31,13 @@
     "state:publish": "nx publish state",
     "template:publish": "nx publish template",
     "tracebench": "tracerbench compare --controlURL http://localhost:4200/rx-angular/demos --experimentURL http://localhost:4242/rx-angular/demos --markers startRouting,endRouting --headless --report",
-    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points && node ./decorate-angular-cli.js",
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points && node ./decorate-angular-cli.js && husky install",
     "workspace-generator": "nx workspace-generator"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -e HUSKY_GIT_PARAMS"
     }
   },
   "lint-staged": {
@@ -81,6 +82,8 @@
     "@angular/cli": "12.0.1",
     "@angular/compiler-cli": "12.0.0",
     "@angular/language-service": "12.0.1",
+    "@commitlint/cli": "^13.0.0",
+    "@commitlint/config-conventional": "^13.0.0",
     "@nguniversal/builders": "^12.0.0",
     "@ngxs/devtools-plugin": "^3.7.0",
     "@nrwl/angular": "12.3.5",
