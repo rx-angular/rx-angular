@@ -1,13 +1,14 @@
 import { Observable } from 'rxjs';
+import { setInterval, clearInterval } from '@rx-angular/cdk/zone-less';
 
 export const intervalTick = () =>
   new Observable<number>((subscriber) => {
-    const id = (window as any).__zone_symbol__setInterval(() => {
+    const id = setInterval(() => {
       subscriber.next(0);
       subscriber.complete();
     });
 
     return () => {
-      (window as any).__zone_symbol__clearInterval(id);
+      clearInterval(id);
     };
   });

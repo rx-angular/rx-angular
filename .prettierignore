@@ -3,5 +3,4 @@
 /dist
 /coverage
 /node_modules
-/**/*.spec.ts
 /**/images/**/*

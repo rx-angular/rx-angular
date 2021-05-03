@@ -14,13 +14,22 @@ import { ɵglobal } from '@angular/core';
 export function getZoneUnPatchedApi<
   N extends keyof (Window & typeof globalThis)
 >(name: N): (Window & typeof globalThis)[N];
+
 export function getZoneUnPatchedApi<T extends object, N extends keyof T>(
-  name: N,
-  target: T
+  target: T,
+  name: N
 ): T[N];
+
 export function getZoneUnPatchedApi<T extends object, N extends keyof T>(
-  name: N,
-  target: T = ɵglobal
-): T[N] {
-  return target['__zone_symbol__' + name] ?? target[name];
+  targetOrName: T | string,
+  name?: N
+) {
+  // If the user has provided the API name as the first argument, for instance:
+  // `const addEventListener = getZoneUnPatchedApi('addEventListener');`
+  // Then we just swap arguments and make `global` or `window` as the default target.
+  if (typeof targetOrName === 'string') {
+    name = targetOrName as N;
+    targetOrName = ɵglobal as T;
+  }
+  return targetOrName['__zone_symbol__' + name] || targetOrName[name];
 }
