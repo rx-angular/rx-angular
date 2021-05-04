@@ -105,7 +105,7 @@
     "@types/jest": "26.0.20",
     "@types/klaw-sync": "^6.0.0",
     "@types/ncp": "^2.0.4",
-    "@types/node": "~12.12.38",
+    "@types/node": "~15.0.1",
     "@types/node-fetch": "^2.5.8",
     "@typescript-eslint/eslint-plugin": "4.22.0",
     "@typescript-eslint/parser": "4.3.0",
