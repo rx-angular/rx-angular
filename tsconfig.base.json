@@ -21,6 +21,9 @@
       "@rx-angular/template": ["libs/template/src/index.ts"],
       "@rx-angular/cdk": ["libs/cdk/src/index.ts"],
       "@rx-angular/cdk/zone-less": ["libs/cdk/zone-less/src/index.ts"],
+      "@rx-angular/cdk/zone-configurations": [
+        "libs/cdk/zone-configurations/src/index.ts"
+      ],
       "@rx-angular/cdk/internals/scheduler": [
         "libs/cdk/internals/scheduler/src/index.ts"
       ]
