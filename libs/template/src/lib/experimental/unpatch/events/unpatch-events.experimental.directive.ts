@@ -7,10 +7,10 @@ import {
   OnDestroy,
   SimpleChanges,
 } from '@angular/core';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/zone-less';
 import { BehaviorSubject, Subscription } from 'rxjs';
 // @TODO use cdk/zone-configuration here
 import { zonePatchedEvents } from './unpatch-event-list.experimental';
-import { getZoneUnPatchedApi } from '../../../core/utils';
 
 /**
  *
@@ -43,8 +43,8 @@ export function unpatchEventListener(
   }
 
   const addEventListener = getZoneUnPatchedApi(
-    'addEventListener',
-    element
+    element,
+    'addEventListener'
   ).bind(element);
   eventListeners.forEach((listener) => {
     // Remove and reapply listeners with patched API

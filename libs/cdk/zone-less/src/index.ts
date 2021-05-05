@@ -1,4 +1,4 @@
-export { getZoneUnPatchedApi } from './utils';
+export { getZoneUnPatchedApi } from './get-zone-unpatched-api';
 
 export {
   Promise,
