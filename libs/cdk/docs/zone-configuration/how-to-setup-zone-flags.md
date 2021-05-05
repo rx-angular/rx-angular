@@ -64,8 +64,15 @@ Cause all imports get hoisted by webpack and then imported code is injected into
 1. Create file `zone-flags.ts` parallel to your `polyfills.ts` and insert the following content:
 
 ```typescript
-window.__zone_symbol__UNPATCHED_EVENTS = ["load", "error", "close", "open”];
-window.__Zone_disable_XHR = true;
+(window as any).__Zone_disable_requestAnimationFrame = true;
+(window as any).__Zone_disable_timers = true;
+(window as any).__zone_symbol__UNPATCHED_EVENTS = [
+  'load',
+  'error',
+  'close',
+  'open',
+];
+(window as any).__Zone_disable_XHR = true;
 ```
 
 2. In `polyfills.ts` above the zone import, import `zone-flags.ts`:
@@ -79,17 +86,26 @@ import 'zone.js/dist/zone';
 
 ## Set up using `@rx-angular/cdk/zone-configuration` helpers
 
-1. Create file `zone-flags.ts` parallel to your `polyfills.ts` and insert the following content:
+1. Create file `zone-flags.ts` next to your `polyfills.ts` and insert the following content:
 
 ```typescript
-import { globalEvents, xhrEvent, zoneConfig } from '@rx-angular/cdk/zone-flags';
+import { zoneConfig } from '@rx-angular/cdk/zone-flags';
 
 zoneConfig.global.disable.requestAnimationFrame();
 zoneConfig.global.disable.timers();
-zoneConfig.events.disable.UNPATCHED_EVENTS([...globalEvents, ...xhrEvent]);
+zoneConfig.events.disableXHR();
 ```
 
-In this file we disable some global APIs as well as a couple of DOM events.
+In this file we disable some global APIs as well as a couple of DOM events by using the typed methods and extra convenience methods.
+
+As you type you will see `zoneConfig` provides autocompletion:
+![IDE autocomplete for zoneConfig methods](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_ide-documentation-zoneConfig-api.png)
+![IDE autocomplete for zoneConfig](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_ide-documentation-zoneConfig-global-flags.png)
+
+As well as inline documentation of scopes, methods and configuration details in the IDE:
+![IDE documentation for zoneConfig](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_ide-documentation-zoneConfig.png)
+![IDE documentation for zoneConfig](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_ide-documentation-zoneConfig-global.png)
+![IDE documentation for zoneConfig](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_ide-documentation-zoneConfig-global-flags-timers.png)
 
 2. In `polyfills.ts` above the zone import, import `zone-flags.ts`:
 
@@ -100,6 +116,29 @@ import './zone-flags';
 import 'zone.js/dist/zone';
 ```
 
-> **💡 Pro Tipps:** > `@rx-angular/cdk/zone-configuration` errors if it is used incorrectly.
+> **💡 Pro Tip:** > `@rx-angular/cdk/zone-configuration` errors if it is used incorrectly.
 > If you used zone-flags wrong (not executing it before zone.js runs) you should see the following error in the console:
 > ![Log zone-flags](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_log-zone-flags_michael-hladky.png)
+
+## Configure Zone runtime settings using `@rx-angular/cdk/zone-configuration` helpers
+
+1. Create file `zone-runtime.ts` parallel to your `polyfills.ts` and insert the following content:
+
+```typescript
+import { zoneConfig } from '@rx-angular/cdk/zone-flags';
+
+zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError();
+```
+
+2. In `polyfills.ts` below the zone import, import `zone-runtime.ts`:
+
+```typescript
+// Zone JS is required by default for Angular itself.
+import 'zone.js/dist/zone';
+// ☝️ Make sure zoneflags are imported before zone.js
+import './zone-runtime';
+```
+
+> **💡 Pro Tip:** > `@rx-angular/cdk/zone-configuration` errors if it is used incorrectly.
+> If you used zone-runtime configurations wrong (not executing it after zone.js runs) you should see the following error in the console:
+> ![Log zone-runtime](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_log-zone-flags-runtime_michael-hladky.png)

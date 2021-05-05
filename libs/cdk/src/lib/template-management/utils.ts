@@ -23,7 +23,7 @@ import {
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { asyncScheduler } from '../zone-less/rxjs/scheduler/index';
+import { asyncScheduler } from '@rx-angular/cdk/zone-less';
 import { RxStrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 import { toRenderError } from './render-error';
@@ -256,8 +256,10 @@ export function notifyAllParentsIfNeeded<T>(
             null,
             strategy,
             (_v, work, options) => work(injectingViewCdRef, options.scope),
-            { scope: (injectingViewCdRef as any).context || injectingViewCdRef },
-            error => toRenderError(error, injectingViewCdRef)
+            {
+              scope: (injectingViewCdRef as any).context || injectingViewCdRef,
+            },
+            (error) => toRenderError(error, injectingViewCdRef)
           )
         );
         if (behaviors.length === 1) {
@@ -293,7 +295,7 @@ export function notifyInjectingParentIfNeeded(
             work(injectingViewCdRef, options.scope);
           },
           {},
-          error => toRenderError(error, injectingViewCdRef)
+          (error) => toRenderError(error, injectingViewCdRef)
         ).pipe(ignoreElements())
       : (([] as unknown) as Observable<never>)
   );
@@ -329,7 +331,7 @@ export function getVirtualParentNotifications$(
           detectChanges(parentComponent);
         },
         { scope: parentComponent },
-        error => toRenderError(error, injectingViewCdRef)
+        (error) => toRenderError(error, injectingViewCdRef)
       )
     );
   }

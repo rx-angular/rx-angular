@@ -10,7 +10,8 @@ export {
   insert,
   remove,
   toDictionary,
-  update
+  update,
+  upsert
 } from './transformation-helpers/array/index';
 export {
   setProp,

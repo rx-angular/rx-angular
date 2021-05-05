@@ -32,7 +32,7 @@ the bound Observable.
 
 Included features for `*rxLet`:
 
-- binding is always present. (see "Problems with `async` and `*ngIf`" section below)
+- binding is always present. (see "Problems with `async` and `*ngIf`" section above)
 - it takes away the multiple usages of the `async` or `push` pipe
 - a unified/structured way of handling null and undefined
 - triggers change-detection differently if `zone.js` is present or not (`ChangeDetectorRef.detectChanges` or

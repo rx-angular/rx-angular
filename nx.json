@@ -30,8 +30,12 @@
     "test-helpers": {
       "tags": ["type:util"]
     },
-    "cdk": {
+    "cdk-zone-less": {
       "tags": ["type:lib", "type:cdk"]
+    },
+    "cdk": {
+      "tags": ["type:lib", "type:cdk"],
+      "implicitDependencies": ["cdk-zone-less"]
     },
     "state": {
       "tags": ["type:lib"]
@@ -54,9 +58,9 @@
     "vanilla-case-studies-e2e": {
       "tags": [],
       "implicitDependencies": ["vanilla-case-studies"]
-    }
+    },
+    "ssr": { "tags": [] },
+    "ssr-e2e": { "tags": [], "implicitDependencies": ["ssr"] }
   },
-  "affected": {
-    "defaultBase": "master"
-  }
+  "affected": { "defaultBase": "master" }
 }
