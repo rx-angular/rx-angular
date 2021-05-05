@@ -1,8 +1,8 @@
 // tslint:disable
 import { AsyncAction } from '../async/AsyncAction';
 import { Subscription } from 'rxjs';
-import { QueueScheduler } from './QueueScheduler';
 import { SchedulerAction } from '../types';
+import { QueueScheduler } from './QueueScheduler';
 
 /**
  * We need this JSDoc comment for affecting ESDoc.
