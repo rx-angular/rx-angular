@@ -18,7 +18,7 @@ components and does not work in zone-less mode.
 
 ## Solution
 
-`push` pipe solves that problem. It contains intelligent handling of change detection by leveraging a [RenderStrategy](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/render-strategies.md) under the hood which in turn, takes care of optimizing the `ChangeDetection` of your component. Pipe can be used in zone-full as well as zone-less mode without any changes to the code.
+`push` pipe solves that problem. It contains intelligent handling of change detection by leveraging a [RenderStrategy](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/docs/render-strategies/README.md) under the hood which in turn, takes care of optimizing the `ChangeDetection` of your component. Pipe can be used in zone-full as well as zone-less mode without any changes to the code.
 
 _Example_
 
