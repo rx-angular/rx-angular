@@ -16,7 +16,7 @@ import {
   TestDisableConfigurationMethods,
   ZoneGlobalEventsConfigurationsMethods,
   RuntimeConfigurationMethods,
-} from './model/zone-cfg.types';
+} from './model/zone-config.types';
 import { convenienceMethods } from './convenience-methods';
 
 const zoneDisable = '__Zone_disable_';

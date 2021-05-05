@@ -33,6 +33,10 @@
     "cdk-zone-less": {
       "tags": ["type:lib", "type:cdk"]
     },
+    "cdk-zone-configurations": {
+      "tags": ["type:lib", "type:cdk"],
+      "implicitDependencies": []
+    },
     "cdk": {
       "tags": ["type:lib", "type:cdk"],
       "implicitDependencies": ["cdk-zone-less"]

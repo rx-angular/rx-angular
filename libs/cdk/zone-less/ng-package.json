@@ -2,6 +2,7 @@
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../dist/libs/cdk/zone-less",
   "lib": {
+    "umdId": "rx-angular.cdk-zone-less",
     "entryFile": "src/index.ts",
     "flatModuleFile": "cdk-zone-less"
   }
