@@ -413,10 +413,10 @@
   dependencies:
     tslib "^2.0.0"
 
-"@angular/platform-server@^11.2.0":
-  version "11.2.11"
-  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-11.2.11.tgz#8bb3569b605c3bf0bb34617e2838764560d42e32"
-  integrity sha512-Rxo7yAy8XgQXU+UZaFTPQKkE1QK4WCfaN7NvyvdY+HXVCnVd4F1CoNnJfGELcvxdcqFYVCwij6K4n65cstL+9Q==
+"@angular/platform-server@^11.2.12":
+  version "11.2.12"
+  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-11.2.12.tgz#b33a56378bcc1590818782513f77c8742525bf65"
+  integrity sha512-M/eARAjt9fiUaqWqdHMTSwuGY2y7mm47olOR8o88J10IpZQaar5n9WFeTtH47ht1RGdmHqX4rM7pzk8pHWv0xg==
   dependencies:
     domino "^2.1.2"
     tslib "^2.0.0"
@@ -4769,10 +4769,10 @@ core-js@^2.4.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
-core-js@^3.11.1:
-  version "3.11.1"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.11.1.tgz#f920392bf8ed63a0ec8e4e729857bfa3d121c525"
-  integrity sha512-k93Isqg7e4txZWMGNYwevZL9MiogLk8pd1PtwrmFmi8IBq4GXqUaVW/a33Llt6amSI36uSjd0GWwc9pTT9ALlQ==
+core-js@^3.11.2:
+  version "3.11.2"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.11.2.tgz#af087a43373fc6e72942917c4a4c3de43ed574d6"
+  integrity sha512-3tfrrO1JpJSYGKnd9LKTBPqgUES/UYiCzMKeqwR1+jF16q4kD1BY2NvqkfuzXwQ6+CIWm55V9cjD7PQd+hijdw==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
