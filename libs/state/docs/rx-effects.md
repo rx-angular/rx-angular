@@ -5,18 +5,16 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 # Motivation
 
-In certian cases we have some side effects present in components.
-As side effects by definition do not introduce state changes directly the management and maintainance of side effecs should not be tied to the `RxState` service.
-For this very reason all side effect management is organized in the `RxEffecfts` service.
+There are many situations where you need to manage side effects inside your components.
+In the context of state management every piece of code which does not manipulate, transform or read state can be considered as side effect.
+Side effects can be triggered by state changes though.
 
-Side effects in general are always a potential leak in our architecture or memory it self if not cleaned up correctly.
-In Angular specifically as they should be tightly coupled to the component life cycle and get cleaned up at latest when the component got cleaned up.
+Side effects (most of the time coming from subscriptions) always yield the potential of a memory leak if not cleaned up correctly.
+Like local state, local side-effects need to be coupled to the lifecycle of the component.
 
-If we not only consider imperative but also reactively drive side effects a clean implementation ends up to be pretty wordy and boilerplatey.
+To accomplish this, we need to make sure to clean up every side effect in the `OnDestroy` method. Here we can de-reference local variables and unsubscribe open subscriptions.
 
-We have to get hold of Angular's `OnDestroy` method and either unsubscribe in that method, or use it as trigger in other places with e.g. the `takeUntil`operator.
-
-Using `takeUntil` to run the clean up logic.
+With `RxEffects` RxAngular introduces another light weight tool only designed to manage local side-effects.
 
 ```ts
 @Component({
