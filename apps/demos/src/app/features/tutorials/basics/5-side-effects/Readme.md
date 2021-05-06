@@ -130,7 +130,7 @@ This is the trigger for our side effect.
 To maintain side effects RxAngular provides a deprecated method `RxState#hold`. 
 As this method will get removed in the future we directly focus on the new method and use `RxEffects#register`.
 
-`ExEffects` is used same as `RxState` as "component only provider". This means we need to add it to the components `providers` slot.
+`RxEffects` is used in the same way as `RxState` as "component only provider". This means we need to add it to the components `providers` array.
 
 
 ```typescript
