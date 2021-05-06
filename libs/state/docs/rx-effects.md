@@ -62,8 +62,9 @@ export class FooComponent implements OnDestroy {
 }
 ```
 
-In RxAngular we think the essential problem here is the call to `subscribe` itself. Same as `RxState`, `RxEffects` is a component only provider that is tied to the components life cycle.
-We can hand over `Observables` for the reactive side effects as well as a `Subscription` from other already started `Observables` the a method called `register`.
+In RxAngular we think the essential problem here is the call to `subscribe` itself. All `Subscription`s need to get unsubscribed manually which most of the time produces heavy boilerplate or even memory leaks if ignored or did wrong. 
+Like `RxState`, `RxEffects` is a local service provided by a component and thus tied to the components life cycle.
+We can manage `Observables` as reactive triggers for side effects or manage `Subscription`s which internally hold side effects.
 To also provide an imperative way for developers to unsubscribe from the side effect `register` returns an "asyncId" similar to `setTimeout`.
 This can be used later on to call `unregister` and pass the async id retreived from a previous `register` call. This stops and cleans up the side effect when invoked.
 
