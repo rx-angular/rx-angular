@@ -15,7 +15,6 @@ insert(nonArray as any, items) > items;
 ### update
 
 ```typescript
-update(null as any, items) > null;
 update(items, null as any) > items;
 update(null as any, null as any) > null;
 update(undefined as any, undefined as any) > undefined;
