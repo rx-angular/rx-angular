@@ -1215,6 +1215,38 @@
           }
         }
       }
+    },
+    "cdk-internals-scheduler": {
+      "projectType": "library",
+      "root": "libs/cdk/internals/scheduler",
+      "sourceRoot": "libs/cdk/internals/scheduler/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "libs/cdk/internals/scheduler/tsconfig.lib.json",
+            "project": "libs/cdk/internals/scheduler/ng-package.json"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/cdk/internals/scheduler/src/**/*.ts",
+              "libs/cdk/internals/scheduler/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/cdk/internals/scheduler"],
+          "options": {
+            "jestConfig": "libs/cdk/internals/scheduler/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

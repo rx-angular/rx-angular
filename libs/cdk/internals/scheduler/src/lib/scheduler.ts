@@ -1,20 +1,18 @@
 // see https://raw.githubusercontent.com/facebook/react/master/packages/scheduler/src/forks/SchedulerDOM.js
 
-import { push, pop, peek, ReactSchedulerTask } from './schedulerMinHeap';
 import { ɵglobal } from '@angular/core';
 
-// TODO: Use symbols?
-import {
-  ImmediatePriority,
-  UserBlockingPriority,
-  NormalPriority,
-  LowPriority,
-  IdlePriority,
-} from './schedulerPriorities';
-
+import { PriorityLevel } from './schedulerPriorities';
 import { enableIsInputPending } from './schedulerFeatureFlags';
+import { push, pop, peek, ReactSchedulerTask } from './schedulerMinHeap';
 
-let getCurrentTime;
+/**
+ * @description Will be provided through Terser global definitions by Angular CLI
+ * during the production build.
+ */
+declare const ngDevMode: boolean;
+
+let getCurrentTime: () => number;
 const hasPerformanceNow =
   typeof performance === 'object' && typeof performance.now === 'function';
 
@@ -52,7 +50,7 @@ let taskIdCounter = 1;
 let isSchedulerPaused = false;
 
 let currentTask = null;
-let currentPriorityLevel = NormalPriority;
+let currentPriorityLevel = PriorityLevel.NormalPriority;
 
 // This is set while performing work, to prevent re-entrancy.
 let isPerformingWork = false;
@@ -64,7 +62,12 @@ let isHostTimeoutScheduled = false;
 const setTimeout = ɵglobal.setTimeout;
 const clearTimeout = ɵglobal.clearTimeout;
 
-if (typeof console !== 'undefined') {
+// Caretaker note: we have still left the `typeof` condition in order to avoid
+// creating a breaking change for projects that still use the View Engine.
+if (
+  (typeof ngDevMode === 'undefined' || ngDevMode) &&
+  typeof console !== 'undefined'
+) {
   // TODO: Scheduler no longer requires these methods to be polyfilled. But
   // maybe we want to continue warning if they don't exist, to preserve the
   // option to rely on it in the future?
@@ -192,14 +195,14 @@ function workLoop(hasTimeRemaining, initialTime) {
 
 function runWithPriority(priorityLevel, eventHandler) {
   switch (priorityLevel) {
-    case ImmediatePriority:
-    case UserBlockingPriority:
-    case NormalPriority:
-    case LowPriority:
-    case IdlePriority:
+    case PriorityLevel.ImmediatePriority:
+    case PriorityLevel.UserBlockingPriority:
+    case PriorityLevel.NormalPriority:
+    case PriorityLevel.LowPriority:
+    case PriorityLevel.IdlePriority:
       break;
     default:
-      priorityLevel = NormalPriority;
+      priorityLevel = PriorityLevel.NormalPriority;
   }
 
   const previousPriorityLevel = currentPriorityLevel;
@@ -215,11 +218,11 @@ function runWithPriority(priorityLevel, eventHandler) {
 function next(eventHandler) {
   let priorityLevel;
   switch (currentPriorityLevel) {
-    case ImmediatePriority:
-    case UserBlockingPriority:
-    case NormalPriority:
+    case PriorityLevel.ImmediatePriority:
+    case PriorityLevel.UserBlockingPriority:
+    case PriorityLevel.NormalPriority:
       // Shift down to normal priority
-      priorityLevel = NormalPriority;
+      priorityLevel = PriorityLevel.NormalPriority;
       break;
     default:
       // Anything lower than normal priority should remain at the current level.
@@ -237,7 +240,7 @@ function next(eventHandler) {
   }
 }
 
-function wrapCallback(callback) {
+function wrapCallback(callback: VoidFunction) {
   const parentPriorityLevel = currentPriorityLevel;
   return () => {
     // This is a fork of runWithPriority, inlined for performance.
@@ -245,7 +248,7 @@ function wrapCallback(callback) {
     currentPriorityLevel = parentPriorityLevel;
 
     try {
-      // @ts-ignore
+      // eslint-disable-next-line prefer-rest-params
       return callback.apply(this, arguments);
     } finally {
       currentPriorityLevel = previousPriorityLevel;
@@ -253,14 +256,18 @@ function wrapCallback(callback) {
   };
 }
 
+interface ScheduleCallbackOptions {
+  delay: number;
+}
+
 function scheduleCallback(
-  priorityLevel,
-  callback,
-  options
+  priorityLevel: PriorityLevel,
+  callback: VoidFunction,
+  options?: ScheduleCallbackOptions
 ): ReactSchedulerTask {
   const currentTime = getCurrentTime();
 
-  let startTime;
+  let startTime: number;
   if (typeof options === 'object' && options !== null) {
     const delay = options.delay;
     if (typeof delay === 'number' && delay > 0) {
@@ -272,21 +279,21 @@ function scheduleCallback(
     startTime = currentTime;
   }
 
-  let timeout;
+  let timeout: number;
   switch (priorityLevel) {
-    case ImmediatePriority:
+    case PriorityLevel.ImmediatePriority:
       timeout = IMMEDIATE_PRIORITY_TIMEOUT;
       break;
-    case UserBlockingPriority:
+    case PriorityLevel.UserBlockingPriority:
       timeout = USER_BLOCKING_PRIORITY_TIMEOUT;
       break;
-    case IdlePriority:
+    case PriorityLevel.IdlePriority:
       timeout = IDLE_PRIORITY_TIMEOUT;
       break;
-    case LowPriority:
+    case PriorityLevel.LowPriority:
       timeout = LOW_PRIORITY_TIMEOUT;
       break;
-    case NormalPriority:
+    case PriorityLevel.NormalPriority:
     default:
       timeout = NORMAL_PRIORITY_TIMEOUT;
       break;
@@ -426,11 +433,12 @@ function requestPaint() {
 
 function forceFrameRate(fps) {
   if (fps < 0 || fps > 125) {
-    // Using console['error'] to evade Babel and ESLint
-    console['error'](
-      'forceFrameRate takes a positive int between 0 and 125, ' +
-        'forcing frame rates higher than 125 fps is not supported'
-    );
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      console.error(
+        'forceFrameRate takes a positive int between 0 and 125, ' +
+          'forcing frame rates higher than 125 fps is not supported'
+      );
+    }
     return;
   }
   if (fps > 0) {
@@ -478,7 +486,8 @@ const performWorkUntilDeadline = () => {
   needsPaint = false;
 };
 
-const channel = ɵglobal.MessageChannel && new ɵglobal.MessageChannel();
+const channel: MessageChannel =
+  ɵglobal.MessageChannel && new ɵglobal.MessageChannel();
 const port = channel && channel.port2;
 
 if (channel) {
@@ -508,11 +517,6 @@ function cancelHostTimeout() {
 const _requestPaint = requestPaint;
 
 export {
-  ImmediatePriority as ImmediatePriority,
-  UserBlockingPriority as UserBlockingPriority,
-  NormalPriority as NormalPriority,
-  IdlePriority as IdlePriority,
-  LowPriority as LowPriority,
   runWithPriority,
   next,
   scheduleCallback,

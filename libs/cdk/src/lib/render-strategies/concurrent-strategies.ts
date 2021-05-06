@@ -4,14 +4,9 @@ import {
   cancelCallback,
   scheduleCallback,
   forceFrameRate,
-  UserBlockingPriority,
-  ImmediatePriority,
-  NormalPriority,
-  LowPriority,
-  IdlePriority,
   PriorityLevel,
-  NoPriority,
-} from './scheduler';
+} from '@rx-angular/cdk/internals/scheduler';
+
 import {
   RxCustomStrategyCredentials,
   RxConcurrentStrategyNames,
@@ -26,7 +21,9 @@ const noPriorityStrategy: RxStrategyCredentials = {
   work: (cdRef) => cdRef.detectChanges(),
   behavior: (work: any, scope: any) => {
     return (o$) =>
-      o$.pipe(scheduleOnQueue(work, { priority: NoPriority, scope }));
+      o$.pipe(
+        scheduleOnQueue(work, { priority: PriorityLevel.NoPriority, scope })
+      );
   },
 };
 
@@ -37,7 +34,7 @@ const immediateStrategy: RxStrategyCredentials = {
     return (o$) =>
       o$.pipe(
         scheduleOnQueue(work, {
-          priority: ImmediatePriority,
+          priority: PriorityLevel.ImmediatePriority,
           scope,
         })
       );
@@ -51,7 +48,7 @@ const userBlockingStrategy: RxStrategyCredentials = {
     return (o$) =>
       o$.pipe(
         scheduleOnQueue(work, {
-          priority: UserBlockingPriority,
+          priority: PriorityLevel.UserBlockingPriority,
           scope,
         })
       );
@@ -63,7 +60,9 @@ const normalStrategy: RxStrategyCredentials = {
   work: (cdRef) => cdRef.detectChanges(),
   behavior: (work: any, scope: any) => {
     return (o$) =>
-      o$.pipe(scheduleOnQueue(work, { priority: NormalPriority, scope }));
+      o$.pipe(
+        scheduleOnQueue(work, { priority: PriorityLevel.NormalPriority, scope })
+      );
   },
 };
 
@@ -72,7 +71,9 @@ const lowStrategy: RxStrategyCredentials = {
   work: (cdRef) => cdRef.detectChanges(),
   behavior: (work: any, scope: any) => {
     return (o$) =>
-      o$.pipe(scheduleOnQueue(work, { priority: LowPriority, scope }));
+      o$.pipe(
+        scheduleOnQueue(work, { priority: PriorityLevel.LowPriority, scope })
+      );
   },
 };
 
@@ -81,7 +82,9 @@ const idleStrategy: RxStrategyCredentials = {
   work: (cdRef) => cdRef.detectChanges(),
   behavior: (work: any, scope: any) => {
     return (o$) =>
-      o$.pipe(scheduleOnQueue(work, { priority: IdlePriority, scope }));
+      o$.pipe(
+        scheduleOnQueue(work, { priority: PriorityLevel.IdlePriority, scope })
+      );
   },
 };
 

@@ -20,7 +20,10 @@
       "@rx-angular/state": ["libs/state/src/index.ts"],
       "@rx-angular/template": ["libs/template/src/index.ts"],
       "@rx-angular/cdk": ["libs/cdk/src/index.ts"],
-      "@rx-angular/cdk/zone-less": ["libs/cdk/zone-less/src/index.ts"]
+      "@rx-angular/cdk/zone-less": ["libs/cdk/zone-less/src/index.ts"],
+      "@rx-angular/cdk/internals/scheduler": [
+        "libs/cdk/internals/scheduler/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

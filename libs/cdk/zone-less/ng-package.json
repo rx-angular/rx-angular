@@ -3,6 +3,7 @@
   "dest": "../../../dist/libs/cdk/zone-less",
   "lib": {
     "entryFile": "src/index.ts",
-    "flatModuleFile": "cdk-zone-less"
+    "flatModuleFile": "cdk-zone-less",
+    "umdId": "rx-angular.cdk-zone-less"
   }
 }
