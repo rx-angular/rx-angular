@@ -1,6 +1,6 @@
 import { ɵglobal } from '@angular/core';
 import {
-  ZoneFlagsHelperFunctions,
+  RxZoneFlagsHelperFunctions,
   zoneGlobalDisableConfigurationsKeys,
   zoneGlobalEventsConfigurationsKeys,
   zoneGlobalSettingsConfigurationsKeys,
@@ -8,14 +8,14 @@ import {
   zoneTestDisableConfigurationsKeys,
   zoneTestSettingsConfigurationsKeys,
 } from './model/configurations.types';
-import { ZoneGlobalConfigurations } from './model/zone.configurations.api';
+import { RxZoneGlobalConfigurations } from './model/zone.configurations.api';
 import {
-  ZoneConfigConfiguration,
-  ZoneConfig,
-  GlobalDisableConfigurationMethods,
-  TestDisableConfigurationMethods,
-  ZoneGlobalEventsConfigurationsMethods,
-  RuntimeConfigurationMethods,
+  RxZoneConfigConfiguration,
+  RxZoneConfig,
+  RxGlobalDisableConfigurationMethods,
+  RxTestDisableConfigurationMethods,
+  RxZoneGlobalEventsConfigurationsMethods,
+  RxRuntimeConfigurationMethods,
 } from './model/zone-config.types';
 import { convenienceMethods } from './convenience-methods';
 
@@ -25,49 +25,30 @@ const zoneSymbol = '__zone_symbol__';
 /**
  * https://angular.io/guide/zone#setting-up-zonejs
  **/
-function assertZoneObjectExistsBeforeZoneJs() {
+function assertZoneConfig() {
   if ((window as any).Zone !== undefined) {
-    console.error(
-      'zone configuration file for global configuration needs to get imported before zone.js. https://angular.io/guide/zone#setting-up-zonejs'
-    );
+    // @TODO link to docs
+    console.error('zone-flags file needs to get imported before zone.js');
   }
 }
 
-/**
- * https://github.com/angular/angular/blob/master/packages/zone.js/lib/zone.configurations.api.ts#L775-L776
- **/
-function assertZoneObjectExistsAfterZoneJs() {
-  if ((window as any).Zone === undefined) {
-    console.error(
-      'zone configuration file for runtime configuration needs to get imported/used after zone.js. https://github.com/angular/angular/blob/master/packages/zone.js/lib/zone.configurations.api.ts#L775-L776'
-    );
-  }
-}
-
-const addDisableFlagBeforeZoneJs = (prop: string) => ({
+const addDisableFlag = (prop: string) => ({
   [prop]: () => {
-    assertZoneObjectExistsBeforeZoneJs();
+    assertZoneConfig();
     return ((window as any)[zoneDisable + prop] = true);
   },
 });
 
-const addSymbolBeforeZoneJs = (prop: string) => ({
+const addSymbolFlag = (prop: string) => ({
   [prop]: () => {
-    assertZoneObjectExistsBeforeZoneJs();
+    assertZoneConfig();
     return ((window as any)[zoneSymbol + prop] = true);
   },
 });
 
-const addSymbolAfterZoneJs = (prop: string) => ({
-  [prop]: () => {
-    assertZoneObjectExistsAfterZoneJs();
-    return ((window as any)[zoneSymbol + prop] = true);
-  },
-});
-
-const addArraySymbolFlagBeforeZoneJs = (prop: string) => ({
+const addArraySymbolFlag = (prop: string) => ({
   [prop]: (eventNames: string[]) => {
-    assertZoneObjectExistsBeforeZoneJs();
+    assertZoneConfig();
     const w: any = window as any;
     return (w[zoneSymbol + prop] = [
       ...(Array.isArray(w[zoneSymbol + prop]) ? w[zoneSymbol + prop] : []),
@@ -81,7 +62,7 @@ const reduceToObject = <T>(methodsArray: any[]): T => {
 };
 
 /**
- * factory function to create a `ZoneConfig` object.
+ * factory function to create a `RxZoneConfig` object.
  *
  * @Example
  * import { globalEvents,xhrEvent, zoneConfig} from '@rx-angular/cdk/zone-flags';
@@ -93,8 +74,8 @@ const reduceToObject = <T>(methodsArray: any[]): T => {
  * zoneConfig.events.disable.UNPATCHED_EVENTS([...globalEvents, ...xhrEvent]);
  *
  */
-function createZoneFlagsConfigurator(): ZoneConfig {
-  const cfg = (ɵglobal as unknown) as ZoneGlobalConfigurations;
+function createZoneFlagsConfigurator(): RxZoneConfig {
+  const cfg = (ɵglobal as unknown) as RxZoneGlobalConfigurations;
   const configProps = [
     ...[
       ...zoneGlobalDisableConfigurationsKeys,
@@ -109,34 +90,34 @@ function createZoneFlagsConfigurator(): ZoneConfig {
   ];
 
   // append as global method for easy debugging
-  (cfg as ZoneFlagsHelperFunctions).__rxa_zone_config__log = (): void => {
+  (cfg as RxZoneFlagsHelperFunctions).__rxa_zone_config__log = (): void => {
     configProps.forEach((flag) => {
       // tslint:disable-next-line:no-unused-expression
       cfg[flag] && console.log(flag, cfg[flag]);
     });
   };
 
-  const zoneConfigObj: ZoneConfigConfiguration = {
+  const zoneConfigObj: RxZoneConfigConfiguration = {
     global: {
-      disable: reduceToObject<GlobalDisableConfigurationMethods>([
-        ...zoneGlobalDisableConfigurationsKeys.map(addDisableFlagBeforeZoneJs),
-        ...zoneGlobalSettingsConfigurationsKeys.map(addSymbolBeforeZoneJs),
+      disable: reduceToObject<RxGlobalDisableConfigurationMethods>([
+        ...zoneGlobalDisableConfigurationsKeys.map(addDisableFlag),
+        ...zoneGlobalSettingsConfigurationsKeys.map(addSymbolFlag),
       ]),
     },
     test: {
-      disable: reduceToObject<TestDisableConfigurationMethods>([
-        ...zoneTestDisableConfigurationsKeys.map(addDisableFlagBeforeZoneJs),
-        ...zoneTestSettingsConfigurationsKeys.map(addSymbolBeforeZoneJs),
+      disable: reduceToObject<RxTestDisableConfigurationMethods>([
+        ...zoneTestDisableConfigurationsKeys.map(addDisableFlag),
+        ...zoneTestSettingsConfigurationsKeys.map(addSymbolFlag),
       ]),
     },
     events: {
-      disable: reduceToObject<ZoneGlobalEventsConfigurationsMethods>(
-        zoneGlobalEventsConfigurationsKeys.map(addArraySymbolFlagBeforeZoneJs)
+      disable: reduceToObject<RxZoneGlobalEventsConfigurationsMethods>(
+        zoneGlobalEventsConfigurationsKeys.map(addArraySymbolFlag)
       ),
     },
     runtime: {
-      disable: reduceToObject<RuntimeConfigurationMethods>(
-        zoneRuntimeConfigurationsKeys.map(addSymbolAfterZoneJs)
+      disable: reduceToObject<RxRuntimeConfigurationMethods>(
+        zoneRuntimeConfigurationsKeys.map(addSymbolFlag)
       ),
     },
   };
@@ -148,11 +129,7 @@ function createZoneFlagsConfigurator(): ZoneConfig {
 }
 
 /**
- * An object for typed zone-flags configuration. It exposes flags under the following scopes:
- * - global (global environment API)
- * - events (event listener names and behavior)
- * - runtime (configurable behaviour at runtime)
- * - test (patches for testing libs like jasmine, jest etc)
+ * An object for typed zone-flags configuration.
  *
  * @Example
  *

@@ -1,37 +1,37 @@
 import {
-  ZoneGlobalDisableConfigurationsKey,
-  ZoneGlobalSettingsConfigurationsKey,
-  ZoneTestDisableConfigurationsKey,
-  ZoneTestSettingsConfigurationsKey,
-  ZoneGlobalEventsConfigurationsKey,
-  ZoneRuntimeConfigurationsKey,
+  RxZoneGlobalDisableConfigurationsKey,
+  RxZoneGlobalSettingsConfigurationsKey,
+  RxZoneTestDisableConfigurationsKey,
+  RxZoneTestSettingsConfigurationsKey,
+  RxZoneGlobalEventsConfigurationsKey,
+  RxZoneRuntimeConfigurationsKey,
 } from './configurations.types';
 
-export type GlobalDisableConfigurationMethods = {
-  [disabledFlag in ZoneGlobalDisableConfigurationsKey]: () => void;
+export type RxGlobalDisableConfigurationMethods = {
+  [disabledFlag in RxZoneGlobalDisableConfigurationsKey]: () => void;
 } &
   {
-    [symbolFlag in ZoneGlobalSettingsConfigurationsKey]: () => void;
+    [symbolFlag in RxZoneGlobalSettingsConfigurationsKey]: () => void;
   };
 
-export type TestDisableConfigurationMethods = {
-  [disabledFlag in ZoneTestDisableConfigurationsKey]: () => void;
+export type RxTestDisableConfigurationMethods = {
+  [disabledFlag in RxZoneTestDisableConfigurationsKey]: () => void;
 } &
   {
-    [symbolFlag in ZoneTestSettingsConfigurationsKey]: () => void;
+    [symbolFlag in RxZoneTestSettingsConfigurationsKey]: () => void;
   };
 
-export type ZoneGlobalEventsConfigurationsMethods = {
-  [disabledFlag in ZoneGlobalEventsConfigurationsKey]: (
+export type RxZoneGlobalEventsConfigurationsMethods = {
+  [disabledFlag in RxZoneGlobalEventsConfigurationsKey]: (
     eventNames: string[]
   ) => void;
 };
 
-export type RuntimeConfigurationMethods = {
-  [disabledFlag in ZoneRuntimeConfigurationsKey]: () => void;
+export type RxRuntimeConfigurationMethods = {
+  [disabledFlag in RxZoneRuntimeConfigurationsKey]: () => void;
 };
 
-export interface ZoneConfigConvenienceMethods {
+export interface RxZoneConfigConvenienceMethods {
   /**
    * Unpatch all related to XHR
    **/
@@ -42,48 +42,20 @@ export interface ZoneConfigConvenienceMethods {
   useUnpatchedPassiveScrollEvents: () => void;
 }
 
-export interface ZoneConfigConfiguration {
-  /**
-   * Interface of `zone.js` configurations.
-   *
-   * You can define the following configurations on the `window/global` object before
-   * importing `zone.js` to change its default behaviors.
-   */
+export interface RxZoneConfigConfiguration {
   global: {
-    disable: GlobalDisableConfigurationMethods;
+    disable: RxGlobalDisableConfigurationMethods;
   };
-  /**
-   * Interface of `zone-testing.js` test configurations.
-   *
-   * You can define the following configurations on the `window` or `global` object before
-   * importing `zone-testing.js` to change its default behaviors in the test runner.
-   */
   test: {
-    disable: TestDisableConfigurationMethods;
+    disable: RxTestDisableConfigurationMethods;
   };
-  /**
-   * Interface of `zone-testing.js` test configurations, but just the event related part.
-   */
   events: {
-    disable: ZoneGlobalEventsConfigurationsMethods;
+    disable: RxZoneGlobalEventsConfigurationsMethods;
   };
-  /**
-   * The interface of the `zone.js` runtime configurations.
-   *
-   * These configurations can be defined on the `Zone` object after
-   * importing zone.js to change behaviors. The differences between
-   * the `ZoneRuntimeConfigurations` and the `ZoneGlobalConfigurations` are,
-   *
-   * 1. `ZoneGlobalConfigurations` must be defined on the `global/window` object before importing
-   * `zone.js`. The value of the configuration cannot be changed at runtime.
-   *
-   * 2. `ZoneRuntimeConfigurations` must be defined on the `Zone` object after importing `zone.js`.
-   * You can change the value of this configuration at runtime.
-   *
-   */
   runtime: {
-    disable: RuntimeConfigurationMethods;
+    disable: RxRuntimeConfigurationMethods;
   };
 }
 
-export type ZoneConfig = ZoneConfigConfiguration & ZoneConfigConvenienceMethods;
+export type RxZoneConfig = RxZoneConfigConfiguration &
+  RxZoneConfigConvenienceMethods;

@@ -1,5 +1,5 @@
 // prefix: __Zone_disable_
-export interface ZoneGlobalDisableConfigurations {
+export interface RxZoneGlobalDisableConfigurations {
   /**
    * Disable the monkey patch of the `Node.js` `EventEmitter` API.
    *
@@ -481,8 +481,8 @@ export interface ZoneGlobalDisableConfigurations {
    */
   ZoneAwarePromise?: boolean;
 }
-export type ZoneGlobalDisableConfigurationsKey = keyof ZoneGlobalDisableConfigurations;
-export const zoneGlobalDisableConfigurationsKeys: ZoneGlobalDisableConfigurationsKey[] = [
+export type RxZoneGlobalDisableConfigurationsKey = keyof RxZoneGlobalDisableConfigurations;
+export const zoneGlobalDisableConfigurationsKeys: RxZoneGlobalDisableConfigurationsKey[] = [
   'EventEmitter',
   'fs',
   'node_timers',
@@ -507,7 +507,7 @@ export const zoneGlobalDisableConfigurationsKeys: ZoneGlobalDisableConfiguration
 ];
 
 // prefix: __zone_symbol__
-export interface ZoneGlobalEventsConfigurations {
+export interface RxZoneGlobalEventsConfigurations {
   /**
    * Define event names that users don't want monkey patched by the `zone.js`.
    *
@@ -538,14 +538,14 @@ export interface ZoneGlobalEventsConfigurations {
    */
   PASSIVE_EVENTS?: string[];
 }
-export type ZoneGlobalEventsConfigurationsKey = keyof ZoneGlobalEventsConfigurations;
-export const zoneGlobalEventsConfigurationsKeys: ZoneGlobalEventsConfigurationsKey[] = [
+export type RxZoneGlobalEventsConfigurationsKey = keyof RxZoneGlobalEventsConfigurations;
+export const zoneGlobalEventsConfigurationsKeys: RxZoneGlobalEventsConfigurationsKey[] = [
   'UNPATCHED_EVENTS',
   'PASSIVE_EVENTS',
 ];
 
 // prefix: __zone_symbol__
-export interface ZoneGlobalSettingsConfigurations {
+export interface RxZoneGlobalSettingsConfigurations {
   /**
    * Disable wrapping uncaught promise rejection.
    *
@@ -557,31 +557,22 @@ export interface ZoneGlobalSettingsConfigurations {
    */
   DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION?: boolean;
 }
-export type ZoneGlobalSettingsConfigurationsKey = keyof ZoneGlobalSettingsConfigurations;
-export const zoneGlobalSettingsConfigurationsKeys: ZoneGlobalSettingsConfigurationsKey[] = [
+export type RxZoneGlobalSettingsConfigurationsKey = keyof RxZoneGlobalSettingsConfigurations;
+export const zoneGlobalSettingsConfigurationsKeys: RxZoneGlobalSettingsConfigurationsKey[] = [
   'DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION',
 ];
 
 // prefix: __zone_symbol__
-export interface ZoneRuntimeConfigurations {
-  /**
-   * Ignore outputting errors to the console when uncaught Promise errors occur.
-   *
-   * By default, if an uncaught Promise error occurs, `zone.js` outputs the
-   * error to the console by calling `console.error()`.
-   *
-   * If you set `__zone_symbol__ignoreConsoleErrorUncaughtError = true`, `zone.js` does not output
-   * the uncaught error to `console.error()`.
-   */
+export interface RxZoneRuntimeConfigurations {
   ignoreConsoleErrorUncaughtError?: boolean;
 }
-export type ZoneRuntimeConfigurationsKey = keyof ZoneRuntimeConfigurations;
-export const zoneRuntimeConfigurationsKeys: ZoneRuntimeConfigurationsKey[] = [
+export type RxZoneRuntimeConfigurationsKey = keyof RxZoneRuntimeConfigurations;
+export const zoneRuntimeConfigurationsKeys: RxZoneRuntimeConfigurationsKey[] = [
   'ignoreConsoleErrorUncaughtError',
 ];
 
 // prefix: __Zone_disable_
-export interface ZoneTestDisableConfigurations {
+export interface RxZoneTestDisableConfigurations {
   /**
    * Disable the Jasmine integration.
    *
@@ -634,15 +625,15 @@ export interface ZoneTestDisableConfigurations {
    */
   jest?: boolean;
 }
-export type ZoneTestDisableConfigurationsKey = keyof ZoneTestDisableConfigurations;
-export const zoneTestDisableConfigurationsKeys: ZoneTestDisableConfigurationsKey[] = [
+export type RxZoneTestDisableConfigurationsKey = keyof RxZoneTestDisableConfigurations;
+export const zoneTestDisableConfigurationsKeys: RxZoneTestDisableConfigurationsKey[] = [
   'jasmine',
   'mocha',
   'jest',
 ];
 
 // prefix: __zone_symbol__
-export interface ZoneTestSettingsConfigurations {
+export interface RxZoneTestSettingsConfigurations {
   /**
    * Disable monkey patch the jasmine clock APIs.
    *
@@ -756,14 +747,14 @@ export interface ZoneTestSettingsConfigurations {
    */
   supportWaitUnResolvedChainedPromise?: boolean;
 }
-export type ZoneTestSettingsConfigurationsKey = keyof ZoneTestSettingsConfigurations;
-export const zoneTestSettingsConfigurationsKeys: ZoneTestSettingsConfigurationsKey[] = [
+export type RxZoneTestSettingsConfigurationsKey = keyof RxZoneTestSettingsConfigurations;
+export const zoneTestSettingsConfigurationsKeys: RxZoneTestSettingsConfigurationsKey[] = [
   'fakeAsyncDisablePatchingClock',
   'fakeAsyncAutoFakeAsyncWhenClockPatched',
   'supportWaitUnResolvedChainedPromise',
 ];
 
-export interface ZoneFlagsHelperFunctions {
+export interface RxZoneFlagsHelperFunctions {
   /**
    * Logs all zone.js configurations in the console.
    */
