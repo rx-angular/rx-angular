@@ -125,7 +125,7 @@ export class SideEffectsStart
 
 This is the trigger for our side effect.
 
-## Maintaining the side effect
+## Manage side effects
 
 To maintain side effects RxAngular provides a deprecated method `RxState#hold`. 
 As this method will get removed in the future we directly focus on the new method and use `RxEffects#register`.
