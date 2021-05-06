@@ -1,6 +1,7 @@
 // tslint:disable file-name-casing
+import * as rxjs from 'rxjs';
 import { AnimationFrameAction } from './AnimationFrameAction';
-import { AnimationFrameScheduler } from './AnimationFrameScheduler';
+import { createScheduler } from '../create-scheduler';
 
 /**
  *
@@ -35,4 +36,7 @@ import { AnimationFrameScheduler } from './AnimationFrameScheduler';
  * // You will see a div element growing in height
  * ```
  */
-export const animationFrame = new AnimationFrameScheduler(AnimationFrameAction);
+export const animationFrameScheduler = createScheduler(
+  rxjs.animationFrameScheduler,
+  AnimationFrameAction
+);

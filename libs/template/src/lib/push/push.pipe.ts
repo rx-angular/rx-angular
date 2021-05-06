@@ -78,14 +78,18 @@ import { delay, filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
  * @publicApi
  */
 @Pipe({ name: 'push', pure: false })
-export class PushPipe<U, S extends string = string>
-  implements PipeTransform, OnDestroy {
-  /** @internal */
-  private renderedValue: U | null | undefined;
+export class PushPipe<S extends string = string> implements PipeTransform, OnDestroy {
+  /**
+   * @internal
+   * This is typed as `any` because the type cannot be inferred
+   * without a class-level generic argument, which was removed to
+   * fix https://github.com/rx-angular/rx-angular/pull/684
+  */
+  private renderedValue: any | null | undefined;
   /** @internal */
   private readonly subscription: Unsubscribable;
   /** @internal */
-  private readonly templateObserver = templateNotifier<U>();
+  private readonly templateObserver = templateNotifier<any>();
   /** @internal */
   private readonly strategyHandler = strategyHandling(
     this.strategyProvider.primaryStrategy,
@@ -94,7 +98,7 @@ export class PushPipe<U, S extends string = string>
   /** @internal */
   private patchZone: false | NgZone;
   /** @internal */
-  private _renderCallback: NextObserver<U>;
+  private _renderCallback: NextObserver<any>;
 
   constructor(
     private strategyProvider: RxStrategyProvider,
@@ -107,26 +111,26 @@ export class PushPipe<U, S extends string = string>
     this.subscription = this.handleChangeDetection();
   }
 
-  transform(
+  transform<U>(
     potentialObservable: null,
     config?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>,
     renderCallback?: NextObserver<U>
   ): null;
-  transform(
+  transform<U>(
     potentialObservable: undefined,
     config?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>,
     renderCallback?: NextObserver<U>
   ): undefined;
-  transform(
+  transform<U>(
     potentialObservable: ObservableInput<U>,
     config?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>,
     renderCallback?: NextObserver<U>
   ): U;
-  transform(
+  transform<U>(
     potentialObservable: ObservableInput<U>,
     config?: PushInput<U, S>
   ): U;
-  transform(
+  transform<U>(
     potentialObservable: ObservableInput<U> | null | undefined,
     config:
       | PushInput<U, S>
@@ -167,13 +171,13 @@ export class PushPipe<U, S extends string = string>
     const scope = (this.cdRef as any).context;
     return this.templateObserver.values$
       .pipe(
-        filter<RxNotification<U>>(
+        filter(
           (n) =>
             n.kind === RxNotificationKind.suspense ||
             n.kind === RxNotificationKind.next
         ),
-        tap<RxNotification<U>>((notification) => {
-          this.renderedValue = notification.value as U;
+        tap((notification) => {
+          this.renderedValue = notification.value;
         }),
         withLatestFrom(this.strategyHandler.strategy$),
         switchMap(([notification, strategy]) =>
@@ -190,7 +194,7 @@ export class PushPipe<U, S extends string = string>
             )
             .pipe(
               delay(0, asyncScheduler),
-              tap(() => this._renderCallback?.next(notification.value as U))
+              tap(() => this._renderCallback?.next(notification.value))
             )
         )
       )

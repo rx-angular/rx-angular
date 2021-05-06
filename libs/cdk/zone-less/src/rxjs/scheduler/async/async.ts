@@ -1,6 +1,7 @@
 // tslint:disable file-name-casing
+import * as rxjs from 'rxjs';
 import { AsyncAction } from './AsyncAction';
-import { AsyncScheduler } from './AsyncScheduler';
+import { createScheduler } from '../create-scheduler';
 
 /**
  *
@@ -50,4 +51,4 @@ import { AsyncScheduler } from './AsyncScheduler';
  * // 3 after 6s
  * ```
  */
-export const async = new AsyncScheduler(AsyncAction);
+export const asyncScheduler = createScheduler(rxjs.asyncScheduler, AsyncAction);

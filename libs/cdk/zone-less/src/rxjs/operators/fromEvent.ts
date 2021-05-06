@@ -1,7 +1,7 @@
 // tslint:disable
 import { Observable, Subscriber } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { getZoneUnPatchedApi } from '../../utils';
+import { getZoneUnPatchedApi } from '../../get-zone-unpatched-api';
 
 // @ts-ignore
 const isFunction = (fn) => typeof fn === 'function';
@@ -146,14 +146,14 @@ function setupSubscription<T>(
   let unsubscribe: () => void;
   if (isEventTarget(sourceObj)) {
     const source = sourceObj;
-    getZoneUnPatchedApi('addEventListener', sourceObj).call(
+    getZoneUnPatchedApi(sourceObj, 'addEventListener').call(
       sourceObj,
       eventName,
       handler,
       options
     );
     unsubscribe = () =>
-      getZoneUnPatchedApi('removeEventListener', source).call(
+      getZoneUnPatchedApi(source, 'removeEventListener').call(
         source,
         eventName,
         handler,

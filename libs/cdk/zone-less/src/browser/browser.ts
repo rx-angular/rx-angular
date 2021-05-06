@@ -1,4 +1,4 @@
-import { getZoneUnPatchedApi } from '../utils';
+import { getZoneUnPatchedApi } from '../get-zone-unpatched-api';
 
 /**
  * This file provides unpatched versions of APIs patched in the following file: https://github.com/angular/angular/blob/master/packages/zone.js/lib/browser/browser.ts
@@ -152,11 +152,13 @@ export function clearTimeout(id: number): void {
 
 /**
  * This function is a zone un-patched implementation of Element#addEventListener() method.
- * @param elem
+ * @param target
  */
-export function unpatchAddEventListener(elem) {
-  elem.addEventListener = getZoneUnPatchedApi('addEventListener', elem).bind(
-    elem
-  );
-  return elem;
+export function unpatchAddEventListener<T extends EventTarget>(target: T): T {
+  target.addEventListener = getZoneUnPatchedApi(
+    target,
+    'addEventListener'
+  ).bind(target);
+
+  return target;
 }

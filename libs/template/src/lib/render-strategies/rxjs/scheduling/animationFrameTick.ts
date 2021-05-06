@@ -1,14 +1,17 @@
 import { Observable } from 'rxjs';
-import { getZoneUnPatchedApi } from '../../../core';
+import {
+  requestAnimationFrame,
+  cancelAnimationFrame,
+} from '@rx-angular/cdk/zone-less';
 
 export const animationFrameTick = () =>
   new Observable<number>((subscriber) => {
-    const id = getZoneUnPatchedApi('requestAnimationFrame')(() => {
+    const id = requestAnimationFrame(() => {
       subscriber.next(0);
       subscriber.complete();
     });
 
     return () => {
-      getZoneUnPatchedApi('cancelAnimationFrame')(id);
+      cancelAnimationFrame(id);
     };
   });

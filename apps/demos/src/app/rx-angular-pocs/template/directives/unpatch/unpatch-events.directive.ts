@@ -27,7 +27,7 @@ export function unpatchEventListener(elem: HTMLElement, event: string): void {
     // Remove and reapply listeners with patched API
     elem.removeEventListener(event, listener);
     // Reapply listeners with un-patched API
-    unpatchAddEventListener(event).addEventListener(listener);
+    unpatchAddEventListener(elem).addEventListener(event, listener);
   });
 }
 

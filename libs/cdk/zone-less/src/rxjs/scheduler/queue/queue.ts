@@ -1,6 +1,7 @@
 // tslint:disable file-name-casing
+import * as rxjs from 'rxjs';
 import { QueueAction } from './QueueAction';
-import { QueueScheduler } from './QueueScheduler';
+import { createScheduler } from '../create-scheduler';
 
 /**
  *
@@ -66,4 +67,4 @@ import { QueueScheduler } from './QueueScheduler';
  * // "after", 1
  * ```
  */
-export const queue = new QueueScheduler(QueueAction);
+export const queueScheduler = createScheduler(rxjs.queueScheduler, QueueAction);
