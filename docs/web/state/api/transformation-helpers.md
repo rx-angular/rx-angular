@@ -24,6 +24,10 @@ You can use the transformation helpers without RxState but expect the behavior t
 
 [update.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/array/update.md ':include')
 
+---
+
+[extract.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/array/extract.md ':include')
+
 # Object
 
 [delete-prop.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/object/delete-prop.md ':include')
@@ -43,3 +47,7 @@ You can use the transformation helpers without RxState but expect the behavior t
 ---
 
 [toggle.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/object/toggle.md ':include')
+
+---
+
+[slice.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/object/slice.md ':include')
