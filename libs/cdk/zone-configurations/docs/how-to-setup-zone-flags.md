@@ -49,10 +49,10 @@ import './zone-flags';
 import 'zone.js/dist/zone';
 ```
 
-![Zone-flags import order](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_import-order_michael-hladky.png)
+![Zone-flags import order](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_import-order_michael-hladky.png)
 
 It is **not efficient** to do like that:
-![Webpack import hoisting](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_webpack-import-hoisting_michael-hladky.png)
+![Webpack import hoisting](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_webpack-import-hoisting_michael-hladky.png)
 
 ```typescript
 window.__Zone_disable_XHR = true;
@@ -101,13 +101,13 @@ zoneConfig.events.disableXHR();
 In this file we disable some global APIs as well as a couple of DOM events by using the typed methods and extra convenience methods.
 
 As you type you will see `zoneConfig` provides autocompletion:
-![IDE autocomplete for zoneConfig methods](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_ide-documentation-zoneConfig-api.png)
-![IDE autocomplete for zoneConfig](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_ide-documentation-zoneConfig-global-flags.png)
+![IDE autocomplete for zoneConfig methods](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_ide-documentation-zoneConfig-api.png)
+![IDE autocomplete for zoneConfig](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_ide-documentation-zoneConfig-global-flags.png)
 
 As well as inline documentation of scopes, methods and configuration details in the IDE:
-![IDE documentation for zoneConfig](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_ide-documentation-zoneConfig.png)
-![IDE documentation for zoneConfig](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_ide-documentation-zoneConfig-global.png)
-![IDE documentation for zoneConfig](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_ide-documentation-zoneConfig-global-flags-timers.png)
+![IDE documentation for zoneConfig](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_ide-documentation-zoneConfig.png)
+![IDE documentation for zoneConfig](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_ide-documentation-zoneConfig-global.png)
+![IDE documentation for zoneConfig](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_ide-documentation-zoneConfig-global-flags-timers.png)
 
 2. In `polyfills.ts` above the zone import, import `zone-flags.ts`:
 
@@ -120,7 +120,7 @@ import 'zone.js/dist/zone';
 
 > **💡 Pro Tip:** > `@rx-angular/cdk/zone-configuration` errors if it is used incorrectly.
 > If you used zone-flags wrong (not executing it before zone.js runs) you should see the following error in the console:
-> ![Log zone-flags](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_log-zone-flags_michael-hladky.png)
+> ![Log zone-flags](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_log-zone-flags_michael-hladky.png)
 
 ## Configure Zone runtime settings using `@rx-angular/cdk/zone-configuration` helpers
 
@@ -143,4 +143,4 @@ import './zone-runtime';
 
 > **💡 Pro Tip:** > `@rx-angular/cdk/zone-configuration` errors if it is used incorrectly.
 > If you used zone-runtime configurations wrong (not executing it after zone.js runs) you should see the following error in the console:
-> ![Log zone-runtime](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_log-zone-flags-runtime_michael-hladky.png)
+> ![Log zone-runtime](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_log-zone-flags-runtime_michael-hladky.png)
