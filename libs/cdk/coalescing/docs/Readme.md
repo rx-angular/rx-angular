@@ -101,20 +101,20 @@ Imagine the following code snippet which executes heavy computation:
 
 ```typescript
 function doStuff(value) {
-  console.log('heavy computation', value);
+  console.log(value);
 }
 ```
 
 If we would call it mutiple times we would cause 3 times the computation.
 
 ```typescript
-from([1, 2, 3]).subscribe(doStuff); // 3 x doStuff
+from([1, 2, 3]).subscribe(doStuff); // 3 x doStuff logs 1, 2, 3
 ```
 
 RxAngular's `coalesceWith` operator helps to merge together when applied to the source.
 
 ```typescript
-from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff
+from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
 ```
 
 ### Coalescing duration
@@ -137,15 +137,22 @@ Even a longer duration based on milliseconds e.g. `interval(500)` can be used as
 For more information on the different scheduling options you could have a look at the different scheduling API's like
 `queueMicroTask`, `requestAnimationFrame`, `setTimeout`, `postMessage` or `requestIdleCallback`.
 
+![coalesceWith - one component](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component.png)
+
+
 ### Coalescing scope
 
 If we think about the underlying principle of coalescing a little bit more we may ask our self how the logy knows that some work was already scheduled and does not need to get executed anymore. Surely there must be stored a variable somewhere that tells us if coalescing it currently ongoing or not. 
 
 Let's make up a small example to understand the situation a little bit better. 
 
-![coalesceWith - one component](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component.png)
+In the following diagram we see the above code
 
 ![coalesceWith - multiple components no scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-no-scope.png)
+
+```typescript
+from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
+```
 
 ![coalesceWith - multiple components scoped](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-scoped.png)
 
