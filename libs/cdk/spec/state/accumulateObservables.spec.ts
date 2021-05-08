@@ -2,7 +2,9 @@ import { TestScheduler } from 'rxjs/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 // tslint:disable-next-line:nx-enforce-module-boundaries
-import { accumulateObservables, coalesceWith } from '@rx-angular/cdk';
+import { accumulateObservables } from '@rx-angular/cdk';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import { from, Observable, of } from 'rxjs';
 
 let testScheduler: TestScheduler;
@@ -96,7 +98,7 @@ describe('createAccumulationObservable', () => {
       const vm$: Observable<ViewModelTest> = accumulateObservables({
         prop1: of(1),
         prop2: of('42'),
-        prop3: of(true)
+        prop3: of(true),
       });
       expect(vm$.subscribe).toBeDefined();
       expect(vm$.subscribe().unsubscribe).toBeDefined();
@@ -105,11 +107,14 @@ describe('createAccumulationObservable', () => {
 
   it('should return observable that emits when all sources emitted at least once', () => {
     testScheduler.run(({ cold, expectObservable }) => {
-      const vm$: Observable<ViewModelTest> = accumulateObservables({
-        prop1: cold('h-h-i-', { h, i }),
-        prop2: cold('--a-b-', { a, b }),
-        prop3: cold('----t-', { t }),
-      }, cold(      's'))
+      const vm$: Observable<ViewModelTest> = accumulateObservables(
+        {
+          prop1: cold('h-h-i-', { h, i }),
+          prop2: cold('--a-b-', { a, b }),
+          prop3: cold('----t-', { t }),
+        },
+        cold('s')
+      );
       const expected = '----x-';
       expectObservable(vm$).toBe(expected, { x });
     });
@@ -141,11 +146,14 @@ describe('createAccumulationObservable', () => {
   it('should return observable that emits only distinct values  --  should distinguish between values', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const values = { u, v, w, x };
-      const vm$: Observable<ViewModelTest> = accumulateObservables({
-        prop1: cold('h-h-i-i-i-i', { h, i }),
-        prop2: cold('a-a-a-b-b-b', { a, b }),
-        prop3: cold('f-f-f-f-t-t', { f, t }),
-      }, cold('s'));
+      const vm$: Observable<ViewModelTest> = accumulateObservables(
+        {
+          prop1: cold('h-h-i-i-i-i', { h, i }),
+          prop2: cold('a-a-a-b-b-b', { a, b }),
+          prop3: cold('f-f-f-f-t-t', { f, t }),
+        },
+        cold('s')
+      );
       const expected = 'u---v-w-x--';
       expectObservable(vm$).toBe(expected, values);
     });
@@ -154,11 +162,14 @@ describe('createAccumulationObservable', () => {
   it('should ignore changes if any key is undefined', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const values = { u, v, w, x };
-      const vm$: Observable<ViewModelTest> = accumulateObservables({
-        prop1: cold('h-h-i-i-i-i-i', { h, i }),
-        prop2: cold('_-a-a-_-b-_-b', { _, a, b }),
-        prop3: cold('f-f-f-f-f-t-t', { f, t }),
-      }, cold('s'));
+      const vm$: Observable<ViewModelTest> = accumulateObservables(
+        {
+          prop1: cold('h-h-i-i-i-i-i', { h, i }),
+          prop2: cold('_-a-a-_-b-_-b', { _, a, b }),
+          prop3: cold('f-f-f-f-f-t-t', { f, t }),
+        },
+        cold('s')
+      );
       const expected = '--u-v---w-x--';
       expectObservable(vm$).toBe(expected, values);
     });
@@ -170,11 +181,14 @@ describe('createAccumulationObservable', () => {
       const prop1$ = cold('--h--', { h, i });
       const prop2$ = cold('--a--', { a, b });
       const prop3$ = cold('--f--', { f });
-      const vm$: Observable<ViewModelTest> = accumulateObservables({
-        prop1: prop1$,
-        prop2: prop2$,
-        prop3: prop3$,
-      }, cold('s'));
+      const vm$: Observable<ViewModelTest> = accumulateObservables(
+        {
+          prop1: prop1$,
+          prop2: prop2$,
+          prop3: prop3$,
+        },
+        cold('s')
+      );
       const psubs = '^----';
       const expected = '--u--';
 
@@ -195,12 +209,15 @@ describe('createAccumulationObservable', () => {
       const prop1$ = cold('--h--i-', { h, i });
       const prop2$ = cold('--a--b-', { a, b });
       const prop3$ = cold('--f--t-', { f, t });
-      const vm$: Observable<ViewModelTest> = accumulateObservables({
-        prop1: prop1$,
-        prop2: prop2$,
-        prop3: prop3$,
-      }, cold('s'));
-      const psubs =    '^------';
+      const vm$: Observable<ViewModelTest> = accumulateObservables(
+        {
+          prop1: prop1$,
+          prop2: prop2$,
+          prop3: prop3$,
+        },
+        cold('s')
+      );
+      const psubs = '^------';
       const expected = '--u--x-';
 
       expectObservable(vm$).toBe(expected, values);
@@ -216,12 +233,15 @@ describe('createAccumulationObservable', () => {
       const prop1$ = cold('(hhi)', { h, i });
       const prop2$ = cold('(abb)', { a, b });
       const prop3$ = cold('(fft)', { f, t });
-      const vm$: Observable<ViewModelTest> = accumulateObservables({
-        prop1: prop1$,
-        prop2: prop2$,
-        prop3: prop3$,
-      }, cold('s'));
-      const psubs =    '^------';
+      const vm$: Observable<ViewModelTest> = accumulateObservables(
+        {
+          prop1: prop1$,
+          prop2: prop2$,
+          prop3: prop3$,
+        },
+        cold('s')
+      );
+      const psubs = '^------';
       const expected = 'x';
 
       expectObservable(vm$).toBe(expected, values);
@@ -232,23 +252,26 @@ describe('createAccumulationObservable', () => {
   });
 
   it('should return observable that coalesce by a custom duration (edge-case)', () => {
-      testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-        const values = { u, v, w, x };
-        const prop1$ = cold('h--i', { h, i });
-        const prop2$ = cold('a--b', { a, b });
-        const prop3$ = cold('f--t', { f, t });
-        const vm$: Observable<ViewModelTest> = accumulateObservables({
+    testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+      const values = { u, v, w, x };
+      const prop1$ = cold('h--i', { h, i });
+      const prop2$ = cold('a--b', { a, b });
+      const prop3$ = cold('f--t', { f, t });
+      const vm$: Observable<ViewModelTest> = accumulateObservables(
+        {
           prop1: prop1$,
           prop2: prop2$,
           prop3: prop3$,
-        },          cold('-----s'));
-        const psubs =    '^-----';
-        const expected = '-----x';
+        },
+        cold('-----s')
+      );
+      const psubs = '^-----';
+      const expected = '-----x';
 
-        expectObservable(vm$).toBe(expected, values);
-        expectSubscriptions(prop1$.subscriptions).toBe(psubs);
-        expectSubscriptions(prop2$.subscriptions).toBe(psubs);
-        expectSubscriptions(prop3$.subscriptions).toBe(psubs);
-      });
+      expectObservable(vm$).toBe(expected, values);
+      expectSubscriptions(prop1$.subscriptions).toBe(psubs);
+      expectSubscriptions(prop2$.subscriptions).toBe(psubs);
+      expectSubscriptions(prop3$.subscriptions).toBe(psubs);
+    });
   });
 });
