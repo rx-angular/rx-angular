@@ -64,7 +64,7 @@ console.log(window.__zone_symbol__setTimeout);
 console.log(window.__zone_symbol__clearTimeout);
 ```
 
-![Log patched timer APIs](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_setTimeout-patched_michael-hladky.png)
+![Log patched timer APIs](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_setTimeout-patched_michael-hladky.png)
 
 After (timer APIs are patched):
 
@@ -130,7 +130,7 @@ __Zone_disable_timer = true;
 __zone_symbol__UNPATCHED_EVENTS = ['click'];
 ```
 
-![Performance Profile of patched Event Listener](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_event-listener-patched-flames_michael-hladky.png)
+![Performance Profile of patched Event Listener](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_event-listener-patched-flames_michael-hladky.png)
 
 ```typescript
 __Zone_disable_timer = true;
