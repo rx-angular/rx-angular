@@ -3,6 +3,10 @@
   "dest": "../../dist/libs/cdk",
   "lib": {
     "flatModuleFile": "cdk",
-    "entryFile": "src/index.ts"
+    "entryFile": "src/index.ts",
+    "umdModuleIds": {
+      "@rx-angular/cdk/zone-less": "rx-angular.cdk-zone-less",
+      "@rx-angular/cdk/internals/scheduler": "rx-angular.cdk-internals-scheduler"
+    }
   }
 }

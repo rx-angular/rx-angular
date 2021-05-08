@@ -1,10 +1,12 @@
+import { PriorityLevel } from './schedulerPriorities';
+
 type Heap = Array<ReactSchedulerTask>;
 
 export interface ReactSchedulerTask {
   id: number;
   sortIndex: number;
-  callback: () => void;
-  priorityLevel: any;
+  callback: VoidFunction;
+  priorityLevel: PriorityLevel;
   startTime: number;
   expirationTime: number;
   isQueued?: boolean;
@@ -37,6 +39,7 @@ export function pop(heap: Heap): ReactSchedulerTask | null {
 
 function siftUp(heap, node, i) {
   let index = i;
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     // tslint:disable-next-line:no-bitwise
     const parentIndex = (index - 1) >>> 1;

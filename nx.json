@@ -30,12 +30,17 @@
     "test-helpers": {
       "tags": ["type:util"]
     },
+    "cdk-internals-scheduler": {
+      "tags": ["type:lib", "type:cdk", "type:internals"],
+      "implicitDependencies": []
+    },
     "cdk-zone-less": {
-      "tags": ["type:lib", "type:cdk"]
+      "tags": ["type:lib", "type:cdk"],
+      "implicitDependencies": []
     },
     "cdk": {
       "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": ["cdk-zone-less"]
+      "implicitDependencies": ["cdk-zone-less", "cdk-internals-scheduler"]
     },
     "state": {
       "tags": ["type:lib"]
