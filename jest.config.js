@@ -12,5 +12,6 @@ module.exports = {
     '<rootDir>/libs/cdk/zone-less',
     '<rootDir>/libs/cdk/internals/scheduler',
     '<rootDir>/apps/ssr',
+    '<rootDir>/libs/cdk/coalescing',
   ],
 };
