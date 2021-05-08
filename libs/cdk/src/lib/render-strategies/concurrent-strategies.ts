@@ -12,7 +12,7 @@ import {
   RxConcurrentStrategyNames,
   RxStrategyCredentials,
 } from '../model';
-import { coalescingManager } from '../utils/coalescingManager';
+import { coalescingManager } from '@rx-angular/cdk/coalescing';
 
 forceFrameRate(60);
 
@@ -92,7 +92,7 @@ function scheduleOnQueue<T>(
   work: (...args: any[]) => void,
   options: {
     priority: PriorityLevel;
-    scope: object;
+    scope: Record<string, unknown>;
     delay?: number;
   }
 ): MonoTypeOperatorFunction<T> {

@@ -8,7 +8,7 @@ import {
   PropType,
 } from '../utils/model';
 import { NotEmpty, ObservableMap } from './model';
-import { coalesceWith } from '../utils';
+import { coalesceWith } from '@rx-angular/cdk/coalescing';
 
 const resolvedPromise = Promise.resolve();
 const resolvedPromise$ = from(resolvedPromise);
