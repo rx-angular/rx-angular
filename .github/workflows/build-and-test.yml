@@ -46,4 +46,4 @@ jobs:
     - run: yarn nx affected:lint --parallel --base=origin/master
     - run: yarn nx affected:test --parallel --base=origin/master
     # Do not run builds in parallel since it will cause `ngcc` compiler deadlocks.
-    - run: yarn nx affected:build --base=origin/master
+    - run: yarn nx affected:build --with-deps --base=origin/master

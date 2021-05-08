@@ -5,7 +5,11 @@
     "module": "es2015",
     "inlineSources": true,
     "importHelpers": true,
-    "lib": ["dom", "es2018"]
+    "lib": ["dom", "es2018"],
+    "paths": {
+      "@rx-angular/cdk": ["dist/libs/cdk"],
+      "@rx-angular/cdk/zone-less": ["dist/libs/cdk/zone-less"]
+    }
   },
   "angularCompilerOptions": {
     "enableIvy": false,

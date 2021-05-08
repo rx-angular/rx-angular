@@ -2,11 +2,11 @@ import {
   SchematicTestRunner,
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
-import * as path from 'path';
+import { join } from 'path';
 
-import { SchemaOptions } from './schema';
+import { readJsonInTree } from '../../common';
 
-const collectionPath = path.join(__dirname, '../../../collection.json');
+const collectionPath = join(__dirname, '../../../collection.json');
 
 const workspaceOptions = {
   name: 'workspace',
@@ -19,16 +19,13 @@ const defaultAppOptions = {
   name: 'template',
 };
 
-const projectPath = `/${workspaceOptions.newProjectRoot}/${defaultAppOptions.name}`;
-const options: SchemaOptions = { project: 'template', module: 'app' };
-
 describe('ng-add schematic', () => {
   let appTree: UnitTestTree;
   let schematicRunner: SchematicTestRunner;
 
   beforeEach(async () => {
     schematicRunner = new SchematicTestRunner(
-      'rx-angular-schematics',
+      '@rx-angular/schematics',
       collectionPath
     );
     appTree = await schematicRunner
@@ -49,34 +46,14 @@ describe('ng-add schematic', () => {
       .toPromise();
   });
 
-  it('should import into a specified module', async () => {
+  it('should add proper package to dependencies', async () => {
     const tree = await schematicRunner
-      .runSchematicAsync('ng-add', options, appTree)
+      .runSchematicAsync('ng-add', undefined, appTree)
       .toPromise();
 
-    const content = tree.readContent(`${projectPath}/src/app/app.module.ts`);
+    const packageJson = readJsonInTree(tree, 'package.json');
 
-    expect(content).toMatchInlineSnapshot(`
-      "import { NgModule } from '@angular/core';
-      import { BrowserModule } from '@angular/platform-browser';
-
-      import { AppComponent } from './app.component';
-
-      @NgModule({
-        declarations: [
-          AppComponent
-        ],
-        imports: [
-          BrowserModule
-        ],
-        providers: [],
-        bootstrap: [AppComponent]
-      })
-      export class AppModule { }
-      "
-    `);
-  },
-    // timeout is needed because request to npmjs registry sometimes takes more than 5 seconds
-   10000
-  );
+    expect(packageJson.dependencies['@rx-angular/cdk']).toBeDefined();
+    expect(packageJson.devDependencies['@rx-angular/cdk']).toBeUndefined();
+  });
 });
