@@ -20,8 +20,7 @@ Besides a well documented and typed API it also provides a set of convenience fe
 - ✅ Convenience methods
 
 ## Demos:
-
-- [⚡ Zone Configuration Demos](https://stackblitz.com/edit/rx-angular-cdk-zone-configuration-demos)
+- [⚡ Zone Configuration Demos](https://github.com/BioPhoton/rx-angular-cdk-coalescing)
 
 ## Install
 
