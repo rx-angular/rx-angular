@@ -10,12 +10,24 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 Coalescing in general means, bring together multiple things into one. This can be anything starting from values to whole systems.
 In RxAngular coalescing always refers to any sort of emissions or calls that will merge into one. The logic is implemented as RxJS operators and used to improve the change detection mechanism of Angular.
 
-Before we dive into the usage we may want to understand already existing coalescing mechanisms in Angular and why it is used to get better performance.
+
+# Available Approaches
 
 There are 2 places in Angular we have coalescing already implemented in the framework:
 
 - Coalescing of `ApplicationRef#tick` calls (re-rendering/re-evaluation of the app) triggered by e.g. `ChangeDetectorRef#markForCheck` or `ɵmarkDirty`.
 - The flag `ngZoneEventCoalescing` in `CompilerOption`
+- RxAngular add another option where we can apply that techniques manually wherever we want.
+
+**The Benefits**
+
+- ✅ Coalescing techniques as RxJS operators
+- ✅ Configurable durationSelector for all kind of scheduling methods
+- ✅ Scope coalescing to a specific component or object
+- ✅ Typed methods
+- ✅ IDE inline documentation
+
+Before we dive into the usage of this package we may want to understand already existing coalescing mechanisms in Angular and why it is used to get better performance.
 
 ## Coalescing of `ApplicationRef#tick` calls
 
@@ -48,6 +60,7 @@ platformBrowserDynamic()
 This setting applies the technique of coalescing to fired events bound by Angular. It will coalesce multiple event emissions caused by event bubbling together and run `ApplicationRef#tick` only one time instead of multiple times.
 
 ![Angular - ngZoneEventCoalescing diagram])()
+
 
 # RxAngular Coalescing operators
 
