@@ -26,6 +26,10 @@
       "tags": ["type:lib", "type:cdk"],
       "implicitDependencies": []
     },
+    "cdk-coalescing": {
+      "tags": ["type:lib", "type:cdk"],
+      "implicitDependencies": []
+    },
     "cdk": {
       "tags": ["type:lib", "type:cdk"],
       "implicitDependencies": ["cdk-zone-less", "cdk-internals-scheduler"]
@@ -41,8 +45,7 @@
       "implicitDependencies": ["vanilla-case-studies"]
     },
     "ssr": { "tags": [] },
-    "ssr-e2e": { "tags": [], "implicitDependencies": ["ssr"] },
-    "cdk-coalescing": { "tags": [] }
+    "ssr-e2e": { "tags": [], "implicitDependencies": ["ssr"] }
   },
   "affected": { "defaultBase": "master" }
 }
