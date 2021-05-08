@@ -183,10 +183,12 @@ This canbe acheaved by scoping the flag that maintains coalescing to a specific 
 With this in mind we can go one step further and look at change detection across muntiple coponents. 
 
 The following diagram illustrates cnage detection in component level:
-![coalesceWith - multiple components no scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-no-scope.png)
+
+![coalesceWith - multiple components scoped](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-scoped.png)
 
 > **⚠ Notice:**
 > Be cautious with globally shared coalescing scopes, it could lead to un wanted behaviour ans loss of updates when used incorrectly.
 
-![coalesceWith - multiple components scoped](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-scoped.png)
+![coalesceWith - multiple components no scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-no-scope.png)
+
 
