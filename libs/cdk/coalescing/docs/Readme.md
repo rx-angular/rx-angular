@@ -119,7 +119,7 @@ from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
 
 ### Coalescing duration
 
-By default, the duration in which values get united is derived from a `Promise` which executes immediately after the synchronous code got executed.
+By default, the duration in which values get united is derived from a micro taks which executes immediately after the synchronous code got executed.
 
 See the diagram for details:
 ![coalesceWith - micro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task.png)
@@ -127,15 +127,19 @@ See the diagram for details:
 To have more fine-grained control over the duration of coalescing an optional parameter `durationSelector` is provided.
 `durationSelector` is of type `Observable<unknown>` and the first emission of it terminates the coalescing duration.
 
-You could pass e.g. `interval(100)` as `durationSelector` to use a `setInterval` as duration period.
+You could pass e.g. `interval(0)` as `durationSelector` to use a `setInterval` as duration period.
 
 See the diagram for details:
 ![coalesceWith - macro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task-flames.png)
 
-Even a longer duration based on milliseconds e.g. `interval(500)` can be used as duration.
+> **💡 Pro Tip**
+> Even a longer duration based on milliseconds e.g. `interval(500)` can be used as duration.
+> 
+> For more information on the different scheduling options you could have a look at the different scheduling API's like
+> `queueMicroTask`, `requestAnimationFrame`, `setTimeout`, `postMessage` or `requestIdleCallback`.
 
-For more information on the different scheduling options you could have a look at the different scheduling API's like
-`queueMicroTask`, `requestAnimationFrame`, `setTimeout`, `postMessage` or `requestIdleCallback`.
+A real life example where `coalesceWith` comes in handy is runnning manual change detection with `ChangeDetectorRef#detectChanges()`.
+The below diagram display the cycle of updates, coalescing and rendering of values in a component.  
 
 ![coalesceWith - one component](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component.png)
 
