@@ -138,6 +138,7 @@ See the diagram for details:
 > For more information on the different scheduling options you could have a look at the different scheduling API's like
 > `queueMicroTask`, `requestAnimationFrame`, `setTimeout`, `postMessage` or `requestIdleCallback`.
 
+
 A real life example where `coalesceWith` comes in handy is runnning manual change detection with `ChangeDetectorRef#detectChanges()`.
 The below diagram display the cycle of updates, coalescing and rendering of values in a component.  
 
@@ -146,17 +147,46 @@ The below diagram display the cycle of updates, coalescing and rendering of valu
 
 ### Coalescing scope
 
-If we think about the underlying principle of coalescing a little bit more we may ask our self how the logy knows that some work was already scheduled and does not need to get executed anymore. Surely there must be stored a variable somewhere that tells us if coalescing it currently ongoing or not. 
+If we think about the underlying principle of coalescing a little bit more we may ask our self how the logic knows what to do? How is it done that some work that is scheduled multiple times get executed only once?
+Surely there must be a variable stored somewhere that knows if coalescing it currently ongoing or not. 
 
 Let's make up a small example to understand the situation a little bit better. 
 
-In the following diagram we see the above code
+In the following snippet we see the same logic from above but applied to 2 different subscription. 
+Both components schedule changes and use `coalesceWith` inside. 
 
-![coalesceWith - multiple components no scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-no-scope.png)
+```typescript
+  from([1, 2, 3]).pipe(coalesceWith(queueMicroTask)).subscribe(detectChanges); // 1 x detectChanges renders 3
+  from([1, 2, 3]).pipe(coalesceWith(queueMicroTask)).subscribe(detectChanges); // 1 x detectChanges renders 3
+```
+
+The result is quite unintuitive. Both subscriptions trigger the detect changes call and the component got re-rendered 2 times.
+
+Why is this the case? 
+
+If we recall the code snippet from above we see the number loged to to console was `3` out of the series of `1`, `2`, `3`.
 
 ```typescript
 from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
 ```
+
+It makes sense because we want to render only the last update to the component. To do this `coalesceWith` maintains a flag for each subscription.
+The wante bevavior should execute change detection only once per component. 
+
+This canbe acheaved by scoping the flag that maintains coalescing to a specific thing. e.g. the component.
+
+```typescript
+  from([1, 2, 3]).pipe(coalesceWith(queueMicroTask, this)).subscribe(detectChanges); // 0 x detectChanges no render
+  from([1, 2, 3]).pipe(coalesceWith(queueMicroTask, this)).subscribe(detectChanges); // 1 x detectChanges renders 3
+```
+
+With this in mind we can go one step further and look at change detection across muntiple coponents. 
+
+The following diagram illustrates cnage detection in component level:
+![coalesceWith - multiple components no scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-no-scope.png)
+
+> **⚠ Notice:**
+> Be cautious with globally shared coalescing scopes, it could lead to un wanted behaviour ans loss of updates when used incorrectly.
 
 ![coalesceWith - multiple components scoped](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-scoped.png)
 
