@@ -141,7 +141,7 @@ For more information on the different scheduling options you could have a look a
 
 If we think about the underlying principle of coalescing a little bit more we may ask our self how the logy knows that some work was already scheduled and does not need to get executed anymore. Surely there must be stored a variable somewhere that tells us if coalescing it currently ongoing or not. 
 
-Let's make up a small example to understand the situation a little bit better.
+Let's make up a small example to understand the situation a little bit better. 
 
 ![coalesceWith - one component](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component.png)
 
