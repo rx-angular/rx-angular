@@ -127,16 +127,25 @@ See the diagram for details:
 To have more fine-grained control over the duration of coalescing an optional parameter `durationSelector` is provided.
 `durationSelector` is of type `Observable<unknown>` and the first emission of it terminates the coalescing duration.
 
-You could pass e.g. `timer(0, 0)` as `durationSelector` to use a `setInterval` as duration period.
+You could pass e.g. `interval(100)` as `durationSelector` to use a `setInterval` as duration period.
 
 See the diagram for details:
 ![coalesceWith - macro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task-flames.png)
 
-Even a longer duration based on milliseconds e.g. `timer(0, 500)` can be used as duration.
+Even a longer duration based on milliseconds e.g. `interval(500)` can be used as duration.
 
 For more information on the different scheduling options you could have a look at the different scheduling API's like
 `queueMicroTask`, `requestAnimationFrame`, `setTimeout`, `postMessage` or `requestIdleCallback`.
 
 ### Coalescing scope
 
-@TODO
+If we think about the underlying principle of coalescing a little bit more we may ask our self how the logy knows that some work was already scheduled and does not need to get executed anymore. Surely there must be stored a variable somewhere that tells us if coalescing it currently ongoing or not. 
+
+Let's make up a small example to understand the situation a little bit better.
+
+![coalesceWith - one component](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component.png)
+
+![coalesceWith - multiple components no scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-no-scope.png)
+
+![coalesceWith - multiple components scoped](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-scoped.png)
+
