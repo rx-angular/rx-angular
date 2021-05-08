@@ -13,10 +13,10 @@ applications
 
 ## Sub Modules
 
-- ⛔ Zone Configuration
-- 🚫 Zone Less
+- [⛔ Zone Configuration](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/zone-configurations)
+- [🚫 Zone Less](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/zone-less)
 - 🛠 Coercing
-- 🛠 Coalescing
+- [🛠 Coalescing](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalsecing)
 - 📡 Notification
 - 🔳 Template Management
 - 🖌 Render-Strategies
@@ -36,11 +36,11 @@ yarn add @rx-angular/cdk
 
 ## ⛔ Zone Configuration
 
-[Zone Flags](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/zone-configuration/zone-flags.md)
+[Zone Flags](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/zone-configurations/docs/zone-flags.md)
 
 ## 🛠 Coalescing
 
-[Coalescing](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/docs/coalescing)
+[Coalescing](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/coalescing)
 
 ## Browsers support
 
