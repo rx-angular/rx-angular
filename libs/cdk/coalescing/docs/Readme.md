@@ -35,7 +35,7 @@ The graphic shows start of the coalescing duration, the differen browser events 
 
 With that information we should be able to reflect this concept also onto other usages in Angular.
 
-## Coalescing of `ApplicationRef#tick` calls
+## Coalescing with `ngZoneEventCoalescing` settings
 
 @TODO
 
