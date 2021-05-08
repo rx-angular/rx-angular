@@ -39,10 +39,15 @@ With that information we should be able to reflect this concept also onto other 
 
 Angular's bootstrap method can be configured to use a config property called `ngZoneEventCoalescing`.
 
-
 ```typescript
-from([1, 2, 3]).subscribe(doStuff); // 3 x doStuff
+platformBrowserDynamic()
+  .bootstrapModule(AppModule, {ngZoneCoalescing: true})
+  .catch(err => console.error(err));
 ```
+
+This setting applies the technique of coalescing to fired events bound by Angular. It will coalesce multiple event emissions caused by event bubbling together and run `ApplicationRef#tick` only one time instead of multiple times.
+
+![Angular - ngZoneEventCoalescing diagram])()
 
 # RxAngular Coalescing operators
 
