@@ -622,7 +622,7 @@
       "sourceRoot": "libs/template/src",
       "prefix": "rx",
       "architect": {
-        "build": {
+        "build-lib": {
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/template/tsconfig.lib.json",
@@ -649,12 +649,12 @@
             "parallel": false
           }
         },
-        "build-lib": {
+        "build": {
           "builder": "@nrwl/workspace:run-commands",
           "options": {
             "commands": [
               {
-                "command": "nx run template:build --with-deps"
+                "command": "nx run template:build-lib"
               },
               {
                 "command": "nx run template:build-schematics"
