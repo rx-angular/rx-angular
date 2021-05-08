@@ -10,7 +10,6 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 Coalescing in general means, bring together multiple things into one. This can be anything starting from values to whole systems.
 In RxAngular coalescing always refers to any sort of emissions or calls that will merge into one. The logic is implemented as RxJS operators and used to improve the change detection mechanism of Angular.
 
-
 # Available Approaches
 
 There are 2 places in Angular we have coalescing already implemented in the framework:
@@ -53,14 +52,13 @@ Angular's bootstrap method can be configured to use a config property called `ng
 
 ```typescript
 platformBrowserDynamic()
-  .bootstrapModule(AppModule, {ngZoneCoalescing: true})
-  .catch(err => console.error(err));
+  .bootstrapModule(AppModule, { ngZoneCoalescing: true })
+  .catch((err) => console.error(err));
 ```
 
 This setting applies the technique of coalescing to fired events bound by Angular. It will coalesce multiple event emissions caused by event bubbling together and run `ApplicationRef#tick` only one time instead of multiple times.
 
 ![Angular - ngZoneEventCoalescing diagram])()
-
 
 # RxAngular Coalescing operators
 
@@ -143,7 +141,6 @@ A real life example where `coalesceWith` comes in handy is runnning manual chang
 The below diagram display the cycle of updates, coalescing and rendering of values in a component.  
 
 ![coalesceWith - one component](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component.png)
-
 
 ### Coalescing scope
 
