@@ -1,28 +1,42 @@
+import { zoneConfig } from './zone-config';
+import { RxZoneFlagsHelperFunctions } from './model/configurations.types';
 import {
-  zoneConfig,
-  ZoneGlobalConfigurations,
-  ZoneTestConfigurations,
-  ZoneRuntimeConfigurations,
-  ZoneFlagsHelperFunctions
-} from '@rx-angular/cdk';
-import createSpy = jasmine.createSpy;
+  RxZoneGlobalConfigurations,
+  RxZoneTestConfigurations,
+  RxZoneRuntimeConfigurations,
+} from './model/zone.configurations.api';
 
 describe('zone-config', () => {
+  const w = window as RxZoneGlobalConfigurations &
+    RxZoneTestConfigurations &
+    RxZoneRuntimeConfigurations &
+    RxZoneFlagsHelperFunctions & {
+      console: { log: () => void; error: () => void };
+    } & { Zone?: any };
 
-  const w = window as ZoneGlobalConfigurations &
-    ZoneTestConfigurations &
-    ZoneRuntimeConfigurations &
-    ZoneFlagsHelperFunctions & { console: { log: () => void,  error: () => void } }
-    & { Zone?: any };
+  const Zone = w.Zone;
+  const properties = Object.keys(w)
+    .filter((property) => property.toLowerCase().startsWith('__zone'))
+    .map((property) => [property, w[property]]);
 
   beforeAll(() => {
     w.Zone = undefined;
   });
 
+  afterAll(() => {
+    w.Zone = Zone;
+
+    properties.forEach(([property, method]) => {
+      w[property] = method;
+    });
+  });
+
   beforeEach(() => {
-    Object.keys(w).filter(key=>key.toLowerCase().startsWith('__zone')).forEach(key=>{
-      delete w[key]
-    })
+    Object.keys(w)
+      .filter((property) => property.toLowerCase().startsWith('__zone'))
+      .forEach((property) => {
+        delete w[property];
+      });
   });
 
   it('should be created', () => {
@@ -85,7 +99,9 @@ describe('zone-config', () => {
     });
 
     it('should have EventTargetLegacy present', () => {
-      expect(typeof zoneConfig.global.disable.EventTargetLegacy).toBe('function');
+      expect(typeof zoneConfig.global.disable.EventTargetLegacy).toBe(
+        'function'
+      );
       expect(w.__Zone_disable_EventTargetLegacy).toBe(undefined);
       zoneConfig.global.disable.EventTargetLegacy();
       expect(w.__Zone_disable_EventTargetLegacy).toBe(true);
@@ -120,14 +136,18 @@ describe('zone-config', () => {
     });
 
     it('should have MutationObserver present', () => {
-      expect(typeof zoneConfig.global.disable.MutationObserver).toBe('function');
+      expect(typeof zoneConfig.global.disable.MutationObserver).toBe(
+        'function'
+      );
       expect(w.__Zone_disable_MutationObserver).toBe(undefined);
       zoneConfig.global.disable.MutationObserver();
       expect(w.__Zone_disable_MutationObserver).toBe(true);
     });
 
     it('should have IntersectionObserver present', () => {
-      expect(typeof zoneConfig.global.disable.IntersectionObserver).toBe('function');
+      expect(typeof zoneConfig.global.disable.IntersectionObserver).toBe(
+        'function'
+      );
       expect(w.__Zone_disable_IntersectionObserver).toBe(undefined);
       zoneConfig.global.disable.IntersectionObserver();
       expect(w.__Zone_disable_IntersectionObserver).toBe(true);
@@ -169,19 +189,27 @@ describe('zone-config', () => {
     });
 
     it('should have ZoneAwarePromise present', () => {
-      expect(typeof zoneConfig.global.disable.ZoneAwarePromise).toBe('function');
+      expect(typeof zoneConfig.global.disable.ZoneAwarePromise).toBe(
+        'function'
+      );
       expect(w.__Zone_disable_ZoneAwarePromise).toBe(undefined);
       zoneConfig.global.disable.ZoneAwarePromise();
       expect(w.__Zone_disable_ZoneAwarePromise).toBe(true);
     });
 
     it('should have DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION present', () => {
-      expect(typeof zoneConfig.global.disable.DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION).toBe('function');
-      expect(w.__zone_symbol__DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION).toBe(undefined);
+      expect(
+        typeof zoneConfig.global.disable
+          .DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION
+      ).toBe('function');
+      expect(w.__zone_symbol__DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION).toBe(
+        undefined
+      );
       zoneConfig.global.disable.DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION();
-      expect(w.__zone_symbol__DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION).toBe(true);
+      expect(w.__zone_symbol__DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION).toBe(
+        true
+      );
     });
-
   });
 
   describe('test flags', () => {
@@ -194,22 +222,34 @@ describe('zone-config', () => {
     });
 
     it('should have fakeAsyncAutoFakeAsyncWhenClockPatched present', () => {
-      expect(typeof zoneConfig.test.disable.fakeAsyncAutoFakeAsyncWhenClockPatched).toBe('function');
-      expect(w.__zone_symbol__fakeAsyncAutoFakeAsyncWhenClockPatched).toBe(undefined);
+      expect(
+        typeof zoneConfig.test.disable.fakeAsyncAutoFakeAsyncWhenClockPatched
+      ).toBe('function');
+      expect(w.__zone_symbol__fakeAsyncAutoFakeAsyncWhenClockPatched).toBe(
+        undefined
+      );
       zoneConfig.test.disable.fakeAsyncAutoFakeAsyncWhenClockPatched();
-      expect(w.__zone_symbol__fakeAsyncAutoFakeAsyncWhenClockPatched).toBe(true);
+      expect(w.__zone_symbol__fakeAsyncAutoFakeAsyncWhenClockPatched).toBe(
+        true
+      );
     });
 
     it('should have fakeAsyncDisablePatchingClock present', () => {
-      expect(typeof zoneConfig.test.disable.fakeAsyncDisablePatchingClock).toBe('function');
+      expect(typeof zoneConfig.test.disable.fakeAsyncDisablePatchingClock).toBe(
+        'function'
+      );
       expect(w.__zone_symbol__fakeAsyncDisablePatchingClock).toBe(undefined);
       zoneConfig.test.disable.fakeAsyncDisablePatchingClock();
       expect(w.__zone_symbol__fakeAsyncDisablePatchingClock).toBe(true);
     });
 
     it('should have supportWaitUnResolvedChainedPromise present', () => {
-      expect(typeof zoneConfig.test.disable.supportWaitUnResolvedChainedPromise).toBe('function');
-      expect(w.__zone_symbol__supportWaitUnResolvedChainedPromise).toBe(undefined);
+      expect(
+        typeof zoneConfig.test.disable.supportWaitUnResolvedChainedPromise
+      ).toBe('function');
+      expect(w.__zone_symbol__supportWaitUnResolvedChainedPromise).toBe(
+        undefined
+      );
       zoneConfig.test.disable.supportWaitUnResolvedChainedPromise();
       expect(w.__zone_symbol__supportWaitUnResolvedChainedPromise).toBe(true);
     });
@@ -234,7 +274,6 @@ describe('zone-config', () => {
       zoneConfig.test.disable.mocha();
       expect(w.__Zone_disable_mocha).toBe(true);
     });
-
   });
 
   describe('events flags', () => {
@@ -254,12 +293,13 @@ describe('zone-config', () => {
     });
 
     it('should have UNPATCHED_EVENTS present', () => {
-      expect(typeof zoneConfig.events.disable.UNPATCHED_EVENTS).toBe('function');
+      expect(typeof zoneConfig.events.disable.UNPATCHED_EVENTS).toBe(
+        'function'
+      );
       expect(w.__zone_symbol__UNPATCHED_EVENTS).toBe(undefined);
       zoneConfig.events.disable.UNPATCHED_EVENTS(['test']);
       expect(w.__zone_symbol__UNPATCHED_EVENTS).toStrictEqual(['test']);
     });
-
   });
 
   describe('runtime flags', () => {
@@ -272,25 +312,33 @@ describe('zone-config', () => {
     });
 
     it('should have ignoreConsoleErrorUncaughtError present', () => {
-      expect(typeof zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError).toBe('function');
+      expect(
+        typeof zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError
+      ).toBe('function');
       expect(w.__zone_symbol__ignoreConsoleErrorUncaughtError).toBe(undefined);
       zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError();
       expect(w.__zone_symbol__ignoreConsoleErrorUncaughtError).toBe(true);
     });
 
-    it('should assert if used before', () => {
-      w.console.error = createSpy('console.error');
+    xit('should assert if used before', () => {
+      const spy = jest.spyOn(console, 'error');
       zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError();
-      expect(w.__zone_symbol__ignoreConsoleErrorUncaughtError).toBe(true);
-      expect(w.console.error).toHaveBeenCalledTimes(1);
+      try {
+        expect(w.__zone_symbol__ignoreConsoleErrorUncaughtError).toBe(true);
+        expect(spy).toHaveBeenCalledTimes(1);
+      } finally {
+        spy.mockRestore();
+      }
     });
 
     it('should not assert if used after', () => {
-      w.console.error = createSpy('console.error');
-      expect(w.console.error).toHaveBeenCalledTimes(0);
+      const spy = jest.spyOn(console, 'error');
+      try {
+        expect(spy).toHaveBeenCalledTimes(0);
+      } finally {
+        spy.mockRestore();
+      }
     });
-
-
   });
 
   describe('convenience methods', () => {
@@ -300,12 +348,11 @@ describe('zone-config', () => {
       expect(w.__zone_symbol__UNPATCHED_EVENTS).toEqual(['load', 'error']);
     });
 
-   it('should have unpatchXHR method', () => {
+    it('should have unpatchXHR method', () => {
       zoneConfig.useUnpatchedPassiveScrollEvents();
       expect(w.__zone_symbol__UNPATCHED_EVENTS).toEqual(['scroll']);
       expect(w.__zone_symbol__PASSIVE_EVENTS).toEqual(['scroll']);
     });
-
   });
 
   describe('zone-flags log', () => {
@@ -314,15 +361,17 @@ describe('zone-config', () => {
     });
 
     it('should log zone-flags if called', () => {
-      w.console.log = createSpy('console.log');
+      const spy = jest.spyOn(console, 'log');
       zoneConfig.events.disable.UNPATCHED_EVENTS(['test']);
       zoneConfig.events.disable.PASSIVE_EVENTS(['test']);
       zoneConfig.global.disable.XHR();
       zoneConfig.global.disable.timers();
       w.__rxa_zone_config__log();
-
-      expect(w.console.log).toHaveBeenCalledTimes(4);
+      try {
+        expect(spy).toHaveBeenCalledTimes(4);
+      } finally {
+        spy.mockRestore();
+      }
     });
-
   });
 });

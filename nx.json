@@ -38,6 +38,10 @@
       "tags": ["type:lib", "type:cdk"],
       "implicitDependencies": []
     },
+    "cdk-zone-configurations": {
+      "tags": ["type:lib", "type:cdk"],
+      "implicitDependencies": []
+    },
     "cdk": {
       "tags": ["type:lib", "type:cdk"],
       "implicitDependencies": ["cdk-zone-less", "cdk-internals-scheduler"]
@@ -46,7 +50,8 @@
       "tags": ["type:lib"]
     },
     "template": {
-      "tags": ["type:lib"]
+      "tags": ["type:lib", "type:template"],
+      "implicitDependencies": ["cdk-zone-less", "cdk"]
     },
     "docs": {
       "tags": ["type:app"]

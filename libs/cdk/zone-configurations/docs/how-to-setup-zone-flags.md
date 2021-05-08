@@ -1,5 +1,7 @@
 # How to set up zone flags
 
+---
+
 ## Resources
 
 **Example application:**
