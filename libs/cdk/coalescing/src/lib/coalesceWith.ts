@@ -12,8 +12,8 @@ import { coalescingManager } from './coalescingManager';
  * @description
  * Limits the number of synchronous emitted a value from the source Observable to
  * one emitted value per
- *   [`AnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame), then repeats
- *   this process for every tick of the browsers event loop.
+ *   durationSelector e.g. [`AnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame), then repeats
+ * this process for every tick of the browsers event loop.
  *
  * The coalesce operator is based on the [throttle](https://rxjs-dev.firebaseapp.com/api/operators/throttle) operator.
  * In addition to that is provides emitted values for the trailing end only, as well as maintaining a context to scope
