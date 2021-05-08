@@ -86,7 +86,7 @@
     "@angular-devkit/build-ng-packagr": "0.1002.0",
     "@angular-eslint/eslint-plugin": "2.0.2",
     "@angular-eslint/eslint-plugin-template": "2.0.2",
-    "@angular-eslint/template-parser": "2.0.2",
+    "@angular-eslint/template-parser": "4.2.0",
     "@angular/cli": "11.2.0",
     "@angular/compiler-cli": "11.2.0",
     "@angular/language-service": "11.2.0",
