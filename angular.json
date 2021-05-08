@@ -1135,6 +1135,38 @@
         }
       }
     },
+    "cdk-zone-configurations": {
+      "projectType": "library",
+      "root": "libs/cdk/zone-configurations",
+      "sourceRoot": "libs/cdk/zone-configurations/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "libs/cdk/zone-configurations/tsconfig.lib.json",
+            "project": "libs/cdk/zone-configurations/ng-package.json"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/cdk/zone-configurations/src/**/*.ts",
+              "libs/cdk/zone-configurations/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/cdk/zone-configurations"],
+          "options": {
+            "jestConfig": "libs/cdk/zone-configurations/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "cdk-internals-scheduler": {
       "projectType": "library",
       "root": "libs/cdk/internals/scheduler",

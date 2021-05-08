@@ -2,7 +2,10 @@
   "npmScope": "rx-angular",
   "implicitDependencies": {
     "angular.json": "*",
-    "package.json": { "dependencies": "*", "devDependencies": "*" },
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
     "tsconfig.json": "*",
     "tslint.json": "*",
     "nx.json": "*",
@@ -11,13 +14,22 @@
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
-      "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
+      }
     }
   },
   "projects": {
-    "demos": { "tags": ["type:app"] },
-    "demos-e2e": { "tags": [], "implicitDependencies": ["demos"] },
-    "test-helpers": { "tags": ["type:util"] },
+    "demos": {
+      "tags": ["type:app"]
+    },
+    "demos-e2e": {
+      "tags": [],
+      "implicitDependencies": ["demos"]
+    },
+    "test-helpers": {
+      "tags": ["type:util"]
+    },
     "cdk-internals-scheduler": {
       "tags": ["type:lib", "type:cdk", "type:internals"],
       "implicitDependencies": []
@@ -30,16 +42,33 @@
       "tags": ["type:lib", "type:cdk"],
       "implicitDependencies": []
     },
+    "cdk-zone-configurations": {
+      "tags": ["type:lib", "type:cdk"],
+      "implicitDependencies": []
+    },
     "cdk": {
       "tags": ["type:lib", "type:cdk"],
       "implicitDependencies": ["cdk-zone-less", "cdk-internals-scheduler"]
     },
-    "state": { "tags": ["type:lib"] },
-    "template": { "tags": ["type:lib"] },
-    "docs": { "tags": ["type:app"] },
-    "tour-of-heroes": { "tags": ["type:app"] },
-    "tour-of-heroes-ngxs": { "tags": ["type:app"] },
-    "vanilla-case-studies": { "tags": [] },
+    "state": {
+      "tags": ["type:lib"]
+    },
+    "template": {
+      "tags": ["type:lib", "type:template"],
+      "implicitDependencies": ["cdk-zone-less", "cdk"]
+    },
+    "docs": {
+      "tags": ["type:app"]
+    },
+    "tour-of-heroes": {
+      "tags": ["type:app"]
+    },
+    "tour-of-heroes-ngxs": {
+      "tags": ["type:app"]
+    },
+    "vanilla-case-studies": {
+      "tags": []
+    },
     "vanilla-case-studies-e2e": {
       "tags": [],
       "implicitDependencies": ["vanilla-case-studies"]

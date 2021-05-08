@@ -10,6 +10,7 @@ module.exports = {
     '<rootDir>/libs/template',
     '<rootDir>/libs/cdk',
     '<rootDir>/libs/cdk/zone-less',
+    '<rootDir>/libs/cdk/zone-configurations',
     '<rootDir>/libs/cdk/internals/scheduler',
     '<rootDir>/apps/ssr',
     '<rootDir>/libs/cdk/coalescing',

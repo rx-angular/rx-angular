@@ -2,7 +2,13 @@
   "extends": "../../../tslint.json",
   "rules": {
     "directive-selector": [true, "attribute", "rxAngular", "camelCase"],
-    "component-selector": [true, "element", "rx-angular", "kebab-case"]
+    "component-selector": [true, "element", "rx-angular", "kebab-case"],
+    "nx-enforce-module-boundaries": [
+      true,
+      {
+        "allow": []
+      }
+    ]
   },
   "linterOptions": {
     "exclude": ["!**/*"]
