@@ -181,11 +181,11 @@ With this in mind we can go one step further and look at change detection across
 
 The following diagram illustrates cnage detection in component level:
 
-![coalesceWith - multiple components scoped](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-scoped.png)
+![coalesceWith - multiple components with component scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-component-scope.png)
 
 > **⚠ Notice:**
 > Be cautious with globally shared coalescing scopes, it could lead to un wanted behaviour ans loss of updates when used incorrectly.
 
-![coalesceWith - multiple components no scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-no-scope.png)
+![coalesceWith - multiple components with global scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-global-scope.png)
 
 
