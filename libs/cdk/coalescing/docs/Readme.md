@@ -37,7 +37,12 @@ With that information we should be able to reflect this concept also onto other 
 
 ## Coalescing with `ngZoneEventCoalescing` settings
 
-@TODO
+Angular's bootstrap method can be configured to use a config property called `ngZoneEventCoalescing`.
+
+
+```typescript
+from([1, 2, 3]).subscribe(doStuff); // 3 x doStuff
+```
 
 # RxAngular Coalescing operators
 
