@@ -298,4 +298,4 @@ export class AnyService {
 ```
 
 > **⚠ Notice:**  
-> As the component which introduces the change does not know ehere in the template it sits the whole template needs to be reevaluated. 
+> As the component which introduces the change does not know where in the template it sits the whole template needs to be reevaluated. 
