@@ -5,7 +5,7 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 # Motivation
 
-![Angular - Coalescing re-render caused by `markForCheck` diagram](https://user-images.githubusercontent.com/10064416/117549469-d1d63400-b03a-11eb-9711-aeee24347f9a.png)
+![RxAngular - CDK/Coalescing](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing.png)
 
 Coalescing in general means, bring together multiple things into one. This can be anything starting from values to whole systems.
 In RxAngular coalescing always refers to any sort of emissions or calls that will merge into one. The logic is implemented as RxJS operators and used to improve the change detection mechanism of Angular.
@@ -26,12 +26,12 @@ In the following image we see 3 changes that call `ChangeDetectorRef#markForChec
 The internal logic then delay's these calls for a while by using `requestAnimationFrame` and calls `ApplicationRef#tick` only one time after the next animation frame arrives.
 This way Angular's change detection and re-evaluation/re-rendering of the app get executed only once for all calls that fall into the duration from invocation until the next animation frame lands.
 
-![Angular - Coalescing re-render caused by `markForCheck` diagram]()
+![Angular - Coalescing re-render caused by `markForCheck` diagram](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__appRef#tick-coalescing.png)
 
 If we visualize the same behavior based on flame charts we can understand the interlan logic and naming of the different steps in that process more technically.
 The graphic shows start of the coalescing duration, the differen browser events and where the execution of certain logic is moved to.
 
-![Angular - Coalescing re-render caused by `markForCheck` flame charts]()
+![Angular - Coalescing re-render caused by `markForCheck` flame charts](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__appRef#tick-coalescing-flames.png)
 
 With that information we should be able to reflect this concept also onto other usages in Angular.
 
@@ -49,7 +49,13 @@ There are 2 main pieces to understand:
 - the coalescing mechanism
 - the scoping mechanism
 
-In the section usage we gill go into more detail.
+In the section usage we will go into more detail.
+
+## Diagram
+
+![Angular - coalesceWith shifted version](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_coalesceWith1.png)
+
+![Angular - coalesceWith aligned version](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_coalesceWith2.png)
 
 ## Setup
 
@@ -93,7 +99,7 @@ from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff
 By default, the duration in which values get united is derived from a `Promise` which executes immediately after the synchronous code got executed.
 
 See the diagram for details:
-![coalesceWith - micro taks duration selector]()
+![coalesceWith - micro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task.png)
 
 To have more fine-grained control over the duration of coalescing an optional parameter `durationSelector` is provided.
 `durationSelector` is of type `Observable<unknown>` and the first emission of it terminates the coalescing duration.
@@ -101,12 +107,9 @@ To have more fine-grained control over the duration of coalescing an optional pa
 You could pass e.g. `timer(0, 0)` as `durationSelector` to use a `setInterval` as duration period.
 
 See the diagram for details:
-![coalesceWith - macro taks duration selector]()
+![coalesceWith - macro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task-flames.png)
 
 Even a longer duration based on milliseconds e.g. `timer(0, 500)` can be used as duration.
-
-See the diagram for details:
-![coalesceWith - 500ms duration selector]()
 
 For more information on the different scheduling options you could have a look at the different scheduling API's like
 `queueMicroTask`, `requestAnimationFrame`, `setTimeout`, `postMessage` or `requestIdleCallback`.
