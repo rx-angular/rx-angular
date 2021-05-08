@@ -38,6 +38,10 @@
       "tags": ["type:lib", "type:cdk"],
       "implicitDependencies": []
     },
+    "cdk-coalescing": {
+      "tags": ["type:lib", "type:cdk"],
+      "implicitDependencies": []
+    },
     "cdk-zone-configurations": {
       "tags": ["type:lib", "type:cdk"],
       "implicitDependencies": []

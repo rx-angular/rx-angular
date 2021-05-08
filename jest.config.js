@@ -13,5 +13,6 @@ module.exports = {
     '<rootDir>/libs/cdk/zone-configurations',
     '<rootDir>/libs/cdk/internals/scheduler',
     '<rootDir>/apps/ssr',
+    '<rootDir>/libs/cdk/coalescing',
   ],
 };

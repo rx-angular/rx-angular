@@ -8,7 +8,6 @@ export { onStrategy } from './onStrategy';
 export { rxMaterialize } from './rxMaterialize';
 export { strategyHandling } from './strategy-handling';
 export { templateTriggerHandling } from './template-trigger-handling';
-export { coalesceWith } from './coalesceWith';
 export {
   toRxCompleteNotification,
   toRxErrorNotification,

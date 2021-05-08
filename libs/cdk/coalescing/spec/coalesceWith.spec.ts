@@ -1,10 +1,17 @@
 import { TestScheduler } from 'rxjs/internal/testing/TestScheduler';
-import { mergeMapTo, share, tap } from 'rxjs/operators';
-import { asapScheduler, concat, defer, from, Observable, of, timer } from 'rxjs';
+import { mergeMapTo, share } from 'rxjs/operators';
+import {
+  asapScheduler,
+  concat,
+  defer,
+  from,
+  Observable,
+  of,
+  timer,
+} from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher, mockConsole } from '@test-helpers';
-import { coalesceWith } from '../../../src/lib/render-strategies/rxjs/operators/coalesceWith';
-
+import { coalesceWith } from '../src/lib/coalesceWith';
 
 /** @test {coalesceWith} */
 describe('coalesce operator additional logic', () => {
@@ -34,10 +41,10 @@ describe('coalesce operator additional logic', () => {
   it('should emit last value if source completes before durationSelector', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const s1 = cold('---abcdef---|');
-      const s1Subs =  '^-----------!';
+      const s1Subs = '^-----------!';
       const n1 = cold('   ----------');
       const n1Subs = ['---^--------!'];
-      const exp =     '------------(f|)';
+      const exp = '------------(f|)';
 
       const result = s1.pipe(coalesceWith(n1));
       expectObservable(result).toBe(exp);
@@ -106,14 +113,14 @@ describe('coalesce operator additional logic', () => {
     it('should emit coalesce sync values', () => {
       // Test case inspired by https://github.com/cartant/rxjs-etc/blob/main/source/operators/debounceSync-spec.ts
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-        const durationSelector = new Observable(subscriber => {
+        const durationSelector = new Observable((subscriber) => {
           asapScheduler.schedule(() => {
             subscriber.next();
           });
         });
-        const source = cold("   (ab)-(cd)---(ef)----|");
-        const sourceSubs = "      ^-------------------!";
-        const expected = " b----d------f-------|";
+        const source = cold('   (ab)-(cd)---(ef)----|');
+        const sourceSubs = '      ^-------------------!';
+        const expected = ' b----d------f-------|';
 
         const result = source.pipe(coalesceWith(durationSelector));
         expectObservable(result).toBe(expected);
@@ -184,11 +191,9 @@ describe('coalesce operator additional logic', () => {
     it('should emit per subscriber by default sync', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
         const s1 = cold('--(abcdef)--|');
-        const s1Subs = ['^-----------!',
-          '^-----------!'];
+        const s1Subs = ['^-----------!', '^-----------!'];
         const n1 = cold('(|)   ');
-        const n1Subs = ['--(^!)   ',
-          '--(^!)   '];
+        const n1Subs = ['--(^!)   ', '--(^!)   '];
         const exp1 = '--(f)-------|';
         const exp2 = '--(f)-------|';
 
@@ -237,6 +242,31 @@ describe('coalesce operator additional logic', () => {
       });
     });
 
+    it('should emit once per micro task with default durationSelector', (done) => {
+      const scope = {};
+      const arrNum = [1, 2, 3, 4];
+      const num$ = from(arrNum).pipe(
+        share(),
+        coalesceWith(
+          defer(() => from(Promise.resolve())),
+          scope
+        )
+      );
+
+      num$.subscribe(
+        (x: number) => {
+          expect(x).toBe(4);
+          done();
+        },
+        () => {
+          throw new Error('should not be called');
+        },
+        () => {
+          throw new Error('should not be called');
+        }
+      );
+    });
+
     describe('with different durationSelector', () => {
       it('should emit once per micro task (THEORY)', () => {
         let syncEmission1: any;
@@ -268,11 +298,17 @@ describe('coalesce operator additional logic', () => {
             const arrAlph = ['a', 'b', 'c', 'd'];
             const num$ = from(arrNum).pipe(
               share(),
-              coalesceWith(defer(() => from([1])), scope)
+              coalesceWith(
+                defer(() => from([1])),
+                scope
+              )
             );
             const alph$ = from(arrAlph).pipe(
               share(),
-              coalesceWith(defer(() => from([1])), scope)
+              coalesceWith(
+                defer(() => from([1])),
+                scope
+              )
             );
 
             expect(syncEmission1).not.toBeDefined();
@@ -355,7 +391,7 @@ describe('coalesce operator additional logic', () => {
   });
 
   describe('error handling', () => {
-    it('should forward errors', (() => {
+    it('should forward errors', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
         const s1 = cold('---a--#------');
         const s1Subs = '^-----!      ';
@@ -368,6 +404,6 @@ describe('coalesce operator additional logic', () => {
         expectSubscriptions(s1.subscriptions).toBe(s1Subs);
         expectSubscriptions(n1.subscriptions).toBe(n1Subs);
       });
-    }));
+    });
   });
 });

@@ -1198,6 +1198,43 @@
           }
         }
       }
+    },
+    "cdk-coalescing": {
+      "projectType": "library",
+      "root": "libs/cdk/coalescing",
+      "sourceRoot": "libs/cdk/coalescing/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "libs/cdk/coalescing/tsconfig.lib.json",
+            "project": "libs/cdk/coalescing/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/cdk/coalescing/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/cdk/coalescing/src/**/*.ts",
+              "libs/cdk/coalescing/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/cdk/coalescing"],
+          "options": {
+            "jestConfig": "libs/cdk/coalescing/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

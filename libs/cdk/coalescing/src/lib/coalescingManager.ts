@@ -1,15 +1,19 @@
-interface CoalescingContextProps {
+interface CoalescingContextProps extends Record<string, unknown> {
   numCoalescingSubscribers: number;
 }
 
 interface CoalescingManager {
-  remove: (scope: object) => void;
-  add: (scope: object) => void;
-  isCoalescing: (scope: object) => boolean;
+  remove: (scope: Record<string, unknown>) => void;
+  add: (scope: Record<string, unknown>) => void;
+  isCoalescing: (scope: Record<string, unknown>) => boolean;
 }
 
 export const coalescingManager: CoalescingManager = createCoalesceManager();
-type KeyOf<O> = keyof O & string & symbol & number;
+type KeyOf<O> = keyof O;
+type ValueOf<O> = O[keyof O];
+function hasKey<O>(ctx: O, property: KeyOf<O>): ctx is O {
+  return ctx[property] != null;
+}
 /*
  * createPropertiesWeakMap
  *
@@ -39,9 +43,10 @@ type KeyOf<O> = keyof O & string & symbol & number;
  * console.log('props after:', propsMap.getProps(obj));
  * // {isCoalescing: "true"}
  * */
-function createPropertiesWeakMap<O extends object, P extends object>(
-  getDefaults: (o: O) => P
-) {
+function createPropertiesWeakMap<
+  O extends Record<string, unknown>,
+  P extends O
+>(getDefaults: (o: O) => P) {
   type K = KeyOf<P>;
   const propertyMap = new WeakMap<O, P>();
 
@@ -56,13 +61,17 @@ function createPropertiesWeakMap<O extends object, P extends object>(
     let properties: P;
 
     if (propertiesPresent !== undefined) {
-      properties = propertiesPresent;
+      properties = propertiesPresent as P;
     } else {
       properties = {} as P;
 
-      (Object.entries(defaults) as [K, P[K]][]).forEach(
-        ([prop, value]): void => {
-          properties[prop] = hasKey(ctx, prop) ? ctx[prop] : value;
+      (Object.entries(defaults) as unknown[]).forEach(
+        ([prop, value]: [KeyOf<P>, ValueOf<P>]): void => {
+          if (hasKey(ctx as P, prop)) {
+            properties[prop] = (ctx as P)[prop];
+          } else {
+            properties[prop] = value;
+          }
         }
       );
 
@@ -79,13 +88,10 @@ function createPropertiesWeakMap<O extends object, P extends object>(
     propertyMap.set(ctx, properties);
     return properties;
   }
-
-  function hasKey(ctx: O, property: K): ctx is K {
-    return ctx[property] != null;
-  }
 }
+
 const coalescingContextPropertiesMap = createPropertiesWeakMap<
-  object,
+  Record<string, unknown>,
   CoalescingContextProps
 >((ctx) => ({
   numCoalescingSubscribers: 0,
@@ -107,7 +113,7 @@ function createCoalesceManager(): CoalescingManager {
   };
 
   // Increments the number of subscriptions in a scope e.g. a class instance
-  function removeWork(scope: object): void {
+  function removeWork(scope: Record<string, unknown>): void {
     const numCoalescingSubscribers =
       coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers -
       1;
@@ -118,7 +124,7 @@ function createCoalesceManager(): CoalescingManager {
   }
 
   // Decrements the number of subscriptions in a scope e.g. a class instance
-  function addWork(scope: object): void {
+  function addWork(scope: Record<string, unknown>): void {
     const numCoalescingSubscribers =
       coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers +
       1;
@@ -128,7 +134,7 @@ function createCoalesceManager(): CoalescingManager {
   }
 
   // Checks if anybody else is already coalescing atm
-  function isCoalescing(scope: object): boolean {
+  function isCoalescing(scope: Record<string, unknown>): boolean {
     return (
       coalescingContextPropertiesMap.getProps(scope).numCoalescingSubscribers >
       0
