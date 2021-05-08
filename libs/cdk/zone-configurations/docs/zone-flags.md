@@ -10,11 +10,11 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 By default `zone.js` wraps almost all browser events – like mouse events, XHR events, timers and so on.
 Every time event is invoked, zone initiates app re-render. This is cool feature of the Angular framework – every time data has a \***\*chance\*\*** to update, Angular checks and re-renders the app.
 
-![Angular change-detection based on zone](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-change-detection_michael-hladky.png)
+![Angular change-detection based on zone](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-change-detection_michael-hladky.png)
 
 How it influences on the performance of the app
 But when we talk about big complex apps – we might not need this to be done over all the app on every event, it influences badly on the performance. Better manually control re-renders with change detection strategy onPush and decide explicitly should something be re-rendered or not.
-Zone can be (disabled fully)[https://angular.io/guide/zone#disabling-zone], but it's too big step for an existent app – things would break. So better approach is to disable events one by one, controlling affected area.
+Zone can be [disabled fully](https://angular.io/guide/zone#disabling-zone), but it's too big step for an existent app – things would break. So better approach is to disable events one by one, controlling affected area.
 **Here zone flags come to action**.
 
 To set up zone flags we can use the direct `window` properties as documented in the [official docs](https://angular.io/guide/zone#setting-up-zonejs). The best documentation can be found in the source [zone-flags](https://github.com/angular/angular/blob/master/packages/zone.js/lib/zone.configurations.api.ts).
@@ -47,7 +47,7 @@ The impact is introduced by removing the following process:
 Check the difference in flame charts: it's a performance snapshot from list view of clickup being scrolled down.
 A second charts is with timer, scroll and xhr events turned off.
 
-![angular and zone flags performance comparison](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/docs/zone-configuration/images/angular-zone-flags_performance-comparison_michael-hladky.png)
+![angular and zone flags performance comparison](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_performance-comparison_michael-hladky.png)
 
 # Risks & What can break
 
