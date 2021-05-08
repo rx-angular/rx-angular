@@ -26,12 +26,12 @@ In the following image we see 3 changes that call `ChangeDetectorRef#markForChec
 The internal logic then delay's these calls for a while by using `requestAnimationFrame` and calls `ApplicationRef#tick` only one time after the next animation frame arrives.
 This way Angular's change detection and re-evaluation/re-rendering of the app get executed only once for all calls that fall into the duration from invocation until the next animation frame lands.
 
-![Angular - Coalescing re-render caused by `markForCheck` diagram](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__appRef#tick-coalescing.png)
+![Angular - Coalescing re-render caused by `markForCheck` diagram](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__appRef-tick-coalescing.png)
 
 If we visualize the same behavior based on flame charts we can understand the interlan logic and naming of the different steps in that process more technically.
 The graphic shows start of the coalescing duration, the differen browser events and where the execution of certain logic is moved to.
 
-![Angular - Coalescing re-render caused by `markForCheck` flame charts](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__appRef#tick-coalescing-flames.png)
+![Angular - Coalescing re-render caused by `markForCheck` flame charts](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__appRef-tick-coalescing-flames.png)
 
 With that information we should be able to reflect this concept also onto other usages in Angular.
 
