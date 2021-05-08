@@ -5,7 +5,7 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 # Motivation
 
-![Angular - Coalescing re-render caused by `markForCheck` diagram]()
+![Angular - Coalescing re-render caused by `markForCheck` diagram](https://user-images.githubusercontent.com/10064416/117549469-d1d63400-b03a-11eb-9711-aeee24347f9a.png)
 
 Coalescing in general means, bring together multiple things into one. This can be anything starting from values to whole systems.
 In RxAngular coalescing always refers to any sort of emissions or calls that will merge into one. The logic is implemented as RxJS operators and used to improve the change detection mechanism of Angular.
