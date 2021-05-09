@@ -16,7 +16,7 @@ The documentation also includes a set of marble diagrams for better visual under
 
 ## Demos:
 
-- [GitHub](https://github.com/BioPhoton/rx-angular-cdk-coercing)
+- [GitHub](https://github.com/rx-angular/rx-angular-cdk-coercing)
 
 ## Install
 
