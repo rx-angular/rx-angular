@@ -21,7 +21,7 @@ As we obviously can see the difference is dramatic already with a small number.
 There are 2 places in Angular we have coalescing already implemented in the framework:
 
 - Coalescing of `ApplicationRef#tick` calls (re-rendering/re-evaluation of the app) triggered by e.g. `ChangeDetectorRef#markForCheck` or `ɵmarkDirty`.
-- The flag `ngZoneEventCoalescing` in `CompilerOption`
+- The flag `ngZoneEventCoalescing` in `BootstrapOptions`
 - RxAngular add another option where we can apply that techniques manually wherever we want.
 
 **The Benefits of RxAngular**
@@ -58,7 +58,7 @@ Angular's bootstrap method can be configured to use a config property called `ng
 
 ```typescript
 platformBrowserDynamic()
-  .bootstrapModule(AppModule, { ngZoneCoalescing: true })
+  .bootstrapModule(AppModule, { ngZoneEventCoalescing: true })
   .catch((err) => console.error(err));
 ```
 
