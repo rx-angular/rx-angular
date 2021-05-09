@@ -4,7 +4,7 @@
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
-## A small typed and documented convenience helper to apply performance improvements over coercing techniques.
+## Convenience helper to easily coerce reactive values
 
 `@rx-angular/cdk/coercing` is designed to help developers improve performance by leveraging reactive data streams. In particular it comes in handy when refactoring to a reactive setup,
 or if you want to have mixed code styles (imperative and reactive) appliead in an ergonimic way.
