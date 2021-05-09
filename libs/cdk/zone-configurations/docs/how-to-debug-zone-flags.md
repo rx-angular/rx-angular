@@ -78,7 +78,7 @@ console.log(window.__Zone_disable_timers); // logs 'false' if the flag is active
 
 ![Log timers flag active](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_disable-timers-true_michael-hladky.png)
 
-Now `globalThis`, should have no original/unpatched version present under the zone symbol.
+Now, `globalThis` should have no original/unpatched version present under the zone symbol.
 
 ```typescript
 // logs the unpatched/original setTimeout API if zone was active, of it logs 'undefined' if not
@@ -106,7 +106,7 @@ window.__rxa_zone_config__log(); // logs all active flags
 
 ## DevTools performance tab
 
-As all the executed JavaScript is present in flame charts we can also debug zone-flags there.
+As all the executed JavaScript is present in flame charts, we can also debug zone-flags there.
 
 The following images got taken from the performance tab:
 
@@ -139,11 +139,11 @@ __Zone_disable_timer = true;
 ![Performance Profile of unpatched Event Listener](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_event-listener-unpatched-flames_michael-hladky.png)
 
 > **💡 Pro Tipps:**
-> Recordings should be fully identical with flags on/off to make a valid comparison. Fully identical means even the mouse moves and time to wait in between the interactions are important. This will make it easy and fast to find the right spot in the flames.
-> You can use this tool to compare two charts by drag and dropping the profile measures into the UI. (need to download reports as json)
-> Every `.js` file has its own different color on the chart(assigned randomly – except native browser calls, they are yellow)
-> If you can't find Timings panel, check this tread
-> To see who invoked Timer(looooong curve on flame chart), tick this checkbox in extended preferences:
+> Recordings should be fully identical with flags on/off to make a valid comparison. Fully identical means even the mouse moves and time to wait in between the interactions are important. This will make it easy and fast to find the right spot in flames.
+> You can use this tool to compare two charts by drag and dropping the profile measures into the UI. (need to download reports as JSON)
+> Every `.js` file has its own different color on the chart (assigned randomly – except native browser calls, they are yellow)
+> If you can't find Timings panel, check this thread
+> To see who invoked Timer (looooong curve on flame chart), tick this checkbox in extended preferences:
 > ![DevTools - Settings - Experiments - Timeline: event initiators](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/dev-tools_timeline-event-initiators_michael-hladky.png)
 > Search for 'tick' – it indicates that `ApplicationRef#tick` was most probably invoked by `zone.js` (ctrl+F for search over the flame chart)
 > ![Performance Tab - search timeline](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/dev-tools_performance_search-method-names_michael-hladky.png)
