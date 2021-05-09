@@ -116,7 +116,7 @@ function doStuff(value) {
 }
 ```
 
-If we would call it mutiple times we would cause 3 times the computation.
+If we would call it multiple times we would cause 3 times the computation.
 
 ```typescript
 from([1, 2, 3]).subscribe(doStuff); // 3 x doStuff logs 1, 2, 3
@@ -130,7 +130,7 @@ from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
 
 ### Coalescing duration
 
-By default, the duration in which values get united is derived from a micro taks which executes immediately after the synchronous code got executed.
+By default, the duration in which values get united is derived from a micro task which executes immediately after the synchronous code got executed.
 
 See the diagram for details:
 ![coalesceWith - macro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task-flames.png)
@@ -141,21 +141,21 @@ To have more fine-grained control over the duration of coalescing an optional pa
 You could pass e.g. `interval(0)` as `durationSelector` to use a `setInterval` as duration period.
 
 > **💡 Pro Tip**  
-> Even a longer duration based on milliseconds e.g. `interval(500)` can be used as duration.
+> Even a longer duration based on milliseconds, e.g. `interval(500)` can be used as duration.
 > 
 > For more information on the different scheduling options you could have a look at the different scheduling API's like
 > `queueMicroTask`, `requestAnimationFrame`, `setTimeout`, `postMessage` or `requestIdleCallback`.
 
 
 A real life example where `coalesceWith` comes in handy is runnning manual change detection with `ChangeDetectorRef#detectChanges()`.
-The below diagram display the cycle of updates, coalescing and rendering of values in a component.  
+The below diagram displays the cycle of updates, coalescing and rendering of values in a component.  
 
 ![coalesceWith - one component](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component.png)
 
 ### Coalescing scope
 
 If we think about the underlying principle of coalescing a little bit more we may ask our self how the logic knows what to do? How is it done that some work that is scheduled multiple times get executed only once?
-Surely there must be a variable stored somewhere that knows if coalescing it currently ongoing or not. 
+Surely there must be a variable stored somewhere that knows if coalescing is currently ongoing or not. 
 
 Let's make up a small example to understand the situation a little bit better. 
 
