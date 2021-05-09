@@ -191,7 +191,7 @@ The following diagram illustrates cnage detection in component level:
 Again, why is this the case?
 
 As we have now only one scope for every scheduled work form multiple components we will end up updating only the last one.
-Same as in the first example where we only loges the last emission.
+Same as in the first example where we only logs the last emission.
 
 ```typescript
 from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
