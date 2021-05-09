@@ -200,14 +200,14 @@ The following diagram illustrates change detection in component level:
 
 Again, why is this the case?
 
-As we have now only one scope for every scheduled work form multiple components we will end up updating only the last one.
-Same as in the first example where we only logs the last emission.
+As we have now only one scope for every scheduled work from multiple components we will end up updating only the last one.
+Same as in the first example where we only log the last emission.
 
 ```typescript
 from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
 ```
 
-Just imagine the smae for components:
+Just imagine the same for components:
 
 ```typescript
 from([component1, component2, component3]).pipe(coalesceWith()).subscribe((component) => component.cdr.detectChanges()); // only component 3 gets called
@@ -218,14 +218,14 @@ from([component1, component2, component3]).pipe(coalesceWith()).subscribe((compo
 As RxAngular/cdk packages are not only here to build other tools but also to build RxAngular it self lets see where we used it under the hood.
 
 In the [template](https://github.com/rx-angular/rx-angular/edit/master/libs/template) package we have a couple of directives and pipes that use the coalescing logic internally.
-It is is done in a way where the directives and services automatically take the most performant scope to bind coalescing to.
+It is done in a way where the directives and services automatically take the most performant scope to bind coalescing to.
 
-The example below shows multiple components rendering the same or parts of the same value. The scopes are applied autometically and named for all different usages.
+The example below shows multiple components rendering the same or parts of the same value. The scopes are applied automatically and named for all different usages.
 
 **The different usages are as follw:**
 - As operator in the compomponent class
-- As pipe in the compomponent's template
-- As structural directive in the compomponent's template
+- As pipe in the component's template
+- As structural directive in the component's template
 
 ![Coalescing Scope Example](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_coalescing-scope-example.png)
 
