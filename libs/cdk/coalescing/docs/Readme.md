@@ -188,4 +188,11 @@ The following diagram illustrates cnage detection in component level:
 
 ![coalesceWith - multiple components with global scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-global-scope.png)
 
+Again, why is this the case?
 
+As we have now only one scope for every scheduled work form multiple components we will end up updating only the last one.
+Same as in the first example where we only loges the last emission.
+
+```typescript
+from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
+```
