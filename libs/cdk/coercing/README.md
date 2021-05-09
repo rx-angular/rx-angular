@@ -6,9 +6,9 @@
 
 ## Convenience helper to easily coerce reactive values
 
-`@rx-angular/cdk/coercing` is designed to help developers improve performance by leveraging reactive data streams. In particular it comes in handy when refactoring to a reactive setup,
-or if you want to have mixed code styles (imperative and reactive) appliead in an ergonimic way.
-Besides a well documented and typed API it also provides a set of marble diagrams for better visual understanding.
+`@rx-angular/cdk/coercing` is a small set of helpers designed to improve the DX when managing transformations between imperative and reactive values.
+It provides a strictly typed API to conveniently coerce imperative setters into reactive streams.
+The documentation also includes a set of marble diagrams for better visual understanding.
 
 ## Key features
 
