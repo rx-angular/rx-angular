@@ -25,7 +25,7 @@ What does it mean?
 Imagine you would have a very costly HTML structure. 
 Wouldn't it be cool to only create, evaluate or render that template if a value arrives?
 
-In `@rx-angular/template` we provide channels for the 3 RxJS ones as well as the 4th state in the reactive context, 🔥`suspense`🔥.
+In `@rx-angular/template`, we provide channels for the 3 RxJS ones as well as the 4th state in the reactive context, 🔥`suspense`🔥.
 
 The context naming is prefixed with `rx` as always in this repo:
 - 💡`rxSuspense`
@@ -33,27 +33,27 @@ The context naming is prefixed with `rx` as always in this repo:
 - `rxError`
 - `rxComplete`
 
-This is used internally in different implementations like `RxNotification` or `RxViewContext`, 
-but also exposed over the public API over the template names and the local-variables. 
+This is used internally in different implementations like `RxNotification` or `RxViewContext`,
+but also exposed over the public API over the template names and the local variables.
 
 We can find those naming conventions when using a structural directive like `*rxLet` and their 
 template bindings or local variables.
 
-If we create a template to be presented for the loading state we can use `ng-template` as following 
+If we create a template to be presented for the loading state we can use `ng-template` as following:
 ```html
 <ng-container *rxLet="hero$; let hero; rxSuspense: suspenseView; rxError: errorView; rxComplete: completeView">
-        {{hero.name}}
+  {{ hero.name }}
 <ng-container>
 <ng-template #suspenseView>Loading...</ng-template>
 <ng-template #errorView>Error!</ng-template>
 <ng-template #completeView>Complete.</ng-template>
 ```
 
-The value of the different channels can also be accessed by the template variables. 
+The value of the different channels can also be accessed by the template variables.
 The only difference here, they are prefixed with an '$' character.
 ```html
 <ng-container *rxLet="hero$; let hero; s = $rxSuspense; e = $rxError; c = $rxComplete">
-        {{s}},{{hero}},{{e}},{{c}}
+{{ s }}, {{ hero }}, {{ e }}, {{ c }}
 <ng-container>
 ```
 
@@ -68,7 +68,7 @@ interface RxViewContext<T> {
 }
 ```
 
-Another situation where you will find the extended reactive context channels is when you use the `renderCallback` in the template: 
+Another situation where you will find the extended reactive context channels is when you use the `renderCallback` in the template:
 
 ```typescript
 readonly renderCallback$ = new Subject<string>();
@@ -100,6 +100,6 @@ export type RxNotification<T> = Pick<Notification<T>, NotificationExtract> & { k
 
 ---
 
-As a sum up we now know that `@rx-angular/template` provides an extended reactive context with the `suspense` channel.
-Use suspense as a template wherever possible as is reduces rendering work drastically. 
-Also be sure to remember that we have also access on the values of the 4 channels as local-variables in the template and as the notifications from the render callback. 
+As a sum up, we now know that `@rx-angular/template` provides an extended reactive context with the `suspense` channel.
+Use suspense as a template wherever possible as it reduces rendering work drastically.
+Also, be sure to remember that we have also access to the values of the 4 channels as local variables in the template and as the notifications from the render callback.
