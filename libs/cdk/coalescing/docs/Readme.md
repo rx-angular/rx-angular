@@ -219,7 +219,6 @@ As RxAngular/cdk packages are not only here to build other tools but also to bui
 
 In the [template](https://github.com/rx-angular/rx-angular/edit/master/libs/template) package we have a couple of directives and pipes that use the coalescing logic internally.
 
-
-![Coalescing Scope Example](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalescing-scope-example.png)
+![Coalescing Scope Example](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_coalescing-scope-example.png)
 
 
