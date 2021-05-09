@@ -14,6 +14,7 @@ As small example we can compare 3 calls in a row to a heavy computation of a com
 
 ![coalesceWith - micro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task.png)
 
+As we obviously can see the difference is dramatic already with a small number.
 
 # Available Approaches
 
