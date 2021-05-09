@@ -1,7 +1,7 @@
 # The extended reactive context in RxAngular
 
-If we think about any process, e. g. a http request, we can differentiate different states in it. 
-The request can start, result in a valid response or throws an error. After that the process is completed.
+If we think about any process, e.g. an HTTP request, we can differentiate different states in it. 
+The request can start, result in a valid response or throws an error. After that, the process is completed.
 
 These states fit pretty much any process, they just differ in the number of emissions.
 
@@ -10,13 +10,13 @@ These states fit pretty much any process, they just differ in the number of emis
 - `error`
 - `complete` 
 
-Where `next` can have zero to infinite emissions, and `error` and `complete` zero to 1 emissions.
+Where `next` can have zero to infinite emissions, and `error` and `complete` zero to 1 emission.
 
-This differentiation works perfectly in code, however when we start to project those channels and their changes into HTML
+This differentiation works perfectly in code. However, when we start to project those channels and their changes into HTML
 we sometimes end up implementing a hack for another potential state that is not provided by Angular.
  
-In the above example with the http request, we may want to indicate, that the process was started, 
-but no result, neither a value nor an error or complete arrived yet from the process.
+In the above example with the HTTP request, we may want to indicate that the process was started, 
+but no result, neither a value nor an error nor complete arrived yet from the process.
 
 This leads not only to a cluttered HTML, but, what's worse, to the `eager template`.
 
