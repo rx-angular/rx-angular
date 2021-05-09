@@ -7,14 +7,16 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 ![RxAngular - CDK/Coalescing](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing.png)
 
-Coalescing in general means, bring together multiple things into one. This can be anything starting from values to whole systems.
-In RxAngular coalescing always refers to any sort of emissions or calls that will merge into one. The logic is implemented as RxJS operators and used to improve the change detection mechanism of Angular.
+If two or more things coalesce, they come or grow together to form one thing or system.
+In RxAngular coalescing is used for merging multiple emissions, streams or calls that happen during a given timeframe. As one of the key building blocks for performance, this technique is utilized to improve the change detection cycles of angular applications.
 
-As small example we can compare 3 calls in a row to a heavy computation of a component template.
+The next example shows the effect of coalescing visualized in flame charts.
 
 ![coalesceWith - micro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task.png)
+_no coalescing vs. coalescing on microtask. visualized in flame charts_
 
-As we obviously can see the difference is dramatic already with a small number.
+The non-coalesced component has three consequetive heavy computations in the template whilest the coalesced component only has to do the same computation once in order to complete the same job.
+Even on a small components scale the difference in performance can be significant.
 
 # Available Approaches
 
