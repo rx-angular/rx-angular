@@ -130,7 +130,7 @@ You could pass e.g. `interval(0)` as `durationSelector` to use a `setInterval` a
 See the diagram for details:
 ![coalesceWith - macro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task-flames.png)
 
-> **💡 Pro Tip**
+> **💡 Pro Tip**  
 > Even a longer duration based on milliseconds e.g. `interval(500)` can be used as duration.
 > 
 > For more information on the different scheduling options you could have a look at the different scheduling API's like
@@ -183,7 +183,7 @@ The following diagram illustrates cnage detection in component level:
 
 ![coalesceWith - multiple components with component scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-component-scope.png)
 
-> **⚠ Notice:**
+> **⚠ Notice:**  
 > Be cautious with globally shared coalescing scopes, it could lead to un wanted behaviour ans loss of updates when used incorrectly.
 
 ![coalesceWith - multiple components with global scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-global-scope.png)
