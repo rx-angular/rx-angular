@@ -222,7 +222,7 @@ It is done in a way where the directives and services automatically take the mos
 
 The example below shows multiple components rendering the same or parts of the same value. The scopes are applied automatically and named for all different usages.
 
-**The different usages are as follw:**
+**The different usages are as follows:**
 - As operator in the compomponent class
 - As pipe in the component's template
 - As structural directive in the component's template
