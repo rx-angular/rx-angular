@@ -64,7 +64,14 @@ platformBrowserDynamic()
 
 This setting applies the technique of coalescing to fired events bound by Angular. It will coalesce multiple event emissions caused by event bubbling together and run `ApplicationRef#tick` only one time instead of multiple times.
 
-![Angular - ngZoneEventCoalescing diagram])()
+![Angular - ngZoneEventCoalescing diagram])(TODO)
+
+A good real life usecase is... TODO
+
+```typescript
+// TODO
+```
+
 
 # RxAngular Coalescing operators
 
