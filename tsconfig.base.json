@@ -26,7 +26,8 @@
       "@rx-angular/cdk/internals/scheduler": [
         "libs/cdk/internals/scheduler/src/index.ts"
       ],
-      "@rx-angular/cdk/coalescing": ["libs/cdk/coalescing/src/index.ts"]
+      "@rx-angular/cdk/coalescing": ["libs/cdk/coalescing/src/index.ts"],
+      "@rx-angular/cdk/coercing": ["libs/cdk/coercing/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

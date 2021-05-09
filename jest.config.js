@@ -14,5 +14,6 @@ module.exports = {
     '<rootDir>/libs/cdk/internals/scheduler',
     '<rootDir>/apps/ssr',
     '<rootDir>/libs/cdk/coalescing',
+    '<rootDir>/libs/cdk/coercing',
   ],
 };

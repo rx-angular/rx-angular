@@ -1235,6 +1235,43 @@
           }
         }
       }
+    },
+    "cdk-coercing": {
+      "projectType": "library",
+      "root": "libs/cdk/coercing",
+      "sourceRoot": "libs/cdk/coercing/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "libs/cdk/coercing/tsconfig.lib.json",
+            "project": "libs/cdk/coercing/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/cdk/coercing/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/cdk/coercing/src/**/*.ts",
+              "libs/cdk/coercing/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/cdk/coercing"],
+          "options": {
+            "jestConfig": "libs/cdk/coercing/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {
