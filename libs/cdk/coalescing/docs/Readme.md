@@ -159,7 +159,7 @@ Surely there must be a variable stored somewhere that knows if coalescing is cur
 
 Let's make up a small example to understand the situation a little bit better. 
 
-In the following snippet we see the same logic from above but applied to 2 different subscription. 
+In the following snippet we see the same logic from above but applied to 2 different subscriptions. 
 Both components schedule changes and use `coalesceWith` inside. 
 
 ```typescript
@@ -171,30 +171,30 @@ The result is quite unintuitive. Both subscriptions trigger the detect changes c
 
 Why is this the case? 
 
-If we recall the code snippet from above we see the number loged to to console was `3` out of the series of `1`, `2`, `3`.
+If we recall the code snippet from above we see the number logged to console was `3` out of the series of `1`, `2`, `3`.
 
 ```typescript
 from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
 ```
 
-It makes sense because we want to render only the last update to the component. To do this `coalesceWith` maintains a flag for each subscription.
-The wante bevavior should execute change detection only once per component. 
+It makes sense because we want to render only the last update to the component. To do this, `coalesceWith` maintains a flag for each subscription.
+The wanted bevavior should execute change detection only once per component. 
 
-This canbe acheaved by scoping the flag that maintains coalescing to a specific thing. e.g. the component.
+This can be achieved by scoping the flag that maintains coalescing to a specific thing. e.g. the component.
 
 ```typescript
   from([1, 2, 3]).pipe(coalesceWith(queueMicroTask, this)).subscribe(detectChanges); // 0 x detectChanges no render
   from([1, 2, 3]).pipe(coalesceWith(queueMicroTask, this)).subscribe(detectChanges); // 1 x detectChanges renders 3
 ```
 
-With this in mind we can go one step further and look at change detection across muntiple coponents. 
+With this in mind, we can go one step further and look at change detection across multiple components.
 
-The following diagram illustrates cnage detection in component level:
+The following diagram illustrates change detection in component level:
 
 ![coalesceWith - multiple components with component scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-component-scope.png)
 
 > **⚠ Notice:**  
-> Be cautious with globally shared coalescing scopes, it could lead to un wanted behaviour ans loss of updates when used incorrectly.
+> Be cautious with globally shared coalescing scopes. It could lead to unwanted behaviour and loss of updates when used incorrectly.
 
 ![coalesceWith - multiple components with global scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-global-scope.png)
 
