@@ -206,3 +206,18 @@ Same as in the first example where we only logs the last emission.
 ```typescript
 from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
 ```
+
+Just imagine the smae for components:
+
+```typescript
+from([component1, component2, component3]).pipe(coalesceWith()).subscribe((component) => component.cdr.detectChanges()); // only component 3 gets called
+```
+
+# Usage in RxAngular
+
+As RxAngular/cdk packages are not only here to build other tools but also to build RxAngular it self lets see where we used it under the hood.
+
+In the [template](https://github.com/rx-angular/rx-angular/edit/master/libs/template) package we have a couple of directives and pipes that use the coalescing logic internally.
+
+
+
