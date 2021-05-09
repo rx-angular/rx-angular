@@ -213,12 +213,21 @@ Just imagine the smae for components:
 from([component1, component2, component3]).pipe(coalesceWith()).subscribe((component) => component.cdr.detectChanges()); // only component 3 gets called
 ```
 
-# Usage in RxAngular
+# Example usage in RxAngular
 
 As RxAngular/cdk packages are not only here to build other tools but also to build RxAngular it self lets see where we used it under the hood.
 
 In the [template](https://github.com/rx-angular/rx-angular/edit/master/libs/template) package we have a couple of directives and pipes that use the coalescing logic internally.
+It is is done in a way where the directives and services automatically take the most performant scope to bind coalescing to.
+
+The example below shows multiple components rendering the same or parts of the same value. The scopes are applied autometically and named for all different usages.
+
+**The different usages are as follw:**
+- As operator in the compomponent class
+- As pipe in the compomponent's template
+- As structural directive in the compomponent's template
 
 ![Coalescing Scope Example](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_coalescing-scope-example.png)
+
 
 
