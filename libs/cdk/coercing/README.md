@@ -12,7 +12,8 @@ The documentation also includes a set of marble diagrams for better visual under
 
 ## Key features
 
-<!-- - ✅ ... -->
+- turn imperative code into reactive streams
+- strictly typed
 
 ## Demos:
 
