@@ -22,9 +22,9 @@ The documentation also includes a set of marble diagrams for better visual under
 ## Install
 
 ```bash
-npm install --save @rx-angular/cdk
+npm install --save @rx-angular/cdk/coercing
 # or
-yarn add @rx-angular/cdk
+yarn add @rx-angular/cdk/coercing
 ```
 
 ## Documentation
