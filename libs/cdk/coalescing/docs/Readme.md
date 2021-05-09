@@ -10,6 +10,11 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 Coalescing in general means, bring together multiple things into one. This can be anything starting from values to whole systems.
 In RxAngular coalescing always refers to any sort of emissions or calls that will merge into one. The logic is implemented as RxJS operators and used to improve the change detection mechanism of Angular.
 
+As small example we can compare 3 calls in a row to a heavy computation of a component template.
+
+![coalesceWith - micro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task.png)
+
+
 # Available Approaches
 
 There are 2 places in Angular we have coalescing already implemented in the framework:
@@ -120,15 +125,12 @@ from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
 By default, the duration in which values get united is derived from a micro taks which executes immediately after the synchronous code got executed.
 
 See the diagram for details:
-![coalesceWith - micro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task.png)
+![coalesceWith - macro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task-flames.png)
 
 To have more fine-grained control over the duration of coalescing an optional parameter `durationSelector` is provided.
 `durationSelector` is of type `Observable<unknown>` and the first emission of it terminates the coalescing duration.
 
 You could pass e.g. `interval(0)` as `durationSelector` to use a `setInterval` as duration period.
-
-See the diagram for details:
-![coalesceWith - macro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task-flames.png)
 
 > **💡 Pro Tip**  
 > Even a longer duration based on milliseconds e.g. `interval(500)` can be used as duration.
