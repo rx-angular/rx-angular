@@ -72,7 +72,7 @@ There are 2 main pieces to understand:
 
 In the section usage we will go into more detail.
 
-## Diagram
+## Marble Diagram
 
 ![Angular - coalesceWith shifted version](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_coalesceWith1.png)
 
