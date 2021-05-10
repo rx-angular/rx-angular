@@ -34,10 +34,13 @@
       "tags": ["type:lib", "type:cdk"],
       "implicitDependencies": []
     },
-    "cdk-coercing": { "tags": ["type:lib", "type:cdk"] },
+    "cdk-coercing": {
+      "tags": ["type:lib", "type:cdk"],
+      "implicitDependencies": []
+    },
     "cdk": {
       "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": ["cdk-zone-less", "cdk-internals-scheduler"]
+      "implicitDependencies": ["cdk-internals-scheduler", "cdk-coercing", "cdk-zone-less"]
     },
     "state": { "tags": ["type:lib"] },
     "template": {

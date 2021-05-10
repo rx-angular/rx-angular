@@ -17,6 +17,12 @@
         "@angular-eslint/component-selector": [
           "error",
           { "type": "element", "prefix": "rx-angular", "style": "kebab-case" }
+        ],
+        "@nrwl/nx/enforce-module-boundaries": [
+          "error",
+          {
+            "allow": []
+          }
         ]
       }
     },
