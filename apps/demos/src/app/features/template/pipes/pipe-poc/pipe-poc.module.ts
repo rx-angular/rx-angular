@@ -2,8 +2,9 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template';
 import { LetModule } from '@rx-angular/template/let';
+import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { PipeModule } from '../../../../rx-angular-pocs/template/pipes/pipe/pipe.module';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { PipePocComponent } from './pipe-poc.component';
@@ -19,7 +20,7 @@ const DECLARATIONS = [PipePocComponent];
     PipeModule,
     DirtyChecksModule,
     MatButtonModule,
-    UnpatchEventsModule,
+    UnpatchModule,
     PushModule,
     LetModule
   ],

@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template';
+import { UnpatchModule } from '@rx-angular/template/unpatch';
 
 import { ROUTES } from './coalescing.routes';
 import { CoalescingComponent } from './coalescing/coalescing.component';
@@ -20,7 +21,7 @@ const DECLARATIONS = [
     RouterModule.forChild(ROUTES),
     VisualizerModule,
     StrategySelectModule,
-    UnpatchEventsModule,
+    UnpatchModule,
     MatButtonModule,
     PushModule
   ],

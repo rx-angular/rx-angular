@@ -6,7 +6,8 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './passing-values.routes';
 import { MatButtonModule } from '@angular/material/button';
-import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template';
+import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { PassingValuesComponent } from './passing-values.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
@@ -30,7 +31,7 @@ import { FormsModule } from '@angular/forms';
     MatIconModule,
     RecursiveModule,
     FormsModule,
-    UnpatchEventsModule,
+    UnpatchModule,
     MatButtonModule,
     PushModule
   ],

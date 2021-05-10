@@ -73,6 +73,10 @@
       "tags": ["type:lib", "type:template"],
       "implicitDependencies": ["cdk-zone-less", "cdk"]
     },
+    "template-unpatch": {
+      "tags": ["type:lib", "type:template"],
+      "implicitDependencies": ["cdk-zone-less", "cdk-zone-configurations"]
+    },
     "docs": {
       "tags": ["type:app"]
     },

@@ -1442,6 +1442,37 @@
         }
       }
     },
+    "template-unpatch": {
+      "projectType": "library",
+      "root": "libs/template/unpatch",
+      "sourceRoot": "libs/template/unpatch/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "libs/template/unpatch/tsconfig.lib.json",
+            "project": "libs/template/unpatch/ng-package.json"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/template/unpatch/src/**/*.ts",
+              "libs/template/unpatch/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/template/unpatch/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "cdk-coercing": {
       "projectType": "library",
       "root": "libs/cdk/coercing",
