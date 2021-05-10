@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { LetModule } from '@rx-angular/template/let';
 import { ComparisonComponent } from './comparison.component';
 
 import { MatCheckboxModule } from '@angular/material/checkbox';

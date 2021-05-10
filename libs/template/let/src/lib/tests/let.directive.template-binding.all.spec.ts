@@ -1,27 +1,55 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { LetDirective } from '@rx-angular/template';
-import { EMPTY, interval, NEVER, Observable, of, Subject, throwError } from 'rxjs';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+  waitForAsync,
+} from '@angular/core/testing';
+import { LetDirective } from '../let.directive';
+import {
+  EMPTY,
+  interval,
+  NEVER,
+  Observable,
+  of,
+  Subject,
+  throwError,
+} from 'rxjs';
 import { take } from 'rxjs/operators';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import { MockChangeDetectorRef } from '../fixtures/fixtures';
+import { MockChangeDetectorRef } from './fixtures';
 import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value; rxSuspense: suspense; rxError: error; rxComplete: complete">{{
+    <ng-container
+      *rxLet="
+        value$;
+        let value;
+        rxSuspense: suspense;
+        rxError: error;
+        rxComplete: complete
+      "
+      >{{
         value === undefined
           ? 'undefined'
           : value === null
           ? 'null'
           : (value | json)
-      }}</ng-container>
+      }}</ng-container
+    >
 
     <ng-template #complete>complete</ng-template>
     <ng-template #error>error</ng-template>
     <ng-template #suspense>suspense</ng-template>
-  `
+  `,
 })
 class LetDirectiveAllTemplatesTestComponent {
   value$: Observable<number> = of(1);
@@ -39,11 +67,12 @@ const setupTestComponent = () => {
       TemplateRef,
       ViewContainerRef,
       {
-        provide: RX_ANGULAR_CONFIG, useValue: {
-          primaryStrategy: 'native'
-        }
-      }
-    ]
+        provide: RX_ANGULAR_CONFIG,
+        useValue: {
+          primaryStrategy: 'native',
+        },
+      },
+    ],
   }).compileComponents();
 };
 
@@ -115,7 +144,9 @@ describe('LetDirective when template binding with all templates', () => {
 
   it('should have `ngTemplateContextGuard` defined', () => {
     expect(LetDirective.ngTemplateContextGuard).toBeDefined();
-    expect(LetDirective.ngTemplateContextGuard({} as LetDirective<any>, {})).toBe(true);
+    expect(
+      LetDirective.ngTemplateContextGuard({} as LetDirective<any>, {})
+    ).toBe(true);
   });
 });
 

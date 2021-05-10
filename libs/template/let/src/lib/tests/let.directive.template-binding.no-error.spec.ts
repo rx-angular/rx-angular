@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { LetDirective, LetModule } from '@rx-angular/template';
+import { LetDirective } from '../let.directive';
 import { Observable, of, Subject } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
@@ -8,17 +8,20 @@ import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value; rxSuspense: suspense; rxComplete: complete">{{
-      value === undefined
-        ? 'undefined'
-        : value === null
-        ? 'null'
-        : (value | json)
-    }}</ng-container>
+    <ng-container
+      *rxLet="value$; let value; rxSuspense: suspense; rxComplete: complete"
+      >{{
+        value === undefined
+          ? 'undefined'
+          : value === null
+          ? 'null'
+          : (value | json)
+      }}</ng-container
+    >
 
     <ng-template #complete>complete</ng-template>
     <ng-template #suspense>suspense</ng-template>
-  `
+  `,
 })
 class LetDirectiveNoErrorTemplateTestComponent {
   value$: Observable<number> = of(1);
@@ -32,10 +35,11 @@ const setupTestComponent = () => {
   TestBed.configureTestingModule({
     providers: [
       {
-        provide: RX_ANGULAR_CONFIG, useValue: {
-          primaryStrategy: 'native'
-        }
-      }
+        provide: RX_ANGULAR_CONFIG,
+        useValue: {
+          primaryStrategy: 'native',
+        },
+      },
     ],
     declarations: [LetDirectiveNoErrorTemplateTestComponent, LetDirective],
   }).compileComponents();
@@ -51,7 +55,7 @@ describe('LetDirective when template binding without "error" template', () => {
   beforeAll(() => mockConsole());
   beforeEach(waitForAsync(setupTestComponent));
   beforeEach(() => {
-    setUpFixture()
+    setUpFixture();
   });
 
   it('should be initiated', () => {

@@ -1,22 +1,27 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { LetDirective } from '@rx-angular/template';
+import { LetDirective } from '../let.directive';
 import { EMPTY, Observable, of } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import { MockChangeDetectorRef } from '../fixtures/fixtures';
+import { MockChangeDetectorRef } from './fixtures';
 import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value;">{{
+    <ng-container *rxLet="value$; let value">{{
       value === undefined
         ? 'undefined'
         : value === null
         ? 'null'
         : (value | json)
     }}</ng-container>
-  `
+  `,
 })
 class LetDirectiveNoCompleteTemplateTestComponent {
   value$: Observable<number> = of(1);
@@ -34,16 +39,19 @@ const setupTestComponent = () => {
       TemplateRef,
       ViewContainerRef,
       {
-        provide: RX_ANGULAR_CONFIG, useValue: {
-          primaryStrategy: 'native'
-        }
-      }
-    ]
+        provide: RX_ANGULAR_CONFIG,
+        useValue: {
+          primaryStrategy: 'native',
+        },
+      },
+    ],
   }).compileComponents();
 };
 
 const setUpFixture = () => {
-  fixture = TestBed.createComponent(LetDirectiveNoCompleteTemplateTestComponent);
+  fixture = TestBed.createComponent(
+    LetDirectiveNoCompleteTemplateTestComponent
+  );
   component = fixture.componentInstance;
   nativeElement = fixture.nativeElement;
 };

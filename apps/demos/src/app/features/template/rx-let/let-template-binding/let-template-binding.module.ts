@@ -9,7 +9,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { LetModule } from '@rx-angular/template/let';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ToStringPipe } from './to-string.pipe';
 

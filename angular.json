@@ -1235,6 +1235,38 @@
           }
         }
       }
+    },
+    "template-let": {
+      "projectType": "library",
+      "root": "libs/template/let",
+      "sourceRoot": "libs/template/let/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "libs/template/let/tsconfig.lib.json",
+            "project": "libs/template/let/ng-package.json"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/template/let/src/**/*.ts",
+              "libs/template/let/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/template/let"],
+          "options": {
+            "jestConfig": "libs/template/let/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

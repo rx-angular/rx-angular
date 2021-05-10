@@ -1,23 +1,28 @@
-import { ChangeDetectorRef, Component, ElementRef, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
-import { LetDirective } from '../../src/lib/let/let.directive';
-import { MockChangeDetectorRef, MockElementRef } from '../fixtures';
+import { LetDirective } from '../let.directive';
+import { MockChangeDetectorRef, MockElementRef } from './fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import {
   RxDefaultStrategyNames,
   RX_ANGULAR_CONFIG,
-  RxStrategyProvider
+  RxStrategyProvider,
 } from '@rx-angular/cdk';
 
 @Component({
   template: `
-    <ng-container
-      *rxLet="value$; let value; strategy: strategy;"
-    >{{ (value | json) || 'undefined' }}</ng-container
-    >
-  `
+    <ng-container *rxLet="value$; let value; strategy: strategy">{{
+      (value | json) || 'undefined'
+    }}</ng-container>
+  `,
 })
 class LetDirectiveTestComponentStrategy {
   value$: Observable<number> = of(42);
@@ -41,21 +46,24 @@ const setupLetDirectiveTestComponentStrategy = (): void => {
       ViewContainerRef,
       LetDirective,
       {
-        provide: RX_ANGULAR_CONFIG, useValue: {
-          primaryStrategy: 'native'
-        }
-      }
-    ]
+        provide: RX_ANGULAR_CONFIG,
+        useValue: {
+          primaryStrategy: 'native',
+        },
+      },
+    ],
   });
   fixtureLetDirectiveTestComponent = TestBed.createComponent(
     LetDirectiveTestComponentStrategy
   );
   letDirectiveTestComponent =
     fixtureLetDirectiveTestComponent.componentInstance;
-  letDirective = fixtureLetDirectiveTestComponent.debugElement.injector.get(LetDirective);
+  letDirective = fixtureLetDirectiveTestComponent.debugElement.injector.get(
+    LetDirective
+  );
   activeStrategy = letDirective['strategyProvider'].primaryStrategy as any;
   letDirective['strategyHandler'].values$.subscribe((as: any) => {
-    activeStrategy = as
+    activeStrategy = as;
   });
   componentNativeElement = fixtureLetDirectiveTestComponent.nativeElement;
 };
@@ -73,6 +81,8 @@ describe('LetDirective when using strategy', () => {
 
   it('should apply default strategy if none is declared by the user', () => {
     fixtureLetDirectiveTestComponent.detectChanges();
-    expect(activeStrategy).toEqual(letDirective['strategyProvider'].primaryStrategy);
+    expect(activeStrategy).toEqual(
+      letDirective['strategyProvider'].primaryStrategy
+    );
   });
 });

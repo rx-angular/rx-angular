@@ -1,8 +1,13 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 import { EMPTY, Observable, of } from 'rxjs';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { LetDirective } from '../../src/lib/let/let.directive';
-import { MockChangeDetectorRef } from '../fixtures';
+import { LetDirective } from '../let.directive';
+import { MockChangeDetectorRef } from './fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
@@ -11,8 +16,8 @@ import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
   template: `
     <ng-container *rxLet="value$; $complete as complete">{{
       complete
-      }}</ng-container>
-  `
+    }}</ng-container>
+  `,
 })
 class LetDirectiveTestCompleteComponent {
   value$: Observable<number> = of(42);
@@ -33,11 +38,12 @@ const setupLetDirectiveTestComponentComplete = (): void => {
       TemplateRef,
       ViewContainerRef,
       {
-        provide: RX_ANGULAR_CONFIG, useValue: {
-          primaryStrategy: 'native'
-        }
-      }
-    ]
+        provide: RX_ANGULAR_CONFIG,
+        useValue: {
+          primaryStrategy: 'native',
+        },
+      },
+    ],
   });
 
   fixtureLetDirectiveTestComponent = TestBed.createComponent(
