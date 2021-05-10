@@ -88,7 +88,7 @@ The sub-package provides the following features:
 ## Setup 
 
 The render strategies can be used directly from the `cdk` package or indirectly through the `template` package.
-To do so install the the cdk package and if needed the packages depending on it.
+To do so, install the `cdk` package and, if needed, the packages depending on it.
 
 1. Install `@rx-angular/cdk`
 ```bash
@@ -99,12 +99,12 @@ yarn add @rx-angular/cdk
 
 ## Configuration
 
-By default RxAngular render strategies are preconfigures in a way they are still way more performant then native Angular, but focusing on being as non breaking as possible.
-In the majority of cases you can just drop in the new features and everything works as before.
+By default, RxAngular render strategies are preconfigured in a way they are still way more performant than native Angular but focusing on being as non-breaking as possible.
+In the majority of cases, you can just drop in the new features, and everything works as before.
 
 You can then partially enable more performance features on RxAngular.
 
-Configurations is done with Angular best practies and based on `InjectionToken`'s.
+Configurations are done with Angular best practies and based on `InjectionToken`'s.
 We can configure on the following levels:
 - globally
 - feature module
@@ -206,12 +206,12 @@ Some of the cases wayh you might have to use custom change detection are:
 
 
 To replace that logic you have to import `StrategyProvider` and use the `scheduleCD` API. 
-You can configure a strategy by name. Otherwise the default one is used. 
+You can configure a strategy by name. Otherwise, the default one is used. 
 This API takes the components `ChangeDetectorRef` and uses one of the registered strategies to render the change. 
 You can also configure the used strategy per call.
 
-In this case we span an overlay with the `immediate` strategy to get the best UX. 
-The reason for the strategy choice is primarly because user interaction needs give feedback instantly to align with the users expectations. 
+In this case, we span an overlay with the `immediate` strategy to get the best UX.
+The reason for the strategy choice is primarily because user interaction needs to give feedback instantly to align with the user's expectations.
 
 
 ```typescript
@@ -237,7 +237,7 @@ export class AnyComponent {
 ```
 
 > **⚠ Notice:**  
-> As the component which introduces the change does not know where in the template the change got introduced, the whole template needs to be re-evaluated. 
+> As the component which introduces the change does not know where in the template the change got introduced, the whole template needs to be re-evaluated.
 
 ### Usage in the template
 
@@ -260,22 +260,22 @@ To be more specific the `EmbeddedView`.
 ```html
 <div *rxLet="list$; let list; strategy: 'userBlocking'"></div>
 ```
-They own a `EmbeddedView` and RxAngular realized it and applyed the re-evaluation only to the very HTML snippet it is used on.  
+They own an `EmbeddedView`, and RxAngular realized it and applied the re-evaluation only to the very HTML snippet it is used on.  
 
 ![rx-angular-cdk_render-strategies_template-vs-embeddedview](https://user-images.githubusercontent.com/10064416/116314957-1c8cbc00-a7b0-11eb-91e8-cb6f5de038db.png)
 
 
 > **⚠ Notice:**  
-> Even if the push pipe lives in the template, the performance is still the same as controling rendering in the component because it reevaluates the whole template. 
+> Even if the push pipe lives in the template, the performance is still the same as controlling rendering in the component because it re-evaluates the whole template.
 
 
 ### Usage in a service
 
-The scheduling logic of the strategies is not only useful to schedule rendering but work in general.
-A good example usecase is HTTP requests and response processing. As this logic is not directly reflected in the UI the user will not realize if it is done a little bit later.
-In this case we can use a low priority.
+The scheduling logic of the strategies is not only valuable for schedule rendering but work in general.
+A good example is HTTP requests and response processing. As this logic is not directly reflected in the UI, the user will not realize if it is done a little bit later.
+In this case, we can use a low priority.
 
-Again, `StrategyProvider` needs to get imported, and the scheduling APIs needs to be used. 
+Again, `StrategyProvider` needs to get imported, and the scheduling APIs needs to be used.
 
 ```typescript
 @Injectable({
@@ -298,4 +298,4 @@ export class AnyService {
 ```
 
 > **⚠ Notice:**  
-> As the component which introduces the change does not know where in the template it sits the whole template needs to be reevaluated. 
+> The component that introduces the change does not know where in the template it sits. The whole template needs to be re-evaluated.
