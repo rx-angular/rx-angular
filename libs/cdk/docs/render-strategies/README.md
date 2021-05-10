@@ -5,12 +5,12 @@
 
 ## Motivation
 
-Angulars change detection is pull based and implicit. 
-This affects not only the performance but also forces us into specific ways of architecting as well as thinking.
+Angulars change detection is pull-based and implicit. 
+This affects not only the performance but also forces us into specific ways of architecting and thinking.
 
 Render strategies serve as the core of the new change detection system.
 This enables us to build scalable and highly performant applications.
-Furthermore they provide new ways of explicitely tying truly push based state management solutions to the change detection for highly responsive UI's.
+Furthermore, they provide new ways of explicitly tying truly push-based state management solutions to the change detection for highly responsive UI's.
 
 
 A strategy exposes the work to perform (e.g. `cdRef#markForCheck`, `cdRef#detectChanges`) as well as the scheduling mechanism to developers for configuration & customization via the interface `RxStrategyCredentials`.
@@ -30,25 +30,25 @@ This architecture enables modern features like:
 
 **BasicStrategies**
 
-BasicStrategies wrap modern ivy API's like `ɵmarkDirty` and `ɵdetectChanges` as well as a strategy to "noop" change detection.  
-As fallback for the migration process or comparison testing, Angulars default change detection behaviour is also provided as a strategy.
+BasicStrategies wrap modern ivy APIs like `ɵmarkDirty` and `ɵdetectChanges` as well as a strategy to "noop" change detection.
+As a fallback for the migration process or comparison testing, Angulars default change detection behaviour is also provided as a strategy.
 
-This set aims to get a first option for zone-less rendering (`ɵmarkDirty`), more control on the top down process and already improve performance drastically by only rendering components that received updates.
+This set aims to get the first option for zone-less rendering (`ɵmarkDirty`), more control on the top-down process, and improve performance drastically by only rendering components that received updates.
 
 ![rx-angular-cdk-render-strategies__reduced-render-work](https://user-images.githubusercontent.com/10064416/116158910-9ad55980-a6ef-11eb-8ad2-62532a3e6b6e.png)
 
 **ConcurrentStrategies**
 
-The ConcurrentStrategies utilize the latest technologies to enable priority based change detection for non-blocking rendering and smooth user experiences. It combines the most performant scheduling techniques with a highly performant queueing mechanism.
+The ConcurrentStrategies utilize the latest technologies to enable priority-based change detection for non-blocking rendering and smooth user experiences. It combines the most performant scheduling techniques with a highly performant queueing mechanism.
 Read more about the internal techniques [here](https://www.npmjs.com/package/scheduler) or [here](https://github.com/WICG/scheduling-apis).
 
 The name **ConcurrentStrategies** implies that concepts of [react concurrent mode](https://reactjs.org/docs/concurrent-mode-intro.html) are transported into the world of Angular.
 
 ConcurrentStrategies implement not yet released browser features ([Chrome Canary postTask scheduling](https://www.chromestatus.com/feature/6031161734201344)) already today.
 
-Rendering can be executed with the frame budget [long task](https://developer.mozilla.org/en-US/docs/Web/API/Long_Tasks_API) in mind, prioritized at the level of `Component`'s or even `EmbeddedView`'s and provide an excellent tool to improve performance. 
+Rendering can be executed with the frame budget [long task](https://developer.mozilla.org/en-US/docs/Web/API/Long_Tasks_API) in mind, prioritized at the level of `Component`'s or even `EmbeddedView`'s and provide an excellent tool to improve performance.
 
-With these sets of strategies and the possibility of switching them at runtime we can create tools that align with performance best pratices (e.g. [RAIL](https://web.dev/rail/)) and implement expert level optimizations. We can control rendering based on view port visibility, measure the DOM _after_ rendering or re-render only parts of a component.
+With these sets of strategies and the possibility of switching them at runtime we can create tools that align with performance best practices (e.g. [RAIL](https://web.dev/rail/)) and implement expert level optimizations. We can control rendering based on viewport visibility, measure the DOM _after_ rendering or re-render only parts of a component.
 
 ![rx-angular-cdk-render-strategies__concurrent-scheduling](https://user-images.githubusercontent.com/10064416/116227659-adce4500-a754-11eb-970a-e755b7ce7300.png)
 
