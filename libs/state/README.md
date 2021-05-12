@@ -6,7 +6,7 @@
 
 ## Reactive Component State for Angular
 
-RxState is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in angular.
+RxState is a lightweight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in Angular.
 
 ![state logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/images/state_logo.png)
 
@@ -20,12 +20,12 @@ Developing modern, **reactive** user interfaces imposes a variety of challenging
 - handling subscriptions
 
 There are plenty of solutions available for managing these challenges on a **global level** (Akita, NgRx, NgXs, ...).
-None of them is dedicated targeting the special needs of the **component level**.
+None of them is dedicated to targeting the particular needs of the **component level**.
 
 `@rx-angular/state` was specifically designed to give developers a tool for mastering **component state** without forcing
 them to use complex design patterns.
 
-It's light-weight and intuitive API and the automatic subscription handling making `@rx-angular/state`
+Its lightweight and intuitive API and the automatic subscription handling making `@rx-angular/state`
 the **perfect fit** for handling state in any angular component.
 
 Using this library allows you to implement things like:
