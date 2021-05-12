@@ -6,7 +6,7 @@ import { ImageArrayModule } from '../../../../shared/image-array/image-array.mod
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SiblingModule } from '../../../../shared/template-structures/sibling/sibling.module';
 import { RouterModule } from '@angular/router';
-import { LetModule, PushModule } from 'templateAlpha0';
+import { LetModule, PushModule } from '@rx-angular/template';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
