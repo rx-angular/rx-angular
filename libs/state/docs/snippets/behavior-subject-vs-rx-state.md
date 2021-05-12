@@ -205,7 +205,7 @@ But there are some issues with this approach.
 
 ## Step 2. A bit more reactive component.
 
-**First let's try to get rid of `OnInit` lifecycle hook.**
+**First, let's try to get rid of `OnInit` lifecycle hook.**
 
 We need some **event** for initialization. Let's create a `Subject` for this.
 
@@ -213,7 +213,7 @@ We need some **event** for initialization. Let's create a `Subject` for this.
 init$ = new Subject<string>();
 ```
 
-Now we need a place from which we can **trigger** this event. `@Input id: string` is a place where we getting checklist id that is needed for initialization. We are planning to remove `OnInit` so there is no need to intorduce `OnChanges` to our component. Let's make a setter!
+Now we need a place from which we can **trigger** this event. `@Input id: string` is where we get the checklist id that is needed for initialization. We are planning to remove `OnInit`, so there is no need to introduce `OnChanges` to our component. Let's make a setter!
 
 ```ts
 @Input() set id(id: string) {
@@ -221,7 +221,7 @@ Now we need a place from which we can **trigger** this event. `@Input id: string
 }
 ```
 
-Also we need to write a logic for getting our checklist from api and storing response.
+Also, we need to write a logic for getting our checklist from API and storing a response:
 
 ```ts
 initHandler$ = this.init$.pipe(
@@ -231,7 +231,7 @@ initHandler$ = this.init$.pipe(
 );
 ```
 
-So far so good. Inside `switchMap` we are getting value passed to `init$` and switching to our api call. We
+So far, so good. Inside `switchMap`, we are getting value passed to `init$` and switching to our API call. We
 are going as reactive as possible here and don't want to have any logic inside subscription and placed it
 inside `tap`.
 
@@ -266,45 +266,49 @@ answerHandler$ = this.answer$.pipe(
 );
 ```
 
-Here we introduce additional operator called `withLatestFrom`. This way we can get latest value from our `this.tasks$ = this.state.select('tasks')` in more reactive manner. `switchMap` will receive array of values. First one will be `id` from `answer$` and second one will be our tasks.
+Here we introduce an additional operator called `withLatestFrom`. This way we can get latest value from our `this.tasks$ = this.state.select('tasks')` in more reactive manner. `switchMap` will receive array of values. The first one will be `id` from `answer$` and the second one will be our tasks.
 
 **Now we need to subscribe.**
 
 Good fit is `constructor()`. Here we use `merge` to combine 2 observables and subscribe only once.
-Unsubscribe will happen on component destruction as in original example.
+Unsubscribe will happen on component destruction as in the original example.
 
 ```ts
 constructor(private api: TodoApiService) {
-merge(this.initHandler$, this.answerHandler$)
-.pipe(takeUntil(this.destroy$))
-.subscribe();
+  merge(this.initHandler$, this.answerHandler$)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe();
 }
 ```
 
-**Full component code.**
+**The full component code:**
 
 ```ts
 export class ChecklistComponent implements OnDestroy {
   @Input() set id(id: string) {
     this.init$.next(id);
   }
-  private destroy$ = new Subject();
-  state = new State<IChecklist>({
+
+  state = new State<Checklist>({
     id: null,
     name: null,
     tasks: null,
   });
+
   // READS
   name$ = this.state.select('name');
   tasks$ = this.state.select('tasks');
+
   // EVENTS
   init$ = new Subject<string>();
   answer$ = new Subject<string>();
+
   initHandler$ = this.init$.pipe(
     switchMap((id) =>
       this.api.get(id).pipe(tap((checklist) => this.state.patch(checklist)))
     )
   );
+
   answerHandler$ = this.answer$.pipe(
     withLatestFrom(this.tasks$),
     switchMap(([id, tasks]) =>
@@ -317,12 +321,16 @@ export class ChecklistComponent implements OnDestroy {
         )
     )
   );
+
+  private destroy$ = new Subject();
+
   constructor(private api: TodoApiService) {
     merge(this.initHandler$, this.answerHandler$)
       .pipe(takeUntil(this.destroy$))
       .subscribe();
   }
-  ngOnDestroy() {
+
+  ngOnDestroy(): void {
     this.destroy$.next();
   }
 }
@@ -331,7 +339,7 @@ export class ChecklistComponent implements OnDestroy {
 **Summary:**
 
 - Now we have a bit more code but component is more reactive.
-- Component initialization now not depending on `OnInit` lifecycle hook and will be a reaction to `init$` event.
+- Component initialization is not depending on the `OnInit` lifecycle hook and will be a reaction to the `init$` event.
 - We removed imperative `answerTask()` method.
 - Now we have only one subscription to manage.
 - We dont have any code inside subscription.
@@ -339,11 +347,11 @@ export class ChecklistComponent implements OnDestroy {
 **However:**
 
 - We still need to manage subscription.
-- State updates are side effects of our api calls. We are using `tap` in our pipe to handle this and manually calling `this.state.patch()` method in our component. It is still not reactive.
+- State updates are side effects of our API calls. We are using `tap` in our pipe to handle this and manually calling the `this.state.patch()` method in our component. It is still not reactive.
 
 ## Step 3. Fully reactive component.
 
-Lets do another round and refactor `List` component using `@rx-angular/state`. In the core of it are operators `mergeAll()` that works with stream of streams instead of single values and `scan()` that accumulates values form this streams into single state observable.
+Let's do another round and refactor the `List` component using `@rx-angular/state`. The core of it is operators `mergeAll()` that works with a stream of streams instead of single values and `scan()` that accumulates values from these streams into single state observable.
 
 First step will be adding `RxState` service to our component.
 
@@ -359,9 +367,9 @@ First step will be adding `RxState` service to our component.
 constructor(private api: TodoApiService, private state: RxState<IChecklist>)
 ```
 
-RxState service is in component providers. That means that lifecycle of this service will be nearly the same as lifecycle of component. And on component destruction service will also be destroyed. We can now completely remove our `State` class. Also we can get rid of `OnDestroy` lifecycle hook since we don't need to manage subscriptions manually anymore.
+RxState service is in component providers. That means that the lifecycle of this service will be nearly the same as the lifecycle of the component. And on component destruction, service will also be destroyed. We can now entirely remove our `State` class. Also, we can get rid of the `OnDestroy` lifecycle hook since we don't need to manage subscriptions manually anymore.
 
-**Reading from state**
+**Reading from state:**
 
 ```ts
 name$ = this.state.select('name');
@@ -375,7 +383,7 @@ Visually it looks the same but the select operator provides a lot more than just
 Since in this example our api calls are main producers of our state we can connect them to state
 using `connect` method.
 
-Let's start with initialization. Event `init$` and trigger `@Input set id` remains the same but now we can remove `tap` operator from our `initHandler$` and simply return raw data from our api.
+Let's start with initialization. Event `init$` and trigger `@Input set id` remains the same, but now we can remove the `tap` operator from our `initHandler$` and simply return raw data from our API.
 
 ```ts
 initHandler$ = this.init$.pipe(switchMap((id) => this.api.get(id)));
@@ -390,7 +398,7 @@ constructor(private api: TodoApiService, private state: RxState<IChecklist>) {
 }
 ```
 
-Cool so now all values emitted by our `get()` api call will be merged into state. Subscription
+Cool, so now all values emitted by our `get()` API call will be merged into the state. Subscription
 will be managed automatically.
 
 Now we need to update our `answerHandler$` so it will return an id of task that was answered
@@ -422,17 +430,21 @@ export class ChecklistComponent {
   @Input() set id(id: string) {
     this.init$.next(id);
   }
+
   // READS
   name$ = this.state.select('name');
   tasks$ = this.state.select('tasks');
+
   // EVENTS
   init$ = new Subject<string>();
   answer$ = new Subject<string>();
+
   // HANDLERS
   initHandler$ = this.init$.pipe(switchMap((id) => this.api.get(id)));
   answerHandler$ = this.answer$.pipe(
     switchMap((id) => this.api.answerTask(id).pipe(map(() => id)))
   );
+
   constructor(private api: TodoApiService, private state: RxState<IChecklist>) {
     this.state.connect(this.initHandler$);
     this.state.connect('tasks', this.answerHandler$, (state, id) =>
@@ -447,4 +459,4 @@ export class ChecklistComponent {
 - Both reading and writing are reactive.
 - No subscriptions. All managed automatically by package.
 - No lifecycle hooks.
-- Less code. No need to use tricky operators if you not sure how to use them. Huge chunk of job done under the hood.
+- Less code. No need to use tricky operators if you not sure how to use them. A massive chunk of a job done under the hood.
