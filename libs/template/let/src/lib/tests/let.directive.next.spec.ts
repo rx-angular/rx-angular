@@ -1,24 +1,28 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 import { EMPTY, interval, NEVER, Observable, of } from 'rxjs';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { LetDirective } from '../../src/lib/let/let.directive';
+import { LetDirective } from '../let.directive';
 import { take } from 'rxjs/operators';
-import { MockChangeDetectorRef } from '../fixtures';
+import { MockChangeDetectorRef } from './fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
-    <ng-container
-      *rxLet="value$; let value">{{
+    <ng-container *rxLet="value$; let value">{{
       value === undefined
         ? 'undefined'
         : value === null
         ? 'null'
         : (value | json)
-      }}</ng-container>
-  `
+    }}</ng-container>
+  `,
 })
 class LetDirectiveTestComponent {
   value$: Observable<number> = of(42);
@@ -39,11 +43,12 @@ const setupLetDirectiveTestComponent = (): void => {
       TemplateRef,
       ViewContainerRef,
       {
-        provide: RX_ANGULAR_CONFIG, useValue: {
-          primaryStrategy: 'native'
-        }
-      }
-    ]
+        provide: RX_ANGULAR_CONFIG,
+        useValue: {
+          primaryStrategy: 'native',
+        },
+      },
+    ],
   });
   fixtureLetDirectiveTestComponent = TestBed.createComponent(
     LetDirectiveTestComponent
@@ -55,7 +60,7 @@ const setupLetDirectiveTestComponent = (): void => {
 
 describe('LetDirective when nexting values', () => {
   beforeAll(() => mockConsole());
-  beforeEach((setupLetDirectiveTestComponent));
+  beforeEach(setupLetDirectiveTestComponent);
 
   it('should be instantiable', () => {
     expect(fixtureLetDirectiveTestComponent).toBeDefined();

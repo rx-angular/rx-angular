@@ -47,10 +47,22 @@
       "tags": ["type:lib", "type:template"],
       "implicitDependencies": ["cdk-zone-less", "cdk"]
     },
-    "docs": { "tags": ["type:app"] },
-    "tour-of-heroes": { "tags": ["type:app"] },
-    "tour-of-heroes-ngxs": { "tags": ["type:app"] },
-    "vanilla-case-studies": { "tags": [] },
+    "template-let": {
+      "tags": ["type:lib", "type:template"],
+      "implicitDependencies": ["cdk"]
+    },
+    "docs": {
+      "tags": ["type:app"]
+    },
+    "tour-of-heroes": {
+      "tags": ["type:app"]
+    },
+    "tour-of-heroes-ngxs": {
+      "tags": ["type:app"]
+    },
+    "vanilla-case-studies": {
+      "tags": []
+    },
     "vanilla-case-studies-e2e": {
       "tags": [],
       "implicitDependencies": ["vanilla-case-studies"]

@@ -13,7 +13,7 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 API patching or monkey-patching means we take an existing API and override its behavior globally or in specific places.
 
-A example on what zone.js is doing under the hood can look like this:
+An example on what zone.js is doing under the hood can look like this:
 
 ```typescript
 const originalMethod = EventTarget.prototype.addEventListener;
@@ -59,7 +59,7 @@ window.__Zone_disable_XHR = true;
 import 'zone.js/dist/zone';
 ```
 
-Cause all imports get hoisted by webpack and then imported code is injected into bundle before any meaningful js in file itself
+Because all imports get hoisted by webpack and then imported code is injected into a bundle before any meaningful JS in the file itself.
 
 ## Set up using vanilla JavaScript
 
@@ -98,9 +98,9 @@ zoneConfig.global.disable.timers();
 zoneConfig.events.disableXHR();
 ```
 
-In this file we disable some global APIs as well as a couple of DOM events by using the typed methods and extra convenience methods.
+In this file, we disable some global APIs and a couple of DOM events by using the typed methods and extra convenience methods.
 
-As you type you will see `zoneConfig` provides autocompletion:
+As you type, you will see `zoneConfig` provides autocompletion:
 ![IDE autocomplete for zoneConfig methods](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_ide-documentation-zoneConfig-api.png)
 ![IDE autocomplete for zoneConfig](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_ide-documentation-zoneConfig-global-flags.png)
 

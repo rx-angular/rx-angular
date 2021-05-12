@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { WorkComponent } from './work.component';
 import { CommonModule } from '@angular/common';
 import { MatRippleModule } from '@angular/material/core';
-import { LetModule, PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template';
+import { LetModule } from '@rx-angular/template/let';
 import { UtilsModule } from '../../utils/utils.module';
 
 const DEPRECATIONS = [WorkComponent];

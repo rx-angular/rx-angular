@@ -7,7 +7,7 @@ import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-s
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/value-providers.module';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { RxLetBasicComponent } from './rx-let-basic.component';
-import { LetModule } from '@rx-angular/template';
+import { LetModule } from '@rx-angular/template/let';
 
 const routes: Routes = [
   {

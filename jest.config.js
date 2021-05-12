@@ -8,6 +8,7 @@ module.exports = {
     '<rootDir>/libs/test-helpers',
     '<rootDir>/libs/state',
     '<rootDir>/libs/template',
+    '<rootDir>/libs/template/let',
     '<rootDir>/libs/cdk',
     '<rootDir>/libs/cdk/zone-less',
     '<rootDir>/libs/cdk/zone-configurations',

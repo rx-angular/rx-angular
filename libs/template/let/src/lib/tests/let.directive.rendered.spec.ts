@@ -1,16 +1,23 @@
-import { ChangeDetectorRef, Component, ElementRef, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { LetDirective } from '../../src/lib/let/let.directive';
-import { MockChangeDetectorRef, MockElementRef } from '../fixtures';
+import { LetDirective } from '../let.directive';
+import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value; renderCallback: renderCallback$">{{value === undefined ? 'undefined' : value === null ? 'null' : value}}</ng-container>
-  `
+    <ng-container *rxLet="value$; let value; renderCallback: renderCallback$">{{
+      value === undefined ? 'undefined' : value === null ? 'null' : value
+    }}</ng-container>
+  `,
 })
 class LetDirectiveTestComponent {
   value$: Observable<number> = of(42);
@@ -34,11 +41,12 @@ const setupLetDirectiveTestComponent = (): void => {
       TemplateRef,
       ViewContainerRef,
       {
-        provide: RX_ANGULAR_CONFIG, useValue: {
-          primaryStrategy: 'native'
-        }
-      }
-    ]
+        provide: RX_ANGULAR_CONFIG,
+        useValue: {
+          primaryStrategy: 'native',
+        },
+      },
+    ],
   });
   fixtureLetDirectiveTestComponent = TestBed.createComponent(
     LetDirectiveTestComponent
@@ -50,7 +58,7 @@ const setupLetDirectiveTestComponent = (): void => {
 
 describe('LetDirective renderCallback', () => {
   beforeAll(() => mockConsole());
-  beforeEach((setupLetDirectiveTestComponent));
+  beforeEach(setupLetDirectiveTestComponent);
 
   it('should be instantiable', () => {
     expect(fixtureLetDirectiveTestComponent).toBeDefined();
@@ -58,8 +66,8 @@ describe('LetDirective renderCallback', () => {
     expect(componentNativeElement).toBeDefined();
   });
 
-  it('should emit the latest value after rendering via renderCallback', done => {
-    letDirectiveTestComponent.renderCallback$.subscribe(renderedValue => {
+  it('should emit the latest value after rendering via renderCallback', (done) => {
+    letDirectiveTestComponent.renderCallback$.subscribe((renderedValue) => {
       expect(renderedValue).toBe(42);
       done();
     });

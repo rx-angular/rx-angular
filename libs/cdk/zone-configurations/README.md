@@ -20,6 +20,7 @@ Besides a well documented and typed API it also provides a set of convenience fe
 - ✅ Convenience methods
 
 ## Demos:
+
 - [⚡ Zone Configuration Demos](https://github.com/BioPhoton/rx-angular-cdk-coalescing)
 
 ## Install
@@ -33,5 +34,5 @@ yarn add @rx-angular/cdk
 ## Documentation
 
 - [Zone Configurations with ZoneFlags](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/zone-configurations/docs/zone-flags.md)
-  - [How to set up zone flags](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/zone-configurations/docs/how-to-set-up-zone-flags.md)
+  - [How to set up zone flags](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/zone-configurations/docs/how-to-setup-zone-flags.md)
   - [How to debug zone flags](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/zone-configurations/docs/how-to-debug-zone-flags.md)

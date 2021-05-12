@@ -5,8 +5,8 @@ The `push` pipe serves as a drop-in replacement for the `async` pipe.
 The current way of binding an observable to the view looks like that:
 
 ```html
-{{observable$ | async}}
-<ng-container *ngIf="observable$ | async as o">{{o}}</ng-container>
+{{ observable$ | async }}
+<ng-container *ngIf="observable$ | async as o">{{ o }}</ng-container>
 <component [value]="observable$ | async"></component>
 ```
 
@@ -18,7 +18,7 @@ components and does not work in zone-less mode.
 
 ## Solution
 
-`push` pipe solves that problem. It contains intelligent handling of change detection by leveraging a [RenderStrategy](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/docs/render-strategies/README.md) under the hood which in turn, takes care of optimizing the `ChangeDetection` of your component. Pipe can be used in zone-full as well as zone-less mode without any changes to the code.
+`push` pipe solves that problem. It contains intelligent handling of change detection by leveraging a [RenderStrategy](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/docs/render-strategies/README.md) under the hood, which in turn, takes care of optimizing the `ChangeDetection` of your component. The `push` pipe can be used in zone-full as well as zone-less mode without any changes to the code.
 
 _Example_
 

@@ -1,14 +1,15 @@
 import {
   Directive,
   ElementRef,
+  Inject,
   OnDestroy,
   OnInit,
   Optional,
 } from '@angular/core';
 import { RxStrategyProvider } from '@rx-angular/cdk';
+import { LetDirective } from '@rx-angular/template/let';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, mergeAll, withLatestFrom } from 'rxjs/operators';
-import { LetDirective } from '../../let/let.directive';
 
 function intersectionObserver(
   options?: object
@@ -92,7 +93,9 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
   constructor(
     private readonly el: ElementRef<HTMLElement>,
     private strategyProvider: RxStrategyProvider,
-    @Optional() private letDirective: LetDirective<any>
+    @Inject(LetDirective)
+    @Optional()
+    private letDirective: LetDirective<any> | null
   ) {}
 
   ngOnInit() {
@@ -108,7 +111,9 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
         )
       )
       .subscribe((strategyName) => {
-        this.letDirective.strategy = strategyName as string;
+        if (this.letDirective !== null) {
+          this.letDirective.strategy = strategyName as string;
+        }
         // render actual state on viewport enter
         // @TODO this doesnt catch unsubscribe (cant be cancelled)
         // @TODO: we need to fetch the current template of the letDirective here

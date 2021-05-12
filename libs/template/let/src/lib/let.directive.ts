@@ -39,7 +39,7 @@ import {
 import { mergeAll } from 'rxjs/operators';
 
 /** @internal */
-type rxLetTemplateNames = 'nextTpl' | RxBaseTemplateNames;
+type RxLetTemplateNames = 'nextTpl' | RxBaseTemplateNames;
 
 /** @internal */
 const RxLetTemplateNames = {
@@ -170,10 +170,7 @@ export interface RxLetViewContext<T> extends RxViewContext<T> {
  * @docsPage LetDirective
  * @publicApi
  */
-@Directive({
-  selector: '[rxLet]',
-  providers: [],
-})
+@Directive({ selector: '[rxLet]' })
 export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   static ngTemplateGuard_rxLet: 'binding';
 
@@ -347,7 +344,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   private templateManager: RxTemplateManager<
     U,
     RxLetViewContext<U | undefined | null>,
-    rxLetTemplateNames
+    RxLetTemplateNames
   >;
 
   /** @internal */
@@ -413,7 +410,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     this.templateManager = createTemplateManager<
       U,
       RxLetViewContext<U>,
-      rxLetTemplateNames
+      RxLetTemplateNames
     >({
       templateSettings: {
         viewContainerRef: this.viewContainerRef,
