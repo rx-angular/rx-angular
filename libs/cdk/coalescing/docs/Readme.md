@@ -74,7 +74,6 @@ A good real life usecase is... TODO
 // TODO
 ```
 
-
 # RxAngular Coalescing operators
 
 While developing RxAngular one of the first things we had to tackle for performant change detection, was coalescing of `ChangeDetectorRef#detectChanges` calls on component level,
@@ -144,34 +143,33 @@ You could pass e.g. `interval(0)` as `durationSelector` to use a `setInterval` a
 
 > **💡 Pro Tip**  
 > Even a longer duration based on milliseconds, e.g. `interval(500)` can be used as duration.
-> 
+>
 > For more information on the different scheduling options you could have a look at the different scheduling API's like
 > `queueMicroTask`, `requestAnimationFrame`, `setTimeout`, `postMessage` or `requestIdleCallback`.
 
-
 A real life example where `coalesceWith` comes in handy is runnning manual change detection with `ChangeDetectorRef#detectChanges()`.
-The below diagram displays the cycle of updates, coalescing and rendering of values in a component.  
+The below diagram displays the cycle of updates, coalescing and rendering of values in a component.
 
 ![coalesceWith - one component](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component.png)
 
 ### Coalescing scope
 
 If we think about the underlying principle of coalescing a little bit more we may ask our self how the logic knows what to do? How is it done that some work that is scheduled multiple times get executed only once?
-Surely there must be a variable stored somewhere that knows if coalescing is currently ongoing or not. 
+Surely there must be a variable stored somewhere that knows if coalescing is currently ongoing or not.
 
-Let's make up a small example to understand the situation a little bit better. 
+Let's make up a small example to understand the situation a little bit better.
 
-In the following snippet we see the same logic from above but applied to 2 different subscriptions. 
-Both components schedule changes and use `coalesceWith` inside. 
+In the following snippet we see the same logic from above but applied to 2 different subscriptions.
+Both components schedule changes and use `coalesceWith` inside.
 
 ```typescript
-  from([1, 2, 3]).pipe(coalesceWith(queueMicroTask)).subscribe(detectChanges); // 1 x detectChanges renders 3
-  from([1, 2, 3]).pipe(coalesceWith(queueMicroTask)).subscribe(detectChanges); // 1 x detectChanges renders 3
+from([1, 2, 3]).pipe(coalesceWith(queueMicroTask)).subscribe(detectChanges); // 1 x detectChanges renders 3
+from([1, 2, 3]).pipe(coalesceWith(queueMicroTask)).subscribe(detectChanges); // 1 x detectChanges renders 3
 ```
 
 The result is quite unintuitive. Both subscriptions trigger the detect changes call and the component got re-rendered 2 times.
 
-Why is this the case? 
+Why is this the case?
 
 If we recall the code snippet from above we see the number logged to console was `3` out of the series of `1`, `2`, `3`.
 
@@ -180,13 +178,17 @@ from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
 ```
 
 It makes sense because we want to render only the last update to the component. To do this, `coalesceWith` maintains a flag for each subscription.
-The wanted bevavior should execute change detection only once per component. 
+The wanted bevavior should execute change detection only once per component.
 
 This can be achieved by scoping the flag that maintains coalescing to a specific thing. e.g. the component.
 
 ```typescript
-  from([1, 2, 3]).pipe(coalesceWith(queueMicroTask, this)).subscribe(detectChanges); // 0 x detectChanges no render
-  from([1, 2, 3]).pipe(coalesceWith(queueMicroTask, this)).subscribe(detectChanges); // 1 x detectChanges renders 3
+from([1, 2, 3])
+  .pipe(coalesceWith(queueMicroTask, this))
+  .subscribe(detectChanges); // 0 x detectChanges no render
+from([1, 2, 3])
+  .pipe(coalesceWith(queueMicroTask, this))
+  .subscribe(detectChanges); // 1 x detectChanges renders 3
 ```
 
 With this in mind, we can go one step further and look at change detection across multiple components.
@@ -212,7 +214,9 @@ from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
 Just imagine the same for components:
 
 ```typescript
-from([component1, component2, component3]).pipe(coalesceWith()).subscribe((component) => component.cdr.detectChanges()); // only component 3 gets called
+from([component1, component2, component3])
+  .pipe(coalesceWith())
+  .subscribe((component) => component.cdr.detectChanges()); // only component 3 gets called
 ```
 
 # Example usage in RxAngular
@@ -225,11 +229,9 @@ It is done in a way where the directives and services automatically take the mos
 The example below shows multiple components rendering the same or parts of the same value. The scopes are applied automatically and named for all different usages.
 
 **The different usages are as follows:**
+
 - As operator in the compomponent class
 - As pipe in the component's template
 - As structural directive in the component's template
 
 ![Coalescing Scope Example](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_coalescing-scope-example.png)
-
-
-

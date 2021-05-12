@@ -16,11 +16,11 @@ import {
 import {
   createListTemplateManager,
   RxListManager,
-  RxListViewComputedContext, RxListViewContext, RxDefaultListViewContext, coerceDistinctWith, RxStrategyProvider
+  RxListViewComputedContext, RxListViewContext, RxDefaultListViewContext, RxStrategyProvider
 } from '@rx-angular/cdk';
+import {coerceDistinctWith} from '@rx-angular/cdk/coercing';
 
 import { ReplaySubject, Subject, Observable, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 /**
  * @Directive RxFor

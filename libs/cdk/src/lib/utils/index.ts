@@ -1,7 +1,3 @@
-export { coerceDistinctObservable } from './coerceDistinctObservable';
-export { coerceDistinctWith } from './coerceDistinctObservableWith';
-export { coerceObservable } from './coerceObservable';
-export { coerceObservableWith } from './coerceObservableWith';
 export { hotFlatten } from './hotFlatten';
 export { templateNotifier } from './templateNotifier';
 export { onStrategy } from './onStrategy';

@@ -1,6 +1,6 @@
 import { Observable, ObservableInput, OperatorFunction, Subject } from 'rxjs';
 import { switchAll } from 'rxjs/operators';
-import { coerceDistinctWith } from './coerceDistinctObservableWith';
+import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
 
 /**
  * @internal

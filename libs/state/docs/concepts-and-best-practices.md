@@ -12,17 +12,13 @@
 Bad:
 
 ```html
-<ng-container *ngIf="obj$ | async as obj">
-  {{ obj }}
-</ng-container>
+<ng-container *ngIf="obj$ | async as obj"> {{ obj }} </ng-container>
 ```
 
 Good:
 
 ```html
-<ng-container *rxLet="obj$ as obj">
-  {{ obj }}
-</ng-container>
+<ng-container *rxLet="obj$ as obj"> {{ obj }} </ng-container>
 ```
 
 ## Component Implementation Approach
@@ -90,9 +86,7 @@ vm$ = this.state.select();
 ```
 
 ```html
-<ng-container *rxLet="obj$; let obj">
-  {{obj}}
-</ng-container>
+<ng-container *rxLet="obj$; let obj"> {{obj}} </ng-container>
 ```
 
 - Hook up UI interaction
