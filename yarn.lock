@@ -359,10 +359,10 @@
   dependencies:
     tslib "^2.0.0"
 
-"@angular/platform-server@^11.2.0":
-  version "11.2.11"
-  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-11.2.11.tgz#8bb3569b605c3bf0bb34617e2838764560d42e32"
-  integrity sha512-Rxo7yAy8XgQXU+UZaFTPQKkE1QK4WCfaN7NvyvdY+HXVCnVd4F1CoNnJfGELcvxdcqFYVCwij6K4n65cstL+9Q==
+"@angular/platform-server@^11.2.13":
+  version "11.2.13"
+  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-11.2.13.tgz#e7552e3f429fb3f3506b4c45489aec9abf4d00e2"
+  integrity sha512-9WEIK0GHbbUwT9HNa2VCYLMrSxgsCMGkQ7XHQISLcVeHHb3yz/I0D0GRJfOVulpCOfwsgepQ/GJgeXMeuz2vTg==
   dependencies:
     domino "^2.1.2"
     tslib "^2.0.0"
@@ -9267,7 +9267,6 @@ minipass-fetch@^1.3.0, minipass-fetch@^1.3.2:
   resolved "https://registry.yarnpkg.com/minipass-fetch/-/minipass-fetch-1.3.3.tgz#34c7cea038c817a8658461bf35174551dce17a0a"
   integrity sha512-akCrLDWfbdAWkMLBxJEeWTdNsjML+dt5YgOI4gJ53vuO0vrmYQkUPxa6j6V65s9CcePIr2SSWqjT2EcrNseryQ==
   dependencies:
-    encoding "^0.1.12"
     minipass "^3.1.0"
     minipass-sized "^1.0.3"
     minizlib "^2.0.0"

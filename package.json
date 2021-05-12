@@ -58,7 +58,7 @@
     "@angular/material": "11.2.0",
     "@angular/platform-browser": "11.2.0",
     "@angular/platform-browser-dynamic": "11.2.0",
-    "@angular/platform-server": "^11.2.0",
+    "@angular/platform-server": "^11.2.13",
     "@angular/router": "11.2.0",
     "@nguniversal/express-engine": "^11.2.1",
     "@ngxs/store": "3.7.1",
