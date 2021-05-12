@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { LetDirective } from '@rx-angular/template';
+import { LetDirective } from '../let.directive';
 import { Observable, of, Subject } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
@@ -8,13 +8,16 @@ import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value; rxComplete: complete; rxError: error;">{{
-      value === undefined
-        ? 'undefined'
-        : value === null
-        ? 'null'
-        : (value | json)
-    }}</ng-container>
+    <ng-container
+      *rxLet="value$; let value; rxComplete: complete; rxError: error"
+      >{{
+        value === undefined
+          ? 'undefined'
+          : value === null
+          ? 'null'
+          : (value | json)
+      }}</ng-container
+    >
 
     <ng-template #complete>complete</ng-template>
     <ng-template #error>error</ng-template>
@@ -32,18 +35,21 @@ const setupTestComponent = () => {
   TestBed.configureTestingModule({
     declarations: [LetDirectiveNoSuspenseTemplateTestComponent, LetDirective],
 
-  providers: [
-    {
-      provide: RX_ANGULAR_CONFIG, useValue: {
-        primaryStrategy: 'native'
-      }
-    }
-  ],
+    providers: [
+      {
+        provide: RX_ANGULAR_CONFIG,
+        useValue: {
+          primaryStrategy: 'native',
+        },
+      },
+    ],
   }).compileComponents();
 };
 
 const setUpFixture = () => {
-  fixture = TestBed.createComponent(LetDirectiveNoSuspenseTemplateTestComponent);
+  fixture = TestBed.createComponent(
+    LetDirectiveNoSuspenseTemplateTestComponent
+  );
   component = fixture.componentInstance;
   nativeElement = fixture.nativeElement;
 };

@@ -57,6 +57,10 @@
       "tags": ["type:lib", "type:template"],
       "implicitDependencies": ["cdk-zone-less", "cdk"]
     },
+    "template-let": {
+      "tags": ["type:lib", "type:template"],
+      "implicitDependencies": ["cdk"]
+    },
     "docs": {
       "tags": ["type:app"]
     },

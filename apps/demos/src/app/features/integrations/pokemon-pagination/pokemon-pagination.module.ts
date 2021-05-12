@@ -7,7 +7,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
-import { LetModule } from '@rx-angular/template';
+import { LetModule } from '@rx-angular/template/let';
 import { ROUTES } from './pokemon-pagination.routes';
 import { PokemonComponent } from './pokemon.component';
 
