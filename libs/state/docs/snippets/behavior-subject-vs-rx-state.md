@@ -1,25 +1,25 @@
 # Migrating to RxState
 
-Let's take a look at a simple checklist app, see how it can be implemented in the imperative way and after that we will iterate over it and add some reactiveness. We skip any additional logic as routing, errors handling etc in this examples.
+Let's take a look at a simple checklist app, see how it can be implemented in an imperative way, and after that, we will iterate over it and add some reactiveness. We skip any additional logic as routing, errors handling etc., in these examples.
 
 ## Intial solution
 
 **Interfaces**
 
-checklist interface
+The checklist interface:
 
 ```ts
-interface IChecklist {
+interface Checklist {
   id: string;
   name: string;
-  tasks: ITask[];
+  tasks: Task[];
 }
 ```
 
-task interface
+The task interface:
 
 ```ts
-export interface ITask {
+export interface Task {
   id: string;
   name: string;
 }
@@ -27,24 +27,32 @@ export interface ITask {
 
 List is a nested smart component.
 
-component code
+The component code:
 
 ```ts
 export class ChecklistComponent implements OnInit, OnDestroy {
   @Input() id: string;
+
+  checklist: Checklist;
+
   private destroy$ = new Subject();
-  checklist: IChecklist;
+
   constructor(private api: TodoApiService) {}
-  ngOnInit() {
+
+  ngOnInit(): void {
     this.api
       .get(this.id)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((checklist) => (this.checklist = checklist));
+      .subscribe((checklist) => {
+        this.checklist = checklist;
+      });
   }
-  ngOnDestroy() {
+
+  ngOnDestroy(): void {
     this.destroy$.next();
   }
-  answerTask(id: string) {
+
+  answerTask(id: string): void {
     this.api
       .answerTask(id)
       .pipe(takeUntil(this.destroy$))
@@ -55,12 +63,12 @@ export class ChecklistComponent implements OnInit, OnDestroy {
 }
 ```
 
-template
+The template:
 
 ```html
 <section class="checklist">
   <h1>
-    <span>checklist.name</span>
+    <span>{{ checklist.name }}</span>
   </h1>
   <div>
     <article class="task" *ngFor="let task of checklist.tasks">
@@ -73,69 +81,81 @@ template
 
 ## Step 1. Basic solution using BehaviorSubject
 
-First pattern that many developers who switching to reactive programming with Angular & RxJS will find is so called "Observable data service" (organization of state with `BehaviorSubject` as data storage).
+The first pattern that many developers switching to reactive programming with Angular & RxJS will find is the so-called "Observable data service" (organization of state with `BehaviorSubject` as data storage).
 
-This pattern is pretty flexible and can be applied to services and components. With some tuning it can even serve as a light-weight alternative to NgRx, NGXS, Akita and other state management solutions.
+This pattern is pretty flexible and can be applied to services and components. It can even serve as a lightweight alternative to NgRx, NGXS, Akita, and other state management solutions with some tuning.
 
-_Another alternative can be `merge` + `scan` operators that allows to combine multiple observables and accumulate their values into a single state observable._
+_Another alternative can be `merge` + `scan` operators to combine multiple observables and accumulate their values into a single state observable._
 
-**Let's create a state class that abstracts our BehaviorSubject and some basic operations we can do with it**
+**Let's create a state class that abstracts our BehaviorSubject and some basic operations we can do with it.**
 
 **State class**
 
 ```ts
 export class State<T = any> {
-  private dataSrc: BehaviorSubject<T>;
   data$: Observable<T>;
 
+  private dataSource$: BehaviorSubject<T>;
+
   constructor(initialData: T) {
-    this.dataSrc = new BehaviorSubject(initialData);
-    this.data$ = this.dataSrc.asObservable();
+    this.dataSource$ = new BehaviorSubject(initialData);
+    this.data$ = this.dataSource$.asObservable();
   }
-  get snapshot() {
-    return this.dataSrc.getValue();
+
+  get snapshot(): T {
+    return this.dataSource$.getValue();
   }
+
   select<K extends keyof T>(path: K): Observable<T[K]> {
     return this.data$.pipe(
       map((state) => state[path])
       // some additional logic
     );
   }
-  patch(data: Partial<T>) {
-    this.dataSrc.next({ ...this.snapshot, ...data });
+
+  patch(data: Partial<T>): void {
+    this.dataSource$.next({ ...this.snapshot, ...data });
   }
 }
 ```
 
-- Data initialization happens inside `constructor`. We are passing `initialData` of type `T` and it is set to our `dataSrc`.
-- `get snapshot()` returns current value from `dataSrc`.
+- Data initialization happens inside the `constructor`. We are passing `initialData` of type `T`, and it is set to our `dataSource$`.
+- `get snapshot()` returns the current value from the `dataSource$`.
 - `select <K extends keyof T>(path: K): Observable<T[K]>` accepts key of `T` and returns value of type `T[K]` from `data$` as observable. Selection is done with `map` operator but `pluck` is also an option. We are skipping any additional filtering/sharing logic in this example.
-- `patch(data: Partial<T>)` accepts data of `Partial<T>` and updates current value of `dataSrc`.
+- `patch(data: Partial<T>)` accepts data of `Partial<T>` and updates the current value of `dataSource$`.
 
-**Now we can organize `List` component in a more reactive way**
+**Now we can organize `List` component in a more reactive way:**
 
 ```ts
 export class ChecklistComponent implements OnInit, OnDestroy {
   @Input() id: string;
-  private destroy$ = new Subject();
-  state = new State<IChecklist>({
+
+  state = new State<Checklist>({
     id: null,
     name: null,
     tasks: null,
   });
+
   name$ = this.state.select('name');
+
   tasks$ = this.state.select('tasks');
+
+  private destroy$ = new Subject();
+
   constructor(private api: TodoApiService) {}
-  ngOnInit() {
+
+  ngOnInit(): void {
     this.api
       .get(this.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe((checklist) => this.state.patch(checklist));
   }
-  ngOnDestroy() {
+
+  ngOnDestroy(): void {
     this.destroy$.next();
   }
-  answerTask(id: string) {
+
+  answerTask(id: string): void {
     this.api
       .answerTask(id)
       .pipe(takeUntil(this.destroy$))
@@ -149,7 +169,7 @@ export class ChecklistComponent implements OnInit, OnDestroy {
 }
 ```
 
-**Template**
+**The template:**
 
 ```html
 <section class="checklist">
@@ -166,22 +186,22 @@ export class ChecklistComponent implements OnInit, OnDestroy {
 What happens here:
 
 - Component gets initialized. Constructor gets involved.
-- Checklist id passed to component through `@Input id: string`
-- In `OnInit` lifecycle hook we are getting our checklist by calling `get(id)` method from our api service, subscribe to results and updating our `state`.
-- After that `name$` and `tasks$` getting data from state through `select()` method. (let's assume we placed some filtering logic in `select()` method so we haven't received initial empty values).
+- Checklist id passed to the component through `@Input id: string`
+- In `OnInit` lifecycle hook, we are getting our checklist by calling `get(id)` method from our API service, subscribe to results and updating our `state`.
+- After that `name$` and `tasks$` getting data from state through `select()` method. (let's assume we placed some filtering logic in the `select()` method, so we haven't received initial empty values).
 - Data is displayed in component template with `async` pipe. `<h1>{{name$ | async}}</h1>` and `<article class="task"*ngFor="let task of (tasks$ | async)">`
-- User clicks on `answer-button`. Method `answerTask(task.id)` is called.
-- We subscribe to `answerTask` method form our api service. Our api returns only status code. So what we can do is just remove this task from UI. For this we need to get existing tasks in some way. We are using `this.state.snapshot` for this purpose. We filter tasks to exclude answered task from array and updating our state with `patch()` method.
+- User clicks on the `answer-button`. Method `answerTask(task.id)` is called.
+- We subscribe to the `answerTask` method from our API service. Our API returns only the status code. So what we can do is just remove this task from UI. For this, we need to get existing tasks in some way. We are using `this.state.snapshot` for this purpose. We filter tasks to exclude answered task from an array and updating our state with `patch()` method.
 
 **Looks reactive?**
 
-Reading part is pretty reactive. With `select()` method we are observing changes of state fields `name` and `tasks` and render them with `async` pipe. So Angular will manage subscription for us. That's pretty cool.
+The reading part is pretty reactive. With the `select()` method, we observe changes of state fields `name` and `tasks` and render them with an `async` pipe. So Angular will manage subscription for us. That's pretty cool.
 
 But there are some issues with this approach.
 
 - Solution is depending on lifecycle hooks of our component. We need to remember the order in which initialization happens `constructor` -> `ngOnChanges` (that's where input binding will be initialized) -> `ngOnInit` -> .... -> `ngOnDestroy`.
-- Update (or write) part is still imperative. We need to call a method in our component, subscribe to some observable and inside subscription update our state with `patch()` method. We are breaking reactive flow.
-- We have multiple subscriptions in pretty simple component. Subscription management should be done manually if we don't use external packages or create own solution for this.
+- Update (or write) part is still imperative. We need to call a method in our component, subscribe to some observable and inside subscription update our state with `patch()` method. We are breaking the reactive flow.
+- We have multiple subscriptions in a pretty simple component. Subscription management should be done manually if we don't use external packages or create our solution.
 
 ## Step 2. A bit more reactive component.
 
