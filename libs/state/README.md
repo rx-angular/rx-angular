@@ -25,8 +25,8 @@ None of them is dedicated to targeting the particular needs of the **component l
 `@rx-angular/state` was specifically designed to give developers a tool for mastering **component state** without forcing
 them to use complex design patterns.
 
-Its lightweight and intuitive API and the automatic subscription handling making `@rx-angular/state`
-the **perfect fit** for handling state in any angular component.
+Its lightweight and intuitive API and the automatic subscription handling makes `@rx-angular/state`
+the **perfect fit** for handling state in any Angular component.
 
 Using this library allows you to implement things like:
 
