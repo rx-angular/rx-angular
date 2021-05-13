@@ -1,4 +1,4 @@
-import { insert } from '@rx-angular/state';
+import { insert } from '../../../src';
 
 interface Creature {
   id: number;
@@ -10,13 +10,14 @@ let creatures: Creature[];
 const creatureToAdd = { id: 3, type: 'catDog' };
 
 beforeEach(() => {
-  creatures = [{ id: 1, type: 'cat' }, { id: 2, type: 'dog' }];
-  jest.spyOn(console, 'warn').mockImplementation(() => {
-  });
+  creatures = [
+    { id: 1, type: 'cat' },
+    { id: 2, type: 'dog' },
+  ];
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 describe('insert', () => {
-
   describe('general', () => {
     it('should be defined', () => {
       const fn = insert;
@@ -57,12 +58,15 @@ describe('insert', () => {
       const numbersResult = insert([1, 2], [42, 84]);
 
       expect(numbersResult).toEqual([1, 2, 42, 84]);
-      expect(creaturesResult).toEqual([...creatures, creatureToAdd, creatureToAdd]);
+      expect(creaturesResult).toEqual([
+        ...creatures,
+        creatureToAdd,
+        creatureToAdd,
+      ]);
     });
   });
 
   describe('edge cases', () => {
-
     describe('emtpy values', () => {
       it('should return updates if original array is empty', () => {
         const emptyObjectsArray: Creature[] = [];
@@ -134,6 +138,5 @@ describe('insert', () => {
         expect(insert(1 as any, undefined as any)).toEqual(1);
       });
     });
-
   });
 });

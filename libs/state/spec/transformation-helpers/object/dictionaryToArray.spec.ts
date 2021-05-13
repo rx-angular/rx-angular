@@ -1,6 +1,5 @@
 import { initialPrimitiveState } from '../../fixtures';
-import { dictionaryToArray } from '@rx-angular/state';
-
+import { dictionaryToArray } from '../../../src';
 
 interface Creature {
   id: number;
@@ -10,13 +9,10 @@ interface Creature {
 }
 
 beforeEach(() => {
-  jest.spyOn(console, 'warn').mockImplementation(() => {
-  });
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-
 describe('dictionaryToArray', () => {
-
   describe('general', () => {
     it('should be defined', () => {
       const fn = dictionaryToArray;
@@ -30,12 +26,12 @@ describe('dictionaryToArray', () => {
       const dictionary: { [key: string]: Creature } = {
         cat: { id: 1, type: 'cat', real: true, breeds: ['Persian'] },
         dog: { id: 2, type: 'dog', real: true, breeds: ['Doberman'] },
-        catDog: { id: 3, type: 'catDog', real: false, breeds: [] }
+        catDog: { id: 3, type: 'catDog', real: false, breeds: [] },
       };
       const arrayFromDictionary = [
         { id: 1, type: 'cat', real: true, breeds: ['Persian'] },
         { id: 2, type: 'dog', real: true, breeds: ['Doberman'] },
-        { id: 3, type: 'catDog', real: false, breeds: [] }
+        { id: 3, type: 'catDog', real: false, breeds: [] },
       ];
       const arrayResult = dictionaryToArray(dictionary);
 

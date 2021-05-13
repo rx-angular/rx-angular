@@ -1,4 +1,4 @@
-import { update } from '@rx-angular/state';
+import { update } from '../../../src';
 
 interface Creature {
   id: number;
@@ -6,38 +6,50 @@ interface Creature {
   name: string;
 }
 
-const creaturesForUpdate: Creature[] = [{ id: 1, type: 'lion', name: 'Bella' }, {
-  id: 2,
-  type: 'wolf',
-  name: 'Sparky'
-}];
+const creaturesForUpdate: Creature[] = [
+  { id: 1, type: 'lion', name: 'Bella' },
+  {
+    id: 2,
+    type: 'wolf',
+    name: 'Sparky',
+  },
+];
 let creatures: Creature[];
 let creaturesAfterSingleItemUpdate: Creature[];
 let creaturesAfterMultipleItemsUpdate: Creature[];
 
 beforeEach(() => {
-  creatures = [{ id: 1, type: 'cat', name: 'Bella' }, { id: 2, type: 'dog', name: 'Sparky' }, {
-    id: 3,
-    type: 'catDog',
-    name: 'Cat-Dog'
-  }];
-  creaturesAfterMultipleItemsUpdate = [{ id: 1, type: 'lion', name: 'Bella' }, {
-    id: 2,
-    type: 'wolf',
-    name: 'Sparky'
-  }, { id: 3, type: 'catDog', name: 'Cat-Dog' }];
-  creaturesAfterSingleItemUpdate = [{ id: 1, type: 'lion', name: 'Bella' }, {
-    id: 2,
-    type: 'dog',
-    name: 'Sparky'
-  }, { id: 3, type: 'catDog', name: 'Cat-Dog' }];
-  jest.spyOn(console, 'warn').mockImplementation(() => {
-  });
+  creatures = [
+    { id: 1, type: 'cat', name: 'Bella' },
+    { id: 2, type: 'dog', name: 'Sparky' },
+    {
+      id: 3,
+      type: 'catDog',
+      name: 'Cat-Dog',
+    },
+  ];
+  creaturesAfterMultipleItemsUpdate = [
+    { id: 1, type: 'lion', name: 'Bella' },
+    {
+      id: 2,
+      type: 'wolf',
+      name: 'Sparky',
+    },
+    { id: 3, type: 'catDog', name: 'Cat-Dog' },
+  ];
+  creaturesAfterSingleItemUpdate = [
+    { id: 1, type: 'lion', name: 'Bella' },
+    {
+      id: 2,
+      type: 'dog',
+      name: 'Sparky',
+    },
+    { id: 3, type: 'catDog', name: 'Cat-Dog' },
+  ];
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-
 describe('update', () => {
-
   describe('general', () => {
     it('should be defined', () => {
       const fn = update;
@@ -53,39 +65,54 @@ describe('update', () => {
 
     it('should not return same reference', () => {
       const originalCreatures = [...creatures];
-      const result = update(originalCreatures, creaturesForUpdate[0], (o, n) => o.id === n.id);      
+      const result = update(
+        originalCreatures,
+        creaturesForUpdate[0],
+        (o, n) => o.id === n.id
+      );
 
       originalCreatures[0] = null as any;
 
-      expect(originalCreatures).toEqual([null, { id: 2, type: 'dog', name: 'Sparky' }, {
-        id: 3,
-        type: 'catDog',
-        name: 'Cat-Dog'
-      }]);
+      expect(originalCreatures).toEqual([
+        null,
+        { id: 2, type: 'dog', name: 'Sparky' },
+        {
+          id: 3,
+          type: 'catDog',
+          name: 'Cat-Dog',
+        },
+      ]);
       expect(result).toEqual(creaturesAfterSingleItemUpdate);
     });
   });
 
   describe('functionality', () => {
     it('should update value if matching by compareFn', () => {
-      expect(update(creatures, creaturesForUpdate, (a, b) => a.id === b.id)).toEqual(creaturesAfterMultipleItemsUpdate);
+      expect(
+        update(creatures, creaturesForUpdate, (a, b) => a.id === b.id)
+      ).toEqual(creaturesAfterMultipleItemsUpdate);
     });
 
     it('should update value if matching by key', () => {
-      expect(update(creatures, creaturesForUpdate, 'id')).toEqual(creaturesAfterMultipleItemsUpdate);
+      expect(update(creatures, creaturesForUpdate, 'id')).toEqual(
+        creaturesAfterMultipleItemsUpdate
+      );
     });
 
     it('should update value if matching by array of keys', () => {
-      expect(update(creatures, creaturesForUpdate, ['id'])).toEqual(creaturesAfterMultipleItemsUpdate);
+      expect(update(creatures, creaturesForUpdate, ['id'])).toEqual(
+        creaturesAfterMultipleItemsUpdate
+      );
     });
 
     it('should update partials', () => {
-      expect(update(creatures, { id: 1, type: 'lion' }, 'id')).toEqual(creaturesAfterSingleItemUpdate);
+      expect(update(creatures, { id: 1, type: 'lion' }, 'id')).toEqual(
+        creaturesAfterSingleItemUpdate
+      );
     });
   });
 
   describe('edge cases', () => {
-
     describe('empty values', () => {
       it('should leave original array empty if calling update on empty array', () => {
         const emptyObjectsArray: Creature[] = [];

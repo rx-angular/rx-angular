@@ -1,17 +1,14 @@
 import { initialPrimitiveState, PrimitiveState } from '../../fixtures';
-import { slice } from '@rx-angular/state';
+import { slice } from '../../../src';
 
 let primitiveState: PrimitiveState;
 
 beforeEach(() => {
   primitiveState = initialPrimitiveState;
-  jest.spyOn(console, 'warn').mockImplementation(() => {
-  });
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-
 describe('slice', () => {
-
   describe('general', () => {
     it('should be defined', () => {
       const fn = slice;
@@ -72,7 +69,9 @@ describe('slice', () => {
       expect(slice(primitiveState, null as any)).toEqual(undefined);
       expect(slice(primitiveState, undefined as any)).toEqual(undefined);
       expect(slice(primitiveState, (() => null) as any)).toEqual(undefined);
-      expect(slice(primitiveState, ['nonExisting', 1] as any)).toEqual(undefined);
+      expect(slice(primitiveState, ['nonExisting', 1] as any)).toEqual(
+        undefined
+      );
     });
   });
 });

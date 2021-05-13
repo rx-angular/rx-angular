@@ -3,7 +3,7 @@ import { jestMatcher } from '@test-helpers';
 import { EMPTY, NEVER } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-import { stateful } from '@rx-angular/state';
+import { stateful } from '../../../src';
 
 let testScheduler: TestScheduler;
 
@@ -48,14 +48,13 @@ describe('stateful', () => {
     });
   });
 
-  it('should replay the last emitted value', () => {
-  });
+  it('should replay the last emitted value', () => {});
 
   it('should accept one operator', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const values = { a: 2, b: 4 };
       const source = cold('a|', values);
-      expectObservable(source.pipe(stateful(map(v => v * 2)))).toBe(
+      expectObservable(source.pipe(stateful(map((v) => v * 2)))).toBe(
         'b|',
         values
       );
@@ -69,11 +68,11 @@ describe('stateful', () => {
       expectObservable(
         source.pipe(
           stateful(
-            map(v => v * 2),
-            map(v => v / 2),
-            map(v => v * 2),
-            map(v => v / 2),
-            map(v => v * 2)
+            map((v) => v * 2),
+            map((v) => v / 2),
+            map((v) => v * 2),
+            map((v) => v / 2),
+            map((v) => v * 2)
           )
         )
       ).toBe('b|', values);
