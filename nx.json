@@ -2,7 +2,10 @@
   "npmScope": "rx-angular",
   "implicitDependencies": {
     "angular.json": "*",
-    "package.json": { "dependencies": "*", "devDependencies": "*" },
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
     "tsconfig.json": "*",
     "tslint.json": "*",
     "nx.json": "*",
@@ -11,13 +14,22 @@
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
-      "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
+      }
     }
   },
   "projects": {
-    "demos": { "tags": ["type:app"] },
-    "demos-e2e": { "tags": [], "implicitDependencies": ["demos"] },
-    "test-helpers": { "tags": ["type:util"] },
+    "demos": {
+      "tags": ["type:app"]
+    },
+    "demos-e2e": {
+      "tags": [],
+      "implicitDependencies": ["demos"]
+    },
+    "test-helpers": {
+      "tags": ["type:util"]
+    },
     "cdk-internals-scheduler": {
       "tags": ["type:lib", "type:cdk", "type:internals"],
       "implicitDependencies": []
@@ -40,9 +52,15 @@
     },
     "cdk": {
       "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": ["cdk-internals-scheduler", "cdk-coercing", "cdk-zone-less"]
+      "implicitDependencies": [
+        "cdk-internals-scheduler",
+        "cdk-coercing",
+        "cdk-zone-less"
+      ]
     },
-    "state": { "tags": ["type:lib"] },
+    "state": {
+      "tags": ["type:lib"]
+    },
     "template": {
       "tags": ["type:lib", "type:template"],
       "implicitDependencies": ["cdk-zone-less", "cdk"]
@@ -67,8 +85,15 @@
       "tags": [],
       "implicitDependencies": ["vanilla-case-studies"]
     },
-    "ssr": { "tags": [] },
-    "ssr-e2e": { "tags": [], "implicitDependencies": ["ssr"] }
+    "ssr": {
+      "tags": []
+    },
+    "ssr-e2e": {
+      "tags": [],
+      "implicitDependencies": ["ssr"]
+    }
   },
-  "affected": { "defaultBase": "master" }
+  "affected": {
+    "defaultBase": "master"
+  }
 }

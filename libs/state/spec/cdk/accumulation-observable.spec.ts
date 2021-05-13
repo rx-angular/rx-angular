@@ -4,9 +4,9 @@ import { interval, of, throwError } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { createAccumulationObservable } from '../../src/lib/cdk';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { select } from '@rx-angular/state';
 import { initialPrimitiveState, PrimitiveState } from '../fixtures';
-
 
 function setupAccumulationObservable<T extends object>(cfg: {
   initialState?: T;
@@ -62,7 +62,7 @@ describe('createAccumulationObservable', () => {
 
       let i = -1;
       const valuesInOrder = ['', { num: 777 }];
-      slice$.subscribe(next => expect(next).toBe(valuesInOrder[++i]));
+      slice$.subscribe((next) => expect(next).toBe(valuesInOrder[++i]));
       state.nextSlice({ num: 777 });
     });
 
@@ -81,7 +81,7 @@ describe('createAccumulationObservable', () => {
       testScheduler.run(({ expectObservable }) => {
         const acc = setupAccumulationObservable<PrimitiveState>({
           initialState: initialPrimitiveState,
-          initialize: false
+          initialize: false,
         });
         expectObservable(acc.state$).toBe('');
       });
@@ -90,7 +90,7 @@ describe('createAccumulationObservable', () => {
     it('should return nothing after init', () => {
       testScheduler.run(({ expectObservable }) => {
         const acc = setupAccumulationObservable<PrimitiveState>({
-          initialize: true
+          initialize: true,
         });
         expectObservable(acc.state$).toBe('');
       });
@@ -99,7 +99,7 @@ describe('createAccumulationObservable', () => {
     it('should return initial base-state', () => {
       testScheduler.run(({ expectObservable }) => {
         const acc = setupAccumulationObservable<PrimitiveState>({
-          initialState: initialPrimitiveState
+          initialState: initialPrimitiveState,
         });
         expectObservable(acc.state$).toBe('s', { s: initialPrimitiveState });
       });
@@ -109,28 +109,28 @@ describe('createAccumulationObservable', () => {
   describe('state', () => {
     it('should return {} without subscriber', () => {
       const acc = setupAccumulationObservable<PrimitiveState>({
-        initialize: false
+        initialize: false,
       });
       expect(acc.state).toStrictEqual({});
     });
 
     it('should return {} with subscriber', () => {
       const acc = setupAccumulationObservable<PrimitiveState>({
-        initialize: true
+        initialize: true,
       });
       expect(acc.state).toStrictEqual({});
     });
 
     it('should return {} after init', () => {
       const acc = setupAccumulationObservable<PrimitiveState>({
-        initialize: true
+        initialize: true,
       });
       expect(acc.state).toStrictEqual({});
     });
 
     it('should return initial base-state', () => {
       const acc = setupAccumulationObservable<PrimitiveState>({
-        initialState: initialPrimitiveState
+        initialState: initialPrimitiveState,
       });
       expect(acc.state).toEqual(initialPrimitiveState);
     });
@@ -147,15 +147,15 @@ describe('createAccumulationObservable', () => {
 
     it('should override previous base-state by partial', () => {
       const acc = setupAccumulationObservable<PrimitiveState>({
-        initialState: initialPrimitiveState
+        initialState: initialPrimitiveState,
       });
       acc.state$
         .pipe(pluck('num'))
-        .subscribe(res => expect(res).toBe({ s: 42 }));
+        .subscribe((res) => expect(res).toBe({ s: 42 }));
       acc.nextSlice({ num: 43 });
       acc.state$
         .pipe(pluck('num'))
-        .subscribe(res => expect(res).toBe({ s: 43 }));
+        .subscribe((res) => expect(res).toBe({ s: 43 }));
     });
   });
 
@@ -170,15 +170,15 @@ describe('createAccumulationObservable', () => {
 
     it('should override previous base-state slices', () => {
       const acc = setupAccumulationObservable<PrimitiveState>({
-        initialState: initialPrimitiveState
+        initialState: initialPrimitiveState,
       });
       acc.state$
         .pipe(pluck('num'))
-        .subscribe(res => expect(res).toBe({ s: 42 }));
+        .subscribe((res) => expect(res).toBe({ s: 42 }));
       acc.nextSliceObservable(of({ num: 43 }));
       acc.state$
         .pipe(pluck('num'))
-        .subscribe(res => expect(res).toBe({ s: 42 }));
+        .subscribe((res) => expect(res).toBe({ s: 42 }));
     });
   });
 
@@ -188,7 +188,8 @@ describe('createAccumulationObservable', () => {
       const customAcc = <T>(s: T, sl: Partial<T>) => {
         ++numAccCalls;
         return {
-          ...s, ...sl
+          ...s,
+          ...sl,
         };
       };
       const acc = setupAccumulationObservable<PrimitiveState>({});
@@ -197,7 +198,7 @@ describe('createAccumulationObservable', () => {
         expectObservable(acc.state$.pipe(pluck('num'))).toBe('(abc)', {
           a: 42,
           b: 43,
-          c: 44
+          c: 44,
         });
 
         acc.nextAccumulator(customAcc);
@@ -210,7 +211,6 @@ describe('createAccumulationObservable', () => {
   });
 
   describe('emissions', () => {
-
     it('should stop on unsubscribe from state', () => {
       testScheduler.run(({ expectObservable }) => {
         const acc = createAccumulationObservable<PrimitiveState>();
@@ -226,12 +226,11 @@ describe('createAccumulationObservable', () => {
         const acc = createAccumulationObservable<PrimitiveState>();
         const sub = acc.subscribe();
         acc.nextSlice(initialPrimitiveState);
-        const tick$ = interval(1000).pipe(map(num => ({ num })));
+        const tick$ = interval(1000).pipe(map((num) => ({ num })));
         acc.nextSliceObservable(tick$);
         sub.unsubscribe();
         expectObservable(acc.state$).toBe('');
       });
     });
-
   });
 });

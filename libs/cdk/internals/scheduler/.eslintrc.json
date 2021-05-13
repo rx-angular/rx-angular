@@ -14,11 +14,19 @@
       "rules": {
         "@angular-eslint/directive-selector": [
           "error",
-          { "type": "attribute", "prefix": "rx-angular", "style": "camelCase" }
+          {
+            "type": "attribute",
+            "prefix": "rx-angular",
+            "style": "camelCase"
+          }
         ],
         "@angular-eslint/component-selector": [
           "error",
-          { "type": "element", "prefix": "rx-angular", "style": "kebab-case" }
+          {
+            "type": "element",
+            "prefix": "rx-angular",
+            "style": "kebab-case"
+          }
         ],
         "@nrwl/nx/enforce-module-boundaries": [
           "error",

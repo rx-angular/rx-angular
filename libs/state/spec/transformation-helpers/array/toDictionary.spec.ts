@@ -1,3 +1,4 @@
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { toDictionary } from '@rx-angular/state';
 
 interface Creature {
@@ -7,7 +8,6 @@ interface Creature {
   breeds: string[];
 }
 
-
 let creatures: Creature[];
 
 const genus = Symbol('genus');
@@ -15,34 +15,43 @@ const genus = Symbol('genus');
 const dictionaryByNumber = {
   1: { id: 1, type: 'cat', real: true, breeds: ['Persian'] },
   2: { id: 2, type: 'dog', real: true, breeds: ['Doberman'] },
-  3: { id: 3, type: 'catDog', real: false, breeds: [] }
+  3: { id: 3, type: 'catDog', real: false, breeds: [] },
 };
 
 const dictionaryByString = {
   cat: { id: 1, type: 'cat', real: true, breeds: ['Persian'] },
   dog: { id: 2, type: 'dog', real: true, breeds: ['Doberman'] },
-  catDog: { id: 3, type: 'catDog', real: false, breeds: [] }
+  catDog: { id: 3, type: 'catDog', real: false, breeds: [] },
 };
 
 const dictionaryBySymbol = {
-  felis: { id: 1, type: 'cat', real: true, breeds: ['Persian'], [genus]: 'felis' },
-  canis: { id: 2, type: 'dog', real: true, breeds: ['Doberman'], [genus]: 'canis' },
-  fake: { id: 3, type: 'catDog', real: false, breeds: [], [genus]: 'fake' }
+  felis: {
+    id: 1,
+    type: 'cat',
+    real: true,
+    breeds: ['Persian'],
+    [genus]: 'felis',
+  },
+  canis: {
+    id: 2,
+    type: 'dog',
+    real: true,
+    breeds: ['Doberman'],
+    [genus]: 'canis',
+  },
+  fake: { id: 3, type: 'catDog', real: false, breeds: [], [genus]: 'fake' },
 };
 
 beforeEach(() => {
-  jest.spyOn(console, 'warn').mockImplementation(() => {
-  });
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
   creatures = [
     { id: 1, type: 'cat', real: true, breeds: ['Persian'] },
     { id: 2, type: 'dog', real: true, breeds: ['Doberman'] },
-    { id: 3, type: 'catDog', real: false, breeds: [] }
+    { id: 3, type: 'catDog', real: false, breeds: [] },
   ];
 });
 
-
 describe('toDictionary', () => {
-
   describe('general', () => {
     it('should be defined', () => {
       const fn = toDictionary;
@@ -65,7 +74,10 @@ describe('toDictionary', () => {
     });
 
     it('should create dictionary by symbol', () => {
-      const dictionaryResult = toDictionary(Object.values(dictionaryBySymbol), genus);
+      const dictionaryResult = toDictionary(
+        Object.values(dictionaryBySymbol),
+        genus
+      );
 
       expect(dictionaryResult).toEqual(dictionaryBySymbol);
     });
@@ -90,7 +102,7 @@ describe('toDictionary', () => {
     it('should call console.warn when key not found and source not empty', () => {
       const spy = jest.spyOn(console, 'warn').mockImplementation();
       // @ts-ignore
-      toDictionary([{notFake: 1}] as any, 'fakeKey');
+      toDictionary([{ notFake: 1 }] as any, 'fakeKey');
 
       expect(spy).toBeCalled();
     });

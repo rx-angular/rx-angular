@@ -1,4 +1,10 @@
-import { initialNestedState, initialPrimitiveState, NestedState, PrimitiveState } from '../../fixtures';
+import {
+  initialNestedState,
+  initialPrimitiveState,
+  NestedState,
+  PrimitiveState,
+} from '../../fixtures';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { patch } from '@rx-angular/state';
 
 let primitiveState: PrimitiveState;
@@ -7,12 +13,10 @@ let nestedState: NestedState;
 beforeEach(() => {
   primitiveState = initialPrimitiveState;
   nestedState = initialNestedState;
-  jest.spyOn(console, 'warn').mockImplementation(() => {
-  });
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 describe('patch', () => {
-
   describe('general', () => {
     it('should be defined', () => {
       const fn = patch;
@@ -58,7 +62,6 @@ describe('patch', () => {
 
       expect(result).toEqual(primitiveState);
     });
-
   });
 
   describe('edge cases', () => {
@@ -81,9 +84,15 @@ describe('patch', () => {
     });
 
     it('should work if at least one of objects is array', () => {
-      expect(patch(primitiveState, [primitiveState] as any)).toEqual(primitiveState);
-      expect(patch([primitiveState] as any, primitiveState)).toEqual(primitiveState);
-      expect(patch([primitiveState] as any, [primitiveState] as any)).toEqual([primitiveState]);
+      expect(patch(primitiveState, [primitiveState] as any)).toEqual(
+        primitiveState
+      );
+      expect(patch([primitiveState] as any, primitiveState)).toEqual(
+        primitiveState
+      );
+      expect(patch([primitiveState] as any, [primitiveState] as any)).toEqual([
+        primitiveState,
+      ]);
     });
   });
 });

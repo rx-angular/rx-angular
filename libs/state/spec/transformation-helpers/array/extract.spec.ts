@@ -1,3 +1,4 @@
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { extract } from '@rx-angular/state';
 
 interface Creature {
@@ -8,21 +9,34 @@ interface Creature {
 
 let creatures: Creature[];
 let partialCreatures: Creature[];
-const creaturesNames  = [{name: 'Emma'}, {name: 'Sparky'}];
-const creaturesWithoutType = [{ id: 1, name: 'Emma' }, { id: 2, name: 'Sparky' }];
-const partialCreaturesWithNames = [{ id: 1, type: 'cat', name: 'Emma' }, { id: 2, type: 'dog', name: undefined }];
-const creaturesFromNotConsistentArray = [{ id: 1,  name: 'Emma' }, { id: undefined, name: undefined }, { id: undefined, name: undefined }];
+const creaturesNames = [{ name: 'Emma' }, { name: 'Sparky' }];
+const creaturesWithoutType = [
+  { id: 1, name: 'Emma' },
+  { id: 2, name: 'Sparky' },
+];
+const partialCreaturesWithNames = [
+  { id: 1, type: 'cat', name: 'Emma' },
+  { id: 2, type: 'dog', name: undefined },
+];
+const creaturesFromNotConsistentArray = [
+  { id: 1, name: 'Emma' },
+  { id: undefined, name: undefined },
+  { id: undefined, name: undefined },
+];
 
 beforeEach(() => {
-  creatures = [{ id: 1, type: 'cat', name: 'Emma' }, { id: 2, type: 'dog', name: 'Sparky' }];
-  partialCreatures = [{ id: 1, type: 'cat', name: 'Emma' }, { id: 2, type: 'dog' }];
-  jest.spyOn(console, 'warn').mockImplementation(() => {
-  });
+  creatures = [
+    { id: 1, type: 'cat', name: 'Emma' },
+    { id: 2, type: 'dog', name: 'Sparky' },
+  ];
+  partialCreatures = [
+    { id: 1, type: 'cat', name: 'Emma' },
+    { id: 2, type: 'dog' },
+  ];
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-
 describe('extract', () => {
-
   describe('general', () => {
     it('should be defined', () => {
       const fn = extract;
@@ -43,7 +57,10 @@ describe('extract', () => {
 
       originalCreatures[0] = {};
 
-      expect(originalCreatures).toEqual([{}, { id: 2, type: 'dog', name: 'Sparky' }]);
+      expect(originalCreatures).toEqual([
+        {},
+        { id: 2, type: 'dog', name: 'Sparky' },
+      ]);
       expect(result).toEqual(creaturesNames);
       expect(result2).toEqual(undefined);
     });
@@ -63,19 +80,30 @@ describe('extract', () => {
     });
 
     it('should extract only existing keys', () => {
-      const result = extract(creatures, ['name', 'id', 'nonExistingProp'] as any);
+      const result = extract(creatures, [
+        'name',
+        'id',
+        'nonExistingProp',
+      ] as any);
 
       expect(result).toEqual(creaturesWithoutType);
     });
     it('should extract only existing keys', () => {
-      const result = extract(creatures, ['name', 'id', 'nonExistingProp'] as any);
+      const result = extract(creatures, [
+        'name',
+        'id',
+        'nonExistingProp',
+      ] as any);
 
       expect(result).toEqual(creaturesWithoutType);
     });
 
     it('should extract key if it is defined in at least one item', () => {
       const result = extract(partialCreatures, ['name', 'id', 'type'] as any);
-      const result2 = extract([{id: 1, type: 'cat', name: 'Emma'}, 1, 'string'] as any, ['id', 'name'] as any);
+      const result2 = extract(
+        [{ id: 1, type: 'cat', name: 'Emma' }, 1, 'string'] as any,
+        ['id', 'name'] as any
+      );
 
       expect(result).toEqual(partialCreaturesWithNames);
       expect(result2).toEqual(creaturesFromNotConsistentArray);

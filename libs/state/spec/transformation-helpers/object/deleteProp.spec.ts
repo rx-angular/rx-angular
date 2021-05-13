@@ -1,17 +1,15 @@
 import { initialPrimitiveState, PrimitiveState } from '../../fixtures';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { deleteProp } from '@rx-angular/state';
 
 let primitiveState: PrimitiveState;
 
 beforeEach(() => {
   primitiveState = initialPrimitiveState;
-  jest.spyOn(console, 'warn').mockImplementation(() => {
-  });
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-
 describe('deleteProp', () => {
-
   describe('general', () => {
     it('should be defined', () => {
       const fn = deleteProp;

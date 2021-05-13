@@ -8,15 +8,25 @@
         "plugin:@nrwl/nx/angular",
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
-      "parserOptions": { "project": ["apps/ssr/tsconfig.*?.json"] },
+      "parserOptions": {
+        "project": ["apps/ssr/tsconfig.*?.json"]
+      },
       "rules": {
         "@angular-eslint/directive-selector": [
           "error",
-          { "type": "attribute", "prefix": "rx-angular", "style": "camelCase" }
+          {
+            "type": "attribute",
+            "prefix": "rx-angular",
+            "style": "camelCase"
+          }
         ],
         "@angular-eslint/component-selector": [
           "error",
-          { "type": "element", "prefix": "rx-angular", "style": "kebab-case" }
+          {
+            "type": "element",
+            "prefix": "rx-angular",
+            "style": "kebab-case"
+          }
         ]
       }
     },
