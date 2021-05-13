@@ -62,36 +62,6 @@ let isHostTimeoutScheduled = false;
 const setTimeout = ɵglobal.setTimeout;
 const clearTimeout = ɵglobal.clearTimeout;
 
-// Caretaker note: we have still left the `typeof` condition in order to avoid
-// creating a breaking change for projects that still use the View Engine.
-if (
-  (typeof ngDevMode === 'undefined' || ngDevMode) &&
-  typeof console !== 'undefined'
-) {
-  // TODO: Scheduler no longer requires these methods to be polyfilled. But
-  // maybe we want to continue warning if they don't exist, to preserve the
-  // option to rely on it in the future?
-  const requestAnimationFrame = ɵglobal.requestAnimationFrame;
-  const cancelAnimationFrame = ɵglobal.cancelAnimationFrame;
-
-  if (typeof requestAnimationFrame !== 'function') {
-    // Using console['error'] to evade Babel and ESLint
-    console['error'](
-      "This browser doesn't support requestAnimationFrame. " +
-        'Make sure that you load a ' +
-        'polyfill in older browsers. https://reactjs.org/link/react-polyfills'
-    );
-  }
-  if (typeof cancelAnimationFrame !== 'function') {
-    // Using console['error'] to evade Babel and ESLint
-    console['error'](
-      "This browser doesn't support cancelAnimationFrame. " +
-        'Make sure that you load a ' +
-        'polyfill in older browsers. https://reactjs.org/link/react-polyfills'
-    );
-  }
-}
-
 function advanceTimers(currentTime) {
   // Check for tasks that are no longer delayed and add them to the queue.
   let timer = peek(timerQueue);
