@@ -22,10 +22,15 @@
             "main": "apps/demos/src/main.ts",
             "polyfills": "apps/demos/src/polyfills.ts",
             "tsConfig": "apps/demos/tsconfig.app.json",
-            "aot": true,
             "assets": ["apps/demos/src/favicon.ico", "apps/demos/src/assets"],
             "styles": ["apps/demos/src/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -193,10 +198,15 @@
             "main": "apps/docs/src/main.ts",
             "polyfills": "apps/docs/src/polyfills.ts",
             "tsConfig": "apps/docs/tsconfig.app.json",
-            "aot": true,
             "assets": ["apps/docs/src/favicon.ico", "apps/docs/src/assets"],
             "styles": ["apps/docs/src/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -285,7 +295,6 @@
             "main": "apps/tour-of-heroes/src/main.ts",
             "polyfills": "apps/tour-of-heroes/src/polyfills.ts",
             "tsConfig": "apps/tour-of-heroes/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "apps/tour-of-heroes/src/favicon.ico",
               "apps/tour-of-heroes/src/assets"
@@ -294,7 +303,13 @@
               "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
               "apps/tour-of-heroes/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -394,13 +409,18 @@
             "main": "apps/tour-of-heroes-ngxs/src/main.ts",
             "polyfills": "apps/tour-of-heroes-ngxs/src/polyfills.ts",
             "tsConfig": "apps/tour-of-heroes-ngxs/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "apps/tour-of-heroes-ngxs/src/favicon.ico",
               "apps/tour-of-heroes-ngxs/src/assets"
             ],
             "styles": ["apps/tour-of-heroes-ngxs/src/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -763,14 +783,19 @@
             "main": "apps/vanilla-case-studies/src/main.ts",
             "polyfills": "apps/vanilla-case-studies/src/polyfills.ts",
             "tsConfig": "apps/vanilla-case-studies/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "apps/vanilla-case-studies/src/favicon.ico",
               "apps/vanilla-case-studies/src/assets",
               "apps/vanilla-case-studies/src/case-studies"
             ],
             "styles": ["apps/vanilla-case-studies/src/styles.css"],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -971,10 +996,15 @@
             "main": "apps/ssr/src/main.ts",
             "polyfills": "apps/ssr/src/polyfills.ts",
             "tsConfig": "apps/ssr/tsconfig.app.json",
-            "aot": true,
             "assets": ["apps/ssr/src/favicon.ico", "apps/ssr/src/assets"],
             "styles": ["apps/ssr/src/styles.css"],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -1045,7 +1075,9 @@
           "options": {
             "outputPath": "dist/apps/ssr/server",
             "main": "apps/ssr/server.ts",
-            "tsConfig": "apps/ssr/tsconfig.server.json"
+            "tsConfig": "apps/ssr/tsconfig.server.json",
+            "sourceMap": true,
+            "optimization": false
           },
           "configurations": {
             "production": {
