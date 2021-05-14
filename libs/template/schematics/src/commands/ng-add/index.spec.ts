@@ -12,7 +12,6 @@ const workspaceOptions = {
   name: 'workspace',
   newProjectRoot: 'projects',
   version: '10.1.0',
-  defaultProject: 'template',
 };
 
 const defaultAppOptions = {

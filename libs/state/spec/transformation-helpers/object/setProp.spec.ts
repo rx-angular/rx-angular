@@ -1,4 +1,10 @@
-import { initialNestedState, initialPrimitiveState, NestedState, PrimitiveState } from '../../fixtures';
+import {
+  initialNestedState,
+  initialPrimitiveState,
+  NestedState,
+  PrimitiveState,
+} from '../../fixtures';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { setProp } from '@rx-angular/state';
 
 let primitiveState: PrimitiveState;
@@ -7,13 +13,10 @@ let nestedState: NestedState;
 beforeEach(() => {
   primitiveState = initialPrimitiveState;
   nestedState = initialNestedState;
-  jest.spyOn(console, 'warn').mockImplementation(() => {
-  });
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-
 describe('setProp', () => {
-
   describe('general', () => {
     it('should be defined', () => {
       const fn = setProp;
@@ -48,7 +51,9 @@ describe('setProp', () => {
     });
 
     it('should set non-primitive property', () => {
-      const result = setProp(nestedState, 'obj', { key1: { key11: { key111: 'hello' } } });
+      const result = setProp(nestedState, 'obj', {
+        key1: { key11: { key111: 'hello' } },
+      });
 
       expect(result).toEqual({ obj: { key1: { key11: { key111: 'hello' } } } });
     });
@@ -68,11 +73,16 @@ describe('setProp', () => {
       expect(setProp(null as any, 'fake', 42)).toEqual({ fake: 42 });
       expect(setProp(undefined as any, 'fake', 42)).toEqual({ fake: 42 });
       expect(setProp(null as any, null as any, 42)).toEqual(null);
-      expect(setProp([primitiveState], 'concat', 32 as any)).toEqual({ concat: 32 });
+      expect(setProp([primitiveState], 'concat', 32 as any)).toEqual({
+        concat: 32,
+      });
     });
 
     it('should initialize non-existing key', () => {
-      expect(setProp(primitiveState, 'fake' as any, 42)).toEqual({ ...primitiveState, fake: 42 });
+      expect(setProp(primitiveState, 'fake' as any, 42)).toEqual({
+        ...primitiveState,
+        fake: 42,
+      });
     });
 
     it('should return original object if key not found/not provided', () => {

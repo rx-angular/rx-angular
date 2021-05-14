@@ -1,17 +1,15 @@
 import { initialPrimitiveState, PrimitiveState } from '../../fixtures';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { toggle } from '@rx-angular/state';
 
 let primitiveState: PrimitiveState;
 
 beforeEach(() => {
   primitiveState = initialPrimitiveState;
-  jest.spyOn(console, 'warn').mockImplementation(() => {
-  });
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-
 describe('toggle', () => {
-
   describe('general', () => {
     it('should be defined', () => {
       const fn = toggle;
@@ -46,7 +44,10 @@ describe('toggle', () => {
     });
 
     it('should initialize new values in an object', () => {
-      expect(toggle(primitiveState, 'newBoolean' as any)).toEqual({ ...primitiveState, newBoolean: true });
+      expect(toggle(primitiveState, 'newBoolean' as any)).toEqual({
+        ...primitiveState,
+        newBoolean: true,
+      });
     });
   });
 
