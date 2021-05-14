@@ -70,7 +70,7 @@ This is mainly impactful if we deal with event-heavy templates. The diagram belo
 
 ![Angular - ngZoneEventCoalescing diagram])(TODO)
 
-As this situations normally occour across multiple compoents or are hard to scope and demo we list some staged examples:
+As these situations typically occur across multiple components or are hard to scope and demo, we list some staged examples:
 
 ```html
 <button (click)="doStuff()" (mousedown)="doStuff()">click</button>
@@ -92,8 +92,8 @@ As this situations normally occour across multiple compoents or are hard to scop
 
 # RxAngular Coalescing operators
 
-While developing RxAngular one of the first things we had to tackle for performant change detection, was coalescing of `ChangeDetectorRef#detectChanges` calls on component level,
-but in fact the shipped logic can be applied anywhere.
+While developing RxAngular, one of the first things we had to tackle for performant change detection was coalescing of `ChangeDetectorRef#detectChanges` calls on component level,
+but in fact, the shipped logic can be applied anywhere.
 
 There are 2 main pieces to understand:
 
@@ -111,7 +111,7 @@ In the section usage we will go into more detail.
 ## Setup
 
 The coalescing features can be used directly from the `cdk` package or indirectly through the `template` package.
-To do so install the the cdk package and if needed the packages depending on it.
+To do so, install the `cdk` package and, if needed, the packages depending on it:
 
 1. Install `@rx-angular/cdk`
 
