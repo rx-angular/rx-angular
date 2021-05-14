@@ -64,15 +64,31 @@ platformBrowserDynamic()
   .catch((err) => console.error(err));
 ```
 
-This setting applies the technique of coalescing to fired events bound by Angular. It will coalesce multiple event emissions caused by event bubbling together and run `ApplicationRef#tick` only one time instead of multiple times.
+This setting applies the technique of coalescing to fired events bound by Angular. It will coalesce any event emissions occuring withing and animation frame together and run `ApplicationRef#tick` only one time instead of multiple times. 
+
+This is especially impactful if we deal with event heavy templates. The diagram below shows the difference between 2 events with and without coalescing.
 
 ![Angular - ngZoneEventCoalescing diagram])(TODO)
 
-A good real life usecase is... TODO
+As this situations normally occour across multiple compoents or are hard to scope and demo we list some staged examples:
 
-```typescript
-// TODO
+```html
+<button (click)="doStuff()" (mousedown)="doStuff()">click</button>
 ```
+
+```html
+<div (mousedown)="doStuff()">
+  <button (click)="doStuff()">click</button>
+</div>  
+```
+
+```html
+<div (click)="doStuff()">
+  <button (click)="doStuff()">click</button>
+</div>  
+```
+
+
 
 # RxAngular Coalescing operators
 
