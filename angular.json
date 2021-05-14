@@ -1235,11 +1235,6 @@
           "options": {
             "tsConfig": "libs/cdk/zone-less/tsconfig.lib.json",
             "project": "libs/cdk/zone-less/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/cdk/zone-less/tsconfig.lib.prod.json"
-            }
           }
         },
         "lint": {
@@ -1404,6 +1399,45 @@
           "options": {
             "jestConfig": "libs/template/let/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "template-push": {
+      "projectType": "library",
+      "root": "libs/template/push",
+      "sourceRoot": "libs/template/push/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "project": "libs/template/push/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/template/push/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "libs/template/push/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/template/push/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/template/push/src/**/*.ts",
+              "libs/template/push/src/**/*.html"
+            ]
           }
         }
       }

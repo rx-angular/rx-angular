@@ -1,9 +1,7 @@
 import {
   ChangeDetectorRef,
-  Inject,
   NgZone,
   OnDestroy,
-  Optional,
   Pipe,
   PipeTransform,
 } from '@angular/core';
@@ -13,9 +11,6 @@ import {
   RxStrategyProvider,
   templateNotifier,
   RxNotificationKind,
-  RxNotification,
-  RX_ANGULAR_CONFIG,
-  RxAngularConfig,
   RxStrategyNames,
 } from '@rx-angular/cdk';
 import {
@@ -78,13 +73,14 @@ import { delay, filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
  * @publicApi
  */
 @Pipe({ name: 'push', pure: false })
-export class PushPipe<S extends string = string> implements PipeTransform, OnDestroy {
+export class PushPipe<S extends string = string>
+  implements PipeTransform, OnDestroy {
   /**
    * @internal
    * This is typed as `any` because the type cannot be inferred
    * without a class-level generic argument, which was removed to
    * fix https://github.com/rx-angular/rx-angular/pull/684
-  */
+   */
   private renderedValue: any | null | undefined;
   /** @internal */
   private readonly subscription: Unsubscribable;
@@ -103,10 +99,7 @@ export class PushPipe<S extends string = string> implements PipeTransform, OnDes
   constructor(
     private strategyProvider: RxStrategyProvider,
     private cdRef: ChangeDetectorRef,
-    private ngZone: NgZone,
-    @Optional()
-    @Inject(RX_ANGULAR_CONFIG)
-    private config?: RxAngularConfig<S>
+    private ngZone: NgZone
   ) {
     this.subscription = this.handleChangeDetection();
   }
@@ -208,10 +201,14 @@ interface PushInput<T, S> {
   patchZone?: boolean;
 }
 
-function isRxComponentInput<U, S>(val: any): val is PushInput<U, S> {
+// https://eslint.org/docs/rules/no-prototype-builtins
+const hasOwnProperty = Object.prototype.hasOwnProperty;
+
+function isRxComponentInput<U, S>(value: any): value is PushInput<U, S> {
   return (
-    val?.hasOwnProperty('strategy') ||
-    val?.hasOwnProperty('renderCallback') ||
-    val?.hasOwnProperty('patchZone')
+    value != null &&
+    (hasOwnProperty.call(value, 'strategy') ||
+      hasOwnProperty.call(value, 'renderCallback') ||
+      hasOwnProperty.call(value, 'patchZone'))
   );
 }

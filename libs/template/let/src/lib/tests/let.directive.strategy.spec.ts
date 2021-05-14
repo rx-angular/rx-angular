@@ -24,6 +24,7 @@ import {
     }}</ng-container>
   `,
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 class LetDirectiveTestComponentStrategy {
   value$: Observable<number> = of(42);
   strategy: string;

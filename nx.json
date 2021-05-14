@@ -69,6 +69,10 @@
       "tags": ["type:lib", "type:template"],
       "implicitDependencies": ["cdk"]
     },
+    "template-push": {
+      "tags": ["type:lib", "type:template"],
+      "implicitDependencies": ["cdk-zone-less", "cdk"]
+    },
     "docs": {
       "tags": ["type:app"]
     },
