@@ -1,34 +1,19 @@
 import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
-import { PushPipe } from '../../src/lib/push/push.pipe';
+import { PushPipe } from '../push.pipe';
 import { TestBed } from '@angular/core/testing';
-import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import { MockNgZone } from '../fixtures/mock-ng-zone';
 
 function wrapWithSpace(str: string): string {
   return ' ' + str + ' ';
 }
 
 @Component({
-  template: `
-    {{ (value$ | push | json) || 'undefined' }}
-  `
+  template: ` {{ (value$ | push | json) || 'undefined' }} `,
 })
 class PushPipeTestComponent {
-  value$: Observable<number> = of(42);
-}
-
-
-@Component({
-  template: `
-    <p id="p1">{{ (value$ | push | json) || 'undefined' }}</p>
-    <p id="p2">{{ (value$ | push | json) || 'undefined' }}</p>
-    <p id="p3">{{ (value$ | push | json) || 'undefined' }}</p>
-  `
-})
-class PushPipeMultipleTestComponent {
   value$: Observable<number> = of(42);
 }
 
@@ -41,11 +26,15 @@ let componentNativeElement: any;
 const setupPushPipeComponent = () => {
   TestBed.configureTestingModule({
     declarations: [PushPipe, PushPipeTestComponent],
-    providers: [ChangeDetectorRef, {
-      provide: RX_ANGULAR_CONFIG, useValue: {
-        primaryStrategy: 'native'
-      }
-    }]
+    providers: [
+      ChangeDetectorRef,
+      {
+        provide: RX_ANGULAR_CONFIG,
+        useValue: {
+          primaryStrategy: 'native',
+        },
+      },
+    ],
   });
 
   fixturePushPipeTestComponent = TestBed.createComponent(PushPipeTestComponent);
