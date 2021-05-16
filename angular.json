@@ -1211,7 +1211,7 @@
           "options": {
             "cypressConfig": "apps/ssr-e2e/cypress.json",
             "tsConfig": "apps/ssr-e2e/tsconfig.e2e.json",
-            "baseUrl": "https://localhost:4200"
+            "devServerTarget": "ssr:serve-ssr"
           }
         },
         "lint": {
