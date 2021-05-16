@@ -1,5 +1,5 @@
 {
-  "extends": ["../../../.eslintrc.json"],
+  "extends": ["../../.eslintrc.json"],
   "ignorePatterns": ["!**/*"],
   "overrides": [
     {
@@ -24,7 +24,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "rx-angular",
+            "prefix": "rxa",
             "style": "kebab-case"
           }
         ]

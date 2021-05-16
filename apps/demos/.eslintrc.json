@@ -12,19 +12,38 @@
         "project": ["apps/demos/tsconfig.*?.json"]
       },
       "rules": {
+        "prefer-rest-params": "warn",
+        "prefer-const": "warn",
+        "prefer-spread": "warn",
+        "no-empty": "warn",
+        "no-extra-boolean-cast": "warn",
+        "no-prototype-builtins": "warn",
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/ban-types": "warn",
+        "@typescript-eslint/no-empty-interface": "warn",
+        "@typescript-eslint/no-inferrable-types": "warn",
+        "@typescript-eslint/no-non-null-assertion": "warn",
+        "@typescript-eslint/no-empty-function": "warn",
+        "@typescript-eslint/member-ordering": "warn",
+        "@angular-eslint/contextual-lifecycle": "warn",
+        "@angular-eslint/no-host-metadata-property": "warn",
+        "@angular-eslint/no-empty-lifecycle-method": "warn",
+        "@angular-eslint/no-input-rename": "warn",
+        "@angular-eslint/component-class-suffix": "warn",
+        "@angular-eslint/directive-class-suffix": "warn",
         "@angular-eslint/directive-selector": [
-          "error",
+          "warn",
           {
             "type": "attribute",
-            "prefix": "rx-angular",
+            "prefix": "rxa",
             "style": "camelCase"
           }
         ],
         "@angular-eslint/component-selector": [
-          "error",
+          "warn",
           {
             "type": "element",
-            "prefix": "rx-angular",
+            "prefix": "rxa",
             "style": "kebab-case"
           }
         ]
