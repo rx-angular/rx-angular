@@ -83,7 +83,7 @@
     "@angular/language-service": "12.0.0",
     "@nguniversal/builders": "^11.2.1",
     "@ngxs/devtools-plugin": "^3.7.0",
-    "@nrwl/angular": "12.3.1",
+    "@nrwl/angular": "12.3.3",
     "@nrwl/cli": "12.3.1",
     "@nrwl/cypress": "12.3.1",
     "@nrwl/eslint-plugin-nx": "12.3.1",
