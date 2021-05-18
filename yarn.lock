@@ -1774,23 +1774,6 @@
     yargs "15.4.1"
     yargs-parser "20.0.0"
 
-"@nrwl/cypress@12.3.1":
-  version "12.3.1"
-  resolved "https://registry.yarnpkg.com/@nrwl/cypress/-/cypress-12.3.1.tgz#19d6a38438503a02efc97cb730b71301abd85dd2"
-  integrity sha512-40ZrW4DFJ7bZI0lCoS4hsLnsbCqswUTATRowEPMPmlMmgmQqYb4Ls2zv7W8vjdkcUbsJRtpPnyxCfa8GXvH+SQ==
-  dependencies:
-    "@cypress/webpack-preprocessor" "~4.1.2"
-    "@nrwl/devkit" "12.3.1"
-    "@nrwl/linter" "12.3.1"
-    "@nrwl/workspace" "12.3.1"
-    fork-ts-checker-webpack-plugin "^3.1.1"
-    rxjs "^6.5.4"
-    ts-loader "5.4.5"
-    tsconfig-paths-webpack-plugin "3.2.0"
-    tslib "^2.0.0"
-    webpack-node-externals "1.7.2"
-    yargs-parser "20.0.0"
-
 "@nrwl/cypress@12.3.3":
   version "12.3.3"
   resolved "https://registry.yarnpkg.com/@nrwl/cypress/-/cypress-12.3.3.tgz#56e2fd86926d9bea64157c261ce4c2f9bcbdc76b"
