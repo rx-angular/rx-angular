@@ -96,7 +96,7 @@
     "@types/jest": "26.0.20",
     "@types/klaw-sync": "^6.0.0",
     "@types/node": "~15.3.0",
-    "@typescript-eslint/eslint-plugin": "4.19.0",
+    "@typescript-eslint/eslint-plugin": "4.24.0",
     "@typescript-eslint/parser": "4.19.0",
     "benchmark": "^2.1.4",
     "chrome-remote-interface": "^0.29.0",
