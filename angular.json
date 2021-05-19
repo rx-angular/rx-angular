@@ -1511,6 +1511,45 @@
           }
         }
       }
+    },
+    "cdk-notifications": {
+      "projectType": "library",
+      "root": "libs/cdk/notifications",
+      "sourceRoot": "libs/cdk/notifications/src",
+      "prefix": "rx-angular",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "project": "libs/cdk/notifications/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/cdk/notifications/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "libs/cdk/notifications/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/cdk/notifications/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/cdk/notifications/src/**/*.ts",
+              "libs/cdk/notifications/src/**/*.html"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {

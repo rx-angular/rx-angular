@@ -8,12 +8,7 @@
     "lib": ["dom", "es2018"],
     "paths": {
       "@rx-angular/cdk": ["dist/libs/cdk"],
-      "@rx-angular/cdk/zone-less": ["dist/libs/cdk/zone-less"],
-      "@rx-angular/cdk/zone-configurations": [
-        "dist/libs/cdk/zone-configurations"
-      ],
-      "@rx-angular/cdk/coercing": ["dist/libs/cdk/coercing"],
-      "@rx-angular/cdk/notifications": ["dist/libs/cdk/notifications"]
+      "@rx-angular/cdk/coercing": ["dist/libs/cdk/coercing"]
     }
   },
   "angularCompilerOptions": {
@@ -25,5 +20,6 @@
     "strictInjectionParameters": true,
     "enableResourceInlining": true
   },
+  "include": ["**/*.ts"],
   "exclude": ["src/test-setup.ts", "**/*.spec.ts"]
 }

@@ -17,12 +17,12 @@ import { mergeAll } from 'rxjs/operators';
 import { RxIfTemplateNames, rxIfTemplateNames, RxIfViewContext } from './model';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-    createTemplateManager,
-  hotFlatten,
-  RxNotificationKind,
+  createTemplateManager,
   RxTemplateManager,
-  RxStrategyProvider, templateNotifier,
+  RxStrategyProvider
 } from '@rx-angular/cdk';
+import { coerceAllFactory } from '@rx-angular/cdk/coercing';
+import { createTemplateNotifier, RxNotificationKind } from '@rx-angular/cdk/notifications';
 import {coerceObservable} from '@rx-angular/cdk/coercing';
 @Directive({
   selector: '[rxIf]',
@@ -62,8 +62,8 @@ export class RxIf<U> implements OnInit, OnDestroy {
   }
 
   /** @internal */
-  private observablesHandler = templateNotifier<U>();
-  private readonly strategyHandler = hotFlatten<string>(
+  private observablesHandler = createTemplateNotifier<U>();
+  private readonly strategyHandler = coerceAllFactory<string>(
     () => new ReplaySubject<string | Observable<string>>(1),
     mergeAll()
   );
@@ -102,16 +102,16 @@ export class RxIf<U> implements OnInit, OnDestroy {
         strategies: this.strategyProvider.strategies,
       },
       notificationToTemplateName: {
-        [RxNotificationKind.suspense]: () => RxIfTemplateNames.suspense,
-        [RxNotificationKind.next]: (value, templates) => {
+        [RxNotificationKind.Suspense]: () => RxIfTemplateNames.suspense,
+        [RxNotificationKind.Next]: (value, templates) => {
           return value ?
             RxIfTemplateNames.then as rxIfTemplateNames
             : templates.get(RxIfTemplateNames.else) ?
               RxIfTemplateNames.then
               : undefined
         },
-        [RxNotificationKind.error]: () => RxIfTemplateNames.error,
-        [RxNotificationKind.complete]: () => RxIfTemplateNames.complete
+        [RxNotificationKind.Error]: () => RxIfTemplateNames.error,
+        [RxNotificationKind.Complete]: () => RxIfTemplateNames.complete
       }
     });
     this.templateManager.addTemplateRef(

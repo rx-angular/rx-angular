@@ -1,6 +1,6 @@
 import { Observable, ObservableInput, OperatorFunction, Subject } from 'rxjs';
 import { switchAll } from 'rxjs/operators';
-import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
+import { coerceDistinctWith } from './coerceDistinctObservableWith';
 
 /**
  * @internal
@@ -15,7 +15,7 @@ import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
  *   `values$`
  *
  */
-export function hotFlatten<U, R = U>(
+export function coerceAllFactory<U, R = U>(
   subjectFactory?: () => Subject<ObservableInput<U> | U>,
   flattenOperator?: OperatorFunction<ObservableInput<U>, R>
 ): {

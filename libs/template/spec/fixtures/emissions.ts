@@ -1,6 +1,6 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { getStrategies } from '../../src/lib/render-strategies';
-import { RenderStrategy } from '../../src/lib/core';
+import { RenderStrategy } from '../../src/lib/core/render-aware';
 import { from, of } from 'rxjs';
 import { getMockStrategyConfig } from './mock-strategies';
 

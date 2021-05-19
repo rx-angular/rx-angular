@@ -16,16 +16,18 @@ import {
 } from '@angular/core';
 import {
   createTemplateManager,
-  hotFlatten,
-  templateNotifier,
-  RxNotification,
-  RxNotificationKind,
   RxTemplateManager,
   RxStrategyProvider,
   RxBaseTemplateNames,
   RxViewContext,
   RxStrategyNames,
 } from '@rx-angular/cdk';
+import { coerceAllFactory } from '@rx-angular/cdk/coercing';
+import {
+  createTemplateNotifier,
+  RxNotification,
+  RxNotificationKind,
+} from '@rx-angular/cdk/notifications';
 
 import {
   defer,
@@ -323,13 +325,15 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   ) {}
 
   /** @internal */
-  private observablesHandler = templateNotifier<U>(() => !!this.rxSuspense);
+  private observablesHandler = createTemplateNotifier<U>(
+    () => !!this.rxSuspense
+  );
   /** @internal */
-  private strategyHandler = hotFlatten<string>(
+  private strategyHandler = coerceAllFactory<string>(
     () => new ReplaySubject<RxStrategyNames<string>>(1)
   );
   /** @internal */
-  private triggerHandler = hotFlatten<RxNotification<unknown>>(
+  private triggerHandler = coerceAllFactory<RxNotification<unknown>>(
     () => new Subject(),
     mergeAll()
   );
@@ -350,7 +354,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   /** @internal */
   private rendered$ = new Subject<void>();
 
-  @Output() readonly rendered = defer(() => this.rendered$.pipe());
+  @Output() readonly rendered = defer(() => this.rendered$);
 
   /** @internal */
   static ngTemplateContextGuard<U>(
@@ -429,14 +433,14 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
         errorHandler: this.errorHandler,
       },
       notificationToTemplateName: {
-        [RxNotificationKind.suspense]: () =>
+        [RxNotificationKind.Suspense]: () =>
           this.rxSuspense
             ? RxLetTemplateNames.suspense
             : RxLetTemplateNames.next,
-        [RxNotificationKind.next]: () => RxLetTemplateNames.next,
-        [RxNotificationKind.error]: () =>
+        [RxNotificationKind.Next]: () => RxLetTemplateNames.next,
+        [RxNotificationKind.Error]: () =>
           this.rxError ? RxLetTemplateNames.error : RxLetTemplateNames.next,
-        [RxNotificationKind.complete]: () =>
+        [RxNotificationKind.Complete]: () =>
           this.rxComplete
             ? RxLetTemplateNames.complete
             : RxLetTemplateNames.next,

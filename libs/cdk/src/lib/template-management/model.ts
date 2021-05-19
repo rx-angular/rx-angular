@@ -7,7 +7,10 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RxNotification, RxStrategies } from '../model';
+
+import { RxNotification } from '@rx-angular/cdk/notifications';
+
+import { RxStrategies } from '../model';
 
 export type rxBaseTemplateNames = 'errorTpl' | 'completeTpl' | 'suspenseTpl';
 

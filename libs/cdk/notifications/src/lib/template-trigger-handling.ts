@@ -1,7 +1,9 @@
 import { Observable, Subject } from 'rxjs';
-import { RxNotification } from '../model';
 import { mergeAll, share } from 'rxjs/operators';
-import { hotFlatten } from './hotFlatten';
+
+import { coerceAllFactory } from '@rx-angular/cdk/coercing';
+
+import { RxNotification } from './model';
 
 /**
  * @internal
@@ -14,7 +16,7 @@ export function templateTriggerHandling<T>(): {
   trigger$: Observable<RxNotification<T>>;
   next(templateName: Observable<RxNotification<T>>): void;
 } {
-  const hotFlattened = hotFlatten(
+  const hotFlattened = coerceAllFactory(
     () => new Subject<Observable<RxNotification<T> | RxNotification<T>>>(),
     mergeAll()
   );

@@ -4,7 +4,6 @@ import {
   NEVER,
   Observable,
   ObservableInput,
-  of,
   ReplaySubject,
 } from 'rxjs';
 import {
@@ -15,14 +14,15 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { RxNotification, RxNotificationKind } from '../model';
+
+import { rxMaterialize } from './rx-materialize';
+import { RxNotification, RxNotificationKind } from './model';
 import { toRxSuspenseNotification } from './notification-transforms';
-import { rxMaterialize } from './rxMaterialize';
 
 /**
  * @internal
  */
-export function templateNotifier<U>(
+export function createTemplateNotifier<U>(
   withSuspense?: () => boolean
 ): {
   values$: Observable<RxNotification<U>>;
@@ -62,11 +62,11 @@ export function templateNotifier<U>(
         rxMaterialize(),
         map((notification) => {
           latestNextValue =
-            notification.kind === RxNotificationKind.next
+            notification.kind === RxNotificationKind.Next
               ? notification.value
               : latestNextValue;
           if (
-            notification.kind === RxNotificationKind.next &&
+            notification.kind === RxNotificationKind.Next &&
             latestNextValue === undefined
           ) {
             return toRxSuspenseNotification(
