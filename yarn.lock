@@ -1860,15 +1860,15 @@
     tmp "~0.2.1"
     tslib "^2.0.0"
 
-"@nrwl/node@12.3.1":
-  version "12.3.1"
-  resolved "https://registry.yarnpkg.com/@nrwl/node/-/node-12.3.1.tgz#b48c511059b327ef924ee97ecdf1f1bab814bae9"
-  integrity sha512-hjPc2QrbO5CNJ0LI0pNJ70fsSkxJkuv2VY3N9+XoM7ZzfLBEOp2OzlIHGkZiXx4a0HUI3TY/1h5pnTX0Sf2mAw==
+"@nrwl/node@12.3.3":
+  version "12.3.3"
+  resolved "https://registry.yarnpkg.com/@nrwl/node/-/node-12.3.3.tgz#8979c676e176162d8e33ea68f55d65d02e134303"
+  integrity sha512-x/e9AJG3kFZcA6Q44zuLeyB3ab0oiFfJ98A1y+AJG2fnJigl+zBaHobDn3I3I1qm+MXye4QcSmOC0yQpcvH+SA==
   dependencies:
-    "@nrwl/devkit" "12.3.1"
-    "@nrwl/jest" "12.3.1"
-    "@nrwl/linter" "12.3.1"
-    "@nrwl/workspace" "12.3.1"
+    "@nrwl/devkit" "12.3.3"
+    "@nrwl/jest" "12.3.3"
+    "@nrwl/linter" "12.3.3"
+    "@nrwl/workspace" "12.3.3"
     circular-dependency-plugin "5.2.0"
     copy-webpack-plugin "6.0.3"
     fork-ts-checker-webpack-plugin "^3.1.1"
