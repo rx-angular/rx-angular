@@ -1743,17 +1743,6 @@
     jasmine-marbles "~0.6.0"
     tslib "^2.1.0"
 
-"@nrwl/cli@12.3.1":
-  version "12.3.1"
-  resolved "https://registry.yarnpkg.com/@nrwl/cli/-/cli-12.3.1.tgz#a02f240ccff96876c29f9aa1d744cf7e7c32c909"
-  integrity sha512-NbfR62mL1wmOPBk9uzeWpLZsI9CWQwUHERb/CsTlKIfAhQLLmpId8mbyirjEpLAPFqfwyRGJ4x0BcQmRJo4lRw==
-  dependencies:
-    "@nrwl/tao" "12.3.1"
-    chalk "4.1.0"
-    v8-compile-cache "2.3.0"
-    yargs "15.4.1"
-    yargs-parser "20.0.0"
-
 "@nrwl/cli@12.3.3":
   version "12.3.3"
   resolved "https://registry.yarnpkg.com/@nrwl/cli/-/cli-12.3.3.tgz#ec5e2a96e9a76da0c83df9245462752e7783cbe2"
@@ -1838,17 +1827,6 @@
     "@nrwl/workspace" "12.3.4"
     "@typescript-eslint/experimental-utils" "^4.3.0"
     confusing-browser-globals "^1.0.9"
-
-"@nrwl/jest@12.3.1":
-  version "12.3.1"
-  resolved "https://registry.yarnpkg.com/@nrwl/jest/-/jest-12.3.1.tgz#edd5d41134bd7e4ecee979cfab4abb83d8bd0857"
-  integrity sha512-rO7xPNo5wolCQafcxoAXsvTgfXEm/jWuKg9b10EZARp+gvC+OB4ti+kAml4wfLAL79AGxfRxr/3z+PZQLlKo6Q==
-  dependencies:
-    "@nrwl/devkit" "12.3.1"
-    jest-resolve "^26.6.2"
-    rxjs "^6.5.4"
-    strip-json-comments "^3.1.1"
-    tslib "^2.0.0"
 
 "@nrwl/jest@12.3.3":
   version "12.3.3"
