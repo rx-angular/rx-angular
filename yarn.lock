@@ -1806,13 +1806,13 @@
     strip-json-comments "^3.1.1"
     tslib "^2.0.0"
 
-"@nrwl/eslint-plugin-nx@12.3.1":
-  version "12.3.1"
-  resolved "https://registry.yarnpkg.com/@nrwl/eslint-plugin-nx/-/eslint-plugin-nx-12.3.1.tgz#163e44698e3cdacddbc7088e25f076fa821fa743"
-  integrity sha512-h5wYhuVCVNzVk4pABkox23SD2oaI+EOBhtMLTo5LJ81JFyO1qGuSKVC+lAXAdwtd6aohoBedZviNgrsJnKB5aA==
+"@nrwl/eslint-plugin-nx@12.3.3":
+  version "12.3.3"
+  resolved "https://registry.yarnpkg.com/@nrwl/eslint-plugin-nx/-/eslint-plugin-nx-12.3.3.tgz#ae10dc135afc63f1b45ba0a5fe35911f87e6ab32"
+  integrity sha512-9f8LNQYg1czV+g7t2CaQP5P2yeld+cUFPmQ4c+URO/dJk9ymC9MCYGidzZzTyGxxOr6O0jg1RGrMKcklp52kdA==
   dependencies:
-    "@nrwl/devkit" "12.3.1"
-    "@nrwl/workspace" "12.3.1"
+    "@nrwl/devkit" "12.3.3"
+    "@nrwl/workspace" "12.3.3"
     "@typescript-eslint/experimental-utils" "^4.3.0"
     confusing-browser-globals "^1.0.9"
 
