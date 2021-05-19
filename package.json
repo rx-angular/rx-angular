@@ -90,7 +90,7 @@
     "@nrwl/jest": "12.3.1",
     "@nrwl/linter": "12.3.1",
     "@nrwl/node": "12.3.3",
-    "@nrwl/tao": "12.3.1",
+    "@nrwl/tao": "12.3.4",
     "@nrwl/workspace": "12.3.3",
     "@types/benchmark": "^2.1.0",
     "@types/jest": "26.0.20",
