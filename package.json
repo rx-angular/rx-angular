@@ -81,7 +81,7 @@
     "@angular/cli": "12.0.0",
     "@angular/compiler-cli": "12.0.0",
     "@angular/language-service": "12.0.0",
-    "@nguniversal/builders": "^11.2.1",
+    "@nguniversal/builders": "^12.0.0",
     "@ngxs/devtools-plugin": "^3.7.0",
     "@nrwl/angular": "12.3.3",
     "@nrwl/cli": "12.3.1",
