@@ -244,10 +244,10 @@
   dependencies:
     tslib "^2.1.0"
 
-"@angular/language-service@12.0.0":
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-12.0.0.tgz#b404961f60d944ea013833b282c144b3228f439d"
-  integrity sha512-LDS1+dOdXUEf0kiqcYnOfXBIs2HAD6vJ5HWb58kq6z/8AHRMvvHiwSV26UlIbnnD+CBnTu36xmbCyZtIJluhqw==
+"@angular/language-service@12.0.1":
+  version "12.0.1"
+  resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-12.0.1.tgz#b3c1ff17e50f89b5c988e5d88bf7ee64ff9826cb"
+  integrity sha512-zK4mRzPuCFnlcP+WDCQ2RhTggYTUIPmSgc6Ndcw5EzYdF+WUnjZSurbd6hAqJd5wd1PScieUU8YhoDhzHfNMSg==
 
 "@angular/material@11.2.0":
   version "11.2.0"
@@ -1648,10 +1648,10 @@
   dependencies:
     tslib "^1.9.0"
 
-"@ngxs/store@3.7.1":
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/@ngxs/store/-/store-3.7.1.tgz#3333379eb36cfe475d019b6c894b263ea515b8a5"
-  integrity sha512-Qg4rkF8XoIg/E2SGUfBbr4JmR8ZbRfeg1X++fF0HJymK1PtbIxtEXQXm7VTH0+GSmYDCwPJb8Im9dZHGZWF5ww==
+"@ngxs/store@3.7.2":
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/@ngxs/store/-/store-3.7.2.tgz#1088b0669adc382d36ca7ae8438c603e55879b42"
+  integrity sha512-1cnAjHOGCovfvhjtcAWBajrMXos97Un3c8ekKoS8FIHnq3aQOzY/ePspDRNi9kTcuBJ/r/xl097JC1ssEuNbyg==
   dependencies:
     tslib "^1.9.0"
 
@@ -2227,10 +2227,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/lodash@^4.14.168":
-  version "4.14.169"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.169.tgz#83c217688f07a4d9ef8f28a3ebd1d318f6ff4cbb"
-  integrity sha512-DvmZHoHTFJ8zhVYwCLWbQ7uAbYQEk52Ev2/ZiQ7Y7gQGeV9pjBqjnQpECMHfKS1rCYAhMI7LHVxwyZLZinJgdw==
+"@types/lodash@^4.14.170":
+  version "4.14.170"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.170.tgz#0d67711d4bf7f4ca5147e9091b847479b87925d6"
+  integrity sha512-bpcvu/MKHHeYX+qeEN8GE7DIravODWdACVA1ctevD8CN24RhPZIKMn9ntfAsrvLfSX3cR5RrBKAbYm9bGs0A+Q==
 
 "@types/minimatch@*":
   version "3.0.4"
