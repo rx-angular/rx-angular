@@ -9,6 +9,7 @@ export { ViewportPrioModule } from './lib/experimental/viewport-prio/viewport-pr
 export { ViewportPrioDirective } from './lib/experimental/viewport-prio/viewport-prio.experimental.directive';
 
 // STABLE
+// @deprecated import from template/unpatch
 // TODO(artur): we're keeping it here until we get a migration script.
 export { LetModule, LetDirective } from '@rx-angular/template/let';
 
