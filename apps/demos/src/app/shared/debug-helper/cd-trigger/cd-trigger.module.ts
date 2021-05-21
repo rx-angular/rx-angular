@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdTriggerComponent } from './cd-trigger/cd-trigger.component';
 import { MatButtonModule } from '@angular/material/button';
-import { UnpatchEventsModule } from '@rx-angular/template';
+import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { ZonePatchedIconModule } from '../../zone-patched-icon/zone-patched-icon.module';
 
 
@@ -14,7 +14,7 @@ import { ZonePatchedIconModule } from '../../zone-patched-icon/zone-patched-icon
   imports: [
     CommonModule,
     MatButtonModule,
-    UnpatchEventsModule,
+    UnpatchModule,
     ZonePatchedIconModule
   ]
 })

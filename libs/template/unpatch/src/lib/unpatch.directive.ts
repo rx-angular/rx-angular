@@ -7,10 +7,25 @@ import {
   OnDestroy,
   SimpleChanges,
 } from '@angular/core';
-import { getZoneUnPatchedApi } from '@rx-angular/cdk/zone-less';
 import { BehaviorSubject, Subscription } from 'rxjs';
-// @TODO use cdk/zone-configuration here
-import { zonePatchedEvents } from './unpatch-event-list.experimental';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/zone-less';
+import {
+  focusEvents,
+  mouseEvents,
+  wheelEvents,
+  inputEvents,
+  keyboardEvents,
+  touchEvents,
+} from '@rx-angular/cdk/zone-configurations';
+
+const zonePatchedEvents: string[] = [
+  ...focusEvents,
+  ...mouseEvents,
+  ...wheelEvents,
+  ...inputEvents,
+  ...keyboardEvents,
+  ...touchEvents,
+];
 
 /**
  *
@@ -36,9 +51,11 @@ export function unpatchEventListener(
   if (typeof element.eventListeners !== 'function') {
     return;
   }
+
   const eventListeners = element.eventListeners(event);
+
   // Return if no event listeners are present
-  if (!eventListeners) {
+  if (!Array.isArray(eventListeners) || eventListeners.length === 0) {
     return;
   }
 
@@ -46,6 +63,7 @@ export function unpatchEventListener(
     element,
     'addEventListener'
   ).bind(element);
+
   eventListeners.forEach((listener) => {
     // Remove and reapply listeners with patched API
     // @TODO use (elem as any).removeAllListeners?(eventName?: string): void;
@@ -96,11 +114,7 @@ export function unpatchEventListener(
  */
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[unpatch]' })
-export class UnpatchEventsDirective
-  implements OnChanges, AfterViewInit, OnDestroy {
-  subscription = new Subscription();
-  events$ = new BehaviorSubject<string[]>(zonePatchedEvents);
-
+export class UnpatchDirective implements OnChanges, AfterViewInit, OnDestroy {
   /**
    * @description
    * List of events that the element should be unpatched from. When input is empty or undefined,
@@ -112,13 +126,10 @@ export class UnpatchEventsDirective
    */
   @Input('unpatch') events?: string[];
 
-  reapplyEventListenersZoneUnPatched(events: string[]) {
-    events.forEach((ev) => {
-      unpatchEventListener(this.el.nativeElement, ev);
-    });
-  }
+  private subscription = new Subscription();
+  private events$ = new BehaviorSubject<string[]>(zonePatchedEvents);
 
-  constructor(private el: ElementRef) {}
+  constructor(private host: ElementRef<HTMLElement>) {}
 
   ngOnChanges({ events }: SimpleChanges): void {
     if (events && Array.isArray(this.events)) {
@@ -127,12 +138,18 @@ export class UnpatchEventsDirective
   }
 
   ngAfterViewInit(): void {
-    this.subscription = this.events$.subscribe((eventList) => {
-      this.reapplyEventListenersZoneUnPatched(eventList);
+    this.subscription = this.events$.subscribe((events) => {
+      this.reapplyUnPatchedEventListeners(events);
     });
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  private reapplyUnPatchedEventListeners(events: string[]): void {
+    for (const event of events) {
+      unpatchEventListener(this.host.nativeElement, event);
+    }
   }
 }

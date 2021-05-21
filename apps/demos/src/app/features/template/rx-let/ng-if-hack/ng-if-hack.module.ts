@@ -4,8 +4,9 @@ import { RouterModule } from '@angular/router';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ROUTES } from './ng-if-hack.routes';
 import { NgIfHackComponent } from './ng-if-hack.component';
-import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template';
 import { LetModule } from '@rx-angular/template/let';
+import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatIconModule } from '@angular/material/icon';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
@@ -33,7 +34,7 @@ const DECLARATIONS = [
     RouterModule.forChild(ROUTES),
     DirtyChecksModule,
     LetModule,
-    UnpatchEventsModule,
+    UnpatchModule,
     NgxSkeletonLoaderModule,
     MatIconModule,
     ValueProvidersModule,

@@ -9,8 +9,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template';
 import { LetModule } from '@rx-angular/template/let';
+import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ToStringPipe } from './to-string.pipe';
 
@@ -30,7 +31,7 @@ const DECLARATIONS = [
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    UnpatchEventsModule,
+    UnpatchModule,
     PushModule,
     MatBadgeModule,
     LetModule,

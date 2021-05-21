@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './basic-example.routes';
 import { BasicExampleComponent } from './basic-example.component';
-import { PushModule, UnpatchEventsModule, ViewportPrioModule } from '@rx-angular/template';
+import { PushModule, ViewportPrioModule } from '@rx-angular/template';
 import { LetModule } from '@rx-angular/template/let';
+import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
@@ -18,7 +19,7 @@ const DECLARATIONS = [BasicExampleComponent];
   imports: [
     CommonModule,
     ViewportPrioModule,
-    UnpatchEventsModule,
+    UnpatchModule,
     DirtyChecksModule,
     RouterModule.forChild(ROUTES),
     MatButtonModule,

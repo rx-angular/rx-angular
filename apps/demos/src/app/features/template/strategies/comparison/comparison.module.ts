@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template';
 import { LetModule } from '@rx-angular/template/let';
+import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { ComparisonComponent } from './comparison.component';
 
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -23,7 +24,7 @@ import { RxForModule, RxIfModule, PipeModule } from '../../../../rx-angular-pocs
     CommonModule,
     RouterModule.forChild(ROUTES),
     MatButtonModule,
-    UnpatchEventsModule,
+    UnpatchModule,
     VisualizerModule,
     SiblingModule,
     MatCheckboxModule,
