@@ -244,10 +244,10 @@
   dependencies:
     tslib "^2.1.0"
 
-"@angular/language-service@12.0.0":
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-12.0.0.tgz#b404961f60d944ea013833b282c144b3228f439d"
-  integrity sha512-LDS1+dOdXUEf0kiqcYnOfXBIs2HAD6vJ5HWb58kq6z/8AHRMvvHiwSV26UlIbnnD+CBnTu36xmbCyZtIJluhqw==
+"@angular/language-service@12.0.1":
+  version "12.0.1"
+  resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-12.0.1.tgz#b3c1ff17e50f89b5c988e5d88bf7ee64ff9826cb"
+  integrity sha512-zK4mRzPuCFnlcP+WDCQ2RhTggYTUIPmSgc6Ndcw5EzYdF+WUnjZSurbd6hAqJd5wd1PScieUU8YhoDhzHfNMSg==
 
 "@angular/material@11.2.0":
   version "11.2.0"
@@ -1641,17 +1641,17 @@
     "@nguniversal/common" "11.2.1"
     tslib "^2.0.0"
 
-"@ngxs/devtools-plugin@^3.7.0":
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/@ngxs/devtools-plugin/-/devtools-plugin-3.7.1.tgz#e0abb97f0fb239236b135f15b82704289c96774b"
-  integrity sha512-tZ5dVrgHDaOK0NMuSy3eesqwCXncF7Tm2bO/5cSvgSUXCKuU8UfWKxvP/N/Wcz5V5uaUIdOY1bnF6ZdeAMVzGQ==
+"@ngxs/devtools-plugin@^3.7.2":
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/@ngxs/devtools-plugin/-/devtools-plugin-3.7.2.tgz#995424e5faf48df55a1b54b9e1b36ce9c47c1d52"
+  integrity sha512-kRuOx1GPXHHZZAeQMm1J1msTZxjgiAUY4NR7bzaQPn+UwSY2OgGEsd8driMM5YSTF1hOjcFHinaLCM1vmu8FmQ==
   dependencies:
     tslib "^1.9.0"
 
-"@ngxs/store@3.7.1":
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/@ngxs/store/-/store-3.7.1.tgz#3333379eb36cfe475d019b6c894b263ea515b8a5"
-  integrity sha512-Qg4rkF8XoIg/E2SGUfBbr4JmR8ZbRfeg1X++fF0HJymK1PtbIxtEXQXm7VTH0+GSmYDCwPJb8Im9dZHGZWF5ww==
+"@ngxs/store@3.7.2":
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/@ngxs/store/-/store-3.7.2.tgz#1088b0669adc382d36ca7ae8438c603e55879b42"
+  integrity sha512-1cnAjHOGCovfvhjtcAWBajrMXos97Un3c8ekKoS8FIHnq3aQOzY/ePspDRNi9kTcuBJ/r/xl097JC1ssEuNbyg==
   dependencies:
     tslib "^1.9.0"
 
