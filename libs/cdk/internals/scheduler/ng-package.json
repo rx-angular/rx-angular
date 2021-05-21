@@ -1,0 +1,9 @@
+{
+  "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../../dist/libs/cdk/internals/scheduler",
+  "lib": {
+    "entryFile": "src/index.ts",
+    "flatModuleFile": "cdk-internals-scheduler",
+    "umdId": "rx-angular.cdk-internals-scheduler"
+  }
+}

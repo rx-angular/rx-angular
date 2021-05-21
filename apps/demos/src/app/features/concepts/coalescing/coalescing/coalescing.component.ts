@@ -1,15 +1,7 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-} from '@angular/core';
-import { interval, Subject } from 'rxjs';
+import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
+import { Subject } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { RippleRenderer } from '../../../../shared/ripple/rxa-responsive-meter';
 import { Platform } from '@angular/cdk/platform';
-import { fromEvent } from '../../../../rx-angular-pocs/cdk/utils/zone-agnostic/rxjs/operators';
-import { coerceElement } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'rxa-demo-basics',
@@ -60,6 +52,4 @@ export class CoalescingComponent {
     private readonly elRef: ElementRef,
     private readonly platform: Platform
   ) {}
-
 }
-

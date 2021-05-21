@@ -19,6 +19,7 @@
 *.sublime-workspace
 apps/docs/generated
 apps/docs/generated/*
+docs/demos
 
 # IDE - VSCode
 .vscode/*

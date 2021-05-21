@@ -1,7 +1,8 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { unpatchAddEventListener, allEvents } from '@rx-angular/cdk';
+import { unpatchAddEventListener } from '@rx-angular/cdk/zone-less';
+import { focusEvents, formControlsEvents, inputEvents, mouseEvents } from '@rx-angular/cdk/zone-configurations';
 
 /**
  *
@@ -26,7 +27,7 @@ export function unpatchEventListener(elem: HTMLElement, event: string): void {
     // Remove and reapply listeners with patched API
     elem.removeEventListener(event, listener);
     // Reapply listeners with un-patched API
-    unpatchAddEventListener(event).addEventListener(listener);
+    unpatchAddEventListener(elem).addEventListener(event, listener);
   });
 }
 

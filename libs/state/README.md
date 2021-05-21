@@ -6,7 +6,7 @@
 
 ## Reactive Component State for Angular
 
-RxState is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in angular.
+RxState is a lightweight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in Angular.
 
 ![state logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/images/state_logo.png)
 
@@ -20,13 +20,13 @@ Developing modern, **reactive** user interfaces imposes a variety of challenging
 - handling subscriptions
 
 There are plenty of solutions available for managing these challenges on a **global level** (Akita, NgRx, NgXs, ...).
-None of them is dedicated targeting the special needs of the **component level**.
+None of them is dedicated to targeting the particular needs of the **component level**.
 
 `@rx-angular/state` was specifically designed to give developers a tool for mastering **component state** without forcing
 them to use complex design patterns.
 
-It's light-weight and intuitive API and the automatic subscription handling making `@rx-angular/state`
-the **perfect fit** for handling state in any angular component.
+Its lightweight and intuitive API and the automatic subscription handling makes `@rx-angular/state`
+the **perfect fit** for handling state in any Angular component.
 
 Using this library allows you to implement things like:
 
@@ -97,3 +97,9 @@ yarn add @rx-angular/state
 - [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
 - [📜 Design Documents](https://hackmd.io/wVkWRc3XQWmtM6YcktRTrA)
 - [📑 Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) by [Mike Hartington](https://twitter.com/mhartington)
+
+## Browsers support
+
+| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari-ios/safari-ios_48x48.png" alt="iOS Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>iOS Safari |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| IE11, Edge                                                                                                                                                                                                      | last version                                                                                                                                                                                                      | last version                                                                                                                                                                                                  | last 2 versions                                                                                                                                                                                               | last 2 versions                                                                                                                                                                                                               |

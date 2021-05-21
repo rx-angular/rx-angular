@@ -1,5 +1,6 @@
 import { combineLatest, from, Observable } from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay } from 'rxjs/operators';
+import { Promise } from '@rx-angular/cdk/zone-less';
 import {
   ArrayReducerFn,
   ExtractObservableValue,
@@ -7,8 +8,7 @@ import {
   PropType,
 } from '../utils/model';
 import { NotEmpty, ObservableMap } from './model';
-import { Promise } from '../zone-less';
-import { coalesceWith } from '../utils';
+import { coalesceWith } from '@rx-angular/cdk/coalescing';
 
 const resolvedPromise = Promise.resolve();
 const resolvedPromise$ = from(resolvedPromise);

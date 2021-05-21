@@ -4,13 +4,14 @@ import { tap } from 'rxjs/operators';
 import {
   RxCustomStrategyCredentials,
   RxNativeStrategyNames,
+  RxRenderWork,
   RxStrategyCredentials,
 } from '../model';
-import { coalesceWith } from '../utils/coalesceWith';
+import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import {
   cancelAnimationFrame,
   requestAnimationFrame,
-} from '../zone-less/browser/browser';
+} from '@rx-angular/cdk/zone-less';
 
 const animationFrameTick = () =>
   new Observable<number>((subscriber) => {
@@ -28,7 +29,9 @@ const localCredentials: RxStrategyCredentials = {
   work: (cdRef, _, notification) => {
     cdRef.detectChanges();
   },
-  behavior: (work: any, scope) => (o$) =>
+  behavior: (work: () => RxRenderWork, scope: Record<string, unknown>) => (
+    o$
+  ) =>
     o$.pipe(
       coalesceWith(animationFrameTick(), scope),
       tap(() => work())

@@ -17,14 +17,13 @@ import { mergeAll } from 'rxjs/operators';
 import { RxIfTemplateNames, rxIfTemplateNames, RxIfViewContext } from './model';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-  coerceObservable,
-  createTemplateManager,
-  hotFlatten, RxNotification,
+    createTemplateManager,
+  hotFlatten,
   RxNotificationKind,
   RxTemplateManager,
   RxStrategyProvider, templateNotifier,
 } from '@rx-angular/cdk';
-
+import {coerceObservable} from '@rx-angular/cdk/coercing';
 @Directive({
   selector: '[rxIf]',
 })

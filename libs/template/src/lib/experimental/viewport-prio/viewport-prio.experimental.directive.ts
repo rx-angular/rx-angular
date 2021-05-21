@@ -1,45 +1,15 @@
 import {
   Directive,
   ElementRef,
+  Inject,
   OnDestroy,
   OnInit,
   Optional,
 } from '@angular/core';
 import { RxStrategyProvider } from '@rx-angular/cdk';
+import { LetDirective } from '@rx-angular/template/let';
 import { Observable, Subject } from 'rxjs';
-import { filter, map, mergeAll, tap, withLatestFrom } from 'rxjs/operators';
-import { getZoneUnPatchedApi } from '../../core';
-import { LetDirective } from '../../let/let.directive';
-
-/**
- *
- * @description
- *
- * This function takes an elem and event and re-applies the listeners from the passed event to the
- * passed element with the zone un-patched version of it.
- *
- * @param elem {HTMLElement} - The elem to re-apply the listeners to.
- * @param event {string} - The name of the event from which to re-apply the listeners.
- *
- * @returns void
- */
-function unpatchEventListener(elem: HTMLElement, event: string): void {
-  const eventListeners = (elem as any).eventListeners(event);
-  // Return if no event listeners are present
-  if (!eventListeners) {
-    return;
-  }
-
-  const addEventListener = getZoneUnPatchedApi('addEventListener', elem).bind(
-    elem
-  );
-  eventListeners.forEach((listener) => {
-    // Remove and reapply listeners with patched API
-    elem.removeEventListener(event, listener);
-    // Reapply listeners with un-patched API
-    addEventListener(event, listener);
-  });
-}
+import { filter, map, mergeAll, withLatestFrom } from 'rxjs/operators';
 
 function intersectionObserver(
   options?: object
@@ -123,7 +93,9 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
   constructor(
     private readonly el: ElementRef<HTMLElement>,
     private strategyProvider: RxStrategyProvider,
-    @Optional() private letDirective: LetDirective<any>
+    @Inject(LetDirective)
+    @Optional()
+    private letDirective: LetDirective<any> | null
   ) {}
 
   ngOnInit() {
@@ -139,7 +111,9 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
         )
       )
       .subscribe((strategyName) => {
-        this.letDirective.strategy = strategyName as string;
+        if (this.letDirective !== null) {
+          this.letDirective.strategy = strategyName as string;
+        }
         // render actual state on viewport enter
         // @TODO this doesnt catch unsubscribe (cant be cancelled)
         // @TODO: we need to fetch the current template of the letDirective here

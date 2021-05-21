@@ -6,8 +6,6 @@ export { ViewportPrioModule } from './lib/experimental/viewport-prio/viewport-pr
 export { ViewportPrioDirective } from './lib/experimental/viewport-prio/viewport-prio.experimental.directive';
 
 // STABLE
-export { PushPipe } from './lib/push/push.pipe';
-export { PushModule } from './lib/push/push.module';
+export { LetModule, LetDirective } from '@rx-angular/template/let';
 
-export { LetModule } from './lib/let/let.module';
-export { LetDirective } from './lib/let/let.directive';
+export { PushModule, PushPipe } from '@rx-angular/template/push';

@@ -2,36 +2,32 @@
 
 ## Component Shell and Folder
 
-- `@Input` bindings are setter
+- `@Input` bindings are setters
 - `@Output` bindings are state derivations
-- State is injected over the constructor
-- State is displayed over a pipe in the template
-- UI interaction is implemented over `Subjects`
+- The state is injected over the constructor
+- The state is displayed over a pipe in the template
+- The UI interaction is implemented over `Subjects`
 - use `*rxLet` over `*ngIf`
 
 Bad:
 
 ```html
-<ng-container *ngIf="obj$ | async as obj">
-  {{obj}}
-</ng-container>
+<ng-container *ngIf="obj$ | async as obj"> {{ obj }} </ng-container>
 ```
 
 Good:
 
 ```html
-<ng-container *rxLet="obj$; let obj">
-  {{obj}}
-</ng-container>
+<ng-container *rxLet="obj$ as obj"> {{ obj }} </ng-container>
 ```
 
 ## Component Implementation Approach
 
 ### Defining the Interface
 
-In a first step you want to setup the state interface. A property which should change the view of your component should find it's place into the interface.
-View bindings and triggers which in turn mutate your state should be `Subjects`.
-In the best case you keep your state _normalized_.
+In a first step you want to setup the state interface. A property that should change the view of your component should find its place in the interface.
+View bindings and triggers, which in turn mutate your state, should be `Subjects`.
+In the best case, you keep your state _normalized_.
 _Derived state_ should be handled seperately.
 
 **Example view interface**:
@@ -90,9 +86,7 @@ vm$ = this.state.select();
 ```
 
 ```html
-<ng-container *rxLet="obj$; let obj">
-  {{obj}}
-</ng-container>
+<ng-container *rxLet="obj$; let obj"> {{obj}} </ng-container>
 ```
 
 - Hook up UI interaction
@@ -108,7 +102,7 @@ vm$ = this.state.select();
   taskChanges = this.state.$.pipe(distinctUntilKeyChanged('prop'));
   ```
 
-Observables and projection functions are named in a way they give us information about the returned data struckture.
+Observables and projection functions are named in a way that gives us information about the returned data structure.
 
 Think in Source => transfor => state/effect
 

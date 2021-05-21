@@ -15,6 +15,8 @@ export {
   remove,
   toDictionary,
   update,
+  extract,
+  upsert,
 } from './transformation-helpers/array/index';
 export {
   setProp,
@@ -22,5 +24,6 @@ export {
   deleteProp,
   dictionaryToArray,
   toggle,
+  slice,
 } from './transformation-helpers/object/index';
 export { KeyCompareMap, CompareFn } from './rxjs/interfaces';

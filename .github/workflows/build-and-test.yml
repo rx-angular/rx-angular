@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -33,7 +33,9 @@ jobs:
     - uses: actions/cache@v2
       id: yarn-cache
       with:
-        path: node_modules
+        path: |
+          node_modules
+          ~/.cache/Cypress
         key: ${{ runner.os }}-yarn-${{ hashFiles('./yarn.lock') }}
         restore-keys: ${{ runner.os }}-yarn
 
@@ -43,6 +45,8 @@ jobs:
         HUSKY_SKIP_INSTALL: 'true'
       run: yarn --frozen-lockfile --no-progress --non-interactive
 
-    - run: yarn nx affected:lint --base=origin/master
-    - run: yarn nx affected:build --base=origin/master
-    - run: yarn nx affected:test --base=origin/master
+    - run: yarn nx affected:lint --parallel --base=origin/master
+    - run: yarn nx affected:test --parallel --base=origin/master
+    - run: yarn nx run ssr-e2e:e2e --headless --base=origin/master
+    # Do not run builds in parallel since it will cause `ngcc` compiler deadlocks.
+    - run: yarn nx affected:build --with-deps --base=origin/master

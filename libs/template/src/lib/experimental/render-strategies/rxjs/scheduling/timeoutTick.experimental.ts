@@ -1,13 +1,14 @@
 import { Observable } from 'rxjs';
+import { setTimeout, clearTimeout } from '@rx-angular/cdk/zone-less';
 
 export const timeoutTick = () =>
   new Observable<number>((subscriber) => {
-    const id = (window as any).__zone_symbol__setTimeout(() => {
+    const id = setTimeout(() => {
       subscriber.next(0);
       subscriber.complete();
     });
 
     return () => {
-      (window as any).__zone_symbol__clearTimeout(id);
+      clearTimeout(id);
     };
   });

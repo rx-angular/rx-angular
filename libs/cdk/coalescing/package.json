@@ -1,0 +1,11 @@
+{
+  "name": "@rx-angular/cdk/coalescing",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^11.2.12",
+    "@angular/core": "^11.2.12"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}

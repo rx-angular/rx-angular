@@ -1,3 +1,4 @@
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { update } from '@rx-angular/state';
 
 interface Creature {
@@ -6,38 +7,50 @@ interface Creature {
   name: string;
 }
 
-const creaturesForUpdate: Creature[] = [{ id: 1, type: 'lion', name: 'Bella' }, {
-  id: 2,
-  type: 'wolf',
-  name: 'Sparky'
-}];
+const creaturesForUpdate: Creature[] = [
+  { id: 1, type: 'lion', name: 'Bella' },
+  {
+    id: 2,
+    type: 'wolf',
+    name: 'Sparky',
+  },
+];
 let creatures: Creature[];
 let creaturesAfterSingleItemUpdate: Creature[];
 let creaturesAfterMultipleItemsUpdate: Creature[];
 
 beforeEach(() => {
-  creatures = [{ id: 1, type: 'cat', name: 'Bella' }, { id: 2, type: 'dog', name: 'Sparky' }, {
-    id: 3,
-    type: 'catDog',
-    name: 'Cat-Dog'
-  }];
-  creaturesAfterMultipleItemsUpdate = [{ id: 1, type: 'lion', name: 'Bella' }, {
-    id: 2,
-    type: 'wolf',
-    name: 'Sparky'
-  }, { id: 3, type: 'catDog', name: 'Cat-Dog' }];
-  creaturesAfterSingleItemUpdate = [{ id: 1, type: 'lion', name: 'Bella' }, {
-    id: 2,
-    type: 'dog',
-    name: 'Sparky'
-  }, { id: 3, type: 'catDog', name: 'Cat-Dog' }];
-  jest.spyOn(console, 'warn').mockImplementation(() => {
-  });
+  creatures = [
+    { id: 1, type: 'cat', name: 'Bella' },
+    { id: 2, type: 'dog', name: 'Sparky' },
+    {
+      id: 3,
+      type: 'catDog',
+      name: 'Cat-Dog',
+    },
+  ];
+  creaturesAfterMultipleItemsUpdate = [
+    { id: 1, type: 'lion', name: 'Bella' },
+    {
+      id: 2,
+      type: 'wolf',
+      name: 'Sparky',
+    },
+    { id: 3, type: 'catDog', name: 'Cat-Dog' },
+  ];
+  creaturesAfterSingleItemUpdate = [
+    { id: 1, type: 'lion', name: 'Bella' },
+    {
+      id: 2,
+      type: 'dog',
+      name: 'Sparky',
+    },
+    { id: 3, type: 'catDog', name: 'Cat-Dog' },
+  ];
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-
 describe('update', () => {
-
   describe('general', () => {
     it('should be defined', () => {
       const fn = update;
@@ -53,45 +66,58 @@ describe('update', () => {
 
     it('should not return same reference', () => {
       const originalCreatures = [...creatures];
-      const result = update(originalCreatures, creaturesForUpdate[0], (o, n) => o.id === n.id);
-      const result2 = update(null as any, originalCreatures);
+      const result = update(
+        originalCreatures,
+        creaturesForUpdate[0],
+        (o, n) => o.id === n.id
+      );
 
       originalCreatures[0] = null as any;
 
-      expect(originalCreatures).toEqual([null, { id: 2, type: 'dog', name: 'Sparky' }, {
-        id: 3,
-        type: 'catDog',
-        name: 'Cat-Dog'
-      }]);
+      expect(originalCreatures).toEqual([
+        null,
+        { id: 2, type: 'dog', name: 'Sparky' },
+        {
+          id: 3,
+          type: 'catDog',
+          name: 'Cat-Dog',
+        },
+      ]);
       expect(result).toEqual(creaturesAfterSingleItemUpdate);
-      expect(result2).toEqual(creatures);
     });
   });
 
   describe('functionality', () => {
     it('should update value if matching by compareFn', () => {
-      expect(update(creatures, creaturesForUpdate, (a, b) => a.id === b.id)).toEqual(creaturesAfterMultipleItemsUpdate);
+      expect(
+        update(creatures, creaturesForUpdate, (a, b) => a.id === b.id)
+      ).toEqual(creaturesAfterMultipleItemsUpdate);
     });
 
     it('should update value if matching by key', () => {
-      expect(update(creatures, creaturesForUpdate, 'id')).toEqual(creaturesAfterMultipleItemsUpdate);
+      expect(update(creatures, creaturesForUpdate, 'id')).toEqual(
+        creaturesAfterMultipleItemsUpdate
+      );
     });
 
     it('should update value if matching by array of keys', () => {
-      expect(update(creatures, creaturesForUpdate, ['id'])).toEqual(creaturesAfterMultipleItemsUpdate);
+      expect(update(creatures, creaturesForUpdate, ['id'])).toEqual(
+        creaturesAfterMultipleItemsUpdate
+      );
     });
 
     it('should update partials', () => {
-      expect(update(creatures, { id: 1, type: 'lion' }, 'id')).toEqual(creaturesAfterSingleItemUpdate);
+      expect(update(creatures, { id: 1, type: 'lion' }, 'id')).toEqual(
+        creaturesAfterSingleItemUpdate
+      );
     });
   });
 
   describe('edge cases', () => {
-
-    describe('emtpy values', () => {
-      it('should return updates if original array is empty', () => {
+    describe('empty values', () => {
+      it('should leave original array empty if calling update on empty array', () => {
         const emptyObjectsArray: Creature[] = [];
-        expect(update(emptyObjectsArray, creatures)).toEqual(creatures);
+        expect(update(emptyObjectsArray, creatures)).toEqual(emptyObjectsArray);
       });
 
       it('should return original array if updates array is empty', () => {
@@ -105,8 +131,8 @@ describe('update', () => {
     });
 
     describe('undefined values', () => {
-      it('should return updates if original array is undefined', () => {
-        expect(update(undefined as any, creatures)).toEqual(creatures);
+      it('should return source if source is undefined', () => {
+        expect(update(undefined as any, creatures)).toEqual(undefined);
       });
 
       it('should return original array if updates are undefined', () => {
@@ -123,8 +149,8 @@ describe('update', () => {
     });
 
     describe('null values', () => {
-      it('should return updates if original array is null', () => {
-        expect(update(null as any, creatures)).toEqual(creatures);
+      it('should return source if source is null', () => {
+        expect(update(null as any, creatures)).toEqual(null);
       });
 
       it('should return original array if updates are null', () => {
@@ -141,8 +167,8 @@ describe('update', () => {
     });
 
     describe('unexpected value types', () => {
-      it('should return updates if original array not an array', () => {
-        expect(update(1 as any, creatures)).toEqual(creatures);
+      it('should return source if source not an array', () => {
+        expect(update(1 as any, creatures)).toEqual(1);
       });
 
       it('should return original array if updates not matching expected type', () => {

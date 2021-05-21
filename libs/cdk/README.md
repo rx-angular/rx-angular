@@ -11,13 +11,12 @@ applications
 
 ![rx-angular-cdk](https://user-images.githubusercontent.com/10064416/115325340-b8ed0800-a18b-11eb-9896-28c91c9e7801.png)
 
-
 ## Sub Modules
 
-- ⛔ Zone Configuration
-- 🚫 Zone Less
+- [⛔ Zone Configuration](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/zone-configurations)
+- [🚫 Zone Less](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/zone-less)
 - 🛠 Coercing
-- 🛠 Coalescing
+- [🛠 Coalescing](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing)
 - 📡 Notification
 - 🔳 Template Management
 - 🖌 Render-Strategies
@@ -37,9 +36,14 @@ yarn add @rx-angular/cdk
 
 ## ⛔ Zone Configuration
 
-[Zone Flags](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/zone-configuration/zone-flags.md)
+[Zone Flags](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/zone-configurations/docs/zone-flags.md)
 
 ## 🛠 Coalescing
 
-[Coalescing](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/docs/coalescing)
+[Coalescing](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/coalescing)
 
+## Browsers support
+
+| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari-ios/safari-ios_48x48.png" alt="iOS Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>iOS Safari |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| IE11, Edge                                                                                                                                                                                                      | last version                                                                                                                                                                                                      | last version                                                                                                                                                                                                  | last 2 versions                                                                                                                                                                                               | last 2 versions                                                                                                                                                                                                               |

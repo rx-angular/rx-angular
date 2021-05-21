@@ -1,12 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AfterViewInit, Component, Input, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { initialPrimitiveState, PrimitiveState } from '../fixtures';
 import { Observable, Subject } from 'rxjs';
+// tslint:disable-next-line:nx-enforce-module-boundaries
 import { RxState, select } from '@rx-angular/state';
 
 const initialParentState: PrimitiveState = {
   ...initialPrimitiveState,
-  str: 'initialParent'
+  str: 'initialParent',
 };
 
 const initialChildState = { str: 'initialChildState' };
@@ -16,10 +23,11 @@ const initialChildState = { str: 'initialChildState' };
   template: `
     <span id="child">{{
       (str$ | async) == null ? 'undefined' : (str$ | async)
-      }}</span>
-  `
+    }}</span>
+  `,
 })
-export class RxStateGlueComponent extends RxState<{ str: string }>
+export class RxStateGlueComponent
+  extends RxState<{ str: string }>
   implements AfterViewInit {
   afterViewInit = false;
   str$ = this.select('str');
@@ -52,14 +60,14 @@ export class RxStateGlueComponent extends RxState<{ str: string }>
   template: `
     <span id="parent">{{
       (str$ | async) == null ? 'undefined' : (str$ | async)
-      }}</span>
+    }}</span>
     <rx-angular-state-glue-test
       [str]="str$ | async"
       (strChange)="strChange$.next($event)"
       (strChangeWrong)="strChangeWrong$.next($event)"
     >
     </rx-angular-state-glue-test>
-  `
+  `,
 })
 export class RxStateGlueContainerComponent
   extends RxState<PrimitiveState & { strWrong: string }>
@@ -89,7 +97,7 @@ describe('GlueTestComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [RxStateGlueComponent, RxStateGlueContainerComponent]
+      declarations: [RxStateGlueComponent, RxStateGlueContainerComponent],
     }).compileComponents();
     parentFixture = TestBed.createComponent(RxStateGlueContainerComponent);
     parentFixture.detectChanges();
