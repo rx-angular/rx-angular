@@ -5,9 +5,13 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 # Motivation
 
+Coalescing means multiple things "grow" togeather.
+
 ![RxAngular - CDK/Coalescing](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing.png)
 
-If two or more things coalesce, they come or grow together to form one thing or system.
+If two or more things coalesce, they come merge togeather into one thing or system.
+Natively Angular is using this under the hood already for a long time.
+
 In RxAngular coalescing is used for merging multiple emissions, streams or calls that happen during a given timeframe. As one of the key building blocks for performance, this technique is utilized to improve the change detection cycles of angular applications.
 
 The next example shows the effect of coalescing visualized in flame charts.
