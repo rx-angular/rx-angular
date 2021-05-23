@@ -1,10 +1,10 @@
 ## Overview
 
-Transformation helpers provides a set of tools that simplifies the management of data structures in an immutable way.
+Transformation helpers provide a set of tools that simplifies the management of data structures in an immutable way.
 
-Currently transformation helpers support the management of objects and arrays.
+Currently, transformation helpers support the management of objects and arrays.
 
-You can use the transformation helpers without RxState but expect the behavior to be opinionated since in the first place this package is designed to optimize state management with RxState.
+You can use the transformation helpers without RxState but expect the behavior to be opinionated since, in the first place, this package is designed to optimize state management with RxState.
 
 ---
 
