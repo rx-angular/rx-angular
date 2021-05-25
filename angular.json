@@ -6,7 +6,7 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "css"
         }
       },
       "root": "apps/demos",
@@ -301,127 +301,6 @@
           },
           "outputs": [
             "coverage/apps/docs"
-          ]
-        }
-      }
-    },
-    "tour-of-heroes": {
-      "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
-      "root": "apps/tour-of-heroes",
-      "sourceRoot": "apps/tour-of-heroes/src",
-      "prefix": "rx-angular",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/tour-of-heroes",
-            "index": "apps/tour-of-heroes/src/index.html",
-            "main": "apps/tour-of-heroes/src/main.ts",
-            "polyfills": "apps/tour-of-heroes/src/polyfills.ts",
-            "tsConfig": "apps/tour-of-heroes/tsconfig.app.json",
-            "assets": [
-              "apps/tour-of-heroes/src/favicon.ico",
-              "apps/tour-of-heroes/src/assets"
-            ],
-            "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
-              "apps/tour-of-heroes/src/styles.scss"
-            ],
-            "scripts": [],
-            "vendorChunk": true,
-            "extractLicenses": false,
-            "buildOptimizer": false,
-            "sourceMap": true,
-            "optimization": false,
-            "namedChunks": true
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/tour-of-heroes/src/environments/environment.ts",
-                  "with": "apps/tour-of-heroes/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            },
-            "zoneless": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/tour-of-heroes/src/environments/environment.ts",
-                  "with": "apps/tour-of-heroes/src/environments/environment.zoneless.ts"
-                }
-              ]
-            }
-          },
-          "outputs": [
-            "{options.outputPath}"
-          ]
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "tour-of-heroes:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "tour-of-heroes:build:production"
-            },
-            "zoneless": {
-              "browserTarget": "tour-of-heroes:build:zoneless"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "tour-of-heroes:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/tour-of-heroes/tsconfig.app.json",
-              "apps/tour-of-heroes/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/tour-of-heroes/**/*"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/tour-of-heroes/jest.config.js",
-            "passWithNoTests": true
-          },
-          "outputs": [
-            "coverage/apps/tour-of-heroes"
           ]
         }
       }

@@ -84,9 +84,6 @@
     "docs": {
       "tags": ["type:app"]
     },
-    "tour-of-heroes": {
-      "tags": ["type:app"]
-    },
     "tour-of-heroes-ngxs": {
       "tags": ["type:app"]
     },
