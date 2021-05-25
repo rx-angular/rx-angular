@@ -1881,15 +1881,15 @@
     tmp "~0.2.1"
     tslib "^2.0.0"
 
-"@nrwl/node@12.3.3":
-  version "12.3.3"
-  resolved "https://registry.yarnpkg.com/@nrwl/node/-/node-12.3.3.tgz#8979c676e176162d8e33ea68f55d65d02e134303"
-  integrity sha512-x/e9AJG3kFZcA6Q44zuLeyB3ab0oiFfJ98A1y+AJG2fnJigl+zBaHobDn3I3I1qm+MXye4QcSmOC0yQpcvH+SA==
+"@nrwl/node@12.3.4":
+  version "12.3.4"
+  resolved "https://registry.yarnpkg.com/@nrwl/node/-/node-12.3.4.tgz#404e49659b4c5dfe07bc7e1f39aef1801c52c917"
+  integrity sha512-PgVG9SFsLgWhXXCYP17wMTAQMruW66Nn8sS6V6VZM7QHJzDFplkwOl7v+GEL/H0k5KPE6ItoHdrKR2f60GYkfQ==
   dependencies:
-    "@nrwl/devkit" "12.3.3"
-    "@nrwl/jest" "12.3.3"
-    "@nrwl/linter" "12.3.3"
-    "@nrwl/workspace" "12.3.3"
+    "@nrwl/devkit" "12.3.4"
+    "@nrwl/jest" "12.3.4"
+    "@nrwl/linter" "12.3.4"
+    "@nrwl/workspace" "12.3.4"
     circular-dependency-plugin "5.2.0"
     copy-webpack-plugin "6.0.3"
     fork-ts-checker-webpack-plugin "^3.1.1"
@@ -8698,7 +8698,6 @@ minipass-fetch@^1.3.0, minipass-fetch@^1.3.2:
   resolved "https://registry.yarnpkg.com/minipass-fetch/-/minipass-fetch-1.3.3.tgz#34c7cea038c817a8658461bf35174551dce17a0a"
   integrity sha512-akCrLDWfbdAWkMLBxJEeWTdNsjML+dt5YgOI4gJ53vuO0vrmYQkUPxa6j6V65s9CcePIr2SSWqjT2EcrNseryQ==
   dependencies:
-    encoding "^0.1.12"
     minipass "^3.1.0"
     minipass-sized "^1.0.3"
     minizlib "^2.0.0"
