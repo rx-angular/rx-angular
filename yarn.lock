@@ -1750,19 +1750,20 @@
     node-gyp "^7.1.0"
     read-package-json-fast "^2.0.1"
 
-"@nrwl/angular@12.3.3":
-  version "12.3.3"
-  resolved "https://registry.yarnpkg.com/@nrwl/angular/-/angular-12.3.3.tgz#13ffd5d67d1a0873c0dc68820f4ce42294574351"
-  integrity sha512-3zJoYAUcthjgQBeunJ5yaaFo+azubXdhaXSSOgpx6CT4Lwfm8ydctxJ78T38ibkA/oYPfnsJ0MfRO62pv45XSA==
+"@nrwl/angular@12.3.4":
+  version "12.3.4"
+  resolved "https://registry.yarnpkg.com/@nrwl/angular/-/angular-12.3.4.tgz#cf67f072138b33e2d4842fc7f20d7cb88eb07bd5"
+  integrity sha512-z2gewGHbwJ3JZB5jfA0pu8Rypq7iFxdf2hyJeXKw8D59usPDQVXf3T2GcxQ/AGzD752WiS7+/2+03mfoopFqYQ==
   dependencies:
     "@angular-devkit/schematics" "~12.0.0"
-    "@nrwl/cypress" "12.3.3"
-    "@nrwl/devkit" "12.3.3"
-    "@nrwl/jest" "12.3.3"
-    "@nrwl/linter" "12.3.3"
+    "@nrwl/cypress" "12.3.4"
+    "@nrwl/devkit" "12.3.4"
+    "@nrwl/jest" "12.3.4"
+    "@nrwl/linter" "12.3.4"
     "@schematics/angular" "~12.0.0"
     jasmine-marbles "~0.6.0"
     tslib "^2.1.0"
+    webpack-merge "5.7.3"
 
 "@nrwl/cli@12.3.3":
   version "12.3.3"
@@ -1795,6 +1796,23 @@
     "@nrwl/devkit" "12.3.3"
     "@nrwl/linter" "12.3.3"
     "@nrwl/workspace" "12.3.3"
+    fork-ts-checker-webpack-plugin "^3.1.1"
+    rxjs "^6.5.4"
+    ts-loader "5.4.5"
+    tsconfig-paths-webpack-plugin "3.2.0"
+    tslib "^2.0.0"
+    webpack-node-externals "1.7.2"
+    yargs-parser "20.0.0"
+
+"@nrwl/cypress@12.3.4":
+  version "12.3.4"
+  resolved "https://registry.yarnpkg.com/@nrwl/cypress/-/cypress-12.3.4.tgz#0f1cabb92cba1d102435afc4be82ce731e7b5843"
+  integrity sha512-aENY3HEi7/3mEvzg8X7pAacfa78mJIGxlI0nWKwhY7NCTycwplR1920+JiE4TsjW8Z90gstxVjKSANNXfnNDbg==
+  dependencies:
+    "@cypress/webpack-preprocessor" "~4.1.2"
+    "@nrwl/devkit" "12.3.4"
+    "@nrwl/linter" "12.3.4"
+    "@nrwl/workspace" "12.3.4"
     fork-ts-checker-webpack-plugin "^3.1.1"
     rxjs "^6.5.4"
     ts-loader "5.4.5"
@@ -8698,7 +8716,6 @@ minipass-fetch@^1.3.0, minipass-fetch@^1.3.2:
   resolved "https://registry.yarnpkg.com/minipass-fetch/-/minipass-fetch-1.3.3.tgz#34c7cea038c817a8658461bf35174551dce17a0a"
   integrity sha512-akCrLDWfbdAWkMLBxJEeWTdNsjML+dt5YgOI4gJ53vuO0vrmYQkUPxa6j6V65s9CcePIr2SSWqjT2EcrNseryQ==
   dependencies:
-    encoding "^0.1.12"
     minipass "^3.1.0"
     minipass-sized "^1.0.3"
     minizlib "^2.0.0"
