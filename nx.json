@@ -50,6 +50,10 @@
       "tags": ["type:lib", "type:cdk"],
       "implicitDependencies": []
     },
+    "cdk-notifications": {
+      "tags": ["type:lib", "type:cdk"],
+      "implicitDependencies": ["cdk-coercing"]
+    },
     "cdk": {
       "tags": ["type:lib", "type:cdk"],
       "implicitDependencies": [

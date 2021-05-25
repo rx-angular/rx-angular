@@ -1,4 +1,4 @@
-import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core';
+import { RenderStrategy, RenderStrategyFactoryConfig } from '../../core/render-aware';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { timeoutTick } from '../../experimental/render-strategies/rxjs/scheduling';
 import { afterScheduleCD } from '../util';

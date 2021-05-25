@@ -9,10 +9,12 @@ import { asyncScheduler } from '@rx-angular/cdk/zone-less';
 import {
   strategyHandling,
   RxStrategyProvider,
-  templateNotifier,
-  RxNotificationKind,
   RxStrategyNames,
 } from '@rx-angular/cdk';
+import {
+  createTemplateNotifier,
+  RxNotificationKind,
+} from '@rx-angular/cdk/notifications';
 import {
   NextObserver,
   Observable,
@@ -85,7 +87,7 @@ export class PushPipe<S extends string = string>
   /** @internal */
   private readonly subscription: Unsubscribable;
   /** @internal */
-  private readonly templateObserver = templateNotifier<any>();
+  private readonly templateObserver = createTemplateNotifier<any>();
   /** @internal */
   private readonly strategyHandler = strategyHandling(
     this.strategyProvider.primaryStrategy,
@@ -166,8 +168,8 @@ export class PushPipe<S extends string = string>
       .pipe(
         filter(
           (n) =>
-            n.kind === RxNotificationKind.suspense ||
-            n.kind === RxNotificationKind.next
+            n.kind === RxNotificationKind.Suspense ||
+            n.kind === RxNotificationKind.Next
         ),
         tap((notification) => {
           this.renderedValue = notification.value;

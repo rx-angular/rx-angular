@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
-import { createTemplateManager, RxNotificationKind, RxTemplateManager, RxStrategyCredentials } from '@rx-angular/cdk';
+import { RxTemplateManager } from '@rx-angular/cdk';
+import { RxNotificationKind } from '@rx-angular/cdk/notifications';
 
 import { isObservable, Observable, of, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
 import { Hooks } from '../../../cdk/hooks/hooks';
@@ -43,17 +44,17 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
 
   @Input('rxContextCompleteTrg')
   set rxCompleteTrigger(complete$: Observable<any>) {
-    this.rxState.connect('templateName', complete$.pipe(mapTo(RxNotificationKind.complete)));
+    this.rxState.connect('templateName', complete$.pipe(mapTo(RxNotificationKind.Complete)));
   }
 
   @Input('rxContextErrorTrg')
   set rxErrorTrigger(error$: Observable<any>) {
-    this.rxState.connect('templateName', error$.pipe(mapTo(RxNotificationKind.error)));
+    this.rxState.connect('templateName', error$.pipe(mapTo(RxNotificationKind.Error)));
   }
 
   @Input('rxContextSuspenseTrg')
   set rxSuspenseTrigger(suspense$: Observable<any>) {
-    this.rxState.connect('templateName', suspense$.pipe(mapTo(RxNotificationKind.suspense)));
+    this.rxState.connect('templateName', suspense$.pipe(mapTo(RxNotificationKind.Suspense)));
   }
 
   constructor(
@@ -111,7 +112,7 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
     // this.templateManager.displayView(RxContextTemplateNames.content);
 
     if(!this.rxState.get('templateName')) {
-      this.rxState.set({ templateName: RxNotificationKind.suspense });
+      this.rxState.set({ templateName: RxNotificationKind.Suspense });
     }
 
     /*this.rxState.hold(this.rxState.select(

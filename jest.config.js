@@ -5,6 +5,7 @@ module.exports = {
     '<rootDir>/apps/tour-of-heroes',
     '<rootDir>/apps/tour-of-heroes-ngxs',
     '<rootDir>/apps/vanilla-case-studies',
+    '<rootDir>/apps/ssr',
     '<rootDir>/libs/test-helpers',
     '<rootDir>/libs/state',
     '<rootDir>/libs/template',
@@ -15,8 +16,8 @@ module.exports = {
     '<rootDir>/libs/cdk/zone-less',
     '<rootDir>/libs/cdk/zone-configurations',
     '<rootDir>/libs/cdk/internals/scheduler',
-    '<rootDir>/apps/ssr',
     '<rootDir>/libs/cdk/coalescing',
     '<rootDir>/libs/cdk/coercing',
+    '<rootDir>/libs/cdk/notifications',
   ],
 };

@@ -1,4 +1,12 @@
 import { EmbeddedViewRef, TemplateRef } from '@angular/core';
+import {
+  RxCompleteNotification,
+  RxErrorNotification,
+  RxNextNotification,
+  RxNotification,
+  RxNotificationKind,
+  RxSuspenseNotification,
+} from '@rx-angular/cdk/notifications';
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import {
   catchError,
@@ -6,16 +14,7 @@ import {
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
-import {
-  RxCoalescingOptions,
-  RxCompleteNotification,
-  RxErrorNotification,
-  RxNextNotification,
-  RxNotification,
-  RxNotificationKind,
-  RxRenderWork,
-  RxSuspenseNotification,
-} from '../model';
+import { RxCoalescingOptions, RxRenderWork } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 import { strategyHandling } from '../utils/strategy-handling';
 import {
