@@ -5,7 +5,7 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 # Motivation
 
-Coalescing means multiple things "grow" togeather.
+Coalescing means multiple things "merge" into one.
 
 ![RxAngular - CDK/Coalescing](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing.png)
 
