@@ -290,13 +290,13 @@
   dependencies:
     tslib "^2.1.0"
 
-"@angular/platform-server@^11.2.0":
-  version "11.2.14"
-  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-11.2.14.tgz#19b0e2e287178b57a761123bdb4b1aafd2493741"
-  integrity sha512-VSJ4FSyMPVCE3EGfD4hIK1fZu+KFYi04uL4Co8vchzBQFpXPFABpCS/lGd7rOyvLnKRmUvl4NGS72gQdS00IUw==
+"@angular/platform-server@12.0.0":
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-12.0.0.tgz#581e694166edfeebcf3f3ab69528cff394749ae1"
+  integrity sha512-8q87lUVglqGLVa6ttR0SkSUK3p2+1z8wAoAxg9iLbqXo8c9JJ9Qdo8/rNThcqROHq6X5Q2p7T45GpDipNq2VkQ==
   dependencies:
     domino "^2.1.2"
-    tslib "^2.0.0"
+    tslib "^2.1.0"
     xhr2 "^0.2.0"
 
 "@angular/router@12.0.0":
