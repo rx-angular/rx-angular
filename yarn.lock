@@ -1750,19 +1750,21 @@
     node-gyp "^7.1.0"
     read-package-json-fast "^2.0.1"
 
-"@nrwl/angular@12.3.3":
-  version "12.3.3"
-  resolved "https://registry.yarnpkg.com/@nrwl/angular/-/angular-12.3.3.tgz#13ffd5d67d1a0873c0dc68820f4ce42294574351"
-  integrity sha512-3zJoYAUcthjgQBeunJ5yaaFo+azubXdhaXSSOgpx6CT4Lwfm8ydctxJ78T38ibkA/oYPfnsJ0MfRO62pv45XSA==
+"@nrwl/angular@12.3.5":
+  version "12.3.5"
+  resolved "https://registry.yarnpkg.com/@nrwl/angular/-/angular-12.3.5.tgz#f578d8f24086b33fd233cf85d506020076a7dd7a"
+  integrity sha512-AXH/LVppvDQLL1QLARg74u7mnRP1jnh6y65CZo2B7cjrP1jib2fLzAOVsr3YRwMrUQ3tpAGG3uYmrwJn/yBsKA==
   dependencies:
     "@angular-devkit/schematics" "~12.0.0"
-    "@nrwl/cypress" "12.3.3"
-    "@nrwl/devkit" "12.3.3"
-    "@nrwl/jest" "12.3.3"
-    "@nrwl/linter" "12.3.3"
+    "@nrwl/cypress" "12.3.5"
+    "@nrwl/devkit" "12.3.5"
+    "@nrwl/jest" "12.3.5"
+    "@nrwl/linter" "12.3.5"
     "@schematics/angular" "~12.0.0"
     jasmine-marbles "~0.6.0"
+    rxjs-for-await "0.0.2"
     tslib "^2.1.0"
+    webpack-merge "5.7.3"
 
 "@nrwl/cli@12.3.3":
   version "12.3.3"
