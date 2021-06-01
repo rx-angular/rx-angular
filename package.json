@@ -85,7 +85,7 @@
     "@ngxs/devtools-plugin": "^3.7.0",
     "@nrwl/angular": "12.3.3",
     "@nrwl/cli": "12.3.4",
-    "@nrwl/cypress": "12.3.3",
+    "@nrwl/cypress": "12.3.5",
     "@nrwl/eslint-plugin-nx": "12.3.4",
     "@nrwl/jest": "12.3.4",
     "@nrwl/linter": "12.3.4",
