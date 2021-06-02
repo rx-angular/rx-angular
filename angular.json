@@ -600,6 +600,9 @@
                 "command": "npx cpx libs/template/schematics/collection.json dist/libs/template/schematics"
               },
               {
+                "command": "npx cpx libs/template/schematics/migration.json dist/libs/template/schematics"
+              },
+              {
                 "command": "npx cpx libs/template/schematics/src/**/files/** dist/libs/template/schematics/src"
               },
               {
