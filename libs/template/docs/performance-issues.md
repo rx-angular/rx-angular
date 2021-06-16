@@ -55,7 +55,7 @@ crucial control over what happens in your application.
 You can play around in the `demo apps (experiments, template-demo)` if you want
 to get a clearer picture of what actually happens.
 
-[The Deep Dive Podcast, Episode 1](https://twitter.com/TheDeepDiveDev/status/1272668862736150530?s=20):
+[The Deep Dive Podcast, Episode 1](https://youtu.be/wVRb1aDHFC0):
 Mythbusting the AsyncPipe with guests @angularlicious and @Michael_Hladky
 
 The long term goal should be to eliminate NgZone by using the `'noop' NgZone`. However, this is only in a few scenarios
