@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "template-migration-01": {
+      "version": "1.0.0",
+      "description": "Update @rx-angular/template to version 1.0.0",
+      "factory": "./src/migrations/update-1-0-0"
+    }
+  }
+}
