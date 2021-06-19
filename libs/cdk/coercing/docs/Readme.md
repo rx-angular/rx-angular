@@ -30,7 +30,7 @@ For this very reason the team later on shipped a sub package under the Angular C
 # Available Approaches
 
 - [@angular/cdk/coercion](https://www.npmjs.com/package/@angular/cdk)
-- 
+- [@rx-angular/cdk/coercion](https://www.npmjs.com/package/@rx-angular/cdk)
 
 **The Benefits of RxAngular**
 
