@@ -28,6 +28,7 @@ There are 2 places in Angular we have coalescing already implemented in the fram
 
 - Coalescing of `ApplicationRef#tick` calls (re-rendering/re-evaluation of the app) triggered by e.g. `ChangeDetectorRef#markForCheck` or `ɵmarkDirty`.
 - The flag `ngZoneEventCoalescing` in `BootstrapOptions`
+- The flag `ngZoneCoalescing` in `BootstrapOptions`
 - RxAngular adds another option where we can apply those techniques manually wherever we want.
 
 **The Benefits of RxAngular**
@@ -35,6 +36,7 @@ There are 2 places in Angular we have coalescing already implemented in the fram
 - ✅ Coalescing techniques as RxJS operators
 - ✅ Configurable durationSelector for all kind of scheduling methods
 - ✅ Scope coalescing to a specific component or object
+- ✅ Memory leak save through WeakMaps
 - ✅ Typed methods
 - ✅ IDE inline documentation
 
