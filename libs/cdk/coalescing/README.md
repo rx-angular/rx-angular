@@ -19,7 +19,7 @@ Besides a well documented and typed API it also provides a set of marble diagram
 - ✅ IDE inline documentation
 
 ## Demos:
-- [GitHub](https://github.com/BioPhoton/rx-angular-cdk-coalescing)
+- [⚡ GitHub](https://github.com/BioPhoton/rx-angular-cdk-coalescing)
 
 
 ## Install
