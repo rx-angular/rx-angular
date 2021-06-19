@@ -25,25 +25,28 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 # RxAngular Zone-Less
 
-**utils**
-- getZoneUnPatchedApi
-**browser**
+**utils**  
+- getZoneUnPatchedApi  
+
+**browser**  
 - requestAnimationFrame
 - cancelAnimationFrame,
 - setInterval,
 - clearInterval,
 - setTimeout,
-- clearTimeout,
-**rxjs**
-creation 
+- clearTimeout
+ 
+**rxjs**  
+
+creation   
 - fromEvent
 - interval
 - timer
-- 
-operators
+ 
+operators  
 
 
-scheduler
+scheduler  
 - async
 - asap
 - queue
