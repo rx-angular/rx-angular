@@ -60,7 +60,6 @@ yarn add @rx-angular/cdk
 
 ## Usage
 
-As coercing was already explained in the Angular context, apply this knokledge in a more general way.
 
 > **⚠ Notice:**  
 > 
