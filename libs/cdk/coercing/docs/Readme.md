@@ -35,9 +35,6 @@ For this very reason the team later on shipped a sub package under the Angular C
 **The Benefits of RxAngular**
 
 - ✅ 
-- ✅ Typed methods
-- ✅ IDE inline documentation
-
 
 # RxAngular Coercing operators
 
