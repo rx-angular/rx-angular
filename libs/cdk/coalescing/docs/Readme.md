@@ -70,11 +70,15 @@ platformBrowserDynamic()
   .catch((err) => console.error(err));
 ```
 
-This setting applies the technique of coalescing to fired events bound by Angular. It will coalesce any event emissions occurring within an animation frame and run `ApplicationRef#tick` only one time instead of multiple times.
+This setting applies the technique of coalescing to fired events bound by Angular.  
+It will coalesce any event emissions occurring during the duration of an animation frame and after that, run `ApplicationRef#tick` only one time instead of multiple times.
 
-This is mainly impactful if we deal with event-heavy templates. The diagram below shows the difference between 2 events with and without coalescing.
+This is mainly impactful if we deal with event-heavy templates. The diagrams below shows the difference between 2 events with and without coalescing.
 
-![Angular - ngZoneEventCoalescing diagram])(TODO)
+![Angular - ngZoneEventCoalescing Cefore](https://user-images.githubusercontent.com/10064416/122643339-92a60300-d10f-11eb-9e6c-0ebd3dbe7c45.png)
+![Angular - ngZoneEventCoalescing After](https://user-images.githubusercontent.com/10064416/122643340-946fc680-d10f-11eb-952d-9f19d6245d2d.png)
+![Angular - ngZoneEventCoalescing Details](https://user-images.githubusercontent.com/10064416/122643341-96398a00-d10f-11eb-8815-9ed7ec00ac11.png)
+
 
 As these situations typically occur across multiple components or are hard to scope and demo, we list some staged examples:
 
