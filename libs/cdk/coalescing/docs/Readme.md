@@ -81,16 +81,19 @@ This is mainly impactful if we deal with event-heavy templates. The diagrams bel
 
 As these situations typically occur across multiple components or are hard to scope and demo, we list some staged examples:
 
+**Multiple Events on the same element**
 ```html
 <button (click)="doStuff()" (mousedown)="doStuff()">click</button>
 ```
 
+**Nested Events on multiple elements**
 ```html
 <div (mousedown)="doStuff()">
   <button (click)="doStuff()">click</button>
 </div>  
 ```
 
+**Event Bubbling of smae event on multiple elements**
 ```html
 <div (click)="doStuff()">
   <button (click)="doStuff()">click</button>
