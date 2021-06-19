@@ -28,7 +28,6 @@ There are 2 places in Angular we have coalescing already implemented in the fram
 
 - Coalescing of `ApplicationRef#tick` calls (re-rendering/re-evaluation of the app) triggered by e.g. `ChangeDetectorRef#markForCheck` or `ɵmarkDirty`.
 - The flag `ngZoneEventCoalescing` in `BootstrapOptions`
-- The flag `ngZoneCoalescing` in `BootstrapOptions`
 - RxAngular adds another option where we can apply those techniques manually wherever we want.
 
 **The Benefits of RxAngular**
