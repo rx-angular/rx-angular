@@ -32,4 +32,4 @@ yarn add @rx-angular/cdk
 
 ## Documentation
 
-- [Coalescing](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/zone-less/docs/Readme.md)
+- [Zone-Less](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/zone-less/docs/Readme.md)
