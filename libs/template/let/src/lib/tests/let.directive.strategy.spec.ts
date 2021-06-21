@@ -45,13 +45,7 @@ const setupLetDirectiveTestComponentStrategy = (): void => {
       { provide: ElementRef, useValue: new MockElementRef({}) },
       TemplateRef,
       ViewContainerRef,
-      LetDirective,
-      {
-        provide: RX_ANGULAR_CONFIG,
-        useValue: {
-          primaryStrategy: 'native',
-        },
-      },
+      LetDirective
     ],
   });
   fixtureLetDirectiveTestComponent = TestBed.createComponent(
@@ -73,7 +67,76 @@ describe('LetDirective when using strategy', () => {
   beforeAll(() => mockConsole());
   beforeEach(setupLetDirectiveTestComponentStrategy);
 
-  it('should work with different if a strategy other than the default', () => {
+  it('should work with default strategy', done => {
+    letDirectiveTestComponent.value$ = of(5);
+    fixtureLetDirectiveTestComponent.detectChanges();
+    setTimeout(() => {
+      expect(componentNativeElement.textContent).toBe('5');
+      done();
+    }, 1);
+  });
+
+  it('should work with noPriority strategy', done => {
+    letDirectiveTestComponent.value$ = of(5);
+    letDirectiveTestComponent.strategy = 'noPriority';
+    fixtureLetDirectiveTestComponent.detectChanges();
+    setTimeout(() => {
+      expect(componentNativeElement.textContent).toBe('5');
+      done();
+    }, 1);
+  });
+
+  it('should work with immediate strategy', done => {
+    letDirectiveTestComponent.value$ = of(5);
+    letDirectiveTestComponent.strategy = 'immediate';
+    fixtureLetDirectiveTestComponent.detectChanges();
+    setTimeout(() => {
+      expect(componentNativeElement.textContent).toBe('5');
+      done();
+    }, 1);
+  });
+
+  it('should work with userBlocking strategy', done => {
+    letDirectiveTestComponent.value$ = of(5);
+    letDirectiveTestComponent.strategy = 'userBlocking';
+    fixtureLetDirectiveTestComponent.detectChanges();
+    setTimeout(() => {
+      expect(componentNativeElement.textContent).toBe('5');
+      done();
+    }, 1);
+  });
+
+  it('should work with normal strategy', done => {
+    letDirectiveTestComponent.value$ = of(5);
+    letDirectiveTestComponent.strategy = 'normal';
+    fixtureLetDirectiveTestComponent.detectChanges();
+    setTimeout(() => {
+      expect(componentNativeElement.textContent).toBe('5');
+      done();
+    }, 1);
+  });
+
+  it('should work with low strategy', done => {
+    letDirectiveTestComponent.value$ = of(5);
+    letDirectiveTestComponent.strategy = 'low';
+    fixtureLetDirectiveTestComponent.detectChanges();
+    setTimeout(() => {
+      expect(componentNativeElement.textContent).toBe('5');
+      done();
+    }, 1);
+  });
+
+  it('should work with idle strategy', done => {
+    letDirectiveTestComponent.value$ = of(5);
+    letDirectiveTestComponent.strategy = 'idle';
+    fixtureLetDirectiveTestComponent.detectChanges();
+    setTimeout(() => {
+      expect(componentNativeElement.textContent).toBe('5');
+      done();
+    }, 1);
+  });
+
+  it('should work with native strategy', () => {
     letDirectiveTestComponent.value$ = of(1, 2, 3, 4, 5);
     letDirectiveTestComponent.strategy = 'native';
     fixtureLetDirectiveTestComponent.detectChanges();
