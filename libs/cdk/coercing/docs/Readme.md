@@ -65,14 +65,18 @@ export class AppComponent {
 - ✅ 
 
 
-# RxAngular Coercing operators
+# RxAngular Coercing helpers
 
-There are:
-- 
+**Factories:**
+- coerceObservable
+- coerceDistinctObservable
+- coerceAllFactory
+
+**Operators:**
+- coerceObservableWith
+- coerceDistinctWith
 
 In the section usage we will go into more detail.
-
-## Marble Diagram
 
 ## Setup
 
