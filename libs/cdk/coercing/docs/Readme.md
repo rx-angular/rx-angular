@@ -56,14 +56,11 @@ export class AppComponent {
 
 **The Benefits of RxAngular**
 
-- ✅ Helpers to coerce values to Observables
+- ✅ Coercing helper for Observables
 - ✅ RxJS operators 
 - ✅ RxJS factories
-- ✅ Well tested 
-- ✅ 
-- ✅ 
-- ✅ 
-- ✅ 
+- ✅ Fully tested 
+- ✅ Well Documented
 
 
 # RxAngular Coercing helpers
