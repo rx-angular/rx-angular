@@ -12,12 +12,15 @@ The documentation also includes a set of marble diagrams for better visual under
 
 ## Key features
 
-- turn imperative code into reactive streams
-- strictly typed
+- ✅ Coercing helper for Observables
+- ✅ RxJS operators
+- ✅ RxJS factories
+- ✅ Fully tested
+- ✅ Well Documented
 
 ## Demos:
 
-- [⚡ GitHub](https://github.com/rx-angular/rx-angular-cdk-coercing)
+- [⚡ GitHub](https://github.com/BioPhoton/rx-angular-cdk-coercion)
 
 ## Install
 
@@ -29,4 +32,4 @@ yarn add @rx-angular/cdk/coercing
 
 ## Documentation
 
-- [Coercing](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/coercing/docs/Readme.md)
+- [Coercion](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/coercing/docs/Readme.md)
