@@ -56,9 +56,10 @@ export class AppComponent {
 
 **The Benefits of RxAngular**
 
-- ✅ helpers to coerce values to Observables
-- ✅ RxJS operators as well as factories
-- ✅ 
+- ✅ Helpers to coerce values to Observables
+- ✅ RxJS operators 
+- ✅ RxJS factories
+- ✅ Well tested 
 - ✅ 
 - ✅ 
 - ✅ 
@@ -92,6 +93,43 @@ yarn add @rx-angular/cdk
 ```
 
 ## Usage
+
+```typescript
+@Component({
+  // ...
+})
+export class AppComponent {
+  
+  prop1$: Observable<number>;
+  
+  @Input()
+  set prop1(val: Observable<number> | number) {
+      this.prop1$ = coerceObservable(val);
+  }
+  
+}
+```
+
+
+
+```typescript
+@Component({
+  // ...
+})
+export class AppComponent {
+  
+  _prop1 = new Subject<number | Observable<number>>();
+  prop1$: Observable<number> = this._prop1.pipe(
+    coerceObservableWith()
+  ); 
+ 
+  @Input()
+  set prop1(val: Observable<number> | number) {
+      this._prop1.next(val);
+  }
+  
+}
+```
 
 
 > **⚠ Notice:**  
