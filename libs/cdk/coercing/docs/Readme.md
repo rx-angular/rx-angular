@@ -9,12 +9,12 @@ Coercing, or to be more specific type coercion is the process of converting a va
 This can be done with any primitive value in JavaScript. e.g. number, string, Symbol, boolean, null, undefined
 
 In practice you can apply this technique in 2 ways:
-- explicitly e.g. `Number(string)` coercres a string to a number
-- implicitely e.g. `!!string` coerces a string to a boolean
+- **explicitly** e.g. `Number(string)` coercres a string to a number
+- **implicitely** e.g. `!!string` coerces a string to a boolean
 
 In general when we apply those techniques our code base starts to maintain repetative patterns which either bloten up the codebase or just makes it harder to read.
 
-As a good example let's look at this snippet of code here:
+As an example let's look at this snippet of code here:
 
 ```typescript
 const num = !isNaN(parseFloat(valueFromInput)) && !isNaN(Number(valueFromInput));
@@ -23,7 +23,7 @@ const num = !isNaN(parseFloat(valueFromInput)) && !isNaN(Number(valueFromInput))
 Because we receive the value from an input the type is always string. We have to care every time the when we want to pass the value to get a propper number type of it.
 
 Furthermore, in version 10 of Angular the team announced strict type checking as opt-in configuration. 
-Since then developers where encurraged to match exaclty the types. This especially needs attention when it comes to templates.
+Since then, developers where encurraged to match the types exaclty. This especially needs attention when it comes to templates.
 
 For this very reason the team later on shipped a sub package under the Angular CDK to provide some helpers for the important cases.
 The included helpers can be used whenever coercing is needed to obtain a propper value.
