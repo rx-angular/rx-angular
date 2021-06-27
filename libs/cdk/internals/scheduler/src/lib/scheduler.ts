@@ -67,7 +67,7 @@ const localSetTimeout = typeof setTimeout === 'function' ? setTimeout : null;
 const localClearTimeout =
   typeof clearTimeout === 'function' ? clearTimeout : null;
 const localSetImmediate =
-  typeof setImmediate !== 'undefined' ? setImmediate : null; // IE and Node.js + jsdom
+  typeof ɵglobal.setImmediate !== 'undefined' ? ɵglobal.setImmediate : null; // IE and Node.js + jsdom
 
 function advanceTimers(currentTime) {
   // Check for tasks that are no longer delayed and add them to the queue.
