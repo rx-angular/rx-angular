@@ -155,8 +155,12 @@ function getListChanges<T>(
   });
   changes.forEachIdentityChange((record) => {
     const item = record.item;
-    changesArr.push(getUpdateChange(item, record.currentIndex));
-    changedIdxs.add(item);
+    if (!changedIdxs.has(item)) {
+      changesArr.push(getUpdateChange(item, record.currentIndex));
+      changedIdxs.add(item);
+    } else {
+      console.warn('oO');
+    }
   });
   items.forEach((item, index) => {
     if (!changedIdxs.has(item)) {

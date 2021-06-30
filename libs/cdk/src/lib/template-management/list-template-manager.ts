@@ -10,7 +10,7 @@ import { combineLatest, merge, Observable, of, OperatorFunction } from 'rxjs';
 import {
   catchError,
   ignoreElements,
-  map,
+  map, materialize,
   switchMap,
   tap,
   withLatestFrom,
@@ -103,7 +103,9 @@ export function createListTemplateManager<
       o$.pipe(
         // map iterable to latest diff
         map((iterable) => {
+          console.log('new data', iterable);
           if (partiallyFinished) {
+            console.log('partiallyFinished ' + partiallyFinished);
             const currentIterable = [];
             for (let i = 0, ilen = viewContainerRef.length; i < ilen; i++) {
               const viewRef = <EmbeddedViewRef<C>>viewContainerRef.get(i);
@@ -120,6 +122,7 @@ export function createListTemplateManager<
         // Cancel old renders
         switchMap(([{ changes, items }, strategy]) => {
           if (!changes) {
+            console.log('no changes');
             return of([]);
           }
           const listChanges = listViewHandler.getListChanges(changes, items);
@@ -128,40 +131,47 @@ export function createListTemplateManager<
           const applyChanges$ = getObservablesFromChangesArray(
             changesArr,
             strategy,
-            count
+            items.length
           );
           partiallyFinished = true;
+          console.log('start', partiallyFinished);
           // @TODO we need to know if we need to notifyParent on move aswell
           notifyParent = insertedOrRemoved && parent;
-          count = items.length;
-          return merge(
-            combineLatest(
-              // emit after all changes are rendered
-              applyChanges$.length > 0 ? applyChanges$ : [of(items)]
-            ).pipe(
-              tap(() => (partiallyFinished = false)),
-              // somehow this makes the strategySelect work
-              notifyAllParentsIfNeeded(
-                tNode,
+          return new Observable(subscriber => {
+            const s = merge(
+              combineLatest(
+                // emit after all changes are rendered
+                applyChanges$.length > 0 ? applyChanges$ : [of(items)]
+              ).pipe(
+                tap(() => (partiallyFinished = false)),
+                tap(() => console.log('finished', partiallyFinished)),
+                // somehow this makes the strategySelect work
+                notifyAllParentsIfNeeded(
+                  tNode,
+                  injectingViewCdRef,
+                  strategy,
+                  () => notifyParent
+                )
+              ),
+              // emit injectingParent if needed
+              notifyInjectingParentIfNeeded(
                 injectingViewCdRef,
                 strategy,
-                () => notifyParent
-              )
-            ),
-            // emit injectingParent if needed
-            notifyInjectingParentIfNeeded(
-              injectingViewCdRef,
-              strategy,
-              insertedOrRemoved
-            ).pipe(ignoreElements())
-          ).pipe(
-            map(() => items),
-            catchError((e) => {
-              partiallyFinished = false;
-              errorHandler.handleError(e);
-              return of(e);
-            })
-          );
+                insertedOrRemoved
+              ).pipe(ignoreElements())
+            ).pipe(
+              map(() => items),
+              catchError((e) => {
+                partiallyFinished = false;
+                errorHandler.handleError(e);
+                return of(e);
+              })
+            ).subscribe(subscriber);
+            return () => {
+              s.unsubscribe();
+              console.log('unsubscribe');
+            }
+          })
         })
       );
   }
@@ -190,6 +200,7 @@ export function createListTemplateManager<
             () => {
               const type = change[0];
               const payload = change[1];
+              // console.log('perform work', type, payload);
               switch (type) {
                 case RxListTemplateChangeType.insert:
                   listViewHandler.insertView(payload[0], payload[1], count);
