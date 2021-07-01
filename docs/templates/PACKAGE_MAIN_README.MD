@@ -40,7 +40,7 @@ A short sentence pitching the idea and benefits
 -->
 
 Example:
-> ## A Component Development Kit for high performant and ergonomic Angular applications and UI libs.
+> ## A Component Development Kit for high performant, ergonomic Angular applications and UI libs.
 
 
 <!-- TEASER:
