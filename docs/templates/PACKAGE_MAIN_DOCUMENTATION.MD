@@ -18,10 +18,10 @@ Example:
 
 Motivation is here to point out the value for the consumer. If possible we can make clear in which situations the impact will get visible most.
 
-Importent to cover in this section is:
-- Theoretical background to understand the problem
-- The problem and pain points in detail
-- Sketch a optimal solution for the problem
+This section should cover at least these main points:
+- Problem description. What are existing pain points? (code duplication, error prone, performance, ...)
+- If needed, describe theoretical background to understand the problem
+- Roughly describe a possible solution for the problem and point out the improvements (increased maintainability, performance, ...)
 -->
 
 Example:
