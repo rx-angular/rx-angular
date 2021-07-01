@@ -27,7 +27,7 @@ This section should cover at least these main points:
 Example:
 > 
 
-# Available Approaches
+# Other Solution Approaches
 <!-- AVAILABLE_APPROACHES:
 * required
 
