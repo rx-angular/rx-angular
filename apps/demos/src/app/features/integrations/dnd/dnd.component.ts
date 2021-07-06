@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx-for.module';
 
 @Component({
@@ -29,15 +30,31 @@ import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx
       <ul>
         <li
           cdkDrag
-          *rxFor="let item of items$; trackBy: trackItem; strategy: 'normal'; parent: false; patchZone: false"
+          *rxFor="let item of items$; trackBy: trackItem; strategy: 'normal'"
+        >{{item.value}}</li>
+      </ul>
+    </div>
+
+    <div
+      cdkDropList
+      (cdkDropListDropped)="drop($event)"
+    >
+      <h3>rxFor with noop-switch</h3>
+      <ul>
+        <li
+          cdkDrag
+          (cdkDragStarted)="dragging$.next(true)"
+          (cdkDragEnded)="dragging$.next(false)"
+          *rxFor="let item of items$; trackBy: trackItem; strategy: noopWhileDrag$"
         >{{item.value}}</li>
       </ul>
     </div>
 
     <style>
       :host {
-        display: grid;
-        grid-template-columns: 200px 200px;
+        display: flex;
+        width: 100%;
+        justify-content: space-around;
       }
 
       div[cdkDropList] {
@@ -50,11 +67,13 @@ import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx
 })
 export class DndComponent {
   items$ = new BehaviorSubject<any>(createItems(50));
-  isDragging = false;
+  dragging$ = new BehaviorSubject<boolean>(false);
+
+  noopWhileDrag$ = this.dragging$.pipe(
+    map(d => d ? 'noop' : 'normal')
+  )
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   drop(event: CdkDragDrop<any>) {
     const items = this.items$.value;
