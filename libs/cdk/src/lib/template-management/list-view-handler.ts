@@ -58,15 +58,25 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
     index: number,
     count: number
   ): void {
-    const oldView = viewContainerRef.get(oldIndex);
-    const view = <EmbeddedViewRef<C>>viewContainerRef.move(oldView, index);
-    workFactory(() => {
-      updateViewContext(item, view, {
-        count,
-        index,
+    let oldView;
+    let view;
+    // TODO: re-store
+    try {
+      oldView = viewContainerRef.get(oldIndex);
+      view = <EmbeddedViewRef<C>>viewContainerRef.move(oldView, index);
+      workFactory(() => {
+        updateViewContext(item, view, {
+          count,
+          index,
+        });
+        view.detectChanges();
       });
-      view.detectChanges();
-    });
+    } catch (e) {
+      console.log('oldView', oldView);
+      console.log('view', view);
+      console.trace(e);
+      insertView(item, index, count);
+    }
   }
 
   function updateView(item: T, index: number, count: number): void {
@@ -138,12 +148,12 @@ function getListChanges<T>(
     const item = record.item;
     if (record.previousIndex == null) {
       // insert
-      changesArr.push(getInsertChange(item, currentIndex));
+      changesArr.push(getInsertChange(item, currentIndex === null ? undefined : currentIndex));
       changedIdxs.add(item);
       notifyParent = true;
     } else if (currentIndex == null) {
       // remove
-      changesArr.push(getRemoveChange(item, adjustedPreviousIndex));
+      changesArr.push(getRemoveChange(item, adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex));
       changedIdxs.add(item);
       notifyParent = true;
     } else if (adjustedPreviousIndex !== null) {
@@ -158,8 +168,6 @@ function getListChanges<T>(
     if (!changedIdxs.has(item)) {
       changesArr.push(getUpdateChange(item, record.currentIndex));
       changedIdxs.add(item);
-    } else {
-      console.warn('oO');
     }
   });
   items.forEach((item, index) => {

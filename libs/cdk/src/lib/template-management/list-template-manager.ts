@@ -8,12 +8,11 @@ import {
 } from '@angular/core';
 import { combineLatest, merge, Observable, of, OperatorFunction } from 'rxjs';
 import {
-  catchError,
+  catchError, distinctUntilChanged,
   ignoreElements,
-  map, materialize,
+  map,
   switchMap,
-  tap,
-  withLatestFrom,
+  tap
 } from 'rxjs/operators';
 import { RxStrategyCredentials } from '../model';
 import { onStrategy } from '../utils/onStrategy';
@@ -98,14 +97,11 @@ export function createListTemplateManager<
   };
 
   function render(): OperatorFunction<NgIterable<T>, any> {
-    let count = 0;
     return (o$: Observable<NgIterable<T>>): Observable<any> =>
-      o$.pipe(
+      combineLatest([o$, strategyHandling$.strategy$.pipe(distinctUntilChanged())]).pipe(
         // map iterable to latest diff
-        map((iterable) => {
-          console.log('new data', iterable);
+        map(([iterable, strategy]) => {
           if (partiallyFinished) {
-            console.log('partiallyFinished ' + partiallyFinished);
             const currentIterable = [];
             for (let i = 0, ilen = viewContainerRef.length; i < ilen; i++) {
               const viewRef = <EmbeddedViewRef<C>>viewContainerRef.get(i);
@@ -116,13 +112,12 @@ export function createListTemplateManager<
           return {
             changes: differ.diff(iterable),
             items: iterable != null && Array.isArray(iterable) ? iterable : [],
+            strategy
           };
         }),
-        withLatestFrom(strategyHandling$.strategy$),
         // Cancel old renders
-        switchMap(([{ changes, items }, strategy]) => {
+        switchMap(({ changes, items, strategy }) => {
           if (!changes) {
-            console.log('no changes');
             return of([]);
           }
           const listChanges = listViewHandler.getListChanges(changes, items);
@@ -134,7 +129,6 @@ export function createListTemplateManager<
             items.length
           );
           partiallyFinished = true;
-          console.log('start', partiallyFinished);
           // @TODO we need to know if we need to notifyParent on move aswell
           notifyParent = insertedOrRemoved && parent;
           return new Observable(subscriber => {
@@ -144,7 +138,6 @@ export function createListTemplateManager<
                 applyChanges$.length > 0 ? applyChanges$ : [of(items)]
               ).pipe(
                 tap(() => (partiallyFinished = false)),
-                tap(() => console.log('finished', partiallyFinished)),
                 // somehow this makes the strategySelect work
                 notifyAllParentsIfNeeded(
                   tNode,
@@ -164,12 +157,11 @@ export function createListTemplateManager<
               catchError((e) => {
                 partiallyFinished = false;
                 errorHandler.handleError(e);
-                return of(e);
+                return of(items);
               })
             ).subscribe(subscriber);
             return () => {
               s.unsubscribe();
-              console.log('unsubscribe');
             }
           })
         })
@@ -200,7 +192,6 @@ export function createListTemplateManager<
             () => {
               const type = change[0];
               const payload = change[1];
-              // console.log('perform work', type, payload);
               switch (type) {
                 case RxListTemplateChangeType.insert:
                   listViewHandler.insertView(payload[0], payload[1], count);
