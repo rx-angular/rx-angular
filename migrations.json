@@ -1,11 +1,11 @@
 {
   "migrations": [
     {
-      "version": "12.0.2",
-      "description": "Automatically migrates shadow-piercing selector from `/deep/` to the recommended alternative `::ng-deep`.",
-      "factory": "./migrations/deep-shadow-piercing-selector/index",
-      "package": "@angular/core",
-      "name": "migration-v12-deep-shadow-piercing-selector"
+      "version": "12.0.0-0",
+      "description": "Updates Angular Material to v12",
+      "factory": "./ng-update/index#updateToV12",
+      "package": "@angular/material",
+      "name": "migration-v12"
     }
   ]
 }
