@@ -94,7 +94,7 @@ jobs:
       - run: npx nx-cloud start-ci-run
 
       - name: Run Affected lint
-        run: yarn nx affected:lint --parallel --maxParallel=3 --quiet
+        run: yarn nx affected:lint --parallel --maxParallel=3
 
       - name: Run Affected test
         run: yarn nx affected:test --parallel --maxParallel=2
