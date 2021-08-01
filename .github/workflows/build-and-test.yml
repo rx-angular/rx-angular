@@ -101,7 +101,7 @@ jobs:
         run: yarn nx run ssr-e2e:e2e --headless
       # don't run build in parallel, can cause dead locks
       - name: Run Affected build
-        run: yarn nx affected:build --exclude=$(npx nx affected:libs --plain)
+        run: yarn nx affected:build --with-deps
 
       - run: yarn nx-cloud stop-all-agents
 
