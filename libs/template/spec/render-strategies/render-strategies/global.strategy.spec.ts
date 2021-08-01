@@ -164,5 +164,5 @@ describe('global Strategy', () => {
 });
 
 function spyOnMarkDirty() {
-  spyOn(AngularCore, 'ɵmarkDirty').and.callFake(() => undefined);
+  jest.spyOn(AngularCore, 'ɵmarkDirty').mockImplementation(() => undefined);
 }
