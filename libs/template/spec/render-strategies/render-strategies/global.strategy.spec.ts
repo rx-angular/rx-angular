@@ -125,7 +125,7 @@ describe('global Strategy', () => {
           strategyMethod: 'scheduleCD',
           flushMicrotask: true,
           singleTime: false,
-          afterCD: jest.fn()
+          afterCD: jest.fn(),
           callsExpectations,
         },
         done
