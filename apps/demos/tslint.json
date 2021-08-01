@@ -3,9 +3,15 @@
   "rules": {
     "no-host-metadata-property": false,
     "directive-selector": [true, "attribute", ["rxa", "rx"], "camelCase"],
-    "component-selector": [true, "element",["rxa", "rx"], "kebab-case"]
+    "component-selector": [true, "element",["rxa", "rx"], "kebab-case"],
+    "nx-enforce-module-boundaries": [
+      true,
+      {
+        "allow": ["@rx-angular/cdk"]
+      }
+    ]
   },
   "linterOptions": {
-    "exclude": ["!**/*"]
+    "exclude": ["!**/*", "src/app/rx-angular-pocs/**/*"]
   }
 }
