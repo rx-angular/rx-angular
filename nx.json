@@ -39,6 +39,17 @@
         "demos"
       ]
     },
+    "cdk": {
+      "tags": [
+        "type:lib",
+        "type:cdk"
+      ],
+      "implicitDependencies": [
+        "cdk-internals-scheduler",
+        "cdk-coercing",
+        "cdk-zone-less"
+      ]
+    },
     "cdk-internals-scheduler": {
       "tags": [
         "type:lib",
