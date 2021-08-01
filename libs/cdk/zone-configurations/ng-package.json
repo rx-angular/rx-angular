@@ -3,6 +3,7 @@
   "dest": "../../../dist/libs/cdk/zone-configurations",
   "lib": {
     "entryFile": "src/index.ts",
-    "flatModuleFile": "cdk-zone-configurations"
+    "flatModuleFile": "cdk-zone-configurations",
+    "umdId": "rx-angular.cdk-zone-configurations"
   }
 }
