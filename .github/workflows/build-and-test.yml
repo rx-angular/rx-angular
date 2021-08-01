@@ -54,19 +54,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         name: Checkout [master]
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           fetch-depth: 0
 
       - uses: actions/checkout@v2
         name: Checkout [pr]
-        if: github.ref != 'refs/heads/main'
+        if: github.ref != 'refs/heads/master'
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
-        uses: nrwl/nx-set-shas@v1
+        uses: nrwl/nx-set-shas@v2
+        with:
+          main-branch-name: 'master'
 
       - name: Set up Node.js ${{ env.node-version }}
         uses: actions/setup-node@v2
@@ -106,5 +108,5 @@ jobs:
       - run: yarn nx-cloud stop-all-agents
 
       - name: Tag main branch if all jobs succeed
-        if: github.ref == 'refs/heads/main'
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         uses: nrwl/nx-tag-successful-ci-run@v1
