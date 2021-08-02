@@ -1,4 +1,4 @@
-import 'jest-preset-angular'; // TODO: move this into test-setup when zone-config.spec is in its own lib
+import 'jest-preset-angular/setup-jest'; // TODO: move this into test-setup when zone-config.spec is in its own lib
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -26,7 +26,6 @@ import {
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { ReplaySubject } from 'rxjs';
-import createSpy = jasmine.createSpy;
 
 @Component({
   selector: 'rx-angular-error-test',
@@ -124,7 +123,7 @@ const updateViewContext = (
 };
 
 const customErrorHandler: ErrorHandler = {
-  handleError: createSpy('handleError'),
+  handleError: jest.fn(),
 };
 
 let fixtureComponent: any;

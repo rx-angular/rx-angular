@@ -6,6 +6,6 @@
     "component-selector": [true, "element",["rxa", "rx"], "kebab-case"]
   },
   "linterOptions": {
-    "exclude": ["!**/*"]
+    "exclude": ["!**/*", "src/app/rx-angular-pocs/**/*"]
   }
 }
