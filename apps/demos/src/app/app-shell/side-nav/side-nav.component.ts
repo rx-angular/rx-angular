@@ -24,7 +24,7 @@ export class AppShellSideNavComponent {
   );
 
   @Input() set navItems(navItems: AppShellNavItem[]) {
-    this.navItemDataSource._data.next(generateRoutes(navItems) || []);
+    this.navItemDataSource.data = generateRoutes(navItems) || [];
   }
 
   @Output() readonly navItemSelected = new Subject<AppShellNavItem>();
