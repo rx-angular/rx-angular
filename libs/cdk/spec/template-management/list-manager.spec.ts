@@ -197,14 +197,14 @@ describe('list-manager', () => {
       expect(customErrorHandler.handleError).toHaveBeenCalled();
     });
 
-    it('should emit error and payload via renderCallback', () => {
+    it('should emit items on error via renderCallback', () => {
       fixtureComponent.detectChanges();
       const items = [2];
       componentInstance.values$.next(items);
       try {
         fixtureComponent.detectChanges();
       } catch (e) {
-        expect(componentInstance.latestRenderedValue[0]).toEqual(e);
+        expect(componentInstance.latestRenderedValue[0]).toEqual(items);
       }
       expect(customErrorHandler.handleError).toHaveBeenCalled();
     });
