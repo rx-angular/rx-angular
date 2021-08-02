@@ -1,3 +1,4 @@
+import { CompareFn } from '../../rxjs/interfaces';
 import { ComparableData } from '../interfaces/comparable-data-type';
 import { isKeyOf } from '../../core';
 
@@ -19,5 +20,5 @@ export function valuesComparer<T>(
       : defaultCompare(original, incoming);
   }
 
-  return (compare || defaultCompare)(original, incoming);
+  return ((compare as CompareFn<T>) || defaultCompare)(original, incoming);
 }

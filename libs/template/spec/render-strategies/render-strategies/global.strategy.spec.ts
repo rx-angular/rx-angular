@@ -9,7 +9,6 @@ import {
 } from '../../fixtures';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LetDirective } from '@rx-angular/template/let';
-import createSpy = jasmine.createSpy;
 
 @Component({
   template: ``,
@@ -111,7 +110,7 @@ describe('global Strategy', () => {
             strategyMethod: 'scheduleCD',
             flushMicrotask: true,
             singleTime: true,
-            afterCD: createSpy('afterCD'),
+            afterCD: jest.fn(),
             callsExpectations,
           },
           done
@@ -126,7 +125,7 @@ describe('global Strategy', () => {
           strategyMethod: 'scheduleCD',
           flushMicrotask: true,
           singleTime: false,
-          afterCD: createSpy('afterCD'),
+          afterCD: jest.fn(),
           callsExpectations,
         },
         done
@@ -165,5 +164,5 @@ describe('global Strategy', () => {
 });
 
 function spyOnMarkDirty() {
-  spyOn(AngularCore, 'ɵmarkDirty').and.callFake(() => undefined);
+  jest.spyOn(AngularCore, 'ɵmarkDirty').mockImplementation(() => undefined);
 }

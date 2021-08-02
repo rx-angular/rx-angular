@@ -1,7 +1,6 @@
 import { Component, Directive, Input, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createTemplateManager, TemplateManager } from '../../../src/lib/core/utils/template-manager_creator';
-import createSpy = jasmine.createSpy;
 
 export interface TestViewContext {
   $implicit: string;
@@ -129,8 +128,8 @@ xdescribe('TemplateManager', () => {
 
   it('displayView should create and insert a view out of a registered template by calling createEmbeddedView', () => {
     templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
-    testViewContainerRef.createEmbeddedView = createSpy('createEmbeddedView');
-    testViewContainerRef.insert = createSpy('insert');
+    testViewContainerRef.createEmbeddedView = jest.fn();
+    testViewContainerRef.insert = jest.fn();
     templateManager.displayView('templateRefA');
 
     expect(testViewContainerRef.createEmbeddedView).toHaveBeenCalledTimes(1);
@@ -140,7 +139,7 @@ xdescribe('TemplateManager', () => {
   it('displayView should throw if an unregistered registered template is used', () => {
     expect(templateManager.hasTemplateRef('templateRefA')).toBe(false);
     expect(testViewContainerRef.length).toBe(0);
-    console.error = createSpy('error')
+    console.error = jest.fn()
     templateManager.displayView('templateRefA')
     expect(console.error).toBeCalledWith('A non-existing view was tried to insert templateRefA')
     expect(templateManager.hasTemplateRef('templateRefA')).toBe(false);
@@ -170,8 +169,8 @@ xdescribe('TemplateManager', () => {
     templateManager.addTemplateRef('templateRefB', testComponent.templateRefB);
     templateManager.displayView('templateRefA');
     templateManager.displayView('templateRefB');
-    testViewContainerRef.createEmbeddedView = createSpy('createEmbeddedView');
-    testViewContainerRef.insert = createSpy('insert');
+    testViewContainerRef.createEmbeddedView = jest.fn();
+    testViewContainerRef.insert = jest.fn();
     templateManager.displayView('templateRefA');
 
     expect(testViewContainerRef.createEmbeddedView).toHaveBeenCalledTimes(0);
@@ -181,8 +180,8 @@ xdescribe('TemplateManager', () => {
   it('displayView should do nothing if the passed view is already displayed', () => {
     templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
     templateManager.displayView('templateRefA');
-    testViewContainerRef.createEmbeddedView = createSpy('createEmbeddedView');
-    testViewContainerRef.insert = createSpy('insert');
+    testViewContainerRef.createEmbeddedView = jest.fn();
+    testViewContainerRef.insert = jest.fn();
     templateManager.displayView('templateRefA');
 
     expect(testViewContainerRef.createEmbeddedView).toHaveBeenCalledTimes(0);
@@ -202,7 +201,7 @@ xdescribe('TemplateManager', () => {
 
   it('should detach only the last embedded view on `displayView`', () => {
     templateManager.addTemplateRef('templateRefA', testComponent.templateRefA);
-    testViewContainerRef.detach = createSpy('detach');
+    testViewContainerRef.detach = jest.fn();
     templateManager.displayView('templateRefA');
 
     expect(testViewContainerRef.detach).toHaveBeenCalledTimes(1);
