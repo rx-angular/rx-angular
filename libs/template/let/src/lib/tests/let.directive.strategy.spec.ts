@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 
 import { LetDirective } from '../let.directive';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value; strategy: strategy">{{
+    <ng-container *rxLet="value$; let value; strategy: strategy; renderCallback:renderedValue$">{{
       (value | json) || 'undefined'
     }}</ng-container>
   `,
@@ -14,6 +14,7 @@ import { LetDirective } from '../let.directive';
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 class LetDirectiveTestComponentStrategy {
   value$: Observable<number> = of(42);
+  renderedValue$ = new Subject<number>();
   strategy: string;
 }
 
@@ -45,13 +46,14 @@ describe('LetDirective strategies', () => {
     ['idle'],
     ['native'],
   ])('Strategy: %p', (strategy) => {
-    it('should render with given strategy', async () => {
+    it('should render with given strategy', done => {
       componentInstance.strategy = strategy;
 
       fixture.detectChanges();
-      await fixture.whenStable();
-
-      expect(componentNativeElement.textContent).toBe('42');
+      componentInstance.renderedValue$.subscribe(v => {
+        expect(v).toBe(42);
+        done();
+      });
     });
   });
 });
