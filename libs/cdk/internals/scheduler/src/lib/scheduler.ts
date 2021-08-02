@@ -61,13 +61,8 @@ let isHostTimeoutScheduled = false;
 // Capture local references to native APIs, in case a polyfill overrides them.
 const setTimeout = ɵglobal.setTimeout;
 const clearTimeout = ɵglobal.clearTimeout;
-
-// Capture local references to native APIs, in case a polyfill overrides them.
-const localSetTimeout = typeof setTimeout === 'function' ? setTimeout : null;
-const localClearTimeout =
-  typeof clearTimeout === 'function' ? clearTimeout : null;
-const localSetImmediate =
-  typeof ɵglobal.setImmediate !== 'undefined' ? ɵglobal.setImmediate : null; // IE and Node.js + jsdom
+const setImmediate = ɵglobal.setImmediate; // IE and Node.js + jsdom
+const messageChannel = ɵglobal.MessageChannel;
 
 function advanceTimers(currentTime) {
   // Check for tasks that are no longer delayed and add them to the queue.
@@ -463,7 +458,7 @@ const performWorkUntilDeadline = () => {
 };
 
 let schedulePerformWorkUntilDeadline;
-if (typeof localSetImmediate === 'function') {
+if (typeof setImmediate === 'function') {
   // Node.js and old IE.
   // There's a few reasons for why we prefer setImmediate.
   //
@@ -476,10 +471,10 @@ if (typeof localSetImmediate === 'function') {
   // If other browsers ever implement it, it's better to use it.
   // Although both of these would be inferior to native scheduling.
   schedulePerformWorkUntilDeadline = () => {
-    localSetImmediate(performWorkUntilDeadline);
+    setImmediate(performWorkUntilDeadline);
   };
-} else if (typeof ɵglobal.MessageChannel !== 'undefined') {
-  const channel: MessageChannel = new ɵglobal.MessageChannel();
+} else if (typeof messageChannel !== 'undefined') {
+  const channel: MessageChannel = new messageChannel();
   const port = channel.port2;
 
   channel.port1.onmessage = performWorkUntilDeadline;
@@ -489,7 +484,7 @@ if (typeof localSetImmediate === 'function') {
 } else {
   // We should only fallback here in non-browser environments.
   schedulePerformWorkUntilDeadline = () => {
-    localSetTimeout(performWorkUntilDeadline, 0);
+    setTimeout(performWorkUntilDeadline, 0);
   };
 }
 
