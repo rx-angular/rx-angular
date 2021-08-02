@@ -58,25 +58,15 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
     index: number,
     count: number
   ): void {
-    let oldView;
-    let view;
-    // TODO: re-store
-    try {
-      oldView = viewContainerRef.get(oldIndex);
-      view = <EmbeddedViewRef<C>>viewContainerRef.move(oldView, index);
-      workFactory(() => {
-        updateViewContext(item, view, {
-          count,
-          index,
-        });
-        view.detectChanges();
+    const oldView = viewContainerRef.get(oldIndex);
+    const view = <EmbeddedViewRef<C>>viewContainerRef.move(oldView, index);
+    workFactory(() => {
+      updateViewContext(item, view, {
+        count,
+        index,
       });
-    } catch (e) {
-      console.log('oldView', oldView);
-      console.log('view', view);
-      console.trace(e);
-      insertView(item, index, count);
-    }
+      view.detectChanges();
+    });
   }
 
   function updateView(item: T, index: number, count: number): void {
