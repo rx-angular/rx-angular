@@ -204,7 +204,7 @@ describe('list-manager', () => {
       try {
         fixtureComponent.detectChanges();
       } catch (e) {
-        expect(componentInstance.latestRenderedValue[0]).toEqual(items);
+        expect(componentInstance.latestRenderedValue).toEqual(items);
       }
       expect(customErrorHandler.handleError).toHaveBeenCalled();
     });
