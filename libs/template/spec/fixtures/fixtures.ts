@@ -1,12 +1,11 @@
-import createSpy = jasmine.createSpy;
 import { ChangeDetectorRef, ElementRef } from '@angular/core';
 
 export class MockChangeDetectorRef extends ChangeDetectorRef {
-  markForCheck = createSpy('markForCheck');
-  detectChanges = createSpy('detectChanges');
-  detach = createSpy('detach');
-  reattach = createSpy('reattach');
-  checkNoChanges = createSpy('checkNoChanges');
+  markForCheck = jest.fn();
+  detectChanges = jest.fn();
+  detach = jest.fn();
+  reattach = jest.fn();
+  checkNoChanges = jest.fn();
   context = { a: 'context' };
 }
 

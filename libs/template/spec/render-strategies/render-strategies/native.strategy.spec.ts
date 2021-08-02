@@ -2,7 +2,6 @@
 import { mockConsole } from '@test-helpers';
 import { getStrategies } from '../../../src/lib/render-strategies/strategies/strategies-map';
 import { CallsExpectations, getMockStrategyConfig, numMultipleCalls, testStrategyMethod } from '../../fixtures';
-import createSpy = jasmine.createSpy;
 
 /**
  * NATIVE STRATEGY
@@ -63,7 +62,7 @@ describe('native Strategy', () => {
         strategyName,
         strategyMethod: 'scheduleCD',
         singleTime: true,
-        afterCD: createSpy('afterCD'),
+        afterCD: jest.fn(),
         callsExpectations
       }, done);
     });
@@ -75,7 +74,7 @@ describe('native Strategy', () => {
           strategyName,
           strategyMethod: 'scheduleCD',
           singleTime: false,
-          afterCD: createSpy('afterCD'),
+          afterCD: jest.fn(),
           callsExpectations: { ...callsExpectations, markForCheck: numMultipleCalls }
         }, done);
       }

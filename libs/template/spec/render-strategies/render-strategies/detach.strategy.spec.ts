@@ -2,7 +2,6 @@
 import { mockConsole } from '@test-helpers';
 import { getStrategies } from '../../../src/lib/render-strategies';
 import { CallsExpectations, getMockStrategyConfig, testStrategyMethod } from '../../fixtures';
-import createSpy = jasmine.createSpy;
 
 /**
  * DETACH STRATEGY
@@ -62,7 +61,7 @@ describe('detach Strategy', () => {
         strategyName,
         strategyMethod: 'scheduleCD',
         singleTime: true,
-        afterCD: createSpy('afterCD'),
+        afterCD: jest.fn(),
         callsExpectations
       }, done);
     });
@@ -72,7 +71,7 @@ describe('detach Strategy', () => {
         strategyName,
         strategyMethod: 'scheduleCD',
         singleTime: false,
-        afterCD: createSpy('afterCD'),
+        afterCD: jest.fn(),
         callsExpectations
       }, done);
     });
