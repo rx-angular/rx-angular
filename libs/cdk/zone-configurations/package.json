@@ -1,5 +1,5 @@
 {
-  "name": "@rx-angular/cdk-zone-less",
+  "name": "@rx-angular/cdk-zone-configurations",
   "peerDependencies": {
     "@angular/core": ">10.1.1"
   },
