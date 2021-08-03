@@ -47,8 +47,7 @@
       "tags": ["type:lib"]
     },
     "template": {
-      "tags": ["type:lib", "type:template"],
-      "implicitDependencies": ["cdk"]
+      "tags": ["type:lib", "type:template"]
     },
     "test-helpers": {
       "tags": ["type:util"]
