@@ -9363,10 +9363,10 @@ ng-packagr@12.1.2:
     sass "^1.32.8"
     stylus "^0.54.8"
 
-ngx-skeleton-loader@^2.9.1:
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/ngx-skeleton-loader/-/ngx-skeleton-loader-2.10.1.tgz#90b1132a4fe46ad05412e7cea547f24e14ddb7b7"
-  integrity sha512-YcV7LgvhFijzW8SAvfECbpiEoOx0/wCZWacaYQ9kIZMtjevt0GOLvU+DTFXiOu9nlmFnV3QCIpu3e1ay0R0a9w==
+ngx-skeleton-loader@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-skeleton-loader/-/ngx-skeleton-loader-4.0.0.tgz#2bd6ef369c2a1c3d053c09b2a099b403b373a662"
+  integrity sha512-fbCWZrBVJF1jVVK056z3zPcAk0EXUtImdRkrjbc4xiWNkmhGskGfNh6UxKrkheMS9iOJoaLLo8KscLeUa9yggQ==
   dependencies:
     perf-marks "^1.13.4"
     tslib "^1.10.0"
