@@ -296,7 +296,7 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
   readonly view = new BehaviorSubject<'list' | 'tile'>('list');
   readonly triggerChangeSet = new Subject<void>();
   readonly activeChangeSet$ = this.triggerChangeSet.pipe(
-    switchMapTo(scheduled(customChangeSet, asyncScheduler)),
+    switchMapTo(scheduled(customChangeSet, asyncScheduler))
     // tap((data) => console.log(data))
   );
 
@@ -311,9 +311,7 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
     merge(this.arrayP.array$, this.activeChangeSet$, this.activeMoveSet$)
   );
   readonly renderCallback = new Subject();
-  readonly rendered$ = this.renderCallback.pipe(
-    map(() => ++this.numRendered),
-  );
+  readonly rendered$ = this.renderCallback.pipe(map(() => ++this.numRendered));
   readonly viewBroken$ = this.renderCallback.pipe(
     map(() => {
       const children = Array.from(

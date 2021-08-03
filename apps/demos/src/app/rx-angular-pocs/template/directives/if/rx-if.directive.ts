@@ -10,30 +10,38 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { NextObserver, Observable, ReplaySubject,
+import {
+  NextObserver,
+  Observable,
+  ReplaySubject,
   Subject,
-  Subscription,} from 'rxjs';
+  Subscription,
+} from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
 import { RxIfTemplateNames, rxIfTemplateNames, RxIfViewContext } from './model';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   createTemplateManager,
   RxTemplateManager,
-  RxStrategyProvider
+  RxStrategyProvider,
 } from '@rx-angular/cdk';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
-import { createTemplateNotifier, RxNotificationKind } from '@rx-angular/cdk/notifications';
-import {coerceObservable} from '@rx-angular/cdk/coercing';
+import {
+  createTemplateNotifier,
+  RxNotificationKind,
+} from '@rx-angular/cdk/notifications';
+import { coerceObservable } from '@rx-angular/cdk/coercing';
 @Directive({
   selector: '[rxIf]',
 })
 export class RxIf<U> implements OnInit, OnDestroy {
   private subscription = new Subscription();
   private _renderObserver: NextObserver<any>;
-  private templateManager: RxTemplateManager<U,
+  private templateManager: RxTemplateManager<
+    U,
     RxIfViewContext<U>,
     rxIfTemplateNames
-    >;
+  >;
 
   @Input()
   set rxIf(potentialObservable: Observable<U> | U | null | undefined) {
@@ -76,16 +84,14 @@ export class RxIf<U> implements OnInit, OnDestroy {
     private ngZone: NgZone,
     private readonly thenTemplateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
     this.templateManager = createTemplateManager<
       U,
       RxIfViewContext<U>,
       rxIfTemplateNames
-      >({
+    >({
       templateSettings: {
         viewContainerRef: this.viewContainerRef,
         createViewContext,
@@ -104,15 +110,15 @@ export class RxIf<U> implements OnInit, OnDestroy {
       notificationToTemplateName: {
         [RxNotificationKind.Suspense]: () => RxIfTemplateNames.suspense,
         [RxNotificationKind.Next]: (value, templates) => {
-          return value ?
-            RxIfTemplateNames.then as rxIfTemplateNames
-            : templates.get(RxIfTemplateNames.else) ?
-              RxIfTemplateNames.then
-              : undefined
+          return value
+            ? (RxIfTemplateNames.then as rxIfTemplateNames)
+            : templates.get(RxIfTemplateNames.else)
+            ? RxIfTemplateNames.then
+            : undefined;
         },
         [RxNotificationKind.Error]: () => RxIfTemplateNames.error,
-        [RxNotificationKind.Complete]: () => RxIfTemplateNames.complete
-      }
+        [RxNotificationKind.Complete]: () => RxIfTemplateNames.complete,
+      },
     });
     this.templateManager.addTemplateRef(
       RxIfTemplateNames.then,

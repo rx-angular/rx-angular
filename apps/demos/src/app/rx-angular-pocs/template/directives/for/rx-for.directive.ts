@@ -2,7 +2,9 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectorRef,
   Directive,
-  ElementRef, EmbeddedViewRef, ErrorHandler,
+  ElementRef,
+  EmbeddedViewRef,
+  ErrorHandler,
   Input,
   IterableDiffers,
   NgIterable,
@@ -11,14 +13,17 @@ import {
   OnInit,
   TemplateRef,
   TrackByFunction,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import {
   createListTemplateManager,
   RxListManager,
-  RxListViewComputedContext, RxListViewContext, RxDefaultListViewContext, RxStrategyProvider
+  RxListViewComputedContext,
+  RxListViewContext,
+  RxDefaultListViewContext,
+  RxStrategyProvider,
 } from '@rx-angular/cdk';
-import {coerceDistinctWith} from '@rx-angular/cdk/coercing';
+import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
 
 import { ReplaySubject, Subject, Observable, Subscription } from 'rxjs';
 
@@ -275,10 +280,11 @@ import { ReplaySubject, Subject, Observable, Subscription } from 'rxjs';
  */
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[rxFor]'
+  selector: '[rxFor]',
 })
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
-  implements OnInit, OnDestroy {
+  implements OnInit, OnDestroy
+{
   /** @internal */
   static ngTemplateGuard_rxFor: 'binding';
 
@@ -388,7 +394,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param renderParent
    */
-    // tslint:disable-next-line:no-input-rename
+  // tslint:disable-next-line:no-input-rename
   @Input('rxForParent') renderParent = true;
 
   /**
@@ -622,16 +628,19 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /** @internal */
   ngOnInit() {
-    this.listManager = createListTemplateManager<T, RxDefaultListViewContext<T>>({
+    this.listManager = createListTemplateManager<
+      T,
+      RxDefaultListViewContext<T>
+    >({
       iterableDiffers: this.iterableDiffers,
       renderSettings: {
         cdRef: this.cdRef,
         eRef: this.eRef,
-        strategies: this.strategyProvider.strategies as any,  // TODO: move strategyProvider
+        strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         parent: coerceBooleanProperty(this.renderParent),
         patchZone: this.patchZone ? this.ngZone : false,
-        errorHandler: this.errorHandler
+        errorHandler: this.errorHandler,
       },
       templateSettings: {
         viewContainerRef: this.viewContainerRef,
@@ -639,13 +648,18 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
         createViewContext: this.createViewContext,
         updateViewContext: this.updateViewContext,
       },
-      trackBy: this._trackBy
+      trackBy: this._trackBy,
     });
     this.listManager.nextStrategy(this.strategy$);
-    this._subscription = this.listManager.render(this.values$).subscribe(v => this._renderCallback?.next(v));
+    this._subscription = this.listManager
+      .render(this.values$)
+      .subscribe((v) => this._renderCallback?.next(v));
   }
   /** @internal */
-  createViewContext(item: T, computedContext: RxListViewComputedContext): RxDefaultListViewContext<T> {
+  createViewContext(
+    item: T,
+    computedContext: RxListViewComputedContext
+  ): RxDefaultListViewContext<T> {
     return new RxDefaultListViewContext<T>(item, computedContext);
   }
 
@@ -665,4 +679,3 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     this.viewContainerRef.clear();
   }
 }
-

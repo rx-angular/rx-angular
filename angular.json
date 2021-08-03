@@ -91,36 +91,24 @@
     },
     "cdk-coalescing": {
       "projectType": "library",
-      "root": "libs/cdk/coalescing",
-      "sourceRoot": "libs/cdk/coalescing/src",
+      "root": "libs/cdk/src/lib/coalescing",
+      "sourceRoot": "libs/cdk/src/lib/coalescing/src",
       "prefix": "rx-angular",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
-          "options": {
-            "tsConfig": "libs/cdk/coalescing/tsconfig.lib.json",
-            "project": "libs/cdk/coalescing/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/cdk/coalescing/tsconfig.lib.prod.json"
-            }
-          }
-        },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "libs/cdk/coalescing/src/**/*.ts",
-              "libs/cdk/coalescing/src/**/*.html"
+              "libs/cdk/src/lib/coalescing/src/**/*.ts",
+              "libs/cdk/src/lib/coalescing/src/**/*.html"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/cdk/coalescing"],
+          "outputs": ["coverage/libs/cdk/src/lib/coalescing"],
           "options": {
-            "jestConfig": "libs/cdk/coalescing/jest.config.js",
+            "jestConfig": "libs/cdk/src/lib/coalescing/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -128,36 +116,24 @@
     },
     "cdk-coercing": {
       "projectType": "library",
-      "root": "libs/cdk/coercing",
-      "sourceRoot": "libs/cdk/coercing/src",
+      "root": "libs/cdk/src/lib/coercing",
+      "sourceRoot": "libs/cdk/src/lib/coercing/src",
       "prefix": "rx-angular",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
-          "options": {
-            "tsConfig": "libs/cdk/coercing/tsconfig.lib.json",
-            "project": "libs/cdk/coercing/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/cdk/coercing/tsconfig.lib.prod.json"
-            }
-          }
-        },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "libs/cdk/coercing/src/**/*.ts",
-              "libs/cdk/coercing/src/**/*.html"
+              "libs/cdk/src/lib/coercing/src/**/*.ts",
+              "libs/cdk/src/lib/coercing/src/**/*.html"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/cdk/coercing"],
+          "outputs": ["coverage/libs/cdk/src/lib/coercing"],
           "options": {
-            "jestConfig": "libs/cdk/coercing/jest.config.js",
+            "jestConfig": "libs/cdk/src/lib/coercing/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -165,31 +141,24 @@
     },
     "cdk-internals-scheduler": {
       "projectType": "library",
-      "root": "libs/cdk/internals/scheduler",
-      "sourceRoot": "libs/cdk/internals/scheduler/src",
+      "root": "libs/cdk/src/lib/internals/scheduler",
+      "sourceRoot": "libs/cdk/src/lib/internals/scheduler/src",
       "prefix": "rx-angular",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
-          "options": {
-            "tsConfig": "libs/cdk/internals/scheduler/tsconfig.lib.json",
-            "project": "libs/cdk/internals/scheduler/ng-package.json"
-          }
-        },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "libs/cdk/internals/scheduler/src/**/*.ts",
-              "libs/cdk/internals/scheduler/src/**/*.html"
+              "libs/cdk/src/lib/internals/scheduler/src/**/*.ts",
+              "libs/cdk/src/lib/internals/scheduler/src/**/*.html"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/cdk/internals/scheduler"],
+          "outputs": ["coverage/libs/cdk/src/lib/internals/scheduler"],
           "options": {
-            "jestConfig": "libs/cdk/internals/scheduler/jest.config.js",
+            "jestConfig": "libs/cdk/src/lib/internals/scheduler/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -197,29 +166,14 @@
     },
     "cdk-notifications": {
       "projectType": "library",
-      "root": "libs/cdk/notifications",
-      "sourceRoot": "libs/cdk/notifications/src",
+      "root": "libs/cdk/src/lib/notifications",
+      "sourceRoot": "libs/cdk/src/lib/notifications/src",
       "prefix": "rx-angular",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
-          "options": {
-            "project": "libs/cdk/notifications/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/cdk/notifications/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "libs/cdk/notifications/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/cdk/notifications/jest.config.js",
+            "jestConfig": "libs/cdk/src/lib/notifications/jest.config.js",
             "passWithNoTests": true
           }
         },
@@ -227,8 +181,8 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "libs/cdk/notifications/src/**/*.ts",
-              "libs/cdk/notifications/src/**/*.html"
+              "libs/cdk/src/lib/notifications/src/**/*.ts",
+              "libs/cdk/src/lib/notifications/src/**/*.html"
             ]
           }
         }
@@ -236,31 +190,24 @@
     },
     "cdk-zone-configurations": {
       "projectType": "library",
-      "root": "libs/cdk/zone-configurations",
-      "sourceRoot": "libs/cdk/zone-configurations/src",
+      "root": "libs/cdk/src/lib/zone-configurations",
+      "sourceRoot": "libs/cdk/src/lib/zone-configurations/src",
       "prefix": "rx-angular",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
-          "options": {
-            "tsConfig": "libs/cdk/zone-configurations/tsconfig.lib.json",
-            "project": "libs/cdk/zone-configurations/ng-package.json"
-          }
-        },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "libs/cdk/zone-configurations/src/**/*.ts",
-              "libs/cdk/zone-configurations/src/**/*.html"
+              "libs/cdk/src/lib/zone-configurations/src/**/*.ts",
+              "libs/cdk/src/lib/zone-configurations/src/**/*.html"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/cdk/zone-configurations"],
+          "outputs": ["coverage/libs/cdk/src/lib/zone-configurations"],
           "options": {
-            "jestConfig": "libs/cdk/zone-configurations/jest.config.js",
+            "jestConfig": "libs/cdk/src/lib/zone-configurations/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -268,32 +215,28 @@
     },
     "cdk-zone-less": {
       "projectType": "library",
-      "root": "libs/cdk/zone-less",
-      "sourceRoot": "libs/cdk/zone-less/src",
+      "root": "libs/cdk/src/lib/zone-less",
+      "sourceRoot": "libs/cdk/src/lib/zone-less/src",
       "prefix": "rx-angular",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
-          "options": {
-            "tsConfig": "libs/cdk/zone-less/tsconfig.lib.json",
-            "project": "libs/cdk/zone-less/ng-package.json"
-          }
-        },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/cdk/zone-less/tsconfig.lib.json",
-              "libs/cdk/zone-less/tsconfig.spec.json"
+              "libs/cdk/src/lib/zone-less/tsconfig.lib.json",
+              "libs/cdk/src/lib/zone-less/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/cdk/zone-less/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/cdk/src/lib/zone-less/**/*"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/cdk/zone-less"],
+          "outputs": ["coverage/libs/cdk/src/lib/zone-less"],
           "options": {
-            "jestConfig": "libs/cdk/zone-less/jest.config.js",
+            "jestConfig": "libs/cdk/src/lib/zone-less/jest.config.js",
             "passWithNoTests": true
           }
         }

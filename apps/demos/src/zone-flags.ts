@@ -1,7 +1,7 @@
 import {
   globalEvents,
   xhrEvents,
-  zoneConfig
+  zoneConfig,
 } from '@rx-angular/cdk/zone-configurations';
 
 //zoneConfig.global.disable.requestAnimationFrame();

@@ -1,4 +1,5 @@
 import { EmbeddedViewRef, TemplateRef } from '@angular/core';
+import { RxCoalescingOptions } from '@rx-angular/cdk/coalescing';
 import {
   RxCompleteNotification,
   RxErrorNotification,
@@ -14,7 +15,7 @@ import {
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { RxCoalescingOptions, RxRenderWork } from '../model';
+import { RxRenderWork } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 import { strategyHandling } from '../utils/strategy-handling';
 import {
@@ -117,11 +118,8 @@ export function createTemplateManager<
   templateTrigger$?: Observable<RxNotification<unknown>>;
   notificationToTemplateName: RxNotificationTemplateNameMap<T, C, N>;
 }): RxTemplateManager<T, C, N> {
-  const {
-    renderSettings,
-    notificationToTemplateName,
-    templateSettings,
-  } = config;
+  const { renderSettings, notificationToTemplateName, templateSettings } =
+    config;
   const {
     defaultStrategyName,
     strategies,

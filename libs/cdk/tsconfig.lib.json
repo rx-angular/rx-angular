@@ -5,7 +5,12 @@
     "module": "es2015",
     "inlineSources": true,
     "importHelpers": true,
-    "lib": ["dom", "es2018"]
+    "lib": ["dom", "es2018"],
+    "paths": {
+      "@rx-angular/cdk/*": [
+        "libs/cdk/src/lib/*/index.ts"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableIvy": false,
@@ -16,5 +21,5 @@
     "strictInjectionParameters": true,
     "enableResourceInlining": true
   },
-  "exclude": ["src/test-setup.ts", "**/*.spec.ts"]
+  "exclude": ["**/*/test-setup.ts", "**/*.spec.ts"]
 }

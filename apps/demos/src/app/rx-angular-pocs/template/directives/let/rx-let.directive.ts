@@ -3,7 +3,8 @@ import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
-  EmbeddedViewRef, ErrorHandler,
+  EmbeddedViewRef,
+  ErrorHandler,
   Input,
   NgZone,
   OnDestroy,
@@ -15,10 +16,16 @@ import {
 import {
   createTemplateManager,
   RxTemplateManager,
-  RxStrategyProvider
+  RxStrategyProvider,
 } from '@rx-angular/cdk';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
-import { RxNotificationKind, toRxCompleteNotification, toRxErrorNotification, toRxSuspenseNotification, createTemplateNotifier } from '@rx-angular/cdk/notifications';
+import {
+  RxNotificationKind,
+  toRxCompleteNotification,
+  toRxErrorNotification,
+  toRxSuspenseNotification,
+  createTemplateNotifier,
+} from '@rx-angular/cdk/notifications';
 
 import {
   defer,
@@ -326,7 +333,10 @@ export class RxLet<U> implements OnInit, OnDestroy {
 
   /** @internal */
   private observablesHandler = createTemplateNotifier<U>();
-  private strategyHandler = coerceAllFactory<string>(() => new Subject(), mergeAll());
+  private strategyHandler = coerceAllFactory<string>(
+    () => new Subject(),
+    mergeAll()
+  );
   private triggerHandler = coerceAllFactory<RxNotificationKind>(
     () => new Subject(),
     mergeAll()
@@ -374,7 +384,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
         patchZone: this.patchZone ? this.ngZone : false,
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         strategies: this.strategyProvider.strategies,
-        errorHandler: this.errorHandler
+        errorHandler: this.errorHandler,
       },
       notificationToTemplateName: {
         [RxNotificationKind.Suspense]: () => RxLetTemplateNames.suspense,
