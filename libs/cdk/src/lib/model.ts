@@ -1,15 +1,8 @@
-import { ChangeDetectorRef, Type } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { coalescingObj } from '@rx-angular/cdk/coalescing';
 import { Observable } from 'rxjs';
 
 import { RxNotification } from '@rx-angular/cdk/notifications';
-
-export type coalescingObj =
-  | Record<string | number | symbol, unknown>
-  | Type<unknown>
-  | object;
-export interface RxCoalescingOptions {
-  scope?: coalescingObj;
-}
 
 export type RxRenderWork = <T = unknown>(
   cdRef: ChangeDetectorRef,

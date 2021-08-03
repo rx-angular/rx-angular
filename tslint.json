@@ -54,7 +54,7 @@
       true,
       {
         "enforceBuildableLibDependency": true,
-        "allow": [],
+        "allow": ["@rx-angular/cdk/**"],
         "depConstraints": [
           {
             "sourceTag": "type:utils",

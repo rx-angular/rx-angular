@@ -22,9 +22,7 @@ import { toRxSuspenseNotification } from './notification-transforms';
 /**
  * @internal
  */
-export function createTemplateNotifier<U>(
-  withSuspense?: () => boolean
-): {
+export function createTemplateNotifier<U>(withSuspense?: () => boolean): {
   values$: Observable<RxNotification<U>>;
   next(observable: ObservableInput<U>): void;
 } {

@@ -1,7 +1,8 @@
 import {
   ChangeDetectorRef,
   ElementRef,
-  EmbeddedViewRef, ErrorHandler,
+  EmbeddedViewRef,
+  ErrorHandler,
   NgZone,
   TemplateRef,
   ViewContainerRef,
@@ -27,7 +28,10 @@ export const enum RxListTemplateChangeType {
   update,
   context,
 }
-export type RxListTemplateChange<T = any> = [RxListTemplateChangeType, [T, number, number?]];
+export type RxListTemplateChange<T = any> = [
+  RxListTemplateChangeType,
+  [T, number, number?]
+];
 export type RxListTemplateChanges<T = any> = [
   RxListTemplateChange<T>[], // changes to apply
   boolean // notify parent

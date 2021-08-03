@@ -20,11 +20,7 @@ describe('Scheduler', () => {
   let cancelCallback: typeof import('./scheduler').cancelCallback;
   let shouldYield: typeof import('./scheduler').shouldYield;
 
-  describe.each([
-    ['Browser'],
-    ['Node'],
-    ['NonBrowser']
-  ])('%p', env => {
+  describe.each([['Browser'], ['Node'], ['NonBrowser']])('%p', (env) => {
     beforeEach(() => {
       jest.resetModules();
       jest.mock('./scheduler', () => jest.requireActual('./scheduler'));
@@ -87,7 +83,7 @@ describe('Scheduler', () => {
           runtime.advanceTime(1);
         }
         now = performance.now();
-        runtime.log(`Yield at ${ now }ms`);
+        runtime.log(`Yield at ${now}ms`);
         return () => {
           runtime.log(LogEvent.Continuation);
         };
@@ -98,8 +94,8 @@ describe('Scheduler', () => {
       runtime.assertLog([
         LogEvent.MessageEvent,
         LogEvent.Task,
-        `Yield at ${ now }ms`,
-        schedulingMessageEvent
+        `Yield at ${now}ms`,
+        schedulingMessageEvent,
       ]);
 
       runtime.fireMessageEvent();
@@ -132,7 +128,7 @@ describe('Scheduler', () => {
         LogEvent.MessageEvent,
         'A',
         // Ran out of time. Post a continuation event.
-        schedulingMessageEvent
+        schedulingMessageEvent,
       ]);
       runtime.fireMessageEvent();
       runtime.assertLog([LogEvent.MessageEvent, 'B']);
@@ -158,7 +154,11 @@ describe('Scheduler', () => {
       runtime.assertLog([schedulingMessageEvent]);
 
       expect(() => runtime.fireMessageEvent()).toThrow('Oops!');
-      runtime.assertLog([LogEvent.MessageEvent, 'Oops!', schedulingMessageEvent]);
+      runtime.assertLog([
+        LogEvent.MessageEvent,
+        'Oops!',
+        schedulingMessageEvent,
+      ]);
 
       runtime.fireMessageEvent();
       runtime.assertLog([LogEvent.MessageEvent, 'Yay']);
@@ -219,7 +219,7 @@ describe('Scheduler', () => {
     ɵglobal.performance = {
       now() {
         return currentTime;
-      }
+      },
     };
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -241,7 +241,7 @@ describe('Scheduler', () => {
         }
         log(LogEvent.PostMessage);
         hasPendingMessageEvent = true;
-      }
+      },
     };
 
     ɵglobal.MessageChannel = function MessageChannel() {
@@ -291,7 +291,7 @@ describe('Scheduler', () => {
       fireMessageEvent,
       log,
       isLogEmpty,
-      assertLog
+      assertLog,
     };
   }
   function installMockNodeRuntime() {
@@ -325,7 +325,7 @@ describe('Scheduler', () => {
       fireMessageEvent,
       log: _runtime.log,
       isLogEmpty: _runtime.isLogEmpty,
-      assertLog: _runtime.assertLog
+      assertLog: _runtime.assertLog,
     };
   }
   function installMockNonBrowserRuntime() {
@@ -356,8 +356,7 @@ describe('Scheduler', () => {
       fireMessageEvent,
       log: _runtime.log,
       isLogEmpty: _runtime.isLogEmpty,
-      assertLog: _runtime.assertLog
+      assertLog: _runtime.assertLog,
     };
   }
-
 });

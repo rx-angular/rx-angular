@@ -7,46 +7,50 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 # Available Approaches
 
-- `ngZone#runOutsideZone` 
+- `ngZone#runOutsideZone`
 - RxAngular CDK/Zone-Less
 
 **The Benefits of RxAngular**
 
-- ✅ 
+- ✅
 
-## `ngZone#runOutsideZone` 
+## `ngZone#runOutsideZone`
 
 **Event Bubbling of smae event on multiple elements**
+
 ```html
 <div (click)="doStuff()">
   <button (click)="doStuff()">click</button>
-</div>  
+</div>
 ```
 
 # RxAngular Zone-Less
 
-**utils**  
-- getZoneUnPatchedApi  
+**utils**
 
-**browser**  
+- getZoneUnPatchedApi
+
+**browser**
+
 - requestAnimationFrame
 - cancelAnimationFrame,
 - setInterval,
 - clearInterval,
 - setTimeout,
 - clearTimeout
- 
-**rxjs**  
 
-creation   
+**rxjs**
+
+creation
+
 - fromEvent
 - interval
 - timer
- 
-operators  
 
+operators
 
-scheduler  
+scheduler
+
 - async
 - asap
 - queue

@@ -15,12 +15,7 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ],
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
         "accessToken": "OTg2OGFkNmMtNzA5Zi00MjBiLWFhMmQtOGYwNTQ1MjM1ZjQ3fHJlYWQtd3JpdGU=",
         "canTrackAnalytics": false,
         "showUsageWarnings": true
@@ -28,69 +23,15 @@
     }
   },
   "projects": {
+    "cdk": {
+      "tags": ["type:lib", "type:cdk"]
+    },
     "demos": {
-      "tags": [
-        "type:app"
-      ]
+      "tags": ["type:app"]
     },
     "demos-e2e": {
       "tags": [],
-      "implicitDependencies": [
-        "demos"
-      ]
-    },
-    "cdk": {
-      "tags": [
-        "type:lib",
-        "type:cdk"
-      ],
-      "implicitDependencies": [
-        "cdk-internals-scheduler",
-        "cdk-coercing",
-        "cdk-zone-less"
-      ]
-    },
-    "cdk-internals-scheduler": {
-      "tags": [
-        "type:lib",
-        "type:cdk",
-        "type:internals"
-      ],
-      "implicitDependencies": []
-    },
-    "cdk-coalescing": {
-      "tags": [
-        "type:lib",
-        "type:cdk"
-      ],
-      "implicitDependencies": []
-    },
-    "cdk-coercing": {
-      "tags": [
-        "type:lib",
-        "type:cdk"
-      ],
-      "implicitDependencies": []
-    },
-    "cdk-notifications": {
-      "tags": [
-        "type:lib",
-        "type:cdk"
-      ],
-      "implicitDependencies": [
-        "cdk-coercing"
-      ]
-    },
-    "cdk-zone-configurations": {
-      "tags": [
-        "type:lib",
-        "type:cdk"
-      ],
-      "implicitDependencies": []
-    },
-    "cdk-zone-less": {
-      "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": []
+      "implicitDependencies": ["demos"]
     },
     "docs": {
       "tags": ["type:app"]
@@ -103,58 +44,16 @@
       "implicitDependencies": ["ssr"]
     },
     "state": {
-      "tags": [
-        "type:lib"
-      ]
+      "tags": ["type:lib"]
     },
     "template": {
-      "tags": [
-        "type:lib",
-        "type:template"
-      ],
-      "implicitDependencies": [
-        "cdk-zone-less",
-        "cdk"
-      ]
-    },
-    "template-let": {
-      "tags": [
-        "type:lib",
-        "type:template"
-      ],
-      "implicitDependencies": [
-        "cdk"
-      ]
-    },
-    "template-push": {
-      "tags": [
-        "type:lib",
-        "type:template"
-      ],
-      "implicitDependencies": [
-        "cdk-zone-less",
-        "cdk"
-      ]
-    },
-    "template-unpatch": {
-      "tags": [
-        "type:lib",
-        "type:template"
-      ],
-      "implicitDependencies": [
-        "cdk-zone-less",
-        "cdk-zone-configurations"
-      ]
+      "tags": ["type:lib", "type:template"]
     },
     "test-helpers": {
-      "tags": [
-        "type:util"
-      ]
+      "tags": ["type:util"]
     },
     "tour-of-heroes-ngxs": {
-      "tags": [
-        "type:app"
-      ]
+      "tags": ["type:app"]
     },
     "vanilla-case-studies": {
       "tags": []

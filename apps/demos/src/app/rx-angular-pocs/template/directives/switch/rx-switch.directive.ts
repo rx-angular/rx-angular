@@ -15,7 +15,10 @@ export class RxSwitch<U> {
     this.observables$.next(potentialObservable);
   }
 
-  private strategyHandler = coerceAllFactory<string>(() => new BehaviorSubject(this.strategyProvider.primaryStrategy), mergeAll());
+  private strategyHandler = coerceAllFactory<string>(
+    () => new BehaviorSubject(this.strategyProvider.primaryStrategy),
+    mergeAll()
+  );
   readonly strategies$ = this.strategyHandler.values$;
 
   @Input('rxLetStrategy')

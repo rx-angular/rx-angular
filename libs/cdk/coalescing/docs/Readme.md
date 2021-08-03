@@ -78,29 +78,29 @@ This is mainly impactful if we deal with event-heavy templates. The diagrams bel
 ![Angular - ngZoneEventCoalescing After](https://user-images.githubusercontent.com/10064416/122643340-946fc680-d10f-11eb-952d-9f19d6245d2d.png)
 ![Angular - ngZoneEventCoalescing Details](https://user-images.githubusercontent.com/10064416/122643341-96398a00-d10f-11eb-8815-9ed7ec00ac11.png)
 
-
 As these situations typically occur across multiple components or are hard to scope and demo, we list some staged examples:
 
 **Multiple Events on the same element**
+
 ```html
 <button (click)="doStuff()" (mousedown)="doStuff()">click</button>
 ```
 
 **Nested Events on multiple elements**
+
 ```html
 <div (mousedown)="doStuff()">
   <button (click)="doStuff()">click</button>
-</div>  
+</div>
 ```
 
 **Event Bubbling of smae event on multiple elements**
+
 ```html
 <div (click)="doStuff()">
   <button (click)="doStuff()">click</button>
-</div>  
+</div>
 ```
-
-
 
 # RxAngular Coalescing operators
 
