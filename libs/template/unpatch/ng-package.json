@@ -1,13 +1,6 @@
 {
-  "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../../dist/libs/template/unpatch",
+  "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "lib": {
-    "entryFile": "src/index.ts",
-    "flatModuleFile": "template-unpatch",
-    "umdId": "rx-angular.template-unpatch",
-    "umdModuleIds": {
-      "@rx-angular/cdk/zone-less": "rx-angular.cdk-zone-less",
-      "@rx-angular/cdk/zone-configurations": "rx-angular.cdk-zone-configurations"
-    }
+    "entryFile": "src/index.ts"
   }
 }

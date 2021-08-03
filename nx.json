@@ -50,18 +50,6 @@
       "tags": ["type:lib", "type:template"],
       "implicitDependencies": ["cdk"]
     },
-    "template-let": {
-      "tags": ["type:lib", "type:template"],
-      "implicitDependencies": ["cdk"]
-    },
-    "template-push": {
-      "tags": ["type:lib", "type:template"],
-      "implicitDependencies": ["cdk"]
-    },
-    "template-unpatch": {
-      "tags": ["type:lib", "type:template"],
-      "implicitDependencies": []
-    },
     "test-helpers": {
       "tags": ["type:util"]
     },
