@@ -24,36 +24,7 @@
   },
   "projects": {
     "cdk": {
-      "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": [
-        "cdk-internals-scheduler",
-        "cdk-coercing",
-        "cdk-zone-less"
-      ]
-    },
-    "cdk-coalescing": {
-      "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": []
-    },
-    "cdk-coercing": {
-      "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": []
-    },
-    "cdk-internals-scheduler": {
-      "tags": ["type:lib", "type:cdk", "type:internals"],
-      "implicitDependencies": []
-    },
-    "cdk-notifications": {
-      "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": ["cdk-coercing"]
-    },
-    "cdk-zone-configurations": {
-      "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": []
-    },
-    "cdk-zone-less": {
-      "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": []
+      "tags": ["type:lib", "type:cdk"]
     },
     "demos": {
       "tags": ["type:app"]
@@ -77,7 +48,7 @@
     },
     "template": {
       "tags": ["type:lib", "type:template"],
-      "implicitDependencies": ["cdk-zone-less", "cdk"]
+      "implicitDependencies": ["cdk"]
     },
     "template-let": {
       "tags": ["type:lib", "type:template"],
@@ -85,14 +56,11 @@
     },
     "template-push": {
       "tags": ["type:lib", "type:template"],
-      "implicitDependencies": ["cdk-zone-less", "cdk"]
+      "implicitDependencies": ["cdk"]
     },
     "template-unpatch": {
       "tags": ["type:lib", "type:template"],
-      "implicitDependencies": [
-        "cdk-zone-less",
-        "cdk-zone-configurations"
-      ]
+      "implicitDependencies": []
     },
     "test-helpers": {
       "tags": ["type:util"]
