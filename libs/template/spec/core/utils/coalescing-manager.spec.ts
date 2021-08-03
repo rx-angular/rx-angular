@@ -21,6 +21,22 @@ describe('coalescingManager', () => {
     expect(coalescingManager.isCoalescing(scope)).toBeTruthy();
   });
 
+  it('should add work with function as scope', () => {
+    const fnScope = () => {};
+    coalescingManager.add(fnScope);
+    expect(coalescingManager.isCoalescing(fnScope)).toBeTruthy();
+    coalescingManager.remove(fnScope);
+    expect(coalescingManager.isCoalescing(fnScope)).toBeFalsy();
+  });
+
+  it('should add work with array as scope', () => {
+    const arrScope = [];
+    coalescingManager.add(arrScope);
+    expect(coalescingManager.isCoalescing(arrScope)).toBeTruthy();
+    coalescingManager.remove(arrScope);
+    expect(coalescingManager.isCoalescing(arrScope)).toBeFalsy();
+  });
+
   it('should remove work', () => {
     coalescingManager.add(scope);
     expect(coalescingManager.isCoalescing(scope)).toBeTruthy();
