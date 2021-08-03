@@ -133,8 +133,6 @@ In this case we turn a number into an observable of number. Here we use an opera
 
 **coerceDistinctObservable**
 
-- coerceAllFactory
-
 ```typescript
 @Component({
   // ...
