@@ -4,6 +4,11 @@
   "lib": {
     "entryFile": "src/index.ts",
     "flatModuleFile": "cdk",
-    "umdId": "rx-angular.cdk"
+    "umdId": "rx-angular.cdk",
+    "umdModuleIds": {
+      "@rx-angular/cdk/coercing": "rx-angular.cdk-coercing",
+      "@rx-angular/cdk/zone-less": "rx-angular.cdk-zone-less",
+      "@rx-angular/cdk/internals/scheduler": "rx-angular.cdk-internals-scheduler"
+    }
   }
 }
