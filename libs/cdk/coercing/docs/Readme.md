@@ -92,7 +92,7 @@ yarn add @rx-angular/cdk
 
 ## Usage
 
-In the following we will sketch some usecases where coercing oberators can be used.
+In the following we will sketch some usecases where coercing operators can be used.
 
 **coerceObservable**
 
@@ -150,7 +150,7 @@ export class AppComponent {
 ```
 
 Same as with `coerceObservable` we turn a number into an observable of number, but in addition the `distinctUntilChanged` operator gets applied to filter out same values in a row.
-This comes in handy fur later processing and improves performance.
+This comes in handy for later processing and improves performance.
 
 **coerceDistinctWith**
 
@@ -169,7 +169,7 @@ export class AppComponent {
 }
 ```
 
-This is the operator version of `coerceDistinctObservable`. It also includes the benefit in processing and performance.
+This is the operator version of `coerceDistinctObservable`. It also includes the benefit of later processing and performance through distinct values.
 
 **coerceAllFactory**
 
@@ -181,5 +181,3 @@ export class AppComponent {
   _ = coerceAllFactory();
 }
 ```
-
-> **⚠ Notice:**
