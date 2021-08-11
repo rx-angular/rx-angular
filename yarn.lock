@@ -1947,6 +1947,18 @@
     semver "7.3.4"
     tslib "^2.0.0"
 
+"@nrwl/devkit@12.6.6":
+  version "12.6.6"
+  resolved "https://registry.yarnpkg.com/@nrwl/devkit/-/devkit-12.6.6.tgz#ac0ff61cef4fb63bbeeba0a1c8b32916378a7325"
+  integrity sha512-G7QIzxYKJYPSYBC53x790tKcfesTlF20Q7lVj48XPfHFY5jr+6i9PVsvk9bSk/Xf+BxDkJli/iJnTAD3D22ToQ==
+  dependencies:
+    "@nrwl/tao" "12.6.6"
+    ejs "^3.1.5"
+    ignore "^5.0.4"
+    rxjs "^6.5.4"
+    semver "7.3.4"
+    tslib "^2.0.0"
+
 "@nrwl/eslint-plugin-nx@12.6.3":
   version "12.6.3"
   resolved "https://registry.yarnpkg.com/@nrwl/eslint-plugin-nx/-/eslint-plugin-nx-12.6.3.tgz#9ee43400ba325eb23309639aa5bfb07ea21cb860"
@@ -1965,6 +1977,22 @@
     "@jest/reporters" "27.0.6"
     "@jest/test-result" "27.0.6"
     "@nrwl/devkit" "12.6.3"
+    chalk "4.1.0"
+    identity-obj-proxy "3.0.0"
+    jest-config "27.0.6"
+    jest-resolve "27.0.6"
+    jest-util "27.0.6"
+    rxjs "^6.5.4"
+    tslib "^2.0.0"
+
+"@nrwl/jest@12.6.6":
+  version "12.6.6"
+  resolved "https://registry.yarnpkg.com/@nrwl/jest/-/jest-12.6.6.tgz#43b35f479d206bb5a905e7b4a4dfc4d47732cfc2"
+  integrity sha512-afsdGleGtzH0r0RmSyQkKzkYEowL161DPyxlGiTJ7zGZyCYgqgmkGrRJe/w/SZHoVTtpANHZ3yaJ2UolTYWfww==
+  dependencies:
+    "@jest/reporters" "27.0.6"
+    "@jest/test-result" "27.0.6"
+    "@nrwl/devkit" "12.6.6"
     chalk "4.1.0"
     identity-obj-proxy "3.0.0"
     jest-config "27.0.6"
@@ -2041,6 +2069,22 @@
   version "12.6.3"
   resolved "https://registry.yarnpkg.com/@nrwl/tao/-/tao-12.6.3.tgz#3eee7eee4d18a0580eee30fe3e3df0193195bc07"
   integrity sha512-KlVdQEyxi/mk0X9FBY6w72XouiMesD3FCCrqgKx5oShOx2GehuP+LhOOrfnuMOT7WgKBCoHnqhnK1x6X1F5/XQ==
+  dependencies:
+    chalk "4.1.0"
+    enquirer "~2.3.6"
+    fs-extra "^9.1.0"
+    jsonc-parser "3.0.0"
+    rxjs "^6.5.4"
+    rxjs-for-await "0.0.2"
+    semver "7.3.4"
+    tmp "~0.2.1"
+    tslib "^2.0.0"
+    yargs-parser "20.0.0"
+
+"@nrwl/tao@12.6.6":
+  version "12.6.6"
+  resolved "https://registry.yarnpkg.com/@nrwl/tao/-/tao-12.6.6.tgz#cc664b04ff43e879116a321cfdd0d12d3f672241"
+  integrity sha512-PaRUIP8zwD6BV3AoX33red76xSXcZdYNDSxtmJd+Hw2eoJEi8qhpWqJhzUY4RCqIZrHoVT7HJrjq0Dsaj4z7sw==
   dependencies:
     chalk "4.1.0"
     enquirer "~2.3.6"
