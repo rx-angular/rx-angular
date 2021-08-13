@@ -67,7 +67,7 @@ describe('toDictionary', () => {
       expect(dictionaryResult).toEqual(dictionaryByNumber);
     });
 
-    it('should change the refence', () => {
+    it('should change the reference', () => {
       const dictionaryResult = toDictionary(creatures, 'id');
 
       expect(Object.values(dictionaryResult)[0] === creatures[0]).toBeFalsy();
