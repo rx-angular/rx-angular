@@ -16,10 +16,10 @@ import { Hooks, intersectionObserver } from '../../../cdk';
 
 import {
   createTemplateManager,
-  hotFlatten,
-  RxNotificationKind,
   RxTemplateManager, RxStrategyProvider,
 } from '@rx-angular/cdk';
+import { coerceAllFactory } from '@rx-angular/cdk/coercing';
+import { RxNotificationKind } from '@rx-angular/cdk/notifications';
 import {
   RxIfVisibleTemplateNames,
   rxIfVisibleTemplateNames,
@@ -37,7 +37,7 @@ export class IfVisibleDirective<U> extends Hooks implements OnInit {
   private observer = intersectionObserver();
   private subscription: Subscription = new Subscription();
 
-  private strategyHandler = hotFlatten<string>(undefined, mergeAll());
+  private strategyHandler = coerceAllFactory<string>(undefined, mergeAll());
 
   private templateManager: RxTemplateManager<
     U,
@@ -83,10 +83,10 @@ export class IfVisibleDirective<U> extends Hooks implements OnInit {
         strategies: this.strategyProvider.strategies,
       },
       notificationToTemplateName: {
-        [RxNotificationKind.suspense]: () => RxIfVisibleTemplateNames.suspense,
-        [RxNotificationKind.next]: () => RxIfVisibleTemplateNames.view,
-        [RxNotificationKind.error]: () => RxIfVisibleTemplateNames.error,
-        [RxNotificationKind.complete]: () => RxIfVisibleTemplateNames.complete,
+        [RxNotificationKind.Suspense]: () => RxIfVisibleTemplateNames.suspense,
+        [RxNotificationKind.Next]: () => RxIfVisibleTemplateNames.view,
+        [RxNotificationKind.Error]: () => RxIfVisibleTemplateNames.error,
+        [RxNotificationKind.Complete]: () => RxIfVisibleTemplateNames.complete,
       },
     });
     this.templateManager.addTemplateRef(

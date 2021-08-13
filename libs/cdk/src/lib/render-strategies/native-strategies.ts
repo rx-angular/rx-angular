@@ -29,13 +29,12 @@ const localCredentials: RxStrategyCredentials = {
   work: (cdRef, _, notification) => {
     cdRef.detectChanges();
   },
-  behavior: (work: () => RxRenderWork, scope: Record<string, unknown>) => (
-    o$
-  ) =>
-    o$.pipe(
-      coalesceWith(animationFrameTick(), scope),
-      tap(() => work())
-    ),
+  behavior:
+    (work: () => RxRenderWork, scope: Record<string, unknown>) => (o$) =>
+      o$.pipe(
+        coalesceWith(animationFrameTick(), scope),
+        tap(() => work())
+      ),
 };
 
 const globalCredentials: RxStrategyCredentials = {
@@ -56,7 +55,8 @@ const nativeCredentials: RxStrategyCredentials = {
   behavior: (work: any) => (o$) => o$.pipe(tap(() => work())),
 };
 
-export type RxNativeStrategies = RxCustomStrategyCredentials<RxNativeStrategyNames>;
+export type RxNativeStrategies =
+  RxCustomStrategyCredentials<RxNativeStrategyNames>;
 export const RX_NATIVE_STRATEGIES: RxNativeStrategies = {
   global: globalCredentials,
   native: nativeCredentials,

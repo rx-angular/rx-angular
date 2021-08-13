@@ -1,13 +1,13 @@
 // Standard Events
 
 // Focus Events
-export const focusEvents = ['blur', 'focus', 'focusin', 'focusout'];
+export const focusEvents = ['blur', 'focus', 'focusin', 'focusout'] as const;
 
 /**
  * Mouse Events
  * (MouseEvent)[https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent]
  */
-export const mouseEvents: (keyof WindowEventMap)[] = [
+export const mouseEvents = [
   'mousedown',
   'dblclick',
   'mouseenter',
@@ -17,42 +17,38 @@ export const mouseEvents: (keyof WindowEventMap)[] = [
   'mouseover',
   'mouseup',
   'click',
-];
+] as const;
 
 /**
  * Wheel Events
  * (WheelEvent)[https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent]
  */
-export const wheelEvents: (keyof WindowEventMap)[] = [
+export const wheelEvents = [
   // (WheelEvent)[https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent]
   'wheel',
   'mousewheel',
-];
+] as const;
 
 // Input Events
-export const inputEvents: (keyof WindowEventMap)[] = [
+export const inputEvents = [
   'input',
   'invalid',
   'change',
   'reset',
   'select',
   'submit',
-];
+] as const;
 
 /**
  * @deprecated
  */
-export const formControlsEvents: (keyof WindowEventMap)[] = inputEvents;
+export const formControlsEvents = inputEvents;
 
 // [KeyboardEvent](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent)
-export const keyboardEvents: (keyof WindowEventMap)[] = [
-  'keydown',
-  'keypress',
-  'keyup',
-];
+export const keyboardEvents = ['keydown', 'keypress', 'keyup'] as const;
 
 // [VR]()
-export const vrEvents: (keyof WindowEventMap)[] = [
+export const vrEvents = [
   'vrdisplayactivate',
   'vrdisplayblur',
   'vrdisplayconnect',
@@ -62,10 +58,10 @@ export const vrEvents: (keyof WindowEventMap)[] = [
   'vrdisplaypointerrestricted',
   'vrdisplaypointerunrestricted',
   'vrdisplaypresentchange',
-];
+] as const;
 
 // [MSGesture]()
-export const mSGestureEvents: (keyof WindowEventMap)[] = [
+export const mSGestureEvents = [
   'MSGestureChange',
   'MSGestureDoubleTap',
   'MSGestureEnd',
@@ -81,39 +77,36 @@ export const mSGestureEvents: (keyof WindowEventMap)[] = [
   'MSPointerOut',
   'MSPointerOver',
   'MSPointerUp',
-];
+] as const;
 
 // [xPrint](https://developer.mozilla.org/en-US/docs/Web/API/Window/afterprint_event)
-export const printEvents: (keyof WindowEventMap)[] = [
-  'afterprint',
-  'beforeprint',
-];
+export const printEvents = ['afterprint', 'beforeprint'] as const;
 // [network]()
-export const networkEvents: (keyof WindowEventMap)[] = ['offline', 'online'];
+export const networkEvents = ['offline', 'online'] as const;
 
 // [network]()
-export const audioEvents: (keyof WindowEventMap)[] = [
+export const audioEvents = [
   'canplay',
   'canplaythrough',
   'pause',
   'play',
   'playing',
   'volumechange',
-];
+] as const;
 
 // Composition Events
 export const compositionEvents = [
   'compositionstart',
   'compositionupdate',
   'compositionend',
-];
+] as const;
 
 /**
  * Touch Events
  * [PointerEvent](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent)
  * [TouchEvent](https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent)
  */
-export const touchEvents: (keyof WindowEventMap)[] = [
+export const touchEvents = [
   // [PointerEvent](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent)
   'pointerover',
   'pointerenter',
@@ -143,9 +136,9 @@ export const touchEvents: (keyof WindowEventMap)[] = [
   'dragover',
   'dragstart',
   'drop',
-];
+] as const;
 
-export const globalEvents: (keyof WindowEventMap)[] = [
+export const globalEvents = [
   'contextmenu',
   'resize',
   'scroll',
@@ -158,14 +151,9 @@ export const globalEvents: (keyof WindowEventMap)[] = [
   'unload',
 
   'error',
-];
+] as const;
 
-export const websocketEvents: (keyof WebSocketEventMap)[] = [
-  'close',
-  'error',
-  'message',
-  'open',
-];
+export const websocketEvents = ['close', 'error', 'message', 'open'] as const;
 
 /**
  * Basic XHR Events
@@ -174,10 +162,10 @@ export const websocketEvents: (keyof WebSocketEventMap)[] = [
  * There are more events you may want to unpatch https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
  */
 // XHREvent (group is here to make it easier to target XHR in angular applications. It contains redundant events e.g. 'error')
-export const xhrEvents = ['load', 'error'];
+export const xhrEvents = ['load', 'error'] as const;
 
 // @TODO
-export const windowEvents: (keyof WindowEventMap)[] = [
+export const windowEvents = [
   'compassneedscalibration',
   'durationchange',
   'emptied',
@@ -194,12 +182,12 @@ export const windowEvents: (keyof WindowEventMap)[] = [
   'suspend',
   'timeupdate',
   'waiting',
-];
+] as const;
 
 /**
  * All Events combined
  */
-export const allEvents: string[] = Array.from(
+export const allEvents = Array.from(
   new Set([
     ...focusEvents,
     ...mouseEvents,

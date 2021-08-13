@@ -1,4 +1,13 @@
 import { EmbeddedViewRef, TemplateRef } from '@angular/core';
+import { RxCoalescingOptions } from '@rx-angular/cdk/coalescing';
+import {
+  RxCompleteNotification,
+  RxErrorNotification,
+  RxNextNotification,
+  RxNotification,
+  RxNotificationKind,
+  RxSuspenseNotification,
+} from '@rx-angular/cdk/notifications';
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import {
   catchError,
@@ -6,16 +15,7 @@ import {
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
-import {
-  RxCoalescingOptions,
-  RxCompleteNotification,
-  RxErrorNotification,
-  RxNextNotification,
-  RxNotification,
-  RxNotificationKind,
-  RxRenderWork,
-  RxSuspenseNotification,
-} from '../model';
+import { RxRenderWork } from '../model';
 import { onStrategy } from '../utils/onStrategy';
 import { strategyHandling } from '../utils/strategy-handling';
 import {
@@ -118,11 +118,8 @@ export function createTemplateManager<
   templateTrigger$?: Observable<RxNotification<unknown>>;
   notificationToTemplateName: RxNotificationTemplateNameMap<T, C, N>;
 }): RxTemplateManager<T, C, N> {
-  const {
-    renderSettings,
-    notificationToTemplateName,
-    templateSettings,
-  } = config;
+  const { renderSettings, notificationToTemplateName, templateSettings } =
+    config;
   const {
     defaultStrategyName,
     strategies,

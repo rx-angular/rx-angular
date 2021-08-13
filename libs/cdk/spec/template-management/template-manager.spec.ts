@@ -1,4 +1,4 @@
-import 'jest-preset-angular'; // TODO: move this into test-setup when zone-config.spec is in its own lib
+import 'jest-preset-angular/setup-jest'; // TODO: move this into test-setup when zone-config.spec is in its own lib
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -19,15 +19,18 @@ import {
   createTemplateManager,
   RX_ANGULAR_CONFIG,
   RxBaseTemplateNames,
-  RxNotificationKind, RxStrategyProvider,
+  RxStrategyProvider,
   RxTemplateManager,
   RxViewContext,
-  templateNotifier,
 } from '@rx-angular/cdk';
+// tslint:disable-next-line:nx-enforce-module-boundaries
+import {
+  RxNotificationKind,
+  createTemplateNotifier,
+} from '@rx-angular/cdk/notifications';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { ReplaySubject, Subscription } from 'rxjs';
-import createSpy = jasmine.createSpy;
 
 @Component({
   selector: 'rx-angular-error-test',
@@ -71,7 +74,7 @@ class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
 
   values$ = new ReplaySubject<number>(1);
 
-  private observablesHandler = templateNotifier<number>(() => false);
+  private observablesHandler = createTemplateNotifier<number>(() => false);
 
   latestRenderedValue: any;
 
@@ -106,10 +109,10 @@ class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
         updateViewContext,
       },
       notificationToTemplateName: {
-        [RxNotificationKind.suspense]: () => TestTemplateNames.next,
-        [RxNotificationKind.next]: () => TestTemplateNames.next,
-        [RxNotificationKind.error]: () => TestTemplateNames.next,
-        [RxNotificationKind.complete]: () => TestTemplateNames.next,
+        [RxNotificationKind.Suspense]: () => TestTemplateNames.next,
+        [RxNotificationKind.Next]: () => TestTemplateNames.next,
+        [RxNotificationKind.Error]: () => TestTemplateNames.next,
+        [RxNotificationKind.Complete]: () => TestTemplateNames.next,
       },
     });
     this.templateManager.addTemplateRef(
@@ -151,7 +154,7 @@ function updateViewContext<T>(
 }
 
 const customErrorHandler: ErrorHandler = {
-  handleError: createSpy('handleError'),
+  handleError: jest.fn(),
 };
 
 let fixtureComponent: any;

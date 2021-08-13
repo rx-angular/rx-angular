@@ -1,50 +1,8 @@
-import { ChangeDetectorRef, Type } from '@angular/core';
-import { NextObserver, Notification, Observable } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
+import { coalescingObj } from '@rx-angular/cdk/coalescing';
+import { Observable } from 'rxjs';
 
-export type coalescingObj =
-  | Record<string | number | symbol, unknown>
-  | Type<unknown>
-  | object;
-export interface RxCoalescingOptions {
-  scope?: coalescingObj;
-}
-
-export enum RxNotificationKind {
-  suspense = 'suspense',
-  next = 'next',
-  error = 'error',
-  complete = 'complete',
-}
-
-export type RxNotificationValue = 'value' | 'hasValue';
-
-export type RxNextNotification<T> = Pick<
-  Notification<T>,
-  RxNotificationValue
-> & {
-  kind: RxNotificationKind;
-} & { error: boolean } & { complete: boolean };
-export type RxSuspenseNotification<T> = Pick<
-  Notification<T>,
-  RxNotificationValue
-> & { kind: RxNotificationKind.suspense } & { error: false } & {
-  complete: false;
-};
-export type RxErrorNotification<T> = Pick<
-  Notification<T>,
-  RxNotificationValue
-> & { kind: RxNotificationKind.error } & { error: any } & { complete: false };
-export type RxCompleteNotification<T> = Pick<
-  Notification<T>,
-  RxNotificationValue
-> & { kind: RxNotificationKind.complete } & { complete: boolean } & {
-  error: false;
-};
-export type RxNotification<T> =
-  | RxNextNotification<T>
-  | RxSuspenseNotification<T>
-  | RxErrorNotification<T>
-  | RxCompleteNotification<T>;
+import { RxNotification } from '@rx-angular/cdk/notifications';
 
 export type RxRenderWork = <T = unknown>(
   cdRef: ChangeDetectorRef,

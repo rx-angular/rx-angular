@@ -185,7 +185,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
         };
         this.sub.add(
           of(null)
-            .pipe(strat.behavior(work, insertMap.get(idx)), take(1))
+            .pipe(strat.behavior(work, this), take(1))
             .subscribe(insert)
         );
         behaviors$.push(insert);

@@ -3,7 +3,8 @@ import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
-  EmbeddedViewRef, ErrorHandler,
+  EmbeddedViewRef,
+  ErrorHandler,
   Input,
   NgZone,
   OnDestroy,
@@ -14,26 +15,27 @@ import {
 } from '@angular/core';
 import {
   createTemplateManager,
-  hotFlatten,
-  RxNotificationKind,
   RxTemplateManager,
+  RxStrategyProvider,
+} from '@rx-angular/cdk';
+import { coerceAllFactory } from '@rx-angular/cdk/coercing';
+import {
+  RxNotificationKind,
   toRxCompleteNotification,
   toRxErrorNotification,
   toRxSuspenseNotification,
-  RxStrategyProvider, templateNotifier,
-} from '@rx-angular/cdk';
+  createTemplateNotifier,
+} from '@rx-angular/cdk/notifications';
 
 import {
   defer,
   NextObserver,
   Observable,
   ObservableInput,
-  ReplaySubject,
   Subject,
   Subscription,
 } from 'rxjs';
 import { map, mapTo, mergeAll } from 'rxjs/operators';
-import { Hooks } from '../../../cdk';
 import {
   RxLetTemplateNames,
   rxLetTemplateNames,
@@ -330,9 +332,12 @@ export class RxLet<U> implements OnInit, OnDestroy {
   ) {}
 
   /** @internal */
-  private observablesHandler = templateNotifier<U>();
-  private strategyHandler = hotFlatten<string>(() => new Subject(), mergeAll());
-  private triggerHandler = hotFlatten<RxNotificationKind>(
+  private observablesHandler = createTemplateNotifier<U>();
+  private strategyHandler = coerceAllFactory<string>(
+    () => new Subject(),
+    mergeAll()
+  );
+  private triggerHandler = coerceAllFactory<RxNotificationKind>(
     () => new Subject(),
     mergeAll()
   );
@@ -379,13 +384,13 @@ export class RxLet<U> implements OnInit, OnDestroy {
         patchZone: this.patchZone ? this.ngZone : false,
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         strategies: this.strategyProvider.strategies,
-        errorHandler: this.errorHandler
+        errorHandler: this.errorHandler,
       },
       notificationToTemplateName: {
-        [RxNotificationKind.suspense]: () => RxLetTemplateNames.suspense,
-        [RxNotificationKind.next]: () => RxLetTemplateNames.next,
-        [RxNotificationKind.error]: () => RxLetTemplateNames.error,
-        [RxNotificationKind.complete]: () => RxLetTemplateNames.complete,
+        [RxNotificationKind.Suspense]: () => RxLetTemplateNames.suspense,
+        [RxNotificationKind.Next]: () => RxLetTemplateNames.next,
+        [RxNotificationKind.Error]: () => RxLetTemplateNames.error,
+        [RxNotificationKind.Complete]: () => RxLetTemplateNames.complete,
       },
       templateTrigger$: this.triggerHandler.values$ as any,
     });

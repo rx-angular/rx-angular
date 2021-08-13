@@ -1,25 +1,12 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Observable, of, Subject } from 'rxjs';
+
 import { LetDirective } from '../let.directive';
-import { MockChangeDetectorRef, MockElementRef } from './fixtures';
-// tslint:disable-next-line:nx-enforce-module-boundaries
-import { mockConsole } from '@test-helpers';
-import {
-  RxDefaultStrategyNames,
-  RX_ANGULAR_CONFIG,
-  RxStrategyProvider,
-} from '@rx-angular/cdk';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value; strategy: strategy">{{
+    <ng-container *rxLet="value$; let value; strategy: strategy; renderCallback:renderedValue$">{{
       (value | json) || 'undefined'
     }}</ng-container>
   `,
@@ -27,63 +14,46 @@ import {
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 class LetDirectiveTestComponentStrategy {
   value$: Observable<number> = of(42);
+  renderedValue$ = new Subject<number>();
   strategy: string;
 }
 
-let fixtureLetDirectiveTestComponent: any;
-let letDirectiveTestComponent: LetDirectiveTestComponentStrategy;
-let letDirective: LetDirective<number>;
-let activeStrategy: RxDefaultStrategyNames;
-let componentNativeElement: any;
+let fixture: ComponentFixture<LetDirectiveTestComponentStrategy>;
+let componentInstance: LetDirectiveTestComponentStrategy;
+let componentNativeElement: HTMLElement;
 
-const setupLetDirectiveTestComponentStrategy = (): void => {
-  TestBed.configureTestingModule({
-    declarations: [LetDirectiveTestComponentStrategy, LetDirective],
-    providers: [
-      RxStrategyProvider,
-      { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
-      { provide: ElementRef, useValue: new MockElementRef({}) },
-      TemplateRef,
-      ViewContainerRef,
-      LetDirective,
-      {
-        provide: RX_ANGULAR_CONFIG,
-        useValue: {
-          primaryStrategy: 'native',
-        },
-      },
-    ],
-  });
-  fixtureLetDirectiveTestComponent = TestBed.createComponent(
-    LetDirectiveTestComponentStrategy
-  );
-  letDirectiveTestComponent =
-    fixtureLetDirectiveTestComponent.componentInstance;
-  letDirective = fixtureLetDirectiveTestComponent.debugElement.injector.get(
-    LetDirective
-  );
-  activeStrategy = letDirective['strategyProvider'].primaryStrategy as any;
-  letDirective['strategyHandler'].values$.subscribe((as: any) => {
-    activeStrategy = as;
-  });
-  componentNativeElement = fixtureLetDirectiveTestComponent.nativeElement;
-};
-
-describe('LetDirective when using strategy', () => {
-  beforeAll(() => mockConsole());
-  beforeEach(setupLetDirectiveTestComponentStrategy);
-
-  it('should work with different if a strategy other than the default', () => {
-    letDirectiveTestComponent.value$ = of(1, 2, 3, 4, 5);
-    letDirectiveTestComponent.strategy = 'native';
-    fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('5');
+describe('LetDirective strategies', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [LetDirectiveTestComponentStrategy, LetDirective],
+    }).compileComponents();
   });
 
-  it('should apply default strategy if none is declared by the user', () => {
-    fixtureLetDirectiveTestComponent.detectChanges();
-    expect(activeStrategy).toEqual(
-      letDirective['strategyProvider'].primaryStrategy
-    );
+  beforeEach(() => {
+    fixture = TestBed.createComponent(LetDirectiveTestComponentStrategy);
+    componentInstance = fixture.componentInstance;
+    componentNativeElement = fixture.nativeElement;
+  });
+
+  describe.each([
+    [''], /* <- Invalid strategy should fallback. */
+    ['invalid'], /* <- Same here. */
+    ['noPriority'],
+    ['immediate'],
+    ['userBlocking'],
+    ['normal'],
+    ['low'],
+    ['idle'],
+    ['native'],
+  ])('Strategy: %p', (strategy) => {
+    it('should render with given strategy', done => {
+      componentInstance.strategy = strategy;
+
+      fixture.detectChanges();
+      componentInstance.renderedValue$.subscribe(v => {
+        expect(v).toBe(42);
+        done();
+      });
+    });
   });
 });

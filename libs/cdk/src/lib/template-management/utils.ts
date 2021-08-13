@@ -297,7 +297,7 @@ export function notifyInjectingParentIfNeeded(
           {},
           (error) => toRenderError(error, injectingViewCdRef)
         ).pipe(ignoreElements())
-      : (([] as unknown) as Observable<never>)
+      : ([] as unknown as Observable<never>)
   );
 }
 

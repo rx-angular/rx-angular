@@ -1,4 +1,4 @@
-import { Notification, PartialObserver } from 'rxjs';
+import { PartialObserver } from 'rxjs';
 
 export interface RxViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
@@ -20,12 +20,3 @@ export type RxTemplateObserver<T> = {
   suspense?: (value?: any) => void;
 } & PartialObserver<T>;
 
-export type RxNotificationKind =
-  | 'rxSuspense'
-  | 'rxNext'
-  | 'rxError'
-  | 'rxComplete';
-type NotificationExtract = 'value' | 'hasValue' | 'error';
-export type RxNotification<T> = Pick<Notification<T>, NotificationExtract> & {
-  kind: RxNotificationKind;
-};

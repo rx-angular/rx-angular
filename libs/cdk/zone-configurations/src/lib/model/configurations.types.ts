@@ -481,30 +481,32 @@ export interface RxZoneGlobalDisableConfigurations {
    */
   ZoneAwarePromise?: boolean;
 }
-export type RxZoneGlobalDisableConfigurationsKey = keyof RxZoneGlobalDisableConfigurations;
-export const zoneGlobalDisableConfigurationsKeys: RxZoneGlobalDisableConfigurationsKey[] = [
-  'EventEmitter',
-  'fs',
-  'node_timers',
-  'nextTick',
-  'crypto',
-  'defineProperty',
-  'registerElement',
-  'EventTargetLegacy',
-  'timers',
-  'requestAnimationFrame',
-  'blocking',
-  'EventTarget',
-  'FileReader',
-  'MutationObserver',
-  'IntersectionObserver',
-  'on_property',
-  'customElements',
-  'XHR',
-  'geolocation',
-  'canvas',
-  'ZoneAwarePromise',
-];
+export type RxZoneGlobalDisableConfigurationsKey =
+  keyof RxZoneGlobalDisableConfigurations;
+export const zoneGlobalDisableConfigurationsKeys: RxZoneGlobalDisableConfigurationsKey[] =
+  [
+    'EventEmitter',
+    'fs',
+    'node_timers',
+    'nextTick',
+    'crypto',
+    'defineProperty',
+    'registerElement',
+    'EventTargetLegacy',
+    'timers',
+    'requestAnimationFrame',
+    'blocking',
+    'EventTarget',
+    'FileReader',
+    'MutationObserver',
+    'IntersectionObserver',
+    'on_property',
+    'customElements',
+    'XHR',
+    'geolocation',
+    'canvas',
+    'ZoneAwarePromise',
+  ];
 
 // prefix: __zone_symbol__
 export interface RxZoneGlobalEventsConfigurations {
@@ -538,11 +540,10 @@ export interface RxZoneGlobalEventsConfigurations {
    */
   PASSIVE_EVENTS?: string[];
 }
-export type RxZoneGlobalEventsConfigurationsKey = keyof RxZoneGlobalEventsConfigurations;
-export const zoneGlobalEventsConfigurationsKeys: RxZoneGlobalEventsConfigurationsKey[] = [
-  'UNPATCHED_EVENTS',
-  'PASSIVE_EVENTS',
-];
+export type RxZoneGlobalEventsConfigurationsKey =
+  keyof RxZoneGlobalEventsConfigurations;
+export const zoneGlobalEventsConfigurationsKeys: RxZoneGlobalEventsConfigurationsKey[] =
+  ['UNPATCHED_EVENTS', 'PASSIVE_EVENTS'];
 
 // prefix: __zone_symbol__
 export interface RxZoneGlobalSettingsConfigurations {
@@ -557,10 +558,10 @@ export interface RxZoneGlobalSettingsConfigurations {
    */
   DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION?: boolean;
 }
-export type RxZoneGlobalSettingsConfigurationsKey = keyof RxZoneGlobalSettingsConfigurations;
-export const zoneGlobalSettingsConfigurationsKeys: RxZoneGlobalSettingsConfigurationsKey[] = [
-  'DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION',
-];
+export type RxZoneGlobalSettingsConfigurationsKey =
+  keyof RxZoneGlobalSettingsConfigurations;
+export const zoneGlobalSettingsConfigurationsKeys: RxZoneGlobalSettingsConfigurationsKey[] =
+  ['DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION'];
 
 // prefix: __zone_symbol__
 export interface RxZoneRuntimeConfigurations {
@@ -625,12 +626,10 @@ export interface RxZoneTestDisableConfigurations {
    */
   jest?: boolean;
 }
-export type RxZoneTestDisableConfigurationsKey = keyof RxZoneTestDisableConfigurations;
-export const zoneTestDisableConfigurationsKeys: RxZoneTestDisableConfigurationsKey[] = [
-  'jasmine',
-  'mocha',
-  'jest',
-];
+export type RxZoneTestDisableConfigurationsKey =
+  keyof RxZoneTestDisableConfigurations;
+export const zoneTestDisableConfigurationsKeys: RxZoneTestDisableConfigurationsKey[] =
+  ['jasmine', 'mocha', 'jest'];
 
 // prefix: __zone_symbol__
 export interface RxZoneTestSettingsConfigurations {
@@ -747,12 +746,14 @@ export interface RxZoneTestSettingsConfigurations {
    */
   supportWaitUnResolvedChainedPromise?: boolean;
 }
-export type RxZoneTestSettingsConfigurationsKey = keyof RxZoneTestSettingsConfigurations;
-export const zoneTestSettingsConfigurationsKeys: RxZoneTestSettingsConfigurationsKey[] = [
-  'fakeAsyncDisablePatchingClock',
-  'fakeAsyncAutoFakeAsyncWhenClockPatched',
-  'supportWaitUnResolvedChainedPromise',
-];
+export type RxZoneTestSettingsConfigurationsKey =
+  keyof RxZoneTestSettingsConfigurations;
+export const zoneTestSettingsConfigurationsKeys: RxZoneTestSettingsConfigurationsKey[] =
+  [
+    'fakeAsyncDisablePatchingClock',
+    'fakeAsyncAutoFakeAsyncWhenClockPatched',
+    'supportWaitUnResolvedChainedPromise',
+  ];
 
 export interface RxZoneFlagsHelperFunctions {
   /**

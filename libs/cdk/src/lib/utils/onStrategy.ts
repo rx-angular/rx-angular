@@ -1,8 +1,8 @@
+import { RxCoalescingOptions } from '@rx-angular/cdk/coalescing';
 import { switchMap } from 'rxjs/operators';
 import {
   RxRenderWork,
   RxStrategyCredentials,
-  RxCoalescingOptions,
 } from '../model';
 import { Observable, Observer, of, throwError } from 'rxjs';
 import {

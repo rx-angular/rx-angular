@@ -138,12 +138,12 @@ function getListChanges<T>(
     const item = record.item;
     if (record.previousIndex == null) {
       // insert
-      changesArr.push(getInsertChange(item, currentIndex));
+      changesArr.push(getInsertChange(item, currentIndex === null ? undefined : currentIndex));
       changedIdxs.add(item);
       notifyParent = true;
     } else if (currentIndex == null) {
       // remove
-      changesArr.push(getRemoveChange(item, adjustedPreviousIndex));
+      changesArr.push(getRemoveChange(item, adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex));
       changedIdxs.add(item);
       notifyParent = true;
     } else if (adjustedPreviousIndex !== null) {
@@ -155,8 +155,10 @@ function getListChanges<T>(
   });
   changes.forEachIdentityChange((record) => {
     const item = record.item;
-    changesArr.push(getUpdateChange(item, record.currentIndex));
-    changedIdxs.add(item);
+    if (!changedIdxs.has(item)) {
+      changesArr.push(getUpdateChange(item, record.currentIndex));
+      changedIdxs.add(item);
+    }
   });
   items.forEach((item, index) => {
     if (!changedIdxs.has(item)) {

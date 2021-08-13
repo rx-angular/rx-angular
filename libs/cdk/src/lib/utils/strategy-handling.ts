@@ -1,7 +1,8 @@
 import { RxStrategyCredentials, RxCustomStrategyCredentials } from '../model';
 import { Observable, ReplaySubject } from 'rxjs';
-import { map, mergeAll, share, startWith, switchAll } from 'rxjs/operators';
-import { hotFlatten } from './hotFlatten';
+import { map, share, startWith, switchAll } from 'rxjs/operators';
+
+import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 
 /**
  * @internal
@@ -19,7 +20,7 @@ export function strategyHandling(
   strategy$: Observable<RxStrategyCredentials>;
   next(name: string | Observable<string>): void;
 } {
-  const hotFlattened = hotFlatten(
+  const hotFlattened = coerceAllFactory(
     () => new ReplaySubject<string | Observable<string>>(1),
     switchAll()
   );

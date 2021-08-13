@@ -1,8 +1,19 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  Input,
+  OnDestroy,
+} from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { unpatchAddEventListener } from '@rx-angular/cdk/zone-less';
-import { focusEvents, formControlsEvents, inputEvents, mouseEvents } from '@rx-angular/cdk/zone-configurations';
+import {
+  focusEvents,
+  formControlsEvents,
+  inputEvents,
+  mouseEvents,
+} from '@rx-angular/cdk/zone-configurations';
 
 /**
  *
@@ -32,7 +43,10 @@ export function unpatchEventListener(elem: HTMLElement, event: string): void {
 }
 
 const eventsToUnpatch: string[] = [
-  ...allEvents
+  ...mouseEvents,
+  ...inputEvents,
+  ...focusEvents,
+  ...formControlsEvents,
 ];
 
 /**
@@ -77,7 +91,6 @@ const eventsToUnpatch: string[] = [
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[unpatch]' })
 export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
-
   /**
    * @description
    * List of unpatch that the element should be unpatched from. When input is empty or undefined,
@@ -98,8 +111,7 @@ export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
   subscription = new Subscription();
   events$ = new BehaviorSubject<string[]>(eventsToUnpatch);
 
-  constructor(private el: ElementRef) {
-  }
+  constructor(private el: ElementRef) {}
 
   reapplyEventListenersZoneUnPatched(events) {
     events.forEach((ev) => {

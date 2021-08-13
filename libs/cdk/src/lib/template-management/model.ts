@@ -1,13 +1,17 @@
 import {
   ChangeDetectorRef,
   ElementRef,
-  EmbeddedViewRef, ErrorHandler,
+  EmbeddedViewRef,
+  ErrorHandler,
   NgZone,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RxNotification, RxStrategies } from '../model';
+
+import { RxNotification } from '@rx-angular/cdk/notifications';
+
+import { RxStrategies } from '../model';
 
 export type rxBaseTemplateNames = 'errorTpl' | 'completeTpl' | 'suspenseTpl';
 
@@ -24,7 +28,10 @@ export const enum RxListTemplateChangeType {
   update,
   context,
 }
-export type RxListTemplateChange<T = any> = [RxListTemplateChangeType, [T, number, number?]];
+export type RxListTemplateChange<T = any> = [
+  RxListTemplateChangeType,
+  [T, number, number?]
+];
 export type RxListTemplateChanges<T = any> = [
   RxListTemplateChange<T>[], // changes to apply
   boolean // notify parent

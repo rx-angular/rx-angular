@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template';
+import { UnpatchModule } from '@rx-angular/template/unpatch';
 
 import { DirtyChecksModule } from '../../debug-helper/dirty-checks';
 import { RenderingsModule } from '../../debug-helper/renderings';
@@ -37,7 +38,7 @@ const DECLARATIONS = [
     CommonModule,
     MatButtonModule,
     DirtyChecksModule,
-    UnpatchEventsModule,
+    UnpatchModule,
     PushModule,
     VisualizerModule,
     ValueProvidersModule,

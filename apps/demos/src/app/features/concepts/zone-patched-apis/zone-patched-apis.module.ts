@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './zone-patched-apis.routes';
 import { MatButtonModule } from '@angular/material/button';
-import { PushModule, UnpatchEventsModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template';
+import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { ZonePatchedApisComponent } from './zone-patched-apis.component';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visualizer.module';
@@ -20,7 +21,7 @@ import { ValueProvidersModule } from '../../../shared/debug-helper/value-provide
     RouterModule.forChild(ROUTES),
     MatButtonModule,
     DirtyChecksModule,
-    UnpatchEventsModule,
+    UnpatchModule,
     PushModule,
     VisualizerModule,
     CdDefaultModule,
