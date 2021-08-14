@@ -6,7 +6,12 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 # Motivation
 
 Coercing, or to be more specific type coercion is the process of converting a value from one type to another.
-This can be done with any primitive value in JavaScript. e.g. number, string, Symbol, boolean, null, undefined
+This can be done with any primitive value in JavaScript. e.g. number, string, Symbol, boolean, null, undefined. 
+
+Another type where we also can apply coercing is the `Observable` type.
+
+![coerceObservable](https://user-images.githubusercontent.com/10064416/129430812-1e4af911-fb42-4d61-a68a-4fb86e595113.png)
+
 
 In practice you can apply this technique in 2 ways:
 
