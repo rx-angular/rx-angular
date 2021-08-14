@@ -171,6 +171,18 @@ This is the operator version of `coerceDistinctObservable`. It also includes the
 
 **coerceAllFactory**
 
+The naming `coerceAll` relates to an operator that processes higher-order observables. The naming `factory` relates to the fact thatthis function helps to set up such a operator.
+
+To get a quick understanding of the difference of an first-order and higher-order observable we will take a look at the following graphic:
+
+![rxjs_order-of-observables_michael-hladky](https://user-images.githubusercontent.com/10064416/129426892-64ff26e7-3271-412f-ba29-b7bd940ff0d3.png)
+
+As we can see the upper half of the image represents a stream of single values, where the lower part represents a stream of streams of single values.
+The order (first, second, thrid) is determined by the level of "nesting" of the streams.
+
+Where the above operators where solving only the coercing, the factory here helps to create compositions for specific cases in a more elegant way.
+ 
+
 ```typescript
 @Component({
   // ...
