@@ -192,7 +192,7 @@ export class AppComponent {
 
 The downside here is we need to inject `NgZone` and rely on dependency injection wich is not only more code but also slow.
 
-## `Zone Configuration`
+## Zone Configuration
 
 Zone configuration is a less granular way to disable zone. It helps to cinfigure zone in a way where it don't patches specific API's at all.
 
