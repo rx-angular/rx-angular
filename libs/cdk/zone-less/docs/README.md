@@ -35,6 +35,18 @@ This will print the original unpatched API to the Brwosers console.
 Internally the symbols and in turn the unpatched API's is what the zone-less package is using. 
 The essential method used to get hold of the unpatched APIs is called `getZoneUnPatchedApi`. It takes a target i.e. `window` and a name of the method we want to retreive the unpatched version of.
 
+## Setup
+
+The zone-less API's can be used directly from the `cdk` package.
+To do so, install the `cdk` package and, if needed, the packages depending on it:
+
+1. Install `@rx-angular/cdk`
+
+```bash
+npm i @rx-angular/cdk
+// or
+yarn add @rx-angular/cdk
+```
 
 ## Usage
 
