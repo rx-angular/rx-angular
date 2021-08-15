@@ -10,7 +10,7 @@
 
 ## Key features
 
-- ✅ Assertion if values get coalesced 
+- ✅ 
 
 ## Demos:
 
