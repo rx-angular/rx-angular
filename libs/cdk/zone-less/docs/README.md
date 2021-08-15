@@ -15,13 +15,13 @@ The zone-less package helps out here.
 It provides a general method to access the unpatched version of an API and also ships a set of commonly used APIs of the Browser as well as RxJS. 
 All those APIs are fully independent of zone.js and NgZone (which is normally used to run things outside Angular).
 
-
 # The Benefits
 
-- ✅ Fastest option possible
+- ✅ Finegrained ways to unpatch APIs
+- ✅ Fastest option possible to run code outside of Angulars zone mechanism
 - ✅ Drop-in replacement for navive APIs
 - ✅ Drop-in replacement for RxJS functions
-- ✅ No need for `ngZone#runOutsideZone`
+- ✅ No need for `runOutsideAngular` and `NgZone` injection
 
 # RxAngular CDK/Zone-Less
 
@@ -50,9 +50,29 @@ yarn add @rx-angular/cdk
 
 ## Usage
 
+The utils folder contains the most essential functions used to unpatch APIs. 
+Normally if developers want to avoid change detection through zone the have to inject `NgZone` and run the code that should not trigger change detection in the `runOutsideAngular` method.  
+
+```typescript
+export class AnyComponent {
+  
+  constructor(private ngZone: NgZone) {
+     this.ngZone.runOutsideAngular(() => {
+      // code here
+    });
+  }
+ 
+}
+```
+
+This introduces some lines of code and also takes time to retreive the service form dependency injection and execute additional code.
+
 **utils**
 
 - getZoneUnPatchedApi
+
+The `getZoneUnPatchedApi` function is used in all other functions of the zone-less package to access the Browsers unpatched API's. 
+
 
 ```typescript
 @Component({
@@ -61,12 +81,14 @@ yarn add @rx-angular/cdk
 export class AppComponent {
   
   doStuff() {
+   // unpatched method of the window object
     getZoneUnPatchedApi('setTimeout')(
       () => console.log('tada!'), 
       300);
   };
   
   doOtherStuff() {
+    // unpatched method of an HTML element
     getZoneUnPatchedApi(elem, 'addEventListener')('click', () => console.log('tada!') );
   };
   
@@ -82,6 +104,26 @@ export class AppComponent {
 - setTimeout,
 - clearTimeout
 
+To reduce lines of code we ship all common browser scheduling APIs as unpatched version directly.
+
+```typescript
+import {setTimeout} from @rx-angular/cdk/zone-less
+
+@Component({
+  // ...
+})
+export class AppComponent {
+  
+  doStuff() {
+   // unpatched method of the window object
+    setTimeout(
+      () => console.log('tada!'), 
+      300);
+  };
+  
+}
+```
+
 **rxjs**
 
 creation
@@ -96,6 +138,25 @@ scheduler
 - asap
 - queue
 - animationFrame
+
+As RxJS internally uses Browser API's it is pretty impossible to get rid of the zone involvment. 
+For this very reason we shipped the RxJS operators, schedulers and functions that would trigger zone as unpatched version.
+
+```typescript
+import {interval} from @rx-angular/cdk/zone-less
+
+@Component({
+  // ...
+})
+export class AppComponent {
+  
+  doStuff() {
+    // unpatched method of RxJS lib
+    interval(300).subscribe();
+  };
+  
+}
+```
 
 
 # Available Approaches
@@ -129,4 +190,10 @@ export class AppComponent {
 }
 ```
 
-The downside here is we need to inject `NgZone` and rely on dependency injection wich is not only more code but also very slow.
+The downside here is we need to inject `NgZone` and rely on dependency injection wich is not only more code but also slow.
+
+## `Zone Configuration`
+
+Zone configuration is a less granular way to disable zone. It helps to cinfigure zone in a way where it don't patches specific API's at all.
+
+You can read in detail about it in the docs of [`@rx-angular/cdk/zone-configuration`](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/zone-configurations/docs/zone-flags.md).
