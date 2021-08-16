@@ -139,14 +139,14 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
   }
 
   error(): void {
-    this.errorSubject.next();
+    this.errorSubject.next(undefined);
   }
 
   complete(): void {
-    this.completeSubject.next();
+    this.completeSubject.next(undefined);
   }
 
   reset(): void {
-    this.resetSubject.next();
+    this.resetSubject.next(undefined);
   }
 }

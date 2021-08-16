@@ -9,7 +9,7 @@ import { delay, scan, shareReplay, switchMap } from 'rxjs/operators';
     <rxa-visualizer>
       <div visualizerHeader>
         <h3>Resolving over Observable</h3>
-        <button mat-raised-button [unpatch] (click)="toggleSubject.next();">Toggle</button>
+        <button mat-raised-button [unpatch] (click)="toggleSubject.next(undefined);">Toggle</button>
       </div>
       <ng-template #suspenseView>
         <rxa-list-item-ghost></rxa-list-item-ghost>
