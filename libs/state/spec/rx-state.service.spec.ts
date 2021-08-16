@@ -119,7 +119,7 @@ describe('RxStateService', () => {
         state.set({ num: 42 });
         const slice$ = state.select('num');
         let i = -1;
-        const valuesInOrder = [{ num: 42 }, { num: 777 }];
+        const valuesInOrder = [42, 777];
         slice$.subscribe((next) => expect(next).toBe(valuesInOrder[++i]));
         state.set({ num: 777 });
       });
