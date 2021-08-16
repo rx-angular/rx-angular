@@ -1,3 +1,32 @@
+# [1.0.0-alpha.9](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.7...cdk@1.0.0-alpha.9) (2021-08-16)
+
+
+### Bug Fixes
+
+* **cdk:** setup polyfills for non browser environments in scheduler ([#820](https://github.com/rx-angular/rx-angular/issues/820)) ([674d584](https://github.com/rx-angular/rx-angular/commit/674d5847d709380d6e6bee6e5e230ae36b688818))
+* **cdk:** skip logging irelevant browser API error ([#741](https://github.com/rx-angular/rx-angular/issues/741)) ([78a624f](https://github.com/rx-angular/rx-angular/commit/78a624f993a63327ffce2fcd4ce032d693deb129))
+* **demos:** fix most of the demos ([#640](https://github.com/rx-angular/rx-angular/issues/640)) ([3d443e9](https://github.com/rx-angular/rx-angular/commit/3d443e927ccc90f2bc7919c7364e3f3ab5cb8595))
+
+### Features
+
+* **cdk:** add accumulateObservable creation function ([#582](https://github.com/rx-angular/rx-angular/issues/582)) ([65250ba](https://github.com/rx-angular/rx-angular/commit/65250ba15ab2c6569a00b0d82c57be9ba54787c8))
+* **cdk:** improve rendering error handling ([#626](https://github.com/rx-angular/rx-angular/issues/626)) ([0437438](https://github.com/rx-angular/rx-angular/commit/0437438112c42b8f072b219d599d5ea8d68b30bc))
+* **cdk:** move scheduler into `internals/scheduler` ([#725](https://github.com/rx-angular/rx-angular/issues/725)) ([26aedbd](https://github.com/rx-angular/rx-angular/commit/26aedbd5c3f78e65d40797e3c310e797f00c426f))
+* **cdk:** swap arguments in the `getZoneUnPatchedApi` to benefit from autocomplete ([#707](https://github.com/rx-angular/rx-angular/issues/707)) ([6d5341d](https://github.com/rx-angular/rx-angular/commit/6d5341d22d5e24bf55289654989d3c11dd47c1e8))
+* **zone-configuration:** add ts docs to zone configuration ([#667](https://github.com/rx-angular/rx-angular/issues/667)) ([da4eb77](https://github.com/rx-angular/rx-angular/commit/da4eb776747c0e812e2fea1c4eac533db71d04cb))
+* **coercing:** add ts docs to coercing 
+* **coalescing:** add ts docs to coalescing 
+
+
+### Performance Improvements
+
+* **cdk:** decouple `notifications` into a lib ([#782](https://github.com/rx-angular/rx-angular/issues/782)) ([3032b69](https://github.com/rx-angular/rx-angular/commit/3032b696a909bd9066572584fd2fbb1a132fb730))
+* **cdk:** decouple `zone-configurations` into its own library ([#728](https://github.com/rx-angular/rx-angular/issues/728)) ([4f35bfa](https://github.com/rx-angular/rx-angular/commit/4f35bfaf2a65333b3eff2f74671ad2c443946ca4))
+* **cdk:** decouple `zone-less` into its own self-contained library ([#688](https://github.com/rx-angular/rx-angular/issues/688)) ([bf561e8](https://github.com/rx-angular/rx-angular/commit/bf561e837b37c25ae2ce5430eb861f08ec9c0204))
+* **cdk:** move `coercing` into lib ([#730](https://github.com/rx-angular/rx-angular/issues/730)) ([803412b](https://github.com/rx-angular/rx-angular/commit/803412b8f00d1e0b31f07ced1a2951e445b48546))
+* **cdk:** use existing `rxjs` schedulers ([#700](https://github.com/rx-angular/rx-angular/issues/700)) ([15d0333](https://github.com/rx-angular/rx-angular/commit/15d0333d74b4da56407a7514f2cc50b7db82c93d))
+
+
 # [1.0.0-alpha.8](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.7...cdk@1.0.0-alpha.8) (2021-04-13)
 
 ### Features
