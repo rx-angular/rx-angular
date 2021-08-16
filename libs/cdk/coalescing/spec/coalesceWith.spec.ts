@@ -312,35 +312,35 @@ describe('coalesce operator additional logic', () => {
             );
 
             expect(syncEmission1).not.toBeDefined();
-            num$.subscribe(
-              (x: number) => {
+            num$.subscribe({
+              next: (x: number) => {
                 syncEmission1 = x;
                 // if(syncEmission1 !== 4) {
-                throw new Error('should be called one');
+                expect(syncEmission1).toBe(4);
                 // }
               },
-              () => {
+              error: () => {
                 throw new Error('should not be called');
               },
-              () => {
-                expect(syncEmission1).not.toBeDefined();
+              complete: () => {
+                expect(syncEmission1).toBe(4);
               }
-            );
+            });
 
-            alph$.subscribe(
-              (x: string) => {
+            alph$.subscribe({
+              next: (x: string) => {
                 syncEmission1 = x;
                 if (syncEmission1 !== 'd') {
                   throw new Error('should not be called');
                 }
               },
-              () => {
+              error: () => {
                 throw new Error('should not be called');
               },
-              () => {
+              complete: () => {
                 expect(syncEmission1).toBe('d');
               }
-            );
+            });
           });
         });
       });
