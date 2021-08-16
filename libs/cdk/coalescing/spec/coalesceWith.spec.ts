@@ -1,4 +1,3 @@
-import { TestScheduler } from 'rxjs/internal/testing/TestScheduler';
 import { mergeMapTo, share } from 'rxjs/operators';
 import {
   asapScheduler,
@@ -11,6 +10,7 @@ import {
 } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher, mockConsole } from '@test-helpers';
+import { TestScheduler } from 'rxjs/testing';
 import { coalesceWith } from '../src/lib/coalesceWith';
 
 /** @test {coalesceWith} */
