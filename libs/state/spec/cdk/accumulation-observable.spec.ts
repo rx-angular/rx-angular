@@ -195,10 +195,8 @@ describe('createAccumulationObservable', () => {
       const acc = setupAccumulationObservable<PrimitiveState>({});
       testScheduler.run(({ expectObservable }) => {
         acc.nextSlice({ num: 42 });
-        expectObservable(acc.state$.pipe(pluck('num'))).toBe('(abc)', {
-          a: 42,
-          b: 43,
-          c: 44,
+        expectObservable(acc.state$.pipe(pluck('num'))).toBe('(a)', {
+          a: 44,
         });
 
         acc.nextAccumulator(customAcc);
