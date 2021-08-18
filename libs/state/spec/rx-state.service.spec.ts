@@ -436,71 +436,70 @@ describe('RxStateService', () => {
     });
 
     it('should stop from connect observable', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const state = setupState({ initialState: initialPrimitiveState });
-        const sub = state.subscribe();
-        state.set(initialPrimitiveState);
-        const tick$ = interval(100).pipe(map((num) => ({ num })));
-        state.connect(tick$);
-        sub.unsubscribe();
-        testScheduler.flush();
-        expect(state.get()).toBeUndefined();
+      testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
+        const state = setupState({});
+        const tick$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const subs = '(^!)';
+        state.connect(tick$.pipe(map((num) => ({ num }))));
+        state.ngOnDestroy();
         expectObservable(state.select()).toBe('');
+        expectSubscriptions(tick$.subscriptions).toBe(subs);
       });
     });
 
     it('should stop from connect key & observable', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const state = setupState({ initialState: initialPrimitiveState });
-        const sub = state.subscribe();
-        state.set(initialPrimitiveState);
-        const tick$ = interval(100);
-        state.connect('num', tick$);
-        sub.unsubscribe();
+      testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
+        const state = setupState<any>({});
+        const tick$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const subs = '(^!)';
+        state.connect('num' as any, tick$);
+        state.ngOnDestroy();
+        expectSubscriptions(tick$.subscriptions).toBe(subs);
         expectObservable(state.select()).toBe('');
       });
     });
 
     it('should stop from connect observable & projectFn', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const state = setupState({ initialState: initialPrimitiveState });
-        const sub = state.subscribe();
-        state.set(initialPrimitiveState);
-        const tick$ = interval(100);
-        state.connect(tick$, (s, v) => ({ num: s.num + v }));
-        sub.unsubscribe();
+      testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
+        const state = setupState({ });
+        const tick$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const subs = '(^!)';
+        state.connect(tick$, (s, v) => ({ num: v * 42 }));
+        state.ngOnDestroy();
         expectObservable(state.select()).toBe('');
+        expectSubscriptions(tick$.subscriptions).toBe(subs);
       });
     });
 
     it('should stop from connect key & observable & projectFn', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const state = setupState({ initialState: initialPrimitiveState });
-        const sub = state.subscribe();
-        state.set(initialPrimitiveState);
-        const tick$ = interval(100);
-        state.connect('num', tick$, (s, v) => s.num + v);
-        sub.unsubscribe();
+      testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
+        const state = setupState<any>({ });
+        const tick$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const subs = '(^!)';
+        state.connect('num', tick$, (s, v) => v * 42);
+        state.ngOnDestroy();
         expectObservable(state.select()).toBe('');
+        expectSubscriptions(tick$.subscriptions).toBe(subs);
       });
     });
 
     it('should stop in selects with HOOs', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const state = setupState({ initialState: initialPrimitiveState });
-        const sub = state.subscribe();
-        state.set(initialPrimitiveState);
+      testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
+        const state = setupState({ });
+        const interval$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const subs = '';
         expectObservable(
           state.select(
             switchMap(() =>
-              interval(100).pipe(
+              interval$.pipe(
                 map((num) => ({ num })),
                 take(3)
               )
             )
           )
         ).toBe('');
-        sub.unsubscribe();
+        expectSubscriptions(interval$.subscriptions).toBe(subs);
+        state.ngOnDestroy();
       });
     });
   });
