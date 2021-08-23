@@ -1,3 +1,12 @@
+# [1.0.0-beta.29](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.28...template@1.0.0-beta.29) (2021-08-23)
+
+
+### Bug Fixes
+
+* **schematics:** fix template migration ([#848](https://github.com/rx-angular/rx-angular/issues/848)) ([718eb36](https://github.com/rx-angular/rx-angular/commit/718eb36810533f42e9ed6366beb96b00b78c494a))
+
+
+
 # [1.0.0-beta.28](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.27...template@1.0.0-beta.28) (2021-08-23)
 
 * **template:** remove RxJS dependency
