@@ -8,6 +8,12 @@ import * as path from 'path';
 describe('Template Migration 1.0.0', () => {
   let appTree: UnitTestTree;
 
+  /* Increase Jest timeout because of long living tests. */
+  beforeAll(() => jest.setTimeout(10_000));
+
+  /* Reset default timeout to 5s. */
+  afterAll(() => jest.setTimeout(5_000));
+
   it('should replace LetModule + LetDirective module specifier', async () => {
     appTree = await setupTestFile(`
       import { NgModule } from '@angular/core';
