@@ -1,3 +1,8 @@
+# [1.0.0-beta.27](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.26...template@1.0.0-beta.27) (2021-08-23)
+
+* **template:** fix RxJS7 update ([#907](https://github.com/rx-angular/rx-angular/pull/907)) ([674d584]()
+
+
 # [1.0.0-beta.26](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.21...template@1.0.0-beta.26) (2021-08-16)
 
 
