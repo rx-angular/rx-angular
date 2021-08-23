@@ -2,7 +2,7 @@
   "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "update-1-0-0": {
-      "version": "1.0.0-beta.26",
+      "version": "1.0.0-beta.28",
       "description": "Migrate to sub-entry points",
       "factory": "./src/migrations/update-1-0-0/index"
     }
