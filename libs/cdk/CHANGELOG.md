@@ -1,3 +1,8 @@
+# [1.0.0-alpha.10](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.9...cdk@1.0.0-alpha.10) (2021-08-23)
+
+* **cdk:** fix RxJS7 update ([#907](https://github.com/rx-angular/rx-angular/pull/907)) ([674d584]()
+
+
 # [1.0.0-alpha.9](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.7...cdk@1.0.0-alpha.9) (2021-08-16)
 
 
