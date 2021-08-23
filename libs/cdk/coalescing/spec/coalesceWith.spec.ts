@@ -1,16 +1,16 @@
-import { TestScheduler } from 'rxjs/internal/testing/TestScheduler';
 import { mergeMapTo, share } from 'rxjs/operators';
 import {
   asapScheduler,
   concat,
   defer,
-  from,
+  from, NEVER,
   Observable,
-  of,
-  timer,
+  of, scheduled,
+  timer
 } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher, mockConsole } from '@test-helpers';
+import { TestScheduler } from 'rxjs/testing';
 import { coalesceWith } from '../src/lib/coalesceWith';
 
 /** @test {coalesceWith} */
@@ -288,60 +288,49 @@ describe('coalesce operator additional logic', () => {
         }
       });
 
-      it('should emit once per micro task', () => {
-        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const scope = {};
-          testScheduler.run(() => {
-            let syncEmission1: any;
-
-            const arrNum = [1, 2, 3, 4];
-            const arrAlph = ['a', 'b', 'c', 'd'];
-            const num$ = from(arrNum).pipe(
-              share(),
-              coalesceWith(
-                defer(() => from([1])),
-                scope
-              )
-            );
-            const alph$ = from(arrAlph).pipe(
-              share(),
-              coalesceWith(
-                defer(() => from([1])),
-                scope
-              )
-            );
-
-            expect(syncEmission1).not.toBeDefined();
-            num$.subscribe(
-              (x: number) => {
-                syncEmission1 = x;
-                // if(syncEmission1 !== 4) {
-                throw new Error('should be called one');
-                // }
-              },
-              () => {
-                throw new Error('should not be called');
-              },
-              () => {
-                expect(syncEmission1).not.toBeDefined();
-              }
-            );
-
-            alph$.subscribe(
-              (x: string) => {
-                syncEmission1 = x;
-                if (syncEmission1 !== 'd') {
-                  throw new Error('should not be called');
-                }
-              },
-              () => {
-                throw new Error('should not be called');
-              },
-              () => {
-                expect(syncEmission1).toBe('d');
-              }
-            );
-          });
+      it('should emit once per micro task', done => {
+        const scope = {};
+        const arrNum = [1, 2, 3, 4];
+        const arrAlph = ['a', 'b', 'c', 'd'];
+        const num$ = concat(from(arrNum), NEVER).pipe(
+          share(),
+          coalesceWith(
+            scheduled([1], asapScheduler),
+            scope
+          )
+        );
+        const alph$ = concat(from(arrAlph), NEVER).pipe(
+          share(),
+          coalesceWith(
+            scheduled([1], asapScheduler),
+            scope
+          )
+        );
+        let numValue;
+        num$.subscribe({
+          next: (x: number) => {
+            numValue = x;
+            throw new Error('should not be called');
+          },
+          error: () => {
+            throw new Error('should not be called');
+          },
+          complete: () => {
+            throw new Error('should not be called');
+          }
+        });
+        alph$.subscribe({
+          next: (x: string) => {
+            expect(x).toBe('d');
+            expect(numValue).not.toBeDefined();
+            done();
+          },
+          error: () => {
+            throw new Error('should not be called');
+          },
+          complete: () => {
+            throw new Error('should not be called');
+          }
         });
       });
 

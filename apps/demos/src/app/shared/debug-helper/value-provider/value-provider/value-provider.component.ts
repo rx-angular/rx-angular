@@ -62,7 +62,7 @@ export class ValueProviderComponent extends PrimitivesProviderService {
 
   reset() {
     super.reset();
-    this.resetState.next();
+    this.resetState.next(undefined);
   }
 
   getZoneState() {

@@ -360,11 +360,11 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    */
   connect<K extends keyof T, V>(
     keyOrInputOrSlice$: K | Observable<Partial<T> | V>,
-    projectOrSlices$?: ProjectStateReducer<T, V> | Observable<T[K]>,
+    projectOrSlices$?: ProjectStateReducer<T, V> | Observable<T[K] | V>,
     projectValueFn?: ProjectValueReducer<T, K, V>
   ): void {
     if (
-      isObservable<Partial<T>>(keyOrInputOrSlice$) &&
+      isObservable(keyOrInputOrSlice$) &&
       projectOrSlices$ === undefined &&
       projectValueFn === undefined
     ) {
@@ -373,14 +373,14 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     }
 
     if (
-      isObservable<V>(keyOrInputOrSlice$) &&
+      isObservable(keyOrInputOrSlice$) &&
       typeof projectOrSlices$ === 'function' &&
-      !isObservable<T[K]>(projectOrSlices$) &&
+      !isObservable(projectOrSlices$) &&
       projectValueFn === undefined
     ) {
       const project = projectOrSlices$;
       const slice$ = keyOrInputOrSlice$.pipe(
-        map((v) => project(this.get(), v))
+        map((v) => project(this.get(), v as V))
       );
       this.accumulator.nextSliceObservable(slice$);
       return;
@@ -388,7 +388,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
     if (
       isKeyOf<T>(keyOrInputOrSlice$) &&
-      isObservable<T[K]>(projectOrSlices$) &&
+      isObservable(projectOrSlices$) &&
       projectValueFn === undefined
     ) {
       const key = keyOrInputOrSlice$;
@@ -401,12 +401,12 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
     if (
       isKeyOf<T>(keyOrInputOrSlice$) &&
-      isObservable<V>(projectOrSlices$) &&
+      isObservable(projectOrSlices$) &&
       typeof projectValueFn === 'function'
     ) {
       const key = keyOrInputOrSlice$;
       const slice$ = projectOrSlices$.pipe(
-        map((value) => ({ ...{}, [key]: projectValueFn(this.get(), value) }))
+        map((value) => ({ ...{}, [key]: projectValueFn(this.get(), value as V) }))
       );
       this.accumulator.nextSliceObservable(slice$);
       return;
@@ -555,7 +555,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     if (!opOrMapFn || opOrMapFn.length === 0) {
       return this.accumulator.state$.pipe(stateful());
     } else if (isStringArrayGuard(opOrMapFn)) {
-      return this.accumulator.state$.pipe(stateful(pluck(...opOrMapFn)));
+      return this.accumulator.state$.pipe(stateful(pluck(...opOrMapFn))) as Observable<T | R>;
     } else if (isOperateFnArrayGuard(opOrMapFn)) {
       return this.accumulator.state$.pipe(stateful(pipeFromArray(opOrMapFn)));
     }

@@ -1,6 +1,6 @@
 {
   "name": "@rx-angular/state",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "@rx-angular/state is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state and side effects in angular",
   "main": "index.js",
   "publishConfig": {
@@ -48,8 +48,7 @@
     "url": "https://github.com/rx-angular/rx-angular.git"
   },
   "peerDependencies": {
-    "@angular/core": ">8.0.0",
-    "rxjs": "^6.5.5"
+    "@angular/core": ">8.0.0"
   },
   "dependencies": {
     "tslib": "^2.0.0"

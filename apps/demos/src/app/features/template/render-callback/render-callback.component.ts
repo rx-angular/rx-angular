@@ -14,7 +14,7 @@ import { map, scan, shareReplay, startWith, switchMap, switchMapTo, take, tap } 
   template: `
     <h1 class="mat-header">Render Callback</h1>
     <h4 class="mat-subheader">Height calculation using rendered$ Event</h4>
-    <button mat-raised-button [unpatch] (click)="updateClick.next()">Update content</button>
+    <button mat-raised-button [unpatch] (click)="updateClick.next(undefined)">Update content</button>
     <div class="example-results">
       <div class="example-result">
         <h4>Calculated after renderCallback</h4>
