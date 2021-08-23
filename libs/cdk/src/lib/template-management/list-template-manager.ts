@@ -183,15 +183,15 @@ export function createListTemplateManager<
     changes: RxListTemplateChange<T>[],
     strategy: RxStrategyCredentials,
     count: number
-  ): Observable<null | false | RxListTemplateChange<T>[]>[] {
+  ): Observable<null | false | RxListTemplateChange<T>>[] {
     return changes.length > 0
       ? changes.map((change) => {
+        const payload = change[1];
           return onStrategy(
-            change[1],
+            change,
             strategy,
             () => {
               const type = change[0];
-              const payload = change[1];
               switch (type) {
                 case RxListTemplateChangeType.insert:
                   listViewHandler.insertView(payload[0], payload[1], count);

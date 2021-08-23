@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject, interval, Subject, throwError } from 'rxjs';
-import { fromPromise } from 'rxjs/internal-compatibility';
+import { BehaviorSubject, from, interval, Subject, throwError } from 'rxjs';
 import { map, share, switchMap, takeUntil, withLatestFrom } from 'rxjs/operators';
 
 @Component({
@@ -120,13 +119,11 @@ export class LetTemplateBindingHttpExampleComponent {
           if (error) {
             return throwError(error);
           } else {
-            return fromPromise(
-              fetch(
-                `https://swapi.dev/api/people/${
-                  Math.floor(Math.random() * 50) + 1
-                }`
-              ).then((a) => a.json())
-            );
+           return fetch(
+             `https://swapi.dev/api/people/${
+               Math.floor(Math.random() * 50) + 1
+             }`
+           ).then((a) => a.json());
           }
         }),
         map((hero) => hero.name || hero.detail || 'Not found')
@@ -137,12 +134,12 @@ export class LetTemplateBindingHttpExampleComponent {
   );
 
   startFetch() {
-    this.start$.next();
+    this.start$.next(undefined);
     this.start$.complete();
   }
 
   completeFetch() {
-    this.complete$.next();
+    this.complete$.next(undefined);
     this.complete$.complete();
   }
 

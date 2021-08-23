@@ -79,7 +79,7 @@ export class WorkComponent extends Hooks {
   }
 
   dirtyCheck() {
-    this.dirtyCheckSubject.next();
+    this.dirtyCheckSubject.next(undefined);
   }
 
   scriptingWork(iterations: number) {

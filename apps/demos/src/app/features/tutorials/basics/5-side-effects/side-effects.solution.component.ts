@@ -94,7 +94,7 @@ export class SideEffectsSolution extends RxState<ComponentState>
   }
 
   ngOnInit(): void {
-    this.refreshClicks$.next();
+    this.refreshClicks$.next(undefined);
   }
 
   parseListItems(l: ListServerItem[]): DemoBasicsItem[] {

@@ -28,9 +28,11 @@ export const enum RxListTemplateChangeType {
   update,
   context,
 }
+// [value, index, oldIndex?]
+export type RxListTemplateChangePayload<T> = [T, number, number?];
 export type RxListTemplateChange<T = any> = [
   RxListTemplateChangeType,
-  [T, number, number?]
+  RxListTemplateChangePayload<T>
 ];
 export type RxListTemplateChanges<T = any> = [
   RxListTemplateChange<T>[], // changes to apply

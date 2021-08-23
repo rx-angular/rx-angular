@@ -1,5 +1,5 @@
 import { EMPTY, from, Observable, of, timer } from 'rxjs';
-import { merge as mergeWith, share, switchMap, take, takeUntil } from 'rxjs/operators';
+import { mergeWith, share, switchMap, take, takeUntil } from 'rxjs/operators';
 import { SchedulerConfig, TestItem } from './model';
 import { fromFetch } from 'rxjs/fetch';
 
@@ -9,8 +9,8 @@ export function compareIdFn(a, b) {
 
 const theMax = 10000;
 
-export function withCompleteAndError<T>(error$, complete$) {
-  return (o: Observable<T>): Observable<T> =>
+export function withCompleteAndError<T, E>(error$: Observable<E>, complete$) {
+  return (o: Observable<T>): Observable<T | E> =>
     o.pipe(
       /* tslint:disable */
       mergeWith(error$),
