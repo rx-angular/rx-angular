@@ -80,7 +80,7 @@
     "@angular-eslint/eslint-plugin": "12.3.1",
     "@angular-eslint/eslint-plugin-template": "12.3.1",
     "@angular-eslint/template-parser": "12.3.1",
-    "@angular/cli": "12.2.1",
+    "@angular/cli": "12.2.3",
     "@angular/compiler-cli": "12.2.2",
     "@angular/language-service": "12.2.2",
     "@commitlint/cli": "^13.1.0",
