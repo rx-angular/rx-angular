@@ -6,6 +6,8 @@
     "inlineSources": true,
     "declaration": true,
     "declarationMap": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
     "lib": ["dom", "es2018"]
   },
   "angularCompilerOptions": {
@@ -14,9 +16,7 @@
     "annotateForClosureCompiler": true,
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,
-    "enableResourceInlining": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true
+    "enableResourceInlining": true
   },
   "exclude": ["src/test-setup.ts", "**/*.spec.ts"]
 }
