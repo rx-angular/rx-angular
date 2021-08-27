@@ -4,6 +4,8 @@
     "target": "es2015",
     "module": "es2015",
     "inlineSources": true,
+    "declaration": true,
+    "declarationMap": true,
     "lib": ["dom", "es2018"]
   },
   "angularCompilerOptions": {
@@ -12,7 +14,9 @@
     "annotateForClosureCompiler": true,
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,
-    "enableResourceInlining": true
+    "enableResourceInlining": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true
   },
   "exclude": ["src/test-setup.ts", "**/*.spec.ts"]
 }
