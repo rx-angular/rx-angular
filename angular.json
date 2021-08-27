@@ -517,15 +517,10 @@
       "prefix": "rx",
       "architect": {
         "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/state/tsconfig.lib.json",
             "project": "libs/state/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/state/tsconfig.lib.prod.json"
-            }
           },
           "outputs": ["dist/libs/state"]
         },
