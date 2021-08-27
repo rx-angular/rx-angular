@@ -67,6 +67,12 @@ describe('toDictionary', () => {
       expect(dictionaryResult).toEqual(dictionaryByNumber);
     });
 
+    it('should change the reference', () => {
+      const dictionaryResult = toDictionary(creatures, 'id');
+
+      expect(Object.values(dictionaryResult)[0] === creatures[0]).toBeFalsy();
+    });
+
     it('should create dictionary by string', () => {
       const dictionaryResult = toDictionary(creatures, 'type');
 
