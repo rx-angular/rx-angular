@@ -1,3 +1,17 @@
+## [1.4.5](https://github.com/rx-angular/rx-angular/compare/state@1.4.4...state@1.4.5) (2021-08-27)
+
+
+### Bug Fixes
+
+* **state:** fix imports ([#925](https://github.com/rx-angular/rx-angular/pull/925))
+
+
+### Performance Improvements
+
+* **state:** improve toDictionary & extract performance ([#901](https://github.com/rx-angular/rx-angular/issues/901)) ([930aa4f](https://github.com/rx-angular/rx-angular/commit/930aa4f52a43c9c117c96af7f551d49913783d5a))
+
+
+
 ## [1.4.4](https://github.com/rx-angular/rx-angular/compare/state@1.4.2...state@1.4.4) (2021-08-23)
 
 
