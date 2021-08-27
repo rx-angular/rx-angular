@@ -1,7 +1,7 @@
 # Resources
 
 **Example applications:**  
-A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-cdk-notifications).
+A demo application is available on [GitHub](https://stackblitz.com/edit/angular-async-ngif-with-error-tpb4uc).
 
 # Motivation
 
@@ -71,30 +71,24 @@ A good example is the [`rxLet`](https://github.com/rx-angular/rx-angular/blob/ma
 @Component({
   selector: 'any-component',
   template: `
-    <ng-container *ngIf="(count$ | async) as count; else loadingOrErrorOrComplete">
-      <p *ngIf="count > 0 && count !== undefined; else empty">
-        Count: {{ count }}
-      </p>
+    <p *rxIf="count$; let count; else empty; suspense: loading; error: error; complete: complete">
+      Count: {{ count }}
+    </p>
 
-      <ng-template #empty>
-        Negative Count
-      </ng-template>
-    </ng-container>
+    <ng-template #empty>
+      Negative Count
+    </ng-template>
+      
+    <ng-template #error>
+      Error!
+    </ng-template>
 
-    <ng-template #loadingOrErrorOrComplete>
-      <ng-container [ngSwitch]="isErrorCompleteOrLoading$ | async">
-        <p *ngSwitchCase="-1">
-          Error!
-        </p>
+    <ng-template #complete>
+      Complete!
+    </ng-template>
 
-        <p *ngSwitchCase="1">
-          Complete!
-        </p>
-
-        <p *ngSwitchCase="0">
-          Loading...
-        </p>
-      </ng-container>
+    <ng-template #loading>
+      Loading...
     </ng-template>
   `
 })
