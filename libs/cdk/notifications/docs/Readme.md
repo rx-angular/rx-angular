@@ -5,6 +5,8 @@ A demo application is available on [GitHub](https://stackblitz.com/edit/angular-
 
 # Motivation
 
+![rx-angular_cdk_notifications__toNotifiaction_michael_hladky](https://user-images.githubusercontent.com/10064416/131154927-c56e1fbe-c01f-4c8a-9445-869db3f9bd0e.png)
+
 When dealing with asynchronouse code we always have some contextual information given that directly relate to the output of an asynchronouse code.
 
 The a good example is a `[Promise](https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Promise)` used in a UI where you can list items and search them.
