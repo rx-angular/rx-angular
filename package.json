@@ -99,7 +99,7 @@
     "@types/benchmark": "^2.1.0",
     "@types/jest": "27.0.1",
     "@types/klaw-sync": "^6.0.0",
-    "@types/node": "~15.3.0",
+    "@types/node": "~16.7.6",
     "@typescript-eslint/eslint-plugin": "4.29.2",
     "@typescript-eslint/parser": "4.29.2",
     "benchmark": "^2.1.4",
