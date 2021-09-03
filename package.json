@@ -67,7 +67,7 @@
     "@types/lodash": "^4.14.168",
     "angular-in-memory-web-api": "^0.11.0",
     "bootstrap": "^4.6.0",
-    "core-js": "^3.11.2",
+    "core-js": "^3.17.2",
     "ngx-skeleton-loader": "^2.9.1",
     "normalize-css": "^2.3.1",
     "rx-query": "^1.0.2",
