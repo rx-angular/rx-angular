@@ -193,7 +193,7 @@ export class RxStrategyProvider<T extends string = string> {
    * Scope setup is especially useful if you provide work that will trigger a change detection.
    *
    * @example
-   * this.strategyProvider.schedule(() => myWork(), {strategy: 'idle', patchZone: false, scope: this}).subscribe();
+   * this.strategyProvider.schedule(() => myWork(), {strategy: 'idle', patchZone: false}).subscribe();
    *
    * @return Observable<R>
    */
