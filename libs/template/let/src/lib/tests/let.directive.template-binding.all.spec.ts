@@ -11,6 +11,7 @@ import {
   tick,
   waitForAsync,
 } from '@angular/core/testing';
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { LetDirective } from '../let.directive';
 import {
   EMPTY,

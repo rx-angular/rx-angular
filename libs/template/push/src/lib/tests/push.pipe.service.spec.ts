@@ -1,4 +1,5 @@
 
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { PushPipe } from '../push.pipe';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { ChangeDetectorRef } from '@angular/core';

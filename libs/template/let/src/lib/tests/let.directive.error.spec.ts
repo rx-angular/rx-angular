@@ -4,6 +4,7 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { Observable, of, throwError } from 'rxjs';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { LetDirective } from '../let.directive';
