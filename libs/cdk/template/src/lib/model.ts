@@ -10,8 +10,7 @@ import {
 import { Observable } from 'rxjs';
 
 import { RxNotification } from '@rx-angular/cdk/notifications';
-
-import { RxStrategies } from '../model';
+import { RxStrategies } from '@rx-angular/cdk/render-strategies';
 
 export type rxBaseTemplateNames = 'errorTpl' | 'completeTpl' | 'suspenseTpl';
 

@@ -16,7 +16,6 @@ import { TestBed } from '@angular/core/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import {
   createListTemplateManager,
-  RX_ANGULAR_CONFIG,
   RxDefaultListViewContext,
   RxListManager,
   RxListViewComputedContext,

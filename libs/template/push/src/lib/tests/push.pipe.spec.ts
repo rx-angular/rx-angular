@@ -1,4 +1,4 @@
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
+
 import { PushPipe } from '../push.pipe';
 import { TestBed } from '@angular/core/testing';
 import { ChangeDetectorRef, Component } from '@angular/core';

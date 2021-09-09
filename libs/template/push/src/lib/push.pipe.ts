@@ -8,9 +8,8 @@ import {
 import { asyncScheduler } from '@rx-angular/cdk/zone-less';
 import {
   strategyHandling,
-  RxStrategyProvider,
-  RxStrategyNames,
-} from '@rx-angular/cdk';
+  RxStrategyProvider, RxStrategyNames, RxStrategyCredentials
+} from '@rx-angular/cdk/render-strategies';
 import {
   createTemplateNotifier,
   RxNotificationKind,
@@ -30,9 +29,9 @@ import { delay, filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
  *
  * The push pipe serves as a drop-in replacement for angulars built-in async pipe.
  * Just like the *rxLet Directive, it leverages a
- * [RenderStrategy](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/render-strategies/README.md) under the hood which takes care of optimizing the ChangeDetection of your
- * component.
- * The rendering behavior can be configured per PushPipe instance using either a strategy name or provide a
+ * [RenderStrategy](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/render-strategies/README.md)
+ *   under the hood which takes care of optimizing the ChangeDetection of your component. The rendering behavior can be
+ *   configured per PushPipe instance using either a strategy name or provide a
  * `RxComponentInput` config.
  *
  * Usage in the template

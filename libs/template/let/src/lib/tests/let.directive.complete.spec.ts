@@ -10,7 +10,6 @@ import { LetDirective } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
