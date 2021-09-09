@@ -152,7 +152,7 @@ export class RxStrategyProvider<T extends string = string> {
    * - (optional) options includes strategy, patchZone and scope
    *
    * Scope is by default a subscription but you can also pass `this` and then the scope will be current component.
-   * Scope setup is especially useful if you provide work that will trigger a change detection.
+   * Scope setup is useful if your work is some of the methods of `ChangeDetectorRef`. Only one change detection will be triggered if you have multiple schedules of change detection methods and scope is set to `this`.
    *
    * @example
    * myObservable$.pipe(
