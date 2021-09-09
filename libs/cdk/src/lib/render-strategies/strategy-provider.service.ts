@@ -156,7 +156,7 @@ export class RxStrategyProvider<T extends string = string> {
    *
    * @example
    * myObservable$.pipe(
-   *    this.scheduleWith(() => myWork(), {strategy: 'idle', patchZone: false})
+   *    this.strategyProvider.scheduleWith(() => myWork(), {strategy: 'idle', patchZone: false})
    * ).subscribe();
    *
    * @return MonoTypeOperatorFunction<R>
