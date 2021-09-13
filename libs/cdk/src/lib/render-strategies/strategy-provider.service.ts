@@ -12,6 +12,7 @@ import {
   Observable,
 } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
+import { setNgZone } from '../../../internals/scheduler/src/lib/scheduler';
 import { mergeDefaultConfig, RX_ANGULAR_CONFIG } from '../cdk-config';
 import {
   RxAngularConfig,
@@ -68,11 +69,13 @@ export class RxStrategyProvider<T extends string = string> {
   );
 
   constructor(
+    private ngZone: NgZone,
     @Optional()
     @Inject(RX_ANGULAR_CONFIG)
     cfg: RxAngularConfig<T>
   ) {
     this._cfg = mergeDefaultConfig(cfg);
+    setNgZone(ngZone);
     this._strategies$.next(this._cfg.customStrategies as any);
     this.primaryStrategy = this.config.primaryStrategy;
   }

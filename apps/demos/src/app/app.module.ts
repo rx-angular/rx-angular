@@ -25,7 +25,7 @@ import { HomeComponent } from './features/home/home.component';
       provide: RX_ANGULAR_CONFIG,
       useValue: {
         primaryStrategy: 'normal',
-        patchZone: true
+        patchZone: false
       }
     }
   ],

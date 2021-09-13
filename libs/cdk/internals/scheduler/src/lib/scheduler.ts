@@ -1,6 +1,6 @@
 // see https://raw.githubusercontent.com/facebook/react/master/packages/scheduler/src/forks/SchedulerDOM.js
 
-import { ɵglobal } from '@angular/core';
+import { ɵɵdirectiveInject as inject, NgZone, ɵglobal } from '@angular/core';
 import { enableIsInputPending } from './schedulerFeatureFlags';
 import { peek, pop, push, ReactSchedulerTask } from './schedulerMinHeap';
 
@@ -63,6 +63,20 @@ const setTimeout = ɵglobal.setTimeout;
 const clearTimeout = ɵglobal.clearTimeout;
 const setImmediate = ɵglobal.setImmediate; // IE and Node.js + jsdom
 const messageChannel = ɵglobal.MessageChannel;
+const defaultLoopPatch = (fn: () => void) => fn();
+let loopPatch = defaultLoopPatch;
+function setLoopPatch(patchFn: (fn: () => void) => void) {
+  loopPatch = patchFn || defaultLoopPatch;
+}
+const defaultZone = {
+  run: fn => fn()
+};
+let ngZone: {
+  run<T>(fn: (...args: any[]) => T, applyThis?: any, applyArgs?: any[]): T;
+} = defaultZone;
+function setNgZone(zone: NgZone) {
+  ngZone = zone || defaultZone;
+}
 
 function advanceTimers(currentTime) {
   // Check for tasks that are no longer delayed and add them to the queue.
@@ -125,34 +139,36 @@ function workLoop(hasTimeRemaining, initialTime) {
   let currentTime = initialTime;
   advanceTimers(currentTime);
   currentTask = peek(taskQueue);
-  while (currentTask !== null && !isSchedulerPaused) {
-    if (
-      currentTask.expirationTime > currentTime &&
-      (!hasTimeRemaining || shouldYieldToHost())
-    ) {
-      // This currentTask hasn't expired, and we've reached the deadline.
-      break;
-    }
-    const callback = currentTask.callback;
-    if (typeof callback === 'function') {
-      currentTask.callback = null;
-      currentPriorityLevel = currentTask.priorityLevel;
-      const didUserCallbackTimeout = currentTask.expirationTime <= currentTime;
-      const continuationCallback = callback(didUserCallbackTimeout);
-      currentTime = getCurrentTime();
-      if (typeof continuationCallback === 'function') {
-        currentTask.callback = continuationCallback;
-      } else {
-        if (currentTask === peek(taskQueue)) {
-          pop(taskQueue);
-        }
+  ngZone.run(() => {
+    while (currentTask !== null && !isSchedulerPaused) {
+      if (
+        currentTask.expirationTime > currentTime &&
+        (!hasTimeRemaining || shouldYieldToHost())
+      ) {
+        // This currentTask hasn't expired, and we've reached the deadline.
+        break;
       }
-      advanceTimers(currentTime);
-    } else {
-      pop(taskQueue);
+      const callback = currentTask.callback;
+      if (typeof callback === 'function') {
+        currentTask.callback = null;
+        currentPriorityLevel = currentTask.priorityLevel;
+        const didUserCallbackTimeout = currentTask.expirationTime <= currentTime;
+        const continuationCallback = callback(didUserCallbackTimeout);
+        currentTime = getCurrentTime();
+        if (typeof continuationCallback === 'function') {
+          currentTask.callback = continuationCallback;
+        } else {
+          if (currentTask === peek(taskQueue)) {
+            pop(taskQueue);
+          }
+        }
+        advanceTimers(currentTime);
+      } else {
+        pop(taskQueue);
+      }
+      currentTask = peek(taskQueue);
     }
-    currentTask = peek(taskQueue);
-  }
+  });
   // Return whether there's additional work
   if (currentTask !== null) {
     return true;
@@ -511,6 +527,7 @@ const _requestPaint = requestPaint;
 
 export {
   runWithPriority,
+  setNgZone,
   next,
   scheduleCallback,
   cancelCallback,
