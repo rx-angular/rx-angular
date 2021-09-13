@@ -8,6 +8,7 @@
     "lib": ["dom", "es2018"],
     "paths": {
       "@rx-angular/cdk/zone-less": ["dist/libs/cdk/zone-less"],
+      "@rx-angular/cdk/zone-configurations": ["dist/libs/cdk/zone-configurations"],
       "@rx-angular/cdk/render-strategies": ["dist/libs/cdk/render-strategies"],
       "@rx-angular/cdk/template": ["dist/libs/cdk/template"],
       "@rx-angular/cdk/coercing": ["dist/libs/cdk/coercing"],
