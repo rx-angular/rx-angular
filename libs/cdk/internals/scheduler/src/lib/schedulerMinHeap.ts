@@ -1,3 +1,4 @@
+import { NgZone } from '@angular/core';
 import { PriorityLevel } from './schedulerPriorities';
 
 type Heap = Array<ReactSchedulerTask>;
@@ -10,6 +11,9 @@ export interface ReactSchedulerTask {
   startTime: number;
   expirationTime: number;
   isQueued?: boolean;
+  ngZone?: {
+    run<T>(fn: (...args: any[]) => T, applyThis?: any, applyArgs?: any[]): T;
+  }
 }
 
 export function push(heap: Heap, node: ReactSchedulerTask): void {

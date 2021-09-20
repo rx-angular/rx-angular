@@ -79,7 +79,7 @@ export function createListTemplateManager<
   const listViewHandler = getTemplateHandler({
     ...templateSettings,
     initialTemplateRef: templateSettings.templateRef,
-    patchZone,
+    patchZone: false,
   });
   const viewContainerRef = templateSettings.viewContainerRef;
 
@@ -215,7 +215,7 @@ export function createListTemplateManager<
                   break;
               }
             },
-            {},
+            { ngZone: patchZone ? patchZone : undefined },
             (e, v) => toRenderError(e, v[0])
           );
         })

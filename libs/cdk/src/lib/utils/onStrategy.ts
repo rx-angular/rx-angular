@@ -1,3 +1,4 @@
+import { NgZone } from '@angular/core';
 import { RxCoalescingOptions } from '@rx-angular/cdk/coalescing';
 import { switchMap } from 'rxjs/operators';
 import {
@@ -53,7 +54,7 @@ export function onStrategy<T>(
     work: RxRenderWork,
     options: RxCoalescingOptions
   ) => void,
-  options: RxCoalescingOptions = {},
+  options: RxCoalescingOptions & { ngZone?: NgZone } = {},
   errorFactory: RxRenderErrorFactory<T, any> = (e, v) => [e, v]
 ): Observable<T> {
   let error: Error;
@@ -64,7 +65,7 @@ export function onStrategy<T>(
       } catch (e) {
         error = e;
       }
-    }, options.scope || {}),
+    }, options.scope || {}, options.ngZone),
     switchMap(() =>
       error ? throwError(errorFactory(error, value)) : of(value)
     )

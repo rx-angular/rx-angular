@@ -13,10 +13,6 @@ export const RX_ANGULAR_DEFAULTS: Required<
   primaryStrategy: 'normal',
   customStrategies: {
     ...RX_NATIVE_STRATEGIES,
-    local: {
-      ...RX_CONCURRENT_STRATEGIES.immediate,
-      name: 'local',
-    },
     ...RX_CONCURRENT_STRATEGIES,
   },
   patchZone: true,

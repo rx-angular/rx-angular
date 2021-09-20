@@ -1,4 +1,4 @@
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, NgZone } from '@angular/core';
 import { coalescingObj } from '@rx-angular/cdk/coalescing';
 import { Observable } from 'rxjs';
 
@@ -11,7 +11,8 @@ export type RxRenderWork = <T = unknown>(
 ) => void;
 export type RxRenderBehavior = <T = unknown>(
   work: any,
-  scope?: coalescingObj
+  scope?: coalescingObj,
+  ngZone?: NgZone
 ) => (o: Observable<T>) => Observable<T>;
 
 export interface RxStrategyCredentials<S = string> {

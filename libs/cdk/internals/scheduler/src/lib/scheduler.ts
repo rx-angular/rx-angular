@@ -1,6 +1,6 @@
 // see https://raw.githubusercontent.com/facebook/react/master/packages/scheduler/src/forks/SchedulerDOM.js
 
-import { ɵɵdirectiveInject as inject, NgZone, ɵglobal } from '@angular/core';
+import { NgZone, ɵglobal } from '@angular/core';
 import { enableIsInputPending } from './schedulerFeatureFlags';
 import { peek, pop, push, ReactSchedulerTask } from './schedulerMinHeap';
 
@@ -63,21 +63,10 @@ const setTimeout = ɵglobal.setTimeout;
 const clearTimeout = ɵglobal.clearTimeout;
 const setImmediate = ɵglobal.setImmediate; // IE and Node.js + jsdom
 const messageChannel = ɵglobal.MessageChannel;
-const defaultLoopPatch = (fn: () => void) => fn();
-let loopPatch = defaultLoopPatch;
-function setLoopPatch(patchFn: (fn: () => void) => void) {
-  loopPatch = patchFn || defaultLoopPatch;
-}
+
 const defaultZone = {
   run: fn => fn()
 };
-let ngZone: {
-  run<T>(fn: (...args: any[]) => T, applyThis?: any, applyArgs?: any[]): T;
-} = defaultZone;
-function setNgZone(zone: NgZone) {
-  ngZone = zone || defaultZone;
-}
-
 function advanceTimers(currentTime) {
   // Check for tasks that are no longer delayed and add them to the queue.
   let timer = peek(timerQueue);
@@ -135,12 +124,18 @@ function flushWork(hasTimeRemaining, initialTime) {
   }
 }
 
-function workLoop(hasTimeRemaining, initialTime) {
+function workLoop(hasTimeRemaining: boolean, initialTime: number, _currentTask?: ReactSchedulerTask) {
   let currentTime = initialTime;
-  advanceTimers(currentTime);
-  currentTask = peek(taskQueue);
+  if (_currentTask) {
+    currentTask = _currentTask;
+  } else {
+    advanceTimers(currentTime);
+    currentTask = peek(taskQueue);
+  }
+  const ngZone = currentTask.ngZone;
+  let zoneChanged = false;
   ngZone.run(() => {
-    while (currentTask !== null && !isSchedulerPaused) {
+    while (currentTask !== null && !isSchedulerPaused && !zoneChanged) {
       if (
         currentTask.expirationTime > currentTime &&
         (!hasTimeRemaining || shouldYieldToHost())
@@ -167,8 +162,12 @@ function workLoop(hasTimeRemaining, initialTime) {
         pop(taskQueue);
       }
       currentTask = peek(taskQueue);
+      zoneChanged = currentTask && currentTask.ngZone !== ngZone;
     }
   });
+  if (zoneChanged) {
+    return workLoop(hasTimeRemaining, currentTime, currentTask);
+  }
   // Return whether there's additional work
   if (currentTask !== null) {
     return true;
@@ -246,6 +245,7 @@ function wrapCallback(callback: VoidFunction) {
 
 interface ScheduleCallbackOptions {
   delay: number;
+  ngZone?: NgZone;
 }
 
 function scheduleCallback(
@@ -296,6 +296,7 @@ function scheduleCallback(
     startTime,
     expirationTime,
     sortIndex: -1,
+    ngZone: options?.ngZone || defaultZone
   };
 
   if (startTime > currentTime) {
@@ -348,6 +349,7 @@ function cancelCallback(task) {
   // remove from the queue because you can't remove arbitrary nodes from an
   // array based heap, only the first one.)
   task.callback = null;
+  task.ngZone = defaultZone;
 }
 
 function getCurrentPriorityLevel() {
@@ -527,7 +529,6 @@ const _requestPaint = requestPaint;
 
 export {
   runWithPriority,
-  setNgZone,
   next,
   scheduleCallback,
   cancelCallback,

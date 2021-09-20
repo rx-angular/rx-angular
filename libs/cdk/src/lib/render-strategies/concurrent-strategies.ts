@@ -1,3 +1,4 @@
+import { NgZone } from '@angular/core';
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { filter, mapTo, switchMap } from 'rxjs/operators';
 import {
@@ -19,10 +20,10 @@ forceFrameRate(60);
 const noPriorityStrategy: RxStrategyCredentials = {
   name: 'noPriority',
   work: (cdRef) => cdRef.detectChanges(),
-  behavior: (work: any, scope: any) => {
+  behavior: (work: any, scope: any, ngZone: NgZone) => {
     return (o$) =>
       o$.pipe(
-        scheduleOnQueue(work, { priority: PriorityLevel.NoPriority, scope })
+        scheduleOnQueue(work, { ngZone, priority: PriorityLevel.NoPriority, scope })
       );
   },
 };
@@ -30,11 +31,11 @@ const noPriorityStrategy: RxStrategyCredentials = {
 const immediateStrategy: RxStrategyCredentials = {
   name: 'immediate',
   work: (cdRef) => cdRef.detectChanges(),
-  behavior: (work: any, scope: any) => {
+  behavior: (work: any, scope: any, ngZone: NgZone) => {
     return (o$) =>
       o$.pipe(
         scheduleOnQueue(work, {
-          priority: PriorityLevel.ImmediatePriority,
+          ngZone, priority: PriorityLevel.ImmediatePriority,
           scope,
         })
       );
@@ -44,11 +45,11 @@ const immediateStrategy: RxStrategyCredentials = {
 const userBlockingStrategy: RxStrategyCredentials = {
   name: 'userBlocking',
   work: (cdRef) => cdRef.detectChanges(),
-  behavior: (work: any, scope: any) => {
+  behavior: (work: any, scope: any, ngZone: NgZone) => {
     return (o$) =>
       o$.pipe(
         scheduleOnQueue(work, {
-          priority: PriorityLevel.UserBlockingPriority,
+          ngZone, priority: PriorityLevel.UserBlockingPriority,
           scope,
         })
       );
@@ -58,10 +59,10 @@ const userBlockingStrategy: RxStrategyCredentials = {
 const normalStrategy: RxStrategyCredentials = {
   name: 'normal',
   work: (cdRef) => cdRef.detectChanges(),
-  behavior: (work: any, scope: any) => {
+  behavior: (work: any, scope: any, ngZone: NgZone) => {
     return (o$) =>
       o$.pipe(
-        scheduleOnQueue(work, { priority: PriorityLevel.NormalPriority, scope })
+        scheduleOnQueue(work, { ngZone, priority: PriorityLevel.NormalPriority, scope })
       );
   },
 };
@@ -69,10 +70,10 @@ const normalStrategy: RxStrategyCredentials = {
 const lowStrategy: RxStrategyCredentials = {
   name: 'low',
   work: (cdRef) => cdRef.detectChanges(),
-  behavior: (work: any, scope: any) => {
+  behavior: (work: any, scope: any, ngZone: NgZone) => {
     return (o$) =>
       o$.pipe(
-        scheduleOnQueue(work, { priority: PriorityLevel.LowPriority, scope })
+        scheduleOnQueue(work, { ngZone, priority: PriorityLevel.LowPriority, scope })
       );
   },
 };
@@ -80,10 +81,10 @@ const lowStrategy: RxStrategyCredentials = {
 const idleStrategy: RxStrategyCredentials = {
   name: 'idle',
   work: (cdRef) => cdRef.detectChanges(),
-  behavior: (work: any, scope: any) => {
+  behavior: (work: any, scope: any, ngZone: NgZone) => {
     return (o$) =>
       o$.pipe(
-        scheduleOnQueue(work, { priority: PriorityLevel.IdlePriority, scope })
+        scheduleOnQueue(work, { ngZone, priority: PriorityLevel.IdlePriority, scope })
       );
   },
 };
@@ -94,6 +95,7 @@ function scheduleOnQueue<T>(
     priority: PriorityLevel;
     scope: Record<string, unknown>;
     delay?: number;
+    ngZone: NgZone
   }
 ): MonoTypeOperatorFunction<T> {
   return (o$: Observable<T>): Observable<T> =>
@@ -109,7 +111,7 @@ function scheduleOnQueue<T>(
               coalescingManager.remove(options.scope);
               subscriber.next(v);
             },
-            { delay: options.delay }
+            { delay: options.delay, ngZone: options.ngZone }
           );
           return () => {
             coalescingManager.remove(options.scope);
