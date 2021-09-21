@@ -145,10 +145,6 @@ export function createTemplateManager<
     templateSettings.customContext || ((v) => {})
   );
 
-  const workFactory = patchZone
-    ? (work: VoidFunction) => patchZone.run(work)
-    : (work: VoidFunction) => work();
-
   return {
     addTemplateRef: templates.add,
     // addTrigger: triggerHandling.next,
@@ -183,14 +179,12 @@ export function createTemplateManager<
                   // remove current view if there is any
                   if (viewContainerRef.length > 0) {
                     // patch removal if needed
-                    workFactory(() => viewContainerRef.clear());
+                    viewContainerRef.clear()
                   }
                   // create new view if any
                   if (template) {
                     // createEmbeddedView is already patched, no need for workFactory
-                    workFactory(() =>
-                      templates.createEmbeddedView(templateName, context)
-                    );
+                    templates.createEmbeddedView(templateName, context);
                   }
                 } else if (template) {
                   // template didn't change, update it
@@ -200,10 +194,10 @@ export function createTemplateManager<
                     view.context[k] = context[k];
                   });
                   // update view context, patch if needed
-                  workFactory(() => work(view, options.scope, notification));
+                  work(view, options.scope, notification)
                 }
                 activeTemplate = templateName;
-              }
+              }, { ngZone: patchZone ? patchZone : undefined }
               // we don't need to specify any scope here. The template manager is the only one
               // who will call `viewRef#detectChanges` on any of the templates it manages.
               // whenever a new value comes in, any pre-scheduled work of this taskManager will
