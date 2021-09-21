@@ -3,17 +3,19 @@ import { PriorityLevel } from './schedulerPriorities';
 
 type Heap = Array<ReactSchedulerTask>;
 
+export interface SchedulerTaskZone {
+  run<T>(fn: (...args: any[]) => T): T;
+}
+
 export interface ReactSchedulerTask {
   id: number;
   sortIndex: number;
-  callback: VoidFunction;
+  callback: Function;
   priorityLevel: PriorityLevel;
   startTime: number;
   expirationTime: number;
   isQueued?: boolean;
-  ngZone?: {
-    run<T>(fn: (...args: any[]) => T, applyThis?: any, applyArgs?: any[]): T;
-  }
+  ngZone?: SchedulerTaskZone;
 }
 
 export function push(heap: Heap, node: ReactSchedulerTask): void {
