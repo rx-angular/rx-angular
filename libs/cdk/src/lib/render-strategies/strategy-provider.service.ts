@@ -84,7 +84,7 @@ export class RxStrategyProvider<T extends string = string> {
   ): MonoTypeOperatorFunction<R> {
     const strategy = this.strategies[options?.strategy || this.primaryStrategy];
     const scope = options?.scope || {};
-    const _work = getWork(work, options?.patchZone);
+    const ngZone = options?.patchZone || undefined;
     return (o$) =>
       o$.pipe(
         switchMap((v) =>
@@ -92,9 +92,9 @@ export class RxStrategyProvider<T extends string = string> {
             v,
             strategy,
             (_v) => {
-              _work(_v);
+              work(_v);
             },
-            { scope }
+            { scope, ngZone }
           )
         )
       );
@@ -106,15 +106,15 @@ export class RxStrategyProvider<T extends string = string> {
   ): Observable<R> {
     const strategy = this.strategies[options?.strategy || this.primaryStrategy];
     const scope = options?.scope || {};
-    const _work = getWork(work, options?.patchZone);
+    const ngZone = options?.patchZone || undefined;
     let returnVal: R;
     return onStrategy(
       null,
       strategy,
       () => {
-        returnVal = _work();
+        returnVal = work();
       },
-      { scope }
+      { scope, ngZone }
     ).pipe(map(() => returnVal));
   }
 
@@ -128,33 +128,23 @@ export class RxStrategyProvider<T extends string = string> {
     const strategy = this.strategies[options?.strategy || this.primaryStrategy];
     const scope = options?.scope || cdRef;
     const abC = options?.abortCtrl || new AbortController();
-    const work = getWork(() => {
+    const ngZone = options?.patchZone || undefined;
+    const work = () => {
       strategy.work(cdRef, scope);
       if (options?.afterCD) {
         options.afterCD();
       }
-    }, options.patchZone);
+    };
     onStrategy(
       null,
       strategy,
       () => {
         work();
       },
-      { scope }
+      { scope, ngZone }
     )
       .pipe(takeUntil(fromEvent(abC.signal, 'abort')))
       .subscribe();
     return abC;
   }
-}
-
-function getWork<T>(
-  work: (args?: any) => T,
-  patchZone?: false | NgZone
-): (args?: any) => T {
-  let _work = work;
-  if (patchZone) {
-    _work = (args?: any) => patchZone.run(() => work(args));
-  }
-  return _work;
 }
