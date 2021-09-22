@@ -145,7 +145,7 @@ function workLoop(hasTimeRemaining: boolean, initialTime: number, _currentTask?:
     (!hasTimeRemaining || shouldYieldToHost());
 
   if (!hitDeadline()) {
-    const ngZone = currentTask.ngZone;
+    const ngZone = currentTask.ngZone || defaultZone;
     ngZone.run(() => {
       while (currentTask !== null && !zoneChanged) {
         if (hitDeadline()) {
@@ -170,7 +170,7 @@ function workLoop(hasTimeRemaining: boolean, initialTime: number, _currentTask?:
           pop(taskQueue);
         }
         currentTask = peek(taskQueue);
-        zoneChanged = currentTask && currentTask.ngZone !== ngZone;
+        zoneChanged = currentTask?.ngZone != null && currentTask.ngZone !== ngZone;
       }
     });
   }
@@ -305,7 +305,7 @@ function scheduleCallback(
     startTime,
     expirationTime,
     sortIndex: -1,
-    ngZone: options?.ngZone || defaultZone
+    ngZone: options?.ngZone || null
   };
 
   if (startTime > currentTime) {
