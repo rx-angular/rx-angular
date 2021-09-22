@@ -30,17 +30,17 @@ const localCredentials: RxStrategyCredentials = {
     cdRef.detectChanges();
   },
   behavior:
-    (work: () => RxRenderWork, scope: Record<string, unknown>) => (o$) =>
+    (work: () => RxRenderWork, scope: Record<string, unknown>, ngZone) => (o$) =>
       o$.pipe(
         coalesceWith(animationFrameTick(), scope),
-        tap(() => work())
+        tap(() => ngZone ? ngZone.run(() => work()) : work())
       ),
 };
 
 const globalCredentials: RxStrategyCredentials = {
   name: 'global',
   work: (_, context) => markDirty(context),
-  behavior: (work: any) => (o$) => o$.pipe(tap(() => work())),
+  behavior: (work: any, scope, ngZone) => (o$) => o$.pipe(tap(() => ngZone ? ngZone.run(() => work()) : work())),
 };
 
 const noopCredentials: RxStrategyCredentials = {
@@ -52,7 +52,8 @@ const noopCredentials: RxStrategyCredentials = {
 const nativeCredentials: RxStrategyCredentials = {
   name: 'native',
   work: (cdRef) => cdRef.markForCheck(),
-  behavior: (work: any) => (o$) => o$.pipe(tap(() => work())),
+  behavior: (work: any, scope, ngZone) => (o$) => o$.pipe(tap(() =>
+  ngZone ? ngZone.run(() => work()) : work())),
 };
 
 export type RxNativeStrategies =
