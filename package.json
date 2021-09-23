@@ -64,7 +64,7 @@
     "@nguniversal/express-engine": "^12.1.0",
     "@ngxs/store": "3.7.2",
     "@nrwl/nx-cloud": "12.3.10",
-    "@types/lodash": "^4.14.168",
+    "@types/lodash": "^4.14.173",
     "angular-in-memory-web-api": "^0.11.0",
     "bootstrap": "^4.6.0",
     "core-js": "^3.11.2",
