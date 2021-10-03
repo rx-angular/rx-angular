@@ -2,7 +2,6 @@ import {
   ChangeDetectorRef,
   Component,
   EmbeddedViewRef,
-  NgZone,
   TemplateRef,
   Type,
   ViewContainerRef,
@@ -297,7 +296,7 @@ export function notifyInjectingParentIfNeeded(
           {},
           (error) => toRenderError(error, injectingViewCdRef)
         ).pipe(ignoreElements())
-      : (([] as unknown) as Observable<never>)
+      : ([] as unknown as Observable<never>)
   );
 }
 

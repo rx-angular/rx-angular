@@ -120,7 +120,8 @@ function scheduleOnQueue<T>(
     );
 }
 
-export type RxConcurrentStrategies = RxCustomStrategyCredentials<RxConcurrentStrategyNames>;
+export type RxConcurrentStrategies =
+  RxCustomStrategyCredentials<RxConcurrentStrategyNames>;
 export const RX_CONCURRENT_STRATEGIES: RxConcurrentStrategies = {
   noPriority: noPriorityStrategy,
   immediate: immediateStrategy,

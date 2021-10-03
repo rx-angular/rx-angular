@@ -2,7 +2,6 @@ import { staticSchedule } from '../../../src/lib/render-strategies/static';
 import { SchedulingPriority } from '../../../src/lib/render-strategies/rxjs/scheduling';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import createSpy = jasmine.createSpy;
 
 
 describe('staticSchedule', () => {
@@ -24,7 +23,7 @@ describe('staticSchedule', () => {
     };
     const priority = SchedulingPriority.Promise;
     const abc = {
-      abort: createSpy('abort'),
+      abort: jest.fn(),
       signal: {
         addEventListener: () => void 0,
         // hack to enter complete only and get 1 call

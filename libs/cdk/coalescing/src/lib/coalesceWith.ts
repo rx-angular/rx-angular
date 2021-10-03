@@ -85,7 +85,7 @@ export function coalesceWith<T>(
               error: (error) => outerObserver.error(error),
               next: () => {
                 tryEmitLatestValue();
-                actionSubscription.unsubscribe();
+                actionSubscription?.unsubscribe();
                 actionSubscription = undefined;
               },
               complete: () => {
@@ -96,10 +96,8 @@ export function coalesceWith<T>(
             rootSubscription.add(
               new Subscription(() => {
                 tryEmitLatestValue();
-                if (actionSubscription) {
-                  actionSubscription.unsubscribe();
-                  actionSubscription = undefined;
-                }
+                actionSubscription?.unsubscribe();
+                actionSubscription = undefined;
               })
             );
           }

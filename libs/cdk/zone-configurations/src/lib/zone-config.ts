@@ -75,7 +75,7 @@ const reduceToObject = <T>(methodsArray: any[]): T => {
  *
  */
 function createZoneFlagsConfigurator(): RxZoneConfig {
-  const cfg = (ɵglobal as unknown) as RxZoneGlobalConfigurations;
+  const cfg = ɵglobal as unknown as RxZoneGlobalConfigurations;
   const configProps = [
     ...[
       ...zoneGlobalDisableConfigurationsKeys,

@@ -1,23 +1,5 @@
+const { getJestProjects } = require('@nrwl/jest');
+
 module.exports = {
-  projects: [
-    '<rootDir>/apps/demos',
-    '<rootDir>/apps/docs',
-    '<rootDir>/apps/tour-of-heroes',
-    '<rootDir>/apps/tour-of-heroes-ngxs',
-    '<rootDir>/apps/vanilla-case-studies',
-    '<rootDir>/apps/ssr',
-    '<rootDir>/libs/test-helpers',
-    '<rootDir>/libs/state',
-    '<rootDir>/libs/template',
-    '<rootDir>/libs/template/let',
-    '<rootDir>/libs/template/push',
-    '<rootDir>/libs/template/unpatch',
-    '<rootDir>/libs/cdk',
-    '<rootDir>/libs/cdk/zone-less',
-    '<rootDir>/libs/cdk/zone-configurations',
-    '<rootDir>/libs/cdk/internals/scheduler',
-    '<rootDir>/libs/cdk/coalescing',
-    '<rootDir>/libs/cdk/coercing',
-    '<rootDir>/libs/cdk/notifications',
-  ],
+  projects: [...getJestProjects()],
 };

@@ -40,7 +40,7 @@ export class CounterPresenterService extends RxState<CounterState> {
   }
 
   setToClick() {
-    this.countChangeSubject.next();
+    this.countChangeSubject.next(undefined);
   }
 
   changeTickSpeed(tickSpeed: string) {

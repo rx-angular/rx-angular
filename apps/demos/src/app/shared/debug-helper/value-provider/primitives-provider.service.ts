@@ -92,18 +92,18 @@ export class PrimitivesProviderService {
   }
 
   next(): void {
-    this.nextSubject.next();
+    this.nextSubject.next(undefined);
   }
 
   error(): void {
-    this.errorSubject.next();
+    this.errorSubject.next(undefined);
   }
 
   complete(): void {
-    this.completeSubject.next();
+    this.completeSubject.next(undefined);
   }
 
   reset(): void {
-    this.resetSubject.next();
+    this.resetSubject.next(undefined);
   }
 }

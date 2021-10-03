@@ -17,10 +17,9 @@ Besides a well documented and typed API it provides way to use patched API's in 
 - ✅ unpatched RxJS schedulers
 - ✅ no need for `runOutsideAngular`
 
-
 ## Demos:
-- [⚡ GitHub](https://github.com/BioPhoton/rx-angular-cdk-zone-less)
 
+- [⚡ GitHub](https://github.com/BioPhoton/rx-angular-cdk-zone-less)
 
 ## Install
 
@@ -32,4 +31,4 @@ yarn add @rx-angular/cdk
 
 ## Documentation
 
-- [Zone-Less](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/zone-less/docs/Readme.md)
+- [Zone-Less](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/zone-less/docs)

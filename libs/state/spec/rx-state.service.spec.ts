@@ -10,7 +10,7 @@ import { TestScheduler } from 'rxjs/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { RxState, select } from '@rx-angular/state';
 import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
-import { from, interval, of, Subject } from 'rxjs';
+import { asyncScheduler, from, interval, of, scheduled, Subject } from 'rxjs';
 
 function setupState<T extends object>(cfg: { initialState?: T }) {
   const { initialState } = { ...cfg };
@@ -119,7 +119,7 @@ describe('RxStateService', () => {
         state.set({ num: 42 });
         const slice$ = state.select('num');
         let i = -1;
-        const valuesInOrder = [{ num: 42 }, { num: 777 }];
+        const valuesInOrder = [42, 777];
         slice$.subscribe((next) => expect(next).toBe(valuesInOrder[++i]));
         state.set({ num: 777 });
       });
@@ -308,7 +308,7 @@ describe('RxStateService', () => {
           c: 44,
         });
 
-        state.connect(from([{ num: 42 }, { num: 43 }, { num: 44 }]));
+        state.connect(scheduled([{ num: 42 }, { num: 43 }, { num: 44 }], testScheduler));
       });
     });
 
@@ -323,7 +323,7 @@ describe('RxStateService', () => {
 
         state.connect(
           'num',
-          from([{ num: 42 }, { num: 43 }, { num: 44 }]).pipe(map((s) => s.num))
+          scheduled([{ num: 42 }, { num: 43 }, { num: 44 }], testScheduler).pipe(map((s) => s.num))
         );
       });
     });
@@ -338,7 +338,7 @@ describe('RxStateService', () => {
         });
 
         state.connect(
-          from([{ num: 42 }, { num: 43 }, { num: 44 }]),
+          scheduled([{ num: 42 }, { num: 43 }, { num: 44 }], testScheduler),
           (s, n) => ({ num: n.num })
         );
       });
@@ -355,7 +355,7 @@ describe('RxStateService', () => {
 
         state.connect(
           'num',
-          from([{ num: 42 }, { num: 43 }, { num: 44 }]),
+          scheduled([{ num: 42 }, { num: 43 }, { num: 44 }], testScheduler),
           (s, v) => v.num
         );
       });
@@ -373,7 +373,7 @@ describe('RxStateService', () => {
         });
 
         state.connect(
-          from([{ num: undefined }, { num: 43 }, { num: undefined }]),
+          scheduled([{ num: undefined }, { num: 43 }, { num: undefined }], testScheduler),
           (o, n) => n
         );
       });
@@ -390,7 +390,7 @@ describe('RxStateService', () => {
           c: undefined,
         });
 
-        state.connect('num', from([undefined, 43, undefined]), (o, n) => n);
+        state.connect('num', scheduled([undefined, 43, undefined], testScheduler), (o, n) => n);
       });
     });
 
@@ -405,7 +405,7 @@ describe('RxStateService', () => {
           c: undefined,
         });
 
-        state.connect('num', from([undefined, 43, undefined]));
+        state.connect('num', scheduled([undefined, 43, undefined], testScheduler));
       });
     });
 
@@ -421,7 +421,7 @@ describe('RxStateService', () => {
         });
 
         state.connect(
-          from([{ num: undefined }, { num: 43 }, { num: undefined }]),
+          scheduled([{ num: undefined }, { num: 43 }, { num: undefined }], testScheduler),
           (sta, newVal) => newVal
         );
       });
@@ -436,69 +436,70 @@ describe('RxStateService', () => {
     });
 
     it('should stop from connect observable', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const state = setupState({ initialState: initialPrimitiveState });
-        const sub = state.subscribe();
-        state.set(initialPrimitiveState);
-        const tick$ = interval(100).pipe(map((num) => ({ num })));
-        state.connect(tick$);
-        sub.unsubscribe();
+      testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
+        const state = setupState({});
+        const tick$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const subs = '(^!)';
+        state.connect(tick$.pipe(map((num) => ({ num }))));
+        state.ngOnDestroy();
         expectObservable(state.select()).toBe('');
+        expectSubscriptions(tick$.subscriptions).toBe(subs);
       });
     });
 
     it('should stop from connect key & observable', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const state = setupState({ initialState: initialPrimitiveState });
-        const sub = state.subscribe();
-        state.set(initialPrimitiveState);
-        const tick$ = interval(100);
-        state.connect('num', tick$);
-        sub.unsubscribe();
+      testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
+        const state = setupState<any>({});
+        const tick$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const subs = '(^!)';
+        state.connect('num' as any, tick$);
+        state.ngOnDestroy();
+        expectSubscriptions(tick$.subscriptions).toBe(subs);
         expectObservable(state.select()).toBe('');
       });
     });
 
     it('should stop from connect observable & projectFn', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const state = setupState({ initialState: initialPrimitiveState });
-        const sub = state.subscribe();
-        state.set(initialPrimitiveState);
-        const tick$ = interval(100);
-        state.connect(tick$, (s, v) => ({ num: s.num + v }));
-        sub.unsubscribe();
+      testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
+        const state = setupState({ });
+        const tick$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const subs = '(^!)';
+        state.connect(tick$, (s, v) => ({ num: v * 42 }));
+        state.ngOnDestroy();
         expectObservable(state.select()).toBe('');
+        expectSubscriptions(tick$.subscriptions).toBe(subs);
       });
     });
 
     it('should stop from connect key & observable & projectFn', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const state = setupState({ initialState: initialPrimitiveState });
-        const sub = state.subscribe();
-        state.set(initialPrimitiveState);
-        const tick$ = interval(100);
-        state.connect('num', tick$, (s, v) => s.num + v);
-        sub.unsubscribe();
+      testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
+        const state = setupState<any>({ });
+        const tick$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const subs = '(^!)';
+        state.connect('num', tick$, (s, v) => v * 42);
+        state.ngOnDestroy();
         expectObservable(state.select()).toBe('');
+        expectSubscriptions(tick$.subscriptions).toBe(subs);
       });
     });
 
     it('should stop in selects with HOOs', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const state = setupState({ initialState: initialPrimitiveState });
-        const sub = state.subscribe();
-        state.set(initialPrimitiveState);
+      testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
+        const state = setupState({ });
+        const interval$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const subs = '';
         expectObservable(
           state.select(
             switchMap(() =>
-              interval(100).pipe(
+              interval$.pipe(
                 map((num) => ({ num })),
                 take(3)
               )
             )
           )
         ).toBe('');
-        sub.unsubscribe();
+        expectSubscriptions(interval$.subscriptions).toBe(subs);
+        state.ngOnDestroy();
       });
     });
   });
@@ -515,10 +516,8 @@ describe('RxStateService', () => {
       };
       const state = setupState({ initialState: initialPrimitiveState });
       testScheduler.run(({ expectObservable }) => {
-        expectObservable(state.select('num')).toBe('(abc)', {
-          a: 42,
-          b: 43,
-          c: 44,
+        expectObservable(state.select('num')).toBe('(a)', {
+          a: 44,
         });
 
         state.setAccumulator(customAcc);
@@ -549,10 +548,8 @@ describe('RxStateService', () => {
       };
       const state = setupState({ initialState: initialPrimitiveState });
       testScheduler.run(({ expectObservable }) => {
-        expectObservable(state.select('num')).toBe('(abc)', {
-          a: 42,
-          b: 43,
-          c: 44,
+        expectObservable(state.select('num')).toBe('(a)', {
+          a: 44
         });
 
         state.set({ num: 42 });

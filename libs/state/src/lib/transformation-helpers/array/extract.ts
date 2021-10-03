@@ -3,7 +3,7 @@ import { isDefined, isKeyOf } from '../../core';
 /**
  * @description
  * Accepts an array of objects of type T and single key or array of keys (K extends keyof T).
- * The `exctract` method is pure and immutable, thus not touching the input values and returning a shallow 
+ * The `exctract` method is pure and immutable, thus not touching the input values and returning a shallow
  * copy of the extracted source.
  *
  * @example
@@ -34,7 +34,7 @@ import { isDefined, isKeyOf } from '../../core';
  * @docsPage slice
  * @docsCategory transformation-helpers
  */
-export function extract<T extends object, K extends keyof T>(
+ export function extract<T extends object, K extends keyof T>(
   array: T[],
   keys: K | K[]
 ): Pick<T, K>[] {
@@ -46,15 +46,24 @@ export function extract<T extends object, K extends keyof T>(
   }
 
   const sanitizedKeys = (Array.isArray(keys) ? keys : [keys]).filter(
-    (k) => isKeyOf<T>(k) && array.some((i) => k in i)
+    k => isKeyOf<T>(k) && array.some(i => k in i)
   );
+  const length = sanitizedKeys.length;
 
   if (!sanitizedKeys.length) {
     console.warn(`extract: provided keys not found`);
     return undefined as any;
   }
 
-  return array.map((i) =>
-    sanitizedKeys.reduce((acc, k) => ({ ...acc, [k]: i[k] }), {} as Pick<T, K>)
+  return array.map(item => {
+    let i = 0;
+    const result = {} as Pick<T, K>;
+
+    for(i; i < length; i++) {
+      result[sanitizedKeys[i]] = item[sanitizedKeys[i]];
+    }
+
+    return result;
+  }
   );
 }

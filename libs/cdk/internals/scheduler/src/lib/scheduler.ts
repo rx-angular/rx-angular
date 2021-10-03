@@ -1,10 +1,10 @@
 // see https://raw.githubusercontent.com/facebook/react/master/packages/scheduler/src/forks/SchedulerDOM.js
 
 import { ɵglobal } from '@angular/core';
+import { enableIsInputPending } from './schedulerFeatureFlags';
+import { peek, pop, push, ReactSchedulerTask } from './schedulerMinHeap';
 
 import { PriorityLevel } from './schedulerPriorities';
-import { enableIsInputPending } from './schedulerFeatureFlags';
-import { push, pop, peek, ReactSchedulerTask } from './schedulerMinHeap';
 
 /**
  * @description Will be provided through Terser global definitions by Angular CLI
@@ -61,6 +61,8 @@ let isHostTimeoutScheduled = false;
 // Capture local references to native APIs, in case a polyfill overrides them.
 const setTimeout = ɵglobal.setTimeout;
 const clearTimeout = ɵglobal.clearTimeout;
+const setImmediate = ɵglobal.setImmediate; // IE and Node.js + jsdom
+const messageChannel = ɵglobal.MessageChannel;
 
 function advanceTimers(currentTime) {
   // Check for tasks that are no longer delayed and add them to the queue.
@@ -441,8 +443,7 @@ const performWorkUntilDeadline = () => {
       if (hasMoreWork) {
         // If there's more work, schedule the next message event at the end
         // of the preceding one.
-        // tslint:disable-next-line: no-unused-expression
-        port && port.postMessage(null);
+        schedulePerformWorkUntilDeadline();
       } else {
         isMessageLoopRunning = false;
         scheduledHostCallback = null;
@@ -456,20 +457,42 @@ const performWorkUntilDeadline = () => {
   needsPaint = false;
 };
 
-const channel: MessageChannel =
-  ɵglobal.MessageChannel && new ɵglobal.MessageChannel();
-const port = channel && channel.port2;
+let schedulePerformWorkUntilDeadline;
+if (typeof setImmediate === 'function') {
+  // Node.js and old IE.
+  // There's a few reasons for why we prefer setImmediate.
+  //
+  // Unlike MessageChannel, it doesn't prevent a Node.js process from exiting.
+  // (Even though this is a DOM fork of the Scheduler, you could get here
+  // with a mix of Node.js 15+, which has a MessageChannel, and jsdom.)
+  // https://github.com/facebook/react/issues/20756
+  //
+  // But also, it runs earlier which is the semantic we want.
+  // If other browsers ever implement it, it's better to use it.
+  // Although both of these would be inferior to native scheduling.
+  schedulePerformWorkUntilDeadline = () => {
+    setImmediate(performWorkUntilDeadline);
+  };
+} else if (typeof messageChannel !== 'undefined') {
+  const channel: MessageChannel = new messageChannel();
+  const port = channel.port2;
 
-if (channel) {
   channel.port1.onmessage = performWorkUntilDeadline;
+  schedulePerformWorkUntilDeadline = () => {
+    port.postMessage(null);
+  };
+} else {
+  // We should only fallback here in non-browser environments.
+  schedulePerformWorkUntilDeadline = () => {
+    setTimeout(performWorkUntilDeadline, 0);
+  };
 }
 
 function requestHostCallback(callback) {
   scheduledHostCallback = callback;
   if (!isMessageLoopRunning) {
     isMessageLoopRunning = true;
-    // tslint:disable-next-line: no-unused-expression
-    port && port.postMessage(null);
+    schedulePerformWorkUntilDeadline();
   }
 }
 

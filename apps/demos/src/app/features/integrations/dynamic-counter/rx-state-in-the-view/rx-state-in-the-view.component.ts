@@ -30,7 +30,7 @@ import { updateCount } from '../shared/utils';
 
       <br/>
 
-      <button (click)="setToClick.next()" mat-raised-button>
+      <button (click)="setToClick.next($event)" mat-raised-button>
         Set To
       </button>
 

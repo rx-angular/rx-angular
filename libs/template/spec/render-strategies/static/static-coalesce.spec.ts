@@ -4,7 +4,6 @@ import { from } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { coalescingManager } from '../../../src/lib/core/utils';
-import createSpy = jasmine.createSpy;
 
 /** @test {coalesceWith} */
 describe('staticCoalesce', () => {
@@ -12,7 +11,7 @@ describe('staticCoalesce', () => {
 
   it('should be callable without errors', (done) => {
     const durationSelector = from(Promise.resolve());
-    const spy = createSpy('spy');
+    const spy = jest.fn();
     staticCoalesce(spy, durationSelector);
     setTimeout(() => {
       expect(spy).toHaveBeenCalledTimes(1);
@@ -24,7 +23,7 @@ describe('staticCoalesce', () => {
   it('should test els branch of tryExecuteWork', (done) => {
     const scope = {};
     const durationSelector = from(Promise.resolve());
-    const spy = createSpy('spy');
+    const spy = jest.fn();
     staticCoalesce(spy, durationSelector, scope);
     coalescingManager.add(scope);
     setTimeout(() => {

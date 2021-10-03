@@ -76,7 +76,8 @@ import { delay, filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
  */
 @Pipe({ name: 'push', pure: false })
 export class PushPipe<S extends string = string>
-  implements PipeTransform, OnDestroy {
+  implements PipeTransform, OnDestroy
+{
   /**
    * @internal
    * This is typed as `any` because the type cannot be inferred

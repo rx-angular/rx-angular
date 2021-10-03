@@ -22,9 +22,7 @@ import { toRxSuspenseNotification } from './notification-transforms';
 /**
  * @internal
  */
-export function createTemplateNotifier<U>(
-  withSuspense?: () => boolean
-): {
+export function createTemplateNotifier<U>(withSuspense?: () => boolean): {
   values$: Observable<RxNotification<U>>;
   next(observable: ObservableInput<U>): void;
 } {
@@ -36,7 +34,7 @@ export function createTemplateNotifier<U>(
     distinctUntilChanged(),
     // handle null | undefined assignment and new Observable reset
     map((observable$) => {
-      const isObs = isObservable<U>(observable$);
+      const isObs = isObservable(observable$);
       // only pass through initial undefined value to filter out
       if (firstRun && (observable$ === undefined || observable$ === NEVER)) {
         return wSuspense() ? NEVER.pipe(startWith(undefined)) : undefined;

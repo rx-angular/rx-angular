@@ -2,7 +2,6 @@ import { getStrategies } from '../../../src/lib/render-strategies/strategies/str
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { CallsExpectations, getMockStrategyConfig, testStrategyMethod } from '../../fixtures';
-import createSpy = jasmine.createSpy;
 
 /**
  * LOCAL STRATEGY
@@ -61,7 +60,7 @@ describe('local Strategy', () => {
         strategyMethod: 'scheduleCD',
         flushMicrotask: true,
         singleTime: true,
-        afterCD: createSpy('afterCD'),
+        afterCD: jest.fn(),
         callsExpectations
       }, done);
     });
@@ -71,7 +70,7 @@ describe('local Strategy', () => {
         strategyName,
         strategyMethod: 'scheduleCD',
         singleTime: false,
-        afterCD: createSpy('afterCD'),
+        afterCD: jest.fn(),
         callsExpectations
       }, done);
     });
