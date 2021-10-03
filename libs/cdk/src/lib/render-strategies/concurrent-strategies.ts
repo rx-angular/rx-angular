@@ -14,9 +14,8 @@ import {
 } from '../model';
 import { coalescingManager } from '@rx-angular/cdk/coalescing';
 
-// set default to 30fps, actually matching other frameworks defaults:
-// https://github.com/WICG/scheduling-apis/blob/main/misc/userspace-schedulers.md#appendix-scheduler-case-studies
-forceFrameRate(30);
+// set default to 60fps
+forceFrameRate(60);
 
 const noPriorityStrategy: RxStrategyCredentials = {
   name: 'noPriority',
