@@ -1,5 +1,5 @@
 import {RxCoalescingOptions as ɵRxCoalescingOptions,
-  coalescingObj as ɵcoalescingObj, coalesceWith as ɵcoalesceWith, coalescingManager as ɵcoalescingManager} from '@rx-angular/cdk/coalescing';
+  coalescingObj as ɵcoalescingObj, coalesceWith as ɵcoalesceWith, CoalescingManager as ɵCoalescingManager, coalescingManager as ɵcoalescingManager} from '@rx-angular/cdk/coalescing';
 /**
  * @deprecated import `RxCoalescingOptions` from `@rx-angular/cdk/coalescing`
  */
@@ -15,9 +15,13 @@ const coalesceWith = ɵcoalesceWith;
 /**
  * @deprecated import `coalescingManager` from `@rx-angular/cdk/coalescing`
  */
+type CoalescingManager = ɵCoalescingManager;
+/**
+ * @deprecated import `coalescingManager` from `@rx-angular/cdk/coalescing`
+ */
 const coalescingManager = ɵcoalescingManager;
 
-export { RxCoalescingOptions, coalescingObj, coalesceWith, coalescingManager };
+export { RxCoalescingOptions, coalescingObj, coalesceWith, CoalescingManager, coalescingManager };
 
 import {
   coerceObservable as ɵcoerceObservable,
