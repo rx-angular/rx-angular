@@ -3,6 +3,7 @@ import {
   concatAll,
   delay,
   from,
+  mergeAll,
   Observable,
   ObservableInput,
   of,
@@ -72,6 +73,45 @@ describe('coerceAllFactory', () => {
         testScheduler.run(({ cold, expectObservable }) => {
           const source =   '-a-b----c-d------------------------';
           const expected = '-a-(bc)---------------------(defgh)';
+
+          const values = {
+            a: of('hello dear contributor'),
+            b: from(['hello', 'world']),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            d: of('the quick brown fox jumps over the lazy dog')
+          };
+          const expectedValues = {
+            a: 'hello dear contributor',
+            b: 'hello',
+            c: 'world',
+            d: 'hello',
+            e: 'world',
+            f: 'with',
+            g: 'delay',
+            h: 'the quick brown fox jumps over the lazy dog',
+          };
+
+          cold(source, values)
+            .pipe(take(Object.keys(values).length))
+            .subscribe(value => inputHandler.next(value));
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+        });
+      });
+    });
+
+    describe('flattening via mergeAll', () => {
+      beforeEach(() => {
+        inputHandler = coerceAllFactory<string>(
+          () => new Subject<string>(),
+          mergeAll()
+        );
+      });
+
+      it('should emit value from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable }) => {
+          const source =   '-a-b----c-d------------------------';
+          const expected = '-a-(bc)---h-----------------(defg)';
 
           const values = {
             a: of('hello dear contributor'),
@@ -171,6 +211,45 @@ describe('coerceAllFactory', () => {
         });
       });
     });
+
+    describe('flattening via mergeAll', () => {
+      beforeEach(() => {
+        inputHandler = coerceAllFactory<string>(
+          () => new ReplaySubject<string>(1),
+          mergeAll()
+        );
+      });
+
+      it('should emit value from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable }) => {
+          const source =   '-a-b----c-d------------------------';
+          const expected = '-a-(bc)---h-----------------(defg)';
+
+          const values = {
+            a: of('hello dear contributor'),
+            b: from(['hello', 'world']),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            d: of('the quick brown fox jumps over the lazy dog')
+          };
+          const expectedValues = {
+            a: 'hello dear contributor',
+            b: 'hello',
+            c: 'world',
+            d: 'hello',
+            e: 'world',
+            f: 'with',
+            g: 'delay',
+            h: 'the quick brown fox jumps over the lazy dog',
+          };
+
+          cold(source, values)
+            .pipe(take(Object.keys(values).length))
+            .subscribe(value => inputHandler.next(value));
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+        });
+      });
+    });
   });
 
   describe('BehaviorSubject', () => {
@@ -238,6 +317,45 @@ describe('coerceAllFactory', () => {
             g: 'with',
             h: 'delay',
             i: 'the quick brown fox jumps over the lazy dog',
+          };
+
+          cold(source, values)
+            .pipe(take(Object.keys(values).length))
+            .subscribe(value => inputHandler.next(value));
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+        });
+      });
+    });
+
+    describe('flattening via mergeAll', () => {
+      beforeEach(() => {
+        inputHandler = coerceAllFactory<string>(
+          () => new Subject<string>(),
+          mergeAll()
+        );
+      });
+
+      it('should emit value from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable }) => {
+          const source =   '-a-b----c-d------------------------';
+          const expected = '-a-(bc)---h-----------------(defg)';
+
+          const values = {
+            a: of('hello dear contributor'),
+            b: from(['hello', 'world']),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            d: of('the quick brown fox jumps over the lazy dog')
+          };
+          const expectedValues = {
+            a: 'hello dear contributor',
+            b: 'hello',
+            c: 'world',
+            d: 'hello',
+            e: 'world',
+            f: 'with',
+            g: 'delay',
+            h: 'the quick brown fox jumps over the lazy dog',
           };
 
           cold(source, values)
