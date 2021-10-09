@@ -100,24 +100,24 @@ describe('Template Migration 1.0.0', () => {
 
   it('should replace all module specifiers', async () => {
     appTree = await setupTestFile(`
-      import { NgModule } from '@angular/core';
-      import { BrowserModule } from '@angular/platform-browser';
-      import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
+    import { NgModule } from '@angular/core';
+    import { BrowserModule } from '@angular/platform-browser';
+    import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
 
-      import { AppComponent } from './app.component';
+    import { AppComponent } from './app.component';
 
-      @NgModule({
-        declarations: [
-          AppComponent,
-        ],
-        imports: [
-          BrowserModule,
-          UnpatchEventsModule
-        ],
-        providers: [],
-        bootstrap: [AppComponent]
-      })
-      export class AppModule { }
+    @NgModule({
+      declarations: [
+        AppComponent,
+      ],
+      imports: [
+        BrowserModule,
+        UnpatchEventsModule
+      ],
+      providers: [],
+      bootstrap: [AppComponent]
+    })
+    export class AppModule { }
   `);
 
     const file = appTree.readContent('app.module.ts');

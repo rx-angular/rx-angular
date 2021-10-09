@@ -3,6 +3,7 @@ import { findNodes } from '@schematics/angular/utility/ast-utils';
 import * as ts from 'typescript';
 
 import { createRemoveChange } from '../../common/utils/changes';
+import { formatFiles } from '../../common/utils/format-files';
 import { insert, insertImport } from '../../common/utils/insert';
 import { replaceNodeValue } from '../../common/utils/replace-node-value';
 import { visitTSSourceFiles } from '../../common/utils/visitors';
@@ -81,6 +82,7 @@ export default function (): Rule {
         })(sourceFile);
       });
     },
+    formatFiles()
   ]);
 }
 
