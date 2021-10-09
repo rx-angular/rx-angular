@@ -17,11 +17,37 @@ import { jestMatcher } from '@test-helpers';
 
 import { coerceAllFactory } from '../src/lib/coerce-all-factory';
 
+function createInputStream(
+  cold: typeof TestScheduler.prototype.createColdObservable,
+  marble: string,
+  values: Record<string, any>,
+  inputHandler: {
+    values$: Observable<string | string[]>;
+    next(observable: ObservableInput<string | string[]> | string): void;
+  }
+) {
+  cold(marble, values)
+    .pipe(take(Object.keys(values).length))
+    .subscribe(value => inputHandler.next(value));
+}
+
+function createValueStreams(
+  time: typeof TestScheduler.prototype.createTime,
+  timeMarble: string
+): Record<string, Observable<string | string[]>> {
+  return {
+    a: of('hello dear contributor'),
+    b: from(['hello', 'world']),
+    c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
+    d: of('the quick brown fox jumps over the lazy dog')
+  };
+}
+
 describe('coerceAllFactory', () => {
   let testScheduler: TestScheduler;
   let inputHandler: {
-    values$: Observable<string | string[]>,
-    next(observable: ObservableInput<string | string[]> | string): void
+    values$: Observable<string | string[]>;
+    next(observable: ObservableInput<string | string[]> | string): void;
   };
 
   beforeEach(() => {
@@ -36,16 +62,11 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler', () => {
         testScheduler.run(({ cold, expectObservable, time }) => {
-          const source =     '-a-b-----c-d';
+          const source =     '-a-b-----c-d|';
           const expected =   '-a-(bc)----d';
           const timeMarble = '    -----|';
 
-          const values = {
-            a: of('hello dear contributor'),
-            b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
-            d: of('the quick brown fox jumps over the lazy dog')
-          };
+          const values = createValueStreams(time, timeMarble);
           const expectedValues = {
             a: 'hello dear contributor',
             b: 'hello',
@@ -53,9 +74,7 @@ describe('coerceAllFactory', () => {
             d: 'the quick brown fox jumps over the lazy dog',
           };
 
-          cold(source, values)
-            .pipe(take(Object.keys(values).length))
-            .subscribe(value => inputHandler.next(value));
+          createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
         });
@@ -72,16 +91,11 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler', () => {
         testScheduler.run(({ cold, expectObservable, time }) => {
-          const source =     '-a-b----c-d---------';
+          const source =     '-a-b----c-d--------|';
           const expected =   '-a-(bc)------(defgh)';
           const timeMarble = '    -----|';
 
-          const values = {
-            a: of('hello dear contributor'),
-            b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
-            d: of('the quick brown fox jumps over the lazy dog')
-          };
+          const values = createValueStreams(time, timeMarble);
           const expectedValues = {
             a: 'hello dear contributor',
             b: 'hello',
@@ -93,9 +107,7 @@ describe('coerceAllFactory', () => {
             h: 'the quick brown fox jumps over the lazy dog',
           };
 
-          cold(source, values)
-            .pipe(take(Object.keys(values).length))
-            .subscribe(value => inputHandler.next(value));
+          createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
         });
@@ -112,16 +124,11 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler', () => {
         testScheduler.run(({ cold, expectObservable, time }) => {
-          const source =     '-a-b----c-d--------';
+          const source =     '-a-b----c-d-------|';
           const expected =   '-a-(bc)---h--(defg)';
           const timeMarble = '    -----|';
 
-          const values = {
-            a: of('hello dear contributor'),
-            b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
-            d: of('the quick brown fox jumps over the lazy dog')
-          };
+          const values = createValueStreams(time, timeMarble);
           const expectedValues = {
             a: 'hello dear contributor',
             b: 'hello',
@@ -133,9 +140,7 @@ describe('coerceAllFactory', () => {
             h: 'the quick brown fox jumps over the lazy dog',
           };
 
-          cold(source, values)
-            .pipe(take(Object.keys(values).length))
-            .subscribe(value => inputHandler.next(value));
+          createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
         });
@@ -151,16 +156,11 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler', () => {
         testScheduler.run(({ cold, expectObservable, time }) => {
-          const source =     '-a-b-----c-d';
+          const source =     '-a-b-----c-d|';
           const expected =   '-a-(bc)----d';
           const timeMarble = '    -----|';
 
-          const values = {
-            a: of('hello dear contributor'),
-            b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
-            d: of('the quick brown fox jumps over the lazy dog')
-          };
+          const values = createValueStreams(time, timeMarble);
           const expectedValues = {
             a: 'hello dear contributor',
             b: 'hello',
@@ -168,9 +168,7 @@ describe('coerceAllFactory', () => {
             d: 'the quick brown fox jumps over the lazy dog',
           };
 
-          cold(source, values)
-            .pipe(take(Object.keys(values).length))
-            .subscribe(value => inputHandler.next(value));
+          createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
         });
@@ -187,16 +185,11 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler', () => {
         testScheduler.run(({ cold, expectObservable, time }) => {
-          const source =     '-a-b----c-d---------';
+          const source =     '-a-b----c-d--------|';
           const expected =   '-a-(bc)------(defgh)';
           const timeMarble = '    -----|';
 
-          const values = {
-            a: of('hello dear contributor'),
-            b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
-            d: of('the quick brown fox jumps over the lazy dog')
-          };
+          const values = createValueStreams(time, timeMarble);
           const expectedValues = {
             a: 'hello dear contributor',
             b: 'hello',
@@ -208,9 +201,7 @@ describe('coerceAllFactory', () => {
             h: 'the quick brown fox jumps over the lazy dog',
           };
 
-          cold(source, values)
-            .pipe(take(Object.keys(values).length))
-            .subscribe(value => inputHandler.next(value));
+          createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
         });
@@ -227,16 +218,11 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler', () => {
         testScheduler.run(({ cold, expectObservable, time }) => {
-          const source =     '-a-b----c-d--------';
+          const source =     '-a-b----c-d-------|';
           const expected =   '-a-(bc)---h--(defg)';
           const timeMarble = '    -----|';
 
-          const values = {
-            a: of('hello dear contributor'),
-            b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
-            d: of('the quick brown fox jumps over the lazy dog')
-          };
+          const values = createValueStreams(time, timeMarble);
           const expectedValues = {
             a: 'hello dear contributor',
             b: 'hello',
@@ -248,9 +234,7 @@ describe('coerceAllFactory', () => {
             h: 'the quick brown fox jumps over the lazy dog',
           };
 
-          cold(source, values)
-            .pipe(take(Object.keys(values).length))
-            .subscribe(value => inputHandler.next(value));
+          createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
         });
@@ -272,12 +256,7 @@ describe('coerceAllFactory', () => {
           const expected =   'ab-(cd)----e';
           const timeMarble = '    -----|';
 
-          const values = {
-            a: of('hello dear contributor'),
-            b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
-            d: of('the quick brown fox jumps over the lazy dog')
-          };
+          const values = createValueStreams(time, timeMarble);
           const expectedValues = {
             a: initialValue,
             b: 'hello dear contributor',
@@ -286,9 +265,7 @@ describe('coerceAllFactory', () => {
             e: 'the quick brown fox jumps over the lazy dog',
           };
 
-          cold(source, values)
-            .pipe(take(Object.keys(values).length))
-            .subscribe(value => inputHandler.next(value));
+          createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
         });
@@ -305,16 +282,11 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler', () => {
         testScheduler.run(({ cold, expectObservable, time }) => {
-          const source =     '-a-b----c-d--------';
+          const source =     '-a-b----c-d--------|';
           const expected =   'ab-(cd)------(efghi)';
           const timeMarble = '    -----|';
 
-          const values = {
-            a: of('hello dear contributor'),
-            b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
-            d: of('the quick brown fox jumps over the lazy dog')
-          };
+          const values = createValueStreams(time, timeMarble);
           const expectedValues = {
             a: initialValue,
             b: 'hello dear contributor',
@@ -327,9 +299,7 @@ describe('coerceAllFactory', () => {
             i: 'the quick brown fox jumps over the lazy dog',
           };
 
-          cold(source, values)
-            .pipe(take(Object.keys(values).length))
-            .subscribe(value => inputHandler.next(value));
+          createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
         });
@@ -346,16 +316,11 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler', () => {
         testScheduler.run(({ cold, expectObservable, time }) => {
-          const source =     '-a-b----c-d--------';
+          const source =     '-a-b----c-d-------|';
           const expected =   '-a-(bc)---h--(defg)';
           const timeMarble = '    -----|';
 
-          const values = {
-            a: of('hello dear contributor'),
-            b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
-            d: of('the quick brown fox jumps over the lazy dog')
-          };
+          const values = createValueStreams(time, timeMarble);
           const expectedValues = {
             a: 'hello dear contributor',
             b: 'hello',
@@ -367,9 +332,7 @@ describe('coerceAllFactory', () => {
             h: 'the quick brown fox jumps over the lazy dog',
           };
 
-          cold(source, values)
-            .pipe(take(Object.keys(values).length))
-            .subscribe(value => inputHandler.next(value));
+          createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
         });
