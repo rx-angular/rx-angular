@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, ObservableInput, ReplaySubject, Subject, take } from 'rxjs';
+import { BehaviorSubject, delay, from, Observable, ObservableInput, of, ReplaySubject, Subject, take } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 
 import { jestMatcher } from '@test-helpers';
@@ -8,8 +8,8 @@ import { coerceAllFactory } from '../src/lib/coerce-all-factory';
 describe('coerceAllFactory', () => {
   let testScheduler: TestScheduler;
   let inputHandler: {
-    values$: Observable<string>,
-    next(observable: ObservableInput<string> | string): void
+    values$: Observable<string | string[]>,
+    next(observable: ObservableInput<string | string[]> | string): void
   };
 
   beforeEach(() => {
@@ -23,16 +23,28 @@ describe('coerceAllFactory', () => {
       });
 
       it('should emit value from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const values = { a: 'hello dear contributor' };
-          const s1 = cold( '---a---------|', values);
-          const s1Subs =   '-^------------!';
-          const expected = '----a---------';
+        testScheduler.run(({ cold, expectObservable }) => {
+          const source =   '-a-b----c-d';
+          const expected = '-a-(bc)---d';
 
-          cold('-a').pipe(take(1)).subscribe(() => inputHandler.next(s1));
+          const values = {
+            a: of('hello dear contributor'),
+            b: from(['hello', 'world']),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            d: of('the quick brown fox jumps over the lazy dog')
+          };
+          const expectedValues = {
+            a: 'hello dear contributor',
+            b: 'hello',
+            c: 'world',
+            d: 'the quick brown fox jumps over the lazy dog',
+          };
 
-          expectObservable(inputHandler.values$).toBe(expected, values);
-          expectSubscriptions(s1.subscriptions).toBe(s1Subs);
+          cold(source, values)
+            .pipe(take(Object.keys(values).length))
+            .subscribe(value => inputHandler.next(value));
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
         });
       });
     });
@@ -45,38 +57,65 @@ describe('coerceAllFactory', () => {
       });
 
       it('should emit value from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const values = { a: 'hello dear contributor' };
-          const s1 = cold('---a---------|', values);
-          const s1Subs =  '^------------!';
-          const expected = '---a--------';
+        testScheduler.run(({ cold, expectObservable }) => {
+          const source =   '-a-b----c-d';
+          const expected = '-a-(bc)---d';
 
-          inputHandler.next(s1);
+          const values = {
+            a: of('hello dear contributor'),
+            b: from(['hello', 'world']),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            d: of('the quick brown fox jumps over the lazy dog')
+          };
+          const expectedValues = {
+            a: 'hello dear contributor',
+            b: 'hello',
+            c: 'world',
+            d: 'the quick brown fox jumps over the lazy dog',
+          };
 
-          expectObservable(inputHandler.values$).toBe(expected, values);
-          expectSubscriptions(s1.subscriptions).toBe(s1Subs);
+          cold(source, values)
+            .pipe(take(Object.keys(values).length))
+            .subscribe(value => inputHandler.next(value));
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
         });
       });
     });
   });
 
   describe('BehaviorSubject', () => {
+    const initialValue = 'invisible initial value';
+
     describe('default flattening (switchAll)', () => {
       beforeEach(() => {
-        inputHandler = coerceAllFactory<string>(() => new BehaviorSubject<string>('invisible initial value'));
+        inputHandler = coerceAllFactory<string>(() => new BehaviorSubject<string>(initialValue));
       });
 
       it('should emit value from the observable passed to the input handler', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const values = { a: 'hello dear contributor' };
-          const s1 = cold('---a---------|', values);
-          const s1Subs = '^------------!';
-          const expected = '---a--------';
+          const source =   '-a-b----c-d';
+          const expected = 'ab-(cd)---e';
 
-          inputHandler.next(s1);
+          const values = {
+            a: of('hello dear contributor'),
+            b: from(['hello', 'world']),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            d: of('the quick brown fox jumps over the lazy dog')
+          };
+          const expectedValues = {
+            a: initialValue,
+            b: 'hello dear contributor',
+            c: 'hello',
+            d: 'world',
+            e: 'the quick brown fox jumps over the lazy dog',
+          };
 
-          expectObservable(inputHandler.values$).toBe(expected, values);
-          expectSubscriptions(s1.subscriptions).toBe(s1Subs);
+          cold(source, values)
+            .pipe(take(Object.keys(values).length))
+            .subscribe(value => inputHandler.next(value));
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
         });
       });
     });
