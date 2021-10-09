@@ -1,4 +1,15 @@
-import { BehaviorSubject, delay, from, Observable, ObservableInput, of, ReplaySubject, Subject, take } from 'rxjs';
+import {
+  BehaviorSubject,
+  concatAll,
+  delay,
+  from,
+  Observable,
+  ObservableInput,
+  of,
+  ReplaySubject,
+  Subject,
+  take
+} from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 
 import { jestMatcher } from '@test-helpers';
@@ -48,6 +59,45 @@ describe('coerceAllFactory', () => {
         });
       });
     });
+
+    describe('flattening via concatAll', () => {
+      beforeEach(() => {
+        inputHandler = coerceAllFactory<string>(
+          () => new Subject<string>(),
+          concatAll()
+        );
+      });
+
+      it('should emit value from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable }) => {
+          const source =   '-a-b----c-d------------------------';
+          const expected = '-a-(bc)---------------------(defgh)';
+
+          const values = {
+            a: of('hello dear contributor'),
+            b: from(['hello', 'world']),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            d: of('the quick brown fox jumps over the lazy dog')
+          };
+          const expectedValues = {
+            a: 'hello dear contributor',
+            b: 'hello',
+            c: 'world',
+            d: 'hello',
+            e: 'world',
+            f: 'with',
+            g: 'delay',
+            h: 'the quick brown fox jumps over the lazy dog',
+          };
+
+          cold(source, values)
+            .pipe(take(Object.keys(values).length))
+            .subscribe(value => inputHandler.next(value));
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+        });
+      });
+    });
   });
 
   describe('ReplaySubject', () => {
@@ -72,6 +122,45 @@ describe('coerceAllFactory', () => {
             b: 'hello',
             c: 'world',
             d: 'the quick brown fox jumps over the lazy dog',
+          };
+
+          cold(source, values)
+            .pipe(take(Object.keys(values).length))
+            .subscribe(value => inputHandler.next(value));
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+        });
+      });
+    });
+
+    describe('flattening via concatAll', () => {
+      beforeEach(() => {
+        inputHandler = coerceAllFactory<string>(
+          () => new ReplaySubject<string>(1),
+          concatAll()
+        );
+      });
+
+      it('should emit value from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable }) => {
+          const source = '-a-b----c-d------------------------';
+          const expected = '-a-(bc)---------------------(defgh)';
+
+          const values = {
+            a: of('hello dear contributor'),
+            b: from(['hello', 'world']),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            d: of('the quick brown fox jumps over the lazy dog')
+          };
+          const expectedValues = {
+            a: 'hello dear contributor',
+            b: 'hello',
+            c: 'world',
+            d: 'hello',
+            e: 'world',
+            f: 'with',
+            g: 'delay',
+            h: 'the quick brown fox jumps over the lazy dog',
           };
 
           cold(source, values)
@@ -109,6 +198,46 @@ describe('coerceAllFactory', () => {
             c: 'hello',
             d: 'world',
             e: 'the quick brown fox jumps over the lazy dog',
+          };
+
+          cold(source, values)
+            .pipe(take(Object.keys(values).length))
+            .subscribe(value => inputHandler.next(value));
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+        });
+      });
+    });
+
+    describe('flattening via concatAll', () => {
+      beforeEach(() => {
+        inputHandler = coerceAllFactory<string>(
+          () => new BehaviorSubject<string>(initialValue),
+          concatAll()
+        );
+      });
+
+      it('should emit value from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable }) => {
+          const source =   '-a-b----c-d------------------------';
+          const expected = 'ab-(cd)---------------------(efghi)';
+
+          const values = {
+            a: of('hello dear contributor'),
+            b: from(['hello', 'world']),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            d: of('the quick brown fox jumps over the lazy dog')
+          };
+          const expectedValues = {
+            a: initialValue,
+            b: 'hello dear contributor',
+            c: 'hello',
+            d: 'world',
+            e: 'hello',
+            f: 'world',
+            g: 'with',
+            h: 'delay',
+            i: 'the quick brown fox jumps over the lazy dog',
           };
 
           cold(source, values)
