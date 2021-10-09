@@ -34,15 +34,16 @@ describe('coerceAllFactory', () => {
         inputHandler = coerceAllFactory<string>(() => new Subject<string>());
       });
 
-      it('should emit value from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable }) => {
-          const source =   '-a-b----c-d';
-          const expected = '-a-(bc)---d';
+      it('should emit value/s from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable, time }) => {
+          const source =     '-a-b-----c-d';
+          const expected =   '-a-(bc)----d';
+          const timeMarble = '    -----|';
 
           const values = {
             a: of('hello dear contributor'),
             b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
             d: of('the quick brown fox jumps over the lazy dog')
           };
           const expectedValues = {
@@ -69,15 +70,16 @@ describe('coerceAllFactory', () => {
         );
       });
 
-      it('should emit value from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable }) => {
-          const source =   '-a-b----c-d------------------------';
-          const expected = '-a-(bc)---------------------(defgh)';
+      it('should emit value/s from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable, time }) => {
+          const source =     '-a-b----c-d---------';
+          const expected =   '-a-(bc)------(defgh)';
+          const timeMarble = '    -----|';
 
           const values = {
             a: of('hello dear contributor'),
             b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
             d: of('the quick brown fox jumps over the lazy dog')
           };
           const expectedValues = {
@@ -108,15 +110,16 @@ describe('coerceAllFactory', () => {
         );
       });
 
-      it('should emit value from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable }) => {
-          const source =   '-a-b----c-d------------------------';
-          const expected = '-a-(bc)---h-----------------(defg)';
+      it('should emit value/s from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable, time }) => {
+          const source =     '-a-b----c-d--------';
+          const expected =   '-a-(bc)---h--(defg)';
+          const timeMarble = '    -----|';
 
           const values = {
             a: of('hello dear contributor'),
             b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
             d: of('the quick brown fox jumps over the lazy dog')
           };
           const expectedValues = {
@@ -146,15 +149,16 @@ describe('coerceAllFactory', () => {
         inputHandler = coerceAllFactory<string>(() => new ReplaySubject<string>(1));
       });
 
-      it('should emit value from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable }) => {
-          const source =   '-a-b----c-d';
-          const expected = '-a-(bc)---d';
+      it('should emit value/s from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable, time }) => {
+          const source =     '-a-b-----c-d';
+          const expected =   '-a-(bc)----d';
+          const timeMarble = '    -----|';
 
           const values = {
             a: of('hello dear contributor'),
             b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
             d: of('the quick brown fox jumps over the lazy dog')
           };
           const expectedValues = {
@@ -181,15 +185,16 @@ describe('coerceAllFactory', () => {
         );
       });
 
-      it('should emit value from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable }) => {
-          const source = '-a-b----c-d------------------------';
-          const expected = '-a-(bc)---------------------(defgh)';
+      it('should emit value/s from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable, time }) => {
+          const source =     '-a-b----c-d---------';
+          const expected =   '-a-(bc)------(defgh)';
+          const timeMarble = '    -----|';
 
           const values = {
             a: of('hello dear contributor'),
             b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
             d: of('the quick brown fox jumps over the lazy dog')
           };
           const expectedValues = {
@@ -220,15 +225,16 @@ describe('coerceAllFactory', () => {
         );
       });
 
-      it('should emit value from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable }) => {
-          const source =   '-a-b----c-d------------------------';
-          const expected = '-a-(bc)---h-----------------(defg)';
+      it('should emit value/s from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable, time }) => {
+          const source =     '-a-b----c-d--------';
+          const expected =   '-a-(bc)---h--(defg)';
+          const timeMarble = '    -----|';
 
           const values = {
             a: of('hello dear contributor'),
             b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
             d: of('the quick brown fox jumps over the lazy dog')
           };
           const expectedValues = {
@@ -260,15 +266,16 @@ describe('coerceAllFactory', () => {
         inputHandler = coerceAllFactory<string>(() => new BehaviorSubject<string>(initialValue));
       });
 
-      it('should emit value from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =   '-a-b----c-d';
-          const expected = 'ab-(cd)---e';
+      it('should emit value/s from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable, time }) => {
+          const source =     '-a-b-----c-d';
+          const expected =   'ab-(cd)----e';
+          const timeMarble = '    -----|';
 
           const values = {
             a: of('hello dear contributor'),
             b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
             d: of('the quick brown fox jumps over the lazy dog')
           };
           const expectedValues = {
@@ -296,15 +303,16 @@ describe('coerceAllFactory', () => {
         );
       });
 
-      it('should emit value from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable }) => {
-          const source =   '-a-b----c-d------------------------';
-          const expected = 'ab-(cd)---------------------(efghi)';
+      it('should emit value/s from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable, time }) => {
+          const source =     '-a-b----c-d--------';
+          const expected =   'ab-(cd)------(efghi)';
+          const timeMarble = '    -----|';
 
           const values = {
             a: of('hello dear contributor'),
             b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
             d: of('the quick brown fox jumps over the lazy dog')
           };
           const expectedValues = {
@@ -336,15 +344,16 @@ describe('coerceAllFactory', () => {
         );
       });
 
-      it('should emit value from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable }) => {
-          const source =   '-a-b----c-d------------------------';
-          const expected = '-a-(bc)---h-----------------(defg)';
+      it('should emit value/s from the observable passed to the input handler', () => {
+        testScheduler.run(({ cold, expectObservable, time }) => {
+          const source =     '-a-b----c-d--------';
+          const expected =   '-a-(bc)---h--(defg)';
+          const timeMarble = '    -----|';
 
           const values = {
             a: of('hello dear contributor'),
             b: from(['hello', 'world']),
-            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(20)),
+            c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
             d: of('the quick brown fox jumps over the lazy dog')
           };
           const expectedValues = {
