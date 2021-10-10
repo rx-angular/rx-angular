@@ -225,7 +225,7 @@ export class RxStrategyProvider<T extends string = string> {
    * @example
    * this.strategyProvider.scheduleCd(this.changeDetectorRef, {afterCD: myWork()});
    *
-   * @return Observable<R>
+   * @return AbortController
    */
   scheduleCD(
     cdRef: ChangeDetectorRef,
