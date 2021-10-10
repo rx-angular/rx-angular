@@ -1,12 +1,9 @@
 import {
   BehaviorSubject,
   concatAll,
-  delay,
-  from,
   mergeAll,
   Observable,
   ObservableInput,
-  of,
   ReplaySubject,
   Subject,
   take
@@ -31,15 +28,14 @@ function createInputStream(
     .subscribe(value => inputHandler.next(value));
 }
 
-function createValueStreams(
-  time: typeof TestScheduler.prototype.createTime,
-  timeMarble: string
-): Record<string, Observable<string | string[]>> {
+function createNoCompletionValueStreams(
+  cold: typeof TestScheduler.prototype.createColdObservable
+): Record<string, ReturnType<typeof TestScheduler.prototype.createColdObservable>> {
   return {
-    a: of('hello dear contributor'),
-    b: from(['hello', 'world']),
-    c: from(['hello', 'world', 'with', 'delay']).pipe(delay(time(timeMarble))),
-    d: of('the quick brown fox jumps over the lazy dog')
+    a: cold('a', { a: 'hello dear contributor' }),
+    b: cold('ab', { a: 'hello', b: 'world' }),
+    c: cold('-a-b-c-d', { a: 'hello', b: 'world', c: 'with', d: 'delay' }),
+    d: cold('a', { a: 'the quick brown fox jumps over the lazy dog' }),
   };
 }
 
@@ -60,23 +56,33 @@ describe('coerceAllFactory', () => {
         inputHandler = coerceAllFactory<string>(() => new Subject<string>());
       });
 
-      it('should emit value/s from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable, time }) => {
+      it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
           const source =     '-a-b-----c-d|';
-          const expected =   '-a-(bc)----d';
-          const timeMarble = '    -----|';
+          const expected =   '-a-bc-----de';
+          const valueSubs = {
+            a:               '-^-!',
+            b:               '---^-----!',
+            c:               '---------^-!',
+            d:               '-----------^',
+          };
 
-          const values = createValueStreams(time, timeMarble);
+          const values = createNoCompletionValueStreams(cold);
           const expectedValues = {
             a: 'hello dear contributor',
             b: 'hello',
             c: 'world',
-            d: 'the quick brown fox jumps over the lazy dog',
+            d: 'hello',
+            e: 'the quick brown fox jumps over the lazy dog',
           };
 
           createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
         });
       });
     });
@@ -89,27 +95,29 @@ describe('coerceAllFactory', () => {
         );
       });
 
-      it('should emit value/s from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable, time }) => {
+      it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
           const source =     '-a-b----c-d--------|';
-          const expected =   '-a-(bc)------(defgh)';
-          const timeMarble = '    -----|';
+          const expected =   '-a-----------------';
+          const valueSubs = {
+            a:               '-^',
+            b:               '------------',
+            c:               '------------',
+            d:               '------------',
+          };
 
-          const values = createValueStreams(time, timeMarble);
+          const values = createNoCompletionValueStreams(cold);
           const expectedValues = {
             a: 'hello dear contributor',
-            b: 'hello',
-            c: 'world',
-            d: 'hello',
-            e: 'world',
-            f: 'with',
-            g: 'delay',
-            h: 'the quick brown fox jumps over the lazy dog',
           };
 
           createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
         });
       });
     });
@@ -122,13 +130,18 @@ describe('coerceAllFactory', () => {
         );
       });
 
-      it('should emit value/s from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable, time }) => {
+      it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
           const source =     '-a-b----c-d-------|';
-          const expected =   '-a-(bc)---h--(defg)';
-          const timeMarble = '    -----|';
+          const expected =   '-a-bc----dhe-f-g---';
+          const valueSubs = {
+            a:               '-^',
+            b:               '---^',
+            c:               '--------^--',
+            d:               '----------^',
+          };
 
-          const values = createValueStreams(time, timeMarble);
+          const values = createNoCompletionValueStreams(cold);
           const expectedValues = {
             a: 'hello dear contributor',
             b: 'hello',
@@ -143,6 +156,10 @@ describe('coerceAllFactory', () => {
           createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
         });
       });
     });
@@ -154,23 +171,33 @@ describe('coerceAllFactory', () => {
         inputHandler = coerceAllFactory<string>(() => new ReplaySubject<string>(1));
       });
 
-      it('should emit value/s from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable, time }) => {
+      it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
           const source =     '-a-b-----c-d|';
-          const expected =   '-a-(bc)----d';
-          const timeMarble = '    -----|';
+          const expected =   '-a-bc-----de';
+          const valueSubs = {
+            a:               '-^-!',
+            b:               '---^-----!',
+            c:               '---------^-!',
+            d:               '-----------^',
+          };
 
-          const values = createValueStreams(time, timeMarble);
+          const values = createNoCompletionValueStreams(cold);
           const expectedValues = {
             a: 'hello dear contributor',
             b: 'hello',
             c: 'world',
-            d: 'the quick brown fox jumps over the lazy dog',
+            d: 'hello',
+            e: 'the quick brown fox jumps over the lazy dog',
           };
 
           createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
         });
       });
     });
@@ -183,27 +210,29 @@ describe('coerceAllFactory', () => {
         );
       });
 
-      it('should emit value/s from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable, time }) => {
+      it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
           const source =     '-a-b----c-d--------|';
-          const expected =   '-a-(bc)------(defgh)';
-          const timeMarble = '    -----|';
+          const expected =   '-a-----------------';
+          const valueSubs = {
+            a:               '-^',
+            b:               '------------',
+            c:               '------------',
+            d:               '------------',
+          };
 
-          const values = createValueStreams(time, timeMarble);
+          const values = createNoCompletionValueStreams(cold);
           const expectedValues = {
             a: 'hello dear contributor',
-            b: 'hello',
-            c: 'world',
-            d: 'hello',
-            e: 'world',
-            f: 'with',
-            g: 'delay',
-            h: 'the quick brown fox jumps over the lazy dog',
           };
 
           createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
         });
       });
     });
@@ -216,13 +245,18 @@ describe('coerceAllFactory', () => {
         );
       });
 
-      it('should emit value/s from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable, time }) => {
+      it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
           const source =     '-a-b----c-d-------|';
-          const expected =   '-a-(bc)---h--(defg)';
-          const timeMarble = '    -----|';
+          const expected =   '-a-bc----dhe-f-g---';
+          const valueSubs = {
+            a:               '-^',
+            b:               '---^',
+            c:               '--------^--',
+            d:               '----------^',
+          };
 
-          const values = createValueStreams(time, timeMarble);
+          const values = createNoCompletionValueStreams(cold);
           const expectedValues = {
             a: 'hello dear contributor',
             b: 'hello',
@@ -237,6 +271,10 @@ describe('coerceAllFactory', () => {
           createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
         });
       });
     });
@@ -250,24 +288,34 @@ describe('coerceAllFactory', () => {
         inputHandler = coerceAllFactory<string>(() => new BehaviorSubject<string>(initialValue));
       });
 
-      it('should emit value/s from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable, time }) => {
-          const source =     '-a-b-----c-d';
-          const expected =   'ab-(cd)----e';
-          const timeMarble = '    -----|';
+      it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+          const source =     '-a-b-----c-d|';
+          const expected =   'ab-cd-----ef';
+          const valueSubs = {
+            a:               '-^-!',
+            b:               '---^-----!',
+            c:               '---------^-!',
+            d:               '-----------^',
+          };
 
-          const values = createValueStreams(time, timeMarble);
+          const values = createNoCompletionValueStreams(cold);
           const expectedValues = {
             a: initialValue,
             b: 'hello dear contributor',
             c: 'hello',
             d: 'world',
-            e: 'the quick brown fox jumps over the lazy dog',
+            e: 'hello',
+            f: 'the quick brown fox jumps over the lazy dog',
           };
 
           createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
         });
       });
     });
@@ -280,13 +328,54 @@ describe('coerceAllFactory', () => {
         );
       });
 
-      it('should emit value/s from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable, time }) => {
+      it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
           const source =     '-a-b----c-d--------|';
-          const expected =   'ab-(cd)------(efghi)';
-          const timeMarble = '    -----|';
+          const expected =   'ab-----------------';
+          const valueSubs = {
+            a:               '-^',
+            b:               '------------',
+            c:               '------------',
+            d:               '------------',
+          };
 
-          const values = createValueStreams(time, timeMarble);
+          const values = createNoCompletionValueStreams(cold);
+          const expectedValues = {
+            a: initialValue,
+            b: 'hello dear contributor',
+          };
+
+          createInputStream(cold, source, values, inputHandler);
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
+        });
+      });
+    });
+
+    describe('flattening via mergeAll', () => {
+      beforeEach(() => {
+        inputHandler = coerceAllFactory<string>(
+          () => new BehaviorSubject<string>(initialValue),
+          mergeAll()
+        );
+      });
+
+      it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+          const source =     '-a-b----c-d-------|';
+          const expected =   'ab-cd----eif-g-h---';
+          const valueSubs = {
+            a:               '-^',
+            b:               '---^',
+            c:               '--------^--',
+            d:               '----------^',
+          };
+
+          const values = createNoCompletionValueStreams(cold);
           const expectedValues = {
             a: initialValue,
             b: 'hello dear contributor',
@@ -302,39 +391,10 @@ describe('coerceAllFactory', () => {
           createInputStream(cold, source, values, inputHandler);
 
           expectObservable(inputHandler.values$).toBe(expected, expectedValues);
-        });
-      });
-    });
-
-    describe('flattening via mergeAll', () => {
-      beforeEach(() => {
-        inputHandler = coerceAllFactory<string>(
-          () => new Subject<string>(),
-          mergeAll()
-        );
-      });
-
-      it('should emit value/s from the observable passed to the input handler', () => {
-        testScheduler.run(({ cold, expectObservable, time }) => {
-          const source =     '-a-b----c-d-------|';
-          const expected =   '-a-(bc)---h--(defg)';
-          const timeMarble = '    -----|';
-
-          const values = createValueStreams(time, timeMarble);
-          const expectedValues = {
-            a: 'hello dear contributor',
-            b: 'hello',
-            c: 'world',
-            d: 'hello',
-            e: 'world',
-            f: 'with',
-            g: 'delay',
-            h: 'the quick brown fox jumps over the lazy dog',
-          };
-
-          createInputStream(cold, source, values, inputHandler);
-
-          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
         });
       });
     });
