@@ -39,6 +39,18 @@ function createNoCompletionValueStreams(
   };
 }
 
+function createWithCompletionValueStreams(
+  cold: typeof TestScheduler.prototype.createColdObservable
+): Record<string, ReturnType<typeof TestScheduler.prototype.createColdObservable>> {
+  return {
+    a: cold('a|', { a: 'hello dear contributor' }),
+    b: cold('(ab|)', { a: 'hello', b: 'world' }),
+    c: cold('-a-b-c-d|', { a: 'hello', b: 'world', c: 'with', d: 'delay' }),
+    d: cold('(a|)', { a: 'the quick brown fox jumps over the lazy dog' }),
+  };
+}
+
+/** @test {coerceAllFactory} */
 describe('coerceAllFactory', () => {
   let testScheduler: TestScheduler;
   let inputHandler: {
@@ -68,6 +80,36 @@ describe('coerceAllFactory', () => {
           };
 
           const values = createNoCompletionValueStreams(cold);
+          const expectedValues = {
+            a: 'hello dear contributor',
+            b: 'hello',
+            c: 'world',
+            d: 'hello',
+            e: 'the quick brown fox jumps over the lazy dog',
+          };
+
+          createInputStream(cold, source, values, inputHandler);
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
+        });
+      });
+
+      it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+          const source =     '-a-b-----c-d|';
+          const expected =   '-a-(bc)---de-';
+          const valueSubs = {
+            a:               '-^!',
+            b:               '---(^!)',
+            c:               '---------^-!',
+            d:               '-----------(^!)',
+          };
+
+          const values = createWithCompletionValueStreams(cold);
           const expectedValues = {
             a: 'hello dear contributor',
             b: 'hello',
@@ -120,6 +162,39 @@ describe('coerceAllFactory', () => {
           expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
         });
       });
+
+      it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+          const source =     '-a-b----c-d--------|'
+          const expected =   '-a-(bc)--d-e-f-gh';
+          const valueSubs = {
+            a:               '-^!',
+            b:               '---(^!)',
+            c:               '--------^-------!',
+            d:               '----------------(^!)',
+          };
+
+          const values = createWithCompletionValueStreams(cold);
+          const expectedValues = {
+            a: 'hello dear contributor',
+            b: 'hello',
+            c: 'world',
+            d: 'hello',
+            e: 'world',
+            f: 'with',
+            g: 'delay',
+            h: 'the quick brown fox jumps over the lazy dog',
+          };
+
+          createInputStream(cold, source, values, inputHandler);
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
+        });
+      });
     });
 
     describe('flattening via mergeAll', () => {
@@ -142,6 +217,39 @@ describe('coerceAllFactory', () => {
           };
 
           const values = createNoCompletionValueStreams(cold);
+          const expectedValues = {
+            a: 'hello dear contributor',
+            b: 'hello',
+            c: 'world',
+            d: 'hello',
+            e: 'world',
+            f: 'with',
+            g: 'delay',
+            h: 'the quick brown fox jumps over the lazy dog',
+          };
+
+          createInputStream(cold, source, values, inputHandler);
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
+        });
+      });
+
+      it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+          const source =     '-a-b----c-d-------|';
+          const expected =   '-a-(bc)--dhe-f-g---';
+          const valueSubs = {
+            a:               '-^!',
+            b:               '---(^!)',
+            c:               '--------^-------!',
+            d:               '----------(^!)',
+          };
+
+          const values = createWithCompletionValueStreams(cold);
           const expectedValues = {
             a: 'hello dear contributor',
             b: 'hello',
@@ -200,6 +308,36 @@ describe('coerceAllFactory', () => {
           expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
         });
       });
+
+      it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+          const source =     '-a-b-----c-d|';
+          const expected =   '-a-(bc)---de-';
+          const valueSubs = {
+            a:               '-^!',
+            b:               '---(^!)',
+            c:               '---------^-!',
+            d:               '-----------(^!)',
+          };
+
+          const values = createWithCompletionValueStreams(cold);
+          const expectedValues = {
+            a: 'hello dear contributor',
+            b: 'hello',
+            c: 'world',
+            d: 'hello',
+            e: 'the quick brown fox jumps over the lazy dog',
+          };
+
+          createInputStream(cold, source, values, inputHandler);
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
+        });
+      });
     });
 
     describe('flattening via concatAll', () => {
@@ -224,6 +362,39 @@ describe('coerceAllFactory', () => {
           const values = createNoCompletionValueStreams(cold);
           const expectedValues = {
             a: 'hello dear contributor',
+          };
+
+          createInputStream(cold, source, values, inputHandler);
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
+        });
+      });
+
+      it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+          const source =     '-a-b----c-d--------|'
+          const expected =   '-a-(bc)--d-e-f-gh';
+          const valueSubs = {
+            a:               '-^!',
+            b:               '---(^!)',
+            c:               '--------^-------!',
+            d:               '----------------(^!)',
+          };
+
+          const values = createWithCompletionValueStreams(cold);
+          const expectedValues = {
+            a: 'hello dear contributor',
+            b: 'hello',
+            c: 'world',
+            d: 'hello',
+            e: 'world',
+            f: 'with',
+            g: 'delay',
+            h: 'the quick brown fox jumps over the lazy dog',
           };
 
           createInputStream(cold, source, values, inputHandler);
@@ -277,11 +448,44 @@ describe('coerceAllFactory', () => {
           expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
         });
       });
+
+      it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+          const source =     '-a-b----c-d-------|';
+          const expected =   '-a-(bc)--dhe-f-g---';
+          const valueSubs = {
+            a:               '-^!',
+            b:               '---(^!)',
+            c:               '--------^-------!',
+            d:               '----------(^!)',
+          };
+
+          const values = createWithCompletionValueStreams(cold);
+          const expectedValues = {
+            a: 'hello dear contributor',
+            b: 'hello',
+            c: 'world',
+            d: 'hello',
+            e: 'world',
+            f: 'with',
+            g: 'delay',
+            h: 'the quick brown fox jumps over the lazy dog',
+          };
+
+          createInputStream(cold, source, values, inputHandler);
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
+        });
+      });
     });
   });
 
   describe('BehaviorSubject', () => {
-    const initialValue = 'invisible initial value';
+    const initialValue = 'initial value';
 
     describe('default flattening (switchAll)', () => {
       beforeEach(() => {
@@ -300,6 +504,37 @@ describe('coerceAllFactory', () => {
           };
 
           const values = createNoCompletionValueStreams(cold);
+          const expectedValues = {
+            a: initialValue,
+            b: 'hello dear contributor',
+            c: 'hello',
+            d: 'world',
+            e: 'hello',
+            f: 'the quick brown fox jumps over the lazy dog',
+          };
+
+          createInputStream(cold, source, values, inputHandler);
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
+        });
+      });
+
+      it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+          const source =     '-a-b-----c-d|';
+          const expected =   'ab-(cd)---ef-';
+          const valueSubs = {
+            a:               '-^!',
+            b:               '---(^!)',
+            c:               '---------^-!',
+            d:               '-----------(^!)',
+          };
+
+          const values = createWithCompletionValueStreams(cold);
           const expectedValues = {
             a: initialValue,
             b: 'hello dear contributor',
@@ -354,6 +589,40 @@ describe('coerceAllFactory', () => {
           expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
         });
       });
+
+      it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+          const source =     '-a-b----c-d--------|'
+          const expected =   'ab-(cd)--e-f-g-hi';
+          const valueSubs = {
+            a:               '-^!',
+            b:               '---(^!)',
+            c:               '--------^-------!',
+            d:               '----------------(^!)',
+          };
+
+          const values = createWithCompletionValueStreams(cold);
+          const expectedValues = {
+            a: initialValue,
+            b: 'hello dear contributor',
+            c: 'hello',
+            d: 'world',
+            e: 'hello',
+            f: 'world',
+            g: 'with',
+            h: 'delay',
+            i: 'the quick brown fox jumps over the lazy dog',
+          };
+
+          createInputStream(cold, source, values, inputHandler);
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
+        });
+      });
     });
 
     describe('flattening via mergeAll', () => {
@@ -376,6 +645,40 @@ describe('coerceAllFactory', () => {
           };
 
           const values = createNoCompletionValueStreams(cold);
+          const expectedValues = {
+            a: initialValue,
+            b: 'hello dear contributor',
+            c: 'hello',
+            d: 'world',
+            e: 'hello',
+            f: 'world',
+            g: 'with',
+            h: 'delay',
+            i: 'the quick brown fox jumps over the lazy dog',
+          };
+
+          createInputStream(cold, source, values, inputHandler);
+
+          expectObservable(inputHandler.values$).toBe(expected, expectedValues);
+          expectSubscriptions(values.a.subscriptions).toBe(valueSubs.a);
+          expectSubscriptions(values.b.subscriptions).toBe(valueSubs.b);
+          expectSubscriptions(values.c.subscriptions).toBe(valueSubs.c);
+          expectSubscriptions(values.d.subscriptions).toBe(valueSubs.d);
+        });
+      });
+
+      it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
+        testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+          const source =     '-a-b----c-d-------|';
+          const expected =   'ab-(cd)--eif-g-h---';
+          const valueSubs = {
+            a:               '-^!',
+            b:               '---(^!)',
+            c:               '--------^-------!',
+            d:               '----------(^!)',
+          };
+
+          const values = createWithCompletionValueStreams(cold);
           const expectedValues = {
             a: initialValue,
             b: 'hello dear contributor',
