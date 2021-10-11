@@ -5,6 +5,7 @@ import {
   mergeAll,
   Observable,
   ObservableInput,
+  of,
   ReplaySubject,
   Subject,
   take
@@ -281,7 +282,7 @@ describe('coerceAllFactory', () => {
         );
       });
 
-      it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
+      it('should only emit 1 value from the first observable passed to the input handler since the first observable never completes', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
           const source =     '-a-b----c-d--------|';
           const expected =   '-a-----------------';
@@ -307,7 +308,7 @@ describe('coerceAllFactory', () => {
         });
       });
 
-      it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
+      it('should emit the values of the first 3 observables and ignore the value for the last observable', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
           const source =     '-a-b----c-d--------|'
           const expected =   '-a-(bc)--d-e-f-g';
@@ -559,7 +560,7 @@ describe('coerceAllFactory', () => {
         );
       });
 
-      it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
+      it('should only emit 1 value from the first observable passed to the input handler since the first observable never completes', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
           const source =     '-a-b----c-d--------|';
           const expected =   '-a-----------------';
@@ -585,7 +586,7 @@ describe('coerceAllFactory', () => {
         });
       });
 
-      it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
+      it('should emit the values of the first 3 observables and ignore the value for the last observable', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
           const source =     '-a-b----c-d--------|'
           const expected =   '-a-(bc)--d-e-f-g';
@@ -624,7 +625,7 @@ describe('coerceAllFactory', () => {
 
     describe('default flattening (switchAll)', () => {
       beforeEach(() => {
-        inputHandler = coerceAllFactory<string>(() => new BehaviorSubject<string>(initialValue));
+        inputHandler = coerceAllFactory<string>(() => new BehaviorSubject<Observable<string>>(of(initialValue)));
       });
 
       it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
@@ -693,7 +694,7 @@ describe('coerceAllFactory', () => {
     describe('flattening via concatAll', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
-          () => new BehaviorSubject<string>(initialValue),
+          () => new BehaviorSubject<Observable<string>>(of(initialValue)),
           concatAll()
         );
       });
@@ -763,7 +764,7 @@ describe('coerceAllFactory', () => {
     describe('flattening via mergeAll', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
-          () => new BehaviorSubject<string>(initialValue),
+          () => new BehaviorSubject<Observable<string>>(of(initialValue)),
           mergeAll()
         );
       });
@@ -840,12 +841,12 @@ describe('coerceAllFactory', () => {
     describe('flattening via exhaustAll', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
-          () => new BehaviorSubject<string>(initialValue),
+          () => new BehaviorSubject<Observable<string>>(of(initialValue)),
           exhaustAll()
         );
       });
 
-      it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
+      it('should NOT emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
           const source =     '-a-b----c-d--------|';
           const expected =   'a------------------';
@@ -871,7 +872,7 @@ describe('coerceAllFactory', () => {
         });
       });
 
-      it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
+      it('should NOT emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
           const source =     '-a-b----c-d--------|';
           const expected =   'a------------------';
