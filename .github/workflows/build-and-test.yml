@@ -62,7 +62,8 @@ jobs:
         name: Checkout [pr]
         if: github.ref != 'refs/heads/master'
         with:
-          ref: $GITHUB_REF
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
           fetch-depth: 0
 
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
