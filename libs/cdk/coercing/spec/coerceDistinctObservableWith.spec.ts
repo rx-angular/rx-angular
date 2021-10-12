@@ -25,7 +25,6 @@ describe('coerceDistinctWith', () => {
   beforeEach(() => {
     testScheduler = new TestScheduler(jestMatcher);
     inputHandler$ = new Subject<string | Observable<string>>();
-    coercePipeline$ = inputHandler$.asObservable().pipe(coerceDistinctWith<string>());
   });
 
   afterEach(() => {
