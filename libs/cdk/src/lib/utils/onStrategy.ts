@@ -1,41 +1,14 @@
 import { NgZone } from '@angular/core';
 import { RxCoalescingOptions } from '@rx-angular/cdk/coalescing';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import {
   RxRenderWork,
   RxStrategyCredentials,
 } from '../model';
-import { Observable, Observer, of, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import {
-  RxRenderError,
   RxRenderErrorFactory,
 } from '../template-management/render-error';
-
-/**
- * @internal
- *
- * @param value
- * @param strategy
- * @param workFactory
- * @param options
- */
-/*export function onStrategy<T>(
-  value: T,
-  strategy: RxStrategyCredentials,
-  workFactory: (
-    value: T,
-    work: RxRenderWork,
-    options: RxCoalescingOptions
-  ) => void,
-  options: RxCoalescingOptions = {}
-): Observable<T> {
-  return of(value).pipe(
-    strategy.behavior(
-      () => workFactory(value, strategy.work, options),
-      options.scope || {}
-    )
-  );
-}*/
 
 /**
  * @internal
@@ -58,7 +31,9 @@ export function onStrategy<T>(
   errorFactory: RxRenderErrorFactory<T, any> = (e, v) => [e, v]
 ): Observable<T> {
   let error: Error;
-  return of(value).pipe(
+  return new Observable<T>(subscriber => {
+    subscriber.next(value);
+  }).pipe(
     strategy.behavior(() => {
       try {
         workFactory(value, strategy.work, options);
@@ -68,6 +43,7 @@ export function onStrategy<T>(
     }, options.scope || {}, options.ngZone),
     switchMap(() =>
       error ? throwError(errorFactory(error, value)) : of(value)
-    )
+    ),
+    take(1)
   );
 }

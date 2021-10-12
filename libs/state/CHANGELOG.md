@@ -1,3 +1,12 @@
+## [1.4.6](https://github.com/rx-angular/rx-angular/compare/state@1.4.5...state@1.4.6) (2021-09-23)
+
+
+### Bug Fixes
+
+* **state:** disable Ivy + partial compilation ([#953](https://github.com/rx-angular/rx-angular/issues/953)) ([379524f](https://github.com/rx-angular/rx-angular/commit/379524ff89d7ff49114629c2fe594e2cdffef2d1)), closes [#928](https://github.com/rx-angular/rx-angular/issues/928)
+
+
+
 ## [1.4.5](https://github.com/rx-angular/rx-angular/compare/state@1.4.4...state@1.4.5) (2021-08-27)
 
 
