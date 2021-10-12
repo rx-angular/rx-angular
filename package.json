@@ -95,7 +95,7 @@
     "@nrwl/linter": "12.7.2",
     "@nrwl/node": "12.7.2",
     "@nrwl/tao": "12.7.2",
-    "@nrwl/workspace": "12.7.2",
+    "@nrwl/workspace": "12.10.0",
     "@types/benchmark": "^2.1.0",
     "@types/jest": "27.0.1",
     "@types/klaw-sync": "^6.0.0",
