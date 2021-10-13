@@ -69,12 +69,6 @@
         "browserTarget": "ssr:build"
       }
     },
-    "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/ssr/src/**/*.ts", "apps/ssr/src/**/*.html"]
-      }
-    },
     "test": {
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/apps/ssr"],
