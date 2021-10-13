@@ -15,7 +15,8 @@
       "executor": "@nrwl/linter:eslint",
       "options": {
         "lintFilePatterns": ["apps/ssr-e2e/**/*.{js,ts}"]
-      }
+      },
+      "outputs": ["{options.outputFile}"]
     }
   },
   "tags": [],
