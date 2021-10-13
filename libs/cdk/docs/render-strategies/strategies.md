@@ -171,10 +171,10 @@ Tooltips should be displayed immediately on mouse over. Any delay will be very n
   `,
 })
 export class RenderCallbackComponent {
-  constructor(private strategyPrivider: StrategyPrivider) {}
+  constructor(private strategyProvider: RxStrategyProvider) {}
 
   showTooltip() {
-    this.StrategyProvider.schedule(
+    this.strategyProvider.schedule(
       () => {
         // create tooltip
       },
@@ -183,7 +183,7 @@ export class RenderCallbackComponent {
   }
 
   hideTooltip() {
-    this.StrategyProvider.schedule(
+    this.strategyProvider.schedule(
       () => {
         // destroy tooltip
       },
@@ -226,10 +226,10 @@ Dropdowns should be displayed right away on user interaction.
   `,
 })
 export class RenderCallbackComponent {
-  constructor(private strategyPrivider: StrategyPrivider) {}
+  constructor(private strategyProvider: RxStrategyProvider) {}
 
   showTooltip() {
-    this.StrategyProvider.schedule(
+    this.strategyProvider.schedule(
       () => {
         // create tooltip
       },
@@ -238,7 +238,7 @@ export class RenderCallbackComponent {
   }
 
   hideTooltip() {
-    this.StrategyProvider.schedule(
+    this.strategyProvider.schedule(
       () => {
         // destroy tooltip
       },
