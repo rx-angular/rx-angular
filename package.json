@@ -116,7 +116,7 @@
     "jest-preset-angular": "9.0.5",
     "klaw-sync": "^6.0.0",
     "lint-staged": "^11.1.2",
-    "ng-packagr": "12.2.0",
+    "ng-packagr": "12.2.3",
     "prettier": "2.3.2",
     "ts-jest": "27.0.5",
     "ts-node": "10.2.1",
