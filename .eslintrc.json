@@ -23,7 +23,13 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nrwl/nx/typescript"],
+      "extends": [
+        "plugin:@angular-eslint/recommended",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended",
+        "plugin:@nrwl/nx/typescript"
+      ],
       "parserOptions": {
         "project": "./tsconfig.*?.json"
       },
@@ -31,8 +37,14 @@
     },
     {
       "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nrwl/nx/javascript"],
-      "rules": {}
+      "extends": [
+        "plugin:@angular-eslint/template/recommended", 
+        "plugin:prettier/recommended",
+        "plugin:@nrwl/nx/javascript"
+      ],
+      "rules": {
+        "@typescript-eslint/no-non-null-assertion": "off"
+      }
     }
   ]
 }
