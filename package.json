@@ -81,7 +81,7 @@
     "@angular-eslint/template-parser": "12.5.0",
     "@angular/cli": "12.2.9",
     "@angular/compiler-cli": "12.2.9",
-    "@angular/language-service": "12.2.9",
+    "@angular/language-service": "12.2.10",
     "@commitlint/cli": "^13.2.1",
     "@commitlint/config-conventional": "^13.2.0",
     "@nguniversal/builders": "^12.1.1",
