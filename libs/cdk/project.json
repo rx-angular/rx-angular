@@ -1,0 +1,88 @@
+{
+  "projectType": "library",
+  "root": "libs/cdk",
+  "sourceRoot": "libs/cdk/src",
+  "prefix": "rx-angular",
+  "targets": {
+    "build-test-coverage-badge": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/cdk/cobertura-coverage.xml -d docs/test-coverage/cdk"
+          }
+        ]
+      }
+    },
+    "build-docs": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "nx test-coverage cdk && nx build-test-coverage-badge cdk"
+          }
+        ]
+      }
+    },
+    "build": {
+      "executor": "@nrwl/angular:package",
+      "options": {
+        "tsConfig": "libs/cdk/tsconfig.lib.json",
+        "project": "libs/cdk/ng-package.json"
+      }
+    },
+    "lint": {
+      "executor": "@angular-devkit/build-angular:tslint",
+      "options": {
+        "tsConfig": [
+          "libs/cdk/tsconfig.lib.json",
+          "libs/cdk/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!libs/cdk/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/cdk/jest.config.js",
+        "passWithNoTests": true
+      },
+      "outputs": ["coverage/libs/cdk"]
+    },
+    "test-coverage": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/cdk/jest.config.js",
+        "passWithNoTests": true,
+        "codeCoverage": true
+      },
+      "outputs": ["coverage/libs/cdk"]
+    },
+    "changelog": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "npx conventional-changelog-cli -p angular -k ./libs/cdk/package.json -i ./libs/cdk/CHANGELOG.md -s --commit-path ./libs/cdk --tagPrefix cdk@"
+          }
+        ]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "nx test cdk && nx build cdk && cd ./dist/libs/cdk && npm publish"
+          }
+        ]
+      }
+    }
+  },
+  "generators": {
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "tags": ["type:lib", "type:cdk"]
+}

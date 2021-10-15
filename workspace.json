@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "projects": {
+    "cdk": "libs/cdk",
+    "demos": "apps/demos",
+    "demos-e2e": "apps/demos-e2e",
+    "docs": "apps/docs",
+    "ssr": "apps/ssr",
+    "ssr-e2e": "apps/ssr-e2e",
+    "state": "libs/state",
+    "template": "libs/template",
+    "test-helpers": "libs/test-helpers",
+    "tour-of-heroes-ngxs": "apps/tour-of-heroes-ngxs",
+    "vanilla-case-studies": "apps/vanilla-case-studies",
+    "vanilla-case-studies-e2e": "apps/vanilla-case-studies-e2e"
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/angular",
+    "analytics": false,
+    "packageManager": "yarn"
+  },
+  "generators": {
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "tslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "tslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "defaultProject": "demos"
+}
