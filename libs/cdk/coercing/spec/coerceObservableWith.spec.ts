@@ -1,3 +1,5 @@
+// tslint:disable:nx-enforce-module-boundaries
+// eslint:disable:nx-enforce-module-boundaries
 import { coerceObservableWith } from '@rx-angular/cdk';
 import { jestMatcher, mockConsole } from '@test-helpers';
 import { of } from 'rxjs';
