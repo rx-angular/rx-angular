@@ -112,7 +112,7 @@
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-cypress": "^2.12.1",
     "husky": "^7.0.2",
-    "jest": "27.2.5",
+    "jest": "27.3.0",
     "jest-preset-angular": "10.0.1",
     "klaw-sync": "^6.0.0",
     "lint-staged": "^11.2.3",
