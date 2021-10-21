@@ -13,27 +13,5 @@
     "tour-of-heroes-ngxs": "apps/tour-of-heroes-ngxs",
     "vanilla-case-studies": "apps/vanilla-case-studies",
     "vanilla-case-studies-e2e": "apps/vanilla-case-studies-e2e"
-  },
-  "cli": {
-    "defaultCollection": "@nrwl/angular",
-    "analytics": false,
-    "packageManager": "yarn"
-  },
-  "generators": {
-    "@nrwl/angular:application": {
-      "style": "scss",
-      "linter": "tslint",
-      "unitTestRunner": "jest",
-      "e2eTestRunner": "cypress"
-    },
-    "@nrwl/angular:library": {
-      "style": "scss",
-      "linter": "tslint",
-      "unitTestRunner": "jest"
-    },
-    "@nrwl/angular:component": {
-      "style": "scss"
-    }
-  },
-  "defaultProject": "demos"
+  }
 }
