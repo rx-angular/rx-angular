@@ -100,8 +100,8 @@ export function upsert<T>(
   const updatesAsArray =
     update != null ? (Array.isArray(update) ? update : [update]) : [];
   // check inputs for validity
-  const sourceIsArray = Array.isArray(source);
-  const invalidInput = !sourceIsArray && updatesAsArray.length === 0;
+  const sourceIsNotArray = !Array.isArray(source);
+  const invalidInput = sourceIsNotArray && updatesAsArray.length === 0;
   // if the source value is not an Array or the input is not defined return the original source
   // this is the case for any edge case:
   // '', null, undefined, CustomObjectOfDoomAndDarkness, ...
@@ -111,14 +111,14 @@ export function upsert<T>(
 
   // if source is empty array or not an array, but the updates are valid:
   // return a shallow copy of the updates as result
-  if (updatesAsArray.length > 0 && (!sourceIsArray || source.length === 0)) {
+  if (updatesAsArray.length > 0 && (sourceIsNotArray || source.length === 0)) {
     return [...updatesAsArray] as T[];
   }
 
   const inserts: T[] = [];
   const updates: Record<number, Partial<T>> = {};
   // process updates/inserts
-  updatesAsArray.forEach((item) => {
+  for (const item of updatesAsArray) {
     const match = source.findIndex((sourceItem) =>
       valuesComparer(item as T, sourceItem, compare)
     );
@@ -135,7 +135,8 @@ export function upsert<T>(
         inserts.push(item);
       }
     }
-  });
+  }
+
   let updated = source;
   if (Object.keys(updates).length > 0) {
     // if we have updates to process
@@ -153,5 +154,5 @@ export function upsert<T>(
     });
   }
   // return the combination of the updated source & the inserts as new array
-  return [...updated, ...inserts];
+  return updated.concat(inserts);
 }
