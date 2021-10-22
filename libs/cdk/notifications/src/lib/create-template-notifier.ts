@@ -3,15 +3,16 @@ import {
   isObservable,
   NEVER,
   Observable,
-  ObservableInput, of,
-  ReplaySubject
+  ObservableInput,
+  of,
+  ReplaySubject,
 } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
   map,
   startWith,
-  switchMap
+  switchMap,
 } from 'rxjs/operators';
 
 import { rxMaterialize } from './rx-materialize';
@@ -59,9 +60,7 @@ const handleSuspenseNotifications = <T>() => {
       notification.kind === RxNotificationKind.Next &&
       latestNextValue === undefined
     ) {
-      return toRxSuspenseNotification(
-        latestNextValue
-      ) as RxNotification<T>;
+      return toRxSuspenseNotification(latestNextValue) as RxNotification<T>;
     }
 
     notification.value = latestNextValue;
@@ -84,27 +83,30 @@ export function createTemplateNotifier<U>(withSuspense?: () => boolean): {
   // A Subject driven from the outside, it can contain Observables, static values null and undefined on purpose of from unassigned properties
   const observablesSubject = new ReplaySubject<ObservableInput<U>>(1);
 
-  // Determines if a suspense notification is needed
-  const isSuspenseTamplateGiven = calcWithSuspense(withSuspense);
 
   const values$ = observablesSubject.pipe(
     distinctUntilChanged(),
+    // Handle initialization edge cases
     mapFirst((value) => {
+
       const isUndefined = value === undefined;
         const isNEVER = value === NEVER;
         // If it is a `NEVER` Observable we know it will never emit a value nor complete or error.
         // Therefore we emit directly undefined to signal a suspense state
 
       if((isUndefined || isNEVER)) {
+        // Determines if a suspense notification is needed
+        const isSuspenseTemplateGiven = calcWithSuspense(withSuspense);
+
         // Render suspense template if given. Otherwise do nothing (later undefined are filtered out)
-        return isSuspenseTamplateGiven ? singleShotOngoing(undefined) : undefined
+        return isSuspenseTemplateGiven ? singleShotOngoing(undefined) : undefined
       }
 
       const isNull = value === null;
 
       if (isNull) {
         // We return the value and no undefined as first value as we dont need to render the suspense template for null values (it is considered as not used)
-        return of(value);
+        return of(undefined);
       }
 
       return value;
@@ -113,6 +115,7 @@ export function createTemplateNotifier<U>(withSuspense?: () => boolean): {
     filter((v) => v !== undefined),
     // handle static values inc null assignment and new Observable or Promises
     map((observable$): Observable<ObservableInput<U> | U> => {
+
       const isPromiseOrObs = typeof (observable$ as any).then === 'function' || isObservable(observable$);
       // A value is considered as static value if it is `null`, or any other value than `undefined`, `Promise`, `Observable`
       const isStaticValue = !isPromiseOrObs && !(observable$ === undefined);
@@ -133,8 +136,10 @@ export function createTemplateNotifier<U>(withSuspense?: () => boolean): {
 
       return from(observable$).pipe(
         (o$) => {
+          // Determines if a suspense notification is needed
+          const isSuspenseTemplateGiven = calcWithSuspense(withSuspense);
 
-          if (isSuspenseTamplateGiven) {
+          if (isSuspenseTemplateGiven) {
             // Render suspense template
             return o$.pipe(startWith(undefined));
           }
