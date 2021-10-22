@@ -31,7 +31,7 @@ class LetDirectiveTestComponent {
 let fixtureLetDirectiveTestComponent: any;
 let letDirectiveTestComponent: {
   strategy: any;
-  value$: Observable<any> | undefined | null;
+  value$: Observable<any> | any | undefined | null;
 };
 let componentNativeElement: any;
 
@@ -76,6 +76,12 @@ describe('LetDirective when nexting values', () => {
 
   it('should render null as value when initially null was passed (as no value ever was emitted)', () => {
     letDirectiveTestComponent.value$ = null;
+    fixtureLetDirectiveTestComponent.detectChanges();
+    expect(componentNativeElement.textContent).toBe('null');
+  });
+
+  it('should render 42 as value when initially 42 was passed (as static value)', () => {
+    letDirectiveTestComponent.value$ = 42;
     fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('null');
   });
