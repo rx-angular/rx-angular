@@ -5,10 +5,9 @@ import { from } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
 export function formatFiles(
-  options: { skipFormat: boolean } = { skipFormat: false },
-  directory: string = ''
+  options: { skipFormat: boolean } = { skipFormat: false }
 ): Rule {
-  let prettier;
+  let prettier: any;
   try {
     prettier = require('prettier');
   } catch (e) {}
