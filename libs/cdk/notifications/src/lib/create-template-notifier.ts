@@ -106,7 +106,7 @@ export function createTemplateNotifier<U>(withSuspense?: () => boolean): {
 
       if (isNull) {
         // We return the value and no undefined as first value as we dont need to render the suspense template for null values (it is considered as not used)
-        return of(undefined);
+        return of(null);
       }
 
       return value;
@@ -115,10 +115,10 @@ export function createTemplateNotifier<U>(withSuspense?: () => boolean): {
     filter((v) => v !== undefined),
     // handle static values inc null assignment and new Observable or Promises
     map((observable$): Observable<ObservableInput<U> | U> => {
-
+      const isNull = observable$ === null;
       const isPromiseOrObs = typeof (observable$ as any).then === 'function' || isObservable(observable$);
       // A value is considered as static value if it is `null`, or any other value than `undefined`, `Promise`, `Observable`
-      const isStaticValue = !isPromiseOrObs && !(observable$ === undefined);
+      const isStaticValue = !isPromiseOrObs && !(observable$ === undefined) || isNull;
 
       const isNEVER = observable$ === NEVER;
       // If it is a `NEVER` Observable we know it will never emit a value nor complete or error.
