@@ -118,12 +118,7 @@ export class PushPipe<S extends string = string>
     renderCallback?: NextObserver<U>
   ): undefined;
   transform<U>(
-    potentialObservable: ObservableInput<U>,
-    config?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>,
-    renderCallback?: NextObserver<U>
-  ): U;
-  transform<U>(
-    potentialObservable: U,
+    potentialObservable: ObservableInput<U> | U,
     config?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>,
     renderCallback?: NextObserver<U>
   ): U;
