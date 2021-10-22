@@ -1,9 +1,11 @@
 import { chain, Rule, Tree } from '@angular-devkit/schematics';
-import { findNodes, formatFiles } from '@nrwl/workspace';
-import { insert, insertImport, replaceNodeValue } from '@nrwl/workspace/src/utils/ast-utils';
+import { findNodes } from '@schematics/angular/utility/ast-utils';
 import * as ts from 'typescript';
 
 import { createRemoveChange } from '../../common/utils/changes';
+import { formatFiles } from '../../common/utils/format-files';
+import { insert, insertImport } from '../../common/utils/insert';
+import { replaceNodeValue } from '../../common/utils/replace-node-value';
 import { visitTSSourceFiles } from '../../common/utils/visitors';
 
 const renames: Record<string, string | [string, string]> = {
@@ -33,6 +35,18 @@ export default function (): Rule {
           return;
         }
 
+        /* Remove old imports. */
+        const removeChanges = findImportSpecifiers(sourceFile, imports).map(
+          ({ importDeclaration }) => {
+            return createRemoveChange(
+              sourceFile,
+              importDeclaration,
+              importDeclaration.getStart(),
+              importDeclaration.getFullText()
+            );
+          }
+        );
+
         /* Insert new imports. */
         const insertChanges = findImportSpecifiers(sourceFile, imports).map(
           ({ importSpecifier }) => {
@@ -45,30 +59,17 @@ export default function (): Rule {
             );
           }
         );
-        insert(tree, sourceFile.fileName, insertChanges);
 
-        /* Remove old imports. */
-        const removeChanges = findImportSpecifiers(
-          sourceFile,
-          imports
-        ).map(({ importDeclaration }) =>
-          createRemoveChange(
-            sourceFile,
-            importDeclaration,
-            importDeclaration.pos,
-            importDeclaration.getFullText()
-          )
-        );
-        insert(tree, sourceFile.fileName, removeChanges);
+        insert(tree, sourceFile.fileName, [...insertChanges, ...removeChanges]);
       });
     },
     (tree: Tree) => {
       visitTSSourceFiles(tree, (sourceFile) => {
         /* Replace UnpatchEventsModule declaration to UnpatchModule. */
-        function replaceUnpatchEventsModule(node: ts.Node) {
+        (function replaceUnpatchEventsModule(node: ts.Node) {
           if (
             ts.isIdentifier(node) &&
-            node.getText(sourceFile).includes('UnpatchEventsModule')
+            node.getText(sourceFile) === 'UnpatchEventsModule'
           ) {
             replaceNodeValue(
               tree,
@@ -78,12 +79,10 @@ export default function (): Rule {
             );
           }
           ts.forEachChild(node, replaceUnpatchEventsModule);
-        }
-
-        replaceUnpatchEventsModule(sourceFile);
+        })(sourceFile);
       });
     },
-    formatFiles(),
+    formatFiles()
   ]);
 }
 
