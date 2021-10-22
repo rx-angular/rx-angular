@@ -1,0 +1,113 @@
+{
+  "projectType": "application",
+  "generators": {
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "root": "apps/tour-of-heroes-ngxs",
+  "sourceRoot": "apps/tour-of-heroes-ngxs/src",
+  "prefix": "rx-angular",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/tour-of-heroes-ngxs",
+        "index": "apps/tour-of-heroes-ngxs/src/index.html",
+        "main": "apps/tour-of-heroes-ngxs/src/main.ts",
+        "polyfills": "apps/tour-of-heroes-ngxs/src/polyfills.ts",
+        "tsConfig": "apps/tour-of-heroes-ngxs/tsconfig.app.json",
+        "assets": [
+          "apps/tour-of-heroes-ngxs/src/favicon.ico",
+          "apps/tour-of-heroes-ngxs/src/assets"
+        ],
+        "styles": ["apps/tour-of-heroes-ngxs/src/styles.scss"],
+        "scripts": [],
+        "vendorChunk": true,
+        "extractLicenses": false,
+        "buildOptimizer": false,
+        "sourceMap": true,
+        "optimization": false,
+        "namedChunks": true
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/tour-of-heroes-ngxs/src/environments/environment.ts",
+              "with": "apps/tour-of-heroes-ngxs/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": true,
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "6kb",
+              "maximumError": "10kb"
+            }
+          ]
+        },
+        "zoneless": {
+          "polyfills": "apps/tour-of-heroes-ngxs/src/polyfills.ts",
+          "fileReplacements": [
+            {
+              "replace": "apps/tour-of-heroes/src/environments/environment.ts",
+              "with": "apps/tour-of-heroes/src/environments/environment.zoneless.ts"
+            }
+          ]
+        }
+      },
+      "outputs": ["{options.outputPath}"]
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "browserTarget": "tour-of-heroes-ngxs:build"
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "tour-of-heroes-ngxs:build:production"
+        },
+        "zoneless": {
+          "browserTarget": "tour-of-heroes-ngxs:build:zoneless"
+        }
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "tour-of-heroes-ngxs:build"
+      }
+    },
+    "lint": {
+      "executor": "@angular-devkit/build-angular:tslint",
+      "options": {
+        "tsConfig": [
+          "apps/tour-of-heroes-ngxs/tsconfig.app.json",
+          "apps/tour-of-heroes-ngxs/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!apps/tour-of-heroes-ngxs/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "apps/tour-of-heroes-ngxs/jest.config.js",
+        "passWithNoTests": true
+      },
+      "outputs": ["coverage/apps/tour-of-heroes-ngxs"]
+    }
+  },
+  "tags": ["type:app"]
+}

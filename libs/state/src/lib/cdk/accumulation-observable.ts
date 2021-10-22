@@ -7,7 +7,7 @@ import {
   queueScheduler,
   Subject,
   Subscribable,
-  Subscription
+  Subscription,
 } from 'rxjs';
 import {
   catchError,
@@ -31,6 +31,7 @@ interface Accumulator<T> extends Subscribable<T> {
   state: T;
   state$: Observable<T>;
   signal$: Observable<T>;
+  subscribe: () => Subscription;
   nextSlice: (stateSlice: Partial<T>) => void;
   nextSliceObservable: (state$: Observable<Partial<T>>) => void;
   nextAccumulator: (fn: AccumulationFn) => void;

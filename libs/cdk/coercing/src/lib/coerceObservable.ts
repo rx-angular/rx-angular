@@ -8,5 +8,5 @@ import { isObservable, Observable, ObservableInput, of } from 'rxjs';
 export function coerceObservable<T>(
   o: ObservableInput<T | null | undefined> | T | null | undefined
 ): Observable<T | null | undefined> {
-  return isObservable<T>(o) ? o : of(o as T | null | undefined);
+  return isObservable(o) ? o : of(o as T | null | undefined);
 }
