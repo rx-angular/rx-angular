@@ -72,7 +72,7 @@ const handleSuspenseNotifications = <T>() => {
  * @internal
  *
  * @description
- * This factory function returns an object that can be driven imperatovely over a next method.
+ * This factory function returns an object that can be driven imperatively over a next method.
  * Internally it prepares the incoming values for rendering by turning them into "template notifications" an
  * extended `Notification` object used to determine the respective template for values, errors, completing of suspense states.
  */
