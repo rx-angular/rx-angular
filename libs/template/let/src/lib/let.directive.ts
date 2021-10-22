@@ -22,7 +22,7 @@ import {
   RxViewContext,
   RxStrategyNames
 } from '@rx-angular/cdk';
-import { coerceAllFactory, coerceObservable } from '@rx-angular/cdk/coercing';
+import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
   RxNotification,
@@ -196,7 +196,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    */
   @Input()
   set rxLet(potentialObservable: ObservableInput<U> | U | null | undefined) {
-    this.observablesHandler.next(coerceObservable(potentialObservable));
+    this.observablesHandler.next(potentialObservable);
   }
 
   /**

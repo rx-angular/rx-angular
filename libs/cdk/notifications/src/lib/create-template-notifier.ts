@@ -24,7 +24,7 @@ import { toRxSuspenseNotification } from './notification-transforms';
  */
 export function createTemplateNotifier<U>(withSuspense?: () => boolean): {
   values$: Observable<RxNotification<U>>;
-  next(observable: ObservableInput<U>): void;
+  next(observable: ObservableInput<U> | U): void;
 } {
   const observablesSubject = new ReplaySubject<ObservableInput<U>>(1);
   let firstRun = true;
