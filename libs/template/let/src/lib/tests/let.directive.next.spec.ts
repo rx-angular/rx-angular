@@ -83,7 +83,7 @@ describe('LetDirective when nexting values', () => {
   it('should render 42 as value when initially 42 was passed (as static value)', () => {
     letDirectiveTestComponent.value$ = 42;
     fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('null');
+    expect(componentNativeElement.textContent).toBe('42');
   });
 
   it('should render undefined as value when initially of(undefined) was passed (as undefined was emitted)', () => {

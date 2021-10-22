@@ -3,8 +3,8 @@ import {
   isObservable,
   NEVER,
   Observable,
-  ObservableInput,
-  ReplaySubject,
+  ObservableInput, of,
+  ReplaySubject
 } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -42,6 +42,10 @@ export function createTemplateNotifier<U>(withSuspense?: () => boolean): {
       const isNull = observable$ == null;
       if (isNull) {
         return NEVER.pipe(startWith(observable$));
+      }
+      const isPromise = typeof (observable$ as any).then === 'function';
+      if (!isPromise && !isObs) {
+        return of(observable$);
       }
       return (isObs ? (observable$ as Observable<U>) : from(observable$)).pipe(
         (o$) => {
