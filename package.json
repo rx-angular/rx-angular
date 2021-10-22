@@ -118,7 +118,7 @@
     "klaw-sync": "^6.0.0",
     "lint-staged": "^11.2.3",
     "ng-packagr": "12.2.4",
-    "postcss": "^8.3.9",
+    "postcss": "^8.3.11",
     "postcss-import": "^14.0.2",
     "postcss-preset-env": "^6.7.0",
     "postcss-url": "^10.1.1",
