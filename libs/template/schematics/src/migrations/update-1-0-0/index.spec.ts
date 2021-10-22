@@ -41,16 +41,7 @@ describe('Template Migration 1.0.0', () => {
 
     const file = appTree.readContent('app.module.ts');
 
-    expect(file).not.toContain(`import {
-      LetModule,
-      LetDirective
-    } from '@rx-angular/template'`);
-    expect(file).toContain(
-      "import { LetModule } from '@rx-angular/template/let'"
-    );
-    expect(file).toContain(
-      "import { LetDirective } from '@rx-angular/template/let'"
-    );
+    expect(file).toMatchSnapshot();
   });
 
   it('should replace PushModule + PushPipe module specifier', async () => {
@@ -77,15 +68,7 @@ describe('Template Migration 1.0.0', () => {
 
     const file = appTree.readContent('app.module.ts');
 
-    expect(file).not.toContain(
-      "import { PushModule, PushPipe } from '@rx-angular/template'"
-    );
-    expect(file).toContain(
-      "import { PushModule } from '@rx-angular/template/push'"
-    );
-    expect(file).toContain(
-      "import { PushPipe } from '@rx-angular/template/push'"
-    );
+    expect(file).toMatchSnapshot();
   });
 
   it('should replace UnpatchEventsModule + UnpatchDirective module specifier', async () => {
@@ -112,53 +95,34 @@ describe('Template Migration 1.0.0', () => {
 
     const file = appTree.readContent('app.module.ts');
 
-    expect(file).not.toContain(
-      "import { UnpatchEventsModule, UnpatchDirective } from '@rx-angular/template'"
-    );
-    expect(file).toContain(
-      "import { UnpatchModule } from '@rx-angular/template/unpatch'"
-    );
-    expect(file).toContain(
-      "import { UnpatchDirective } from '@rx-angular/template/unpatch'"
-    );
+    expect(file).toMatchSnapshot();
   });
 
   it('should replace all module specifiers', async () => {
     appTree = await setupTestFile(`
-      import { NgModule } from '@angular/core';
-      import { BrowserModule } from '@angular/platform-browser';
-      import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
+    import { NgModule } from '@angular/core';
+    import { BrowserModule } from '@angular/platform-browser';
+    import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template';
 
-      import { AppComponent } from './app.component';
+    import { AppComponent } from './app.component';
 
-      @NgModule({
-        declarations: [
-          AppComponent,
-        ],
-        imports: [
-          BrowserModule,
-          UnpatchEventsModule
-        ],
-        providers: [],
-        bootstrap: [AppComponent]
-      })
-      export class AppModule { }
+    @NgModule({
+      declarations: [
+        AppComponent,
+      ],
+      imports: [
+        BrowserModule,
+        UnpatchEventsModule
+      ],
+      providers: [],
+      bootstrap: [AppComponent]
+    })
+    export class AppModule { }
   `);
 
     const file = appTree.readContent('app.module.ts');
 
-    expect(file).not.toContain(
-      "import { LetModule, PushModule, UnpatchEventsModule } from '@rx-angular/template'"
-    );
-    expect(file).toContain(
-      "import { LetModule } from '@rx-angular/template/let'"
-    );
-    expect(file).toContain(
-      "import { PushModule } from '@rx-angular/template/push'"
-    );
-    expect(file).toContain(
-      "import { UnpatchModule } from '@rx-angular/template/unpatch'"
-    );
+    expect(file).toMatchSnapshot();
   });
 
   it('should replace UnpatchEventsModule identifier', async () => {
@@ -185,8 +149,7 @@ describe('Template Migration 1.0.0', () => {
 
     const file = appTree.readContent('app.module.ts');
 
-    expect(file).not.toContain('UnpatchEventsModule');
-    expect(file).toContain('UnpatchModule');
+    expect(file).toMatchSnapshot();
   });
 
   function setupTestFile(fileInput: string, filePath = './app.module.ts') {
