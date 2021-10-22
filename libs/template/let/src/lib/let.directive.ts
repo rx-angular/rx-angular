@@ -20,9 +20,9 @@ import {
   RxStrategyProvider,
   RxBaseTemplateNames,
   RxViewContext,
-  RxStrategyNames, coerceObservable
+  RxStrategyNames
 } from '@rx-angular/cdk';
-import { coerceAllFactory } from '@rx-angular/cdk/coercing';
+import { coerceAllFactory, coerceObservable } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
   RxNotification,
