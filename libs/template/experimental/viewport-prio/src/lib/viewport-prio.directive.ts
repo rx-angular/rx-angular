@@ -99,9 +99,19 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    const letStrategyName$ = this.letDirective['strategyHandler'].values$.pipe(
+    const letStrategyName$ = this.strategyProvider.primaryStrategy$.pipe(
+      map(({name}) => name),
       filter((name) => name !== this._viewportPrio)
     );
+
+    let lastValue = undefined;
+    this.letDirective
+      .values$.pipe(
+        filter(n => n.kind === 'next')
+    )
+      .subscribe(v => {
+        lastValue = v;
+      });
 
     this.visibilityEvents$
       .pipe(
@@ -115,9 +125,7 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
           this.letDirective.strategy = strategyName as string;
         }
         // render actual state on viewport enter
-        // @TODO this doesnt catch unsubscribe (cant be cancelled)
-        // @TODO: we need to fetch the current template of the letDirective here
-        // this.strategyProvider.scheduleCD()
+        this.letDirective.templateNotification$.next(lastValue);
       });
 
     // If the browser doesn't support the `IntersectionObserver` or we're inside
