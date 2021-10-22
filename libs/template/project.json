@@ -121,9 +121,34 @@
       "options": {
         "commands": [
           {
-            "command": "nx test template && nx build template && cd ./dist/libs/template && npm publish"
+            "command": "npm publish dist/libs/template"
           }
         ]
+      },
+      "dependsOn": [
+        {
+          "target": "lint",
+          "projects": "self"
+        },
+        {
+          "target": "test",
+          "projects": "self"
+        },
+        {
+          "target": "version",
+          "projects": "self"
+        },
+        {
+          "target": "build",
+          "projects": "self"
+        }
+      ]
+    },
+    "version": {
+      "builder": "@jscutlery/semver:version",
+      "options": {
+        "baseBranch": "master",
+        "versionTagPrefix": "${target}@"
       }
     }
   },
