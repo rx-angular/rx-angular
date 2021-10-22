@@ -40,7 +40,7 @@ const mapFirst = <T>(transformation: (value: any) => any) => (o$: Observable<T>)
 }
 // @TODO needs documentation :D
 const handleSuspenseNotifications = <T>() => {
-  let  latestNextValue: T = undefined;
+  let  latestNextValue: T;
 
   return (notification) => {
     latestNextValue =
