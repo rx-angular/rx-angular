@@ -69,11 +69,13 @@ export function toDictionary<T extends object>(
     return {};
   }
 
-  return source.reduce(
-    (acc, entity) => ({
-      ...acc,
-      [entity[key] as any]: entity
-    }),
-    {}
-  );
+  const dictionary: { [key: string]: T } = {};
+  const length = source.length;
+  let i = 0;
+
+  for (i; i < length; i++) {
+    dictionary[`${source[i][key]}`] = Object.assign({}, source[i]);
+  }
+
+  return dictionary;
 }

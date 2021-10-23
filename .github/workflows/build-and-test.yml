@@ -63,6 +63,7 @@ jobs:
         if: github.ref != 'refs/heads/master'
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
           fetch-depth: 0
 
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
@@ -103,7 +104,7 @@ jobs:
         run: yarn nx run ssr-e2e:e2e --headless
       # don't run build in parallel, can cause dead locks
       - name: Run Affected build
-        run: yarn nx affected:build --with-deps
+        run: yarn nx affected:build
 
       - run: yarn nx-cloud stop-all-agents
 

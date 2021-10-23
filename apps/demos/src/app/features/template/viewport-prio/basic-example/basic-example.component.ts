@@ -12,7 +12,7 @@ import { scan, switchMap } from 'rxjs/operators';
           <button mat-raised-button [unpatch] (click)="valP.next()">
             count up
           </button>
-          <button mat-raised-button [unpatch] (click)="runningToggle$.next()">
+          <button mat-raised-button [unpatch] (click)="runningToggle$.next(undefined)">
             auto
           </button>
         </rxa-value-provider>
@@ -63,7 +63,7 @@ import { scan, switchMap } from 'rxjs/operators';
   ],
 })
 export class BasicExampleComponent {
-  runningToggle$ = new Subject<boolean>();
+  runningToggle$ = new Subject<any>();
   running$ = this.runningToggle$.pipe(
     scan((b) => !b, false),
     switchMap((b) => (b ? interval(200) : NEVER))

@@ -22,47 +22,6 @@
       }
     }
   },
-  "projects": {
-    "cdk": {
-      "tags": ["type:lib", "type:cdk"]
-    },
-    "demos": {
-      "tags": ["type:app"]
-    },
-    "demos-e2e": {
-      "tags": [],
-      "implicitDependencies": ["demos"]
-    },
-    "docs": {
-      "tags": ["type:app"]
-    },
-    "ssr": {
-      "tags": []
-    },
-    "ssr-e2e": {
-      "tags": [],
-      "implicitDependencies": ["ssr"]
-    },
-    "state": {
-      "tags": ["type:lib"]
-    },
-    "template": {
-      "tags": ["type:lib", "type:template"]
-    },
-    "test-helpers": {
-      "tags": ["type:util"]
-    },
-    "tour-of-heroes-ngxs": {
-      "tags": ["type:app"]
-    },
-    "vanilla-case-studies": {
-      "tags": []
-    },
-    "vanilla-case-studies-e2e": {
-      "tags": [],
-      "implicitDependencies": ["vanilla-case-studies"]
-    }
-  },
   "affected": {
     "defaultBase": "origin/master"
   },
@@ -73,5 +32,27 @@
         "projects": "dependencies"
       }
     ]
-  }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/angular",
+    "analytics": false,
+    "packageManager": "yarn"
+  },
+  "generators": {
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "tslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "tslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "defaultProject": "demos"
 }

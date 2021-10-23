@@ -6,7 +6,12 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 # Motivation
 
 Coercing, or to be more specific type coercion is the process of converting a value from one type to another.
-This can be done with any primitive value in JavaScript. e.g. number, string, Symbol, boolean, null, undefined
+This can be done with any primitive value in JavaScript. e.g. number, string, Symbol, boolean, null, undefined. 
+
+Another type where we also can apply coercing is the `Observable` type.
+
+![coerceObservable](https://user-images.githubusercontent.com/10064416/129430812-1e4af911-fb42-4d61-a68a-4fb86e595113.png)
+
 
 In practice you can apply this technique in 2 ways:
 
@@ -158,7 +163,7 @@ This comes in handy for later processing and improves performance.
 })
 export class AppComponent {
   _prop1 = new Subject<number | Observable<number>>();
-  prop1$: Observable<number> = this._prop1.pipe(coerceDistinctWith());
+  prop1Observables$: Observable<number> = this._prop1.pipe(coerceDistinctWith());
 
   @Input()
   set prop1(val: Observable<number> | number) {
@@ -171,11 +176,66 @@ This is the operator version of `coerceDistinctObservable`. It also includes the
 
 **coerceAllFactory**
 
+The naming `coerceAll` relates to an operator that processes higher-order observables. The naming `factory` relates to the fact that this function helps to set up such a operator.
+
+To get a quick understanding of the difference of an first-order and higher-order observable we will take a look at the following graphic:
+
+![rxjs_order-of-observables_michael-hladky](https://user-images.githubusercontent.com/10064416/129426892-64ff26e7-3271-412f-ba29-b7bd940ff0d3.png)
+
+As we can see the upper half of the image represents a stream of single values, where the lower part represents a stream of streams of single values.
+The order (first, second, thrid) is determined by the level of "nesting" of the streams.
+
+Where the above operators where solving only the coercing to observables, the factory here helps to process them.
+
+The question to answer here is if we receive a series of observables, how do we deat with all the streams?
+Should we merge them all togeather aor should we stop the previouse and start the new one? Or should we even queu them up?
+
+A minimal implementation if it would look like this:
+
 ```typescript
 @Component({
   // ...
 })
 export class AppComponent {
-  _ = coerceAllFactory();
+  _prop1 = new Subject<number | Observable<number>>();
+  prop1Changes$: Observable<number> = this._prop1.pipe(
+  coerceDistinctWith(),
+  switchAll()
+  );
+
+  @Input()
+  set prop1(val: Observable<number> | number) {
+    this._prop1.next(val);
+  }
 }
+```
+
+Here we apply the `switchAll` operator to unsubscribe the previouse observable and subscribe to the new one.
+![switchAll](https://user-images.githubusercontent.com/10064416/129447011-ca4fb691-faa7-4a58-b7fb-8f64ec249729.png)
+
+by using the `coerceAllFactory` function we can compose this pattern with less code and still have the option to decide on the way of compostion.
+
+
+```typescript
+@Component({
+  // ...
+})
+export class AppComponent {
+  _prop1 = coerceAllFactory();
+  prop1Changes$: Observable<number> = this._prop1.values$;
+  
+  @Input()
+  set prop1(val: Observable<number> | number) {
+    this._prop1.next(val);
+  }
+}
+```
+
+Another benefit here is that only the `next` method is exposed.
+
+By default a normal `Subject` is used and `switchAll` is applied. 
+As there are quite some ways to process higher order observables the factory provides optional configuration parameter.
+
+```typescript
+_prop1 = coerceAllFactory(subjectFactory, operators);
 ```

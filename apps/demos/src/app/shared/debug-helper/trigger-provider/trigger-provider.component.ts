@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
   selector: 'rxa-trigger-provider',
   exportAs: 'rxaTriggerProvider',
   template: `
-      <button mat-raised-button (click)="suspense$.next()">
+      <button mat-raised-button (click)="suspense$.next(undefined)">
         Suspense <mat-icon></mat-icon>
         <rxa-zone-patched-icon class="mat-icon" [zoneState]="getZoneState()"></rxa-zone-patched-icon>
       </button>
@@ -13,7 +13,7 @@ import { Subject } from 'rxjs';
         Error
         <rxa-zone-patched-icon class="mat-icon" [zoneState]="getZoneState()"></rxa-zone-patched-icon>
       </button>
-      <button mat-raised-button [unpatch]="unpatched" (click)="complete$.next()">
+      <button mat-raised-button [unpatch]="unpatched" (click)="complete$.next(undefined)">
         Complete
         <rxa-zone-patched-icon class="mat-icon" [zoneState]="getZoneState()"></rxa-zone-patched-icon>
       </button>
