@@ -74,24 +74,39 @@
         "buildTarget": "state:perfBuild"
       }
     },
-    "changelog": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx conventional-changelog-cli -p angular -k ./libs/state/package.json -i ./libs/state/CHANGELOG.md -s --commit-path ./libs/state --tagPrefix state@"
-          }
-        ]
-      }
-    },
     "publish": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
           {
-            "command": "nx test state && nx build state && cd ./dist/libs/state && npm publish"
+            "command": "npm publish dist/libs/state"
           }
         ]
+      },
+      "dependsOn": [
+        {
+          "target": "lint",
+          "projects": "self"
+        },
+        {
+          "target": "test",
+          "projects": "self"
+        },
+        {
+          "target": "version",
+          "projects": "self"
+        },
+        {
+          "target": "build",
+          "projects": "self"
+        }
+      ]
+    },
+    "version": {
+      "builder": "@jscutlery/semver:version",
+      "options": {
+        "baseBranch": "master",
+        "versionTagPrefix": "${target}@"
       }
     }
   },

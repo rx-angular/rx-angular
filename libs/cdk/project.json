@@ -58,24 +58,39 @@
       },
       "outputs": ["coverage/libs/cdk"]
     },
-    "changelog": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx conventional-changelog-cli -p angular -k ./libs/cdk/package.json -i ./libs/cdk/CHANGELOG.md -s --commit-path ./libs/cdk --tagPrefix cdk@"
-          }
-        ]
-      }
-    },
     "publish": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
           {
-            "command": "nx test cdk && nx build cdk && cd ./dist/libs/cdk && npm publish"
+            "command": "npm publish dist/libs/cdk"
           }
         ]
+      },
+      "dependsOn": [
+        {
+          "target": "lint",
+          "projects": "self"
+        },
+        {
+          "target": "test",
+          "projects": "self"
+        },
+        {
+          "target": "version",
+          "projects": "self"
+        },
+        {
+          "target": "build",
+          "projects": "self"
+        }
+      ]
+    },
+    "version": {
+      "builder": "@jscutlery/semver:version",
+      "options": {
+        "baseBranch": "master",
+        "versionTagPrefix": "${target}@"
       }
     }
   },
