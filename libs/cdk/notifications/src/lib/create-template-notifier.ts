@@ -1,7 +1,7 @@
 import {
   from,
   isObservable,
-  NEVER, Notification,
+  NEVER,
   Observable,
   ObservableInput, ObservableNotification,
   of,
@@ -58,7 +58,8 @@ const mapFirst = <T>(transformation: (value: any) => any) => (o$: Observable<T>)
  * The value can be very useful in error or complete messages or to display the old value overlays by a loading spinner in case of the suspense state.
  *
  * If a notification of kind `next` enters and its value is undefined we turn it into a suspense notification
- * If a notification of kind `error`, `complete`, `suspense` enters we take the last value from of a next notification and assign it as new value to the notification
+ * If a notification of kind `error`, `complete`, `suspense` enters we take the last value from of a next notification
+ * and assign it as new value to the notification
  */
 const handleSuspenseAndLastValueInNotifications = <T>() => {
   // Used to store the last value per handleSuspenseAndLastValueInNotifications call
@@ -135,7 +136,8 @@ export function createTemplateNotifier<U>(withSuspenseTpl?: () => boolean): {
       const isNull = value === null;
 
       if (isNull) {
-        // We return the value and no undefined as first value as we dont need to render the suspense template for null values (it is considered as not used)
+        // We return the value and no undefined as first value
+        // as we dont need to render the suspense template for null values (it is considered as not used)
         return of(null);
       }
 
