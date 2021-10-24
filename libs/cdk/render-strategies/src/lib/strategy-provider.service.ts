@@ -12,15 +12,9 @@ import {
   Observable,
 } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
-import { mergeDefaultConfig, RX_ANGULAR_CONFIG } from '../cdk-config';
-import {
-  RxAngularConfig,
-  RxStrategies,
-  RxStrategyNames,
-  RxStrategyCredentials,
-} from '../model';
-import { onStrategy } from '../utils/onStrategy';
-import { ScheduleOnStrategyOptions } from './model';
+import { mergeDefaultConfig, RX_ANGULAR_CONFIG, RxAngularConfig } from './config';
+import { onStrategy } from './onStrategy';
+import { RxStrategies, RxStrategyCredentials, RxStrategyNames, ScheduleOnStrategyOptions } from './model';
 
 /**
  * @description

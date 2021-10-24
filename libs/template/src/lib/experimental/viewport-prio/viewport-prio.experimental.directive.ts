@@ -6,7 +6,7 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
-import { RxStrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { LetDirective } from '@rx-angular/template/let';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, mergeAll, withLatestFrom } from 'rxjs/operators';

@@ -15,9 +15,7 @@ import {
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { RxRenderWork } from '../model';
-import { onStrategy } from '../utils/onStrategy';
-import { strategyHandling } from '../utils/strategy-handling';
+import { RxRenderWork, onStrategy, strategyHandling } from '@rx-angular/cdk/render-strategies';
 import {
   rxBaseTemplateNames,
   RxRenderAware,
