@@ -28,12 +28,14 @@ const calcWithSuspenseTpl = (withSuspenseTpl?: () => boolean): boolean => withSu
  * @param value
  */
 const emitAndDontComplete = (value) => NEVER.pipe(startWith(value));
-
+/**
+* @description
+* Flags the first run.
+* This is important as we want to create laziness in the template.
+* If no value ever is emitted we dont want to create/render the value (next template).
+* In case a suspense template is given (calculated by `withSuspense` param) we render the suspense template on the first run.
+*/
 const mapFirst = <T>(transformation: (value: any) => any) => (o$: Observable<T>): Observable<T> => {
-  // Flags the first run.
-  // This is important as we want to create laziness in the template.
-  // If no value ever is emitted we dont want to create/render the value (next template).
-  // In case a suspense template is given (calculated by `withSuspense` param) we render the suspense template on the first run.
   let firstRun = true;
   return o$.pipe(
     map((value) => {
