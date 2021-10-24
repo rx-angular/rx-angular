@@ -1,19 +1,10 @@
-import {
-  Directive,
-  ElementRef,
-  Inject,
-  OnDestroy,
-  OnInit,
-  Optional,
-} from '@angular/core';
-import { RxStrategyProvider } from '@rx-angular/cdk';
+import { Directive, ElementRef, Inject, Input, OnDestroy, OnInit, Optional } from '@angular/core';
+import { coerceObservableWith, RxStrategyProvider } from '@rx-angular/cdk';
 import { LetDirective } from '@rx-angular/template/let';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, Subject, tap } from 'rxjs';
 import { filter, map, mergeAll, withLatestFrom } from 'rxjs/operators';
 
-function intersectionObserver(
-  options?: object
-): {
+function intersectionObserver(options?: object): {
   observe: (target: Element) => void;
   unobserve: (target: Element) => void;
   entries$: Observable<any>;
@@ -21,8 +12,8 @@ function intersectionObserver(
   const subject = new Subject();
   const observer = observerSupported()
     ? new IntersectionObserver((entries) => {
-        entries.forEach((entry) => subject.next(entry));
-      }, options)
+      entries.forEach((entry) => subject.next(entry));
+    }, options)
     : null;
 
   const entries$ = new Observable((subscriber) => {
@@ -37,7 +28,7 @@ function intersectionObserver(
   return {
     entries$,
     observe: observer.observe,
-    unobserve: observer.unobserve,
+    unobserve: observer.unobserve
   };
 }
 
@@ -48,36 +39,38 @@ const observerSupported = () =>
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[viewport-prio]',
+  selector: '[viewport-prio]'
 })
 export class ViewportPrioDirective implements OnInit, OnDestroy {
   // Note that we're picking only the `intersectionRatio` property
   // since this is the only property that we're intersted in.
-  entriesSubject = new Subject<
-    Pick<IntersectionObserverEntry, 'intersectionRatio'>[]
-  >();
+  entriesSubject = new Subject<Pick<IntersectionObserverEntry, 'intersectionRatio'>[]>();
 
-  entries$: Observable<
-    Pick<IntersectionObserverEntry, 'intersectionRatio'>
-  > = this.entriesSubject.pipe(mergeAll());
+  entries$: Observable<Pick<IntersectionObserverEntry, 'intersectionRatio'>> =
+    this.entriesSubject.pipe(mergeAll());
 
-  _viewportPrio = 'noop';
-  /* @Input('viewport-prio')
-  set viewportPrio(prio) {
-    if (prio) {
-      this._viewportPrio = prio || 'noop';
-    }
-  }*/
+  _viewportPrioObservables = new BehaviorSubject<Observable<string> | string>(
+    of('noop')
+  );
+  _viewportPrio = this._viewportPrioObservables.pipe(
+    coerceObservableWith(),
+    mergeAll(),
+    map((v) => (!v ? 'noop' : v))
+  );
+  @Input('viewport-prio')
+  set viewportPrio(prio: string | Observable<string>) {
+    this._viewportPrioObservables.next(prio);
+  }
 
   private observer: IntersectionObserver | null = observerSupported()
     ? new IntersectionObserver(
-        (entries) => {
-          this.entriesSubject.next(entries);
-        },
-        {
-          threshold: 0,
-        }
-      )
+      (entries) => {
+        this.entriesSubject.next(entries);
+      },
+      {
+        threshold: 0
+      }
+    )
     : null;
 
   visibilityEvents$ = this.entries$.pipe(
@@ -96,36 +89,46 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
     @Inject(LetDirective)
     @Optional()
     private letDirective: LetDirective<any> | null
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     const letStrategyName$ = this.strategyProvider.primaryStrategy$.pipe(
-      map(({name}) => name),
-      filter((name) => name !== this._viewportPrio)
+      map(({ name }) => name)
     );
 
     let lastValue = undefined;
-    this.letDirective
-      .values$.pipe(
-        filter(n => n.kind === 'next')
-    )
-      .subscribe(v => {
+    // @TODO add a connect here to get rid of the subscribe
+    this.letDirective.values$
+      .pipe(filter((n) => n.kind === 'next'))
+      .subscribe((v) => {
         lastValue = v;
       });
 
+
     this.visibilityEvents$
       .pipe(
-        withLatestFrom(letStrategyName$),
-        map(([visibility, strategyName]) =>
-          visibility === 'visible' ? strategyName : this._viewportPrio
-        )
+        withLatestFrom(
+          combineLatest(letStrategyName$, this._viewportPrio).pipe(
+            filter(([newN, oldN]) => newN !== oldN)
+          )),
+        map(([visibility, s]) => {
+        const [inStrategyName, outStrategyName] = s
+         return visibility === 'visible'
+            ? [visibility, inStrategyName]
+            : [visibility, outStrategyName]
+        })
       )
-      .subscribe((strategyName) => {
+      .subscribe(([visibility, strategyName]) => {
         if (this.letDirective !== null) {
+          console.log('strategy', strategyName);
           this.letDirective.strategy = strategyName as string;
         }
-        // render actual state on viewport enter
-        this.letDirective.templateNotification$.next(lastValue);
+
+        if (visibility === 'visible') {
+          // render actual state on viewport enter
+          //  this.letDirective.templateNotification$.next(lastValue);
+        }
       });
 
     // If the browser doesn't support the `IntersectionObserver` or we're inside
