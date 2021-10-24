@@ -19,7 +19,7 @@ class PushPipeTestComponent {
 
 let fixturePushPipeTestComponent: any;
 let pushPipeTestComponent: {
-  value$: Observable<any> | any | undefined | null;
+  value$: Observable<unknown> | unknown | undefined | null;
 };
 let componentNativeElement: any;
 

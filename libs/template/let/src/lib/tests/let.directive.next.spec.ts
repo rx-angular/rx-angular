@@ -30,8 +30,8 @@ class LetDirectiveTestComponent {
 
 let fixtureLetDirectiveTestComponent: any;
 let letDirectiveTestComponent: {
-  strategy: any;
-  value$: Observable<any> | any | undefined | null;
+  strategy: string;
+  value$: Observable<unknown> | unknown | undefined | null;
 };
 let componentNativeElement: any;
 
