@@ -1,11 +1,11 @@
 import {
   from,
   isObservable,
-  NEVER,
+  NEVER, Notification,
   Observable,
-  ObservableInput,
+  ObservableInput, ObservableNotification,
   of,
-  ReplaySubject,
+  ReplaySubject
 } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -19,21 +19,21 @@ import { rxMaterialize } from './rx-materialize';
 import { RxNotification, RxNotificationKind } from './model';
 import { toRxSuspenseNotification } from './notification-transforms';
 
-const calcWithSuspense = (withSuspense?: () => boolean): boolean => withSuspense && withSuspense();
+const calcWithSuspenseTpl = (withSuspenseTpl?: () => boolean): boolean => withSuspenseTpl && withSuspenseTpl();
 
 /**
+ * @description
  * Sends value and an initial `undefined` as value With a NEVER.
  * This is needed to render the suspense template and avoid completing (and render the complete template).
  * @param value
  */
-const singleShotOngoing = (value) => NEVER.pipe(startWith(value));
+const ofNonCompletion = (value) => NEVER.pipe(startWith(value));
 
 const mapFirst = <T>(transformation: (value: any) => any) => (o$: Observable<T>): Observable<T> => {
   // Flags the first run.
   // This is important as we want to create laziness in the template.
   // If no value ever is emitted we dont want to create/render the value (next template).
   // In case a suspense template is given (calculated by `withSuspense` param) we render the suspense template on the first run.
-
   let firstRun = true;
   return o$.pipe(
     map((value) => {
@@ -46,25 +46,48 @@ const mapFirst = <T>(transformation: (value: any) => any) => (o$: Observable<T>)
     })
   )
 }
-// @TODO needs documentation :D
-const handleSuspenseNotifications = <T>() => {
+
+/**
+ * This helper is responsible for turning a stream of materialized notifications
+ * (next error, complete as object in the next stream) into an enriched version with an additional suspense notification type.
+ *
+ * If a notification enters and is of type next we store tne value of `notification.next` as last value emitted.
+ * This value is important in the template to show an e.g. error and also have access to the last emitted value of next.
+ * The value can be very useful in error or complete messages or to display the old value overlays by a loading spinner in case of the suspense state.
+ *
+ * If a notification of kind `next` enters and its value is undefined we turn it into a suspense notification
+ * If a notification of kind `error`, `complete`, `suspense` enters we take the last value from of a next notification and assign it as new value to the notification
+ */
+const handleSuspenseAndLastValueInNotifications = <T>() => {
+  // Used to store the last value per handleSuspenseAndLastValueInNotifications call
   let  latestNextValue: T;
 
-  return (notification) => {
-    latestNextValue =
-      notification.kind === RxNotificationKind.Next
-        ? notification.value
-        : latestNextValue;
-
-    if (
-      notification.kind === RxNotificationKind.Next &&
-      latestNextValue === undefined
-    ) {
-      return toRxSuspenseNotification(latestNextValue) as RxNotification<T>;
+  // returns a projection function with a lastValue cache
+  return (notification: RxNotification<T>): RxNotification<T> => {
+    // if it the notification is of type next we take its value
+    // otherwise we keep the existing last value
+    if(notification.kind === RxNotificationKind.Next) {
+      latestNextValue = notification.value;
     }
 
-    notification.value = latestNextValue;
-    return notification;
+    // If a next notification enters with a value of undefined we turn it into a suspense notification
+    if (
+      notification.kind === RxNotificationKind.Next &&
+      notification.value === undefined
+    ) {
+      return toRxSuspenseNotification(undefined) as RxNotification<T>;
+    }
+
+    // If a Notification of type error, complete or suspense enters we assign the latest last value to them.
+    // This is needed to access the old value in case of error or complete.
+    if(
+      notification.kind === RxNotificationKind.Error ||
+      notification.kind === RxNotificationKind.Complete ||
+      notification.kind === RxNotificationKind.Suspense) {
+      notification.value = latestNextValue;
+    }
+
+    return notification as RxNotification<T>;
   }
 }
 
@@ -76,7 +99,7 @@ const handleSuspenseNotifications = <T>() => {
  * Internally it prepares the incoming values for rendering by turning them into "template notifications" an
  * extended `Notification` object used to determine the respective template for values, errors, completing of suspense states.
  */
-export function createTemplateNotifier<U>(withSuspense?: () => boolean): {
+export function createTemplateNotifier<U>(withSuspenseTpl?: () => boolean): {
   values$: Observable<RxNotification<U>>;
   next(observable: ObservableInput<U> | U): void;
 } {
@@ -96,10 +119,10 @@ export function createTemplateNotifier<U>(withSuspense?: () => boolean): {
 
       if((isUndefined || isNEVER)) {
         // Determines if a suspense notification is needed
-        const isSuspenseTemplateGiven = calcWithSuspense(withSuspense);
+        const isSuspenseTemplateGiven = calcWithSuspenseTpl(withSuspenseTpl);
 
         // Render suspense template if given. Otherwise do nothing (later undefined are filtered out)
-        return isSuspenseTemplateGiven ? singleShotOngoing(undefined) : undefined
+        return isSuspenseTemplateGiven ? ofNonCompletion(undefined) : undefined
       }
 
       const isNull = value === null;
@@ -125,19 +148,19 @@ export function createTemplateNotifier<U>(withSuspense?: () => boolean): {
       // Therefore we emit directly undefined to signal a suspense state
       if (isNEVER) {
         // Render suspense template for null values (it is considered as not used)
-        return singleShotOngoing(undefined);
+        return ofNonCompletion(undefined);
       }
 
       // If it is a static value forward directly
       if (isStaticValue) {
         // Render next template for static values (it is considered as kinda sync)
-        return singleShotOngoing(observable$);
+        return ofNonCompletion(observable$);
       }
 
       return from(observable$).pipe(
         (o$) => {
           // Determines if a suspense notification is needed
-          const isSuspenseTemplateGiven = calcWithSuspense(withSuspense);
+          const isSuspenseTemplateGiven = calcWithSuspenseTpl(withSuspenseTpl);
 
           if (isSuspenseTemplateGiven) {
             // Render suspense template
@@ -151,7 +174,7 @@ export function createTemplateNotifier<U>(withSuspense?: () => boolean): {
       return o.pipe(
         distinctUntilChanged(),
         rxMaterialize(),
-        map(handleSuspenseNotifications<U>())
+        map(handleSuspenseAndLastValueInNotifications<U>())
       );
     })
   );
