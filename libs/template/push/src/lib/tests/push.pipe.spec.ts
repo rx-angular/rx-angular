@@ -20,7 +20,7 @@ class PushPipeTestComponent {
 
 let fixturePushPipeTestComponent: any;
 let pushPipeTestComponent: {
-  value$: Observable<any> | undefined | null;
+  value$: Observable<unknown> | unknown | undefined | null;
 };
 let componentNativeElement: any;
 
@@ -64,6 +64,12 @@ describe('PushPipe used as pipe in the template', () => {
     pushPipeTestComponent.value$ = null;
     fixturePushPipeTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe(wrapWithSpace('null'));
+  });
+
+  it('should return 42 as value when initially 42 was passed (as static value)', () => {
+    pushPipeTestComponent.value$ = 42;
+    fixturePushPipeTestComponent.detectChanges();
+    expect(componentNativeElement.textContent).toBe(wrapWithSpace('42'));
   });
 
   it('should return undefined as value when initially of(undefined) was passed (as undefined was emitted)', () => {
