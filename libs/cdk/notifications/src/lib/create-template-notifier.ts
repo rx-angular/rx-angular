@@ -97,9 +97,13 @@ const handleSuspenseAndLastValueInNotifications = <T>() => {
  * @internal
  *
  * @description
- * This factory function returns an object that can be driven imperatively over a next method.
- * Internally it prepares the incoming values for rendering by turning them into "template notifications" an
- * extended `Notification` object used to determine the respective template for values, errors, completing of suspense states.
+ * This factory function returns an object that can be driven imperatively over a `next` method.
+ * Internally it prepares the incoming values for rendering by turning them into "template notifications",
+ * an extended `ObservableNotification` object used to determine the respective template for values, errors, completing or suspense states.
+ *
+ * Internally it handles different edge cases for initial emits. This helps to have or template creation lazy.
+ * Also it maps any Observable to RxNotifications. These notifications are bound to the view later and handle the display of
+ * the default template as well as the suspense, error, complete templates.
  */
 export function createTemplateNotifier<U>(withSuspenseTpl?: () => boolean): {
   values$: Observable<RxNotification<U>>;
