@@ -27,7 +27,7 @@ const calcWithSuspenseTpl = (withSuspenseTpl?: () => boolean): boolean => withSu
  * This is needed to render the suspense template and avoid completing (and render the complete template).
  * @param value
  */
-const ofNonCompleting = (value) => NEVER.pipe(startWith(value));
+const emitAndDontComplete = (value) => NEVER.pipe(startWith(value));
 
 const mapFirst = <T>(transformation: (value: any) => any) => (o$: Observable<T>): Observable<T> => {
   // Flags the first run.
@@ -122,7 +122,7 @@ export function createTemplateNotifier<U>(withSuspenseTpl?: () => boolean): {
         const isSuspenseTemplateGiven = calcWithSuspenseTpl(withSuspenseTpl);
 
         // Render suspense template if given. Otherwise do nothing (later undefined are filtered out)
-        return isSuspenseTemplateGiven ? ofNonCompleting(undefined) : undefined
+        return isSuspenseTemplateGiven ? emitAndDontComplete(undefined) : undefined
       }
 
       const isNull = value === null;
@@ -148,13 +148,13 @@ export function createTemplateNotifier<U>(withSuspenseTpl?: () => boolean): {
       // Therefore we emit directly undefined to signal a suspense state
       if (isNEVER) {
         // Render suspense template for null values (it is considered as not used)
-        return ofNonCompleting(undefined);
+        return emitAndDontComplete(undefined);
       }
 
       // If it is a static value forward directly
       if (isStaticValue) {
         // Render next template for static values (it is considered as kinda sync)
-        return ofNonCompleting(observable$);
+        return emitAndDontComplete(observable$);
       }
 
       return from(observable$).pipe(
