@@ -82,6 +82,7 @@ const handleSuspenseAndLastValueInNotifications = <T>() => {
 
     // If a Notification of type error, complete or suspense enters we assign the latest last value to them.
     // This is needed to access the old value in case of error or complete.
+    // Next notifications will pass as they are.
     if(
       notification.kind === RxNotificationKind.Error ||
       notification.kind === RxNotificationKind.Complete ||
