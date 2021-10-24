@@ -4,7 +4,7 @@ import * as rxjs from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 // tslint:disable-next-line:nx-enforce-module-boundaries
-import { onStrategy, RX_NATIVE_STRATEGIES } from '@rx-angular/cdk';
+import { onStrategy, RX_NATIVE_STRATEGIES } from '@rx-angular/cdk/render-strategies';
 import { animationFrameScheduler, observeOn, of } from 'rxjs';
 
 // tslint:disable: no-duplicate-string

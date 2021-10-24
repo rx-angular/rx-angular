@@ -11,7 +11,7 @@ import {
   RxCustomStrategyCredentials,
   RxConcurrentStrategyNames,
   RxStrategyCredentials,
-} from '../model';
+} from './model';
 import { coalescingManager } from '@rx-angular/cdk/coalescing';
 
 forceFrameRate(60);

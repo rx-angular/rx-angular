@@ -9,29 +9,33 @@ export const enum RxNotificationKind {
 
 export type RxNotificationValue = 'value' | 'hasValue';
 
-export interface RxNextNotification<T>
-  extends Pick<Notification<T>, RxNotificationValue> {
+export interface RxNextNotification<T> {
+  value: T,
+  hasValue: boolean,
   kind: RxNotificationKind;
   error: boolean;
   complete: boolean;
 }
 
-export interface RxSuspenseNotification<T>
-  extends Pick<Notification<T>, RxNotificationValue> {
+export interface RxSuspenseNotification<T> {
+  value: T,
+  hasValue: boolean,
   kind: RxNotificationKind.Suspense;
   error: false;
   complete: false;
 }
 
-export interface RxErrorNotification<T>
-  extends Pick<Notification<T>, RxNotificationValue> {
+export interface RxErrorNotification<T> {
+  value: T,
+  hasValue: boolean,
   kind: RxNotificationKind.Error;
   error: any;
   complete: false;
 }
 
-export interface RxCompleteNotification<T>
-  extends Pick<Notification<T>, RxNotificationValue> {
+export interface RxCompleteNotification<T> {
+  value: T,
+  hasValue: boolean,
   kind: RxNotificationKind.Complete;
   complete: boolean;
   error: false;

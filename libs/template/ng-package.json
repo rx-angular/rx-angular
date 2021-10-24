@@ -6,7 +6,8 @@
     "entryFile": "src/index.ts",
     "umdModuleIds": {
       "@rx-angular/cdk": "rx-angular.cdk",
-      "@rx-angular/cdk/zone-less": "rx-angular.cdk-zone-less"
+      "@rx-angular/cdk/zone-less": "rx-angular.cdk-zone-less",
+      "@rx-angular/cdk/zone-configurations": "rx-angular.cdk-zone-configurations"
     }
   }
 }

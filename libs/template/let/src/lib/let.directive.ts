@@ -17,11 +17,10 @@ import {
 import {
   createTemplateManager,
   RxTemplateManager,
-  RxStrategyProvider,
   RxBaseTemplateNames,
-  RxViewContext,
-  RxStrategyNames,
-} from '@rx-angular/cdk';
+  RxViewContext
+} from '@rx-angular/cdk/template';
+import { RxStrategyProvider, RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
@@ -181,6 +180,13 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * The Observable to be bound to the context of a template.
    *
    * @example
+   * const hero1 = {name: 'Batman'};
+   * const hero$ = of(hero);
+   *
+   * <ng-container *rxLet="hero1; let hero">
+   *   <app-hero [hero]="hero"></app-hero>
+   * </ng-container>
+   *
    * <ng-container *rxLet="hero$; let hero">
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
@@ -188,7 +194,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * @param potentialObservable
    */
   @Input()
-  set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
+  set rxLet(potentialObservable: ObservableInput<U> | U | null | undefined) {
     this.observablesHandler.next(potentialObservable);
   }
 
