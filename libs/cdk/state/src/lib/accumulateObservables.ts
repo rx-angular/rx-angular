@@ -1,14 +1,8 @@
+import { coalesceWith } from '@rx-angular/cdk/coalescing';
+import { Promise } from '@rx-angular/cdk/zone-less';
 import { combineLatest, from, Observable } from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay } from 'rxjs/operators';
-import { Promise } from '@rx-angular/cdk/zone-less';
-import {
-  ArrayReducerFn,
-  ExtractObservableValue,
-  PropName,
-  PropType,
-} from '../utils/model';
-import { NotEmpty, ObservableMap } from './model';
-import { coalesceWith } from '@rx-angular/cdk/coalescing';
+import { ArrayReducerFn, ExtractObservableValue, NotEmpty, ObservableMap, PropName, PropType } from './model';
 
 const resolvedPromise = Promise.resolve();
 const resolvedPromise$ = from(resolvedPromise);
@@ -28,7 +22,7 @@ function getEntriesToObjectReducerFn<T extends Record<string, any>>(
   ): T => {
     return {
       ...accumulator,
-      [keys[currentIndex]]: currentValue,
+      [keys[currentIndex]]: currentValue
     };
   };
 }
@@ -85,7 +79,8 @@ export function accumulateObservables<T extends ObservableMap & NotEmpty<T>>(
     )
   );
   return combineLatest(observables).pipe(
-    // As combineLatest will emit multiple times for a change in multiple properties we coalesce those emissions together
+    // As combineLatest will emit multiple times for a change in multiple properties we coalesce those emissions
+    // together
     coalesceWith(durationSelector),
     // mapping array of values to object
     map((values) =>

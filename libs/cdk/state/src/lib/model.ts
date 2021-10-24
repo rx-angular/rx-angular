@@ -1,5 +1,4 @@
 import { Observable } from 'rxjs';
-import { ExtractObservableValue } from '../utils/model';
 
 /**
  * Type to specify an object of observables
@@ -19,3 +18,18 @@ export type ObservableAccumulation<T extends ObservableMap> = {
  */
 export type NotEmpty<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
   U[keyof U];
+
+export type ExtractObservableValue<T> = T extends Observable<infer R>
+                                        ? R
+                                        : never;
+export type PropName<T> = keyof T;
+export type PropType<T> = T[PropName<T>];
+
+/**
+ * Typed reducer function for the `Array#reduce` method.
+ */
+export type ArrayReducerFn<T extends Record<string, any>> = (
+  acc: T,
+  cur?: PropType<T>,
+  idx?: number
+) => T;

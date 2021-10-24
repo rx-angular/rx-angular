@@ -4,6 +4,7 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { EMPTY, interval, NEVER, Observable, of } from 'rxjs';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LetDirective } from '../let.directive';
@@ -11,7 +12,6 @@ import { take } from 'rxjs/operators';
 import { MockChangeDetectorRef } from './fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
@@ -30,8 +30,8 @@ class LetDirectiveTestComponent {
 
 let fixtureLetDirectiveTestComponent: any;
 let letDirectiveTestComponent: {
-  strategy: any;
-  value$: Observable<any> | undefined | null;
+  strategy: string;
+  value$: Observable<unknown> | unknown | undefined | null;
 };
 let componentNativeElement: any;
 
@@ -78,6 +78,12 @@ describe('LetDirective when nexting values', () => {
     letDirectiveTestComponent.value$ = null;
     fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('null');
+  });
+
+  it('should render 42 as value when initially 42 was passed (as static value)', () => {
+    letDirectiveTestComponent.value$ = 42;
+    fixtureLetDirectiveTestComponent.detectChanges();
+    expect(componentNativeElement.textContent).toBe('42');
   });
 
   it('should render undefined as value when initially of(undefined) was passed (as undefined was emitted)', () => {

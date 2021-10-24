@@ -11,6 +11,7 @@ import {
   tick,
   waitForAsync,
 } from '@angular/core/testing';
+import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { LetDirective } from '../let.directive';
 import {
   EMPTY,
@@ -25,7 +26,6 @@ import { take } from 'rxjs/operators';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { MockChangeDetectorRef } from './fixtures';
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `

@@ -14,9 +14,7 @@ import {
   switchMap,
   tap
 } from 'rxjs/operators';
-import { RxStrategyCredentials } from '../model';
-import { onStrategy } from '../utils/onStrategy';
-import { strategyHandling } from '../utils/strategy-handling';
+import { RxStrategyCredentials, onStrategy, strategyHandling } from '@rx-angular/cdk/render-strategies';
 import {
   RxListViewComputedContext,
   RxListViewContext,
@@ -28,7 +26,7 @@ import {
   RxRenderSettings,
   RxTemplateSettings,
 } from './model';
-import { createErrorHandler, toRenderError } from './render-error';
+import { createErrorHandler } from './render-error';
 import {
   getTNode,
   notifyAllParentsIfNeeded,
@@ -183,15 +181,14 @@ export function createListTemplateManager<
     changes: RxListTemplateChange<T>[],
     strategy: RxStrategyCredentials,
     count: number
-  ): Observable<null | false | RxListTemplateChange<T>>[] {
+  ): Observable<RxListTemplateChangeType>[] {
     return changes.length > 0
       ? changes.map((change) => {
         const payload = change[1];
           return onStrategy(
-            change,
+            change[0],
             strategy,
-            () => {
-              const type = change[0];
+            type => {
               switch (type) {
                 case RxListTemplateChangeType.insert:
                   listViewHandler.insertView(payload[0], payload[1], count);
@@ -215,8 +212,7 @@ export function createListTemplateManager<
                   break;
               }
             },
-            {},
-            (e, v) => toRenderError(e, v[0])
+            {}
           );
         })
       : [of(null)];
