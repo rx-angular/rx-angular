@@ -1,10 +1,10 @@
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
-import { Promise } from '@rx-angular/cdk/zone-less';
 import { combineLatest, from, Observable } from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay } from 'rxjs/operators';
 import { ArrayReducerFn, ExtractObservableValue, NotEmpty, ObservableMap, PropName, PropType } from './model';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 
-const resolvedPromise = Promise.resolve();
+const resolvedPromise = getZoneUnPatchedApi('Promise').resolve();
 const resolvedPromise$ = from(resolvedPromise);
 
 /**

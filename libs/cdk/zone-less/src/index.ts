@@ -1,5 +1,3 @@
-export { getZoneUnPatchedApi } from './get-zone-unpatched-api';
-
 export {
   Promise,
   requestAnimationFrame,

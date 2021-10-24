@@ -5,6 +5,7 @@ import {
   Pipe,
   PipeTransform,
 } from '@angular/core';
+// @TODO: [bundle-size] replace with unpatched API method directly
 import { asyncScheduler } from '@rx-angular/cdk/zone-less';
 import {
   strategyHandling,

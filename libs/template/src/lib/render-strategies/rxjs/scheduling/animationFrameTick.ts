@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+// @TODO: [bundle-size] replace with unpatched API method directly
 import {
   requestAnimationFrame,
   cancelAnimationFrame,

@@ -14,10 +14,12 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {
-  createTemplateManager,
   RxTemplateManager,
+  createTemplateManager
+} from '@rx-angular/cdk/template';
+import {
   RxStrategyProvider,
-} from '@rx-angular/cdk';
+} from '@rx-angular/cdk/render-strategies';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   RxNotificationKind,

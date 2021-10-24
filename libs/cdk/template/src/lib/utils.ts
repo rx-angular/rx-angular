@@ -24,6 +24,7 @@ import {
 } from 'rxjs/operators';
 import { asyncScheduler } from '@rx-angular/cdk/zone-less';
 import { RxStrategyCredentials, onStrategy } from '@rx-angular/cdk/render-strategies';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 
 // Below are constants for LView indices to help us look up LView members
 // without having to remember the specific indices.
@@ -238,6 +239,7 @@ export function notifyAllParentsIfNeeded<T>(
 ): MonoTypeOperatorFunction<T> {
   return (o$) =>
     o$.pipe(
+      // @TODO: [bundle-size] if possible replace it with primitive logic to get rid of zone-less
       delay(0, asyncScheduler),
       switchMap((v) => {
         const notifyParent = notifyNeeded();

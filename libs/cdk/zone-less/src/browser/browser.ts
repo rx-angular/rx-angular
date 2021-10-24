@@ -1,4 +1,4 @@
-import { getZoneUnPatchedApi } from '../get-zone-unpatched-api';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 
 /**
  * This file provides unpatched versions of APIs patched in the following file: https://github.com/angular/angular/blob/master/packages/zone.js/lib/browser/browser.ts
