@@ -2,11 +2,11 @@ import { chain, Rule, Tree } from '@angular-devkit/schematics';
 import { findNodes } from '@schematics/angular/utility/ast-utils';
 import * as ts from 'typescript';
 
-import { createRemoveChange } from '../../common/utils/changes';
-import { formatFiles } from '../../common/utils/format-files';
-import { insert, insertImport } from '../../common/utils/insert';
-import { replaceNodeValue } from '../../common/utils/replace-node-value';
-import { visitTSSourceFiles } from '../../common/utils/visitors';
+import { createRemoveChange } from '@rx-angular/tools/generators/changes';
+import { formatFiles } from '@rx-angular/tools/generators/format-files';
+import { insert, insertImport } from '@rx-angular/tools/generators/insert';
+import { replaceNodeValue } from '@rx-angular/tools/generators/replace-node-value';
+import { visitTSSourceFiles } from '@rx-angular/tools/generators/visitors';
 
 const renames: Record<string, string | [string, string]> = {
   LetModule: '@rx-angular/template/let',

@@ -4,7 +4,7 @@ import {
 } from '@angular-devkit/schematics/testing';
 import { join } from 'path';
 
-import { readJsonInTree } from '../../common';
+import { readJsonInTree } from '../../../../../../tools/generators/common';
 
 const collectionPath = join(__dirname, '../../../collection.json');
 
