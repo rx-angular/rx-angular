@@ -16,12 +16,11 @@ import {
 import { TestBed } from '@angular/core/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import {
-  createTemplateManager,
-  RX_ANGULAR_CONFIG,
+  createTemplateManager, RX_ANGULAR_CONFIG,
   RxBaseTemplateNames,
   RxStrategyProvider,
   RxTemplateManager,
-  RxViewContext,
+  RxViewContext
 } from '@rx-angular/cdk';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import {

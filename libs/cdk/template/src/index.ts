@@ -1,21 +1,21 @@
-export { templateHandling } from './utils';
+export { templateHandling } from './lib/utils';
 export {
   RxBaseTemplateNames,
   RxRenderAware,
   RxViewContext,
   rxBaseTemplateNames,
-} from './model';
+} from './lib/model';
 export {
   RxTemplateManager,
   createTemplateManager,
   RxNotificationTemplateNameMap,
-} from './template-manager';
+} from './lib/template-manager';
 export {
   RxListManager,
   createListTemplateManager,
-} from './list-template-manager';
+} from './lib/list-template-manager';
 export {
   RxListViewComputedContext,
   RxDefaultListViewContext,
   RxListViewContext,
-} from './list-view-context';
+} from './lib/list-view-context';

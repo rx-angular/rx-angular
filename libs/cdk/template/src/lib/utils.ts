@@ -23,9 +23,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { asyncScheduler } from '@rx-angular/cdk/zone-less';
-import { RxStrategyCredentials } from '../model';
-import { onStrategy } from '../utils/onStrategy';
-import { toRenderError } from './render-error';
+import { RxStrategyCredentials, onStrategy } from '@rx-angular/cdk/render-strategies';
 
 // Below are constants for LView indices to help us look up LView members
 // without having to remember the specific indices.
@@ -252,13 +250,12 @@ export function notifyAllParentsIfNeeded<T>(
         // @TODO remove this CD on injectingViewCdRef if possible
         behaviors.push(
           onStrategy(
-            null,
+            injectingViewCdRef,
             strategy,
             (_v, work, options) => work(injectingViewCdRef, options.scope),
             {
               scope: (injectingViewCdRef as any).context || injectingViewCdRef,
-            },
-            (error) => toRenderError(error, injectingViewCdRef)
+            }
           )
         );
         if (behaviors.length === 1) {
@@ -287,14 +284,13 @@ export function notifyInjectingParentIfNeeded(
     of(null),
     notify
       ? onStrategy(
-          null,
+        injectingViewCdRef,
           strategy,
           (value, work, options) => {
             // console.log('notify injectingView', injectingViewCdRef);
             work(injectingViewCdRef, options.scope);
           },
-          {},
-          (error) => toRenderError(error, injectingViewCdRef)
+          {}
         ).pipe(ignoreElements())
       : ([] as unknown as Observable<never>)
   );
@@ -313,7 +309,7 @@ export function getVirtualParentNotifications$(
   tNode: TNode,
   injectingViewCdRef: ChangeDetectorRef,
   strategy: RxStrategyCredentials
-): Observable<Comment>[] {
+): Observable<unknown>[] {
   const parentElements = extractProjectionParentViewSet(
     injectingViewCdRef,
     tNode
@@ -329,8 +325,7 @@ export function getVirtualParentNotifications$(
           // console.log('parentComponent', parentComponent);
           detectChanges(parentComponent);
         },
-        { scope: parentComponent },
-        (error) => toRenderError(error, injectingViewCdRef)
+        { scope: parentComponent }
       )
     );
   }

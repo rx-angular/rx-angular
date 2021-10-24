@@ -1,17 +1,12 @@
 import { ɵmarkDirty as markDirty } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import {
-  RxCustomStrategyCredentials,
-  RxNativeStrategyNames,
-  RxRenderWork,
-  RxStrategyCredentials,
-} from '../model';
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import {
   cancelAnimationFrame,
   requestAnimationFrame,
 } from '@rx-angular/cdk/zone-less';
+import { RxCustomStrategyCredentials, RxNativeStrategyNames, RxRenderWork, RxStrategyCredentials } from './model';
 
 const animationFrameTick = () =>
   new Observable<number>((subscriber) => {
