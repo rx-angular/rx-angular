@@ -91,7 +91,7 @@
     "@nrwl/cli": "13.0.1",
     "@nrwl/cypress": "13.0.1",
     "@nrwl/eslint-plugin-nx": "13.0.1",
-    "@nrwl/jest": "13.0.1",
+    "@nrwl/jest": "13.0.2",
     "@nrwl/linter": "13.0.1",
     "@nrwl/node": "13.0.1",
     "@nrwl/tao": "13.0.1",
