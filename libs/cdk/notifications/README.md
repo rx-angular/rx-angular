@@ -4,13 +4,15 @@
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
-## A small typed and documented convenience helper to handle contextual state like laoding, complete and eror .
+## A small typed convenience helper to handle contextual state.
 
-`@rx-angular/cdk/notifications` is 
+`@rx-angular/cdk/notifications` is a small set of helpers designed to handle contextual states display.
 
 ## Key features
 
-- ✅ 
+- ✅ Handle the display of the default, suspense, error and complete templates
+- ✅ Enrich notifications with an additional suspense type
+- ✅ Help to have lazy template creation
 
 ## Demos:
 
