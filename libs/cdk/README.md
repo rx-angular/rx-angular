@@ -17,7 +17,7 @@ applications
 - [🚫 Zone Less](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/zone-less)
 - [🛠 Coercing](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coercing)
 - [🛠 Coalescing](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing)
-- 📡 Notification
+- [📡 Notifications](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/notifications)
 - 🔳 Template Management
 - 🖌 Render-Strategies
 
