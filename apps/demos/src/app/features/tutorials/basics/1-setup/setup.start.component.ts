@@ -1,11 +1,17 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { interval, Subject, Subscription } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { interval, merge, Subject, switchMap } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
+import { RxState } from '../../../../../../../../libs/state/src/lib';
 //👇 1- import RxState
-import { RxState } from '@rx-angular/state';
 //👇 2- define a component state
-interface ComponentState {
+interface ComponentModel {
   refreshInterval: number;
   list: DemoBasicsItem[];
   listExpanded: boolean;
@@ -20,29 +26,47 @@ export interface DemoBasicsItem {
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
-  list: []
+  list: [],
 };
+
+/*
+// Not used as we DONT want to have a singleton.
+// We need the instance per component
+@Injectable({
+  providedIn: 'root'
+})
+*/
+
+/*
+class GlobalState extends RxState implements OnDestroy {
+  subscription = new Subscription();
+
+  hold(o$: Observable<any>) {
+    this.subscription.add(o$.subscribe());
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+}*/
 
 @Component({
   selector: 'rxa-setup-start',
   //👇 Render the model property of the component
   template: `
-    model$: <pre>{{model$ | async | json}}</pre>
-    <h3>
-      Setup
-    </h3>
+    <h3>Setup</h3>
     <mat-expansion-panel
-      (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
-      [expanded]="listExpanded">
+      *rxLet="model$; let model"
+      (expandedChange)="model.listExpanded = $event; listExpandedChanges.next($event)"
+      [expanded]="model.listExpanded"
+    >
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
-        <mat-panel-title>
-          List
-        </mat-panel-title>
+        <mat-panel-title> List</mat-panel-title>
         <mat-panel-description>
           <span
-          >{{ (storeList$ | async)?.length }} Repositories Updated every:
-            {{ _refreshInterval }} ms
+            >{{ model.list.length }} Repositories Updated every:
+            {{ model.refreshInterval }} ms
           </span>
         </mat-panel-description>
       </mat-expansion-panel-header>
@@ -50,20 +74,18 @@ const initComponentState = {
       <button
         mat-raised-button
         color="primary"
-        (click)="onRefreshClicks($event)"
+        (click)="refreshClick.next($event)"
       >
         Refresh List
       </button>
 
-      <ng-container *ngIf="storeList$ | async as list">
-        <div *ngIf="list?.length; else noList">
+        <div *ngIf="model.list.length; else noList">
           <mat-list>
-            <mat-list-item *ngFor="let item of list">
+            <mat-list-item *rxFor="let item of model.list">
               {{ item.name }}
             </mat-list-item>
           </mat-list>
         </div>
-      </ng-container>
 
       <ng-template #noList>
         <mat-card>No list given!</mat-card>
@@ -85,59 +107,41 @@ const initComponentState = {
       .list .mat-expansion-panel-content .mat-expansion-panel-body {
         padding-top: 10px;
       }
-    `
+    `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  // providers: [SubHandler],
 })
 //👇 3- extend the component
-export class SetupStart extends RxState<ComponentState> implements OnInit, OnDestroy {
-  //👇 Set up the model property of the component
+export class SetupStart extends RxState<ComponentModel> {
   model$ = this.select();
-  intervalSubscription = new Subscription();
-  listExpandedChanges = new Subject<boolean>();
-  storeList$ = this.listService.list$.pipe(
-    map(this.parseListItems),
-    startWith(initComponentState.list)
-  );
 
-  _refreshInterval: number = initComponentState.refreshInterval;
+  listExpandedChanges = new Subject<boolean>();
+  refreshClick = new Subject<void>();
+
   @Input()
   set refreshInterval(refreshInterval: number) {
     if (refreshInterval > 4000) {
-      this._refreshInterval = refreshInterval;
-      this.resetRefreshTick();
+      this.set({ refreshInterval });
     }
   }
 
-  listExpanded: boolean = initComponentState.listExpanded;
   @Output()
-  listExpandedChange = this.listExpandedChanges;
-  constructor(
-    private listService: ListService
-  ) {
-    //👇 Always call super() first in the constructor
+  listExpandedChange = this.select('listExpanded');
+
+  timerRefresh = this.select(
+    map((s) => s.refreshInterval),
+    switchMap((ms) => interval(ms))
+  );
+  refreshListTrigger$ = merge(this.timerRefresh, this.refreshClick);
+  refreshListSideEffect = (_) => this.listService.refetchList();
+
+  constructor(private listService: ListService) {
     super();
-    //👇 Call set() to initialize the state
     this.set(initComponentState);
-  }
-
-  ngOnDestroy(): void {
-    this.intervalSubscription.unsubscribe();
-  }
-
-  ngOnInit(): void {
-    this.resetRefreshTick();
-  }
-
-  resetRefreshTick() {
-    this.intervalSubscription.unsubscribe();
-    this.intervalSubscription = interval(this._refreshInterval)
-      .pipe(tap((_) => this.listService.refetchList()))
-      .subscribe();
-  }
-
-  onRefreshClicks(event) {
-    this.listService.refetchList();
+    this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
+    this.connect('listExpanded', this.listExpandedChanges);
+    this.hold(this.refreshListTrigger$, this.refreshListSideEffect);
   }
 
   parseListItems(l: ListServerItem[]): DemoBasicsItem[] {

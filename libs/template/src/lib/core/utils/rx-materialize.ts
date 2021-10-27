@@ -1,6 +1,6 @@
 import { OperatorFunction } from 'rxjs';
 import { map, materialize, tap } from 'rxjs/operators';
-import { RxNotification, RxNotificationKind } from '../model';
+import { RxNotification, RxNotificationKind } from '@rx-angular/cdk/notifications';
 
 export function rxMaterialize<T>(): OperatorFunction<T, RxNotification<T>> {
   return o$ => o$.pipe(
