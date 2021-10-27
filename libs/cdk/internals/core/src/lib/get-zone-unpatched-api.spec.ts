@@ -1,6 +1,6 @@
 /// <reference types="zone.js" />
 
-import { getZoneUnPatchedApi } from './';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 
 // These tests are actually passing. The test spec is skipped because there's no `Zone` in the global
 // scope (since `jest-preset-angular` is not imported). Shouldn't be skipped when zone configuration
