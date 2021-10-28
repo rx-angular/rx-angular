@@ -2,6 +2,13 @@
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../dist/libs/template/class",
   "lib": {
-    "entryFile": "src/index.ts"
+    "entryFile": "src/index.ts",
+    "flatModuleFile": "template-class",
+    "umdId": "rx-angular.template-class",
+    "umdModuleIds": {
+      "@rx-angular/cdk": "rx-angular.cdk",
+      "@rx-angular/cdk/notifications": "rx-angular.cdk-notifications",
+      "@rx-angular/cdk/coercing": "rx-angular.cdk-coercing"
+    }
   }
 }
