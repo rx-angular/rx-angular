@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ClassDirective } from '@rx-angular/template/class';
 import { BehaviorSubject, of } from 'rxjs';
+import { ClassDirective } from '../class.directive';
 
 @Component({
   selector: 'rx-test-component',
