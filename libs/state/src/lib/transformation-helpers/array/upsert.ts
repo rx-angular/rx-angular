@@ -137,22 +137,19 @@ export function upsert<T>(
     }
   }
 
-  let updated = source;
-  if (Object.keys(updates).length > 0) {
-    // if we have updates to process
-    updated = updated.map((item, i) => {
-      const updatedItem = updates[i];
-      // process the updated
-      if (updatedItem != null) {
-        if (isObjectGuard(item)) {
-          return { ...item, ...updatedItem };
-        } else {
-          return updatedItem as T;
-        }
+  const updated = source.map((item, i) => {
+    const updatedItem = updates[i];
+    // process the updated
+    if (updatedItem !== null && updatedItem !== undefined) {
+      if (isObjectGuard(item)) {
+        return { ...item, ...updatedItem } as T;
+      } else {
+        return updatedItem as T;
       }
-      return item;
-    });
-  }
+    }
+    return item;
+  });
+
   // return the combination of the updated source & the inserts as new array
   return updated.concat(inserts);
 }
