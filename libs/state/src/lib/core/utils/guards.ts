@@ -33,10 +33,11 @@ export function isIterableGuard<T>(obj: unknown): obj is Array<T> {
 }
 
 export function isKeyOf<O>(k: unknown): k is keyof O {
+  const typeofK = typeof k;
   return (
     k !== null &&
     k !== undefined &&
-    (typeof k === 'string' || typeof k === 'symbol' || typeof k === 'number')
+    ['string', 'symbol', 'number'].includes(typeofK)
   );
 }
 
