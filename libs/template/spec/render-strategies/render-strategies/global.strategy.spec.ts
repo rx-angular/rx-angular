@@ -7,7 +7,7 @@ import {
   getMockStrategyConfig,
   testStrategyMethod,
 } from '../../fixtures';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LetDirective } from '@rx-angular/template/let';
 
 @Component({
@@ -25,7 +25,7 @@ const setupTestComponent = () => {
   TestBed.configureTestingModule({
     declarations: [GlobalStrategyTestComponent, LetDirective],
     teardown: { destroyAfterEach: true },
-  }).compileComponents();
+  });
 };
 
 const setUpFixture = () => {
@@ -51,7 +51,7 @@ const callsExpectations: CallsExpectations = {
 
 describe('global Strategy', () => {
   // beforeAll(() => mockConsole());
-  beforeEach(waitForAsync(setupTestComponent));
+  beforeEach(setupTestComponent);
   beforeEach(setUpFixture);
   beforeEach(spyOnMarkDirty);
 

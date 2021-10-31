@@ -104,7 +104,7 @@ describe('LocalProviderTestComponent', () => {
     TestBed.configureTestingModule({
       declarations: [RxStateInjectionComponent],
       teardown: { destroyAfterEach: true },
-    }).compileComponents();
+    });
     fixture = TestBed.createComponent(RxStateInjectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -123,7 +123,7 @@ describe('InheritanceTestComponent', () => {
     TestBed.configureTestingModule({
       declarations: [RxStateInheritanceComponent],
       teardown: { destroyAfterEach: true },
-    }).compileComponents();
+    });
     fixture = TestBed.createComponent(RxStateInheritanceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

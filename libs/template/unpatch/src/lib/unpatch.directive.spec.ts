@@ -1,10 +1,10 @@
 /// <reference types="zone.js" />
 import { ApplicationRef, Component, NgZone } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { UnpatchModule } from './unpatch.module';
 import { UnpatchDirective } from './unpatch.directive';
+import { UnpatchModule } from './unpatch.module';
 
 describe(UnpatchDirective.name, () => {
   enum LogEvent {
@@ -33,15 +33,13 @@ describe(UnpatchDirective.name, () => {
     }
   }
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [UnpatchModule],
-        declarations: [TestComponent],
-        teardown: { destroyAfterEach: true },
-      });
-    })
-  );
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [UnpatchModule],
+      declarations: [TestComponent],
+      teardown: { destroyAfterEach: true },
+    });
+  });
 
   afterEach(() => {
     logs.length = 0;
