@@ -45,6 +45,7 @@ const setupTestComponent = () => {
         },
       },
     ],
+    teardown: { destroyAfterEach: true },
   }).compileComponents();
 };
 

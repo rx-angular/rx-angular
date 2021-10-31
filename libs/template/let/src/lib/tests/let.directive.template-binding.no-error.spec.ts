@@ -42,6 +42,7 @@ const setupTestComponent = () => {
       },
     ],
     declarations: [LetDirectiveNoErrorTemplateTestComponent, LetDirective],
+    teardown: { destroyAfterEach: true },
   }).compileComponents();
 };
 

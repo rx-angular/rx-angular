@@ -26,6 +26,7 @@ describe('LetDirective strategies', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LetDirectiveTestComponentStrategy, LetDirective],
+      teardown: { destroyAfterEach: true },
     }).compileComponents();
   });
 

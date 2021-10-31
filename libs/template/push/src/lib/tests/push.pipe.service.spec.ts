@@ -22,6 +22,7 @@ const setupPushPipeComponent = () => {
         },
       },
     ],
+    teardown: { destroyAfterEach: true },
   });
   pushPipe = TestBed.inject(PushPipe);
 };

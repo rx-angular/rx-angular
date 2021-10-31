@@ -39,7 +39,9 @@ describe('RxStateService', () => {
   let service: RxState<PrimitiveState>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      teardown: { destroyAfterEach: true },
+    });
     service = setupState({});
   });
 

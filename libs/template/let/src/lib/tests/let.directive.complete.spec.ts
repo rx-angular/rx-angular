@@ -44,6 +44,7 @@ const setupLetDirectiveTestComponentComplete = (): void => {
         },
       },
     ],
+    teardown: { destroyAfterEach: true },
   });
 
   fixtureLetDirectiveTestComponent = TestBed.createComponent(

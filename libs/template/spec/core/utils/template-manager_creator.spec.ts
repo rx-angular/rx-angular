@@ -60,7 +60,8 @@ const setupTestComponent = (): void => {
       TemplateRef,
       ViewContainerRef,
       TestContainerDirective
-    ]
+    ],
+    teardown: { destroyAfterEach: true },
   });
 
   fixtureTestComponent = TestBed.createComponent(

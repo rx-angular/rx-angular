@@ -24,6 +24,7 @@ let nativeElement: HTMLElement;
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
     declarations: [GlobalStrategyTestComponent, LetDirective],
+    teardown: { destroyAfterEach: true },
   }).compileComponents();
 };
 

@@ -38,6 +38,7 @@ describe(UnpatchDirective.name, () => {
       TestBed.configureTestingModule({
         imports: [UnpatchModule],
         declarations: [TestComponent],
+        teardown: { destroyAfterEach: true },
       });
     })
   );

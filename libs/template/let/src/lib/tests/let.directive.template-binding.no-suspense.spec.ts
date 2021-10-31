@@ -34,7 +34,6 @@ let nativeElement: HTMLElement;
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
     declarations: [LetDirectiveNoSuspenseTemplateTestComponent, LetDirective],
-
     providers: [
       {
         provide: RX_ANGULAR_CONFIG,
@@ -43,6 +42,7 @@ const setupTestComponent = () => {
         },
       },
     ],
+    teardown: { destroyAfterEach: true },
   }).compileComponents();
 };
 

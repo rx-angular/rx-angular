@@ -92,6 +92,7 @@ describe('RxEffects', () => {
     await TestBed.configureTestingModule({
       declarations: [TestComponent],
       providers: [Store, { provide: Service, useValue: service }],
+      teardown: { destroyAfterEach: true },
     }).compileComponents();
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
@@ -121,6 +122,7 @@ describe('RxEffects', () => {
     await TestBed.configureTestingModule({
       declarations: [TestComponent],
       providers: [Store, { provide: Service, useValue: service }],
+      teardown: { destroyAfterEach: true },
     }).compileComponents();
     const fixture = TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
@@ -169,6 +171,7 @@ describe('RxEffects', () => {
           useValue: customErrorHandler,
         },
       ],
+      teardown: { destroyAfterEach: true },
     }).compileComponents();
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
@@ -195,6 +198,7 @@ describe('RxEffects', () => {
     await TestBed.configureTestingModule({
       declarations: [TestComponent],
       providers: [Store, { provide: Service, useValue: service }],
+      teardown: { destroyAfterEach: true },
     }).compileComponents();
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
@@ -231,6 +235,7 @@ describe('RxEffects', () => {
         { provide: Service, useValue: service },
         { provide: ErrorHandler, useValue: { handleError: () => {} } },
       ],
+      teardown: { destroyAfterEach: true },
     }).compileComponents();
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
@@ -250,6 +255,7 @@ describe('RxEffects', () => {
     await TestBed.configureTestingModule({
       declarations: [TestUnregisterComponent],
       providers: [Store, { provide: Service, useValue: service }],
+      teardown: { destroyAfterEach: true },
     }).compileComponents();
     const fixture = TestBed.createComponent(TestUnregisterComponent);
     const component = fixture.componentInstance;
