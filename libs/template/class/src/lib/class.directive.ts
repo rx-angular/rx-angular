@@ -16,7 +16,7 @@ import {
 import {
   accumulateObservables,
   RxStrategyNames,
-  RxStrategyProvider,
+  RxStrategyProvider
 } from '@rx-angular/cdk';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
@@ -45,7 +45,6 @@ type RxClassInput =
 export class ClassDirective implements OnInit, OnDestroy {
   private iterableDiffer: IterableDiffer<string> | null = null;
   private keyValueDiffer: KeyValueDiffer<string, any> | null = null;
-  private initialClasses: string[] = [];
   private rawClass: NgClassValues = null;
   private newInput = false;
   private sub = new Subscription();
@@ -74,7 +73,7 @@ export class ClassDirective implements OnInit, OnDestroy {
   }
 
   private strategy = coerceAllFactory(
-    () => new BehaviorSubject<ObservableInput<string> | string>('immediate'),
+    () => new BehaviorSubject<ObservableInput<string> | string>(this.strategyProvider.primaryStrategy),
     switchAll()
   );
 
@@ -93,29 +92,21 @@ export class ClassDirective implements OnInit, OnDestroy {
           switchMap(([value, strategy]) =>
             this.strategyProvider.schedule(
               () => {
+                this.rawClass = value;
                 if (this.newInput) {
-                  this.removeClasses(this.rawClass);
-                  this.applyClasses(this.initialClasses);
-
                   this.iterableDiffer = null;
                   this.keyValueDiffer = null;
 
-                  this.rawClass = value;
-
-                  if (this.rawClass) {
-                    if (isListLikeIterable(this.rawClass)) {
-                      this.iterableDiffer = this.iterableDiffers
-                        .find(this.rawClass)
-                        .create();
-                    } else {
-                      this.keyValueDiffer = this.keyValueDiffers
-                        .find(this.rawClass)
-                        .create();
-                    }
+                  if (isListLikeIterable(this.rawClass)) {
+                    this.iterableDiffer = this.iterableDiffers
+                      .find(this.rawClass)
+                      .create();
+                  } else {
+                    this.keyValueDiffer = this.keyValueDiffers
+                      .find(this.rawClass)
+                      .create();
                   }
                   this.newInput = false;
-                } else {
-                  this.rawClass = value;
                 }
                 this.applyChanges();
               },
@@ -125,31 +116,6 @@ export class ClassDirective implements OnInit, OnDestroy {
         )
         .subscribe()
     );
-  }
-
-  /**
-   * Applies a collection of CSS classes to the DOM element.
-   *
-   * For argument of type Set and Array CSS class names contained in those collections are always
-   * added.
-   * For argument of type Map CSS class name in the map's key is toggled based on the value (added
-   * for truthy and removed for falsy).
-   */
-  private applyClasses(rawClassVal: NgClassValues) {
-    if (rawClassVal) {
-      if (Array.isArray(rawClassVal) || rawClassVal instanceof Set) {
-        (<any>rawClassVal).forEach((klass: string) =>
-          this.toggleClass(klass, true)
-        );
-      } else {
-        Object.keys(rawClassVal).forEach((klass) =>
-          this.toggleClass(
-            klass,
-            (rawClassVal as Record<string, boolean>)[klass]
-          )
-        );
-      }
-    }
   }
 
   private applyChanges(): void {
@@ -185,31 +151,13 @@ export class ClassDirective implements OnInit, OnDestroy {
   }
 
   private applyIterableChanges(changes: IterableChanges<string>): void {
-    changes.forEachAddedItem((record) => {
-      this.toggleClass(record.item, true);
-    });
+    changes.forEachAddedItem((record) =>
+      this.toggleClass(record.item, true)
+    );
 
     changes.forEachRemovedItem((record) =>
       this.toggleClass(record.item, false)
     );
-  }
-
-  /**
-   * Removes a collection of CSS classes from the DOM element. This is mostly useful for cleanup
-   * purposes.
-   */
-  private removeClasses(rawClassVal: NgClassValues) {
-    if (rawClassVal) {
-      if (Array.isArray(rawClassVal) || rawClassVal instanceof Set) {
-        (<any>rawClassVal).forEach((klass: string) =>
-          this.toggleClass(klass, false)
-        );
-      } else {
-        Object.keys(rawClassVal).forEach((klass) =>
-          this.toggleClass(klass, false)
-        );
-      }
-    }
   }
 
   /**
