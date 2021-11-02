@@ -10,8 +10,9 @@ import {
   KeyValueDiffers,
   OnDestroy,
   OnInit,
+  Output,
   Renderer2,
-  ɵisListLikeIterable as isListLikeIterable,
+  ɵisListLikeIterable as isListLikeIterable
 } from '@angular/core';
 import {
   accumulateObservables,
@@ -25,7 +26,8 @@ import {
   Observable,
   ObservableInput,
   ReplaySubject,
-  Subscription,
+  Subject,
+  Subscription
 } from 'rxjs';
 import { map, switchAll, switchMap, withLatestFrom } from 'rxjs/operators';
 
@@ -48,6 +50,7 @@ export class ClassDirective implements OnInit, OnDestroy {
   private rawClass: NgClassValues = null;
   private newInput = false;
   private sub = new Subscription();
+  private classValueChanged = false;
 
   constructor(
     private readonly iterableDiffers: IterableDiffers,
@@ -84,6 +87,8 @@ export class ClassDirective implements OnInit, OnDestroy {
     this.strategy.next(strategy);
   }
 
+  @Output() readonly renderCallback = new Subject<void>();
+
   ngOnInit(): void {
     this.sub.add(
       this.rxClass.values$
@@ -92,6 +97,7 @@ export class ClassDirective implements OnInit, OnDestroy {
           switchMap(([value, strategy]) =>
             this.strategyProvider.schedule(
               () => {
+                this.classValueChanged = false;
                 this.rawClass = value;
                 if (this.newInput) {
                   this.iterableDiffer = null;
@@ -109,6 +115,10 @@ export class ClassDirective implements OnInit, OnDestroy {
                   this.newInput = false;
                 }
                 this.applyChanges();
+
+                if (this.classValueChanged) {
+                  this.renderCallback.next();
+                }
               },
               { strategy, scope: this, patchZone: false }
             )
@@ -119,6 +129,7 @@ export class ClassDirective implements OnInit, OnDestroy {
   }
 
   private applyChanges(): void {
+    console.log(this.iterableDiffer);
     if (this.iterableDiffer) {
       const iterableChanges = this.iterableDiffer.diff(
         this.rawClass as string[]
@@ -175,6 +186,7 @@ export class ClassDirective implements OnInit, OnDestroy {
         } else {
           this.renderer.removeClass(this.ngEl.nativeElement, cls);
         }
+        this.classValueChanged = true;
       });
     }
   }
