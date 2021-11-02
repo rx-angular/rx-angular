@@ -72,7 +72,7 @@ describe('rxClass', () => {
     fixture.detectChanges();
   });
 
-  it('should set rxClasses to the container-one', () => {
+  it('should set rxClasses in the container-one', () => {
     const rxClasses = ['class-one', 'class-two'];
     const container = fixture.debugElement.query(By.css('.container-one'));
     const classes = Object.entries(container.classes)
@@ -83,7 +83,7 @@ describe('rxClass', () => {
     });
   });
 
-  it('should set rxClasses to the container-two', () => {
+  it('should set rxClasses in the container-two', () => {
     const rxClasses = ['class-one', 'class-two'];
     const container = fixture.debugElement.query(By.css('.container-two'));
     const classes = Object.entries(container.classes)
@@ -94,7 +94,7 @@ describe('rxClass', () => {
     });
   });
 
-  it('should set class-one to the container-three', () => {
+  it('should set class-one in the container-three', () => {
     const container = fixture.debugElement.query(By.css('.container-three'));
     const classes = Object.entries(container.classes)
       .filter(([, value]) => value)
@@ -102,7 +102,7 @@ describe('rxClass', () => {
     expect(classes).toContain('class-one');
   });
 
-  it('should replace previously set classes to the container-four', () => {
+  it('should replace previously set classes in the container-four', () => {
     fixture.componentInstance.containerFourClasses$.next([
       'class-one',
       'class-three',
@@ -116,7 +116,7 @@ describe('rxClass', () => {
     expect(classes).toContain('class-one');
   });
 
-  it('should replace previously set classes when using Set to the container-five', () => {
+it('should replace previously set classes when using Set in the container-five', () => {
     fixture.componentInstance.containerFiveClasses$.next(
       new Set(['class-one', 'class-three'])
     );
@@ -127,9 +127,23 @@ describe('rxClass', () => {
       .map(([key]) => key);
     expect(classes).not.toContain('class-two');
     expect(classes).toContain('class-one');
+    expect(classes).toContain('class-three');
   });
 
-  it('should set class-one and replace it with class-two', () => {
+  it('should replace previously set classes with null in the container-five', () => {
+    fixture.componentInstance.containerFiveClasses$.next(
+      null
+    );
+    fixture.detectChanges();
+    const container = fixture.debugElement.query(By.css('.container-five'));
+    const classes = Object.entries(container.classes)
+      .filter(([, value]) => value)
+      .map(([key]) => key);
+    expect(classes).not.toContain('class-two');
+    expect(classes).not.toContain('class-one');
+  });
+
+  it('should set class-one and replace it with class-two in the container-six', () => {
     const container = fixture.debugElement.query(By.css('.container-six'));
     const classes = Object.entries(container.classes)
       .filter(([, value]) => value)
