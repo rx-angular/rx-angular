@@ -3,7 +3,7 @@
 The `rxClass` directive serves a convenient way of using observables for style (class) changes.
 
 Under the hood, it leverages a `RenderStrategy` which in turn takes care of optimizing the change detection
-of your component by passing wanted strategy to `rxClassStrategy` (the default strategy is `'immediate'`). The `ClassDirective` will apply style (class) changes to the template and manage change detection after it got an initial value.
+of your component by passing wanted strategy to `rxClassStrategy`. The `ClassDirective` will apply style (class) changes to the template and manage change detection after it got an initial value.
 So if the incoming `Observable` emits its value lazily (e.g. data coming from `Http`), your style/class will be
 applied lazily as well. This can very positively impact the render performance of your application.
 
