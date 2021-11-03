@@ -21,7 +21,7 @@ import {
 } from '@rx-angular/cdk';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
-  BehaviorSubject,
+  BehaviorSubject, defer,
   isObservable,
   Observable,
   ObservableInput,
@@ -87,7 +87,9 @@ export class ClassDirective implements OnInit, OnDestroy {
     this.strategy.next(strategy);
   }
 
-  @Output() readonly renderCallback = new Subject<void>();
+  private rendered$ = new Subject<void>();
+
+  @Output() readonly rendered = defer(() => this.rendered$);
 
   ngOnInit(): void {
     this.sub.add(
@@ -106,7 +108,7 @@ export class ClassDirective implements OnInit, OnDestroy {
                 this.applyChanges();
 
                 if (this.classValueChanged) {
-                  this.renderCallback.next();
+                  this.rendered$.next();
                 }
               },
               { strategy, scope: this, patchZone: false }
