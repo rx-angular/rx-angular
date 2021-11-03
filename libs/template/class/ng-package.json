@@ -7,7 +7,6 @@
     "umdId": "rx-angular.template-class",
     "umdModuleIds": {
       "@rx-angular/cdk": "rx-angular.cdk",
-      "@rx-angular/cdk/notifications": "rx-angular.cdk-notifications",
       "@rx-angular/cdk/coercing": "rx-angular.cdk-coercing"
     }
   }

@@ -114,6 +114,7 @@ describe('rxClass', () => {
       .map(([key]) => key);
     expect(classes).not.toContain('class-two');
     expect(classes).toContain('class-one');
+    expect(classes).toContain('class-three');
   });
 
 it('should replace previously set classes when using Set in the container-five', () => {

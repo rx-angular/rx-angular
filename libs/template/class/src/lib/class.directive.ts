@@ -97,23 +97,12 @@ export class ClassDirective implements OnInit, OnDestroy {
           switchMap(([value, strategy]) =>
             this.strategyProvider.schedule(
               () => {
-                this.classValueChanged = false;
-                this.rawClass = value;
                 if (this.newInput) {
-                  this.iterableDiffer = null;
-                  this.keyValueDiffer = null;
-
-                  if (isListLikeIterable(this.rawClass)) {
-                    this.iterableDiffer = this.iterableDiffers
-                      .find(this.rawClass)
-                      .create();
-                  } else {
-                    this.keyValueDiffer = this.keyValueDiffers
-                      .find(this.rawClass)
-                      .create();
-                  }
+                  this.initDiffers(value);
                   this.newInput = false;
                 }
+                this.classValueChanged = false;
+                this.rawClass = value;
                 this.applyChanges();
 
                 if (this.classValueChanged) {
@@ -128,8 +117,19 @@ export class ClassDirective implements OnInit, OnDestroy {
     );
   }
 
+  private initDiffers(value: NgClassValues): void {
+    if (isListLikeIterable(value)) {
+      this.iterableDiffer = this.iterableDiffers
+        .find(value)
+        .create();
+    } else {
+      this.keyValueDiffer = this.keyValueDiffers
+        .find(value)
+        .create();
+    }
+  }
+
   private applyChanges(): void {
-    console.log(this.iterableDiffer);
     if (this.iterableDiffer) {
       const iterableChanges = this.iterableDiffer.diff(
         this.rawClass as string[]
