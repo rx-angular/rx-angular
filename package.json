@@ -42,7 +42,7 @@
   },
   "lint-staged": {
     "libs/**/!(images)/**/*.{ts,html,scss,md,json}": [
-      "eslint --fix --quiet"
+      "yarn affected:lint -- --uncommitted --fix --parallel"
     ],
     "libs/**/*.{ts,html,scss,md,json}": [
       "prettier --write"
