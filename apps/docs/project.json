@@ -36,8 +36,13 @@
         "main": "apps/docs/src/main.ts",
         "polyfills": "apps/docs/src/polyfills.ts",
         "tsConfig": "apps/docs/tsconfig.app.json",
-        "assets": ["apps/docs/src/favicon.ico", "apps/docs/src/assets"],
-        "styles": ["apps/docs/src/styles.scss"],
+        "assets": [
+          "apps/docs/src/favicon.ico",
+          "apps/docs/src/assets"
+        ],
+        "styles": [
+          "apps/docs/src/styles.scss"
+        ],
         "scripts": [],
         "vendorChunk": true,
         "extractLicenses": false,
@@ -75,7 +80,9 @@
           ]
         }
       },
-      "outputs": ["{options.outputPath}"]
+      "outputs": [
+        "{options.outputPath}"
+      ]
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
@@ -94,24 +101,18 @@
         "browserTarget": "docs:build"
       }
     },
-    "lint": {
-      "executor": "@angular-devkit/build-angular:tslint",
-      "options": {
-        "tsConfig": [
-          "apps/docs/tsconfig.app.json",
-          "apps/docs/tsconfig.spec.json"
-        ],
-        "exclude": ["**/node_modules/**", "!apps/docs/**/*"]
-      }
-    },
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
         "jestConfig": "apps/docs/jest.config.js",
         "passWithNoTests": true
       },
-      "outputs": ["coverage/apps/docs"]
+      "outputs": [
+        "coverage/apps/docs"
+      ]
     }
   },
-  "tags": ["type:app"]
+  "tags": [
+    "type:app"
+  ]
 }

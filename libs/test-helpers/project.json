@@ -4,24 +4,18 @@
   "projectType": "library",
   "generators": {},
   "targets": {
-    "lint": {
-      "executor": "@angular-devkit/build-angular:tslint",
-      "options": {
-        "tsConfig": [
-          "libs/test-helpers/tsconfig.lib.json",
-          "libs/test-helpers/tsconfig.spec.json"
-        ],
-        "exclude": ["**/node_modules/**", "!libs/test-helpers/**/*"]
-      }
-    },
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
         "jestConfig": "libs/test-helpers/jest.config.js",
         "passWithNoTests": true
       },
-      "outputs": ["coverage/libs/test-helpers"]
+      "outputs": [
+        "coverage/libs/test-helpers"
+      ]
     }
   },
-  "tags": ["type:util"]
+  "tags": [
+    "type:util"
+  ]
 }

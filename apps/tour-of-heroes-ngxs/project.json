@@ -21,7 +21,9 @@
           "apps/tour-of-heroes-ngxs/src/favicon.ico",
           "apps/tour-of-heroes-ngxs/src/assets"
         ],
-        "styles": ["apps/tour-of-heroes-ngxs/src/styles.scss"],
+        "styles": [
+          "apps/tour-of-heroes-ngxs/src/styles.scss"
+        ],
         "scripts": [],
         "vendorChunk": true,
         "extractLicenses": false,
@@ -68,7 +70,9 @@
           ]
         }
       },
-      "outputs": ["{options.outputPath}"]
+      "outputs": [
+        "{options.outputPath}"
+      ]
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
@@ -90,24 +94,18 @@
         "browserTarget": "tour-of-heroes-ngxs:build"
       }
     },
-    "lint": {
-      "executor": "@angular-devkit/build-angular:tslint",
-      "options": {
-        "tsConfig": [
-          "apps/tour-of-heroes-ngxs/tsconfig.app.json",
-          "apps/tour-of-heroes-ngxs/tsconfig.spec.json"
-        ],
-        "exclude": ["**/node_modules/**", "!apps/tour-of-heroes-ngxs/**/*"]
-      }
-    },
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
         "jestConfig": "apps/tour-of-heroes-ngxs/jest.config.js",
         "passWithNoTests": true
       },
-      "outputs": ["coverage/apps/tour-of-heroes-ngxs"]
+      "outputs": [
+        "coverage/apps/tour-of-heroes-ngxs"
+      ]
     }
   },
-  "tags": ["type:app"]
+  "tags": [
+    "type:app"
+  ]
 }

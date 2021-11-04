@@ -1,36 +1,11 @@
 {
   "migrations": [
     {
-      "version": "13.0.0-beta.1",
-      "description": "Add default base to nx.json if its not currently set",
-      "factory": "./src/migrations/update-13-0-0/set-default-base-if-not-set",
-      "cli": "nx",
-      "package": "@nrwl/workspace",
-      "name": "set-default-base-if-not-set"
-    },
-    {
-      "version": "13.0.0-beta.4",
-      "description": "Move global settings into nx.json, and project specific settings into workspace.json",
-      "cli": "nx",
-      "implementation": "./src/migrations/update-13-0-0/config-locations/config-locations",
-      "package": "@nrwl/workspace",
-      "name": "13-0-0-config-locations"
-    },
-    {
-      "cli": "nx",
-      "version": "13.0.0-beta.10",
-      "description": "Adds postcss packages needed for Tailwind support if ng-packagr is already installed.",
-      "factory": "./src/migrations/update-13-0-0/add-postcss-packages",
-      "package": "@nrwl/angular",
-      "name": "add-postcss-packages"
-    },
-    {
-      "cli": "nx",
-      "version": "13.0.0-beta.1",
-      "description": "Remove packages installed by Nx 12's `@nrwl/node:webpack5` generator.",
-      "factory": "./src/migrations/update-13-0-0/remove-webpack-5-packages-13-0-0",
-      "package": "@nrwl/node",
-      "name": "remove-webpack-5-packages"
+      "version": "13.0.0-0",
+      "description": "Updates Angular Material to v13",
+      "factory": "./ng-update/index#updateToV13",
+      "package": "@angular/material",
+      "name": "migration-v13"
     }
   ]
 }
