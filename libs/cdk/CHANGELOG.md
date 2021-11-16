@@ -1,3 +1,21 @@
+# Changelog
+
+This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
+
+# [1.0.0-alpha.11](/compare/cdk@1.0.0-alpha.10...cdk@1.0.0-alpha.11) (2021-11-16)
+
+
+### Bug Fixes
+
+* **cdk-render-strategies:** don't send complete event to strategy-behavior (#954) 8df99ea, closes #954
+
+
+### Features
+
+* add ability to rxLet and push to take static values (#1033) 42d7a81, closes #1033
+
+
+
 # [1.0.0-alpha.10](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.9...cdk@1.0.0-alpha.10) (2021-08-23)
 
 * **cdk:** fix RxJS7 update ([#907](https://github.com/rx-angular/rx-angular/pull/907)) ([674d584]()
