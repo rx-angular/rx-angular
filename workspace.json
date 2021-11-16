@@ -4,6 +4,7 @@
     "cdk": "libs/cdk",
     "demos": "apps/demos",
     "docs": "apps/docs",
+    "eslint-plugin": "libs/eslint-plugin",
     "ssr": "apps/ssr",
     "ssr-e2e": "apps/ssr-e2e",
     "state": "libs/state",

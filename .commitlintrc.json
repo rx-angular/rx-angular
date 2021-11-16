@@ -5,7 +5,16 @@
     "scope-enum": [
       2,
       "always",
-      ["cdk", "template", "state", "docs", "demos", "schematics", "ci"]
+      [
+        "cdk",
+        "template",
+        "state",
+        "docs",
+        "demos",
+        "schematics",
+        "ci",
+        "eslint"
+      ]
     ],
     "type-empty": [2, "never"],
     "type-enum": [
