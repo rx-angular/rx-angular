@@ -63,7 +63,7 @@
     "@angular/router": "12.2.11",
     "@nguniversal/express-engine": "^12.1.1",
     "@ngxs/store": "3.7.2",
-    "@nrwl/nx-cloud": "12.5.0",
+    "@nrwl/nx-cloud": "12.5.2",
     "angular-in-memory-web-api": "^0.11.0",
     "bootstrap": "^4.6.0",
     "core-js": "^3.18.3",
