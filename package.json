@@ -114,7 +114,7 @@
     "eslint-plugin-cypress": "^2.12.1",
     "husky": "^7.0.4",
     "jest": "27.3.1",
-    "jest-preset-angular": "10.0.1",
+    "jest-preset-angular": "10.1.0",
     "klaw-sync": "^6.0.0",
     "lint-staged": "^11.2.3",
     "ng-packagr": "12.2.4",
