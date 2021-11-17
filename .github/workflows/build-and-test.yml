@@ -109,6 +109,7 @@ jobs:
       - name: Size
         uses: andresz1/size-limit-action@v1
         with:
+          skip_step: BUILD_STEP
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - run: yarn nx-cloud stop-all-agents
