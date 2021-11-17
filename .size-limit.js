@@ -38,10 +38,10 @@ module.exports = [
   },*/
   {
     path: 'dist/apps/bundle-budget--template-unpatch/default-libs_cdk_zone-less_src_index_ts.js',
-    limit: '307ms',
+    limit: '100ms',
   },
   {
     path: 'dist/apps/bundle-budget--template-unpatch/main.js',
-    limit: '270ms',
+    limit: '90ms',
   },
 ];
