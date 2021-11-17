@@ -1,0 +1,116 @@
+{
+  "projectType": "application",
+  "generators": {},
+  "root": "apps/bundle-budget--template-unpatch",
+  "sourceRoot": "apps/bundle-budget--template-unpatch/src",
+  "prefix": "rx-angular",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/bundle-budget--template-unpatch",
+        "index": "apps/bundle-budget--template-unpatch/src/index.html",
+        "main": "apps/bundle-budget--template-unpatch/src/main.ts",
+        "tsConfig": "apps/bundle-budget--template-unpatch/tsconfig.app.json",
+        "vendorChunk": false,
+        "extractLicenses": true,
+        "buildOptimizer": true,
+        "optimization": true,
+        "sourceMap": false,
+        "namedChunks": true,
+        "fileReplacements": [
+          {
+            "replace": "apps/bundle-budget--template-unpatch/src/environments/environment.ts",
+            "with": "apps/bundle-budget--template-unpatch/src/environments/environment.prod.ts"
+          }
+        ],
+        "budgets": [
+          {
+            "type": "bundle",
+            "name": "main",
+            "maximumWarning": "5kb"
+          },
+          {
+            "type": "bundle",
+            "name": "apps_bundle-budget--template-unpatch_src_empty-bundle_ts",
+            "maximumWarning": "200b",
+            "maximumError": " 213b"
+          },
+          {
+            "type": "bundle",
+            "name": "libs_template_unpatch_src_index_ts",
+            "maximumWarning": "1kb",
+            "maximumError": " 1.66kb"
+          },
+          {
+            "type": "bundle",
+            "name": "libs_template_let_src_index_ts.js",
+            "maximumWarning": "3kb",
+            "maximumError": "3.27kb"
+          },
+          {
+            "type": "bundle",
+            "name": "libs_template_push_src_index_ts",
+            "maximumWarning": "2kb",
+            "maximumError": "2.9kb"
+          },
+          {
+            "type": "bundle",
+            "name": "libs_cdk_coalescing_src_index_ts",
+            "maximumWarning": "6kb",
+            "maximumError": "6.92kb"
+          },
+          {
+            "type": "bundle",
+            "name": "libs_cdk_coercing_src_index_ts",
+            "maximumWarning": "1kb",
+            "maximumError": "1.83kb"
+          },
+          {
+            "type": "bundle",
+            "name": "libs_cdk_notifications_src_index_ts-node_modules_rxjs_dist_esm_internal_ReplaySubject_js-node-a695b1.js",
+            "maximumWarning": "5kb",
+            "maximumError": "5.88kb"
+          },
+          {
+            "type": "bundle",
+            "name": "default-libs_cdk_render-strategies_src_index_ts",
+            "maximumWarning": " 13kb",
+            "maximumError": " 13.35kb"
+          },
+          {
+            "type": "bundle",
+            "name": "libs_cdk_state_src_index_ts",
+            "maximumWarning": "4kb",
+            "maximumError": "4.45kb"
+          },
+          {
+            "type": "bundle",
+            "name": "default-libs_cdk_template_src_index_ts",
+            "maximumWarning": "9kb",
+            "maximumError": "9.63kb"
+          },
+          {
+            "type": "bundle",
+            "name": "default-libs_cdk_zone-less_src_index_ts",
+            "maximumWarning": "9kb",
+            "maximumError": "9.82kb"
+          },
+          {
+            "type": "bundle",
+            "name": "libs_cdk_zone-configurations_src_index_ts",
+            "maximumWarning": "1b",
+            "maximumError": "1b"
+          }
+        ]
+      },
+      "configurations": {
+        "production": {
+
+        }
+      },
+      "outputs": ["{options.outputPath}"]
+    }
+  },
+  "tags": []
+}

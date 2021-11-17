@@ -12,6 +12,7 @@
     "test-helpers": "libs/test-helpers",
     "tour-of-heroes-ngxs": "apps/tour-of-heroes-ngxs",
     "vanilla-case-studies": "apps/vanilla-case-studies",
+    "bundle-budget--template-unpatch": "apps/bundle-budget--template-unpatch",
     "vanilla-case-studies-e2e": "apps/vanilla-case-studies-e2e"
   }
 }
