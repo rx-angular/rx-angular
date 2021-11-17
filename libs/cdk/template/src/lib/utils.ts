@@ -11,20 +11,19 @@ import {
   combineLatest,
   concat,
   merge,
+  MonoTypeOperatorFunction,
   Observable,
   of,
   OperatorFunction,
 } from 'rxjs';
-import { MonoTypeOperatorFunction } from 'rxjs';
+import { ignoreElements, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
   delay,
-  ignoreElements,
-  switchMap,
-  withLatestFrom,
 } from 'rxjs/operators';
 import { asyncScheduler } from '@rx-angular/cdk/zone-less';
 import { RxStrategyCredentials, onStrategy } from '@rx-angular/cdk/render-strategies';
-import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
+//import { coalesceWith } from '@rx-angular/cdk/coalescing';
+//import { timeout } from '@rx-angular/cdk/internals/core';
 
 // Below are constants for LView indices to help us look up LView members
 // without having to remember the specific indices.
@@ -239,8 +238,9 @@ export function notifyAllParentsIfNeeded<T>(
 ): MonoTypeOperatorFunction<T> {
   return (o$) =>
     o$.pipe(
-      // @TODO: [bundle-size] if possible replace it with primitive logic to get rid of zone-less
       delay(0, asyncScheduler),
+      // @Todo check why tests fail for this delay replacement
+      // coalesceWith(timeout()),
       switchMap((v) => {
         const notifyParent = notifyNeeded();
         if (!notifyParent) {
@@ -286,7 +286,7 @@ export function notifyInjectingParentIfNeeded(
     of(null),
     notify
       ? onStrategy(
-        injectingViewCdRef,
+          injectingViewCdRef,
           strategy,
           (value, work, options) => {
             // console.log('notify injectingView', injectingViewCdRef);

@@ -5,11 +5,10 @@ import {
   Pipe,
   PipeTransform,
 } from '@angular/core';
-// @TODO: [bundle-size] replace with unpatched API method directly
-import { asyncScheduler } from '@rx-angular/cdk/zone-less';
 import {
+  RxStrategyNames,
+  RxStrategyProvider,
   strategyHandling,
-  RxStrategyProvider, RxStrategyNames, RxStrategyCredentials
 } from '@rx-angular/cdk/render-strategies';
 import {
   createTemplateNotifier,
@@ -21,7 +20,9 @@ import {
   ObservableInput,
   Unsubscribable,
 } from 'rxjs';
-import { delay, filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { coalesceWith } from '@rx-angular/cdk/coalescing';
+import { timeout } from '@rx-angular/cdk/internals/core';
 
 /**
  * @Pipe PushPipe
@@ -189,7 +190,7 @@ export class PushPipe<S extends string = string>
               }
             )
             .pipe(
-              delay(0, asyncScheduler),
+              coalesceWith(timeout()),
               tap(() => this._renderCallback?.next(notification.value))
             )
         )
