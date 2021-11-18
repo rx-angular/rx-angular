@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './basic-example.routes';
 import { BasicExampleComponent } from './basic-example.component';
-import { PushModule, ViewportPrioModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template/push';
 import { LetModule } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
@@ -18,7 +18,6 @@ const DECLARATIONS = [BasicExampleComponent];
   declarations: [DECLARATIONS],
   imports: [
     CommonModule,
-    ViewportPrioModule,
     UnpatchModule,
     DirtyChecksModule,
     RouterModule.forChild(ROUTES),
@@ -28,7 +27,7 @@ const DECLARATIONS = [BasicExampleComponent];
     VisualizerModule,
     ValueProvidersModule,
     RenderingsModule,
-    ViewportPrioModule
+    // ViewportPrioModule
   ],
   exports: [DECLARATIONS]
 })
