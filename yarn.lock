@@ -12695,16 +12695,17 @@ sisteransi@^1.0.5:
   resolved "https://registry.yarnpkg.com/sisteransi/-/sisteransi-1.0.5.tgz#134d681297756437cc05ca01370d3a7a571075ed"
   integrity sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==
 
-size-limit@^6.0.4:
-  version "6.0.4"
-  resolved "https://registry.yarnpkg.com/size-limit/-/size-limit-6.0.4.tgz#f3345206d8c25485d0d31ea41622761a3a1aad93"
-  integrity sha512-zo/9FrXzetvZGFJnd1LC4mR9GvirElALlerMY3EOwEGdW7Lwgl2WT0hTRC2559ZR2PGfRpnXEgAFkayGAJOebg==
+size-limit@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/size-limit/-/size-limit-7.0.0.tgz#813e26e3496d3403f12f25fdf1233421c038a3e5"
+  integrity sha512-tyeM1x2AYOyPxrg8NXG6zJokFY8lOlxQLi3GQpIpSqV3kHG3xlzutsPc1xZLMTvnaZeEvnD0ZgoNRfBz0T7How==
   dependencies:
     bytes-iec "^3.1.1"
     chokidar "^3.5.2"
     ci-job-number "^1.2.2"
     globby "^11.0.4"
     lilconfig "^2.0.3"
+    mkdirp "^1.0.4"
     nanospinner "^0.4.0"
     picocolors "^1.0.0"
 
