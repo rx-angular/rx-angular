@@ -1,17 +1,17 @@
 {
   "projectType": "application",
   "generators": {},
-  "root": "apps/bundle-budget--template-unpatch",
-  "sourceRoot": "apps/bundle-budget--template-unpatch/src",
-  "prefix": "rx-angular",
+  "root": "apps/bundle-budgets",
+  "sourceRoot": "apps/bundle-budgets/src",
+  "prefix": "bdgt",
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
       "options": {
-        "outputPath": "dist/apps/bundle-budget--template-unpatch",
-        "index": "apps/bundle-budget--template-unpatch/src/index.html",
-        "main": "apps/bundle-budget--template-unpatch/src/main.ts",
-        "tsConfig": "apps/bundle-budget--template-unpatch/tsconfig.app.json",
+        "outputPath": "dist/apps/bundle-budgets",
+        "index": "apps/bundle-budgets/src/index.html",
+        "main": "apps/bundle-budgets/src/main.ts",
+        "tsConfig": "apps/bundle-budgets/tsconfig.app.json",
         "vendorChunk": false,
         "extractLicenses": true,
         "buildOptimizer": true,
@@ -20,8 +20,8 @@
         "namedChunks": true,
         "fileReplacements": [
           {
-            "replace": "apps/bundle-budget--template-unpatch/src/environments/environment.ts",
-            "with": "apps/bundle-budget--template-unpatch/src/environments/environment.prod.ts"
+            "replace": "apps/bundle-budgets/src/environments/environment.ts",
+            "with": "apps/bundle-budgets/src/environments/environment.prod.ts"
           }
         ],
         "budgets": [
@@ -32,7 +32,7 @@
           },
           {
             "type": "bundle",
-            "name": "apps_bundle-budget--template-unpatch_src_empty-bundle_ts",
+            "name": "apps_bundle-budgets_src_empty-bundle_ts",
             "maximumWarning": "200b",
             "maximumError": " 213b"
           },
