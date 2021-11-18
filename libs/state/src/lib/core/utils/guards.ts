@@ -2,7 +2,8 @@ import { OperatorFunction } from 'rxjs';
 
 export function isPromiseGuard<T>(value: unknown): value is Promise<T> {
   return (
-    !!value &&
+    value !== null &&
+    value !== undefined &&
     typeof (<any>value).subscribe !== 'function' &&
     typeof (value as any).then === 'function'
   );
@@ -32,14 +33,21 @@ export function isIterableGuard<T>(obj: unknown): obj is Array<T> {
 }
 
 export function isKeyOf<O>(k: unknown): k is keyof O {
+  const typeofK = typeof k;
   return (
-    !!k &&
-    (typeof k === 'string' || typeof k === 'symbol' || typeof k === 'number')
+    k !== null &&
+    k !== undefined &&
+    ['string', 'symbol', 'number'].includes(typeofK)
   );
 }
 
 export function isObjectGuard(obj: unknown): obj is object {
-  return !!obj && typeof obj === 'object' && !Array.isArray(obj);
+  return (
+    obj !== null &&
+    obj !== undefined &&
+    typeof obj === 'object' &&
+    !Array.isArray(obj)
+  );
 }
 
 export function isDefined(val: unknown): val is NonNullable<any> {

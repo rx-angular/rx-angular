@@ -9,7 +9,7 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { onStrategy, RxRenderWork, RxStrategyNames, RxStrategyProvider } from '@rx-angular/cdk';
+import { onStrategy, RxRenderWork, RxStrategyProvider, RxStrategyNames } from '@rx-angular/cdk';
 import { Subscription, Unsubscribable } from 'rxjs';
 import { distinctUntilChanged, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { RxSwitch } from './rx-switch.directive';

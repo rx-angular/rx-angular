@@ -17,11 +17,10 @@ import {
 import {
   createTemplateManager,
   RxTemplateManager,
-  RxStrategyProvider,
   RxBaseTemplateNames,
-  RxViewContext,
-  RxStrategyNames
-} from '@rx-angular/cdk';
+  RxViewContext
+} from '@rx-angular/cdk/template';
+import { RxStrategyProvider, RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
