@@ -15,15 +15,10 @@
           "devServerTarget": "demos:serve:production"
         }
       }
-    },
-    "lint": {
-      "executor": "@angular-devkit/build-angular:tslint",
-      "options": {
-        "tsConfig": ["apps/demos-e2e/tsconfig.e2e.json"],
-        "exclude": ["**/node_modules/**", "!apps/demos-e2e/**/*"]
-      }
     }
   },
   "tags": [],
-  "implicitDependencies": ["demos"]
+  "implicitDependencies": [
+    "demos"
+  ]
 }
