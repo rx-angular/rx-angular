@@ -178,6 +178,7 @@ const setupTemplateManagerComponent = (): void => {
         },
       },
     ],
+    teardown: { destroyAfterEach: true },
   });
 
   fixtureComponent = TestBed.createComponent(TemplateManagerSpecComponent);

@@ -2,6 +2,6 @@
   "$schema": "../../../../node_modules/ng-packagr/package.schema.json",
   "lib": {
     "entryFile": "src/index.ts",
-    "flatModuleFile": "cdk-internals-scheduler"
+    "flatModuleFile": "cdk-internals-core"
   }
 }

@@ -31,23 +31,15 @@
         "project": "libs/cdk/ng-package.json"
       }
     },
-    "lint": {
-      "executor": "@angular-devkit/build-angular:tslint",
-      "options": {
-        "tsConfig": [
-          "libs/cdk/tsconfig.lib.json",
-          "libs/cdk/tsconfig.spec.json"
-        ],
-        "exclude": ["**/node_modules/**", "!libs/cdk/**/*"]
-      }
-    },
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
         "jestConfig": "libs/cdk/jest.config.js",
         "passWithNoTests": true
       },
-      "outputs": ["coverage/libs/cdk"]
+      "outputs": [
+        "coverage/libs/cdk"
+      ]
     },
     "test-coverage": {
       "executor": "@nrwl/jest:jest",
@@ -56,7 +48,9 @@
         "passWithNoTests": true,
         "codeCoverage": true
       },
-      "outputs": ["coverage/libs/cdk"]
+      "outputs": [
+        "coverage/libs/cdk"
+      ]
     },
     "publish": {
       "executor": "@nrwl/workspace:run-commands",
@@ -87,7 +81,7 @@
       ]
     },
     "version": {
-      "builder": "@jscutlery/semver:version",
+      "executor": "@jscutlery/semver:version",
       "options": {
         "baseBranch": "master",
         "versionTagPrefix": "${target}@"
@@ -99,5 +93,8 @@
       "style": "scss"
     }
   },
-  "tags": ["type:lib", "type:cdk"]
+  "tags": [
+    "type:lib",
+    "type:cdk"
+  ]
 }

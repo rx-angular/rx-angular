@@ -2,20 +2,19 @@ import { ɵmarkDirty as markDirty } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
-import {
-  cancelAnimationFrame,
-  requestAnimationFrame,
-} from '@rx-angular/cdk/zone-less';
 import { RxCustomStrategyCredentials, RxNativeStrategyNames, RxRenderWork, RxStrategyCredentials } from './model';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 
 const animationFrameTick = () =>
   new Observable<number>((subscriber) => {
-    const id = requestAnimationFrame(() => {
+    // use the unpatched API no avoid zone interference
+    const id = getZoneUnPatchedApi('requestAnimationFrame')(() => {
       subscriber.next(0);
       subscriber.complete();
     });
     return () => {
-      cancelAnimationFrame(id);
+      // use the unpatched API no avoid zone interference
+      getZoneUnPatchedApi('cancelAnimationFrame')(id);
     };
   });
 

@@ -5,10 +5,10 @@ import {
   Pipe,
   PipeTransform,
 } from '@angular/core';
-import { asyncScheduler } from '@rx-angular/cdk/zone-less';
 import {
+  RxStrategyNames,
+  RxStrategyProvider,
   strategyHandling,
-  RxStrategyProvider, RxStrategyNames, RxStrategyCredentials
 } from '@rx-angular/cdk/render-strategies';
 import {
   createTemplateNotifier,
@@ -17,10 +17,11 @@ import {
 import {
   NextObserver,
   Observable,
-  ObservableInput,
-  Unsubscribable,
+  ObservableInput, timeoutWith,
+  Unsubscribable
 } from 'rxjs';
-import { delay, filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { timeoutSwitchMapWith } from '@rx-angular/cdk/internals/core';
 
 /**
  * @Pipe PushPipe
@@ -188,7 +189,7 @@ export class PushPipe<S extends string = string>
               }
             )
             .pipe(
-              delay(0, asyncScheduler),
+              timeoutSwitchMapWith(),
               tap(() => this._renderCallback?.next(notification.value))
             )
         )

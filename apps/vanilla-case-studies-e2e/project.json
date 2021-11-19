@@ -15,15 +15,10 @@
           "devServerTarget": "vanilla-case-studies:serve:production"
         }
       }
-    },
-    "lint": {
-      "executor": "@angular-devkit/build-angular:tslint",
-      "options": {
-        "tsConfig": ["apps/vanilla-case-studies-e2e/tsconfig.e2e.json"],
-        "exclude": ["**/node_modules/**", "!apps/vanilla-case-studies-e2e/**/*"]
-      }
     }
   },
   "tags": [],
-  "implicitDependencies": ["vanilla-case-studies"]
+  "implicitDependencies": [
+    "vanilla-case-studies"
+  ]
 }
