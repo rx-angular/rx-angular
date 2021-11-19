@@ -4,6 +4,7 @@ import { coerceObservableWith } from '@rx-angular/cdk/coerce';
 import { LetDirective } from '@rx-angular/template/let';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, tap } from 'rxjs';
 import { filter, map, mergeAll, withLatestFrom } from 'rxjs/operators';
+import { RxNotification } from '../../../../../cdk/notifications/src';
 
 function intersectionObserver(options?: object): {
   observe: (target: Element) => void;
@@ -101,7 +102,7 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
     let lastValue = undefined;
     // @TODO add a connect here to get rid of the subscribe
     this.letDirective.values$
-      .pipe(filter((n) => n.kind === 'next'))
+      .pipe(filter((n: RxNotification<any>) => n.kind === 'next'))
       .subscribe((v) => {
         lastValue = v;
       });
@@ -113,8 +114,8 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
           combineLatest(letStrategyName$, this._viewportPrio).pipe(
             filter(([newN, oldN]) => newN !== oldN)
           )),
-        map(([visibility, s]) => {
-        const [inStrategyName, outStrategyName] = s
+        map(([visibility, strategyNames]) => {
+        const [inStrategyName, outStrategyName] = strategyNames
          return visibility === 'visible'
             ? [visibility, inStrategyName]
             : [visibility, outStrategyName]
