@@ -1,4 +1,4 @@
-import { merge, Observable, queueScheduler, Subject, Subscribable, Subscription, Observer } from 'rxjs';
+import { merge, Observable, queueScheduler, Subject, Subscribable, Subscription } from 'rxjs';
 import { mergeAll, observeOn } from 'rxjs/operators';
 
 export function createSideEffectObservable<T>(
