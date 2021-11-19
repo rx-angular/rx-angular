@@ -16,5 +16,5 @@ export { RxCustomStrategyCredentials } from './lib/model';
 export { RxStrategyCredentials } from './lib/model';
 export { RxRenderBehavior } from './lib/model';
 export { RxRenderWork } from './lib/model';
-export { RX_ANGULAR_CONFIG } from './lib/config';
-export { RxAngularConfig } from './lib/config';
+export { RX_ANGULAR_CONFIG, RxAngularConfig } from './lib/config';
+export { RX_ANGULAR_RENDER_STRATEGIES_CONFIG, RxAngularRenderStrategiesConfig } from './lib/config';
