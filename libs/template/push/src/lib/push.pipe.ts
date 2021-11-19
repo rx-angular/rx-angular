@@ -17,12 +17,11 @@ import {
 import {
   NextObserver,
   Observable,
-  ObservableInput,
-  Unsubscribable,
+  ObservableInput, timeoutWith,
+  Unsubscribable
 } from 'rxjs';
 import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { coalesceWith } from '@rx-angular/cdk/coalescing';
-import { timeout } from '@rx-angular/cdk/internals/core';
+import { timeoutSwitchMapWith } from '@rx-angular/cdk/internals/core';
 
 /**
  * @Pipe PushPipe
@@ -190,7 +189,7 @@ export class PushPipe<S extends string = string>
               }
             )
             .pipe(
-              coalesceWith(timeout()),
+              timeoutSwitchMapWith(),
               tap(() => this._renderCallback?.next(notification.value))
             )
         )
