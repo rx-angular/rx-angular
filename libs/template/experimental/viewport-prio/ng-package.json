@@ -2,11 +2,6 @@
   "$schema": "../../../../node_modules/ng-packagr/package.schema.json",
   "lib": {
     "entryFile": "src/index.ts",
-    "flatModuleFile": "template-experimental-viewport-prio",
-    "umdModuleIds": {
-      "@rx-angular/cdk": "rx-angular.cdk",
-      "@rx-angular/template/let": "rx-angular.template-let",
-      "@rx-angular/cdk/coercing": "rx-angular.cdk-coercing"
-    }
+    "flatModuleFile": "template-experimental-viewport-prio"
   }
 }
