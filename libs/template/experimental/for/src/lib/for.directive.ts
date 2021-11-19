@@ -17,15 +17,15 @@ import {
 } from '@angular/core';
 import {
   createListTemplateManager,
+  RxDefaultListViewContext,
   RxListManager,
   RxListViewComputedContext,
   RxListViewContext,
-  RxDefaultListViewContext,
-  RxStrategyProvider,
-} from '@rx-angular/cdk';
+} from '@rx-angular/cdk/template';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
 
-import { ReplaySubject, Subject, Observable, Subscription } from 'rxjs';
+import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 
 /**
  * @Directive RxFor
@@ -530,6 +530,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param distinctBy
    */
+
   /*@Input('rxForDistinctBy')*/
   set distinctBy(distinctBy: (a: T, b: T) => boolean) {
     this._distinctBy = distinctBy;
@@ -655,6 +656,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       .render(this.values$)
       .subscribe((v) => this._renderCallback?.next(v));
   }
+
   /** @internal */
   createViewContext(
     item: T,

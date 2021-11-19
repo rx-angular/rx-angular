@@ -1,5 +1,6 @@
 import { Directive, ElementRef, Inject, Input, OnDestroy, OnInit, Optional } from '@angular/core';
-import { coerceObservableWith, RxStrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { coerceObservableWith } from '@rx-angular/cdk/coerce';
 import { LetDirective } from '@rx-angular/template/let';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, tap } from 'rxjs';
 import { filter, map, mergeAll, withLatestFrom } from 'rxjs/operators';
@@ -121,7 +122,6 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
       )
       .subscribe(([visibility, strategyName]) => {
         if (this.letDirective !== null) {
-          console.log('strategy', strategyName);
           this.letDirective.strategy = strategyName as string;
         }
 
