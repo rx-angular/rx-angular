@@ -82,17 +82,18 @@ describe('RxEffects', () => {
     jest.restoreAllMocks();
   });
 
-  test('should invoke callback for each value emitted', async () => {
+  test('should invoke callback for each value emitted', () => {
     const service = {
       method1: jest.fn(),
       method2: jest.fn(),
       method3: jest.fn(),
       method4: jest.fn(),
     };
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       declarations: [TestComponent],
       providers: [Store, { provide: Service, useValue: service }],
-    }).compileComponents();
+      teardown: { destroyAfterEach: true },
+    });
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
 
@@ -111,17 +112,18 @@ describe('RxEffects', () => {
     expect(service.method4).toHaveBeenCalledWith('bar4');
   });
 
-  test('should unsubscribe when component is destroyed', async () => {
+  test('should unsubscribe when component is destroyed', () => {
     const service = {
       method1: jest.fn(),
       method2: jest.fn(),
       method3: jest.fn(),
       method4: jest.fn(),
     };
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       declarations: [TestComponent],
       providers: [Store, { provide: Service, useValue: service }],
-    }).compileComponents();
+      teardown: { destroyAfterEach: true },
+    });
     const fixture = TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
 
@@ -147,7 +149,7 @@ describe('RxEffects', () => {
     expect(service.method4).not.toHaveBeenCalled();
   });
 
-  test('should isolate errors and invoke provided ErrorHandler', async () => {
+  test('should isolate errors and invoke provided ErrorHandler', () => {
     const service = {
       method1: () => {
         throw new Error('something went wrong');
@@ -159,7 +161,7 @@ describe('RxEffects', () => {
     const customErrorHandler: ErrorHandler = {
       handleError: jest.fn(),
     };
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       declarations: [TestComponent],
       providers: [
         Store,
@@ -169,7 +171,8 @@ describe('RxEffects', () => {
           useValue: customErrorHandler,
         },
       ],
-    }).compileComponents();
+      teardown: { destroyAfterEach: true },
+    });
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
 
@@ -184,7 +187,7 @@ describe('RxEffects', () => {
     expect(service.method4).toHaveBeenCalledWith('foo4');
   });
 
-  test('should invoke complete callback upon completion', async () => {
+  test('should invoke complete callback upon completion', () => {
     const service = {
       method1: () => {},
       method2: () => {},
@@ -192,10 +195,11 @@ describe('RxEffects', () => {
       method4: () => {},
       method4OnComplete: jest.fn(),
     };
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       declarations: [TestComponent],
       providers: [Store, { provide: Service, useValue: service }],
-    }).compileComponents();
+      teardown: { destroyAfterEach: true },
+    });
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
 
@@ -209,7 +213,7 @@ describe('RxEffects', () => {
     expect(service.method4OnComplete).toHaveBeenCalled();
   });
 
-  test('should invoke error callback when source observable errors', async () => {
+  test('should invoke error callback when source observable errors', () => {
     const service = {
       method1: () => {},
       method2: () => {},
@@ -224,14 +228,15 @@ describe('RxEffects', () => {
           ? throwError(new Error('something went wrong'))
           : EMPTY
       );
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       declarations: [TestComponent],
       providers: [
         Store,
         { provide: Service, useValue: service },
         { provide: ErrorHandler, useValue: { handleError: () => {} } },
       ],
-    }).compileComponents();
+      teardown: { destroyAfterEach: true },
+    });
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
 
@@ -242,15 +247,16 @@ describe('RxEffects', () => {
     );
   });
 
-  test('should cancel side-effect if unregistered imperatively', async () => {
+  test('should cancel side-effect if unregistered imperatively', () => {
     const service = {
       method1: jest.fn(),
       method2: jest.fn(),
     };
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       declarations: [TestUnregisterComponent],
       providers: [Store, { provide: Service, useValue: service }],
-    }).compileComponents();
+      teardown: { destroyAfterEach: true },
+    });
     const fixture = TestBed.createComponent(TestUnregisterComponent);
     const component = fixture.componentInstance;
     const store = TestBed.inject(Store);
