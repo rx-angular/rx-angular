@@ -3,7 +3,6 @@
   "lib": {
     "entryFile": "src/index.ts",
     "flatModuleFile": "template-experimental-for",
-    "umdId": "rx-angular.template-experimental-for",
     "umdModuleIds": {
       "@rx-angular/cdk": "rx-angular.cdk",
       "@rx-angular/cdk/coercing": "rx-angular.cdk-coercing"

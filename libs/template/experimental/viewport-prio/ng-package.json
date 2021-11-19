@@ -3,7 +3,6 @@
   "lib": {
     "entryFile": "src/index.ts",
     "flatModuleFile": "template-experimental-viewport-prio",
-    "umdId": "rx-angular.template-experimental-viewport-prio",
     "umdModuleIds": {
       "@rx-angular/cdk": "rx-angular.cdk",
       "@rx-angular/template/let": "rx-angular.template-let",
