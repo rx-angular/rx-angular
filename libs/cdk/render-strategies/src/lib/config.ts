@@ -16,8 +16,8 @@ export interface RxAngularConfig<T extends string> extends RxRenderStrategiesCon
 
 };
 
-export const RX_ANGULAR_RENDER_STRATEGIES_CONFIG = new InjectionToken<RxRenderStrategiesConfig<string>>(
-  'rx-angular-render-strategies-config'
+export const RX_RENDER_STRATEGIES_CONFIG = new InjectionToken<RxRenderStrategiesConfig<string>>(
+  'rxa-render-strategies-config'
 );
 
 export const RX_ANGULAR_RENDER_STRATEGIES_DEFAULTS: Required<RxRenderStrategiesConfig<RxDefaultStrategyNames>> = {

@@ -15,7 +15,7 @@ import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import {
   mergeDefaultConfig,
   RX_ANGULAR_CONFIG,
-  RX_ANGULAR_RENDER_STRATEGIES_CONFIG,
+  RX_RENDER_STRATEGIES_CONFIG,
   RxAngularConfig,
   RxRenderStrategiesConfig
 } from './config';
@@ -137,10 +137,9 @@ export class RxStrategyProvider<T extends string = string> {
   constructor(
     @Optional()
     @Inject(RX_ANGULAR_CONFIG)
-    @Optional()
     cfgOld: RxRenderStrategiesConfig<T>,
     @Optional()
-    @Inject(RX_ANGULAR_RENDER_STRATEGIES_CONFIG)
+    @Inject(RX_RENDER_STRATEGIES_CONFIG)
     cfg: RxRenderStrategiesConfig<T>
   ) {
     // @TODO remove after breaking change

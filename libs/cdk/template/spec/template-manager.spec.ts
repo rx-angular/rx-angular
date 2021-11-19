@@ -21,7 +21,7 @@ import {
 } from '@rx-angular/cdk/template';
 import {
   RxStrategyProvider,
-  RX_ANGULAR_RENDER_STRATEGIES_CONFIG
+  RX_RENDER_STRATEGIES_CONFIG
 } from '@rx-angular/cdk/render-strategies';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import {
@@ -174,7 +174,7 @@ const setupTemplateManagerComponent = (): void => {
       { provide: ErrorHandler, useValue: customErrorHandler },
       ViewContainerRef,
       {
-        provide: RX_ANGULAR_RENDER_STRATEGIES_CONFIG,
+        provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
         },

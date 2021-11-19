@@ -7,7 +7,7 @@ import { ENVIRONMENT_SETTINGS } from './shared/environment.token';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './features/home/home.component';
-import { RX_ANGULAR_RENDER_STRATEGIES_CONFIG } from '../../../../libs/cdk/render-strategies/src/lib/config';
+import { RX_RENDER_STRATEGIES_CONFIG } from '../../../../libs/cdk/render-strategies/src/lib/config';
 
 @NgModule({
   imports: [
@@ -22,7 +22,7 @@ import { RX_ANGULAR_RENDER_STRATEGIES_CONFIG } from '../../../../libs/cdk/render
       useValue: environment,
     },
     {
-      provide: RX_ANGULAR_RENDER_STRATEGIES_CONFIG,
+      provide: RX_RENDER_STRATEGIES_CONFIG,
       useValue: {
         primaryStrategy: 'normal',
         patchZone: true
