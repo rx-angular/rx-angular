@@ -3,7 +3,7 @@ import {
   isObservable,
   NEVER,
   Observable,
-  ObservableInput, ObservableNotification,
+  ObservableInput,
   of,
   ReplaySubject
 } from 'rxjs';

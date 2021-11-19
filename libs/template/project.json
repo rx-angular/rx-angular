@@ -48,23 +48,15 @@
         "parallel": false
       }
     },
-    "lint": {
-      "executor": "@angular-devkit/build-angular:tslint",
-      "options": {
-        "tsConfig": [
-          "libs/template/tsconfig.lib.json",
-          "libs/template/tsconfig.spec.json"
-        ],
-        "exclude": ["**/node_modules/**", "!libs/template/**/*"]
-      }
-    },
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
         "jestConfig": "libs/template/jest.config.js",
         "passWithNoTests": true
       },
-      "outputs": ["coverage/libs/template"]
+      "outputs": [
+        "coverage/libs/template"
+      ]
     },
     "build-docs": {
       "executor": "@nrwl/workspace:run-commands",
@@ -94,7 +86,9 @@
         "passWithNoTests": true,
         "codeCoverage": true
       },
-      "outputs": ["coverage/libs/template"]
+      "outputs": [
+        "coverage/libs/template"
+      ]
     },
     "changelog": {
       "executor": "@nrwl/workspace:run-commands",
@@ -145,7 +139,7 @@
       ]
     },
     "version": {
-      "builder": "@jscutlery/semver:version",
+      "executor": "@jscutlery/semver:version",
       "options": {
         "baseBranch": "master",
         "versionTagPrefix": "${target}@"
@@ -157,5 +151,8 @@
       "style": "scss"
     }
   },
-  "tags": ["type:lib", "type:template"]
+  "tags": [
+    "type:lib",
+    "type:template"
+  ]
 }

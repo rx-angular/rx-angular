@@ -8,7 +8,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { getZoneUnPatchedApi } from '@rx-angular/cdk/zone-less';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 import {
   focusEvents,
   mouseEvents,

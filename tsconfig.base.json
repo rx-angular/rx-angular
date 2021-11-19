@@ -21,6 +21,9 @@
       "@rx-angular/cdk/internals/scheduler": [
         "libs/cdk/internals/scheduler/src/index.ts"
       ],
+      "@rx-angular/cdk/internals/core": [
+        "libs/cdk/internals/core/src/index.ts"
+      ],
       "@rx-angular/tools/generators/*": [
         "tools/generators/utils/*"
       ],
@@ -28,12 +31,8 @@
       "@rx-angular/cdk/render-strategies": [
         "libs/cdk/render-strategies/src/index.ts"
       ],
-      "@rx-angular/cdk/state": [
-        "libs/cdk/state/src/index.ts"
-      ],
-      "@rx-angular/cdk/template": [
-        "libs/cdk/template/src/index.ts"
-      ],
+      "@rx-angular/cdk/state": ["libs/cdk/state/src/index.ts"],
+      "@rx-angular/cdk/template": ["libs/cdk/template/src/index.ts"],
       "@rx-angular/cdk/zone-configurations": [
         "libs/cdk/zone-configurations/src/index.ts"
       ],
