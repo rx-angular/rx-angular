@@ -1,4 +1,4 @@
-import { Observable, Subscriber } from 'rxjs';
+import { mapTo, Observable, Subscriber, concatMap } from 'rxjs';
 import { getZoneUnPatchedApi } from './get-zone-unpatched-api';
 
 /**
@@ -6,13 +6,22 @@ import { getZoneUnPatchedApi } from './get-zone-unpatched-api';
  * The timeout it unpatched to not avoid zone pollution
  * @param setTimeoutFn
  */
-export function timeout(
-  setTimeoutFn: (cb: () => void) => number = getZoneUnPatchedApi('setTimeout')
+function timeout(
+  delay: number = 0
 ) {
   return new Observable<number>((subscriber: Subscriber<number>) => {
-    const asyncID = setTimeoutFn(() => subscriber.next(0));
+    const asyncID = getZoneUnPatchedApi('setTimeout')(() => subscriber.next(0), delay);
     return () => {
       getZoneUnPatchedApi('clearTimeout')(asyncID);
     };
   });
+}
+
+/**
+ *
+ */
+export function timeoutSwitchMapWith<T>() {
+  return (o$: Observable<T>) => o$.pipe(
+    concatMap((v) => timeout().pipe(mapTo(v)))
+  )
 }
