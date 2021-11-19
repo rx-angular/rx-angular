@@ -16,12 +16,18 @@ import {
 import { TestBed } from '@angular/core/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import {
-  createTemplateManager, RX_ANGULAR_CONFIG,
-  RxBaseTemplateNames,
-  RxStrategyProvider,
-  RxTemplateManager,
-  RxViewContext
+  RX_ANGULAR_CONFIG
 } from '@rx-angular/cdk';
+import {
+  createListTemplateManager,
+  RxDefaultListViewContext,
+  RxListManager,
+  RxListViewComputedContext,
+  RxListViewContext
+} from '@rx-angular/cdk/template';
+import {
+  RxStrategyProvider
+} from '@rx-angular/cdk/render-strategies';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import {
   RxNotificationKind,
