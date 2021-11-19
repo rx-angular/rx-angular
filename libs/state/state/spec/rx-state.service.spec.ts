@@ -5,7 +5,7 @@ import {
   createStateChecker,
   initialPrimitiveState,
   PrimitiveState,
-} from './fixtures';
+} from '../../spec/fixtures';
 import { TestScheduler } from 'rxjs/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { RxState, select } from '@rx-angular/state';
