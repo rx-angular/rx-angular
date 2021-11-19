@@ -36,6 +36,7 @@ const setupPushPipeComponent = () => {
         },
       },
     ],
+    teardown: { destroyAfterEach: true },
   });
 
   fixturePushPipeTestComponent = TestBed.createComponent(PushPipeTestComponent);
