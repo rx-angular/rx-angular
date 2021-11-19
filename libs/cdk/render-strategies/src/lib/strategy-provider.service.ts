@@ -12,7 +12,13 @@ import {
   Observable,
 } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
-import { mergeDefaultConfig, RX_ANGULAR_CONFIG, RxAngularConfig } from './config';
+import {
+  mergeDefaultConfig,
+  RX_ANGULAR_CONFIG,
+  RX_ANGULAR_RENDER_STRATEGIES_CONFIG,
+  RxAngularConfig,
+  RxRenderStrategiesConfig
+} from './config';
 import { onStrategy } from './onStrategy';
 import { RxStrategies, RxStrategyCredentials, RxStrategyNames, ScheduleOnStrategyOptions } from './model';
 
@@ -93,7 +99,6 @@ export class RxStrategyProvider<T extends string = string> {
     return this._primaryStrategy$.getValue().name;
   }
 
-
   /**
    * @description
    * Set's the strategy that will be used by the service.
@@ -126,15 +131,20 @@ export class RxStrategyProvider<T extends string = string> {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
- /**
-  * @internal
-  */
+  /**
+   * @internal
+   */
   constructor(
     @Optional()
     @Inject(RX_ANGULAR_CONFIG)
-    cfg: RxAngularConfig<T>
+    @Optional()
+    cfgOld: RxRenderStrategiesConfig<T>,
+    @Optional()
+    @Inject(RX_ANGULAR_RENDER_STRATEGIES_CONFIG)
+    cfg: RxRenderStrategiesConfig<T>
   ) {
-    this._cfg = mergeDefaultConfig(cfg);
+    // @TODO remove after breaking change
+    this._cfg = mergeDefaultConfig({ ...cfg, ...cfgOld });
     this._strategies$.next(this._cfg.customStrategies as any);
     this.primaryStrategy = this.config.primaryStrategy;
   }

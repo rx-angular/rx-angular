@@ -3,7 +3,7 @@ import { RX_CONCURRENT_STRATEGIES } from './concurrent-strategies';
 import { RxCustomStrategyCredentials, RxDefaultStrategyNames, RxStrategyNames } from './model';
 import { RX_NATIVE_STRATEGIES } from './native-strategies';
 
-export interface RxAngularRenderStrategiesConfig<T extends string> {
+export interface RxRenderStrategiesConfig<T extends string> {
   primaryStrategy?: RxStrategyNames<T>;
   customStrategies?: RxCustomStrategyCredentials<T>;
   patchZone?: boolean;
@@ -12,15 +12,15 @@ export interface RxAngularRenderStrategiesConfig<T extends string> {
 /**
  * @deprecated use RxAngularRenderStrategiesConfig instead
  */
-export interface RxAngularConfig<T extends string> extends RxAngularRenderStrategiesConfig<T> {
+export interface RxAngularConfig<T extends string> extends RxRenderStrategiesConfig<T> {
 
 };
 
-export const RX_ANGULAR_RENDER_STRATEGIES_CONFIG = new InjectionToken<RxAngularRenderStrategiesConfig<string>>(
+export const RX_ANGULAR_RENDER_STRATEGIES_CONFIG = new InjectionToken<RxRenderStrategiesConfig<string>>(
   'rx-angular-render-strategies-config'
 );
 
-export const RX_ANGULAR_RENDER_STRATEGIES_DEFAULTS: Required<RxAngularRenderStrategiesConfig<RxDefaultStrategyNames>> = {
+export const RX_ANGULAR_RENDER_STRATEGIES_DEFAULTS: Required<RxRenderStrategiesConfig<RxDefaultStrategyNames>> = {
   primaryStrategy: 'normal',
   customStrategies: {
     ...RX_NATIVE_STRATEGIES,
@@ -50,9 +50,9 @@ export const RX_ANGULAR_DEFAULTS: Required<RxAngularConfig<RxDefaultStrategyName
 } as const;
 
 export function mergeDefaultConfig<T extends string>(
-  cfg?: RxAngularRenderStrategiesConfig<T>
-): Required<RxAngularRenderStrategiesConfig<T | RxDefaultStrategyNames>> {
-  const custom: RxAngularRenderStrategiesConfig<T> = cfg
+  cfg?: RxRenderStrategiesConfig<T>
+): Required<RxRenderStrategiesConfig<T | RxDefaultStrategyNames>> {
+  const custom: RxRenderStrategiesConfig<T> = cfg
                                      ? cfg
                                      : ({
       customStrategies: {}
