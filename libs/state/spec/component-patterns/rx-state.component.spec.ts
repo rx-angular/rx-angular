@@ -98,7 +98,8 @@ describe('GlueTestComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [RxStateGlueComponent, RxStateGlueContainerComponent],
-    }).compileComponents();
+      teardown: { destroyAfterEach: true },
+    });
     parentFixture = TestBed.createComponent(RxStateGlueContainerComponent);
     parentFixture.detectChanges();
 

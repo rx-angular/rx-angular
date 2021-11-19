@@ -13,5 +13,7 @@
     }
   },
   "tags": [],
-  "implicitDependencies": ["ssr"]
+  "implicitDependencies": [
+    "ssr"
+  ]
 }
