@@ -18,17 +18,11 @@
         "optimization": true,
         "sourceMap": false,
         "namedChunks": true,
-        "fileReplacements": [
-          {
-            "replace": "apps/bundle-budgets/src/environments/environment.ts",
-            "with": "apps/bundle-budgets/src/environments/environment.prod.ts"
-          }
-        ],
         "budgets": [
           {
             "type": "bundle",
             "name": "main",
-            "maximumWarning": "5kb"
+            "maximumWarning": "1kb"
           },
           {
             "type": "bundle",
@@ -106,7 +100,12 @@
       },
       "configurations": {
         "production": {
-
+          "fileReplacements": [
+            {
+              "replace": "apps/bundle-budgets/src/environments/environment.ts",
+              "with": "apps/bundle-budgets/src/environments/environment.prod.ts"
+            }
+          ]
         }
       },
       "outputs": ["{options.outputPath}"]
