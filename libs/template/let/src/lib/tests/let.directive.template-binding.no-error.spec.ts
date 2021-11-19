@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { LetDirective } from '../let.directive';
-import { Observable, of, Subject } from 'rxjs';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { Observable, of, Subject } from 'rxjs';
+
+import { LetDirective } from '../let.directive';
 
 @Component({
   template: `
@@ -42,7 +43,8 @@ const setupTestComponent = () => {
       },
     ],
     declarations: [LetDirectiveNoErrorTemplateTestComponent, LetDirective],
-  }).compileComponents();
+    teardown: { destroyAfterEach: true },
+  });
 };
 
 const setUpFixture = () => {
@@ -53,7 +55,7 @@ const setUpFixture = () => {
 
 describe('LetDirective when template binding without "error" template', () => {
   beforeAll(() => mockConsole());
-  beforeEach(waitForAsync(setupTestComponent));
+  beforeEach(setupTestComponent);
   beforeEach(() => {
     setUpFixture();
   });

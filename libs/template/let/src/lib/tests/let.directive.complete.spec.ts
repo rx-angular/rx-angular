@@ -1,16 +1,12 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { EMPTY, Observable, of } from 'rxjs';
-import { TestBed, waitForAsync } from '@angular/core/testing';
-import { LetDirective } from '../let.directive';
-import { MockChangeDetectorRef } from './fixtures';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { EMPTY, Observable, of } from 'rxjs';
+
+import { LetDirective } from '../let.directive';
+import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
   template: `
@@ -44,6 +40,7 @@ const setupLetDirectiveTestComponentComplete = (): void => {
         },
       },
     ],
+    teardown: { destroyAfterEach: true },
   });
 
   fixtureLetDirectiveTestComponent = TestBed.createComponent(
@@ -56,7 +53,7 @@ const setupLetDirectiveTestComponentComplete = (): void => {
 
 describe('LetDirective when complete', () => {
   beforeAll(() => mockConsole());
-  beforeEach(waitForAsync(setupLetDirectiveTestComponentComplete));
+  beforeEach(setupLetDirectiveTestComponentComplete);
 
   it('should render true if completed', () => {
     letDirectiveTestComponent.value$ = EMPTY;

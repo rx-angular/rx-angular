@@ -147,6 +147,7 @@ const setupListManagerComponent = (): void => {
         },
       },
     ],
+    teardown: { destroyAfterEach: true },
   });
 
   fixtureComponent = TestBed.createComponent(ListTemplateManagerSpecComponent);
