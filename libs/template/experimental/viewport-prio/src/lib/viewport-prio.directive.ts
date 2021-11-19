@@ -1,6 +1,6 @@
 import { Directive, ElementRef, Inject, Input, OnDestroy, OnInit, Optional } from '@angular/core';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { coerceObservableWith } from '@rx-angular/cdk/coerce';
+import { coerceObservableWith } from '@rx-angular/cdk/coercing';
 import { RxNotification } from '@rx-angular/cdk/notifications';
 import { LetDirective } from '@rx-angular/template/let';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, tap } from 'rxjs';
