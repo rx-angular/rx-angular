@@ -19,12 +19,8 @@ import {
   takeUntil,
   tap,
 } from 'rxjs/operators';
-import {
-  DestroyProp,
-  OnDestroy$,
-  toHook,
-  untilDestroyed,
-} from '@rx-angular/cdk';
+import { DestroyProp, OnDestroy$ } from './model';
+import { toHook, untilDestroyed } from './utils';
 
 /**
  * Reduces subscription boilerplate for performing observable-based side-effects in components.
@@ -69,7 +65,6 @@ import {
  */
 @Injectable()
 export class RxEffects implements OnDestroy, OnDestroy$ {
-
   constructor(
     @Optional()
     private readonly errorHandler: ErrorHandler
@@ -82,8 +77,9 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
   private readonly effects$ = this.observables$.pipe(mergeAll(), publish());
   onDestroy$: Observable<boolean> = this._hooks$.pipe(toHook('destroy'));
   private readonly destroyers: Record<number, Subject<void>> = {};
-  private readonly subscription = (this
-    .effects$ as ConnectableObservable<any>).connect();
+  private readonly subscription = (
+    this.effects$ as ConnectableObservable<any>
+  ).connect();
 
   /**
    * Performs a side-effect whenever a source observable emits, and handles its subscription.
