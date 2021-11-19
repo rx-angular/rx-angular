@@ -42,6 +42,8 @@
       "@rx-angular/template/let": ["libs/template/let/src/index.ts"],
       "@rx-angular/template/push": ["libs/template/push/src/index.ts"],
       "@rx-angular/template/unpatch": ["libs/template/unpatch/src/index.ts"],
+      "@rx-angular/template/experimental/for": ["libs/template/experimental/for/src/index.ts"],
+      "@rx-angular/template/experimental/viewport-prio": ["libs/template/experimental/viewport-prio/src/index.ts"],
       "@test-helpers": ["libs/test-helpers/src/index.ts"]
     }
   },

@@ -29,13 +29,13 @@ import {
 } from '@rx-angular/cdk/notifications';
 
 import {
-  defer,
+  defer, merge,
   NextObserver,
   Observable,
   ObservableInput,
-  ReplaySubject,
+  ReplaySubject, shareReplay,
   Subject,
-  Subscription,
+  Subscription
 } from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
 
@@ -360,6 +360,14 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   /** @internal */
   private rendered$ = new Subject<void>();
 
+  /** @internal */
+  readonly templateNotification$ = new Subject<RxNotification<U>>();
+
+  /** @internal */
+  readonly values$ = this.observablesHandler.values$;
+
+
+
   @Output() readonly rendered = defer(() => this.rendered$);
 
   /** @internal */
@@ -372,9 +380,15 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
 
   /** @internal */
   ngOnInit() {
+    this.subscription.add(this.strategyHandler.values$
+      .subscribe(strategy => {
+      if(strategy) {
+        this.strategyProvider.primaryStrategy = strategy
+      }
+    }));
     this.subscription.add(
       this.templateManager
-        .render(this.observablesHandler.values$)
+        .render(merge(this.values$, this.templateNotification$))
         .subscribe((n) => {
           this.rendered$.next(n);
           this._renderObserver?.next(n);
