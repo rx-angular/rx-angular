@@ -23,10 +23,11 @@ let componentInstance: LetDirectiveTestComponentStrategy;
 let componentNativeElement: HTMLElement;
 
 describe('LetDirective strategies', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       declarations: [LetDirectiveTestComponentStrategy, LetDirective],
-    }).compileComponents();
+      teardown: { destroyAfterEach: true },
+    });
   });
 
   beforeEach(() => {
