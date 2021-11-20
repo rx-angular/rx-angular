@@ -270,7 +270,7 @@ describe('cdk migration 1.0.0', () => {
       import { BrowserModule } from '@angular/platform-browser';
       import {
         getZoneUnPatchedApi,
-        Promise,
+        Promise as unpatchedPromise,
         requestAnimationFrame,
         cancelAnimationFrame,
         setInterval,

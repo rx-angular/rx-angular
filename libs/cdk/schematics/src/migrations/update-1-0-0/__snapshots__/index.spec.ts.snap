@@ -171,7 +171,7 @@ exports[`cdk migration 1.0.0 should replace zone-less 1`] = `
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { getZoneUnPatchedApi } from '@rx-angular/cdk/zone-less';
-import { Promise } from '@rx-angular/cdk/zone-less';
+import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less';
 import { requestAnimationFrame } from '@rx-angular/cdk/zone-less';
 import { cancelAnimationFrame } from '@rx-angular/cdk/zone-less';
 import { setInterval } from '@rx-angular/cdk/zone-less';

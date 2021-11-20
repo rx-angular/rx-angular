@@ -10,8 +10,8 @@ import {
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 
-import { Dependency } from '@rx-angular/tools/generators/dependency';
-import { getLatestNodeVersion } from '@rx-angular/tools/generators/get-latest-node-version';
+import { Dependency } from '../../utils/dependency';
+import { getLatestNodeVersion } from '../../utils/get-latest-node-version';
 
 const dependencies: Dependency[] = [
   {
