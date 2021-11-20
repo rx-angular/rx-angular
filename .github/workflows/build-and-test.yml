@@ -12,7 +12,7 @@ env:
   node-version: 14.x
   NX_CLOUD_DISTRIBUTED_EXECUTION: true
   NX_DISTRIBUTED_TASK_EXECUTION: true
-  NX_VERBOSE_LOGGING: true
+  NX_VERBOSE_LOGGING: false
 
 jobs:
   agents:

@@ -16,8 +16,9 @@ import { Hooks, intersectionObserver } from '../../../cdk';
 
 import {
   createTemplateManager,
-  RxTemplateManager, RxStrategyProvider,
-} from '@rx-angular/cdk';
+  RxTemplateManager
+} from '@rx-angular/cdk/template';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import { RxNotificationKind } from '@rx-angular/cdk/notifications';
 import {

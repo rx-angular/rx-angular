@@ -14,9 +14,7 @@ import {
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import {
   mergeDefaultConfig,
-  RX_ANGULAR_CONFIG,
   RX_RENDER_STRATEGIES_CONFIG,
-  RxAngularConfig,
   RxRenderStrategiesConfig
 } from './config';
 import { onStrategy } from './onStrategy';
@@ -61,7 +59,7 @@ export class RxStrategyProvider<T extends string = string> {
     RxStrategyCredentials<RxStrategyNames<T>>
   >(undefined);
 
-  private _cfg: Required<RxAngularConfig<T>>;
+  private _cfg: Required<RxRenderStrategiesConfig<T>>;
 
   /**
    * @description
@@ -71,7 +69,7 @@ export class RxStrategyProvider<T extends string = string> {
    * - array of custom user defined strategies - `customStrategies`
    * - setting that is responsible for running in our outside of the zone.js - `patchZone`
    */
-  get config(): Required<RxAngularConfig<T>> {
+  get config(): Required<RxRenderStrategiesConfig<T>> {
     return this._cfg;
   }
 
@@ -136,14 +134,10 @@ export class RxStrategyProvider<T extends string = string> {
    */
   constructor(
     @Optional()
-    @Inject(RX_ANGULAR_CONFIG)
-    cfgOld: RxRenderStrategiesConfig<T>,
-    @Optional()
     @Inject(RX_RENDER_STRATEGIES_CONFIG)
     cfg: RxRenderStrategiesConfig<T>
   ) {
-    // @TODO remove after breaking change
-    this._cfg = mergeDefaultConfig({ ...cfg, ...cfgOld });
+    this._cfg = mergeDefaultConfig(cfg);
     this._strategies$.next(this._cfg.customStrategies as any);
     this.primaryStrategy = this.config.primaryStrategy;
   }

@@ -124,9 +124,9 @@ By default the following configurations are set:
 
 ```typescript
 ...
-import {RxAngularConfig, RX_ANGULAR_CONFIG} from '@rx-angular/cdk';
+import {RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG} from '@rx-angular/cdk/render-strategies';
 
-const CUSTOM_RX_ANGULAR_CONFIG: RxAngularConfig<string> {
+const CUSTOM_RX_ANGULAR_CONFIG: RxRenderStrategiesConfig<string> {
   primaryStrategy: 'global';
   patchZone: false
 }
@@ -134,7 +134,7 @@ const CUSTOM_RX_ANGULAR_CONFIG: RxAngularConfig<string> {
 @Module({
   providers: [
     {
-      provide: RX_ANGULAR_CONFIG,
+      provide: RX_RENDER_STRATEGIES_CONFIG,
       useValue: CUSTOM_RX_ANGULAR_CONFIG
     }
   ]
@@ -148,9 +148,9 @@ export class AnyModule {
 
 ```typescript
 ...
-import {RxAngularConfig, RX_ANGULAR_CONFIG} from '@rx-angular/cdk';
+import {RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG} from '@rx-angular/cdk/render-strategies';
 
-const FEATURE_RX_ANGULAR_CONFIG: RxAngularConfig<string> {
+const FEATURE_RX_ANGULAR_CONFIG: RxRenderStrategiesConfig<string> {
   primaryStrategy: 'global';
   patchZone: false
 }
@@ -158,7 +158,7 @@ const FEATURE_RX_ANGULAR_CONFIG: RxAngularConfig<string> {
 @Module({
   providers: [
     {
-      provide: RX_ANGULAR_CONFIG,
+      provide: RX_RENDER_STRATEGIES_CONFIG,
       useValue: FEATURE_RX_ANGULAR_CONFIG
     }
   ]
@@ -172,9 +172,9 @@ export class AnyFeatureModule {
 
 ```typescript
 ...
-import {RxAngularConfig, RX_ANGULAR_CONFIG} from '@rx-angular/cdk';
+import {RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG} from '@rx-angular/cdk/render-strategies';
 
-const COMPONENT_RX_ANGULAR_CONFIG: RxAngularConfig<string> {
+const COMPONENT_RX_ANGULAR_CONFIG: RxRenderStrategiesConfig<string> {
   primaryStrategy: 'global';
   patchZone: false
 }
@@ -183,7 +183,7 @@ const COMPONENT_RX_ANGULAR_CONFIG: RxAngularConfig<string> {
   selector: 'any-component',
   providers: [
     {
-      provide: RX_ANGULAR_CONFIG,
+      provide: RX_RENDER_STRATEGIES_CONFIG,
       useValue: COMPONENT_RX_ANGULAR_CONFIG
     }
   ]
