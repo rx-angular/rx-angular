@@ -91,11 +91,14 @@ function replaceNodeOccurrences(
           sourceFile.fileName,
           node.getStart(),
           node.getText(),
-          newName + ','
+          newName
         )
       );
     }
-    ts.forEachChild(node, collectReplaces);
+    /* Skip replacing imports since it was already replaced previously. */
+    if (!ts.isImportDeclaration(node)) {
+      ts.forEachChild(node, collectReplaces);
+    }
   })(sourceFile)
   return nodeOccurrences;
 }

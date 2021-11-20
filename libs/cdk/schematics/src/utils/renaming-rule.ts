@@ -1,12 +1,15 @@
 import { chain, Tree } from '@angular-devkit/schematics';
 import { findNodes } from '@schematics/angular/utility/ast-utils';
 import * as ts from 'typescript';
-import { createRemoveChange } from './changes';
+import { createRemoveChange, ReplaceChange } from './changes';
 import { formatFiles } from './format-files';
 import { insert, insertImport } from './insert';
 import { visitTSSourceFiles } from './visitors';
 
-export function renamingRule(packageName: string, renames: Record<string, string | [string, string]>) {
+export function renamingRule(
+  packageName: string,
+  renames: Record<string, string | [string, string]>
+) {
   return () => {
     return chain([
       (tree: Tree) => {
@@ -16,8 +19,7 @@ export function renamingRule(packageName: string, renames: Record<string, string
             .filter(ts.isImportDeclaration)
             .filter(
               ({ moduleSpecifier }) =>
-                moduleSpecifier.getText(sourceFile) ===
-                `'${packageName}'` ||
+                moduleSpecifier.getText(sourceFile) === `'${packageName}'` ||
                 moduleSpecifier.getText(sourceFile) === `"${packageName}"`
             );
 
@@ -44,7 +46,9 @@ export function renamingRule(packageName: string, renames: Record<string, string
               const as = asSpecifier != null ? asSpecifier[0] : '';
               const i = importSpecifier.replace(/\s+as.*/gm, '');
               const rename = renames[i];
-              const symbolName = `${(typeof rename === 'string' ? i : rename[0])}${as}`;
+              const symbolName = `${
+                typeof rename === 'string' ? i : rename[0]
+              }${as}`;
               return insertImport(
                 sourceFile,
                 sourceFile.fileName,
@@ -54,12 +58,49 @@ export function renamingRule(packageName: string, renames: Record<string, string
             }
           );
 
-          insert(tree, sourceFile.fileName, [...insertChanges, ...removeChanges]);
+          /* Replace node occurrences if a rename is specified, eg: { OldModuleName: ['NewModuleName', 'new-path.ts'] } */
+          const replaceChanges = Object.entries(renames)
+            .filter(([, rename]) => Array.isArray(rename))
+            .flatMap(([oldName, [newName]]) =>
+              replaceNodeOccurrences(sourceFile, oldName, newName)
+            );
+
+          insert(tree, sourceFile.fileName, [
+            ...insertChanges,
+            ...removeChanges,
+            ...replaceChanges,
+          ]);
         });
       },
-      formatFiles()
+      formatFiles(),
     ]);
-  }
+  };
+}
+
+function replaceNodeOccurrences(
+  sourceFile: ts.SourceFile,
+  oldName: string,
+  newName: string
+) {
+  const nodeOccurrences: ReplaceChange[] = [];
+  (function collectReplaces(node: ts.Node) {
+    if (ts.isIdentifier(node) && node.getText(sourceFile) === oldName) {
+      console.log(node.getText(), newName)
+      nodeOccurrences.push(
+        new ReplaceChange(
+          sourceFile.fileName,
+          node.getStart(),
+          node.getText(),
+          newName
+        )
+      );
+    }
+    /* Skip replacing imports since it was already replaced previously. */
+    if (!ts.isImportDeclaration(node)) {
+      ts.forEachChild(node, collectReplaces);
+    }
+  })(sourceFile);
+  return nodeOccurrences;
 }
 
 function findImportSpecifiers(
