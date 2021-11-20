@@ -1,4 +1,4 @@
-import { MonoTypeOperatorFunction, Observable, OperatorFunction } from 'rxjs';
+import { Observable, OperatorFunction } from 'rxjs';
 import { distinctUntilChanged, filter, shareReplay } from 'rxjs/operators';
 import { isOperateFnArrayGuard, pipeFromArray } from '../../core/utils';
 import { NonUndefined } from '../interfaces';
@@ -44,7 +44,7 @@ import { NonUndefined } from '../interfaces';
  * @docsPage stateful
  * @docsCategory operators
  */
-export function stateful<T>(): MonoTypeOperatorFunction<NonUndefined<T>>;
+export function stateful<T>(): OperatorFunction<T, NonUndefined<T>>;
 /**
  * @internal
  */
