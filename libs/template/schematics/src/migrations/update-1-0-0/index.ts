@@ -9,4 +9,4 @@ const renames: Record<string, string | [string, string]> = {
   UnpatchEventsModule: ['UnpatchModule', '@rx-angular/template/unpatch'],
 };
 
-export default renamingRule(renames);
+export default renamingRule('@rx-angular/template', renames);

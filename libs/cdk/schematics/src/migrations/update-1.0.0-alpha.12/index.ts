@@ -1,4 +1,3 @@
-import { RX_ANGULAR_DEFAULTS } from '../../../../render-strategies/src/lib/config';
 import { renamingRule } from '../../utils/renaming-rule';
 
 const renames: Record<string, string | [string, string]> = {
@@ -107,6 +106,6 @@ const renames: Record<string, string | [string, string]> = {
   zoneConfig: '@rx-angular/cdk/zone-configurations'
 };
 
-export default renamingRule(renames);
+export default renamingRule('@rx-angular/cdk', renames);
 
 
