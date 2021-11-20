@@ -1,3 +1,4 @@
+import { RX_ANGULAR_DEFAULTS } from '../../../../render-strategies/src/lib/config';
 import { renamingRule } from '../../utils/renaming-rule';
 
 const renames: Record<string, string | [string, string]> = {
@@ -32,8 +33,9 @@ const renames: Record<string, string | [string, string]> = {
   RxStrategyCredentials: '@rx-angular/cdk/render-strategies',
   RxRenderBehavior: '@rx-angular/cdk/render-strategies',
   RxRenderWork: '@rx-angular/cdk/render-strategies',
-  RX_ANGULAR_CONFIG: '@rx-angular/cdk/render-strategies',
-  RxAngularConfig: '@rx-angular/cdk/render-strategies',
+  RX_ANGULAR_CONFIG: ['RX_RENDER_STRATEGIES_CONFIG', '@rx-angular/cdk/render-strategies'],
+  RX_ANGULAR_DEFAULTS: ['RX_RENDER_STRATEGIES_DEFAULTS', '@rx-angular/cdk/render-strategies'],
+  RxAngularConfig: ['RxRenderStrategiesConfig', '@rx-angular/cdk/render-strategies'],
   ObservableAccumulation: '@rx-angular/cdk/state',
   ObservableMap: '@rx-angular/cdk/state',
   accumulateObservables: '@rx-angular/cdk/state',

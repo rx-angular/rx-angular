@@ -79,8 +79,9 @@ import { RxCustomStrategyCredentials } from '@rx-angular/cdk/render-strategies';
 import { RxStrategyCredentials } from '@rx-angular/cdk/render-strategies';
 import { RxRenderBehavior } from '@rx-angular/cdk/render-strategies';
 import { RxRenderWork } from '@rx-angular/cdk/render-strategies';
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { RxAngularConfig } from '@rx-angular/cdk/render-strategies';
+import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { RX_RENDER_STRATEGIES_DEFAULTS } from '@rx-angular/cdk/render-strategies';
+import { RxRenderStrategiesConfig } from '@rx-angular/cdk/render-strategies';
 
 @NgModule({
   declarations: [AppComponent],

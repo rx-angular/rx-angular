@@ -131,6 +131,7 @@ describe('cdk migration 1.0.0', () => {
         RxRenderBehavior,
         RxRenderWork,
         RX_ANGULAR_CONFIG,
+        RX_ANGULAR_DEFAULTS,
         RxAngularConfig
       } from '@rx-angular/cdk';
 

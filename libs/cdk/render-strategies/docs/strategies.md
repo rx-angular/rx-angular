@@ -353,7 +353,7 @@ export type RxStrategies<T extends string> = RxCustomStrategyCredentials<
   RxStrategyNames<T>
 >;
 
-export interface RxAngularConfig<T extends string> {
+export interface RxRenderStrategiesConfig<T extends string> {
   primaryStrategy?: RxStrategyNames<T>;
   customStrategies?: RxCustomStrategyCredentials<T>;
   patchZone?: boolean;
