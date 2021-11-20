@@ -3,8 +3,9 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import { join } from 'path';
+import { readJsonInTree } from '../../utils/read-json-in-tree';
 
-import { readJsonInTree } from '../../../../../../tools/generators/common';
+
 
 const collectionPath = join(__dirname, '../../../collection.json');
 
