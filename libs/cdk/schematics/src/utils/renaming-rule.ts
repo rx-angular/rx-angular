@@ -85,7 +85,6 @@ function replaceNodeOccurrences(
   const nodeOccurrences: ReplaceChange[] = [];
   (function collectReplaces(node: ts.Node) {
     if (ts.isIdentifier(node) && node.getText(sourceFile) === oldName) {
-      console.log(node.getText(), newName)
       nodeOccurrences.push(
         new ReplaceChange(
           sourceFile.fileName,
