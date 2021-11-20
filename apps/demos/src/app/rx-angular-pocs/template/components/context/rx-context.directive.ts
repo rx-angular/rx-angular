@@ -7,7 +7,7 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { RxTemplateManager } from '@rx-angular/cdk';
+import { RxTemplateManager } from '@rx-angular/cdk/template';
 import { RxNotificationKind } from '@rx-angular/cdk/notifications';
 
 import {
@@ -19,7 +19,7 @@ import {
   Unsubscribable,
 } from 'rxjs';
 import { Hooks } from '../../../cdk/hooks/hooks';
-import { RxStrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import {
   RxContextTemplateNames,
   rxContextTemplateNames,
