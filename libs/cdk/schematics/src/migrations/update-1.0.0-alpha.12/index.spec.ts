@@ -144,7 +144,9 @@ describe('cdk migration 1.0.0', () => {
         imports: [
           BrowserModule
         ],
-        providers: [],
+        providers: [
+          { provide: RX_ANGULAR_CONFIG, useValue: RX_ANGULAR_DEFAULTS }
+        ],
         bootstrap: [AppComponent]
       })
       export class AppModule { }

@@ -24,9 +24,6 @@
       "@rx-angular/cdk/internals/core": [
         "libs/cdk/internals/core/src/index.ts"
       ],
-      "@rx-angular/tools/generators/*": [
-        "tools/generators/utils/*"
-      ],
       "@rx-angular/cdk/notifications": ["libs/cdk/notifications/src/index.ts"],
       "@rx-angular/cdk/render-strategies": [
         "libs/cdk/render-strategies/src/index.ts"
