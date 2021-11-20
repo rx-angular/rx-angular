@@ -6,7 +6,7 @@ import { formatFiles } from './format-files';
 import { insert, insertImport } from './insert';
 import { visitTSSourceFiles } from './visitors';
 
-export function renamingRule(renames: Record<string, string | [string, string]>) {
+export function renamingRule(packageName: string, renames: Record<string, string | [string, string]>) {
   return () => {
     return chain([
       (tree: Tree) => {
@@ -17,8 +17,8 @@ export function renamingRule(renames: Record<string, string | [string, string]>)
             .filter(
               ({ moduleSpecifier }) =>
                 moduleSpecifier.getText(sourceFile) ===
-                `'@rx-angular/cdk'` ||
-                moduleSpecifier.getText(sourceFile) === `"@rx-angular/cdk"`
+                `'${packageName}'` ||
+                moduleSpecifier.getText(sourceFile) === `"${packageName}"`
             );
 
           if (imports.length === 0) {

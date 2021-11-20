@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RxStrategyProvider } from '@rx-angular/cdk';
+import { ChangeDetectionStrategy, Component } from '@angular/core';;
 
 @Component({
   selector: 'rxa-rx-let-poc',

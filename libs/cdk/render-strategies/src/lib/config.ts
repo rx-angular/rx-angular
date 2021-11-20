@@ -9,38 +9,11 @@ export interface RxRenderStrategiesConfig<T extends string> {
   patchZone?: boolean;
 }
 
-/**
- * @deprecated use RxRenderStrategiesConfig instead
- */
-export interface RxAngularConfig<T extends string> extends RxRenderStrategiesConfig<T> {
-
-};
-
 export const RX_RENDER_STRATEGIES_CONFIG = new InjectionToken<RxRenderStrategiesConfig<string>>(
   'rxa-render-strategies-config'
 );
 
 export const RX_RENDER_STRATEGIES_DEFAULTS: Required<RxRenderStrategiesConfig<RxDefaultStrategyNames>> = {
-  primaryStrategy: 'normal',
-  customStrategies: {
-    ...RX_NATIVE_STRATEGIES,
-    ...RX_CONCURRENT_STRATEGIES
-  },
-  patchZone: true
-} as const;
-
-
-/**
- * @deprecated use RX_RENDER_STRATEGIES_CONFIG instead
- */
-export const RX_ANGULAR_CONFIG = new InjectionToken<RxAngularConfig<string>>(
-  'rx-angular-config'
-);
-
-/**
- * @deprecated use RX_RENDER_STRATEGIES_DEFAULTS instead
- */
-export const RX_ANGULAR_DEFAULTS: Required<RxAngularConfig<RxDefaultStrategyNames>> = {
   primaryStrategy: 'normal',
   customStrategies: {
     ...RX_NATIVE_STRATEGIES,

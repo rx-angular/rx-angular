@@ -368,6 +368,6 @@ describe('cdk migration 1.0.0', () => {
 
     tree.create(filePath, fileInput);
 
-    return runner.runSchematicAsync(`update-1-0-0`, {}, tree).toPromise();
+    return runner.runSchematicAsync(`update-1.0.0-alpha.12`, {}, tree).toPromise();
   }
 });
