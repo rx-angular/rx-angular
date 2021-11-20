@@ -104,8 +104,7 @@ jobs:
         run: yarn nx run ssr-e2e:e2e --headless
       # don't run build in parallel, can cause dead locks
       - name: Run Affected build
-      # @todo: @edbzn Nx cloud fail, disable it temporary.
-        run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx affected:build
+        run: yarn nx affected:build
 
       - run: yarn nx-cloud stop-all-agents
 
