@@ -26,16 +26,18 @@
     },
     "build": {
       "executor": "@nrwl/workspace:run-commands",
+      "dependsOn": [
+        {
+          "target": "build-base",
+          "projects": "self"
+        },
+        {
+          "target": "build-schematics",
+          "projects": "self"
+        }
+      ],
       "options": {
-        "commands": [
-          {
-            "command": "nx run cdk:build-lib"
-          },
-          {
-            "command": "nx run cdk:build-schematics"
-          }
-        ],
-        "parallel": false
+        "commands": []
       }
     },
     "build-schematics": {
@@ -61,7 +63,7 @@
         "parallel": false
       }
     },
-    "build-lib": {
+    "build-base": {
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/cdk/tsconfig.lib.json",
@@ -74,9 +76,7 @@
         "jestConfig": "libs/cdk/jest.config.js",
         "passWithNoTests": true
       },
-      "outputs": [
-        "coverage/libs/cdk"
-      ]
+      "outputs": ["coverage/libs/cdk"]
     },
     "test-coverage": {
       "executor": "@nrwl/jest:jest",
@@ -85,9 +85,7 @@
         "passWithNoTests": true,
         "codeCoverage": true
       },
-      "outputs": [
-        "coverage/libs/cdk"
-      ]
+      "outputs": ["coverage/libs/cdk"]
     },
     "publish": {
       "executor": "@nrwl/workspace:run-commands",
@@ -130,8 +128,5 @@
       "style": "scss"
     }
   },
-  "tags": [
-    "type:lib",
-    "type:cdk"
-  ]
+  "tags": ["type:lib", "type:cdk"]
 }

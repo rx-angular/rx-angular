@@ -9,7 +9,13 @@
       "options": {
         "tsConfig": "libs/template/tsconfig.lib.json",
         "project": "libs/template/ng-package.json"
-      }
+      },
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        }
+      ]
     },
     "build-schematics": {
       "executor": "@nrwl/workspace:run-commands",
@@ -36,16 +42,18 @@
     },
     "build": {
       "executor": "@nrwl/workspace:run-commands",
+      "dependsOn": [
+        {
+          "target": "build-lib",
+          "projects": "self"
+        },
+        {
+          "target": "build-schematics",
+          "projects": "self"
+        }
+      ],
       "options": {
-        "commands": [
-          {
-            "command": "nx run template:build-lib"
-          },
-          {
-            "command": "nx run template:build-schematics"
-          }
-        ],
-        "parallel": false
+        "commands": []
       }
     },
     "test": {
