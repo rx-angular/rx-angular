@@ -28,20 +28,10 @@
       "executor": "@nrwl/workspace:run-commands",
       "dependsOn": [
         {
-          "target": "build-base",
-          "projects": "self"
-        },
-        {
-          "target": "build-schematics",
+          "target": "build-lib",
           "projects": "self"
         }
       ],
-      "options": {
-        "commands": []
-      }
-    },
-    "build-schematics": {
-      "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
           {
@@ -63,7 +53,7 @@
         "parallel": false
       }
     },
-    "build-base": {
+    "build-lib": {
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/cdk/tsconfig.lib.json",

@@ -16,7 +16,6 @@
       "runner": "@nrwl/nx-cloud",
       "options": {
         "cacheableOperations": [
-          "build-schematics",
           "build-base",
           "build-lib",
           "build",
@@ -32,14 +31,6 @@
   },
   "affected": {
     "defaultBase": "origin/master"
-  },
-  "targetDependencies": {
-    "build": [
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ]
   },
   "cli": {
     "defaultCollection": "@nrwl/angular",
