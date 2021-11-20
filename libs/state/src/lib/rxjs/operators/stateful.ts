@@ -1,6 +1,7 @@
 import { MonoTypeOperatorFunction, Observable, OperatorFunction } from 'rxjs';
 import { distinctUntilChanged, filter, shareReplay } from 'rxjs/operators';
 import { isOperateFnArrayGuard, pipeFromArray } from '../../core/utils';
+import { NonUndefined } from '../interfaces';
 
 /**
  * @description
@@ -38,25 +39,25 @@ import { isOperateFnArrayGuard, pipeFromArray } from '../../core/utils';
  * );
  *
  * @param {OperatorFunction<T, A>} op - one or multiple passed operator comma separated
- * @return OperatorFunction<T, A>
+ * @return OperatorFunction<T, NonUndefined<A>>
  *
  * @docsPage stateful
  * @docsCategory operators
  */
-export function stateful<T>(): MonoTypeOperatorFunction<T>;
+export function stateful<T>(): MonoTypeOperatorFunction<NonUndefined<T>>;
 /**
  * @internal
  */
 export function stateful<T, A>(
   op: OperatorFunction<T, A>
-): OperatorFunction<T, A>;
+): OperatorFunction<T, NonUndefined<A>>;
 /**
  * @internal
  */
 export function stateful<T, A, B>(
   op1: OperatorFunction<T, A>,
   op2: OperatorFunction<A, B>
-): OperatorFunction<T, B>;
+): OperatorFunction<T, NonUndefined<B>>;
 /**
  * @internal
  */
@@ -64,7 +65,7 @@ export function stateful<T, A, B, C>(
   op1: OperatorFunction<T, A>,
   op2: OperatorFunction<A, B>,
   op3: OperatorFunction<B, C>
-): OperatorFunction<T, C>;
+): OperatorFunction<T, NonUndefined<C>>;
 /**
  * @internal
  */
@@ -73,7 +74,7 @@ export function stateful<T, A, B, C, D>(
   op2: OperatorFunction<A, B>,
   op3: OperatorFunction<B, C>,
   op4: OperatorFunction<C, D>
-): OperatorFunction<T, D>;
+): OperatorFunction<T, NonUndefined<D>>;
 /**
  * @internal
  */
@@ -83,7 +84,7 @@ export function stateful<T, A, B, C, D, E>(
   op3: OperatorFunction<B, C>,
   op4: OperatorFunction<C, D>,
   op5: OperatorFunction<D, E>
-): OperatorFunction<T, E>;
+): OperatorFunction<T, NonUndefined<E>>;
 /**
  * @description
  *
@@ -109,8 +110,8 @@ export function stateful<T, A, B, C, D, E>(
  */
 export function stateful<T, R>(
   ...optionalDerive: OperatorFunction<T, R>[]
-): OperatorFunction<T, T | R> {
-  return (s: Observable<T>): Observable<T | R> => {
+): OperatorFunction<T, NonUndefined<T> | NonUndefined<R>> {
+  return (s: Observable<T>): Observable<NonUndefined<T> | NonUndefined<R>> => {
     return s.pipe(
       // distinct same base-state objects (e.g. a default emission of default switch cases, incorrect mutable handling
       // of data) @TODO evaluate benefits vs. overhead
@@ -123,7 +124,7 @@ export function stateful<T, R>(
         return o;
       },
       // initial emissions, undefined is no base-state, pollution with skip(1)
-      filter((v) => v !== undefined),
+      filter((v): v is NonUndefined<typeof v> => v !== undefined),
       // distinct same derivation value
       distinctUntilChanged(),
       // reuse custom operations result for multiple subscribers and reemit the last calculated value.

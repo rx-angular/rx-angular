@@ -25,4 +25,4 @@ export {
   toggle,
   slice,
 } from './transformation-helpers/object/index';
-export { KeyCompareMap, CompareFn, PickSlice } from './rxjs/interfaces';
+export { KeyCompareMap, CompareFn, PickSlice, NonUndefined } from './rxjs/interfaces';
