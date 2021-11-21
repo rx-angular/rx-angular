@@ -124,5 +124,5 @@
       "style": "scss"
     }
   },
-  "tags": ["type:lib", "type:cdk"]
+  "tags": ["type:lib", "cdk"]
 }

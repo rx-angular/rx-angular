@@ -151,5 +151,5 @@
       "style": "scss"
     }
   },
-  "tags": ["type:lib", "type:template"]
+  "tags": ["type:lib", "template"]
 }

@@ -1,5 +1,22 @@
 {
   "extends": "../../.eslintrc.json",
   "ignorePatterns": ["!**/*"],
-  "rules": {}
+  "rules": {
+    /**
+     * @Notice: overwrite root enforce-module-boundaries to allow deep imports of secondary entry-points.
+     */
+    "@nrwl/nx/enforce-module-boundaries": [
+      "error",
+      {
+        "enforceBuildableLibDependency": false,
+        "allow": ["@rx-angular/cdk/**"],
+        "depConstraints": [
+          {
+            "sourceTag": "cdk",
+            "onlyDependOnLibsWithTags": ["type:test-util"]
+          }
+        ]
+      }
+    ]
+  }
 }

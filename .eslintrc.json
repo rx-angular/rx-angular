@@ -17,20 +17,16 @@
                 "onlyDependOnLibsWithTags": ["*"]
               },
               {
-                "sourceTag": "type:lib",
-                "onlyDependOnLibsWithTags": ["type:utils"]
+                "sourceTag": "template",
+                "onlyDependOnLibsWithTags": ["type:test-util", "cdk"]
               },
               {
-                "sourceTag": "type:template",
-                "onlyDependOnLibsWithTags": ["type:cdk"]
+                "sourceTag": "state",
+                "onlyDependOnLibsWithTags": ["type:test-util"]
               },
               {
-                "sourceTag": "type:state",
-                "onlyDependOnLibsWithTags": []
-              },
-              {
-                "sourceTag": "type:cdk",
-                "onlyDependOnLibsWithTags": []
+                "sourceTag": "cdk",
+                "onlyDependOnLibsWithTags": ["type:test-util"]
               }
             ]
           }
@@ -39,10 +35,7 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": [
-        "plugin:@nrwl/nx/typescript",
-        "prettier"
-      ],
+      "extends": ["plugin:@nrwl/nx/typescript", "prettier"],
       "parserOptions": {
         "project": "./tsconfig.*?.json"
       },
@@ -53,7 +46,8 @@
         "@typescript-eslint/no-empty-interface": "warn",
         "@typescript-eslint/no-empty-function": "warn",
         "prefer-rest-params": "warn",
-        "no-prototype-builtins": "warn"
+        "no-prototype-builtins": "warn",
+        "no-empty": "warn"
       }
     },
     {

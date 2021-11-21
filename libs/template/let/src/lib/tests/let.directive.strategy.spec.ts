@@ -11,7 +11,6 @@ import { LetDirective } from '../let.directive';
     }}</ng-container>
   `,
 })
-// eslint-disable-next-line @angular-eslint/component-class-suffix
 class LetDirectiveTestComponentStrategy {
   value$: Observable<number> = of(42);
   renderedValue$ = new Subject<number>();
