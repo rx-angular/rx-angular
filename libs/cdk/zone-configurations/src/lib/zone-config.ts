@@ -92,7 +92,6 @@ function createZoneFlagsConfigurator(): RxZoneConfig {
   // append as global method for easy debugging
   (cfg as RxZoneFlagsHelperFunctions).__rxa_zone_config__log = (): void => {
     configProps.forEach((flag) => {
-      // tslint:disable-next-line:no-unused-expression
       cfg[flag] && console.log(flag, cfg[flag]);
     });
   };

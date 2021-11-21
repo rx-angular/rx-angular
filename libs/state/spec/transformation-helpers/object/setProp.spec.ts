@@ -4,7 +4,6 @@ import {
   NestedState,
   PrimitiveState,
 } from '../../fixtures';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { setProp } from '@rx-angular/state';
 
 let primitiveState: PrimitiveState;

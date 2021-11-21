@@ -40,7 +40,6 @@ const observerSupported = () =>
     : false;
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[viewport-prio]'
 })
 export class ViewportPrioDirective implements OnInit, OnDestroy {

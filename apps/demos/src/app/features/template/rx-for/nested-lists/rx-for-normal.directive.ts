@@ -20,8 +20,6 @@ import { concat, forkJoin, Observable, ObservableInput, of, ReplaySubject, Subje
 import { catchError, distinctUntilChanged, filter, map, shareReplay, switchAll, switchMap, take, tap } from 'rxjs/operators';
 
 @Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
-  // tslint:disable-next-line:directive-selector
   selector: '[rxForNormal]'
 })
 export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>

@@ -112,7 +112,6 @@ export function unpatchEventListener(
  *
  * @publicApi
  */
-// tslint:disable-next-line:directive-selector
 @Directive({ selector: '[unpatch]' })
 export class UnpatchDirective implements OnChanges, AfterViewInit, OnDestroy {
   /**

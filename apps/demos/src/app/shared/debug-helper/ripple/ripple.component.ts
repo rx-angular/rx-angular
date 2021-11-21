@@ -7,7 +7,6 @@ import { switchMap } from 'rxjs/operators';
 import { isObservable, Observable, of } from 'rxjs';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'rxa-ripple',
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
@@ -67,9 +66,7 @@ export class RippleComponent extends Hooks {
   }
 
   render(value: any) {
-    // tslint:disable-next-line:no-unused-expression
     this.rippleOn && this.ripple && this.ripple.launch(this.rippleEffect);
-    // tslint:disable-next-line:no-unused-expression
     this.displayElem && this.renderer.setProperty(this.displayElem, 'innerHTML', value + '');
     console.log(this.name, ' called');
   }

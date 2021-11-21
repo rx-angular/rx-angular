@@ -8,7 +8,6 @@ import { select } from '@rx-angular/state';
 import { AppConfigService } from '../../../app-config.service';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'rxa-renders',
   template: `
     <div class="indicator-ripple" [ngStyle]="{minWidth: radius+'px',minHeight: radius+'px'}" matRipple
