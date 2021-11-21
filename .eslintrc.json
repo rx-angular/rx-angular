@@ -13,8 +13,24 @@
             "allow": [],
             "depConstraints": [
               {
-                "sourceTag": "*",
+                "sourceTag": "type:app",
                 "onlyDependOnLibsWithTags": ["*"]
+              },
+              {
+                "sourceTag": "type:lib",
+                "onlyDependOnLibsWithTags": ["type:utils"]
+              },
+              {
+                "sourceTag": "type:template",
+                "onlyDependOnLibsWithTags": ["type:cdk"]
+              },
+              {
+                "sourceTag": "type:state",
+                "onlyDependOnLibsWithTags": []
+              },
+              {
+                "sourceTag": "type:cdk",
+                "onlyDependOnLibsWithTags": []
               }
             ]
           }
@@ -23,11 +39,22 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nrwl/nx/typescript"],
+      "extends": [
+        "plugin:@nrwl/nx/typescript",
+        "prettier"
+      ],
       "parserOptions": {
         "project": "./tsconfig.*?.json"
       },
-      "rules": {}
+      "rules": {
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/no-inferrable-types": "warn",
+        "@typescript-eslint/ban-types": "warn",
+        "@typescript-eslint/no-empty-interface": "warn",
+        "@typescript-eslint/no-empty-function": "warn",
+        "prefer-rest-params": "warn",
+        "no-prototype-builtins": "warn"
+      }
     },
     {
       "files": ["*.js", "*.jsx"],
