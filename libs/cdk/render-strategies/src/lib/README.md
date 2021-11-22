@@ -44,7 +44,7 @@ Some of the strategies has limited amount of time to do tasks in chunks, after t
 
 **Priority**
 
-Each strategy has own queue with own priority.
+Each strategy has its own queue with its own priority.
 
 ### Available concurrent strategies
 
