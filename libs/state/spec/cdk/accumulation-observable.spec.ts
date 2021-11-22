@@ -3,9 +3,8 @@ import { jestMatcher } from '@test-helpers';
 import { of, throwError } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-import { createAccumulationObservable } from '../../src/lib/cdk';
 // tslint:disable-next-line:nx-enforce-module-boundaries
-import { select } from '@rx-angular/state';
+import { select, createAccumulationObservable } from '@rx-angular/state';
 import { initialPrimitiveState, PrimitiveState } from '../fixtures';
 
 function setupAccumulationObservable<T extends object>(cfg: {

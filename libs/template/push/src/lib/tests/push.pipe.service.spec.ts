@@ -1,11 +1,13 @@
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
-import { PushPipe } from '../push.pipe';
-import { TestBed, waitForAsync } from '@angular/core/testing';
 import { ChangeDetectorRef } from '@angular/core';
-import { EMPTY, NEVER, of } from 'rxjs';
-import { MockChangeDetectorRef } from './fixtures';
+import { TestBed } from '@angular/core/testing';
+import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
+import { EMPTY, NEVER, of } from 'rxjs';
+
+import { PushPipe } from '../push.pipe';
+import { MockChangeDetectorRef } from './fixtures';
+
 
 let pushPipe: any;
 
@@ -15,19 +17,20 @@ const setupPushPipeComponent = () => {
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       PushPipe,
       {
-        provide: RX_ANGULAR_CONFIG,
+        provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
         },
       },
     ],
+    teardown: { destroyAfterEach: true },
   });
   pushPipe = TestBed.inject(PushPipe);
 };
 
 describe('PushPipe used as a Service', () => {
   beforeAll(() => mockConsole());
-  beforeEach(waitForAsync(setupPushPipeComponent));
+  beforeEach(setupPushPipeComponent);
 
   it('should be instantiable', () => {
     expect(pushPipe).toBeDefined();

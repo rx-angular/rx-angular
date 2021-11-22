@@ -4,15 +4,27 @@
   "sourceRoot": "libs/template/src",
   "prefix": "rx",
   "targets": {
-    "build-lib": {
+    "build-base": {
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/template/tsconfig.lib.json",
         "project": "libs/template/ng-package.json"
-      }
+      },
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        }
+      ]
     },
-    "build-schematics": {
+    "build": {
       "executor": "@nrwl/workspace:run-commands",
+      "dependsOn": [
+        {
+          "target": "build-base",
+          "projects": "self"
+        }
+      ],
       "options": {
         "commands": [
           {
@@ -32,30 +44,6 @@
           }
         ],
         "parallel": false
-      }
-    },
-    "build": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "nx run template:build-lib"
-          },
-          {
-            "command": "nx run template:build-schematics"
-          }
-        ],
-        "parallel": false
-      }
-    },
-    "lint": {
-      "executor": "@angular-devkit/build-angular:tslint",
-      "options": {
-        "tsConfig": [
-          "libs/template/tsconfig.lib.json",
-          "libs/template/tsconfig.spec.json"
-        ],
-        "exclude": ["**/node_modules/**", "!libs/template/**/*"]
       }
     },
     "test": {
@@ -121,9 +109,34 @@
       "options": {
         "commands": [
           {
-            "command": "nx test template && nx build template && cd ./dist/libs/template && npm publish"
+            "command": "npm publish dist/libs/template"
           }
         ]
+      },
+      "dependsOn": [
+        {
+          "target": "lint",
+          "projects": "self"
+        },
+        {
+          "target": "test",
+          "projects": "self"
+        },
+        {
+          "target": "version",
+          "projects": "self"
+        },
+        {
+          "target": "build",
+          "projects": "self"
+        }
+      ]
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {
+        "baseBranch": "master",
+        "versionTagPrefix": "${target}@"
       }
     }
   },

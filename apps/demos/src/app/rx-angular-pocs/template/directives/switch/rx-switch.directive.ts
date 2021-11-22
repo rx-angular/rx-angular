@@ -2,7 +2,7 @@ import { Directive, Input } from '@angular/core';
 
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, mergeAll, switchAll } from 'rxjs/operators';
-import { RxStrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 
 @Directive({

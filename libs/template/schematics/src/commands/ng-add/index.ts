@@ -4,10 +4,22 @@ import {
   SchematicContext,
   Tree,
 } from '@angular-devkit/schematics';
+import {
+  NodeDependencyType,
+} from '@schematics/angular/utility/dependencies';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 
-import { dependencies, Dependency, getLatestNodeVersion } from '../../common';
+import { Dependency } from '../../utils/dependency';
+import { getLatestNodeVersion } from '../../utils/get-latest-node-version';
+
+const dependencies: Dependency[] = [
+  {
+    type: NodeDependencyType.Default,
+    name: '@rx-angular/cdk',
+    overwrite: true,
+  },
+];
 
 function addPackageJsonDependencies(packages: Dependency[]): Rule {
   return async (tree: Tree, context: SchematicContext) => {

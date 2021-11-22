@@ -25,20 +25,39 @@
       }
     },
     "build": {
+      "executor": "@nrwl/workspace:run-commands",
+      "dependsOn": [
+        {
+          "target": "build-lib",
+          "projects": "self"
+        }
+      ],
+      "options": {
+        "commands": [
+          {
+            "command": "npx tsc -p libs/cdk/tsconfig.schematics.json"
+          },
+          {
+            "command": "npx cpx libs/cdk/schematics/collection.json dist/libs/cdk/schematics"
+          },
+          {
+            "command": "npx cpx libs/cdk/schematics/migration.json dist/libs/cdk/schematics"
+          },
+          {
+            "command": "npx cpx libs/cdk/schematics/src/**/files/** dist/libs/cdk/schematics/src"
+          },
+          {
+            "command": "npx cpx libs/cdk/schematics/src/**/schema.json dist/libs/cdk/schematics/src"
+          }
+        ],
+        "parallel": false
+      }
+    },
+    "build-lib": {
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/cdk/tsconfig.lib.json",
         "project": "libs/cdk/ng-package.json"
-      }
-    },
-    "lint": {
-      "executor": "@angular-devkit/build-angular:tslint",
-      "options": {
-        "tsConfig": [
-          "libs/cdk/tsconfig.lib.json",
-          "libs/cdk/tsconfig.spec.json"
-        ],
-        "exclude": ["**/node_modules/**", "!libs/cdk/**/*"]
       }
     },
     "test": {
@@ -58,24 +77,39 @@
       },
       "outputs": ["coverage/libs/cdk"]
     },
-    "changelog": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx conventional-changelog-cli -p angular -k ./libs/cdk/package.json -i ./libs/cdk/CHANGELOG.md -s --commit-path ./libs/cdk --tagPrefix cdk@"
-          }
-        ]
-      }
-    },
     "publish": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
           {
-            "command": "nx test cdk && nx build cdk && cd ./dist/libs/cdk && npm publish"
+            "command": "npm publish dist/libs/cdk"
           }
         ]
+      },
+      "dependsOn": [
+        {
+          "target": "lint",
+          "projects": "self"
+        },
+        {
+          "target": "test",
+          "projects": "self"
+        },
+        {
+          "target": "version",
+          "projects": "self"
+        },
+        {
+          "target": "build",
+          "projects": "self"
+        }
+      ]
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {
+        "baseBranch": "master",
+        "versionTagPrefix": "${target}@"
       }
     }
   },

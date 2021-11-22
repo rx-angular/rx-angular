@@ -15,23 +15,44 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"],
+        "cacheableOperations": [
+          "build-base",
+          "build-lib",
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ],
         "accessToken": "OTg2OGFkNmMtNzA5Zi00MjBiLWFhMmQtOGYwNTQ1MjM1ZjQ3fHJlYWQtd3JpdGU=",
         "canTrackAnalytics": false,
-        "showUsageWarnings": true
+        "showUsageWarnings": true,
+        "parallel": false
       }
     }
   },
-  "projects": {},
   "affected": {
     "defaultBase": "origin/master"
   },
-  "targetDependencies": {
-    "build": [
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ]
-  }
+  "cli": {
+    "defaultCollection": "@nrwl/angular",
+    "analytics": false,
+    "packageManager": "yarn"
+  },
+  "generators": {
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "tslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "tslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "defaultProject": "demos"
 }

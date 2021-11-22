@@ -10,14 +10,10 @@
         "tsConfig": "apps/ssr-e2e/tsconfig.e2e.json",
         "devServerTarget": "ssr:serve-ssr"
       }
-    },
-    "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/ssr-e2e/**/*.{js,ts}"]
-      }
     }
   },
   "tags": [],
-  "implicitDependencies": ["ssr"]
+  "implicitDependencies": [
+    "ssr"
+  ]
 }

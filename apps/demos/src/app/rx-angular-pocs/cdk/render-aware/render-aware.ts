@@ -1,22 +1,18 @@
-import { RxCustomStrategyCredentials, RxStrategyCredentials, strategyHandling } from '@rx-angular/cdk';
+import { ChangeDetectorRef } from '@angular/core';
+import { RxCustomStrategyCredentials, RxStrategyCredentials, strategyHandling } from '@rx-angular/cdk/render-strategies';
 import { ConnectableObservable, EMPTY, isObservable, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
   map,
-  // @NOTICE in RxJS v7 it will be renamed to `mergeWith`
   merge as mergeWith,
   mergeAll,
-  publishReplay, shareReplay,
-  startWith,
+  publishReplay,
   switchAll,
-  tap
 } from 'rxjs/operators';
 
-import { ChangeDetectorRef } from '@angular/core';
-import { rxMaterialize } from '../utils/rxjs/operators/rx-materialize';
-import { ngInputFlatten } from '../utils/rxjs/operators/ngInputFlatten';
 import { RxNotification, RxTemplateObserver } from '../utils/rxjs/Notification';
+import { rxMaterialize } from '../utils/rxjs/operators/rx-materialize';
 
 export interface RenderAware<U> {
   strategy$: Observable<RxStrategyCredentials>;

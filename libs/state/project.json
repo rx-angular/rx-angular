@@ -10,17 +10,9 @@
         "tsConfig": "libs/state/tsconfig.lib.json",
         "project": "libs/state/ng-package.json"
       },
-      "outputs": ["dist/libs/state"]
-    },
-    "lint": {
-      "executor": "@angular-devkit/build-angular:tslint",
-      "options": {
-        "tsConfig": [
-          "libs/state/tsconfig.lib.json",
-          "libs/state/tsconfig.spec.json"
-        ],
-        "exclude": ["**/node_modules/**", "!libs/state/**/*"]
-      }
+      "outputs": [
+        "dist/libs/state"
+      ]
     },
     "test": {
       "executor": "@nrwl/jest:jest",
@@ -28,7 +20,9 @@
         "jestConfig": "libs/state/jest.config.js",
         "passWithNoTests": true
       },
-      "outputs": ["coverage/libs/state"]
+      "outputs": [
+        "coverage/libs/state"
+      ]
     },
     "build-docs": {
       "executor": "@nrwl/workspace:run-commands",
@@ -57,7 +51,9 @@
         "passWithNoTests": true,
         "codeCoverage": true
       },
-      "outputs": ["coverage/libs/state"]
+      "outputs": [
+        "coverage/libs/state"
+      ]
     },
     "perfBuild": {
       "executor": "@nrwl/node:build",
@@ -66,7 +62,9 @@
         "outputPath": "dist/libs/state-perf/dist",
         "tsConfig": "libs/state/tsconfig.perf.json"
       },
-      "outputs": ["{options.outputPath}"]
+      "outputs": [
+        "{options.outputPath}"
+      ]
     },
     "perf": {
       "executor": "@nrwl/node:execute",
@@ -74,24 +72,39 @@
         "buildTarget": "state:perfBuild"
       }
     },
-    "changelog": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx conventional-changelog-cli -p angular -k ./libs/state/package.json -i ./libs/state/CHANGELOG.md -s --commit-path ./libs/state --tagPrefix state@"
-          }
-        ]
-      }
-    },
     "publish": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
           {
-            "command": "nx test state && nx build state && cd ./dist/libs/state && npm publish"
+            "command": "npm publish dist/libs/state"
           }
         ]
+      },
+      "dependsOn": [
+        {
+          "target": "lint",
+          "projects": "self"
+        },
+        {
+          "target": "test",
+          "projects": "self"
+        },
+        {
+          "target": "version",
+          "projects": "self"
+        },
+        {
+          "target": "build",
+          "projects": "self"
+        }
+      ]
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {
+        "baseBranch": "master",
+        "versionTagPrefix": "${target}@"
       }
     }
   },
@@ -100,5 +113,7 @@
       "style": "scss"
     }
   },
-  "tags": ["type:lib"]
+  "tags": [
+    "type:lib"
+  ]
 }

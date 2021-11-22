@@ -5,7 +5,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
+import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
@@ -41,12 +41,13 @@ const setupLetDirectiveTestComponent = (): void => {
       TemplateRef,
       ViewContainerRef,
       {
-        provide: RX_ANGULAR_CONFIG,
+        provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
         },
       },
     ],
+    teardown: { destroyAfterEach: true },
   });
   fixtureLetDirectiveTestComponent = TestBed.createComponent(
     LetDirectiveTestComponent

@@ -1,11 +1,5 @@
-import {
-  isObservable,
-  Observable,
-  ObservableInput,
-  of,
-  OperatorFunction,
-} from 'rxjs';
-import { distinctUntilChanged, map, switchAll } from 'rxjs/operators';
+import { Observable, ObservableInput, OperatorFunction } from 'rxjs';
+import { distinctUntilChanged, switchAll } from 'rxjs/operators';
 import { coerceObservableWith } from './coerceObservableWith';
 
 /**

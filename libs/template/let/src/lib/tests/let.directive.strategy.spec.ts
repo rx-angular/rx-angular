@@ -23,10 +23,11 @@ let componentInstance: LetDirectiveTestComponentStrategy;
 let componentNativeElement: HTMLElement;
 
 describe('LetDirective strategies', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       declarations: [LetDirectiveTestComponentStrategy, LetDirective],
-    }).compileComponents();
+      teardown: { destroyAfterEach: true },
+    });
   });
 
   beforeEach(() => {
@@ -48,12 +49,11 @@ describe('LetDirective strategies', () => {
   ])('Strategy: %p', (strategy) => {
     it('should render with given strategy', done => {
       componentInstance.strategy = strategy;
-
-      fixture.detectChanges();
       componentInstance.renderedValue$.subscribe(v => {
         expect(v).toBe(42);
         done();
       });
+      fixture.detectChanges();
     });
   });
 });
