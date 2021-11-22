@@ -1,9 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, isObservable, Observable, OperatorFunction, Subscribable, Subscription, Unsubscribable } from 'rxjs';
 import { catchError, map, pluck, tap } from 'rxjs/operators';
-import { isKeyOf, isOperateFnArrayGuard, isStringArrayGuard, pipeFromArray, safePluck } from './core';
-import { AccumulationFn, createAccumulationObservable, createSideEffectObservable } from './cdk';
-import { stateful } from './rxjs/operators';
+import { isKeyOf, isOperateFnArrayGuard, isStringArrayGuard, pipeFromArray, safePluck } from '@rx-angular/cdk/utils';
+import {
+  stateful,
+  AccumulationFn,
+  createAccumulationObservable,
+  createSideEffectObservable
+} from '@rx-angular/cdk/state';
 
 type ProjectStateFn<T> = (oldState: T) => Partial<T>;
 type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];

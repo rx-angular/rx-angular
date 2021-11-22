@@ -34,6 +34,23 @@ export class AppModule {}
 "
 `;
 
+exports[`Template Migration 1.0.0-beta.29 should replace PushModule + PushPipe module specifier 2`] = `
+"import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { PushModule } from '@rx-angular/template/push';
+import { PushPipe } from '@rx-angular/template/push';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, PushModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;
+
 exports[`Template Migration 1.0.0-beta.29 should replace UnpatchEventsModule + UnpatchDirective module specifier 1`] = `
 "import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';

@@ -1,14 +1,14 @@
 // tslint:disable-next-line:nx-enforce-module-boundaries
-import { jestMatcher } from '@test-helpers';
+import { initialPrimitiveState, jestMatcher, PrimitiveState } from '@test-helpers';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import {
   createStateChecker,
-  initialPrimitiveState,
-  PrimitiveState,
-} from '../../spec/fixtures';
+} from './fixtures';
+
 import { TestScheduler } from 'rxjs/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
-import { RxState, select } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state/state';
+import { select } from '@rx-angular/cdk/state';
 import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
 import { asyncScheduler, from, interval, of, scheduled, Subject } from 'rxjs';
 
