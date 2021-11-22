@@ -56,5 +56,8 @@
   },
   "ng-add": {
     "save": "dependencies"
+  },
+  "ng-update": {
+    "migrations": "./schematics/migration.json"
   }
 }
