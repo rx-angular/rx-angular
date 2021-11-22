@@ -15,13 +15,18 @@ import {
 import { TestBed } from '@angular/core/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import {
-  createListTemplateManager, RX_ANGULAR_CONFIG,
+  RX_RENDER_STRATEGIES_CONFIG
+} from '@rx-angular/cdk/render-strategies';
+import {
+  createListTemplateManager,
   RxDefaultListViewContext,
   RxListManager,
   RxListViewComputedContext,
-  RxListViewContext,
+  RxListViewContext
+} from '@rx-angular/cdk/template';
+import {
   RxStrategyProvider
-} from '@rx-angular/cdk';
+} from '@rx-angular/cdk/render-strategies';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { ReplaySubject } from 'rxjs';
@@ -141,7 +146,7 @@ const setupListManagerComponent = (): void => {
       { provide: ErrorHandler, useValue: customErrorHandler },
       ViewContainerRef,
       {
-        provide: RX_ANGULAR_CONFIG,
+        provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
         },

@@ -16,12 +16,13 @@ import {
 import { TestBed } from '@angular/core/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import {
-  createTemplateManager, RX_ANGULAR_CONFIG,
-  RxBaseTemplateNames,
+  createTemplateManager, RxBaseTemplateNames,
+  RxTemplateManager, RxViewContext
+} from '@rx-angular/cdk/template';
+import {
   RxStrategyProvider,
-  RxTemplateManager,
-  RxViewContext
-} from '@rx-angular/cdk';
+  RX_RENDER_STRATEGIES_CONFIG
+} from '@rx-angular/cdk/render-strategies';
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import {
   RxNotificationKind,
@@ -30,6 +31,7 @@ import {
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { ReplaySubject, Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'rx-angular-error-test',
@@ -172,7 +174,7 @@ const setupTemplateManagerComponent = (): void => {
       { provide: ErrorHandler, useValue: customErrorHandler },
       ViewContainerRef,
       {
-        provide: RX_ANGULAR_CONFIG,
+        provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
         },

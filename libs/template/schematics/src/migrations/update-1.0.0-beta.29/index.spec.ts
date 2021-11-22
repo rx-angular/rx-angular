@@ -5,11 +5,11 @@ import {
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 
-describe('Template Migration 1.0.0', () => {
+describe('Template Migration 1.0.0-beta.29', () => {
   let appTree: UnitTestTree;
 
   /* Increase Jest timeout because of long living tests. */
-  beforeAll(() => jest.setTimeout(10_000));
+  beforeAll(() => jest.setTimeout(20_000));
 
   /* Reset default timeout to 5s. */
   afterAll(() => jest.setTimeout(5_000));
@@ -161,6 +161,6 @@ describe('Template Migration 1.0.0', () => {
 
     tree.create(filePath, fileInput);
 
-    return runner.runSchematicAsync(`update-1-0-0`, {}, tree).toPromise();
+    return runner.runSchematicAsync(`update-1.0.0-beta.29`, {}, tree).toPromise();
   }
 });

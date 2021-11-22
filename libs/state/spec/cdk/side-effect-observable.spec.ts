@@ -1,7 +1,7 @@
 // tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { TestScheduler } from 'rxjs/testing';
-import { createSideEffectObservable } from '../../src/lib/cdk';
+import { createSideEffectObservable } from '@rx-angular/state';
 
 let testScheduler: TestScheduler;
 
