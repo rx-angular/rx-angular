@@ -40,6 +40,11 @@ const observerSupported = () =>
     : false;
 
 @Directive({
+  /**
+   * @todo: use camelcase for directive selector.
+   * @todo: deprecate [viewport-prio] + add camelcase support.
+   */
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[viewport-prio]'
 })
 export class ViewportPrioDirective implements OnInit, OnDestroy {

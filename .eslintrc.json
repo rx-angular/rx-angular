@@ -35,7 +35,13 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nrwl/nx/typescript", "prettier"],
+      "extends": [
+        "prettier",
+        "eslint:recommended",
+        "plugin:@nrwl/nx/typescript",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@typescript-eslint/recommended"
+      ],
       "parserOptions": {
         "project": "./tsconfig.*?.json"
       },
