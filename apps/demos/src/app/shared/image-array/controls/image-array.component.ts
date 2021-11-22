@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Output, ViewChild } from '@angula
 import { Observable, Subject } from 'rxjs';
 import { RxEffects } from '../../rx-effects.service';
 import { Hooks } from '../../debug-helper/hooks';
-import { RxState } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state/state';
 import { fileReaderFromBlob, imageFromFileReader } from '../pixel-image';
 
 interface ComponentState {

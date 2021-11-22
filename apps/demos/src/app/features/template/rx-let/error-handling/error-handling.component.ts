@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map, scan, share } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state/state';
 
 @Component({
   selector: 'rxa-let-error-handling',

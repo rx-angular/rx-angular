@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { RxState } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state/state';
 import { isObservable, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestItem, toBoolean } from '../../../../shared/debug-helper/value-provider';

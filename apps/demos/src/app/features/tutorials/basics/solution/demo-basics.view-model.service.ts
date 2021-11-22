@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RxState } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state/state';
 import { merge, Observable, Subject, timer } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 

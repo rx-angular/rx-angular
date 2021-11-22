@@ -1,7 +1,7 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { ChangeDetectionStrategy, Component, Input, Output } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { RxState } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state/state';
 import { Subject } from 'rxjs';
 import { AppShellNavItem } from '../app-shell.models';
 import { generateRoutes } from './utils';

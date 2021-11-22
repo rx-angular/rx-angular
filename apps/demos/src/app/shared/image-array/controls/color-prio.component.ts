@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state/state';
 
 @Component({
   selector: 'rxa-color-prio',

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { RxState } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state/state';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Adapter } from "./adapter";

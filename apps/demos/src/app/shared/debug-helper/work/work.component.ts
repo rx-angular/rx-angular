@@ -3,7 +3,8 @@
 import { Component, ElementRef, Input, Renderer2 } from '@angular/core';
 import { isObservable, Observable, of, Subject } from 'rxjs';
 import { map, scan, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { RxState, selectSlice } from '@rx-angular/state';
+import { selectSlice } from '@rx-angular/cdk/state';
+import { RxState } from '@rx-angular/state/state';
 import { Hooks } from '../hooks';
 
 

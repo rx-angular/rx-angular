@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { Hooks } from '../hooks';
-import { select } from '@rx-angular/state';
+import { select } from '@rx-angular/cdk/state';
 import { RxEffects } from '../../rx-effects.service';
 import { AppConfigService } from '../../../app-config.service';
 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { RxState } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state/state';
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
@@ -73,13 +73,13 @@ const initComponentState = {
         .list .mat-expansion-panel-header {
           position: relative;
         }
-  
+
         .list .mat-expansion-panel-header mat-progress-bar {
           position: absolute;
           top: 0px;
           left: 0;
         }
-  
+
         .list .mat-expansion-panel-content .mat-expansion-panel-body {
           padding-top: 10px;
         }

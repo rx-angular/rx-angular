@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RxState } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state/state';
 import { map } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
 import { ComponentState } from './presenter';

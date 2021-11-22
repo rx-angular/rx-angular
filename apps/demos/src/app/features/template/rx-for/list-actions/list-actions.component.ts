@@ -18,7 +18,7 @@ import {
   TestItem,
 } from '../../../../shared/debug-helper/value-provider';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
-import { RxState } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state/state';
 import { Hooks } from '../../../../shared/debug-helper/hooks';
 import { map, startWith, switchMap, switchMapTo, tap } from 'rxjs/operators';
 

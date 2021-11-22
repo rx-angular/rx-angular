@@ -18,6 +18,7 @@
         "cacheableOperations": [
           "build-base",
           "build-lib",
+          "build-state",
           "build",
           "lint",
           "test",

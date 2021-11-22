@@ -17,7 +17,7 @@ import {
   Subject,
 } from 'rxjs';
 import { scan, share, switchMap, tap } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state/state';
 import { environment } from '../../../../../environments/environment';
 import { immutableArr } from './utils';
 
