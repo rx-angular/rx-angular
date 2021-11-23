@@ -1,6 +1,6 @@
 # RxStrategyProvider
 
-`RxStrategyProvider` is the best way to consume full power of concurrent strategies to schedule work that is not related to rendering.
+`RxStrategyProvider` is the best way to consume full power of concurrent strategies to schedule any kind of work.
 
 > Want to play with it? Here's [demo link](https://stackblitz.com/edit/angular-ivy-1vfpoe) 
 
@@ -46,7 +46,7 @@ Some of the strategies has limited amount of time to do tasks in chunks, after t
 
 Each strategy has its own queue with its own priority.
 
-### Available concurrent strategies
+### [Available concurrent strategies](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/render-strategies)
 
 ```jsx
 | Name             | Priority | Render Method     | Scheduling    | Deadline        |
