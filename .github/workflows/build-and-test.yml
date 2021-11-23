@@ -104,7 +104,10 @@ jobs:
         run: yarn nx run ssr-e2e:e2e --headless
       # don't run build in parallel, can cause dead locks
       - name: Run Affected build
-        run: yarn nx affected:build
+      # @Notice: Nx cache broke build dependencies defined by "dependsOn" property.
+      # The issue is, if the cache is hit, cdk isn't build in order before template, resulting in the following error:
+      # https://github.com/rx-angular/rx-angular/runs/4286264078?check_suite_focus=true
+        run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx affected:build
 
       - run: yarn nx-cloud stop-all-agents
 

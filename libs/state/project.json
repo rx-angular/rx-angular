@@ -10,9 +10,7 @@
         "tsConfig": "libs/state/tsconfig.lib.json",
         "project": "libs/state/ng-package.json"
       },
-      "outputs": [
-        "dist/libs/state"
-      ]
+      "outputs": ["dist/libs/state"]
     },
     "test": {
       "executor": "@nrwl/jest:jest",
@@ -20,9 +18,7 @@
         "jestConfig": "libs/state/jest.config.js",
         "passWithNoTests": true
       },
-      "outputs": [
-        "coverage/libs/state"
-      ]
+      "outputs": ["coverage/libs/state"]
     },
     "build-docs": {
       "executor": "@nrwl/workspace:run-commands",
@@ -51,9 +47,7 @@
         "passWithNoTests": true,
         "codeCoverage": true
       },
-      "outputs": [
-        "coverage/libs/state"
-      ]
+      "outputs": ["coverage/libs/state"]
     },
     "perfBuild": {
       "executor": "@nrwl/node:build",
@@ -62,9 +56,7 @@
         "outputPath": "dist/libs/state-perf/dist",
         "tsConfig": "libs/state/tsconfig.perf.json"
       },
-      "outputs": [
-        "{options.outputPath}"
-      ]
+      "outputs": ["{options.outputPath}"]
     },
     "perf": {
       "executor": "@nrwl/node:execute",
@@ -106,6 +98,12 @@
         "baseBranch": "main",
         "versionTagPrefix": "${target}@"
       }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/state/**/*.ts"]
+      }
     }
   },
   "generators": {
@@ -113,7 +111,5 @@
       "style": "scss"
     }
   },
-  "tags": [
-    "type:lib"
-  ]
+  "tags": ["type:lib", "state"]
 }

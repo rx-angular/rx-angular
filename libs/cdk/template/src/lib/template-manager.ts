@@ -153,9 +153,7 @@ export function createTemplateManager<
     nextStrategy: strategyHandling$.next,
     render(values$: Observable<RxNotification<T>>): Observable<any> {
       return values$.pipe(
-        /* tslint:disable */
         // mergeWith(triggerHandling.trigger$ || EMPTY),
-        /* tslint:enable */
         withLatestFrom(strategyHandling$.strategy$),
         // Cancel old renders
         switchMap(([notification, strategy]) => {

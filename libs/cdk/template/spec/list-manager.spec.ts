@@ -13,7 +13,6 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import {
   RX_RENDER_STRATEGIES_CONFIG
 } from '@rx-angular/cdk/render-strategies';
@@ -27,7 +26,6 @@ import {
 import {
   RxStrategyProvider
 } from '@rx-angular/cdk/render-strategies';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { ReplaySubject } from 'rxjs';
 

@@ -1,5 +1,4 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
-import { insert, upsert } from '@rx-angular/state';
+import { upsert } from '@rx-angular/state';
 
 interface Creature {
   id: number;
