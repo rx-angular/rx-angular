@@ -21,7 +21,7 @@ export class StatefulComponent {
 
 ```typescript
 class RxState<T extends object> implements OnDestroy, Subscribable<T> {
-  readonly readonly $: Observable<T> = this.accumulator.signal$;
+  readonly $: Observable<T> = this.accumulator.signal$;
 
   connect(inputOrSlice$: Observable<Partial<T> | V>, projectFn?: ProjectStateReducer<T, V>) => void;
   connect(key: K, slice$: Observable<T[K]>) => void;
