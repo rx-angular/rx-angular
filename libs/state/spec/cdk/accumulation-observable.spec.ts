@@ -1,9 +1,7 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { of, throwError } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { select, createAccumulationObservable } from '@rx-angular/state';
 import { initialPrimitiveState, PrimitiveState } from '../fixtures';
 
@@ -28,7 +26,6 @@ beforeEach(() => {
   testScheduler = new TestScheduler(jestMatcher);
 });
 
-// tslint:disable: no-duplicate-string
 describe('createAccumulationObservable', () => {
   it('should return object', () => {
     const acc = createAccumulationObservable();

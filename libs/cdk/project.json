@@ -111,6 +111,12 @@
         "baseBranch": "master",
         "versionTagPrefix": "${target}@"
       }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/cdk/**/*.ts"]
+      }
     }
   },
   "generators": {
@@ -118,5 +124,5 @@
       "style": "scss"
     }
   },
-  "tags": ["type:lib", "type:cdk"]
+  "tags": ["type:lib", "cdk"]
 }

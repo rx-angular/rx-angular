@@ -1,5 +1,3 @@
-// tslint:disable:no-unused-expression
-
 import { Component, ElementRef, Input, Renderer2 } from '@angular/core';
 import { isObservable, Observable, of, Subject } from 'rxjs';
 import { map, scan, switchMap, tap, withLatestFrom } from 'rxjs/operators';
@@ -10,7 +8,6 @@ import { Hooks } from '../hooks';
 type workType = 'scripting' | 'layouting';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'rxa-work',
   template: `
     <div class="work" [ngClass]="s.type" *rxLet="state$, let s">

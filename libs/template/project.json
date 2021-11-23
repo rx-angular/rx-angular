@@ -138,6 +138,12 @@
         "baseBranch": "master",
         "versionTagPrefix": "${target}@"
       }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/template/**/*.ts"]
+      }
     }
   },
   "generators": {
@@ -145,5 +151,5 @@
       "style": "scss"
     }
   },
-  "tags": ["type:lib", "type:template"]
+  "tags": ["type:lib", "template"]
 }

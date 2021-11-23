@@ -1,5 +1,5 @@
 {
-  "extends": ["../../.eslintrc.json"],
+  "extends": "../../.eslintrc.json",
   "ignorePatterns": ["!**/*"],
   "overrides": [
     {
@@ -8,10 +8,23 @@
         "plugin:@nrwl/nx/angular",
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
-      "parserOptions": {
-        "project": ["libs/cdk/tsconfig.*?.json"]
-      },
       "rules": {
+        /**
+         * @Notice: overwrite root enforce-module-boundaries to allow deep imports of secondary entry-points.
+         */
+        "@nrwl/nx/enforce-module-boundaries": [
+          "error",
+          {
+            "enforceBuildableLibDependency": false,
+            "allow": ["@rx-angular/cdk/**"],
+            "depConstraints": [
+              {
+                "sourceTag": "cdk",
+                "onlyDependOnLibsWithTags": ["type:test-util"]
+              }
+            ]
+          }
+        ],
         "@angular-eslint/directive-selector": [
           "error",
           {
@@ -27,13 +40,16 @@
             "prefix": "rx",
             "style": "kebab-case"
           }
-        ]
+        ],
+        "@typescript-eslint/no-non-null-assertion": "warn"
       }
     },
     {
       "files": ["*.html"],
       "extends": ["plugin:@nrwl/nx/angular-template"],
-      "rules": {}
+      "rules": {
+        "@angular-eslint/template/eqeqeq": "warn"
+      }
     }
   ]
 }

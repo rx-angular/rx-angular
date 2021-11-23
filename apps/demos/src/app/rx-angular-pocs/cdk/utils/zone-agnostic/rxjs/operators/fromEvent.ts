@@ -46,8 +46,6 @@ export interface AddEventListenerOptions extends EventListenerOptions {
   passive?: boolean;
 }
 
-/* tslint:disable:max-line-length */
-/* tslint:disable:unified-signatures */
 export function fromEvent<T>(target: FromEventTarget<T>, eventName: string): Observable<T>;
 /** @deprecated resultSelector no longer supported, pipe to map instead */
 export function fromEvent<T>(
@@ -58,8 +56,6 @@ export function fromEvent<T>(
 export function fromEvent<T>(
   target: FromEventTarget<T>, eventName: string, options: EventListenerOptions,
   resultSelector: (...args: any[]) => T): Observable<T>;
-/* tslint:enable:max-line-length */
-/* tslint:enable:unified-signatures */
 
 
 export function fromEvent<T>(

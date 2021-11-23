@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { initialPrimitiveState, PrimitiveState } from '../fixtures';
 import { Observable, Subject } from 'rxjs';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { RxState, select } from '@rx-angular/state';
 
 const initialParentState: PrimitiveState = {

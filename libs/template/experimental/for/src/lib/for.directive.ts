@@ -279,9 +279,10 @@ import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
  * @publicApi
  */
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[rxFor]',
 })
+/* @todo: rename to ForDirective? */
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, OnDestroy
 {
@@ -364,6 +365,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     this.strategyInput$.next(strategyName);
   }
 
+  /* @todo: rename to `rxRenderParent`? */
+  /* eslint-disable @angular-eslint/no-input-rename */
   /**
    * @description
    *  If `parent` is set to `true` (default to `false`), `*rxFor` will automatically detect every other `Component` where its
@@ -394,7 +397,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param renderParent
    */
-  // tslint:disable-next-line:no-input-rename
   @Input('rxForParent') renderParent = true;
 
   /**
@@ -427,7 +429,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param patchZone
    */
-  // tslint:disable-next-line:no-input-rename
   @Input('rxForPatchZone') patchZone = this.strategyProvider.config.patchZone;
 
   /**
