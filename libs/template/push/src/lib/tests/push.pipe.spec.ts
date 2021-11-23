@@ -4,7 +4,6 @@ import { PushPipe } from '../push.pipe';
 import { TestBed } from '@angular/core/testing';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
 function wrapWithSpace(str: string): string {

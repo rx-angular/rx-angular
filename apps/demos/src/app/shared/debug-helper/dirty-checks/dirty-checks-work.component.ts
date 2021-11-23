@@ -6,7 +6,6 @@ import { RxEffects } from '../../rx-effects.service';
 import { AppConfigService } from '../../../app-config.service';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'rxa-dirty-check-work',
   template: `
     <div class="d-inline-flex align-items-center">
@@ -72,10 +71,8 @@ export class DirtyChecksWorkComponent extends Hooks {
 
   numDirtyChecks() {
     if (this.rippleOn) {
-      // tslint:disable-next-line:no-unused-expression
       this.rippleOn && this.ripple && this.ripple.launch(this.rippleEffect);
     }
-    // tslint:disable-next-line:no-unused-expression
     this.displayElem && this.renderer.setProperty(this.displayElem, 'innerHTML', ++this.dirtyChecks + '');
   }
 }

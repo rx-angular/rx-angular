@@ -78,7 +78,6 @@ export class SiblingPixelImgComponent extends RxState<{
 
   @Input()
   set pixelSize(pixelSize$: Observable<number | string>) {
-    // tslint:disable-next-line:no-bitwise
     this.connect('pixelSize', pixelSize$.pipe(map(v => +v)));
   }
 
