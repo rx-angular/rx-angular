@@ -5,9 +5,9 @@ name: rx-angular CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 env:
   node-version: 14.x
   NX_CLOUD_DISTRIBUTED_EXECUTION: true
@@ -53,14 +53,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        name: Checkout [master]
-        if: github.ref == 'refs/heads/master'
+        name: Checkout [main]
+        if: github.ref == 'refs/heads/main'
         with:
           fetch-depth: 0
 
       - uses: actions/checkout@v2
         name: Checkout [pr]
-        if: github.ref != 'refs/heads/master'
+        if: github.ref != 'refs/heads/main'
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{github.event.pull_request.head.repo.full_name}}
@@ -69,7 +69,7 @@ jobs:
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
         uses: nrwl/nx-set-shas@v2
         with:
-          main-branch-name: 'master'
+          main-branch-name: 'main'
 
       - name: Set up Node.js ${{ env.node-version }}
         uses: actions/setup-node@v2
@@ -109,5 +109,5 @@ jobs:
       - run: yarn nx-cloud stop-all-agents
 
       - name: Tag main branch if all jobs succeed
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         uses: nrwl/nx-tag-successful-ci-run@v1

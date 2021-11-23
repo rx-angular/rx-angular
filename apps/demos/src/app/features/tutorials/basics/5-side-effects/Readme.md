@@ -245,4 +245,4 @@ Furthermore, we managed to get rid of all implemented lifecycles as well as the 
 
 All in all, an amazing job!
 
-[side-effects.start.component.ts]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/5-side-effects
+[side-effects.start.component.ts]: https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics/5-side-effects

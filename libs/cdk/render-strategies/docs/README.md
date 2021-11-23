@@ -15,7 +15,7 @@ Furthermore, they provide new ways of explicitly tying truly push-based state ma
 
 A strategy exposes the work to perform (e.g. `cdRef#markForCheck`, `cdRef#detectChanges`) as well as the scheduling mechanism to developers for configuration & customization via the interface `RxStrategyCredentials`.
 
-`Directive`s, `Service`s or `Component`s of your application can make use of these strategies as an easy API for the key [concepts](https://github.com/rx-angular/rx-angular/blob/master/libs/template/docs/concepts.md) of rendering performance.
+`Directive`s, `Service`s or `Component`s of your application can make use of these strategies as an easy API for the key [concepts](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts.md) of rendering performance.
 
 This architecture enables modern features like:
 
@@ -68,7 +68,7 @@ The sub-package provides the following features:
 - [x] RenderStrategyConfig
 - [x] RxStrategyProvider
 
-**[Available Strategies:](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/render-strategies/docs/strategies.md)**
+**[Available Strategies:](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/strategies.md)**
 
 | Name             | Priority | Render Method     | Scheduling              | Render Deadline |
 | ---------------- | -------- | ----------------- | ----------------------- | --------------- |

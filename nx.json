@@ -31,7 +31,7 @@
     }
   },
   "affected": {
-    "defaultBase": "origin/master"
+    "defaultBase": "origin/main"
   },
   "cli": {
     "defaultCollection": "@nrwl/angular",
