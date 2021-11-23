@@ -1,1 +1,5 @@
-export * from './lib/eslint-plugin';
+import { rules } from './lib/rules';
+
+export = {
+  rules,
+};
