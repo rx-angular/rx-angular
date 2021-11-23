@@ -7,7 +7,7 @@ import { docsUrl } from '../utils/docs';
 import { isKeyof } from '../utils/guards';
 import { namesToRegex } from '../utils/regex';
 
-const enum MessageIds {
+export const enum MessageIds {
   NoDetectChanges = 'no-detect-changes',
   NoMarkForCheck = 'no-mark-for-check',
 }
