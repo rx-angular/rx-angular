@@ -1,6 +1,6 @@
 # Migrating to RxState
 
-Let's take a look at a simple checklist app, see how it can be implemented in an imperative way, and after that, we will iterate over it and add some reactiveness. We skip any additional logic as routing, error handling etc., in these examples.
+Let's take a look at a simple checklist app, see how it can be implemented in an imperative way, and after that, we will iterate over it and add some reactiveness. We skip any additional logic such as routing, error handling etc., in these examples.
 
 ## Initial solution
 
