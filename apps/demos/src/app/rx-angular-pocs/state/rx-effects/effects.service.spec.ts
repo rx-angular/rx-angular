@@ -4,7 +4,6 @@ import { BehaviorSubject, EMPTY, Observable, throwError } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { RxEffects } from './effects.service';
 
-// tslint:disable: max-classes-per-file
 
 type TState = string;
 
@@ -30,7 +29,6 @@ class Service {
   method4OnComplete(..._: any[]): void {}
 }
 
-// tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
   providers: [RxEffects],
@@ -48,7 +46,6 @@ class TestComponent {
   }
 }
 
-// tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
   providers: [RxEffects],
