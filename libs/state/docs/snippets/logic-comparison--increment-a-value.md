@@ -17,7 +17,7 @@ We have a component that:
 ## Imperative
 
 **State**:
-The components' state is a simple object `state: { count: number } = {};`.
+The component's state is a simple object `state: { count: number } = {};`.
 
 **Display**:
 To display the value we use a template expression `{{ state.count }}`.
@@ -52,8 +52,8 @@ export class MyComponent {
 ## Reactive reading
 
 **State**:
-The components' state gets managed with `RxState` by extending the class. `export class MyComponent extends RxState<{ count: number }> {`
-The components' state is a simple interface: `{ count: number }`.
+The component's state gets managed with `RxState` by extending the class. `export class MyComponent extends RxState<{ count: number }> {`
+The component's state is a simple interface: `{ count: number }`.
 Inside the class we expose our state as Observable `readonly state$ = this.select();`
 
 **Display**:
@@ -90,7 +90,7 @@ export class MyComponent extends RxState<{ count: number }> {
 ## Reactive Writing
 
 **State**:
-The components' state gets managed with `RxState` by extending the class. `export class MyComponent extends RxState<{ count: number }> {`
+The component's state gets managed with `RxState` by extending the class. `export class MyComponent extends RxState<{ count: number }> {`
 The components state is a simple interface `{ count: number }`.
 Inside the class we expose our state as Observable `readonly state$ = this.select();`
 
@@ -104,7 +104,7 @@ The state gets incremented by one whenever the button gets clicked.
 In the class we use a Subject to track clicks `btn$ = new Subject();`.
 The click binding is set-up over an event binding `(click)` and fires the Subjects `next` method.
 
-This Observable gets connected to the components' state in the constructor `this.connect(btn$, (oldState, clickEvent) => ({ count: s.count + 1 }));`.
+This Observable gets connected to the component's state in the constructor `this.connect(btn$, (oldState, clickEvent) => ({ count: s.count + 1 }));`.
 Whenever the Subject emits, we apply the increment logic passed as a function.
 The function signature looks like this: `(oldState: T, newValue: T[K]) => T`.
 
@@ -134,7 +134,7 @@ export class MyComponent extends RxState<{ count: number }> {
 
 In this section we use the `zoneless` directive to get control over rendering.
 
-The sections State ans Action are identical.
+The sections State and Action are identical.
 The Display has a small difference. We use the `zoneless` directive to get rid of renderings caused by the button eventListener.
 
 Rendering:
