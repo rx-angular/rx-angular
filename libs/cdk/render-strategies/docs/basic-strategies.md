@@ -1,15 +1,8 @@
-## Basic Strategies
+# Basic Strategies
 
-| Name       | Priority | Render Method     | Scheduling              | Render Deadline |
-| ---------- | -------- | ----------------- | ----------------------- | --------------- |
-| `"native"` | ❌       | ⮁ `markForCheck`  | `requestAnimationFrame` | N/A             |
-| `"global"` | ❌       | ⮁ `ɵmarkDirty`    | `requestAnimationFrame` | N/A             |
-| `"local"`  | ❌       | 🠗 `detectChanges` | `requestAnimationFrame` | N/A             |
-| `"noop"`   | ❌       | - `noop`          | `requestAnimationFrame` | N/A             |
+## Concepts
 
-### Concepts
-
-#### Render work
+### Render work
 
 To apply changes to a component template we need to re-evaluate the template. Internally this is done by calling `???`.
 This method will execute whenever a component's template is re-evaluated through `async`, `push`, `ChangedDetectorRef.detectChanges` or a structural directive template is re-evaluated through `EmbeddedView.detectChanges`
@@ -52,7 +45,7 @@ The re-evaluation or browser re-rendreing can be caused by:
 - Big LCP elements
 - Large amount of content
 
-#### Local vs global CD
+### Local vs global CD
 
 ![ChangeDetection](https://user-images.githubusercontent.com/10064416/143149592-9a55eafc-3b44-412c-a146-acb777a2e777.png)
 
@@ -69,7 +62,7 @@ Technically the methods we can use for it are `detectChanges` or `ɵdetectChange
 ![Render Strategies-global-vs-local](https://user-images.githubusercontent.com/10064416/143150010-fa01316a-acd9-4906-ab81-25a29336cf57.png)
 
 
-#### Pull vs push based
+### Pull vs push based
 
 
 ![Render Strategies-requext-subscribe](https://user-images.githubusercontent.com/10064416/143153116-782bec55-0353-4254-8fe5-5a16691ac320.png)
@@ -80,14 +73,22 @@ In a simple setup the pull might be a quick solution and you just `.get()` the v
 
 Compare it with HTTP calls vs Websockets.
 
-
 If we apply this concepts to our change detection mechanis we can directly apply changes where they are needd and skip nearly all the unnessecary work. 
 
 In combination with Observables, and EmbeddedViews change detection can be speed up dramatically by this architecture.
  
 ![Render Strategies-pull-vs-push](https://user-images.githubusercontent.com/10064416/143150014-e83347e4-188c-447d-8d61-2fc3014f5abb.png)
 
-### Native
+### Strategies
+
+| Name       | Priority | Render Method     | Scheduling              | Render Deadline |
+| ---------- | -------- | ----------------- | ----------------------- | --------------- |
+| `"native"` | ❌       | ⮁ `markForCheck`  | `requestAnimationFrame` | N/A             |
+| `"global"` | ❌       | ⮁ `ɵmarkDirty`    | `requestAnimationFrame` | N/A             |
+| `"local"`  | ❌       | 🠗 `detectChanges` | `requestAnimationFrame` | N/A             |
+| `"noop"`   | ❌       | - `noop`          | `requestAnimationFrame` | N/A             |
+
+#### Native
 
 ![rx-angular-cdk-render-strategies__strategy-native](https://user-images.githubusercontent.com/10064416/116009720-78720c00-a61b-11eb-9702-82361d782a46.png)
 
@@ -100,7 +101,7 @@ as the internally called function [`markViewDirty`](https://github.com/angular/a
 | -------- | ------------- | ---------------- | ------------- | ----------------------- |
 | `native` | ❌            | ⮁ `markForCheck` | ✔ RootContext | `requestAnimationFrame` |
 
-### Global Strategy
+#### Global Strategy
 
 This strategy leverages Angular's internal [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) render method.
 It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) but works also 🚫 zone-less.
@@ -112,7 +113,7 @@ It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angul
 | -------- | ------------- | -------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `global` | ✔             | ⮁ `ɵmarkDirty` | ✔ `RootContext` | [`animationFrame`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/util/misc_utils.ts#L39) |
 
-### Local
+#### Local
 
 This strategy is rendering the actual component and all its children that are on a path
 that is marked as dirty or has components with `ChangeDetectionStrategy.Default`.
@@ -137,7 +138,7 @@ both accessed over the context over `ChangeDetectorRef#context`.
 
 <!-- @TODO Julian - full screen animation of slide fo template vs EV -->
 
-### Noop
+#### Noop
 
 The no-operation strategy does nothing. It can be a valuable tool for performance improvements as well as debugging.
 
@@ -150,7 +151,47 @@ The no-operation strategy does nothing. It can be a valuable tool for performanc
 
 ## Usage
 
-## Custom features
+### Component / Service
+
+```ts
+import {RxStrategyProvider} from '@rx-angular/cdk/render-strategies';
+
+@Component()
+class Component {
+
+constructor(private strategyProvider: RxStrategyProvider) {
+  strategyProvider.schedule(() => {}, {strategyName: 'local'})
+}
+
+}
+```
+
+### Template
+
+```ts
+import {LetModule} from '@rx-angular/template/let';
+import {ForModule} from '@rx-angular/template/for';
+import {PushModule} from '@rx-angular/template/push';
+
+@Module({
+imports: [
+LetModule,
+ForModule,
+PushModule
+]
+})
+class Module {
+
+}
+```
+
+```html
+<h1 *rxLet="title$; strategy:'local'">{{title}}</h1>
+<a *rxFor="let itme of itmes$; strategy:'local'">{{item}}</a>
+<p>{{title$ | push : 'local'}}</p>
+```
+
+## Build custom features
 
 Let's try to use the strategies knowledge and build a new feature.
 
