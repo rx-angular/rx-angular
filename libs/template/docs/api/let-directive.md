@@ -105,7 +105,9 @@ them whenever the observable notification (next/error/complete) is sent. Then, i
 
 ## Testing
 
-By default the directive uses the [`normal`]() concurrent strategy which render the view using a scheduling mechanism. This behavior leads to unexpected results when testing the view, that's why we recommend to test your templates using the [`native`]() strategy. This is configurable using the following provider.
+### Handling the scheduling issue
+
+By default `*rxLet` uses the normal concurrent strategy which renders the view using a scheduling mechanism. This behavior leads to unexpected results in a test environnement, that's why we recommend to test your templates using the native strategy. This is configurable with the following provider.
 
 ```ts
 export const RX_ANGULAR_TEST_PROVIDER: StaticProvider = {
@@ -116,7 +118,7 @@ export const RX_ANGULAR_TEST_PROVIDER: StaticProvider = {
 };
 ```
 
-Then, you import the provider in your tests.
+Then, declare it in the providers entry.
 
 ```ts
 TestBed.configureTestingModule({
@@ -125,13 +127,22 @@ TestBed.configureTestingModule({
 }).compileComponents();
 ```
 
-Keep in mind that `*rxLet` directive renders the view asynchronously, for this reason, you want to be sure any asynchronous change detection is done before asserting anything in your template.
+This way, `*rxLet` will use the same rendering strategy used by the Angular's built-in `async` pipe.
+
+### Handling the lazy rendering problem
+
+Keep in mind that no matter which strategy is used, `*rxLet` always renders the view asynchronously. For this reason, you want to be sure the asynchronous change detection is done before querying any DOM element rendered by the directive. You can achieve this using the `ComponentFixture#whenStable()` function.
 
 ```ts
-await fixture.whenStable();
-```
+fixture.detectChanges();
+await fixture.whenStable(); // 👈 This is important to wait *rxLet asynchronous rendering.
 
-You can found out [more concrete testing examples here]().
+const myElement = fixture.debugElement.query(
+  By.css('.my-element')
+).nativeElement;
+
+expect(myElement.textContent).toContain('my-component works!');
+```
 
 ## Signature
 
