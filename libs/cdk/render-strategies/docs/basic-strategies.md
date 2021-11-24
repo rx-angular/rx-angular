@@ -71,10 +71,19 @@ Technically the methods we can use for it are `detectChanges` or `ɵdetectChange
 
 #### Pull vs push based
 
+Consuming value changes can be done by **constantly** watching the source for changes and **pull** them,
+ or subscribe to the changes like a DOM event binding **once** and get the changes **pushed**.
+
+In a simple setup the pull might be a quick solution and you just `.get()` the value, but a push based architecture always scales better.
+
+Compare it with HTTP calls vs Websockets.
 
 
+If we apply this concepts to our change detection mechanis we can directly apply changes where they are needd and skip nearly all the unnessecary work. 
+
+In combination with Observables, and EmbeddedViews change detection can be speed up dramatically by this architecture.
+ 
 ![Render Strategies-pull-vs-push](https://user-images.githubusercontent.com/10064416/143150014-e83347e4-188c-447d-8d61-2fc3014f5abb.png)
-
 
 ### Native
 
