@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { Observable, Subject } from 'rxjs';
 import { scan, startWith } from 'rxjs/operators';
 
@@ -30,11 +31,17 @@ import { scan, startWith } from 'rxjs/operators';
       </mat-card-content>
 
       <mat-card-actions>
-        <button mat-button [unpatch] (click)="signals$.complete()">
+        <button
+          mat-button
+          class="complete"
+          [unpatch]
+          (click)="signals$.complete()"
+        >
           COMPLETE
         </button>
         <button
           mat-button
+          class="next"
           [matBadge]="signalsCount$ | push | toString"
           [matBadgeHidden]="(signalsCount$ | push) === 0"
           [unpatch]
@@ -42,7 +49,12 @@ import { scan, startWith } from 'rxjs/operators';
         >
           NEXT
         </button>
-        <button mat-button [unpatch] (click)="signals$.error(errorStub)">
+        <button
+          mat-button
+          class="error"
+          [unpatch]
+          (click)="signals$.error(errorStub)"
+        >
           ERROR
         </button>
       </mat-card-actions>
@@ -111,11 +123,11 @@ import { scan, startWith } from 'rxjs/operators';
 })
 export class LetTemplateBindingSubjectExampleComponent {
   errorStub = new Error('Template observable error!');
-  visibleStrategy = 'local';
+  visibleStrategy = this.strategyProvider.primaryStrategy;
   signals$: Subject<number>;
   signalsCount$: Observable<number>;
 
-  constructor() {
+  constructor(private strategyProvider: RxStrategyProvider) {
     this.reset();
   }
 
