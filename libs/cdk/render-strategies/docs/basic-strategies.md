@@ -71,6 +71,8 @@ Technically the methods we can use for it are `detectChanges` or `ɵdetectChange
 
 #### Pull vs push based
 
+
+![Render Strategies-requext-subscribe](https://user-images.githubusercontent.com/10064416/143153116-782bec55-0353-4254-8fe5-5a16691ac320.png)
 Consuming value changes can be done by **constantly** watching the source for changes and **pull** them,
  or subscribe to the changes like a DOM event binding **once** and get the changes **pushed**.
 
