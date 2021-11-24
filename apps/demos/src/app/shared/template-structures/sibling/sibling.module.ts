@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PushModule } from '@rx-angular/template';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 
 import { DirtyChecksModule } from '../../debug-helper/dirty-checks';
 import { RenderingsModule } from '../../debug-helper/renderings';

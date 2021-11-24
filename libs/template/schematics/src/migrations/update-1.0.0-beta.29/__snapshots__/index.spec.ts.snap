@@ -38,8 +38,8 @@ exports[`Template Migration 1.0.0-beta.29 should replace UnpatchEventsModule + U
 "import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
-import { UnpatchDirective } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
+import { UnpatchDirective } from '@rx-angular/template/experimental/unpatch';
 
 @NgModule({
   declarations: [AppComponent],
@@ -57,7 +57,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { LetModule } from '@rx-angular/template/let';
 import { PushModule } from '@rx-angular/template/push';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 
 @NgModule({
   declarations: [AppComponent],
@@ -75,7 +75,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { LetModule } from '@rx-angular/template/let';
 import { PushModule } from '@rx-angular/template/push';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 
 @NgModule({
   declarations: [AppComponent],

@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { PushModule } from '@rx-angular/template';
 import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx-for.module';
 import { StrategySelectComponent } from './strategy-select/strategy-select.component';
 

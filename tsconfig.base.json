@@ -44,7 +44,7 @@
       ],
       "@rx-angular/template/let": ["libs/template/let/src/index.ts"],
       "@rx-angular/template/push": ["libs/template/push/src/index.ts"],
-      "@rx-angular/template/unpatch": ["libs/template/unpatch/src/index.ts"],
+      "@rx-angular/template/experimental/unpatch": ["libs/template/experimental/unpatch/src/index.ts"],
       "@test-helpers": ["libs/test-helpers/src/index.ts"]
     }
   },

@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PushModule } from '@rx-angular/template';
 import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ToStringPipe } from './to-string.pipe';
 

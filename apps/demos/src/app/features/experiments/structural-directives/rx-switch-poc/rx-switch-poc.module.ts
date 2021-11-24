@@ -5,7 +5,7 @@ import { ROUTES } from './rx-switch-poc.routes';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { PushModule } from '@rx-angular/template';
 import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 import { MatButtonModule } from '@angular/material/button';
 import { RxSwitchPocComponent } from './rx-switch-poc.component';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';

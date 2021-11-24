@@ -5,7 +5,7 @@ import { ROUTES } from './basic-example.routes';
 import { BasicExampleComponent } from './basic-example.component';
 import { PushModule } from '@rx-angular/template/push';
 import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';

@@ -6,7 +6,7 @@ import { ROUTES } from './ng-if-hack.routes';
 import { NgIfHackComponent } from './ng-if-hack.component';
 import { PushModule } from '@rx-angular/template';
 import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatIconModule } from '@angular/material/icon';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';

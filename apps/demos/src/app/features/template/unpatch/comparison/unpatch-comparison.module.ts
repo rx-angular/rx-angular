@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 import { ComparisonUnpatchComponent } from './comparison-unpatch.component';
 import { ROUTES } from './comparison.routes';
 import { RunOutsideZoneDirective } from './runOutsideZone.directive';

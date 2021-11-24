@@ -9,7 +9,7 @@ import { RENDER_CALLBACK_ROUTES } from './render-callback.routes';
 import { MatButtonModule } from '@angular/material/button';
 import { PushModule } from '@rx-angular/template';
 import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 
 @NgModule({
   declarations: [

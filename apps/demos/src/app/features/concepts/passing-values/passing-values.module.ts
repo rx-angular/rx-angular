@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { ROUTES } from './passing-values.routes';
 import { MatButtonModule } from '@angular/material/button';
 import { PushModule } from '@rx-angular/template';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 import { PassingValuesComponent } from './passing-values.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';

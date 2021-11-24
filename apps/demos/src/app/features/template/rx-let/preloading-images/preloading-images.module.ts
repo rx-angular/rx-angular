@@ -5,7 +5,7 @@ import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks'
 import { ROUTES } from './preloading-images.routes';
 import { PreloadingImagesComponent } from './preloading-images.component';
 import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatIconModule } from '@angular/material/icon';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';

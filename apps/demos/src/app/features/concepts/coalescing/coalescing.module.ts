@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PushModule } from '@rx-angular/template';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 
 import { ROUTES } from './coalescing.routes';
 import { CoalescingComponent } from './coalescing/coalescing.component';

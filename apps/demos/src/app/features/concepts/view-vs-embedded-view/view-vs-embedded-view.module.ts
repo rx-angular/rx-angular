@@ -4,7 +4,7 @@ import { OriginalLetDirective } from './original-let.directive';
 import { Poc1LetDirective } from './poc1-let.directive';
 import { ViewVsEmbeddedViewComponent } from './view-vs-embedded-view.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({

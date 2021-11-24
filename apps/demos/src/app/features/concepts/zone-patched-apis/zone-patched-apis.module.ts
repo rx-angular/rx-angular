@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ROUTES } from './zone-patched-apis.routes';
 import { MatButtonModule } from '@angular/material/button';
 import { PushModule } from '@rx-angular/template';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 import { ZonePatchedApisComponent } from './zone-patched-apis.component';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visualizer.module';

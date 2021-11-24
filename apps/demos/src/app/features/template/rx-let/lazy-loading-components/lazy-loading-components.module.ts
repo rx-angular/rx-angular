@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ROUTES } from './lazy-loading-components.routes';
 import { LazyLoadingComponentsComponent } from './lazy-loading-components.component';
 import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 import { GhostElementsModule } from '../../../../shared/ghost-elements';
 import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';

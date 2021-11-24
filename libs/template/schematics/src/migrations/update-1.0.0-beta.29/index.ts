@@ -5,8 +5,8 @@ const renames: Record<string, string | [string, string]> = {
   LetDirective: '@rx-angular/template/let',
   PushModule: '@rx-angular/template/push',
   PushPipe: '@rx-angular/template/push',
-  UnpatchDirective: '@rx-angular/template/unpatch',
-  UnpatchEventsModule: ['UnpatchModule', '@rx-angular/template/unpatch'],
+  UnpatchDirective: '@rx-angular/template/experimental/unpatch',
+  UnpatchEventsModule: ['UnpatchModule', '@rx-angular/template/experimental/unpatch'],
 };
 
 export default renamingRule('@rx-angular/template', renames);

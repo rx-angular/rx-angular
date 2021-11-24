@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { SchedulingComponent } from './scheduling/scheduling.component';
 import { PushModule } from '@rx-angular/template';
 import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { UnpatchModule } from '@rx-angular/template/experimental/unpatch';
 import { ROUTES } from './scheduling.routes';
 import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
