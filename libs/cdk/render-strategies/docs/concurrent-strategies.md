@@ -5,9 +5,7 @@ If your app provides user feedback within less than 16ms (less than 60 frames pe
 
 Based on the [RAIL model](https://web.dev/rail/), a user experiences motion as laggy if the frame rate is lower than 60 frames per second (~16ms per task).
 
-From perspec UX => app should give feedback =>
-
-if blocked => laggy
+From perspec UX => app should give feedback => if blocked => laggy
 
 ### Concepts
 
