@@ -45,9 +45,23 @@ The re-evaluation or browser re-rendreing can be caused by:
 - Big LCP elements
 - Large amount of content
 
-#### Local vs global
+#### Local vs global CD
+
+The change detection system that is currently implemented in Angular is pull-based, but way more important, as a side effect it also runs CD globally.
+It performs a re-rendering where at optimum every single component on the path from the root to the actual UI update needs to get re-evaluated. 
+
+A lot of work is performed useless.
+
+Technically the methods to run change detection are `markForCheck` / `markViewDirty`, `ɵmarkDirty` and `tick`.
+
+If we want to avoid this process we can run change detection locally and re-render only the very component and potentially its children.
+
+Technically the methods we can use for it are `detectChanges` or `ɵdetectChanges`
+
 
 #### Pull vs push based
+
+
 
 --- 
 
@@ -117,3 +131,11 @@ The no-operation strategy does nothing. It can be a valuable tool for performanc
 | Name   | Zone Agnostic | Render Method | Coalescing | Scheduling |
 | ------ | ------------- | ------------- | ---------- | ---------- |
 | `noop` | ✔             | - `noop`      | ❌         | ❌         |
+
+
+## Usage
+
+## Custom features
+
+Let's try to use the strategies knowledge and build a new feature.
+

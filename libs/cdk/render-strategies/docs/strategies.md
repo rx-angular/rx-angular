@@ -22,3 +22,89 @@ Strategies give us a way to control how Angular's rendering is executed and whic
 **Strategy Sets:**
 - [Basic Strategies](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/render-strategies/docs/basic-strategies.md)
 - [Concurrent Strategies](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/render-strategies/docs/concurrent-strategies.md)
+
+## Usage
+
+### Configure existing features
+```typescript
+@Component({
+  selector: 'immediate',
+  template: `
+    <button id="btn" (mouseenter)="showTooltip()" (mouseleave)="hideTooltip()">
+      Button with Tooltip
+    </button>
+  `,
+})
+export class RenderCallbackComponent {
+  constructor(private strategyProvider: RxStrategyProvider) {}
+
+  showTooltip() {
+    this.strategyProvider.schedule(
+      () => {
+        // create tooltip
+      },
+      { strategy: 'immediate' }
+    );
+  }
+
+  hideTooltip() {
+    this.strategyProvider.schedule(
+      () => {
+        // destroy tooltip
+      },
+      { strategy: 'immediate' }
+    );
+  }
+}
+```
+
+
+### Custom Strategies
+
+```typescript
+export type RxRenderWork = <T = unknown>(
+  cdRef: ChangeDetectorRef,
+  scope?: coalescingObj,
+  notification?: RxNotification<T>
+) => void;
+
+export type RxRenderBehavior = <T = unknown>(
+  work: any,
+  scope?: coalescingObj
+) => (o: Observable<T>) => Observable<T>;
+
+export interface RxStrategyCredentials<S = string> {
+  name: S;
+  work: RxRenderWork;
+  behavior: RxRenderBehavior;
+}
+
+export type RxCustomStrategyCredentials<T extends string> = Record<
+  T,
+  RxStrategyCredentials
+>;
+export type RxNativeStrategyNames = 'native' | 'local' | 'global' | 'noop';
+
+export type RxConcurrentStrategyNames =
+  | 'noPriority'
+  | 'immediate'
+  | 'userBlocking'
+  | 'normal'
+  | 'low'
+  | 'idle';
+
+export type RxDefaultStrategyNames =
+  | RxNativeStrategyNames
+  | RxConcurrentStrategyNames;
+
+export type RxStrategyNames<T> = RxDefaultStrategyNames | T;
+export type RxStrategies<T extends string> = RxCustomStrategyCredentials<
+  RxStrategyNames<T>
+>;
+
+export interface RxRenderStrategiesConfig<T extends string> {
+  primaryStrategy?: RxStrategyNames<T>;
+  customStrategies?: RxCustomStrategyCredentials<T>;
+  patchZone?: boolean;
+}
+```
