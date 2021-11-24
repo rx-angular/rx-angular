@@ -29,7 +29,6 @@ import {
 import { RxEffects } from '../../../state/rx-effects';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[ifVisible]',
   providers: [RxEffects],
 })

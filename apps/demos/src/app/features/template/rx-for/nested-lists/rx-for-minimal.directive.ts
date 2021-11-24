@@ -41,7 +41,6 @@ export class RxForViewContext<T extends object, U extends NgIterable<T> = NgIter
 
 
   constructor(private _$implicit: T, public rxFor: U, private distinctBy: (a: T, b: T) => boolean = (a, b) => a === b) {
-    // tslint:disable-next-line:no-unused-expression
     this._record.next(_$implicit);
   }
 
@@ -80,7 +79,6 @@ export interface RecordViewTuple<T extends object, U extends NgIterable<T>> {
 
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[rxMinimalFor]',
   providers: [RxEffects]
 })

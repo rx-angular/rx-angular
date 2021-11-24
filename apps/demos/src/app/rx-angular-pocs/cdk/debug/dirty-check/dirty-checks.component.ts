@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, Renderer2 } from '@angular/core';
 
-// tslint:disable
 @Component({
   selector: 'rxa-dirty-check',
   template: `

@@ -12,9 +12,7 @@ const theMax = 10000;
 export function withCompleteAndError<T, E>(error$: Observable<E>, complete$) {
   return (o: Observable<T>): Observable<T | E> =>
     o.pipe(
-      /* tslint:disable */
       mergeWith(error$),
-      /* tslint:enable */
       takeUntil(complete$));
 }
 
@@ -42,7 +40,6 @@ export function toTick(scheduleConfig: SchedulerConfig): Observable<number> {
 }
 
 export function toInt(float: number = toRandom(), min = 0, max = theMax): number {
-  // tslint:disable-next-line:no-bitwise
   return ~~(min + float * (max+1 - min));
 }
 
