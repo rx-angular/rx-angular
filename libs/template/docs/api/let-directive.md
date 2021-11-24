@@ -1,4 +1,4 @@
-## LetDirective
+## Let Directive
 
 The `*rxLet` directive serves a convenient way of binding observables to a view context. Furthermore, it helps
 you structure view-related models into view context scope (DOM element's scope).

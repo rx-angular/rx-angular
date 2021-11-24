@@ -1,4 +1,4 @@
-# PushPipe
+# Push Pipe
 
 The `push` pipe serves as a drop-in replacement for the `async` pipe.
 

@@ -70,11 +70,13 @@ yarn add @rx-angular/template @rx-angular/cdk
 You can import each feature module individually.
 
 ```typescript
-import { LetModule, PushModule, ViewportPrioModule } from '@rx-angular/template';
+import { LetModule } from '@rx-angular/template/let';
+import { PushModule } from '@rx-angular/template/push';
+import { UnpatchModule } from '@rx-angular/template/unpatch';
 
 @NgModule({
   declarations: [...],
-  imports: [LetModule, PushModule, ViewportPrioModule],
+  imports: [LetModule, PushModule, UnpatchModule],
 })
 export class MyModule {}
 ```
@@ -83,18 +85,17 @@ export class MyModule {}
 
 - Directives
   - [LetDirective (\*rxLet)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/api/let-directive.md)
+  - [UnpatchDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/api/unpatch.md)
 - Pipes
-  - [PushPipe (push)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/push.md)
-- [Render Strategies](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/docs/render-strategies/README.md)
+  - [PushPipe (push)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/api/push.md)
 
 ## Experimental features
 
-Additionally, @rx-angular/template provides some experimental optimization tools which in general will give you more control
+Additionally, `@rx-angular/template` provides some experimental optimization tools which in general will give you more control
 about what changes are leading to re-renderings.
 
-- [🧪 Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/experimental/viewport-prio.md)
-- [🧪 UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/experimental/unpatch.md)
-- [🧪 Detach strategy](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/experimental/experimental-render-strategies.md)
+- [🧪 ViewportPrioDirective (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/experimental/viewport-prio.md)
+- [🧪 RxFor (\*rxFor)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/experimental/for-directive.md)
 
 ## Browsers support
 
