@@ -136,7 +136,7 @@ Dropdowns should be displayed right away on user interaction.
     </div>
   `,
 })
-export class RenderCallbackComponent {
+export class TooltipComponent {
   constructor(private strategyProvider: RxStrategyProvider) {}
 
   showTooltip() {
