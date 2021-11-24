@@ -81,7 +81,7 @@ Tooltips should be displayed immediately on mouse over. Any delay will be very n
     </button>
   `,
 })
-export class RenderCallbackComponent {
+export class TooltipComponent {
   constructor(private strategyProvider: RxStrategyProvider) {}
 
   showTooltip() {
