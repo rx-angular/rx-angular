@@ -103,6 +103,36 @@ Internally, `*rxLet` is using a simple "view memoization" - it caches all anchor
 them whenever the observable notification (next/error/complete) is sent. Then, it only updates the context
 (e.g. a value from the observable) in the view.
 
+## Testing
+
+By default the directive uses the [`normal`]() concurrent strategy which render the view using a scheduling mechanism. This behavior leads to unexpected results when testing the view, that's why we recommend to test your templates using the [`native`]() strategy. This is configurable using the following provider.
+
+```ts
+export const RX_ANGULAR_TEST_PROVIDER: StaticProvider = {
+  provide: RX_RENDER_STRATEGIES_CONFIG,
+  useValue: {
+    primaryStrategy: 'native',
+  },
+};
+```
+
+Then, you import the provider in your tests.
+
+```ts
+TestBed.configureTestingModule({
+  ...
+  providers: [RX_ANGULAR_TEST_PROVIDER],
+}).compileComponents();
+```
+
+Keep in mind that `*rxLet` directive renders the view asynchronously, for this reason, you want to be sure any asynchronous change detection is done before asserting anything in your template.
+
+```ts
+await fixture.whenStable();
+```
+
+You can found out [more concrete testing examples here]().
+
 ## Signature
 
 ```TypeScript
