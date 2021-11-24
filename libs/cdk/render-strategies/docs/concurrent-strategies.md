@@ -1,5 +1,4 @@
-
-## Concurrent Strategies
+# Concurrent Strategies
 
 If your app provides user feedback within less than 16ms (less than 60 frames per second), it feels laggy to the user and leads to bad UX.
 
@@ -7,21 +6,21 @@ Based on the [RAIL model](https://web.dev/rail/), a user experiences motion as l
 
 From perspec UX => app should give feedback => if blocked => laggy
 
-### Concepts
+## Concepts
 
-- Scheduling
+### Scheduling
   https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel
 - Frame budget
   ![rx-angular-cdk-render-strategies__frame-budget](https://user-images.githubusercontent.com/10064416/115894224-4f098280-a459-11eb-9abf-9a902d66d380.png)
 
 ![rx-angular-cdk-render-strategies__concurrent-strategies-anatomy](https://user-images.githubusercontent.com/10064416/116157149-bee36b80-a6ec-11eb-965a-9fbe34a8eca4.png)
 
-**Chunking**
+### Chunking
 ![rx-angular-cdk-render-strategies__concurrent-strategies-un-chuked-work](https://user-images.githubusercontent.com/10064416/116010309-7cebf400-a61e-11eb-8715-a6428e5f16a3.png)
 ![rx-angular-cdk-render-strategies__concurrent-strategies-chuked-work](https://user-images.githubusercontent.com/10064416/116010261-2c749680-a61e-11eb-9e92-3bd032045fdf.png)
 ![rx-angular-cdk-render-strategies__concurrent-strategies-non-chunked-vs-chuked-work](https://user-images.githubusercontent.com/10064416/116007117-705f9f80-a60e-11eb-879c-87746ba677f6.png)
 
-**Render Deadline**
+### Render Deadline
 
 ![rx-angular-cdk-render-strategies__concurrent-strategies-render-deadline](https://user-images.githubusercontent.com/10064416/116008121-42308e80-a613-11eb-90da-c3299bbf8c0a.png)
 
@@ -35,7 +34,10 @@ Input handlers (tap, click etc.) often need to schedule a combination of differe
 - rendering in the current frame, e.g. to respond to user typing, toggle the like button, start an animation when clicking on a comment list etc.
 - rendering over the course of next new frames, as fetches complete and data becomes available to prepare and render results.
 
-#### Priority:
+### Priority:
+
+
+
 
 | Name             | Priority | Render Method     | Scheduling    | Render Deadline |
 | ---------------- | -------- | ----------------- | ------------- | --------------- |
