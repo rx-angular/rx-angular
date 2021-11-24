@@ -52,6 +52,14 @@ It performs a re-rendering where at optimum every single component on the path f
 
 A lot of work is performed useless.
 
+![Render Strategies-global-vs-loc
+![Render Strategies-pull-vs-push](https://user-images.githubusercontent.com/10064416/143150014-e83347e4-188c-447d-8d61-2fc3014f5abb.png)
+al](https://user-images.githubusercontent.com/10064416/143150010-fa01316a-acd9-4906-ab81-25a29336cf57.png)
+
+![ChangeDetection](https://user-images.githubusercontent.com/10064416/143149592-9a55eafc-3b44-412c-a146-acb777a2e777.png)
+
+
+
 Technically the methods to run change detection are `markForCheck` / `markViewDirty`, `ɵmarkDirty` and `tick`.
 
 If we want to avoid this process we can run change detection locally and re-render only the very component and potentially its children.
