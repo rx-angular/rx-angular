@@ -60,36 +60,17 @@
       "options": {
         "commands": [
           {
-            "command": "nx test-coverage template && nx test-coverage-badge template"
+            "command": "nx test template --codeCoverage template && nx build-test-coverage-badge template"
           }
         ]
       }
     },
-    "test-coverage-badge": {
+    "build-test-coverage-badge": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
           {
             "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/template/cobertura-coverage.xml -d docs/test-coverage/template"
-          }
-        ]
-      }
-    },
-    "test-coverage": {
-      "executor": "@nrwl/jest:jest",
-      "options": {
-        "jestConfig": "libs/template/jest.config.js",
-        "passWithNoTests": true,
-        "codeCoverage": true
-      },
-      "outputs": ["coverage/libs/template"]
-    },
-    "changelog": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx conventional-changelog-cli -p angular -k ./libs/template/package.json -i ./libs/template/CHANGELOG.md -s --commit-path ./libs/template --tagPrefix template@"
           }
         ]
       }
