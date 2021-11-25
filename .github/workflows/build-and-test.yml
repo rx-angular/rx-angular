@@ -42,10 +42,10 @@ jobs:
         run: yarn nx affected:lint --parallel --maxParallel=3
 
       - name: Run Affected test
-        run: yarn nx affected:test --parallel --maxParallel=2
+        run: yarn nx affected:test --parallel --maxParallel=3
 
-      - name: Run SSR e2e
-        run: yarn nx run ssr-e2e:e2e --headless
+      - name: Run Affected e2e
+        run: yarn nx affected:e2e
 
       # don't run build in parallel, can cause dead locks
       - name: Run Affected build
@@ -64,12 +64,14 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
 
-      - run: yarn nx-cloud start-ci-run
+      # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
+      # - run: yarn nx-cloud start-ci-run
 
-      - run: yarn nx run-many --projects state,template,cdk --target build-docs --parallel=false
+      - run: yarn nx run-many --projects=state,template,cdk --target=build-docs --parallel --maxParallel=3
       - run: yarn nx build demos --prod
 
-      - run: yarn nx-cloud stop-all-agents
+      # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
+      # - run: yarn nx-cloud stop-all-agents
 
       - uses: EndBug/add-and-commit@v4
         with:
