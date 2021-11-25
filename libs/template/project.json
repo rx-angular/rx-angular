@@ -60,7 +60,7 @@
       "options": {
         "commands": [
           {
-            "command": "nx test template --codeCoverage template && nx build-test-coverage-badge template"
+            "command": "nx test template --codeCoverage && nx build-test-coverage-badge template"
           }
         ]
       }
