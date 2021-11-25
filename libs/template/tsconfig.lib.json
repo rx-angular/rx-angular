@@ -19,7 +19,6 @@
     }
   },
   "angularCompilerOptions": {
-    "enableIvy": true,
     "compilationMode": "partial",
     "annotateForClosureCompiler": true,
     "skipTemplateCodegen": true,
