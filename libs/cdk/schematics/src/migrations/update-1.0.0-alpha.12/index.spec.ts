@@ -9,7 +9,7 @@ describe('cdk migration 1.0.0-alpha-12', () => {
   let appTree: UnitTestTree;
 
   /* Increase Jest timeout because of long living tests. */
-  beforeAll(() => jest.setTimeout(20_000));
+  beforeAll(() => jest.setTimeout(100_000));
 
   /* Reset default timeout to 5s. */
   afterAll(() => jest.setTimeout(5_000));
