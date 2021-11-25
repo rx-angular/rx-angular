@@ -33,6 +33,7 @@ runs:
 
     - name: Install dependencies
       if: steps.yarn-cache.outputs.cache-hit != 'true'
+      shell: bash
       run: yarn --frozen-lockfile --no-progress --non-interactive --prefer-offline
       env:
         HUSKY_SKIP_INSTALL: 'true'
