@@ -76,9 +76,8 @@ jobs:
       - uses: EndBug/add-and-commit@v4
         with:
           add: 'docs/*'
-          force: true
           author_name: Github Action
-          message: 'chore(docs): GitHub pages generation'
+          message: 'chore(docs): update GitHub pages'
           # Name of the branch to use, if different from the one that triggered the workflow
           # Default: the branch that triggered the workflow (from GITHUB_REF)
           ref: 'github-pages'
