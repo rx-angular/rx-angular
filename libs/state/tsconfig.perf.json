@@ -5,8 +5,12 @@
     "rootDir": ".",
     "module": "commonjs",
     "target": "es5",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "downlevelIteration": true
   },
-  "include": ["./perf/**/*.ts"]
+  "include": [
+    "./perf/**/*.ts"
+  ]
 }

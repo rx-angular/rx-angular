@@ -2,5 +2,5 @@
 
 /dist
 /coverage
-/**/*.spec.ts
+/node_modules
 /**/images/**/*

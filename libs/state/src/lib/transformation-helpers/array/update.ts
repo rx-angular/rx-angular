@@ -1,6 +1,5 @@
 import { ComparableData } from '../interfaces/comparable-data-type';
 import { valuesComparer } from '../_internals/valuesComparer.util';
-import { isDefined } from '../../core';
 
 /**
  * @description
@@ -58,7 +57,7 @@ import { isDefined } from '../../core';
  *        'creatures',
  *        this.updateCreature$,
  *        ({ creatures }, creatureToUpdate) => {
- *            return update(creatures, creatureToRemove, (a, b) => a.id === b.id);
+ *            return update(creatures, creatureToUpdate, (a, b) => a.id === b.id);
  *        }
  *      );
  *    }
@@ -79,17 +78,19 @@ export function update<T extends object>(
   updates: Partial<T>[] | Partial<T>,
   compare?: ComparableData<T>
 ): T[] {
-  const updatesAsArray = updates
+  const updatesDefined = updates != null;
+  const updatesAsArray = updatesDefined
     ? Array.isArray(updates)
       ? updates
       : [updates]
     : [];
 
-  const sourceDefined = isDefined(source);
-  const sourceIsArray = Array.isArray(source);
-  const invalidInput = !sourceIsArray && !isDefined(updates);
+  const sourceDefined = source != null;
+  const sourceIsNotArray = !Array.isArray(source);
+  const invalidInput =
+    sourceIsNotArray || source.length === 0 || updatesAsArray.length === 0;
 
-  if (sourceDefined && !sourceIsArray) {
+  if (sourceDefined && sourceIsNotArray) {
     console.warn(`Update: Original value (${source}) is not an array.`);
   }
 
@@ -97,19 +98,23 @@ export function update<T extends object>(
     return source;
   }
 
-  if (!sourceDefined || !source.length || !sourceIsArray) {
-    return [...updatesAsArray] as T[];
-  }
-
-  return source.map((existingItem) => {
-    const match = updatesAsArray.find((item) =>
+  const x: T[] = [];
+  for (const existingItem of source) {
+    const match = customFind(updatesAsArray, (item) =>
       valuesComparer(item as T, existingItem, compare)
     );
 
-    if (match) {
-      return { ...existingItem, ...match };
-    }
+    x.push(match ? { ...existingItem, ...match } : existingItem);
+  }
 
-    return existingItem;
-  });
+  return x;
+}
+
+function customFind<T>(array: T[], fn: (item: T) => boolean): T | undefined {
+  for (const item of array) {
+    const x = fn(item);
+    if (x) {
+      return item;
+    }
+  }
 }

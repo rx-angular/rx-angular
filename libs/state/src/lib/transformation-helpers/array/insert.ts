@@ -59,10 +59,10 @@ import { isDefined } from '../../core';
  */
 export function insert<T>(source: T[], updates: T | T[]): T[] {
   const updatesDefined = isDefined(updates);
-  const sourceIsArray = Array.isArray(source);
-  const invalidInput = !sourceIsArray && !updatesDefined;
+  const sourceIsNotArray = !Array.isArray(source);
+  const invalidInput = sourceIsNotArray && !updatesDefined;
 
-  if (!sourceIsArray && isDefined(source)) {
+  if (sourceIsNotArray && isDefined(source)) {
     console.warn(`Insert: Original value (${source}) is not an array.`);
   }
 
@@ -70,8 +70,7 @@ export function insert<T>(source: T[], updates: T | T[]): T[] {
     return source;
   }
 
-  return [
-    ...(sourceIsArray ? source : []),
-    ...(updatesDefined ? (Array.isArray(updates) ? updates : [updates]) : []),
-  ];
+  return (sourceIsNotArray ? [] : source).concat(
+    updatesDefined ? (Array.isArray(updates) ? updates : [updates]) : []
+  );
 }

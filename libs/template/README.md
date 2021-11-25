@@ -25,22 +25,17 @@ on template rendering, the coordination and optimization of `ChangeDetection` cy
 straight **drop in replacement** for the `AsyncPipe (async)`, the `LetDirective` will often provide a more
 convenient way of managing reactive sources and lazy rendering of the view.
 
-Using those with the default strategy ([Local Strategy](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/render-strategies.md#local-strategy)) should already improve the rendering performance of
+Using those with the default strategy ([Local Strategy](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/render-strategies/strategies.md#local)) should already improve the rendering performance of
 your application by a decent amount.
 
 The applied optimization behavior is fully customizable by using built-in or
-custom provided (_coming soon_) [RenderStrategies](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/render-strategies.md).  
+custom provided (_coming soon_) [RenderStrategies](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/docs/render-strategies).  
 However, `RenderStrategies` are also meant to be as a tool developers can interact with inside
 their components, giving you an even broader access to the rendering mechanisms of your application.
 The API comes with imperative as well as reactive ways to manage renderings.
 By default, changes get scoped, coalesced and scheduled using the latest browser APIs.
 Beyond to the use of the scheduling APIs in the browser, local rendering of components is also
 key for a smooth experience.
-
-Additionally, @rx-angular/template provides some neat optimization tools such as
-[unpatch](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/unpatch.md) or
-[viewport-prio](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/viewport-prio.md) which in general will give you more control
-about what changes are leading to re-renderings.
 
 If you plan to improve your rendering performance to the maximum possible, there
 are several techniques that need to be known and considered.
@@ -50,9 +45,21 @@ are several techniques that need to be known and considered.
 
 ## Installation
 
-`npm install --save @rx-angular/template`  
-or  
-`yarn add @rx-angular/template`
+Using schematics:
+
+```bash
+ng add @rx-angular/template
+# or
+nx add @rx-angular/template
+```
+
+Manually:
+
+```bash
+npm install --save @rx-angular/template @rx-angular/cdk
+# or
+yarn add @rx-angular/template @rx-angular/cdk
+```
 
 ## API
 
@@ -60,19 +67,7 @@ or
 
 ## Basic setup
 
-Importing `TemplateModule` to your Module (includes push, \*rxLet, unpatch).
-
-```typescript
-import { TemplateModule } from '@rx-angular/template';
-
-@NgModule({
-  declarations: [...],
-  imports: [TemplateModule],
-})
-export class MyModule {}
-```
-
-Alternatively, you can import each feature module individually.
+You can import each feature module individually.
 
 ```typescript
 import { LetModule, PushModule, ViewportPrioModule } from '@rx-angular/template';
@@ -88,8 +83,21 @@ export class MyModule {}
 
 - Directives
   - [LetDirective (\*rxLet)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/api/let-directive.md)
-  - [Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/viewport-prio.md)
-  - [UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/unpatch.md)
 - Pipes
   - [PushPipe (push)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/push.md)
-- [Render Strategies](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/render-strategies.md)
+- [Render Strategies](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/docs/render-strategies/README.md)
+
+## Experimental features
+
+Additionally, @rx-angular/template provides some experimental optimization tools which in general will give you more control
+about what changes are leading to re-renderings.
+
+- [🧪 Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/experimental/viewport-prio.md)
+- [🧪 UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/experimental/unpatch.md)
+- [🧪 Detach strategy](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/experimental/experimental-render-strategies.md)
+
+## Browsers support
+
+| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari-ios/safari-ios_48x48.png" alt="iOS Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>iOS Safari |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| IE11, Edge                                                                                                                                                                                                      | last version                                                                                                                                                                                                      | last version                                                                                                                                                                                                  | last 2 versions                                                                                                                                                                                               | last 2 versions                                                                                                                                                                                                               |

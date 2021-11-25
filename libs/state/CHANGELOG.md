@@ -1,3 +1,63 @@
+## [1.4.6](https://github.com/rx-angular/rx-angular/compare/state@1.4.5...state@1.4.6) (2021-09-23)
+
+
+### Bug Fixes
+
+* **state:** disable Ivy + partial compilation ([#953](https://github.com/rx-angular/rx-angular/issues/953)) ([379524f](https://github.com/rx-angular/rx-angular/commit/379524ff89d7ff49114629c2fe594e2cdffef2d1)), closes [#928](https://github.com/rx-angular/rx-angular/issues/928)
+
+
+
+## [1.4.5](https://github.com/rx-angular/rx-angular/compare/state@1.4.4...state@1.4.5) (2021-08-27)
+
+
+### Bug Fixes
+
+* **state:** fix imports ([#925](https://github.com/rx-angular/rx-angular/pull/925))
+
+
+### Performance Improvements
+
+* **state:** improve toDictionary & extract performance ([#901](https://github.com/rx-angular/rx-angular/issues/901)) ([930aa4f](https://github.com/rx-angular/rx-angular/commit/930aa4f52a43c9c117c96af7f551d49913783d5a))
+
+
+
+## [1.4.4](https://github.com/rx-angular/rx-angular/compare/state@1.4.2...state@1.4.4) (2021-08-23)
+
+
+### Bug Fixes
+
+* **state:** adopt build ([cbc59d3](https://github.com/rx-angular/rx-angular/commit/cbc59d3b05032154ef7829822a6d5fd59ce82010))
+* **RxState#hold:** stop stream when throw error in hold method ([#437](https://github.com/rx-angular/rx-angular/issues/437)) ([6ca27b1](https://github.com/rx-angular/rx-angular/commit/6ca27b1f6f75eb80b7193529035ead70f52e77c8))
+* **schematics:** remove undefined collection ref ([#454](https://github.com/rx-angular/rx-angular/issues/454)) ([bdea627](https://github.com/rx-angular/rx-angular/commit/bdea627ca6c721b123cb5d0897c3849b9e7fa8e3))
+* **transformation-helper:** fix update behavior on invalid source data ([8ebbc44](https://github.com/rx-angular/rx-angular/commit/8ebbc44cfc6054578d1928216f52a803f06289f6))
+* **transformation-helper:** simplify update helper ([#694](https://github.com/rx-angular/rx-angular/issues/694)) ([f38cd20](https://github.com/rx-angular/rx-angular/commit/f38cd20b16f55f608ff08f1a469d7e59fb446ea5))
+
+
+### Features
+
+* **state:** docs and tests ([ce29d15](https://github.com/rx-angular/rx-angular/commit/ce29d15916c676b29d5159121d35605cbcc96885))
+* **state:** move `coercing` into lib ([#730](https://github.com/rx-angular/rx-angular/issues/730)) ([803412b](https://github.com/rx-angular/rx-angular/commit/803412b8f00d1e0b31f07ced1a2951e445b48546))
+* **transformation-helpers:** add upsert transformation helper ([#392](https://github.com/rx-angular/rx-angular/issues/392)) ([fd52555](https://github.com/rx-angular/rx-angular/commit/fd52555d6af1c81ec666e6554ceab33a95097f43))
+
+
+
+## [1.4.3](https://github.com/rx-angular/rx-angular/compare/state@1.4.2...state@1.4.3) (2020-12-26)
+
+
+### Bug Fixes
+
+* **RxState#hold:** stop stream when throw error in hold method ([#437](https://github.com/rx-angular/rx-angular/issues/437)) ([6ca27b1](https://github.com/rx-angular/rx-angular/commit/6ca27b1f6f75eb80b7193529035ead70f52e77c8))
+
+
+
+## [1.4.2](https://github.com/rx-angular/rx-angular/compare/state@1.4.1...state@1.4.2) (2020-12-26)
+
+### Bug Fixes
+
+* **state:** fixed return value of get when state is empty ([#391](https://github.com/rx-angular/rx-angular/issues/391)) ([ec1efa8](https://github.com/rx-angular/rx-angular/commit/ec1efa8c5e34989ce243435f6db82476b18f38ed))
+* **transformation-helpers:** log warning only if source is not empty. ([#349](https://github.com/rx-angular/rx-angular/issues/349)) ([291a834](https://github.com/rx-angular/rx-angular/commit/291a83468bec574397ef6aa88b93afbec10d4d12))
+* **cdk-folder:** intro cdk folder ([#296](https://github.com/rx-angular/rx-angular/issues/296)) ([72e315f](https://github.com/rx-angular/rx-angular/commit/72e315f98980e599186324681a05c992ac130c3f))
+
 ## [1.4.1](https://github.com/rx-angular/rx-angular/compare/state@1.4.0...state@1.4.1) (2020-09-03)
 
 ### Bug Fixes

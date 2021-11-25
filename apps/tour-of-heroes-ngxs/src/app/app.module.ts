@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { LetModule, PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template';
+import { LetModule } from '@rx-angular/template/let';
 import { NgxsModule } from '@ngxs/store';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './in-memory-data.service';
@@ -17,7 +19,7 @@ import { HeroesComponent } from './heroes/heroes.component';
 import { HeroSearchComponent } from './hero-search/hero-search.component';
 import { MessagesComponent } from './messages/messages.component';
 import { environment } from '../environments/environment';
-import { HeroStateService } from './ngxs/hero-feature/hero.state';
+import { HeroState } from './ngxs/hero-feature/hero.state';
 
 @NgModule({
   imports: [
@@ -30,13 +32,17 @@ import { HeroStateService } from './ngxs/hero-feature/hero.state';
     // and returns simulated server responses.
     // Remove it when a real server is ready to receive requests.
     HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {
-      dataEncapsulation: false,
+      dataEncapsulation: false
     }),
-    NgxsModule.forRoot([HeroStateService], {
-      developmentMode: !environment.production,
+    NgxsModule.forRoot([HeroState], {
+      developmentMode: !environment.production
+    }),
+    NgxsReduxDevtoolsPluginModule.forRoot({
+      name: 'NGXS TOH',
+      disabled: environment.production
     }),
     LetModule,
-    PushModule,
+    PushModule
   ],
   declarations: [
     AppComponent,
@@ -44,8 +50,8 @@ import { HeroStateService } from './ngxs/hero-feature/hero.state';
     HeroesComponent,
     HeroDetailComponent,
     MessagesComponent,
-    HeroSearchComponent,
+    HeroSearchComponent
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

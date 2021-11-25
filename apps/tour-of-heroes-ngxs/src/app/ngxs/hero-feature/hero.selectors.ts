@@ -1,16 +1,15 @@
+import { createSelector, Selector } from '@ngxs/store';
+import { createPropertySelector } from '../../createPropertySelector';
 import { Hero } from '../../hero';
+import { HeroState, HeroStateModel } from './hero.state';
 
-export function getHeroes(s): Hero[] {
-  return s.hero.heroes;
-}
-export function getSearch(s): Hero[] {
-  return s.hero.search;
-}
+export class HeroesSelectors {
+  static props = createPropertySelector<HeroStateModel>(HeroState);
 
-export function getHeroesById(id: number) {
-  return (s): Hero => {
-    return getHeroes(s)
-      .filter((h) => h.id === id)
-      .pop();
-  };
+  @Selector()
+  static getHeroesById(id: number) {
+    return createSelector([HeroesSelectors.props.heroes], (heroes: Hero[]) =>
+      heroes.filter(h => h.id === id).pop()
+    );
+  }
 }

@@ -8,9 +8,7 @@ beforeEach(() => {
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-
 describe('toggle', () => {
-
   describe('general', () => {
     it('should be defined', () => {
       const fn = toggle;
@@ -18,21 +16,21 @@ describe('toggle', () => {
     });
 
     it('should not mutate object', () => {
-      const simpleState = {...primitiveState};
+      const simpleState = { ...primitiveState };
       toggle(simpleState, 'bol');
 
       expect(simpleState).toEqual(primitiveState);
     });
 
     it('should not return same reference', () => {
-      const simpleState = {...primitiveState};
+      const simpleState = { ...primitiveState };
       const result = toggle(simpleState, 'bol');
       const result2 = toggle(simpleState, null as any);
 
       simpleState.num = 24;
 
-      expect(simpleState).toEqual({num: 24, bol: true, str: 'str'});
-      expect(result).toEqual({...primitiveState, bol: false});
+      expect(simpleState).toEqual({ num: 24, bol: true, str: 'str' });
+      expect(result).toEqual({ ...primitiveState, bol: false });
       expect(result2).toEqual(primitiveState);
     });
   });
@@ -41,11 +39,14 @@ describe('toggle', () => {
     it('should toggle boolean property', () => {
       const result = toggle(primitiveState, 'bol');
 
-      expect(result).toEqual({num: 42, bol: false, str: 'str'});
+      expect(result).toEqual({ num: 42, bol: false, str: 'str' });
     });
 
     it('should initialize new values in an object', () => {
-      expect(toggle(primitiveState, 'newBoolean' as any)).toEqual({...primitiveState, newBoolean: true});
+      expect(toggle(primitiveState, 'newBoolean' as any)).toEqual({
+        ...primitiveState,
+        newBoolean: true,
+      });
     });
   });
 

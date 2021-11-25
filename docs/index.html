@@ -12,6 +12,14 @@
       name="viewport"
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
+    <meta
+      name="google-site-verification"
+      content="UcEBUT6NDpJsXZCxoCrLyZsnbMJZF9Fm62yAyzgybcw"
+    />
+    <meta
+      name="ahrefs-site-verification"
+      content="3213e48ac97f2a6ba339f96a481c551da0e3f0a5310aa45b6ec62b2f5f084d2d"
+    />
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="favicon.png" />
     <!-- Roboto font -->
@@ -59,6 +67,19 @@
         --heading-h3-font-weight: normal;
       }
     </style>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-180240379-1"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'UA-180240379-1');
+    </script>
   </head>
   <body>
     <div id="app"></div>
@@ -79,6 +100,7 @@
           '/.*/_sidebar.md': './web/partials/_sidebar.md',
           '/_sidebar.md': './web/partials/_sidebar.md',
         },
+        routerMode: 'history',
         // Autoscroll content to the top when changing page
         auto2top: true,
         relativePath: true,
@@ -90,6 +112,8 @@
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.21.0/components/prism-typescript.min.js"></script>
     <!-- Search -->
     <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+    <!-- Zoom image -->
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
     <!-- Copy code plugin -->
     <script src="https://unpkg.com/docsify-copy-code@2"></script>
   </body>

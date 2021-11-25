@@ -1,6 +1,6 @@
 {
   "name": "@rx-angular/template",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.29",
   "description": "**Fully** Reactive Component Template Rendering in Angular. @rx-angular/template aims to be a reflection of Angular's built in renderings just reactive.",
   "main": "index.js",
   "publishConfig": {
@@ -12,7 +12,7 @@
     "yarn": ">=1.9.2"
   },
   "author": "Michael Hladky <michael@hladky.at>",
-  "homepage": "https://rx-angular.github.io/rx-angular/#/",
+  "homepage": "https://rx-angular.io/",
   "keywords": [
     "angular",
     "rxjs",
@@ -22,7 +22,8 @@
     "lazy templates",
     "memoized views",
     "scheduling",
-    "coalescing"
+    "coalescing",
+    "concurrent rendering"
   ],
   "contributors": [
     {
@@ -38,8 +39,8 @@
       "email": "karnaukhov.kh@gmail.com"
     },
     {
-      "name": "Kajetan Świątek",
-      "email": "kajetan.swiatek@gmail.com"
+      "name": "Edouard Bozon",
+      "email": "bozonedouard@gmail.com"
     }
   ],
   "license": "MIT",
@@ -48,10 +49,17 @@
     "url": "https://github.com/rx-angular/rx-angular.git"
   },
   "peerDependencies": {
-    "@angular/core": ">8.0.0",
-    "rxjs": "^6.5.5"
+    "@angular/core": ">10.1.1",
+    "@rx-angular/cdk": ">=1.0.0-alpha.11"
   },
   "dependencies": {
     "tslib": "^2.0.0"
+  },
+  "schematics": "./schematics/collection.json",
+  "ng-add": {
+    "save": "dependencies"
+  },
+  "ng-update": {
+    "migrations": "./schematics/migration.json"
   }
 }

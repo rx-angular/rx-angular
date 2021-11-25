@@ -1,4 +1,3 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { mergeMap } from 'rxjs/operators';
 import { KeyCompareMap } from '../../../src/lib/rxjs/interfaces';
@@ -44,7 +43,7 @@ describe('distinctUntilSomeChanged operator', () => {
   it('should distinguish between values with multiple keys', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 }, b: { val: 1, valOther: 3 } };
-      const e1 = cold('--a--a--a--b--b--a--|', values);
+      const e1 = cold<{val: number, valOther?: number}>('--a--a--a--b--b--a--|', values);
       const e1subs = '^-------------------!';
       const expected = '--a--------b-----a--|';
 
@@ -142,7 +141,7 @@ describe('distinctUntilSomeChanged operator', () => {
         d: { val: 1 },
         e: { val: 5 }
       };
-      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1 = cold<{val?: number, valOther?: number}>('--a--b--c--d--e--|', values);
       const e1subs = '^----------------!';
       const expected = '--a--b-----d--e--|';
 
@@ -164,7 +163,7 @@ describe('distinctUntilSomeChanged operator', () => {
         d: { valOther: 1 },
         e: { valOther: 5 }
       };
-      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1 = cold<{val?: number, valOther?: number}>('--a--b--c--d--e--|', values);
       const e1subs = '^----------------!';
       const expected = '--a--------------|';
 
@@ -462,65 +461,65 @@ describe('distinctUntilSomeChanged edge cases', () => {
     const testSet = [
       {
         name: 'case {str} => undefined',
-        inputMarble:    '--a--a--a--b--b--a--|',
+        inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: { str: 'test' }, b: undefined },
         expectedMarble: '--a--------b-----a--|',
         expectValues: { a: { str: 'test' }, b: undefined }
       },
       {
         name: 'case {str} => null',
-        inputMarble:    '--a--a--a--b--b--a--|',
+        inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: { str: 'test' }, b: null },
         expectedMarble: '--a--------b-----a--|',
         expectValues: { a: { str: 'test' }, b: null }
       },
       {
         name: 'case  null => undefined',
-        inputMarble:    '--a--a--a--b--b--a--|',
+        inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: null, b: undefined },
         expectedMarble: '--a--------b-----a--|',
         expectValues: { a: null, b: undefined }
       },
       {
         name: 'case  undefined => null',
-        inputMarble:    '--a--a--a--b--b--a--|',
+        inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: undefined, b: null },
         expectedMarble: '--a--------b-----a--|',
         expectValues: { a: undefined, b: null }
       },
       {
         name: 'case  {str} => {undefined}',
-        inputMarble:    '--a--a--a--b--b--a--|',
+        inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: { str: 'test' }, b: { str: undefined } },
         expectedMarble: '--a--------b-----a--|',
         expectValues: { a: { str: 'test' }, b: { str: undefined } }
       },
       {
         name: 'case {str} => {null}',
-        inputMarble:    '--a--a--a--b--b--a--|',
+        inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: { str: 'test' }, b: { str: null } },
         expectedMarble: '--a--------b-----a--|',
         expectValues: { a: { str: 'test' }, b: { str: null } }
       },
       {
         name: 'case {null} => {undefined}',
-        inputMarble:    '--a--a--a--b--b--a--|',
+        inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: { str: null }, b: { str: undefined } },
         expectedMarble: '--a--------b-----a--|',
         expectValues: { a: { str: null }, b: { str: undefined } }
       },
       {
         name: 'case {undefined} => {null}',
-        inputMarble:    '--a--a--a--b--b--a--|',
+        inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: { str: undefined }, b: { str: null } },
         expectedMarble: '--a--------b-----a--|',
         expectValues: { a: { str: undefined }, b: { str: null } }
       }
     ];
 
-    testScheduler.run(({cold, expectObservable}) => {
+    testScheduler.run(({ cold, expectObservable }) => {
       testSet.forEach((test) => {
-        const e1 =  cold(test.inputMarble, test.inputValues as any);
+        const e1 = cold<{str?: any}>(test.inputMarble, test.inputValues as any);
         const expected = test.expectedMarble;
 
         /*
@@ -535,8 +534,8 @@ describe('distinctUntilSomeChanged edge cases', () => {
           )
         ).toBe(expected, test.expectValues);
 
-      })
-    })
+      });
+    });
   });
 
 });

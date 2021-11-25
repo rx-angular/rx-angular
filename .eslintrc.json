@@ -1,0 +1,71 @@
+{
+  "root": true,
+  "ignorePatterns": ["**/*"],
+  "plugins": ["@nrwl/nx"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "@nrwl/nx/enforce-module-boundaries": [
+          "error",
+          {
+            "enforceBuildableLibDependency": true,
+            "allow": [],
+            "depConstraints": [
+              {
+                "sourceTag": "type:app",
+                "onlyDependOnLibsWithTags": ["*"]
+              },
+              {
+                "sourceTag": "template",
+                "onlyDependOnLibsWithTags": ["type:test-util", "cdk"]
+              },
+              {
+                "sourceTag": "state",
+                "onlyDependOnLibsWithTags": ["type:test-util"]
+              },
+              {
+                "sourceTag": "cdk",
+                "onlyDependOnLibsWithTags": ["type:test-util"]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": [
+        "prettier",
+        "eslint:recommended",
+        "plugin:@nrwl/nx/typescript",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@typescript-eslint/recommended"
+      ],
+      "parserOptions": {
+        "project": "./tsconfig.*?.json"
+      },
+      "rules": {
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/no-inferrable-types": "warn",
+        "@typescript-eslint/ban-types": "warn",
+        "@typescript-eslint/no-empty-interface": "warn",
+        "@typescript-eslint/no-empty-function": "warn",
+        "prefer-rest-params": "warn",
+        "no-prototype-builtins": "warn",
+        "no-empty": "warn"
+      }
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "extends": [
+        "prettier",
+        "plugin:@angular-eslint/template/recommended",
+        "plugin:@nrwl/nx/javascript"
+      ],
+      "rules": {
+        "@typescript-eslint/no-non-null-assertion": "off"
+      }
+    }
+  ]
+}

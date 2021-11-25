@@ -1,4 +1,9 @@
-import { initialPrimitiveState, PrimitiveState, NestedState, initialNestedState } from '../../fixtures';
+import {
+  initialNestedState,
+  initialPrimitiveState,
+  NestedState,
+  PrimitiveState,
+} from '../../fixtures';
 import { patch } from '@rx-angular/state';
 
 let primitiveState: PrimitiveState;
@@ -11,7 +16,6 @@ beforeEach(() => {
 });
 
 describe('patch', () => {
-
   describe('general', () => {
     it('should be defined', () => {
       const fn = patch;
@@ -19,15 +23,15 @@ describe('patch', () => {
     });
 
     it('should not return same reference', () => {
-      const simpleState = {...primitiveState};
-      const result = patch(simpleState, {num: 43});
+      const simpleState = { ...primitiveState };
+      const result = patch(simpleState, { num: 43 });
       const result2 = patch(null as any, simpleState);
       const result3 = patch([] as any, simpleState);
 
       simpleState.bol = false;
 
-      expect(simpleState).toEqual({num: 42, bol: false, str: 'str'});
-      expect(result).toEqual({...primitiveState, num: 43});
+      expect(simpleState).toEqual({ num: 42, bol: false, str: 'str' });
+      expect(result).toEqual({ ...primitiveState, num: 43 });
       expect(result2).toEqual(primitiveState);
       expect(result3).toEqual(primitiveState);
     });
@@ -41,15 +45,15 @@ describe('patch', () => {
     });
 
     it('should override original values with updates', () => {
-      const result = patch(primitiveState, {...primitiveState, str: 'str2'});
+      const result = patch(primitiveState, { ...primitiveState, str: 'str2' });
 
-      expect(result).toEqual({num: 42, bol: true, str: 'str2'});
+      expect(result).toEqual({ num: 42, bol: true, str: 'str2' });
     });
 
     it('should work with partial updates', () => {
-      const result = patch(primitiveState, {str: 'str2'});
+      const result = patch(primitiveState, { str: 'str2' });
 
-      expect(result).toEqual({num: 42, bol: true, str: 'str2'});
+      expect(result).toEqual({ num: 42, bol: true, str: 'str2' });
     });
 
     it('should return original object if updates are empty object', () => {
@@ -57,7 +61,6 @@ describe('patch', () => {
 
       expect(result).toEqual(primitiveState);
     });
-
   });
 
   describe('edge cases', () => {
@@ -80,9 +83,15 @@ describe('patch', () => {
     });
 
     it('should work if at least one of objects is array', () => {
-      expect(patch(primitiveState, [primitiveState] as any)).toEqual(primitiveState);
-      expect(patch([primitiveState] as any, primitiveState)).toEqual(primitiveState);
-      expect(patch([primitiveState] as any, [primitiveState] as any)).toEqual([primitiveState]);
+      expect(patch(primitiveState, [primitiveState] as any)).toEqual(
+        primitiveState
+      );
+      expect(patch([primitiveState] as any, primitiveState)).toEqual(
+        primitiveState
+      );
+      expect(patch([primitiveState] as any, [primitiveState] as any)).toEqual([
+        primitiveState,
+      ]);
     });
-  })
+  });
 });

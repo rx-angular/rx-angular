@@ -1,4 +1,3 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,7 +8,7 @@ import {
   initialNestedState,
   initialPrimitiveState,
   NestedState,
-  PrimitiveState
+  PrimitiveState,
 } from '../../fixtures';
 
 let testScheduler: TestScheduler;
@@ -61,7 +60,7 @@ describe('select', () => {
       testScheduler.run(({ cold, expectObservable }) => {
         const values = { a: 2, b: 4 };
         const source = cold('a|', values);
-        expectObservable(source.pipe(select(map(v => v * 2)))).toBe(
+        expectObservable(source.pipe(select(map((v) => v * 2)))).toBe(
           'b|',
           values
         );
@@ -75,11 +74,11 @@ describe('select', () => {
         expectObservable(
           source.pipe(
             select(
-              map(v => v * 2),
-              map(v => v / 2),
-              map(v => v * 2),
-              map(v => v / 2),
-              map(v => v * 2)
+              map((v) => v * 2),
+              map((v) => v / 2),
+              map((v) => v * 2),
+              map((v) => v / 2),
+              map((v) => v * 2)
             )
           )
         ).toBe('b|', values);
@@ -92,10 +91,10 @@ describe('select', () => {
       const primitiveState: PrimitiveState = {
         bol: true,
         str: 'string',
-        num: 42
+        num: 42,
       };
       const source: Observable<PrimitiveState> = cold('a|', {
-        a: primitiveState
+        a: primitiveState,
       });
       expectObservable(source.pipe(select('bol'))).toBe('a|', { a: true });
     });
@@ -104,7 +103,7 @@ describe('select', () => {
   it('should accept multiple strings keyof T', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const source: Observable<NestedState> = cold('a|', {
-        a: initialNestedState
+        a: initialNestedState,
       });
       expectObservable(
         source.pipe(select('obj', 'key1', 'key11', 'key111'))
@@ -115,10 +114,10 @@ describe('select', () => {
   it('should accept one operator', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const source: Observable<PrimitiveState> = cold('a|', {
-        a: initialPrimitiveState
+        a: initialPrimitiveState,
       });
-      expectObservable(source.pipe(select(map(s => s.bol)))).toBe('a|', {
-        a: true
+      expectObservable(source.pipe(select(map((s) => s.bol)))).toBe('a|', {
+        a: true,
       });
     });
   });
@@ -126,24 +125,24 @@ describe('select', () => {
   it('should accept multiple operators', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const source: Observable<NestedState> = cold('a|', {
-        a: initialNestedState
+        a: initialNestedState,
       });
       expectObservable(
         source.pipe(
           select(
-            map(s => s.obj),
-            map(s => s.key1),
-            map(s => s.key11),
-            map(s => s.key111)
+            map((s) => s.obj),
+            map((s) => s.key1),
+            map((s) => s.key11),
+            map((s) => s.key111)
           )
         )
       ).toBe('a|', { a: 'test' });
     });
   });
 
-
   it('should throw with wrong params', () => {
-    expect(() => of().pipe(select(true as any))).toThrowError('wrong params passed to select');
-
+    expect(() => of().pipe(select(true as any))).toThrowError(
+      'wrong params passed to select'
+    );
   });
 });

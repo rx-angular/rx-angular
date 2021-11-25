@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input, Output, ViewChild } from '@angular/core';
 import { createStateChecker, PrimitiveState } from './fixtures';
 import { Observable, Subject } from 'rxjs';
-import { select, RxState } from '@rx-angular/state';
+import { RxState, select } from '@rx-angular/state';
 
 const initialChildState = { str: 'initialChildState' };
 
@@ -16,9 +16,7 @@ const stateChecker = createStateChecker((actual, expected) => {
 
 @Component({
   selector: 'rx-angular-state-inheritance-test',
-  template: `
-    <span>{{ value$ }}</span>
-  `
+  template: ` <span>{{ value$ }}</span> `,
 })
 export class RxStateInheritanceComponent extends RxState<PrimitiveState> {
   value$ = this.select();
@@ -33,13 +31,12 @@ export class RxStateInheritanceComponent extends RxState<PrimitiveState> {
   template: `
     <span>{{ (num$ | async) == null ? 'undefined' : (num$ | async) }}</span>
   `,
-  providers: [RxState]
+  providers: [RxState],
 })
 export class RxStateInjectionComponent {
   num$ = this.state.select();
 
-  constructor(public state: RxState<PrimitiveState>) {
-  }
+  constructor(public state: RxState<PrimitiveState>) {}
 }
 
 @Component({
@@ -47,8 +44,8 @@ export class RxStateInjectionComponent {
   template: `
     <span id="child">{{
       (str$ | async) == null ? 'undefined' : (str$ | async)
-      }}</span>
-  `
+    }}</span>
+  `,
 })
 export class RxStateGlueComponent extends RxState<{ str: string }> {
   str$ = this.select('str');
@@ -77,13 +74,13 @@ export class RxStateGlueComponent extends RxState<{ str: string }> {
   template: `
     <span id="parent">{{
       (str$ | async) == null ? 'undefined' : (str$ | async)
-      }}</span>
+    }}</span>
     <rx-angular-state-glue-test
       [str]="str$ | async"
       (strChange)="strChange$.next($event)"
     >
     </rx-angular-state-glue-test>
-  `
+  `,
 })
 export class RxStateGlueContainerComponent extends RxState<PrimitiveState> {
   strChange$ = new Subject<string>();
@@ -104,8 +101,9 @@ describe('LocalProviderTestComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [RxStateInjectionComponent]
-    }).compileComponents();
+      declarations: [RxStateInjectionComponent],
+      teardown: { destroyAfterEach: true },
+    });
     fixture = TestBed.createComponent(RxStateInjectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -122,8 +120,9 @@ describe('InheritanceTestComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [RxStateInheritanceComponent]
-    }).compileComponents();
+      declarations: [RxStateInheritanceComponent],
+      teardown: { destroyAfterEach: true },
+    });
     fixture = TestBed.createComponent(RxStateInheritanceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

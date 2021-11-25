@@ -1,10 +1,10 @@
 ## Overview
 
-Transformation helpers provides a set of tools that simplifies the management of data structures in an immutable way.
+Transformation helpers provide a set of tools that simplifies the management of data structures in an immutable way.
 
-Currently transformation helpers support the management of objects and arrays.
+Currently, transformation helpers support the management of objects and arrays.
 
-You can use the transformation helpers without RxState but expect the behavior to be opinionated since in the first place this package is designed to optimize state management with RxState.
+You can use the transformation helpers without RxState but expect the behavior to be opinionated since, in the first place, this package is designed to optimize state management with RxState.
 
 ---
 
@@ -23,6 +23,10 @@ You can use the transformation helpers without RxState but expect the behavior t
 ---
 
 [update.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/array/update.md ':include')
+
+---
+
+[extract.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/array/extract.md ':include')
 
 # Object
 
@@ -43,3 +47,7 @@ You can use the transformation helpers without RxState but expect the behavior t
 ---
 
 [toggle.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/object/toggle.md ':include')
+
+---
+
+[slice.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/object/slice.md ':include')

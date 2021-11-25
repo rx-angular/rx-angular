@@ -1,10 +1,10 @@
-# Rendering Issues in Angular
+## Rendering Issues in Angular
 
 A brief overview about what is about the current situation in terms of rendering in angular applications.
 
-![Scheduling Options](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/images/bad-rendering-performance-angular.png)
+![Scheduling Options](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/docs/images/scheduling-options.png)
 
-## Binding Reactive Sources
+### Binding Reactive Sources
 
 The current way of binding _reactive_ sources to a view in angular looks like that:
 
@@ -26,11 +26,11 @@ since the rendering gets brute-forced on any change, making REALLY sure anything
 Heavy dynamic and interactive UIs suffer pretty bad from `zone.js ChangeDetection`.
 This can lead to very bad performance or even unusable applications.
 Furthermore, it turns out the `async` pipe does not work in zone-less environments as well as many third party
-software as well.
+software.
 
 The comprehensive toolset of `@rx-angular/template` solves most of those issues with or without `zone.js`.
 
-## NgZone
+### NgZone
 
 `NgZone` assumes that DOM events like click, resize, focus, blur (+ `EventEmitters`, `setTimeOut`, `Promise.resolve()`, etc)
 are always used by developers to dispatch actions which leads to state mutation. If one of those
@@ -52,19 +52,16 @@ This can be irrelevant on hardware accelerated powerhouses, user experiences wil
 On top of that, we think that this technique inserts way too much _magic_ in the framework itself as well as keeping away
 crucial control over what happens in your application.
 
-You can play around in the `demo apps (expermiments, template-demo)` if you want
+You can play around in the `demo apps (experiments, template-demo)` if you want
 to get a clearer picture of what actually happens.
 
-[The Deep Dive Podcast, Episode 1](https://twitter.com/TheDeepDiveDev/status/1272668862736150530?s=20):
+[The Deep Dive Podcast, Episode 1](https://youtu.be/wVRb1aDHFC0):
 Mythbusting the AsyncPipe with guests @angularlicious and @Michael_Hladky
 
 The long term goal should be to eliminate NgZone by using the `'noop' NgZone`. However, this is only in a few scenarios
 a feasible option. Most third party libraries
 rely on some `NgZone` callbacks (including `@angular/components` & `@angular/cdk` pretty heavily). Some of the components will
 stop working at all after using `'noop' NgZone`.
-
-To encounter those issues at least partially, @rx-angular/template provides easy to use optimization tools
-such as the [[unpatch] directive](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/unpatch.md).
 
 Nevertheless, if you know what you do and want to build a render performance critical application, `@rx-angular/template`
 is the perfect candidate for being its base.

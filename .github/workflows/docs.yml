@@ -27,8 +27,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: git fetch --no-tags --prune --depth=5 origin master
-      - run: npm install --frozen-lockfile --non-interactive
-      - run: npm run build-docs-page
+      - run: yarn install --frozen-lockfile --non-interactive
+      - run: yarn build-docs-page
+      - run: yarn nx build demos --prod
       - uses: EndBug/add-and-commit@v4 # You can change this to use a specific version
         with:
           add: 'docs/*'

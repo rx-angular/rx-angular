@@ -1,4 +1,3 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { EMPTY, NEVER } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -54,7 +53,7 @@ describe('stateful', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const values = { a: 2, b: 4 };
       const source = cold('a|', values);
-      expectObservable(source.pipe(stateful(map(v => v * 2)))).toBe(
+      expectObservable(source.pipe(stateful(map((v) => v * 2)))).toBe(
         'b|',
         values
       );
@@ -68,11 +67,11 @@ describe('stateful', () => {
       expectObservable(
         source.pipe(
           stateful(
-            map(v => v * 2),
-            map(v => v / 2),
-            map(v => v * 2),
-            map(v => v / 2),
-            map(v => v * 2)
+            map((v) => v * 2),
+            map((v) => v / 2),
+            map((v) => v * 2),
+            map((v) => v / 2),
+            map((v) => v * 2)
           )
         )
       ).toBe('b|', values);

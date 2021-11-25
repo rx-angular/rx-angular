@@ -6,9 +6,9 @@
 
 ## Reactive Component State for Angular
 
-RxState is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in angular.
+RxState is a lightweight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in Angular.
 
-![state logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/images/state_logo.png)
+![state logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/images/state_logo.png)
 
 ## Description
 
@@ -20,13 +20,13 @@ Developing modern, **reactive** user interfaces imposes a variety of challenging
 - handling subscriptions
 
 There are plenty of solutions available for managing these challenges on a **global level** (Akita, NgRx, NgXs, ...).
-None of them is dedicated targeting the special needs of the **component level**.
+None of them is dedicated to targeting the particular needs of the **component level**.
 
 `@rx-angular/state` was specifically designed to give developers a tool for mastering **component state** without forcing
 them to use complex design patterns.
 
-It's light-weight and intuitive API and the automatic subscription handling making `@rx-angular/state`
-the **perfect fit** for handling state in any angular component.
+Its lightweight and intuitive API and the automatic subscription handling makes `@rx-angular/state`
+the **perfect fit** for handling state in any Angular component.
 
 Using this library allows you to implement things like:
 
@@ -38,8 +38,8 @@ Using this library allows you to implement things like:
 with very little effort in any component.
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/images/state_API-names.png" width="49%" />
-  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/images/state_API-types.png" width="49%" />
+  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/images/state_API-names.png" width="49%" />
+  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/images/state_API-types.png" width="49%" />
 </p>
 
 ## Key features
@@ -55,7 +55,11 @@ with very little effort in any component.
 
 ## Install
 
-`npm install @rx-angular/state`
+```bash
+npm install --save @rx-angular/state
+# or
+yarn add @rx-angular/state
+```
 
 ## API
 
@@ -67,7 +71,7 @@ with very little effort in any component.
 
 ## Tutorials
 
-- [Basic Tutorial](https://github.com/rx-angular/rx-angular/tree/master/apps/state-demo/src/app/examples/demo-basics)
+- [Basic Tutorial](https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics)
 - [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
 
 ## Snippets
@@ -88,8 +92,15 @@ with very little effort in any component.
 
 ## Resources
 
+- [🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session](https://youtu.be/CcQYj4V2IKw)
 - [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch?v=I8uaHMs8rw0)
 - [🎥 Extending Angular for the Reactive Web](https://youtu.be/pkN6CeZ8h_U?t=5913)
 - [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
 - [📜 Design Documents](https://hackmd.io/wVkWRc3XQWmtM6YcktRTrA)
 - [📑 Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) by [Mike Hartington](https://twitter.com/mhartington)
+
+## Browsers support
+
+| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari-ios/safari-ios_48x48.png" alt="iOS Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>iOS Safari |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| IE11, Edge                                                                                                                                                                                                      | last version                                                                                                                                                                                                      | last version                                                                                                                                                                                                  | last 2 versions                                                                                                                                                                                               | last 2 versions                                                                                                                                                                                                               |

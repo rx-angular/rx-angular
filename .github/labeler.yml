@@ -1,32 +1,36 @@
-# Add 'demo' label to any app file changes
-  demo:
-     - ./apps/*
+  ⚙️ Chore:
+    - '.github/*'
+    - '.tools/*'
 
-# Add 'state' label to any change within the 'state' package
-  state:
+  🃏 Demos:
+     - ./apps/demos/*
+     - ./apps/demos/**/*
+
+  "🛠️ CDK":
+    - libs/cdk/*
+    - libs/cdk/**/*
+
+  "{ } State":
      - libs/state/*
      - libs/state/**/*
 
-# Add 'template' label to any change within the 'template' package
-  template:
+  "</> Template":
      - libs/template/*
      - libs/template/**/*
 
-# Add 'documentation' label to any change to files within a docs dir
-  documentation:
+  📖 Docs API:
     - libs/**/docs/**/*
+
+  📚 Docs Web:
+    - docs/*
     - docs/**/*
 
-# Add 'test' label to any change to *.spec.js files within the source dir
-  test:
-     - libs/**/*.spec.js
+  🔬 Experimental:
+    - libs/**/experimental/*
+    - libs/**/experimental/**/*
+
+  🛂 Test:
+     - libs/**/spec/*
+     - libs/**/spec/**/*
+     - libs/**/perf/*
      - libs/**/perf/**/*
-
-# Add 'root-file-changes' label to any change to files located directly in the root dir
-#  root-files-affected:
-#    - '*'
-#    - '!*.*'
-
-# Add 'github' label to any change to files located directly in the root dir
-  github:
-    - '.github/*'

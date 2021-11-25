@@ -1,0 +1,115 @@
+{
+  "projectType": "library",
+  "root": "libs/state",
+  "sourceRoot": "libs/state/src",
+  "prefix": "rx",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:package",
+      "options": {
+        "tsConfig": "libs/state/tsconfig.lib.json",
+        "project": "libs/state/ng-package.json"
+      },
+      "outputs": ["dist/libs/state"]
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/state/jest.config.js",
+        "passWithNoTests": true
+      },
+      "outputs": ["coverage/libs/state"]
+    },
+    "build-docs": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "nx test-coverage state && nx test-coverage-badge state"
+          }
+        ]
+      }
+    },
+    "test-coverage-badge": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/state/cobertura-coverage.xml -d docs/test-coverage/state"
+          }
+        ]
+      }
+    },
+    "test-coverage": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/state/jest.config.js",
+        "passWithNoTests": true,
+        "codeCoverage": true
+      },
+      "outputs": ["coverage/libs/state"]
+    },
+    "perfBuild": {
+      "executor": "@nrwl/node:build",
+      "options": {
+        "main": "libs/state/perf/index.ts",
+        "outputPath": "dist/libs/state-perf/dist",
+        "tsConfig": "libs/state/tsconfig.perf.json"
+      },
+      "outputs": ["{options.outputPath}"]
+    },
+    "perf": {
+      "executor": "@nrwl/node:execute",
+      "options": {
+        "buildTarget": "state:perfBuild"
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "npm publish dist/libs/state"
+          }
+        ]
+      },
+      "dependsOn": [
+        {
+          "target": "lint",
+          "projects": "self"
+        },
+        {
+          "target": "test",
+          "projects": "self"
+        },
+        {
+          "target": "version",
+          "projects": "self"
+        },
+        {
+          "target": "build",
+          "projects": "self"
+        }
+      ]
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {
+        "baseBranch": "master",
+        "versionTagPrefix": "${target}@"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/state/**/*.ts"]
+      }
+    }
+  },
+  "generators": {
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "tags": ["type:lib", "state"]
+}

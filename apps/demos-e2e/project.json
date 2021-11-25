@@ -1,0 +1,24 @@
+{
+  "root": "apps/demos-e2e",
+  "sourceRoot": "apps/demos-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/demos-e2e/cypress.json",
+        "tsConfig": "apps/demos-e2e/tsconfig.e2e.json",
+        "devServerTarget": "demos:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "demos:serve:production"
+        }
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": [
+    "demos"
+  ]
+}

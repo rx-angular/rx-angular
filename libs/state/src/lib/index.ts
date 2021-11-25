@@ -1,3 +1,7 @@
+export {
+  createSideEffectObservable,
+  createAccumulationObservable,
+} from './cdk';
 export { RxState } from './rx-state.service';
 export {
   select,
@@ -10,6 +14,8 @@ export {
   remove,
   toDictionary,
   update,
+  extract,
+  upsert,
 } from './transformation-helpers/array/index';
 export {
   setProp,
@@ -17,5 +23,6 @@ export {
   deleteProp,
   dictionaryToArray,
   toggle,
+  slice,
 } from './transformation-helpers/object/index';
-export { KeyCompareMap, CompareFn } from './rxjs/interfaces';
+export { KeyCompareMap, CompareFn, PickSlice } from './rxjs/interfaces';

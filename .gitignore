@@ -19,6 +19,7 @@
 *.sublime-workspace
 apps/docs/generated
 apps/docs/generated/*
+docs/demos
 
 # IDE - VSCode
 .vscode/*
@@ -28,6 +29,7 @@ apps/docs/generated/*
 !.vscode/extensions.json
 
 # misc
+/.angular/cache
 /.sass-cache
 /connect.lock
 /coverage
