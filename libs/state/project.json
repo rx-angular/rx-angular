@@ -25,12 +25,12 @@
       "options": {
         "commands": [
           {
-            "command": "nx test-coverage state && nx test-coverage-badge state"
+            "command": "nx test state --codeCoverage && nx build-test-coverage-badge state"
           }
         ]
       }
     },
-    "test-coverage-badge": {
+    "build-test-coverage-badge": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
@@ -39,15 +39,6 @@
           }
         ]
       }
-    },
-    "test-coverage": {
-      "executor": "@nrwl/jest:jest",
-      "options": {
-        "jestConfig": "libs/state/jest.config.js",
-        "passWithNoTests": true,
-        "codeCoverage": true
-      },
-      "outputs": ["coverage/libs/state"]
     },
     "perfBuild": {
       "executor": "@nrwl/node:build",
