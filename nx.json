@@ -15,6 +15,7 @@
       "runner": "@nrwl/nx-cloud",
       "options": {
         "cacheableOperations": [
+          "build-docs",
           "build-schematics",
           "build-base",
           "build-lib",
