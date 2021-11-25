@@ -67,8 +67,8 @@ jobs:
       # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
       # - run: yarn nx-cloud start-ci-run
 
-      - run: yarn nx run-many --projects=state,template,cdk --target=build-docs --parallel --maxParallel=3
-      - run: yarn nx build demos --prod
+      - run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx run-many --projects=state,template,cdk --target=build-docs --parallel --maxParallel=3
+      - run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx build demos --prod
 
       # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
       # - run: yarn nx-cloud stop-all-agents
