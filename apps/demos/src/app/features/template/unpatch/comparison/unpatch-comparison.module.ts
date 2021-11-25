@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UnpatchEventsModule } from '@rx-angular/template';
+import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { ComparisonUnpatchComponent } from './comparison-unpatch.component';
 import { ROUTES } from './comparison.routes';
 import { RunOutsideZoneDirective } from './runOutsideZone.directive';
@@ -16,7 +16,7 @@ const DECLARATIONS = [ComparisonUnpatchComponent, RunOutsideZoneDirective];
     CommonModule,
     MatButtonModule,
     RouterModule.forChild(ROUTES),
-    UnpatchEventsModule,
+    UnpatchModule,
     DirtyChecksModule
   ],
   exports: [DECLARATIONS]

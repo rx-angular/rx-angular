@@ -1,6 +1,6 @@
 {
   "name": "@rx-angular/template",
-  "version": "1.0.0-beta.25",
+  "version": "1.0.0-beta.29",
   "description": "**Fully** Reactive Component Template Rendering in Angular. @rx-angular/template aims to be a reflection of Angular's built in renderings just reactive.",
   "main": "index.js",
   "publishConfig": {
@@ -39,8 +39,8 @@
       "email": "karnaukhov.kh@gmail.com"
     },
     {
-      "name": "Kajetan Świątek",
-      "email": "kajetan.swiatek@gmail.com"
+      "name": "Edouard Bozon",
+      "email": "bozonedouard@gmail.com"
     }
   ],
   "license": "MIT",
@@ -50,8 +50,7 @@
   },
   "peerDependencies": {
     "@angular/core": ">10.1.1",
-    "rxjs": "^6.5.5",
-    "@rx-angular/cdk": ">=1.0.0-alpha.8"
+    "@rx-angular/cdk": ">=1.0.0-alpha.11"
   },
   "dependencies": {
     "tslib": "^2.0.0"
@@ -59,5 +58,8 @@
   "schematics": "./schematics/collection.json",
   "ng-add": {
     "save": "dependencies"
+  },
+  "ng-update": {
+    "migrations": "./schematics/migration.json"
   }
 }

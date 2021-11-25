@@ -1,3 +1,60 @@
+# Changelog
+
+This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
+
+# [1.0.0-beta.29](/compare/template@1.0.0-beta.28...template@1.0.0-beta.29) (2021-11-16)
+
+
+### Bug Fixes
+
+* **schematics:** fix template migration (#848) 718eb36, closes #848
+* **schematics:** remove `@nrwl/workspace` dependency (#968) 0bdcd16, closes #968
+
+
+### Features
+
+* add ability to rxLet and push to take static values (#1033) 42d7a81, closes #1033
+
+
+
+# [1.0.0-beta.28](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.27...template@1.0.0-beta.28) (2021-08-23)
+
+* **template:** remove RxJS dependency
+
+
+# [1.0.0-beta.27](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.26...template@1.0.0-beta.27) (2021-08-23)
+
+* **template:** fix RxJS7 update ([#907](https://github.com/rx-angular/rx-angular/pull/907)) ([674d584]()
+
+
+# [1.0.0-beta.26](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.21...template@1.0.0-beta.26) (2021-08-16)
+
+
+### Bug Fixes
+
+* **template:** remove window object access ([#599](https://github.com/rx-angular/rx-angular/issues/599)) ([47b6dbb](https://github.com/rx-angular/rx-angular/commit/47b6dbb66deac7b44cb7aa0f348bc45cd64541fb)), closes [#579](https://github.com/rx-angular/rx-angular/issues/579)
+* **docs:** Documentation for template overview ([#687](https://github.com/rx-angular/rx-angular/issues/687)) ([9374906](https://github.com/rx-angular/rx-angular/commit/93749060ba59ba197816848d5869d17976ca29be))
+* ng-packagr builds ([#553](https://github.com/rx-angular/rx-angular/issues/553)) ([cfd4711](https://github.com/rx-angular/rx-angular/commit/cfd47112c12bf7333e657c2f6b6e79d3d3eccda4))
+* **schematics:** use `"$id"` for schema ID ([1510339](https://github.com/rx-angular/rx-angular/commit/15103393fa0700d2fd795703f529fe2a7c15b7c4))
+* **state-docs:** Fix typo in concepts ([#614](https://github.com/rx-angular/rx-angular/issues/614)) ([3bdf93c](https://github.com/rx-angular/rx-angular/commit/3bdf93c17ad660fd4e5699ded40ee28e6b69a6e1))
+* **state-docs:** Polish basics tutorial ([#645](https://github.com/rx-angular/rx-angular/issues/645)) ([91419a1](https://github.com/rx-angular/rx-angular/commit/91419a1ebcb64f91cd6fa0277b9cad8fd93cd3a7))
+* **tempalte:** Fix broken image url ([#615](https://github.com/rx-angular/rx-angular/issues/615)) ([4f3d12b](https://github.com/rx-angular/rx-angular/commit/4f3d12bb7954728c6e9f8b9017e7f5c3e0cb2505))
+* **template:** import from another lib ([#693](https://github.com/rx-angular/rx-angular/issues/693)) ([6888a7c](https://github.com/rx-angular/rx-angular/commit/6888a7ce4ec0a893942a497b42375f8c2ed21ff3))
+* **template:** update readme install ([a51a9a9](https://github.com/rx-angular/rx-angular/commit/a51a9a976399d2522d119f6b5af0dbcc47d39955))
+* **template:** update template schematics ([546f80c](https://github.com/rx-angular/rx-angular/commit/546f80cc2dca95537c8cd699499e2c3ef5e6a79b))
+
+
+### Features
+
+* **push:** implement proper patchZone flag ([#575](https://github.com/rx-angular/rx-angular/issues/575)) ([595d4a5](https://github.com/rx-angular/rx-angular/commit/595d4a54b36bc1d8c582c7925e1be0712a8d6e10))
+* **push:** support template typing  ([78b4816](https://github.com/rx-angular/rx-angular/commit/78b4816a52c7da7f583e7a614c97ec6fb8b885fc)), closes [#634](https://github.com/rx-angular/rx-angular/issues/634)
+* **schematics:** add template@1.0.0 migration schematic ([#806](https://github.com/rx-angular/rx-angular/issues/806)) ([7806063](https://github.com/rx-angular/rx-angular/commit/78060633c0ef00db6140af383ef750fc0b642697))
+* **template:** decouple `let` into a library ([#732](https://github.com/rx-angular/rx-angular/issues/732)) ([8529cb6](https://github.com/rx-angular/rx-angular/commit/8529cb68e3963a7fd6f0db12a41908281b733fe9))
+* **template:** decouple `push` into a lib ([#753](https://github.com/rx-angular/rx-angular/issues/753)) ([ee370be](https://github.com/rx-angular/rx-angular/commit/ee370be2ea2b6b097b5dc6a24b05afda53e95f1c))
+* **template:** decouple `unpatch` into a lib ([#752](https://github.com/rx-angular/rx-angular/issues/752)) ([f78ba33](https://github.com/rx-angular/rx-angular/commit/f78ba33ffad083d9ba38a3f530d497ceab5c0518))
+
+
+
 # [1.0.0-beta.25](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.21...template@1.0.0-beta.25) (2021-04-13)
 
 ### Bug Fixes

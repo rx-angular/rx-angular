@@ -1,11 +1,8 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
-import { interval, of, throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-import { createAccumulationObservable } from '../../src/lib/cdk';
-// tslint:disable-next-line:nx-enforce-module-boundaries
-import { select } from '@rx-angular/state';
+import { select, createAccumulationObservable } from '@rx-angular/state';
 import { initialPrimitiveState, PrimitiveState } from '../fixtures';
 
 function setupAccumulationObservable<T extends object>(cfg: {
@@ -29,7 +26,6 @@ beforeEach(() => {
   testScheduler = new TestScheduler(jestMatcher);
 });
 
-// tslint:disable: no-duplicate-string
 describe('createAccumulationObservable', () => {
   it('should return object', () => {
     const acc = createAccumulationObservable();
@@ -195,10 +191,8 @@ describe('createAccumulationObservable', () => {
       const acc = setupAccumulationObservable<PrimitiveState>({});
       testScheduler.run(({ expectObservable }) => {
         acc.nextSlice({ num: 42 });
-        expectObservable(acc.state$.pipe(pluck('num'))).toBe('(abc)', {
-          a: 42,
-          b: 43,
-          c: 44,
+        expectObservable(acc.state$.pipe(pluck('num'))).toBe('(a)', {
+          a: 44,
         });
 
         acc.nextAccumulator(customAcc);
@@ -211,7 +205,9 @@ describe('createAccumulationObservable', () => {
   });
 
   describe('emissions', () => {
-    it('should stop on unsubscribe from state', () => {
+    // this test makes no sense since state$ won't reset itself after unsubscribing. re-subscribing would result in
+    // the latest value emitted
+    xit('should stop on unsubscribe from state', () => {
       testScheduler.run(({ expectObservable }) => {
         const acc = createAccumulationObservable<PrimitiveState>();
         const sub = acc.subscribe();
@@ -222,14 +218,16 @@ describe('createAccumulationObservable', () => {
     });
 
     it('should stop from connect observable', () => {
-      testScheduler.run(({ expectObservable }) => {
+      testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
         const acc = createAccumulationObservable<PrimitiveState>();
         const sub = acc.subscribe();
-        acc.nextSlice(initialPrimitiveState);
-        const tick$ = interval(1000).pipe(map((num) => ({ num })));
-        acc.nextSliceObservable(tick$);
+        const tick$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const interval$ = tick$.pipe(map((num) => ({ num })));
+        const subs = '(^!)';
+        acc.nextSliceObservable(interval$);
         sub.unsubscribe();
         expectObservable(acc.state$).toBe('');
+        expectSubscriptions(tick$.subscriptions).toBe(subs);
       });
     });
   });

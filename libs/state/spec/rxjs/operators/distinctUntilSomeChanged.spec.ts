@@ -1,4 +1,3 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { mergeMap } from 'rxjs/operators';
 import { KeyCompareMap } from '../../../src/lib/rxjs/interfaces';
@@ -44,7 +43,7 @@ describe('distinctUntilSomeChanged operator', () => {
   it('should distinguish between values with multiple keys', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 }, b: { val: 1, valOther: 3 } };
-      const e1 = cold('--a--a--a--b--b--a--|', values);
+      const e1 = cold<{val: number, valOther?: number}>('--a--a--a--b--b--a--|', values);
       const e1subs = '^-------------------!';
       const expected = '--a--------b-----a--|';
 
@@ -142,7 +141,7 @@ describe('distinctUntilSomeChanged operator', () => {
         d: { val: 1 },
         e: { val: 5 }
       };
-      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1 = cold<{val?: number, valOther?: number}>('--a--b--c--d--e--|', values);
       const e1subs = '^----------------!';
       const expected = '--a--b-----d--e--|';
 
@@ -164,7 +163,7 @@ describe('distinctUntilSomeChanged operator', () => {
         d: { valOther: 1 },
         e: { valOther: 5 }
       };
-      const e1 = cold('--a--b--c--d--e--|', values);
+      const e1 = cold<{val?: number, valOther?: number}>('--a--b--c--d--e--|', values);
       const e1subs = '^----------------!';
       const expected = '--a--------------|';
 
@@ -520,7 +519,7 @@ describe('distinctUntilSomeChanged edge cases', () => {
 
     testScheduler.run(({ cold, expectObservable }) => {
       testSet.forEach((test) => {
-        const e1 = cold(test.inputMarble, test.inputValues as any);
+        const e1 = cold<{str?: any}>(test.inputMarble, test.inputValues as any);
         const expected = test.expectedMarble;
 
         /*

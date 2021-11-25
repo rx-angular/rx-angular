@@ -1,5 +1,4 @@
 import { initialPrimitiveState, PrimitiveState } from '../../fixtures';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { slice } from '@rx-angular/state';
 
 let primitiveState: PrimitiveState;

@@ -13,12 +13,6 @@ module.exports = {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
       stringifyContentPathRegex: '\\.(html|svg)$',
-      astTransformers: {
-        before: [
-          'jest-preset-angular/build/InlineFilesTransformer',
-          'jest-preset-angular/build/StripStylesTransformer',
-        ],
-      },
     },
   },
   displayName: 'template',
@@ -27,4 +21,8 @@ module.exports = {
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment',
   ],
+  transform: {
+    '^.+.(ts|mjs|js|html)$': 'jest-preset-angular',
+  },
+  transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
 };

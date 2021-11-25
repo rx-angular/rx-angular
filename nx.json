@@ -7,93 +7,52 @@
       "devDependencies": "*"
     },
     "tsconfig.json": "*",
-    "tslint.json": "*",
     "nx.json": "*",
     ".eslintrc.json": "*"
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
+      "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": [
+          "build-schematics",
+          "build-base",
+          "build-lib",
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ],
+        "accessToken": "OTg2OGFkNmMtNzA5Zi00MjBiLWFhMmQtOGYwNTQ1MjM1ZjQ3fHJlYWQtd3JpdGU=",
+        "canTrackAnalytics": false,
+        "showUsageWarnings": true,
+        "parallel": false
       }
     }
   },
-  "projects": {
-    "demos": {
-      "tags": ["type:app"]
+  "affected": {
+    "defaultBase": "origin/master"
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/angular",
+    "analytics": false,
+    "packageManager": "yarn"
+  },
+  "generators": {
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
     },
-    "demos-e2e": {
-      "tags": [],
-      "implicitDependencies": ["demos"]
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
     },
-    "test-helpers": {
-      "tags": ["type:util"]
-    },
-    "cdk-internals-scheduler": {
-      "tags": ["type:lib", "type:cdk", "type:internals"],
-      "implicitDependencies": []
-    },
-    "cdk-zone-less": {
-      "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": []
-    },
-    "cdk-coalescing": {
-      "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": []
-    },
-    "cdk-zone-configurations": {
-      "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": []
-    },
-    "cdk-coercing": {
-      "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": []
-    },
-    "cdk": {
-      "tags": ["type:lib", "type:cdk"],
-      "implicitDependencies": [
-        "cdk-internals-scheduler",
-        "cdk-coercing",
-        "cdk-zone-less"
-      ]
-    },
-    "state": {
-      "tags": ["type:lib"]
-    },
-    "template": {
-      "tags": ["type:lib", "type:template"],
-      "implicitDependencies": ["cdk-zone-less", "cdk"]
-    },
-    "template-let": {
-      "tags": ["type:lib", "type:template"],
-      "implicitDependencies": ["cdk"]
-    },
-    "docs": {
-      "tags": ["type:app"]
-    },
-    "tour-of-heroes": {
-      "tags": ["type:app"]
-    },
-    "tour-of-heroes-ngxs": {
-      "tags": ["type:app"]
-    },
-    "vanilla-case-studies": {
-      "tags": []
-    },
-    "vanilla-case-studies-e2e": {
-      "tags": [],
-      "implicitDependencies": ["vanilla-case-studies"]
-    },
-    "ssr": {
-      "tags": []
-    },
-    "ssr-e2e": {
-      "tags": [],
-      "implicitDependencies": ["ssr"]
+    "@nrwl/angular:component": {
+      "style": "scss"
     }
   },
-  "affected": {
-    "defaultBase": "master"
-  }
+  "defaultProject": "demos"
 }

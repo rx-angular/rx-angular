@@ -1,9 +1,7 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { EMPTY, NEVER } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { stateful } from '@rx-angular/state';
 
 let testScheduler: TestScheduler;

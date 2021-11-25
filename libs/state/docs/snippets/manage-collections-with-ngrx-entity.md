@@ -2,11 +2,11 @@ _Author: [@Phhansen](https://github.com/Phhansen)_
 
 # Manage entities using `@ngrx/entity`
 
-When working with collections or arrays in our state, we tend to write a lot of repeated code when we want to add, update or delete items from these collections.
+When working with collections or arrays in our state, we tend to write many repeated code when we want to add, update or delete items from these collections.
 
-In NgRx they have created a helper library called [@ngrx/entity adapter](https://ngrx.io/guide/entity/adapter). The adapter provides a simple API to manipulate and query these collections, hiding a lot of the repetetive code needed.
+In NgRx, they have created a helper library called [@ngrx/entity adapter](https://ngrx.io/guide/entity/adapter). The adapter provides a simple API to manipulate and query these collections, hiding much repetitive code needed.
 
-Lets say we have a collection of type `Item` as part of our component state;
+Let's say we have a collection of type `Item` as part of our component state;
 
 ```typescript
 interface Item {
@@ -20,7 +20,7 @@ interface ComponentState {
 }
 ```
 
-Now if we want to add one item to our array _(in an immutable way)_, we replace the `items` array in the state with a new reference.
+Now, if we want to add one item to our array _(in an immutable way)_, we replace the `items` array in the state with a new reference.
 
 ```typescript
 @Component({
@@ -47,7 +47,7 @@ export class MyComponent extends RxState<ComponentState> {
 }
 ```
 
-Now if we want to update one item, we have query the `items` array to first get a hold of the item, then construct a new array again.
+If we want to update one item, we have to query the `items` array first to get a hold of the item and then construct a new array again.
 
 What about deleting an item? You get the picture. **It´s a lot of code**, and it will grow even more if we have several types of collections in our state.
 
@@ -72,7 +72,7 @@ const adapter: EntityAdapter<Item> = createEntityAdapter<Item>({
 
 The entity adapter needs a `selectId` function which is used to query items by `id` within the collection.
 
-Now lets see how the component has changed.
+Now let's see how the component has changed:
 
 ```typescript
 @Component({

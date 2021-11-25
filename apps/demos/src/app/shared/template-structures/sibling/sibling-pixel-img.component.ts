@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
-import { RxStrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { Observable } from 'rxjs';
 import { RxState, selectSlice } from '@rx-angular/state';
 import { map } from 'rxjs/operators';
@@ -78,7 +78,6 @@ export class SiblingPixelImgComponent extends RxState<{
 
   @Input()
   set pixelSize(pixelSize$: Observable<number | string>) {
-    // tslint:disable-next-line:no-bitwise
     this.connect('pixelSize', pixelSize$.pipe(map(v => +v)));
   }
 

@@ -6,6 +6,7 @@ export function createSideEffectObservable<T>(
 ): {
   effects$: Observable<T>;
   nextEffectObservable: (effect$: Observable<T>) => void;
+  subscribe: () => Subscription;
 } & Subscribable<T> {
   const effects$: Observable<T> = merge(
     stateObservables.pipe(mergeAll(), observeOn(queueScheduler))

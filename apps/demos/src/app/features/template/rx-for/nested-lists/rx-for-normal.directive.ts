@@ -2,7 +2,6 @@ import {
   ChangeDetectorRef,
   Directive,
   EmbeddedViewRef,
-  Inject,
   Input,
   IterableChangeRecord,
   IterableChanges,
@@ -13,35 +12,14 @@ import {
   OnInit,
   TemplateRef,
   TrackByFunction,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
-import { RxDefaultListViewContext, RxStrategyProvider } from '@rx-angular/cdk';
-
-import {
-  concat,
-  forkJoin,
-  Observable,
-  ObservableInput,
-  of,
-  ReplaySubject,
-  Subject,
-  Subscription
-} from 'rxjs';
-import {
-  catchError,
-  distinctUntilChanged,
-  filter,
-  map,
-  shareReplay,
-  switchAll,
-  switchMap,
-  take,
-  tap
-} from 'rxjs/operators';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { RxDefaultListViewContext } from '@rx-angular/cdk/template';
+import { concat, forkJoin, Observable, ObservableInput, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { catchError, distinctUntilChanged, filter, map, shareReplay, switchAll, switchMap, take, tap } from 'rxjs/operators';
 
 @Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
-  // tslint:disable-next-line:directive-selector
   selector: '[rxForNormal]'
 })
 export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
@@ -185,7 +163,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
         };
         this.sub.add(
           of(null)
-            .pipe(strat.behavior(work, insertMap.get(idx)), take(1))
+            .pipe(strat.behavior(work, this), take(1))
             .subscribe(insert)
         );
         behaviors$.push(insert);

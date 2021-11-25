@@ -1,6 +1,5 @@
 {
-  "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../../dist/libs/cdk/zone-configurations",
+  "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "lib": {
     "entryFile": "src/index.ts",
     "flatModuleFile": "cdk-zone-configurations"

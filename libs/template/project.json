@@ -1,0 +1,155 @@
+{
+  "projectType": "library",
+  "root": "libs/template",
+  "sourceRoot": "libs/template/src",
+  "prefix": "rx",
+  "targets": {
+    "build-base": {
+      "executor": "@nrwl/angular:package",
+      "options": {
+        "tsConfig": "libs/template/tsconfig.lib.json",
+        "project": "libs/template/ng-package.json"
+      },
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        }
+      ]
+    },
+    "build": {
+      "executor": "@nrwl/workspace:run-commands",
+      "dependsOn": [
+        {
+          "target": "build-base",
+          "projects": "self"
+        }
+      ],
+      "options": {
+        "commands": [
+          {
+            "command": "npx tsc -p libs/template/tsconfig.schematics.json"
+          },
+          {
+            "command": "npx cpx libs/template/schematics/collection.json dist/libs/template/schematics"
+          },
+          {
+            "command": "npx cpx libs/template/schematics/migration.json dist/libs/template/schematics"
+          },
+          {
+            "command": "npx cpx libs/template/schematics/src/**/files/** dist/libs/template/schematics/src"
+          },
+          {
+            "command": "npx cpx libs/template/schematics/src/**/schema.json dist/libs/template/schematics/src"
+          }
+        ],
+        "parallel": false
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/template/jest.config.js",
+        "passWithNoTests": true
+      },
+      "outputs": ["coverage/libs/template"]
+    },
+    "build-docs": {
+      "executor": "@nrwl/workspace:run-commands",
+      "sequential": true,
+      "options": {
+        "commands": [
+          {
+            "command": "nx test-coverage template && nx test-coverage-badge template"
+          }
+        ]
+      }
+    },
+    "test-coverage-badge": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/template/cobertura-coverage.xml -d docs/test-coverage/template"
+          }
+        ]
+      }
+    },
+    "test-coverage": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/template/jest.config.js",
+        "passWithNoTests": true,
+        "codeCoverage": true
+      },
+      "outputs": ["coverage/libs/template"]
+    },
+    "changelog": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "npx conventional-changelog-cli -p angular -k ./libs/template/package.json -i ./libs/template/CHANGELOG.md -s --commit-path ./libs/template --tagPrefix template@"
+          }
+        ]
+      }
+    },
+    "link": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "cd ./dist/libs/template && npm link"
+          }
+        ]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "npm publish dist/libs/template"
+          }
+        ]
+      },
+      "dependsOn": [
+        {
+          "target": "lint",
+          "projects": "self"
+        },
+        {
+          "target": "test",
+          "projects": "self"
+        },
+        {
+          "target": "version",
+          "projects": "self"
+        },
+        {
+          "target": "build",
+          "projects": "self"
+        }
+      ]
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {
+        "baseBranch": "master",
+        "versionTagPrefix": "${target}@"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/template/**/*.ts"]
+      }
+    }
+  },
+  "generators": {
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "tags": ["type:lib", "template"]
+}

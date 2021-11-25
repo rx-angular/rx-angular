@@ -1,4 +1,3 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { toDictionary } from '@rx-angular/state';
 
 interface Creature {
@@ -65,6 +64,12 @@ describe('toDictionary', () => {
       const dictionaryResult = toDictionary(creatures, 'id');
 
       expect(dictionaryResult).toEqual(dictionaryByNumber);
+    });
+
+    it('should change the reference', () => {
+      const dictionaryResult = toDictionary(creatures, 'id');
+
+      expect(Object.values(dictionaryResult)[0] === creatures[0]).toBeFalsy();
     });
 
     it('should create dictionary by string', () => {

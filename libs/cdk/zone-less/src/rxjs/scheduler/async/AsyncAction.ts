@@ -1,4 +1,3 @@
-// tslint:disable
 import { Subscription } from 'rxjs';
 import { Action } from '../Action';
 import { SchedulerAction } from '../types';
@@ -85,7 +84,7 @@ export class AsyncAction<T> extends Action<T> {
     delay: number | null = 0
   ): any {
     // If this action is rescheduled with the same delay time, don't clear the interval id.
-    if (delay !== null && this.delay === delay && this.pending === false) {
+    if (delay != null && this.delay === delay && this.pending === false) {
       return id;
     }
     // Otherwise, if the action's delay time is different from the current delay,
@@ -140,27 +139,25 @@ export class AsyncAction<T> extends Action<T> {
     }
   }
 
-  /** @deprecated This is an internal implementation detail, do not use. */
-  _unsubscribe() {
-    const id = this.id;
-    const scheduler = this.scheduler;
-    const actions = scheduler.actions;
-    // @ts-ignore
-    const index = actions.indexOf(this);
+  unsubscribe() {
+    if (!this.closed) {
+      const { id, scheduler } = this;
+      const { actions } = scheduler;
 
-    this.work = null!;
-    this.state = null!;
-    this.pending = false;
-    this.scheduler = null!;
+      this.work = this.state = this.scheduler = null!;
+      this.pending = false;
 
-    if (index !== -1) {
-      actions.splice(index, 1);
+      // arrRemove
+      if (actions) {
+        const index = actions.indexOf(this);
+        0 <= index && actions.splice(index, 1);
+      }
+      if (id != null) {
+        this.id = this.recycleAsyncId(scheduler, id, null);
+      }
+
+      this.delay = null!;
+      super.unsubscribe();
     }
-
-    if (id != null) {
-      this.id = this.recycleAsyncId(scheduler, id, null);
-    }
-
-    this.delay = null!;
   }
 }

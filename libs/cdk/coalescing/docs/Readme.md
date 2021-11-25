@@ -5,9 +5,13 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 # Motivation
 
+Coalescing means multiple things "merge" into one.
+
 ![RxAngular - CDK/Coalescing](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing.png)
 
-If two or more things coalesce, they come or grow together to form one thing or system.
+If two or more things coalesce, they come merge togeather into one thing or system.
+Natively Angular is using this under the hood already for a long time.
+
 In RxAngular coalescing is used for merging multiple emissions, streams or calls that happen during a given timeframe. As one of the key building blocks for performance, this technique is utilized to improve the change detection cycles of angular applications.
 
 The next example shows the effect of coalescing visualized in flame charts.
@@ -31,6 +35,7 @@ There are 2 places in Angular we have coalescing already implemented in the fram
 - ✅ Coalescing techniques as RxJS operators
 - ✅ Configurable durationSelector for all kind of scheduling methods
 - ✅ Scope coalescing to a specific component or object
+- ✅ Memory leak save through WeakMaps
 - ✅ Typed methods
 - ✅ IDE inline documentation
 
@@ -64,31 +69,38 @@ platformBrowserDynamic()
   .catch((err) => console.error(err));
 ```
 
-This setting applies the technique of coalescing to fired events bound by Angular. It will coalesce any event emissions occurring within an animation frame and run `ApplicationRef#tick` only one time instead of multiple times.
+This setting applies the technique of coalescing to fired events bound by Angular.  
+It will coalesce any event emissions occurring during the duration of an animation frame and after that, run `ApplicationRef#tick` only one time instead of multiple times.
 
-This is mainly impactful if we deal with event-heavy templates. The diagram below shows the difference between 2 events with and without coalescing.
+This is mainly impactful if we deal with event-heavy templates. The diagrams below shows the difference between 2 events with and without coalescing.
 
-![Angular - ngZoneEventCoalescing diagram])(TODO)
+![Angular - ngZoneEventCoalescing Cefore](https://user-images.githubusercontent.com/10064416/122643339-92a60300-d10f-11eb-9e6c-0ebd3dbe7c45.png)
+![Angular - ngZoneEventCoalescing After](https://user-images.githubusercontent.com/10064416/122643340-946fc680-d10f-11eb-952d-9f19d6245d2d.png)
+![Angular - ngZoneEventCoalescing Details](https://user-images.githubusercontent.com/10064416/122643341-96398a00-d10f-11eb-8815-9ed7ec00ac11.png)
 
 As these situations typically occur across multiple components or are hard to scope and demo, we list some staged examples:
+
+**Multiple Events on the same element**
 
 ```html
 <button (click)="doStuff()" (mousedown)="doStuff()">click</button>
 ```
 
+**Nested Events on multiple elements**
+
 ```html
 <div (mousedown)="doStuff()">
   <button (click)="doStuff()">click</button>
-</div>  
+</div>
 ```
+
+**Event Bubbling of smae event on multiple elements**
 
 ```html
 <div (click)="doStuff()">
   <button (click)="doStuff()">click</button>
-</div>  
+</div>
 ```
-
-
 
 # RxAngular Coalescing operators
 

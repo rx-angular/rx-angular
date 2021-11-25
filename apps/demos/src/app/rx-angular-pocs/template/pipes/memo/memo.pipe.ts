@@ -9,12 +9,10 @@ export class MemoPipe<U> implements PipeTransform {
     fn: (args: null) => unknown
   ): unknown;
   transform<T>(
-    // tslint:disable-next-line:unified-signatures
     args: undefined,
     fn: (args: undefined) => unknown
   ): unknown;
   transform<T>(
-    // tslint:disable-next-line:unified-signatures
     args: any[],
     fn: (...args: any[]) => unknown
   ): unknown;

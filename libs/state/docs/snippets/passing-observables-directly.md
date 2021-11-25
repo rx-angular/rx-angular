@@ -47,7 +47,7 @@ export class ChildComponent {
 
 ## Passing observables
 
-This example in comparison passes the Observable directly tho the child component.
+This example in comparison passes the Observable directly to the child component.
 
 Only the first time the parent triggers the change detection and re-renders.
 

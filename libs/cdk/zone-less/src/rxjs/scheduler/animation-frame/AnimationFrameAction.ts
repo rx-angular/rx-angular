@@ -1,4 +1,3 @@
-// tslint:disable
 import { AsyncAction } from '../async/AsyncAction';
 import { AnimationFrameScheduler } from './AnimationFrameScheduler';
 import { SchedulerAction } from '../types';

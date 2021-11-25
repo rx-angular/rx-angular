@@ -1,0 +1,24 @@
+{
+  "root": "apps/vanilla-case-studies-e2e",
+  "sourceRoot": "apps/vanilla-case-studies-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/vanilla-case-studies-e2e/cypress.json",
+        "tsConfig": "apps/vanilla-case-studies-e2e/tsconfig.e2e.json",
+        "devServerTarget": "vanilla-case-studies:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "vanilla-case-studies:serve:production"
+        }
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": [
+    "vanilla-case-studies"
+  ]
+}
