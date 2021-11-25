@@ -23,7 +23,6 @@
     "format:check": "nx format:check",
     "update": "nx migrate latest",
     "dep-graph": "nx dep-graph",
-    "build-docs-page": "nx run-many --projects state,template,cdk --target build-docs",
     "generate-typescript-docs": "ts-node -P tools/tsconfig.tools.json tools/scripts/docs/generate-typescript-docs.ts",
     "help": "nx help",
     "cdk:publish": "nx publish cdk",
