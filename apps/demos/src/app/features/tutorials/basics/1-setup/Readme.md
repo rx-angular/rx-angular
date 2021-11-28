@@ -23,7 +23,7 @@ To this end, we have to extend our class and use the already existing `Component
 ```typescript
 
 // 1- import RxState
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 
 ...
 

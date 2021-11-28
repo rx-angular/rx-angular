@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { Observable } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { TestItem } from '../../../../shared/debug-helper/value-provider';

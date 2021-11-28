@@ -3,7 +3,7 @@ import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
 //👇 1- import RxState
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 //👇 2- define a component state
 interface ComponentState {
   refreshInterval: number;

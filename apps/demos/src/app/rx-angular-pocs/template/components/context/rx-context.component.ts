@@ -9,7 +9,7 @@ import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { isObservable, Observable, of } from 'rxjs';
 import { Hooks, RxNotificationKind } from '../../../cdk';
 import { mapTo } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { observableToRxTemplateName } from '../../../cdk/utils/rxjs/operators/observable-to-rx-template-name';
 
 @Component({

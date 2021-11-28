@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ConfigService } from '../config.service';

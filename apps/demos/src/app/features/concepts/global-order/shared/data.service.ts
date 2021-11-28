@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { filter, map, tap } from 'rxjs/operators';
 
 type actions = { inc: number } | { dec: number };

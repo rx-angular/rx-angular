@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { ConfigService } from '../config.service';
 import { Hero } from '../hero';
 import { HeroStateFacade } from '../ngxs/hero-feature/hero.facade';

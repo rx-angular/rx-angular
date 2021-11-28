@@ -1,7 +1,7 @@
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { filter, tap, withLatestFrom } from 'rxjs/operators';
 import { ViewportService } from '../../shared/viewport.service';

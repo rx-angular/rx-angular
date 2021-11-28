@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Injectable } from '@angular/core';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { from, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {

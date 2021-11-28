@@ -2,7 +2,7 @@ import { EMPTY, Observable, Subject, timer } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { selectSlice } from '@rx-angular/cdk/state';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { CounterState, INITIAL_STATE } from '../shared/model';
 import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
 import { updateCount } from '../shared/utils';

@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { CounterState, INITIAL_STATE } from '../shared/model';
 
 @Component({

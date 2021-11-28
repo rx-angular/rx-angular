@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 
 interface MessageServiceState {
   messages: string[];

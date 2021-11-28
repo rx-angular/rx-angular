@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DemoBasicsItem } from './demo-basics.view-model.service';

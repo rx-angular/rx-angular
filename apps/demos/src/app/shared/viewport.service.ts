@@ -1,6 +1,6 @@
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { Injectable, OnDestroy } from '@angular/core';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
 export enum Viewport {

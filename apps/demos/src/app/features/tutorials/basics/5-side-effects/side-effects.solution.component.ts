@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { distinctUntilKeyChanged, map, startWith } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';

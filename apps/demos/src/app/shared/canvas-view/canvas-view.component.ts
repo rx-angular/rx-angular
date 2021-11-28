@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Hooks } from '../debug-helper/hooks';
 import { Observable } from 'rxjs';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 
 @Component({
   selector: 'rxa-canvas-view',

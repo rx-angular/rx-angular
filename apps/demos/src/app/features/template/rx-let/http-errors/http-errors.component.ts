@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { Observable, Subject, throwError } from 'rxjs';
 import { concatMap, share } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 
 @Component({
   selector: 'rxa-http-errors',

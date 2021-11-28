@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { selectSlice } from '@rx-angular/cdk/state';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { combineLatest } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Pokemon } from '../models/pokemon.model';

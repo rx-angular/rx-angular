@@ -1,5 +1,5 @@
 import { ApplicationRef, Injectable, Input, NgZone } from '@angular/core';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { environment } from '../environments/environment';
 import { isNgZone } from './rx-angular-pocs/cdk/utils/zone-agnostic';
 

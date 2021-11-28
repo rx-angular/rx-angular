@@ -7,7 +7,7 @@ import {
 
 import { TestScheduler } from 'rxjs/testing';
 // tslint:disable-next-line:nx-enforce-module-boundaries
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { select } from '@rx-angular/cdk/state';
 import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
 import { asyncScheduler, from, interval, of, scheduled, Subject } from 'rxjs';

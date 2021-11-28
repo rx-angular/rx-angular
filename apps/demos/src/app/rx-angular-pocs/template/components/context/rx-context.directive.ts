@@ -34,7 +34,7 @@ import {
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 
 @Directive({
   // tslint:disable-next-line:directive-selector

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 
 @Component({
   selector: 'rxa-strategy-icon',

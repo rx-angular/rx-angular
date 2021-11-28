@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Output } from '@angular/core';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { delay, map, skip } from 'rxjs/operators';
 import { EventEmitter } from '@angular/core';

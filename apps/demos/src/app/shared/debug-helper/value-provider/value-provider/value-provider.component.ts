@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Output } from '@angular/core';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
 import { ProvidedValues } from '../model';
 import { PrimitivesProviderService } from '../primitives-provider.service';

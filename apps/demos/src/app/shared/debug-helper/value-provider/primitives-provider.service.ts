@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Injectable } from '@angular/core';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { merge, Observable, Subject } from 'rxjs';
 import { map, scan } from 'rxjs/operators';
 import { ngInputFlatten } from '../../utils/ngInputFlatten';

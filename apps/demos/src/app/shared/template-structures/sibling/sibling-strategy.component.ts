@@ -7,7 +7,7 @@ import {
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { Observable, Subject } from 'rxjs';
 import { toBooleanArray } from './utils';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { delay, map } from 'rxjs/operators';
 
 const chunk = (arr, n) =>

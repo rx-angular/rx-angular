@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 
 import { selectSlice } from '@rx-angular/cdk/state';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { CounterState, INITIAL_STATE } from '../shared/model';
 import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
 import { updateCount } from '../shared/utils';

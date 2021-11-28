@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { Hooks } from '../hooks';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { AppConfigService } from '../../../app-config.service';
 import { switchMap } from 'rxjs/operators';
 import { isObservable, Observable, of } from 'rxjs';

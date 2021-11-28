@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { Observable } from 'rxjs';
 import { selectSlice } from '@rx-angular/cdk/state';
-import { RxState } from '@rx-angular/state/state';
+import { RxState } from '@rx-angular/state';
 import { map } from 'rxjs/operators';
 import { toInt } from '../../debug-helper/value-provider';
 import { ImgInfo } from '../../image-array';
