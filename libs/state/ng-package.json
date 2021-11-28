@@ -2,6 +2,7 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/libs/state",
   "lib": {
-    "flatModuleFile": "state"
+    "flatModuleFile": "state",
+    "entryFile": "src/index.ts"
   }
 }

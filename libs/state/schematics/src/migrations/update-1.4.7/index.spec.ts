@@ -14,32 +14,6 @@ describe('state migration update-1.4.7', () => {
   /* Reset default timeout to 5s. */
   afterAll(() => jest.setTimeout(5_000));
 
-  it('should replace state/state', async () => {
-    appTree = await setupTestFile(`
-      import { NgModule } from '@angular/core';
-      import { BrowserModule } from '@angular/platform-browser';
-      import { RxState } from '@rx-angular/state';
-
-      import { AppComponent } from './app.component';
-
-      @NgModule({
-        declarations: [
-          AppComponent,
-        ],
-        imports: [
-          BrowserModule
-        ],
-        providers: [],
-        bootstrap: [AppComponent]
-      })
-      export class AppModule { }
-  `);
-
-    const file = appTree.readContent('app.module.ts');
-
-    expect(file).toMatchSnapshot();
-  });
-
   it('should replace cdk/state', async () => {
     appTree = await setupTestFile(`
       import { NgModule } from '@angular/core';

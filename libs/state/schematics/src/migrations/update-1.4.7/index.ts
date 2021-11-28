@@ -3,7 +3,6 @@ import { renamingRule } from '../../utils/renaming-rule';
 const renames: Record<string, string | [string, string]> = {
   createSideEffectObservable: '@rx-angular/cdk/state',
   createAccumulationObservable: '@rx-angular/cdk/state',
-  RxState: '@rx-angular/state/state',
   select: '@rx-angular/cdk/state',
   stateful: '@rx-angular/cdk/state',
   distinctUntilSomeChanged: '@rx-angular/cdk/state',

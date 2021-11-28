@@ -1,20 +1,20 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, isObservable, Observable, OperatorFunction, Subscribable, Subscription, Unsubscribable } from 'rxjs';
 import { catchError, map, pluck, tap } from 'rxjs/operators';
-import { isKeyOf, isOperateFnArrayGuard, isStringArrayGuard, pipeFromArray, safePluck } from '@rx-angular/cdk/utils';
-import {
-  stateful,
-  AccumulationFn,
-  createAccumulationObservable,
-  createSideEffectObservable
-} from '@rx-angular/cdk/state';
+import { createAccumulationObservable } from './deprecated/cdk/accumulation-observable';
+import { AccumulationFn } from './deprecated/cdk/model';
+import { stateful } from './deprecated/cdk/operators/stateful';
+import { createSideEffectObservable } from './deprecated/cdk/side-effect-observable';
+import { isKeyOf, isOperateFnArrayGuard, isStringArrayGuard } from './deprecated/utils/guards';
+import { pipeFromArray } from './deprecated/utils/pipe-from-array';
+import { safePluck } from './deprecated/utils/safe-pluck';
 
-type ProjectStateFn<T> = (oldState: T) => Partial<T>;
-type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
+export type ProjectStateFn<T> = (oldState: T) => Partial<T>;
+export type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
 
-type ProjectStateReducer<T, V> = (oldState: T, value: V) => Partial<T>;
+export type ProjectStateReducer<T, V> = (oldState: T, value: V) => Partial<T>;
 
-type ProjectValueReducer<T, K extends keyof T, V> = (
+export type ProjectValueReducer<T, K extends keyof T, V> = (
   oldState: T,
   value: V
 ) => T[K];

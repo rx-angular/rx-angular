@@ -24,22 +24,6 @@ export class AppModule {}
 "
 `;
 
-exports[`state migration update-1.4.7 should replace state/state 1`] = `
-"import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
-import { RxState } from '@rx-angular/state/state';
-
-@NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule],
-  providers: [],
-  bootstrap: [AppComponent],
-})
-export class AppModule {}
-"
-`;
-
 exports[`state migration update-1.4.7 should replace cdk/transformations 1`] = `
 "import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
