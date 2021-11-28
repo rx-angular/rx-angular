@@ -169,7 +169,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     } else {
       return hasStateAnyKeys ?
              this.accumulator.state :
-              undefined as unknown as T;
+             undefined as unknown as T;
     }
   }
 
@@ -404,7 +404,8 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
   /**
    * @description
    * returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
-   * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive composition.
+   * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive
+   *   composition.
    *
    * @example
    * const profilePicture$ = state.select(
@@ -551,7 +552,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     obsOrObsWithSideEffect: Observable<S>,
     sideEffectFn?: (arg: S) => void
   ): void {
-    const sideEffect = obsOrObsWithSideEffect.pipe(catchError(e => EMPTY))
+    const sideEffect = obsOrObsWithSideEffect.pipe(catchError(e => EMPTY));
     if (typeof sideEffectFn === 'function') {
       this.effectObservable.nextEffectObservable(
         sideEffect.pipe(tap(sideEffectFn))
