@@ -1,5 +1,5 @@
 {
-  "extends": "../../.eslintrc.json",
+  "extends": "../.eslintrc.json",
   "ignorePatterns": ["!**/*"],
   "overrides": [
     {
@@ -9,20 +9,14 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
-        "@angular-eslint/directive-selector": [
+        /**
+        * @Notice: overwrite root enforce-module-boundaries to allow deep imports of secondary entry-points.
+        */
+        "@nrwl/nx/enforce-module-boundaries": [
           "error",
           {
-            "type": "attribute",
-            "prefix": "rx",
-            "style": "camelCase"
-          }
-        ],
-        "@angular-eslint/component-selector": [
-          "error",
-          {
-            "type": "element",
-            "prefix": "rx",
-            "style": "kebab-case"
+            "enforceBuildableLibDependency": false,
+            "allow": ["@rx-angular/state", "@rx-angular/state/**"]
           }
         ]
       }

@@ -1,7 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, isObservable, Observable, OperatorFunction, Subscribable, Subscription, Unsubscribable } from 'rxjs';
 import { catchError, map, pluck, tap } from 'rxjs/operators';
-import { createAccumulationObservable } from './deprecated/cdk/accumulation-observable';
+// import { createAccumulationObservable } from './deprecated/cdk/accumulation-observable';
+import { createAccumulationObservable } from '@rx-angular/cdk/state';
 import { AccumulationFn } from './deprecated/cdk/model';
 import { stateful } from './deprecated/cdk/operators/stateful';
 import { createSideEffectObservable } from './deprecated/cdk/side-effect-observable';

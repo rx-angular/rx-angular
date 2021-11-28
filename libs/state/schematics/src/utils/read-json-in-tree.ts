@@ -5,7 +5,7 @@ export function readJsonInTree<T = any>(host: Tree, path: string): T {
     throw new Error(`Cannot find ${path}`);
   }
 
-  const contents = host.read(path)!.toString('utf-8');
+  const contents = host.read(path).toString('utf-8');
   try {
     return JSON.parse(contents);
   } catch (e) {
