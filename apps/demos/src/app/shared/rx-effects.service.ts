@@ -48,7 +48,6 @@ export class RxEffects implements OnDestroy {
   }
 
   ngOnDestroy() {
-    // tslint:disable-next-line:no-unused-expression
     this.subscription && this.subscription.unsubscribe()
   }
 

@@ -1,4 +1,3 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher,initialNestedState,
   initialPrimitiveState,
   NestedState,
@@ -7,7 +6,6 @@ import { EMPTY, NEVER, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { select } from '@rx-angular/cdk/state';
 
 let testScheduler: TestScheduler;

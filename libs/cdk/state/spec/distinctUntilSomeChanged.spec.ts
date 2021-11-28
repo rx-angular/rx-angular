@@ -1,4 +1,3 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { mergeMap } from 'rxjs/operators';
 import { KeyCompareMap } from '@rx-angular/cdk/state';

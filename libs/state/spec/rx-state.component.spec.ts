@@ -3,7 +3,6 @@ import { Component, Input, Output, ViewChild } from '@angular/core';
 import { PrimitiveState } from '@test-helpers';
 import { createStateChecker } from './fixtures';
 import { Observable, Subject } from 'rxjs';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { RxState } from '@rx-angular/state';
 import { select } from '@rx-angular/cdk/state';
 

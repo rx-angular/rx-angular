@@ -1,4 +1,3 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { setProp } from '@rx-angular/cdk/transformations';
 import { initialNestedState, initialPrimitiveState, NestedState, PrimitiveState } from '@test-helpers';
 

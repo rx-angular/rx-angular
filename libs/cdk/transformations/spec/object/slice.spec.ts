@@ -1,5 +1,4 @@
 import { initialPrimitiveState, PrimitiveState } from '@test-helpers';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { slice } from '@rx-angular/cdk/transformations';
 
 let primitiveState: PrimitiveState;

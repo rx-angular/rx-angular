@@ -1,4 +1,3 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { TestScheduler } from 'rxjs/testing';
 import { createSideEffectObservable } from '@rx-angular/cdk/state';
@@ -9,7 +8,6 @@ beforeEach(() => {
   testScheduler = new TestScheduler(jestMatcher);
 });
 
-// tslint:disable: no-duplicate-string
 describe('createSideEffectObservable', () => {
   it('should be defined', () => {
     testScheduler.run(() => {

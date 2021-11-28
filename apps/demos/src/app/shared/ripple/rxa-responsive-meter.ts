@@ -258,7 +258,6 @@ export class RippleRenderer implements EventListenerObject {
     // Once the ripple faded out, the ripple can be safely removed from the DOM.
     setTimeout(() => {
       rippleRef.state = RippleState.HIDDEN;
-      // tslint:disable-next-line:no-non-null-assertion
       rippleEl.parentNode!.removeChild(rippleEl);
     }, animationConfig.exitDuration);
   }

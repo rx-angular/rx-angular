@@ -1,4 +1,3 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { update } from '@rx-angular/cdk/transformations';
 
 interface Creature {

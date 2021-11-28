@@ -4,7 +4,6 @@ import {
   NestedState,
   PrimitiveState,
 } from '@test-helpers';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { patch } from '@rx-angular/cdk/transformations';
 
 let primitiveState: PrimitiveState;

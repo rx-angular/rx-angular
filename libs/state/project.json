@@ -10,9 +10,7 @@
         "tsConfig": "libs/state/tsconfig.lib.json",
         "project": "libs/state/ng-package.json"
       },
-      "outputs": [
-        "dist/libs/state"
-      ],
+      "outputs": ["dist/libs/state"],
       "dependsOn": [
         {
           "target": "build",
@@ -55,21 +53,19 @@
         "jestConfig": "libs/state/jest.config.js",
         "passWithNoTests": true
       },
-      "outputs": [
-        "coverage/libs/state"
-      ]
+      "outputs": ["coverage/libs/state"]
     },
     "build-docs": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
           {
-            "command": "nx test-coverage state && nx test-coverage-badge state"
+            "command": "nx test state --codeCoverage && nx build-test-coverage-badge state"
           }
         ]
       }
     },
-    "test-coverage-badge": {
+    "build-test-coverage-badge": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
@@ -79,17 +75,6 @@
         ]
       }
     },
-    "test-coverage": {
-      "executor": "@nrwl/jest:jest",
-      "options": {
-        "jestConfig": "libs/state/jest.config.js",
-        "passWithNoTests": true,
-        "codeCoverage": true
-      },
-      "outputs": [
-        "coverage/libs/state"
-      ]
-    },
     "perfBuild": {
       "executor": "@nrwl/node:build",
       "options": {
@@ -97,9 +82,7 @@
         "outputPath": "dist/libs/state-perf/dist",
         "tsConfig": "libs/state/tsconfig.perf.json"
       },
-      "outputs": [
-        "{options.outputPath}"
-      ]
+      "outputs": ["{options.outputPath}"]
     },
     "perf": {
       "executor": "@nrwl/node:execute",
@@ -141,6 +124,12 @@
         "baseBranch": "master",
         "versionTagPrefix": "${target}@"
       }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/state/**/*.ts"]
+      }
     }
   },
   "generators": {
@@ -148,7 +137,5 @@
       "style": "scss"
     }
   },
-  "tags": [
-    "type:lib"
-  ]
+  "tags": ["type:lib", "state"]
 }

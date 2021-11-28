@@ -1,4 +1,3 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { toggle } from '@rx-angular/cdk/transformations';
 import { initialPrimitiveState, PrimitiveState } from '@test-helpers';
 

@@ -1,4 +1,3 @@
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { Observable, of } from 'rxjs';
 import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
