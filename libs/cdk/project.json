@@ -19,7 +19,7 @@
       "options": {
         "commands": [
           {
-            "command": "nx test-coverage cdk && nx build-test-coverage-badge cdk"
+            "command": "nx test cdk --codeCoverage && nx build-test-coverage-badge cdk"
           }
         ]
       }
@@ -65,15 +65,6 @@
       "options": {
         "jestConfig": "libs/cdk/jest.config.js",
         "passWithNoTests": true
-      },
-      "outputs": ["coverage/libs/cdk"]
-    },
-    "test-coverage": {
-      "executor": "@nrwl/jest:jest",
-      "options": {
-        "jestConfig": "libs/cdk/jest.config.js",
-        "passWithNoTests": true,
-        "codeCoverage": true
       },
       "outputs": ["coverage/libs/cdk"]
     },

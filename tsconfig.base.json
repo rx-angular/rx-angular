@@ -30,6 +30,8 @@
       ],
       "@rx-angular/cdk/state": ["libs/cdk/state/src/index.ts"],
       "@rx-angular/cdk/template": ["libs/cdk/template/src/index.ts"],
+      "@rx-angular/cdk/utils": ["libs/cdk/utils/src/index.ts"],
+      "@rx-angular/cdk/transformations": ["libs/cdk/transformations/src/index.ts"],
       "@rx-angular/cdk/zone-configurations": [
         "libs/cdk/zone-configurations/src/index.ts"
       ],
