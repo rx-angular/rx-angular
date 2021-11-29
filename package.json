@@ -94,7 +94,7 @@
     "@nrwl/nx-cloud": "12.5.4",
     "@nrwl/tao": "13.2.1",
     "@nrwl/workspace": "13.2.1",
-    "@size-limit/preset-big-lib": "^7.0.0",
+    "@size-limit/preset-big-lib": "^7.0.3",
     "@types/benchmark": "^2.1.0",
     "@types/jest": "27.0.2",
     "@types/klaw-sync": "^6.0.0",
