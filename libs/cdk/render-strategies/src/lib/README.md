@@ -149,7 +149,7 @@ Options are configuration object that you can use to setup the scheduling behavi
 
 #### Usage examples
 
-```tsx
+```typescript
 this.strategyProvider.schedule(() => 
     myWork(), 
     {strategy: 'idle', patchZone: false, scope: this}
