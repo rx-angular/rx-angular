@@ -10,6 +10,9 @@ From perspec UX => app should give feedback => if blocked => laggy
 
 ![Render Strategies-Frame Drop Detail View](https://user-images.githubusercontent.com/10064416/144141900-25c2c4a4-1a8d-472c-a658-9f860e384c47.png)
 
+
+![Render Strategies-Scheduling Detail View](https://user-images.githubusercontent.com/10064416/144145201-e72f927c-6365-4f33-9b93-5908f3726b06.png)
+
 ![Render Strategies -Frame Drop Overview](https://user-images.githubusercontent.com/10064416/144139010-ecddecc8-c561-4708-bc9e-36d60a84cad7.png)
 
 ![RxAngular - for Angular Team(1)](https://user-images.githubusercontent.com/10064416/144139079-9f1d6ad7-ad7e-437c-95a2-8a794460f9c9.png)
