@@ -120,7 +120,7 @@ class NotOkIvyMarkDirtyComponent {
   },
 ];
 
-ruleTester.run('no-explicit-change-detection-apis', rule, {
+ruleTester.run(path.parse(__filename).name, rule, {
   valid,
   invalid,
 });
