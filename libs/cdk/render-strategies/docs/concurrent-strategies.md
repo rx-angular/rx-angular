@@ -31,9 +31,6 @@ In the browser, we can see tasks in the main thread that are too long for a good
 
 ![Render Strategies-Frame Drop Detail View](https://user-images.githubusercontent.com/10064416/144141900-25c2c4a4-1a8d-472c-a658-9f860e384c47.png)
 
-
-![Render Strategies-Scheduling Detail View](https://user-images.githubusercontent.com/10064416/144145201-e72f927c-6365-4f33-9b93-5908f3726b06.png)
-
 In the image, we see ChromeDevtools marks frames that take longer than 50ms as long task. All those tasks exceeded the input response budget.
 
 The reason why it is 50ms and not 16.6ms is based on other things that can happen in relation to the user input.
@@ -51,6 +48,9 @@ When it comes to scripting work we can do 2 things to avoid that:
 angular-scripting-time
 
 As often the work just can't get reduced so we have to schedule. 
+
+
+![Render Strategies-Scheduling Detail View](https://user-images.githubusercontent.com/10064416/144145201-e72f927c-6365-4f33-9b93-5908f3726b06.png)
 
 Some of the possible APIs are:
 - queueMicrotask
