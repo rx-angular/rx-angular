@@ -39,8 +39,6 @@ In the image, we see ChromeDevtools marks frames that take longer than 50ms as l
 The reason why it is 50ms and not 16.6ms is based on other things that can happen in relation to the user input.
 The related theory is known as the RAIL model.
 
-
-
 ### Scheduling
 
 ![Render Strategies - scheduling abstract diagram](https://user-images.githubusercontent.com/10064416/144139325-c58f41e3-2a05-4a25-ac92-9507e9a9877b.png)
@@ -87,7 +85,6 @@ They all help to prioritize the work and define the moment of execution differen
 ![Render Strategies - scheduling techniques](https://user-images.githubusercontent.com/10064416/144139079-9f1d6ad7-ad7e-437c-95a2-8a794460f9c9.png)
 
 
-
 ### Chunking
 
 There are also other scheduling APIs. They all help to prioritize the work and define the moment of execution differently.
@@ -101,17 +98,12 @@ The image shows that all AnimatioFrame events end up in the same task.
 
 This scenario gets to a problem depending on:
 
-    the number of Angular elements
-    the amount of work done in the elements
-
+- the number of Angular elements
+- the amount of work done in the elements
 
 ![rx-angular-cdk-render-strategies__concurrent-strategies-un-chuked-work](https://user-images.githubusercontent.com/10064416/116010309-7cebf400-a61e-11eb-8715-a6428e5f16a3.png)
 ![rx-angular-cdk-render-strategies__concurrent-strategies-chuked-work](https://user-images.githubusercontent.com/10064416/116010261-2c749680-a61e-11eb-9e92-3bd032045fdf.png)
 ![rx-angular-cdk-render-strategies__concurrent-strategies-non-chunked-vs-chuked-work](https://user-images.githubusercontent.com/10064416/116007117-705f9f80-a60e-11eb-879c-87746ba677f6.png)
-
-### Render Deadline
-
-![rx-angular-cdk-render-strategies__concurrent-strategies-render-deadline](https://user-images.githubusercontent.com/10064416/116008121-42308e80-a613-11eb-90da-c3299bbf8c0a.png)
 
 
 ### Concurrent Scheduling
@@ -121,6 +113,10 @@ This scenario gets to a problem depending on:
 ![rx-angular-cdk-render-strategies__frame-budget](https://user-images.githubusercontent.com/10064416/115894224-4f098280-a459-11eb-9abf-9a902d66d380.png)
 
 ![rx-angular-cdk-render-strategies__concurrent-strategies-anatomy](https://user-images.githubusercontent.com/10064416/116157149-bee36b80-a6ec-11eb-965a-9fbe34a8eca4.png)
+
+### Render Deadline
+
+![rx-angular-cdk-render-strategies__concurrent-strategies-render-deadline](https://user-images.githubusercontent.com/10064416/116008121-42308e80-a613-11eb-90da-c3299bbf8c0a.png)
 
 ## Strategies:
 
