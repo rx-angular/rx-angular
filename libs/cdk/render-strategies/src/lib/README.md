@@ -4,7 +4,7 @@
 
 > Want to play with it? Here's [demo link](https://stackblitz.com/edit/angular-ivy-1vfpoe) 
 
-## Why to schedule
+## Motivation
 
 Chromium based browsers considers all tasks that taking more than 50ms as long tasks. If task runs more than 50ms, users will start noticing lags. Optimally all user interactions should happen at 30 fps framerate with 32ms budget per browser task. In ideal world it should be 60 fps and 16ms budget. 
 
