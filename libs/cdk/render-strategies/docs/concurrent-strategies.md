@@ -7,6 +7,15 @@ Based on the [RAIL model](https://web.dev/rail/), a user experiences motion as l
 From perspec UX => app should give feedback => if blocked => laggy
 
 ## Concepts
+![Render Strategies -Frame Drop Overview](https://user-images.githubusercontent.com/10064416/144139010-ecddecc8-c561-4708-bc9e-36d60a84cad7.png)
+
+![RxAngular - for Angular Team(1)](https://user-images.githubusercontent.com/10064416/144139079-9f1d6ad7-ad7e-437c-95a2-8a794460f9c9.png)
+
+![Render Strategies - scheduling abstract diagram](https://user-images.githubusercontent.com/10064416/144139325-c58f41e3-2a05-4a25-ac92-9507e9a9877b.png)
+
+![Render Strategies-Scheduling](https://user-images.githubusercontent.com/10064416/144139120-fa33cdd4-e638-48dc-bc49-57674927d1a1.png)
+
+![Render Strategies - priority abstract diagram png](https://user-images.githubusercontent.com/10064416/144139332-87d740a6-6c43-42fa-a208-237af01fe68c.png)
 
 ### Scheduling
   https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel
