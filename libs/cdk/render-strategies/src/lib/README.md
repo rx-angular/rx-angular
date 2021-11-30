@@ -171,7 +171,7 @@ Imperative method that you can use to schedule change detection cycle. You must 
 
 #### Usage example
 
-```tsx
+```typescript
 this.strategyProvider.scheduleCd(this.changeDetectorRef, {afterCD: myWork()});
 ```
 
