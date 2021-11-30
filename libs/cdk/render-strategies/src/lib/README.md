@@ -63,7 +63,7 @@ Each strategy has its own queue with its own priority.
 
 Full signature of the service available below, but we will focus only on methods that provides scheduling.
 
-```tsx
+```typescript
 @Injectable({ providedIn: 'root' })
 export class RxStrategyProvider<T extends string = string> {
   /**
