@@ -169,7 +169,7 @@ Imperative method that you can use to schedule change detection cycle. You must 
 - Work that should be performed after change detection is done (`afterCD`).
 - `AbortController` that you can use if you want to cancel a change detection cycle that you just scheduled.
 
-Usage example
+#### Usage example
 
 ```tsx
 this.strategyProvider.scheduleCd(this.changeDetectorRef, {afterCD: myWork()});
