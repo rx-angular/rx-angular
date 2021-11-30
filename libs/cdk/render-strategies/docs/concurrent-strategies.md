@@ -8,39 +8,69 @@ From perspec UX => app should give feedback => if blocked => laggy
 
 ## Concepts
 
+### Frame budget / Frame Drop
+
+The Browsers main thread is a single-threaded system, meaning things happen one after another.
+
+When we connect this information with the fact that users constantly interact with our site this means if our main thread is busy the user cant interact with the page. The events like scroll or click will get delayed until the main thread is unblocked from work again and can process those interactions.
+
+![Render Strategies - Frame Drop Overview](https://user-images.githubusercontent.com/10064416/144139010-ecddecc8-c561-4708-bc9e-36d60a84cad7.png)
+
+Such situations cause problems like:
+
+- blocking UIs
+- animation jank
+- scroll jank or stottering
+- delayed navigations
+- bad frame rates in general
+
+All those problems boil down to the way the user perceives the interactions with the website.
+Due to the human eye and how our screens got standardized, the frame rate is defined as good if it is 60 frames per second which is a screen update every 16.6 milliseconds.
+
+In the browser, we can see tasks in the main thread that are too long for a good framerate marked with a red triangle.
+
 ![Render Strategies-Frame Drop Detail View](https://user-images.githubusercontent.com/10064416/144141900-25c2c4a4-1a8d-472c-a658-9f860e384c47.png)
 
 
 ![Render Strategies-Scheduling Detail View](https://user-images.githubusercontent.com/10064416/144145201-e72f927c-6365-4f33-9b93-5908f3726b06.png)
 
-![Render Strategies -Frame Drop Overview](https://user-images.githubusercontent.com/10064416/144139010-ecddecc8-c561-4708-bc9e-36d60a84cad7.png)
+In the image, we see ChromeDevtools marks frames that take longer than 50ms as long task. All those tasks exceeded the input response budget.
 
-![RxAngular - for Angular Team(1)](https://user-images.githubusercontent.com/10064416/144139079-9f1d6ad7-ad7e-437c-95a2-8a794460f9c9.png)
+The reason why it is 50ms and not 16.6ms is based on other things that can happen in relation to the user input.
+The related theory is known as the RAIL model.
+
+
+
+### Scheduling
 
 ![Render Strategies - scheduling abstract diagram](https://user-images.githubusercontent.com/10064416/144139325-c58f41e3-2a05-4a25-ac92-9507e9a9877b.png)
 
-![Render Strategies-Scheduling](https://user-images.githubusercontent.com/10064416/144139120-fa33cdd4-e638-48dc-bc49-57674927d1a1.png)
+When it comes to scripting work we can do 2 things to avoid that:
+
+- reduce scripting work and let the user interact earlier
+- chunk up work and use scheduling API's to distribute the work overtime and let the user interact in between
+
+angular-scripting-time
+
+As often the work just can't get reduced so we have to schedule. 
+
+Some of the possible APIs are:
+- queueMicrotask
+- setTimeout
+- postMessage
+- requestAnimationFrame
+- requestIdleCallback
+
+Angular did that internally in different places. One of them is in the elements package:
+
+https://github.com/angular/angular/blob/master/packages/elements/src/component-factory-strategy.ts#L255-L267
+
+Also, the utils file is an interesting place to look at:
+https://github.com/angular/angular/blob/master/packages/elements/src/utils.ts#L13-L46
+
+### Priority
 
 ![Render Strategies - priority abstract diagram png](https://user-images.githubusercontent.com/10064416/144139332-87d740a6-6c43-42fa-a208-237af01fe68c.png)
-
-### Scheduling
-  https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel
-- Frame budget
-  ![rx-angular-cdk-render-strategies__frame-budget](https://user-images.githubusercontent.com/10064416/115894224-4f098280-a459-11eb-9abf-9a902d66d380.png)
-
-![rx-angular-cdk-render-strategies__concurrent-strategies-anatomy](https://user-images.githubusercontent.com/10064416/116157149-bee36b80-a6ec-11eb-965a-9fbe34a8eca4.png)
-
-### Chunking
-![rx-angular-cdk-render-strategies__concurrent-strategies-un-chuked-work](https://user-images.githubusercontent.com/10064416/116010309-7cebf400-a61e-11eb-8715-a6428e5f16a3.png)
-![rx-angular-cdk-render-strategies__concurrent-strategies-chuked-work](https://user-images.githubusercontent.com/10064416/116010261-2c749680-a61e-11eb-9e92-3bd032045fdf.png)
-![rx-angular-cdk-render-strategies__concurrent-strategies-non-chunked-vs-chuked-work](https://user-images.githubusercontent.com/10064416/116007117-705f9f80-a60e-11eb-879c-87746ba677f6.png)
-
-### Render Deadline
-
-![rx-angular-cdk-render-strategies__concurrent-strategies-render-deadline](https://user-images.githubusercontent.com/10064416/116008121-42308e80-a613-11eb-90da-c3299bbf8c0a.png)
-
-- Priority
-  ![rx-angular-cdk-render-strategies__concurrent-scheduling](https://user-images.githubusercontent.com/10064416/115897522-cc82c200-a45c-11eb-84de-a6fc02a1bcca.png)
 
 Input handlers (tap, click etc.) often need to schedule a combination of different kinds of work:
 
@@ -49,10 +79,50 @@ Input handlers (tap, click etc.) often need to schedule a combination of differe
 - rendering in the current frame, e.g. to respond to user typing, toggle the like button, start an animation when clicking on a comment list etc.
 - rendering over the course of next new frames, as fetches complete and data becomes available to prepare and render results.
 
-### Priority:
+To get the best user experience we should prioritize this tasks.
+
+There are a couple scheduling APIs mentioned under scheduling. 
+They all help to prioritize the work and define the moment of execution differently.
+
+![Render Strategies - scheduling techniques](https://user-images.githubusercontent.com/10064416/144139079-9f1d6ad7-ad7e-437c-95a2-8a794460f9c9.png)
 
 
 
+### Chunking
+
+There are also other scheduling APIs. They all help to prioritize the work and define the moment of execution differently.
+
+When using the requestAnimationFrame API we should know that it is not a queued system.
+All scheduled tasks will end up in the same task of the main thread.
+
+timer vs animationframe - collapse
+
+The image shows that all AnimatioFrame events end up in the same task.
+
+This scenario gets to a problem depending on:
+
+    the number of Angular elements
+    the amount of work done in the elements
+
+
+![rx-angular-cdk-render-strategies__concurrent-strategies-un-chuked-work](https://user-images.githubusercontent.com/10064416/116010309-7cebf400-a61e-11eb-8715-a6428e5f16a3.png)
+![rx-angular-cdk-render-strategies__concurrent-strategies-chuked-work](https://user-images.githubusercontent.com/10064416/116010261-2c749680-a61e-11eb-9e92-3bd032045fdf.png)
+![rx-angular-cdk-render-strategies__concurrent-strategies-non-chunked-vs-chuked-work](https://user-images.githubusercontent.com/10064416/116007117-705f9f80-a60e-11eb-879c-87746ba677f6.png)
+
+### Render Deadline
+
+![rx-angular-cdk-render-strategies__concurrent-strategies-render-deadline](https://user-images.githubusercontent.com/10064416/116008121-42308e80-a613-11eb-90da-c3299bbf8c0a.png)
+
+
+### Concurrent Scheduling
+
+![rx-angular-cdk-render-strategies__concurrent-scheduling](https://user-images.githubusercontent.com/10064416/115897522-cc82c200-a45c-11eb-84de-a6fc02a1bcca.png)
+
+![rx-angular-cdk-render-strategies__frame-budget](https://user-images.githubusercontent.com/10064416/115894224-4f098280-a459-11eb-9abf-9a902d66d380.png)
+
+![rx-angular-cdk-render-strategies__concurrent-strategies-anatomy](https://user-images.githubusercontent.com/10064416/116157149-bee36b80-a6ec-11eb-965a-9fbe34a8eca4.png)
+
+## Strategies:
 
 | Name             | Priority | Render Method     | Scheduling    | Render Deadline |
 | ---------------- | -------- | ----------------- | ------------- | --------------- |
