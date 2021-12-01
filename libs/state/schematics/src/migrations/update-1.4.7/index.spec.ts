@@ -8,12 +8,6 @@ import * as path from 'path';
 describe('state migration update-1.4.7', () => {
   let appTree: UnitTestTree;
 
-  /* Increase Jest timeout because of long living tests. */
-  beforeAll(() => jest.setTimeout(20_000));
-
-  /* Reset default timeout to 5s. */
-  afterAll(() => jest.setTimeout(5_000));
-
   it('should replace cdk/state', async () => {
     appTree = await setupTestFile(`
       import { NgModule } from '@angular/core';
