@@ -1,10 +1,28 @@
-import { ESLintUtils } from '@typescript-eslint/experimental-utils';
+import {
+  AST_NODE_TYPES,
+  ESLintUtils,
+  TSESTree,
+} from '@typescript-eslint/experimental-utils';
 import { docsUrl } from '../utils/docs';
+import { namesToRegex } from '../utils/regex';
 import path = require('path');
 
 const MESSAGE_ID = 'no-rxjs-operators';
-
 export type MessageIds = typeof MESSAGE_ID;
+
+const operators = [
+  'auditTime',
+  'bufferTime',
+  'debounceTime',
+  'delay',
+  'sampleTime',
+  'throttleTime',
+  'timeout',
+  'timeoutWith',
+  'windowTime',
+];
+
+const operatorsRegex = namesToRegex(operators);
 
 export default ESLintUtils.RuleCreator(docsUrl)({
   name: path.parse(__filename).name,
@@ -22,6 +40,17 @@ export default ESLintUtils.RuleCreator(docsUrl)({
   },
   defaultOptions: [],
   create: (context) => ({
-    // TODO
+    [`Program:has(ImportDeclaration[source.value='rxjs/operators'] > ImportSpecifier[imported.name=${operatorsRegex}]) CallExpression[callee.name=${operatorsRegex}]`]:
+      (node: TSESTree.CallExpression) => {
+        if (node.callee.type === AST_NODE_TYPES.Identifier) {
+          context.report({
+            node,
+            messageId: MESSAGE_ID,
+            data: {
+              name: node.callee.name,
+            },
+          });
+        }
+      },
   }),
 });
