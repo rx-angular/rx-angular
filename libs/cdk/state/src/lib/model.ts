@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, Subscribable, Subscription } from 'rxjs';
 
 /**
  * Type to specify an object of observables
@@ -33,3 +33,15 @@ export type ArrayReducerFn<T extends Record<string, any>> = (
   cur?: PropType<T>,
   idx?: number
 ) => T;
+
+export type AccumulationFn = <T>(st: T, sl: Partial<T>) => T;
+
+export interface Accumulator<T> extends Subscribable<T> {
+  state: T;
+  state$: Observable<T>;
+  signal$: Observable<T>;
+  subscribe: () => Subscription;
+  nextSlice: (stateSlice: Partial<T>) => void;
+  nextSliceObservable: (state$: Observable<Partial<T>>) => void;
+  nextAccumulator: (fn: AccumulationFn) => void;
+}

@@ -22,7 +22,7 @@
               },
               {
                 "sourceTag": "state",
-                "onlyDependOnLibsWithTags": ["type:test-util"]
+                "onlyDependOnLibsWithTags": ["type:test-util", "cdk"]
               },
               {
                 "sourceTag": "cdk",

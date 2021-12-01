@@ -1,15 +1,12 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
 name: rx-angular CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
+
 env:
-  node-version: 14.x
   NX_CLOUD_DISTRIBUTED_EXECUTION: true
   NX_DISTRIBUTED_TASK_EXECUTION: true
   NX_VERBOSE_LOGGING: false
@@ -17,91 +14,38 @@ env:
 jobs:
   agents:
     runs-on: ubuntu-latest
+
     name: Agent 1
     timeout-minutes: 20
+
     strategy:
       matrix:
-        agent: [ 1, 2, 3 ]
+        agent: [1, 2, 3]
+
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set up Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ env.node-version }}
-
-      - uses: actions/cache@v2
-        id: yarn-cache
-        with:
-          path: |
-            node_modules
-            ~/.cache/Cypress
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        env:
-          HUSKY_SKIP_INSTALL: 'true'
-        run: yarn --frozen-lockfile --no-progress --non-interactive
+      - uses: ./.github/actions/setup
 
       - name: Start Nx Agent ${{ matrix.agent }}
-        run: npx nx-cloud start-agent
-  build:
+        run: yarn nx-cloud start-agent
 
+  build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
-        name: Checkout [master]
-        if: github.ref == 'refs/heads/master'
-        with:
-          fetch-depth: 0
+      - uses: ./.github/actions/setup
 
-      - uses: actions/checkout@v2
-        name: Checkout [pr]
-        if: github.ref != 'refs/heads/master'
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{github.event.pull_request.head.repo.full_name}}
-          fetch-depth: 0
-
-      - name: Derive appropriate SHAs for base and head for `nx affected` commands
-        uses: nrwl/nx-set-shas@v2
-        with:
-          main-branch-name: 'master'
-
-      - name: Set up Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ env.node-version }}
-
-      - uses: actions/cache@v2
-        id: yarn-cache
-        with:
-          path: |
-            node_modules
-            ~/.cache/Cypress
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        env:
-          HUSKY_SKIP_INSTALL: 'true'
-        run: yarn --frozen-lockfile --no-progress --non-interactive
-
-      - run: npx nx-cloud start-ci-run
+      - run: yarn nx-cloud start-ci-run
 
       - name: Run Affected lint
         run: yarn nx affected:lint --parallel --maxParallel=3
 
       - name: Run Affected test
-        run: yarn nx affected:test --parallel --maxParallel=2
+        run: yarn nx affected:test --parallel --maxParallel=3
 
-      - name: Run SSR e2e
-        run: yarn nx run ssr-e2e:e2e --headless
+      - name: Run Affected e2e
+        run: yarn nx affected:e2e
 
       # don't run build in parallel, can cause dead locks
       - name: Run Affected build
@@ -109,6 +53,34 @@ jobs:
 
       - run: yarn nx-cloud stop-all-agents
 
-      - name: Tag main branch if all jobs succeed
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-        uses: nrwl/nx-tag-successful-ci-run@v1
+  build-docs:
+    runs-on: ubuntu-latest
+
+    if: github.ref == 'refs/heads/master'
+
+    needs: [build]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+
+      # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
+      # - run: yarn nx-cloud start-ci-run
+
+      - run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx run-many --projects=state,template,cdk --target=build-docs --parallel --maxParallel=3
+      - run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx build demos --prod
+
+      # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
+      # - run: yarn nx-cloud stop-all-agents
+
+      - uses: EndBug/add-and-commit@v4
+        with:
+          add: 'docs/*'
+          author_name: Github Action
+          message: 'chore(docs): update GitHub pages'
+          # Name of the branch to use, if different from the one that triggered the workflow
+          # Default: the branch that triggered the workflow (from GITHUB_REF)
+          ref: 'github-pages'
+        env:
+          # This is necessary in order to push a commit to the repo
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

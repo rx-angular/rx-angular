@@ -3,7 +3,6 @@
   "projects": {
     "cdk": "libs/cdk",
     "demos": "apps/demos",
-    "demos-e2e": "apps/demos-e2e",
     "docs": "apps/docs",
     "ssr": "apps/ssr",
     "ssr-e2e": "apps/ssr-e2e",
@@ -11,7 +10,6 @@
     "template": "libs/template",
     "test-helpers": "libs/test-helpers",
     "tour-of-heroes-ngxs": "apps/tour-of-heroes-ngxs",
-    "vanilla-case-studies": "apps/vanilla-case-studies",
-    "vanilla-case-studies-e2e": "apps/vanilla-case-studies-e2e"
+    "vanilla-case-studies": "apps/vanilla-case-studies"
   }
 }
