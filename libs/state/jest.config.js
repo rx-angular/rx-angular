@@ -4,12 +4,7 @@ module.exports = {
   preset: '../../jest.preset.js',
   coverageReporters: ['lcov', 'cobertura'],
   coverageDirectory: '../../docs/test-coverage/state',
-  collectCoverageFrom: [
-    './src/**/!(index).ts',
-    '!./src/lib/experimental/**/*.ts',
-  ],
-
-  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/test-setup.ts'],
   globals: {
     'ts-jest': {
       stringifyContentPathRegex: '\\.(html|svg)$',

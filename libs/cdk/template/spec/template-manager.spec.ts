@@ -14,7 +14,6 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import {
   createTemplateManager, RxBaseTemplateNames,
   RxTemplateManager, RxViewContext
@@ -23,12 +22,10 @@ import {
   RxStrategyProvider,
   RX_RENDER_STRATEGIES_CONFIG
 } from '@rx-angular/cdk/render-strategies';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import {
   RxNotificationKind,
   createTemplateNotifier,
 } from '@rx-angular/cdk/notifications';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { ReplaySubject, Subscription } from 'rxjs';
 

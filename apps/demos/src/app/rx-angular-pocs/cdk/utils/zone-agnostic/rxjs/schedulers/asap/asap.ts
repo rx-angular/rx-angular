@@ -1,4 +1,3 @@
-// tslint:disable file-name-casing
 import { AsapAction } from './AsapAction';
 import { AsapScheduler } from './AsapScheduler';
 

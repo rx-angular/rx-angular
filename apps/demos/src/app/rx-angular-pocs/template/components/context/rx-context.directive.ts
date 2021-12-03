@@ -37,11 +37,9 @@ import {
 import { RxState } from '@rx-angular/state';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[rxContext]',
   providers: [RxState],
 })
-// tslint:disable-next-line:directive-class-suffix
 export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
   @Input()
   set rxContext(potentialObservable: Observable<U> | null | undefined) {

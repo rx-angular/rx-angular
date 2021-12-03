@@ -11,27 +11,26 @@ import { LetDirective } from '../let.directive';
     }}</ng-container>
   `,
 })
-// eslint-disable-next-line @angular-eslint/component-class-suffix
-class LetDirectiveTestComponentStrategy {
+class LetDirectiveTestStrategyComponent {
   value$: Observable<number> = of(42);
   renderedValue$ = new Subject<number>();
   strategy: string;
 }
 
-let fixture: ComponentFixture<LetDirectiveTestComponentStrategy>;
-let componentInstance: LetDirectiveTestComponentStrategy;
+let fixture: ComponentFixture<LetDirectiveTestStrategyComponent>;
+let componentInstance: LetDirectiveTestStrategyComponent;
 let componentNativeElement: HTMLElement;
 
 describe('LetDirective strategies', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LetDirectiveTestComponentStrategy, LetDirective],
+      declarations: [LetDirectiveTestStrategyComponent, LetDirective],
       teardown: { destroyAfterEach: true },
     });
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LetDirectiveTestComponentStrategy);
+    fixture = TestBed.createComponent(LetDirectiveTestStrategyComponent);
     componentInstance = fixture.componentInstance;
     componentNativeElement = fixture.nativeElement;
   });

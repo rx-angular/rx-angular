@@ -4,11 +4,10 @@ import { isObservable, Observable, of, ReplaySubject, Subscription } from 'rxjs'
 import { distinctUntilChanged, scan, switchAll, switchMap, tap } from 'rxjs/operators';
 import { Hooks } from '../hooks';
 import { RxEffects } from '../../rx-effects.service';
-import { select } from '@rx-angular/state';
+import { select } from '@rx-angular/cdk/state';
 import { AppConfigService } from '../../../app-config.service';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'rxa-renders',
   template: `
     <div class="indicator-ripple" [ngStyle]="{minWidth: radius+'px',minHeight: radius+'px'}" matRipple
