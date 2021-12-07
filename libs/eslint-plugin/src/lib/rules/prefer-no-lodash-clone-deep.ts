@@ -1,4 +1,4 @@
-import { ESLintUtils } from '@typescript-eslint/experimental-utils';
+import { ESLintUtils, TSESTree } from '@typescript-eslint/experimental-utils';
 import { docsUrl } from '../utils/docs';
 import path = require('path');
 
@@ -20,5 +20,13 @@ export default ESLintUtils.RuleCreator(docsUrl)({
     schema: [],
   },
   defaultOptions: [],
-  create: (context) => ({}),
+  create: (context) => ({
+    "Program:has(ImportDeclaration[source.value='lodash-es'] > ImportSpecifier[imported.name=cloneDeep]) CallExpression[callee.name=cloneDeep]":
+      (node: TSESTree.CallExpression) => {
+        context.report({
+          node,
+          messageId: MESSAGE_ID,
+        });
+      },
+  }),
 });
