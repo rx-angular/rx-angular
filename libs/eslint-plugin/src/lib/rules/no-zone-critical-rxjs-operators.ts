@@ -29,7 +29,7 @@ export default ESLintUtils.RuleCreator(docsUrl)({
   meta: {
     docs: {
       recommended: 'error',
-      description: 'Detects zone critical RxJS operators.',
+      description: 'Detects Zone critical RxJS operators.',
     },
     type: 'problem',
     messages: {

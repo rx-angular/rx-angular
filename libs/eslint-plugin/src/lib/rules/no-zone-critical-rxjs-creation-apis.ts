@@ -18,7 +18,7 @@ export default ESLintUtils.RuleCreator(docsUrl)({
   meta: {
     docs: {
       recommended: 'error',
-      description: 'Detects zone critical rxjs creation APIs.',
+      description: 'Detects Zone critical rxjs creation APIs.',
     },
     type: 'problem',
     messages: {
