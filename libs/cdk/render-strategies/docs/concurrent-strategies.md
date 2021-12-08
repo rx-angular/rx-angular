@@ -128,21 +128,36 @@ This scenario gets to a problem depending on:
 - the amount of work done in the elements
 
 ![rx-angular-cdk-render-strategies__concurrent-strategies-un-chuked-work](https://user-images.githubusercontent.com/10064416/116010309-7cebf400-a61e-11eb-8715-a6428e5f16a3.png)
-![rx-angular-cdk-render-strategies__concurrent-strategies-chuked-work](https://user-images.githubusercontent.com/10064416/116010261-2c749680-a61e-11eb-9e92-3bd032045fdf.png)
-![rx-angular-cdk-render-strategies__concurrent-strategies-non-chunked-vs-chuked-work](https://user-images.githubusercontent.com/10064416/116007117-705f9f80-a60e-11eb-879c-87746ba677f6.png)
-
 
 ### Concurrent Scheduling
 
 ![rx-angular-cdk-render-strategies__concurrent-scheduling](https://user-images.githubusercontent.com/10064416/115897522-cc82c200-a45c-11eb-84de-a6fc02a1bcca.png)
 
+Concurrent scheduling is a marketing therm and simply means that there is a mechanism in place that knows how much time is spent in the current task.
+This number is called frame budget and measured in milliseconds. The other cool part of this technique is we get prioritization and user centric scheduling behaviours. 
+
+This enables:
+- scheduling
+- cancellation
+- fine grained prioritization
+- works distribution based on the frame budget
+- render deadlines
+
+One of the first things to understand is the term frame budget.
+It means we have a maximum time a task can take before yealding to the main thread which is globally defined.  e.g. 60frames/1000ms=16.6666ms animations or 50ms long task
+
+Scheduling with notion of the frame budget enables us to stop processing scheduled tasks whenever we are close to the budget.
+ We then yeild to the main thread and are interactive again until the next batch of tasks will get processed. 
+
 ![rx-angular-cdk-render-strategies__frame-budget](https://user-images.githubusercontent.com/10064416/115894224-4f098280-a459-11eb-9abf-9a902d66d380.png)
+
+The special thing about the set of concurrent strategies is they have a render deadline. 
+It means if the scheduled tasks in the global queue of work is not exhausted after a certain time window we stop the chunking prozess.
+Instead all remaining work will get executed as fast as possible. This means in one synchronouse block (that potentially can causes a frame drop).
 
 ![rx-angular-cdk-render-strategies__concurrent-strategies-anatomy](https://user-images.githubusercontent.com/10064416/116157149-bee36b80-a6ec-11eb-965a-9fbe34a8eca4.png)
 
-### Render Deadline
-
-![rx-angular-cdk-render-strategies__concurrent-strategies-render-deadline](https://user-images.githubusercontent.com/10064416/116008121-42308e80-a613-11eb-90da-c3299bbf8c0a.png)
+Every strategy has a different render deadline. Strategies are designed the perspective on how important the change work is for the user. see: [RAIL model](https://web.dev/rail/)
 
 ## Strategies:
 
