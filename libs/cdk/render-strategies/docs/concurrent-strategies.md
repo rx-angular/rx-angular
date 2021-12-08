@@ -38,7 +38,7 @@ The related theory is known as the RAIL model.
 
 ### Scheduling
 
-![Render Strategies - scheduling abstract diagram](https://user-images.githubusercontent.com/10064416/144139325-c58f41e3-2a05-4a25-ac92-9507e9a9877b.png)
+![Render Strategies - scheduling abstract diagram](https://user-images.githubusercontent.com/10064416/145228196-8a7293ff-d865-46a9-a995-dfed801bb90c.png)
 
 When it comes to scripting work we can do 2 things to avoid that:
 
@@ -90,7 +90,7 @@ If we pass the asyncId as parameter to the `clearTimeout` function we can cancle
 
 ### Priority
 
-![Render Strategies - priority abstract diagram png](https://user-images.githubusercontent.com/10064416/144139332-87d740a6-6c43-42fa-a208-237af01fe68c.png)
+![Render Strategies - priority abstract diagram png](https://user-images.githubusercontent.com/10064416/145228352-da3487fa-41c0-497b-a49a-c274bf531d32.png)
 
 Input handlers (tap, click etc.) often need to schedule a combination of different kinds of work:
 
@@ -131,7 +131,7 @@ This scenario gets to a problem depending on:
 
 ### Concurrent Scheduling
 
-![rx-angular-cdk-render-strategies__concurrent-scheduling](https://user-images.githubusercontent.com/10064416/115897522-cc82c200-a45c-11eb-84de-a6fc02a1bcca.png)
+![concurrent scheduling - abstract diagram](https://user-images.githubusercontent.com/10064416/145228577-6b8f0bb7-6547-4835-aecc-13d7e07baf02.png)
 
 Concurrent scheduling is a marketing therm and simply means that there is a mechanism in place that knows how much time is spent in the current task.
 This number is called frame budget and measured in milliseconds. The other cool part of this technique is we get prioritization and user centric scheduling behaviours. 
@@ -157,7 +157,7 @@ Instead all remaining work will get executed as fast as possible. This means in 
 
 ![rx-angular-cdk-render-strategies__concurrent-strategies-anatomy](https://user-images.githubusercontent.com/10064416/116157149-bee36b80-a6ec-11eb-965a-9fbe34a8eca4.png)
 
-Every strategy has a different render deadline. Strategies are designed the perspective on how important the change work is for the user. see: [RAIL model](https://web.dev/rail/)
+Every strategy has a different render deadline. Strategies are designed from the perspective of how important the work is for the user. see: [RAIL model](https://web.dev/rail/)
 
 ## Strategies:
 
