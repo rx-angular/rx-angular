@@ -105,6 +105,10 @@ In the majority of cases, you can just drop in the new features, and everything 
 You can then partially enable more performance features on RxAngular.
 
 Configurations are done with Angular best practies and based on `InjectionToken`'s.
+
+> As all configurtion are controlled by `RxStrategyProvider`, an Angular service we can apply 
+> all knowledge of Angular DI on global and local level including all life cycles.
+
 We can configure on the following levels:
 
 - globally
@@ -245,7 +249,7 @@ export class AnyComponent {
 The best place and most efficient place to control rendering is the template.
 Here we again have 2 ways to do it. Over `Pipe`'s or `Directive`'s.
 
-In general, all features in `@rx-angular/template` have strategies backed in and are fine-grained configurable.
+In general, all features in `@rx-angular/template/*` have strategies backed in and are fine-grained configurable.
 
 The second best way of using stragegies in the template is by using the `push` pipe.
 
@@ -268,6 +272,7 @@ They own an `EmbeddedView`, and RxAngular realized it and applied the re-evaluat
 ![rx-angular-cdk_render-strategies_template-vs-embeddedview](https://user-images.githubusercontent.com/10064416/116314957-1c8cbc00-a7b0-11eb-91e8-cb6f5de038db.png)
 
 > **⚠ Notice:**  
+> Use rxLet over push.  
 > Even if the push pipe lives in the template, the performance is still the same as controlling rendering in the component because it re-evaluates the whole template.
 
 ### Usage in a service
@@ -293,3 +298,9 @@ export class AnyService {
 
 > **⚠ Notice:**  
 > The component that introduces the change does not know where in the template it sits. The whole template needs to be re-evaluated.
+
+
+## Testing
+
+@TODO 
+
