@@ -111,7 +111,7 @@ They all help to prioritize the work and define the moment of execution differen
 
 Chunking means using scheduling APIs to split work and distribute in over time to have less frame drops.
 
-![Render Strategies-chunking-example](https://user-images.githubusercontent.com/10064416/145215112-4da1a147-1107-4a18-9ff0-6fb20fca01d8.png)
+![Render Strategies-chunking-example](https://user-images.githubusercontent.com/10064416/145215422-2b047199-d7fa-46ef-aa99-fab236875952.png)
 
 All scheduling APIs can help to prioritize the work and define the moment of execution differently.
 
