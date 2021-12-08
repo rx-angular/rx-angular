@@ -136,7 +136,11 @@ both accessed over the context over `ChangeDetectorRef#context`.
 | ------- | ------------- | ----------------- | ------------------ | ----------------------- |
 | `local` | ✔             | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame` |
 
-<!-- @TODO Julian - full screen animation of slide fo template vs EV -->
+The best place to use the local strategie is a structural directive like `*rxLet`. Those will have a independent template from the component and prevorm changes only there.
+
+![render-strategies - basic-strategies - local - directive_michael-hladky](https://user-images.githubusercontent.com/10064416/145226924-d5b46406-10b6-4e4b-ae46-ae0347309261.png)
+
+This has a pretty nice performance boost and is causing only minimal change detection work.
 
 #### Noop
 
@@ -190,9 +194,3 @@ class Module {
 <a *rxFor="let itme of itmes$; strategy:'local'">{{item}}</a>
 <p>{{title$ | push : 'local'}}</p>
 ```
-
-## Build custom features
-
-Let's try to use the strategies knowledge and build a new feature.
-
-@TODO 
