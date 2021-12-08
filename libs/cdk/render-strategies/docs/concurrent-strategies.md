@@ -155,7 +155,7 @@ The special thing about the set of concurrent strategies is they have a render d
 It means if the scheduled tasks in the global queue of work is not exhausted after a certain time window we stop the chunking prozess.
 Instead all remaining work will get executed as fast as possible. This means in one synchronouse block (that potentially can causes a frame drop).
 
-![rx-angular-cdk-render-strategies__concurrent-strategies-anatomy](https://user-images.githubusercontent.com/10064416/116157149-bee36b80-a6ec-11eb-965a-9fbe34a8eca4.png)
+![Render Strategies - concurrent anatomy png](https://user-images.githubusercontent.com/10064416/145231603-5e6e250d-7c8c-4e76-8872-8b01a3a65c24.png)
 
 Every strategy has a different render deadline. Strategies are designed from the perspective of how important the work is for the user. see: [RAIL model](https://web.dev/rail/)
 
