@@ -1,6 +1,6 @@
 import { ESLintUtils, TSESTree } from '@typescript-eslint/experimental-utils';
+import * as path from 'path';
 import { docsUrl } from '../utils/docs';
-import path = require('path');
 
 const MESSAGE_ID = 'no-lodash-clone-deep';
 export type MessageIds = typeof MESSAGE_ID;

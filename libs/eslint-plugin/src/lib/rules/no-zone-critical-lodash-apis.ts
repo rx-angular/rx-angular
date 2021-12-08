@@ -3,9 +3,9 @@ import {
   ESLintUtils,
   TSESTree,
 } from '@typescript-eslint/experimental-utils';
+import * as path from 'path';
 import { docsUrl } from '../utils/docs';
 import { namesToRegex } from '../utils/regex';
-import path = require('path');
 
 const MESSAGE_ID = 'no-lodash-apis';
 export type MessageIds = typeof MESSAGE_ID;
