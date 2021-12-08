@@ -29,7 +29,7 @@ Due to the human eye and how our screens got standardized, the frame rate is def
 
 In the browser, we can see tasks in the main thread that are too long for a good framerate marked with a red triangle.
 
-![Render Strategies-Frame Drop Detail View](https://user-images.githubusercontent.com/10064416/144141900-25c2c4a4-1a8d-472c-a658-9f860e384c47.png)
+![Render Strategies-Frame Drop Detail View](https://user-images.githubusercontent.com/10064416/145211921-92b65bd3-b4f2-4557-af54-107e136a1747.png)
 
 In the image, we see ChromeDevtools marks frames that take longer than 50ms as long task. All those tasks exceeded the input response budget.
 
