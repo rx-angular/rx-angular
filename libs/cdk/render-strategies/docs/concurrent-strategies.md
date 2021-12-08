@@ -49,7 +49,6 @@ angular-scripting-time
 
 As often the work just can't get reduced so we have to schedule. 
 
-
 ![Render Strategies-Scheduling Detail View](https://user-images.githubusercontent.com/10064416/144145201-e72f927c-6365-4f33-9b93-5908f3726b06.png)
 
 Some of the possible APIs are:
@@ -65,6 +64,29 @@ https://github.com/angular/angular/blob/master/packages/elements/src/component-f
 
 Also, the utils file is an interesting place to look at:
 https://github.com/angular/angular/blob/master/packages/elements/src/utils.ts#L13-L46
+
+A simple way to schedule work is using `setTimeout`.
+
+```typescript
+function work(): viod {
+  concole.log('work done!'); 
+}
+
+const asyncId = setTimeout(work);
+```
+
+By calling `setTimeout` we can schedule the execution of the `work` function in the next tast.
+
+As a return value we receive the so called "asyncId" a number that serves as reverence to the scheduled task.
+
+This is important for cancellation and cleanup logic.
+
+```
+clearTimeout(asyncId);
+``` 
+
+If we pass the asyncId as parameter to the `clearTimeout` function we can cancle the scheduling and `work` will never get executed.
+
 
 ### Priority
 
@@ -87,7 +109,11 @@ They all help to prioritize the work and define the moment of execution differen
 
 ### Chunking
 
-There are also other scheduling APIs. They all help to prioritize the work and define the moment of execution differently.
+Chunking means using scheduling APIs to split work and distribute in over time to have less frame drops.
+
+IMG
+
+All scheduling APIs can help to prioritize the work and define the moment of execution differently.
 
 When using the requestAnimationFrame API we should know that it is not a queued system.
 All scheduled tasks will end up in the same task of the main thread.
