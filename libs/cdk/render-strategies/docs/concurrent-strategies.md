@@ -49,7 +49,7 @@ angular-scripting-time
 
 As often the work just can't get reduced so we have to schedule. 
 
-![Render Strategies-Scheduling Detail View](https://user-images.githubusercontent.com/10064416/144145201-e72f927c-6365-4f33-9b93-5908f3726b06.png)
+![Render Strategies-Scheduling Detail View](https://user-images.githubusercontent.com/10064416/145210963-be6d2dc0-f4e3-4654-9f7f-f5221976ed0c.png)
 
 Some of the possible APIs are:
 - queueMicrotask
