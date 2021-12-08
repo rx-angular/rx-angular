@@ -118,7 +118,7 @@ All scheduling APIs can help to prioritize the work and define the moment of exe
 When using the requestAnimationFrame API we should know that it is not a queued system.
 All scheduled tasks will end up in the same task of the main thread.
 
-timer vs animationframe - collapse
+![Render Strategies-chunking-animation-frame](https://user-images.githubusercontent.com/10064416/145215060-56d037a7-ec51-4846-9e78-a0f358128c61.png)
 
 The image shows that all AnimatioFrame events end up in the same task.
 
