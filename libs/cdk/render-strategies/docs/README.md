@@ -51,7 +51,7 @@ Rendering can be executed with the frame budget [long task](https://developer.mo
 
 With these sets of strategies and the possibility of switching them at runtime we can create tools that align with performance best practices (e.g. [RAIL](https://web.dev/rail/)) and implement expert level optimizations. We can control rendering based on viewport visibility, measure the DOM _after_ rendering or re-render only parts of a component.
 
-![rx-angular-cdk-render-strategies__concurrent-scheduling](https://user-images.githubusercontent.com/10064416/116227659-adce4500-a754-11eb-970a-e755b7ce7300.png)
+![rx-angular-cdk-render-strategies__concurrent-scheduling](https://user-images.githubusercontent.com/10064416/145224834-07016e3c-3e21-4550-9e09-af542853f59e.png)
 
 **Render strategies pave the way for truly non-blocking applications, targeted for any device or platform 🚀**
 
