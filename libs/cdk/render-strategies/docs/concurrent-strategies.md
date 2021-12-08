@@ -14,7 +14,7 @@ The Browsers main thread is a single-threaded system, meaning things happen one 
 
 When we connect this information with the fact that users constantly interact with our site this means if our main thread is busy the user cant interact with the page. The events like scroll or click will get delayed until the main thread is unblocked from work again and can process those interactions.
 
-![Render Strategies - Frame Drop Overview](https://user-images.githubusercontent.com/10064416/144139010-ecddecc8-c561-4708-bc9e-36d60a84cad7.png)
+![Render Strategies - Frame Drop Overview](https://user-images.githubusercontent.com/10064416/145212039-b4b20fe5-19c9-4062-aba3-b5749cca978d.png)
 
 Such situations cause problems like:
 
