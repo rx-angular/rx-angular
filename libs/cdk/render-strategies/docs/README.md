@@ -292,7 +292,7 @@ export class AnyService {
   constructor(public strategyProvider: RxStrategyProvider) {}
 
   getData() {
-    this.strategyProvider.schedule(() => {});
+    this.strategyProvider.schedule(() => {}).subscribe();
   }
 }
 ```
