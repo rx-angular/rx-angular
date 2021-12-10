@@ -144,7 +144,7 @@ This enables:
 - render deadlines
 
 One of the first things to understand is the term frame budget.
-It means we have a maximum time a task can take before yealding to the main thread which is globally defined.  e.g. 60frames/1000ms=16.6666ms animations or 50ms long task
+It means we have a maximum time (which is globally defined) a task can take before yealding to the main thread.  e.g. 60frames/1000ms=16.6666ms animations or 50ms long task
 
 Scheduling with notion of the frame budget enables us to stop processing scheduled tasks whenever we are close to the budget.
  We then yeild to the main thread and are interactive again until the next batch of tasks will get processed. 
@@ -300,7 +300,7 @@ Heavy work visible to the user. For example, since it has a higher timeout, it i
 
 ![rx-angular-cdk-render-strategies__normal_example](https://user-images.githubusercontent.com/10064416/115315848-7837c380-a178-11eb-985e-b639f034fcb4.PNG)
 
-### low
+### Low
 
 Work that is typically not visible to the user or initiated by the user. For example getting scrollbar position form `localStorage`.
 
