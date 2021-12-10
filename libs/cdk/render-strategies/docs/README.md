@@ -51,7 +51,8 @@ Rendering can be executed with the frame budget [long task](https://developer.mo
 
 With these sets of strategies and the possibility of switching them at runtime we can create tools that align with performance best practices (e.g. [RAIL](https://web.dev/rail/)) and implement expert level optimizations. We can control rendering based on viewport visibility, measure the DOM _after_ rendering or re-render only parts of a component.
 
-![rx-angular-cdk-render-strategies__concurrent-scheduling](https://user-images.githubusercontent.com/10064416/116227659-adce4500-a754-11eb-970a-e755b7ce7300.png)
+![concurrent scheduling - abstract diagram](https://user-images.githubusercontent.com/10064416/145224962-04147632-f634-4025-a097-8135cdf9f3cc.png)
+
 
 **Render strategies pave the way for truly non-blocking applications, targeted for any device or platform 🚀**
 
@@ -105,6 +106,10 @@ In the majority of cases, you can just drop in the new features, and everything 
 You can then partially enable more performance features on RxAngular.
 
 Configurations are done with Angular best practies and based on `InjectionToken`'s.
+
+> As all configurtion are controlled by `RxStrategyProvider`, an Angular service we can apply 
+> all knowledge of Angular DI on global and local level including all life cycles.
+
 We can configure on the following levels:
 
 - globally
@@ -245,7 +250,7 @@ export class AnyComponent {
 The best place and most efficient place to control rendering is the template.
 Here we again have 2 ways to do it. Over `Pipe`'s or `Directive`'s.
 
-In general, all features in `@rx-angular/template` have strategies backed in and are fine-grained configurable.
+In general, all features in `@rx-angular/template/*` have strategies backed in and are fine-grained configurable.
 
 The second best way of using stragegies in the template is by using the `push` pipe.
 
@@ -268,6 +273,7 @@ They own an `EmbeddedView`, and RxAngular realized it and applied the re-evaluat
 ![rx-angular-cdk_render-strategies_template-vs-embeddedview](https://user-images.githubusercontent.com/10064416/116314957-1c8cbc00-a7b0-11eb-91e8-cb6f5de038db.png)
 
 > **⚠ Notice:**  
+> Use rxLet over push.  
 > Even if the push pipe lives in the template, the performance is still the same as controlling rendering in the component because it re-evaluates the whole template.
 
 ### Usage in a service
@@ -286,10 +292,16 @@ export class AnyService {
   constructor(public strategyProvider: RxStrategyProvider) {}
 
   getData() {
-    this.strategyProvider.schedule(() => {});
+    this.strategyProvider.schedule(() => {}).subscribe();
   }
 }
 ```
 
 > **⚠ Notice:**  
 > The component that introduces the change does not know where in the template it sits. The whole template needs to be re-evaluated.
+
+
+## Testing
+
+@TODO 
+

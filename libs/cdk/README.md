@@ -13,13 +13,15 @@ applications
 
 ## Sub Modules
 
+
 - [⛔ Zone Configuration](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/zone-configurations)
 - [🚫 Zone Less](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/zone-less)
 - [🛠 Coercing](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coercing)
 - [🛠 Coalescing](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing)
 - [📡 Notifications](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/notifications)
+- [🖌 Render-Strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies)
 - 🔳 Template Management
-- 🖌 Render-Strategies
+
 
 ## Demos:
 
