@@ -88,7 +88,6 @@ const eventsToUnpatch: string[] = [
  *
  * @publicApi
  */
-// tslint:disable-next-line:directive-selector
 @Directive({ selector: '[unpatch]' })
 export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
   /**

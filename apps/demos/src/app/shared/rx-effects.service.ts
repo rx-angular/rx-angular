@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { createSideEffectObservable } from '@rx-angular/state';
+import { createSideEffectObservable } from '@rx-angular/cdk/state';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -48,7 +48,6 @@ export class RxEffects implements OnDestroy {
   }
 
   ngOnDestroy() {
-    // tslint:disable-next-line:no-unused-expression
     this.subscription && this.subscription.unsubscribe()
   }
 

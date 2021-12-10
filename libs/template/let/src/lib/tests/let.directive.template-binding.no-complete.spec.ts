@@ -1,15 +1,10 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { LetDirective } from '../let.directive';
-import { EMPTY, Observable, of } from 'rxjs';
-// tslint:disable-next-line:nx-enforce-module-boundaries
+import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
+import { EMPTY, Observable, of } from 'rxjs';
+
+import { LetDirective } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
@@ -39,13 +34,14 @@ const setupTestComponent = () => {
       TemplateRef,
       ViewContainerRef,
       {
-        provide: RX_ANGULAR_CONFIG,
+        provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
         },
       },
     ],
-  }).compileComponents();
+    teardown: { destroyAfterEach: true },
+  });
 };
 
 const setUpFixture = () => {
@@ -58,7 +54,7 @@ const setUpFixture = () => {
 
 describe('LetDirective when template binding without "complete" template', () => {
   beforeAll(() => mockConsole());
-  beforeEach(waitForAsync(setupTestComponent));
+  beforeEach(setupTestComponent);
   beforeEach(setUpFixture);
 
   it('should be initiated', () => {

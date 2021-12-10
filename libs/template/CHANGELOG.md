@@ -1,9 +1,19 @@
-# [1.0.0-beta.29](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.28...template@1.0.0-beta.29) (2021-08-23)
+# Changelog
+
+This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
+
+# [1.0.0-beta.29](/compare/template@1.0.0-beta.28...template@1.0.0-beta.29) (2021-11-16)
 
 
 ### Bug Fixes
 
-* **schematics:** fix template migration ([#848](https://github.com/rx-angular/rx-angular/issues/848)) ([718eb36](https://github.com/rx-angular/rx-angular/commit/718eb36810533f42e9ed6366beb96b00b78c494a))
+* **schematics:** fix template migration (#848) 718eb36, closes #848
+* **schematics:** remove `@nrwl/workspace` dependency (#968) 0bdcd16, closes #968
+
+
+### Features
+
+* add ability to rxLet and push to take static values (#1033) 42d7a81, closes #1033
 
 
 

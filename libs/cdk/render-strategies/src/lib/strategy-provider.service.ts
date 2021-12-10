@@ -12,7 +12,11 @@ import {
   Observable,
 } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
-import { mergeDefaultConfig, RX_ANGULAR_CONFIG, RxAngularConfig } from './config';
+import {
+  mergeDefaultConfig,
+  RX_RENDER_STRATEGIES_CONFIG,
+  RxRenderStrategiesConfig
+} from './config';
 import { onStrategy } from './onStrategy';
 import { RxStrategies, RxStrategyCredentials, RxStrategyNames, ScheduleOnStrategyOptions } from './model';
 
@@ -55,7 +59,7 @@ export class RxStrategyProvider<T extends string = string> {
     RxStrategyCredentials<RxStrategyNames<T>>
   >(undefined);
 
-  private _cfg: Required<RxAngularConfig<T>>;
+  private _cfg: Required<RxRenderStrategiesConfig<T>>;
 
   /**
    * @description
@@ -65,7 +69,7 @@ export class RxStrategyProvider<T extends string = string> {
    * - array of custom user defined strategies - `customStrategies`
    * - setting that is responsible for running in our outside of the zone.js - `patchZone`
    */
-  get config(): Required<RxAngularConfig<T>> {
+  get config(): Required<RxRenderStrategiesConfig<T>> {
     return this._cfg;
   }
 
@@ -92,7 +96,6 @@ export class RxStrategyProvider<T extends string = string> {
   get primaryStrategy(): RxStrategyNames<T> {
     return this._primaryStrategy$.getValue().name;
   }
-
 
   /**
    * @description
@@ -126,13 +129,13 @@ export class RxStrategyProvider<T extends string = string> {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
- /**
-  * @internal
-  */
+  /**
+   * @internal
+   */
   constructor(
     @Optional()
-    @Inject(RX_ANGULAR_CONFIG)
-    cfg: RxAngularConfig<T>
+    @Inject(RX_RENDER_STRATEGIES_CONFIG)
+    cfg: RxRenderStrategiesConfig<T>
   ) {
     this._cfg = mergeDefaultConfig(cfg);
     this._strategies$.next(this._cfg.customStrategies as any);

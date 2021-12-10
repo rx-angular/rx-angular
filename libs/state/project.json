@@ -4,22 +4,47 @@
   "sourceRoot": "libs/state/src",
   "prefix": "rx",
   "targets": {
-    "build": {
+    "build-state": {
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/state/tsconfig.lib.json",
         "project": "libs/state/ng-package.json"
       },
-      "outputs": ["dist/libs/state"]
+      "outputs": ["dist/libs/state"],
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        }
+      ]
     },
-    "lint": {
-      "executor": "@angular-devkit/build-angular:tslint",
+    "build": {
+      "executor": "@nrwl/workspace:run-commands",
+      "dependsOn": [
+        {
+          "target": "build-state",
+          "projects": "self"
+        }
+      ],
       "options": {
-        "tsConfig": [
-          "libs/state/tsconfig.lib.json",
-          "libs/state/tsconfig.spec.json"
+        "commands": [
+          {
+            "command": "npx tsc -p libs/state/tsconfig.schematics.json"
+          },
+          {
+            "command": "npx cpx libs/state/schematics/collection.json dist/libs/state/schematics"
+          },
+          {
+            "command": "npx cpx libs/state/schematics/migration.json dist/libs/state/schematics"
+          },
+          {
+            "command": "npx cpx libs/state/schematics/src/**/files/** dist/libs/state/schematics/src"
+          },
+          {
+            "command": "npx cpx libs/state/schematics/src/**/schema.json dist/libs/state/schematics/src"
+          }
         ],
-        "exclude": ["**/node_modules/**", "!libs/state/**/*"]
+        "parallel": false
       }
     },
     "test": {
@@ -35,12 +60,12 @@
       "options": {
         "commands": [
           {
-            "command": "nx test-coverage state && nx test-coverage-badge state"
+            "command": "nx test state --codeCoverage && nx build-test-coverage-badge state"
           }
         ]
       }
     },
-    "test-coverage-badge": {
+    "build-test-coverage-badge": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
@@ -49,15 +74,6 @@
           }
         ]
       }
-    },
-    "test-coverage": {
-      "executor": "@nrwl/jest:jest",
-      "options": {
-        "jestConfig": "libs/state/jest.config.js",
-        "passWithNoTests": true,
-        "codeCoverage": true
-      },
-      "outputs": ["coverage/libs/state"]
     },
     "perfBuild": {
       "executor": "@nrwl/node:build",
@@ -103,10 +119,16 @@
       ]
     },
     "version": {
-      "builder": "@jscutlery/semver:version",
+      "executor": "@jscutlery/semver:version",
       "options": {
         "baseBranch": "master",
         "versionTagPrefix": "${target}@"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/state/**/*.ts"]
       }
     }
   },
@@ -115,5 +137,5 @@
       "style": "scss"
     }
   },
-  "tags": ["type:lib"]
+  "tags": ["type:lib", "state"]
 }

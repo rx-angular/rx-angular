@@ -27,7 +27,6 @@ interface KMeansResult {
 class KMeansRunner {
 
   palette(result: KMeansResult): RGBAs {
-    // tslint:disable-next-line:no-bitwise
     return result.clusters.map(rgba => computeAverageColor(rgba).map(v => ~~v) as RGBA)
   }
 
@@ -93,7 +92,6 @@ class KMeansRunner {
         }
       });
       // @ts-ignore
-      // tslint:disable-next-line:no-bitwise
       result |= meanIsAlsoInMeansB;
     });
     return result;

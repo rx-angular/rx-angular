@@ -18,8 +18,9 @@ applications
 - [🛠 Coercing](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coercing)
 - [🛠 Coalescing](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing)
 - [📡 Notifications](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/notifications)
+- [🖌 Render-Strategies](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/render-strategies)
 - 🔳 Template Management
-- 🖌 Render-Strategies
+
 
 ## Demos:
 

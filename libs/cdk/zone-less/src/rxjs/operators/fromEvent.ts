@@ -1,7 +1,6 @@
-// tslint:disable
 import { Observable, Subscriber } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { getZoneUnPatchedApi } from '../../get-zone-unpatched-api';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 
 // @ts-ignore
 const isFunction = (fn) => typeof fn === 'function';
@@ -65,33 +64,28 @@ export interface AddEventListenerOptions extends EventListenerOptions {
   passive?: boolean;
 }
 
-/* tslint:disable:max-line-length */
 export function fromEvent<T>(
   target: FromEventTarget<T>,
   eventName: string
 ): Observable<T>;
 /** @deprecated resultSelector no longer supported, pipe to map instead */
-// tslint:disable-next-line:unified-signatures
 export function fromEvent<T>(
   target: FromEventTarget<T>,
   eventName: string,
   resultSelector: (...args: any[]) => T
 ): Observable<T>;
-// tslint:disable-next-line:unified-signatures
 export function fromEvent<T>(
   target: FromEventTarget<T>,
   eventName: string,
   options: EventListenerOptions
 ): Observable<T>;
 /** @deprecated resultSelector no longer supported, pipe to map instead */
-// tslint:disable-next-line:unified-signatures
 export function fromEvent<T>(
   target: FromEventTarget<T>,
   eventName: string,
   options: EventListenerOptions,
   resultSelector: (...args: any[]) => T
 ): Observable<T>;
-/* tslint:enable:max-line-length */
 
 export function fromEvent<T>(
   target: FromEventTarget<T>,

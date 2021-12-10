@@ -41,7 +41,6 @@ function siftUp(heap, node, i) {
   let index = i;
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    // tslint:disable-next-line:no-bitwise
     const parentIndex = (index - 1) >>> 1;
     const parent = heap[parentIndex];
     if (parent !== undefined && compare(parent, node) > 0) {
