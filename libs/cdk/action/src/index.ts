@@ -14,7 +14,7 @@ export type ActionAccess<T extends { [x: string]: any }> = {
  * @example
  *
  * const actions = getActions<search: string, submit: void>({search: (e) => e.target.value});
- * 
+ *
  * actions.search($event);
  * actions.search$ | async;
  *
