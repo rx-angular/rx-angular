@@ -31,12 +31,12 @@ export function getActions<T extends object>(transforms?: Partial<{ [K in keyof 
 
       if (property.toString().split('').pop() === '$') {
         const propName: string | number | Symbol = property.toString().slice(0, -1);
-        subjects[propName] =  subjects[propName] ||  new Subject<keyof T>()
+        subjects[propName] =  subjects[propName] ||  new Subject<T[keyof T]>()
         return subjects[propName].pipe(map((v) => (_transforms[propName] ? _transforms[propName](v) : v)));
       }
 
       return (args: T[keyof T]) => {
-        subjects[property] =  subjects[property] ||  new Subject<keyof T>()
+        subjects[property] =  subjects[property] ||  new Subject<T[keyof T]>()
         subjects[property].next(args);
       };
     },
