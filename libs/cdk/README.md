@@ -36,6 +36,17 @@ npm install --save @rx-angular/cdk
 yarn add @rx-angular/cdk
 ```
 
+## Update
+
+If you are using `@rx-angular/cdk` already, please consider upgrading with the `@angular/cli update` command in order
+to make sure all provided code migrations are processed properly.
+
+```bash
+ng update @rx-angular/cdk
+# or with nx
+nx migrate @rx-angular/cdk
+```
+
 ## ⛔ Zone Configuration
 
 [Zone Flags](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/zone-configurations/docs/zone-flags.md)
