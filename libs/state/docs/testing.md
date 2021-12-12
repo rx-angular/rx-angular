@@ -105,6 +105,8 @@ describe('MyComponent', () => {
 });
 ```
 
+**Mock the state**
+
 If you want to `mock` the instance of `RxState` used in your component while testing, you can make use
 of the `providers` property in the `TestBed` configuration.
 
@@ -121,7 +123,7 @@ describe('MyComponent', () => {
     mockState = new RxState();
     TestBed.configureTestingModule({
       declarations: [MyComponent],
-      // this is only possible when going with the `local provider` way
+      // this is only possible when going the `local provider` way
       providers: [
         {
           provide: RxState,
@@ -134,15 +136,100 @@ describe('MyComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-  
-  it('should create', () => {
-    // modify your components state before testing it
-    mockState.set({ foo: 'im running in a test' });
-    expect(component).toBeTruthy();
-  });
+});
+```
+
+Now you are able to use your mocked state instance in order to manipulate data in the test environment.
+
+```ts
+it('should work', () => {
+  // modify your components state before testing it
+  mockState.set({ foo: 'im running in a test' });
+  expect(component).toBeTruthy();
 });
 ```
 
 ### State
 
-TBD
+There are cases where you want to unit test your state transformations instead of a component.
+
+> It is advisable that you make yourself familiar with the concept of [rxjs marble testing](https://rxjs.dev/guide/testing/marble-testing)
+
+Ideally, you already have decoupled your `RxState` from your `Component` in your application.
+
+In order to create a fully decoupled `RxState` instance, you can simply create an `@Injectable()` and 
+extend from `RxState`.
+
+```ts
+@Injectable()
+export class MyState extends RxState<{ foo: string; }> {
+  state$ = this.select();
+  
+  setFoo(foo: string): void {
+    this.set({ foo });
+  }
+}
+```
+
+The `MyState` service now can be used as local provided instance for your component.
+
+```ts
+@Component({
+  selector: 'rx-angular-state-local-provider-test',
+  template: `
+    <span>{{ state$ | async }}</span>
+  `,
+  providers: [MyState],
+})
+export class RxStateInjectionComponent {
+  state$ = this.state.state$;
+  
+  constructor(public state: MyState) {}
+}
+```
+
+This is the most sophisticated setup you could implement `RxState` in your application. It is
+especially useful for large ViewModels and SmartComponents and provides the easiest testing experience.
+
+In your `jest` setup you are now able to test your Service completely decoupled from the component.
+
+> You can find more information about the [`jestMatcher` here](https://github.com/rx-angular/rx-angular/blob/main/libs/test-helpers/src/lib/rx-marbles/jest.observable-matcher.ts).
+
+```ts
+
+describe('MyState', () => {
+  let service: MyState;
+  let testScheduler: TestScheduler;
+  
+  beforeEach(() => {
+    // create a new instance for each test
+    service = new MyState();
+    // create a new TestScheduler to run marble tests
+    /**
+     * you need to implement your own `jestMatcher` for rxjs marble tests to work in your
+     * jest environment.
+     */
+    testScheduler = new TestScheduler(jestMatcher);
+  });
+  // destroy the service after each test
+  afterEach(() => {
+    service.ngOnDestroy();
+  });
+});
+```
+
+Now that we have everything setup, we can start testing our state transitions with rxjs
+marble tests.
+
+```ts
+it('state should emit foo', () => {
+  testScheduler.run(({ expectObservable }) => {
+    service.setFoo('in a test');
+    expectObservable(service.select('foo')).toBe('(a)', {
+      a: 'in a test'
+    });
+  });
+});
+```
+
+
