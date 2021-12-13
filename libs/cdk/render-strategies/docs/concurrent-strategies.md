@@ -14,7 +14,7 @@ There are 5 core concepts of the concurrent strategies:
 
 The Browser has only one UI thread (main thread), meaning things happen one after another.
 
-Users constantly interract with out site and this means if our main thread is busy, they can't interact whit the page. The events like scroll or click will get delayed until the main thread is unblocked from work again and can process those interactions.
+Users constantly interract with our site and this means if our main thread is busy, they can't interact whit the page. The events like scroll or click will get delayed until the main thread is unblocked from work again and can process those interactions.
 
 ![Render Strategies - Frame Drop Overview](https://user-images.githubusercontent.com/10064416/145212039-b4b20fe5-19c9-4062-aba3-b5749cca978d.png)
 
