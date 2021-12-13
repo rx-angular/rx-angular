@@ -14,12 +14,9 @@ import {
   Renderer2,
   ɵisListLikeIterable as isListLikeIterable
 } from '@angular/core';
-import {
-  accumulateObservables,
-  RxStrategyNames,
-  RxStrategyProvider
-} from '@rx-angular/cdk';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
+import { RxStrategyNames, RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { accumulateObservables } from '@rx-angular/cdk/state';
 import {
   BehaviorSubject, defer,
   isObservable,
@@ -65,6 +62,7 @@ export class ClassDirective implements OnInit, OnDestroy {
     switchAll()
   );
 
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxClass')
   set rxClass$(value$: RxClassInput) {
     this.newInput = true;
@@ -80,6 +78,7 @@ export class ClassDirective implements OnInit, OnDestroy {
     switchAll()
   );
 
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxClassStrategy')
   set strategy$(
     strategy: RxStrategyNames<string> | Observable<RxStrategyNames<string>>
