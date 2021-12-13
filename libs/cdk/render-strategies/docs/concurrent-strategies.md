@@ -425,7 +425,10 @@ export class ItemsListComponent {
     private webSocket: WebSocketService
   ) {
     this.items$.pipe(
-      this.strategyProvider.scheduleWith(items => this.webSocket.syncItems(items), {strategy: 'idle'})
+      this.strategyProvider.scheduleWith(
+          items => this.webSocket.syncItems(items), 
+          {strategy: 'idle'}
+       )
     ).subscribe();
   }
 
