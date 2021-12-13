@@ -442,4 +442,4 @@ export class ItemsListComponent {
 ```
 
 > **⚠ Notice:**  
-> This priority fits well for things that should happen but has lower priority. For any non-urgent background process `idle` is the best fit.
+> This priority fits well for low priority background processes that are not affecting user interactions.
