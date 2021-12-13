@@ -397,7 +397,6 @@ Urgent work that should happen in the background and is not initiated but visibl
 **Usecase:**
 
 This strategy is especially useful for logic meant to run in the background. Good example of such interaction is background sync.
-Good use case for this strategy will be lazy load of component. For example popup.
 
 <!-- TODO: Add proper image -->
 ![rx-angular-cdk-render-strategies__idle_example](https://user-images.githubusercontent.com/10064416/115316774-49225180-a17a-11eb-9045-3cdd38217b4d.PNG)
