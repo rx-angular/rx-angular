@@ -116,7 +116,7 @@
     "version": {
       "executor": "@jscutlery/semver:version",
       "options": {
-        "baseBranch": "master",
+        "baseBranch": "main",
         "versionTagPrefix": "${target}@"
       }
     },

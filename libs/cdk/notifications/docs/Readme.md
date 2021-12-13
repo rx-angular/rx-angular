@@ -67,7 +67,7 @@ For those states we use the term **reactive context** which includes the state a
 
 Whith this concept we can create helpers that support to implement the handling of reactive context in a more elegant way.
 
-A good example is the [`rxLet`](https://github.com/rx-angular/rx-angular/blob/master/libs/template/docs/api/let-directive.md) directive:
+A good example is the [`rxLet`](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/api/let-directive.md) directive:
 
 ```typescript
 @Component({

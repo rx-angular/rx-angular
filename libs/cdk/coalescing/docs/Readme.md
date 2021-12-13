@@ -7,7 +7,7 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 Coalescing means multiple things "merge" into one.
 
-![RxAngular - CDK/Coalescing](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing.png)
+![RxAngular - CDK/Coalescing](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing.png)
 
 If two or more things coalesce, they come merge togeather into one thing or system.
 Natively Angular is using this under the hood already for a long time.
@@ -16,7 +16,7 @@ In RxAngular coalescing is used for merging multiple emissions, streams or calls
 
 The next example shows the effect of coalescing visualized in flame charts.
 
-![coalesceWith - micro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task.png)
+![coalesceWith - micro taks duration selector](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task.png)
 _no coalescing vs. coalescing on microtask. visualized in flame charts_
 
 The non-coalesced component has three consequetive heavy computations in the template whilest the coalesced component only has to do the same computation once in order to complete the same job.
@@ -50,12 +50,12 @@ In the following image we see 3 changes that call `ChangeDetectorRef#markForChec
 The internal logic then delays these calls for a while by using `requestAnimationFrame` and calls `ApplicationRef#tick` only one time after the next animation frame arrives.
 This way Angular's change detection and re-evaluation/re-rendering of the app get executed only once for all calls that fall into the duration from invocation until the next animation frame lands.
 
-![Angular - Coalescing re-render caused by `markForCheck` diagram](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__appRef-tick-coalescing.png)
+![Angular - Coalescing re-render caused by `markForCheck` diagram](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__appRef-tick-coalescing.png)
 
 If we visualize the same behavior based on flame charts, we can understand the internal logic and naming of the different steps in that process more technically.
 The graphic shows the start of the coalescing duration, the different browser events and where the execution of certain logic is moved to.
 
-![Angular - Coalescing re-render caused by `markForCheck` flame charts](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__appRef-tick-coalescing-flames.png)
+![Angular - Coalescing re-render caused by `markForCheck` flame charts](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__appRef-tick-coalescing-flames.png)
 
 With that information, we should be able to reflect this concept also onto other usages in Angular.
 
@@ -116,9 +116,9 @@ In the section usage we will go into more detail.
 
 ## Marble Diagram
 
-![Angular - coalesceWith shifted version](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_coalesceWith1.png)
+![Angular - coalesceWith shifted version](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_coalesceWith1.png)
 
-![Angular - coalesceWith aligned version](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_coalesceWith2.png)
+![Angular - coalesceWith aligned version](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_coalesceWith2.png)
 
 ## Setup
 
@@ -162,7 +162,7 @@ from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
 By default, the duration in which values get united is derived from a micro task which executes immediately after the synchronous code got executed.
 
 See the diagram for details:
-![coalesceWith - macro taks duration selector](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task-flames.png)
+![coalesceWith - macro taks duration selector](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task-flames.png)
 
 To have more fine-grained control over the duration of coalescing an optional parameter `durationSelector` is provided.
 `durationSelector` is of type `Observable<unknown>` and the first emission of it terminates the coalescing duration.
@@ -178,7 +178,7 @@ You could pass e.g. `interval(0)` as `durationSelector` to use a `setInterval` a
 A real life example where `coalesceWith` comes in handy is runnning manual change detection with `ChangeDetectorRef#detectChanges()`.
 The below diagram displays the cycle of updates, coalescing and rendering of values in a component.
 
-![coalesceWith - one component](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component.png)
+![coalesceWith - one component](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component.png)
 
 ### Coalescing scope
 
@@ -223,12 +223,12 @@ With this in mind, we can go one step further and look at change detection acros
 
 The following diagram illustrates change detection in component level:
 
-![coalesceWith - multiple components with component scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-component-scope.png)
+![coalesceWith - multiple components with component scope](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-component-scope.png)
 
 > **⚠ Notice:**  
 > Be cautious with globally shared coalescing scopes. It could lead to unwanted behaviour and loss of updates when used incorrectly.
 
-![coalesceWith - multiple components with global scope](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-global-scope.png)
+![coalesceWith - multiple components with global scope](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-global-scope.png)
 
 Again, why is this the case?
 
@@ -251,7 +251,7 @@ from([component1, component2, component3])
 
 As RxAngular/cdk packages are not only here to build other tools but also to build RxAngular it self lets see where we used it under the hood.
 
-In the [template](https://github.com/rx-angular/rx-angular/edit/master/libs/template) package we have a couple of directives and pipes that use the coalescing logic internally.
+In the [template](https://github.com/rx-angular/rx-angular/edit/main/libs/template) package we have a couple of directives and pipes that use the coalescing logic internally.
 It is done in a way where the directives and services automatically take the most performant scope to bind coalescing to.
 
 The example below shows multiple components rendering the same or parts of the same value. The scopes are applied automatically and named for all different usages.
@@ -262,4 +262,4 @@ The example below shows multiple components rendering the same or parts of the s
 - As pipe in the component's template
 - As structural directive in the component's template
 
-![Coalescing Scope Example](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_coalescing-scope-example.png)
+![Coalescing Scope Example](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_coalescing-scope-example.png)

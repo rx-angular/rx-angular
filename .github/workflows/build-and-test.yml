@@ -2,10 +2,9 @@ name: rx-angular CI
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
-
+    branches: [main]
 env:
   NX_CLOUD_DISTRIBUTED_EXECUTION: true
   NX_DISTRIBUTED_TASK_EXECUTION: true
@@ -56,7 +55,7 @@ jobs:
   build-docs:
     runs-on: ubuntu-latest
 
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
 
     needs: [build]
 
