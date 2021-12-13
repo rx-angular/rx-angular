@@ -3,11 +3,7 @@
   "dest": "../../../dist/libs/template/class",
   "lib": {
     "entryFile": "src/index.ts",
-    "flatModuleFile": "template-class",
-    "umdId": "rx-angular.template-class",
-    "umdModuleIds": {
-      "@rx-angular/cdk": "rx-angular.cdk",
-      "@rx-angular/cdk/coercing": "rx-angular.cdk-coercing"
-    }
+    "flatModuleFile": "template-class"
   }
 }
+
