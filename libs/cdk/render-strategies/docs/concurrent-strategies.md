@@ -1,27 +1,29 @@
 # Concurrent Strategies
 
-If your app provides user feedback within less than 16ms (less than 60 frames per second), it feels laggy to the user and leads to bad UX.
-
-Based on the [RAIL model](https://web.dev/rail/), a user experiences motion as laggy if the frame rate is lower than 60 frames per second (~16ms per task).
-
-From perspec UX => app should give feedback => if blocked => laggy
+Based on the [RAIL model](https://web.dev/rail/), if your app provides user feedback within more than 16ms (less than 60 frames per second), it feels laggy to the user and leads to bad UX.
+From the UX perspective that means users should not experience blocking periods more than 16 ms.
 
 ## Concepts
-
+There are 5 core concepts of the concurrent strategies:
+- Frame budget / Frame drop
+- Scheduling
+- Priority
+- Chunking
+- Concurrent Scheduling
 ### Frame budget / Frame Drop
 
-The Browsers main thread is a single-threaded system, meaning things happen one after another.
+The Browser has only one UI thread (main thread), meaning things happen one after another.
 
-When we connect this information with the fact that users constantly interact with our site this means if our main thread is busy the user cant interact with the page. The events like scroll or click will get delayed until the main thread is unblocked from work again and can process those interactions.
+Users constantly interract with our site and this means if our main thread is busy, they can't interact whit the page. The events like scroll or click will get delayed until the main thread is unblocked from work again and can process those interactions.
 
 ![Render Strategies - Frame Drop Overview](https://user-images.githubusercontent.com/10064416/145212039-b4b20fe5-19c9-4062-aba3-b5749cca978d.png)
 
 Such situations cause problems like:
 
 - blocking UIs
-- animation jank
-- scroll jank or stottering
-- delayed navigations
+- animation junk
+- scroll junk or stuttering
+- delayed navigation
 - bad frame rates in general
 
 All those problems boil down to the way the user perceives the interactions with the website.
@@ -43,11 +45,9 @@ The related theory is known as the RAIL model.
 When it comes to scripting work we can do 2 things to avoid that:
 
 - reduce scripting work and let the user interact earlier
-- chunk up work and use scheduling API's to distribute the work overtime and let the user interact in between
+- chunk up work and use scheduling API's to distribute the work overtime and let the user interact in between.
 
-angular-scripting-time
-
-As often the work just can't get reduced so we have to schedule. 
+It is often the case that the work just can't get reduced so we have to schedule. 
 
 ![Render Strategies-Scheduling Detail View](https://user-images.githubusercontent.com/10064416/145210963-be6d2dc0-f4e3-4654-9f7f-f5221976ed0c.png)
 
@@ -75,17 +75,17 @@ function work(): viod {
 const asyncId = setTimeout(work);
 ```
 
-By calling `setTimeout` we can schedule the execution of the `work` function in the next tast.
+By calling `setTimeout` we can schedule the execution of the `work` function in the next task.
 
-As a return value we receive the so called "asyncId" a number that serves as reverence to the scheduled task.
+As a return value we receive the so called "asyncId" a number that serves as reference to the scheduled task.
 
 This is important for cancellation and cleanup logic.
 
-```
+```typescript
 clearTimeout(asyncId);
 ``` 
 
-If we pass the asyncId as parameter to the `clearTimeout` function we can cancle the scheduling and `work` will never get executed.
+If we pass the asyncId as parameter to the `clearTimeout` function we can cancel the scheduling and `work` will never get executed.
 
 
 ### Priority
@@ -101,15 +101,14 @@ Input handlers (tap, click etc.) often need to schedule a combination of differe
 
 To get the best user experience we should prioritize this tasks.
 
-There are a couple scheduling APIs mentioned under scheduling. 
+There are couple of scheduling APIs mentioned under scheduling. 
 They all help to prioritize the work and define the moment of execution differently.
 
 ![Render Strategies - scheduling techniques](https://user-images.githubusercontent.com/10064416/144139079-9f1d6ad7-ad7e-437c-95a2-8a794460f9c9.png)
 
-
 ### Chunking
 
-Chunking means using scheduling APIs to split work and distribute in over time to have less frame drops.
+Chunking means using scheduling APIs to split work and distribute it over time to have less frame drops.
 
 ![Render Strategies-chunking-example](https://user-images.githubusercontent.com/10064416/145215422-2b047199-d7fa-46ef-aa99-fab236875952.png)
 
@@ -133,8 +132,8 @@ This scenario gets to a problem depending on:
 
 ![concurrent scheduling - abstract diagram](https://user-images.githubusercontent.com/10064416/145228577-6b8f0bb7-6547-4835-aecc-13d7e07baf02.png)
 
-Concurrent scheduling is a marketing therm and simply means that there is a mechanism in place that knows how much time is spent in the current task.
-This number is called frame budget and measured in milliseconds. The other cool part of this technique is we get prioritization and user centric scheduling behaviours. 
+Concurrent scheduling is a marketing term and simply means that there is a mechanism in place that knows how much time is spent in the current task.
+This number is called frame budget and measured in milliseconds. As a result of this technique we're getting prioritized user-centric scheduling behaviours. 
 
 This enables:
 - scheduling
@@ -143,17 +142,17 @@ This enables:
 - works distribution based on the frame budget
 - render deadlines
 
-One of the first things to understand is the term frame budget.
-It means we have a maximum time (which is globally defined) a task can take before yealding to the main thread.  e.g. 60frames/1000ms=16.6666ms animations or 50ms long task
+One of the first things to understand is the term "frame budget".
+It means we have a maximum time (which is globally defined) a task can take before yielding to the main thread.  e.g. 60frames/1000ms=16.6666ms animations or 50ms long task.
 
-Scheduling with notion of the frame budget enables us to stop processing scheduled tasks whenever we are close to the budget.
- We then yeild to the main thread and are interactive again until the next batch of tasks will get processed. 
+Scheduling with notion of frame budget enables us to split work into individual browser tasks as soon as we exceed the budget.
+We then yield to the main thread and are interactive again until the next batch of tasks will get processed. 
 
 ![rx-angular-cdk-render-strategies__frame-budget](https://user-images.githubusercontent.com/10064416/115894224-4f098280-a459-11eb-9abf-9a902d66d380.png)
 
 The special thing about the set of concurrent strategies is they have a render deadline. 
-It means if the scheduled tasks in the global queue of work is not exhausted after a certain time window we stop the chunking prozess.
-Instead all remaining work will get executed as fast as possible. This means in one synchronouse block (that potentially can causes a frame drop).
+It means if the scheduled tasks in the global queue of work is not exhausted after a certain time window, we stop the chunking process.
+Instead all remaining work will get executed as fast as possible. This means in one synchronous block (that potentially can causes a frame drop).
 
 ![Render Strategies - concurrent anatomy png](https://user-images.githubusercontent.com/10064416/145231603-5e6e250d-7c8c-4e76-8872-8b01a3a65c24.png)
 
@@ -196,14 +195,18 @@ Tooltips should be displayed immediately on mouse over. Any delay will be very n
 
 ```typescript
 @Component({
-  selector: 'immediate',
+  selector: 'item-image',
   template: `
-    <button id="btn" (mouseenter)="showTooltip()" (mouseleave)="hideTooltip()">
-      Button with Tooltip
-    </button>
+    <img 
+      [src]="src" 
+      (mouseenter)="showTooltip()" 
+      (mouseleave)="hideTooltip()" 
+    />
   `,
 })
-export class TooltipComponent {
+export class ItemsListComponent {
+  @Input() src: string;
+
   constructor(private strategyProvider: RxStrategyProvider) {}
 
   showTooltip() {
@@ -212,7 +215,7 @@ export class TooltipComponent {
         // create tooltip
       },
       { strategy: 'immediate' }
-    );
+    ).subscribe();
   }
 
   hideTooltip() {
@@ -221,7 +224,7 @@ export class TooltipComponent {
         // destroy tooltip
       },
       { strategy: 'immediate' }
-    );
+    ).subscribe();
   }
 }
 ```
@@ -247,36 +250,38 @@ Dropdowns should be displayed right away on user interaction.
 
 ```typescript
 @Component({
-  selector: 'userBlocking',
+  selector: 'item-dropdown',
   template: `
     <div
       id="collapse"
-      (mouseenter)="showTooltip()"
-      (mouseleave)="hideTooltip()"
+      (mouseenter)="showDropdown()"
+      (mouseleave)="hideDropdown()"
     >
-      Button with Tooltip
+      {{ text }}
     </div>
   `,
 })
-export class TooltipComponent {
+export class DropdownComponent {
+  @Input() text: string;
+
   constructor(private strategyProvider: RxStrategyProvider) {}
 
-  showTooltip() {
+  showDropdown() {
     this.strategyProvider.schedule(
       () => {
-        // create tooltip
-      },
-      { strategy: 'immediate' }
-    );
-  }
-
-  hideTooltip() {
-    this.strategyProvider.schedule(
-      () => {
-        // destroy tooltip
+        // create dropdown
       },
       { strategy: 'userBlocking' }
     );
+  }
+
+  hideDropdown() {
+    this.strategyProvider.schedule(
+      () => {
+        // destroy dropdown
+      },
+      { strategy: 'userBlocking' }
+    ).subscribe();
   }
 }
 ```
@@ -296,13 +301,32 @@ Heavy work visible to the user. For example, since it has a higher timeout, it i
 
 **Usecase:**
 
-@TODO: List example
+For `normal` strategy a perfect example will be rendering of the items list. 
+
+It is often the case that rendering of big lists blocks user interactions. In combination with `rxFor` directive such operations become truly unblocking.
 
 ![rx-angular-cdk-render-strategies__normal_example](https://user-images.githubusercontent.com/10064416/115315848-7837c380-a178-11eb-985e-b639f034fcb4.PNG)
+```typescript
+@Component({
+  selector: 'items-list',
+  template: `
+    <div id="items-list">
+      <div *rxFor="let item of items$; strategy: 'normal'>
+        <item-image [src]="item.image"></item-image>
+        <item-dropdown [text]="item.text"></item-dropdown>
+      </div>
+    </div>
+  `,
+})
+export class ItemsListComponent {
+  items$ = this.state.items$;
+  constructor(private state: StateService) {}
+}
+```
 
 ### Low
 
-Work that is typically not visible to the user or initiated by the user. For example getting scrollbar position form `localStorage`.
+Work that is typically not visible to the user or initiated by the user.
 
 | Render Method     | Scheduling    | Render Deadline |
 | ----------------- | ------------- | --------------- |
@@ -310,17 +334,49 @@ Work that is typically not visible to the user or initiated by the user. For exa
 
 **Usecase:**
 
+Good use case for this strategy will be lazy loading of the components. For example popup.
+
+<!-- TODO: Add proper image -->
 ![low-example](https://user-images.githubusercontent.com/15088626/115315764-a7523300-a180-11eb-9231-1376bda540a4.png)
 
-@TODO: Get scrollbar position
+```typescript
+@Component({
+  selector: 'items-list',
+  template: `
+    <div id="items-list">
+      <div *rxFor="let item of items$; strategy: 'normal'>
+        <item-image [src]="item.image"></item-image>
+        <item-dropdown [text]="item.text"></item-dropdown>
+      </div>
+    </div>
+
+    <button id="addItem" (click)="openCreateItemPopup()">Create new item</button>
+  `,
+})
+export class ItemsListComponent {
+  items$ = this.state.items$;
+
+  constructor(
+    private state: StateService,
+    private strategyProvider: RxStrategyProvider
+  ) {}
+
+  openCreateItemPopup() {
+    this.strategyProvider.schedule(() => {
+      // logic to lazy load popup component
+    }, {strategy: 'low'}).subscribe();
+  }
+
+}
+```
 
 > **⚠ Notice:**  
-> This strategy is especially useful for sending request and and preprocessing their responses. As they are not directly visible a low priority is best.
+> This priority fits well for things that should happen but has lower priority. For any non-urgent background process `idle` is the best fit.
 
 ### Idle
 
 <!--
-- Descriptoin of the strategies behavior
+- Description of the strategies behavior
 - Table
   - no `Zone Agnostic` column just mention it
   - Render Method
@@ -332,13 +388,58 @@ Work that is typically not visible to the user or initiated by the user. For exa
 -
 -->
 
-Urgent work that should happen in the background and is not initiated but visible by the user. This occurs right after current task and has the lowest priority. For example background sync.
+Urgent work that should happen in the background and is not initiated but visible by the user. This occurs right after current task and has the lowest priority. 
 
 | Render Method     | Scheduling    | Render Deadline |
 | ----------------- | ------------- | --------------- |
 | 🠗 `detectChanges` | `postMessage` | ❌              |
 
+**Usecase:**
+
+This strategy is especially useful for logic meant to run in the background. Good example of such interaction is background sync.
+
+<!-- TODO: Add proper image -->
 ![rx-angular-cdk-render-strategies__idle_example](https://user-images.githubusercontent.com/10064416/115316774-49225180-a17a-11eb-9045-3cdd38217b4d.PNG)
 
+```typescript
+@Component({
+  selector: 'items-list',
+  template: `
+    <div id="items-list">
+      <div *rxFor="let item of items$; strategy: 'normal'>
+        {{item.name}}
+      </div>
+    </div>
+
+    <button id="addItem" (click)="openCreateItemPopup()">Create new item</button>
+
+    <div id="background-indicator>Background sync</div>
+  `,
+})
+export class ItemsListComponent {
+  items$ = this.state.items$;
+
+  constructor(
+    private state: StateService,
+    private strategyProvider: RxStrategyProvider,
+    private webSocket: WebSocketService
+  ) {
+    this.items$.pipe(
+      this.strategyProvider.scheduleWith(
+          items => this.webSocket.syncItems(items), 
+          {strategy: 'idle'}
+       )
+    ).subscribe();
+  }
+
+  openCreateItemPopup() {
+    this.strategyProvider.schedule(() => {
+      // logic to lazy load popup component
+    }, {strategy: 'low'}).subscribe();
+  }
+
+}
+```
+
 > **⚠ Notice:**  
-> This strategy is especially useful for logic ment to run in the backgroung. As they are not directly visible a low priority is best.
+> This priority fits well for low priority background processes that are not affecting user interactions.
