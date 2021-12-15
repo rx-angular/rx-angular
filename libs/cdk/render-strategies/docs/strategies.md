@@ -86,7 +86,6 @@ export type RxCustomStrategyCredentials<T extends string> = Record<
 export type RxNativeStrategyNames = 'native' | 'local' | 'global' | 'noop';
 
 export type RxConcurrentStrategyNames =
-  | 'noPriority'
   | 'immediate'
   | 'userBlocking'
   | 'normal'

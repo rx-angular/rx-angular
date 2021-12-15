@@ -10,6 +10,7 @@ There are 5 core concepts of the concurrent strategies:
 - Priority
 - Chunking
 - Concurrent Scheduling
+
 ### Frame budget / Frame Drop
 
 The Browser has only one UI thread (main thread), meaning things happen one after another.
@@ -162,7 +163,6 @@ Every strategy has a different render deadline. Strategies are designed from the
 
 | Name             | Priority | Render Method     | Scheduling    | Render Deadline |
 | ---------------- | -------- | ----------------- | ------------- | --------------- |
-| `"noPriority"`   | 0        | 🠗 `detectChanges` | `postMessage` | ❌              |
 | `"immediate"`    | 2        | 🠗 `detectChanges` | `postMessage` | 0ms             |
 | `"userBlocking"` | 3        | 🠗 `detectChanges` | `postMessage` | 250ms           |
 | `"normal"`       | 4        | 🠗 `detectChanges` | `postMessage` | 5000ms          |
@@ -170,12 +170,6 @@ Every strategy has a different render deadline. Strategies are designed from the
 | `"idle"`         | 6        | 🠗 `detectChanges` | `postMessage` | ❌              |
 
 ![rx-angular-cdk-render-strategies__example](https://user-images.githubusercontent.com/10064416/115321372-f483d400-a183-11eb-810b-2df59f56794f.PNG)
-
-![render-strategy-comparison](https://user-images.githubusercontent.com/10064416/115313442-8f27e700-a173-11eb-817d-9868180305d5.gif)
-
-### noPriority
-
-![rx-angular-cdk-render-strategies__strategy-noPriority](https://user-images.githubusercontent.com/10064416/116009734-84f66480-a61b-11eb-89f4-a57b90573b9b.png)
 
 ### Immediate
 
