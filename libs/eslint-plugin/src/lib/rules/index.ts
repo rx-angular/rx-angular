@@ -1,17 +1,24 @@
 import { TSESLint } from '@typescript-eslint/experimental-utils';
-import * as fs from 'fs';
-import * as path from 'path';
+import noExplicitChangeDetectionApis from './no-explicit-change-detection-apis';
+import noZoneCriticalBrowserApis from './no-zone-critical-browser-apis';
+import noZoneCriticalLodashApis from './no-zone-critical-lodash-apis';
+import noZoneCriticalRxjsCreationApis from './no-zone-critical-rxjs-creation-apis';
+import noZoneCriticalRxjsOperators from './no-zone-critical-rxjs-operators';
+import noZoneCriticalRxjsSchedulers from './no-zone-critical-rxjs-schedulers';
+import noZoneRunApis from './no-zone-run-apis';
+import preferNoLayoutSensitiveApis from './prefer-no-layout-sensitive-apis';
+import preferNoLodashCloneDeep from './prefer-no-lodash-clone-deep';
+import preferNoLodashIsEqual from './prefer-no-lodash-is-equal';
 
-const dirEntries = fs.readdirSync(__dirname, { withFileTypes: true });
-
-export const rules = dirEntries.reduce<
-  Record<string, TSESLint.RuleModule<string>>
->((acc, entry) => {
-  if (!entry.isFile() || path.join(__dirname, entry.name) === __filename) {
-    return acc;
-  }
-  const ruleName = path.parse(entry.name).name;
-  const module = require(path.join(__dirname, entry.name));
-  const rule = module?.__esModule ? module.default : module;
-  return { ...acc, [ruleName]: rule };
-}, {});
+export const rules: Record<string, TSESLint.RuleModule<string>> = {
+  'no-explicit-change-detection-apis': noExplicitChangeDetectionApis,
+  'no-zone-critical-browser-apis': noZoneCriticalBrowserApis,
+  'no-zone-critical-lodash-apis': noZoneCriticalLodashApis,
+  'no-zone-critical-rxjs-creation-apis': noZoneCriticalRxjsCreationApis,
+  'no-zone-critical-rxjs-operators': noZoneCriticalRxjsOperators,
+  'no-zone-critical-rxjs-schedulers': noZoneCriticalRxjsSchedulers,
+  'no-zone-run-apis': noZoneRunApis,
+  'prefer-no-layout-sensitive-apis': preferNoLayoutSensitiveApis,
+  'prefer-no-lodash-clone-deep': preferNoLodashCloneDeep,
+  'prefer-no-lodash-is-equal': preferNoLodashIsEqual,
+};
