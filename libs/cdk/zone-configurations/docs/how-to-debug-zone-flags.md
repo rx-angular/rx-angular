@@ -53,7 +53,7 @@ We can check if the flag is un-set by accessing the window object directly:
 console.log(window.__Zone_disable_timers); // logs 'undefined' if the flag is active
 ```
 
-![Log timers flag inactive](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_disable-timers-false_michael-hladky.png)
+![Log timers flag inactive](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zone-flags_disable-timers-false_michael-hladky.png)
 
 Another, more direct way how we can check if the zone actually patched the respective API or not is to look for the APIs original version which is maintained on the globalThis object if `zone.js` applied the patch.
 If it is not present, clearly `zone.js` did not patch the API in question.
@@ -64,7 +64,7 @@ console.log(window.__zone_symbol__setTimeout);
 console.log(window.__zone_symbol__clearTimeout);
 ```
 
-![Log patched timer APIs](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_setTimeout-patched_michael-hladky.png)
+![Log patched timer APIs](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zone-flags_setTimeout-patched_michael-hladky.png)
 
 After (timer APIs are patched):
 
@@ -76,7 +76,7 @@ The check if the flag is set should now return true:
 console.log(window.__Zone_disable_timers); // logs 'false' if the flag is active
 ```
 
-![Log timers flag active](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/zone-configurations/docs/images/angular_zone-flags_disable-timers-true_michael-hladky.png)
+![Log timers flag active](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/zone-configurations/docs/images/angular_zone-flags_disable-timers-true_michael-hladky.png)
 
 Now, `globalThis` should have no original/unpatched version present under the zone symbol.
 
@@ -86,7 +86,7 @@ console.log(window.__zone_symbol__setTimeout);
 console.log(window.__zone_symbol__clearTimeout);
 ```
 
-![Log unpatched timer APIs](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/zone-configurations/docs/images/angular_zone-flags_setTimeout-unpatched_michael-hladky.png)
+![Log unpatched timer APIs](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/zone-configurations/docs/images/angular_zone-flags_setTimeout-unpatched_michael-hladky.png)
 
 > **💡 Pro Tipps:**
 >
@@ -110,13 +110,13 @@ As all the executed JavaScript is present in flame charts, we can also debug zon
 
 The following images got taken from the performance tab:
 
-![DevTools - Performance Tab](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/dev-tools_performance-tab_michael-hladky.png)
+![DevTools - Performance Tab](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/dev-tools_performance-tab_michael-hladky.png)
 
 In the following, we can see how the flame charts for patched and unpatched timer APIs differ.
 
 Before (without any patches):
 
-![Performance Profile of patched setTimeout](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_setTimeout-patched-flames_michael-hladky.png)
+![Performance Profile of patched setTimeout](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zone-flags_setTimeout-patched-flames_michael-hladky.png)
 
 After (with different patches):
 
@@ -124,19 +124,19 @@ After (with different patches):
 __Zone_disable_timer = true;
 ```
 
-![Performance Profile of unpatched setTimeout](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_setTimeout-unpatched-flames_michael-hladky.png)
+![Performance Profile of unpatched setTimeout](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zone-flags_setTimeout-unpatched-flames_michael-hladky.png)
 
 ```typescript
 __zone_symbol__UNPATCHED_EVENTS = ['click'];
 ```
 
-![Performance Profile of patched Event Listener](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_event-listener-patched-flames_michael-hladky.png)
+![Performance Profile of patched Event Listener](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zone-flags_event-listener-patched-flames_michael-hladky.png)
 
 ```typescript
 __Zone_disable_timer = true;
 ```
 
-![Performance Profile of unpatched Event Listener](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_event-listener-unpatched-flames_michael-hladky.png)
+![Performance Profile of unpatched Event Listener](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zone-flags_event-listener-unpatched-flames_michael-hladky.png)
 
 > **💡 Pro Tipps:**
 > Recordings should be fully identical with flags on/off to make a valid comparison. Fully identical means even the mouse moves and time to wait in between the interactions are important. This will make it easy and fast to find the right spot in flames.
@@ -144,9 +144,9 @@ __Zone_disable_timer = true;
 > Every `.js` file has its own different color on the chart (assigned randomly – except native browser calls, they are yellow)
 > If you can't find Timings panel, check this thread
 > To see who invoked Timer (looooong curve on flame chart), tick this checkbox in extended preferences:
-> ![DevTools - Settings - Experiments - Timeline: event initiators](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/dev-tools_timeline-event-initiators_michael-hladky.png)
+> ![DevTools - Settings - Experiments - Timeline: event initiators](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/dev-tools_timeline-event-initiators_michael-hladky.png)
 > Search for 'tick' – it indicates that `ApplicationRef#tick` was most probably invoked by `zone.js` (ctrl+F for search over the flame chart)
-> ![Performance Tab - search timeline](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/dev-tools_performance_search-method-names_michael-hladky.png)
+> ![Performance Tab - search timeline](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/dev-tools_performance_search-method-names_michael-hladky.png)
 > Some events may be caused by your browser extensions, to avoid that open the tab in incognito mode
 
 ## Timings
@@ -154,9 +154,9 @@ __Zone_disable_timer = true;
 `zone.js` patching mechanism is also visible in the flame charts timing lane.
 You can find the timing marks before the bootstrap phase of Angular.
 
-![zone.js - Timeing Marks](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zonejs_timing-marks_overview_michael-hladky.png)
+![zone.js - Timeing Marks](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zonejs_timing-marks_overview_michael-hladky.png)
 There every patched API is listed.
-![zone.js - Timeing Marks Detailed](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zonejs_timing-marks_detail_michael-hladky.png)
+![zone.js - Timeing Marks Detailed](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zonejs_timing-marks_detail_michael-hladky.png)
 
 > **💡 Pro Tipps:**
 >
@@ -168,6 +168,6 @@ There every patched API is listed.
 - Zone Patches listed in flame chart
 - Navigate to `zone.js` code to see if patch is invoked
 
-![Sources Tab](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/dev-tools_sources_michael-hladky.png)
+![Sources Tab](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/dev-tools_sources_michael-hladky.png)
 
-![Sources Tab - Breakpoints](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/dev-tools_sources_breakpoints_michael-hladky.png)
+![Sources Tab - Breakpoints](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/dev-tools_sources_breakpoints_michael-hladky.png)

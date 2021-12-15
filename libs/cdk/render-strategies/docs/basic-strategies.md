@@ -4,10 +4,10 @@
 
 ### Render work
 
-To apply changes to a component template we need to re-evaluate the template. Internally this is done by calling `???`.
-This method will execute whenever a component's template is re-evaluated through `async`, `push`, `ChangedDetectorRef.detectChanges` or a structural directive template is re-evaluated through `EmbeddedView.detectChanges`
+To apply changes to a component template we need to re-evaluate the template. Internally this is done in the specific strategy.
+This process will execute whenever a component's template is re-evaluated through `async`, `push`, `ChangedDetectorRef.detectChanges` or a structural directive template is re-evaluated through `EmbeddedView.detectChanges`.
 
-This process can be pretty time consuming and directly depends on the following factors:
+It can be pretty time consuming and directly depends on the following factors:
 - HTML size (only for init and destroy and bundle-size)
 - JS size (only for init and destroy and bundle-size)
 - number of event bindings (only for init and destroy)
@@ -18,7 +18,7 @@ This process can be pretty time consuming and directly depends on the following 
 Some of the problems related to work of Angular are:
 
 **Out of bound change detection:**
-If we perform this re-evaluation without any visual change for the user (over-rendering) we introduce noticable performance degradations.
+If we perform this re-evaluation without any visual change for the user (over-rendering) we introduce noticeable performance degradations.
 
 The out of bound change detection can be caused through: 
   - Zone pollution
@@ -27,12 +27,12 @@ The out of bound change detection can be caused through:
   - Pull-based rendering processes 
   
 **Out of bound template evaluation:**
-If we perform a re-evaluation of a single property in the template any other expression/binding also gets reevaluated. 
-Again over-rendering introduces noticable performance degradations.
+If we perform a re-evaluation of a single property in the template any other expression/binding also gets re-evaluated. 
+Again over-rendering introduces noticeable performance degradations.
 
 The out of bound template evaluation can be caused through:
   - Pull-based rendering processes
-  - any reactive change throught `async`
+  - any reactive change through `async`
   - any call to `cdRef.detectChanges`
 
 
@@ -40,9 +40,9 @@ The out of bound template evaluation can be caused through:
 If we perform a re-evaluation or even re-rendering of the DOM of elements outside of the viewport we perform useless work for the user.
 This will pollute the main thread and reduced time for more important content to get rendered.
 
-The re-evaluation or browser re-rendreing can be caused by:
+The re-evaluation or browser re-rendering can be caused by:
 - Bad style changes
-- Big LCP elements
+- Big LCP (Largest Contentful Paint) elements
 - Large amount of content
 
 ### Local vs global CD
@@ -51,7 +51,7 @@ The re-evaluation or browser re-rendreing can be caused by:
 
 The change detection system that is currently implemented in Angular is pull-based, but way more important, as a side effect it also runs CD globally.
 It performs a re-rendering where at optimum every single component on the path from the root to the actual UI update needs to get re-evaluated. 
-A lot of work is performed useless.
+A lot of performed work is useless.
 
 Technically the methods to run change detection are `markForCheck` / `markViewDirty`, `ɵmarkDirty` and `tick`.
 
@@ -71,9 +71,9 @@ Consuming value changes can be done by **constantly** watching the source for ch
 
 In a simple setup the pull might be a quick solution and you just `.get()` the value, but a push based architecture always scales better.
 
-Compare it with HTTP calls vs Websockets.
+Compare it with HTTP calls vs WebSockets.
 
-If we apply this concepts to our change detection mechanis we can directly apply changes where they are needd and skip nearly all the unnessecary work. 
+If we apply this concepts to our change detection mechanics we can directly apply changes where they are needd and skip nearly all the unnessecary work. 
 
 In combination with Observables, and EmbeddedViews change detection can be speed up dramatically by this architecture.
  
@@ -136,7 +136,7 @@ both accessed over the context over `ChangeDetectorRef#context`.
 | ------- | ------------- | ----------------- | ------------------ | ----------------------- |
 | `local` | ✔             | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame` |
 
-The best place to use the local strategie is a structural directive like `*rxLet`. Those will have a independent template from the component and prevorm changes only there.
+The best place to use the local strategy is a structural directive like `*rxLet`. Those will have a independent template from the component and perform changes only there.
 
 ![render-strategies - basic-strategies - local - directive_michael-hladky](https://user-images.githubusercontent.com/10064416/145226924-d5b46406-10b6-4e4b-ae46-ae0347309261.png)
 
@@ -163,9 +163,9 @@ import {RxStrategyProvider} from '@rx-angular/cdk/render-strategies';
 @Component()
 class Component {
 
-constructor(private strategyProvider: RxStrategyProvider) {
-  strategyProvider.schedule(() => {}, {strategyName: 'local'})
-}
+  constructor(private strategyProvider: RxStrategyProvider) {
+    strategyProvider.schedule(() => {}, {strategyName: 'local'})
+  }
 
 }
 ```
@@ -178,11 +178,11 @@ import {ForModule} from '@rx-angular/template/for';
 import {PushModule} from '@rx-angular/template/push';
 
 @Module({
-imports: [
-LetModule,
-ForModule,
-PushModule
-]
+  imports: [
+    LetModule,
+    ForModule,
+    PushModule
+  ]
 })
 class Module {
 
@@ -191,6 +191,6 @@ class Module {
 
 ```html
 <h1 *rxLet="title$; strategy:'local'">{{title}}</h1>
-<a *rxFor="let itme of itmes$; strategy:'local'">{{item}}</a>
+<a *rxFor="let itme of itmes$; strategy:'native'">{{item}}</a>
 <p>{{title$ | push : 'local'}}</p>
 ```

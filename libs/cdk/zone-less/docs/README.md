@@ -196,4 +196,4 @@ The downside here is we need to inject `NgZone` and rely on dependency injection
 
 Zone configuration is a less granular way to disable zone. It helps to cinfigure zone in a way where it don't patches specific API's at all.
 
-You can read in detail about it in the docs of [`@rx-angular/cdk/zone-configuration`](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/zone-configurations/docs/zone-flags.md).
+You can read in detail about it in the docs of [`@rx-angular/cdk/zone-configuration`](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/zone-configurations/docs/zone-flags.md).
