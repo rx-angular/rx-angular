@@ -117,7 +117,6 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
    */
   register<T>(
     sourceObs: ObservableInput<T>,
-    // tslint:disable-next-line: unified-signatures
     observer: PartialObserver<T>
   ): number;
 
@@ -146,7 +145,6 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
    *
    * @param subscription Subscription to observable with side-effect
    */
-  // tslint:disable-next-line: unified-signatures
   register(subscription: Subscription): void;
 
   register<T>(

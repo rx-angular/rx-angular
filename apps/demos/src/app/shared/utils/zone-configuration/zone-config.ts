@@ -73,8 +73,6 @@ function createZoneFlagsConfigurator(): ZoneConfig {
     },
     getCompilerOptions(noop = true, coalescing = true): {ngZone?: 'noop', ngZoneEventCoalescing?: true} {
       const zoneRelevantCompilerOption: any = {};
-      // tslint:disable-next-line:no-unused-expression
-      // tslint:disable-next-line:no-unused-expression
       if(noop){
         zoneRelevantCompilerOption.ngZone = 'noop';
       }

@@ -1,12 +1,11 @@
 import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { Hooks } from '../hooks';
-import { select } from '@rx-angular/state';
+import { select } from '@rx-angular/cdk/state';
 import { RxEffects } from '../../rx-effects.service';
 import { AppConfigService } from '../../../app-config.service';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'rxa-dirty-check',
   template: `
     <div class="indicator-ripple" [ngStyle]="{width: radius+'px',height: radius+'px'}" matRipple
@@ -58,10 +57,8 @@ export class DirtyChecksComponent extends Hooks {
 
   numDirtyChecks() {
     if (this.rippleOn) {
-      // tslint:disable-next-line:no-unused-expression
       this.rippleOn && this.ripple && this.ripple.launch(this.rippleEffect);
     }
-    // tslint:disable-next-line:no-unused-expression
     this.displayElem && this.renderer.setProperty(this.displayElem, 'innerHTML', ++this.dirtyChecks + '');
   }
 }

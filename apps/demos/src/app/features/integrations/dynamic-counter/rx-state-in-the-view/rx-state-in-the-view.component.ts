@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CounterState, INITIAL_STATE } from '../shared/model';
-import { RxState, selectSlice } from '@rx-angular/state';
+import { selectSlice } from '@rx-angular/cdk/state';
+import { RxState } from '@rx-angular/state';
 import { EMPTY, Subject, timer } from 'rxjs';
 import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
 import { toInt } from '../../../../shared/utils/to-int';

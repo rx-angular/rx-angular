@@ -7,7 +7,6 @@
       "devDependencies": "*"
     },
     "tsconfig.json": "*",
-    "tslint.json": "*",
     "nx.json": "*",
     ".eslintrc.json": "*"
   },
@@ -16,8 +15,10 @@
       "runner": "@nrwl/nx-cloud",
       "options": {
         "cacheableOperations": [
+          "build-schematics",
           "build-base",
           "build-lib",
+          "build-state",
           "build",
           "lint",
           "test",
@@ -31,7 +32,7 @@
     }
   },
   "affected": {
-    "defaultBase": "origin/master"
+    "defaultBase": "origin/main"
   },
   "cli": {
     "defaultCollection": "@nrwl/angular",
@@ -41,13 +42,13 @@
   "generators": {
     "@nrwl/angular:application": {
       "style": "scss",
-      "linter": "tslint",
+      "linter": "eslint",
       "unitTestRunner": "jest",
       "e2eTestRunner": "cypress"
     },
     "@nrwl/angular:library": {
       "style": "scss",
-      "linter": "tslint",
+      "linter": "eslint",
       "unitTestRunner": "jest"
     },
     "@nrwl/angular:component": {

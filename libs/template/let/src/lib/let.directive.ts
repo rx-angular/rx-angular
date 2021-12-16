@@ -33,7 +33,7 @@ import {
   NextObserver,
   Observable,
   ObservableInput,
-  ReplaySubject, shareReplay,
+  ReplaySubject,
   Subject,
   Subscription
 } from 'rxjs';
@@ -296,6 +296,8 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     this._renderObserver = callback;
   }
 
+  /* @todo: Rename to `rxRenderParent`? */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxLetParent') renderParent = true;
 
   @Input('rxLetPatchZone') patchZone = this.strategyProvider.config.patchZone;

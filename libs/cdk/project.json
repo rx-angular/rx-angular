@@ -19,7 +19,7 @@
       "options": {
         "commands": [
           {
-            "command": "nx test-coverage cdk && nx build-test-coverage-badge cdk"
+            "command": "nx test cdk --codeCoverage && nx build-test-coverage-badge cdk"
           }
         ]
       }
@@ -68,15 +68,6 @@
       },
       "outputs": ["coverage/libs/cdk"]
     },
-    "test-coverage": {
-      "executor": "@nrwl/jest:jest",
-      "options": {
-        "jestConfig": "libs/cdk/jest.config.js",
-        "passWithNoTests": true,
-        "codeCoverage": true
-      },
-      "outputs": ["coverage/libs/cdk"]
-    },
     "publish": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
@@ -108,8 +99,14 @@
     "version": {
       "executor": "@jscutlery/semver:version",
       "options": {
-        "baseBranch": "master",
+        "baseBranch": "main",
         "versionTagPrefix": "${target}@"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/cdk/**/*.ts"]
       }
     }
   },
@@ -118,5 +115,5 @@
       "style": "scss"
     }
   },
-  "tags": ["type:lib", "type:cdk"]
+  "tags": ["type:lib", "cdk"]
 }

@@ -3,7 +3,7 @@ import { environment } from '../../../../../environments/environment';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { toInt } from '../../../../shared/debug-helper/value-provider';
-import { stateful } from '@rx-angular/state';
+import { stateful } from '@rx-angular/cdk/state';
 
 @Component({
   selector: 'rxa-switch-poc',
