@@ -1,4 +1,5 @@
 import { OperatorFunction } from 'rxjs';
+import { KeyOf } from './types';
 
 export function isPromiseGuard<T>(value: unknown): value is Promise<T> {
   return (
@@ -39,6 +40,10 @@ export function isKeyOf<O>(k: unknown): k is keyof O {
     k !== undefined &&
     ['string', 'symbol', 'number'].includes(typeofK)
   );
+}
+
+export function hasKey<O>(ctx: O, property: KeyOf<O>): ctx is O {
+  return ctx[property] != null;
 }
 
 export function isObjectGuard(obj: unknown): obj is object {
