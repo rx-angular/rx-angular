@@ -159,7 +159,7 @@ Every strategy has a different render deadline. Strategies are designed from the
 
 What concurrent scheduling does under the hood is is cunking up work in cycles of scheduling, prioritization and execution based on different settings.
 
-![Render Strategies - task flow](https://user-images.githubusercontent.com/10064416/146285877-7e899e67-0942-49e0-a41c-257a59e22df7.png)
+![Render Strategies - task flow](https://user-images.githubusercontent.com/10064416/146287195-89e22ed8-12ba-4099-9379-430a41469b9c.png)
 
 ## Strategies:
 
