@@ -78,7 +78,6 @@ The sub-package provides the following features:
 | `"global"`       | ❌       | ⮁ `ɵmarkDirty`    | `requestAnimationFrame` | N/A             |
 | `"local"`        | ❌       | 🠗 `detectChanges` | `requestAnimationFrame` | N/A             |
 |                  |          |                   |                         |                 |
-| `"noPriority"`   | 0        | 🠗 `detectChanges` | `postMessage`           | ❌              |
 | `"immediate"`    | 1        | 🠗 `detectChanges` | `postMessage`           | 0ms             |
 | `"userBlocking"` | 2        | 🠗 `detectChanges` | `postMessage`           | 250ms           |
 | `"normal"`       | 3        | 🠗 `detectChanges` | `postMessage`           | 5000ms          |
