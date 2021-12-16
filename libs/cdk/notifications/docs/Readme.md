@@ -100,9 +100,12 @@ export class AnyComponent  {
 ```
 
  
-**The Benefits of RxAngular**
+**The Benefits**
 
-- ✅ 
+- ✅ A mental model for contextual state
+- ✅ Typed contextual state
+- ✅ RxJS materialize and notification extension
+- ✅ A mental model for contextual state
 
 ## Setup
 
@@ -120,8 +123,5 @@ yarn add @rx-angular/cdk
 ## Usage
 
 
-# Alternative Approaches
-
-- [@angular/cdk/coercion](https://www.npmjs.com/package/@angular/cdk)
 
 
