@@ -28,36 +28,7 @@ None of them has a full notion about what happens in the browser and can be unre
 
 To address the problem of long tasks and help browser split the work @rx-angular/cdk provides  concurrent strategies. This strategies will help browser to chunk the work into non-blocking tasks whenever it's possible. 
 
-### Core concepts
-
-**Frame budget**
-
-Each strategy knows the budget and knows which task will go above this budget.
-
-**Chunking**
-
-Strategies will split work into non-blocking pieces whenever it's possible.
-
-**Deadline**
-
-Some of the strategies has limited amount of time to do tasks in chunks, after this time all remaining work will go as a single task.
-
-**Priority**
-
-Each strategy has its own queue with its own priority.
-
-### [Available concurrent strategies](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/render-strategies)
-
-```jsx
-| Name             | Priority | Render Method     | Scheduling    | Deadline        |
-| ---------------- | -------- | ----------------- | ------------- | --------------- |
-| `"noPriority"`   | 0        | 🠗 `detectChanges` | `postMessage` | ❌              |
-| `"immediate"`    | 2        | 🠗 `detectChanges` | `postMessage` | 0ms             |
-| `"userBlocking"` | 3        | 🠗 `detectChanges` | `postMessage` | 250ms           |
-| `"normal"`       | 4        | 🠗 `detectChanges` | `postMessage` | 5000ms          |
-| `"low"`          | 5        | 🠗 `detectChanges` | `postMessage` | 10000ms         |
-| `"idle"`         | 6        | 🠗 `detectChanges` | `postMessage` | ❌              |
-```
+You can read detailed information about concurrent strategies [here](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concurrent-strategies.md).
 
 ## RxStrategyProvider APIs
 
@@ -66,48 +37,21 @@ Full signature of the service available below, but we will focus only on methods
 ```typescript
 @Injectable({ providedIn: 'root' })
 export class RxStrategyProvider<T extends string = string> {
-  /**
-   * Returns current `RxAngularConfig` used in the service.
-   * Config includes:
-   * - strategy that currently in use - `primaryStrategy`
-   * - array of custom user defined strategies - `customStrategies`
-   * - setting that is responsible for running in our outside of the zone.js - `patchZone`
-   */
+  
   get config(): Required<RxAngularConfig<T>>;
 
-  /**
-   * Returns object that contains key-value pairs of strategy names and their credentials (settings) that are available in the service.
-   */
   get strategies(): RxStrategies<T>;
 
-  /**
-   * Returns an array of strategy names available in the service.
-   */
   get strategyNames(): string[];
 
-  /**
-   * Returns current strategy of the service.
-   */
   get primaryStrategy(): RxStrategyNames<T>;
 
-  /**
-   * Set's the strategy that will be used by the service.
-   */
   set primaryStrategy(strategyName: RxStrategyNames<T>);
 
-  /**
-   * Current strategy of the service as an observable.
-   */
   readonly primaryStrategy$: Observable<RxStrategyCredentials>;
 
-  /**
-   * Returns observable of an object that contains key-value pairs of strategy names and their credentials (settings) that are available in the service.
-   */
   readonly strategies$: Observable<RxStrategies<T>;
 
-  /**
-   * Returns an observable of an array of strategy names available in the service.
-   */
   readonly strategyNames$: Observable<string[]>;
 
   schedule<R>(
@@ -128,6 +72,88 @@ export class RxStrategyProvider<T extends string = string> {
     }
   ): AbortController;
 }
+```
+
+### `get config()`
+
+This method returns current `RxAngularConfig` used in the service.
+Config includes:
+- strategy that currently in use - `primaryStrategy`
+- array of custom user defined strategies - `customStrategies`
+- setting that is responsible for running in our outside of the zone.js - `patchZone`
+
+#### Usage example
+
+```typescript
+const defaultConfig = this.strategyProvider.config; 
+```
+
+### `get strategies()`
+
+This method returns object that contains key-value pairs of strategy names and their credentials (settings) that are available in the service.
+
+#### Usage example
+
+```typescript
+const currentStrategies = this.strategyProvider.strategies;
+```
+
+### `get strategyNames()`
+
+This method returns an array of strategy names available in the service.
+
+#### Usage example
+
+```typescript
+const currentStrategiesNames = this.strategyProvider.strategyNames;
+```
+
+### `get primaryStrategy()`
+
+This method returns current default strategy of the service.
+
+#### Usage example
+
+```typescript
+const primaryStrategy = this.strategyProvider.primaryStrategy;
+```
+
+```html
+<div *rxLet="let obs$; strategy: strategyProvider.primaryStrategy">
+```
+
+### `set primaryStrategy()`
+
+This method allows you to set default strategy of the service.
+
+#### Usage example
+
+```typescript
+this.strategyProvider.primaryStrategy = 'low';
+```
+
+### `primaryStrategy$`
+
+This is a primary strategy of the service as an observable.
+
+#### Usage example
+
+```typescript
+const primaryStrategy$ = this.strategyProvider.primaryStrategy$;
+```
+
+```html
+<div *rxLet="let obs$; strategy: strategyProvider.primaryStrategy$">
+```
+
+### `strategies$`
+
+An array of strategy names available in the service as observables.
+
+#### Usage example
+
+```typescript
+const strategyNames$ = this.strategyProvider.strategyNames$;
 ```
 
 ### `schedule` & `scheduleWith`
