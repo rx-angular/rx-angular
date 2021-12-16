@@ -160,7 +160,23 @@ Instead all remaining work will get executed as fast as possible. This means in 
 Every strategy has a different render deadline. Strategies are designed from the perspective of how important the work is for the user. see: [RAIL model](https://web.dev/rail/)
 
 What concurrent scheduling does under the hood is is cunking up work in cycles of scheduling, prioritization and execution based on different settings.
-
+![render-strategies-concurrent-immediate-diagramm](https://user-images.githubusercontent.com/10064416/146285874-684230bf-f38d-4150-a803-fdf896a57c8a.png)
+![render-strategies-concurrent-immediate-tree](https://user-images.githubusercontent.com/10064416/146285875-2049440b-4fb8-493e-a220-adfde74bdc8f.png)
+![Render Strategies - task flow](https://user-images.githubusercontent.com/10064416/146285877-7e899e67-0942-49e0-a41c-257a59e22df7.png)
+![Render Strategies - normal example](https://user-images.githubusercontent.com/10064416/146285878-3b242f2d-046e-49ad-be2f-cbf1c33b7a02.png)
+![Render Strategies - userBlocking example](https://user-images.githubusercontent.com/10064416/146285880-73bf726d-8793-42f3-84d4-6476889ed468.png)
+![Render Strategies - immediate example](https://user-images.githubusercontent.com/10064416/146285883-eb500a95-3f98-4892-88fd-89322f0aaa32.png)
+![Render Strategies - low example](https://user-images.githubusercontent.com/10064416/146285886-082574dd-02a2-4db7-b06c-16ff96fab72a.png)
+![Render Strategies - idle example](https://user-images.githubusercontent.com/10064416/146285887-0c214d88-cab1-4517-97a7-41318e6436c0.png)
+![Render Strategies - example usage](https://user-images.githubusercontent.com/10064416/146285888-ae39072c-aa8f-4c8a-a33b-8181f0c62464.png)
+![render-strategies-concurrent-idle-tree](https://user-images.githubusercontent.com/10064416/146285889-8f98a92c-35dd-4632-9b3a-0eaf759790fc.png)
+![render-strategies-concurrent-low-tree](https://user-images.githubusercontent.com/10064416/146285890-421be34c-8a76-4b04-bd29-2d9bca103547.png)
+![render-strategies-concurrent-idle-diagramm](https://user-images.githubusercontent.com/10064416/146285892-c996b043-c1c0-411b-abbd-1d2867e36711.png)
+![render-strategies-concurrent-low-diagramm](https://user-images.githubusercontent.com/10064416/146285894-8d2992f3-6e5f-49db-8c45-d54424cc4a3e.png)
+![render-strategies-concurrent-normal-diagramm](https://user-images.githubusercontent.com/10064416/146285895-ec045bf7-5c68-4359-a723-032c963b80b5.png)
+![render-strategies-concurrent-normal-tree](https://user-images.githubusercontent.com/10064416/146285896-c41bffd9-f711-4442-bd9c-009a0579dd49.png)
+![render-strategies-concurrent-userBlocking-diagramm](https://user-images.githubusercontent.com/10064416/146285898-c60e4ab6-98bd-4c0a-8c1f-a2ecbc829f88.png)
+![render-strategies-concurrent-userBlocking-tree](https://user-images.githubusercontent.com/10064416/146285901-b84f4e32-9213-4674-9cfe-f4dffe68dd65.png)
 ## Strategies:
 
 | Name             | Priority | Render Method     | Scheduling    | Render Deadline |
