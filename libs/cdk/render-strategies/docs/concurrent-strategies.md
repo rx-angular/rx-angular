@@ -154,7 +154,7 @@ It means if the scheduled tasks in the global queue of work is not exhausted aft
 Instead all remaining work will get executed as fast as possible. This means in one synchronous block (that potentially can causes a frame drop).
 
 ![Render Strategies - concurrent anatomy png](https://user-images.githubusercontent.com/10064416/145231603-5e6e250d-7c8c-4e76-8872-8b01a3a65c24.png)
-
+![Render Strategies - concurrent anatomy png](https://user-images.githubusercontent.com/10064416/146287356-023836c8-a697-4640-a4ae-7d567bc02bf0.png)
 Every strategy has a different render deadline. Strategies are designed from the perspective of how important the work is for the user. see: [RAIL model](https://web.dev/rail/)
 
 What concurrent scheduling does under the hood is is cunking up work in cycles of scheduling, prioritization and execution based on different settings.
