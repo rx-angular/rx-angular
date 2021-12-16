@@ -100,9 +100,12 @@ export class AnyComponent  {
 ```
 
  
-**The Benefits of RxAngular**
+**The Benefits**
 
-- ✅ 
+- ✅ A mental model for contextual state
+- ✅ Typed contextual state
+- ✅ RxJS materialize and notification extension
+- ✅ A mental model for contextual state
 
 ## Setup
 
@@ -119,9 +122,38 @@ yarn add @rx-angular/cdk
 
 ## Usage
 
+The whole section is about extending the notification channels with a 4th state. 
+The new type is called `RxNotifications`. In the following we will see a couple of helper functions that deal with that type.
 
-# Alternative Approaches
+For wrapping a value into a RxNotification we provide 3 helpers:
 
-- [@angular/cdk/coercion](https://www.npmjs.com/package/@angular/cdk)
+**RxErrorNotification**
 
+```typescript
+  const errorNotification:  RxErrorNotification<any> = toRxErrorNotification();
+  const errorNotification:  RxErrorNotification<any> = toRxErrorNotification(new Error());
+  const errorNotification:  RxErrorNotification<string> = toRxErrorNotification(new Error(), 'lastValue');
+```
 
+**toRxSuspenseNotification**
+
+```typescript
+  const toRxSuspenseNotification:  RxSuspenseNotification<any> = toRxSuspenseNotification();
+  const toRxSuspenseNotification:  RxSuspenseNotification<string> = toRxSuspenseNotification('lastValue');
+```
+  
+**toRxCompleteNotification**
+
+```typescript
+  const toRxCompleteNotification:  RxCompleteNotification<any> = toRxCompleteNotification();
+  const toRxCompleteNotification:  RxCompleteNotification<string> = toRxCompleteNotification('lastValue');
+```
+
+**rxMaterialize**
+
+```typescript
+  const websocketUpdates$: Observable<number> = interval(3000);
+  const materialized$:  Observable<RxNotification<number>> = websocketUpdates.pipe(
+    rxMaterialize()
+  );
+```
