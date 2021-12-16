@@ -13,7 +13,7 @@ export function getActionsWithTransforms<T extends Actions>(
 }
 
 type UIActions = {
-  search: string | number;
+  search: string;
   toggle: boolean;
 };
 
