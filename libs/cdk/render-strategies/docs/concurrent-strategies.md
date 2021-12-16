@@ -242,6 +242,7 @@ Critical work that must be done in the current frame, is initiated and visible b
 ![render-strategies-concurrent-userBlocking-diagramm](https://user-images.githubusercontent.com/10064416/146285898-c60e4ab6-98bd-4c0a-8c1f-a2ecbc829f88.png)
 
 **Usecase:**
+
 ![Render Strategies - userBlocking example](https://user-images.githubusercontent.com/10064416/146285880-73bf726d-8793-42f3-84d4-6476889ed468.png)
 
 A good example here would be a dropdown menu.
@@ -340,9 +341,9 @@ Work that is typically not visible to the user or initiated by the user.
 
 **Usecase:**
 
-Good use case for this strategy will be lazy loading of the components. For example popup.
-
 ![Render Strategies - low example](https://user-images.githubusercontent.com/10064416/146285886-082574dd-02a2-4db7-b06c-16ff96fab72a.png)
+
+Good use case for this strategy will be lazy loading of the components. For example popup.
 
 ```typescript
 @Component({
@@ -393,9 +394,6 @@ Urgent work that should happen in the background and is not initiated but visibl
 ![Render Strategies - idle example](https://user-images.githubusercontent.com/10064416/146285887-0c214d88-cab1-4517-97a7-41318e6436c0.png)
 
 This strategy is especially useful for logic meant to run in the background. Good example of such interaction is background sync.
-
-<!-- TODO: Add proper image -->
-![rx-angular-cdk-render-strategies__idle_example](https://user-images.githubusercontent.com/10064416/115316774-49225180-a17a-11eb-9045-3cdd38217b4d.PNG)
 
 ```typescript
 @Component({
