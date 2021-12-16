@@ -159,15 +159,17 @@ Instead all remaining work will get executed as fast as possible. This means in 
 
 Every strategy has a different render deadline. Strategies are designed from the perspective of how important the work is for the user. see: [RAIL model](https://web.dev/rail/)
 
+What concurrent scheduling does under the hood is is cunking up work in cycles of scheduling, prioritization and execution based on different settings.
+
 ## Strategies:
 
 | Name             | Priority | Render Method     | Scheduling    | Render Deadline |
 | ---------------- | -------- | ----------------- | ------------- | --------------- |
-| `"immediate"`    | 2        | 🠗 `detectChanges` | `postMessage` | 0ms             |
-| `"userBlocking"` | 3        | 🠗 `detectChanges` | `postMessage` | 250ms           |
-| `"normal"`       | 4        | 🠗 `detectChanges` | `postMessage` | 5000ms          |
-| `"low"`          | 5        | 🠗 `detectChanges` | `postMessage` | 10000ms         |
-| `"idle"`         | 6        | 🠗 `detectChanges` | `postMessage` | ❌              |
+| `"immediate"`    | 1        | 🠗 `detectChanges` | `postMessage` | 0ms             |
+| `"userBlocking"` | 2        | 🠗 `detectChanges` | `postMessage` | 250ms           |
+| `"normal"`       | 3        | 🠗 `detectChanges` | `postMessage` | 5000ms          |
+| `"low"`          | 4        | 🠗 `detectChanges` | `postMessage` | 10000ms         |
+| `"idle"`         | 5        | 🠗 `detectChanges` | `postMessage` | ❌              |
 
 ![rx-angular-cdk-render-strategies__example](https://user-images.githubusercontent.com/10064416/115321372-f483d400-a183-11eb-810b-2df59f56794f.PNG)
 
