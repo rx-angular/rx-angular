@@ -183,10 +183,10 @@ function sideEffectFn() {
 
 - mutable reference arguments get passed
 
-  ```typescript
-  let state = { isVisible: false };
-  let newState = sideEffectFn(state);
-  ```
+```typescript
+let state = { isVisible: false };
+let newState = sideEffectFn(state);
+```
 
 function sideEffectFn(oldState) {
 oldState.isVisible = true;
@@ -327,6 +327,7 @@ export class FooComponent {
 ```
 
 ### Advanced examples
+
 The register method can also be combined with tap or even subscribe:
 
 ```typescript
@@ -381,7 +382,6 @@ const customErrorHandler: ErrorHandler = {
 });
 // ...
 ```
-
 
 ## Alternative Approaches
 

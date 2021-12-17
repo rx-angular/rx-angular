@@ -54,7 +54,7 @@
         "prefer-rest-params": "warn",
         "no-prototype-builtins": "warn",
         "no-empty": "warn",
-        "import-blacklist": [true, "rxjs/operators"]
+        "import-blacklist": [2, "rxjs/operators"]
       }
     },
     {
