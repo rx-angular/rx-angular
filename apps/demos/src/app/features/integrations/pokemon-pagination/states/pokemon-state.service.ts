@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { selectSlice } from '@rx-angular/cdk/state';
+import { selectSlice } from '@rx-angular/state/selections';
 import { RxState } from '@rx-angular/state';
 import { combineLatest } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
