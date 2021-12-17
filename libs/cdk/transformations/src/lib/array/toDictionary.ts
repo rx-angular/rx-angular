@@ -1,5 +1,4 @@
-import { OnlyKeysOfSpecificType } from '../interfaces/only-keys-of-specific-type';
-import { isDefined, isKeyOf } from '@rx-angular/cdk/utils';
+import { isDefined, isKeyOf, OnlyKeysOfSpecificType } from '../_internals/guards';
 
 /**
  * @description
