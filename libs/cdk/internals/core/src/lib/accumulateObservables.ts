@@ -9,7 +9,7 @@ import {
   PropName,
   PropType,
 } from './model';
-import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
+import { getZoneUnPatchedApi } from './get-zone-unpatched-api';
 
 const resolvedPromise = getZoneUnPatchedApi('Promise').resolve();
 const resolvedPromise$ = from(resolvedPromise);
