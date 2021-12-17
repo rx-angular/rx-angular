@@ -1,7 +1,7 @@
 import { Component, ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { BehaviorSubject, EMPTY, Observable, throwError, map, tap } from 'rxjs';
-import { RxEffects } from '@rx-angular/state/effects';
+import { RxEffects } from './../src/lib/effects.service';
 
 // tslint:disable: max-classes-per-file
 
