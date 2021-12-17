@@ -16,11 +16,42 @@ To accomplish this, we need to make sure to clean up every side effect in the `O
 
 With `RxEffects` RxAngular introduces another light weight tool only designed to manage local side-effects.
 
+Let's get the problem it solves into code so we can refactor it. 
+
+We start with the side effect and 2 ways to execute it:
+
+```typescript
+@Component({
+  // ...
+})
+export class FooComponent {
+ // The side effect (`console.log`) 
+ private runSideEffect = (num: number) => console.log('number: '+num); 
+  // The interval triggers our function including the side effect
+  private effect$ = interval(1000);
+
+  constructor() {
+    // The subscribe's next callback it used to wrap and execute the side effect
+    effect$.subscribe(this.runSideEffect);
+
+    effect$.pipe(
+      // `tap` is used to wrap and execute the side effect
+      tap(this.runSideEffect)
+    ).subscribe();
+    
+  }
+
+}
+```
+
+As we introduced a memory leak we have to setup some boilerplate code to handle the cleanup logic:
+
 ```ts
 @Component({
   // ...
 })
 export class FooComponent implements OnDestroy {
+
   // ⚠ Notice: The destroy hook must be reactive to use `takeUntil`
   private readonly destroy$ = new Subject<void>();
 
@@ -30,7 +61,7 @@ export class FooComponent implements OnDestroy {
         takeUntil(this.destroy$)
         // ⚠ Notice: Don't put any operator after takeUntil to avoid potential subscription leaks
       )
-      .subscribe(doSideEffect);
+      .subscribe(runSideEffect);
   }
 
   ngOnDestroy(): void {
@@ -40,19 +71,26 @@ export class FooComponent implements OnDestroy {
 }
 ```
 
-Using the `subscription` to run the clean up logic.
+There are already a couple of things that can are crutual:
+- using the right `Subject`
+- unsubscribe on destroy
+- having the `takeUntil` operator as last operator in the chain
+
+
+Another way would be using the `subscription` to run the cleanup logic.
 
 ```ts
 @Component({
   // ...
 })
 export class FooComponent implements OnDestroy {
+
   // ⚠ Notice: The created subscriptin must be stored to `unsubscribe` later
   private readonly subscription: Subscription;
 
   constructor() {
     // ⚠ Notice: Never forget to store the subscription
-    this.subscription = effect$.subscribe(doSideEffect);
+    this.subscription = effect$.subscribe(runSideEffect);
   }
 
   ngOnDestroy(): void {
@@ -90,7 +128,7 @@ export class FooComponent {
 # Impact
 
 Compared to common approaches `RxEffects` does not rely on additional decorators or operators.
-In fact, it remove the necessity of the `subscribe`.
+In fact, it removes the necessity of the `subscribe`.
 
 This results in less boilerplate and a good guidance to resilient and ergonomic component architecture.
 Furthermore, the optional imperative methods help to glue third party libs and a mixed but clean codestyle in Angular.
@@ -119,7 +157,7 @@ A function has a _side effect_ if:
 Let's look at a couple of examples that will make the above definitions easier to understand.
 
 ```typescript
-let state = true;
+let state = false;
 sideEffectFn();
 
 function sideEffectFn() {
@@ -163,19 +201,141 @@ Yet, essentially, a side effect always has 2 important parts associated with it:
 - the trigger
 - the side-effect logic
 
-In the above examples, the trigger was the method call itself. That is one way of doing it, but not the only one.
+In the previous examples, the trigger was the method call itself like here:
 
 ```typescript
-some code
+@Component({
+  // ...
+  providers: [RxEffects],
+})
+export class FooComponent {
+  private runSideEffect = console.log; 
+  private effect$ = interval(1000).pipe(
+    tap(this.runSideEffect)
+  );
+  
+  constructor(effects: RxEffects) {
+    effects.register(this.effect$);
+  }
+
+}
 ```
 
 We can also set a value emitted from an `Observable` as a trigger.
 Thus, you may use a render call or any other logic executed by the trigger as the side-effect logic.
 
 ```typescript
-some code
+@Component({
+  // ...
+  providers: [RxEffects],
+})
+export class FooComponent {
+  private runSideEffect = console.log; 
+  private effect$ = interval(1000);
+  
+  constructor(effects: RxEffects) {
+    effects.register(this.effect$, this.runSideEffect);
+  }
+}
 ```
 
-# Setup
+The subscription handling and cleanup is done automatically under the hood.
+However, if we want to stop a particular side effect earlier we can do the following:
 
-# Usage
+```typescript
+@Component({
+  // ...
+  providers: [RxEffects],
+})
+export class FooComponent {
+  private effect$ = interval(1000);
+  private effectId:number;
+
+  constructor(effects: RxEffects) {
+     this.effectId = effects.register(this.effect$, console.log);
+  }
+  
+  stop() {
+     this.effects.unregister(this.effectId);
+  }
+}
+```
+
+## Install
+
+```bash
+npm install --save @rx-angular/state
+# or
+yarn add @rx-angular/state
+```
+
+## Update
+
+If you are using `@rx-angular/state` already, please consider upgrading with the `@angular/cli update` command in order
+to make sure all provided code migrations are processed properly.
+
+```bash
+ng update @rx-angular/state
+# or with nx
+nx migrate @rx-angular/state
+```
+
+## Usage
+
+
+```typescript
+@Component({
+  // ...
+  providers: [RxEffects],
+})
+export class FooComponent {
+  
+  chartVisible$ = new Subject();
+
+
+  constructor(
+    private ngRxStore: Store,
+    private effects: RxEffects
+  ) {
+     effects.register(interval(30000), () => this.ngRxStore.dispatch(refreshAction()));
+  }
+  
+}
+```
+
+
+
+### Advanced examples
+The register method can also be combined with tap or even subscribe:
+
+```typescript
+effects.register(obs$, doSideEffect);
+// is equivalent to
+effects.register(obs$.pipe(tap(doSideEffect)));
+// is equivalent to
+effects.register(obs$.subscribe(doSideEffect));
+// is equivalent to
+effects.register(obs$, { next: doSideEffect }); // <- you can also tap into error or complete here
+```
+
+You can even use it with promises or schedulers:
+```typescript
+effects.register(fetch('...'), doSideEffect);
+effects.register(animationFrameScheduler.schedule(action));
+```
+
+All registered effects are automatically unsubscribed when the component is destroyed. If you wish to cancel a specific effect earlier, you can do this either declaratively (obs$.pipe(takeUntil(otherObs$))) or imperatively using the returned effect ID:
+
+```typescript
+this.effectId = this.effects.register(obs$, doSideEffect);
+
+// later
+this.effects.unregister(this.effectId); // doSideEffect will no longer be called
+```
+
+### Error handling
+If an error is thrown inside the side-effect callback, other effects are not effected. The built-in Angular ErrorHandler gets automatically notified of the error, so these errors should still show up in Rollbar reports.
+
+# Alternative Approaches
+
+
