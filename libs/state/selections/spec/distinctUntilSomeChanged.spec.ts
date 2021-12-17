@@ -1,6 +1,9 @@
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { mergeMap } from 'rxjs/operators';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { KeyCompareMap } from '@rx-angular/state/selections';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { distinctUntilSomeChanged } from '@rx-angular/state/selections';
 import { Observable, of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
@@ -21,7 +24,6 @@ beforeEach(() => {
   testScheduler = new TestScheduler(jestMatcher);
 });
 
-
 /** @test {distinctUntilSomeChanged} */
 describe('distinctUntilSomeChanged operator', () => {
   it('should distinguish between values', () => {
@@ -31,11 +33,10 @@ describe('distinctUntilSomeChanged operator', () => {
       const e1subs = '^-------------------!';
       const expected = '--a--------b-----a--|';
 
-      expectObservable(
-        e1.pipe(
-          distinctUntilSomeChanged(['val'])
-        )
-      ).toBe(expected, values);
+      expectObservable(e1.pipe(distinctUntilSomeChanged(['val']))).toBe(
+        expected,
+        values
+      );
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
   });
@@ -43,14 +44,15 @@ describe('distinctUntilSomeChanged operator', () => {
   it('should distinguish between values with multiple keys', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { a: { val: 1 }, b: { val: 1, valOther: 3 } };
-      const e1 = cold<{val: number, valOther?: number}>('--a--a--a--b--b--a--|', values);
+      const e1 = cold<{ val: number; valOther?: number }>(
+        '--a--a--a--b--b--a--|',
+        values
+      );
       const e1subs = '^-------------------!';
       const expected = '--a--------b-----a--|';
 
       expectObservable(
-        e1.pipe(
-          distinctUntilSomeChanged(['val', 'valOther'])
-        )
+        e1.pipe(distinctUntilSomeChanged(['val', 'valOther']))
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
@@ -63,11 +65,10 @@ describe('distinctUntilSomeChanged operator', () => {
       const e1subs = '^-------------------!';
       const expected = '--a-----------------|';
 
-      expectObservable(
-        e1.pipe(
-          distinctUntilSomeChanged(['val'])
-        )
-      ).toBe(expected, values);
+      expectObservable(e1.pipe(distinctUntilSomeChanged(['val']))).toBe(
+        expected,
+        values
+      );
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
   });
@@ -81,36 +82,34 @@ describe('distinctUntilSomeChanged operator', () => {
           val: 2,
           objVal: {
             foo: 'foo',
-            bar: 0
-          }
+            bar: 0,
+          },
         },
         d: {
           val: 2,
           objVal: {
             foo: 'foo2',
-            bar: 0
-          }
+            bar: 0,
+          },
         },
         e: {
           val: 2,
           objVal: {
             foo: 'foo2',
-            bar: 3
-          }
-        }
+            bar: 3,
+          },
+        },
       };
       const e1 = cold('--a--a--b--c--d--e--|', values);
       const e1subs = '^-------------------!';
       const expected = '--a-----b--c--d-----|';
       const keyCompare: KeyCompareMap<DistinctUntilSomeChangedTest> = {
         val: undefined,
-        objVal: (oldVal, newVal) => oldVal?.foo === newVal?.foo
+        objVal: (oldVal, newVal) => oldVal?.foo === newVal?.foo,
       };
 
       expectObservable(
-        e1.pipe(
-          distinctUntilSomeChanged(['val', 'objVal'], keyCompare)
-        )
+        e1.pipe(distinctUntilSomeChanged(['val', 'objVal'], keyCompare))
       ).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
@@ -123,11 +122,10 @@ describe('distinctUntilSomeChanged operator', () => {
       const e1subs = '^------------------';
       const expected = '--a--------b-----a-';
 
-      expectObservable(
-        e1.pipe(
-          distinctUntilSomeChanged(['val'])
-        )
-      ).toBe(expected, values);
+      expectObservable(e1.pipe(distinctUntilSomeChanged(['val']))).toBe(
+        expected,
+        values
+      );
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
   });
@@ -139,17 +137,19 @@ describe('distinctUntilSomeChanged operator', () => {
         b: { valOther: 1 },
         c: { valOther: 3 },
         d: { val: 1 },
-        e: { val: 5 }
+        e: { val: 5 },
       };
-      const e1 = cold<{val?: number, valOther?: number}>('--a--b--c--d--e--|', values);
+      const e1 = cold<{ val?: number; valOther?: number }>(
+        '--a--b--c--d--e--|',
+        values
+      );
       const e1subs = '^----------------!';
       const expected = '--a--b-----d--e--|';
 
-      expectObservable(
-        e1.pipe(
-          distinctUntilSomeChanged(['val'])
-        )
-      ).toBe(expected, values);
+      expectObservable(e1.pipe(distinctUntilSomeChanged(['val']))).toBe(
+        expected,
+        values
+      );
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
   });
@@ -161,17 +161,19 @@ describe('distinctUntilSomeChanged operator', () => {
         b: { valOther: 1 },
         c: { valOther: 3 },
         d: { valOther: 1 },
-        e: { valOther: 5 }
+        e: { valOther: 5 },
       };
-      const e1 = cold<{val?: number, valOther?: number}>('--a--b--c--d--e--|', values);
+      const e1 = cold<{ val?: number; valOther?: number }>(
+        '--a--b--c--d--e--|',
+        values
+      );
       const e1subs = '^----------------!';
       const expected = '--a--------------|';
 
-      expectObservable(
-        e1.pipe(
-          distinctUntilSomeChanged(['val'])
-        )
-      ).toBe(expected, values);
+      expectObservable(e1.pipe(distinctUntilSomeChanged(['val']))).toBe(
+        expected,
+        values
+      );
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
   });
@@ -235,11 +237,10 @@ describe('distinctUntilSomeChanged operator', () => {
       const e1subs = '^----!';
       const expected = '--a--|';
 
-      expectObservable(
-        e1.pipe(
-          distinctUntilSomeChanged(['val'])
-        )
-      ).toBe(expected, values);
+      expectObservable(e1.pipe(distinctUntilSomeChanged(['val']))).toBe(
+        expected,
+        values
+      );
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
   });
@@ -250,11 +251,10 @@ describe('distinctUntilSomeChanged operator', () => {
       const e1 = of(values.a);
       const expected = '(a|)';
 
-      expectObservable(
-        e1.pipe(
-          distinctUntilSomeChanged(['val'])
-        )
-      ).toBe(expected, values);
+      expectObservable(e1.pipe(distinctUntilSomeChanged(['val']))).toBe(
+        expected,
+        values
+      );
     });
   });
 
@@ -265,11 +265,10 @@ describe('distinctUntilSomeChanged operator', () => {
       const e1subs = '^-------!';
       const expected = '--a-----#';
 
-      expectObservable(
-        e1.pipe(
-          distinctUntilSomeChanged(['val'])
-        )
-      ).toBe(expected, values);
+      expectObservable(e1.pipe(distinctUntilSomeChanged(['val']))).toBe(
+        expected,
+        values
+      );
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
   });
@@ -294,17 +293,16 @@ describe('distinctUntilSomeChanged operator', () => {
         b: { val: 2 },
         c: { val: 3 },
         d: { val: 4 },
-        e: { val: 5 }
+        e: { val: 5 },
       };
       const e1 = cold('--a--b--c--d--e--|', values);
       const e1subs = '^----------------!';
       const expected = '--a--b--c--d--e--|';
 
-      expectObservable(
-        e1.pipe(
-          distinctUntilSomeChanged(['val'])
-        )
-      ).toBe(expected, values);
+      expectObservable(e1.pipe(distinctUntilSomeChanged(['val']))).toBe(
+        expected,
+        values
+      );
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
   });
@@ -316,16 +314,14 @@ describe('distinctUntilSomeChanged operator', () => {
         b: { val: 2 },
         c: { val: 3 },
         d: { val: 4 },
-        e: { val: 5 }
+        e: { val: 5 },
       };
       const e1 = cold('--a--b--b--d--a--e--|', values);
       const e1subs = '^---------!          ';
       const expected = '--a--b-----          ';
       const unsub = '----------!          ';
 
-      const result = e1.pipe(
-        distinctUntilSomeChanged(['val'])
-      );
+      const result = e1.pipe(distinctUntilSomeChanged(['val']));
 
       expectObservable(result, unsub).toBe(expected, values);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
@@ -339,7 +335,7 @@ describe('distinctUntilSomeChanged operator', () => {
         b: { val: 2 },
         c: { val: 3 },
         d: { val: 4 },
-        e: { val: 5 }
+        e: { val: 5 },
       };
       const e1 = cold('--a--b--b--d--a--e--|', values);
       const e1subs = '^---------!          ';
@@ -364,11 +360,10 @@ describe('distinctUntilSomeChanged operator', () => {
       const e1subs = '^-------------------!';
       const expected = '--a-----------------|';
 
-      expectObservable(
-        e1.pipe(
-          distinctUntilSomeChanged(['val'])
-        )
-      ).toBe(expected, values);
+      expectObservable(e1.pipe(distinctUntilSomeChanged(['val']))).toBe(
+        expected,
+        values
+      );
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
     });
   });
@@ -380,7 +375,7 @@ describe('distinctUntilSomeChanged operator', () => {
         b: { val: 2 },
         c: { val: 3 },
         d: { val: 4 },
-        e: { val: 5 }
+        e: { val: 5 },
       };
       const e1 = cold('--a--b--c--d--e--|', values);
       const e1subs = '^----------------!';
@@ -414,7 +409,7 @@ describe('distinctUntilSomeChanged operator', () => {
         b: { val: 2 },
         c: { val: 3 },
         d: { val: 4 },
-        e: { val: 5 }
+        e: { val: 5 },
       };
       const e1 = cold('--a--b--c--d--e--|', values);
       const e1subs = '^----------------!';
@@ -435,7 +430,7 @@ describe('distinctUntilSomeChanged operator', () => {
         b: { val: 2 },
         c: { val: 3 },
         d: { val: 4 },
-        e: { val: 5 }
+        e: { val: 5 },
       };
       const e1 = cold('--a--b--c--d--e--|', values);
       const e1subs = '^----------!      ';
@@ -456,7 +451,6 @@ describe('distinctUntilSomeChanged operator', () => {
 });
 
 describe('distinctUntilSomeChanged edge cases', () => {
-
   it('should handle the defined edge cases', () => {
     const testSet = [
       {
@@ -464,62 +458,65 @@ describe('distinctUntilSomeChanged edge cases', () => {
         inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: { str: 'test' }, b: undefined },
         expectedMarble: '--a--------b-----a--|',
-        expectValues: { a: { str: 'test' }, b: undefined }
+        expectValues: { a: { str: 'test' }, b: undefined },
       },
       {
         name: 'case {str} => null',
         inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: { str: 'test' }, b: null },
         expectedMarble: '--a--------b-----a--|',
-        expectValues: { a: { str: 'test' }, b: null }
+        expectValues: { a: { str: 'test' }, b: null },
       },
       {
         name: 'case  null => undefined',
         inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: null, b: undefined },
         expectedMarble: '--a--------b-----a--|',
-        expectValues: { a: null, b: undefined }
+        expectValues: { a: null, b: undefined },
       },
       {
         name: 'case  undefined => null',
         inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: undefined, b: null },
         expectedMarble: '--a--------b-----a--|',
-        expectValues: { a: undefined, b: null }
+        expectValues: { a: undefined, b: null },
       },
       {
         name: 'case  {str} => {undefined}',
         inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: { str: 'test' }, b: { str: undefined } },
         expectedMarble: '--a--------b-----a--|',
-        expectValues: { a: { str: 'test' }, b: { str: undefined } }
+        expectValues: { a: { str: 'test' }, b: { str: undefined } },
       },
       {
         name: 'case {str} => {null}',
         inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: { str: 'test' }, b: { str: null } },
         expectedMarble: '--a--------b-----a--|',
-        expectValues: { a: { str: 'test' }, b: { str: null } }
+        expectValues: { a: { str: 'test' }, b: { str: null } },
       },
       {
         name: 'case {null} => {undefined}',
         inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: { str: null }, b: { str: undefined } },
         expectedMarble: '--a--------b-----a--|',
-        expectValues: { a: { str: null }, b: { str: undefined } }
+        expectValues: { a: { str: null }, b: { str: undefined } },
       },
       {
         name: 'case {undefined} => {null}',
         inputMarble: '--a--a--a--b--b--a--|',
         inputValues: { a: { str: undefined }, b: { str: null } },
         expectedMarble: '--a--------b-----a--|',
-        expectValues: { a: { str: undefined }, b: { str: null } }
-      }
+        expectValues: { a: { str: undefined }, b: { str: null } },
+      },
     ];
 
     testScheduler.run(({ cold, expectObservable }) => {
       testSet.forEach((test) => {
-        const e1 = cold<{str?: any}>(test.inputMarble, test.inputValues as any);
+        const e1 = cold<{ str?: any }>(
+          test.inputMarble,
+          test.inputValues as any
+        );
         const expected = test.expectedMarble;
 
         /*
@@ -528,14 +525,11 @@ describe('distinctUntilSomeChanged edge cases', () => {
         console.log('test', test);
         }
         */
-        expectObservable(
-          e1.pipe(
-            distinctUntilSomeChanged(['str'])
-          )
-        ).toBe(expected, test.expectValues);
-
+        expectObservable(e1.pipe(distinctUntilSomeChanged(['str']))).toBe(
+          expected,
+          test.expectValues
+        );
       });
     });
   });
-
 });

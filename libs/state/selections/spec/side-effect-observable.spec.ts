@@ -1,5 +1,7 @@
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { TestScheduler } from 'rxjs/testing';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { createSideEffectObservable } from '@rx-angular/state/selections';
 
 let testScheduler: TestScheduler;
@@ -26,7 +28,6 @@ describe('createSideEffectObservable', () => {
       ef.nextEffectObservable(test$);
       subMain.unsubscribe();
       expectSubscriptions(test$.subscriptions).toBe(sub);
-
     });
   });
 });

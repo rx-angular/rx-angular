@@ -1,8 +1,14 @@
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { of, throwError } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-import { select, createAccumulationObservable } from '@rx-angular/state/selections';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import {
+  select,
+  createAccumulationObservable,
+} from '@rx-angular/state/selections';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { initialPrimitiveState, PrimitiveState } from '@test-helpers';
 
 function setupAccumulationObservable<T extends object>(cfg: {
@@ -221,7 +227,7 @@ describe('createAccumulationObservable', () => {
       testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
         const acc = createAccumulationObservable<PrimitiveState>();
         const sub = acc.subscribe();
-        const tick$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const tick$ = hot('aaaaaaaaaaaaaaa|', { a: 1 });
         const interval$ = tick$.pipe(map((num) => ({ num })));
         const subs = '(^!)';
         acc.nextSliceObservable(interval$);
