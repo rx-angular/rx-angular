@@ -1,4 +1,3 @@
-// tslint:disable
 import { Subscription } from 'rxjs';
 import { Scheduler } from './Scheduler';
 import { SchedulerAction } from './types';

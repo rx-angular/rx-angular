@@ -1,4 +1,3 @@
-// tslint:disable file-name-casing
 import { AsyncAction } from './AsyncAction';
 import { AsyncScheduler } from './AsyncScheduler';
 

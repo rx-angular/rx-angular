@@ -1,10 +1,9 @@
 
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { PushPipe } from '../push.pipe';
 import { TestBed } from '@angular/core/testing';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
 function wrapWithSpace(str: string): string {
@@ -30,7 +29,7 @@ const setupPushPipeComponent = () => {
     providers: [
       ChangeDetectorRef,
       {
-        provide: RX_ANGULAR_CONFIG,
+        provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
         },

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk/render-strategies';
-// tslint:disable-next-line:nx-enforce-module-boundaries
+import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import { Observable, of, Subject } from 'rxjs';
 
@@ -37,7 +36,7 @@ const setupTestComponent = () => {
     declarations: [LetDirectiveNoSuspenseTemplateTestComponent, LetDirective],
     providers: [
       {
-        provide: RX_ANGULAR_CONFIG,
+        provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
         },

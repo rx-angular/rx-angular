@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk/render-strategies';
-// tslint:disable-next-line:nx-enforce-module-boundaries
+import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import { EMPTY, interval, NEVER, Observable, of, Subject, throwError } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -49,7 +48,7 @@ const setupTestComponent = () => {
       TemplateRef,
       ViewContainerRef,
       {
-        provide: RX_ANGULAR_CONFIG,
+        provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
         },

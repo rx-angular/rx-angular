@@ -17,14 +17,14 @@
   - We could research tools on how to measure performance
   - Benchmark CD runs https://angular.io/api/platform-browser/enableDebugTools#description
   - benchpress
-  -  https://github.com/alan-agius4/angular-benchpress-playground/blob/master/e2e/app.e2e-spec.ts
-  - https://github.com/angular/angular/tree/master/modules/benchmarks
-  - https://github.com/angular/angular/blob/master/dev-infra/benchmark/driver-utilities/perf_util.ts
+  -  https://github.com/alan-agius4/angular-benchpress-playground/blob/main/e2e/app.e2e-spec.ts
+  - https://github.com/angular/angular/tree/main/modules/benchmarks
+  - https://github.com/angular/angular/blob/main/dev-infra/benchmark/driver-utilities/perf_util.ts
   - https://github.com/paulirish/automated-chrome-profiling
   - https://github.com/GoogleChromeLabs/psi
   - https://github.com/krausest/js-framework-benchmark
   - https://arkit.pro/svg/UDfDp34EW20C0C2zh-YeWrym37waaQe4sf82-dqTdI-vq3fv7r80MavQoKbGJ6s_t8In--2Vj8kYFKbFFAWq1jZuvcAL7PSL9_AS-WmGMEDtlbU28LS0
-  - https://github.com/angular/angular/blob/master/docs/TOOLS.md
+  - https://github.com/angular/angular/blob/main/docs/TOOLS.md
   - https://github.com/angular/angular/issues/14033#issuecomment-612841032
 
   ## Articles
@@ -33,4 +33,4 @@
   - https://codeburst.io/javascript-compiler-optimization-techniques-only-for-experts-58d6f5f958ca
 
   ## Code 
-  - https://github.com/facebook/react/blob/master/packages/scheduler/src/Scheduler.js
+  - https://github.com/facebook/react/blob/main/packages/scheduler/src/Scheduler.js

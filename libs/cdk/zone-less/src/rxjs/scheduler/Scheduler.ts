@@ -1,4 +1,3 @@
-// tslint:disable
 import { SchedulerLike } from './types';
 
 /**

@@ -8,7 +8,11 @@
     "declarationMap": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
-    "lib": ["dom", "es2018"]
+    "lib": ["dom", "es2018"],
+    "paths": {
+      "@rx-angular/cdk/utils": ["dist/libs/cdk/utils"],
+      "@rx-angular/cdk/state": ["dist/libs/cdk/state"]
+    }
   },
   "angularCompilerOptions": {
     "enableIvy": false,
@@ -17,5 +21,5 @@
     "strictMetadataEmit": true,
     "enableResourceInlining": true
   },
-  "exclude": ["src/test-setup.ts", "**/*.spec.ts", "**/*.test.ts"]
+  "exclude": ["./test-setup.ts", "**/*.spec.ts", "**/*.test.ts"]
 }
