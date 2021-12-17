@@ -1,6 +1,5 @@
 import { ErrorHandler, Injectable, OnDestroy, Optional } from '@angular/core';
 import {
-  ConnectableObservable,
   EMPTY,
   from,
   Observable,
@@ -9,16 +8,13 @@ import {
   pipe,
   Subject,
   Subscription,
-} from 'rxjs';
-import {
   catchError,
   filter,
   mapTo,
   mergeAll,
-  publish,
   takeUntil,
-  tap,
-} from 'rxjs/operators';
+  tap, share
+} from 'rxjs';
 import { DestroyProp, OnDestroy$ } from './model';
 import { toHook, untilDestroyed } from './utils';
 
@@ -74,12 +70,10 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
   readonly _hooks$ = new Subject<DestroyProp>();
   private readonly observables$ = new Subject<Observable<unknown>>();
   // we have to use publish here to make it hot (composition happens without subscriber)
-  private readonly effects$ = this.observables$.pipe(mergeAll(), publish());
+  private readonly effects$ = this.observables$.pipe(mergeAll(), share());
   onDestroy$: Observable<boolean> = this._hooks$.pipe(toHook('destroy'));
   private readonly destroyers: Record<number, Subject<void>> = {};
-  private readonly subscription = (
-    this.effects$ as ConnectableObservable<any>
-  ).connect();
+  private readonly subscription = this.effects$.subscribe();
 
   /**
    * Performs a side-effect whenever a source observable emits, and handles its subscription.

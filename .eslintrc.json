@@ -53,7 +53,8 @@
         "@typescript-eslint/no-empty-function": "warn",
         "prefer-rest-params": "warn",
         "no-prototype-builtins": "warn",
-        "no-empty": "warn"
+        "no-empty": "warn",
+        "import-blacklist": [true, "rxjs/operators"]
       }
     },
     {
