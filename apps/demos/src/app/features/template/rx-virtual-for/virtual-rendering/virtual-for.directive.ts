@@ -25,7 +25,7 @@ import {
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
 
-import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { RxVirtualForViewportComponent } from './virtual-for-viewport.component';
 import { createVirtualListManager, VirtualListManager } from './virtual-template-manager';
 
@@ -151,6 +151,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
         errorHandler: this.errorHandler,
       },
       templateSettings: {
+        patchZone: false,
         viewContainerRef: this.viewContainerRef,
         templateRef: this.templateRef,
         createViewContext: this.createViewContext,
@@ -160,8 +161,11 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
     });
     this.listManager.nextStrategy(this.strategy$);
     this._subscription = this.listManager
-      .render(this.values$)
-      .subscribe((v) => this._renderCallback?.next(v));
+      .render(this.values$, of({ start: 0, end: 200 }))
+      .subscribe((v) => {
+        this._renderCallback?.next(v);
+        this.viewport.updateContentSize(this.listManager.getHeight());
+      });
   }
 
   /** @internal */

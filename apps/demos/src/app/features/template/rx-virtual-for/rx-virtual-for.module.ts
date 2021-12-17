@@ -10,7 +10,7 @@ export const ROUTES = [
     path: 'virtual-rendering',
     loadChildren: () =>
       import('./virtual-rendering/virtual-for-experiments.module').then(
-        m => m.ListActionsModule
+        m => m.RxVirtualForModule
       )
   }
 ];

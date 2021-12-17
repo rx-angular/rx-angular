@@ -67,6 +67,11 @@ const ROUTES: Routes = [
     path: 'render-callback',
     loadChildren: () => import('./render-callback/render-callback.module')
       .then(m => m.RenderCallbackModule)
+  },
+  {
+    path: 'virtual-rendering',
+    loadChildren: () => import('./rx-virtual-for/rx-virtual-for.module')
+      .then(m => m.RxForDemoModule)
   }
 ];
 

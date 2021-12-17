@@ -44,6 +44,7 @@ export type VirtualListManager<T> = Omit<RxListManager<T>, 'render'> & {
   ): Observable<any>;
   setViewCacheSize(viewCache: number): void;
   detach(): void;
+  getHeight(): number;
 };
 
 export function createVirtualListManager<
@@ -100,10 +101,22 @@ export function createVirtualListManager<
   let changesArr: RxListTemplateChange[];
   let partiallyFinished = false;
   let renderedRange: ListRange;
+  let heights = [];
+
+  function heightsUntil(index: number) {
+    let height = 0;
+    for (let i = 0; i < index; i++) {
+      height += heights[i];
+    }
+    return height;
+  }
 
   return {
     setViewCacheSize(viewCache: number): void {
       viewCacheSize = viewCache;
+    },
+    getHeight(): number {
+      return heights.reduce((a, b) => a+b, 0);
     },
     nextStrategy(nextConfig: Observable<string>): void {
       strategyHandling$.next(nextConfig);
@@ -273,6 +286,10 @@ export function createVirtualListManager<
         index: currentIndex
       } as any);
       cachedView.detectChanges();
+      const element = cachedView.rootNodes[0] as HTMLElement;
+      element.style.position = 'absolute';
+      element.style.transform = `translateY(${heightsUntil(currentIndex)})`;
+      heights[currentIndex] = element.offsetHeight;
       return undefined;
     }
     const context = templateSettings.createViewContext(value, {
@@ -285,6 +302,10 @@ export function createVirtualListManager<
       currentIndex
     );
     view.detectChanges();
+    const element = view.rootNodes[0] as HTMLElement;
+    element.style.position = 'absolute';
+    element.style.transform = `translateY(${heightsUntil(currentIndex)}px)`;
+    heights[currentIndex] = element.offsetHeight;
     return view;
   }
 
