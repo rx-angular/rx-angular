@@ -27,7 +27,7 @@
           {
             "type": "bundle",
             "name": "apps_bundle-budgets_src_empty-bundle_ts",
-            "maximumWarning": "10b"
+            "maximumWarning": "1b"
           }
         ]
       },

@@ -7,7 +7,6 @@ import('@rx-angular/cdk/coalescing').then(m => m);
 import('@rx-angular/cdk/coercing').then(m => m);
 import('@rx-angular/cdk/notifications').then(m => m);
 import('@rx-angular/cdk/render-strategies').then(m => m);
-import('@rx-angular/cdk/state').then(m => m);
 import('@rx-angular/cdk/template').then(m => m);
 import('@rx-angular/cdk/template').then(m => m);
 import('@rx-angular/cdk/zone-less').then(m => m);

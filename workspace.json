@@ -10,7 +10,7 @@
     "template": "libs/template",
     "test-helpers": "libs/test-helpers",
     "tour-of-heroes-ngxs": "apps/tour-of-heroes-ngxs",
-    "vanilla-case-studies": "apps/vanilla-case-studies"
+    "vanilla-case-studies": "apps/vanilla-case-studies",
     "bundle-budgets": "apps/bundle-budgets"
   }
 }
