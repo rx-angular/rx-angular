@@ -9,12 +9,11 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { onStrategy, RxRenderWork, RxStrategyProvider, RxStrategyNames } from '@rx-angular/cdk';
+import { onStrategy, RxRenderWork, RxStrategyProvider, RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { Subscription, Unsubscribable } from 'rxjs';
 import { distinctUntilChanged, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { RxSwitch } from './rx-switch.directive';
 
-// tslint:disable-next-line:directive-selector
 @Directive({ selector: '[rxSwitchCase]' })
 export class RxSwitchCase implements OnInit, OnDestroy {
   @Input()
@@ -44,7 +43,6 @@ export class RxSwitchCase implements OnInit, OnDestroy {
     this.createView();
     this.subscription = this.rxSwitch.values$
       .pipe(
-        // tslint:disable-next-line:triple-equals
         map((switchValue) => this.caseValue === switchValue),
         distinctUntilChanged(),
         withLatestFrom(this.rxSwitch.strategies$),

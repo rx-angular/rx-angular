@@ -1,4 +1,4 @@
-import { RxBaseTemplateNames } from '@rx-angular/cdk';
+import { RxBaseTemplateNames } from '@rx-angular/cdk/template';
 
 export type rxLetTemplateNames = 'nextTpl' | RxBaseTemplateNames;
 

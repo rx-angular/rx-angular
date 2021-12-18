@@ -5,10 +5,10 @@ import {
   Pipe,
   PipeTransform,
 } from '@angular/core';
-import { asyncScheduler } from '@rx-angular/cdk/zone-less';
 import {
+  RxStrategyNames,
+  RxStrategyProvider,
   strategyHandling,
-  RxStrategyProvider, RxStrategyNames, RxStrategyCredentials
 } from '@rx-angular/cdk/render-strategies';
 import {
   createTemplateNotifier,
@@ -17,10 +17,11 @@ import {
 import {
   NextObserver,
   Observable,
-  ObservableInput,
-  Unsubscribable,
+  ObservableInput, timeoutWith,
+  Unsubscribable
 } from 'rxjs';
-import { delay, filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { timeoutSwitchMapWith } from '@rx-angular/cdk/internals/core';
 
 /**
  * @Pipe PushPipe
@@ -29,7 +30,7 @@ import { delay, filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
  *
  * The push pipe serves as a drop-in replacement for angulars built-in async pipe.
  * Just like the *rxLet Directive, it leverages a
- * [RenderStrategy](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/render-strategies/README.md)
+ * [RenderStrategy](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/docs/render-strategies/README.md)
  *   under the hood which takes care of optimizing the ChangeDetection of your component. The rendering behavior can be
  *   configured per PushPipe instance using either a strategy name or provide a
  * `RxComponentInput` config.
@@ -58,7 +59,7 @@ import { delay, filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
  * Other Features:
  *
  * - lazy rendering (see
- *  [LetDirective](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/api/let-directive.md))
+ *  [LetDirective](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md))
  * - Take observables or promises, retrieve their values and render the value to the template
  * - a unified/structured way of handling null, undefined or error
  * - distinct same values in a row skip not needed re-renderings
@@ -188,7 +189,7 @@ export class PushPipe<S extends string = string>
               }
             )
             .pipe(
-              delay(0, asyncScheduler),
+              timeoutSwitchMapWith(),
               tap(() => this._renderCallback?.next(notification.value))
             )
         )

@@ -1,6 +1,4 @@
-// tslint:disable:nx-enforce-module-boundaries
-/* eslint-disable nx-enforce-module-boundaries */
-import { coerceObservableWith } from '@rx-angular/cdk';
+import { coerceObservableWith } from '@rx-angular/cdk/coercing';
 import { jestMatcher, mockConsole } from '@test-helpers';
 import { of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
@@ -25,7 +23,7 @@ describe('coerceObservableWith', () => {
       const expectedValues = { a, b, c };
 
       const result = src.pipe(coerceObservableWith());
-      
+
       expectObservable(result).toBe(expected, expectedValues);
       expectSubscriptions(src.subscriptions).toBe(subs);
     });
@@ -43,7 +41,7 @@ describe('coerceObservableWith', () => {
       const expectedValues = { a, b, c };
 
       const result = src.pipe(coerceObservableWith());
-      
+
       expectObservable(result).toBe(expected, expectedValues);
       expectSubscriptions(src.subscriptions).toBe(subs);
     });

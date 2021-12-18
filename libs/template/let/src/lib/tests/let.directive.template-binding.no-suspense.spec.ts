@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { LetDirective } from '../let.directive';
-import { Observable, of, Subject } from 'rxjs';
-// tslint:disable-next-line:nx-enforce-module-boundaries
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
+import { Observable, of, Subject } from 'rxjs';
+
+import { LetDirective } from '../let.directive';
 
 @Component({
   template: `
@@ -34,16 +34,16 @@ let nativeElement: HTMLElement;
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
     declarations: [LetDirectiveNoSuspenseTemplateTestComponent, LetDirective],
-
     providers: [
       {
-        provide: RX_ANGULAR_CONFIG,
+        provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
         },
       },
     ],
-  }).compileComponents();
+    teardown: { destroyAfterEach: true },
+  });
 };
 
 const setUpFixture = () => {
@@ -56,7 +56,7 @@ const setUpFixture = () => {
 
 describe('LetDirective when template binding without "suspense" template', () => {
   beforeAll(() => mockConsole());
-  beforeEach(waitForAsync(setupTestComponent));
+  beforeEach(setupTestComponent);
   beforeEach(setUpFixture);
 
   it('should be initiated', () => {

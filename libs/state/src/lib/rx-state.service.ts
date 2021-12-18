@@ -1,16 +1,33 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EMPTY, isObservable, Observable, OperatorFunction, Subscribable, Subscription, Unsubscribable } from 'rxjs';
+import {
+  EMPTY,
+  isObservable,
+  Observable,
+  OperatorFunction,
+  Subscribable,
+  Subscription,
+  Unsubscribable,
+} from 'rxjs';
 import { catchError, map, pluck, tap } from 'rxjs/operators';
-import { isKeyOf, isOperateFnArrayGuard, isStringArrayGuard, pipeFromArray, safePluck } from './core';
-import { AccumulationFn, createAccumulationObservable, createSideEffectObservable } from './cdk';
-import { stateful } from './rxjs/operators';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import {
+  stateful,
+  pipeFromArray,
+  safePluck,
+  createSideEffectObservable,
+  createAccumulationObservable,
+  AccumulationFn,
+  isKeyOf,
+  isOperateFnArrayGuard,
+  isStringArrayGuard,
+} from '@rx-angular/state/selections';
 
-type ProjectStateFn<T> = (oldState: T) => Partial<T>;
-type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
+export type ProjectStateFn<T> = (oldState: T) => Partial<T>;
+export type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
 
-type ProjectStateReducer<T, V> = (oldState: T, value: V) => Partial<T>;
+export type ProjectStateReducer<T, V> = (oldState: T, value: V) => Partial<T>;
 
-type ProjectValueReducer<T, K extends keyof T, V> = (
+export type ProjectValueReducer<T, K extends keyof T, V> = (
   oldState: T,
   value: V
 ) => T[K];
@@ -120,30 +137,38 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     k3: K3
   ): T[K1][K2][K3];
   /** @internal **/
-  get<K1 extends keyof T,
+  get<
+    K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
-    K4 extends keyof T[K1][K2][K3]>(k1: K1, k2: K2, k3: K3, k4: K4): T[K1][K2][K3][K4];
+    K4 extends keyof T[K1][K2][K3]
+  >(k1: K1, k2: K2, k3: K3, k4: K4): T[K1][K2][K3][K4];
   /** @internal **/
-  get<K1 extends keyof T,
-    K2 extends keyof T[K1],
-    K3 extends keyof T[K1][K2],
-    K4 extends keyof T[K1][K2][K3],
-    K5 extends keyof T[K1][K2][K3][K4]>(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): T[K1][K2][K3][K4][K5];
-  /** @internal **/
-  get<K1 extends keyof T,
+  get<
+    K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
     K4 extends keyof T[K1][K2][K3],
-    K5 extends keyof T[K1][K2][K3][K4],
-    K6 extends keyof T[K1][K2][K3][K4][K5]>(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5, k6: K6): T[K1][K2][K3][K4][K5][K6];
+    K5 extends keyof T[K1][K2][K3][K4]
+  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): T[K1][K2][K3][K4][K5];
   /** @internal **/
-  get<K1 extends keyof T,
+  get<
+    K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
     K4 extends keyof T[K1][K2][K3],
     K5 extends keyof T[K1][K2][K3][K4],
-    K6 extends keyof T[K1][K2][K3][K4][K5]>(
+    K6 extends keyof T[K1][K2][K3][K4][K5]
+  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5, k6: K6): T[K1][K2][K3][K4][K5][K6];
+  /** @internal **/
+  get<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3],
+    K5 extends keyof T[K1][K2][K3][K4],
+    K6 extends keyof T[K1][K2][K3][K4][K5]
+  >(
     ...keys:
       | [K1]
       | [K1, K2]
@@ -163,9 +188,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     if (!!keys && keys.length) {
       return safePluck(this.accumulator.state, keys);
     } else {
-      return hasStateAnyKeys ?
-             this.accumulator.state :
-              undefined as unknown as T;
+      return hasStateAnyKeys
+        ? this.accumulator.state
+        : (undefined as unknown as T);
     }
   }
 
@@ -374,7 +399,10 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     ) {
       const key = keyOrInputOrSlice$;
       const slice$ = projectOrSlices$.pipe(
-        map((value) => ({ ...{}, [key]: projectValueFn(this.get(), value as V) }))
+        map((value) => ({
+          ...{},
+          [key]: projectValueFn(this.get(), value as V),
+        }))
       );
       this.accumulator.nextSliceObservable(slice$);
       return;
@@ -400,7 +428,8 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
   /**
    * @description
    * returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
-   * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive composition.
+   * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive
+   *   composition.
    *
    * @example
    * const profilePicture$ = state.select(
@@ -472,33 +501,41 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
   /**
    * @internal
    */
-  select<K1 extends keyof T,
+  select<
+    K1 extends keyof T,
     K2 extends keyof T[K1],
-    K3 extends keyof T[K1][K2]>(k1: K1, k2: K2, k3: K3): Observable<T[K1][K2][K3]>;
+    K3 extends keyof T[K1][K2]
+  >(k1: K1, k2: K2, k3: K3): Observable<T[K1][K2][K3]>;
   /**
    * @internal
    */
-  select<K1 extends keyof T,
+  select<
+    K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
-    K4 extends keyof T[K1][K2][K3]>(k1: K1, k2: K2, k3: K3, k4: K4): Observable<T[K1][K2][K3][K4]>;
+    K4 extends keyof T[K1][K2][K3]
+  >(k1: K1, k2: K2, k3: K3, k4: K4): Observable<T[K1][K2][K3][K4]>;
   /**
    * @internal
    */
-  select<K1 extends keyof T,
+  select<
+    K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
     K4 extends keyof T[K1][K2][K3],
-    K5 extends keyof T[K1][K2][K3][K4]>(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): Observable<T[K1][K2][K3][K4][K5]>;
+    K5 extends keyof T[K1][K2][K3][K4]
+  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): Observable<T[K1][K2][K3][K4][K5]>;
   /**
    * @internal
    */
-  select<K1 extends keyof T,
+  select<
+    K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
     K4 extends keyof T[K1][K2][K3],
     K5 extends keyof T[K1][K2][K3][K4],
-    K6 extends keyof T[K1][K2][K3][K4][K5]>(
+    K6 extends keyof T[K1][K2][K3][K4][K5]
+  >(
     k1: K1,
     k2: K2,
     k3: K3,
@@ -515,7 +552,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     if (!opOrMapFn || opOrMapFn.length === 0) {
       return this.accumulator.state$.pipe(stateful());
     } else if (isStringArrayGuard(opOrMapFn)) {
-      return this.accumulator.state$.pipe(stateful(pluck(...opOrMapFn))) as Observable<T | R>;
+      return this.accumulator.state$.pipe(
+        stateful(pluck(...opOrMapFn))
+      ) as Observable<T | R>;
     } else if (isOperateFnArrayGuard(opOrMapFn)) {
       return this.accumulator.state$.pipe(stateful(pipeFromArray(opOrMapFn)));
     }
@@ -547,7 +586,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     obsOrObsWithSideEffect: Observable<S>,
     sideEffectFn?: (arg: S) => void
   ): void {
-    const sideEffect = obsOrObsWithSideEffect.pipe(catchError(e => EMPTY))
+    const sideEffect = obsOrObsWithSideEffect.pipe(catchError((e) => EMPTY));
     if (typeof sideEffectFn === 'function') {
       this.effectObservable.nextEffectObservable(
         sideEffect.pipe(tap(sideEffectFn))

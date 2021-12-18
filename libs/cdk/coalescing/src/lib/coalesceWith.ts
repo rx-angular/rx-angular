@@ -79,7 +79,6 @@ export function coalesceWith<T>(
         next: (value) => {
           latestValue = value;
           if (!actionSubscription) {
-            // tslint:disable-next-line:no-unused-expression
             coalescingManager.add(_scope);
             actionSubscription = durationSelector.subscribe({
               error: (error) => outerObserver.error(error),

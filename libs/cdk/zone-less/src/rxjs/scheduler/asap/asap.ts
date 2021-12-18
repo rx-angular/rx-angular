@@ -1,4 +1,3 @@
-// tslint:disable file-name-casing
 import * as rxjs from 'rxjs';
 import { AsapAction } from './AsapAction';
 import { createScheduler } from '../create-scheduler';

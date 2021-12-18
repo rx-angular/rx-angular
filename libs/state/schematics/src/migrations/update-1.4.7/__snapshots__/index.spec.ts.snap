@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`state migration update-1.4.7 should replace cdk/state 1`] = `
+"import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { createSideEffectObservable } from '@rx-angular/state/selections';
+import { createAccumulationObservable } from '@rx-angular/state/selections';
+import { select } from '@rx-angular/state/selections';
+import { stateful } from '@rx-angular/state/selections';
+import { distinctUntilSomeChanged } from '@rx-angular/state/selections';
+import { selectSlice } from '@rx-angular/state/selections';
+import { KeyCompareMap } from '@rx-angular/state/selections';
+import { CompareFn } from '@rx-angular/state/selections';
+import { PickSlice } from '@rx-angular/state/selections';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;
+
+exports[`state migration update-1.4.7 should replace cdk/transformations 1`] = `
+"import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { insert } from '@rx-angular/cdk/transformations';
+import { remove } from '@rx-angular/cdk/transformations';
+import { toDictionary } from '@rx-angular/cdk/transformations';
+import { update } from '@rx-angular/cdk/transformations';
+import { extract } from '@rx-angular/cdk/transformations';
+import { upsert } from '@rx-angular/cdk/transformations';
+import { setProp } from '@rx-angular/cdk/transformations';
+import { patch } from '@rx-angular/cdk/transformations';
+import { deleteProp } from '@rx-angular/cdk/transformations';
+import { dictionaryToArray } from '@rx-angular/cdk/transformations';
+import { toggle } from '@rx-angular/cdk/transformations';
+import { slice } from '@rx-angular/cdk/transformations';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;
