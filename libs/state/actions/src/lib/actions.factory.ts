@@ -6,11 +6,15 @@ import { Subject } from 'rxjs';
 type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> }
 
 /**
- * This class creates RxActions bound to Angular's DI life-cycles. This prevents memorie leaks and optionally makes the instance reusable across the app.
- * The main function here is called
+ * This class to creates RxActions bound to Angular's DI life-cycles. This prevents memorie leaks and optionally makes the instance reusable across the app.
+ * The main function here is called `create`, optionally you can also call `destroy` to complete all action channels. 
+ * If the instanciator gets destroyed also the actions get destroiyed automatically.
  *
  * @example
- * const factory = new RxActionFactory();
+ * const factory = new RxActionFactory<{search: string}>();
+ * const actions = factory.create();
+ * actions.search('');
+ * actions.search$.subscribe();
  */
 @Injectable()
 export class RxActionsFactory<T extends Actions> implements OnDestroy {
@@ -28,7 +32,7 @@ export class RxActionsFactory<T extends Actions> implements OnDestroy {
    *  submit: void
    * };
    *
-   * const actions = create<UIActions>();
+   * const actions = new RxActionsFactory<UIActions>().create();
    *
    * actions.search($event.target.value);
    * actions.search$ | async;
@@ -71,7 +75,8 @@ export class RxActionsFactory<T extends Actions> implements OnDestroy {
   }
 
   /**
-   * internally used to clean up potential subscriptions to the subjects. (For Actions it is most probably a rare case but still important to care about)
+   * @internal 
+   * Internally used to clean up potential subscriptions to the subjects. (For Actions it is most probably a rare case but still important to care about)
    */
   ngOnDestroy() {
     this.destroy();
