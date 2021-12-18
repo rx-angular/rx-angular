@@ -25,7 +25,6 @@ describe('getActions', () => {
   });
 
   it('should emit and transform on the subscribed channels', (done) => {
-    const values = 'foo';
     const actions = new RxActionsFactory<{ prop: string }>().create({
       prop: () => 'transformed',
     });
