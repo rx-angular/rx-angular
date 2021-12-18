@@ -1,4 +1,5 @@
-import { isObjectGuard } from '../../utils';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { isObjectGuard } from '@rx-angular/state/selections';
 
 /**
  * @deprecated moved to `@rx-angular/cdk/transformations`

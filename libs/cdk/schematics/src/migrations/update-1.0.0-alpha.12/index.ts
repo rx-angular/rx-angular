@@ -32,12 +32,21 @@ const renames: Record<string, string | [string, string]> = {
   RxStrategyCredentials: '@rx-angular/cdk/render-strategies',
   RxRenderBehavior: '@rx-angular/cdk/render-strategies',
   RxRenderWork: '@rx-angular/cdk/render-strategies',
-  RX_ANGULAR_CONFIG: ['RX_RENDER_STRATEGIES_CONFIG', '@rx-angular/cdk/render-strategies'],
-  RX_ANGULAR_DEFAULTS: ['RX_RENDER_STRATEGIES_DEFAULTS', '@rx-angular/cdk/render-strategies'],
-  RxAngularConfig: ['RxRenderStrategiesConfig', '@rx-angular/cdk/render-strategies'],
-  ObservableAccumulation: '@rx-angular/cdk/state',
-  ObservableMap: '@rx-angular/cdk/state',
-  accumulateObservables: '@rx-angular/cdk/state',
+  RX_ANGULAR_CONFIG: [
+    'RX_RENDER_STRATEGIES_CONFIG',
+    '@rx-angular/cdk/render-strategies',
+  ],
+  RX_ANGULAR_DEFAULTS: [
+    'RX_RENDER_STRATEGIES_DEFAULTS',
+    '@rx-angular/cdk/render-strategies',
+  ],
+  RxAngularConfig: [
+    'RxRenderStrategiesConfig',
+    '@rx-angular/cdk/render-strategies',
+  ],
+  ObservableAccumulation: '@rx-angular/cdk/internals/core',
+  ObservableMap: '@rx-angular/cdk/internals/core',
+  accumulateObservables: '@rx-angular/cdk/internals/core',
   templateHandling: '@rx-angular/cdk/template',
   RxBaseTemplateNames: '@rx-angular/cdk/template',
   RxRenderAware: '@rx-angular/cdk/template',
@@ -103,9 +112,7 @@ const renames: Record<string, string | [string, string]> = {
   RxZoneGlobalConfigurations: '@rx-angular/cdk/zone-configurations',
   RxZoneTestConfigurations: '@rx-angular/cdk/zone-configurations',
   RxZoneRuntimeConfigurations: '@rx-angular/cdk/zone-configurations',
-  zoneConfig: '@rx-angular/cdk/zone-configurations'
+  zoneConfig: '@rx-angular/cdk/zone-configurations',
 };
 
 export default renamingRule('@rx-angular/cdk', renames);
-
-
