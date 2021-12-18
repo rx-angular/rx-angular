@@ -38,7 +38,7 @@ import { TestItem } from '../../../../shared/debug-helper/value-provider/index';
       }
       .item {
         width: 250px;
-        height: 50px;
+        /*height: 50px;*/
         overflow: hidden;
         border: 1px solid green;
         padding: 10px 0;
