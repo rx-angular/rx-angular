@@ -97,6 +97,9 @@ export function createVirtualListManager<
 
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
+  const dataDiffer: IterableDiffer<T> = iterableDiffers
+    .find([])
+    .create(trackBy);
   //               type,  payload
   const tNode: TNode = parent
     ? getTNode(injectingViewCdRef, eRef.nativeElement)
@@ -113,6 +116,8 @@ export function createVirtualListManager<
   let partiallyFinished = false;
   let renderedRange: ListRange;
   let heights: { height: number; scrollTop: number }[] = [];
+  let totalHeight = 0;
+  const averager = new ItemSizeAverager();
 
   function heightsUntil(index: number) {
     let height = 0;
@@ -127,7 +132,7 @@ export function createVirtualListManager<
       viewCacheSize = viewCache;
     },
     getHeight(): number {
-      return heights.reduce((a, { height }) => a + height, 0);
+      return totalHeight;
     },
     nextStrategy(nextConfig: Observable<string>): void {
       strategyHandling$.next(nextConfig);
@@ -153,6 +158,18 @@ export function createVirtualListManager<
         // map iterable to latest diff
         map(([data, scrollTop]) => {
           const items = Array.isArray(data) ? data : [];
+          let _scrollTop;
+          const averageSize = averager.getAverageItemSize();
+          console.log('averageSize', averageSize);
+          console.log('items', items);
+          dataDiffer.diff(items)?.forEachAddedItem(({ currentIndex }) => {
+            _scrollTop = _scrollTop == null ? heightsUntil(currentIndex) : 0;
+            heights[currentIndex] = {
+              height: averageSize,
+              scrollTop: _scrollTop,
+            };
+            _scrollTop += averageSize;
+          });
           const range = { start: 0, end: items.length };
           const heightsLength = heights.length;
           let i = 0;
@@ -160,6 +177,8 @@ export function createVirtualListManager<
           const margin = 40;
           const adjustedScrollTop = scrollTop + margin;
           console.log(items.length, 'itemLenght');
+          console.log(adjustedScrollTop, 'adjustedScrollTop');
+          console.log(heights, 'heights');
           for (i; i < heightsLength; i++) {
             const entry = heights[i];
             if (entry.scrollTop + entry.height <= adjustedScrollTop) {
@@ -209,7 +228,25 @@ export function createVirtualListManager<
               // emit after all changes are rendered
               applyChanges$.length > 0 ? [...applyChanges$] : [of(items)]
             ).pipe(
-              tap(() => (partiallyFinished = false)),
+              tap(() => {
+                partiallyFinished = false;
+                let scrollTop = heightsUntil(renderedRange.start);
+                let height = 0;
+                for (let i = 0; i < viewContainerRef.length; i++) {
+                  const _height = _setViewHeight(
+                    viewContainerRef.get(i) as any,
+                    i,
+                    scrollTop
+                  );
+                  height += _height;
+                  scrollTop += _height;
+                }
+                totalHeight = heights.reduce((a, { height }) => a + height, 0);
+                console.log('addSample', renderedRange, height);
+                averager.addSample(renderedRange, height);
+                console.log('totalHeight', totalHeight);
+                console.log('averager', averager.getAverageItemSize());
+              }),
               // somehow this makes the strategySelect work
               notifyAllParentsIfNeeded(
                 tNode,
@@ -244,23 +281,23 @@ export function createVirtualListManager<
               const payload = _change[1];
               switch (type) {
                 case RxListTemplateChangeType.insert:
-                  console.log('perform insert', payload);
+                  // console.log('perform insert', payload);
                   _insertView(payload[0], payload[1], count);
                   break;
                 case RxListTemplateChangeType.move:
-                  console.log('perform move', payload);
+                  // console.log('perform move', payload);
                   _moveView(payload[0], payload[2], payload[1], count);
                   break;
                 case RxListTemplateChangeType.remove:
-                  console.log('perform remove', payload);
+                  // console.log('perform remove', payload);
                   _detachAndCacheView(payload[1] as any);
                   break;
                 case RxListTemplateChangeType.update:
-                  console.log('perform update', payload);
+                  // console.log('perform update', payload);
                   _updateView(payload[0], payload[1], count);
                   break;
                 case RxListTemplateChangeType.context:
-                  console.log('perform context', payload);
+                  // console.log('perform context', payload);
                   _updateUnchangedContext(payload[1], count);
                   break;
               }
@@ -287,7 +324,7 @@ export function createVirtualListManager<
       index: renderedRange.start + index,
     } as any);
     view.detectChanges();
-    _setViewHeight(view, index);
+    // _setViewHeight(view, index);
   }
 
   /**
@@ -306,7 +343,7 @@ export function createVirtualListManager<
         index: currentIndex,
       } as any);
       cachedView.detectChanges();
-      _setViewHeight(cachedView, currentIndex);
+      // _setViewHeight(cachedView, currentIndex);
       return undefined;
     }
     const context = templateSettings.createViewContext(value, {
@@ -319,25 +356,32 @@ export function createVirtualListManager<
       currentIndex
     );
     view.detectChanges();
-    _setViewHeight(view, currentIndex);
+    // _setViewHeight(view, currentIndex);
     return view;
   }
 
-  function _setViewHeight(view: EmbeddedViewRef<any>, currentIndex: number) {
+  function _setViewHeight(
+    view: EmbeddedViewRef<any>,
+    currentIndex: number,
+    scrollTop: number
+  ): number {
     const element = view.rootNodes[0] as HTMLElement;
     const adjustedIndex = currentIndex + renderedRange.start;
-    const scrollTop = heightsUntil(adjustedIndex);
-    console.log('_setViewHeight', view.context);
-    console.log('currentIndex', currentIndex);
+    // const scrollTop = heightsUntil(adjustedIndex);
+    // console.log('_setViewHeight', view.context);
+    // console.log('currentIndex', currentIndex);
     console.log('scrollTop', scrollTop);
     console.log('heights', heights);
     console.log('adjustedIndex', adjustedIndex);
+    const height = element.offsetHeight;
+    console.log('element.offsetHeight', height);
     element.style.position = 'absolute';
     element.style.transform = `translateY(${scrollTop}px)`;
     heights[adjustedIndex] = {
-      height: element.offsetHeight,
+      height,
       scrollTop,
     };
+    return height;
   }
 
   /** Detaches the view at the given index and inserts into the view cache. */
@@ -363,7 +407,7 @@ export function createVirtualListManager<
       index: currentIndex,
     } as any);
     view.detectChanges();
-    _setViewHeight(view, currentIndex);
+    // _setViewHeight(view, currentIndex);
     return view;
   }
 
@@ -397,5 +441,54 @@ export function createVirtualListManager<
       viewContainerRef.insert(cachedView, index);
     }
     return cachedView || null;
+  }
+}
+
+/**
+ * A class that tracks the size of items that have been seen and uses it to estimate the average
+ * item size.
+ */
+export class ItemSizeAverager {
+  /** The total amount of weight behind the current average. */
+  private _totalWeight = 0;
+
+  /** The current average item size. */
+  private _averageItemSize: number;
+
+  /** The default size to use for items when no data is available. */
+  private _defaultItemSize: number;
+
+  /** @param defaultItemSize The default size to use for items when no data is available. */
+  constructor(defaultItemSize = 50) {
+    this._defaultItemSize = defaultItemSize;
+    this._averageItemSize = defaultItemSize;
+  }
+
+  /** Returns the average item size. */
+  getAverageItemSize(): number {
+    return this._averageItemSize;
+  }
+
+  /**
+   * Adds a measurement sample for the estimator to consider.
+   * @param range The measured range.
+   * @param size The measured size of the given range in pixels.
+   */
+  addSample(range: ListRange, size: number) {
+    const newTotalWeight = this._totalWeight + range.end - range.start;
+    if (newTotalWeight) {
+      const newAverageItemSize =
+        (size + this._averageItemSize * this._totalWeight) / newTotalWeight;
+      if (newAverageItemSize) {
+        this._averageItemSize = newAverageItemSize;
+        this._totalWeight = newTotalWeight;
+      }
+    }
+  }
+
+  /** Resets the averager. */
+  reset() {
+    this._averageItemSize = this._defaultItemSize;
+    this._totalWeight = 0;
   }
 }
