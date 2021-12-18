@@ -3,28 +3,17 @@ import { AppPresenter } from './app-presenter.service';
 import { MENU_ITEMS } from './app.menu';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, take, tap } from 'rxjs/operators';
-import { RxActionFactory } from '../../../../../libs/cdk/action/src/action.creator';
-
-type UIActions = {
-  search: string;
-  check: number;
-};
 
 @Component({
   selector: 'rxa-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [AppPresenter, RxActionFactory],
+  providers: [AppPresenter],
 })
 export class AppComponent implements AfterViewInit {
   menuItems = MENU_ITEMS;
 
-  actions = this.actionFactory.create();
-  constructor(
-    public vm: AppPresenter, router: Router,
-    public actionFactory: RxActionFactory<UIActions>
-  ) {
-
+  constructor(public vm: AppPresenter, router: Router) {
     performance.mark('startRouting');
     router.events
       .pipe(
