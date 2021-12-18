@@ -1,16 +1,21 @@
 <!-- - **@rx-angular/template [BETA]** -->
 
-- State
-  - Overview
-  - Installation
-  - Migration
-  - Getting started
-  - 📋 Tutorials
+- **State**
+  - [Overview](/web/state/overview.md)
+  - [Installation](/web/state/installation.md)
+  - [Migration](/web/state/migration.md)
+  - [Getting started](/web/state/getting-started.md)
+  - [State](/web/state/state.md)
+  - [Selections](/web/state/selections.md)
+  - [Effects](/)
+  - [Actions](/)
+  - [Testing](/)
+  - Tutorials
     - [Basic tutorial](/web/state/tutorials/basic-tutorial.md)
     - [Incrementing a value](/web/state/tutorials/incrementing-value.md)
     - [Migrating to RxState](/web/state/tutorials/from-imperative-to-reactive.md)
     - [Passing observables directly](/web/state/tutorials/passing-observables.md)
-  - 💡 Recipes
+  - Recipes
     - [Determine state type](/web/state/howtos/determine-state.md)
     - [Manage ViewModel](/web/state/howtos/manage-viewmodel.md)
     - [Run partial updates](/web/state/howtos/partial-updates.md)
@@ -19,20 +24,16 @@
     - [Use RxState as Global State](/web/state/howtos/rx-state-as-global-state.md)
     - [Reuse ngrx selectors to compose state](/web/state/integrations/compose-state-using-ngrx-selectors.md)
     - [Manage entities using `@ngrx/entity`](/web/state/integrations/manage-entities-ngrx.md)
-  - [State](/web/state/api/rx-state.md)
-  - Selections // (RXJS OPERATORS)
-  - Effects
-  - Actions
-  - Testing
 
-- Template
-  - Overview
-  - Installation
-  - Migration
-  - Getting started
-  - Let
-  - For 
-  - Push
+
+- **Template**
+  - [Overview](/)
+  - [Installation](/)
+  - [Migration](/)
+  - [Getting started](/)
+  - [Let](/)
+  - [For](/)
+  - [Push](/)
   - 🔬 Experimental
     - [🧪 Unpatch directive](/)
     - [🧪 ViewportPriority directive](/)
@@ -40,18 +41,26 @@
     - Class
   - Testing
 
-- CDK
-  - Overview
-  - Installation 
-  - Migration
-  - Coalescing
-  - Coercing
-  - Notifications
+- **CDK**
+  - [Overview](/web/cdk/overview.md)
+  - [Installation](/web/cdk/installation.md) 
+  - [Migration](/web/cdk/migration.md)
+  - [Coalescing](/web/cdk/coalescing.md)
+  - [Coercing](/web/cdk/coercing.md)
+  - [Notifications](/web/cdk/notifications.md)
   - Render strategies
-  - Template
-  - Zone-configurations
-  - Zone-less
-  - [Transformations](/web/state/api/transformation-helpers.md)
+    - [Overview](/web/cdk/render-strategies/overview.md)
+    - [Introduction](/web/cdk/render-strategies/introduction.md)
+    - [Basic strategies](/web/cdk/render-strategies/basic-strategies.md)
+    - [Concurrent strategies](/web/cdk/render-strategies/concurrent-strategies.md)
+    - [Strategy provider](/web/cdk/render-strategies/strategy-provider.md)
+  - [Template](/web/cdk/template.md)
+  - [Transformations](/web/cdk/transformations/transformation-helpers.md)
+  - Zone configurations
+    - [Zone flags](/web/cdk/zone-configuration/zone-flags.md)
+    - [Setting up zone flags](/web/cdk/zone-configuration/how-to-setup-zone-flags.md)
+    - [Debugging zone flags](/web/cdk/zone-configuration/how-to-debug-zone-flags.md)
+  - [Zone-less](/web/cdk/zone-less.md)
     
 ---
 

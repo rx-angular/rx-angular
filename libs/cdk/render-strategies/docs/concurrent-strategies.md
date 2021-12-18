@@ -160,7 +160,7 @@ What concurrent scheduling does under the hood is is cunking up work in cycles o
 
 ![Render Strategies - task flow](https://user-images.githubusercontent.com/10064416/146287195-89e22ed8-12ba-4099-9379-430a41469b9c.png)
 
-## Strategies:
+## Strategies
 
 | Name             | Priority | Render Method     | Scheduling    | Render Deadline |
 | ---------------- | -------- | ----------------- | ------------- | --------------- |
