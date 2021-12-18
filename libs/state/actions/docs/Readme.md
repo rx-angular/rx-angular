@@ -1,7 +1,7 @@
 # Resources
 
 **Example applications:**  
-A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-cdk-actions).
+A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-state-actions).
 
 # Motivation
 
