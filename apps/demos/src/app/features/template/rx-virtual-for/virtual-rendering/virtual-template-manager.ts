@@ -163,7 +163,8 @@ export function createVirtualListManager<
           console.log('averageSize', averageSize);
           console.log('items', items);
           dataDiffer.diff(items)?.forEachAddedItem(({ currentIndex }) => {
-            _scrollTop = _scrollTop == null ? heightsUntil(currentIndex) : 0;
+            _scrollTop =
+              _scrollTop == null ? heightsUntil(currentIndex) : _scrollTop || 0;
             heights[currentIndex] = {
               height: averageSize,
               scrollTop: _scrollTop,
