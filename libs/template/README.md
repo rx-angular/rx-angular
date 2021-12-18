@@ -1,7 +1,7 @@
 # @rx-angular/template
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/package/%40rx-angular%2Ftemplate)
-![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
+![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/template/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/template/lcov-report/index.html)
 
 ## Reactive Template Rendering for Angular
@@ -12,24 +12,24 @@ the user experience of your angular application.
 The functionalities are provided by
 structural directives, pipes, RxJS operators, or imperative functions to manage the rendering in Angular.
 
-![template logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/template/docs/images/template_logo.png)
+![template logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/template/docs/images/template_logo.png)
 
 ## Description
 
 **@rx-angular/template** is nothing less than a revolution in `ChangeDetection` for angular applications.
 Developers are provided with tools for high-performance rendering, which are operated by a broad and intuitive API.
 
-The [LetDirective (`*rxLet`)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/api/let-directive.md) &
-[PushPipe (`push`)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/push.md) focus
+The [LetDirective (`*rxLet`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md) &
+[PushPipe (`push`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/push.md) focus
 on template rendering, the coordination and optimization of `ChangeDetection` cycles. While the `PushPipe` is a
 straight **drop in replacement** for the `AsyncPipe (async)`, the `LetDirective` will often provide a more
 convenient way of managing reactive sources and lazy rendering of the view.
 
-Using those with the default strategy ([Local Strategy](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/docs/render-strategies/strategies.md#local)) should already improve the rendering performance of
+Using those with the default strategy ([Local Strategy](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/docs/render-strategies/strategies.md#local)) should already improve the rendering performance of
 your application by a decent amount.
 
 The applied optimization behavior is fully customizable by using built-in or
-custom provided (_coming soon_) [RenderStrategies](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/docs/render-strategies).  
+custom provided (_coming soon_) [RenderStrategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/docs/render-strategies).  
 However, `RenderStrategies` are also meant to be as a tool developers can interact with inside
 their components, giving you an even broader access to the rendering mechanisms of your application.
 The API comes with imperative as well as reactive ways to manage renderings.
@@ -40,8 +40,8 @@ key for a smooth experience.
 If you plan to improve your rendering performance to the maximum possible, there
 are several techniques that need to be known and considered.
 
-- [Coalescing, Scoped Coalescing & Scheduling](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/concepts.md)
-- [Rendering Issues in Angular](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/performance-issues.md)
+- [Coalescing, Scoped Coalescing & Scheduling](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/concepts.md)
+- [Rendering Issues in Angular](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/performance-issues.md)
 
 ## Installation
 
@@ -61,9 +61,20 @@ npm install --save @rx-angular/template @rx-angular/cdk
 yarn add @rx-angular/template @rx-angular/cdk
 ```
 
+## Update
+
+If you are using `@rx-angular/template` already, please consider upgrading with the `@angular/cli update` command in order
+to make sure all provided code migrations are processed properly.
+
+```bash
+ng update @rx-angular/template
+# or with nx
+nx migrate @rx-angular/template
+```
+
 ## API
 
-[API Documentation](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/api/overview.md)
+[API Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/overview.md)
 
 ## Basic setup
 
@@ -82,19 +93,19 @@ export class MyModule {}
 ## Features
 
 - Directives
-  - [LetDirective (\*rxLet)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/api/let-directive.md)
+  - [LetDirective (\*rxLet)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md)
 - Pipes
-  - [PushPipe (push)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/push.md)
-- [Render Strategies](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/docs/render-strategies/README.md)
+  - [PushPipe (push)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/push.md)
+- [Render Strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/docs/render-strategies/README.md)
 
 ## Experimental features
 
 Additionally, @rx-angular/template provides some experimental optimization tools which in general will give you more control
 about what changes are leading to re-renderings.
 
-- [🧪 Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/experimental/viewport-prio.md)
-- [🧪 UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/experimental/unpatch.md)
-- [🧪 Detach strategy](https://github.com/rx-angular/rx-angular/tree/master/libs/template/docs/experimental/experimental-render-strategies.md)
+- [🧪 Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/viewport-prio.md)
+- [🧪 UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/unpatch.md)
+- [🧪 Detach strategy](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/experimental-render-strategies.md)
 
 ## Browsers support
 

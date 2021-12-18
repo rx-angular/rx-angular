@@ -18,6 +18,7 @@
           "build-schematics",
           "build-base",
           "build-lib",
+          "build-state",
           "build",
           "lint",
           "test",
@@ -31,7 +32,7 @@
     }
   },
   "affected": {
-    "defaultBase": "origin/master"
+    "defaultBase": "origin/main"
   },
   "cli": {
     "defaultCollection": "@nrwl/angular",

@@ -76,4 +76,4 @@ Let's refactor it into the following and delete the `listExpanded` property in t
 We are using `$` here to 'signal' that the state has been changed. Signals, in comparison to stateful streams, don't replay the last value on subscription.
 This is especially useful as a way to avoid loops.
 
-[output-bindings.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/master/apps/demos/src/app/features/tutorials/basics/3-output-bindings/output-bindings.start.component.ts
+[output-bindings.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/main/apps/demos/src/app/features/tutorials/basics/3-output-bindings/output-bindings.start.component.ts

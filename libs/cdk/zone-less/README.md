@@ -1,7 +1,7 @@
 # @rx-angular/cdk/zone-less
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)
-![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
+![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
 ## A set of wrappers for Browser native as well as RxJS functions to avoid unnessecary change detection and zone interference in Angular.
@@ -31,4 +31,4 @@ yarn add @rx-angular/cdk
 
 ## Documentation
 
-- [Zone-Less](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/zone-less/docs)
+- [Zone-Less](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/zone-less/docs)
