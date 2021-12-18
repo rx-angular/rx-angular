@@ -13,6 +13,7 @@ describe('state migration update-1.4.7', () => {
       import { NgModule } from '@angular/core';
       import { BrowserModule } from '@angular/platform-browser';
       import {
+        RxState,
         createSideEffectObservable,
         createAccumulationObservable,
         select,
@@ -33,7 +34,7 @@ describe('state migration update-1.4.7', () => {
         imports: [
           BrowserModule
         ],
-        providers: [],
+        providers: [RxState],
         bootstrap: [AppComponent]
       })
       export class AppModule { }
@@ -60,7 +61,8 @@ describe('state migration update-1.4.7', () => {
         deleteProp,
         dictionaryToArray,
         toggle,
-        slice
+        slice,
+        RxState
       } from '@rx-angular/state';
 
       import { AppComponent } from './app.component';
@@ -72,7 +74,7 @@ describe('state migration update-1.4.7', () => {
         imports: [
           BrowserModule
         ],
-        providers: [],
+        providers: [RxState],
         bootstrap: [AppComponent]
       })
       export class AppModule { }

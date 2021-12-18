@@ -21,9 +21,8 @@ const renames: Record<string, string | [string, string]> = {
   deleteProp: '@rx-angular/cdk/transformations',
   dictionaryToArray: '@rx-angular/cdk/transformations',
   toggle: '@rx-angular/cdk/transformations',
-  slice: '@rx-angular/cdk/transformations'
+  slice: '@rx-angular/cdk/transformations',
+  RxState: '@rx-angular/state',
 };
 
 export default renamingRule('@rx-angular/state', renames);
-
-
