@@ -1,4 +1,6 @@
+
 /**
+ * @internal
  * Internal helper to create the proxy object
  * It lifes as standalone function because we dont need to carrie it in memory for every ActionHandler instance
  * @param subjects
