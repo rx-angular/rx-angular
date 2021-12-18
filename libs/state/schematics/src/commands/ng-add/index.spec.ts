@@ -53,7 +53,7 @@ describe('ng-add schematic', () => {
 
     const packageJson = readJsonInTree(tree, 'package.json');
 
-    expect(packageJson.dependencies['@rx-angular/cdk']).toBeDefined();
-    expect(packageJson.devDependencies['@rx-angular/cdk']).toBeUndefined();
+    expect(packageJson.dependencies['@rx-angular/state']).toBeDefined();
+    expect(packageJson.devDependencies['@rx-angular/state']).toBeUndefined();
   });
 });
