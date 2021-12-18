@@ -130,9 +130,9 @@ exports[`cdk migration 1.0.0-alpha-12 should replace state 1`] = `
 "import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { ObservableAccumulation } from '@rx-angular/cdk/state';
-import { ObservableMap } from '@rx-angular/cdk/state';
-import { accumulateObservables } from '@rx-angular/cdk/state';
+import { ObservableAccumulation } from '@rx-angular/cdk/internals/core';
+import { ObservableMap } from '@rx-angular/cdk/internals/core';
+import { accumulateObservables } from '@rx-angular/cdk/internals/core';
 
 @NgModule({
   declarations: [AppComponent],

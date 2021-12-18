@@ -1,4 +1,4 @@
-import { isDefined } from '@rx-angular/cdk/utils';
+import { isDefined } from '../_internals/guards';
 
 /**
  * @description
