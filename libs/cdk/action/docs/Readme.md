@@ -61,6 +61,7 @@ Downsides:
 Imagine we could have a configurable functions that retuens all ui logic typed under one object.
 
 ```typescript
+import { RxActionsFactory } from './actions.factory'; 
 interface UiActions {
  submitBtn: void,
  searchInput: string
@@ -73,16 +74,20 @@ template: `
 <ul>
   <li *ngFor="let item of list$ | async as list">{{item}}</li>
 </ul>
-`})
+`,
+providers: [RxActionsFactory]
+})
 class Component {
-  ui = getActions<UiActions>({searchInput: (e) => e?.target?.value});
+  ui = factory.create({searchInput: (e) => e?.target?.value});
   
   list$ = this.ui.submitBtn$.pipe(
     withLatestFrom(this.ui.search$),
     switchMap(([_, searchString]) => api.query(searchString))
    )
   
-  consotructor(api: API) {
+  consotructor(api: API, 
+   private factory: RxActionsFactory<UiActions>
+) {
   
   }
 
@@ -99,12 +104,12 @@ It mostly is used in combination with state management libs to handle user inter
 The coalescing features can be used directly from the `cdk` package or indirectly through the `state` package.
 To do so, install the `cdk` package and, if needed, the packages depending on it:
 
-1. Install `@rx-angular/cdk`
+1. Install `@rx-angular/state`
 
 ```bash
-npm i @rx-angular/cdk
+npm i @rx-angular/state
 // or
-yarn add @rx-angular/cdk
+yarn add @rx-angular/state
 ```
 
 ## Usage
@@ -224,7 +229,7 @@ interface Commands {
   providedIn: 'root'
 })
 export class StateService extends RxState<State> {
-  private commands = getActions<commands>();
+  private commands = new RxActionsFactory<Commands>.create();
 
   genres$ = this.select('genres');
 
@@ -275,9 +280,11 @@ template: `
   <li *ngFor="let item of list$ | async as list">{{item}}</li>
 </ul>,
 providers: [RxState]
-`})
+`,
+providers: [RxActionsFactory]
+})
 class Component {
-  ui = getActions<UiActions>({searchInput: (e) => e?.target?.value});
+  ui = factory.create({searchInput: (e) => e?.target?.value});
   list$ = this.state.select('list');
   submittedSearchQuery$ = this.ui.submitBtn$.pipe(
     withLatestFrom(this.ui.search$), 
@@ -285,7 +292,10 @@ class Component {
     debounceTime(1500)
   );
   
-  consotructor(private state: RxState<State>, globalState: StateService) {
+  consotructor(
+    private state: RxState<State>,
+    private factory: RxActionsFactory<UiActions>,
+    globalState: StateService) {
     super(); 
     this.connect('list', this.globalState.refreshGenres$);
     
