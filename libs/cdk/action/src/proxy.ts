@@ -29,7 +29,8 @@ export function actionProxyHandler<T, U>(
       // the user wants to get a dispatcher function
       return (args: ValuesOfT) => {
         subjects[prop] = subjects[prop] || new Subject<ValuesOfT>();
-        subjects[prop].next(args);
+        const val = transforms && (transforms as any)[prop] ? (transforms as any)[prop](args) : args
+        subjects[prop].next(val);
       };
     },
     set() {
