@@ -4,7 +4,7 @@
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
-## This package provides a quick way to create an action challel and some configuration options. 
+## This package provides a quick way to create an action channel and some configuration options. 
 
 
 ## Key features
