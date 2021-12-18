@@ -1,70 +1,38 @@
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import {
-  AnyFn,
   ExtractString,
-  FirstParamOf,
-  InstanceOrTypeOf,
-  KeysOf,
+  InferArguments,
+  InstanceOrType,
+  Select,
 } from '../../utils/src/lib/types';
 
-export type Actions = Record<string, any>;
+// Helper to get either the params of the transform function, or if the function is not present a fallback type
+type FunctionParamsOrValueType<U, K, F> = InferArguments<
+  Select<U, K>
+  > extends never
+  ? [F]
+  : InferArguments<Select<U, K>>;
 
-export type ActionDispatchFn<O> = (value: O) => void;
-export type ActionDispatchers<T extends Actions> = {
-  [K in ExtractString<T>]: ActionDispatchFn<T[K]>;
+export type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> }
+
+export type Actions = {};
+
+export type ActionTransforms<T extends {}> = Partial<{
+  [K in keyof T]: (...args: any[]) => T[K];
+}>;
+
+export type ActionDispatchFn<O extends unknown[]> = (
+  ...value: InstanceOrType<O>
+) => void;
+
+export type ActionDispatchers<T extends Actions, U extends {}> = {
+  [K in keyof T]: ActionDispatchFn<
+    FunctionParamsOrValueType<U, K, Select<T, K>>
+  >;
 };
 
 export type ActionObservables<T extends Actions> = {
-  [K in ExtractString<T> as `${K}$`]: Observable<InstanceOrTypeOf<T[K]>>;
+  [K in ExtractString<T> as `${K}$`]: Observable<InstanceOrType<T[K]>>;
 };
 
-export type ActionAccess<T extends Record<string, unknown>> =
-  ActionDispatchers<T> & ActionObservables<T>;
-
-export type ActionTransformFn<O, I = O> = (value: I) => O;
-export type ActionTransforms<T> = {
-  [K in keyof T]?: ActionTransformFn<T[K], any>;
-};
-
-type SearchTransform = ActionTransformFn<string, number | string | boolean>;
-//type SearchTransformInputType = FirstParamOf<SearchTransform>;
-//type SearchTransformInputType2 = FirstParamOf<SearchTransform, boolean>;
-//type SearchTransformInputType4 = FirstParamOf<'SearchTransform', boolean>;
-//type SearchTransformOutputType = ReturnType<SearchTransform>;
-type UIActionsTransforms = {
-  search: SearchTransform;
-};
-
-//type UIDispatcherFromUIActionTransforms = DispatcherFromTransformsOf<UIActionsTransforms>;
-type DispatcherFromTransformsOf<T extends ActionTransforms<Actions>> = {
-  [K in KeysOf<T>]: ActionDispatchFn<FirstParamOf<T[K]>>;
-};
-type UIActions = {
-  search: string;
-  toggle: boolean;
-};
-//type KeysInUIActions = KeysOf<UIActions>;
-//type KeysInUIActionTransforms = KeysOf<UIActionsTransforms>;
-//type KeysNotInTransforms = KeysNotInTransformsOf<UIActions,UIActionsTransforms>;
-type KeysNotInTransformsOf<
-  T extends Actions,
-  I extends ActionTransforms<Partial<T>>
-> = Exclude<KeysOf<T>, KeysOf<I>>;
-
-//type DispatcherFromUIActionsWithoutTransforms = DispatcherFromActionsWithoutTransformsOf<UIActions, UIActionsTransforms>;
-export type DispatcherFromActionsWithoutTransformsOf<
-  T extends Actions,
-  I extends { [K in KeysOf<T>]?: AnyFn }
-> = { [K in KeysNotInTransformsOf<T, I>]: ActionDispatchFn<T[K]> };
-
-type UIActionActionDispatchers = ActionDispatchersOf<UIActions, UIActionsTransforms>;
-type UIActionActionDispatchers2 = ActionDispatchersOf<UIActions, UIActionsTransforms>['search'];
-type UIActionActionDispatchers3 = ActionDispatchersOf<UIActions, UIActionsTransforms>['toggle'];
-export type ActionDispatchersOf<T extends Actions, I extends ActionTransforms<T>> = DispatcherFromActionsWithoutTransformsOf<T, I> & DispatcherFromTransformsOf<I>;
-
-export function getActionsWithTransforms<T extends UIActions>(
-  transforms?: ActionTransforms<T>
-) {
-  return {} as ActionObservables<T> &
-    ActionDispatchersOf<T, ActionTransforms<T>>;
-}
+export type RxActions<T extends Actions, U extends {} = T> = ActionDispatchers<T, U> & ActionObservables<T>;

@@ -1,6 +1,13 @@
 
 // class vs instance
-export type InstanceOrTypeOf<T> = T extends abstract new (...args: unknown[]) => infer R ? R : T;
+export type InstanceOrType<T> = T extends abstract new (...args: any) => infer R ? R : T;
+
+// We infer all arguments instead of just the first one as we are more flexible for later changes
+export type InferArguments<T> = T extends (...args: infer R) => any ? R : never;
+
+// It helps to infer the type of an objects key
+// We have to use it because using just U[K] directly would @TODO
+export type Select<U, K> = K extends keyof U ? U[K] : never;
 
 export type ExtractString<T extends object> = Extract<keyof T, string>
 
