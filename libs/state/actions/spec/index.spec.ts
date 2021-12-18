@@ -1,3 +1,4 @@
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { RxActionsFactory } from '../src/actions.factory';
 import { isObservable } from 'rxjs';
