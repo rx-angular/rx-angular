@@ -9,7 +9,8 @@
 
 ## Key features
 
- - ✅ Typed actions
+ - ✅ Fully Typed
+ - ✅ No-Boilerplate
  - ✅ Configurable transformations to have lines in the template
  - ✅ Minimal memory foot print through a Proxy object and lazy initialisation
  
