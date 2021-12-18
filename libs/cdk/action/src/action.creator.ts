@@ -55,7 +55,7 @@ export class RxActionFactory<T extends Actions> implements OnDestroy {
    * actions.search$ | async; // string Observable
    *
    */
-  create<U extends ActionTransforms<T>>(transforms?: U): RxActions<T, U> {
+  create<U extends ActionTransforms<T> = {}>(transforms?: U): RxActions<T, U> {
     return new Proxy(
       {} as RxActions<T, U>,
       actionProxyHandler(this.subjects, transforms)
@@ -76,7 +76,7 @@ export class RxActionFactory<T extends Actions> implements OnDestroy {
   }
 }
 
-
+/*
 type UIActions = {
   search: string;
   check: number;

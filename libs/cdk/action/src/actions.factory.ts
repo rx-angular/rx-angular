@@ -16,8 +16,8 @@ export function rxActionCreator<T extends Actions>() {
     },
   };
 
-  function create<U extends ActionTransforms<T>>(
-    transforms: U
+  function create<U extends ActionTransforms<T> = {}>(
+    transforms?: U
   ): RxActions<T, U> {
     return new Proxy(
       {} as RxActions<T, U>,
@@ -25,7 +25,7 @@ export function rxActionCreator<T extends Actions>() {
     ) as RxActions<T, U>;
   }
 }
-
+/*
 type UIActions = {
   search: string;
   check: number;
@@ -35,3 +35,4 @@ const g = rxActionCreator<UIActions>().create({
   search: (v: number) => 'string',
 });
 g.search(4);
+/**/
