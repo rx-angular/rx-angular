@@ -12,6 +12,9 @@ There are two ways you can test `RxState`. Depending on your use case, you maybe
 to test the behavior of a whole component, or test the state and it's transformations on
 its own.
 
+> Note that you want your tests to be unrelated to implementation details as much as possible.
+> Keep in mind that testing a component with DOM nodes instead of component instance is considered as a best practice.
+
 ### Components
 
 > it is recommended to read the [official component testing docs](https://angular.io/guide/testing-components-basics)
