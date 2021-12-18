@@ -6,29 +6,41 @@ import {
   NgIterable,
   TemplateRef,
   TrackByFunction,
+  ViewRef,
 } from '@angular/core';
-import { RxListViewComputedContext, RxListViewContext } from '@rx-angular/cdk/template';
+import {
+  RxListViewComputedContext,
+  RxListViewContext,
+} from '@rx-angular/cdk/template';
 import { combineLatest, merge, Observable, of, OperatorFunction } from 'rxjs';
 import {
-  catchError, distinctUntilChanged,
+  catchError,
+  distinctUntilChanged,
+  filter,
   ignoreElements,
   map,
   switchMap,
-  tap, withLatestFrom
+  tap,
+  withLatestFrom,
 } from 'rxjs/operators';
-import { RxStrategyCredentials, onStrategy, strategyHandling } from '@rx-angular/cdk/render-strategies';
+import {
+  RxStrategyCredentials,
+  onStrategy,
+  strategyHandling,
+} from '@rx-angular/cdk/render-strategies';
 import { getTemplateHandler } from '../../../../../../../../libs/cdk/template/src/lib/list-view-handler';
 import {
-  RxListTemplateChange, RxListTemplateChangeType,
+  RxListTemplateChange,
+  RxListTemplateChangeType,
   RxRenderSettings,
-  RxTemplateSettings
+  RxTemplateSettings,
 } from '../../../../../../../../libs/cdk/template/src/lib/model';
 import { createErrorHandler } from '../../../../../../../../libs/cdk/template/src/lib/render-error';
 import {
   getTNode,
   notifyAllParentsIfNeeded,
   notifyInjectingParentIfNeeded,
-  TNode
+  TNode,
 } from '../../../../../../../../libs/cdk/template/src/lib/utils';
 
 export interface RxListManager<T> {
@@ -40,7 +52,7 @@ export interface RxListManager<T> {
 export type VirtualListManager<T> = Omit<RxListManager<T>, 'render'> & {
   render(
     data$: Observable<NgIterable<T>>,
-    range: Observable<ListRange>
+    onScroll$: Observable<number>
   ): Observable<any>;
   setViewCacheSize(viewCache: number): void;
   detach(): void;
@@ -50,7 +62,7 @@ export type VirtualListManager<T> = Omit<RxListManager<T>, 'render'> & {
 export function createVirtualListManager<
   T,
   C extends RxListViewContext<T>
-  >(config: {
+>(config: {
   renderSettings: RxRenderSettings<T, C>;
   templateSettings: RxTemplateSettings<T, C> & {
     templateRef: TemplateRef<C>;
@@ -59,14 +71,13 @@ export function createVirtualListManager<
   trackBy: TrackByFunction<T>;
   iterableDiffers: IterableDiffers;
 }): VirtualListManager<T> {
-  const { templateSettings, renderSettings, trackBy, iterableDiffers } =
-    config;
+  const { templateSettings, renderSettings, trackBy, iterableDiffers } = config;
   const {
     defaultStrategyName,
     strategies,
     cdRef: injectingViewCdRef,
     parent,
-    eRef
+    eRef,
   } = renderSettings;
 
   /**
@@ -88,12 +99,12 @@ export function createVirtualListManager<
   const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
   //               type,  payload
   const tNode: TNode = parent
-                       ? getTNode(injectingViewCdRef, eRef.nativeElement)
-                       : false;
+    ? getTNode(injectingViewCdRef, eRef.nativeElement)
+    : false;
   const listViewHandler = getTemplateHandler({
     ...templateSettings,
     initialTemplateRef: templateSettings.templateRef,
-    patchZone: false
+    patchZone: false,
   });
   const viewContainerRef = templateSettings.viewContainerRef;
 
@@ -101,12 +112,12 @@ export function createVirtualListManager<
   let changesArr: RxListTemplateChange[];
   let partiallyFinished = false;
   let renderedRange: ListRange;
-  let heights = [];
+  let heights: { height: number; scrollTop: number }[] = [];
 
   function heightsUntil(index: number) {
     let height = 0;
     for (let i = 0; i < index; i++) {
-      height += heights[i];
+      height += heights[i]?.height || 0;
     }
     return height;
   }
@@ -116,44 +127,55 @@ export function createVirtualListManager<
       viewCacheSize = viewCache;
     },
     getHeight(): number {
-      return heights.reduce((a, b) => a+b, 0);
+      return heights.reduce((a, { height }) => a + height, 0);
     },
     nextStrategy(nextConfig: Observable<string>): void {
       strategyHandling$.next(nextConfig);
     },
     render(
       values$: Observable<NgIterable<T>>,
-      range: Observable<ListRange>
+      onScroll$: Observable<number>
     ): Observable<any> {
-      return combineLatest([values$, range]).pipe(render());
+      return combineLatest([values$, onScroll$]).pipe(render());
     },
     detach(): void {
       for (const view of _viewCache) {
         view.destroy();
       }
       _viewCache = [];
-    }
+    },
   };
 
-  function render(): OperatorFunction<[NgIterable<T>, ListRange], any> {
+  function render(): OperatorFunction<[NgIterable<T>, number], any> {
     let count = 0;
-    return (o$: Observable<[NgIterable<T>, ListRange]>): Observable<any> =>
+    return (o$: Observable<[NgIterable<T>, number]>): Observable<any> =>
       o$.pipe(
         // map iterable to latest diff
-        map(([data, range]) => {
+        map(([data, scrollTop]) => {
           const items = Array.isArray(data) ? data : [];
+          const range = { start: 0, end: items.length };
+          const heightsLength = heights.length;
+          let i = 0;
+          const containerHeight = 350;
+          const margin = 40;
+          const adjustedScrollTop = scrollTop + margin;
+          console.log(items.length, 'itemLenght');
+          for (i; i < heightsLength; i++) {
+            const entry = heights[i];
+            if (entry.scrollTop + entry.height <= adjustedScrollTop) {
+              range.start = i;
+            } else if (entry.scrollTop > containerHeight + adjustedScrollTop) {
+              range.end = i;
+              break;
+            }
+          }
           const iterable = items.slice(range.start, range.end);
           renderedRange = range;
+          console.log('renderedRange', range);
           if (partiallyFinished) {
             const currentIterable = [];
-            for (
-              let i = 0, ilen = viewContainerRef.length;
-              i < ilen;
-              i++
-            ) {
-              const viewRef = <EmbeddedViewRef<C>>(
-                viewContainerRef.get(i)
-              );
+            for (let i = 0, ilen = viewContainerRef.length; i < ilen; i++) {
+              const viewRef = <EmbeddedViewRef<C>>viewContainerRef.get(i);
               currentIterable[i] = viewRef.context.$implicit;
             }
             differ.diff(currentIterable);
@@ -161,16 +183,15 @@ export function createVirtualListManager<
           return {
             changes: differ.diff(iterable),
             items: iterable,
-            data: items
+            data: items,
           };
         }),
+        filter(({ changes }) => !!changes),
         withLatestFrom(strategyHandling$.strategy$),
         // Cancel old renders
         switchMap(([{ changes, items, data }, strategy]) => {
-          const listChanges = listViewHandler.getListChanges(
-            changes,
-            items
-          );
+          console.log('changes', changes);
+          const listChanges = listViewHandler.getListChanges(changes, items);
           changesArr = listChanges[0];
           const insertedOrRemoved = listChanges[1];
           const applyChanges$ = getObservablesFromChangesArray(
@@ -186,9 +207,7 @@ export function createVirtualListManager<
           return merge(
             combineLatest(
               // emit after all changes are rendered
-              applyChanges$.length > 0
-              ? [...applyChanges$]
-              : [of(items)]
+              applyChanges$.length > 0 ? [...applyChanges$] : [of(items)]
             ).pipe(
               tap(() => (partiallyFinished = false)),
               // somehow this makes the strategySelect work
@@ -216,47 +235,47 @@ export function createVirtualListManager<
     count: number
   ) {
     return changes.length > 0
-           ? changes.map(change => {
-        return onStrategy(
-          change,
-          strategy,
-          _change => {
-            const type = _change[0];
-            const payload = _change[1];
-            switch (type) {
-              case RxListTemplateChangeType.insert:
-                _insertView(payload[0], payload[1], count);
-                break;
-              case RxListTemplateChangeType.move:
-                _moveView(
-                  payload[0],
-                  payload[2],
-                  payload[1],
-                  count
-                );
-                break;
-              case RxListTemplateChangeType.remove:
-                _detachAndCacheView(payload as any);
-                break;
-              case RxListTemplateChangeType.update:
-                _updateView(payload[0], payload[1], count);
-                break;
-              case RxListTemplateChangeType.context:
-                _updateUnchangedContext(payload[1], count);
-                break;
-            }
-          },
-          {}
-        );
-      })
-           : [];
+      ? changes.map((change) => {
+          return onStrategy(
+            change,
+            strategy,
+            (_change) => {
+              const type = _change[0];
+              const payload = _change[1];
+              switch (type) {
+                case RxListTemplateChangeType.insert:
+                  console.log('perform insert', payload);
+                  _insertView(payload[0], payload[1], count);
+                  break;
+                case RxListTemplateChangeType.move:
+                  console.log('perform move', payload);
+                  _moveView(payload[0], payload[2], payload[1], count);
+                  break;
+                case RxListTemplateChangeType.remove:
+                  console.log('perform remove', payload);
+                  _detachAndCacheView(payload[1] as any);
+                  break;
+                case RxListTemplateChangeType.update:
+                  console.log('perform update', payload);
+                  _updateView(payload[0], payload[1], count);
+                  break;
+                case RxListTemplateChangeType.context:
+                  console.log('perform context', payload);
+                  _updateUnchangedContext(payload[1], count);
+                  break;
+              }
+            },
+            {}
+          );
+        })
+      : [];
   }
 
   function _updateUnchangedContext(index: number, count: number) {
     const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
     view.context.updateContext({
       count,
-      index: renderedRange.start + index
+      index: renderedRange.start + index,
     } as any);
     view.detectChanges();
   }
@@ -265,9 +284,10 @@ export function createVirtualListManager<
     const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
     templateSettings.updateViewContext(item, view, {
       count,
-      index: renderedRange.start + index
+      index: renderedRange.start + index,
     } as any);
     view.detectChanges();
+    _setViewHeight(view, index);
   }
 
   /**
@@ -283,18 +303,15 @@ export function createVirtualListManager<
     if (cachedView) {
       templateSettings.updateViewContext(value, cachedView, {
         count,
-        index: currentIndex
+        index: currentIndex,
       } as any);
       cachedView.detectChanges();
-      const element = cachedView.rootNodes[0] as HTMLElement;
-      element.style.position = 'absolute';
-      element.style.transform = `translateY(${heightsUntil(currentIndex)})`;
-      heights[currentIndex] = element.offsetHeight;
+      _setViewHeight(cachedView, currentIndex);
       return undefined;
     }
     const context = templateSettings.createViewContext(value, {
       count,
-      index: currentIndex
+      index: currentIndex,
     });
     const view = viewContainerRef.createEmbeddedView(
       templateSettings.templateRef,
@@ -302,18 +319,30 @@ export function createVirtualListManager<
       currentIndex
     );
     view.detectChanges();
-    const element = view.rootNodes[0] as HTMLElement;
-    element.style.position = 'absolute';
-    element.style.transform = `translateY(${heightsUntil(currentIndex)}px)`;
-    heights[currentIndex] = element.offsetHeight;
+    _setViewHeight(view, currentIndex);
     return view;
+  }
+
+  function _setViewHeight(view: EmbeddedViewRef<any>, currentIndex: number) {
+    const element = view.rootNodes[0] as HTMLElement;
+    const adjustedIndex = currentIndex + renderedRange.start;
+    const scrollTop = heightsUntil(adjustedIndex);
+    console.log('_setViewHeight', view.context);
+    console.log('currentIndex', currentIndex);
+    console.log('scrollTop', scrollTop);
+    console.log('heights', heights);
+    console.log('adjustedIndex', adjustedIndex);
+    element.style.position = 'absolute';
+    element.style.transform = `translateY(${scrollTop}px)`;
+    heights[adjustedIndex] = {
+      height: element.offsetHeight,
+      scrollTop,
+    };
   }
 
   /** Detaches the view at the given index and inserts into the view cache. */
   function _detachAndCacheView(index: number) {
-    const detachedView = viewContainerRef.detach(
-      index
-    ) as EmbeddedViewRef<C>;
+    const detachedView = viewContainerRef.detach(index) as EmbeddedViewRef<C>;
     detachedView.detectChanges();
     _maybeCacheView(detachedView);
   }
@@ -331,9 +360,10 @@ export function createVirtualListManager<
     viewContainerRef.move(view, currentIndex);
     templateSettings.updateViewContext(value, view, {
       count,
-      index: currentIndex
+      index: currentIndex,
     } as any);
     view.detectChanges();
+    _setViewHeight(view, currentIndex);
     return view;
   }
 

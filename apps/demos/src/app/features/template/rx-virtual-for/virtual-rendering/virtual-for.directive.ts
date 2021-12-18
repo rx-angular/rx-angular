@@ -24,11 +24,15 @@ import {
 } from '@rx-angular/cdk/template';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
+import { fromEvent } from '@rx-angular/cdk/zone-less';
 
 import { Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { RxVirtualForViewportComponent } from './virtual-for-viewport.component';
-import { createVirtualListManager, VirtualListManager } from './virtual-template-manager';
-
+import {
+  createVirtualListManager,
+  VirtualListManager,
+} from './virtual-template-manager';
 
 @Directive({
   selector: '[rxVirtualFor]',
@@ -39,7 +43,6 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
 {
   /** @internal */
   static ngTemplateGuard_rxFor: 'binding';
-
 
   @Input()
   set rxVirtualFor(
@@ -70,8 +73,8 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   @Input('rxVirtualForParent') renderParent = true;
 
-
-  @Input('rxVirtualForPatchZone') patchZone = this.strategyProvider.config.patchZone;
+  @Input('rxVirtualForPatchZone') patchZone =
+    this.strategyProvider.config.patchZone;
 
   @Input('rxVirtualForTrackBy')
   set trackBy(trackByFnOrKey: string | ((idx: number, i: T) => any)) {
@@ -81,7 +84,9 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
         : trackByFnOrKey;
   }
 
-  @Input('rxVirtualForRenderCallback') set renderCallback(renderCallback: Subject<U>) {
+  @Input('rxVirtualForRenderCallback') set renderCallback(
+    renderCallback: Subject<U>
+  ) {
     this._renderCallback = renderCallback;
   }
 
@@ -136,32 +141,37 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /** @internal */
   ngOnInit() {
-    this.listManager = createVirtualListManager<
-      T,
-      RxDefaultListViewContext<T>
-    >({
-      iterableDiffers: this.iterableDiffers,
-      renderSettings: {
-        cdRef: this.cdRef,
-        eRef: this.eRef,
-        strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
-        defaultStrategyName: this.strategyProvider.primaryStrategy,
-        parent: coerceBooleanProperty(this.renderParent),
-        patchZone: this.patchZone ? this.ngZone : false,
-        errorHandler: this.errorHandler,
-      },
-      templateSettings: {
-        patchZone: false,
-        viewContainerRef: this.viewContainerRef,
-        templateRef: this.templateRef,
-        createViewContext: this.createViewContext,
-        updateViewContext: this.updateViewContext,
-      },
-      trackBy: this._trackBy,
-    });
+    this.listManager = createVirtualListManager<T, RxDefaultListViewContext<T>>(
+      {
+        iterableDiffers: this.iterableDiffers,
+        renderSettings: {
+          cdRef: this.cdRef,
+          eRef: this.eRef,
+          strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
+          defaultStrategyName: this.strategyProvider.primaryStrategy,
+          parent: coerceBooleanProperty(this.renderParent),
+          patchZone: this.patchZone ? this.ngZone : false,
+          errorHandler: this.errorHandler,
+        },
+        templateSettings: {
+          patchZone: false,
+          viewContainerRef: this.viewContainerRef,
+          templateRef: this.templateRef,
+          createViewContext: this.createViewContext,
+          updateViewContext: this.updateViewContext,
+        },
+        trackBy: this._trackBy,
+      }
+    );
     this.listManager.nextStrategy(this.strategy$);
     this._subscription = this.listManager
-      .render(this.values$, of({ start: 0, end: 200 }))
+      .render(
+        this.values$,
+        this.viewport.elementScrolled().pipe(
+          map(() => this.viewport.scrollContainer().nativeElement.scrollTop),
+          startWith(0)
+        )
+      )
       .subscribe((v) => {
         this._renderCallback?.next(v);
         this.viewport.updateContentSize(this.listManager.getHeight());
