@@ -46,7 +46,7 @@ export class RxStateInjectionComponent {
 
 **Inheritance**
 
-You can also use `RxState` by `extending` from it in your component. The downside of this approach is, that
+You can also use `RxState` by extending from it in your component. The downside of this approach is, that
 you cannot replace the instance of `RxState` in a test environment.
 
 ```ts
