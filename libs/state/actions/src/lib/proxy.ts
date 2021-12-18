@@ -5,8 +5,7 @@
  * @param transforms
  */
 import { Subject } from 'rxjs';
-import { KeysOf, ValuesOf } from '../../utils/src';
-import { RxActions } from './types';
+import { KeysOf, ValuesOf, RxActions } from './types';
 
 export function actionProxyHandler<T, U>(
   subjects: { [K in keyof T]: Subject<ValuesOf<T>> },

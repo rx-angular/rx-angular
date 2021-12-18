@@ -1,7 +1,9 @@
-import { Actions, ActionTransforms, RxActions, SubjectMap } from './types';
-import { OnDestroy } from '@angular/core';
+import { Actions, ActionTransforms, RxActions } from './types';
+import { Injectable, OnDestroy } from '@angular/core';
 import { actionProxyHandler } from './proxy';
 import { Subject } from 'rxjs';
+
+type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> }
 
 /**
  * This class creates RxActions bound to Angular's DI life-cycles. This prevents memorie leaks and optionally makes the instance reusable across the app.
@@ -10,6 +12,7 @@ import { Subject } from 'rxjs';
  * @example
  * const factory = new RxActionFactory();
  */
+@Injectable()
 export class RxActionsFactory<T extends Actions> implements OnDestroy {
   private subjects: SubjectMap<T> = {} as SubjectMap<T>;
 
