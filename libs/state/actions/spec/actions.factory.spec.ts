@@ -3,8 +3,8 @@ import { mockConsole } from '@test-helpers';
 import { RxActionsFactory } from '../src/lib/actions.factory';
 import { isObservable } from 'rxjs';
 
-/** @test {getActions} */
-describe('getActions', () => {
+/** @test {RxActionsFactory} */
+describe('RxActionsFactory', () => {
   beforeAll(() => mockConsole());
 
   it('should get created properly', () => {
