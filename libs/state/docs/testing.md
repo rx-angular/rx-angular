@@ -25,7 +25,7 @@ and access the respective component:
 
 **Local Provider**
 
-`providing` a local instance of `RxState` for a component is the recommended and most common way to use `RxState` in your component.
+Providing a local instance of `RxState` for a component is the recommended and most common way to use `RxState` in your component.
 It is recommended because it is the only way to actually make use of angulars `Dependency Injection` system
 when testing your component. You'll see why in the next section.
 
