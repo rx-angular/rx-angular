@@ -9,7 +9,7 @@ package.
 ## RxState
 
 There are two ways you can test `RxState`. Depending on your use case, you maybe want
-to test the behavior of a whole `component`, or test the `state` and it's transformations on
+to test the behavior of a whole component, or test the state and it's transformations on
 its own.
 
 ### Components
