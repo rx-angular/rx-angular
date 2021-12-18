@@ -1,5 +1,6 @@
 import { ComparableData } from '../interfaces/comparable-data-type';
-import { isDefined } from '../../utils';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { isDefined } from '@rx-angular/state/selections';
 import { valuesComparer } from '../_internals/valuesComparer.util';
 
 /**
