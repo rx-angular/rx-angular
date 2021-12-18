@@ -12,12 +12,12 @@ Convenience helper to easily apply different change detection mechanisms to Angu
 The documentation also includes detaillsd explainations of techniques and provides diagrams for better visual understanding.
 
 ## Key features
-✅ A easy mental model for highly sophisticated techniques
-✅ Abstracted ChangeDetection 
-✅ Schedule any type of work
-✅ Rich set of optimized change detection strategies
-✅ Fully tested
-✅ Well Documented
+- ✅ A easy mental model for highly sophisticated techniques
+- ✅ Abstracted ChangeDetection 
+- ✅ Schedule any type of work
+- ✅ Rich set of optimized change detection strategies
+ -✅ Fully tested
+- ✅ Well Documented
 
 ## Demos:
 

@@ -153,7 +153,6 @@ The special thing about the set of concurrent strategies is they have a render d
 It means if the scheduled tasks in the global queue of work is not exhausted after a certain time window, we stop the chunking process.
 Instead all remaining work will get executed as fast as possible. This means in one synchronous block (that potentially can causes a frame drop).
 
-![Render Strategies - concurrent anatomy png](https://user-images.githubusercontent.com/10064416/145231603-5e6e250d-7c8c-4e76-8872-8b01a3a65c24.png)
 ![Render Strategies - concurrent anatomy png](https://user-images.githubusercontent.com/10064416/146287356-023836c8-a697-4640-a4ae-7d567bc02bf0.png)
 Every strategy has a different render deadline. Strategies are designed from the perspective of how important the work is for the user. see: [RAIL model](https://web.dev/rail/)
 
@@ -174,6 +173,7 @@ What concurrent scheduling does under the hood is is cunking up work in cycles o
 ![Render Strategies - example usage](https://user-images.githubusercontent.com/10064416/146285888-ae39072c-aa8f-4c8a-a33b-8181f0c62464.png)
 
 ### Immediate
+
 ![render-strategies-concurrent-immediate-tree](https://user-images.githubusercontent.com/10064416/146285875-2049440b-4fb8-493e-a220-adfde74bdc8f.png)
 
 Urgent work that must happen immediately is initiated and visible by the user. This occurs right after the current task and has the highest priority.
@@ -181,6 +181,7 @@ Urgent work that must happen immediately is initiated and visible by the user. T
 | Render Method     | Scheduling    | Render Deadline |
 | ----------------- | ------------- | --------------- |
 | 🠗 `detectChanges` | `postMessage` | 0ms             |
+
 ![render-strategies-concurrent-immediate-diagramm](https://user-images.githubusercontent.com/10064416/146285874-684230bf-f38d-4150-a803-fdf896a57c8a.png)
 
 **Usecase:**
@@ -239,6 +240,7 @@ Critical work that must be done in the current frame, is initiated and visible b
 | Render Method     | Scheduling    | Render Deadline |
 | ----------------- | ------------- | --------------- |
 | 🠗 `detectChanges` | `postMessage` | 250ms           |
+
 ![render-strategies-concurrent-userBlocking-diagramm](https://user-images.githubusercontent.com/10064416/146285898-c60e4ab6-98bd-4c0a-8c1f-a2ecbc829f88.png)
 
 **Usecase:**
@@ -291,6 +293,7 @@ export class DropdownComponent {
 > Be aware to avoid scheduling large or non-urgent work with `userBlocking` priority as it blocks rendering after 250ms
 
 ### Normal
+
 ![render-strategies-concurrent-normal-tree](https://user-images.githubusercontent.com/10064416/146285896-c41bffd9-f711-4442-bd9c-009a0579dd49.png)
 
 Heavy work visible to the user. For example, since it has a higher timeout, it is more suitable for the rendering of data lists.
@@ -330,6 +333,7 @@ export class ItemsListComponent {
 ```
 
 ### Low
+
 ![render-strategies-concurrent-low-tree](https://user-images.githubusercontent.com/10064416/146285890-421be34c-8a76-4b04-bd29-2d9bca103547.png)
 
 Work that is typically not visible to the user or initiated by the user.
@@ -337,6 +341,7 @@ Work that is typically not visible to the user or initiated by the user.
 | Render Method     | Scheduling    | Render Deadline |
 | ----------------- | ------------- | --------------- |
 | 🠗 `detectChanges` | `postMessage` | 10000ms         |
+
 ![render-strategies-concurrent-low-diagramm](https://user-images.githubusercontent.com/10064416/146285894-8d2992f3-6e5f-49db-8c45-d54424cc4a3e.png)
 
 **Usecase:**
@@ -380,6 +385,7 @@ export class ItemsListComponent {
 > This priority fits well for things that should happen but has lower priority. For any non-urgent background process `idle` is the best fit.
 
 ### Idle
+
 ![render-strategies-concurrent-idle-tree](https://user-images.githubusercontent.com/10064416/146285889-8f98a92c-35dd-4632-9b3a-0eaf759790fc.png)
 
 Urgent work that should happen in the background and is not initiated but visible by the user. This occurs right after current task and has the lowest priority. 
@@ -391,6 +397,7 @@ Urgent work that should happen in the background and is not initiated but visibl
 ![render-strategies-concurrent-idle-diagramm](https://user-images.githubusercontent.com/10064416/146285892-c996b043-c1c0-411b-abbd-1d2867e36711.png)
 
 **Usecase:**
+
 ![Render Strategies - idle example](https://user-images.githubusercontent.com/10064416/146285887-0c214d88-cab1-4517-97a7-41318e6436c0.png)
 
 This strategy is especially useful for logic meant to run in the background. Good example of such interaction is background sync.
