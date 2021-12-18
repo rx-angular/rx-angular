@@ -53,7 +53,9 @@ export function renamingRule(
                 sourceFile,
                 sourceFile.fileName,
                 symbolName,
-                typeof rename === 'string' ? rename : rename[1]
+                typeof rename === 'string' ? rename : rename[1],
+                false,
+                packageName
               );
             }
           );
