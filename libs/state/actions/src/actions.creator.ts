@@ -1,5 +1,6 @@
 import { RxActions, Actions, ActionTransforms, SubjectMap } from './types';
 import { actionProxyHandler } from './proxy';
+import { Subject } from 'rxjs';
 
 /**
  * This function, similar to the RxActionFactory class, creates RxActions. In comparison to the class those actions are not bound to Angular' DI.
@@ -10,9 +11,7 @@ export function rxActionsCreator<T extends Actions>() {
   return {
     create,
     destroy: (): void => {
-      for (let subjectsKey in subjects) {
-        subjects[subjectsKey].complete();
-      }
+      Object.values(subjects).forEach((subject: Subject<any>) => subject.complete());
     },
   };
 
