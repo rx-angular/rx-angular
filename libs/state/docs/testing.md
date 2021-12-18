@@ -155,7 +155,7 @@ There are cases where you want to unit test your state transformations instead o
 
 > It is advisable that you make yourself familiar with the concept of [rxjs marble testing](https://rxjs.dev/guide/testing/marble-testing)
 
-Ideally, you already have decoupled your `RxState` from your `Component` in your application.
+Ideally, you already have decoupled your `RxState` from your component in your application.
 
 In order to create a fully decoupled `RxState` instance, you can simply create an `@Injectable()` and 
 extend from `RxState`.
