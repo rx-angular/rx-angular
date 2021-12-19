@@ -45,6 +45,23 @@ describe('state migration update-1.4.7', () => {
     expect(file).toMatchSnapshot();
   });
 
+  it('should keep rx-angular/state', async () => {
+    appTree = await setupTestFile(`
+      import { Injectable } from '@angular/core';
+      import { map } from 'rxjs';
+      import { RxState } from '@rx-angular/state';
+
+      @Injectable({
+        providedIn: 'root',
+      })
+      export class AuthStateService extends RxState<AuthState>{ }
+  `);
+
+    const file = appTree.readContent('app.module.ts');
+
+    expect(file).toMatchSnapshot();
+  });
+
   it('should replace cdk/transformations', async () => {
     appTree = await setupTestFile(`
       import { NgModule } from '@angular/core';
