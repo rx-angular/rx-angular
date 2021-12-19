@@ -243,3 +243,25 @@ import { setTimeout } from '@rx-angular/cdk/zone-less/browser';
 export class AppModule {}
 "
 `;
+
+exports[`cdk migration 1.0.0-alpha-12 should replace zone-less in edge case 1`] = `
+"import {
+  ChangeDetectionStrategy,
+  Component,
+  TrackByFunction,
+  ViewChild,
+} from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { RxState } from '@rx-angular/state';
+import { filter, map } from 'rxjs';
+import { setTimeout } from '@rx-angular/cdk/zone-less/browser';
+@Component({
+  selector: 'app-shell',
+  templateUrl: './app-shell.component.html',
+  styleUrls: ['./app-shell.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [RxState],
+})
+export class AppShellComponent {}
+"
+`;

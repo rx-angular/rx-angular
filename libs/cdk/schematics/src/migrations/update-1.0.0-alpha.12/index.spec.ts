@@ -305,6 +305,30 @@ describe('cdk migration 1.0.0-alpha-12', () => {
 
     expect(file).toMatchSnapshot();
   });
+  it('should replace zone-less in edge case', async () => {
+    appTree = await setupTestFile(`
+    import { ChangeDetectionStrategy, Component, TrackByFunction, ViewChild } from '@angular/core';
+    import { NavigationEnd, Router } from '@angular/router';
+    import { RxState } from '@rx-angular/state';
+    import { filter, map } from 'rxjs';
+    import { setTimeout } from '@rx-angular/cdk';
+
+    @Component({
+      selector: 'app-shell',
+      templateUrl: './app-shell.component.html',
+      styleUrls: ['./app-shell.component.scss'],
+      changeDetection: ChangeDetectionStrategy.OnPush,
+      providers: [RxState]
+    })
+    export class AppShellComponent {
+
+    }
+  `);
+
+    const file = appTree.readContent('app.module.ts');
+
+    expect(file).toMatchSnapshot();
+  });
 
   it('should replace zone-configurations', async () => {
     appTree = await setupTestFile(`
@@ -366,6 +390,8 @@ describe('cdk migration 1.0.0-alpha-12', () => {
 
     tree.create(filePath, fileInput);
 
-    return runner.runSchematicAsync(`update-1.0.0-alpha.12`, {}, tree).toPromise();
+    return runner
+      .runSchematicAsync(`update-1.0.0-alpha.12`, {}, tree)
+      .toPromise();
   }
 });
