@@ -325,7 +325,6 @@ export function createVirtualListManager<
       index: renderedRange.start + index,
     } as any);
     view.detectChanges();
-    // _setViewHeight(view, index);
   }
 
   /**
@@ -344,7 +343,6 @@ export function createVirtualListManager<
         index: currentIndex,
       } as any);
       cachedView.detectChanges();
-      // _setViewHeight(cachedView, currentIndex);
       return undefined;
     }
     const context = templateSettings.createViewContext(value, {
@@ -357,7 +355,6 @@ export function createVirtualListManager<
       currentIndex
     );
     view.detectChanges();
-    // _setViewHeight(view, currentIndex);
     return view;
   }
 
@@ -428,7 +425,6 @@ export function createVirtualListManager<
       // container to ensure that all the references are removed.
       if (index === -1) {
         view.destroy();
-        // view.detectChanges();
       } else {
         viewContainerRef.remove(index);
       }
