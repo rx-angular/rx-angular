@@ -28,35 +28,41 @@ export function renamingRule(
           }
 
           /* Remove old imports. */
-          const removeChanges = findImportSpecifiers(sourceFile, imports).map(
-            ({ importDeclaration }) => {
-              return createRemoveChange(
-                sourceFile,
-                importDeclaration,
-                importDeclaration.getStart(),
-                importDeclaration.getFullText()
-              );
-            }
-          );
+          const removeChanges = findImportSpecifiers(
+            sourceFile,
+            imports,
+            renames
+          ).map(({ importDeclaration }) => {
+            return createRemoveChange(
+              sourceFile,
+              importDeclaration,
+              importDeclaration.getStart(),
+              importDeclaration.getFullText()
+            );
+          });
 
           /* Insert new imports. */
-          const insertChanges = findImportSpecifiers(sourceFile, imports).map(
-            ({ importSpecifier }) => {
-              const asSpecifier = /\s+as.*/gm.exec(importSpecifier);
-              const as = asSpecifier != null ? asSpecifier[0] : '';
-              const i = importSpecifier.replace(/\s+as.*/gm, '');
-              const rename = renames[i];
-              const symbolName = `${
-                typeof rename === 'string' ? i : rename[0]
-              }${as}`;
-              return insertImport(
-                sourceFile,
-                sourceFile.fileName,
-                symbolName,
-                typeof rename === 'string' ? rename : rename[1]
-              );
-            }
-          );
+          const insertChanges = findImportSpecifiers(
+            sourceFile,
+            imports,
+            renames
+          ).map(({ importSpecifier }) => {
+            const asSpecifier = /\s+as.*/gm.exec(importSpecifier);
+            const as = asSpecifier != null ? asSpecifier[0] : '';
+            const i = importSpecifier.replace(/\s+as.*/gm, '');
+            const rename = renames[i];
+            const symbolName = `${
+              typeof rename === 'string' ? i : rename[0]
+            }${as}`;
+            return insertImport(
+              sourceFile,
+              sourceFile.fileName,
+              symbolName,
+              typeof rename === 'string' ? rename : rename[1],
+              false,
+              packageName
+            );
+          });
 
           /* Replace node occurrences if a rename is specified, eg: { OldModuleName: ['NewModuleName', 'new-path.ts'] } */
           const replaceChanges = Object.entries(renames)
@@ -66,8 +72,8 @@ export function renamingRule(
             );
 
           insert(tree, sourceFile.fileName, [
-            ...insertChanges,
             ...removeChanges,
+            ...insertChanges,
             ...replaceChanges,
           ]);
         });
@@ -104,7 +110,8 @@ function replaceNodeOccurrences(
 
 function findImportSpecifiers(
   sourceFile: ts.SourceFile,
-  imports: ts.ImportDeclaration[]
+  imports: ts.ImportDeclaration[],
+  renames: Record<string, string | [string, string]>
 ) {
   return imports.flatMap((importDeclaration) => {
     const importSpecifiers = findNodes(
@@ -112,9 +119,38 @@ function findImportSpecifiers(
       ts.SyntaxKind.ImportSpecifier
     );
 
-    return importSpecifiers.map((importSpecifier) => ({
-      importDeclaration,
-      importSpecifier: importSpecifier.getText(sourceFile),
-    }));
+    return importSpecifiers
+      .map((importSpecifier) => ({
+        importDeclaration,
+        importSpecifier: importSpecifier.getText(sourceFile),
+      }))
+      .filter(({ importDeclaration, importSpecifier }) => {
+        const i = importSpecifier.replace(/\s+as.*/gm, '');
+        const rename = renames[i];
+        if (!rename) {
+          return false;
+        }
+        if (importDeclaration.importClause != null) {
+          const imports = importDeclaration.importClause
+            .getText(sourceFile)
+            .replace(/{/g, '')
+            .replace(/}/g, '')
+            .trim()
+            .split(',');
+          if (imports.length > 1) {
+            return true;
+          }
+        }
+        const symbolName = `${typeof rename === 'string' ? i : rename[0]}`;
+        const importPath = (typeof rename === 'string' ? rename : rename[1])
+          .replace(/'/g, '')
+          .replace(/"/g, '');
+        const currentImport = importDeclaration.moduleSpecifier
+          .getText(sourceFile)
+          .replace(/'/g, '')
+          .replace(/"/g, '');
+
+        return currentImport !== importPath || symbolName !== importSpecifier;
+      });
   });
 }

@@ -214,23 +214,25 @@ export class AppModule {}
 exports[`cdk migration 1.0.0-alpha-12 should replace zone-less 1`] = `
 "import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { coerceObservableWith } from '@rx-angular/cdk/coercing';
 import { AppComponent } from './app.component';
-import { getZoneUnPatchedApi } from '@rx-angular/cdk/zone-less';
-import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less';
-import { requestAnimationFrame } from '@rx-angular/cdk/zone-less';
-import { cancelAnimationFrame } from '@rx-angular/cdk/zone-less';
-import { setInterval } from '@rx-angular/cdk/zone-less';
-import { clearInterval } from '@rx-angular/cdk/zone-less';
-import { setTimeout } from '@rx-angular/cdk/zone-less';
-import { clearTimeout } from '@rx-angular/cdk/zone-less';
-import { unpatchAddEventListener } from '@rx-angular/cdk/zone-less';
-import { interval } from '@rx-angular/cdk/zone-less';
-import { timer } from '@rx-angular/cdk/zone-less';
-import { fromEvent } from '@rx-angular/cdk/zone-less';
-import { asyncScheduler } from '@rx-angular/cdk/zone-less';
-import { asapScheduler } from '@rx-angular/cdk/zone-less';
-import { queueScheduler } from '@rx-angular/cdk/zone-less';
-import { animationFrameScheduler } from '@rx-angular/cdk/zone-less';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
+import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less/browser';
+import { requestAnimationFrame } from '@rx-angular/cdk/zone-less/browser';
+import { cancelAnimationFrame } from '@rx-angular/cdk/zone-less/browser';
+import { setInterval } from '@rx-angular/cdk/zone-less/browser';
+import { clearInterval } from '@rx-angular/cdk/zone-less/browser';
+import { setTimeout } from '@rx-angular/cdk/zone-less/browser';
+import { clearTimeout } from '@rx-angular/cdk/zone-less/browser';
+import { unpatchAddEventListener } from '@rx-angular/cdk/zone-less/browser';
+import { interval } from '@rx-angular/cdk/zone-less/rxjs';
+import { timer } from '@rx-angular/cdk/zone-less/rxjs';
+import { fromEvent } from '@rx-angular/cdk/zone-less/rxjs';
+import { asyncScheduler } from '@rx-angular/cdk/zone-less/rxjs';
+import { asapScheduler } from '@rx-angular/cdk/zone-less/rxjs';
+import { queueScheduler } from '@rx-angular/cdk/zone-less/rxjs';
+import { animationFrameScheduler } from '@rx-angular/cdk/zone-less/rxjs';
+import { setTimeout } from '@rx-angular/cdk/zone-less/browser';
 
 @NgModule({
   declarations: [AppComponent],

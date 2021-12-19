@@ -11,6 +11,7 @@ export function insertImport(
   symbolName: string,
   fileName: string,
   isDefault = false,
+  toBeRemoved?: string
 ): Change {
   const rootNode = source;
   const allImports = findNodes(rootNode, ts.SyntaxKind.ImportDeclaration);
@@ -23,7 +24,11 @@ export function insertImport(
       .filter(ts.isStringLiteral)
       .map((n) => n.text);
 
-    return importFiles.filter((file) => file === fileName).length === 1;
+    return (
+      importFiles.filter(
+        (file) => file === fileName && (!toBeRemoved || file !== toBeRemoved)
+      ).length === 1
+    );
   });
 
   if (relevantImports.length > 0) {
@@ -31,7 +36,10 @@ export function insertImport(
     // imports from import file
     const imports: ts.Node[] = [];
     relevantImports.forEach((n) => {
-      Array.prototype.push.apply(imports, findNodes(n, ts.SyntaxKind.Identifier));
+      Array.prototype.push.apply(
+        imports,
+        findNodes(n, ts.SyntaxKind.Identifier)
+      );
       if (findNodes(n, ts.SyntaxKind.AsteriskToken).length > 0) {
         importsAsterisk = true;
       }
@@ -42,22 +50,34 @@ export function insertImport(
       return new NoopChange();
     }
 
-    const importTextNodes = imports.filter((n) => (n as ts.Identifier).text === symbolName);
+    const importTextNodes = imports.filter(
+      (n) => (n as ts.Identifier).text === symbolName
+    );
 
     // insert import if it's not there
     if (importTextNodes.length === 0) {
       const fallbackPos =
-        findNodes(relevantImports[0], ts.SyntaxKind.CloseBraceToken)[0].getStart() ||
+        findNodes(
+          relevantImports[0],
+          ts.SyntaxKind.CloseBraceToken
+        )[0].getStart() ||
         findNodes(relevantImports[0], ts.SyntaxKind.FromKeyword)[0].getStart();
 
-      return insertAfterLastOccurrence(imports, `, ${symbolName}`, fileToEdit, fallbackPos);
+      return insertAfterLastOccurrence(
+        imports,
+        `, ${symbolName}`,
+        fileToEdit,
+        fallbackPos
+      );
     }
 
     return new NoopChange();
   }
 
   // no such import declaration exists
-  const useStrict = findNodes(rootNode, ts.isStringLiteral).filter((n) => n.text === 'use strict');
+  const useStrict = findNodes(rootNode, ts.isStringLiteral).filter(
+    (n) => n.text === 'use strict'
+  );
   let fallbackPos = 0;
   if (useStrict.length > 0) {
     fallbackPos = useStrict[0].end;
@@ -76,7 +96,7 @@ export function insertImport(
     toInsert,
     fileToEdit,
     fallbackPos,
-    ts.SyntaxKind.StringLiteral,
+    ts.SyntaxKind.StringLiteral
   );
 }
 
@@ -115,7 +135,7 @@ function insertAfterLastOccurrence(
   toInsert: string,
   file: string,
   fallbackPos: number,
-  syntaxKind?: ts.SyntaxKind,
+  syntaxKind?: ts.SyntaxKind
 ): Change {
   let lastItem: ts.Node | undefined;
   for (const node of nodes) {
@@ -127,7 +147,9 @@ function insertAfterLastOccurrence(
     lastItem = findNodes(lastItem, syntaxKind).sort(nodesByPosition).pop();
   }
   if (!lastItem && fallbackPos == undefined) {
-    throw new Error(`tried to insert ${toInsert} as first occurence with no fallback position`);
+    throw new Error(
+      `tried to insert ${toInsert} as first occurence with no fallback position`
+    );
   }
   const lastItemPosition: number = lastItem ? lastItem.getEnd() : fallbackPos;
 

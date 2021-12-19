@@ -265,6 +265,7 @@ describe('cdk migration 1.0.0-alpha-12', () => {
     appTree = await setupTestFile(`
       import { NgModule } from '@angular/core';
       import { BrowserModule } from '@angular/platform-browser';
+      import { coerceObservableWith } from '@rx-angular/cdk/coercing';
       import {
         getZoneUnPatchedApi,
         Promise as unpatchedPromise,
@@ -283,6 +284,7 @@ describe('cdk migration 1.0.0-alpha-12', () => {
         queueScheduler,
         animationFrameScheduler
       } from '@rx-angular/cdk';
+      import { setTimeout } from '@rx-angular/cdk';
 
       import { AppComponent } from './app.component';
 
