@@ -130,14 +130,16 @@ function findImportSpecifiers(
         if (!rename) {
           return false;
         }
-        const imports = importDeclaration.importClause
-          .getText(sourceFile)
-          .replace(/{/g, '')
-          .replace(/}/g, '')
-          .trim()
-          .split(',');
-        if (imports.length > 1) {
-          return true;
+        if (importDeclaration.importClause != null) {
+          const imports = importDeclaration.importClause
+            .getText(sourceFile)
+            .replace(/{/g, '')
+            .replace(/}/g, '')
+            .trim()
+            .split(',');
+          if (imports.length > 1) {
+            return true;
+          }
         }
         const symbolName = `${typeof rename === 'string' ? i : rename[0]}`;
         const importPath = (typeof rename === 'string' ? rename : rename[1])
