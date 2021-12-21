@@ -84,6 +84,10 @@ nx migrate @rx-angular/state
 
 [Usage Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/usage.md)
 
+## Testing
+
+[Testing](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/testing.md)
+
 ## Tutorials
 
 - [Basic Tutorial](https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics)
