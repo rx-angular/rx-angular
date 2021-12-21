@@ -1,4 +1,5 @@
-import { CompareFn } from '../../cdk/interfaces/compare-fn';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { CompareFn } from '@rx-angular/state/selections';
 
 /**
  * @deprecated moved to `@rx-angular/cdk/transformations`
