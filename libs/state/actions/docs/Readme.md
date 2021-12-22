@@ -190,7 +190,7 @@ get refreshGenres$(): Observable<string | number> {
 
 Both produce a similar amount of boiler plate and are hard to maintain and type.
 
-By using RxAngular Actions we can reduce the boiler plate significantly:
+By using RxAngular Actions we can reduce the boilerplate significantly:
 
 **RxA - Actions**
 ```typescript
