@@ -278,10 +278,8 @@ template: `
 <button (click)="ui.submitBtn()">Submit<button><br/>
 <ul>
   <li *ngFor="let item of list$ | async as list">{{item}}</li>
-</ul>,
-providers: [RxState]
-`,
-providers: [RxActionsFactory]
+</ul>`,
+providers: [RxState, RxActionsFactory]
 })
 class Component {
   ui = factory.create({searchInput: (e) => e?.target?.value});
