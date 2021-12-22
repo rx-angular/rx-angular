@@ -114,92 +114,19 @@ yarn add @rx-angular/state
 
 ## Usage
 
-As actions are used in global state management as well as in UI event composition we will have a look on both ends.
+By using RxAngular Actions we can reduce the boilerplate significantly, to do so we can start by thinking about the specific section ther events and event payload types:
 
-
-There are 2 common ways to create an action stream and its emission:
-- on Subject multiple filter
-- multiple Subjects
-
-
-**One Subject multiple filter**
-```typescript
-type commandNames = 'refreshUsers' | 'refreshList' | 'refreshGenres';
-interface Command<T extends commandNames, P = any> {
-  type: T;
-  payload?: P;
-}
-type refreshUser = Command<'refreshUsers', string | number>;
-type refreshList = Command<'refreshList', string | number>;
-type refreshGenres = Command<'refreshGenres', string | number>;
-type commands = refreshGenres | refreshList | refreshUser;
-
-private commands = new Subject<commands>();
-
-set refreshUser(value: string | number) {
-  this._refreshUser.next({refreshUser: value})
-}
-get refreshUser$(): Observable<string | number> {
-  return this.commands.pipe(
-    filter(({type} => type === 'refreshUser')
-  ).asObservable();
-}
-set refreshList(value: string | number) {
-  this.commands.next({refreshList: value})
-}
-get refreshList$(): Observable<string | number> {
-  return this.commands.pipe(
-    filter(({type} => type === 'refreshList')
-  ).asObservable();
-}
-set refreshGenres(value: string | number) {
-  this.commands.next({refreshGenres: value})
-}
-get refreshGenres$(): Observable<string | number> {
-  return this.commands.pipe(
-    filter(({type} => type === 'refreshGenres')
-  ).asObservable();
-}
-```
-
-**Multiple Subject**
-```typescript
-private _refreshUser = new Subject<string | number>();
-private _refreshList = new Subject<string | number>();
-private _refreshGenres = new Subject<string | number>();
-
-set refreshUser(value: string | number) {
-  this._refreshUser.next(value)
-}
-get refreshUser$(): Observable<string | number> {
-  return this._refreshUser.asObservable();
-}
-set refreshList(value: string | number) {
-  this._refreshList.next(value)
-}
-get refreshList$(): Observable<string | number> {
-  return this._refreshList.asObservable();
-}
-set refreshGenres(value: string | number) {
-  this._refreshUser.next(value)
-}
-get refreshGenres$(): Observable<string | number> {
-  return this._refreshUser.asObservable();
-}
-```
-
-Both produce a similar amount of boiler plate and are hard to maintain and type.
-
-By using RxAngular Actions we can reduce the boilerplate significantly:
-
-**RxA - Actions**
 ```typescript
 interface Commands {
   refreshUser: string | number;
   refreshList: string | number;
   refreshGenres: string | number;
 }
+```
 
+Next we can use the typing the create the action object:
+
+```typescript
  commands = getActions<Commands>();
  
  refreshUser = commands.refreshUser(value);
@@ -213,7 +140,8 @@ interface Commands {
 ### Usage for global services
 
 In services it comes in handy to have a minimal typed action system. 
-Furthermore, we the still expose setters to trigger actions the imperative way.
+This helps to have them composable for further optimizations.
+Furthermore, we can still expose setters to trigger actions the imperative way.
 
 ```typescript
 interface State {
