@@ -8,7 +8,7 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 Actions are a common part of state management and reactive systems in general. 
 Even if `@rx-angular/state` provides `set` method, sometimes you need to add behaviour to your user input or incomming events.
 
-Subjects are normally used to implement this feature. This leads, especialls in bigger applications to messy code that is bloated with Subjects.
+Subjects are normally used to implement this feature. This leads, especially in bigger applications to messy code that is bloated with Subjects.
 
 Let's have a look at this piece of code:
 
