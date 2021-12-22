@@ -264,7 +264,7 @@ export class StateService extends RxState<State> {
 ### Usage for template events
 
 In components/templates we can use the optional `transforms` param to reduce repetativ code in the template.
-In addition we can use it as a shorthand in the template and directly connect to action dispatching in the calss.
+In addition, we can use it as a shorthand in the template and directly connect to action dispatching in the class.
 
 ```typescript
 interface UiActions {
