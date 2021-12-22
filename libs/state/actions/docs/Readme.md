@@ -58,7 +58,7 @@ Downsides:
 - Manual typing ov subjects and streams
 - no central plae for ui trigger
 
-Imagine we could have a configurable functions that retuens all ui logic typed under one object.
+Imagine we could have configurable functions that return all UI logic typed under one object.
 
 ```typescript
 import { RxActionsFactory } from './actions.factory'; 
