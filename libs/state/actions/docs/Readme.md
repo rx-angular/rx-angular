@@ -200,7 +200,7 @@ interface Commands {
   refreshGenres: string | number;
 }
 
- commands = getActions<>()<Commands>();
+ commands = getActions<Commands>();
  
  refreshUser = commands.refreshUser(value);
  refreshUser$ = commands.refreshUser$;
