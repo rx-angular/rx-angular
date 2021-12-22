@@ -54,7 +54,7 @@ Just look at the amount of code we need to write for only 2 observable ui events
 
 Downsides:
 - Boilerplate for setter and getter
-- Transfromations spreaded over class and template
+- Transformations spreaded over class and template
 - Manual typing ov subjects and streams
 - no central plae for ui trigger
 
