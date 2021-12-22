@@ -43,7 +43,7 @@ class Component {
     switchMap(([_, searchString]) => api.query(searchString))
    )
   
-  consotructor(api: API) {
+  constructor(api: API) {
   
   }
 
