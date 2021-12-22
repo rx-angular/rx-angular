@@ -290,7 +290,7 @@ class Component {
     debounceTime(1500)
   );
   
-  consotructor(
+  constructor(
     private state: RxState<State>,
     private factory: RxActionsFactory<UiActions>,
     globalState: StateService) {
