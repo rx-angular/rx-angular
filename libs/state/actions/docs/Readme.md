@@ -56,7 +56,7 @@ Downsides:
 - Boilerplate for setter and getter
 - Transformations spreaded over class and template
 - Manual typing ov subjects and streams
-- no central plae for ui trigger
+- No central place for UI trigger
 
 Imagine we could have configurable functions that return all UI logic typed under one object.
 
