@@ -254,7 +254,7 @@ export class TypescriptDocsParser {
    */
   private parseMembers(
     members: ts.NodeArray<ts.TypeElement | ts.ClassElement | ts.EnumMember>
-  ): Array<PropertyInfo | MethodInfo | MutatorInfo> {
+  ): Array<any> {
     const result: Array<PropertyInfo | MethodInfo | MutatorInfo> = [];
 
     for (const member of members) {
@@ -304,8 +304,8 @@ export class TypescriptDocsParser {
         this.parseTags(member, {
           description: (tag) => (description += tag.comment || ''),
           example: (tag) =>
-            (description += this.formatExampleCode(tag.comment)),
-          default: (tag) => (defaultValue = tag.comment || ''),
+            (description += this.formatExampleCode(tag.comment as any)),
+          default: (tag) => (defaultValue = tag.comment || '' as any),
           internal: (tag) => (isInternal = true),
         });
         if (isInternal) {
@@ -366,10 +366,10 @@ export class TypescriptDocsParser {
   /**
    * Reads the @docsWeight JSDoc tag from the interface.
    */
-  private getDeclarationWeight(statement: ValidDeclaration): number {
+  private getDeclarationWeight(statement: ValidDeclaration): any {
     let weight = 10;
     this.parseTags(statement, {
-      docsWeight: (tag) => (weight = Number.parseInt(tag.comment || '10', 10)),
+      docsWeight: (tag) => (weight = Number.parseInt(tag.comment || '10' as any, 10)),
     });
     return weight;
   }
@@ -377,7 +377,7 @@ export class TypescriptDocsParser {
   private getDocsPage(statement: ValidDeclaration): string | undefined {
     let docsPage: string | undefined;
     this.parseTags(statement, {
-      docsPage: (tag) => (docsPage = tag.comment),
+      docsPage: (tag) => (docsPage = tag.comment as any),
     });
     return docsPage;
   }
@@ -389,7 +389,7 @@ export class TypescriptDocsParser {
     let description = '';
     this.parseTags(statement, {
       description: (tag) => (description += tag.comment),
-      example: (tag) => (description += this.formatExampleCode(tag.comment)),
+      example: (tag) => (description += this.formatExampleCode(tag.comment as any)),
     });
     return this.restoreAtTokens(description);
   }
@@ -400,7 +400,7 @@ export class TypescriptDocsParser {
   private getDocsCategory(statement: ValidDeclaration): string | undefined {
     let category: string | undefined;
     this.parseTags(statement, {
-      docsCategory: (tag) => (category = tag.comment || ''),
+      docsCategory: (tag) => (category = tag.comment || '' as any),
     });
     return this.kebabCase(category);
   }

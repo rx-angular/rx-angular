@@ -29,19 +29,23 @@
 
 
 - **TEMPLATE**
-  - [Overview](/)
-  - [Installation](/)
-  - [Migration](/)
-  - [Getting started](/)
-  - [Let](/)
-  - [For](/)
-  - [Push](/)
-  - 🔬 Experimental
-    - [🧪 Unpatch directive](/)
-    - [🧪 ViewportPriority directive](/)
-    - Styles
-    - Class
-  - Testing
+  - [Overview](/web/template/overview.md)
+  - [Installation](/web/template/installation.md)
+  - [Migration](/web/template/migration.md)
+  <!-- TODO: Getting started -->
+  <!-- - [Getting started](/) -->
+  - [Let](/web/template/let.md)
+  <!-- TODO: For -->
+  <!-- - [For](/) -->
+  - [Push](/web/template/push.md)
+  - Experimental
+    - [Unpatch directive](/web/template/unpatch.md)
+    <!-- TODO: ViewportPriority -->
+    <!-- - [ViewportPriority directive](/) -->
+    <!-- TODO: Styles, Class, Testing -->
+    <!-- - Styles
+    - Class -->
+  <!-- - Testing -->
 
 - **CDK**
   - [Overview](/web/cdk/overview.md)
