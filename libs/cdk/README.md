@@ -20,7 +20,8 @@ applications
 - [🛠 Coalescing](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing)
 - [📡 Notifications](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/notifications)
 - [🖌 Render-Strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies)
-- 🔳 Template Management
+- [🔳 Template Management](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/template)
+- [🔳 Transformations](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/transformations)
 
 
 ## Demos:

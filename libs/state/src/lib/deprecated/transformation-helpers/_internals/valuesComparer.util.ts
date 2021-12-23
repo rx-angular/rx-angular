@@ -1,6 +1,6 @@
-import { CompareFn } from '../../cdk/interfaces/compare-fn';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { CompareFn, isKeyOf } from '@rx-angular/state/selections';
 import { ComparableData } from '../interfaces/comparable-data-type';
-import { isKeyOf } from '../../utils';
 
 const defaultCompareFn = <T>(a: T, b: T) => a === b;
 
@@ -13,7 +13,6 @@ export function valuesComparer<T>(
   incoming: T,
   compare?: ComparableData<T>
 ): boolean {
-
   if (isKeyOf<T>(compare)) {
     return original[compare] === incoming[compare];
   }

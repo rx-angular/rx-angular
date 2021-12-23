@@ -1,15 +1,17 @@
 <!-- - **@rx-angular/template [BETA]** -->
 
-- **State**
+- **STATE**
   - [Overview](/web/state/overview.md)
   - [Installation](/web/state/installation.md)
   - [Migration](/web/state/migration.md)
-  - [Getting started](/web/state/getting-started.md)
+  <!-- TODO: Getting started OR use basic tutorial -->
+  <!-- - [Getting started](/web/state/getting-started.md) -->
   - [State](/web/state/state.md)
   - [Selections](/web/state/selections.md)
-  - [Effects](/)
-  - [Actions](/)
-  - [Testing](/)
+  <!-- TODO: Effects & Actions -->
+  <!-- - [Effects](/) -->
+  <!-- - [Actions](/) -->
+  - [Testing](/web/state/testing.md)
   - Tutorials
     - [Basic tutorial](/web/state/tutorials/basic-tutorial.md)
     - [Incrementing a value](/web/state/tutorials/incrementing-value.md)
@@ -26,7 +28,7 @@
     - [Manage entities using `@ngrx/entity`](/web/state/integrations/manage-entities-ngrx.md)
 
 
-- **Template**
+- **TEMPLATE**
   - [Overview](/)
   - [Installation](/)
   - [Migration](/)
@@ -54,7 +56,8 @@
     - [Basic strategies](/web/cdk/render-strategies/basic-strategies.md)
     - [Concurrent strategies](/web/cdk/render-strategies/concurrent-strategies.md)
     - [Strategy provider](/web/cdk/render-strategies/strategy-provider.md)
-  - [Template](/web/cdk/template.md)
+  <!-- TODO: Template -->
+  <!-- - [Template](/web/cdk/template.md) -->
   - [Transformations](/web/cdk/transformations/transformation-helpers.md)
   - Zone configurations
     - [Zone flags](/web/cdk/zone-configuration/zone-flags.md)

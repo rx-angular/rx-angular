@@ -3,28 +3,8 @@ export {
   ProjectStateFn,
   ProjectValueFn,
   ProjectStateReducer,
-  ProjectValueReducer
+  ProjectValueReducer,
 } from './lib/rx-state.service';
-export {
-  createSideEffectObservable,
-  createAccumulationObservable,
-  select,
-  stateful,
-  distinctUntilSomeChanged,
-  selectSlice,
-  KeyCompareMap,
-  CompareFn,
-  PickSlice,
-  insert,
-  remove,
-  toDictionary,
-  update,
-  extract,
-  upsert,
-  setProp,
-  patch,
-  deleteProp,
-  dictionaryToArray,
-  toggle,
-  slice
-} from './lib/deprecated'
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+export * from '@rx-angular/state/selections';
+export * from './lib/deprecated/transformation-helpers';

@@ -1,6 +1,6 @@
-import { CompareFn } from '@rx-angular/cdk/state';
+import { CompareFn } from '../interfaces/comparable-data-type';
 import { ComparableData } from '../interfaces/comparable-data-type';
-import { isKeyOf } from '@rx-angular/cdk/utils';
+import { isKeyOf } from '../_internals/guards';
 
 const defaultCompareFn = <T>(a: T, b: T) => a === b;
 

@@ -1,7 +1,7 @@
 import { EMPTY, Observable, Subject, timer } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { selectSlice } from '@rx-angular/cdk/state';
+import { selectSlice } from '@rx-angular/state/selections';
 import { RxState } from '@rx-angular/state';
 import { CounterState, INITIAL_STATE } from '../shared/model';
 import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
@@ -17,14 +17,18 @@ export class CounterPresenterService extends RxState<CounterState> {
   private readonly setToClickSubject = new Subject<Event>();
   private readonly updateCountTrigger$ = this.select(
     selectSlice(['isTicking', 'tickSpeed']),
-    switchMap(s => (s.isTicking ? timer(0, s.tickSpeed) : EMPTY))
+    switchMap((s) => (s.isTicking ? timer(0, s.tickSpeed) : EMPTY))
   );
 
   initialCounterState = INITIAL_STATE;
 
-  readonly count$: Observable<string> = this.select(map(s => s.count + ''));
-  readonly tickSpeed$: Observable<string> = this.select(map(s => s.tickSpeed + ''));
-  readonly countDiff$: Observable<string> = this.select(map(s => s.countDiff + ''));
+  readonly count$: Observable<string> = this.select(map((s) => s.count + ''));
+  readonly tickSpeed$: Observable<string> = this.select(
+    map((s) => s.tickSpeed + '')
+  );
+  readonly countDiff$: Observable<string> = this.select(
+    map((s) => s.countDiff + '')
+  );
 
   constructor() {
     super();
@@ -32,7 +36,10 @@ export class CounterPresenterService extends RxState<CounterState> {
     this.connect('countUp', this.countUpToggleSubject);
     this.connect('countDiff', this.countDiffChangeSubject);
     this.connect('tickSpeed', this.tickSpeedChangeSubject);
-    this.connect('count', this.setToClickSubject.pipe(toLatestFrom(this.countChangeSubject)));
+    this.connect(
+      'count',
+      this.setToClickSubject.pipe(toLatestFrom(this.countChangeSubject))
+    );
     this.connect('count', this.updateCountTrigger$, updateCount);
   }
 
@@ -71,7 +78,4 @@ export class CounterPresenterService extends RxState<CounterState> {
   countDown() {
     this.countUpToggleSubject.next(false);
   }
-
 }
-
-

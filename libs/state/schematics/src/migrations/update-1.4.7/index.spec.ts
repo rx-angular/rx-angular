@@ -13,6 +13,7 @@ describe('state migration update-1.4.7', () => {
       import { NgModule } from '@angular/core';
       import { BrowserModule } from '@angular/platform-browser';
       import {
+        RxState,
         createSideEffectObservable,
         createAccumulationObservable,
         select,
@@ -33,10 +34,27 @@ describe('state migration update-1.4.7', () => {
         imports: [
           BrowserModule
         ],
-        providers: [],
+        providers: [RxState],
         bootstrap: [AppComponent]
       })
       export class AppModule { }
+  `);
+
+    const file = appTree.readContent('app.module.ts');
+
+    expect(file).toMatchSnapshot();
+  });
+
+  it('should keep rx-angular/state', async () => {
+    appTree = await setupTestFile(`
+      import { Injectable } from '@angular/core';
+      import { map } from 'rxjs';
+      import { RxState } from '@rx-angular/state';
+
+      @Injectable({
+        providedIn: 'root',
+      })
+      export class AuthStateService extends RxState<AuthState>{ }
   `);
 
     const file = appTree.readContent('app.module.ts');
@@ -60,7 +78,8 @@ describe('state migration update-1.4.7', () => {
         deleteProp,
         dictionaryToArray,
         toggle,
-        slice
+        slice,
+        RxState
       } from '@rx-angular/state';
 
       import { AppComponent } from './app.component';
@@ -72,7 +91,7 @@ describe('state migration update-1.4.7', () => {
         imports: [
           BrowserModule
         ],
-        providers: [],
+        providers: [RxState],
         bootstrap: [AppComponent]
       })
       export class AppModule { }

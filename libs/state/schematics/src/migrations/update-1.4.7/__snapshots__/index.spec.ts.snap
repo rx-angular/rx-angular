@@ -4,23 +4,36 @@ exports[`state migration update-1.4.7 should replace cdk/state 1`] = `
 "import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { createSideEffectObservable } from '@rx-angular/cdk/state';
-import { createAccumulationObservable } from '@rx-angular/cdk/state';
-import { select } from '@rx-angular/cdk/state';
-import { stateful } from '@rx-angular/cdk/state';
-import { distinctUntilSomeChanged } from '@rx-angular/cdk/state';
-import { selectSlice } from '@rx-angular/cdk/state';
-import { KeyCompareMap } from '@rx-angular/cdk/state';
-import { CompareFn } from '@rx-angular/cdk/state';
-import { PickSlice } from '@rx-angular/cdk/state';
+import { RxState } from '@rx-angular/state';
+import { createSideEffectObservable } from '@rx-angular/state/selections';
+import { createAccumulationObservable } from '@rx-angular/state/selections';
+import { select } from '@rx-angular/state/selections';
+import { stateful } from '@rx-angular/state/selections';
+import { distinctUntilSomeChanged } from '@rx-angular/state/selections';
+import { selectSlice } from '@rx-angular/state/selections';
+import { KeyCompareMap } from '@rx-angular/state/selections';
+import { CompareFn } from '@rx-angular/state/selections';
+import { PickSlice } from '@rx-angular/state/selections';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule],
-  providers: [],
+  providers: [RxState],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
+"
+`;
+
+exports[`state migration update-1.4.7 should keep rx-angular/state 1`] = `
+"import { Injectable } from '@angular/core';
+import { map } from 'rxjs';
+import { RxState } from '@rx-angular/state';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthStateService extends RxState<AuthState> {}
 "
 `;
 
@@ -40,11 +53,12 @@ import { deleteProp } from '@rx-angular/cdk/transformations';
 import { dictionaryToArray } from '@rx-angular/cdk/transformations';
 import { toggle } from '@rx-angular/cdk/transformations';
 import { slice } from '@rx-angular/cdk/transformations';
+import { RxState } from '@rx-angular/state';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule],
-  providers: [],
+  providers: [RxState],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
