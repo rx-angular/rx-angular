@@ -29,6 +29,7 @@
 
 
 - **TEMPLATE**
+<!-- TODO: Update links after refactoring -->
   - [Overview](/web/template/overview.md)
   - [Installation](/web/template/installation.md)
   - [Migration](/web/template/migration.md)
