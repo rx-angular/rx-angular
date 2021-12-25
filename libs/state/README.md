@@ -14,6 +14,11 @@ RxState is a lightweight, flexible, strongly typed and tested tool dedicated to 
 
 - [⛔ Selections](https://github.com/rx-angular/rx-angular/blob/main/libs/state/selections/README.md)
 
+## Intro Video
+
+<a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)</a>
+
+
 ## Description
 
 Developing modern, **reactive** user interfaces imposes a variety of challenging tasks. Naming some of those:
