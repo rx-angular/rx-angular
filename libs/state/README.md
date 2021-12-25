@@ -81,10 +81,6 @@ ng update @rx-angular/state
 nx migrate @rx-angular/state
 ```
 
-## API
-
-[API Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/api/overview.md)
-
 ## Usage
 
 [Usage Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/usage.md)
@@ -92,6 +88,10 @@ nx migrate @rx-angular/state
 ## Testing
 
 [Testing](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/testing.md)
+
+## API
+
+[API Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/api/overview.md)
 
 ## Tutorials
 
