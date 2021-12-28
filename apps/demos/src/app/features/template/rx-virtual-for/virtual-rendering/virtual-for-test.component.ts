@@ -2,14 +2,16 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   OnInit,
   ViewChild,
 } from '@angular/core';
 import { patch, toDictionary, update } from '@rx-angular/cdk/transformations';
-import { defer, pairwise, ReplaySubject, switchMap } from 'rxjs';
+import { defer, pairwise, ReplaySubject, Subject, switchMap } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/index';
+import { RxVirtualForViewportComponent } from './virtual-for-viewport.component';
 
 @Component({
   selector: 'rxa-virtual-for-test',
@@ -21,10 +23,26 @@ import { TestItem } from '../../../../shared/debug-helper/value-provider/index';
           [buttons]="true"
         ></rxa-array-provider>
       </div>
+      <div class="stats">
+        <div *rxLet="data$; let data">
+          <strong>Items: </strong>{{ data.length }}
+        </div>
+        <div *rxLet="renderedItems$; let renderedItems">
+          <strong>renderedItems: </strong>{{ renderedItems }}
+        </div>
+      </div>
       <h2 class="mat-subheading-1">*rxVirtualFor</h2>
       <rxa-virtual-for-viewport class="viewport">
-        <div *rxVirtualFor="let item of data$; trackBy: trackItem" class="item">
-          {{ item.content }}
+        <div
+          *rxVirtualFor="
+            let item of data$;
+            let i = index;
+            trackBy: trackItem;
+            renderCallback: rendered
+          "
+          class="item"
+        >
+          {{ i }} {{ item.content }}
         </div>
       </rxa-virtual-for-viewport>
     </div>
@@ -52,9 +70,19 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
   @ViewChild(ArrayProviderComponent)
   arrayProvider: ArrayProviderComponent;
 
+  @ViewChild(RxVirtualForViewportComponent)
+  virtualViewport: RxVirtualForViewportComponent;
+
   private readonly afterViewInit$ = new ReplaySubject<void>(1);
 
   contentCache = {};
+
+  rendered = new Subject<unknown>();
+  renderedItems$ = this.rendered.pipe(
+    map(
+      () => this.virtualViewport.nativeElement.querySelectorAll('.item').length
+    )
+  );
 
   data$ = defer(() =>
     this.afterViewInit$.pipe(
@@ -102,7 +130,7 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
 
   trackItem = (idx: number, item: TestItem): number => item.id;
 
-  constructor() {}
+  constructor(private elementRef: ElementRef<HTMLElement>) {}
 
   ngOnInit() {}
 

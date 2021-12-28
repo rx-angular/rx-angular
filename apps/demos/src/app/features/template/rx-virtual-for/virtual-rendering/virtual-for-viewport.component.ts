@@ -51,6 +51,8 @@ export class RxVirtualForViewportComponent implements AfterViewInit {
 
   private _elementScrolled = new Subject<Event>();
 
+  readonly nativeElement = this.elementRef.nativeElement;
+
   constructor(
     private elementRef: ElementRef<HTMLElement>,
     private ngZone: NgZone,
