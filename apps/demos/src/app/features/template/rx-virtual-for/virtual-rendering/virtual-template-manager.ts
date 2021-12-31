@@ -1,4 +1,5 @@
 import { ListRange } from '@angular/cdk/collections';
+import { newArray } from '@angular/compiler/src/util';
 import {
   EmbeddedViewRef,
   IterableDiffer,
@@ -13,7 +14,14 @@ import {
   RxListViewComputedContext,
   RxListViewContext,
 } from '@rx-angular/cdk/template';
-import { combineLatest, merge, Observable, of, OperatorFunction } from 'rxjs';
+import {
+  combineLatest,
+  merge,
+  Observable,
+  of,
+  OperatorFunction,
+  Subject,
+} from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
@@ -120,6 +128,11 @@ export function createVirtualListManager<
   let heights: { height: number; scrollTop: number; sampled?: boolean }[] = [];
   let totalHeight = 0;
   const averager = new ItemSizeAverager();
+  const rangeAdjust$ = new Subject<ListRange>();
+  const containerHeight = 350;
+  const margin = 50;
+  let scrollTop = 0;
+  let direction: 'up' | 'down' = 'down';
 
   function heightsUntil(index: number) {
     const entry = heights[index - 1];
@@ -172,42 +185,47 @@ export function createVirtualListManager<
             return items;
           })
         ),
-        combineLatest([
-          onScroll$,
-          items$.pipe(
-            distinctUntilChanged(
-              (oldItems, newItems) => oldItems?.length === newItems?.length
-            )
-          ),
-        ]).pipe(
-          map(([scrollTop, items]) => {
-            const range = { start: null, end: items.length };
-            const heightsLength = heights.length;
-            let i = 0;
-            const containerHeight = 350;
-            const margin = 50;
-            const adjustedScrollTop = scrollTop + margin;
-            console.log(items.length, 'itemLenght');
-            console.log(adjustedScrollTop, 'adjustedScrollTop');
-            console.log(heights, 'heights');
-            for (i; i < heightsLength; i++) {
-              const entry = heights[i];
-              if (entry.scrollTop + entry.height + margin <= scrollTop) {
-                range.start = i;
-              } else if (
-                entry.scrollTop >
-                containerHeight + adjustedScrollTop
-              ) {
-                range.end = i;
-                break;
+        merge(
+          combineLatest([
+            onScroll$.pipe(
+              tap((_scroll) => {
+                direction = _scroll > scrollTop ? 'down' : 'up';
+                scrollTop = _scroll;
+              })
+            ),
+            items$.pipe(
+              distinctUntilChanged(
+                (oldItems, newItems) => oldItems?.length === newItems?.length
+              )
+            ),
+          ]).pipe(
+            map(([_scroll, items]) => {
+              const range = { start: null, end: items.length };
+              const heightsLength = heights.length;
+              let i = 0;
+
+              const adjustedScrollTop = scrollTop + margin;
+              console.log(items.length, 'itemLenght');
+              console.log(adjustedScrollTop, 'adjustedScrollTop');
+              console.log(heights, 'heights');
+              for (i; i < heightsLength; i++) {
+                const entry = heights[i];
+                if (entry.scrollTop + entry.height + margin <= scrollTop) {
+                  range.start = i;
+                } else if (
+                  entry.scrollTop >
+                  containerHeight + adjustedScrollTop
+                ) {
+                  range.end = i;
+                  break;
+                }
               }
-            }
-            range.start = range.start == null ? 0 : range.start;
-            console.log('renderedRange', range);
-            return range;
-          }),
-          distinctUntilSomeChanged(['start', 'end'])
-        ),
+              range.start = range.start == null ? 0 : range.start;
+              return range;
+            })
+          ),
+          rangeAdjust$
+        ).pipe(distinctUntilSomeChanged(['start', 'end'])),
       ]).pipe(render());
     },
     detach(): void {
@@ -230,6 +248,7 @@ export function createVirtualListManager<
         // map iterable to latest diff
         map(([items, range]) => {
           renderedRange = range;
+          console.log('renderedRange', range);
           const iterable = items.slice(range.start, range.end + 1);
           if (partiallyFinished) {
             const currentIterable = [];
@@ -276,7 +295,9 @@ export function createVirtualListManager<
                 let i = 0;
                 let end = viewContainerRef.length;
                 // update heights according to actual rendered items
+                let expectedHeight = 0;
                 for (i; i < end; i++) {
+                  expectedHeight += heights[i + renderedRange.start].height;
                   const _height = _setViewHeight(
                     viewContainerRef.get(i) as any,
                     i,
@@ -285,31 +306,56 @@ export function createVirtualListManager<
                   height += _height;
                   scrollTop += _height;
                 }
+
                 // set new sample
-                averager.addSample(renderedRange, height);
-                console.log(
-                  'addSample',
-                  renderedRange,
-                  height,
-                  averager.getAverageItemSize()
+                averager.addSample(
+                  { ...renderedRange, end: renderedRange.end + 1 },
+                  height
                 );
+                const newAverage = Math.ceil(averager.getAverageItemSize());
+                console.log('addSample', renderedRange, height, newAverage);
                 // adjust heights of all guessed items based on the new average size
                 const heightLength = heights.length;
                 let _totalHeight = 0;
-                const average = averager.getAverageItemSize();
                 for (let j = 0; j < heightLength; j++) {
                   const entry = heights[j];
                   if (entry.sampled) {
-                    entry.height = average;
-                    entry.scrollTop =
-                      j > 0
-                        ? heights[j - 1].scrollTop + heights[j - 1].height
-                        : 0;
+                    entry.height = newAverage;
                   }
+                  entry.scrollTop =
+                    j > 0
+                      ? heights[j - 1].scrollTop + heights[j - 1].height
+                      : 0;
                   _totalHeight += entry.height;
                 }
+                // adjust scrollTop
+                /*console.log('totalHeightOffset', totalHeight - _totalHeight);
+                console.log('totalHeightOld', totalHeight);
+                console.log('_totalHeight', _totalHeight);*/
                 totalHeight = _totalHeight;
                 console.log('heights', heights);
+                const heightOffset = expectedHeight - height;
+                const underrendered = heightOffset >= newAverage;
+                if (underrendered) {
+                  const reloadAmount = Math.ceil(heightOffset / newAverage);
+                  console.warn('reloadAmount', reloadAmount);
+                  console.warn(
+                    'heightOffset / newAverage',
+                    heightOffset,
+                    newAverage
+                  );
+                  if (direction === 'down') {
+                    rangeAdjust$.next({
+                      start: renderedRange.start,
+                      end: renderedRange.end + reloadAmount,
+                    });
+                  } else {
+                    rangeAdjust$.next({
+                      start: renderedRange.start - reloadAmount,
+                      end: renderedRange.end,
+                    });
+                  }
+                }
               }),
               // somehow this makes the strategySelect work
               notifyAllParentsIfNeeded(
@@ -345,7 +391,7 @@ export function createVirtualListManager<
               const payload = _change[1];
               switch (type) {
                 case RxListTemplateChangeType.insert:
-                  // console.log('perform insert', payload);
+                  console.log('perform insert', payload);
                   _insertView(payload[0], payload[1], count);
                   break;
                 case RxListTemplateChangeType.move:
@@ -357,7 +403,7 @@ export function createVirtualListManager<
                   _detachAndCacheView(payload[1] as any);
                   break;
                 case RxListTemplateChangeType.update:
-                  // console.log('perform update', payload);
+                  console.log('perform update', payload);
                   _updateView(payload[0], payload[1], count);
                   break;
                 case RxListTemplateChangeType.context:
@@ -403,14 +449,14 @@ export function createVirtualListManager<
     if (cachedView) {
       templateSettings.updateViewContext(value, cachedView, {
         count,
-        index: currentIndex,
+        index: currentIndex + renderedRange.start,
       } as any);
       cachedView.detectChanges();
       return undefined;
     }
     const context = templateSettings.createViewContext(value, {
       count,
-      index: currentIndex,
+      index: currentIndex + renderedRange.start,
     });
     const view = viewContainerRef.createEmbeddedView(
       templateSettings.templateRef,
