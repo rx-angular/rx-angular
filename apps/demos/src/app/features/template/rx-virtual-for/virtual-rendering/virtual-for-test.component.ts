@@ -1,3 +1,4 @@
+import { coerceNumberProperty } from '@angular/cdk/coercion';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -23,6 +24,17 @@ import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.comp
           [buttons]="true"
         ></rxa-array-provider>
       </div>
+      <div class="d-flex">
+        <input
+          matInput
+          #scrollToInput
+          placeholder="scrollToIndex"
+          type="number"
+        />
+        <button mat-button (click)="scrollToIndex(scrollToInput.value)">
+          ScrollTo
+        </button>
+      </div>
       <div class="d-flex justify-content-between">
         <div class="w-50">
           <div class="stats">
@@ -34,7 +46,7 @@ import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.comp
             </div>
           </div>
           <h2 class="mat-subheading-1">*rxVirtualFor</h2>
-          <rxa-virtual-scroll-viewport autosize class="viewport">
+          <rx-virtual-scroll-viewport [itemSize]="50" class="viewport">
             <div
               *rxVirtualFor="
                 let item of data$;
@@ -46,7 +58,7 @@ import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.comp
             >
               {{ i }} {{ item.content }}
             </div>
-          </rxa-virtual-scroll-viewport>
+          </rx-virtual-scroll-viewport>
         </div>
         <div class="w-50">
           <h2 class="mat-subheading-1">*cdkVirtualVor</h2>
@@ -75,7 +87,7 @@ import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.comp
       }
       .item {
         width: 250px;
-        /*height: 50px;*/
+        height: 50px;
         overflow: hidden;
         border: 1px solid green;
         padding: 10px 0;
@@ -155,5 +167,9 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.afterViewInit$.next();
+  }
+
+  scrollToIndex(index: string): void {
+    this.virtualViewport.scrollToIndex(coerceNumberProperty(index, 0));
   }
 }

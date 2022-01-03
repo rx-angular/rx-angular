@@ -16,18 +16,20 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {
-  createListTemplateManager,
   RxDefaultListViewContext,
-  RxListManager,
   RxListViewComputedContext,
   RxListViewContext,
 } from '@rx-angular/cdk/template';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
 
-import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { VirtualViewRepeater } from './model';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import {
+  RxVirtualScrollStrategy,
+  RxVirtualScrollViewport,
+  RxVirtualViewRepeater,
+} from './model';
 import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
 import {
   createVirtualListManager,
@@ -36,11 +38,11 @@ import {
 
 @Directive({
   selector: '[rxVirtualFor]',
-  providers: [{ provide: VirtualViewRepeater, useExisting: RxVirtualFor }],
+  providers: [{ provide: RxVirtualViewRepeater, useExisting: RxVirtualFor }],
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
-  implements VirtualViewRepeater<T>, OnInit, OnDestroy
+  implements RxVirtualViewRepeater<T>, OnInit, OnDestroy
 {
   /** @internal */
   static ngTemplateGuard_rxFor: 'binding';
@@ -77,6 +79,10 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   @Input('rxVirtualForPatchZone') patchZone =
     this.strategyProvider.config.patchZone;
 
+  @Input('rxVirtualForTombstone') tombstone: TemplateRef<
+    RxListViewContext<T>
+  > | null = null;
+
   @Input('rxVirtualForTrackBy')
   set trackBy(trackByFnOrKey: string | ((idx: number, i: T) => any)) {
     this._trackBy =
@@ -96,13 +102,13 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /** @internal */
   constructor(
-    private viewport: RxVirtualScrollViewportComponent,
+    private scrollStrategy: RxVirtualScrollStrategy,
     private iterableDiffers: IterableDiffers,
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
     private eRef: ElementRef,
     private readonly templateRef: TemplateRef<RxDefaultListViewContext<T>>,
-    public readonly viewContainerRef: ViewContainerRef,
+    private readonly viewContainerRef: ViewContainerRef,
     private strategyProvider: RxStrategyProvider,
     private errorHandler: ErrorHandler
   ) {}
@@ -128,7 +134,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   private listManager: VirtualListManager<T>;
 
   /** @internal */
-  private _subscription = Subscription.EMPTY;
+  private _destroy$ = new Subject<void>();
 
   /** @internal */
   static ngTemplateContextGuard<U>(
@@ -168,17 +174,17 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
       }
     );
     this.listManager.nextStrategy(this.strategy$);
-    this._subscription = new Subscription();
-    this._subscription.add(
-      this.listManager
-        .render(this.values$, this.viewport.renderedRange$)
-        .subscribe((v) => {
-          this._renderCallback?.next(v);
-        })
-    );
-    this.listManager.viewsRendered$.subscribe((v) => {
-      this.contentRendered$.next(v);
-    });
+    this.listManager
+      .render(this.values$, this.scrollStrategy.renderedRange$)
+      .pipe(takeUntil(this._destroy$))
+      .subscribe((v) => {
+        this._renderCallback?.next(v);
+      });
+    this.listManager.viewsRendered$
+      .pipe(takeUntil(this._destroy$))
+      .subscribe((v) => {
+        this.contentRendered$.next(v);
+      });
   }
 
   /** @internal */
@@ -201,7 +207,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /** @internal */
   ngOnDestroy() {
-    this._subscription.unsubscribe();
+    this._destroy$.next();
     this.viewContainerRef.clear();
   }
 }

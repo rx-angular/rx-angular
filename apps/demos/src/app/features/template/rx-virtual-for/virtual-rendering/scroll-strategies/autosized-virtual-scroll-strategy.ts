@@ -1,7 +1,12 @@
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import { distinctUntilSomeChanged } from '@rx-angular/cdk/state';
 import { animationFrameScheduler } from '@rx-angular/cdk/zone-less';
-import { ListRange } from '../model';
+import {
+  ListRange,
+  RxVirtualScrollViewport,
+  RxVirtualScrollStrategy,
+  RxVirtualViewRepeater,
+} from '../model';
 import {
   Directive,
   EmbeddedViewRef,
@@ -9,29 +14,36 @@ import {
   IterableDiffers,
   OnDestroy,
 } from '@angular/core';
-import { combineLatest, merge, Observable, scheduled, Subject } from 'rxjs';
+import {
+  combineLatest,
+  merge,
+  Observable,
+  ReplaySubject,
+  scheduled,
+  Subject,
+} from 'rxjs';
 import {
   distinctUntilChanged,
   map,
   startWith,
   takeUntil,
+  tap,
 } from 'rxjs/operators';
-import { RxVirtualScrollViewportComponent } from '../virtual-scroll-viewport.component';
-import { VirtualScrollStrategy } from './virtual-scroll-strategy';
 
 @Directive({
-  selector: 'rxa-virtual-scroll-viewport[autosize]',
+  selector: 'rx-virtual-scroll-viewport[autosize]',
   providers: [
     {
-      provide: VirtualScrollStrategy,
+      provide: RxVirtualScrollStrategy,
       useExisting: AutosizeVirtualScrollStrategy,
     },
   ],
 })
 export class AutosizeVirtualScrollStrategy
-  implements VirtualScrollStrategy, OnDestroy
+  implements RxVirtualScrollStrategy, OnDestroy
 {
-  private viewport: RxVirtualScrollViewportComponent | null = null;
+  private viewport: RxVirtualScrollViewport | null = null;
+  private viewRepeater: RxVirtualViewRepeater<any> | null = null;
   private readonly averager = new ItemSizeAverager();
   private dataDiffer: IterableDiffer<any> | null = null;
   private readonly rangeAdjust$ = new Subject<ListRange>();
@@ -39,10 +51,37 @@ export class AutosizeVirtualScrollStrategy
   private readonly containerHeight = 350;
   private margin = 50;
 
+  private readonly _contentSize$ = new ReplaySubject<number>(1);
+  readonly contentSize$ = this._contentSize$.asObservable();
+
+  private _contentSize = 0;
+  private set contentSize(size: number) {
+    this._contentSize = size;
+    this._contentSize$.next(size);
+  }
+  private get contentSize(): number {
+    return this._contentSize;
+  }
+
+  private readonly _renderedRange$ = new ReplaySubject<ListRange>(1);
+  renderedRange$ = this._renderedRange$.asObservable();
+  private _renderedRange: ListRange = { start: 0, end: 0 };
+  private set renderedRange(range: ListRange) {
+    this._renderedRange = range;
+    this._renderedRange$.next(range);
+  }
+  private get renderedRange(): ListRange {
+    return this._renderedRange;
+  }
+
   scrolledIndexChange: Observable<number>;
 
-  private heights: { height: number; scrollTop: number; sampled?: boolean }[] =
-    [];
+  private virtualViewContainer: {
+    height: number;
+    scrollTop: number;
+    sampled?: boolean;
+  }[] = [];
+
   private scrollTop = 0;
   private direction: 'up' | 'down' = 'down';
 
@@ -58,43 +97,88 @@ export class AutosizeVirtualScrollStrategy
     this.destroy$.next();
   }
 
-  attach(viewport: RxVirtualScrollViewportComponent): void {
+  attach(
+    viewport: RxVirtualScrollViewport,
+    viewRepeater: RxVirtualViewRepeater<any>
+  ): void {
     this.viewport = viewport;
-    const onScroll$ = this.viewport.elementScrolled().pipe(startWith(0));
-    onScroll$.pipe(this.until$).subscribe(() => this.onContentScrolled());
-    this.dataDiffer = this.differs
-      .find([])
-      .create(this.viewport.viewRepeater._trackBy);
-    this.viewport.viewRepeater.values$
-      .pipe(this.until$)
-      .subscribe((data) => this.onDataChanged(data as any[]));
+    this.viewRepeater = viewRepeater;
+    this.onDataChanged();
+    this.onContentScrolled();
+    this.onContentRendered();
+  }
+
+  detach(): void {
+    this.viewport = null;
+    this.virtualViewContainer = [];
+    this.detached$.next();
+  }
+
+  scrollToIndex(index: number, behavior?: ScrollBehavior): void {
+    const scrollTop = this.virtualViewContainer[index].scrollTop;
+    this.viewport.scrollTo(scrollTop, behavior);
+  }
+
+  private onDataChanged(): void {
+    this.dataDiffer = this.differs.find([]).create(this.viewRepeater._trackBy);
+    this.viewRepeater.values$.pipe(this.until$).subscribe((items: any[]) => {
+      let _scrollTop;
+      const averageSize = this.averager.getAverageItemSize();
+      // we want to adjust our heightMap with the new items
+      // TODO: move & delete need to be handled as well
+
+      this.dataDiffer.diff(items)?.forEachAddedItem(({ currentIndex }) => {
+        _scrollTop =
+          _scrollTop == null
+            ? this.heightsUntil(currentIndex)
+            : _scrollTop || 0;
+        this.virtualViewContainer[currentIndex] = {
+          height: averageSize,
+          scrollTop: _scrollTop,
+          sampled: true,
+        };
+        _scrollTop += averageSize;
+      });
+    });
+  }
+
+  private onContentScrolled(): void {
+    const dataLengthChanged$ = this.viewRepeater.values$.pipe(
+      map(
+        (values) =>
+          (Array.isArray(values)
+            ? values
+            : values != null
+            ? Array.from(values)
+            : []
+          ).length
+      ),
+      distinctUntilChanged()
+    );
+    const onScroll$ = this.viewport.elementScrolled$.pipe(
+      map(() => this.viewport.getScrollTop()),
+      startWith(0),
+      tap((_scrollTop) => {
+        // TODO: improve this
+        this.direction = _scrollTop > this.scrollTop ? 'down' : 'up';
+        this.scrollTop = _scrollTop;
+        console.log('scrollTop', this.scrollTop);
+      }),
+      coalesceWith(scheduled([], animationFrameScheduler))
+    );
     merge(
-      combineLatest([
-        this.viewport.viewRepeater.values$.pipe(
-          map((values) =>
-            Array.isArray(values)
-              ? values
-              : values != null
-              ? Array.from(values)
-              : []
-          ),
-          distinctUntilChanged(
-            (oldItems, newItems) => oldItems?.length === newItems?.length
-          )
-        ),
-        onScroll$.pipe(coalesceWith(scheduled([], animationFrameScheduler))),
-      ]).pipe(
-        map(([items]) => {
-          const range = { start: null, end: items.length };
-          const heightsLength = this.heights.length;
+      combineLatest([dataLengthChanged$, onScroll$]).pipe(
+        map(([length]) => {
+          const range = { start: null, end: length };
+          const heightsLength = this.virtualViewContainer.length;
           let i = 0;
 
           const adjustedScrollTop = this.scrollTop + this.margin;
-          console.log(items.length, 'itemLength');
+          console.log(length, 'itemLength');
           console.log(adjustedScrollTop, 'adjustedScrollTop');
-          console.log(this.heights, 'heights');
+          console.log(this.virtualViewContainer, 'heights');
           for (i; i < heightsLength; i++) {
-            const entry = this.heights[i];
+            const entry = this.virtualViewContainer[i];
             if (
               entry.scrollTop + entry.height + this.margin <=
               this.scrollTop
@@ -115,110 +199,88 @@ export class AutosizeVirtualScrollStrategy
       this.rangeAdjust$
     )
       .pipe(distinctUntilSomeChanged(['start', 'end']), this.until$)
-      .subscribe((range: ListRange) => (this.viewport.renderedRange = range));
-    this.viewport.viewRepeater.contentRendered$
+      .subscribe((range: ListRange) => (this.renderedRange = range));
+  }
+
+  private onContentRendered(): void {
+    this.viewRepeater.contentRendered$
       .pipe(this.until$)
-      .subscribe((views: EmbeddedViewRef<any>[]) =>
-        this.onContentRendered(views)
-      );
-  }
-  detach(): void {
-    this.viewport = null;
-    this.detached$.next();
-  }
-  onContentRendered(views: EmbeddedViewRef<any>[]): void {
-    const renderedRange = this.viewport.renderedRange;
-    let scrollTop = this.heightsUntil(renderedRange.start);
-    console.log('heightsUntil', scrollTop);
-    let height = 0;
-    let i = 0;
-    let end = views.length;
-    // update heights according to actual rendered items
-    let expectedHeight = 0;
-    for (i; i < end; i++) {
-      expectedHeight += this.heights[i + renderedRange.start].height;
-      const _height = this._setViewHeight(
-        views[i],
-        i,
-        scrollTop,
-        renderedRange
-      );
-      height += _height;
-      scrollTop += _height;
-    }
+      .subscribe((views: EmbeddedViewRef<any>[]) => {
+        const renderedRange = this.renderedRange;
+        let scrollTop = this.heightsUntil(renderedRange.start);
+        console.log('heightsUntil', scrollTop);
+        let height = 0;
+        let i = 0;
+        let end = views.length;
+        // update heights according to actual rendered items
+        let expectedHeight = 0;
+        for (i; i < end; i++) {
+          expectedHeight +=
+            this.virtualViewContainer[i + renderedRange.start].height;
+          const _height = this._setViewHeight(
+            views[i],
+            i,
+            scrollTop,
+            renderedRange
+          );
+          height += _height;
+          scrollTop += _height;
+        }
 
-    // set new sample
-    this.averager.addSample(
-      { ...renderedRange, end: renderedRange.end + 1 },
-      height
-    );
-    const newAverage = Math.ceil(this.averager.getAverageItemSize());
-    console.log('addSample', renderedRange, height, newAverage);
-    // adjust heights of all guessed items based on the new average size
-    const heightLength = this.heights.length;
-    let _totalHeight = 0;
-    for (let j = 0; j < heightLength; j++) {
-      const entry = this.heights[j];
-      if (entry.sampled) {
-        entry.height = newAverage;
-      }
-      entry.scrollTop =
-        j > 0 ? this.heights[j - 1].scrollTop + this.heights[j - 1].height : 0;
-      _totalHeight += entry.height;
-    }
-    // this._totalHeight$.next(_totalHeight);
-    this.viewport.updateContentSize(_totalHeight);
-    console.log('heights', this.heights);
-    const heightOffset = expectedHeight - height;
-    const underrendered = heightOffset >= newAverage;
-    if (underrendered) {
-      const reloadAmount = Math.ceil(heightOffset / newAverage);
-      console.warn('reloadAmount', reloadAmount);
-      console.warn('heightOffset / newAverage', heightOffset, newAverage);
-      if (this.direction === 'down') {
-        this.rangeAdjust$.next({
-          start: renderedRange.start,
-          end: renderedRange.end + reloadAmount,
-        });
-      } else {
-        this.rangeAdjust$.next({
-          start: renderedRange.start - reloadAmount,
-          end: renderedRange.end,
-        });
-      }
-    }
-  }
-  onContentScrolled(): void {
-    // TODO: improve this
-    const scrollTop = this.viewport.nativeElement.scrollTop;
-    this.direction = scrollTop > this.scrollTop ? 'down' : 'up';
-    this.scrollTop = scrollTop;
-  }
-
-  scrollToIndex(index: number, behavior: ScrollBehavior): void {
-    this.viewport.scrollTo(index);
-  }
-
-  private onDataChanged(items: any[]): void {
-    let _scrollTop;
-    const averageSize = this.averager.getAverageItemSize();
-    // we want to adjust our heightMap with the new items
-    // TODO: move & delete need to be handled as well
-
-    this.dataDiffer.diff(items)?.forEachAddedItem(({ currentIndex }) => {
-      _scrollTop =
-        _scrollTop == null ? this.heightsUntil(currentIndex) : _scrollTop || 0;
-      this.heights[currentIndex] = {
-        height: averageSize,
-        scrollTop: _scrollTop,
-        sampled: true,
-      };
-      _scrollTop += averageSize;
-    });
+        // set new sample
+        this.averager.addSample(
+          { ...renderedRange, end: renderedRange.end + 1 },
+          height
+        );
+        const newAverage = Math.ceil(this.averager.getAverageItemSize());
+        console.log('addSample', renderedRange, height, newAverage);
+        // adjust heights of all guessed items based on the new average size
+        const heightLength = this.virtualViewContainer.length;
+        let _totalHeight = 0;
+        for (let j = 0; j < heightLength; j++) {
+          const entry = this.virtualViewContainer[j];
+          if (entry.sampled) {
+            entry.height = newAverage;
+          }
+          entry.scrollTop =
+            j > 0
+              ? this.virtualViewContainer[j - 1].scrollTop +
+                this.virtualViewContainer[j - 1].height
+              : 0;
+          _totalHeight += entry.height;
+        }
+        const totalHeightOffset = this.contentSize - _totalHeight;
+        console.log('totalHeightOffset', totalHeightOffset);
+        this.contentSize = _totalHeight;
+        console.log('heights', this.virtualViewContainer);
+        const heightOffset = expectedHeight - height;
+        console.log('heightOffset', heightOffset);
+        /*if (totalHeightOffset != 0) {
+          // this.scrollTo$.next(scrollTop + heightOffset);
+          this.viewport.scrollTo(this.scrollTop + totalHeightOffset);
+        }*/
+        const underrendered = heightOffset >= newAverage;
+        if (underrendered) {
+          const reloadAmount = Math.ceil(heightOffset / newAverage);
+          console.warn('reloadAmount', reloadAmount);
+          console.warn('heightOffset / newAverage', heightOffset, newAverage);
+          if (this.direction === 'down') {
+            this.rangeAdjust$.next({
+              start: renderedRange.start,
+              end: renderedRange.end + reloadAmount,
+            });
+          } else {
+            this.rangeAdjust$.next({
+              start: renderedRange.start - reloadAmount,
+              end: renderedRange.end,
+            });
+          }
+        }
+      });
   }
 
   private heightsUntil(index: number) {
-    const entry = this.heights[index - 1];
+    const entry = this.virtualViewContainer[index - 1];
     return (entry?.scrollTop || 0) + (entry?.height || 0);
   }
 
@@ -240,7 +302,7 @@ export class AutosizeVirtualScrollStrategy
     // console.log('element.offsetHeight', height);
     element.style.position = 'absolute';
     element.style.transform = `translateY(${scrollTop}px)`;
-    this.heights[adjustedIndex] = {
+    this.virtualViewContainer[adjustedIndex] = {
       height,
       scrollTop,
       sampled: false,
