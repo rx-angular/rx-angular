@@ -11,7 +11,7 @@ import { defer, pairwise, ReplaySubject, Subject, switchMap } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/index';
-import { RxVirtualForViewportComponent } from './virtual-for-viewport.component';
+import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
 
 @Component({
   selector: 'rxa-virtual-for-test',
@@ -23,28 +23,47 @@ import { RxVirtualForViewportComponent } from './virtual-for-viewport.component'
           [buttons]="true"
         ></rxa-array-provider>
       </div>
-      <div class="stats">
-        <div *rxLet="data$; let data">
-          <strong>Items: </strong>{{ data.length }}
+      <div class="d-flex justify-content-between">
+        <div class="w-50">
+          <div class="stats">
+            <div *rxLet="data$; let data">
+              <strong>Items: </strong>{{ data.length }}
+            </div>
+            <div *rxLet="renderedItems$; let renderedItems">
+              <strong>renderedItems: </strong>{{ renderedItems }}
+            </div>
+          </div>
+          <h2 class="mat-subheading-1">*rxVirtualFor</h2>
+          <rxa-virtual-scroll-viewport autosize class="viewport">
+            <div
+              *rxVirtualFor="
+                let item of data$;
+                let i = index;
+                trackBy: trackItem;
+                renderCallback: rendered
+              "
+              class="item"
+            >
+              {{ i }} {{ item.content }}
+            </div>
+          </rxa-virtual-scroll-viewport>
         </div>
-        <div *rxLet="renderedItems$; let renderedItems">
-          <strong>renderedItems: </strong>{{ renderedItems }}
+        <div class="w-50">
+          <h2 class="mat-subheading-1">*cdkVirtualVor</h2>
+          <cdk-virtual-scroll-viewport class="viewport" autosize>
+            <div
+              *cdkVirtualFor="
+                let item of data$;
+                let i = index;
+                trackBy: trackItem
+              "
+              class="item"
+            >
+              {{ i }} {{ item.content }}
+            </div>
+          </cdk-virtual-scroll-viewport>
         </div>
       </div>
-      <h2 class="mat-subheading-1">*rxVirtualFor</h2>
-      <rxa-virtual-for-viewport class="viewport">
-        <div
-          *rxVirtualFor="
-            let item of data$;
-            let i = index;
-            trackBy: trackItem;
-            renderCallback: rendered
-          "
-          class="item"
-        >
-          {{ i }} {{ item.content }}
-        </div>
-      </rxa-virtual-for-viewport>
     </div>
   `,
   styles: [
@@ -70,8 +89,8 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
   @ViewChild(ArrayProviderComponent)
   arrayProvider: ArrayProviderComponent;
 
-  @ViewChild(RxVirtualForViewportComponent)
-  virtualViewport: RxVirtualForViewportComponent;
+  @ViewChild(RxVirtualScrollViewportComponent)
+  virtualViewport: RxVirtualScrollViewportComponent;
 
   private readonly afterViewInit$ = new ReplaySubject<void>(1);
 

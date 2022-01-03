@@ -1,9 +1,12 @@
+import { ScrollingModule as AutosizedScrollingModule } from '@angular/cdk-experimental/scrolling';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { LetModule } from '@rx-angular/template/let';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/index';
+import { AutosizeVirtualScrollStrategyModule } from './scroll-strategies/autosized-virtual-scroll-strategy';
 import { VirtualForTestComponent } from './virtual-for-test.component';
-import { RxVirtualForViewportComponent } from './virtual-for-viewport.component';
+import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
 import { RxVirtualFor } from './virtual-for.directive';
 
 @NgModule({
@@ -16,11 +19,14 @@ import { RxVirtualFor } from './virtual-for.directive';
     ]),
     ValueProvidersModule,
     LetModule,
+    AutosizedScrollingModule,
+    ScrollingModule,
+    AutosizeVirtualScrollStrategyModule,
   ],
-  exports: [RxVirtualForViewportComponent],
+  exports: [RxVirtualScrollViewportComponent],
   declarations: [
     RxVirtualFor,
-    RxVirtualForViewportComponent,
+    RxVirtualScrollViewportComponent,
     VirtualForTestComponent,
   ],
   providers: [],

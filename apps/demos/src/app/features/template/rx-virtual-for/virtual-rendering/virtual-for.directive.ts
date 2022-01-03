@@ -24,11 +24,11 @@ import {
 } from '@rx-angular/cdk/template';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
-import { fromEvent } from '@rx-angular/cdk/zone-less';
 
-import { Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { RxVirtualForViewportComponent } from './virtual-for-viewport.component';
+import { VirtualViewRepeater } from './model';
+import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
 import {
   createVirtualListManager,
   VirtualListManager,
@@ -36,10 +36,11 @@ import {
 
 @Directive({
   selector: '[rxVirtualFor]',
+  providers: [{ provide: VirtualViewRepeater, useExisting: RxVirtualFor }],
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
-  implements OnInit, OnDestroy
+  implements VirtualViewRepeater<T>, OnInit, OnDestroy
 {
   /** @internal */
   static ngTemplateGuard_rxFor: 'binding';
@@ -91,14 +92,17 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   /** @internal */
+  readonly contentRendered$ = new Subject<any>();
+
+  /** @internal */
   constructor(
-    private viewport: RxVirtualForViewportComponent,
+    private viewport: RxVirtualScrollViewportComponent,
     private iterableDiffers: IterableDiffers,
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
     private eRef: ElementRef,
     private readonly templateRef: TemplateRef<RxDefaultListViewContext<T>>,
-    private readonly viewContainerRef: ViewContainerRef,
+    public readonly viewContainerRef: ViewContainerRef,
     private strategyProvider: RxStrategyProvider,
     private errorHandler: ErrorHandler
   ) {}
@@ -115,7 +119,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   private _renderCallback: Subject<any>;
 
   /** @internal */
-  private readonly values$ = this.observables$.pipe(coerceDistinctWith());
+  readonly values$ = this.observables$.pipe(coerceDistinctWith());
 
   /** @internal */
   private readonly strategy$ = this.strategyInput$.pipe(coerceDistinctWith());
@@ -164,18 +168,17 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
       }
     );
     this.listManager.nextStrategy(this.strategy$);
-    this._subscription = this.listManager
-      .render(
-        this.values$,
-        this.viewport.elementScrolled().pipe(
-          map(() => this.viewport.scrollContainer().nativeElement.scrollTop),
-          startWith(0)
-        )
-      )
-      .subscribe((v) => {
-        this._renderCallback?.next(v);
-        this.viewport.updateContentSize(this.listManager.getHeight());
-      });
+    this._subscription = new Subscription();
+    this._subscription.add(
+      this.listManager
+        .render(this.values$, this.viewport.renderedRange$)
+        .subscribe((v) => {
+          this._renderCallback?.next(v);
+        })
+    );
+    this.listManager.viewsRendered$.subscribe((v) => {
+      this.contentRendered$.next(v);
+    });
   }
 
   /** @internal */

@@ -1,9 +1,10 @@
 import { Dir, Directionality } from '@angular/cdk/bidi';
 import { ScrollDispatcher } from '@angular/cdk/scrolling/scroll-dispatcher';
-import { ExtendedScrollToOptions } from '@angular/cdk/scrolling/scrollable';
 import {
+  AfterContentInit,
   AfterViewInit,
   Component,
+  ContentChild,
   ElementRef,
   Inject,
   NgZone,
@@ -11,10 +12,18 @@ import {
   ViewChild,
 } from '@angular/core';
 import { fromEvent } from '@rx-angular/cdk/zone-less';
-import { Observable, Subject, Subscription } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  ReplaySubject,
+  Subject,
+  Subscription,
+} from 'rxjs';
+import { ListRange, VirtualViewRepeater } from './model';
+import { VirtualScrollStrategy } from './scroll-strategies/virtual-scroll-strategy';
 
 @Component({
-  selector: 'rxa-virtual-for-viewport',
+  selector: 'rxa-virtual-scroll-viewport',
   template: `
     <div #runway class="rxa-virtual-scroll-run-way"></div>
     <ng-content></ng-content>
@@ -41,23 +50,46 @@ import { Observable, Subject, Subscription } from 'rxjs';
     `,
   ],
 })
-export class RxVirtualForViewportComponent implements AfterViewInit {
+export class RxVirtualScrollViewportComponent implements AfterContentInit {
   protected scrollDispatcher: ScrollDispatcher;
 
-  @ViewChild('runway')
+  @ViewChild('runway', { static: true })
   private _runway: ElementRef<HTMLElement>;
+
+  @ContentChild(VirtualViewRepeater)
+  viewRepeater: VirtualViewRepeater<any>;
 
   private _sub?: Subscription;
 
   private _elementScrolled = new Subject<Event>();
+
+  private readonly _renderedRange = new ReplaySubject<ListRange>(1);
+  readonly renderedRange$ = this._renderedRange.asObservable();
+
+  private renderedRage: ListRange = { start: 0, end: 0 };
+  get renderedRange(): ListRange {
+    return this.renderedRage;
+  }
+
+  set renderedRange(range: ListRange) {
+    this.renderedRage = range;
+    this._renderedRange.next(range);
+  }
 
   readonly nativeElement = this.elementRef.nativeElement;
 
   constructor(
     private elementRef: ElementRef<HTMLElement>,
     private ngZone: NgZone,
+    @Optional() private scrollStrategy: VirtualScrollStrategy,
     @Optional() @Inject(Dir) private dir?: Directionality
-  ) {}
+  ) {
+    if (!scrollStrategy /*TODO: use ngDevMode approach from scheduler.ts*/) {
+      throw Error(
+        'Error: rx-virtual-scroll-viewport requires a `VirtualScrollStrategy` to be set.'
+      );
+    }
+  }
 
   ngOnInit(): void {
     fromEvent(this.elementRef.nativeElement, 'scroll', {
@@ -65,7 +97,9 @@ export class RxVirtualForViewportComponent implements AfterViewInit {
     }).subscribe(this._elementScrolled);
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterContentInit(): void {
+    this.scrollStrategy.attach(this);
+  }
 
   ngOnDestroy(): void {
     this._sub?.unsubscribe();
@@ -83,11 +117,8 @@ export class RxVirtualForViewportComponent implements AfterViewInit {
     return this.elementRef;
   }
 
-  scrollTo(options: ExtendedScrollToOptions): void {}
-
-  measureScrollOffset(
-    from: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'
-  ): number {
-    return 0;
+  scrollTo(index: number, behavior?: ScrollBehavior): void {
+    // TODO: implement more complex scroll scenarios
+    this.nativeElement.scrollTo({ top: index, behavior: behavior });
   }
 }
