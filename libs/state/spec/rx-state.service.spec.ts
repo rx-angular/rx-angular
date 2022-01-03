@@ -6,7 +6,7 @@ import {
 
 import { TestScheduler } from 'rxjs/testing';
 import { RxState } from '@rx-angular/state';
-import { select } from '@rx-angular/cdk/state';
+import { select } from '@rx-angular/state/selections';
 import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
 import { of, scheduled, Subject } from 'rxjs';
 
