@@ -5,14 +5,12 @@ import {
 } from '@rx-angular/cdk/render-strategies';
 import { RxListViewContext } from '@rx-angular/cdk/template';
 import { Observable } from 'rxjs';
-import { ListTemplateManager } from '../../../../../../../../libs/cdk/template/src/lib/list-view-handler';
 import {
   RxListTemplateChange,
   RxListTemplateChanges,
   RxListTemplateChangeType,
   RxTemplateSettings,
 } from '../../../../../../../../libs/cdk/template/src/lib/model';
-import { createEmbeddedView } from '../../../../../../../../libs/cdk/template/src/lib/utils';
 import { ListRange } from './model';
 
 /**
@@ -41,7 +39,7 @@ export interface RxVirtualListTemplateManager<T> {
  *
  * @param templateSettings
  */
-export function getTemplateHandler<C extends RxListViewContext<T>, T>(
+export function getVirtualTemplateHandler<C extends RxListViewContext<T>, T>(
   templateSettings: RxTemplateSettings<T, C> & {
     viewCacheSize: number;
   }

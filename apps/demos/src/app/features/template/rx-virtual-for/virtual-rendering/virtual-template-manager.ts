@@ -6,13 +6,8 @@ import {
   NgIterable,
   TemplateRef,
   TrackByFunction,
-  ViewRef,
 } from '@angular/core';
-import { distinctUntilSomeChanged } from '@rx-angular/cdk/state';
-import {
-  RxListViewComputedContext,
-  RxListViewContext,
-} from '@rx-angular/cdk/template';
+import { RxListViewContext } from '@rx-angular/cdk/template';
 import {
   combineLatest,
   merge,
@@ -22,35 +17,25 @@ import {
   Subject,
 } from 'rxjs';
 import {
-  catchError,
-  distinctUntilChanged,
   filter,
   ignoreElements,
   map,
-  shareReplay,
   switchMap,
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
+import { strategyHandling } from '@rx-angular/cdk/render-strategies';
 import {
-  RxStrategyCredentials,
-  onStrategy,
-  strategyHandling,
-} from '@rx-angular/cdk/render-strategies';
-import {
-  RxListTemplateChange,
-  RxListTemplateChangeType,
   RxRenderSettings,
   RxTemplateSettings,
 } from '../../../../../../../../libs/cdk/template/src/lib/model';
-import { createErrorHandler } from '../../../../../../../../libs/cdk/template/src/lib/render-error';
 import {
   getTNode,
   notifyAllParentsIfNeeded,
   notifyInjectingParentIfNeeded,
   TNode,
 } from '../../../../../../../../libs/cdk/template/src/lib/utils';
-import { getTemplateHandler } from './virtual-list-view-handler';
+import { getVirtualTemplateHandler } from './virtual-list-view-handler';
 
 export interface RxListManager<T> {
   nextStrategy: (config: string | Observable<string>) => void;
@@ -62,9 +47,7 @@ export type VirtualListManager<T> = RxListManager<T> & {
     range$: Observable<ListRange>
   ): Observable<any>;
   viewsRendered$: Observable<EmbeddedViewRef<any>[]>;
-  scrollTo(index: number): void;
   detach(): void;
-  getHeight(): number;
 };
 
 export function createVirtualListManager<
@@ -74,6 +57,7 @@ export function createVirtualListManager<
   renderSettings: RxRenderSettings<T, C>;
   templateSettings: RxTemplateSettings<T, C> & {
     templateRef: TemplateRef<C>;
+    viewCacheSize: number;
   };
   //
   trackBy: TrackByFunction<T>;
@@ -90,36 +74,24 @@ export function createVirtualListManager<
 
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
-  const dataDiffer: IterableDiffer<T> = iterableDiffers
-    .find([])
-    .create(trackBy);
   //               type,  payload
   const tNode: TNode = parent
     ? getTNode(injectingViewCdRef, eRef.nativeElement)
     : false;
-  const listViewHandler = getTemplateHandler({
+  const listViewHandler = getVirtualTemplateHandler({
     ...templateSettings,
     initialTemplateRef: templateSettings.templateRef,
     patchZone: false,
-    viewCacheSize: 55,
   });
   const viewContainerRef = templateSettings.viewContainerRef;
 
   let notifyParent = false;
   let partiallyFinished = false;
   let renderedRange: ListRange;
-  let totalHeight = 0;
-  const scrollTo$ = new Subject<number>();
   const _viewsRendered$ = new Subject<EmbeddedViewRef<C>[]>();
 
   return {
-    scrollTo(scrollTo: number): void {
-      scrollTo$.next(scrollTo);
-    },
     viewsRendered$: _viewsRendered$,
-    getHeight(): number {
-      return totalHeight;
-    },
     nextStrategy(nextConfig: Observable<string>): void {
       strategyHandling$.next(nextConfig);
     },
@@ -172,7 +144,6 @@ export function createVirtualListManager<
         withLatestFrom(strategyHandling$.strategy$),
         // Cancel old renders
         switchMap(([{ changes, items, data }, strategy]) => {
-          console.log('changes', changes);
           const { work$, insertedOrRemoved } = listViewHandler.toTemplateWork(
             changes,
             items,

@@ -43,6 +43,7 @@ export abstract class RxVirtualScrollStrategy {
 @Injectable()
 export abstract class RxVirtualScrollViewport {
   elementScrolled$: Observable<void>;
+  containerSize$: Observable<number>;
   abstract getScrollTop(): number;
   abstract scrollTo(scrollTo: number, behavior?: ScrollBehavior): void;
 }

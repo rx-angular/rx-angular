@@ -1,4 +1,3 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectorRef,
   Directive,
@@ -20,17 +19,15 @@ import {
   RxListViewComputedContext,
   RxListViewContext,
 } from '@rx-angular/cdk/template';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import {
+  RxStrategyNames,
+  RxStrategyProvider,
+} from '@rx-angular/cdk/render-strategies';
 import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
 
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {
-  RxVirtualScrollStrategy,
-  RxVirtualScrollViewport,
-  RxVirtualViewRepeater,
-} from './model';
-import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
+import { RxVirtualScrollStrategy, RxVirtualViewRepeater } from './model';
 import {
   createVirtualListManager,
   VirtualListManager,
@@ -45,7 +42,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements RxVirtualViewRepeater<T>, OnInit, OnDestroy
 {
   /** @internal */
-  static ngTemplateGuard_rxFor: 'binding';
+  static ngTemplateGuard_rxVirtualFor: 'binding';
 
   @Input()
   set rxVirtualFor(
@@ -70,9 +67,16 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   @Input('rxVirtualForStrategy')
-  set strategy(strategyName: string | Observable<string> | undefined) {
+  set strategy(
+    strategyName:
+      | RxStrategyNames<string>
+      | Observable<RxStrategyNames<string>>
+      | undefined
+  ) {
     this.strategyInput$.next(strategyName);
   }
+
+  @Input('rxVirtualForViewCacheSize') viewCacheSize = 50;
 
   @Input('rxVirtualForParent') renderParent = true;
 
@@ -159,7 +163,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
           eRef: this.eRef,
           strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
           defaultStrategyName: this.strategyProvider.primaryStrategy,
-          parent: coerceBooleanProperty(this.renderParent),
+          parent: !!this.renderParent,
           patchZone: this.patchZone ? this.ngZone : false,
           errorHandler: this.errorHandler,
         },
@@ -169,6 +173,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
           templateRef: this.templateRef,
           createViewContext: this.createViewContext,
           updateViewContext: this.updateViewContext,
+          viewCacheSize: this.viewCacheSize,
         },
         trackBy: this._trackBy,
       }
@@ -208,6 +213,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   ngOnDestroy() {
     this._destroy$.next();
+    this.listManager.detach();
     this.viewContainerRef.clear();
   }
 }

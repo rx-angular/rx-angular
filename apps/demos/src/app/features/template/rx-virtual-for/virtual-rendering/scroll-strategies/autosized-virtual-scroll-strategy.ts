@@ -10,6 +10,7 @@ import {
 import {
   Directive,
   EmbeddedViewRef,
+  Input,
   IterableDiffer,
   IterableDiffers,
   OnDestroy,
@@ -42,14 +43,16 @@ import {
 export class AutosizeVirtualScrollStrategy
   implements RxVirtualScrollStrategy, OnDestroy
 {
+  /**
+   * The amount of buffer (in px) to render on either side of the viewport
+   */
+  @Input() buffer = 150;
+
   private viewport: RxVirtualScrollViewport | null = null;
   private viewRepeater: RxVirtualViewRepeater<any> | null = null;
   private readonly averager = new ItemSizeAverager();
   private dataDiffer: IterableDiffer<any> | null = null;
   private readonly rangeAdjust$ = new Subject<ListRange>();
-  private readonly scrollTo$ = new Subject<number>();
-  private readonly containerHeight = 350;
-  private margin = 50;
 
   private readonly _contentSize$ = new ReplaySubject<number>(1);
   readonly contentSize$ = this._contentSize$.asObservable();
@@ -167,27 +170,28 @@ export class AutosizeVirtualScrollStrategy
       coalesceWith(scheduled([], animationFrameScheduler))
     );
     merge(
-      combineLatest([dataLengthChanged$, onScroll$]).pipe(
-        map(([length]) => {
+      combineLatest([
+        dataLengthChanged$,
+        this.viewport.containerSize$,
+        onScroll$,
+      ]).pipe(
+        map(([length, containerHeight]) => {
           const range = { start: null, end: length };
           const heightsLength = this.virtualViewContainer.length;
           let i = 0;
 
-          const adjustedScrollTop = this.scrollTop + this.margin;
+          const adjustedScrollTop = this.scrollTop + this.buffer;
           console.log(length, 'itemLength');
           console.log(adjustedScrollTop, 'adjustedScrollTop');
           console.log(this.virtualViewContainer, 'heights');
           for (i; i < heightsLength; i++) {
             const entry = this.virtualViewContainer[i];
             if (
-              entry.scrollTop + entry.height + this.margin <=
+              entry.scrollTop + entry.height + this.buffer <=
               this.scrollTop
             ) {
               range.start = i;
-            } else if (
-              entry.scrollTop >
-              this.containerHeight + adjustedScrollTop
-            ) {
+            } else if (entry.scrollTop > containerHeight + adjustedScrollTop) {
               range.end = i;
               break;
             }
@@ -321,6 +325,7 @@ import { NgModule } from '@angular/core';
 })
 export class AutosizeVirtualScrollStrategyModule {}
 
+// stolen from @angular/cdk/scrolling
 /**
  * A class that tracks the size of items that have been seen and uses it to estimate the average
  * item size.

@@ -37,12 +37,18 @@ import { RxVirtualScrollStrategy } from '../model';
 export class FixedSizeVirtualScrollStrategy
   implements RxVirtualScrollStrategy, OnDestroy
 {
+  /**
+   * The size of the items in the virtually scrolled list
+   */
+  @Input() itemSize = 50;
+
+  /**
+   * The amount of buffer (in px) to render on either side of the viewport
+   */
+  @Input() buffer = 150;
+
   private viewport: RxVirtualScrollViewport | null = null;
   private viewRepeater: RxVirtualViewRepeater<any> | null = null;
-  private readonly containerHeight = 350;
-  private margin = 50;
-
-  @Input() itemSize = 50;
 
   scrolledIndexChange: Observable<number>;
   private readonly _contentSize$ = new ReplaySubject<number>(1);
@@ -76,8 +82,6 @@ export class FixedSizeVirtualScrollStrategy
 
   private until$ = (o$) =>
     o$.pipe(takeUntil(merge(this.destroy$, this.detached$)));
-
-  constructor() {}
 
   ngOnDestroy() {
     this.destroy$.next();
@@ -133,23 +137,25 @@ export class FixedSizeVirtualScrollStrategy
       map(() => this.viewport.getScrollTop()),
       startWith(0),
       tap((_scrollTop) => {
-        // TODO: improve this
         this.direction = _scrollTop > this.scrollTop ? 'down' : 'up';
         this.scrollTop = _scrollTop;
       }),
       coalesceWith(scheduled([], animationFrameScheduler))
     );
     merge(
-      combineLatest([dataLengthChanged$, onScroll$]).pipe(
-        map(([length]) => {
+      combineLatest([
+        dataLengthChanged$,
+        this.viewport.containerSize$,
+        onScroll$,
+      ]).pipe(
+        map(([length, containerSize]) => {
           const start = Math.floor(
-            Math.max(0, this.scrollTop - this.margin) / this.itemSize
+            Math.max(0, this.scrollTop - this.buffer) / this.itemSize
           );
           const end = Math.min(
             length,
             Math.ceil(
-              (this.scrollTop + this.containerHeight + this.margin) /
-                this.itemSize
+              (this.scrollTop + containerSize + this.buffer) / this.itemSize
             )
           );
           return { start, end };

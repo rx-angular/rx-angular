@@ -1,4 +1,3 @@
-import { Dir, Directionality } from '@angular/cdk/bidi';
 import {
   AfterContentInit,
   Component,
@@ -11,14 +10,20 @@ import {
   ViewChild,
 } from '@angular/core';
 import { fromEvent } from '@rx-angular/cdk/zone-less';
-import { defer, Observable, ReplaySubject, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import {
-  ListRange,
+  BehaviorSubject,
+  defer,
+  Observable,
+  ReplaySubject,
+  Subject,
+} from 'rxjs';
+import { distinctUntilChanged, startWith, takeUntil } from 'rxjs/operators';
+import {
   RxVirtualScrollViewport,
   RxVirtualViewRepeater,
   RxVirtualScrollStrategy,
 } from './model';
+import { observeElementSize } from './observe-element-size';
 
 @Component({
   selector: 'rx-virtual-scroll-viewport',
@@ -67,6 +72,9 @@ export class RxVirtualScrollViewportComponent
   readonly elementScrolled$ =
     this._elementScrolled.asObservable() as unknown as Observable<void>;
 
+  private _containerSize$ = new ReplaySubject<number>(1);
+  readonly containerSize$ = this._containerSize$.asObservable();
+
   readonly renderedRange$ = defer(() => this.scrollStrategy.renderedRange$);
 
   readonly nativeElement = this.elementRef.nativeElement;
@@ -76,8 +84,7 @@ export class RxVirtualScrollViewportComponent
   constructor(
     private elementRef: ElementRef<HTMLElement>,
     private ngZone: NgZone,
-    @Optional() private scrollStrategy: RxVirtualScrollStrategy,
-    @Optional() @Inject(Dir) private dir?: Directionality
+    @Optional() private scrollStrategy: RxVirtualScrollStrategy
   ) {
     if (!scrollStrategy /*TODO: use ngDevMode approach from scheduler.ts*/) {
       throw Error(
@@ -95,6 +102,13 @@ export class RxVirtualScrollViewportComponent
   }
 
   ngAfterContentInit(): void {
+    observeElementSize(this.elementRef.nativeElement, 'height')
+      .pipe(
+        startWith(this.elementRef.nativeElement.offsetHeight),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(this._containerSize$);
     this.scrollStrategy.attach(this, this.viewRepeater);
     this.scrollStrategy.contentSize$
       .pipe(takeUntil(this.destroy$))
