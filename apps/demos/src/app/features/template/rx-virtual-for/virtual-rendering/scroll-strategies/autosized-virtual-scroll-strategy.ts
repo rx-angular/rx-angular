@@ -15,11 +15,21 @@ import {
   IterableDiffers,
   OnDestroy,
 } from '@angular/core';
-import { combineLatest, merge, ReplaySubject, scheduled, Subject } from 'rxjs';
+import {
+  combineLatest,
+  EMPTY,
+  merge,
+  ReplaySubject,
+  scan,
+  scheduled,
+  Subject,
+} from 'rxjs';
 import {
   distinctUntilChanged,
+  filter,
   map,
   startWith,
+  switchMap,
   takeUntil,
   tap,
 } from 'rxjs/operators';
@@ -77,6 +87,8 @@ export class AutosizeVirtualScrollStrategy
     this._scrolledIndex = index;
     this._scrolledIndex$.next(index);
   }
+
+  private containerSize = 0;
 
   private virtualViewContainer: {
     height: number;
@@ -181,6 +193,7 @@ export class AutosizeVirtualScrollStrategy
         onScroll$,
       ]).pipe(
         map(([length, containerHeight]) => {
+          this.containerSize = containerHeight;
           const range = { start: null, end: length };
           const heightsLength = this.virtualViewContainer.length;
           let i = 0;
@@ -216,19 +229,63 @@ export class AutosizeVirtualScrollStrategy
 
   private onContentRendered(): void {
     this.viewRepeater.contentRendered$
-      .pipe(this.until$)
-      .subscribe((views: EmbeddedViewRef<any>[]) => {
+      .pipe(
+        switchMap((views) => {
+          return merge(
+            ...views.map((view, index) => {
+              const adjustedIndex = index + this.renderedRange.start;
+              return observeElementSize(
+                view.rootNodes[0],
+                (entries) => entries[0].borderBoxSize[0].blockSize,
+                { box: 'border-box' }
+              ).pipe(
+                distinctUntilChanged(),
+                filter(
+                  () =>
+                    view.rootNodes[0].offsetHeight !==
+                    this.virtualViewContainer[adjustedIndex].height
+                ),
+                map(() => ({
+                  view,
+                  index,
+                }))
+              );
+            })
+          ).pipe(
+            scan((sizeAdjusts, adjust) => {
+              sizeAdjusts.push(adjust);
+              return sizeAdjusts;
+            }, []),
+            coalesceWith(scheduled([], animationFrameScheduler)),
+            map((adjusts) => ({
+              views,
+              index: adjusts.sort((a, b) => a.index - b.index)[0].index,
+            })),
+            startWith({
+              views,
+              index: 0,
+            })
+          );
+        }),
+        this.until$
+      )
+      .subscribe(({ views, index }) => {
+        const updatedRange = {
+          ...this.renderedRange,
+          start: this.renderedRange.start + index,
+        };
         const renderedRange = this.renderedRange;
-        let scrollTop = this.heightsUntil(renderedRange.start);
+        let scrollTop = this.heightsUntil(updatedRange.start);
         // console.log('heightsUntil', scrollTop);
         let height = 0;
-        let i = 0;
+        let i = index;
         let end = views.length;
         // update heights according to actual rendered items
         let expectedHeight = 0;
+        const adjustIndexWith = renderedRange.start;
         for (i; i < end; i++) {
           expectedHeight +=
-            this.virtualViewContainer[i + renderedRange.start].height;
+            this.virtualViewContainer[i + adjustIndexWith].height;
           const _height = this._setViewHeight(
             views[i],
             i,
@@ -240,7 +297,7 @@ export class AutosizeVirtualScrollStrategy
         }
         // set new sample
         this.averager.addSample(
-          { ...renderedRange, end: renderedRange.end + 1 },
+          { ...updatedRange, end: updatedRange.end + 1 },
           height
         );
         const newAverage = Math.ceil(this.averager.getAverageItemSize());
@@ -273,10 +330,12 @@ export class AutosizeVirtualScrollStrategy
         const heightOffset = expectedHeight - height;
         // console.log('heightOffset', heightOffset);
         /*if (totalHeightOffset != 0) {
-          // this.scrollTo$.next(scrollTop + heightOffset);
-          this.viewport.scrollTo(this.scrollTop + totalHeightOffset);
-        }*/
-        const underrendered = heightOffset >= newAverage;
+         // this.scrollTo$.next(scrollTop + heightOffset);
+         this.viewport.scrollTo(this.scrollTop + totalHeightOffset);
+         }*/
+        const underrendered =
+          height < this.containerSize + this.buffer &&
+          heightOffset >= newAverage;
         if (underrendered) {
           const reloadAmount = Math.ceil(heightOffset / newAverage);
           /*console.warn('reloadAmount', reloadAmount);
@@ -288,7 +347,7 @@ export class AutosizeVirtualScrollStrategy
             });
           } else {
             this.rangeAdjust$.next({
-              start: renderedRange.start - reloadAmount,
+              start: Math.max(0, renderedRange.start - reloadAmount),
               end: renderedRange.end,
             });
           }
@@ -329,6 +388,7 @@ export class AutosizeVirtualScrollStrategy
 }
 
 import { NgModule } from '@angular/core';
+import { observeElementSize } from '../observe-element-size';
 
 @NgModule({
   imports: [],

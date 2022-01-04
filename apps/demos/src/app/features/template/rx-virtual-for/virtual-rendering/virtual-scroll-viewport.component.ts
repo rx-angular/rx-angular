@@ -107,7 +107,10 @@ export class RxVirtualScrollViewportComponent
   }
 
   ngAfterContentInit(): void {
-    observeElementSize(this.elementRef.nativeElement, 'height')
+    observeElementSize(
+      this.elementRef.nativeElement,
+      (entries) => entries[0].contentRect.height
+    )
       .pipe(
         startWith(this.elementRef.nativeElement.offsetHeight),
         distinctUntilChanged(),

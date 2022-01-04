@@ -143,8 +143,12 @@ import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.comp
                     strategy: $any(strategy$)
                   "
                   class="item"
+                  #div
                 >
-                  {{ i }} {{ item.content }}
+                  <div class="content">{{ i }} {{ item.content }}</div>
+                  <!--<button (click)="div.style.height = '170px'">
+                    change size
+                  </button>-->
                 </div>
               </rx-virtual-scroll-viewport>
             </ng-template>
@@ -227,6 +231,9 @@ import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.comp
         border: 1px solid green;
         padding: 10px 0;
         box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.13);
+      }
+      .content:hover {
+        height: 300px;
       }
     `,
   ],
