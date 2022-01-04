@@ -15,7 +15,7 @@ export interface ListRange {
 @Injectable()
 export abstract class RxVirtualScrollStrategy {
   /** Emits when the index of the first element visible in the viewport changes. */
-  scrolledIndexChange: Observable<number>;
+  scrolledIndex$: Observable<number>;
   renderedRange$: Observable<ListRange>;
   contentSize$: Observable<number>;
 

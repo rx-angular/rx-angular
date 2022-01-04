@@ -7,14 +7,7 @@ import {
   RxVirtualViewRepeater,
 } from '../model';
 import { Directive, EmbeddedViewRef, Input, OnDestroy } from '@angular/core';
-import {
-  combineLatest,
-  merge,
-  Observable,
-  ReplaySubject,
-  scheduled,
-  Subject,
-} from 'rxjs';
+import { combineLatest, merge, ReplaySubject, scheduled, Subject } from 'rxjs';
 import {
   distinctUntilChanged,
   map,
@@ -50,7 +43,14 @@ export class FixedSizeVirtualScrollStrategy
   private viewport: RxVirtualScrollViewport | null = null;
   private viewRepeater: RxVirtualViewRepeater<any> | null = null;
 
-  scrolledIndexChange: Observable<number>;
+  private readonly _scrolledIndex$ = new ReplaySubject<number>(1);
+  scrolledIndex$ = this._scrolledIndex$.asObservable();
+  private _scrolledIndex: number = 0;
+  private set scrolledIndex(index: number) {
+    this._scrolledIndex = index;
+    this._scrolledIndex$.next(index);
+  }
+
   private readonly _contentSize$ = new ReplaySubject<number>(1);
   readonly contentSize$ = this._contentSize$.asObservable();
 
@@ -58,9 +58,6 @@ export class FixedSizeVirtualScrollStrategy
   private set contentSize(size: number) {
     this._contentSize = size;
     this._contentSize$.next(size);
-  }
-  private get contentSize(): number {
-    return this._contentSize;
   }
 
   private readonly _renderedRange$ = new ReplaySubject<ListRange>(1);
@@ -142,12 +139,8 @@ export class FixedSizeVirtualScrollStrategy
       }),
       coalesceWith(scheduled([], animationFrameScheduler))
     );
-    merge(
-      combineLatest([
-        dataLengthChanged$,
-        this.viewport.containerSize$,
-        onScroll$,
-      ]).pipe(
+    combineLatest([dataLengthChanged$, this.viewport.containerSize$, onScroll$])
+      .pipe(
         map(([length, containerSize]) => {
           const start = Math.floor(
             Math.max(0, this.scrollTop - this.buffer) / this.itemSize
@@ -158,11 +151,12 @@ export class FixedSizeVirtualScrollStrategy
               (this.scrollTop + containerSize + this.buffer) / this.itemSize
             )
           );
+          this.scrolledIndex = Math.floor(this.scrollTop / this.itemSize);
           return { start, end };
-        })
+        }),
+        distinctUntilSomeChanged(['start', 'end']),
+        this.until$
       )
-    )
-      .pipe(distinctUntilSomeChanged(['start', 'end']), this.until$)
       .subscribe((range: ListRange) => (this.renderedRange = range));
   }
 

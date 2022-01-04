@@ -7,6 +7,7 @@ import {
   NgZone,
   OnDestroy,
   Optional,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { fromEvent } from '@rx-angular/cdk/zone-less';
@@ -75,7 +76,11 @@ export class RxVirtualScrollViewportComponent
   private _containerSize$ = new ReplaySubject<number>(1);
   readonly containerSize$ = this._containerSize$.asObservable();
 
+  @Output('renderedRange')
   readonly renderedRange$ = defer(() => this.scrollStrategy.renderedRange$);
+
+  @Output('scrolledIndexChange')
+  readonly scrolledIndex$ = defer(() => this.scrollStrategy.scrolledIndex$);
 
   readonly nativeElement = this.elementRef.nativeElement;
 

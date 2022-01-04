@@ -15,14 +15,7 @@ import {
   IterableDiffers,
   OnDestroy,
 } from '@angular/core';
-import {
-  combineLatest,
-  merge,
-  Observable,
-  ReplaySubject,
-  scheduled,
-  Subject,
-} from 'rxjs';
+import { combineLatest, merge, ReplaySubject, scheduled, Subject } from 'rxjs';
 import {
   distinctUntilChanged,
   map,
@@ -77,7 +70,13 @@ export class AutosizeVirtualScrollStrategy
     return this._renderedRange;
   }
 
-  scrolledIndexChange: Observable<number>;
+  private readonly _scrolledIndex$ = new ReplaySubject<number>(1);
+  scrolledIndex$ = this._scrolledIndex$.asObservable();
+  private _scrolledIndex: number = 0;
+  private set scrolledIndex(index: number) {
+    this._scrolledIndex = index;
+    this._scrolledIndex$.next(index);
+  }
 
   private virtualViewContainer: {
     height: number;
@@ -118,8 +117,14 @@ export class AutosizeVirtualScrollStrategy
   }
 
   scrollToIndex(index: number, behavior?: ScrollBehavior): void {
-    const scrollTop = this.virtualViewContainer[index].scrollTop;
-    this.viewport.scrollTo(scrollTop, behavior);
+    const _index = Math.min(
+      Math.max(index, 0),
+      this.virtualViewContainer.length - 1
+    );
+    this.viewport.scrollTo(
+      this.virtualViewContainer[_index].scrollTop,
+      behavior
+    );
   }
 
   private onDataChanged(): void {
@@ -165,7 +170,7 @@ export class AutosizeVirtualScrollStrategy
         // TODO: improve this
         this.direction = _scrollTop > this.scrollTop ? 'down' : 'up';
         this.scrollTop = _scrollTop;
-        console.log('scrollTop', this.scrollTop);
+        // console.log('scrollTop', this.scrollTop);
       }),
       coalesceWith(scheduled([], animationFrameScheduler))
     );
@@ -181,21 +186,24 @@ export class AutosizeVirtualScrollStrategy
           let i = 0;
 
           const adjustedScrollTop = this.scrollTop + this.buffer;
-          console.log(length, 'itemLength');
+          /*console.log(length, 'itemLength');
           console.log(adjustedScrollTop, 'adjustedScrollTop');
-          console.log(this.virtualViewContainer, 'heights');
+          console.log(this.virtualViewContainer, 'heights');*/
+          let scrolledIndex;
           for (i; i < heightsLength; i++) {
             const entry = this.virtualViewContainer[i];
-            if (
-              entry.scrollTop + entry.height + this.buffer <=
-              this.scrollTop
-            ) {
+            const entryPos = entry.scrollTop + entry.height;
+            if (entryPos + this.buffer <= this.scrollTop) {
               range.start = i;
             } else if (entry.scrollTop > containerHeight + adjustedScrollTop) {
               range.end = i;
               break;
             }
+            if (scrolledIndex == null && entry.scrollTop >= this.scrollTop) {
+              scrolledIndex = i;
+            }
           }
+          this.scrolledIndex = scrolledIndex;
           range.start = range.start == null ? 0 : range.start;
           return range;
         })
@@ -212,7 +220,7 @@ export class AutosizeVirtualScrollStrategy
       .subscribe((views: EmbeddedViewRef<any>[]) => {
         const renderedRange = this.renderedRange;
         let scrollTop = this.heightsUntil(renderedRange.start);
-        console.log('heightsUntil', scrollTop);
+        // console.log('heightsUntil', scrollTop);
         let height = 0;
         let i = 0;
         let end = views.length;
@@ -230,17 +238,17 @@ export class AutosizeVirtualScrollStrategy
           height += _height;
           scrollTop += _height;
         }
-
         // set new sample
         this.averager.addSample(
           { ...renderedRange, end: renderedRange.end + 1 },
           height
         );
         const newAverage = Math.ceil(this.averager.getAverageItemSize());
-        console.log('addSample', renderedRange, height, newAverage);
+        // console.log('addSample', renderedRange, height, newAverage);
         // adjust heights of all guessed items based on the new average size
         const heightLength = this.virtualViewContainer.length;
         let _totalHeight = 0;
+        let scrolledIndex;
         for (let j = 0; j < heightLength; j++) {
           const entry = this.virtualViewContainer[j];
           if (entry.sampled) {
@@ -252,13 +260,18 @@ export class AutosizeVirtualScrollStrategy
                 this.virtualViewContainer[j - 1].height
               : 0;
           _totalHeight += entry.height;
+          if (scrolledIndex == null && entry.scrollTop >= this.scrollTop) {
+            scrolledIndex = j;
+          }
         }
+        this.scrolledIndex = scrolledIndex;
         const totalHeightOffset = this.contentSize - _totalHeight;
-        console.log('totalHeightOffset', totalHeightOffset);
+        // console.log('totalHeightOffset', totalHeightOffset);
         this.contentSize = _totalHeight;
-        console.log('heights', this.virtualViewContainer);
+
+        // console.log('heights', this.virtualViewContainer);
         const heightOffset = expectedHeight - height;
-        console.log('heightOffset', heightOffset);
+        // console.log('heightOffset', heightOffset);
         /*if (totalHeightOffset != 0) {
           // this.scrollTo$.next(scrollTop + heightOffset);
           this.viewport.scrollTo(this.scrollTop + totalHeightOffset);
@@ -266,8 +279,8 @@ export class AutosizeVirtualScrollStrategy
         const underrendered = heightOffset >= newAverage;
         if (underrendered) {
           const reloadAmount = Math.ceil(heightOffset / newAverage);
-          console.warn('reloadAmount', reloadAmount);
-          console.warn('heightOffset / newAverage', heightOffset, newAverage);
+          /*console.warn('reloadAmount', reloadAmount);
+          console.warn('heightOffset / newAverage', heightOffset, newAverage);*/
           if (this.direction === 'down') {
             this.rangeAdjust$.next({
               start: renderedRange.start,

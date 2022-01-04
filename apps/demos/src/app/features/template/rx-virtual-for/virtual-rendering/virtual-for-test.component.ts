@@ -1,4 +1,5 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -31,64 +32,84 @@ import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.comp
       <rxa-strategy-select
         (strategyChange)="strategy$.next($event)"
       ></rxa-strategy-select>
-      <h2 class="mat-subheading-2">ScrollStrategy</h2>
-      <mat-button-toggle-group
-        *rxLet="scrollStrategy$; let viewMode"
-        aria-label="Visible Examples"
-        [value]="viewMode"
-      >
-        <mat-button-toggle value="fixed" (click)="scrollStrategy$.next('fixed')"
-          >Fixed size
-        </mat-button-toggle>
-        <mat-button-toggle value="auto" (click)="scrollStrategy$.next('auto')"
-          >Autosized
-        </mat-button-toggle>
-      </mat-button-toggle-group>
-      <h2 class="mat-subheading-2 mt-4">Components</h2>
-      <mat-button-toggle-group
-        *rxLet="components$; let components"
-        aria-label="Visible Examples"
-        [value]="components"
-      >
-        <mat-button-toggle value="rxa" (click)="components$.next('rxa')"
-          >rxVirtualFor
-        </mat-button-toggle>
-        <mat-button-toggle value="cdk" (click)="components$.next('cdk')"
-          >cdkVirtualFor
-        </mat-button-toggle>
-        <mat-button-toggle value="both" (click)="components$.next('both')"
-          >Both
-        </mat-button-toggle>
-      </mat-button-toggle-group>
+      <div class="d-flex">
+        <div class="mr-4">
+          <h2 class="mat-subheading-2">ScrollStrategy</h2>
+          <mat-button-toggle-group
+            *rxLet="scrollStrategy$; let viewMode"
+            aria-label="Visible Examples"
+            [value]="viewMode"
+          >
+            <mat-button-toggle
+              value="fixed"
+              (click)="scrollStrategy$.next('fixed')"
+              >Fixed size
+            </mat-button-toggle>
+            <mat-button-toggle
+              value="auto"
+              (click)="scrollStrategy$.next('auto')"
+              >Autosized
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div>
+          <h2 class="mat-subheading-2">Components</h2>
+          <mat-button-toggle-group
+            *rxLet="components$; let components"
+            aria-label="Visible Examples"
+            [value]="components"
+          >
+            <mat-button-toggle value="rxa" (click)="components$.next('rxa')"
+              >rxVirtualFor
+            </mat-button-toggle>
+            <mat-button-toggle value="cdk" (click)="components$.next('cdk')"
+              >cdkVirtualFor
+            </mat-button-toggle>
+            <mat-button-toggle value="both" (click)="components$.next('both')"
+              >Both
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+      </div>
       <rxa-array-provider
         [unpatched]="[]"
         [buttons]="true"
       ></rxa-array-provider>
-      <div class="d-flex">
-        <input
-          style="width: 200px"
-          matInput
-          #scrollToInput
-          placeholder="scrollToIndex"
-          type="number"
-        />
-        <button mat-button (click)="scrollToIndex(scrollToInput.value)">
-          ScrollTo
-        </button>
-      </div>
       <div class="d-flex justify-content-between">
         <div class="w-50" *rxIf="showRxa$">
+          <h2 class="mat-subheading-2">*rxVirtualFor</h2>
+          <div class="d-flex">
+            <input
+              style="width: 200px"
+              matInput
+              #scrollToInput
+              placeholder="scrollToIndex"
+              type="number"
+            />
+            <button mat-button (click)="scrollToIndex(scrollToInput.value)">
+              ScrollTo
+            </button>
+          </div>
+          <h2 class="mat-subheading-1">Stats</h2>
           <div class="stats">
-            <div *rxLet="data$; let data">
-              <strong>Items: </strong>{{ data.length }}
+            <div>
+              <strong>Items: </strong
+              ><span *rxLet="data$; let data">{{ data.length }}</span>
             </div>
-            <div *rxLet="renderedItems$; let renderedItems">
-              <strong>renderedItems: </strong>{{ renderedItems }}
+            <div>
+              <strong>renderedItems: </strong
+              ><span *rxLet="renderedItems$; let renderedItems">{{
+                renderedItems
+              }}</span>
+            </div>
+            <div>
+              <strong>scrolledIndex: </strong>
+              <span *rxLet="rxaScrolledIndex$; let idx">{{ idx }}</span>
             </div>
           </div>
-          <h2 class="mat-subheading-1">*rxVirtualFor</h2>
           <ng-container *rxLet="scrollStrategy$; let viewMode">
             <rx-virtual-scroll-viewport
+              (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
               *ngIf="viewMode === 'fixed'; else autoSized"
               [itemSize]="itemSize"
               class="viewport"
@@ -99,7 +120,7 @@ import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.comp
                   let i = index;
                   trackBy: trackItem;
                   renderCallback: rendered;
-                  strategy: strategy$
+                  strategy: $any(strategy$)
                 "
                 class="item"
                 [style.height.px]="itemSize"
@@ -108,14 +129,18 @@ import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.comp
               </div>
             </rx-virtual-scroll-viewport>
             <ng-template #autoSized>
-              <rx-virtual-scroll-viewport autosize class="viewport">
+              <rx-virtual-scroll-viewport
+                (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
+                autosize
+                class="viewport"
+              >
                 <div
                   *rxVirtualFor="
                     let item of data$;
                     let i = index;
                     trackBy: trackItem;
                     renderCallback: rendered;
-                    strategy: strategy$
+                    strategy: $any(strategy$)
                   "
                   class="item"
                 >
@@ -126,9 +151,34 @@ import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.comp
           </ng-container>
         </div>
         <div class="w-50" *rxIf="showCdk$">
-          <h2 class="mat-subheading-1">*cdkVirtualVor</h2>
+          <h2 class="mat-subheading-2">*cdkVirtualVor</h2>
+          <div class="d-flex">
+            <input
+              style="width: 200px"
+              matInput
+              #scrollToInput
+              placeholder="scrollToIndex"
+              type="number"
+            />
+            <button mat-button (click)="scrollToCdkIndex(scrollToInput.value)">
+              ScrollTo
+            </button>
+          </div>
+          <h2 class="mat-subheading-1">Stats</h2>
+          <div class="stats">
+            <div>
+              <strong>Items: </strong
+              ><span *rxLet="data$; let data">{{ data.length }}</span>
+            </div>
+            <div><strong>renderedItems: </strong> N/A</div>
+            <div>
+              <strong>scrolledIndex: </strong>
+              <span *rxLet="cdkScrolledIndex$; let idx">{{ idx }}</span>
+            </div>
+          </div>
           <ng-container *rxLet="scrollStrategy$; let viewMode">
             <cdk-virtual-scroll-viewport
+              (scrolledIndexChange)="cdkScrolledIndex$.next($event)"
               *ngIf="viewMode === 'fixed'; else autoSized"
               class="viewport"
               [itemSize]="itemSize"
@@ -189,6 +239,9 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
   @ViewChild(RxVirtualScrollViewportComponent)
   virtualViewport: RxVirtualScrollViewportComponent;
 
+  @ViewChild(CdkVirtualScrollViewport)
+  cdkVirtualViewport: CdkVirtualScrollViewport;
+
   private readonly afterViewInit$ = new ReplaySubject<void>(1);
 
   contentCache = {};
@@ -204,6 +257,9 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
   showCdk$ = this.components$.pipe(
     map((components) => components === 'cdk' || components === 'both')
   );
+
+  cdkScrolledIndex$ = new ReplaySubject<number>(1);
+  rxaScrolledIndex$ = new ReplaySubject<number>(1);
 
   itemSize = 50;
 
@@ -270,5 +326,9 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
 
   scrollToIndex(index: string): void {
     this.virtualViewport.scrollToIndex(coerceNumberProperty(index, 0));
+  }
+
+  scrollToCdkIndex(index: string): void {
+    this.cdkVirtualViewport.scrollToIndex(coerceNumberProperty(index, 0));
   }
 }
