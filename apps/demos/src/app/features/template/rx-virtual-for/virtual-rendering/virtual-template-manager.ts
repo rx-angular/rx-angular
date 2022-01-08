@@ -124,7 +124,7 @@ export function createVirtualListManager<
         // map iterable to latest diff
         map(([items, range]) => {
           renderedRange = range;
-          const iterable = items.slice(range.start, range.end + 1);
+          const iterable = items.slice(range.start, range.end);
           if (partiallyFinished) {
             const currentIterable = [];
             for (let i = 0, ilen = viewContainerRef.length; i < ilen; i++) {

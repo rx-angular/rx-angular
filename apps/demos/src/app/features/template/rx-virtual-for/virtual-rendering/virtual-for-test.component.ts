@@ -228,12 +228,13 @@ import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.comp
       .item {
         width: 250px;
         overflow: hidden;
+        /*height: 50px;*/
         border: 1px solid green;
         padding: 10px 0;
         box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.13);
       }
       .content:hover {
-        height: 300px;
+        height: 200px;
       }
     `,
   ],
