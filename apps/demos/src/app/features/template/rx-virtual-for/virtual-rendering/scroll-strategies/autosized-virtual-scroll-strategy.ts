@@ -311,29 +311,6 @@ export class AutosizeVirtualScrollStrategy
               }
             }
           }
-          /*let scrolledIndex;
-          let scrollTopAcc = 0;
-          const avg = this.lastScrollAverage;
-          for (i; i < length; i++) {
-            const entry = this._virtualViewContainer.get(i);
-            const entryPos = entry.scrollTop + entry.height;
-            if (entryPos + this.buffer <= adjustedScrollTop) {
-              range.start = i;
-            } else if (
-              entry.scrollTop >
-              containerHeight + scrollTopWithBuffer
-            ) {
-              range.end = i;
-              break;
-            }
-            scrollTopAcc += entry.height;
-            if (scrolledIndex == null && scrollTopAcc > adjustedScrollTop) {
-              scrolledIndex = i;
-            }
-          }
-          this.scrolledIndex = scrolledIndex;
-          this.lastScrollAverage = this.averager.getAverageItemSize();
-          console.log('scrolledIndex after scroll', scrolledIndex);*/
           console.log('renderedRange', oldRange, '->', range);
           console.groupEnd();
           return range;
@@ -398,48 +375,56 @@ export class AutosizeVirtualScrollStrategy
           start: this.renderedRange.start + index,
         };
         const renderedRange = this.renderedRange;
-        let scrollTopUntil = this.scrollTopUntil(updatedRange.start);
-        console.log('scrollTopUntil', scrollTopUntil);
-        console.log('renderedRange', renderedRange);
-        let renderedSize = 0;
+        const { start: oldStart, end: oldEnd } = this.rangeRendered;
+        let scrollTopUntil = 0;
         let i = index;
         let end = views.length;
-        let expectedHeight = 0;
+        let renderedSize = 0;
         const adjustIndexWith = renderedRange.start;
-        if (
-          renderedRange.start < this.rangeRendered.start &&
-          renderedRange.end > this.rangeRendered.start
-        ) {
+        if (renderedRange.start < oldStart && renderedRange.end > oldStart) {
           let _s = renderedRange.start;
-          let _e = this.rangeRendered.start;
+          let _e = oldStart - 1;
+          i = oldStart - _s;
+          scrollTopUntil = this.scrollTopUntil(oldStart);
+          let scrollTo = scrollTopUntil;
+          for (_e; _e >= _s; _e--) {
+            const view = views[_e - adjustIndexWith];
+            const { size, element } = this._getElementAndSize(view);
+            scrollTo -= size;
+            renderedSize += size;
+            this._positionView(element, scrollTo);
+            this._virtualViewContainer.set(_e, {
+              height: size,
+              scrollTop: scrollTo,
+            });
+          }
+        } else if (renderedRange.end > oldEnd && renderedRange.start < oldEnd) {
           console.warn('before', this.renderedRange);
           console.warn('new', this.rangeRendered);
-          // scrollTopUntil = this.scrollTopUntil(_e);
-          for (_s; _s < _e; _s++) {
-            const expectedFirstHeight =
-              this._virtualViewContainer.get(_s).height;
-            const firstHeight = this.getViewSize(
-              views[_s - renderedRange.start]
-            );
-            const heightDiff = expectedFirstHeight - firstHeight;
-            if (heightDiff !== 0) {
-              console.warn('adjust scrollUntil', heightDiff);
-              scrollTopUntil = Math.max(0, scrollTopUntil + heightDiff);
-            }
-          }
+          scrollTopUntil = this.scrollTopUntil(updatedRange.start);
+        } else {
+          scrollTopUntil = this.scrollTopUntil(updatedRange.start);
         }
         let scrolledIndex;
+        let expectedHeight = 0;
         for (i; i < end; i++) {
           const adjustedIndex = i + adjustIndexWith;
-          expectedHeight +=
-            this._virtualViewContainer.get(adjustedIndex)?.height;
-          const _size = this._setViewHeight(
-            views[i],
-            adjustedIndex,
-            scrollTopUntil
-          );
-          renderedSize += _size;
-          scrollTopUntil += _size;
+          const expected = this._virtualViewContainer.items[adjustedIndex];
+          const view = views[i];
+          const { size, element } = this._getElementAndSize(view);
+          expectedHeight += expected.height;
+          const wasRenderedBefore =
+            adjustedIndex >= oldStart && adjustedIndex < oldEnd;
+          // only position element if wasn't rendered before or it's position changed
+          if (!wasRenderedBefore || scrollTopUntil !== expected.scrollTop) {
+            this._positionView(element, scrollTopUntil);
+          }
+          this._virtualViewContainer.set(adjustedIndex, {
+            height: size,
+            scrollTop: scrollTopUntil,
+          });
+          renderedSize += size;
+          scrollTopUntil += size;
           if (scrolledIndex == null && scrollTopUntil > this.scrollTop) {
             scrolledIndex = i + adjustIndexWith;
           }
@@ -448,7 +433,6 @@ export class AutosizeVirtualScrollStrategy
         if (scrolledIndex != null) {
           this.scrolledIndex = scrolledIndex;
         }
-        const heightOffset = expectedHeight - renderedSize;
         let adjustScrollTop;
         // set new sample
         this.averager.addSample(
@@ -587,25 +571,20 @@ export class AutosizeVirtualScrollStrategy
     return lastEntry?.scrollTop + lastEntry?.height || 0;
   }
 
-  private getViewSize(view: EmbeddedViewRef<any>): number {
+  private _getElementAndSize(view: EmbeddedViewRef<any>): {
+    element: HTMLElement;
+    size: number;
+  } {
     const element = view.rootNodes[0] as HTMLElement;
-    return element.offsetHeight;
+    return {
+      element,
+      size: element.offsetHeight,
+    };
   }
 
-  private _setViewHeight(
-    view: EmbeddedViewRef<any>,
-    currentIndex: number,
-    scrollTop: number
-  ): number {
-    const element = view.rootNodes[0] as HTMLElement;
-    const height = element.offsetHeight;
+  private _positionView(element: HTMLElement, scrollTop: number): void {
     element.style.position = 'absolute';
     element.style.transform = `translateY(${scrollTop}px)`;
-    this._virtualViewContainer.set(currentIndex, {
-      height,
-      scrollTop,
-    });
-    return height;
   }
 }
 
