@@ -149,6 +149,7 @@ export class AutosizeVirtualScrollStrategy
   private currentOffset = 0;
   private lastScrollAverage = this.averager.getAverageItemSize();
   private anchorTop = 0;
+  private rangeRendered: ListRange = { start: 0, end: 0 };
 
   private readonly destroy$ = new Subject<void>();
   private readonly detached$ = new Subject<void>();
@@ -271,14 +272,16 @@ export class AutosizeVirtualScrollStrategy
         map(([length, containerHeight]) => {
           console.group('onScroll');
           this.containerSize = containerHeight;
-          const oldRange = this.renderedRange;
+          const oldRange = this.rangeRendered;
           const range = {
             ...oldRange,
             end: oldRange.end === 0 ? length : oldRange.end,
           };
           const scrollTopWithBuffer = this.scrollTop + this.buffer;
+
           const delta = this.scrollTop - this.anchorTop;
           if (delta >= 0) {
+            // scrolling down
             let j = oldRange.start;
             range.end = length;
             let scrollTop = this.anchorTop;
@@ -403,7 +406,28 @@ export class AutosizeVirtualScrollStrategy
         let end = views.length;
         let expectedHeight = 0;
         const adjustIndexWith = renderedRange.start;
-
+        if (
+          renderedRange.start < this.rangeRendered.start &&
+          renderedRange.end > this.rangeRendered.start
+        ) {
+          let _s = renderedRange.start;
+          let _e = this.rangeRendered.start;
+          console.warn('before', this.renderedRange);
+          console.warn('new', this.rangeRendered);
+          // scrollTopUntil = this.scrollTopUntil(_e);
+          for (_s; _s < _e; _s++) {
+            const expectedFirstHeight =
+              this._virtualViewContainer.get(_s).height;
+            const firstHeight = this.getViewSize(
+              views[_s - renderedRange.start]
+            );
+            const heightDiff = expectedFirstHeight - firstHeight;
+            if (heightDiff !== 0) {
+              console.warn('adjust scrollUntil', heightDiff);
+              scrollTopUntil = Math.max(0, scrollTopUntil + heightDiff);
+            }
+          }
+        }
         let scrolledIndex;
         for (i; i < end; i++) {
           const adjustedIndex = i + adjustIndexWith;
@@ -454,7 +478,7 @@ export class AutosizeVirtualScrollStrategy
               const isOff = remaining - height;
               if (isOff != 0) {
                 height = remaining;
-                console.warn('adjusted height', remaining, height, s);
+                console.warn('adjusted height', remaining, view.height, s);
                 /* if (view.sampled) {
                   console.warn('adjusted height', remaining, height, s);
                   height = remaining;
@@ -523,14 +547,21 @@ export class AutosizeVirtualScrollStrategy
         }
         console.log('heightDiffPerc', heightDiffPerc);
         console.log('this.currentOffset', this.currentOffset);*/
-        console.groupEnd();
-        const underrendered =
-          renderedSize < this.containerSize + this.buffer &&
-          heightOffset >= newAverage;
+        const last = this._virtualViewContainer.get(
+          views.length - 1 + renderedRange.start
+        );
+        this.rangeRendered = this.renderedRange;
+        const renderOffset =
+          this.scrollTop +
+          this.containerSize +
+          this.buffer -
+          (last.scrollTop + last.height);
+        /* const underrendered =
+          renderedRange.end < this.contentLength && renderOffset > newAverage;
         if (underrendered) {
-          const reloadAmount = Math.ceil(heightOffset / newAverage);
-          /*console.warn('reloadAmount', reloadAmount);
-          console.warn('heightOffset / newAverage', heightOffset, newAverage);*/
+          const reloadAmount = Math.floor(renderOffset / newAverage);
+          console.warn('reloadAmount', reloadAmount);
+          console.warn('renderOffset / newAverage', renderOffset, newAverage);
           if (this.direction === 'down') {
             this.rangeAdjust$.next({
               start: renderedRange.start,
@@ -542,7 +573,8 @@ export class AutosizeVirtualScrollStrategy
               end: renderedRange.end,
             });
           }
-        }
+        }*/
+        console.groupEnd();
       });
   }
 
