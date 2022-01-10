@@ -79,7 +79,7 @@
     "@angular/cli": "13.0.3",
     "@angular/compiler-cli": "13.0.2",
     "@angular/language-service": "13.0.2",
-    "@commitlint/cli": "^15.0.0",
+    "@commitlint/cli": "^16.0.2",
     "@commitlint/config-conventional": "^15.0.0",
     "@jscutlery/semver": "^2.13.1",
     "@nguniversal/builders": "^13.0.1",
