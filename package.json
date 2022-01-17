@@ -60,7 +60,7 @@
     "@angular/platform-server": "13.0.2",
     "@angular/router": "13.0.2",
     "@nguniversal/express-engine": "^13.0.1",
-    "@ngxs/store": "3.7.2",
+    "@ngxs/store": "3.7.3",
     "angular-in-memory-web-api": "^0.11.0",
     "bootstrap": "^4.6.0",
     "core-js": "^3.18.3",
