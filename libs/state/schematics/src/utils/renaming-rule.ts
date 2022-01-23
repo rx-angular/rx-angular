@@ -53,13 +53,15 @@ export function renamingRule(
                 };
 
                 if (namedImport.getAliasNode()) {
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   namedImportConfig.alias = namedImport
-                    .getAliasNode()
+                    .getAliasNode()!
                     .getText();
                 }
 
                 if (newImports.has(key)) {
-                  const value = newImports.get(key);
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  const value = newImports.get(key)!;
                   newImports.set(key, [...value, namedImportConfig]);
                 } else {
                   newImports.set(key, [namedImportConfig]);
