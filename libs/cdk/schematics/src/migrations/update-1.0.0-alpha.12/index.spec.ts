@@ -284,7 +284,6 @@ describe('cdk migration 1.0.0-alpha-12', () => {
         queueScheduler,
         animationFrameScheduler
       } from '@rx-angular/cdk';
-      import { setTimeout } from '@rx-angular/cdk';
 
       import { AppComponent } from './app.component';
 
@@ -305,6 +304,7 @@ describe('cdk migration 1.0.0-alpha-12', () => {
 
     expect(file).toMatchSnapshot();
   });
+
   it('should replace zone-less in edge case', async () => {
     appTree = await setupTestFile(`
     import { ChangeDetectionStrategy, Component, TrackByFunction, ViewChild } from '@angular/core';
@@ -320,9 +320,7 @@ describe('cdk migration 1.0.0-alpha-12', () => {
       changeDetection: ChangeDetectionStrategy.OnPush,
       providers: [RxState]
     })
-    export class AppShellComponent {
-
-    }
+    export class AppShellComponent { }
   `);
 
     const file = appTree.readContent('app.module.ts');
