@@ -59,7 +59,7 @@ export function renamingRule(
             });
           });
 
-          if (importDeclaration.getNamedImports.length === 0) {
+          if (importDeclaration.getNamedImports().length === 0) {
             importDeclaration.remove();
           }
         });
