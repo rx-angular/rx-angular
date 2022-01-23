@@ -246,6 +246,7 @@ exports[`cdk migration 1.0.0-alpha-12 should replace zone-less 1`] = `
   animationFrameScheduler,
 } from '@rx-angular/cdk/zone-less/rxjs';
 import {
+  Promise as unpatchedPromise,
   requestAnimationFrame,
   cancelAnimationFrame,
   setInterval,

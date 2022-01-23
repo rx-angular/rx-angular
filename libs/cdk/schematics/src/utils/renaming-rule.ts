@@ -4,11 +4,14 @@ import {
   createProject,
   getImports,
   ImportSpecifier,
+  ImportSpecifierStructure,
   saveActiveProject,
   setActiveProject,
 } from 'ng-morph';
 
 import { formatFiles } from './format-files';
+
+type ImportConfig = Pick<ImportSpecifierStructure, 'alias' | 'name'>;
 
 export function renamingRule(
   packageName: string,
@@ -31,7 +34,7 @@ export function renamingRule(
         const imports = getImports('**.ts', {
           moduleSpecifier: packageName,
         });
-        const newImports = new Map<string, string[]>();
+        const newImports = new Map<string, ImportConfig[]>();
 
         imports.forEach((importDeclaration) => {
           Object.keys(renames).forEach((importRename) => {
@@ -39,18 +42,27 @@ export function renamingRule(
             const rename = getRename(importRename);
 
             namedImports.forEach((namedImport) => {
-              if (namedImport.getText() === importRename) {
+              if (namedImport.getName() === importRename) {
                 const filePath = importDeclaration
                   .getSourceFile()
                   .getFilePath()
                   .toString();
                 const key = `${filePath}__${rename.moduleSpecifier}`;
+                const namedImportConfig: ImportConfig = {
+                  name: rename.namedImport,
+                };
+
+                if (namedImport.getAliasNode()) {
+                  namedImportConfig.alias = namedImport
+                    .getAliasNode()
+                    .getText();
+                }
 
                 if (newImports.has(key)) {
                   const value = newImports.get(key);
-                  newImports.set(key, [...value, rename.namedImport]);
+                  newImports.set(key, [...value, namedImportConfig]);
                 } else {
-                  newImports.set(key, [rename.namedImport]);
+                  newImports.set(key, [namedImportConfig]);
                 }
 
                 renameReferences(namedImport, importRename, rename.namedImport);
