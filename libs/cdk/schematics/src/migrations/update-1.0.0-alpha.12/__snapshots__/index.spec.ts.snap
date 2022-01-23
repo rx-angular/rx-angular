@@ -6,12 +6,11 @@ exports[`cdk migration 1.0.0-alpha-12 should replace coalescing 1`] = `
   coalescingObj,
   coalesceWith,
   coalescingManager,
+  CoalescingManager,
 } from '@rx-angular/cdk/coalescing';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { CoalescingManager } from '@rx-angular/cdk/coalescing';
-
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -30,12 +29,11 @@ exports[`cdk migration 1.0.0-alpha-12 should replace coercing 1`] = `
   coerceObservableWith,
   coerceDistinctObservable,
   coerceDistinctWith,
+  coerceAllFactory,
 } from '@rx-angular/cdk/coercing';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { coerceAllFactory } from '@rx-angular/cdk/coercing';
-
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -53,12 +51,11 @@ exports[`cdk migration 1.0.0-alpha-12 should replace internals-scheduler 1`] = `
   cancelCallback,
   scheduleCallback,
   forceFrameRate,
+  PriorityLevel,
 } from '@rx-angular/cdk/internals/scheduler';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { PriorityLevel } from '@rx-angular/cdk/internals/scheduler';
-
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -85,12 +82,11 @@ exports[`cdk migration 1.0.0-alpha-12 should replace notifications 1`] = `
   toRxCompleteNotification,
   templateTriggerHandling,
   rxMaterialize,
+  createTemplateNotifier,
 } from '@rx-angular/cdk/notifications';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { createTemplateNotifier } from '@rx-angular/cdk/notifications';
-
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -123,18 +119,22 @@ exports[`cdk migration 1.0.0-alpha-12 should replace render-strategies 1`] = `
   RxRenderWork,
   RX_RENDER_STRATEGIES_CONFIG,
   RX_RENDER_STRATEGIES_DEFAULTS,
+  RxRenderStrategiesConfig,
 } from '@rx-angular/cdk/render-strategies';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RxRenderStrategiesConfig } from '@rx-angular/cdk/render-strategies';
-
 import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule],
-  providers: [{ provide: RX_ANGULAR_CONFIG, useValue: RX_ANGULAR_DEFAULTS }],
+  providers: [
+    {
+      provide: RX_RENDER_STRATEGIES_CONFIG,
+      useValue: RX_RENDER_STRATEGIES_DEFAULTS,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
@@ -145,12 +145,11 @@ exports[`cdk migration 1.0.0-alpha-12 should replace state 1`] = `
 "import {
   ObservableAccumulation,
   ObservableMap,
+  accumulateObservables,
 } from '@rx-angular/cdk/internals/core';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { accumulateObservables } from '@rx-angular/cdk/internals/core';
-
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -177,12 +176,11 @@ exports[`cdk migration 1.0.0-alpha-12 should replace template 1`] = `
   createListTemplateManager,
   RxListViewComputedContext,
   RxDefaultListViewContext,
+  RxListViewContext,
 } from '@rx-angular/cdk/template';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RxListViewContext } from '@rx-angular/cdk/template';
-
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -220,12 +218,11 @@ exports[`cdk migration 1.0.0-alpha-12 should replace zone-configurations 1`] = `
   RxZoneGlobalConfigurations,
   RxZoneTestConfigurations,
   RxZoneRuntimeConfigurations,
+  zoneConfig,
 } from '@rx-angular/cdk/zone-configurations';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { zoneConfig } from '@rx-angular/cdk/zone-configurations';
-
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -262,8 +259,6 @@ import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { coerceObservableWith } from '@rx-angular/cdk/coercing';
-import { Promise as unpatchedPromise } from '@rx-angular/cdk';
-
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -277,7 +272,9 @@ export class AppModule {}
 `;
 
 exports[`cdk migration 1.0.0-alpha-12 should replace zone-less in edge case 1`] = `
-"import {
+"import { setTimeout } from '@rx-angular/cdk/zone-less/browser';
+
+import {
   ChangeDetectionStrategy,
   Component,
   TrackByFunction,
@@ -286,7 +283,6 @@ exports[`cdk migration 1.0.0-alpha-12 should replace zone-less in edge case 1`] 
 import { NavigationEnd, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
 import { filter, map } from 'rxjs';
-import { setTimeout } from '@rx-angular/cdk/zone-less/browser';
 
 @Component({
   selector: 'app-shell',

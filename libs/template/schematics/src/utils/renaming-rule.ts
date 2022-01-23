@@ -1,5 +1,12 @@
 import { chain, Tree } from '@angular-devkit/schematics';
-import { addImports, createProject, getImports, saveActiveProject, setActiveProject } from 'ng-morph';
+import {
+  addImports,
+  createProject,
+  getImports,
+  ImportSpecifier,
+  saveActiveProject,
+  setActiveProject,
+} from 'ng-morph';
 
 import { formatFiles } from './format-files';
 
@@ -24,45 +31,40 @@ export function renamingRule(
         const imports = getImports('**.ts', {
           moduleSpecifier: packageName,
         });
+        const newImports = new Map<string, string[]>();
 
-        const changes = new Map<string, string[]>();
+        imports.forEach((importDeclaration) => {
+          Object.keys(renames).forEach((importRename) => {
+            const namedImports = importDeclaration.getNamedImports();
+            const rename = getRename(importRename);
 
-        Object.keys(renames).forEach((namedImport) => {
-          imports.forEach((imprt) => {
-            const namedImports = imprt.getNamedImports();
-            const rename = getRename(namedImport);
+            namedImports.forEach((namedImport) => {
+              if (namedImport.getText() === importRename) {
+                const filePath = importDeclaration
+                  .getSourceFile()
+                  .getFilePath()
+                  .toString();
+                const key = `${filePath}__${rename.moduleSpecifier}`;
 
-            if (namedImports.length > 1) {
-              namedImports.forEach((_namedImport) => {
-                if (_namedImport.getText() === namedImport) {
-                  const filePath = imprt
-                    .getSourceFile()
-                    .getFilePath()
-                    .toString();
-                  const key = `${filePath}__${rename.moduleSpecifier}`;
-
-                  if (changes.has(key)) {
-                    const value = changes.get(key);
-                    changes.set(key, [...value, rename.namedImport]);
-                  } else {
-                    changes.set(key, [rename.namedImport]);
-                  }
-
-                  _namedImport.remove();
+                if (newImports.has(key)) {
+                  const value = newImports.get(key);
+                  newImports.set(key, [...value, rename.namedImport]);
+                } else {
+                  newImports.set(key, [rename.namedImport]);
                 }
-              });
-            } else if (namedImports.length === 1) {
-              const [_namedImport] = namedImports;
-              if (_namedImport.getText() === namedImport) {
-                imprt.removeNamedImports();
-                imprt.addNamedImport(rename.namedImport);
-                imprt.setModuleSpecifier(rename.moduleSpecifier);
+
+                renameReferences(namedImport, importRename, rename.namedImport);
+                namedImport.remove();
               }
-            }
+            });
           });
+
+          if (importDeclaration.getNamedImports.length === 0) {
+            importDeclaration.remove();
+          }
         });
 
-        changes.forEach((namedImports, key) => {
+        newImports.forEach((namedImports, key) => {
           const [filePath, moduleSpecifier] = key.split('__');
           addImports(filePath, {
             namedImports: namedImports,
@@ -75,4 +77,19 @@ export function renamingRule(
       formatFiles(),
     ]);
   };
+}
+
+function renameReferences(
+  importSpecifier: ImportSpecifier,
+  oldName: string,
+  newName: string
+) {
+  importSpecifier
+    .getNameNode()
+    .findReferencesAsNodes()
+    .forEach((ref) => {
+      if (ref.getText() === oldName) {
+        ref.replaceWithText(newName);
+      }
+    });
 }

@@ -1,9 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`state migration update-1.4.7 should keep rx-angular/state 1`] = `
-"import { Injectable } from '@angular/core';
+"import { RxState } from '@rx-angular/state';
+
+import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
-import { RxState } from '@rx-angular/state';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,8 @@ export class AuthStateService extends RxState<AuthState> {}
 `;
 
 exports[`state migration update-1.4.7 should replace cdk/state 1`] = `
-"import {
+"import { RxState } from '@rx-angular/state';
+import {
   createSideEffectObservable,
   createAccumulationObservable,
   select,
@@ -27,8 +29,6 @@ exports[`state migration update-1.4.7 should replace cdk/state 1`] = `
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RxState } from '@rx-angular/state';
-
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -42,7 +42,8 @@ export class AppModule {}
 `;
 
 exports[`state migration update-1.4.7 should replace cdk/transformations 1`] = `
-"import {
+"import { RxState } from '@rx-angular/state';
+import {
   insert,
   remove,
   toDictionary,
@@ -59,8 +60,6 @@ exports[`state migration update-1.4.7 should replace cdk/transformations 1`] = `
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RxState } from '@rx-angular/state';
-
 import { AppComponent } from './app.component';
 
 @NgModule({
