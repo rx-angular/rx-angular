@@ -1,11 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Template Migration 1.0.0-beta.29 should replace LetModule + LetDirective module specifier 1`] = `
-"import { NgModule } from '@angular/core';
+"import { LetModule } from '@rx-angular/template/let';
+
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
-import { LetModule } from '@rx-angular/template/let';
 import { LetDirective } from '@rx-angular/template/let';
+
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,11 +20,13 @@ export class AppModule {}
 `;
 
 exports[`Template Migration 1.0.0-beta.29 should replace PushModule + PushPipe module specifier 1`] = `
-"import { NgModule } from '@angular/core';
+"import { PushModule } from '@rx-angular/template/push';
+
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
-import { PushModule } from '@rx-angular/template/push';
 import { PushPipe } from '@rx-angular/template/push';
+
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,15 +39,17 @@ export class AppModule {}
 `;
 
 exports[`Template Migration 1.0.0-beta.29 should replace UnpatchEventsModule + UnpatchDirective module specifier 1`] = `
-"import { NgModule } from '@angular/core';
+"import { UnpatchDirective } from '@rx-angular/template/unpatch';
+
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
-import { UnpatchDirective } from '@rx-angular/template/unpatch';
+
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, UnpatchModule],
+  imports: [BrowserModule, UnpatchEventsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
@@ -52,16 +58,18 @@ export class AppModule {}
 `;
 
 exports[`Template Migration 1.0.0-beta.29 should replace UnpatchEventsModule identifier 1`] = `
-"import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
+"import { PushModule } from '@rx-angular/template/push';
 import { LetModule } from '@rx-angular/template/let';
-import { PushModule } from '@rx-angular/template/push';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
+
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, UnpatchModule],
+  imports: [BrowserModule, UnpatchEventsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
@@ -70,16 +78,18 @@ export class AppModule {}
 `;
 
 exports[`Template Migration 1.0.0-beta.29 should replace all module specifiers 1`] = `
-"import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
+"import { PushModule } from '@rx-angular/template/push';
 import { LetModule } from '@rx-angular/template/let';
-import { PushModule } from '@rx-angular/template/push';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
+
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, UnpatchModule],
+  imports: [BrowserModule, UnpatchEventsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
