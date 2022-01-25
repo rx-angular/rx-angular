@@ -96,7 +96,7 @@ export class MyModule {}
   - [LetDirective (\*rxLet)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md)
 - Pipes
   - [PushPipe (push)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/push.md)
-- [Render Strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md)
+- [Render Strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies/docs/README.md)
 
 ## Experimental features
 
