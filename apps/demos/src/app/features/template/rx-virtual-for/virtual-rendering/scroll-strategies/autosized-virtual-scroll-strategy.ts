@@ -16,9 +16,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import {
-  auditTime,
   combineLatest,
-  EMPTY,
   merge,
   ReplaySubject,
   scan,
@@ -28,9 +26,7 @@ import {
 import {
   distinctUntilChanged,
   filter,
-  ignoreElements,
   map,
-  skip,
   startWith,
   switchMap,
   takeUntil,
@@ -39,50 +35,14 @@ import {
 
 type VirtualViewItem = {
   height: number;
-  scrollTop: number;
-  sampled?: boolean;
+  width?: number;
+  tombstone?: boolean;
 };
 
-class VirtualViewContainer {
-  totalHeight = 0;
-  items: Record<number, VirtualViewItem> = {};
-
-  get size(): number {
-    return Object.keys(this.items).length;
-  }
-
-  get(index: number): VirtualViewItem | null {
-    return this.items[index] || null;
-  }
-
-  set(index: number, item: VirtualViewItem) {
-    this.totalHeight += item.height - (this.items[index]?.height || 0);
-    this.items[index] = item;
-    /*if (index <= (this.firstItem?.index || 0)) {
-      this.firstItem = { ...item, index };
-    }
-    if (index >= (this.lastItem?.index || 0)) {
-      this.lastItem = { ...item, index };
-    }*/
-  }
-
-  delete(index: number) {
-    const item = this.items[index];
-    if (item) {
-      this.totalHeight -= item.height;
-      delete this.items[index];
-    }
-  }
-
-  clear() {
-    this.items = {};
-    this.totalHeight = 0;
-  }
-}
-
-function toDecimal(value: number): number {
-  return parseFloat(value.toFixed(2));
-}
+type AnchorItem = {
+  index: number;
+  offset: number;
+};
 
 @Directive({
   selector: 'rx-virtual-scroll-viewport[autosize]',
@@ -97,15 +57,18 @@ export class AutosizeVirtualScrollStrategy
   implements RxVirtualScrollStrategy, OnDestroy
 {
   /**
-   * The amount of buffer (in px) to render on either side of the viewport
+   * The amount of items to render upfront in scroll direction
    */
-  @Input() buffer = 150;
+  @Input() runwayItems = 20;
+
+  /**
+   * The amount of items to render upfront in reverse scroll direction
+   */
+  @Input() runwayItemsOpposite = 5;
 
   private viewport: RxVirtualScrollViewport | null = null;
   private viewRepeater: RxVirtualViewRepeater<any> | null = null;
-  private readonly averager = new ItemSizeAverager();
   private dataDiffer: IterableDiffer<any> | null = null;
-  private readonly rangeAdjust$ = new Subject<ListRange>();
 
   private readonly _contentSize$ = new ReplaySubject<number>(1);
   readonly contentSize$ = this._contentSize$.asObservable();
@@ -114,9 +77,6 @@ export class AutosizeVirtualScrollStrategy
   private set contentSize(size: number) {
     this._contentSize = size;
     this._contentSize$.next(size);
-  }
-  private get contentSize(): number {
-    return this._contentSize;
   }
 
   private readonly _renderedRange$ = new ReplaySubject<ListRange>(1);
@@ -141,14 +101,16 @@ export class AutosizeVirtualScrollStrategy
   private containerSize = 0;
   private contentLength = 0;
 
-  private _virtualViewContainer: VirtualViewContainer;
+  private _virtualItems: VirtualViewItem[] = [];
 
   private scrollTop = 0;
-  private scrollDelta = 0;
   private direction: 'up' | 'down' = 'down';
-  private currentOffset = 0;
-  private lastScrollAverage = this.averager.getAverageItemSize();
-  private anchorTop = 0;
+  private anchorScrollTop = 0;
+  private tombstoneSize = 50;
+  private anchorItem = {
+    index: 0,
+    offset: 0,
+  };
   private rangeRendered: ListRange = { start: 0, end: 0 };
 
   private readonly destroy$ = new Subject<void>();
@@ -169,17 +131,15 @@ export class AutosizeVirtualScrollStrategy
   ): void {
     this.viewport = viewport;
     this.viewRepeater = viewRepeater;
-    this._virtualViewContainer = new VirtualViewContainer();
 
     /*
      * scroll
-     *   calc range (with average)
+     *   calc range
      * render
-     * calc heights
-     * calc average
-     * adjust viewport height
-     * position
-     * adjust scrollposition
+     *    calc heights
+     *    position
+     *    adjust viewport height
+     *    adjust scrollposition
      *
      */
 
@@ -190,41 +150,59 @@ export class AutosizeVirtualScrollStrategy
 
   detach(): void {
     this.viewport = null;
-    this._virtualViewContainer.clear();
-    this._virtualViewContainer = null;
+    this._virtualItems = [];
     this.detached$.next();
   }
 
   scrollToIndex(index: number, behavior?: ScrollBehavior): void {
     const _index = Math.min(Math.max(index, 0), this.contentLength - 1);
-    this.viewport.scrollTo(this.scrollTopUntil(_index), behavior);
-  }
-
-  private setContentSize(): void {
-    this.contentSize = this._virtualViewContainer.totalHeight;
-    // this.contentSize = this.contentLength * this.averager.getAverageItemSize();
+    let offset = 0;
+    for (let i = 0; i < _index; i++) {
+      offset += this._virtualItems[i].height || this.tombstoneSize;
+    }
+    this.viewport.scrollTo(offset, behavior);
   }
 
   private onDataChanged(): void {
     this.dataDiffer = this.differs.find([]).create(this.viewRepeater._trackBy);
     this.viewRepeater.values$.pipe(this.until$).subscribe((items: any[]) => {
-      let _scrollTop;
-      const averageSize = this.averager.getAverageItemSize();
       // we want to adjust our heightMap with the new items
       // TODO: move & delete need to be handled as well
-
-      this.dataDiffer.diff(items)?.forEachAddedItem(({ currentIndex }) => {
-        _scrollTop =
-          _scrollTop == null
-            ? this.scrollTopUntil(currentIndex)
-            : _scrollTop || 0;
-        this._virtualViewContainer.set(currentIndex, {
-          height: averageSize,
-          scrollTop: _scrollTop,
-          sampled: true,
+      const diff = this.dataDiffer.diff(items);
+      if (diff) {
+        const moveCache = new Map<
+          number,
+          VirtualViewItem & { restoreTo: number }
+        >();
+        diff.forEachOperation((item, adjustedPreviousIndex, currentIndex) => {
+          if (item.previousIndex == null) {
+            this._virtualItems[currentIndex] = {
+              height: 0,
+              width: 0,
+              tombstone: true,
+            };
+          } else if (currentIndex == null) {
+            this._virtualItems.splice(adjustedPreviousIndex, 1);
+          } else if (adjustedPreviousIndex !== null) {
+            const entry =
+              moveCache.get(adjustedPreviousIndex) ||
+              this._virtualItems[adjustedPreviousIndex];
+            moveCache.delete(adjustedPreviousIndex);
+            const toCache = {
+              ...this._virtualItems[currentIndex],
+              restoreTo: adjustedPreviousIndex,
+            };
+            moveCache.set(currentIndex, toCache);
+            this._virtualItems[currentIndex] = entry;
+          }
         });
-        _scrollTop += averageSize;
-      });
+        if (moveCache.size) {
+          for (const [index, entry] of moveCache) {
+            this._virtualItems[entry.restoreTo] = entry;
+          }
+        }
+        moveCache.clear();
+      }
     });
   }
 
@@ -247,15 +225,7 @@ export class AutosizeVirtualScrollStrategy
       coalesceWith(scheduled([], animationFrameScheduler)),
       startWith(0),
       tap((_scrollTop) => {
-        // TODO: improve this
-        this.direction = _scrollTop >= this.scrollTop ? 'down' : 'up';
-        this.scrollDelta = _scrollTop - this.scrollTop;
         this.scrollTop = _scrollTop;
-        console.group('scroll');
-        console.log('scrollTop', this.scrollTop);
-        console.log('scrollDelta', this.scrollDelta);
-        console.log('direction', this.direction);
-        console.groupEnd();
       })
     );
     merge(
@@ -263,63 +233,93 @@ export class AutosizeVirtualScrollStrategy
         dataLengthChanged$.pipe(
           tap((length) => {
             this.contentLength = length;
-            this.setContentSize();
           })
         ),
         this.viewport.containerSize$,
         onScroll$,
       ]).pipe(
         map(([length, containerHeight]) => {
-          console.group('onScroll');
           this.containerSize = containerHeight;
-          const oldRange = this.rangeRendered;
-          const range = {
-            ...oldRange,
-            end: oldRange.end === 0 ? length : oldRange.end,
-          };
-          const scrollTopWithBuffer = this.scrollTop + this.buffer;
+          const range = { start: 0, end: 0 };
 
-          const delta = this.scrollTop - this.anchorTop;
-          if (delta >= 0) {
-            // scrolling down
-            let j = oldRange.start;
-            range.end = length;
-            let scrollTop = this.anchorTop;
-            for (j; j < length; j++) {
-              const item = this._virtualViewContainer.get(j);
-              scrollTop += item.height;
-              if (scrollTop + this.buffer <= this.scrollTop) {
-                range.start = j;
-              } else if (scrollTop > containerHeight + scrollTopWithBuffer) {
-                range.end = j;
-                break;
-              }
-            }
+          const delta = this.scrollTop - this.anchorScrollTop;
+          if (this.scrollTop == 0) {
+            this.anchorItem = { index: 0, offset: 0 };
           } else {
-            let j = Math.max(oldRange.end - 1, 0);
-            range.start = 0;
-            for (j; j >= 0; j--) {
-              const item = this._virtualViewContainer.get(j);
-              if (item.scrollTop > containerHeight + scrollTopWithBuffer) {
-                range.end = j;
-              } else if (
-                item.scrollTop + item.height + this.buffer <=
-                this.scrollTop
-              ) {
-                range.start = j;
-                break;
-              }
-            }
+            this.anchorItem = this.calculateAnchoredItem(
+              this.anchorItem,
+              delta
+            );
           }
-          console.log('renderedRange', oldRange, '->', range);
-          console.groupEnd();
+          this.scrolledIndex = this.anchorItem.index;
+          this.anchorScrollTop = this.scrollTop;
+          const lastScreenItem = this.calculateAnchoredItem(
+            this.anchorItem,
+            containerHeight
+          );
+          this.direction = delta < 0 ? 'down' : 'up';
+          if (delta < 0) {
+            range.start = Math.max(0, this.anchorItem.index - this.runwayItems);
+            range.end = Math.min(
+              length,
+              lastScreenItem.index + this.runwayItemsOpposite
+            );
+          } else {
+            range.start = Math.max(
+              0,
+              this.anchorItem.index - this.runwayItemsOpposite
+            );
+            range.end = Math.min(
+              length,
+              lastScreenItem.index + this.runwayItems
+            );
+          }
           return range;
         })
-      ),
-      this.rangeAdjust$
+      )
     )
       .pipe(distinctUntilSomeChanged(['start', 'end']), this.until$)
       .subscribe((range: ListRange) => (this.renderedRange = range));
+  }
+
+  // heavily inspired by https://github.com/GoogleChromeLabs/ui-element-samples/blob/gh-pages/infinite-scroller/scripts/infinite-scroll.js
+  private calculateAnchoredItem(initialAnchor, delta): AnchorItem {
+    if (delta == 0) return initialAnchor;
+    delta += initialAnchor.offset;
+    let i = initialAnchor.index;
+    let tombstones = 0;
+    const items = this._virtualItems;
+    if (delta < 0) {
+      while (delta < 0 && i > 0 && items[i - 1].height) {
+        delta += items[i - 1].height;
+        i--;
+      }
+      tombstones = Math.max(
+        -i,
+        Math.ceil(Math.min(delta, 0) / this.tombstoneSize)
+      );
+    } else {
+      while (
+        delta > 0 &&
+        i < items.length &&
+        items[i].height &&
+        items[i].height < delta
+      ) {
+        delta -= items[i].height;
+        i++;
+      }
+      if (i >= items.length) {
+        tombstones = 0;
+      } else if (!items[i].height) {
+        tombstones = Math.floor(Math.max(delta, 0) / this.tombstoneSize);
+      }
+    }
+    i += tombstones;
+    delta -= tombstones * this.tombstoneSize;
+    return {
+      index: Math.min(i, items.length),
+      offset: delta,
+    };
   }
 
   private onContentRendered(): void {
@@ -338,7 +338,7 @@ export class AutosizeVirtualScrollStrategy
                 filter(
                   () =>
                     view.rootNodes[0].offsetHeight !==
-                    this._virtualViewContainer.get(adjustedIndex).height
+                    this._virtualItems[adjustedIndex].height
                 ),
                 map(() => ({
                   view,
@@ -357,218 +357,99 @@ export class AutosizeVirtualScrollStrategy
               views,
               index: adjusts.sort((a, b) => a.index - b.index)[0].index,
             })),
-            // ignoreElements(),
-            // takeUntil(this.renderedRange$.pipe(skip(1))),
             startWith({
               adjusted: false,
               views,
               index: 0,
-            })
+            }),
+            filter(({ views }) => !!views)
           );
         }),
         this.until$
       )
       .subscribe(({ adjusted, views, index }) => {
-        console.group('rendering');
         const updatedRange = {
           ...this.renderedRange,
           start: this.renderedRange.start + index,
         };
         const renderedRange = this.renderedRange;
-        const { start: oldStart, end: oldEnd } = this.rangeRendered;
-        let scrollTopUntil = 0;
         let i = index;
         let end = views.length;
         let renderedSize = 0;
         const adjustIndexWith = renderedRange.start;
-        if (renderedRange.start < oldStart && renderedRange.end > oldStart) {
-          let _s = renderedRange.start;
-          let _e = oldStart - 1;
-          i = oldStart - _s;
-          scrollTopUntil = this.scrollTopUntil(oldStart);
-          let scrollTo = scrollTopUntil;
-          for (_e; _e >= _s; _e--) {
-            const view = views[_e - adjustIndexWith];
-            const { size, element } = this._getElementAndSize(view);
-            scrollTo -= size;
-            renderedSize += size;
-            this._positionView(element, scrollTo);
-            this._virtualViewContainer.set(_e, {
-              height: size,
-              scrollTop: scrollTo,
-            });
-          }
-        } else if (renderedRange.end > oldEnd && renderedRange.start < oldEnd) {
-          console.warn('before', this.renderedRange);
-          console.warn('new', this.rangeRendered);
-          scrollTopUntil = this.scrollTopUntil(updatedRange.start);
-        } else {
-          scrollTopUntil = this.scrollTopUntil(updatedRange.start);
-        }
         let scrolledIndex;
-        let expectedHeight = 0;
+        const elements = [];
+        // get height of all rendered elements in range
+        let heightChanged = false;
         for (i; i < end; i++) {
-          const adjustedIndex = i + adjustIndexWith;
-          const expected = this._virtualViewContainer.items[adjustedIndex];
           const view = views[i];
           const { size, element } = this._getElementAndSize(view);
-          expectedHeight += expected.height;
-          const wasRenderedBefore =
-            adjustedIndex >= oldStart && adjustedIndex < oldEnd;
-          // only position element if wasn't rendered before or it's position changed
-          if (!wasRenderedBefore || scrollTopUntil !== expected.scrollTop) {
-            this._positionView(element, scrollTopUntil);
+          elements[i] = element;
+          const itemIndex = i + adjustIndexWith;
+          const item = this._virtualItems[itemIndex];
+          if (item.height != size) {
+            item.height = size;
+            heightChanged = true;
           }
-          this._virtualViewContainer.set(adjustedIndex, {
-            height: size,
-            scrollTop: scrollTopUntil,
-          });
-          renderedSize += size;
-          scrollTopUntil += size;
-          if (scrolledIndex == null && scrollTopUntil > this.scrollTop) {
+        }
+
+        // Fix scroll position in case we have realized the heights of elements
+        // that we didn't used to know.
+        /* if (heightChanged) {
+          this.anchorScrollTop = 0;
+          for (i = 0; i < this.anchorItem.index; i++) {
+            this.anchorScrollTop +=
+              this._virtualViewContainer.items[i].height || this.tombstoneSize;
+          }
+          this.anchorScrollTop += this.anchorItem.offset;
+        }*/
+
+        this.anchorScrollTop = 0;
+        for (i = 0; i < this.anchorItem.index; i++) {
+          this.anchorScrollTop +=
+            this._virtualItems[i].height || this.tombstoneSize;
+        }
+        this.anchorScrollTop += this.anchorItem.offset;
+
+        // Position all nodes.
+        let curPos = this.anchorScrollTop - this.anchorItem.offset;
+        i = this.anchorItem.index;
+        while (i > updatedRange.start) {
+          curPos -= this._virtualItems[i - 1].height || this.tombstoneSize;
+          i--;
+        }
+        while (i < updatedRange.start) {
+          curPos += this._virtualItems[i].height || this.tombstoneSize;
+          i++;
+        }
+        i = index;
+        for (i; i < end; i++) {
+          const adjustedIndex = i + adjustIndexWith;
+          const item = this._virtualItems[adjustedIndex];
+          this._positionView(elements[i], curPos);
+          this._virtualItems[adjustedIndex] = {
+            height: item.height,
+          };
+          renderedSize += item.height;
+          curPos += item.height;
+          if (scrolledIndex == null && curPos > this.scrollTop) {
             scrolledIndex = i + adjustIndexWith;
           }
         }
-        // console.log('scrolledIndex after render', scrolledIndex);
         if (scrolledIndex != null) {
           this.scrolledIndex = scrolledIndex;
         }
-        let adjustScrollTop;
-        // set new sample
-        this.averager.addSample(
-          { ...updatedRange, end: updatedRange.end },
-          renderedSize
-        );
-        const newAverage = this.averager.getAverageItemSize();
-        const contentSizeApprox = this.contentLength * newAverage;
-        this.anchorTop = this._virtualViewContainer.get(
-          renderedRange.start
-        ).scrollTop;
-        let s = 0;
-        let l = this.contentLength;
-        let offset = 0;
-        const firstItem = this._virtualViewContainer.get(renderedRange.start);
-        let untilStartTarget = firstItem.scrollTop;
-        for (s; s < l; s++) {
-          const view = this._virtualViewContainer.get(s);
-          let height = view.height;
-          if (s < renderedRange.start) {
-            if (view.sampled) {
-              const remaining = untilStartTarget - offset;
-              height = remaining / (renderedRange.start - s);
-            }
-            if (s === renderedRange.start - 1) {
-              const remaining = untilStartTarget - offset;
-              const isOff = remaining - height;
-              if (isOff != 0) {
-                height = remaining;
-                console.warn('adjusted height', remaining, view.height, s);
-                /* if (view.sampled) {
-                  console.warn('adjusted height', remaining, height, s);
-                  height = remaining;
-                } else {
-                  let r = s;
-                  offset += isOff;
-                  while (r >= 0) {
-                    const _view = this._virtualViewContainer.get(r);
-                    if (_view.sampled) {
-                      this._virtualViewContainer.set(r, {
-                        ..._view,
-                        height: remaining,
-                      });
-                      console.warn(
-                        'adjusted height boom',
-                        remaining,
-                        _view.height,
-                        r
-                      );
-                      let rr = r;
-                      for (rr; rr < s; rr++) {
-                        this._virtualViewContainer.items[rr].scrollTop += isOff;
-                      }
-                      break;
-                    }
-                    r--;
-                  }
-                }*/
-              }
-            }
-          } else if (s >= renderedRange.end) {
-            if (view.sampled) {
-              const remaining = l - s;
-              height = (contentSizeApprox - offset) / remaining;
-            }
-          } else {
-            if (view.scrollTop !== offset) {
-              console.warn('should be', view.scrollTop);
-              console.warn('is', offset);
-            }
-          }
-          this._virtualViewContainer.set(s, {
-            height,
-            scrollTop: offset,
-            sampled: view.sampled,
-          });
-          offset += height;
+        let size = 0;
+        for (i = 0; i < this.contentLength; i++) {
+          const item = this._virtualItems[i];
+          size += item?.height || this.tombstoneSize;
         }
-        this.setContentSize();
-
-        console.log('items', { ...this._virtualViewContainer.items });
-        if (adjustScrollTop) {
-          console.log('adjustScrollTop', adjustScrollTop);
-          this.viewport.scrollTo(adjustScrollTop);
+        this.contentSize = size;
+        if (this.anchorScrollTop !== this.scrollTop) {
+          this.viewport.scrollTo(this.anchorScrollTop);
         }
-        /*const heightAfter = this.contentSize;
-        console.log('heightBefore', heightBefore);
-        console.log('heightAfter', heightAfter);
-        const heightDiff = !heightBefore ? 0 : heightBefore - heightAfter;
-        console.log('heightDiff', heightBefore - heightAfter);
-        let heightDiffPerc;
-        if (heightDiff > 0) {
-          heightDiffPerc = (heightDiff / heightBefore) * 100;
-        } else if (heightDiff < 0) {
-          heightDiffPerc = (heightBefore / heightAfter - 1) * 100;
-        }
-        console.log('heightDiffPerc', heightDiffPerc);
-        console.log('this.currentOffset', this.currentOffset);*/
-        const last = this._virtualViewContainer.get(
-          views.length - 1 + renderedRange.start
-        );
         this.rangeRendered = this.renderedRange;
-        const renderOffset =
-          this.scrollTop +
-          this.containerSize +
-          this.buffer -
-          (last.scrollTop + last.height);
-        /* const underrendered =
-          renderedRange.end < this.contentLength && renderOffset > newAverage;
-        if (underrendered) {
-          const reloadAmount = Math.floor(renderOffset / newAverage);
-          console.warn('reloadAmount', reloadAmount);
-          console.warn('renderOffset / newAverage', renderOffset, newAverage);
-          if (this.direction === 'down') {
-            this.rangeAdjust$.next({
-              start: renderedRange.start,
-              end: renderedRange.end + reloadAmount,
-            });
-          } else {
-            this.rangeAdjust$.next({
-              start: Math.max(0, renderedRange.start - reloadAmount),
-              end: renderedRange.end,
-            });
-          }
-        }*/
-        console.groupEnd();
       });
-  }
-
-  private scrollTopUntil(index: number) {
-    const entry = this._virtualViewContainer.get(index);
-    if (entry) {
-      return entry.scrollTop;
-    }
-    const lastEntry = this._virtualViewContainer.get(index - 1);
-    return lastEntry?.scrollTop + lastEntry?.height || 0;
   }
 
   private _getElementAndSize(view: EmbeddedViewRef<any>): {
@@ -598,53 +479,3 @@ import { observeElementSize } from '../observe-element-size';
   providers: [],
 })
 export class AutosizeVirtualScrollStrategyModule {}
-
-// stolen from @angular/cdk/scrolling
-/**
- * A class that tracks the size of items that have been seen and uses it to estimate the average
- * item size.
- */
-export class ItemSizeAverager {
-  /** The total amount of weight behind the current average. */
-  private _totalWeight = 0;
-
-  /** The current average item size. */
-  private _averageItemSize: number;
-
-  /** The default size to use for items when no data is available. */
-  private _defaultItemSize: number;
-
-  /** @param defaultItemSize The default size to use for items when no data is available. */
-  constructor(defaultItemSize = 50) {
-    this._defaultItemSize = defaultItemSize;
-    this._averageItemSize = defaultItemSize;
-  }
-
-  /** Returns the average item size. */
-  getAverageItemSize(): number {
-    return this._averageItemSize;
-  }
-
-  /**
-   * Adds a measurement sample for the estimator to consider.
-   * @param range The measured range.
-   * @param size The measured size of the given range in pixels.
-   */
-  addSample(range: ListRange, size: number) {
-    const newTotalWeight = this._totalWeight + range.end - range.start;
-    if (newTotalWeight) {
-      const newAverageItemSize =
-        (size + this._averageItemSize * this._totalWeight) / newTotalWeight;
-      if (newAverageItemSize) {
-        this._averageItemSize = toDecimal(newAverageItemSize);
-        this._totalWeight = newTotalWeight;
-      }
-    }
-  }
-
-  /** Resets the averager. */
-  reset() {
-    this._averageItemSize = this._defaultItemSize;
-    this._totalWeight = 0;
-  }
-}

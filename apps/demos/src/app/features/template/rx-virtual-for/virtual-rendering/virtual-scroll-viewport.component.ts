@@ -3,7 +3,6 @@ import {
   Component,
   ContentChild,
   ElementRef,
-  Inject,
   NgZone,
   OnDestroy,
   Optional,
@@ -11,13 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { fromEvent } from '@rx-angular/cdk/zone-less';
-import {
-  BehaviorSubject,
-  defer,
-  Observable,
-  ReplaySubject,
-  Subject,
-} from 'rxjs';
+import { defer, Observable, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, startWith, takeUntil } from 'rxjs/operators';
 import {
   RxVirtualScrollViewport,

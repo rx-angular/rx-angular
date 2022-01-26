@@ -229,6 +229,7 @@ import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.comp
         width: 250px;
         overflow: hidden;
         /*height: 50px;*/
+        will-change: transform;
         border: 1px solid green;
         padding: 10px 0;
         box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.13);

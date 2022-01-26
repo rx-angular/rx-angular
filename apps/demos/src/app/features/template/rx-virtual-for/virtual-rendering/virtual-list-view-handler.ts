@@ -220,7 +220,7 @@ export function getVirtualTemplateHandler<C extends RxListViewContext<T>, T>(
     viewContainerRef.move(view, currentIndex);
     updateViewContext(value, view, {
       count,
-      index: currentIndex + contextIndex,
+      index: currentIndex,
     } as any);
     view.detectChanges();
     return view;
