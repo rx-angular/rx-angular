@@ -25,6 +25,11 @@ const clone = cloneDeep(orig);
 <summary>✅ Examples of correct code for this rule</summary>
 
 ```ts
+// see: https://developer.mozilla.org/en-US/docs/Web/API/structuredClone
+const clone = structuredClone(original);
+```
+
+```ts
 type T = {
   prop: string;
   arr: { x: number; y: number }[];

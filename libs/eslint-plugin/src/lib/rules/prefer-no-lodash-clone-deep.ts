@@ -15,7 +15,7 @@ export default ESLintUtils.RuleCreator(docsUrl)({
     type: 'problem',
     messages: {
       [MESSAGE_ID]:
-        'Use with caution - cloneDeep is a costly operation that may cause performance problems.',
+        'Use with caution - cloneDeep is a costly operation that may cause performance problems. Have you considered using structuredClone?',
     },
     schema: [],
   },

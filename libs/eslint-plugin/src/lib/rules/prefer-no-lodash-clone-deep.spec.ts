@@ -7,6 +7,7 @@ const ruleTester = new TSESLint.RuleTester({
 });
 
 const valid: TSESLint.RunTests<MessageIds, never[]>['valid'] = [
+  `const clone = structuredClone(original);`,
   `
 type T = {
   prop: string;
