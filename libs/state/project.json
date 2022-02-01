@@ -45,7 +45,8 @@
           }
         ],
         "parallel": false
-      }
+      },
+      "outputs": ["dist/libs/state/schematics"]
     },
     "test": {
       "executor": "@nrwl/jest:jest",

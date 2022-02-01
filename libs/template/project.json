@@ -15,7 +15,8 @@
           "target": "build",
           "projects": "dependencies"
         }
-      ]
+      ],
+      "outputs": ["dist/libs/template"]
     },
     "build": {
       "executor": "@nrwl/workspace:run-commands",
@@ -44,7 +45,8 @@
           }
         ],
         "parallel": false
-      }
+      },
+      "outputs": ["dist/libs/template/schematics"]
     },
     "test": {
       "executor": "@nrwl/jest:jest",
