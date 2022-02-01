@@ -31,7 +31,7 @@ export function renamingRule(
       (tree: Tree) => {
         setActiveProject(createProject(tree, '/', ['**/*.ts']));
 
-        const imports = getImports('**.ts', {
+        const imports = getImports('**/*.ts', {
           moduleSpecifier: packageName,
         });
         const newImports = new Map<string, ImportConfig[]>();
