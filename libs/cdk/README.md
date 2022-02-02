@@ -51,10 +51,10 @@ nx migrate @rx-angular/cdk
 ## Version Compatibility
 
 ### Angular
-|               | @rx-angular/cdk     | 
-|---------------|---------------------|
-| Angular > 13  | `> 1.0.0-alpha.10`  |
-| Angular > 12  | `<= 1.0.0-alpha.10` |
+|   Angular      |   RxJS                                                     | @rx-angular/cdk    |
+|---------------|-------------------------------------------|----------------------|
+|  > 13.1.x       | 6.5.x/6.6.x/7.4.x or later minor version  | > 1.0.0-alpha.10     |
+| < 12.1.4        | 6.5.x/6.6.x                                              | <= 1.0.0-alpha.10   |
 
 ### RxJs
 
