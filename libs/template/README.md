@@ -112,8 +112,8 @@ about what changes are leading to re-renderings.
 ### Angular
 |               | @rx-angular/template |
 |---------------|----------------------|
-| Angular > 13  | `> 1.0.0-beta.30`    |
-| Angular > 12  | `<= 1.0.0-beta.30`   |
+| Angular > 13  | `> 1.0.0-beta.29`    |
+| Angular > 12  | `<= 1.0.0-beta.29`   |
 
 ### RxJs
 

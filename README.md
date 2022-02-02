@@ -32,8 +32,8 @@ Find details in the linked readme files below for installation and setup instruc
 ### Angular
 |               | @rx-angular/state   | @rx-angular/template | @rx-angular/cdk     | 
 |---------------|---------------------|----------------------|---------------------|
-| Angular > 13  | `> 1.4.6`           | `> 1.0.0-beta.30`    | `> 1.0.0-alpha.12`  |
-| Angular > 12  | `<= 1.4.6`          | `<= 1.0.0-beta.30`   | `<= 1.0.0-alpha.12` |
+| Angular > 13  | `> 1.4.6`           | `> 1.0.0-beta.29`    | `> 1.0.0-alpha.10`  |
+| Angular > 12  | `<= 1.4.6`          | `<= 1.0.0-beta.29`   | `<= 1.0.0-alpha.10` |
 
 ### RxJs
 

@@ -53,8 +53,8 @@ nx migrate @rx-angular/cdk
 ### Angular
 |               | @rx-angular/cdk     | 
 |---------------|---------------------|
-| Angular > 13  | `> 1.0.0-alpha.12`  |
-| Angular > 12  | `<= 1.0.0-alpha.12` |
+| Angular > 13  | `> 1.0.0-alpha.10`  |
+| Angular > 12  | `<= 1.0.0-alpha.10` |
 
 ### RxJs
 
