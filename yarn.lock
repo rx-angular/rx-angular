@@ -2150,10 +2150,10 @@
   resolved "https://registry.yarnpkg.com/@jridgewell/resolve-uri/-/resolve-uri-1.0.0.tgz#3fdf5798f0b49e90155896f6291df186eac06c83"
   integrity sha512-9oLAnygRMi8Q5QkYEU4XWK04B+nuoXoxjRvRxgjuChkLZFBja0YPSgdZ7dZtwhncLBcQe/I/E+fLuk5qxcYVJA==
 
-"@jscutlery/semver@^2.13.1":
-  version "2.13.1"
-  resolved "https://registry.yarnpkg.com/@jscutlery/semver/-/semver-2.13.1.tgz#ad0258061a41402124bbbb0456d0b7b124647288"
-  integrity sha512-UuYtOgUnhEtM579++ysOM9o3vD064o752Xgpp2ERZzQNvFWXRuAUkzvduOXmxUJj2pyaxC+1rb0KJNzhx73f3w==
+"@jscutlery/semver@^2.18.0":
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/@jscutlery/semver/-/semver-2.18.0.tgz#e7e6a8e4e0f5586e514a55098d537cf3662f1de9"
+  integrity sha512-YK00dXy/nrGUCKC5sSUEmBfRRLw59MlcTm4wp5jepWkI/pynB9SyTqq5V1IxVn/+SlCsBLx6od5ANi34+iq5Ow==
   dependencies:
     "@nrwl/devkit" "^13.0.2"
     inquirer "^8.2.0"
@@ -2682,6 +2682,16 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
 
+"@ts-morph/common@~0.9.0":
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/@ts-morph/common/-/common-0.9.2.tgz#fc63ed4f8d3a45e4ed6849fe20a57f4f2baecc5d"
+  integrity sha512-IPyg+c3Am0EBoa63W0f/AKeLrJhvzMzQ4BIvD1baxLopmiHOj1HFTXYxC6e8iTZ+UYtN+/WFM9UyGRnoA20b8g==
+  dependencies:
+    fast-glob "^3.2.5"
+    minimatch "^3.0.4"
+    mkdirp "^1.0.4"
+    path-browserify "^1.0.1"
+
 "@tsconfig/node10@^1.0.7":
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/@tsconfig/node10/-/node10-1.0.8.tgz#c1e4e80d6f964fbecb3359c43bd48b40f7cadad9"
@@ -2828,6 +2838,11 @@
   version "4.14.176"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.176.tgz#641150fc1cda36fbfa329de603bbb175d7ee20c0"
   integrity sha512-xZmuPTa3rlZoIbtDUyJKZQimJV3bxCmzMIO2c9Pz9afyDro6kr7R79GwcB6mRhuoPmV2p1Vb66WOJH7F886WKQ==
+
+"@types/minimatch@^3.0.3":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.5.tgz#1001cc5e6a3704b83c236027e77f2f58ea010f40"
+  integrity sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==
 
 "@types/minimist@^1.2.0":
   version "1.2.2"
@@ -3491,6 +3506,11 @@ arr-union@^3.1.0:
   resolved "https://registry.yarnpkg.com/arr-union/-/arr-union-3.1.0.tgz#e39b09aea9def866a8f206e288af63919bae39c4"
   integrity sha1-45sJrqne+Gao8gbiiK9jkZuuOcQ=
 
+array-differ@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/array-differ/-/array-differ-3.0.0.tgz#3cbb3d0f316810eafcc47624734237d6aee4ae6b"
+  integrity sha512-THtfYS6KtME/yIAhKjZ2ul7XI96lQGHRputJQHO80LAWQnuGP4iCIN8vdMRboGbIEYBwU33q8Tch1os2+X0kMg==
+
 array-flatten@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-1.1.1.tgz#9a5f699051b1e7073328f2a008968b64ea2955d2"
@@ -3530,6 +3550,11 @@ arrify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
   integrity sha1-iYUI2iIm84DfkEcoRWhJwVAaSw0=
+
+arrify@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/arrify/-/arrify-2.0.1.tgz#c9655e9331e0abcd588d2a7cad7e9956f66701fa"
+  integrity sha512-3duEwti880xqi4eAMN8AyR4a0ByT90zoYdLlevfrvU43vb0YZwZVfxOgxWrLXXXpyugL0hNZc9G6BiB5B3nUug==
 
 asn1@~0.2.3:
   version "0.2.4"
@@ -4457,6 +4482,11 @@ co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
   integrity sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ=
+
+code-block-writer@^10.1.1:
+  version "10.1.1"
+  resolved "https://registry.yarnpkg.com/code-block-writer/-/code-block-writer-10.1.1.tgz#ad5684ed4bfb2b0783c8b131281ae84ee640a42f"
+  integrity sha512-67ueh2IRGst/51p0n6FvPrnRjAGHY5F8xdjkgrYE7DDzpJe6qA07RYQ9VcoUeo5ATOjSOiWpSL3SWBRRbempMw==
 
 code-point-at@^1.0.0:
   version "1.1.0"
@@ -9659,6 +9689,17 @@ multicast-dns@^6.0.1:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
 
+multimatch@5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/multimatch/-/multimatch-5.0.0.tgz#932b800963cea7a31a033328fa1e0c3a1874dbe6"
+  integrity sha512-ypMKuglUrZUD99Tk2bUQ+xNQj43lPEfAeX2o9cTteAmShXy2VHDJpuwu1o0xqoKCt9jLVAvwyFKdLTPXKAfJyA==
+  dependencies:
+    "@types/minimatch" "^3.0.3"
+    array-differ "^3.0.0"
+    array-union "^2.1.0"
+    arrify "^2.0.1"
+    minimatch "^3.0.4"
+
 mute-stream@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
@@ -9726,6 +9767,16 @@ neo-async@^2.6.0, neo-async@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
+
+ng-morph@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ng-morph/-/ng-morph-2.0.0.tgz#63e0655e272e898e4240f1f53404820daccedf47"
+  integrity sha512-ljkPY0d153Gch6h3Q7H2qUn99QuroQ9P5KEFYgsmVobzm3l5Dx2gYsC7U//Tkigk1cSJzoFfuUs5R6HXCasw4w==
+  dependencies:
+    jsonc-parser "3.0.0"
+    minimatch "3.0.4"
+    multimatch "5.0.0"
+    ts-morph "10.0.2"
 
 ng-packagr@13.0.6:
   version "13.0.6"
@@ -10431,6 +10482,11 @@ pascalcase@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
   integrity sha1-s2PlXoAGym/iF4TS2yK9FdeRfxQ=
+
+path-browserify@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/path-browserify/-/path-browserify-1.0.1.tgz#d98454a9c3753d5790860f16f68867b9e46be1fd"
+  integrity sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==
 
 path-exists@^3.0.0:
   version "3.0.0"
@@ -12869,6 +12925,14 @@ ts-loader@^9.2.6:
     enhanced-resolve "^5.0.0"
     micromatch "^4.0.0"
     semver "^7.3.4"
+
+ts-morph@10.0.2:
+  version "10.0.2"
+  resolved "https://registry.yarnpkg.com/ts-morph/-/ts-morph-10.0.2.tgz#292418207db467326231b2be92828b5e295e7946"
+  integrity sha512-TVuIfEqtr9dW25K3Jajqpqx7t/zLRFxKu2rXQZSDjTm4MO4lfmuj1hn8WEryjeDDBFcNOCi+yOmYUYR4HucrAg==
+  dependencies:
+    "@ts-morph/common" "~0.9.0"
+    code-block-writer "^10.1.1"
 
 ts-node@10.4.0:
   version "10.4.0"

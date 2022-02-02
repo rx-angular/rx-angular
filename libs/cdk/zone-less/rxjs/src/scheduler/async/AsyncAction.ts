@@ -2,7 +2,7 @@ import { Subscription } from 'rxjs';
 import { Action } from '../Action';
 import { SchedulerAction } from '../types';
 import { AsyncScheduler } from './AsyncScheduler';
-import { setInterval, clearInterval } from '../../../browser/browser';
+import { setInterval, clearInterval } from '@rx-angular/cdk/zone-less/browser';
 
 /**
  * We need this JSDoc comment for affecting ESDoc.

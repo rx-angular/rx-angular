@@ -1,7 +1,7 @@
 import { AsyncAction } from '../async/AsyncAction';
 import { AsapScheduler } from './AsapScheduler';
 import { SchedulerAction } from '../types';
-import { Promise } from '../../../browser/browser';
+import { Promise } from '@rx-angular/cdk/zone-less/browser';
 
 /**
  * We need this JSDoc comment for affecting ESDoc.
