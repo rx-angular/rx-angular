@@ -85,7 +85,7 @@
     "@nguniversal/builders": "^13.0.1",
     "@ngxs/devtools-plugin": "^3.7.0",
     "@nrwl/angular": "13.2.1",
-    "@nrwl/cli": "13.2.1",
+    "@nrwl/cli": "13.7.1",
     "@nrwl/cypress": "13.2.1",
     "@nrwl/eslint-plugin-nx": "^13.2.1",
     "@nrwl/jest": "13.2.1",
