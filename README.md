@@ -27,7 +27,7 @@ Find details in the linked readme files below for installation and setup instruc
 - [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/README.md) - Imperative&Reactive Component State-Management
 - [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/master/libs/template/README.md) - High-Performance Reactive Rendering
 
-### Version Compatability
+### Version Compatibility
 
 #### Angular
 |                      | Angular > 12        | Angular > 13       | 
@@ -40,4 +40,4 @@ Find details in the linked readme files below for installation and setup instruc
 
 Regarding the compatibility to rxjs, we generally stick to the compatibilities of the angular framework itself.
 All of the current packages support rxjs versions `>= 6.5.x`.
-For more information about the compatabilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3)
+For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3)
