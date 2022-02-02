@@ -2,6 +2,23 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0-rc.0](/compare/template@1.0.0-beta.29...template@1.0.0-rc.0) (2022-02-02)
+
+
+### Features
+
+* enable Ivy with partial compilation mode (#1186) eddaf20, closes #1186
+* introduce viewport-prio and rx-for as experimental (#887) d5d026c, closes #887
+
+
+### Performance Improvements
+
+* move getUnpatchedApi into sun-package and avoid zone-less package (#1035) 170ab7a, closes #1035
+* reduce bundle size by removing unused code (#1039) 0c6c089, closes #1039
+* zone less sub modules f765336
+
+
+
 # [1.0.0-beta.29](/compare/template@1.0.0-beta.28...template@1.0.0-beta.29) (2021-11-16)
 
 
