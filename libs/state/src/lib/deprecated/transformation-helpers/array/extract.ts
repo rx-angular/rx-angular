@@ -1,10 +1,11 @@
-import { isDefined, isKeyOf } from '../../utils';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { isDefined, isKeyOf } from '@rx-angular/state/selections';
 
 /**
  * @deprecated moved to `@rx-angular/cdk/transformations`
  * @see {@link https://www.npmjs.com/package/@rx-angular/cdk}
  */
- export function extract<T extends object, K extends keyof T>(
+export function extract<T extends object, K extends keyof T>(
   array: T[],
   keys: K | K[]
 ): Pick<T, K>[] {
@@ -16,7 +17,7 @@ import { isDefined, isKeyOf } from '../../utils';
   }
 
   const sanitizedKeys = (Array.isArray(keys) ? keys : [keys]).filter(
-    k => isKeyOf<T>(k) && array.some(i => k in i)
+    (k) => isKeyOf<T>(k) && array.some((i) => k in i)
   );
   const length = sanitizedKeys.length;
 
@@ -25,15 +26,14 @@ import { isDefined, isKeyOf } from '../../utils';
     return undefined as any;
   }
 
-  return array.map(item => {
+  return array.map((item) => {
     let i = 0;
     const result = {} as Pick<T, K>;
 
-    for(i; i < length; i++) {
+    for (i; i < length; i++) {
       result[sanitizedKeys[i]] = item[sanitizedKeys[i]];
     }
 
     return result;
-  }
-  );
+  });
 }

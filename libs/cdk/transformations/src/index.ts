@@ -6,6 +6,7 @@ export {
   extract,
   upsert,
 } from './lib/array/index';
+export { ComparableData } from './lib/interfaces/comparable-data-type';
 export {
   setProp,
   patch,

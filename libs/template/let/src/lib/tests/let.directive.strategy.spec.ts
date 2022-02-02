@@ -38,7 +38,7 @@ describe('LetDirective strategies', () => {
   describe.each([
     [''], /* <- Invalid strategy should fallback. */
     ['invalid'], /* <- Same here. */
-    ['noPriority'],
+
     ['immediate'],
     ['userBlocking'],
     ['normal'],

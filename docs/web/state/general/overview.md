@@ -1,1 +1,1 @@
-[README.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/README.md ':include')
+[README.md](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/README.md ':include')

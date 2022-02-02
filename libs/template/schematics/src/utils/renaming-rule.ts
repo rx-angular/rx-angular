@@ -1,121 +1,109 @@
 import { chain, Tree } from '@angular-devkit/schematics';
-import { findNodes } from '@schematics/angular/utility/ast-utils';
-import * as ts from 'typescript';
+import {
+  addImports,
+  createProject,
+  getImports,
+  ImportSpecifier,
+  ImportSpecifierStructure,
+  saveActiveProject,
+  setActiveProject,
+} from 'ng-morph';
 
-import { createRemoveChange, ReplaceChange } from './changes';
 import { formatFiles } from './format-files';
-import { insert, insertImport } from './insert';
-import { visitTSSourceFiles } from './visitors';
+
+type ImportConfig = Pick<ImportSpecifierStructure, 'alias' | 'name'>;
 
 export function renamingRule(
   packageName: string,
   renames: Record<string, string | [string, string]>
 ) {
   return () => {
+    const getRename = (namedImport: string) => ({
+      namedImport: Array.isArray(renames[namedImport])
+        ? renames[namedImport][0]
+        : namedImport,
+      moduleSpecifier: Array.isArray(renames[namedImport])
+        ? renames[namedImport][1]
+        : (renames[namedImport] as string),
+    });
+
     return chain([
       (tree: Tree) => {
-        visitTSSourceFiles(tree, (sourceFile) => {
-          /* Collect RxAngular imports. */
-          const imports = sourceFile.statements
-            .filter(ts.isImportDeclaration)
-            .filter(
-              ({ moduleSpecifier }) =>
-                moduleSpecifier.getText(sourceFile) === `'${packageName}'` ||
-                moduleSpecifier.getText(sourceFile) === `"${packageName}"`
-            );
+        setActiveProject(createProject(tree, '/', ['**/*.ts']));
 
-          if (imports.length === 0) {
-            return;
-          }
-
-          /* Remove old imports. */
-          const removeChanges = findImportSpecifiers(sourceFile, imports).map(
-            ({ importDeclaration }) => {
-              return createRemoveChange(
-                sourceFile,
-                importDeclaration,
-                importDeclaration.getStart(),
-                importDeclaration.getFullText()
-              );
-            }
-          );
-
-          /* Insert new imports. */
-          const insertChanges = findImportSpecifiers(sourceFile, imports).map(
-            ({ importSpecifier }) => {
-              const asSpecifier = /\s+as.*/gm.exec(importSpecifier);
-              const as = asSpecifier != null ? asSpecifier[0] : '';
-              const i = importSpecifier.replace(/\s+as.*/gm, '');
-              const rename = renames[i];
-              const symbolName = `${
-                typeof rename === 'string' ? i : rename[0]
-              }${as}`;
-              return insertImport(
-                sourceFile,
-                sourceFile.fileName,
-                symbolName,
-                typeof rename === 'string' ? rename : rename[1]
-              );
-            }
-          );
-
-          /* Replace node occurrences if a rename is specified, eg: { OldModuleName: ['NewModuleName', 'new-path.ts'] } */
-          const replaceChanges = Object.entries(renames)
-            .filter(([, rename]) => Array.isArray(rename))
-            .flatMap(([oldName, [newName]]) =>
-              replaceNodeOccurrences(sourceFile, oldName, newName)
-            );
-
-          insert(tree, sourceFile.fileName, [
-            ...insertChanges,
-            ...removeChanges,
-            ...replaceChanges,
-          ]);
+        const imports = getImports('**/*.ts', {
+          moduleSpecifier: packageName,
         });
+        const newImports = new Map<string, ImportConfig[]>();
+
+        imports.forEach((importDeclaration) => {
+          Object.keys(renames).forEach((importRename) => {
+            const namedImports = importDeclaration.getNamedImports();
+            const rename = getRename(importRename);
+
+            namedImports.forEach((namedImport) => {
+              if (namedImport.getName() === importRename) {
+                const filePath = importDeclaration
+                  .getSourceFile()
+                  .getFilePath()
+                  .toString();
+                const key = `${filePath}__${rename.moduleSpecifier}`;
+                const namedImportConfig: ImportConfig = {
+                  name: rename.namedImport,
+                };
+
+                if (namedImport.getAliasNode()) {
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  namedImportConfig.alias = namedImport
+                    .getAliasNode()!
+                    .getText();
+                }
+
+                if (newImports.has(key)) {
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  const value = newImports.get(key)!;
+                  newImports.set(key, [...value, namedImportConfig]);
+                } else {
+                  newImports.set(key, [namedImportConfig]);
+                }
+
+                renameReferences(namedImport, importRename, rename.namedImport);
+                namedImport.remove();
+              }
+            });
+          });
+
+          if (importDeclaration.getNamedImports().length === 0) {
+            importDeclaration.remove();
+          }
+        });
+
+        newImports.forEach((namedImports, key) => {
+          const [filePath, moduleSpecifier] = key.split('__');
+          addImports(filePath, {
+            namedImports: namedImports,
+            moduleSpecifier: moduleSpecifier,
+          });
+        });
+
+        saveActiveProject();
       },
       formatFiles(),
     ]);
   };
 }
 
-function replaceNodeOccurrences(
-  sourceFile: ts.SourceFile,
+function renameReferences(
+  importSpecifier: ImportSpecifier,
   oldName: string,
   newName: string
 ) {
-  const nodeOccurrences: ReplaceChange[] = [];
-  (function collectReplaces(node: ts.Node) {
-    if (ts.isIdentifier(node) && node.getText(sourceFile) === oldName) {
-      nodeOccurrences.push(
-        new ReplaceChange(
-          sourceFile.fileName,
-          node.getStart(),
-          node.getText(),
-          newName
-        )
-      );
-    }
-    /* Skip replacing imports since it was already replaced previously. */
-    if (!ts.isImportDeclaration(node)) {
-      ts.forEachChild(node, collectReplaces);
-    }
-  })(sourceFile)
-  return nodeOccurrences;
-}
-
-function findImportSpecifiers(
-  sourceFile: ts.SourceFile,
-  imports: ts.ImportDeclaration[]
-) {
-  return imports.flatMap((importDeclaration) => {
-    const importSpecifiers = findNodes(
-      importDeclaration,
-      ts.SyntaxKind.ImportSpecifier
-    );
-
-    return importSpecifiers.map((importSpecifier) => ({
-      importDeclaration,
-      importSpecifier: importSpecifier.getText(sourceFile),
-    }));
-  });
+  importSpecifier
+    .getNameNode()
+    .findReferencesAsNodes()
+    .forEach((ref) => {
+      if (ref.getText() === oldName) {
+        ref.replaceWithText(newName);
+      }
+    });
 }
