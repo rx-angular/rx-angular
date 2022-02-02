@@ -54,7 +54,8 @@
     "rxjs": "^7.0.0"
   },
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "ng-morph": "^2.0.0"
   },
   "schematics": "./schematics/collection.json",
   "ng-add": {
