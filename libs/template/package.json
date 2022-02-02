@@ -53,7 +53,8 @@
     "@rx-angular/cdk": ">=1.0.0-alpha.11"
   },
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "ng-morph": "^2.0.0"
   },
   "schematics": "./schematics/collection.json",
   "ng-add": {

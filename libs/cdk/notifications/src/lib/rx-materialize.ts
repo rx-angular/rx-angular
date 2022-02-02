@@ -1,4 +1,4 @@
-import { OperatorFunction, ObservableNotification } from 'rxjs';
+import { OperatorFunction, Notification } from 'rxjs';
 import { map, materialize, tap } from 'rxjs/operators';
 
 import { RxNotification, RxNotificationKind } from './model';
@@ -13,11 +13,11 @@ export function rxMaterialize<T>(): OperatorFunction<T, RxNotification<T>> {
           console.error(error);
         }
       }),
-      map(({ value, error, kind }) => {
+      map(({ value, error, kind, hasValue }) => {
         const rxNotificationKind = notificationKindToRxNotificationKind(kind);
         return {
           value,
-          hasValue: kind === 'N',
+          hasValue,
           error,
           kind: rxNotificationKind,
           complete: rxNotificationKind === RxNotificationKind.Complete,
@@ -35,7 +35,7 @@ export function rxMaterialize<T>(): OperatorFunction<T, RxNotification<T>> {
  * template names (`suspense`, `next`, `error` `complete`) in the directives of the template package
  */
 export function notificationKindToRxNotificationKind(
-  kind: ObservableNotification<unknown>['kind']
+  kind: Notification<unknown>['kind']
 ): RxNotificationKind {
   switch (kind) {
     case 'C':

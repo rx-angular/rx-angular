@@ -32,7 +32,7 @@
     }
   },
   "affected": {
-    "defaultBase": "origin/master"
+    "defaultBase": "origin/main"
   },
   "cli": {
     "defaultCollection": "@nrwl/angular",
@@ -47,7 +47,6 @@
       "e2eTestRunner": "cypress"
     },
     "@nrwl/angular:library": {
-      "style": "scss",
       "linter": "eslint",
       "unitTestRunner": "jest"
     },

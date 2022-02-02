@@ -1,14 +1,23 @@
 # @rx-angular/state
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
-![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
+![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/state/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/state/lcov-report/index.html)
 
 ## Reactive Component State for Angular
 
 RxState is a lightweight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in Angular.
 
-![state logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/images/state_logo.png)
+![state logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/images/state_logo.png)
+
+## Sub Modules
+
+- [⛔ Selections](https://github.com/rx-angular/rx-angular/blob/main/libs/state/selections/README.md)
+
+## Intro Video
+
+<a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)</a>
+
 
 ## Description
 
@@ -38,8 +47,8 @@ Using this library allows you to implement things like:
 with very little effort in any component.
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/images/state_API-names.png" width="49%" />
-  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/images/state_API-types.png" width="49%" />
+  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/images/state_API-names.png" width="49%" />
+  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/images/state_API-types.png" width="49%" />
 </p>
 
 ## Key features
@@ -61,43 +70,70 @@ npm install --save @rx-angular/state
 yarn add @rx-angular/state
 ```
 
-## API
+## Update
 
-[API Documentation](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/api/overview.md)
+If you are using `@rx-angular/state` already, please consider upgrading with the `@angular/cli update` command in order
+to make sure all provided code migrations are processed properly.
+
+```bash
+ng update @rx-angular/state
+# or with nx
+nx migrate @rx-angular/state
+```
 
 ## Usage
 
-[Usage Documentation](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/usage.md)
+[Usage Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/usage.md)
+
+## Testing
+
+[Testing](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/testing.md)
+
+## API
+
+[API Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/api/overview.md)
 
 ## Tutorials
 
-- [Basic Tutorial](https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics)
+- [Basic Tutorial](https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics)
 - [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
 
 ## Snippets
 
-- [Logic comparison - Increment a Value](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/logic-comparison--increment-a-value.md)
-- [Loading state and data fetching](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/loading-state-and-data-fetching.md)
-- [Passing Observables directly](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/passing-observables-directly.md)
-- [How to run partial state updates](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/how-can-i-run-partial-state-updates.md)
-- [Get nested state slices](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/get-nested-state-slices.md)
-- [Deriving simple state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/deriving-simple-state.md)
-- [Composing state using NgRx selectors](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/composing-state-using-ngrx-selectors.md)
-- [Manage entities using NgRx entity adapter](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/manage-collections-with-ngrx-entity.md)
-- [BehaviorSubject vs RxState](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/behavior-subject-vs-rx-state.md)
-- [Managing ViewModels with selectSlice](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/selecting-the-viewmodel.md)
-- [Manage reactive HostBindings](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/hostbindings.md)
-- [Difference between Global and Local state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/docs/snippets/global-state-vs-local-state.md)
-- [Using RxState as Global State](https://github.com/rx-angular/rx-angular/blob/master/libs/state/docs/snippets/manage-global-state.md)
+- [Logic comparison - Increment a Value](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/logic-comparison--increment-a-value.md)
+- [Loading state and data fetching](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/loading-state-and-data-fetching.md)
+- [Passing Observables directly](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/passing-observables-directly.md)
+- [How to run partial state updates](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/how-can-i-run-partial-state-updates.md)
+- [Get nested state slices](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/get-nested-state-slices.md)
+- [Deriving simple state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/deriving-simple-state.md)
+- [Composing state using NgRx selectors](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/composing-state-using-ngrx-selectors.md)
+- [Manage entities using NgRx entity adapter](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/manage-collections-with-ngrx-entity.md)
+- [BehaviorSubject vs RxState](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/behavior-subject-vs-rx-state.md)
+- [Managing ViewModels with selectSlice](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/selecting-the-viewmodel.md)
+- [Manage reactive HostBindings](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/hostbindings.md)
+- [Difference between Global and Local state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/global-state-vs-local-state.md)
+- [Using RxState as Global State](https://github.com/rx-angular/rx-angular/blob/main/libs/state/docs/snippets/manage-global-state.md)
 
-## Resources
+## Vidoes
 
-- [🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session](https://youtu.be/CcQYj4V2IKw)
-- [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch?v=I8uaHMs8rw0)
+<a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)_🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session_</a>
+
+<a target="_blank" href="https://www.youtube.com/watch?v=I8uaHMs8rw0">![tackling-component-state-reactively](https://user-images.githubusercontent.com/10064416/147395866-031704dc-837d-4d1f-82d6-e758e4cb9556.PNG)_🎥 Tackling Component State Reactively (Live Demo at 24:47)_</a>
+
 - [🎥 Extending Angular for the Reactive Web](https://youtu.be/pkN6CeZ8h_U?t=5913)
+
+
+## Blogs/Documents
+
 - [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
+
 - [📜 Design Documents](https://hackmd.io/wVkWRc3XQWmtM6YcktRTrA)
-- [📑 Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) by [Mike Hartington](https://twitter.com/mhartington)
+
+## OSS Example Applications
+
+- [📑 Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) - [Mike Hartington](https://twitter.com/mhartington)
+- [📑 High performant zone-Less Angular Progressive Web Application](https://angular-movies-a12d3.web.app/list/category/popular) - [TasteJS](https://github.com/tastejs/angular-movies)
+- [📑 Zone-Less Angular Application - Tour of heros](https://github.com/BioPhoton/tour-of-heroes) - [Michael_Hladky](https://twitter.com/Michael_Hladky)
 
 ## Browsers support
 

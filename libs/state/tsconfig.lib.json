@@ -8,11 +8,7 @@
     "declarationMap": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
-    "lib": ["dom", "es2018"],
-    "paths": {
-      "@rx-angular/cdk/utils": ["dist/libs/cdk/utils"],
-      "@rx-angular/cdk/state": ["dist/libs/cdk/state"]
-    }
+    "lib": ["dom", "es2018"]
   },
   "angularCompilerOptions": {
     "enableIvy": true,

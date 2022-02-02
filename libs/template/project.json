@@ -15,7 +15,8 @@
           "target": "build",
           "projects": "dependencies"
         }
-      ]
+      ],
+      "outputs": ["dist/libs/template"]
     },
     "build": {
       "executor": "@nrwl/workspace:run-commands",
@@ -44,7 +45,8 @@
           }
         ],
         "parallel": false
-      }
+      },
+      "outputs": ["dist/libs/template/schematics"]
     },
     "test": {
       "executor": "@nrwl/jest:jest",
@@ -116,8 +118,19 @@
     "version": {
       "executor": "@jscutlery/semver:version",
       "options": {
-        "baseBranch": "master",
-        "versionTagPrefix": "${target}@"
+        "push": true,
+        "noVerify": true,
+        "baseBranch": "main",
+        "versionTagPrefix": "${target}@",
+        "postTargets": ["template:github"],
+        "commitMessageFormat": "release(${projectName}): ${version}"
+      }
+    },
+    "github": {
+      "executor": "@jscutlery/semver:github",
+      "options": {
+        "tag": "${tag}",
+        "notes": "${notes}"
       }
     },
     "lint": {
