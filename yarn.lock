@@ -2150,10 +2150,10 @@
   resolved "https://registry.yarnpkg.com/@jridgewell/resolve-uri/-/resolve-uri-1.0.0.tgz#3fdf5798f0b49e90155896f6291df186eac06c83"
   integrity sha512-9oLAnygRMi8Q5QkYEU4XWK04B+nuoXoxjRvRxgjuChkLZFBja0YPSgdZ7dZtwhncLBcQe/I/E+fLuk5qxcYVJA==
 
-"@jscutlery/semver@^2.13.1":
-  version "2.13.1"
-  resolved "https://registry.yarnpkg.com/@jscutlery/semver/-/semver-2.13.1.tgz#ad0258061a41402124bbbb0456d0b7b124647288"
-  integrity sha512-UuYtOgUnhEtM579++ysOM9o3vD064o752Xgpp2ERZzQNvFWXRuAUkzvduOXmxUJj2pyaxC+1rb0KJNzhx73f3w==
+"@jscutlery/semver@^2.18.0":
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/@jscutlery/semver/-/semver-2.18.0.tgz#e7e6a8e4e0f5586e514a55098d537cf3662f1de9"
+  integrity sha512-YK00dXy/nrGUCKC5sSUEmBfRRLw59MlcTm4wp5jepWkI/pynB9SyTqq5V1IxVn/+SlCsBLx6od5ANi34+iq5Ow==
   dependencies:
     "@nrwl/devkit" "^13.0.2"
     inquirer "^8.2.0"
