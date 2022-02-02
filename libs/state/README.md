@@ -138,10 +138,10 @@ nx migrate @rx-angular/state
 ## Version Compatibility
 
 ### Angular
-|               | @rx-angular/state   |
-|---------------|---------------------|
-| Angular > 13  | `> 1.4.6`           |
-| Angular > 12  | `<= 1.4.6`          |
+|   Angular      |   RxJS                                                     | @rx-angular/state  |
+|---------------|-------------------------------------------|----------------------|
+|  > 13.1.x       | 6.5.x/6.6.x/7.4.x or later minor version  | > 1.4.6                    |
+| < 12.1.4        | 6.5.x/6.6.x                                              | <= 1.4.6                 |
 
 ### RxJs
 
