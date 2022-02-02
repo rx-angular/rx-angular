@@ -1,19 +1,19 @@
-# RxAngular ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
+# RxAngular ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 
 RxAngular offers a comprehensive toolset for handling fully reactive Angular applications with the main focus on runtime
 performance and template rendering.
 
 RxAngular is divided into different packages:
 
-- [📦@rx-angular/cdk](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/README.md)
-- [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/README.md)
-- [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/master/libs/template/README.md)
+- [📦@rx-angular/cdk](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/README.md)
+- [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/README.md)
+- [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/main/libs/template/README.md)
 
 Used together, you get a powerful tool for developing high-performance angular applications with or without NgZone.
 
 This repository holds a set of helpers to create **fully reactive** as well as **fully zone-less** applications.
 
-[![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/master/docs/images/rx-angular_logo.png)](https://www.rx-angular.io/)
+[![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/docs/images/rx-angular_logo.png)](https://www.rx-angular.io/)
 ## Links
 
 - [📚 Official docs](https://www.rx-angular.io/)
@@ -23,9 +23,9 @@ This repository holds a set of helpers to create **fully reactive** as well as *
 
 Find details in the linked readme files below for installation and setup instructions, examples and resources.
 
-- [📦@rx-angular/cdk](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/README.md) - Component Development Kit
-- [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/master/libs/state/README.md) - Imperative&Reactive Component State-Management
-- [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/master/libs/template/README.md) - High-Performance Reactive Rendering
+- [📦@rx-angular/cdk](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/README.md) - Component Development Kit
+- [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/README.md) - Imperative&Reactive Component State-Management
+- [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/main/libs/template/README.md) - High-Performance Reactive Rendering
 
 ## Version Compatibility
 

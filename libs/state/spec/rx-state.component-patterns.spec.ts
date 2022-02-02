@@ -9,7 +9,7 @@ import {
 import { initialPrimitiveState, PrimitiveState } from '@test-helpers';
 import { Observable, Subject } from 'rxjs';
 import { RxState } from '@rx-angular/state';
-import { select } from '@rx-angular/cdk/state';
+import { select } from '@rx-angular/state/selections';
 
 const initialChildState = { str: 'initialChildState' };
 

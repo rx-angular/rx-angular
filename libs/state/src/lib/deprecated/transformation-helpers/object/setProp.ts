@@ -1,4 +1,9 @@
-import { isDefined, isKeyOf, isObjectGuard } from '../../utils';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import {
+  isDefined,
+  isKeyOf,
+  isObjectGuard,
+} from '@rx-angular/state/selections';
 
 /**
  * @deprecated moved to `@rx-angular/cdk/transformations`
@@ -28,7 +33,7 @@ export function setProp<T extends object, K extends keyof T>(
   if (keyIsValid) {
     return {
       ...initialObject,
-      [key]: value
+      [key]: value,
     };
   }
 
