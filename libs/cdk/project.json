@@ -51,14 +51,16 @@
           }
         ],
         "parallel": false
-      }
+      },
+      "outputs": ["dist/libs/cdk/schematics"]
     },
     "build-lib": {
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/cdk/tsconfig.lib.json",
         "project": "libs/cdk/ng-package.json"
-      }
+      },
+      "outputs": ["dist/libs/cdk"]
     },
     "test": {
       "executor": "@nrwl/jest:jest",
