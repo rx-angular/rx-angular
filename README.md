@@ -30,10 +30,10 @@ Find details in the linked readme files below for installation and setup instruc
 ## Version Compatibility
 
 ### Angular
-|               | @rx-angular/state   | @rx-angular/template | @rx-angular/cdk     | 
-|---------------|---------------------|----------------------|---------------------|
-| Angular > 13  | `> 1.4.6`           | `> 1.0.0-beta.29`    | `> 1.0.0-alpha.10`  |
-| Angular > 12  | `<= 1.4.6`          | `<= 1.0.0-beta.29`   | `<= 1.0.0-alpha.10` |
+|   Angular      |   RxJS                                                     | @rx-angular/state   | @rx-angular/template | @rx-angular/cdk     | 
+|---------------|-------------------------------------------|----------------------|----------------------|----------------------|
+|  > 13.1.x       | 6.5.x/6.6.x/7.4.x or later minor version  | > 1.4.6                    | > 1.0.0-beta.29       | > 1.0.0-alpha.10     |
+| < 12.1.4        | 6.5.x/6.6.x                                              | <= 1.4.6                  | <= 1.0.0-beta.29    | <= 1.0.0-alpha.10  |
 
 ### RxJs
 
