@@ -1,4 +1,4 @@
-import { chain, Tree } from '@angular-devkit/schematics';
+import { chain, Rule, Tree } from '@angular-devkit/schematics';
 import {
   addImports,
   createProject,
@@ -12,21 +12,12 @@ import {
 import { formatFiles } from './format-files';
 
 type ImportConfig = Pick<ImportSpecifierStructure, 'alias' | 'name'>;
+type RenameConfig = Record<string, string | [string, string]>;
 
-export function renamingRule(
-  packageName: string,
-  renames: Record<string, string | [string, string]>
-) {
-  return () => {
-    const getRename = (namedImport: string) => ({
-      namedImport: Array.isArray(renames[namedImport])
-        ? renames[namedImport][0]
-        : namedImport,
-      moduleSpecifier: Array.isArray(renames[namedImport])
-        ? renames[namedImport][1]
-        : (renames[namedImport] as string),
-    });
+export function renamingRule(packageName: string, renames: RenameConfig) {
+  const getRename = configureRenames(renames);
 
+  return (): Rule => {
     return chain([
       (tree: Tree) => {
         setActiveProject(createProject(tree, '/', ['**/*.ts']));
@@ -36,55 +27,55 @@ export function renamingRule(
         });
         const newImports = new Map<string, ImportConfig[]>();
 
-        imports.forEach((importDeclaration) => {
-          Object.keys(renames).forEach((importRename) => {
-            const namedImports = importDeclaration.getNamedImports();
-            const rename = getRename(importRename);
+        for (const importDeclaration of imports) {
+          const namedImports = importDeclaration.getNamedImports();
 
-            namedImports.forEach((namedImport) => {
-              if (namedImport.getName() === importRename) {
-                const filePath = importDeclaration
-                  .getSourceFile()
-                  .getFilePath()
-                  .toString();
-                const key = `${filePath}__${rename.moduleSpecifier}`;
-                const namedImportConfig: ImportConfig = {
-                  name: rename.namedImport,
-                };
+          for (const namedImport of namedImports) {
+            const oldName = namedImport.getName();
+            const rename = getRename(oldName);
 
-                if (namedImport.getAliasNode()) {
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  namedImportConfig.alias = namedImport
-                    .getAliasNode()!
-                    .getText();
-                }
+            if (rename == null) {
+              continue;
+            }
 
-                if (newImports.has(key)) {
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  const value = newImports.get(key)!;
-                  newImports.set(key, [...value, namedImportConfig]);
-                } else {
-                  newImports.set(key, [namedImportConfig]);
-                }
+            const filePath = importDeclaration
+              .getSourceFile()
+              .getFilePath()
+              .toString();
+            const key = `${filePath}__${rename.moduleSpecifier}`;
+            const namedImportConfig: ImportConfig = {
+              name: rename.namedImport,
+            };
 
-                renameReferences(namedImport, importRename, rename.namedImport);
-                namedImport.remove();
-              }
-            });
-          });
+            if (namedImport.getAliasNode()) {
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              namedImportConfig.alias = namedImport.getAliasNode()!.getText();
+            }
+
+            if (newImports.has(key)) {
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              const value = newImports.get(key)!;
+              newImports.set(key, [...value, namedImportConfig]);
+            } else {
+              newImports.set(key, [namedImportConfig]);
+            }
+
+            renameReferences(namedImport, oldName, rename.namedImport);
+            namedImport.remove();
+          }
 
           if (importDeclaration.getNamedImports().length === 0) {
             importDeclaration.remove();
           }
-        });
+        }
 
-        newImports.forEach((namedImports, key) => {
+        for (const [key, namedImports] of newImports.entries()) {
           const [filePath, moduleSpecifier] = key.split('__');
           addImports(filePath, {
             namedImports: namedImports,
             moduleSpecifier: moduleSpecifier,
           });
-        });
+        }
 
         saveActiveProject();
       },
@@ -106,4 +97,21 @@ function renameReferences(
         ref.replaceWithText(newName);
       }
     });
+}
+
+function configureRenames(renames: RenameConfig) {
+  return (namedImport: string) => {
+    if (renames[namedImport] == null) {
+      return null;
+    }
+
+    return {
+      namedImport: Array.isArray(renames[namedImport])
+        ? renames[namedImport][0]
+        : namedImport,
+      moduleSpecifier: Array.isArray(renames[namedImport])
+        ? renames[namedImport][1]
+        : (renames[namedImport] as string),
+    };
+  };
 }
