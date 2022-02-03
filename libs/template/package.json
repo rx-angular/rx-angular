@@ -50,7 +50,7 @@
   },
   "peerDependencies": {
     "@angular/core": ">10.1.1",
-    "@rx-angular/cdk": ">=1.0.0-beat.1"
+    "@rx-angular/cdk": ">=1.0.0-beta.0"
   },
   "dependencies": {
     "tslib": "^2.0.0",

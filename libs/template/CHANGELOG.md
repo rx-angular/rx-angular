@@ -2,11 +2,7 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
-# [1.0.0-rc.1](/compare/template@1.0.0-rc.0...template@1.0.0-rc.1) (2022-02-03)
-
-
-
-# [1.0.0-rc.0](/compare/template@1.0.0-beta.29...template@1.0.0-rc.0) (2022-02-02)
+# [1.0.0-beta.30](/compare/template@1.0.0-beta.29...template@1.0.0-beta.30) (2022-02-02)
 
 
 ### Features

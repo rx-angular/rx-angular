@@ -5,7 +5,7 @@ import {
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 
-describe('Template Migration 1.0.0-rc.1', () => {
+describe('Template Migration 1.0.0-beta.30', () => {
   let appTree: UnitTestTree;
 
   it('should replace LetModule + LetDirective module specifier', async () => {
@@ -155,6 +155,6 @@ describe('Template Migration 1.0.0-rc.1', () => {
 
     tree.create(filePath, fileInput);
 
-    return runner.runSchematicAsync(`update-1.0.0-rc.1`, {}, tree).toPromise();
+    return runner.runSchematicAsync(`update-1.0.0-beta.30`, {}, tree).toPromise();
   }
 });
