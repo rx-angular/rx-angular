@@ -72,7 +72,9 @@ This leads to situations called the late or the early subscriber problem. (LINK)
 
 In most cases it's best to go with solving problems on the early subscriber side and be sure we never loose values that should render on the screen.
 
-<State LAYER IMG>
+![Selections (4)](https://user-images.githubusercontent.com/10064416/152422883-0b5f6006-7929-4520-b0b2-79eb61e4eb08.png)
+
+
 
 ## Advanced derivations architecture
 
