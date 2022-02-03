@@ -81,4 +81,5 @@ In most cases it's best to go with solving problems on the early subscriber side
 
 <SELECT => CONNECT BAD IMG>
 
-<SELECT GOOD IMG>
+![Selections (7)](https://user-images.githubusercontent.com/10064416/152423026-d23326c2-97d5-4bd0-9015-f498c3fc0e55.png)
+
