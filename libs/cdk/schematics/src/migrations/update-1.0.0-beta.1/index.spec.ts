@@ -5,7 +5,7 @@ import {
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 
-describe('cdk migration 1.0.0-beta.0', () => {
+describe('cdk migration 1.0.0-beta.1', () => {
   let appTree: UnitTestTree;
 
   it('should replace coalescing', async () => {
@@ -276,14 +276,16 @@ describe('cdk migration 1.0.0-beta.0', () => {
         setTimeout,
         clearTimeout,
         unpatchAddEventListener,
-        interval,
-        timer,
-        fromEvent,
         asyncScheduler,
         asapScheduler,
         queueScheduler,
         animationFrameScheduler
       } from '@rx-angular/cdk';
+      import {
+        interval,
+        timer,
+        fromEvent
+      } from '@rx-angular/cdk/zone-less'
 
       import { AppComponent } from './app.component';
 
@@ -304,7 +306,6 @@ describe('cdk migration 1.0.0-beta.0', () => {
 
     expect(file).toMatchSnapshot();
   });
-
 
   it('should replace zone-less sub-entrypoint', async () => {
     appTree = await setupTestFile(`
@@ -432,7 +433,7 @@ describe('cdk migration 1.0.0-beta.0', () => {
     tree.create(filePath, fileInput);
 
     return runner
-      .runSchematicAsync(`update-1.0.0-beta.0`, {}, tree)
+      .runSchematicAsync(`update-1.0.0-beta.1`, {}, tree)
       .toPromise();
   }
 });
