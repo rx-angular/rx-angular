@@ -52,7 +52,8 @@ As this process contains a lot of gotchas and possible pitfalls in terms of memo
 
 # Benefits
 
-<Solutions IMG>
+![Selections (3)](https://user-images.githubusercontent.com/10064416/152422856-a483a06c-84e0-4067-9eaa-f3bb54a0156d.png)
+
 
 - Sophisticated set of helpers for any selection problem
 - Enables lazy rendering
