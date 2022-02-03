@@ -68,7 +68,8 @@ As this process contains a lot of gotchas and possible pitfalls in terms of memo
 As Observables are cold their resulting srteam will only get active too by a subscription.
 This leads to situations called the late or the early subscriber problem. (LINK)
 
-<Subscriber Problem IMG>
+![Selections (5)](https://user-images.githubusercontent.com/10064416/152422955-cb89d198-1a69-450b-be84-29dd6c8c4fdb.png)
+
 
 In most cases it's best to go with solving problems on the early subscriber side and be sure we never loose values that should render on the screen.
 
