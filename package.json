@@ -103,7 +103,7 @@
     "@typescript-eslint/eslint-plugin": "5.10.2",
     "@typescript-eslint/parser": "5.10.2",
     "benchmark": "^2.1.4",
-    "chrome-remote-interface": "^0.29.0",
+    "chrome-remote-interface": "^0.31.1",
     "cpx": "^1.5.0",
     "cypress": "^9.4.1",
     "debug": "^4.2.0",
