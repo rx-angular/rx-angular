@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Template Migration 1.0.0-beta.29 should replace LetModule + LetDirective module specifier 1`] = `
+exports[`Template Migration 1.0.0-beta.30 should replace LetModule + LetDirective module specifier 1`] = `
 "import { LetModule, LetDirective } from '@rx-angular/template/let';
 
 import { NgModule } from '@angular/core';
@@ -17,7 +17,7 @@ export class AppModule {}
 "
 `;
 
-exports[`Template Migration 1.0.0-beta.29 should replace PushModule + PushPipe module specifier 1`] = `
+exports[`Template Migration 1.0.0-beta.30 should replace PushModule + PushPipe module specifier 1`] = `
 "import { PushModule, PushPipe } from '@rx-angular/template/push';
 
 import { NgModule } from '@angular/core';
@@ -34,7 +34,7 @@ export class AppModule {}
 "
 `;
 
-exports[`Template Migration 1.0.0-beta.29 should replace UnpatchEventsModule + UnpatchDirective module specifier 1`] = `
+exports[`Template Migration 1.0.0-beta.30 should replace UnpatchEventsModule + UnpatchDirective module specifier 1`] = `
 "import { UnpatchDirective, UnpatchModule } from '@rx-angular/template/unpatch';
 
 import { NgModule } from '@angular/core';
@@ -51,7 +51,7 @@ export class AppModule {}
 "
 `;
 
-exports[`Template Migration 1.0.0-beta.29 should replace UnpatchEventsModule identifier 1`] = `
+exports[`Template Migration 1.0.0-beta.30 should replace UnpatchEventsModule identifier 1`] = `
 "import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { PushModule } from '@rx-angular/template/push';
 import { LetModule } from '@rx-angular/template/let';
@@ -70,7 +70,7 @@ export class AppModule {}
 "
 `;
 
-exports[`Template Migration 1.0.0-beta.29 should replace all module specifiers 1`] = `
+exports[`Template Migration 1.0.0-beta.30 should replace all module specifiers 1`] = `
 "import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { PushModule } from '@rx-angular/template/push';
 import { LetModule } from '@rx-angular/template/let';

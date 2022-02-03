@@ -2,6 +2,29 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0-beta.0](/compare/cdk@1.0.0-alpha.11...cdk@1.0.0-beta.0) (2022-02-02)
+
+
+### Bug Fixes
+
+* **cdk:** support rxjs 6 (#1183) 98749c8, closes #1183
+* **docs:** adjust headline and add link to strategies 8bf672d
+* **docs:** update strategyProvider docs f290142
+
+
+### Features
+
+* **docs:** add readme file to rxStrategyProvider 0675dac
+* enable Ivy with partial compilation mode (#1186) eddaf20, closes #1186
+
+
+### Performance Improvements
+
+* move getUnpatchedApi into sun-package and avoid zone-less package (#1035) 170ab7a, closes #1035
+* zone less sub modules f765336
+
+
+
 # [1.0.0-alpha.11](/compare/cdk@1.0.0-alpha.10...cdk@1.0.0-alpha.11) (2021-11-16)
 
 
