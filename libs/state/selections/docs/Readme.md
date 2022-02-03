@@ -44,7 +44,9 @@ One time they are displayed in a sorted order, the other time only filtered subs
 > Derivations are always redundant information of our core data and therefore should not get stored,
 > but cached in the derivation logic.
 
-<SELECTIONS IMG>
+![Selections (2)](https://user-images.githubusercontent.com/10064416/152422803-bfd07ab2-0a6f-4521-836e-b71677e11923.png)
+
+
 
 As this process contains a lot of gotchas and possible pitfalls in terms of memory usage and performance this small helper library was created.
 
