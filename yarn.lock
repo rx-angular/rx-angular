@@ -2475,15 +2475,15 @@
     tslib "^2.3.0"
     webpack-merge "5.7.3"
 
-"@nrwl/cli@*":
-  version "12.9.0"
-  resolved "https://registry.yarnpkg.com/@nrwl/cli/-/cli-12.9.0.tgz#f5fccd973006ad2802d7c823b28820ac1fa6c27c"
-  integrity sha512-YKTZ3G07f6Y4MedOOkBmCi1Y72gu3ssCk2J50wL76SaiSjJTUSAz1NkKLsPwO6S8/QloMSR71tI42HJG2bbpwQ==
+"@nrwl/cli@*", "@nrwl/cli@13.7.2":
+  version "13.7.2"
+  resolved "https://registry.yarnpkg.com/@nrwl/cli/-/cli-13.7.2.tgz#8929cc4202f364bd460b2944d3f5467d2b2d16f2"
+  integrity sha512-EvuY1aqPkGc1pavI2ANVGLotDpQ2xIhJfmRr/lY19zbEedN19azqniKmX7BAkKg2kEnbqf1D6vsZx53qcEaM4g==
   dependencies:
-    "@nrwl/tao" "12.9.0"
+    "@nrwl/tao" "13.7.2"
     chalk "4.1.0"
+    enquirer "~2.3.6"
     v8-compile-cache "2.3.0"
-    yargs "15.4.1"
     yargs-parser "20.0.0"
 
 "@nrwl/cli@13.7.1":
@@ -2637,23 +2637,6 @@
     ts-loader "^9.2.6"
     tsconfig-paths-webpack-plugin "3.5.2"
 
-"@nrwl/tao@12.9.0":
-  version "12.9.0"
-  resolved "https://registry.yarnpkg.com/@nrwl/tao/-/tao-12.9.0.tgz#f8470ac0dccd5df414afc244fbbf37c23eb75764"
-  integrity sha512-a97JYoLohhBRthnWAGMh3++8Ri/yvCQUG/INBAYxW6sWAk2owJ6DIEIERP4yhIW29HPdqZ/fA2k9iqU6EgIAew==
-  dependencies:
-    chalk "4.1.0"
-    enquirer "~2.3.6"
-    fs-extra "^9.1.0"
-    jsonc-parser "3.0.0"
-    nx "12.9.0"
-    rxjs "^6.5.4"
-    rxjs-for-await "0.0.2"
-    semver "7.3.4"
-    tmp "~0.2.1"
-    tslib "^2.0.0"
-    yargs-parser "20.0.0"
-
 "@nrwl/tao@13.1.3":
   version "13.1.3"
   resolved "https://registry.yarnpkg.com/@nrwl/tao/-/tao-13.1.3.tgz#5a88029b0aa9dfd4bca0a86d3dde2b608c468b36"
@@ -2683,6 +2666,25 @@
     ignore "^5.0.4"
     jsonc-parser "3.0.0"
     nx "13.7.1"
+    rxjs "^6.5.4"
+    rxjs-for-await "0.0.2"
+    semver "7.3.4"
+    tmp "~0.2.1"
+    tslib "^2.3.0"
+    yargs-parser "20.0.0"
+
+"@nrwl/tao@13.7.2":
+  version "13.7.2"
+  resolved "https://registry.yarnpkg.com/@nrwl/tao/-/tao-13.7.2.tgz#3c25d0acfd4c200d88cbc59558e340ad3141617a"
+  integrity sha512-Dsh01wHJGsZfNI4GAqm4lJArho6qmTvOIRXlKrYjjERWD80EmpWV+JpMwZseKI/ZWKg8gda8iYIDD4FSXTQjrw==
+  dependencies:
+    chalk "4.1.0"
+    enquirer "~2.3.6"
+    fast-glob "3.2.7"
+    fs-extra "^9.1.0"
+    ignore "^5.0.4"
+    jsonc-parser "3.0.0"
+    nx "13.7.2"
     rxjs "^6.5.4"
     rxjs-for-await "0.0.2"
     semver "7.3.4"
@@ -10657,13 +10659,6 @@ nwsapi@^2.2.0:
   resolved "https://registry.yarnpkg.com/nwsapi/-/nwsapi-2.2.0.tgz#204879a9e3d068ff2a55139c2c772780681a38b7"
   integrity sha512-h2AatdwYH+JHiZpv7pt/gSX1XoRGb7L/qSIeuqA6GwYoF9w1vP1cw42TO0aI2pNyshRK5893hNSl+1//vHK7hQ==
 
-nx@12.9.0:
-  version "12.9.0"
-  resolved "https://registry.yarnpkg.com/nx/-/nx-12.9.0.tgz#8553ce806fd19181ad8f81395f7812ab9fe5d4e2"
-  integrity sha512-AOyMJPpioeMtY1UJ2Zgxyjfsc6rg31uztqiCZIQEOLwXoYIYiPuz54IhTngW7c1MjtxDl8B62G8xCjlRv2zjhw==
-  dependencies:
-    "@nrwl/cli" "*"
-
 nx@13.1.3:
   version "13.1.3"
   resolved "https://registry.yarnpkg.com/nx/-/nx-13.1.3.tgz#0b2db9b5bc87a47fb3a90014d2b2abb44f568851"
@@ -10677,6 +10672,13 @@ nx@13.7.1:
   integrity sha512-/jKcS8t88ESwP6gRZ8Mg3sy86D/9YquLEoAcBVxR/bkoAZLQLXcdrJRQbx+yT5Wo8iJXzCC+wEyrDueJLJLaAQ==
   dependencies:
     "@nrwl/cli" "13.7.1"
+
+nx@13.7.2:
+  version "13.7.2"
+  resolved "https://registry.yarnpkg.com/nx/-/nx-13.7.2.tgz#d376c3856ed304158d2df9a1b4e0ad53c164bedc"
+  integrity sha512-5xZVZKi81U7YKoDSC4HcrJDUajfReRlWroIBfDhH92c2DMdAxL1gnWxLFJ8HB3V2O8UYPlomYllr3CwHrfnqcQ==
+  dependencies:
+    "@nrwl/cli" "13.7.2"
 
 object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
@@ -14622,20 +14624,7 @@ yargs@16.2.0, yargs@^16.0.0, yargs@^16.2.0:
     y18n "^5.0.5"
     yargs-parser "^20.2.2"
 
-yargs@^17.0.0:
-  version "17.0.1"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-17.0.1.tgz#6a1ced4ed5ee0b388010ba9fd67af83b9362e0bb"
-  integrity sha512-xBBulfCc8Y6gLFcrPvtqKz9hz8SO0l1Ni8GgDekvBX2ro0HRQImDGnikfc33cgzcYUSncapnNcZDjVFIH3f6KQ==
-  dependencies:
-    cliui "^7.0.2"
-    escalade "^3.1.1"
-    get-caller-file "^2.0.5"
-    require-directory "^2.1.1"
-    string-width "^4.2.0"
-    y18n "^5.0.5"
-    yargs-parser "^20.2.2"
-
-yargs@^17.2.1:
+yargs@^17.0.0, yargs@^17.2.1:
   version "17.2.1"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-17.2.1.tgz#e2c95b9796a0e1f7f3bf4427863b42e0418191ea"
   integrity sha512-XfR8du6ua4K6uLGm5S6fA+FIJom/MdJcFNVY8geLlp2v8GYbOXD4EB1tPNZsRn4vBzKGMgb5DRZMeWuFc2GO8Q==
