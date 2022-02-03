@@ -1,6 +1,6 @@
 # Motivation
 
-<INTOR IMG>
+![Selections (1)](https://user-images.githubusercontent.com/10064416/152422745-b3d8e094-d0f0-4810-b1b2-5f81fae25938.png)
 
 When managing state you want to maintain a core unit of data. 
 This data is then later on distributed to multiple places in your component template (local) or whole app (global). 
