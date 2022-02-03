@@ -1,6 +1,6 @@
 {
   "name": "@rx-angular/template",
-  "version": "1.0.0-rc.0",
+  "version": "1.0.0-rc.1",
   "description": "**Fully** Reactive Component Template Rendering in Angular. @rx-angular/template aims to be a reflection of Angular's built in renderings just reactive.",
   "main": "index.js",
   "publishConfig": {
@@ -50,7 +50,7 @@
   },
   "peerDependencies": {
     "@angular/core": ">10.1.1",
-    "@rx-angular/cdk": ">=1.0.0-beat.0"
+    "@rx-angular/cdk": ">=1.0.0-beat.1"
   },
   "dependencies": {
     "tslib": "^2.0.0",
