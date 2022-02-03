@@ -79,7 +79,8 @@ In most cases it's best to go with solving problems on the early subscriber side
 
 ## Advanced derivations architecture
 
-<SELECT => CONNECT BAD IMG>
+![Selections (6)](https://user-images.githubusercontent.com/10064416/152422999-db8260f0-69e1-4d99-b6ac-b2b1d043b4b7.png)
+
 
 ![Selections (7)](https://user-images.githubusercontent.com/10064416/152423026-d23326c2-97d5-4bd0-9015-f498c3fc0e55.png)
 
