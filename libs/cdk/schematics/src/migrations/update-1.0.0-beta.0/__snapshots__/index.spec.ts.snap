@@ -295,3 +295,38 @@ import { filter, map } from 'rxjs';
 export class AppShellComponent {}
 "
 `;
+
+exports[`cdk migration 1.0.0-beta.0 should replace zone-less sub-entrypoint 1`] = `
+"import {
+  interval,
+  timer,
+  fromEvent,
+  asyncScheduler,
+  asapScheduler,
+  queueScheduler,
+  animationFrameScheduler,
+} from '@rx-angular/cdk/zone-less/rxjs';
+import {
+  Promise,
+  requestAnimationFrame,
+  cancelAnimationFrame,
+  setInterval,
+  clearInterval,
+  setTimeout,
+  clearTimeout,
+  unpatchAddEventListener,
+} from '@rx-angular/cdk/zone-less/browser';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;
