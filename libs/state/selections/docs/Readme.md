@@ -1,10 +1,79 @@
 # Motivation
 
-TBD
+<INTOR IMG>
 
-* [`Interfaces`](./operators/interfaces.md)
-* [`distinctUntilSomeChanged`](./operators/distinct-until-some-changed.md)
-* [`select`](./operators/select.md)
-* [`selectSlice`](./operators/select-slice.md)
-* [`stateful`](./operators/stateful.md)
+When managing state you want to maintain a core unit of data. 
+This data is then later on distributed to multiple places in your component template (local) or whole app (global). 
 
+We can forward this state to thier consumers directly or compute specific derivations (selections) for the core unit.
+
+As an example we could think of the following shape: 
+
+**A list and a list title**
+```typescript
+interface GlobalModel {
+  title: string;
+  list: { id: number, date: Date }
+}
+```
+
+This data is consumed in different screens:
+
+**A list of all items sorted by id**
+```typescript
+interface SeceltionScreen1 {
+  title: string;
+  sortDirection: 'asc' | 'desc' | 'none';
+  list: { id: number }
+}
+```
+
+**A list of items filtered by date**
+```typescript
+interface SeceltionScreen2 {
+  title: string;
+  startingDate: Date;
+  list: { id: number }
+}
+```
+
+The 2 rendered lists are a derivation, a modified version of the core set of items.
+One time they are displayed in a sorted order, the other time only filtered subset of the items.
+
+> **Hint:**  
+> Derivations are always redundant information of our core data and therefore should not get stored,
+> but cached in the derivation logic.
+
+<SELECTIONS IMG>
+
+As this process contains a lot of gotchas and possible pitfalls in terms of memory usage and performance this small helper library was created.
+
+# Benefits
+
+<Solutions IMG>
+
+- Sophisticated set of helpers for any selection problem
+- Enables lazy rendering
+- Computes only distinct values
+- Shares computed result with multiple subscriber
+- Select distinct sub-sets
+- Select from static values
+- Fully Tested
+- Fully Typed
+
+## Selection owner - Template vs Class
+
+As Observables are cold their resulting srteam will only get active too by a subscription.
+This leads to situations called the late or the early subscriber problem. (LINK)
+
+<Subscriber Problem IMG>
+
+In most cases it's best to go with solving problems on the early subscriber side and be sure we never loose values that should render on the screen.
+
+<State LAYER IMG>
+
+## Advanced derivations architecture
+
+<SELECT => CONNECT BAD IMG>
+
+<SELECT GOOD IMG>
