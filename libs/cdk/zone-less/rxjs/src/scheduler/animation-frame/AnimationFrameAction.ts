@@ -4,7 +4,7 @@ import { SchedulerAction } from '../types';
 import {
   requestAnimationFrame,
   cancelAnimationFrame,
-} from '../../../browser/browser';
+} from '@rx-angular/cdk/zone-less/browser';
 
 /**
  * We need this JSDoc comment for affecting ESDoc.

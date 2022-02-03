@@ -5,7 +5,7 @@ import {
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 
-describe('cdk migration 1.0.0-alpha-12', () => {
+describe('cdk migration 1.0.0-beta.0', () => {
   let appTree: UnitTestTree;
 
   it('should replace coalescing', async () => {
@@ -265,6 +265,7 @@ describe('cdk migration 1.0.0-alpha-12', () => {
     appTree = await setupTestFile(`
       import { NgModule } from '@angular/core';
       import { BrowserModule } from '@angular/platform-browser';
+      import { coerceObservableWith } from '@rx-angular/cdk/coercing';
       import {
         getZoneUnPatchedApi,
         Promise as unpatchedPromise,
@@ -297,6 +298,29 @@ describe('cdk migration 1.0.0-alpha-12', () => {
         bootstrap: [AppComponent]
       })
       export class AppModule { }
+  `);
+
+    const file = appTree.readContent('app.module.ts');
+
+    expect(file).toMatchSnapshot();
+  });
+
+  it('should replace zone-less in edge case', async () => {
+    appTree = await setupTestFile(`
+    import { ChangeDetectionStrategy, Component, TrackByFunction, ViewChild } from '@angular/core';
+    import { NavigationEnd, Router } from '@angular/router';
+    import { RxState } from '@rx-angular/state';
+    import { filter, map } from 'rxjs';
+    import { setTimeout } from '@rx-angular/cdk';
+
+    @Component({
+      selector: 'app-shell',
+      templateUrl: './app-shell.component.html',
+      styleUrls: ['./app-shell.component.scss'],
+      changeDetection: ChangeDetectionStrategy.OnPush,
+      providers: [RxState]
+    })
+    export class AppShellComponent { }
   `);
 
     const file = appTree.readContent('app.module.ts');
@@ -364,6 +388,8 @@ describe('cdk migration 1.0.0-alpha-12', () => {
 
     tree.create(filePath, fileInput);
 
-    return runner.runSchematicAsync(`update-1.0.0-alpha.12`, {}, tree).toPromise();
+    return runner
+      .runSchematicAsync(`update-1.0.0-beta.0`, {}, tree)
+      .toPromise();
   }
 });

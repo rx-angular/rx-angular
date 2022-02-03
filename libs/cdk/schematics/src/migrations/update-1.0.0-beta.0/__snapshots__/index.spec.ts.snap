@@ -1,0 +1,297 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cdk migration 1.0.0-beta.0 should replace coalescing 1`] = `
+"import {
+  RxCoalescingOptions,
+  coalescingObj,
+  coalesceWith,
+  coalescingManager,
+  CoalescingManager,
+} from '@rx-angular/cdk/coalescing';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;
+
+exports[`cdk migration 1.0.0-beta.0 should replace coercing 1`] = `
+"import {
+  coerceObservable,
+  coerceObservableWith,
+  coerceDistinctObservable,
+  coerceDistinctWith,
+  coerceAllFactory,
+} from '@rx-angular/cdk/coercing';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;
+
+exports[`cdk migration 1.0.0-beta.0 should replace internals-scheduler 1`] = `
+"import {
+  cancelCallback,
+  scheduleCallback,
+  forceFrameRate,
+  PriorityLevel,
+} from '@rx-angular/cdk/internals/scheduler';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;
+
+exports[`cdk migration 1.0.0-beta.0 should replace notifications 1`] = `
+"import {
+  RxNotificationKind,
+  RxNotification,
+  RxCompleteNotification,
+  RxErrorNotification,
+  RxNextNotification,
+  RxNotificationValue,
+  RxSuspenseNotification,
+  toRxErrorNotification,
+  toRxSuspenseNotification,
+  toRxCompleteNotification,
+  templateTriggerHandling,
+  rxMaterialize,
+  createTemplateNotifier,
+} from '@rx-angular/cdk/notifications';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;
+
+exports[`cdk migration 1.0.0-beta.0 should replace render-strategies 1`] = `
+"import {
+  ScheduleOnStrategyOptions,
+  RX_CONCURRENT_STRATEGIES,
+  RxConcurrentStrategies,
+  RX_NATIVE_STRATEGIES,
+  RxNativeStrategies,
+  onStrategy,
+  strategyHandling,
+  RxStrategies,
+  RxStrategyNames,
+  RxDefaultStrategyNames,
+  RxConcurrentStrategyNames,
+  RxNativeStrategyNames,
+  RxCustomStrategyCredentials,
+  RxStrategyCredentials,
+  RxRenderBehavior,
+  RxRenderWork,
+  RX_RENDER_STRATEGIES_CONFIG,
+  RX_RENDER_STRATEGIES_DEFAULTS,
+  RxRenderStrategiesConfig,
+} from '@rx-angular/cdk/render-strategies';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [
+    {
+      provide: RX_RENDER_STRATEGIES_CONFIG,
+      useValue: RX_RENDER_STRATEGIES_DEFAULTS,
+    },
+  ],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;
+
+exports[`cdk migration 1.0.0-beta.0 should replace state 1`] = `
+"import {
+  ObservableAccumulation,
+  ObservableMap,
+  accumulateObservables,
+} from '@rx-angular/cdk/internals/core';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;
+
+exports[`cdk migration 1.0.0-beta.0 should replace template 1`] = `
+"import {
+  templateHandling,
+  RxBaseTemplateNames,
+  RxRenderAware,
+  RxViewContext,
+  rxBaseTemplateNames,
+  RxTemplateManager,
+  createTemplateManager,
+  RxNotificationTemplateNameMap,
+  RxListManager,
+  createListTemplateManager,
+  RxListViewComputedContext,
+  RxDefaultListViewContext,
+  RxListViewContext,
+} from '@rx-angular/cdk/template';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;
+
+exports[`cdk migration 1.0.0-beta.0 should replace zone-configurations 1`] = `
+"import {
+  focusEvents,
+  mouseEvents,
+  wheelEvents,
+  inputEvents,
+  formControlsEvents,
+  keyboardEvents,
+  vrEvents,
+  mSGestureEvents,
+  printEvents,
+  networkEvents,
+  audioEvents,
+  compositionEvents,
+  touchEvents,
+  globalEvents,
+  websocketEvents,
+  xhrEvents,
+  windowEvents,
+  allEvents,
+  EventTarget,
+  RxZoneFlagsHelperFunctions,
+  RxZoneGlobalConfigurations,
+  RxZoneTestConfigurations,
+  RxZoneRuntimeConfigurations,
+  zoneConfig,
+} from '@rx-angular/cdk/zone-configurations';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;
+
+exports[`cdk migration 1.0.0-beta.0 should replace zone-less 1`] = `
+"import {
+  interval,
+  timer,
+  fromEvent,
+  asyncScheduler,
+  asapScheduler,
+  queueScheduler,
+  animationFrameScheduler,
+} from '@rx-angular/cdk/zone-less/rxjs';
+import {
+  Promise as unpatchedPromise,
+  requestAnimationFrame,
+  cancelAnimationFrame,
+  setInterval,
+  clearInterval,
+  setTimeout,
+  clearTimeout,
+  unpatchAddEventListener,
+} from '@rx-angular/cdk/zone-less/browser';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { coerceObservableWith } from '@rx-angular/cdk/coercing';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;
+
+exports[`cdk migration 1.0.0-beta.0 should replace zone-less in edge case 1`] = `
+"import { setTimeout } from '@rx-angular/cdk/zone-less/browser';
+
+import {
+  ChangeDetectionStrategy,
+  Component,
+  TrackByFunction,
+  ViewChild,
+} from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { RxState } from '@rx-angular/state';
+import { filter, map } from 'rxjs';
+
+@Component({
+  selector: 'app-shell',
+  templateUrl: './app-shell.component.html',
+  styleUrls: ['./app-shell.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [RxState],
+})
+export class AppShellComponent {}
+"
+`;
