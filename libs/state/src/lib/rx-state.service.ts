@@ -556,7 +556,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
         stateful(pluck(...opOrMapFn))
       ) as Observable<T | R>;
     } else if (isOperateFnArrayGuard(opOrMapFn)) {
-      return this.accumulator.state$.pipe(stateful(pipeFromArray(opOrMapFn)));
+      return this.accumulator.state$.pipe(
+        stateful(pipeFromArray(opOrMapFn))
+      ) as Observable<R>;
     }
     throw new Error('wrong params passed to select');
   }

@@ -19,8 +19,8 @@ import { coerceObservable } from './coerceObservable';
  * @param flattenOperator - determines the flattening strategy e.g. mergeAll, concatAll, exhaust, switchAll. default is switchAll
  */
 export function coerceDistinctObservable<T>(
-  o$: Observable<Observable<T> | T>,
-  flattenOperator?: OperatorFunction<ObservableInput<T>, T>
+  o$: Observable<Observable<T> | T>  ,
+  flattenOperator?: OperatorFunction<ObservableInput<T>, T > 
 ) {
   flattenOperator = flattenOperator || switchAll();
   return coerceObservable(o$).pipe(

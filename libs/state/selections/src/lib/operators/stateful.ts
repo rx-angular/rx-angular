@@ -119,7 +119,7 @@ export function stateful<T, R>(
       // CUSTOM LOGIC HERE
       (o: Observable<T>): Observable<T | R> => {
         if (isOperateFnArrayGuard(optionalDerive)) {
-          return o.pipe(pipeFromArray(optionalDerive));
+          return o.pipe(pipeFromArray(optionalDerive)) as Observable<T | R>;
         }
         return o;
       },

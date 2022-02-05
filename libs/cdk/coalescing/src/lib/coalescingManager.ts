@@ -65,7 +65,7 @@ function createPropertiesWeakMap<
     } else {
       properties = {} as P;
 
-      (Object.entries(defaults) as unknown[]).forEach(
+      (Object.entries(defaults) as []).forEach(
         ([prop, value]: [KeyOf<P>, ValueOf<P>]): void => {
           if (hasKey(ctx as P, prop)) {
             properties[prop] = (ctx as P)[prop];
