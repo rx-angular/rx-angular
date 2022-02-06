@@ -359,8 +359,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param strategyName
    * @see {@link strategies}
    */
-  @Input('rxForStrategy')
-  set strategy(strategyName: string | Observable<string> | undefined) {
+  @Input()
+  set rxForStrategy(strategyName: string | Observable<string> | undefined) {
     this.strategyInput$.next(strategyName);
   }
 
