@@ -18,9 +18,12 @@ import {
   createTemplateManager,
   RxTemplateManager,
   RxBaseTemplateNames,
-  RxViewContext
+  RxViewContext,
 } from '@rx-angular/cdk/template';
-import { RxStrategyProvider, RxStrategyNames } from '@rx-angular/cdk/render-strategies';
+import {
+  RxStrategyProvider,
+  RxStrategyNames,
+} from '@rx-angular/cdk/render-strategies';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
@@ -29,13 +32,14 @@ import {
 } from '@rx-angular/cdk/notifications';
 
 import {
-  defer, merge,
+  defer,
+  merge,
   NextObserver,
   Observable,
   ObservableInput,
   ReplaySubject,
   Subject,
-  Subscription
+  Subscription,
 } from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
 
@@ -367,8 +371,6 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
 
   /** @internal */
   readonly values$ = this.observablesHandler.values$;
-
-
 
   @Output() readonly rendered = defer(() => this.rendered$);
 
