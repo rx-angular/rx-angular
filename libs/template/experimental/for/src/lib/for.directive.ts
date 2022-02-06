@@ -280,7 +280,6 @@ import { RxForViewContext } from './for-view-context';
 @Directive({
   selector: '[rxFor][rxForOf]',
 })
-/* @todo: rename to ForDirective? */
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, OnDestroy
@@ -302,14 +301,12 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /**
    * @internal
-   * A reference to the template that is stamped out for each item in the iterable.
+   * A reference to the template that is created for each item in the iterable.
    * @see [template reference variable](guide/template-reference-variables)
+   * (inspired by @angular/common `ng_for_of.ts`)
    */
   @Input()
   set rxForTemplate(value: TemplateRef<RxForViewContext<T, U>>) {
-    // TODO(TS2.1): make TemplateRef<Partial<NgForRowOf<T>>> once we move to TS v2.1
-    // The current type is too restrictive; a template that just uses index, for example,
-    // should be acceptable.
     if (value) {
       this.templateRef = value;
     }
