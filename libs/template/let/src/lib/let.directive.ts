@@ -382,12 +382,6 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
 
   /** @internal */
   ngOnInit() {
-    this.subscription.add(this.strategyHandler.values$
-      .subscribe(strategy => {
-      if(strategy) {
-        this.strategyProvider.primaryStrategy = strategy
-      }
-    }));
     this.subscription.add(
       this.templateManager
         .render(merge(this.values$, this.templateNotification$))
