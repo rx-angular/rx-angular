@@ -287,7 +287,17 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   static ngTemplateGuard_rxFor: 'binding';
 
-  /** @internal */
+  /**
+   * @description
+   * The iterable input
+   *
+   * @example
+   * <ng-container *rxFor="heroes$; let hero">
+   *   <app-hero [hero]="hero"></app-hero>
+   * </ng-container>
+   *
+   * @param potentialObservable
+   */
   @Input()
   set rxForOf(
     potentialObservable:
