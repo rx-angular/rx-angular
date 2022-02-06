@@ -1,4 +1,3 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectorRef,
   Directive,
@@ -17,7 +16,6 @@ import {
 } from '@angular/core';
 import {
   createListTemplateManager,
-  RxDefaultListViewContext,
   RxListManager,
   RxListViewComputedContext,
   RxListViewContext,
@@ -26,6 +24,7 @@ import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
 
 import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { RxForViewContext } from './for-view-context';
 
 /**
  * @Directive RxFor
@@ -279,7 +278,7 @@ import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
  * @publicApi
  */
 @Directive({
-  selector: '[rxFor]',
+  selector: '[rxFor][rxForOf]',
 })
 /* @todo: rename to ForDirective? */
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
@@ -289,38 +288,31 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   static ngTemplateGuard_rxFor: 'binding';
 
-  /**
-   * @description
-   * The iterable input
-   *
-   * @example
-   * <ng-container *rxFor="heroes$; let hero">
-   *   <app-hero [hero]="hero"></app-hero>
-   * </ng-container>
-   *
-   * @param potentialObservable
-   */
+  /** @internal */
   @Input()
-  set rxFor(
+  set rxForOf(
     potentialObservable:
-      | Observable<NgIterable<T>>
-      | NgIterable<T>
+      | Observable<(U & NgIterable<T>) | undefined | null>
+      | (U & NgIterable<T>)
       | null
       | undefined
   ) {
     this.observables$.next(potentialObservable);
   }
 
-  /** @internal */
+  /**
+   * @internal
+   * A reference to the template that is stamped out for each item in the iterable.
+   * @see [template reference variable](guide/template-reference-variables)
+   */
   @Input()
-  set rxForOf(
-    potentialObservable:
-      | Observable<NgIterable<T>>
-      | NgIterable<T>
-      | null
-      | undefined
-  ) {
-    this.observables$.next(potentialObservable);
+  set rxForTemplate(value: TemplateRef<RxForViewContext<T, U>>) {
+    // TODO(TS2.1): make TemplateRef<Partial<NgForRowOf<T>>> once we move to TS v2.1
+    // The current type is too restrictive; a template that just uses index, for example,
+    // should be acceptable.
+    if (value) {
+      this.templateRef = value;
+    }
   }
 
   /**
@@ -586,7 +578,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
     private eRef: ElementRef,
-    private readonly templateRef: TemplateRef<RxDefaultListViewContext<T>>,
+    private templateRef: TemplateRef<RxForViewContext<T, U>>,
     private readonly viewContainerRef: ViewContainerRef,
     private strategyProvider: RxStrategyProvider,
     private errorHandler: ErrorHandler
@@ -596,9 +588,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   private strategyInput$ = new ReplaySubject<string | Observable<string>>(1);
 
   /** @internal */
-  private observables$ = new ReplaySubject<
-    Observable<NgIterable<T>> | NgIterable<T>
-  >(1);
+  private observables$ = new ReplaySubject<Observable<U> | U>(1);
 
   /** @internal */
   private _renderCallback: Subject<any>;
@@ -607,19 +597,23 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   private readonly values$ = this.observables$.pipe(coerceDistinctWith());
 
   /** @internal */
+  private values: U | undefined | null = null;
+
+  /** @internal */
   private readonly strategy$ = this.strategyInput$.pipe(coerceDistinctWith());
 
   /** @internal */
   private listManager: RxListManager<T>;
 
   /** @internal */
-  private _subscription = Subscription.EMPTY;
+  private _subscription = new Subscription();
 
   /** @internal */
-  static ngTemplateContextGuard<U>(
-    dir: RxFor<U>,
-    ctx: unknown | null | undefined
-  ): ctx is RxDefaultListViewContext<U> {
+  static ngTemplateContextGuard<
+    T,
+    U extends NgIterable<T> = NgIterable<T>,
+    K = keyof T
+  >(dir: RxFor<T, U>, ctx: any): ctx is RxForViewContext<T, U, K> {
     return true;
   }
 
@@ -630,40 +624,40 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /** @internal */
   ngOnInit() {
-    this.listManager = createListTemplateManager<
-      T,
-      RxDefaultListViewContext<T>
-    >({
+    this._subscription.add(this.values$.subscribe((v) => (this.values = v)));
+    this.listManager = createListTemplateManager<T, RxForViewContext<T>>({
       iterableDiffers: this.iterableDiffers,
       renderSettings: {
         cdRef: this.cdRef,
         eRef: this.eRef,
         strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
         defaultStrategyName: this.strategyProvider.primaryStrategy,
-        parent: coerceBooleanProperty(this.renderParent),
+        parent: !!this.renderParent,
         patchZone: this.patchZone ? this.ngZone : false,
         errorHandler: this.errorHandler,
       },
       templateSettings: {
         viewContainerRef: this.viewContainerRef,
         templateRef: this.templateRef,
-        createViewContext: this.createViewContext,
+        createViewContext: this.createViewContext.bind(this),
         updateViewContext: this.updateViewContext,
       },
       trackBy: this._trackBy,
     });
     this.listManager.nextStrategy(this.strategy$);
-    this._subscription = this.listManager
-      .render(this.values$)
-      .subscribe((v) => this._renderCallback?.next(v));
+    this._subscription.add(
+      this.listManager
+        .render(this.values$)
+        .subscribe((v) => this._renderCallback?.next(v))
+    );
   }
 
   /** @internal */
   createViewContext(
     item: T,
     computedContext: RxListViewComputedContext
-  ): RxDefaultListViewContext<T> {
-    return new RxDefaultListViewContext<T>(item, computedContext);
+  ): RxForViewContext<T, U> {
+    return new RxForViewContext<T, U>(item, this.values, computedContext);
   }
 
   /** @internal */
