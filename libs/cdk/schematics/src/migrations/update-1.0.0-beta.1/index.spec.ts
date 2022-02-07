@@ -5,7 +5,7 @@ import {
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 
-describe('cdk migration 1.0.0-alpha-12', () => {
+describe('cdk migration 1.0.0-beta.1', () => {
   let appTree: UnitTestTree;
 
   it('should replace coalescing', async () => {
@@ -276,14 +276,58 @@ describe('cdk migration 1.0.0-alpha-12', () => {
         setTimeout,
         clearTimeout,
         unpatchAddEventListener,
+        asyncScheduler,
+        asapScheduler,
+        queueScheduler,
+        animationFrameScheduler
+      } from '@rx-angular/cdk';
+      import {
+        interval,
+        timer,
+        fromEvent
+      } from '@rx-angular/cdk/zone-less'
+
+      import { AppComponent } from './app.component';
+
+      @NgModule({
+        declarations: [
+          AppComponent,
+        ],
+        imports: [
+          BrowserModule
+        ],
+        providers: [],
+        bootstrap: [AppComponent]
+      })
+      export class AppModule { }
+  `);
+
+    const file = appTree.readContent('app.module.ts');
+
+    expect(file).toMatchSnapshot();
+  });
+
+  it('should replace zone-less sub-entrypoint', async () => {
+    appTree = await setupTestFile(`
+      import { NgModule } from '@angular/core';
+      import { BrowserModule } from '@angular/platform-browser';
+      import {
+        Promise,
+        requestAnimationFrame,
+        cancelAnimationFrame,
+        setInterval,
+        clearInterval,
+        setTimeout,
+        clearTimeout,
+        unpatchAddEventListener,
         interval,
         timer,
         fromEvent,
         asyncScheduler,
         asapScheduler,
         queueScheduler,
-        animationFrameScheduler
-      } from '@rx-angular/cdk';
+        animationFrameScheduler,
+      } from '@rx-angular/cdk/zone-less';
 
       import { AppComponent } from './app.component';
 
@@ -389,7 +433,7 @@ describe('cdk migration 1.0.0-alpha-12', () => {
     tree.create(filePath, fileInput);
 
     return runner
-      .runSchematicAsync(`update-1.0.0-alpha.12`, {}, tree)
+      .runSchematicAsync(`update-1.0.0-beta.1`, {}, tree)
       .toPromise();
   }
 });

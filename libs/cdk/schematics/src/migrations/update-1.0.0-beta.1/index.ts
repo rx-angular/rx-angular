@@ -115,4 +115,7 @@ const renames: Record<string, string | [string, string]> = {
   zoneConfig: '@rx-angular/cdk/zone-configurations',
 };
 
-export default renamingRule('@rx-angular/cdk', renames);
+export default renamingRule(
+  ['@rx-angular/cdk', '@rx-angular/cdk/zone-less'],
+  renames
+);
