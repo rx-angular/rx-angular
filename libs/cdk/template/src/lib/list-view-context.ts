@@ -22,7 +22,8 @@ export class RxDefaultListViewContext<
   T,
   U extends NgIterable<T> = NgIterable<T>,
   K = keyof T
-> implements RxListViewContext<T> {
+> implements RxListViewContext<T>
+{
   readonly _item = new ReplaySubject<T>(1);
   item$ = this._item.asObservable();
   private _$implicit: T;
@@ -103,7 +104,7 @@ export class RxDefaultListViewContext<
     return this.even$.pipe(map((even) => !even));
   }
 
-  constructor(private item: T, customProps?: { count: number; index: number }) {
+  constructor(item: T, customProps?: { count: number; index: number }) {
     this.$implicit = item;
     if (customProps) {
       this.updateContext(customProps);

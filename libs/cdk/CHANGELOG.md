@@ -2,6 +2,57 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0-beta.0](/compare/cdk@1.0.0-alpha.11...cdk@1.0.0-beta.0) (2022-02-02)
+
+
+### Bug Fixes
+
+* **cdk:** support rxjs 6 (#1183) 98749c8, closes #1183
+* **docs:** adjust headline and add link to strategies 8bf672d
+* **docs:** update strategyProvider docs f290142
+
+
+### Features
+
+* **docs:** add readme file to rxStrategyProvider 0675dac
+* enable Ivy with partial compilation mode (#1186) eddaf20, closes #1186
+
+
+### Performance Improvements
+
+* move getUnpatchedApi into sun-package and avoid zone-less package (#1035) 170ab7a, closes #1035
+* zone less sub modules f765336
+
+### New zone-less sub entry points
+
+With this version a migration was introduced, which migrates your codebase automatically to the new sub entry points.
+run the migration:
+
+```bash
+ng update @rx-angular/cdk
+// or
+nx migrate @rx-angular/cdk
+nx migrate --run-migrations
+```
+
+| item                      | from                          | to                                  |
+|---------------------------|-------------------------------|-------------------------------------|
+| `Promise`                 | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
+| `requestAnimationFrame`   | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
+| `cancelAnimationFrame`    | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
+| `setInterval`             | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
+| `clearInterval`           | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
+| `setTimeout`              | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
+| `clearTimeout`            | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
+| `unpatchAddEventListener` | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
+| `interval`                | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/rxjs`    |
+| `timer`                   | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/rxjs`    |
+| `fromEvent`               | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/rxjs`    |
+| `asyncScheduler`          | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/rxjs`    |
+| `asapScheduler`           | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/rxjs`    |
+| `queueScheduler`          | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/rxjs`    |
+| `animationFrameScheduler` | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/rxjs`    |
+
 # [1.0.0-alpha.11](/compare/cdk@1.0.0-alpha.10...cdk@1.0.0-alpha.11) (2021-11-16)
 
 
@@ -13,6 +64,124 @@ This file was generated using [@jscutlery/semver](https://github.com/jscutlery/s
 ### Features
 
 * add ability to rxLet and push to take static values (#1033) 42d7a81, closes #1033
+
+### New library structure
+
+With this version a migration was introduced, which migrates your codebase automatically to the new sub entry points.
+run the migration:
+
+```bash
+ng update @rx-angular/cdk
+// or
+nx migrate @rx-angular/cdk
+nx migrate --run-migrations
+```
+
+| item                            | from              | to                                    |
+|---------------------------------|-------------------|---------------------------------------|
+| `RxCoalescingOptions`           | `@rx-angular/cdk` | `@rx-angular/cdk/coalescing`          |
+| `coalescingObj`                 | `@rx-angular/cdk` | `@rx-angular/cdk/coalescing`          |
+| `coalesceWith`                  | `@rx-angular/cdk` | `@rx-angular/cdk/coalescing`          |
+| `coalescingManager`             | `@rx-angular/cdk` | `@rx-angular/cdk/coalescing`          |
+| `CoalescingManager`             | `@rx-angular/cdk` | `@rx-angular/cdk/coalescing`          |
+| `coerceObservable`              | `@rx-angular/cdk` | `@rx-angular/cdk/coercing`            |
+| `coerceObservableWith`          | `@rx-angular/cdk` | `@rx-angular/cdk/coercing`            |
+| `coerceDistinctObservable`      | `@rx-angular/cdk` | `@rx-angular/cdk/coercing`            |
+| `coerceDistinctWith`            | `@rx-angular/cdk` | `@rx-angular/cdk/coercing`            |
+| `coerceAllFactory`              | `@rx-angular/cdk` | `@rx-angular/cdk/coercing`            |
+| `cancelCallback`                | `@rx-angular/cdk` | `@rx-angular/cdk/internals/scheduler` |
+| `scheduleCallback`              | `@rx-angular/cdk` | `@rx-angular/cdk/internals/scheduler` |
+| `forceFrameRate`                | `@rx-angular/cdk` | `@rx-angular/cdk/internals/scheduler` |
+| `PriorityLevel`                 | `@rx-angular/cdk` | `@rx-angular/cdk/internals/scheduler` |
+| `RxStrategyProvider`            | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `ScheduleOnStrategyOptions`     | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RX_CONCURRENT_STRATEGIES`      | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RxConcurrentStrategies`        | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RX_NATIVE_STRATEGIES`          | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RxNativeStrategies`            | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `onStrategy`                    | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `strategyHandling`              | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RxStrategies`                  | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RxStrategyNames`               | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RxDefaultStrategyNames`        | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RxConcurrentStrategyNames`     | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RxNativeStrategyNames`         | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RxCustomStrategyCredentials`   | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RxStrategyCredentials`         | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RxRenderBehavior`              | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RxRenderWork`                  | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RX_ANGULAR_CONFIG`             | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RX_ANGULAR_DEFAULTS`           | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `RxAngularConfig`               | `@rx-angular/cdk` | `@rx-angular/cdk/render-strategies`   |
+| `ObservableAccumulation`        | `@rx-angular/cdk` | `@rx-angular/cdk/internals/core`      |
+| `ObservableMap`                 | `@rx-angular/cdk` | `@rx-angular/cdk/internals/core`      |
+| `accumulateObservables`         | `@rx-angular/cdk` | `@rx-angular/cdk/internals/core`      |
+| `getZoneUnPatchedApi`           | `@rx-angular/cdk` | `@rx-angular/cdk/internals/core`      |
+| `templateHandling`              | `@rx-angular/cdk` | `@rx-angular/cdk/template`            |
+| `RxBaseTemplateNames`           | `@rx-angular/cdk` | `@rx-angular/cdk/template`            |
+| `RxRenderAware`                 | `@rx-angular/cdk` | `@rx-angular/cdk/template`            |
+| `RxViewContext`                 | `@rx-angular/cdk` | `@rx-angular/cdk/template`            |
+| `rxBaseTemplateNames`           | `@rx-angular/cdk` | `@rx-angular/cdk/template`            |
+| `RxTemplateManager`             | `@rx-angular/cdk` | `@rx-angular/cdk/template`            |
+| `createTemplateManager`         | `@rx-angular/cdk` | `@rx-angular/cdk/template`            |
+| `RxNotificationTemplateNameMap` | `@rx-angular/cdk` | `@rx-angular/cdk/template`            |
+| `RxListManager`                 | `@rx-angular/cdk` | `@rx-angular/cdk/template`            |
+| `createListTemplateManager`     | `@rx-angular/cdk` | `@rx-angular/cdk/template`            |
+| `RxListViewComputedContext`     | `@rx-angular/cdk` | `@rx-angular/cdk/template`            |
+| `RxDefaultListViewContext`      | `@rx-angular/cdk` | `@rx-angular/cdk/template`            |
+| `RxListViewContext`             | `@rx-angular/cdk` | `@rx-angular/cdk/template`            |
+| `RxNotificationKind`            | `@rx-angular/cdk` | `@rx-angular/cdk/notifications`       |
+| `RxNotification`                | `@rx-angular/cdk` | `@rx-angular/cdk/notifications`       |
+| `RxCompleteNotification`        | `@rx-angular/cdk` | `@rx-angular/cdk/notifications`       |
+| `RxErrorNotification`           | `@rx-angular/cdk` | `@rx-angular/cdk/notifications`       |
+| `RxNextNotification`            | `@rx-angular/cdk` | `@rx-angular/cdk/notifications`       |
+| `RxNotificationValue`           | `@rx-angular/cdk` | `@rx-angular/cdk/notifications`       |
+| `RxSuspenseNotification`        | `@rx-angular/cdk` | `@rx-angular/cdk/notifications`       |
+| `toRxErrorNotification`         | `@rx-angular/cdk` | `@rx-angular/cdk/notifications`       |
+| `toRxSuspenseNotification`      | `@rx-angular/cdk` | `@rx-angular/cdk/notifications`       |
+| `toRxCompleteNotification`      | `@rx-angular/cdk` | `@rx-angular/cdk/notifications`       |
+| `templateTriggerHandling`       | `@rx-angular/cdk` | `@rx-angular/cdk/notifications`       |
+| `rxMaterialize`                 | `@rx-angular/cdk` | `@rx-angular/cdk/notifications`       |
+| `createTemplateNotifier`        | `@rx-angular/cdk` | `@rx-angular/cdk/notifications`       |
+| `Promise`                       | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `requestAnimationFrame`         | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `cancelAnimationFrame`          | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `setInterval`                   | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `clearInterval`                 | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `setTimeout`                    | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `clearTimeout`                  | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `unpatchAddEventListener`       | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `interval`                      | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `timer`                         | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `fromEvent`                     | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `asyncScheduler`                | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `asapScheduler`                 | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `queueScheduler`                | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `animationFrameScheduler`       | `@rx-angular/cdk` | `@rx-angular/cdk/zone-less`           |
+| `focusEvents`                   | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `mouseEvents`                   | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `wheelEvents`                   | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `inputEvents`                   | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `formControlsEvents`            | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `keyboardEvents`                | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `vrEvents`                      | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `mSGestureEvents`               | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `printEvents`                   | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `networkEvents`                 | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `audioEvents`                   | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `compositionEvents`             | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `touchEvents`                   | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `globalEvents`                  | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `websocketEvents`               | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `xhrEvents`                     | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `windowEvents`                  | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `allEvents`                     | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `EventTarget`                   | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `RxZoneFlagsHelperFunctions`    | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `RxZoneGlobalConfigurations`    | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `RxZoneTestConfigurations`      | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `RxZoneRuntimeConfigurations`   | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
+| `zoneConfig`                    | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
 
 
 
