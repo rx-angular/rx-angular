@@ -104,6 +104,42 @@ describe('createSmoshObservable', () => {
     });
   });
 
+  it('should return observable that emits if only static values are used', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      const vm$: Observable<ViewModelTest> = smosh({
+        prop1: i,
+        prop2: b,
+        prop3: t,
+      },        cold('s'))
+      const expected = '(x|)';
+      expectObservable(vm$).toBe(expected, { x });
+    });
+  });
+
+  it('should return observable that emits when all static and observable sources emitted at least once', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      const vm$: Observable<ViewModelTest> = smosh({
+        prop1: cold('h-h-i-', { h, i }),
+        prop2: cold('--a-b-', { a, b }),
+        prop3: t,
+      }, cold(      's'))
+      const expected = '----x-';
+      expectObservable(vm$).toBe(expected, { x });
+    });
+  });
+
+  it('should return observable that not emit when all static and observable sources emitted not at least once', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      const vm$: Observable<ViewModelTest> = smosh({
+        prop1: cold('h-h-i-', { h, i }),
+        prop2: cold('--a-b-', { a, b }),
+        prop3: undefined,
+      }, cold(      's'))
+      const expected = '----x-';
+      expectObservable(vm$).toBe(expected, { x });
+    });
+  });
+
   it('should return observable that emits when all sources emitted at least once', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const vm$: Observable<ViewModelTest> = smosh({
@@ -115,6 +151,19 @@ describe('createSmoshObservable', () => {
       expectObservable(vm$).toBe(expected, { x });
     });
   });
+
+  it('should return observable that not emit when all sources emitted not at least once', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      const vm$: Observable<ViewModelTest> = smosh({
+        prop1: cold('h-h-i-', { h, i }),
+        prop2: cold('--a-b-', { a, b }),
+        prop3: cold('------', { t }),
+      }, cold(      's'))
+      const expected = '------';
+      expectObservable(vm$).toBe(expected);
+    });
+  });
+
 
   it('should emit last for sync values when durationSelector is a Promise', () => {
     testScheduler.run(({ cold, expectObservable }) => {
