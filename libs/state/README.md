@@ -122,6 +122,7 @@ nx migrate @rx-angular/state
 
 - [🎥 Extending Angular for the Reactive Web](https://youtu.be/pkN6CeZ8h_U?t=5913)
 
+- [German content | 🎥 Michael explains rx-state to webdave_de (Livestream)](https://youtu.be/cKUFcY8QkYM)
 
 ## Blogs/Documents
 

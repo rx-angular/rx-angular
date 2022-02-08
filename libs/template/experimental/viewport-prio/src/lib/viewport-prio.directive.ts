@@ -1,9 +1,23 @@
-import { Directive, ElementRef, Inject, Input, OnDestroy, OnInit, Optional } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Optional,
+} from '@angular/core';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceObservableWith } from '@rx-angular/cdk/coercing';
 import { RxNotification } from '@rx-angular/cdk/notifications';
 import { LetDirective } from '@rx-angular/template/let';
-import { BehaviorSubject, combineLatest, Observable, of, Subject, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  Observable,
+  of,
+  Subject,
+} from 'rxjs';
 import { filter, map, mergeAll, withLatestFrom } from 'rxjs/operators';
 
 function intersectionObserver(options?: object): {
@@ -14,8 +28,8 @@ function intersectionObserver(options?: object): {
   const subject = new Subject();
   const observer = observerSupported()
     ? new IntersectionObserver((entries) => {
-      entries.forEach((entry) => subject.next(entry));
-    }, options)
+        entries.forEach((entry) => subject.next(entry));
+      }, options)
     : null;
 
   const entries$ = new Observable((subscriber) => {
@@ -30,7 +44,7 @@ function intersectionObserver(options?: object): {
   return {
     entries$,
     observe: observer.observe,
-    unobserve: observer.unobserve
+    unobserve: observer.unobserve,
   };
 }
 
@@ -45,12 +59,14 @@ const observerSupported = () =>
    * @todo: deprecate [viewport-prio] + add camelcase support.
    */
   // eslint-disable-next-line @angular-eslint/directive-selector
-  selector: '[viewport-prio]'
+  selector: '[viewport-prio]',
 })
 export class ViewportPrioDirective implements OnInit, OnDestroy {
   // Note that we're picking only the `intersectionRatio` property
   // since this is the only property that we're intersted in.
-  entriesSubject = new Subject<Pick<IntersectionObserverEntry, 'intersectionRatio'>[]>();
+  entriesSubject = new Subject<
+    Pick<IntersectionObserverEntry, 'intersectionRatio'>[]
+  >();
 
   entries$: Observable<Pick<IntersectionObserverEntry, 'intersectionRatio'>> =
     this.entriesSubject.pipe(mergeAll());
@@ -70,13 +86,13 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
 
   private observer: IntersectionObserver | null = observerSupported()
     ? new IntersectionObserver(
-      (entries) => {
-        this.entriesSubject.next(entries);
-      },
-      {
-        threshold: 0
-      }
-    )
+        (entries) => {
+          this.entriesSubject.next(entries);
+        },
+        {
+          threshold: 0,
+        }
+      )
     : null;
 
   visibilityEvents$ = this.entries$.pipe(
@@ -95,8 +111,7 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
     @Inject(LetDirective)
     @Optional()
     private letDirective: LetDirective<any> | null
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     const letStrategyName$ = this.strategyProvider.primaryStrategy$.pipe(
@@ -111,18 +126,18 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
         lastValue = v;
       });
 
-
     this.visibilityEvents$
       .pipe(
         withLatestFrom(
           combineLatest(letStrategyName$, this._viewportPrio).pipe(
             filter(([newN, oldN]) => newN !== oldN)
-          )),
+          )
+        ),
         map(([visibility, strategyNames]) => {
-        const [inStrategyName, outStrategyName] = strategyNames
-         return visibility === 'visible'
+          const [inStrategyName, outStrategyName] = strategyNames;
+          return visibility === 'visible'
             ? [visibility, inStrategyName]
-            : [visibility, outStrategyName]
+            : [visibility, outStrategyName];
         })
       )
       .subscribe(([visibility, strategyName]) => {
