@@ -35,7 +35,7 @@ export class AppModule {}
 `;
 
 exports[`Template Migration 1.0.0-beta.30 should replace UnpatchEventsModule + UnpatchDirective module specifier 1`] = `
-"import { UnpatchDirective, UnpatchModule } from '@rx-angular/template/unpatch';
+"import { UnpatchModule, UnpatchDirective } from '@rx-angular/template/unpatch';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
