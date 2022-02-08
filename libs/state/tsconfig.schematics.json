@@ -12,7 +12,7 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "rootDir": "schematics",
-    "outDir": "../../dist/libs/cdk/schematics",
+    "outDir": "../../dist/libs/state/schematics",
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "sourceMap": false,

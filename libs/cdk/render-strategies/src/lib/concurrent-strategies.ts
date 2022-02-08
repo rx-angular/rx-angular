@@ -16,17 +16,6 @@ import { coalescingManager } from '@rx-angular/cdk/coalescing';
 
 forceFrameRate(60);
 
-const noPriorityStrategy: RxStrategyCredentials = {
-  name: 'noPriority',
-  work: (cdRef) => cdRef.detectChanges(),
-  behavior: (work: any, scope: any) => {
-    return (o$) =>
-      o$.pipe(
-        scheduleOnQueue(work, { priority: PriorityLevel.NoPriority, scope })
-      );
-  },
-};
-
 const immediateStrategy: RxStrategyCredentials = {
   name: 'immediate',
   work: (cdRef) => cdRef.detectChanges(),
@@ -123,7 +112,6 @@ function scheduleOnQueue<T>(
 export type RxConcurrentStrategies =
   RxCustomStrategyCredentials<RxConcurrentStrategyNames>;
 export const RX_CONCURRENT_STRATEGIES: RxConcurrentStrategies = {
-  noPriority: noPriorityStrategy,
   immediate: immediateStrategy,
   userBlocking: userBlockingStrategy,
   normal: normalStrategy,

@@ -1,6 +1,6 @@
 # Selecting the ViewModel
 
-Here are some useful strategies to properly handle `ViewModels` with `@rx-angular/state`. In this examples we will use standalone [`selectSlice`](https://github.com/rx-angular/rx-angular/blob/master/libs/state/docs/api/operators/select-slice.md) operator.
+Here are some useful strategies to properly handle `ViewModels` with `@rx-angular/state`. In this examples we will use standalone [`selectSlice`](https://github.com/rx-angular/rx-angular/blob/main/libs/state/docs/api/operators/select-slice.md) operator.
 
 Imagine the following setup:
 

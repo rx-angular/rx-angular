@@ -1,4 +1,5 @@
-import { isDefined, isObjectGuard } from '../../utils';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { isDefined, isObjectGuard } from '@rx-angular/state/selections';
 
 /**
  * @deprecated moved to `@rx-angular/cdk/transformations`
@@ -6,7 +7,7 @@ import { isDefined, isObjectGuard } from '../../utils';
  */
 export function dictionaryToArray<T>(dictionary: { [key: string]: T }): T[] {
   if (!isDefined(dictionary)) {
-    return dictionary;
+    return dictionary as any;
   }
 
   if (!isObjectGuard(dictionary)) {

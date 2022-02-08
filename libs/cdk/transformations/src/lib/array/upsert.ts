@@ -1,4 +1,4 @@
-import { isObjectGuard } from '@rx-angular/cdk/utils';
+import { isObjectGuard } from '../_internals/guards';
 import { valuesComparer } from '../_internals/valuesComparer.util';
 import { ComparableData } from '../interfaces/comparable-data-type';
 
