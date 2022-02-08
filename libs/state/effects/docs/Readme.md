@@ -383,6 +383,3 @@ const customErrorHandler: ErrorHandler = {
 // ...
 ```
 
-## Alternative Approaches
-
-@TODO list alternatives and explain why it is the best to avoid operators and subscribe calls at all.
