@@ -1,5 +1,8 @@
 # Setting up a Reactive State
 
+We're assuming you've already covered the basics [here](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/usage.md)
+
+
 In this section, we will be working with an [imperative code base][setup.start.component.ts] to refactor
 its state management to a [reactive setup][setup.solution.component.ts].
 
@@ -35,7 +38,7 @@ interface ComponentState {
 }
 
 // 3- extend the component, or alternatively, register a local provider and inject it
-export class SetupStart implements OnInit, OnDestroy extends RxState<ComponentState> ... {
+export class SetupStart extends RxState<ComponentState> implements OnInit, OnDestroy  ... {
 ```
 
 Since we decided to create a reactive state by extending an existing component, we will need to extend its class definition and call `super()` in the constructor.
@@ -66,6 +69,7 @@ By assigning the `model$` to the `$` property of the `RxState` class, we get the
 })
 export class SetupReactiveComponentStateContainerComponent extends RxState<ComponentState> {
   model$ = this.select();
+  list$: Observable<DemoBasicsItem[]> = this.select('list')
 }
 ```
 
