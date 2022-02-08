@@ -1,4 +1,0 @@
-# Motivation
-
-TBD
-
