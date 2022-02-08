@@ -94,6 +94,6 @@ export function accumulateObservables<T extends ObservableMap & NotEmpty<T>>(
       values.reduce(getEntriesToObjectReducerFn(keys), {} as any)
     ),
     // by using shareReplay we share the last composition work done to create the accumulated object
-    shareReplay(1)
+    shareReplay({refCount: true, bufferSize: 1})
   );
 }
