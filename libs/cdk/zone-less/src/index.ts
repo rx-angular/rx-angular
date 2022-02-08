@@ -1,5 +1,3 @@
-export { getZoneUnPatchedApi } from './get-zone-unpatched-api';
-
 export {
   Promise,
   requestAnimationFrame,
@@ -9,14 +7,13 @@ export {
   setTimeout,
   clearTimeout,
   unpatchAddEventListener,
-} from './browser/browser';
+} from '@rx-angular/cdk/zone-less/browser';
 
-export { interval } from './rxjs/observable/interval';
-export { timer } from './rxjs/observable/timer';
+export { interval } from '../rxjs/src/observable/interval';
+export { timer } from '../rxjs/src/observable/timer';
+export { fromEvent } from '../rxjs/src/observable/fromEvent';
 
-export { fromEvent } from './rxjs/operators/fromEvent';
-
-export { asyncScheduler } from './rxjs/scheduler/async/async';
-export { asapScheduler } from './rxjs/scheduler/asap/asap';
-export { queueScheduler } from './rxjs/scheduler/queue/queue';
-export { animationFrameScheduler } from './rxjs/scheduler/animation-frame/animationFrame';
+export { asyncScheduler } from '../rxjs/src/scheduler/async/async';
+export { asapScheduler } from '../rxjs/src/scheduler/asap/asap';
+export { queueScheduler } from '../rxjs/src/scheduler/queue/queue';
+export { animationFrameScheduler } from '../rxjs/src/scheduler/animation-frame/animationFrame';

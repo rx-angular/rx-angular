@@ -85,5 +85,5 @@ We will use `set()` as we already have initial values assigned to the `initCompo
 
 After we have completed all these steps, we should see the initial state in the template.
 
-[setup.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/master/apps/demos/src/app/features/tutorials/basics/1-setup/setup.start.component.ts
-[setup.solution.component.ts]: https://github.com/rx-angular/rx-angular/blob/master/apps/demos/src/app/features/tutorials/basics/1-setup/setup.solution.component.ts
+[setup.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/main/apps/demos/src/app/features/tutorials/basics/1-setup/setup.start.component.ts
+[setup.solution.component.ts]: https://github.com/rx-angular/rx-angular/blob/main/apps/demos/src/app/features/tutorials/basics/1-setup/setup.solution.component.ts

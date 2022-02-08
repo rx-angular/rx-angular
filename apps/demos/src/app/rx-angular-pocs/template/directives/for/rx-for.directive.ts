@@ -15,15 +15,15 @@ import {
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
+
+import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import {
   createListTemplateManager,
-  RxListManager,
-  RxListViewComputedContext,
-  RxListViewContext,
   RxDefaultListViewContext,
-  RxStrategyProvider,
-} from '@rx-angular/cdk';
-import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
+  RxListManager,
+  RxListViewComputedContext, RxListViewContext
+} from '@rx-angular/cdk/template';
 
 import { ReplaySubject, Subject, Observable, Subscription } from 'rxjs';
 
@@ -279,7 +279,6 @@ import { ReplaySubject, Subject, Observable, Subscription } from 'rxjs';
  * @publicApi
  */
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[rxFor]',
 })
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
@@ -394,7 +393,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param renderParent
    */
-  // tslint:disable-next-line:no-input-rename
   @Input('rxForParent') renderParent = true;
 
   /**
@@ -427,7 +425,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param patchZone
    */
-  // tslint:disable-next-line:no-input-rename
   @Input('rxForPatchZone') patchZone = this.strategyProvider.config.patchZone;
 
   /**

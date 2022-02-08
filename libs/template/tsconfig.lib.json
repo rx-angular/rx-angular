@@ -7,17 +7,20 @@
     "importHelpers": true,
     "lib": ["dom", "es2018"],
     "paths": {
-      "@rx-angular/cdk": ["dist/libs/cdk"],
       "@rx-angular/cdk/zone-less": ["dist/libs/cdk/zone-less"],
       "@rx-angular/cdk/zone-configurations": [
         "dist/libs/cdk/zone-configurations"
       ],
+      "@rx-angular/cdk/render-strategies": ["dist/libs/cdk/render-strategies"],
+      "@rx-angular/cdk/template": ["dist/libs/cdk/template"],
       "@rx-angular/cdk/coercing": ["dist/libs/cdk/coercing"],
-      "@rx-angular/cdk/notifications": ["dist/libs/cdk/notifications"]
+      "@rx-angular/cdk/notifications": ["dist/libs/cdk/notifications"],
+      "@rx-angular/cdk/internals/core": ["dist/libs/cdk/internals/core"]
     }
   },
   "angularCompilerOptions": {
-    "enableIvy": false,
+    "enableIvy": true,
+    "compilationMode": "partial",
     "annotateForClosureCompiler": true,
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,
@@ -25,5 +28,5 @@
     "strictInjectionParameters": true,
     "enableResourceInlining": true
   },
-  "exclude": ["src/test-setup.ts", "**/*.spec.ts"]
+  "exclude": ["src/test-setup.ts", "**/*.spec.ts", "**/*.test.ts"]
 }

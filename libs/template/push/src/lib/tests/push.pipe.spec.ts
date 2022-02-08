@@ -1,9 +1,9 @@
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
+
+import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { PushPipe } from '../push.pipe';
 import { TestBed } from '@angular/core/testing';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 
 function wrapWithSpace(str: string): string {
@@ -19,7 +19,7 @@ class PushPipeTestComponent {
 
 let fixturePushPipeTestComponent: any;
 let pushPipeTestComponent: {
-  value$: Observable<any> | undefined | null;
+  value$: Observable<unknown> | unknown | undefined | null;
 };
 let componentNativeElement: any;
 
@@ -29,12 +29,13 @@ const setupPushPipeComponent = () => {
     providers: [
       ChangeDetectorRef,
       {
-        provide: RX_ANGULAR_CONFIG,
+        provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
         },
       },
     ],
+    teardown: { destroyAfterEach: true },
   });
 
   fixturePushPipeTestComponent = TestBed.createComponent(PushPipeTestComponent);
@@ -63,6 +64,12 @@ describe('PushPipe used as pipe in the template', () => {
     pushPipeTestComponent.value$ = null;
     fixturePushPipeTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe(wrapWithSpace('null'));
+  });
+
+  it('should return 42 as value when initially 42 was passed (as static value)', () => {
+    pushPipeTestComponent.value$ = 42;
+    fixturePushPipeTestComponent.detectChanges();
+    expect(componentNativeElement.textContent).toBe(wrapWithSpace('42'));
   });
 
   it('should return undefined as value when initially of(undefined) was passed (as undefined was emitted)', () => {

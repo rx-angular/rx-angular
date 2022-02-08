@@ -7,7 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
-import { PushModule } from '@rx-angular/template';
+import { LetModule, PushModule } from '@rx-angular/template';
+import { ForModule } from '@rx-angular/template/experimental/for';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/value-providers.module';
@@ -15,7 +16,7 @@ import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/vis
 import { RecursiveModule } from '../../../../shared/template-structures/recursive/recursive.module';
 import { ListActionsComponent } from './list-actions.component';
 import { ROUTES } from './list-actions.routes';
-import { RxForModule, RxIfModule, RxLetModule } from '../../../../rx-angular-pocs';
+import { RxIfModule } from '../../../../rx-angular-pocs';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 
 const DECLARATIONS = [ListActionsComponent];
@@ -38,8 +39,8 @@ const DECLARATIONS = [ListActionsComponent];
     ValueProvidersModule,
     MatIconModule,
     StrategySelectModule,
-    RxLetModule,
-    RxForModule,
+    LetModule,
+    ForModule,
     RxIfModule,
   ],
   exports: [DECLARATIONS],

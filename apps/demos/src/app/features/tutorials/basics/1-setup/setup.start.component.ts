@@ -27,7 +27,6 @@ const initComponentState = {
   selector: 'rxa-setup-start',
   //👇 Render the model property of the component
   template: `
-    model$: <pre>{{model$ | async | json}}</pre>
     <h3>
       Setup
     </h3>
@@ -90,9 +89,8 @@ const initComponentState = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 //👇 3- extend the component
-export class SetupStart extends RxState<ComponentState> implements OnInit, OnDestroy {
+export class SetupStart implements OnInit, OnDestroy {
   //👇 Set up the model property of the component
-  model$ = this.select();
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.listService.list$.pipe(
@@ -116,9 +114,9 @@ export class SetupStart extends RxState<ComponentState> implements OnInit, OnDes
     private listService: ListService
   ) {
     //👇 Always call super() first in the constructor
-    super();
+
     //👇 Call set() to initialize the state
-    this.set(initComponentState);
+
   }
 
   ngOnDestroy(): void {

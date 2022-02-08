@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input, Output, ViewChild } from '@angular/core';
-import { createStateChecker, PrimitiveState } from './fixtures';
+import { PrimitiveState } from '@test-helpers';
+import { createStateChecker } from './fixtures';
 import { Observable, Subject } from 'rxjs';
-// tslint:disable-next-line:nx-enforce-module-boundaries
-import { RxState, select } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state';
+import { select } from '@rx-angular/state/selections';
 
 const initialChildState = { str: 'initialChildState' };
 
@@ -103,7 +104,8 @@ describe('LocalProviderTestComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [RxStateInjectionComponent],
-    }).compileComponents();
+      teardown: { destroyAfterEach: true },
+    });
     fixture = TestBed.createComponent(RxStateInjectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -121,7 +123,8 @@ describe('InheritanceTestComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [RxStateInheritanceComponent],
-    }).compileComponents();
+      teardown: { destroyAfterEach: true },
+    });
     fixture = TestBed.createComponent(RxStateInheritanceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

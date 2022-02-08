@@ -17,11 +17,13 @@ import {
 import {
   createTemplateManager,
   RxTemplateManager,
-  RxStrategyProvider,
   RxBaseTemplateNames,
   RxViewContext,
+} from '@rx-angular/cdk/template';
+import {
+  RxStrategyProvider,
   RxStrategyNames,
-} from '@rx-angular/cdk';
+} from '@rx-angular/cdk/render-strategies';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
@@ -31,6 +33,7 @@ import {
 
 import {
   defer,
+  merge,
   NextObserver,
   Observable,
   ObservableInput,
@@ -181,6 +184,13 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * The Observable to be bound to the context of a template.
    *
    * @example
+   * const hero1 = {name: 'Batman'};
+   * const hero$ = of(hero);
+   *
+   * <ng-container *rxLet="hero1; let hero">
+   *   <app-hero [hero]="hero"></app-hero>
+   * </ng-container>
+   *
    * <ng-container *rxLet="hero$; let hero">
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
@@ -188,7 +198,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * @param potentialObservable
    */
   @Input()
-  set rxLet(potentialObservable: ObservableInput<U> | null | undefined) {
+  set rxLet(potentialObservable: ObservableInput<U> | U | null | undefined) {
     this.observablesHandler.next(potentialObservable);
   }
 
@@ -290,6 +300,8 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     this._renderObserver = callback;
   }
 
+  /* @todo: Rename to `rxRenderParent`? */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxLetParent') renderParent = true;
 
   @Input('rxLetPatchZone') patchZone = this.strategyProvider.config.patchZone;
@@ -354,6 +366,12 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   /** @internal */
   private rendered$ = new Subject<void>();
 
+  /** @internal */
+  readonly templateNotification$ = new Subject<RxNotification<U>>();
+
+  /** @internal */
+  readonly values$ = this.observablesHandler.values$;
+
   @Output() readonly rendered = defer(() => this.rendered$);
 
   /** @internal */
@@ -368,7 +386,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   ngOnInit() {
     this.subscription.add(
       this.templateManager
-        .render(this.observablesHandler.values$)
+        .render(merge(this.values$, this.templateNotification$))
         .subscribe((n) => {
           this.rendered$.next(n);
           this._renderObserver?.next(n);

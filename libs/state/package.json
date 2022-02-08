@@ -51,9 +51,13 @@
     "@angular/core": ">8.0.0"
   },
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "ng-morph": "^2.0.0"
   },
   "ng-add": {
     "save": "dependencies"
+  },
+  "ng-update": {
+    "migrations": "./schematics/migration.json"
   }
 }

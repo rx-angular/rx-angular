@@ -8,7 +8,8 @@
     "lib": ["dom", "es2018"]
   },
   "angularCompilerOptions": {
-    "enableIvy": false,
+    "enableIvy": true,
+    "compilationMode": "partial",
     "annotateForClosureCompiler": true,
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,
@@ -16,5 +17,5 @@
     "strictInjectionParameters": true,
     "enableResourceInlining": true
   },
-  "exclude": ["src/test-setup.ts", "**/*.spec.ts"]
+  "exclude": ["src/test-setup.ts", "**/*.spec.ts", "**/*.test.ts"]
 }

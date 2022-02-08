@@ -8,7 +8,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { getZoneUnPatchedApi } from '@rx-angular/cdk/zone-less';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 import {
   focusEvents,
   mouseEvents,
@@ -73,6 +73,7 @@ export function unpatchEventListener(
   });
 }
 
+/* eslint-disable @angular-eslint/directive-selector */
 /**
  * @Directive UnpatchEventsDirective
  *
@@ -112,8 +113,10 @@ export function unpatchEventListener(
  *
  * @publicApi
  */
-// tslint:disable-next-line:directive-selector
 @Directive({ selector: '[unpatch]' })
+/**
+ * @todo: add prefix [rxUnpatch]
+ */
 export class UnpatchDirective implements OnChanges, AfterViewInit, OnDestroy {
   /**
    * @description

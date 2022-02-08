@@ -73,13 +73,13 @@ const initComponentState = {
         .list .mat-expansion-panel-header {
           position: relative;
         }
-  
+
         .list .mat-expansion-panel-header mat-progress-bar {
           position: absolute;
           top: 0px;
           left: 0;
         }
-  
+
         .list .mat-expansion-panel-content .mat-expansion-panel-body {
           padding-top: 10px;
         }

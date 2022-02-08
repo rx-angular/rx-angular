@@ -1,0 +1,94 @@
+{
+  "projectType": "application",
+  "generators": {},
+  "root": "apps/vanilla-case-studies",
+  "sourceRoot": "apps/vanilla-case-studies/src",
+  "prefix": "rx-angular",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/vanilla-case-studies",
+        "index": "apps/vanilla-case-studies/src/index.html",
+        "main": "apps/vanilla-case-studies/src/main.ts",
+        "polyfills": "apps/vanilla-case-studies/src/polyfills.ts",
+        "tsConfig": "apps/vanilla-case-studies/tsconfig.app.json",
+        "assets": [
+          "apps/vanilla-case-studies/src/favicon.ico",
+          "apps/vanilla-case-studies/src/assets",
+          "apps/vanilla-case-studies/src/case-studies"
+        ],
+        "styles": [
+          "apps/vanilla-case-studies/src/styles.css"
+        ],
+        "scripts": [],
+        "vendorChunk": true,
+        "extractLicenses": false,
+        "buildOptimizer": false,
+        "sourceMap": true,
+        "optimization": false,
+        "namedChunks": true
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/vanilla-case-studies/src/environments/environment.ts",
+              "with": "apps/vanilla-case-studies/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": true,
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "6kb",
+              "maximumError": "10kb"
+            }
+          ]
+        }
+      },
+      "outputs": [
+        "{options.outputPath}"
+      ]
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "browserTarget": "vanilla-case-studies:build"
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "vanilla-case-studies:build:production"
+        }
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "vanilla-case-studies:build"
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "apps/vanilla-case-studies/jest.config.js",
+        "passWithNoTests": true
+      },
+      "outputs": [
+        "coverage/apps/vanilla-case-studies"
+      ]
+    }
+  },
+  "tags": []
+}
