@@ -8,9 +8,8 @@ This file was generated using [@jscutlery/semver](https://github.com/jscutlery/s
 ### Bug Fixes
 
 * drop `@nrwl/tao` deep import 6eeae5e
-* migrate `@rx-angular/zone-less` as well 78c1ec6
+* deprecate `src` content
 * state migrations (#1132) 974a6d0, closes #1132
-* **state:** disable Ivy + partial compilation (#953) 379524f, closes #953 #928
 * **state:** make migrations keep rxstate (#1133) 76ce6c6, closes #1133
 
 
