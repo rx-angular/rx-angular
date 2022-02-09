@@ -78,7 +78,7 @@
     "@angular-eslint/template-parser": "13.0.1",
     "@angular/cli": "13.2.1",
     "@angular/compiler-cli": "13.2.0",
-    "@angular/language-service": "13.2.0",
+    "@angular/language-service": "13.2.2",
     "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",
     "@jscutlery/semver": "^2.18.0",
