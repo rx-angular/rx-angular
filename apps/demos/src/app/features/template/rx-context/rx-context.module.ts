@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { ForModule } from '@rx-angular/template/experimental/for';
+import { LetModule } from '@rx-angular/template/let';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
 import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
@@ -11,18 +13,16 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
-import { RxContextModule, RxForModule, RxLetModule } from '../../../rx-angular-pocs';
+import { RxContextModule } from '../../../rx-angular-pocs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-const DECLARATIONS = [
-  RxContextComponent
-];
+const DECLARATIONS = [RxContextComponent];
 
 @NgModule({
   declarations: DECLARATIONS,
   imports: [
-    RxLetModule,
+    LetModule,
     VisualizerModule,
     ValueProvidersModule,
     StrategySelectModule,
@@ -34,7 +34,7 @@ const DECLARATIONS = [
     RouterModule,
     MatCardModule,
     DirtyChecksModule,
-    RxForModule,
+    ForModule,
     RxContextModule,
     MatIconModule,
     MatProgressSpinnerModule,
