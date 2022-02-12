@@ -124,7 +124,7 @@ interface Commands {
 }
 ```
 
-Next we can use the typing the create the action object:
+Next we can use the typing to create the action object:
 
 ```typescript
  commands = getActions<Commands>();
