@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`cdk migration 1.0.0-beta.0 should replace coalescing 1`] = `
+exports[`cdk migration 1.0.0-beta.1 should replace coalescing 1`] = `
 "import {
   RxCoalescingOptions,
   coalescingObj,
@@ -23,7 +23,7 @@ export class AppModule {}
 "
 `;
 
-exports[`cdk migration 1.0.0-beta.0 should replace coercing 1`] = `
+exports[`cdk migration 1.0.0-beta.1 should replace coercing 1`] = `
 "import {
   coerceObservable,
   coerceObservableWith,
@@ -46,7 +46,7 @@ export class AppModule {}
 "
 `;
 
-exports[`cdk migration 1.0.0-beta.0 should replace internals-scheduler 1`] = `
+exports[`cdk migration 1.0.0-beta.1 should replace internals-scheduler 1`] = `
 "import {
   cancelCallback,
   scheduleCallback,
@@ -68,7 +68,7 @@ export class AppModule {}
 "
 `;
 
-exports[`cdk migration 1.0.0-beta.0 should replace notifications 1`] = `
+exports[`cdk migration 1.0.0-beta.1 should replace notifications 1`] = `
 "import {
   RxNotificationKind,
   RxNotification,
@@ -99,7 +99,7 @@ export class AppModule {}
 "
 `;
 
-exports[`cdk migration 1.0.0-beta.0 should replace render-strategies 1`] = `
+exports[`cdk migration 1.0.0-beta.1 should replace render-strategies 1`] = `
 "import {
   ScheduleOnStrategyOptions,
   RX_CONCURRENT_STRATEGIES,
@@ -141,7 +141,7 @@ export class AppModule {}
 "
 `;
 
-exports[`cdk migration 1.0.0-beta.0 should replace state 1`] = `
+exports[`cdk migration 1.0.0-beta.1 should replace state 1`] = `
 "import {
   ObservableAccumulation,
   ObservableMap,
@@ -162,7 +162,7 @@ export class AppModule {}
 "
 `;
 
-exports[`cdk migration 1.0.0-beta.0 should replace template 1`] = `
+exports[`cdk migration 1.0.0-beta.1 should replace template 1`] = `
 "import {
   templateHandling,
   RxBaseTemplateNames,
@@ -193,7 +193,7 @@ export class AppModule {}
 "
 `;
 
-exports[`cdk migration 1.0.0-beta.0 should replace zone-configurations 1`] = `
+exports[`cdk migration 1.0.0-beta.1 should replace zone-configurations 1`] = `
 "import {
   focusEvents,
   mouseEvents,
@@ -235,15 +235,15 @@ export class AppModule {}
 "
 `;
 
-exports[`cdk migration 1.0.0-beta.0 should replace zone-less 1`] = `
+exports[`cdk migration 1.0.0-beta.1 should replace zone-less 1`] = `
 "import {
-  interval,
-  timer,
-  fromEvent,
   asyncScheduler,
   asapScheduler,
   queueScheduler,
   animationFrameScheduler,
+  interval,
+  timer,
+  fromEvent,
 } from '@rx-angular/cdk/zone-less/rxjs';
 import {
   Promise as unpatchedPromise,
@@ -272,7 +272,7 @@ export class AppModule {}
 "
 `;
 
-exports[`cdk migration 1.0.0-beta.0 should replace zone-less in edge case 1`] = `
+exports[`cdk migration 1.0.0-beta.1 should replace zone-less in edge case 1`] = `
 "import { setTimeout } from '@rx-angular/cdk/zone-less/browser';
 
 import {
@@ -293,5 +293,40 @@ import { filter, map } from 'rxjs';
   providers: [RxState],
 })
 export class AppShellComponent {}
+"
+`;
+
+exports[`cdk migration 1.0.0-beta.1 should replace zone-less sub-entrypoint 1`] = `
+"import {
+  interval,
+  timer,
+  fromEvent,
+  asyncScheduler,
+  asapScheduler,
+  queueScheduler,
+  animationFrameScheduler,
+} from '@rx-angular/cdk/zone-less/rxjs';
+import {
+  Promise,
+  requestAnimationFrame,
+  cancelAnimationFrame,
+  setInterval,
+  clearInterval,
+  setTimeout,
+  clearTimeout,
+  unpatchAddEventListener,
+} from '@rx-angular/cdk/zone-less/browser';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
 "
 `;

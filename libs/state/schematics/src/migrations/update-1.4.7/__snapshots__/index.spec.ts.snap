@@ -14,8 +14,7 @@ export class AuthStateService extends RxState<AuthState> {}
 `;
 
 exports[`state migration update-1.4.7 should replace cdk/state 1`] = `
-"import { RxState } from '@rx-angular/state';
-import {
+"import {
   createSideEffectObservable,
   createAccumulationObservable,
   select,
@@ -26,6 +25,7 @@ import {
   CompareFn,
   PickSlice,
 } from '@rx-angular/state/selections';
+import { RxState } from '@rx-angular/state';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';

@@ -1,3 +1,37 @@
+# Changelog
+
+This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
+
+# [1.5.0](/compare/state@1.4.5...state@1.5.0) (2022-02-08)
+
+
+### Bug Fixes
+
+* drop `@nrwl/tao` deep import 6eeae5e
+* deprecate `src` content
+* state migrations (#1132) 974a6d0, closes #1132
+* **state:** make migrations keep rxstate (#1133) 76ce6c6, closes #1133
+
+
+### Features
+
+* enable Ivy with partial compilation mode (#1186) eddaf20, closes #1186
+
+
+### Performance Improvements
+
+* improve migrations perf 44eccda
+* move getUnpatchedApi into sun-package and avoid zone-less package (#1035) 170ab7a, closes #1035
+* **state:** extract values comparer default compare fn be9401c
+* **state:** insert helper conditions and result concat b86a2bd
+* **state:** isKeyOf guard typeof check optimization 007a13a
+* **state:** update helper iteration and custom find fn 9e4d530
+* **state:** update helper updates object keys check removed 1e2dfc3
+* **state:** upsert helper iteration, conditions and result concat d851fb9
+* zone less sub modules f765336
+
+
+
 ## [1.4.6](https://github.com/rx-angular/rx-angular/compare/state@1.4.5...state@1.4.6) (2021-09-23)
 
 
