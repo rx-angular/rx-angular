@@ -8,7 +8,7 @@ type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> }
 /**
  * This class creates RxActions bound to Angular's DI life-cycles. This prevents memory leaks and optionally makes the instance reusable across the app.
  * The main function here is called `create`, optionally you can also call `destroy` to complete all action channels. 
- * If the instanciator gets destroyed also the actions get destroiyed automatically.
+ * If the instantiator gets destroyed also the actions get destroyed automatically.
  *
  * @example
  * const factory = new RxActionFactory<{search: string}>();
