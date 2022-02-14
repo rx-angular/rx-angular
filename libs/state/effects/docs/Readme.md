@@ -4,17 +4,20 @@
 A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-state-rx-effects).
 
 # Motivation
-![rx-angular--state--effects--concept-immutable-changes--michael-hladky](https://user-images.githubusercontent.com/10064416/153937475-66a856d3-dc21-4708-9312-7ae3dc3593d7.png)
-![rx-angular--state--effects--concept-pure-function--michael-hladky](https://user-images.githubusercontent.com/10064416/153937480-b39debc4-b524-4c7b-8f46-bd7b67b4b334.png)
 ![rx-angular--state--effects--motivation--michael-hladky](https://user-images.githubusercontent.com/10064416/153937481-3527573b-dfbe-46af-94d7-66271847b020.png)
-![rx-angular--state--effects--motivation-when-to-use--michael-hladky](https://user-images.githubusercontent.com/10064416/153937482-89672107-68f3-4ae1-a997-500f1d0943b1.png)
-![rx-angular--state--effects--motivation-process-diagramm--michael-hladky](https://user-images.githubusercontent.com/10064416/153937484-2012c665-69ab-41c2-b8cf-214087579ca2.png)
-![rx-angular--state--effects--motivation-building-blocks--michael-hladky](https://user-images.githubusercontent.com/10064416/153937485-a87481fc-9b33-4caf-8cef-898cef32431d.png)
+
+Most of the side effects are related to rendering and change detection and dont in the template by building blocks like:
+- pipes
+- directives
+- component bindings
+
+Some of the side effects are not related to the template and need to get handled in the component.
+For for async effet's like Promise or Observable it requires to maintain a cancellation logic.
 
 In general, it's best to avoid the direct use of the `subscribe` API of RxJS at all.
 
 It may sound weired, as I'm pretty sure you are used to handle your subscriptions.
-You most probably store the `Subscription` object, add a takeUntil to hook it into the component lifecycle and avoid memory leaks etc.
+You most probably store the `Subscription` object, add a `takeUntil` to hook it into the component lifecycle and avoid memory leaks etc.
 Maybe even hacks where you subscribe to one Observable just to next into another subject. 
 
 In RxAngular we found ways to avoid the `subscribe` API and in addition handle all of the above edge cases and more.
@@ -149,6 +152,8 @@ export class FooComponent {
 
 # Impact
 
+![rx-angular--state--effects--motivation-process-diagramm--michael-hladky](https://user-images.githubusercontent.com/10064416/153937484-2012c665-69ab-41c2-b8cf-214087579ca2.png)
+
 Compared to common approaches `RxEffects` does not rely on additional decorators or operators.
 In fact, it removes the necessity of the `subscribe`.
 
@@ -161,6 +166,11 @@ Let's have some fundamental thoughts on the concept of side effects and their re
 Before we get any further, let's define two terms, _side effect_ and _pure function_.
 
 **Pure function:**
+![rx-angular--state--effects--concept-pure-function--michael-hladky](https://user-images.githubusercontent.com/10064416/153937480-b39debc4-b524-4c7b-8f46-bd7b67b4b334.png)
+
+![rx-angular--state--effects--concept-immutable-changes--michael-hladky](https://user-images.githubusercontent.com/10064416/153937475-66a856d3-dc21-4708-9312-7ae3dc3593d7.png)
+
+
 A function is called pure if:
 
 - Its return value is the same for the same arguments, e.g. `function add(a, b) { return a + b}`
@@ -217,6 +227,8 @@ function sideEffectFn(state) {
 As a good rule of thumb, you can consider every function without a return value to be a side effect.
 
 ## Anatomy
+
+![rx-angular--state--effects--motivation-building-blocks--michael-hladky](https://user-images.githubusercontent.com/10064416/153937485-a87481fc-9b33-4caf-8cef-898cef32431d.png)
 
 Yet, essentially, a side effect always has 2 important parts associated with it:
 
@@ -303,6 +315,8 @@ nx migrate @rx-angular/state
 ```
 
 ## Usage
+
+![rx-angular--state--effects--motivation-when-to-use--michael-hladky](https://user-images.githubusercontent.com/10064416/153937482-89672107-68f3-4ae1-a997-500f1d0943b1.png)
 
 In this example we have a chart in our UI which should display live data of a REST API ;).
 We have a small handle that shows and hides the chart. 

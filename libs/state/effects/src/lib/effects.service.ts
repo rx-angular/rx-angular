@@ -71,9 +71,9 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
   private readonly observables$ = new Subject<Observable<unknown>>();
   // we have to use publish here to make it hot (composition happens without subscriber)
   private readonly effects$ = this.observables$.pipe(mergeAll(), share());
+  private readonly subscription = this.effects$.subscribe();
   onDestroy$: Observable<boolean> = this._hooks$.pipe(toHook('destroy'));
   private readonly destroyers: Record<number, Subject<void>> = {};
-  private readonly subscription = this.effects$.subscribe();
 
   /**
    * Performs a side-effect whenever a source observable emits, and handles its subscription.
@@ -200,6 +200,10 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
   /**
    * Operator that unsubscribes based on emission of an registered effect.
    *
+   * @NOTICE
+   * This operator has to be placed always at the end of the operator chain (before the subscription).
+   * Otherwise we may leak as a subsequent operator could instantiate new ongoing Observables which will not get unsubscribed.
+   *
    * @example
    * const effectId1 = effects.register(
    *   colorMode$.subscribe(mode => localStorage.setItem('colorMode', mode))
@@ -216,23 +220,6 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
         untilDestroyed(this),
         takeUntil(this.effects$.pipe(filter((eId) => eId === effectId)))
       );
-  }
-
-  /**
-   * Operator that unsubscribes based on the `OnDestroy` lifecycle hook of this instance.
-   *
-   * @NOTICE
-   * This operator has to be placed always at the end of the operator chain (before the subscription).
-   * Otherwise we may leak as a subsequent operator could instantiate new ongoing Observables which will not get unsubscribed.
-   *
-   * @example
-   * someValue$.pipe(
-   *    effect.untilDestroy()
-   * )
-   *
-   */
-  untilDestroy() {
-    return <V>(source: Observable<V>) => source.pipe(untilDestroyed(this));
   }
 
   /**
