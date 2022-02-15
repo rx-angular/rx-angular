@@ -1,3 +1,5 @@
+[![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/docs/images/rx-angular_logo.png)](https://www.rx-angular.io/)
+
 # RxAngular ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 
 RxAngular offers a comprehensive toolset for handling fully reactive Angular applications with the main focus on runtime
@@ -13,7 +15,52 @@ Used together, you get a powerful tool for developing high-performance angular a
 
 This repository holds a set of helpers to create **fully reactive** as well as **fully zone-less** applications.
 
-[![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/docs/images/rx-angular_logo.png)](https://www.rx-angular.io/)
+## Benefits
+
+ - ✔ Migration scripts form beat versions on! Just run `ng update @rx-angular/???`
+ - ✔ No boilerplate garantieed
+ - ✔ Performance focused and small bundle size through sub packages
+ - ✔ Well typed and tested
+ - ✔ support for Angular > v11
+ - ❗ expect no migration scripts for changes in `experimental` folders
+
+## Used by
+<table style="width:100%">
+  <tr>
+    <td><img src="https://clickup.com/landing/images/logo-clickup_color.svg"></td>
+    <td><img src="https://media-exp1.licdn.com/dms/image/C4D0BAQEexCZaCyeDYg/company-logo_200_200/0/1626433899897?e=1652918400&v=beta&t=zjTJehE51V39-IaRRaaK_uBzLqcdTr2wsm7YpLLleUQ"></td>
+    <td><img src="https://avatars.githubusercontent.com/u/1733746?s=200&v=4"></td>
+  </tr>
+   <tr>
+    <th>Large scale application</th>
+    <th>Medium size project</th>
+    <th>Small project</th>
+  </tr>
+  <tr>
+    <td>
+      Url: clickup.com <br/>
+      LOC: <br/>
+      Used in Platforms: Web<br/>
+      Total Components: <br/>
+      Total Services: <br/>
+    </td>
+    <td>
+      Url: get.tapeapp.com<br/>
+      LOC: <br/>
+      Used in Platforms: Web, Mobile (ionic)<br/>
+      Total Components: <br/>
+      Total Services: <br/>
+    </td>
+    <td> 
+      Url: https://angular-movies-a12d3.web.app <br/>
+      LOC: <br/>
+      Used in Platforms: Web<br/>
+      Total Components: <br/>
+      Total Services: <br/>
+    </td>
+  </tr>
+</table>
+
 ## Links
 
 - [📚 Official docs](https://www.rx-angular.io/)
@@ -25,7 +72,7 @@ Find details in the linked readme files below for installation and setup instruc
 
 - [📦@rx-angular/cdk](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/README.md) - Component Development Kit
 - [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/README.md) - Imperative&Reactive Component State-Management
-- [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/main/libs/template/README.md) - High-Performance Reactive Rendering
+- [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/main/libs/template/README.md) - High-Performance Non-Blocking Rendering
 
 ## Browsers support
 
