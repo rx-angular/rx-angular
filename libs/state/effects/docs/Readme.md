@@ -179,7 +179,6 @@ A function is referentially transparent if:
 ## Pure function
 ![rx-angular--state--effects--concept-pure-function--michael-hladky](https://user-images.githubusercontent.com/10064416/153937480-b39debc4-b524-4c7b-8f46-bd7b67b4b334.png)
 
-![rx-angular--state--effects--concept-immutable-changes--michael-hladky](https://user-images.githubusercontent.com/10064416/153937475-66a856d3-dc21-4708-9312-7ae3dc3593d7.png)
 
 
 A function is called pure if:
