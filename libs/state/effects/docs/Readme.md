@@ -4,7 +4,7 @@
 A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-state-rx-effects).
 
 # Motivation
-![rx-angular--state--effects--motivation--michael-hladky](https://user-images.githubusercontent.com/10064416/153937481-3527573b-dfbe-46af-94d7-66271847b020.png)
+![rx-angular--state--effects--motivation--michael-hladky](https://user-images.githubusercontent.com/10064416/154173406-47245226-e56a-43b1-aec6-bbf1efc535b9.png)
 
 Most of the side effects are related to rendering and change detection and dont in the template by building blocks like:
 - pipes
