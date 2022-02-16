@@ -188,6 +188,9 @@ A function is called pure if:
 - Its executed internal logic has no side effects
 
 ## Side Effect
+
+![rx-angular--state--effects--concept-side-effect-free--michael-hladky](https://user-images.githubusercontent.com/10064416/154173856-39ba5362-9952-46f6-83bd-765e4511b326.png)
+
 A function has a _side effect_ if:
 
 - There's a mutation of local static variables, e.g. `this.prop = value`
