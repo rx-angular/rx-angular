@@ -6,15 +6,16 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 # Motivation
 ![rx-angular--state--effects--motivation--michael-hladky](https://user-images.githubusercontent.com/10064416/154173406-47245226-e56a-43b1-aec6-bbf1efc535b9.png)
 
-Most of the side effects are related to rendering and change detection and dont in the template by building blocks like:
+Most of the side effects are related to rendering and change detection and done in the template by building blocks like:
 - pipes
 - directives
 - component bindings
 
 Some of the side effects are not related to the template and need to get handled in the component.
-For for async effet's like Promise or Observable it requires to maintain a cancellation logic.
+For for async effect's like Promise or Observable it requires to maintain a cancellation logic.
 
-In general, it's best to avoid the direct use of the `subscribe` API of RxJS at all.
+> **Pro Tip:**  
+> In general, it's best to avoid the direct use of the `subscribe` API of RxJS at all.
 
 It may sound weired, as I'm pretty sure you are used to handle your subscriptions.
 You most probably store the `Subscription` object, add a `takeUntil` to hook it into the component lifecycle and avoid memory leaks etc.
@@ -40,6 +41,8 @@ To accomplish this, we need to make sure to clean up every side effect in the `O
 **With `RxEffects` RxAngular introduces another light weight tool only designed to manage side-effects.**
 
 ---
+
+## Problem
 
 Let's get the problem it solves into code so we can refactor it. 
 
@@ -125,6 +128,8 @@ export class FooComponent implements OnDestroy {
 }
 ```
 
+## Solution 
+
 In RxAngular we think the essential problem here is the call to `subscribe` itself. All `Subscription`s need to get unsubscribed manually which most of the time produces heavy boilerplate or even memory leaks if ignored or did wrong. 
 Like `RxState`, `RxEffects` is a local service provided by a component and thus tied to the components life cycle.
 We can manage `Observables` as reactive triggers for side effects or manage `Subscription`s which internally hold side effects.
@@ -160,12 +165,18 @@ In fact, it removes the necessity of the `subscribe`.
 This results in less boilerplate and a good guidance to resilient and ergonomic component architecture.
 Furthermore, the optional imperative methods help to glue third party libs and a mixed but clean codestyle in Angular.
 
-# Concept of Side Effect
+# Concepts
 
 Let's have some fundamental thoughts on the concept of side effects and their reactive handling.
 Before we get any further, let's define two terms, _side effect_ and _pure function_.
 
-**Pure function:**
+## Referentially Transparent
+
+A function is referentially transparent if: 
+- it is **pure** (output must be the same for the same inputs)
+- it's evaluation must have no **side effects**
+
+## Pure function
 ![rx-angular--state--effects--concept-pure-function--michael-hladky](https://user-images.githubusercontent.com/10064416/153937480-b39debc4-b524-4c7b-8f46-bd7b67b4b334.png)
 
 ![rx-angular--state--effects--concept-immutable-changes--michael-hladky](https://user-images.githubusercontent.com/10064416/153937475-66a856d3-dc21-4708-9312-7ae3dc3593d7.png)
@@ -176,15 +187,13 @@ A function is called pure if:
 - Its return value is the same for the same arguments, e.g. `function add(a, b) { return a + b}`
 - Its executed internal logic has no side effects
 
-**Side Effect:**
+## Side Effect
 A function has a _side effect_ if:
 
 - There's a mutation of local static variables, e.g. `this.prop = value`
 - Non-local variables are used
 
----
-
-## Examples
+### Examples
 
 Let's look at a couple of examples that will make the above definitions easier to understand.
 
@@ -202,18 +211,17 @@ function sideEffectFn() {
 ```typescript
 let state = { isVisible: false };
 let newState = sideEffectFn(state);
-```
 
 function sideEffectFn(oldState) {
 oldState.isVisible = true;
 return oldState;
 }
 
-````
+```
 
 - I/O is changed
 
-  ```typescript
+```typescript
 let state = { isVisible: false };
 sideEffectFn(state);
 
@@ -222,7 +230,7 @@ function sideEffectFn(state) {
   // or
   this.render(state);
 }
-````
+```
 
 As a good rule of thumb, you can consider every function without a return value to be a side effect.
 
