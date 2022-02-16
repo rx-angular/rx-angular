@@ -326,7 +326,7 @@ nx migrate @rx-angular/state
 
 ## Usage
 
-![rx-angular--state--effects--motivation-when-to-use--michael-hladky](https://user-images.githubusercontent.com/10064416/153937482-89672107-68f3-4ae1-a997-500f1d0943b1.png)
+![rx-angular--state--effects--motivation-when-to-use--michael-hladky](https://user-images.githubusercontent.com/10064416/154174403-5ab34eb8-68e4-40f9-95de-12a62784ac40.png)
 
 In this example we have a chart in our UI which should display live data of a REST API ;).
 We have a small handle that shows and hides the chart. 
