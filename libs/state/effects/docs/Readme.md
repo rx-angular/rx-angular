@@ -171,7 +171,7 @@ Let's have some fundamental thoughts on the concept of side effects and their re
 Before we get any further, let's define two terms, _side effect_ and _pure function_.
 
 ## Referentially Transparent
-
+![rx-angular--state--effects--concept-referentially-transparent--michael-hladky](https://user-images.githubusercontent.com/10064416/154173775-7900608a-3fd9-4c56-b583-3150709d622e.png)
 A function is referentially transparent if: 
 - it is **pure** (output must be the same for the same inputs)
 - it's evaluation must have no **side effects**
