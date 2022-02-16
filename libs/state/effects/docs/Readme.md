@@ -238,7 +238,7 @@ As a good rule of thumb, you can consider every function without a return value 
 
 ## Anatomy
 
-![rx-angular--state--effects--motivation-building-blocks--michael-hladky](https://user-images.githubusercontent.com/10064416/153937485-a87481fc-9b33-4caf-8cef-898cef32431d.png)
+![rx-angular--state--effects--motivation-building-blocks--michael-hladky](https://user-images.githubusercontent.com/10064416/154174526-aa1409cd-e16a-4e3d-b913-f77920ffc05e.png)
 
 Yet, essentially, a side effect always has 2 important parts associated with it:
 
