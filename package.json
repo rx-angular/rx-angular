@@ -92,7 +92,7 @@
     "@nrwl/linter": "12.10.1",
     "@nrwl/node": "12.10.1",
     "@nrwl/nx-cloud": "13.1.2",
-    "@nrwl/tao": "12.10.1",
+    "@nrwl/tao": "13.8.2",
     "@nrwl/workspace": "12.10.1",
     "@size-limit/preset-big-lib": "^7.0.0",
     "@types/benchmark": "^2.1.0",
