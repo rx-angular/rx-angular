@@ -4,7 +4,7 @@
   "sourceRoot": "libs/template/src",
   "prefix": "rx",
   "targets": {
-    "build-base": {
+    "build-lib": {
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/template/tsconfig.lib.json",
@@ -22,7 +22,7 @@
       "executor": "@nrwl/workspace:run-commands",
       "dependsOn": [
         {
-          "target": "build-base",
+          "target": "build-lib",
           "projects": "self"
         }
       ],
