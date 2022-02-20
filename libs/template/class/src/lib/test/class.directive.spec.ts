@@ -15,12 +15,10 @@ import { ClassDirective } from '../class.directive';
     <div
       class='container-one'
       [rxClass]='containerOneClasses$'
-      [rxClassStrategy]="'native'"
     ></div>
     <div
       class='container-two'
       [rxClass]='containerTwoClasses$'
-      [rxClassStrategy]="'native'"
     ></div>
     <div
       class='container-three'
@@ -28,22 +26,18 @@ import { ClassDirective } from '../class.directive';
         'class-one': setClassOne$,
         'class-two': setClassTwo$
       }"
-      [rxClassStrategy]="'native'"
     ></div>
     <div
       class='container-four'
       [rxClass]='containerFourClasses$'
-      [rxClassStrategy]="'native'"
     ></div>
     <div
       class='container-five'
       [rxClass]='containerFiveClasses$'
-      [rxClassStrategy]="'native'"
     ></div>
     <div
       class='container-six'
       [rxClass]='containerSixClass$'
-      [rxClassStrategy]="'native'"
     ></div>
   `
 })
