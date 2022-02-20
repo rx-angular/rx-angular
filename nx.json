@@ -16,9 +16,7 @@
       "options": {
         "cacheableOperations": [
           "build-schematics",
-          "build-base",
           "build-lib",
-          "build-state",
           "build",
           "lint",
           "test",
