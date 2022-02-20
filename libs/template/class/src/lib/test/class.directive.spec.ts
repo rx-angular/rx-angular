@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { BehaviorSubject, of } from 'rxjs';
 import { ClassDirective } from '../class.directive';
 
@@ -65,7 +66,13 @@ describe('rxClass', () => {
   beforeEach(() => {
     fixture = TestBed.configureTestingModule({
       declarations: [TestComponent, ClassDirective],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      providers: [
+        {
+          provide: RxStrategyProvider,
+          useValue: new RxStrategyProvider({ primaryStrategy: 'native' }),
+        }
+      ]
     }).createComponent(TestComponent);
     fixture.detectChanges();
   });
@@ -73,9 +80,9 @@ describe('rxClass', () => {
   it('should set rxClasses in the container-one', () => {
     const rxClasses = ['class-one', 'class-two'];
     const container = fixture.debugElement.query(By.css('.container-one'));
-    const classes = Object.entries(container.classes)
-      .filter(([, value]) => value)
-      .map(([key]) => key);
+    const classes = Object.entries(container.classes).reduce((acc, [key, value]) => (
+      value ? [...acc, key] : [...acc]
+    ), []);
     rxClasses.forEach((klass) => {
       expect(classes).toContain(klass);
     });
@@ -84,9 +91,9 @@ describe('rxClass', () => {
   it('should set rxClasses in the container-two', () => {
     const rxClasses = ['class-one', 'class-two'];
     const container = fixture.debugElement.query(By.css('.container-two'));
-    const classes = Object.entries(container.classes)
-      .filter(([, value]) => value)
-      .map(([key]) => key);
+    const classes = Object.entries(container.classes).reduce((acc, [key, value]) => (
+      value ? [...acc, key] : [acc]
+    ), []);
     rxClasses.forEach((klass) => {
       expect(classes).toContain(klass);
     });
@@ -94,9 +101,9 @@ describe('rxClass', () => {
 
   it('should set class-one in the container-three', () => {
     const container = fixture.debugElement.query(By.css('.container-three'));
-    const classes = Object.entries(container.classes)
-      .filter(([, value]) => value)
-      .map(([key]) => key);
+    const classes = Object.entries(container.classes).reduce((acc, [key, value]) => (
+      value ? [...acc, key] : [...acc]
+    ), []);
     expect(classes).toContain('class-one');
   });
 
@@ -107,9 +114,9 @@ describe('rxClass', () => {
     ]);
     fixture.detectChanges();
     const container = fixture.debugElement.query(By.css('.container-four'));
-    const classes = Object.entries(container.classes)
-      .filter(([, value]) => value)
-      .map(([key]) => key);
+    const classes = Object.entries(container.classes).reduce((acc, [key, value]) => (
+      value ? [...acc, key] : [...acc]
+    ), []);
     expect(classes).not.toContain('class-two');
     expect(classes).toContain('class-one');
     expect(classes).toContain('class-three');
@@ -121,9 +128,9 @@ describe('rxClass', () => {
     );
     fixture.detectChanges();
     const container = fixture.debugElement.query(By.css('.container-five'));
-    const classes = Object.entries(container.classes)
-      .filter(([, value]) => value)
-      .map(([key]) => key);
+    const classes = Object.entries(container.classes).reduce((acc, [key, value]) => (
+      value ? [...acc, key] : [...acc]
+    ), []);
     expect(classes).not.toContain('class-two');
     expect(classes).toContain('class-one');
     expect(classes).toContain('class-three');
@@ -135,25 +142,25 @@ describe('rxClass', () => {
     );
     fixture.detectChanges();
     const container = fixture.debugElement.query(By.css('.container-five'));
-    const classes = Object.entries(container.classes)
-      .filter(([, value]) => value)
-      .map(([key]) => key);
+    const classes = Object.entries(container.classes).reduce((acc, [key, value]) => (
+      value ? [...acc, key] : [...acc]
+    ), []);
     expect(classes).not.toContain('class-two');
     expect(classes).not.toContain('class-one');
   });
 
   it('should set class-one and replace it with class-two in the container-six', () => {
     const container = fixture.debugElement.query(By.css('.container-six'));
-    const classes = Object.entries(container.classes)
-      .filter(([, value]) => value)
-      .map(([key]) => key);
+    const classes = Object.entries(container.classes).reduce((acc, [key, value]) => (
+      value ? [...acc, key] : [...acc]
+    ), []);
     expect(classes).toContain('class-one');
     fixture.componentInstance.containerSixClass$.next('class-two');
     fixture.detectChanges();
     const container2 = fixture.debugElement.query(By.css('.container-six'));
-    const classes2 = Object.entries(container2.classes)
-      .filter(([, value]) => value)
-      .map(([key]) => key);
+    const classes2 = Object.entries(container2.classes).reduce((acc, [key, value]) => (
+      value ? [...acc, key] : [...acc]
+    ), []);
     expect(classes2).not.toContain('class-one');
     expect(classes2).toContain('class-two');
   });
