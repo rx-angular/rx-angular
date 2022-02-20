@@ -2,10 +2,16 @@
 
 The `rxClass` directive serves a convenient way of using observables for style (class) changes.
 
-Under the hood, it leverages a `RenderStrategy` which in turn takes care of optimizing the change detection
-of your component by passing wanted strategy to `rxClassStrategy`. The `ClassDirective` will apply style (class) changes to the template and manage change detection after it got an initial value.
-So if the incoming `Observable` emits its value lazily (e.g. data coming from `Http`), your style/class will be
-applied lazily as well. This can very positively impact the render performance of your application.
+Under the hood, it leverages a `RenderStrategy` which in turn defines the timing when incoming changes get applied to the directives `ElementRef#nativeElement`. The key difference to the native `ngClass` directive and the main reason to use `rxClass` over `ngClass` is its runtime performance. Due to its push-based nature, the `ClassDirective` is able to apply classes defined as input to its `nativeElement` without the need of running `ChangeDetection` or waiting for `NgZone` to kick in.
+For this, it needs an `Observable` as input source.
+```typescript
+class$ = state$.pipe(
+  map(state => state.isActive ? 'active-class' : 'disabled-class' )
+)
+```
+```html
+<div [rxClass]="class$"></div>
+```
 
 ### Problems with `async` and `ngClass` or `class`
 
@@ -16,7 +22,8 @@ In Angular, a way of binding an observable to the `ngClass` or `class` directive
 <div [class.visible]="isVisible$ | async"></div>
 ```
 
-When using `ngClass` or `class` directive with an Observable value and the `async` pipe in the template of an Angular application, the `async` pipe relies on the Zone to be present - it doesn't really trigger change detection by itself. It marks the component and its children as dirty waiting for the Zone to trigger change detection. So, in case you want to create a zone-less application, the `async` pipe won't work as desired.
+When using the native `ngClass` or `class` directive, the template of your component needs to get re-evaluated in order to apply the changes. In other words `ChangeDetection` has to run for your component in order to set a class to an `HTMLElement`.
+With an Observable value you typically use something like the `async` pipe in order to reflect its values in your components template. ..TBD. ... more to continue, here is a link where the async behavior is already described. we can cross-link here: https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/performance-issues.md#binding-reactive-sources
 
 ### Features of `rxClass`
 
@@ -38,6 +45,7 @@ template and allows to choose a preferred rendering strategy using `rxClassStrat
 
 <div [rxClass]="singleClass$" [rxClassStrategy]="'native'"></div>
 <div [rxClass]="setOfClasses$" [rxClassStrategy]="'native'"></div>
+<div [rxClass]="arrayOfClasses$" [rxClassStrategy]="'native'"></div>
 <div [rxClass]="recordOfClasses$" [rxClassStrategy]="'native'"></div>
 ```
 
@@ -56,7 +64,8 @@ export class AppComponent {
   readonly isVisible$ = new BehaviorSubject<boolean>(true);
 
   readonly singleClass$ = new BehaviorSubject<string>('class-one');
-  readonly setOfClasses$ = new BehaviorSubject<string[]>(['class-one', 'class-two']);
+  readonly setOfClasses$ = new BehaviorSubject<Set<string>>(new Set(['class-one', 'class-two']));
+  readonly arrayOfClasses$ = new BehaviorSubject<string[]>(['class-one', 'class-two']);
   readonly recordOfClasses$ = new BehaviorSubject<Record<string, boolean>>({
     'class-one': true,
     'class-two': false
