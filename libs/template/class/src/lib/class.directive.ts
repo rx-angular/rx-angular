@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import { RxStrategyNames, RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { accumulateObservables } from '@rx-angular/cdk/state';
+import { accumulateObservables } from '@rx-angular/cdk/internals/core';
 import {
   BehaviorSubject, defer,
   isObservable,
@@ -67,7 +67,7 @@ export class ClassDirective implements OnInit, OnDestroy {
   set rxClass$(value$: RxClassInput) {
     this.newInput = true;
     this.rxClass.next(
-      (isObservable(value$) ? accumulateObservables(value$) : value$).pipe(
+      (isObservable(value$) ? value$ : accumulateObservables(value$)).pipe(
         map((value) => (typeof value === 'string' ? [value] : value))
       )
     );
