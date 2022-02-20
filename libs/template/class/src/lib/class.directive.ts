@@ -67,7 +67,7 @@ export class ClassDirective implements OnInit, OnDestroy {
   set rxClass$(value$: RxClassInput) {
     this.newInput = true;
     this.rxClass.next(
-      (isObservable(value$) ? value$ : accumulateObservables(value$)).pipe(
+      (isObservable(value$) ? accumulateObservables(value$) : value$).pipe(
         map((value) => (typeof value === 'string' ? [value] : value))
       )
     );
