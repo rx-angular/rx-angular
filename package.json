@@ -108,7 +108,7 @@
     "cypress": "^9.4.1",
     "debug": "^4.2.0",
     "eslint": "7.32.0",
-    "eslint-config-prettier": "8.3.0",
+    "eslint-config-prettier": "8.4.0",
     "husky": "^7.0.4",
     "jest": "27.3.1",
     "jest-preset-angular": "11.0.0-rc.3",
