@@ -17,12 +17,11 @@ This repository holds a set of helpers to create **fully reactive** as well as *
 
 ## Benefits
 
- - ✔ Migration scripts form beat versions on! Just run `ng update @rx-angular/???`
- - ✔ No boilerplate garantieed
- - ✔ Performance focused and small bundle size through sub packages
+ - 🔥 It's fast & performance focused: exceptional runtime speed & small bundle size
+ - ✔ Easy upgrade paths: migration scripts included since beta! `ng update @rx-angular/{cdk | template | state}`
+ - ✔ Lean and simple: No boilerplate guaranteed
  - ✔ Well typed and tested
- - ✔ support for Angular > v11
- - ❗ expect no migration scripts for changes in `experimental` folders
+ - ✔ Backwards compatible: support for Angular > v11
 
 ## Used by
 <table style="width:100%">
