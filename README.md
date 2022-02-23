@@ -23,6 +23,8 @@ This repository holds a set of helpers to create **fully reactive** as well as *
  - ✔ Well typed and tested
  - ✔ Backwards compatible: support for Angular > v11
 
+> **❗ Warning**
+> Expect no migration scripts for any change in `experimental` folders
 ## Used by
 <table style="width:100%">
   <tr>
