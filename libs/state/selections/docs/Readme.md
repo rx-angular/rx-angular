@@ -13,7 +13,7 @@ As an example we could think of the following shape:
 ```typescript
 interface GlobalModel {
   title: string;
-  list: { id: number, date: Date }
+  list: Array<{ id: number, date: Date }>
 }
 ```
 
