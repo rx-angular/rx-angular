@@ -66,7 +66,7 @@ As this process contains a lot of gotchas and possible pitfalls in terms of memo
 
 ## Selection owner - Template vs Class
 
-As Observables are cold their resulting srteam will only get active too by a subscription.
+As Observables are cold their resulting stream will only get activated by a subscription.
 This leads to a situation called: "the late or the early subscriber problem". (LINK)
 
 ![Selections (5)](https://user-images.githubusercontent.com/10064416/152422955-cb89d198-1a69-450b-be84-29dd6c8c4fdb.png)
