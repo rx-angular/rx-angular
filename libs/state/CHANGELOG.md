@@ -5,6 +5,9 @@ This file was generated using [@jscutlery/semver](https://github.com/jscutlery/s
 ## [1.5.1](/compare/state@1.5.0...state@1.5.1) (2022-02-27)
 
 
+### Bug Fixes
+
+* **cdk:** compat for jest and Angular 12
 
 # [1.5.0](/compare/state@1.4.5...state@1.5.0) (2022-02-08)
 
