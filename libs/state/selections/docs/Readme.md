@@ -24,7 +24,7 @@ This data is consumed in different screens:
 interface SelectionScreen1 {
   title: string;
   sortDirection: 'asc' | 'desc' | 'none';
-  list: { id: number }
+  list: Array<{ id: number }>
 }
 ```
 
