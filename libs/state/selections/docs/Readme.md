@@ -46,8 +46,6 @@ One time they are displayed in a sorted order, the other time only filtered subs
 
 ![Selections (2)](https://user-images.githubusercontent.com/10064416/152422803-bfd07ab2-0a6f-4521-836e-b71677e11923.png)
 
-
-
 As this process contains a lot of gotchas and possible pitfalls in terms of memory usage and performance this small helper library was created.
 
 # Benefits
@@ -77,8 +75,52 @@ In most cases it's best to go with solving problems on the early subscriber side
 ![Selections (4)](https://user-images.githubusercontent.com/10064416/152422883-0b5f6006-7929-4520-b0b2-79eb61e4eb08.png)
 
 
+## Advanced derivation architecture
 
-## Advanced derivations architecture
+**The problem**
+
+We have the following state sources to manage:
+- the list of products received form global state - `Product[]`
+- the title of the list including it's number of children computen in the component class - `string`
+- the sort direction triggered over a UI element click - `boolean`
+
+A setup of the compoents class based on `RxState` could look like this:
+
+```typescript
+@Component({
+  selector: 'app-problem',
+  template: `
+    <ng-container>
+      <h1>{{}}</h1>
+    </ng-container>
+    `,
+  providers: [RxState],
+})
+export class ProblemComponent {
+
+  constructor(private globalState: GlobalState, private state: RxState<Model>) {
+    this.state.set(title: 'My list')
+    this.state.connect('products', this.globalState.products$);
+    
+  }
+  
+  toggleSort() {
+    this.state.set('sort', ({sort}) => !sort))
+  }
+}
+
+```
+
+In a components template we want to render the the UI for the above explained view model `SelectionScreen1`.
+
+```typescript
+interface SelectionScreen1 {
+  title: string;
+  sortDirection: 'asc' | 'desc' | 'none';
+  list: Array<{ id: number }>
+}
+```
+
 
 ![Selections (6)](https://user-images.githubusercontent.com/10064416/152422999-db8260f0-69e1-4d99-b6ac-b2b1d043b4b7.png)
 
