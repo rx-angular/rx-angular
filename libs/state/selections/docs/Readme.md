@@ -5,7 +5,7 @@
 When managing state you want to maintain a core unit of data. 
 This data is then later on distributed to multiple places in your component template (local) or whole app (global). 
 
-We can forward this state to thier consumers directly or compute specific derivations (selections) for the core unit.
+We can forward this state to their consumers directly or compute specific derivations (selections) for the core unit.
 
 As an example we could think of the following shape: 
 
