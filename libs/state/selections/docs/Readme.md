@@ -30,7 +30,7 @@ interface SeceltionScreen1 {
 
 **A list of items filtered by date**
 ```typescript
-interface SeceltionScreen2 {
+interface SelectionScreen2 {
   title: string;
   startingDate: Date;
   list: { id: number }
