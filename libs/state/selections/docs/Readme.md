@@ -21,7 +21,7 @@ This data is consumed in different screens:
 
 **A list of all items sorted by id**
 ```typescript
-interface SeceltionScreen1 {
+interface SelectionScreen1 {
   title: string;
   sortDirection: 'asc' | 'desc' | 'none';
   list: { id: number }
