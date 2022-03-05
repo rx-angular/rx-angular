@@ -63,19 +63,6 @@ class TestComponent {
   template: '',
   providers: [RxEffects]
 })
-class TestUntilDestroyComponent {
-  constructor(store: Store, service: Service, private effects: RxEffects) {
-    store.state$.pipe(
-      effects.untilDestroy()
-    ).subscribe(service.method1);
-  }
-}
-
-// tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
-@Component({
-  template: '',
-  providers: [RxEffects]
-})
 class TestUntilEffectComponent {
   constructor(store: Store, service: Service, private effects: RxEffects) {
     const effectId1 = effects.register(store.select((v) => v === 'effectTrigger'), () => void 0);
@@ -337,29 +324,6 @@ describe('RxEffects', () => {
 
     expect(service.method1).not.toHaveBeenCalled();
     expect(service.method2).not.toHaveBeenCalled();
-  });
-
-  test('should cancel side-effect if components gets destroyed when using untilDestroy', async () => {
-    const service = {
-      method1: jest.fn(),
-    };
-    await TestBed.configureTestingModule({
-      declarations: [TestUntilDestroyComponent],
-      providers: [Store, { provide: Service, useValue: service }]
-    }).compileComponents();
-    const fixture = TestBed.createComponent(TestUntilDestroyComponent);
-    const component = fixture.componentInstance;
-    const store = TestBed.inject(Store);
-
-    expect(service.method1).toHaveBeenCalledWith('');
-
-    service.method1.mockClear();
-
-    (component as any).effects.ngOnDestroy();
-
-    store.state$.next('bar');
-
-    expect(service.method1).not.toHaveBeenCalled();
   });
 
   test('should cancel side-effect if components gets destroyed when using untilEffect', async () => {
