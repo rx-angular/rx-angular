@@ -38,7 +38,7 @@ import { RxEffects } from '@rx-angular/state/effects';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NgIfHackComponent extends RxEffects {
+export class NgIfHackComponent {
   isVisible= true
 
   displayStates = {

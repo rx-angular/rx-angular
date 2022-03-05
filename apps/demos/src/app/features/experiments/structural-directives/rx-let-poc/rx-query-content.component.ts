@@ -31,7 +31,7 @@ export class RxQueryContentComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.effects.hold(this.value, () => {
+    this.effects.register(this.value, () => {
       setTimeout(() => console.log(this.contentChild), 250);
     });
   }

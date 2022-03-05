@@ -58,10 +58,10 @@ export class DirtyChecksComponent extends Hooks {
     private rxEf: RxEffects
   ) {
     super();
-    this.rxEf.hold(this.configService.$.pipe(select('rippleOn')), (r) => {
+    this.rxEf.register(this.configService.$.pipe(select('rippleOn')), (r) => {
       this.rippleOn = r;
     });
-    this.rxEf.hold(this.afterViewInit$, () => {
+    this.rxEf.register(this.afterViewInit$, () => {
       this.displayElem = this.elementRef.nativeElement.children[0].children[0];
       this.numDirtyChecks();
     });

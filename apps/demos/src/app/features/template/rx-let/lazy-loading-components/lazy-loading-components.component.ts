@@ -33,7 +33,7 @@ import { RxEffects } from '@rx-angular/state/effects';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LazyLoadingComponentsComponent extends RxEffects {
+export class LazyLoadingComponentsComponent {
 
   displayStates = {
     none: 0,

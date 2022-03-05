@@ -67,7 +67,7 @@ export class PixelPriorityComponent {
   pixelArray$ = this.imgInfoChange$.pipe(map(d => d.pixelArray));
 
   constructor(public rxEf: RxEffects) {
-    this.rxEf.hold(this.imgChange$, (img: CanvasImageSource) => this.imgConverter.renderImage(img));
+    this.rxEf.register(this.imgChange$, (img: CanvasImageSource) => this.imgConverter.renderImage(img));
   }
 
   visible(choice) {
