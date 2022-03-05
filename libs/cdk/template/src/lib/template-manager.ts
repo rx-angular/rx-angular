@@ -11,11 +11,17 @@ import {
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import {
   catchError,
+  filter,
   ignoreElements,
+  map,
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { RxRenderWork, onStrategy, strategyHandling } from '@rx-angular/cdk/render-strategies';
+import {
+  RxRenderWork,
+  onStrategy,
+  strategyHandling,
+} from '@rx-angular/cdk/render-strategies';
 import {
   rxBaseTemplateNames,
   RxRenderAware,
@@ -154,25 +160,28 @@ export function createTemplateManager<
     render(values$: Observable<RxNotification<T>>): Observable<any> {
       return values$.pipe(
         // mergeWith(triggerHandling.trigger$ || EMPTY),
-        withLatestFrom(strategyHandling$.strategy$),
-        // Cancel old renders
-        switchMap(([notification, strategy]) => {
+        map((notification) => {
           const kind: RxNotificationKind = notification.kind;
           const value: T = notification.value as T;
           const templateName = notificationToTemplateName[kind](
             value,
             templates
           );
-
           const template = templates.get(templateName);
+          return { template, templateName, notification };
+        }),
+        filter(({ template }) => !!template),
+        withLatestFrom(strategyHandling$.strategy$),
+        // Cancel old renders
+        switchMap(([{ template, templateName, notification }, strategy]) => {
           const isNewTemplate = activeTemplate !== templateName;
           const notifyParent = isNewTemplate && parent;
           return merge(
             onStrategy(
-              value,
+              notification.value,
               strategy,
               (v: T, work: RxRenderWork, options: RxCoalescingOptions) => {
-                const context = <C>getContext[kind](notification);
+                const context = <C>getContext[notification.kind](notification);
                 if (isNewTemplate) {
                   // template has changed (undefined => next; suspense => next; ...)
                   // handle remove & insert
