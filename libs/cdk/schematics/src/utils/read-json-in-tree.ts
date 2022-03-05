@@ -4,6 +4,7 @@ export function readJsonInTree<T = any>(host: Tree, path: string): T {
   if (!host.exists(path)) {
     throw new Error(`Cannot find ${path}`);
   }
+
   const buffer = host.read(path);
   if (buffer != null) {
     const contents = buffer.toString('utf-8');

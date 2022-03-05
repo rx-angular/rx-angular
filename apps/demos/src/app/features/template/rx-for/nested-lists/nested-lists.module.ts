@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ForModule } from '@rx-angular/template/experimental/for';
+import { LetModule } from '@rx-angular/template/let';
+import { PushModule } from '@rx-angular/template/push';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,14 +16,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
-import { PushModule, RxForModule, RxLetModule } from '../../../../rx-angular-pocs';
 import { RxForNormal } from './rx-for-normal.directive';
 
 const DECLARATIONS = [
   RxForNestedListsComponent,
   RxMinimalForOf,
   RxForNormal,
-  RxForValueComponent
+  RxForValueComponent,
 ];
 
 @NgModule({
@@ -36,12 +38,11 @@ const DECLARATIONS = [
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    RxLetModule,
-    RxForModule,
+    LetModule,
+    ForModule,
     StrategySelectModule,
-    PushModule
+    PushModule,
   ],
-  exports: DECLARATIONS
+  exports: DECLARATIONS,
 })
-export class NestedListsModule {
-}
+export class NestedListsModule {}

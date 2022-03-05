@@ -4,7 +4,7 @@
   "sourceRoot": "libs/state/src",
   "prefix": "rx",
   "targets": {
-    "build-state": {
+    "build-lib": {
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/state/tsconfig.lib.json",
@@ -22,7 +22,7 @@
       "executor": "@nrwl/workspace:run-commands",
       "dependsOn": [
         {
-          "target": "build-state",
+          "target": "build-lib",
           "projects": "self"
         }
       ],
@@ -45,7 +45,8 @@
           }
         ],
         "parallel": false
-      }
+      },
+      "outputs": ["dist/libs/state/schematics"]
     },
     "test": {
       "executor": "@nrwl/jest:jest",
@@ -121,8 +122,19 @@
     "version": {
       "executor": "@jscutlery/semver:version",
       "options": {
+        "push": true,
+        "noVerify": true,
         "baseBranch": "main",
-        "versionTagPrefix": "${target}@"
+        "versionTagPrefix": "${target}@",
+        "postTargets": ["state:github"],
+        "commitMessageFormat": "release(${projectName}): ${version}"
+      }
+    },
+    "github": {
+      "executor": "@jscutlery/semver:github",
+      "options": {
+        "tag": "${tag}",
+        "notes": "${notes}"
       }
     },
     "lint": {

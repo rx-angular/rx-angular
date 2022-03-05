@@ -12,8 +12,14 @@ RxState is a lightweight, flexible, strongly typed and tested tool dedicated to 
 
 ## Sub Modules
 
-- [Selections](https://github.com/rx-angular/rx-angular/blob/main/libs/state/selections/README.md)
-- [Actions](https://github.com/rx-angular/rx-angular/blob/main/libs/state/actions/README.md)
+- [🧩 Selections](https://github.com/rx-angular/rx-angular/blob/main/libs/state/selections/README.md)
+- [☁ Effects](https://github.com/rx-angular/rx-angular/blob/main/libs/state/effects/README.md)
+- [? Actions](https://github.com/rx-angular/rx-angular/blob/main/libs/state/actions/README.md)
+
+## Intro Video
+
+<a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)</a>
+
 
 ## Description
 
@@ -77,13 +83,17 @@ ng update @rx-angular/state
 nx migrate @rx-angular/state
 ```
 
-## API
-
-[API Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/api/overview.md)
-
 ## Usage
 
 [Usage Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/usage.md)
+
+## Testing
+
+[Testing](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/testing.md)
+
+## API
+
+[API Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/api/overview.md)
 
 ## Tutorials
 
@@ -106,14 +116,27 @@ nx migrate @rx-angular/state
 - [Difference between Global and Local state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/global-state-vs-local-state.md)
 - [Using RxState as Global State](https://github.com/rx-angular/rx-angular/blob/main/libs/state/docs/snippets/manage-global-state.md)
 
-## Resources
+## Vidoes
 
-- [🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session](https://youtu.be/CcQYj4V2IKw)
-- [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch?v=I8uaHMs8rw0)
+<a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)_🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session_</a>
+
+<a target="_blank" href="https://www.youtube.com/watch?v=I8uaHMs8rw0">![tackling-component-state-reactively](https://user-images.githubusercontent.com/10064416/147395866-031704dc-837d-4d1f-82d6-e758e4cb9556.PNG)_🎥 Tackling Component State Reactively (Live Demo at 24:47)_</a>
+
 - [🎥 Extending Angular for the Reactive Web](https://youtu.be/pkN6CeZ8h_U?t=5913)
+
+- [German content | 🎥 Michael explains rx-state to webdave_de (Livestream)](https://youtu.be/cKUFcY8QkYM)
+
+## Blogs/Documents
+
 - [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
+
 - [📜 Design Documents](https://hackmd.io/wVkWRc3XQWmtM6YcktRTrA)
-- [📑 Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) by [Mike Hartington](https://twitter.com/mhartington)
+
+## OSS Example Applications
+
+- [📑 Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) - [Mike Hartington](https://twitter.com/mhartington)
+- [📑 High performant zone-Less Angular Progressive Web Application](https://angular-movies-a12d3.web.app/list/category/popular) - [TasteJS](https://github.com/tastejs/angular-movies)
+- [📑 Zone-Less Angular Application - Tour of heros](https://github.com/BioPhoton/tour-of-heroes) - [Michael_Hladky](https://twitter.com/Michael_Hladky)
 
 ## Browsers support
 

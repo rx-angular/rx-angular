@@ -2,6 +2,45 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+
+## [0.0.0-beta.32](/compare/template@1.0.0-beta.1...template@1.0.0-beta.32) (2022-02-27)
+
+### Bug Fixes
+
+* **template:** compat for jest and Angular 12
+
+# [1.0.0-beta.31](/compare/template@1.0.0-beta.30...template@1.0.0-beta.31) (2022-02-08)
+
+
+### Bug Fixes
+
+* drop `@nrwl/tao` deep import 6eeae5e
+* migrate `@rx-angular/zone-less` as well 78c1ec6
+* **template:** Rxfor template typings (#1198) 5830f38, closes #1198
+* **template:** rxLet: don't override primary strategy  (#1197) 5c9d2a3, closes #1197
+
+
+### Performance Improvements
+
+* improve migrations perf 44eccda
+
+# [1.0.0-beta.30](/compare/template@1.0.0-beta.29...template@1.0.0-beta.30) (2022-02-02)
+
+
+### Features
+
+* enable Ivy with partial compilation mode (#1186) eddaf20, closes #1186
+* introduce viewport-prio and rx-for as experimental (#887) d5d026c, closes #887
+
+
+### Performance Improvements
+
+* move getUnpatchedApi into sun-package and avoid zone-less package (#1035) 170ab7a, closes #1035
+* reduce bundle size by removing unused code (#1039) 0c6c089, closes #1039
+* zone less sub modules f765336
+
+
+
 # [1.0.0-beta.29](/compare/template@1.0.0-beta.28...template@1.0.0-beta.29) (2021-11-16)
 
 
