@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 
 import { RouterModule } from '@angular/router';
+import { IfModule } from '@rx-angular/template/experimental/if';
 import { ROUTES } from './rx-if.routes';
 import { RxIfBasicComponent } from './rx-if-basic.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
@@ -12,7 +13,6 @@ import { StrategySelectModule } from '../../../shared/debug-helper/strategy-sele
 import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
 import { GhostElementsModule } from '../../../shared/ghost-elements';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
-import { RxIfModule } from '../../../rx-angular-pocs';
 
 const DECLARATIONS = [RxIfBasicComponent];
 
@@ -29,7 +29,7 @@ const DECLARATIONS = [RxIfBasicComponent];
     ValueProvidersModule,
     StrategySelectModule,
     RouterModule.forChild(ROUTES),
-    RxIfModule
+    IfModule,
   ],
   exports: DECLARATIONS,
 })
