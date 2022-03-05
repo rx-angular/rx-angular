@@ -1,4 +1,4 @@
-import { Subscription } from 'rxjs';
+import { Subscription, takeUntil } from 'rxjs';
 import { filter, mergeAll } from 'rxjs/operators';
 import {
   ChangeDetectorRef,
@@ -26,7 +26,7 @@ import {
   rxIfVisibleTemplateNames,
   RxIfVisibleViewContext,
 } from './model';
-import { RxEffects } from '../../../state/rx-effects';
+import { RxEffects } from '@rx-angular/state/effects';
 
 @Directive({
   selector: '[ifVisible]',
@@ -99,7 +99,7 @@ export class IfVisibleDirective<U> extends Hooks implements OnInit {
         .render(
           this.observer.entries$.pipe(
             filter((entry) => entry.isIntersecting && !this.displayed),
-            this.rxEf.untilDestroy()
+            takeUntil(this.onDestroy$)
           )
         )
         .subscribe(() => {

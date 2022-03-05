@@ -20,7 +20,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { Hooks } from '../hooks';
-import { RxEffects } from '../../rx-effects.service';
+import { RxEffects } from '@rx-angular/state/effects';
 import { select } from '@rx-angular/state/selections';
 import { AppConfigService } from '../../../app-config.service';
 
@@ -88,11 +88,11 @@ export class RenderingsComponent extends Hooks {
     private rxEf: RxEffects
   ) {
     super();
-    this.rxEf.hold(this.configService.$.pipe(select('rippleOn')), (r) => {
+    this.rxEf.register(this.configService.$.pipe(select('rippleOn')), (r) => {
       this.rippleOn = r;
     });
 
-    this.rxEf.hold(this.afterViewInit$, () => {
+    this.rxEf.register(this.afterViewInit$, () => {
       this.launchRipple();
     });
   }

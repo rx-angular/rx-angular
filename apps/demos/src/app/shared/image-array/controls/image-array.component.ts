@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Output, ViewChild } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { RxEffects } from '../../rx-effects.service';
+import { RxEffects } from '@rx-angular/state/effects';
 import { Hooks } from '../../debug-helper/hooks';
 import { RxState } from '@rx-angular/state';
 import { fileReaderFromBlob, imageFromFileReader } from '../pixel-image';
