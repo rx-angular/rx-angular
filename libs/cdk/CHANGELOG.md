@@ -2,6 +2,29 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.0.0-beta.2](/compare/cdk@1.0.0-beta.1...cdk@1.0.0-beta.2) (2022-02-27)
+
+### Bug Fixes
+
+* **cdk:** compat for jest and Angular 12
+
+# [1.0.0-beta.1](/compare/cdk@1.0.0-beat.1...cdk@1.0.0-beta.1) (2022-02-08)
+
+
+### Bug Fixes
+
+* **cdk:** use refCount in shareReplay 801d90f
+* drop `@nrwl/tao` deep import 6eeae5e
+* migrate `@rx-angular/zone-less` as well 78c1ec6
+* **template:** Rxfor template typings (#1198) 5830f38, closes #1198
+
+
+### Performance Improvements
+
+* improve migrations perf 44eccda
+
+
+
 # [1.0.0-beta.0](/compare/cdk@1.0.0-alpha.11...cdk@1.0.0-beta.0) (2022-02-02)
 
 

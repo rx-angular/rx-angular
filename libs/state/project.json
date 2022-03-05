@@ -4,7 +4,7 @@
   "sourceRoot": "libs/state/src",
   "prefix": "rx",
   "targets": {
-    "build-state": {
+    "build-lib": {
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/state/tsconfig.lib.json",
@@ -22,7 +22,7 @@
       "executor": "@nrwl/workspace:run-commands",
       "dependsOn": [
         {
-          "target": "build-state",
+          "target": "build-lib",
           "projects": "self"
         }
       ],

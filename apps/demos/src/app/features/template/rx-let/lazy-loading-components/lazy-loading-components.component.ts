@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RxEffects } from '../../../../shared/rx-effects.service';
+import { RxEffects } from '@rx-angular/state/effects';
 
 @Component({
   selector: 'rxa-lazy-loading-components',
@@ -33,7 +33,7 @@ import { RxEffects } from '../../../../shared/rx-effects.service';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LazyLoadingComponentsComponent extends RxEffects {
+export class LazyLoadingComponentsComponent {
 
   displayStates = {
     none: 0,
