@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.6.0](/compare/state@1.5.1...state@1.6.0) (2022-03-05)
+
+
+### Features
+
+* add effects sum-module to docs 9586e09
+
+
+
 ## [1.5.1](/compare/state@1.5.0...state@1.5.1) (2022-02-27)
 
 
