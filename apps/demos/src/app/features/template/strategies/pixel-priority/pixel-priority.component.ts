@@ -3,7 +3,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { createImageConverter } from '../../../../shared/image-array';
 import { computeColorPrio } from '../../../../shared/image-array/pixel-image';
-import { RxEffects } from '../../../../shared/rx-effects.service';
+import { RxEffects } from '@rx-angular/state/effects';
 
 @Component({
   selector: 'rxa-concurrent-strategies',

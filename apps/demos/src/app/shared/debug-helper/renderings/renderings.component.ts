@@ -20,7 +20,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { Hooks } from '../hooks';
-import { RxEffects } from '../../rx-effects.service';
+import { RxEffects } from '@rx-angular/state/effects';
 import { select } from '@rx-angular/state/selections';
 import { AppConfigService } from '../../../app-config.service';
 

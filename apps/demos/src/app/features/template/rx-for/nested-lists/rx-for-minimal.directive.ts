@@ -28,7 +28,7 @@ import {
   take,
   tap
 } from 'rxjs/operators';
-import { RxEffects } from '../../../../shared/rx-effects.service';
+import { RxEffects } from '@rx-angular/state/effects';
 
 type RxForTemplateNames = 'rxSuspense' | 'rxNext' | 'rxError' | 'rxComplete';
 

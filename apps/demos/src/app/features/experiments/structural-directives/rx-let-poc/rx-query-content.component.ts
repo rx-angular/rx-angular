@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { RxEffects } from '../../../../shared/rx-effects.service';
+import { RxEffects } from '@rx-angular/state/effects';
 
 @Directive({
   selector: '[rxaContentTest]'

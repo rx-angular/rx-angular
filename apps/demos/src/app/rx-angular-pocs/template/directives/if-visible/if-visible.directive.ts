@@ -26,7 +26,7 @@ import {
   rxIfVisibleTemplateNames,
   RxIfVisibleViewContext,
 } from './model';
-import { RxEffects } from '../../../state/rx-effects';
+import { RxEffects } from '@rx-angular/state/effects';
 
 @Directive({
   selector: '[ifVisible]',

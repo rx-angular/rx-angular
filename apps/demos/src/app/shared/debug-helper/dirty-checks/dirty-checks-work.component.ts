@@ -8,7 +8,7 @@ import {
 import { MatRipple } from '@angular/material/core';
 import { Hooks } from '../hooks';
 import { select } from '@rx-angular/state/selections';
-import { RxEffects } from '../../rx-effects.service';
+import { RxEffects } from '@rx-angular/state/effects';
 import { AppConfigService } from '../../../app-config.service';
 
 @Component({
