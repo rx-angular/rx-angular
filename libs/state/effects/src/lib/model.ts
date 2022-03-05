@@ -28,7 +28,7 @@ export interface DestroyChannel$ {
 }
 
 /**
- * Interface to specify the channel for the `onDestoy` hook as Observable
+ * Interface to specify the channel for the `onDestroy` hook as Observable
  */
 export interface OnDestroy$ extends DestroyChannel$ {
   onDestroy$: Observable<boolean>;
