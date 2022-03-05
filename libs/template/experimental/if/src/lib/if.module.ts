@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
-import { RxIf } from './rx-if.directive';
+import { RxIf } from './if.directive';
 
 const DECLARATIONS = [RxIf];
 
 @NgModule({
   declarations: DECLARATIONS,
   imports: [],
-  exports: DECLARATIONS
+  exports: DECLARATIONS,
 })
-export class RxIfModule {
-}
+export class IfModule {}
