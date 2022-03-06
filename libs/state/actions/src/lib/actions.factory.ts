@@ -1,13 +1,13 @@
 import { Actions, ActionTransforms, RxActions } from './types';
-import { Injectable, OnDestroy } from '@angular/core';
+import { ErrorHandler, Injectable, OnDestroy, Optional } from '@angular/core';
 import { actionProxyHandler } from './proxy';
 import { Subject } from 'rxjs';
 
-type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> }
+type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
 
 /**
  * This class creates RxActions bound to Angular's DI life-cycles. This prevents memory leaks and optionally makes the instance reusable across the app.
- * The main function here is called `create`, optionally you can also call `destroy` to complete all action channels. 
+ * The main function here is called `create`, optionally you can also call `destroy` to complete all action channels.
  * If the instantiator gets destroyed also the actions get destroyed automatically.
  *
  * @example
@@ -17,8 +17,13 @@ type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> }
  * actions.search$.subscribe();
  */
 @Injectable()
-export class RxActionsFactory<T extends Actions> implements OnDestroy {
+export class RxActionFactory<T extends Actions> implements OnDestroy {
   private subjects: SubjectMap<T> = {} as SubjectMap<T>;
+
+  constructor(
+    @Optional()
+    private readonly errorHandler: ErrorHandler
+  ) {}
 
   /*
    * Returns a object based off of the provided typing with a separate setter `[prop](value: T[K]): void` and observable stream `[prop]$: Observable<T[K]>`;
@@ -32,7 +37,7 @@ export class RxActionsFactory<T extends Actions> implements OnDestroy {
    *  submit: void
    * };
    *
-   * const actions = new RxActionsFactory<UIActions>().create();
+   * const actions = new RxActionFactory<UIActions>().create();
    *
    * actions.search($event.target.value);
    * actions.search$ | async;
@@ -66,16 +71,18 @@ export class RxActionsFactory<T extends Actions> implements OnDestroy {
   create<U extends ActionTransforms<T> = {}>(transforms?: U): RxActions<T, U> {
     return new Proxy(
       {} as RxActions<T, U>,
-      actionProxyHandler(this.subjects, transforms)
+      actionProxyHandler(this.subjects, transforms, this.errorHandler)
     ) as RxActions<T, U>;
   }
 
   destroy() {
-    Object.values(this.subjects).forEach((subject: Subject<any>) => subject.complete());
+    Object.values(this.subjects).forEach((subject: Subject<any>) =>
+      subject.complete()
+    );
   }
 
   /**
-   * @internal 
+   * @internal
    * Internally used to clean up potential subscriptions to the subjects. (For Actions it is most probably a rare case but still important to care about)
    */
   ngOnDestroy() {

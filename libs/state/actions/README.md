@@ -16,7 +16,7 @@
  
 ## Demos:
 
-- [⚡ GitHub](https://github.com/BioPhoton/rx-angular-state-coalescing)
+- [⚡ GitHub](https://github.com/BioPhoton/rx-angular-state-actions)
 
 ## Install
 

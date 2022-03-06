@@ -61,7 +61,7 @@ Downsides:
 Imagine we could have configurable functions that return all UI logic typed under one object.
 
 ```typescript
-import { RxActionsFactory } from './actions.factory'; 
+import { RxActionFactory } from './actions.factory'; 
 interface UiActions {
  submitBtn: void,
  searchInput: string
@@ -75,7 +75,7 @@ template: `
   <li *ngFor="let item of list$ | async as list">{{item}}</li>
 </ul>
 `,
-providers: [RxActionsFactory]
+providers: [RxActionFactory]
 })
 class Component {
   ui = factory.create({searchInput: (e) => e?.target?.value});
@@ -86,7 +86,7 @@ class Component {
    )
   
   constructor(api: API,
-   private factory: RxActionsFactory<UiActions>
+   private factory: RxActionFactory<UiActions>
 ) {
   
   }
@@ -157,7 +157,7 @@ interface Commands {
   providedIn: 'root'
 })
 export class StateService extends RxState<State> {
-  private commands = new RxActionsFactory<Commands>.create();
+  private commands = new RxActionFactory<Commands>.create();
 
   genres$ = this.select('genres');
 
@@ -207,7 +207,7 @@ template: `
 <ul>
   <li *ngFor="let item of list$ | async as list">{{item}}</li>
 </ul>`,
-providers: [RxState, RxActionsFactory]
+providers: [RxState, RxActionFactory]
 })
 class Component {
   ui = factory.create({searchInput: (e) => e?.target?.value});
@@ -220,7 +220,7 @@ class Component {
   
   constructor(
     private state: RxState<State>,
-    private factory: RxActionsFactory<UiActions>,
+    private factory: RxActionFactory<UiActions>,
     globalState: StateService) {
     super(); 
     this.connect('list', this.globalState.refreshGenres$);

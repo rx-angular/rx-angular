@@ -7,7 +7,7 @@ import {
 import { combineLatest, Subject } from 'rxjs';
 import { ContentChildComponent } from './content-child.component';
 import { ViewChildComponent } from './view-child.component';
-import { RxActionsFactory } from '@rx-angular/state/actions';
+import { RxActionFactory } from '@rx-angular/state/actions';
 
 @Component({
   selector: 'rxa-projected-views',
@@ -62,7 +62,7 @@ import { RxActionsFactory } from '@rx-angular/state/actions';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [RxActionsFactory],
+  providers: [RxActionFactory],
 })
 export class ProjectedViewsComponent {
   @ViewChildren('test') set test(t) {
@@ -85,7 +85,7 @@ export class ProjectedViewsComponent {
     );
   }
 
-  constructor(private actions: RxActionsFactory<{ trigger: number }>) {}
+  constructor(private actions: RxActionFactory<{ trigger: number }>) {}
 
   ui = this.actions.create();
   renderCallback$ = new Subject<any>();

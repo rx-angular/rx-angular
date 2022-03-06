@@ -1,2 +1,2 @@
 export { RxActions, ActionTransforms, ActionObservables, ActionDispatchers, ActionDispatchFn } from './lib/types';
-export { RxActionsFactory } from './lib/actions.factory';
+export { RxActionFactory } from './lib/actions.factory';
