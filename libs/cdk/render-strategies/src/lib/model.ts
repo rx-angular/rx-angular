@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, NgZone } from '@angular/core';
+import { coalescingObj, RxCoalescingOptions } from '@rx-angular/cdk/coalescing';
 import { RxNotification } from '@rx-angular/cdk/notifications';
 import { Observable } from 'rxjs';
 
@@ -10,12 +11,12 @@ export interface ScheduleOnStrategyOptions {
 
 export type RxRenderWork = <T = unknown>(
   cdRef: ChangeDetectorRef,
-  scope?: Record<string, unknown>,
+  scope?: coalescingObj,
   notification?: RxNotification<T>
 ) => void;
 export type RxRenderBehavior = <T = unknown>(params: {
   work: () => any;
-  scope?: Record<string, unknown>;
+  scope?: coalescingObj;
   ngZone?: NgZone;
 }) => (o: Observable<T>) => Observable<T>;
 

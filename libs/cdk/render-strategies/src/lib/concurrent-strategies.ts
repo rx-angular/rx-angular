@@ -13,7 +13,7 @@ import {
   RxConcurrentStrategyNames,
   RxStrategyCredentials,
 } from './model';
-import { coalescingManager } from '@rx-angular/cdk/coalescing';
+import { coalescingManager, coalescingObj } from '@rx-angular/cdk/coalescing';
 
 forceFrameRate(60);
 
@@ -96,28 +96,29 @@ function scheduleOnQueue<T>(
   work: (...args: any[]) => void,
   options: {
     priority: PriorityLevel;
-    scope: Record<string, unknown>;
+    scope: coalescingObj;
     delay?: number;
     ngZone: NgZone;
   }
 ): MonoTypeOperatorFunction<T> {
+  const scope = (options.scope as Record<string, unknown>) || {};
   return (o$: Observable<T>): Observable<T> =>
     o$.pipe(
-      filter(() => !coalescingManager.isCoalescing(options.scope)),
+      filter(() => !coalescingManager.isCoalescing(scope)),
       switchMap((v) =>
         new Observable<T>((subscriber) => {
-          coalescingManager.add(options.scope);
+          coalescingManager.add(scope);
           const task = scheduleCallback(
             options.priority,
             () => {
               work();
-              coalescingManager.remove(options.scope);
+              coalescingManager.remove(scope);
               subscriber.next(v);
             },
             { delay: options.delay, ngZone: options.ngZone }
           );
           return () => {
-            coalescingManager.remove(options.scope);
+            coalescingManager.remove(scope);
             cancelCallback(task);
           };
         }).pipe(mapTo(v))
