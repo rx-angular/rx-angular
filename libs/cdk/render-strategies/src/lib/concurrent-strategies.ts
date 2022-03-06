@@ -20,11 +20,12 @@ forceFrameRate(60);
 const immediateStrategy: RxStrategyCredentials = {
   name: 'immediate',
   work: (cdRef) => cdRef.detectChanges(),
-  behavior: (work: any, scope: any, ngZone: NgZone) => {
+  behavior: ({ work, scope, ngZone }) => {
     return (o$) =>
       o$.pipe(
         scheduleOnQueue(work, {
-          ngZone, priority: PriorityLevel.ImmediatePriority,
+          ngZone,
+          priority: PriorityLevel.ImmediatePriority,
           scope,
         })
       );
@@ -34,11 +35,12 @@ const immediateStrategy: RxStrategyCredentials = {
 const userBlockingStrategy: RxStrategyCredentials = {
   name: 'userBlocking',
   work: (cdRef) => cdRef.detectChanges(),
-  behavior: (work: any, scope: any, ngZone: NgZone) => {
+  behavior: ({ work, scope, ngZone }) => {
     return (o$) =>
       o$.pipe(
         scheduleOnQueue(work, {
-          ngZone, priority: PriorityLevel.UserBlockingPriority,
+          ngZone,
+          priority: PriorityLevel.UserBlockingPriority,
           scope,
         })
       );
@@ -48,10 +50,14 @@ const userBlockingStrategy: RxStrategyCredentials = {
 const normalStrategy: RxStrategyCredentials = {
   name: 'normal',
   work: (cdRef) => cdRef.detectChanges(),
-  behavior: (work: any, scope: any, ngZone: NgZone) => {
+  behavior: ({ work, scope, ngZone }) => {
     return (o$) =>
       o$.pipe(
-        scheduleOnQueue(work, { ngZone, priority: PriorityLevel.NormalPriority, scope })
+        scheduleOnQueue(work, {
+          ngZone,
+          priority: PriorityLevel.NormalPriority,
+          scope,
+        })
       );
   },
 };
@@ -59,10 +65,14 @@ const normalStrategy: RxStrategyCredentials = {
 const lowStrategy: RxStrategyCredentials = {
   name: 'low',
   work: (cdRef) => cdRef.detectChanges(),
-  behavior: (work: any, scope: any, ngZone: NgZone) => {
+  behavior: ({ work, scope, ngZone }) => {
     return (o$) =>
       o$.pipe(
-        scheduleOnQueue(work, { ngZone, priority: PriorityLevel.LowPriority, scope })
+        scheduleOnQueue(work, {
+          ngZone,
+          priority: PriorityLevel.LowPriority,
+          scope,
+        })
       );
   },
 };
@@ -70,10 +80,14 @@ const lowStrategy: RxStrategyCredentials = {
 const idleStrategy: RxStrategyCredentials = {
   name: 'idle',
   work: (cdRef) => cdRef.detectChanges(),
-  behavior: (work: any, scope: any, ngZone: NgZone) => {
+  behavior: ({ work, scope, ngZone }) => {
     return (o$) =>
       o$.pipe(
-        scheduleOnQueue(work, { ngZone, priority: PriorityLevel.IdlePriority, scope })
+        scheduleOnQueue(work, {
+          ngZone,
+          priority: PriorityLevel.IdlePriority,
+          scope,
+        })
       );
   },
 };
@@ -84,7 +98,7 @@ function scheduleOnQueue<T>(
     priority: PriorityLevel;
     scope: Record<string, unknown>;
     delay?: number;
-    ngZone: NgZone
+    ngZone: NgZone;
   }
 ): MonoTypeOperatorFunction<T> {
   return (o$: Observable<T>): Observable<T> =>
