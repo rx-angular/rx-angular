@@ -1,8 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { from, Subject } from 'rxjs';
-import { delay, scan, shareReplay, switchMap } from 'rxjs/operators';
-import { RxEffects } from '../../../../shared/rx-effects.service';
-import { CdHelper } from '../../../../shared/utils/cd-helper';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'rxa-lazy-loading-components-promise',
