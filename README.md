@@ -40,24 +40,15 @@ This repository holds a set of helpers to create **fully reactive** as well as *
   <tr>
     <td>
       Url: clickup.com <br/>
-      LOC: <br/>
-      Used in Platforms: Web<br/>
-      Total Components: <br/>
-      Total Services: <br/>
+      Used in Platforms: Web
     </td>
     <td>
       Url: get.tapeapp.com<br/>
-      LOC: <br/>
-      Used in Platforms: Web, Mobile (ionic)<br/>
-      Total Components: <br/>
-      Total Services: <br/>
+      Used in Platforms: Web, Mobile (ionic)
     </td>
     <td> 
-      Url: https://angular-movies-a12d3.web.app <br/>
-      LOC: <br/>
-      Used in Platforms: Web<br/>
-      Total Components: <br/>
-      Total Services: <br/>
+      Url: https://angular-movies-a12d3.web.app<br/>
+      Used in Platforms: Web
     </td>
   </tr>
 </table>
