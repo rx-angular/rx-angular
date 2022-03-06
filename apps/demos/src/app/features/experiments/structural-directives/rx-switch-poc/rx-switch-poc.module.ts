@@ -13,7 +13,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatInputModule } from '@angular/material/input';
-import { RxIfModule, RxSwichModule } from '../../../../rx-angular-pocs/';
+import { RxSwichModule } from '../../../../rx-angular-pocs/';
+import { IfModule } from '@rx-angular/template/experimental/if';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 
 @NgModule({
@@ -31,7 +32,7 @@ import { ValueProvidersModule } from '../../../../shared/debug-helper/value-prov
     MatSliderModule,
     MatButtonToggleModule,
     MatInputModule,
-    RxIfModule,
+    IfModule,
     RxSwichModule,
     ValueProvidersModule,
   ],
