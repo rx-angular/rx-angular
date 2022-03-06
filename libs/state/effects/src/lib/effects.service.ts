@@ -8,18 +8,15 @@ import {
   pipe,
   Subject,
   Subscription,
-} from 'rxjs';
-import {
   catchError,
   filter,
   mapTo,
   mergeAll,
-  share,
   takeUntil,
-  tap,
-} from 'rxjs/operators';
-import { untilDestroyed } from './until-destroy';
-import { OnDestroy$, toHook } from '../../cdk/hooks';
+  tap, share
+} from 'rxjs';
+import { DestroyProp, OnDestroy$ } from './model';
+import { toHook, untilDestroyed } from './utils';
 
 /**
  * Reduces subscription boilerplate for performing observable-based side-effects in components.
@@ -64,20 +61,19 @@ import { OnDestroy$, toHook } from '../../cdk/hooks';
  */
 @Injectable()
 export class RxEffects implements OnDestroy, OnDestroy$ {
-  private static nextId = 0;
-  private readonly destroyers: Record<number, Subject<void>> = {};
-
-  readonly _hooks$ = new Subject<{ destroy: boolean }>();
-  private readonly observables$ = new Subject<Observable<unknown>>();
-  private readonly effects$ = this.observables$.pipe(mergeAll(), share());
-  onDestroy$: Observable<boolean> = this._hooks$.pipe(toHook('destroy'));
-
-  private readonly subscription = this.effects$.subscribe();
-
   constructor(
     @Optional()
     private readonly errorHandler: ErrorHandler
   ) {}
+
+  private static nextId = 0;
+  readonly _hooks$ = new Subject<DestroyProp>();
+  private readonly observables$ = new Subject<Observable<unknown>>();
+  // we have to use publish here to make it hot (composition happens without subscriber)
+  private readonly effects$ = this.observables$.pipe(mergeAll(), share());
+  private readonly subscription = this.effects$.subscribe();
+  onDestroy$: Observable<boolean> = this._hooks$.pipe(toHook('destroy'));
+  private readonly destroyers: Record<number, Subject<void>> = {};
 
   /**
    * Performs a side-effect whenever a source observable emits, and handles its subscription.
@@ -117,6 +113,7 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
    */
   register<T>(
     sourceObs: ObservableInput<T>,
+    // tslint:disable-next-line: unified-signatures
     observer: PartialObserver<T>
   ): number;
 
@@ -145,6 +142,7 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
    *
    * @param subscription Subscription to observable with side-effect
    */
+  // tslint:disable-next-line: unified-signatures
   register(subscription: Subscription): void;
 
   register<T>(
@@ -195,14 +193,16 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
    *
    * @param sideEffect
    */
-  registerOnDestroy(
-    sideEffect: (value: boolean) => void
-  ): number | void {
+  registerOnDestroy(sideEffect: (value: boolean) => void): number | void {
     return this.register(this.onDestroy$, sideEffect);
   }
 
   /**
    * Operator that unsubscribes based on emission of an registered effect.
+   *
+   * @NOTICE
+   * This operator has to be placed always at the end of the operator chain (before the subscription).
+   * Otherwise we may leak as a subsequent operator could instantiate new ongoing Observables which will not get unsubscribed.
    *
    * @example
    * const effectId1 = effects.register(
@@ -217,33 +217,16 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
   untilEffect(effectId: number) {
     return <V>(source: Observable<V>) =>
       source.pipe(
+        untilDestroyed(this),
         takeUntil(this.effects$.pipe(filter((eId) => eId === effectId)))
       );
-  }
-
-  /**
-   * Operator that unsubscribes based on the `OnDestroy` lifecycle hook of this instance.
-   *
-   * @NOTICE
-   * This operator has to be placed always at the end of the operator chain (before the subscription).
-   * Otherwise we may leak as a subsequent operator could instantiate new ongoing Observables which will not get unsubscribed.
-   *
-   * @example
-   * someValue$.pipe(
-   *    effect.untilDestroy()
-   * )
-   *
-   */
-  untilDestroy() {
-    return <V>(source: Observable<V>) => source.pipe(untilDestroyed(this));
   }
 
   /**
    * @internal
    */
   ngOnDestroy(): void {
-    this._hooks$.next({ destroy: undefined });
-    this._hooks$.complete();
+    this._hooks$.next({ destroy: true });
     this.subscription.unsubscribe();
   }
 }

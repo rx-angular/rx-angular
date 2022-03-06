@@ -1,9 +1,9 @@
 import { Component, ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { BehaviorSubject, EMPTY, Observable, throwError } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { RxEffects } from './effects.service';
+import { BehaviorSubject, EMPTY, Observable, throwError, map, tap } from 'rxjs';
+import { RxEffects } from './../src/lib/effects.service';
 
+// tslint:disable: max-classes-per-file
 
 type TState = string;
 
@@ -21,17 +21,29 @@ const selector3 = (state: TState) => `${state}3`;
 const selector4 = (state: TState) => `${state}4`;
 
 class Service {
-  method1(..._: any[]): void {}
-  method2(..._: any[]): void {}
-  method3(..._: any[]): void {}
-  method4(..._: any[]): void {}
-  method4OnError(..._: any[]): void {}
-  method4OnComplete(..._: any[]): void {}
+  method1(..._: any[]): void {
+  }
+
+  method2(..._: any[]): void {
+  }
+
+  method3(..._: any[]): void {
+  }
+
+  method4(..._: any[]): void {
+  }
+
+  method4OnError(..._: any[]): void {
+  }
+
+  method4OnComplete(..._: any[]): void {
+  }
 }
 
+// tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
-  providers: [RxEffects],
+  providers: [RxEffects]
 })
 class TestComponent {
   constructor(store: Store, service: Service, effects: RxEffects) {
@@ -41,14 +53,41 @@ class TestComponent {
     effects.register(store.select(selector4), {
       next: service.method4,
       error: service.method4OnError,
-      complete: service.method4OnComplete,
+      complete: service.method4OnComplete
     });
   }
 }
 
+// tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
-  providers: [RxEffects],
+  providers: [RxEffects]
+})
+class TestUntilEffectComponent {
+  constructor(store: Store, service: Service, private effects: RxEffects) {
+    const effectId1 = effects.register(store.select((v) => v === 'effectTrigger'), () => void 0);
+    store.state$.pipe(
+      effects.untilEffect(effectId1)
+    ).subscribe(service.method1);
+
+  }
+}
+
+// tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
+@Component({
+  template: '',
+  providers: [RxEffects]
+})
+class TestOnDestroyComponent {
+  constructor(store: Store, service: Service, private effects: RxEffects) {
+    effects.registerOnDestroy(service.method1);
+  }
+}
+
+// tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
+@Component({
+  template: '',
+  providers: [RxEffects]
 })
 class TestUnregisterComponent {
   private readonly effectId1: number;
@@ -79,18 +118,17 @@ describe('RxEffects', () => {
     jest.restoreAllMocks();
   });
 
-  test('should invoke callback for each value emitted', () => {
+  test('should invoke callback for each value emitted', async () => {
     const service = {
       method1: jest.fn(),
       method2: jest.fn(),
       method3: jest.fn(),
-      method4: jest.fn(),
+      method4: jest.fn()
     };
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [TestComponent],
-      providers: [Store, { provide: Service, useValue: service }],
-      teardown: { destroyAfterEach: true },
-    });
+      providers: [Store, { provide: Service, useValue: service }]
+    }).compileComponents();
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
 
@@ -109,18 +147,17 @@ describe('RxEffects', () => {
     expect(service.method4).toHaveBeenCalledWith('bar4');
   });
 
-  test('should unsubscribe when component is destroyed', () => {
+  test('should unsubscribe when component is destroyed', async () => {
     const service = {
       method1: jest.fn(),
       method2: jest.fn(),
       method3: jest.fn(),
-      method4: jest.fn(),
+      method4: jest.fn()
     };
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [TestComponent],
-      providers: [Store, { provide: Service, useValue: service }],
-      teardown: { destroyAfterEach: true },
-    });
+      providers: [Store, { provide: Service, useValue: service }]
+    }).compileComponents();
     const fixture = TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
 
@@ -146,30 +183,29 @@ describe('RxEffects', () => {
     expect(service.method4).not.toHaveBeenCalled();
   });
 
-  test('should isolate errors and invoke provided ErrorHandler', () => {
+  test('should isolate errors and invoke provided ErrorHandler', async () => {
     const service = {
       method1: () => {
         throw new Error('something went wrong');
       },
       method2: jest.fn(),
       method3: jest.fn(),
-      method4: jest.fn(),
+      method4: jest.fn()
     };
     const customErrorHandler: ErrorHandler = {
-      handleError: jest.fn(),
+      handleError: jest.fn()
     };
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [TestComponent],
       providers: [
         Store,
         { provide: Service, useValue: service },
         {
           provide: ErrorHandler,
-          useValue: customErrorHandler,
-        },
-      ],
-      teardown: { destroyAfterEach: true },
-    });
+          useValue: customErrorHandler
+        }
+      ]
+    }).compileComponents();
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
 
@@ -184,19 +220,22 @@ describe('RxEffects', () => {
     expect(service.method4).toHaveBeenCalledWith('foo4');
   });
 
-  test('should invoke complete callback upon completion', () => {
+  test('should invoke complete callback upon completion', async () => {
     const service = {
-      method1: () => {},
-      method2: () => {},
-      method3: () => {},
-      method4: () => {},
-      method4OnComplete: jest.fn(),
+      method1: () => {
+      },
+      method2: () => {
+      },
+      method3: () => {
+      },
+      method4: () => {
+      },
+      method4OnComplete: jest.fn()
     };
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [TestComponent],
-      providers: [Store, { provide: Service, useValue: service }],
-      teardown: { destroyAfterEach: true },
-    });
+      providers: [Store, { provide: Service, useValue: service }]
+    }).compileComponents();
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
 
@@ -210,13 +249,17 @@ describe('RxEffects', () => {
     expect(service.method4OnComplete).toHaveBeenCalled();
   });
 
-  test('should invoke error callback when source observable errors', () => {
+  test('should invoke error callback when source observable errors', async () => {
     const service = {
-      method1: () => {},
-      method2: () => {},
-      method3: () => {},
-      method4: () => {},
-      method4OnError: jest.fn(),
+      method1: () => {
+      },
+      method2: () => {
+      },
+      method3: () => {
+      },
+      method4: () => {
+      },
+      method4OnError: jest.fn()
     };
     jest
       .spyOn(Store.prototype, 'select')
@@ -225,15 +268,19 @@ describe('RxEffects', () => {
           ? throwError(new Error('something went wrong'))
           : EMPTY
       );
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [TestComponent],
       providers: [
         Store,
         { provide: Service, useValue: service },
-        { provide: ErrorHandler, useValue: { handleError: () => {} } },
-      ],
-      teardown: { destroyAfterEach: true },
-    });
+        {
+          provide: ErrorHandler, useValue: {
+            handleError: () => {
+            }
+          }
+        }
+      ]
+    }).compileComponents();
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
 
@@ -244,16 +291,15 @@ describe('RxEffects', () => {
     );
   });
 
-  test('should cancel side-effect if unregistered imperatively', () => {
+  test('should cancel side-effect if unregistered imperatively', async () => {
     const service = {
       method1: jest.fn(),
-      method2: jest.fn(),
+      method2: jest.fn()
     };
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [TestUnregisterComponent],
-      providers: [Store, { provide: Service, useValue: service }],
-      teardown: { destroyAfterEach: true },
-    });
+      providers: [Store, { provide: Service, useValue: service }]
+    }).compileComponents();
     const fixture = TestBed.createComponent(TestUnregisterComponent);
     const component = fixture.componentInstance;
     const store = TestBed.inject(Store);
@@ -278,5 +324,55 @@ describe('RxEffects', () => {
 
     expect(service.method1).not.toHaveBeenCalled();
     expect(service.method2).not.toHaveBeenCalled();
+  });
+
+  test('should cancel side-effect if components gets destroyed when using untilEffect', async () => {
+    const service = {
+      method1: jest.fn(),
+    };
+    await TestBed.configureTestingModule({
+      declarations: [TestUntilEffectComponent],
+      providers: [Store, { provide: Service, useValue: service }]
+    }).compileComponents();
+    const fixture = TestBed.createComponent(TestUntilEffectComponent);
+    const component = fixture.componentInstance;
+    const store = TestBed.inject(Store);
+
+    expect(service.method1).toHaveBeenCalledWith('');
+
+    service.method1.mockClear();
+
+    store.state$.next('foo');
+
+    expect(service.method1).not.toHaveBeenCalled();
+
+    store.state$.next('effectTrigger');
+    store.state$.next('foo');
+
+    expect(service.method1).not.toHaveBeenCalled();
+
+  });
+
+  test('should cancel side-effect if components gets destroyed when using onDestroy', async () => {
+    const service = {
+      method1: jest.fn(),
+    };
+    await TestBed.configureTestingModule({
+      declarations: [TestOnDestroyComponent],
+      providers: [Store, { provide: Service, useValue: service }]
+    }).compileComponents();
+    const fixture = TestBed.createComponent(TestOnDestroyComponent);
+    const component = fixture.componentInstance;
+    const store = TestBed.inject(Store);
+
+    expect(service.method1).not.toHaveBeenCalled();
+
+    service.method1.mockClear();
+
+    (component as any).effects.ngOnDestroy();
+
+    store.state$.next('bar');
+
+    expect(service.method1).toHaveBeenCalled();
   });
 });
