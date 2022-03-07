@@ -11233,13 +11233,13 @@ ng-packagr@12.2.7:
   optionalDependencies:
     esbuild "0.13.8"
 
-ngx-skeleton-loader@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/ngx-skeleton-loader/-/ngx-skeleton-loader-4.0.0.tgz#2bd6ef369c2a1c3d053c09b2a099b403b373a662"
-  integrity sha512-fbCWZrBVJF1jVVK056z3zPcAk0EXUtImdRkrjbc4xiWNkmhGskGfNh6UxKrkheMS9iOJoaLLo8KscLeUa9yggQ==
+ngx-skeleton-loader@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-skeleton-loader/-/ngx-skeleton-loader-5.0.0.tgz#e0042de20b0159d3f97d03a696d68f39ceee383b"
+  integrity sha512-6cz8UAu4WcYnBp/LnU053LCIwjKNZWX8GX1v3bvqQVdDa1ubsEeJm+CZxk5B8W2jP9CcFhvWrBlmmVUyl1Yxug==
   dependencies:
     perf-marks "^1.13.4"
-    tslib "^1.10.0"
+    tslib "^2.0.0"
 
 nice-napi@^1.0.2:
   version "1.0.2"
