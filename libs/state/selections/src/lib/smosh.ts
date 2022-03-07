@@ -1,10 +1,10 @@
-import { combineLatest, from, Observable } from 'rxjs';
+import { combineLatest, from, merge, Observable, scan } from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay } from 'rxjs/operators';
 
 import { Promise } from '@rx-angular/cdk/zone-less/browser';
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import { ExtractObservableValue } from '../../../../cdk/internals/core/src/lib/model';
-import { NotEmpty, ObservableMap } from './interfaces';
+import { NonUndefined, NotEmpty, ObservableMap } from './interfaces';
 import { coerceObservable } from '@rx-angular/cdk/coercing';
 
 const resolvedPromise = Promise.resolve();
@@ -46,10 +46,13 @@ const resolvedPromise$ = from(resolvedPromise);
  * @param obj - An object of key & Observable values pairs
  * @param durationSelector - An Observable determining the duration for the internal coalescing method
  */
-export function smosh<T extends ObservableMap | (Partial<T> & NotEmpty<T>)>(
-  obj: T,
-  durationSelector: Observable<any> = resolvedPromise$
-): Observable<{ [K in keyof T]: ExtractObservableValue<T[K]> }> {
+export function smosh<T extends ObservableMap | (Partial<T> & NotEmpty<T>), U extends Record<string, any>>(
+  obj: Partial<T>,
+  spreads: Observable<U>[] = [],
+  options?: {durationSelector: Observable<any>}
+): Observable<{ [K in keyof T]: ExtractObservableValue<T[K]>} & U> {
+  let {durationSelector} = options || {};
+  durationSelector = durationSelector || resolvedPromise$;
   const keys = Object.keys(obj) as (keyof T)[];
   const observables = keys.map((key) =>
     // turn values, if they are static, into Observables
@@ -60,12 +63,11 @@ export function smosh<T extends ObservableMap | (Partial<T> & NotEmpty<T>)>(
       distinctUntilChanged()
     )
   );
-  return combineLatest(observables).pipe(
-    // As combineLatest will emit multiple times for a change in multiple properties we coalesce those emissions together
-    coalesceWith(durationSelector),
+
+  const obj$ = combineLatest(observables).pipe(
     // mapping array of values to object
     map((values) => {
-      let obj = {} as any;
+      const obj = {} as any;
       for (let i = 0; i < values.length; i++) {
         obj[keys[i]] = values[i];
       }
@@ -73,5 +75,16 @@ export function smosh<T extends ObservableMap | (Partial<T> & NotEmpty<T>)>(
     }),
     // by using shareReplay we share the last composition work done to create the accumulated object
     shareReplay(1)
+  )
+  spreads = spreads.map(o => o.pipe(
+    // we avoid using the nullish operator later ;)
+    filter((v) => v !== undefined),
+    // state "changes" differ from each other, this operator ensures distinct values
+    distinctUntilChanged()
+    )
+  );
+  return merge(...spreads, obj$).pipe(scan((acc, slice) => ({...acc, ...slice}), {})).pipe(
+    // As combineLatest will emit multiple times for a change in multiple properties we coalesce those emissions together
+    coalesceWith(durationSelector)
   );
 }

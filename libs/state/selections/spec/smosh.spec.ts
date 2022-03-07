@@ -92,211 +92,294 @@ beforeEach(() => {
 
 // tslint:disable: no-duplicate-string
 describe('createSmoshObservable', () => {
-  it('should return an observable', () => {
-    testScheduler.run(({ cold, expectObservable }) => {
-      const vm$: Observable<ViewModelTest> = smosh({
-        prop1: of(1),
-        prop2: of('42'),
-        prop3: of(true)
+  describe('with only the object param', () => {
+    it('should return an observable', () => {
+      testScheduler.run(({ cold, expectObservable }) => {
+        const vm$: Observable<ViewModelTest> = smosh({
+          prop1: of(1),
+          prop2: of('42'),
+          prop3: of(true),
+        });
+        expect(vm$.subscribe).toBeDefined();
+        expect(vm$.subscribe().unsubscribe).toBeDefined();
       });
-      expect(vm$.subscribe).toBeDefined();
-      expect(vm$.subscribe().unsubscribe).toBeDefined();
     });
-  });
 
-  it('should return observable that emits if only static values are used', () => {
-    testScheduler.run(({ cold, expectObservable }) => {
-      const vm$: Observable<ViewModelTest> = smosh({
-        prop1: i,
-        prop2: b,
-        prop3: t,
-      },        cold('s'))
-      const expected = '(x|)';
-      expectObservable(vm$).toBe(expected, { x });
-    });
-  });
-
-  it('should return observable that emits when all static and observable sources emitted at least once', () => {
-    testScheduler.run(({ cold, expectObservable }) => {
-      const vm$: Observable<ViewModelTest> = smosh({
-        prop1: cold('h-h-i-', { h, i }),
-        prop2: cold('--a-b-', { a, b }),
-        prop3: t,
-      }, cold(      's'))
-      const expected = '----x-';
-      expectObservable(vm$).toBe(expected, { x });
-    });
-  });
-
-  it('should return observable that not emit when all static and observable sources emitted not at least once', () => {
-    testScheduler.run(({ cold, expectObservable }) => {
-      const vm$: Observable<ViewModelTest> = smosh({
-        prop1: cold('h-h-i-', { h, i }),
-        prop2: cold('--a-b-', { a, b }),
-        prop3: undefined,
-      }, cold(      's'))
-      const expected = '----x-';
-      expectObservable(vm$).toBe(expected, { x });
-    });
-  });
-
-  it('should return observable that emits when all sources emitted at least once', () => {
-    testScheduler.run(({ cold, expectObservable }) => {
-      const vm$: Observable<ViewModelTest> = smosh({
-        prop1: cold('h-h-i-', { h, i }),
-        prop2: cold('--a-b-', { a, b }),
-        prop3: cold('----t-', { t }),
-      }, cold(      's'))
-      const expected = '----x-';
-      expectObservable(vm$).toBe(expected, { x });
-    });
-  });
-
-  it('should return observable that not emit when all sources emitted not at least once', () => {
-    testScheduler.run(({ cold, expectObservable }) => {
-      const vm$: Observable<ViewModelTest> = smosh({
-        prop1: cold('h-h-i-', { h, i }),
-        prop2: cold('--a-b-', { a, b }),
-        prop3: cold('------', { t }),
-      }, cold(      's'))
-      const expected = '------';
-      expectObservable(vm$).toBe(expected);
-    });
-  });
-
-
-  it('should emit last for sync values when durationSelector is a Promise', () => {
-    testScheduler.run(({ cold, expectObservable }) => {
-      const durationSelector = from(Promise.resolve(1));
-      const s1 = cold('(abcdef|)');
-      const exp = '(f|)';
-
-      const result = s1.pipe(coalesceWith(durationSelector));
-      expectObservable(result).toBe(exp);
-    });
-  });
-
-  it('should return observable that does not emits when not all sources emitted at least once', () => {
-    testScheduler.run(({ cold, expectObservable }) => {
-      const vm$: Observable<ViewModelTest> = smosh({
-        prop1: cold('h-h-i-', { h, i }),
-        prop2: cold('--a-b-', { a, b }),
-        prop3: cold<boolean>('------'),
+    it('should return observable that emits if only static values are used', () => {
+      testScheduler.run(({ cold, expectObservable }) => {
+        const vm$: Observable<ViewModelTest> = smosh(
+          {
+            prop1: i,
+            prop2: b,
+            prop3: t,
+          },
+          undefined,
+          { durationSelector: cold('s') }
+        );
+        const expected = '(x|)';
+        expectObservable(vm$).toBe(expected, { x });
       });
-      const expected = '------';
-      expectObservable(vm$).toBe(expected);
+    });
+
+    it('should return observable that emits when all static and observable sources emitted at least once', () => {
+      testScheduler.run(({ cold, expectObservable }) => {
+        const vm$: Observable<ViewModelTest> = smosh(
+          {
+            prop1: cold('h-i--', { h, i }),
+            prop2: cold('---b-', { b }),
+            prop3: t,
+          },
+          undefined,
+          { durationSelector: cold('s') }
+        );
+        const expected = '---x-';
+        expectObservable(vm$).toBe(expected, { x });
+      });
+    });
+
+    it('should return observable that not emit if one sources emitted not at least once or is undefined', () => {
+      testScheduler.run(({ cold, expectObservable }) => {
+        const vm$: Observable<ViewModelTest> = smosh(
+          {
+            prop1: cold('h-h-i-', { h, i }),
+            prop2: cold('--a-b-', { a, b }),
+            prop3: undefined,
+          },
+          undefined,
+          { durationSelector: cold('s') }
+        );
+        const expected = '------';
+        expectObservable(vm$).toBe(expected, { x });
+      });
+    });
+
+    it('should return observable that emits when all sources emitted at least once', () => {
+      testScheduler.run(({ cold, expectObservable }) => {
+        const vm$: Observable<ViewModelTest> = smosh(
+          {
+            prop1: cold('h-h-i-', { h, i }),
+            prop2: cold('--a-b-', { a, b }),
+            prop3: cold('----t-', { t }),
+          },
+          undefined,
+          { durationSelector: cold('s') }
+        );
+        const expected = '----x-';
+        expectObservable(vm$).toBe(expected, { x });
+      });
+    });
+
+    it('should return observable that not emit when if any of the sources not emitted at least once', () => {
+      testScheduler.run(({ cold, expectObservable }) => {
+        const vm$: Observable<ViewModelTest> = smosh(
+          {
+            prop1: cold('h-h-i-', { h, i }),
+            prop2: cold('--a-b-', { a, b }),
+            prop3: cold('------', { t }),
+          },
+          undefined,
+          { durationSelector: cold('s') }
+        );
+        const expected = '------';
+        expectObservable(vm$).toBe(expected);
+      });
+    });
+
+    it('should emit last for sync values when durationSelector is a Promise', () => {
+      testScheduler.run(({ cold, expectObservable }) => {
+        const durationSelector = from(Promise.resolve(1));
+        const s1 = cold('(abcdef|)');
+        const exp = '(f|)';
+
+        const result = s1.pipe(coalesceWith(durationSelector));
+        expectObservable(result).toBe(exp);
+      });
+    });
+
+    it('should return observable that does not emits when not all sources emitted at least once', () => {
+      testScheduler.run(({ cold, expectObservable }) => {
+        const vm$: Observable<ViewModelTest> = smosh({
+          prop1: cold('h-h-i-', { h, i }),
+          prop2: cold('--a-b-', { a, b }),
+          prop3: cold<boolean>('------'),
+        });
+        const expected = '------';
+        expectObservable(vm$).toBe(expected);
+      });
+    });
+
+    it('should return observable that emits only distinct values  --  should distinguish between values', () => {
+      testScheduler.run(({ cold, expectObservable }) => {
+        const values = { u, v, w, x };
+        const vm$: Observable<ViewModelTest> = smosh(
+          {
+            prop1: cold('h-h-i-i-i-i', { h, i }),
+            prop2: cold('a-a-a-b-b-b', { a, b }),
+            prop3: cold('f-f-f-f-t-t', { f, t }),
+          },
+          undefined,
+          { durationSelector: cold('s') }
+        );
+        const expected = 'u---v-w-x--';
+        expectObservable(vm$).toBe(expected, values);
+      });
+    });
+
+    it('should ignore changes if any key is undefined', () => {
+      testScheduler.run(({ cold, expectObservable }) => {
+        const values = { u, v, w, x };
+        const vm$: Observable<ViewModelTest> = smosh(
+          {
+            prop1: cold('h-h-i-i-i-i-i', { h, i }),
+            prop2: cold('_-a-a-_-b-_-b', { _, a, b }),
+            prop3: cold('f-f-f-f-f-t-t', { f, t }),
+          },
+          undefined,
+          { durationSelector: cold('s') }
+        );
+        const expected = '--u-v---w-x--';
+        expectObservable(vm$).toBe(expected, values);
+      });
+    });
+
+    it('should return observable that shares the composition', () => {
+      testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+        const values = { u, v, w, x };
+        const prop1$ = cold('--h--', { h, i });
+        const prop2$ = cold('--a--', { a, b });
+        const prop3$ = cold('--f--', { f });
+        const vm$: Observable<ViewModelTest> = smosh(
+          {
+            prop1: prop1$,
+            prop2: prop2$,
+            prop3: prop3$,
+          },
+          undefined,
+          { durationSelector: cold('s') }
+        );
+        const psubs = '^----';
+        const expected = '--u--';
+
+        expectObservable(vm$).toBe(expected, values);
+        expectSubscriptions(prop1$.subscriptions).toBe(psubs);
+        expectSubscriptions(prop2$.subscriptions).toBe(psubs);
+        expectSubscriptions(prop3$.subscriptions).toBe(psubs);
+      });
+    });
+    it('should return observable that coalesce sync emissions caused by combineLatest (over emitting)', () => {
+      testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+        const values = { u, v, w, x };
+        const prop1$ = cold('--h--i-', { h, i });
+        const prop2$ = cold('--a--b-', { a, b });
+        const prop3$ = cold('--f--t-', { f, t });
+        const vm$: Observable<ViewModelTest> = smosh(
+          {
+            prop1: prop1$,
+            prop2: prop2$,
+            prop3: prop3$,
+          },
+          undefined,
+          { durationSelector: cold('s') }
+        );
+        const psubs = '^------';
+        const expected = '--u--x-';
+
+        expectObservable(vm$).toBe(expected, values);
+        expectSubscriptions(prop1$.subscriptions).toBe(psubs);
+        expectSubscriptions(prop2$.subscriptions).toBe(psubs);
+        expectSubscriptions(prop3$.subscriptions).toBe(psubs);
+      });
+    });
+
+    it('should return observable that coalesce sync emissions caused by sync emissions (over emitting)', () => {
+      testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+        const values = { u, v, w, x };
+        const prop1$ = cold('(hhi)', { h, i });
+        const prop2$ = cold('(abb)', { a, b });
+        const prop3$ = cold('(fft)', { f, t });
+        const vm$: Observable<ViewModelTest> = smosh(
+          {
+            prop1: prop1$,
+            prop2: prop2$,
+            prop3: prop3$,
+          },
+          undefined,
+          { durationSelector: cold('s') }
+        );
+        const psubs = '^------';
+        const expected = 'x';
+
+        expectObservable(vm$).toBe(expected, values);
+        expectSubscriptions(prop1$.subscriptions).toBe(psubs);
+        expectSubscriptions(prop2$.subscriptions).toBe(psubs);
+        expectSubscriptions(prop3$.subscriptions).toBe(psubs);
+      });
+    });
+
+    it('should return observable that coalesce by a custom duration (edge-case)', () => {
+      testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+        const values = { u, v, w, x };
+        const prop1$ = cold('h--i', { h, i });
+        const prop2$ = cold('a--b', { a, b });
+        const prop3$ = cold('f--t', { f, t });
+        const vm$: Observable<ViewModelTest> = smosh(
+          {
+            prop1: prop1$,
+            prop2: prop2$,
+            prop3: prop3$,
+          },
+          undefined,
+          { durationSelector: cold('-----s') }
+        );
+        const psubs = '^-----';
+        const expected = '-----x';
+
+        expectObservable(vm$).toBe(expected, values);
+        expectSubscriptions(prop1$.subscriptions).toBe(psubs);
+        expectSubscriptions(prop2$.subscriptions).toBe(psubs);
+        expectSubscriptions(prop3$.subscriptions).toBe(psubs);
+      });
     });
   });
 
-  it('should return observable that emits only distinct values  --  should distinguish between values', () => {
-    testScheduler.run(({ cold, expectObservable }) => {
-      const values = { u, v, w, x };
-      const vm$: Observable<ViewModelTest> = smosh({
-        prop1: cold('h-h-i-i-i-i', { h, i }),
-        prop2: cold('a-a-a-b-b-b', { a, b }),
-        prop3: cold('f-f-f-f-t-t', { f, t }),
-      }, cold('s'));
-      const expected = 'u---v-w-x--';
-      expectObservable(vm$).toBe(expected, values);
+  describe('with only the array param', () => {
+    it('should replay the last emitted value with all params used', () => {
+      testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
+        const values = { u, v, w, x };
+        const prop1$ = cold('h--i', { h: { prop1: h}, i: { prop1: i} });
+        const prop2$ = cold('--a--', { a: { prop2: a} });
+        const prop3$ = cold('--f--', { f: { prop3: f } });
+        const vm$: Observable<ViewModelTest> = smosh(
+          undefined,
+          [prop1$, prop2$, prop3$],
+          { durationSelector: cold('s') }
+        );
+        const psubs = '^----';
+        const expected = '--u--';
+
+        expectObservable(vm$).toBe(expected, values);
+        expectSubscriptions(prop2$.subscriptions).toBe(psubs);
+        expectSubscriptions(prop3$.subscriptions).toBe(psubs);
+      });
     });
   });
-
-  it('should ignore changes if any key is undefined', () => {
-    testScheduler.run(({ cold, expectObservable }) => {
-      const values = { u, v, w, x };
-      const vm$: Observable<ViewModelTest> = smosh({
-        prop1: cold('h-h-i-i-i-i-i', { h, i }),
-        prop2: cold('_-a-a-_-b-_-b', { _, a, b }),
-        prop3: cold('f-f-f-f-f-t-t', { f, t }),
-      }, cold('s'));
-      const expected = '--u-v---w-x--';
-      expectObservable(vm$).toBe(expected, values);
-    });
-  });
-
-  it('should return observable that shares the composition', () => {
+  it('should replay the last emitted value with all params used', () => {
     testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
       const values = { u, v, w, x };
-      const prop1$ = cold('--h--', { h, i });
-      const prop2$ = cold('--a--', { a, b });
-      const prop3$ = cold('--f--', { f });
-      const vm$: Observable<ViewModelTest> = smosh({
-        prop1: prop1$,
-        prop2: prop2$,
-        prop3: prop3$,
-      }, cold('s'));
+      const prop2$ = cold('--a--', { a });
+      const prop3$ = cold('--f--', { f: { prop3: f } });
+      const vm$: Observable<ViewModelTest> = smosh(
+        {
+          prop1: h,
+          prop2: prop2$,
+        },
+        [prop3$],
+        { durationSelector: cold('s') }
+      );
       const psubs = '^----';
       const expected = '--u--';
 
       expectObservable(vm$).toBe(expected, values);
-      expectSubscriptions(prop1$.subscriptions).toBe(psubs);
-      expectSubscriptions(prop2$.subscriptions).toBe(psubs);
-      expectSubscriptions(prop3$.subscriptions).toBe(psubs);
-    });
-  });
-
-  it('should replay the last emitted value', () => {
-    testScheduler.run(({ cold, expectObservable }) => {});
-  });
-
-  it('should return observable that coalesce sync emissions caused by combineLatest (over emitting)', () => {
-    testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const values = { u, v, w, x };
-      const prop1$ = cold('--h--i-', { h, i });
-      const prop2$ = cold('--a--b-', { a, b });
-      const prop3$ = cold('--f--t-', { f, t });
-      const vm$: Observable<ViewModelTest> = smosh({
-        prop1: prop1$,
-        prop2: prop2$,
-        prop3: prop3$,
-      }, cold('s'));
-      const psubs =    '^------';
-      const expected = '--u--x-';
-
-      expectObservable(vm$).toBe(expected, values);
-      expectSubscriptions(prop1$.subscriptions).toBe(psubs);
-      expectSubscriptions(prop2$.subscriptions).toBe(psubs);
-      expectSubscriptions(prop3$.subscriptions).toBe(psubs);
-    });
-  });
-
-  it('should return observable that coalesce sync emissions caused by sync emissions (over emitting)', () => {
-    testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const values = { u, v, w, x };
-      const prop1$ = cold('(hhi)', { h, i });
-      const prop2$ = cold('(abb)', { a, b });
-      const prop3$ = cold('(fft)', { f, t });
-      const vm$: Observable<ViewModelTest> = smosh({
-        prop1: prop1$,
-        prop2: prop2$,
-        prop3: prop3$,
-      }, cold('s'));
-      const psubs =    '^------';
-      const expected = 'x';
-
-      expectObservable(vm$).toBe(expected, values);
-      expectSubscriptions(prop1$.subscriptions).toBe(psubs);
-      expectSubscriptions(prop2$.subscriptions).toBe(psubs);
-      expectSubscriptions(prop3$.subscriptions).toBe(psubs);
-    });
-  });
-
-  it('should return observable that coalesce by a custom duration (edge-case)', () => {
-    testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-      const values = { u, v, w, x };
-      const prop1$ = cold('h--i', { h, i });
-      const prop2$ = cold('a--b', { a, b });
-      const prop3$ = cold('f--t', { f, t });
-      const vm$: Observable<ViewModelTest> = smosh({
-        prop1: prop1$,
-        prop2: prop2$,
-        prop3: prop3$,
-      },          cold('-----s'));
-      const psubs =    '^-----';
-      const expected = '-----x';
-
-      expectObservable(vm$).toBe(expected, values);
-      expectSubscriptions(prop1$.subscriptions).toBe(psubs);
       expectSubscriptions(prop2$.subscriptions).toBe(psubs);
       expectSubscriptions(prop3$.subscriptions).toBe(psubs);
     });
