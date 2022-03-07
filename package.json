@@ -81,7 +81,7 @@
     "@angular/language-service": "12.2.16",
     "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",
-    "@jscutlery/semver": "^2.18.0",
+    "@jscutlery/semver": "^2.20.1",
     "@nguniversal/builders": "^13.0.2",
     "@ngxs/devtools-plugin": "^3.7.0",
     "@nrwl/angular": "12.10.1",
