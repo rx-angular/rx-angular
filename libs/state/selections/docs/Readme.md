@@ -104,7 +104,7 @@ export class ProblemComponent {
   viewModel$: Observable<ViewModel>; // ???
 
   constructor(private globalState: GlobalState, private state: RxState<Model>) {
-    this.state.set({title: 'My list'})
+    this.state.connect('title', this.globalState.title$);
     this.state.connect('products', this.globalState.products$);
   }
   
@@ -144,11 +144,11 @@ export class ProblemComponent {
     selectSlice(['title', 'sortedList', 'sortDirection'])
   )
 
-  //                                                    BAD: modle viewmodel mix up 👇
+  //                                                    ❌ BAD: modle viewmodel mix up 👇
   constructor(private globalState: GlobalState, private state: RxState<Model & Pick<ViewModel, 'sortedList'>>) {
-    this.state.set({title: 'My list'})
-    this.state.connect('products', this.globalState.products$);
-    // BAD: store derived state 👇
+    // ...
+    
+    // ❌ BAD: store derived state 👇
     this.state.connect('sortedList', this.sortedList$);
   }
   
@@ -174,12 +174,12 @@ export class ProblemComponent {
       })
   );
   
-  // GOOD: Derive view model from model 👇
+  // ✔ GOOD: Derive view model from model 👇
   viewModel$ = smosh({ title: this.state.select('title')}, this.sortedSlice$);
 
   constructor(private globalState: GlobalState, private state: RxState<Model>) {
-    this.state.set({title: 'My list'});
-    this.state.connect('products', this.globalState.products$);
+    // ...
+    
   }
   
   // ...
