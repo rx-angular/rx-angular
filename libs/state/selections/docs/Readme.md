@@ -24,7 +24,7 @@ This data is consumed in different screens:
 interface SelectionScreen1 {
   title: string;
   sortDirection: 'asc' | 'desc' | 'none';
-  list: Array<{ id: number }>
+  sortedList: Array<{ id: number }>
 }
 ```
 
@@ -33,7 +33,7 @@ interface SelectionScreen1 {
 interface SelectionScreen2 {
   title: string;
   startingDate: Date;
-  list: { id: number }
+  filteredList: { id: number }
 }
 ```
 
@@ -90,18 +90,22 @@ A setup of the compoents class based on `RxState` could look like this:
 @Component({
   selector: 'app-problem',
   template: `
-    <ng-container>
-      <h1>{{}}</h1>
+    <ng-container *rxLet="viewModel$; let vm">
+      <h1>{{vm.title}} - {{vm.sortDirection}}</h1>
+      <ul>
+        <li *ngFor="let item of vm.sortedList">{{item}}</li>
+      </ul>
     </ng-container>
     `,
   providers: [RxState],
 })
 export class ProblemComponent {
+  
+  viewModel$: Observable<ViewModel>; // ???
 
   constructor(private globalState: GlobalState, private state: RxState<Model>) {
-    this.state.set(title: 'My list')
+    this.state.set({title: 'My list'})
     this.state.connect('products', this.globalState.products$);
-    
   }
   
   toggleSort() {
@@ -117,13 +121,71 @@ In a components template we want to render the the UI for the above explained vi
 interface SelectionScreen1 {
   title: string;
   sortDirection: 'asc' | 'desc' | 'none';
-  list: Array<{ id: number }>
+  sortedList: Array<{ id: number }>
 }
 ```
 
+A common implementations looks like this:
+
+
+```typescript
+// template removed for brevity
+export class ProblemComponent {
+  
+  private sortedList$ = this.state.select(
+      selectSlice(['sortDirection', 'list']),
+      map(() => {
+         // sort `list` by `sortDirection` to `sortedList` here
+        return sortedList;
+      })
+  );
+  
+  viewModel$ = this.state.select(
+    selectSlice(['title', 'sortedList', 'sortDirection'])
+  )
+
+  //                                                    BAD: modle viewmodel mix up 👇
+  constructor(private globalState: GlobalState, private state: RxState<Model & Pick<ViewModel, 'sortedList'>>) {
+    this.state.set({title: 'My list'})
+    this.state.connect('products', this.globalState.products$);
+    // BAD: store derived state 👇
+    this.state.connect('sortedList', this.sortedList$);
+  }
+  
+  // ...
+}
+
+```
 
 ![Selections (6)](https://user-images.githubusercontent.com/10064416/152422999-db8260f0-69e1-4d99-b6ac-b2b1d043b4b7.png)
 
+By removing the sorted list form the state and moving it into the selection  
+we can clean up the state's typing and have a nice separation of which data is owned by the component (model) and which data is owned by the template (view model)
+
+```typescript
+// template removed for brevity
+export class ProblemComponent {
+  
+  private sortedSlice$ = this.state.select(
+      selectSlice(['sortDirection', 'list']),
+      map(({list, sortDirection}) => {
+        // sort `list` by `sortDirection` to `sortedList` here
+        return { sortDirection, sortedList };
+      })
+  );
+  
+  // GOOD: Derive view model from model 👇
+  viewModel$ = smosh({ title: this.state.select('title')}, this.sortedSlice$);
+
+  constructor(private globalState: GlobalState, private state: RxState<Model>) {
+    this.state.set({title: 'My list'});
+    this.state.connect('products', this.globalState.products$);
+  }
+  
+  // ...
+}
+
+```
 
 ![Selections (7)](https://user-images.githubusercontent.com/10064416/152423026-d23326c2-97d5-4bd0-9015-f498c3fc0e55.png)
 
