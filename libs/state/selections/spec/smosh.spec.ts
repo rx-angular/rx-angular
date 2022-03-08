@@ -351,7 +351,7 @@ describe('createSmoshObservable', () => {
         const prop3$ = cold('--f--', { f: { prop3: f } });
         const vm$: Observable<ViewModelTest> = smosh(
           undefined,
-          [prop1$, prop2$, prop3$],
+          [prop1$, /*prop2$, prop3$*/],
           { durationSelector: cold('s') }
         );
         const psubs = '^----';

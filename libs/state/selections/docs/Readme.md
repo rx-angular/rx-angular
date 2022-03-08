@@ -177,6 +177,25 @@ export class ProblemComponent {
   // ✔ GOOD: Derive view model from model 👇
   viewModel$ = smosh({ title: this.state.select('title')}, this.sortedSlice$);
 
+  // target API
+  viewModel$ = smosh({ 
+    prop1: 'prop1', // string
+    prop2: prop1$ // Observable<string>
+    }, 
+    slice1$, // Observable<{prop3: 3}>
+    slice2$  // Observable<{prop4: 'four'}>,
+    // durationSelector$ (optional)
+  );
+
+  
+  // ✔ GOOD: Derive view model from model 👇
+  viewModel$ = smosh({ 
+      title: this.state.select('title'),
+      ...this.sortedSlice$
+  });
+
+
+
   constructor(private globalState: GlobalState, private state: RxState<Model>) {
     // ...
     

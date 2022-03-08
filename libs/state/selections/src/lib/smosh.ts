@@ -4,7 +4,7 @@ import { distinctUntilChanged, filter, map, shareReplay } from 'rxjs/operators';
 import { Promise } from '@rx-angular/cdk/zone-less/browser';
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import { ExtractObservableValue } from '../../../../cdk/internals/core/src/lib/model';
-import { NonUndefined, NotEmpty, ObservableMap } from './interfaces';
+import { NotEmpty, ObservableMap } from './interfaces';
 import { coerceObservable } from '@rx-angular/cdk/coercing';
 
 const resolvedPromise = Promise.resolve();
@@ -72,9 +72,7 @@ export function smosh<T extends ObservableMap | (Partial<T> & NotEmpty<T>), U ex
         obj[keys[i]] = values[i];
       }
       return obj;
-    }),
-    // by using shareReplay we share the last composition work done to create the accumulated object
-    shareReplay(1)
+    })
   )
   spreads = spreads.map(o => o.pipe(
     // we avoid using the nullish operator later ;)
@@ -83,8 +81,17 @@ export function smosh<T extends ObservableMap | (Partial<T> & NotEmpty<T>), U ex
     distinctUntilChanged()
     )
   );
-  return merge(...spreads, obj$).pipe(scan((acc, slice) => ({...acc, ...slice}), {})).pipe(
+
+  return merge(...spreads, obj$).pipe(scan((acc, slice) => {
+    const ks = Object.keys(slice) as (keyof T)[];
+    for (let i = 0; i < ks.length; i++) {
+      acc[ks[i] as any] = slice[ks[i]];
+    }
+    return acc as any;
+  }, {})).pipe(
     // As combineLatest will emit multiple times for a change in multiple properties we coalesce those emissions together
-    coalesceWith(durationSelector)
+    coalesceWith(durationSelector),
+    // by using shareReplay we share the last composition work done to create the accumulated object
+    shareReplay(1)
   );
 }
