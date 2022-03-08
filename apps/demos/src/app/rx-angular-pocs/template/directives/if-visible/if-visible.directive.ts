@@ -16,7 +16,7 @@ import { Hooks, intersectionObserver } from '../../../cdk';
 
 import {
   createTemplateManager,
-  RxTemplateManager
+  RxTemplateManager,
 } from '@rx-angular/cdk/template';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
@@ -76,7 +76,6 @@ export class IfVisibleDirective<U> extends Hooks implements OnInit {
       },
       renderSettings: {
         cdRef: this.cdRef,
-        eRef: this.eRef,
         parent: coerceBooleanProperty(this.renderParent),
         patchZone: this.patchZone ? this.ngZone : false,
         defaultStrategyName: this.strategyProvider.primaryStrategy,
@@ -132,5 +131,3 @@ function updateViewContext<T>(
     view.context[k] = context[k];
   });
 }
-
-
