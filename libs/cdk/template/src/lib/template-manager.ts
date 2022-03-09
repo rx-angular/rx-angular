@@ -8,13 +8,12 @@ import {
   RxNotificationKind,
   RxSuspenseNotification,
 } from '@rx-angular/cdk/notifications';
-import { EMPTY, merge, Observable, of } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import {
   catchError,
   filter,
   map,
   switchMap,
-  tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import {
