@@ -1,148 +1,16 @@
 import {
   ChangeDetectorRef,
-  Component,
   EmbeddedViewRef,
+  NgZone,
   TemplateRef,
-  Type,
   ViewContainerRef,
-  ɵdetectChanges as detectChanges,
 } from '@angular/core';
-import {
-  combineLatest,
-  concat,
-  merge,
-  MonoTypeOperatorFunction,
-  Observable,
-  of,
-  OperatorFunction
-} from 'rxjs';
-import { ignoreElements, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
   onStrategy,
   RxStrategyCredentials,
 } from '@rx-angular/cdk/render-strategies';
-import { timeoutSwitchMapWith } from '@rx-angular/cdk/internals/core';
-
-// Below are constants for LView indices to help us look up LView members
-// without having to remember the specific indices.
-// Uglify will inline these when minifying so there shouldn't be a cost.
-const TVIEW = 1;
-const T_HOST = 6;
-const L_CONTAINER_NATIVE = 7;
-const CONTEXT = 8;
-const HEADER_OFFSET = 20;
-
-export type TNode = any;
-
-/**
- * @internal
- *
- * Returns the TNode of the passed node form TVIEW of passed cdRef
- *
- * @param cdRef
- * @param native
- */
-export function getTNode(cdRef: ChangeDetectorRef, native: Node): TNode {
-  const lView = (cdRef as any)._cdRefInjectingView;
-  if (!lView) {
-    return undefined;
-  }
-  const tView = lView[TVIEW];
-  let i = HEADER_OFFSET;
-  let lContainer;
-  while (!lContainer && i <= tView['bindingStartIndex']) {
-    const candidate = lView[i];
-    if (candidate && candidate[L_CONTAINER_NATIVE] === native) {
-      lContainer = candidate;
-    }
-    i++;
-  }
-  return lContainer[T_HOST];
-}
-
-/**
- * @internal
- *
- * Returns a set of references to parent views
- *
- *
- * @param cdRef
- * @param tNode
- */
-export function extractProjectionParentViewSet(
-  cdRef: ChangeDetectorRef,
-  tNode: TNode
-): Set<Type<Component>> {
-  const injectingLView = (cdRef as any)._cdRefInjectingView;
-  const injectingTView = injectingLView[1];
-  const components = new Set<number>(injectingTView['components']);
-  const parentElements = new Set<Type<Component>>();
-  let parent = tNode['parent'];
-  while (parent != null && components.size > 0) {
-    const idx = parent['index'];
-    if (components.has(idx)) {
-      // TODO: we should discuss about this. currently only the first Component will get returned, not a list of
-      //  components. Maybe we should make the parent notification configurable regarding the level of `deepness`?
-      // components.delete(idx);
-      components.clear();
-      parentElements.add(injectingLView[idx][CONTEXT]);
-    }
-    parent = parent['parent'];
-  }
-  return parentElements;
-}
-
-export function extractProjectionViews(
-  cdRef: ChangeDetectorRef,
-  tNode: TNode
-): Type<any>[] {
-  return Array.from(extractProjectionParentViewSet(cdRef, tNode));
-}
-
-/**
- * A side effect operator similar to `tap` but with a static logic
- *
- *
- *
- * @param cdRef
- * @param tNode
- * @param strategy$
- */
-export function renderProjectionParents(
-  cdRef: ChangeDetectorRef,
-  tNode: TNode,
-  strategy$: Observable<RxStrategyCredentials>
-): OperatorFunction<any, any> {
-  return (o$) =>
-    o$.pipe(
-      withLatestFrom(strategy$),
-      switchMap(([_, strategy]) => {
-        const parentElements = extractProjectionParentViewSet(cdRef, tNode);
-        const behaviors = [];
-        for (const el of parentElements.values()) {
-          behaviors.push(
-            onStrategy(
-              el,
-              strategy,
-              (value, work, options) => {
-                detectChanges(el);
-              },
-              { scope: el }
-            )
-          );
-        }
-        behaviors.push(
-          onStrategy(
-            null,
-            strategy,
-            (value, work, options) => work(cdRef, options.scope),
-            { scope: (cdRef as any).context || cdRef }
-          )
-        );
-        return merge(...behaviors);
-      })
-    );
-}
+import { concat, MonoTypeOperatorFunction, of } from 'rxjs';
+import { ignoreElements, switchMap } from 'rxjs/operators';
 
 /**
  * @internal
@@ -223,111 +91,42 @@ export function templateHandling<N, C>(
  * A side effect operator similar to `tap` but with a static internal logic.
  * It calls detect changes on the 'VirtualParent' and the injectingViewCdRef.
  *
- * @param tNode
  * @param injectingViewCdRef
  * @param strategy
  * @param notifyNeeded
+ * @param ngZone
  */
 export function notifyAllParentsIfNeeded<T>(
-  tNode: TNode,
   injectingViewCdRef: ChangeDetectorRef,
   strategy: RxStrategyCredentials,
-  notifyNeeded: () => boolean
+  notifyNeeded: () => boolean,
+  ngZone?: NgZone
 ): MonoTypeOperatorFunction<T> {
   return (o$) =>
     o$.pipe(
-      // delay(0, asyncScheduler),
-      // @Todo check why tests fail for this delay replacement
-      timeoutSwitchMapWith(),
       switchMap((v) => {
         const notifyParent = notifyNeeded();
         if (!notifyParent) {
           return of(v);
         }
-        const behaviors = tNode
-          ? getVirtualParentNotifications$(tNode, injectingViewCdRef, strategy)
-          : [];
-        // @TODO remove this CD on injectingViewCdRef if possible
-        behaviors.push(
+        return concat(
+          of(v),
           onStrategy(
             injectingViewCdRef,
             strategy,
-            (_v, work, options) => work(injectingViewCdRef, options.scope),
+            (_v, work, options) => {
+              /*console.log(
+               'notifyAllParentsIfNeeded injectingView',
+               (injectingViewCdRef as any).context
+               );*/
+              work(injectingViewCdRef, options.scope);
+            },
             {
               scope: (injectingViewCdRef as any).context || injectingViewCdRef,
+              ngZone,
             }
-          )
+          ).pipe(ignoreElements())
         );
-        if (behaviors.length === 1) {
-          return of(v);
-        }
-        return concat(of(v), combineLatest(behaviors).pipe(ignoreElements()));
       })
     );
-}
-
-/**
- * @internal
- *
- * returns an Observable executing a side effects for change detection of parents
- *
- * @param injectingViewCdRef
- * @param strategy
- * @param notify
- */
-export function notifyInjectingParentIfNeeded(
-  injectingViewCdRef: ChangeDetectorRef,
-  strategy: RxStrategyCredentials,
-  notify: boolean
-): Observable<null> {
-  return concat(
-    of(null),
-    notify
-      ? onStrategy(
-          injectingViewCdRef,
-          strategy,
-          (value, work, options) => {
-            // console.log('notify injectingView', injectingViewCdRef);
-            work(injectingViewCdRef, options.scope);
-          },
-          {}
-        ).pipe(ignoreElements())
-      : ([] as unknown as Observable<never>)
-  );
-}
-
-/**
- * @internal
- *
- * Returns an array of observables triggering `detectChanges` on the __virtual parent__  (parent of the projected view)
- *
- * @param tNode - is a component that was projected into another component (virtual parent)
- * @param injectingViewCdRef - is needed to get the
- * @param strategy - the strategy to run the change detection
- */
-export function getVirtualParentNotifications$(
-  tNode: TNode,
-  injectingViewCdRef: ChangeDetectorRef,
-  strategy: RxStrategyCredentials
-): Observable<unknown>[] {
-  const parentElements = extractProjectionParentViewSet(
-    injectingViewCdRef,
-    tNode
-  );
-  const behaviors = [];
-  for (const parentComponent of parentElements.values()) {
-    behaviors.push(
-      onStrategy(
-        parentComponent,
-        strategy,
-        // Here we CD the parent to update their projected views scenarios
-        (value, work, options) => {
-          // console.log('parentComponent', parentComponent);
-          detectChanges(parentComponent);
-        },
-        { scope: parentComponent }
-      )
-    );
-  }
-  return behaviors;
 }

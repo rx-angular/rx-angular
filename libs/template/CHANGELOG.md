@@ -2,6 +2,13 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+
+## [0.0.0-beta.32](/compare/template@1.0.0-beta.1...template@1.0.0-beta.32) (2022-02-27)
+
+### Bug Fixes
+
+* **template:** compat for jest and Angular 12
+
 # [1.0.0-beta.31](/compare/template@1.0.0-beta.30...template@1.0.0-beta.31) (2022-02-08)
 
 

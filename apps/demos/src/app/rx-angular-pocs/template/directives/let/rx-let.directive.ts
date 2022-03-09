@@ -15,11 +15,9 @@ import {
 } from '@angular/core';
 import {
   RxTemplateManager,
-  createTemplateManager
+  createTemplateManager,
 } from '@rx-angular/cdk/template';
-import {
-  RxStrategyProvider,
-} from '@rx-angular/cdk/render-strategies';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   RxNotificationKind,
@@ -381,7 +379,6 @@ export class RxLet<U> implements OnInit, OnDestroy {
       },
       renderSettings: {
         cdRef: this.cdRef,
-        eRef: this.eRef,
         parent: coerceBooleanProperty(this.renderParent),
         patchZone: this.patchZone ? this.ngZone : false,
         defaultStrategyName: this.strategyProvider.primaryStrategy,

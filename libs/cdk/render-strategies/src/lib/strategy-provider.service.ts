@@ -15,10 +15,15 @@ import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import {
   mergeDefaultConfig,
   RX_RENDER_STRATEGIES_CONFIG,
-  RxRenderStrategiesConfig
+  RxRenderStrategiesConfig,
 } from './config';
 import { onStrategy } from './onStrategy';
-import { RxStrategies, RxStrategyCredentials, RxStrategyNames, ScheduleOnStrategyOptions } from './model';
+import {
+  RxStrategies,
+  RxStrategyCredentials,
+  RxStrategyNames,
+  ScheduleOnStrategyOptions,
+} from './model';
 
 /**
  * @description
@@ -59,7 +64,7 @@ export class RxStrategyProvider<T extends string = string> {
     RxStrategyCredentials<RxStrategyNames<T>>
   >(undefined);
 
-  private _cfg: Required<RxRenderStrategiesConfig<T>>;
+  private readonly _cfg: Required<RxRenderStrategiesConfig<T>>;
 
   /**
    * @description
@@ -165,6 +170,7 @@ export class RxStrategyProvider<T extends string = string> {
     const strategy = this.strategies[options?.strategy || this.primaryStrategy];
     const scope = options?.scope || {};
     const _work = getWork(work, options?.patchZone);
+    const ngZone = options?.patchZone || undefined;
     return (o$) =>
       o$.pipe(
         switchMap((v) =>
@@ -174,7 +180,7 @@ export class RxStrategyProvider<T extends string = string> {
             (_v) => {
               _work(_v);
             },
-            { scope }
+            { scope, ngZone }
           )
         )
       );
@@ -201,6 +207,7 @@ export class RxStrategyProvider<T extends string = string> {
     const strategy = this.strategies[options?.strategy || this.primaryStrategy];
     const scope = options?.scope || {};
     const _work = getWork(work, options?.patchZone);
+    const ngZone = options?.patchZone || undefined;
     let returnVal: R;
     return onStrategy(
       null,
@@ -208,7 +215,7 @@ export class RxStrategyProvider<T extends string = string> {
       () => {
         returnVal = _work();
       },
-      { scope }
+      { scope, ngZone }
     ).pipe(map(() => returnVal));
   }
 
@@ -234,6 +241,7 @@ export class RxStrategyProvider<T extends string = string> {
     const strategy = this.strategies[options?.strategy || this.primaryStrategy];
     const scope = options?.scope || cdRef;
     const abC = options?.abortCtrl || new AbortController();
+    const ngZone = options?.patchZone || undefined;
     const work = getWork(() => {
       strategy.work(cdRef, scope);
       if (options?.afterCD) {
@@ -246,7 +254,7 @@ export class RxStrategyProvider<T extends string = string> {
       () => {
         work();
       },
-      { scope }
+      { scope, ngZone }
     )
       .pipe(takeUntil(fromEvent(abC.signal, 'abort')))
       .subscribe();

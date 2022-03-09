@@ -2,6 +2,12 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.0.0-beta.2](/compare/cdk@1.0.0-beta.1...cdk@1.0.0-beta.2) (2022-02-27)
+
+### Bug Fixes
+
+* **cdk:** compat for jest and Angular 12
+
 # [1.0.0-beta.1](/compare/cdk@1.0.0-beat.1...cdk@1.0.0-beta.1) (2022-02-08)
 
 
