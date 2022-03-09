@@ -63,6 +63,7 @@ export function createListTemplateManager<
     parent,
   } = renderSettings;
   const errorHandler = createErrorHandler(renderSettings.errorHandler);
+  const ngZone = patchZone ? patchZone : undefined;
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
   //               type,  context
@@ -72,7 +73,6 @@ export function createListTemplateManager<
   const listViewHandler = getTemplateHandler({
     ...templateSettings,
     initialTemplateRef: templateSettings.templateRef,
-    patchZone,
   });
   const viewContainerRef = templateSettings.viewContainerRef;
 
@@ -137,7 +137,8 @@ export function createListTemplateManager<
                 notifyAllParentsIfNeeded(
                   injectingViewCdRef,
                   strategy,
-                  () => notifyParent
+                  () => notifyParent,
+                  ngZone
                 ),
                 map(() => items),
                 catchError((e) => {
@@ -201,7 +202,7 @@ export function createListTemplateManager<
                   break;
               }
             },
-            {}
+            { ngZone }
           );
         })
       : [of(null)];

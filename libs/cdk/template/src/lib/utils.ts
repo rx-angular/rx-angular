@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   EmbeddedViewRef,
+  NgZone,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
@@ -93,11 +94,13 @@ export function templateHandling<N, C>(
  * @param injectingViewCdRef
  * @param strategy
  * @param notifyNeeded
+ * @param ngZone
  */
 export function notifyAllParentsIfNeeded<T>(
   injectingViewCdRef: ChangeDetectorRef,
   strategy: RxStrategyCredentials,
-  notifyNeeded: () => boolean
+  notifyNeeded: () => boolean,
+  ngZone?: NgZone
 ): MonoTypeOperatorFunction<T> {
   return (o$) =>
     o$.pipe(
@@ -120,6 +123,7 @@ export function notifyAllParentsIfNeeded<T>(
             },
             {
               scope: (injectingViewCdRef as any).context || injectingViewCdRef,
+              ngZone,
             }
           ).pipe(ignoreElements())
         );

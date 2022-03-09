@@ -88,8 +88,8 @@ describe('LetDirective parent notification', () => {
         const behavior = strategyProvider.strategies[strategy].behavior;
         componentInstance.rendered$
           .pipe(
-            behavior(() => {}, {
-              scope: {},
+            behavior({
+              work: () => {},
             }),
             delay(0, asapScheduler)
           )
@@ -108,8 +108,8 @@ describe('LetDirective parent notification', () => {
         const behavior = strategyProvider.strategies[strategy].behavior;
         componentInstance.rendered$
           .pipe(
-            behavior(() => {}, {
-              scope: {},
+            behavior({
+              work: () => {},
             }),
             delay(0, asapScheduler)
           )
@@ -128,8 +128,8 @@ describe('LetDirective parent notification', () => {
         const behavior = strategyProvider.strategies[strategy].behavior;
         componentInstance.rendered$
           .pipe(
-            behavior(() => {}, {
-              scope: {},
+            behavior({
+              work: () => {},
             }),
             delay(0, asapScheduler)
           )
@@ -151,8 +151,8 @@ describe('LetDirective parent notification', () => {
         const behavior = strategyProvider.strategies[strategy].behavior;
         componentInstance.rendered$
           .pipe(
-            behavior(() => {}, {
-              scope: {},
+            behavior({
+              work: () => {},
             }),
             delay(0, asapScheduler)
           )
@@ -171,8 +171,8 @@ describe('LetDirective parent notification', () => {
         const behavior = strategyProvider.strategies[strategy].behavior;
         componentInstance.rendered$
           .pipe(
-            behavior(() => {}, {
-              scope: {},
+            behavior({
+              work: () => {},
             }),
             delay(0, asapScheduler)
           )
