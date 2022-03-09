@@ -39,16 +39,16 @@ This repository holds a set of helpers to create **fully reactive** as well as *
   </tr>
   <tr>
     <td>
-      Url: clickup.com <br/>
-      Used in Platforms: Web
+      Url: https://clickup.com <br/>
+      Platforms: Web
     </td>
     <td>
-      Url: get.tapeapp.com<br/>
-      Used in Platforms: Web, Mobile (ionic)
+      Url: https://get.tapeapp.com<br/>
+      Platforms: Web, Mobile (ionic)
     </td>
     <td> 
       Url: https://angular-movies-a12d3.web.app<br/>
-      Used in Platforms: Web
+      Platforms: Web
     </td>
   </tr>
 </table>
