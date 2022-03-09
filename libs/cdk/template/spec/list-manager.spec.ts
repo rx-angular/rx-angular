@@ -85,7 +85,6 @@ class ListTemplateManagerSpecComponent implements AfterViewInit {
       iterableDiffers: this.iterableDiffers,
       renderSettings: {
         cdRef: this.cdRef,
-        eRef: this.eRef,
         strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         parent: false,
