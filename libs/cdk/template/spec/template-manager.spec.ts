@@ -93,7 +93,6 @@ class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
     this.templateManager = createTemplateManager<any, RxViewContext<number>>({
       renderSettings: {
         cdRef: this.cdRef,
-        eRef: this.eRef,
         strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         parent: false,
