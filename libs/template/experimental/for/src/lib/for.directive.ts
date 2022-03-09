@@ -396,7 +396,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param renderParent
    */
-  @Input('rxForParent') renderParent = true;
+  @Input('rxForParent') renderParent = this.strategyProvider.config.parent;
 
   /**
    * @description

@@ -66,7 +66,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
   @Input('rxIfCompleteTpl') completeTmpl: TemplateRef<any>;
   @Input('rxIfErrorTpl') errorTmpl: TemplateRef<any>;
 
-  @Input('rxIfParent') renderParent = true;
+  @Input('rxIfParent') renderParent = this.strategyProvider.config.parent;
 
   @Input('rxIfPatchZone') patchZone = this.strategyProvider.config.patchZone;
 
