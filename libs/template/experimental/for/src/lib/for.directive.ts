@@ -396,7 +396,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param renderParent
    */
-  @Input('rxForParent') renderParent = true;
+  @Input('rxForParent') renderParent = this.strategyProvider.config.parent;
 
   /**
    * @description
@@ -636,7 +636,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       iterableDiffers: this.iterableDiffers,
       renderSettings: {
         cdRef: this.cdRef,
-        eRef: this.eRef,
         strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         parent: !!this.renderParent,

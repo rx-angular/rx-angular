@@ -22,7 +22,8 @@ import {
   createListTemplateManager,
   RxDefaultListViewContext,
   RxListManager,
-  RxListViewComputedContext, RxListViewContext
+  RxListViewComputedContext,
+  RxListViewContext,
 } from '@rx-angular/cdk/template';
 
 import { ReplaySubject, Subject, Observable, Subscription } from 'rxjs';
@@ -632,7 +633,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       iterableDiffers: this.iterableDiffers,
       renderSettings: {
         cdRef: this.cdRef,
-        eRef: this.eRef,
         strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         parent: coerceBooleanProperty(this.renderParent),

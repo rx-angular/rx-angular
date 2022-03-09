@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, ElementRef, Input, Renderer2 } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  Renderer2,
+} from '@angular/core';
 
 @Component({
   selector: 'rxa-dirty-check',
@@ -8,12 +14,12 @@ import { AfterViewInit, Component, ElementRef, Input, Renderer2 } from '@angular
     </div>
   `,
   styles: [
-      `
+    `
       :host .indicator {
         border: 1px solid #ffff005f;
       }
-    `
-  ]
+    `,
+  ],
   //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DirtyChecksComponent implements AfterViewInit {
@@ -23,8 +29,7 @@ export class DirtyChecksComponent implements AfterViewInit {
   @Input()
   log;
 
-  constructor(private elementRef: ElementRef, private renderer: Renderer2) {
-  }
+  constructor(private elementRef: ElementRef, private renderer: Renderer2) {}
 
   ngAfterViewInit() {
     this.displayElem = this.elementRef.nativeElement.children[0].children[0];
@@ -35,7 +40,7 @@ export class DirtyChecksComponent implements AfterViewInit {
     if (this.log) {
       console.log('dirtyCheck', this.log);
     } else {
-
     }
+    return this.dirtyChecks++;
   }
 }
