@@ -51,6 +51,9 @@
       "@rx-angular/template/experimental/for": [
         "libs/template/experimental/for/src/index.ts"
       ],
+      "@rx-angular/template/experimental/if": [
+        "libs/template/experimental/if/src/index.ts"
+      ],
       "@rx-angular/template/experimental/viewport-prio": [
         "libs/template/experimental/viewport-prio/src/index.ts"
       ],
