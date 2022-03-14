@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 
 import { LetDirective } from '../let.directive';
 
@@ -19,7 +19,7 @@ import { LetDirective } from '../let.directive';
   `,
 })
 class LetDirectiveTestStrategyComponent {
-  value$: Observable<number> = of(42);
+  value$: Observable<number> = new BehaviorSubject<number>(42);
   renderedValue$ = new Subject<number>();
   strategy: string;
 }
@@ -47,8 +47,8 @@ describe('LetDirective strategies', () => {
   });
 
   describe.each([
-    [''], /* <- Invalid strategy should fallback. */
-    ['invalid'], /* <- Same here. */
+    [''] /* <- Invalid strategy should fallback. */,
+    ['invalid'] /* <- Same here. */,
 
     ['immediate'],
     ['userBlocking'],

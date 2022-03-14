@@ -1,7 +1,6 @@
 import {
   ChangeDetectorRef,
   Directive,
-  ElementRef,
   EmbeddedViewRef,
   ErrorHandler,
   Input,
@@ -302,7 +301,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
 
   /* @todo: Rename to `rxRenderParent`? */
   // eslint-disable-next-line @angular-eslint/no-input-rename
-  @Input('rxLetParent') renderParent = true;
+  @Input('rxLetParent') renderParent = this.strategyProvider.config.parent;
 
   @Input('rxLetPatchZone') patchZone = this.strategyProvider.config.patchZone;
 
@@ -329,7 +328,6 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   constructor(
     private strategyProvider: RxStrategyProvider,
     public cdRef: ChangeDetectorRef,
-    public eRef: ElementRef,
     private ngZone: NgZone,
     private readonly nextTemplateRef: TemplateRef<RxLetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef,
@@ -443,7 +441,6 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
       },
       renderSettings: {
         cdRef: this.cdRef,
-        eRef: this.eRef,
         parent: !!this.renderParent,
         patchZone: this.patchZone ? this.ngZone : false,
         defaultStrategyName: this.strategyProvider.primaryStrategy,

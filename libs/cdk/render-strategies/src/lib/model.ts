@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, NgZone } from '@angular/core';
-import { coalescingObj } from '@rx-angular/cdk/coalescing';
+import { coalescingObj, RxCoalescingOptions } from '@rx-angular/cdk/coalescing';
 import { RxNotification } from '@rx-angular/cdk/notifications';
 import { Observable } from 'rxjs';
 
@@ -14,10 +14,11 @@ export type RxRenderWork = <T = unknown>(
   scope?: coalescingObj,
   notification?: RxNotification<T>
 ) => void;
-export type RxRenderBehavior = <T = unknown>(
-  work: any,
-  scope?: coalescingObj
-) => (o: Observable<T>) => Observable<T>;
+export type RxRenderBehavior = <T = unknown>(params: {
+  work: () => any;
+  scope?: coalescingObj;
+  ngZone?: NgZone;
+}) => (o: Observable<T>) => Observable<T>;
 
 export interface RxStrategyCredentials<S = string> {
   name: S;
@@ -25,8 +26,10 @@ export interface RxStrategyCredentials<S = string> {
   behavior: RxRenderBehavior;
 }
 
-export type RxCustomStrategyCredentials<T extends string> = Record<T,
-  RxStrategyCredentials>;
+export type RxCustomStrategyCredentials<T extends string> = Record<
+  T,
+  RxStrategyCredentials
+>;
 export type RxNativeStrategyNames = 'native' | 'local' | 'global' | 'noop';
 export type RxConcurrentStrategyNames =
   | 'immediate'
@@ -38,4 +41,6 @@ export type RxDefaultStrategyNames =
   | RxNativeStrategyNames
   | RxConcurrentStrategyNames;
 export type RxStrategyNames<T> = RxDefaultStrategyNames | T;
-export type RxStrategies<T extends string> = RxCustomStrategyCredentials<RxStrategyNames<T>>;
+export type RxStrategies<T extends string> = RxCustomStrategyCredentials<
+  RxStrategyNames<T>
+>;
