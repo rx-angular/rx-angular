@@ -23,13 +23,13 @@ In Angular, a way of binding an observable to the `ngClass` or `class` directive
 ```
 
 When using the native `ngClass` or `class` directive, the template of your component needs to get re-evaluated in order to apply the changes. In other words `ChangeDetection` has to run for your component in order to set a class to an `HTMLElement`.
-That's not the case when using `rxClass` that allows you to re-render the content asynchronously based on the chosen strategy.  The async behavior description can be found here: https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/performance-issues.md#binding-reactive-sources.
+`rxClass` in comparison allows you to apply class updates without running `ChangeDetection` with a configurable render-strategy.
 
+You find more on this topic and why the usage of `async` pipe can harm your performance [here](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/performance-issues.md#binding-reactive-sources).
 ### Features of `rxClass`
 
 - re-rendering without `ChangeDetection`
 - binding is always present. (see "Problems with `async` and `*ngClass` or `class`" section above)
-- it takes away the multiple usages of the `async` or `push` pipe
 - a unified/structured way of handling null and undefined
 - it allows to easily choose preferred rendering strategy using `rxClassStrategy` directive
 
