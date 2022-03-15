@@ -1,7 +1,6 @@
 import {
   ChangeDetectorRef,
   Directive,
-  ElementRef,
   EmbeddedViewRef,
   Input,
   NgZone,
@@ -67,7 +66,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
   @Input('rxIfCompleteTpl') completeTmpl: TemplateRef<any>;
   @Input('rxIfErrorTpl') errorTmpl: TemplateRef<any>;
 
-  @Input('rxIfParent') renderParent = true;
+  @Input('rxIfParent') renderParent = this.strategyProvider.config.parent;
 
   @Input('rxIfPatchZone') patchZone = this.strategyProvider.config.patchZone;
 
@@ -89,7 +88,6 @@ export class RxIf<U> implements OnInit, OnDestroy {
   constructor(
     private strategyProvider: RxStrategyProvider,
     private cdRef: ChangeDetectorRef,
-    private eRef: ElementRef<Comment>,
     private ngZone: NgZone,
     private readonly thenTemplateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef
@@ -157,7 +155,6 @@ export class RxIf<U> implements OnInit, OnDestroy {
       },
       renderSettings: {
         cdRef: this.cdRef,
-        eRef: this.eRef,
         parent: coerceBooleanProperty(this.renderParent),
         patchZone: this.patchZone ? this.ngZone : false,
         defaultStrategyName: this.strategyProvider.primaryStrategy,

@@ -148,9 +148,9 @@ export function createTemplateNotifier<U>(withSuspenseTpl?: () => boolean): {
     // handle static values inc null assignment and new Observable or Promises
     map((observable$): Observable<ObservableInput<U> | U> => {
       const isNull = observable$ === null;
-      const isPromiseOrObs = typeof (observable$ as any).then === 'function' || isObservable(observable$);
+      const isPromiseOrObs = !isNull && (typeof (observable$ as any).then === 'function' || isObservable(observable$));
       // A value is considered as static value if it is `null`, or any other value than `undefined`, `Promise`, `Observable`
-      const isStaticValue = !isPromiseOrObs && !(observable$ === undefined) || isNull;
+      const isStaticValue = !isPromiseOrObs && !(observable$ === undefined);
 
       const isNEVER = observable$ === NEVER;
       // If it is a `NEVER` Observable we know it will never emit a value nor complete or error.
