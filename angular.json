@@ -3,5 +3,173 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-  }
+    "ngx-isr": {
+      "projectType": "library",
+      "root": "projects/ngx-isr",
+      "sourceRoot": "projects/ngx-isr/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/ngx-isr/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-isr/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ngx-isr/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-isr/src/test.ts",
+            "tsConfig": "projects/ngx-isr/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-isr/karma.conf.js"
+          }
+        }
+      }
+    },
+    "ngx-isr-demo": {
+      "projectType": "application",
+      "root": "projects/ngx-isr-demo",
+      "sourceRoot": "projects/ngx-isr-demo/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/ngx-isr-demo/browser",
+            "index": "projects/ngx-isr-demo/src/index.html",
+            "main": "projects/ngx-isr-demo/src/main.ts",
+            "polyfills": "projects/ngx-isr-demo/src/polyfills.ts",
+            "tsConfig": "projects/ngx-isr-demo/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/ngx-isr-demo/src/favicon.ico",
+              "projects/ngx-isr-demo/src/assets"
+            ],
+            "styles": [
+              "projects/ngx-isr-demo/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/ngx-isr-demo/src/environments/environment.ts",
+                  "with": "projects/ngx-isr-demo/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "ngx-isr-demo:build:production"
+            },
+            "development": {
+              "browserTarget": "ngx-isr-demo:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ngx-isr-demo:build"
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/ngx-isr-demo/server",
+            "main": "projects/ngx-isr-demo/server.ts",
+            "tsConfig": "projects/ngx-isr-demo/tsconfig.server.json",
+            "inlineStyleLanguage": "scss"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "projects/ngx-isr-demo/src/environments/environment.ts",
+                  "with": "projects/ngx-isr-demo/src/environments/environment.prod.ts"
+                }
+              ]
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "ngx-isr-demo:build:development",
+              "serverTarget": "ngx-isr-demo:server:development"
+            },
+            "production": {
+              "browserTarget": "ngx-isr-demo:build:production",
+              "serverTarget": "ngx-isr-demo:server:production"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "prerender": {
+          "builder": "@nguniversal/builders:prerender",
+          "options": {
+            "routes": [
+              "/"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ngx-isr-demo:build:production",
+              "serverTarget": "ngx-isr-demo:server:production"
+            },
+            "development": {
+              "browserTarget": "ngx-isr-demo:build:development",
+              "serverTarget": "ngx-isr-demo:server:development"
+            }
+          },
+          "defaultConfiguration": "production"
+        }
+      }
+    }
+  },
+  "defaultProject": "ngx-isr"
 }
