@@ -1,6 +1,6 @@
 export interface ISRHandlerConfig {
   cache: {
-    type: 'memory' | 'filesystem';
+    type: 'memory'; // TODO: add filesystem
     cacheFolderPath?: string; // is required for filesystem cache type
   },
   indexHtml: string; // indexHtml path,

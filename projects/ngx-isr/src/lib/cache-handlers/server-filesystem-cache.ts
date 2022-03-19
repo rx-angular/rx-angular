@@ -81,8 +81,8 @@ export class ServerFileSystemCache implements CacheHandler {
       return;
     }
 
-    fs.readdir(this.cacheFolderPath, (err, files) => {
-      this.cachedUrls = files.map((fileName) => `/${fileName.replace('.html', '')}`);
+    fs.readdir(this.cacheFolderPath, (err, files: any) => {
+      this.cachedUrls = files.map((fileName: any) => `/${fileName.replace('.html', '')}`);
       console.log("Cached urls: ", this.cachedUrls);
     });
   }

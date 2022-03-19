@@ -1,4 +1,4 @@
-import { NgxIsrService } from './../../../ngx-isr/src/lib/ngx-isr.service';
+import { NgxIsrService } from 'ngx-isr';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { take } from 'rxjs';
@@ -20,10 +20,13 @@ import { take } from 'rxjs';
   `,
 })
 export class AppComponent {
+  // Step 5: add NgxIsrService in AppComponent in order to initialize route listener
   constructor(private http: HttpClient, private isrService: NgxIsrService){}
 
   invalidate(url: string): void {
-    // const path = `http://localhost:4200/api/invalidate?secret=MY_TOKEN&urlToInvalidate=${url}`
-    // this.http.get(path).pipe(take(1)).subscribe();
+    const path = `http://localhost:4200/api/invalidate?secret=MY_TOKEN&urlToInvalidate=${url}`
+    this.http.get(path).pipe(take(1)).subscribe(
+      res => console.log(res)
+    );
   }
 }

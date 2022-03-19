@@ -26,13 +26,14 @@ export class ISRHandler {
     // TODO: find a better and tree-shakable way to handle this
     if (config.cache.type === 'memory') {
       this.cache = new ServerSsrInMemoryCache();
-    } else if (config.cache.type === 'filesystem') {
-      if (!config.cache.cacheFolderPath) {
-        throw new Error('Provide cacheFolderPath inside cache config!');
-      }
-
-      this.cache = new ServerFileSystemCache(config.cache.cacheFolderPath);
     }
+    // else if (config.cache.type === 'filesystem') {
+    //   if (!config.cache.cacheFolderPath) {
+    //     throw new Error('Provide cacheFolderPath inside cache config!');
+    //   }
+
+    //   this.cache = new ServerFileSystemCache(config.cache.cacheFolderPath);
+    // }
 
     this.cacheRegeneration = new CacheRegeneration(this.cache, config.indexHtml);
   }
@@ -61,7 +62,7 @@ export class ISRHandler {
 
       try {
         // re-render the page again
-        const html = await renderUrl(urlToInvalidate, req, res, this.indexHtml);
+        const html = await renderUrl(req, res, urlToInvalidate, this.indexHtml);
         // get revalidate data in order to set it to cache data
         const { revalidate } = getISROptions(html);
         // add the regenerated page to cache
