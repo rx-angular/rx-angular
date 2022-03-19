@@ -9,6 +9,7 @@ npm install ngx-isr
 ```
 
 > Make sure you have Angular Universal in your app.
+
 > Setup Angular Universal: `ng add @nguniversal/express-engine`
 
 
@@ -31,20 +32,20 @@ server.get("/api/invalidate", async (req, res) => await isr.invalidate(req, res)
 
 Replace
 ```ts
--server.get('*',
-- (req, res) => {
--   res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
-- }
--);
+server.get('*',
+ (req, res) => {
+   res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
+ }
+);
 ```
 with
 ```ts
-+server.get('*',
-+  // Serve page if it exists in cache
-+  async (req, res, next) => await isr.serveFromCache(req, res, next),
-+  // Server side render the page and add to cache if needed
-+  async (req, res, next) => await isr.render(req, res, next),
-+);
+server.get('*',
+  // Serve page if it exists in cache
+  async (req, res, next) => await isr.serveFromCache(req, res, next),
+  // Server side render the page and add to cache if needed
+  async (req, res, next) => await isr.render(req, res, next),
+);
 ```
 > NOTE: Routes that don't have revalidate key in data won't be handled by ISR, they will fallback to Angular default server side rendering pipeline.
 
@@ -55,7 +56,7 @@ Example:
 {
   path: "example",
   component: ExampleComponent,
-+  data: { revalidate: 5 },
+  data: { revalidate: 5 },
 }
 ```
 
@@ -65,7 +66,7 @@ Example:
 ```
 By adding the service in the constructor it will be initialized and start to listen to route changes.
 
-It will be run only on server side.
+**It will be run only on server side.**
 
 # Play with demo [Stackblitz](https://stackblitz.com/edit/node-cvlod6?file=server.ts)
 
@@ -75,7 +76,7 @@ npm install
 npm run dev:ssr
 ```
 
-1. *Disable Javascript** (in order to not load Angular after the page loads)
+1. **Disable Javascript** (in order to not load Angular after the page loads)
 2. Navigate to different pages and check how the cache gets regenerated in terminal logs
 
 
