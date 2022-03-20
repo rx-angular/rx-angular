@@ -118,7 +118,6 @@ On the third request to the same url, if the regeneration was finished the user 
 - Path `/three` after the first request that is server-rendered, the page will be added to cache and the cache will never be deleted automatically as in path `/two`. So after the first request, all the other ones will come from the cache.
 
 ## What's next?
-- Add example with transfer state
 - Add tests
 - Add create cache at production build
 - Add Redis implementation to handle cache
