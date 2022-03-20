@@ -8,7 +8,7 @@ export function getISROptions(html: string): ISROptions {
   const indexOfScriptTag = html?.indexOf(isrScriptTag);
 
   // check if script tag is not included
-  if (indexOfScriptTag === -1) {
+  if (!html || indexOfScriptTag === -1) {
     return { revalidate: null };
   }
 
