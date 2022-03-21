@@ -89,7 +89,7 @@ export class ISRHandler {
 
       // Cache exists. Send it.
       this.showLogs && console.log("Page was retrieved from cache: ", req.url);
-      res.send(`${html} <h1>Cache hit!</h1>`);
+      res.send(html);
     } catch (error) {
       // Cache does not exist. Serve user using SSR
       next();
