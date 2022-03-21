@@ -1,3 +1,4 @@
+import { InMemoryCacheHandler } from 'ngx-isr';
 import { environment } from './src/environments/environment';
 import 'zone.js/dist/zone-node';
 
@@ -18,7 +19,6 @@ export function app(): express.Express {
 
   // Step 1: Initialize ISRHandler
   const isr = new ISRHandler({
-    cache: { type: 'memory' },
     indexHtml,
     invalidateSecretToken: 'MY_TOKEN',
     enableLogging: !environment.production

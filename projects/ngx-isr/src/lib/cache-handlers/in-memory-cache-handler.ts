@@ -1,6 +1,6 @@
 import { CacheData, CacheHandler, ISROptions } from "../models/cache-handler";
 
-export class ServerSsrInMemoryCache implements CacheHandler {
+export class InMemoryCacheHandler implements CacheHandler {
   private cache = new Map<string, CacheData>();
 
   add(url: string, html: string, options: ISROptions = { revalidate: null }): Promise<void> {

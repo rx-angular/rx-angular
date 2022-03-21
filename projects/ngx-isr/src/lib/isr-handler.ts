@@ -1,6 +1,5 @@
 import { CacheHandler, ISRHandlerConfig } from './models';
-import { ServerFileSystemCache } from './cache-handlers/server-filesystem-cache';
-import { ServerSsrInMemoryCache } from './cache-handlers/server-in-memory-cache';
+import { InMemoryCacheHandler } from './cache-handlers';
 import { renderUrl } from './utils/render-url';
 import { getISROptions } from './utils/get-isr-options';
 import { CacheRegeneration } from './cache-regeneration';
@@ -23,17 +22,11 @@ export class ISRHandler {
     this.invalidateSecretToken = config.invalidateSecretToken;
     this.showLogs = config?.enableLogging ?? false;
 
-    // TODO: find a better and tree-shakable way to handle this
-    if (config.cache.type === 'memory') {
-      this.cache = new ServerSsrInMemoryCache();
+    if (config.cache && config.cache instanceof CacheHandler) {
+      this.cache = config.cache;
+    } else {
+      this.cache = new InMemoryCacheHandler()
     }
-    // else if (config.cache.type === 'filesystem') {
-    //   if (!config.cache.cacheFolderPath) {
-    //     throw new Error('Provide cacheFolderPath inside cache config!');
-    //   }
-
-    //   this.cache = new ServerFileSystemCache(config.cache.cacheFolderPath);
-    // }
 
     this.cacheRegeneration = new CacheRegeneration(this.cache, config.indexHtml);
   }

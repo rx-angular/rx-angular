@@ -2,7 +2,7 @@ import { CacheData, CacheHandler } from "../models/cache-handler";
 import * as fs from "fs";
 import { join } from "path";
 
-export class ServerFileSystemCache implements CacheHandler {
+export class FileSystemCacheHandler implements CacheHandler {
   // in cache we will save url and path to file
   private cachedUrls: string[] = [];
   private cacheFolderPath: string;
