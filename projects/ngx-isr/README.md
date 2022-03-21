@@ -16,7 +16,6 @@ npm install ngx-isr
 2. Initialize `ISRHandler` inside `server.ts`
 ```ts
 const isr = new ISRHandler({
-  cache: { type: 'memory' },
   indexHtml,
   invalidateSecretToken: 'MY_TOKEN', // replace with env secret key
   enableLogging: !environment.production
@@ -116,13 +115,6 @@ The url will be added to a regeneration queue, in order to re-generate the cache
 On the third request to the same url, if the regeneration was finished the user will be served the regenerated page otherwise he will be served with the old cached page.
 
 - Path `/three` after the first request that is server-rendered, the page will be added to cache and the cache will never be deleted automatically as in path `/two`. So after the first request, all the other ones will come from the cache.
-
-## What's next?
-- Add tests
-- Add create cache at production build
-- Add Redis implementation to handle cache
-- Check-out what can be done with hybrid-rendering (using cached pages as prerendered ones)
-- Add an api to invalidate (regenerate) multiple pages at once (using post request with urls in body)
 
 ## License
 MIT
