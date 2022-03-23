@@ -59,10 +59,16 @@ As this process contains a lot of gotchas and possible pitfalls in terms of memo
 - Shares computed result with multiple subscriber
 - Select distinct sub-sets
 - Select from static values
-- Fully Tested
-- Fully Typed
+- Fully tested
+- Strongly typed
 
-## Selection owner - Template vs Class
+# Concepts
+
+## Selection composition - lazy vs eager
+
+## Selection composition - functional vs reactive
+
+## Selection setup - Template vs Class
 
 As Observables are cold their resulting stream will only get activated by a subscription.
 This leads to a situations called: "the late subscriber problem" or "the early subscriber problem". (LINK)
@@ -74,8 +80,69 @@ In most cases it's best to go with solving problems on the early subscriber side
 
 ![Selections (4)](https://user-images.githubusercontent.com/10064416/152422883-0b5f6006-7929-4520-b0b2-79eb61e4eb08.png)
 
+# Usage
 
-## Advanced derivation architecture
+## select
+
+`select` is the stand-alone version of the `RxState#select` top level method. It helps to create default selection's from a changing state source.
+
+```typescritp
+// emissions: 
+// 0.        - no emission ever happened
+// 1. {a: 1} - incomplete state leads to `?` pollution in the template
+// 2. {a: 1, b: 'a'} - render relevant emission
+// 2. {a: 1, b: 'a'} - same instance emisssion 
+// 3. {a: 1, b: 'a', c: true} - render irrelevant change
+// 4. {a: 1, b: 'b', c: true} - render relevant emission
+const model$: Observable<Partial<{a: number, b: string, c: boolean}>>;
+``` 
+**Problem**
+```html
+<!-- 
+
+Computes 2 times & Renders 0. ❌; 1. ❌; 2. ✅; 3. ❌; .4 ✅
+-->
+<div *rxLet="model$; let vm">
+    B: {{vm?.b}}
+</div>
+B: {{(model$ | push)?.b}}
+```
+
+### single property short hand
+```typescritp
+const vm$ = model$.pipe(select('b'));
+``` 
+```html
+<!-- 
+Computes 1 time & Renders 2. ✅; .4 ✅
+-->
+<div *rxLet="model$; let vm">
+    B: {{vm.b}}
+</div>
+B: {{(model$ | push).b}}
+```
+
+### single operators
+```typescritp
+const vm$: Observable<> = model$.pipe(select(map(({b}) => b === 'a')));
+``` 
+```html
+<!-- 
+Computes 1 time & Renders 2. ✅; .4 ✅
+-->
+<div *rxLet="model$; let vm">
+    B: {{vm.b}}
+</div>
+B: {{(model$ | push).b}}
+```
+
+## selectSlice
+
+## smosh
+  
+## distinctUntilSomeChanges
+
+# Advanced derivation architecture
 
 **The problem**
 

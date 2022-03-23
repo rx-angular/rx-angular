@@ -46,12 +46,15 @@ const resolvedPromise$ = from(resolvedPromise);
  * @param obj - An object of key & Observable values pairs
  * @param durationSelector - An Observable determining the duration for the internal coalescing method
  */
-export function smosh<T extends ObservableMap | (Partial<T> & NotEmpty<T>), U extends Record<string, any>>(
+export function smosh<
+  T extends ObservableMap | (Partial<T> & NotEmpty<T>),
+  U extends Record<string, any>
+>(
   obj: Partial<T>,
   spreads: Observable<U>[] = [],
-  options?: {durationSelector: Observable<any>}
-): Observable<{ [K in keyof T]: ExtractObservableValue<T[K]>} & U> {
-  let {durationSelector} = options || {};
+  options?: { durationSelector: Observable<any> }
+): Observable<{ [K in keyof T]: ExtractObservableValue<T[K]> } & U> {
+  let { durationSelector } = options || {};
   durationSelector = durationSelector || resolvedPromise$;
   const keys = Object.keys(obj) as (keyof T)[];
   const observables = keys.map((key) =>
@@ -73,25 +76,32 @@ export function smosh<T extends ObservableMap | (Partial<T> & NotEmpty<T>), U ex
       }
       return obj;
     })
-  )
-  spreads = spreads.map(o => o.pipe(
-    // we avoid using the nullish operator later ;)
-    filter((v) => v !== undefined),
-    // state "changes" differ from each other, this operator ensures distinct values
-    distinctUntilChanged()
+  );
+  spreads = spreads.map((o) =>
+    o.pipe(
+      // we avoid using the nullish operator later ;)
+      filter((v) => v !== undefined),
+      // state "changes" differ from each other, this operator ensures distinct values
+      distinctUntilChanged()
     )
   );
 
-  return merge(...spreads, obj$).pipe(scan((acc, slice) => {
-    const ks = Object.keys(slice) as (keyof T)[];
-    for (let i = 0; i < ks.length; i++) {
-      acc[ks[i] as any] = slice[ks[i]];
-    }
-    return acc as any;
-  }, {})).pipe(
-    // As combineLatest will emit multiple times for a change in multiple properties we coalesce those emissions together
-    coalesceWith(durationSelector),
-    // by using shareReplay we share the last composition work done to create the accumulated object
-    shareReplay(1)
-  );
+  return combineLatest([...spreads, obj$])
+    .pipe(
+      scan((acc, slices) => {
+        const ks = slices.flatMap((slice) => Object.keys(slice)) as (keyof T)[];
+        slices.forEach((slice) => {
+          for (let i = 0; i < ks.length; i++) {
+            acc[ks[i] as any] = slice[ks[i]];
+          }
+        });
+        return acc as any;
+      }, {})
+    )
+    .pipe(
+      // As combineLatest will emit multiple times for a change in multiple properties we coalesce those emissions together
+      coalesceWith(durationSelector),
+      // by using shareReplay we share the last composition work done to create the accumulated object
+      shareReplay(1)
+    );
 }
