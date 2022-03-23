@@ -85,7 +85,11 @@ export function extractProjectionParentViewSet(
       //  components. Maybe we should make the parent notification configurable regarding the level of `deepness`?
       // components.delete(idx);
       components.clear();
-      parentElements.add(injectingLView[idx][CONTEXT]);
+
+      const parentElement = injectingLView[idx][CONTEXT];
+      if (parentElement) {
+        parentElements.add(parentElement);
+      }
     }
     parent = parent['parent'];
   }
@@ -322,7 +326,6 @@ export function getVirtualParentNotifications$(
         strategy,
         // Here we CD the parent to update their projected views scenarios
         (value, work, options) => {
-          // console.log('parentComponent', parentComponent);
           detectChanges(parentComponent);
         },
         { scope: parentComponent }
