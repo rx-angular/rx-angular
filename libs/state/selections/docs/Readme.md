@@ -257,9 +257,8 @@ export class ProblemComponent {
   
   // ✔ GOOD: Derive view model from model 👇
   viewModel$ = smosh({ 
-      title: this.state.select('title'),
-      [this.sortedSlice$]
-  });
+      title: this.state.select('title')
+  }, [this.sortedSlice$]);
 
 
 
