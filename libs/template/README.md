@@ -20,7 +20,7 @@ structural directives, pipes, RxJS operators, or imperative functions to manage 
 Developers are provided with tools for high-performance rendering, which are operated by a broad and intuitive API.
 
 The [LetDirective (`*rxLet`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md) &
-[PushPipe (`push`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/push.md) focus
+[PushPipe (`push`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/push-pipe.md) focus
 on template rendering, the coordination and optimization of `ChangeDetection` cycles. While the `PushPipe` is a
 straight **drop in replacement** for the `AsyncPipe (async)`, the `LetDirective` will often provide a more
 convenient way of managing reactive sources and lazy rendering of the view.
@@ -29,7 +29,7 @@ Using those with the default strategy ([Local Strategy](https://github.com/rx-an
 your application by a decent amount.
 
 The applied optimization behavior is fully customizable by using built-in or
-custom provided (_coming soon_) [RenderStrategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/docs/render-strategies).  
+custom provided [RenderStrategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/docs/render-strategies).  
 However, `RenderStrategies` are also meant to be as a tool developers can interact with inside
 their components, giving you an even broader access to the rendering mechanisms of your application.
 The API comes with imperative as well as reactive ways to manage renderings.
@@ -81,11 +81,12 @@ nx migrate @rx-angular/template
 You can import each feature module individually.
 
 ```typescript
-import { LetModule, PushModule, ViewportPrioModule } from '@rx-angular/template';
+import { LetModule } from '@rx-angular/template/let';
+import { PushModule } from '@rx-angular/template/push';
 
 @NgModule({
   declarations: [...],
-  imports: [LetModule, PushModule, ViewportPrioModule],
+  imports: [LetModule, PushModule],
 })
 export class MyModule {}
 ```
@@ -95,17 +96,16 @@ export class MyModule {}
 - Directives
   - [LetDirective (\*rxLet)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md)
 - Pipes
-  - [PushPipe (push)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/push.md)
-- [Render Strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies/docs/README.md)
+  - [PushPipe (push)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/push-pipe.md)
 
 ## Experimental features
 
-Additionally, @rx-angular/template provides some experimental optimization tools which in general will give you more control
+Additionally, `@rx-angular/template` provides some experimental optimization tools which in general will give you more control
 about what changes are leading to re-renderings.
 
+- [🧪 RxIf (\*rxIf)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/viewport-prio.md)
+- [🧪 RxFor (\*rxFor)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/viewport-prio.md)
 - [🧪 Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/viewport-prio.md)
-- [🧪 UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/unpatch.md)
-- [🧪 Detach strategy](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/experimental-render-strategies.md)
 
 ## Version Compatibility
 
