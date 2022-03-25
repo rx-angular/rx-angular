@@ -1,8 +1,8 @@
 import { TestScheduler } from 'rxjs/testing';
-// tslint:disable-next-line:nx-enforce-module-boundaries
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 
-import { smosh } from '@rx-angular/state/selections';
+import { smosh } from '../src';
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import { from, Observable, of } from 'rxjs';
 

@@ -1,11 +1,10 @@
-import { combineLatest, from, merge, Observable, scan } from 'rxjs';
+import { combineLatest, from, Observable, scan } from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay } from 'rxjs/operators';
 
 import { Promise } from '@rx-angular/cdk/zone-less/browser';
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
-import { ExtractObservableValue } from '../../../../cdk/internals/core/src/lib/model';
-import { NotEmpty, ObservableMap } from './interfaces';
 import { coerceObservable } from '@rx-angular/cdk/coercing';
+import { ExtractObservableValue, NotEmpty, ObservableMap } from './interfaces';
 
 const resolvedPromise = Promise.resolve();
 const resolvedPromise$ = from(resolvedPromise);
@@ -25,7 +24,7 @@ const resolvedPromise$ = from(resolvedPromise);
  *   prop1: number,
  *   prop2: string,
  *   prop3: string
- * }> = accumulateObservables({
+ * }> = smosh({
  *   prop1: interval(42),
  *   prop2: of('lorem'),
  *   prop3: 'test'
@@ -37,7 +36,7 @@ const resolvedPromise$ = from(resolvedPromise);
  *   prop1: number,
  *   prop2: string,
  *   prop3: string
- * }> = accumulateObservables({
+ * }> = smosh({
  *   prop1: interval(42),
  *   prop2: of('lorem'),
  *   prop3: 'test'
