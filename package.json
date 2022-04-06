@@ -87,7 +87,7 @@
     "@nrwl/angular": "12.10.1",
     "@nrwl/cli": "12.10.1",
     "@nrwl/cypress": "12.10.1",
-    "@nrwl/eslint-plugin-nx": "12.10.1",
+    "@nrwl/eslint-plugin-nx": "13.9.7",
     "@nrwl/jest": "12.10.1",
     "@nrwl/linter": "12.10.1",
     "@nrwl/node": "12.10.1",
