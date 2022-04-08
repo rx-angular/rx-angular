@@ -7,4 +7,9 @@ export * from './lib/isr-handler';
 
 export { InMemoryCacheHandler } from './lib/cache-handlers';
 
-export { ISRHandlerConfig } from './lib/models/isr-handler-config';
+export {
+  ISRHandlerConfig,
+  InvalidateConfig,
+  RenderConfig,
+  ServeFromCacheConfig,
+} from './lib/models/isr-handler-config';
