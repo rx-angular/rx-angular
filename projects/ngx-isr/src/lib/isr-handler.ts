@@ -1,4 +1,10 @@
-import { CacheHandler, ISRHandlerConfig } from './models';
+import {
+  CacheHandler,
+  InvalidateConfig,
+  ISRHandlerConfig,
+  RenderConfig,
+  ServeFromCacheConfig,
+} from './models';
 import { InMemoryCacheHandler } from './cache-handlers';
 import { renderUrl } from './utils/render-url';
 import { getISROptions } from './utils/get-isr-options';
@@ -25,13 +31,20 @@ export class ISRHandler {
     if (config.cache && config.cache instanceof CacheHandler) {
       this.cache = config.cache;
     } else {
-      this.cache = new InMemoryCacheHandler()
+      this.cache = new InMemoryCacheHandler();
     }
 
-    this.cacheRegeneration = new CacheRegeneration(this.cache, config.indexHtml);
+    this.cacheRegeneration = new CacheRegeneration(
+      this.cache,
+      config.indexHtml
+    );
   }
 
-  async invalidate(req: any, res: any): Promise<any> {
+  async invalidate(
+    req: any,
+    res: any,
+    config?: InvalidateConfig
+  ): Promise<any> {
     const { secretToken, urlToInvalidate } = extractData(req);
 
     if (secretToken !== this.invalidateSecretToken) {
@@ -55,33 +68,59 @@ export class ISRHandler {
 
       try {
         // re-render the page again
-        const html = await renderUrl(req, res, urlToInvalidate, this.indexHtml);
+        const html = await renderUrl({
+          req,
+          res,
+          url: urlToInvalidate,
+          indexHtml: this.indexHtml,
+          providers: config?.providers,
+        });
+
         // get revalidate data in order to set it to cache data
         const { revalidate } = getISROptions(html);
+
         // add the regenerated page to cache
         await this.cache.add(req.url, html, { revalidate });
 
-        this.showLogs && console.log(`Url: ${urlToInvalidate} was regenerated!`);
+        this.showLogs &&
+          console.log(`Url: ${urlToInvalidate} was regenerated!`);
 
-        res.json({ status: 'success', message: `Url: ${urlToInvalidate} was regenerated!` });
+        res.json({
+          status: 'success',
+          message: `Url: ${urlToInvalidate} was regenerated!`,
+        });
       } catch (err) {
-        res.json({ status: 'error', message: 'Error while regenerating url!!' });
+        res.json({
+          status: 'error',
+          message: 'Error while regenerating url!!',
+        });
       }
     }
   }
 
-  async serveFromCache(req: any, res: any, next: any): Promise<any> {
+  async serveFromCache(
+    req: any,
+    res: any,
+    next: any,
+    config?: ServeFromCacheConfig
+  ): Promise<any> {
     try {
       const cacheData = await this.cache.get(req.url);
       const { html, options, createdAt } = cacheData;
 
       // const lastCacheDateDiff = (Date.now() - createdAt) / 1000; // in seconds
       if (options.revalidate && options.revalidate > 0) {
-        await this.cacheRegeneration.regenerate(req, res, cacheData, this.showLogs);
+        await this.cacheRegeneration.regenerate(
+          req,
+          res,
+          cacheData,
+          this.showLogs,
+          config?.providers
+        );
       }
 
       // Cache exists. Send it.
-      this.showLogs && console.log("Page was retrieved from cache: ", req.url);
+      this.showLogs && console.log('Page was retrieved from cache: ', req.url);
       res.send(html);
     } catch (error) {
       // Cache does not exist. Serve user using SSR
@@ -89,8 +128,10 @@ export class ISRHandler {
     }
   }
 
-  async render(req: any, res: any, next: any): Promise<any> {
-    res.render(this.indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }]},
+  async render(req: any, res: any, next: any, config?: RenderConfig): Promise<any> {
+    res.render(
+      this.indexHtml,
+      { req, providers: config?.providers ?? [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] },
       async (err: Error, html: string) => {
         const { revalidate } = getISROptions(html);
 
@@ -109,14 +150,12 @@ export class ISRHandler {
       }
     );
   }
-
 }
-
 
 const extractData = (req: any) => {
   return {
-    secretToken: req.query["secret"] || null,
-    urlToInvalidate: req.query["urlToInvalidate"] || null,
+    secretToken: req.query['secret'] || null,
+    urlToInvalidate: req.query['urlToInvalidate'] || null,
     // urlsToInvalidate: req.body.urls || [],
   };
 };

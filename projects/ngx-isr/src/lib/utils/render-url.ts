@@ -1,12 +1,18 @@
 import { APP_BASE_HREF } from '@angular/common';
+import { Provider } from '@angular/core';
+
+export interface RenderUrlConfig {
+  req: any;
+  res: any;
+  url: string;
+  indexHtml: string;
+  providers?: Provider[];
+}
 
 // helper method that generates html of a url
-export const renderUrl = async (
-  req: any,
-  res: any,
-  url: string,
-  indexHtml: string
-): Promise<string> => {
+export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
+  const { req, res, url, indexHtml, providers } = options;
+
   // we need to override url of req with the one we have in parameters
   req.url = url;
   req.originalUrl = url;
@@ -16,7 +22,7 @@ export const renderUrl = async (
       indexHtml,
       {
         req,
-        providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
+        providers: providers ?? [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
       },
       async (err: Error, html: string) => {
         if (err) {
