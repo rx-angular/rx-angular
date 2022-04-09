@@ -1,4 +1,3 @@
-import { InMemoryCacheHandler } from 'ngx-isr';
 import { environment } from './src/environments/environment';
 import 'zone.js/dist/zone-node';
 

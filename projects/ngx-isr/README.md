@@ -46,7 +46,23 @@ server.get('*',
   async (req, res, next) => await isr.render(req, res, next),
 );
 ```
-> NOTE: Routes that don't have revalidate key in data won't be handled by ISR, they will fallback to Angular default server side rendering pipeline.
+
+You can also pass `providers` to each of the `ISRHandler` methods.
+
+```ts
+server.get('*',
+  ...
+  async (req, res, next) => await isr.render(req, res, next, {
+    providers: [
+      { provide: APP_BASE_HREF, useValue: req.baseUrl }, // <-- Needs to be provided when passing providers 
+      { provide: CUSTOM_TOKEN, useValue: 'Hello from ISR' },
+      CustomService
+    ]
+  }),
+);
+```
+
+ISRHandler provides `APP_BASE_HREF` by default. And if you want pass `providers` into the methods of ISRHandler, you will also have to provide `APP_BASE_HREF` token.
 
 5. Add `revalidate` key in route data
 
@@ -59,13 +75,23 @@ Example:
 }
 ```
 
-6. Add `NgxIsrService` in AppComponent contructor
-```ts
-  constructor(private isrService: NgxIsrService) {}
-```
-By adding the service in the constructor it will be initialized and start to listen to route changes.
+> **NOTE:** Routes that don't have revalidate key in data won't be handled by ISR. They will fallback to Angular default server side rendering pipeline.
 
-**It will be run only on server side.**
+
+6. Add `NgxIsrModule` in AppServerModule imports
+```ts
+import { NgxIsrModule } from 'ngx-isr'; // <-- Import module from library
+
+@NgModule({
+  imports: [
+    ...
+    NgxIsrModule  // <-- Use it in module imports
+  ]
+})
+export class AppServerModule {}
+```
+
+When importing the module, `NgxIsrService` will be initialized and will start to listen to route changes, only on the server side, so the client code won't contain any extra code.
 
 # Play with demo [Stackblitz](https://stackblitz.com/edit/node-cvlod6?file=server.ts)
 

@@ -9,7 +9,7 @@ export interface RenderUrlConfig {
   providers?: Provider[];
 }
 
-// helper method that generates html of a url
+// helper method that generates html of an url
 export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
   const { req, res, url, indexHtml, providers } = options;
 

@@ -32,9 +32,9 @@ server.get("/api/invalidate", async (req, res) => await isr.invalidate(req, res)
 Replace
 ```ts
 server.get('*',
- (req, res) => {
-   res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
- }
+  (req, res) => {
+    res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
+  }
 );
 ```
 with
@@ -46,7 +46,23 @@ server.get('*',
   async (req, res, next) => await isr.render(req, res, next),
 );
 ```
-> NOTE: Routes that don't have revalidate key in data won't be handled by ISR, they will fallback to Angular default server side rendering pipeline.
+
+You can also pass `providers` to each of the `ISRHandler` methods.
+
+```ts
+server.get('*',
+  ...
+  async (req, res, next) => await isr.render(req, res, next, {
+    providers: [
+      { provide: APP_BASE_HREF, useValue: req.baseUrl }, // <-- Needs to be provided when passing providers 
+      { provide: CUSTOM_TOKEN, useValue: 'Hello from ISR' },
+      CustomService
+    ]
+  }),
+);
+```
+
+ISRHandler provides `APP_BASE_HREF` by default. And if you want pass `providers` into the methods of ISRHandler, you will also have to provide `APP_BASE_HREF` token.
 
 5. Add `revalidate` key in route data
 
@@ -59,13 +75,23 @@ Example:
 }
 ```
 
-6. Add `NgxIsrService` in AppComponent contructor
-```ts
-  constructor(private isrService: NgxIsrService) {}
-```
-By adding the service in the constructor it will be initialized and start to listen to route changes.
+> **NOTE:** Routes that don't have revalidate key in data won't be handled by ISR. They will fallback to Angular default server side rendering pipeline.
 
-**It will be run only on server side.**
+
+6. Add `NgxIsrModule` in AppServerModule imports
+```ts
+import { NgxIsrModule } from 'ngx-isr'; // <-- Import module from library
+
+@NgModule({
+  imports: [
+    ...
+    NgxIsrModule  // <-- Use it in module imports
+  ]
+})
+export class AppServerModule {}
+```
+
+When importing the module, `NgxIsrService` will be initialized and will start to listen to route changes, only on the server side, so the browser bundle won't contain any extra code.
 
 # Play with demo [Stackblitz](https://stackblitz.com/edit/node-cvlod6?file=server.ts)
 
@@ -111,8 +137,8 @@ const routes: Routes = [
 - Path `/one` won't be cached at all, and everytime it is requested it will be server-rendered and then will be served to the user.
 
 - Path `/two` on the first request will be server-rendered and then will be cached. On the second request to it, the user will be served the cache that we got on the first request.
-The url will be added to a regeneration queue, in order to re-generate the cache after `5` seconds.
-On the third request to the same url, if the regeneration was finished the user will be served the regenerated page otherwise he will be served with the old cached page.
+  The url will be added to a regeneration queue, in order to re-generate the cache after `5` seconds.
+  On the third request to the same url, if the regeneration was finished the user will be served the regenerated page otherwise he will be served with the old cached page.
 
 - Path `/three` after the first request that is server-rendered, the page will be added to cache and the cache will never be deleted automatically as in path `/two`. So after the first request, all the other ones will come from the cache.
 
