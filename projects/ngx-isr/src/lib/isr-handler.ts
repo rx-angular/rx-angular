@@ -6,26 +6,23 @@ import {
   ServeFromCacheConfig,
 } from './models';
 import { InMemoryCacheHandler } from './cache-handlers';
-import { renderUrl } from './utils/render-url';
+import { renderUrl, RenderUrlConfig } from './utils/render-url';
 import { getISROptions } from './utils/get-isr-options';
 import { CacheRegeneration } from './cache-regeneration';
-import { APP_BASE_HREF } from '@angular/common';
 
 export class ISRHandler {
-  private cache!: CacheHandler;
-  private indexHtml!: string;
-  private invalidateSecretToken!: string;
+  private readonly cache!: CacheHandler;
   private cacheRegeneration!: CacheRegeneration;
 
-  private showLogs: boolean = false;
+  private isrConfig: ISRHandlerConfig;
+  private readonly showLogs: boolean = false;
 
   constructor(config?: ISRHandlerConfig) {
     if (!config) {
       throw new Error('Provide ISRHandlerConfig!');
     }
 
-    this.indexHtml = config.indexHtml;
-    this.invalidateSecretToken = config.invalidateSecretToken;
+    this.isrConfig = config;
     this.showLogs = config?.enableLogging ?? false;
 
     if (config.cache && config.cache instanceof CacheHandler) {
@@ -47,7 +44,7 @@ export class ISRHandler {
   ): Promise<any> {
     const { secretToken, urlToInvalidate } = extractData(req);
 
-    if (secretToken !== this.invalidateSecretToken) {
+    if (secretToken !== this.isrConfig.invalidateSecretToken) {
       res.json({ status: 'error', message: 'Your secret token is wrong!!!' });
     }
 
@@ -59,7 +56,7 @@ export class ISRHandler {
     }
 
     if (urlToInvalidate) {
-      if (!this.cache.has(urlToInvalidate)) {
+      if (!(await this.cache.has(urlToInvalidate))) {
         res.json({
           status: 'error',
           message: "The url you provided doesn't exist in cache!",
@@ -72,7 +69,7 @@ export class ISRHandler {
           req,
           res,
           url: urlToInvalidate,
-          indexHtml: this.indexHtml,
+          indexHtml: this.isrConfig.indexHtml,
           providers: config?.providers,
         });
 
@@ -83,11 +80,11 @@ export class ISRHandler {
         await this.cache.add(req.url, html, { revalidate });
 
         this.showLogs &&
-          console.log(`Url: ${urlToInvalidate} was regenerated!`);
+        console.log(`Url: ${ urlToInvalidate } was regenerated!`);
 
         res.json({
           status: 'success',
-          message: `Url: ${urlToInvalidate} was regenerated!`,
+          message: `Url: ${ urlToInvalidate } was regenerated!`,
         });
       } catch (err) {
         res.json({
@@ -129,17 +126,23 @@ export class ISRHandler {
   }
 
   async render(req: any, res: any, next: any, config?: RenderConfig): Promise<any> {
-    res.render(
-      this.indexHtml,
-      { req, providers: config?.providers ?? [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] },
-      async (err: Error, html: string) => {
+    const renderUrlConfig: RenderUrlConfig = {
+      req,
+      res,
+      url: req.url,
+      indexHtml: this.isrConfig.indexHtml,
+      providers: config?.providers
+    };
+
+    renderUrl(renderUrlConfig).then(
+      async (html) => {
         const { revalidate } = getISROptions(html);
 
         // if revalidate is null we won't cache it
         // if revalidate is 0, we will never clear the cache automatically
         // if revalidate is x, we will clear cache every x seconds (after the last request) for that url
 
-        if (revalidate === null) {
+        if (!revalidate) {
           res.send(html);
           return;
         }
@@ -149,6 +152,7 @@ export class ISRHandler {
         res.send(html);
       }
     );
+
   }
 }
 
