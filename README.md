@@ -93,7 +93,7 @@ export class AppServerModule {}
 
 When importing the module, `NgxIsrService` will be initialized and will start to listen to route changes, only on the server side, so the browser bundle won't contain any extra code.
 
-# Play with demo [Stackblitz](https://stackblitz.com/edit/node-cvlod6?file=server.ts)
+# Play with demo
 
 ```bash
 git clone https://github.com/eneajaho/ngx-isr.git
