@@ -1,7 +1,7 @@
 import { CacheData, CacheHandler, ISROptions } from "../models";
 
 export class InMemoryCacheHandler implements CacheHandler {
-  private cache = new Map<string, CacheData>();
+  protected cache = new Map<string, CacheData>();
 
   add(url: string, html: string, options: ISROptions = { revalidate: null }): Promise<void> {
 

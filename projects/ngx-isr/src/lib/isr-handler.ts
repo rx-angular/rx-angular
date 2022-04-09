@@ -11,11 +11,11 @@ import { getISROptions } from './utils/get-isr-options';
 import { CacheRegeneration } from './cache-regeneration';
 
 export class ISRHandler {
-  private readonly cache!: CacheHandler;
-  private cacheRegeneration!: CacheRegeneration;
+  protected cache!: CacheHandler;
+  protected cacheRegeneration!: CacheRegeneration;
 
-  private isrConfig: ISRHandlerConfig;
-  private readonly showLogs: boolean = false;
+  protected isrConfig: ISRHandlerConfig;
+  protected readonly showLogs: boolean = false;
 
   constructor(config?: ISRHandlerConfig) {
     if (!config) {
