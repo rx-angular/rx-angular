@@ -1,12 +1,15 @@
-import { CacheData, CacheHandler, ISROptions } from "../models/cache-handler";
+import { CacheData, CacheHandler, ISROptions } from "../models";
 
 export class InMemoryCacheHandler implements CacheHandler {
   private cache = new Map<string, CacheData>();
 
   add(url: string, html: string, options: ISROptions = { revalidate: null }): Promise<void> {
+
+    const htmlWithMsg = html + cacheMsg(options.revalidate);
+
     return new Promise((resolve, reject) => {
       const cacheData: CacheData = {
-        html,
+        html: htmlWithMsg,
         options,
         createdAt: Date.now()
       };
@@ -41,4 +44,22 @@ export class InMemoryCacheHandler implements CacheHandler {
       resolve(this.cache.delete(url));
     })
   }
+}
+
+const cacheMsg = (revalidateTime?: number | null): string => {
+  const time = new Date().toISOString()
+    .replace(/T/, ' ')
+    .replace(/\..+/, '')
+
+  let msg = '<!-- ';
+
+  msg += `\n🚀 NgxISR: Served from cache! \n⌛ Last updated: ${time}. `;
+
+  if (revalidateTime) {
+    msg += `\n⏭️ Next refresh is after ${revalidateTime} seconds. `;
+  }
+
+  msg += ' \n-->';
+
+  return msg;
 }
