@@ -8,9 +8,7 @@
 npm install ngx-isr
 ```
 
-> Make sure you have Angular Universal in your app.
-
-> Setup Angular Universal: `ng add @nguniversal/express-engine`
+> Make sure you have Angular Universal in your app. Setup Angular Universal: `ng add @nguniversal/express-engine`
 
 
 2. Initialize `ISRHandler` inside `server.ts`
@@ -93,7 +91,7 @@ export class AppServerModule {}
 
 When importing the module, `NgxIsrService` will be initialized and will start to listen to route changes, only on the server side, so the client code won't contain any extra code.
 
-# Play with demo [Stackblitz](https://stackblitz.com/edit/node-cvlod6?file=server.ts)
+# Play with demo
 
 ```bash
 git clone https://github.com/eneajaho/ngx-isr.git
@@ -103,7 +101,6 @@ npm run dev:ssr
 
 1. **Disable Javascript** (in order to not load Angular after the page loads)
 2. Navigate to different pages and check how the cache gets regenerated in terminal logs
-
 
 # How it works?
 - [Explanation video](https://vimeo.com/687530247) (w/o voice)
@@ -134,13 +131,21 @@ const routes: Routes = [
 ];
 ```
 
-- Path `/one` won't be cached at all, and everytime it is requested it will be server-rendered and then will be served to the user.
+- Path `one`:
+   It won't be cached and will always be server-rendered before being served to the user.
 
-- Path `/two` on the first request will be server-rendered and then will be cached. On the second request to it, the user will be served the cache that we got on the first request.
-The url will be added to a regeneration queue, in order to re-generate the cache after `5` seconds.
-On the third request to the same url, if the regeneration was finished the user will be served the regenerated page otherwise he will be served with the old cached page.
+- Path `two`:
+   The first request will be server-rendered and then will be cached.
+   On the second request, it will be served from the cache that was saved on the first request.
+   The url will be added to a regeneration queue, in order to re-generate the cache after `5` seconds.
+   On the third request, if the regeneration was finished successfully
+   the user will be served the regenerated page, otherwise he will be served with the old cached page.
 
-- Path `/three` after the first request that is server-rendered, the page will be added to cache and the cache will never be deleted automatically as in path `/two`. So after the first request, all the other ones will come from the cache.
+- Path `three`:
+   The first request will be server-rendered and then will be cached.
+   After the first request, all the other ones will be served from cache.
+   So, the cache will never be refreshed automatically.
+   The only way to refresh the cache is to make a request to /invalidate api route.
 
 ## License
 MIT
