@@ -142,7 +142,7 @@ export class ISRHandler {
         // if revalidate is 0, we will never clear the cache automatically
         // if revalidate is x, we will clear cache every x seconds (after the last request) for that url
 
-        if (!revalidate) {
+        if (revalidate === null || revalidate === undefined) { // don't do !revalidate because it will also catch "0"
           res.send(html);
           return;
         }
