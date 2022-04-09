@@ -7,6 +7,8 @@ export * from './lib/isr-handler';
 
 export { InMemoryCacheHandler } from './lib/cache-handlers';
 
+export { NgxIsrModule } from './lib/ngx-isr.module';
+
 export {
   ISRHandlerConfig,
   InvalidateConfig,
