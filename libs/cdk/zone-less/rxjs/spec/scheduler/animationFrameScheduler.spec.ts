@@ -1,17 +1,20 @@
+import {
+  animationFrameProvider,
+  intervalProvider,
+} from '@rx-angular/cdk/internals/rxjs';
 import { animationFrameScheduler } from '@rx-angular/cdk/zone-less/rxjs';
-import { Subscription, merge } from 'rxjs';
-import { delay } from 'rxjs/operators';
-import { TestScheduler } from 'rxjs/testing';
+import { Subscription, merge, delay } from 'rxjs';
 import { jestMatcher } from '@test-helpers';
+import { RxTestScheduler } from '@rx-angular/cdk/testing';
 
 const animationFrame = animationFrameScheduler;
 
 /** @test {Scheduler} */
 describe('Scheduler.animationFrame', () => {
-  let testScheduler: TestScheduler;
+  let testScheduler: RxTestScheduler;
 
   beforeEach(() => {
-    testScheduler = new TestScheduler(jestMatcher);
+    testScheduler = new RxTestScheduler(jestMatcher);
   });
 
   it('should exist', () => {
@@ -26,12 +29,39 @@ describe('Scheduler.animationFrame', () => {
       const b = cold('  b            ');
       const tb = time(' --------|    ');
       const expected = '----a---b----';
-
       const result = merge(
         a.pipe(delay(ta, animationFrame)),
         b.pipe(delay(tb, animationFrame))
       );
       expectObservable(result).toBe(expected);
+    });
+  });
+
+  it('should cancel animationFrame actions when delay > 0', () => {
+    testScheduler.run(({ animate, cold, expectObservable, flush, time }) => {
+      const requestSpy = jest.spyOn(
+        animationFrameProvider,
+        'requestAnimationFrame'
+      );
+      const setSpy = jest.spyOn(intervalProvider, 'setInterval');
+      const clearSpy = jest.spyOn(intervalProvider, 'clearInterval');
+
+      animate('         ----------x--');
+      const a = cold('  a            ');
+      const ta = time(' ----|        ');
+      const subs = '    ^-!          ';
+      const expected = '-------------';
+
+      const result = merge(a.pipe(delay(ta, animationFrame)));
+      expectObservable(result, subs).toBe(expected);
+
+      flush();
+      expect(requestSpy).not.toHaveBeenCalled();
+      expect(setSpy).toHaveBeenCalledTimes(1);
+      expect(clearSpy).toHaveBeenCalledTimes(1);
+      requestSpy.mockRestore();
+      setSpy.mockRestore();
+      clearSpy.mockRestore();
     });
   });
 
