@@ -252,6 +252,7 @@ describe('Scheduler.asap', () => {
   it('should execute actions scheduled when flushing in a subsequent flush when some actions are unsubscribed', (done) => {
     const stubFlush = jest.spyOn(asap, 'flush');
 
+    // eslint-disable-next-line prefer-const
     let a: Subscription;
     let b: Subscription;
 
