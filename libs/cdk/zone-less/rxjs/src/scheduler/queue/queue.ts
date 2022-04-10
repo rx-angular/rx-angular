@@ -1,6 +1,4 @@
-import * as rxjs from 'rxjs';
 import { QueueAction } from './QueueAction';
-import { createScheduler } from '../create-scheduler';
 import { QueueScheduler } from './QueueScheduler';
 
 /**

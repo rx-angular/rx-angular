@@ -1,6 +1,4 @@
-import * as rxjs from 'rxjs';
 import { AsapAction } from './AsapAction';
-import { createScheduler } from '../create-scheduler';
 import { AsapScheduler } from './AsapScheduler';
 
 /**

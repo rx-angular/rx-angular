@@ -20,7 +20,7 @@ import { AnimationFrameScheduler } from './AnimationFrameScheduler';
  * Schedule div height animation
  * ```ts
  * // html: <div style="background: #0ff;"></div>
- * import { animationFrameScheduler } from '@cu/perf-utils';
+ * import { animationFrameScheduler } from '@rx-angular/cdk/zone-less/rxjs';
  *
  * const div = document.querySelector('div');
  *
