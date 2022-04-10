@@ -1,6 +1,5 @@
-import * as rxjs from 'rxjs';
 import { AnimationFrameAction } from './AnimationFrameAction';
-import { createScheduler } from '../create-scheduler';
+import { AnimationFrameScheduler } from './AnimationFrameScheduler';
 
 /**
  *
@@ -35,7 +34,6 @@ import { createScheduler } from '../create-scheduler';
  * // You will see a div element growing in height
  * ```
  */
-export const animationFrameScheduler = createScheduler(
-  rxjs.animationFrameScheduler,
+export const animationFrameScheduler = new AnimationFrameScheduler(
   AnimationFrameAction
 );

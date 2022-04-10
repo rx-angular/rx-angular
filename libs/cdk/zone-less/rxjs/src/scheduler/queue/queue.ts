@@ -1,6 +1,7 @@
 import * as rxjs from 'rxjs';
 import { QueueAction } from './QueueAction';
 import { createScheduler } from '../create-scheduler';
+import { QueueScheduler } from './QueueScheduler';
 
 /**
  *
@@ -66,4 +67,4 @@ import { createScheduler } from '../create-scheduler';
  * // "after", 1
  * ```
  */
-export const queueScheduler = createScheduler(rxjs.queueScheduler, QueueAction);
+export const queueScheduler = new QueueScheduler(QueueAction);

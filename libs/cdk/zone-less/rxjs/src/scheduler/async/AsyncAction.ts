@@ -1,8 +1,8 @@
+import { intervalProvider } from '@rx-angular/cdk/internals/rxjs';
 import { Subscription } from 'rxjs';
 import { Action } from '../Action';
 import { SchedulerAction } from '../types';
 import { AsyncScheduler } from './AsyncScheduler';
-import { setInterval, clearInterval } from '@rx-angular/cdk/zone-less/browser';
 
 /**
  * We need this JSDoc comment for affecting ESDoc.
@@ -75,7 +75,10 @@ export class AsyncAction<T> extends Action<T> {
     id?: any,
     delay: number = 0
   ): any {
-    return setInterval(scheduler.flush.bind(scheduler, this), delay);
+    return intervalProvider.setInterval(
+      scheduler.flush.bind(scheduler, this),
+      delay
+    );
   }
 
   protected recycleAsyncId(
@@ -89,7 +92,7 @@ export class AsyncAction<T> extends Action<T> {
     }
     // Otherwise, if the action's delay time is different from the current delay,
     // or the action has been rescheduled before it's executed, clear the interval id
-    clearInterval(id);
+    intervalProvider.clearInterval(id);
     return undefined;
   }
 
