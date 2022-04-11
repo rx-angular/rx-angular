@@ -1,5 +1,7 @@
 # Incremental Static Regeneration for Angular
-> Incremental Static Regeneration (ISR) enables developers and content editors to use static-generation on a per-page basis, without needing to rebuild the entire site. With ISR, you can retain the benefits of static while scaling to millions of pages. [Source](https://vercel.com/docs/concepts/next.js/incremental-static-regeneration)
+Incremental Static Regeneration (ISR) enables developers and content editors to use static-generation on a per-page basis, without needing to rebuild the entire site. With ISR, you can retain the benefits of static while scaling to millions of pages. [Source](https://vercel.com/docs/concepts/next.js/incremental-static-regeneration)
+
+📰 [Read the blog post](https://itnext.io/incremental-static-regeneration-for-angular-42b0a8440e53)
 
 # How to use it?
 
