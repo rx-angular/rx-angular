@@ -8,33 +8,31 @@ import {
   OnInit,
   SimpleChanges,
   TemplateRef,
-  ViewContainerRef,
+  ViewContainerRef
 } from '@angular/core';
+import { coerceAllFactory, coerceObservable } from '@rx-angular/cdk/coercing';
+import {
+  createTemplateNotifier,
+  RxNotificationKind
+} from '@rx-angular/cdk/notifications';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import {
+  createTemplateManager,
+  RxTemplateManager
+} from '@rx-angular/cdk/template';
 import {
   NextObserver,
   Observable,
   ReplaySubject,
   Subject,
-  Subscription,
+  Subscription
 } from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
 import {
   RxIfTemplateNames,
   rxIfTemplateNames,
-  RxIfViewContext,
+  RxIfViewContext
 } from './model/index';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-  createTemplateManager,
-  RxTemplateManager,
-} from '@rx-angular/cdk/template';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { coerceAllFactory } from '@rx-angular/cdk/coercing';
-import {
-  createTemplateNotifier,
-  RxNotificationKind,
-} from '@rx-angular/cdk/notifications';
-import { coerceObservable } from '@rx-angular/cdk/coercing';
 
 @Directive({
   selector: '[rxIf]',
@@ -199,4 +197,11 @@ function updateViewContext<T>(
   Object.keys(context).forEach((k) => {
     view.context[k] = context[k];
   });
+}
+
+/**
+ * Coerces a data-bound value (typically a string) to a boolean.
+ */
+function coerceBooleanProperty(value: any): boolean {
+  return value != null && `${value}` !== 'false';
 }
