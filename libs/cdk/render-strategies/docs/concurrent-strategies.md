@@ -1,6 +1,6 @@
 # Concurrent Strategies
 
-Based on the [RAIL model](https://web.dev/rail/), if your app provides user feedback within more than 16ms (less than 60 frames per second), it feels laggy to the user and leads to bad UX.
+Based on the [RAIL model](https://web.dev/rail/), e.g. if your app provides animated user feedback within more than 16ms (less than 60 frames per second), it feels laggy to the user and leads to bad UX.
 From the UX perspective that means users should not experience blocking periods more than 16 ms.
 
 ## Concepts
