@@ -109,14 +109,12 @@ about what changes are leading to re-renderings.
 
 ## Version Compatibility
 
-### Angular
-|   Angular      |   RxJS                                                     | @rx-angular/template |
-|---------------|-------------------------------------------|--------------------------|
-|  > 13.1.x       | 6.5.x/6.6.x/7.4.x or later minor version  | > 1.0.0-beta.29             |
-| < 12.1.4        | 6.5.x/6.6.x                                              | <= 1.0.0-beta.29          |
+| Angular                | RxJS                 | @rx-angular/template |
+|------------------------|----------------------|----------------------|
+| `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-beta.29`    |
+| `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-beta.29`   |
 
-### RxJs
 
 Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
-All of the current packages support RxJs versions `>= 6.5.x`.
+All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
 For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3)
