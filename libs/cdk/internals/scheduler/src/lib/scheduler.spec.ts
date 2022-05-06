@@ -17,6 +17,7 @@ describe('Scheduler', () => {
 
   const NormalPriority = 3;
   let scheduleCallback: typeof import('./scheduler').scheduleCallback;
+  let requestPaint: typeof import('./scheduler').requestPaint;
   let cancelCallback: typeof import('./scheduler').cancelCallback;
   let shouldYield: typeof import('./scheduler').shouldYield;
 
@@ -42,6 +43,7 @@ describe('Scheduler', () => {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const Scheduler = require('./scheduler');
       scheduleCallback = Scheduler.scheduleCallback;
+      requestPaint = Scheduler.requestPaint;
       cancelCallback = Scheduler.cancelCallback;
       shouldYield = Scheduler.shouldYield;
     });
@@ -109,6 +111,26 @@ describe('Scheduler', () => {
       runtime.assertLog([schedulingMessageEvent]);
       runtime.fireMessageEvent();
       runtime.assertLog([LogEvent.MessageEvent, 'A', 'B']);
+    });
+
+    it('request paint ', () => {
+      scheduleCallback(NormalPriority, () => {
+        runtime.log('A');
+        requestPaint();
+      });
+      scheduleCallback(NormalPriority, () => {
+        runtime.log('B');
+      });
+      runtime.assertLog([schedulingMessageEvent]);
+      runtime.fireMessageEvent();
+      runtime.assertLog([
+        LogEvent.MessageEvent,
+        'A',
+        // A forced paint
+        schedulingMessageEvent,
+      ]);
+      runtime.fireMessageEvent();
+      runtime.assertLog([LogEvent.MessageEvent, 'B']);
     });
 
     it('multiple tasks with a yield in between', () => {
