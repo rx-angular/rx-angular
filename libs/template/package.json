@@ -49,8 +49,10 @@
     "url": "https://github.com/rx-angular/rx-angular.git"
   },
   "peerDependencies": {
-    "@angular/core": ">10.1.1",
-    "@rx-angular/cdk": ">=1.0.0-beta.2"
+    "@angular/core": ">=12.0.0",
+    "@angular/platform-browser": ">=12.0.0",
+    "@rx-angular/cdk": ">=1.0.0-beta.2",
+    "rxjs": ">=6.5.5"
   },
   "dependencies": {
     "tslib": "^2.0.0",
