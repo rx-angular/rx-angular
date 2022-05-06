@@ -12,7 +12,8 @@ RxState is a lightweight, flexible, strongly typed and tested tool dedicated to 
 
 ## Sub Modules
 
-- [⛔ Selections](https://github.com/rx-angular/rx-angular/blob/main/libs/state/selections/README.md)
+- [🧩 Selections](https://github.com/rx-angular/rx-angular/blob/main/libs/state/selections/README.md)
+- [☁ Effects](https://github.com/rx-angular/rx-angular/blob/main/libs/state/effects/README.md)
 
 ## Intro Video
 
@@ -122,6 +123,7 @@ nx migrate @rx-angular/state
 
 - [🎥 Extending Angular for the Reactive Web](https://youtu.be/pkN6CeZ8h_U?t=5913)
 
+- [German content | 🎥 Michael explains rx-state to webdave_de (Livestream)](https://youtu.be/cKUFcY8QkYM)
 
 ## Blogs/Documents
 

@@ -16,19 +16,14 @@ import { createEmbeddedView } from './utils';
  * @param templateSettings
  */
 export function getTemplateHandler<C extends RxListViewContext<T>, T>(
-  templateSettings: RxTemplateSettings<T, C>
+  templateSettings: Omit<RxTemplateSettings<T, C>, 'patchZone'>
 ): ListTemplateManager<T> {
   const {
     viewContainerRef,
     initialTemplateRef,
     createViewContext,
     updateViewContext,
-    patchZone,
   } = templateSettings;
-
-  const workFactory = patchZone
-    ? (work: VoidFunction) => patchZone.run(work)
-    : (work: VoidFunction) => work();
 
   return {
     updateUnchangedContext,
@@ -43,13 +38,11 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
 
   function updateUnchangedContext(index: number, count: number) {
     const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
-    workFactory(() => {
-      view.context.updateContext({
-        count,
-        index,
-      });
-      view.detectChanges();
+    view.context.updateContext({
+      count,
+      index,
     });
+    view.detectChanges();
   }
 
   function moveView(
@@ -60,42 +53,36 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
   ): void {
     const oldView = viewContainerRef.get(oldIndex);
     const view = <EmbeddedViewRef<C>>viewContainerRef.move(oldView, index);
-    workFactory(() => {
-      updateViewContext(item, view, {
-        count,
-        index,
-      });
-      view.detectChanges();
+    updateViewContext(item, view, {
+      count,
+      index,
     });
+    view.detectChanges();
   }
 
   function updateView(item: T, index: number, count: number): void {
     const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
-    workFactory(() => {
-      updateViewContext(item, view, {
-        count,
-        index,
-      });
-      view.detectChanges();
+    updateViewContext(item, view, {
+      count,
+      index,
     });
+    view.detectChanges();
   }
 
   function removeView(index: number): void {
-    return workFactory(() => viewContainerRef.remove(index));
+    return viewContainerRef.remove(index);
   }
 
   function insertView(item: T, index: number, count: number): void {
-    workFactory(() => {
-      createEmbeddedView(
-        viewContainerRef,
-        initialTemplateRef,
-        createViewContext(item, {
-          count,
-          index,
-        }),
-        index
-      );
-    });
+    createEmbeddedView(
+      viewContainerRef,
+      initialTemplateRef,
+      createViewContext(item, {
+        count,
+        index,
+      }),
+      index
+    );
   }
 }
 

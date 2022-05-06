@@ -1,39 +1,43 @@
 import {
   ChangeDetectorRef,
   Directive,
-  ElementRef,
   EmbeddedViewRef,
   Input,
   NgZone,
   OnDestroy,
   OnInit,
+  SimpleChanges,
   TemplateRef,
-  ViewContainerRef,
+  ViewContainerRef
 } from '@angular/core';
+import { coerceAllFactory, coerceObservable } from '@rx-angular/cdk/coercing';
+import {
+  createTemplateNotifier,
+  RxNotificationKind
+} from '@rx-angular/cdk/notifications';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import {
+  createTemplateManager,
+  RxTemplateManager
+} from '@rx-angular/cdk/template';
 import {
   NextObserver,
   Observable,
   ReplaySubject,
   Subject,
-  Subscription,
+  Subscription
 } from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
-import { RxIfTemplateNames, rxIfTemplateNames, RxIfViewContext } from './model';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-  createTemplateManager,
-  RxTemplateManager
-} from '@rx-angular/cdk/template';
-import {  RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { coerceAllFactory } from '@rx-angular/cdk/coercing';
-import {
-  createTemplateNotifier,
-  RxNotificationKind,
-} from '@rx-angular/cdk/notifications';
-import { coerceObservable } from '@rx-angular/cdk/coercing';
+  RxIfTemplateNames,
+  rxIfTemplateNames,
+  RxIfViewContext
+} from './model/index';
+
 @Directive({
   selector: '[rxIf]',
 })
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxIf<U> implements OnInit, OnDestroy {
   private subscription = new Subscription();
   private _renderObserver: NextObserver<any>;
@@ -48,21 +52,21 @@ export class RxIf<U> implements OnInit, OnDestroy {
     this.observablesHandler.next(coerceObservable(potentialObservable));
   }
 
+  /* eslint-disable @angular-eslint/no-input-rename */
   @Input('rxIfStrategy')
   set strategy(strategyName: Observable<string> | string | null | undefined) {
     this.strategyHandler.next(strategyName);
   }
 
-  @Input('rxIfElse')
-  set else(templateRef: TemplateRef<any>) {
-    if (templateRef) {
-      this.templateManager.addTemplateRef(RxIfTemplateNames.else, templateRef);
-    }
-  }
+  @Input('rxIfElse') else: TemplateRef<any>;
 
-  @Input('rxIfParent') renderParent: boolean;
+  @Input('rxIfSuspenseTpl') suspenseTmpl: TemplateRef<any>;
+  @Input('rxIfCompleteTpl') completeTmpl: TemplateRef<any>;
+  @Input('rxIfErrorTpl') errorTmpl: TemplateRef<any>;
 
-  @Input('rxIfPatchZone') patchZone: boolean;
+  @Input('rxIfParent') renderParent = this.strategyProvider.config.parent;
+
+  @Input('rxIfPatchZone') patchZone = this.strategyProvider.config.patchZone;
 
   @Input('rxIfRenderCallback')
   set renderCallback(callback: NextObserver<U>) {
@@ -70,7 +74,9 @@ export class RxIf<U> implements OnInit, OnDestroy {
   }
 
   /** @internal */
-  private observablesHandler = createTemplateNotifier<U>();
+  private observablesHandler = createTemplateNotifier<U>(
+    () => !!this.suspenseTmpl
+  );
   private readonly strategyHandler = coerceAllFactory<string>(
     () => new ReplaySubject<string | Observable<string>>(1),
     mergeAll()
@@ -80,13 +86,59 @@ export class RxIf<U> implements OnInit, OnDestroy {
   constructor(
     private strategyProvider: RxStrategyProvider,
     private cdRef: ChangeDetectorRef,
-    private eRef: ElementRef<Comment>,
     private ngZone: NgZone,
     private readonly thenTemplateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef
   ) {}
 
   ngOnInit() {
+    this.subscription.add(
+      this.templateManager
+        .render(this.observablesHandler.values$)
+        .subscribe((n) => {
+          this.rendered$.next(n);
+          this._renderObserver?.next(n);
+        })
+    );
+  }
+
+  /** @internal */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.templateManager) {
+      this._createTemplateManager();
+    }
+
+    if (changes.else) {
+      this.templateManager.addTemplateRef(RxIfTemplateNames.else, this.else);
+    }
+
+    if (changes.completeTmpl) {
+      this.templateManager.addTemplateRef(
+        RxIfTemplateNames.complete,
+        this.completeTmpl
+      );
+    }
+
+    if (changes.suspenseTmpl) {
+      this.templateManager.addTemplateRef(
+        RxIfTemplateNames.suspense,
+        this.suspenseTmpl
+      );
+    }
+
+    if (changes.errorTmpl) {
+      this.templateManager.addTemplateRef(
+        RxIfTemplateNames.error,
+        this.errorTmpl
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  private _createTemplateManager(): void {
     this.templateManager = createTemplateManager<
       U,
       RxIfViewContext<U>,
@@ -101,7 +153,6 @@ export class RxIf<U> implements OnInit, OnDestroy {
       },
       renderSettings: {
         cdRef: this.cdRef,
-        eRef: this.eRef,
         parent: coerceBooleanProperty(this.renderParent),
         patchZone: this.patchZone ? this.ngZone : false,
         defaultStrategyName: this.strategyProvider.primaryStrategy,
@@ -113,7 +164,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
           return value
             ? (RxIfTemplateNames.then as rxIfTemplateNames)
             : templates.get(RxIfTemplateNames.else)
-            ? RxIfTemplateNames.then
+            ? RxIfTemplateNames.else
             : undefined;
         },
         [RxNotificationKind.Error]: () => RxIfTemplateNames.error,
@@ -125,25 +176,12 @@ export class RxIf<U> implements OnInit, OnDestroy {
       this.thenTemplateRef
     );
     this.templateManager.nextStrategy(this.strategyHandler.values$);
-    this.subscription.add(
-      this.templateManager
-        .render(this.observablesHandler.values$)
-        .subscribe((n) => {
-          this.rendered$.next(n);
-          this._renderObserver?.next(n);
-        })
-    );
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 }
 
 function createViewContext<T>(value: T): RxIfViewContext<T> {
   return {
     rxIf: value,
-    rxElse: false,
     $implicit: value,
     $error: false,
     $complete: false,
@@ -159,4 +197,11 @@ function updateViewContext<T>(
   Object.keys(context).forEach((k) => {
     view.context[k] = context[k];
   });
+}
+
+/**
+ * Coerces a data-bound value (typically a string) to a boolean.
+ */
+function coerceBooleanProperty(value: any): boolean {
+  return value != null && `${value}` !== 'false';
 }
