@@ -61,6 +61,39 @@ describe('RxActionFactory', () => {
     actions.prop();
   });
 
+  it('should emit on multiple subscribed channels', (done) => {
+    const value1 = 'foo';
+    const value2 = 'bar';
+    const actions = new RxActionFactory<{ prop1: string, prop2: string }>(errorHandler).create();
+    const res = {};
+    actions.prop1$.subscribe((result) => {
+      res['prop1'] = result;
+    });
+    actions.prop2$.subscribe((result) => {
+      res['prop2'] = result;
+    });
+    actions({ prop1: value1, prop2: value2 });
+    expect(res).toStrictEqual({ prop1: value1, prop2: value2 });
+    done();
+  });
+
+
+  it('should emit on multiple subscribed channels over mreged output', (done) => {
+    const value1 = 'foo';
+    const value2 = 'bar';
+    const actions = new RxActionFactory<{ prop1: string, prop2: string }>(errorHandler).create();
+
+    const res = [];
+    expect(typeof actions.$).toBe('function');
+    actions.$(['prop1', 'prop2']).subscribe((result) => {
+      res.push(result);
+    });
+    actions({ prop1: value1, prop2: value2 });
+    expect(res.length).toBe(2);
+    expect(res).toStrictEqual([value1, value2]);
+    done();
+  });
+
   it('should destroy', (done) => {
     let numCalls = 0;
     const factory = new RxActionFactory<{ prop: void }>(errorHandler);

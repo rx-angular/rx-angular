@@ -5,10 +5,10 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 # Motivation
 
-Actions are a common part of state management and reactive systems in general. 
-Even if `@rx-angular/state` provides `set` method, sometimes you need to add behaviour to your user input or incomming events.
+Signals, or a more commonly used name actions, are a common part of state management and reactive systems in general. 
+Even if `@rx-angular/state` provides `set` method, sometimes you need to add behaviour to your user input or incoming events.
 
-Subjects are normally used to implement this feature. This leads, especially in bigger applications to messy code that is bloated with Subjects.
+Subjects are normally used to implement this feature. This leads, especially in bigger applications, to messy code that is bloated with Subjects.
 
 Let's have a look at this piece of code:
 
@@ -78,7 +78,7 @@ template: `
 providers: [RxActionFactory]
 })
 class Component {
-  ui = factory.create({searchInput: (e) => e?.target?.value});
+  ui = factory.create({searchInput: (e) => e.target.value});
   
   list$ = this.ui.submitBtn$.pipe(
     withLatestFrom(this.ui.search$),
@@ -94,7 +94,7 @@ class Component {
 }
 ```
 
-# RxAngular Actions
+# RxAngular Signals
 
 This package helps to reduce code used to create composable action streams. 
 It mostly is used in combination with state management libs to handle user interaction and backend communication.
@@ -112,7 +112,7 @@ npm i @rx-angular/state
 yarn add @rx-angular/state
 ```
 
-## Usage
+## Basic usage
 
 By using RxAngular Actions we can reduce the boilerplate significantly, to do so we can start by thinking about the specific section ther events and event payload types:
 
@@ -128,18 +128,134 @@ Next we can use the typing to create the action object:
 
 ```typescript
  commands = getActions<Commands>();
- 
- refreshUser = commands.refreshUser(value);
+ ```
+
+The object can now be used to emit signals over setters:
+```typescript
+ commands.refreshUser(value);
+ commands.refreshList(value);
+ commands.refreshGenres(value);
+```
+
+The emitted signals can be received over observable properties:
+```typescript
  refreshUser$ = commands.refreshUser$;
- refreshList = commands.refreshList(value);
  refreshList$ = commands.refreshList$;
- refreshGenres = commands.refreshGenres(value);
  refreshGenres$ = commands.refreshGenres$;
 ```
 
-### Usage for global services
+You can also emit multiple signals at once:
+```typescript
+ commands({refreshUser: true, refreshList: true});
+```
 
-In services it comes in handy to have a minimal typed action system. 
+If there is the need to make a combined signal you can also select multiple signals and get thier emissions in one stream:
+```typescript
+ refreshUserOrList$ = commands.$(['refreshUser', 'refreshList']);
+```
+
+## Signals in components
+
+In components/templates we can use signals to map user interaction as well as programmatic to effects or state changes.
+This reduces the componet class code as well as template. 
+ 
+In addition, we can use it as a shorthand in the template and directly connect to action dispatching in the class.
+
+```typescript
+interface UiActions {
+ submitBtn: void,
+ searchInput: string
+}
+
+@Component({
+template: `
+<input (input)="ui.searchInput($event)" /> Search for: {{ui.search$ | async}}<br/>
+<button (click)="ui.submitBtn()">Submit<button><br/>
+<ul>
+  <li *ngFor="let item of list$ | async as list">{{item}}</li>
+</ul>`,
+providers: [RxState, RxActionFactory]
+})
+class Component {
+  ui = factory.create({searchInput: (e) => e?.target?.value});
+  list$ = this.state.select('list');
+  submittedSearchQuery$ = this.ui.submitBtn$.pipe(
+    withLatestFrom(this.ui.search$), 
+    map(([_, search]) => search),
+    debounceTime(1500)
+  );
+  
+  constructor(
+    private state: RxState<State>,
+    private factory: RxActionFactory<UiActions>,
+    globalState: StateService) {
+    super(); 
+    this.connect('list', this.globalState.refreshGenres$);
+    
+    this.state.hold(this.submittedSearchQuery$, this.globalState.refreshGenres);
+    // Optional reactively:
+    // this.globalState.connectRefreshGenres(this.submittedSearchQuery$);
+  }
+}
+```
+
+### Using transforms
+
+Often we process `Events` from the template and occasionally also trigger those channels in the class programmatically.
+
+This leads to a lot of cluttery codebase as we have to consider first the value in the event which leads to un nessecarry and repetative code in the template.
+This is also true for the programmatic usage in the component class or a service.
+
+To ease this pain we can manage this login with `transforms`.
+
+You can write you own transforms or use the predefined functions:
+- preventDefault
+- stopPropagation
+- preventDefaultStopPropagation
+- eventValue
+
+```typescript
+interface UiActions {
+ submitBtn: void,
+ searchInput: string
+}
+
+@Component({
+template: `
+<input (input)="ui.searchInput($event)" /> Search for: {{ui.search$ | async}}<br/>
+<button (click)="ui.submitBtn()">Submit<button><br/>
+<ul>
+  <li *ngFor="let item of list$ | async as list">{{item}}</li>
+</ul>`,
+providers: [RxState, RxActionFactory]
+})
+class Component {
+  //                                (e) => e.target ? e.target.value : e
+  ui = factory.create({searchInput: eventValue});
+  list$ = this.state.select('list');
+  submittedSearchQuery$ = this.ui.submitBtn$.pipe(
+    withLatestFrom(this.ui.search$), 
+    map(([_, search]) => search),
+    debounceTime(1500)
+  );
+  
+  constructor(
+    private state: RxState<State>,
+    private factory: RxActionFactory<UiActions>,
+    globalState: StateService) {
+    super(); 
+    this.connect('list', this.globalState.refreshGenres$);
+    
+    this.state.hold(this.submittedSearchQuery$, this.globalState.refreshGenres);
+    // Optional reactively:
+    // this.globalState.connectRefreshGenres(this.submittedSearchQuery$);
+  }
+}
+```
+
+## Usage for global services
+
+In services, it comes in handy to have a minimal typed action system. 
 This helps to have them composable for further optimizations.
 Furthermore, we can still expose setters to trigger actions the imperative way.
 
@@ -189,45 +305,3 @@ export class StateService extends RxState<State> {
 }
 ```
 
-### Usage for template events
-
-In components/templates we can use the optional `transforms` param to reduce repetitive code in the template.
-In addition, we can use it as a shorthand in the template and directly connect to action dispatching in the class.
-
-```typescript
-interface UiActions {
- submitBtn: void,
- searchInput: string
-}
-
-@Component({
-template: `
-<input (input)="ui.searchInput($event)" /> Search for: {{ui.search$ | async}}<br/>
-<button (click)="ui.submitBtn()">Submit<button><br/>
-<ul>
-  <li *ngFor="let item of list$ | async as list">{{item}}</li>
-</ul>`,
-providers: [RxState, RxActionFactory]
-})
-class Component {
-  ui = factory.create({searchInput: (e) => e?.target?.value});
-  list$ = this.state.select('list');
-  submittedSearchQuery$ = this.ui.submitBtn$.pipe(
-    withLatestFrom(this.ui.search$), 
-    map(([_, search]) => search),
-    debounceTime(1500)
-  );
-  
-  constructor(
-    private state: RxState<State>,
-    private factory: RxActionFactory<UiActions>,
-    globalState: StateService) {
-    super(); 
-    this.connect('list', this.globalState.refreshGenres$);
-    
-    this.state.hold(this.submittedSearchQuery$, this.globalState.refreshGenres);
-    // Optional reactively:
-    // this.globalState.connectRefreshGenres(this.submittedSearchQuery$);
-  }
-}
-```

@@ -1,4 +1,4 @@
-import { Actions, ActionTransforms, RxActions } from './types';
+import { Actions, ActionTransforms, RxActions, ValuesOf } from './types';
 import { ErrorHandler, Injectable, OnDestroy, Optional } from '@angular/core';
 import { actionProxyHandler } from './proxy';
 import { Subject } from 'rxjs';
@@ -17,12 +17,12 @@ type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
  * actions.search$.subscribe();
  */
 @Injectable()
-export class RxActionFactory<T extends Actions> implements OnDestroy {
+export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
   private subjects: SubjectMap<T> = {} as SubjectMap<T>;
 
   constructor(
     @Optional()
-    private readonly errorHandler: ErrorHandler
+    private readonly errorHandler?: ErrorHandler
   ) {}
 
   /*
@@ -40,7 +40,7 @@ export class RxActionFactory<T extends Actions> implements OnDestroy {
    * const actions = new RxActionFactory<UIActions>().create();
    *
    * actions.search($event.target.value);
-   * actions.search$ | async;
+   * actions.search$.subscribe();
    *
    * As it is well typed the following things would not work:
    * actions.submit('not void'); // not void
@@ -65,20 +65,23 @@ export class RxActionFactory<T extends Actions> implements OnDestroy {
    * actions.search('string');
    * actions.search(42);
    * actions.submit('not void'); // does not error anymore
-   * actions.search$ | async; // string Observable
+   * actions.search$.subscribe(); // string Observable
    *
    */
   create<U extends ActionTransforms<T> = {}>(transforms?: U): RxActions<T, U> {
+    function signals(): void {}
     return new Proxy(
-      {} as RxActions<T, U>,
-      actionProxyHandler(this.subjects, transforms, this.errorHandler)
-    ) as RxActions<T, U>;
+      signals as any as RxActions<T, U>,
+      actionProxyHandler(
+        this.subjects as any as { [K in keyof T]: Subject<ValuesOf<T>> },
+        transforms,
+        this.errorHandler
+      )
+    ) as any as RxActions<T, U>;
   }
 
   destroy() {
-    Object.values(this.subjects).forEach((subject: Subject<any>) =>
-      subject.complete()
-    );
+    Object.values(this.subjects).forEach((subject: any) => subject.complete());
   }
 
   /**
