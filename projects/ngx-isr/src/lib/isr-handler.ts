@@ -25,6 +25,9 @@ export class ISRHandler {
     this.isrConfig = config;
     this.showLogs = config?.enableLogging ?? false;
 
+    // if skipCachingOnHttpError is not provided it will default to true
+    this.isrConfig.skipCachingOnHttpError = config?.skipCachingOnHttpError !== false;
+
     if (config.cache && config.cache instanceof CacheHandler) {
       this.cache = config.cache;
     } else {
@@ -74,7 +77,12 @@ export class ISRHandler {
         });
 
         // get revalidate data in order to set it to cache data
-        const { revalidate } = getISROptions(html);
+        const { revalidate, errors } = getISROptions(html);
+
+        // if there are errors when rendering the site we throw an error
+        if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
+          throw new Error('The new rendered page had errors: \n' + JSON.stringify(errors));
+        }
 
         // add the regenerated page to cache
         await this.cache.add(req.url, html, { revalidate });
@@ -90,6 +98,7 @@ export class ISRHandler {
         res.json({
           status: 'error',
           message: 'Error while regenerating url!!',
+          err
         });
       }
     }
@@ -136,7 +145,15 @@ export class ISRHandler {
 
     renderUrl(renderUrlConfig).then(
       async (html) => {
-        const { revalidate } = getISROptions(html);
+        const { revalidate, errors } = getISROptions(html);
+
+        // if we have any http errors when rendering the site, and we have skipCachingOnHttpError enabled
+        // we don't want to cache it, and, we will fall back to client side rendering
+        if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
+          this.showLogs && console.log('Http errors: \n', errors);
+          res.send(html);
+          return;
+        }
 
         // if revalidate is null we won't cache it
         // if revalidate is 0, we will never clear the cache automatically

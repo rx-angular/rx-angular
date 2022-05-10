@@ -6,6 +6,7 @@ export interface ISRHandlerConfig {
   indexHtml: string; // indexHtml path,
   invalidateSecretToken: string;
   enableLogging?: boolean; // defaults to false
+  skipCachingOnHttpError?: boolean; // defaults to true
 }
 
 export interface ServeFromCacheConfig {

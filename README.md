@@ -87,7 +87,7 @@ import { NgxIsrModule } from 'ngx-isr'; // <-- Import module from library
 @NgModule({
   imports: [
     ...
-    NgxIsrModule  // <-- Use it in module imports
+    NgxIsrModule.forRoot()  // <-- Use it in module imports
   ]
 })
 export class AppServerModule {}

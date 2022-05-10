@@ -1,7 +1,7 @@
-import { ISROptions } from './../models/cache-handler';
+import { ISROptions } from '../models';
 
 // this script tag will be included in the page if one of the routes on the page
-// has `revalidate` key in it's route data
+// has `revalidate` key in its route data
 const isrScriptTag = '<script id="isr-state" type="application/json">';
 
 export function getISROptions(html: string): ISROptions {
@@ -9,7 +9,7 @@ export function getISROptions(html: string): ISROptions {
 
   // check if script tag is not included
   if (!html || indexOfScriptTag === -1) {
-    return { revalidate: null };
+    return { revalidate: null, errors: [] };
   }
 
   const isrScript = html.substring(indexOfScriptTag); // start from script till the end of html file

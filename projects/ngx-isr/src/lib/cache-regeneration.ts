@@ -1,6 +1,7 @@
 import { Provider } from '@angular/core';
 import { CacheData, CacheHandler } from './models';
 import { renderUrl } from './utils/render-url';
+import { getISROptions } from './utils/get-isr-options';
 
 export class CacheRegeneration {
   private urlsOnHold: string[] = []; // urls that have regeneration loading
@@ -33,6 +34,13 @@ export class CacheRegeneration {
       // re-render the page again
       renderUrl({ req, res, url, indexHtml: this.indexHtml, providers }).then(
         (html) => {
+          const { errors } = getISROptions(html);
+
+          if (errors?.length) {
+            showLogs && console.error('💥 ERROR: Url: ' + url + ' was not regenerated!', errors);
+            return;
+          }
+
           // add the regenerated page to cache
           this.cache.add(req.url, html, { revalidate }).then(() => {
             // remove url from urlsOnHold
@@ -41,6 +49,6 @@ export class CacheRegeneration {
           });
         }
       );
-    }, revalidate! * 1000); // revalidate value is in seconds so we convert it in milliseconds
+    }, revalidate! * 1000); // revalidate value is in seconds, so we convert it in milliseconds
   }
 }

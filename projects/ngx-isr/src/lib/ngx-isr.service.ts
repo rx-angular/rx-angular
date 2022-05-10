@@ -2,9 +2,27 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { DOCUMENT, isPlatformServer } from '@angular/common';
 import { ChildActivationEnd, Router } from '@angular/router';
 import { filter, map, take } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+
+export interface NgxIsrState {
+  revalidate: number | null;
+  errors: Error[];
+}
+
+const initialState: NgxIsrState = {
+  revalidate: null,
+  errors: []
+}
 
 @Injectable({ providedIn: 'root' })
 export class NgxIsrService {
+
+  protected state = new BehaviorSubject<NgxIsrState>(initialState);
+
+  getState(): NgxIsrState {
+    return this.state.getValue();
+  }
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -31,17 +49,18 @@ export class NgxIsrService {
       )
       .subscribe((data: any) => {
         if (data?.['revalidate'] !== undefined) {
-          this.addISRDataToBody(data);
+          this.setRevalidate(data['revalidate']);
         }
       });
   }
 
-  // append script with revalidate data for the current route
-  private addISRDataToBody({ revalidate }: { revalidate: number }): void {
-    const script = this.doc.createElement('script');
-    script.id = 'isr-state';
-    script.setAttribute('type', 'application/json');
-    script.textContent = JSON.stringify({ revalidate });
-    this.doc.body.appendChild(script);
+  addError(err: HttpErrorResponse): void {
+    const currentErrors = this.getState().errors;
+    this.state.next({ ...this.getState(), errors: [ ...currentErrors, err ] });
   }
+
+  setRevalidate = (revalidate: number | null): void => {
+    this.state.next({ ...this.getState(), revalidate });
+  }
+
 }

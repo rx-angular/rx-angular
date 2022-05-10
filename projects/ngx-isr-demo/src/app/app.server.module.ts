@@ -10,7 +10,7 @@ import { NgxIsrModule } from 'ngx-isr';
     AppModule,
     ServerModule,
     ServerTransferStateModule,
-    NgxIsrModule
+    NgxIsrModule.forRoot()
   ],
   bootstrap: [AppComponent],
 })

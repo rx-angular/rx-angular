@@ -52,6 +52,7 @@
  */
 export interface ISROptions {
   revalidate: number | null; // none, 0, > 0
+  errors?: Error[];
 }
 
 export interface CacheData {
