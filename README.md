@@ -144,5 +144,13 @@ const routes: Routes = [
 
 - Path `/three` after the first request that is server-rendered, the page will be added to cache and the cache will never be deleted automatically as in path `/two`. So after the first request, all the other ones will come from the cache.
 
+
+## Changelog
+ - Version 0.2.0
+   * Features: 
+     * Added `skipCachingOnHttpError` option. It will be enabled by default.
+   * Breaking changes: 
+     * When adding `NgxIsrModule` in AppServerModule imports, we should change it to be `NgxIsrModule.forRoot()`.
+
 ## License
 MIT
