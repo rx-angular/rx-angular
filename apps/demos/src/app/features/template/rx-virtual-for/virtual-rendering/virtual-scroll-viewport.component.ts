@@ -1,5 +1,6 @@
 import {
   AfterContentInit,
+  ChangeDetectionStrategy,
   Component,
   ContentChild,
   ElementRef,
@@ -7,16 +8,12 @@ import {
   OnDestroy,
   Optional,
   Output,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { fromEvent } from '@rx-angular/cdk/zone-less';
 import { defer, Observable, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, startWith, takeUntil } from 'rxjs/operators';
-import {
-  RxVirtualScrollViewport,
-  RxVirtualViewRepeater,
-  RxVirtualScrollStrategy,
-} from './model';
+import { RxVirtualScrollStrategy, RxVirtualScrollViewport, RxVirtualViewRepeater } from './model';
 import { observeElementSize } from './observe-element-size';
 
 @Component({
@@ -52,6 +49,7 @@ import { observeElementSize } from './observe-element-size';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RxVirtualScrollViewportComponent
   implements RxVirtualScrollViewport, AfterContentInit, OnDestroy
