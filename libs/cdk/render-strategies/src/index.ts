@@ -17,3 +17,4 @@ export { RxStrategyCredentials } from './lib/model';
 export { RxRenderBehavior } from './lib/model';
 export { RxRenderWork } from './lib/model';
 export { RX_RENDER_STRATEGIES_CONFIG, RxRenderStrategiesConfig } from './lib/config';
+export { rxScheduleTask } from './lib/rx-schedule-task';
