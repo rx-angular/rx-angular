@@ -67,7 +67,7 @@ function updateStateAndBackup<T>(data: T) {
 }
 ```
 
-### Usage with options strategy
+### Usage with options
 
 ```typescript
 import { rxScheduleTask } from '@rx-angular/cdk/render-strategies';
