@@ -357,19 +357,19 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     projectValueFn?: ProjectValueReducer<T, K, V>
   ): void {
     if (
-      isObservable(keyOrInputOrSlice$) &&
+      projectValueFn === undefined &&
       projectOrSlices$ === undefined &&
-      projectValueFn === undefined
+      isObservable(keyOrInputOrSlice$)
     ) {
       this.accumulator.nextSliceObservable(keyOrInputOrSlice$);
       return;
     }
 
     if (
-      isObservable(keyOrInputOrSlice$) &&
+      projectValueFn === undefined &&
       typeof projectOrSlices$ === 'function' &&
-      !isObservable(projectOrSlices$) &&
-      projectValueFn === undefined
+      isObservable(keyOrInputOrSlice$) &&
+      !isObservable(projectOrSlices$)
     ) {
       const project = projectOrSlices$;
       const slice$ = keyOrInputOrSlice$.pipe(
@@ -380,9 +380,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     }
 
     if (
+      projectValueFn === undefined &&
       isKeyOf<T>(keyOrInputOrSlice$) &&
-      isObservable(projectOrSlices$) &&
-      projectValueFn === undefined
+      isObservable(projectOrSlices$)
     ) {
       const key = keyOrInputOrSlice$;
       const slice$ = projectOrSlices$.pipe(
@@ -393,9 +393,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     }
 
     if (
+      typeof projectValueFn === 'function' &&
       isKeyOf<T>(keyOrInputOrSlice$) &&
-      isObservable(projectOrSlices$) &&
-      typeof projectValueFn === 'function'
+      isObservable(projectOrSlices$)
     ) {
       const key = keyOrInputOrSlice$;
       const slice$ = projectOrSlices$.pipe(
