@@ -41,7 +41,10 @@ export const rxScheduleTask = (
   const task = scheduleCallback(
     strategiesPrio[options?.strategy || defaultStrategy],
     () => work(),
-    options
+    {
+      delay: options?.delay,
+      ngZone: options?.ngZone,
+    }
   );
   return () => {
     cancelCallback(task);
