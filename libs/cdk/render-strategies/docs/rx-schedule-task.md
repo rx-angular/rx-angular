@@ -96,7 +96,7 @@ function updateStateAndBackup<T>(data: T) {
   this.stateService.set(data);
 
   if (saveToLocalStorageCallback) {
-    saveToLocalStorage();
+    saveToLocalStorageCallback();
   }
 
   saveToLocalStorageCallback = rxScheduleTask(() =>
