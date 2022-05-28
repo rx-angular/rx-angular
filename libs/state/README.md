@@ -8,7 +8,9 @@
 
 RxState is a lightweight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in Angular.
 
-<img src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/images/state_logo.png" width="700" />
+<p align="center">
+  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/images/state_logo.png" width="700" />
+</p>
 
 ## Install
 
@@ -42,9 +44,11 @@ For more information about the compatibilities of angular itself see this [gist]
 
 ## Intro Video
 
-<a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw" style="display: block;  max-width: 600px;">
-  <img src="https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG" style="display: block;" />
-</a>
+<p align="center">
+  <a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">
+    <img width="80%" src="https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG" />
+  </a>
+</p>
 
 ## Key features
 
