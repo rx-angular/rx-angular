@@ -8,7 +8,7 @@
 
 RxState is a lightweight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in Angular.
 
-<img src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/images/state_logo.png" style="display: block; max-width: 700px; margin: 0 auto;" />
+<img src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/images/state_logo.png" width="700" />
 
 ## Install
 
@@ -119,27 +119,36 @@ with very little effort in any component.
 
 ## Videos
 
-<div style="display: flex; flex-wrap: wrap;">
-<a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw" style="width: 48%; display: block; padding: 1%; text-align: center;">
-  <img style="max-height: 200px; display: block; margin: auto;" src="https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG" /> 
-  🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session (English)
-</a>
-
-<a target="_blank" href="https://www.youtube.com/watch?v=I8uaHMs8rw0" style="width: 48%; display: block; padding: 1%;v">
-  <img style="max-height: 200px; display: block; margin: auto;" src="https://user-images.githubusercontent.com/10064416/147395866-031704dc-837d-4d1f-82d6-e758e4cb9556.PNG" /> 
-  🎥 Tackling Component State Reactively (Live Demo at 24:47) (English)
-</a>
-
-<a target="_blank" href="https://youtu.be/pkN6CeZ8h_U?t=5913" style="width: 48%; display: block; padding: 1%; text-align: center;">
-  <img style="max-height: 200px; display: block; margin: auto;" src="https://user-images.githubusercontent.com/15088626/170814847-cf06f5e8-297f-4ef9-977b-7942230ba6d9.png" /> 
-  🎥 Extending Angular for the Reactive Web (English)
-</a>
-
-<a target="_blank" href="https://www.youtube.com/watch?v=cKUFcY8QkYM" style="width: 48%; display: block; padding: 1%; text-align: center;">
-  <img style="max-height: 200px; display: block; margin: auto;" src="https://user-images.githubusercontent.com/15088626/170814823-c3132850-fa4d-4a5f-ada9-ae8990b0ddfb.png" /> 
-  🎥 Michael explains rx-state to webdave_de (Livestream, German)
-</a>
-</div>
+<table style="width:100%">
+  <tr>
+    <td style="vertical-align: bottom; text-align: center;">
+      <a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">
+        <img height="100%" src="https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG" /> 
+        🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session (English)
+      </a>
+    </td>
+    <td style="vertical-align: bottom; text-align: center;">
+      <a target="_blank" href="https://www.youtube.com/watch?v=I8uaHMs8rw0">
+        <img height="100%" src="https://user-images.githubusercontent.com/10064416/147395866-031704dc-837d-4d1f-82d6-e758e4cb9556.PNG" /> 
+        🎥 Tackling Component State Reactively (Live Demo at 24:47) (English)
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: bottom; text-align: center;">
+      <a target="_blank" href="https://youtu.be/pkN6CeZ8h_U?t=5913">
+        <img height="100%" src="https://user-images.githubusercontent.com/15088626/170814847-cf06f5e8-297f-4ef9-977b-7942230ba6d9.png" /> 
+        🎥 Extending Angular for the Reactive Web (English)
+      </a>
+    </td>
+    <td style="vertical-align: bottom; text-align: center;">
+      <a target="_blank" href="https://www.youtube.com/watch?v=cKUFcY8QkYM">
+        <img height="100%" src="https://user-images.githubusercontent.com/15088626/170814823-c3132850-fa4d-4a5f-ada9-ae8990b0ddfb.png" /> 
+        🎥 Michael explains rx-state to webdave_de (Livestream, German)
+      </a>
+    </td>
+  </tr>
+</table>
 
 ## Blogs/Documents
 
