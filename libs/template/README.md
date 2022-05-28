@@ -12,36 +12,9 @@ the user experience of your angular application.
 The functionalities are provided by
 structural directives, pipes, RxJS operators, or imperative functions to manage the rendering in Angular.
 
-![template logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/template/docs/images/template_logo.png)
-
-## Description
-
-**@rx-angular/template** is nothing less than a revolution in `ChangeDetection` for angular applications.
-Developers are provided with tools for high-performance rendering, which are operated by a broad and intuitive API.
-
-The [LetDirective (`*rxLet`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md) &
-[PushPipe (`push`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/push.md) focus
-on template rendering, the coordination and optimization of `ChangeDetection` cycles. While the `PushPipe` is a
-straight **drop in replacement** for the `AsyncPipe (async)`, the `LetDirective` will often provide a more
-convenient way of managing reactive sources and lazy rendering of the view.
-
-Using those with the default strategy ([Local Strategy](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/docs/render-strategies/strategies.md#local)) should already improve the rendering performance of
-your application by a decent amount.
-
-The applied optimization behavior is fully customizable by using built-in or
-custom provided (_coming soon_) [RenderStrategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/docs/render-strategies).  
-However, `RenderStrategies` are also meant to be as a tool developers can interact with inside
-their components, giving you an even broader access to the rendering mechanisms of your application.
-The API comes with imperative as well as reactive ways to manage renderings.
-By default, changes get scoped, coalesced and scheduled using the latest browser APIs.
-Beyond to the use of the scheduling APIs in the browser, local rendering of components is also
-key for a smooth experience.
-
-If you plan to improve your rendering performance to the maximum possible, there
-are several techniques that need to be known and considered.
-
-- [Coalescing, Scoped Coalescing & Scheduling](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/concepts.md)
-- [Rendering Issues in Angular](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/performance-issues.md)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/template/docs/images/template_logo.png" width="700" />
+</p>
 
 ## Installation
 
@@ -72,9 +45,16 @@ ng update @rx-angular/template
 nx migrate @rx-angular/template
 ```
 
-## API
+## Version Compatibility
 
-[API Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/overview.md)
+| Angular                | RxJS                 | @rx-angular/template |
+| ---------------------- | -------------------- | -------------------- |
+| `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-beta.29`    |
+| `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-beta.29`   |
+
+Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
+All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
+For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3)
 
 ## Basic setup
 
@@ -90,31 +70,47 @@ import { LetModule, PushModule, ViewportPrioModule } from '@rx-angular/template'
 export class MyModule {}
 ```
 
-## Features
+## Documentation
 
-- Directives
+- [⚙️ API Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/overview.md)
+- 🌟 Features
   - [LetDirective (\*rxLet)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md)
-- Pipes
   - [PushPipe (push)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/push.md)
-- [Render Strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies/docs/README.md)
+- 🧪 Experimental features
+  - [ForDirective (\*rxFor)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/rx-for-directive.md)
+  - [Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/viewport-prio.md)
+  - [UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/unpatch.md)
+  - [Detach strategy](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/experimental-render-strategies.md)
+- 🧾 Snippets
+  - [Core concepts](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/concepts.md)
+  - [Performance issues in Angular](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/performance-issues.md)
+  - [Reactive context](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/reactive-context.md)
 
-## Experimental features
+## Description
 
-Additionally, @rx-angular/template provides some experimental optimization tools which in general will give you more control
-about what changes are leading to re-renderings.
+**@rx-angular/template** is nothing less than a revolution in `ChangeDetection` for angular applications.
+Developers are provided with tools for high-performance rendering, which are operated by a broad and intuitive API.
 
-- [🧪 Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/viewport-prio.md)
-- [🧪 UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/unpatch.md)
-- [🧪 Detach strategy](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/experimental-render-strategies.md)
+The [LetDirective (`*rxLet`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md) &
+[PushPipe (`push`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/push.md) focus
+on template rendering, the coordination and optimization of `ChangeDetection` cycles. While the `PushPipe` is a
+straight **drop in replacement** for the `AsyncPipe (async)`, the `LetDirective` will often provide a more
+convenient way of managing reactive sources and lazy rendering of the view.
 
-## Version Compatibility
+Using those with the default strategy ([Local Strategy](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/docs/render-strategies/strategies.md#local)) should already improve the rendering performance of
+your application by a decent amount.
 
-| Angular                | RxJS                 | @rx-angular/template |
-|------------------------|----------------------|----------------------|
-| `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-beta.29`    |
-| `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-beta.29`   |
+The applied optimization behavior is fully customizable by using built-in or
+custom provided (_coming soon_) [RenderStrategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/docs/render-strategies).  
+However, `RenderStrategies` are also meant to be as a tool developers can interact with inside
+their components, giving you an even broader access to the rendering mechanisms of your application.
+The API comes with imperative as well as reactive ways to manage renderings.
+By default, changes get scoped, coalesced and scheduled using the latest browser APIs.
+Beyond to the use of the scheduling APIs in the browser, local rendering of components is also
+key for a smooth experience.
 
+If you plan to improve your rendering performance to the maximum possible, there
+are several techniques that need to be known and considered.
 
-Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
-All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
-For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3)
+- [Coalescing, Scoped Coalescing & Scheduling](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/concepts.md)
+- [Rendering Issues in Angular](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/performance-issues.md)
