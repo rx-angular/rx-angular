@@ -62,7 +62,7 @@ function updateStateAndBackup<T>(data: T) {
 
   rxScheduleTask(
     () => localStorage.setItem('state', JSON.stringify(state)),
-    'idle'
+    {strategy: 'idle'}
   );
 }
 ```

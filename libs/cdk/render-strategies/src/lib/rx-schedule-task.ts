@@ -19,6 +19,8 @@ const strategiesPrio: StrategiesPriorityRecord = {
   idle: PriorityLevel.IdlePriority,
 };
 
+const defaultStrategy: keyof StrategiesPriorityRecord = 'normal';
+
 /**
  * @description
  * This function is used to schedule a task with a certain priority.
@@ -30,14 +32,14 @@ const strategiesPrio: StrategiesPriorityRecord = {
  */
 export const rxScheduleTask = (
   work: (...args: any[]) => void,
-  strategy: keyof StrategiesPriorityRecord = 'normal',
   options?: {
+    strategy?: keyof StrategiesPriorityRecord;
     delay?: number;
     ngZone?: NgZone;
   }
 ) => {
   const task = scheduleCallback(
-    strategiesPrio[strategy],
+    strategiesPrio[options?.strategy || defaultStrategy],
     () => work(),
     options
   );
