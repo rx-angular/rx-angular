@@ -58,7 +58,7 @@ For more information about the compatibilities of angular itself see this [gist]
 - Connect any Observable source to the state
 - Partial state updates
 - Reactive state selection
-- Lazy state (no BehaviourSubject)
+- Lazy state (no BehaviorSubject)
 - Foundation for zone-less Angular applications
 
 ## Sub Modules
