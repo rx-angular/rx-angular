@@ -31,7 +31,7 @@ Find details in the linked readme files below for installation and setup instruc
 
 Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
 All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
-For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3)
+For more information about the compatibilities of Angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).
 
 ## Links
 
