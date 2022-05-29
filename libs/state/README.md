@@ -39,7 +39,7 @@ nx migrate @rx-angular/state
 | `^11.0.0`              | `^6.5.5`             | `<= 1.4.6`        |
 
 Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
-All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
+All the packages support RxJS versions `^6.5.5` || `^7.4.0`.
 For more information about the compatibilities of Angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).
 
 ## Intro Video
