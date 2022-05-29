@@ -29,7 +29,7 @@ Find details in the linked readme files below for installation and setup instruc
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.4.6`         | `> 1.0.0-beta.29`    | `> 1.0.0-alpha.10`  |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.4.6`        | `<= 1.0.0-beta.29`   | `<= 1.0.0-alpha.10` |
 
-Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
+Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself.
 All the packages support RxJS versions `^6.5.5` || `^7.4.0`.
 For more information about the compatibilities of Angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).
 
