@@ -88,7 +88,7 @@ export class MyModule {}
 
 ## Description
 
-**@rx-angular/template** is nothing less than a revolution in `ChangeDetection` for angular applications.
+**@rx-angular/template** is nothing less than a revolution in `ChangeDetection` for Angular applications.
 Developers are provided with tools for high-performance rendering, which are operated by a broad and intuitive API.
 
 The [LetDirective (`*rxLet`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md) &
