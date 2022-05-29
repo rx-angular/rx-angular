@@ -54,7 +54,7 @@ nx migrate @rx-angular/template
 
 Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself.
 All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
-For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3)
+For more information about the compatibilities of Angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).
 
 ## Basic setup
 
