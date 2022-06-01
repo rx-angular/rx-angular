@@ -4,6 +4,7 @@ import {
   EmbeddedViewRef,
   Input,
   NgZone,
+  OnChanges,
   OnDestroy,
   OnInit,
   SimpleChanges,
@@ -38,7 +39,7 @@ import {
   selector: '[rxIf]',
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
-export class RxIf<U> implements OnInit, OnDestroy {
+export class RxIf<U> implements OnInit, OnDestroy, OnChanges {
   private subscription = new Subscription();
   private _renderObserver: NextObserver<any>;
   private templateManager: RxTemplateManager<
@@ -60,9 +61,9 @@ export class RxIf<U> implements OnInit, OnDestroy {
 
   @Input('rxIfElse') else: TemplateRef<any>;
 
-  @Input('rxIfSuspenseTpl') suspenseTmpl: TemplateRef<any>;
-  @Input('rxIfCompleteTpl') completeTmpl: TemplateRef<any>;
-  @Input('rxIfErrorTpl') errorTmpl: TemplateRef<any>;
+  @Input('rxIfSuspense') suspense: TemplateRef<any>;
+  @Input('rxIfComplete') complete: TemplateRef<any>;
+  @Input('rxIfError') error: TemplateRef<any>;
 
   @Input('rxIfParent') renderParent = this.strategyProvider.config.parent;
 
@@ -75,7 +76,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
 
   /** @internal */
   private observablesHandler = createTemplateNotifier<U>(
-    () => !!this.suspenseTmpl
+    () => !!this.suspense
   );
   private readonly strategyHandler = coerceAllFactory<string>(
     () => new ReplaySubject<string | Observable<string>>(1),
@@ -112,24 +113,24 @@ export class RxIf<U> implements OnInit, OnDestroy {
       this.templateManager.addTemplateRef(RxIfTemplateNames.else, this.else);
     }
 
-    if (changes.completeTmpl) {
+    if (changes.complete) {
       this.templateManager.addTemplateRef(
         RxIfTemplateNames.complete,
-        this.completeTmpl
+        this.complete
       );
     }
 
-    if (changes.suspenseTmpl) {
+    if (changes.suspense) {
       this.templateManager.addTemplateRef(
         RxIfTemplateNames.suspense,
-        this.suspenseTmpl
+        this.suspense
       );
     }
 
-    if (changes.errorTmpl) {
+    if (changes.error) {
       this.templateManager.addTemplateRef(
         RxIfTemplateNames.error,
-        this.errorTmpl
+        this.error
       );
     }
   }

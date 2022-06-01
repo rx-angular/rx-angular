@@ -11,25 +11,24 @@ import {
   Output,
   SimpleChanges,
   TemplateRef,
-  ViewContainerRef,
+  ViewContainerRef
 } from '@angular/core';
-import {
-  createTemplateManager,
-  RxTemplateManager,
-  RxBaseTemplateNames,
-  RxViewContext,
-} from '@rx-angular/cdk/template';
-import {
-  RxStrategyProvider,
-  RxStrategyNames,
-} from '@rx-angular/cdk/render-strategies';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
   RxNotification,
-  RxNotificationKind,
+  RxNotificationKind
 } from '@rx-angular/cdk/notifications';
-
+import {
+  RxStrategyNames,
+  RxStrategyProvider
+} from '@rx-angular/cdk/render-strategies';
+import {
+  createTemplateManager,
+  RxBaseTemplateNames,
+  RxTemplateManager,
+  RxViewContext
+} from '@rx-angular/cdk/template';
 import {
   defer,
   merge,
@@ -38,7 +37,7 @@ import {
   ObservableInput,
   ReplaySubject,
   Subject,
-  Subscription,
+  Subscription
 } from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
 
@@ -103,7 +102,7 @@ export interface RxLetViewContext<T> extends RxViewContext<T> {
  * - triggers change-detection differently if ViewEngine or Ivy is present (`ChangeDetectorRef.detectChanges` or
  *   `ɵdetectChanges`)
  * - distinct same values in a row (`distinctUntilChanged` operator),
- * - display custom templates for different observable notifications (rxSuspense, rxNext, rxError, rxComplete)
+ * - display custom templates for different observable notifications (suspense, next, error, complete)
  * - notify about after changes got rendered to the template (RenderCallback)
  *
  *
@@ -129,7 +128,7 @@ export interface RxLetViewContext<T> extends RxViewContext<T> {
  * - complete occurrence
  *
  * ```html
- * <ng-container *rxLet="observableNumber$; let n; let e = $rxError, let c = $rxComplete">
+ * <ng-container *rxLet="observableNumber$; let n; let e = error, let c = complete">
  *   <app-number [number]="n" *ngIf="!e && !c"></app-number>
  *   <ng-container *ngIf="e">
  *     There is an error: {{ e }}
@@ -153,9 +152,9 @@ export interface RxLetViewContext<T> extends RxViewContext<T> {
  *   *rxLet="
  *     observableNumber$;
  *     let n;
- *     rxError: error;
- *     rxComplete: complete;
- *     rxSuspense: suspense;
+ *     error: error;
+ *     complete: complete;
+ *     suspense: suspense;
  *   "
  * >
  *   <app-number [number]="n"></app-number>
@@ -248,7 +247,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * A template to show if the bound Observable is in "complete" state.
    *
    * @example
-   * <ng-container *rxLet="hero$; let hero; completeTpl: completeTemplate">
+   * <ng-container *rxLet="hero$; let hero; complete: completeTemplate">
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    * <ng-template #completeTemplate>
@@ -257,15 +256,15 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param templateRef
    */
-  @Input('rxLetRxComplete') // TODO: rename: rxLetCompleteTpl
-  rxComplete: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
+  @Input('rxLetComplete')
+  complete: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
 
   /**
    * @description
    * A template to show if the bound Observable is in "error" state.
    *
    * @example
-   * <ng-container *rxLet="hero$; let hero; errorTpl: errorTemplate">
+   * <ng-container *rxLet="hero$; let hero; error: errorTemplate">
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    * <ng-template #errorTemplate>
@@ -274,15 +273,15 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param templateRef
    */
-  @Input('rxLetRxError') // TODO: rename: rxLetErrorTpl
-  rxError: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
+  @Input('rxLetError')
+  error: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
 
   /**
    * @description
    * A template to show before the first value is emitted from the bound Observable.
    *
    * @example
-   * <ng-container *rxLet="hero$; let hero; suspenseTpl: suspenseTemplate">
+   * <ng-container *rxLet="hero$; let hero; suspense: suspenseTemplate">
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    * <ng-template #suspenseTemplate>
@@ -291,15 +290,14 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param templateRef
    */
-  @Input('rxLetRxSuspense') // TODO: rename: rxLetSuspenseTpl
-  rxSuspense: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
+  @Input('rxLetSuspense')
+  suspense: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
 
   @Input('rxLetRenderCallback')
   set renderCallback(callback: NextObserver<U>) {
     this._renderObserver = callback;
   }
 
-  /* @todo: Rename to `rxRenderParent`? */
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxLetParent') renderParent = this.strategyProvider.config.parent;
 
@@ -335,9 +333,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   ) {}
 
   /** @internal */
-  private observablesHandler = createTemplateNotifier<U>(
-    () => !!this.rxSuspense
-  );
+  private observablesHandler = createTemplateNotifier<U>(() => !!this.suspense);
   /** @internal */
   private strategyHandler = coerceAllFactory<string>(
     () => new ReplaySubject<RxStrategyNames<string>>(1)
@@ -398,25 +394,22 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
       this._createTemplateManager();
     }
 
-    if (changes.rxComplete) {
+    if (changes.complete) {
       this.templateManager.addTemplateRef(
         RxLetTemplateNames.complete,
-        this.rxComplete
+        this.complete
       );
     }
 
-    if (changes.rxSuspense) {
+    if (changes.suspense) {
       this.templateManager.addTemplateRef(
         RxLetTemplateNames.suspense,
-        this.rxSuspense
+        this.suspense
       );
     }
 
-    if (changes.rxError) {
-      this.templateManager.addTemplateRef(
-        RxLetTemplateNames.error,
-        this.rxError
-      );
+    if (changes.error) {
+      this.templateManager.addTemplateRef(RxLetTemplateNames.error, this.error);
     }
   }
 
@@ -449,16 +442,12 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
       },
       notificationToTemplateName: {
         [RxNotificationKind.Suspense]: () =>
-          this.rxSuspense
-            ? RxLetTemplateNames.suspense
-            : RxLetTemplateNames.next,
+          this.suspense ? RxLetTemplateNames.suspense : RxLetTemplateNames.next,
         [RxNotificationKind.Next]: () => RxLetTemplateNames.next,
         [RxNotificationKind.Error]: () =>
-          this.rxError ? RxLetTemplateNames.error : RxLetTemplateNames.next,
+          this.error ? RxLetTemplateNames.error : RxLetTemplateNames.next,
         [RxNotificationKind.Complete]: () =>
-          this.rxComplete
-            ? RxLetTemplateNames.complete
-            : RxLetTemplateNames.next,
+          this.complete ? RxLetTemplateNames.complete : RxLetTemplateNames.next,
       },
       templateTrigger$: this.triggerHandler.values$,
     });
