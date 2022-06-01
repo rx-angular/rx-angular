@@ -28,9 +28,9 @@ This repository holds a set of helpers to create **fully reactive** as well as *
 ## Used by
 <table style="width:100%">
   <tr>
-    <td><img src="https://clickup.com/landing/images/logo-clickup_color.svg"></td>
-    <td><img src="https://media-exp1.licdn.com/dms/image/C4D0BAQEexCZaCyeDYg/company-logo_200_200/0/1626433899897?e=1652918400&v=beta&t=zjTJehE51V39-IaRRaaK_uBzLqcdTr2wsm7YpLLleUQ"></td>
-    <td><img src="https://avatars.githubusercontent.com/u/1733746?s=200&v=4"></td>
+    <td><img width="140" src="https://clickup.com/landing/images/logo-clickup_color.svg"></td>
+    <td><img width="140" src="https://get.tapeapp.com/wp-content/uploads/2021/08/tape_logo_24px.svg"></td>
+    <td><img height="80" src="https://avatars.githubusercontent.com/u/1733746?s=200&v=4"></td>
   </tr>
    <tr>
     <th>Large scale application</th>
