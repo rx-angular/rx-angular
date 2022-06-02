@@ -7,7 +7,7 @@
 ## Reactive Template Rendering for Angular
 
 @rx-angular/template is a comprehensive toolset for fully reactive rendering in Angular.
-It leverages the latest Browser APIs (while still being backwards compatible) to maximize the rendering performance and thus
+It leverages the latest Browser APIs (while still being backward compatible) to maximize the rendering performance and thus
 the user experience of your angular application.
 The functionalities are provided by
 structural directives, pipes, RxJS operators, or imperative functions to manage the rendering in Angular.
@@ -22,23 +22,21 @@ Developers are provided with tools for high-performance rendering, which are ope
 The [LetDirective (`*rxLet`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md) &
 [PushPipe (`push`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/push-pipe.md) focus
 on template rendering, the coordination and optimization of `ChangeDetection` cycles. While the `PushPipe` is a
-straight **drop in replacement** for the `AsyncPipe (async)`, the `LetDirective` will often provide a more
+straight **drop-in replacement** for the `AsyncPipe (async)`, the `LetDirective` will often provide a more
 convenient way of managing reactive sources and lazy rendering of the view.
 
-Using those with the default strategy ([Local Strategy](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/basic-strategies.md#local)) should already improve the rendering performance of
-your application by a decent amount.
+Using those with the default strategy ([Normal Strategy](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concurrent-strategies.md#normal)) should already improve the rendering performance of your application by a decent amount.
 
 The applied optimization behavior is fully customizable by using built-in or
-custom provided [RenderStrategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md).  
-However, `RenderStrategies` are also meant to be as a tool developers can interact with inside
-their components, giving you an even broader access to the rendering mechanisms of your application.
+custom-provided [RenderStrategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md).  
+However, `RenderStrategies` are also meant to be a tool developers can interact with inside
+their components, giving you even broader access to the rendering mechanisms of your application.
 The API comes with imperative as well as reactive ways to manage renderings.
 By default, changes get scoped, coalesced and scheduled using the latest browser APIs.
-Beyond to the use of the scheduling APIs in the browser, local rendering of components is also
+Beyond the use of the scheduling APIs in the browser, local rendering of components is also
 key for a smooth experience.
 
-If you plan to improve your rendering performance to the maximum possible, there
-are several techniques that need to be known and considered.
+If you plan to improve your rendering performance to the maximum possible, several techniques need to be known and considered.
 
 - [Coalescing, Scoped Coalescing & Scheduling](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/concepts.md)
 - [Rendering Issues in Angular](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/performance-issues.md)
