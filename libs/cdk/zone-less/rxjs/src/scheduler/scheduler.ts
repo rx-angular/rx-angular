@@ -1,4 +1,4 @@
-import { dateTimestampProvider } from '@rx-angular/cdk/internals/rxjs';
+import { dateTimestampProvider } from '../internals/date-time-stamp.provider';
 import { Subscription } from 'rxjs';
 import { Action } from './Action';
 import { SchedulerLike, SchedulerAction } from './types';

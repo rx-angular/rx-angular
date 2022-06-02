@@ -36,5 +36,6 @@ import { AsapScheduler } from './AsapScheduler';
  * // "async"
  * // ... but 'asap' goes first!
  * ```
+ * @deprecated will be removed with 1.0.0
  */
 export const asapScheduler = new AsapScheduler(AsapAction);

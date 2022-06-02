@@ -1,10 +1,10 @@
 import { Subscription } from 'rxjs';
 import {
-  animationFrameProvider,
-  intervalProvider,
-  immediateProvider,
-  dateTimestampProvider,
-} from '@rx-angular/cdk/internals/rxjs';
+  immediateProvider
+} from '../internals/immediateProvider';
+import { dateTimestampProvider } from '../internals/date-time-stamp.provider';
+import { intervalProvider } from '../internals/intervalProvider';
+import { animationFrameProvider } from '../internals/animationFrameProvider';
 import { RunHelpers, TestScheduler } from 'rxjs/testing';
 
 export class RxTestScheduler extends TestScheduler {

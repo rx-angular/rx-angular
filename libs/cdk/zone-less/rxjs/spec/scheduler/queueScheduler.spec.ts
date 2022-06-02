@@ -1,7 +1,7 @@
 import { queueScheduler } from '@rx-angular/cdk/zone-less/rxjs';
 import { Subscription, merge } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { RxTestScheduler } from '@rx-angular/cdk/testing';
+import { RxTestScheduler } from '../../src/testing/test-scheduler';
 import { jestMatcher } from '@test-helpers';
 
 const queue = queueScheduler;

@@ -1,4 +1,4 @@
-import { animationFrameProvider } from '@rx-angular/cdk/internals/rxjs';
+import { animationFrameProvider } from '../../internals/animationFrameProvider';
 import { AsyncAction } from '../async/AsyncAction';
 import { AnimationFrameScheduler } from './AnimationFrameScheduler';
 import { SchedulerAction } from '../types';

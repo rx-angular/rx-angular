@@ -1,4 +1,4 @@
-import { intervalProvider } from '@rx-angular/cdk/internals/rxjs';
+import { intervalProvider } from '../../internals/intervalProvider';
 import { Subscription } from 'rxjs';
 import { Action } from '../Action';
 import { SchedulerAction } from '../types';

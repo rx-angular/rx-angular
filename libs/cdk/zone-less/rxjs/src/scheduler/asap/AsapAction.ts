@@ -1,4 +1,4 @@
-import { immediateProvider } from '@rx-angular/cdk/internals/rxjs';
+import { immediateProvider } from '../../internals/immediateProvider';
 import { AsyncAction } from '../async/AsyncAction';
 import { AsapScheduler } from './AsapScheduler';
 import { SchedulerAction } from '../types';

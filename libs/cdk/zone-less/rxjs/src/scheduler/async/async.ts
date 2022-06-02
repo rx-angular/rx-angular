@@ -48,5 +48,6 @@ import { AsyncScheduler } from './AsyncScheduler';
  * // 2 after 5s
  * // 3 after 6s
  * ```
+ * @deprecated will be removed with 1.0.0
  */
 export const asyncScheduler = new AsyncScheduler(AsyncAction);

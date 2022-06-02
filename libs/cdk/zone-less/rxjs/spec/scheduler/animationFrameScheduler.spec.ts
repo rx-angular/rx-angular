@@ -1,11 +1,9 @@
-import {
-  animationFrameProvider,
-  intervalProvider,
-} from '@rx-angular/cdk/internals/rxjs';
+import { intervalProvider } from '../../src/internals/intervalProvider';
+import { animationFrameProvider } from '../../src/internals/animationFrameProvider';
 import { animationFrameScheduler } from '@rx-angular/cdk/zone-less/rxjs';
 import { Subscription, merge, delay } from 'rxjs';
 import { jestMatcher } from '@test-helpers';
-import { RxTestScheduler } from '@rx-angular/cdk/testing';
+import { RxTestScheduler } from '../../src/testing/test-scheduler';
 
 const animationFrame = animationFrameScheduler;
 

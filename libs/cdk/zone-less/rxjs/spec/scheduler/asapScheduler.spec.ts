@@ -1,8 +1,6 @@
-import {
-  immediateProvider,
-  intervalProvider,
-} from '@rx-angular/cdk/internals/rxjs';
-import { RxTestScheduler } from '@rx-angular/cdk/testing';
+import { intervalProvider } from '../../src/internals/intervalProvider';
+import { immediateProvider } from '../../src/internals/immediateProvider';
+import { RxTestScheduler } from '../../src/testing/test-scheduler';
 import { jestMatcher } from '@test-helpers';
 import { Subscription, SchedulerAction, merge } from 'rxjs';
 import { delay } from 'rxjs/operators';

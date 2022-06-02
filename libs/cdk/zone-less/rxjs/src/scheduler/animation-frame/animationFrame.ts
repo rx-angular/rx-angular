@@ -33,6 +33,7 @@ import { AnimationFrameScheduler } from './AnimationFrameScheduler';
  *
  * // You will see a div element growing in height
  * ```
+ * @deprecated will be removed with 1.0.0
  */
 export const animationFrameScheduler = new AnimationFrameScheduler(
   AnimationFrameAction

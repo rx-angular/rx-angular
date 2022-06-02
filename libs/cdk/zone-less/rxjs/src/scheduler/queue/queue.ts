@@ -64,5 +64,6 @@ import { QueueScheduler } from './QueueScheduler';
  * // "before", 1
  * // "after", 1
  * ```
+ * @deprecated will be removed with 1.0.0
  */
 export const queueScheduler = new QueueScheduler(QueueAction);
