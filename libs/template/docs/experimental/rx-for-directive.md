@@ -3,7 +3,7 @@
 The `*rxFor` structural directive provides a convenient and performant way for rendering
 templates out of a list of items.
 
-Input values can be provided either as `Observable`, `Promise` or `static` values. Just as the `*ngFor` directive, the `*rxFor` is placed on an element, which becomes the parent of the cloned templates.
+Input values can be provided either as `Observable`, `Promise` or static values.
 
 Compared to the `NgForOf`, `RxFor` treats each child template as single renderable unit. Rendering cycles of child templates get prioritized, scheduled and executed by `RenderStrategies`. This technique enables non-blocking rendering of lists and can be referred to as `concurrent mode`.
 
