@@ -5,11 +5,13 @@ templates out of a list of items.
 
 Input values can be provided either as `Observable`, `Promise` or `static` values. Just as the `*ngFor` directive, the `*rxFor` is placed on an element, which becomes the parent of the cloned templates.
 
-The `RxFor` implements `EmbeddedView Rendering`. Compared to the `NgForOf`, `RxFor` treats each child template as single renderable entity. For each change in the provided list of items it will apply and detect changes to only affected views.
+Compared to the `NgForOf`, `RxFor` treats each child template as single renderable unit. Rendering cycles of child templates get prioritized, scheduled and executed by `RenderStrategies`. This technique enables non-blocking rendering of lists and can be referred to as `concurrent mode`.
 
-Under the hood, it leverages the power of the `StrategyCredential`s which in turn take care of scheduling and prioritizing the change detection for each child template (aka item in the list). This way the rendering behavior of each instance of `RxFor` can be configured individually.
+Each template getting processed as individual task does also mean, rendering can be cancelled and rendered items will be rendered in chunks.
 
-`RxStrategyCredentials` and `EmbeddedView Rendering` together build the basis for the `concurrent mode`. Based on the configured strategy every template will get processed in an individual task, which enables chunked and cancellable rendering of the list.
+Furthermore, `RxFor` provides access to the rendering cycle and informs about any event happening in form of a `renderCallback`.
+
+However, the rendering behavior is fully configurable and transparent for the developer. Each instance of `RxFor` can be configured to render with different settings.
 
 As further improvement compared to the basic `*ngFor` implementation, `*rxFor` is able to take care of `ChangeDetection` in situations which include `projected views` (aka `@ContentChild` or `@ViewChild`).
 
