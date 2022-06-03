@@ -36,7 +36,7 @@ By default, changes get scoped, coalesced and scheduled using the latest browser
 Beyond the use of the scheduling APIs in the browser, local rendering of components is also
 key for a smooth experience.
 
-If you plan to improve your rendering performance to the maximum possible, several techniques need to be known and considered.
+If you want to deepen your knowledge about performance optimizations, consider reading through the following concepts and techniques:
 
 - [Coalescing, Scoped Coalescing & Scheduling](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/concepts.md)
 - [Rendering Issues in Angular](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/performance-issues.md)
