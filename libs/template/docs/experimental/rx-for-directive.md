@@ -13,7 +13,6 @@ Furthermore, `RxFor` provides access to the rendering cycle and informs about an
 
 However, the rendering behavior is fully configurable and transparent for the developer. Each instance of `RxFor` can be configured to render with different settings.
 
-As further improvement compared to the basic `*ngFor` implementation, `*rxFor` is able to take care of `ChangeDetection` in situations which include `projected views` (aka `@ContentChild` or `@ViewChild`).
 
 ### Features of `*rxFor`
 
