@@ -33,8 +33,7 @@ However, `RenderStrategies` are also meant to be a tool developers can interact 
 their components, giving you even broader access to the rendering mechanisms of your application.
 The API comes with imperative as well as reactive ways to manage renderings.
 By default, changes get scoped, coalesced and scheduled using the latest browser APIs.
-Beyond the use of the scheduling APIs in the browser, local rendering of components is also
-key for a smooth experience.
+Beyond the optimization of change detection cycles, `@rx-angular/template` by default performs change detection only scoped to smallest unit possible.
 
 If you want to deepen your knowledge about performance optimizations, consider reading through the following concepts and techniques:
 
