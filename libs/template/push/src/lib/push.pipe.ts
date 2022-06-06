@@ -3,7 +3,7 @@ import {
   NgZone,
   OnDestroy,
   Pipe,
-  PipeTransform,
+  PipeTransform, ViewRef
 } from '@angular/core';
 import {
   RxStrategyNames,
@@ -11,17 +11,18 @@ import {
   strategyHandling,
 } from '@rx-angular/cdk/render-strategies';
 import {
-  createTemplateNotifier,
-  RxNotificationKind,
+  createTemplateNotifier, RxNotification,
+  RxNotificationKind
 } from '@rx-angular/cdk/notifications';
+import { Promise } from '@rx-angular/cdk/zone-less/browser';
 import {
+  from, MonoTypeOperatorFunction,
   NextObserver,
   Observable,
-  ObservableInput,
+  ObservableInput, OperatorFunction, race, share, shareReplay, skip, Subscription,
   Unsubscribable
 } from 'rxjs';
-import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { timeoutSwitchMapWith } from '@rx-angular/cdk/internals/core';
+import { filter, map, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 
 /**
  * @Pipe PushPipe
@@ -89,6 +90,10 @@ export class PushPipe<S extends string = string>
   private readonly subscription: Unsubscribable;
   /** @internal */
   private readonly templateObserver = createTemplateNotifier<any>();
+  private readonly templateValues$ = this.templateObserver.values$.pipe(
+    onlyValues(),
+    shareReplay(1)
+  )
   /** @internal */
   private readonly strategyHandler = strategyHandling(
     this.strategyProvider.primaryStrategy,
@@ -165,36 +170,49 @@ export class PushPipe<S extends string = string>
   /** @internal */
   private handleChangeDetection(): Unsubscribable {
     const scope = (this.cdRef as any).context;
-    return this.templateObserver.values$
+    const sub = new Subscription();
+    const setRenderedValue = this.templateValues$.pipe(
+      onlyValues(),
+    ).subscribe(({ value }) => this.renderedValue = value);
+    const render = hasInitialValue(this.templateValues$)
       .pipe(
-        filter(
-          (n) =>
-            n.kind === RxNotificationKind.Suspense ||
-            n.kind === RxNotificationKind.Next
-        ),
-        tap((notification) => {
-          this.renderedValue = notification.value;
-        }),
-        withLatestFrom(this.strategyHandler.strategy$),
-        switchMap(([notification, strategy]) =>
-          this.strategyProvider
-            .schedule(
-              () => {
-                strategy.work(this.cdRef, scope);
-              },
-              {
-                scope,
-                strategy: strategy.name,
-                patchZone: this.patchZone,
-              }
-            )
-            .pipe(
-              timeoutSwitchMapWith(),
-              tap(() => this._renderCallback?.next(notification.value))
-            )
-        )
+        switchMap(isSync => this.templateValues$.pipe(
+          // skip ticking change detection
+          // in case we have an initial value, we don't need to perform cd
+          // the variable will be evaluated anyway because of the lifecycle
+          skip(isSync ? 1 : 0),
+          onlyValues(),
+          this.render(scope),
+          tap(v =>{
+            console.log('rendered', v);
+            this._renderCallback?.next(v);
+          }),
+        ))
       )
       .subscribe();
+    sub.add(setRenderedValue);
+    sub.add(render);
+    return sub;
+  }
+
+  /** @internal */
+  private render<T>(scope: object): OperatorFunction<RxNotification<T>, T> {
+    return o$ => o$.pipe(
+      withLatestFrom(this.strategyHandler.strategy$),
+      switchMap(([notification, strategy]) =>
+        this.strategyProvider
+          .schedule(
+            () => {
+              strategy.work(this.cdRef, scope);
+              return notification.value;
+            },
+            {
+              scope,
+              strategy: strategy.name,
+              patchZone: this.patchZone,
+            }
+          )
+    ))
   }
 }
 
@@ -206,6 +224,27 @@ interface PushInput<T, S> {
 
 // https://eslint.org/docs/rules/no-prototype-builtins
 const hasOwnProperty = Object.prototype.hasOwnProperty;
+
+function onlyValues<T>(): MonoTypeOperatorFunction<RxNotification<T>> {
+  return o$ => o$.pipe(filter(
+    (n) =>
+      n.kind === RxNotificationKind.Suspense ||
+      n.kind === RxNotificationKind.Next
+  ));
+}
+
+/**
+ *
+ * @param value$
+ */
+function hasInitialValue(value$: Observable<unknown>): Observable<boolean> {
+  return race(
+    from(Promise.resolve()).pipe(map(() => false)),
+    value$.pipe(map(() => true)),
+  ).pipe(
+    take(1)
+  );
+}
 
 function isRxComponentInput<U, S>(value: any): value is PushInput<U, S> {
   return (
