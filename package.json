@@ -98,7 +98,7 @@
     "@types/benchmark": "^2.1.0",
     "@types/jest": "27.0.2",
     "@types/klaw-sync": "^6.0.0",
-    "@types/lodash": "^4.14.176",
+    "@types/lodash": "^4.14.182",
     "@types/node": "~16.11.1",
     "@typescript-eslint/eslint-plugin": "5.10.2",
     "@typescript-eslint/parser": "5.10.2",
