@@ -42,7 +42,6 @@
       "@rx-angular/cdk/zone-configurations": [
         "libs/cdk/zone-configurations/src/index.ts"
       ],
-
       "@rx-angular/cdk/zone-less/browser": [
         "libs/cdk/zone-less/browser/src/index.ts"
       ],
