@@ -1,16 +1,8 @@
+import { animationFrameProvider } from '../../internals/animationFrameProvider';
 import { AsyncAction } from '../async/AsyncAction';
 import { AnimationFrameScheduler } from './AnimationFrameScheduler';
 import { SchedulerAction } from '../types';
-import {
-  requestAnimationFrame,
-  cancelAnimationFrame,
-} from '@rx-angular/cdk/zone-less/browser';
 
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
 export class AnimationFrameAction<T> extends AsyncAction<T> {
   constructor(
     protected scheduler: AnimationFrameScheduler,
@@ -29,14 +21,13 @@ export class AnimationFrameAction<T> extends AsyncAction<T> {
       return super.requestAsyncId(scheduler, id, delay);
     }
     // Push the action to the end of the scheduler queue.
-    // @ts-ignore
     scheduler.actions.push(this);
     // If an animation frame has already been requested, don't request another
     // one. If an animation frame hasn't been requested yet, request one. Return
     // the current animation frame request id.
     return (
-      scheduler.scheduled ||
-      (scheduler.scheduled = requestAnimationFrame(() =>
+      scheduler._scheduled ||
+      (scheduler._scheduled = animationFrameProvider.requestAnimationFrame(() =>
         scheduler.flush(undefined)
       ))
     );
@@ -49,15 +40,15 @@ export class AnimationFrameAction<T> extends AsyncAction<T> {
     // If delay exists and is greater than 0, or if the delay is null (the
     // action wasn't rescheduled) but was originally scheduled as an async
     // action, then recycle as an async action.
-    if ((delay !== null && delay > 0) || (delay === null && this.delay > 0)) {
+    if ((delay != null && delay > 0) || (delay == null && this.delay > 0)) {
       return super.recycleAsyncId(scheduler, id, delay);
     }
     // If the scheduler queue is empty, cancel the requested animation frame and
     // set the scheduled flag to undefined so the next AnimationFrameAction will
     // request its own.
-    if (scheduler.actions.length === 0) {
-      cancelAnimationFrame(id);
-      scheduler.scheduled = undefined;
+    if (!scheduler.actions.some((action) => action.id === id)) {
+      animationFrameProvider.cancelAnimationFrame(id);
+      scheduler._scheduled = undefined;
     }
     // Return undefined so the action knows to request a new async id if it's rescheduled.
     return undefined;
