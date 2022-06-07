@@ -3,6 +3,7 @@
   "projects": {
     "cdk": "libs/cdk",
     "demos": "apps/demos",
+    "docs": "apps/docs",
     "ssr": "apps/ssr",
     "ssr-e2e": "apps/ssr-e2e",
     "state": "libs/state",
