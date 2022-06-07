@@ -17,6 +17,14 @@
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.0"
 
+"@angular-devkit/architect@0.1201.0":
+  version "0.1201.0"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.1201.0.tgz#33dccc420abe5a859c699ffce8936eb2f88c1c22"
+  integrity sha512-tqIhGccWjI32xmLs0UIr2umET18Le+r5PxCf30ueOE5pv1q7XKD06EzGx9J05B1aUgDFb3LP/ArlKel5JnD+3g==
+  dependencies:
+    "@angular-devkit/core" "12.1.0"
+    rxjs "6.6.7"
+
 "@angular-devkit/architect@0.1202.16":
   version "0.1202.16"
   resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.1202.16.tgz#8d11fe26a1fb693b70043f98b8bcb7e4960adc62"
@@ -127,6 +135,18 @@
     "@angular-devkit/architect" "0.1202.16"
     rxjs "6.6.7"
 
+"@angular-devkit/core@12.1.0":
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-12.1.0.tgz#d00a50ede9441ea225284238a3f96fd1a206f928"
+  integrity sha512-y6q/hn9/j6LwNgDzTBXe5pTXouU7nuc3KZFq3JwfTdo4yTIxN1Rdv9+zfzDkzEcYtyFoqLqqskQFme/DqdbEZw==
+  dependencies:
+    ajv "8.6.0"
+    ajv-formats "2.1.0"
+    fast-json-stable-stringify "2.1.0"
+    magic-string "0.25.7"
+    rxjs "6.6.7"
+    source-map "0.7.3"
+
 "@angular-devkit/core@12.2.16":
   version "12.2.16"
   resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-12.2.16.tgz#3a833fde6be1997f4961565da8bec1bb58fb8b8d"
@@ -162,6 +182,15 @@
     magic-string "0.25.7"
     rxjs "6.6.7"
     source-map "0.7.3"
+
+"@angular-devkit/schematics@12.1.0":
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-12.1.0.tgz#b559e0a07059b72efc8739a47a8d3ec043737303"
+  integrity sha512-KlE1fnvqWItt9dYCaQ89b9WoqFvOK64kemCLGGx49CllQ3con1lwXW2iauzT/29UoK1rSzvTVMvTJcDQOJ7isQ==
+  dependencies:
+    "@angular-devkit/core" "12.1.0"
+    ora "5.4.1"
+    rxjs "6.6.7"
 
 "@angular-devkit/schematics@12.2.16", "@angular-devkit/schematics@~12.2.0":
   version "12.2.16"
@@ -2718,6 +2747,17 @@
     yargs "15.4.1"
     yargs-parser "20.0.0"
 
+"@nx-plus/docusaurus@12.2.0":
+  version "12.2.0"
+  resolved "https://registry.yarnpkg.com/@nx-plus/docusaurus/-/docusaurus-12.2.0.tgz#9e9e54a9e3926a7db346a3e70fde96e2de616d16"
+  integrity sha512-/GWFsEenqAprjDJgaZj13TWbjfK3A722JaKVuChjNT8Ze7JA5M9XOdpzMlDaaL4OuKcwfzPFgfgcoTSp9e4Vrw==
+  dependencies:
+    "@angular-devkit/architect" "0.1201.0"
+    "@angular-devkit/core" "12.1.0"
+    "@angular-devkit/schematics" "12.1.0"
+    rxjs "6.5.5"
+    typescript "4.3.5"
+
 "@parcel/watcher@2.0.0-alpha.11":
   version "2.0.0-alpha.11"
   resolved "https://registry.yarnpkg.com/@parcel/watcher/-/watcher-2.0.0-alpha.11.tgz#8d6233d4416880810438cd2628e6a35273241ab3"
@@ -3721,6 +3761,16 @@ ajv-keywords@^3.1.0, ajv-keywords@^3.4.1, ajv-keywords@^3.5.2:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-3.5.2.tgz#31f29da5ab6e00d1c2d329acf7b5929614d5014d"
   integrity sha512-5p6WTN0DdTGVQk6VjcEju19IgaHudalcfabD7yhDGeA6bcQnmL+CpveLJq/3hvfwd1aof6L386Ougkx6RfyMIQ==
+
+ajv@8.6.0:
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.6.0.tgz#60cc45d9c46a477d80d92c48076d972c342e5720"
+  integrity sha512-cnUG4NSBiM4YFBxgZIj/In3/6KX+rQ2l2YPRVcvAMQGWEPKuXoPIhxzwqh31jA3IPbI4qEOp/5ILI4ynioXsGQ==
+  dependencies:
+    fast-deep-equal "^3.1.1"
+    json-schema-traverse "^1.0.0"
+    require-from-string "^2.0.2"
+    uri-js "^4.2.2"
 
 ajv@8.6.2, ajv@^8.0.0:
   version "8.6.2"
