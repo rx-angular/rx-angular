@@ -12,7 +12,7 @@
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "nx/tasks-runners/default",
+      "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
         "cacheableOperations": [
           "build-schematics",
