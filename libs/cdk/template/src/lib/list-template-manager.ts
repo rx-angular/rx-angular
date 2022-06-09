@@ -100,6 +100,17 @@ export function createListTemplateManager<
     },
   };
 
+  function handleError() {
+    return (o$) =>
+      o$.pipe(
+        catchError((err: Error) => {
+          partiallyFinished = false;
+          errorHandler.handleError(err);
+          return of(null);
+        })
+      );
+  }
+
   function render(): MonoTypeOperatorFunction<NgIterable<T> | null> {
     return (o$: Observable<NgIterable<T>>): Observable<NgIterable<T> | null> =>
       combineLatest([
@@ -154,14 +165,11 @@ export function createListTemplateManager<
               () => notifyParent,
               ngZone
             ),
+            handleError(),
             map(() => iterable)
           );
         }),
-        catchError((err) => {
-          partiallyFinished = false;
-          errorHandler.handleError(err);
-          return of(null);
-        })
+        handleError()
       );
   }
 
