@@ -1,10 +1,15 @@
-import { Component, ErrorHandler } from '@angular/core';
+import { ErrorHandler } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { ForModule } from '../for.module';
-
-let thisArg: any;
+import {
+  createErrorHandler,
+  createTestComponent,
+  setThis,
+  TestComponent,
+  thisArg,
+} from './fixtures';
 
 const customErrorHandler: ErrorHandler = {
   handleError: jest.fn(),
@@ -427,7 +432,7 @@ describe('rxFor', () => {
         const template = `<p *rxFor="let item of items; trackBy: trackByContext.bind(this)"></p>`;
         fixture = createTestComponent(template);
 
-        thisArg = null;
+        setThis(null);
         fixture.detectChanges();
         expect(thisArg).toBe(getComponent());
       })
@@ -506,35 +511,4 @@ class Foo {
   toString() {
     return 'foo';
   }
-}
-
-// eslint-disable-next-line @angular-eslint/component-selector
-@Component({ selector: 'test-cmp', template: '' })
-class TestComponent {
-  value: any;
-  items: any[] = [1, 2];
-  trackById(index: number, item: any): string {
-    return item['id'];
-  }
-  trackByIndex(index: number, item: any): number {
-    return index;
-  }
-  trackByContext(): void {
-    thisArg = this;
-  }
-}
-
-const TEMPLATE =
-  '<div><span *rxFor="let item of items">{{item.toString()}};</span></div>';
-
-function createTestComponent(
-  template: string = TEMPLATE
-): ComponentFixture<TestComponent> {
-  return TestBed.overrideComponent(TestComponent, {
-    set: { template: template },
-  }).createComponent(TestComponent);
-}
-
-function createErrorHandler() {
-  return TestBed.inject(ErrorHandler);
 }
