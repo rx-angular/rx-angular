@@ -6,6 +6,10 @@ import { ForModule } from '../for.module';
 
 let thisArg: any;
 
+const customErrorHandler: ErrorHandler = {
+  handleError: jest.fn(),
+};
+
 describe('rxFor', () => {
   let fixture: ComponentFixture<TestComponent>;
   let errorHandler: ErrorHandler;
@@ -29,6 +33,10 @@ describe('rxFor', () => {
       declarations: [TestComponent],
       imports: [ForModule],
       providers: [
+        {
+          provide: ErrorHandler,
+          useValue: customErrorHandler,
+        },
         {
           provide: RX_RENDER_STRATEGIES_CONFIG,
           useValue: {
