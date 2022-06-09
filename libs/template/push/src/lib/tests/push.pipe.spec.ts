@@ -1,9 +1,16 @@
 
-import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import {
+  RX_RENDER_STRATEGIES_CONFIG,
+  RxStrategyCredentials,
+  RxStrategyProvider
+} from '@rx-angular/cdk/render-strategies';
+import { map, tap } from 'rxjs/operators';
+import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less/browser';
+import { PushModule } from '../push.module';
 import { PushPipe } from '../push.pipe';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { EMPTY, NEVER, Observable, of } from 'rxjs';
+import { asapScheduler, EMPTY, from, NEVER, Observable, of, scheduled, share, shareReplay, timer } from 'rxjs';
 import { mockConsole } from '@test-helpers';
 
 function wrapWithSpace(str: string): string {
@@ -11,36 +18,49 @@ function wrapWithSpace(str: string): string {
 }
 
 @Component({
-  template: ` {{ (value$ | push | json) || 'undefined' }} `,
+  template: ` {{ (value$ | push: strategy | json) || 'undefined' }} `,
 })
 class PushPipeTestComponent {
   value$: Observable<number> = of(42);
+  strategy?: string;
 }
 
-let fixturePushPipeTestComponent: any;
+let fixturePushPipeTestComponent: ComponentFixture<PushPipeTestComponent>;
 let pushPipeTestComponent: {
   value$: Observable<unknown> | unknown | undefined | null;
+  strategy?: string;
 };
-let componentNativeElement: any;
+let componentNativeElement: HTMLElement;
+let strategyProvider: RxStrategyProvider;
 
 const setupPushPipeComponent = () => {
   TestBed.configureTestingModule({
-    declarations: [PushPipe, PushPipeTestComponent],
+    declarations: [PushPipeTestComponent],
+    imports: [PushModule],
     providers: [
       ChangeDetectorRef,
       {
         provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
+          customStrategies: {
+            'custom': {
+              name: 'custom',
+              work: cdRef => {
+                cdRef.detectChanges();
+              },
+              behavior: ({ work }) => o$ => o$.pipe(tap(() => work()))
+            }
+          }
         },
       },
     ],
-    teardown: { destroyAfterEach: true },
   });
 
   fixturePushPipeTestComponent = TestBed.createComponent(PushPipeTestComponent);
   pushPipeTestComponent = fixturePushPipeTestComponent.componentInstance;
   componentNativeElement = fixturePushPipeTestComponent.nativeElement;
+  strategyProvider = TestBed.inject(RxStrategyProvider);
 };
 
 describe('PushPipe used as pipe in the template', () => {
@@ -110,4 +130,79 @@ describe('PushPipe used as pipe in the template', () => {
     fixturePushPipeTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe(wrapWithSpace('43'));
   });
+
+  describe('async values', () => {
+    let cdSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      const strategy = strategyProvider.strategies['custom'];
+      pushPipeTestComponent.strategy = 'custom';
+      cdSpy = jest.spyOn(strategy, 'work');
+    })
+
+    it('should not detect changes with sync value', () => {
+      fixturePushPipeTestComponent.detectChanges();
+      expect(componentNativeElement.textContent).toBe(wrapWithSpace('42'));
+      expect(cdSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('should detect changes with async value', async () => {
+      const value$ = new Observable(sub => {
+        Promise.resolve().then(() => {
+          sub.next(44);
+          sub.complete();
+        });
+        return () => {
+          sub.complete();
+        }
+      });
+      pushPipeTestComponent.value$ = value$;
+      fixturePushPipeTestComponent.detectChanges();
+      expect(componentNativeElement.textContent).toBe(wrapWithSpace('undefined'));
+      await Promise.resolve();
+      expect(cdSpy).toBeCalledTimes(1);
+      expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
+    });
+
+    it('should detect changes with unpatched Promise', async () => {
+      const value$ = new Observable(sub => {
+        unpatchedPromise.resolve().then(() => {
+          sub.next(44);
+          sub.complete();
+        });
+        return () => {
+          sub.complete();
+        }
+      });
+      pushPipeTestComponent.value$ = value$;
+      fixturePushPipeTestComponent.detectChanges();
+      expect(componentNativeElement.textContent).toBe(wrapWithSpace('undefined'));
+      await unpatchedPromise.resolve();
+      expect(cdSpy).toBeCalledTimes(1);
+      expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
+    });
+
+    it('should detect changes with asapScheduler', async () => {
+      const value$ = timer(0, asapScheduler).pipe(map(() => 44));
+      pushPipeTestComponent.value$ = value$;
+      fixturePushPipeTestComponent.detectChanges();
+      expect(componentNativeElement.textContent).toBe(wrapWithSpace('undefined'));
+      await Promise.resolve();
+      expect(cdSpy).toBeCalledTimes(1);
+      expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
+    });
+
+    it('should detect changes with macrotask', async () => {
+      const value$ = timer(0).pipe(map(() => 44));
+      pushPipeTestComponent.value$ = value$;
+      fixturePushPipeTestComponent.detectChanges();
+      expect(componentNativeElement.textContent).toBe(wrapWithSpace('undefined'));
+      await new Promise(resolve => {
+        setTimeout(resolve);
+      })
+      expect(cdSpy).toBeCalledTimes(1);
+      expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
+    });
+
+  })
 });
