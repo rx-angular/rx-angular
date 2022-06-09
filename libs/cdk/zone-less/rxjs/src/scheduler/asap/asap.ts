@@ -1,6 +1,5 @@
-import * as rxjs from 'rxjs';
 import { AsapAction } from './AsapAction';
-import { createScheduler } from '../create-scheduler';
+import { AsapScheduler } from './AsapScheduler';
 
 /**
  *
@@ -37,5 +36,6 @@ import { createScheduler } from '../create-scheduler';
  * // "async"
  * // ... but 'asap' goes first!
  * ```
+ * @deprecated will be removed with 1.0.0
  */
-export const asapScheduler = createScheduler(rxjs.asapScheduler, AsapAction);
+export const asapScheduler = new AsapScheduler(AsapAction);

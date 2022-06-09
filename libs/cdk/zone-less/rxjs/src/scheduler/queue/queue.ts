@@ -1,6 +1,5 @@
-import * as rxjs from 'rxjs';
 import { QueueAction } from './QueueAction';
-import { createScheduler } from '../create-scheduler';
+import { QueueScheduler } from './QueueScheduler';
 
 /**
  *
@@ -65,5 +64,6 @@ import { createScheduler } from '../create-scheduler';
  * // "before", 1
  * // "after", 1
  * ```
+ * @deprecated will be removed with 1.0.0
  */
-export const queueScheduler = createScheduler(rxjs.queueScheduler, QueueAction);
+export const queueScheduler = new QueueScheduler(QueueAction);
