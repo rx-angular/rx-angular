@@ -170,7 +170,7 @@ export class PushPipe<S extends string = string>
 
   /** @internal */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscription?.unsubscribe();
   }
 
   /** @internal */
