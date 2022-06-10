@@ -37,6 +37,12 @@ import {
 import { RxForViewContext } from './for-view-context';
 
 /**
+ * @description Will be provided through Terser global definitions by Angular CLI
+ * during the production build.
+ */
+declare const ngDevMode: boolean;
+
+/**
  * @Directive RxFor
  *
  * @description
@@ -508,10 +514,26 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    */
   @Input('rxForTrackBy')
   set trackBy(trackByFnOrKey: string | ((idx: number, i: T) => any)) {
-    this._trackBy =
+    if (
+      (typeof ngDevMode === 'undefined' || ngDevMode) &&
+      trackByFnOrKey != null &&
+      typeof trackByFnOrKey !== 'string' &&
       typeof trackByFnOrKey !== 'function'
-        ? (i, a) => a[trackByFnOrKey]
-        : trackByFnOrKey;
+    ) {
+      console.warn(
+        `trackBy must be a function, but received ${JSON.stringify(
+          trackByFnOrKey
+        )}.`
+      );
+    }
+    if (trackByFnOrKey == null) {
+      this._trackBy = null;
+    } else {
+      this._trackBy =
+        typeof trackByFnOrKey !== 'function'
+          ? (i, a) => a[trackByFnOrKey]
+          : trackByFnOrKey;
+    }
   }
 
   /**
@@ -643,16 +665,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   private _subscription = new Subscription();
 
   /** @internal */
-  static ngTemplateContextGuard<
-    T,
-    U extends NgIterable<T> = NgIterable<T>,
-    K = keyof T
-  >(dir: RxFor<T, U>, ctx: any): ctx is RxForViewContext<T, U, K> {
-    return true;
-  }
-
-  /** @internal */
-  _trackBy: TrackByFunction<T> = (i, a) => a;
+  _trackBy: TrackByFunction<T>;
   /** @internal */
   _distinctBy = (a: T, b: T) => a === b;
 
@@ -715,5 +728,15 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   ngOnDestroy() {
     this._subscription.unsubscribe();
     this.viewContainerRef.clear();
+  }
+
+  /** @internal */
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  static ngTemplateContextGuard<
+    T,
+    U extends NgIterable<T> = NgIterable<T>,
+    K = keyof T
+  >(dir: RxFor<T, U>, ctx: any): ctx is RxForViewContext<T, U, K> {
+    return true;
   }
 }
