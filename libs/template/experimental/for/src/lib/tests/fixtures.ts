@@ -13,8 +13,8 @@ export function setThis(arg: any) {
 export class TestComponent {
   value: any;
   items: any[] = [1, 2];
-  itemsCold$ = new Subject<number[]>();
-  itemsHot$ = new BehaviorSubject<number[]>([1, 2]);
+  itemsCold$ = new Subject<any[]>();
+  itemsHot$ = new BehaviorSubject<any[]>([1, 2]);
   parent: boolean;
 
   renderedValue$ = new Subject<number[]>();

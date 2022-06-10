@@ -10,6 +10,7 @@ import {
   TestComponent,
   thisArg,
 } from './fixtures';
+import SpyInstance = jest.SpyInstance;
 
 const customErrorHandler: ErrorHandler = {
   handleError: jest.fn(),
@@ -18,6 +19,7 @@ const customErrorHandler: ErrorHandler = {
 describe('rxFor', () => {
   let fixture: ComponentFixture<TestComponent>;
   let errorHandler: ErrorHandler;
+  const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
 
   function getComponent(): TestComponent {
     return fixture.componentInstance;
@@ -50,6 +52,7 @@ describe('rxFor', () => {
         },
       ],
     });
+    warnSpy.mockClear();
   });
 
   it(
@@ -404,18 +407,17 @@ describe('rxFor', () => {
     it(
       'should console.warn if trackBy is not a function',
       waitForAsync(() => {
-        // TODO(vicb): expect a warning message when we have a proper log service
         const template = `<p *rxFor="let item of items; trackBy: value"></p>`;
         fixture = createTestComponent(template);
         fixture.componentInstance.value = 0;
         fixture.detectChanges();
+        expect(warnSpy).toBeCalledTimes(1);
       })
     );
 
     it(
       'should track by identity when trackBy is to `null` or `undefined`',
       waitForAsync(() => {
-        // TODO(vicb): expect no warning message when we have a proper log service
         const template = `<p *rxFor="let item of items; trackBy: value">{{ item }}</p>`;
         fixture = createTestComponent(template);
         fixture.componentInstance.items = ['a', 'b', 'c'];
@@ -423,6 +425,7 @@ describe('rxFor', () => {
         detectChangesAndExpectText('abc');
         fixture.componentInstance.value = undefined;
         detectChangesAndExpectText('abc');
+        expect(warnSpy).toBeCalledTimes(0);
       })
     );
 
