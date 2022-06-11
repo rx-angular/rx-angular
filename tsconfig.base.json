@@ -53,8 +53,8 @@
       "@rx-angular/state/effects": ["libs/state/effects/src/index.ts"],
       "@rx-angular/state/selections": ["libs/state/selections/src/index.ts"],
       "@rx-angular/template": ["libs/template/src/index.ts"],
-      "@rx-angular/template/experimental/for": [
-        "libs/template/experimental/for/src/index.ts"
+      "@rx-angular/template/for": [
+        "libs/template/for/src/index.ts"
       ],
       "@rx-angular/template/experimental/if": [
         "libs/template/experimental/if/src/index.ts"
