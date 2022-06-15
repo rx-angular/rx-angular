@@ -12,9 +12,6 @@ npm install ngx-isr
 
 > Make sure you have Angular Universal in your app.
 
-> Setup Angular Universal: `ng add @nguniversal/express-engine`
-
-
 2. Initialize `ISRHandler` inside `server.ts`
 ```ts
 const isr = new ISRHandler({
@@ -56,7 +53,7 @@ server.get('*',
   ...
   async (req, res, next) => await isr.render(req, res, next, {
     providers: [
-      { provide: APP_BASE_HREF, useValue: req.baseUrl }, // <-- Needs to be provided when passing providers 
+      { provide: APP_BASE_HREF, useValue: req.baseUrl }, // <-- Needs to be provided when passing providers
       { provide: CUSTOM_TOKEN, useValue: 'Hello from ISR' },
       CustomService
     ]
@@ -146,11 +143,15 @@ const routes: Routes = [
 
 
 ## Changelog
- - Version 0.2.0
-   * Features: 
-     * Added `skipCachingOnHttpError` option. It will be enabled by default.
-   * Breaking changes: 
-     * When adding `NgxIsrModule` in AppServerModule imports, we should change it to be `NgxIsrModule.forRoot()`.
+- Version 0.3.0
+  * Features:
+    * Added support for Angular v14
+
+- Version 0.2.0
+  * Features:
+    * Added `skipCachingOnHttpError` option. It will be enabled by default.
+  * Breaking changes:
+    * When adding `NgxIsrModule` in AppServerModule imports, we should change it to be `NgxIsrModule.forRoot()`.
 
 ## License
 MIT
