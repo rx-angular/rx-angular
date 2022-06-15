@@ -25,7 +25,6 @@ describe('@rx-angular/template universal rendering', () => {
     it('should display green and purple text', () => {
       cy.request('http://localhost:4200').its('body').then(
         html => {
-          console.log(html)
           const el = Cypress.$(html).find('.for');
           expect(el.length).eq(2);
           expect(el.eq(0)).to.include.text('green');
