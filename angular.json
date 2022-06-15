@@ -53,9 +53,7 @@
               "projects/ngx-isr-demo/src/favicon.ico",
               "projects/ngx-isr-demo/src/assets"
             ],
-            "styles": [
-              "projects/ngx-isr-demo/src/styles.scss"
-            ],
+            "styles": ["projects/ngx-isr-demo/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -152,9 +150,7 @@
         "prerender": {
           "builder": "@nguniversal/builders:prerender",
           "options": {
-            "routes": [
-              "/"
-            ]
+            "routes": ["/"]
           },
           "configurations": {
             "production": {
@@ -170,6 +166,5 @@
         }
       }
     }
-  },
-  "defaultProject": "ngx-isr"
+  }
 }
