@@ -1,4 +1,6 @@
+import { RouterModule } from '@angular/router';
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-page-two',
@@ -9,7 +11,9 @@ import { Component } from '@angular/core';
     </p>
 
     <router-outlet></router-outlet>
-  `
+  `,
+  standalone: true,
+  imports: [CommonModule, RouterModule]
 })
 export class PageTwoComponent {
   time = new Date()

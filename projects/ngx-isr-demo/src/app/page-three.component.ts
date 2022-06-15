@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
@@ -7,7 +8,9 @@ import { Component } from '@angular/core';
       page-three works!
       <span>{{ time | date:'medium' }} </span>
     </p>
-  `
+  `,
+  standalone: true,
+  imports: [CommonModule]
 })
 export class PageThreeComponent {
 

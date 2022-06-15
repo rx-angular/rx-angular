@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -8,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
       <span>{{ time | date:'medium' }} </span>
     </p>
   `,
+  standalone: true,
+  imports: [CommonModule]
 })
 export class PageOneComponent {
   time = new Date();
