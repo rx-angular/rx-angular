@@ -48,11 +48,11 @@ export class ISRHandler {
     const { secretToken, urlToInvalidate } = extractData(req);
 
     if (secretToken !== this.isrConfig.invalidateSecretToken) {
-      res.json({ status: 'error', message: 'Your secret token is wrong!!!' });
+      return res.json({ status: 'error', message: 'Your secret token is wrong!!!' });
     }
 
     if (!urlToInvalidate) {
-      res.json({
+      return res.json({
         status: 'error',
         message: 'Please add `urlToInvalidate` query param in your url',
       });
@@ -60,7 +60,7 @@ export class ISRHandler {
 
     if (urlToInvalidate) {
       if (!(await this.cache.has(urlToInvalidate))) {
-        res.json({
+        return res.json({
           status: 'error',
           message: "The url you provided doesn't exist in cache!",
         });
@@ -90,12 +90,12 @@ export class ISRHandler {
         this.showLogs &&
         console.log(`Url: ${ urlToInvalidate } was regenerated!`);
 
-        res.json({
+        return res.json({
           status: 'success',
           message: `Url: ${ urlToInvalidate } was regenerated!`,
         });
       } catch (err) {
-        res.json({
+        return res.json({
           status: 'error',
           message: 'Error while regenerating url!!',
           err
@@ -127,7 +127,7 @@ export class ISRHandler {
 
       // Cache exists. Send it.
       this.showLogs && console.log('Page was retrieved from cache: ', req.url);
-      res.send(html);
+      return res.send(html);
     } catch (error) {
       // Cache does not exist. Serve user using SSR
       next();
@@ -151,8 +151,7 @@ export class ISRHandler {
         // we don't want to cache it, and, we will fall back to client side rendering
         if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
           this.showLogs && console.log('Http errors: \n', errors);
-          res.send(html);
-          return;
+          return res.send(html);
         }
 
         // if revalidate is null we won't cache it
@@ -160,13 +159,12 @@ export class ISRHandler {
         // if revalidate is x, we will clear cache every x seconds (after the last request) for that url
 
         if (revalidate === null || revalidate === undefined) { // don't do !revalidate because it will also catch "0"
-          res.send(html);
-          return;
+          return res.send(html);
         }
 
         // Cache the rendered `html` for this request url to use for subsequent requests
         await this.cache.add(req.url, html, { revalidate });
-        res.send(html);
+        return res.send(html);
       }
     );
 
