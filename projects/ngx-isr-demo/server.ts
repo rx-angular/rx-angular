@@ -8,7 +8,7 @@ import { join } from 'path';
 import { AppServerModule } from './src/main.server';
 import { existsSync } from 'fs';
 
-import { ISRHandler } from 'ngx-isr';
+import { ISRHandler , FileSystemCacheHandler} from 'ngx-isr';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -16,9 +16,17 @@ export function app(): express.Express {
   const distFolder = join(process.cwd(), 'dist/ngx-isr-demo/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
+  // Step 0 (optional): Create FileSystemCacheHandler with required options.
+  const fsCacheHandler = new FileSystemCacheHandler({
+    cacheFolderPath: join(distFolder, '/cache'),
+    prerenderedPagesPath: distFolder,
+    addPrerendedPagesToCache: true,
+  });
+
   // Step 1: Initialize ISRHandler
   const isr = new ISRHandler({
     indexHtml,
+    cache: fsCacheHandler, // we can remove this field if we want to use the default InMemoryCacheHandler
     invalidateSecretToken: 'MY_TOKEN',
     enableLogging: !environment.production
   });

@@ -150,7 +150,7 @@
         "prerender": {
           "builder": "@nguniversal/builders:prerender",
           "options": {
-            "routes": ["/"]
+            "routes": ["/", "/one", "/two", "/three", "/details", "/details/1", "/details/2", "/details/3"]
           },
           "configurations": {
             "production": {
