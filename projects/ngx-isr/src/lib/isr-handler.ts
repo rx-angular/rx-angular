@@ -26,7 +26,8 @@ export class ISRHandler {
     this.showLogs = config?.enableLogging ?? false;
 
     // if skipCachingOnHttpError is not provided it will default to true
-    this.isrConfig.skipCachingOnHttpError = config?.skipCachingOnHttpError !== false;
+    this.isrConfig.skipCachingOnHttpError =
+      config?.skipCachingOnHttpError !== false;
 
     if (config.cache && config.cache instanceof CacheHandler) {
       this.cache = config.cache;
@@ -48,7 +49,10 @@ export class ISRHandler {
     const { secretToken, urlToInvalidate } = extractData(req);
 
     if (secretToken !== this.isrConfig.invalidateSecretToken) {
-      return res.json({ status: 'error', message: 'Your secret token is wrong!!!' });
+      return res.json({
+        status: 'error',
+        message: 'Your secret token is wrong!!!',
+      });
     }
 
     if (!urlToInvalidate) {
@@ -58,49 +62,50 @@ export class ISRHandler {
       });
     }
 
-    if (urlToInvalidate) {
-      if (!(await this.cache.has(urlToInvalidate))) {
-        return res.json({
-          status: 'error',
-          message: "The url you provided doesn't exist in cache!",
-        });
+    const urlExists = await this.cache.has(urlToInvalidate);
+
+    if (!urlExists) {
+      return res.json({
+        status: 'error',
+        message: `Url: ${urlToInvalidate}, does not exist in cache.`,
+      });
+    }
+
+    try {
+      // re-render the page again
+      const html = await renderUrl({
+        req,
+        res,
+        url: urlToInvalidate,
+        indexHtml: this.isrConfig.indexHtml,
+        providers: config?.providers,
+      });
+
+      // get revalidate data in order to set it to cache data
+      const { revalidate, errors } = getISROptions(html);
+
+      // if there are errors when rendering the site we throw an error
+      if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
+        throw new Error(
+          'The new rendered page had errors: \n' + JSON.stringify(errors)
+        );
       }
 
-      try {
-        // re-render the page again
-        const html = await renderUrl({
-          req,
-          res,
-          url: urlToInvalidate,
-          indexHtml: this.isrConfig.indexHtml,
-          providers: config?.providers,
-        });
+      // add the regenerated page to cache
+      await this.cache.add(req.url, html, { revalidate });
 
-        // get revalidate data in order to set it to cache data
-        const { revalidate, errors } = getISROptions(html);
+      this.showLogs && console.log(`Url: ${urlToInvalidate} was regenerated!`);
 
-        // if there are errors when rendering the site we throw an error
-        if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
-          throw new Error('The new rendered page had errors: \n' + JSON.stringify(errors));
-        }
-
-        // add the regenerated page to cache
-        await this.cache.add(req.url, html, { revalidate });
-
-        this.showLogs &&
-        console.log(`Url: ${ urlToInvalidate } was regenerated!`);
-
-        return res.json({
-          status: 'success',
-          message: `Url: ${ urlToInvalidate } was regenerated!`,
-        });
-      } catch (err) {
-        return res.json({
-          status: 'error',
-          message: 'Error while regenerating url!!',
-          err
-        });
-      }
+      return res.json({
+        status: 'success',
+        message: `Url: ${urlToInvalidate} was regenerated!`,
+      });
+    } catch (err) {
+      return res.json({
+        status: 'error',
+        message: 'Error while regenerating url!!',
+        err,
+      });
     }
   }
 
@@ -134,40 +139,43 @@ export class ISRHandler {
     }
   }
 
-  async render(req: any, res: any, next: any, config?: RenderConfig): Promise<any> {
+  async render(
+    req: any,
+    res: any,
+    next: any,
+    config?: RenderConfig
+  ): Promise<any> {
     const renderUrlConfig: RenderUrlConfig = {
       req,
       res,
       url: req.url,
       indexHtml: this.isrConfig.indexHtml,
-      providers: config?.providers
+      providers: config?.providers,
     };
 
-    renderUrl(renderUrlConfig).then(
-      async (html) => {
-        const { revalidate, errors } = getISROptions(html);
+    renderUrl(renderUrlConfig).then(async (html) => {
+      const { revalidate, errors } = getISROptions(html);
 
-        // if we have any http errors when rendering the site, and we have skipCachingOnHttpError enabled
-        // we don't want to cache it, and, we will fall back to client side rendering
-        if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
-          this.showLogs && console.log('Http errors: \n', errors);
-          return res.send(html);
-        }
-
-        // if revalidate is null we won't cache it
-        // if revalidate is 0, we will never clear the cache automatically
-        // if revalidate is x, we will clear cache every x seconds (after the last request) for that url
-
-        if (revalidate === null || revalidate === undefined) { // don't do !revalidate because it will also catch "0"
-          return res.send(html);
-        }
-
-        // Cache the rendered `html` for this request url to use for subsequent requests
-        await this.cache.add(req.url, html, { revalidate });
+      // if we have any http errors when rendering the site, and we have skipCachingOnHttpError enabled
+      // we don't want to cache it, and, we will fall back to client side rendering
+      if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
+        this.showLogs && console.log('Http errors: \n', errors);
         return res.send(html);
       }
-    );
 
+      // if revalidate is null we won't cache it
+      // if revalidate is 0, we will never clear the cache automatically
+      // if revalidate is x, we will clear cache every x seconds (after the last request) for that url
+
+      if (revalidate === null || revalidate === undefined) {
+        // don't do !revalidate because it will also catch "0"
+        return res.send(html);
+      }
+
+      // Cache the rendered `html` for this request url to use for subsequent requests
+      await this.cache.add(req.url, html, { revalidate });
+      return res.send(html);
+    });
   }
 }
 
