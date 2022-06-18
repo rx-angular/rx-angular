@@ -10,13 +10,6 @@ export interface FileSystemCacheOptions {
 }
 
 export class FileSystemCacheHandler implements CacheHandler {
-  // in cache we will save url and path to file
-  private cachedUrls: {
-    route: string;
-    htmlFilePath: string;
-    options: ISROptions;
-  }[] = [];
-
   protected cache = new Map<string, CacheData>();
 
   private get cacheFolderPath(): string {
