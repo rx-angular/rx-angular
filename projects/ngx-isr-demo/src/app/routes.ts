@@ -24,6 +24,12 @@ export const routes: Routes = [
     title: 'Page Three',
   },
   {
+    path: "details",
+    loadComponent: DetailsComponent,
+    data: { revalidate: 10 },
+    title: 'Details',
+  },
+  {
     path: "details/:id",
     loadComponent: DetailsComponent,
     data: { revalidate: 10 },

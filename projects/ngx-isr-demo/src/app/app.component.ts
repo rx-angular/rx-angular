@@ -8,14 +8,14 @@ import { take } from 'rxjs';
    <a routerLink="one" routerLinkActive="active">One</a>
     <a routerLink="two" routerLinkActive="active">Two</a>
     <a routerLink="three" routerLinkActive="active">Three</a>
-    <a routerLink="details/123" routerLinkActive="active">Details</a>
+    <a routerLink="details/1" routerLinkActive="active">Details</a>
 
     <router-outlet></router-outlet>
 
     <button (click)="invalidate('/one')">Clear one</button>
     <button (click)="invalidate('/two')">Clear two</button>
     <button (click)="invalidate('/three')">Clear three</button>
-    <button (click)="invalidate('/details/123')">Clear details</button>
+    <button (click)="invalidate('/details/1')">Clear details</button>
   `,
 })
 export class AppComponent {

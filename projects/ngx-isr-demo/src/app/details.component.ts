@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { useParams } from './helpers';
+
+const API_URL = 'https://jsonplaceholder.typicode.com';
 
 @Component({
   selector: 'app-details',
@@ -18,11 +21,12 @@ import { Component } from '@angular/core';
   imports: [CommonModule]
 })
 export class DetailsComponent {
+  private http = inject(HttpClient);
+  detailsId = useParams('id');
+
   time = new Date();
 
-  todo$ = this.httpClient.get<{ title: string }>(
-    `https://jsonplaceholder.typicode.com/todos/1`
+  todo$ = this.http.get<{ title: string }>(
+    `${API_URL}/todos/${this.detailsId ?? ''}`
   );
-
-  constructor(private httpClient: HttpClient) {}
 }
