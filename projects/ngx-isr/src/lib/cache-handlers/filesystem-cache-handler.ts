@@ -134,13 +134,6 @@ export class FileSystemCacheHandler implements CacheHandler {
         const isDirectory = fs.statSync(filePath).isDirectory();
 
         if (isDirectory) {
-          const directoryFiles: string[] = fs.readdirSync(filePath);
-
-          // if (directoryFiles.includes('index.html')) {
-          //   const html = fs.readFileSync(join(filePath, 'index.html'), 'utf-8');
-          //   pathsToCache.push({ path: file, html });
-          // }
-
           const indexHtmlFiles = findIndexHtmlFilesRecuresively(filePath);
 
           pathsToCache.push(
@@ -215,8 +208,4 @@ function findIndexHtmlFilesRecuresively(
 
 function convertRouteToFileName(route: string): string {
   return route.replace(new RegExp('/', 'g'), '__');
-}
-
-function convertFileNameToRoute(filename: string): string {
-  return filename.replace(new RegExp('__', 'g'), '/');
 }
