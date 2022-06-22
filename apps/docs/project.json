@@ -7,7 +7,8 @@
       "executor": "@nx-plus/docusaurus:browser",
       "options": {
         "outputPath": "dist/apps/docs"
-      }
+      },
+      "outputs": ["{options.outputPath}"]
     },
     "serve": {
       "executor": "@nx-plus/docusaurus:dev-server",
