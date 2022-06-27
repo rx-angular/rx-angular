@@ -4,9 +4,18 @@
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
+// TODO(@LayZeeDK): Change organization to `rx-angular`
+const organizationName = 'LayZeeDK';
+const projectName = 'rx-angular';
+const title = 'RxAngular';
+// TODO(@LayZeeDK): Use top-level domain URL. Remove base path when doing this.
+// const url = 'https://rx-angular.io';
+const url = `https://${organizationName}.github.io`;
+
 /** @type {import('@docusaurus/types').Config} */
 module.exports = {
-  baseUrl: '/',
+  // TODO(@LayZeeDK): Remove base URL to use top-level domain URL.
+  baseUrl: `/${projectName}/`,
   favicon: 'img/favicon.ico',
   /**
    * Even if you don't use internalization, you can use this field to set useful
@@ -18,9 +27,10 @@ module.exports = {
     locales: ['en'],
   },
   onBrokenLinks: 'throw',
+  // TODO(@LayZeeDK): Change to `'throw'` when all package categories are scaffolded.
   onBrokenMarkdownLinks: 'warn',
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName,
+  projectName,
   presets: [
     [
       'classic',
@@ -28,17 +38,10 @@ module.exports = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
+          editUrl: `https://github.com/${organizationName}/${projectName}/edit/main`,
         },
         blog: {
           showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/blog/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -46,7 +49,7 @@ module.exports = {
       }),
     ],
   ],
-  tagline: 'The tagline of my site',
+  tagline: 'Extending Angular for the Reactive Web',
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -57,34 +60,61 @@ module.exports = {
           src: 'img/logo.svg',
         },
         items: [
+          // {
+          //   to: 'docs/',
+          //   activeBasePath: 'docs',
+          //   label: 'Docs',
+          //   position: 'left',
+          // },
           {
-            to: 'docs/',
-            activeBasePath: 'docs',
-            label: 'Docs',
+            docId: 'cdk',
+            label: 'CDK',
             position: 'left',
+            type: 'doc',
           },
-          { to: 'blog', label: 'Blog', position: 'left' },
           {
-            href: 'https://github.com/facebook/docusaurus',
+            docId: 'state',
+            label: 'State',
+            position: 'left',
+            type: 'doc',
+          },
+          {
+            docId: 'template',
+            label: 'Template',
+            position: 'left',
+            type: 'doc',
+          },
+          // { to: 'blog', label: 'Blog', position: 'left' },
+          {
+            href: `https://github.com/${organizationName}/${projectName}`,
             label: 'GitHub',
             position: 'right',
           },
         ],
       },
       footer: {
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} RxAngular.`,
         style: 'dark',
+        logo: {
+          alt: title,
+          href: url,
+          src: 'img/logo.svg',
+        },
         links: [
           {
-            title: 'Docs',
+            title: 'Documentation',
             items: [
               {
-                label: 'Style Guide',
-                to: 'docs/',
+                label: '@rx-angular/cdk',
+                to: 'docs/cdk/',
               },
               {
-                label: 'Second Doc',
-                to: 'docs/doc2/',
+                label: '@rx-angular/state',
+                to: 'docs/state/',
+              },
+              {
+                label: '@rx-angular/template',
+                to: 'docs/template/',
               },
             ],
           },
@@ -92,39 +122,47 @@ module.exports = {
             title: 'Community',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                label: 'Angular Community Discord',
+                href: 'https://discord.com/invite/XWWGZsQ',
               },
               {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
+                label: 'RxAngular Slack (existing users)',
+                href: 'https://rxangular.slack.com',
               },
               {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
+                label: 'RxAngular Slack invite (up to 100 uses)',
+                href: 'https://join.slack.com/t/rxangular/shared_invite/zt-1bidnn86a-02bFi6E8b71Czmwod6H81A',
               },
             ],
           },
           {
             title: 'More',
             items: [
-              {
-                label: 'Blog',
-                to: 'blog',
-              },
+              // {
+              //   label: 'Blog',
+              //   to: 'blog',
+              // },
               {
                 label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                href: `https://github.com/${organizationName}/${projectName}`,
               },
             ],
           },
         ],
       },
+      colorMode: {
+        respectPrefersColorScheme: true,
+      },
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
+        defaultLanguage: 'typescript',
       },
     }),
-  title: 'My Site',
-  url: 'https://your-docusaurus-test-site.com',
+  title,
+  /**
+   * GitHub Pages adds a trailing slash to Docusaurus URLs by default.
+   */
+  trailingSlash: false,
+  url,
 };
