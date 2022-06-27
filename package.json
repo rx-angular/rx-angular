@@ -72,6 +72,7 @@
     "zone.js": "0.11.4"
   },
   "devDependencies": {
+    "@algolia/client-search": "^4.13.1",
     "@angular-devkit/build-angular": "12.2.16",
     "@angular-eslint/eslint-plugin": "13.0.1",
     "@angular-eslint/eslint-plugin-template": "13.0.1",
@@ -100,6 +101,7 @@
     "@nrwl/workspace": "12.10.1",
     "@nx-plus/docusaurus": "^12.2.0",
     "@size-limit/preset-big-lib": "^7.0.0",
+    "@tsconfig/docusaurus": "^1.0.6",
     "@types/benchmark": "^2.1.0",
     "@types/jest": "27.0.2",
     "@types/klaw-sync": "^6.0.0",
