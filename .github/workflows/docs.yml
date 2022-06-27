@@ -1,0 +1,76 @@
+name: Docs
+
+on:
+  push:
+    branches:
+      - main
+  pull_request: {}
+
+concurrency:
+  # Group concurrency on workflow, then:
+  # - Is merge run? Group on branch name (`refs/heads/main`)
+  # - Is pull request? Group on pull request branch name, for example `feat/add-awesome-feature`
+  group: >-
+    ${{ github.workflow }}-${{
+      github.event_name == 'push'
+        && github.ref
+        || github.head_ref
+    }}
+  # Run merge workflows in sequence to prevent parallel deployments and releases
+  # Cancel stale pull request runs in progress for the same branch
+  cancel-in-progress: ${{ github.event_name != 'push' }}
+
+env:
+  DOCS_PACKAGE_NAME: docs
+  DOCS_PACKAGE_PATH: ./dist/apps/docs/
+  # GitHub-hosted runner with 7 GB RAM total
+  NODE_OPTIONS: --max-old-space-size=6144
+
+jobs:
+  build:
+    name: Build and verify website
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          cache: yarn
+          node-version: 16
+      - name: Install package dependencies
+        run: yarn install --frozen-lockfile --no-progress --non-interactive
+
+      - name: Build website
+        run: yarn nx build docs
+
+      # - name: Scan for broken links
+      #   run: yarn start-server-and-test serve 3000 'yarn broken-link-checker | (! grep ─BROKEN─)'
+
+      - name: Upload website package
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.DOCS_PACKAGE_NAME }}
+          path: ${{ env.DOCS_PACKAGE_PATH }}
+          if-no-files-found: error
+
+  deploy:
+    name: '[Merge] Deploy website to GitHub Pages'
+    if: github.event_name == 'push' && github.ref_name == 'main'
+    needs:
+      - build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download website package
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.DOCS_PACKAGE_NAME }}
+          path: ${{ env.DOCS_PACKAGE_PATH }}
+
+      - name: Deploy website to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: github-pages
+          publish_dir: ${{ env.DOCS_PACKAGE_PATH }}
