@@ -1,3 +1,8 @@
+---
+title: insert
+# Moved from libs/state/transformations/docs/arrays/
+---
+
 ## insert
 
 Inserts one or multiple items to an array T[].

@@ -1,3 +1,8 @@
+---
+title: remove
+# Moved from libs/state/transformations/docs/arrays/
+---
+
 ## remove
 
 Removes one or multiple items from an array T[].

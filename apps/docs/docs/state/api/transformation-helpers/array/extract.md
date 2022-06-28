@@ -1,3 +1,8 @@
+---
+title: extract
+# Moved from libs/state/transformations/docs/arrays/
+---
+
 ## extract
 
 Accepts an array of T `extends object` and a single key or an array of keys (`K extends keyof T`).

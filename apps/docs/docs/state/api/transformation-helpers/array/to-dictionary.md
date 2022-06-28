@@ -1,3 +1,8 @@
+---
+title: toDictionary
+# Moved from libs/state/transformations/docs/arrays/
+---
+
 ## toDictionary
 
 Converts an array of objects to a dictionary {[key: string]: T}.

@@ -1,0 +1,8 @@
+{
+  "label": "Transformation helpers",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "Transformation helpers provide a set of tools that simplifies the management of data structures in an immutable way.\n\nCurrently, transformation helpers support the management of objects and arrays.\n\nYou can use the transformation helpers without RxState but expect the behavior to be opinionated since, in the first place, this package is designed to optimize state management with RxState."
+  }
+}

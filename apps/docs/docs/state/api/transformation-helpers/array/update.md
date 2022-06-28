@@ -1,3 +1,8 @@
+---
+title: update
+# Moved from libs/state/transformations/docs/arrays/
+---
+
 ## update
 
 Updates one or multiple items in an array T[].
