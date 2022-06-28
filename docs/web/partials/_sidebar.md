@@ -22,18 +22,6 @@
 
 - **@rx-angular/state**
 
-  - Getting started
-
-    - [Overview](/web/state/general/overview.md)
-    - [Setup](/web/state/general/basic-setup.md)
-
-  - API
-
-    - [RxState](/web/state/api/rx-state.md)
-    - [RxJS Operators](/web/state/api/rxjs-operators.md)
-    - [Transformation helpers](/web/state/api/transformation-helpers.md)
-    - [Interfaces](/web/state/api/interfaces.md)
-
   - Tutorials
 
     - [Basic tutorial](/web/state/tutorials/basic-tutorial.md)
