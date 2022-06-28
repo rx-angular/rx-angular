@@ -1,9 +1,13 @@
+---
+title: OnlyKeysOfSpecificType
+# Moved from libs/cdk/transformations/docs/interfaces/
+---
+
 ## OnlyKeysOfSpecificType
 
 Allows to pass only keys which value is of specific type.
 
 _Example_
-
 
 ```typescript
 interface Creature {
@@ -35,5 +39,4 @@ updateCreature(cat, 'id', 3);
 type OnlyKeysOfSpecificType<T, S> = {
   [Key in keyof T]: S extends T[Key] ? Key : never;
 }[keyof T];
-
 ```
