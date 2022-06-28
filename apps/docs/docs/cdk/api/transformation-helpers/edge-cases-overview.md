@@ -1,3 +1,9 @@
+---
+title: Edge cases overview
+sidebar_position: 1
+# Moved from libs/cdk/transformations/docs/
+---
+
 # Edge cases overview
 
 ## Array
