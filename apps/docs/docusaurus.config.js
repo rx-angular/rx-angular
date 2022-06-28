@@ -65,12 +65,12 @@ module.exports = {
           //   label: 'Docs',
           //   position: 'left',
           // },
-          // {
-          //   docId: 'cdk/index',
-          //   label: 'CDK',
-          //   position: 'left',
-          //   type: 'doc',
-          // },
+          {
+            docId: 'cdk/api/transformation-helpers/index',
+            label: 'CDK',
+            position: 'left',
+            type: 'doc',
+          },
           {
             docId: 'state/getting-started/overview',
             label: 'State',
@@ -103,10 +103,10 @@ module.exports = {
           {
             title: 'Documentation',
             items: [
-              // {
-              //   label: '@rx-angular/cdk',
-              //   to: 'docs/cdk/',
-              // },
+              {
+                label: '@rx-angular/cdk',
+                to: 'docs/cdk/api/transformation-helpers',
+              },
               {
                 label: '@rx-angular/state',
                 to: 'docs/state/getting-started/overview',
