@@ -1,3 +1,8 @@
+---
+title: distinctUntilSomeChanged
+# Moved from libs/state/selections/docs/operators/
+---
+
 ## distinctUntilSomeChanged
 
 Returns an Observable that emits all items emitted by the source Observable that are distinct by comparison from

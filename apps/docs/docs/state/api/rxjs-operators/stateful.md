@@ -1,3 +1,8 @@
+---
+title: stateful
+# Moved from libs/state/selections/docs/operators/
+---
+
 ## stateful
 
 As the name `stateful` implies this operator is useful when you process an Observable which maintains state.

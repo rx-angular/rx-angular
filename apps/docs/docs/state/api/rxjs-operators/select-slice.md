@@ -1,3 +1,8 @@
+---
+title: selectSlice
+# Moved from libs/state/selections/docs/operators/
+---
+
 ## selectSlice
 
 Returns an Observable that emits only the provided `keys` emitted by the source Observable. Each key will get

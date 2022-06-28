@@ -1,3 +1,8 @@
+---
+title: select
+# Moved from libs/state/selections/docs/operators/
+---
+
 ## select
 
 returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
