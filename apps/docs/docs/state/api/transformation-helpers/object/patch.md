@@ -1,6 +1,11 @@
+---
+title: patch
+# Moved from libs/state/transformations/docs/object/
+---
+
 ## patch
 
-Merges an object of type T with updates of type Partial<T>.
+Merges an object of type T with updates of type `Partial<T>`.
 Returns a new object where updates override original values while not mutating the original one.
 
 _Example_

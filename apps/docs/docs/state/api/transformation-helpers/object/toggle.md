@@ -1,3 +1,8 @@
+---
+title: toggle
+# Moved from libs/state/transformations/docs/object/
+---
+
 ## toggle
 
 Toggles a boolean property in the object.

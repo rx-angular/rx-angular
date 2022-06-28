@@ -1,3 +1,8 @@
+---
+title: setProp
+# Moved from libs/state/transformations/docs/object/
+---
+
 ## setProp
 
 Accepts an object of type T, key of type K extends keyof T, and value of type T[K].

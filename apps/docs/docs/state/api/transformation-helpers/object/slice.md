@@ -1,3 +1,8 @@
+---
+title: slice
+# Moved from libs/state/transformations/docs/object/
+---
+
 ## slice
 
 Accepts an object of type T and a single key or an array of keys (`K extends keyof T`).

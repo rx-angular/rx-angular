@@ -1,3 +1,8 @@
+---
+title: dictionaryToArray
+# Moved from libs/state/transformations/docs/object/
+---
+
 ## dictionaryToArray
 
 Converts a dictionary of type {[key: string]: T} to array T[].

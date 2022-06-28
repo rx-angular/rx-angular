@@ -1,3 +1,8 @@
+---
+title: deleteProp
+# Moved from libs/state/transformations/docs/object/
+---
+
 ## deleteProp
 
 Accepts an object of type T and key of type K extends keyof T.
