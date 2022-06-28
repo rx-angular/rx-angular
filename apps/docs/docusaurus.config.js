@@ -40,9 +40,8 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: `https://github.com/${organizationName}/${projectName}/edit/main`,
         },
-        blog: {
-          showReadingTime: true,
-        },
+        // Disable the blog plugin
+        blog: false,
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -66,24 +65,24 @@ module.exports = {
           //   label: 'Docs',
           //   position: 'left',
           // },
+          // {
+          //   docId: 'cdk',
+          //   label: 'CDK',
+          //   position: 'left',
+          //   type: 'doc',
+          // },
           {
-            docId: 'cdk',
-            label: 'CDK',
-            position: 'left',
-            type: 'doc',
-          },
-          {
-            docId: 'state',
+            docId: 'state/index',
             label: 'State',
             position: 'left',
             type: 'doc',
           },
-          {
-            docId: 'template',
-            label: 'Template',
-            position: 'left',
-            type: 'doc',
-          },
+          // {
+          //   docId: 'template',
+          //   label: 'Template',
+          //   position: 'left',
+          //   type: 'doc',
+          // },
           // { to: 'blog', label: 'Blog', position: 'left' },
           {
             href: `https://github.com/${organizationName}/${projectName}`,
@@ -104,18 +103,18 @@ module.exports = {
           {
             title: 'Documentation',
             items: [
-              {
-                label: '@rx-angular/cdk',
-                to: 'docs/cdk/',
-              },
+              // {
+              //   label: '@rx-angular/cdk',
+              //   to: 'docs/cdk/',
+              // },
               {
                 label: '@rx-angular/state',
                 to: 'docs/state/',
               },
-              {
-                label: '@rx-angular/template',
-                to: 'docs/template/',
-              },
+              // {
+              //   label: '@rx-angular/template',
+              //   to: 'docs/template/',
+              // },
             ],
           },
           {
