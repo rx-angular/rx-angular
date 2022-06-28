@@ -65,24 +65,24 @@ module.exports = {
           //   label: 'Docs',
           //   position: 'left',
           // },
-          // {
-          //   docId: 'cdk',
-          //   label: 'CDK',
-          //   position: 'left',
-          //   type: 'doc',
-          // },
+          {
+            docId: 'cdk/index',
+            label: 'CDK',
+            position: 'left',
+            type: 'doc',
+          },
           {
             docId: 'state/index',
             label: 'State',
             position: 'left',
             type: 'doc',
           },
-          // {
-          //   docId: 'template',
-          //   label: 'Template',
-          //   position: 'left',
-          //   type: 'doc',
-          // },
+          {
+            docId: 'template/index',
+            label: 'Template',
+            position: 'left',
+            type: 'doc',
+          },
           // { to: 'blog', label: 'Blog', position: 'left' },
           {
             href: `https://github.com/${organizationName}/${projectName}`,
@@ -103,18 +103,18 @@ module.exports = {
           {
             title: 'Documentation',
             items: [
-              // {
-              //   label: '@rx-angular/cdk',
-              //   to: 'docs/cdk/',
-              // },
+              {
+                label: '@rx-angular/cdk',
+                to: 'docs/cdk/',
+              },
               {
                 label: '@rx-angular/state',
                 to: 'docs/state/',
               },
-              // {
-              //   label: '@rx-angular/template',
-              //   to: 'docs/template/',
-              // },
+              {
+                label: '@rx-angular/template',
+                to: 'docs/template/',
+              },
             ],
           },
           {
