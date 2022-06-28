@@ -2,7 +2,7 @@
 sidebar_label: Setup
 sidebar_position: 2
 title: Setup
-# Copied from libs/state/docs/usage.md
+# Renamed from libs/state/docs/usage.md
 ---
 
 ## Basic Setup
