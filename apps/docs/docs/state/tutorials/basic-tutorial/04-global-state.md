@@ -1,3 +1,9 @@
+---
+sidebar_label: Global State
+title: Global State
+# Renamed from apps/demos/src/app/features/tutorials/basics/4-global-state/Readme.md
+---
+
 # Global State
 
 In this chapter, we will create the global state and attach it to our component (see [global-state.start.component.ts] [global-state.start.component.ts]) to enable reactive state management there.

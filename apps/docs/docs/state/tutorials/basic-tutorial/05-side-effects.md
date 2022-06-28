@@ -1,8 +1,14 @@
+---
+sidebar_label: Side Effects
+title: Handling Side Effects Reactively
+# Renamed from apps/demos/src/app/features/tutorials/basics/5-side-effects/Readme.md
+---
+
 # Handling Side Effects Reactively
 
 This section introduces and explores the concept of side effects and their reactive handling.
 
-Before we get any further, let's define two terms, *side effect* and *pure function*.
+Before we get any further, let's define two terms, _side effect_ and _pure function_.
 
 **Pure function:**
 A function is called pure if:
@@ -11,7 +17,7 @@ A function is called pure if:
 - Its executed internal logic has no side effects
 
 **Side Effect:**
-A function has a *side effect* if:
+A function has a _side effect_ if:
 
 - There's a mutation of local static variables, e.g. `this.prop = value`
 - Non-local variables are used
@@ -64,7 +70,7 @@ Yet, essentially, a side effect always has 2 important parts associated with it:
 - the side-effect logic
 
 In the above examples, the trigger was the method call itself. That is one way of doing it, but not the only one. We can also set a value emitted from an `Observable` as a trigger.
-Thus, you may use a render call or any other logic executed by the trigger as the side-effect logic.  
+Thus, you may use a render call or any other logic executed by the trigger as the side-effect logic.
 
 ## Application
 
@@ -117,7 +123,8 @@ In our case, we have the refresh button as UI interaction. To get this interacti
 ```typescript
 export class SideEffectsStart
   extends RxState<ComponentState>
-  implements OnInit, OnDestroy {
+  implements OnInit, OnDestroy
+{
   refreshClicks$ = new Subject<Event>();
   //...
 }
@@ -127,29 +134,28 @@ This is the trigger for our side effect.
 
 ## Manage side effects
 
-To maintain side effects RxAngular provides a deprecated method `RxState#hold`. 
+To maintain side effects RxAngular provides a deprecated method `RxState#hold`.
 As this method will get removed in the future we directly focus on the new method and use `RxEffects#register`.
 
 `RxEffects` is used in the same way as `RxState` as "component only provider". This means we need to add it to the components `providers` array.
-
 
 ```typescript
 @Component({
   ...
   providers: [
     RxEffects
-  ] 
+  ]
 })
 export class SideEffectsStart extends RxState<ComponentState> {
  constructor(private rxEffects: RxEffects) {
-   
+
  }
 }
 ```
 
 From the `resetRefreshTick` method, we now move the logic that starts the tick and place it in the `register` method of `RxEffects` as a callback parameter.
 
-The `register` method's job, as the name implies, is to *registers/holds* something. Namely, it holds a subscription to a side effect and takes care of its initialization.
+The `register` method's job, as the name implies, is to _registers/holds_ something. Namely, it holds a subscription to a side effect and takes care of its initialization.
 Furthermore, it automatically handles the subscription management and unsubscribes if the component gets destroyed.
 
 ```typescript
@@ -182,8 +188,8 @@ Another side effect in this component is the background process that dispatches 
 
 If we take a look at the current implementation of `resetRefreshTick`, we will see 2 pieces:
 
-* One piece is responsible for deriving an interval from the current `refreshInterval` value in milliseconds.
-* The other piece fires the actual side effect.
+- One piece is responsible for deriving an interval from the current `refreshInterval` value in milliseconds.
+- The other piece fires the actual side effect.
 
 Let's first refactor the trigger `this.select('refreshInterval').pipe(switchMap(ms => timer(0, ms)))` to a separate class property.
 

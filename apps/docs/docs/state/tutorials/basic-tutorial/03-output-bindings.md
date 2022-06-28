@@ -1,3 +1,9 @@
+---
+sidebar_label: Output Bindings
+title: Handling Output Bindings
+# Renamed from apps/demos/src/app/features/tutorials/basics/3-output-bindings/Readme.md
+---
+
 # Handling Output Bindings
 
 This section contains an [imperative code base][output-bindings.start.component.ts] for you to refer to and a quick tutorial on how to set up and use output bindings reactively.
@@ -19,8 +25,8 @@ One way of using it is passing an Observable of type `Partial<ComponentState>` t
 When choosing this way of connecting an Observable to the component's state, we will also need a subject called `listExpandedChanges` whose job is to ensure stable user interaction with the open/closed state.
 This way, whenever we click on the expansion panel, the subject generates a new state using the `next` method.
 
-
 We can generally use `connect` with multiple different overloads. In our case, however, the best use case scenario would look like this:
+
 ```typescript
 constructor() {
   // ...

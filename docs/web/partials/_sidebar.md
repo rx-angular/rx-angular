@@ -24,7 +24,6 @@
 
   - Tutorials
 
-    - [Basic tutorial](/web/state/tutorials/basic-tutorial.md)
     - [Incrementing a value](/web/state/tutorials/incrementing-value.md)
     - [Migrating to RxState](/web/state/tutorials/from-imperative-to-reactive.md)
     - [Passing observables directly](/web/state/tutorials/passing-observables.md)

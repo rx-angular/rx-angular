@@ -1,7 +1,12 @@
+---
+sidebar_label: Setup
+title: Setting up a Reactive State
+# Renamed from apps/demos/src/app/features/tutorials/basics/1-setup/Readme.md
+---
+
 # Setting up a Reactive State
 
 We're assuming you've already covered the basics [here](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/usage.md)
-
 
 In this section, we will be working with an [imperative code base][setup.start.component.ts] to refactor
 its state management to a [reactive setup][setup.solution.component.ts].
@@ -23,6 +28,7 @@ One distinct feature of this method, which is both its benefit and disadvantage,
 
 To this end, we have to extend our class and use the already existing `ComponentState` interface (see
 [setup.start.component.ts] [setup.start.component.ts].)
+
 ```typescript
 
 // 1- import RxState

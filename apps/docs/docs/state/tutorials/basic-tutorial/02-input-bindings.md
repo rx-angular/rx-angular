@@ -1,3 +1,9 @@
+---
+sidebar_label: Input Bindings
+title: Handling Input Bindings
+# Renamed from apps/demos/src/app/features/tutorials/basics/2-input-bindings/Readme.md
+---
+
 # Handling Input Bindings
 
 In this section, we will remove `this._refreshInterval` that defines how frequently our product list should be refreshed and save its data inside the component's state (see [input-bindings.start.component.ts] [input-bindings.start.component.ts].)
@@ -13,7 +19,6 @@ That's why in this case we will have to hook into the imperative callback of the
 Thus, we have to perform a partial update to our state by providing an object containing the new state slice `{refreshInterval: number}`.
 This can be done by using either a reduce function `(oldState) => ({refreshInterval: oldState.refreshInterval + 2})` or the state slice itself `{refreshInterval: 2}`.
 As no previous state is needed to calculate the new value, we will opt for the latter and provide the slice itself to partially update our state.
-
 
 Please note that `{refreshInterval}` is a short form of `{refreshInterval: refreshInterval}`.
 
@@ -71,5 +76,6 @@ Now we can replace the `_refreshInterval` component in the template with `vm.ref
   vm.refreshInterval }} ms
 </span>
 ```
+
 [input-bindings.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/main/apps/demos/src/app/features/tutorials/basics/2-input-bindings/input-bindings.start.component.ts
 [input-bindings.solution.component.ts]: https://github.com/rx-angular/rx-angular/blob/main/apps/demos/src/app/features/tutorials/basics/2-input-bindings/input-bindings.solution.component.ts
