@@ -1,6 +1,6 @@
 ---
 title: Edge cases overview
-sidebar_position: 1
+sidebar_position: 2
 # Moved from libs/cdk/transformations/docs/
 ---
 

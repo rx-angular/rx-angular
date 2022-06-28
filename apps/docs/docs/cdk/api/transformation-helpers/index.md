@@ -1,3 +1,9 @@
+---
+title: Transformation helpers
+sidebar_position: 1
+# Moved from libs/cdk/transformations/docs/
+---
+
 # Transformation helpers
 
 Transformation helpers provides a set of tools that simplifies the management of data structures in an immutable way.
