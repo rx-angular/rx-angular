@@ -1,6 +1,6 @@
 ---
 title: toDictionary
-# Moved from libs/state/transformations/docs/arrays/
+# Moved from libs/cdk/transformations/docs/array/
 ---
 
 ## toDictionary

@@ -1,6 +1,6 @@
 ---
 title: dictionaryToArray
-# Moved from libs/state/transformations/docs/object/
+# Moved from libs/cdk/transformations/docs/object/
 ---
 
 ## dictionaryToArray

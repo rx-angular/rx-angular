@@ -1,5 +1,6 @@
 {
   "label": "@rx-angular/cdk",
+  "position": 1,
   "link": {
     "type": "generated-index",
     "description": "RxAngular CDK"
