@@ -24,7 +24,6 @@
 
   - Recipes
 
-    - [Determine state type](/web/state/howtos/determine-state.md)
     - [Manage ViewModel](/web/state/howtos/manage-viewmodel.md)
     - [Run partial updates](/web/state/howtos/partial-updates.md)
     - [Load data on route change](/web/state/howtos/load-data-on-route-change.md)
