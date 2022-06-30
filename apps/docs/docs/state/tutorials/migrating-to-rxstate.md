@@ -1,5 +1,4 @@
 ---
-sidebar_label: Migrating to RxState
 title: Migrating to RxState
 # Renamed from libs/state/docs/snippets/behavior-subject-vs-rx-state.md
 ---
