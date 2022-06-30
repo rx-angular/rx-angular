@@ -1,3 +1,9 @@
+---
+sidebar_label: Run partial updates
+title: How can I run partial updates?
+# Renamed from libs/state/docs/snippets/how-can-i-run-partial-state-updates.md
+---
+
 # How can I run partial updates?
 
 `RxState` has partial updates built in. Every change sent to the state over `set` or `connect` is treated as partial update.
@@ -28,6 +34,6 @@ Internally the state update looks like this:
 
 ```typescript
 newState$.pipe(
-    scan((oldState, newPartialState) => ({...oldState, ...newPartialState})
-)
+  scan((oldState, newPartialState) => ({ ...oldState, ...newPartialState }))
+);
 ```
