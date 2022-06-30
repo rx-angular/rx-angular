@@ -1,3 +1,9 @@
+---
+sidebar_label: Increment a Value
+title: Logic comparison - Increment a Value
+# Renamed from libs/state/docs/snippets/logic-comparison--increment-a-value.md
+---
+
 # Logic comparison - Increment a Value
 
 This snippet compares 3 different implementations of the same problem.
