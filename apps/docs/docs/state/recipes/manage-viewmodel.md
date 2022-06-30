@@ -1,4 +1,5 @@
 ---
+sidebar_position: 1
 sidebar_label: Manage ViewModel
 title: Selecting the ViewModel
 # Renamed from libs/state/docs/snippets/selecting-the-viewmodel.md

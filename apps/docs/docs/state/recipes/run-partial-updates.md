@@ -1,4 +1,5 @@
 ---
+sidebar_position: 1
 sidebar_label: Run partial updates
 title: How can I run partial updates?
 # Renamed from libs/state/docs/snippets/how-can-i-run-partial-state-updates.md

@@ -1,3 +1,9 @@
+---
+sidebar_position: 2
+title: Load data on route change
+# Renamed from libs/state/docs/snippets/loading-state-and-data-fetching.md
+---
+
 # Load data on route change
 
 On every URL change fetch users from the back end and deal with loading flags

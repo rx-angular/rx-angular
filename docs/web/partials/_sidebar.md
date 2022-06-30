@@ -24,7 +24,6 @@
 
   - Recipes
 
-    - [Load data on route change](/web/state/howtos/load-data-on-route-change.md)
     - [Work with HostBindings](/web/state/howtos/hostbindings.md)
     - [Use RxState as Global State](/web/state/howtos/rx-state-as-global-state.md)
 

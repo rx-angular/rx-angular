@@ -1,4 +1,5 @@
 ---
+sidebar_position: 1
 sidebar_label: Determine state type
 title: Difference between Global and Local state
 # Renamed from libs/state/docs/snippets/global-state-vs-local-state.md
