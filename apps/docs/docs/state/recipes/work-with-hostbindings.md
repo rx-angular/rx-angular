@@ -1,3 +1,10 @@
+---
+sidebar_position: 2
+sidebar_label: Work with HostBindings
+title: HostBindings
+# Renamed from libs/state/docs/snippets/hostbindings.md
+---
+
 # HostBindings
 
 Some examples how to reactively handle basic [`HostBindings`](https://angular.io/api/core/HostBinding) with `@rx-angular/state` `RxState`.
