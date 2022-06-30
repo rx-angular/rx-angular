@@ -22,10 +22,6 @@
 
 - **@rx-angular/state**
 
-  - Recipes
-
-    - [Use RxState as Global State](/web/state/howtos/rx-state-as-global-state.md)
-
   - Integrations
 
     - [Reuse ngrx selectors to compose state](/web/state/integrations/compose-state-using-ngrx-selectors.md)
