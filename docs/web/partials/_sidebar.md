@@ -22,10 +22,6 @@
 
 - **@rx-angular/state**
 
-  - Tutorials
-
-    - [Passing observables directly](/web/state/tutorials/passing-observables.md)
-
   - Recipes
 
     - [Determine state type](/web/state/howtos/determine-state.md)

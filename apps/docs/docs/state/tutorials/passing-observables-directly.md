@@ -1,3 +1,8 @@
+---
+title: Passing observables directly
+# Moved from libs/state/docs/snippets/
+---
+
 # Passing observables directly
 
 In this section we will compare the different ways to pass a value to components.
