@@ -1,3 +1,9 @@
+---
+sidebar_label: Manage ViewModel
+title: Selecting the ViewModel
+# Renamed from libs/state/docs/snippets/selecting-the-viewmodel.md
+---
+
 # Selecting the ViewModel
 
 Here are some useful strategies to properly handle `ViewModels` with `@rx-angular/state`. In this examples we will use standalone [`selectSlice`](https://github.com/rx-angular/rx-angular/blob/main/libs/state/docs/api/operators/select-slice.md) operator.
@@ -36,8 +42,7 @@ You want to render the following template.
   <ul>
     <li *ngFor="let item of vm.visibleItems">{{ item.name }}</li>
   </ul>
-  ></ng-container
->
+</ng-container>
 ```
 
 As your view requires additional and/or derived information from your component state, we need to transform the
@@ -83,9 +88,7 @@ This way you may achieve more control over what to render when, e.g. lazy render
 <ng-container *ngIf="viewModel.main$ | async as vm">
   <h1>
     {{vm.title}}
-    <small>
-      {{vm.created | date}}
-    </small>
+    <small> {{vm.created | date}} </small>
   </h1>
 </ng-container>
 <ng-container *ngIf="viewModel.list$ | async as vm">
