@@ -1,3 +1,10 @@
+---
+sidebar_position: 1
+sidebar_label: Reuse ngrx selectors to compose state
+title: Reusing ngrx selectors to compose state
+# Renamed from libs/state/docs/snippets/composing-state-using-ngrx-selectors.md
+---
+
 _Author: [@Phhansen](https://github.com/Phhansen)_
 
 # Reusing ngrx selectors to compose state

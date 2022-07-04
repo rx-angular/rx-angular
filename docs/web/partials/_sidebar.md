@@ -24,7 +24,6 @@
 
   - Integrations
 
-    - [Reuse ngrx selectors to compose state](/web/state/integrations/compose-state-using-ngrx-selectors.md)
     - [Manage entities using `@ngrx/entity`](/web/state/integrations/manage-entities-ngrx.md)
 
 ---
