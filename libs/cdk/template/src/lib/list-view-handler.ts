@@ -150,6 +150,7 @@ function getListChanges<T>(
     const item = record.item;
     if (!changedIdxs.has(item)) {
       changesArr.push(getUpdateChange(item, record.currentIndex));
+      changedIdxs.add(item);
     }
   });
   items.forEach((item, index) => {
