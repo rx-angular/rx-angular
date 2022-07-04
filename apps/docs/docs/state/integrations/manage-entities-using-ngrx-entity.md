@@ -1,3 +1,9 @@
+---
+sidebar_position: 2
+title: Manage entities using @ngrx/entity
+# Renamed from libs/state/docs/snippets/manage-collections-with-ngrx-entity.md
+---
+
 _Author: [@Phhansen](https://github.com/Phhansen)_
 
 # Manage entities using `@ngrx/entity`
@@ -104,12 +110,8 @@ The entity adapter comes with a small set of default selectors we can use right 
 ```typescript
 import { select } from '@ngrx/store';
 
-const {
-  selectIds,
-  selectEntities,
-  selectAll,
-  selectTotal,
-} = adapter.getSelectors();
+const { selectIds, selectEntities, selectAll, selectTotal } =
+  adapter.getSelectors();
 
 @Component({
   selector: 'my-component',

@@ -20,12 +20,6 @@
 
     - [Unpatch directive](/template/experimental/unpatch.md) -->
 
-- **@rx-angular/state**
-
-  - Integrations
-
-    - [Manage entities using `@ngrx/entity`](/web/state/integrations/manage-entities-ngrx.md)
-
 ---
 
 - **Links**
