@@ -4,6 +4,8 @@
  */
 
 .heroBanner {
+  --ifm-hero-background-color: var(--ifm-color-primary-dark);
+
   padding: 4rem 0;
   text-align: center;
   position: relative;
@@ -32,4 +34,8 @@
 .featureImage {
   height: 200px;
   width: 200px;
+}
+
+.logo.logo {
+  filter: drop-shadow(5px 5px 3px rgba(0, 0, 0, 0.5));
 }

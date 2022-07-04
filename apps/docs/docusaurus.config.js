@@ -48,15 +48,15 @@ module.exports = {
       }),
     ],
   ],
-  tagline: 'Extending Angular for the Reactive Web',
+  tagline: 'Performance & DX',
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'My Site',
+        title: 'RxAngular',
         logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          alt: 'RxAngular',
+          src: 'img/logo.png',
         },
         items: [
           // {
@@ -97,7 +97,7 @@ module.exports = {
         logo: {
           alt: title,
           href: url,
-          src: 'img/logo.svg',
+          src: 'img/logo.png',
         },
         links: [
           {
@@ -149,6 +149,7 @@ module.exports = {
           },
         ],
       },
+      image: 'img/logo.png',
       colorMode: {
         respectPrefersColorScheme: true,
       },
