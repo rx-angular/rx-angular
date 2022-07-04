@@ -56,7 +56,7 @@ jobs:
 
   deploy:
     name: '[Merge] Deploy website to GitHub Pages'
-    if: github.event_name == 'push' && github.ref_name == 'main'
+    # if: github.event_name == 'push' && github.ref_name == 'main'
     needs:
       - build
     runs-on: ubuntu-latest
