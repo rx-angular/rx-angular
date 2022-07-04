@@ -59,7 +59,7 @@ class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 ##### typeof: Observable&#60;T&#62;
 
 The unmodified state exposed as `Observable<T>`. It is not shared, distinct or gets replayed.
-Use the `$` property if you want to read the state without having applied <a href='/docs/generated/operators/stateful#stateful'>stateful</a> to it.
+Use the `$` property if you want to read the state without having applied [stateful](/docs/state/api/rxjs-operators/stateful) to it.
 
 ---
 
