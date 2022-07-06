@@ -56,4 +56,5 @@ export abstract class RxVirtualViewRepeater<
   _trackBy: TrackByFunction<T> = (i, a) => a;
   values$: Observable<U>;
   contentRendered$: Observable<EmbeddedViewRef<any>[]>;
+  beforeContentRendered$: Observable<void>;
 }

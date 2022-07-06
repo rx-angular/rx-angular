@@ -6,8 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
+import { IfModule } from '@rx-angular/template/experimental/if';
 import { LetModule } from '@rx-angular/template/let';
-import { RxIfModule } from '../../../../rx-angular-pocs/index';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select/index';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/index';
 import { AutosizeVirtualScrollStrategyModule } from './scroll-strategies/autosized-virtual-scroll-strategy';
@@ -35,7 +35,7 @@ import { RxVirtualFor } from './virtual-for.directive';
     StrategySelectModule,
     MatButtonToggleModule,
     CommonModule,
-    RxIfModule,
+    IfModule,
   ],
   exports: [RxVirtualScrollViewportComponent],
   declarations: [

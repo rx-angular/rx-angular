@@ -49,13 +49,8 @@ export function getVirtualTemplateHandler<C extends RxListViewContext<T>, T>(
     initialTemplateRef,
     createViewContext,
     updateViewContext,
-    patchZone,
     viewCacheSize,
   } = templateSettings;
-
-  const workFactory = patchZone
-    ? (work: VoidFunction) => patchZone.run(work)
-    : (work: VoidFunction) => work();
 
   let _viewCache: EmbeddedViewRef<C>[] = [];
 
@@ -125,7 +120,8 @@ export function getVirtualTemplateHandler<C extends RxListViewContext<T>, T>(
                       break;
                     case RxListTemplateChangeType.context:
                       // console.log('perform context', payload);
-                      _updateUnchangedContext(
+                      _updateView(
+                        payload[0],
                         payload[1],
                         count,
                         renderedRange.start + payload[1]
@@ -288,12 +284,10 @@ function getListChanges<T>(
           adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex
         )
       );
-      changedIdxs.add(item);
       notifyParent = true;
     } else if (adjustedPreviousIndex !== null) {
       // move
       changesArr.push(getMoveChange(item, currentIndex, adjustedPreviousIndex));
-      changedIdxs.add(item);
       notifyParent = true;
     }
   });
@@ -306,7 +300,7 @@ function getListChanges<T>(
   });
   items.forEach((item, index) => {
     if (!changedIdxs.has(item)) {
-      changesArr.push(getUnchangedChange(item, index));
+      changesArr.push(getUpdateChange(item, index));
     }
   });
   return [changesArr, notifyParent];

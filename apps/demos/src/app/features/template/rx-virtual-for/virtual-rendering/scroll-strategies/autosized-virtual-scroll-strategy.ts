@@ -1,6 +1,5 @@
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
-import { distinctUntilSomeChanged } from '@rx-angular/cdk/state';
-import { animationFrameScheduler } from '@rx-angular/cdk/zone-less';
+import { distinctUntilSomeChanged } from '@rx-angular/state/selections';
 import {
   ListRange,
   RxVirtualScrollViewport,
@@ -16,14 +15,13 @@ import {
   OnDestroy,
 } from '@angular/core';
 import {
+  asyncScheduler,
   combineLatest,
   merge,
   ReplaySubject,
   scan,
   scheduled,
   Subject,
-} from 'rxjs';
-import {
   distinctUntilChanged,
   filter,
   map,
@@ -31,7 +29,7 @@ import {
   switchMap,
   takeUntil,
   tap,
-} from 'rxjs/operators';
+} from 'rxjs';
 
 type VirtualViewItem = {
   height: number;
@@ -44,7 +42,17 @@ type AnchorItem = {
   offset: number;
 };
 
+function removeFromArray(arr: any[], index: number): any {
+  // perf: array.pop is faster than array.splice!
+  if (index >= arr.length - 1) {
+    return arr.pop();
+  } else {
+    return arr.splice(index, 1)[0];
+  }
+}
+
 @Directive({
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'rx-virtual-scroll-viewport[autosize]',
   providers: [
     {
@@ -65,6 +73,8 @@ export class AutosizeVirtualScrollStrategy
    * The amount of items to render upfront in reverse scroll direction
    */
   @Input() runwayItemsOpposite = 5;
+
+  @Input() tombstoneSize = 50;
 
   private viewport: RxVirtualScrollViewport | null = null;
   private viewRepeater: RxVirtualViewRepeater<any> | null = null;
@@ -92,7 +102,7 @@ export class AutosizeVirtualScrollStrategy
 
   private readonly _scrolledIndex$ = new ReplaySubject<number>(1);
   scrolledIndex$ = this._scrolledIndex$.asObservable();
-  private _scrolledIndex: number = 0;
+  private _scrolledIndex = 0;
   private set scrolledIndex(index: number) {
     this._scrolledIndex = index;
     this._scrolledIndex$.next(index);
@@ -106,12 +116,14 @@ export class AutosizeVirtualScrollStrategy
   private scrollTop = 0;
   private direction: 'up' | 'down' = 'down';
   private anchorScrollTop = 0;
-  private tombstoneSize = 50;
   private anchorItem = {
     index: 0,
     offset: 0,
   };
-  private rangeRendered: ListRange = { start: 0, end: 0 };
+  private lastScreenItem = {
+    index: 0,
+    offset: 0,
+  };
 
   private readonly destroy$ = new Subject<void>();
   private readonly detached$ = new Subject<void>();
@@ -131,17 +143,6 @@ export class AutosizeVirtualScrollStrategy
   ): void {
     this.viewport = viewport;
     this.viewRepeater = viewRepeater;
-
-    /*
-     * scroll
-     *   calc range
-     * render
-     *    calc heights
-     *    position
-     *    adjust viewport height
-     *    adjust scrollposition
-     *
-     */
 
     this.onDataChanged();
     this.onContentScrolled();
@@ -166,42 +167,31 @@ export class AutosizeVirtualScrollStrategy
   private onDataChanged(): void {
     this.dataDiffer = this.differs.find([]).create(this.viewRepeater._trackBy);
     this.viewRepeater.values$.pipe(this.until$).subscribe((items: any[]) => {
-      // we want to adjust our heightMap with the new items
-      // TODO: move & delete need to be handled as well
       const diff = this.dataDiffer.diff(items);
       if (diff) {
-        const moveCache = new Map<
-          number,
-          VirtualViewItem & { restoreTo: number }
-        >();
         diff.forEachOperation((item, adjustedPreviousIndex, currentIndex) => {
           if (item.previousIndex == null) {
-            this._virtualItems[currentIndex] = {
+            const entry = {
               height: 0,
               width: 0,
               tombstone: true,
             };
+            if (currentIndex < this._virtualItems.length) {
+              this._virtualItems.splice(currentIndex, 0, entry);
+            } else {
+              this._virtualItems.push(entry);
+            }
           } else if (currentIndex == null) {
-            this._virtualItems.splice(adjustedPreviousIndex, 1);
+            const removeIdx =
+              adjustedPreviousIndex == null
+                ? this._virtualItems.length - 1
+                : adjustedPreviousIndex;
+            removeFromArray(this._virtualItems, removeIdx);
           } else if (adjustedPreviousIndex !== null) {
-            const entry =
-              moveCache.get(adjustedPreviousIndex) ||
+            this._virtualItems[currentIndex] =
               this._virtualItems[adjustedPreviousIndex];
-            moveCache.delete(adjustedPreviousIndex);
-            const toCache = {
-              ...this._virtualItems[currentIndex],
-              restoreTo: adjustedPreviousIndex,
-            };
-            moveCache.set(currentIndex, toCache);
-            this._virtualItems[currentIndex] = entry;
           }
         });
-        if (moveCache.size) {
-          for (const [index, entry] of moveCache) {
-            this._virtualItems[entry.restoreTo] = entry;
-          }
-        }
-        moveCache.clear();
       }
     });
   }
@@ -222,7 +212,7 @@ export class AutosizeVirtualScrollStrategy
     const onScroll$ = this.viewport.elementScrolled$.pipe(
       map(() => this.viewport.getScrollTop()),
       distinctUntilChanged(),
-      coalesceWith(scheduled([], animationFrameScheduler)),
+      // coalesceWith(scheduled([], animationFrameScheduler)),
       startWith(0),
       tap((_scrollTop) => {
         this.scrollTop = _scrollTop;
@@ -253,16 +243,16 @@ export class AutosizeVirtualScrollStrategy
           }
           this.scrolledIndex = this.anchorItem.index;
           this.anchorScrollTop = this.scrollTop;
-          const lastScreenItem = this.calculateAnchoredItem(
+          this.lastScreenItem = this.calculateAnchoredItem(
             this.anchorItem,
             containerHeight
           );
-          this.direction = delta < 0 ? 'down' : 'up';
+          this.direction = delta >= 0 ? 'down' : 'up';
           if (delta < 0) {
             range.start = Math.max(0, this.anchorItem.index - this.runwayItems);
             range.end = Math.min(
               length,
-              lastScreenItem.index + this.runwayItemsOpposite
+              this.lastScreenItem.index + this.runwayItemsOpposite
             );
           } else {
             range.start = Math.max(
@@ -271,7 +261,7 @@ export class AutosizeVirtualScrollStrategy
             );
             range.end = Math.min(
               length,
-              lastScreenItem.index + this.runwayItems
+              this.lastScreenItem.index + this.runwayItems
             );
           }
           return range;
@@ -326,19 +316,32 @@ export class AutosizeVirtualScrollStrategy
     this.viewRepeater.contentRendered$
       .pipe(
         switchMap((views) => {
+          this.adjustElementPositions({
+            views,
+            index: 0,
+            adjusted: false,
+          });
+          const renderedRange = {
+            ...this.renderedRange,
+          };
           return merge(
             ...views.map((view, index) => {
-              const adjustedIndex = index + this.renderedRange.start;
+              const adjustedIndex = index + renderedRange.start;
               return observeElementSize(
                 view.rootNodes[0],
-                (entries) => entries[0].borderBoxSize[0].blockSize,
-                { box: 'border-box' }
+                (entries) => {
+                  return entries[0];
+                }
+                // { box: 'border-box' }
               ).pipe(
                 distinctUntilChanged(),
                 filter(
-                  () =>
-                    view.rootNodes[0].offsetHeight !==
-                    this._virtualItems[adjustedIndex].height
+                  (entry) =>
+                    (entry as ResizeObserverEntry).target.isConnected &&
+                    (entry as ResizeObserverEntry).borderBoxSize[0]
+                      .blockSize !==
+                      (this._virtualItems[adjustedIndex]?.height ||
+                        this.tombstoneSize)
                 ),
                 map(() => ({
                   view,
@@ -351,105 +354,111 @@ export class AutosizeVirtualScrollStrategy
               sizeAdjusts.push(adjust);
               return sizeAdjusts;
             }, []),
-            coalesceWith(scheduled([], animationFrameScheduler)),
+            coalesceWith(scheduled([], asyncScheduler)),
             map((adjusts) => ({
               adjusted: true,
               views,
               index: adjusts.sort((a, b) => a.index - b.index)[0].index,
             })),
-            startWith({
-              adjusted: false,
-              views,
-              index: 0,
-            }),
-            filter(({ views }) => !!views)
+            filter(({ views }) => !!views),
+            takeUntil(this.viewRepeater.beforeContentRendered$)
           );
         }),
         this.until$
       )
-      .subscribe(({ adjusted, views, index }) => {
-        const updatedRange = {
-          ...this.renderedRange,
-          start: this.renderedRange.start + index,
+      .subscribe(this.adjustElementPositions.bind(this));
+  }
+
+  private adjustElementPositions({
+    views,
+    index,
+  }: {
+    adjusted: boolean;
+    views: EmbeddedViewRef<any>[];
+    index: number;
+  }): void {
+    const renderedRange = this.renderedRange;
+    const updatedRange = {
+      ...this.renderedRange,
+      start: this.renderedRange.start + index,
+    };
+    let i = index;
+    const end = views.length;
+    let renderedSize = 0;
+    const adjustIndexWith = renderedRange.start;
+    let scrolledIndex;
+    const elements = [];
+    // get height of all rendered elements in range
+    let heightChanged = false;
+    for (i; i < end; i++) {
+      const view = views[i];
+      const { size, element } = this._getElementAndSize(view);
+      elements[i] = element;
+      const itemIndex = i + adjustIndexWith;
+      const item = this._virtualItems[itemIndex];
+      if (item.height != size) {
+        this._virtualItems[itemIndex] = {
+          height: size,
         };
-        const renderedRange = this.renderedRange;
-        let i = index;
-        let end = views.length;
-        let renderedSize = 0;
-        const adjustIndexWith = renderedRange.start;
-        let scrolledIndex;
-        const elements = [];
-        // get height of all rendered elements in range
-        let heightChanged = false;
-        for (i; i < end; i++) {
-          const view = views[i];
-          const { size, element } = this._getElementAndSize(view);
-          elements[i] = element;
-          const itemIndex = i + adjustIndexWith;
-          const item = this._virtualItems[itemIndex];
-          if (item.height != size) {
-            item.height = size;
-            heightChanged = true;
-          }
-        }
+        heightChanged = true;
+      }
+    }
 
-        // Fix scroll position in case we have realized the heights of elements
-        // that we didn't used to know.
-        /* if (heightChanged) {
-          this.anchorScrollTop = 0;
-          for (i = 0; i < this.anchorItem.index; i++) {
-            this.anchorScrollTop +=
-              this._virtualViewContainer.items[i].height || this.tombstoneSize;
-          }
-          this.anchorScrollTop += this.anchorItem.offset;
-        }*/
+    // Fix scroll position in case we have realized the heights of elements
+    // that we didn't used to know.
+    /* if (heightChanged) {
+     this.anchorScrollTop = 0;
+     for (i = 0; i < this.anchorItem.index; i++) {
+     this.anchorScrollTop +=
+     this._virtualViewContainer.items[i].height || this.tombstoneSize;
+     }
+     this.anchorScrollTop += this.anchorItem.offset;
+     }*/
 
-        this.anchorScrollTop = 0;
-        for (i = 0; i < this.anchorItem.index; i++) {
-          this.anchorScrollTop +=
-            this._virtualItems[i].height || this.tombstoneSize;
-        }
-        this.anchorScrollTop += this.anchorItem.offset;
+    this.anchorScrollTop = 0;
+    for (i = 0; i < this.anchorItem.index; i++) {
+      this.anchorScrollTop +=
+        this._virtualItems[i].height || this.tombstoneSize;
+    }
+    this.anchorScrollTop += this.anchorItem.offset;
 
-        // Position all nodes.
-        let curPos = this.anchorScrollTop - this.anchorItem.offset;
-        i = this.anchorItem.index;
-        while (i > updatedRange.start) {
-          curPos -= this._virtualItems[i - 1].height || this.tombstoneSize;
-          i--;
-        }
-        while (i < updatedRange.start) {
-          curPos += this._virtualItems[i].height || this.tombstoneSize;
-          i++;
-        }
-        i = index;
-        for (i; i < end; i++) {
-          const adjustedIndex = i + adjustIndexWith;
-          const item = this._virtualItems[adjustedIndex];
-          this._positionView(elements[i], curPos);
-          this._virtualItems[adjustedIndex] = {
-            height: item.height,
-          };
-          renderedSize += item.height;
-          curPos += item.height;
-          if (scrolledIndex == null && curPos > this.scrollTop) {
-            scrolledIndex = i + adjustIndexWith;
-          }
-        }
-        if (scrolledIndex != null) {
-          this.scrolledIndex = scrolledIndex;
-        }
-        let size = 0;
-        for (i = 0; i < this.contentLength; i++) {
-          const item = this._virtualItems[i];
-          size += item?.height || this.tombstoneSize;
-        }
-        this.contentSize = size;
-        if (this.anchorScrollTop !== this.scrollTop) {
-          this.viewport.scrollTo(this.anchorScrollTop);
-        }
-        this.rangeRendered = this.renderedRange;
-      });
+    // Position all nodes.
+    let curPos = this.anchorScrollTop - this.anchorItem.offset;
+    i = this.anchorItem.index;
+    while (i > updatedRange.start) {
+      curPos -= this._virtualItems[i - 1].height || this.tombstoneSize;
+      i--;
+    }
+    while (i < updatedRange.start) {
+      curPos += this._virtualItems[i].height || this.tombstoneSize;
+      i++;
+    }
+    i = index;
+    for (i; i < end; i++) {
+      const adjustedIndex = i + adjustIndexWith;
+      const item = this._virtualItems[adjustedIndex];
+      this._positionView(elements[i], curPos);
+      this._virtualItems[adjustedIndex] = {
+        height: item.height,
+      };
+      renderedSize += item.height;
+      curPos += item.height;
+      if (scrolledIndex == null && curPos > this.scrollTop) {
+        scrolledIndex = i + adjustIndexWith;
+      }
+    }
+    if (scrolledIndex != null) {
+      this.scrolledIndex = scrolledIndex;
+    }
+    let size = 0;
+    for (i = 0; i < this.contentLength; i++) {
+      const item = this._virtualItems[i];
+      size += item?.height || this.tombstoneSize;
+    }
+    this.contentSize = size;
+    if (this.anchorScrollTop !== this.scrollTop) {
+      this.viewport.scrollTo(this.anchorScrollTop);
+    }
   }
 
   private _getElementAndSize(view: EmbeddedViewRef<any>): {
@@ -464,8 +473,9 @@ export class AutosizeVirtualScrollStrategy
   }
 
   private _positionView(element: HTMLElement, scrollTop: number): void {
-    element.style.position = 'absolute';
+    // element.style.opacity = '1';
     element.style.transform = `translateY(${scrollTop}px)`;
+    element.style.position = 'absolute';
   }
 }
 

@@ -8,12 +8,23 @@ import {
   OnDestroy,
   Optional,
   Output,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
-import { fromEvent } from '@rx-angular/cdk/zone-less';
-import { defer, Observable, ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, startWith, takeUntil } from 'rxjs/operators';
-import { RxVirtualScrollStrategy, RxVirtualScrollViewport, RxVirtualViewRepeater } from './model';
+import {
+  defer,
+  fromEvent,
+  Observable,
+  ReplaySubject,
+  Subject,
+  distinctUntilChanged,
+  startWith,
+  takeUntil,
+} from 'rxjs';
+import {
+  RxVirtualScrollStrategy,
+  RxVirtualScrollViewport,
+  RxVirtualViewRepeater,
+} from './model';
 import { observeElementSize } from './observe-element-size';
 
 @Component({
@@ -38,7 +49,7 @@ import { observeElementSize } from './observe-element-size';
         width: 100%;
         height: 100%;
         box-sizing: border-box;
-        contain: layout;
+        contain: content;
         will-change: transform;
       }
       .rxa-virtual-scroll-run-way {
@@ -49,7 +60,7 @@ import { observeElementSize } from './observe-element-size';
       }
     `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RxVirtualScrollViewportComponent
   implements RxVirtualScrollViewport, AfterContentInit, OnDestroy
@@ -90,11 +101,13 @@ export class RxVirtualScrollViewportComponent
   }
 
   ngOnInit(): void {
-    fromEvent(this.elementRef.nativeElement, 'scroll', {
-      passive: true,
-    })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(this._elementScrolled);
+    this.ngZone.runOutsideAngular(() => {
+      fromEvent(this.elementRef.nativeElement, 'scroll', {
+        passive: true,
+      })
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(this._elementScrolled);
+    });
   }
 
   ngAfterContentInit(): void {

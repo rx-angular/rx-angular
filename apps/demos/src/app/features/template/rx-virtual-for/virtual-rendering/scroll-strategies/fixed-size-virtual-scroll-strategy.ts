@@ -1,24 +1,26 @@
-import { coalesceWith } from '@rx-angular/cdk/coalescing';
-import { distinctUntilSomeChanged } from '@rx-angular/cdk/state';
-import { animationFrameScheduler } from '@rx-angular/cdk/zone-less';
+import { distinctUntilSomeChanged } from '@rx-angular/state/selections';
 import {
   ListRange,
   RxVirtualScrollViewport,
   RxVirtualViewRepeater,
 } from '../model';
 import { Directive, EmbeddedViewRef, Input, OnDestroy } from '@angular/core';
-import { combineLatest, merge, ReplaySubject, scheduled, Subject } from 'rxjs';
 import {
+  combineLatest,
+  merge,
+  ReplaySubject,
+  Subject,
   distinctUntilChanged,
   map,
   shareReplay,
   startWith,
   takeUntil,
   tap,
-} from 'rxjs/operators';
+} from 'rxjs';
 import { RxVirtualScrollStrategy } from '../model';
 
 @Directive({
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'rx-virtual-scroll-viewport[itemSize]',
   providers: [
     {
@@ -38,14 +40,24 @@ export class FixedSizeVirtualScrollStrategy
   /**
    * The amount of buffer (in px) to render on either side of the viewport
    */
-  @Input() buffer = 150;
+  @Input() buffer = 350;
+
+  /**
+   * The amount of items to render upfront in scroll direction
+   */
+  @Input() runwayItems = 20;
+
+  /**
+   * The amount of items to render upfront in reverse scroll direction
+   */
+  @Input() runwayItemsOpposite = 5;
 
   private viewport: RxVirtualScrollViewport | null = null;
   private viewRepeater: RxVirtualViewRepeater<any> | null = null;
 
   private readonly _scrolledIndex$ = new ReplaySubject<number>(1);
   scrolledIndex$ = this._scrolledIndex$.asObservable();
-  private _scrolledIndex: number = 0;
+  private _scrolledIndex = 0;
   private set scrolledIndex(index: number) {
     this._scrolledIndex = index;
     this._scrolledIndex$.next(index);
@@ -105,7 +117,7 @@ export class FixedSizeVirtualScrollStrategy
         const renderedRange = this.renderedRange;
         let scrollTop = this.itemSize * renderedRange.start;
         let i = 0;
-        let end = views.length;
+        const end = views.length;
         for (i; i < end; i++) {
           this._setViewPosition(views[i], scrollTop);
           scrollTop += this.itemSize;
@@ -136,23 +148,45 @@ export class FixedSizeVirtualScrollStrategy
       tap((_scrollTop) => {
         this.direction = _scrollTop > this.scrollTop ? 'down' : 'up';
         this.scrollTop = _scrollTop;
-      }),
-      coalesceWith(scheduled([], animationFrameScheduler))
+      })
     );
     combineLatest([dataLengthChanged$, this.viewport.containerSize$, onScroll$])
       .pipe(
         map(([length, containerSize]) => {
-          const start = Math.floor(
-            Math.max(0, this.scrollTop - this.buffer) / this.itemSize
-          );
-          const end = Math.min(
-            length,
-            Math.ceil(
-              (this.scrollTop + containerSize + this.buffer) / this.itemSize
-            )
-          );
+          const range = { start: 0, end: 0 };
+          if (this.direction === 'up') {
+            range.start = Math.floor(
+              Math.max(0, this.scrollTop - this.runwayItems * this.itemSize) /
+                this.itemSize
+            );
+            range.end = Math.min(
+              length,
+              Math.ceil(
+                (this.scrollTop +
+                  containerSize +
+                  this.runwayItemsOpposite * this.itemSize) /
+                  this.itemSize
+              )
+            );
+          } else {
+            range.start = Math.floor(
+              Math.max(
+                0,
+                this.scrollTop - this.runwayItemsOpposite * this.itemSize
+              ) / this.itemSize
+            );
+            range.end = Math.min(
+              length,
+              Math.ceil(
+                (this.scrollTop +
+                  containerSize +
+                  this.runwayItems * this.itemSize) /
+                  this.itemSize
+              )
+            );
+          }
           this.scrolledIndex = Math.floor(this.scrollTop / this.itemSize);
-          return { start, end };
+          return range;
         }),
         distinctUntilSomeChanged(['start', 'end']),
         this.until$
@@ -170,8 +204,9 @@ export class FixedSizeVirtualScrollStrategy
     scrollTop: number
   ): void {
     const element = view.rootNodes[0] as HTMLElement;
-    element.style.position = 'absolute';
+    // element.style.opacity = '1';
     element.style.transform = `translateY(${scrollTop}px)`;
+    element.style.position = 'absolute';
   }
 }
 

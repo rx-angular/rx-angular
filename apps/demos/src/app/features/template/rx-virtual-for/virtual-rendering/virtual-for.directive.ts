@@ -103,6 +103,8 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /** @internal */
   readonly contentRendered$ = new Subject<any>();
+  /** @internal */
+  readonly beforeContentRendered$ = new Subject<void>();
 
   /** @internal */
   constructor(
@@ -110,7 +112,6 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
     private iterableDiffers: IterableDiffers,
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
-    private eRef: ElementRef,
     private readonly templateRef: TemplateRef<RxDefaultListViewContext<T>>,
     private readonly viewContainerRef: ViewContainerRef,
     private strategyProvider: RxStrategyProvider,
@@ -160,7 +161,6 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
         iterableDiffers: this.iterableDiffers,
         renderSettings: {
           cdRef: this.cdRef,
-          eRef: this.eRef,
           strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
           defaultStrategyName: this.strategyProvider.primaryStrategy,
           parent: !!this.renderParent,
@@ -168,7 +168,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
           errorHandler: this.errorHandler,
         },
         templateSettings: {
-          patchZone: false,
+          patchZone: this.patchZone ? this.ngZone : false,
           viewContainerRef: this.viewContainerRef,
           templateRef: this.templateRef,
           createViewContext: this.createViewContext,
@@ -189,6 +189,11 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
       .pipe(takeUntil(this._destroy$))
       .subscribe((v) => {
         this.contentRendered$.next(v);
+      });
+    this.listManager.beforeViewsRendered$
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(() => {
+        this.beforeContentRendered$.next();
       });
   }
 
