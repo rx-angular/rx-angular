@@ -1,6 +1,6 @@
 {
   "name": "@rx-angular/state",
-  "version": "1.4.6",
+  "version": "1.6.1",
   "description": "@rx-angular/state is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state and side effects in angular",
   "main": "index.js",
   "publishConfig": {
@@ -11,7 +11,7 @@
     "npm": ">=5.3.0",
     "yarn": ">=1.9.2"
   },
-  "author": "Michael Hladky <michael@hladky.at>",
+  "author": "Michael Hladky <michael.hladky@push-based>",
   "homepage": "https://rx-angular.io/",
   "keywords": [
     "angular",
@@ -27,7 +27,7 @@
   "contributors": [
     {
       "name": "Michael Hladky",
-      "email": "michael@hladky.at"
+      "email": "michael.hladky@push-based"
     },
     {
       "name": "Julian Jandl",
@@ -48,11 +48,13 @@
     "url": "https://github.com/rx-angular/rx-angular.git"
   },
   "peerDependencies": {
-    "@angular/core": ">8.0.0",
-    "@rx-angular/cdk": ">=1.0.0-alpha.11"
+    "@angular/core": ">=12.0.0",
+    "@angular/platform-browser": ">=12.0.0",
+    "rxjs": ">=6.5.5"
   },
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "ng-morph": "^2.0.0"
   },
   "ng-add": {
     "save": "dependencies"

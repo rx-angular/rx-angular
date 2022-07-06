@@ -1,6 +1,6 @@
 # Concurrent Strategies
 
-Based on the [RAIL model](https://web.dev/rail/), if your app provides user feedback within more than 16ms (less than 60 frames per second), it feels laggy to the user and leads to bad UX.
+Based on the [RAIL model](https://web.dev/rail/), e.g. if your app provides animated user feedback within more than 16ms (less than 60 frames per second), it feels laggy to the user and leads to bad UX.
 From the UX perspective that means users should not experience blocking periods more than 16 ms.
 
 ## Concepts
@@ -10,6 +10,7 @@ There are 5 core concepts of the concurrent strategies:
 - Priority
 - Chunking
 - Concurrent Scheduling
+
 ### Frame budget / Frame Drop
 
 The Browser has only one UI thread (main thread), meaning things happen one after another.
@@ -126,8 +127,6 @@ This scenario gets to a problem depending on:
 - the number of Angular elements
 - the amount of work done in the elements
 
-![rx-angular-cdk-render-strategies__concurrent-strategies-un-chuked-work](https://user-images.githubusercontent.com/10064416/116010309-7cebf400-a61e-11eb-8715-a6428e5f16a3.png)
-
 ### Concurrent Scheduling
 
 ![concurrent scheduling - abstract diagram](https://user-images.githubusercontent.com/10064416/145228577-6b8f0bb7-6547-4835-aecc-13d7e07baf02.png)
@@ -154,30 +153,28 @@ The special thing about the set of concurrent strategies is they have a render d
 It means if the scheduled tasks in the global queue of work is not exhausted after a certain time window, we stop the chunking process.
 Instead all remaining work will get executed as fast as possible. This means in one synchronous block (that potentially can causes a frame drop).
 
-![Render Strategies - concurrent anatomy png](https://user-images.githubusercontent.com/10064416/145231603-5e6e250d-7c8c-4e76-8872-8b01a3a65c24.png)
-
+![Render Strategies - concurrent anatomy png](https://user-images.githubusercontent.com/10064416/146287356-023836c8-a697-4640-a4ae-7d567bc02bf0.png)
 Every strategy has a different render deadline. Strategies are designed from the perspective of how important the work is for the user. see: [RAIL model](https://web.dev/rail/)
+
+What concurrent scheduling does under the hood is is cunking up work in cycles of scheduling, prioritization and execution based on different settings.
+
+![Render Strategies - task flow](https://user-images.githubusercontent.com/10064416/146287195-89e22ed8-12ba-4099-9379-430a41469b9c.png)
 
 ## Strategies:
 
 | Name             | Priority | Render Method     | Scheduling    | Render Deadline |
 | ---------------- | -------- | ----------------- | ------------- | --------------- |
-| `"noPriority"`   | 0        | 🠗 `detectChanges` | `postMessage` | ❌              |
-| `"immediate"`    | 2        | 🠗 `detectChanges` | `postMessage` | 0ms             |
-| `"userBlocking"` | 3        | 🠗 `detectChanges` | `postMessage` | 250ms           |
-| `"normal"`       | 4        | 🠗 `detectChanges` | `postMessage` | 5000ms          |
-| `"low"`          | 5        | 🠗 `detectChanges` | `postMessage` | 10000ms         |
-| `"idle"`         | 6        | 🠗 `detectChanges` | `postMessage` | ❌              |
+| `"immediate"`    | 1        | 🠗 `detectChanges` | `postMessage` | 0ms             |
+| `"userBlocking"` | 2        | 🠗 `detectChanges` | `postMessage` | 250ms           |
+| `"normal"`       | 3        | 🠗 `detectChanges` | `postMessage` | 5000ms          |
+| `"low"`          | 4        | 🠗 `detectChanges` | `postMessage` | 10000ms         |
+| `"idle"`         | 5        | 🠗 `detectChanges` | `postMessage` | ❌              |
 
-![rx-angular-cdk-render-strategies__example](https://user-images.githubusercontent.com/10064416/115321372-f483d400-a183-11eb-810b-2df59f56794f.PNG)
-
-![render-strategy-comparison](https://user-images.githubusercontent.com/10064416/115313442-8f27e700-a173-11eb-817d-9868180305d5.gif)
-
-### noPriority
-
-![rx-angular-cdk-render-strategies__strategy-noPriority](https://user-images.githubusercontent.com/10064416/116009734-84f66480-a61b-11eb-89f4-a57b90573b9b.png)
+![Render Strategies - example usage](https://user-images.githubusercontent.com/10064416/146285888-ae39072c-aa8f-4c8a-a33b-8181f0c62464.png)
 
 ### Immediate
+
+![render-strategies-concurrent-immediate-tree](https://user-images.githubusercontent.com/10064416/146285875-2049440b-4fb8-493e-a220-adfde74bdc8f.png)
 
 Urgent work that must happen immediately is initiated and visible by the user. This occurs right after the current task and has the highest priority.
 
@@ -185,9 +182,11 @@ Urgent work that must happen immediately is initiated and visible by the user. T
 | ----------------- | ------------- | --------------- |
 | 🠗 `detectChanges` | `postMessage` | 0ms             |
 
+![render-strategies-concurrent-immediate-diagramm](https://user-images.githubusercontent.com/10064416/146285874-684230bf-f38d-4150-a803-fdf896a57c8a.png)
+
 **Usecase:**
 
-![immediate-example](https://user-images.githubusercontent.com/15088626/115313764-8b4c9280-a17c-11eb-812e-98354c7090ba.png)
+![Render Strategies - immediate example](https://user-images.githubusercontent.com/10064416/146285883-eb500a95-3f98-4892-88fd-89322f0aaa32.png)
 
 A good example here would be a tool-tip.
 
@@ -234,15 +233,19 @@ export class ItemsListComponent {
 
 ### User Blocking
 
+![render-strategies-concurrent-userBlocking-tree](https://user-images.githubusercontent.com/10064416/146285901-b84f4e32-9213-4674-9cfe-f4dffe68dd65.png)
+
 Critical work that must be done in the current frame, is initiated and visible by the user. DOM manipulations that should be rendered quickly. Tasks with this priority can delay current frame rendering, so this is the place for lightweight work (otherwise use "normal" priority).
 
 | Render Method     | Scheduling    | Render Deadline |
 | ----------------- | ------------- | --------------- |
 | 🠗 `detectChanges` | `postMessage` | 250ms           |
 
+![render-strategies-concurrent-userBlocking-diagramm](https://user-images.githubusercontent.com/10064416/146285898-c60e4ab6-98bd-4c0a-8c1f-a2ecbc829f88.png)
+
 **Usecase:**
 
-![userBlocking-example](https://user-images.githubusercontent.com/15088626/115313646-550f1300-a17c-11eb-8430-87eda6855822.png)
+![Render Strategies - userBlocking example](https://user-images.githubusercontent.com/10064416/146285880-73bf726d-8793-42f3-84d4-6476889ed468.png)
 
 A good example here would be a dropdown menu.
 
@@ -291,21 +294,26 @@ export class DropdownComponent {
 
 ### Normal
 
+![render-strategies-concurrent-normal-tree](https://user-images.githubusercontent.com/10064416/146285896-c41bffd9-f711-4442-bd9c-009a0579dd49.png)
+
 Heavy work visible to the user. For example, since it has a higher timeout, it is more suitable for the rendering of data lists.
 
 | Render Method     | Scheduling    | Render Deadline |
 | ----------------- | ------------- | --------------- |
 | 🠗 `detectChanges` | `postMessage` | 5000ms          |
 
+![render-strategies-concurrent-normal-diagramm](https://user-images.githubusercontent.com/10064416/146285895-ec045bf7-5c68-4359-a723-032c963b80b5.png)
+
 <!-- In most cases it is a rendering from user interaction that depends on network and can be delayed by the couple of frames to the point where requested data is available. It should not delay current frame but should target next available frame. -->
 
 **Usecase:**
+
+![Render Strategies - normal example](https://user-images.githubusercontent.com/10064416/146285878-3b242f2d-046e-49ad-be2f-cbf1c33b7a02.png)
 
 For `normal` strategy a perfect example will be rendering of the items list. 
 
 It is often the case that rendering of big lists blocks user interactions. In combination with `rxFor` directive such operations become truly unblocking.
 
-![rx-angular-cdk-render-strategies__normal_example](https://user-images.githubusercontent.com/10064416/115315848-7837c380-a178-11eb-985e-b639f034fcb4.PNG)
 ```typescript
 @Component({
   selector: 'items-list',
@@ -326,18 +334,21 @@ export class ItemsListComponent {
 
 ### Low
 
+![render-strategies-concurrent-low-tree](https://user-images.githubusercontent.com/10064416/146285890-421be34c-8a76-4b04-bd29-2d9bca103547.png)
+
 Work that is typically not visible to the user or initiated by the user.
 
 | Render Method     | Scheduling    | Render Deadline |
 | ----------------- | ------------- | --------------- |
 | 🠗 `detectChanges` | `postMessage` | 10000ms         |
 
+![render-strategies-concurrent-low-diagramm](https://user-images.githubusercontent.com/10064416/146285894-8d2992f3-6e5f-49db-8c45-d54424cc4a3e.png)
+
 **Usecase:**
 
-Good use case for this strategy will be lazy loading of the components. For example popup.
+![Render Strategies - low example](https://user-images.githubusercontent.com/10064416/146285886-082574dd-02a2-4db7-b06c-16ff96fab72a.png)
 
-<!-- TODO: Add proper image -->
-![low-example](https://user-images.githubusercontent.com/15088626/115315764-a7523300-a180-11eb-9231-1376bda540a4.png)
+Good use case for this strategy will be lazy loading of the components. For example popup.
 
 ```typescript
 @Component({
@@ -375,18 +386,7 @@ export class ItemsListComponent {
 
 ### Idle
 
-<!--
-- Description of the strategies behavior
-- Table
-  - no `Zone Agnostic` column just mention it
-  - Render Method
-  - no Coalescing just mention it
-  - Scheduling
-  - Render deadline (chunked) => ms | false
-  -
-- Usecase + Code snippet + Image
--
--->
+![render-strategies-concurrent-idle-tree](https://user-images.githubusercontent.com/10064416/146285889-8f98a92c-35dd-4632-9b3a-0eaf759790fc.png)
 
 Urgent work that should happen in the background and is not initiated but visible by the user. This occurs right after current task and has the lowest priority. 
 
@@ -394,12 +394,13 @@ Urgent work that should happen in the background and is not initiated but visibl
 | ----------------- | ------------- | --------------- |
 | 🠗 `detectChanges` | `postMessage` | ❌              |
 
+![render-strategies-concurrent-idle-diagramm](https://user-images.githubusercontent.com/10064416/146285892-c996b043-c1c0-411b-abbd-1d2867e36711.png)
+
 **Usecase:**
 
-This strategy is especially useful for logic meant to run in the background. Good example of such interaction is background sync.
+![Render Strategies - idle example](https://user-images.githubusercontent.com/10064416/146285887-0c214d88-cab1-4517-97a7-41318e6436c0.png)
 
-<!-- TODO: Add proper image -->
-![rx-angular-cdk-render-strategies__idle_example](https://user-images.githubusercontent.com/10064416/115316774-49225180-a17a-11eb-9045-3cdd38217b4d.PNG)
+This strategy is especially useful for logic meant to run in the background. Good example of such interaction is background sync.
 
 ```typescript
 @Component({

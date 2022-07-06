@@ -10,6 +10,16 @@ RxState is a lightweight, flexible, strongly typed and tested tool dedicated to 
 
 ![state logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/images/state_logo.png)
 
+## Sub Modules
+
+- [🧩 Selections](https://github.com/rx-angular/rx-angular/blob/main/libs/state/selections/README.md)
+- [☁ Effects](https://github.com/rx-angular/rx-angular/blob/main/libs/state/effects/README.md)
+
+## Intro Video
+
+<a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)</a>
+
+
 ## Description
 
 Developing modern, **reactive** user interfaces imposes a variety of challenging tasks. Naming some of those:
@@ -72,13 +82,17 @@ ng update @rx-angular/state
 nx migrate @rx-angular/state
 ```
 
-## API
-
-[API Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/api/overview.md)
-
 ## Usage
 
 [Usage Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/usage.md)
+
+## Testing
+
+[Testing](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/testing.md)
+
+## API
+
+[API Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/api/overview.md)
 
 ## Tutorials
 
@@ -101,17 +115,35 @@ nx migrate @rx-angular/state
 - [Difference between Global and Local state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/global-state-vs-local-state.md)
 - [Using RxState as Global State](https://github.com/rx-angular/rx-angular/blob/main/libs/state/docs/snippets/manage-global-state.md)
 
-## Resources
+## Vidoes
 
-- [🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session](https://youtu.be/CcQYj4V2IKw)
-- [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch?v=I8uaHMs8rw0)
+<a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)_🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session_</a>
+
+<a target="_blank" href="https://www.youtube.com/watch?v=I8uaHMs8rw0">![tackling-component-state-reactively](https://user-images.githubusercontent.com/10064416/147395866-031704dc-837d-4d1f-82d6-e758e4cb9556.PNG)_🎥 Tackling Component State Reactively (Live Demo at 24:47)_</a>
+
 - [🎥 Extending Angular for the Reactive Web](https://youtu.be/pkN6CeZ8h_U?t=5913)
+
+- [German content | 🎥 Michael explains rx-state to webdave_de (Livestream)](https://youtu.be/cKUFcY8QkYM)
+
+## Blogs/Documents
+
 - [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
+
 - [📜 Design Documents](https://hackmd.io/wVkWRc3XQWmtM6YcktRTrA)
-- [📑 Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) by [Mike Hartington](https://twitter.com/mhartington)
 
-## Browsers support
+## OSS Example Applications
 
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari-ios/safari-ios_48x48.png" alt="iOS Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>iOS Safari |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| IE11, Edge                                                                                                                                                                                                      | last version                                                                                                                                                                                                      | last version                                                                                                                                                                                                  | last 2 versions                                                                                                                                                                                               | last 2 versions                                                                                                                                                                                                               |
+- [📑 Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) - [Mike Hartington](https://twitter.com/mhartington)
+- [📑 High performant zone-Less Angular Progressive Web Application](https://angular-movies-a12d3.web.app/list/category/popular) - [TasteJS](https://github.com/tastejs/angular-movies)
+- [📑 Zone-Less Angular Application - Tour of heros](https://github.com/BioPhoton/tour-of-heroes) - [Michael_Hladky](https://twitter.com/Michael_Hladky)
+
+## Version Compatibility
+
+| Angular                | RxJS                 | @rx-angular/state |
+|------------------------|----------------------|-------------------|
+| `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.4.6`         |
+| `^11.0.0`              | `^6.5.5`             | `<= 1.4.6`        |
+
+Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
+All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
+For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3) 

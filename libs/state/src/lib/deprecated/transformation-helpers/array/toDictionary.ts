@@ -1,5 +1,6 @@
 import { OnlyKeysOfSpecificType } from '../interfaces/only-keys-of-specific-type';
-import { isDefined, isKeyOf } from '../../utils';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { isDefined, isKeyOf } from '@rx-angular/state/selections';
 
 /**
  * @deprecated moved to `@rx-angular/cdk/transformations`
@@ -13,7 +14,7 @@ export function toDictionary<T extends object>(
     | OnlyKeysOfSpecificType<T, symbol>
 ): { [key: string]: T } {
   if (!isDefined(source)) {
-    return source;
+    return source as any;
   }
 
   const sourceEmpty = !source.length;

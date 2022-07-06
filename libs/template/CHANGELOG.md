@@ -2,6 +2,64 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0-beta.33](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.32...template@1.0.0-beta.33) (2022-06-07)
+
+
+### Bug Fixes
+
+* add missing peerDependencies ([223b751](https://github.com/rx-angular/rx-angular/commit/223b751b9c14f67fe803d84872ffe56b005373c6)), closes [#1261](https://github.com/rx-angular/rx-angular/issues/1261)
+* **template:** drop @angular/cdk dep for rxIf ([0ce6abc](https://github.com/rx-angular/rx-angular/commit/0ce6abc9a18dff11e9da8c1c939e5e5586cc3ef8))
+
+
+### Features
+
+* **template:** introduce experimental rx-if directive ([#1251](https://github.com/rx-angular/rx-angular/issues/1251)) ([4f8c4ac](https://github.com/rx-angular/rx-angular/commit/4f8c4ac991ba8a6fad032ba461c31a17e3573c82))
+
+
+### Performance Improvements
+
+* **cdk:** coalesce and optimize parent notification ([#1262](https://github.com/rx-angular/rx-angular/issues/1262)) ([9d1d099](https://github.com/rx-angular/rx-angular/commit/9d1d099608ffe848af207475a51f3788b94ca8bc))
+
+
+
+## [0.0.0-beta.32](/compare/template@1.0.0-beta.1...template@1.0.0-beta.32) (2022-02-27)
+
+### Bug Fixes
+
+* **template:** compat for jest and Angular 12
+
+# [1.0.0-beta.31](/compare/template@1.0.0-beta.30...template@1.0.0-beta.31) (2022-02-08)
+
+
+### Bug Fixes
+
+* drop `@nrwl/tao` deep import 6eeae5e
+* migrate `@rx-angular/zone-less` as well 78c1ec6
+* **template:** Rxfor template typings (#1198) 5830f38, closes #1198
+* **template:** rxLet: don't override primary strategy  (#1197) 5c9d2a3, closes #1197
+
+
+### Performance Improvements
+
+* improve migrations perf 44eccda
+
+# [1.0.0-beta.30](/compare/template@1.0.0-beta.29...template@1.0.0-beta.30) (2022-02-02)
+
+
+### Features
+
+* enable Ivy with partial compilation mode (#1186) eddaf20, closes #1186
+* introduce viewport-prio and rx-for as experimental (#887) d5d026c, closes #887
+
+
+### Performance Improvements
+
+* move getUnpatchedApi into sun-package and avoid zone-less package (#1035) 170ab7a, closes #1035
+* reduce bundle size by removing unused code (#1039) 0c6c089, closes #1039
+* zone less sub modules f765336
+
+
+
 # [1.0.0-beta.29](/compare/template@1.0.0-beta.28...template@1.0.0-beta.29) (2021-11-16)
 
 
