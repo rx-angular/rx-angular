@@ -2,6 +2,32 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0-beta.3](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-beta.2...cdk@1.0.0-beta.3) (2022-06-07)
+
+
+### Bug Fixes
+
+* add missing peerDependencies ([223b751](https://github.com/rx-angular/rx-angular/commit/223b751b9c14f67fe803d84872ffe56b005373c6)), closes [#1261](https://github.com/rx-angular/rx-angular/issues/1261)
+* **cdk:** fix rxjs schedulers & deprecate zone-less/rxjs ([9dc3483](https://github.com/rx-angular/rx-angular/commit/9dc34832c5bb2fca123fc9e328cb96c800f40c82))
+* **cdk:** requestPaint should force a paint ([1f5b6bb](https://github.com/rx-angular/rx-angular/commit/1f5b6bba7e1cb5fa4a22331d90e65bb8a0b38d29))
+* **cdk:** resolve null error in template-notifier ([68616a8](https://github.com/rx-angular/rx-angular/commit/68616a8af80323512bb638760f6695a15767c02b)), closes [#1106](https://github.com/rx-angular/rx-angular/issues/1106)
+
+
+### Features
+
+* **template:** introduce experimental rx-if directive ([#1251](https://github.com/rx-angular/rx-angular/issues/1251)) ([4f8c4ac](https://github.com/rx-angular/rx-angular/commit/4f8c4ac991ba8a6fad032ba461c31a17e3573c82))
+
+
+### Performance Improvements
+
+* **cdk:** coalesce and optimize parent notification ([#1262](https://github.com/rx-angular/rx-angular/issues/1262)) ([9d1d099](https://github.com/rx-angular/rx-angular/commit/9d1d099608ffe848af207475a51f3788b94ca8bc))
+* **cdk:** improve ngZone aware scheduler poc ([f6bab88](https://github.com/rx-angular/rx-angular/commit/f6bab88e096a6bbce225764480921f51e4024ae0))
+* coalesce ngZone PoC ([668c28a](https://github.com/rx-angular/rx-angular/commit/668c28ad0fb949666c58b27468188d759cfaf5c0))
+* remove main entry point ([#1228](https://github.com/rx-angular/rx-angular/issues/1228)) ([4cc9a73](https://github.com/rx-angular/rx-angular/commit/4cc9a73bf3a20c8c96b09e523abf5c3a86d02635))
+* stay in ngZone as long as no new ngZone was provided ([117cb6b](https://github.com/rx-angular/rx-angular/commit/117cb6bc119536869731bd9e93ae2c1183dd7be2))
+
+
+
 ## [0.0.0-beta.2](/compare/cdk@1.0.0-beta.1...cdk@1.0.0-beta.2) (2022-02-27)
 
 ### Bug Fixes

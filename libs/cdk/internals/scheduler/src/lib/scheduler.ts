@@ -381,6 +381,10 @@ let needsPaint = false;
 let queueStartTime = -1;
 
 function shouldYieldToHost() {
+  if (needsPaint) {
+    // There's a pending paint (signaled by `requestPaint`). Yield now.
+    return true;
+  }
   const timeElapsed = getCurrentTime() - queueStartTime;
   if (timeElapsed < yieldInterval) {
     // The main thread has only been blocked for a really short amount of time;
@@ -428,16 +432,16 @@ function shouldYieldToHost() {
 }
 
 function requestPaint() {
-  if (
+  needsPaint = true;
+  // we don't support isInputPending currently
+  /*if (
     enableIsInputPending &&
     navigator !== undefined &&
     (navigator as any).scheduling !== undefined &&
     (navigator as any).scheduling.isInputPending !== undefined
   ) {
     needsPaint = true;
-  }
-
-  // Since we yield every frame regardless, `requestPaint` has no effect.
+  }*/
 }
 
 function forceFrameRate(fps) {

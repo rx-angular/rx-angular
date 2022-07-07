@@ -81,7 +81,7 @@ export class ParentComponent {
 export class ChildComponent {
   users$ = this.select('users');
   @Input()
-  set users(users) {
+  set users(users$) {
     this.connect('users', users$);
   }
 }
