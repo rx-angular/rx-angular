@@ -8,30 +8,30 @@ import {
   OnInit,
   SimpleChanges,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { coerceAllFactory, coerceObservable } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
-  RxNotificationKind
+  RxNotificationKind,
 } from '@rx-angular/cdk/notifications';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import {
   createTemplateManager,
-  RxTemplateManager
+  RxTemplateManager,
 } from '@rx-angular/cdk/template';
 import {
   NextObserver,
   Observable,
   ReplaySubject,
   Subject,
-  Subscription
+  Subscription,
 } from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
 import {
   RxIfTemplateNames,
   rxIfTemplateNames,
-  RxIfViewContext
+  RxIfViewContext,
 } from './model/index';
 
 @Directive({
@@ -74,9 +74,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
   }
 
   /** @internal */
-  private observablesHandler = createTemplateNotifier<U>(
-    () => !!this.suspenseTmpl
-  );
+  private observablesHandler = createTemplateNotifier<U>();
   private readonly strategyHandler = coerceAllFactory<string>(
     () => new ReplaySubject<string | Observable<string>>(1),
     mergeAll()

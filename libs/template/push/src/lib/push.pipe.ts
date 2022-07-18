@@ -18,7 +18,7 @@ import {
   NextObserver,
   Observable,
   ObservableInput,
-  Unsubscribable
+  Unsubscribable,
 } from 'rxjs';
 import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { timeoutSwitchMapWith } from '@rx-angular/cdk/internals/core';
@@ -167,11 +167,7 @@ export class PushPipe<S extends string = string>
     const scope = (this.cdRef as any).context;
     return this.templateObserver.values$
       .pipe(
-        filter(
-          (n) =>
-            n.kind === RxNotificationKind.Suspense ||
-            n.kind === RxNotificationKind.Next
-        ),
+        filter((n) => n.kind === RxNotificationKind.Next),
         tap((notification) => {
           this.renderedValue = notification.value;
         }),
