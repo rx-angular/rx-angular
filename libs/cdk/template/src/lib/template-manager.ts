@@ -8,19 +8,23 @@ import {
   RxNotificationKind,
   RxSuspenseNotification,
 } from '@rx-angular/cdk/notifications';
-import { EMPTY, Observable, of } from 'rxjs';
 import {
+  onStrategy,
+  RxRenderWork,
+  strategyHandling,
+} from '@rx-angular/cdk/render-strategies';
+import {
+  EMPTY,
+  merge,
+  Observable,
+  of,
   catchError,
   filter,
   map,
   switchMap,
+  tap,
   withLatestFrom,
-} from 'rxjs/operators';
-import {
-  RxRenderWork,
-  onStrategy,
-  strategyHandling,
-} from '@rx-angular/cdk/render-strategies';
+} from 'rxjs';
 import {
   rxBaseTemplateNames,
   RxRenderAware,
@@ -78,7 +82,7 @@ export function notificationKindToViewContext<T>(
       return {
         $implicit,
         $complete: false,
-        $error: notification.error,
+        $error: notification.error || true,
         $suspense: false,
         ...customNextContext($implicit),
       };
@@ -112,7 +116,7 @@ export function createTemplateManager<
 >(config: {
   renderSettings: RxRenderSettings;
   templateSettings: RxTemplateSettings<T, C>;
-  templateTrigger$?: Observable<RxNotification<unknown>>;
+  templateTrigger$?: Observable<RxNotificationKind>;
   notificationToTemplateName: RxNotificationTemplateNameMap<T, C, N>;
 }): RxTemplateManager<T, C, N> {
   const { renderSettings, notificationToTemplateName, templateSettings } =
@@ -138,79 +142,117 @@ export function createTemplateManager<
   const getContext = notificationKindToViewContext(
     templateSettings.customContext || ((v) => {})
   );
+  let withSuspense = false;
 
   return {
-    addTemplateRef: templates.add,
+    addTemplateRef: (name: N, templateRef: TemplateRef<C>) => {
+      // @ts-ignore
+      if (!withSuspense && name === 'suspenseTpl') {
+        withSuspense = true;
+      }
+      templates.add(name, templateRef);
+    },
     // addTrigger: triggerHandling.next,
     nextStrategy: strategyHandling$.next,
     render(values$: Observable<RxNotification<T>>): Observable<any> {
-      return values$.pipe(
-        // mergeWith(triggerHandling.trigger$ || EMPTY),
-        map((notification) => {
-          const kind: RxNotificationKind = notification.kind;
+      let trg: RxNotificationKind | undefined;
+      let notification: RxNotification<T> = {
+        value: undefined,
+        complete: false,
+        error: false,
+        kind: withSuspense
+          ? RxNotificationKind.Suspense
+          : RxNotificationKind.Next,
+        hasValue: false,
+      };
+      console.log('withSuspense', withSuspense);
+
+      return merge(
+        values$.pipe(
+          filter(
+            ({ kind }) => withSuspense || kind !== RxNotificationKind.Suspense
+          ),
+          tap((n) => {
+            notification = n;
+            // set suspense to true after first emission so that we have continuous suspense context values
+            withSuspense = true;
+          })
+        ),
+        triggerHandling.pipe(
+          tap<RxNotificationKind>((trigger) => (trg = trigger))
+        )
+      ).pipe(
+        map(() => {
+          const contextKind: RxNotificationKind = trg || notification.kind;
+          trg = undefined;
           const value: T = notification.value as T;
-          const templateName = notificationToTemplateName[kind](
+          const templateName = notificationToTemplateName[contextKind](
             value,
             templates
           );
           const template = templates.get(templateName);
-          return { template, templateName, notification };
+          return { template, templateName, notification, contextKind };
         }),
-        filter(({ template }) => !!template),
+        // filter(({ template }) => !!template),
         withLatestFrom(strategyHandling$.strategy$),
         // Cancel old renders
-        switchMap(([{ template, templateName, notification }, strategy]) => {
-          const isNewTemplate = activeTemplate !== templateName;
-          const notifyParent = isNewTemplate && parent;
-          return onStrategy(
-            notification.value,
+        switchMap(
+          ([
+            { template, templateName, notification, contextKind },
             strategy,
-            (v: T, work: RxRenderWork, options: RxCoalescingOptions) => {
-              const context = <C>getContext[notification.kind](notification);
-              if (isNewTemplate) {
-                // template has changed (undefined => next; suspense => next; ...)
-                // handle remove & insert
-                // remove current view if there is any
-                if (viewContainerRef.length > 0) {
-                  // patch removal if needed
-                  viewContainerRef.clear();
-                }
-                // create new view if any
-                if (template) {
-                  // createEmbeddedView is already patched, no need for workFactory
-                  templates.createEmbeddedView(templateName, context);
-                }
-              } else if (template) {
-                // template didn't change, update it
-                // handle update
-                const view = <EmbeddedViewRef<C>>viewContainerRef.get(0);
-                Object.keys(context).forEach((k) => {
-                  view.context[k] = context[k];
-                });
-                // update view context, patch if needed
-                work(view, options.scope, notification);
-              }
-              activeTemplate = templateName;
-            },
-            { ngZone }
-            // we don't need to specify any scope here. The template manager is the only one
-            // who will call `viewRef#detectChanges` on any of the templates it manages.
-            // whenever a new value comes in, any pre-scheduled work of this taskManager will
-            // be nooped before a new work will be scheduled. This happens because of the implementation
-            // of `StrategyCredential#behavior`
-          ).pipe(
-            notifyAllParentsIfNeeded(
-              injectingViewCdRef,
+          ]) => {
+            const isNewTemplate = activeTemplate !== templateName || !template;
+            const notifyParent = isNewTemplate && parent;
+            return onStrategy(
+              notification.value,
               strategy,
-              () => notifyParent,
-              ngZone
-            ),
-            catchError((e) => {
-              errorHandler.handleError(e);
-              return of(e);
-            })
-          );
-        })
+              (v: T, work: RxRenderWork, options: RxCoalescingOptions) => {
+                const context = <C>getContext[contextKind](notification);
+                if (isNewTemplate) {
+                  // template has changed (undefined => next; suspense => next; ...)
+                  // handle remove & insert
+                  // remove current view if there is any
+                  if (viewContainerRef.length > 0) {
+                    // patch removal if needed
+                    viewContainerRef.clear();
+                  }
+                  // create new view if any
+                  if (template) {
+                    // createEmbeddedView is already patched, no need for workFactory
+                    templates.createEmbeddedView(templateName, context);
+                  }
+                } else if (template) {
+                  // template didn't change, update it
+                  // handle update
+                  const view = <EmbeddedViewRef<C>>viewContainerRef.get(0);
+                  Object.keys(context).forEach((k) => {
+                    view.context[k] = context[k];
+                  });
+                  // update view context, patch if needed
+                  work(view, options.scope, notification);
+                }
+                activeTemplate = templateName;
+              },
+              { ngZone }
+              // we don't need to specify any scope here. The template manager is the only one
+              // who will call `viewRef#detectChanges` on any of the templates it manages.
+              // whenever a new value comes in, any pre-scheduled work of this taskManager will
+              // be nooped before a new work will be scheduled. This happens because of the implementation
+              // of `StrategyCredential#behavior`
+            ).pipe(
+              notifyAllParentsIfNeeded(
+                injectingViewCdRef,
+                strategy,
+                () => notifyParent,
+                ngZone
+              ),
+              catchError((e) => {
+                errorHandler.handleError(e);
+                return of(e);
+              })
+            );
+          }
+        )
       );
     },
   };
