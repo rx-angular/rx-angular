@@ -16,7 +16,6 @@ import {
   RxNotificationKind,
 } from '@rx-angular/cdk/notifications';
 import {
-  merge,
   MonoTypeOperatorFunction,
   NextObserver,
   Observable,
@@ -29,9 +28,7 @@ import {
 } from 'rxjs';
 import {
   filter,
-  map,
   switchMap,
-  take,
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
@@ -161,10 +158,10 @@ export class PushPipe<S extends string = string>
         this.strategyHandler.next(config as string);
       }
     }
+    this.templateObserver.next(potentialObservable);
     if (!this.subscription) {
       this.subscription = this.handleChangeDetection();
     }
-    this.templateObserver.next(potentialObservable);
     return this.renderedValue as U;
   }
 
@@ -232,13 +229,15 @@ export class PushPipe<S extends string = string>
 
   /** @internal */
   private hasInitialValue(value$: Observable<unknown>): Observable<boolean> {
-    return merge(
-      // runOutsideAngular over UnpatchPromise, because regular promises
-      // resolve before the unpatched ones, resulting in a corrupted result
-      // for the check if the value is async or not
-      this.ngZone.runOutsideAngular(() => Promise.resolve(false)),
-      value$.pipe(map(() => true))
-    ).pipe(take(1));
+    return new Observable<boolean>((subscriber) => {
+      let hasInitialValue = false;
+      const inner = value$.subscribe(() => {
+        hasInitialValue = true;
+      });
+      inner.unsubscribe();
+      subscriber.next(hasInitialValue);
+      subscriber.complete();
+    });
   }
 }
 
