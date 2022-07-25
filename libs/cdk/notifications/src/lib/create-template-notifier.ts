@@ -4,12 +4,10 @@ import {
   NEVER,
   Observable,
   ObservableInput,
-  of,
   ReplaySubject,
 } from 'rxjs';
 import {
   distinctUntilChanged,
-  filter,
   map,
   startWith,
   switchMap,
@@ -26,29 +24,39 @@ import { toRxSuspenseNotification } from './notification-transforms';
  * @param value
  */
 const emitAndDontComplete = (value) => NEVER.pipe(startWith(value));
+
 /**
  * @description
- * Flags the first run.
- * This is important as we want to create laziness in the template.
- * If no value ever is emitted we dont want to create/render the value (next template).
- * In case a suspense template is given (calculated by `withSuspense` param) we render the suspense template on the
- *   first run.
+ * returns an observable that starts with an undefined value in case the input
+ * observable$ does not emit a value immediately.
+ * This is needed in order to skip the suspense template when we already know
+ * there will be a next template rendered afterwards
+ * @param observable$
  */
-const mapFirst =
-  <T>(transformation: (value: any) => any) =>
-  (o$: Observable<T>): Observable<T> => {
-    let firstRun = true;
-    return o$.pipe(
-      map((value) => {
-        if (!firstRun) {
-          return value;
-        }
-        const result = transformation(value);
-        firstRun = false;
-        return result;
-      })
-    );
-  };
+function skipSuspenseIfHasValue<T>(
+  observable$: ObservableInput<T>
+): Observable<T> {
+  return new Observable((subscriber) => {
+    let startWithUndefined = true;
+    const inner = from(observable$).subscribe({
+      next: (v) => {
+        startWithUndefined = false;
+        subscriber.next(v);
+      },
+      error: (e) => {
+        startWithUndefined = false;
+        subscriber.error(e);
+      },
+      complete: () => subscriber.complete(),
+    });
+    if (startWithUndefined) {
+      subscriber.next(undefined);
+    }
+    return () => {
+      inner.unsubscribe();
+    };
+  });
+}
 
 /**
  * This helper is responsible for turning a stream of materialized notifications
@@ -122,39 +130,16 @@ export function createTemplateNotifier<U>(): {
 
   const values$ = observablesSubject.pipe(
     distinctUntilChanged(),
-    // Handle initialization edge cases
-    mapFirst((value) => {
-      const isUndefined = value === undefined;
-      const isNEVER = value === NEVER;
-      // If it is a `NEVER` Observable we know it will never emit a value nor complete or error.
-      // Therefore we emit directly undefined to signal a suspense state
-
-      if (isUndefined || isNEVER) {
-        // Render suspense template if given. Otherwise do nothing (later undefined are filtered out)
-        return emitAndDontComplete(undefined);
-      }
-
-      const isNull = value === null;
-
-      if (isNull) {
-        // We return the value and no undefined as first value
-        // as we dont need to render the suspense template for null values (it is considered as not used)
-        return of(null);
-      }
-
-      return value;
-    }),
-    // `undefined` values are only processed once at beginning to initialize lazy. After that they are filtered out.
-    filter((v) => v !== undefined),
     // handle static values inc null assignment and new Observable or Promises
     map((observable$): Observable<ObservableInput<U> | U> => {
-      const isNull = observable$ === null;
+      const isNull = observable$ == null;
       const isPromiseOrObs =
         !isNull &&
-        (typeof (observable$ as any).then === 'function' ||
+        (typeof (observable$ as any)?.then === 'function' ||
           isObservable(observable$));
-      // A value is considered as static value if it is `null`, or any other value than `undefined`, `Promise`, `Observable`
-      const isStaticValue = !isPromiseOrObs && !(observable$ === undefined);
+      // A value is considered as static value if it is `null`, `undefined` or any other value than
+      // `Promise` or `Observable`
+      const isStaticValue = !isPromiseOrObs;
 
       const isNEVER = observable$ === NEVER;
       // If it is a `NEVER` Observable we know it will never emit a value nor complete or error.
@@ -169,8 +154,7 @@ export function createTemplateNotifier<U>(): {
         // Render next template for static values (it is considered as kinda sync)
         return emitAndDontComplete(observable$);
       }
-
-      return from(observable$).pipe(startWith(undefined));
+      return skipSuspenseIfHasValue(observable$);
     }),
     switchMap((o: Observable<U>) => {
       return o.pipe(
