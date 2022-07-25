@@ -165,7 +165,6 @@ export function createTemplateManager<
           : RxNotificationKind.Next,
         hasValue: false,
       };
-      console.log('withSuspense', withSuspense);
 
       return merge(
         values$.pipe(
