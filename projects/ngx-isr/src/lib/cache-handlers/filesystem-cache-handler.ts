@@ -1,4 +1,4 @@
-import { CacheData, CacheHandler, ISROptions } from '../models/cache-handler';
+import { CacheData, CacheHandler, ISROptions } from '../models';
 import * as fs from 'fs';
 import { join } from 'path';
 import { getISROptions } from '../utils/get-isr-options';
@@ -6,7 +6,7 @@ import { getISROptions } from '../utils/get-isr-options';
 export interface FileSystemCacheOptions {
   cacheFolderPath: string;
   prerenderedPagesPath?: string;
-  addPrerendedPagesToCache?: boolean;
+  addPrerenderedPagesToCache?: boolean;
 }
 
 export class FileSystemCacheHandler implements CacheHandler {
@@ -21,7 +21,7 @@ export class FileSystemCacheHandler implements CacheHandler {
       throw new Error('Cache folder path is required!');
     }
 
-    if (options.addPrerendedPagesToCache && !options.prerenderedPagesPath) {
+    if (options.addPrerenderedPagesToCache && !options.prerenderedPagesPath) {
       throw new Error(
         'Prerendered pages path is required when `addPrerenderedPagesToCache` is enabled!'
       );
@@ -111,13 +111,13 @@ export class FileSystemCacheHandler implements CacheHandler {
       });
     }
 
-    if (this.options.addPrerendedPagesToCache) {
+    if (this.options.addPrerenderedPagesToCache) {
       console.log('Adding prerendered pages to cache...');
-      this.addPrerendedPagesToCache();
+      this.addPrerenderedPagesToCache();
     }
   }
 
-  private addPrerendedPagesToCache() {
+  private addPrerenderedPagesToCache() {
     // read all folders in browser folder and check if they have index.html inside
     // if yes add the folder name to cache as url and index.html as html
     // then remove the found files because they will be handled by ISR
@@ -134,7 +134,7 @@ export class FileSystemCacheHandler implements CacheHandler {
         const isDirectory = fs.statSync(filePath).isDirectory();
 
         if (isDirectory) {
-          const indexHtmlFiles = findIndexHtmlFilesRecuresively(filePath);
+          const indexHtmlFiles = findIndexHtmlFilesRecursively(filePath);
 
           pathsToCache.push(
             ...indexHtmlFiles.map(({ path, html }) => ({
@@ -182,7 +182,7 @@ export class FileSystemCacheHandler implements CacheHandler {
   }
 }
 
-function findIndexHtmlFilesRecuresively(
+function findIndexHtmlFilesRecursively(
   path: string
 ): Array<{ path: string; html: string }> {
   const data: Array<{ path: string; html: string }> = [];
@@ -192,7 +192,7 @@ function findIndexHtmlFilesRecuresively(
     files.forEach((file: string) => {
       const filePath = join(path, file);
       if (fs.statSync(filePath).isDirectory()) {
-        data.push(...findIndexHtmlFilesRecuresively(filePath));
+        data.push(...findIndexHtmlFilesRecursively(filePath));
       } else if (file.includes('index.html')) {
         const html = fs.readFileSync(filePath, 'utf8');
         data.push({ path: filePath, html });

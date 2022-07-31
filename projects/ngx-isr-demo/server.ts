@@ -20,7 +20,7 @@ export function app(): express.Express {
   const fsCacheHandler = new FileSystemCacheHandler({
     cacheFolderPath: join(distFolder, '/cache'),
     prerenderedPagesPath: distFolder,
-    addPrerendedPagesToCache: true,
+    addPrerenderedPagesToCache: true,
   });
 
   // Step 1: Initialize ISRHandler
