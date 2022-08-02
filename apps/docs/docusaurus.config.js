@@ -12,6 +12,8 @@ const title = 'RxAngular';
 // const url = 'https://rx-angular.io';
 const url = `https://${organizationName}.github.io`;
 
+const googleTrackingId = 'UA-180240379-1';
+
 /** @type {import('@docusaurus/types').Config} */
 module.exports = {
   // TODO(@LayZeeDK): Remove base URL to use top-level domain URL.
@@ -44,6 +46,12 @@ module.exports = {
         blog: false,
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
+        },
+        googleAnalytics: {
+          trackingID: googleTrackingId,
+        },
+        gtag: {
+          trackingID: googleTrackingId,
         },
       }),
     ],
