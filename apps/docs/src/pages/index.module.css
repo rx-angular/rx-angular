@@ -4,12 +4,13 @@
  */
 
 .heroBanner {
-  --ifm-hero-background-color: var(--ifm-color-primary-dark);
+  --ifm-hero-background-color: var(--ifm-background-color);
 
   padding: 4rem 0;
   text-align: center;
   position: relative;
   overflow: hidden;
+  color: var(--ifm-font-color-base);
 }
 
 @media screen and (max-width: 996px) {
