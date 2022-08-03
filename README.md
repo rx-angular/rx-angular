@@ -143,6 +143,11 @@ const routes: Routes = [
 
 
 ## Changelog
+- Version 0.3.1
+  * Features: 
+    * Added FileSystem CacheHandler
+    * Added "@types/node": "^14.15.0" to peerDeps required by FileSystemCacheHandler
+
 - Version 0.3.0
   * Features:
     * Added support for Angular v14
