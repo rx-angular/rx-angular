@@ -54,9 +54,8 @@ export interface RxRenderAware<T> {
   render: (values$: Observable<RxNotification<T>>) => Observable<void>;
 }
 
-export interface RxRenderSettings<T, C> {
+export interface RxRenderSettings {
   cdRef: ChangeDetectorRef;
-  eRef: ElementRef;
   parent: boolean;
   patchZone: NgZone | false;
   strategies: RxStrategies<string>;

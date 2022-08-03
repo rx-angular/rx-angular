@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { RxEffects } from '../../../../shared/rx-effects.service';
+import { RxEffects } from '@rx-angular/state/effects';
 
 @Directive({
   selector: '[rxaContentTest]'
@@ -31,7 +31,7 @@ export class RxQueryContentComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.effects.hold(this.value, () => {
+    this.effects.register(this.value, () => {
       setTimeout(() => console.log(this.contentChild), 250);
     });
   }

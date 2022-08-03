@@ -8,7 +8,7 @@ import {
 import { MatRipple } from '@angular/material/core';
 import { Hooks } from '../hooks';
 import { select } from '@rx-angular/state/selections';
-import { RxEffects } from '../../rx-effects.service';
+import { RxEffects } from '@rx-angular/state/effects';
 import { AppConfigService } from '../../../app-config.service';
 
 @Component({
@@ -58,10 +58,10 @@ export class DirtyChecksComponent extends Hooks {
     private rxEf: RxEffects
   ) {
     super();
-    this.rxEf.hold(this.configService.$.pipe(select('rippleOn')), (r) => {
+    this.rxEf.register(this.configService.$.pipe(select('rippleOn')), (r) => {
       this.rippleOn = r;
     });
-    this.rxEf.hold(this.afterViewInit$, () => {
+    this.rxEf.register(this.afterViewInit$, () => {
       this.displayElem = this.elementRef.nativeElement.children[0].children[0];
       this.numDirtyChecks();
     });

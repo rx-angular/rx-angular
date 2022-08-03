@@ -12,7 +12,8 @@ RxState is a lightweight, flexible, strongly typed and tested tool dedicated to 
 
 ## Sub Modules
 
-- [⛔ Selections](https://github.com/rx-angular/rx-angular/blob/main/libs/state/selections/README.md)
+- [🧩 Selections](https://github.com/rx-angular/rx-angular/blob/main/libs/state/selections/README.md)
+- [☁ Effects](https://github.com/rx-angular/rx-angular/blob/main/libs/state/effects/README.md)
 
 ## Intro Video
 
@@ -114,7 +115,7 @@ nx migrate @rx-angular/state
 - [Difference between Global and Local state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/global-state-vs-local-state.md)
 - [Using RxState as Global State](https://github.com/rx-angular/rx-angular/blob/main/libs/state/docs/snippets/manage-global-state.md)
 
-## Vidoes
+## Videos
 
 <a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)_🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session_</a>
 
@@ -122,6 +123,7 @@ nx migrate @rx-angular/state
 
 - [🎥 Extending Angular for the Reactive Web](https://youtu.be/pkN6CeZ8h_U?t=5913)
 
+- [German content | 🎥 Michael explains rx-state to webdave_de (Livestream)](https://youtu.be/cKUFcY8QkYM)
 
 ## Blogs/Documents
 
@@ -135,8 +137,13 @@ nx migrate @rx-angular/state
 - [📑 High performant zone-Less Angular Progressive Web Application](https://angular-movies-a12d3.web.app/list/category/popular) - [TasteJS](https://github.com/tastejs/angular-movies)
 - [📑 Zone-Less Angular Application - Tour of heros](https://github.com/BioPhoton/tour-of-heroes) - [Michael_Hladky](https://twitter.com/Michael_Hladky)
 
-## Browsers support
+## Version Compatibility
 
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari-ios/safari-ios_48x48.png" alt="iOS Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>iOS Safari |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| IE11, Edge                                                                                                                                                                                                      | last version                                                                                                                                                                                                      | last version                                                                                                                                                                                                  | last 2 versions                                                                                                                                                                                               | last 2 versions                                                                                                                                                                                                               |
+| Angular                | RxJS                 | @rx-angular/state |
+|------------------------|----------------------|-------------------|
+| `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.4.6`         |
+| `^11.0.0`              | `^6.5.5`             | `<= 1.4.6`        |
+
+Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
+All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
+For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3) 

@@ -17,7 +17,7 @@ import {
 import {
   NextObserver,
   Observable,
-  ObservableInput, timeoutWith,
+  ObservableInput,
   Unsubscribable
 } from 'rxjs';
 import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
