@@ -55,9 +55,7 @@ export default function Home(): JSX.Element {
 
         <div className="text--center padding-horiz--md">
           <p>
-            This repository holds a set of helpers to create
-            <strong>fully reactive</strong> as well as
-            <strong>fully zone-less</strong> applications.
+            This repository holds a set of helpers to create <strong>fully reactive</strong> as well as <strong>fully zone-less</strong> applications.
           </p>
         </div>
 
