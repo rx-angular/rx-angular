@@ -6,7 +6,7 @@ title: Setting up a Reactive State
 
 # Setting up a Reactive State
 
-We're assuming you've already covered the basics [here](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/usage.md)
+We're assuming you've already covered the basics [here](/docs/state/getting-started/setup).
 
 In this section, we will be working with an [imperative code base][setup.start.component.ts] to refactor
 its state management to a [reactive setup][setup.solution.component.ts].
