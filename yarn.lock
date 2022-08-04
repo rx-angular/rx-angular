@@ -76,7 +76,7 @@
     "@algolia/requester-common" "4.14.2"
     "@algolia/transporter" "4.14.2"
 
-"@algolia/client-search@4.14.2", "@algolia/client-search@^4.13.1":
+"@algolia/client-search@4.14.2":
   version "4.14.2"
   resolved "https://registry.yarnpkg.com/@algolia/client-search/-/client-search-4.14.2.tgz#357bdb7e640163f0e33bad231dfcc21f67dc2e92"
   integrity sha512-L5zScdOmcZ6NGiVbLKTvP02UbxZ0njd5Vq9nJAmPFtjffUSOGEp11BmD2oMJ5QvARgx2XbX4KzTTNS5ECYIMWw==
@@ -3144,7 +3144,7 @@
     yargs "15.4.1"
     yargs-parser "20.0.0"
 
-"@nx-plus/docusaurus@^12.2.0":
+"@nx-plus/docusaurus@12.2.0":
   version "12.2.0"
   resolved "https://registry.yarnpkg.com/@nx-plus/docusaurus/-/docusaurus-12.2.0.tgz#9e9e54a9e3926a7db346a3e70fde96e2de616d16"
   integrity sha512-/GWFsEenqAprjDJgaZj13TWbjfK3A722JaKVuChjNT8Ze7JA5M9XOdpzMlDaaL4OuKcwfzPFgfgcoTSp9e4Vrw==
