@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import React from 'react';
 import styles from './index.module.css';
 
-function HomepageHeader() {
+function HomepageHeader(): JSX.Element {
   const { siteConfig } = useDocusaurusContext();
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
