@@ -44,12 +44,12 @@ function Reference({
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
-        <a href={url} target="_blank">
+        <a href={url} target="_blank" rel="noopener">
           <Svg className={styles.referenceSvg} role="img" />
         </a>
       </div>
       <div className="text--center padding-horiz--md">
-        <a href={url} target="_blank">
+        <a href={url} target="_blank" rel="noopener">
           <h3>{title}</h3>
         </a>
         <p>{description}</p>
