@@ -74,6 +74,36 @@ export default function Home(): JSX.Element {
           <h3>Used by</h3>
         </div>
         <HomepageReferences />
+
+        <div className="text--center padding-horiz--md">
+          <h3>Version Compatibility</h3>
+          <table style={{ display: 'inline-block' }}>
+            <tr>
+              <th>Angular</th>
+              <th>RxJS</th>
+              <th><code>@rx-angular/state</code></th>
+              <th><code>@rx-angular/template</code></th>
+              <th><code>@rx-angular/cdk</code></th>
+            </tr>
+            <tr>
+              <td><code>^12.0.0</code> or <code>^13.0.0</code></td>
+              <td><code>^6.5.5</code> or <code>^7.4.0</code></td>
+              <td><code>&gt; 1.4.6</code></td>
+              <td><code>&gt; 1.0.0-beta.29</code></td>
+              <td><code>&gt; 1.0.0-alpha.10</code></td>
+            </tr>
+            <tr>
+              <td><code>^11.0.0</code></td>
+              <td><code>^6.5.5</code></td>
+              <td><code>&lt;= 1.4.6</code></td>
+              <td><code>&lt;= 1.0.0-beta.29</code></td>
+              <td><code>&lt;= 1.0.0-alpha.10</code></td>
+            </tr>
+          </table>
+          <p>Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.</p>
+          <p>All the packages support RxJs versions <code>^6.5.5 || ^7.4.0</code>.</p>
+          <p>For more information about the compatibilities of angular itself see this <a href="https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3" target="_blank" rel="noopener">gist</a></p>
+        </div>
       </main>
     </Layout>
   );
