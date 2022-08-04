@@ -24,7 +24,7 @@ RxState is a lightweight, flexible, strongly typed and tested tool dedicated to 
 
 ## Intro Video
 
-<a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)</a>
+[![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)](https://www.youtube.com/watch?v=CcQYj4V2IKw)
 
 ## Description
 
@@ -123,9 +123,9 @@ nx migrate @rx-angular/state
 
 ## Videos
 
-<a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)_🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session_</a>
+[![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)_🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session_](https://www.youtube.com/watch?v=CcQYj4V2IKw)
 
-<a target="_blank" href="https://www.youtube.com/watch?v=I8uaHMs8rw0">![tackling-component-state-reactively](https://user-images.githubusercontent.com/10064416/147395866-031704dc-837d-4d1f-82d6-e758e4cb9556.PNG)_🎥 Tackling Component State Reactively (Live Demo at 24:47)_</a>
+[![tackling-component-state-reactively](https://user-images.githubusercontent.com/10064416/147395866-031704dc-837d-4d1f-82d6-e758e4cb9556.PNG)_🎥 Tackling Component State Reactively (Live Demo at 24:47)_](https://www.youtube.com/watch?v=I8uaHMs8rw0)
 
 - [🎥 Extending Angular for the Reactive Web](https://youtu.be/pkN6CeZ8h_U?t=5913)
 
