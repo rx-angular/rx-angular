@@ -29,8 +29,7 @@ module.exports = {
     locales: ['en'],
   },
   onBrokenLinks: 'throw',
-  // TODO(@LayZeeDK): Change to `'throw'` when all package categories are scaffolded.
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenMarkdownLinks: 'throw',
   organizationName,
   projectName,
   presets: [
