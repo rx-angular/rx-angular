@@ -50,11 +50,11 @@ class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 }
 ```
 
-![](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/images/api-schema.jpg)
+![](/img/state/api-schema.jpg)
 
-![](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/images/api-reveal.jpg)
+![](/img/state/api-reveal.jpg)
 
-## \$ (state observable)
+## $ (state observable)
 
 ##### typeof: Observable&#60;T&#62;
 
