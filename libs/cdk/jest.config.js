@@ -4,7 +4,7 @@ module.exports = {
   displayName: 'cdk',
   preset: '../../jest.preset.js',
   coverageReporters: ['lcov', 'cobertura'],
-  coverageDirectory: '../../docs/test-coverage/cdk',
+  coverageDirectory: '../../dist/apps/docs/test-coverage/cdk',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
     'ts-jest': {

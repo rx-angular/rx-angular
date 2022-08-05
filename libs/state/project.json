@@ -71,7 +71,7 @@
       "options": {
         "commands": [
           {
-            "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/state/cobertura-coverage.xml -d docs/test-coverage/state"
+            "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./dist/apps/docs/test-coverage/state/cobertura-coverage.xml -d dist/apps/docs/test-coverage/state"
           }
         ]
       }

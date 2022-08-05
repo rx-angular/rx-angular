@@ -9,7 +9,7 @@
       "options": {
         "commands": [
           {
-            "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/cdk/cobertura-coverage.xml -d docs/test-coverage/cdk"
+            "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./dist/apps/docs/test-coverage/cdk/cobertura-coverage.xml -d dist/apps/docs/test-coverage/cdk"
           }
         ]
       }
