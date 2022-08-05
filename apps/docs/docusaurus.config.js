@@ -4,20 +4,16 @@
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
-// TODO(@LayZeeDK): Change organization to `rx-angular`
-const organizationName = 'LayZeeDK';
+const organizationName = 'rx-angular';
 const projectName = 'rx-angular';
 const title = 'RxAngular';
-// TODO(@LayZeeDK): Use top-level domain URL. Remove base path when doing this.
-// const url = 'https://rx-angular.io';
-const url = `https://${organizationName}.github.io`;
+const url = 'https://rx-angular.io';
 
 const googleTrackingId = 'UA-180240379-1';
 
 /** @type {import('@docusaurus/types').Config} */
 module.exports = {
-  // TODO(@LayZeeDK): Remove base URL to use top-level domain URL.
-  baseUrl: `/${projectName}/`,
+  baseUrl: '/',
   favicon: 'img/favicon.png',
   /**
    * Even if you don't use internalization, you can use this field to set useful
