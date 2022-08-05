@@ -12,19 +12,14 @@
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
       "options": {
-        "outputPath": "docs/demos",
+        "outputPath": "dist/apps/docs/demos",
         "baseHref": "/rx-angular/demos/",
         "index": "apps/demos/src/index.html",
         "main": "apps/demos/src/main.ts",
         "polyfills": "apps/demos/src/polyfills.ts",
         "tsConfig": "apps/demos/tsconfig.app.json",
-        "assets": [
-          "apps/demos/src/favicon.ico",
-          "apps/demos/src/assets"
-        ],
-        "styles": [
-          "apps/demos/src/styles.scss"
-        ],
+        "assets": ["apps/demos/src/favicon.ico", "apps/demos/src/assets"],
+        "styles": ["apps/demos/src/styles.scss"],
         "scripts": [],
         "vendorChunk": true,
         "extractLicenses": false,
@@ -89,9 +84,7 @@
           "polyfills": ""
         }
       },
-      "outputs": [
-        "{options.outputPath}"
-      ]
+      "outputs": ["{options.outputPath}"]
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
@@ -123,12 +116,8 @@
         "jestConfig": "apps/demos/jest.config.js",
         "passWithNoTests": true
       },
-      "outputs": [
-        "coverage/apps/demos"
-      ]
+      "outputs": ["coverage/apps/demos"]
     }
   },
-  "tags": [
-    "type:app"
-  ]
+  "tags": ["type:app"]
 }
