@@ -29,7 +29,7 @@ jobs:
 
       # don't run build in parallel, can cause dead locks
       - name: Run Affected build
-        run: yarn nx affected:build --parallel=false
+        run: yarn nx affected:build --exclude=docs --parallel=false
 
   build-docs:
     runs-on: ubuntu-latest
