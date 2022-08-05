@@ -55,18 +55,28 @@ export default function Home(): JSX.Element {
 
         <div className="text--center padding-horiz--md">
           <p>
-            This repository holds a set of helpers to create <strong>fully reactive</strong> as well as <strong>fully zone-less</strong> applications.
+            This repository holds a set of helpers to create{' '}
+            <strong>fully reactive</strong> as well as{' '}
+            <strong>fully zone-less</strong> applications.
           </p>
         </div>
 
         <div className="text--center padding-horiz--md">
           <h3>Benefits</h3>
           <ul>
-            <li>🔥 It's fast &amp; performance focused: exceptional runtime speed &amp; small bundle size</li>
-            <li>✔ Easy upgrade paths: migration scripts included since beta! <code>ng update @rx-angular/&#123;cdk | template | state&#125;</code></li>
+            <li>
+              🔥 It's fast &amp; performance focused: exceptional runtime speed
+              &amp; small bundle size
+            </li>
+            <li>
+              ✔ Easy upgrade paths: migration scripts included since beta!{' '}
+              <code>
+                ng update @rx-angular/&#123;cdk | template | state&#125;
+              </code>
+            </li>
             <li>✔ Lean and simple: No boilerplate guaranteed</li>
             <li>✔ Well typed and tested</li>
-            <li>✔ Backwards compatible: support for Angular > v11</li>
+            <li>✔ Backwards compatible: support for Angular &gt; v11</li>
           </ul>
         </div>
 
@@ -81,28 +91,70 @@ export default function Home(): JSX.Element {
             <tr>
               <th>Angular</th>
               <th>RxJS</th>
-              <th><code>@rx-angular/state</code></th>
-              <th><code>@rx-angular/template</code></th>
-              <th><code>@rx-angular/cdk</code></th>
+              <th>
+                <code>@rx-angular/state</code>
+              </th>
+              <th>
+                <code>@rx-angular/template</code>
+              </th>
+              <th>
+                <code>@rx-angular/cdk</code>
+              </th>
             </tr>
             <tr>
-              <td><code>^12.0.0</code> or <code>^13.0.0</code></td>
-              <td><code>^6.5.5</code> or <code>^7.4.0</code></td>
-              <td><code>&gt; 1.4.6</code></td>
-              <td><code>&gt; 1.0.0-beta.29</code></td>
-              <td><code>&gt; 1.0.0-alpha.10</code></td>
+              <td>
+                <code>^12.0.0</code> or <code>^13.0.0</code>
+              </td>
+              <td>
+                <code>^6.5.5</code> or <code>^7.4.0</code>
+              </td>
+              <td>
+                <code>&gt; 1.4.6</code>
+              </td>
+              <td>
+                <code>&gt; 1.0.0-beta.29</code>
+              </td>
+              <td>
+                <code>&gt; 1.0.0-alpha.10</code>
+              </td>
             </tr>
             <tr>
-              <td><code>^11.0.0</code></td>
-              <td><code>^6.5.5</code></td>
-              <td><code>&lt;= 1.4.6</code></td>
-              <td><code>&lt;= 1.0.0-beta.29</code></td>
-              <td><code>&lt;= 1.0.0-alpha.10</code></td>
+              <td>
+                <code>^11.0.0</code>
+              </td>
+              <td>
+                <code>^6.5.5</code>
+              </td>
+              <td>
+                <code>&lt;= 1.4.6</code>
+              </td>
+              <td>
+                <code>&lt;= 1.0.0-beta.29</code>
+              </td>
+              <td>
+                <code>&lt;= 1.0.0-alpha.10</code>
+              </td>
             </tr>
           </table>
-          <p>Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.</p>
-          <p>All the packages support RxJs versions <code>^6.5.5 || ^7.4.0</code>.</p>
-          <p>For more information about the compatibilities of angular itself see this <a href="https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3" target="_blank" rel="noopener">gist</a></p>
+          <p>
+            Regarding the compatibility to RxJs, we generally stick to the
+            compatibilities of the angular framework itself.
+          </p>
+          <p>
+            All the packages support RxJs versions <code>^6.5.5 || ^7.4.0</code>
+            .
+          </p>
+          <p>
+            For more information about the compatibilities of angular itself see
+            this{' '}
+            <a
+              href="https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3"
+              target="_blank"
+              rel="noopener"
+            >
+              gist
+            </a>
+          </p>
         </div>
       </main>
     </Layout>
