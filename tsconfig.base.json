@@ -21,20 +21,18 @@
       "@rx-angular/cdk/internals/core": [
         "libs/cdk/internals/core/src/index.ts"
       ],
-      "@rx-angular/cdk/internals/scheduler": [
-        "libs/cdk/internals/scheduler/src/index.ts"
-      ],
       "@rx-angular/cdk/internals/rxjs": [
         "libs/cdk/internals/rxjs/src/index.ts"
       ],
-      "@rx-angular/cdk/testing": [
-        "libs/cdk/testing/src/index.ts"
+      "@rx-angular/cdk/internals/scheduler": [
+        "libs/cdk/internals/scheduler/src/index.ts"
       ],
       "@rx-angular/cdk/notifications": ["libs/cdk/notifications/src/index.ts"],
       "@rx-angular/cdk/render-strategies": [
         "libs/cdk/render-strategies/src/index.ts"
       ],
       "@rx-angular/cdk/template": ["libs/cdk/template/src/index.ts"],
+      "@rx-angular/cdk/testing": ["libs/cdk/testing/src/index.ts"],
       "@rx-angular/cdk/transformations": [
         "libs/cdk/transformations/src/index.ts"
       ],
