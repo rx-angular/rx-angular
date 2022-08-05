@@ -63,6 +63,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
         with:
+          # Docusaurus needs Node.js 16
           node-version: 16
 
       # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
