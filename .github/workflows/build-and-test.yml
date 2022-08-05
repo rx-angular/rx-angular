@@ -11,12 +11,31 @@ env:
   NX_VERBOSE_LOGGING: false
 
 jobs:
+  agents:
+    runs-on: ubuntu-latest
+
+    name: Agent 1
+    timeout-minutes: 20
+
+    strategy:
+      matrix:
+        agent: [1, 2, 3]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+
+      - name: Start Nx Agent ${{ matrix.agent }}
+        run: yarn nx-cloud start-agent
+
   build:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
+
+      - run: yarn nx-cloud start-ci-run
 
       - name: Run Affected lint
         run: yarn nx affected:lint --parallel --maxParallel=3
@@ -30,6 +49,8 @@ jobs:
       # don't run build in parallel, can cause dead locks
       - name: Run Affected build
         run: yarn nx affected:build --exclude=docs --parallel=false
+
+      - run: yarn nx-cloud stop-all-agents
 
   build-docs:
     runs-on: ubuntu-latest
