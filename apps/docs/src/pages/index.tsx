@@ -103,6 +103,23 @@ export default function Home(): JSX.Element {
             </tr>
             <tr>
               <td>
+                <code>14</code>
+              </td>
+              <td>
+                <code>^7.4.0</code>
+              </td>
+              <td>
+                <code>&gt; 1.4.6</code>
+              </td>
+              <td>
+                <code>&gt; 1.0.0-beta.29</code>
+              </td>
+              <td>
+                <code>&gt; 1.0.0-alpha.10</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <code>^12.0.0</code> or <code>^13.0.0</code>
               </td>
               <td>
