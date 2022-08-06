@@ -1,4 +1,4 @@
-import { ɵmarkDirty as markDirty } from '@angular/core';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
@@ -36,15 +36,6 @@ const localCredentials: RxStrategyCredentials = {
       ),
 };
 
-const globalCredentials: RxStrategyCredentials = {
-  name: 'global',
-  work: (_, context) => markDirty(context),
-  behavior:
-    ({ work, ngZone }) =>
-    (o$) =>
-      o$.pipe(tap(() => (ngZone ? ngZone.run(() => work()) : work()))),
-};
-
 const noopCredentials: RxStrategyCredentials = {
   name: 'noop',
   work: () => void 0,
@@ -57,7 +48,18 @@ const nativeCredentials: RxStrategyCredentials = {
   behavior:
     ({ work, ngZone }) =>
     (o$) =>
-      o$.pipe(tap(() => (ngZone ? ngZone.run(() => work()) : work()))),
+      o$.pipe(
+        tap(() =>
+          ngZone && !NgZone.isInAngularZone()
+            ? ngZone.run(() => work())
+            : work()
+        )
+      ),
+};
+
+const globalCredentials: RxStrategyCredentials = {
+  name: 'global',
+  ...nativeCredentials,
 };
 
 export type RxNativeStrategies =
