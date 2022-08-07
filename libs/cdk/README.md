@@ -1,7 +1,7 @@
 # @rx-angular/cdk
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)
-![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
+![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
 ## A Component Development Kit for High performance and ergonomic Angular UI libs and large scale applications
@@ -13,13 +13,16 @@ applications
 
 ## Sub Modules
 
-- [⛔ Zone Configuration](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/zone-configurations)
-- [🚫 Zone Less](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/zone-less)
-- [🛠 Coercing](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coercing)
-- [🛠 Coalescing](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/coalescing)
-- [📡 Notifications](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/notifications)
-- 🔳 Template Management
-- 🖌 Render-Strategies
+
+- [⛔ Zone Configuration](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/zone-configurations)
+- [🚫 Zone Less](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/zone-less)
+- [🛠 Coercing](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coercing)
+- [🛠 Coalescing](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing)
+- [📡 Notifications](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/notifications)
+- [🖌 Render-Strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies)
+- [🔳 Template Management](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/template)
+- [🔳 Transformations](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/transformations)
+
 
 ## Demos:
 
@@ -34,16 +37,25 @@ npm install --save @rx-angular/cdk
 yarn add @rx-angular/cdk
 ```
 
-## ⛔ Zone Configuration
+## Update
 
-[Zone Flags](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/zone-configurations/docs/zone-flags.md)
+If you are using `@rx-angular/cdk` already, please consider upgrading with the `@angular/cli update` command in order
+to make sure all provided code migrations are processed properly.
 
-## 🛠 Coalescing
+```bash
+ng update @rx-angular/cdk
+# or with nx
+nx migrate @rx-angular/cdk
+```
 
-[Coalescing](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/coalescing)
+## Version Compatibility
 
-## Browsers support
+| Angular                | RxJS                 | @rx-angular/cdk     | 
+|------------------------|----------------------|---------------------|
+| `14`                   | `^7.4.0`             | `> 1.0.0-alpha.10`  |
+| `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-alpha.10`  |
+| `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-alpha.10` |
 
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari-ios/safari-ios_48x48.png" alt="iOS Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>iOS Safari |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| IE11, Edge                                                                                                                                                                                                      | last version                                                                                                                                                                                                      | last version                                                                                                                                                                                                  | last 2 versions                                                                                                                                                                                               | last 2 versions                                                                                                                                                                                                               |
+Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
+All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
+For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3)

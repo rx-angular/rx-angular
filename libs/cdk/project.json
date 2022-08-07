@@ -51,14 +51,16 @@
           }
         ],
         "parallel": false
-      }
+      },
+      "outputs": ["dist/libs/cdk/schematics"]
     },
     "build-lib": {
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/cdk/tsconfig.lib.json",
         "project": "libs/cdk/ng-package.json"
-      }
+      },
+      "outputs": ["dist/libs/cdk"]
     },
     "test": {
       "executor": "@nrwl/jest:jest",
@@ -99,8 +101,19 @@
     "version": {
       "executor": "@jscutlery/semver:version",
       "options": {
-        "baseBranch": "master",
-        "versionTagPrefix": "${target}@"
+        "push": true,
+        "noVerify": true,
+        "baseBranch": "main",
+        "versionTagPrefix": "${target}@",
+        "postTargets": ["cdk:github"],
+        "commitMessageFormat": "release(${projectName}): ${version}"
+      }
+    },
+    "github": {
+      "executor": "@jscutlery/semver:github",
+      "options": {
+        "tag": "${tag}",
+        "notes": "${notes}"
       }
     },
     "lint": {

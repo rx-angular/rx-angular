@@ -6,15 +6,19 @@ import {
   TemplateRef,
   TrackByFunction,
 } from '@angular/core';
-import { combineLatest, merge, Observable, of, OperatorFunction } from 'rxjs';
+import { combineLatest, Observable, of, OperatorFunction } from 'rxjs';
 import {
-  catchError, distinctUntilChanged,
-  ignoreElements,
+  catchError,
+  distinctUntilChanged,
   map,
   switchMap,
-  tap
+  tap,
 } from 'rxjs/operators';
-import { RxStrategyCredentials, onStrategy, strategyHandling } from '@rx-angular/cdk/render-strategies';
+import {
+  RxStrategyCredentials,
+  onStrategy,
+  strategyHandling,
+} from '@rx-angular/cdk/render-strategies';
 import {
   RxListViewComputedContext,
   RxListViewContext,
@@ -27,12 +31,7 @@ import {
   RxTemplateSettings,
 } from './model';
 import { createErrorHandler } from './render-error';
-import {
-  getTNode,
-  notifyAllParentsIfNeeded,
-  notifyInjectingParentIfNeeded,
-  TNode,
-} from './utils';
+import { notifyAllParentsIfNeeded } from './utils';
 
 export interface RxListManager<T> {
   nextStrategy: (config: string | Observable<string>) => void;
@@ -44,7 +43,7 @@ export function createListTemplateManager<
   T,
   C extends RxListViewContext<T>
 >(config: {
-  renderSettings: RxRenderSettings<T, C>;
+  renderSettings: RxRenderSettings;
   templateSettings: Omit<
     RxTemplateSettings<T, C, RxListViewComputedContext>,
     'patchZone'
@@ -62,22 +61,18 @@ export function createListTemplateManager<
     cdRef: injectingViewCdRef,
     patchZone,
     parent,
-    eRef,
   } = renderSettings;
   const errorHandler = createErrorHandler(renderSettings.errorHandler);
+  const ngZone = patchZone ? patchZone : undefined;
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
   //               type,  context
-  const tNode: TNode = parent
-    ? getTNode(injectingViewCdRef, eRef.nativeElement)
-    : false;
   /* TODO (regarding createView): this is currently not in use. for the list-manager this would mean to provide
    functions for not only create. developers than should have to provide create, move, remove,... the whole thing.
    i don't know if this is the right decision for a first RC */
   const listViewHandler = getTemplateHandler({
     ...templateSettings,
     initialTemplateRef: templateSettings.templateRef,
-    patchZone,
   });
   const viewContainerRef = templateSettings.viewContainerRef;
 
@@ -96,7 +91,10 @@ export function createListTemplateManager<
 
   function render(): OperatorFunction<NgIterable<T>, any> {
     return (o$: Observable<NgIterable<T>>): Observable<any> =>
-      combineLatest([o$, strategyHandling$.strategy$.pipe(distinctUntilChanged())]).pipe(
+      combineLatest([
+        o$,
+        strategyHandling$.strategy$.pipe(distinctUntilChanged()),
+      ]).pipe(
         // map iterable to latest diff
         map(([iterable, strategy]) => {
           if (partiallyFinished) {
@@ -110,7 +108,7 @@ export function createListTemplateManager<
           return {
             changes: differ.diff(iterable),
             items: iterable != null && Array.isArray(iterable) ? iterable : [],
-            strategy
+            strategy,
           };
         }),
         // Cancel old renders
@@ -127,41 +125,33 @@ export function createListTemplateManager<
             items.length
           );
           partiallyFinished = true;
-          // @TODO we need to know if we need to notifyParent on move aswell
           notifyParent = insertedOrRemoved && parent;
-          return new Observable(subscriber => {
-            const s = merge(
-              combineLatest(
-                // emit after all changes are rendered
-                applyChanges$.length > 0 ? applyChanges$ : [of(items)]
-              ).pipe(
+          return new Observable((subscriber) => {
+            const s = combineLatest(
+              // emit after all changes are rendered
+              applyChanges$.length > 0 ? applyChanges$ : [of(items)]
+            )
+              .pipe(
                 tap(() => (partiallyFinished = false)),
                 // somehow this makes the strategySelect work
                 notifyAllParentsIfNeeded(
-                  tNode,
                   injectingViewCdRef,
                   strategy,
-                  () => notifyParent
-                )
-              ),
-              // emit injectingParent if needed
-              notifyInjectingParentIfNeeded(
-                injectingViewCdRef,
-                strategy,
-                insertedOrRemoved
-              ).pipe(ignoreElements())
-            ).pipe(
-              map(() => items),
-              catchError((e) => {
-                partiallyFinished = false;
-                errorHandler.handleError(e);
-                return of(items);
-              })
-            ).subscribe(subscriber);
+                  () => notifyParent,
+                  ngZone
+                ),
+                map(() => items),
+                catchError((e) => {
+                  partiallyFinished = false;
+                  errorHandler.handleError(e);
+                  return of(items);
+                })
+              )
+              .subscribe(subscriber);
             return () => {
               s.unsubscribe();
-            }
-          })
+            };
+          });
         })
       );
   }
@@ -184,11 +174,11 @@ export function createListTemplateManager<
   ): Observable<RxListTemplateChangeType>[] {
     return changes.length > 0
       ? changes.map((change) => {
-        const payload = change[1];
+          const payload = change[1];
           return onStrategy(
             change[0],
             strategy,
-            type => {
+            (type) => {
               switch (type) {
                 case RxListTemplateChangeType.insert:
                   listViewHandler.insertView(payload[0], payload[1], count);
@@ -212,7 +202,7 @@ export function createListTemplateManager<
                   break;
               }
             },
-            {}
+            { ngZone }
           );
         })
       : [of(null)];

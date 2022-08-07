@@ -15,12 +15,14 @@ import {
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import {
-  createTemplateManager, RxBaseTemplateNames,
-  RxTemplateManager, RxViewContext
+  createTemplateManager,
+  RxBaseTemplateNames,
+  RxTemplateManager,
+  RxViewContext,
 } from '@rx-angular/cdk/template';
 import {
   RxStrategyProvider,
-  RX_RENDER_STRATEGIES_CONFIG
+  RX_RENDER_STRATEGIES_CONFIG,
 } from '@rx-angular/cdk/render-strategies';
 import {
   RxNotificationKind,
@@ -28,7 +30,6 @@ import {
 } from '@rx-angular/cdk/notifications';
 import { mockConsole } from '@test-helpers';
 import { ReplaySubject, Subscription } from 'rxjs';
-
 
 @Component({
   selector: 'rx-angular-error-test',
@@ -93,7 +94,6 @@ class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
     this.templateManager = createTemplateManager<any, RxViewContext<number>>({
       renderSettings: {
         cdRef: this.cdRef,
-        eRef: this.eRef,
         strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         parent: false,

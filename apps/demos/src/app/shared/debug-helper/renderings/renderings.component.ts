@@ -1,27 +1,51 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  ViewChild,
+} from '@angular/core';
 import { MatRipple } from '@angular/material/core';
-import { isObservable, Observable, of, ReplaySubject, Subscription } from 'rxjs';
-import { distinctUntilChanged, scan, switchAll, switchMap, tap } from 'rxjs/operators';
+import {
+  isObservable,
+  Observable,
+  of,
+  ReplaySubject,
+  Subscription,
+} from 'rxjs';
+import {
+  distinctUntilChanged,
+  scan,
+  switchAll,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { Hooks } from '../hooks';
-import { RxEffects } from '../../rx-effects.service';
-import { select } from '@rx-angular/cdk/state';
+import { RxEffects } from '@rx-angular/state/effects';
+import { select } from '@rx-angular/state/selections';
 import { AppConfigService } from '../../../app-config.service';
 
 @Component({
   selector: 'rxa-renders',
   template: `
-    <div class="indicator-ripple" [ngStyle]="{minWidth: radius+'px',minHeight: radius+'px'}" matRipple
-         [matRippleColor]="color" [matRippleRadius]="radius">
+    <div
+      class="indicator-ripple"
+      [ngStyle]="{ minWidth: radius + 'px', minHeight: radius + 'px' }"
+      matRipple
+      [matRippleColor]="color"
+      [matRippleRadius]="radius"
+    >
       {{ numRenders$ | push | json }}
     </div>
   `,
-  styles: [`
-    :host .indicator-ripple {
-      border: 1px solid #ff00005f;
-    }
-  `],
+  styles: [
+    `
+      :host .indicator-ripple {
+        border: 1px solid #ff00005f;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [RxEffects]
+  providers: [RxEffects],
 })
 export class RenderingsComponent extends Hooks {
   sub: Subscription;
@@ -29,12 +53,15 @@ export class RenderingsComponent extends Hooks {
   @ViewChild(MatRipple) ripple: MatRipple;
   changeO$ = new ReplaySubject<Observable<any>>(1);
   numRenders$ = this.afterViewInit$.pipe(
-    switchMap(() => this.changeO$.pipe(
-      switchAll(),
-      distinctUntilChanged(),
-      scan(a => ++a, 0),
-      tap(() => this.rippleOn && this.ripple.launch({ centered: true }))
-    )));
+    switchMap(() =>
+      this.changeO$.pipe(
+        switchAll(),
+        distinctUntilChanged(),
+        scan((a) => ++a, 0),
+        tap(() => this.rippleOn && this.ripple.launch({ centered: true }))
+      )
+    )
+  );
 
   @Input()
   rippleOn = true;
@@ -54,18 +81,18 @@ export class RenderingsComponent extends Hooks {
         this.changeO$.next(of(v$));
       }
     }
-  };
+  }
 
   constructor(
     private configService: AppConfigService,
     private rxEf: RxEffects
   ) {
     super();
-    this.rxEf.hold(this.configService.$.pipe(select('rippleOn')), (r) => {
+    this.rxEf.register(this.configService.$.pipe(select('rippleOn')), (r) => {
       this.rippleOn = r;
     });
 
-    this.rxEf.hold(this.afterViewInit$, () => {
+    this.rxEf.register(this.afterViewInit$, () => {
       this.launchRipple();
     });
   }
@@ -75,5 +102,4 @@ export class RenderingsComponent extends Hooks {
       this.ripple.launch(options);
     }
   }
-
 }

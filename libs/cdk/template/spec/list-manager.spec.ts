@@ -13,19 +13,15 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import {
-  RX_RENDER_STRATEGIES_CONFIG
-} from '@rx-angular/cdk/render-strategies';
+import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import {
   createListTemplateManager,
   RxDefaultListViewContext,
   RxListManager,
   RxListViewComputedContext,
-  RxListViewContext
+  RxListViewContext,
 } from '@rx-angular/cdk/template';
-import {
-  RxStrategyProvider
-} from '@rx-angular/cdk/render-strategies';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import { ReplaySubject } from 'rxjs';
 
@@ -85,7 +81,6 @@ class ListTemplateManagerSpecComponent implements AfterViewInit {
       iterableDiffers: this.iterableDiffers,
       renderSettings: {
         cdRef: this.cdRef,
-        eRef: this.eRef,
         strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
         defaultStrategyName: this.strategyProvider.primaryStrategy,
         parent: false,

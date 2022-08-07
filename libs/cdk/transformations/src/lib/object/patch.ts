@@ -1,4 +1,4 @@
-import { isObjectGuard } from '@rx-angular/cdk/utils';
+import { isObjectGuard } from '../_internals/guards';
 
 /**
  * @description

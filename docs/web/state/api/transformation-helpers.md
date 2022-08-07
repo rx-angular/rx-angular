@@ -10,44 +10,44 @@ You can use the transformation helpers without RxState but expect the behavior t
 
 # Array
 
-[insert.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/array/insert.md ':include')
+[insert.md](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/api/transformation-helpers/array/insert.md ':include')
 
 ---
 
-[remvoe.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/array/remove.md ':include')
+[remvoe.md](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/api/transformation-helpers/array/remove.md ':include')
 
 ---
 
-[to-dictionary.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/array/to-dictionary.md ':include')
+[to-dictionary.md](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/api/transformation-helpers/array/to-dictionary.md ':include')
 
 ---
 
-[update.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/array/update.md ':include')
+[update.md](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/api/transformation-helpers/array/update.md ':include')
 
 ---
 
-[extract.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/array/extract.md ':include')
+[extract.md](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/api/transformation-helpers/array/extract.md ':include')
 
 # Object
 
-[delete-prop.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/object/delete-prop.md ':include')
+[delete-prop.md](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/api/transformation-helpers/object/delete-prop.md ':include')
 
 ---
 
-[dictionary-to-array.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/object/dictionary-to-array.md ':include')
+[dictionary-to-array.md](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/api/transformation-helpers/object/dictionary-to-array.md ':include')
 
 ---
 
-[patch.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/object/patch.md ':include')
+[patch.md](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/api/transformation-helpers/object/patch.md ':include')
 
 ---
 
-[set-prop.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/object/set-prop.md ':include')
+[set-prop.md](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/api/transformation-helpers/object/set-prop.md ':include')
 
 ---
 
-[toggle.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/object/toggle.md ':include')
+[toggle.md](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/api/transformation-helpers/object/toggle.md ':include')
 
 ---
 
-[slice.md](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/state/docs/api/transformation-helpers/object/slice.md ':include')
+[slice.md](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/api/transformation-helpers/object/slice.md ':include')

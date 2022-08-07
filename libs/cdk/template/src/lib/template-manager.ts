@@ -8,14 +8,19 @@ import {
   RxNotificationKind,
   RxSuspenseNotification,
 } from '@rx-angular/cdk/notifications';
-import { EMPTY, merge, Observable, of } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import {
   catchError,
-  ignoreElements,
+  filter,
+  map,
   switchMap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { RxRenderWork, onStrategy, strategyHandling } from '@rx-angular/cdk/render-strategies';
+import {
+  RxRenderWork,
+  onStrategy,
+  strategyHandling,
+} from '@rx-angular/cdk/render-strategies';
 import {
   rxBaseTemplateNames,
   RxRenderAware,
@@ -24,13 +29,7 @@ import {
   RxViewContext,
 } from './model';
 import { createErrorHandler } from './render-error';
-import {
-  getTNode,
-  notifyAllParentsIfNeeded,
-  notifyInjectingParentIfNeeded,
-  templateHandling,
-  TNode,
-} from './utils';
+import { notifyAllParentsIfNeeded, templateHandling } from './utils';
 
 export interface RxTemplateManager<
   T,
@@ -111,7 +110,7 @@ export function createTemplateManager<
   C extends RxViewContext<T>,
   N = rxBaseTemplateNames | string
 >(config: {
-  renderSettings: RxRenderSettings<T, C>;
+  renderSettings: RxRenderSettings;
   templateSettings: RxTemplateSettings<T, C>;
   templateTrigger$?: Observable<RxNotification<unknown>>;
   notificationToTemplateName: RxNotificationTemplateNameMap<T, C, N>;
@@ -124,13 +123,10 @@ export function createTemplateManager<
     cdRef: injectingViewCdRef,
     patchZone,
     parent,
-    eRef,
   } = renderSettings;
 
   const errorHandler = createErrorHandler(renderSettings.errorHandler);
-  const tNode: TNode = parent
-    ? getTNode(injectingViewCdRef, eRef.nativeElement)
-    : false;
+  const ngZone = patchZone ? patchZone : undefined;
 
   let activeTemplate: N;
 
@@ -143,10 +139,6 @@ export function createTemplateManager<
     templateSettings.customContext || ((v) => {})
   );
 
-  const workFactory = patchZone
-    ? (work: VoidFunction) => patchZone.run(work)
-    : (work: VoidFunction) => work();
-
   return {
     addTemplateRef: templates.add,
     // addTrigger: triggerHandling.next,
@@ -154,71 +146,65 @@ export function createTemplateManager<
     render(values$: Observable<RxNotification<T>>): Observable<any> {
       return values$.pipe(
         // mergeWith(triggerHandling.trigger$ || EMPTY),
-        withLatestFrom(strategyHandling$.strategy$),
-        // Cancel old renders
-        switchMap(([notification, strategy]) => {
+        map((notification) => {
           const kind: RxNotificationKind = notification.kind;
           const value: T = notification.value as T;
           const templateName = notificationToTemplateName[kind](
             value,
             templates
           );
-
           const template = templates.get(templateName);
+          return { template, templateName, notification };
+        }),
+        filter(({ template }) => !!template),
+        withLatestFrom(strategyHandling$.strategy$),
+        // Cancel old renders
+        switchMap(([{ template, templateName, notification }, strategy]) => {
           const isNewTemplate = activeTemplate !== templateName;
           const notifyParent = isNewTemplate && parent;
-          return merge(
-            onStrategy(
-              value,
-              strategy,
-              (v: T, work: RxRenderWork, options: RxCoalescingOptions) => {
-                const context = <C>getContext[kind](notification);
-                if (isNewTemplate) {
-                  // template has changed (undefined => next; suspense => next; ...)
-                  // handle remove & insert
-                  // remove current view if there is any
-                  if (viewContainerRef.length > 0) {
-                    // patch removal if needed
-                    workFactory(() => viewContainerRef.clear());
-                  }
-                  // create new view if any
-                  if (template) {
-                    // createEmbeddedView is already patched, no need for workFactory
-                    workFactory(() =>
-                      templates.createEmbeddedView(templateName, context)
-                    );
-                  }
-                } else if (template) {
-                  // template didn't change, update it
-                  // handle update
-                  const view = <EmbeddedViewRef<C>>viewContainerRef.get(0);
-                  Object.keys(context).forEach((k) => {
-                    view.context[k] = context[k];
-                  });
-                  // update view context, patch if needed
-                  workFactory(() => work(view, options.scope, notification));
+          return onStrategy(
+            notification.value,
+            strategy,
+            (v: T, work: RxRenderWork, options: RxCoalescingOptions) => {
+              const context = <C>getContext[notification.kind](notification);
+              if (isNewTemplate) {
+                // template has changed (undefined => next; suspense => next; ...)
+                // handle remove & insert
+                // remove current view if there is any
+                if (viewContainerRef.length > 0) {
+                  // patch removal if needed
+                  viewContainerRef.clear();
                 }
-                activeTemplate = templateName;
+                // create new view if any
+                if (template) {
+                  // createEmbeddedView is already patched, no need for workFactory
+                  templates.createEmbeddedView(templateName, context);
+                }
+              } else if (template) {
+                // template didn't change, update it
+                // handle update
+                const view = <EmbeddedViewRef<C>>viewContainerRef.get(0);
+                Object.keys(context).forEach((k) => {
+                  view.context[k] = context[k];
+                });
+                // update view context, patch if needed
+                work(view, options.scope, notification);
               }
-              // we don't need to specify any scope here. The template manager is the only one
-              // who will call `viewRef#detectChanges` on any of the templates it manages.
-              // whenever a new value comes in, any pre-scheduled work of this taskManager will
-              // be nooped before a new work will be scheduled. This happens because of the implementation
-              // of `StrategyCredential#behavior`
-            ).pipe(
-              notifyAllParentsIfNeeded(
-                tNode,
-                injectingViewCdRef,
-                strategy,
-                () => notifyParent
-              )
-            ),
-            notifyInjectingParentIfNeeded(
+              activeTemplate = templateName;
+            },
+            { ngZone }
+            // we don't need to specify any scope here. The template manager is the only one
+            // who will call `viewRef#detectChanges` on any of the templates it manages.
+            // whenever a new value comes in, any pre-scheduled work of this taskManager will
+            // be nooped before a new work will be scheduled. This happens because of the implementation
+            // of `StrategyCredential#behavior`
+          ).pipe(
+            notifyAllParentsIfNeeded(
               injectingViewCdRef,
               strategy,
-              isNewTemplate
-            ).pipe(ignoreElements())
-          ).pipe(
+              () => notifyParent,
+              ngZone
+            ),
             catchError((e) => {
               errorHandler.handleError(e);
               return of(e);

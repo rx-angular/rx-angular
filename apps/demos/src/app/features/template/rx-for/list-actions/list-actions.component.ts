@@ -2,13 +2,13 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ElementRef,
+  ElementRef, NgZone,
   QueryList,
   ViewChild,
   ViewChildren,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
-import { asyncScheduler } from '@rx-angular/cdk/zone-less';
+import { asyncScheduler } from '@rx-angular/cdk/zone-less/rxjs';
 import { BehaviorSubject, defer, merge, scheduled, Subject } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import {
@@ -20,7 +20,7 @@ import {
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { RxState } from '@rx-angular/state';
 import { Hooks } from '../../../../shared/debug-helper/hooks';
-import { map, startWith, switchMap, switchMapTo, tap } from 'rxjs/operators';
+import { map, switchMap, switchMapTo } from 'rxjs/operators';
 
 let itemIdx = 0;
 
@@ -353,7 +353,7 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
   }
 
   clickMe() {
-    console.log('clicked me');
+    console.log('clicked in angular zone', NgZone.isInAngularZone());
   }
 
   trackByIdFn = (a) => a.id;
