@@ -57,9 +57,13 @@ const nativeCredentials: RxStrategyCredentials = {
       ),
 };
 
+/**
+ * @deprecated
+ * angular drops the internal markDirty API, will fall back to native if used
+ */
 const globalCredentials: RxStrategyCredentials = {
-  name: 'global',
   ...nativeCredentials,
+  name: 'global',
 };
 
 export type RxNativeStrategies =
