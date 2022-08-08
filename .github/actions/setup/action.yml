@@ -9,7 +9,7 @@ runs:
   using: composite
   steps:
     - name: Checkout all commits
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
@@ -21,7 +21,7 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
 
-    - uses: actions/cache@v2
+    - uses: actions/checkout@v3
       id: yarn-cache
       with:
         path: |
