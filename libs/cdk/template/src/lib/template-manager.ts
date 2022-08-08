@@ -41,8 +41,6 @@ export interface RxTemplateManager<
   N = rxBaseTemplateNames | string
 > extends RxRenderAware<T> {
   addTemplateRef: (name: N, templateRef: TemplateRef<C>) => void;
-  // addTrigger: (trigger$: Observable<RxNotification<T>>) => void;
-  // activeTemplate: N;
 }
 
 /**
@@ -192,7 +190,6 @@ export function createTemplateManager<
           const template = templates.get(templateName);
           return { template, templateName, notification, contextKind };
         }),
-        // filter(({ template }) => !!template),
         withLatestFrom(strategyHandling$.strategy$),
         // Cancel old renders
         switchMap(
