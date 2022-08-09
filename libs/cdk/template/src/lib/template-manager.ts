@@ -106,7 +106,7 @@ export type RxNotificationTemplateNameMap<T, C, N> = Record<
 export function createTemplateManager<
   T,
   C extends RxViewContext<T>,
-  N extends rxBaseTemplateNames
+  N extends string = rxBaseTemplateNames
 >(config: {
   renderSettings: RxRenderSettings;
   templateSettings: RxTemplateSettings<T, C>;
@@ -145,7 +145,6 @@ export function createTemplateManager<
       }
       templates.add(name, templateRef);
     },
-    // addTrigger: triggerHandling.next,
     nextStrategy: strategyHandling$.next,
     render(values$: Observable<RxNotification<T>>): Observable<any> {
       let trg: RxNotificationKind | undefined;
