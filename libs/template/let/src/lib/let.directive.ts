@@ -44,8 +44,6 @@ import {
   filter,
 } from 'rxjs';
 
-/* eslint-disable @angular-eslint/no-input-rename */
-
 /** @internal */
 type RxLetTemplateNames = 'nextTpl' | RxBaseTemplateNames;
 
