@@ -8,30 +8,30 @@ import {
   OnInit,
   SimpleChanges,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { coerceAllFactory, coerceObservable } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
-  RxNotificationKind
+  RxNotificationKind,
 } from '@rx-angular/cdk/notifications';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import {
   createTemplateManager,
-  RxTemplateManager
+  RxTemplateManager,
 } from '@rx-angular/cdk/template';
 import {
   NextObserver,
   Observable,
   ReplaySubject,
   Subject,
-  Subscription
+  Subscription,
 } from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
 import {
   RxIfTemplateNames,
   rxIfTemplateNames,
-  RxIfViewContext
+  RxIfViewContext,
 } from './model/index';
 
 @Directive({
@@ -52,7 +52,6 @@ export class RxIf<U> implements OnInit, OnDestroy {
     this.observablesHandler.next(coerceObservable(potentialObservable));
   }
 
-  /* eslint-disable @angular-eslint/no-input-rename */
   @Input('rxIfStrategy')
   set strategy(strategyName: Observable<string> | string | null | undefined) {
     this.strategyHandler.next(strategyName);
