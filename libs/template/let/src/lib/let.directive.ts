@@ -432,8 +432,6 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     this._renderObserver = callback;
   }
 
-  /* @todo: Rename to `rxRenderParent`? */
-  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxLetParent') renderParent = this.strategyProvider.config.parent;
 
   @Input('rxLetPatchZone') patchZone = this.strategyProvider.config.patchZone;

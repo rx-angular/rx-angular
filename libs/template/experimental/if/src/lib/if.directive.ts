@@ -52,7 +52,6 @@ export class RxIf<U> implements OnInit, OnDestroy {
     this.observablesHandler.next(coerceObservable(potentialObservable));
   }
 
-  /* eslint-disable @angular-eslint/no-input-rename */
   @Input('rxIfStrategy')
   set strategy(strategyName: Observable<string> | string | null | undefined) {
     this.strategyHandler.next(strategyName);
