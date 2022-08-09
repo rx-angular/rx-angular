@@ -6,31 +6,27 @@ import {
   RxNextNotification,
   RxNotification,
   RxNotificationKind,
-  RxSuspenseNotification,
+  RxSuspenseNotification
 } from '@rx-angular/cdk/notifications';
 import {
   onStrategy,
   RxRenderWork,
-  strategyHandling,
+  strategyHandling
 } from '@rx-angular/cdk/render-strategies';
 import {
-  EMPTY,
-  merge,
+  catchError, EMPTY, filter,
+  map, merge,
   Observable,
-  of,
-  catchError,
-  filter,
-  map,
-  switchMap,
+  of, switchMap,
   tap,
-  withLatestFrom,
+  withLatestFrom
 } from 'rxjs';
 import {
   rxBaseTemplateNames,
   RxRenderAware,
   RxRenderSettings,
   RxTemplateSettings,
-  RxViewContext,
+  RxViewContext
 } from './model';
 import { createErrorHandler } from './render-error';
 import { notifyAllParentsIfNeeded, templateHandling } from './utils';
@@ -110,7 +106,7 @@ export type RxNotificationTemplateNameMap<T, C, N> = Record<
 export function createTemplateManager<
   T,
   C extends RxViewContext<T>,
-  N = rxBaseTemplateNames | string
+  N extends rxBaseTemplateNames
 >(config: {
   renderSettings: RxRenderSettings;
   templateSettings: RxTemplateSettings<T, C>;
@@ -144,7 +140,6 @@ export function createTemplateManager<
 
   return {
     addTemplateRef: (name: N, templateRef: TemplateRef<C>) => {
-      // @ts-ignore
       if (!withSuspense && name === 'suspenseTpl') {
         withSuspense = true;
       }
