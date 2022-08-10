@@ -22,7 +22,6 @@ export class QueueAction<T> extends AsyncAction<T> {
     }
     this.delay = delay;
     this.state = state;
-    // @ts-ignore
     this.scheduler.flush(this);
     return this;
   }
@@ -45,7 +44,6 @@ export class QueueAction<T> extends AsyncAction<T> {
       return super.requestAsyncId(scheduler, id, delay);
     }
     // Otherwise flush the scheduler starting with this action.
-    // @ts-ignore
     return scheduler.flush(this);
   }
 }
