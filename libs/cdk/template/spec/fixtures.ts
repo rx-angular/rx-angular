@@ -1,29 +1,25 @@
 import {
   AfterViewInit,
   ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EmbeddedViewRef,
+  Component, EmbeddedViewRef,
   ErrorHandler,
-  Input,
-  IterableDiffers,
-  OnDestroy,
+  Input, OnDestroy,
   TemplateRef,
   ViewChild,
-  ViewContainerRef,
+  ViewContainerRef
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReplaySubject, Subscription } from 'rxjs';
 import {
   createTemplateNotifier,
-  RxNotificationKind,
+  RxNotificationKind
 } from '../../notifications/src/index';
 import { RxStrategyProvider } from '../../render-strategies/src/index';
 import {
   createTemplateManager,
   RxBaseTemplateNames,
   RxTemplateManager,
-  RxViewContext,
+  RxViewContext
 } from '../src/index';
 
 @Component({
@@ -81,10 +77,7 @@ export class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
   triggerHandler = new ReplaySubject<RxNotificationKind>(1);
 
   constructor(
-    private iterableDiffers: IterableDiffers,
     private cdRef: ChangeDetectorRef,
-    private eRef: ElementRef,
-    private vcRef: ViewContainerRef,
     private strategyProvider: RxStrategyProvider,
     public errorHandler: ErrorHandler
   ) {}

@@ -106,7 +106,7 @@ export type RxNotificationTemplateNameMap<T, C, N> = Record<
 export function createTemplateManager<
   T,
   C extends RxViewContext<T>,
-  N extends string = rxBaseTemplateNames
+  N extends string = string
 >(config: {
   renderSettings: RxRenderSettings;
   templateSettings: RxTemplateSettings<T, C>;
