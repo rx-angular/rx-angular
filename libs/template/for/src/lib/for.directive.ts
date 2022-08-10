@@ -13,18 +13,15 @@ import {
   OnInit,
   TemplateRef,
   TrackByFunction,
-  ViewContainerRef,
+  ViewContainerRef
 } from '@angular/core';
+import { coerceDistinctWith, coerceObservableWith } from '@rx-angular/cdk/coercing';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import {
   createListTemplateManager,
   RxListManager,
-  RxListViewComputedContext,
+  RxListViewComputedContext
 } from '@rx-angular/cdk/template';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import {
-  coerceDistinctWith,
-  coerceObservableWith,
-} from '@rx-angular/cdk/coercing';
 
 import {
   isObservable,
@@ -32,7 +29,7 @@ import {
   ReplaySubject,
   Subject,
   Subscription,
-  switchAll,
+  switchAll
 } from 'rxjs';
 import { RxForViewContext } from './for-view-context';
 
@@ -389,8 +386,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     this.strategyInput$.next(strategyName);
   }
 
-  /* @todo: rename to `rxRenderParent`? */
-  /* eslint-disable @angular-eslint/no-input-rename */
   /**
    * @description
    *  If `parent` is set to `true` (default to `false`), `*rxFor` will automatically detect every other `Component`

@@ -29,7 +29,7 @@ export class MyComponent {
         tap(() => this.isLoading$.next(false)),
     );
 
-    this.subscription = this.fetchUserOnUrlChangeEffect$
+    this.subscription = fetchUserOnUrlChangeEffect$
       .subscribe();
 
    }
