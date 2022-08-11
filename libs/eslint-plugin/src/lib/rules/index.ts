@@ -1,5 +1,6 @@
 import { TSESLint } from '@typescript-eslint/experimental-utils';
 import noExplicitChangeDetectionApis from './no-explicit-change-detection-apis';
+import noRxstateImperativeInReactive from './no-rxstate-imperative-in-reactive';
 import noZoneCriticalBrowserApis from './no-zone-critical-browser-apis';
 import noZoneCriticalLodashApis from './no-zone-critical-lodash-apis';
 import noZoneCriticalRxjsCreationApis from './no-zone-critical-rxjs-creation-apis';
@@ -12,6 +13,7 @@ import preferNoLodashIsEqual from './prefer-no-lodash-is-equal';
 
 export const rules: Record<string, TSESLint.RuleModule<string>> = {
   'no-explicit-change-detection-apis': noExplicitChangeDetectionApis,
+  'no-rxstate-imperative-in-reactive': noRxstateImperativeInReactive,
   'no-zone-critical-browser-apis': noZoneCriticalBrowserApis,
   'no-zone-critical-lodash-apis': noZoneCriticalLodashApis,
   'no-zone-critical-rxjs-creation-apis': noZoneCriticalRxjsCreationApis,
