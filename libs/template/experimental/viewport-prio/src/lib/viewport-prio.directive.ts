@@ -59,7 +59,7 @@ const observerSupported = () =>
    * @todo: deprecate [viewport-prio] + add camelcase support.
    */
   // eslint-disable-next-line @angular-eslint/directive-selector
-  selector: '[viewport-prio]',
+  selector: '[viewportPrio]',
 })
 export class ViewportPrioDirective implements OnInit, OnDestroy {
   // Note that we're picking only the `intersectionRatio` property
@@ -71,17 +71,19 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
   entries$: Observable<Pick<IntersectionObserverEntry, 'intersectionRatio'>> =
     this.entriesSubject.pipe(mergeAll());
 
-  _viewportPrioObservables = new BehaviorSubject<Observable<string> | string>(
+  private viewportPrioObservables = new BehaviorSubject<Observable<string> | string>(
     of('noop')
   );
-  _viewportPrio = this._viewportPrioObservables.pipe(
+  private internalViewportPrio = this.viewportPrioObservables.pipe(
     coerceObservableWith(),
     mergeAll(),
     map((v) => (!v ? 'noop' : v))
   );
-  @Input('viewport-prio')
+
+
+  @Input('viewportPrio')
   set viewportPrio(prio: string | Observable<string>) {
-    this._viewportPrioObservables.next(prio);
+    this.viewportPrioObservables.next(prio);
   }
 
   private observer: IntersectionObserver | null = observerSupported()
@@ -129,7 +131,7 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
     this.visibilityEvents$
       .pipe(
         withLatestFrom(
-          combineLatest(letStrategyName$, this._viewportPrio).pipe(
+          combineLatest(letStrategyName$, this.internalViewportPrio).pipe(
             filter(([newN, oldN]) => newN !== oldN)
           )
         ),
@@ -147,7 +149,7 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
 
         if (visibility === 'visible') {
           // render actual state on viewport enter
-          //  this.letDirective.templateNotification$.next(lastValue);
+          this.letDirective.templateNotification$.next(lastValue);
         }
       });
 
