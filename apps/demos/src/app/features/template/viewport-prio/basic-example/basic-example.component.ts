@@ -24,7 +24,7 @@ import { scan, switchMap } from 'rxjs/operators';
           <div class="view-port-inner">
             <div
               class="target"
-              viewport-prio
+              viewportPrio
               *rxLet="valP.incremental$; let count"
             >
               {{logLetUpdate(count)}}
