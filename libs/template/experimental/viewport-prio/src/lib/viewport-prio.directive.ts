@@ -121,6 +121,7 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
     );
 
     let lastValue = undefined;
+    let lastRenderedValue = undefined;
     // @TODO add a connect here to get rid of the subscribe
     this.letDirective.values$
       .pipe(filter((n: RxNotification<any>) => n.kind === 'next'))
@@ -147,9 +148,10 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
           this.letDirective.strategy = strategyName as string;
         }
 
-        if (visibility === 'visible') {
+        if (visibility === 'visible' && lastRenderedValue !== lastValue) {
           // render actual state on viewport enter
           this.letDirective.templateNotification$.next(lastValue);
+          lastRenderedValue = lastValue;
         }
       });
 
