@@ -8,8 +8,11 @@ import {
   isOperateFnArrayGuard,
   isStringAndFunctionTupleGuard,
   isStringArrayGuard,
+  isStringsArrayAndFunctionTupleGuard,
+  PickSlice,
   pipeFromArray,
   safePluck,
+  selectSlice,
   stateful,
 } from '@rx-angular/state/selections';
 import {
@@ -428,8 +431,27 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   /**
    * @description
+   * Transform a slice of the state by providing keys and map function.
+   * Returns result of applying function to state slice as cached and distinct `Observable<V>`.
+   *
+   * @example
+   * // Project state slice
+   * const text$ = state.select(
+   *   ['query', 'results'],
+   *   ({ query, results }) => `${results.length} results found for "${query}"`
+   * );
+   *
+   * @return Observable<V>
+   */
+  select<K extends keyof T, V>(
+    keys: K[],
+    fn: (slice: PickSlice<T, K>) => V
+  ): Observable<V>;
+
+  /**
+   * @description
    * Transform a single property of the state by providing a key and map function.
-   * Returns result of applying function to state property as cached and distinct `Observable<T[V]>`.
+   * Returns result of applying function to state property as cached and distinct `Observable<V>`.
    *
    * @example
    * // Project state based on single property
@@ -565,12 +587,18 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       | OperatorFunction<T, R>[]
       | string[]
       | [string, (val: any) => R]
+      | [string[], (slice: any) => R]
   ): Observable<T | R> {
     if (!opOrMapFn || opOrMapFn.length === 0) {
       return this.accumulator.state$.pipe(stateful());
     } else if (isStringAndFunctionTupleGuard(opOrMapFn)) {
       return this.accumulator.state$.pipe(
         stateful(pluck(opOrMapFn[0])),
+        stateful(map(opOrMapFn[1]))
+      );
+    } else if (isStringsArrayAndFunctionTupleGuard(opOrMapFn)) {
+      return this.accumulator.state$.pipe(
+        selectSlice(opOrMapFn[0] as (keyof T)[]),
         stateful(map(opOrMapFn[1]))
       );
     } else if (isStringArrayGuard(opOrMapFn)) {

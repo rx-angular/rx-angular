@@ -240,6 +240,17 @@ describe('RxStateService', () => {
           });
         });
       });
+
+      it('should return mapped slice on select with keys and function', () => {
+        testScheduler.run(({ expectObservable }) => {
+          const state = setupState({ initialState: initialPrimitiveState });
+          expectObservable(
+            state.select(['num', 'str'], ({ num, str }) => `${str}: ${num}`)
+          ).toBe('s', {
+            s: `${initialPrimitiveState.str}: ${initialPrimitiveState.num}`,
+          });
+        });
+      });
     });
   });
 

@@ -128,6 +128,24 @@ describe('select', () => {
     });
   });
 
+  it('should accept array of strings keyof T and one map function', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      const primitiveState: PrimitiveState = {
+        bol: true,
+        str: 'string',
+        num: 42,
+      };
+      const source: Observable<PrimitiveState> = cold('a|', {
+        a: primitiveState,
+      });
+      expectObservable(
+        source.pipe(select(['num', 'str'], ({ num, str }) => `${str} (${num})`))
+      ).toBe('a|', {
+        a: 'string (42)',
+      });
+    });
+  });
+
   it('should accept one operator', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const source: Observable<PrimitiveState> = cold('a|', {

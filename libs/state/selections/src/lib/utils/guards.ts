@@ -59,3 +59,9 @@ export function isStringAndFunctionTupleGuard<R>(
 ): op is [string, (val: any) => R] {
   return typeof op[0] === 'string' && typeof op[1] === 'function';
 }
+
+export function isStringsArrayAndFunctionTupleGuard<R>(
+  op: unknown[]
+): op is [string[], (val: any) => R] {
+  return isStringArrayGuard(op[0] as any) && typeof op[1] === 'function';
+}
