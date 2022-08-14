@@ -15,6 +15,13 @@
       "options": {
         "port": 3000
       }
+    },
+    "serve-static": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "docusaurus serve --config apps/docs/docusaurus.config.js --dir dist/apps/docs"
+      },
+      "dependsOn": [{ "projects": "self", "target": "build" }]
     }
   },
   "tags": []
