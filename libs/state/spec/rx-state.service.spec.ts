@@ -1,14 +1,15 @@
-import { initialPrimitiveState, jestMatcher, PrimitiveState } from '@test-helpers';
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import {
-  createStateChecker,
-} from './fixtures';
-
-import { TestScheduler } from 'rxjs/testing';
 import { RxState } from '@rx-angular/state';
 import { select } from '@rx-angular/state/selections';
-import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
+import {
+  initialPrimitiveState,
+  jestMatcher,
+  PrimitiveState,
+} from '@test-helpers';
 import { of, scheduled, Subject } from 'rxjs';
+import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
+import { TestScheduler } from 'rxjs/testing';
+import { createStateChecker } from './fixtures';
 
 function setupState<T extends object>(cfg: { initialState?: T }) {
   const { initialState } = { ...cfg };
@@ -230,6 +231,15 @@ describe('RxStateService', () => {
           });
         });
       });
+
+      it('should return mapped slice on select with key and function', () => {
+        testScheduler.run(({ expectObservable }) => {
+          const state = setupState({ initialState: initialPrimitiveState });
+          expectObservable(state.select('num', (x) => x * 2)).toBe('s', {
+            s: initialPrimitiveState.num * 2,
+          });
+        });
+      });
     });
   });
 
@@ -308,7 +318,9 @@ describe('RxStateService', () => {
           c: 44,
         });
 
-        state.connect(scheduled([{ num: 42 }, { num: 43 }, { num: 44 }], testScheduler));
+        state.connect(
+          scheduled([{ num: 42 }, { num: 43 }, { num: 44 }], testScheduler)
+        );
       });
     });
 
@@ -323,7 +335,10 @@ describe('RxStateService', () => {
 
         state.connect(
           'num',
-          scheduled([{ num: 42 }, { num: 43 }, { num: 44 }], testScheduler).pipe(map((s) => s.num))
+          scheduled(
+            [{ num: 42 }, { num: 43 }, { num: 44 }],
+            testScheduler
+          ).pipe(map((s) => s.num))
         );
       });
     });
@@ -373,7 +388,10 @@ describe('RxStateService', () => {
         });
 
         state.connect(
-          scheduled([{ num: undefined }, { num: 43 }, { num: undefined }], testScheduler),
+          scheduled(
+            [{ num: undefined }, { num: 43 }, { num: undefined }],
+            testScheduler
+          ),
           (o, n) => n
         );
       });
@@ -390,7 +408,11 @@ describe('RxStateService', () => {
           c: undefined,
         });
 
-        state.connect('num', scheduled([undefined, 43, undefined], testScheduler), (o, n) => n);
+        state.connect(
+          'num',
+          scheduled([undefined, 43, undefined], testScheduler),
+          (o, n) => n
+        );
       });
     });
 
@@ -405,7 +427,10 @@ describe('RxStateService', () => {
           c: undefined,
         });
 
-        state.connect('num', scheduled([undefined, 43, undefined], testScheduler));
+        state.connect(
+          'num',
+          scheduled([undefined, 43, undefined], testScheduler)
+        );
       });
     });
 
@@ -421,7 +446,10 @@ describe('RxStateService', () => {
         });
 
         state.connect(
-          scheduled([{ num: undefined }, { num: 43 }, { num: undefined }], testScheduler),
+          scheduled(
+            [{ num: undefined }, { num: 43 }, { num: undefined }],
+            testScheduler
+          ),
           (sta, newVal) => newVal
         );
       });
@@ -438,7 +466,7 @@ describe('RxStateService', () => {
     it('should stop from connect observable', () => {
       testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
         const state = setupState({});
-        const tick$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const tick$ = hot('aaaaaaaaaaaaaaa|', { a: 1 });
         const subs = '(^!)';
         state.connect(tick$.pipe(map((num) => ({ num }))));
         state.ngOnDestroy();
@@ -450,7 +478,7 @@ describe('RxStateService', () => {
     it('should stop from connect key & observable', () => {
       testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
         const state = setupState<any>({});
-        const tick$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const tick$ = hot('aaaaaaaaaaaaaaa|', { a: 1 });
         const subs = '(^!)';
         state.connect('num' as any, tick$);
         state.ngOnDestroy();
@@ -461,8 +489,8 @@ describe('RxStateService', () => {
 
     it('should stop from connect observable & projectFn', () => {
       testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
-        const state = setupState({ });
-        const tick$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const state = setupState({});
+        const tick$ = hot('aaaaaaaaaaaaaaa|', { a: 1 });
         const subs = '(^!)';
         state.connect(tick$, (s, v) => ({ num: v * 42 }));
         state.ngOnDestroy();
@@ -473,8 +501,8 @@ describe('RxStateService', () => {
 
     it('should stop from connect key & observable & projectFn', () => {
       testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
-        const state = setupState<any>({ });
-        const tick$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const state = setupState<any>({});
+        const tick$ = hot('aaaaaaaaaaaaaaa|', { a: 1 });
         const subs = '(^!)';
         state.connect('num', tick$, (s, v) => v * 42);
         state.ngOnDestroy();
@@ -485,8 +513,8 @@ describe('RxStateService', () => {
 
     it('should stop in selects with HOOs', () => {
       testScheduler.run(({ expectObservable, hot, expectSubscriptions }) => {
-        const state = setupState({ });
-        const interval$ = hot('aaaaaaaaaaaaaaa|', {a : 1});
+        const state = setupState({});
+        const interval$ = hot('aaaaaaaaaaaaaaa|', { a: 1 });
         const subs = '';
         expectObservable(
           state.select(
@@ -549,7 +577,7 @@ describe('RxStateService', () => {
       const state = setupState({ initialState: initialPrimitiveState });
       testScheduler.run(({ expectObservable }) => {
         expectObservable(state.select('num')).toBe('(a)', {
-          a: 44
+          a: 44,
         });
 
         state.set({ num: 42 });

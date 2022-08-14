@@ -1,4 +1,17 @@
 import { Injectable, OnDestroy } from '@angular/core';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import {
+  AccumulationFn,
+  createAccumulationObservable,
+  createSideEffectObservable,
+  isKeyOf,
+  isOperateFnArrayGuard,
+  isStringAndFunctionTupleGuard,
+  isStringArrayGuard,
+  pipeFromArray,
+  safePluck,
+  stateful,
+} from '@rx-angular/state/selections';
 import {
   EMPTY,
   isObservable,
@@ -9,18 +22,6 @@ import {
   Unsubscribable,
 } from 'rxjs';
 import { catchError, map, pluck, tap } from 'rxjs/operators';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {
-  stateful,
-  pipeFromArray,
-  safePluck,
-  createSideEffectObservable,
-  createAccumulationObservable,
-  AccumulationFn,
-  isKeyOf,
-  isOperateFnArrayGuard,
-  isStringArrayGuard,
-} from '@rx-angular/state/selections';
 
 export type ProjectStateFn<T> = (oldState: T) => Partial<T>;
 export type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
@@ -427,6 +428,19 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   /**
    * @description
+   * Transform a single property of the state by providing a key and map function.
+   * Returns result of applying function to state property as cached and distinct `Observable<T[V]>`.
+   *
+   * @example
+   * // Project state based on single property
+   * const foo$ = state.select('bar', bar => `bar equals ${bar}`);
+   *
+   * @return Observable<V>
+   */
+  select<K extends keyof T, V>(k: K, fn: (val: T[K]) => V): Observable<V>;
+
+  /**
+   * @description
    * returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
    * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive
    *   composition.
@@ -547,10 +561,18 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * @internal
    */
   select<R>(
-    ...opOrMapFn: OperatorFunction<T, R>[] | string[]
+    ...opOrMapFn:
+      | OperatorFunction<T, R>[]
+      | string[]
+      | [string, (val: any) => R]
   ): Observable<T | R> {
     if (!opOrMapFn || opOrMapFn.length === 0) {
       return this.accumulator.state$.pipe(stateful());
+    } else if (isStringAndFunctionTupleGuard(opOrMapFn)) {
+      return this.accumulator.state$.pipe(
+        stateful(pluck(opOrMapFn[0])),
+        stateful(map(opOrMapFn[1]))
+      );
     } else if (isStringArrayGuard(opOrMapFn)) {
       return this.accumulator.state$.pipe(
         stateful(pluck(...opOrMapFn))

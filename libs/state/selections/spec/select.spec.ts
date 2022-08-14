@@ -1,16 +1,16 @@
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { select } from '@rx-angular/state/selections';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {
-  jestMatcher,
   initialNestedState,
   initialPrimitiveState,
+  jestMatcher,
   NestedState,
   PrimitiveState,
 } from '@test-helpers';
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { select } from '@rx-angular/state/selections';
 
 let testScheduler: TestScheduler;
 
@@ -109,6 +109,22 @@ describe('select', () => {
       expectObservable(
         source.pipe(select('obj', 'key1', 'key11', 'key111'))
       ).toBe('a|', { a: 'test' });
+    });
+  });
+
+  it('should accept one string keyof T and one map function', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      const primitiveState: PrimitiveState = {
+        bol: true,
+        str: 'string',
+        num: 42,
+      };
+      const source: Observable<PrimitiveState> = cold('a|', {
+        a: primitiveState,
+      });
+      expectObservable(source.pipe(select('num', (x) => x / 2))).toBe('a|', {
+        a: 21,
+      });
     });
   });
 

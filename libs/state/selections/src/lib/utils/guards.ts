@@ -53,3 +53,9 @@ export function isObjectGuard(obj: unknown): obj is object {
 export function isDefined(val: unknown): val is NonNullable<any> {
   return val !== null && val !== undefined;
 }
+
+export function isStringAndFunctionTupleGuard<R>(
+  op: unknown[]
+): op is [string, (val: any) => R] {
+  return typeof op[0] === 'string' && typeof op[1] === 'function';
+}

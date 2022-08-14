@@ -1,6 +1,10 @@
 import { MonoTypeOperatorFunction, Observable, OperatorFunction } from 'rxjs';
-import { pluck } from 'rxjs/operators';
-import { isOperateFnArrayGuard, isStringArrayGuard } from '../utils/guards';
+import { map, pluck } from 'rxjs/operators';
+import {
+  isOperateFnArrayGuard,
+  isStringAndFunctionTupleGuard,
+  isStringArrayGuard,
+} from '../utils/guards';
 import { pipeFromArray } from '../utils/pipe-from-array';
 import { stateful } from './stateful';
 
@@ -17,6 +21,22 @@ import { stateful } from './stateful';
  */
 
 export function select<T>(): MonoTypeOperatorFunction<T>;
+
+/**
+ * @description
+ * Transform a single property of the state by providing a key and map function.
+ * Returns result of applying function to state property as cached and distinct `Observable<T[R]>`.
+ *
+ * @example
+ *  // Project state based on single property
+ * const foo$ = state$.pipe(select('bar', bar => `bar equals ${bar}`));
+ *
+ * @return Observable<R>
+ */
+export function select<T, K extends keyof T, R>(
+  k: K,
+  fn: (val: T[K]) => R
+): OperatorFunction<T, R>;
 
 /**
  * @description
@@ -101,27 +121,33 @@ export function select<T, K1 extends keyof T, K2 extends keyof T[K1]>(
 /**
  * @internal
  */
-export function select<T,
+export function select<
+  T,
   K1 extends keyof T,
   K2 extends keyof T[K1],
-  K3 extends keyof T[K1][K2]>(k1: K1, k2: K2, k3: K3): OperatorFunction<T, T[K1][K2][K3]>;
+  K3 extends keyof T[K1][K2]
+>(k1: K1, k2: K2, k3: K3): OperatorFunction<T, T[K1][K2][K3]>;
 /**
  * @internal
  */
-export function select<T,
+export function select<
+  T,
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
-  K4 extends keyof T[K1][K2][K3]>(k1: K1, k2: K2, k3: K3, k4: K4): OperatorFunction<T, T[K1][K2][K3][K4]>;
+  K4 extends keyof T[K1][K2][K3]
+>(k1: K1, k2: K2, k3: K3, k4: K4): OperatorFunction<T, T[K1][K2][K3][K4]>;
 /**
  * @internal
  */
-export function select<T,
+export function select<
+  T,
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
   K4 extends keyof T[K1][K2][K3],
-  K5 extends keyof T[K1][K2][K3][K4]>(
+  K5 extends keyof T[K1][K2][K3][K4]
+>(
   k1: K1,
   k2: K2,
   k3: K3,
@@ -131,13 +157,15 @@ export function select<T,
 /**
  * @internal
  */
-export function select<T,
+export function select<
+  T,
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
   K4 extends keyof T[K1][K2][K3],
   K5 extends keyof T[K1][K2][K3][K4],
-  K6 extends keyof T[K1][K2][K3][K4][K5]>(
+  K6 extends keyof T[K1][K2][K3][K4][K5]
+>(
   k1: K1,
   k2: K2,
   k3: K3,
@@ -150,11 +178,19 @@ export function select<T,
  * @internal
  */
 export function select<T>(
-  ...opOrMapFn: OperatorFunction<T, any>[] | string[]
+  ...opOrMapFn:
+    | OperatorFunction<T, any>[]
+    | string[]
+    | [string, (val: any) => any]
 ): OperatorFunction<T, any> {
   return (state$: Observable<T>) => {
     if (!opOrMapFn || opOrMapFn.length === 0) {
       return state$.pipe(stateful());
+    } else if (isStringAndFunctionTupleGuard(opOrMapFn)) {
+      return state$.pipe(
+        stateful(pluck(opOrMapFn[0])),
+        stateful(map(opOrMapFn[1]))
+      );
     } else if (isStringArrayGuard(opOrMapFn)) {
       return state$.pipe(stateful(pluck(...opOrMapFn)));
     } else if (isOperateFnArrayGuard(opOrMapFn)) {
