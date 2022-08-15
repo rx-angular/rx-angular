@@ -16,7 +16,7 @@ import {
   combineLatest,
   Observable,
   of,
-  Subject,
+  Subject, Subscription
 } from 'rxjs';
 import { filter, map, mergeAll, withLatestFrom } from 'rxjs/operators';
 
@@ -54,26 +54,28 @@ const observerSupported = () =>
     : false;
 
 @Directive({
-  /**
-   * @todo: use camelcase for directive selector.
-   * @todo: deprecate [viewport-prio] + add camelcase support.
-   */
   // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[viewportPrio]',
 })
 export class ViewportPrioDirective implements OnInit, OnDestroy {
+  subscription = new Subscription();
+  /* internal */
   // Note that we're picking only the `intersectionRatio` property
   // since this is the only property that we're intersted in.
-  entriesSubject = new Subject<
+  private entriesSubject = new Subject<
     Pick<IntersectionObserverEntry, 'intersectionRatio'>[]
   >();
 
-  entries$: Observable<Pick<IntersectionObserverEntry, 'intersectionRatio'>> =
+  /* internal */
+  private entries$: Observable<Pick<IntersectionObserverEntry, 'intersectionRatio'>> =
     this.entriesSubject.pipe(mergeAll());
 
+  /* internal */
   private viewportPrioObservables = new BehaviorSubject<Observable<string> | string>(
     of('noop')
   );
+
+  /* internal */
   private internalViewportPrio = this.viewportPrioObservables.pipe(
     coerceObservableWith(),
     mergeAll(),
@@ -86,6 +88,7 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
     this.viewportPrioObservables.next(prio);
   }
 
+  /* internal */
   private observer: IntersectionObserver | null = observerSupported()
     ? new IntersectionObserver(
         (entries) => {
@@ -97,7 +100,8 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
       )
     : null;
 
-  visibilityEvents$ = this.entries$.pipe(
+  /* internal */
+  private visibilityEvents$ = this.entries$.pipe(
     map((entry) => {
       if (entry.intersectionRatio > 0) {
         return 'visible';
@@ -115,21 +119,22 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
     private letDirective: LetDirective<any> | null
   ) {}
 
+  /* internal */
   ngOnInit() {
     const letStrategyName$ = this.strategyProvider.primaryStrategy$.pipe(
       map(({ name }) => name)
     );
 
-    let lastValue = undefined;
-    let lastRenderedValue = undefined;
-    // @TODO add a connect here to get rid of the subscribe
-    this.letDirective.values$
-      .pipe(filter((n: RxNotification<any>) => n.kind === 'next'))
-      .subscribe((v) => {
-        lastValue = v;
-      });
+    let lastValue: RxNotification<any> = undefined;
 
-    this.visibilityEvents$
+    this.subscription.add(this.letDirective.values$
+      .subscribe((v) => {
+        if(v.kind === 'next') {
+          lastValue = v;
+        }
+      }));
+
+    this.subscription.add(this.visibilityEvents$
       .pipe(
         withLatestFrom(
           combineLatest(letStrategyName$, this.internalViewportPrio).pipe(
@@ -148,12 +153,11 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
           this.letDirective.strategy = strategyName as string;
         }
 
-        if (visibility === 'visible' && lastRenderedValue !== lastValue) {
+        if (visibility === 'visible') {
           // render actual state on viewport enter
           this.letDirective.templateNotification$.next(lastValue);
-          lastRenderedValue = lastValue;
         }
-      });
+      }));
 
     // If the browser doesn't support the `IntersectionObserver` or we're inside
     // the Node.js environment, then this will throw an exception that property
@@ -168,6 +172,7 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
     }
   }
 
+  /* internal */
   ngOnDestroy(): void {
     if (this.observer) {
       this.observer.disconnect();
