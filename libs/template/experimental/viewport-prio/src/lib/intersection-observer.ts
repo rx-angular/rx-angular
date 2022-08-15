@@ -1,6 +1,4 @@
 import { Observable, Subject } from 'rxjs';
-import retryTimes = jest.retryTimes;
-
 
 let _observerSupported: boolean = undefined;
 function observerSupported(): boolean {
