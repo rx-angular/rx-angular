@@ -125,12 +125,13 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
       map(({ name }) => name)
     );
 
-    let lastValue: RxNotification<any> = undefined;
+    let lastNextNotification: RxNotification<any> = undefined;
+    let lastValue: any = undefined;
 
     this.subscription.add(this.letDirective.values$
       .subscribe((v) => {
         if(v.kind === 'next') {
-          lastValue = v;
+          lastNextNotification = v;
         }
       }));
 
@@ -153,9 +154,10 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
           this.letDirective.strategy = strategyName as string;
         }
 
-        if (visibility === 'visible') {
+        if (visibility === 'visible' && lastValue !== lastNextNotification.value) {
           // render actual state on viewport enter
-          this.letDirective.templateNotification$.next(lastValue);
+          this.letDirective.templateNotification$.next(lastNextNotification);
+          lastValue = lastNextNotification.value
         }
       }));
 
