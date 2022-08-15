@@ -40,13 +40,10 @@ function intersectionObserver(options?: object): {
   };
 }
 
-export function saveCreateIntersectionObserver(callback: IntersectionObserverCallback): IntersectionObserver | null {
+export function saveCreateIntersectionObserver(callback: IntersectionObserverCallback, cfg: any = {
+  threshold: 0,
+}): IntersectionObserver | null {
   return observerSupported()
-    ? new IntersectionObserver(
-    callback,
-    {
-      threshold: 0,
-    }
-    )
+    ? new IntersectionObserver(callback, cfg)
     : null
 }
