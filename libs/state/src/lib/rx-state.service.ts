@@ -591,7 +591,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       return this.accumulator.state$.pipe(stateful());
     } else if (isStringAndFunctionTupleGuard(opOrMapFn)) {
       return this.accumulator.state$.pipe(
-        stateful(map((s) => opOrMapFn[1](s[opOrMapFn[0]])))
+        stateful(
+          map((s) => opOrMapFn[1]((s as Record<string, unknown>)[opOrMapFn[0]]))
+        )
       );
     } else if (isStringsArrayAndFunctionTupleGuard(opOrMapFn)) {
       return this.accumulator.state$.pipe(

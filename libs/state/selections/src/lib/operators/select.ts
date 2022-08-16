@@ -201,7 +201,7 @@ export function select<
 /**
  * @internal
  */
-export function select<T>(
+export function select<T extends Record<string, unknown>>(
   ...opOrMapFn:
     | OperatorFunction<T, unknown>[]
     | string[]
