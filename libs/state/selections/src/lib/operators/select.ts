@@ -27,43 +27,6 @@ export function select<T>(): MonoTypeOperatorFunction<T>;
 
 /**
  * @description
- * Transform a slice of the state by providing keys and map function.
- * Returns result of applying function to state slice as cached and distinct `Observable<R>`.
- *
- * @example
- * // Project state slice
- * const text$ = state$.pipe(
- *   select(
- *     ['query', 'results'],
- *     ({ query, results }) => `${results.length} results found for "${query}"`
- *   )
- * );
- *
- * @return Observable<R>
- */
-export function select<T extends object, K extends keyof T, R>(
-  keys: K[],
-  fn: (slice: PickSlice<T, K>) => R
-): OperatorFunction<T, R>;
-
-/**
- * @description
- * Transform a single property of the state by providing a key and map function.
- * Returns result of applying function to state property as cached and distinct `Observable<T[R]>`.
- *
- * @example
- *  // Project state based on single property
- * const foo$ = state$.pipe(select('bar', bar => `bar equals ${bar}`));
- *
- * @return Observable<R>
- */
-export function select<T, K extends keyof T, R>(
-  k: K,
-  fn: (val: T[K]) => R
-): OperatorFunction<T, R>;
-
-/**
- * @description
  * returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
  * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive composition.
  *
@@ -117,6 +80,43 @@ export function select<T, A, B, C, D, E>(
   op4: OperatorFunction<C, D>,
   op5: OperatorFunction<D, E>
 ): OperatorFunction<T, E>;
+
+/**
+ * @description
+ * Transform a slice of the state by providing keys and map function.
+ * Returns result of applying function to state slice as cached and distinct `Observable<R>`.
+ *
+ * @example
+ * // Project state slice
+ * const text$ = state$.pipe(
+ *   select(
+ *     ['query', 'results'],
+ *     ({ query, results }) => `${results.length} results found for "${query}"`
+ *   )
+ * );
+ *
+ * @return Observable<R>
+ */
+export function select<T extends object, K extends keyof T, R>(
+  keys: K[],
+  fn: (slice: PickSlice<T, K>) => R
+): OperatorFunction<T, R>;
+
+/**
+ * @description
+ * Transform a single property of the state by providing a key and map function.
+ * Returns result of applying function to state property as cached and distinct `Observable<T[R]>`.
+ *
+ * @example
+ *  // Project state based on single property
+ * const foo$ = state$.pipe(select('bar', bar => `bar equals ${bar}`));
+ *
+ * @return Observable<R>
+ */
+export function select<T, K extends keyof T, R>(
+  k: K,
+  fn: (val: T[K]) => R
+): OperatorFunction<T, R>;
 
 /**
  * @description

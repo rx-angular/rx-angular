@@ -431,38 +431,6 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   /**
    * @description
-   * Transform a slice of the state by providing keys and map function.
-   * Returns result of applying function to state slice as cached and distinct `Observable<V>`.
-   *
-   * @example
-   * // Project state slice
-   * const text$ = state.select(
-   *   ['query', 'results'],
-   *   ({ query, results }) => `${results.length} results found for "${query}"`
-   * );
-   *
-   * @return Observable<V>
-   */
-  select<K extends keyof T, V>(
-    keys: K[],
-    fn: (slice: PickSlice<T, K>) => V
-  ): Observable<V>;
-
-  /**
-   * @description
-   * Transform a single property of the state by providing a key and map function.
-   * Returns result of applying function to state property as cached and distinct `Observable<V>`.
-   *
-   * @example
-   * // Project state based on single property
-   * const foo$ = state.select('bar', bar => `bar equals ${bar}`);
-   *
-   * @return Observable<V>
-   */
-  select<K extends keyof T, V>(k: K, fn: (val: T[K]) => V): Observable<V>;
-
-  /**
-   * @description
    * returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
    * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive
    *   composition.
@@ -510,6 +478,36 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     op4: OperatorFunction<C, D>,
     op5: OperatorFunction<D, E>
   ): Observable<E>;
+  /**
+   * @description
+   * Transform a slice of the state by providing keys and map function.
+   * Returns result of applying function to state slice as cached and distinct `Observable<V>`.
+   *
+   * @example
+   * // Project state slice
+   * const text$ = state.select(
+   *   ['query', 'results'],
+   *   ({ query, results }) => `${results.length} results found for "${query}"`
+   * );
+   *
+   * @return Observable<V>
+   */
+  select<K extends keyof T, V>(
+    keys: K[],
+    fn: (slice: PickSlice<T, K>) => V
+  ): Observable<V>;
+  /**
+   * @description
+   * Transform a single property of the state by providing a key and map function.
+   * Returns result of applying function to state property as cached and distinct `Observable<V>`.
+   *
+   * @example
+   * // Project state based on single property
+   * const foo$ = state.select('bar', bar => `bar equals ${bar}`);
+   *
+   * @return Observable<V>
+   */
+  select<K extends keyof T, V>(k: K, fn: (val: T[K]) => V): Observable<V>;
   /**
    * @description
    * Access a single property of the state by providing keys.
