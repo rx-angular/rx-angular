@@ -1,6 +1,4 @@
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { select } from '@rx-angular/state/selections';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {
   initialNestedState,
   initialPrimitiveState,
@@ -11,6 +9,7 @@ import {
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
+import { select } from '../src/lib/operators/select';
 
 let testScheduler: TestScheduler;
 

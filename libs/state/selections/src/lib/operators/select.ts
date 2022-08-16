@@ -203,19 +203,16 @@ export function select<
  */
 export function select<T>(
   ...opOrMapFn:
-    | OperatorFunction<T, any>[]
+    | OperatorFunction<T, unknown>[]
     | string[]
-    | [string, (val: any) => any]
-    | [string[], (slice: any) => any]
-): OperatorFunction<T, any> {
+    | [string, (val: unknown) => unknown]
+    | [string[], (slice: unknown) => unknown]
+): OperatorFunction<T, unknown> {
   return (state$: Observable<T>) => {
     if (!opOrMapFn || opOrMapFn.length === 0) {
       return state$.pipe(stateful());
     } else if (isStringAndFunctionTupleGuard(opOrMapFn)) {
-      return state$.pipe(
-        stateful(pluck(opOrMapFn[0])),
-        stateful(map(opOrMapFn[1]))
-      );
+      return state$.pipe(stateful(map((s) => opOrMapFn[1](s[opOrMapFn[0]]))));
     } else if (isStringsArrayAndFunctionTupleGuard(opOrMapFn)) {
       return state$.pipe(
         selectSlice<T & object, keyof T>(opOrMapFn[0] as (keyof T)[]),

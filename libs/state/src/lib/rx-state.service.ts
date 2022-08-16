@@ -584,15 +584,14 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     ...opOrMapFn:
       | OperatorFunction<T, R>[]
       | string[]
-      | [string, (val: any) => R]
-      | [string[], (slice: any) => R]
+      | [string, (val: unknown) => R]
+      | [string[], (slice: unknown) => R]
   ): Observable<T | R> {
     if (!opOrMapFn || opOrMapFn.length === 0) {
       return this.accumulator.state$.pipe(stateful());
     } else if (isStringAndFunctionTupleGuard(opOrMapFn)) {
       return this.accumulator.state$.pipe(
-        stateful(pluck(opOrMapFn[0])),
-        stateful(map(opOrMapFn[1]))
+        stateful(map((s) => opOrMapFn[1](s[opOrMapFn[0]])))
       );
     } else if (isStringsArrayAndFunctionTupleGuard(opOrMapFn)) {
       return this.accumulator.state$.pipe(
