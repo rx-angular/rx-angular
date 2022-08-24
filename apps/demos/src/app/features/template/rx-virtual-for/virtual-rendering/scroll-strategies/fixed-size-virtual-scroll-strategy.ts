@@ -1,10 +1,18 @@
 import { distinctUntilSomeChanged } from '@rx-angular/state/selections';
+import { switchMap } from 'rxjs/operators';
 import {
   ListRange,
+  RxVirtualForViewContext,
   RxVirtualScrollViewport,
   RxVirtualViewRepeater,
 } from '../model';
-import { Directive, EmbeddedViewRef, Input, OnDestroy } from '@angular/core';
+import {
+  Directive,
+  EmbeddedViewRef,
+  Input,
+  NgIterable,
+  OnDestroy,
+} from '@angular/core';
 import {
   combineLatest,
   merge,
@@ -29,8 +37,12 @@ import { RxVirtualScrollStrategy } from '../model';
     },
   ],
 })
-export class FixedSizeVirtualScrollStrategy
-  implements RxVirtualScrollStrategy, OnDestroy
+export class FixedSizeVirtualScrollStrategy<
+    T,
+    U extends NgIterable<T> = NgIterable<T>
+  >
+  extends RxVirtualScrollStrategy<T, U>
+  implements OnDestroy
 {
   /**
    * The size of the items in the virtually scrolled list
@@ -53,7 +65,7 @@ export class FixedSizeVirtualScrollStrategy
   @Input() runwayItemsOpposite = 5;
 
   private viewport: RxVirtualScrollViewport | null = null;
-  private viewRepeater: RxVirtualViewRepeater<any> | null = null;
+  private viewRepeater: RxVirtualViewRepeater<T, U> | null = null;
 
   private readonly _scrolledIndex$ = new ReplaySubject<number>(1);
   scrolledIndex$ = this._scrolledIndex$.asObservable();
@@ -86,46 +98,52 @@ export class FixedSizeVirtualScrollStrategy
   private scrollTop = 0;
   private direction: 'up' | 'down' = 'down';
 
-  private readonly destroy$ = new Subject<void>();
   private readonly detached$ = new Subject<void>();
 
-  private until$ = (o$) =>
-    o$.pipe(takeUntil(merge(this.destroy$, this.detached$)));
+  private until$ = (o$) => o$.pipe(takeUntil(this.detached$));
 
   ngOnDestroy() {
-    this.destroy$.next();
+    this.detach();
   }
 
   attach(
     viewport: RxVirtualScrollViewport,
-    viewRepeater: RxVirtualViewRepeater<any>
+    viewRepeater: RxVirtualViewRepeater<T, U>
   ): void {
     this.viewport = viewport;
     this.viewRepeater = viewRepeater;
-    this.onContentScrolled();
-    this.onContentRendered();
+    this.calcRenderedRange();
+    this.positionElements();
   }
+
   detach(): void {
     this.viewport = null;
+    this.viewRepeater = null;
     this.detached$.next();
   }
 
-  private onContentRendered(): void {
-    this.viewRepeater.contentRendered$
-      .pipe(this.until$)
-      .subscribe((views: EmbeddedViewRef<any>[]) => {
-        const renderedRange = this.renderedRange;
-        let scrollTop = this.itemSize * renderedRange.start;
-        let i = 0;
-        const end = views.length;
-        for (i; i < end; i++) {
-          this._setViewPosition(views[i], scrollTop);
-          scrollTop += this.itemSize;
-        }
-      });
+  private positionElements(): void {
+    this.viewRepeater.renderingStart$
+      .pipe(
+        switchMap(() => {
+          const start = this.renderedRange.start;
+          return this.viewRepeater.viewRendered$.pipe(
+            tap(({ view, index, item }) => {
+              this._setViewPosition(view, (index + start) * this.itemSize);
+              this.viewRenderCallback.next({
+                view,
+                item,
+                index,
+              });
+            })
+          );
+        }),
+        this.until$
+      )
+      .subscribe();
   }
 
-  private onContentScrolled(): void {
+  private calcRenderedRange(): void {
     const dataLengthChanged$ = this.viewRepeater.values$.pipe(
       map(
         (values) =>
@@ -200,13 +218,12 @@ export class FixedSizeVirtualScrollStrategy
   }
 
   private _setViewPosition(
-    view: EmbeddedViewRef<any>,
+    view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>,
     scrollTop: number
   ): void {
-    const element = view.rootNodes[0] as HTMLElement;
-    // element.style.opacity = '1';
-    element.style.transform = `translateY(${scrollTop}px)`;
+    const element = this.getElement(view);
     element.style.position = 'absolute';
+    element.style.transform = `translateY(${scrollTop}px)`;
   }
 }
 

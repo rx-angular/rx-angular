@@ -4,7 +4,7 @@ import {
   RxStrategyCredentials,
 } from '@rx-angular/cdk/render-strategies';
 import { RxListViewContext } from '@rx-angular/cdk/template';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import {
   RxListTemplateChange,
   RxListTemplateChanges,
@@ -27,8 +27,15 @@ export interface RxVirtualListTemplateManager<T> {
     count: number
   ): {
     insertedOrRemoved: boolean;
+    changes: RxListTemplateChange<T>[];
     work$: Observable<RxListTemplateChanges>[] | any[];
   };
+  viewRendered$: Observable<{
+    view: EmbeddedViewRef<any>;
+    index: number;
+    item: T;
+    change: RxListTemplateChangeType;
+  }>;
   detach(): void;
 }
 
@@ -53,9 +60,16 @@ export function getVirtualTemplateHandler<C extends RxListViewContext<T>, T>(
   } = templateSettings;
 
   let _viewCache: EmbeddedViewRef<C>[] = [];
+  const _viewRendered$ = new Subject<{
+    index: number;
+    view: EmbeddedViewRef<C>;
+    item: T;
+    change: RxListTemplateChangeType;
+  }>();
 
   return {
     toTemplateWork,
+    viewRendered$: _viewRendered$,
     detach: () => {
       for (const view of _viewCache) {
         view.destroy();
@@ -72,10 +86,13 @@ export function getVirtualTemplateHandler<C extends RxListViewContext<T>, T>(
     count: number
   ) {
     const listChanges = getListChanges(iterableChanges, items);
-    const changes = listChanges[0];
+    const changes = listChanges[0].sort(([, payloadA], [, payloadB]) => {
+      return payloadA[1] - payloadB[1];
+    });
     const insertedOrRemoved = listChanges[1];
     return {
       insertedOrRemoved,
+      changes,
       work$:
         changes.length > 0
           ? changes.map((change) => {
@@ -83,49 +100,61 @@ export function getVirtualTemplateHandler<C extends RxListViewContext<T>, T>(
                 change,
                 strategy,
                 (_change) => {
-                  const type = _change[0];
-                  const payload = _change[1];
+                  const [type, [item, index, adjustedPreviousIndex]] = _change;
+                  const update = () => ({
+                    view: viewContainerRef.get(
+                      index || 0
+                    ) as EmbeddedViewRef<C>,
+                    index,
+                    change: type,
+                    item,
+                  });
                   switch (type) {
                     case RxListTemplateChangeType.insert:
                       // console.log('perform insert', payload);
                       _insertView(
-                        payload[0],
-                        payload[1],
+                        item,
+                        index,
                         count,
-                        renderedRange.start + payload[1]
+                        renderedRange.start + index
                       );
+                      _viewRendered$.next(update());
                       break;
                     case RxListTemplateChangeType.move:
                       // console.log('perform move', payload);
                       _moveView(
-                        payload[0],
-                        payload[2],
-                        payload[1],
+                        item,
+                        adjustedPreviousIndex,
+                        index,
                         count,
-                        renderedRange.start + payload[1]
+                        renderedRange.start + index
                       );
+                      _viewRendered$.next(update());
                       break;
                     case RxListTemplateChangeType.remove:
                       // console.log('perform remove', payload);
-                      _detachAndCacheView(payload[1] as any);
+                      _detachAndCacheView(index);
+                      _viewRendered$.next(update());
                       break;
                     case RxListTemplateChangeType.update:
                       // console.log('perform update', payload);
                       _updateView(
-                        payload[0],
-                        payload[1],
+                        item,
+                        index,
                         count,
-                        renderedRange.start + payload[1]
+                        renderedRange.start + index
                       );
+                      _viewRendered$.next(update());
                       break;
                     case RxListTemplateChangeType.context:
                       // console.log('perform context', payload);
                       _updateView(
-                        payload[0],
-                        payload[1],
+                        item,
+                        index,
                         count,
-                        renderedRange.start + payload[1]
+                        renderedRange.start + index
                       );
+                      _viewRendered$.next(update());
                       break;
                   }
                 },
@@ -156,7 +185,7 @@ export function getVirtualTemplateHandler<C extends RxListViewContext<T>, T>(
     contextIndex: number
   ): void {
     const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
-    templateSettings.updateViewContext(item, view, {
+    updateViewContext(item, view, {
       count,
       index: contextIndex,
     } as any);
@@ -198,8 +227,8 @@ export function getVirtualTemplateHandler<C extends RxListViewContext<T>, T>(
   /** Detaches the view at the given index and inserts into the view cache. */
   function _detachAndCacheView(index: number) {
     const detachedView = viewContainerRef.detach(index) as EmbeddedViewRef<C>;
-    detachedView.detectChanges();
     _maybeCacheView(detachedView);
+    detachedView.detectChanges();
   }
 
   /** Moves view at the previous index to the current index. */
@@ -216,7 +245,7 @@ export function getVirtualTemplateHandler<C extends RxListViewContext<T>, T>(
     viewContainerRef.move(view, currentIndex);
     updateViewContext(value, view, {
       count,
-      index: currentIndex,
+      index: contextIndex,
     } as any);
     view.detectChanges();
     return view;
@@ -229,6 +258,7 @@ export function getVirtualTemplateHandler<C extends RxListViewContext<T>, T>(
   function _maybeCacheView(view: EmbeddedViewRef<C>) {
     if (_viewCache.length < viewCacheSize) {
       _viewCache.push(view);
+      return true;
     } else {
       const index = viewContainerRef.indexOf(view);
 
@@ -241,6 +271,7 @@ export function getVirtualTemplateHandler<C extends RxListViewContext<T>, T>(
       } else {
         viewContainerRef.remove(index);
       }
+      return false;
     }
   }
 
@@ -263,44 +294,40 @@ export function getVirtualTemplateHandler<C extends RxListViewContext<T>, T>(
 function getListChanges<T>(
   changes: IterableChanges<T>,
   items: T[]
-): RxListTemplateChanges {
+): RxListTemplateChanges<T> {
   const changedIdxs = new Set<T>();
   const changesArr: RxListTemplateChange[] = [];
   let notifyParent = false;
-  changes.forEachOperation((record, adjustedPreviousIndex, currentIndex) => {
-    const item = record.item;
-    if (record.previousIndex == null) {
-      // insert
-      changesArr.push(
-        getInsertChange(item, currentIndex === null ? undefined : currentIndex)
-      );
-      changedIdxs.add(item);
-      notifyParent = true;
-    } else if (currentIndex == null) {
-      // remove
-      changesArr.push(
-        getRemoveChange(
-          item,
-          adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex
-        )
-      );
-      notifyParent = true;
-    } else if (adjustedPreviousIndex !== null) {
-      // move
-      changesArr.push(getMoveChange(item, currentIndex, adjustedPreviousIndex));
-      notifyParent = true;
+  changes.forEachOperation(
+    ({ item, previousIndex }, adjustedPreviousIndex, currentIndex) => {
+      if (previousIndex == null) {
+        // insert
+        changesArr.push(getInsertChange(item, currentIndex));
+        changedIdxs.add(item);
+        notifyParent = true;
+      } else if (currentIndex == null) {
+        // remove
+        changesArr.push(getRemoveChange(item, adjustedPreviousIndex));
+        notifyParent = true;
+      } else if (adjustedPreviousIndex !== null) {
+        // move
+        changesArr.push(
+          getMoveChange(item, currentIndex, adjustedPreviousIndex)
+        );
+        changedIdxs.add(item);
+        notifyParent = true;
+      }
     }
-  });
-  changes.forEachIdentityChange((record) => {
-    const item = record.item;
+  );
+  changes.forEachIdentityChange(({ item, currentIndex }) => {
     if (!changedIdxs.has(item)) {
-      changesArr.push(getUpdateChange(item, record.currentIndex));
+      changesArr.push(getUpdateChange(item, currentIndex));
       changedIdxs.add(item);
     }
   });
   items.forEach((item, index) => {
     if (!changedIdxs.has(item)) {
-      changesArr.push(getUpdateChange(item, index));
+      changesArr.push(getUnchangedChange(item, index));
     }
   });
   return [changesArr, notifyParent];
@@ -311,7 +338,7 @@ function getListChanges<T>(
     item: T,
     currentIndex: number,
     adjustedPreviousIndex: number
-  ): RxListTemplateChange {
+  ): RxListTemplateChange<T> {
     return [
       RxListTemplateChangeType.move,
       [item, currentIndex, adjustedPreviousIndex],
@@ -321,7 +348,7 @@ function getListChanges<T>(
   function getUpdateChange(
     item: T,
     currentIndex: number
-  ): RxListTemplateChange {
+  ): RxListTemplateChange<T> {
     return [RxListTemplateChangeType.update, [item, currentIndex]];
   }
 
@@ -331,8 +358,8 @@ function getListChanges<T>(
 
   function getInsertChange(
     item: T,
-    currentIndex: number
-  ): RxListTemplateChange {
+    currentIndex: number | null
+  ): RxListTemplateChange<T> {
     return [
       RxListTemplateChangeType.insert,
       [item, currentIndex === null ? undefined : currentIndex],
@@ -342,7 +369,7 @@ function getListChanges<T>(
   function getRemoveChange(
     item: T,
     adjustedPreviousIndex: number
-  ): RxListTemplateChange {
+  ): RxListTemplateChange<T> {
     return [
       RxListTemplateChangeType.remove,
       [

@@ -3,21 +3,45 @@ import {
   EmbeddedViewRef,
   Injectable,
   NgIterable,
+  Output,
   TrackByFunction,
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import { RxDefaultListViewContext } from '@rx-angular/cdk/template';
+import { Observable, Subject } from 'rxjs';
 
 export interface ListRange {
   start: number;
   end: number;
 }
 
-@Injectable()
-export abstract class RxVirtualScrollStrategy {
+@Directive()
+export abstract class RxVirtualScrollStrategy<
+  T,
+  U extends NgIterable<T> = NgIterable<T>
+> {
   /** Emits when the index of the first element visible in the viewport changes. */
   scrolledIndex$: Observable<number>;
   renderedRange$: Observable<ListRange>;
   contentSize$: Observable<number>;
+
+  @Output() readonly viewRenderCallback = new Subject<{
+    view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>;
+    item: T;
+    index: number;
+  }>();
+
+  private nodeIndex?: number;
+
+  protected getElement(
+    view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>
+  ): HTMLElement {
+    if (this.nodeIndex !== undefined) {
+      return view.rootNodes[this.nodeIndex];
+    }
+    const rootNode = view.rootNodes[0];
+    this.nodeIndex = rootNode instanceof HTMLElement ? 0 : 1;
+    return view.rootNodes[this.nodeIndex] as HTMLElement;
+  }
 
   /**
    * Attaches this scroll strategy to a viewport.
@@ -42,6 +66,9 @@ export abstract class RxVirtualScrollStrategy {
 
 @Injectable()
 export abstract class RxVirtualScrollViewport {
+  rendered$: Observable<any>;
+  renderedRange$: Observable<ListRange>;
+  viewChange: Observable<ListRange>;
   elementScrolled$: Observable<void>;
   containerSize$: Observable<number>;
   abstract getScrollTop(): number;
@@ -53,8 +80,28 @@ export abstract class RxVirtualViewRepeater<
   T,
   U extends NgIterable<T> = NgIterable<T>
 > {
-  _trackBy: TrackByFunction<T> = (i, a) => a;
   values$: Observable<U>;
-  contentRendered$: Observable<EmbeddedViewRef<any>[]>;
-  beforeContentRendered$: Observable<void>;
+  rendered$: Observable<any>;
+  viewsRendered$: Observable<EmbeddedViewRef<any>[]>;
+  viewRendered$: Observable<{
+    view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>;
+    index: number;
+    item: T;
+  }>;
+  renderingStart$: Observable<void>;
+  _trackBy: TrackByFunction<T> = (i, a) => a;
+}
+
+export class RxVirtualForViewContext<
+  T,
+  U extends NgIterable<T> = NgIterable<T>,
+  K = keyof T
+> extends RxDefaultListViewContext<T, U, K> {
+  constructor(
+    item: T,
+    public rxVirtualForOf: U,
+    customProps?: { count: number; index: number }
+  ) {
+    super(item, customProps);
+  }
 }

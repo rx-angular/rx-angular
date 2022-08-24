@@ -19,6 +19,8 @@ import {
   distinctUntilChanged,
   startWith,
   takeUntil,
+  merge,
+  map,
 } from 'rxjs';
 import {
   RxVirtualScrollStrategy,
@@ -50,8 +52,8 @@ import { observeElementSize } from './observe-element-size';
         height: 100%;
         box-sizing: border-box;
         contain: content;
-        will-change: transform;
       }
+
       .rxa-virtual-scroll-run-way {
         width: 1px;
         height: 1px;
@@ -71,6 +73,8 @@ export class RxVirtualScrollViewportComponent
   @ContentChild(RxVirtualViewRepeater)
   viewRepeater: RxVirtualViewRepeater<any>;
 
+  readonly rendered$ = defer(() => this.viewRepeater.rendered$);
+
   private _elementScrolled = new Subject<Event>();
   readonly elementScrolled$ =
     this._elementScrolled.asObservable() as unknown as Observable<void>;
@@ -80,18 +84,19 @@ export class RxVirtualScrollViewportComponent
 
   @Output('renderedRange')
   readonly renderedRange$ = defer(() => this.scrollStrategy.renderedRange$);
+  readonly viewChange = this.renderedRange$;
 
   @Output('scrolledIndexChange')
   readonly scrolledIndex$ = defer(() => this.scrollStrategy.scrolledIndex$);
 
   readonly nativeElement = this.elementRef.nativeElement;
 
-  private destroy$ = new Subject<void>();
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     private elementRef: ElementRef<HTMLElement>,
     private ngZone: NgZone,
-    @Optional() private scrollStrategy: RxVirtualScrollStrategy
+    @Optional() private scrollStrategy: RxVirtualScrollStrategy<unknown>
   ) {
     if (!scrollStrategy /*TODO: use ngDevMode approach from scheduler.ts*/) {
       throw Error(
@@ -108,23 +113,30 @@ export class RxVirtualScrollViewportComponent
         .pipe(takeUntil(this.destroy$))
         .subscribe(this._elementScrolled);
     });
-  }
-
-  ngAfterContentInit(): void {
-    observeElementSize(
-      this.elementRef.nativeElement,
-      (entries) => entries[0].contentRect.height
-    )
+    observeElementSize(this.elementRef.nativeElement, {
+      extract: (entries) => entries[0].contentRect.height,
+    })
       .pipe(
         startWith(this.elementRef.nativeElement.offsetHeight),
         distinctUntilChanged(),
         takeUntil(this.destroy$)
       )
       .subscribe(this._containerSize$);
+  }
+
+  ngAfterContentInit(): void {
     this.scrollStrategy.attach(this, this.viewRepeater);
     this.scrollStrategy.contentSize$
       .pipe(takeUntil(this.destroy$))
       .subscribe((size) => this.updateContentSize(size));
+    merge(
+      this.elementScrolled$.pipe(map(() => '')),
+      this.viewRepeater.viewsRendered$.pipe(map(() => 'transform 0.2s ease 0s'))
+    )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((transition) => {
+        this._runway.nativeElement.style.transition = transition;
+      });
   }
 
   ngOnDestroy(): void {

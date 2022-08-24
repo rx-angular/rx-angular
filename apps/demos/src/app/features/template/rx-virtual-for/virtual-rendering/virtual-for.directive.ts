@@ -14,11 +14,7 @@ import {
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
-import {
-  RxDefaultListViewContext,
-  RxListViewComputedContext,
-  RxListViewContext,
-} from '@rx-angular/cdk/template';
+import { RxListViewComputedContext } from '@rx-angular/cdk/template';
 import {
   RxStrategyNames,
   RxStrategyProvider,
@@ -26,8 +22,12 @@ import {
 import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
 
 import { Observable, ReplaySubject, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { RxVirtualScrollStrategy, RxVirtualViewRepeater } from './model';
+import { shareReplay, takeUntil } from 'rxjs/operators';
+import {
+  RxVirtualForViewContext,
+  RxVirtualScrollStrategy,
+  RxVirtualViewRepeater,
+} from './model';
 import {
   createVirtualListManager,
   VirtualListManager,
@@ -66,6 +66,18 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
     this.observables$.next(potentialObservable);
   }
 
+  /**
+   * @internal
+   * A reference to the template that is created for each item in the iterable.
+   * @see [template reference variable](guide/template-reference-variables)
+   * (inspired by @angular/common `ng_for_of.ts`)
+   */
+  private _template: TemplateRef<RxVirtualForViewContext<T, U>>;
+  @Input()
+  set rxForTemplate(value: TemplateRef<RxVirtualForViewContext<T, U>>) {
+    this._template = value;
+  }
+
   @Input('rxVirtualForStrategy')
   set strategy(
     strategyName:
@@ -78,14 +90,15 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   @Input('rxVirtualForViewCacheSize') viewCacheSize = 50;
 
-  @Input('rxVirtualForParent') renderParent = true;
+  @Input('rxVirtualForParent') renderParent =
+    this.strategyProvider.config.parent;
 
   @Input('rxVirtualForPatchZone') patchZone =
     this.strategyProvider.config.patchZone;
 
-  @Input('rxVirtualForTombstone') tombstone: TemplateRef<
-    RxListViewContext<T>
-  > | null = null;
+  /*@Input('rxVirtualForTombstone') tombstone: TemplateRef<
+   RxVirtualForViewContext<T>
+   > | null = null;*/
 
   @Input('rxVirtualForTrackBy')
   set trackBy(trackByFnOrKey: string | ((idx: number, i: T) => any)) {
@@ -102,17 +115,30 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   /** @internal */
-  readonly contentRendered$ = new Subject<any>();
+  readonly rendered$ = new Subject<any>();
   /** @internal */
-  readonly beforeContentRendered$ = new Subject<void>();
+  readonly viewsRendered$ = new Subject<EmbeddedViewRef<any>[]>();
+  /** @internal */
+  readonly viewRendered$ = new Subject<{
+    view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>;
+    index: number;
+    item: T;
+  }>();
+  /** @internal */
+  readonly renderingStart$ = new Subject<void>();
+
+  private get template(): TemplateRef<RxVirtualForViewContext<T, U>> {
+    return this._template || this.templateRef;
+  }
 
   /** @internal */
   constructor(
-    private scrollStrategy: RxVirtualScrollStrategy,
+    private scrollStrategy: RxVirtualScrollStrategy<T, U>,
     private iterableDiffers: IterableDiffers,
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
-    private readonly templateRef: TemplateRef<RxDefaultListViewContext<T>>,
+    private eRef: ElementRef,
+    private readonly templateRef: TemplateRef<RxVirtualForViewContext<T, U>>,
     private readonly viewContainerRef: ViewContainerRef,
     private strategyProvider: RxStrategyProvider,
     private errorHandler: ErrorHandler
@@ -130,95 +156,107 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   private _renderCallback: Subject<any>;
 
   /** @internal */
-  readonly values$ = this.observables$.pipe(coerceDistinctWith());
+  readonly values$ = this.observables$.pipe(
+    coerceDistinctWith(),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  /** @internal */
+  private values?: NgIterable<T>;
 
   /** @internal */
   private readonly strategy$ = this.strategyInput$.pipe(coerceDistinctWith());
 
   /** @internal */
-  private listManager: VirtualListManager<T>;
+  private listManager: VirtualListManager<T, RxVirtualForViewContext<T, U>>;
 
   /** @internal */
   private _destroy$ = new Subject<void>();
 
   /** @internal */
-  static ngTemplateContextGuard<U>(
-    dir: RxVirtualFor<U>,
-    ctx: unknown | null | undefined
-  ): ctx is RxDefaultListViewContext<U> {
+  static ngTemplateContextGuard<
+    T,
+    U extends NgIterable<T> = NgIterable<T>,
+    K = keyof T
+  >(
+    dir: RxVirtualFor<T, U>,
+    ctx: any
+  ): ctx is RxVirtualForViewContext<T, U, K> {
     return true;
   }
 
   /** @internal */
   _trackBy: TrackByFunction<T> = (i, a) => a;
-  /** @internal */
-  _distinctBy = (a: T, b: T) => a === b;
 
   /** @internal */
   ngOnInit() {
-    this.listManager = createVirtualListManager<T, RxDefaultListViewContext<T>>(
-      {
-        iterableDiffers: this.iterableDiffers,
-        renderSettings: {
-          cdRef: this.cdRef,
-          strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
-          defaultStrategyName: this.strategyProvider.primaryStrategy,
-          parent: !!this.renderParent,
-          patchZone: this.patchZone ? this.ngZone : false,
-          errorHandler: this.errorHandler,
-        },
-        templateSettings: {
-          patchZone: this.patchZone ? this.ngZone : false,
-          viewContainerRef: this.viewContainerRef,
-          templateRef: this.templateRef,
-          createViewContext: this.createViewContext,
-          updateViewContext: this.updateViewContext,
-          viewCacheSize: this.viewCacheSize,
-        },
-        trackBy: this._trackBy,
-      }
-    );
+    this.listManager = createVirtualListManager<
+      T,
+      RxVirtualForViewContext<T, U>
+    >({
+      iterableDiffers: this.iterableDiffers,
+      renderSettings: {
+        cdRef: this.cdRef,
+        strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
+        defaultStrategyName: this.strategyProvider.primaryStrategy,
+        parent: !!this.renderParent,
+        patchZone: this.patchZone ? this.ngZone : false,
+        errorHandler: this.errorHandler,
+      },
+      templateSettings: {
+        patchZone: false,
+        viewContainerRef: this.viewContainerRef,
+        templateRef: this.template,
+        createViewContext: this.createViewContext.bind(this),
+        updateViewContext: this.updateViewContext.bind(this),
+        viewCacheSize: this.viewCacheSize,
+      },
+      trackBy: this._trackBy,
+    });
     this.listManager.nextStrategy(this.strategy$);
+    this.values$.pipe(takeUntil(this._destroy$)).subscribe((values) => {
+      this.values = values;
+    });
     this.listManager
       .render(this.values$, this.scrollStrategy.renderedRange$)
       .pipe(takeUntil(this._destroy$))
       .subscribe((v) => {
+        this.rendered$.next(v);
         this._renderCallback?.next(v);
       });
     this.listManager.viewsRendered$
       .pipe(takeUntil(this._destroy$))
-      .subscribe((v) => {
-        this.contentRendered$.next(v);
-      });
-    this.listManager.beforeViewsRendered$
+      .subscribe(this.viewsRendered$);
+    this.listManager.viewRendered$
       .pipe(takeUntil(this._destroy$))
-      .subscribe(() => {
-        this.beforeContentRendered$.next();
-      });
+      .subscribe(this.viewRendered$);
+    this.listManager.renderingStart$
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(this.renderingStart$);
   }
 
   /** @internal */
   createViewContext(
     item: T,
     computedContext: RxListViewComputedContext
-  ): RxDefaultListViewContext<T> {
-    return new RxDefaultListViewContext<T>(item, computedContext);
+  ): RxVirtualForViewContext<T> {
+    return new RxVirtualForViewContext<T>(item, this.values, computedContext);
   }
 
   /** @internal */
   updateViewContext(
     item: T,
-    view: EmbeddedViewRef<RxListViewContext<T>>,
+    view: EmbeddedViewRef<RxVirtualForViewContext<T>>,
     computedContext: RxListViewComputedContext
   ): void {
     view.context.updateContext(computedContext);
     view.context.$implicit = item;
+    view.context.rxVirtualForOf = this.values;
   }
 
   /** @internal */
   ngOnDestroy() {
     this._destroy$.next();
     this.listManager.detach();
-    this.viewContainerRef.clear();
   }
 }

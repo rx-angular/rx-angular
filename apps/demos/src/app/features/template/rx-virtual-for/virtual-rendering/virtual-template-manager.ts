@@ -1,3 +1,4 @@
+import { distinctUntilChanged } from 'rxjs/operators';
 import { createErrorHandler } from '../../../../../../../../libs/cdk/template/src/lib/render-error';
 import { ListRange } from './model';
 import {
@@ -24,9 +25,14 @@ import {
   switchMap,
   tap,
   withLatestFrom,
+  NEVER,
 } from 'rxjs';
-import { strategyHandling } from '@rx-angular/cdk/render-strategies';
 import {
+  RxStrategyCredentials,
+  strategyHandling,
+} from '@rx-angular/cdk/render-strategies';
+import {
+  RxListTemplateChangeType,
   RxRenderSettings,
   RxTemplateSettings,
 } from '../../../../../../../../libs/cdk/template/src/lib/model';
@@ -37,13 +43,18 @@ export interface RxListManager<T> {
   nextStrategy: (config: string | Observable<string>) => void;
 }
 
-export type VirtualListManager<T> = RxListManager<T> & {
+export type VirtualListManager<T, C> = RxListManager<T> & {
   render(
     data$: Observable<NgIterable<T>>,
     range$: Observable<ListRange>
   ): Observable<any>;
-  viewsRendered$: Observable<EmbeddedViewRef<any>[]>;
-  beforeViewsRendered$: Observable<void>;
+  viewsRendered$: Observable<EmbeddedViewRef<C>[]>;
+  viewRendered$: Observable<{
+    index: number;
+    view: EmbeddedViewRef<C>;
+    item: T;
+  }>;
+  renderingStart$: Observable<void>;
   detach(): void;
 };
 
@@ -59,32 +70,16 @@ export function createVirtualListManager<
   //
   trackBy: TrackByFunction<T>;
   iterableDiffers: IterableDiffers;
-}): VirtualListManager<T> {
+}): VirtualListManager<T, C> {
   const { templateSettings, renderSettings, trackBy, iterableDiffers } = config;
   const {
     defaultStrategyName,
     strategies,
     cdRef: injectingViewCdRef,
     parent,
-    patchZone,
   } = renderSettings;
-
-  const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
-  const listViewHandler = getVirtualTemplateHandler({
-    ...templateSettings,
-    initialTemplateRef: templateSettings.templateRef,
-    patchZone: false,
-  });
-  const viewContainerRef = templateSettings.viewContainerRef;
   const errorHandler = createErrorHandler(renderSettings.errorHandler);
-  const ngZone = patchZone ? patchZone : undefined;
-
-  let notifyParent = false;
-  let partiallyFinished = false;
-  let renderedRange: ListRange;
-  const _viewsRendered$ = new Subject<EmbeddedViewRef<C>[]>();
-  const _beforeViewsRendered$ = new Subject<void>();
-
+  const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   let _differ: IterableDiffer<T> | undefined;
   function getDiffer(values: NgIterable<T>): IterableDiffer<T> | null {
     if (_differ) {
@@ -94,10 +89,53 @@ export function createVirtualListManager<
       ? (_differ = iterableDiffers.find(values).create(trackBy))
       : null;
   }
+  //               type,  payload
+  const listViewHandler = getVirtualTemplateHandler({
+    ...templateSettings,
+    initialTemplateRef: templateSettings.templateRef,
+    patchZone: false,
+  });
+  const viewContainerRef = templateSettings.viewContainerRef;
+
+  let notifyParent = false;
+  let partiallyFinished = false;
+  let renderedRange: ListRange;
+  const _viewsRendered$ = new Subject<EmbeddedViewRef<C>[]>();
+  const _viewRendered$ = new Subject<{
+    index: number;
+    view: EmbeddedViewRef<C>;
+    item: T;
+  }>();
+  const _renderingStart$ = new Subject<void>();
+  const viewRenderedSub = listViewHandler.viewRendered$
+    .pipe(
+      filter(
+        ({ view, change }) =>
+          !!view && change !== RxListTemplateChangeType.remove
+      ),
+      map(({ view, item, index }) => ({
+        view,
+        item,
+        index,
+      }))
+    )
+    .subscribe(_viewRendered$);
+
+  function handleError() {
+    return (o$) =>
+      o$.pipe(
+        catchError((err: Error) => {
+          partiallyFinished = false;
+          errorHandler.handleError(err);
+          return of(null);
+        })
+      );
+  }
 
   return {
     viewsRendered$: _viewsRendered$,
-    beforeViewsRendered$: _beforeViewsRendered$,
+    viewRendered$: _viewRendered$,
+    renderingStart$: _renderingStart$,
     nextStrategy(nextConfig: Observable<string>): void {
       strategyHandling$.next(nextConfig);
     },
@@ -116,34 +154,29 @@ export function createVirtualListManager<
           )
         ),
         range$,
-      ]).pipe(render());
+        strategyHandling$.strategy$.pipe(distinctUntilChanged()),
+      ]).pipe(render(), handleError());
     },
     detach(): void {
+      viewRenderedSub.unsubscribe();
       listViewHandler.detach();
     },
   };
 
-  function handleError() {
-    return (o$) =>
+  function render(): OperatorFunction<
+    [T[], ListRange, RxStrategyCredentials],
+    any
+  > {
+    return (
+      o$: Observable<[T[], ListRange, RxStrategyCredentials]>
+    ): Observable<any> =>
       o$.pipe(
-        catchError((err: Error) => {
-          partiallyFinished = false;
-          errorHandler.handleError(err);
-          return of(null);
-        })
-      );
-  }
-
-  function render(): OperatorFunction<[T[], ListRange], any> {
-    let count = 0;
-    return (o$: Observable<[T[], ListRange]>): Observable<any> =>
-      combineLatest([o$, strategyHandling$.strategy$]).pipe(
         // map iterable to latest diff
-        map(([[iterable, range], strategy]) => {
+        map(([items, range, strategy]) => {
+          renderedRange = range;
+          const iterable = items.slice(range.start, range.end);
           const differ = getDiffer(iterable);
           let changes: IterableChanges<T>;
-          let items: T[];
-          renderedRange = range;
           if (differ) {
             if (partiallyFinished) {
               const currentIterable = [];
@@ -152,39 +185,35 @@ export function createVirtualListManager<
                 currentIterable[i] = viewRef.context.$implicit;
               }
               differ.diff(currentIterable);
-              partiallyFinished = false;
+              // partiallyFinished = false;
             }
-            items = iterable.slice(range.start, range.end);
-            changes = differ.diff(items);
+            changes = differ.diff(iterable);
           }
           return {
-            strategy,
             changes,
-            items,
-            data: iterable,
+            itemsToRender: iterable,
+            count: items.length,
+            strategy,
           };
         }),
         // Cancel old renders
-        switchMap(({ strategy, changes, items, data }) => {
+        switchMap(({ changes, count, itemsToRender, strategy }) => {
           if (!changes) {
-            return of([]);
+            return NEVER;
           }
           const { work$, insertedOrRemoved } = listViewHandler.toTemplateWork(
             changes,
-            items,
+            itemsToRender,
             renderedRange,
             strategy,
             count
           );
           partiallyFinished = true;
-          // @TODO we need to know if we need to notifyParent on move aswell
           notifyParent = insertedOrRemoved && parent;
-          count = data.length;
-          _beforeViewsRendered$.next();
-          // console.log('changes', changesArr, notifyParent);
+          _renderingStart$.next();
           return combineLatest(
             // emit after all changes are rendered
-            work$.length > 0 ? work$ : [of(null)]
+            work$.length > 0 ? work$ : [of(itemsToRender)]
           ).pipe(
             tap(() => {
               partiallyFinished = false;
@@ -198,18 +227,15 @@ export function createVirtualListManager<
               }
               _viewsRendered$.next(viewsRendered);
             }),
-            // somehow this makes the strategySelect work
             notifyAllParentsIfNeeded(
               injectingViewCdRef,
               strategy,
-              () => notifyParent,
-              ngZone
+              () => notifyParent
             ),
             handleError(),
-            map(() => items)
+            map(() => itemsToRender)
           );
-        }),
-        handleError()
+        })
       );
   }
 }
