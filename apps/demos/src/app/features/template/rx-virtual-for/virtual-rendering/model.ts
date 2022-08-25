@@ -1,7 +1,6 @@
 import {
   Directive,
   EmbeddedViewRef,
-  Injectable,
   NgIterable,
   Output,
   TrackByFunction,
@@ -14,24 +13,49 @@ export interface ListRange {
   end: number;
 }
 
+/**
+ * @Directive RxVirtualScrollStrategy
+ *
+ * @description
+ * Abstract implementation for the actual implementations of the ScrollStrategies
+ * being consumed by `*rxVirtualFor` and `rx-virtual-scroll-viewport`.
+ *
+ * This is one of the core parts for the virtual scrolling implementation. It has
+ * to determine the `ListRange` being rendered to the DOM as well as managing
+ * the layouting task for the `*rxVirtualFor` directive.
+ *
+ * @docsCategory RxVirtualFor
+ * @docsPage RxVirtualFor
+ * @publicApi
+ */
 @Directive()
 export abstract class RxVirtualScrollStrategy<
   T,
   U extends NgIterable<T> = NgIterable<T>
 > {
   /** Emits when the index of the first element visible in the viewport changes. */
+  /** @internal */
   scrolledIndex$: Observable<number>;
+  /** @internal */
   renderedRange$: Observable<ListRange>;
+  /** @internal */
   contentSize$: Observable<number>;
 
+  /**
+   * @description
+   *
+   * Emits whenever an update to a single view was rendered
+   */
   @Output() readonly viewRenderCallback = new Subject<{
     view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>;
     item: T;
     index: number;
   }>();
 
+  /** @internal */
   private nodeIndex?: number;
 
+  /** @internal */
   protected getElement(
     view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>
   ): HTMLElement {
@@ -64,17 +88,18 @@ export abstract class RxVirtualScrollStrategy<
   abstract scrollToIndex(index: number, behavior?: ScrollBehavior): void;
 }
 
-@Injectable()
+/** @internal */
+@Directive()
 export abstract class RxVirtualScrollViewport {
   rendered$: Observable<any>;
-  renderedRange$: Observable<ListRange>;
-  viewChange: Observable<ListRange>;
+  viewRange: Observable<ListRange>;
   elementScrolled$: Observable<void>;
   containerSize$: Observable<number>;
   abstract getScrollTop(): number;
   abstract scrollTo(scrollTo: number, behavior?: ScrollBehavior): void;
 }
 
+/** @internal */
 @Directive()
 export abstract class RxVirtualViewRepeater<
   T,
@@ -92,6 +117,7 @@ export abstract class RxVirtualViewRepeater<
   _trackBy: TrackByFunction<T> = (i, a) => a;
 }
 
+/** @internal */
 export class RxVirtualForViewContext<
   T,
   U extends NgIterable<T> = NgIterable<T>,

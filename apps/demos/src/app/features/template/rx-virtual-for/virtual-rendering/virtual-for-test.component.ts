@@ -132,6 +132,9 @@ import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.comp
               <rx-virtual-scroll-viewport
                 (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
                 autosize
+                [resizeObserverConfig]="{
+                  extractSize: extractSize
+                }"
                 class="viewport"
               >
                 <div
@@ -300,6 +303,9 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
       )
     )
   );
+
+  extractSize = (entries: ResizeObserverEntry[]) =>
+    entries[0].borderBoxSize[0].blockSize;
 
   randomContent = () => {
     return new Array(Math.max(1, Math.floor(Math.random() * 25)))

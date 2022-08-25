@@ -15,7 +15,6 @@ import {
 } from '@angular/core';
 import {
   combineLatest,
-  merge,
   ReplaySubject,
   Subject,
   distinctUntilChanged,
@@ -27,6 +26,19 @@ import {
 } from 'rxjs';
 import { RxVirtualScrollStrategy } from '../model';
 
+/**
+ * @Directive FixedSizeVirtualScrollStrategy
+ *
+ * @description
+ *
+ * The `FixedSizeVirtualScrollStrategy` provides a very performant way of rendering
+ * items of a given size. It is comparable to \@angular/cdk `FixedSizeVirtualScrollStrategy`, but
+ * with a high performant layouting technique.
+ *
+ * @docsCategory RxVirtualFor
+ * @docsPage RxVirtualFor
+ * @publicApi
+ */
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'rx-virtual-scroll-viewport[itemSize]',
@@ -45,24 +57,47 @@ export class FixedSizeVirtualScrollStrategy<
   implements OnDestroy
 {
   /**
+   * @description
    * The size of the items in the virtually scrolled list
    */
   @Input() itemSize = 50;
 
   /**
-   * The amount of buffer (in px) to render on either side of the viewport
-   */
-  @Input() buffer = 350;
-
-  /**
+   * @description
    * The amount of items to render upfront in scroll direction
    */
   @Input() runwayItems = 20;
 
   /**
+   * @description
    * The amount of items to render upfront in reverse scroll direction
    */
   @Input() runwayItemsOpposite = 5;
+
+  /**
+   * @description
+   * Styles that will be applied to a DOM element when being positioned. A useful
+   * example is if you want to implement a css based fade-in animation by setting
+   * the opacity of the rendered item to 1 when getting position.
+   *
+   * @example
+   * \@Component({
+   *   template: `
+   *    <rx-virtual-scroll-viewport
+   *      [itemSize]="50"
+   *      [enterStyles]="{opacity: '1'}"
+   *    ></rx-virtual-scroll-viewport>
+   *   `,
+   *   styles: [`
+   *    .item {
+   *      opacity: 0;
+   *      transition: opacity 125ms linear;
+   *    }
+   *   `]
+   * })
+   * export class VirtualComponent {}
+   */
+  @Input() enterStyles?: Record<keyof CSSStyleDeclaration, string>;
 
   private viewport: RxVirtualScrollViewport | null = null;
   private viewRepeater: RxVirtualViewRepeater<T, U> | null = null;
@@ -224,6 +259,11 @@ export class FixedSizeVirtualScrollStrategy<
     const element = this.getElement(view);
     element.style.position = 'absolute';
     element.style.transform = `translateY(${scrollTop}px)`;
+    if (this.enterStyles) {
+      Object.keys(this.enterStyles).forEach((style) => {
+        element.style[style] = this.enterStyles[style];
+      });
+    }
   }
 }
 

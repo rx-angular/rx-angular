@@ -14,14 +14,13 @@ import {
   IterableDiffer,
   IterableDiffers,
   NgIterable,
+  NgZone,
   OnDestroy,
 } from '@angular/core';
 import {
-  asyncScheduler,
   combineLatest,
   merge,
   ReplaySubject,
-  scan,
   scheduled,
   Subject,
   distinctUntilChanged,
@@ -35,17 +34,19 @@ import {
   animationFrameScheduler,
 } from 'rxjs';
 
+/** @internal */
 type VirtualViewItem = {
-  height: number;
-  width?: number;
+  size: number;
   tombstone?: boolean;
 };
 
+/** @internal */
 type AnchorItem = {
   index: number;
   offset: number;
 };
 
+/** @internal */
 function removeFromArray(arr: any[], index: number): any {
   // perf: array.pop is faster than array.splice!
   if (index >= arr.length - 1) {
@@ -55,6 +56,29 @@ function removeFromArray(arr: any[], index: number): any {
   }
 }
 
+/**
+ * @Directive AutosizeVirtualScrollStrategy
+ *
+ * @description
+ *
+ * The `AutosizeVirtualScrollStrategy` provides a twitter-like virtual-scrolling
+ * experience. It is able to render and position items based on their individual
+ * size. It is comparable to \@angular/cdk/experimental `AutosizeVirtualScrollStrategy`, but
+ * with a high performant layouting technique and more features.
+ *
+ * On top of this the `AutosizeVirtualScrollStrategy` is leveraging the native
+ * `ResizeObserver` in order to detect size changes for each individual view
+ * rendered to the DOM and properly re-position accordingly.
+ *
+ * In order to provide top-notch runtime performance the `AutosizeVirtualScrollStrategy`
+ * builds up caches that prevent DOM interactions whenever possible. Once a view
+ * was visited, its properties will be stored instead of re-read from the DOM again as
+ * this can potentially lead to unwanted forced reflows.
+ *
+ * @docsCategory RxVirtualFor
+ * @docsPage RxVirtualFor
+ * @publicApi
+ */
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'rx-virtual-scroll-viewport[autosize]',
@@ -73,84 +97,160 @@ export class AutosizeVirtualScrollStrategy<
   implements OnDestroy
 {
   /**
+   * @description
    * The amount of items to render upfront in scroll direction
    */
   @Input() runwayItems = 20;
 
   /**
+   * @description
    * The amount of items to render upfront in reverse scroll direction
    */
   @Input() runwayItemsOpposite = 5;
 
+  /**
+   * @description
+   * The default size of the items being rendered. The autosized strategy will assume
+   * this size for items it doesn't know yet. For the smoothest experience,
+   * you provide the mean size of all items being rendered - if possible of course.
+   *
+   * As soon as rxVirtualFor is able to also render actual tombstone items, this
+   * will be the size of a tombstone item being rendered before the actual item
+   * is inserted into its position.
+   */
   @Input() tombstoneSize = 50;
 
+  /**
+   * @description
+   * Styles that will be applied to a DOM element when being positioned. A useful
+   * example is if you want to implement a css based fade-in animation by setting
+   * the opacity of the rendered item to 1 when getting position.
+   *
+   * @example
+   * \@Component({
+   *   template: `
+   *    <rx-virtual-scroll-viewport
+   *      autosized
+   *      [enterStyles]="{opacity: '1'}"
+   *    ></rx-virtual-scroll-viewport>
+   *   `,
+   *   styles: [`
+   *    .item {
+   *      opacity: 0;
+   *      transition: opacity 125ms linear;
+   *    }
+   *   `]
+   * })
+   * export class VirtualComponent {}
+   */
+  @Input() enterStyles?: Record<keyof CSSStyleDeclaration, string>;
+
+  /**
+   * @description
+   * The autosized strategy uses the native ResizeObserver in order to determine
+   * if an item changed in size to afterwards properly position the views.
+   * You can customize the config passed to the ResizeObserver as well as determine
+   * which result property to use when determining the views size.
+   */
+  @Input() resizeObserverConfig: {
+    options?: ResizeObserverOptions;
+    extractSize?: (entries: ResizeObserverEntry[]) => number;
+  } = {
+    extractSize: (entries) => entries[0].contentRect.height,
+  };
+
+  /** @internal */
   private viewport: RxVirtualScrollViewport | null = null;
+  /** @internal */
   private viewRepeater: RxVirtualViewRepeater<T, U> | null = null;
+  /** @internal */
   private dataDiffer: IterableDiffer<T> | null = null;
 
+  /** @internal */
   private readonly _contentSize$ = new ReplaySubject<number>(1);
+  /** @internal */
   readonly contentSize$ = this._contentSize$.asObservable();
 
+  /** @internal */
   private _contentSize = 0;
+  /** @internal */
   private set contentSize(size: number) {
     this._contentSize = size;
     this._contentSize$.next(size);
   }
 
+  /** @internal */
   private readonly _renderedRange$ = new ReplaySubject<ListRange>(1);
+  /** @internal */
   renderedRange$ = this._renderedRange$.asObservable();
+  /** @internal */
   private _renderedRange: ListRange = { start: 0, end: 0 };
   // range of items where size is known and doesn't need to be re-calculated
+  /** @internal */
   private _cachedRange: ListRange | null = null;
 
+  /** @internal */
   private set renderedRange(range: ListRange) {
     this._renderedRange = range;
     this._renderedRange$.next(range);
   }
+  /** @internal */
   private get renderedRange(): ListRange {
     return this._renderedRange;
   }
-
+  /** @internal */
   private readonly _scrolledIndex$ = new ReplaySubject<number>(1);
+  /** @internal */
   scrolledIndex$ = this._scrolledIndex$.asObservable();
+  /** @internal */
   private _scrolledIndex = 0;
+  /** @internal */
   private get scrolledIndex(): number {
     return this._scrolledIndex;
   }
+  /** @internal */
   private set scrolledIndex(index: number) {
     this._scrolledIndex = index;
     this._scrolledIndex$.next(index);
   }
 
+  /** @internal */
   private containerSize = 0;
+  /** @internal */
   private contentLength = 0;
-
+  /** @internal */
   private _virtualItems: VirtualViewItem[] = [];
-
+  /** @internal */
   private scrollTop = 0;
-  private direction: 'up' | 'down' = 'down';
+  /** @internal */
   private anchorScrollTop = 0;
+  /** @internal */
   private anchorItem = {
     index: 0,
     offset: 0,
   };
+  /** @internal */
   private lastScreenItem = {
     index: 0,
     offset: 0,
   };
 
+  /** @internal */
   private readonly detached$ = new Subject<void>();
-
+  /** @internal */
   private until$ = (o$) => o$.pipe(takeUntil(this.detached$));
 
-  constructor(private differs: IterableDiffers) {
+  /** @internal */
+  constructor(private differs: IterableDiffers, private ngZone: NgZone) {
     super();
   }
 
+  /** @internal */
   ngOnDestroy() {
     this.detach();
   }
 
+  /** @internal */
   attach(
     viewport: RxVirtualScrollViewport,
     viewRepeater: RxVirtualViewRepeater<T, U>
@@ -162,6 +262,7 @@ export class AutosizeVirtualScrollStrategy<
     this.positionElements();
   }
 
+  /** @internal */
   detach(): void {
     this.viewport = null;
     this.viewRepeater = null;
@@ -173,11 +274,12 @@ export class AutosizeVirtualScrollStrategy<
     const _index = Math.min(Math.max(index, 0), this.contentLength - 1);
     let offset = 0;
     for (let i = 0; i < _index; i++) {
-      offset += this._virtualItems[i].height || this.tombstoneSize;
+      offset += this._virtualItems[i].size || this.tombstoneSize;
     }
     this.viewport.scrollTo(offset, behavior);
   }
 
+  /** @internal */
   private maintainVirtualItems(): void {
     this.viewRepeater.values$.pipe(this.until$).subscribe((items: any[]) => {
       const changes = this.getDiffer(items).diff(items);
@@ -188,8 +290,7 @@ export class AutosizeVirtualScrollStrategy<
           (item, adjustedPreviousIndex, currentIndex) => {
             if (item.previousIndex == null) {
               const entry = {
-                height: 0,
-                width: 0,
+                size: 0,
                 tombstone: true,
               };
               if (currentIndex < this._virtualItems.length) {
@@ -213,6 +314,7 @@ export class AutosizeVirtualScrollStrategy<
     });
   }
 
+  /** @internal */
   private calcRenderedRange(): void {
     const dataLengthChanged$ = this.viewRepeater.values$.pipe(
       map(
@@ -263,7 +365,6 @@ export class AutosizeVirtualScrollStrategy<
             this.anchorItem,
             containerHeight
           );
-          this.direction = delta >= 0 ? 'down' : 'up';
           if (delta < 0) {
             range.start = Math.max(0, this.anchorItem.index - this.runwayItems);
             range.end = Math.min(
@@ -288,6 +389,7 @@ export class AutosizeVirtualScrollStrategy<
       .subscribe((range: ListRange) => (this.renderedRange = range));
   }
 
+  /** @internal */
   private positionElements(): void {
     this.viewRepeater.renderingStart$
       .pipe(
@@ -349,7 +451,7 @@ export class AutosizeVirtualScrollStrategy<
                   >();
                   return o$.pipe(
                     tap((v) => _resized.set(v.index, v)),
-                    coalesceWith(scheduled([], animationFrameScheduler)),
+                    coalesceWith(this.animationFrameTick()),
                     tap(() => {
                       const sortedIds = Array.from(_resized.keys()).sort(
                         (a, b) => a - b
@@ -395,7 +497,10 @@ export class AutosizeVirtualScrollStrategy<
       .subscribe();
   }
 
-  // heavily inspired by https://github.com/GoogleChromeLabs/ui-element-samples/blob/gh-pages/infinite-scroller/scripts/infinite-scroll.js
+  /**
+   * @internal
+   * heavily inspired by https://github.com/GoogleChromeLabs/ui-element-samples/blob/gh-pages/infinite-scroller/scripts/infinite-scroll.js
+   */
   private calculateAnchoredItem(initialAnchor, delta): AnchorItem {
     if (delta == 0) return initialAnchor;
     delta += initialAnchor.offset;
@@ -403,8 +508,8 @@ export class AutosizeVirtualScrollStrategy<
     let tombstones = 0;
     const items = this._virtualItems;
     if (delta < 0) {
-      while (delta < 0 && i > 0 && items[i - 1]?.height) {
-        delta += items[i - 1].height;
+      while (delta < 0 && i > 0 && items[i - 1]?.size) {
+        delta += items[i - 1].size;
         i--;
       }
       tombstones = Math.max(
@@ -415,15 +520,15 @@ export class AutosizeVirtualScrollStrategy<
       while (
         delta > 0 &&
         i < this.contentLength &&
-        items[i]?.height &&
-        items[i].height < delta
+        items[i]?.size &&
+        items[i].size < delta
       ) {
-        delta -= items[i].height;
+        delta -= items[i].size;
         i++;
       }
       if (i >= this.contentLength) {
         tombstones = 0;
-      } else if (!items[i]?.height) {
+      } else if (!items[i]?.size) {
         tombstones = Math.floor(Math.max(delta, 0) / this.tombstoneSize);
       }
     }
@@ -434,7 +539,7 @@ export class AutosizeVirtualScrollStrategy<
       offset: delta,
     };
   }
-
+  /** @internal */
   private calcInitialPosition(range: ListRange): number {
     let pos = 0;
     let i = 0;
@@ -459,7 +564,7 @@ export class AutosizeVirtualScrollStrategy<
     }
     return pos;
   }
-
+  /** @internal */
   private adjustElementPosition({
     index,
     view,
@@ -472,7 +577,7 @@ export class AutosizeVirtualScrollStrategy<
     viewSize?: number;
   }): number {
     const element = this.getElement(view);
-    const oldSize = this._virtualItems[index].height;
+    const oldSize = this._virtualItems[index].size;
     let size = viewSize;
     if (!size) {
       const isCached =
@@ -483,11 +588,11 @@ export class AutosizeVirtualScrollStrategy<
     }
     this.positionElement(element, position);
     this._virtualItems[index] = {
-      height: size,
+      size: size,
     };
     return size;
   }
-
+  /** @internal */
   private observeViewSize$(
     view: EmbeddedViewRef<any>,
     index: number,
@@ -500,17 +605,20 @@ export class AutosizeVirtualScrollStrategy<
   }> {
     return observeElementSize(this.getElement(view), {
       extract: (entries) => {
-        return entries[0];
+        return {
+          target: entries[0].target,
+          size: this.resizeObserverConfig.extractSize(entries),
+        };
       },
+      options: this.resizeObserverConfig.options,
     }).pipe(
       filter(
-        ({ target, contentRect, borderBoxSize }) =>
+        ({ target, size }) =>
           target.isConnected &&
-          Math.ceil(borderBoxSize[0].blockSize) !==
-            this._virtualItems[adjustedIndex].height
+          Math.ceil(size) !== this._virtualItems[adjustedIndex].size
       ),
-      map(({ contentRect, borderBoxSize }) => ({
-        size: Math.ceil(borderBoxSize[0].blockSize),
+      map(({ size }) => ({
+        size: Math.ceil(size),
         view,
         index,
         adjustedIndex,
@@ -518,20 +626,25 @@ export class AutosizeVirtualScrollStrategy<
       distinctUntilKeyChanged('size')
     );
   }
-
+  /** @internal */
   private getItemSize(index: number): number {
-    return this._virtualItems[index].height || this.tombstoneSize;
+    return this._virtualItems[index].size || this.tombstoneSize;
   }
-
+  /** @internal */
   private getElementSize(element: HTMLElement): number {
     return element.offsetHeight;
   }
-
+  /** @internal */
   private positionElement(element: HTMLElement, scrollTop: number): void {
     element.style.position = 'absolute';
     element.style.transform = `translateY(${scrollTop}px)`;
+    if (this.enterStyles) {
+      Object.keys(this.enterStyles).forEach((style) => {
+        element.style[style] = this.enterStyles[style];
+      });
+    }
   }
-
+  /** @internal */
   private updateCachedRange(index: number): void {
     if (!this._cachedRange) {
       this._cachedRange = {
@@ -545,7 +658,7 @@ export class AutosizeVirtualScrollStrategy<
       };
     }
   }
-
+  /** @internal */
   private getDiffer(values: unknown[]): IterableDiffer<unknown> | null {
     if (this.dataDiffer) {
       return this.dataDiffer;
@@ -555,6 +668,12 @@ export class AutosizeVirtualScrollStrategy<
           .find(values)
           .create(this.viewRepeater._trackBy))
       : null;
+  }
+  /** @internal */
+  private animationFrameTick() {
+    return this.ngZone.runOutsideAngular(() =>
+      scheduled([], animationFrameScheduler)
+    );
   }
 }
 
