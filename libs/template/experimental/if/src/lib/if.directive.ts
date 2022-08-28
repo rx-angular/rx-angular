@@ -4,6 +4,7 @@ import {
   EmbeddedViewRef,
   Input,
   NgZone,
+  OnChanges,
   OnDestroy,
   OnInit,
   SimpleChanges,
@@ -38,7 +39,7 @@ import {
   selector: '[rxIf]',
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
-export class RxIf<U> implements OnInit, OnDestroy {
+export class RxIf<U> implements OnInit, OnChanges, OnDestroy {
   private subscription = new Subscription();
   private _renderObserver: NextObserver<any>;
   private templateManager: RxTemplateManager<
@@ -47,10 +48,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
     rxIfTemplateNames
   >;
 
-  @Input()
-  set rxIf(potentialObservable: Observable<U> | U | null | undefined) {
-    this.observablesHandler.next(coerceObservable(potentialObservable));
-  }
+  @Input() rxIf: Observable<U> | U | null | undefined;
 
   @Input('rxIfStrategy')
   set strategy(strategyName: Observable<string> | string | null | undefined) {
@@ -58,6 +56,7 @@ export class RxIf<U> implements OnInit, OnDestroy {
   }
 
   @Input('rxIfElse') else: TemplateRef<any>;
+  @Input('rxIfThen') then: TemplateRef<any>;
 
   @Input('rxIfSuspenseTpl') suspenseTmpl: TemplateRef<any>;
   @Input('rxIfCompleteTpl') completeTmpl: TemplateRef<any>;
@@ -80,11 +79,15 @@ export class RxIf<U> implements OnInit, OnDestroy {
   );
   private readonly rendered$ = new Subject<void>();
 
+  private get thenTemplate(): TemplateRef<RxIfViewContext<U>> {
+    return this.then ? this.then : this.templateRef;
+  }
+
   constructor(
     private strategyProvider: RxStrategyProvider,
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
-    private readonly thenTemplateRef: TemplateRef<any>,
+    private readonly templateRef: TemplateRef<RxIfViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {}
 
@@ -129,6 +132,9 @@ export class RxIf<U> implements OnInit, OnDestroy {
         this.errorTmpl
       );
     }
+    if (changes.rxIf) {
+      this.observablesHandler.next(coerceObservable(this.rxIf));
+    }
   }
 
   ngOnDestroy() {
@@ -136,6 +142,13 @@ export class RxIf<U> implements OnInit, OnDestroy {
   }
 
   private _createTemplateManager(): void {
+    const getNextTemplate = (value, templates) => {
+      return value
+        ? (RxIfTemplateNames.then as rxIfTemplateNames)
+        : templates.get(RxIfTemplateNames.else)
+        ? RxIfTemplateNames.else
+        : undefined;
+    };
     this.templateManager = createTemplateManager<
       U,
       RxIfViewContext<U>,
@@ -156,21 +169,24 @@ export class RxIf<U> implements OnInit, OnDestroy {
         strategies: this.strategyProvider.strategies,
       },
       notificationToTemplateName: {
-        [RxNotificationKind.Suspense]: () => RxIfTemplateNames.suspense,
-        [RxNotificationKind.Next]: (value, templates) => {
-          return value
-            ? (RxIfTemplateNames.then as rxIfTemplateNames)
-            : templates.get(RxIfTemplateNames.else)
-            ? RxIfTemplateNames.else
-            : undefined;
-        },
-        [RxNotificationKind.Error]: () => RxIfTemplateNames.error,
-        [RxNotificationKind.Complete]: () => RxIfTemplateNames.complete,
+        [RxNotificationKind.Suspense]: (value, templates) =>
+          this.suspenseTmpl
+            ? RxIfTemplateNames.suspense
+            : getNextTemplate(value, templates),
+        [RxNotificationKind.Next]: getNextTemplate.bind(this),
+        [RxNotificationKind.Error]: (value, templates) =>
+          this.errorTmpl
+            ? RxIfTemplateNames.error
+            : getNextTemplate(value, templates),
+        [RxNotificationKind.Complete]: (value, templates) =>
+          this.completeTmpl
+            ? RxIfTemplateNames.complete
+            : getNextTemplate(value, templates),
       },
     });
     this.templateManager.addTemplateRef(
       RxIfTemplateNames.then,
-      this.thenTemplateRef
+      this.thenTemplate
     );
     this.templateManager.nextStrategy(this.strategyHandler.values$);
   }
