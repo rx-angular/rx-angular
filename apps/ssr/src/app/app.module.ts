@@ -1,9 +1,9 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { PushModule } from '@rx-angular/template';
+import { ForModule } from '@rx-angular/template/for';
 import { LetModule } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
-
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -13,6 +13,7 @@ import { AppComponent } from './app.component';
     PushModule,
     LetModule,
     UnpatchModule,
+    ForModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Directive,
+  DoCheck,
   ElementRef,
   EmbeddedViewRef,
   ErrorHandler,
@@ -12,19 +13,31 @@ import {
   OnInit,
   TemplateRef,
   TrackByFunction,
-  ViewContainerRef,
+  ViewContainerRef
 } from '@angular/core';
-import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
+import { coerceDistinctWith, coerceObservableWith } from '@rx-angular/cdk/coercing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import {
   createListTemplateManager,
   RxListManager,
-  RxListViewComputedContext,
-  RxListViewContext,
+  RxListViewComputedContext
 } from '@rx-angular/cdk/template';
 
-import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import {
+  isObservable,
+  Observable,
+  ReplaySubject,
+  Subject,
+  Subscription,
+  switchAll
+} from 'rxjs';
 import { RxForViewContext } from './for-view-context';
+
+/**
+ * @description Will be provided through Terser global definitions by Angular CLI
+ * during the production build.
+ */
+declare const ngDevMode: boolean;
 
 /**
  * @Directive RxFor
@@ -33,7 +46,8 @@ import { RxForViewContext } from './for-view-context';
  *
  * The `*rxFor` structural directive provides a convenient and performant way for rendering
  * templates out of a list of items.
- * Input values can be provided either as `Observable`, `Promise` or `static` values. Just as the `*ngFor` directive, the
+ * Input values can be provided either as `Observable`, `Promise` or `static` values. Just as the `*ngFor` directive,
+ *   the
  * `*rxFor` is placed on an
  * element, which becomes the parent of the cloned templates.
  *
@@ -282,10 +296,12 @@ import { RxForViewContext } from './for-view-context';
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
-  implements OnInit, OnDestroy
+  implements OnInit, DoCheck, OnDestroy
 {
   /** @internal */
-  static ngTemplateGuard_rxFor: 'binding';
+  private staticValue?: U;
+  /** @internal */
+  private renderStatic = false;
 
   /**
    * @description
@@ -306,7 +322,14 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       | null
       | undefined
   ) {
-    this.observables$.next(potentialObservable);
+    if (!isObservable(potentialObservable)) {
+      this.staticValue = potentialObservable;
+      this.renderStatic = true;
+    } else {
+      this.staticValue = undefined;
+      this.renderStatic = false;
+      this.observables$.next(potentialObservable);
+    }
   }
 
   /**
@@ -315,11 +338,10 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @see [template reference variable](guide/template-reference-variables)
    * (inspired by @angular/common `ng_for_of.ts`)
    */
+  private _template: TemplateRef<RxForViewContext<T, U>>;
   @Input()
   set rxForTemplate(value: TemplateRef<RxForViewContext<T, U>>) {
-    if (value) {
-      this.templateRef = value;
-    }
+    this._template = value;
   }
 
   /**
@@ -366,7 +388,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /**
    * @description
-   *  If `parent` is set to `true` (default to `false`), `*rxFor` will automatically detect every other `Component` where its
+   *  If `parent` is set to `true` (default to `false`), `*rxFor` will automatically detect every other `Component`
+   *   where its
    * `EmbeddedView`s were inserted into. Those components will get change detected as well in order to force
    * update their state accordingly. In the given example, `AppListComponent` will get notified about which insert
    * or remove any `AppListItemComponent`.
@@ -486,10 +509,26 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    */
   @Input('rxForTrackBy')
   set trackBy(trackByFnOrKey: string | ((idx: number, i: T) => any)) {
-    this._trackBy =
+    if (
+      (typeof ngDevMode === 'undefined' || ngDevMode) &&
+      trackByFnOrKey != null &&
+      typeof trackByFnOrKey !== 'string' &&
       typeof trackByFnOrKey !== 'function'
-        ? (i, a) => a[trackByFnOrKey]
-        : trackByFnOrKey;
+    ) {
+      console.warn(
+        `trackBy must be a function, but received ${JSON.stringify(
+          trackByFnOrKey
+        )}.`
+      );
+    }
+    if (trackByFnOrKey == null) {
+      this._trackBy = null;
+    } else {
+      this._trackBy =
+        typeof trackByFnOrKey !== 'function'
+          ? (i, a) => a[trackByFnOrKey]
+          : trackByFnOrKey;
+    }
   }
 
   /**
@@ -577,6 +616,10 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     this._renderCallback = renderCallback;
   }
 
+  private get template(): TemplateRef<RxForViewContext<T, U>> {
+    return this._template || this.templateRef;
+  }
+
   /** @internal */
   constructor(
     private iterableDiffers: IterableDiffers,
@@ -599,7 +642,10 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   private _renderCallback: Subject<any>;
 
   /** @internal */
-  private readonly values$ = this.observables$.pipe(coerceDistinctWith());
+  private readonly values$ = this.observables$.pipe(
+    coerceObservableWith(),
+    switchAll()
+  );
 
   /** @internal */
   private values: U | undefined | null = null;
@@ -614,16 +660,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   private _subscription = new Subscription();
 
   /** @internal */
-  static ngTemplateContextGuard<
-    T,
-    U extends NgIterable<T> = NgIterable<T>,
-    K = keyof T
-  >(dir: RxFor<T, U>, ctx: any): ctx is RxForViewContext<T, U, K> {
-    return true;
-  }
-
-  /** @internal */
-  _trackBy: TrackByFunction<T> = (i, a) => a;
+  _trackBy: TrackByFunction<T>;
   /** @internal */
   _distinctBy = (a: T, b: T) => a === b;
 
@@ -642,9 +679,9 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       },
       templateSettings: {
         viewContainerRef: this.viewContainerRef,
-        templateRef: this.templateRef,
+        templateRef: this.template,
         createViewContext: this.createViewContext.bind(this),
-        updateViewContext: this.updateViewContext,
+        updateViewContext: this.updateViewContext.bind(this),
       },
       trackBy: this._trackBy,
     });
@@ -667,16 +704,34 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   updateViewContext(
     item: T,
-    view: EmbeddedViewRef<RxListViewContext<T>>,
+    view: EmbeddedViewRef<RxForViewContext<T>>,
     computedContext: RxListViewComputedContext
   ): void {
     view.context.updateContext(computedContext);
+    view.context.rxForOf = this.values;
     view.context.$implicit = item;
+  }
+
+  /** @internal */
+  ngDoCheck() {
+    if (this.renderStatic) {
+      this.observables$.next(this.staticValue);
+    }
   }
 
   /** @internal */
   ngOnDestroy() {
     this._subscription.unsubscribe();
     this.viewContainerRef.clear();
+  }
+
+  /** @internal */
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  static ngTemplateContextGuard<
+    T,
+    U extends NgIterable<T> = NgIterable<T>,
+    K = keyof T
+  >(dir: RxFor<T, U>, ctx: any): ctx is RxForViewContext<T, U, K> {
+    return true;
   }
 }
