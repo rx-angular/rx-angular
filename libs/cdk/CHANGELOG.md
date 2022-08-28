@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0-rc.0](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-beta.3...cdk@1.0.0-rc.0) (2022-08-28)
+
+
+### Features
+
+* **cdk:** deprecate global StrategyCredentials and replace with native ([#1389](https://github.com/rx-angular/rx-angular/issues/1389)) ([f46e837](https://github.com/rx-angular/rx-angular/commit/f46e837137cefd2753b331c0bb3d249aa286905b))
+
+
+
 # [1.0.0-beta.3](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-beta.2...cdk@1.0.0-beta.3) (2022-06-07)
 
 
