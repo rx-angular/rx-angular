@@ -6,27 +6,31 @@ import {
   RxNextNotification,
   RxNotification,
   RxNotificationKind,
-  RxSuspenseNotification
+  RxSuspenseNotification,
 } from '@rx-angular/cdk/notifications';
 import {
   onStrategy,
   RxRenderWork,
-  strategyHandling
+  strategyHandling,
 } from '@rx-angular/cdk/render-strategies';
 import {
-  catchError, EMPTY, filter,
-  map, merge,
+  catchError,
+  EMPTY,
+  filter,
+  map,
+  merge,
   Observable,
-  of, switchMap,
+  of,
+  switchMap,
   tap,
-  withLatestFrom
+  withLatestFrom,
 } from 'rxjs';
 import {
   rxBaseTemplateNames,
   RxRenderAware,
   RxRenderSettings,
   RxTemplateSettings,
-  RxViewContext
+  RxViewContext,
 } from './model';
 import { createErrorHandler } from './render-error';
 import { notifyAllParentsIfNeeded, templateHandling } from './utils';
@@ -55,9 +59,9 @@ export function notificationKindToViewContext<T>(
       const $implicit: T | null | undefined = notification.value as T;
       return {
         $implicit,
-        $suspense: true,
-        $error: false,
-        $complete: false,
+        suspense: true,
+        error: false,
+        complete: false,
         ...customNextContext($implicit),
       };
     },
@@ -65,9 +69,9 @@ export function notificationKindToViewContext<T>(
       const $implicit: T | null | undefined = notification.value as T;
       return {
         $implicit,
-        $suspense: false,
-        $error: false,
-        $complete: false,
+        suspense: false,
+        error: false,
+        complete: false,
         ...customNextContext($implicit),
       };
     },
@@ -75,9 +79,9 @@ export function notificationKindToViewContext<T>(
       const $implicit: T | null | undefined = notification.value as T;
       return {
         $implicit,
-        $complete: false,
-        $error: notification.error || true,
-        $suspense: false,
+        complete: false,
+        error: notification.error || true,
+        suspense: false,
         ...customNextContext($implicit),
       };
     },
@@ -85,9 +89,9 @@ export function notificationKindToViewContext<T>(
       const $implicit: T | null | undefined = notification.value as T;
       return {
         $implicit,
-        $error: false,
-        $complete: true,
-        $suspense: false,
+        error: false,
+        complete: true,
+        suspense: false,
         ...customNextContext($implicit),
       };
     },

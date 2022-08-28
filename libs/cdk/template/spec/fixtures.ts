@@ -1,25 +1,27 @@
 import {
   AfterViewInit,
   ChangeDetectorRef,
-  Component, EmbeddedViewRef,
+  Component,
+  EmbeddedViewRef,
   ErrorHandler,
-  Input, OnDestroy,
+  Input,
+  OnDestroy,
   TemplateRef,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReplaySubject, Subscription } from 'rxjs';
 import {
   createTemplateNotifier,
-  RxNotificationKind
+  RxNotificationKind,
 } from '../../notifications/src/index';
 import { RxStrategyProvider } from '../../render-strategies/src/index';
 import {
   createTemplateManager,
   RxBaseTemplateNames,
   RxTemplateManager,
-  RxViewContext
+  RxViewContext,
 } from '../src/index';
 
 @Component({
@@ -154,9 +156,9 @@ export class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
 function createViewContext<T>(value: T): RxViewContext<T> {
   return {
     $implicit: value,
-    $error: false,
-    $complete: false,
-    $suspense: false,
+    error: false,
+    complete: false,
+    suspense: false,
   };
 }
 /** @internal */

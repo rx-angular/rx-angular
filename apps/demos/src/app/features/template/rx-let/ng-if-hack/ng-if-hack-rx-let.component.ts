@@ -6,15 +6,23 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     <rxa-visualizer>
       <div visualizerHeader>
         <h3>*rxLet Directive</h3>
-        <rxa-value-provider [unpatched]="false" [buttons]="true" #valP="rxaValueProvider"></rxa-value-provider>
+        <rxa-value-provider
+          [unpatched]="false"
+          [buttons]="true"
+          #valP="rxaValueProvider"
+        ></rxa-value-provider>
       </div>
 
-      <ng-container *rxLet="valP.boolean$; let value;
-               rxSuspense: suspenseView;
-               rxError: errorView;
-               rxComplete: completeView
-             ">
-        value: {{ value | json }}<br/>
+      <ng-container
+        *rxLet="
+          valP.boolean$;
+          let value;
+          suspense: suspenseView;
+          error: errorView;
+          rxComplete: completeView
+        "
+      >
+        value: {{ value | json }}<br />
       </ng-container>
 
       <ng-template #suspenseView>
@@ -28,11 +36,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       <ng-template #completeView>
         <mat-icon color="primary">check</mat-icon>
       </ng-template>
-
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgIfHackRxLetComponent {
-
-}
+export class NgIfHackRxLetComponent {}
