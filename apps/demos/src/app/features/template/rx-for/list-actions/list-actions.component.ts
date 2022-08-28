@@ -2,14 +2,22 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ElementRef, NgZone,
+  ElementRef,
+  NgZone,
   QueryList,
   ViewChild,
   ViewChildren,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import { asyncScheduler } from '@rx-angular/cdk/zone-less/rxjs';
-import { BehaviorSubject, defer, merge, scheduled, Subject } from 'rxjs';
+import {
+  BehaviorSubject,
+  defer,
+  merge,
+  Observable,
+  scheduled,
+  Subject,
+} from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import {
   ArrayProviderService,
