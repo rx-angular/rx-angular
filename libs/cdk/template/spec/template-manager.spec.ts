@@ -188,9 +188,9 @@ describe('template-manager', () => {
         `
         <ng-template #tmpl
           let-v
-          let-suspense="$suspense"
-          let-error="$error"
-          let-complete="$complete"
+          let-suspense="suspense"
+          let-error="error"
+          let-complete="complete"
           >
           <ng-container *ngIf="v">{{v}}</ng-container>
           <ng-container *ngIf="suspense">suspense</ng-container>

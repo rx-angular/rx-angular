@@ -116,9 +116,9 @@ function createViewContext<T>(value: T): RxIfVisibleViewContext<T> {
   return {
     rxIfVisible: value,
     $implicit: value,
-    $error: false,
-    $complete: false,
-    $suspense: false,
+    error: false,
+    complete: false,
+    suspense: false,
   };
 }
 

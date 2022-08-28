@@ -6,16 +6,23 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     <rxa-visualizer>
       <div visualizerHeader>
         <h3>*ngIf + async</h3>
-        <rxa-value-provider [unpatched]="[]" [buttons]="true" #valP="rxaValueProvider"></rxa-value-provider>
+        <rxa-value-provider
+          [unpatched]="[]"
+          [buttons]="true"
+          #valP="rxaValueProvider"
+        ></rxa-value-provider>
       </div>
 
-      <ng-container *rxLet="valP.boolean$; let value;
-               rxSuspense: suspenseView;
-               rxError: errorView;
-               rxComplete: completeView
-            ">
-        *ngIf: {{ value | json }}<br/>
-
+      <ng-container
+        *rxLet="
+          valP.boolean$;
+          let value;
+          suspense: suspenseView;
+          error: errorView;
+          complete: completeView
+        "
+      >
+        *ngIf: {{ value | json }}<br />
       </ng-container>
 
       <ng-template #suspenseView>
@@ -30,12 +37,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         <mat-icon color="primary">check</mat-icon>
       </ng-template>
 
-
       <!--
       <ng-container *rxLet="valP.boolean$; let value;
-               rxSuspense: suspenseView;
-               rxError: errorView;
-               rxComplete: completeView
+               suspense: suspenseView;
+               error: errorView;
+               complete: completeView
              ">
         value: {{ value | json }}<br/>
       </ng-container>
@@ -52,12 +58,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         <mat-icon color="primary">check</mat-icon>
       </ng-template>
       -->
-
-
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgIfHackNgIfAsyncComponent {
-
-}
+export class NgIfHackNgIfAsyncComponent {}

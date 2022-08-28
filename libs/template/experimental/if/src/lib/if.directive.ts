@@ -125,10 +125,7 @@ export class RxIf<U> implements OnInit, OnDestroy, OnChanges {
     }
 
     if (changes.error) {
-      this.templateManager.addTemplateRef(
-        RxIfTemplateNames.error,
-        this.error
-      );
+      this.templateManager.addTemplateRef(RxIfTemplateNames.error, this.error);
     }
   }
 
@@ -181,9 +178,9 @@ function createViewContext<T>(value: T): RxIfViewContext<T> {
   return {
     rxIf: value,
     $implicit: value,
-    $error: false,
-    $complete: false,
-    $suspense: false,
+    error: false,
+    complete: false,
+    suspense: false,
   };
 }
 

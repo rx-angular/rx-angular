@@ -11,23 +11,23 @@ import {
   Output,
   SimpleChanges,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
   RxNotification,
-  RxNotificationKind
+  RxNotificationKind,
 } from '@rx-angular/cdk/notifications';
 import {
   RxStrategyNames,
-  RxStrategyProvider
+  RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
 import {
   createTemplateManager,
   RxBaseTemplateNames,
   RxTemplateManager,
-  RxViewContext
+  RxViewContext,
 } from '@rx-angular/cdk/template';
 
 import {
@@ -305,7 +305,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *  *rxLet="
    *    hero$;
    *    let hero;
-   *    let e = $error;
+   *    let e = error;
    *    templateTrg: templateTrigger$
    * ">
    *
@@ -324,14 +324,14 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * @description
    * A trigger to manually activate the complete template. It accepts any value,
    * on emission it will display the error template. If no template is given,
-   * the $complete context variable will complete set to true instead.
+   * the complete context variable will complete set to true instead.
    *
    * @example
    * <ng-container
    *  *rxLet="
    *    hero$;
    *    let hero;
-   *    let c = $complete;
+   *    let c = complete;
    *    completeTrg: completeTrigger$
    * ">
    *
@@ -350,14 +350,14 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * @description
    * A trigger to manually activate the error template. It accepts any value,
    * on emission it will display the error template. If no template is given,
-   * the $error context variable will be set to true instead.
+   * the error context variable will be set to true instead.
    *
    * @example
    * <ng-container
    *  *rxLet="
    *    hero$;
    *    let hero;
-   *    let e = $error;
+   *    let e = error;
    *    errorTrg: errorTrigger$
    * ">
    *
@@ -376,14 +376,14 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * @description
    * A trigger to manually activate the suspense template. It accepts any value,
    * on emission it will display the suspense template. If no template is given,
-   * the $suspense context variable will be set to true instead.
+   * the suspense context variable will be set to true instead.
    *
    * @example
    * <ng-container
    *  *rxLet="
    *    hero$;
    *    let hero;
-   *    let s = $suspense;
+   *    let s = suspense;
    *    suspenseTrg: suspenseTrigger$
    * ">
    *
@@ -409,7 +409,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *  *rxLet="
    *    hero$;
    *    let hero;
-   *    suspenseTpl: suspense
+   *    suspense: suspense
    *    nextTrg: nextTrigger$
    * ">
    *
@@ -590,9 +590,9 @@ function createViewContext<T>(value: T): RxLetViewContext<T> {
   return {
     rxLet: value,
     $implicit: value,
-    $error: false,
-    $complete: false,
-    $suspense: false,
+    error: false,
+    complete: false,
+    suspense: false,
   };
 }
 /** @internal */

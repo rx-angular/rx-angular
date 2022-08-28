@@ -148,9 +148,9 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
 
   private readonly initialViewContext: RxContextViewContext<U> = {
     $implicit: undefined,
-    $error: false,
-    $complete: false,
-    $suspense: false,
+    error: false,
+    complete: false,
+    suspense: false,
   };
 
   /** @internal */
