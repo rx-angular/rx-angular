@@ -78,7 +78,7 @@ export function templateHandling<N, C>(
     );
     if (!isTemplateRefOrNull) {
       throw new Error(
-        `${property} must be a TemplateRef, but received something else.`
+        `${property} must be a TemplateRef, but received ${typeof templateRef}`
       );
     }
     return isTemplateRefOrNull;
