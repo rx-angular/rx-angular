@@ -327,6 +327,7 @@ import { IfModule } from '../if.module';
   });
 }
 
+// eslint-disable-next-line @angular-eslint/component-selector
 @Component({ selector: 'test-cmp', template: '' })
 class TestComponent {
   booleanCondition = true;
