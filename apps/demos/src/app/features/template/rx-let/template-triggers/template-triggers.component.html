@@ -27,9 +27,9 @@
         *rxLet="
     valueProvider.incremental$;
     let state;
-    let c = $complete;
-    let s = $suspense;
-    let e = $error;
+    let c = complete;
+    let s = suspense;
+    let e = error;
     nextTrg: triggerProvider.next$;
     completeTrg: triggerProvider.complete$;
     errorTrg: triggerProvider.error$;
@@ -62,9 +62,9 @@
         *rxLet="
     valueProvider.incremental$;
     let state;
-    rxError: error;
-    rxSuspense: suspense;
-    rxComplete: complete;
+    error: error;
+    suspense: suspense;
+    complete: complete;
     nextTrg: triggerProvider.next$;
     completeTrg: triggerProvider.complete$;
     errorTrg: triggerProvider.error$;

@@ -39,7 +39,7 @@ import {
   selector: '[rxIf]',
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
-export class RxIf<U> implements OnInit, OnChanges, OnDestroy {
+export class RxIf<U> implements OnInit, OnChanges, OnDestroy, OnChanges {
   private subscription = new Subscription();
   private _renderObserver: NextObserver<any>;
   private templateManager: RxTemplateManager<
@@ -58,9 +58,9 @@ export class RxIf<U> implements OnInit, OnChanges, OnDestroy {
   @Input('rxIfElse') else: TemplateRef<any>;
   @Input('rxIfThen') then: TemplateRef<any>;
 
-  @Input('rxIfSuspenseTpl') suspenseTmpl: TemplateRef<any>;
-  @Input('rxIfCompleteTpl') completeTmpl: TemplateRef<any>;
-  @Input('rxIfErrorTpl') errorTmpl: TemplateRef<any>;
+  @Input('rxIfSuspense') suspense: TemplateRef<any>;
+  @Input('rxIfComplete') complete: TemplateRef<any>;
+  @Input('rxIfError') error: TemplateRef<any>;
 
   @Input('rxIfParent') renderParent = this.strategyProvider.config.parent;
 
@@ -112,26 +112,24 @@ export class RxIf<U> implements OnInit, OnChanges, OnDestroy {
       this.templateManager.addTemplateRef(RxIfTemplateNames.else, this.else);
     }
 
-    if (changes.completeTmpl) {
+    if (changes.complete) {
       this.templateManager.addTemplateRef(
         RxIfTemplateNames.complete,
-        this.completeTmpl
+        this.complete
       );
     }
 
-    if (changes.suspenseTmpl) {
+    if (changes.suspense) {
       this.templateManager.addTemplateRef(
         RxIfTemplateNames.suspense,
-        this.suspenseTmpl
+        this.suspense
       );
     }
 
-    if (changes.errorTmpl) {
-      this.templateManager.addTemplateRef(
-        RxIfTemplateNames.error,
-        this.errorTmpl
-      );
+    if (changes.error) {
+      this.templateManager.addTemplateRef(RxIfTemplateNames.error, this.error);
     }
+
     if (changes.rxIf) {
       this.observablesHandler.next(coerceObservable(this.rxIf));
     }
@@ -170,16 +168,16 @@ export class RxIf<U> implements OnInit, OnChanges, OnDestroy {
       },
       notificationToTemplateName: {
         [RxNotificationKind.Suspense]: (value, templates) =>
-          this.suspenseTmpl
+          this.suspense
             ? RxIfTemplateNames.suspense
             : getNextTemplate(value, templates),
         [RxNotificationKind.Next]: getNextTemplate.bind(this),
         [RxNotificationKind.Error]: (value, templates) =>
-          this.errorTmpl
+          this.error
             ? RxIfTemplateNames.error
             : getNextTemplate(value, templates),
         [RxNotificationKind.Complete]: (value, templates) =>
-          this.completeTmpl
+          this.complete
             ? RxIfTemplateNames.complete
             : getNextTemplate(value, templates),
       },
@@ -196,9 +194,9 @@ function createViewContext<T>(value: T): RxIfViewContext<T> {
   return {
     rxIf: value,
     $implicit: value,
-    $error: false,
-    $complete: false,
-    $suspense: false,
+    error: false,
+    complete: false,
+    suspense: false,
   };
 }
 
