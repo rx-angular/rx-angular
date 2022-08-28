@@ -25,6 +25,9 @@ on template rendering, the coordination and optimization of `ChangeDetection` cy
 straight **drop in replacement** for the `AsyncPipe (async)`, the `LetDirective` will often provide a more
 convenient way of managing reactive sources and lazy rendering of the view.
 
+Should be noted that both [LetDirective (`*rxLet`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md) &
+[PushPipe (`push`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/push.md) recognize only immutable changes.
+
 Using those with the default strategy ([Local Strategy](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/docs/render-strategies/strategies.md#local)) should already improve the rendering performance of
 your application by a decent amount.
 
@@ -111,6 +114,7 @@ about what changes are leading to re-renderings.
 
 | Angular                | RxJS                 | @rx-angular/template |
 |------------------------|----------------------|----------------------|
+| `14`                   | `^7.4.0`             | `> 1.0.0-beta.29`    |
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-beta.29`    |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-beta.29`   |
 

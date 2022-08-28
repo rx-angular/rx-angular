@@ -20,7 +20,7 @@
 
 ## Demos:
 
-- [⚡ GitHub](https://github.com/BioPhoton/rx-angular-state-effects)
+- [⚡ GitHub](https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics/5-side-effects)
 
 
 ## Install
@@ -44,5 +44,5 @@ nx migrate @rx-angular/state
 
 ## Documentation
 
-- [RxEffects]()
+- [RxEffects](https://github.com/rx-angular/rx-angular/tree/main/libs/state/effects/docs)
 
