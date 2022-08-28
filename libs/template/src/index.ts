@@ -10,3 +10,5 @@ export {
 export { LetModule, LetDirective } from '@rx-angular/template/let';
 
 export { PushModule, PushPipe } from '@rx-angular/template/push';
+
+export { ForModule, RxFor, RxForViewContext } from '@rx-angular/template/for';
