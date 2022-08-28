@@ -74,9 +74,7 @@ export class RxIf<U> implements OnInit, OnDestroy, OnChanges {
   }
 
   /** @internal */
-  private observablesHandler = createTemplateNotifier<U>(
-    () => !!this.suspense
-  );
+  private observablesHandler = createTemplateNotifier<U>();
   private readonly strategyHandler = coerceAllFactory<string>(
     () => new ReplaySubject<string | Observable<string>>(1),
     mergeAll()
