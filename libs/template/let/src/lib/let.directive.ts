@@ -32,15 +32,17 @@ import {
 
 import {
   defer,
+  map,
   merge,
+  NEVER,
   NextObserver,
   Observable,
   ObservableInput,
   ReplaySubject,
   Subject,
   Subscription,
+  filter,
 } from 'rxjs';
-import { mergeAll } from 'rxjs/operators';
 
 /** @internal */
 type RxLetTemplateNames = 'nextTpl' | RxBaseTemplateNames;
@@ -196,10 +198,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param potentialObservable
    */
-  @Input()
-  set rxLet(potentialObservable: ObservableInput<U> | U | null | undefined) {
-    this.observablesHandler.next(potentialObservable);
-  }
+  @Input() rxLet: ObservableInput<U> | U | null | undefined;
 
   /**
    * @description
@@ -294,6 +293,138 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   @Input('rxLetRxSuspense') // TODO: rename: rxLetSuspenseTpl
   rxSuspense: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
 
+  /**
+   * @description
+   * A trigger to manually set the active template. It accepts a RxNotificationKind
+   * which determines what template to display. If no template is given, a context
+   * variable resembling the notification state is put into the `Next`
+   * template of the directive
+   *
+   * @example
+   * <ng-container
+   *  *rxLet="
+   *    hero$;
+   *    let hero;
+   *    let e = $error;
+   *    templateTrg: templateTrigger$
+   * ">
+   *
+   *   <app-hero [hero]="hero"></app-hero>
+   *   <error *ngIf="e"></error>
+   * </ng-container>
+   *
+   * // trigger template from component.ts
+   * templateTrigger$.next(RxNotificationKind.error)
+   *
+   * @param Observable<RxNotificationKind>
+   */
+  @Input('rxLetTemplateTrg') templateTrigger?: Observable<RxNotificationKind>;
+
+  /**
+   * @description
+   * A trigger to manually activate the complete template. It accepts any value,
+   * on emission it will display the error template. If no template is given,
+   * the $complete context variable will complete set to true instead.
+   *
+   * @example
+   * <ng-container
+   *  *rxLet="
+   *    hero$;
+   *    let hero;
+   *    let c = $complete;
+   *    completeTrg: completeTrigger$
+   * ">
+   *
+   *   <app-hero [hero]="hero"></app-hero>
+   *   <done *ngIf="c"></done>
+   * </ng-container>
+   *
+   * // trigger template from component.ts
+   * completeTrigger$.next()
+   *
+   * @param Observable<RxNotificationKind>
+   */
+  @Input('rxLetCompleteTrg') completeTrigger?: Observable<unknown>;
+
+  /**
+   * @description
+   * A trigger to manually activate the error template. It accepts any value,
+   * on emission it will display the error template. If no template is given,
+   * the $error context variable will be set to true instead.
+   *
+   * @example
+   * <ng-container
+   *  *rxLet="
+   *    hero$;
+   *    let hero;
+   *    let e = $error;
+   *    errorTrg: errorTrigger$
+   * ">
+   *
+   *   <app-hero [hero]="hero"></app-hero>
+   *   <error *ngIf="e"></error>
+   * </ng-container>
+   *
+   * // trigger template from component.ts
+   * errorTrigger$.next()
+   *
+   * @param Observable<unknown>
+   */
+  @Input('rxLetErrorTrg') errorTrigger?: Observable<unknown>;
+
+  /**
+   * @description
+   * A trigger to manually activate the suspense template. It accepts any value,
+   * on emission it will display the suspense template. If no template is given,
+   * the $suspense context variable will be set to true instead.
+   *
+   * @example
+   * <ng-container
+   *  *rxLet="
+   *    hero$;
+   *    let hero;
+   *    let s = $suspense;
+   *    suspenseTrg: suspenseTrigger$
+   * ">
+   *
+   *   <app-hero [hero]="hero"></app-hero>
+   *   <loader *ngIf="s"></loader>
+   * </ng-container>
+   *
+   *
+   * // trigger template from component.ts
+   * suspenseTrigger$.next()
+   *
+   * @param Observable<unknown>
+   */
+  @Input('rxLetSuspenseTrg') suspenseTrigger?: Observable<unknown>;
+
+  /**
+   * @description
+   * A trigger to manually activate the default template. It accepts any value,
+   * on emission it will switch to the let directives default template.
+   *
+   * @example
+   * <ng-container
+   *  *rxLet="
+   *    hero$;
+   *    let hero;
+   *    suspenseTpl: suspense
+   *    nextTrg: nextTrigger$
+   * ">
+   *
+   *   <app-hero [hero]="hero"></app-hero>
+   * </ng-container>
+   *
+   * <ng-template #suspense><loader></loader></ng-template>
+   *
+   * // trigger template from component.ts
+   * nextTrigger$.next()
+   *
+   * @param Observable<unknown>
+   */
+  @Input('rxLetNextTrg') nextTrigger?: Observable<unknown>;
+
   @Input('rxLetRenderCallback')
   set renderCallback(callback: NextObserver<U>) {
     this._renderObserver = callback;
@@ -302,26 +433,6 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   @Input('rxLetParent') renderParent = this.strategyProvider.config.parent;
 
   @Input('rxLetPatchZone') patchZone = this.strategyProvider.config.patchZone;
-
-  // TODO: enable when tested and documented properly
-  /* @Input('rxLetShowComplete')
-   set showComplete(trigger$: Observable<any>) {
-   this.triggerHandler.next(
-   trigger$.pipe(mapTo(toRxCompleteNotification() as any))
-   );
-   }
-
-   @Input('rxLetShowError')
-   set showError(error$: Observable<any>) {
-   this.triggerHandler.next(error$.pipe(map(toRxErrorNotification as any)));
-   }
-
-   @Input('rxLetShowSuspense')
-   set showSuspense(trigger$: Observable<any>) {
-   this.triggerHandler.next(
-   trigger$.pipe(map(toRxSuspenseNotification as any))
-   );
-   }*/
 
   constructor(
     private strategyProvider: RxStrategyProvider,
@@ -333,18 +444,13 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   ) {}
 
   /** @internal */
-  private observablesHandler = createTemplateNotifier<U>(
-    () => !!this.rxSuspense
-  );
+  private observablesHandler = createTemplateNotifier<U>();
   /** @internal */
   private strategyHandler = coerceAllFactory<string>(
     () => new ReplaySubject<RxStrategyNames<string>>(1)
   );
   /** @internal */
-  private triggerHandler = coerceAllFactory<RxNotification<unknown>>(
-    () => new Subject(),
-    mergeAll()
-  );
+  private triggerHandler = new ReplaySubject<RxNotificationKind>(1);
 
   /** @internal */
   private _renderObserver: NextObserver<any>;
@@ -388,6 +494,19 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
           this._renderObserver?.next(n);
         })
     );
+    this.subscription.add(
+      merge(
+        this.templateTrigger || NEVER,
+        this.nextTrigger?.pipe(map(() => RxNotificationKind.Next)) || NEVER,
+        this.suspenseTrigger?.pipe(map(() => RxNotificationKind.Suspense)) ||
+          NEVER,
+        this.completeTrigger?.pipe(map(() => RxNotificationKind.Complete)) ||
+          NEVER,
+        this.errorTrigger?.pipe(map(() => RxNotificationKind.Error)) || NEVER
+      )
+        .pipe(filter((v) => !!v))
+        .subscribe((t) => this.triggerHandler.next(t))
+    );
   }
 
   /** @internal */
@@ -415,6 +534,10 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
         RxLetTemplateNames.error,
         this.rxError
       );
+    }
+
+    if (changes.rxLet) {
+      this.observablesHandler.next(this.rxLet);
     }
   }
 
@@ -458,7 +581,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
             ? RxLetTemplateNames.complete
             : RxLetTemplateNames.next,
       },
-      templateTrigger$: this.triggerHandler.values$,
+      templateTrigger$: this.triggerHandler,
     });
 
     this.templateManager.addTemplateRef(
@@ -468,6 +591,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     this.templateManager.nextStrategy(this.strategyHandler.values$);
   }
 }
+
 /** @internal */
 function createViewContext<T>(value: T): RxLetViewContext<T> {
   return {

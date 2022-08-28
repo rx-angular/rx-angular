@@ -18,7 +18,7 @@ import {
   NextObserver,
   Observable,
   ObservableInput,
-  Unsubscribable
+  Unsubscribable,
 } from 'rxjs';
 import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { timeoutSwitchMapWith } from '@rx-angular/cdk/internals/core';
