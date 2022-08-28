@@ -81,12 +81,12 @@ In combination with Observables, and EmbeddedViews change detection can be speed
 
 ### Strategies
 
-| Name       | Priority | Render Method     | Scheduling              | Render Deadline |
-| ---------- | -------- | ----------------- | ----------------------- | --------------- |
-| `"native"` | ❌       | ⮁ `markForCheck`  | `requestAnimationFrame` | N/A             |
-| `"global"` | ❌       | ⮁ `ɵmarkDirty`    | `requestAnimationFrame` | N/A             |
-| `"local"`  | ❌       | 🠗 `detectChanges` | `requestAnimationFrame` | N/A             |
-| `"noop"`   | ❌       | - `noop`          | `requestAnimationFrame` | N/A             |
+| Name                    | Priority | Render Method     | Scheduling              | Render Deadline |
+|-------------------------| -------- | ----------------- | ----------------------- | --------------- |
+| `"native"`              | ❌       | ⮁ `markForCheck`  | `requestAnimationFrame` | N/A             |
+| `"global"` - _deprecated_ | ❌       | ⮁ `ɵmarkDirty`    | `requestAnimationFrame` | N/A             |
+| `"local"`               | ❌       | 🠗 `detectChanges` | `requestAnimationFrame` | N/A             |
+| `"noop"`                | ❌       | - `noop`          | `requestAnimationFrame` | N/A             |
 
 #### Native
 
@@ -102,6 +102,9 @@ as the internally called function [`markViewDirty`](https://github.com/angular/a
 | `native` | ❌            | ⮁ `markForCheck` | ✔ RootContext | `requestAnimationFrame` |
 
 #### Global Strategy
+
+> **deprecated**  
+> angular [drops support](https://github.com/angular/angular/pull/46806) for `ɵmarkDirty`
 
 This strategy leverages Angular's internal [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) render method.
 It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) but works also 🚫 zone-less.
