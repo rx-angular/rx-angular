@@ -28,6 +28,10 @@ export const MENU_ITEMS = [
     link: 'template-bindings',
   },
   {
+    label: 'Template Triggers',
+    link: 'template-triggers',
+  },
+  {
     label: 'Preloading Techniques',
     link: 'preloading-images',
   },

@@ -42,7 +42,7 @@ import { distinctUntilChanged, map, share, tap } from 'rxjs/operators';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PushPocComponent {
+export class PushBasicComponent {
 
   readonly updateClick = new Subject<void>();
   private _numRendered = 0;

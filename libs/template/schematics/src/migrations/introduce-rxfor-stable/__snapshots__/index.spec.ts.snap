@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Template Migration introduce-rxfor-stable should replace module specifier 1`] = `
+"import { ForModule, RxFor, RxForViewContext } from '@rx-angular/template/for';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, ForModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;

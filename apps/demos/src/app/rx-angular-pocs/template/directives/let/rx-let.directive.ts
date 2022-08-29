@@ -417,9 +417,9 @@ function createViewContext<T>(value: T): RxLetViewContext<T> {
   return {
     rxLet: value,
     $implicit: value,
-    $error: false,
-    $complete: false,
-    $suspense: false,
+    error: false,
+    complete: false,
+    suspense: false,
   };
 }
 
