@@ -4,17 +4,17 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { mockConsole } from '@test-helpers';
 import { EMPTY, Observable, of } from 'rxjs';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+
 import { LetDirective } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
-// tslint:disable-next-line:nx-enforce-module-boundaries
-import { mockConsole } from '@test-helpers';
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; $complete as complete">{{
+    <ng-container *rxLet="value$; complete as complete">{{
       complete
     }}</ng-container>
   `,
@@ -38,12 +38,13 @@ const setupLetDirectiveTestComponentComplete = (): void => {
       TemplateRef,
       ViewContainerRef,
       {
-        provide: RX_ANGULAR_CONFIG,
+        provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
         },
       },
     ],
+    teardown: { destroyAfterEach: true },
   });
 
   fixtureLetDirectiveTestComponent = TestBed.createComponent(
@@ -56,7 +57,7 @@ const setupLetDirectiveTestComponentComplete = (): void => {
 
 describe('LetDirective when complete', () => {
   beforeAll(() => mockConsole());
-  beforeEach(waitForAsync(setupLetDirectiveTestComponentComplete));
+  beforeEach(setupLetDirectiveTestComponentComplete);
 
   it('should render true if completed', () => {
     letDirectiveTestComponent.value$ = EMPTY;

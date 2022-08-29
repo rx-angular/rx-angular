@@ -2,14 +2,9 @@ module.exports = {
   name: 'state',
   displayName: 'state',
   preset: '../../jest.preset.js',
-  coverageReporters: ['lcov', 'cobertura'],
-  coverageDirectory: '../../docs/test-coverage/state',
-  collectCoverageFrom: [
-    './src/**/!(index).ts',
-    '!./src/lib/experimental/**/*.ts',
-  ],
-
-  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
+  coverageReporters: ['lcov'],
+  coverageDirectory: '../../coverage/state',
+  setupFilesAfterEnv: ['<rootDir>/test-setup.ts'],
   globals: {
     'ts-jest': {
       stringifyContentPathRegex: '\\.(html|svg)$',
@@ -22,5 +17,8 @@ module.exports = {
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment',
   ],
-  transform: { '^.+\\.(ts|js|html)$': 'jest-preset-angular' },
+  transform: {
+    '^.+.(ts|mjs|js|html)$': 'jest-preset-angular',
+  },
+  transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
 };

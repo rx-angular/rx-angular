@@ -14,10 +14,10 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {
-  createTemplateManager,
   RxTemplateManager,
-  RxStrategyProvider,
-} from '@rx-angular/cdk';
+  createTemplateManager,
+} from '@rx-angular/cdk/template';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   RxNotificationKind,
@@ -379,7 +379,6 @@ export class RxLet<U> implements OnInit, OnDestroy {
       },
       renderSettings: {
         cdRef: this.cdRef,
-        eRef: this.eRef,
         parent: coerceBooleanProperty(this.renderParent),
         patchZone: this.patchZone ? this.ngZone : false,
         defaultStrategyName: this.strategyProvider.primaryStrategy,
@@ -418,9 +417,9 @@ function createViewContext<T>(value: T): RxLetViewContext<T> {
   return {
     rxLet: value,
     $implicit: value,
-    $error: false,
-    $complete: false,
-    $suspense: false,
+    error: false,
+    complete: false,
+    suspense: false,
   };
 }
 

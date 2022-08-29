@@ -31,7 +31,7 @@ The topics we will discuss in this tutorial include:
 - [Handling Side Effects reactively][5-side-effects]
 <!-- - [Presenter Pattern][6-presenter-pattern] -->
 
-You can also check out the full solution after applying all the above steps [here](https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/solution).
+You can also check out the full solution after applying all the above steps [here](https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics/solution).
 
 # How to use this tutorial
 
@@ -48,8 +48,8 @@ Each chapter contains three files:
 > 2- press Ctrl(Cmd)+Shift+P and choose `File: Compare Active file with ...` <br>
 > 3- choose the second file (in our case, the `.solution.component.ts`)
 
-[1-setup]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/1-setup
-[2-input-bindings]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/2-input-bindings
-[3-output-bindings]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/3-output-bindings
-[4-global-state]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/4-global-state
-[5-side-effects]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/5-side-effects
+[1-setup]: https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics/1-setup
+[2-input-bindings]: https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics/2-input-bindings
+[3-output-bindings]: https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics/3-output-bindings
+[4-global-state]: https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics/4-global-state
+[5-side-effects]: https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics/5-side-effects

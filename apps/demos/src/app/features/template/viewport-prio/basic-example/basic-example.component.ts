@@ -27,7 +27,8 @@ import { scan, switchMap } from 'rxjs/operators';
               viewport-prio
               *rxLet="valP.incremental$; let count"
             >
-              <rxa-renders [value$]="count"></rxa-renders>
+              {{logLetUpdate(count)}}
+              {{count}}
             </div>
           </div>
         </div>
@@ -70,4 +71,8 @@ export class BasicExampleComponent {
   );
 
   constructor() {}
+
+  logLetUpdate(v) {
+    console.log('let TP: ', v);
+  }
 }

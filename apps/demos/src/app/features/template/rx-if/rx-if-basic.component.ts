@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
-import { Subject } from 'rxjs';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'rxa-rx-if-poc',
@@ -10,48 +9,81 @@ import { environment } from '../../../../environments/environment';
       <div visualizerHeader>
         <h2>rxIf POC</h2>
         <rxa-strategy-select
-          (strategyChange)="strategy = $event"
+          (strategyChange)="strategy$.next($event)"
         ></rxa-strategy-select>
         <rxa-value-provider
           #v="rxaValueProvider"
           [buttons]="true"
         ></rxa-value-provider>
-        <button mat-raised-button (click)="v.next()" class="mr-1">
+        <button
+          mat-raised-button
+          (click)="staticBool = !staticBool; v.next()"
+          class="mr-1"
+        >
           toggle
         </button>
-        <button mat-raised-button [unpatch] (click)="v.next()">
+        <button
+          mat-raised-button
+          [unpatch]
+          (click)="staticBool = !staticBool; v.next()"
+        >
           toggle (unpatched)
         </button>
       </div>
       <div class="row w-100">
         <div class="col-sm-3">
-          <h3>RxIf</h3>
+          <h3>RxIf (observable value)</h3>
           <strong *rxLet="rendered$; let rendered"
             >Rendercallback: {{ rendered }}</strong
           >
-          <ng-template #elseTpl>
-            <div class="dh-embedded-view">
-              <rxa-dirty-check></rxa-dirty-check>
-              FALSE TEMPLATE
-            </div>
-          </ng-template>
           <div
             class="dh-embedded-view"
             *rxIf="
               v.boolean$;
               let value;
               renderCallback: renderCallback;
-              strategy: strategy
+              strategy: strategy$;
+              else: elseTpl;
+              suspenseTpl: suspenseTpl;
+              completeTpl: completeTpl;
+              errorTpl: errorTpl
             "
           >
             <rxa-dirty-check></rxa-dirty-check>
             TRUE TEMPLATE
           </div>
         </div>
+        <div class="col-sm-3">
+          <h3>RxIf (static value)</h3>
+          <strong *rxLet="rendered$; let rendered"
+            >Rendercallback: {{ rendered }}</strong
+          >
+          <div
+            class="dh-embedded-view"
+            *rxIf="
+              staticBool;
+              renderCallback: renderCallback;
+              strategy: strategy$;
+              else: elseTpl
+            "
+          >
+            <rxa-dirty-check></rxa-dirty-check>
+            TRUE TEMPLATE
+          </div>
+        </div>
+        <ng-template #elseTpl>
+          <div class="dh-embedded-view">
+            <rxa-dirty-check></rxa-dirty-check>
+            FALSE TEMPLATE
+          </div>
+        </ng-template>
+        <ng-template #errorTpl> ERROR </ng-template>
+        <ng-template #completeTpl> COMPLETE </ng-template>
+        <ng-template #suspenseTpl> SUSPENSE </ng-template>
       </div>
     </rxa-visualizer>
   `,
-  changeDetection: environment.changeDetection,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RxIfBasicComponent {
   private _renderCalled = 0;
@@ -59,5 +91,7 @@ export class RxIfBasicComponent {
 
   rendered$ = this.renderCallback.pipe(map(() => this._renderCalled++));
 
-  strategy;
+  strategy$ = new BehaviorSubject('normal');
+
+  staticBool = true;
 }

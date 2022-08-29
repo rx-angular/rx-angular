@@ -6,7 +6,7 @@ import { isObservable, Observable, ObservableInput, of } from 'rxjs';
  * @param o - the value to coerce
  */
 export function coerceObservable<T>(
-  o: ObservableInput<T | null | undefined> | T | null | undefined
-): Observable<T | null | undefined> {
-  return isObservable(o) ? o : of(o as T | null | undefined);
+  o: ObservableInput<T> | T
+): Observable<T> {
+  return isObservable(o) ? o : of(o as T);
 }

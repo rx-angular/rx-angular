@@ -1,4 +1,3 @@
-// tslint:disable
 import { AsyncAction } from '../async/AsyncAction';
 import { AsyncScheduler } from '../async/AsyncScheduler';
 

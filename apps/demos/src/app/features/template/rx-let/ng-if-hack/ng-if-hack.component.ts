@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RxEffects } from '../../../../shared/rx-effects.service';
+import { RxEffects } from '@rx-angular/state/effects';
 
 @Component({
   selector: 'rxa-ngif-hack-container',
@@ -38,7 +38,7 @@ import { RxEffects } from '../../../../shared/rx-effects.service';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NgIfHackComponent extends RxEffects {
+export class NgIfHackComponent {
   isVisible= true
 
   displayStates = {

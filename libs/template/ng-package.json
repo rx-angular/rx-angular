@@ -3,10 +3,7 @@
   "dest": "../../dist/libs/template",
   "lib": {
     "flatModuleFile": "template",
-    "entryFile": "src/index.ts",
-    "umdModuleIds": {
-      "@rx-angular/cdk": "rx-angular.cdk",
-      "@rx-angular/cdk/zone-less": "rx-angular.cdk-zone-less"
-    }
-  }
+    "entryFile": "src/index.ts"
+  },
+  "allowedNonPeerDependencies": ["ng-morph"]
 }

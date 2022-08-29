@@ -1,7 +1,7 @@
 backend:
   name: proxy
   proxy_url: http://localhost:8081/api/v1
-  branch: master # Branch to update (optional; defaults to master)
+  branch: main # Branch to update (optional; defaults to main)
 media_folder: 'docs/images' # Media files will be stored in the repo under static/images/uploads
 public_folder: '/images' # The src attribute for uploaded media will begin with /images/uploads
 collections:

@@ -11,6 +11,5 @@ export function toFloatArray(num: number) {
 
 
 export function toIntArray(num: number) {
-  // tslint:disable-next-line:no-bitwise
   return new Array(num).fill(0).map(() => ~~(Math.random()*10))
 }

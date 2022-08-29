@@ -56,14 +56,12 @@ export class ListService {
 
   httpGetListItem = (arg?: any): Observable<{ list: any[] }> =>
     of(getData(arg)).pipe(
-      // tslint:disable-next-line:no-bitwise
       delay(~~(Math.random() * 5000)),
       map((list) => ({ list }))
     );
 }
 
 export function getData(cfg = { num: 5 }): ListServerItem[] {
-  // tslint:disable-next-line:no-bitwise
   const randId = (s: string) => s + ~~(Math.random() * 100);
   return new Array(cfg.num).fill(cfg.num).map((_) => ({
     id: randId('id'),

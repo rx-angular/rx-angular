@@ -1,0 +1,7 @@
+{
+  "$schema": "../../../../node_modules/ng-packagr/package.schema.json",
+  "lib": {
+    "entryFile": "src/index.ts",
+    "flatModuleFile": "template-experimental-if"
+  }
+}

@@ -17,6 +17,7 @@ describe('Scheduler', () => {
 
   const NormalPriority = 3;
   let scheduleCallback: typeof import('./scheduler').scheduleCallback;
+  let requestPaint: typeof import('./scheduler').requestPaint;
   let cancelCallback: typeof import('./scheduler').cancelCallback;
   let shouldYield: typeof import('./scheduler').shouldYield;
 
@@ -39,19 +40,17 @@ describe('Scheduler', () => {
           break;
       }
       performance = ɵglobal.performance;
-
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const Scheduler = require('./scheduler');
       scheduleCallback = Scheduler.scheduleCallback;
+      requestPaint = Scheduler.requestPaint;
       cancelCallback = Scheduler.cancelCallback;
       shouldYield = Scheduler.shouldYield;
     });
 
     afterEach(() => {
-      delete ɵglobal.performance;
-
       if (!runtime.isLogEmpty()) {
-        throw Error('Test exited without clearing log.');
+        throw Error('Test eited without clearing log.');
       }
     });
 
@@ -112,6 +111,26 @@ describe('Scheduler', () => {
       runtime.assertLog([schedulingMessageEvent]);
       runtime.fireMessageEvent();
       runtime.assertLog([LogEvent.MessageEvent, 'A', 'B']);
+    });
+
+    it('request paint ', () => {
+      scheduleCallback(NormalPriority, () => {
+        runtime.log('A');
+        requestPaint();
+      });
+      scheduleCallback(NormalPriority, () => {
+        runtime.log('B');
+      });
+      runtime.assertLog([schedulingMessageEvent]);
+      runtime.fireMessageEvent();
+      runtime.assertLog([
+        LogEvent.MessageEvent,
+        'A',
+        // A forced paint
+        schedulingMessageEvent,
+      ]);
+      runtime.fireMessageEvent();
+      runtime.assertLog([LogEvent.MessageEvent, 'B']);
     });
 
     it('multiple tasks with a yield in between', () => {
@@ -199,6 +218,66 @@ describe('Scheduler', () => {
       runtime.fireMessageEvent();
       runtime.assertLog([LogEvent.MessageEvent, 'B']);
     });
+
+    it('should run task with configured patch', () => {
+      const ngZone = getMockNgZone();
+      scheduleCallback(NormalPriority, () => {
+        runtime.log('A');
+      }, { ngZone } );
+      runtime.assertLog([schedulingMessageEvent]);
+      runtime.fireMessageEvent();
+      expect(ngZone.run).toHaveBeenCalledTimes(1);
+      runtime.assertLog([LogEvent.MessageEvent, 'A']);
+    });
+
+    it('should run multiple tasks with different patches', () => {
+      const ngZone = getMockNgZone();
+      const ngZone2 = getMockNgZone();
+      scheduleCallback(NormalPriority, () => {
+        runtime.log('A');
+      }, { ngZone } );
+      scheduleCallback(NormalPriority, () => {
+        runtime.log('B');
+      }, { ngZone: ngZone2 } );
+      scheduleCallback(NormalPriority, () => {
+        runtime.log('C');
+      }, { ngZone: ngZone } );
+      runtime.assertLog([schedulingMessageEvent]);
+      runtime.fireMessageEvent();
+      expect(ngZone.run).toHaveBeenCalledTimes(2);
+      expect(ngZone2.run).toHaveBeenCalledTimes(1);
+      runtime.assertLog([LogEvent.MessageEvent, 'A', 'B', 'C']);
+    });
+
+    it('should work with multiple tasks with a yield in between', () => {
+      const ngZone = getMockNgZone();
+      const ngZone2 = getMockNgZone();
+      scheduleCallback(NormalPriority, () => {
+        runtime.log('A');
+      }, { ngZone });
+      scheduleCallback(NormalPriority, () => {
+        runtime.log('B');
+        runtime.advanceTime(4000);
+      }, { ngZone: ngZone2 });
+      scheduleCallback(NormalPriority, () => {
+        runtime.log('C');
+      }, { ngZone });
+      runtime.assertLog([schedulingMessageEvent]);
+      runtime.fireMessageEvent();
+      runtime.assertLog([
+        LogEvent.MessageEvent,
+        'A',
+        'B',
+        // Ran out of time. Post a continuation event.
+        schedulingMessageEvent,
+      ]);
+      // expect(ngZone.run).toHaveBeenCalledTimes(1);
+      runtime.fireMessageEvent();
+      runtime.assertLog([LogEvent.MessageEvent, 'C']);
+      expect(ngZone2.run).toHaveBeenCalledTimes(1);
+      expect(ngZone.run).toHaveBeenCalledTimes(2);
+    });
+
   });
 
   const enum LogEvent {
@@ -210,17 +289,22 @@ describe('Scheduler', () => {
     Continuation = 'Continuation',
   }
 
+  function getMockNgZone() {
+    const run = jest.fn((fn: (...args: any[]) => any) => {
+      return fn();
+    });
+    return { run };
+  }
+
   function installMockBrowserRuntime() {
     let timerIdCounter = 0;
     let currentTime = 0;
     let eventLog: string[] = [];
     let hasPendingMessageEvent = false;
 
-    ɵglobal.performance = {
-      now() {
-        return currentTime;
-      },
-    };
+    ɵglobal.performance.now = () => {
+      return currentTime;
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     ɵglobal.requestAnimationFrame = ɵglobal.cancelAnimationFrame = () => {};

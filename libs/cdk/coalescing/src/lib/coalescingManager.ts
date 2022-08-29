@@ -2,7 +2,7 @@ interface CoalescingContextProps extends Record<string, unknown> {
   numCoalescingSubscribers: number;
 }
 
-interface CoalescingManager {
+export interface CoalescingManager {
   remove: (scope: Record<string, unknown>) => void;
   add: (scope: Record<string, unknown>) => void;
   isCoalescing: (scope: Record<string, unknown>) => boolean;

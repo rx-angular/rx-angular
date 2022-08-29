@@ -1,4 +1,3 @@
-// tslint:disable
 import { BenchmarkSuite } from '../../utils';
 
 export const oneOfSuite: BenchmarkSuite = {

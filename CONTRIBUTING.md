@@ -19,7 +19,7 @@ yarn
 You can start developing and then run tests for the affected target:
 
 ```sh
-yarn nx affected:test --base=master
+yarn nx affected:test
 ```
 
 Either you can run all tests for all targets:

@@ -50,5 +50,5 @@ With this step, we're refactoring our state management from an imperative to a r
 The benefits we can gain here are that we have our state centralized and reactive but, at the same time, can also include
 imperative parts of our components, like input bindings, into the state.
 
-[global-state.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/master/apps/demos/src/app/features/tutorials/basics/4-global-state/global-state.start.component.ts
-[3-output-bindings]: https://github.com/rx-angular/rx-angular/tree/master/apps/demos/src/app/features/tutorials/basics/3-output-bindings
+[global-state.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/main/apps/demos/src/app/features/tutorials/basics/4-global-state/global-state.start.component.ts
+[3-output-bindings]: https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics/3-output-bindings

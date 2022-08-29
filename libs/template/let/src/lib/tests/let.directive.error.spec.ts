@@ -4,17 +4,19 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { mockConsole } from '@test-helpers';
 import { Observable, of, throwError } from 'rxjs';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+
 import { LetDirective } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
-// tslint:disable-next-line:nx-enforce-module-boundaries
-import { mockConsole } from '@test-helpers';
-import { RX_ANGULAR_CONFIG } from '@rx-angular/cdk';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; $error as error">{{ error }}</ng-container>
+    <ng-container *rxLet="value$; error as hasError">{{
+      hasError
+    }}</ng-container>
   `,
 })
 class LetDirectiveTestErrorComponent {
@@ -29,12 +31,13 @@ const setupLetDirectiveTestComponentError = (): void => {
       TemplateRef,
       ViewContainerRef,
       {
-        provide: RX_ANGULAR_CONFIG,
+        provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
         },
       },
     ],
+    teardown: { destroyAfterEach: true },
   });
 
   fixtureLetDirectiveTestComponent = TestBed.createComponent(
@@ -54,7 +57,7 @@ let componentNativeElement: any;
 
 describe('LetDirective when error', () => {
   beforeAll(() => mockConsole());
-  beforeEach(waitForAsync(setupLetDirectiveTestComponentError));
+  beforeEach(setupLetDirectiveTestComponentError);
 
   it('should render the error to false if next or complete', () => {
     letDirectiveTestComponent.value$ = of(1);

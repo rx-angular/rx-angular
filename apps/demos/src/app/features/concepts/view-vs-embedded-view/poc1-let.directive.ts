@@ -13,7 +13,6 @@ export interface PocLetViewContext<T> {
 }
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[poc1Let]'
 })
 export class Poc1LetDirective<U> implements OnInit, OnDestroy {

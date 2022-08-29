@@ -2,7 +2,6 @@ import { AfterViewInit, Directive, ElementRef, Input, NgZone, OnDestroy } from '
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-// tslint:disable-next-line:directive-selector
 @Directive({ selector: '[runOutsideZone]' })
 export class RunOutsideZoneDirective implements AfterViewInit, OnDestroy {
   subscription = new Subscription();

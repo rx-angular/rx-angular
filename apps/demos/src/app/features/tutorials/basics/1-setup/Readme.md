@@ -1,5 +1,8 @@
 # Setting up a Reactive State
 
+We're assuming you've already covered the basics [here](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/usage.md)
+
+
 In this section, we will be working with an [imperative code base][setup.start.component.ts] to refactor
 its state management to a [reactive setup][setup.solution.component.ts].
 
@@ -35,7 +38,7 @@ interface ComponentState {
 }
 
 // 3- extend the component, or alternatively, register a local provider and inject it
-export class SetupStart implements OnInit, OnDestroy extends RxState<ComponentState> ... {
+export class SetupStart extends RxState<ComponentState> implements OnInit, OnDestroy  ... {
 ```
 
 Since we decided to create a reactive state by extending an existing component, we will need to extend its class definition and call `super()` in the constructor.
@@ -55,7 +58,6 @@ The next step is to set up `model$`, a component property that holds all data we
 By assigning the `model$` to the `$` property of the `RxState` class, we get the full state object as `Observable<ComponentState>`.
 
 ```typescript
-
 @Component({
   selector: 'rxa-setup-solution',
   template: `
@@ -66,6 +68,7 @@ By assigning the `model$` to the `$` property of the `RxState` class, we get the
 })
 export class SetupReactiveComponentStateContainerComponent extends RxState<ComponentState> {
   model$ = this.select();
+  list$: Observable<DemoBasicsItem[]> = this.select('list')
 }
 ```
 
@@ -85,5 +88,5 @@ We will use `set()` as we already have initial values assigned to the `initCompo
 
 After we have completed all these steps, we should see the initial state in the template.
 
-[setup.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/master/apps/demos/src/app/features/tutorials/basics/1-setup/setup.start.component.ts
-[setup.solution.component.ts]: https://github.com/rx-angular/rx-angular/blob/master/apps/demos/src/app/features/tutorials/basics/1-setup/setup.solution.component.ts
+[setup.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/main/apps/demos/src/app/features/tutorials/basics/1-setup/setup.start.component.ts
+[setup.solution.component.ts]: https://github.com/rx-angular/rx-angular/blob/main/apps/demos/src/app/features/tutorials/basics/1-setup/setup.solution.component.ts

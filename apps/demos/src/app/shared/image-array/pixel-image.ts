@@ -15,7 +15,6 @@ export const styleToRgba = getMemoizedFn(
 export function rgbToHsl(r: number, g: number, b: number): number[] {
   r /= 255, g /= 255, b /= 255;
   const max = Math.max(r, g, b), min = Math.min(r, g, b);
-  // tslint:disable-next-line:prefer-const
   let h, s, l = (max + min) / 2;
 
   if (max === min) {

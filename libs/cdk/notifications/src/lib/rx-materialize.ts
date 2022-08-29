@@ -8,11 +8,12 @@ export function rxMaterialize<T>(): OperatorFunction<T, RxNotification<T>> {
     o$.pipe(
       materialize(),
       tap(({ kind, error }) => {
+        // As we dont want to just swallow errors we log them here
         if (kind === 'E') {
           console.error(error);
         }
       }),
-      map(({ value, hasValue, error, kind }) => {
+      map(({ value, error, kind, hasValue }) => {
         const rxNotificationKind = notificationKindToRxNotificationKind(kind);
         return {
           value,
@@ -25,6 +26,14 @@ export function rxMaterialize<T>(): OperatorFunction<T, RxNotification<T>> {
     );
 }
 
+/**
+ * @internal
+ *
+ * @description
+ * This function is here to turn RxJS notification kind values into RxNotification kind names.
+ * The main reason for the naming is the RxNotification kind values map directly to the default
+ * template names (`suspense`, `next`, `error` `complete`) in the directives of the template package
+ */
 export function notificationKindToRxNotificationKind(
   kind: Notification<unknown>['kind']
 ): RxNotificationKind {

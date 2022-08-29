@@ -2,22 +2,15 @@ import { NgModule } from '@angular/core';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { IfVisibleComponent } from './if-visible.component';
-import { RxLetModule, RxIfModule } from '../../../../rx-angular-pocs';
+import { RxLetModule } from '../../../../rx-angular-pocs';
+import { IfModule } from '@rx-angular/template/experimental/if';
 
-const DECLARATIONS = [
-  IfVisibleComponent,
-];
+const DECLARATIONS = [IfVisibleComponent];
 
 @NgModule({
   declarations: DECLARATIONS,
-  imports: [
-    VisualizerModule,
-    ValueProvidersModule,
-    RxLetModule,
-    RxIfModule
-  ],
+  imports: [VisualizerModule, ValueProvidersModule, RxLetModule, IfModule],
   exports: DECLARATIONS,
-  providers: []
+  providers: [],
 })
-export class IfVisibleModule {
-}
+export class IfVisibleModule {}

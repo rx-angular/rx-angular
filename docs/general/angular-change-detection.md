@@ -3,7 +3,7 @@
 author: [Michael Hladky]
 created: 2020-10-18
 status: [**draft** | in review | approved | implemented | obsolete]
-doc url: https://github.com/rx-angular/rx-angular/blob/master/docs/general/angular-change-detection.md
+doc url: https://github.com/rx-angular/rx-angular/blob/main/docs/general/angular-change-detection.md
 feedback url: https://github.com/rx-angular/rx-angular/issues
 version: 1.0.0
 
@@ -167,7 +167,6 @@ This includes not only releases of the subject of this document but also respect
 Include alternate design ideas you tried out, but didn't continue with them.
 List their disadvantages or at least why you did not invest more time in researching them.
 
-<!-- 
 Include alternate design ideas you tried out, but didn't continue with them.
 List their disadvantages or at least why you did not invest more time in researching them.
 
@@ -198,4 +197,3 @@ Drawbacks:
 Explain how multiple people would actively working on the suggested code base.
 If needed include branching suggestions or the way code interacts
 -->
->>>>>>> master

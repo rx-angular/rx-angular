@@ -6,7 +6,7 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
-import { RxStrategyProvider } from '@rx-angular/cdk';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import {
   BehaviorSubject,
   combineLatest,

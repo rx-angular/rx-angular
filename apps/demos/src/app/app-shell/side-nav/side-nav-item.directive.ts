@@ -2,7 +2,6 @@ import { Directive, HostBinding, Input } from '@angular/core';
 
 @Directive({
   selector: '[rxaAppShellSideNavItem]',
-  // tslint:disable-next-line:no-host-metadata-property
   host: {
     class:
       'app-shell-sidenav-item',
