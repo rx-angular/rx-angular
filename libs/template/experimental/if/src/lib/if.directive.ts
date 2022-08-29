@@ -48,6 +48,7 @@ export class RxIf<U> implements OnInit, OnChanges, OnDestroy, OnChanges {
     rxIfTemplateNames
   >;
 
+  private lastValidValue: U | null;
   @Input() rxIf: Observable<U> | U | null | undefined;
 
   @Input('rxIfStrategy')
@@ -55,12 +56,12 @@ export class RxIf<U> implements OnInit, OnChanges, OnDestroy, OnChanges {
     this.strategyHandler.next(strategyName);
   }
 
-  @Input('rxIfElse') else: TemplateRef<any>;
-  @Input('rxIfThen') then: TemplateRef<any>;
+  @Input('rxIfElse') else: TemplateRef<RxIfViewContext<U>>;
+  @Input('rxIfThen') then: TemplateRef<RxIfViewContext<U>>;
 
-  @Input('rxIfSuspense') suspense: TemplateRef<any>;
-  @Input('rxIfComplete') complete: TemplateRef<any>;
-  @Input('rxIfError') error: TemplateRef<any>;
+  @Input('rxIfSuspense') suspense: TemplateRef<RxIfViewContext<U>>;
+  @Input('rxIfComplete') complete: TemplateRef<RxIfViewContext<U>>;
+  @Input('rxIfError') error: TemplateRef<RxIfViewContext<U>>;
 
   @Input('rxIfParent') renderParent = this.strategyProvider.config.parent;
 
@@ -93,6 +94,13 @@ export class RxIf<U> implements OnInit, OnChanges, OnDestroy, OnChanges {
 
   ngOnInit() {
     this.subscription.add(
+      this.observablesHandler.values$.subscribe(({ kind, value }) => {
+        if (kind === 'next' && value !== undefined) {
+          this.lastValidValue = value;
+        }
+      })
+    );
+    this.subscription.add(
       this.templateManager
         .render(this.observablesHandler.values$)
         .subscribe((n) => {
@@ -106,6 +114,13 @@ export class RxIf<U> implements OnInit, OnChanges, OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.templateManager) {
       this._createTemplateManager();
+    }
+
+    if (changes.then && !changes.then.firstChange) {
+      this.templateManager.addTemplateRef(
+        RxIfTemplateNames.then,
+        this.thenTemplate
+      );
     }
 
     if (changes.else) {
@@ -131,7 +146,9 @@ export class RxIf<U> implements OnInit, OnChanges, OnDestroy, OnChanges {
     }
 
     if (changes.rxIf) {
-      this.observablesHandler.next(coerceObservable(this.rxIf));
+      this.observablesHandler.next(
+        this.rxIf === undefined ? this.rxIf : coerceObservable(this.rxIf)
+      );
     }
   }
 
@@ -140,10 +157,10 @@ export class RxIf<U> implements OnInit, OnChanges, OnDestroy, OnChanges {
   }
 
   private _createTemplateManager(): void {
-    const getNextTemplate = (value, templates) => {
+    const getNextTemplate = (value) => {
       return value
-        ? (RxIfTemplateNames.then as rxIfTemplateNames)
-        : templates.get(RxIfTemplateNames.else)
+        ? RxIfTemplateNames.then
+        : this.else
         ? RxIfTemplateNames.else
         : undefined;
     };
@@ -167,19 +184,19 @@ export class RxIf<U> implements OnInit, OnChanges, OnDestroy, OnChanges {
         strategies: this.strategyProvider.strategies,
       },
       notificationToTemplateName: {
-        [RxNotificationKind.Suspense]: (value, templates) =>
+        [RxNotificationKind.Suspense]: () =>
           this.suspense
             ? RxIfTemplateNames.suspense
-            : getNextTemplate(value, templates),
+            : getNextTemplate(this.lastValidValue),
         [RxNotificationKind.Next]: getNextTemplate.bind(this),
-        [RxNotificationKind.Error]: (value, templates) =>
+        [RxNotificationKind.Error]: () =>
           this.error
             ? RxIfTemplateNames.error
-            : getNextTemplate(value, templates),
-        [RxNotificationKind.Complete]: (value, templates) =>
+            : getNextTemplate(this.lastValidValue),
+        [RxNotificationKind.Complete]: () =>
           this.complete
             ? RxIfTemplateNames.complete
-            : getNextTemplate(value, templates),
+            : getNextTemplate(this.lastValidValue),
       },
     });
     this.templateManager.addTemplateRef(
