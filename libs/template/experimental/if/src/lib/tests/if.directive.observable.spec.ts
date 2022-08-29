@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { BehaviorSubject, of, startWith, throwError } from 'rxjs';
+import { BehaviorSubject, of, startWith, throwError, tap } from 'rxjs';
 import { IfModule } from '../if.module';
 import { createTestComponent, TestComponent } from './fixtures';
 
 {
-  describe('rxIf directive', () => {
+  describe('rxIf directive observable values', () => {
     let fixture: ComponentFixture<TestComponent>;
 
     function getComponent(): TestComponent {
@@ -25,7 +25,19 @@ import { createTestComponent, TestComponent } from './fixtures';
           {
             provide: RX_RENDER_STRATEGIES_CONFIG,
             useValue: {
-              primaryStrategy: 'native',
+              primaryStrategy: 'custom',
+              customStrategies: {
+                custom: {
+                  name: 'custom',
+                  work: (cdRef) => {
+                    cdRef.detectChanges();
+                  },
+                  behavior:
+                    ({ work }) =>
+                    (o$) =>
+                      o$.pipe(tap(() => work())),
+                },
+              },
             },
           },
         ],
