@@ -2,8 +2,8 @@ module.exports = {
   name: 'state',
   displayName: 'state',
   preset: '../../jest.preset.js',
-  coverageReporters: ['lcov', 'cobertura'],
-  coverageDirectory: '../../dist/apps/docs/test-coverage/state',
+  coverageReporters: ['lcov'],
+  coverageDirectory: '../../coverage/state',
   setupFilesAfterEnv: ['<rootDir>/test-setup.ts'],
   globals: {
     'ts-jest': {

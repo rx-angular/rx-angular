@@ -1,6 +1,12 @@
 import { Component } from '@angular/core';
 import { BehaviorSubject, from, interval, Subject, throwError } from 'rxjs';
-import { map, share, switchMap, takeUntil, withLatestFrom } from 'rxjs/operators';
+import {
+  map,
+  share,
+  switchMap,
+  takeUntil,
+  withLatestFrom,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-let-template-binding-http-example',
@@ -16,9 +22,9 @@ import { map, share, switchMap, takeUntil, withLatestFrom } from 'rxjs/operators
             heroes$;
             let hero;
             strategy: visibleStrategy;
-            rxComplete: complete;
-            rxError: error;
-            rxSuspense: suspense
+            complete: complete;
+            error: error;
+            suspense: suspense
           "
         >
           random Star Wars character fetched!
@@ -119,11 +125,11 @@ export class LetTemplateBindingHttpExampleComponent {
           if (error) {
             return throwError(error);
           } else {
-           return fetch(
-             `https://swapi.dev/api/people/${
-               Math.floor(Math.random() * 50) + 1
-             }`
-           ).then((a) => a.json());
+            return fetch(
+              `https://swapi.dev/api/people/${
+                Math.floor(Math.random() * 50) + 1
+              }`
+            ).then((a) => a.json());
           }
         }),
         map((hero) => hero.name || hero.detail || 'Not found')

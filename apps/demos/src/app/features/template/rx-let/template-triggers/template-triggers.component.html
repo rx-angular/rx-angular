@@ -1,0 +1,101 @@
+<rxa-visualizer>
+  <div visualizerHeader>
+    <h2>rxLet Template Triggers</h2>
+    <div class="d-flex">
+      <rxa-strategy-select
+        (strategyChange)="strategy$.next($event)"
+      ></rxa-strategy-select>
+      <div class="ml-2">
+        <div class="mb-2">
+          <strong>Stream</strong>
+        </div>
+        <rxa-value-provider
+          #valueProvider
+          [buttons]="true"
+        ></rxa-value-provider>
+      </div>
+      <div class="ml-2">
+        <div class="mb-2"><strong>Trigger</strong></div>
+        <rxa-trigger-provider #triggerProvider></rxa-trigger-provider>
+      </div>
+    </div>
+  </div>
+  <div class="row w-100">
+    <div class="col-6">
+      <h2>Context Variables</h2>
+      <ng-container
+        *rxLet="
+    valueProvider.incremental$;
+    let state;
+    let c = complete;
+    let s = suspense;
+    let e = error;
+    nextTrg: triggerProvider.next$;
+    completeTrg: triggerProvider.complete$;
+    errorTrg: triggerProvider.error$;
+    suspenseTrg: triggerProvider.suspense$;
+  "
+      >
+
+        <ng-container *ngIf="c; then: complete"></ng-container>
+        <ng-container *ngIf="s">
+          <ng-template [ngTemplateOutlet]="suspense"
+                       [ngTemplateOutletContext]="{
+                        $implicit: state
+                       }"></ng-template>
+        </ng-container>
+        <ng-container *ngIf="e">
+          <ng-template [ngTemplateOutlet]="error"
+                       [ngTemplateOutletContext]="{
+                        $implicit: state,
+                        $error: e
+                       }"></ng-template>
+        </ng-container>
+
+        <div>{{ state }}</div>
+
+      </ng-container>
+    </div>
+    <div class="col-6">
+      <h2>Template Bindings</h2>
+      <ng-container
+        *rxLet="
+    valueProvider.incremental$;
+    let state;
+    error: error;
+    suspense: suspense;
+    complete: complete;
+    nextTrg: triggerProvider.next$;
+    completeTrg: triggerProvider.complete$;
+    errorTrg: triggerProvider.error$;
+    suspenseTrg: triggerProvider.suspense$;
+  "
+      >
+
+        <div>{{ state }}</div>
+
+      </ng-container>
+    </div>
+    <ng-template #complete>
+      <div>
+        <mat-icon class="complete-icon">thumb_up</mat-icon>
+        <h2>Completed!</h2>
+      </div>
+    </ng-template>
+    <ng-template #error let-value let-error="$error">
+      <div>
+        <mat-icon class="error-icon">thumb_down</mat-icon>
+        <h2>Error value: {{ error }}</h2>
+        <strong>Last valid value: {{ value }}</strong>
+      </div>
+    </ng-template>
+    <ng-template #suspense let-value>
+      <mat-progress-spinner
+        [diameter]="80"
+        [color]="'primary'"
+        [mode]="'indeterminate'"
+      ></mat-progress-spinner>
+      <strong>Last valid value: {{ value }}</strong>
+    </ng-template>
+  </div>
+</rxa-visualizer>

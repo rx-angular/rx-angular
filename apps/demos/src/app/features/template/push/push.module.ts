@@ -9,8 +9,15 @@ export const ROUTES = [
   {
     path: 'basic-example',
     loadChildren: () =>
-      import('./push-basic-example/push-basic-example.module').then(
-        m => m.PushBasicExampleModule
+      import('./push-basic/push-basic.module').then(
+        m => m.PushBasicModule
+      )
+  },
+  {
+    path: 'vs-async',
+    loadChildren: () =>
+      import('./push-vs-async/push-vs-async.module').then(
+        m => m.PushVsAsyncModule
       )
   }
 ];

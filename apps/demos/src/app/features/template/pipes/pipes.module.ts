@@ -4,14 +4,7 @@ import { RouterModule } from '@angular/router';
 export const ROUTES = [
   {
     path: '',
-    redirectTo: 'push'
-  },
-  {
-    path: 'push',
-    loadChildren: () =>
-      import('./push-poc/push-poc.module').then(
-        m => m.PushPocModule
-      )
+    redirectTo: 'memo'
   },
   {
     path: 'memo',
