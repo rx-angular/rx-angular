@@ -17,3 +17,4 @@ export { safePluck } from './lib/utils/safe-pluck';
 export { KeyCompareMap, CompareFn, PickSlice } from './lib/interfaces/index';
 export { createAccumulationObservable } from './lib/accumulation-observable';
 export { createSideEffectObservable } from './lib/side-effect-observable';
+export { smosh } from './lib/smosh';

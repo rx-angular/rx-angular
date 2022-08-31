@@ -12,6 +12,7 @@ RxState is a lightweight, flexible, strongly typed and tested tool dedicated to 
 
 ## Sub Modules
 
+- [**{ }** State (root module)](https://github.com/rx-angular/rx-angular/blob/main/libs/state/README.md)
 - [🧩 Selections](https://github.com/rx-angular/rx-angular/blob/main/libs/state/selections/README.md)
 - [☁ Effects](https://github.com/rx-angular/rx-angular/blob/main/libs/state/effects/README.md)
 

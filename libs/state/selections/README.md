@@ -6,15 +6,23 @@
 
 ## Slogan
 
-`@rx-angular/state/selections` TBD
+`@rx-angular/state/selections` provides performant and boiler plate free helpers for to craft custom selections with just a few lines of code.
 
 ## Key features
 
-- ✅ 
+- ✅ reduces repetitative code to a minimum
+- ✅ most common problems solved with a 1 liner
+- ✅ distinct values
+- ✅ lazy initialization (avoids `?` in the template)
+- ✅ shared computation
+- ✅ strongly types
+- ✅ fully tested
+
+
 
 ## Demos:
 
-- ⚡ GitHub
+- ⚡ GitHub Todo
 
 ## Install
 
@@ -27,4 +35,3 @@ yarn add @rx-angular/state
 ## Documentation
 
 - [Selections](https://github.com/rx-angular/rx-angular/tree/main/libs/state/selections/docs/Readme.md)
-
