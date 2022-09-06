@@ -5,15 +5,9 @@ import {
   createAccumulationObservable,
   createSideEffectObservable,
   isKeyOf,
-  isOperateFnArrayGuard,
-  isStringAndFunctionTupleGuard,
-  isStringArrayGuard,
-  isStringsArrayAndFunctionTupleGuard,
   PickSlice,
-  pipeFromArray,
   safePluck,
-  selectSlice,
-  stateful,
+  select,
 } from '@rx-angular/state/selections';
 import {
   EMPTY,
@@ -24,7 +18,7 @@ import {
   Subscription,
   Unsubscribable,
 } from 'rxjs';
-import { catchError, map, pluck, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 export type ProjectStateFn<T> = (oldState: T) => Partial<T>;
 export type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
@@ -581,33 +575,15 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * @internal
    */
   select<R>(
-    ...opOrMapFn:
-      | OperatorFunction<T, R>[]
+    ...args:
+      | OperatorFunction<T, unknown>[]
       | string[]
-      | [string, (val: unknown) => R]
-      | [string[], (slice: unknown) => R]
+      | [string, (val: unknown) => unknown]
+      | [string[], (slice: unknown) => unknown]
   ): Observable<T | R> {
-    if (!opOrMapFn || opOrMapFn.length === 0) {
-      return this.accumulator.state$.pipe(stateful());
-    } else if (isStringAndFunctionTupleGuard(opOrMapFn)) {
-      return this.accumulator.state$.pipe(
-        stateful(
-          map((s) => opOrMapFn[1]((s as Record<string, unknown>)[opOrMapFn[0]]))
-        )
-      );
-    } else if (isStringsArrayAndFunctionTupleGuard(opOrMapFn)) {
-      return this.accumulator.state$.pipe(
-        selectSlice(opOrMapFn[0] as (keyof T)[]),
-        stateful(map(opOrMapFn[1]))
-      );
-    } else if (isStringArrayGuard(opOrMapFn)) {
-      return this.accumulator.state$.pipe(
-        stateful(pluck(...opOrMapFn))
-      ) as Observable<T | R>;
-    } else if (isOperateFnArrayGuard(opOrMapFn)) {
-      return this.accumulator.state$.pipe(stateful(pipeFromArray(opOrMapFn)));
-    }
-    throw new Error('wrong params passed to select');
+    return this.accumulator.state$.pipe(
+      select(...(args as Parameters<typeof select>))
+    );
   }
 
   /**
