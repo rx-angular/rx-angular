@@ -13,18 +13,15 @@ import {
   RxRenderWork,
   strategyHandling,
 } from '@rx-angular/cdk/render-strategies';
+import { EMPTY, merge, Observable, of } from 'rxjs';
 import {
   catchError,
-  EMPTY,
   filter,
   map,
-  merge,
-  Observable,
-  of,
   switchMap,
   tap,
   withLatestFrom,
-} from 'rxjs';
+} from 'rxjs/operators';
 import {
   rxBaseTemplateNames,
   RxRenderAware,
