@@ -5,6 +5,7 @@ import {
   createAccumulationObservable,
   createSideEffectObservable,
   isKeyOf,
+  KeyCompareMap,
   PickSlice,
   safePluck,
   select,
@@ -488,7 +489,8 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    */
   select<K extends keyof T, V>(
     keys: K[],
-    fn: (slice: PickSlice<T, K>) => V
+    fn: (slice: PickSlice<T, K>) => V,
+    keyCompareMap?: KeyCompareMap<Pick<T, K>>
   ): Observable<V>;
   /**
    * @description
@@ -578,8 +580,12 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     ...args:
       | OperatorFunction<T, unknown>[]
       | string[]
-      | [string, (val: unknown) => unknown]
-      | [string[], (slice: unknown) => unknown]
+      | [k: string, fn: (val: unknown) => unknown]
+      | [
+          keys: string[],
+          fn: (slice: unknown) => unknown,
+          keyCompareMap?: KeyCompareMap<T>
+        ]
   ): Observable<T | R> {
     return this.accumulator.state$.pipe(
       select(...(args as Parameters<typeof select>))

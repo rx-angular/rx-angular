@@ -2,6 +2,7 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RxState } from '@rx-angular/state';
 import { select } from '@rx-angular/state/selections';
 import {
+  initialNestedState,
   initialPrimitiveState,
   jestMatcher,
   PrimitiveState,
@@ -248,6 +249,23 @@ describe('RxStateService', () => {
             state.select(['num', 'str'], ({ num, str }) => `${str}: ${num}`)
           ).toBe('s', {
             s: `${initialPrimitiveState.str}: ${initialPrimitiveState.num}`,
+          });
+        });
+      });
+
+      it('should return mapped slice on select with keys, function and key compare map', () => {
+        testScheduler.run(({ expectObservable }) => {
+          const state = setupState({
+            initialState: { ...initialPrimitiveState, ...initialNestedState },
+          });
+          expectObservable(
+            state.select(
+              ['num', 'obj'],
+              ({ num, obj }) => `${num}: ${obj.key1.key11.key111}`,
+              { obj: (a, b) => a.key1.key11.key111 === b.key1.key11.key111 }
+            )
+          ).toBe('s', {
+            s: `${initialPrimitiveState.num}: ${initialNestedState.obj.key1.key11.key111}`,
           });
         });
       });

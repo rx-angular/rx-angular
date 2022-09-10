@@ -1,11 +1,11 @@
 import { MonoTypeOperatorFunction, Observable, OperatorFunction } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
-import { PickSlice } from '../interfaces';
+import { KeyCompareMap, PickSlice } from '../interfaces';
 import {
   isOperateFnArrayGuard,
   isStringAndFunctionTupleGuard,
+  isStringArrayFunctionAndOptionalObjectTupleGuard,
   isStringArrayGuard,
-  isStringsArrayAndFunctionTupleGuard,
 } from '../utils/guards';
 import { pipeFromArray } from '../utils/pipe-from-array';
 import { selectSlice } from './selectSlice';
@@ -99,7 +99,8 @@ export function select<T, A, B, C, D, E>(
  */
 export function select<T extends object, K extends keyof T, R>(
   keys: K[],
-  fn: (slice: PickSlice<T, K>) => R
+  fn: (slice: PickSlice<T, K>) => R,
+  keyCompareMap?: KeyCompareMap<Pick<T, K>>
 ): OperatorFunction<T, R>;
 
 /**
@@ -205,17 +206,24 @@ export function select<T extends Record<string, unknown>>(
   ...opOrMapFn:
     | OperatorFunction<T, unknown>[]
     | string[]
-    | [string, (val: unknown) => unknown]
-    | [string[], (slice: unknown) => unknown]
+    | [k: string, fn: (val: unknown) => unknown]
+    | [
+        keys: string[],
+        fn: (slice: unknown) => unknown,
+        keyCompareMap?: KeyCompareMap<T>
+      ]
 ): OperatorFunction<T, unknown> {
   return (state$: Observable<T>) => {
     if (!opOrMapFn || opOrMapFn.length === 0) {
       return state$.pipe(stateful());
     } else if (isStringAndFunctionTupleGuard(opOrMapFn)) {
       return state$.pipe(stateful(map((s) => opOrMapFn[1](s[opOrMapFn[0]]))));
-    } else if (isStringsArrayAndFunctionTupleGuard(opOrMapFn)) {
+    } else if (isStringArrayFunctionAndOptionalObjectTupleGuard(opOrMapFn)) {
       return state$.pipe(
-        selectSlice<T & object, keyof T>(opOrMapFn[0] as (keyof T)[]),
+        selectSlice<T & object, keyof T>(
+          opOrMapFn[0] as (keyof T)[],
+          opOrMapFn[2]
+        ),
         stateful(map(opOrMapFn[1]))
       );
     } else if (isStringArrayGuard(opOrMapFn)) {

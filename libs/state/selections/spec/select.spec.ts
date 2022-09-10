@@ -145,6 +145,43 @@ describe('select', () => {
     });
   });
 
+  it('should accept array of strings keyof T, map function and key compare map', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      const state: PrimitiveState & NestedState = {
+        bol: true,
+        str: 'string',
+        num: 42,
+        obj: {
+          key1: {
+            key11: {
+              key111: 'foo',
+            },
+          },
+        },
+      };
+      const source: Observable<PrimitiveState & NestedState> = cold('abcde|', {
+        a: state,
+        b: { ...state, bol: false },
+        c: { ...state, num: 69 },
+        d: { ...state, num: 69, obj: { key1: { key11: { key111: 'foo' } } } },
+        e: { ...state, num: 69, obj: { key1: { key11: { key111: 'bar' } } } },
+      });
+      expectObservable(
+        source.pipe(
+          select(
+            ['num', 'obj'],
+            ({ num, obj }) => `${num}: ${obj.key1.key11.key111}`,
+            { obj: (a, b) => a.key1.key11.key111 === b.key1.key11.key111 }
+          )
+        )
+      ).toBe('a-c-e|', {
+        a: '42: foo',
+        c: '69: foo',
+        e: '69: bar',
+      });
+    });
+  });
+
   it('should accept one operator', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const source: Observable<PrimitiveState> = cold('a|', {
