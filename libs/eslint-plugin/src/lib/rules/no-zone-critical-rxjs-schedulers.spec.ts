@@ -19,7 +19,7 @@ function applyCustomScheduler<T>(source: Observable<T>): Observable<T> {
   `
 import { Observable } from 'rxjs';
 import { observeOn } from 'rxjs/operators';
-import { asyncScheduler } from '@rx-angular/cdk/zone-less';
+import { asyncScheduler } from 'rxjs-zone-less';
 
 function applyZonelessScheduler<T>(source: Observable<T>): Observable<T> {
   return source.pipe(observeOn(asyncScheduler));

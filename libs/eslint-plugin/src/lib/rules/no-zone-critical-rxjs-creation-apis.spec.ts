@@ -14,7 +14,7 @@ const arraySource = from([1, 2, 3, 4, 5]);
 const subscribe = arraySource.subscribe(val => console.log(val));
 `,
   `
-import { interval } from '@rx-angular/cdk/zone-less';
+import { interval } from 'rxjs-zone-less';
 
 const source = interval(1000);
 const subscribe = source.subscribe(val => console.log(val));

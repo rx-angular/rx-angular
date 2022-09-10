@@ -42,7 +42,7 @@ const subscribe = source.subscribe((val) => console.log(val));
 <summary>✅ Examples of correct code for this rule</summary>
 
 ```ts
-import { interval } from '@rx-angular/cdk/zone-less';
+import { interval } from 'rxjs-zone-less';
 
 const source = interval(1000);
 const subscribe = source.subscribe((val) => console.log(val));

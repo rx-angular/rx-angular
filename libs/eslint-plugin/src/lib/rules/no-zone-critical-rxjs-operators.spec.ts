@@ -33,7 +33,7 @@ const timer$ = merge(pause$, resume$)
   `
 import { fromEvent, of } from 'rxjs';
 import { mergeMap, takeUntil } from 'rxjs/operators';
-import { delay } from '@rx-angular/cdk/zone-less';
+import { delay } from './rxjs-zoneless-operators';
 
 const mousedown$ = fromEvent(document, 'mousedown');
 const mouseup$ = fromEvent(document, 'mouseup');

@@ -40,7 +40,7 @@ interval(10).pipe(observeOn(asyncScheduler)).subscribe(console.log);
 ```ts
 import { interval } from 'rxjs';
 import { observeOn } from 'rxjs/operators';
-import { asyncScheduler } from '@rx-angular/cdk/zone-less';
+import { asyncScheduler } from 'rxjs-zone-less';
 
 interval(10).pipe(observeOn(asyncScheduler)).subscribe(console.log);
 ```

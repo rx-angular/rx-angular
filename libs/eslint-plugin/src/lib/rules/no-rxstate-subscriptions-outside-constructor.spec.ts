@@ -1,6 +1,5 @@
 import { TSESLint } from '@typescript-eslint/experimental-utils';
 import * as path from 'path';
-import { rxstateMethodCallExpression } from '../utils/selectors';
 import rule, {
   MessageIds,
   Options,
@@ -9,8 +8,6 @@ import rule, {
 const ruleTester = new TSESLint.RuleTester({
   parser: path.resolve('./node_modules/@typescript-eslint/parser'),
 });
-
-console.log(rxstateMethodCallExpression(['connect', 'hold']));
 
 const valid: TSESLint.RunTests<MessageIds, Options>['valid'] = [
   `
