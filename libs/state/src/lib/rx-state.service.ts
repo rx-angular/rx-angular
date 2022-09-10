@@ -412,7 +412,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   /**
    * @description
-   * returns the state as cached and distinct `Observable<T>`. This way you don't have to think about **late
+   * Returns the state as cached and distinct `Observable<T>`. This way you don't have to think about **late
    * subscribers**,
    * **multiple subscribers** or **multiple emissions** of the same value
    *
@@ -426,7 +426,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   /**
    * @description
-   * returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
+   * Returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
    * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive
    *   composition.
    *

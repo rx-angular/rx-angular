@@ -13,7 +13,7 @@ import { stateful } from './stateful';
 
 /**
  * @description
- * returns the state as shared, replayed and distinct `Observable<T>`. This way you don't have to think about late
+ * Returns the state as shared, replayed and distinct `Observable<T>`. This way you don't have to think about late
  * subscribers, multiple subscribers or multiple emissions of the same value.
  *
  * @example
@@ -27,7 +27,7 @@ export function select<T>(): MonoTypeOperatorFunction<T>;
 
 /**
  * @description
- * returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
+ * Returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
  * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive composition.
  *
  * @example
@@ -109,7 +109,7 @@ export function select<T extends object, K extends keyof T, R>(
  * Returns result of applying function to state property as cached and distinct `Observable<T[R]>`.
  *
  * @example
- *  // Project state based on single property
+ * // Project state based on single property
  * const foo$ = state$.pipe(select('bar', bar => `bar equals ${bar}`));
  *
  * @return Observable<R>
@@ -125,7 +125,7 @@ export function select<T, K extends keyof T, R>(
  * Returns a single property of the state as cached and distinct `Observable<T[K1]>`.
  *
  * @example
- *  // Access a single property
+ * // Access a single property
  * const bar$ = state$.pipe(select('bar'));
  *
  * // Access a nested property
