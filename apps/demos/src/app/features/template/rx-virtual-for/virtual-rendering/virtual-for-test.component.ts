@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { patch, toDictionary, update } from '@rx-angular/cdk/transformations';
+import { RxState } from '@rx-angular/state';
 import {
   BehaviorSubject,
   combineLatest,
@@ -32,7 +33,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
       <rxa-strategy-select
         (strategyChange)="strategy$.next($event)"
       ></rxa-strategy-select>
-      <div class="d-flex">
+      <div class="d-flex flex-wrap">
         <div class="mr-4">
           <h2 class="mat-subheading-2">ScrollStrategy</h2>
           <mat-button-toggle-group
@@ -42,17 +43,17 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
           >
             <mat-button-toggle
               value="fixed"
-              (click)="scrollStrategy$.next('fixed')"
+              (click)="state.set({ scrollStrategy: 'fixed' })"
               >Fixed size
             </mat-button-toggle>
             <mat-button-toggle
               value="auto"
-              (click)="scrollStrategy$.next('auto')"
+              (click)="state.set({ scrollStrategy: 'auto' })"
               >Autosized
             </mat-button-toggle>
           </mat-button-toggle-group>
         </div>
-        <div>
+        <div class="mr-4">
           <h2 class="mat-subheading-2">Components</h2>
           <mat-button-toggle-group
             *rxLet="components$; let components"
@@ -69,6 +70,45 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
               >Both
             </mat-button-toggle>
           </mat-button-toggle-group>
+        </div>
+        <div *rxIf="showRxa$" class="d-flex flex-column">
+          <h2 class="mat-subheading-2">rxVirtualFor Settings</h2>
+          <div class="d-flex align-items-center flex-grow-1">
+            <div class="mr-2">
+              <label>runwayItems</label>
+              <input
+                style="width: 75px; display: block"
+                #runwayItemsInput
+                placeholder="runwayItems"
+                matInput
+                min="0"
+                value="20"
+                (input)="
+                  state.set({ runwayItems: toNumber(runwayItemsInput.value) })
+                "
+                type="number"
+              />
+            </div>
+            <div>
+              <label>runwayItemsOpposite</label>
+              <input
+                style="width: 75px; display: block"
+                #runwayItemsOppositeInput
+                placeholder="runwayItemsOpposite"
+                matInput
+                min="0"
+                value="5"
+                (input)="
+                  state.set({
+                    runwayItemsOpposite: toNumber(
+                      runwayItemsOppositeInput.value
+                    )
+                  })
+                "
+                type="number"
+              />
+            </div>
+          </div>
         </div>
       </div>
       <rxa-array-provider
@@ -107,11 +147,13 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
               <span *rxLet="rxaScrolledIndex$; let idx">{{ idx }}</span>
             </div>
           </div>
-          <ng-container *rxLet="scrollStrategy$; let viewMode">
+          <ng-container *rxLet="rxVirtualForState$; let state">
             <rx-virtual-scroll-viewport
               (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
-              *ngIf="viewMode === 'fixed'; else autoSized"
+              *ngIf="state.scrollStrategy === 'fixed'; else autoSized"
               [itemSize]="itemSize"
+              [runwayItemsOpposite]="state.runwayItemsOpposite"
+              [runwayItems]="state.runwayItems"
               class="viewport"
             >
               <div
@@ -135,6 +177,8 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
                 [resizeObserverConfig]="{
                   extractSize: extractSize
                 }"
+                [runwayItemsOpposite]="state.runwayItemsOpposite"
+                [runwayItems]="state.runwayItems"
                 class="viewport"
               >
                 <div
@@ -242,6 +286,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
       }
     `,
   ],
+  providers: [RxState],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VirtualForTestComponent implements OnInit, AfterViewInit {
@@ -258,8 +303,11 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
 
   contentCache = {};
 
+  toNumber = coerceNumberProperty;
+
   strategy$ = new Subject<RxStrategyNames<string>>();
-  scrollStrategy$ = new BehaviorSubject<'fixed' | 'auto'>('fixed');
+  scrollStrategy$ = this.state.select('scrollStrategy');
+  rxVirtualForState$ = this.state.select();
   components$ = new BehaviorSubject<'cdk' | 'rxa' | 'both'>('both');
 
   showRxa$ = this.components$.pipe(
@@ -331,7 +379,19 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
 
   trackItem = (idx: number, item: TestItem): number => item.id;
 
-  constructor(private elementRef: ElementRef<HTMLElement>) {}
+  constructor(
+    public state: RxState<{
+      runwayItems: number;
+      runwayItemsOpposite: number;
+      scrollStrategy: 'fixed' | 'auto';
+    }>
+  ) {
+    state.set({
+      runwayItems: 20,
+      runwayItemsOpposite: 5,
+      scrollStrategy: 'fixed',
+    });
+  }
 
   ngOnInit() {}
 
