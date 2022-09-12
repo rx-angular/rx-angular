@@ -10,11 +10,13 @@ import { IfModule } from '@rx-angular/template/experimental/if';
 import { LetModule } from '@rx-angular/template/let';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select/index';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/index';
-import { AutosizeVirtualScrollStrategyModule } from './scroll-strategies/autosized-virtual-scroll-strategy';
-import { FixedSizeVirtualScrollStrategyModule } from './scroll-strategies/fixed-size-virtual-scroll-strategy';
+import {
+  AutosizeVirtualScrollStrategyModule,
+  FixedSizeVirtualScrollStrategyModule,
+  RxVirtualScrollViewportComponent,
+  RxVirtualFor,
+} from '@rx-angular/template/experimental/virtual-scrolling';
 import { VirtualForTestComponent } from './virtual-for-test.component';
-import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
-import { RxVirtualFor } from './virtual-for.directive';
 
 @NgModule({
   imports: [

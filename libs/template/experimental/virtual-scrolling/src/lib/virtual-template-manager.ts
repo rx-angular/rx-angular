@@ -1,5 +1,5 @@
 import { distinctUntilChanged } from 'rxjs/operators';
-import { createErrorHandler } from '../../../../../../../../libs/cdk/template/src/lib/render-error';
+import { createErrorHandler } from '../../../../../cdk/template/src/lib/render-error';
 import { ListRange } from './model';
 import {
   EmbeddedViewRef,
@@ -35,8 +35,8 @@ import {
   RxListTemplateChangeType,
   RxRenderSettings,
   RxTemplateSettings,
-} from '../../../../../../../../libs/cdk/template/src/lib/model';
-import { notifyAllParentsIfNeeded } from '../../../../../../../../libs/cdk/template/src/lib/utils';
+} from '../../../../../cdk/template/src/lib/model';
+import { notifyAllParentsIfNeeded } from '../../../../../cdk/template/src/lib/utils';
 import { getVirtualTemplateHandler } from './virtual-list-view-handler';
 
 export interface RxListManager<T> {

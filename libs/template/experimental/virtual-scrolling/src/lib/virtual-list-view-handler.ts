@@ -10,7 +10,7 @@ import {
   RxListTemplateChanges,
   RxListTemplateChangeType,
   RxTemplateSettings,
-} from '../../../../../../../../libs/cdk/template/src/lib/model';
+} from '../../../../../cdk/template/src/lib/model';
 import { ListRange } from './model';
 
 /**

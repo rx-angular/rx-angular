@@ -22,7 +22,7 @@ import {
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/index';
-import { RxVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
+import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimental/virtual-scrolling';
 
 @Component({
   selector: 'rxa-virtual-for-test',
