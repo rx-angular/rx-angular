@@ -49,6 +49,23 @@ describe('RxActionFactory', () => {
     actions.prop(values);
   });
 
+  it('should maintain channels per create call', (done) => {
+    const values = 'foo';
+    const nextSpy = jest.spyOn({ nextSpy: (v: any) => void 0 }, 'nextSpy');
+    const actions = new RxActionFactory<{ prop: string }>(errorHandler).create();
+    const actions2 = new RxActionFactory<{ prop: string }>(errorHandler).create();
+    const exp = values;
+
+    actions2.prop$.subscribe(nextSpy as any);
+    actions.prop$.subscribe((result) => {
+      expect(result).toBe(exp);
+      done();
+    });
+    expect(nextSpy).not.toHaveBeenCalled();
+    actions.prop(values);
+
+  });
+
   it('should emit and transform on the subscribed channels', (done) => {
     const actions = new RxActionFactory<{ prop: string }>(errorHandler).create({
       prop: () => 'transformed',
@@ -77,7 +94,6 @@ describe('RxActionFactory', () => {
     done();
   });
 
-
   it('should emit on multiple subscribed channels over mreged output', (done) => {
     const value1 = 'foo';
     const value2 = 'bar';
@@ -94,18 +110,26 @@ describe('RxActionFactory', () => {
     done();
   });
 
-  it('should destroy', (done) => {
+  it('should destroy all created actions', (done) => {
     let numCalls = 0;
+    let numCalls2 = 0;
     const factory = new RxActionFactory<{ prop: void }>(errorHandler);
     const actions = factory.create();
+    const actions2 = factory.create();
 
     actions.prop$.subscribe(() => ++numCalls);
+    actions2.prop$.subscribe(() => ++numCalls2);
     expect(numCalls).toBe(0);
+    expect(numCalls2).toBe(0);
     actions.prop();
+    actions2.prop();
     expect(numCalls).toBe(1);
+    expect(numCalls2).toBe(1);
     factory.destroy();
     actions.prop();
+    actions2.prop();
     expect(numCalls).toBe(1);
+    expect(numCalls2).toBe(1);
     done();
   });
 

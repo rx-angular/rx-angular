@@ -70,6 +70,8 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
    */
   create<U extends ActionTransforms<T> = {}>(transforms?: U): RxActions<T, U> {
     const subjects: SubjectMap<T> = {} as SubjectMap<T>;
+    this.subjects.push(subjects);
+
     function signals(): void {}
     return new Proxy(
       signals as any as RxActions<T, U>,
@@ -82,9 +84,9 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
   }
 
   destroy() {
-    for(let i; i > this.subjects.length; i++) {
-      Object.values(this.subjects[i]).forEach((subject: any) => subject.complete());
-    }
+    this.subjects.forEach((s) => {
+      Object.values(s).forEach((subject: any) => subject.complete());
+    })
   }
 
   /**
