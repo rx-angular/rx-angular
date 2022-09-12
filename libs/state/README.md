@@ -14,6 +14,7 @@ RxState is a lightweight, flexible, strongly typed and tested tool dedicated to 
 
 - [🧩 Selections](https://github.com/rx-angular/rx-angular/blob/main/libs/state/selections/README.md)
 - [☁ Effects](https://github.com/rx-angular/rx-angular/blob/main/libs/state/effects/README.md)
+- [? Actions](https://github.com/rx-angular/rx-angular/blob/main/libs/state/actions/README.md)
 
 ## Intro Video
 
