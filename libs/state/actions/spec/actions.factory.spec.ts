@@ -18,7 +18,7 @@ class TestComponent {
     search: (e: InputEvent | string): string => {
       return typeof e === 'object' ? (e as any).target.value : e;
     },
-    resize: (n: string | number): number => {
+    resize: (_: string | number): number => {
       throw new Error('something went wrong');
     }
   });
@@ -51,12 +51,12 @@ describe('RxActionFactory', () => {
 
   it('should maintain channels per create call', (done) => {
     const values = 'foo';
-    const nextSpy = jest.spyOn({ nextSpy: (v: any) => void 0 }, 'nextSpy');
+    const nextSpy = jest.spyOn({ nextSpy: (_: string) => void 0 }, 'nextSpy');
     const actions = new RxActionFactory<{ prop: string }>(errorHandler).create();
     const actions2 = new RxActionFactory<{ prop: string }>(errorHandler).create();
     const exp = values;
 
-    actions2.prop$.subscribe(nextSpy as any);
+    actions2.prop$.subscribe(nextSpy as unknown as (_: string) => void);
     actions.prop$.subscribe((result) => {
       expect(result).toBe(exp);
       done();
