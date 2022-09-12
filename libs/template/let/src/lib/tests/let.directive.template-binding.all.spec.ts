@@ -4,9 +4,9 @@ import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import { EMPTY, interval, NEVER, Observable, of, Subject, throwError } from 'rxjs';
 import { take } from 'rxjs/operators';
-
 import { LetDirective } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
+
 
 @Component({
   template: `
@@ -14,9 +14,9 @@ import { MockChangeDetectorRef } from './fixtures';
       *rxLet="
         value$;
         let value;
-        rxSuspense: suspense;
-        rxError: error;
-        rxComplete: complete
+        suspense: suspense;
+        error: error;
+        complete: complete
       "
       >{{
         value === undefined
@@ -87,7 +87,7 @@ describe('LetDirective when template binding with all templates', () => {
   });
 
   it('should render "error" template on observable error', () => {
-    component.value$ = throwError(new Error('test error'));
+    component.value$ = throwError(() => new Error('test error'));
     fixture.detectChanges();
     expectContentToBe('error');
   });

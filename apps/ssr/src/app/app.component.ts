@@ -8,16 +8,19 @@ import { BehaviorSubject } from 'rxjs';
     <div id="let" *rxLet="color$ as color; strategy">{{ color }}</div>
     <div id="push">{{ color$ | push }}</div>
     <div id="unpatch" [unpatch]="['click']" (click)="onClick()"></div>
+    <div class="for" *rxFor="let color of colors$">{{ color }}</div>
   `,
 })
 export class AppComponent implements OnInit {
   color$ = new BehaviorSubject('red');
+  colors$ = new BehaviorSubject(['red']);
 
   constructor(@Inject(PLATFORM_ID) private platformId: string) {}
 
   ngOnInit() {
     if (isPlatformServer(this.platformId)) {
       this.color$.next('green');
+      this.colors$.next(['green', 'purple']);
     }
   }
 

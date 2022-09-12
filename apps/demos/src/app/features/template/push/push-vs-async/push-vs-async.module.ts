@@ -7,16 +7,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
-import { PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template/push';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/value-providers.module';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { RecursiveModule } from '../../../../shared/template-structures/recursive/recursive.module';
-import { PushBasicExampleComponent } from './push-basic-example.component';
-import { ROUTES } from './push-basic-example.routes';
+import { PushVsAsyncComponent } from './push-vs-async.component';
+import { ROUTES } from './push-vs-async.routes';
 
-const DECLARATIONS = [PushBasicExampleComponent];
+const DECLARATIONS = [PushVsAsyncComponent];
 
 @NgModule({
   declarations: [DECLARATIONS],
@@ -38,5 +38,5 @@ const DECLARATIONS = [PushBasicExampleComponent];
   ],
   exports: [DECLARATIONS]
 })
-export class PushBasicExampleModule {
+export class PushVsAsyncModule {
 }

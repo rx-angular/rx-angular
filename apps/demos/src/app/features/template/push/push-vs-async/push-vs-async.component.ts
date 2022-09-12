@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, share, shareReplay } from 'rxjs/operators';
 
 @Component({
@@ -74,7 +74,7 @@ import { distinctUntilChanged, map, share, shareReplay } from 'rxjs/operators';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PushBasicExampleComponent {
+export class PushVsAsyncComponent {
 
   private _depth = 5;
   set depth(depth: number) {
@@ -96,7 +96,7 @@ export class PushBasicExampleComponent {
     async: 3
   };
 
-  btnBothClick$ = new BehaviorSubject<any>(1);
+  btnBothClick$ = new ReplaySubject<any>(1);
   readonly value$ = this.updateClick.pipe(
     map(() => Math.ceil(Math.random() * 100)),
     distinctUntilChanged(),

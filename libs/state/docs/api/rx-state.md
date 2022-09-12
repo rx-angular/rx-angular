@@ -32,6 +32,8 @@ class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   select(op: OperatorFunction<T, A>) => Observable<A>;
   select(k1: K1) => Observable<T[K1]>;
+  select(k: K, fn: (val: T[K]) => V): Observable<V>;
+  select(keys: K[], fn: (slice: PickSlice<T, K>) => V, keyCompareMap?: KeyCompareMap<Pick<T, K>>): Observable<V>;
   select() => Observable<T>;
 
   get() => T;
@@ -187,7 +189,7 @@ state.set('bar', reduceFn);
 select(): Observable<T>
 ```
 
-returns the state as cached and distinct `Observable<T>`. This way you don't have to think about **late
+Returns the state as cached and distinct `Observable<T>`. This way you don't have to think about **late
 subscribers**,
 **multiple subscribers** or **multiple emissions** of the same value
 
@@ -204,7 +206,7 @@ state$.subscribe((state) => doStuff(state));
 select(op: OperatorFunction<T, A>): Observable<A>
 ```
 
-returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
+Returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
 [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive composition.
 
 _Example_
@@ -235,6 +237,41 @@ const bar$ = state.select('bar');
 // Access a nested property
 
 const foo$ = state.select('bar', 'foo');
+```
+
+### Signature
+
+```typescript
+select(k: K, fn: (val: T[K]) => V): Observable<V>;
+```
+
+Transform a single property of the state by providing a key and map function.
+Returns result of applying function to state property as cached and distinct `Observable<V>`.
+
+_Example_
+
+```typescript
+// Project state based on single property
+const foo$ = state.select('bar', (bar) => `bar equals ${bar}`);
+```
+
+### Signature
+
+```typescript
+select(keys: K[], fn: (slice: PickSlice<T, K>) => V, keyCompareMap?: KeyCompareMap<Pick<T, K>>): Observable<V>;
+```
+
+Transform a slice of the state by providing keys and map function.
+Returns result of applying function to state slice as cached and distinct `Observable<V>`.
+
+_Example_
+
+```typescript
+// Project state slice
+const text$ = state.select(
+  ['query', 'results'],
+  ({ query, results }) => `${results.length} results found for "${query}"`
+);
 ```
 
 ---
@@ -323,7 +360,7 @@ state.hold(changes$, localStorageEffectFn);
 setAccumulator(accumulatorFn: AccumulationFn) => void
 ```
 
-Allows to customize state accumulation function. 
+Allows to customize state accumulation function.
 This can be helpful to implement deep updates and tackle other immutability problems in a custom way.
 
 _Example_

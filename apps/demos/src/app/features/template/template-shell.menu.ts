@@ -1,3 +1,4 @@
+import { PUSH_PIPE_MENU } from './push/push.menu';
 import { MENU_ITEMS as RX_LET_MENU_ITEMS } from './rx-let/rx-let.menu';
 import { MENU_ITEMS as RX_IF_MENU_ITEMS } from './rx-if/rx-if.menu';
 import { MENU_ITEMS as RX_CONTEXT_MENU_ITEMS } from './rx-context/rx-context.menu';
@@ -17,6 +18,11 @@ export const TEMPLATE_MENU = [
     label: 'rxContext',
     link: 'rx-context',
     children: RX_CONTEXT_MENU_ITEMS,
+  },
+  {
+    label: 'push',
+    link: 'push',
+    children: PUSH_PIPE_MENU,
   },
   {
     label: '*rxLet',

@@ -1,7 +1,7 @@
 import { NgZone } from '@angular/core';
 import { RxCoalescingOptions } from '@rx-angular/cdk/coalescing';
-import { switchMap, take } from 'rxjs/operators';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map, take } from 'rxjs/operators';
 import { RxRenderWork, RxStrategyCredentials } from './model';
 
 /**
@@ -22,22 +22,16 @@ export function onStrategy<T>(
   ) => void,
   options: RxCoalescingOptions & { ngZone?: NgZone } = {}
 ): Observable<T> {
-  let error: Error;
   return new Observable<T>((subscriber) => {
     subscriber.next(value);
   }).pipe(
     strategy.behavior({
-      work: () => {
-        try {
-          workFactory(value, strategy.work, options);
-        } catch (e) {
-          error = e;
-        }
-      },
+      work: () => workFactory(value, strategy.work, options),
       scope: (options.scope as Record<string, unknown>) || {},
       ngZone: options.ngZone,
     }),
-    switchMap(() => (error ? throwError([error, value]) : of(value))),
+    catchError((error) => throwError(() => [error, value])),
+    map(() => value),
     take(1)
   );
 }

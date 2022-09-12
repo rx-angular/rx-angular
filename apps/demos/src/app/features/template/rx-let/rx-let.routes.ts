@@ -44,6 +44,13 @@ export const ROUTES: Routes = [
       ),
   },
   {
+    path: 'template-triggers',
+    loadChildren: () =>
+      import('./template-triggers/template-triggers.module').then(
+        (m) => m.TemplateTriggersModule
+      ),
+  },
+  {
     path: 'ng-if-hack',
     loadChildren: () =>
       import('./ng-if-hack/ng-if-hack.module').then((m) => m.NgIfHackModule),

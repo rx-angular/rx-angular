@@ -4,11 +4,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { PushModule } from '@rx-angular/template';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
-import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
-import { PushPocComponent } from './push-poc.component';
-import { ROUTES } from './push-poc.routes';
+import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks/index';
+import { PushBasicComponent } from './push-basic.component';
+import { ROUTES } from './push-basic.routes';
 
-const DECLARATIONS = [PushPocComponent];
+const DECLARATIONS = [PushBasicComponent];
 
 @NgModule({
   declarations: [DECLARATIONS],
@@ -22,5 +22,5 @@ const DECLARATIONS = [PushPocComponent];
   ],
   exports: [DECLARATIONS]
 })
-export class PushPocModule {
+export class PushBasicModule {
 }

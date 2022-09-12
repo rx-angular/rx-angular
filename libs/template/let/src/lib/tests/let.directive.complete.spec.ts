@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
@@ -9,7 +14,7 @@ import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; $complete as complete">{{
+    <ng-container *rxLet="value$; complete as complete">{{
       complete
     }}</ng-container>
   `,
