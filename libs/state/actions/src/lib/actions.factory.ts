@@ -18,7 +18,7 @@ type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
  */
 @Injectable()
 export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
-  private subjects: SubjectMap<T> = {} as SubjectMap<T>;
+  private subjects: SubjectMap<T>[] = [] as SubjectMap<T>[];
 
   constructor(
     @Optional()
@@ -69,11 +69,12 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
    *
    */
   create<U extends ActionTransforms<T> = {}>(transforms?: U): RxActions<T, U> {
+    const subjects: SubjectMap<T> = {} as SubjectMap<T>;
     function signals(): void {}
     return new Proxy(
       signals as any as RxActions<T, U>,
       actionProxyHandler(
-        this.subjects as any as { [K in keyof T]: Subject<ValuesOf<T>> },
+        subjects as any as { [K in keyof T]: Subject<ValuesOf<T>> },
         transforms,
         this.errorHandler
       )
@@ -81,7 +82,9 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
   }
 
   destroy() {
-    Object.values(this.subjects).forEach((subject: any) => subject.complete());
+    for(let i; i > this.subjects.length; i++) {
+      Object.values(this.subjects[i]).forEach((subject: any) => subject.complete());
+    }
   }
 
   /**
