@@ -37,7 +37,7 @@ export function preventDefaultStopPropagation(e: Event): Event {
  */
 export function eventValue<T = string>(e: Event | T): T {
   // Consider https://stackoverflow.com/questions/1458894/how-to-determine-if-javascript-object-is-an-event
-  if(e['target']) {
+  if((e as unknown as {target: {value: T}})?.target) {
     return (e as unknown as {target: {value: T}})?.target?.value;
   }
   return e as T;
