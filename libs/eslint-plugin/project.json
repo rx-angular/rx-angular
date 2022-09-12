@@ -1,0 +1,34 @@
+{
+  "root": "libs/eslint-plugin",
+  "sourceRoot": "libs/eslint-plugin/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/eslint-plugin/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/eslint-plugin"],
+      "options": {
+        "jestConfig": "libs/eslint-plugin/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/node:package",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/eslint-plugin",
+        "tsConfig": "libs/eslint-plugin/tsconfig.lib.json",
+        "packageJson": "libs/eslint-plugin/package.json",
+        "main": "libs/eslint-plugin/src/index.ts",
+        "assets": ["libs/eslint-plugin/*.md"]
+      }
+    }
+  },
+  "tags": ["type:lib"]
+}
