@@ -1,5 +1,4 @@
 import { Observable } from 'rxjs';
-import { KeyCompareMap } from '@rx-angular/state/selections';
 
 export type ValuesOf<O> = O[keyof O];
 // type Keys = KeysOf<{ a: string, b: number }>; // "a" | "b"
