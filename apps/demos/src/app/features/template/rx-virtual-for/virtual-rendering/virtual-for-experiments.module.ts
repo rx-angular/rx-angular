@@ -13,8 +13,7 @@ import { ValueProvidersModule } from '../../../../shared/debug-helper/value-prov
 import {
   AutosizeVirtualScrollStrategyModule,
   FixedSizeVirtualScrollStrategyModule,
-  RxVirtualScrollViewportComponent,
-  RxVirtualFor,
+  RxVirtualScrollingModule,
 } from '@rx-angular/template/experimental/virtual-scrolling';
 import { VirtualForTestComponent } from './virtual-for-test.component';
 
@@ -38,13 +37,11 @@ import { VirtualForTestComponent } from './virtual-for-test.component';
     MatButtonToggleModule,
     CommonModule,
     IfModule,
+    RxVirtualScrollingModule,
+    FixedSizeVirtualScrollStrategyModule,
+    AutosizeVirtualScrollStrategyModule,
   ],
-  exports: [RxVirtualScrollViewportComponent],
-  declarations: [
-    RxVirtualFor,
-    RxVirtualScrollViewportComponent,
-    VirtualForTestComponent,
-  ],
+  declarations: [VirtualForTestComponent],
   providers: [],
 })
 export class RxVirtualForModule {}
