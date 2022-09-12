@@ -8,6 +8,13 @@ const ROUTES: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'push',
+    loadChildren: () =>
+      import('./push/push.module').then(
+        m => m.PushDemoModule
+      )
+  },
+  {
     path: 'rx-let',
     loadChildren: () =>
       import('./rx-let/rx-let-demo.module').then(

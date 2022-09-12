@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
@@ -9,7 +14,9 @@ import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; $error as error">{{ error }}</ng-container>
+    <ng-container *rxLet="value$; error as hasError">{{
+      hasError
+    }}</ng-container>
   `,
 })
 class LetDirectiveTestErrorComponent {

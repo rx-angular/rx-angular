@@ -2,6 +2,42 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0-rc.1](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.0...cdk@1.0.0-rc.1) (2022-08-28)
+
+
+### Bug Fixes
+
+* **cdk:** list-template-manager: properly apply changes from iterableDiffer ([9718fdd](https://github.com/rx-angular/rx-angular/commit/9718fdd8f45b754d99b875e27b0a9ac07248bab1))
+
+
+### Features
+
+* **cdk:** improve template-notifier suspense handling ([a6bfd05](https://github.com/rx-angular/rx-angular/commit/a6bfd053a2256b64a28dc7cfe00129a35128f40c))
+* **cdk:** support template-triggers ([940f36c](https://github.com/rx-angular/rx-angular/commit/940f36cad908ae28e9c29e0d11f3e5fa9736bb2a))
+* **template:** remove leading $ on RxViewContext properties ([16aab61](https://github.com/rx-angular/rx-angular/commit/16aab61ceb16216ed36defe066e4f40804140afa))
+
+
+### Performance Improvements
+
+* **cdk:** optimize list change handling ([03d1c95](https://github.com/rx-angular/rx-angular/commit/03d1c956389c910cb010d6d82e3a41ddbf74600c))
+
+
+### BREAKING CHANGES
+
+* **template:** context variables for error, suspense and complete were renamed, refer to #431
+* **cdk:** template-notifier does not emit suspense if the input observable has a value
+
+
+
+# [1.0.0-rc.0](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-beta.3...cdk@1.0.0-rc.0) (2022-08-28)
+
+
+### Features
+
+* **cdk:** deprecate global StrategyCredentials and replace with native ([#1389](https://github.com/rx-angular/rx-angular/issues/1389)) ([f46e837](https://github.com/rx-angular/rx-angular/commit/f46e837137cefd2753b331c0bb3d249aa286905b))
+
+
+
 # [1.0.0-beta.3](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-beta.2...cdk@1.0.0-beta.3) (2022-06-07)
 
 
