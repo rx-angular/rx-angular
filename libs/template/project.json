@@ -52,9 +52,10 @@
       "executor": "@nrwl/jest:jest",
       "options": {
         "jestConfig": "libs/template/jest.config.js",
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "codeCoverage": true
       },
-      "outputs": ["coverage/libs/template"]
+      "outputs": ["coverage/template"]
     },
     "build-docs": {
       "executor": "@nrwl/workspace:run-commands",
@@ -63,16 +64,6 @@
         "commands": [
           {
             "command": "nx test template --codeCoverage && nx build-test-coverage-badge template"
-          }
-        ]
-      }
-    },
-    "build-test-coverage-badge": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/template/cobertura-coverage.xml -d docs/test-coverage/template"
           }
         ]
       }

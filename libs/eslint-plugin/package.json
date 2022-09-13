@@ -1,0 +1,8 @@
+{
+  "name": "@rx-angular/eslint-plugin",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "eslint": ">=8.0.0",
+    "typescript": ">=4.3.5"
+  }
+}

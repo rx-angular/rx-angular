@@ -1,4 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import {
+  AccumulationFn,
+  createAccumulationObservable,
+  createSideEffectObservable,
+  isKeyOf,
+  KeyCompareMap,
+  PickSlice,
+  safePluck,
+  select,
+} from '@rx-angular/state/selections';
 import {
   EMPTY,
   isObservable,
@@ -8,19 +19,7 @@ import {
   Subscription,
   Unsubscribable,
 } from 'rxjs';
-import { catchError, map, pluck, tap } from 'rxjs/operators';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {
-  stateful,
-  pipeFromArray,
-  safePluck,
-  createSideEffectObservable,
-  createAccumulationObservable,
-  AccumulationFn,
-  isKeyOf,
-  isOperateFnArrayGuard,
-  isStringArrayGuard,
-} from '@rx-angular/state/selections';
+import { catchError, map, tap } from 'rxjs/operators';
 
 export type ProjectStateFn<T> = (oldState: T) => Partial<T>;
 export type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
@@ -413,7 +412,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   /**
    * @description
-   * returns the state as cached and distinct `Observable<T>`. This way you don't have to think about **late
+   * Returns the state as cached and distinct `Observable<T>`. This way you don't have to think about **late
    * subscribers**,
    * **multiple subscribers** or **multiple emissions** of the same value
    *
@@ -427,7 +426,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   /**
    * @description
-   * returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
+   * Returns the state as cached and distinct `Observable<A>`. Accepts arbitrary
    * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators) to enrich the selection with reactive
    *   composition.
    *
@@ -474,6 +473,37 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     op4: OperatorFunction<C, D>,
     op5: OperatorFunction<D, E>
   ): Observable<E>;
+  /**
+   * @description
+   * Transform a slice of the state by providing keys and map function.
+   * Returns result of applying function to state slice as cached and distinct `Observable<V>`.
+   *
+   * @example
+   * // Project state slice
+   * const text$ = state.select(
+   *   ['query', 'results'],
+   *   ({ query, results }) => `${results.length} results found for "${query}"`
+   * );
+   *
+   * @return Observable<V>
+   */
+  select<K extends keyof T, V>(
+    keys: K[],
+    fn: (slice: PickSlice<T, K>) => V,
+    keyCompareMap?: KeyCompareMap<Pick<T, K>>
+  ): Observable<V>;
+  /**
+   * @description
+   * Transform a single property of the state by providing a key and map function.
+   * Returns result of applying function to state property as cached and distinct `Observable<V>`.
+   *
+   * @example
+   * // Project state based on single property
+   * const foo$ = state.select('bar', bar => `bar equals ${bar}`);
+   *
+   * @return Observable<V>
+   */
+  select<K extends keyof T, V>(k: K, fn: (val: T[K]) => V): Observable<V>;
   /**
    * @description
    * Access a single property of the state by providing keys.
@@ -547,18 +577,19 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * @internal
    */
   select<R>(
-    ...opOrMapFn: OperatorFunction<T, R>[] | string[]
+    ...args:
+      | OperatorFunction<T, unknown>[]
+      | string[]
+      | [k: string, fn: (val: unknown) => unknown]
+      | [
+          keys: string[],
+          fn: (slice: unknown) => unknown,
+          keyCompareMap?: KeyCompareMap<T>
+        ]
   ): Observable<T | R> {
-    if (!opOrMapFn || opOrMapFn.length === 0) {
-      return this.accumulator.state$.pipe(stateful());
-    } else if (isStringArrayGuard(opOrMapFn)) {
-      return this.accumulator.state$.pipe(
-        stateful(pluck(...opOrMapFn))
-      ) as Observable<T | R>;
-    } else if (isOperateFnArrayGuard(opOrMapFn)) {
-      return this.accumulator.state$.pipe(stateful(pipeFromArray(opOrMapFn)));
-    }
-    throw new Error('wrong params passed to select');
+    return this.accumulator.state$.pipe(
+      select(...(args as Parameters<typeof select>))
+    );
   }
 
   /**

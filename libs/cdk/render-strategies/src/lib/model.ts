@@ -30,7 +30,16 @@ export type RxCustomStrategyCredentials<T extends string> = Record<
   T,
   RxStrategyCredentials
 >;
-export type RxNativeStrategyNames = 'native' | 'local' | 'global' | 'noop';
+/**
+ * @deprecated
+ * angular drops the internal markDirty API, will fall back to native if used
+ */
+export type RxGlobalStrategyName = 'global';
+export type RxNativeStrategyNames =
+  | 'native'
+  | 'local'
+  | 'noop'
+  | RxGlobalStrategyName;
 export type RxConcurrentStrategyNames =
   | 'immediate'
   | 'userBlocking'

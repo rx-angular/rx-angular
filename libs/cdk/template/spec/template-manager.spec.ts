@@ -1,170 +1,34 @@
 import 'jest-preset-angular/setup-jest'; // TODO: move this into test-setup when zone-config.spec is in its own lib
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EmbeddedViewRef,
-  ErrorHandler,
-  Input,
-  IterableDiffers,
-  OnDestroy,
-  TemplateRef,
-  ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import {
-  createTemplateManager,
-  RxBaseTemplateNames,
-  RxTemplateManager,
-  RxViewContext,
-} from '@rx-angular/cdk/template';
-import {
-  RxStrategyProvider,
-  RX_RENDER_STRATEGIES_CONFIG,
-} from '@rx-angular/cdk/render-strategies';
-import {
-  RxNotificationKind,
-  createTemplateNotifier,
-} from '@rx-angular/cdk/notifications';
+import { ErrorHandler, TemplateRef, ViewContainerRef } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RxNotificationKind } from '@rx-angular/cdk/notifications';
+import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { RxTemplateManager } from '@rx-angular/cdk/template';
 import { mockConsole } from '@test-helpers';
-import { ReplaySubject, Subscription } from 'rxjs';
-
-@Component({
-  selector: 'rx-angular-error-test',
-  template: `{{ value }}`,
-})
-class ErrorTestComponent {
-  private _value: number;
-  @Input()
-  set value(value: number) {
-    this._value = value;
-    if (value % 2 === 0) {
-      throw new Error('isEven');
-    }
-  }
-  get value(): number {
-    return this._value;
-  }
-}
-
-const TestTemplateNames = {
-  ...RxBaseTemplateNames,
-  next: 'nextTpl',
-};
-
-@Component({
-  template: `
-    <ng-template #tmpl let-v>
-      <rx-angular-error-test [value]="v"></rx-angular-error-test>
-    </ng-template>
-    <span #host></span>
-  `,
-})
-class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('tmpl', { read: TemplateRef })
-  templateRef: TemplateRef<RxViewContext<number>>;
-
-  @ViewChild('host', { read: ViewContainerRef })
-  host: ViewContainerRef;
-
-  templateManager: RxTemplateManager<number, RxViewContext<number>>;
-
-  values$ = new ReplaySubject<number>(1);
-
-  private observablesHandler = createTemplateNotifier<number>(() => false);
-
-  latestRenderedValue: any;
-
-  private sub = new Subscription();
-
-  constructor(
-    private iterableDiffers: IterableDiffers,
-    private cdRef: ChangeDetectorRef,
-    private eRef: ElementRef,
-    private vcRef: ViewContainerRef,
-    private strategyProvider: RxStrategyProvider,
-    public errorHandler: ErrorHandler
-  ) {
-    this.observablesHandler.next(this.values$);
-  }
-
-  ngAfterViewInit() {
-    this.templateManager = createTemplateManager<any, RxViewContext<number>>({
-      renderSettings: {
-        cdRef: this.cdRef,
-        strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
-        defaultStrategyName: this.strategyProvider.primaryStrategy,
-        parent: false,
-        patchZone: false,
-        errorHandler: this.errorHandler,
-      },
-      templateSettings: {
-        viewContainerRef: this.host,
-        patchZone: false,
-        createViewContext,
-        updateViewContext,
-      },
-      notificationToTemplateName: {
-        [RxNotificationKind.Suspense]: () => TestTemplateNames.next,
-        [RxNotificationKind.Next]: () => TestTemplateNames.next,
-        [RxNotificationKind.Error]: () => TestTemplateNames.next,
-        [RxNotificationKind.Complete]: () => TestTemplateNames.next,
-      },
-    });
-    this.templateManager.addTemplateRef(
-      TestTemplateNames.next,
-      this.templateRef
-    );
-    this.sub.add(
-      this.templateManager
-        .render(this.observablesHandler.values$)
-        .subscribe((n) => {
-          this.latestRenderedValue = n;
-        })
-    );
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
-}
-
-/** @internal */
-function createViewContext<T>(value: T): RxViewContext<T> {
-  return {
-    $implicit: value,
-    $error: false,
-    $complete: false,
-    $suspense: false,
-  };
-}
-/** @internal */
-function updateViewContext<T>(
-  value: T,
-  view: EmbeddedViewRef<RxViewContext<T>>,
-  context: RxViewContext<T>
-): void {
-  Object.keys(context).forEach((k) => {
-    view.context[k] = context[k];
-  });
-}
+import { of, ReplaySubject, throwError } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import {
+  createTestComponent,
+  DEFAULT_TEMPLATE,
+  ErrorTestComponent,
+  TemplateManagerSpecComponent,
+} from './fixtures';
 
 const customErrorHandler: ErrorHandler = {
   handleError: jest.fn(),
 };
 
-let fixtureComponent: any;
+let fixtureComponent: ComponentFixture<TemplateManagerSpecComponent>;
 let componentInstance: {
   templateManager: RxTemplateManager<number, any>;
+  triggerHandler: ReplaySubject<RxNotificationKind>;
   errorHandler: ErrorHandler;
   templateRef: TemplateRef<any>;
   values$: ReplaySubject<number>;
   latestRenderedValue: any;
 };
-let componentNativeElement: any;
-const setupTemplateManagerComponent = (): void => {
+let componentNativeElement: HTMLElement;
+const setupTemplateManagerComponent = (template = DEFAULT_TEMPLATE): void => {
   TestBed.configureTestingModule({
     declarations: [TemplateManagerSpecComponent, ErrorTestComponent],
     providers: [
@@ -173,14 +37,24 @@ const setupTemplateManagerComponent = (): void => {
       {
         provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
-          primaryStrategy: 'native',
+          primaryStrategy: 'test',
+          customStrategies: {
+            test: {
+              name: 'test',
+              work: (cdRef) => cdRef.detectChanges(),
+              behavior:
+                ({ work }) =>
+                (o$) =>
+                  o$.pipe(tap(() => work())),
+            },
+          },
         },
       },
     ],
     teardown: { destroyAfterEach: true },
   });
 
-  fixtureComponent = TestBed.createComponent(TemplateManagerSpecComponent);
+  fixtureComponent = createTestComponent(template);
   componentInstance = fixtureComponent.componentInstance;
   componentNativeElement = fixtureComponent.nativeElement;
 };
@@ -188,67 +62,169 @@ const setupTemplateManagerComponent = (): void => {
 describe('template-manager', () => {
   beforeAll(() => mockConsole());
 
-  beforeEach(() => setupTemplateManagerComponent());
+  describe('behavior', () => {
+    beforeEach(() => setupTemplateManagerComponent());
 
-  it('should be created', () => {
-    expect(fixtureComponent).toBeTruthy();
-  });
-
-  it('should have customErrorHandler', () => {
-    expect(componentInstance.errorHandler).toEqual(customErrorHandler);
-  });
-
-  it('should have templateManager', () => {
-    fixtureComponent.detectChanges();
-    expect(componentInstance.templateManager).toBeTruthy();
-  });
-
-  it('should have templateRef', () => {
-    fixtureComponent.detectChanges();
-    expect(componentInstance.templateRef).toBeTruthy();
-  });
-
-  it('should render items', () => {
-    fixtureComponent.detectChanges();
-    componentInstance.values$.next(1);
-    fixtureComponent.detectChanges();
-    const componentContent = componentNativeElement.textContent;
-    expect(componentContent).toEqual('1');
-  });
-
-  describe('exception handling', () => {
-    it('should capture errors with errorHandler', () => {
-      fixtureComponent.detectChanges();
-      componentInstance.values$.next(2);
-      try {
-        fixtureComponent.detectChanges();
-      } catch (e) {}
-      expect(customErrorHandler.handleError).toHaveBeenCalled();
+    it('should be created', () => {
+      expect(fixtureComponent).toBeTruthy();
     });
 
-    it('should emit error and payload via renderCallback', () => {
-      fixtureComponent.detectChanges();
-      const items = 2;
-      componentInstance.values$.next(items);
-      try {
-        fixtureComponent.detectChanges();
-      } catch (e) {
-        expect(componentInstance.latestRenderedValue[0]).toEqual(e);
-      }
-      expect(customErrorHandler.handleError).toHaveBeenCalled();
+    it('should have customErrorHandler', () => {
+      expect(componentInstance.errorHandler).toEqual(customErrorHandler);
     });
 
-    it('should work after an error has been thrown', () => {
+    it('should have templateManager', () => {
       fixtureComponent.detectChanges();
-      componentInstance.values$.next(2);
-      try {
-        fixtureComponent.detectChanges();
-      } catch (e) {}
-      expect(customErrorHandler.handleError).toHaveBeenCalled();
+      expect(componentInstance.templateManager).toBeTruthy();
+    });
+
+    it('should have templateRef', () => {
+      fixtureComponent.detectChanges();
+      expect(componentInstance.templateRef).toBeTruthy();
+    });
+
+    it('should render items', () => {
+      fixtureComponent.detectChanges();
       componentInstance.values$.next(1);
       fixtureComponent.detectChanges();
       const componentContent = componentNativeElement.textContent;
       expect(componentContent).toEqual('1');
+    });
+
+    describe('exception handling', () => {
+      it('should capture errors with errorHandler', () => {
+        fixtureComponent.detectChanges();
+        componentInstance.values$.next(2);
+        try {
+          fixtureComponent.detectChanges();
+        } catch (e) {}
+        expect(customErrorHandler.handleError).toHaveBeenCalled();
+      });
+
+      it('should emit error and payload via renderCallback', () => {
+        fixtureComponent.detectChanges();
+        const items = 2;
+        componentInstance.values$.next(items);
+        try {
+          fixtureComponent.detectChanges();
+        } catch (e) {
+          expect(componentInstance.latestRenderedValue[0]).toEqual(e);
+        }
+        expect(customErrorHandler.handleError).toHaveBeenCalled();
+      });
+
+      it('should work after an error has been thrown', () => {
+        fixtureComponent.detectChanges();
+        componentInstance.values$.next(2);
+        try {
+          fixtureComponent.detectChanges();
+        } catch (e) {}
+        expect(customErrorHandler.handleError).toHaveBeenCalled();
+        componentInstance.values$.next(1);
+        fixtureComponent.detectChanges();
+        const componentContent = componentNativeElement.textContent;
+        expect(componentContent).toEqual('1');
+      });
+    });
+  });
+
+  describe('templates', () => {
+    beforeEach(() =>
+      setupTemplateManagerComponent(
+        `
+        <ng-template #tmpl let-v>next</ng-template>
+        <ng-template #suspense let-v>suspense</ng-template>
+        <ng-template #error let-v>error</ng-template>
+        <ng-template #complete let-v>complete</ng-template>
+        <span #host></span>
+      `
+      )
+    );
+
+    it('should render suspense template', () => {
+      fixtureComponent.detectChanges();
+      expect(componentNativeElement.textContent).toBe('suspense');
+    });
+
+    it('should render complete template', () => {
+      componentInstance.values$ = of(1) as any;
+      fixtureComponent.detectChanges();
+      expect(componentNativeElement.textContent).toBe('complete');
+    });
+
+    it('should render error template', () => {
+      componentInstance.values$ = throwError(() => new Error('')) as any;
+      fixtureComponent.detectChanges();
+      expect(componentNativeElement.textContent).toBe('error');
+    });
+
+    describe('triggers', () => {
+      it('should render suspense', () => {
+        fixtureComponent.detectChanges();
+        componentInstance.values$.next(1);
+        componentInstance.triggerHandler.next(RxNotificationKind.Suspense);
+        expect(componentNativeElement.textContent).toBe('suspense');
+      });
+
+      it('should render complete', () => {
+        fixtureComponent.detectChanges();
+        componentInstance.values$.next(1);
+        componentInstance.triggerHandler.next(RxNotificationKind.Complete);
+        expect(componentNativeElement.textContent).toBe('complete');
+      });
+
+      it('should render error', () => {
+        fixtureComponent.detectChanges();
+        componentInstance.values$.next(1);
+        componentInstance.triggerHandler.next(RxNotificationKind.Error);
+        expect(componentNativeElement.textContent).toBe('error');
+      });
+    });
+  });
+
+  describe('context variables', () => {
+    beforeEach(() =>
+      setupTemplateManagerComponent(
+        `
+        <ng-template #tmpl
+          let-v
+          let-suspense="suspense"
+          let-error="error"
+          let-complete="complete"
+          >
+          <ng-container *ngIf="v">{{v}}</ng-container>
+          <ng-container *ngIf="suspense">suspense</ng-container>
+          <ng-container *ngIf="error">error</ng-container>
+          <ng-container *ngIf="complete">complete</ng-container>
+</ng-template>
+        <span #host></span>
+      `
+      )
+    );
+
+    it('should not render initial suspense template', () => {
+      fixtureComponent.detectChanges();
+      expect(componentNativeElement.textContent).toBe('');
+    });
+
+    it('should render suspense template', () => {
+      fixtureComponent.detectChanges();
+      componentInstance.values$.next(1);
+      expect(componentNativeElement.textContent).toBe('1');
+      componentInstance.values$.next(undefined);
+      expect(componentNativeElement.textContent).toBe('suspense');
+    });
+
+    it('should render complete template', () => {
+      componentInstance.values$ = of(1) as any;
+      fixtureComponent.detectChanges(false);
+      expect(componentNativeElement.textContent).toBe('1complete');
+    });
+
+    it('should render error template', () => {
+      componentInstance.values$ = throwError(() => new Error('')) as any;
+      fixtureComponent.detectChanges();
+      expect(componentNativeElement.textContent).toBe('error');
     });
   });
 });

@@ -12,16 +12,26 @@ import {
 } from '@rx-angular/cdk/render-strategies';
 import {
   createTemplateNotifier,
+  RxNotification,
   RxNotificationKind,
 } from '@rx-angular/cdk/notifications';
 import {
+  MonoTypeOperatorFunction,
   NextObserver,
   Observable,
   ObservableInput,
-  Unsubscribable
+  OperatorFunction,
+  Subscription,
+  Unsubscribable,
 } from 'rxjs';
-import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { timeoutSwitchMapWith } from '@rx-angular/cdk/internals/core';
+import {
+  shareReplay,
+  skip,
+  filter,
+  switchMap,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
 
 /**
  * @Pipe PushPipe
@@ -86,9 +96,13 @@ export class PushPipe<S extends string = string>
    */
   private renderedValue: any | null | undefined;
   /** @internal */
-  private readonly subscription: Unsubscribable;
+  private subscription: Unsubscribable;
   /** @internal */
   private readonly templateObserver = createTemplateNotifier<any>();
+  private readonly templateValues$ = this.templateObserver.values$.pipe(
+    onlyValues(),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
   /** @internal */
   private readonly strategyHandler = strategyHandling(
     this.strategyProvider.primaryStrategy,
@@ -103,9 +117,7 @@ export class PushPipe<S extends string = string>
     private strategyProvider: RxStrategyProvider,
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone
-  ) {
-    this.subscription = this.handleChangeDetection();
-  }
+  ) {}
 
   transform<U>(
     potentialObservable: null,
@@ -147,12 +159,15 @@ export class PushPipe<S extends string = string>
       }
     }
     this.templateObserver.next(potentialObservable);
+    if (!this.subscription) {
+      this.subscription = this.handleChangeDetection();
+    }
     return this.renderedValue as U;
   }
 
   /** @internal */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscription?.unsubscribe();
   }
 
   /** @internal */
@@ -165,36 +180,64 @@ export class PushPipe<S extends string = string>
   /** @internal */
   private handleChangeDetection(): Unsubscribable {
     const scope = (this.cdRef as any).context;
-    return this.templateObserver.values$
+    const sub = new Subscription();
+    const setRenderedValue = this.templateValues$.subscribe(({ value }) => {
+      this.renderedValue = value;
+    });
+    const render = this.hasInitialValue(this.templateValues$)
       .pipe(
-        filter(
-          (n) =>
-            n.kind === RxNotificationKind.Suspense ||
-            n.kind === RxNotificationKind.Next
-        ),
-        tap((notification) => {
-          this.renderedValue = notification.value;
-        }),
-        withLatestFrom(this.strategyHandler.strategy$),
-        switchMap(([notification, strategy]) =>
-          this.strategyProvider
-            .schedule(
-              () => {
-                strategy.work(this.cdRef, scope);
-              },
-              {
-                scope,
-                strategy: strategy.name,
-                patchZone: this.patchZone,
-              }
-            )
-            .pipe(
-              timeoutSwitchMapWith(),
-              tap(() => this._renderCallback?.next(notification.value))
-            )
+        switchMap((isSync) =>
+          this.templateValues$.pipe(
+            // skip ticking change detection
+            // in case we have an initial value, we don't need to perform cd
+            // the variable will be evaluated anyway because of the lifecycle
+            skip(isSync ? 1 : 0),
+            // onlyValues(),
+            this.render(scope),
+            tap((v) => {
+              this._renderCallback?.next(v);
+            })
+          )
         )
       )
       .subscribe();
+    sub.add(setRenderedValue);
+    sub.add(render);
+    return sub;
+  }
+
+  /** @internal */
+  private render<T>(scope: object): OperatorFunction<RxNotification<T>, T> {
+    return (o$) =>
+      o$.pipe(
+        withLatestFrom(this.strategyHandler.strategy$),
+        switchMap(([notification, strategy]) =>
+          this.strategyProvider.schedule(
+            () => {
+              strategy.work(this.cdRef, scope);
+              return notification.value;
+            },
+            {
+              scope,
+              strategy: strategy.name,
+              patchZone: this.patchZone,
+            }
+          )
+        )
+      );
+  }
+
+  /** @internal */
+  private hasInitialValue(value$: Observable<unknown>): Observable<boolean> {
+    return new Observable<boolean>((subscriber) => {
+      let hasInitialValue = false;
+      const inner = value$.subscribe(() => {
+        hasInitialValue = true;
+      });
+      inner.unsubscribe();
+      subscriber.next(hasInitialValue);
+      subscriber.complete();
+    });
   }
 }
 
@@ -206,6 +249,17 @@ interface PushInput<T, S> {
 
 // https://eslint.org/docs/rules/no-prototype-builtins
 const hasOwnProperty = Object.prototype.hasOwnProperty;
+
+function onlyValues<T>(): MonoTypeOperatorFunction<RxNotification<T>> {
+  return (o$) =>
+    o$.pipe(
+      filter(
+        (n) =>
+          n.kind === RxNotificationKind.Suspense ||
+          n.kind === RxNotificationKind.Next
+      )
+    );
+}
 
 function isRxComponentInput<U, S>(value: any): value is PushInput<U, S> {
   return (

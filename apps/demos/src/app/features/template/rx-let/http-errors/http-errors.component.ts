@@ -13,41 +13,23 @@ import { RxState } from '@rx-angular/state';
       </mat-card-header>
 
       <mat-card-content>
-        <div *rxLet="httpResponse$;
-            let r;
-            let e = $rxError;
-            ">
+        <div *rxLet="httpResponse$; let r; let e = error">
           <h2>Default Template</h2>
-          R: {{ r | json }}
-          E: {{ e | json }}
+          R: {{ r | json }} E: {{ e | json }}
         </div>
-
       </mat-card-content>
 
       <mat-card-actions>
-        <button mat-button [unpatch] (click)="reset()">
-          reset
-        </button>
-        <button mat-button [unpatch] (click)="offlineError()">
-          offline
-        </button>
-        <button mat-button [unpatch] (click)="authError()">
-          auth
-        </button>
-        <button mat-button [unpatch] (click)="accessError()">
-          access
-        </button>
-        <button mat-button [unpatch] (click)="serverError()">
-          server
-        </button>
+        <button mat-button [unpatch] (click)="reset()">reset</button>
+        <button mat-button [unpatch] (click)="offlineError()">offline</button>
+        <button mat-button [unpatch] (click)="authError()">auth</button>
+        <button mat-button [unpatch] (click)="accessError()">access</button>
+        <button mat-button [unpatch] (click)="serverError()">server</button>
       </mat-card-actions>
     </mat-card>
-
-
-
   `,
   styles: [
-      `
+    `
       mat-card-content {
         min-height: 10rem;
         display: flex;
@@ -66,20 +48,19 @@ import { RxState } from '@rx-angular/state';
         text-align: center;
         width: 20rem;
       }
-    `
+    `,
   ],
-  providers: [RxState]
+  providers: [RxState],
 })
 export class HttpErrorsComponent {
   error$ = new Subject<HttpErrorResponse>();
   httpResponse$: Observable<Error> = this.setup();
 
-  constructor(private cdRef: ChangeDetectorRef) {
-  }
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   setup(): Observable<HttpErrorResponse> {
     return this.error$.pipe(
-      concatMap(e => throwError(parseError(e))),
+      concatMap((e) => throwError(parseError(e))),
       share()
     );
   }
@@ -104,7 +85,6 @@ export class HttpErrorsComponent {
   serverError() {
     this.error$.next(new HttpErrorResponse({ status: 501 }));
   }
-
 }
 
 function parseError(e: HttpErrorResponse): string {
