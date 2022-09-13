@@ -2,6 +2,27 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.7.0](https://github.com/rx-angular/rx-angular/compare/state@1.6.1...state@1.7.0) (2022-09-13)
+
+
+### Bug Fixes
+
+* **docs:** rename vidoes to videos ([bc8f650](https://github.com/rx-angular/rx-angular/commit/bc8f65059d0fd8c53d22c0dbc5e0b74c8ca1df77))
+* **state:** exclude `undefined` from return type of `stateful` ([#1073](https://github.com/rx-angular/rx-angular/issues/1073)) ([4329422](https://github.com/rx-angular/rx-angular/commit/43294225bff997a7a20f086527ac2e1c2db465c4)), closes [#837](https://github.com/rx-angular/rx-angular/issues/837)
+* **state:** fix build error ([3626463](https://github.com/rx-angular/rx-angular/commit/36264636da4cbcb639385e403aa840433b63691c))
+* **state:** fix overload declaration order ([75d1bd8](https://github.com/rx-angular/rx-angular/commit/75d1bd8229328266ca29c1aa6204897ba02167b6))
+* **state:** make rxjs imports to be compatible with rxjs v6 ([#1378](https://github.com/rx-angular/rx-angular/issues/1378)) ([7379994](https://github.com/rx-angular/rx-angular/commit/7379994aa372716994387fb7b075b3eca724bb04))
+
+
+### Features
+
+* **state:** add key and map function overload to select ([f00e943](https://github.com/rx-angular/rx-angular/commit/f00e9436720cb4dbcd71d243523abb9da7dd8eaa))
+* **state:** add keyCompareMap option to select's keys+fn overload ([b1b5370](https://github.com/rx-angular/rx-angular/commit/b1b5370511064b4265f2b0714af97c3e982032c0))
+* **state:** add keys array and map function overload to select ([2b9c819](https://github.com/rx-angular/rx-angular/commit/2b9c819557f02519bdd8c160b2469a71ac92e362))
+* **state:** introduce RxActions ([a63e01a](https://github.com/rx-angular/rx-angular/commit/a63e01a891204be4087472fa808371bd85590171))
+
+
+
 ## [1.6.1](https://github.com/rx-angular/rx-angular/compare/state@1.6.0...state@1.6.1) (2022-06-07)
 
 
