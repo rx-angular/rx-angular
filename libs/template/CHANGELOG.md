@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0-rc.2](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.1...template@1.0.0-rc.2) (2022-09-13)
+
+
+### Bug Fixes
+
+* **template:** use rxjs version 6 compatible imports ([9d1d23d](https://github.com/rx-angular/rx-angular/commit/9d1d23de2e7f064783c2103380fe9c00356bb7b8))
+
+
+
 # [1.0.0-rc.1](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.0...template@1.0.0-rc.1) (2022-08-28)
 
 
