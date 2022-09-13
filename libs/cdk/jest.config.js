@@ -3,13 +3,9 @@ module.exports = {
   name: 'cdk',
   displayName: 'cdk',
   preset: '../../jest.preset.js',
-  coverageReporters: ['lcov', 'cobertura'],
-  coverageDirectory: '../../docs/test-coverage/cdk',
-  collectCoverageFrom: [
-    './src/**/!(index).ts',
-    '!./src/lib/experimental/**/*.ts',
-  ],
-  setupFilesAfterEnv: ['<rootDir>/test-setup.ts'],
+  coverageReporters: ['lcov'],
+  coverageDirectory: '../../coverage/cdk',
+  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
     'ts-jest': {
       stringifyContentPathRegex: '\\.(html|svg)$',

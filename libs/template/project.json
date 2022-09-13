@@ -4,7 +4,7 @@
   "sourceRoot": "libs/template/src",
   "prefix": "rx",
   "targets": {
-    "build-base": {
+    "build-lib": {
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/template/tsconfig.lib.json",
@@ -15,13 +15,14 @@
           "target": "build",
           "projects": "dependencies"
         }
-      ]
+      ],
+      "outputs": ["dist/libs/template"]
     },
     "build": {
       "executor": "@nrwl/workspace:run-commands",
       "dependsOn": [
         {
-          "target": "build-base",
+          "target": "build-lib",
           "projects": "self"
         }
       ],
@@ -44,15 +45,17 @@
           }
         ],
         "parallel": false
-      }
+      },
+      "outputs": ["dist/libs/template/schematics"]
     },
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
         "jestConfig": "libs/template/jest.config.js",
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "codeCoverage": true
       },
-      "outputs": ["coverage/libs/template"]
+      "outputs": ["coverage/template"]
     },
     "build-docs": {
       "executor": "@nrwl/workspace:run-commands",
@@ -60,36 +63,7 @@
       "options": {
         "commands": [
           {
-            "command": "nx test-coverage template && nx test-coverage-badge template"
-          }
-        ]
-      }
-    },
-    "test-coverage-badge": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/template/cobertura-coverage.xml -d docs/test-coverage/template"
-          }
-        ]
-      }
-    },
-    "test-coverage": {
-      "executor": "@nrwl/jest:jest",
-      "options": {
-        "jestConfig": "libs/template/jest.config.js",
-        "passWithNoTests": true,
-        "codeCoverage": true
-      },
-      "outputs": ["coverage/libs/template"]
-    },
-    "changelog": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx conventional-changelog-cli -p angular -k ./libs/template/package.json -i ./libs/template/CHANGELOG.md -s --commit-path ./libs/template --tagPrefix template@"
+            "command": "nx test template --codeCoverage && nx build-test-coverage-badge template"
           }
         ]
       }
@@ -135,8 +109,25 @@
     "version": {
       "executor": "@jscutlery/semver:version",
       "options": {
-        "baseBranch": "master",
-        "versionTagPrefix": "${target}@"
+        "push": true,
+        "noVerify": true,
+        "baseBranch": "main",
+        "versionTagPrefix": "${target}@",
+        "postTargets": ["template:github"],
+        "commitMessageFormat": "release(${projectName}): ${version}"
+      }
+    },
+    "github": {
+      "executor": "@jscutlery/semver:github",
+      "options": {
+        "tag": "${tag}",
+        "notes": "${notes}"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/template/**/*.ts"]
       }
     }
   },
@@ -145,5 +136,5 @@
       "style": "scss"
     }
   },
-  "tags": ["type:lib", "type:template"]
+  "tags": ["type:lib", "template"]
 }

@@ -1,7 +1,7 @@
 # @rx-angular/cdk/notifications
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)
-![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
+![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
 ## A small typed convenience helper to handle contextual state.
@@ -28,5 +28,5 @@ yarn add @rx-angular/cdk
 
 ## Documentation
 
-- [Notifications](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/notifications/docs/Readme.md)
+- [Notifications](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/notifications/docs/Readme.md)
 

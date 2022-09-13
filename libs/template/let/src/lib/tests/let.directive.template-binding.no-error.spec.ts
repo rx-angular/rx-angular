@@ -1,16 +1,14 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-// tslint:disable-next-line:nx-enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { Observable, of, Subject } from 'rxjs';
-
 import { LetDirective } from '../let.directive';
 
 @Component({
   template: `
     <ng-container
-      *rxLet="value$; let value; rxSuspense: suspense; rxComplete: complete"
+      *rxLet="value$; let value; suspense: suspense; complete: complete"
       >{{
         value === undefined
           ? 'undefined'
@@ -85,6 +83,21 @@ describe('LetDirective when template binding without "error" template', () => {
     fixture.detectChanges();
 
     expectContentToBe('undefined');
+  });
+
+  it('should render complete when observable completes', () => {
+    component.value$ = new Subject();
+    (component.value$ as Subject<number>).complete();
+    fixture.detectChanges();
+
+    expectContentToBe('complete');
+  });
+
+  it('should render suspense when observable has not emitted yet', () => {
+    component.value$ = new Subject();
+    fixture.detectChanges();
+
+    expectContentToBe('suspense');
   });
 });
 

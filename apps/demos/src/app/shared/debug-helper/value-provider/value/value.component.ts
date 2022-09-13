@@ -1,5 +1,3 @@
-// tslint:disable:no-unused-expression
-
 import { Component, Input } from '@angular/core';
 import { isObservable, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -8,7 +6,6 @@ import { toBoolean } from '../utils';
 import { TestItem } from '../model';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'rxa-value',
   template: `
     <mat-icon class="item" [ngClass]="{red:!v, green:v}" *rxLet="value$; let v">{{v ? 'check' : 'highlight_off'}}</mat-icon>`,

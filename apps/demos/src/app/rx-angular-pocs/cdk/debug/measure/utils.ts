@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Observable } from 'rxjs';
 
 /**

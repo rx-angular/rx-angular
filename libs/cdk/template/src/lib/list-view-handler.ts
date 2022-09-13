@@ -16,19 +16,14 @@ import { createEmbeddedView } from './utils';
  * @param templateSettings
  */
 export function getTemplateHandler<C extends RxListViewContext<T>, T>(
-  templateSettings: RxTemplateSettings<T, C>
+  templateSettings: Omit<RxTemplateSettings<T, C>, 'patchZone'>
 ): ListTemplateManager<T> {
   const {
     viewContainerRef,
     initialTemplateRef,
     createViewContext,
     updateViewContext,
-    patchZone,
   } = templateSettings;
-
-  const workFactory = patchZone
-    ? (work: VoidFunction) => patchZone.run(work)
-    : (work: VoidFunction) => work();
 
   return {
     updateUnchangedContext,
@@ -41,15 +36,13 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
 
   // =====
 
-  function updateUnchangedContext(index: number, count: number) {
+  function updateUnchangedContext(item: T, index: number, count: number) {
     const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
-    workFactory(() => {
-      view.context.updateContext({
-        count,
-        index,
-      });
-      view.detectChanges();
+    updateViewContext(item, view, {
+      count,
+      index,
     });
+    view.detectChanges();
   }
 
   function moveView(
@@ -60,42 +53,36 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
   ): void {
     const oldView = viewContainerRef.get(oldIndex);
     const view = <EmbeddedViewRef<C>>viewContainerRef.move(oldView, index);
-    workFactory(() => {
-      updateViewContext(item, view, {
-        count,
-        index,
-      });
-      view.detectChanges();
+    updateViewContext(item, view, {
+      count,
+      index,
     });
+    view.detectChanges();
   }
 
   function updateView(item: T, index: number, count: number): void {
     const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
-    workFactory(() => {
-      updateViewContext(item, view, {
-        count,
-        index,
-      });
-      view.detectChanges();
+    updateViewContext(item, view, {
+      count,
+      index,
     });
+    view.detectChanges();
   }
 
   function removeView(index: number): void {
-    return workFactory(() => viewContainerRef.remove(index));
+    return viewContainerRef.remove(index);
   }
 
   function insertView(item: T, index: number, count: number): void {
-    workFactory(() => {
-      createEmbeddedView(
-        viewContainerRef,
-        initialTemplateRef,
-        createViewContext(item, {
-          count,
-          index,
-        }),
-        index
-      );
-    });
+    createEmbeddedView(
+      viewContainerRef,
+      initialTemplateRef,
+      createViewContext(item, {
+        count,
+        index,
+      }),
+      index
+    );
   }
 }
 
@@ -105,7 +92,7 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
  * An object that holds methods needed to introduce actions to a list e.g. move, remove, insert
  */
 export interface ListTemplateManager<T> {
-  updateUnchangedContext(index: number, count: number): void;
+  updateUnchangedContext(item: T, index: number, count: number): void;
 
   insertView(item: T, index: number, count: number): void;
 
@@ -138,13 +125,19 @@ function getListChanges<T>(
     const item = record.item;
     if (record.previousIndex == null) {
       // insert
-      changesArr.push(getInsertChange(item, currentIndex === null ? undefined : currentIndex));
+      changesArr.push(
+        getInsertChange(item, currentIndex === null ? undefined : currentIndex)
+      );
       changedIdxs.add(item);
       notifyParent = true;
     } else if (currentIndex == null) {
       // remove
-      changesArr.push(getRemoveChange(item, adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex));
-      changedIdxs.add(item);
+      changesArr.push(
+        getRemoveChange(
+          item,
+          adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex
+        )
+      );
       notifyParent = true;
     } else if (adjustedPreviousIndex !== null) {
       // move
@@ -207,7 +200,10 @@ function getListChanges<T>(
   ): RxListTemplateChange {
     return [
       RxListTemplateChangeType.remove,
-      [item, adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex],
+      [
+        item,
+        adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex,
+      ],
     ];
   }
 }

@@ -58,9 +58,7 @@ export function createRenderAware<U>(cfg: {
       switchAll(),
       distinctUntilChanged(),
       rxMaterialize(),
-      /* tslint:disable */
       mergeWith(templateTrigger$ || EMPTY),
-      /* tslint:enable */
       /*observeTemplateByNotificationKind(cfg.templateObserver),
       applyStrategy(strategy$, cfg.getContext, cfg.getCdRef),*/
       catchError(e => {

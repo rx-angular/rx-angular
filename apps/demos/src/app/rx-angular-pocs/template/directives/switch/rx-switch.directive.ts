@@ -6,7 +6,6 @@ import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[rxSwitch]',
 })
 export class RxSwitch<U> {

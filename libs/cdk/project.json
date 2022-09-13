@@ -4,22 +4,12 @@
   "sourceRoot": "libs/cdk/src",
   "prefix": "rx-angular",
   "targets": {
-    "build-test-coverage-badge": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/cdk/cobertura-coverage.xml -d docs/test-coverage/cdk"
-          }
-        ]
-      }
-    },
     "build-docs": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
           {
-            "command": "nx test-coverage cdk && nx build-test-coverage-badge cdk"
+            "command": "nx test cdk --codeCoverage && nx build-test-coverage-badge cdk"
           }
         ]
       }
@@ -51,31 +41,25 @@
           }
         ],
         "parallel": false
-      }
+      },
+      "outputs": ["dist/libs/cdk/schematics"]
     },
     "build-lib": {
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/cdk/tsconfig.lib.json",
         "project": "libs/cdk/ng-package.json"
-      }
+      },
+      "outputs": ["dist/libs/cdk"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "options": {
-        "jestConfig": "libs/cdk/jest.config.js",
-        "passWithNoTests": true
-      },
-      "outputs": ["coverage/libs/cdk"]
-    },
-    "test-coverage": {
       "executor": "@nrwl/jest:jest",
       "options": {
         "jestConfig": "libs/cdk/jest.config.js",
         "passWithNoTests": true,
         "codeCoverage": true
       },
-      "outputs": ["coverage/libs/cdk"]
+      "outputs": ["coverage/cdk"]
     },
     "publish": {
       "executor": "@nrwl/workspace:run-commands",
@@ -108,8 +92,25 @@
     "version": {
       "executor": "@jscutlery/semver:version",
       "options": {
-        "baseBranch": "master",
-        "versionTagPrefix": "${target}@"
+        "push": true,
+        "noVerify": true,
+        "baseBranch": "main",
+        "versionTagPrefix": "${target}@",
+        "postTargets": ["cdk:github"],
+        "commitMessageFormat": "release(${projectName}): ${version}"
+      }
+    },
+    "github": {
+      "executor": "@jscutlery/semver:github",
+      "options": {
+        "tag": "${tag}",
+        "notes": "${notes}"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/cdk/**/*.ts"]
       }
     }
   },
@@ -118,5 +119,5 @@
       "style": "scss"
     }
   },
-  "tags": ["type:lib", "type:cdk"]
+  "tags": ["type:lib", "cdk"]
 }

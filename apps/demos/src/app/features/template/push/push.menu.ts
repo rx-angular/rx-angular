@@ -1,6 +1,10 @@
-export const MENU_ITEMS = [
+export const PUSH_PIPE_MENU = [
   {
-    label: 'Push Basic Example',
+    label: 'Basic Example',
     link: 'basic-example'
+  },
+  {
+    label: 'Push vs Async',
+    link: 'vs-async'
   }
 ];

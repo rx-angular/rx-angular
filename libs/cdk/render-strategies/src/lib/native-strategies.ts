@@ -1,8 +1,12 @@
-import { ɵmarkDirty as markDirty } from '@angular/core';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
-import { RxCustomStrategyCredentials, RxNativeStrategyNames, RxRenderWork, RxStrategyCredentials } from './model';
+import {
+  RxCustomStrategyCredentials,
+  RxNativeStrategyNames,
+  RxStrategyCredentials,
+} from './model';
 import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 
 const animationFrameTick = () =>
@@ -24,17 +28,12 @@ const localCredentials: RxStrategyCredentials = {
     cdRef.detectChanges();
   },
   behavior:
-    (work: () => RxRenderWork, scope: Record<string, unknown>) => (o$) =>
+    ({ work, scope, ngZone }) =>
+    (o$) =>
       o$.pipe(
-        coalesceWith(animationFrameTick(), scope),
-        tap(() => work())
+        coalesceWith(animationFrameTick(), scope as Record<string, unknown>),
+        tap(() => (ngZone ? ngZone.run(() => work()) : work()))
       ),
-};
-
-const globalCredentials: RxStrategyCredentials = {
-  name: 'global',
-  work: (_, context) => markDirty(context),
-  behavior: (work: any) => (o$) => o$.pipe(tap(() => work())),
 };
 
 const noopCredentials: RxStrategyCredentials = {
@@ -46,7 +45,25 @@ const noopCredentials: RxStrategyCredentials = {
 const nativeCredentials: RxStrategyCredentials = {
   name: 'native',
   work: (cdRef) => cdRef.markForCheck(),
-  behavior: (work: any) => (o$) => o$.pipe(tap(() => work())),
+  behavior:
+    ({ work, ngZone }) =>
+    (o$) =>
+      o$.pipe(
+        tap(() =>
+          ngZone && !NgZone.isInAngularZone()
+            ? ngZone.run(() => work())
+            : work()
+        )
+      ),
+};
+
+/**
+ * @deprecated
+ * angular drops the internal markDirty API, will fall back to native if used
+ */
+const globalCredentials: RxStrategyCredentials = {
+  ...nativeCredentials,
+  name: 'global',
 };
 
 export type RxNativeStrategies =

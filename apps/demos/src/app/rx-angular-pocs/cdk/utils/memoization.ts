@@ -1,6 +1,5 @@
 // Source https://github.com/thinkloop/memoizerific/blob/master/src/memoizerific.js
 
-// tslint:ignore-file
 export function memo(limit): (fn: (...args: any[]) => any) => any {
   const cache = new Map(),
     lru = [];

@@ -15,7 +15,7 @@
  `LetDirective` as `@ViewChild()` and subscribe the event manually or providing a RenderCallback on your own.
  
  Please note that due to the built-in
-   [coalescing][https://github.com/rx-angular/rx-angular/blob/master/libs/template/docs/concepts.md] can cause this
+   [coalescing][https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts.md] can cause this
    callback different in situations where multiple `LetDirectives` are used to render the same
  `Component`. Make sure to subscribe to every instance in your component to avoid missing render
  notifications.

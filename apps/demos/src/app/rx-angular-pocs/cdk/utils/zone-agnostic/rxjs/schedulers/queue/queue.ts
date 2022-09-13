@@ -1,4 +1,3 @@
-// tslint:disable file-name-casing
 import { QueueAction } from './QueueAction';
 import { QueueScheduler } from './QueueScheduler';
 

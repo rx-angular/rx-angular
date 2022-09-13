@@ -1,4 +1,3 @@
-// tslint:disable file-name-casing
 import { AnimationFrameAction } from './AnimationFrameAction';
 import { AnimationFrameScheduler } from './AnimationFrameScheduler';
 

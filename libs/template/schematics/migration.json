@@ -1,10 +1,15 @@
 {
   "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
-    "update-1.0.0-beta.29": {
-      "version": "1.0.0-beta.29",
+    "update-1.0.0-beta.30": {
+      "version": "1.0.0-beta.30",
       "description": "Migrate to sub-entry points",
-      "factory": "./src/migrations/update-1.0.0-beta.29/index"
+      "factory": "./src/migrations/update-1.0.0-beta.30/index"
+    },
+    "introduce-rxfor-stable": {
+      "version": "1.0.0-rc.0",
+      "description": "Migrate rxFor imports from experimental package",
+      "factory": "./src/migrations/introduce-rxfor-stable/index"
     }
   }
 }

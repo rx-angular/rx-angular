@@ -6,7 +6,6 @@ const children1 = 10;
 const children2 = 3;
 
 export const rand = (n: number = 2): number => {
-  // tslint:disable-next-line:no-bitwise
   return ~~(Math.random() * n);
 };
 

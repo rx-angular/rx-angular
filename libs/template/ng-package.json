@@ -4,5 +4,6 @@
   "lib": {
     "flatModuleFile": "template",
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": ["ng-morph"]
 }

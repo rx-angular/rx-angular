@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RxState, selectSlice } from '@rx-angular/state';
+import { selectSlice } from '@rx-angular/state/selections';
+import { RxState } from '@rx-angular/state';
 import { Observable, of } from 'rxjs';
 import { filter } from 'rxjs/operators';
 

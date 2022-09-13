@@ -7,10 +7,9 @@ import {
 } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { unpatchAddEventListener } from '@rx-angular/cdk/zone-less';
+import { unpatchAddEventListener } from '@rx-angular/cdk/zone-less/browser';
 import {
   focusEvents,
-  formControlsEvents,
   inputEvents,
   mouseEvents,
 } from '@rx-angular/cdk/zone-configurations';
@@ -46,7 +45,6 @@ const eventsToUnpatch: string[] = [
   ...mouseEvents,
   ...inputEvents,
   ...focusEvents,
-  ...formControlsEvents,
 ];
 
 /**
@@ -88,7 +86,6 @@ const eventsToUnpatch: string[] = [
  *
  * @publicApi
  */
-// tslint:disable-next-line:directive-selector
 @Directive({ selector: '[unpatch]' })
 export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
   /**

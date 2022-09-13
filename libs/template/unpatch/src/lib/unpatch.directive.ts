@@ -73,6 +73,7 @@ export function unpatchEventListener(
   });
 }
 
+/* eslint-disable @angular-eslint/directive-selector */
 /**
  * @Directive UnpatchEventsDirective
  *
@@ -112,8 +113,10 @@ export function unpatchEventListener(
  *
  * @publicApi
  */
-// tslint:disable-next-line:directive-selector
 @Directive({ selector: '[unpatch]' })
+/**
+ * @todo: add prefix [rxUnpatch]
+ */
 export class UnpatchDirective implements OnChanges, AfterViewInit, OnDestroy {
   /**
    * @description

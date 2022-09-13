@@ -1,9 +1,7 @@
-// tslint:disable
 import { AsyncAction } from '../async/AsyncAction';
 import { AsapScheduler } from './AsapScheduler';
 import { SchedulerAction } from '../types';
 
-// tslint:disable
 import { Promise } from '../../../browser';
 
 let nextHandle = 1;

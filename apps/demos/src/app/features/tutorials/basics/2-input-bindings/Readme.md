@@ -71,5 +71,5 @@ Now we can replace the `_refreshInterval` component in the template with `vm.ref
   vm.refreshInterval }} ms
 </span>
 ```
-[input-bindings.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/master/apps/demos/src/app/features/tutorials/basics/2-input-bindings/input-bindings.start.component.ts
-[input-bindings.solution.component.ts]: https://github.com/rx-angular/rx-angular/blob/master/apps/demos/src/app/features/tutorials/basics/2-input-bindings/input-bindings.solution.component.ts
+[input-bindings.start.component.ts]: https://github.com/rx-angular/rx-angular/blob/main/apps/demos/src/app/features/tutorials/basics/2-input-bindings/input-bindings.start.component.ts
+[input-bindings.solution.component.ts]: https://github.com/rx-angular/rx-angular/blob/main/apps/demos/src/app/features/tutorials/basics/2-input-bindings/input-bindings.solution.component.ts

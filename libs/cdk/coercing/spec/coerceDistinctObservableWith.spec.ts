@@ -1,5 +1,3 @@
-// tslint:disable:nx-enforce-module-boundaries
-// eslint:disable:nx-enforce-module-boundaries
 import { concatAll, exhaustAll, mergeAll, Observable, ObservableInput, Subject, take } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 

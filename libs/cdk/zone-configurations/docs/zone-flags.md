@@ -10,7 +10,7 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 By default `zone.js` wraps almost all browser events – like mouse events, XHR events, timers and so on.
 Every time event is invoked, zone initiates app re-render. This is cool feature of the Angular framework – every time data has a \***\*chance\*\*** to update, Angular checks and re-renders the app.
 
-![Angular change-detection based on zone](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-change-detection_michael-hladky.png)
+![Angular change-detection based on zone](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zone-change-detection_michael-hladky.png)
 
 How it influences on the performance of the app
 But when we talk about big complex apps – we might not need this to be done over all the app on every event, it influences badly on the performance. Better manually control re-renders with change detection strategy onPush and decide explicitly should something be re-rendered or not.
@@ -47,7 +47,7 @@ The impact is introduced by removing the following process:
 Check the difference in flame charts: it's a performance snapshot from list view of clickup being scrolled down.
 A second charts is with timer, scroll and xhr events turned off.
 
-![angular and zone flags performance comparison](https://raw.githubusercontent.com/rx-angular/rx-angular/master/libs/cdk/zone-configurations/docs/images/angular-zone-flags_performance-comparison_michael-hladky.png)
+![angular and zone flags performance comparison](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zone-flags_performance-comparison_michael-hladky.png)
 
 # Risks & What can break
 

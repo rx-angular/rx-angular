@@ -1,20 +1,25 @@
 import {
   EmbeddedViewRef,
+  IterableChanges,
   IterableDiffer,
   IterableDiffers,
   NgIterable,
   TemplateRef,
   TrackByFunction,
 } from '@angular/core';
-import { combineLatest, merge, Observable, of, OperatorFunction } from 'rxjs';
+import { combineLatest, MonoTypeOperatorFunction, Observable, of } from 'rxjs';
 import {
-  catchError, distinctUntilChanged,
-  ignoreElements,
+  catchError,
+  distinctUntilChanged,
   map,
   switchMap,
-  tap
+  tap,
 } from 'rxjs/operators';
-import { RxStrategyCredentials, onStrategy, strategyHandling } from '@rx-angular/cdk/render-strategies';
+import {
+  RxStrategyCredentials,
+  onStrategy,
+  strategyHandling,
+} from '@rx-angular/cdk/render-strategies';
 import {
   RxListViewComputedContext,
   RxListViewContext,
@@ -27,31 +32,25 @@ import {
   RxTemplateSettings,
 } from './model';
 import { createErrorHandler } from './render-error';
-import {
-  getTNode,
-  notifyAllParentsIfNeeded,
-  notifyInjectingParentIfNeeded,
-  TNode,
-} from './utils';
+import { notifyAllParentsIfNeeded } from './utils';
 
 export interface RxListManager<T> {
   nextStrategy: (config: string | Observable<string>) => void;
 
-  render(changes$: Observable<NgIterable<T>>): Observable<void>;
+  render(changes$: Observable<NgIterable<T>>): Observable<NgIterable<T> | null>;
 }
 
 export function createListTemplateManager<
   T,
   C extends RxListViewContext<T>
 >(config: {
-  renderSettings: RxRenderSettings<T, C>;
+  renderSettings: RxRenderSettings;
   templateSettings: Omit<
     RxTemplateSettings<T, C, RxListViewComputedContext>,
     'patchZone'
   > & {
     templateRef: TemplateRef<C>;
   };
-  //
   trackBy: TrackByFunction<T>;
   iterableDiffers: IterableDiffers;
 }): RxListManager<T> {
@@ -62,22 +61,27 @@ export function createListTemplateManager<
     cdRef: injectingViewCdRef,
     patchZone,
     parent,
-    eRef,
   } = renderSettings;
   const errorHandler = createErrorHandler(renderSettings.errorHandler);
+  const ngZone = patchZone ? patchZone : undefined;
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
-  const differ: IterableDiffer<T> = iterableDiffers.find([]).create(trackBy);
+
+  let _differ: IterableDiffer<T> | undefined;
+  function getDiffer(values: NgIterable<T>): IterableDiffer<T> | null {
+    if (_differ) {
+      return _differ;
+    }
+    return values
+      ? (_differ = iterableDiffers.find(values).create(trackBy))
+      : null;
+  }
   //               type,  context
-  const tNode: TNode = parent
-    ? getTNode(injectingViewCdRef, eRef.nativeElement)
-    : false;
   /* TODO (regarding createView): this is currently not in use. for the list-manager this would mean to provide
    functions for not only create. developers than should have to provide create, move, remove,... the whole thing.
    i don't know if this is the right decision for a first RC */
   const listViewHandler = getTemplateHandler({
     ...templateSettings,
     initialTemplateRef: templateSettings.templateRef,
-    patchZone,
   });
   const viewContainerRef = templateSettings.viewContainerRef;
 
@@ -89,35 +93,58 @@ export function createListTemplateManager<
     nextStrategy(nextConfig: Observable<string>): void {
       strategyHandling$.next(nextConfig);
     },
-    render(values$: Observable<NgIterable<T>>): Observable<any> {
+    render(
+      values$: Observable<NgIterable<T>>
+    ): Observable<NgIterable<T> | null> {
       return values$.pipe(render());
     },
   };
 
-  function render(): OperatorFunction<NgIterable<T>, any> {
-    return (o$: Observable<NgIterable<T>>): Observable<any> =>
-      combineLatest([o$, strategyHandling$.strategy$.pipe(distinctUntilChanged())]).pipe(
-        // map iterable to latest diff
+  function handleError() {
+    return (o$) =>
+      o$.pipe(
+        catchError((err: Error) => {
+          partiallyFinished = false;
+          errorHandler.handleError(err);
+          return of(null);
+        })
+      );
+  }
+
+  function render(): MonoTypeOperatorFunction<NgIterable<T> | null> {
+    return (o$: Observable<NgIterable<T>>): Observable<NgIterable<T> | null> =>
+      combineLatest([
+        o$,
+        strategyHandling$.strategy$.pipe(distinctUntilChanged()),
+      ]).pipe(
         map(([iterable, strategy]) => {
-          if (partiallyFinished) {
-            const currentIterable = [];
-            for (let i = 0, ilen = viewContainerRef.length; i < ilen; i++) {
-              const viewRef = <EmbeddedViewRef<C>>viewContainerRef.get(i);
-              currentIterable[i] = viewRef.context.$implicit;
+          const differ = getDiffer(iterable);
+          let changes: IterableChanges<T>;
+          if (differ) {
+            if (partiallyFinished) {
+              const currentIterable = [];
+              for (let i = 0, ilen = viewContainerRef.length; i < ilen; i++) {
+                const viewRef = <EmbeddedViewRef<C>>viewContainerRef.get(i);
+                currentIterable[i] = viewRef.context.$implicit;
+              }
+              differ.diff(currentIterable);
             }
-            differ.diff(currentIterable);
+            changes = differ.diff(iterable);
           }
           return {
-            changes: differ.diff(iterable),
-            items: iterable != null && Array.isArray(iterable) ? iterable : [],
-            strategy
+            changes,
+            iterable,
+            strategy,
           };
         }),
         // Cancel old renders
-        switchMap(({ changes, items, strategy }) => {
+        switchMap(({ changes, iterable, strategy }) => {
           if (!changes) {
             return of([]);
           }
+          const values = iterable || [];
+          // TODO: we might want to treat other iterables in a more performant way than Array.from()
+          const items = Array.isArray(values) ? values : Array.from(iterable);
           const listChanges = listViewHandler.getListChanges(changes, items);
           changesArr = listChanges[0];
           const insertedOrRemoved = listChanges[1];
@@ -127,42 +154,22 @@ export function createListTemplateManager<
             items.length
           );
           partiallyFinished = true;
-          // @TODO we need to know if we need to notifyParent on move aswell
           notifyParent = insertedOrRemoved && parent;
-          return new Observable(subscriber => {
-            const s = merge(
-              combineLatest(
-                // emit after all changes are rendered
-                applyChanges$.length > 0 ? applyChanges$ : [of(items)]
-              ).pipe(
-                tap(() => (partiallyFinished = false)),
-                // somehow this makes the strategySelect work
-                notifyAllParentsIfNeeded(
-                  tNode,
-                  injectingViewCdRef,
-                  strategy,
-                  () => notifyParent
-                )
-              ),
-              // emit injectingParent if needed
-              notifyInjectingParentIfNeeded(
-                injectingViewCdRef,
-                strategy,
-                insertedOrRemoved
-              ).pipe(ignoreElements())
-            ).pipe(
-              map(() => items),
-              catchError((e) => {
-                partiallyFinished = false;
-                errorHandler.handleError(e);
-                return of(items);
-              })
-            ).subscribe(subscriber);
-            return () => {
-              s.unsubscribe();
-            }
-          })
-        })
+          return combineLatest(
+            applyChanges$.length > 0 ? applyChanges$ : [of(null)]
+          ).pipe(
+            tap(() => (partiallyFinished = false)),
+            notifyAllParentsIfNeeded(
+              injectingViewCdRef,
+              strategy,
+              () => notifyParent,
+              ngZone
+            ),
+            handleError(),
+            map(() => iterable)
+          );
+        }),
+        handleError()
       );
   }
 
@@ -184,11 +191,11 @@ export function createListTemplateManager<
   ): Observable<RxListTemplateChangeType>[] {
     return changes.length > 0
       ? changes.map((change) => {
-        const payload = change[1];
+          const payload = change[1];
           return onStrategy(
             change[0],
             strategy,
-            type => {
+            (type) => {
               switch (type) {
                 case RxListTemplateChangeType.insert:
                   listViewHandler.insertView(payload[0], payload[1], count);
@@ -208,11 +215,15 @@ export function createListTemplateManager<
                   listViewHandler.updateView(payload[0], payload[1], count);
                   break;
                 case RxListTemplateChangeType.context:
-                  listViewHandler.updateUnchangedContext(payload[1], count);
+                  listViewHandler.updateUnchangedContext(
+                    payload[0],
+                    payload[1],
+                    count
+                  );
                   break;
               }
             },
-            {}
+            { ngZone }
           );
         })
       : [of(null)];

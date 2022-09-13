@@ -8,14 +8,20 @@ import {
   RxNotificationKind,
   RxSuspenseNotification,
 } from '@rx-angular/cdk/notifications';
+import {
+  onStrategy,
+  RxRenderWork,
+  strategyHandling,
+} from '@rx-angular/cdk/render-strategies';
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import {
   catchError,
-  ignoreElements,
+  filter,
+  map,
   switchMap,
+  tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { RxRenderWork, onStrategy, strategyHandling } from '@rx-angular/cdk/render-strategies';
 import {
   rxBaseTemplateNames,
   RxRenderAware,
@@ -24,13 +30,7 @@ import {
   RxViewContext,
 } from './model';
 import { createErrorHandler } from './render-error';
-import {
-  getTNode,
-  notifyAllParentsIfNeeded,
-  notifyInjectingParentIfNeeded,
-  templateHandling,
-  TNode,
-} from './utils';
+import { notifyAllParentsIfNeeded, templateHandling } from './utils';
 
 export interface RxTemplateManager<
   T,
@@ -38,8 +38,6 @@ export interface RxTemplateManager<
   N = rxBaseTemplateNames | string
 > extends RxRenderAware<T> {
   addTemplateRef: (name: N, templateRef: TemplateRef<C>) => void;
-  // addTrigger: (trigger$: Observable<RxNotification<T>>) => void;
-  // activeTemplate: N;
 }
 
 /**
@@ -58,9 +56,9 @@ export function notificationKindToViewContext<T>(
       const $implicit: T | null | undefined = notification.value as T;
       return {
         $implicit,
-        $suspense: true,
-        $error: false,
-        $complete: false,
+        suspense: true,
+        error: false,
+        complete: false,
         ...customNextContext($implicit),
       };
     },
@@ -68,9 +66,9 @@ export function notificationKindToViewContext<T>(
       const $implicit: T | null | undefined = notification.value as T;
       return {
         $implicit,
-        $suspense: false,
-        $error: false,
-        $complete: false,
+        suspense: false,
+        error: false,
+        complete: false,
         ...customNextContext($implicit),
       };
     },
@@ -78,9 +76,9 @@ export function notificationKindToViewContext<T>(
       const $implicit: T | null | undefined = notification.value as T;
       return {
         $implicit,
-        $complete: false,
-        $error: notification.error,
-        $suspense: false,
+        complete: false,
+        error: notification.error || true,
+        suspense: false,
         ...customNextContext($implicit),
       };
     },
@@ -88,9 +86,9 @@ export function notificationKindToViewContext<T>(
       const $implicit: T | null | undefined = notification.value as T;
       return {
         $implicit,
-        $error: false,
-        $complete: true,
-        $suspense: false,
+        error: false,
+        complete: true,
+        suspense: false,
         ...customNextContext($implicit),
       };
     },
@@ -109,11 +107,11 @@ export type RxNotificationTemplateNameMap<T, C, N> = Record<
 export function createTemplateManager<
   T,
   C extends RxViewContext<T>,
-  N = rxBaseTemplateNames | string
+  N extends string = string
 >(config: {
-  renderSettings: RxRenderSettings<T, C>;
+  renderSettings: RxRenderSettings;
   templateSettings: RxTemplateSettings<T, C>;
-  templateTrigger$?: Observable<RxNotification<unknown>>;
+  templateTrigger$?: Observable<RxNotificationKind>;
   notificationToTemplateName: RxNotificationTemplateNameMap<T, C, N>;
 }): RxTemplateManager<T, C, N> {
   const { renderSettings, notificationToTemplateName, templateSettings } =
@@ -124,13 +122,10 @@ export function createTemplateManager<
     cdRef: injectingViewCdRef,
     patchZone,
     parent,
-    eRef,
   } = renderSettings;
 
   const errorHandler = createErrorHandler(renderSettings.errorHandler);
-  const tNode: TNode = parent
-    ? getTNode(injectingViewCdRef, eRef.nativeElement)
-    : false;
+  const ngZone = patchZone ? patchZone : undefined;
 
   let activeTemplate: N;
 
@@ -142,53 +137,80 @@ export function createTemplateManager<
   const getContext = notificationKindToViewContext(
     templateSettings.customContext || ((v) => {})
   );
-
-  const workFactory = patchZone
-    ? (work: VoidFunction) => patchZone.run(work)
-    : (work: VoidFunction) => work();
+  let withSuspense = false;
 
   return {
-    addTemplateRef: templates.add,
-    // addTrigger: triggerHandling.next,
+    addTemplateRef: (name: N, templateRef: TemplateRef<C>) => {
+      if (!withSuspense && name === 'suspenseTpl') {
+        withSuspense = true;
+      }
+      templates.add(name, templateRef);
+    },
     nextStrategy: strategyHandling$.next,
     render(values$: Observable<RxNotification<T>>): Observable<any> {
-      return values$.pipe(
-        /* tslint:disable */
-        // mergeWith(triggerHandling.trigger$ || EMPTY),
-        /* tslint:enable */
-        withLatestFrom(strategyHandling$.strategy$),
-        // Cancel old renders
-        switchMap(([notification, strategy]) => {
-          const kind: RxNotificationKind = notification.kind;
+      let trg: RxNotificationKind | undefined;
+      let notification: RxNotification<T> = {
+        value: undefined,
+        complete: false,
+        error: false,
+        kind: withSuspense
+          ? RxNotificationKind.Suspense
+          : RxNotificationKind.Next,
+        hasValue: false,
+      };
+
+      return merge(
+        values$.pipe(
+          filter(
+            ({ kind }) => withSuspense || kind !== RxNotificationKind.Suspense
+          ),
+          tap((n) => {
+            notification = n;
+            // set suspense to true after first emission so that we have continuous suspense context values
+            withSuspense = true;
+          })
+        ),
+        triggerHandling.pipe(
+          tap<RxNotificationKind>((trigger) => (trg = trigger))
+        )
+      ).pipe(
+        map(() => {
+          const contextKind: RxNotificationKind = trg || notification.kind;
+          trg = undefined;
           const value: T = notification.value as T;
-          const templateName = notificationToTemplateName[kind](
+          const templateName = notificationToTemplateName[contextKind](
             value,
             templates
           );
-
           const template = templates.get(templateName);
-          const isNewTemplate = activeTemplate !== templateName;
-          const notifyParent = isNewTemplate && parent;
-          return merge(
-            onStrategy(
-              value,
+          return { template, templateName, notification, contextKind };
+        }),
+        withLatestFrom(strategyHandling$.strategy$),
+        // Cancel old renders
+        switchMap(
+          ([
+            { template, templateName, notification, contextKind },
+            strategy,
+          ]) => {
+            const isNewTemplate = activeTemplate !== templateName || !template;
+            const notifyParent = isNewTemplate && parent;
+            return onStrategy(
+              notification.value,
               strategy,
               (v: T, work: RxRenderWork, options: RxCoalescingOptions) => {
-                const context = <C>getContext[kind](notification);
+                const context = <C>getContext[contextKind](notification);
                 if (isNewTemplate) {
                   // template has changed (undefined => next; suspense => next; ...)
                   // handle remove & insert
                   // remove current view if there is any
                   if (viewContainerRef.length > 0) {
                     // patch removal if needed
-                    workFactory(() => viewContainerRef.clear());
+                    viewContainerRef.clear();
                   }
                   // create new view if any
                   if (template) {
                     // createEmbeddedView is already patched, no need for workFactory
-                    workFactory(() =>
-                      templates.createEmbeddedView(templateName, context)
-                    );
+                    templates.createEmbeddedView(templateName, context);
                   }
                 } else if (template) {
                   // template didn't change, update it
@@ -198,10 +220,11 @@ export function createTemplateManager<
                     view.context[k] = context[k];
                   });
                   // update view context, patch if needed
-                  workFactory(() => work(view, options.scope, notification));
+                  work(view, options.scope, notification);
                 }
                 activeTemplate = templateName;
-              }
+              },
+              { ngZone }
               // we don't need to specify any scope here. The template manager is the only one
               // who will call `viewRef#detectChanges` on any of the templates it manages.
               // whenever a new value comes in, any pre-scheduled work of this taskManager will
@@ -209,24 +232,18 @@ export function createTemplateManager<
               // of `StrategyCredential#behavior`
             ).pipe(
               notifyAllParentsIfNeeded(
-                tNode,
                 injectingViewCdRef,
                 strategy,
-                () => notifyParent
-              )
-            ),
-            notifyInjectingParentIfNeeded(
-              injectingViewCdRef,
-              strategy,
-              isNewTemplate
-            ).pipe(ignoreElements())
-          ).pipe(
-            catchError((e) => {
-              errorHandler.handleError(e);
-              return of(e);
-            })
-          );
-        })
+                () => notifyParent,
+                ngZone
+              ),
+              catchError((e) => {
+                errorHandler.handleError(e);
+                return of(e);
+              })
+            );
+          }
+        )
       );
     },
   };

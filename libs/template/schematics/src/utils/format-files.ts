@@ -1,5 +1,4 @@
 import { CreateFileAction, noop, OverwriteFileAction, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import { appRootPath } from '@nrwl/tao/src/utils/app-root';
 import * as path from 'path';
 import { from } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators';
@@ -37,7 +36,7 @@ export function formatFiles(
     return from(files).pipe(
       filter((file) => host.exists(file.path)),
       mergeMap(async (file) => {
-        const systemPath = path.join(appRootPath, file.path);
+        const systemPath = path.join(process.cwd(), file.path);
         let options: any = {
           filepath: systemPath,
         };

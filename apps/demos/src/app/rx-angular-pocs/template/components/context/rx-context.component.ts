@@ -13,7 +13,6 @@ import { RxState } from '@rx-angular/state';
 import { observableToRxTemplateName } from '../../../cdk/utils/rxjs/operators/observable-to-rx-template-name';
 
 @Component({
-  // tslint:disable-next-line:directive-selector component-selector
   selector: '[rxContextContainer]',
   template: `
     <!-- Everything but content with selectors -->
@@ -36,7 +35,6 @@ import { observableToRxTemplateName } from '../../../cdk/utils/rxjs/operators/ob
   providers: [RxState],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-// tslint:disable-next-line:directive-class-suffix
 export class RxContextContainer<U> extends Hooks implements OnInit {
   @Input('rxContextContainer')
   set rxContextContainer(

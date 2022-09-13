@@ -15,8 +15,8 @@ import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { SiblingModule } from '../../../../shared/template-structures/sibling/sibling.module';
 import { ImageArrayModule } from '../../../../shared/image-array/image-array.module';
 import { ROUTES } from './comparison.routes';
-import { RxForModule, RxIfModule, PipeModule } from '../../../../rx-angular-pocs';
-
+import { RxForModule, PipeModule } from '../../../../rx-angular-pocs';
+import { IfModule } from '@rx-angular/template/experimental/if';
 
 @NgModule({
   declarations: [ComparisonComponent],
@@ -35,7 +35,7 @@ import { RxForModule, RxIfModule, PipeModule } from '../../../../rx-angular-pocs
     ImageArrayModule,
     LetModule,
     RxForModule,
-    RxIfModule,
+    IfModule,
     PipeModule,
   ],
   exports: [],
