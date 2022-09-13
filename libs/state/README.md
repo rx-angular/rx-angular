@@ -14,6 +14,7 @@ RxState is a lightweight, flexible, strongly typed and tested tool dedicated to 
 
 - [🧩 Selections](https://github.com/rx-angular/rx-angular/blob/main/libs/state/selections/README.md)
 - [☁ Effects](https://github.com/rx-angular/rx-angular/blob/main/libs/state/effects/README.md)
+- [? Actions](https://github.com/rx-angular/rx-angular/blob/main/libs/state/actions/README.md)
 
 ## Intro Video
 
@@ -115,7 +116,7 @@ nx migrate @rx-angular/state
 - [Difference between Global and Local state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/global-state-vs-local-state.md)
 - [Using RxState as Global State](https://github.com/rx-angular/rx-angular/blob/main/libs/state/docs/snippets/manage-global-state.md)
 
-## Vidoes
+## Videos
 
 <a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)_🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session_</a>
 
@@ -141,6 +142,7 @@ nx migrate @rx-angular/state
 
 | Angular                | RxJS                 | @rx-angular/state |
 |------------------------|----------------------|-------------------|
+| `14`                   | `^7.4.0`             | `> 1.4.6`         |
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.4.6`         |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.4.6`        |
 

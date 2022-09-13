@@ -1,6 +1,5 @@
-import * as rxjs from 'rxjs';
 import { AnimationFrameAction } from './AnimationFrameAction';
-import { createScheduler } from '../create-scheduler';
+import { AnimationFrameScheduler } from './AnimationFrameScheduler';
 
 /**
  *
@@ -21,7 +20,7 @@ import { createScheduler } from '../create-scheduler';
  * Schedule div height animation
  * ```ts
  * // html: <div style="background: #0ff;"></div>
- * import { animationFrameScheduler } from '@cu/perf-utils';
+ * import { animationFrameScheduler } from '@rx-angular/cdk/zone-less/rxjs';
  *
  * const div = document.querySelector('div');
  *
@@ -34,8 +33,8 @@ import { createScheduler } from '../create-scheduler';
  *
  * // You will see a div element growing in height
  * ```
+ * @deprecated will be removed with 1.0.0
  */
-export const animationFrameScheduler = createScheduler(
-  rxjs.animationFrameScheduler,
+export const animationFrameScheduler = new AnimationFrameScheduler(
   AnimationFrameAction
 );

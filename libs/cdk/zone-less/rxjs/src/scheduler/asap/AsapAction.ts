@@ -1,7 +1,7 @@
+import { immediateProvider } from '../../internals/immediateProvider';
 import { AsyncAction } from '../async/AsyncAction';
 import { AsapScheduler } from './AsapScheduler';
 import { SchedulerAction } from '../types';
-import { Promise } from '@rx-angular/cdk/zone-less/browser';
 
 /**
  * We need this JSDoc comment for affecting ESDoc.
@@ -31,8 +31,8 @@ export class AsapAction<T> extends AsyncAction<T> {
     // one. If a microtask hasn't been scheduled yet, schedule one now. Return
     // the current scheduled microtask id.
     return (
-      scheduler.scheduled ||
-      (scheduler.scheduled = Immediate.setImmediate(
+      scheduler._scheduled ||
+      (scheduler._scheduled = immediateProvider.setImmediate(
         scheduler.flush.bind(scheduler, undefined)
       ))
     );
@@ -51,57 +51,11 @@ export class AsapAction<T> extends AsyncAction<T> {
     // If the scheduler queue is empty, cancel the requested microtask and
     // set the scheduled flag to undefined so the next AsapAction will schedule
     // its own.
-    if (scheduler.actions.length === 0) {
-      Immediate.clearImmediate(id);
-      scheduler.scheduled = undefined;
+    if (!scheduler.actions.some((action) => action.id === id)) {
+      immediateProvider.clearImmediate(id);
+      scheduler._scheduled = undefined;
     }
     // Return undefined so the action knows to request a new async id if it's rescheduled.
     return undefined;
   }
 }
-
-let nextHandle = 1;
-// The promise needs to be created lazily otherwise it won't be patched by Zones
-let resolved: Promise<any>;
-const activeHandles: { [key: number]: any } = {};
-
-/**
- * Finds the handle in the list of active handles, and removes it.
- * Returns `true` if found, `false` otherwise. Used both to clear
- * Immediate scheduled tasks, and to identify if a task should be scheduled.
- */
-function findAndClearHandle(handle: number): boolean {
-  if (handle in activeHandles) {
-    delete activeHandles[handle];
-    return true;
-  }
-  return false;
-}
-
-/**
- * Helper functions to schedule and unschedule microtasks.
- */
-const Immediate = {
-  setImmediate(cb: () => void): number {
-    const handle = nextHandle++;
-    activeHandles[handle] = true;
-    if (!resolved) {
-      resolved = Promise.resolve();
-    }
-    resolved.then(() => findAndClearHandle(handle) && cb());
-    return handle;
-  },
-
-  clearImmediate(handle: number): void {
-    findAndClearHandle(handle);
-  },
-};
-
-/**
- * Used for internal testing purposes only. Do not export from library.
- */
-export const TestTools = {
-  pending() {
-    return Object.keys(activeHandles).length;
-  },
-};

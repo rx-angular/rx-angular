@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { Scheduler } from './Scheduler';
+import { Scheduler } from './scheduler';
 import { SchedulerAction } from './types';
 
 /**

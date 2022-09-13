@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [1.6.1](https://github.com/rx-angular/rx-angular/compare/state@1.6.0...state@1.6.1) (2022-06-07)
+
+
+### Bug Fixes
+
+* add missing peerDependencies ([223b751](https://github.com/rx-angular/rx-angular/commit/223b751b9c14f67fe803d84872ffe56b005373c6)), closes [#1261](https://github.com/rx-angular/rx-angular/issues/1261)
+
+
+### Performance Improvements
+
+* **state:** improve connect checks performance ([916014c](https://github.com/rx-angular/rx-angular/commit/916014c744b45f7f629b7f249dff323c2c53fd27))
+
+
+
 # [1.6.0](/compare/state@1.5.1...state@1.6.0) (2022-03-05)
 
 

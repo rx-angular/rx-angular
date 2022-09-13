@@ -1,8 +1,8 @@
 module.exports = {
   bail: true,
   preset: '../../jest.preset.js',
-  coverageReporters: ['lcov', 'cobertura'],
-  coverageDirectory: '../../docs/test-coverage/template',
+  coverageReporters: ['lcov'],
+  coverageDirectory: '../../coverage/template',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
     'ts-jest': {

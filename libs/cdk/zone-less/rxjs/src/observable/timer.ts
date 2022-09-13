@@ -49,6 +49,7 @@ import { isNumeric, isScheduler } from './utils';
  * `dueTime` and ever increasing numbers after each `period` of time
  * thereafter.
  * @static true
+ * @deprecated will be removed with 1.0.0
  * @name timer
  * @owner Observable
  */
