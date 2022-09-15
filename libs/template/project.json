@@ -8,7 +8,8 @@
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/template/tsconfig.lib.json",
-        "project": "libs/template/ng-package.json"
+        "project": "libs/template/ng-package.json",
+        "updateBuildableProjectDepsInPackageJson": false
       },
       "dependsOn": [
         {
