@@ -134,8 +134,8 @@ By default the following configurations are set:
 ...
 import {RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG} from '@rx-angular/cdk/render-strategies';
 
-const CUSTOM_RX_ANGULAR_CONFIG: RxRenderStrategiesConfig<string> {
-  primaryStrategy: 'global';
+const CUSTOM_RX_ANGULAR_CONFIG: RxRenderStrategiesConfig<string> = {
+  primaryStrategy: 'global',
   patchZone: false
 }
 
