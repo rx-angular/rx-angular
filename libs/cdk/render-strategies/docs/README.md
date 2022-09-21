@@ -158,8 +158,8 @@ export class AnyModule {
 ...
 import {RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG} from '@rx-angular/cdk/render-strategies';
 
-const FEATURE_RX_ANGULAR_CONFIG: RxRenderStrategiesConfig<string> {
-  primaryStrategy: 'global';
+const FEATURE_RX_ANGULAR_CONFIG: RxRenderStrategiesConfig<string> = {
+  primaryStrategy: 'global',
   patchZone: false
 }
 
@@ -182,8 +182,8 @@ export class AnyFeatureModule {
 ...
 import {RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG} from '@rx-angular/cdk/render-strategies';
 
-const COMPONENT_RX_ANGULAR_CONFIG: RxRenderStrategiesConfig<string> {
-  primaryStrategy: 'global';
+const COMPONENT_RX_ANGULAR_CONFIG: RxRenderStrategiesConfig<string> = {
+  primaryStrategy: 'global',
   patchZone: false
 }
 
