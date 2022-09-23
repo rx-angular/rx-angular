@@ -58,16 +58,6 @@
       },
       "outputs": ["coverage/state"]
     },
-    "build-docs": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "nx test state --codeCoverage && nx build-test-coverage-badge state"
-          }
-        ]
-      }
-    },
     "perfBuild": {
       "executor": "@nrwl/node:build",
       "options": {

@@ -58,17 +58,6 @@
       },
       "outputs": ["coverage/template"]
     },
-    "build-docs": {
-      "executor": "@nrwl/workspace:run-commands",
-      "sequential": true,
-      "options": {
-        "commands": [
-          {
-            "command": "nx test template --codeCoverage && nx build-test-coverage-badge template"
-          }
-        ]
-      }
-    },
     "link": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {

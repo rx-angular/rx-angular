@@ -56,35 +56,3 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
             token: ${{ secrets.CODECOV_TOKEN }}
-
-  build-docs:
-    runs-on: ubuntu-latest
-
-    if: github.ref == 'refs/heads/main'
-
-    needs: [build]
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/setup
-
-      # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
-      # - run: yarn nx-cloud start-ci-run
-
-      - run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx run-many --projects=state,template,cdk --target=build-docs --parallel --maxParallel=3
-      - run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx build demos --prod
-
-      # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
-      # - run: yarn nx-cloud stop-all-agents
-
-      - uses: EndBug/add-and-commit@v4
-        with:
-          add: 'docs/*'
-          author_name: Github Action
-          message: 'chore(docs): update GitHub pages'
-          # Name of the branch to use, if different from the one that triggered the workflow
-          # Default: the branch that triggered the workflow (from GITHUB_REF)
-          ref: 'github-pages'
-        env:
-          # This is necessary in order to push a commit to the repo
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
