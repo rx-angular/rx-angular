@@ -48,7 +48,8 @@
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/cdk/tsconfig.lib.json",
-        "project": "libs/cdk/ng-package.json"
+        "project": "libs/cdk/ng-package.json",
+        "updateBuildableProjectDepsInPackageJson": false
       },
       "outputs": ["dist/libs/cdk"]
     },
