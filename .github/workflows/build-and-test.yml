@@ -48,7 +48,7 @@ jobs:
 
       # don't run build in parallel, can cause dead locks
       - name: Run Affected build
-        run: yarn nx affected:build --parallel=false
+        run: yarn nx affected:build --exclude=docs --parallel=false
 
       - run: yarn nx-cloud stop-all-agents
 
@@ -67,10 +67,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
+        with:
+          # Docusaurus needs Node.js 16
+          node-version: 16
 
       # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
       # - run: yarn nx-cloud start-ci-run
 
+      - run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx build docs
       - run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx run-many --projects=state,template,cdk --target=build-docs --parallel --maxParallel=3
       - run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx build demos --prod
 
@@ -79,7 +83,7 @@ jobs:
 
       - uses: EndBug/add-and-commit@v4
         with:
-          add: 'docs/*'
+          add: 'dist/apps/docs/*'
           author_name: Github Action
           message: 'chore(docs): update GitHub pages'
           # Name of the branch to use, if different from the one that triggered the workflow

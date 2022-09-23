@@ -47,6 +47,10 @@
     ]
   },
   "private": true,
+  "workspaces": [
+    "apps/**",
+    "libs/**"
+  ],
   "dependencies": {
     "@angular/animations": "12.2.16",
     "@angular/cdk": "12.2.13",
@@ -95,6 +99,7 @@
     "@nrwl/nx-cloud": "13.1.2",
     "@nrwl/tao": "12.10.1",
     "@nrwl/workspace": "12.10.1",
+    "@nx-plus/docusaurus": "12.2.0",
     "@size-limit/preset-big-lib": "^7.0.0",
     "@types/benchmark": "^2.1.0",
     "@types/jest": "27.0.2",
