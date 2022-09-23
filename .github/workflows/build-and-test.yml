@@ -72,14 +72,13 @@ jobs:
           node-version: 16
 
       # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
-      # - run: yarn nx-cloud start-ci-run
+      - run: yarn nx-cloud start-ci-run
 
-      - run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx build docs
-      - run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx run-many --projects=state,template,cdk --target=build-docs --parallel --maxParallel=3
-      - run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx build demos --prod
+      - run: yarn nx build docs
+      - run: yarn nx build demos --prod
 
       # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
-      # - run: yarn nx-cloud stop-all-agents
+      - run: yarn nx-cloud stop-all-agents
 
       - uses: EndBug/add-and-commit@v4
         with:
