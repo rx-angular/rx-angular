@@ -32,7 +32,6 @@ import {
 
 import {
   defer,
-  map,
   merge,
   NEVER,
   NextObserver,
@@ -41,8 +40,8 @@ import {
   ReplaySubject,
   Subject,
   Subscription,
-  filter,
 } from 'rxjs';
+import { map, filter } from 'rxjs/operators';
 
 /** @internal */
 type RxLetTemplateNames = 'nextTpl' | RxBaseTemplateNames;

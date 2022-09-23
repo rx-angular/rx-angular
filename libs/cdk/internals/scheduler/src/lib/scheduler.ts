@@ -460,6 +460,9 @@ function forceFrameRate(fps) {
     // reset the framerate
     yieldInterval = 5;
   }
+  // be aware of browser housekeeping work (~6ms per frame)
+  // according to https://developers.google.com/web/fundamentals/performance/rendering
+  yieldInterval = Math.max(5, yieldInterval - 6);
 }
 
 const performWorkUntilDeadline = () => {

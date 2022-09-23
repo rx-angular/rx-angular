@@ -13,14 +13,17 @@ import {
   OnInit,
   TemplateRef,
   TrackByFunction,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
-import { coerceDistinctWith, coerceObservableWith } from '@rx-angular/cdk/coercing';
+import {
+  coerceDistinctWith,
+  coerceObservableWith,
+} from '@rx-angular/cdk/coercing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import {
   createListTemplateManager,
   RxListManager,
-  RxListViewComputedContext
+  RxListViewComputedContext,
 } from '@rx-angular/cdk/template';
 
 import {
@@ -29,8 +32,8 @@ import {
   ReplaySubject,
   Subject,
   Subscription,
-  switchAll
 } from 'rxjs';
+import { switchAll } from 'rxjs/operators';
 import { RxForViewContext } from './for-view-context';
 
 /**
