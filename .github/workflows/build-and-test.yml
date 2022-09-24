@@ -75,7 +75,6 @@ jobs:
       - run: yarn nx-cloud start-ci-run
 
       - run: yarn nx build docs
-      - run: yarn nx build demos --prod
 
       # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
       - run: yarn nx-cloud stop-all-agents
