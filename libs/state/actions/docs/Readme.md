@@ -1,12 +1,12 @@
 # Resources
 
 **Example applications:**  
-A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-state-actions).
+A example application is available on [GitHub](https://github.com/tastejs/angular-movies/tree/main/projects/movies/src/app/pages/movie-detail-page).
 
 # Motivation
 
 Signals, or a more commonly used name actions, are a common part of state management and reactive systems in general. 
-Even if `@rx-angular/state` provides `set` method, sometimes you need to add behaviour to your user input or incoming events.
+Even if `@rx-angular/state` provides a `set` method, sometimes you need to add behaviour to your user input or incoming events.
 
 Subjects are normally used to implement this feature. This leads, especially in bigger applications, to messy code that is bloated with Subjects.
 
@@ -101,8 +101,8 @@ It mostly is used in combination with state management libs to handle user inter
 
 ## Setup
 
-The coalescing features can be used directly from the `cdk` package or indirectly through the `state` package.
-To do so, install the `cdk` package and, if needed, the packages depending on it:
+The actions features can be used directly from the `state` package.
+To do so, install the `@rx-angular/state` package:
 
 1. Install `@rx-angular/state`
 
@@ -127,7 +127,7 @@ interface Commands {
 Next we can use the typing to create the action object:
 
 ```typescript
- commands = getActions<Commands>();
+ commands = factory.create<Commands>();
  ```
 
 The object can now be used to emit signals over setters:
@@ -149,10 +149,11 @@ You can also emit multiple signals at once:
  commands({refreshUser: true, refreshList: true});
 ```
 
-If there is the need to make a combined signal you can also select multiple signals and get thier emissions in one stream:
+If there is the need to make a combined signal you can also select multiple signals and get their emissions in one stream:
 ```typescript
  refreshUserOrList$ = commands.$(['refreshUser', 'refreshList']);
 ```
+This is the equivalent to "merge" the actions together. This first emission of a single action will also emit first in the combined channel. 
 
 ## Signals in components
 
@@ -169,7 +170,7 @@ interface UiActions {
 
 @Component({
 template: `
-<input (input)="ui.searchInput($event)" /> Search for: {{ui.search$ | async}}<br/>
+<input (input)="ui.searchInput($event?.target?.value)" /> Search for: {{ui.search$ | async}}<br/>
 <button (click)="ui.submitBtn()">Submit<button><br/>
 <ul>
   <li *ngFor="let item of list$ | async as list">{{item}}</li>
@@ -177,7 +178,7 @@ template: `
 providers: [RxState, RxActionFactory]
 })
 class Component {
-  ui = factory.create({searchInput: (e) => e?.target?.value});
+  ui = factory.create();
   list$ = this.state.select('list');
   submittedSearchQuery$ = this.ui.submitBtn$.pipe(
     withLatestFrom(this.ui.search$), 
@@ -230,7 +231,7 @@ template: `
 providers: [RxState, RxActionFactory]
 })
 class Component {
-  //                                (e) => e.target ? e.target.value : e
+  //  eventValue => (e) => e.target ? e.target.value : e
   ui = factory.create({searchInput: eventValue});
   list$ = this.state.select('list');
   submittedSearchQuery$ = this.ui.submitBtn$.pipe(
