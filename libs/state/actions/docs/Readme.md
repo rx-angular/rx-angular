@@ -22,8 +22,8 @@ template: `
 </ul>
 `})
 class Component {
-  private _submitBtn = new Sunject<void>();
-  private _searchInput = new Sunject<string>();
+  private _submitBtn = new Subject<void>();
+  private _searchInput = new Subject<string>();
     
   set submitBtn() {
     _submitBtn.next()
