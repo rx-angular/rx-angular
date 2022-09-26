@@ -4,26 +4,6 @@
   "sourceRoot": "libs/cdk/src",
   "prefix": "rx-angular",
   "targets": {
-    "build-test-coverage-badge": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/cdk/cobertura-coverage.xml -d docs/test-coverage/cdk"
-          }
-        ]
-      }
-    },
-    "build-docs": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "nx test cdk --codeCoverage && nx build-test-coverage-badge cdk"
-          }
-        ]
-      }
-    },
     "build": {
       "executor": "@nrwl/workspace:run-commands",
       "dependsOn": [
@@ -58,7 +38,8 @@
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/cdk/tsconfig.lib.json",
-        "project": "libs/cdk/ng-package.json"
+        "project": "libs/cdk/ng-package.json",
+        "updateBuildableProjectDepsInPackageJson": false
       },
       "outputs": ["dist/libs/cdk"]
     },
@@ -66,9 +47,10 @@
       "executor": "@nrwl/jest:jest",
       "options": {
         "jestConfig": "libs/cdk/jest.config.js",
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "codeCoverage": true
       },
-      "outputs": ["coverage/libs/cdk"]
+      "outputs": ["coverage/cdk"]
     },
     "publish": {
       "executor": "@nrwl/workspace:run-commands",

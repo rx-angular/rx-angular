@@ -1,0 +1,11 @@
+.references {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.referenceSvg {
+  width: 200px;
+  height: 100px;
+}

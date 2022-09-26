@@ -15,6 +15,7 @@ import {
 } from './model';
 import { coalescingManager, coalescingObj } from '@rx-angular/cdk/coalescing';
 
+// set default to 60fps
 forceFrameRate(60);
 
 const immediateStrategy: RxStrategyCredentials = {
