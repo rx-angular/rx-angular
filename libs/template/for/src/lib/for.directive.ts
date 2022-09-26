@@ -200,7 +200,7 @@ declare const ngDevMode: boolean;
  * This is a known issue which has never been solved for `ngFor` (or other structural directives) especially in
  * combination with `CD OnPush` see here: (https://github.com/angular/angular/pull/35428)
  * `RxFor` solves this issue for you by providing a simple input parameter `parent: boolean`.
- * If set to `true`, `*rxFor` will automatically detect every other `Component` where its
+ * If value is set to `true` (default is `true`), `*rxFor` will automatically detect every other `Component` where its
  * `EmbeddedView`s were inserted into. Those components will get change detected as well in order to force
  * update their state accordingly.
  *
@@ -321,7 +321,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /**
    * @description
-   *  If `parent` is set to `true` (default to `false`), `*rxFor` will automatically detect every other `Component`
+   *  If `parent` is set to `true` (default to `true`), `*rxFor` will automatically detect every other `Component`
    *   where its
    * `EmbeddedView`s were inserted into. Those components will get change detected as well in order to force
    * update their state accordingly. In the given example, `AppListComponent` will get notified about which insert
