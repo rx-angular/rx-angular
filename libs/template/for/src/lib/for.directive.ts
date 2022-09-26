@@ -13,17 +13,14 @@ import {
   OnInit,
   TemplateRef,
   TrackByFunction,
-  ViewContainerRef,
+  ViewContainerRef
 } from '@angular/core';
-import {
-  coerceDistinctWith,
-  coerceObservableWith,
-} from '@rx-angular/cdk/coercing';
+import { coerceDistinctWith, coerceObservableWith } from '@rx-angular/cdk/coercing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import {
   createListTemplateManager,
   RxListManager,
-  RxListViewComputedContext,
+  RxListViewComputedContext
 } from '@rx-angular/cdk/template';
 
 import {
@@ -31,10 +28,11 @@ import {
   Observable,
   ReplaySubject,
   Subject,
-  Subscription,
+  Subscription
 } from 'rxjs';
 import { switchAll } from 'rxjs/operators';
 import { RxForViewContext } from './for-view-context';
+
 
 /**
  * @description Will be provided through Terser global definitions by Angular CLI
@@ -126,7 +124,6 @@ declare const ngDevMode: boolean;
  * - Immutable as well as mutable data structures (`trackBy`)
  * - Provide a comprehensive set of context variables for each view
  * - Provide a way to fix `ChangeDetection` issues in `Projected Views` scenarios
- * - automatically runs out of `NgZone`, provide an easy way to opt-in (`patchZone`)
  * - Notify about when rendering of child templates is finished (`renderCallback`)
  * - Reactive as well as imperative values in the template (`ngFor` drop-in replacement)
  * - `ListManager`: special logic for differ mechanism to avoid over-rendering; abstracts away low level logic
@@ -203,7 +200,7 @@ declare const ngDevMode: boolean;
  * This is a known issue which has never been solved for `ngFor` (or other structural directives) especially in
  * combination with `CD OnPush` see here: (https://github.com/angular/angular/pull/35428)
  * `RxFor` solves this issue for you by providing a simple input parameter `parent: boolean`.
- * If set to `true`, `*rxFor` will automatically detect every other `Component` where its
+ * If value is set to `true` (default is `true`), `*rxFor` will automatically detect every other `Component` where its
  * `EmbeddedView`s were inserted into. Those components will get change detected as well in order to force
  * update their state accordingly.
  *
@@ -220,73 +217,6 @@ declare const ngDevMode: boolean;
  *     <div>{{ item }}</div>
  *   </app-list-item>
  * </app-list-component>
- * ```
- * ### `NgZone` patch
- *
- * By default `*rxFor` will create it's `EmbeddedViews` outside of `NgZone` which drastically speeds up the
- * performance.
- * There are scenarios where you want to opt-in to `NgZone` though. If views are created out of `NgZone`, all
- * `EventListeners` attached to them run out `NgZone` as well.
- *
- * Take a look at the following example:
- *
- * ```ts
- * \@Component({
- *   selector: 'app-root',
- *   template: `
- *     <!-- clickedHeroName won't get updated due to `NgZone` not noticing the click -->
- *     {{ clickedHeroName }}
- *     <ng-container *rxFor="let hero of heroes$; trackBy: trackHero">
- *       <!-- click runs out of `NgZone` -->
- *       <button (click)="heroClicked(hero)">{{ hero.name }}</button>
- *     </ng-container>
- *   `
- * })
- * export class AppComponent {
- *   clickedHeroName = '';
- *
- *   heroClicked(hero: Hero) {
- *     // this will run out of `NgZone` and thus not update the DOM
- *     this.clickedHeroName = hero.name;
- *   }
- * }
- * ```
- *
- * There are several ways to get around this issue.
- * `*rxFor` can be configured to create views inside of `NgZone` with the `patchZone` flag:
- *
- * ```html
- * <ng-container *rxFor="let hero of heroes$; trackBy: trackHero; patchZone: true">
- *   <!-- click now gets detected by `NgZone` -->
- *   <button (click)="heroClicked(hero)">{{ hero.name }}</button>
- * </ng-container>
- * ```
- *
- * However, `patchZone: true` can in some cases have a negative impact on the performance of the `*rxFor` Directive.
- * Since the creation of the `EmbeddedViews` will most likely happen in batches, every batch will result in one
- * `NgZone` cycle resulting in a possible re-rendering of many other `Components`.
- *
- * Another approach would be to manually detect changes coming from `unpatched` EventListeners or wrapping them in
- * `NgZone`.
- *
- * ```ts
- * export class AppComponent {
- *   clickedHeroName = '';
- *
- *   constructor(
- *     private cdRef: ChangeDetectorRef, // option1
- *     private ngZone: NgZone // option 2
- *   ) {}
- *
- *   heroClicked(hero: Hero) {
- *     // this will run out of `NgZone` and thus not update the DOM
- *     this.clickedHeroName = hero.name;
- *     this.cdRef.markForCheck(); // option 1
- *
- *     // option 2
- *     this.ngZone.run(() => this.clickedHeroName = hero.name);
- *   }
- * }
  * ```
  *
  *
@@ -391,7 +321,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /**
    * @description
-   *  If `parent` is set to `true` (default to `false`), `*rxFor` will automatically detect every other `Component`
+   *  If `parent` is set to `true` (default to `true`), `*rxFor` will automatically detect every other `Component`
    *   where its
    * `EmbeddedView`s were inserted into. Those components will get change detected as well in order to force
    * update their state accordingly. In the given example, `AppListComponent` will get notified about which insert
