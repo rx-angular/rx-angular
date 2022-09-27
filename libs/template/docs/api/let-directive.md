@@ -87,9 +87,9 @@ You can also use template anchors and display template's content for different o
   *rxLet="
     observableNumber$;
     let n;
-    rxError: error;
-    rxSuspense: suspense;
-    rxComplete: complete;
+    error: error;
+    suspense: suspense;
+    complete: complete;
   "
 >
   <app-number [number]="n"></app-number>
