@@ -87,16 +87,16 @@ You can also use template anchors and display template's content for different o
   *rxLet="
     observableNumber$;
     let n;
-    rxError: error;
-    rxSuspense: suspense;
-    rxComplete: complete;
+    error: errorTemplate;
+    suspense: suspenseTemplate;
+    complete: completeTemplate;
   "
 >
   <app-number [number]="n"></app-number>
 </ng-container>
-<ng-template #error>ERROR</ng-template>
-<ng-template #complete>COMPLETE</ng-template>
-<ng-template #suspense>SUSPENSE</ng-template>
+<ng-template #errorTemplate>ERROR</ng-template>
+<ng-template #completeTemplate>COMPLETE</ng-template>
+<ng-template #suspenseTemplate>SUSPENSE</ng-template>
 ```
 
 Internally, `*rxLet` is using a simple "view memoization" - it caches all anchored template references and re-uses
@@ -187,7 +187,7 @@ A template to show if the bound Observable is in "complete" state.
 _Example_
 
 ```TypeScript
-<ng-container *rxLet="hero$; let hero; rxComplete: completeTemplate">
+<ng-container *rxLet="hero$; let hero; complete: completeTemplate">
   <app-hero [hero]="hero"></app-hero>
 </ng-container>
 <ng-template #completeTemplate>
@@ -204,7 +204,7 @@ A template to show if the bound Observable is in "error" state.
 _Example_
 
 ```TypeScript
-<ng-container *rxLet="hero$; let hero; rxError: errorTemplate">
+<ng-container *rxLet="hero$; let hero; error: errorTemplate">
   <app-hero [hero]="hero"></app-hero>
 </ng-container>
 <ng-template #errorTemplate>
@@ -221,7 +221,7 @@ A template to show before the first value is emitted from the bound Observable.
 _Example_
 
 ```TypeScript
-<ng-container *rxLet="hero$; let hero; rxSuspense: suspenseTemplate">
+<ng-container *rxLet="hero$; let hero; suspense: suspenseTemplate">
   <app-hero [hero]="hero"></app-hero>
 </ng-container>
 <ng-template #suspenseTemplate>
