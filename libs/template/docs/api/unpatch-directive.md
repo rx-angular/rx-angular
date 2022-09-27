@@ -1,4 +1,4 @@
-## 🧪 UnpatchEventsDirective
+## 🧪 UnpatchDirective
 
 The `unpatch` directive helps developers to partially deactivate `NgZone`, as well as getting rid
 of unnecessary renderings through zones `addEventListener` patches.
