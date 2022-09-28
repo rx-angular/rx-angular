@@ -15,20 +15,21 @@
 - [LetDirective (`*rxLet`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md) 
 - [ForDirective (`*rxFor`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/for-directive.md) 
 - [TemplateDirective (`*rxTemplate`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/template-directive.md) 
+- [UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/unpatch.md)
  
 **Experimental features**
 
-- [IfDirective (`*rxIf`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/if-directive.md) 
+- [🧪 IfDirective (`*rxIf`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/if-directive.md) 
 - [🧪 Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/viewport-prio.md)
-- [🧪 UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/unpatch.md)
  
 All experimental features are very stable and already tested in production apps for multiple month. The reason to have them in experimental is so we can make small typing changes without breaking changes.
  
 ### Concepts
 
-- [reactive context]()
+- [reactive context](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/reactive-context.md)
+- [context trigger]()
 - [render strategies]()
-- []()
+- [render callback]()
 
 ## Installation
 
