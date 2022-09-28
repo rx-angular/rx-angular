@@ -63,7 +63,7 @@ In short, we can handle the following states in the template:
 Read detailed information about the [reactive state]([reactive context](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/reactive-context.md) in our docs. 
 
 ## Contextual template state
-
+![Contextual-State](https://user-images.githubusercontent.com/10064416/192659019-279925c4-bb85-44df-a6e3-7d160fdb1874.png)
 Contextual template state is [reactive context]() as specification. This could also be visualized in component templates
 
 ## Local variables
