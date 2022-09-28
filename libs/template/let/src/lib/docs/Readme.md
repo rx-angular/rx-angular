@@ -161,7 +161,7 @@ This can be achieved by using Angular's native 'let' syntax `*rxLet="observableN
 ```
 
 ## Using the reactive context over local variables
-
+![Contextual-State--template-vs-variable](https://user-images.githubusercontent.com/10064416/192660150-643c4d37-5326-4ba2-ad84-e079890b3f2f.png)
 A nice feature of the `*rxLet` directive is, it provides a set of [local variables]() to access the [reactive context state]() in the tempalte. 
 
 * ### Context Variables
