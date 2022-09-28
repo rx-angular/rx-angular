@@ -5,5 +5,7 @@
     "flatModuleFile": "state",
     "entryFile": "src/index.ts"
   },
-  "allowedNonPeerDependencies": ["ng-morph"]
+  "allowedNonPeerDependencies": [
+    "ng-morph"
+  ]
 }

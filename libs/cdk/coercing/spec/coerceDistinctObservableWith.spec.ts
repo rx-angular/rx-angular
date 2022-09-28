@@ -1,4 +1,12 @@
-import { concatAll, exhaustAll, mergeAll, Observable, ObservableInput, Subject, take } from 'rxjs';
+import {
+  concatAll,
+  exhaustAll,
+  mergeAll,
+  Observable,
+  ObservableInput,
+  Subject,
+  take,
+} from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 
 import { jestMatcher } from '@test-helpers';
@@ -13,7 +21,7 @@ function createInputStream(
 ) {
   cold(marble, values)
     .pipe(take(Object.keys(values).length))
-    .subscribe(value => inputHandler.next(value));
+    .subscribe((value) => inputHandler.next(value));
 }
 
 /** @test {coerceDistinctWith} */
@@ -33,16 +41,18 @@ describe('coerceDistinctWith', () => {
 
   describe('default flattening - switchAll', () => {
     beforeEach(() => {
-      coercePipeline$ = inputHandler$.asObservable().pipe(coerceDistinctWith<string>());
+      coercePipeline$ = inputHandler$
+        .asObservable()
+        .pipe(coerceDistinctWith<string>());
     });
 
     it('should coerce non-observable values', () => {
       testScheduler.run(({ cold, expectObservable }) => {
-        const source =   '-a|';
+        const source = '-a|';
         const expected = '-a-';
 
         const values = {
-          a: 'hello dear contributor'
+          a: 'hello dear contributor',
         };
         const expectedValues = {
           a: 'hello dear contributor',
@@ -56,11 +66,11 @@ describe('coerceDistinctWith', () => {
 
     it('should emit unique values', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-        const source =       '-a-bc|';
-        const expected =     '-a--c-';
+        const source = '-a-bc|';
+        const expected = '-a--c-';
         const valueSubs = {
-          b:                 '---(^!)----',
-          c:                 '----(^!)---',
+          b: '---(^!)----',
+          c: '----(^!)---',
         };
 
         const values = {
@@ -70,7 +80,7 @@ describe('coerceDistinctWith', () => {
         };
         const expectedValues = {
           a: 'hello dear contributor',
-          c: 'hello world'
+          c: 'hello world',
         };
 
         createInputStream(cold, source, values, inputHandler$);
@@ -83,18 +93,23 @@ describe('coerceDistinctWith', () => {
 
     it('should coerce both observable and non-observable values', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-        const source =       '-a-b-----c-d|';
-        const expected =     '-a-(bc)---de-';
+        const source = '-a-b-----c-d|';
+        const expected = '-a-(bc)---de-';
         const valueSubs = {
-          b:                 '---(^!)----',
-          c:                 '---------^-!',
-          d:                 '-----------(^!)',
+          b: '---(^!)----',
+          c: '---------^-!',
+          d: '-----------(^!)',
         };
 
         const values = {
           a: 'hello dear contributor',
           b: cold('(ab|)', { a: 'hello', b: 'world' }),
-          c: cold('-a-b-c-d|', { a: 'hello', b: 'world', c: 'with', d: 'delay' }),
+          c: cold('-a-b-c-d|', {
+            a: 'hello',
+            b: 'world',
+            c: 'with',
+            d: 'delay',
+          }),
           d: cold('(a|)', { a: 'the quick brown fox jumps over the lazy dog' }),
         };
         const expectedValues = {
@@ -117,9 +132,9 @@ describe('coerceDistinctWith', () => {
 
   describe('flattening via concatAll', () => {
     beforeEach(() => {
-      coercePipeline$ = inputHandler$.asObservable().pipe(
-        coerceDistinctWith<string>(concatAll())
-      );
+      coercePipeline$ = inputHandler$
+        .asObservable()
+        .pipe(coerceDistinctWith<string>(concatAll()));
     });
 
     it('should coerce non-observable values', () => {
@@ -128,7 +143,7 @@ describe('coerceDistinctWith', () => {
         const expected = '-a-';
 
         const values = {
-          a: 'hello dear contributor'
+          a: 'hello dear contributor',
         };
         const expectedValues = {
           a: 'hello dear contributor',
@@ -142,11 +157,11 @@ describe('coerceDistinctWith', () => {
 
     it('should emit unique values', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-        const source =       '-a-bc|';
-        const expected =     '-a--c-';
+        const source = '-a-bc|';
+        const expected = '-a--c-';
         const valueSubs = {
-          b:                 '---(^!)----',
-          c:                 '----(^!)---',
+          b: '---(^!)----',
+          c: '----(^!)---',
         };
 
         const values = {
@@ -156,7 +171,7 @@ describe('coerceDistinctWith', () => {
         };
         const expectedValues = {
           a: 'hello dear contributor',
-          c: 'hello world'
+          c: 'hello world',
         };
 
         createInputStream(cold, source, values, inputHandler$);
@@ -169,18 +184,23 @@ describe('coerceDistinctWith', () => {
 
     it('should coerce both observable and non-observable values', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-        const source =     '-a-b----c-d--------|'
-        const expected =   '-a-(bc)--d-e-f-gh';
+        const source = '-a-b----c-d--------|';
+        const expected = '-a-(bc)--d-e-f-gh';
         const valueSubs = {
-          b:               '---(^!)',
-          c:               '--------^-------!',
-          d:               '----------------(^!)',
+          b: '---(^!)',
+          c: '--------^-------!',
+          d: '----------------(^!)',
         };
 
         const values = {
           a: 'hello dear contributor',
           b: cold('(ab|)', { a: 'hello', b: 'world' }),
-          c: cold('-a-b-c-d|', { a: 'hello', b: 'world', c: 'with', d: 'delay' }),
+          c: cold('-a-b-c-d|', {
+            a: 'hello',
+            b: 'world',
+            c: 'with',
+            d: 'delay',
+          }),
           d: cold('(a|)', { a: 'the quick brown fox jumps over the lazy dog' }),
         };
         const expectedValues = {
@@ -206,9 +226,9 @@ describe('coerceDistinctWith', () => {
 
   describe('flattening via mergeAll', () => {
     beforeEach(() => {
-      coercePipeline$ = inputHandler$.asObservable().pipe(
-        coerceDistinctWith<string>(mergeAll())
-      );
+      coercePipeline$ = inputHandler$
+        .asObservable()
+        .pipe(coerceDistinctWith<string>(mergeAll()));
     });
 
     it('should coerce non-observable values', () => {
@@ -217,7 +237,7 @@ describe('coerceDistinctWith', () => {
         const expected = '-a-';
 
         const values = {
-          a: 'hello dear contributor'
+          a: 'hello dear contributor',
         };
         const expectedValues = {
           a: 'hello dear contributor',
@@ -231,11 +251,11 @@ describe('coerceDistinctWith', () => {
 
     it('should emit unique values', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-        const source =       '-a-bc|';
-        const expected =     '-a--c-';
+        const source = '-a-bc|';
+        const expected = '-a--c-';
         const valueSubs = {
-          b:                 '---(^!)----',
-          c:                 '----(^!)---',
+          b: '---(^!)----',
+          c: '----(^!)---',
         };
 
         const values = {
@@ -245,7 +265,7 @@ describe('coerceDistinctWith', () => {
         };
         const expectedValues = {
           a: 'hello dear contributor',
-          c: 'hello world'
+          c: 'hello world',
         };
 
         createInputStream(cold, source, values, inputHandler$);
@@ -258,18 +278,23 @@ describe('coerceDistinctWith', () => {
 
     it('should coerce both observable and non-observable values', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-        const source =     '-a-b----c-d-------|';
-          const expected =   '-a-(bc)--dhe-f-g---';
-          const valueSubs = {
-            b:               '---(^!)',
-            c:               '--------^-------!',
-            d:               '----------(^!)',
-          };
+        const source = '-a-b----c-d-------|';
+        const expected = '-a-(bc)--dhe-f-g---';
+        const valueSubs = {
+          b: '---(^!)',
+          c: '--------^-------!',
+          d: '----------(^!)',
+        };
 
         const values = {
           a: 'hello dear contributor',
           b: cold('(ab|)', { a: 'hello', b: 'world' }),
-          c: cold('-a-b-c-d|', { a: 'hello', b: 'world', c: 'with', d: 'delay' }),
+          c: cold('-a-b-c-d|', {
+            a: 'hello',
+            b: 'world',
+            c: 'with',
+            d: 'delay',
+          }),
           d: cold('(a|)', { a: 'the quick brown fox jumps over the lazy dog' }),
         };
         const expectedValues = {
@@ -295,9 +320,9 @@ describe('coerceDistinctWith', () => {
 
   describe('flattening via exhaustAll', () => {
     beforeEach(() => {
-      coercePipeline$ = inputHandler$.asObservable().pipe(
-        coerceDistinctWith<string>(exhaustAll())
-      );
+      coercePipeline$ = inputHandler$
+        .asObservable()
+        .pipe(coerceDistinctWith<string>(exhaustAll()));
     });
 
     it('should coerce non-observable values', () => {
@@ -306,7 +331,7 @@ describe('coerceDistinctWith', () => {
         const expected = '-a-';
 
         const values = {
-          a: 'hello dear contributor'
+          a: 'hello dear contributor',
         };
         const expectedValues = {
           a: 'hello dear contributor',
@@ -320,18 +345,23 @@ describe('coerceDistinctWith', () => {
 
     it('should only emit 1 value since the coerced value for the first emission never completes', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-        const source =     '-a-b----c-d--------|'
-        const expected =   '-a------------------';
+        const source = '-a-b----c-d--------|';
+        const expected = '-a------------------';
         const valueSubs = {
-          b:               '-----',
-          c:               '-----',
-          d:               '-----',
+          b: '-----',
+          c: '-----',
+          d: '-----',
         };
 
         const values = {
-          a: 'hello dear contributor',
+          a: cold('a', { a: 'hello dear contributor' }),
           b: cold('(ab|)', { a: 'hello', b: 'world' }),
-          c: cold('-a-b-c-d|', { a: 'hello', b: 'world', c: 'with', d: 'delay' }),
+          c: cold('-a-b-c-d|', {
+            a: 'hello',
+            b: 'world',
+            c: 'with',
+            d: 'delay',
+          }),
           d: cold('(a|)', { a: 'the quick brown fox jumps over the lazy dog' }),
         };
         const expectedValues = {
@@ -347,5 +377,4 @@ describe('coerceDistinctWith', () => {
       });
     });
   });
-
 });

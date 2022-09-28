@@ -2,7 +2,7 @@ import { Component, Input, Output } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'rxa-state-child-selections',
@@ -29,16 +29,16 @@ export class RxStateChildSelectionsComponent {
     }
   }
 
-  formGroup$: Observable<FormGroup> = this.state$.pipe(
+  formGroup$: Observable<UntypedFormGroup> = this.state$.pipe(
     startWith({}),
     map((input) => this.getFormGroupFromConfig(input))
   );
 
   @Output() formValueChange = this.formGroup$.pipe(
-    switchMap((fg: FormGroup) => fg.valueChanges)
+    switchMap((fg: UntypedFormGroup) => fg.valueChanges)
   );
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: UntypedFormBuilder) {
   }
 
   select(o$: Observable<any>) {

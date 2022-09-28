@@ -52,9 +52,7 @@ export function createStateChecker<T extends object>(
   }
 
   function checkSubscriptions(service: RxState<T>, numTotalSubs: number): void {
-    const actual = (service as any).subscription._teardowns
-      ? (service as any).subscription._teardowns.length
-      : 0;
+    const actual = (service as any).subscription?._finalizers?.length ?? 0;
     assert(actual, numTotalSubs);
   }
 }

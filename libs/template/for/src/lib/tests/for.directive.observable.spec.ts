@@ -189,7 +189,7 @@ describe('rxFor with observables', () => {
       errorHandler = createErrorHandler();
       const errorSpy = jest.spyOn(errorHandler, 'handleError');
       const expectedError = new Error(
-        "Cannot find a differ supporting object 'whaaa' of type 'string'"
+        "NG0901: Cannot find a differ supporting object 'whaaa' of type 'string'"
       );
       getComponent().itemsHot$.next(<any>'whaaa');
       fixture.detectChanges();
@@ -204,7 +204,7 @@ describe('rxFor with observables', () => {
       errorHandler = createErrorHandler();
       const errorSpy = jest.spyOn(errorHandler, 'handleError');
       const expectedError = new Error(
-        "Error trying to diff 'whaaa'. Only arrays and iterables are allowed"
+        "NG0900: Error trying to diff 'whaaa'. Only arrays and iterables are allowed"
       );
       detectChangesAndExpectText('1;2;');
 

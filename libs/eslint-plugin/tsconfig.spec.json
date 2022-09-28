@@ -7,9 +7,14 @@
   },
   "include": [
     "**/*.spec.ts",
+    "**/*.test.ts",
     "**/*.spec.tsx",
+    "**/*.test.tsx",
     "**/*.spec.js",
+    "**/*.test.js",
     "**/*.spec.jsx",
-    "**/*.d.ts"
+    "**/*.test.jsx",
+    "**/*.d.ts",
+    "jest.config.ts"
   ]
 }

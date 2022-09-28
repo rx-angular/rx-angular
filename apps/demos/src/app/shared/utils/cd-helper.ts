@@ -1,4 +1,4 @@
-import { ApplicationRef, ChangeDetectorRef, Injectable, ɵdetectChanges, ɵmarkDirty } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, Injectable, ɵdetectChanges } from '@angular/core';
 
 
 @Injectable()
@@ -21,7 +21,7 @@ export class CdHelper {
   }
 
   markDirty() {
-    ɵmarkDirty((this.cdRef as any).context);
+    throw new Error('not implemented');
   }
 
   detectChanges() {

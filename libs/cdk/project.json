@@ -1,6 +1,5 @@
 {
   "projectType": "library",
-  "root": "libs/cdk",
   "sourceRoot": "libs/cdk/src",
   "prefix": "rx-angular",
   "targets": {
@@ -46,7 +45,7 @@
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
-        "jestConfig": "libs/cdk/jest.config.js",
+        "jestConfig": "libs/cdk/jest.config.ts",
         "passWithNoTests": true,
         "codeCoverage": true
       },

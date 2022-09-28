@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { FormGhostComponent } from '../../../../shared/ghost-elements';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'rxa-v4-b',
@@ -39,7 +39,7 @@ export class V4BComponent {
   @Output()
   valueChange = new Subject<number>();
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: UntypedFormBuilder) {
   }
 
 }

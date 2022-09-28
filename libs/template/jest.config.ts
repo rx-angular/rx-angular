@@ -1,15 +1,17 @@
-module.exports = {
-  displayName: 'ssr',
+/* eslint-disable */
+export default {
+  bail: true,
   preset: '../../jest.preset.js',
+  coverageReporters: ['lcov'],
+  coverageDirectory: '../../coverage/template',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
     'ts-jest': {
-      stringifyContentPathRegex: '\\.(html|svg)$',
-
       tsconfig: '<rootDir>/tsconfig.spec.json',
+      stringifyContentPathRegex: '\\.(html|svg)$',
     },
   },
-  coverageDirectory: '../../coverage/apps/ssr',
+  displayName: 'template',
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
