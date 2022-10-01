@@ -1,8 +1,3 @@
-# Resources
-
-**Example applications:**  
-A demo application is available on [GitHub](https://github.com/tastejs/angular-movies).
-
 # Motivation
 
 In Angular there are no out of the box ways to handle asyncronouse values in the template.
@@ -51,7 +46,9 @@ It mostly is used in combination with state management libs to handle user inter
 # Concepts
 
 ## Reactive context
+
 ![Reactive-Context](https://user-images.githubusercontent.com/10064416/192658822-67b51256-1c4a-49c7-8c48-6040b666d8a6.png)
+
 As asynchronous values to have special states.
 Those states are always hard to handle and produce brittle code, especially in the tenplate.
 
@@ -62,9 +59,11 @@ In short, we can handle the following states in the template:
 
 Read detailed information about the [reactive state]([reactive context](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/reactive-context.md) in our docs. 
 
-## Contextual template state
+## Contextual state in the template
+
 ![Contextual-State](https://user-images.githubusercontent.com/10064416/192659019-279925c4-bb85-44df-a6e3-7d160fdb1874.png)
-Contextual template state is [reactive context]() as specification. This could also be visualized in component templates
+
+Contextual template state is [reactive context]() accessible in the template. This can help to handle loading spinner, error and success messages. 
 
 ## Local variables
    
@@ -97,6 +96,11 @@ With directive's we can now provide custom values to the consumer.
     even: {{ e }}    
 <ng-container/>
 ```
+
+## Template Slots
+
+@TODO
+
 # Features
 
 **DX Features**
@@ -105,12 +109,13 @@ Local Variables
 - error, complete, suspense
 - reduces boilerplate (multiple `async` pipe's
 - a unified/structured way of handling `null` and `undefined`
+- works also with static variables `*rxLet="42; let n"`
 
 Inputs
-- 
+- @TODO
 
 Outputs
-- 
+- @TODO
 
 **Performance Features**
 
@@ -148,6 +153,15 @@ export class AnyComponent {}
 
 # Basic Usage
 
+> **⚠ Notice:**  
+> By default `*rxLet` is optimized for performance out of the box.
+> 
+> This includes:
+> - The default render strategy is [`normal`](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md). This ensures non-blocking rendering. See [strategy configuration](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md#Default-configuration) if you want to change it. 
+> - Runs the `EmbeddedView` creation outside of `NgZone`. See [how to opt-in to `NgZone`](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md) if you want to change it.
+> - Creates templates lazy and manages multiple template instances
+> 
+
 ## Binding an Observable to a local variable in the template
 
 The `*rxLet` directive makes it easy to work with reactive data streams in the template.
@@ -160,20 +174,25 @@ This can be achieved by using Angular's native 'let' syntax `*rxLet="observableN
 </ng-container>
 ```
 
+## Using the reactive context
+
 ## Using the reactive context over local variables
 ![Contextual-State--template-vs-variable](https://user-images.githubusercontent.com/10064416/192660150-643c4d37-5326-4ba2-ad84-e079890b3f2f.png)
-A nice feature of the `*rxLet` directive is, it provides a set of [local variables]() to access the [reactive context state]() in the tempalte. 
 
-* ### Context Variables
+A nice feature of the `*rxLet` directive is, it provides 2 ways to access the [reactive context state]() in the tempalte:
+- local variables
+- templates
+
+### Context Variables
  
-  The following context variables are available for each template:
+The following context variables are available for each template:
  
  - $implicit: `T` // the default variable accessed by `let val`
  - error: `undefined` | `Error`
  - complete: `undefined` |`boolean`
  - suspense: `undefined` |`true` 
  
- You can use the as likek this:
+ You can use the as like this:
  
 ```html
 <ng-container *rxLet="observableNumber$; let n; let s = suspense; let e = error, let c = complete">
@@ -187,7 +206,7 @@ A nice feature of the `*rxLet` directive is, it provides a set of [local variabl
 </ng-container>
 ```
 
-## Using the reactive context over custom templates
+### Templates
 
 You can also use template anchors to display the [contextual state]() in the template:
 
@@ -239,11 +258,11 @@ as well as `Observable<number>`, `Promise<number>` or any other 'subscribale'.
 
 This is especially interesting as we can enrich rendering with e.g. awareness of the viewport and make it even more lazy see [viewport-priority]().
 
-## RenderCallback
+## Use a renderCallback to run post render processes (`renderCallback`)
 
- A notification channel of `*rxFor` that the fires when rendering is done.
+ A notification channel of `*rxLet` that the fires when rendering is done.
  
- This enables developers to perform actions based on rendering timings e.g. checking the DOM for the final height or sending a the LCP time to the server.
+ This enables developers to perform actions based on rendering timings e.g. checking the DOM for the final height or send the LCP time to a tracking server.
  
  It is also possible to use the renderCallback in order to determine if a view should be visible or not. 
  This way developers can hide a display as long as it has not finished rendering and e.g show a loading spinner.
@@ -275,7 +294,7 @@ This is especially interesting as we can enrich rendering with e.g. awareness of
  }
 ```
 
-## Render Projected Views (`parent`)
+## Fix projected view rendering (`parent`)
 
 Imagine the following situation:
 
@@ -287,7 +306,7 @@ Imagine the following situation:
   `
 })
 export class AppListComponent {
- @ContentChildren(AppListItemComponent) appListItems: QueryList<AppListItemComponent>:
+ @ContentChildren(AppListItemComponent) appListItems: QueryList<AppListItemComponent>
 }
 ```
 
@@ -308,12 +327,149 @@ The usage of `AppListComponent` looks like this:
 <app-list-component>
   <app-list-item
     *rxLet="
-      let num of num$;
+      num$; let n;
       parent: true;
     "
   >
-    <div>{{ num }}</div>
+    <div>{{ n }}</div>
   </app-list-item>
 </app-list-component>
 ```
    
+### Handle un-patched event template bindings (`NgZone`)
+
+By default `*rxLet` will create it's `EmbeddedView` outside of `NgZone` which drastically speeds up the
+performance.
+There are scenarios where you want to opt-in to `NgZone` though. If views are created out of `NgZone`, all
+`EventListeners` attached to them run out `NgZone` as well.
+
+Take a look at the following example:
+
+```ts
+@Component({
+  selector: 'app-root',
+  template: `
+    <!-- clickedHeroName won't get updated due to `NgZone` not noticing the click -->
+    {{ clickedHeroName }}
+    <!-- click runs out of `NgZone` -->
+    <button *rxLet="heroes$; let hero" 
+    (click)="heroClicked(hero)">
+      {{ hero.name }}
+    </button>
+  `
+})
+export class AppComponent {
+  clickedHeroName = '';
+
+  heroClicked(hero: Hero) {
+    // this will run out of `NgZone` and thus not update the DOM
+    this.clickedHeroName = hero.name;
+  }
+}
+```
+
+There are several ways to get around this issue.
+`*rxLet` can be configured to create views inside of `NgZone` with the `patchZone` flag:
+
+```html
+<!-- click now gets detected by `NgZone` -->
+<button *rxLet="heroes$; let hero; patchZone: true"
+    (click)="heroClicked(hero)">
+    {{ hero.name }}
+</button>
+```
+
+However, `patchZone: true` can in some cases have a negative impact on the performance of the `*rxLet` Directive.
+Since the creation of the `EmbeddedViews` will most likely happen in batches, every batch will result in one
+`NgZone` cycle resulting in a possible re-rendering of many other `Components`.
+
+Another approach would be to manually detect changes coming from `unpatched` EventListeners or wrapping them in
+`NgZone`.
+
+```ts
+export class AppComponent {
+  clickedHeroName = '';
+
+  constructor(
+    private cdRef: ChangeDetectorRef, // option1
+    private ngZone: NgZone // option 2
+  ) {}
+
+  heroClicked(hero: Hero) {
+    // this will run out of `NgZone` and thus not update the DOM
+    this.clickedHeroName = hero.name;
+    this.cdRef.markForCheck(); // option 1
+
+    // option 2
+    this.ngZone.run(() => this.clickedHeroName = hero.name);
+  }
+}
+```
+
+# Testing
+
+## Basic Setup
+
+```typescript
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { LetDirective } from '../let.directive';
+
+@Component({
+  template: `
+    <ng-container *rxLet="value$; let value;">
+      {{value}}
+    </ng-container>
+  `,
+})
+class TestComponent {
+  value$: Observable<number> = of(42);
+}
+
+const setupTestComponent = (): void => {
+  TestBed.configureTestingModule({
+    declarations: [LetDirective, LetDirectiveTestComponent],
+    providers: [ TemplateRef, ViewContainerRef ],
+    teardown: { destroyAfterEach: true }
+  });
+
+  fixtureComponent = TestBed.createComponent(TestComponent);
+  component = fixtureComponent.componentInstance;
+  componentNativeElement = component.nativeElement;
+};
+
+```
+           
+## Instantiation
+           
+```typescript
+//...
+class TestComponent {
+  value$: Observable<number> = of(42);
+}
+
+describe('LetDirective', () => {
+  beforeEach(setupLetDirectiveTestComponent);
+
+  it('should be instantiable', () => {
+    expect(fixtureComponent).toBeDefined();
+    expect(testComponent).toBeDefined();
+    expect(componentNativeElement).toBeDefined();
+    expect(componentNativeElement.innerHTML).toBe('42');
+  });
+
+});
+```
+
+
+
+# Resources
+
+**Example applications:**  
+A demo application is available on [GitHub](https://github.com/tastejs/angular-movies).
