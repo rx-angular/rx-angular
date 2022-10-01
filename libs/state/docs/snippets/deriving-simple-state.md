@@ -13,7 +13,7 @@ You will always (aka repetitive) want to ensure that:
 You will sometimes (aka situational) need:
 
 - a subset of the state (derivations)
-- compose the state with other Observables or change the Observables behaviour
+- compose the state with other Observables or change the Observables behavior
 
 If we take a simple state derivation and select the number of items in a list the above looks like this:
 
@@ -31,12 +31,12 @@ const derivation$ = state$.pipe(
   filter((v) => v !== undefined),
   // Distinct same values derived from the state
   distinctUntilChanged(),
-  // Reuse custom operations result for multiple subscribers and reemit the last calculated value.
+  // Reuse custom operations result for multiple subscribers and re-emit the last calculated value.
   shareReplay({ bufferSize: 1, refCount: true })
 );
 ```
 
-Using the `stateful` operator gives you the advantage to insert custom logic to derive state without having to think about sharing or replaying. It will also apply `distinctUntilChanged` by default. But you can provide custom logic for distinct values aswell.
+Using the `stateful` operator gives you the advantage to insert custom logic to derive state without having to think about sharing or replaying. It will also apply `distinctUntilChanged` by default. But you can provide custom logic for distinct values as well.
 
 ```typescript
 import { Observable } from 'rxjs';

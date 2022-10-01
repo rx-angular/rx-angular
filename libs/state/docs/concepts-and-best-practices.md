@@ -28,7 +28,7 @@ Good:
 In a first step you want to setup the state interface. A property that should change the view of your component should find its place in the interface.
 View bindings and triggers, which in turn mutate your state, should be `Subjects`.
 In the best case, you keep your state _normalized_.
-_Derived state_ should be handled seperately.
+_Derived state_ should be handled separately.
 
 **Example view interface**:
 
@@ -54,7 +54,7 @@ interface MyView {
 @Component({
   selector: 'app-stateful-component',
   template: ` <div>{{ vm$ | async | json }}</div> `,
-  changeDetection: Changedetection.OnPush,
+  changeDetection: ChangeDetection.OnPush,
   providers: [RxState],
 })
 export class StatefulComponent implements MyView {
