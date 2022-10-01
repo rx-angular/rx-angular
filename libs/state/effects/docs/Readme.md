@@ -1,6 +1,6 @@
 # Resources
 
-**Example applications:**  
+**Example applications:**
 A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-state-rx-effects).
 
 # Motivation
@@ -17,7 +17,7 @@ For for async effect's like Promise or Observable it requires to maintain a canc
 > **Pro Tip:**  
 > In general, it's best to avoid the direct use of the `subscribe` API of RxJS at all.
 
-It may sound weired, as I'm pretty sure you are used to handle your subscriptions.
+It may sound weird, as I'm pretty sure you are used to handle your subscriptions.
 You most probably store the `Subscription` object, add a `takeUntil` to hook it into the component lifecycle and avoid memory leaks etc.
 Maybe even hacks where you subscribe to one Observable just to next into another subject. 
 
@@ -99,7 +99,7 @@ export class FooComponent implements OnDestroy {
 }
 ```
 
-There are already a couple of things that can are crutual:
+There are already a couple of things that are crucial:
 - using the right `Subject`
 - unsubscribe on destroy
 - having the `takeUntil` operator as last operator in the chain
@@ -113,7 +113,7 @@ Another way would be using the `subscription` to run the cleanup logic.
 })
 export class FooComponent implements OnDestroy {
 
-  // ⚠ Notice: The created subscriptin must be stored to `unsubscribe` later
+  // ⚠ Notice: The created subscription must be stored to `unsubscribe` later
   private readonly subscription: Subscription;
 
   constructor() {
@@ -134,7 +134,7 @@ In RxAngular we think the essential problem here is the call to `subscribe` itse
 Like `RxState`, `RxEffects` is a local service provided by a component and thus tied to the components life cycle.
 We can manage `Observables` as reactive triggers for side effects or manage `Subscription`s which internally hold side effects.
 To also provide an imperative way for developers to unsubscribe from the side effect `register` returns an "asyncId" similar to `setTimeout`.
-This can be used later on to call `unregister` and pass the async id retreived from a previous `register` call. This stops and cleans up the side effect when invoked.
+This can be used later on to call `unregister` and pass the async id retrieved from a previous `register` call. This stops and cleans up the side effect when invoked.
 
 As an automatism any registered side effect will get cleaned up when the related component is destroyed.
 
@@ -163,7 +163,7 @@ Compared to common approaches `RxEffects` does not rely on additional decorators
 In fact, it removes the necessity of the `subscribe`.
 
 This results in less boilerplate and a good guidance to resilient and ergonomic component architecture.
-Furthermore, the optional imperative methods help to glue third party libs and a mixed but clean codestyle in Angular.
+Furthermore, the optional imperative methods help to glue third party libs and a mixed but clean code style in Angular.
 
 # Concepts
 
@@ -340,7 +340,7 @@ To avoid data fetching when the chart is not visible we connect the side effect 
 export class FooComponent {
   
   chartVisible$ = new Subject<boolean>();
-  chartData$ = this.ngRxStore.select(getListDatat());
+  chartData$ = this.ngRxStore.select(getListData());
   
   pollingTrigger$ this.chartVisible$.pipe(
       switchMap(isPolling => isPolling ? interval(2000) : EMPTY)
@@ -387,10 +387,10 @@ this.effects.unregister(this.effectId); // doSideEffect will no longer be called
 
 ## Error handling
 
-If an error is thrown inside one side-effect callback, other effects are not effected. 
+If an error is thrown inside one side-effect callback, other effects are not affected.
 The built-in Angular ErrorHandler gets automatically notified of the error, so these errors should still show up in Rollbar reports.
 
-However there are additional ways to tweak the error handling.
+However, there are additional ways to tweak the error handling.
 
 We can hook into this process by providing a custom error handler:
 
