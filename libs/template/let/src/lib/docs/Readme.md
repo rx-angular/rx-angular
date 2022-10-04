@@ -1,12 +1,30 @@
 # Motivation
 
-In Angular there are no out of the box ways to handle asyncronouse values in the template.
-Even though the async pipe is a way to evaluate and update the template if a change arrives it is insufficient in many ways.
-Many developers tend to use the so called "*ngIf hack" to bind async values to a context variable in the template.
+In Angular there is one way to handle asynchronous values or streams in the template, the `async` pipe.
+Even though the async pipe evaluates such values the template, it is insufficient in many ways.
+To name a few:
+* it will only update the template when `NgZone` is also aware of the value change
+* it leads to over rendering because it can only run global change detection
+* it leads to too many subscriptions in the template
+* it is cumbersome to work with values in the template
 
-## Problems with `async` and `*ngIf`
+## Too many subscriptions
+
+A common scenario is to use multiple async pipes to subscribe to either multiple, or the same observable
+throughout different parts of a components template.
+
+```html
+<div class="item" *ngFor="let item of items$ | async"></div>
+<div class="loader" *ngIf="(items$ | async).length > 0"></div>
+```
+
+Besides being not readable, it is also very inefficient. Unshared observables will most likely and each `async` 
+will definitely run the same code multiple times.
+
+## Access values in the template: `*ngIf hack`
 
 The ngIf hack looks like this:
+
 ```html
 <ng-container *ngIf="observableNumber$ | async as n">
   <app-number [number]="n"></app-number>
@@ -15,12 +33,17 @@ The ngIf hack looks like this:
 ```
 
 The problem is that `*ngIf` interferes with rendering and in case of falsy values (`0`, ``, `false`, `null`, `undefined`) the component
-would be hidden. This issue is a big problem and leads to many production bugs as it's edge cases are often overlooked.
+would be hidden. This issue is a big problem and leads to many production bugs as its edge cases are often overlooked.
 
-Another thing to consider is, the `AsyncPipe` relies on zone.js to be present - it doesn't really trigger change detection by itself.
-It marks the component and its children as dirty waiting for the Zone to trigger change detection. So, in case you want to create a zone-less application, the `AsyncPipe` won't work as desired. 
+## NgZone
 
-**Downsides:**
+Another thing to consider is, the `AsyncPipe` relies on zone.js to be present and aware of the value change bound to the async pipe. 
+It doesn't really trigger change detection by itself. Instead, it marks the component and its parents as dirty, waiting for the Zone to trigger change detection.
+This is especially bad for leaf components, as the async pipe will mark the whole component tree as dirty before being able to update the desired template.
+Also in case you want to create a zone-less application, the `AsyncPipe` won't work as desired. 
+
+## Summary and other downsides
+
 - Boilerplate in the template
 - Typings are hard to handle due to `null` and `undefined`
 - Inefficient change detection (Evaluation of the whole template)
@@ -28,11 +51,12 @@ It marks the component and its children as dirty waiting for the Zone to trigger
 - Edge cases cause unexpected bugs
 - No contextual information given
 
-The `LetDirective` comes with it's own way to handle change detection in a very efficient way.
-In addition, the directive is configurable in a way where you can change the way change detection is done.
-This can bring not only great new features in, but also provides a migration path from large existing apps running with Angular's default change detection.
+## Conclusion - Structural directives
 
-## Solution - Structural directives
+In contrast to global change detection, structural directives allow fine-grained control of change detection on a per directive basis.
+The `LetDirective` comes with its own way to handle change detection in templates in a very efficient way.
+However, the change detection behavior is configurable on a per directive or global basis.
+This makes it possible to implement your own strategies, and also provides a migration path from large existing apps running with Angulars default change detection.
 
 This package helps to reduce code used to create composable action streams. 
 It mostly is used in combination with state management libs to handle user interaction and backend communication.
@@ -97,9 +121,9 @@ As asynchronous values to have special states.
 Those states are always hard to handle and produce brittle code, especially in the tenplate.
 
 In short, we can handle the following states in the template:
-- suspense state
-- error occurrence
-- complete occurrence
+- suspense
+- error
+- complete
 
 Read detailed information about the [reactive state]([reactive context](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/reactive-context.md) in our docs. 
 
@@ -114,31 +138,33 @@ Contextual template state is [reactive context]() accessible in the template. Th
 
 **DX Features**
 
-- Local variables (error, complete, suspense)
-- Local tempates (error, complete, suspense)
+- context variables (error, complete, suspense)
+- context templates (error, complete, suspense)
 - Template trigger
 - reduces boilerplate (multiple `async` pipe's
 - a unified/structured way of handling `null` and `undefined`
 - works also with static variables `*rxLet="42; let n"`
 
 **Inputs**
-@TODO table
 
-- error
-- complete
-- suspense
-- nextTrg
-- errorTrg
-- completeTrg
-- suspenseTrg
-- templateTrg
-- patchZone
-- parent
-- renderCallback
-- strategy
+| Input            | Type                                                               | description                                                                                                                                                                                             |
+|------------------|--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `error`          | `TemplateRef<RxLetViewContext>`                                    | defines the template for the error state                                                                                                                                                                |
+| `complete`       | `TemplateRef<RxLetViewContext>`                                    | defines the template for the complete state                                                                                                                                                             |
+| `suspense`       | `TemplateRef<RxLetViewContext>`                                    | defines the template for the suspense state                                                                                                                                                             |
+| `nextTrg`        | `Observable<unknown>`                                              | trigger to show `next` template                                                                                                                                                                         |
+| `errorTrg`       | `Observable<unknown>`                                              | trigger to show `error` template                                                                                                                                                                        |
+| `completeTrg`    | `Observable<unknown>`                                              | trigger to show `complete` template                                                                                                                                                                     |
+| `suspenseTrg`    | `Observable<unknown>`                                              | trigger to show `suspense` template                                                                                                                                                                     |
+| `templateTrg`    | `Observable<RxNotificationKind>`                                   | trigger to show any templates, based on the given `RxNotificationKind`                                                                                                                                  |
+| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`                                                                                                                    |
+| `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. |
+| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                              |
+| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes                                                                                                                     |
 
 
 **Outputs**
+
 n/a
 
 **Performance Features**
