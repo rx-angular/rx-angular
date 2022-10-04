@@ -8,19 +8,6 @@ To name a few:
 * it leads to too many subscriptions in the template
 * it is cumbersome to work with values in the template
 
-## Too many subscriptions
-
-A common scenario is to use multiple async pipes to subscribe to either multiple, or the same observable
-throughout different parts of a components template.
-
-```html
-<div class="item" *ngFor="let item of items$ | async"></div>
-<div class="loader" *ngIf="(items$ | async).length > 0"></div>
-```
-
-Besides being not readable, it is also very inefficient. Unshared observables will most likely and each `async` 
-will definitely run the same code multiple times.
-
 ## Access values in the template: `*ngIf hack`
 
 The ngIf hack looks like this:
@@ -34,6 +21,19 @@ The ngIf hack looks like this:
 
 The problem is that `*ngIf` interferes with rendering and in case of falsy values (`0`, ``, `false`, `null`, `undefined`) the component
 would be hidden. This issue is a big problem and leads to many production bugs as its edge cases are often overlooked.
+
+## Too many subscriptions
+
+A common scenario is to use multiple async pipes to subscribe to either multiple, or the same observable
+throughout different parts of a components template.
+
+```html
+<div class="item" *ngFor="let item of items$ | async"></div>
+<div class="loader" *ngIf="(items$ | async).length > 0"></div>
+```
+
+Besides being not readable, it is also very inefficient. Unshared observables will most likely and each `async` 
+will definitely run the same code multiple times.
 
 ## NgZone
 
@@ -69,70 +69,12 @@ It mostly is used in combination with state management libs to handle user inter
 
 # Concepts
 
-- [Local variables]()
+- [Local variables](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/local-variables.md) 
 - [Local template]()
-- [Reactive context]()
-- [Contextual state in the template]()
-- [Handling view and content queries]()
-- [ngZone and template creation]()
+- [Reactive context](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/reactive-context.md)
+- [Contextual state in the template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/contextual-state-in-the-template.md)
+- [Handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/handling-view-and-content-queries.md)
 - [Render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#usage-in-the-template)
-
-## Local variables
-   
-Angular provides a way to bind values to the template. 
-For example this can be done on 2 ways, the 'as syntax' `num$ | async as num` and the 'let syntax' `*rxLet="num$; let num"`.
-
-Both ways can reduce the usage of pipes the `async` pipe (or any other pipe).
- 
-**With `async` pipe**
-
-```html
-<ng-container>
-    {{ n | async }} {{ n | async}} {{ n | async}}    
-</ng-container>
-```
-
-**With `*rxLet` directive**
-
-```html
-<ng-container *rxLet="num$; let n;">
-    {{ n }} {{ n }} {{ n }}    
-</ng-container>
-```
-
-With directive's we can now provide custom values to the consumer.
- Angular does this in e.g. the `*ngFor` directive with local variables like `even` or `odd`.  
-
-``` 
-<ng-container *ngFor="let item in list; let e = even">
-    even: {{ e }}    
-<ng-container/>
-```
-
-## Local template
-
-@TODO
-
-## Reactive context
-
-![Reactive-Context](https://user-images.githubusercontent.com/10064416/192658822-67b51256-1c4a-49c7-8c48-6040b666d8a6.png)
-
-As asynchronous values to have special states.
-Those states are always hard to handle and produce brittle code, especially in the tenplate.
-
-In short, we can handle the following states in the template:
-- suspense
-- error
-- complete
-
-Read detailed information about the [reactive state]([reactive context](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/reactive-context.md) in our docs. 
-
-## Contextual state in the template
-
-![Contextual-State](https://user-images.githubusercontent.com/10064416/192659019-279925c4-bb85-44df-a6e3-7d160fdb1874.png)
-
-Contextual template state is [reactive context]() accessible in the template. This can help to handle loading spinner, error and success messages. 
-
 
 # Features
 
