@@ -20,7 +20,7 @@ would be hidden. This issue is a big problem and leads to many production bugs a
 Another thing to consider is, the `AsyncPipe` relies on zone.js to be present - it doesn't really trigger change detection by itself.
 It marks the component and its children as dirty waiting for the Zone to trigger change detection. So, in case you want to create a zone-less application, the `AsyncPipe` won't work as desired. 
 
-**Downsides: **
+**Downsides:**
 - Boilerplate in the template
 - Typings are hard to handle due to `null` and `undefined`
 - Inefficient change detection (Evaluation of the whole template)
@@ -45,25 +45,13 @@ It mostly is used in combination with state management libs to handle user inter
 
 # Concepts
 
-## Reactive context
-
-![Reactive-Context](https://user-images.githubusercontent.com/10064416/192658822-67b51256-1c4a-49c7-8c48-6040b666d8a6.png)
-
-As asynchronous values to have special states.
-Those states are always hard to handle and produce brittle code, especially in the tenplate.
-
-In short, we can handle the following states in the template:
-- suspense state
-- error occurrence
-- complete occurrence
-
-Read detailed information about the [reactive state]([reactive context](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/reactive-context.md) in our docs. 
-
-## Contextual state in the template
-
-![Contextual-State](https://user-images.githubusercontent.com/10064416/192659019-279925c4-bb85-44df-a6e3-7d160fdb1874.png)
-
-Contextual template state is [reactive context]() accessible in the template. This can help to handle loading spinner, error and success messages. 
+- [Local variables]()
+- [Local template]()
+- [Reactive context]()
+- [Contextual state in the template]()
+- [Handling view and content queries]()
+- [ngZone and template creation]()
+- [Render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#usage-in-the-template)
 
 ## Local variables
    
@@ -97,25 +85,61 @@ With directive's we can now provide custom values to the consumer.
 <ng-container/>
 ```
 
-## Template Slots
+## Local template
 
 @TODO
+
+## Reactive context
+
+![Reactive-Context](https://user-images.githubusercontent.com/10064416/192658822-67b51256-1c4a-49c7-8c48-6040b666d8a6.png)
+
+As asynchronous values to have special states.
+Those states are always hard to handle and produce brittle code, especially in the tenplate.
+
+In short, we can handle the following states in the template:
+- suspense state
+- error occurrence
+- complete occurrence
+
+Read detailed information about the [reactive state]([reactive context](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/reactive-context.md) in our docs. 
+
+## Contextual state in the template
+
+![Contextual-State](https://user-images.githubusercontent.com/10064416/192659019-279925c4-bb85-44df-a6e3-7d160fdb1874.png)
+
+Contextual template state is [reactive context]() accessible in the template. This can help to handle loading spinner, error and success messages. 
+
 
 # Features
 
 **DX Features**
 
-Local Variables
-- error, complete, suspense
+- Local variables (error, complete, suspense)
+- Local tempates (error, complete, suspense)
+- Template trigger
 - reduces boilerplate (multiple `async` pipe's
 - a unified/structured way of handling `null` and `undefined`
 - works also with static variables `*rxLet="42; let n"`
 
-Inputs
-- @TODO
+**Inputs**
+@TODO table
 
-Outputs
-- @TODO
+- error
+- complete
+- suspense
+- nextTrg
+- errorTrg
+- completeTrg
+- suspenseTrg
+- templateTrg
+- patchZone
+- parent
+- renderCallback
+- strategy
+
+
+**Outputs**
+n/a
 
 **Performance Features**
 
@@ -123,6 +147,7 @@ Outputs
 - lazy template creation (done by render strategies) 
 - triggers change-detection on `EmbeddedView` level
 - distinct same values in a row (over-rendering)
+- view memoization
 
 # Setup
 
@@ -176,7 +201,6 @@ This can be achieved by using Angular's native 'let' syntax `*rxLet="observableN
 
 ## Using the reactive context
 
-## Using the reactive context over local variables
 ![Contextual-State--template-vs-variable](https://user-images.githubusercontent.com/10064416/192660150-643c4d37-5326-4ba2-ad84-e079890b3f2f.png)
 
 A nice feature of the `*rxLet` directive is, it provides 2 ways to access the [reactive context state]() in the tempalte:
@@ -206,13 +230,13 @@ The following context variables are available for each template:
 </ng-container>
 ```
 
-### Templates
+### Context Templates
 
 You can also use template anchors to display the [contextual state]() in the template:
 
 ```html
 <ng-container
- rxLet="
+ *rxLet="
     observableNumber$; let n;
     error: error;
     complete: complete;
@@ -228,6 +252,146 @@ You can also use template anchors to display the [contextual state]() in the tem
 ```
 
 This helps in some cases to organize the template and introduces a way to make the dynamic or even lazy.
+
+### Context Trigger
+
+You can also use asynchronous code like a `Promise` or an `Observable` to switch between templates.
+This is perfect for e.g. a searchable list with loading spinner.
+
+If applied the trigger will apply the new context state, and the directive will update the local variables, as well as switch to the template if one is registered.
+
+#### Showing the `next` template
+
+We can use the `nextTrg` input to switch back from any template to display the actual value.
+ e.g. from the complete template back to the value display
+
+```typescript
+ @Component({
+   selector: 'any-component',
+   template: `
+    <button (click)="nextTrigger$.next()">show value</button>
+    <ng-container
+     *rxLet="
+       num$; let n;
+       let n;
+       complete: complete
+       nextTrg: nextTrigger$
+    ">
+      {{n}}
+    </ng-container>
+    <ng-template #complete>✔</ng-template>
+   `
+ })
+ export class AppComponent {
+  nextTrigger$ = new Subject();
+  num$ = timer(2000);
+}
+```
+
+This helps in some cases to organize the template and introduces a way to make it dynamic or even lazy.
+
+#### Showing the `error` template
+
+We can use the `errorTrg` input to switch back from any template to display the actual value.
+ e.g. from the complete template back to the value display
+
+```typescript
+ @Component({
+   selector: 'any-component',
+   template: `
+    <ng-container
+     *rxLet="
+       num$; let n;
+       let n;
+       error: error
+       errorTrg: errorTrigger$
+    ">
+      {{n}}
+    </ng-container>
+    <ng-template #error>❌</ng-template>
+   `
+ })
+ export class AppComponent {
+  num$ = this.state.num$;
+  errorTrigger$ = this.state.error$;
+  
+  constructor(private state: globalState) {
+
+  }
+
+}
+```
+
+#### Showing the `complete` template
+
+We can use the `completeTrg` input to switch back from any template to display the actual value.
+ e.g. from the complete template back to the value display
+
+```typescript
+ @Component({
+   selector: 'any-component',
+   template: `
+    <ng-container
+     *rxLet="
+       num$; let n;
+       let n;
+       complete: complete
+       completeTrg: completeTrigger$
+    ">
+      {{n}}
+    </ng-container>
+    <ng-template #complete>✔</ng-template>
+   `
+ })
+ export class AppComponent {
+  num$ = this.state.num$;
+  completeTrigger$ = this.state.success$;
+  
+  constructor(private state: globalState) {
+
+  }
+
+}
+```
+
+
+#### Showing the `suspense` template
+
+We can use the `suspenseTrg` input to switch back from any template to display the actual value.
+ e.g. from the complete template back to the value display
+
+```typescript
+ @Component({
+   selector: 'any-component',
+   template: `
+    <input (input)="search($event.target.value)" />
+    <ng-container
+     *rxLet="
+       num$; let n;
+       let n;
+       suspense: suspense
+       suspenseTrg: suspenseTrigger$
+    ">
+      {{n}}
+    </ng-container>
+    <ng-template #suspense>loading...</ng-template>
+   `
+ })
+ export class AppComponent {
+    num$ = this.state.num$;
+    suspenseTrigger$ = new Subject();
+    
+    constructor(private state: globalState) {
+    
+    }
+
+    search(str: string) {
+      this.state.search(str);
+      this.suspenseTrigger$.next();
+    }
+
+}
+```
 
 # Advanced Usage
 
@@ -337,6 +501,7 @@ The usage of `AppListComponent` looks like this:
 ```
    
 ### Handle un-patched event template bindings (`NgZone`)
+@TODO this is on by default. so we need to update this here.
 
 By default `*rxLet` will create it's `EmbeddedView` outside of `NgZone` which drastically speeds up the
 performance.
