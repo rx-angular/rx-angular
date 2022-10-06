@@ -80,12 +80,12 @@ module.exports = {
             position: 'left',
             type: 'doc',
           },
-          // {
-          //   docId: 'template/index',
-          //   label: 'Template',
-          //   position: 'left',
-          //   type: 'doc',
-          // },
+          {
+            docId: 'template/overview/overview',
+            label: 'Template',
+            position: 'left',
+            type: 'doc',
+          },
           // { to: 'blog', label: 'Blog', position: 'left' },
           {
             href: `https://github.com/${organizationName}/${projectName}`,
