@@ -1,3 +1,4 @@
+
 # Motivation
 
 In Angular there is one way to handle asynchronous values or streams in the template, the `async` pipe.
@@ -151,10 +152,9 @@ export class AnyComponent {}
 > By default `*rxLet` is optimized for performance out of the box.
 > 
 > This includes:
-> - The default render strategy is [`normal`](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md). This ensures non-blocking rendering. See [strategy configuration](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md#Default-configuration) if you want to change it. 
-> - Runs the `EmbeddedView` creation outside of `NgZone`. See [how to opt-in to `NgZone`](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md) if you want to change it.
+> - The default render strategy is [`normal`](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md).  
+>   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md#Default-configuration) if you want to change it. 
 > - Creates templates lazy and manages multiple template instances
-> 
 
 ## Binding an Observable to a local variable in the template
 

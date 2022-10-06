@@ -61,6 +61,7 @@ export class AppListComponent {}
 ## RX_RENDER_STRATEGIES_CONFIG
 
 You can also set the `parent` config globally by providing a `RX_RENDER_STRATEGIES_CONFIG`.
+See more about configuration under [render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#global)
 
 ```ts
 @NgModule({
