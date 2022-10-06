@@ -69,7 +69,7 @@ module.exports = {
           //   position: 'left',
           // },
           {
-            docId: 'cdk/api/transformation-helpers/index',
+            docId: 'cdk/overview',
             label: 'CDK',
             position: 'left',
             type: 'doc',
