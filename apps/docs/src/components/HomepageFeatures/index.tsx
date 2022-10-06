@@ -33,7 +33,7 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/undraw_rxangular_progressive_app.svg')
       .default,
     description: <>High-Performance Reactive Template Rendering for Angular.</>,
-    url: null,
+    url: 'docs/template/overview',
   },
 ];
 
