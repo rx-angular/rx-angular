@@ -6,7 +6,7 @@
     "build": {
       "executor": "@nx-plus/docusaurus:browser",
       "options": {
-        "outputPath": "docs/dist"
+        "outputPath": "dist/apps/docs"
       },
       "outputs": ["{options.outputPath}"]
     },
