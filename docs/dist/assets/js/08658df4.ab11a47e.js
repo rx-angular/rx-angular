@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkrx_angular=self.webpackChunkrx_angular||[]).push([[8418],{4962:a=>{a.exports=JSON.parse('{"title":"@rx-angular/cdk","description":"RxAngular CDK","slug":"/category/rx-angularcdk","permalink":"/docs/category/rx-angularcdk","navigation":{"next":{"title":"Transformation helpers","permalink":"/docs/cdk/api/transformation-helpers/"}}}')}}]);
