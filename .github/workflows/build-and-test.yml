@@ -59,6 +59,9 @@ jobs:
 
   build-docs:
     runs-on: ubuntu-latest
+    env:
+      NX_CLOUD_DISTRIBUTED_EXECUTION: false
+      NX_DISTRIBUTED_TASK_EXECUTION: false
 
     if: github.ref == 'refs/heads/main'
 
