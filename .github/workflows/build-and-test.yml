@@ -72,12 +72,12 @@ jobs:
           node-version: 16
 
       # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
-      - run: yarn nx-cloud start-ci-run
+      # - run: yarn nx-cloud start-ci-run
 
       - run: yarn nx build docs
 
       # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
-      - run: yarn nx-cloud stop-all-agents
+      # - run: yarn nx-cloud stop-all-agents
 
       - uses: EndBug/add-and-commit@v4
         with:
