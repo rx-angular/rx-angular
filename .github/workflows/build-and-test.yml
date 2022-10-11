@@ -81,7 +81,7 @@ jobs:
 
       - uses: EndBug/add-and-commit@v4
         with:
-          add: 'dist/apps/docs/*'
+          add: 'docs/dist/*'
           author_name: Github Action
           message: 'chore(docs): update GitHub pages'
           # Name of the branch to use, if different from the one that triggered the workflow
