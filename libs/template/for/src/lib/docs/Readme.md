@@ -18,10 +18,10 @@ TBD
 
 # Concepts
 
-- [Local variables](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/local-variables.md) 
-- [Local template]()
-- [Handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/handling-view-and-content-queries.md)
-- [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/ngzone-optimizations.md)
+- [Local variables](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts/local-variables.md)
+- [Local template](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts/local-templates.md)
+- [Handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/performance-issues/handling-view-and-content-queries.md)
+- [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/performance-issues/ngzone-optimizations.md)
 - [Render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#usage-in-the-template)
 
 # Features
