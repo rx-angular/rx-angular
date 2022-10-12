@@ -438,6 +438,34 @@ as well as `Observable<number>`, `Promise<number>` or any other 'subscribale'.
 
 This is especially interesting as we can enrich rendering with e.g. awareness of the viewport and make it even more lazy see [viewport-priority]().
 
+### Local strategies and view and content children (`parent`)
+
+For more details read about [Handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/handling-view-and-content-queries.md)
+
+The following example will not work with a local strategy because `@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren` will not update.
+
+To get it running with strategies like `local` or `concurrent` strategies we need to set `parent` to `true`. This is given by default.
+Set the value to `false` and it will stop working.
+
+```ts
+@Component({
+  selector: 'app-list-component',
+  template: `
+    <div
+      #myDiv
+      *rxLet="state$; let state;">
+    </div>
+    <button (click)="append()">append</button>
+  `
+})
+export class AppListComponent {
+ @ViewChild('myDiv') myDiv: ElementRef<HTMLElement>;
+ 
+ append() { this.myDiv.nativeElement.appendChild('span') }
+}
+```
+
+
 ## Use a renderCallback to run post render processes (`renderCallback`)
 
  A notification channel of `*rxLet` that the fires when rendering is done.
@@ -477,7 +505,9 @@ This is especially interesting as we can enrich rendering with e.g. awareness of
 ## Working with event listeners (`patchZone`)
 
 Event listeners normally trigger zone. Especially high frequently events cause performance issues.
-By using we can run all event listener inside `rxLet` outside zone.
+By using we can run all event listener inside `rxLet` outside zone. 
+
+For more details read about [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/ngzone-optimizations.md)
 
 ```ts
 @Component({
@@ -497,11 +527,12 @@ export class AppComponent {
 }
 ```
 
-
 # Testing
 
 For testing we suggest to switch the CD strategy to `native`. 
 This helps to exclude all side effects from special render strategies.
+
+@TODO native is not used here
 
 ## Basic Setup
 

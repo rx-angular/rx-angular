@@ -5,18 +5,9 @@ For example this is implemented in the `*ngIf` structural directive under the el
 
 This can reduce expressions in the template and save us boiler plate.
  
-
 ```html
-<ng-container>
-    {{ n | async }} {{ n | async}} {{ n | async}}    
-</ng-container>
+<div *ngIf="isTrue; else:elseTpl">Visible if true</div>
+<ng-template #elseTpl>Visible if false</ng-template>
 ```
 
-With directive's we can now provide custom values to the consumer.
- Angular does this in e.g. the `*ngFor` directive with local variables like `even` or `odd`.  
-
-``` 
-<ng-container *ngFor="let item in list; let e = even">
-    even: {{ e }}    
-<ng-container/>
-```
+With directive's we can now provide custom template slots for any behavior.
