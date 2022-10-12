@@ -61,7 +61,7 @@ with very little effort in any component.
 - Connect any Observable source to the state
 - Partial state updates
 - Reactive state selection
-- Lazy state (no BehaviourSubject)
+- Lazy state (no BehaviorSubject)
 - Foundation for zone-less Angular applications
 
 ## Install

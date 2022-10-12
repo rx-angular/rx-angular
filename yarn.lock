@@ -14748,10 +14748,10 @@ neo-async@^2.5.0, neo-async@^2.6.0, neo-async@^2.6.1, neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-ng-morph@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/ng-morph/-/ng-morph-2.0.0.tgz#63e0655e272e898e4240f1f53404820daccedf47"
-  integrity sha512-ljkPY0d153Gch6h3Q7H2qUn99QuroQ9P5KEFYgsmVobzm3l5Dx2gYsC7U//Tkigk1cSJzoFfuUs5R6HXCasw4w==
+ng-morph@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/ng-morph/-/ng-morph-2.1.1.tgz#93d0daf4096c26463b5ac42014222a40e9c0be6c"
+  integrity sha512-mUziQxQm0YnP9WOCy2WRZVq6xNf+WgAvosdPU+hwmGUinoZ6vBrP3GECoRmM7Aor0PDG1KNIarJsDNS7BlxTLQ==
   dependencies:
     jsonc-parser "3.0.0"
     minimatch "3.0.4"

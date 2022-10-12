@@ -1,39 +1,6 @@
 # Motivation
 
-In Angular there is one way to handle asynchronous values or streams in the template, the `async` pipe.
-Even though the async pipe evaluates such values the template, it is insufficient in many ways.
-To name a few:
-* it will only update the template when `NgZone` is also aware of the value change
-* it leads to over rendering because it can only run global change detection
-* it leads to too many subscriptions in the template
-* it is cumbersome to work with values in the template
-
-## Access values in the template: `*ngIf hack`
-
-The ngIf hack looks like this:
-
-```html
-<ng-container *ngIf="observableNumber$ | async as n">
-  <app-number [number]="n"></app-number>
-  <app-number-special [number]="n"></app-number-special>
-</ng-container>
-```
-
-The problem is that `*ngIf` interferes with rendering and in case of falsy values (`0`, ``, `false`, `null`, `undefined`) the component
-would be hidden. This issue is a big problem and leads to many production bugs as its edge cases are often overlooked.
-
-## Too many subscriptions
-
-A common scenario is to use multiple async pipes to subscribe to either multiple, or the same observable
-throughout different parts of a components template.
-
-```html
-<div class="item" *ngFor="let item of items$ | async"></div>
-<div class="loader" *ngIf="(items$ | async).length > 0"></div>
-```
-
-Besides being not readable, it is also very inefficient. Unshared observables will most likely and each `async` 
-will definitely run the same code multiple times.
+TBD
 
 ## NgZone
 
@@ -44,74 +11,24 @@ Also in case you want to create a zone-less application, the `AsyncPipe` won't w
 
 ## Downsides
 
-- Boilerplate in the template
-- Typings are hard to handle due to `null` and `undefined`
-- Inefficient change detection (Evaluation of the whole template)
-- New but same values (1 => 1) still trigger change detection
-- Edge cases cause unexpected bugs
-- No contextual information given
+TBD
 
-## Conclusion - Structural directives
+## Conclusion - TBD
 
-In contrast to global change detection, structural directives allow fine-grained control of change detection on a per directive basis.
-The `LetDirective` comes with its own way to handle change detection in templates in a very efficient way.
-However, the change detection behavior is configurable on a per directive or global basis.
-This makes it possible to implement your own strategies, and also provides a migration path from large existing apps running with Angulars default change detection.
-
-This package helps to reduce code used to create composable action streams. 
-It mostly is used in combination with state management libs to handle user interaction and backend communication.
-
-```
-<ng-container *rxLet="observableNumber$; let n">
- ...
-</ng-container>
-```
 
 # Concepts
 
 - [Local variables](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/local-variables.md) 
 - [Local template]()
-- [Reactive context](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/reactive-context.md)
-- [Contextual state in the template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/contextual-state-in-the-template.md)
 - [Handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/handling-view-and-content-queries.md)
 - [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/ngzone-optimizations.md)
 - [Render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#usage-in-the-template)
 
 # Features
-
-**DX Features**
-
-- context variables (error, complete, suspense)
-- context templates (error, complete, suspense)
-- context trigger
-- reduces boilerplate (multiple `async` pipe's)
-- a unified/structured way of handling `null` and `undefined`
-- works also with static variables `*rxLet="42; let n"`
-
-**Performance Features**
-
-- value binding is always present. ('`*ngIf` hack' bugs and edge cases)
-- lazy template creation (done by render strategies) 
-- triggers change-detection on `EmbeddedView` level
-- distinct same values in a row (over-rendering)
-- view memoization
+ 
+TBD
 
 ## Inputs
-
-**Contextual state**
-
-| Input            | Type                                                               | description                                                                                                                                                                                             |
-|------------------|--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `error`          | `TemplateRef<RxLetViewContext>`                                    | defines the template for the error state                                                                                                                                                                |
-| `complete`       | `TemplateRef<RxLetViewContext>`                                    | defines the template for the complete state                                                                                                                                                             |
-| `suspense`       | `TemplateRef<RxLetViewContext>`                                    | defines the template for the suspense state                                                                                                                                                             |
-| `nextTrg`        | `Observable<unknown>`                                              | trigger to show `next` template                                                                                                                                                                         |
-| `errorTrg`       | `Observable<unknown>`                                              | trigger to show `error` template                                                                                                                                                                        |
-| `completeTrg`    | `Observable<unknown>`                                              | trigger to show `complete` template                                                                                                                                                                     |
-| `suspenseTrg`    | `Observable<unknown>`                                              | trigger to show `suspense` template                                                                                                                                                                     |
-| `templateTrg`    | `Observable<RxNotificationKind>`                                   | trigger to show any templates, based on the given `RxNotificationKind`                                                                                                                                  |
-
-
 
 **Rendering**  
 
@@ -130,14 +47,14 @@ n/a
 
 # Setup
 
-The `LetModule` can be imported as following:
+The `ForModule` can be imported as following:
 
 Module based setup:
 ```
-import { LetModule } from "@rx-angular/template/let";
+import { ForModule } from "@rx-angular/template/let";
 
 @NgModule({
-  imports: [ LetModule ],
+  imports: [ ForModule ],
   // ...
 })
 export class AnyModule {}
@@ -145,11 +62,11 @@ export class AnyModule {}
 
 Standalone component setup:
 ```
-import { LetModule } from "@rx-angular/template/let";
+import { ForModule } from "@rx-angular/template/let";
 
 @NgComponent({
     standalone: true,
-    imports: [ LetModule ],
+    imports: [ ForModule ],
     template: `...`
 })
 export class AnyComponent {}
@@ -158,411 +75,176 @@ export class AnyComponent {}
 # Basic Usage
 
 > **⚠ Notice:**  
-> By default `*rxLet` is optimized for performance out of the box.
+> By default `*rxFor` is optimized for performance out of the box.
 > 
 > This includes:
 > - The default render strategy is [`normal`](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md).  
 >   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md#Default-configuration) if you want to change it. 
 > - Creates templates lazy and manages multiple template instances
 
-## Binding an Observable to a local variable in the template
-
-The `*rxLet` directive makes it easy to work with reactive data streams in the template.
-This can be achieved by using Angular's native 'let' syntax `*rxLet="observableNumber$; let n"`.
-
-```html
-<ng-container *rxLet="observableNumber$; let n">
-  <app-number [number]="n"></app-number>
-  <app-number-special [number]="n"></app-number-special>
-</ng-container>
-```
-
-## Using the reactive context
-
-![Contextual-State--template-vs-variable](https://user-images.githubusercontent.com/10064416/192660150-643c4d37-5326-4ba2-ad84-e079890b3f2f.png)
-
-A nice feature of the `*rxLet` directive is, it provides 2 ways to access the [reactive context state]() in the tempalte:
-- local variables
-- templates
-
-### Context Variables
- 
-The following context variables are available for each template:
- 
- - $implicit: `T` // the default variable accessed by `let val`
- - error: `undefined` | `Error`
- - complete: `undefined` |`boolean`
- - suspense: `undefined` |`true` 
- 
- You can use the as like this:
- 
-```html
-<ng-container *rxLet="observableNumber$; let n; let s = suspense; let e = error, let c = complete">
-    {{ s && 'No value arrived so far' }}    
-
-    <app-number [number]="n"></app-number>
-
-    There is an error: {{ e ? e.message : 'No Error' }}
-  
-    Observable is completed: {{c ? 'Yes' : 'No'}}
-</ng-container>
-```
-
-### Context Templates
-
-You can also use template anchors to display the [contextual state]() in the template:
-
-```html
-<ng-container
- *rxLet="
-    observableNumber$; let n;
-    error: error;
-    complete: complete;
-    suspense: suspense;
-  "
->
-  <app-number [number]="n"></app-number>
-</ng-container>
-
-<ng-template #suspense>SUSPENSE</ng-template>
-<ng-template #error>ERROR</ng-template>
-<ng-template #complete>COMPLETE</ng-template>
-```
-
-This helps in some cases to organize the template and introduces a way to make the dynamic or even lazy.
-
-### Context Trigger
-
-You can also use asynchronous code like a `Promise` or an `Observable` to switch between templates.
-This is perfect for e.g. a searchable list with loading spinner.
-
-If applied the trigger will apply the new context state, and the directive will update the local variables, as well as switch to the template if one is registered.
-
-#### Showing the `next` template
-
-We can use the `nextTrg` input to switch back from any template to display the actual value.
- e.g. from the complete template back to the value display
-
-```typescript
- @Component({
-   selector: 'any-component',
-   template: `
-    <button (click)="nextTrigger$.next()">show value</button>
-    <ng-container
-     *rxLet="
-       num$; let n;
-       let n;
-       complete: complete
-       nextTrg: nextTrigger$
-    ">
-      {{n}}
-    </ng-container>
-    <ng-template #complete>✔</ng-template>
-   `
- })
- export class AppComponent {
-  nextTrigger$ = new Subject();
-  num$ = timer(2000);
-}
-```
-
-This helps in some cases to organize the template and introduces a way to make it dynamic or even lazy.
-
-#### Showing the `error` template
-
-We can use the `errorTrg` input to switch back from any template to display the actual value.
- e.g. from the complete template back to the value display
-
-```typescript
- @Component({
-   selector: 'any-component',
-   template: `
-    <ng-container
-     *rxLet="
-       num$; let n;
-       let n;
-       error: error
-       errorTrg: errorTrigger$
-    ">
-      {{n}}
-    </ng-container>
-    <ng-template #error>❌</ng-template>
-   `
- })
- export class AppComponent {
-  num$ = this.state.num$;
-  errorTrigger$ = this.state.error$;
-  
-  constructor(private state: globalState) {
-
-  }
-
-}
-```
-
-#### Showing the `complete` template
-
-We can use the `completeTrg` input to switch back from any template to display the actual value.
- e.g. from the complete template back to the value display
-
-```typescript
- @Component({
-   selector: 'any-component',
-   template: `
-    <ng-container
-     *rxLet="
-       num$; let n;
-       let n;
-       complete: complete
-       completeTrg: completeTrigger$
-    ">
-      {{n}}
-    </ng-container>
-    <ng-template #complete>✔</ng-template>
-   `
- })
- export class AppComponent {
-  num$ = this.state.num$;
-  completeTrigger$ = this.state.success$;
-  
-  constructor(private state: globalState) {
-
-  }
-
-}
-```
-
-
-#### Showing the `suspense` template
-
-We can use the `suspenseTrg` input to switch back from any template to display the actual value.
- e.g. from the complete template back to the value display
-
-```typescript
- @Component({
-   selector: 'any-component',
-   template: `
-    <input (input)="search($event.target.value)" />
-    <ng-container
-     *rxLet="
-       num$; let n;
-       let n;
-       suspense: suspense
-       suspenseTrg: suspenseTrigger$
-    ">
-      {{n}}
-    </ng-container>
-    <ng-template #suspense>loading...</ng-template>
-   `
- })
- export class AppComponent {
-    num$ = this.state.num$;
-    suspenseTrigger$ = new Subject();
-    
-    constructor(private state: globalState) {
-    
-    }
-
-    search(str: string) {
-      this.state.search(str);
-      this.suspenseTrigger$.next();
-    }
-
-}
-```
-
-#### Using the `contextTrg`
-
-@TODO 
-
-We can use the `contextTrg` input to switch back from any template to display the actual value.
- e.g. from the complete template back to the value display
-
-```typescript
- @Component({
-   selector: 'any-component',
-   template: `
-    <input (input)="search($event.target.value)" />
-    <ng-container
-     *rxLet="
-       num$; let n;
-       let n;
-       suspense: suspense
-       suspenseTrg: suspenseTrigger$
-    ">
-      {{n}}
-    </ng-container>
-    <ng-template #suspense>loading...</ng-template>
-   `
- })
- export class AppComponent {
-    num$ = this.state.num$;
-    suspenseTrigger$ = new Subject();
-    
-    constructor(private state: globalState) {
-    
-    }
-
-    search(str: string) {
-      this.state.search(str);
-      this.suspenseTrigger$.next();
-    }
-
-}
-```
-
-
 # Advanced Usage
 
- ## Use render strategies (`strategy`)
- 
- Let' see how we can work with strategies in the template.
- If you are not familiar with this concept, you can read more details on [render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#usage-in-the-template) if you need more clarity. 
-
-`*rxLet` accepts static values e.g. `number`   
- 
-```html
- <ng-container *rxLet="num; let n;
-    strategy:'native'
-    ">
-     {{ n }}    
- </ng-container>
- ```
-
-as well as `Observable<number>`, `Promise<number>` or any other 'subscribale'.
-
-```html
- <ng-container *rxLet="num$; let n;
-    strategy:'native'
-    ">
-     {{ n }}    
- </ng-container>
- ```
-
-This is especially interesting as we can enrich rendering with e.g. awareness of the viewport and make it even more lazy see [viewport-priority]().
-
-## Use a renderCallback to run post render processes (`renderCallback`)
-
- A notification channel of `*rxLet` that the fires when rendering is done.
- 
- This enables developers to perform actions based on rendering timings e.g. checking the DOM for the final height or send the LCP time to a tracking server.
- 
- It is also possible to use the renderCallback in order to determine if a view should be visible or not. 
- This way developers can hide a display as long as it has not finished rendering and e.g show a loading spinner.
-
- The result of the `renderCallback` will contain the currently rendered value of in DOM.
-
-```typescript
- @Component({
-   selector: 'app-root',
-   template: `
-   <ng-container *rxLet="num$; let n; renderCallback: valueRendered;">
-      {{ n }}
-   </ng-container>
-   `
- })
- export class AppComponent {
-   num$: Observable<number> = of();
-  
-   // fires when rxLet finished rendering changes
-   valueRendered = new Subject<Item[]>();
-
-  ...
-  
-  init() {
-    // initializes the process 
-    this.rxEffects.register(this.valueRendered, () => saveLCPTime());
-  }
-
- }
-```
-
-## Working with event listeners (`patchZone`)
-
-Event listeners normally trigger zone. Especially high frequently events cause performance issues.
-By using we can run all event listener inside `rxLet` outside zone.
-
-```ts
-@Component({
-  selector: 'any-component>',
-  template: `
-    <div *rxLet="bgColor$; let bgColor; patchZone: false" 
-    (mousemove)="calcBgColor($event)" [style.background]="bgColor">
-    </div>
-  `
-})
-export class AppComponent {
-  // As the part of the template where this function is used as event listener callback
-  // has `patchZone` false the all event listeners run ouside zone.
-  calcBgColor(moveEvent: MouseEvent) {
-   // do something with the background in combination with the mouse position
-  }
-}
-```
-
+ TBD
 
 # Testing
 
 For testing we suggest to switch the CD strategy to `native`. 
 This helps to exclude all side effects from special render strategies.
 
-## Basic Setup
+TBD
 
-```typescript
-import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { LetDirective } from '@rx-angular/template/let';
+# Old Docs
 
-@Component({
-  template: `
-    <ng-container *rxLet="value$; let value;">
-      {{value}}
-    </ng-container>
-  `,
-})
-class TestComponent {
-  value$: Observable<number> = of(42);
-}
+## RxFor Directive
 
-const setupTestComponent = (): void => {
-  TestBed.configureTestingModule({
-    declarations: [LetDirective, LetDirectiveTestComponent],
-    providers: [ TemplateRef, ViewContainerRef ],
-    teardown: { destroyAfterEach: true }
-  });
+The `*rxFor` structural directive provides a convenient and performant way for rendering
+templates out of a list of items.
 
-  fixtureComponent = TestBed.createComponent(TestComponent);
-  component = fixtureComponent.componentInstance;
-  componentNativeElement = component.nativeElement;
-};
+Input values can be provided either as `Observable`, `Promise` or static values.
 
+Compared to the `NgForOf`, `RxFor` treats each child template as single renderable unit. Rendering cycles of child templates get prioritized, scheduled and executed by `RenderStrategies`. This technique enables non-blocking rendering of lists and can be referred to as `concurrent mode`.
+
+Each template getting processed as individual task does also mean, rendering can be cancelled and rendered items will be rendered in chunks.
+
+Furthermore, `RxFor` provides access to the rendering cycle and informs about any event happening in form of a `renderCallback`.
+
+However, the rendering behavior is fully configurable and transparent for the developer. Each instance of `RxFor` can be configured to render with different settings.
+
+
+### Features of `*rxFor`
+
+Included features for `*rxFor`:
+
+- Push based architecture
+- Immutable as well as mutable data structures (`trackBy`)
+- Provide a comprehensive set of context variables for each view
+- Provide a way to fix `ChangeDetection` issues in `Projected Views` scenarios
+- Notify about when rendering of child templates is finished (`renderCallback`)
+- Reactive as well as imperative values in the template (`ngFor` drop-in replacement)
+- `ListManager`: special logic for differ mechanism to avoid over-rendering; abstracts away low level logic
+- render every `EmbeddedView` on its own while applying the configured `RxStrategyCredentials#behavior`
+- cancel any scheduled work if a remove was triggered for a `trackById`
+- cancel any update if a new update was triggered for the same `trackById`
+
+### Simple example using `*rxFor` with `Observable` values
+
+```html
+<ul>
+  <li *rxFor="let item of observableItems$; trackBy: trackItem">{{ item }}</li>
+</ul>
 ```
-           
-## Instantiation
-           
-```typescript
-//...
-class TestComponent {
-  value$: Observable<number> = of(42);
+
+### Simple example using `*rxFor` with simple static values
+
+```html
+<ul>
+  <li *rxFor="let item of items; trackBy: trackItem">{{ item }}</li>
+</ul>
+```
+
+### Context Variables
+
+The following context variables are available for each template:
+
+- $implicit: `T` the default variable accessed by `let val`
+- item$: `Observable<T>` the same value as $implicit, but as `Observable`
+- index: `number` current index of the item
+- count: `number` count of all items in the list
+- first: `boolean` true if the item is the first in the list
+- last: `boolean` true if the item is the last in the list
+- even: `boolean` true if the item has on even index (index % 2 === 0)
+- odd: `boolean` the opposite of even
+- index$: `Observable<number>` index as `Observable`
+- count$: `Observable<number>` count as `Observable`
+- first$: `Observable<boolean>` first as `Observable`
+- last$: `Observable<boolean>` last as `Observable`
+- even$: `Observable<boolean>` even as `Observable`
+- odd$: `Observable<boolean>` odd as `Observable`
+- select: `(keys: (keyof T)[], distinctByMap) => Observable<Partial<T>>` returns a selection function which accepts an array of properties to pluck out of every list item. The function returns the selected properties of the current list item as distinct `Observable` key-value-pair. See the example below:
+
+This example showcases the `select` view-context function used for deeply nested lists.
+
+```html
+<ul>
+ <li *rxFor="let hero of heroes$; trackBy: trackItem; let select = select;">
+   <div>
+     <strong>{{ hero.name }}</strong></br>
+     Defeated enemies:
+   </div>
+    <span *rxFor="let enemy of select(['defeatedEnemies']); trackBy: trackEnemy;">
+      {{ enemy.name }}
+    </span>
+ </li>
+</ul>
+```
+
+### Input properties
+
+- trackBy: `(index: number, item: T) => any`
+- trackBy: `keyof T`
+- strategy: `string`
+- strategy: `Observable<string>`
+- parent: `boolean`;
+- renderCallback: `Subject<T[]>`
+
+### Using the context variables
+
+```html
+<ul>
+  <li
+    *rxFor="
+      let item of observableItems$;
+      let count = count;
+      let index = index;
+      let first = first;
+      let last = last;
+      let even = even;
+      let odd = odd;
+      trackBy: trackItem;
+    "
+  >
+    <div>{{ count }}</div>
+    <div>{{ index }}</div>
+    <div>{{ item }}</div>
+    <div>{{ first }}</div>
+    <div>{{ last }}</div>
+    <div>{{ even }}</div>
+    <div>{{ odd }}</div>
+  </li>
+</ul>
+```
+
+### Projected Views (`parent`)
+
+Imagine the following situation:
+
+```ts
+@Component({
+  selector: 'app-list-component',
+  template: ` <ng-content select="app-list-item"></ng-content> `,
+})
+export class AppListComponent {
+  @ContentChildren(AppListItemComponent)
+  appListItems: QueryList<AppListItemComponent>;
 }
+```
 
-describe('LetDirective', () => {
-  beforeEach(setupLetDirectiveTestComponent);
+`AppListComponent` has a `contentOutlet` where it expects `AppListItemComponents` to be inserted into. In this case `AppListComponent`s state is dependent on its `ContentChildren`.
+This situation leads to the problem that `AppListComponent` needs to get informed about updates of its child views. This is a known issue which has never been solved for `ngFor` (or other structural directives) especially in combination with `CD OnPush` see here: (https://github.com/angular/angular/pull/35428) `RxFor` solves this issue for you by providing a simple input parameter `parent: boolean`. If value is set to `true` (default is `true`), `*rxFor` will automatically detect every other `Component` where its `EmbeddedView`s were inserted into. Those components will get change detected as well in order to force update their state accordingly.
 
-  it('should be instantiable', () => {
-    expect(fixtureComponent).toBeDefined();
-    expect(testComponent).toBeDefined();
-    expect(componentNativeElement).toBeDefined();
-    expect(componentNativeElement.innerHTML).toBe('42');
-  });
+The usage of `AppListComponent` looks like this:
 
-});
+```html
+<app-list-component>
+  <app-list-item
+    *rxFor="
+      let item of observableItems$;
+      parent: true;
+    "
+  >
+    <div>{{ item }}</div>
+  </app-list-item>
+</app-list-component>
 ```
 
 

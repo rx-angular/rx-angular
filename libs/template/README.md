@@ -11,16 +11,16 @@
 
 ## Sub Modules
 
-- [PushPipe (`push`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/push.md)
-- [LetDirective (`*rxLet`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md) 
-- [ForDirective (`*rxFor`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/for-directive.md) 
-- [TemplateDirective (`*rxTemplate`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/template-directive.md) 
-- [UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/unpatch.md)
+- [PushPipe (`push`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/push/src/lib/Readme.md)
+- [LetDirective (`*rxLet`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/let/src/lib/README.md) 
+- [ForDirective (`*rxFor`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/for/src/lib/README.md) 
+- [TemplateDirective (`*rxTemplate`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/template/src/lib/README.md) 
+- [UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/unpatch/src/lib/README.md)
  
 **Experimental features**
 
-- [🧪 IfDirective (`*rxIf`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/if-directive.md) 
-- [🧪 Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/viewport-prio.md)
+- [🧪 IfDirective (`*rxIf`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/experimental/if/src/lib/README.md) 
+- [🧪 Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/experimental/viewport-prio/src/lib/README.md)
  
 All experimental features are very stable and already tested in production apps for multiple month. The reason to have them in experimental is so we can make small typing changes without breaking changes.
  
