@@ -1,4 +1,3 @@
-
 # Motivation
 
 In Angular there is one way to handle asynchronous values or streams in the template, the `async` pipe.
@@ -62,7 +61,7 @@ This makes it possible to implement your own strategies, and also provides a mig
 This package helps to reduce code used to create composable action streams. 
 It mostly is used in combination with state management libs to handle user interaction and backend communication.
 
-```html
+```
 <ng-container *rxLet="observableNumber$; let n">
  ...
 </ng-container>
@@ -71,9 +70,11 @@ It mostly is used in combination with state management libs to handle user inter
 # Concepts
 
 - [Local variables](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/local-variables.md) 
-- [Local template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/local-templates.md)
+- [Local template]()
 - [Reactive context](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/reactive-context.md)
 - [Contextual state in the template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/contextual-state-in-the-template.md)
+- [Handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/handling-view-and-content-queries.md)
+- [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concepts/ngzone-optimizations.md)
 - [Render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#usage-in-the-template)
 
 # Features
@@ -110,16 +111,16 @@ It mostly is used in combination with state management libs to handle user inter
 | `suspenseTrg`    | `Observable<unknown>`                                              | trigger to show `suspense` template                                                                                                                                                                     |
 | `templateTrg`    | `Observable<RxNotificationKind>`                                   | trigger to show any templates, based on the given `RxNotificationKind`                                                                                                                                  |
 
+
+
 **Rendering**  
 
 | Input            | Type                                                               | description                                                                                                                                                                                             |
 |------------------|--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`. See [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/ngzone-optimizations.md)                                                                                                                    |
-| `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/handling-view-and-content-queries.md) |
-| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                     |
-| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                            |
-
-
+| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`                                                                                                                    |
+| `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. |
+| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes                                                                                                                     |
+| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                              |
 
 
 ## Outputs
@@ -146,7 +147,7 @@ Standalone component setup:
 ```
 import { LetModule } from "@rx-angular/template/let";
 
-@Component({
+@NgComponent({
     standalone: true,
     imports: [ LetModule ],
     template: `...`
@@ -180,9 +181,9 @@ This can be achieved by using Angular's native 'let' syntax `*rxLet="observableN
 
 ![Contextual-State--template-vs-variable](https://user-images.githubusercontent.com/10064416/192660150-643c4d37-5326-4ba2-ad84-e079890b3f2f.png)
 
-A nice feature of the `*rxLet` directive is, it provides 2 ways to access the [reactive context state]() in the template:
-- context variables
-- context templates
+A nice feature of the `*rxLet` directive is, it provides 2 ways to access the [reactive context state]() in the tempalte:
+- local variables
+- templates
 
 ### Context Variables
  
@@ -231,8 +232,6 @@ You can also use template anchors to display the [contextual state]() in the tem
 This helps in some cases to organize the template and introduces a way to make the dynamic or even lazy.
 
 ### Context Trigger
-
-![context-templates](https://user-images.githubusercontent.com/4904455/195452228-b2c1c6ac-5046-4cd3-a857-564cf039dd02.gif)
 
 You can also use asynchronous code like a `Promise` or an `Observable` to switch between templates.
 This is perfect for e.g. a searchable list with loading spinner.
@@ -374,8 +373,10 @@ We can use the `suspenseTrg` input to switch back from any template to display t
 
 #### Using the `contextTrg`
 
-We can use the `contextTrg` input to set any context. It combines the functionality of `suspenseTrg`, `completeTrg` and `errorTrg` 
-in a convenient way.
+@TODO 
+
+We can use the `contextTrg` input to switch back from any template to display the actual value.
+ e.g. from the complete template back to the value display
 
 ```typescript
  @Component({
@@ -384,10 +385,10 @@ in a convenient way.
     <input (input)="search($event.target.value)" />
     <ng-container
      *rxLet="
-       num$;
+       num$; let n;
        let n;
-       suspense: suspense;
-       contextTrg: contextTrg$;
+       suspense: suspense
+       suspenseTrg: suspenseTrigger$
     ">
       {{n}}
     </ng-container>
@@ -396,13 +397,15 @@ in a convenient way.
  })
  export class AppComponent {
     num$ = this.state.num$;
-    contextTrg$ = new Subject();
+    suspenseTrigger$ = new Subject();
     
-    constructor(private state: globalState) {}
+    constructor(private state: globalState) {
+    
+    }
 
     search(str: string) {
       this.state.search(str);
-      this.contextTrg$.next(RxNotificationKind.Suspense);
+      this.suspenseTrigger$.next();
     }
 
 }
