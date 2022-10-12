@@ -20,12 +20,14 @@ In many cases, this leads to heavy refactorings to get the performance flaw out 
 Strategies give us a way to control how Angular's rendering is executed and which render method is used.
 
 **Strategy Sets:**
+
 - [Basic Strategies](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/render-strategies/docs/basic-strategies.md)
 - [Concurrent Strategies](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/render-strategies/docs/concurrent-strategies.md)
 
 ## Usage
 
 ### Configure existing features
+
 ```typescript
 @Component({
   selector: 'immediate',
@@ -57,7 +59,6 @@ export class RenderCallbackComponent {
   }
 }
 ```
-
 
 ### Custom Strategies
 

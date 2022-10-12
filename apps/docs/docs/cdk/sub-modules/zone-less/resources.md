@@ -5,14 +5,14 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 # Motivation
 
-By default, Angular or better say zone.js patches most of the asynchronouse API's of the Browser. 
-This adds additional overhead on those API's and even more important, this leads to un-nessecary renderings of the Angular component tree, also known as overredering. 
+By default, Angular or better say zone.js patches most of the asynchronouse API's of the Browser.
+This adds additional overhead on those API's and even more important, this leads to un-nessecary renderings of the Angular component tree, also known as overredering.
 
 Until now developers where only able to either disable zone.js completely or wrapping another logic around the patched APIs to avoid change detection calls.
 This of course requires to inject another service and also makes your code more cluttery and slow.
 
 The zone-less package helps out here.
-It provides a general method to access the unpatched version of an API and also ships a set of commonly used APIs of the Browser as well as RxJS. 
+It provides a general method to access the unpatched version of an API and also ships a set of commonly used APIs of the Browser as well as RxJS.
 All those APIs are fully independent of zone.js and NgZone (which is normally used to run things outside Angular).
 
 # The Benefits
@@ -30,9 +30,9 @@ The way how zone.js works is, it patches all relevant async APIs of the Browser.
 ![rx-angular-cdk-zone-less_API-patching_michael-hladky](https://user-images.githubusercontent.com/10064416/129472845-e27c5a52-f99d-4f5f-b205-4e947e188d25.png)
 
 All original logic of the patched API's is stored under a symbol in `window`. You can check that by logging for example the following value: `console.log(window.__zone_symbol__setTimeout)`.
-This will print the original unpatched API to the Brwosers console. 
+This will print the original unpatched API to the Brwosers console.
 
-Internally the symbols and in turn the unpatched API's is what the zone-less package is using. 
+Internally the symbols and in turn the unpatched API's is what the zone-less package is using.
 The essential method used to get hold of the unpatched APIs is called `getZoneUnPatchedApi`. It takes a target i.e. `window` and a name of the method we want to retreive the unpatched version of.
 
 ## Setup
@@ -50,18 +50,16 @@ yarn add @rx-angular/cdk
 
 ## Usage
 
-The utils folder contains the most essential functions used to unpatch APIs. 
-Normally if developers want to avoid change detection through zone the have to inject `NgZone` and run the code that should not trigger change detection in the `runOutsideAngular` method.  
+The utils folder contains the most essential functions used to unpatch APIs.
+Normally if developers want to avoid change detection through zone the have to inject `NgZone` and run the code that should not trigger change detection in the `runOutsideAngular` method.
 
 ```typescript
 export class AnyComponent {
-  
   constructor(private ngZone: NgZone) {
-     this.ngZone.runOutsideAngular(() => {
+    this.ngZone.runOutsideAngular(() => {
       // code here
     });
   }
- 
 }
 ```
 
@@ -71,27 +69,24 @@ This introduces some lines of code and also takes time to retreive the service f
 
 - getZoneUnPatchedApi
 
-The `getZoneUnPatchedApi` function is used in all other functions of the zone-less package to access the Browsers unpatched API's. 
-
+The `getZoneUnPatchedApi` function is used in all other functions of the zone-less package to access the Browsers unpatched API's.
 
 ```typescript
 @Component({
   // ...
 })
 export class AppComponent {
-  
   doStuff() {
-   // unpatched method of the window object
-    getZoneUnPatchedApi('setTimeout')(
-      () => console.log('tada!'), 
-      300);
-  };
-  
+    // unpatched method of the window object
+    getZoneUnPatchedApi('setTimeout')(() => console.log('tada!'), 300);
+  }
+
   doOtherStuff() {
     // unpatched method of an HTML element
-    getZoneUnPatchedApi(elem, 'addEventListener')('click', () => console.log('tada!') );
-  };
-  
+    getZoneUnPatchedApi(elem, 'addEventListener')('click', () =>
+      console.log('tada!')
+    );
+  }
 }
 ```
 
@@ -113,14 +108,14 @@ import {setTimeout} from @rx-angular/cdk/zone-less
   // ...
 })
 export class AppComponent {
-  
+
   doStuff() {
    // unpatched method of the window object
     setTimeout(
-      () => console.log('tada!'), 
+      () => console.log('tada!'),
       300);
   };
-  
+
 }
 ```
 
@@ -139,7 +134,7 @@ scheduler
 - queue
 - animationFrame
 
-As RxJS internally uses Browser API's it is pretty impossible to get rid of the zone involvment. 
+As RxJS internally uses Browser API's it is pretty impossible to get rid of the zone involvment.
 For this very reason we shipped the RxJS operators, schedulers and functions that would trigger zone as unpatched version.
 
 ```typescript
@@ -149,15 +144,14 @@ import {interval} from @rx-angular/cdk/zone-less
   // ...
 })
 export class AppComponent {
-  
+
   doStuff() {
     // unpatched method of RxJS lib
     interval(300).subscribe();
   };
-  
+
 }
 ```
-
 
 # Available Approaches
 
@@ -173,20 +167,15 @@ It is possible to inject an instance of NgZone into components and services etc 
   // ...
 })
 export class AppComponent {
-  
-  constructor(private ngZone: NgZone) {
-  }
-  
+  constructor(private ngZone: NgZone) {}
+
   doStuff() {
-   
     this.ngZone.runOutsideAngular(() => {
       setTimeout(() => {
         console.log('tada!');
-      }, 300)
+      }, 300);
     });
-  
   }
-  
 }
 ```
 

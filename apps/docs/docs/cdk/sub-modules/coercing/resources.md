@@ -6,12 +6,11 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 # Motivation
 
 Coercing, or to be more specific type coercion is the process of converting a value from one type to another.
-This can be done with any primitive value in JavaScript. e.g. number, string, Symbol, boolean, null, undefined. 
+This can be done with any primitive value in JavaScript. e.g. number, string, Symbol, boolean, null, undefined.
 
 Another type where we also can apply coercing is the `Observable` type.
 
 ![coerceObservable](https://user-images.githubusercontent.com/10064416/129430812-1e4af911-fb42-4d61-a68a-4fb86e595113.png)
-
 
 In practice you can apply this technique in 2 ways:
 
@@ -163,7 +162,9 @@ This comes in handy for later processing and improves performance.
 })
 export class AppComponent {
   _prop1 = new Subject<number | Observable<number>>();
-  prop1Observables$: Observable<number> = this._prop1.pipe(coerceDistinctWith());
+  prop1Observables$: Observable<number> = this._prop1.pipe(
+    coerceDistinctWith()
+  );
 
   @Input()
   set prop1(val: Observable<number> | number) {
@@ -199,8 +200,8 @@ A minimal implementation if it would look like this:
 export class AppComponent {
   _prop1 = new Subject<number | Observable<number>>();
   prop1Changes$: Observable<number> = this._prop1.pipe(
-  coerceDistinctWith(),
-  switchAll()
+    coerceDistinctWith(),
+    switchAll()
   );
 
   @Input()
@@ -215,7 +216,6 @@ Here we apply the `switchAll` operator to unsubscribe the previouse observable a
 
 by using the `coerceAllFactory` function we can compose this pattern with less code and still have the option to decide on the way of compostion.
 
-
 ```typescript
 @Component({
   // ...
@@ -223,7 +223,7 @@ by using the `coerceAllFactory` function we can compose this pattern with less c
 export class AppComponent {
   _prop1 = coerceAllFactory();
   prop1Changes$: Observable<number> = this._prop1.values$;
-  
+
   @Input()
   set prop1(val: Observable<number> | number) {
     this._prop1.next(val);
@@ -233,7 +233,7 @@ export class AppComponent {
 
 Another benefit here is that only the `next` method is exposed.
 
-By default a normal `Subject` is used and `switchAll` is applied. 
+By default a normal `Subject` is used and `switchAll` is applied.
 As there are quite some ways to process higher order observables the factory provides optional configuration parameter.
 
 ```typescript

@@ -22,9 +22,9 @@ its own.
 `RxState` can be used in different styles which will affect the way how we can actually test, modify
 and access the respective component:
 
-* local provider
-* inheritance
-* local creation
+- local provider
+- inheritance
+- local creation
 
 **Local Provider**
 
@@ -35,15 +35,13 @@ when testing your component. You'll see why in the next section.
 ```ts
 @Component({
   selector: 'rx-angular-state-local-provider-test',
-  template: `
-    <span>{{ value$ | async }}</span>
-  `,
+  template: ` <span>{{ value$ | async }}</span> `,
   providers: [RxState],
 })
 export class RxStateInjectionComponent {
   value$ = this.state.select();
-  
-  constructor(public state: RxState<{ foo: string; }>) {}
+
+  constructor(public state: RxState<{ foo: string }>) {}
 }
 ```
 
@@ -57,7 +55,7 @@ you cannot replace the instance of `RxState` in a test environment.
   selector: 'rx-angular-state-inheritance-test',
   template: ` <span>{{ value$ }}</span> `,
 })
-export class RxStateInheritanceComponent extends RxState<{ foo: string; }> {
+export class RxStateInheritanceComponent extends RxState<{ foo: string }> {
   value$ = this.select();
 
   constructor() {
@@ -77,7 +75,7 @@ you cannot replace the instance of `RxState` in a test environment.
   template: ` <span>{{ value$ }}</span> `,
 })
 export class RxStateCreationComponent {
-  state = new RxState<{ foo: string; }>();
+  state = new RxState<{ foo: string }>();
   value$ = this.state.select();
 }
 ```
@@ -85,7 +83,7 @@ export class RxStateCreationComponent {
 **Setup the test environment**
 
 The steps to set up a test environment for component testing involving `RxState` are no different
-to any other component tests. 
+to any other component tests.
 
 ```ts
 describe('MyComponent', () => {
@@ -120,7 +118,7 @@ describe('MyComponent', () => {
   let component: MyComponent;
   let fixture: ComponentFixture<MyComponent>;
   let mockState: RxState<{ foo: string }>;
-  
+
   beforeEach(() => {
     // create a mock for your test environment
     mockState = new RxState();
@@ -130,8 +128,8 @@ describe('MyComponent', () => {
       providers: [
         {
           provide: RxState,
-          useValue: mockState
-        }
+          useValue: mockState,
+        },
       ],
       teardown: { destroyAfterEach: true },
     });
@@ -160,14 +158,14 @@ There are cases where you want to unit test your state transformations instead o
 
 Ideally, you already have decoupled your `RxState` from your component in your application.
 
-In order to create a fully decoupled `RxState` instance, you can simply create an `@Injectable()` and 
+In order to create a fully decoupled `RxState` instance, you can simply create an `@Injectable()` and
 extend from `RxState`.
 
 ```ts
 @Injectable()
-export class MyState extends RxState<{ foo: string; }> {
+export class MyState extends RxState<{ foo: string }> {
   state$ = this.select();
-  
+
   setFoo(foo: string): void {
     this.set({ foo });
   }
@@ -179,14 +177,12 @@ The `MyState` service now can be used as local provided instance for your compon
 ```ts
 @Component({
   selector: 'rx-angular-state-local-provider-test',
-  template: `
-    <span>{{ state$ | async }}</span>
-  `,
+  template: ` <span>{{ state$ | async }}</span> `,
   providers: [MyState],
 })
 export class RxStateInjectionComponent {
   state$ = this.state.state$;
-  
+
   constructor(public state: MyState) {}
 }
 ```
@@ -199,11 +195,10 @@ In your `jest` setup you are now able to test your Service completely decoupled 
 > You can find more information about the [`jestMatcher` here](https://github.com/rx-angular/rx-angular/blob/main/libs/test-helpers/src/lib/rx-marbles/jest.observable-matcher.ts).
 
 ```ts
-
 describe('MyState', () => {
   let service: MyState;
   let testScheduler: TestScheduler;
-  
+
   beforeEach(() => {
     // create a new instance for each test
     service = new MyState();
@@ -229,10 +224,8 @@ it('state should emit foo', () => {
   testScheduler.run(({ expectObservable }) => {
     service.setFoo('in a test');
     expectObservable(service.select('foo')).toBe('(a)', {
-      a: 'in a test'
+      a: 'in a test',
     });
   });
 });
 ```
-
-

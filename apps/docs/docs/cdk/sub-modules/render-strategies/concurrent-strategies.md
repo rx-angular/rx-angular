@@ -4,7 +4,9 @@ Based on the [RAIL model](https://web.dev/rail/), e.g. if your app provides anim
 From the UX perspective that means users should not experience blocking periods more than 16 ms.
 
 ## Concepts
+
 There are 5 core concepts of the concurrent strategies:
+
 - Frame budget / Frame drop
 - Scheduling
 - Priority
@@ -48,11 +50,12 @@ When it comes to scripting work we can do 2 things to avoid that:
 - reduce scripting work and let the user interact earlier
 - chunk up work and use scheduling API's to distribute the work overtime and let the user interact in between.
 
-It is often the case that the work just can't get reduced so we have to schedule. 
+It is often the case that the work just can't get reduced so we have to schedule.
 
 ![Render Strategies-Scheduling Detail View](https://user-images.githubusercontent.com/10064416/145210963-be6d2dc0-f4e3-4654-9f7f-f5221976ed0c.png)
 
 Some of the possible APIs are:
+
 - queueMicrotask
 - setTimeout
 - postMessage
@@ -70,7 +73,7 @@ A simple way to schedule work is using `setTimeout`.
 
 ```typescript
 function work(): viod {
-  concole.log('work done!'); 
+  concole.log('work done!');
 }
 
 const asyncId = setTimeout(work);
@@ -84,10 +87,9 @@ This is important for cancellation and cleanup logic.
 
 ```typescript
 clearTimeout(asyncId);
-``` 
+```
 
 If we pass the asyncId as parameter to the `clearTimeout` function we can cancel the scheduling and `work` will never get executed.
-
 
 ### Priority
 
@@ -102,7 +104,7 @@ Input handlers (tap, click etc.) often need to schedule a combination of differe
 
 To get the best user experience we should prioritize this tasks.
 
-There are couple of scheduling APIs mentioned under scheduling. 
+There are couple of scheduling APIs mentioned under scheduling.
 They all help to prioritize the work and define the moment of execution differently.
 
 ![Render Strategies - scheduling techniques](https://user-images.githubusercontent.com/10064416/144139079-9f1d6ad7-ad7e-437c-95a2-8a794460f9c9.png)
@@ -132,9 +134,10 @@ This scenario gets to a problem depending on:
 ![concurrent scheduling - abstract diagram](https://user-images.githubusercontent.com/10064416/145228577-6b8f0bb7-6547-4835-aecc-13d7e07baf02.png)
 
 Concurrent scheduling is a marketing term and simply means that there is a mechanism in place that knows how much time is spent in the current task.
-This number is called frame budget and measured in milliseconds. As a result of this technique we're getting prioritized user-centric scheduling behaviours. 
+This number is called frame budget and measured in milliseconds. As a result of this technique we're getting prioritized user-centric scheduling behaviours.
 
 This enables:
+
 - scheduling
 - cancellation
 - fine grained prioritization
@@ -142,14 +145,14 @@ This enables:
 - render deadlines
 
 One of the first things to understand is the term "frame budget".
-It means we have a maximum time (which is globally defined) a task can take before yielding to the main thread.  e.g. 60frames/1000ms=16.6666ms animations or 50ms long task.
+It means we have a maximum time (which is globally defined) a task can take before yielding to the main thread. e.g. 60frames/1000ms=16.6666ms animations or 50ms long task.
 
 Scheduling with notion of frame budget enables us to split work into individual browser tasks as soon as we exceed the budget.
-We then yield to the main thread and are interactive again until the next batch of tasks will get processed. 
+We then yield to the main thread and are interactive again until the next batch of tasks will get processed.
 
 ![rx-angular-cdk-render-strategies__frame-budget](https://user-images.githubusercontent.com/10064416/115894224-4f098280-a459-11eb-9abf-9a902d66d380.png)
 
-The special thing about the set of concurrent strategies is they have a render deadline. 
+The special thing about the set of concurrent strategies is they have a render deadline.
 It means if the scheduled tasks in the global queue of work is not exhausted after a certain time window, we stop the chunking process.
 Instead all remaining work will get executed as fast as possible. This means in one synchronous block (that potentially can causes a frame drop).
 
@@ -196,10 +199,10 @@ Tooltips should be displayed immediately on mouse over. Any delay will be very n
 @Component({
   selector: 'item-image',
   template: `
-    <img 
-      [src]="src" 
-      (mouseenter)="showTooltip()" 
-      (mouseleave)="hideTooltip()" 
+    <img
+      [src]="src"
+      (mouseenter)="showTooltip()"
+      (mouseleave)="hideTooltip()"
     />
   `,
 })
@@ -209,21 +212,25 @@ export class ItemsListComponent {
   constructor(private strategyProvider: RxStrategyProvider) {}
 
   showTooltip() {
-    this.strategyProvider.schedule(
-      () => {
-        // create tooltip
-      },
-      { strategy: 'immediate' }
-    ).subscribe();
+    this.strategyProvider
+      .schedule(
+        () => {
+          // create tooltip
+        },
+        { strategy: 'immediate' }
+      )
+      .subscribe();
   }
 
   hideTooltip() {
-    this.strategyProvider.schedule(
-      () => {
-        // destroy tooltip
-      },
-      { strategy: 'immediate' }
-    ).subscribe();
+    this.strategyProvider
+      .schedule(
+        () => {
+          // destroy tooltip
+        },
+        { strategy: 'immediate' }
+      )
+      .subscribe();
   }
 }
 ```
@@ -279,12 +286,14 @@ export class DropdownComponent {
   }
 
   hideDropdown() {
-    this.strategyProvider.schedule(
-      () => {
-        // destroy dropdown
-      },
-      { strategy: 'userBlocking' }
-    ).subscribe();
+    this.strategyProvider
+      .schedule(
+        () => {
+          // destroy dropdown
+        },
+        { strategy: 'userBlocking' }
+      )
+      .subscribe();
   }
 }
 ```
@@ -310,7 +319,7 @@ Heavy work visible to the user. For example, since it has a higher timeout, it i
 
 ![Render Strategies - normal example](https://user-images.githubusercontent.com/10064416/146285878-3b242f2d-046e-49ad-be2f-cbf1c33b7a02.png)
 
-For `normal` strategy a perfect example will be rendering of the items list. 
+For `normal` strategy a perfect example will be rendering of the items list.
 
 It is often the case that rendering of big lists blocks user interactions. In combination with `rxFor` directive such operations become truly unblocking.
 
@@ -373,11 +382,15 @@ export class ItemsListComponent {
   ) {}
 
   openCreateItemPopup() {
-    this.strategyProvider.schedule(() => {
-      // logic to lazy load popup component
-    }, {strategy: 'low'}).subscribe();
+    this.strategyProvider
+      .schedule(
+        () => {
+          // logic to lazy load popup component
+        },
+        { strategy: 'low' }
+      )
+      .subscribe();
   }
-
 }
 ```
 
@@ -388,7 +401,7 @@ export class ItemsListComponent {
 
 ![render-strategies-concurrent-idle-tree](https://user-images.githubusercontent.com/10064416/146285889-8f98a92c-35dd-4632-9b3a-0eaf759790fc.png)
 
-Urgent work that should happen in the background and is not initiated but visible by the user. This occurs right after current task and has the lowest priority. 
+Urgent work that should happen in the background and is not initiated but visible by the user. This occurs right after current task and has the lowest priority.
 
 | Render Method     | Scheduling    | Render Deadline |
 | ----------------- | ------------- | --------------- |
@@ -425,20 +438,26 @@ export class ItemsListComponent {
     private strategyProvider: RxStrategyProvider,
     private webSocket: WebSocketService
   ) {
-    this.items$.pipe(
-      this.strategyProvider.scheduleWith(
-          items => this.webSocket.syncItems(items), 
-          {strategy: 'idle'}
-       )
-    ).subscribe();
+    this.items$
+      .pipe(
+        this.strategyProvider.scheduleWith(
+          (items) => this.webSocket.syncItems(items),
+          { strategy: 'idle' }
+        )
+      )
+      .subscribe();
   }
 
   openCreateItemPopup() {
-    this.strategyProvider.schedule(() => {
-      // logic to lazy load popup component
-    }, {strategy: 'low'}).subscribe();
+    this.strategyProvider
+      .schedule(
+        () => {
+          // logic to lazy load popup component
+        },
+        { strategy: 'low' }
+      )
+      .subscribe();
   }
-
 }
 ```
 

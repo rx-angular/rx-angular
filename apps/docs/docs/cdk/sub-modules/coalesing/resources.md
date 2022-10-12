@@ -38,6 +38,7 @@ There are 2 places in Angular we have coalescing already implemented in the fram
 - RxAngular adds another option where we can apply those techniques manually wherever we want.
 
 **The Benefits**
+
 - ✅ Coalescing techniques as RxJS operators
 - ✅ Configurable durationSelector for all kind of scheduling methods
 - ✅ Scope coalescing to a specific component or object

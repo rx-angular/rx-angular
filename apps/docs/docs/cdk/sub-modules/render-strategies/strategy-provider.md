@@ -2,17 +2,17 @@
 
 `RxStrategyProvider` is the best way to consume full power of concurrent strategies to schedule any kind of work.
 
-> Want to play with it? Here's [demo link](https://stackblitz.com/edit/angular-ivy-1vfpoe) 
+> Want to play with it? Here's [demo link](https://stackblitz.com/edit/angular-ivy-1vfpoe)
 
 ## Motivation
 
-Chromium based browsers considers all tasks that taking more than 50ms as long tasks. If task runs more than 50ms, users will start noticing lags. Optimally all user interactions should happen at 30 fps framerate with 32ms budget per browser task. In ideal world it should be 60 fps and 16ms budget. 
+Chromium based browsers considers all tasks that taking more than 50ms as long tasks. If task runs more than 50ms, users will start noticing lags. Optimally all user interactions should happen at 30 fps framerate with 32ms budget per browser task. In ideal world it should be 60 fps and 16ms budget.
 
 > 💡 In reality browser has a reserved overhead of 4ms, try to stick to 28ms of work for 30 fps and 12ms for 60 fps.
 
 ## Scheduling mechanisms in browser
 
-There are multiple ways to schedule task in the browser. 
+There are multiple ways to schedule task in the browser.
 
 - `setTimeout`
 - `requestAnimationFrame`
@@ -26,7 +26,7 @@ None of them has a full notion about what happens in the browser and can be unre
 
 > 💡 Under the hood all our concurrent strategies are based on MessageChannel technology.
 
-To address the problem of long tasks and help browser split the work @rx-angular/cdk provides  concurrent strategies. This strategies will help browser to chunk the work into non-blocking tasks whenever it's possible. 
+To address the problem of long tasks and help browser split the work @rx-angular/cdk provides concurrent strategies. This strategies will help browser to chunk the work into non-blocking tasks whenever it's possible.
 
 You can read detailed information about concurrent strategies [here](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concurrent-strategies.md).
 
@@ -37,7 +37,7 @@ Full signature of the service available below, but we will focus only on methods
 ```typescript
 @Injectable({ providedIn: 'root' })
 export class RxStrategyProvider<T extends string = string> {
-  
+
   get config(): Required<RxAngularConfig<T>>;
 
   get strategies(): RxStrategies<T>;
@@ -78,6 +78,7 @@ export class RxStrategyProvider<T extends string = string> {
 
 This method returns current `RxAngularConfig` used in the service.
 Config includes:
+
 - strategy that currently in use - `primaryStrategy`
 - array of custom user defined strategies - `customStrategies`
 - setting that is responsible for running in our outside of the zone.js - `patchZone`
@@ -85,7 +86,7 @@ Config includes:
 #### Usage example
 
 ```typescript
-const defaultConfig = this.strategyProvider.config; 
+const defaultConfig = this.strategyProvider.config;
 ```
 
 ### `get strategies()`
@@ -119,7 +120,7 @@ const primaryStrategy = this.strategyProvider.primaryStrategy;
 ```
 
 ```html
-<div *rxLet="let obs$; strategy: strategyProvider.primaryStrategy">
+<div *rxLet="let obs$; strategy: strategyProvider.primaryStrategy"></div>
 ```
 
 ### `set primaryStrategy()`
@@ -143,7 +144,7 @@ const primaryStrategy$ = this.strategyProvider.primaryStrategy$;
 ```
 
 ```html
-<div *rxLet="let obs$; strategy: strategyProvider.primaryStrategy$">
+<div *rxLet="let obs$; strategy: strategyProvider.primaryStrategy$"></div>
 ```
 
 ### `strategies$`
@@ -158,7 +159,7 @@ const strategyNames$ = this.strategyProvider.strategyNames$;
 
 ### `schedule` & `scheduleWith`
 
-These methods allows users to schedule any kind of work. 
+These methods allows users to schedule any kind of work.
 
 - `schedule` returns an observable (don't forget to subscribe!)
 - `scheduleWith` returns a `MonoTypeOperatorFunction` so you can use this method inside rxjs `pipe`
@@ -176,16 +177,19 @@ Options are configuration object that you can use to setup the scheduling behavi
 #### Usage examples
 
 ```typescript
-this.strategyProvider.schedule(() => 
-    myWork(), 
-    {strategy: 'idle', patchZone: false, scope: this}
-).subscribe();
+this.strategyProvider
+  .schedule(() => myWork(), { strategy: 'idle', patchZone: false, scope: this })
+  .subscribe();
 
-myObservable$.pipe(
-  this.strategyProvider.scheduleWith(
-    () => myWork(), 
-    {strategy: 'idle', patchZone: false, scope: this})
-).subscribe();
+myObservable$
+  .pipe(
+    this.strategyProvider.scheduleWith(() => myWork(), {
+      strategy: 'idle',
+      patchZone: false,
+      scope: this,
+    })
+  )
+  .subscribe();
 ```
 
 ### `scheduleCD` method
@@ -198,10 +202,11 @@ Imperative method that you can use to schedule change detection cycle. You must 
 #### Usage example
 
 ```typescript
-this.strategyProvider.scheduleCd(this.changeDetectorRef, {afterCD: myWork()});
+this.strategyProvider.scheduleCd(this.changeDetectorRef, { afterCD: myWork() });
 ```
 
 ## Links
+
 - [Demo](https://stackblitz.com/edit/angular-ivy-1vfpoe)
 - [Detailed information about strategies](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/render-strategies)
 - [MessageChannel documentation](https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel)

@@ -53,7 +53,6 @@ With these sets of strategies and the possibility of switching them at runtime w
 
 ![concurrent scheduling - abstract diagram](https://user-images.githubusercontent.com/10064416/145224962-04147632-f634-4025-a097-8135cdf9f3cc.png)
 
-
 **Render strategies pave the way for truly non-blocking applications, targeted for any device or platform 🚀**
 
 <!--
@@ -110,7 +109,7 @@ You can then partially enable more performance features of RxAngular.
 
 Configurations are done with Angular best practies and based on `InjectionToken`'s.
 
-> As all configurtion are controlled by `RxStrategyProvider`, an Angular service, we can apply 
+> As all configurtion are controlled by `RxStrategyProvider`, an Angular service, we can apply
 > all knowledge of Angular DI on global and local level including all life cycles.
 
 We can configure on the following levels:
@@ -298,7 +297,9 @@ export class AnyService {
   ) {}
 
   getData() {
-    this.strategyProvider.schedule(() => this.apiService.sendRequest(), {strategy: 'low'}).subscribe();
+    this.strategyProvider
+      .schedule(() => this.apiService.sendRequest(), { strategy: 'low' })
+      .subscribe();
   }
 }
 ```
@@ -306,8 +307,6 @@ export class AnyService {
 > **⚠ Notice:**  
 > The component that introduces the change does not know where in the template it sits. The whole template needs to be re-evaluated.
 
-
 ## Testing
 
-@TODO 
-
+@TODO

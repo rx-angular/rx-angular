@@ -12,50 +12,45 @@ When dealing with asynchronouse code we always have some contextual information 
 The a good example is a `[Promise](https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Promise)` used in a UI where you can list items and search them.
 
 The following states can apply to this UI:
+
 - Initial loading of the list. (loading spinner)
 - Display of the data (The actual value is now given and displayed)
 - Error in the asynchronouse process (A error message is displayed)
 - Completion of the process (Communicates that the process is completed)
 - Subsquent search actions (loading spinner)
 
-
 ```typescript
 @Component({
   selector: 'any-component',
   template: `
-    <ng-container *ngIf="(count$ | async) as count; else loadingOrErrorOrComplete">
+    <ng-container
+      *ngIf="count$ | async as count; else loadingOrErrorOrComplete"
+    >
       <p *ngIf="count > 0 && count !== undefined; else empty">
         Count: {{ count }}
       </p>
 
-      <ng-template #empty>
-        Negative Count
-      </ng-template>
+      <ng-template #empty> Negative Count </ng-template>
     </ng-container>
 
     <ng-template #loadingOrErrorOrComplete>
       <ng-container [ngSwitch]="isErrorCompleteOrLoading$ | async">
-        <p *ngSwitchCase="-1">
-          Error!
-        </p>
+        <p *ngSwitchCase="-1">Error!</p>
 
-        <p *ngSwitchCase="1">
-          Complete!
-        </p>
+        <p *ngSwitchCase="1">Complete!</p>
 
-        <p *ngSwitchCase="0">
-          Loading...
-        </p>
+        <p *ngSwitchCase="0">Loading...</p>
       </ng-container>
     </ng-template>
-  `
+  `,
 })
-export class AnyComponent  {
+export class AnyComponent {
   // ...
 }
 ```
 
 If we organize them visually 4 states, 3 of them contextual are given:
+
 - **suspense** (communicating progress)
 - update/**next** (the result it self, or parts of it)
 - **error** (communicating error)
@@ -73,33 +68,33 @@ A good example is the [`rxLet`](https://github.com/rx-angular/rx-angular/blob/ma
 @Component({
   selector: 'any-component',
   template: `
-    <p *rxIf="count$; let count; else empty; suspense: loading; error: error; complete: complete">
+    <p
+      *rxIf="
+        count$;
+        let count;
+        else: empty;
+        suspense: loading;
+        error: error;
+        complete: complete
+      "
+    >
       Count: {{ count }}
     </p>
 
-    <ng-template #empty>
-      Negative Count
-    </ng-template>
-      
-    <ng-template #error>
-      Error!
-    </ng-template>
+    <ng-template #empty> Negative Count </ng-template>
 
-    <ng-template #complete>
-      Complete!
-    </ng-template>
+    <ng-template #error> Error! </ng-template>
 
-    <ng-template #loading>
-      Loading...
-    </ng-template>
-  `
+    <ng-template #complete> Complete! </ng-template>
+
+    <ng-template #loading> Loading... </ng-template>
+  `,
 })
-export class AnyComponent  {
+export class AnyComponent {
   // ...
 }
 ```
 
- 
 **The Benefits**
 
 - ✅ A mental model for contextual state
@@ -122,7 +117,7 @@ yarn add @rx-angular/cdk
 
 ## Usage
 
-The whole section is about extending the notification channels with a 4th state. 
+The whole section is about extending the notification channels with a 4th state.
 The new type is called `RxNotifications`. In the following we will see a couple of helper functions that deal with that type.
 
 For wrapping a value into a RxNotification we provide 3 helpers:
@@ -130,30 +125,39 @@ For wrapping a value into a RxNotification we provide 3 helpers:
 **RxErrorNotification**
 
 ```typescript
-  const errorNotification:  RxErrorNotification<any> = toRxErrorNotification();
-  const errorNotification:  RxErrorNotification<any> = toRxErrorNotification(new Error());
-  const errorNotification:  RxErrorNotification<string> = toRxErrorNotification(new Error(), 'lastValue');
+const errorNotification: RxErrorNotification<any> = toRxErrorNotification();
+const errorNotification: RxErrorNotification<any> = toRxErrorNotification(
+  new Error()
+);
+const errorNotification: RxErrorNotification<string> = toRxErrorNotification(
+  new Error(),
+  'lastValue'
+);
 ```
 
 **toRxSuspenseNotification**
 
 ```typescript
-  const toRxSuspenseNotification:  RxSuspenseNotification<any> = toRxSuspenseNotification();
-  const toRxSuspenseNotification:  RxSuspenseNotification<string> = toRxSuspenseNotification('lastValue');
+const toRxSuspenseNotification: RxSuspenseNotification<any> =
+  toRxSuspenseNotification();
+const toRxSuspenseNotification: RxSuspenseNotification<string> =
+  toRxSuspenseNotification('lastValue');
 ```
-  
+
 **toRxCompleteNotification**
 
 ```typescript
-  const toRxCompleteNotification:  RxCompleteNotification<any> = toRxCompleteNotification();
-  const toRxCompleteNotification:  RxCompleteNotification<string> = toRxCompleteNotification('lastValue');
+const toRxCompleteNotification: RxCompleteNotification<any> =
+  toRxCompleteNotification();
+const toRxCompleteNotification: RxCompleteNotification<string> =
+  toRxCompleteNotification('lastValue');
 ```
 
 **rxMaterialize**
 
 ```typescript
-  const websocketUpdates$: Observable<number> = interval(3000);
-  const materialized$:  Observable<RxNotification<number>> = websocketUpdates.pipe(
-    rxMaterialize()
-  );
+const websocketUpdates$: Observable<number> = interval(3000);
+const materialized$: Observable<RxNotification<number>> = websocketUpdates.pipe(
+  rxMaterialize()
+);
 ```
