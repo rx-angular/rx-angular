@@ -1,8 +1,4 @@
 {
   "label": "@rx-angular/template",
-  "position": 3,
-  "link": {
-    "type": "doc",
-    "id": "template/overview"
-  }
+  "position": 3
 }

@@ -1,8 +1,4 @@
 {
   "label": "@rx-angular/cdk",
-  "position": 3,
-  "link": {
-    "type": "doc",
-    "id": "cdk/overview"
-  }
+  "position": 3
 }

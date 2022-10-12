@@ -1,8 +1,4 @@
 {
   "label": "@rx-angular/eslint-plugin",
-  "position": 3,
-  "link": {
-    "type": "doc",
-    "id": "eslint-plugin/overview"
-  }
+  "position": 3
 }
