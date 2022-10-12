@@ -532,8 +532,6 @@ export class AppComponent {
 For testing we suggest to switch the CD strategy to `native`. 
 This helps to exclude all side effects from special render strategies.
 
-@TODO native is not used here
-
 ## Basic Setup
 
 ```typescript
@@ -561,8 +559,13 @@ class TestComponent {
 const setupTestComponent = (): void => {
   TestBed.configureTestingModule({
     declarations: [LetDirective, LetDirectiveTestComponent],
-    providers: [ TemplateRef, ViewContainerRef ],
-    teardown: { destroyAfterEach: true }
+    providers: [ {
+      // don't forget to configure the primary strategy to 'native'
+      provide: RX_RENDER_STRATEGIES_CONFIG,
+      useValue: {
+        primaryStrategy: 'native',
+      },
+    } ]
   });
 
   fixtureComponent = TestBed.createComponent(TestComponent);
@@ -571,7 +574,31 @@ const setupTestComponent = (): void => {
 };
 
 ```
-           
+
+### Set default strategy
+
+> do not forget to set the primary strategy to `native` in test environments
+
+In test environments it is recommended to configure rx-angular to use the [`native` strategy](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/basic-strategies.md#native),
+as it will run change detection synchronously. 
+Using the [`concurrent` strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concurrent-strategies.md#concurrent-strategies) is possible, but
+requires more effort when writing the tests, as updates will be processed asynchronously.
+
+```ts
+TestBed.configureTestingModule({
+    declarations: [LetDirective, LetDirectiveTestComponent],
+    providers: [ {
+      // don't forget to configure the primary strategy to 'native'
+      provide: RX_RENDER_STRATEGIES_CONFIG,
+      useValue: {
+        primaryStrategy: 'native',
+      },
+    } ]
+  });
+```
+
+Here is an example using the `concurrent` strategies in a test environment: [`rxLet strategy spec`](https://github.com/rx-angular/rx-angular/blob/main/libs/template/let/src/lib/tests/let.directive.strategy.spec.ts)
+
 ## Instantiation
            
 ```typescript
