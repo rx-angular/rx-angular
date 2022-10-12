@@ -43,7 +43,7 @@ It doesn't really trigger change detection by itself. Instead, it marks the comp
 This is especially bad for leaf components, as the async pipe will mark the whole component tree as dirty before being able to update the desired template.
 Also in case you want to create a zone-less application, the `AsyncPipe` won't work as desired. 
 
-## Summary and other downsides
+## Downsides
 
 - Boilerplate in the template
 - Typings are hard to handle due to `null` and `undefined`
@@ -84,10 +84,18 @@ It mostly is used in combination with state management libs to handle user inter
 
 - context variables (error, complete, suspense)
 - context templates (error, complete, suspense)
-- Template trigger
-- reduces boilerplate (multiple `async` pipe's
+- context trigger
+- reduces boilerplate (multiple `async` pipe's)
 - a unified/structured way of handling `null` and `undefined`
 - works also with static variables `*rxLet="42; let n"`
+
+**Performance Features**
+
+- value binding is always present. ('`*ngIf` hack' bugs and edge cases)
+- lazy template creation (done by render strategies) 
+- triggers change-detection on `EmbeddedView` level
+- distinct same values in a row (over-rendering)
+- view memoization
 
 **Inputs**
 
@@ -111,13 +119,6 @@ It mostly is used in combination with state management libs to handle user inter
 
 n/a
 
-**Performance Features**
-
-- value binding is always present. ('`*ngIf` hack' bugs and edge cases)
-- lazy template creation (done by render strategies) 
-- triggers change-detection on `EmbeddedView` level
-- distinct same values in a row (over-rendering)
-- view memoization
 
 # Setup
 
@@ -362,6 +363,47 @@ We can use the `suspenseTrg` input to switch back from any template to display t
 }
 ```
 
+#### Using the `contextTrg`
+
+@TODO 
+
+We can use the `contextTrg` input to switch back from any template to display the actual value.
+ e.g. from the complete template back to the value display
+
+```typescript
+ @Component({
+   selector: 'any-component',
+   template: `
+    <input (input)="search($event.target.value)" />
+    <ng-container
+     *rxLet="
+       num$; let n;
+       let n;
+       suspense: suspense
+       suspenseTrg: suspenseTrigger$
+    ">
+      {{n}}
+    </ng-container>
+    <ng-template #suspense>loading...</ng-template>
+   `
+ })
+ export class AppComponent {
+    num$ = this.state.num$;
+    suspenseTrigger$ = new Subject();
+    
+    constructor(private state: globalState) {
+    
+    }
+
+    search(str: string) {
+      this.state.search(str);
+      this.suspenseTrigger$.next();
+    }
+
+}
+```
+
+
 # Advanced Usage
 
  ## Use render strategies (`strategy`)
@@ -427,6 +469,11 @@ This is especially interesting as we can enrich rendering with e.g. awareness of
  }
 ```
 
+## Working with content queries (`parent`)
+
+## Working with event listeners (`patchZone`)
+
+
 # Testing
 
 ## Basic Setup
@@ -440,7 +487,7 @@ import {
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { LetDirective } from '../let.directive';
+import { LetDirective } from '@rx-angular/template/let';
 
 @Component({
   template: `

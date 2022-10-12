@@ -59,7 +59,7 @@ If we create a template to be presented for the loading state we can use `ng-tem
 
 ```html
 <ng-container
-  *rxLet="hero$; let hero; rxSuspense: suspenseView; rxError: errorView; rxComplete: completeView"
+  *rxLet="hero$; let hero; suspense: suspenseView; error: errorView; complete: completeView"
 >
   {{ hero.name }}
   <ng-container>
@@ -75,7 +75,7 @@ The only difference here, they are prefixed with an '$' character.
 
 ```html
 <ng-container
-  *rxLet="hero$; let hero; s = $rxSuspense; e = $rxError; c = $rxComplete"
+  *rxLet="hero$; let hero; s = $suspense; e = $error; c = $complete"
 >
   {{ s }}, {{ hero }}, {{ e }}, {{ c }}
   <ng-container></ng-container
@@ -87,10 +87,10 @@ The respective typings look like that:
 ```typescript
 // TemplateManager - view context
 interface RxViewContext<T> {
-  $rxSuspense: boolean;
+  $suspense: boolean;
   $implicit: T; // next
-  $rxError: false | Error;
-  $rxComplete: boolean;
+  $error: false | Error;
+  $complete: boolean;
 }
 ```
 
@@ -122,10 +122,10 @@ In both cases the type of $event is `RxNotification` which is typed like this:
 ```typescript
 import { Notification } from 'rxjs';
 export type RxNotificationKind =
-  | 'rxSuspense'
-  | 'rxNext'
-  | 'rxError'
-  | 'rxComplete';
+  | 'suspense'
+  | 'next'
+  | 'error'
+  | 'complete';
 type NotificationExtract = 'value' | 'hasValue' | 'error';
 export type RxNotification<T> = Pick<Notification<T>, NotificationExtract> & {
   kind: RxNotificationKind;
