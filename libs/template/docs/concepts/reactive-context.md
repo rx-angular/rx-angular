@@ -87,10 +87,11 @@ The respective typings look like that:
 ```typescript
 // TemplateManager - view context
 interface RxViewContext<T> {
-  $suspense: boolean;
   $implicit: T; // next
-  $error: false | Error;
-  $complete: boolean;
+  
+  suspense: boolean;
+  error: false | Error;
+  complete: boolean;
 }
 ```
 
@@ -121,18 +122,22 @@ In both cases the type of $event is `RxNotification` which is typed like this:
 
 ```typescript
 import { Notification } from 'rxjs';
-export type RxNotificationKind =
-  | 'suspense'
-  | 'next'
-  | 'error'
-  | 'complete';
-type NotificationExtract = 'value' | 'hasValue' | 'error';
-export type RxNotification<T> = Pick<Notification<T>, NotificationExtract> & {
-  kind: RxNotificationKind;
-};
-```
+export const enum RxNotificationKind {
+  Suspense = 'suspense',
+  Next = 'next',
+  Error = 'error',
+  Complete = 'complete',
+}
 
----
+export interface RxNextNotification<T> {
+  value: T;
+  hasValue: boolean;
+  kind: RxNotificationKind;
+  error: boolean;
+  complete: boolean;
+}
+
+```
 
 As a sum up, we now know that `@rx-angular/template` provides an extended reactive context with the `suspense` channel.
 Use suspense as a template wherever possible as it reduces rendering work drastically.
