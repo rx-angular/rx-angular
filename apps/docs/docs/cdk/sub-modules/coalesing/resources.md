@@ -1,3 +1,10 @@
+---
+sidebar_label: 'Resources'
+sidebar_position: 1
+title: '@rx-angular/cdk/coalescing overview'
+hide_title: true
+---
+
 # Resources
 
 **Example applications:**  
