@@ -5,7 +5,7 @@
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/template/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/template/lcov-report/index.html)
 
 ## A lib for handling data streams in templates for high performance and ergonomic Angular UI's in large scale applications
-@rx-angular/template was specifically designed to help developers reduce the boilerplate in templates and have performante change detection rendering and provide a migration path to go full zone-less.
+@rx-angular/template was specifically designed to help developers reduce the boilerplate in templates and have performant change detection rendering and provide a migration path to go full zone-less.
 
 ![template logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/template/docs/images/template_logo.png)
 
