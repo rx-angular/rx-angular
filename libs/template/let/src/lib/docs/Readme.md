@@ -62,7 +62,7 @@ This makes it possible to implement your own strategies, and also provides a mig
 This package helps to reduce code used to create composable action streams. 
 It mostly is used in combination with state management libs to handle user interaction and backend communication.
 
-```
+```html
 <ng-container *rxLet="observableNumber$; let n">
  ...
 </ng-container>
@@ -173,9 +173,9 @@ This can be achieved by using Angular's native 'let' syntax `*rxLet="observableN
 
 ![Contextual-State--template-vs-variable](https://user-images.githubusercontent.com/10064416/192660150-643c4d37-5326-4ba2-ad84-e079890b3f2f.png)
 
-A nice feature of the `*rxLet` directive is, it provides 2 ways to access the [reactive context state]() in the tempalte:
-- local variables
-- templates
+A nice feature of the `*rxLet` directive is, it provides 2 ways to access the [reactive context state]() in the template:
+- context variables
+- context templates
 
 ### Context Variables
  
@@ -224,7 +224,6 @@ You can also use template anchors to display the [contextual state]() in the tem
 This helps in some cases to organize the template and introduces a way to make the dynamic or even lazy.
 
 ### Context Trigger
-
 
 ![context-templates](https://user-images.githubusercontent.com/4904455/195452228-b2c1c6ac-5046-4cd3-a857-564cf039dd02.gif)
 
@@ -368,10 +367,8 @@ We can use the `suspenseTrg` input to switch back from any template to display t
 
 #### Using the `contextTrg`
 
-@TODO 
-
-We can use the `contextTrg` input to switch back from any template to display the actual value.
- e.g. from the complete template back to the value display
+We can use the `contextTrg` input to set any context. It combines the functionality of `suspenseTrg`, `completeTrg` and `errorTrg` 
+in a convenient way.
 
 ```typescript
  @Component({
@@ -380,10 +377,10 @@ We can use the `contextTrg` input to switch back from any template to display th
     <input (input)="search($event.target.value)" />
     <ng-container
      *rxLet="
-       num$; let n;
+       num$;
        let n;
-       suspense: suspense
-       suspenseTrg: suspenseTrigger$
+       suspense: suspense;
+       contextTrg: contextTrg$;
     ">
       {{n}}
     </ng-container>
@@ -392,15 +389,13 @@ We can use the `contextTrg` input to switch back from any template to display th
  })
  export class AppComponent {
     num$ = this.state.num$;
-    suspenseTrigger$ = new Subject();
+    contextTrg$ = new Subject();
     
-    constructor(private state: globalState) {
-    
-    }
+    constructor(private state: globalState) {}
 
     search(str: string) {
       this.state.search(str);
-      this.suspenseTrigger$.next();
+      this.contextTrg$.next(RxNotificationKind.Suspense);
     }
 
 }
