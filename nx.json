@@ -18,7 +18,7 @@
     "libs/cdk/transformations/README.md": ["docs"],
     "libs/cdk/zone-configurations/README.md": ["docs"],
     "libs/cdk/zone-less/README.md": ["docs"],
-    "libs/cdk/template/README.md": ["docs"],
+    "libs/cdk/template/Readme.md": ["docs"],
     "libs/eslint-plugin/README.md": ["docs"],
     "libs/state/README.md": ["docs"],
     "libs/template/README.md": ["docs"]
