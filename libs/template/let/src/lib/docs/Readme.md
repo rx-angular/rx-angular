@@ -225,6 +225,9 @@ This helps in some cases to organize the template and introduces a way to make t
 
 ### Context Trigger
 
+
+![context-templates](https://user-images.githubusercontent.com/4904455/195452228-b2c1c6ac-5046-4cd3-a857-564cf039dd02.gif)
+
 You can also use asynchronous code like a `Promise` or an `Observable` to switch between templates.
 This is perfect for e.g. a searchable list with loading spinner.
 
