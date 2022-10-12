@@ -139,7 +139,7 @@ Standalone component setup:
 ```
 import { LetModule } from "@rx-angular/template/let";
 
-@NgComponent({
+@Component({
     standalone: true,
     imports: [ LetModule ],
     template: `...`
