@@ -1,4 +1,4 @@
-## RxFor Directive
+# RxFor Directive
 
 The `*rxFor` structural directive provides a convenient and performant way for rendering
 templates out of a list of items.
@@ -13,7 +13,7 @@ Furthermore, `RxFor` provides access to the rendering cycle and informs about an
 
 However, the rendering behavior is fully configurable and transparent for the developer. Each instance of `RxFor` can be configured to render with different settings.
 
-### Features of `*rxFor`
+## Features of `*rxFor`
 
 Included features for `*rxFor`:
 
@@ -28,7 +28,7 @@ Included features for `*rxFor`:
 - cancel any scheduled work if a remove was triggered for a `trackById`
 - cancel any update if a new update was triggered for the same `trackById`
 
-### Simple example using `*rxFor` with `Observable` values
+## Simple example using `*rxFor` with `Observable` values
 
 ```html
 <ul>
@@ -36,7 +36,7 @@ Included features for `*rxFor`:
 </ul>
 ```
 
-### Simple example using `*rxFor` with simple static values
+## Simple example using `*rxFor` with simple static values
 
 ```html
 <ul>
@@ -44,7 +44,7 @@ Included features for `*rxFor`:
 </ul>
 ```
 
-### Context Variables
+## Context Variables
 
 The following context variables are available for each template:
 
@@ -80,7 +80,7 @@ This example showcases the `select` view-context function used for deeply nested
 </ul>
 ```
 
-### Input properties
+## Input properties
 
 - trackBy: `(index: number, item: T) => any`
 - trackBy: `keyof T`
@@ -89,7 +89,7 @@ This example showcases the `select` view-context function used for deeply nested
 - parent: `boolean`;
 - renderCallback: `Subject<T[]>`
 
-### Using the context variables
+## Using the context variables
 
 ```html
 <ul>
@@ -116,7 +116,7 @@ This example showcases the `select` view-context function used for deeply nested
 </ul>
 ```
 
-### Projected Views (`parent`)
+## Projected Views (`parent`)
 
 Imagine the following situation:
 

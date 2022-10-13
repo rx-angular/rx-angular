@@ -1,4 +1,4 @@
-## LetDirective
+# LetDirective
 
 The `*rxLet` directive serves a convenient way of binding observables to a view context. Furthermore, it helps
 you structure view-related models into view context scope (DOM element's scope).
@@ -8,7 +8,7 @@ of your component. The `LetDirective` will render its template and manage change
 So if the incoming `Observable` emits its value lazily (e.g. data coming from `Http`), your template will be
 rendered lazily as well. This can very positively impact the initial render performance of your application.
 
-### Problems with `async` and `*ngIf`
+## Problems with `async` and `*ngIf`
 
 In Angular, a way of binding an observable to the view could look like that:
 
@@ -28,7 +28,7 @@ you want to create a zone-less application, the `AsyncPipe` won't work as desire
 with its own strategies to manage change detection every time a new notification is sent from
 the bound Observable.
 
-### Features of `*rxLet`
+## Features of `*rxLet`
 
 Included features for `*rxLet`:
 
@@ -42,7 +42,7 @@ Included features for `*rxLet`:
 - distinct same values in a row (`distinctUntilChanged` operator),
 - display custom templates for different observable notifications (suspense, next, error, complete)
 
-### Binding an Observable and using the view context
+## Binding an Observable and using the view context
 
 The `*rxLet` directive takes over several things and makes it more convenient and safe to work with streams in the
 template:
@@ -74,7 +74,7 @@ We can track the observables:
 </ng-container>
 ```
 
-### Using the template-binding
+## Using the template-binding
 
 You can also use template anchors and display template's content for different observable states:
 
@@ -120,14 +120,14 @@ class LetDirective<U> implements OnInit, OnDestroy {
 
 ### strategies
 
-##### typeof: StrategySelection
+#### typeof: StrategySelection
 
 All strategies initialized and registered for the `LetDirective`. Pass a name of one the
 `strategies` to the `strategy` input to switch between them on the fly.
 
 ### rxLet
 
-##### typeof: ObservableInput&#60;U&#62; | null | undefined
+#### typeof: ObservableInput&#60;U&#62; | null | undefined
 
 The Observable to be bound to the context of a template.
 
@@ -141,7 +141,7 @@ _Example_
 
 ### strategy
 
-##### typeof: string | Observable&#60;string&#62; | undefined
+#### typeof: string | Observable&#60;string&#62; | undefined
 
 The rendering strategy to be used when rendering with the reactive context within a template.
 Use it to dynamically manage your rendering strategy. You can switch the strategies
@@ -180,7 +180,7 @@ export class AppComponent {
 
 ### rxLetComplete
 
-##### typeof: TemplateRef&#60;LetViewContext&#60;U | undefined | null&#62; | null&#62;
+#### typeof: TemplateRef&#60;LetViewContext&#60;U | undefined | null&#62; | null&#62;
 
 A template to show if the bound Observable is in "complete" state.
 
@@ -197,7 +197,7 @@ _Example_
 
 ### rxLetError
 
-##### typeof: TemplateRef&#60;LetViewContext&#60;U | undefined | null&#62; | null&#62;
+#### typeof: TemplateRef&#60;LetViewContext&#60;U | undefined | null&#62; | null&#62;
 
 A template to show if the bound Observable is in "error" state.
 
@@ -214,7 +214,7 @@ _Example_
 
 ### rxLetSuspense
 
-##### typeof: TemplateRef&#60;LetViewContext&#60;U | undefined | null&#62; | null&#62;
+#### typeof: TemplateRef&#60;LetViewContext&#60;U | undefined | null&#62; | null&#62;
 
 A template to show before the first value is emitted from the bound Observable.
 
