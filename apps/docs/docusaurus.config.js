@@ -114,10 +114,14 @@ module.exports = {
                 label: '@rx-angular/state',
                 to: 'docs/state/getting-started/overview',
               },
-              // {
-              //   label: '@rx-angular/template',
-              //   to: 'docs/template/',
-              // },
+              {
+               label: '@rx-angular/template',
+                to: 'docs/template/',
+              },
+              {
+                label: '@rx-angular/eslint-plugin',
+                 to: 'docs/eslint-plugin/',
+              },
             ],
           },
           {
