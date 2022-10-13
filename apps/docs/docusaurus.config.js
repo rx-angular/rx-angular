@@ -108,11 +108,11 @@ module.exports = {
             items: [
               {
                 label: '@rx-angular/cdk',
-                to: 'docs/cdk/api/transformation-helpers',
+                to: 'docs/cdk/',
               },
               {
                 label: '@rx-angular/state',
-                to: 'docs/state/getting-started/overview',
+                to: 'docs/state/',
               },
               {
                label: '@rx-angular/template',
