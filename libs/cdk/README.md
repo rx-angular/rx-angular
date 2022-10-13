@@ -14,14 +14,14 @@ applications
 ## Sub Modules
 
 
-- [⛔ Zone Configuration](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/zone-configurations)
-- [🚫 Zone Less](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/zone-less)
-- [🛠 Coercing](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coercing)
-- [🛠 Coalescing](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/coalescing)
-- [📡 Notifications](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/notifications)
-- [🖌 Render-Strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies)
-- [🔳 Template Management](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/template)
-- [🔳 Transformations](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/transformations)
+- [⛔ Zone Configuration](https://rx-angular.io/docs/cdk/zone-configurations)
+- [🚫 Zone Less](https://rx-angular.io/docs/cdk/zone-less)
+- [🛠 Coercing](https://rx-angular.io/docs/cdk/coercing)
+- [🛠 Coalescing](https://rx-angular.io/docs/cdk/coalescing)
+- [📡 Notifications](https://rx-angular.io/docs/cdk/notifications)
+- [🖌 Render-Strategies](https://rx-angular.io/docs/cdk/render-strategies)
+- [🔳 Template Management](https://rx-angular.io/docs/cdk/template)
+- [🔳 Transformations](https://rx-angular.io/docs/cdk/transformations)
 
 
 ## Demos:
