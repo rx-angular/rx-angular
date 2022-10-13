@@ -28,7 +28,7 @@ None of them has a full notion about what happens in the browser and can be unre
 
 To address the problem of long tasks and help browser split the work @rx-angular/cdk provides concurrent strategies. This strategies will help browser to chunk the work into non-blocking tasks whenever it's possible.
 
-You can read detailed information about concurrent strategies [here](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concurrent-strategies.md).
+You can read detailed information about concurrent strategies [here](concurrent-strategies.md).
 
 ## RxStrategyProvider APIs
 
@@ -208,5 +208,5 @@ this.strategyProvider.scheduleCd(this.changeDetectorRef, { afterCD: myWork() });
 ## Links
 
 - [Demo](https://stackblitz.com/edit/angular-ivy-1vfpoe)
-- [Detailed information about strategies](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/render-strategies)
+- [Detailed information about strategies](render-strategies.mdx)
 - [MessageChannel documentation](https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel)

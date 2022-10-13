@@ -15,7 +15,7 @@ Furthermore, they provide new ways of explicitly tying truly push-based state ma
 
 A strategy exposes the work to perform (e.g. `cdRef#markForCheck`, `cdRef#detectChanges`) as well as the scheduling mechanism to developers for configuration & customization via the interface `RxStrategyCredentials`.
 
-`Directive`s, `Service`s or `Component`s of your application can make use of these strategies as an easy API for the key [concepts](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts.md) of rendering performance.
+`Directive`s, `Service`s or `Component`s of your application can make use of these strategies as an easy API for the key [concepts](../../template/concepts/concepts.md) of rendering performance.
 
 This architecture enables modern features like:
 
@@ -31,7 +31,7 @@ This architecture enables modern features like:
 
 **BasicStrategies**
 
-[BasicStrategies](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/render-strategies/docs/basic-strategies.md) wrap modern ivy APIs like `ɵmarkDirty` and `ɵdetectChanges` as well as a strategy to "noop" change detection.
+[BasicStrategies](basic-strategies.md) wrap modern ivy APIs like `ɵmarkDirty` and `ɵdetectChanges` as well as a strategy to "noop" change detection.
 As a fallback for the migration process or comparison testing, Angulars default change detection behaviour is also provided as a strategy.
 
 This set aims to get the first option for zone-less rendering (`ɵmarkDirty`), more control on the top-down process, and improve performance drastically by only rendering components that received updates.
@@ -40,7 +40,7 @@ This set aims to get the first option for zone-less rendering (`ɵmarkDirty`), m
 
 **ConcurrentStrategies**
 
-The [ConcurrentStrategies](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/render-strategies/docs/concurrent-strategies.md) utilize the latest technologies to enable priority-based change detection for non-blocking rendering and smooth user experiences. It combines the most performant scheduling techniques with a highly performant queueing mechanism.
+The [ConcurrentStrategies](concurrent-strategies.md) utilize the latest technologies to enable priority-based change detection for non-blocking rendering and smooth user experiences. It combines the most performant scheduling techniques with a highly performant queueing mechanism.
 Read more about the internal techniques [here](https://www.npmjs.com/package/scheduler) or [here](https://github.com/WICG/scheduling-apis).
 
 The name **ConcurrentStrategies** implies that concepts of [react concurrent mode](https://reactjs.org/docs/concurrent-mode-intro.html) are transported into the world of Angular.

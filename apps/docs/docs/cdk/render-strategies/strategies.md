@@ -21,8 +21,8 @@ Strategies give us a way to control how Angular's rendering is executed and whic
 
 **Strategy Sets:**
 
-- [Basic Strategies](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/render-strategies/docs/basic-strategies.md)
-- [Concurrent Strategies](https://github.com/rx-angular/rx-angular/blob/master/libs/cdk/render-strategies/docs/concurrent-strategies.md)
+- [Basic Strategies](basic-strategies.md)
+- [Concurrent Strategies](concurrent-strategies.md)
 
 ## Usage
 
