@@ -19,14 +19,14 @@ structural directives, pipes, RxJS operators, or imperative functions to manage 
 **@rx-angular/template** is nothing less than a revolution in `ChangeDetection` for angular applications.
 Developers are provided with tools for high-performance rendering, which are operated by a broad and intuitive API.
 
-The [LetDirective (`*rxLet`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md) &
-[PushPipe (`push`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/push-pipe.md) focus
+The [LetDirective (`*rxLet`)](https://rx-angular.io/docs/template/api/let-directive) &
+[PushPipe (`push`)](https://rx-angular.io/docs/template/api/push-pipe) focus
 on template rendering, the coordination and optimization of `ChangeDetection` cycles. While the `PushPipe` is a
 straight **drop-in replacement** for the `AsyncPipe (async)`, the `LetDirective` will often provide a more
 convenient way of managing reactive sources and lazy rendering of the view.
 
-Should be noted that both [LetDirective (`*rxLet`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md) &
-[PushPipe (`push`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/push.md) recognize only immutable changes.
+Should be noted that both [LetDirective (`*rxLet`)](https://rx-angular.io/docs/template/api/let-directive) &
+[PushPipe (`push`)](https://rx-angular.io/docs/template/api/push-pipe) recognize only immutable changes.
 
 Using those with the default strategy ([Local Strategy](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/docs/render-strategies/strategies.md#local)) should already improve the rendering performance of
 your application by a decent amount.
@@ -41,8 +41,8 @@ Beyond the optimization of change detection cycles, `@rx-angular/template` by de
 
 If you want to deepen your knowledge about performance optimizations, consider reading through the following concepts and techniques:
 
-- [Coalescing, Scoped Coalescing & Scheduling](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/concepts.md)
-- [Rendering Issues in Angular](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/performance-issues.md)
+- [Coalescing, Scoped Coalescing & Scheduling](https://rx-angular.io/docs/template/concepts)
+- [Rendering Issues in Angular](https://rx-angular.io/docs/template/concepts/performance-issues)
 
 ## Installation
 
@@ -96,19 +96,19 @@ export class MyModule {}
 ## Features
 
 - Directives
-  - [LetDirective (\*rxLet)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/let-directive.md)
-  - [UnpatchDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/unpatch-directive.md)
+  - [LetDirective (\*rxLet)](https://rx-angular.io/docs/template/api/let-directive)
+  - [UnpatchDirective (unpatch)](https://rx-angular.io/docs/template/unpatch-directive)
 - Pipes
-  - [PushPipe (push)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/push-pipe.md)
+  - [PushPipe (push)](https://rx-angular.io/docs/template/api/push-pipe)
 
 ## Experimental features
 
 Additionally, `@rx-angular/template` provides some experimental optimization tools which in general will give you more control
 about what changes are leading to re-renderings.
 
-- [🧪 RxIf (\*rxIf)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/rx-if-directive.md)
-- [🧪 RxFor (\*rxFor)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/rx-for-directive.md)
-- [🧪 Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/experimental/viewport-prio.md)
+- [🧪 RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/experimental/rx-if-directive)
+- [🧪 RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/experimental/rx-for-directive)
+- [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/experimental/viewport-prio)
 
 ## Version Compatibility
 
