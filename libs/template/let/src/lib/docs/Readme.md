@@ -2,7 +2,7 @@
 # Motivation
 
 In Angular there is one way to handle asynchronous values or streams in the template, the `async` pipe.
-Even though the async pipe evaluates such values the template, it is insufficient in many ways.
+Even though the async pipe evaluates such values in the template, it is insufficient in many ways.
 To name a few:
 * it will only update the template when `NgZone` is also aware of the value change
 * it leads to over rendering because it can only run global change detection
@@ -228,7 +228,7 @@ You can also use template anchors to display the [contextual state]() in the tem
 <ng-template #complete>COMPLETE</ng-template>
 ```
 
-This helps in some cases to organize the template and introduces a way to make the dynamic or even lazy.
+This helps in some cases to organize the template and introduces a way to make it dynamic or even lazy.
 
 ### Context Trigger
 

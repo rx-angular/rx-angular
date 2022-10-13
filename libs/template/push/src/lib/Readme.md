@@ -120,7 +120,7 @@ export class AnyComponent {}
 
  ## Use render strategies (`strategy`)
  
- Let' see how we can work with strategies in the template.
+ Let's see how we can work with strategies in the template.
  If you are not familiar with this concept, you can read more details on [render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#usage-in-the-template) if you need more clarity. 
 
 `*rxLet` accepts static values e.g. `number`   
@@ -147,7 +147,7 @@ This is especially interesting as we can enrich rendering with e.g. awareness of
 
 ## Use a renderCallback to run post render processes (`renderCallback`)
 
- A notification channel of `*rxLet` that the fires when rendering is done.
+ A notification channel of `*rxLet` that fires when rendering is done.
  
  This enables developers to perform actions based on rendering timings e.g. checking the DOM for the final height or send the LCP time to a tracking server.
  
