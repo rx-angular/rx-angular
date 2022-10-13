@@ -80,12 +80,18 @@ module.exports = {
             position: 'left',
             type: 'doc',
           },
-          // {
-          //   docId: 'template/index',
-          //   label: 'Template',
-          //   position: 'left',
-          //   type: 'doc',
-          // },
+          {
+            docId: 'template/template',
+            label: 'Template',
+            position: 'left',
+            type: 'doc',
+          },
+          {
+            docId: 'eslint-plugin/eslint-plugin',
+            label: 'ESLint-Plugin',
+            position: 'left',
+            type: 'doc'
+          },
           // { to: 'blog', label: 'Blog', position: 'left' },
           {
             href: `https://github.com/${organizationName}/${projectName}`,
