@@ -68,7 +68,7 @@ The sub-package provides the following features:
 - [x] RenderStrategyConfig
 - [x] RxStrategyProvider
 
-**[Available Strategies:](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/strategies.md)**
+**[Available Strategies:](https://rx-angular.io/docs/cdk/render-strategies/strategies)**
 
 | Name             | Priority | Render Method     | Scheduling              | Render Deadline |
 | ---------------- | -------- | ----------------- | ----------------------- | --------------- |
