@@ -1,5 +1,8 @@
 {
   "label": "API",
   "position": 11,
-  "link": null
+  "link": {
+    "type": "generated-index",
+    "description": "Experimental API reference for @rx-angular/state"
+  }
 }
