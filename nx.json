@@ -21,6 +21,9 @@
     "libs/cdk/template/README.md": ["docs"],
     "libs/eslint-plugin/README.md": ["docs"],
     "libs/state/README.md": ["docs"],
+    "libs/state/actions/README.md": ["docs"],
+    "libs/state/effects/README.md": ["docs"],
+    "libs/state/selections/README.md": ["docs"],
     "libs/template/README.md": ["docs"]
   },
   "tasksRunnerOptions": {
