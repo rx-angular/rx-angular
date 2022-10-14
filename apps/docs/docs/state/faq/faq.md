@@ -1,6 +1,6 @@
 ---
 sidebar_label: 'FAQ'
-sidebar_position: 5
+sidebar_position: 60
 title: 'FAQ'
 hide_title: true
 ---
