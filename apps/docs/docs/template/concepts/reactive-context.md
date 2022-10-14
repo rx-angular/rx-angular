@@ -1,3 +1,10 @@
+---
+sidebar_label: 'Reactive context'
+sidebar_position: 1
+title: 'Reactive context'
+hide_title: true
+---
+
 # The extended reactive context in RxAngular
 
 If we think about any process, e.g. an HTTP request, we can differentiate different states in it.

@@ -1,3 +1,10 @@
+---
+sidebar_label: 'Performance issues'
+sidebar_position: 1
+title: 'Performance issues'
+hide_title: true
+---
+
 # Rendering Issues in Angular
 
 A brief overview about what is about the current situation in terms of rendering in angular applications.
