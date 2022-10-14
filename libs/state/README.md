@@ -88,7 +88,7 @@ nx migrate @rx-angular/state
 
 ## Testing
 
-[Testing](https://rx-angular.io/docs/state/docs/testing.md)
+[Testing](https://rx-angular.io/docs/state/testing)
 
 ## API
 
