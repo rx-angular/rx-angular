@@ -75,7 +75,7 @@ nx migrate @rx-angular/template
 
 ## API
 
-[API Documentation](https://rx-angular.io/docs/category/api-1)
+[API Documentation](https://rx-angular.io/docs/template/api)
 
 ## Basic setup
 
@@ -113,11 +113,10 @@ about what changes are leading to re-renderings.
 ## Version Compatibility
 
 | Angular                | RxJS                 | @rx-angular/template |
-|------------------------|----------------------|----------------------|
+| ---------------------- | -------------------- | -------------------- |
 | `14`                   | `^7.4.0`             | `> 1.0.0-beta.29`    |
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-beta.29`    |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-beta.29`   |
-
 
 Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
 All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
