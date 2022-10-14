@@ -1,3 +1,7 @@
+---
+sidebar_position: 5
+---
+
 # Testing
 
 This document provides a brief overview on how to set up unit tests with `jest` when using the `@rx-angular/state`
