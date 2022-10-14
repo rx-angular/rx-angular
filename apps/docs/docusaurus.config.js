@@ -75,6 +75,12 @@ module.exports = {
             type: 'doc',
           },
           {
+            docId: 'eslint-plugin/eslint-plugin',
+            label: 'ESLint',
+            position: 'left',
+            type: 'doc'
+          },
+          {
             docId: 'state/state',
             label: 'State',
             position: 'left',
@@ -85,12 +91,6 @@ module.exports = {
             label: 'Template',
             position: 'left',
             type: 'doc',
-          },
-          {
-            docId: 'eslint-plugin/eslint-plugin',
-            label: 'ESLint',
-            position: 'left',
-            type: 'doc'
           },
           // { to: 'blog', label: 'Blog', position: 'left' },
           {
