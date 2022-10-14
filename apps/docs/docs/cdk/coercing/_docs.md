@@ -1,9 +1,9 @@
-# Resources
+## Resources
 
 **Example applications:**  
 A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-cdk-coercing).
 
-# Motivation
+## Motivation
 
 Coercing, or to be more specific type coercion is the process of converting a value from one type to another.
 This can be done with any primitive value in JavaScript. e.g. number, string, Symbol, boolean, null, undefined.
@@ -53,10 +53,10 @@ export class AppComponent {
 }
 ```
 
-# Available Approaches
+## Available approaches
 
 - [@angular/cdk/coercion](https://www.npmjs.com/package/@angular/cdk)
-- [@rx-angular/cdk/coercion](https://www.npmjs.com/package/@rx-angular/cdk)
+- [@rx-angular/cdk/coercing](https://www.npmjs.com/package/@rx-angular/cdk)
 
 **The Benefits of RxAngular**
 
@@ -66,7 +66,7 @@ export class AppComponent {
 - ✅ Fully tested
 - ✅ Well Documented
 
-# RxAngular Coercing helpers
+## RxAngular coercing helpers
 
 **Factories:**
 
@@ -81,7 +81,7 @@ export class AppComponent {
 
 In the section usage we will go into more detail.
 
-## Setup
+### Setup
 
 The coalescing features can be used directly from the `cdk` package or indirectly through the `template` package.
 To do so, install the `cdk` package and, if needed, the packages depending on it:
@@ -94,7 +94,7 @@ npm i @rx-angular/cdk
 yarn add @rx-angular/cdk
 ```
 
-## Usage
+### Usage
 
 In the following we will sketch some usecases where coercing operators can be used.
 

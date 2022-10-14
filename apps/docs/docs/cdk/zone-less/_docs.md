@@ -1,9 +1,9 @@
-# Resources
+## Resources
 
 **Example applications:**  
 A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-cdk-zone-less).
 
-# Motivation
+## Motivation
 
 By default, Angular or better say zone.js patches most of the asynchronouse API's of the Browser.
 This adds additional overhead on those API's and even more important, this leads to un-nessecary renderings of the Angular component tree, also known as overredering.
@@ -15,7 +15,7 @@ The zone-less package helps out here.
 It provides a general method to access the unpatched version of an API and also ships a set of commonly used APIs of the Browser as well as RxJS.
 All those APIs are fully independent of zone.js and NgZone (which is normally used to run things outside Angular).
 
-# The Benefits
+## The Benefits
 
 - ✅ Finegrained ways to unpatch APIs
 - ✅ Fastest option possible to run code outside of Angulars zone mechanism
@@ -23,7 +23,7 @@ All those APIs are fully independent of zone.js and NgZone (which is normally us
 - ✅ Drop-in replacement for RxJS functions
 - ✅ No need for `runOutsideAngular` and `NgZone` injection
 
-# RxAngular CDK/Zone-Less
+## RxAngular CDK/Zone-less
 
 The way how zone.js works is, it patches all relevant async APIs of the Browser. This happens early on as zone.js is treated as polyfill.
 
@@ -35,7 +35,7 @@ This will print the original unpatched API to the Brwosers console.
 Internally the symbols and in turn the unpatched API's is what the zone-less package is using.
 The essential method used to get hold of the unpatched APIs is called `getZoneUnPatchedApi`. It takes a target i.e. `window` and a name of the method we want to retreive the unpatched version of.
 
-## Setup
+### Setup
 
 The zone-less API's can be used directly from the `cdk` package.
 To do so, install the `cdk` package and, if needed, the packages depending on it:
@@ -48,7 +48,7 @@ npm i @rx-angular/cdk
 yarn add @rx-angular/cdk
 ```
 
-## Usage
+### Usage
 
 The utils folder contains the most essential functions used to unpatch APIs.
 Normally if developers want to avoid change detection through zone the have to inject `NgZone` and run the code that should not trigger change detection in the `runOutsideAngular` method.
@@ -153,12 +153,12 @@ export class AppComponent {
 }
 ```
 
-# Available Approaches
+## Available approaches
 
 - `ngZone#runOutsideZone`
 - `zone-configuration`
 
-## `ngZone#runOutsideAngular`
+### `ngZone#runOutsideAngular`
 
 It is possible to inject an instance of NgZone into components and services etc to tell Angular to run a specific peice of coe outside of Angular.
 
@@ -181,8 +181,8 @@ export class AppComponent {
 
 The downside here is we need to inject `NgZone` and rely on dependency injection wich is not only more code but also slow.
 
-## Zone Configuration
+### Zone Configuration
 
-Zone configuration is a less granular way to disable zone. It helps to cinfigure zone in a way where it don't patches specific API's at all.
+Zone configuration is a less granular way to disable zone. It helps to configure zone in a way where it don't patches specific APIs at all.
 
 You can read in detail about it in the docs of [`@rx-angular/cdk/zone-configuration`](../zone-configurations/zone-configurations.mdx).

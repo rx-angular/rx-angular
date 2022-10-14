@@ -1,4 +1,4 @@
-# Basic Strategies
+# Basic strategies
 
 ## Concepts
 

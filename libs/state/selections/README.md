@@ -10,7 +10,7 @@
 
 ## Key features
 
-- ✅ 
+- ✅
 
 ## Demos:
 
@@ -26,5 +26,4 @@ yarn add @rx-angular/state
 
 ## Documentation
 
-- [Selections](https://rx-angular.io/cods/state/selections)
-
+- [Selections](https://rx-angular.io/docs/state/selections)

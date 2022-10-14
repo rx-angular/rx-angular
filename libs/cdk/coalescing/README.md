@@ -4,7 +4,7 @@
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
-## A small typed and documented convenience helper to apply performance inprovements over coalescing techniques.
+> A small typed and documented convenience helper to apply performance improvements over coalescing techniques.
 
 `@rx-angular/cdk/coalescing` is designed to help developers improve performance in high frequeltly changing values.
 Besides a well documented and typed API it also provides a set of marble diagrams for better visual understanding as well as smart defaults.

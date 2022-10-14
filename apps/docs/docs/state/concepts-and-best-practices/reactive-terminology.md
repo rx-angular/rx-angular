@@ -1,1 +1,1 @@
-# Reactive Terminology
+# Reactive terminology

@@ -22,7 +22,7 @@ _no coalescing vs. coalescing on microtask. visualized in flame charts_
 The non-coalesced component has three consequetive heavy computations in the template whilest the coalesced component only has to do the same computation once in order to complete the same job.
 Even on a small components scale the difference in performance can be significant.
 
-## Available Approaches
+## Available approaches
 
 There are 2 places in Angular we have coalescing already implemented in the framework:
 
@@ -102,7 +102,7 @@ As these situations typically occur across multiple components or are hard to sc
 </div>
 ```
 
-## RxAngular Coalescing operators
+## RxAngular coalescing operators
 
 While developing RxAngular, one of the first things we had to tackle for performant change detection was coalescing of `ChangeDetectorRef#detectChanges` calls on component level,
 but in fact, the shipped logic can be applied anywhere.

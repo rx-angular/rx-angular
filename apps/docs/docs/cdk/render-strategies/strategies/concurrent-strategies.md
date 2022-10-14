@@ -1,4 +1,4 @@
-# Concurrent Strategies
+# Concurrent strategies
 
 Based on the [RAIL model](https://web.dev/rail/), e.g. if your app provides animated user feedback within more than 16ms (less than 60 frames per second), it feels laggy to the user and leads to bad UX.
 From the UX perspective that means users should not experience blocking periods more than 16 ms.
@@ -13,7 +13,7 @@ There are 5 core concepts of the concurrent strategies:
 - Chunking
 - Concurrent Scheduling
 
-### Frame budget / Frame Drop
+### Frame budget / Frame drop
 
 The Browser has only one UI thread (main thread), meaning things happen one after another.
 
@@ -129,7 +129,7 @@ This scenario gets to a problem depending on:
 - the number of Angular elements
 - the amount of work done in the elements
 
-### Concurrent Scheduling
+### Concurrent scheduling
 
 ![concurrent scheduling - abstract diagram](https://user-images.githubusercontent.com/10064416/145228577-6b8f0bb7-6547-4835-aecc-13d7e07baf02.png)
 
@@ -238,7 +238,7 @@ export class ItemsListComponent {
 > **⚠ Notice:**
 > Be aware to avoid scheduling large or non-urgent work with immediate priority as it blocks rendering
 
-### User Blocking
+### User blocking
 
 ![render-strategies-concurrent-userBlocking-tree](https://user-images.githubusercontent.com/10064416/146285901-b84f4e32-9213-4674-9cfe-f4dffe68dd65.png)
 

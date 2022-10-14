@@ -1,7 +1,5 @@
 # How to set up zone flags
 
----
-
 ## Resources
 
 **Example application:**
@@ -9,7 +7,7 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 ## Concepts
 
-### The Patching Mechanism
+### The patching mechanism
 
 API patching or monkey-patching means we take an existing API and override its behavior globally or in specific places.
 
@@ -37,7 +35,7 @@ EventTarget.prototype.addEventListener = patchedAddEventListener;
 Here we patch the global `addEventListener` API.
 Every fired event in the Browser will now pass our patch from above.
 
-### The Flagging Mechanism
+### The flagging mechanism
 
 When `zone.js` is first time initialised on the page, it takes values of flags already located in `window` object.
 So it's important to set them **before `zone.js` is init**. So we need to inject `zone-flags.js` code **above** the zone code.

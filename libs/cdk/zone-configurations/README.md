@@ -4,7 +4,7 @@
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
-## A small typed and documented convenience helper to configure `zone.js` patching over zone-flags.
+> A small typed and documented convenience helper to configure `zone.js` patching over zone-flags.
 
 `@rx-angular/cdk/zone-configurations` is designed to help developers configure zone-flage easyly.
 Besides a well documented and typed API it also provides a set of convenience features.

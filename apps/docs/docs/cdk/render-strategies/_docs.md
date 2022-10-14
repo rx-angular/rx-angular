@@ -1,6 +1,6 @@
-# Render Strategies
+## Render strategies
 
-##### Explicit fine-grained control of change detection in Angular
+> Explicit fine-grained control of change detection in Angular
 
 ![RenderStrategies - Overview](https://user-images.githubusercontent.com/10064416/116306287-2b21a600-a7a5-11eb-997b-5c2e847821a2.png)
 
@@ -31,7 +31,7 @@ This architecture enables modern features like:
 
 **BasicStrategies**
 
-[BasicStrategies](basic-strategies.md) wrap modern ivy APIs like `ɵmarkDirty` and `ɵdetectChanges` as well as a strategy to "noop" change detection.
+[BasicStrategies](strategies/basic-strategies.md) wrap modern ivy APIs like `ɵmarkDirty` and `ɵdetectChanges` as well as a strategy to "noop" change detection.
 As a fallback for the migration process or comparison testing, Angulars default change detection behaviour is also provided as a strategy.
 
 This set aims to get the first option for zone-less rendering (`ɵmarkDirty`), more control on the top-down process, and improve performance drastically by only rendering components that received updates.
@@ -40,7 +40,7 @@ This set aims to get the first option for zone-less rendering (`ɵmarkDirty`), m
 
 **ConcurrentStrategies**
 
-The [ConcurrentStrategies](concurrent-strategies.md) utilize the latest technologies to enable priority-based change detection for non-blocking rendering and smooth user experiences. It combines the most performant scheduling techniques with a highly performant queueing mechanism.
+The [ConcurrentStrategies](strategies/concurrent-strategies.md) utilize the latest technologies to enable priority-based change detection for non-blocking rendering and smooth user experiences. It combines the most performant scheduling techniques with a highly performant queueing mechanism.
 Read more about the internal techniques [here](https://www.npmjs.com/package/scheduler) or [here](https://github.com/WICG/scheduling-apis).
 
 The name **ConcurrentStrategies** implies that concepts of [react concurrent mode](https://reactjs.org/docs/concurrent-mode-intro.html) are transported into the world of Angular.
@@ -68,7 +68,7 @@ The sub-package provides the following features:
 - [x] RenderStrategyConfig
 - [x] RxStrategyProvider
 
-**[Available Strategies:](https://rx-angular.io/docs/cdk/render-strategies/strategies)**
+**[Available Strategies:](render-strategies/strategies)**
 
 | Name             | Priority | Render Method     | Scheduling              | Render Deadline |
 | ---------------- | -------- | ----------------- | ----------------------- | --------------- |

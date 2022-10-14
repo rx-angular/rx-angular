@@ -1,9 +1,9 @@
-# Resources
+## Resources
 
 **Example applications:**  
 A demo application is available on [GitHub](https://stackblitz.com/edit/angular-async-ngif-with-error-tpb4uc).
 
-# Motivation
+## Motivation
 
 ![rx-angular_cdk_notifications__toNotifiaction_michael_hladky](https://user-images.githubusercontent.com/10064416/131154927-c56e1fbe-c01f-4c8a-9445-869db3f9bd0e.png)
 

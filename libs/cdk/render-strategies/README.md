@@ -4,7 +4,7 @@
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
-## A small typed convenience helper to handle contextual state.
+> A small typed convenience helper to handle contextual state.
 
 Convenience helper to easily apply different change detection mechanisms to Angular
 
@@ -17,7 +17,7 @@ The documentation also includes detaillsd explainations of techniques and provid
 - ✅ Abstracted ChangeDetection
 - ✅ Schedule any type of work
 - ✅ Rich set of optimized change detection strategies
-  -✅ Fully tested
+- ✅ Fully tested
 - ✅ Well Documented
 
 ## Demos:

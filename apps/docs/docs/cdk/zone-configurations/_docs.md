@@ -1,9 +1,9 @@
-# Resources
+## Resources
 
 **Example applications:**  
 A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-cdk-zone-configuration).
 
-# Motivation
+## Motivation
 
 **How zone.js works by default**
 
@@ -19,7 +19,7 @@ Zone can be [disabled fully](https://angular.io/guide/zone#disabling-zone), but 
 
 To set up zone flags we can use the direct `window` properties as documented in the [official docs](https://angular.io/guide/zone#setting-up-zonejs). The best documentation can be found in the source [zone-flags](https://github.com/angular/angular/blob/master/packages/zone.js/lib/zone.configurations.api.ts).
 
-# Available Approaches
+## Available approaches
 
 In the following, we will discuss the vanilla JavaScript approach without any abstraction or DX to understand the fundamentals, as well as serve an approach for a setup with RxAngulars `@rx-angular/cdk/zone-config` helper.
 
@@ -35,7 +35,7 @@ RxAngular should be our go-to approach as it serves as a more convenient way to 
 - ✅ Assertion if zone-flags are not correctly used
 - ✅ Convenience methods
 
-# Impact
+## Impact
 
 Zone flags can land an incredible performance improvement, but also can cause a lot of problems related to change detection if it was not in a proper state.
 
@@ -49,7 +49,7 @@ A second charts is with timer, scroll and xhr events turned off.
 
 ![angular and zone flags performance comparison](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zone-flags_performance-comparison_michael-hladky.png)
 
-# Risks & What can break
+## Risks & what can break
 
 Applications that rely on global state management are in a good position because they rely on push-based change propagation already. Therefore there is no reason for the dirty marking from the root.
 With some specific local state management, it is manageable to fix possible bugs quite easily for most of the flags.
@@ -59,7 +59,7 @@ Another risk with zone flags is it will also affect **third-party libs** that re
 In general, if you turn off some flags, nothing may break cause others are still present. And only when 70% of flags would be turned off, you'd see some major regression in UI.
 That's why important not only to disable the flag and check that app is ok but also to go over the codebase checking that change detection would be triggered correctly without zone.
 
-# Migration and Precondition
+## Migration and precondition
 
 1. Make sure `ChangeDetectionStrategy.OnPush` is set for the app's root component and the app is working properly. This is needed to ensure an immutable change propagation.
 2. To prioritize the flags we need to compare we can ask the following questions:
@@ -81,7 +81,7 @@ That's why important not only to disable the flag and check that app is ok but a
 7. Take flame chart measurements or use breakpoints to ensure they are working
 8. Test your application and see everything works fine
 
-# Alternatives
+## Alternatives
 
 An even **less granular way** to disable zone functionality is turning it off completely.
 
