@@ -33,8 +33,8 @@ yarn add @rx-angular/cdk
 
 ## Documentation
 
-- [Render Strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies/docs/README.md)
-  - [Strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies/docs/strategies.md)
-    - [Basic Strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies/docs/basic-strategies.md)
-    - [Concurrent-strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies/docs/concurrent-strategies.md)
+- [Render Strategies](https://rx-angular.io/docs/cdk/render-strategies/overview)
+  - [Strategies](https://rx-angular.io/docs/cdk/render-strategies/strategies)
+    - [Basic Strategies](https://rx-angular.io/docs/cdk/render-strategies/basic-strategies)
+    - [Concurrent-strategies](https://rx-angular.io/docs/cdk/render-strategies/concurrent-strategies)
 

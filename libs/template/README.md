@@ -28,11 +28,11 @@ convenient way of managing reactive sources and lazy rendering of the view.
 Should be noted that both [LetDirective (`*rxLet`)](https://rx-angular.io/docs/template/api/let-directive) &
 [PushPipe (`push`)](https://rx-angular.io/docs/template/api/push-pipe) recognize only immutable changes.
 
-Using those with the default strategy ([Local Strategy](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/docs/render-strategies/strategies.md#local)) should already improve the rendering performance of
+Using those with the default strategy ([Local Strategy](http://rx-angular.io/docs/cdk/render-strategies/basic-strategies#local)) should already improve the rendering performance of
 your application by a decent amount.
 
 The applied optimization behavior is fully customizable by using built-in or
-custom-provided [RenderStrategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md).  
+custom-provided [RenderStrategies](https://rx-angular.io/docs/cdk/render-strategies/overview).  
 However, `RenderStrategies` are also meant to be a tool developers can interact with inside
 their components, giving you even broader access to the rendering mechanisms of your application.
 The API comes with imperative as well as reactive ways to manage renderings.

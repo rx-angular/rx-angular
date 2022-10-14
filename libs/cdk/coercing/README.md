@@ -32,4 +32,4 @@ yarn add @rx-angular/cdk/coercing
 
 ## Documentation
 
-- [Coercion](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/coercing/docs/Readme.md)
+- [Coercion](https://rx-angular.io/docs/cdk/coercing/resources)

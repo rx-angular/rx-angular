@@ -26,5 +26,5 @@ yarn add @rx-angular/state
 
 ## Documentation
 
-- [Selections](https://github.com/rx-angular/rx-angular/tree/main/libs/state/selections/docs/Readme.md)
+- [Selections](https://rx-angular.io/cods/state/selections)
 

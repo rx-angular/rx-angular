@@ -26,5 +26,5 @@ yarn add @rx-angular/cdk
 
 ## Documentation
 
-- [Transformations](https://github.com/rx-angular/rx-angular/tree/master/libs/cdk/transformations/docs/Readme.md)
+- [Transformations](https://rx-angular.io/docs/cdk/transformations)
 

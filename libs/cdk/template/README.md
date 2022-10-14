@@ -30,5 +30,5 @@ yarn add @rx-angular/cdk
 
 ## Documentation
 
-- [Template Manager](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/template/docs/template-manager.md)
-- [List Manager](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/template/docs/list-manager.md)
+- [Template Manager](https://rx-angular.io/docs/cdk/template/template-manager)
+- [List Manager](https://rx-angular.io/docs/cdk/template/list-manager)
