@@ -24,6 +24,7 @@ There is a background process running in the child component. The input value fr
 Furthermore, there is a refresh button. A click on it also refreshes the list data.
 
 The topics we will discuss in this tutorial include:
+
 - [Setting up a reactive state, selections, and UI interactions][1-setup]
 - [Handling @Inputs reactively][2-input-bindings]
 - [Handling @Output reactively][3-output-bindings]

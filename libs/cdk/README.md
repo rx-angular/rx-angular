@@ -13,7 +13,6 @@ applications
 
 ## Sub Modules
 
-
 - [⛔ Zone Configuration](https://rx-angular.io/docs/cdk/zone-configurations)
 - [🚫 Zone Less](https://rx-angular.io/docs/cdk/zone-less)
 - [🛠 Coercing](https://rx-angular.io/docs/cdk/coercing)
@@ -22,7 +21,6 @@ applications
 - [🖌 Render-Strategies](https://rx-angular.io/docs/cdk/render-strategies)
 - [🔳 Template Management](https://rx-angular.io/docs/cdk/template)
 - [🔳 Transformations](https://rx-angular.io/docs/cdk/transformations)
-
 
 ## Demos:
 
@@ -50,8 +48,8 @@ nx migrate @rx-angular/cdk
 
 ## Version Compatibility
 
-| Angular                | RxJS                 | @rx-angular/cdk     | 
-|------------------------|----------------------|---------------------|
+| Angular                | RxJS                 | @rx-angular/cdk     |
+| ---------------------- | -------------------- | ------------------- |
 | `14`                   | `^7.4.0`             | `> 1.0.0-alpha.10`  |
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-alpha.10`  |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-alpha.10` |

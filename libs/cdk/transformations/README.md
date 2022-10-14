@@ -27,4 +27,3 @@ yarn add @rx-angular/cdk
 ## Documentation
 
 - [Transformations](https://rx-angular.io/docs/cdk/transformations)
-
