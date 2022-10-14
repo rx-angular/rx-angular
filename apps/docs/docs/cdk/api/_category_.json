@@ -1,5 +1,9 @@
 {
   "label": "API",
   "position": 2,
-  "link": null
+  "link": {
+    "type": "generated-index",
+    "title": "API reference",
+    "slug": "/state/cdk"
+  }
 }
