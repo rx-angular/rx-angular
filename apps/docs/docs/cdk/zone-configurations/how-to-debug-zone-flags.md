@@ -76,7 +76,7 @@ The check if the flag is set should now return true:
 console.log(window.__Zone_disable_timers); // logs 'false' if the flag is active
 ```
 
-![Log timers flag active](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/zone-configurations/docs/images/angular_zone-flags_disable-timers-true_michael-hladky.png)
+![Log timers flag active](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular_zone-flags_disable-timers-true_michael-hladky.png)
 
 Now, `globalThis` should have no original/unpatched version present under the zone symbol.
 
@@ -86,7 +86,7 @@ console.log(window.__zone_symbol__setTimeout);
 console.log(window.__zone_symbol__clearTimeout);
 ```
 
-![Log unpatched timer APIs](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/zone-configurations/docs/images/angular_zone-flags_setTimeout-unpatched_michael-hladky.png)
+![Log unpatched timer APIs](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular_zone-flags_setTimeout-unpatched_michael-hladky.png)
 
 > **💡 Pro Tipps:**
 >
