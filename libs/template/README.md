@@ -75,7 +75,7 @@ nx migrate @rx-angular/template
 
 ## API
 
-[API Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/overview.md)
+[API Documentation](https://rx-angular.io/docs/category/api-1)
 
 ## Basic setup
 
