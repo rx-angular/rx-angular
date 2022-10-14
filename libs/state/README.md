@@ -12,9 +12,9 @@ RxState is a lightweight, flexible, strongly typed and tested tool dedicated to 
 
 ## Sub Modules
 
-- [🧩 Selections](https://github.com/rx-angular/rx-angular/blob/main/libs/state/selections/README.md)
-- [☁ Effects](https://github.com/rx-angular/rx-angular/blob/main/libs/state/effects/README.md)
-- [? Actions](https://github.com/rx-angular/rx-angular/blob/main/libs/state/actions/README.md)
+- [🧩 Selections](https://rx-angular.io/docs/state/selections)
+- [☁ Effects](https://rx-angular.io/docs/state/effects)
+- [? Actions](https://rx-angular.io/docs/state/actions)
 
 ## Intro Video
 
@@ -88,7 +88,7 @@ nx migrate @rx-angular/state
 
 ## Testing
 
-[Testing](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/testing.md)
+[Testing](https://rx-angular.io/docs/state/docs/testing.md)
 
 ## API
 
@@ -96,24 +96,24 @@ nx migrate @rx-angular/state
 
 ## Tutorials
 
-- [Basic Tutorial](https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics)
+- [Basic Tutorial](https://rx-angular.io/docs/state/tutorials/basics)
 - [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
 
 ## Snippets
 
-- [Logic comparison - Increment a Value](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/logic-comparison--increment-a-value.md)
-- [Loading state and data fetching](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/loading-state-and-data-fetching.md)
-- [Passing Observables directly](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/passing-observables-directly.md)
-- [How to run partial state updates](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/how-can-i-run-partial-state-updates.md)
+- [Logic comparison - Increment a Value](https://rx-angular.io/docs/state/tutorials/increment-a-value)
+- [Loading state and data fetching](https://rx-angular.io/docs/state/recipes/load-data-on-route-change)
+- [Passing Observables directly](https://rx-angular.io/docs/state/tutorials/passing-observables)
+- [How to run partial state updates](https://rx-angular.io/docs/state/recipes/run-partial-updates)
 - [Get nested state slices](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/get-nested-state-slices.md)
 - [Deriving simple state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/deriving-simple-state.md)
-- [Composing state using NgRx selectors](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/composing-state-using-ngrx-selectors.md)
-- [Manage entities using NgRx entity adapter](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/manage-collections-with-ngrx-entity.md)
+- [Composing state using NgRx selectors](https://rx-angular.io/docs/state/integrations/resuse-ngrx-selectors-to-compose-state)
+- [Manage entities using NgRx entity adapter](https://rx-angular.io/docs/manage-entities-using-ngrx-entity)
 - [BehaviorSubject vs RxState](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/behavior-subject-vs-rx-state.md)
-- [Managing ViewModels with selectSlice](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/selecting-the-viewmodel.md)
-- [Manage reactive HostBindings](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/hostbindings.md)
-- [Difference between Global and Local state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/global-state-vs-local-state.md)
-- [Using RxState as Global State](https://github.com/rx-angular/rx-angular/blob/main/libs/state/docs/snippets/manage-global-state.md)
+- [Managing ViewModels with selectSlice](https://rx-angular.io/docs/state/recipes/manage-viewmodel)
+- [Manage reactive HostBindings](https://rx-angular.io/docs/state/recipes/work-with-hostbindings)
+- [Difference between Global and Local state](https://rx-angular.io/docs/state/recipes/determine-state-type)
+- [Using RxState as Global State](https://rx-angular.io/docs/state/recipes/use-rxstate-as-global-state)
 
 ## Videos
 
