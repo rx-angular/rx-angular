@@ -1,6 +1,6 @@
 ## Resources
 
-**Example applications:**  
+**Example applications:**
 A demo application is available on [GitHub](https://stackblitz.com/edit/angular-async-ngif-with-error-tpb4uc).
 
 ## Motivation

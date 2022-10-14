@@ -298,7 +298,7 @@ export class DropdownComponent {
 }
 ```
 
-> **⚠ Notice:**  
+> **⚠ Notice:**
 > Be aware to avoid scheduling large or non-urgent work with `userBlocking` priority as it blocks rendering after 250ms
 
 ### Normal
@@ -394,7 +394,7 @@ export class ItemsListComponent {
 }
 ```
 
-> **⚠ Notice:**  
+> **⚠ Notice:**
 > This priority fits well for things that should happen but has lower priority. For any non-urgent background process `idle` is the best fit.
 
 ### Idle
@@ -461,5 +461,5 @@ export class ItemsListComponent {
 }
 ```
 
-> **⚠ Notice:**  
+> **⚠ Notice:**
 > This priority fits well for low priority background processes that are not affecting user interactions.

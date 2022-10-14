@@ -16,7 +16,7 @@ Most of the side effects are related to rendering and change detection and done 
 Some of the side effects are not related to the template and need to get handled in the component.
 For for async effect's like Promise or Observable it requires to maintain a cancellation logic.
 
-> **Pro Tip:**  
+> **Pro Tip:**
 > In general, it's best to avoid the direct use of the `subscribe` API of RxJS at all.
 
 It may sound weird, as I'm pretty sure you are used to handle your subscriptions.

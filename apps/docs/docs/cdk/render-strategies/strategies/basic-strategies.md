@@ -104,7 +104,7 @@ as the internally called function [`markViewDirty`](https://github.com/angular/a
 
 #### Global Strategy
 
-> **deprecated**  
+> **deprecated**
 > angular [drops support](https://github.com/angular/angular/pull/46806) for `ɵmarkDirty`
 
 This strategy leverages Angular's internal [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) render method.

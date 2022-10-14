@@ -244,7 +244,7 @@ export class AnyComponent {
 }
 ```
 
-> **⚠ Notice:**  
+> **⚠ Notice:**
 > As the component which introduces the change does not know where in the template the change got introduced, the whole template needs to be re-evaluated.
 
 ### Usage in the template
@@ -274,8 +274,8 @@ They own an `EmbeddedView`, and RxAngular realized it and applied the re-evaluat
 
 ![rx-angular-cdk_render-strategies_template-vs-embeddedview](https://user-images.githubusercontent.com/10064416/116314957-1c8cbc00-a7b0-11eb-91e8-cb6f5de038db.png)
 
-> **⚠ Notice:**  
-> Use rxLet over push.  
+> **⚠ Notice:**
+> Use rxLet over push.
 > Even if the push pipe lives in the template, the performance is still the same as controlling rendering in the component because it re-evaluates the whole template.
 
 ### Usage in a service
@@ -304,7 +304,7 @@ export class AnyService {
 }
 ```
 
-> **⚠ Notice:**  
+> **⚠ Notice:**
 > The component that introduces the change does not know where in the template it sits. The whole template needs to be re-evaluated.
 
 ## Testing

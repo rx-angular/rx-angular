@@ -1,6 +1,6 @@
 ## Resources
 
-**Example applications:**  
+**Example applications:**
 A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-cdk-coalescing).
 
 ## Motivation
@@ -69,7 +69,7 @@ platformBrowserDynamic()
   .catch((err) => console.error(err));
 ```
 
-This setting applies the technique of coalescing to fired events bound by Angular.  
+This setting applies the technique of coalescing to fired events bound by Angular.
 It will coalesce any event emissions occurring during the duration of an animation frame and after that, run `ApplicationRef#tick` only one time instead of multiple times.
 
 This is mainly impactful if we deal with event-heavy templates. The diagrams below shows the difference between 2 events with and without coalescing.
@@ -169,7 +169,7 @@ To have more fine-grained control over the duration of coalescing an optional pa
 
 You could pass e.g. `interval(0)` as `durationSelector` to use a `setInterval` as duration period.
 
-> **💡 Pro Tip**  
+> **💡 Pro Tip**
 > Even a longer duration based on milliseconds, e.g. `interval(500)` can be used as duration.
 >
 > For more information on the different scheduling options you could have a look at the different scheduling API's like
@@ -225,7 +225,7 @@ The following diagram illustrates change detection in component level:
 
 ![coalesceWith - multiple components with component scope](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-component-scope.png)
 
-> **⚠ Notice:**  
+> **⚠ Notice:**
 > Be cautious with globally shared coalescing scopes. It could lead to unwanted behaviour and loss of updates when used incorrectly.
 
 ![coalesceWith - multiple components with global scope](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-global-scope.png)

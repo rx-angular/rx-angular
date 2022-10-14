@@ -13,7 +13,7 @@ This section contains an [imperative code base][output-bindings.start.component.
 ## React to state changes from child components
 
 In this example, we will be using an expansion panel to display a list.
-For the purpose of this tutorial, we identify the panel's open and close states as part of the component's state.  
+For the purpose of this tutorial, we identify the panel's open and close states as part of the component's state.
 We will also have to forward the changes to the component's `listExpandedChange` output binding.
 
 As it is essential to connect Observables to the state, there is a service method that deals with this specific issue.
