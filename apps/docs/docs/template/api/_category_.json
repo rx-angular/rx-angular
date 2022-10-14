@@ -3,6 +3,7 @@
   "position": 2,
   "link": {
     "type": "generated-index",
-    "description": "API reference @rx-angular/template"
+    "description": "API reference @rx-angular/template",
+    "slug": "/template/api"
   }
 }
