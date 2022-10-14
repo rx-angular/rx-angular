@@ -5,13 +5,13 @@ title: 'Performance issues'
 hide_title: true
 ---
 
-# Rendering Issues in Angular
+# Rendering issues in Angular
 
 A brief overview about what is about the current situation in terms of rendering in angular applications.
 
-![Scheduling Options](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/template/docs/images/scheduling-options.png)
+![Scheduling options](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/template/docs/images/scheduling-options.png)
 
-## Binding Reactive Sources
+## Binding reactive sources
 
 The current way of binding _reactive_ sources to a view in angular looks like that:
 

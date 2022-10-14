@@ -15,7 +15,7 @@ The zone-less package helps out here.
 It provides a general method to access the unpatched version of an API and also ships a set of commonly used APIs of the Browser as well as RxJS.
 All those APIs are fully independent of zone.js and NgZone (which is normally used to run things outside Angular).
 
-## The Benefits
+## The benefits
 
 - ✅ Finegrained ways to unpatch APIs
 - ✅ Fastest option possible to run code outside of Angulars zone mechanism
