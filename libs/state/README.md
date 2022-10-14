@@ -84,7 +84,7 @@ nx migrate @rx-angular/state
 
 ## Usage
 
-[Usage Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/usage.md)
+[Usage Documentation](https://rx-angular.io/docs/state/setup)
 
 ## Testing
 
@@ -92,7 +92,7 @@ nx migrate @rx-angular/state
 
 ## API
 
-[API Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/api/overview.md)
+[API Documentation](https://rx-angular.io/docs/category/api)
 
 ## Tutorials
 
