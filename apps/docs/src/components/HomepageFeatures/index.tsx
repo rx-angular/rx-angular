@@ -26,7 +26,7 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/undraw_rxangular_data_processing.svg')
       .default,
     description: <>Reactive Component State-Management.</>,
-    url: 'docs/state/getting-started/overview',
+    url: 'docs/state',
   },
   {
     title: '@rx-angular/template',

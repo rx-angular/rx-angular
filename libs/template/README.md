@@ -32,7 +32,7 @@ Using those with the default strategy ([Local Strategy](http://rx-angular.io/doc
 your application by a decent amount.
 
 The applied optimization behavior is fully customizable by using built-in or
-custom-provided [RenderStrategies](https://rx-angular.io/docs/cdk/render-strategies/overview).  
+custom-provided [RenderStrategies](https://rx-angular.io/docs/cdk/render-strategies).  
 However, `RenderStrategies` are also meant to be a tool developers can interact with inside
 their components, giving you even broader access to the rendering mechanisms of your application.
 The API comes with imperative as well as reactive ways to manage renderings.
@@ -97,6 +97,7 @@ export class MyModule {}
 
 - Directives
   - [LetDirective (\*rxLet)](https://rx-angular.io/docs/template/api/let-directive)
+  - [RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/rxfor-directive)
   - [UnpatchDirective (unpatch)](https://rx-angular.io/docs/template/unpatch-directive)
 - Pipes
   - [PushPipe (push)](https://rx-angular.io/docs/template/api/push-pipe)
@@ -106,9 +107,8 @@ export class MyModule {}
 Additionally, `@rx-angular/template` provides some experimental optimization tools which in general will give you more control
 about what changes are leading to re-renderings.
 
-- [🧪 RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/experimental/rx-if-directive)
-- [🧪 RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/experimental/rx-for-directive)
-- [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/experimental/viewport-prio)
+- [🧪 RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/experimental/rxif-directive)
+- [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/experimental/viewport-prio-directive)
 
 ## Version Compatibility
 

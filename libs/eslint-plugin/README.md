@@ -46,4 +46,4 @@ This plugin has two pre-defined configurations for different scenarios:
 
 ## Rules
 
-Documentation for individual rules may be found [here](https://rx-angular.io/docs/category/eslint-rules).
+Documentation for individual rules may be found [here](https://rx-angular.io/docs/eslint-plugin/rules).

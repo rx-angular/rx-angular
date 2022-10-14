@@ -31,4 +31,4 @@ yarn add @rx-angular/cdk
 
 ## Documentation
 
-- [Zone-Less](https://rx-angular.io/docs/cdk/zone-less/resources)
+- [Zone-Less](https://rx-angular.io/docs/cdk/zone-less)

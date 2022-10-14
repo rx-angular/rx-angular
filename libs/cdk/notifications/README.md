@@ -28,5 +28,4 @@ yarn add @rx-angular/cdk
 
 ## Documentation
 
-- [Notifications](http://rx-angular.io/docs/cdk/notifications/resources)
-
+- [Notifications](http://rx-angular.io/docs/cdk/notifications)

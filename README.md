@@ -1,4 +1,4 @@
-[![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/docs/images/rx-angular_logo.png)](https://www.rx-angular.io/)
+[![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/docs/images/rx-angular_logo.png)](https://rx-angular.io/)
 
 # RxAngular ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 
@@ -72,8 +72,8 @@ Find details in the links to the official docs below for installation and setup 
 
 ## Version Compatibility
 
-| Angular                | RxJS                 | @rx-angular/state | @rx-angular/template | @rx-angular/cdk     | 
-|------------------------|----------------------|-------------------|----------------------|---------------------|
+| Angular                | RxJS                 | @rx-angular/state | @rx-angular/template | @rx-angular/cdk     |
+| ---------------------- | -------------------- | ----------------- | -------------------- | ------------------- |
 | `14`                   | `^7.4.0`             | `> 1.4.6`         | `> 1.0.0-beta.29`    | `> 1.0.0-alpha.10`  |
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.4.6`         | `> 1.0.0-beta.29`    | `> 1.0.0-alpha.10`  |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.4.6`        | `<= 1.0.0-beta.29`   | `<= 1.0.0-alpha.10` |
