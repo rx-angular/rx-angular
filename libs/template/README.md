@@ -4,7 +4,7 @@
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/template/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/template/lcov-report/index.html)
 
-## Reactive Template Rendering for Angular
+> Reactive Template Rendering for Angular
 
 @rx-angular/template is a comprehensive toolset for fully reactive rendering in Angular.
 It leverages the latest Browser APIs (while still being backward compatible) to maximize the rendering performance and thus
@@ -32,7 +32,7 @@ Using those with the default strategy ([Local Strategy](http://rx-angular.io/doc
 your application by a decent amount.
 
 The applied optimization behavior is fully customizable by using built-in or
-custom-provided [RenderStrategies](https://rx-angular.io/docs/cdk/render-strategies).  
+custom-provided [RenderStrategies](https://rx-angular.io/docs/cdk/render-strategies).
 However, `RenderStrategies` are also meant to be a tool developers can interact with inside
 their components, giving you even broader access to the rendering mechanisms of your application.
 The API comes with imperative as well as reactive ways to manage renderings.

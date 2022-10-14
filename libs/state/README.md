@@ -4,7 +4,7 @@
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/state/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/state/lcov-report/index.html)
 
-## Reactive Component State for Angular
+> Reactive Component State for Angular
 
 RxState is a lightweight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in Angular.
 
