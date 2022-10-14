@@ -1,3 +1,10 @@
+---
+sidebar_label: 'FAQ'
+sidebar_position: 5
+title: 'FAQ'
+hide_title: true
+---
+
 # Frequently asked questions
 
 ## What's the difference between injecting and extending the `RxState` service?

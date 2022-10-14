@@ -1,6 +1,10 @@
+---
+sidebar_position: 5
+---
+
 # Concepts and best practices
 
-## Component Shell and Folder
+## Component shell and folder
 
 - `@Input` bindings are setters
 - `@Output` bindings are state derivations
@@ -21,9 +25,9 @@ Good:
 <ng-container *rxLet="obj$ as obj"> {{ obj }} </ng-container>
 ```
 
-## Component Implementation Approach
+## Component implementation approach
 
-### Defining the Interface
+### Defining the interface
 
 In a first step you want to setup the state interface. A property that should change the view of your component should find its place in the interface.
 View bindings and triggers, which in turn mutate your state, should be `Subjects`.
@@ -33,12 +37,11 @@ _Derived state_ should be handled separately.
 **Example view interface**:
 
 ```typescript
-
 interface MyState {
-    items: string[];
-    listExpanded: boolean;
-    sortKey: string;
-    isAsc: boolean;
+  items: string[];
+  listExpanded: boolean;
+  sortKey: string;
+  isAsc: boolean;
 }
 
 interface MyView {
@@ -104,13 +107,13 @@ vm$ = this.state.select();
 
 Observables and projection functions are named in a way that gives us information about the returned data structure.
 
-Think in Source => transfor => state/effect
+Think in Source => transform => state/effect
 
 Bad:
 
 ```typescript
 getSearchResults() => this.inputChange$.pipe(
-   switchMap((q) => fetchData(q))
+  switchMap((q) => fetchData(q))
 )
 ```
 
@@ -121,8 +124,8 @@ this.toSearchResult
 )
 
 toSearchResults(o) => o.pipe(
- map((data) => {
-   switchMap((q) => fetchData(q))
- })
+  map((data) => {
+    switchMap((q) => fetchData(q))
+  })
 )
 ```
