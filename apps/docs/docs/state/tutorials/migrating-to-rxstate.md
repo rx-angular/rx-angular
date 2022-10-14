@@ -381,7 +381,7 @@ name$ = this.state.select('name');
 tasks$ = this.state.select('tasks');
 ```
 
-Visually it looks the same but the select operator provides a lot more than just passing keys. You can read about it [here](https://github.com/rx-angular/rx-angular/blob/main/libs/state/docs/api/rx-state.md#select). Also selection will be shareReplayed, distincted and undefined values will be filtered out.
+Visually it looks the same but the select operator provides a lot more than just passing keys. You can read about it [here](https://rx-angular.io/docs/state/api/rx-state#select). Also selection will be shareReplayed, distincted and undefined values will be filtered out.
 
 **Updating state reactively**
 
