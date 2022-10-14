@@ -97,7 +97,7 @@ export class MyModule {}
 
 - Directives
   - [LetDirective (\*rxLet)](https://rx-angular.io/docs/template/api/let-directive)
-  - [RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/rxfor-directive)
+  - [RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/rx-for-directive)
   - [UnpatchDirective (unpatch)](https://rx-angular.io/docs/template/unpatch-directive)
 - Pipes
   - [PushPipe (push)](https://rx-angular.io/docs/template/api/push-pipe)
@@ -107,7 +107,7 @@ export class MyModule {}
 Additionally, `@rx-angular/template` provides some experimental optimization tools which in general will give you more control
 about what changes are leading to re-renderings.
 
-- [🧪 RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/experimental/rxif-directive)
+- [🧪 RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/experimental/rx-if-directive)
 - [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/experimental/viewport-prio-directive)
 
 ## Version Compatibility
