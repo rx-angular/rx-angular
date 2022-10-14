@@ -28,7 +28,7 @@ None of them has a full notion about what happens in the browser and can be unre
 
 To address the problem of long tasks and help browser split the work @rx-angular/cdk provides concurrent strategies. This strategies will help browser to chunk the work into non-blocking tasks whenever it's possible.
 
-You can read detailed information about concurrent strategies [here](concurrent-strategies.md).
+You can read detailed information about concurrent strategies [here](strategies/concurrent-strategies.md).
 
 ## RxStrategyProvider APIs
 
