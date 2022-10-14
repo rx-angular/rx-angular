@@ -88,7 +88,7 @@ module.exports = {
           },
           {
             docId: 'eslint-plugin/eslint-plugin',
-            label: 'ESLint-Plugin',
+            label: 'ESLint',
             position: 'left',
             type: 'doc'
           },
@@ -117,17 +117,17 @@ module.exports = {
                 to: 'docs/cdk/',
               },
               {
+                label: '@rx-angular/eslint-plugin',
+                 to: 'docs/eslint-plugin/',
+              },
+              {
                 label: '@rx-angular/state',
                 to: 'docs/state/',
               },
               {
                label: '@rx-angular/template',
                 to: 'docs/template/',
-              },
-              {
-                label: '@rx-angular/eslint-plugin',
-                 to: 'docs/eslint-plugin/',
-              },
+              }
             ],
           },
           {
