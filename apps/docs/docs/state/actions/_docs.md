@@ -1,11 +1,11 @@
-# Resources
+## Resources
 
 **Example applications:**
 A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-state-actions).
 
-# Motivation
+## Motivation
 
-Signals, or a more commonly used name actions, are a common part of state management and reactive systems in general. 
+Signals, or a more commonly used name actions, are a common part of state management and reactive systems in general.
 Even if `@rx-angular/state` provides `set` method, sometimes you need to add behaviour to your user input or incoming events.
 
 Subjects are normally used to implement this feature. This leads, especially in bigger applications, to a messy code that is bloated with Subjects.
@@ -15,25 +15,30 @@ Let's have a look at this piece of code:
 ```typescript
 @Component({
   template: `
-    <input (input)="searchInput($event?.target?.value)" /> Search for: {{search$ | async}}<br/>
-    <button (click)="submitBtn()">Submit<button><br/>
-    <ul>
-      <li *ngFor="let item of list$ | async as list">{{item}}</li>
-    </ul>
-  `
+    <input (input)="searchInput($event?.target?.value)" /> Search for:
+    {{ search$ | async }}<br />
+    <button (click)="submitBtn()">
+      Submit<button>
+        <br />
+        <ul>
+          <li *ngFor="let item of list$ | async as list">{{ item }}</li>
+        </ul>
+      </button>
+    </button>
+  `,
 })
 class Component {
   private _submitBtn = new Subject<void>();
   private _searchInput = new Subject<string>();
-    
+
   set submitBtn() {
-    _submitBtn.next()
+    _submitBtn.next();
   }
   get submitBtn$() {
     return _searchInput.asObservable();
   }
   set search(search: string) {
-    _searchInput.next(search)
+    _searchInput.next(search);
   }
   get search$() {
     return _searchInput.asObservable();
@@ -42,16 +47,16 @@ class Component {
   list$ = this.submitBtn$.pipe(
     withLatestFrom(this.search$),
     switchMap(([_, searchString]) => this.api.query(searchString))
-   )
+  );
 
-  constructor(api: API) { }
- 
+  constructor(api: API) {}
 }
 ```
 
 Just look at the amount of code we need to write for only 2 observable ui events.
 
 Downsides:
+
 - Boilerplate for setter and getter
 - Transformations spreaded over class and template
 - Manual typing ov subjects and streams
@@ -62,42 +67,43 @@ Imagine we could have configurable functions that return all UI logic typed unde
 ```typescript
 import { RxActionFactory } from '@rx-angular/state/actions';
 interface UiActions {
-  submitBtn: void,
-  searchInput: string
+  submitBtn: void;
+  searchInput: string;
 }
 
 @Component({
   template: `
-    <input (input)="ui.searchInput($event)" /> Search for: {{ui.search$ | async}}<br/>
-    <button (click)="ui.submitBtn()">Submit<button><br/>
-    <ul>
-      <li *ngFor="let item of list$ | async as list">{{item}}</li>
-    </ul>
+    <input (input)="ui.searchInput($event)" /> Search for:
+    {{ ui.search$ | async }}<br />
+    <button (click)="ui.submitBtn()">
+      Submit<button>
+        <br />
+        <ul>
+          <li *ngFor="let item of list$ | async as list">{{ item }}</li>
+        </ul>
+      </button>
+    </button>
   `,
-  providers: [RxActionFactory]
+  providers: [RxActionFactory],
 })
 class Component {
-  ui = this.factory.create({searchInput: (e) => e.target.value});
-  
+  ui = this.factory.create({ searchInput: (e) => e.target.value });
+
   list$ = this.ui.submitBtn$.pipe(
     withLatestFrom(this.ui.search$),
     switchMap(([_, searchString]) => this.api.query(searchString))
-   )
-  
-  constructor(
-    api: API,
-    private factory: RxActionFactory<UiActions>
-  ) {}
+  );
 
+  constructor(api: API, private factory: RxActionFactory<UiActions>) {}
 }
 ```
 
-# RxAngular Signals
+## RxAngular Signals
 
-This package helps to reduce code used to create composable action streams. 
+This package helps to reduce code used to create composable action streams.
 It mostly is used in combination with state management libs to handle user interaction and backend communication.
 
-## Setup
+### Setup
 
 The coalescing features can be used directly from the `cdk` package or indirectly through the `state` package.
 To do so, install the `cdk` package and, if needed, the packages depending on it:
@@ -110,7 +116,7 @@ npm i @rx-angular/state
 yarn add @rx-angular/state
 ```
 
-## Basic usage
+### Basic usage
 
 By using RxAngular Actions we can reduce the boilerplate significantly, to do so we can start by thinking about the specific section their events and event payload types:
 
@@ -129,6 +135,7 @@ commands = getActions<Commands>();
 ```
 
 The object can now be used to emit signals over setters:
+
 ```typescript
 commands.refreshUser(value);
 commands.refreshList(value);
@@ -136,6 +143,7 @@ commands.refreshGenres(value);
 ```
 
 The emitted signals can be received over observable properties:
+
 ```typescript
 refreshUser$ = commands.refreshUser$;
 refreshList$ = commands.refreshList$;
@@ -143,47 +151,54 @@ refreshGenres$ = commands.refreshGenres$;
 ```
 
 You can also emit multiple signals at once:
+
 ```typescript
- commands({refreshUser: true, refreshList: true});
+commands({ refreshUser: true, refreshList: true });
 ```
 
 If there is the need to make a combined signal you can also select multiple signals and get their emissions in one stream:
+
 ```typescript
 refreshUserOrList$ = commands.$(['refreshUser', 'refreshList']);
 ```
 
-## Signals in components
+### Signals in components
 
 In components/templates we can use signals to map user interaction as well as programmatic to effects or state changes.
-This reduces the component class code as well as template. 
+This reduces the component class code as well as template.
 
 In addition, we can use it as a shorthand in the template and directly connect to action dispatching in the class.
 
 ```typescript
 interface UiActions {
-  submitBtn: void,
-  searchInput: string
+  submitBtn: void;
+  searchInput: string;
 }
 
 @Component({
   template: `
-    <input (input)="ui.searchInput($event)" /> Search for: {{ui.search$ | async}}<br/>
-    <button (click)="ui.submitBtn()">Submit<button><br/>
-    <ul>
-      <li *ngFor="let item of list$ | async as list">{{item}}</li>
-    </ul>
+    <input (input)="ui.searchInput($event)" /> Search for:
+    {{ ui.search$ | async }}<br />
+    <button (click)="ui.submitBtn()">
+      Submit<button>
+        <br />
+        <ul>
+          <li *ngFor="let item of list$ | async as list">{{ item }}</li>
+        </ul>
+      </button>
+    </button>
   `,
-  providers: [RxState, RxActionFactory]
+  providers: [RxState, RxActionFactory],
 })
 class Component {
-  ui = this.factory.create({searchInput: (e) => e?.target?.value});
+  ui = this.factory.create({ searchInput: (e) => e?.target?.value });
   list$ = this.state.select('list');
   submittedSearchQuery$ = this.ui.submitBtn$.pipe(
-    withLatestFrom(this.ui.search$), 
+    withLatestFrom(this.ui.search$),
     map(([_, search]) => search),
     debounceTime(1500)
   );
-  
+
   constructor(
     private state: RxState<State>,
     private factory: RxActionFactory<UiActions>,
@@ -191,7 +206,7 @@ class Component {
   ) {
     super();
     this.connect('list', this.globalState.refreshGenres$);
-    
+
     this.state.hold(this.submittedSearchQuery$, this.globalState.refreshGenres);
     // Optional reactively:
     // this.globalState.connectRefreshGenres(this.submittedSearchQuery$);
@@ -199,7 +214,7 @@ class Component {
 }
 ```
 
-### Using transforms
+#### Using transforms
 
 Often we process `Events` from the template and occasionally also trigger those channels in the class programmatically.
 
@@ -209,6 +224,7 @@ This is also true for the programmatic usage in the component class or a service
 To ease this pain we can manage this login with `transforms`.
 
 You can write you own transforms or use the predefined functions:
+
 - preventDefault
 - stopPropagation
 - preventDefaultStopPropagation
@@ -216,38 +232,43 @@ You can write you own transforms or use the predefined functions:
 
 ```typescript
 interface UiActions {
-  submitBtn: void,
-  searchInput: string
+  submitBtn: void;
+  searchInput: string;
 }
 
 @Component({
   template: `
-    <input (input)="ui.searchInput($event)" /> Search for: {{ui.search$ | async}}<br/>
-    <button (click)="ui.submitBtn()">Submit<button><br/>
-    <ul>
-      <li *ngFor="let item of list$ | async as list">{{item}}</li>
-    </ul>
+    <input (input)="ui.searchInput($event)" /> Search for:
+    {{ ui.search$ | async }}<br />
+    <button (click)="ui.submitBtn()">
+      Submit<button>
+        <br />
+        <ul>
+          <li *ngFor="let item of list$ | async as list">{{ item }}</li>
+        </ul>
+      </button>
+    </button>
   `,
-  providers: [RxState, RxActionFactory]
+  providers: [RxState, RxActionFactory],
 })
 class Component {
   //                                (e) => e.target ? e.target.value : e
-  ui = this.factory.create({searchInput: eventValue});
+  ui = this.factory.create({ searchInput: eventValue });
   list$ = this.state.select('list');
   submittedSearchQuery$ = this.ui.submitBtn$.pipe(
-    withLatestFrom(this.ui.search$), 
+    withLatestFrom(this.ui.search$),
     map(([_, search]) => search),
     debounceTime(1500)
   );
-  
+
   constructor(
     private state: RxState<State>,
     private factory: RxActionFactory<UiActions>,
     globalState: StateService
   ) {
-    super(); 
+    super();
     this.connect('list', this.globalState.refreshGenres$);
-    
+
     this.state.hold(this.submittedSearchQuery$, this.globalState.refreshGenres);
     // Optional reactively:
     // this.globalState.connectRefreshGenres(this.submittedSearchQuery$);
@@ -255,9 +276,9 @@ class Component {
 }
 ```
 
-## Usage for global services
+### Usage for global services
 
-In services, it comes in handy to have a minimal typed action system. 
+In services, it comes in handy to have a minimal typed action system.
 This helps to have them composable for further optimizations.
 Furthermore, we can still expose setters to trigger actions the imperative way.
 
@@ -270,9 +291,8 @@ interface Commands {
   refreshGenres: string | number;
 }
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StateService extends RxState<State> {
   private commands = new RxActionFactory<Commands>().create();
@@ -284,26 +304,20 @@ export class StateService extends RxState<State> {
 
     this.connect(
       'genres',
-      this.commands.fetchGenres$.pipe(
-        exhaustMap(this.tmdb2Service.getGenres)
-      )
+      this.commands.fetchGenres$.pipe(exhaustMap(this.tmdb2Service.getGenres))
     );
   }
 
   refreshGenres(genre: string): void {
     this.commands.fetchGenres(genre);
   }
-  
+
   // Optionally the reactive way
   connectRefreshGenres(genre$: Observable<string>): void {
     this.connect(
       'genres',
-      this.commands.fetchGenres$.pipe(
-        exhaustMap(this.tmdb2Service.getGenres)
-      )
+      this.commands.fetchGenres$.pipe(exhaustMap(this.tmdb2Service.getGenres))
     );
   }
-
 }
 ```
-
