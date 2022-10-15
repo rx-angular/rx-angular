@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # UnpatchDirective
 
 The `unpatch` directive helps developers to partially deactivate `NgZone`, as well as getting rid

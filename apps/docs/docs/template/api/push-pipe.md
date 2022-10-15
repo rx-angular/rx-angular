@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # PushPipe
 
 The `push` pipe serves as a drop-in replacement for the `async` pipe.

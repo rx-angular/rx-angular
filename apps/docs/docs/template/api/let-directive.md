@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # LetDirective
 
 The `*rxLet` directive serves a convenient way of binding observables to a view context. Furthermore, it helps

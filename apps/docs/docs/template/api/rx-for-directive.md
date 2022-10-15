@@ -1,4 +1,8 @@
-# RxFor Directive
+---
+sidebar_position: 1
+---
+
+# RxFor directive
 
 The `*rxFor` structural directive provides a convenient and performant way for rendering
 templates out of a list of items.
