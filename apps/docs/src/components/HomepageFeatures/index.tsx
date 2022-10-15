@@ -19,7 +19,7 @@ const FeatureList: FeatureItem[] = [
         UI libs and large scale applications.
       </>
     ),
-    url: 'docs/cdk/api/transformation-helpers',
+    url: 'docs/cdk',
   },
   {
     title: '@rx-angular/state',
