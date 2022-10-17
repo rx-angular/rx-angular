@@ -1,0 +1,9 @@
+{
+  "label": "Rules",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "slug": "eslint-plugin/rules",
+    "title": "ESLint rules"
+  }
+}

@@ -381,7 +381,7 @@ name$ = this.state.select('name');
 tasks$ = this.state.select('tasks');
 ```
 
-Visually it looks the same but the select operator provides a lot more than just passing keys. You can read about it [here](https://github.com/rx-angular/rx-angular/blob/main/libs/state/docs/api/rx-state.md#select). Also selection will be shareReplayed, distincted and undefined values will be filtered out.
+Visually it looks the same but the select operator provides a lot more than just passing keys. You can read about it [here](https://rx-angular.io/docs/state/api/rx-state#select). Also selection will be shareReplayed, distincted and undefined values will be filtered out.
 
 **Updating state reactively**
 
@@ -426,7 +426,7 @@ constructor(private api: TodoApiService, private state: RxState<IChecklist>) {
 
 Note that we removed `withLatestFrom(this.tasks$)` in favor of the `projectionFunction` in `connect`.
 First we define fields to be updated, then the source of the changes and lastly we provide the `projectionFunction`. The functions' first first argument is the current state, the second is the change coming from
-our source. More on possible `connect` variants [here](https://github.com/rx-angular/rx-angular/blob/main/libs/state/docs/api/rx-state.md#connect).
+our source. More on possible `connect` variants [here](../api/rx-state.md#connect).
 
 **Full component code**
 

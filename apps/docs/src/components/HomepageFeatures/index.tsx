@@ -19,21 +19,21 @@ const FeatureList: FeatureItem[] = [
         UI libs and large scale applications.
       </>
     ),
-    url: 'docs/cdk/api/transformation-helpers',
+    url: 'docs/cdk',
   },
   {
     title: '@rx-angular/state',
     Svg: require('@site/static/img/undraw_rxangular_data_processing.svg')
       .default,
     description: <>Reactive Component State-Management.</>,
-    url: 'docs/state/getting-started/overview',
+    url: 'docs/state',
   },
   {
     title: '@rx-angular/template',
     Svg: require('@site/static/img/undraw_rxangular_progressive_app.svg')
       .default,
     description: <>High-Performance Reactive Template Rendering for Angular.</>,
-    url: null,
+    url: 'docs/template',
   },
 ];
 

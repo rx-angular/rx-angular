@@ -8,7 +8,23 @@
     },
     "tsconfig.json": "*",
     "nx.json": "*",
-    ".eslintrc.json": "*"
+    ".eslintrc.json": "*",
+    "CONTRIBUTING.md": ["docs"],
+    "libs/cdk/README.md": ["docs"],
+    "libs/cdk/coalescing/README.md": ["docs"],
+    "libs/cdk/coercing/README.md": ["docs"],
+    "libs/cdk/notifications/README.md": ["docs"],
+    "libs/cdk/render-strategies/README.md": ["docs"],
+    "libs/cdk/transformations/README.md": ["docs"],
+    "libs/cdk/zone-configurations/README.md": ["docs"],
+    "libs/cdk/zone-less/README.md": ["docs"],
+    "libs/cdk/template/README.md": ["docs"],
+    "libs/eslint-plugin/README.md": ["docs"],
+    "libs/state/README.md": ["docs"],
+    "libs/state/actions/README.md": ["docs"],
+    "libs/state/effects/README.md": ["docs"],
+    "libs/state/selections/README.md": ["docs"],
+    "libs/template/README.md": ["docs"]
   },
   "tasksRunnerOptions": {
     "default": {
