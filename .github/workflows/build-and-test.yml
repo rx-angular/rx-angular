@@ -48,21 +48,21 @@ jobs:
 
       # don't run build in parallel, can cause dead locks
       - name: Run Affected build
-        run: yarn nx affected:build --parallel=false
+        run: yarn nx affected:build --exclude=docs --parallel=false
 
       - run: yarn nx-cloud stop-all-agents
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+            token: ${{ secrets.CODECOV_TOKEN }}
 
   build-docs:
     runs-on: ubuntu-latest
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
-      pages: write # to deploy to Pages
-      id-token: write # to verify the deployment originates from an appropriate source
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
 
     # Deploy to the github-pages environment
     environment:
@@ -105,6 +105,7 @@ jobs:
 
       # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
       # - run: yarn nx-cloud stop-all-agents
+
 #      - uses: EndBug/add-and-commit@v4
 #        with:
 #          add: 'docs/dist/*'
