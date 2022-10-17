@@ -35,7 +35,7 @@ module.exports = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: `https://github.com/${organizationName}/${projectName}/edit/main`,
+          editUrl: `https://github.com/${organizationName}/${projectName}/edit/main/apps/docs`,
         },
         // Disable the blog plugin
         blog: false,
