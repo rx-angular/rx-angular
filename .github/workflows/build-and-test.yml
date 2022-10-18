@@ -49,7 +49,7 @@ jobs:
       - name: Set up dependencies
         uses: ./.github/actions/setup
 
-      - run: yarn nx-cloud start-ci-run
+      - run: npx nx-cloud start-ci-run
 
       - name: Run Affected lint
         run: yarn nx affected:lint --parallel --maxParallel=3
@@ -64,7 +64,7 @@ jobs:
       - name: Run Affected build
         run: yarn nx affected:build --exclude=docs --parallel=false
 
-      - run: yarn nx-cloud stop-all-agents
+      - run: npx nx-cloud stop-all-agents
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
