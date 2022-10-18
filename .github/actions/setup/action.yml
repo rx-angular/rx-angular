@@ -36,7 +36,6 @@ runs:
         key: ${{ runner.os }}-node-${{ inputs.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
           ${{ runner.os }}-node-${{ inputs.node-version }}-
-          ${{ runner.os }}-
 
     - name: Install dependencies
       if: steps.yarn-cache.outputs.cache-hit != 'true'
