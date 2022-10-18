@@ -5,7 +5,6 @@
   "scripts": {
     "ng": "nx",
     "nx": "nx",
-    "nx-cloud": "nx-cloud",
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
@@ -97,7 +96,7 @@
     "@nrwl/jest": "12.10.1",
     "@nrwl/linter": "12.10.1",
     "@nrwl/node": "12.10.1",
-    "@nrwl/nx-cloud": "14.7.0",
+    "@nrwl/nx-cloud": "12.5.4",
     "@nrwl/tao": "12.10.1",
     "@nrwl/workspace": "12.10.1",
     "@nx-plus/docusaurus": "12.2.0",
