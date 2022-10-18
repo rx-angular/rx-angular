@@ -24,7 +24,6 @@ jobs:
         agent: [1, 2, 3]
 
     steps:
-      - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
 
       - name: Start Nx Agent ${{ matrix.agent }}
@@ -34,7 +33,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
 
       - run: yarn nx-cloud start-ci-run
@@ -71,7 +69,6 @@ jobs:
       NX_DISTRIBUTED_TASK_EXECUTION: false
 
     steps:
-      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
         with:
           # Docusaurus needs Node.js 16
