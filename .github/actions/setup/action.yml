@@ -23,6 +23,7 @@ runs:
 
     - name: Get Yarn cache directory
       id: yarn-cache-dir
+      shell: bash
       run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
     - name: Dependencies and Cypress cache
