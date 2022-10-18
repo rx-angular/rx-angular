@@ -4,7 +4,7 @@
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/state/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/state/lcov-report/index.html)
 
-## Reactive Component State for Angular
+> Reactive Component State for Angular
 
 RxState is a lightweight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in Angular.
 
@@ -12,14 +12,13 @@ RxState is a lightweight, flexible, strongly typed and tested tool dedicated to 
 
 ## Sub Modules
 
-- [🧩 Selections](https://github.com/rx-angular/rx-angular/blob/main/libs/state/selections/README.md)
-- [☁ Effects](https://github.com/rx-angular/rx-angular/blob/main/libs/state/effects/README.md)
-- [? Actions](https://github.com/rx-angular/rx-angular/blob/main/libs/state/actions/README.md)
+- [🧩 Selections](https://rx-angular.io/docs/state/selections)
+- [☁ Effects](https://rx-angular.io/docs/state/effects)
+- [? Actions](https://rx-angular.io/docs/state/actions)
 
 ## Intro Video
 
-<a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)</a>
-
+[![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)](https://www.youtube.com/watch?v=CcQYj4V2IKw)
 
 ## Description
 
@@ -61,7 +60,7 @@ with very little effort in any component.
 - Connect any Observable source to the state
 - Partial state updates
 - Reactive state selection
-- Lazy state (no BehaviourSubject)
+- Lazy state (no BehaviorSubject)
 - Foundation for zone-less Angular applications
 
 ## Install
@@ -85,42 +84,42 @@ nx migrate @rx-angular/state
 
 ## Usage
 
-[Usage Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/usage.md)
+[Usage Documentation](https://rx-angular.io/docs/state/setup)
 
 ## Testing
 
-[Testing](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/testing.md)
+[Testing](https://rx-angular.io/docs/state/testing)
 
 ## API
 
-[API Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/api/overview.md)
+[API Documentation](https://rx-angular.io/docs/state/api)
 
 ## Tutorials
 
-- [Basic Tutorial](https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics)
+- [Basic Tutorial](https://rx-angular.io/docs/state/tutorials/basics)
 - [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
 
 ## Snippets
 
-- [Logic comparison - Increment a Value](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/logic-comparison--increment-a-value.md)
-- [Loading state and data fetching](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/loading-state-and-data-fetching.md)
-- [Passing Observables directly](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/passing-observables-directly.md)
-- [How to run partial state updates](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/how-can-i-run-partial-state-updates.md)
-- [Get nested state slices](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/get-nested-state-slices.md)
-- [Deriving simple state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/deriving-simple-state.md)
-- [Composing state using NgRx selectors](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/composing-state-using-ngrx-selectors.md)
-- [Manage entities using NgRx entity adapter](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/manage-collections-with-ngrx-entity.md)
-- [BehaviorSubject vs RxState](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/behavior-subject-vs-rx-state.md)
-- [Managing ViewModels with selectSlice](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/selecting-the-viewmodel.md)
-- [Manage reactive HostBindings](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/hostbindings.md)
-- [Difference between Global and Local state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/docs/snippets/global-state-vs-local-state.md)
-- [Using RxState as Global State](https://github.com/rx-angular/rx-angular/blob/main/libs/state/docs/snippets/manage-global-state.md)
+- [Logic comparison - Increment a Value](https://rx-angular.io/docs/state/tutorials/increment-a-value)
+- [Loading state and data fetching](https://rx-angular.io/docs/state/recipes/load-data-on-route-change)
+- [Passing Observables directly](https://rx-angular.io/docs/state/tutorials/passing-observables)
+- [How to run partial state updates](https://rx-angular.io/docs/state/recipes/run-partial-updates)
+- [Get nested state slices](https://rx-angular.io/docs/state/concepts-and-best-practices/get-nested-state-slices)
+- [Deriving simple state](https://rx-angular.io/docs/state/concepts-and-best-practices/deriving-simple-state)
+- [Composing state using NgRx selectors](https://rx-angular.io/docs/state/integrations/resuse-ngrx-selectors-to-compose-state)
+- [Manage entities using NgRx entity adapter](https://rx-angular.io/docs/manage-entities-using-ngrx-entity)
+- [BehaviorSubject vs RxState](https://rx-angular.io/docs/state/tutorials/migrating-to-rxstate)
+- [Managing ViewModels with selectSlice](https://rx-angular.io/docs/state/recipes/manage-viewmodel)
+- [Manage reactive HostBindings](https://rx-angular.io/docs/state/recipes/work-with-hostbindings)
+- [Difference between Global and Local state](https://rx-angular.io/docs/state/recipes/determine-state-type)
+- [Using RxState as Global State](https://rx-angular.io/docs/state/recipes/use-rxstate-as-global-state)
 
 ## Videos
 
-<a target="_blank" href="https://www.youtube.com/watch?v=CcQYj4V2IKw">![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)_🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session_</a>
+[![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)_🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session_](https://www.youtube.com/watch?v=CcQYj4V2IKw)
 
-<a target="_blank" href="https://www.youtube.com/watch?v=I8uaHMs8rw0">![tackling-component-state-reactively](https://user-images.githubusercontent.com/10064416/147395866-031704dc-837d-4d1f-82d6-e758e4cb9556.PNG)_🎥 Tackling Component State Reactively (Live Demo at 24:47)_</a>
+[![tackling-component-state-reactively](https://user-images.githubusercontent.com/10064416/147395866-031704dc-837d-4d1f-82d6-e758e4cb9556.PNG)_🎥 Tackling Component State Reactively (Live Demo at 24:47)_](https://www.youtube.com/watch?v=I8uaHMs8rw0)
 
 - [🎥 Extending Angular for the Reactive Web](https://youtu.be/pkN6CeZ8h_U?t=5913)
 
@@ -141,11 +140,11 @@ nx migrate @rx-angular/state
 ## Version Compatibility
 
 | Angular                | RxJS                 | @rx-angular/state |
-|------------------------|----------------------|-------------------|
+| ---------------------- | -------------------- | ----------------- |
 | `14`                   | `^7.4.0`             | `> 1.4.6`         |
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.4.6`         |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.4.6`        |
 
 Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
 All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
-For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3) 
+For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3)

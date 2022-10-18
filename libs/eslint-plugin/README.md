@@ -42,8 +42,8 @@ Alternatively, if you prefer a more manual approach, add the plugin to your ESLi
 This plugin has two pre-defined configurations for different scenarios:
 
 - `@rx-angular/recommended` is recommended for most Angular applications,
-- `@rx-angular/zoneless` is a stricter configuration for applications that aspire to [avoid triggering Zone.js](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/zone-less/docs).
+- `@rx-angular/zoneless` is a stricter configuration for applications that aspire to [avoid triggering Zone.js](https://rx-angular.io/docs/cdk/zone-less).
 
 ## Rules
 
-Documentation for individual rules may be found [here](https://github.com/rx-angular/rx-angular/tree/main/libs/eslint-plugin/docs/rules/).
+Documentation for individual rules may be found [here](https://rx-angular.io/docs/eslint-plugin/rules).

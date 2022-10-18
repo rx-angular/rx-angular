@@ -1,4 +1,4 @@
-[![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/docs/images/rx-angular_logo.png)](https://www.rx-angular.io/)
+[![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/docs/images/rx-angular_logo.png)](https://rx-angular.io/)
 
 # RxAngular ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 
@@ -7,10 +7,10 @@ performance and template rendering.
 
 RxAngular is divided into different packages:
 
-- [📦@rx-angular/cdk](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/README.md)
-- [📦@rx-angular/eslint-plugin](https://github.com/rx-angular/rx-angular/tree/main/libs/eslint-plugin/README.md)
-- [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/README.md)
-- [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/main/libs/template/README.md)
+- [📦@rx-angular/cdk](https://rx-angular.io/docs/cdk)
+- [📦@rx-angular/eslint-plugin](https://rx-angular.io/docs/eslint-plugin)
+- [📦@rx-angular/state](https://rx-angular.io/docs/state)
+- [📦@rx-angular/template](https://rx-angular.io/docs/template)
 
 Used together, you get a powerful tool for developing high-performance angular applications with or without NgZone.
 
@@ -63,17 +63,17 @@ This repository holds a set of helpers to create **fully reactive** as well as *
 
 ## Packages
 
-Find details in the linked readme files below for installation and setup instructions, examples and resources.
+Find details in the links to the official docs below for installation and setup instructions, examples and resources.
 
-- [📦@rx-angular/cdk](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/README.md) - Component Development Kit
-- [📦@rx-angular/eslint-plugin](https://github.com/rx-angular/rx-angular/tree/main/libs/eslint-plugin/README.md) - ESLint Plugin
-- [📦@rx-angular/state](https://github.com/rx-angular/rx-angular/tree/main/libs/state/README.md) - Imperative & Reactive Component State-Management
-- [📦@rx-angular/template](https://github.com/rx-angular/rx-angular/tree/main/libs/template/README.md) - High-Performance Non-Blocking Rendering
+- [📦@rx-angular/cdk](https://rx-angular.io/docs/cdk) - Component Development Kit
+- [📦@rx-angular/eslint-plugin](https://rx-angular.io/docs/eslint-plugin) - ESLint Plugin
+- [📦@rx-angular/state](https://rx-angular.io/docs/state) - Imperative & Reactive Component State-Management
+- [📦@rx-angular/template](https://rx-angular.io/docs/template) - High-Performance Non-Blocking Rendering
 
 ## Version Compatibility
 
-| Angular                | RxJS                 | @rx-angular/state | @rx-angular/template | @rx-angular/cdk     | 
-|------------------------|----------------------|-------------------|----------------------|---------------------|
+| Angular                | RxJS                 | @rx-angular/state | @rx-angular/template | @rx-angular/cdk     |
+| ---------------------- | -------------------- | ----------------- | -------------------- | ------------------- |
 | `14`                   | `^7.4.0`             | `> 1.4.6`         | `> 1.0.0-beta.29`    | `> 1.0.0-alpha.10`  |
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.4.6`         | `> 1.0.0-beta.29`    | `> 1.0.0-alpha.10`  |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.4.6`        | `<= 1.0.0-beta.29`   | `<= 1.0.0-alpha.10` |

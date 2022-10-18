@@ -4,13 +4,13 @@
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
-## Slogan
+> Slogan
 
 `@rx-angular/state/selections` TBD
 
 ## Key features
 
-- ✅ 
+- ✅
 
 ## Demos:
 
@@ -26,5 +26,4 @@ yarn add @rx-angular/state
 
 ## Documentation
 
-- [Selections](https://github.com/rx-angular/rx-angular/tree/main/libs/state/selections/docs/Readme.md)
-
+- [Selections](https://rx-angular.io/docs/state/selections)

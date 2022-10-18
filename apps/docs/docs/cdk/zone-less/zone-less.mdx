@@ -1,0 +1,20 @@
+---
+sidebar_label: 'Zone-less'
+sidebar_position: 1
+title: 'Zone-less'
+hide_title: true
+---
+
+import Readme, {
+  toc as readmeToc,
+} from '@site/../../libs/cdk/zone-less/README.md';
+import Docs, { toc as docsToc } from './_docs.md';
+
+<Readme />
+
+<Docs />
+
+<!-- Workaround for generating table of contents -->
+<!-- See https://github.com/facebook/docusaurus/issues/3915#issuecomment-896193142 -->
+
+export const toc = [...readmeToc, ...docsToc];
