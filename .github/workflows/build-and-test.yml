@@ -35,7 +35,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Start Nx Agent ${{ matrix.agent }}
-        run: yarn nx-cloud start-agent
+        run: npx nx-cloud start-agent
 
   build:
     runs-on: ubuntu-latest
