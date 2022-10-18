@@ -6,6 +6,7 @@ on:
   pull_request:
     branches: [main]
 env:
+  NODE_OPTIONS: --max-old-space-size=6144
   NX_CLOUD_DISTRIBUTED_EXECUTION: true
   NX_DISTRIBUTED_TASK_EXECUTION: true
   NX_VERBOSE_LOGGING: false
