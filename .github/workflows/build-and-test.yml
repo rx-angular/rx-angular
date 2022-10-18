@@ -76,8 +76,6 @@ jobs:
       NX_CLOUD_DISTRIBUTED_EXECUTION: false
       NX_DISTRIBUTED_TASK_EXECUTION: false
 
-    if: github.ref == 'refs/heads/main'
-
     needs: [build]
 
     steps:
@@ -88,15 +86,18 @@ jobs:
           node-version: 16
 
       - name: Setup Pages
+        if: github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v2
 
       - run: yarn nx build docs
 
       - name: Upload artifact
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v1
         with:
           path: 'dist/apps/docs'
 
       - name: Deploy to GitHub Pages
         id: deployment
+        if: github.ref == 'refs/heads/main'
         uses: actions/deploy-pages@v1
