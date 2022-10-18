@@ -78,10 +78,6 @@ jobs:
       actions: read
       contents: read
 
-    env:
-      NX_CLOUD_DISTRIBUTED_EXECUTION: false
-      NX_DISTRIBUTED_TASK_EXECUTION: false
-
     steps:
       - name: Checkout all commits
         uses: actions/checkout@v3
