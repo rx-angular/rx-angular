@@ -24,8 +24,14 @@ jobs:
         agent: [1, 2, 3]
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/setup
+      - name: Checkout all commits
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v3
+      - name: Set up dependencies
+        uses: ./.github/actions/setup
 
       - name: Start Nx Agent ${{ matrix.agent }}
         run: yarn nx-cloud start-agent
@@ -34,8 +40,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/setup
+      - name: Checkout all commits
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v3
+      - name: Set up dependencies
+        uses: ./.github/actions/setup
 
       - run: yarn nx-cloud start-ci-run
 
@@ -71,8 +83,10 @@ jobs:
       NX_DISTRIBUTED_TASK_EXECUTION: false
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
+      - name: Checkout all commits
+        uses: actions/checkout@v3
+      - name: Set up dependencies
+        uses: ./.github/actions/setup
         with:
           # Docusaurus needs Node.js 16
           node-version: 16

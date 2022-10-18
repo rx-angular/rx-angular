@@ -1,5 +1,5 @@
 name: Setup
-description: Setup Node.js, cache and install dependencies
+description: Set up Node.js, cache and install dependencies
 inputs:
   node-version:
     description: Node.js version
@@ -8,14 +8,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Checkout all commits
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-
-    - name: Derive appropriate SHAs for base and head for `nx affected` commands
-      uses: nrwl/nx-set-shas@v3
-
     - name: Use Node.js
       uses: actions/setup-node@v3
       with:
