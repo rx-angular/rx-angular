@@ -90,9 +90,6 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v2
 
-      # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
-      # - run: yarn nx-cloud start-ci-run
-
       - run: yarn nx build docs
 
       - name: Upload artifact
@@ -104,17 +101,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
-
-      # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
-      # - run: yarn nx-cloud stop-all-agents
-#      - uses: EndBug/add-and-commit@v4
-#        with:
-#          add: 'docs/dist/*'
-#          author_name: Github Action
-#          message: 'chore(docs): update GitHub pages'
-#          # Name of the branch to use, if different from the one that triggered the workflow
-#          # Default: the branch that triggered the workflow (from GITHUB_REF)
-#          ref: 'github-pages'
-#        env:
-#          # This is necessary in order to push a commit to the repo
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
