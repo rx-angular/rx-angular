@@ -30,7 +30,6 @@ runs:
           ${{ runner.os }}-node-${{ inputs.node-version }}-
 
     - name: Install dependencies
-      if: steps.yarn-cache.outputs.cache-hit != 'true'
       shell: bash
       run: yarn --frozen-lockfile --no-progress --non-interactive --prefer-offline --ignore-engines
       env:
