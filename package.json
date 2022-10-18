@@ -5,6 +5,7 @@
   "scripts": {
     "ng": "nx",
     "nx": "nx",
+    "nx-cloud": "nx-cloud",
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
