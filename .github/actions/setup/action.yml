@@ -21,15 +21,21 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
 
-    - uses: actions/cache@v3
+    - name: Get Yarn cache directory
+      id: yarn-cache-dir
+      run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+    - name: Dependencies and Cypress cache
+      uses: actions/cache@v3
       id: yarn-cache
       with:
         path: |
-          node_modules
+          ${{ steps.yarn-cache-dir.outputs.dir }}
           ~/.cache/Cypress
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        key: ${{ runner.os }}-node-${{ inputs.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
-          ${{ runner.os }}-yarn-
+          ${{ runner.os }}-node-${{ inputs.node-version }}-
+          ${{ runner.os }}-
 
     - name: Install dependencies
       if: steps.yarn-cache.outputs.cache-hit != 'true'
