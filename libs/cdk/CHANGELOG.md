@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0-rc.2](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.1...cdk@1.0.0-rc.2) (2022-09-13)
+
+
+### Bug Fixes
+
+* **cdk:** use rxjs version 6 compatible imports ([a37caa0](https://github.com/rx-angular/rx-angular/commit/a37caa04bde42c07501da5072bfa92272422d14f))
+
+
+### Performance Improvements
+
+* **cdk:** adjust default frameFrate and frame budget computation ([e66f169](https://github.com/rx-angular/rx-angular/commit/e66f169ffc012db324c9b012f77fed8e44337282))
+
+
+
 # [1.0.0-rc.1](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.0...cdk@1.0.0-rc.1) (2022-08-28)
 
 

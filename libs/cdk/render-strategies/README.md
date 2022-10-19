@@ -4,19 +4,20 @@
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
-## A small typed convenience helper to handle contextual state.
+> A small typed convenience helper to handle contextual state.
 
 Convenience helper to easily apply different change detection mechanisms to Angular
 
-@rx-angular/cdk/render-strategies is a small set of helpers designed to improve the DX when managing change detection and detached or zone-less templates. 
+@rx-angular/cdk/render-strategies is a small set of helpers designed to improve the DX when managing change detection and detached or zone-less templates.
 The documentation also includes detaillsd explainations of techniques and provides diagrams for better visual understanding.
 
 ## Key features
+
 - ✅ A easy mental model for highly sophisticated techniques
-- ✅ Abstracted ChangeDetection 
+- ✅ Abstracted ChangeDetection
 - ✅ Schedule any type of work
 - ✅ Rich set of optimized change detection strategies
- -✅ Fully tested
+- ✅ Fully tested
 - ✅ Well Documented
 
 ## Demos:
@@ -33,8 +34,7 @@ yarn add @rx-angular/cdk
 
 ## Documentation
 
-- [Render Strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies/docs/README.md)
-  - [Strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies/docs/strategies.md)
-    - [Basic Strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies/docs/basic-strategies.md)
-    - [Concurrent-strategies](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/render-strategies/docs/concurrent-strategies.md)
-
+- [Render Strategies](https://rx-angular.io/docs/cdk/render-strategies)
+  - [Strategies](https://rx-angular.io/docs/cdk/render-strategies/strategies)
+    - [Basic Strategies](https://rx-angular.io/docs/cdk/render-strategies/basic-strategies)
+    - [Concurrent-strategies](https://rx-angular.io/docs/cdk/render-strategies/concurrent-strategies)

@@ -48,7 +48,7 @@ jobs:
 
       # don't run build in parallel, can cause dead locks
       - name: Run Affected build
-        run: yarn nx affected:build --parallel=false
+        run: yarn nx affected:build --exclude=docs --parallel=false
 
       - run: yarn nx-cloud stop-all-agents
 
@@ -59,32 +59,61 @@ jobs:
 
   build-docs:
     runs-on: ubuntu-latest
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: www.rx-angular.io
+      #url: ${{ steps.deployment.outputs.page_url }}
+
+    env:
+      NX_CLOUD_DISTRIBUTED_EXECUTION: false
+      NX_DISTRIBUTED_TASK_EXECUTION: false
 
     if: github.ref == 'refs/heads/main'
 
     needs: [build]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
+        with:
+          # Docusaurus needs Node.js 16
+          node-version: 16
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
 
       # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
       # - run: yarn nx-cloud start-ci-run
 
-      - run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx run-many --projects=state,template,cdk --target=build-docs --parallel --maxParallel=3
-      - run: NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx build demos --prod
+      - run: yarn nx build docs
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # upload dist/docs
+          path: 'dist/apps/docs'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
 
       # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
       # - run: yarn nx-cloud stop-all-agents
 
-      - uses: EndBug/add-and-commit@v4
-        with:
-          add: 'docs/*'
-          author_name: Github Action
-          message: 'chore(docs): update GitHub pages'
-          # Name of the branch to use, if different from the one that triggered the workflow
-          # Default: the branch that triggered the workflow (from GITHUB_REF)
-          ref: 'github-pages'
-        env:
-          # This is necessary in order to push a commit to the repo
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - uses: EndBug/add-and-commit@v4
+#        with:
+#          add: 'docs/dist/*'
+#          author_name: Github Action
+#          message: 'chore(docs): update GitHub pages'
+#          # Name of the branch to use, if different from the one that triggered the workflow
+#          # Default: the branch that triggered the workflow (from GITHUB_REF)
+#          ref: 'github-pages'
+#        env:
+#          # This is necessary in order to push a commit to the repo
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
