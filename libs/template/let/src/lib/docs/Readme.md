@@ -9,7 +9,7 @@ To name a few:
 * it leads to too many subscriptions in the template
 * it is cumbersome to work with values in the template
 
-## Access values in the template: `*ngIf hack`
+## Access async values in the template: `*ngIf hack`
 
 The ngIf hack looks like this:
 
@@ -23,28 +23,10 @@ The ngIf hack looks like this:
 The problem is that `*ngIf` interferes with rendering and in case of falsy values (`0`, ``, `false`, `null`, `undefined`) the component
 would be hidden. This issue is a big problem and leads to many production bugs as its edge cases are often overlooked.
 
-## Too many subscriptions
+## Downsides of the "`ngIf`-hack"
 
-A common scenario is to use multiple async pipes to subscribe to either multiple, or the same observable
-throughout different parts of a components template.
-
-```html
-<div class="item" *ngFor="let item of items$ | async"></div>
-<div class="loader" *ngIf="(items$ | async).length > 0"></div>
-```
-
-Besides being not readable, it is also very inefficient. Unshared observables will most likely and each `async` 
-will definitely run the same code multiple times.
-
-## NgZone
-
-Another thing to consider is, the `AsyncPipe` relies on zone.js to be present and aware of the value change bound to the async pipe. 
-It doesn't really trigger change detection by itself. Instead, it marks the component and its parents as dirty, waiting for the Zone to trigger change detection.
-This is especially bad for leaf components, as the async pipe will mark the whole component tree as dirty before being able to update the desired template.
-Also in case you want to create a zone-less application, the `AsyncPipe` won't work as desired. 
-
-## Downsides
-
+- Performance issues from the subscriptions in pipe's
+- Over rendering 
 - Boilerplate in the template
 - Typings are hard to handle due to `null` and `undefined`
 - Inefficient change detection (Evaluation of the whole template)
@@ -93,7 +75,6 @@ It mostly is used in combination with state management libs to handle user inter
 - lazy template creation (done by render strategies) 
 - triggers change-detection on `EmbeddedView` level
 - distinct same values in a row (over-rendering)
-- view memoization
 
 ## Inputs
 
@@ -408,7 +389,6 @@ in a convenient way.
 }
 ```
 
-
 # Advanced Usage
 
  ## Use render strategies (`strategy`)
@@ -527,6 +507,36 @@ export class AppComponent {
 }
 ```
 
+## Local strategies and view/content queries (`parent`)
+
+To make `*rxLet` work with view and content queries a special machanism is implemented to execute CD on the parent. (`parent`)
+This is required if you use any of the following decorators:
+ - `@ViewChild`
+ - `@ViewChildren`
+ - `@ContentChild`
+ - `@ContentChildren`
+ 
+You can read further about it under [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/handling-view-and-contnet-queries.md).
+ 
+To have as little confusion as possible this is on by default.
+If you don't need the behavior you can disable it and gain significant performance improvements.
+ 
+Take a look at the following example:
+
+```ts
+@Component({
+  selector: 'app-list-component',
+  template: `
+    <div
+      *rxLet="state$; let state; parent: false">
+    </div>
+  `
+})
+export class AppListComponent {}
+```
+
+TODO => Flame chart comparison and numbers
+
 # Testing
 
 For testing we suggest to switch the CD strategy to `native`. 
@@ -619,8 +629,6 @@ describe('LetDirective', () => {
 
 });
 ```
-
-
 
 # Resources
 

@@ -1,8 +1,23 @@
-## Rendering Issues in Angular
 
-A brief overview about what is about the current situation in terms of rendering in angular applications.
+## Too many subscriptions
 
-![Scheduling Options](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/template/docs/images/scheduling-options.png)
+A common scenario is to use multiple async pipes to subscribe to either multiple, or the same observable
+throughout different parts of a components template.
+
+```html
+<div class="item" *ngFor="let item of items$ | async"></div>
+<div class="loader" *ngIf="(items$ | async).length > 0"></div>
+```
+
+Besides being not readable, it is also very inefficient. Unshared observables will most likely and each `async` 
+will definitely run the same code multiple times.
+
+## NgZone
+
+Another thing to consider is, the `AsyncPipe` relies on zone.js to be present and aware of the value change bound to the async pipe. 
+It doesn't really trigger change detection by itself. Instead, it marks the component and its parents as dirty, waiting for the Zone to trigger change detection.
+This is especially bad for leaf components, as the async pipe will mark the whole component tree as dirty before being able to update the desired template.
+Also in case you want to create a zone-less application, the `AsyncPipe` won't work as desired. 
 
 ### Binding Reactive Sources
 

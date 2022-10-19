@@ -3,8 +3,8 @@ import { ApplicationRef, Component, NgZone } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { UnpatchDirective } from './unpatch.directive';
-import { UnpatchModule } from './unpatch.module';
+import { UnpatchDirective } from '../unpatch.directive';
+import { UnpatchModule } from '../unpatch.module';
 
 describe(UnpatchDirective.name, () => {
   enum LogEvent {
