@@ -16,11 +16,11 @@ However, the rendering behavior is fully configurable and transparent for the de
 
 ## Downsides
 
-TBD
-
-## Conclusion
-
-TBD
+- Bootstrapping of `ngFor`is slow 
+- Change detection and render work processed in a UI blocking way
+- Laziness of DOM is not given (slow emplate creation)
+- Nested structures are very slow, especially with updates
+- Destruction is more computation heavy than adding bootstrapping
 
 # Concepts
 
@@ -65,6 +65,7 @@ TBD
 | Input            | Type                                                               | description                                                                                                                                                                                             |
 |------------------|--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `trackBy`        | `keyof T` or `(index: number, item: T) => any`                     | Identifier function for items. `rxFor` provides a shorthand where you can name the property directly.                                                                                                                    |
+| `distinctBy`     | `keyof T` or `(index: number, item: T) => any`                     | Identifier function for items. `rxFor` provides a shorthand where you can name the property directly.                                                                                                                    |
 
 **Rendering**  
 
@@ -83,6 +84,8 @@ TBD
 
 The following context variables are available for each template:
 
+**Static Context Variables (mirrored from `ngFor`)**
+
 | Variable Name    | Type                                                               | description                                                                                                                                                                                             |
 |------------------|--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `$implicit`      | `T`                                                          | the default variable accessed by `let val`                                                                                                                    |
@@ -93,6 +96,11 @@ The following context variables are available for each template:
 | `last`      | `boolean`                                                          | true if the item is the last in the list                                                                                                                    |
 | `even`      | `boolean`                                                          | true if the item has on even index (index % 2 === 0)                                                                                                                    |
 | `odd`      | `boolean`                                                          | the opposite of even                                                                                                                    |
+
+**Reactive Context Variables**
+
+| Variable Name    | Type                                                               | description                                                                                                                                                                                             |
+|------------------|--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `index$`      | `Observable<number>`                                                          | index as `Observable`                                                                                                                    |
 | `count$`      | `Observable<number>`                                                          | count as `Observable`                                                                                                                    |
 | `first$`      | `Observable<boolean>`                                                          | first as `Observable`                                                                                                                    |
@@ -137,37 +145,78 @@ export class AnyComponent {}
 > - The default render strategy is [`normal`](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md).  
 >   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md#Default-configuration) if you want to change it. 
 > - Creates templates lazy and manages multiple template instances
+> 
+> As a list can take larger to render items can appear in batches if concurrent strategies are used. 
+> This brings several benefits. e.g. stop rendering in between and navigate away.
+> 
 
 ## Simple example using `*rxFor` with `Observable` values
 
-```html
-<ul>
-  <li *rxFor="let item of observableItems$; trackBy: trackItem">{{ item }}</li>
-</ul>
+```
+@NgComponent({
+    template: `
+    <ul>
+      <li *rxFor="let item of observableItems$; trackBy: trackItem">{{ item }}</li>
+    </ul>
+    `
+})
+export class AnyComponent {
+    trackItem(_, i) {
+        return t.id
+    }
+}
 ```
 
 ## Simple example using `*rxFor` with simple static values
 
-```html
-<ul>
-  <li *rxFor="let item of items; trackBy: trackItem">{{ item }}</li>
-</ul>
+> **🔥 Perf Tip:**  
+> As `rxFor` accepts also static values it can serve as a drop in replacement with an easy find and replace refacturing. 
+> 
+
+```typescript
+@NgComponent({
+    template: `
+    <ul>
+      <li *rxFor="let item of items; trackBy: trackItem">{{ item }}</li>
+    </ul>
+    `
+})
+export class AnyComponent {
+    trackItem(index, item) {
+        return item.id
+    }
+}
 ```
 
-### Using the context variables
+## Save code with the `trackBy` shortcut 
+
+> **💡 DX Tip:**  
+> As `rxFor` accepts also static values it can serve as a drop in replacement with an easy find and replace refacturing. 
+> 
+```typescript
+@NgComponent({
+    template: `
+    <ul>
+      <li *rxFor="let item of items; trackBy: 'id'">{{ item }}</li>
+    </ul>
+    `
+})
+export class AnyComponent {}
+```
+
+### Using the static context variables
 
 ```html
 <ul>
   <li
     *rxFor="
-      let item of observableItems$;
+      let item of observableItems$; trackBy: 'id';
       let count = count;
       let index = index;
       let first = first;
       let last = last;
       let even = even;
       let odd = odd;
-      trackBy: trackItem;
     "
   >
     <div>{{ count }}</div>
@@ -181,7 +230,63 @@ export class AnyComponent {}
 </ul>
 ```
 
+### Using the reactive context variables
+
+```html
+<ul>
+  <li
+    *rxFor="
+      let item of observableItems$; trackBy: 'id';
+      let count$ = count$;
+      let index$ = index$;
+      let first$ = first$;
+      let last$ = last$;
+      let even$ = even$;
+      let odd$ = odd$;
+    "
+  >
+    <div *rxLet="count$; let c">{{ c }}</div>
+    ...
+  </li>
+</ul>
+```
+
 # Advanced Usage
+
+### Fine-grained CD with `distinctBy` 
+
+A function that defines how to track `updates` of items.
+In addition to track when items are added, moved, or removed you can provide a function that determines if any
+updates happened to an item. Use this is if you want to have even more control about what changes lead to
+re-renderings of the DOM.
+
+By default, rxFor identifies if an update happens by doing an (equality check `===`).
+When a function supplied, rxFor uses the result to identify the item node.
+
+```typescript
+@Component({
+  selector: 'app-root',
+  template: `
+   <app-list-component>
+     <app-list-item
+       *rxFor="
+         let item of items$;
+         trackBy: 'id';
+         distinctBy: distinctItem;
+       "
+     >
+       <div>{{ item.name }}</div>
+     </app-list-item>
+   </app-list-component>
+  `
+})
+export class AppComponent {
+  items$ = itemService.getItems();
+  // only changes to the name lead to a re-rendering of a child template
+  distinctItem = (itemA, itemB) => itemA.name === itemB.name;
+} 
+```
+
 
 ### Nested `rxFor` and the `select` variable
 
@@ -202,6 +307,8 @@ This example showcases the `select` view-context function used for deeply nested
 ```
 
 This will significantly improve the performance.
+
+TODO => Flame chart comparison and numbers
 
 ### Projected Views (`parent`)
 
@@ -236,12 +343,46 @@ The usage of `AppListComponent` looks like this:
 </app-list-component>
 ```
 
+## Working with event listeners (`patchZone`)
+
+Event listeners normally trigger zone. Especially high frequently events cause performance issues.
+By using we can run all event listener inside `rxFor` outside zone. 
+
+For more details read about [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/ngzone-optimizations.md)
+
+```ts
+@Component({
+  selector: 'any-component>',
+  template: `
+    <div *rxFor="let bgColor in bgColor$; patchZone: false" 
+    (mousemove)="calcBgColor($event)" [style.background]="bgColor">
+    </div>
+  `
+})
+export class AppComponent {
+  // As the part of the template where this function is used as event listener callback
+  // has `patchZone` false the all event listeners run ouside zone.
+  calcBgColor(moveEvent: MouseEvent) {
+   // do something with the background in combination with the mouse position
+  }
+}
+```
+
 # Testing
 
 For testing we suggest to switch the CD strategy to `native`. 
 This helps to exclude all side effects from special render strategies.
 
+TODO
+
 # Resources
 
+**Demos:**  
+A showcase for [blocking UI as a stackblitz demo](https://stackblitz.com/edit/rx-angular-cdk-demos-c52q34)
+Feature demos in our [demos app](https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/template/rx-for)
+
 **Example applications:**  
-A demo application is available on [GitHub](https://github.com/tastejs/angular-movies).
+A real live application using `rxFor` is available on [GitHub](https://github.com/tastejs/angular-movies).
+
+**Design docs, Researches, Case Studies**
+This issue documents [how we approached `rxFor`](https://github.com/rx-angular/rx-angular/issues/304)
