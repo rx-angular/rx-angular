@@ -170,7 +170,7 @@ export class AnyComponent {
 ## Simple example using `*rxFor` with simple static values
 
 > **🔥 Perf Tip:**  
-> As `rxFor` accepts also static values it can serve as a drop in replacement with an easy find and replace refacturing. 
+> As `rxFor` accepts also static values it can serve as a drop in replacement with an easy find and replace refactoring. 
 > 
 
 ```typescript
@@ -309,6 +309,10 @@ This example showcases the `select` view-context function used for deeply nested
 This will significantly improve the performance.
 
 TODO => Flame chart comparison and numbers
+
+> **🔥 Perf Tip:**  
+> Use `select` in combination with `distinctBy` to get even more performance out of an update. 
+> 
 
 ### Projected Views (`parent`)
 
