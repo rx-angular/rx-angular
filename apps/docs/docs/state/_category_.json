@@ -1,8 +1,3 @@
 {
-  "label": "@rx-angular/state",
-  "position": 2,
-  "link": {
-    "type": "doc",
-    "id": "state/getting-started/overview"
-  }
+  "label": "@rx-angular/state"
 }

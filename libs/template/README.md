@@ -11,25 +11,28 @@
 
 ## Sub Modules
 
-- [PushPipe (`push`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/push/src/lib/Readme.md)
-- [LetDirective (`*rxLet`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/let/src/lib/README.md) 
-- [ForDirective (`*rxFor`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/for/src/lib/README.md) 
-- [TemplateDirective (`*rxTemplate`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/template/src/lib/README.md) 
-- [UnpatchEventsDirective (unpatch)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/unpatch/src/lib/README.md)
- 
+- [LetDirective (\*rxLet)](https://rx-angular.io/docs/template/api/let-directive)
+- [RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/rx-for-directive)
+- [UnpatchDirective (unpatch)](https://rx-angular.io/docs/template/unpatch-directive)
+- [PushPipe (`push`)](https://rx-angular.io/docs/template/push-pipe)
+- [TemplateDirective (`*rxTemplate`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/template/src/lib/README.md)
+
 **Experimental features**
 
-- [🧪 IfDirective (`*rxIf`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/experimental/if/src/lib/README.md) 
-- [🧪 Viewport Priority (viewport-prio)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/experimental/viewport-prio/src/lib/README.md)
- 
+- [🧪 RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/experimental/rx-if-directive)
+- [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/experimental/viewport-prio-directive)
+
 All experimental features are very stable and already tested in production apps for multiple month. The reason to have them in experimental is so we can make small typing changes without breaking changes.
- 
+
 ### Concepts
 
 - [reactive context](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/reactive-context.md)
 - [context trigger]()
 - [render strategies]()
 - [render callback]()
+
+- [Coalescing, Scoped Coalescing & Scheduling](https://rx-angular.io/docs/template/concepts)
+- [Rendering Issues in Angular](https://rx-angular.io/docs/template/concepts/performance-issues)
 
 ## Installation
 
@@ -62,16 +65,32 @@ nx migrate @rx-angular/template
 
 ## API
 
-[API Documentation](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/api/overview.md)
+[API Documentation](https://rx-angular.io/docs/template/api)
+
+## Basic setup
+
+You can import each feature module individually.
+
+```typescript
+import { LetModule } from '@rx-angular/template/let';
+import { ForModule } from '@rx-angular/template/for';
+import { PushModule } from '@rx-angular/template/push';
+import { UnpatchModule } from '@rx-angular/template/unpatch';
+
+@NgModule({
+  declarations: [...],
+  imports: [ForModule, LetModule, PushModule, UnpatchModule],
+})
+export class MyModule {}
+```
 
 ## Version Compatibility
 
 | Angular                | RxJS                 | @rx-angular/template |
-|------------------------|----------------------|----------------------|
+|------------------------| -------------------- | -------------------- |
 | `14`                   | `^7.4.0`             | `> 1.0.0-beta.29`    |
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-beta.29`    |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-beta.29`   |
-
 
 Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
 All the packages support RxJs versions `^6.5.5` || `^7.4.0`.

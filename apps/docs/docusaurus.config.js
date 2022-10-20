@@ -35,7 +35,7 @@ module.exports = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: `https://github.com/${organizationName}/${projectName}/edit/main`,
+          editUrl: `https://github.com/${organizationName}/${projectName}/edit/main/apps/docs`,
         },
         // Disable the blog plugin
         blog: false,
@@ -52,6 +52,17 @@ module.exports = {
     ],
   ],
   tagline: 'Performance & DX',
+  themes: [
+    [
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      {
+        hashed: true,
+        indexDocs: true,
+        indexPages: true,
+        language: ['en'],
+      },
+    ],
+  ],
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -69,23 +80,29 @@ module.exports = {
           //   position: 'left',
           // },
           {
-            docId: 'cdk/api/transformation-helpers/index',
+            docId: 'cdk/cdk',
             label: 'CDK',
             position: 'left',
             type: 'doc',
           },
           {
-            docId: 'state/getting-started/overview',
+            docId: 'eslint-plugin/eslint-plugin',
+            label: 'ESLint',
+            position: 'left',
+            type: 'doc',
+          },
+          {
+            docId: 'state/state',
             label: 'State',
             position: 'left',
             type: 'doc',
           },
-          // {
-          //   docId: 'template/index',
-          //   label: 'Template',
-          //   position: 'left',
-          //   type: 'doc',
-          // },
+          {
+            docId: 'template/template',
+            label: 'Template',
+            position: 'left',
+            type: 'doc',
+          },
           // { to: 'blog', label: 'Blog', position: 'left' },
           {
             href: `https://github.com/${organizationName}/${projectName}`,
@@ -108,16 +125,20 @@ module.exports = {
             items: [
               {
                 label: '@rx-angular/cdk',
-                to: 'docs/cdk/api/transformation-helpers',
+                to: 'docs/cdk/',
+              },
+              {
+                label: '@rx-angular/eslint-plugin',
+                to: 'docs/eslint-plugin/',
               },
               {
                 label: '@rx-angular/state',
-                to: 'docs/state/getting-started/overview',
+                to: 'docs/state/',
               },
-              // {
-              //   label: '@rx-angular/template',
-              //   to: 'docs/template/',
-              // },
+              {
+                label: '@rx-angular/template',
+                to: 'docs/template/',
+              },
             ],
           },
           {

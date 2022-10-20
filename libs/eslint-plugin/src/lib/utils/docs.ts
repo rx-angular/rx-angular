@@ -1,3 +1,3 @@
 export function docsUrl(ruleName: string): string {
-  return `https://github.com/rx-angular/rx-angular/blob/master/libs/eslint-plugin/docs/rules/${ruleName}.md`;
+  return `https://rx-angular.io/docs/eslint-plugin/rules/${ruleName}.md`;
 }

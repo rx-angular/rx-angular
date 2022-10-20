@@ -40,7 +40,7 @@ import {
  *
  * The push pipe serves as a drop-in replacement for angulars built-in async pipe.
  * Just like the *rxLet Directive, it leverages a
- * [RenderStrategy](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/docs/render-strategies/README.md)
+ * [RenderStrategy](https://rx-angular.io/docs/cdk/render-strategies)
  *   under the hood which takes care of optimizing the ChangeDetection of your component. The rendering behavior can be
  *   configured per PushPipe instance using either a strategy name or provide a
  * `RxComponentInput` config.
