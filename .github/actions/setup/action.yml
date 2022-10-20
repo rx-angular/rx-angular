@@ -16,18 +16,12 @@ runs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node-version }}
+        cache: 'yarn'
 
-    - name: Get Yarn cache directory
-      id: yarn-cache-dir
-      shell: bash
-      run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-    - name: Dependencies and Cypress cache
+    - name: Cypress executable cache
       uses: actions/cache@v3
-      id: yarn-cache
       with:
         path: |
-          ${{ steps.yarn-cache-dir.outputs.dir }}
           ~/.cache/Cypress
         key: ${{ runner.os }}-node-${{ inputs.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
