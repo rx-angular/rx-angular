@@ -26,13 +26,12 @@ All experimental features are very stable and already tested in production apps 
 
 ### Concepts
 
-- [reactive context](https://github.com/rx-angular/rx-angular/tree/main/libs/template/docs/reactive-context.md)
-- [context trigger]()
-- [render strategies]()
-- [render callback]()
+- [reactive context](https://rx-angular.io/docs/template/concepts/reactive-context)
+- [local templates](https://rx-angular.io/docs/template/concepts/local-templates)
+- [local variables](https://rx-angular.io/docs/template/concepts/local-variables)
+- [render strategies](https://rx-angular.io/docs/cdk/render-strategies)
 
-- [Coalescing, Scoped Coalescing & Scheduling](https://rx-angular.io/docs/template/concepts)
-- [Rendering Issues in Angular](https://rx-angular.io/docs/template/concepts/performance-issues)
+- [Rendering Issues in Angular](https://rx-angular.io/docs/template/performance-issues)
 
 ## Installation
 
