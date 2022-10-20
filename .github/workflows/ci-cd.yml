@@ -2,9 +2,9 @@ name: CI/CD
 
 on:
   push:
-    branches:
-      - main
-  pull_request: {}
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 concurrency:
   # Group concurrency on workflow, then:
@@ -22,6 +22,10 @@ concurrency:
 
 env:
   NODE_OPTIONS: --max-old-space-size=6144
+  NX_CLOUD_DISTRIBUTED_EXECUTION: true
+  NX_DISTRIBUTED_TASK_EXECUTION: true
+  docs-name: docs
+  docs-path: dist/apps/docs
 
 jobs:
   # We're using Nx Cloud for Distributed Task Execution
@@ -68,3 +72,93 @@ jobs:
       # However, we don't have many projects or targets in this workspace, so we
       # lower the number of agents to reduce spent compute time.
       number-of-agents: 4
+
+  coverage:
+    name: Report test coverage
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+
+    needs: [dte_coordinator]
+
+    steps:
+      - name: Checkout all commits
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up dependencies
+        uses: ./.github/actions/setup
+
+      - name: Download test coverage reports from Nx Cloud
+        run: yarn nx affected --target=test --parallel=2 --max-parallel=2 --max-workers=1 --ci --code-coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  # The docs project is built in a separate job because it requires Node.js 16
+  build-docs:
+    name: Build docs
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+
+    steps:
+      - name: Checkout all commits
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up dependencies
+        uses: ./.github/actions/setup
+        with:
+          # Docusaurus needs Node.js 16
+          node-version: 16
+
+      - name: Build docs
+        run: yarn nx build docs
+
+      - name: '[Merge] Upload docs'
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.docs-name }}
+          path: ${{ env.docs-path }}
+
+  deploy-docs:
+    name: '[Merge] Deploy docs'
+    runs-on: ubuntu-latest
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+    if: github.ref == 'refs/heads/main'
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: www.rx-angular.io
+      #url: ${{ steps.deployment.outputs.page_url }}
+
+    needs: [build-docs]
+
+    steps:
+      - name: Download docs
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.docs-name }}
+          path: ${{ env.docs-path }}
+
+      - name: Set up GitHub Pages
+        uses: actions/configure-pages@v2
+
+      - name: Upload docs to GitHub Pages
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ${{ env.docs-path }}
+
+      - name: Deploy docs to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
