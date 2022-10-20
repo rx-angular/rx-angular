@@ -77,7 +77,7 @@ jobs:
       - name: Run Affected build
         run: yarn nx affected:build --exclude=docs --parallel --max-parallel=2
 
-      # e2e: 1 tasks assigned at a time, 1 task per agent
+      # e2e: 1 tasks assigned at a time, 1 process per agent
       - name: Run Affected e2e
         run: yarn nx affected:e2e --parallel=false --max-parallel=1
 
