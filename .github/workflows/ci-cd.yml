@@ -43,7 +43,7 @@ jobs:
       # in the parallel-commands-on-agents command list
       # The --agent-count parameter must match the number-of-agents parameter
       init-commands: |
-        yarn nx-cloud start-ci-run --stop-agents-after="build" --agent-count=4
+        yarn nx-cloud start-ci-run --stop-agents-after="e2e" --agent-count=4
       # Commands run in parallel in this DTE coordinator
       parallel-commands: |
         yarn nx-cloud record -- yarn nx workspace-lint
@@ -53,10 +53,12 @@ jobs:
       # lint: 2 tasks assigned at a time, 1 task per vCPU
       # test: 1 task assigned at a time with 2 parallel processes, 1 process per vCPU
       # build: 2 tasks assigned at a time, 1 task per vCPU
+      # e2e: 1 tasks assigned at a time, 1 task per agent
       parallel-commands-on-agents: |
         yarn nx affected --target=lint --parallel=2 --max-parallel=2
         yarn nx affected --target=test --parallel=1 --max-parallel=1 --max-workers=2 --ci --code-coverage
         yarn nx affected --target=build --exclude=docs --parallel=2 --max-parallel=2
+        yarn nx affected --target=e2e --parallel=1 --max-parallel=1
 
   dte_agents:
     name: DTE Agents
@@ -79,6 +81,9 @@ jobs:
     permissions:
       actions: read
       contents: read
+    env:
+      NX_CLOUD_DISTRIBUTED_EXECUTION: false
+      NX_DISTRIBUTED_TASK_EXECUTION: false
 
     # Wait for test coverage reports to be cached in Nx Cloud
     needs: [dte_coordinator]
@@ -106,6 +111,9 @@ jobs:
     permissions:
       actions: read
       contents: read
+    env:
+      NX_CLOUD_DISTRIBUTED_EXECUTION: false
+      NX_DISTRIBUTED_TASK_EXECUTION: false
 
     steps:
       - name: Checkout all commits
