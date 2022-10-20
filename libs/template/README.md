@@ -30,6 +30,7 @@ All experimental features are very stable and already tested in production apps 
 - [local templates](https://rx-angular.io/docs/template/concepts/local-templates)
 - [local variables](https://rx-angular.io/docs/template/concepts/local-variables)
 - [render strategies](https://rx-angular.io/docs/cdk/render-strategies)
+- [Coalescing, Scoping, Scheduling](https://rx-angular.io/docs/template/concepts/concepts)
 
 - [Rendering Issues in Angular](https://rx-angular.io/docs/template/performance-issues)
 
