@@ -50,9 +50,9 @@ jobs:
       # test: 1 task assigned at a time with 2 parallel processes, 1 process per vCPU
       # build: 2 tasks assigned at a time, 1 task per vCPU
       parallel-commands-on-agents: |
-        yarn nx affected --target=lint --parallel=2
-        yarn nx affected --target=test --parallel=1 --max-workers=2 --ci --code-coverage
-        yarn nx affected --target=build --exclude=docs --parallel=2
+        yarn nx affected --target=lint --parallel=2 --max-parallel=2
+        yarn nx affected --target=test --parallel=1 --max-parallel=1 --max-workers=2 --ci --code-coverage
+        yarn nx affected --target=build --exclude=docs --parallel=2 --max-parallel=2
 
   dte_agents:
     name: DTE Agents
