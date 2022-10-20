@@ -1,17 +1,32 @@
 # Motivation
 
+Rendering large sets of data is and has always been a performance bottleneck, especially for business
+applications.
+
+The most common way to render lists in angular is by using the `*ngFor` structural directive. `*ngFor` is able
+to take an arbitrary list of data and repeat a defined template per item of the list. However, it can
+only do it synchronously. 
+In other words, the larger the set of data or the heavier the template to repeat, the more `blocking`
+the user experience of your application will be.
+
 The `*rxFor` structural directive provides a convenient and performant way for rendering
 templates out of a list of items.
 
 Input values can be provided either as `Observable`, `Promise` or static values.
 
-Compared to the `NgFor`, `RxFor` treats each child template as single renderable unit. Rendering cycles of child templates get prioritized, scheduled and executed by `RenderStrategies`. This technique enables non-blocking rendering of lists and can be referred to as `concurrent mode`.
+Compared to the `NgFor`, `RxFor` treats each child template as single renderable unit.
+The change detection of the child templates get prioritized, scheduled and executed by
+leveraging `RenderStrategies` under the hood.
+This technique enables non-blocking rendering of lists and can be referred to as `concurrent mode`.
 
-Each template getting processed as individual task does also mean, rendering can be cancelled and rendered items will be rendered in chunks.
+As each rendering each template will be processed as individual task, rendering can be
+cancelled.
 
-Furthermore, `RxFor` provides access to the rendering cycle and informs about any event happening in form of a `renderCallback`.
+Furthermore, `RxFor` provides hooks to react to rendered items in form of a `renderCallback: Subject`.
 
-However, the rendering behavior is fully configurable and transparent for the developer. Each instance of `RxFor` can be configured to render with different settings.
+Together with the `RxRenderStrategies`, this makes the rendering behavior extremely versatile
+and transparent for the developer.
+Each instance of `RxFor` can be configured to render with different settings.
 
 
 ## Downsides
@@ -29,15 +44,6 @@ However, the rendering behavior is fully configurable and transparent for the de
 - [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/performance-issues/ngzone-optimizations.md)
 - [Render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#usage-in-the-template)
 
-
-# Concepts
-
-- [Local variables](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts/local-variables.md) 
-- [Local template](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts/local-templates.md)
-- [Reactive context](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts/reactive-context.md)
-- [Contextual state in the template](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts/contextual-state-in-the-template.md)
-- [Render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#usage-in-the-template)
-
 # Features
 
 **DX Features**
@@ -51,6 +57,8 @@ However, the rendering behavior is fully configurable and transparent for the de
 **Performance Features**
 
 - lazy template creation (done by render strategies) 
+- non-blocking rendering of lists
+- configurable frame budget (defaults to 60 FPS)
 - triggers change-detection on `EmbeddedView` level
 - distinct same values in a row (over-rendering)
 - `ListManager`: special logic for differ mechanism to avoid over-rendering; abstracts away low level logic
@@ -60,21 +68,15 @@ However, the rendering behavior is fully configurable and transparent for the de
 
 ## Inputs
 
-**Default functionality**
-
-| Input            | Type                                                               | description                                                                                                                                                                                             |
-|------------------|--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `trackBy`        | `keyof T` or `(index: number, item: T) => any`                     | Identifier function for items. `rxFor` provides a shorthand where you can name the property directly.                                                                                                                    |
-| `distinctBy`     | `keyof T` or `(index: number, item: T) => any`                     | Identifier function for items. `rxFor` provides a shorthand where you can name the property directly.                                                                                                                    |
-
 **Rendering**  
 
-| Input            | Type                                                               | description                                                                                                                                                                                             |
-|------------------|--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`. See [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/ngzone-optimizations.md)                                                                                                                    |
+| Input            | Type                                                               | description                                                                                                                                                                                                                                                                                                                                                                             |
+|------------------|--------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `trackBy`        | `keyof T` or `(index: number, item: T) => any`                     | Identifier function for items. `rxFor` provides a shorthand where you can name the property directly.                                                                                                                                                                                                                                                                                   |
+| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`. See [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/ngzone-optimizations.md)                                                                                                                                         |
 | `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/handling-view-and-content-queries.md) |
-| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                     |
-| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                            |
+| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                                                                                                                    |
+| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                                                                                                              |
 
 ## Outputs
 
@@ -86,28 +88,28 @@ The following context variables are available for each template:
 
 **Static Context Variables (mirrored from `ngFor`)**
 
-| Variable Name    | Type                                                               | description                                                                                                                                                                                             |
-|------------------|--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `$implicit`      | `T`                                                          | the default variable accessed by `let val`                                                                                                                    |
-| `item$`      | `Observable<T>`                                                          | the same value as $implicit, but as `Observable`                                                                                                                    |
-| `index`      | `number`                                                          | current index of the item                                                                                                                    |
-| `count`      | `number`                                                          | count of all items in the list                                                                                                                    |
-| `first`      | `boolean`                                                          | true if the item is the first in the list                                                                                                                    |
-| `last`      | `boolean`                                                          | true if the item is the last in the list                                                                                                                    |
-| `even`      | `boolean`                                                          | true if the item has on even index (index % 2 === 0)                                                                                                                    |
-| `odd`      | `boolean`                                                          | the opposite of even                                                                                                                    |
+| Variable Name | Type            | description                                          |
+|---------------|-----------------|------------------------------------------------------|
+| `$implicit`   | `T`             | the default variable accessed by `let val`           |
+| `index`       | `number`        | current index of the item                            |
+| `count`       | `number`        | count of all items in the list                       |
+| `first`       | `boolean`       | true if the item is the first in the list            |
+| `last`        | `boolean`       | true if the item is the last in the list             |
+| `even`        | `boolean`       | true if the item has on even index (index % 2 === 0) |
+| `odd`         | `boolean`       | the opposite of even                                 |
 
 **Reactive Context Variables**
 
-| Variable Name    | Type                                                               | description                                                                                                                                                                                             |
-|------------------|--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `index$`      | `Observable<number>`                                                          | index as `Observable`                                                                                                                    |
-| `count$`      | `Observable<number>`                                                          | count as `Observable`                                                                                                                    |
-| `first$`      | `Observable<boolean>`                                                          | first as `Observable`                                                                                                                    |
-| `last$`      | `Observable<boolean>`                                                          | last as `Observable`                                                                                                                    |
-| `even$`      | `Observable<boolean>`                                                          | even as `Observable`                                                                                                                    |
-| `odd$`      | `Observable<boolean>`                                                          | odd as `Observable`                                                                                                                    |
-| `select`      | `(keys: (keyof T)[], distinctByMap) => Observable<Partial<T>>`               | returns a selection function which accepts an array of properties to pluck out of every list item. The function returns the selected properties of the current list item as distinct `Observable` key-value-pair. |
+| Variable Name | Type                                                           | description                                                                                                                                                                                                       |
+|---------------|----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `item$`       | `Observable<T>`                                                | the same value as $implicit, but as `Observable`                                                                                                                                                                  |
+| `index$`      | `Observable<number>`                                           | index as `Observable`                                                                                                                                                                                             |
+| `count$`      | `Observable<number>`                                           | count as `Observable`                                                                                                                                                                                             |
+| `first$`      | `Observable<boolean>`                                          | first as `Observable`                                                                                                                                                                                             |
+| `last$`       | `Observable<boolean>`                                          | last as `Observable`                                                                                                                                                                                              |
+| `even$`       | `Observable<boolean>`                                          | even as `Observable`                                                                                                                                                                                              |
+| `odd$`        | `Observable<boolean>`                                          | odd as `Observable`                                                                                                                                                                                               |
+| `select`      | `(keys: (keyof T)[], distinctByMap) => Observable<Partial<T>>` | returns a selection function which accepts an array of properties to pluck out of every list item. The function returns the selected properties of the current list item as distinct `Observable` key-value-pair. |
 
 # Setup
 
@@ -115,7 +117,7 @@ The `ForModule` can be imported as following:
 
 Module based setup:
 ```
-import { ForModule } from "@rx-angular/template/let";
+import { ForModule } from "@rx-angular/template/for";
 
 @NgModule({
   imports: [ ForModule ],
@@ -126,7 +128,7 @@ export class AnyModule {}
 
 Standalone component setup:
 ```
-import { ForModule } from "@rx-angular/template/let";
+import { ForModule } from "@rx-angular/template/for";
 
 @NgComponent({
     standalone: true,
@@ -152,18 +154,20 @@ export class AnyComponent {}
 
 ## Simple example using `*rxFor` with `Observable` values
 
-```
+```ts
 @NgComponent({
     template: `
     <ul>
-      <li *rxFor="let item of observableItems$; trackBy: trackItem">{{ item }}</li>
+      <li *rxFor="let item of items$; trackBy: trackItem">{{ item }}</li>
     </ul>
     `
 })
 export class AnyComponent {
-    trackItem(_, i) {
-        return t.id
-    }
+  items$: Observable<Items[]> = getItems();
+    
+  trackItem(, item) {
+    return item.id
+  }
 }
 ```
 
@@ -182,9 +186,11 @@ export class AnyComponent {
     `
 })
 export class AnyComponent {
-    trackItem(index, item) {
-        return item.id
-    }
+  items: Items[] = getItems();
+  
+  trackItem(, item) {
+      return item.id
+  }
 }
 ```
 
@@ -253,41 +259,6 @@ export class AnyComponent {}
 
 # Advanced Usage
 
-### Fine-grained CD with `distinctBy` 
-
-A function that defines how to track `updates` of items.
-In addition to track when items are added, moved, or removed you can provide a function that determines if any
-updates happened to an item. Use this is if you want to have even more control about what changes lead to
-re-renderings of the DOM.
-
-By default, rxFor identifies if an update happens by doing an (equality check `===`).
-When a function supplied, rxFor uses the result to identify the item node.
-
-```typescript
-@Component({
-  selector: 'app-root',
-  template: `
-   <app-list-component>
-     <app-list-item
-       *rxFor="
-         let item of items$;
-         trackBy: 'id';
-         distinctBy: distinctItem;
-       "
-     >
-       <div>{{ item.name }}</div>
-     </app-list-item>
-   </app-list-component>
-  `
-})
-export class AppComponent {
-  items$ = itemService.getItems();
-  // only changes to the name lead to a re-rendering of a child template
-  distinctItem = (itemA, itemB) => itemA.name === itemB.name;
-} 
-```
-
-
 ### Nested `rxFor` and the `select` variable
 
 This example showcases the `select` view-context function used for deeply nested lists.
@@ -308,13 +279,9 @@ This example showcases the `select` view-context function used for deeply nested
 
 This will significantly improve the performance.
 
-TODO => Flame chart comparison and numbers
+[//]: # (TODO => Flame chart comparison and numbers)
 
-> **🔥 Perf Tip:**  
-> Use `select` in combination with `distinctBy` to get even more performance out of an update. 
-> 
-
-### Projected Views (`parent`)
+### Local strategies and view and content children (`parent`)
 
 Imagine the following situation:
 
@@ -330,7 +297,10 @@ export class AppListComponent {
 ```
 
 `AppListComponent` has a `contentOutlet` where it expects `AppListItemComponents` to be inserted into. In this case `AppListComponent`s state is dependent on its `ContentChildren`.
-This situation leads to the problem that `AppListComponent` needs to get informed about updates of its child views. This is a known issue which has never been solved for `ngFor` (or other structural directives) especially in combination with `CD OnPush` see here: (https://github.com/angular/angular/pull/35428) `RxFor` solves this issue for you by providing a simple input parameter `parent: boolean`. If value is set to `true` (default is `true`), `*rxFor` will automatically detect every other `Component` where its `EmbeddedView`s were inserted into. Those components will get change detected as well in order to force update their state accordingly.
+This situation leads to the problem that `AppListComponent` needs to get informed about updates of its child views.
+This is a known issue which has never been solved for `ngFor` (or other structural directives) especially in combination with `CD OnPush` see here: (https://github.com/angular/angular/pull/35428)
+`RxFor` solves this issue for you by providing a simple input parameter `parent: boolean`. If value is set to `true` (default is `true`), `*rxFor` will run change detection for it's defining `Component`.
+This will also update its own view and content queries as well as those of its child components.
 
 The usage of `AppListComponent` looks like this:
 
@@ -347,12 +317,14 @@ The usage of `AppListComponent` looks like this:
 </app-list-component>
 ```
 
-## Working with event listeners (`patchZone`)
+Read more about this at [handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/performance-issues/handling-view-and-content-queries.md)
+
+### Working with event listeners (`patchZone`)
 
 Event listeners normally trigger zone. Especially high frequently events cause performance issues.
 By using we can run all event listener inside `rxFor` outside zone. 
 
-For more details read about [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/ngzone-optimizations.md)
+For more details read about [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/performance-issues/ngzone-optimizations.md)
 
 ```ts
 @Component({
@@ -374,10 +346,58 @@ export class AppComponent {
 
 # Testing
 
-For testing we suggest to switch the CD strategy to `native`. 
-This helps to exclude all side effects from special render strategies.
+## Handling the scheduling issue
 
-TODO
+By default `*rxFor` uses the `normal` concurrent strategy which runs change detection asynchronously.
+This behavior can lead to unexpected results in test environments.
+We recommend to test your templates using the `native` strategy to avoid this problem.
+
+This can be configured as a `StaticProvider`.
+
+**Setting the default strategy**
+
+```ts
+export const RX_ANGULAR_TEST_PROVIDER: StaticProvider = {
+  provide: RX_RENDER_STRATEGIES_CONFIG,
+  useValue: {
+    primaryStrategy: 'native',
+  },
+};
+```
+
+**Overriding a strategy**
+
+There will be cases where you have assigned a custom strategy and the `primaryStrategy` setting won't do anything
+for you.
+
+In order to still use the `native` strategy in your test environment, you can simply override the custom strategy
+with the native one.
+
+```ts
+export const RX_ANGULAR_TEST_PROVIDER: StaticProvider = {
+  provide: RX_RENDER_STRATEGIES_CONFIG,
+  useValue: {
+    primaryStrategy: 'native',
+    customStrategies: {
+      'userBlocking': {
+        ...RX_NATIVE_STRATEGIES.native,
+        name: 'userBlocking'
+      }
+    }
+  },
+};
+```
+
+If you have done your desired configuration, declare it in the providers entry of the `TestModule`.
+
+```ts
+TestBed.configureTestingModule({
+  ...
+  providers: [RX_ANGULAR_TEST_PROVIDER],
+}).compileComponents();
+```
+
+This way, `*rxFor` will use the same rendering strategy used by the Angulars built-in `async` pipe.
 
 # Resources
 
