@@ -54,12 +54,12 @@ jobs:
         env:
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
           NX_DISTRIBUTED_TASK_EXECUTION: false
-        run: yarn nx-cloud record -- yarn nx workspace-lint
+        run: yarn nx workspace-lint
       - name: Check formatting
         env:
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
           NX_DISTRIBUTED_TASK_EXECUTION: false
-        run: yarn nx-cloud record -- yarn nx format:check
+        run: yarn nx format:check
 
       # Distribution strategy for 2 vCPUs per hosted runner (GitHub Free):
       #
