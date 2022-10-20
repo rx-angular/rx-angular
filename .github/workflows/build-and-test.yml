@@ -61,23 +61,18 @@ jobs:
       - name: Run Affected build
         run: yarn nx affected:build --exclude=docs --parallel=false
 
-      - run: npx nx-cloud stop-all-agents
-
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
+  # The docs project is built in a separate job because it requires Node.js 16
   build-docs:
     name: Build docs
     runs-on: ubuntu-latest
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
       actions: read
       contents: read
-    env:
-      NX_CLOUD_DISTRIBUTED_EXECUTION: false
-      NX_DISTRIBUTED_TASK_EXECUTION: false
 
     steps:
       - name: Checkout all commits
@@ -99,6 +94,27 @@ jobs:
         with:
           name: ${{ env.docs-name }}
           path: ${{ env.docs-path }}
+
+  stop-agents:
+    name: Stop Nx Cloud agents
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+
+    needs: [build, build-docs]
+
+    steps:
+      - name: Checkout all commits
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v3
+      - name: Set up dependencies
+        uses: ./.github/actions/setup
+
+      - run: npx nx-cloud stop-all-agents
 
   deploy-docs:
     name: '[Merge] Deploy docs'
