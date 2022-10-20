@@ -29,15 +29,15 @@ env:
   docs-path: dist/apps/docs
 
 jobs:
-  agents:
+  dte_agents:
     runs-on: ubuntu-latest
 
-    name: Agent 1
+    name: DTE Agents
     timeout-minutes: 20
 
     strategy:
       matrix:
-        agent: [1, 2, 3]
+        agent: [1, 2, 3, 4]
 
     steps:
       - name: Checkout all commits
@@ -47,7 +47,7 @@ jobs:
       - name: Set up dependencies
         uses: ./.github/actions/setup
 
-      - name: Start Nx Agent ${{ matrix.agent }}
+      - name: Start Nx Cloud Agent ${{ matrix.agent }}
         run: npx nx-cloud start-agent
 
   build:
@@ -63,18 +63,26 @@ jobs:
 
       - run: npx nx-cloud start-ci-run
 
+      # Distribution strategy for 2 vCPUs per hosted runner (GitHub Free):
+      #
+
+      # lint: 2 tasks assigned at a time, 1 task per vCPU
       - name: Run Affected lint
-        run: yarn nx affected:lint --parallel --maxParallel=3
+        run: yarn nx affected:lint --parallel --max-parallel=2
 
+      # test: 1 task assigned at a time with 2 parallel processes, 1 process per vCPU
       - name: Run Affected test
-        run: yarn nx affected:test --parallel --maxParallel=3
+        run: yarn nx affected:test --parallel --max-parallel=1 --max-workers=2 --ci --code-coverage
 
-      - name: Run Affected e2e
-        run: yarn nx affected:e2e
-
-      # don't run build in parallel, can cause dead locks
+      # build: 2 tasks assigned at a time, 1 task per vCPU
       - name: Run Affected build
-        run: yarn nx affected:build --exclude=docs --parallel=false
+        run: yarn nx affected:build --exclude=docs --parallel --max-parallel=2
+
+      # e2e: 1 tasks assigned at a time, 1 task per agent
+      - name: Run Affected e2e
+        run: yarn nx affected:e2e --parallel=false --max-parallel=1
+
+      - run: npx nx-cloud stop-all-agents
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -88,6 +96,9 @@ jobs:
     permissions:
       actions: read
       contents: read
+    env:
+      NX_CLOUD_DISTRIBUTED_EXECUTION: false
+      NX_DISTRIBUTED_TASK_EXECUTION: false
 
     steps:
       - name: Checkout all commits
@@ -109,25 +120,6 @@ jobs:
         with:
           name: ${{ env.docs-name }}
           path: ${{ env.docs-path }}
-
-  stop-agents:
-    name: Stop Nx Cloud agents
-    runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-
-    needs: [build, build-docs]
-
-    steps:
-      - name: Checkout all commits
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Set up dependencies
-        uses: ./.github/actions/setup
-
-      - run: npx nx-cloud stop-all-agents
 
   deploy-docs:
     name: '[Merge] Deploy docs'
