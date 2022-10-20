@@ -22,19 +22,89 @@ concurrency:
 
 env:
   NODE_OPTIONS: --max-old-space-size=6144
-  NX_CLOUD_DISTRIBUTED_EXECUTION: true
-  NX_DISTRIBUTED_TASK_EXECUTION: true
   NX_VERBOSE_LOGGING: false
   docs-name: docs
   docs-path: dist/apps/docs
 
 jobs:
-  dte_agents:
+  # We're using Nx Cloud for Distributed Task Execution
+  # Reference: https://nx.dev/using-nx/dte
+  #
+  # The coordinator outputs the combination of task outputs from the agents,
+  # both terminal and file outputs
+  dte_coordinator:
+    name: DTE Coordinator
     runs-on: ubuntu-latest
+    env:
+      NX_CLOUD_DISTRIBUTED_EXECUTION: true
+      NX_DISTRIBUTED_TASK_EXECUTION: true
 
+    steps:
+      - name: Checkout all commits
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up dependencies
+        uses: ./.github/actions/setup
+
+      - name: Start Nx Cloud DTE
+        run: npx nx-cloud start-ci-run --stop-agents-after="e2e" --agent-count=4
+
+      - name: Lint Nx workspace
+        env:
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false
+          NX_DISTRIBUTED_TASK_EXECUTION: false
+        run: yarn nx-cloud record -- yarn nx workspace-lint
+      - name: Check formatting
+        env:
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false
+          NX_DISTRIBUTED_TASK_EXECUTION: false
+        run: yarn nx-cloud record -- yarn nx format:check
+
+      # Distribution strategy for 2 vCPUs per hosted runner (GitHub Free):
+      #
+
+      # lint: 2 tasks assigned at a time, 1 task per vCPU
+      - name: Run Affected lint
+        run: yarn nx affected:lint --parallel --max-parallel=2
+
+      # test: 1 task assigned at a time with 2 parallel processes, 1 process per vCPU
+      - name: Run Affected test
+        id: test
+        run: yarn nx affected:test --parallel --max-parallel=1 --max-workers=2 --ci --code-coverage
+
+      # build: 2 tasks assigned at a time, 1 task per vCPU
+      - name: Run Affected build
+        run: yarn nx affected:build --exclude=docs --parallel --max-parallel=2
+
+      # e2e: 1 tasks assigned at a time, 1 task per agent
+      - name: Run Affected e2e
+        run: yarn nx affected:e2e --parallel=false --max-parallel=1
+
+      - name: Stop Nx Cloud DTE agents
+        if: ${{ always() }}
+        run: npx nx-cloud stop-all-agents
+
+      - name: Upload coverage to Codecov
+        if: steps.test.outcome == 'success'
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  dte_agents:
     name: DTE Agents
+    runs-on: ubuntu-latest
     timeout-minutes: 20
 
+    # The Free GitHub plan has a limit of 20 concurrent jobs on Ubuntu images
+    # Reference: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration
+    # If we need to, we can optimize for 2 simultaneous workflow runs:
+    # 2 x 1 main job   =  2 concurrent jobs
+    # 2 x 9 agent jobs = 18 concurrent jobs
+    # Total            = 20 concurrent jobs
+    #
+    # However, we don't have many projects or targets in this workspace, so we
+    # lower the number of agents to reduce spent compute time.
     strategy:
       matrix:
         agent: [1, 2, 3, 4]
@@ -47,47 +117,8 @@ jobs:
       - name: Set up dependencies
         uses: ./.github/actions/setup
 
-      - name: Start Nx Cloud Agent ${{ matrix.agent }}
+      - name: Start Nx Cloud DTE Agent ${{ matrix.agent }}
         run: npx nx-cloud start-agent
-
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout all commits
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Set up dependencies
-        uses: ./.github/actions/setup
-
-      - run: npx nx-cloud start-ci-run
-
-      # Distribution strategy for 2 vCPUs per hosted runner (GitHub Free):
-      #
-
-      # lint: 2 tasks assigned at a time, 1 task per vCPU
-      - name: Run Affected lint
-        run: yarn nx affected:lint --parallel --max-parallel=2
-
-      # test: 1 task assigned at a time with 2 parallel processes, 1 process per vCPU
-      - name: Run Affected test
-        run: yarn nx affected:test --parallel --max-parallel=1 --max-workers=2 --ci --code-coverage
-
-      # build: 2 tasks assigned at a time, 1 task per vCPU
-      - name: Run Affected build
-        run: yarn nx affected:build --exclude=docs --parallel --max-parallel=2
-
-      # e2e: 1 tasks assigned at a time, 1 task per agent
-      - name: Run Affected e2e
-        run: yarn nx affected:e2e --parallel=false --max-parallel=1
-
-      - run: npx nx-cloud stop-all-agents
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
 
   # The docs project is built in a separate job because it requires Node.js 16
   build-docs:
@@ -96,9 +127,6 @@ jobs:
     permissions:
       actions: read
       contents: read
-    env:
-      NX_CLOUD_DISTRIBUTED_EXECUTION: false
-      NX_DISTRIBUTED_TASK_EXECUTION: false
 
     steps:
       - name: Checkout all commits
@@ -112,6 +140,9 @@ jobs:
           node-version: 16
 
       - name: Build docs
+        env:
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false
+          NX_DISTRIBUTED_TASK_EXECUTION: false
         run: yarn nx build docs
 
       - name: '[Merge] Upload docs'
