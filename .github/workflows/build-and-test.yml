@@ -48,7 +48,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Start Nx Cloud DTE
-        run: npx nx-cloud start-ci-run --stop-agents-after="e2e" --agent-count=4
+        run: yarn nx-cloud start-ci-run --stop-agents-after="e2e" --agent-count=4
 
       - name: Lint Nx workspace
         env:
@@ -83,7 +83,7 @@ jobs:
 
       - name: Stop Nx Cloud DTE agents
         if: ${{ always() }}
-        run: npx nx-cloud stop-all-agents
+        run: yarn nx-cloud stop-all-agents
 
       - name: Upload coverage to Codecov
         if: steps.test.outcome == 'success'
@@ -118,7 +118,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Start Nx Cloud DTE Agent ${{ matrix.agent }}
-        run: npx nx-cloud start-agent
+        run: yarn nx-cloud start-agent
 
   # The docs project is built in a separate job because it requires Node.js 16
   build-docs:
