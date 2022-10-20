@@ -11,7 +11,7 @@ import { map, startWith, tap } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
 //👇 1- import RxState
 import { RxState } from '@rx-angular/state';
-import { RxActionFactory } from '../../../../../../../../libs/state/actions/src';
+import { RxActionFactory } from '@rx-angular/state/actions';
 import { RxEffects } from '@rx-angular/state/effects';
 
 //👇 2- define a component state
