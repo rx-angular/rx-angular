@@ -80,6 +80,7 @@ jobs:
       actions: read
       contents: read
 
+    # Wait for test coverage reports to be cached in Nx Cloud
     needs: [dte_coordinator]
 
     steps:
