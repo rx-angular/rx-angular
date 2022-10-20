@@ -3,14 +3,20 @@
 Rendering large sets of data is and has always been a performance bottleneck, especially for business
 applications.
 
+![common problem](https://user-images.githubusercontent.com/4904455/197066807-aecdadf2-16bf-48a6-b68a-514ebdcdffe0.png)
+
 The most common way to render lists in angular is by using the `*ngFor` structural directive. `*ngFor` is able
 to take an arbitrary list of data and repeat a defined template per item of the list. However, it can
 only do it synchronously. 
 In other words, the larger the set of data or the heavier the template to repeat, the more `blocking`
 the user experience of your application will be.
 
+![blocking ng-for](https://user-images.githubusercontent.com/4904455/197066870-06bcf36b-9eda-4d9e-9582-102f2830d24e.png)
+
 The `*rxFor` structural directive provides a convenient and performant way for rendering
 templates out of a list of items.
+
+![rxFor improvement](https://user-images.githubusercontent.com/4904455/197066981-2fe2d688-1767-4985-a504-3645a65d9039.png)
 
 Input values can be provided either as `Observable`, `Promise` or static values.
 
@@ -18,6 +24,8 @@ Compared to the `NgFor`, `RxFor` treats each child template as single renderable
 The change detection of the child templates get prioritized, scheduled and executed by
 leveraging `RenderStrategies` under the hood.
 This technique enables non-blocking rendering of lists and can be referred to as `concurrent mode`.
+
+![rxFor usage](https://user-images.githubusercontent.com/4904455/197067044-ad1cc431-0d5d-4cab-b5e0-d74decad7dda.png)
 
 As each rendering each template will be processed as individual task, rendering can be
 cancelled.
