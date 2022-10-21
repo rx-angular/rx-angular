@@ -36,10 +36,10 @@ Each instance of `RxFor` can be configured to render with different settings.
 
 ## Concepts
 
-- [Local variables](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts/local-variables.md)
-- [Handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/performance-issues/handling-view-and-content-queries.md)
-- [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/performance-issues/ngzone-optimizations.md)
-- [Render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#usage-in-the-template)
+- [Local variables](../concepts/local-variables.md)
+- [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md)
+- [NgZone optimizations](../performance-issues/ngzone-optimizations.md)
+- [Render strategies](../../cdk/render-strategies) especially the section [usage-in-the-template](../../cdk/render-strategies#usage-in-the-template)
 
 ## Features
 
@@ -141,8 +141,8 @@ export class AnyComponent {}
 > By default `*rxFor` is optimized for performance out of the box.
 >
 > This includes:
-> - The default render strategy is [`normal`](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md).
-    >   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md#Default-configuration) if you want to change it.
+> - The default render strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies).
+    >   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies#Default-configuration) if you want to change it.
 > - Creates templates lazy and manages multiple template instances
 >
 > As a list can take larger to render items can appear in batches if concurrent strategies are used.
@@ -261,23 +261,34 @@ export class AnyComponent {}
 You can change the used `RenderStrategy` by using the `strategy` input of the `*rxFor`. It accepts
 an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/b0630f69017cc1871d093e976006066d5f2005b9/libs/cdk/render-strategies/src/lib/model.ts#L52).
 
-```html
- <ng-container *rxFor="let item of items; strategy: 'native'">
-     {{ item }}
- </ng-container>
- ```
+The default value for strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies).
 
 ```html
- <ng-container *rxFor="let item of items; strategy: 'normal'">
+<ng-container *rxFor="let item of items; strategy: strategy">
+  {{ item }}
+</ng-container>
+
+<ng-container *rxFor="let item of items; strategy: strategy$">
   {{ item }}
 </ng-container>
  ```
+
+```ts
+@Component()
+export class AppComponent {
+  strategy = 'low';
+  strategy$ = of('immediate');
+}
+```
 
 Learn more about the general concept of [`RenderStrategies`](../../cdk/render-strategies)
 
 #### Local strategies and view/content queries (`parent`)
 
-To make `*rxFor` work with view and content queries a special mechanism is implemented to execute change detection on the parent (`parent`).
+When local rendering strategies are used, we need to treat view and content queries in a
+special way.
+To make `*rxFor` in such situations, a certain mechanism is implemented to
+execute change detection on the parent (`parent`).
 
 This is required if your components state is dependent on its view or content children:
 
@@ -350,6 +361,49 @@ This technique enables non-blocking rendering of lists and can be referred to as
 As rendering of each template will be processed as individual task, rendering can be
 cancelled.
 
+### Use the `renderCallback`
+
+The `renderCallback` can be seen as `hook` into the change detection system.
+It's essentially a `Subject` which emits whenever *rxFor finished rendering a set changes to the view.
+This enables developers to perform actions when a list has finished rendering.
+The `renderCallback` is useful in situations where you rely on specific DOM properties like the `height` a
+table after all items got rendered, or to adjust scroll-positions.
+It is also possible to use the `renderCallback` in order to determine if a view should be visible or not. This
+way developers can hide a list as long as it has not finished rendering.
+
+The result of the `renderCallback` will contain the currently rendered set of items in the iterable.
+
+```ts
+@Component({
+  selector: 'app-root',
+  template: `
+  <app-list-component>
+    <app-list-item
+      *rxFor="
+        let item of items$;
+        trackBy: trackItem;
+        renderCallback: itemsRendered;
+      ">
+      <div>{{ item.name }}</div>
+    </app-list-item>
+  </app-list-component>
+`
+})
+export class AppComponent {
+  items$: Observable<Item[]> = itemService.getItems();
+  trackItem = (idx, item) => item.id;
+  // this emits whenever rxFor finished rendering changes
+  itemsRendered = new Subject<Item[]>();
+
+  constructor(elementRef: ElementRef<HTMLElement>) {
+    itemsRendered.subscribe(() => {
+      // items are rendered, we can now scroll
+      elementRef.scrollTo({bottom: 0});
+    })
+  }
+}
+```
+
 ### Nested `rxFor` and the `select` variable
 
 This example showcases the `select` view-context function used for deeply nested lists.
@@ -374,8 +428,10 @@ This will significantly improve the performance.
 
 ### Working with event listeners (`patchZone`)
 
+A flag to control whether *rxFor templates are created within `NgZone` or not.
+The default value is `true, `*rxFor` will create it's `EmbeddedViews` inside `NgZone`.
+
 Event listeners normally trigger zone. Especially high frequently events cause performance issues.
-By using we can run all event listener inside `rxFor` outside zone.
 
 For more details read about [NgZone optimizations](../performance-issues/ngzone-optimizations.md)
 

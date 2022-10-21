@@ -70,18 +70,18 @@ The sub-package provides the following features:
 
 **[Available Strategies:](render-strategies/strategies)**
 
-| Name             | Priority | Render Method     | Scheduling              | Render Deadline |
-| ---------------- | -------- | ----------------- | ----------------------- | --------------- |
-| `"noop"`         | ❌       | - `noop`          | ❌                      | N/A             |
-| `"native"`       | ❌       | ⮁ `markForCheck`  | `requestAnimationFrame` | N/A             |
-| `"global"`       | ❌       | ⮁ `ɵmarkDirty`    | `requestAnimationFrame` | N/A             |
-| `"local"`        | ❌       | 🠗 `detectChanges` | `requestAnimationFrame` | N/A             |
-|                  |          |                   |                         |                 |
+| Name             | Priority | Render Method      | Scheduling              | Render Deadline |
+|------------------|----------|--------------------|-------------------------|-----------------|
+| `"noop"`         | ❌        | - `noop`           | ❌                       | N/A             |
+| `"native"`       | ❌        | ⮁ `markForCheck`   | `requestAnimationFrame` | N/A             |
+| `"global"`       | ❌        | ⮁ `ɵmarkDirty`     | `requestAnimationFrame` | N/A             |
+| `"local"`        | ❌        | 🠗 `detectChanges` | `requestAnimationFrame` | N/A             |
+|                  |          |                    |                         |                 |
 | `"immediate"`    | 1        | 🠗 `detectChanges` | `postMessage`           | 0ms             |
 | `"userBlocking"` | 2        | 🠗 `detectChanges` | `postMessage`           | 250ms           |
 | `"normal"`       | 3        | 🠗 `detectChanges` | `postMessage`           | 5000ms          |
 | `"low"`          | 4        | 🠗 `detectChanges` | `postMessage`           | 10000ms         |
-| `"idle"`         | 5        | 🠗 `detectChanges` | `postMessage`           | ❌              |
+| `"idle"`         | 5        | 🠗 `detectChanges` | `postMessage`           | ❌               |
 
 **Zone notification configuration with patchZone property**
 
