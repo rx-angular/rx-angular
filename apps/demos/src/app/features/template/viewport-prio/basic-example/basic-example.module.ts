@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { RenderingsModule } from '../../../../shared/debug-helper/renderings';
-import { ViewportPrioModule } from '../../../../../../../../libs/template/experimental/viewport-prio/src/lib/viewport-prio.module';
+import { ViewportStrategyModule } from '../../../../../../../../libs/template/experimental/viewport-prio/src/lib/viewport-strategy.module';
 
 const DECLARATIONS = [BasicExampleComponent];
 
@@ -28,7 +28,7 @@ const DECLARATIONS = [BasicExampleComponent];
     VisualizerModule,
     ValueProvidersModule,
     RenderingsModule,
-    ViewportPrioModule
+    ViewportStrategyModule
   ],
   exports: [DECLARATIONS]
 })

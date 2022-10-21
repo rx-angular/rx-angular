@@ -1,2 +1,2 @@
-export { ViewportPrioDirective } from './lib/viewport-prio.directive';
-export { ViewportPrioModule } from './lib/viewport-prio.module';
+export { ViewportStrategyDirective } from './lib/viewport-strategy.directive';
+export { ViewportStrategyModule } from './lib/viewport-strategy.module';

@@ -26,9 +26,9 @@ type IntersectionRatio = Pick<IntersectionObserverEntry, 'intersectionRatio'>;
 
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector
-  selector: '[viewportPrio]',
+  selector: '[viewportStrategy]',
 })
-export class ViewportPrioDirective implements OnInit, OnDestroy {
+export class ViewportStrategyDirective implements OnInit, OnDestroy {
   subscription = new Subscription();
   /* internal */
   // Note that we're picking only the `intersectionRatio` property
