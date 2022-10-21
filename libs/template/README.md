@@ -13,8 +13,8 @@
 
 - [LetDirective (\*rxLet)](https://rx-angular.io/docs/template/api/let-directive)
 - [RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/rx-for-directive)
-- [UnpatchDirective (unpatch)](https://rx-angular.io/docs/template/unpatch-directive)
-- [PushPipe (`push`)](https://rx-angular.io/docs/template/push-pipe)
+- [UnpatchDirective (unpatch)](https://rx-angular.io/docs/template/api/unpatch-directive)
+- [PushPipe (`push`)](https://rx-angular.io/docs/template/api/push-pipe)
 - [TemplateDirective (`*rxTemplate`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/template/src/lib/README.md)
 
 **Experimental features**
@@ -30,7 +30,7 @@ All experimental features are very stable and already tested in production apps 
 - [local templates](https://rx-angular.io/docs/template/concepts/local-templates)
 - [local variables](https://rx-angular.io/docs/template/concepts/local-variables)
 - [render strategies](https://rx-angular.io/docs/cdk/render-strategies)
-- [Coalescing, Scoping, Scheduling](https://rx-angular.io/docs/template/concepts/concepts)
+- [Coalescing, Scoping, Scheduling](https://rx-angular.io/docs/template/concepts/coalescing-scheduling)
 
 - [Rendering Issues in Angular](https://rx-angular.io/docs/template/performance-issues)
 
@@ -87,7 +87,7 @@ export class MyModule {}
 ## Version Compatibility
 
 | Angular                | RxJS                 | @rx-angular/template |
-|------------------------| -------------------- | -------------------- |
+|------------------------|----------------------|----------------------|
 | `14`                   | `^7.4.0`             | `> 1.0.0-beta.29`    |
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-beta.29`    |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-beta.29`   |

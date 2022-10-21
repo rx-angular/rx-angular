@@ -1,5 +1,7 @@
 ---
+sidebar_label: 'LetDirective'
 sidebar_position: 1
+title: 'LetDirective'
 ---
 
 # Motivation
@@ -55,11 +57,10 @@ It mostly is used in combination with state management libs to handle user inter
 
 # Concepts
 
-- [Local variables](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts/local-variables.md)
-- [Local template](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts/local-templates.md)
-- [Reactive context](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts/reactive-context.md)
-- [Contextual state in the template](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts/contextual-state-in-the-template.md)
-- [Render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#usage-in-the-template)
+- [Local variables](../concepts/local-variables.md)
+- [Local template](../concepts/local-templates.md)
+- [Reactive context](../concepts/reactive-context.md)
+- [Render strategies](https://www.rx-angular.io/docs/cdk/render-strategies)
 
 # Features
 
@@ -116,7 +117,8 @@ n/a
 The `LetModule` can be imported as following:
 
 Module based setup:
-```
+
+```ts
 import { LetModule } from "@rx-angular/template/let";
 
 @NgModule({
@@ -127,7 +129,8 @@ export class AnyModule {}
 ```
 
 Standalone component setup:
-```
+
+```ts
 import { LetModule } from "@rx-angular/template/let";
 
 @Component({
@@ -164,7 +167,7 @@ This can be achieved by using Angular's native 'let' syntax `*rxLet="observableN
 
 ![Contextual-State--template-vs-variable](https://user-images.githubusercontent.com/10064416/192660150-643c4d37-5326-4ba2-ad84-e079890b3f2f.png)
 
-A nice feature of the `*rxLet` directive is, it provides 2 ways to access the [reactive context state]() in the template:
+A nice feature of the `*rxLet` directive is, it provides 2 ways to access the [reactive context state](../concepts/reactive-context.md) in the template:
 - context variables
 - context templates
 
@@ -193,7 +196,7 @@ You can use the as like this:
 
 ### Context Templates
 
-You can also use template anchors to display the [contextual state]() in the template:
+You can also use template anchors to display the [contextual state](../concepts/reactive-context.md) in the template:
 
 ```html
 <ng-container
@@ -419,11 +422,11 @@ as well as `Observable<number>`, `Promise<number>` or any other 'subscribale'.
  </ng-container>
  ```
 
-This is especially interesting as we can enrich rendering with e.g. awareness of the viewport and make it even more lazy see [viewport-priority]().
+This is especially interesting as we can enrich rendering with e.g. awareness of the viewport and make it even more lazy see [viewport-priority](./experimental/viewport-prio-directive.md).
 
 ### Local strategies and view and content children (`parent`)
 
-For more details read about [Handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/handling-view-and-content-queries.md)
+For more details read about [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md)
 
 The following example will not work with a local strategy because `@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren` will not update.
 

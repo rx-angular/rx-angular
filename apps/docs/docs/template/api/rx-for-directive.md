@@ -1,5 +1,7 @@
 ---
-sidebar_position: 1
+sidebar_label: 'RxFor'
+sidebar_position: 2
+title: 'RxFor'
 ---
 
 # Motivation

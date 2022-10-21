@@ -1,4 +1,10 @@
-<<<<<<<< HEAD:libs/template/docs/concepts/reactive-context.md
+---
+sidebar_label: 'Reactive context'
+sidebar_position: 4
+title: 'Reactive context'
+hide_title: true
+---
+
 # Reactive context
 
 ![Reactive-Context](https://user-images.githubusercontent.com/10064416/192658822-67b51256-1c4a-49c7-8c48-6040b666d8a6.png)
@@ -14,16 +20,7 @@ In short, we can handle the following states in the template:
 Read further for more details.
 
 ## The extended reactive context in RxAngular
-========
----
-sidebar_label: 'Reactive context'
-sidebar_position: 1
-title: 'Reactive context'
-hide_title: true
----
 
-# The extended reactive context in RxAngular
->>>>>>>> main:apps/docs/docs/template/concepts/reactive-context.md
 
 If we think about any process, e.g. an HTTP request, we can differentiate different states in it.
 The request can start, result in a valid response or throws an error. After that, the process is completed.
@@ -99,7 +96,7 @@ The respective typings look like that:
 // TemplateManager - view context
 interface RxViewContext<T> {
   $implicit: T; // next
-  
+
   suspense: boolean;
   error: false | Error;
   complete: boolean;
@@ -140,21 +137,9 @@ export const enum RxNotificationKind {
   Complete = 'complete',
 }
 
-<<<<<<<< HEAD:libs/template/docs/concepts/reactive-context.md
-export interface RxNextNotification<T> {
-  value: T;
-  hasValue: boolean;
-  kind: RxNotificationKind;
-  error: boolean;
-  complete: boolean;
-}
-
 ```
 
-As a sum up, we now know that `@rx-angular/template` provides an extended reactive context with the `suspense` channel.
-========
 To sum up, we now know that `@rx-angular/template` provides an extended reactive context with the `suspense` channel.
->>>>>>>> main:apps/docs/docs/template/concepts/reactive-context.md
 Use suspense as a template wherever possible as it reduces rendering work drastically.
 Also, be sure to remember that we have also access to the values of the 4 channels as local variables in the template and as the notifications from the render callback.
 

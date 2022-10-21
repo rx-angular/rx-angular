@@ -1,4 +1,11 @@
-# Concepts
+---
+sidebar_label: 'Coalescing & Scheduling'
+sidebar_position: 1
+title: 'Coalescing & Scheduling'
+hide_title: true
+---
+
+# Coalescing & Scheduling
 
 A brief overview about the internal concepts used in this package.
 

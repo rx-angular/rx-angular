@@ -1,7 +1,8 @@
 {
   "label": "Performance Issues",
-  "position": 2,
+  "position": 120,
   "link": {
+    "type": "generated-index",
     "title": "Performance Issues",
     "slug": "/template/performance-issues"
   }
