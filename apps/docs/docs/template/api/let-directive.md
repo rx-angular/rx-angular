@@ -4,7 +4,9 @@ sidebar_position: 1
 title: 'LetDirective'
 ---
 
-# Motivation
+# RxLet
+
+## Motivation
 
 In Angular there is one way to handle asynchronous values or streams in the template, the `async` pipe.
 Even though the async pipe evaluates such values in the template, it is insufficient in many ways.
@@ -14,7 +16,7 @@ To name a few:
 * it leads to too many subscriptions in the template
 * it is cumbersome to work with values in the template
 
-## Access async values in the template: `*ngIf hack`
+**Access async values in the template: `*ngIf hack`**
 
 The ngIf hack looks like this:
 
@@ -28,7 +30,7 @@ The ngIf hack looks like this:
 The problem is that `*ngIf` interferes with rendering and in case of falsy values (`0`, ``, `false`, `null`, `undefined`) the component
 would be hidden. This issue is a big problem and leads to many production bugs as its edge cases are often overlooked.
 
-## Downsides of the "`ngIf`-hack"
+**Downsides of the "`ngIf`-hack"**
 
 - Performance issues from the subscriptions in pipe's
 - Over rendering
@@ -39,7 +41,7 @@ would be hidden. This issue is a big problem and leads to many production bugs a
 - Edge cases cause unexpected bugs
 - No contextual information given
 
-## Conclusion - Structural directives
+**Conclusion - Structural directives**
 
 In contrast to global change detection, structural directives allow fine-grained control of change detection on a per directive basis.
 The `LetDirective` comes with its own way to handle change detection in templates in a very efficient way.
@@ -55,14 +57,14 @@ It mostly is used in combination with state management libs to handle user inter
 </ng-container>
 ```
 
-# Concepts
+## Concepts
 
 - [Local variables](../concepts/local-variables.md)
 - [Local template](../concepts/local-templates.md)
 - [Reactive context](../concepts/reactive-context.md)
 - [Render strategies](https://www.rx-angular.io/docs/cdk/render-strategies)
 
-# Features
+## Features
 
 **DX Features**
 
@@ -80,7 +82,7 @@ It mostly is used in combination with state management libs to handle user inter
 - triggers change-detection on `EmbeddedView` level
 - distinct same values in a row (over-rendering)
 
-## Inputs
+### Inputs
 
 **Contextual state**
 
@@ -104,15 +106,11 @@ It mostly is used in combination with state management libs to handle user inter
 | `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                     |
 | `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                            |
 
-
-
-
-## Outputs
+### Outputs
 
 n/a
 
-
-# Setup
+## Setup
 
 The `LetModule` can be imported as following:
 
@@ -141,7 +139,7 @@ import { LetModule } from "@rx-angular/template/let";
 export class AnyComponent {}
 ```
 
-# Basic Usage
+## Basic Usage
 
 > **⚠ Notice:**
 > By default `*rxLet` is optimized for performance out of the box.
@@ -151,7 +149,7 @@ export class AnyComponent {}
     >   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md#Default-configuration) if you want to change it.
 > - Creates templates lazy and manages multiple template instances
 
-## Binding an Observable to a local variable in the template
+### Binding an Observable to a local variable in the template
 
 The `*rxLet` directive makes it easy to work with reactive data streams in the template.
 This can be achieved by using Angular's native 'let' syntax `*rxLet="observableNumber$; let n"`.
@@ -163,7 +161,7 @@ This can be achieved by using Angular's native 'let' syntax `*rxLet="observableN
 </ng-container>
 ```
 
-## Using the reactive context
+### Using the reactive context
 
 ![Contextual-State--template-vs-variable](https://user-images.githubusercontent.com/10064416/192660150-643c4d37-5326-4ba2-ad84-e079890b3f2f.png)
 
@@ -395,11 +393,11 @@ in a convenient way.
 }
 ```
 
-# Advanced Usage
+## Advanced Usage
 
-## Use render strategies (`strategy`)
+### Use render strategies (`strategy`)
 
-Let' see how we can work with strategies in the template.
+Let's see how we can work with strategies in the template.
 If you are not familiar with this concept, you can read more details on [render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#usage-in-the-template) if you need more clarity.
 
 `*rxLet` accepts static values e.g. `number`
@@ -424,9 +422,14 @@ as well as `Observable<number>`, `Promise<number>` or any other 'subscribale'.
 
 This is especially interesting as we can enrich rendering with e.g. awareness of the viewport and make it even more lazy see [viewport-priority](./experimental/viewport-prio-directive.md).
 
-### Local strategies and view and content children (`parent`)
+#### Local strategies and view/content queries (`parent`)
 
-For more details read about [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md)
+To make `*rxLet` work with view and content queries a special machanism is implemented to execute CD on the parent. (`parent`)
+This is required if you use any of the following decorators:
+- `@ViewChild`
+- `@ViewChildren`
+- `@ContentChild`
+- `@ContentChildren`
 
 The following example will not work with a local strategy because `@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren` will not update.
 
@@ -438,21 +441,16 @@ Set the value to `false` and it will stop working.
   selector: 'app-list-component',
   template: `
     <div
-      #myDiv
-      *rxLet="state$; let state;">
+      *rxLet="state$; let state; parent: false">
     </div>
-    <button (click)="append()">append</button>
   `
 })
-export class AppListComponent {
- @ViewChild('myDiv') myDiv: ElementRef<HTMLElement>;
-
- append() { this.myDiv.nativeElement.appendChild('span') }
-}
+export class AppListComponent {}
 ```
 
+[//]: # (TODO => Flame chart comparison and numbers)
 
-## Use a renderCallback to run post render processes (`renderCallback`)
+### Use a renderCallback to run post render processes (`renderCallback`)
 
 A notification channel of `*rxLet` that the fires when rendering is done.
 
@@ -488,7 +486,7 @@ The result of the `renderCallback` will contain the currently rendered value of 
  }
 ```
 
-## Working with event listeners (`patchZone`)
+### Working with event listeners (`patchZone`)
 
 Event listeners normally trigger zone. Especially high frequently events cause performance issues.
 By using we can run all event listener inside `rxLet` outside zone.
@@ -513,42 +511,12 @@ export class AppComponent {
 }
 ```
 
-## Local strategies and view/content queries (`parent`)
-
-To make `*rxLet` work with view and content queries a special machanism is implemented to execute CD on the parent. (`parent`)
-This is required if you use any of the following decorators:
-- `@ViewChild`
-- `@ViewChildren`
-- `@ContentChild`
-- `@ContentChildren`
-
-You can read further about it under [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/handling-view-and-contnet-queries.md).
-
-To have as little confusion as possible this is on by default.
-If you don't need the behavior you can disable it and gain significant performance improvements.
-
-Take a look at the following example:
-
-```ts
-@Component({
-  selector: 'app-list-component',
-  template: `
-    <div
-      *rxLet="state$; let state; parent: false">
-    </div>
-  `
-})
-export class AppListComponent {}
-```
-
-TODO => Flame chart comparison and numbers
-
-# Testing
+## Testing
 
 For testing we suggest to switch the CD strategy to `native`.
 This helps to exclude all side effects from special render strategies.
 
-## Basic Setup
+### Basic Setup
 
 ```typescript
 import {
@@ -615,7 +583,7 @@ TestBed.configureTestingModule({
 
 Here is an example using the `concurrent` strategies in a test environment: [`rxLet strategy spec`](https://github.com/rx-angular/rx-angular/blob/main/libs/template/let/src/lib/tests/let.directive.strategy.spec.ts)
 
-## Instantiation
+### Instantiation
 
 ```typescript
 //...
@@ -636,7 +604,7 @@ describe('LetDirective', () => {
 });
 ```
 
-# Resources
+## Resources
 
 **Example applications:**
 A demo application is available on [GitHub](https://github.com/tastejs/angular-movies).

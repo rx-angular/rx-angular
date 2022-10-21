@@ -4,37 +4,20 @@ sidebar_position: 2
 title: 'RxFor'
 ---
 
-# Motivation
+# RxFor
 
-Rendering large sets of data is and has always been a performance bottleneck, especially for business
-applications.
-
-![common problem](https://user-images.githubusercontent.com/4904455/197066807-aecdadf2-16bf-48a6-b68a-514ebdcdffe0.png)
+## Motivation
 
 The most common way to render lists in angular is by using the `*ngFor` structural directive. `*ngFor` is able
 to take an arbitrary list of data and repeat a defined template per item of the list. However, it can
 only do it synchronously.
-In other words, the larger the set of data or the heavier the template to repeat, the more `blocking`
-the user experience of your application will be.
-
-![blocking ng-for](https://user-images.githubusercontent.com/4904455/197066870-06bcf36b-9eda-4d9e-9582-102f2830d24e.png)
-
-The `*rxFor` structural directive provides a convenient and performant way for rendering
-templates out of a list of items.
-
-![rxFor improvement](https://user-images.githubusercontent.com/4904455/197066981-2fe2d688-1767-4985-a504-3645a65d9039.png)
-
-Input values can be provided either as `Observable`, `Promise` or static values.
 
 Compared to the `NgFor`, `RxFor` treats each child template as single renderable unit.
 The change detection of the child templates get prioritized, scheduled and executed by
 leveraging `RenderStrategies` under the hood.
 This technique enables non-blocking rendering of lists and can be referred to as `concurrent mode`.
 
-![rxFor usage](https://user-images.githubusercontent.com/4904455/197067044-ad1cc431-0d5d-4cab-b5e0-d74decad7dda.png)
-
-As each rendering each template will be processed as individual task, rendering can be
-cancelled.
+Read more about this in the [strategies section](#rxfor-with-concurrent-strategies).
 
 Furthermore, `RxFor` provides hooks to react to rendered items in form of a `renderCallback: Subject`.
 
@@ -43,7 +26,7 @@ and transparent for the developer.
 Each instance of `RxFor` can be configured to render with different settings.
 
 
-## Downsides
+**Downsides**
 
 - Bootstrapping of `ngFor`is slow
 - Change detection and render work processed in a UI blocking way
@@ -51,14 +34,14 @@ Each instance of `RxFor` can be configured to render with different settings.
 - Nested structures are very slow, especially with updates
 - Destruction is more computation heavy than adding bootstrapping
 
-# Concepts
+## Concepts
 
 - [Local variables](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/concepts/local-variables.md)
 - [Handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/performance-issues/handling-view-and-content-queries.md)
 - [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/performance-issues/ngzone-optimizations.md)
 - [Render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#usage-in-the-template)
 
-# Features
+## Features
 
 **DX Features**
 
@@ -80,7 +63,7 @@ Each instance of `RxFor` can be configured to render with different settings.
 - cancel any update if a new update was triggered for the same `trackById`
 - nested lists will items fine grained and re-render only what is needed
 
-## Inputs
+### Inputs
 
 **Rendering**
 
@@ -92,11 +75,11 @@ Each instance of `RxFor` can be configured to render with different settings.
 | `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                                                                                                                    |
 | `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                                                                                                              |
 
-## Outputs
+### Outputs
 
 - n/a
 
-## Context Variables
+### Context Variables
 
 The following context variables are available for each template:
 
@@ -125,7 +108,7 @@ The following context variables are available for each template:
 | `odd$`        | `Observable<boolean>`                                          | odd as `Observable`                                                                                                                                                                                               |
 | `select`      | `(keys: (keyof T)[], distinctByMap) => Observable<Partial<T>>` | returns a selection function which accepts an array of properties to pluck out of every list item. The function returns the selected properties of the current list item as distinct `Observable` key-value-pair. |
 
-# Setup
+## Setup
 
 The `ForModule` can be imported as following:
 
@@ -152,7 +135,7 @@ import { ForModule } from "@rx-angular/template/for";
 export class AnyComponent {}
 ```
 
-# Basic Usage
+## Basic Usage
 
 > **⚠ Notice:**
 > By default `*rxFor` is optimized for performance out of the box.
@@ -166,7 +149,7 @@ export class AnyComponent {}
 > This brings several benefits. e.g. stop rendering in between and navigate away.
 >
 
-## Simple example using `*rxFor` with `Observable` values
+### Simple example using `*rxFor` with `Observable` values
 
 ```ts
 @NgComponent({
@@ -185,7 +168,7 @@ export class AnyComponent {
 }
 ```
 
-## Simple example using `*rxFor` with simple static values
+### Simple example using `*rxFor` with simple static values
 
 > **🔥 Perf Tip:**
 > As `rxFor` accepts also static values it can serve as a drop in replacement with an easy find and replace refactoring.
@@ -208,7 +191,7 @@ export class AnyComponent {
 }
 ```
 
-## Save code with the `trackBy` shortcut
+### Save code with the `trackBy` shortcut
 
 > **💡 DX Tip:**
 > As `rxFor` accepts also static values it can serve as a drop in replacement with an easy find and replace refacturing.
@@ -271,7 +254,101 @@ export class AnyComponent {}
 </ul>
 ```
 
-# Advanced Usage
+## Advanced Usage
+
+### Use render strategies (`strategy`)
+
+You can change the used `RenderStrategy` by using the `strategy` input of the `*rxFor`. It accepts
+an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/b0630f69017cc1871d093e976006066d5f2005b9/libs/cdk/render-strategies/src/lib/model.ts#L52).
+
+```html
+ <ng-container *rxFor="let item of items; strategy: 'native'">
+     {{ item }}
+ </ng-container>
+ ```
+
+```html
+ <ng-container *rxFor="let item of items; strategy: 'normal'">
+  {{ item }}
+</ng-container>
+ ```
+
+Learn more about the general concept of [`RenderStrategies`](../../cdk/render-strategies)
+
+#### Local strategies and view/content queries (`parent`)
+
+To make `*rxFor` work with view and content queries a special mechanism is implemented to execute change detection on the parent (`parent`).
+
+This is required if your components state is dependent on its view or content children:
+
+- `@ViewChild`
+- `@ViewChildren`
+- `@ContentChild`
+- `@ContentChildren`
+
+Imagine the following situation:
+
+```ts
+@Component({
+  selector: 'app-list-component',
+  template: ` <ng-content select="app-list-item"></ng-content>`,
+})
+export class AppListComponent {
+  @ContentChildren(AppListItemComponent)
+  appListItems: QueryList<AppListItemComponent>;
+}
+```
+
+The usage of `AppListComponent` looks like this:
+
+```html
+<app-list-component>
+  <app-list-item
+    *rxFor="
+      let item of observableItems$;
+      parent: true;
+    "
+  >
+    <div>{{ item }}</div>
+  </app-list-item>
+</app-list-component>
+```
+
+Read more about this at [handling view and content queries](../performance-issues/handling-view-and-content-queries.md)
+
+#### RxFor with concurrent strategies
+
+The `*rxFor` directive is configured to use the `normal` [concurrent strategy](../../cdk/render-strategies/strategies/concurrent-strategies)
+by default.
+
+Rendering large sets of data is and has always been a performance bottleneck, especially for business
+applications.
+
+![common problem](https://user-images.githubusercontent.com/4904455/197066807-aecdadf2-16bf-48a6-b68a-514ebdcdffe0.png)
+
+The most common way to render lists in angular is by using the `*ngFor` structural directive. `*ngFor` is able
+to take an arbitrary list of data and repeat a defined template per item of the list. However, it can
+only do it synchronously.
+In other words, the larger the set of data or the heavier the template to repeat, the more `blocking`
+the user experience of your application will be.
+
+![blocking ng-for](https://user-images.githubusercontent.com/4904455/197066870-06bcf36b-9eda-4d9e-9582-102f2830d24e.png)
+
+The `*rxFor` structural directive provides a convenient and performant way for rendering
+templates out of a list of items.
+
+Input values can be provided either as `Observable`, `Promise` or static values.
+
+Compared to the `NgFor`, `RxFor` treats each child template as single renderable unit.
+The change detection of the child templates get prioritized, scheduled and executed by
+leveraging `RenderStrategies` under the hood.
+This technique enables non-blocking rendering of lists and can be referred to as `concurrent mode`.
+
+![rxFor improvement](https://user-images.githubusercontent.com/4904455/197066981-2fe2d688-1767-4985-a504-3645a65d9039.png)
+![rxFor usage](https://user-images.githubusercontent.com/4904455/197067044-ad1cc431-0d5d-4cab-b5e0-d74decad7dda.png)
+
+As rendering of each template will be processed as individual task, rendering can be
+cancelled.
 
 ### Nested `rxFor` and the `select` variable
 
@@ -295,50 +372,12 @@ This will significantly improve the performance.
 
 [//]: # (TODO => Flame chart comparison and numbers)
 
-### Local strategies and view and content children (`parent`)
-
-Imagine the following situation:
-
-```ts
-@Component({
-  selector: 'app-list-component',
-  template: ` <ng-content select="app-list-item"></ng-content> `,
-})
-export class AppListComponent {
-  @ContentChildren(AppListItemComponent)
-  appListItems: QueryList<AppListItemComponent>;
-}
-```
-
-`AppListComponent` has a `contentOutlet` where it expects `AppListItemComponents` to be inserted into. In this case `AppListComponent`s state is dependent on its `ContentChildren`.
-This situation leads to the problem that `AppListComponent` needs to get informed about updates of its child views.
-This is a known issue which has never been solved for `ngFor` (or other structural directives) especially in combination with `CD OnPush` see here: (https://github.com/angular/angular/pull/35428)
-`RxFor` solves this issue for you by providing a simple input parameter `parent: boolean`. If value is set to `true` (default is `true`), `*rxFor` will run change detection for it's defining `Component`.
-This will also update its own view and content queries as well as those of its child components.
-
-The usage of `AppListComponent` looks like this:
-
-```html
-<app-list-component>
-  <app-list-item
-    *rxFor="
-      let item of observableItems$;
-      parent: true;
-    "
-  >
-    <div>{{ item }}</div>
-  </app-list-item>
-</app-list-component>
-```
-
-Read more about this at [handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/performance-issues/handling-view-and-content-queries.md)
-
 ### Working with event listeners (`patchZone`)
 
 Event listeners normally trigger zone. Especially high frequently events cause performance issues.
 By using we can run all event listener inside `rxFor` outside zone.
 
-For more details read about [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/template/docs/performance-issues/ngzone-optimizations.md)
+For more details read about [NgZone optimizations](../performance-issues/ngzone-optimizations.md)
 
 ```ts
 @Component({
@@ -358,9 +397,9 @@ export class AppComponent {
 }
 ```
 
-# Testing
+## Testing
 
-## Handling the scheduling issue
+### Handling the scheduling issue
 
 By default `*rxFor` uses the `normal` concurrent strategy which runs change detection asynchronously.
 This behavior can lead to unexpected results in test environments.
@@ -413,7 +452,7 @@ TestBed.configureTestingModule({
 
 This way, `*rxFor` will use the same rendering strategy used by the Angulars built-in `async` pipe.
 
-# Resources
+## Resources
 
 **Demos:**
 A showcase for [blocking UI as a stackblitz demo](https://stackblitz.com/edit/rx-angular-cdk-demos-c52q34)
