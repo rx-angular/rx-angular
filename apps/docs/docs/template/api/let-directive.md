@@ -1,10 +1,8 @@
 ---
-sidebar_label: 'LetDirective'
+sidebar_label: 'RxLet'
 sidebar_position: 1
-title: 'LetDirective'
+title: 'RxLet'
 ---
-
-# RxLet
 
 ## Motivation
 
@@ -84,27 +82,33 @@ It mostly is used in combination with state management libs to handle user inter
 
 ### Inputs
 
+**Value**
+
+| Input   | Type            | description                                                       |
+|---------|-----------------|-------------------------------------------------------------------|
+| `rxLet` | `Observable<T>` | The Observable or value to be bound to the context of a template. |
+
 **Contextual state**
 
-| Input            | Type                                                               | description                                                                                                                                                                                             |
-|------------------|--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `error`          | `TemplateRef<RxLetViewContext>`                                    | defines the template for the error state                                                                                                                                                                |
-| `complete`       | `TemplateRef<RxLetViewContext>`                                    | defines the template for the complete state                                                                                                                                                             |
-| `suspense`       | `TemplateRef<RxLetViewContext>`                                    | defines the template for the suspense state                                                                                                                                                             |
-| `nextTrg`        | `Observable<unknown>`                                              | trigger to show `next` template                                                                                                                                                                         |
-| `errorTrg`       | `Observable<unknown>`                                              | trigger to show `error` template                                                                                                                                                                        |
-| `completeTrg`    | `Observable<unknown>`                                              | trigger to show `complete` template                                                                                                                                                                     |
-| `suspenseTrg`    | `Observable<unknown>`                                              | trigger to show `suspense` template                                                                                                                                                                     |
-| `templateTrg`    | `Observable<RxNotificationKind>`                                   | trigger to show any templates, based on the given `RxNotificationKind`                                                                                                                                  |
+| Input            | Type                              | description                                                            |
+|------------------|-----------------------------------|------------------------------------------------------------------------|
+| `error`          | `TemplateRef<RxLetViewContext>`   | defines the template for the error state                               |
+| `complete`       | `TemplateRef<RxLetViewContext>`   | defines the template for the complete state                            |
+| `suspense`       | `TemplateRef<RxLetViewContext>`   | defines the template for the suspense state                            |
+| `nextTrg`        | `Observable<unknown>`             | trigger to show `next` template                                        |
+| `errorTrg`       | `Observable<unknown>`             | trigger to show `error` template                                       |
+| `completeTrg`    | `Observable<unknown>`             | trigger to show `complete` template                                    |
+| `suspenseTrg`    | `Observable<unknown>`             | trigger to show `suspense` template                                    |
+| `templateTrg`    | `Observable<RxNotificationKind>`  | trigger to show any templates, based on the given `RxNotificationKind` |
 
 **Rendering**
 
-| Input            | Type                                                               | description                                                                                                                                                                                             |
-|------------------|--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`. See [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/ngzone-optimizations.md)                                                                                                                    |
+| Input            | Type                                                               | description                                                                                                                                                                                                                                                                                                                                                                             |
+|------------------|--------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`. See [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/ngzone-optimizations.md)                                                                                                                                         |
 | `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/handling-view-and-content-queries.md) |
-| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                     |
-| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                            |
+| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                                                                                                                    |
+| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                                                                                                              |
 
 ### Outputs
 
@@ -145,8 +149,8 @@ export class AnyComponent {}
 > By default `*rxLet` is optimized for performance out of the box.
 >
 > This includes:
-> - The default render strategy is [`normal`](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md).
-    >   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-stractgies/src/docs/README.md#Default-configuration) if you want to change it.
+> - The default render strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies).
+    >   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies#Default-configuration) if you want to change it.
 > - Creates templates lazy and manages multiple template instances
 
 ### Binding an Observable to a local variable in the template
@@ -397,35 +401,40 @@ in a convenient way.
 
 ### Use render strategies (`strategy`)
 
-Let's see how we can work with strategies in the template.
-If you are not familiar with this concept, you can read more details on [render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#usage-in-the-template) if you need more clarity.
+You can change the used `RenderStrategy` by using the `strategy` input of the `*rxFor`. It accepts
+an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/b0630f69017cc1871d093e976006066d5f2005b9/libs/cdk/render-strategies/src/lib/model.ts#L52).
 
-`*rxLet` accepts static values e.g. `number`
-
-```html
- <ng-container *rxLet="num; let n;
-    strategy:'native'
-    ">
-     {{ n }}
- </ng-container>
- ```
-
-as well as `Observable<number>`, `Promise<number>` or any other 'subscribale'.
+The default value for strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies).
 
 ```html
- <ng-container *rxLet="num$; let n;
-    strategy:'native'
-    ">
-     {{ n }}
- </ng-container>
+<ng-container *rxLet="item$; let item; strategy: strategy">
+  {{ item }}
+</ng-container>
+
+<ng-container *rxFor="item$; let item; strategy: strategy$">
+  {{ item }}
+</ng-container>
  ```
 
-This is especially interesting as we can enrich rendering with e.g. awareness of the viewport and make it even more lazy see [viewport-priority](./experimental/viewport-prio-directive.md).
+```ts
+@Component()
+export class AppComponent {
+  strategy = 'low';
+  strategy$ = of('immediate');
+}
+```
+
+Learn more about the general concept of [`RenderStrategies`](../../cdk/render-strategies) especially the section [usage-in-the-template](../../cdk/render-strategies#usage-in-the-template) if you need more clarity.
 
 #### Local strategies and view/content queries (`parent`)
 
-To make `*rxLet` work with view and content queries a special machanism is implemented to execute CD on the parent. (`parent`)
-This is required if you use any of the following decorators:
+When local rendering strategies are used, we need to treat view and content queries in a
+special way.
+To make `*rxLet` in such situations, a certain mechanism is implemented to
+execute change detection on the parent (`parent`).
+
+This is required if your components state is dependent on its view or content children:
+
 - `@ViewChild`
 - `@ViewChildren`
 - `@ContentChild`
@@ -491,7 +500,7 @@ The result of the `renderCallback` will contain the currently rendered value of 
 Event listeners normally trigger zone. Especially high frequently events cause performance issues.
 By using we can run all event listener inside `rxLet` outside zone.
 
-For more details read about [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/ngzone-optimizations.md)
+For more details read about [NgZone optimizations](../performance-issues/ngzone-optimizations)
 
 ```ts
 @Component({
@@ -563,9 +572,9 @@ const setupTestComponent = (): void => {
 
 > do not forget to set the primary strategy to `native` in test environments
 
-In test environments it is recommended to configure rx-angular to use the [`native` strategy](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/basic-strategies.md#native),
+In test environments it is recommended to configure rx-angular to use the [`native` strategy](../../cdk/render-strategies/strategies/basic-strategies#native),
 as it will run change detection synchronously.
-Using the [`concurrent` strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concurrent-strategies.md#concurrent-strategies) is possible, but
+Using the [`concurrent strategies`](../../cdk/render-strategies/strategies/concurrent-strategies) is possible, but
 requires more effort when writing the tests, as updates will be processed asynchronously.
 
 ```ts

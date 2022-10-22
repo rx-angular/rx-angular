@@ -92,7 +92,10 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    *
-   * @param potentialObservable
+   * @param { Observable<(U & NgIterable<T>) | undefined | null>
+   *       | (U & NgIterable<T>)
+   *       | null
+   *       | undefined } potentialObservable
    */
   @Input()
   set rxForOf(
@@ -155,7 +158,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *   strategy$ = of('immediate');
    * }
    *
-   * @param strategyName
+   * @param {string | Observable<string> | undefined} strategyName
    * @see {@link strategies}
    */
   @Input()
@@ -202,7 +205,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *   items$ = itemService.getItems();
    * }
    *
-   * @param renderParent
+   * @param {boolean} renderParent
    */
   @Input('rxForParent') renderParent = this.strategyProvider.config.parent;
 
@@ -238,7 +241,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *   items$ = itemService.getItems();
    * }
    *
-   * @param patchZone
+   * @param {boolean} patchZone
    */
   @Input('rxForPatchZone') patchZone = this.strategyProvider.config.patchZone;
 
@@ -363,7 +366,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *   }
    * }
    *
-   * @param renderCallback
+   * @param {Subject<U>} renderCallback
    */
   @Input('rxForRenderCallback') set renderCallback(renderCallback: Subject<U>) {
     this._renderCallback = renderCallback;
