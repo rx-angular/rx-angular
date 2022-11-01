@@ -47,6 +47,10 @@
     ]
   },
   "private": true,
+  "workspaces": [
+    "apps/**",
+    "libs/**"
+  ],
   "dependencies": {
     "@angular/animations": "12.2.16",
     "@angular/cdk": "12.2.13",
@@ -96,6 +100,7 @@
     "@nrwl/nx-cloud": "13.1.2",
     "@nrwl/tao": "12.10.1",
     "@nrwl/workspace": "12.10.1",
+    "@nx-plus/docusaurus": "12.2.0",
     "@size-limit/preset-big-lib": "^7.0.0",
     "@types/benchmark": "^2.1.0",
     "@types/jest": "27.0.2",
@@ -116,7 +121,7 @@
     "jest-preset-angular": "11.0.0-rc.3",
     "klaw-sync": "^6.0.0",
     "lint-staged": "^12.0.3",
-    "ng-morph": "^2.0.0",
+    "ng-morph": "^2.1.1",
     "ng-packagr": "12.2.7",
     "postcss": "^8.4.6",
     "postcss-import": "^14.0.2",

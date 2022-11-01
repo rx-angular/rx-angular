@@ -1,118 +1,28 @@
 {
   "projectType": "application",
   "root": "apps/docs",
-  "sourceRoot": "apps/docs",
-  "prefix": "rx-angular",
+  "sourceRoot": "apps/docs/src",
   "targets": {
-    "serve-admin": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "parallel": true,
-        "commands": [
-          {
-            "command": "npx serve docs/admin"
-          },
-          {
-            "command": "npx netlify-cms-proxy-server"
-          }
-        ]
-      }
-    },
-    "serve-docsify": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx docsify-cli serve docs"
-          }
-        ]
-      }
-    },
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
+      "executor": "@nx-plus/docusaurus:browser",
       "options": {
-        "outputPath": "dist/apps/docs",
-        "index": "apps/docs/src/index.html",
-        "main": "apps/docs/src/main.ts",
-        "polyfills": "apps/docs/src/polyfills.ts",
-        "tsConfig": "apps/docs/tsconfig.app.json",
-        "assets": [
-          "apps/docs/src/favicon.ico",
-          "apps/docs/src/assets"
-        ],
-        "styles": [
-          "apps/docs/src/styles.scss"
-        ],
-        "scripts": [],
-        "vendorChunk": true,
-        "extractLicenses": false,
-        "buildOptimizer": false,
-        "sourceMap": true,
-        "optimization": false,
-        "namedChunks": true
+        "outputPath": "dist/apps/docs"
       },
-      "configurations": {
-        "production": {
-          "fileReplacements": [
-            {
-              "replace": "apps/docs/src/environments/environment.ts",
-              "with": "apps/docs/src/environments/environment.prod.ts"
-            }
-          ],
-          "optimization": true,
-          "outputHashing": "all",
-          "sourceMap": false,
-          "namedChunks": false,
-          "extractLicenses": true,
-          "vendorChunk": false,
-          "buildOptimizer": true,
-          "budgets": [
-            {
-              "type": "initial",
-              "maximumWarning": "2mb",
-              "maximumError": "5mb"
-            },
-            {
-              "type": "anyComponentStyle",
-              "maximumWarning": "6kb",
-              "maximumError": "10kb"
-            }
-          ]
-        }
-      },
-      "outputs": [
-        "{options.outputPath}"
-      ]
+      "outputs": ["{options.outputPath}"]
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx-plus/docusaurus:dev-server",
       "options": {
-        "browserTarget": "docs:build"
-      },
-      "configurations": {
-        "production": {
-          "browserTarget": "docs:build:production"
-        }
+        "port": 3000
       }
     },
-    "extract-i18n": {
-      "executor": "@angular-devkit/build-angular:extract-i18n",
+    "serve-static": {
+      "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "browserTarget": "docs:build"
-      }
-    },
-    "test": {
-      "executor": "@nrwl/jest:jest",
-      "options": {
-        "jestConfig": "apps/docs/jest.config.js",
-        "passWithNoTests": true
+        "command": "docusaurus serve --config apps/docs/docusaurus.config.js --dir dist/apps/docs"
       },
-      "outputs": [
-        "coverage/apps/docs"
-      ]
+      "dependsOn": [{ "projects": "self", "target": "build" }]
     }
   },
-  "tags": [
-    "type:app"
-  ]
+  "tags": []
 }

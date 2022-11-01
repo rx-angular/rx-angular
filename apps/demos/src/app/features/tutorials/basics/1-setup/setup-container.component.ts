@@ -16,7 +16,7 @@ import { map } from 'rxjs/operators';
     </mat-form-field>
 
     <rxa-setup-start
-      [refreshInterval]="refreshInterval$ | async"
+      [refreshInterval]="refreshInterval$"
       (listExpandedChange)="listExpandedChange$.next($event)">
     </rxa-setup-start>
   `,

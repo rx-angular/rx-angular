@@ -8,7 +8,8 @@
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/template/tsconfig.lib.json",
-        "project": "libs/template/ng-package.json"
+        "project": "libs/template/ng-package.json",
+        "updateBuildableProjectDepsInPackageJson": false
       },
       "dependsOn": [
         {
@@ -57,17 +58,6 @@
       },
       "outputs": ["coverage/template"]
     },
-    "build-docs": {
-      "executor": "@nrwl/workspace:run-commands",
-      "sequential": true,
-      "options": {
-        "commands": [
-          {
-            "command": "nx test template --codeCoverage && nx build-test-coverage-badge template"
-          }
-        ]
-      }
-    },
     "link": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
@@ -109,11 +99,9 @@
     "version": {
       "executor": "@jscutlery/semver:version",
       "options": {
-        "push": true,
         "noVerify": true,
         "baseBranch": "main",
         "versionTagPrefix": "${target}@",
-        "postTargets": ["template:github"],
         "commitMessageFormat": "release(${projectName}): ${version}"
       }
     },
