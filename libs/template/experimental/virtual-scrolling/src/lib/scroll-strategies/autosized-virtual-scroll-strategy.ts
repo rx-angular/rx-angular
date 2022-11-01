@@ -336,16 +336,16 @@ export class AutosizeVirtualScrollStrategy<
         this.scrollTop = _scrollTop;
       })
     );
-    merge(
-      combineLatest([
-        dataLengthChanged$.pipe(
-          tap((length) => {
-            this.contentLength = length;
-          })
-        ),
-        this.viewport.containerSize$,
-        onScroll$,
-      ]).pipe(
+    combineLatest([
+      dataLengthChanged$.pipe(
+        tap((length) => {
+          this.contentLength = length;
+        })
+      ),
+      this.viewport.containerSize$,
+      onScroll$,
+    ])
+      .pipe(
         map(([length, containerHeight]) => {
           this.containerSize = containerHeight;
           const range = { start: 0, end: 0 };
@@ -384,7 +384,6 @@ export class AutosizeVirtualScrollStrategy<
           return range;
         })
       )
-    )
       .pipe(distinctUntilSomeChanged(['start', 'end']), this.until$)
       .subscribe((range: ListRange) => (this.renderedRange = range));
   }
