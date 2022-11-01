@@ -3,7 +3,7 @@ import { createTemplateNotifier } from './create-template-notifier';
 import { RxNotification, RxNotificationKind } from './model';
 
 describe(createTemplateNotifier.name, () => {
-  it('should start with suspense when there is no value', () => {
+  it('should not emit anything when input is NEVER', () => {
     const templateNotifier = createTemplateNotifier();
     let n: RxNotification<any>;
     templateNotifier.next(NEVER);
@@ -13,7 +13,20 @@ describe(createTemplateNotifier.name, () => {
       },
     });
 
-    expect(n.kind).toBe(RxNotificationKind.Suspense);
+    expect(n).toBeUndefined();
+  });
+
+  it('should not emit first undefined value', () => {
+    const templateNotifier = createTemplateNotifier();
+    let n: RxNotification<any>;
+    templateNotifier.next(undefined);
+    templateNotifier.values$.subscribe({
+      next: (notification) => {
+        n = notification;
+      },
+    });
+
+    expect(n).toBeUndefined();
   });
 
   it('should skip suspense when observable has value', () => {
@@ -40,8 +53,7 @@ describe(createTemplateNotifier.name, () => {
         n = notification;
       },
     });
-    templateNotifier.next(of(null));
-    templateNotifier.next(undefined);
+    templateNotifier.next(new BehaviorSubject(undefined));
     expect(n.kind).toBe(RxNotificationKind.Suspense);
     expect(n.value).toBe(undefined);
   });
