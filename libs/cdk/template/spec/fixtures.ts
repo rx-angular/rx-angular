@@ -125,6 +125,7 @@ export class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
         TestTemplateNames.suspense,
         this.suspenseTpl
       );
+      this.observablesHandler.withInitialSuspense(!!this.suspenseTpl);
     }
     if (this.errorTpl) {
       this.templateManager.addTemplateRef(
