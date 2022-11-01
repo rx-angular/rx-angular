@@ -562,6 +562,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
         RxLetTemplateNames.suspense,
         this.suspense
       );
+      this.observablesHandler.withInitialSuspense(!!this.suspense);
     }
 
     if (changes.error) {
