@@ -1,7 +1,6 @@
 import {
   ChangeDetectorRef,
   Directive,
-  EmbeddedViewRef,
   ErrorHandler,
   Input,
   NgZone,
@@ -588,10 +587,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     >({
       templateSettings: {
         viewContainerRef: this.viewContainerRef,
-        createViewContext,
-        updateViewContext,
         customContext: (rxLet) => ({ rxLet }),
-        patchZone: this.patchZone ? this.ngZone : false,
       },
       renderSettings: {
         cdRef: this.cdRef,
@@ -619,25 +615,4 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     );
     this.templateManager.nextStrategy(this.strategyHandler.values$);
   }
-}
-
-/** @internal */
-function createViewContext<T>(value: T): RxLetViewContext<T> {
-  return {
-    rxLet: value,
-    $implicit: value,
-    error: false,
-    complete: false,
-    suspense: false,
-  };
-}
-/** @internal */
-function updateViewContext<T>(
-  value: T,
-  view: EmbeddedViewRef<RxLetViewContext<T>>,
-  context: RxLetViewContext<T>
-): void {
-  Object.keys(context).forEach((k) => {
-    view.context[k] = context[k];
-  });
 }
