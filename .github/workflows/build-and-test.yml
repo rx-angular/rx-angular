@@ -112,7 +112,7 @@ jobs:
 
       # e2e: 1 tasks assigned at a time, 1 process per agent
       - name: Run Affected e2e
-        run: yarn nx affected:e2e --parallel=false --max-parallel=1
+        run: yarn nx affected:e2e --max-parallel=1
 
       - name: Stop Nx Cloud DTE agents
         if: ${{ always() }}
