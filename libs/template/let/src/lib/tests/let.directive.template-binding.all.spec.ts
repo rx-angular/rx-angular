@@ -33,6 +33,7 @@ import { MockChangeDetectorRef } from './fixtures';
       *rxLet="
         value$;
         let value;
+        nextTrg: nextTrg;
         suspense: suspense;
         suspenseTrg: suspenseTrg;
         error: error;
@@ -159,6 +160,13 @@ describe('LetDirective when template binding with all templates', () => {
     expectContentToBe('suspense');
   });
 
+  it('should have `ngTemplateContextGuard` defined', () => {
+    expect(LetDirective.ngTemplateContextGuard).toBeDefined();
+    expect(
+      LetDirective.ngTemplateContextGuard({} as LetDirective<any>, {})
+    ).toBe(true);
+  });
+
   describe('triggers', () => {
     beforeEach(() => {
       component.value$ = new BehaviorSubject(1);
@@ -180,13 +188,15 @@ describe('LetDirective when template binding with all templates', () => {
       expectContentToBe('error');
     });
 
-    it('should render "suspense"->"complete"->"error" templates', () => {
+    it('should render "suspense"->"complete"->"error"->"next" templates', () => {
       component.suspenseTrg.next();
       expectContentToBe('suspense');
       component.completeTrg.next();
       expectContentToBe('complete');
       component.errorTrg.next();
       expectContentToBe('error');
+      component.nextTrg.next();
+      expectContentToBe('1');
 
       component.trg.next(RxNotificationKind.Suspense);
       expectContentToBe('suspense');
@@ -194,6 +204,8 @@ describe('LetDirective when template binding with all templates', () => {
       expectContentToBe('complete');
       component.trg.next(RxNotificationKind.Error);
       expectContentToBe('error');
+      component.trg.next(RxNotificationKind.Next);
+      expectContentToBe('1');
     });
   });
 });
