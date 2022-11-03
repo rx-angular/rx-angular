@@ -83,11 +83,13 @@ jobs:
 
       - name: Lint Nx workspace
         env:
+          # DTE is disabled to run this step on the DTE coordinator while the agents are set up
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
           NX_DISTRIBUTED_TASK_EXECUTION: false
         run: yarn nx workspace-lint
       - name: Check formatting
         env:
+          # DTE is disabled to run this step on the DTE coordinator while the agents are set up
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
           NX_DISTRIBUTED_TASK_EXECUTION: false
         run: yarn nx format:check
