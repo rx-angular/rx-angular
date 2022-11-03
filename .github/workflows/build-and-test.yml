@@ -28,7 +28,7 @@ env:
 
 jobs:
   dte_agents:
-    name: DTE Agents
+    name: DTE Agent ${{ matrix.agent }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -54,7 +54,7 @@ jobs:
       - name: Set up dependencies
         uses: ./.github/actions/setup
 
-      - name: Start Nx Cloud DTE Agent ${{ matrix.agent }}
+      - name: Start Nx Cloud DTE Agent
         run: yarn nx-cloud start-agent
 
   # We're using Nx Cloud for Distributed Task Execution
