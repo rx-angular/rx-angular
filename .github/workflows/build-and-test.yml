@@ -43,6 +43,7 @@ jobs:
     # lower the number of agents to reduce spent compute time.
     strategy:
       matrix:
+        # Must match the argument passed to `nx-cloud --agent-count` in the dte_coordinator job
         agent: [1, 2, 3, 4]
 
     steps:
@@ -77,6 +78,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Start Nx Cloud DTE
+        # The --agent-count parameter must match the number of strategies run by the dte_agents job
         run: yarn nx-cloud start-ci-run --stop-agents-after="e2e" --agent-count=4
 
       - name: Lint Nx workspace
