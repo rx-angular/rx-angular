@@ -134,7 +134,7 @@ export function createTemplateManager<
 
   const triggerHandling = config.templateTrigger$ || EMPTY;
   const getContext = notificationKindToViewContext(
-    templateSettings.customContext || ((v) => {})
+    templateSettings.customContext || (() => ({}))
   );
 
   return {
