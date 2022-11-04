@@ -22,8 +22,8 @@
     - libs/**/docs/**/*
 
   📚 Docs Web:
-    - docs/*
-    - docs/**/*
+    - apps/docs/*
+    - apps/docs/**/*
 
   🔬 Experimental:
     - libs/**/experimental/*
