@@ -23,7 +23,6 @@ Together with the `RxRenderStrategies`, this makes the rendering behavior extrem
 and transparent for the developer.
 Each instance of `RxFor` can be configured to render with different settings.
 
-
 **Downsides**
 
 - Bootstrapping of `ngFor`is slow
@@ -66,7 +65,7 @@ Each instance of `RxFor` can be configured to render with different settings.
 **Rendering**
 
 | Input            | Type                                                               | description                                                                                                                                                                                                                                                                                          |
-|------------------|--------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `trackBy`        | `keyof T` or `(index: number, item: T) => any`                     | Identifier function for items. `rxFor` provides a shorthand where you can name the property directly.                                                                                                                                                                                                |
 | `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations)                                                                                                                                         |
 | `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries) |
@@ -83,20 +82,20 @@ The following context variables are available for each template:
 
 **Static Context Variables (mirrored from `ngFor`)**
 
-| Variable Name | Type            | description                                          |
-|---------------|-----------------|------------------------------------------------------|
-| `$implicit`   | `T`             | the default variable accessed by `let val`           |
-| `index`       | `number`        | current index of the item                            |
-| `count`       | `number`        | count of all items in the list                       |
-| `first`       | `boolean`       | true if the item is the first in the list            |
-| `last`        | `boolean`       | true if the item is the last in the list             |
-| `even`        | `boolean`       | true if the item has on even index (index % 2 === 0) |
-| `odd`         | `boolean`       | the opposite of even                                 |
+| Variable Name | Type      | description                                          |
+| ------------- | --------- | ---------------------------------------------------- |
+| `$implicit`   | `T`       | the default variable accessed by `let val`           |
+| `index`       | `number`  | current index of the item                            |
+| `count`       | `number`  | count of all items in the list                       |
+| `first`       | `boolean` | true if the item is the first in the list            |
+| `last`        | `boolean` | true if the item is the last in the list             |
+| `even`        | `boolean` | true if the item has on even index (index % 2 === 0) |
+| `odd`         | `boolean` | the opposite of even                                 |
 
 **Reactive Context Variables**
 
 | Variable Name | Type                                                           | description                                                                                                                                                                                                       |
-|---------------|----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `item$`       | `Observable<T>`                                                | the same value as $implicit, but as `Observable`                                                                                                                                                                  |
 | `index$`      | `Observable<number>`                                           | index as `Observable`                                                                                                                                                                                             |
 | `count$`      | `Observable<number>`                                           | count as `Observable`                                                                                                                                                                                             |
@@ -111,6 +110,7 @@ The following context variables are available for each template:
 The `ForModule` can be imported as following:
 
 Module based setup:
+
 ```
 import { ForModule } from "@rx-angular/template/for";
 
@@ -122,6 +122,7 @@ export class AnyModule {}
 ```
 
 Standalone component setup:
+
 ```
 import { ForModule } from "@rx-angular/template/for";
 
@@ -139,13 +140,13 @@ export class AnyComponent {}
 > By default `*rxFor` is optimized for performance out of the box.
 >
 > This includes:
+>
 > - The default render strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies).
-    >   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies#Default-configuration) if you want to change it.
+>   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies#Default-configuration) if you want to change it.
 > - Creates templates lazy and manages multiple template instances
 >
 > As a list can take larger to render items can appear in batches if concurrent strategies are used.
 > This brings several benefits. e.g. stop rendering in between and navigate away.
->
 
 ### Simple example using `*rxFor` with `Observable` values
 
@@ -170,7 +171,6 @@ export class AnyComponent {
 
 > **🔥 Perf Tip:**
 > As `rxFor` accepts also static values it can serve as a drop in replacement with an easy find and replace refactoring.
->
 
 ```typescript
 @NgComponent({
@@ -193,14 +193,14 @@ export class AnyComponent {
 
 > **💡 DX Tip:**
 > As `rxFor` accepts also static values it can serve as a drop in replacement with an easy find and replace refacturing.
->
+
 ```typescript
 @NgComponent({
-    template: `
+  template: `
     <ul>
       <li *rxFor="let item of items; trackBy: 'id'">{{ item }}</li>
     </ul>
-    `
+    `,
 })
 export class AnyComponent {}
 ```
@@ -269,7 +269,7 @@ The default value for strategy is [`normal`](../../cdk/render-strategies/strateg
 <ng-container *rxFor="let item of items; strategy: strategy$">
   {{ item }}
 </ng-container>
- ```
+```
 
 ```ts
 @Component()
@@ -362,7 +362,7 @@ cancelled.
 ### Use the `renderCallback`
 
 The `renderCallback` can be seen as `hook` into the change detection system.
-It's essentially a `Subject` which emits whenever *rxFor finished rendering a set changes to the view.
+It's essentially a `Subject` which emits whenever \*rxFor finished rendering a set changes to the view.
 This enables developers to perform actions when a list has finished rendering.
 The `renderCallback` is useful in situations where you rely on specific DOM properties like the `height` a
 table after all items got rendered, or to adjust scroll-positions.
@@ -375,17 +375,18 @@ The result of the `renderCallback` will contain the currently rendered set of it
 @Component({
   selector: 'app-root',
   template: `
-  <app-list-component>
-    <app-list-item
-      *rxFor="
-        let item of items$;
-        trackBy: trackItem;
-        renderCallback: itemsRendered;
-      ">
-      <div>{{ item.name }}</div>
-    </app-list-item>
-  </app-list-component>
-`
+    <app-list-component>
+      <app-list-item
+        *rxFor="
+          let item of items$;
+          trackBy: trackItem;
+          renderCallback: itemsRendered
+        "
+      >
+        <div>{{ item.name }}</div>
+      </app-list-item>
+    </app-list-component>
+  `,
 })
 export class AppComponent {
   items$: Observable<Item[]> = itemService.getItems();
@@ -396,8 +397,8 @@ export class AppComponent {
   constructor(elementRef: ElementRef<HTMLElement>) {
     itemsRendered.subscribe(() => {
       // items are rendered, we can now scroll
-      elementRef.scrollTo({bottom: 0});
-    })
+      elementRef.scrollTo({ bottom: 0 });
+    });
   }
 }
 ```
@@ -422,12 +423,12 @@ This example showcases the `select` view-context function used for deeply nested
 
 This will significantly improve the performance.
 
-[//]: # (TODO => Flame chart comparison and numbers)
+[//]: # 'TODO => Flame chart comparison and numbers'
 
 ### Working with event listeners (`patchZone`)
 
 A flag to control whether *rxFor templates are created within `NgZone` or not.
-The default value is `true, `*rxFor` will create it's `EmbeddedViews` inside `NgZone`.
+The default value is `true, `*rxFor`will create it's`EmbeddedViews`inside`NgZone`.
 
 Event listeners normally trigger zone. Especially high frequently events cause performance issues.
 
@@ -437,16 +438,18 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 @Component({
   selector: 'any-component>',
   template: `
-    <div *rxFor="let bgColor in bgColor$; patchZone: false"
-    (mousemove)="calcBgColor($event)" [style.background]="bgColor">
-    </div>
-  `
+    <div
+      *rxFor="let bgColor; in: bgColor$; patchZone: false"
+      (mousemove)="calcBgColor($event)"
+      [style.background]="bgColor"
+    ></div>
+  `,
 })
 export class AppComponent {
   // As the part of the template where this function is used as event listener callback
   // has `patchZone` false the all event listeners run ouside zone.
   calcBgColor(moveEvent: MouseEvent) {
-   // do something with the background in combination with the mouse position
+    // do something with the background in combination with the mouse position
   }
 }
 ```
@@ -486,11 +489,11 @@ export const RX_ANGULAR_TEST_PROVIDER: StaticProvider = {
   useValue: {
     primaryStrategy: 'native',
     customStrategies: {
-      'userBlocking': {
+      userBlocking: {
         ...RX_NATIVE_STRATEGIES.native,
-        name: 'userBlocking'
-      }
-    }
+        name: 'userBlocking',
+      },
+    },
   },
 };
 ```

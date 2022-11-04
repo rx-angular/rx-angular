@@ -6,10 +6,9 @@
 
 ## This package provides a quick way to create an action channel and some configuration options.
 
-
 ## Key features
 
- - ✅ Fully Typed
+- ✅ Fully Typed
 
 ## Demos:
 
@@ -26,4 +25,3 @@ yarn add @rx-angular/template
 ## Documentation
 
 - [RxLet](https://rx-angular.io/docs/template/api/let-directive)
-

@@ -22,7 +22,7 @@ Take a look at the following example:
     <!-- clickedHeroName won't get updated due to `NgZone` not noticing the click -->
     {{ clickedHeroName }}
     <!-- click runs out of `NgZone` -->
-    <button *rxLet="heroes$; let hero; patchZone: false" 
+    <button *rxLet="heroes$; let hero; patchZone: false"
     (click)="heroClicked(hero)">
       {{ hero.name }}
     </button>
