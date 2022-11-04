@@ -54,7 +54,7 @@ module.exports = {
   tagline: 'Performance & DX',
   themes: [
     [
-      require.resolve("@easyops-cn/docusaurus-search-local"),
+      require.resolve('@easyops-cn/docusaurus-search-local'),
       {
         hashed: true,
         indexDocs: true,
