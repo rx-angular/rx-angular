@@ -6,7 +6,16 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { filter, interval, merge, Observable, Subject, Subscription, switchMap, takeUntil } from 'rxjs';
+import {
+  filter,
+  interval,
+  merge,
+  Observable,
+  Subject,
+  Subscription,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
 //👇 1- import RxState
@@ -105,40 +114,39 @@ export class SetupStart {
   set refreshInterval(refreshInterval$: Observable<number>) {
     this.model.connect(
       'refreshInterval',
-      refreshInterval$.pipe(filter(rI => rI > 4000))
+      refreshInterval$.pipe(filter((rI) => rI > 4000))
     );
   }
 
   @Output()
   listExpandedChange = this.ui.listExpandedChanges$;
 
-  autoTrigger$ = this.model.select('refreshInterval')
-    .pipe(switchMap(ms => interval(ms)));
+  autoTrigger$ = this.model
+    .select('refreshInterval')
+    .pipe(switchMap((ms) => interval(ms)));
 
   fetchEffect = (_) => this.listService.refetchList();
-
 
   constructor(
     private listService: ListService,
     private model: RxState<ComponentState>,
     private ef: RxEffects,
     private rxActions: RxActionFactory<{
-      listExpandedChanges: boolean,
-      refreshClicks: undefined
+      listExpandedChanges: boolean;
+      refreshClicks: undefined;
     }>
   ) {
     this.model.set(initComponentState);
 
-    this.model.connect('list', this.listService.list$
-      .pipe(map(this.parseListItems))
+    this.model.connect(
+      'list',
+      this.listService.list$.pipe(map(this.parseListItems))
     );
-
 
     this.ef.register(
       merge(this.autoTrigger$, this.ui.listExpandedChanges$),
       this.fetchEffect
     );
-
   }
 
   parseListItems(l: ListServerItem[]): DemoBasicsItem[] {

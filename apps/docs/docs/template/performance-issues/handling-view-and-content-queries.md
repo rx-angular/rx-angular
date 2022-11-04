@@ -15,17 +15,16 @@ Take a look at the following example:
 @Component({
   selector: 'app-list-component',
   template: `
-    <div
-      #myDiv
-      *rxLet="state$; let state">
-    </div>
+    <div #myDiv *rxLet="state$; let state"></div>
     <button (click)="append()">append</button>
-  `
+  `,
 })
 export class AppListComponent {
- @ViewChild('myDiv') myDiv: ElementRef<HTMLElement>;
+  @ViewChild('myDiv') myDiv: ElementRef<HTMLElement>;
 
- append() { this.myDiv.nativeElement.appendChild('span') }
+  append() {
+    this.myDiv.nativeElement.appendChild('span');
+  }
 }
 ```
 
@@ -90,11 +89,7 @@ Take a look at the following example:
 ```ts
 @Component({
   selector: 'app-list-component',
-  template: `
-    <div
-      *rxLet="state$; let state; parent: false">
-    </div>
-  `
+  template: ` <div *rxLet="state$; let state; parent: false"></div> `,
 })
 export class AppListComponent {}
 ```

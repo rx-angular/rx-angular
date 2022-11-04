@@ -9,10 +9,11 @@ title: 'RxLet'
 In Angular there is one way to handle asynchronous values or streams in the template, the `async` pipe.
 Even though the async pipe evaluates such values in the template, it is insufficient in many ways.
 To name a few:
-* it will only update the template when `NgZone` is also aware of the value change
-* it leads to over rendering because it can only run global change detection
-* it leads to too many subscriptions in the template
-* it is cumbersome to work with values in the template
+
+- it will only update the template when `NgZone` is also aware of the value change
+- it leads to over rendering because it can only run global change detection
+- it leads to too many subscriptions in the template
+- it is cumbersome to work with values in the template
 
 **Access async values in the template: `*ngIf hack`**
 
@@ -50,9 +51,7 @@ This package helps to reduce code used to create composable action streams.
 It mostly is used in combination with state management libs to handle user interaction and backend communication.
 
 ```html
-<ng-container *rxLet="observableNumber$; let n">
- ...
-</ng-container>
+<ng-container *rxLet="observableNumber$; let n"> ... </ng-container>
 ```
 
 ## Concepts
@@ -85,26 +84,26 @@ It mostly is used in combination with state management libs to handle user inter
 **Value**
 
 | Input   | Type            | description                                                       |
-|---------|-----------------|-------------------------------------------------------------------|
+| ------- | --------------- | ----------------------------------------------------------------- |
 | `rxLet` | `Observable<T>` | The Observable or value to be bound to the context of a template. |
 
 **Contextual state**
 
-| Input            | Type                              | description                                                            |
-|------------------|-----------------------------------|------------------------------------------------------------------------|
-| `error`          | `TemplateRef<RxLetViewContext>`   | defines the template for the error state                               |
-| `complete`       | `TemplateRef<RxLetViewContext>`   | defines the template for the complete state                            |
-| `suspense`       | `TemplateRef<RxLetViewContext>`   | defines the template for the suspense state                            |
-| `nextTrg`        | `Observable<unknown>`             | trigger to show `next` template                                        |
-| `errorTrg`       | `Observable<unknown>`             | trigger to show `error` template                                       |
-| `completeTrg`    | `Observable<unknown>`             | trigger to show `complete` template                                    |
-| `suspenseTrg`    | `Observable<unknown>`             | trigger to show `suspense` template                                    |
-| `templateTrg`    | `Observable<RxNotificationKind>`  | trigger to show any templates, based on the given `RxNotificationKind` |
+| Input         | Type                             | description                                                            |
+| ------------- | -------------------------------- | ---------------------------------------------------------------------- |
+| `error`       | `TemplateRef<RxLetViewContext>`  | defines the template for the error state                               |
+| `complete`    | `TemplateRef<RxLetViewContext>`  | defines the template for the complete state                            |
+| `suspense`    | `TemplateRef<RxLetViewContext>`  | defines the template for the suspense state                            |
+| `nextTrg`     | `Observable<unknown>`            | trigger to show `next` template                                        |
+| `errorTrg`    | `Observable<unknown>`            | trigger to show `error` template                                       |
+| `completeTrg` | `Observable<unknown>`            | trigger to show `complete` template                                    |
+| `suspenseTrg` | `Observable<unknown>`            | trigger to show `suspense` template                                    |
+| `templateTrg` | `Observable<RxNotificationKind>` | trigger to show any templates, based on the given `RxNotificationKind` |
 
 **Rendering**
 
 | Input            | Type                                                               | description                                                                                                                                                                                                                                                                                                                                                                             |
-|------------------|--------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`. See [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/ngzone-optimizations.md)                                                                                                                                         |
 | `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/handling-view-and-content-queries.md) |
 | `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                                                                                                                    |
@@ -121,10 +120,10 @@ The `LetModule` can be imported as following:
 Module based setup:
 
 ```ts
-import { LetModule } from "@rx-angular/template/let";
+import { LetModule } from '@rx-angular/template/let';
 
 @NgModule({
-  imports: [ LetModule ],
+  imports: [LetModule],
   // ...
 })
 export class AnyModule {}
@@ -133,12 +132,12 @@ export class AnyModule {}
 Standalone component setup:
 
 ```ts
-import { LetModule } from "@rx-angular/template/let";
+import { LetModule } from '@rx-angular/template/let';
 
 @Component({
-    standalone: true,
-    imports: [ LetModule ],
-    template: `...`
+  standalone: true,
+  imports: [LetModule],
+  template: `...`,
 })
 export class AnyComponent {}
 ```
@@ -149,8 +148,9 @@ export class AnyComponent {}
 > By default `*rxLet` is optimized for performance out of the box.
 >
 > This includes:
+>
 > - The default render strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies).
-    >   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies#Default-configuration) if you want to change it.
+>   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies#Default-configuration) if you want to change it.
 > - Creates templates lazy and manages multiple template instances
 
 ### Binding an Observable to a local variable in the template
@@ -170,6 +170,7 @@ This can be achieved by using Angular's native 'let' syntax `*rxLet="observableN
 ![Contextual-State--template-vs-variable](https://user-images.githubusercontent.com/10064416/192660150-643c4d37-5326-4ba2-ad84-e079890b3f2f.png)
 
 A nice feature of the `*rxLet` directive is, it provides 2 ways to access the [reactive context state](../concepts/reactive-context.md) in the template:
+
 - context variables
 - context templates
 
@@ -185,14 +186,15 @@ The following context variables are available for each template:
 You can use the as like this:
 
 ```html
-<ng-container *rxLet="observableNumber$; let n; let s = suspense; let e = error, let c = complete">
-    {{ s && 'No value arrived so far' }}
+<ng-container
+  *rxLet="observableNumber$; let n; let s = suspense; let e = error, let c = complete"
+>
+  {{ s && 'No value arrived so far' }}
 
-    <app-number [number]="n"></app-number>
+  <app-number [number]="n"></app-number>
 
-    There is an error: {{ e ? e.message : 'No Error' }}
-
-    Observable is completed: {{c ? 'Yes' : 'No'}}
+  There is an error: {{ e ? e.message : 'No Error' }} Observable is completed:
+  {{c ? 'Yes' : 'No'}}
 </ng-container>
 ```
 
@@ -202,7 +204,7 @@ You can also use template anchors to display the [contextual state](../concepts/
 
 ```html
 <ng-container
- *rxLet="
+  *rxLet="
     observableNumber$; let n;
     error: error;
     complete: complete;
@@ -234,23 +236,19 @@ We can use the `nextTrg` input to switch back from any template to display the a
 e.g. from the complete template back to the value display
 
 ```typescript
- @Component({
-   selector: 'any-component',
-   template: `
+@Component({
+  selector: 'any-component',
+  template: `
     <button (click)="nextTrigger$.next()">show value</button>
     <ng-container
-     *rxLet="
-       num$; let n;
-       let n;
-       complete: complete
-       nextTrg: nextTrigger$
-    ">
-      {{n}}
+      *rxLet="num$; let n; let n; complete: complete; nextTrg: nextTrigger$"
+    >
+      {{ n }}
     </ng-container>
     <ng-template #complete>✔</ng-template>
-   `
- })
- export class AppComponent {
+  `,
+})
+export class AppComponent {
   nextTrigger$ = new Subject();
   num$ = timer(2000);
 }
@@ -264,29 +262,22 @@ We can use the `errorTrg` input to switch back from any template to display the 
 e.g. from the complete template back to the value display
 
 ```typescript
- @Component({
-   selector: 'any-component',
-   template: `
+@Component({
+  selector: 'any-component',
+  template: `
     <ng-container
-     *rxLet="
-       num$; let n;
-       let n;
-       error: error
-       errorTrg: errorTrigger$
-    ">
-      {{n}}
+      *rxLet="num$; let n; let n; error: error; errorTrg: errorTrigger$"
+    >
+      {{ n }}
     </ng-container>
     <ng-template #error>❌</ng-template>
-   `
- })
- export class AppComponent {
+  `,
+})
+export class AppComponent {
   num$ = this.state.num$;
   errorTrigger$ = this.state.error$;
 
-  constructor(private state: globalState) {
-
-  }
-
+  constructor(private state: globalState) {}
 }
 ```
 
@@ -296,32 +287,30 @@ We can use the `completeTrg` input to switch back from any template to display t
 e.g. from the complete template back to the value display
 
 ```typescript
- @Component({
-   selector: 'any-component',
-   template: `
+@Component({
+  selector: 'any-component',
+  template: `
     <ng-container
-     *rxLet="
-       num$; let n;
-       let n;
-       complete: complete
-       completeTrg: completeTrigger$
-    ">
-      {{n}}
+      *rxLet="
+        num$;
+        let n;
+        let n;
+        complete: complete;
+        completeTrg: completeTrigger$
+      "
+    >
+      {{ n }}
     </ng-container>
     <ng-template #complete>✔</ng-template>
-   `
- })
- export class AppComponent {
+  `,
+})
+export class AppComponent {
   num$ = this.state.num$;
   completeTrigger$ = this.state.success$;
 
-  constructor(private state: globalState) {
-
-  }
-
+  constructor(private state: globalState) {}
 }
 ```
-
 
 #### Showing the `suspense` template
 
@@ -329,35 +318,34 @@ We can use the `suspenseTrg` input to switch back from any template to display t
 e.g. from the complete template back to the value display
 
 ```typescript
- @Component({
-   selector: 'any-component',
-   template: `
+@Component({
+  selector: 'any-component',
+  template: `
     <input (input)="search($event.target.value)" />
     <ng-container
-     *rxLet="
-       num$; let n;
-       let n;
-       suspense: suspense
-       suspenseTrg: suspenseTrigger$
-    ">
-      {{n}}
+      *rxLet="
+        num$;
+        let n;
+        let n;
+        suspense: suspense;
+        suspenseTrg: suspenseTrigger$
+      "
+    >
+      {{ n }}
     </ng-container>
     <ng-template #suspense>loading...</ng-template>
-   `
- })
- export class AppComponent {
-    num$ = this.state.num$;
-    suspenseTrigger$ = new Subject();
+  `,
+})
+export class AppComponent {
+  num$ = this.state.num$;
+  suspenseTrigger$ = new Subject();
 
-    constructor(private state: globalState) {
+  constructor(private state: globalState) {}
 
-    }
-
-    search(str: string) {
-      this.state.search(str);
-      this.suspenseTrigger$.next();
-    }
-
+  search(str: string) {
+    this.state.search(str);
+    this.suspenseTrigger$.next();
+  }
 }
 ```
 
@@ -367,33 +355,28 @@ We can use the `contextTrg` input to set any context. It combines the functional
 in a convenient way.
 
 ```typescript
- @Component({
-   selector: 'any-component',
-   template: `
+@Component({
+  selector: 'any-component',
+  template: `
     <input (input)="search($event.target.value)" />
     <ng-container
-     *rxLet="
-       num$;
-       let n;
-       suspense: suspense;
-       contextTrg: contextTrg$;
-    ">
-      {{n}}
+      *rxLet="num$; let n; suspense: suspense; contextTrg: contextTrg$"
+    >
+      {{ n }}
     </ng-container>
     <ng-template #suspense>loading...</ng-template>
-   `
- })
- export class AppComponent {
-    num$ = this.state.num$;
-    contextTrg$ = new Subject();
+  `,
+})
+export class AppComponent {
+  num$ = this.state.num$;
+  contextTrg$ = new Subject();
 
-    constructor(private state: globalState) {}
+  constructor(private state: globalState) {}
 
-    search(str: string) {
-      this.state.search(str);
-      this.contextTrg$.next(RxNotificationKind.Suspense);
-    }
-
+  search(str: string) {
+    this.state.search(str);
+    this.contextTrg$.next(RxNotificationKind.Suspense);
+  }
 }
 ```
 
@@ -414,7 +397,7 @@ The default value for strategy is [`normal`](../../cdk/render-strategies/strateg
 <ng-container *rxFor="item$; let item; strategy: strategy$">
   {{ item }}
 </ng-container>
- ```
+```
 
 ```ts
 @Component()
@@ -448,16 +431,12 @@ Set the value to `false` and it will stop working.
 ```ts
 @Component({
   selector: 'app-list-component',
-  template: `
-    <div
-      *rxLet="state$; let state; parent: false">
-    </div>
-  `
+  template: ` <div *rxLet="state$; let state; parent: false"></div> `,
 })
 export class AppListComponent {}
 ```
 
-[//]: # (TODO => Flame chart comparison and numbers)
+[//]: # 'TODO => Flame chart comparison and numbers'
 
 ### Use a renderCallback to run post render processes (`renderCallback`)
 
@@ -506,16 +485,18 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 @Component({
   selector: 'any-component>',
   template: `
-    <div *rxLet="bgColor$; let bgColor; patchZone: false"
-    (mousemove)="calcBgColor($event)" [style.background]="bgColor">
-    </div>
-  `
+    <div
+      *rxLet="bgColor$; let bgColor; patchZone: false"
+      (mousemove)="calcBgColor($event)"
+      [style.background]="bgColor"
+    ></div>
+  `,
 })
 export class AppComponent {
   // As the part of the template where this function is used as event listener callback
   // has `patchZone` false the all event listeners run ouside zone.
   calcBgColor(moveEvent: MouseEvent) {
-   // do something with the background in combination with the mouse position
+    // do something with the background in combination with the mouse position
   }
 }
 ```
@@ -540,8 +521,8 @@ import { LetDirective } from '@rx-angular/template/let';
 
 @Component({
   template: `
-    <ng-container *rxLet="value$; let value;">
-      {{value}}
+    <ng-container *rxLet="value$; let value">
+      {{ value }}
     </ng-container>
   `,
 })
@@ -552,20 +533,21 @@ class TestComponent {
 const setupTestComponent = (): void => {
   TestBed.configureTestingModule({
     declarations: [LetDirective, LetDirectiveTestComponent],
-    providers: [ {
-      // don't forget to configure the primary strategy to 'native'
-      provide: RX_RENDER_STRATEGIES_CONFIG,
-      useValue: {
-        primaryStrategy: 'native',
+    providers: [
+      {
+        // don't forget to configure the primary strategy to 'native'
+        provide: RX_RENDER_STRATEGIES_CONFIG,
+        useValue: {
+          primaryStrategy: 'native',
+        },
       },
-    } ]
+    ],
   });
 
   fixtureComponent = TestBed.createComponent(TestComponent);
   component = fixtureComponent.componentInstance;
   componentNativeElement = component.nativeElement;
 };
-
 ```
 
 ### Set default strategy
@@ -579,15 +561,17 @@ requires more effort when writing the tests, as updates will be processed asynch
 
 ```ts
 TestBed.configureTestingModule({
-    declarations: [LetDirective, LetDirectiveTestComponent],
-    providers: [ {
+  declarations: [LetDirective, LetDirectiveTestComponent],
+  providers: [
+    {
       // don't forget to configure the primary strategy to 'native'
       provide: RX_RENDER_STRATEGIES_CONFIG,
       useValue: {
         primaryStrategy: 'native',
       },
-    } ]
-  });
+    },
+  ],
+});
 ```
 
 Here is an example using the `concurrent` strategies in a test environment: [`rxLet strategy spec`](https://github.com/rx-angular/rx-angular/blob/main/libs/template/let/src/lib/tests/let.directive.strategy.spec.ts)
@@ -609,7 +593,6 @@ describe('LetDirective', () => {
     expect(componentNativeElement).toBeDefined();
     expect(componentNativeElement.innerHTML).toBe('42');
   });
-
 });
 ```
 

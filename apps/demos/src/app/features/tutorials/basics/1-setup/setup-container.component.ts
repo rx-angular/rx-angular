@@ -17,7 +17,8 @@ import { map } from 'rxjs/operators';
 
     <rxa-setup-start
       [refreshInterval]="refreshInterval$"
-      (listExpandedChange)="listExpandedChange$.next($event)">
+      (listExpandedChange)="listExpandedChange$.next($event)"
+    >
     </rxa-setup-start>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

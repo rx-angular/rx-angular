@@ -82,12 +82,12 @@ In combination with Observables, and EmbeddedViews change detection can be speed
 
 ### Strategies
 
-| Name                      | Priority | Render Method      | Scheduling              | Render Deadline |
-|---------------------------|----------|--------------------|-------------------------|-----------------|
-| `"native"`                | ❌        | ⮁ `markForCheck`   | `requestAnimationFrame` | N/A             |
-| `"global"` - _deprecated_ | ❌        | ⮁ `ɵmarkDirty`     | `requestAnimationFrame` | N/A             |
-| `"local"`                 | ❌        | 🠗 `detectChanges` | `requestAnimationFrame` | N/A             |
-| `"noop"`                  | ❌        | - `noop`           | `requestAnimationFrame` | N/A             |
+| Name                      | Priority | Render Method     | Scheduling              | Render Deadline |
+| ------------------------- | -------- | ----------------- | ----------------------- | --------------- |
+| `"native"`                | ❌       | ⮁ `markForCheck`  | `requestAnimationFrame` | N/A             |
+| `"global"` - _deprecated_ | ❌       | ⮁ `ɵmarkDirty`    | `requestAnimationFrame` | N/A             |
+| `"local"`                 | ❌       | 🠗 `detectChanges` | `requestAnimationFrame` | N/A             |
+| `"noop"`                  | ❌       | - `noop`          | `requestAnimationFrame` | N/A             |
 
 #### Native
 
@@ -99,8 +99,8 @@ Angular still needs zone.js to trigger the [`ApplicationRef#tick`](https://githu
 as the internally called function [`markViewDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1837) is only responsible for dirty marking and not rendering.
 
 | Name     | Zone Agnostic | Render Method    | Coalescing    | Scheduling              |
-|----------|---------------|------------------|---------------|-------------------------|
-| `native` | ❌             | ⮁ `markForCheck` | ✔ RootContext | `requestAnimationFrame` |
+| -------- | ------------- | ---------------- | ------------- | ----------------------- |
+| `native` | ❌            | ⮁ `markForCheck` | ✔ RootContext | `requestAnimationFrame` |
 
 #### Global Strategy
 
@@ -114,7 +114,7 @@ It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angul
 ![rx-angular-cdk-render-strategies__strategy-global](https://user-images.githubusercontent.com/10064416/116009680-59737a00-a61b-11eb-8c97-394b72ddbc95.png)
 
 | Name     | Zone Agnostic | Render Method  | Coalescing      | Scheduling                                                                                                                                            |
-|----------|---------------|----------------|-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -------- | ------------- | -------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `global` | ✔             | ⮁ `ɵmarkDirty` | ✔ `RootContext` | [`animationFrame`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/util/misc_utils.ts#L39) |
 
 #### Local
@@ -136,8 +136,8 @@ E. g. the _component_ from which the re-rendering was initiated.
 This context could be the Component instance or a `ViewContextRef`,
 both accessed over the context over `ChangeDetectorRef#context`.
 
-| Name    | Zone Agnostic | Render Method      | Coalescing         | Scheduling              |
-|---------|---------------|--------------------|--------------------|-------------------------|
+| Name    | Zone Agnostic | Render Method     | Coalescing         | Scheduling              |
+| ------- | ------------- | ----------------- | ------------------ | ----------------------- |
 | `local` | ✔             | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame` |
 
 The best place to use the local strategy is a structural directive like `*rxLet`. Those will have a independent template from the component and perform changes only there.
@@ -153,8 +153,8 @@ The no-operation strategy does nothing. It can be a valuable tool for performanc
 ![rx-angular-cdk-render-strategies__strategy-noop](https://user-images.githubusercontent.com/10064416/116009707-6d1ee080-a61b-11eb-83e8-5df2e8081b7a.png)
 
 | Name   | Zone Agnostic | Render Method | Coalescing | Scheduling |
-|--------|---------------|---------------|------------|------------|
-| `noop` | ✔             | - `noop`      | ❌          | ❌          |
+| ------ | ------------- | ------------- | ---------- | ---------- |
+| `noop` | ✔             | - `noop`      | ❌         | ❌         |
 
 ## Usage
 

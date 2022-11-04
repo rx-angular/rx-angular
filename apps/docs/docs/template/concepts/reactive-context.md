@@ -13,6 +13,7 @@ As asynchronous values to have special states.
 Those states are always hard to handle and produce brittle code, especially in the tenplate.
 
 In short, we can handle the following states in the template:
+
 - suspense
 - error
 - complete
@@ -20,7 +21,6 @@ In short, we can handle the following states in the template:
 Read further for more details.
 
 ## The extended reactive context in RxAngular
-
 
 If we think about any process, e.g. an HTTP request, we can differentiate different states in it.
 The request can start, result in a valid response or throws an error. After that, the process is completed.
@@ -136,10 +136,8 @@ export const enum RxNotificationKind {
   Error = 'error',
   Complete = 'complete',
 }
-
 ```
 
 To sum up, we now know that `@rx-angular/template` provides an extended reactive context with the `suspense` channel.
 Use suspense as a template wherever possible as it reduces rendering work drastically.
 Also, be sure to remember that we have also access to the values of the 4 channels as local variables in the template and as the notifications from the render callback.
-
