@@ -78,7 +78,7 @@ function defaultCompare<T>(oldVal: T, newVal: T): boolean {
  * // { age: 5, name: 'Han Solo' }
  *
  * @param {K[]} keys String key for object property lookup on each item.
- * @param {KeyCompareMap<T>} [compare] Optional KeyCompareMap to explicitly define comparisons for some of the keys
+ * @param {KeyCompareMap<T>} [keyCompareMap] Optional KeyCompareMap to explicitly define comparisons for some of the keys
  * @docsPage distinctUntilSomeChanged
  * @docsCategory operators
  */
