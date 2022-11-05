@@ -5,139 +5,130 @@ title: 'Reactive context'
 hide_title: true
 ---
 
-# Reactive context
+## Description
 
 ![Reactive-Context](https://user-images.githubusercontent.com/10064416/192658822-67b51256-1c4a-49c7-8c48-6040b666d8a6.png)
 
-As asynchronous values to have special states.
-Those states are always hard to handle and produce brittle code, especially in the tenplate.
+In order to provide high quality user experiences, developers have to take care about giving users proper feedback
+based on their actions with an application. Most of the time external resources (http, databases, websockets, ...) are used
+to read/write data. Operations involving third party resources are asynchronous and don't give immediate feedback.
 
-In short, we can handle the following states in the template:
+In order to provide feedback to the user, we implement features such as loading spinners, refresh indicators, error dialogs, success messages.
+The reactive context is the context we can derive from asynchronous/reactive data structures such as `Promise` or `Observable`.
 
-- suspense
-- error
-- complete
+The following example showcases how we identify the reactive context from an `Observable`:
 
-Read further for more details.
+![reactive context from observable](../../../static/img/template/observable-reactive-context.png)
 
-## The extended reactive context in RxAngular
+Besides the actual value channel (`next`), we can derive the following three contexts:
 
-If we think about any process, e.g. an HTTP request, we can differentiate different states in it.
-The request can start, result in a valid response or throws an error. After that, the process is completed.
+- `suspense` => the stream has not emitted data yet
+- `error` => the stream encountered an error
+- `complete` => the stream completed, won't emit another value
 
-These states fit pretty much any process, they just differ in the number of emissions.
+Based on the contexts we can decide what to present our user.
 
-[`RxJS`](http://www.rxjs.dev) for example, maintains 3 different channels:
+## Usage in the template
 
-- `next`
-- `error`
-- `complete`
+The `@rx-angular/template` directives are capable of
+deriving the reactive context for you.
+There are two ways of handling them, with `reactive context templates` or `reactive context variables`.
 
-Where `next` can have zero to infinite emissions, and `error` and `complete` zero to 1 emission.
 
-This differentiation works perfectly in code. However, when we start to project those channels and their changes into HTML
-we sometimes end up implementing a hack for another potential state that is not provided by Angular.
+### Reactive Context Templates
 
-In the above example with the HTTP request, we may want to indicate that the process was started,
-but no result, neither a value nor an error nor complete arrived yet from the process.
+The following example showcases how to use the reactive context by assigning
+dedicated templates to every possible context value.
 
-This leads not only to a cluttered HTML, but, what's worse, to the `eager template`.
-
-What does it mean?
-
-Imagine you would have a very costly HTML structure.
-Wouldn't it be cool to only create, evaluate or render that template if a value arrives?
-
-In `@rx-angular/template`, we provide channels for the 3 RxJS ones as well as the 4th state in the reactive context, 🔥`suspense`🔥.
-
-The context naming is prefixed with `rx` as always in this repo:
-
-- 💡`rxSuspense`
-- `rxNext`
-- `rxError`
-- `rxComplete`
-
-This is used internally in different implementations like `RxNotification` or `RxViewContext`,
-but also exposed over the public API over the template names and the local variables.
-
-We can find those naming conventions when using a structural directive like `*rxLet` and their
-template bindings or local variables.
-
-If we create a template to be presented for the loading state we can use `ng-template` as following:
+The `rxLet` directive will take care of deriving the reactive context from the source
+observable and displaying the corresponding template accordingly.
 
 ```html
 <ng-container
-  *rxLet="hero$; let hero; suspense: suspenseView; error: errorView; complete: completeView"
+  *rxLet="
+    value$;
+    let value;
+    error: error;
+    complete: complete;
+    suspense: suspense;
+  "
 >
-  {{ hero.name }}
-  <ng-container>
-    <ng-template #suspenseView>Loading...</ng-template>
-    <ng-template #errorView>Error!</ng-template>
-    <ng-template #completeView>Complete.</ng-template></ng-container
-  ></ng-container
->
+  {{ value }}
+</ng-container>
+
+<ng-template #suspense>SUSPENSE</ng-template>
+<ng-template #error>ERROR</ng-template>
+<ng-template #complete>COMPLETE</ng-template>
 ```
 
-The value of the different channels can also be accessed by the template variables.
-The only difference here, they are prefixed with an '$' character.
+> The initial suspense template will be displayed when the bound `Observable` has not yet emitted
+> a value or emits `undefined` as a value
 
-```html
-<ng-container
-  *rxLet="hero$; let hero; s = $suspense; e = $error; c = $complete"
->
-  {{ s }}, {{ hero }}, {{ e }}, {{ c }}
-  <ng-container></ng-container
-></ng-container>
+The following values will result in the `suspense` template being displayed:
+
+```ts
+// all of the following values will result in the suspense template being displayed
+
+value$ = undefined;
+
+value$ = new Subject();
+
+value$ = new BehaviorSubject(undefined);
 ```
 
-The respective typings look like that:
 
-```typescript
-// TemplateManager - view context
-interface RxViewContext<T> {
-  $implicit: T; // next
+### Reactive Context Variables
 
-  suspense: boolean;
-  error: false | Error;
+The `RxViewContext` interface defines all possible states we can use in our template
+to enrich the user experience.
+
+```ts
+export interface RxViewContext<T> {
+  // to enable `let` syntax we have to use $implicit (var; let v = var)
+  $implicit: T;
+  // set context var complete to true (var$; let e = error)
+  error: boolean | Error;
+  // set context var complete to true (var$; let c = complete)
   complete: boolean;
+  // set context var suspense to true (var$; let s = suspense)
+  suspense: boolean;
 }
 ```
 
-Another situation where you will find the extended reactive context channels is when you use the `renderCallback` in the template:
+The following example showcases how to use the reactive context by using
+the context variables.
 
-```typescript
-readonly renderCallback$ = new Subject<string>();
-```
+The `rxLet` directive will take care of deriving the reactive context from the source
+observable and set the corresponding context accordingly.
 
 ```html
-<ng-template
-  let-content
-  [rxLet]="content$"
-  (rendered)="onTemplateRendered($event)"
+<ng-container
+  *rxLet="
+    value$;
+    let value;
+    let error = error;
+    let complete = complete;
+    let suspense = suspense;
+  "
 >
-  {{ content }}
-</ng-template>
+  {{ value }}
+
+  <loader *ngIf="suspense;"></loader>
+  <error *ngIf="error;"></error>
+  <complete *ngIf="complete; then: complete"></complete>
+
+</ng-container>
 ```
 
-or in the class:
+> The initial suspense context will only be displayed for a given `Observable` that
+> emits an `undefined` value. If no value is provided or emitted, no template will be rendered.
 
-```typescript
- @ViewChild(LetDirective) rxLet: LetDirective<string>;
- this.rxLet.rendered.subscribe(value => console.log('afterRender', value));
+The following values will result in the `suspense` context being rendered:
+
+```ts
+// all of the following values will result in the suspense context being set to true
+
+value$ = new BehaviorSubject(undefined);
+
+values$ = service.asyncOperation().pipe(startWith(undefined));
 ```
-
-In both cases the type of $event is `RxNotification` which is typed like this:
-
-```typescript
-import { Notification } from 'rxjs';
-export const enum RxNotificationKind {
-  Suspense = 'suspense',
-  Next = 'next',
-  Error = 'error',
-  Complete = 'complete',
-}
-```
-
-To sum up, we now know that `@rx-angular/template` provides an extended reactive context with the `suspense` channel.
-Use suspense as a template wherever possible as it reduces rendering work drastically.
-Also, be sure to remember that we have also access to the values of the 4 channels as local variables in the template and as the notifications from the render callback.
