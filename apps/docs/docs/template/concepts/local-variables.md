@@ -15,21 +15,17 @@ Both ways can reduce the usage of pipes the `async` pipe (or any other pipe).
 **With `async` pipe**
 
 ```html
-<ng-container>
-    {{ n | async }} {{ n | async}} {{ n | async}}
-</ng-container>
+<ng-container> {{ n | async }} {{ n | async}} {{ n | async}} </ng-container>
 ```
 
 **With `*rxLet` directive**
 
 ```html
-<ng-container *rxLet="num$; let n;">
-    {{ n }} {{ n }} {{ n }}
-</ng-container>
+<ng-container *rxLet="num$; let n;"> {{ n }} {{ n }} {{ n }} </ng-container>
 ```
 
 With directive's we can now provide custom values to the consumer.
- Angular does this in e.g. the `*ngFor` directive with local variables like `even` or `odd`.
+Angular does this in e.g. the `*ngFor` directive with local variables like `even` or `odd`.
 
 ```
 <ng-container *ngFor="let item in list; let e = even">

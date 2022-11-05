@@ -5,64 +5,165 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+
+concurrency:
+  # Group concurrency on workflow, then:
+  # - Is merge run? Group on branch name (`refs/heads/main`)
+  # - Is pull request? Group on pull request branch name, for example `feat/add-awesome-feature`
+  group: >-
+    ${{ github.workflow }}-${{
+      github.event_name == 'push'
+        && github.ref
+        || github.head_ref
+    }}
+  # Run merge workflows in sequence to prevent parallel deployments and releases
+  # Cancel stale pull request runs in progress for the same branch
+  cancel-in-progress: ${{ github.event_name != 'push' }}
+
 env:
-  NX_CLOUD_DISTRIBUTED_EXECUTION: true
-  NX_DISTRIBUTED_TASK_EXECUTION: true
+  NODE_OPTIONS: --max-old-space-size=6144
   NX_VERBOSE_LOGGING: false
+  docs-name: docs
+  docs-path: dist/apps/docs
 
 jobs:
-  agents:
+  dte_agents:
+    name: DTE Agent ${{ matrix.agent }}
     runs-on: ubuntu-latest
-
-    name: Agent 1
     timeout-minutes: 20
 
+    # The Free GitHub plan has a limit of 20 concurrent jobs on Ubuntu images
+    # Reference: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration
+    # If we need to, we can optimize for 2 simultaneous workflow runs:
+    # 2 x 1 main job   =  2 concurrent jobs
+    # 2 x 9 agent jobs = 18 concurrent jobs
+    # Total            = 20 concurrent jobs
+    #
+    # However, we don't have many projects or targets in this workspace, so we
+    # lower the number of agents to reduce spent compute time.
     strategy:
       matrix:
-        agent: [1, 2, 3]
+        # Must match the argument passed to `nx-cloud --agent-count` in the dte_coordinator job
+        agent: [1, 2, 3, 4]
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/setup
+      - name: Checkout all commits
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up dependencies
+        uses: ./.github/actions/setup
 
-      - name: Start Nx Agent ${{ matrix.agent }}
+      - name: Start Nx Cloud DTE Agent
         run: yarn nx-cloud start-agent
 
-  build:
+  # We're using Nx Cloud for Distributed Task Execution
+  # Reference: https://nx.dev/using-nx/dte
+  #
+  # The coordinator outputs the combination of task outputs from the agents,
+  # both terminal and file outputs
+  dte_coordinator:
+    name: DTE Coordinator
     runs-on: ubuntu-latest
+    env:
+      NX_CLOUD_DISTRIBUTED_EXECUTION: true
+      NX_DISTRIBUTED_TASK_EXECUTION: true
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/setup
+      - name: Checkout all commits
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up dependencies
+        uses: ./.github/actions/setup
 
-      - run: yarn nx-cloud start-ci-run
+      - name: Start Nx Cloud DTE
+        # The --agent-count parameter must match the number of strategies run by the dte_agents job
+        run: yarn nx-cloud start-ci-run --agent-count=4
 
+      - name: Lint Nx workspace
+        env:
+          # DTE is disabled to run this step on the DTE coordinator while the agents are set up
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false
+          NX_DISTRIBUTED_TASK_EXECUTION: false
+        run: yarn nx workspace-lint
+      - name: Check formatting
+        env:
+          # DTE is disabled to run this step on the DTE coordinator while the agents are set up
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false
+          NX_DISTRIBUTED_TASK_EXECUTION: false
+        run: yarn nx format:check
+
+      # Distribution strategy for 2 vCPUs per hosted runner (GitHub Free):
+      #
+
+      # lint: 2 tasks assigned at a time, 1 task per vCPU
       - name: Run Affected lint
-        run: yarn nx affected:lint --parallel --maxParallel=3
+        run: yarn nx affected:lint --parallel --max-parallel=2 --quiet
 
+      # test: 1 task assigned at a time with 2 parallel processes, 1 process per vCPU
       - name: Run Affected test
-        run: yarn nx affected:test --parallel --maxParallel=3
+        id: test
+        run: yarn nx affected:test --parallel --max-parallel=1 --max-workers=2 --ci --code-coverage
 
-      - name: Run Affected e2e
-        run: yarn nx affected:e2e
-
-      # don't run build in parallel, can cause dead locks
+      # build: 2 tasks assigned at a time, 1 task per vCPU
       - name: Run Affected build
-        run: yarn nx affected:build --exclude=docs --parallel=false
+        run: yarn nx affected:build --exclude=docs --parallel --max-parallel=2
 
-      - run: yarn nx-cloud stop-all-agents
+      # e2e: 1 tasks assigned at a time, 1 process per agent
+      - name: Run Affected e2e
+        run: yarn nx affected:e2e --max-parallel=1
+
+      - name: Stop Nx Cloud DTE agents
+        if: ${{ always() }}
+        run: yarn nx-cloud stop-all-agents
 
       - name: Upload coverage to Codecov
+        if: steps.test.outcome == 'success'
         uses: codecov/codecov-action@v3
         with:
-            token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
+  # The docs project is built in a separate job because it requires Node.js 16
   build-docs:
+    name: Build docs
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+
+    steps:
+      - name: Checkout all commits
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up dependencies
+        uses: ./.github/actions/setup
+        with:
+          # Docusaurus needs Node.js 16
+          node-version: 16
+
+      - name: Build docs
+        env:
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false
+          NX_DISTRIBUTED_TASK_EXECUTION: false
+        run: yarn nx build docs
+
+      - name: '[Merge] Upload docs'
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.docs-name }}
+          path: ${{ env.docs-path }}
+
+  deploy-docs:
+    name: '[Merge] Deploy docs'
     runs-on: ubuntu-latest
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+    if: github.ref == 'refs/heads/main'
 
     # Deploy to the github-pages environment
     environment:
@@ -70,50 +171,23 @@ jobs:
       url: www.rx-angular.io
       #url: ${{ steps.deployment.outputs.page_url }}
 
-    env:
-      NX_CLOUD_DISTRIBUTED_EXECUTION: false
-      NX_DISTRIBUTED_TASK_EXECUTION: false
-
-    if: github.ref == 'refs/heads/main'
-
-    needs: [build]
+    needs: [build-docs]
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
+      - name: Download docs
+        uses: actions/download-artifact@v3
         with:
-          # Docusaurus needs Node.js 16
-          node-version: 16
+          name: ${{ env.docs-name }}
+          path: ${{ env.docs-path }}
 
-      - name: Setup Pages
+      - name: Set up GitHub Pages
         uses: actions/configure-pages@v2
 
-      # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
-      # - run: yarn nx-cloud start-ci-run
-
-      - run: yarn nx build docs
-
-      - name: Upload artifact
+      - name: Upload docs to GitHub Pages
         uses: actions/upload-pages-artifact@v1
         with:
-          # upload dist/docs
-          path: 'dist/apps/docs'
+          path: ${{ env.docs-path }}
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy docs to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
-
-      # @Notice: temporary skip Nx cloud for this job as it's hanging indefinitely in the CI.
-      # - run: yarn nx-cloud stop-all-agents
-
-#      - uses: EndBug/add-and-commit@v4
-#        with:
-#          add: 'docs/dist/*'
-#          author_name: Github Action
-#          message: 'chore(docs): update GitHub pages'
-#          # Name of the branch to use, if different from the one that triggered the workflow
-#          # Default: the branch that triggered the workflow (from GITHUB_REF)
-#          ref: 'github-pages'
-#        env:
-#          # This is necessary in order to push a commit to the repo
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

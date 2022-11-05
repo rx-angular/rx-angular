@@ -5,6 +5,7 @@
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/template/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/template/lcov-report/index.html)
 
 ## A lib for handling data streams in templates for high performance and ergonomic Angular UI's in large scale applications
+
 @rx-angular/template was specifically designed to help developers reduce the boilerplate in templates and have performant change detection rendering and provide a migration path to go full zone-less.
 
 ![template logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/template/docs/images/template_logo.png)
@@ -89,7 +90,7 @@ export class MyModule {}
 ## Version Compatibility
 
 | Angular                | RxJS                 | @rx-angular/template |
-|------------------------|----------------------|----------------------|
+| ---------------------- | -------------------- | -------------------- |
 | `14`                   | `^7.4.0`             | `> 1.0.0-beta.29`    |
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-beta.29`    |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-beta.29`   |
