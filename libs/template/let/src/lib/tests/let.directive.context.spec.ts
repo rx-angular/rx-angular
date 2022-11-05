@@ -96,7 +96,7 @@ const setUpFixture = () => {
   nativeElement = fixture.nativeElement;
 };
 
-describe('LetDirective when template binding with all templates', () => {
+describe('LetDirective reactive context variables', () => {
   beforeAll(() => mockConsole());
   beforeEach(setupTestComponent);
   beforeEach(setUpFixture);
@@ -132,6 +132,7 @@ describe('LetDirective when template binding with all templates', () => {
       component.value$ = new BehaviorSubject(undefined);
       fixture.detectChanges();
       expectContextToBe('suspense');
+      expectContentToBe('undefined');
     });
 
     it('should render "complete" template on the observable completion', () => {
@@ -146,17 +147,19 @@ describe('LetDirective when template binding with all templates', () => {
       component.value$ = throwError(() => new Error('test error'));
       fixture.detectChanges();
       expectContextToBe('error');
+      expectContentToBe('undefined');
     });
 
     it('should render "complete" template when observable completes immediately (by passing EMPTY)', () => {
       component.value$ = EMPTY;
       fixture.detectChanges();
       expectContextToBe('complete');
+      expectContentToBe('undefined');
     });
   });
 
   describe('ongoing rendering', () => {
-    it('should render nothing when switching from undefined to undefined observable', () => {
+    it('should render nothing when switching from undefined to an observable that emits no value', () => {
       expect(contentElement()).toBeNull();
       expect(contextElement()).toBeNull();
       component.value$ = new Subject();
