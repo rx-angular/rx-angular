@@ -104,7 +104,7 @@ export function stateful<T, A, B, C, D, E>(
  *   )
  * );
  *
- * @param {OperatorFunction<T, A>} op - one or multiple passed operator comma separated
+ * @param {OperatorFunction<T, A>} optionalDerive - one or multiple passed operator comma separated
  *
  * @docsPage stateful
  * @docsCategory operators
