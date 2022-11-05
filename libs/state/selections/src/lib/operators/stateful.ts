@@ -39,7 +39,6 @@ import { pipeFromArray } from '../utils/pipe-from-array';
  *   )
  * );
  *
- * @param {OperatorFunction<T, A>} op - one or multiple passed operator comma separated
  * @return OperatorFunction<T, NonUndefined<A>>
  *
  * @docsPage stateful
