@@ -1,5 +1,5 @@
 export { createAccumulationObservable } from './lib/accumulation-observable';
-export { CompareFn, KeyCompareMap, PickSlice } from './lib/interfaces/index';
+export { CompareFn, KeyCompareMap, PickSlice } from './lib/interfaces';
 export { AccumulationFn, Accumulator } from './lib/model';
 export {
   distinctUntilSomeChanged,
