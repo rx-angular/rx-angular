@@ -192,6 +192,7 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v1
 
+  # This is just a 'ghost' workflow to have all the github CI passed
   build:
     name: build
     runs-on: ubuntu-latest
