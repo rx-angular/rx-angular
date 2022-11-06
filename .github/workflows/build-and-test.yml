@@ -191,3 +191,13 @@ jobs:
       - name: Deploy docs to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: build
+        run: echo Hello, world!
+
+
