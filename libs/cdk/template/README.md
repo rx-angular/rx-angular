@@ -28,8 +28,3 @@ npm install --save @rx-angular/cdk
 # or
 yarn add @rx-angular/cdk
 ```
-
-## Documentation
-
-- [Template Manager](https://rx-angular.io/docs/cdk/template/template-manager)
-- [List Manager](https://rx-angular.io/docs/cdk/template/list-manager)
