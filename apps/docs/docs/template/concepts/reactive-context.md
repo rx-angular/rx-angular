@@ -34,6 +34,18 @@ The `@rx-angular/template` directives are capable of
 deriving the reactive context for you.
 There are two ways of handling them, with `reactive context templates` or `reactive context variables`.
 
+The following table shows how the reactive context is treated on initial rendering. Note how there are
+slight differences between context templates and context variables.
+
+| value                                             | Context Templates | Context Variables |
+|---------------------------------------------------|-------------------|-------------------|
+| `undefined`                                       | suspense          | no render         |
+| `primitive values` (number, string, boolean, ..)  | next              | suspense          |
+| `Observable` emitting `undefined`                 | suspense          | suspense          |
+| `Observable` emitting no value (e.g `NEVER`)      | suspense          | no render         |
+| `Observable` emitting any value != undefined      | next              | next              |
+| `Observable` completing (e.g `EMPTY`)             | complete          | complete          |
+| `Observable` throwing an error                    | error             | error             |
 
 ### Reactive Context Templates
 
