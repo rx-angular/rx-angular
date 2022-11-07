@@ -1,7 +1,7 @@
 # Resources
 
 **Example applications:**  
-A example application is available on [GitHub](https://github.com/tastejs/angular-movies/tree/main/projects/movies/src/app/pages/movie-detail-page).
+An example application is available on [GitHub](https://github.com/tastejs/angular-movies/tree/main/projects/movies/src/app/pages/movie-detail-page).
 
 # Motivation
 
