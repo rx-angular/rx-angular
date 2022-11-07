@@ -108,4 +108,3 @@ export class IfVisibleDirective<U> extends Hooks implements OnInit {
     });
   }
 }
-
