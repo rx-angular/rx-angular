@@ -36,5 +36,5 @@ yarn add @rx-angular/cdk
 
 - [Render Strategies](https://rx-angular.io/docs/cdk/render-strategies)
   - [Strategies](https://rx-angular.io/docs/cdk/render-strategies/strategies)
-    - [Basic Strategies](https://rx-angular.io/docs/cdk/render-strategies/basic-strategies)
-    - [Concurrent-strategies](https://rx-angular.io/docs/cdk/render-strategies/concurrent-strategies)
+    - [Basic Strategies](https://rx-angular.io/docs/cdk/render-strategies/strategies/basic-strategies)
+    - [Concurrent-strategies](https://rx-angular.io/docs/cdk/render-strategies/strategies/concurrent-strategies)

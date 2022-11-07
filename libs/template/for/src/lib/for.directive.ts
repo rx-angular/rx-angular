@@ -33,7 +33,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import { switchAll } from 'rxjs/operators';
+import { shareReplay, switchAll } from 'rxjs/operators';
 import { RxForViewContext } from './for-view-context';
 
 /**
@@ -400,7 +400,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   private readonly values$ = this.observables$.pipe(
     coerceObservableWith(),
-    switchAll()
+    switchAll(),
+    shareReplay({ refCount: true, bufferSize: 1 })
   );
 
   /** @internal */

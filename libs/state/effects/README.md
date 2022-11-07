@@ -43,4 +43,4 @@ nx migrate @rx-angular/state
 
 ## Documentation
 
-- [RxEffects](https://github.com/rx-angular/rx-angular/tree/main/libs/state/effects/docs)
+- [RxEffects](https://www.rx-angular.io/docs/state/effects#resources)

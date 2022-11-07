@@ -1,8 +1,3 @@
-## Resources
-
-**Example applications:**
-A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-state-rx-effects).
-
 ## Motivation
 
 ![rx-angular--state--effects--motivation--michael-hladky](https://user-images.githubusercontent.com/10064416/154173406-47245226-e56a-43b1-aec6-bbf1efc535b9.png)
