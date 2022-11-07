@@ -1,6 +1,5 @@
 import {
   ChangeDetectorRef,
-  ElementRef,
   EmbeddedViewRef,
   ErrorHandler,
   NgZone,
@@ -42,11 +41,11 @@ export interface RxViewContext<T> {
   // to enable `let` syntax we have to use $implicit (var; let v = var)
   $implicit: T;
   // set context var complete to true (var$; let e = $error)
-  $error: false | Error;
+  error: boolean | Error;
   // set context var complete to true (var$; let c = $complete)
-  $complete: boolean;
+  complete: boolean;
   // set context var suspense to true (var$; let s = $suspense)
-  $suspense: any;
+  suspense: boolean;
 }
 
 export interface RxRenderAware<T> {
@@ -83,11 +82,14 @@ export type UpdateViewContext<T, C, U = unknown> = (
   computedContext?: U
 ) => void;
 
-export interface RxTemplateSettings<T, C, U = unknown> {
-  patchZone: NgZone | false;
+export interface RxTemplateSettings<T, C> {
+  viewContainerRef: ViewContainerRef;
+  customContext?: (value: T) => Partial<C>;
+}
+
+export interface RxListTemplateSettings<T, C, U = unknown> {
   viewContainerRef: ViewContainerRef;
   createViewContext: CreateViewContext<T, C, U>;
   updateViewContext: UpdateViewContext<T, C, U>;
   initialTemplateRef?: TemplateRef<C>;
-  customContext?: (value: T) => any;
 }

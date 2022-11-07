@@ -2,6 +2,48 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0-rc.3](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.2...template@1.0.0-rc.3) (2022-09-23)
+
+
+### Bug Fixes
+
+* turn off updating deps in dist package.json ([faec3d4](https://github.com/rx-angular/rx-angular/commit/faec3d492a513d13cf78c4d2248a0dfbf18e5a52)), closes [#1405](https://github.com/rx-angular/rx-angular/issues/1405)
+
+
+
+# [1.0.0-rc.2](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.1...template@1.0.0-rc.2) (2022-09-13)
+
+
+### Bug Fixes
+
+* **template:** use rxjs version 6 compatible imports ([9d1d23d](https://github.com/rx-angular/rx-angular/commit/9d1d23de2e7f064783c2103380fe9c00356bb7b8))
+
+
+
+# [1.0.0-rc.1](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.0...template@1.0.0-rc.1) (2022-08-28)
+
+
+### Features
+
+* **template:** harmonize LetDirective inputs ([1c8377d](https://github.com/rx-angular/rx-angular/commit/1c8377dbd45779b1395945303fd57948a53808b5))
+* **template:** implement rxLet template-triggers ([fa3b820](https://github.com/rx-angular/rx-angular/commit/fa3b8207bc717cc92a75e059a991450fc75c69e7))
+* **template:** introduce rxFor stable version ([3bdb702](https://github.com/rx-angular/rx-angular/commit/3bdb702d7b4bd66e5fb9965d6fd70f7d27492067))
+* **template:** make rxFor behave as drop-in replacement for ngFor ([49e7763](https://github.com/rx-angular/rx-angular/commit/49e77638befabf4568c8fe04acabcff7541acf30))
+* **template:** remove leading $ on RxViewContext properties ([16aab61](https://github.com/rx-angular/rx-angular/commit/16aab61ceb16216ed36defe066e4f40804140afa))
+
+
+### Performance Improvements
+
+* **template:** fix push pipe over-rendering on initialization ([6900f86](https://github.com/rx-angular/rx-angular/commit/6900f86b26c5d1e25cd29fd2203c0085b57bbb89))
+
+
+### BREAKING CHANGES
+
+* **template:** context variables for error, suspense and complete were renamed, refer to #431
+* **template:** Template binding inputs changed, please refer to #431.
+
+
+
 # [1.0.0-beta.33](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.32...template@1.0.0-beta.33) (2022-06-07)
 
 

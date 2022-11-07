@@ -8,7 +8,8 @@
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/template/tsconfig.lib.json",
-        "project": "libs/template/ng-package.json"
+        "project": "libs/template/ng-package.json",
+        "updateBuildableProjectDepsInPackageJson": false
       },
       "dependsOn": [
         {
@@ -52,30 +53,10 @@
       "executor": "@nrwl/jest:jest",
       "options": {
         "jestConfig": "libs/template/jest.config.js",
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "codeCoverage": true
       },
-      "outputs": ["coverage/libs/template"]
-    },
-    "build-docs": {
-      "executor": "@nrwl/workspace:run-commands",
-      "sequential": true,
-      "options": {
-        "commands": [
-          {
-            "command": "nx test template --codeCoverage && nx build-test-coverage-badge template"
-          }
-        ]
-      }
-    },
-    "build-test-coverage-badge": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/template/cobertura-coverage.xml -d docs/test-coverage/template"
-          }
-        ]
-      }
+      "outputs": ["coverage/template"]
     },
     "link": {
       "executor": "@nrwl/workspace:run-commands",
@@ -118,11 +99,9 @@
     "version": {
       "executor": "@jscutlery/semver:version",
       "options": {
-        "push": true,
         "noVerify": true,
         "baseBranch": "main",
         "versionTagPrefix": "${target}@",
-        "postTargets": ["template:github"],
         "commitMessageFormat": "release(${projectName}): ${version}"
       }
     },

@@ -78,7 +78,7 @@ function defaultCompare<T>(oldVal: T, newVal: T): boolean {
  * // { age: 5, name: 'Han Solo' }
  *
  * @param {K[]} keys String key for object property lookup on each item.
- * @param {KeyCompareMap<T>} [compare] Optional KeyCompareMap to explicitly define comparisons for some of the keys
+ * @param {KeyCompareMap<T>} [keyCompareMap] Optional KeyCompareMap to explicitly define comparisons for some of the keys
  * @docsPage distinctUntilSomeChanged
  * @docsCategory operators
  */
@@ -97,7 +97,7 @@ export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
   if (keyCompareMap !== undefined) {
     const compare = (key: K) => {
       return keyCompareMap.hasOwnProperty(key) &&
-      keyCompareMap[key] !== undefined
+        keyCompareMap[key] !== undefined
         ? (keyCompareMap[key] as CompareFn<T[K]>)
         : defaultCompare;
     };

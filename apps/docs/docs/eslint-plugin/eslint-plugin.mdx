@@ -1,0 +1,17 @@
+---
+sidebar_label: '@rx-angular/eslint-plugin'
+sidebar_position: 1
+title: 'ESLint plugin'
+hide_title: true
+---
+
+import Readme, {
+  toc as readmeToc,
+} from '@site/../../libs/eslint-plugin/README.md';
+
+<Readme />
+
+<!-- Workaround for generating table of contents -->
+<!-- See https://github.com/facebook/docusaurus/issues/3915#issuecomment-896193142 -->
+
+export const toc = [...readmeToc];

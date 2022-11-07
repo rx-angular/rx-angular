@@ -7,6 +7,7 @@ import {
 import { combineLatest, Subject } from 'rxjs';
 import { ContentChildComponent } from './content-child.component';
 import { ViewChildComponent } from './view-child.component';
+import { RxActionFactory } from '@rx-angular/state/actions';
 
 @Component({
   selector: 'rxa-projected-views',
@@ -17,7 +18,7 @@ import { ViewChildComponent } from './view-child.component';
         <button
           mat-raised-button
           [unpatch]="['click']"
-          (click)="trigger$.next($event.timeStamp)"
+          (click)="ui.trigger($event.timeStamp)"
         >
           tick
         </button>
@@ -26,16 +27,31 @@ import { ViewChildComponent } from './view-child.component';
       test1
       <rxa-view-child>
         <div>
-          <div *rxLet="renderCallback$; let renderCbVal; parent: false; patchZone: false">
+          <div
+            *rxLet="
+              renderCallback$;
+              let renderCbVal;
+              parent: false;
+              patchZone: false
+            "
+          >
             renderCallback: {{ renderCbVal }}
           </div>
-          <div *rxLet="trigger$; renderCallback: renderCallback$;let value; parent: true; patchZone: false">
+          <div
+            *rxLet="
+              ui.trigger$;
+              renderCallback: renderCallback$;
+              let value;
+              parent: true;
+              patchZone: false
+            "
+          >
             <rxa-content-child>
               <div #test>{{ value }}</div>
             </rxa-content-child>
           </div>
           <!--
-          <div *rxFor="trigger$; let value; parent: true">
+          <div *rxFor="ui.trigger$; let value; parent: true">
             <rxa-content-child>
               <div #test>{{ value }}</div>
             </rxa-content-child>
@@ -46,6 +62,7 @@ import { ViewChildComponent } from './view-child.component';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [RxActionFactory],
 })
 export class ProjectedViewsComponent {
   @ViewChildren('test') set test(t) {
@@ -68,8 +85,10 @@ export class ProjectedViewsComponent {
     );
   }
 
-  trigger$ = new Subject<any>();
+  constructor(private actions: RxActionFactory<{ trigger: number }>) {}
+
+  ui = this.actions.create();
   renderCallback$ = new Subject<any>();
 
-  triggerArr$ = combineLatest([this.trigger$]);
+  triggerArr$ = combineLatest([this.ui.trigger$]);
 }

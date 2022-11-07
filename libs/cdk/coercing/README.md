@@ -4,7 +4,7 @@
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
-## Convenience helper to easily coerce reactive values
+> Convenience helper to easily coerce reactive values
 
 `@rx-angular/cdk/coercing` is a small set of helpers designed to improve the DX when managing transformations between imperative and reactive values.
 It provides a strictly typed API to conveniently coerce imperative setters into reactive streams.
@@ -32,4 +32,4 @@ yarn add @rx-angular/cdk/coercing
 
 ## Documentation
 
-- [Coercion](https://github.com/rx-angular/rx-angular/tree/main/libs/cdk/coercing/docs/Readme.md)
+- [Coercion](https://rx-angular.io/docs/cdk/coercing)

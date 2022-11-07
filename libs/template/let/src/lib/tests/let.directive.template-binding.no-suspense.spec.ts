@@ -3,13 +3,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import { Observable, of, Subject } from 'rxjs';
-
 import { LetDirective } from '../let.directive';
+
 
 @Component({
   template: `
     <ng-container
-      *rxLet="value$; let value; rxComplete: complete; rxError: error"
+      *rxLet="value$; let value; complete: complete; error: error"
       >{{
         value === undefined
           ? 'undefined'

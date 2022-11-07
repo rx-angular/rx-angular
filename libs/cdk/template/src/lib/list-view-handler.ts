@@ -2,7 +2,7 @@ import {
   RxListTemplateChange,
   RxListTemplateChanges,
   RxListTemplateChangeType,
-  RxTemplateSettings,
+  RxListTemplateSettings,
 } from './model';
 import { EmbeddedViewRef, IterableChanges } from '@angular/core';
 import { RxListViewContext } from './list-view-context';
@@ -16,7 +16,7 @@ import { createEmbeddedView } from './utils';
  * @param templateSettings
  */
 export function getTemplateHandler<C extends RxListViewContext<T>, T>(
-  templateSettings: Omit<RxTemplateSettings<T, C>, 'patchZone'>
+  templateSettings: Omit<RxListTemplateSettings<T, C>, 'patchZone'>
 ): ListTemplateManager<T> {
   const {
     viewContainerRef,
@@ -36,9 +36,9 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
 
   // =====
 
-  function updateUnchangedContext(index: number, count: number) {
+  function updateUnchangedContext(item: T, index: number, count: number) {
     const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
-    view.context.updateContext({
+    updateViewContext(item, view, {
       count,
       index,
     });
@@ -92,7 +92,7 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
  * An object that holds methods needed to introduce actions to a list e.g. move, remove, insert
  */
 export interface ListTemplateManager<T> {
-  updateUnchangedContext(index: number, count: number): void;
+  updateUnchangedContext(item: T, index: number, count: number): void;
 
   insertView(item: T, index: number, count: number): void;
 
@@ -125,13 +125,19 @@ function getListChanges<T>(
     const item = record.item;
     if (record.previousIndex == null) {
       // insert
-      changesArr.push(getInsertChange(item, currentIndex === null ? undefined : currentIndex));
+      changesArr.push(
+        getInsertChange(item, currentIndex === null ? undefined : currentIndex)
+      );
       changedIdxs.add(item);
       notifyParent = true;
     } else if (currentIndex == null) {
       // remove
-      changesArr.push(getRemoveChange(item, adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex));
-      changedIdxs.add(item);
+      changesArr.push(
+        getRemoveChange(
+          item,
+          adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex
+        )
+      );
       notifyParent = true;
     } else if (adjustedPreviousIndex !== null) {
       // move
@@ -194,7 +200,10 @@ function getListChanges<T>(
   ): RxListTemplateChange {
     return [
       RxListTemplateChangeType.remove,
-      [item, adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex],
+      [
+        item,
+        adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex,
+      ],
     ];
   }
 }

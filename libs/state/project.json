@@ -8,7 +8,8 @@
       "executor": "@nrwl/angular:package",
       "options": {
         "tsConfig": "libs/state/tsconfig.lib.json",
-        "project": "libs/state/ng-package.json"
+        "project": "libs/state/ng-package.json",
+        "updateBuildableProjectDepsInPackageJson": false
       },
       "outputs": ["dist/libs/state"],
       "dependsOn": [
@@ -52,29 +53,10 @@
       "executor": "@nrwl/jest:jest",
       "options": {
         "jestConfig": "libs/state/jest.config.js",
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "codeCoverage": true
       },
-      "outputs": ["coverage/libs/state"]
-    },
-    "build-docs": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "nx test state --codeCoverage && nx build-test-coverage-badge state"
-          }
-        ]
-      }
-    },
-    "build-test-coverage-badge": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx istanbul-cobertura-badger -b jest-coverage-badge -r ./docs/test-coverage/state/cobertura-coverage.xml -d docs/test-coverage/state"
-          }
-        ]
-      }
+      "outputs": ["coverage/state"]
     },
     "perfBuild": {
       "executor": "@nrwl/node:build",

@@ -1,0 +1,15 @@
+---
+sidebar_label: '@rx-angular/template'
+sidebar_position: 1
+title: 'Template'
+hide_title: true
+---
+
+import Readme, { toc as readmeToc } from '@site/../../libs/template/README.md';
+
+<Readme />
+
+<!-- Workaround for generating table of contents -->
+<!-- See https://github.com/facebook/docusaurus/issues/3915#issuecomment-896193142 -->
+
+export const toc = [...readmeToc];

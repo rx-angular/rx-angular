@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule, Routes } from '@angular/router';
-import { ForModule } from '@rx-angular/template/experimental/for';
+import { ForModule } from '@rx-angular/template/for';
 import { LetModule } from '@rx-angular/template/let';
 import { RouteChangeComponent } from './route-change.component';
 import { RoutedNgForComponent } from './routed-ng-for.component';
