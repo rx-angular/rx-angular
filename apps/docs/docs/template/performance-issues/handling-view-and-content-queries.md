@@ -2,11 +2,11 @@
 
 ## ViewChild example (rxLet)
 
-`rxLet` is a structural directive, maintaining `EmbeddedViews` inside of a components template.
-Depending on the bound value as well as the configured `RxRenderStrategy`, updates processed by `rxLet` can
-be delayed.
+Structural directives maintain `EmbeddedViews` within a components' template.
+Depending on the bound value as well as the configured `RxRenderStrategy`, updates processed by the
+`@rx-angular/template` directives can be asynchronous.
 
-Whenever `rxLet` inserts or removes a template from its parent component, it has to inform it in order to
+Whenever a template gets inserted into, or removed from, its parent component, the directive has to inform the parent in order to
 update any view- or contentquery (`@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren`).
 
 Take a look at the following example:
