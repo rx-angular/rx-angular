@@ -1,11 +1,26 @@
 ---
 sidebar_label: 'Reactive context'
-sidebar_position: 1
+sidebar_position: 4
 title: 'Reactive context'
 hide_title: true
 ---
 
-# The extended reactive context in RxAngular
+# Reactive context
+
+![Reactive-Context](https://user-images.githubusercontent.com/10064416/192658822-67b51256-1c4a-49c7-8c48-6040b666d8a6.png)
+
+As asynchronous values to have special states.
+Those states are always hard to handle and produce brittle code, especially in the tenplate.
+
+In short, we can handle the following states in the template:
+
+- suspense
+- error
+- complete
+
+Read further for more details.
+
+## The extended reactive context in RxAngular
 
 If we think about any process, e.g. an HTTP request, we can differentiate different states in it.
 The request can start, result in a valid response or throws an error. After that, the process is completed.
@@ -52,7 +67,7 @@ If we create a template to be presented for the loading state we can use `ng-tem
 
 ```html
 <ng-container
-  *rxLet="hero$; let hero; rxSuspense: suspenseView; rxError: errorView; rxComplete: completeView"
+  *rxLet="hero$; let hero; suspense: suspenseView; error: errorView; complete: completeView"
 >
   {{ hero.name }}
   <ng-container>
@@ -68,7 +83,7 @@ The only difference here, they are prefixed with an '$' character.
 
 ```html
 <ng-container
-  *rxLet="hero$; let hero; s = $rxSuspense; e = $rxError; c = $rxComplete"
+  *rxLet="hero$; let hero; s = $suspense; e = $error; c = $complete"
 >
   {{ s }}, {{ hero }}, {{ e }}, {{ c }}
   <ng-container></ng-container
@@ -80,10 +95,11 @@ The respective typings look like that:
 ```typescript
 // TemplateManager - view context
 interface RxViewContext<T> {
-  $rxSuspense: boolean;
   $implicit: T; // next
-  $rxError: false | Error;
-  $rxComplete: boolean;
+
+  suspense: boolean;
+  error: false | Error;
+  complete: boolean;
 }
 ```
 
@@ -114,15 +130,12 @@ In both cases the type of $event is `RxNotification` which is typed like this:
 
 ```typescript
 import { Notification } from 'rxjs';
-export type RxNotificationKind =
-  | 'rxSuspense'
-  | 'rxNext'
-  | 'rxError'
-  | 'rxComplete';
-type NotificationExtract = 'value' | 'hasValue' | 'error';
-export type RxNotification<T> = Pick<Notification<T>, NotificationExtract> & {
-  kind: RxNotificationKind;
-};
+export const enum RxNotificationKind {
+  Suspense = 'suspense',
+  Next = 'next',
+  Error = 'error',
+  Complete = 'complete',
+}
 ```
 
 To sum up, we now know that `@rx-angular/template` provides an extended reactive context with the `suspense` channel.

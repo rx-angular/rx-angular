@@ -1,5 +1,7 @@
 ---
-sidebar_position: 1
+sidebar_label: 'PushPipe'
+sidebar_position: 4
+title: 'PushPipe'
 ---
 
 # PushPipe
