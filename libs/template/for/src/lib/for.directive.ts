@@ -13,14 +13,17 @@ import {
   OnInit,
   TemplateRef,
   TrackByFunction,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
-import { coerceDistinctWith, coerceObservableWith } from '@rx-angular/cdk/coercing';
+import {
+  coerceDistinctWith,
+  coerceObservableWith,
+} from '@rx-angular/cdk/coercing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import {
   createListTemplateManager,
   RxListManager,
-  RxListViewComputedContext
+  RxListViewComputedContext,
 } from '@rx-angular/cdk/template';
 
 import {
@@ -28,11 +31,10 @@ import {
   Observable,
   ReplaySubject,
   Subject,
-  Subscription
+  Subscription,
 } from 'rxjs';
-import { switchAll } from 'rxjs/operators';
+import { shareReplay, switchAll } from 'rxjs/operators';
 import { RxForViewContext } from './for-view-context';
-
 
 /**
  * @description Will be provided through Terser global definitions by Angular CLI
@@ -45,180 +47,25 @@ declare const ngDevMode: boolean;
  *
  * @description
  *
- * The `*rxFor` structural directive provides a convenient and performant way for rendering
- * templates out of a list of items.
- * Input values can be provided either as `Observable`, `Promise` or `static` values. Just as the `*ngFor` directive,
- *   the
- * `*rxFor` is placed on an
- * element, which becomes the parent of the cloned templates.
+ * The most common way to render lists in angular is by using the `*ngFor` structural directive. `*ngFor` is able
+ * to take an arbitrary list of data and repeat a defined template per item of the list. However, it can
+ * only do it synchronously.
  *
- * The `RxFor` implements `EmbeddedView Rendering`.
- * Compared to the `NgForOf`, `RxFor` treats each child template as single renderable entity. For each
- * change in the provided list of items it will apply and detect changes to only affected views.
+ * Compared to the `NgFor`, `RxFor` treats each child template as single renderable unit.
+ * The change detection of the child templates get prioritized, scheduled and executed by
+ * leveraging `RenderStrategies` under the hood.
+ * This technique enables non-blocking rendering of lists and can be referred to as `concurrent mode`.
  *
- * Under the hood, it leverages the power of the `StrategyCredential`s which in turn take care of scheduling and
- * prioritizing the change detection for each child template (aka item in the list).
- * This way the rendering behavior of each instance of `RxFor` can be configured individually.
+ * Read more about this in the [strategies
+ * section](https://www.rx-angular.io/docs/template/api/rx-for-directive#rxfor-with-concurrent-strategies).
  *
- * `RxStrategyCredentials` and `EmbeddedView Rendering` together build the basis for the `concurrent mode`. Based on
- * the configured strategy every template will get processed in an individual task, which enables chunked and
- * cancellable rendering of the list.
+ * Furthermore, `RxFor` provides hooks to react to rendered items in form of a `renderCallback: Subject`.
  *
- * As further improvement compared to the basic `*ngFor` implementation, `*rxFor` is able to take care of
- * `ChangeDetection` in situations which include `projected views` (aka `@ContentChild` or `@ViewChild`).
- * Learn more about this in the example section.
+ * Together with the `RxRenderStrategies`, this makes the rendering behavior extremely versatile
+ * and transparent for the developer.
+ * Each instance of `RxFor` can be configured to render with different settings.
  *
- *
- * ### Context Variables
- *
- * The following context variables are available for each template:
- *
- * - $implicit: `T` // the default variable accessed by `let val`
- * - item$: `Observable<T>` // the same value as $implicit, but as `Observable`
- * - index: `number` // current index of the item
- * - count: `number` // count of all items in the list
- * - first: `boolean` // true if the item is the first in the list
- * - last: `boolean` // true if the item is the last in the list
- * - even: `boolean` // true if the item has on even index (index % 2 === 0)
- * - odd: `boolean` // the opposite of even
- * - index$: `Observable<number>` // index as `Observable`
- * - count$: `Observable<number>` // count as `Observable`
- * - first$: `Observable<boolean>` // first as `Observable`
- * - last$: `Observable<boolean>` // last as `Observable`
- * - even$: `Observable<boolean>` // even as `Observable`
- * - odd$: `Observable<boolean>` // odd as `Observable`
- * - select: `(keys: (keyof T)[], distinctByMap) => Observable<Partial<T>>` // returns a selection function which
- * accepts an array of properties to pluck out of every list item. The function returns the selected properties of
- * the current list item as distinct `Observable` key-value-pair. See the example below:
- *
- * This example showcases the `select` view-context function used for deeply nested lists.
- *
- *  ```html
- * <ul>
- *   <li *rxFor="let hero of heroes$; trackBy: trackItem; let select = select;">
- *     <div>
- *       <strong>{{ hero.name }}</strong></br>
- *       Defeated enemies:
- *     </div>
- *      <span *rxFor="let enemy of select(['defeatedEnemies']); trackBy: trackEnemy;">
- *        {{ enemy.name }}
- *      </span>
- *   </li>
- * </ul>
- *  ```
- *
- * ### Input properties
- *
- *  - trackBy: `(index: number, item: T) => any`
- *  - trackBy: `keyof T`
- *  - strategy: `string`
- *  - strategy: `Observable<string>`
- *  - parent: `boolean`;
- *  - renderCallback: `Subject<T[]>`
- *
- *
- * ### Features of `*rxFor`
- *
- * Included features for `*rxFor`:
- * - Push based architecture
- * - Immutable as well as mutable data structures (`trackBy`)
- * - Provide a comprehensive set of context variables for each view
- * - Provide a way to fix `ChangeDetection` issues in `Projected Views` scenarios
- * - Notify about when rendering of child templates is finished (`renderCallback`)
- * - Reactive as well as imperative values in the template (`ngFor` drop-in replacement)
- * - `ListManager`: special logic for differ mechanism to avoid over-rendering; abstracts away low level logic
- * - render every `EmbeddedView` on its own while applying the configured `RxStrategyCredentials#behavior`
- * - cancel any scheduled work if a remove was triggered for a `trackById`
- * - cancel any update if a new update was triggered for the same `trackById`
- *
- *
- * ### Simple example using `*rxFor` with `Observable` values
- * ```html
- * <ul>
- *   <li *rxFor="let item of observableItems$; trackBy: trackItem">
- *      {{ item }}
- *   </li>
- * </ul>
- * ```
- *
- * ### Simple example using `*rxFor` with simple static values
- * ```html
- * <ul>
- *   <li *rxFor="let item of items; trackBy: trackItem">
- *      {{ item }}
- *   </li>
- * </ul>
- * ```
- *
- *
- * ### Using the context variables
- *
- * ```html
- * <ul>
- *   <li
- *     *rxFor="
- *       let item of observableItems$;
- *       let count = count;
- *       let index = index;
- *       let first = first;
- *       let last = last;
- *       let even = even;
- *       let odd = odd;
- *       trackBy: trackItem;
- *     "
- *   >
- *     <div>{{ count }}</div>
- *     <div>{{ index }}</div>
- *     <div>{{ item }}</div>
- *     <div>{{ first }}</div>
- *     <div>{{ last }}</div>
- *     <div>{{ even }}</div>
- *     <div>{{ odd }}</div>
- *   </li>
- * </ul>
- * ```
- *
- * ### Projected Views (`parent`)
- *
- * Imagine the following situation:
- *
- * ```ts
- * \@Component({
- *   selector: 'app-list-component',
- *   template: `
- *     <ng-content select="app-list-item"></ng-content>
- *   `
- * })
- * export class AppListComponent {
- *  \@ContentChildren(AppListItemComponent) appListItems: QueryList<AppListItemComponent>:
- * }
- * ```
- *
- * `AppListComponent` has a `contentOutlet` where it expects `AppListItemComponents` to be inserted into. In this case
- * `AppListComponent`s state is dependent on its `ContentChildren`.
- * This situation leads to the problem that `AppListComponent` needs to get informed about updates of its child views.
- * This is a known issue which has never been solved for `ngFor` (or other structural directives) especially in
- * combination with `CD OnPush` see here: (https://github.com/angular/angular/pull/35428)
- * `RxFor` solves this issue for you by providing a simple input parameter `parent: boolean`.
- * If value is set to `true` (default is `true`), `*rxFor` will automatically detect every other `Component` where its
- * `EmbeddedView`s were inserted into. Those components will get change detected as well in order to force
- * update their state accordingly.
- *
- * The usage of `AppListComponent` looks like this:
- *
- * ```html
- * <app-list-component>
- *   <app-list-item
- *     *rxFor="
- *       let item of observableItems$;
- *       parent: true;
- *     "
- *   >
- *     <div>{{ item }}</div>
- *   </app-list-item>
- * </app-list-component>
- * ```
- *
+ * Read more in the [official docs](https://www.rx-angular.io/docs/template/api/rx-for-directive)
  *
  * @docsCategory RxFor
  * @docsPage RxFor
@@ -245,7 +92,10 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    *
-   * @param potentialObservable
+   * @param { Observable<(U & NgIterable<T>) | undefined | null>
+   *       | (U & NgIterable<T>)
+   *       | null
+   *       | undefined } potentialObservable
    */
   @Input()
   set rxForOf(
@@ -279,39 +129,36 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /**
    * @description
-   * The rendering strategy to be used for each template of the list of items.
-   * Use it to dynamically manage your rendering strategy. You can switch the strategies
-   * imperatively (with a string) or by binding an Observable.
-   * The default strategy is `'normal'`.
+   *
+   * You can change the used `RenderStrategy` by using the `strategy` input of the `*rxFor`. It accepts
+   * an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/b0630f69017cc1871d093e976006066d5f2005b9/libs/cdk/render-strategies/src/lib/model.ts#L52).
+   *
+   * The default value for strategy is
+   * [`normal`](https://www.rx-angular.io/docs/template/cdk/render-strategies/strategies/concurrent-strategies).
+   *
+   * Read more about this in the
+   * [official docs](https://www.rx-angular.io/docs/template/api/rx-for-directive#use-render-strategies-strategy).
    *
    * @example
+   *
    * \@Component({
    *   selector: 'app-root',
    *   template: `
    *     <ng-container *rxFor="let hero of heroes$; strategy: strategy">
    *       <app-hero [hero]="hero"></app-hero>
    *     </ng-container>
-   *   `
-   * })
-   * export class AppComponent {
-   *   strategy = 'low';
-   * }
    *
-   * // OR
-   *
-   * \@Component({
-   *   selector: 'app-root',
-   *   template: `
    *     <ng-container *rxFor="let hero of heroes$; strategy: strategy$">
    *       <app-hero [hero]="hero"></app-hero>
    *     </ng-container>
    *   `
    * })
    * export class AppComponent {
-   *   strategy$ = new BehaviorSubject('immediate');
+   *   strategy = 'low';
+   *   strategy$ = of('immediate');
    * }
    *
-   * @param strategyName
+   * @param {string | Observable<string> | undefined} strategyName
    * @see {@link strategies}
    */
   @Input()
@@ -321,11 +168,21 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /**
    * @description
-   *  If `parent` is set to `true` (default to `true`), `*rxFor` will automatically detect every other `Component`
-   *   where its
-   * `EmbeddedView`s were inserted into. Those components will get change detected as well in order to force
-   * update their state accordingly. In the given example, `AppListComponent` will get notified about which insert
-   * or remove any `AppListItemComponent`.
+   *
+   * When local rendering strategies are used, we need to treat view and content queries in a
+   * special way.
+   * To make `*rxFor` in such situations, a certain mechanism is implemented to
+   * execute change detection on the parent (`parent`).
+   *
+   * This is required if your components state is dependent on its view or content children:
+   *
+   * - `@ViewChild`
+   * - `@ViewChildren`
+   * - `@ContentChild`
+   * - `@ContentChildren`
+   *
+   * Read more about this in the
+   * [official docs](https://www.rx-angular.io/docs/template/api/rx-for-directive#local-strategies-and-view-content-queries-parent).
    *
    * @example
    * \@Component({
@@ -348,16 +205,20 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *   items$ = itemService.getItems();
    * }
    *
-   * @param renderParent
+   * @param {boolean} renderParent
    */
   @Input('rxForParent') renderParent = this.strategyProvider.config.parent;
 
   /**
    * @description
+   *
    * A flag to control whether *rxFor templates are created within `NgZone` or not.
-   * By default `*rxFor` will create it's `EmbeddedViews` outside of `NgZone` which drastically speeds up the
-   * performance.
-   * If `patchZone` is set to `true` (defaults to `false`), `*rxFor` will create its EmbeddedViews inside of `NgZone`.
+   * The default value is `true, `*rxFor` will create it's `EmbeddedViews` inside `NgZone`.
+   *
+   * Event listeners normally trigger zone. Especially high frequently events cause performance issues.
+   *
+   * Read more about this in the
+   * [official docs](https://www.rx-angular.io/docs/template/api/rx-for-directive#working-with-event-listeners-patchzone).
    *
    * @example
    * \@Component({
@@ -368,7 +229,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *        *rxFor="
    *          let item of items$;
    *          trackBy: trackItem;
-   *          patchZone: true;
+   *          patchZone: false;
    *        "
    *      >
    *        <div>{{ item.name }}</div>
@@ -380,7 +241,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *   items$ = itemService.getItems();
    * }
    *
-   * @param patchZone
+   * @param {boolean} patchZone
    */
   @Input('rxForPatchZone') patchZone = this.strategyProvider.config.patchZone;
 
@@ -465,48 +326,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   /**
-   * @internal
-   * A function that defines how to track `updates` of items.
-   * In addition to track when items are added, moved, or removed you can provide a function that determines if any
-   * updates happened to an item. Use this is if you want to have even more control about what changes lead to
-   * re-renderings of the DOM.
-   *
-   * By default, rxFor identifies if an update happens by doing an (equality check `===`).
-   * When a function supplied, rxFor uses the result to identify the item node.
-   *
-   * @internal
-   * \@Component({
-   *   selector: 'app-root',
-   *   template: `
-   *    <app-list-component>
-   *      <app-list-item
-   *        *rxFor="
-   *          let item of items$;
-   *          trackBy: trackItem;
-   *          distinctBy: distinctItem;
-   *        "
-   *      >
-   *        <div>{{ item.name }}</div>
-   *      </app-list-item>
-   *    </app-list-component>
-   *   `
-   * })
-   * export class AppComponent {
-   *   items$ = itemService.getItems();
-   *   trackItem = (idx, item) => item.id;
-   *   // only changes to the name lead to a re-rendering of a child template
-   *   distinctItem = (itemA, itemB) => itemA.name === itemB.name;
-   * }
-   *
-   * @param distinctBy
-   */
-
-  /*@Input('rxForDistinctBy')*/
-  set distinctBy(distinctBy: (a: T, b: T) => boolean) {
-    this._distinctBy = distinctBy;
-  }
-
-  /**
    * @description
    * A `Subject` which emits whenever *rxFor finished rendering a set changes to the view.
    * This enables developers to perform actions when a list has finished rendering.
@@ -518,32 +337,36 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * The result of the `renderCallback` will contain the currently rendered set of items in the iterable.
    *
    * @example
-   * \@Component({
+   * \Component({
    *   selector: 'app-root',
    *   template: `
-   *    <app-list-component>
-   *      <app-list-item
-   *        *rxFor="
-   *          let item of items$;
-   *          trackBy: trackItem;
-   *          renderCallback: itemsRendered;
-   *        "
-   *      >
-   *        <div>{{ item.name }}</div>
-   *      </app-list-item>
-   *    </app-list-component>
-   *   `
+   *   <app-list-component>
+   *     <app-list-item
+   *       *rxFor="
+   *         let item of items$;
+   *         trackBy: trackItem;
+   *         renderCallback: itemsRendered;
+   *       ">
+   *       <div>{{ item.name }}</div>
+   *     </app-list-item>
+   *   </app-list-component>
+   * `
    * })
    * export class AppComponent {
    *   items$: Observable<Item[]> = itemService.getItems();
    *   trackItem = (idx, item) => item.id;
-   *   // only changes to the name lead to a re-rendering of a child template
-   *   distinctItem = (itemA, itemB) => itemA.name === itemB.name;
    *   // this emits whenever rxFor finished rendering changes
    *   itemsRendered = new Subject<Item[]>();
+   *
+   *   constructor(elementRef: ElementRef<HTMLElement>) {
+   *     itemsRendered.subscribe(() => {
+   *       // items are rendered, we can now scroll
+   *       elementRef.scrollTo({bottom: 0});
+   *     })
+   *   }
    * }
    *
-   * @param renderCallback
+   * @param {Subject<U>} renderCallback
    */
   @Input('rxForRenderCallback') set renderCallback(renderCallback: Subject<U>) {
     this._renderCallback = renderCallback;
@@ -577,7 +400,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   private readonly values$ = this.observables$.pipe(
     coerceObservableWith(),
-    switchAll()
+    switchAll(),
+    shareReplay({ refCount: true, bufferSize: 1 })
   );
 
   /** @internal */

@@ -1,7 +1,6 @@
 import {
   ChangeDetectorRef,
   Directive,
-  EmbeddedViewRef,
   ErrorHandler,
   Input,
   NgZone,
@@ -62,113 +61,31 @@ export interface RxLetViewContext<T> extends RxViewContext<T> {
  * @Directive LetDirective
  *
  * @description
+ * In Angular there is one way to handle asynchronous values or streams in the template, the `async` pipe.
+ * Even though the async pipe evaluates such values in the template, it is insufficient in many ways.
+ * To name a few:
+ * * it will only update the template when `NgZone` is also aware of the value change
+ * * it leads to over rendering because it can only run global change detection
+ * * it leads to too many subscriptions in the template
+ * * it is cumbersome to work with values in the template
  *
- * The `*rxLet` directive serves a convenient way of binding observables to a view context. Furthermore, it helps
- * you structure view-related models into view context scope (DOM element's scope).
+ * read more about the LetDirective in the [official docs](https://www.rx-angular.io/docs/template/api/let-directive)
  *
- * Under the hood, it leverages a `RenderStrategy` which in turn takes care of optimizing the change detection
- * of your component or embedded view. The `LetDirective` will render its template and manage change detection after it
- *   got an initial value. So if the incoming `Observable` emits its value lazily (e.g. data coming from `Http`), your
- *   template will be rendered lazily as well. This can very positively impact the initial render performance of your
- *   application.
+ * **Conclusion - Structural directives**
  *
+ * In contrast to global change detection, structural directives allow fine-grained control of change detection on a per directive basis.
+ * The `LetDirective` comes with its own way to handle change detection in templates in a very efficient way.
+ * However, the change detection behavior is configurable on a per directive or global basis.
+ * This makes it possible to implement your own strategies, and also provides a migration path from large existing apps running with Angulars default change detection.
  *
- * ### Problems with `async` and `*ngIf`
- *
- * In Angular, a way of binding an observable to the view could look like that:
- * ```html
- * <ng-container *ngIf="observableNumber$ | async as n">
- *   <app-number [number]="n"></app-number>
- *   <app-number-special [number]="n"></app-number-special>
- * </ng-container>
- * ```
- *
- * The problem is that `*ngIf` interferes with rendering and in case of a `0` (a falsy value) the component
- * would be hidden. This issue doesn't concern the `LetDirective`.
- *
- * The `AsyncPipe` relies on the Zone to be present - it doesn't really trigger change detection by itself.
- * It marks the component and its children as dirty waiting for the Zone to trigger change detection. So, in case
- * you want to create a zone-less application, the `AsyncPipe` won't work as desired. `LetDirective` comes
- * with its own strategies to manage change detection every time a new notification is sent from
- * the bound Observable.
- *
- *
- * ### Features of `*rxLet`
- *
- * Included features for `*rxLet`:
- * - binding is always present. (see "Problems with `async` and `*ngIf`" section below)
- * - it takes away the multiple usages of the `async` or `push` pipe
- * - a unified/structured way of handling null and undefined
- * - triggers change-detection differently if `zone.js` is present or not (`ChangeDetectorRef.detectChanges` or
- *   `ChangeDetectorRef.markForCheck`)
- * - triggers change-detection differently if ViewEngine or Ivy is present (`ChangeDetectorRef.detectChanges` or
- *   `ɵdetectChanges`)
- * - distinct same values in a row (`distinctUntilChanged` operator),
- * - display custom templates for different observable notifications (suspense, next, error, complete)
- * - notify about after changes got rendered to the template (RenderCallback)
- *
- *
- * ### Binding an Observable and using the view context
- *
- * The `*rxLet` directive takes over several things and makes it more convenient and save to work with streams in the
- * template:
+ * This package helps to reduce code used to create composable action streams.
+ * It mostly is used in combination with state management libs to handle user interaction and backend communication.
  *
  * ```html
  * <ng-container *rxLet="observableNumber$; let n">
- *   <app-number [number]="n"></app-number>
- * </ng-container>
- *
- * <ng-container *rxLet="observableNumber$ as n">
- *   <app-number [number]="n"></app-number>
+ *  ...
  * </ng-container>
  * ```
- *
- * In addition to that it provides us information from the whole observable context.
- * We can track the observables:
- * - next value
- * - error occurrence
- * - complete occurrence
- *
- * ```html
- * <ng-container *rxLet="observableNumber$; let n; let e = error, let c = complete">
- *   <app-number [number]="n" *ngIf="!e && !c"></app-number>
- *   <ng-container *ngIf="e">
- *     There is an error: {{ e }}
- *   </ng-container>
- *   <ng-container *ngIf="c">
- *     Observable completed: {{ c }}
- *   </ng-container>
- * </ng-container>
- * ```
- *
- *
- * ### Using the template-binding
- *
- * You can also use template anchors and display template's content for different observable states:
- * - on complete
- * - on error
- * - on suspense - before the first value is emitted
- *
- * ```html
- * <ng-container
- *   *rxLet="
- *     observableNumber$;
- *     let n;
- *     error: error;
- *     complete: complete;
- *     suspense: suspense;
- *   "
- * >
- *   <app-number [number]="n"></app-number>
- * </ng-container>
- * <ng-template #error>ERROR</ng-template>
- * <ng-template #complete>COMPLETE</ng-template>
- * <ng-template #suspense>SUSPENSE</ng-template>
- * ```
- *
- * Internally, `*rxLet` is using a simple "view memoization" - it caches all anchored template references and re-uses
- * them whenever the observable notification (next/error/complete) is sent. Then, it only updates the context
- * (e.g. a value from the observable) in the view.
  *
  *
  * @docsCategory LetDirective
@@ -181,7 +98,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
 
   /**
    * @description
-   * The Observable to be bound to the context of a template.
+   * The Observable or value to be bound to the context of a template.
    *
    * @example
    * const hero1 = {name: 'Batman'};
@@ -195,46 +112,43 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *   <app-hero [hero]="hero"></app-hero>
    * </ng-container>
    *
-   * @param potentialObservable
+   * @param { ObservableInput<U> | U | null | undefined } rxLet
    */
   @Input() rxLet: ObservableInput<U> | U | null | undefined;
 
   /**
    * @description
-   * The rendering strategy to be used when rendering with the reactive context within a template.
-   * Use it to dynamically manage your rendering strategy. You can switch the strategies
-   * imperatively (with a string) or by bounding an Observable.
-   * The default strategy is `'local'`.
+   *
+   * You can change the used `RenderStrategy` by using the `strategy` input of the `*rxLet`. It accepts
+   * an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/b0630f69017cc1871d093e976006066d5f2005b9/libs/cdk/render-strategies/src/lib/model.ts#L52).
+   *
+   * The default value for strategy is
+   * [`normal`](https://www.rx-angular.io/docs/template/cdk/render-strategies/strategies/concurrent-strategies).
+   *
+   * Read more about this in the
+   * [official docs](https://www.rx-angular.io/docs/template/api/let-directive#use-render-strategies-strategy).
    *
    * @example
+   *
    * \@Component({
    *   selector: 'app-root',
    *   template: `
    *     <ng-container *rxLet="hero$; let hero; strategy: strategy">
    *       <app-hero [hero]="hero"></app-hero>
    *     </ng-container>
-   *   `
-   * })
-   * export class AppComponent {
-   *   strategy = 'local';
-   * }
    *
-   * // OR
-   *
-   * \@Component({
-   *   selector: 'app-root',
-   *   template: `
    *     <ng-container *rxLet="hero$; let hero; strategy: strategy$">
    *       <app-hero [hero]="hero"></app-hero>
    *     </ng-container>
    *   `
    * })
    * export class AppComponent {
-   *   strategy$ = new BehaviorSubject('local');
+   *   strategy = 'low';
+   *   strategy$ = of('immediate');
    * }
    *
-   * @param strategy
-   * @see {@link strategies}
+   * @param { string | Observable<string> | undefined } strategyName
+   * @see {@link RxStrategyNames}
    */
   @Input('rxLetStrategy')
   set strategy(strategyName: string | Observable<string> | undefined) {
@@ -243,7 +157,8 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
 
   /**
    * @description
-   * A template to show if the bound Observable is in "complete" state.
+   * Defines the template for the complete state. Will be
+   * shown when the bound Observable is in "complete" state.
    *
    * @example
    * <ng-container *rxLet="hero$; let hero; complete: completeTemplate">
@@ -253,14 +168,15 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *   <mat-icon>thumb_up</mat-icon>
    * </ng-template>
    *
-   * @param templateRef
+   * @param { TemplateRef<RxLetViewContext<U | undefined | null> | null> } complete
    */
   @Input('rxLetComplete')
   complete: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
 
   /**
    * @description
-   * A template to show if the bound Observable is in "error" state.
+   * Defines the template for the error state. Will be
+   * shown when the bound Observable is in "error" state.
    *
    * @example
    * <ng-container *rxLet="hero$; let hero; error: errorTemplate">
@@ -270,14 +186,16 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *   <mat-icon>thumb_down</mat-icon>
    * </ng-template>
    *
-   * @param templateRef
+   * @param { TemplateRef<RxLetViewContext<U | undefined | null> | null> } error
    */
   @Input('rxLetError')
   error: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
 
   /**
    * @description
-   * A template to show before the first value is emitted from the bound Observable.
+   * Defines the template for the suspense state. Will be
+   * shown when the bound Observable is in "suspense" state.
+   * Suspense means any undefined value, a never emitted value or `NEVER` itself.
    *
    * @example
    * <ng-container *rxLet="hero$; let hero; suspense: suspenseTemplate">
@@ -287,14 +205,14 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *   <mat-progress-spinner></mat-progress-spinner>
    * </ng-template>
    *
-   * @param templateRef
+   * @param { TemplateRef<RxLetViewContext<U | undefined | null> | null> } suspense
    */
   @Input('rxLetSuspense')
   suspense: TemplateRef<RxLetViewContext<U | undefined | null> | null>;
 
   /**
    * @description
-   * A trigger to manually set the active template. It accepts a RxNotificationKind
+   * A trigger to manually set the active template. It accepts a `RxNotificationKind`
    * which determines what template to display. If no template is given, a context
    * variable resembling the notification state is put into the `Next`
    * template of the directive
@@ -315,7 +233,8 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * // trigger template from component.ts
    * templateTrigger$.next(RxNotificationKind.error)
    *
-   * @param Observable<RxNotificationKind>
+   * @param { Observable<RxNotificationKind> } templateTrigger
+   * @see {@link RxNotificationKind}
    */
   @Input('rxLetTemplateTrg') templateTrigger?: Observable<RxNotificationKind>;
 
@@ -341,7 +260,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * // trigger template from component.ts
    * completeTrigger$.next()
    *
-   * @param Observable<RxNotificationKind>
+   * @param { Observable<unknown> } completeTrigger
    */
   @Input('rxLetCompleteTrg') completeTrigger?: Observable<unknown>;
 
@@ -367,7 +286,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * // trigger template from component.ts
    * errorTrigger$.next()
    *
-   * @param Observable<unknown>
+   * @param { Observable<unknown> } errorTrigger
    */
   @Input('rxLetErrorTrg') errorTrigger?: Observable<unknown>;
 
@@ -394,7 +313,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * // trigger template from component.ts
    * suspenseTrigger$.next()
    *
-   * @param Observable<unknown>
+   * @param { Observable<unknown> } suspenseTrigger
    */
   @Input('rxLetSuspenseTrg') suspenseTrigger?: Observable<unknown>;
 
@@ -420,17 +339,133 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * // trigger template from component.ts
    * nextTrigger$.next()
    *
-   * @param Observable<unknown>
+   * @param { Observable<unknown> } nextTrigger
    */
   @Input('rxLetNextTrg') nextTrigger?: Observable<unknown>;
 
+  /**
+   * @description
+   * A `Subject` which emits whenever *rxFor finished rendering a set changes to the view.
+   * This enables developers to perform actions when a list has finished rendering.
+   * The `renderCallback` is useful in situations where you rely on specific DOM properties like the `height` a
+   * table after all items got rendered.
+   * It is also possible to use the renderCallback in order to determine if a view should be visible or not. This
+   * way developers can hide a list as long as it has not finished rendering.
+   *
+   * The result of the `renderCallback` will contain the currently rendered set of items in the iterable.
+   *
+   * @example
+   * \Component({
+   *   selector: 'app-root',
+   *   template: `
+   *   <app-list-component>
+   *     <app-list-item
+   *       *rxFor="
+   *         let item of items$;
+   *         trackBy: trackItem;
+   *         renderCallback: itemsRendered;
+   *       ">
+   *       <div>{{ item.name }}</div>
+   *     </app-list-item>
+   *   </app-list-component>
+   * `
+   * })
+   * export class AppComponent {
+   *   items$: Observable<Item[]> = itemService.getItems();
+   *   trackItem = (idx, item) => item.id;
+   *   // this emits whenever rxFor finished rendering changes
+   *   itemsRendered = new Subject<Item[]>();
+   *
+   *   constructor(elementRef: ElementRef<HTMLElement>) {
+   *     itemsRendered.subscribe(() => {
+   *       // items are rendered, we can now scroll
+   *       elementRef.scrollTo({bottom: 0});
+   *     })
+   *   }
+   * }
+   *
+   * @param {Subject<U>} renderCallback
+   */
   @Input('rxLetRenderCallback')
   set renderCallback(callback: NextObserver<U>) {
     this._renderObserver = callback;
   }
 
+  /**
+   * @description
+   *
+   * When local rendering strategies are used, we need to treat view and content queries in a
+   * special way.
+   * To make `*rxLet` in such situations, a certain mechanism is implemented to
+   * execute change detection on the parent (`parent`).
+   *
+   * This is required if your components state is dependent on its view or content children:
+   *
+   * - `@ViewChild`
+   * - `@ViewChildren`
+   * - `@ContentChild`
+   * - `@ContentChildren`
+   *
+   * Read more about this in the
+   * [official
+   * docs](https://www.rx-angular.io/docs/template/api/let-directive#local-strategies-and-view-content-queries-parent).
+   *
+   * @example
+   * \@Component({
+   *   selector: 'app-root',
+   *   template: `
+   *    <app-list-component>
+   *      <app-list-item
+   *        *rxLet="
+   *          item$;
+   *          let item;
+   *          parent: true;
+   *        "
+   *      >
+   *        <div>{{ item.name }}</div>
+   *      </app-list-item>
+   *    </app-list-component>
+   *   `
+   * })
+   * export class AppComponent {
+   *   item$ = itemService.getItem();
+   * }
+   *
+   * @param boolean
+   */
   @Input('rxLetParent') renderParent = this.strategyProvider.config.parent;
 
+  /**
+   * @description
+   * A flag to control whether *rxLet templates are created within `NgZone` or not.
+   * The default value is `true, `*rxLet` will create it's `EmbeddedViews` inside `NgZone`.
+   *
+   * Event listeners normally trigger zone. Especially high frequently events cause performance issues.
+   *
+   * Read more about this in the
+   * [official docs](https://www.rx-angular.io/docs/template/api/let-directive#working-with-event-listeners-patchzone).
+   *
+   * @example
+   * \@Component({
+   *   selector: 'app-root',
+   *   template: `
+   *    <app-list-component>
+   *      <app-list-item
+   *        *rxLet="
+   *          item$;
+   *          let item;
+   *          patchZone: false;
+   *        "
+   *      >
+   *        <div>{{ item.name }}</div>
+   *      </app-list-item>
+   *    </app-list-component>
+   *   `
+   * })
+   * export class AppComponent {
+   *   item$ = itemService.getItem();
+   * }
+   */
   @Input('rxLetPatchZone') patchZone = this.strategyProvider.config.patchZone;
 
   constructor(
@@ -526,6 +561,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
         RxLetTemplateNames.suspense,
         this.suspense
       );
+      this.observablesHandler.withInitialSuspense(!!this.suspense);
     }
 
     if (changes.error) {
@@ -551,10 +587,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     >({
       templateSettings: {
         viewContainerRef: this.viewContainerRef,
-        createViewContext,
-        updateViewContext,
         customContext: (rxLet) => ({ rxLet }),
-        patchZone: this.patchZone ? this.ngZone : false,
       },
       renderSettings: {
         cdRef: this.cdRef,
@@ -582,25 +615,4 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     );
     this.templateManager.nextStrategy(this.strategyHandler.values$);
   }
-}
-
-/** @internal */
-function createViewContext<T>(value: T): RxLetViewContext<T> {
-  return {
-    rxLet: value,
-    $implicit: value,
-    error: false,
-    complete: false,
-    suspense: false,
-  };
-}
-/** @internal */
-function updateViewContext<T>(
-  value: T,
-  view: EmbeddedViewRef<RxLetViewContext<T>>,
-  context: RxLetViewContext<T>
-): void {
-  Object.keys(context).forEach((k) => {
-    view.context[k] = context[k];
-  });
 }

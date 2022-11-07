@@ -28,8 +28,8 @@ import { getTemplateHandler } from './list-view-handler';
 import {
   RxListTemplateChange,
   RxListTemplateChangeType,
+  RxListTemplateSettings,
   RxRenderSettings,
-  RxTemplateSettings,
 } from './model';
 import { createErrorHandler } from './render-error';
 import { notifyAllParentsIfNeeded } from './utils';
@@ -45,10 +45,7 @@ export function createListTemplateManager<
   C extends RxListViewContext<T>
 >(config: {
   renderSettings: RxRenderSettings;
-  templateSettings: Omit<
-    RxTemplateSettings<T, C, RxListViewComputedContext>,
-    'patchZone'
-  > & {
+  templateSettings: RxListTemplateSettings<T, C, RxListViewComputedContext> & {
     templateRef: TemplateRef<C>;
   };
   trackBy: TrackByFunction<T>;

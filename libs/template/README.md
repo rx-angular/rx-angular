@@ -4,45 +4,38 @@
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/template/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/template/lcov-report/index.html)
 
-> Reactive Template Rendering for Angular
+## A lib for handling data streams in templates for high performance and ergonomic Angular UI's in large scale applications
 
-@rx-angular/template is a comprehensive toolset for fully reactive rendering in Angular.
-It leverages the latest Browser APIs (while still being backward compatible) to maximize the rendering performance and thus
-the user experience of your angular application.
-The functionalities are provided by
-structural directives, pipes, RxJS operators, or imperative functions to manage the rendering in Angular.
+@rx-angular/template was specifically designed to help developers reduce the boilerplate in templates and have performant change detection rendering and provide a migration path to go full zone-less.
 
 ![template logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/template/docs/images/template_logo.png)
 
-## Description
+## Sub Modules
 
-**@rx-angular/template** is nothing less than a revolution in `ChangeDetection` for angular applications.
-Developers are provided with tools for high-performance rendering, which are operated by a broad and intuitive API.
+- [LetDirective (\*rxLet)](https://rx-angular.io/docs/template/api/let-directive)
+- [RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/rx-for-directive)
+- [UnpatchDirective (unpatch)](https://rx-angular.io/docs/template/api/unpatch-directive)
+- [PushPipe (`push`)](https://rx-angular.io/docs/template/api/push-pipe)
+- [TemplateDirective (`*rxTemplate`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/template/src/lib/README.md)
 
-The [LetDirective (`*rxLet`)](https://rx-angular.io/docs/template/api/let-directive) &
-[PushPipe (`push`)](https://rx-angular.io/docs/template/api/push-pipe) focus
-on template rendering, the coordination and optimization of `ChangeDetection` cycles. While the `PushPipe` is a
-straight **drop-in replacement** for the `AsyncPipe (async)`, the `LetDirective` will often provide a more
-convenient way of managing reactive sources and lazy rendering of the view.
+**Experimental features**
 
-Should be noted that both [LetDirective (`*rxLet`)](https://rx-angular.io/docs/template/api/let-directive) &
-[PushPipe (`push`)](https://rx-angular.io/docs/template/api/push-pipe) recognize only immutable changes.
+- [🧪 RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/experimental/rx-if-directive)
+- [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/experimental/viewport-prio-directive)
 
-Using those with the default strategy ([Local Strategy](http://rx-angular.io/docs/cdk/render-strategies/basic-strategies#local)) should already improve the rendering performance of
-your application by a decent amount.
+All experimental features are very stable and already tested in production apps for multiple month. The reason to have them in experimental is so we can make small typing changes without breaking changes.
 
-The applied optimization behavior is fully customizable by using built-in or
-custom-provided [RenderStrategies](https://rx-angular.io/docs/cdk/render-strategies).
-However, `RenderStrategies` are also meant to be a tool developers can interact with inside
-their components, giving you even broader access to the rendering mechanisms of your application.
-The API comes with imperative as well as reactive ways to manage renderings.
-By default, changes get scoped, coalesced and scheduled using the latest browser APIs.
-Beyond the optimization of change detection cycles, `@rx-angular/template` by default performs change detection only scoped to smallest unit possible.
+### Concepts
 
-If you want to deepen your knowledge about performance optimizations, consider reading through the following concepts and techniques:
+- [reactive context](https://rx-angular.io/docs/template/concepts/reactive-context)
+- [local templates](https://rx-angular.io/docs/template/concepts/local-templates)
+- [local variables](https://rx-angular.io/docs/template/concepts/local-variables)
+- [render strategies](https://rx-angular.io/docs/cdk/render-strategies)
+- [Coalescing](https://rx-angular.io/docs/cdk/coalescing)
+- [Coercing](https://rx-angular.io/docs/cdk/coercing)
+- [Scheduling](https://rx-angular.io/docs/cdk/render-strategies/strategies/concurrent-strategies#scheduling)
 
-- [Coalescing, Scoped Coalescing & Scheduling](https://rx-angular.io/docs/template/concepts)
-- [Rendering Issues in Angular](https://rx-angular.io/docs/template/concepts/performance-issues)
+- [Rendering Issues in Angular](https://rx-angular.io/docs/template/performance-issues)
 
 ## Installation
 
@@ -83,32 +76,16 @@ You can import each feature module individually.
 
 ```typescript
 import { LetModule } from '@rx-angular/template/let';
+import { ForModule } from '@rx-angular/template/for';
 import { PushModule } from '@rx-angular/template/push';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 
 @NgModule({
   declarations: [...],
-  imports: [LetModule, PushModule, UnpatchModule],
+  imports: [ForModule, LetModule, PushModule, UnpatchModule],
 })
 export class MyModule {}
 ```
-
-## Features
-
-- Directives
-  - [LetDirective (\*rxLet)](https://rx-angular.io/docs/template/api/let-directive)
-  - [RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/rx-for-directive)
-  - [UnpatchDirective (unpatch)](https://rx-angular.io/docs/template/unpatch-directive)
-- Pipes
-  - [PushPipe (push)](https://rx-angular.io/docs/template/api/push-pipe)
-
-## Experimental features
-
-Additionally, `@rx-angular/template` provides some experimental optimization tools which in general will give you more control
-about what changes are leading to re-renderings.
-
-- [🧪 RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/experimental/rx-if-directive)
-- [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/experimental/viewport-prio-directive)
 
 ## Version Compatibility
 
