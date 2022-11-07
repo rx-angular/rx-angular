@@ -34,18 +34,19 @@ The `@rx-angular/template` directives are capable of
 deriving the reactive context for you.
 There are two ways of handling them, with `reactive context templates` or `reactive context variables`.
 
-The following table shows how the reactive context is treated on initial rendering. Note how there are
+The following table shows how the reactive context is treated **on initial rendering**. Note how there are
 slight differences between context templates and context variables.
 
-| value                                             | Context Templates | Context Variables |
-|---------------------------------------------------|-------------------|-------------------|
-| `undefined`                                       | suspense          | no render         |
-| `primitive values` (number, string, boolean, ..)  | next              | suspense          |
-| `Observable` emitting `undefined`                 | suspense          | suspense          |
-| `Observable` emitting no value (e.g `NEVER`)      | suspense          | no render         |
-| `Observable` emitting any value != undefined      | next              | next              |
-| `Observable` completing (e.g `EMPTY`)             | complete          | complete          |
-| `Observable` throwing an error                    | error             | error             |
+| value                                                           | Context Templates | Context Variables |
+| --------------------------------------------------------------- | ----------------- | ----------------- |
+| `undefined`                                                     | suspense          | _no render_       |
+| primitive values (`number`, `string`, `boolean`, ..)            | next              | next              |
+| `Observable` emitting `undefined`                               | suspense          | suspense          |
+| `Observable` or `Promise` not yet emitted a value (e.g `NEVER`) | suspense          | _no render_       |
+| `Observable` emitting any value !== `undefined`                 | next              | next              |
+| `Observable` completing (e.g `EMPTY`)                           | complete          | complete          |
+| `Promise` emitting any value                                    | suspense          | suspense          |
+| `Observable` throwing an error                                  | error             | error             |
 
 ### Reactive Context Templates
 
@@ -88,7 +89,6 @@ value$ = new Subject();
 value$ = new BehaviorSubject(undefined);
 ```
 
-
 ### Reactive Context Variables
 
 The `RxViewContext` interface defines all possible states we can use in our template
@@ -128,7 +128,6 @@ observable and set the corresponding context accordingly.
   <loader *ngIf="suspense;"></loader>
   <error *ngIf="error;"></error>
   <complete *ngIf="complete; then: complete"></complete>
-
 </ng-container>
 ```
 
