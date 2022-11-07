@@ -28,12 +28,14 @@ or triggering global change detection.
 
 ```html
 <!-- some.component.html -->
-<app-item *rxIf="show$"><app-item>
+<app-item *rxIf="show$"><app-item></app-item></app-item>
 ```
 
 ```ts
 // some.component.ts
-@Component({/**/ })
+@Component({
+  /**/
+})
 export class SomeComponent {
   show$ = new BehaviorSubject<boolean>(true);
 }
@@ -68,26 +70,26 @@ export class SomeComponent {
 **Value**
 
 | Input  | Type                                 | description                                                       |
-|--------|--------------------------------------| ----------------------------------------------------------------- |
+| ------ | ------------------------------------ | ----------------------------------------------------------------- |
 | `rxIf` | `boolean \ ObservableInput<boolean>` | The Observable or value to be bound to the context of a template. |
 
 **Contextual state**
 
-| Input         | Type                              | description                                                            |
-|---------------|-----------------------------------|------------------------------------------------------------------------|
-| `error`       | `TemplateRef<RxIfViewContext>`    | defines the template for the error state                               |
-| `complete`    | `TemplateRef<RxIfViewContext>`    | defines the template for the complete state                            |
-| `suspense`    | `TemplateRef<RxIfViewContext>`    | defines the template for the suspense state                            |
-| `nextTrg`     | `Observable<unknown>`             | trigger to show `next` template                                        |
-| `errorTrg`    | `Observable<unknown>`             | trigger to show `error` template                                       |
-| `completeTrg` | `Observable<unknown>`             | trigger to show `complete` template                                    |
-| `suspenseTrg` | `Observable<unknown>`             | trigger to show `suspense` template                                    |
-| `templateTrg` | `Observable<RxNotificationKind>`  | trigger to show any templates, based on the given `RxNotificationKind` |
+| Input         | Type                             | description                                                            |
+| ------------- | -------------------------------- | ---------------------------------------------------------------------- |
+| `error`       | `TemplateRef<RxIfViewContext>`   | defines the template for the error state                               |
+| `complete`    | `TemplateRef<RxIfViewContext>`   | defines the template for the complete state                            |
+| `suspense`    | `TemplateRef<RxIfViewContext>`   | defines the template for the suspense state                            |
+| `nextTrg`     | `Observable<unknown>`            | trigger to show `next` template                                        |
+| `errorTrg`    | `Observable<unknown>`            | trigger to show `error` template                                       |
+| `completeTrg` | `Observable<unknown>`            | trigger to show `complete` template                                    |
+| `suspenseTrg` | `Observable<unknown>`            | trigger to show `suspense` template                                    |
+| `templateTrg` | `Observable<RxNotificationKind>` | trigger to show any templates, based on the given `RxNotificationKind` |
 
 **Rendering**
 
 | Input            | Type                                                            | description                                                                                                                                                                                                                                                                                     |
-|------------------|-----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `then`           | `TemplateRef<RxIfViewContext>`                                  | defines the template for when the bound condition is true                                                                                                                                                                                                                                       |
 | `else`           | `TemplateRef<RxIfViewContext>`                                  | defines the template for when the bound condition is false                                                                                                                                                                                                                                      |
 | `patchZone`      | `boolean`                                                       | _default: `true`_ if set to `false`, the `RxIf` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
@@ -136,7 +138,7 @@ export class AnyComponent {}
 > This includes:
 >
 > - The default render strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies).
-    >   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies#Default-configuration) if you want to change it.
+>   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies#Default-configuration) if you want to change it.
 > - Creates templates lazy and manages multiple template instances
 
 ### Binding an Observable
@@ -145,12 +147,14 @@ The `*rxIf` directive makes it easy to work with reactive data streams in the te
 
 ```html
 <!-- some.component.html -->
-<app-item *rxIf="show$"><app-item>
+<app-item *rxIf="show$"><app-item></app-item></app-item>
 ```
 
 ```ts
 // some.component.ts
-@Component({/**/ })
+@Component({
+  /**/
+})
 export class SomeComponent {
   show$ = new BehaviorSubject<boolean>(true);
 }
@@ -180,22 +184,18 @@ You can use them like this:
 **Context Variables on then template**
 
 ```html
-<ng-container
-  *rxIf="show$; let s = suspense; let e = error, let c = complete"
->
-
+<ng-container *rxIf="show$; let s = suspense; let e = error, let c = complete">
   <loader *ngIf="s"></loader>
   <error *ngIf="e"></error>
   <complete *ngIf="c"></complete>
 
   <app-item></app-item>
-
 </ng-container>
 ```
+
 **Context Variables on else template**
 
 ```html
-
 <ng-container
   *rxIf="show$; else: nope; let s = suspense; let e = error, let c = complete"
 >
@@ -203,7 +203,6 @@ You can use them like this:
   <error *ngIf="e"></error>
   <complete *ngIf="c"></complete>
   <app-item></app-item>
-
 </ng-container>
 <ng-template #nope let-s="suspense" let-e="error" let-c="complete">
   <loader *ngIf="s"></loader>
@@ -213,7 +212,6 @@ You can use them like this:
   <nope></nope>
 </ng-template>
 ```
-
 
 ### Context Templates
 
@@ -256,9 +254,7 @@ e.g. from the complete template back to the value display
   selector: 'any-component',
   template: `
     <button (click)="nextTrigger$.next()">show value</button>
-    <ng-container
-      *rxIf="show; complete: complete; nextTrg: nextTrigger$"
-    >
+    <ng-container *rxIf="show; complete: complete; nextTrg: nextTrigger$">
       <item></item>
     </ng-container>
     <ng-template #complete>✔</ng-template>
@@ -325,11 +321,7 @@ e.g. from the complete template back to the value display
   template: `
     <input (input)="search($event.target.value)" />
     <ng-container
-      *rxIf="
-        show$;
-        suspense: suspense;
-        suspenseTrg: suspenseTrigger$
-      "
+      *rxIf="show$; suspense: suspense; suspenseTrg: suspenseTrigger$"
     >
       <list></list>
     </ng-container>
@@ -337,7 +329,7 @@ e.g. from the complete template back to the value display
   `,
 })
 export class AppComponent {
-  show$ = this.state.items$.pipe(map(items => items.length > 0 ));
+  show$ = this.state.items$.pipe(map((items) => items.length > 0));
   suspenseTrigger$ = new Subject();
 
   constructor(private state: globalState) {}
@@ -359,9 +351,7 @@ in a convenient way.
   selector: 'any-component',
   template: `
     <input (input)="search($event.target.value)" />
-    <ng-container
-      *rxIf="show$; suspense: suspense; contextTrg: contextTrg$"
-    >
+    <ng-container *rxIf="show$; suspense: suspense; contextTrg: contextTrg$">
       <item></item>
     </ng-container>
     <ng-template #suspense>loading...</ng-template>
@@ -451,16 +441,10 @@ The `renderCallback` emits the latest value causing the view to update.
 @Component({
   selector: 'app-root',
   template: `
-   <app-component>
-     <app-item
-       *rxIf="
-         show$;
-         renderCallback: rendered;
-       "
-     >
-     </app-item>
-   </app-component>
-  `
+    <app-component>
+      <app-item *rxIf="show$; renderCallback: rendered"> </app-item>
+    </app-component>
+  `,
 })
 export class AppComponent {
   show$ = state.select('showItem');
@@ -470,7 +454,7 @@ export class AppComponent {
   constructor(elementRef: ElementRef<HTMLElement>) {
     rendered.subscribe(() => {
       // item is rendered, we can access its dom now
-    })
+    });
   }
 }
 ```
@@ -486,10 +470,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 @Component({
   selector: 'any-component',
   template: `
-    <div
-      *rxIf="enabled$; patchZone: false"
-      (drag)="itemDrag($event)"
-    ></div>
+    <div *rxIf="enabled$; patchZone: false" (drag)="itemDrag($event)"></div>
   `,
 })
 export class AppComponent {
@@ -519,11 +500,7 @@ import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { LetDirective } from '@rx-angular/template/let';
 
 @Component({
-  template: `
-    <ng-container *rxIf="show$">
-      visible
-    </ng-container>
-  `,
+  template: ` <ng-container *rxIf="show$"> visible </ng-container> `,
 })
 class TestComponent {
   show$: Observable<boolean> = of(true);

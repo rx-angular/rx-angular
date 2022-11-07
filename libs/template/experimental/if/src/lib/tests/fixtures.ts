@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { RxNotificationKind } from '@rx-angular/cdk/notifications';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 // eslint-disable-next-line @angular-eslint/component-selector
 @Component({ selector: 'test-cmp', template: '' })
@@ -14,6 +15,13 @@ export class TestComponent {
   stringCondition = 'foo';
   renderedValue$ = new Subject();
   strategy: string;
+  value$: Observable<unknown>;
+
+  nextTrg$ = new Subject<void>();
+  suspenseTrg$ = new Subject<void>();
+  errorTrg$ = new Subject<void>();
+  completeTrg$ = new Subject<void>();
+  templateTrg$ = new Subject<RxNotificationKind>();
 
   functionCondition: Function = (s: any, n: any): boolean =>
     s == 'foo' && n == 1;
