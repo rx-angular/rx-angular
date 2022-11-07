@@ -159,6 +159,13 @@ describe('template-manager', () => {
     });
 
     describe('triggers', () => {
+      it('should render without trigger', () => {
+        componentInstance.triggerHandler = undefined;
+        fixtureComponent.detectChanges();
+        componentInstance.values$.next(1);
+        expect(componentNativeElement.textContent).toBe('next');
+      });
+
       it('should render suspense', () => {
         fixtureComponent.detectChanges();
         componentInstance.values$.next(1);

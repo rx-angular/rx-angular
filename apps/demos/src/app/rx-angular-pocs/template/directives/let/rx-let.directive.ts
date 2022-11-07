@@ -372,10 +372,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
     >({
       templateSettings: {
         viewContainerRef: this.viewContainerRef,
-        createViewContext,
-        updateViewContext,
         customContext: (rxLet) => ({ rxLet }),
-        patchZone: this.patchZone ? this.ngZone : false,
       },
       renderSettings: {
         cdRef: this.cdRef,
@@ -411,24 +408,4 @@ export class RxLet<U> implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
-}
-
-function createViewContext<T>(value: T): RxLetViewContext<T> {
-  return {
-    rxLet: value,
-    $implicit: value,
-    error: false,
-    complete: false,
-    suspense: false,
-  };
-}
-
-function updateViewContext<T>(
-  value: T,
-  view: EmbeddedViewRef<RxLetViewContext<T>>,
-  context: RxLetViewContext<T>
-): void {
-  Object.keys(context).forEach((k) => {
-    view.context[k] = context[k];
-  });
 }

@@ -97,9 +97,6 @@ export class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
       },
       templateSettings: {
         viewContainerRef: this.host,
-        patchZone: false,
-        createViewContext,
-        updateViewContext,
       },
       notificationToTemplateName: {
         [RxNotificationKind.Suspense]: () =>
@@ -125,6 +122,7 @@ export class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
         TestTemplateNames.suspense,
         this.suspenseTpl
       );
+      this.observablesHandler.withInitialSuspense(!!this.suspenseTpl);
     }
     if (this.errorTpl) {
       this.templateManager.addTemplateRef(
@@ -152,26 +150,6 @@ export class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
   }
 }
 
-/** @internal */
-function createViewContext<T>(value: T): RxViewContext<T> {
-  return {
-    $implicit: value,
-    error: false,
-    complete: false,
-    suspense: false,
-  };
-}
-/** @internal */
-function updateViewContext<T>(
-  value: T,
-  view: EmbeddedViewRef<RxViewContext<T>>,
-  context: RxViewContext<T>
-): void {
-  Object.keys(context).forEach((k) => {
-    view.context[k] = context[k];
-  });
-}
-
 export const DEFAULT_TEMPLATE = `
   <ng-template #tmpl let-v>
     <rx-angular-error-test [value]="v"></rx-angular-error-test>
@@ -180,13 +158,9 @@ export const DEFAULT_TEMPLATE = `
 `;
 
 export function createTestComponent(
-  template: string = DEFAULT_TEMPLATE
+  template: string
 ): ComponentFixture<TemplateManagerSpecComponent> {
   return TestBed.overrideComponent(TemplateManagerSpecComponent, {
     set: { template: template },
   }).createComponent(TemplateManagerSpecComponent);
-}
-
-export function createErrorHandler() {
-  return TestBed.inject(ErrorHandler);
 }

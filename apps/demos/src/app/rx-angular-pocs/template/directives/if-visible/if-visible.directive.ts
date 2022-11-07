@@ -69,10 +69,7 @@ export class IfVisibleDirective<U> extends Hooks implements OnInit {
     >({
       templateSettings: {
         viewContainerRef: this.viewContainerRef,
-        createViewContext,
-        updateViewContext,
-        customContext: (rxIf) => ({ rxIf }),
-        patchZone: this.patchZone ? this.ngZone : false,
+        customContext: (rxIfVisible) => ({ rxIfVisible }),
       },
       renderSettings: {
         cdRef: this.cdRef,
@@ -110,24 +107,4 @@ export class IfVisibleDirective<U> extends Hooks implements OnInit {
       this.observer.observe(this.eRef.nativeElement.parentElement);
     });
   }
-}
-
-function createViewContext<T>(value: T): RxIfVisibleViewContext<T> {
-  return {
-    rxIfVisible: value,
-    $implicit: value,
-    error: false,
-    complete: false,
-    suspense: false,
-  };
-}
-
-function updateViewContext<T>(
-  value: T,
-  view: EmbeddedViewRef<RxIfVisibleViewContext<T>>,
-  context: RxIfVisibleViewContext<T>
-): void {
-  Object.keys(context).forEach((k) => {
-    view.context[k] = context[k];
-  });
 }
