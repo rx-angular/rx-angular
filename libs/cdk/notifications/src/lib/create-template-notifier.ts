@@ -11,6 +11,7 @@ import {
   map,
   startWith,
   switchMap,
+  tap,
 } from 'rxjs/operators';
 
 import { rxMaterialize } from './rx-materialize';
@@ -24,39 +25,6 @@ import { toRxSuspenseNotification } from './notification-transforms';
  * @param value
  */
 const emitAndDontComplete = (value) => NEVER.pipe(startWith(value));
-
-/**
- * @description
- * returns an observable that starts with an undefined value in case the input
- * observable$ does not emit a value immediately.
- * This is needed in order to skip the suspense template when we already know
- * there will be a next template rendered afterwards
- * @param observable$
- */
-function skipSuspenseIfHasValue<T>(
-  observable$: ObservableInput<T>
-): Observable<T> {
-  return new Observable((subscriber) => {
-    let startWithUndefined = true;
-    const inner = from(observable$).subscribe({
-      next: (v) => {
-        startWithUndefined = false;
-        subscriber.next(v);
-      },
-      error: (e) => {
-        startWithUndefined = false;
-        subscriber.error(e);
-      },
-      complete: () => subscriber.complete(),
-    });
-    if (startWithUndefined) {
-      subscriber.next(undefined);
-    }
-    return () => {
-      inner.unsubscribe();
-    };
-  });
-}
 
 /**
  * This helper is responsible for turning a stream of materialized notifications
@@ -79,7 +47,7 @@ const handleSuspenseAndLastValueInNotifications = <T>() => {
 
   // returns a projection function with a lastValue cache
   return (notification: RxNotification<T>): RxNotification<T> => {
-    // if it the notification is of type next we take its value
+    // if it is the notification is of type next we take its value
     // otherwise we keep the existing last value
     if (notification.kind === RxNotificationKind.Next) {
       latestNextValue = notification.value;
@@ -124,40 +92,27 @@ const handleSuspenseAndLastValueInNotifications = <T>() => {
 export function createTemplateNotifier<U>(): {
   values$: Observable<RxNotification<U>>;
   next(observable: ObservableInput<U> | U): void;
+  withInitialSuspense(withInitialSuspense: boolean): void;
 } {
   // A Subject driven from the outside, it can contain Observables, static values null and undefined on purpose of from unassigned properties
-  const observablesSubject = new ReplaySubject<ObservableInput<U>>(1);
+  const observablesSubject = new ReplaySubject<ObservableInput<U> | U>(1);
+
+  let emittedValueOnce = false;
 
   const values$ = observablesSubject.pipe(
     distinctUntilChanged(),
     // handle static values inc null assignment and new Observable or Promises
-    map((observable$): Observable<ObservableInput<U> | U> => {
-      const isNull = observable$ == null;
-      const isPromiseOrObs =
-        !isNull &&
-        (typeof (observable$ as any)?.then === 'function' ||
-          isObservable(observable$));
-      // A value is considered as static value if it is `null`, `undefined` or any other value than
-      // `Promise` or `Observable`
-      const isStaticValue = !isPromiseOrObs;
-
-      const isNEVER = observable$ === NEVER;
-      // If it is a `NEVER` Observable we know it will never emit a value nor complete or error.
-      // Therefore we emit directly undefined to signal a suspense state
-      if (isNEVER) {
-        // Render suspense template for null values (it is considered as not used)
-        return emitAndDontComplete(undefined);
+    map((observable$): ObservableInput<U> | U => {
+      if (isObservableInput(observable$)) {
+        return skipSuspenseIfHasValue(observable$);
+      } else if (!emittedValueOnce && observable$ === undefined) {
+        return NEVER;
       }
-
-      // If it is a static value forward directly
-      if (isStaticValue) {
-        // Render next template for static values (it is considered as kinda sync)
-        return emitAndDontComplete(observable$);
-      }
-      return skipSuspenseIfHasValue(observable$);
+      return emitAndDontComplete(observable$);
     }),
     switchMap((o: Observable<U>) => {
       return o.pipe(
+        tap(() => (emittedValueOnce = true)),
         distinctUntilChanged(),
         rxMaterialize(),
         map(handleSuspenseAndLastValueInNotifications<U>())
@@ -166,9 +121,51 @@ export function createTemplateNotifier<U>(): {
   );
 
   return {
-    next(observable: ObservableInput<U>) {
+    next(observable: ObservableInput<U> | U) {
       observablesSubject.next(observable);
+    },
+    withInitialSuspense(withInitialSuspense: boolean) {
+      emittedValueOnce = emittedValueOnce || withInitialSuspense;
     },
     values$,
   };
+
+  /**
+   * @description
+   * returns an observable that starts with an undefined value in case the input
+   * observable$ does not emit a value immediately.
+   * This is needed in order to skip the suspense template when we already know
+   * there will be a next template rendered afterwards
+   * @param observable$
+   */
+  function skipSuspenseIfHasValue<T>(
+    observable$: ObservableInput<T>
+  ): Observable<T> {
+    return new Observable((subscriber) => {
+      let startWithUndefined = true;
+      const inner = from(observable$).subscribe({
+        next: (v) => {
+          startWithUndefined = false;
+          subscriber.next(v);
+        },
+        error: (e) => {
+          startWithUndefined = false;
+          subscriber.error(e);
+        },
+        complete: () => subscriber.complete(),
+      });
+      if (emittedValueOnce && startWithUndefined) {
+        subscriber.next(undefined);
+      }
+      return () => {
+        inner.unsubscribe();
+      };
+    });
+  }
+}
+
+function isObservableInput<T>(input: unknown): input is ObservableInput<T> {
+  return (
+    typeof (input as Promise<T>)?.then === 'function' || isObservable(input)
+  );
 }

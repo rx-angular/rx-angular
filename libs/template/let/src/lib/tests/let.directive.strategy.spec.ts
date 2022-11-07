@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, of, Subject } from 'rxjs';
 
 import { LetDirective } from '../let.directive';
+import Spy = jasmine.Spy;
+import SpyInstance = jest.SpyInstance;
 
 @Component({
   template: `
@@ -12,6 +14,7 @@ import { LetDirective } from '../let.directive';
         value$;
         let value;
         strategy: strategy;
+        patchZone: patchZone;
         renderCallback: renderedValue$
       "
       >{{ (value | json) || 'undefined' }}</ng-container
@@ -22,6 +25,7 @@ class LetDirectiveTestStrategyComponent {
   value$: Observable<number> = new BehaviorSubject<number>(42);
   renderedValue$ = new Subject<number>();
   strategy: string;
+  patchZone = true;
 }
 
 let fixture: ComponentFixture<LetDirectiveTestStrategyComponent>;
@@ -44,6 +48,35 @@ describe('LetDirective strategies', () => {
     componentNativeElement = fixture.nativeElement;
     strategyProvider = TestBed.inject(RxStrategyProvider);
     primaryStrategy = strategyProvider.primaryStrategy;
+  });
+
+  describe('ngZone', () => {
+    let ngZone: NgZone;
+
+    beforeEach(() => {
+      ngZone = TestBed.inject(NgZone);
+    });
+
+    it('should run outside ngZone', async () => {
+      componentInstance.strategy = 'normal';
+      componentInstance.patchZone = false;
+      fixture.detectChanges();
+      const ngZoneSpy = jest.spyOn(ngZone, 'run');
+      const v = await firstValueFrom(componentInstance.renderedValue$);
+      expect(v).toBe(42);
+      expect(ngZoneSpy).toHaveBeenCalledTimes(1);
+      ngZoneSpy.mockReset();
+    });
+
+    it('should run inside ngZone', async () => {
+      componentInstance.strategy = 'normal';
+      fixture.detectChanges();
+      const ngZoneSpy = jest.spyOn(ngZone, 'run');
+      const v = await firstValueFrom(componentInstance.renderedValue$);
+      expect(v).toBe(42);
+      expect(ngZoneSpy).toHaveBeenCalledTimes(2);
+      ngZoneSpy.mockReset();
+    });
   });
 
   describe.each([

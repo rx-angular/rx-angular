@@ -241,7 +241,7 @@ e.g. from the complete template back to the value display
   template: `
     <button (click)="nextTrigger$.next()">show value</button>
     <ng-container
-      *rxLet="num$; let n; let n; complete: complete; nextTrg: nextTrigger$"
+      *rxLet="num$; let n; complete: complete; nextTrg: nextTrigger$"
     >
       {{ n }}
     </ng-container>
@@ -265,9 +265,7 @@ e.g. from the complete template back to the value display
 @Component({
   selector: 'any-component',
   template: `
-    <ng-container
-      *rxLet="num$; let n; let n; error: error; errorTrg: errorTrigger$"
-    >
+    <ng-container *rxLet="num$; let n; error: error; errorTrg: errorTrigger$">
       {{ n }}
     </ng-container>
     <ng-template #error>❌</ng-template>
@@ -291,13 +289,7 @@ e.g. from the complete template back to the value display
   selector: 'any-component',
   template: `
     <ng-container
-      *rxLet="
-        num$;
-        let n;
-        let n;
-        complete: complete;
-        completeTrg: completeTrigger$
-      "
+      *rxLet="num$; let n; complete: complete; completeTrg: completeTrigger$"
     >
       {{ n }}
     </ng-container>

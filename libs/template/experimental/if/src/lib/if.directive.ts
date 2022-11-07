@@ -141,10 +141,7 @@ export class RxIf<U> implements OnInit, OnDestroy, OnChanges {
     >({
       templateSettings: {
         viewContainerRef: this.viewContainerRef,
-        createViewContext,
-        updateViewContext,
         customContext: (rxIf) => ({ rxIf }),
-        patchZone: this.patchZone ? this.ngZone : false,
       },
       renderSettings: {
         cdRef: this.cdRef,

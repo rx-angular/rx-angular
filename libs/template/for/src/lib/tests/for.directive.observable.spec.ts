@@ -3,6 +3,7 @@ import { ErrorHandler } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { Observable } from 'rxjs';
 import { ForModule } from '../for.module';
 import {
   createErrorHandler,
@@ -64,6 +65,21 @@ describe('rxFor with observables', () => {
     });
     warnSpy.mockClear();
   });
+
+  it(
+    'should subscribe only once to the source',
+    waitForAsync(() => {
+      fixture = createTestComponent();
+      let subscriber = 0;
+      const observable = new Observable((observer) => {
+        subscriber++;
+        observer.next(['1']);
+      });
+      fixture.componentInstance.itemsHot$ = observable as never;
+      detectChangesAndExpectText('1;');
+      expect(subscriber).toBe(1);
+    })
+  );
 
   it(
     'should reflect initial elements',

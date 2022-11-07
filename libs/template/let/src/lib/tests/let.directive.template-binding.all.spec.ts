@@ -1,12 +1,31 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
+import { RxNotificationKind } from '@rx-angular/cdk/notifications';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
-import { EMPTY, interval, NEVER, Observable, of, Subject, throwError } from 'rxjs';
-import { take } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  EMPTY,
+  interval,
+  NEVER,
+  Observable,
+  of,
+  Subject,
+  throwError,
+} from 'rxjs';
+import { take, tap } from 'rxjs/operators';
 import { LetDirective } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
-
 
 @Component({
   template: `
@@ -14,9 +33,14 @@ import { MockChangeDetectorRef } from './fixtures';
       *rxLet="
         value$;
         let value;
+        nextTrg: nextTrg;
         suspense: suspense;
+        suspenseTrg: suspenseTrg;
         error: error;
-        complete: complete
+        errorTrg: errorTrg;
+        complete: complete;
+        completeTrg: completeTrg;
+        templateTrg: trg
       "
       >{{
         value === undefined
@@ -34,6 +58,11 @@ import { MockChangeDetectorRef } from './fixtures';
 })
 class LetDirectiveAllTemplatesTestComponent {
   value$: Observable<number> = of(1);
+  completeTrg = new Subject<void>();
+  nextTrg = new Subject<void>();
+  suspenseTrg = new Subject<void>();
+  errorTrg = new Subject<void>();
+  trg = new Subject<RxNotificationKind>();
 }
 
 let fixture: ComponentFixture<LetDirectiveAllTemplatesTestComponent>;
@@ -50,7 +79,17 @@ const setupTestComponent = () => {
       {
         provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
-          primaryStrategy: 'native',
+          primaryStrategy: 'urgent',
+          customStrategies: {
+            urgent: {
+              name: 'urgent',
+              work: (cdRef) => cdRef.detectChanges(),
+              behavior:
+                ({ work }) =>
+                (o$) =>
+                  o$.pipe(tap(() => work())),
+            },
+          },
         },
       },
     ],
@@ -64,7 +103,7 @@ const setUpFixture = () => {
   nativeElement = fixture.nativeElement;
 };
 
-describe('LetDirective when template binding with all templates', () => {
+describe('LetDirective reactive context templates', () => {
   beforeAll(() => mockConsole());
   beforeEach(setupTestComponent);
   beforeEach(setUpFixture);
@@ -98,15 +137,12 @@ describe('LetDirective when template binding with all templates', () => {
     expectContentToBe('suspense');
 
     tick(1000);
-    fixture.detectChanges();
     expectContentToBe('0');
 
     tick(1000);
-    fixture.detectChanges();
     expectContentToBe('1');
 
     tick(1000);
-    fixture.detectChanges();
     // the last emitted value ('2') and complete notification are in sync
     // so we expect "complete" here
     expectContentToBe('complete');
@@ -129,6 +165,48 @@ describe('LetDirective when template binding with all templates', () => {
     expect(
       LetDirective.ngTemplateContextGuard({} as LetDirective<any>, {})
     ).toBe(true);
+  });
+
+  describe('triggers', () => {
+    beforeEach(() => {
+      component.value$ = new BehaviorSubject(1);
+      fixture.detectChanges();
+    });
+
+    it('should render suspense', () => {
+      component.suspenseTrg.next();
+      expectContentToBe('suspense');
+    });
+
+    it('should render complete', () => {
+      component.completeTrg.next();
+      expectContentToBe('complete');
+    });
+
+    it('should render error', () => {
+      component.errorTrg.next();
+      expectContentToBe('error');
+    });
+
+    it('should render "suspense"->"complete"->"error"->"next" templates', () => {
+      component.suspenseTrg.next();
+      expectContentToBe('suspense');
+      component.completeTrg.next();
+      expectContentToBe('complete');
+      component.errorTrg.next();
+      expectContentToBe('error');
+      component.nextTrg.next();
+      expectContentToBe('1');
+
+      component.trg.next(RxNotificationKind.Suspense);
+      expectContentToBe('suspense');
+      component.trg.next(RxNotificationKind.Complete);
+      expectContentToBe('complete');
+      component.trg.next(RxNotificationKind.Error);
+      expectContentToBe('error');
+      component.trg.next(RxNotificationKind.Next);
+      expectContentToBe('1');
+    });
   });
 });
 
