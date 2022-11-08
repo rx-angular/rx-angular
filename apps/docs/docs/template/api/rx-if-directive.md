@@ -213,6 +213,24 @@ You can use them like this:
 </ng-template>
 ```
 
+**Context Variables with then/else templates on initial rendering**
+
+| value                                                                               | reactive context | template (both defined) | template (only then) |
+|-------------------------------------------------------------------------------------|------------------|-------------------------|----------------------|
+| `undefined`                                                                         | suspense         | _no render_             | _no render_          |
+| truthy primitive value (`number`, `string`, `boolean`, ..)                          | next             | then                    | then                 |
+| falsy primitive value (`number`, `string`, `boolean`, ..)                           | next             | else                    | _no render_          |
+| `Observable` emitting `undefined`                                                   | suspense         | else                    | _no render_          |
+| `Observable` or `Promise` not yet emitted a value (e.g `Subject`)                   | suspense         | _no render_             | _no render_          |
+| `Observable` emitting truthy                                                        | next             | then                    | then                 |
+| `Observable` emitting falsy value !== `undefined`                                   | next             | else                    | _no render_          |
+| `Observable` completing after truthy value (e.g `of(true)`)                         | complete         | then                    | then                 |
+| `Observable` completing after falsy (incl. `undefined`) value (e.g `of(undefined)`) | complete         | else                    | _no render_          |
+| `Promise` emitting truthy value                                                     | complete         | then                    | then                 |
+| `Promise` emitting falsy (incl. `undefined`) value                                  | complete         | else                    | _no render_          |
+| `Observable` throwing an error after truthy value                                   | error            | then                    | then                 |
+| `Observable` throwing an error after falsy value (incl. `undefined`)                | error            | else                    | _no render_          |
+
 ### Context Templates
 
 You can also use template anchors to display the [reactive context](../concepts/reactive-context.md) in the template:
@@ -235,6 +253,25 @@ You can also use template anchors to display the [reactive context](../concepts/
 ```
 
 This helps in some cases to organize the template and introduces a way to make it dynamic or even lazy.
+
+**Context Templates with then/else templates on initial rendering**
+
+| value                                                                               | reactive context | template (both defined) | template (only then) |
+|-------------------------------------------------------------------------------------|------------------|-------------------------|----------------------|
+| `undefined`                                                                         | suspense         | suspense                | suspense             |
+| truthy primitive value (`number`, `string`, `boolean`, ..)                          | next             | then                    | then                 |
+| falsy primitive value (`number`, `string`, `boolean`, ..)                           | next             | else                    | _no render_          |
+| `Observable` emitting `undefined`                                                   | suspense         | suspense                | suspense             |
+| `Observable` or `Promise` not yet emitted a value (e.g `Subject`)                   | suspense         | suspense                | suspense             |
+| `Observable` emitting truthy                                                        | next             | then                    | then                 |
+| `Observable` emitting falsy value !== `undefined`                                   | next             | else                    | _no render_          |
+| `Observable` completing after truthy value (e.g `of(true)`)                         | complete         | complete                | complete             |
+| `Observable` completing after falsy (incl. `undefined`) value (e.g `of(undefined)`) | complete         | complete                | complete             |
+| `Promise` emitting truthy value                                                     | complete         | complete                | complete             |
+| `Promise` emitting falsy (incl. `undefined`) value                                  | complete         | complete                | complete             |
+| `Observable` throwing an error after truthy value                                   | error            | error                   | error                |
+| `Observable` throwing an error after falsy value (incl. `undefined`)                | error            | error                   | error                |
+
 
 ### Context Trigger
 
