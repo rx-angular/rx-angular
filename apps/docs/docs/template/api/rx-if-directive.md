@@ -216,7 +216,7 @@ You can use them like this:
 **Context Variables with then/else templates on initial rendering**
 
 | value                                                                               | reactive context | template (both defined) | template (only then) |
-|-------------------------------------------------------------------------------------|------------------|-------------------------|----------------------|
+| ----------------------------------------------------------------------------------- | ---------------- | ----------------------- | -------------------- |
 | `undefined`                                                                         | suspense         | _no render_             | _no render_          |
 | truthy primitive value (`number`, `string`, `boolean`, ..)                          | next             | then                    | then                 |
 | falsy primitive value (`number`, `string`, `boolean`, ..)                           | next             | else                    | _no render_          |
@@ -257,7 +257,7 @@ This helps in some cases to organize the template and introduces a way to make i
 **Context Templates with then/else templates on initial rendering**
 
 | value                                                                               | reactive context | template (both defined) | template (only then) |
-|-------------------------------------------------------------------------------------|------------------|-------------------------|----------------------|
+| ----------------------------------------------------------------------------------- | ---------------- | ----------------------- | -------------------- |
 | `undefined`                                                                         | suspense         | suspense                | suspense             |
 | truthy primitive value (`number`, `string`, `boolean`, ..)                          | next             | then                    | then                 |
 | falsy primitive value (`number`, `string`, `boolean`, ..)                           | next             | else                    | _no render_          |
@@ -271,7 +271,6 @@ This helps in some cases to organize the template and introduces a way to make i
 | `Promise` emitting falsy (incl. `undefined`) value                                  | complete         | complete                | complete             |
 | `Observable` throwing an error after truthy value                                   | error            | error                   | error                |
 | `Observable` throwing an error after falsy value (incl. `undefined`)                | error            | error                   | error                |
-
 
 ### Context Trigger
 

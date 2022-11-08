@@ -345,7 +345,8 @@ describe('rxIf directive', () => {
       'should have suspense context',
       waitForAsync(() => {
         const template =
-          '<span *rxIf="booleanCondition; let v; let suspense = suspense">{{suspense}}</span>';
+          '<span *rxIf="booleanCondition; let v; let suspense = suspense; else:' +
+          ' falsy">{{suspense}}</span><ng-template #falsy let-s="suspense">{{s}}</ng-template>';
 
         fixture = createTestComponent(template);
         getComponent().booleanCondition = true;
@@ -355,6 +356,23 @@ describe('rxIf directive', () => {
         getComponent().booleanCondition = undefined;
         fixture.detectChanges();
         expect(fixture.nativeElement.textContent).toBe('true');
+      })
+    );
+
+    it(
+      'should have not have suspense context when no else template is provided',
+      waitForAsync(() => {
+        const template =
+          '<span *rxIf="booleanCondition; let v; let suspense = suspense">{{suspense}}</span>';
+
+        fixture = createTestComponent(template);
+        getComponent().booleanCondition = true;
+        fixture.detectChanges();
+        expect(fixture.nativeElement.textContent).toBe('false');
+
+        getComponent().booleanCondition = undefined;
+        fixture.detectChanges();
+        expect(fixture.nativeElement.textContent).toBe('');
       })
     );
 
