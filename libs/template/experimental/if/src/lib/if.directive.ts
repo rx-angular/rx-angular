@@ -24,6 +24,8 @@ import {
   RxTemplateManager,
 } from '@rx-angular/cdk/template';
 import {
+  merge,
+  NEVER,
   NextObserver,
   Observable,
   ObservableInput,
@@ -31,7 +33,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import { mergeAll } from 'rxjs/operators';
+import { mergeAll, filter, map } from 'rxjs/operators';
 import {
   RxIfTemplateNames,
   rxIfTemplateNames,
@@ -49,7 +51,8 @@ import {
  * This enables `rxIf` to completely operate on its own without having to interact with `NgZone`
  * or triggering global change detection.
  *
- * Read more about the RxIf directive in the [official docs](https://www.rx-angular.io/docs/template/api/rx-if-directive).
+ * Read more about the RxIf directive in the [official
+ *   docs](https://www.rx-angular.io/docs/template/api/rx-if-directive).
  *
  * @example
  * <app-item *rxIf="show$"></app-item>
@@ -73,9 +76,6 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
     RxIfViewContext,
     rxIfTemplateNames
   >;
-
-  /** @internal */
-  private lastValidValue: boolean | null;
 
   /**
    * @description
@@ -108,7 +108,7 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
    * [`normal`](https://www.rx-angular.io/docs/template/cdk/render-strategies/strategies/concurrent-strategies).
    *
    * Read more about this in the
-   * [official docs](https://www.rx-angular.io/docs/template/api/let-directive#use-render-strategies-strategy).
+   * [official docs](https://www.rx-angular.io/docs/template/api/rx-if-directive#use-render-strategies-strategy).
    *
    * @example
    *
@@ -216,16 +216,146 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
 
   /**
    * @description
+   * A trigger to manually set the active template. It accepts a `RxNotificationKind`
+   * which determines what template to display. If no template is given, a context
+   * variable resembling the notification state is put into the `Next`
+   * template of the directive
+   *
+   * @example
+   * <ng-container
+   *  *rxIf="
+   *    show$;
+   *    let e = error;
+   *    templateTrg: templateTrigger$
+   * ">
+   *
+   *   <app-hero></app-hero>
+   *   <error *ngIf="e"></error>
+   * </ng-container>
+   *
+   * // trigger template from component.ts
+   * templateTrigger$.next(RxNotificationKind.error)
+   *
+   * @param { Observable<RxNotificationKind> } templateTrigger
+   * @see {@link RxNotificationKind}
+   */
+  @Input('rxIfTemplateTrg') templateTrigger?: Observable<RxNotificationKind>;
+
+  /**
+   * @description
+   * A trigger to manually activate the default template. It accepts any value,
+   * on emission it will switch to the let directives default template.
+   *
+   * @example
+   * <ng-container
+   *  *rxIf="
+   *    show$;
+   *    suspense: suspense
+   *    nextTrg: nextTrigger$
+   * ">
+   *
+   *   <app-hero></app-hero>
+   * </ng-container>
+   *
+   * <ng-template #suspense><loader></loader></ng-template>
+   *
+   * // trigger template from component.ts
+   * nextTrigger$.next()
+   *
+   * @param { Observable<unknown> } nextTrigger
+   */
+  @Input('rxIfNextTrg') nextTrigger?: Observable<unknown>;
+
+  /**
+   * @description
+   * A trigger to manually activate the suspense template. It accepts any value,
+   * on emission it will display the suspense template. If no template is given,
+   * the suspense context variable will be set to true instead.
+   *
+   * @example
+   * <ng-container
+   *  *rxIf="
+   *    show$;
+   *    let s = suspense;
+   *    suspenseTrg: suspenseTrigger$
+   * ">
+   *
+   *   <app-hero></app-hero>
+   *   <loader *ngIf="s"></loader>
+   * </ng-container>
+   *
+   *
+   * // trigger template from component.ts
+   * suspenseTrigger$.next()
+   *
+   * @param { Observable<unknown> } suspenseTrigger
+   */
+  @Input('rxIfSuspenseTrg') suspenseTrigger?: Observable<unknown>;
+
+  /**
+   * @description
+   * A trigger to manually activate the error template. It accepts any value,
+   * on emission it will display the error template. If no template is given,
+   * the error context variable will be set to true instead.
+   *
+   * @example
+   * <ng-container
+   *  *rxIf="
+   *    show$;
+   *    let e = error;
+   *    errorTrg: errorTrigger$
+   * ">
+   *
+   *   <app-hero></app-hero>
+   *   <error *ngIf="e"></error>
+   * </ng-container>
+   *
+   * // trigger template from component.ts
+   * errorTrigger$.next()
+   *
+   * @param { Observable<unknown> } errorTrigger
+   */
+  @Input('rxIfErrorTrg') errorTrigger?: Observable<unknown>;
+
+  /**
+   * @description
+   * A trigger to manually activate the complete template. It accepts any value,
+   * on emission it will display the error template. If no template is given,
+   * the complete context variable will complete set to true instead.
+   *
+   * @example
+   * <ng-container
+   *  *rxIf="
+   *    show$;
+   *    let c = complete;
+   *    completeTrg: completeTrigger$
+   * ">
+   *
+   *   <app-hero></app-hero>
+   *   <done *ngIf="c"></done>
+   * </ng-container>
+   *
+   * // trigger template from component.ts
+   * completeTrigger$.next()
+   *
+   * @param { Observable<unknown> } completeTrigger
+   */
+  @Input('rxIfCompleteTrg') completeTrigger?: Observable<unknown>;
+
+  /**
+   * @description
    *
    * Structural directives maintain `EmbeddedView`s within a components' template.
    * Depending on the bound value as well as the configured `RxRenderStrategy`,
    * updates processed by the `*rxIf` directive might be asynchronous.
    *
-   * Whenever a template gets inserted into, or removed from, its parent component, the directive has to inform the parent in order to
-   * update any view- or contentquery (`@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren`).
+   * Whenever a template gets inserted into, or removed from, its parent component, the directive has to inform the
+   *   parent in order to update any view- or contentquery (`@ViewChild`, `@ViewChildren`, `@ContentChild`,
+   *   `@ContentChildren`).
    *
    * Read more about this in the
-   * [official docs](https://www.rx-angular.io/docs/template/api/rx-if-directive#local-strategies-and-view-content-queries-parent).
+   * [official
+   *   docs](https://www.rx-angular.io/docs/template/api/rx-if-directive#local-strategies-and-view-content-queries-parent).
    *
    * @example
    * \@Component({
@@ -329,7 +459,10 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
   }
 
   /** @internal */
-  private observablesHandler = createTemplateNotifier<boolean>();
+  private triggerHandler = new ReplaySubject<RxNotificationKind>(1);
+
+  /** @internal */
+  private templateNotifier = createTemplateNotifier<boolean>();
 
   /** @internal */
   private readonly strategyHandler = coerceAllFactory<RxStrategyNames<string>>(
@@ -357,15 +490,21 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
   /** @internal */
   ngOnInit() {
     this.subscription.add(
-      this.observablesHandler.values$.subscribe(({ kind, value }) => {
-        if (kind === 'next' && value !== undefined) {
-          this.lastValidValue = value;
-        }
-      })
+      merge(
+        this.templateTrigger || NEVER,
+        this.nextTrigger?.pipe(map(() => RxNotificationKind.Next)) || NEVER,
+        this.suspenseTrigger?.pipe(map(() => RxNotificationKind.Suspense)) ||
+          NEVER,
+        this.completeTrigger?.pipe(map(() => RxNotificationKind.Complete)) ||
+          NEVER,
+        this.errorTrigger?.pipe(map(() => RxNotificationKind.Error)) || NEVER
+      )
+        .pipe(filter((v) => !!v))
+        .subscribe((t) => this.triggerHandler.next(t))
     );
     this.subscription.add(
       this.templateManager
-        .render(this.observablesHandler.values$)
+        .render(this.templateNotifier.values$)
         .subscribe((n) => {
           this.rendered$.next(n);
           this._renderObserver?.next(n);
@@ -402,15 +541,14 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
         RxIfTemplateNames.suspense,
         this.suspense
       );
-      this.observablesHandler.withInitialSuspense(!!this.suspense);
+      this.templateNotifier.withInitialSuspense(!!this.suspense);
     }
 
     if (changes.error) {
       this.templateManager.addTemplateRef(RxIfTemplateNames.error, this.error);
     }
-
     if (changes.rxIf) {
-      this.observablesHandler.next(this.rxIf);
+      this.templateNotifier.next(this.rxIf);
     }
   }
 
@@ -445,20 +583,15 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
         strategies: this.strategyProvider.strategies,
       },
       notificationToTemplateName: {
-        [RxNotificationKind.Suspense]: () =>
-          this.suspense
-            ? RxIfTemplateNames.suspense
-            : getNextTemplate(this.lastValidValue),
-        [RxNotificationKind.Next]: getNextTemplate.bind(this),
-        [RxNotificationKind.Error]: () =>
-          this.error
-            ? RxIfTemplateNames.error
-            : getNextTemplate(this.lastValidValue),
-        [RxNotificationKind.Complete]: () =>
-          this.complete
-            ? RxIfTemplateNames.complete
-            : getNextTemplate(this.lastValidValue),
+        [RxNotificationKind.Suspense]: (value) =>
+          this.suspense ? RxIfTemplateNames.suspense : getNextTemplate(value),
+        [RxNotificationKind.Next]: (value) => getNextTemplate(value),
+        [RxNotificationKind.Error]: (value) =>
+          this.error ? RxIfTemplateNames.error : getNextTemplate(value),
+        [RxNotificationKind.Complete]: (value) =>
+          this.complete ? RxIfTemplateNames.complete : getNextTemplate(value),
       },
+      templateTrigger$: this.triggerHandler,
     });
     this.templateManager.addTemplateRef(
       RxIfTemplateNames.then,
