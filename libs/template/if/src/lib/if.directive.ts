@@ -65,15 +65,17 @@ import {
   selector: '[rxIf]',
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
-export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
+export class RxIf<T = unknown>
+  implements OnInit, OnChanges, OnDestroy, OnChanges
+{
   /** @internal */
   private subscription = new Subscription();
   /** @internal */
   private _renderObserver: NextObserver<unknown>;
   /** @internal */
   private templateManager: RxTemplateManager<
-    boolean,
-    RxIfViewContext,
+    T,
+    RxIfViewContext<T>,
     rxIfTemplateNames
   >;
 
@@ -93,9 +95,9 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
    *   <app-hero></app-hero>
    * </ng-container>
    *
-   * @param { ObservableInput<boolean> | boolean } rxIf
+   * @param { ObservableInput<T> | T } rxIf
    */
-  @Input() rxIf: ObservableInput<boolean> | boolean;
+  @Input() rxIf: ObservableInput<T> | T;
 
   /**
    * @description
@@ -146,7 +148,7 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
    * <app-hero *rxIf="show$; else: noHero"></app-hero>
    * <ng-template #noHero><no-hero></no-hero></ng-template>
    */
-  @Input('rxIfElse') else: TemplateRef<RxIfViewContext>;
+  @Input('rxIfElse') else: TemplateRef<RxIfViewContext<T>>;
 
   /**
    * @description
@@ -156,7 +158,7 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
    * <ng-container *rxIf="show$; then: hero"></ng-container>
    * <ng-template #hero><app-hero></app-hero></ng-template>
    */
-  @Input('rxIfThen') then: TemplateRef<RxIfViewContext>;
+  @Input('rxIfThen') then: TemplateRef<RxIfViewContext<T>>;
 
   /**
    * @description
@@ -176,7 +178,7 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
    *
    * @param { TemplateRef<RxIfViewContext> } suspense
    */
-  @Input('rxIfSuspense') suspense: TemplateRef<RxIfViewContext>;
+  @Input('rxIfSuspense') suspense: TemplateRef<RxIfViewContext<T>>;
 
   /**
    * @description
@@ -194,7 +196,7 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
    *
    * @param { TemplateRef<RxIfViewContext> } suspense
    */
-  @Input('rxIfComplete') complete: TemplateRef<RxIfViewContext>;
+  @Input('rxIfComplete') complete: TemplateRef<RxIfViewContext<T>>;
 
   /**
    * @description
@@ -212,7 +214,7 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
    *
    * @param { TemplateRef<RxIfViewContext> } suspense
    */
-  @Input('rxIfError') error: TemplateRef<RxIfViewContext>;
+  @Input('rxIfError') error: TemplateRef<RxIfViewContext<T>>;
 
   /**
    * @description
@@ -462,7 +464,7 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
   private triggerHandler = new ReplaySubject<RxNotificationKind>(1);
 
   /** @internal */
-  private templateNotifier = createTemplateNotifier<boolean>();
+  private templateNotifier = createTemplateNotifier<T>();
 
   /** @internal */
   private readonly strategyHandler = coerceAllFactory<RxStrategyNames<string>>(
@@ -475,7 +477,7 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
   /** @internal */
   private readonly rendered$ = new Subject<void>();
   /** @internal */
-  private get thenTemplate(): TemplateRef<RxIfViewContext> {
+  private get thenTemplate(): TemplateRef<RxIfViewContext<T>> {
     return this.then ? this.then : this.templateRef;
   }
 
@@ -483,7 +485,7 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
     private strategyProvider: RxStrategyProvider,
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
-    private readonly templateRef: TemplateRef<RxIfViewContext>,
+    private readonly templateRef: TemplateRef<RxIfViewContext<T>>,
     private readonly viewContainerRef: ViewContainerRef
   ) {}
 
@@ -567,8 +569,8 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
         : undefined;
     };
     this.templateManager = createTemplateManager<
-      boolean,
-      RxIfViewContext,
+      T,
+      RxIfViewContext<T>,
       rxIfTemplateNames
     >({
       templateSettings: {
@@ -598,6 +600,35 @@ export class RxIf implements OnInit, OnChanges, OnDestroy, OnChanges {
       this.thenTemplate
     );
     this.templateManager.nextStrategy(this.strategyHandler.values$);
+  }
+
+  /** @internal */
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  public static rxIfUseIfTypeGuard: void;
+
+  /**
+   * Assert the correct type of the expression bound to the `ngIf` input within the template.
+   *
+   * The presence of this static field is a signal to the Ivy template type check compiler that
+   * when the `NgIf` structural directive renders its template, the type of the expression bound
+   * to `ngIf` should be narrowed in some way. For `NgIf`, the binding expression itself is used to
+   * narrow its type, which allows the strictNullChecks feature of TypeScript to work with `NgIf`.
+   */
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  static ngTemplateGuard_rxIf: 'binding';
+
+  /**
+   * Asserts the correct type of the context for the template that `NgIf` will render.
+   *
+   * The presence of this method is a signal to the Ivy template type-check compiler that the
+   * `NgIf` structural directive renders its template with a specific context type.
+   */
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  static ngTemplateContextGuard<T>(
+    dir: RxIf<T>,
+    ctx: any
+  ): ctx is RxIfViewContext<Exclude<T, false | 0 | '' | null | undefined>> {
+    return true;
   }
 }
 
