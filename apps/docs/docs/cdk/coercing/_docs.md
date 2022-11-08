@@ -1,7 +1,7 @@
 ## Resources
 
 **Example applications:**
-A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-cdk-coercing).
+A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-cdk-coercion).
 
 ## Motivation
 
