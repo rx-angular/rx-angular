@@ -7,7 +7,13 @@ import {
   TemplateRef,
   TrackByFunction,
 } from '@angular/core';
-import { combineLatest, MonoTypeOperatorFunction, Observable, of } from 'rxjs';
+import {
+  combineLatest,
+  MonoTypeOperatorFunction,
+  NEVER,
+  Observable,
+  of,
+} from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
@@ -119,8 +125,9 @@ export function createListTemplateManager<
           let changes: IterableChanges<T>;
           if (differ) {
             if (partiallyFinished) {
-              const currentIterable = [];
-              for (let i = 0, ilen = viewContainerRef.length; i < ilen; i++) {
+              const length = viewContainerRef.length;
+              const currentIterable = new Array<T>(viewContainerRef.length);
+              for (let i = 0; i < length; i++) {
                 const viewRef = <EmbeddedViewRef<C>>viewContainerRef.get(i);
                 currentIterable[i] = viewRef.context.$implicit;
               }
@@ -137,7 +144,7 @@ export function createListTemplateManager<
         // Cancel old renders
         switchMap(({ changes, iterable, strategy }) => {
           if (!changes) {
-            return of([]);
+            return of(iterable);
           }
           const values = iterable || [];
           // TODO: we might want to treat other iterables in a more performant way than Array.from()
