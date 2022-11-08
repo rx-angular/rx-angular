@@ -1,30 +1,22 @@
 import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
-import {
   ComponentFixture,
   fakeAsync,
   TestBed,
   tick,
 } from '@angular/core/testing';
+import { RxNotificationKind } from '@rx-angular/cdk/notifications';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import {
   BehaviorSubject,
   concat,
-  EMPTY,
   interval,
   NEVER,
-  Observable,
   of,
   Subject,
   throwError,
 } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
-import { RxIf } from '../if.directive';
 import { IfModule } from '../if.module';
 import { createTestComponent, TestComponent } from './fixtures';
 
@@ -36,6 +28,11 @@ const ifContextTemplatesTemplate = `
         suspense: suspense;
         error: error;
         complete: complete;
+        nextTrg: nextTrg$;
+        suspenseTrg: suspenseTrg$;
+        errorTrg: errorTrg$;
+        completeTrg: completeTrg$;
+        templateTrg: templateTrg$;
       "
     >
       <span class="context">next</span>
@@ -188,6 +185,46 @@ describe('RxIf reactive context templates', () => {
         expectContextToBe('complete');
       })
     );
+  });
+
+  describe('trigger', () => {
+    beforeEach(() => {
+      component.value$ = new BehaviorSubject(true);
+      fixture.detectChanges();
+    });
+
+    it('should render suspense', () => {
+      component.suspenseTrg$.next();
+      expectContextToBe('suspense');
+    });
+
+    it('should render complete', () => {
+      component.completeTrg$.next();
+      expectContextToBe('complete');
+    });
+
+    it('should render error', () => {
+      component.errorTrg$.next();
+      expectContextToBe('error');
+    });
+
+    it('should render next->suspense->error->complete', () => {
+      expectContextToBe('next');
+      component.templateTrg$.next(RxNotificationKind.Suspense);
+      expectContextToBe('suspense');
+      component.templateTrg$.next(RxNotificationKind.Error);
+      expectContextToBe('error');
+      component.templateTrg$.next(RxNotificationKind.Complete);
+      expectContextToBe('complete');
+    });
+
+    it('should not switch to next when value is falsy without else template', () => {
+      expectContextToBe('next');
+      (component.value$ as any).next(false);
+      expect(contextElement()).toBeNull();
+      component.templateTrg$.next(RxNotificationKind.Next);
+      expect(contextElement()).toBeNull();
+    });
   });
 });
 

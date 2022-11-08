@@ -337,7 +337,7 @@ describe('rxIf directive observable values', () => {
     );
 
     it(
-      'should have suspense context',
+      'should not have suspense context',
       waitForAsync(() => {
         const template =
           '<span *rxIf="booleanCondition$; let v; let suspense = suspense">{{suspense}}</span>';
@@ -348,7 +348,7 @@ describe('rxIf directive observable values', () => {
         expect(fixture.nativeElement.textContent).toBe('false');
 
         getComponent().booleanCondition$.next(undefined);
-        expect(fixture.nativeElement.textContent).toBe('true');
+        expect(fixture.nativeElement.textContent).toBe('');
       })
     );
 

@@ -4,6 +4,7 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
+import { RxNotificationKind } from '@rx-angular/cdk/notifications';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import {
@@ -27,7 +28,12 @@ const ifContextTemplate = `
         else falsy;
         let s = suspense;
         let e = error;
-        let c = complete
+        let c = complete;
+        nextTrg: nextTrg$;
+        suspenseTrg: suspenseTrg$;
+        errorTrg: errorTrg$;
+        completeTrg: completeTrg$;
+        templateTrg: templateTrg$;
       "
     >
       <span class="value">truthy</span>
@@ -174,7 +180,7 @@ describe('RxIf reactive context variables', () => {
       component.value$ = undefined;
       fixture.detectChanges();
       expectContextToBe('suspense');
-      expectContentToBe('truthy');
+      expectContentToBe('falsy');
     });
 
     it('should show suspense context when switching from value to undefined (Observable)', () => {
@@ -185,7 +191,7 @@ describe('RxIf reactive context variables', () => {
       expectContentToBe('truthy');
       value$.next(undefined);
       expectContextToBe('suspense');
-      expectContentToBe('truthy');
+      expectContentToBe('falsy');
     });
 
     it('should render "next"->"complete" contexts and update view context for the full observable lifecycle', fakeAsync(() => {
@@ -207,6 +213,49 @@ describe('RxIf reactive context variables', () => {
       expectContentToBe('truthy');
       expectContextToBe('complete');
     }));
+  });
+
+  describe('trigger', () => {
+    describe.each([[true], [false]])('condition: %p', (condition) => {
+      const templateName = condition ? 'truthy' : 'falsy';
+
+      beforeEach(() => {
+        component.value$ = new BehaviorSubject(condition);
+        fixture.detectChanges();
+      });
+
+      it('should render suspense', () => {
+        component.suspenseTrg$.next();
+        expectContentToBe(templateName);
+        expectContextToBe('suspense');
+      });
+
+      it('should render complete', () => {
+        component.completeTrg$.next();
+        expectContentToBe(templateName);
+        expectContextToBe('complete');
+      });
+
+      it('should render error', () => {
+        component.errorTrg$.next();
+        expectContentToBe(templateName);
+        expectContextToBe('error');
+      });
+
+      it('should render next->suspense->error->complete', () => {
+        expectContentToBe(templateName);
+        expectContextToBe('next');
+        component.templateTrg$.next(RxNotificationKind.Suspense);
+        expectContentToBe(templateName);
+        expectContextToBe('suspense');
+        component.templateTrg$.next(RxNotificationKind.Error);
+        expectContentToBe(templateName);
+        expectContextToBe('error');
+        component.templateTrg$.next(RxNotificationKind.Complete);
+        expectContentToBe(templateName);
+        expectContextToBe('complete');
+      });
+    });
   });
 });
 
