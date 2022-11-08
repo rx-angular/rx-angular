@@ -17,7 +17,7 @@ import { AppShellComponent } from './app-shell-component/app-shell.component';
 import { AppShellSideNavItemDirective } from './side-nav/side-nav-item.directive';
 import { AppShellSideNavComponent } from './side-nav/side-nav.component';
 import { RxLetModule } from '../rx-angular-pocs/template/directives/let';
-import { IfModule } from '@rx-angular/template/experimental/if';
+import { IfModule } from '@rx-angular/template/if';
 
 const exportedDeclarations = [
   AppShellHeaderContent,
