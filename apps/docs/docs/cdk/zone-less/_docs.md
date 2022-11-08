@@ -1,8 +1,3 @@
-## Resources
-
-**Example applications:**
-A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-cdk-zone-less).
-
 ## Motivation
 
 By default, Angular or better say zone.js patches most of the asynchronouse API's of the Browser.

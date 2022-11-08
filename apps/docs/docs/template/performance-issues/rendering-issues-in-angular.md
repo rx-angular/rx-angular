@@ -93,5 +93,5 @@ is the perfect candidate for being its base.
 
 Some further information about NgZone (zone.js):
 
-- [zone-js-references](https://gist.github.com/rx-angular/090684defbe926f398e8d3d4b0b1f0e1)
+- [zone-js-references](https://gist.github.com/090684defbe926f398e8d3d4b0b1f0e1)
 - [zone.js MODULE.md](https://github.com/angular/zone.js/blob/master/MODULE.md)

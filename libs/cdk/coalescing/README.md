@@ -33,4 +33,4 @@ yarn add @rx-angular/cdk
 
 ## Documentation
 
-- [Coalescing](https://rx-angular.io/docs/cdk/coalesing)
+- [Coalescing](https://rx-angular.io/docs/cdk/coalescing)

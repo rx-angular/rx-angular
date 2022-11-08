@@ -40,8 +40,6 @@ Every fired event in the Browser will now pass our patch from above.
 When `zone.js` is first time initialised on the page, it takes values of flags already located in `window` object.
 So it's important to set them **before `zone.js` is init**. So we need to inject `zone-flags.js` code **above** the zone code.
 
-[stackblitz](https://stackblitz.com/edit/angular-zone-flags?file=src%2Fpolyfills.ts).
-
 ```typescript
 import './zone-flags';
 import 'zone.js/dist/zone';
