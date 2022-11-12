@@ -6,7 +6,7 @@
 
 > A small typed and documented convenience helper to apply performance improvements over coalescing techniques.
 
-`@rx-angular/cdk/coalescing` is designed to help developers improve performance in high frequeltly changing values.
+`@rx-angular/cdk/coalescing` is designed to help developers improve performance in high frequently changing values.
 Besides a well documented and typed API it also provides a set of marble diagrams for better visual understanding as well as smart defaults.
 
 ## Key features
