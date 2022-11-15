@@ -2,6 +2,26 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0-rc.3](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.2...cdk@1.0.0-rc.3) (2022-11-15)
+
+
+### Bug Fixes
+
+* turn off updating deps in dist package.json ([faec3d4](https://github.com/rx-angular/rx-angular/commit/faec3d492a513d13cf78c4d2248a0dfbf18e5a52)), closes [#1405](https://github.com/rx-angular/rx-angular/issues/1405)
+
+
+### Features
+
+* **cdk:** remove unused fields from RxTemplateSettings model ([c203757](https://github.com/rx-angular/rx-angular/commit/c203757521582fc6777496a1f7c945799fc86771))
+* **cdk:** templateNotifier: handle initial suspense state based on observable value ([8e87101](https://github.com/rx-angular/rx-angular/commit/8e87101eefdcb9643238fbde6e526f8f72eb47a5))
+
+
+### BREAKING CHANGES
+
+* **cdk:** removed unused fields from RxTemplateSettings interface
+
+
+
 # [1.0.0-rc.2](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.1...cdk@1.0.0-rc.2) (2022-09-13)
 
 
