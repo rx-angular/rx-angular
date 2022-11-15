@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0-rc.4](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.3...template@1.0.0-rc.4) (2022-11-15)
+
+
+### Bug Fixes
+
+* **template:** rxFor: only subscribe once to value input ([3219492](https://github.com/rx-angular/rx-angular/commit/3219492c8d2f6cb7e7faa29d4f9226723cc9f391))
+
+
+### Features
+
+* **template:** letDirective: handle initial suspense for observables emitting undefined values ([66cbb80](https://github.com/rx-angular/rx-angular/commit/66cbb80bdf1438acd727ca263ad124e73c81e958))
+
+
+
 # [1.0.0-rc.3](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.2...template@1.0.0-rc.3) (2022-09-23)
 
 
