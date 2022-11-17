@@ -403,10 +403,12 @@ Learn more about the general concept of [`RenderStrategies`](../../cdk/render-st
 
 #### Local strategies and view/content queries (`parent`)
 
-When local rendering strategies are used, we need to treat view and content queries in a
-special way.
-To make `*rxLet` in such situations, a certain mechanism is implemented to
-execute change detection on the parent (`parent`).
+Structural directives maintain `EmbeddedViews` within a components' template.
+Depending on the bound value as well as the configured `RxRenderStrategy`, updates processed by the
+`@rx-angular/template` directives can be asynchronous.
+
+Whenever a template gets inserted into, or removed from, its parent component, the directive has to inform the parent in order to
+update any view- or contentquery (`@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren`).
 
 This is required if your components state is dependent on its view or content children:
 

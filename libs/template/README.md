@@ -14,13 +14,13 @@
 
 - [LetDirective (\*rxLet)](https://rx-angular.io/docs/template/api/let-directive)
 - [RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/rx-for-directive)
+- [RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/rx-if-directive)
 - [UnpatchDirective (unpatch)](https://rx-angular.io/docs/template/api/unpatch-directive)
 - [PushPipe (`push`)](https://rx-angular.io/docs/template/api/push-pipe)
 - [TemplateDirective (`*rxTemplate`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/template/src/lib/README.md)
 
 **Experimental features**
 
-- [🧪 RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/experimental/rx-if-directive)
 - [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/experimental/viewport-prio-directive)
 
 All experimental features are very stable and already tested in production apps for multiple month. The reason to have them in experimental is so we can make small typing changes without breaking changes.

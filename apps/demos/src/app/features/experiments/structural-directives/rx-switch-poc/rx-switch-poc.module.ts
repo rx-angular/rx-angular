@@ -14,7 +14,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { RxSwichModule } from '../../../../rx-angular-pocs/';
-import { IfModule } from '@rx-angular/template/experimental/if';
+import { IfModule } from '@rx-angular/template/if';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 
 @NgModule({
