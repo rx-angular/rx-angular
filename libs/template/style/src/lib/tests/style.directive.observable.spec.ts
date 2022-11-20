@@ -109,15 +109,14 @@ describe('RxStyle Observable values', () => {
     })
   );
 
-  xit(
+  it(
     'should add and remove styles specified using style.unit notation',
     waitForAsync(() => {
-      // TODO: the directive currently does not support { [key: string]: Observable }
       const template = `<div [rxStyle]="{'max-width.px': expr}"></div>`;
 
       fixture = createTestComponent(template);
 
-      getComponent().expr = '40';
+      getComponent().expr = of('40');
       fixture.detectChanges();
       expect(getElement().styles).toEqual({ 'max-width': '40px' });
 
@@ -128,18 +127,16 @@ describe('RxStyle Observable values', () => {
   );
 
   // https://github.com/angular/angular/issues/21064
-  xit(
+  it(
     'should add and remove styles which names are not dash-cased',
     waitForAsync(() => {
-      // TODO: the directive currently does not support { [key: string]: Observable }
       fixture = createTestComponent(`<div [rxStyle]="{'color': expr}"></div>`);
 
-      getComponent().expr = 'green';
+      getComponent().expr = new BehaviorSubject('green');
       fixture.detectChanges();
       expect(getElement().styles).toEqual({ color: 'green' });
 
-      getComponent().expr = null;
-      fixture.detectChanges();
+      getComponent().expr.next(null);
       expect(getElement().styles).not.toContain('color');
     })
   );
@@ -249,11 +246,11 @@ describe('RxStyle Observable values', () => {
     })
   );
 
-  xit('should not write to the native node unless the bound expression has changed', () => {
+  it('should not write to the native node unless the bound expression has changed', () => {
     const template = `<div [rxStyle]="{'color': expr}"></div>`;
 
     fixture = createTestComponent(template);
-    fixture.componentInstance.expr = 'red';
+    fixture.componentInstance.expr = new BehaviorSubject('red');
 
     fixture.detectChanges();
     expect(getElement().styles).toEqual({ color: 'red' });
@@ -268,29 +265,49 @@ describe('RxStyle Observable values', () => {
       'blue'
     );
 
-    fixture.componentInstance.expr = 'yellow';
-    fixture.detectChanges();
+    fixture.componentInstance.expr.next('yellow');
     // Assert that the style has changed now that the model has changed
     expect(getElement().styles).toEqual({ color: 'yellow' });
   });
 
-  xit('should correctly update style with units (.px) when the model is set to number', () => {
+  it('should correctly update style with units (.px) when the model is set to number', () => {
     const template = `<div [rxStyle]="{'width.px': expr}"></div>`;
     fixture = createTestComponent(template);
-    fixture.componentInstance.expr = 400;
+    fixture.componentInstance.expr = of(400);
 
     fixture.detectChanges();
     expect(getElement().styles).toEqual({ width: '400px' });
   });
 
-  xit('should handle CSS variables', () => {
+  it('should accept a mix of reactive and observable values', () => {
+    const template = `<div [rxStyle]="expr"></div>`;
+    fixture = createTestComponent(template);
+    fixture.componentInstance.expr = { 'width.px': of(400), 'height.px': 20 };
+    fixture.detectChanges();
+    expect(getElement().styles).toEqual({ width: '400px', height: '20px' });
+  });
+
+  xit('should react to changes of a mix of reactive and observable values', () => {
+    // TODO: clarify if we want to support this feature. It would increase the complexity of a lot
+    const template = `<div [rxStyle]="expr"></div>`;
+    fixture = createTestComponent(template);
+    fixture.componentInstance.expr = { 'width.px': of(400), 'height.px': 20 };
+    fixture.detectChanges();
+    expect(getElement().styles).toEqual({ width: '400px', height: '20px' });
+
+    fixture.componentInstance.expr['height.px'] = 50;
+    fixture.detectChanges();
+    expect(getElement().styles).toEqual({ width: '400px', height: '50px' });
+  });
+
+  it('should handle CSS variables', () => {
     if (!supportsCssVariables) {
       return;
     }
 
     const template = `<div style="width: var(--width)" [rxStyle]="{'--width': expr}"></div>`;
     fixture = createTestComponent(template);
-    fixture.componentInstance.expr = '100px';
+    fixture.componentInstance.expr = of('100px');
     fixture.detectChanges();
 
     const target: HTMLElement = fixture.nativeElement.querySelector('div');

@@ -18,19 +18,27 @@ import {
   RxStrategyNames,
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
-import { coerceObservableWith } from '@rx-angular/cdk/coercing';
+import { coerceObservable } from '@rx-angular/cdk/coercing';
 import {
   isObservable,
   NextObserver,
   Observable,
-  ObservableInput,
   ReplaySubject,
   Subscription,
   switchMap,
+  combineLatest,
 } from 'rxjs';
 import { map, shareReplay, switchAll } from 'rxjs/operators';
 
-type RxStyleValues = { [style: string]: any } | null | undefined;
+type RxStyleMap = {
+  [style: string]: string | number | Observable<number | string>;
+};
+function isRxStyleMap(v: unknown): v is RxStyleMap {
+  const keys = Object.keys(v);
+  return typeof v === 'object' && keys.some((key) => isObservable(v[key]));
+}
+type RxStyleValues = { [style: string]: number | string } | null | undefined;
+type RxStyleInput = Observable<RxStyleValues> | RxStyleValues | RxStyleMap;
 
 /* eslint-disable @angular-eslint/no-conflicting-lifecycle */
 @Directive({ selector: '[rxStyle]' })
@@ -41,19 +49,38 @@ export class RxStyle implements OnInit, OnChanges, DoCheck, OnDestroy {
   /** @internal */
   private renderOnCheck = false;
   /** @internal */
-  private readonly values$ = new ReplaySubject<
-    Observable<RxStyleValues> | RxStyleValues
-  >(1);
+  private readonly values$ = new ReplaySubject<RxStyleInput>(1);
   /** @internal */
   private readonly styles$ = this.values$.pipe(
-    coerceObservableWith(),
+    map((values) => {
+      if (isRxStyleMap(values)) {
+        return combineLatest(
+          Object.keys(values).map((key) => {
+            return coerceObservable(values[key]).pipe(
+              map((value) => ({ [key]: value }))
+            );
+          })
+        ).pipe(
+          map((values) =>
+            values.reduce(
+              (styleValues, currentValue) => ({
+                ...styleValues,
+                ...currentValue,
+              }),
+              {} as RxStyleValues
+            )
+          )
+        );
+      }
+      return coerceObservable(values);
+    }),
     switchAll(),
     shareReplay({ refCount: true, bufferSize: 1 })
   );
   /** @internal */
   private differ: KeyValueDiffer<string, string | number> | null = null;
 
-  @Input('rxStyle') style: ObservableInput<RxStyleValues> | RxStyleValues;
+  @Input('rxStyle') style: RxStyleInput;
 
   @Input('rxStyleStrategy') strategy: RxStrategyNames<string>;
 
@@ -72,7 +99,11 @@ export class RxStyle implements OnInit, OnChanges, DoCheck, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.style) {
-      if (!isObservable(this.style)) {
+      if (
+        this.style != null &&
+        !isObservable(this.style) &&
+        !isRxStyleMap(this.style)
+      ) {
         this.staticStyles = this.style;
         this.renderOnCheck = true;
       } else {
