@@ -26,7 +26,7 @@ The ngIf hack looks like this:
 </ng-container>
 ```
 
-The problem is that `*ngIf` interferes with rendering and in case of falsy values (`0`, ``, `false`, `null`, `undefined`) the component
+The problem is that `*ngIf` interferes with rendering and in case of falsy values (`0`, `''`, `false`, `null`, `undefined`) the component
 would be hidden. This issue is a big problem and leads to many production bugs as its edge cases are often overlooked.
 
 **Downsides of the "`ngIf`-hack"**
