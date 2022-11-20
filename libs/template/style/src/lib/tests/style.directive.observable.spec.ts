@@ -1,11 +1,12 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { BehaviorSubject, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { createTestComponent, TestComponent } from './fixtures';
-import { RxStyle } from '../style.directive';
 import { RxStyleModule } from '../style.module';
 
-describe('RxStyle', () => {
+describe('RxStyle Observable values', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   const supportsCssVariables =
@@ -23,7 +24,7 @@ describe('RxStyle', () => {
   }
 
   afterEach(() => {
-    fixture = null!;
+    fixture = null;
   });
 
   beforeEach(() => {
@@ -34,7 +35,17 @@ describe('RxStyle', () => {
         {
           provide: RX_RENDER_STRATEGIES_CONFIG,
           useValue: {
-            primaryStrategy: 'native',
+            primaryStrategy: 'urgent',
+            customStrategies: {
+              urgent: {
+                name: 'urgent',
+                work: (cdRef) => cdRef.detectChanges(),
+                behavior:
+                  ({ work }) =>
+                  (o$) =>
+                    o$.pipe(tap(() => work())),
+              },
+            },
           },
         },
       ],
@@ -44,8 +55,9 @@ describe('RxStyle', () => {
   it(
     'should add styles specified in an object literal',
     waitForAsync(() => {
-      const template = `<div [rxStyle]="{'max-width': '40px'}"></div>`;
+      const template = `<div [rxStyle]="expr"></div>`;
       fixture = createTestComponent(template);
+      getComponent().expr = of({ 'max-width': '40px' });
       fixture.detectChanges();
       expect(getElement().styles).toEqual({
         'max-width': '40px',
@@ -58,14 +70,11 @@ describe('RxStyle', () => {
     waitForAsync(() => {
       const template = `<div [rxStyle]="expr"></div>`;
       fixture = createTestComponent(template);
-
-      getComponent().expr = { 'max-width': '40px' };
+      getComponent().expr = new BehaviorSubject({ 'max-width': '40px' });
       fixture.detectChanges();
       expect(getElement().styles).toEqual({ 'max-width': '40px' });
 
-      const expr = getComponent().expr;
-      expr['max-width'] = '30%';
-      fixture.detectChanges();
+      getComponent().expr.next({ 'max-width': '30%' });
       expect(getElement().styles).toEqual({ 'max-width': '30%' });
     })
   );
@@ -76,12 +85,11 @@ describe('RxStyle', () => {
       const template = `<div [rxStyle]="expr"></div>`;
       fixture = createTestComponent(template);
 
-      getComponent().expr = { 'max-width': '40px' };
+      getComponent().expr = new BehaviorSubject({ 'max-width': '40px' });
       fixture.detectChanges();
       expect(getElement().styles).toEqual({ 'max-width': '40px' });
 
-      getComponent().expr = null;
-      fixture.detectChanges();
+      getComponent().expr.next(null);
       expect(getElement().styles).not.toContain('max-width');
     })
   );
@@ -92,19 +100,19 @@ describe('RxStyle', () => {
       const template = `<div [rxStyle]="expr"></div>`;
       fixture = createTestComponent(template);
 
-      getComponent().expr = { 'max-width': '40px' };
+      getComponent().expr = new BehaviorSubject({ 'max-width': '40px' });
       fixture.detectChanges();
       expect(getElement().styles).toEqual({ 'max-width': '40px' });
 
-      getComponent().expr = undefined;
-      fixture.detectChanges();
+      getComponent().expr.next(undefined);
       expect(getElement().styles).not.toContain('max-width');
     })
   );
 
-  it(
+  xit(
     'should add and remove styles specified using style.unit notation',
     waitForAsync(() => {
+      // TODO: the directive currently does not support { [key: string]: Observable }
       const template = `<div [rxStyle]="{'max-width.px': expr}"></div>`;
 
       fixture = createTestComponent(template);
@@ -120,9 +128,10 @@ describe('RxStyle', () => {
   );
 
   // https://github.com/angular/angular/issues/21064
-  it(
+  xit(
     'should add and remove styles which names are not dash-cased',
     waitForAsync(() => {
+      // TODO: the directive currently does not support { [key: string]: Observable }
       fixture = createTestComponent(`<div [rxStyle]="{'color': expr}"></div>`);
 
       getComponent().expr = 'green';
@@ -142,12 +151,11 @@ describe('RxStyle', () => {
 
       fixture = createTestComponent(template);
 
-      getComponent().expr = { 'max-width.px': '40' };
+      getComponent().expr = new BehaviorSubject({ 'max-width.px': '40' });
       fixture.detectChanges();
       expect(getElement().styles).toEqual({ 'max-width': '40px' });
 
-      getComponent().expr = { 'max-width.em': '40' };
-      fixture.detectChanges();
+      getComponent().expr.next({ 'max-width.em': '40' });
       expect(getElement().styles).toEqual({ 'max-width': '40em' });
     })
   );
@@ -160,22 +168,21 @@ describe('RxStyle', () => {
 
       fixture = createTestComponent(template);
 
-      getComponent().expr = {
+      getComponent().expr = new BehaviorSubject({
         // height, width order is important here
         height: '10px',
         width: '10px',
-      };
+      });
 
       fixture.detectChanges();
       expect(getElement().styles).toEqual({ height: '10px', width: '10px' });
 
-      getComponent().expr = {
+      getComponent().expr.next({
         // width, height order is important here
         width: '5px',
         height: '5px',
-      };
+      });
 
-      fixture.detectChanges();
       expect(getElement().styles).toEqual({ height: '5px', width: '5px' });
     })
   );
@@ -187,12 +194,11 @@ describe('RxStyle', () => {
 
       fixture = createTestComponent(template);
 
-      getComponent().expr = { 'max-width': '40px' };
+      getComponent().expr = new BehaviorSubject({ 'max-width': '40px' });
       fixture.detectChanges();
       expect(getElement().styles).toEqual({ 'max-width': '40px' });
 
-      delete getComponent().expr['max-width'];
-      fixture.detectChanges();
+      getComponent().expr.next({});
       expect(getElement().styles).not.toContain('max-width');
     })
   );
@@ -204,7 +210,7 @@ describe('RxStyle', () => {
 
       fixture = createTestComponent(template);
 
-      getComponent().expr = { 'max-width': '40px' };
+      getComponent().expr = new BehaviorSubject({ 'max-width': '40px' });
       fixture.detectChanges();
       expect((getElement().nativeElement as HTMLElement).style.fontSize).toBe(
         '12px'
@@ -212,8 +218,7 @@ describe('RxStyle', () => {
       expect((getElement().nativeElement as HTMLElement).style.maxWidth).toBe(
         '40px'
       );
-      delete getComponent().expr['max-width'];
-      fixture.detectChanges();
+      getComponent().expr.next({});
       expect(getElement().styles).not.toContain('max-width');
       expect((getElement().nativeElement as HTMLElement).style.fontSize).toBe(
         '12px'
@@ -228,15 +233,14 @@ describe('RxStyle', () => {
 
       fixture = createTestComponent(template);
 
-      getComponent().expr = { 'max-width': '40px' };
+      getComponent().expr = new BehaviorSubject({ 'max-width': '40px' });
       fixture.detectChanges();
       expect(getElement().styles).toEqual({
         'max-width': '40px',
         'font-size': '12px',
       });
 
-      delete getComponent().expr['max-width'];
-      fixture.detectChanges();
+      getComponent().expr.next({});
       expect(getElement().styles).not.toContain('max-width');
       expect(getElement().styles).toEqual({
         'font-size': '12px',
@@ -245,7 +249,7 @@ describe('RxStyle', () => {
     })
   );
 
-  it('should not write to the native node unless the bound expression has changed', () => {
+  xit('should not write to the native node unless the bound expression has changed', () => {
     const template = `<div [rxStyle]="{'color': expr}"></div>`;
 
     fixture = createTestComponent(template);
@@ -270,7 +274,7 @@ describe('RxStyle', () => {
     expect(getElement().styles).toEqual({ color: 'yellow' });
   });
 
-  it('should correctly update style with units (.px) when the model is set to number', () => {
+  xit('should correctly update style with units (.px) when the model is set to number', () => {
     const template = `<div [rxStyle]="{'width.px': expr}"></div>`;
     fixture = createTestComponent(template);
     fixture.componentInstance.expr = 400;
@@ -279,7 +283,7 @@ describe('RxStyle', () => {
     expect(getElement().styles).toEqual({ width: '400px' });
   });
 
-  it('should handle CSS variables', () => {
+  xit('should handle CSS variables', () => {
     if (!supportsCssVariables) {
       return;
     }

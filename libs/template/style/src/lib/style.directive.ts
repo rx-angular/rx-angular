@@ -18,9 +18,7 @@ import {
   RxStrategyNames,
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
-import {
-  coerceObservableWith,
-} from '@rx-angular/cdk/coercing';
+import { coerceObservableWith } from '@rx-angular/cdk/coercing';
 import {
   isObservable,
   NextObserver,
@@ -31,6 +29,7 @@ import {
   switchMap,
 } from 'rxjs';
 import { map, shareReplay, switchAll } from 'rxjs/operators';
+
 type RxStyleValues = { [style: string]: any } | null | undefined;
 
 /* eslint-disable @angular-eslint/no-conflicting-lifecycle */
@@ -61,6 +60,7 @@ export class RxStyle implements OnInit, OnChanges, DoCheck, OnDestroy {
   @Input('rxStyleRenderCallback')
   renderObserver: NextObserver<RxStyleValues> | null = null;
 
+  /** @internal */
   private readonly subscription = new Subscription();
 
   constructor(
@@ -120,6 +120,7 @@ export class RxStyle implements OnInit, OnChanges, DoCheck, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  /** @internal */
   private getDiffer(
     values: RxStyleValues
   ): KeyValueDiffer<string, string | number> {
@@ -129,6 +130,7 @@ export class RxStyle implements OnInit, OnChanges, DoCheck, OnDestroy {
     return this.differ;
   }
 
+  /** @internal */
   private setStyle(
     nameAndUnit: string,
     value: string | number | null | undefined
@@ -151,6 +153,7 @@ export class RxStyle implements OnInit, OnChanges, DoCheck, OnDestroy {
     }
   }
 
+  /** @internal */
   private applyChanges(
     changes: KeyValueChanges<string, string | number>
   ): void {
