@@ -18,7 +18,7 @@ import {
   RxStrategyNames,
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
-import { coerceObservable } from '@rx-angular/cdk/coercing';
+import { coerceAllFactory, coerceObservable } from '@rx-angular/cdk/coercing';
 import {
   isObservable,
   NextObserver,
@@ -27,8 +27,11 @@ import {
   Subscription,
   switchMap,
   combineLatest,
+  Subject,
+  BehaviorSubject,
+  NEVER,
 } from 'rxjs';
-import { map, shareReplay, switchAll } from 'rxjs/operators';
+import { map, shareReplay, switchAll, withLatestFrom } from 'rxjs/operators';
 
 type RxStyleMap = {
   [style: string]: string | number | Observable<number | string>;
@@ -48,6 +51,13 @@ export class RxStyle implements OnInit, OnChanges, DoCheck, OnDestroy {
   private staticStyles: RxStyleValues;
   /** @internal */
   private renderOnCheck = false;
+  /** @internal */
+  private strategyHandler = coerceAllFactory(
+    () =>
+      new BehaviorSubject<RxStrategyNames<string>>(
+        this.strategyProvider.primaryStrategy
+      )
+  );
   /** @internal */
   private readonly values$ = new ReplaySubject<RxStyleInput>(1);
   /** @internal */
@@ -82,7 +92,12 @@ export class RxStyle implements OnInit, OnChanges, DoCheck, OnDestroy {
 
   @Input('rxStyle') style: RxStyleInput;
 
-  @Input('rxStyleStrategy') strategy: RxStrategyNames<string>;
+  @Input('rxStyleStrategy')
+  set strategy(
+    strategy: RxStrategyNames<string> | Observable<RxStrategyNames<string>>
+  ) {
+    this.strategyHandler.next(strategy);
+  }
 
   @Input('rxStyleRenderCallback')
   renderObserver: NextObserver<RxStyleValues> | null = null;
@@ -122,13 +137,14 @@ export class RxStyle implements OnInit, OnChanges, DoCheck, OnDestroy {
             styles,
             changes: this.getDiffer(styles)?.diff(styles),
           })),
-          switchMap(({ changes, styles }) =>
+          withLatestFrom(this.strategyHandler.values$),
+          switchMap(([{ changes, styles }, strategy]) =>
             changes
               ? onStrategy(
                   styles,
-                  this.strategyProvider.strategies[this.strategy] ??
+                  this.strategyProvider.strategies[strategy] ??
                     this.strategyProvider.strategies[
-                      this.strategyProvider.config.primaryStrategy
+                      this.strategyProvider.primaryStrategy
                     ],
                   () => {
                     this.applyChanges(changes);
