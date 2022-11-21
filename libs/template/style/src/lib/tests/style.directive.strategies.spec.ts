@@ -38,6 +38,10 @@ describe('RxStyle strategies', () => {
       ngZone = TestBed.inject(NgZone);
     });
 
+    afterEach(() => {
+      ngZone = null;
+    });
+
     it('should run outside ngZone', async () => {
       getComponent().strategy = 'normal';
       fixture.detectChanges();

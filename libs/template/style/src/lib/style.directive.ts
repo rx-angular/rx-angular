@@ -38,8 +38,12 @@ type RxStyleMap = {
   [style: string]: string | number | Observable<number | string>;
 };
 function isRxStyleMap(v: unknown): v is RxStyleMap {
-  const keys = Object.keys(v);
-  return typeof v === 'object' && keys.some((key) => isObservable(v[key]));
+  return (
+    v != null &&
+    typeof v === 'object' &&
+    !isObservable(v) &&
+    Object.keys(v).some((key) => isObservable(v[key]))
+  );
 }
 type RxStyleValues = { [style: string]: number | string } | null | undefined;
 type RxStyleInput = Observable<RxStyleValues> | RxStyleValues | RxStyleMap;
