@@ -279,7 +279,7 @@ describe('RxStyle Observable values', () => {
     expect(getElement().styles).toEqual({ width: '400px' });
   });
 
-  it('should accept a mix of reactive and observable values', () => {
+  it('should accept a mix of static and observable values', () => {
     const template = `<div [rxStyle]="expr"></div>`;
     fixture = createTestComponent(template);
     fixture.componentInstance.expr = { 'width.px': of(400), 'height.px': 20 };
@@ -287,7 +287,7 @@ describe('RxStyle Observable values', () => {
     expect(getElement().styles).toEqual({ width: '400px', height: '20px' });
   });
 
-  xit('should react to changes of a mix of reactive and observable values', () => {
+  xit('should react to changes of a mix of static and observable values', () => {
     // TODO: clarify if we want to support this feature. It would increase the complexity of a lot
     const template = `<div [rxStyle]="expr"></div>`;
     fixture = createTestComponent(template);

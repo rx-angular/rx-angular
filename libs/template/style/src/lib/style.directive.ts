@@ -9,6 +9,7 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   Renderer2,
   RendererStyleFlags2,
   SimpleChanges,
@@ -102,6 +103,9 @@ export class RxStyle implements OnInit, OnChanges, DoCheck, OnDestroy {
   @Input('rxStyleRenderCallback')
   renderObserver: NextObserver<RxStyleValues> | null = null;
 
+  @Output('rxStyleRenderCallback')
+  renderCallback = new Subject<RxStyleValues>();
+
   /** @internal */
   private readonly subscription = new Subscription();
 
@@ -150,10 +154,13 @@ export class RxStyle implements OnInit, OnChanges, DoCheck, OnDestroy {
                     this.applyChanges(changes);
                   }
                 )
-              : [styles]
+              : NEVER
           )
         )
-        .subscribe((rendered) => this.renderObserver?.next(rendered))
+        .subscribe((rendered) => {
+          this.renderObserver?.next(rendered);
+          this.renderCallback.next(rendered);
+        })
     );
   }
 
