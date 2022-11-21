@@ -32,6 +32,13 @@ const ReferenceList: ReferenceItem[] = [
     url: 'https://angular-movies-a12d3.web.app',
     platforms: ['Web'],
   },
+  {
+    title: 'Genba',
+    Svg: require('@site/static/img/references/genba-logo.svg').default,
+    description: <>Small project</>,
+    url: 'https://genba.fr',
+    platforms: ['Web'],
+  },
 ];
 
 function Reference({

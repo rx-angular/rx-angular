@@ -34,10 +34,12 @@ This repository holds a set of helpers to create **fully reactive** as well as *
     <td><img width="140" src="https://clickup.com/landing/images/logo-clickup_color.svg"></td>
     <td><img width="140" src="https://get.tapeapp.com/wp-content/uploads/2021/08/tape_logo_24px.svg"></td>
     <td><img height="80" src="https://avatars.githubusercontent.com/u/1733746?s=200&v=4"></td>
+    <td><img height="80" src="https://genba.fr/wp-content/uploads/2021/09/Helice-genba-couleur.png"></td>
   </tr>
    <tr>
     <th>Large scale application</th>
     <th>Medium size project</th>
+    <th>Small project</th>
     <th>Small project</th>
   </tr>
   <tr>
@@ -49,8 +51,12 @@ This repository holds a set of helpers to create **fully reactive** as well as *
       Url: https://get.tapeapp.com<br/>
       Platforms: Web, Mobile (ionic)
     </td>
-    <td> 
+    <td>
       Url: https://angular-movies-a12d3.web.app<br/>
+      Platforms: Web
+    </td>
+    <td>
+      Url: https://genba.fr<br/>
       Platforms: Web
     </td>
   </tr>
