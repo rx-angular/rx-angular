@@ -33,10 +33,10 @@
     "workspace-generator": "nx workspace-generator"
   },
   "lint-staged": {
-    "libs/**/!(images)/**/*.{ts,html,scss,md,json}": [
+    "**/!(images)/**/*.{ts,html,scss,md,json}": [
       "yarn affected:lint -- --uncommitted --fix --parallel"
     ],
-    "libs/**/*.{ts,html,scss,md,json}": [
+    "**/*.{ts,html,scss,md,json}": [
       "nx format:write --uncommitted"
     ]
   },
