@@ -475,7 +475,11 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     private readonly nextTemplateRef: TemplateRef<RxLetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef,
     private errorHandler: ErrorHandler
-  ) {}
+  ) {
+    for (let index = 0; index < 10; index++) {
+      console.log('new feature');
+    }
+  }
 
   /** @internal */
   private observablesHandler = createTemplateNotifier<U>();
