@@ -124,7 +124,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage/state/lcov.info
+          files: ./coverage/state/lcov.info
           flags: state
 
       - name: Upload template coverage
@@ -132,7 +132,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage/template/lcov.info
+          files: ./coverage/template/lcov.info
           flags: template
 
       - name: Upload cdk coverage
@@ -140,7 +140,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage/cdk/lcov.info
+          files: ./coverage/cdk/lcov.info
           flags: cdk
 
       - name: Upload eslint-plugin coverage
@@ -148,7 +148,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage/eslint-plugin/lcov.info
+          files: ./coverage/eslint-plugin/lcov.info
           flags: eslint-plugin
 
   # The docs project is built in a separate job because it requires Node.js 16
