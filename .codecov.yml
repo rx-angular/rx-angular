@@ -27,15 +27,19 @@ flags:
   state:
     paths:
       - libs/state
+    carryforward: true
   template:
     paths:
       - libs/template
+    carryforward: true
   cdk:
     paths:
       - libs/cdk
+    carryforward: true
   eslint-plugin:
     paths:
       - libs/eslint-plugin
+    carryforward: true
 
 comment:
   layout: diff, flags, files
