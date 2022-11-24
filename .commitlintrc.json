@@ -1,5 +1,5 @@
 {
-  "extends": ["@commitlint/config-conventional"],
+  "extends": ["@commitlint/config-angular"],
   "rules": {
     "subject-empty": [2, "never"],
     "scope-enum": [
