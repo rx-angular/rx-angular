@@ -196,8 +196,13 @@ function workLoop(
   // left.
   // Otherwise, newly added tasks won't run as `performingWork` is still `true`
   currentTask = currentTask ?? peek(taskQueue);
+  // We should also re-calculate the currentTime, as we need to account for the execution
+  // time of the NgZone tasks as well.
+  // If there is still a task in the queue, but no time is left for executing it,
+  // the scheduler will re-schedule the next tick anyway
+  currentTime = getCurrentTime();
   if (zoneChanged || (currentTask && !hitDeadline())) {
-    return workLoop(hasTimeRemaining, getCurrentTime(), currentTask);
+    return workLoop(hasTimeRemaining, currentTime, currentTask);
   }
   // Return whether there's additional work
   if (currentTask !== null) {
