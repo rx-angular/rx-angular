@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template/push';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 
 import { DirtyChecksModule } from '../../debug-helper/dirty-checks';
@@ -20,7 +20,11 @@ import { SiblingStaticComponent } from './sibling-static.component';
 import { SiblingStrategyComponent } from './sibling-strategy.component';
 import { ImageArrayModule } from '../../image-array/image-array.module';
 import { SiblingPixelImgComponent } from './sibling-pixel-img.component';
-import { RxContextModule, RxForModule, RxLetModule } from '../../../rx-angular-pocs';
+import {
+  RxContextModule,
+  RxForModule,
+  RxLetModule,
+} from '../../../rx-angular-pocs';
 
 const DECLARATIONS = [
   SiblingStaticComponent,
@@ -29,7 +33,7 @@ const DECLARATIONS = [
   SiblingProgressiveComponent,
   SiblingCustomComponent,
   SiblingStrategyComponent,
-  SiblingPixelImgComponent
+  SiblingPixelImgComponent,
 ];
 
 @NgModule({
