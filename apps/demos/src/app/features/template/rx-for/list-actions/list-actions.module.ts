@@ -16,7 +16,7 @@ import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/vis
 import { RecursiveModule } from '../../../../shared/template-structures/recursive/recursive.module';
 import { ListActionsComponent } from './list-actions.component';
 import { ROUTES } from './list-actions.routes';
-import { IfModule } from '@rx-angular/template/experimental/if';
+import { IfModule } from '@rx-angular/template/if';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 
 const DECLARATIONS = [ListActionsComponent];

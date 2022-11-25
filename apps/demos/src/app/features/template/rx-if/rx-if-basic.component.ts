@@ -44,9 +44,9 @@ import { map } from 'rxjs/operators';
               renderCallback: renderCallback;
               strategy: strategy$;
               else: elseTpl;
-              suspenseTpl: suspenseTpl;
-              completeTpl: completeTpl;
-              errorTpl: errorTpl
+              suspense: suspenseTpl;
+              complete: completeTpl;
+              error: errorTpl
             "
           >
             <rxa-dirty-check></rxa-dirty-check>

@@ -126,7 +126,7 @@ export function createTemplateManager<
   const errorHandler = createErrorHandler(renderSettings.errorHandler);
   const ngZone = patchZone ? patchZone : undefined;
 
-  let activeTemplate: N;
+  let activeTemplate: TemplateRef<C>;
 
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   const templates = templateHandling<N, C>(templateSettings.viewContainerRef);
@@ -158,7 +158,7 @@ export function createTemplateManager<
           tap<RxNotificationKind>((trigger) => (trg = trigger))
         )
       ).pipe(
-        map(() => {
+        switchMap(() => {
           const contextKind: RxNotificationKind = trg || notification.kind;
           trg = undefined;
           const value: T = notification.value as T;
@@ -166,8 +166,14 @@ export function createTemplateManager<
             value,
             templates
           );
-          const template = templates.get(templateName);
-          return { template, templateName, notification, contextKind };
+          return templates.get$(templateName).pipe(
+            map((template) => ({
+              template,
+              templateName,
+              notification,
+              contextKind,
+            }))
+          );
         }),
         withLatestFrom(strategyHandling$.strategy$),
         // Cancel old renders
@@ -176,7 +182,7 @@ export function createTemplateManager<
             { template, templateName, notification, contextKind },
             strategy,
           ]) => {
-            const isNewTemplate = activeTemplate !== templateName || !template;
+            const isNewTemplate = activeTemplate !== template || !template;
             const notifyParent = isNewTemplate && parent;
             return onStrategy(
               notification.value,
@@ -206,7 +212,7 @@ export function createTemplateManager<
                   // update view context, patch if needed
                   work(view, options.scope, notification);
                 }
-                activeTemplate = templateName;
+                activeTemplate = template;
               },
               { ngZone }
               // we don't need to specify any scope here. The template manager is the only one

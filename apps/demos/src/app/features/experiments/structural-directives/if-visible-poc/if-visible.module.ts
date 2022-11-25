@@ -3,7 +3,7 @@ import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { IfVisibleComponent } from './if-visible.component';
 import { RxLetModule } from '../../../../rx-angular-pocs';
-import { IfModule } from '@rx-angular/template/experimental/if';
+import { IfModule } from '@rx-angular/template/if';
 
 const DECLARATIONS = [IfVisibleComponent];
 

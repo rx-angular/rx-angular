@@ -26,7 +26,7 @@ The ngIf hack looks like this:
 </ng-container>
 ```
 
-The problem is that `*ngIf` interferes with rendering and in case of falsy values (`0`, ``, `false`, `null`, `undefined`) the component
+The problem is that `*ngIf` interferes with rendering and in case of falsy values (`0`, `''`, `false`, `null`, `undefined`) the component
 would be hidden. This issue is a big problem and leads to many production bugs as its edge cases are often overlooked.
 
 **Downsides of the "`ngIf`-hack"**
@@ -403,10 +403,12 @@ Learn more about the general concept of [`RenderStrategies`](../../cdk/render-st
 
 #### Local strategies and view/content queries (`parent`)
 
-When local rendering strategies are used, we need to treat view and content queries in a
-special way.
-To make `*rxLet` in such situations, a certain mechanism is implemented to
-execute change detection on the parent (`parent`).
+Structural directives maintain `EmbeddedViews` within a components' template.
+Depending on the bound value as well as the configured `RxRenderStrategy`, updates processed by the
+`@rx-angular/template` directives can be asynchronous.
+
+Whenever a template gets inserted into, or removed from, its parent component, the directive has to inform the parent in order to
+update any view- or contentquery (`@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren`).
 
 This is required if your components state is dependent on its view or content children:
 
