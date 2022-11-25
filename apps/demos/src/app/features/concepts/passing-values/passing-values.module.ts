@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './passing-values.routes';
 import { MatButtonModule } from '@angular/material/button';
-import { PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template/push';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { PassingValuesComponent } from './passing-values.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
@@ -16,9 +16,7 @@ import { RecursiveModule } from '../../../shared/template-structures/recursive/r
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    PassingValuesComponent
-  ],
+  declarations: [PassingValuesComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
@@ -33,9 +31,8 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     UnpatchModule,
     MatButtonModule,
-    PushModule
+    PushModule,
   ],
-  exports: []
+  exports: [],
 })
-export class PassingValuesModule {
-}
+export class PassingValuesModule {}

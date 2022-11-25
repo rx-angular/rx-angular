@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ROUTES } from './ng-if-hack.routes';
 import { NgIfHackComponent } from './ng-if-hack.component';
-import { PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template/push';
 import { LetModule } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -24,7 +24,7 @@ const DECLARATIONS = [
   NgIfHackNgIfAsyncComponent,
   NgIfHackNgIfStaticComponent,
   NgIfHackRxLetComponent,
-  NgIfHackNgIfPushComponent
+  NgIfHackNgIfPushComponent,
 ];
 
 @NgModule({
@@ -42,9 +42,7 @@ const DECLARATIONS = [
     PushModule,
     MatButtonToggleModule,
     GhostElementsModule,
-    MatButtonModule
-  ]
+    MatButtonModule,
+  ],
 })
-export class NgIfHackModule {
-
-}
+export class NgIfHackModule {}
