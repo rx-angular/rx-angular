@@ -6,13 +6,12 @@ import { AppShellModule } from '../app-shell';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatListModule } from '@angular/material/list';
+import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './app.routes';
 import { DirtyChecksModule } from '../shared/debug-helper/dirty-checks';
 import { AppControlPanelModule } from './app-control-panel/';
-
 
 @NgModule({
   imports: [
@@ -24,13 +23,12 @@ import { AppControlPanelModule } from './app-control-panel/';
     MatListModule,
     MatIconModule,
     AppShellModule,
-    RouterModule.forRoot(ROUTES, { relativeLinkResolution: 'legacy' }),
+    RouterModule.forRoot(ROUTES, {}),
     DirtyChecksModule,
-    AppControlPanelModule
+    AppControlPanelModule,
   ],
   declarations: [AppComponent],
   exports: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppComponentModule {
-}
+export class AppComponentModule {}

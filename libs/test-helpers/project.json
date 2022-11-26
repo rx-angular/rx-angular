@@ -1,5 +1,5 @@
 {
-  "root": "libs/test-helpers",
+  "name": "test-helpers",
   "sourceRoot": "libs/test-helpers/src",
   "projectType": "library",
   "generators": {},
@@ -7,15 +7,11 @@
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
-        "jestConfig": "libs/test-helpers/jest.config.js",
+        "jestConfig": "libs/test-helpers/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": [
-        "coverage/libs/test-helpers"
-      ]
+      "outputs": ["coverage/libs/test-helpers"]
     }
   },
-  "tags": [
-    "type:test-util"
-  ]
+  "tags": ["type:test-util"]
 }

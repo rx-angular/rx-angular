@@ -17,7 +17,7 @@ import { NgIfHackRxLetComponent } from './ng-if-hack-rx-let.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgIfHackNgIfPushComponent } from './ng-if-hack-push.component';
 import { GhostElementsModule } from '../../../../shared/ghost-elements';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 const DECLARATIONS = [
   NgIfHackComponent,

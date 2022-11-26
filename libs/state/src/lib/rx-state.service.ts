@@ -360,7 +360,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       projectOrSlices$ === undefined &&
       isObservable(keyOrInputOrSlice$)
     ) {
-      this.accumulator.nextSliceObservable(keyOrInputOrSlice$);
+      this.accumulator.nextSliceObservable(
+        keyOrInputOrSlice$ as Observable<Partial<T>>
+      );
       return;
     }
 

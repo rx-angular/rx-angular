@@ -1,5 +1,5 @@
 {
-  "root": "libs/eslint-plugin",
+  "name": "eslint-plugin",
   "sourceRoot": "libs/eslint-plugin/src",
   "projectType": "library",
   "targets": {
@@ -14,12 +14,12 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/eslint-plugin"],
       "options": {
-        "jestConfig": "libs/eslint-plugin/jest.config.js",
+        "jestConfig": "libs/eslint-plugin/jest.config.ts",
         "passWithNoTests": true
       }
     },
     "build": {
-      "executor": "@nrwl/node:package",
+      "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/eslint-plugin",

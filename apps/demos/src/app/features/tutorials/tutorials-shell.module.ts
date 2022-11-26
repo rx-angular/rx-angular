@@ -1,25 +1,23 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
-const TUTORIAL_ROUTES = [
+const TUTORIAL_ROUTES: Routes = [
   {
     path: '',
     redirectTo: 'basics',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'basics',
     loadChildren: () =>
       import('./basics/tutorial-basics.module').then(
-        m => m.TutorialBasicsModule
-      )
+        (m) => m.TutorialBasicsModule
+      ),
   },
 ];
 
 @NgModule({
   declarations: [],
-  imports: [
-    RouterModule.forChild(TUTORIAL_ROUTES)
-  ]
+  imports: [RouterModule.forChild(TUTORIAL_ROUTES)],
 })
 export class TutorialsShellModule {}

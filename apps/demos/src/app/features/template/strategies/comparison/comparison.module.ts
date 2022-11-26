@@ -1,22 +1,22 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { RouterModule } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { PushModule } from '@rx-angular/template/push';
 import { LetModule } from '@rx-angular/template/let';
+import { PushModule } from '@rx-angular/template/push';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { ComparisonComponent } from './comparison.component';
 
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
-import { SiblingModule } from '../../../../shared/template-structures/sibling/sibling.module';
-import { ImageArrayModule } from '../../../../shared/image-array/image-array.module';
-import { ROUTES } from './comparison.routes';
-import { RxForModule, PipeModule } from '../../../../rx-angular-pocs';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { IfModule } from '@rx-angular/template/if';
+import { PipeModule, RxForModule } from '../../../../rx-angular-pocs';
+import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
+import { ImageArrayModule } from '../../../../shared/image-array/image-array.module';
+import { SiblingModule } from '../../../../shared/template-structures/sibling/sibling.module';
+import { ROUTES } from './comparison.routes';
 
 @NgModule({
   declarations: [ComparisonComponent],

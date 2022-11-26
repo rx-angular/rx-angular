@@ -1,7 +1,6 @@
-module.exports = {
+/* eslint-disable */
+export default {
   preset: '../../jest.preset.js',
-  coverageDirectory: '../../coverage/tour-of-heroes-ngxs',
-
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
     'ts-jest': {
@@ -10,7 +9,9 @@ module.exports = {
       tsconfig: '<rootDir>/tsconfig.spec.json',
     },
   },
-  displayName: 'tour-of-heroes-ngxs',
+  coverageDirectory: '../../coverage/apps/demos',
+
+  displayName: 'demos',
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',

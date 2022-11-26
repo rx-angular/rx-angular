@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { RouterModule } from '@angular/router';
 import { LetModule } from '@rx-angular/template/let';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select/index';

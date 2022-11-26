@@ -7,7 +7,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { MatSelect } from '@angular/material/select';
+import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
 import { asyncScheduler } from '@rx-angular/cdk/zone-less/rxjs';
 import { RxState } from '@rx-angular/state';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';

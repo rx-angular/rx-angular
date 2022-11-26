@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { PushModule } from '@rx-angular/template/push';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 
@@ -17,14 +17,14 @@ import { SiblingProgressiveComponent } from './sibling-progressive.component';
 import { SiblingPushComponent } from './sibling-push.component';
 import { SiblingStaticComponent } from './sibling-static.component';
 
-import { SiblingStrategyComponent } from './sibling-strategy.component';
-import { ImageArrayModule } from '../../image-array/image-array.module';
-import { SiblingPixelImgComponent } from './sibling-pixel-img.component';
 import {
   RxContextModule,
   RxForModule,
   RxLetModule,
 } from '../../../rx-angular-pocs';
+import { ImageArrayModule } from '../../image-array/image-array.module';
+import { SiblingPixelImgComponent } from './sibling-pixel-img.component';
+import { SiblingStrategyComponent } from './sibling-strategy.component';
 
 const DECLARATIONS = [
   SiblingStaticComponent,

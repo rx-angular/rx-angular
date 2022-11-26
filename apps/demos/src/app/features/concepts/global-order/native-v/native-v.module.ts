@@ -9,8 +9,7 @@ import { V1CComponent } from './v1-c.component';
 import { V1EComponent } from './v1-e.component';
 import { V1FComponent } from './v1-f.component';
 import { V1HComponent } from './v1-h.component';
-import { MatButtonModule } from '@angular/material/button';
-
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 @NgModule({
   declarations: [
@@ -27,10 +26,8 @@ import { MatButtonModule } from '@angular/material/button';
     VisualizerModule,
     SharedModule,
     MatButtonModule,
-    VisualizerModule
+    VisualizerModule,
   ],
-  exports: [
-    V1AComponent
-  ]
+  exports: [V1AComponent],
 })
-export class NativeVModule { }
+export class NativeVModule {}

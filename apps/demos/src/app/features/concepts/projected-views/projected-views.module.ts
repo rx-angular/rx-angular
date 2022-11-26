@@ -8,8 +8,8 @@ import { ProjectedViewsComponent } from './projected-views.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visualizer.module';
 import { ContentChildComponent } from './content-child.component';
 import { ViewChildComponent } from './view-child.component';
-import { RxForModule, RxLetModule,  } from '../../../rx-angular-pocs';
-import { MatButtonModule } from '@angular/material/button';
+import { RxForModule, RxLetModule } from '../../../rx-angular-pocs';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 @NgModule({
   declarations: [

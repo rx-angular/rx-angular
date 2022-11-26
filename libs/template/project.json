@@ -1,6 +1,6 @@
 {
+  "name": "template",
   "projectType": "library",
-  "root": "libs/template",
   "sourceRoot": "libs/template/src",
   "prefix": "rx",
   "targets": {
@@ -20,7 +20,7 @@
       "outputs": ["dist/libs/template"]
     },
     "build": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "dependsOn": [
         {
           "target": "build-lib",
@@ -52,14 +52,14 @@
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
-        "jestConfig": "libs/template/jest.config.js",
+        "jestConfig": "libs/template/jest.config.ts",
         "passWithNoTests": true,
         "codeCoverage": true
       },
       "outputs": ["coverage/template"]
     },
     "link": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           {
@@ -69,7 +69,7 @@
       }
     },
     "publish": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           {

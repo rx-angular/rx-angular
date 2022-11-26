@@ -1,6 +1,6 @@
 {
+  "name": "ssr",
   "projectType": "application",
-  "root": "apps/ssr",
   "sourceRoot": "apps/ssr/src",
   "prefix": "rx-angular",
   "targets": {
@@ -12,13 +12,8 @@
         "main": "apps/ssr/src/main.ts",
         "polyfills": "apps/ssr/src/polyfills.ts",
         "tsConfig": "apps/ssr/tsconfig.app.json",
-        "assets": [
-          "apps/ssr/src/favicon.ico",
-          "apps/ssr/src/assets"
-        ],
-        "styles": [
-          "apps/ssr/src/styles.css"
-        ],
+        "assets": ["apps/ssr/src/favicon.ico", "apps/ssr/src/assets"],
+        "styles": ["apps/ssr/src/styles.css"],
         "scripts": [],
         "vendorChunk": true,
         "extractLicenses": false,
@@ -76,11 +71,9 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "coverage/apps/ssr"
-      ],
+      "outputs": ["coverage/apps/ssr"],
       "options": {
-        "jestConfig": "apps/ssr/jest.config.js",
+        "jestConfig": "apps/ssr/jest.config.ts",
         "passWithNoTests": true
       }
     },
@@ -105,6 +98,17 @@
           "sourceMap": false,
           "optimization": true
         }
+      },
+      "production": {
+        "outputHashing": "media",
+        "fileReplacements": [
+          {
+            "replace": "apps/ssr/src/environments/environment.ts",
+            "with": "apps/ssr/src/environments/environment.prod.ts"
+          }
+        ],
+        "sourceMap": false,
+        "optimization": true
       }
     },
     "serve-ssr": {

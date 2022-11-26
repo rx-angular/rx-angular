@@ -1,16 +1,18 @@
-module.exports = {
+/* eslint-disable */
+export default {
   bail: true,
+  displayName: 'cdk',
   preset: '../../jest.preset.js',
   coverageReporters: ['lcov'],
-  coverageDirectory: '../../coverage/template',
+  coverageDirectory: '../../coverage/cdk',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
     'ts-jest': {
-      tsconfig: '<rootDir>/tsconfig.spec.json',
       stringifyContentPathRegex: '\\.(html|svg)$',
+
+      tsconfig: '<rootDir>/tsconfig.spec.json',
     },
   },
-  displayName: 'template',
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',

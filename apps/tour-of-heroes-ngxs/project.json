@@ -1,11 +1,11 @@
 {
+  "name": "tour-of-heroes-ngxs",
   "projectType": "application",
   "generators": {
     "@nrwl/angular:component": {
       "style": "scss"
     }
   },
-  "root": "apps/tour-of-heroes-ngxs",
   "sourceRoot": "apps/tour-of-heroes-ngxs/src",
   "prefix": "rx-angular",
   "targets": {
@@ -21,9 +21,7 @@
           "apps/tour-of-heroes-ngxs/src/favicon.ico",
           "apps/tour-of-heroes-ngxs/src/assets"
         ],
-        "styles": [
-          "apps/tour-of-heroes-ngxs/src/styles.scss"
-        ],
+        "styles": ["apps/tour-of-heroes-ngxs/src/styles.scss"],
         "scripts": [],
         "vendorChunk": true,
         "extractLicenses": false,
@@ -70,9 +68,7 @@
           ]
         }
       },
-      "outputs": [
-        "{options.outputPath}"
-      ]
+      "outputs": ["{options.outputPath}"]
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
@@ -97,15 +93,11 @@
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
-        "jestConfig": "apps/tour-of-heroes-ngxs/jest.config.js",
+        "jestConfig": "apps/tour-of-heroes-ngxs/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": [
-        "coverage/apps/tour-of-heroes-ngxs"
-      ]
+      "outputs": ["coverage/apps/tour-of-heroes-ngxs"]
     }
   },
-  "tags": [
-    "type:app"
-  ]
+  "tags": ["type:app"]
 }

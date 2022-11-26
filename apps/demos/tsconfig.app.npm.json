@@ -3,6 +3,8 @@
   "compilerOptions": {
     "paths": {
       "@rx-angular/*": ["node_modules/@rx-angular/*"]
-    }
+    },
+    "target": "ES2022",
+    "useDefineForClassFields": false
   }
 }

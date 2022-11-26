@@ -1,11 +1,11 @@
 {
+  "name": "demos",
   "projectType": "application",
   "generators": {
     "@schematics/angular:component": {
       "style": "css"
     }
   },
-  "root": "apps/demos",
   "sourceRoot": "apps/demos/src",
   "prefix": "rxa",
   "targets": {
@@ -113,7 +113,7 @@
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
-        "jestConfig": "apps/demos/jest.config.js",
+        "jestConfig": "apps/demos/jest.config.ts",
         "passWithNoTests": true
       },
       "outputs": ["coverage/apps/demos"]

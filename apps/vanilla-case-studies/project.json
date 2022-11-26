@@ -1,7 +1,7 @@
 {
+  "name": "vanilla-case-studies",
   "projectType": "application",
   "generators": {},
-  "root": "apps/vanilla-case-studies",
   "sourceRoot": "apps/vanilla-case-studies/src",
   "prefix": "rx-angular",
   "targets": {
@@ -18,9 +18,7 @@
           "apps/vanilla-case-studies/src/assets",
           "apps/vanilla-case-studies/src/case-studies"
         ],
-        "styles": [
-          "apps/vanilla-case-studies/src/styles.css"
-        ],
+        "styles": ["apps/vanilla-case-studies/src/styles.css"],
         "scripts": [],
         "vendorChunk": true,
         "extractLicenses": false,
@@ -58,9 +56,7 @@
           ]
         }
       },
-      "outputs": [
-        "{options.outputPath}"
-      ]
+      "outputs": ["{options.outputPath}"]
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
@@ -82,12 +78,10 @@
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
-        "jestConfig": "apps/vanilla-case-studies/jest.config.js",
+        "jestConfig": "apps/vanilla-case-studies/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": [
-        "coverage/apps/vanilla-case-studies"
-      ]
+      "outputs": ["coverage/apps/vanilla-case-studies"]
     }
   },
   "tags": []

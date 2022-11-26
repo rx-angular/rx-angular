@@ -1,10 +1,6 @@
-module.exports = {
-  bail: true,
-  name: 'cdk',
-  displayName: 'cdk',
+/* eslint-disable */
+export default {
   preset: '../../jest.preset.js',
-  coverageReporters: ['lcov'],
-  coverageDirectory: '../../coverage/cdk',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
     'ts-jest': {
@@ -13,6 +9,9 @@ module.exports = {
       tsconfig: '<rootDir>/tsconfig.spec.json',
     },
   },
+  coverageDirectory: '../../coverage/apps/vanilla-case-studies',
+
+  displayName: 'vanilla-case-studies',
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',

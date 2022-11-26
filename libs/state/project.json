@@ -1,6 +1,6 @@
 {
+  "name": "state",
   "projectType": "library",
-  "root": "libs/state",
   "sourceRoot": "libs/state/src",
   "prefix": "rx",
   "targets": {
@@ -20,7 +20,7 @@
       ]
     },
     "build": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "dependsOn": [
         {
           "target": "build-lib",
@@ -52,14 +52,14 @@
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
-        "jestConfig": "libs/state/jest.config.js",
+        "jestConfig": "libs/state/jest.config.ts",
         "passWithNoTests": true,
         "codeCoverage": true
       },
       "outputs": ["coverage/state"]
     },
     "perfBuild": {
-      "executor": "@nrwl/node:build",
+      "executor": "@nrwl/node:webpack",
       "options": {
         "main": "libs/state/perf/index.ts",
         "outputPath": "dist/libs/state-perf/dist",
@@ -68,13 +68,13 @@
       "outputs": ["{options.outputPath}"]
     },
     "perf": {
-      "executor": "@nrwl/node:execute",
+      "executor": "@nrwl/node:node",
       "options": {
         "buildTarget": "state:perfBuild"
       }
     },
     "publish": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           {

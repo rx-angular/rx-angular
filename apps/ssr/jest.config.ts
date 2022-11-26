@@ -1,4 +1,6 @@
-module.exports = {
+/* eslint-disable */
+export default {
+  displayName: 'ssr',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
@@ -8,9 +10,7 @@ module.exports = {
       tsconfig: '<rootDir>/tsconfig.spec.json',
     },
   },
-  coverageDirectory: '../../coverage/apps/demos',
-
-  displayName: 'demos',
+  coverageDirectory: '../../coverage/apps/ssr',
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',

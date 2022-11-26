@@ -1,11 +1,11 @@
 {
+  "name": "cdk",
   "projectType": "library",
-  "root": "libs/cdk",
   "sourceRoot": "libs/cdk/src",
   "prefix": "rx-angular",
   "targets": {
     "build": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "dependsOn": [
         {
           "target": "build-lib",
@@ -46,14 +46,14 @@
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
-        "jestConfig": "libs/cdk/jest.config.js",
+        "jestConfig": "libs/cdk/jest.config.ts",
         "passWithNoTests": true,
         "codeCoverage": true
       },
       "outputs": ["coverage/cdk"]
     },
     "publish": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           {

@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppControlPanelComponent } from './app-control-panel.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
-import { MatListModule } from '@angular/material/list';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
 import { LetModule } from '@rx-angular/template/let';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { StrategySelectModule } from '../../shared/debug-helper/strategy-select';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
 
 @NgModule({
   declarations: [AppControlPanelComponent],
@@ -29,8 +29,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatListModule,
     MatCheckboxModule,
     StrategySelectModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
   ],
-  exports: [AppControlPanelComponent]
+  exports: [AppControlPanelComponent],
 })
-export class AppControlPanelModule { }
+export class AppControlPanelModule {}

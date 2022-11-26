@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { TriggerProviderComponent } from './trigger-provider.component';
-import { ZonePatchedIconModule } from '../../zone-patched-icon/zone-patched-icon.module';
-import { MatButtonModule } from '@angular/material/button';
-import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { MatIconModule } from '@angular/material/icon';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { LetModule } from '@rx-angular/template/let';
+import { PushModule } from '@rx-angular/template/push';
+import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { ZonePatchedIconModule } from '../../zone-patched-icon/zone-patched-icon.module';
+import { TriggerProviderComponent } from './trigger-provider.component';
 
 @NgModule({
   declarations: [TriggerProviderComponent],

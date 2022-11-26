@@ -1,6 +1,6 @@
 {
+  "name": "docs",
   "projectType": "application",
-  "root": "apps/docs",
   "sourceRoot": "apps/docs/src",
   "targets": {
     "build": {
@@ -17,11 +17,16 @@
       }
     },
     "serve-static": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "docusaurus serve --config apps/docs/docusaurus.config.js --dir dist/apps/docs"
       },
-      "dependsOn": [{ "projects": "self", "target": "build" }]
+      "dependsOn": [
+        {
+          "projects": "self",
+          "target": "build"
+        }
+      ]
     }
   },
   "tags": []

@@ -1,5 +1,5 @@
-module.exports = {
-  name: 'state',
+/* eslint-disable */
+export default {
   displayName: 'state',
   preset: '../../jest.preset.js',
   coverageReporters: ['lcov'],

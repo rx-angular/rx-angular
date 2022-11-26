@@ -1,14 +1,15 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "es2015",
+    "target": "ES2022",
     "module": "es2015",
     "inlineSources": true,
     "declaration": true,
     "declarationMap": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
-    "lib": ["dom", "es2018"]
+    "lib": ["dom", "es2018"],
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "enableIvy": true,
@@ -18,5 +19,10 @@
     "strictMetadataEmit": true,
     "enableResourceInlining": true
   },
-  "exclude": ["./test-setup.ts", "**/*.spec.ts", "**/*.test.ts"]
+  "exclude": [
+    "./test-setup.ts",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "jest.config.ts"
+  ]
 }
