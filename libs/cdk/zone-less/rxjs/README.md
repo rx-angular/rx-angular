@@ -2,12 +2,11 @@
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
-[![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
-> A set of wrappers for RxJS to avoid unnessecary change detection and zone interference in Angular.
+> A set of wrappers for RxJS to avoid unnecessary change detection and zone interference in Angular.
 
 `@rx-angular/cdk/zone-less/rxjs` is designed to help developers improve performance by avoiding the use of zone.js patched API's.
-Besides a well documented and typed API it provides way to use patched API's in a way that is independent of `ngZone runOutsideZone` usage.
+Besides a well documented and typed API it provides a way to use patched API's in a way that is independent of `ngZone runOutsideZone` usage.
 
 ## Key features
 
