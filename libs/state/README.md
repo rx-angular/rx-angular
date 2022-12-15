@@ -35,8 +35,7 @@ None of them is dedicated to targeting the particular needs of the **component l
 `@rx-angular/state` was specifically designed to give developers a tool for mastering **component state** without forcing
 them to use complex design patterns.
 
-Its lightweight and intuitive API and the automatic subscription handling makes `@rx-angular/state`
-the **perfect fit** for handling state in any Angular component.
+Its lightweight and intuitive API and the automatic subscription handling make `@rx-angular/state` the **perfect fit** for handling state in any Angular component.
 
 Using this library allows you to implement things like:
 
@@ -145,6 +144,6 @@ nx migrate @rx-angular/state
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.4.6`         |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.4.6`        |
 
-Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
-All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
-For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3)
+Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself.
+All the packages support RxJS versions `^6.5.5` || `^7.4.0`.
+For more information about the compatibilities of Angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).

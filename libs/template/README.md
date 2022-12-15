@@ -4,7 +4,7 @@
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/template/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/template/lcov-report/index.html)
 
-## A lib for handling data streams in templates for high performance and ergonomic Angular UI's in large scale applications
+## A lib for handling data streams in templates for high performance and ergonomic Angular UI's in large-scale applications
 
 @rx-angular/template was specifically designed to help developers reduce the boilerplate in templates and have performant change detection rendering and provide a migration path to go full zone-less.
 
@@ -17,13 +17,12 @@
 - [RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/rx-if-directive)
 - [UnpatchDirective (unpatch)](https://rx-angular.io/docs/template/api/unpatch-directive)
 - [PushPipe (`push`)](https://rx-angular.io/docs/template/api/push-pipe)
-- [TemplateDirective (`*rxTemplate`)](https://github.com/rx-angular/rx-angular/tree/main/libs/template/template/src/lib/README.md)
 
 **Experimental features**
 
 - [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/experimental/viewport-prio-directive)
 
-All experimental features are very stable and already tested in production apps for multiple month. The reason to have them in experimental is so we can make small typing changes without breaking changes.
+All experimental features are very stable and already tested in production apps for multiple months. The reason to have them in experimental is so we can make small typing changes without breaking changes.
 
 ### Concepts
 
@@ -57,8 +56,7 @@ yarn add @rx-angular/template @rx-angular/cdk
 
 ## Update
 
-If you are using `@rx-angular/template` already, please consider upgrading with the `@angular/cli update` command in order
-to make sure all provided code migrations are processed properly.
+If you are using `@rx-angular/template` already, please consider upgrading with the `@angular/cli update` command in order to make sure all provided code migrations are processed properly.
 
 ```bash
 ng update @rx-angular/template
@@ -95,6 +93,6 @@ export class MyModule {}
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-beta.29`    |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-beta.29`   |
 
-Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
-All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
-For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3)
+Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself.
+All the packages support RxJS versions `^6.5.5` || `^7.4.0`.
+For more information about the compatibilities of Angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).
