@@ -2,11 +2,10 @@
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/package/%40rx-angular%2Ftemplate)
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
-[![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/template/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/template/lcov-report/index.html)
 
-## A lib for handling data streams in templates for high performance and ergonomic Angular UI's in large-scale applications
+> A lib for handling data streams in templates for high performance and ergonomic Angular UI's in large-scale applications
 
-@rx-angular/template was specifically designed to help developers reduce the boilerplate in templates and have performant change detection rendering and provide a migration path to go full zone-less.
+`@rx-angular/template` was specifically designed to help developers reduce the boilerplate in templates and have performant change detection rendering and provide a migration path to go full zone-less.
 
 ![template logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/template/docs/images/template_logo.png)
 
@@ -33,7 +32,6 @@ All experimental features are very stable and already tested in production apps 
 - [Coalescing](https://rx-angular.io/docs/cdk/coalescing)
 - [Coercing](https://rx-angular.io/docs/cdk/coercing)
 - [Scheduling](https://rx-angular.io/docs/cdk/render-strategies/strategies/concurrent-strategies#scheduling)
-
 - [Rendering Issues in Angular](https://rx-angular.io/docs/template/performance-issues)
 
 ## Installation
