@@ -59,7 +59,7 @@
     "@angular/router": "12.2.16",
     "@nguniversal/express-engine": "^13.0.2",
     "@ngxs/store": "3.7.2",
-    "@typescript-eslint/experimental-utils": "^5.4.0",
+    "@typescript-eslint/utils": "^5.47.0",
     "angular-in-memory-web-api": "^0.11.0",
     "bootstrap": "^4.6.0",
     "core-js": "^3.18.3",
