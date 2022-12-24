@@ -2,14 +2,13 @@
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
-[![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
 > A small typed convenience helper to handle contextual state.
 
 Convenience helper to easily apply different change detection mechanisms to Angular
 
-@rx-angular/cdk/render-strategies is a small set of helpers designed to improve the DX when managing change detection and detached or zone-less templates.
-The documentation also includes detaillsd explainations of techniques and provides diagrams for better visual understanding.
+`@rx-angular/cdk/render-strategies` is a small set of helpers designed to improve the DX when managing change detection and detached or zone-less templates.
+The documentation also includes detailed explanations of techniques and provides diagrams for better visual understanding.
 
 ## Key features
 

@@ -2,7 +2,6 @@
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
-[![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/state/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/state/lcov-report/index.html)
 
 > A small typed convenience helper to handle side effects and Observable subscriptions.
 
@@ -10,7 +9,7 @@
 
 ## Key features
 
-- ✅ No boiler plate
+- ✅ No boilerplate
 - ✅ Easy to test
 - ✅ Clean separation of concerns
 - ✅ Slim and handy APIs

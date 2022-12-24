@@ -2,9 +2,8 @@
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
-[![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/cdk/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/cdk/lcov-report/index.html)
 
-> A Component Development Kit for High performance and ergonomic Angular UI libs and large scale applications
+> A Component Development Kit for High performance and ergonomic Angular UI libs and large scale applications.
 
 `@rx-angular/cdk` was specifically designed to help developers build directives, components and services for ergonomic and high performant Angular UI libs as well as large scale
 applications
@@ -37,8 +36,7 @@ yarn add @rx-angular/cdk
 
 ## Update
 
-If you are using `@rx-angular/cdk` already, please consider upgrading with the `@angular/cli update` command in order
-to make sure all provided code migrations are processed properly.
+If you are using `@rx-angular/cdk` already, please consider upgrading with the `@angular/cli update` command in order to make sure all provided code migrations are processed properly.
 
 ```bash
 ng update @rx-angular/cdk
@@ -54,6 +52,6 @@ nx migrate @rx-angular/cdk
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-alpha.10`  |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-alpha.10` |
 
-Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
-All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
-For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3)
+Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself.
+All the packages support RxJS versions `^6.5.5` || `^7.4.0`.
+For more information about the compatibilities of Angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).
