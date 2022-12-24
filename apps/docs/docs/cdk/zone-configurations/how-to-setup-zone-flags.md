@@ -42,7 +42,7 @@ So it's important to set them **before `zone.js` is init**. So we need to inject
 
 ```typescript
 import './zone-flags';
-import 'zone.js/dist/zone';
+import 'zone.js';
 ```
 
 ![Zone-flags import order](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zone-flags_import-order_michael-hladky.png)
@@ -52,7 +52,7 @@ It is **not efficient** to do like that:
 
 ```typescript
 window.__Zone_disable_XHR = true;
-import 'zone.js/dist/zone';
+import 'zone.js';
 ```
 
 Because all imports get hoisted by webpack and then imported code is injected into a bundle before any meaningful JS in the file itself.
@@ -79,7 +79,7 @@ Because all imports get hoisted by webpack and then imported code is injected in
 // ☝️ Make sure zone-flags are imported before zone.js
 import './zone-flags';
 // Zone JS is required by default for Angular itself.
-import 'zone.js/dist/zone';
+import 'zone.js';
 ```
 
 ## Set up using `@rx-angular/cdk/zone-configuration` helpers
@@ -111,7 +111,7 @@ As well as inline documentation of scopes, methods and configuration details in 
 // ☝️ Make sure zoneflags are imported before zone.js
 import './zone-flags';
 // Zone JS is required by default for Angular itself.
-import 'zone.js/dist/zone';
+import 'zone.js';
 ```
 
 > **💡 Pro Tip:** > `@rx-angular/cdk/zone-configuration` errors if it is used incorrectly.
@@ -132,7 +132,7 @@ zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError();
 
 ```typescript
 // Zone JS is required by default for Angular itself.
-import 'zone.js/dist/zone';
+import 'zone.js';
 // ☝️ Make sure zoneflags are imported before zone.js
 import './zone-runtime';
 ```
