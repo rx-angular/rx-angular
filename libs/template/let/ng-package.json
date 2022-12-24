@@ -2,6 +2,12 @@
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "lib": {
     "entryFile": "src/index.ts",
-    "flatModuleFile": "template-let"
+    "flatModuleFile": "template-let",
+    "umdModuleIds": {
+      "@rx-angular/cdk/coercing": "rx-angular.cdk.coercing",
+      "@rx-angular/cdk/notifications": "rx-angular.cdk.notifications",
+      "@rx-angular/cdk/render-strategies": "rx-angular.cdk.render-strategies",
+      "@rx-angular/cdk/template": "rx-angular.cdk.template"
+    }
   }
 }
