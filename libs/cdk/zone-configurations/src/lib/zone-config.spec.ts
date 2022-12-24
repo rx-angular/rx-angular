@@ -1,10 +1,10 @@
-import { zoneConfig } from './zone-config';
 import { RxZoneFlagsHelperFunctions } from './model/configurations.types';
 import {
   RxZoneGlobalConfigurations,
-  RxZoneTestConfigurations,
   RxZoneRuntimeConfigurations,
+  RxZoneTestConfigurations,
 } from './model/zone.configurations.api';
+import { zoneConfig } from './zone-config';
 
 describe('zone-config', () => {
   const w = window as RxZoneGlobalConfigurations &
@@ -18,10 +18,6 @@ describe('zone-config', () => {
   const properties = Object.keys(w)
     .filter((property) => property.toLowerCase().startsWith('__zone'))
     .map((property) => [property, w[property]]);
-
-  beforeAll(() => {
-    w.Zone = undefined;
-  });
 
   afterAll(() => {
     w.Zone = Zone;
