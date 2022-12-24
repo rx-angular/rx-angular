@@ -177,6 +177,7 @@ describe('rxFor with observables', () => {
     fixture = createTestComponent();
     errorHandler = createErrorHandler();
     const errorSpy = jest.spyOn(errorHandler, 'handleError');
+
     const expectedError = new Error(
       "NG0901: Cannot find a differ supporting object 'whaaa' of type 'string'"
     );
