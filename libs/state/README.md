@@ -94,7 +94,7 @@ nx migrate @rx-angular/state
 
 ## Tutorials
 
-- [Basic Tutorial](https://rx-angular.io/docs/state/tutorials/basics)
+- [Basic Tutorial](https://www.rx-angular.io/docs/state/tutorials/basic-tutorial/setup)
 - [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
 
 ## Snippets
