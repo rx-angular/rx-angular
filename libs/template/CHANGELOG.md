@@ -2,6 +2,48 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0-rc.5](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.4...template@1.0.0-rc.5) (2022-12-24)
+
+
+### Code Refactoring
+
+* **template:** harmonize LetDirective triggers ([62f5d1f](https://github.com/rx-angular/rx-angular/commit/62f5d1fc4f9f02402e7ddde8a79b8e81cecc4f67))
+* **template:** harmonize RxIf triggers ([f9f6aba](https://github.com/rx-angular/rx-angular/commit/f9f6abad6a3ad7b2091f5523a7ef4ef0c42efa32))
+* **template:** remove root barrel exports ([fdb620e](https://github.com/rx-angular/rx-angular/commit/fdb620e3ee7ee98a104a23e3e72b385c5bb4c676))
+
+
+### Features
+
+* **template:** implement template triggers for rxIf ([f008aaf](https://github.com/rx-angular/rx-angular/commit/f008aaf4da39d0e97ffb45d1d2911d8d33e3531a))
+* **template:** introduce stable rxIf ([4a88e7d](https://github.com/rx-angular/rx-angular/commit/4a88e7d276e2b9dcb200464c1833f1c743c6fd2a))
+* **template:** rxIf: adjust API to be in line with ngIf ([8601598](https://github.com/rx-angular/rx-angular/commit/860159841acf786e610399331803503295b0d4de))
+* **template:** rxIf: implement reactive context variables. react to template switches ([35e1d41](https://github.com/rx-angular/rx-angular/commit/35e1d41b9ce05b23d5df918c948c1ba75ce03750))
+* **template:** rxIfs viewContext should only allow boolean values ([768ebea](https://github.com/rx-angular/rx-angular/commit/768ebea79d4b5885ca121329fba2b27ed74d6983))
+
+
+### BREAKING CHANGES
+
+* **template:** Some LetDirective inputs were renamed to harmonize the template API.
+
+- `templateTrg` becomes `contextTrigger`
+- `nextTrg` becomes `nextTrigger`
+- `errorTrg` becomes `errorTrigger`
+- `completeTrg` becomes `completeTrigger`
+- `suspenseTrg` becomes `suspenseTrigger`
+* **template:** Modules and directives are now removed from the root entrypoint `'@rx-angular/template'`.
+
+Instead, use secondary entrypoint to import the symbol, for instance: `import { LetModule } from '@rx-angular/template/let';`.
+* **template:** Some RxIf inputs were renamed to harmonize the template API.
+
+- `templateTrg` becomes `contextTrigger`
+- `nextTrg` becomes `nextTrigger`
+- `errorTrg` becomes `errorTrigger`
+- `completeTrg` becomes `completeTrigger`
+- `suspenseTrg` becomes `suspenseTrigger`
+* **template:** move rxIf directive from template/experimental to template
+
+
+
 # [1.0.0-rc.4](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.3...template@1.0.0-rc.4) (2022-11-15)
 
 ### Bug Fixes
