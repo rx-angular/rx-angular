@@ -33,14 +33,14 @@ import { MockChangeDetectorRef } from './fixtures';
       *rxLet="
         value$;
         let value;
-        nextTrg: nextTrg;
+        nextTrigger: nextTrg;
         suspense: suspense;
-        suspenseTrg: suspenseTrg;
+        suspenseTrigger: suspenseTrg;
         error: error;
-        errorTrg: errorTrg;
+        errorTrigger: errorTrg;
         complete: complete;
-        completeTrg: completeTrg;
-        templateTrg: trg
+        completeTrigger: completeTrg;
+        contextTrigger: trg
       "
       >{{
         value === undefined
