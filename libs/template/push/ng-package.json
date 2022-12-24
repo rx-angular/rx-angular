@@ -2,6 +2,10 @@
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "lib": {
     "entryFile": "src/index.ts",
-    "flatModuleFile": "template-push"
+    "flatModuleFile": "template-push",
+    "umdModuleIds": {
+      "@rx-angular/cdk/notifications": "rx-angular.cdk.notifications",
+      "@rx-angular/cdk/render-strategies": "rx-angular.cdk.render-strategies"
+    }
   }
 }

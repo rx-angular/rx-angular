@@ -53,7 +53,7 @@
     "rxjs": ">=6.5.5"
   },
   "dependencies": {
-    "tslib": "^2.0.0",
+    "tslib": "^2.4.1",
     "ng-morph": "^2.1.1"
   },
   "ng-add": {
