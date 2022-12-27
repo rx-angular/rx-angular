@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SchedulingComponent } from './scheduling/scheduling.component';
-import { PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template/push';
 import { LetModule } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { ROUTES } from './scheduling.routes';
@@ -16,10 +16,12 @@ const DECLARATIONS = [SchedulingComponent];
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    LetModule, PushModule, UnpatchModule,
+    LetModule,
+    PushModule,
+    UnpatchModule,
     MatButtonModule,
-    VisualizerModule
+    VisualizerModule,
   ],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
 export class SchedulingModule {}

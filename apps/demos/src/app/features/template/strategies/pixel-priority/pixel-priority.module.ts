@@ -6,7 +6,8 @@ import { ImageArrayModule } from '../../../../shared/image-array/image-array.mod
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SiblingModule } from '../../../../shared/template-structures/sibling/sibling.module';
 import { RouterModule } from '@angular/router';
-import { LetModule, PushModule } from '@rx-angular/template';
+import { LetModule } from '@rx-angular/template/let';
+import { PushModule } from '@rx-angular/template/push';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,28 +17,30 @@ import { CanvasViewModule } from '../../../../shared/canvas-view/canvas-view.mod
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { UnpatchEventsModule } from '../../../../rx-angular-pocs/template/directives/unpatch';
 
-
 @NgModule({
   declarations: [PixelPriorityComponent],
   imports: [
     CommonModule,
     VisualizerModule,
     ImageArrayModule,
-    RouterModule.forChild([{
-      path: '',
-      component: PixelPriorityComponent
-    }]),
+    RouterModule.forChild([
+      {
+        path: '',
+        component: PixelPriorityComponent,
+      },
+    ]),
     MatCheckboxModule,
     SiblingModule,
-    LetModule, PushModule, UnpatchEventsModule,
+    LetModule,
+    PushModule,
+    UnpatchEventsModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatListModule,
     MatSelectModule,
     CanvasViewModule,
-    MatProgressBarModule
-  ]
+    MatProgressBarModule,
+  ],
 })
-export class PixelPriorityModule {
-}
+export class PixelPriorityModule {}

@@ -2,7 +2,7 @@ import {
   AST_NODE_TYPES,
   ESLintUtils,
   TSESTree,
-} from '@typescript-eslint/experimental-utils';
+} from '@typescript-eslint/utils';
 import { docsUrl } from '../utils/docs';
 import { isKeyof } from '../utils/guards';
 import { namesToRegex } from '../utils/regex';

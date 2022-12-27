@@ -2,6 +2,10 @@
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "lib": {
     "entryFile": "src/index.ts",
-    "flatModuleFile": "template-unpatch"
+    "flatModuleFile": "template-unpatch",
+    "umdModuleIds": {
+      "@rx-angular/cdk/zone-configurations": "rx-angular.cdk.zone-configurations",
+      "@rx-angular/cdk/internals/core": "rx-angular.cdk.internals.core"
+    }
   }
 }

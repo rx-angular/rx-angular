@@ -23,4 +23,4 @@ yarn add @rx-angular/template
 
 ## Documentation
 
-- [RxLet](https://rx-angular.io/docs/template/api/unpatch-directive)
+- [UnpatchDirective](https://rx-angular.io/docs/template/api/unpatch-directive)

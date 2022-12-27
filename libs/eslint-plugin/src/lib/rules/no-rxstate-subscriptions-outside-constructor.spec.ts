@@ -1,4 +1,4 @@
-import { TSESLint } from '@typescript-eslint/experimental-utils';
+import { TSESLint } from '@typescript-eslint/utils';
 import * as path from 'path';
 import rule, {
   MessageIds,
@@ -45,9 +45,9 @@ class OkComponent {
   @Input() noDataFetching = false;
 
   constructor(private state: RxState<MyState>, private service: SomeService) {}
-  
+
   ngOnInit() {
-    if (!this.noDataFetching) {      
+    if (!this.noDataFetching) {
       this.state.connect('data', service.getData());
     }
   }
