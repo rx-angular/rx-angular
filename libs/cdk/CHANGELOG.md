@@ -2,6 +2,21 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0-rc.4](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.3...cdk@1.0.0-rc.4) (2022-12-24)
+
+
+### Bug Fixes
+
+* **cdk:** account for NgZone execution time ([c31556c](https://github.com/rx-angular/rx-angular/commit/c31556ccbc4ddaf02e5b68343dda19d35e150430))
+* **cdk:** make sure tasks queued by NgZone are also executed ([c07edbb](https://github.com/rx-angular/rx-angular/commit/c07edbbec95ed9c2f20a2388280891516ec5f8ea))
+
+
+### Features
+
+* **cdk:** template-manager: add ability to dynamically configure templates ([c226b88](https://github.com/rx-angular/rx-angular/commit/c226b88cea36844a58a9b7fbd42dd5beb87eb2f3))
+
+
+
 # [1.0.0-rc.3](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.2...cdk@1.0.0-rc.3) (2022-11-15)
 
 ### Bug Fixes

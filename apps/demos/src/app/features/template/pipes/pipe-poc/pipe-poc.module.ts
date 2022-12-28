@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template/push';
 import { LetModule } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { PipeModule } from '../../../../rx-angular-pocs/template/pipes/pipe/pipe.module';
@@ -22,9 +22,8 @@ const DECLARATIONS = [PipePocComponent];
     MatButtonModule,
     UnpatchModule,
     PushModule,
-    LetModule
+    LetModule,
   ],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
-export class PipePocModule {
-}
+export class PipePocModule {}

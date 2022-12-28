@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RenderingsComponent } from './renderings.component';
 import { CommonModule } from '@angular/common';
 import { MatRippleModule } from '@angular/material/core';
-import { PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template/push';
 
 const DECLARATIONS = [RenderingsComponent];
 

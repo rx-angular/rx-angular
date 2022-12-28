@@ -223,7 +223,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *    hero$;
    *    let hero;
    *    let e = error;
-   *    templateTrg: templateTrigger$
+   *    contextTrigger: contextTrigger$
    * ">
    *
    *   <app-hero [hero]="hero"></app-hero>
@@ -231,12 +231,12 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    * </ng-container>
    *
    * // trigger template from component.ts
-   * templateTrigger$.next(RxNotificationKind.error)
+   * contextTrigger$.next(RxNotificationKind.error)
    *
-   * @param { Observable<RxNotificationKind> } templateTrigger
+   * @param { Observable<RxNotificationKind> } contextTrigger
    * @see {@link RxNotificationKind}
    */
-  @Input('rxLetTemplateTrg') templateTrigger?: Observable<RxNotificationKind>;
+  @Input('rxLetContextTrigger') contextTrigger?: Observable<RxNotificationKind>;
 
   /**
    * @description
@@ -250,7 +250,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *    hero$;
    *    let hero;
    *    let c = complete;
-   *    completeTrg: completeTrigger$
+   *    completeTrigger: completeTrigger$
    * ">
    *
    *   <app-hero [hero]="hero"></app-hero>
@@ -262,7 +262,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param { Observable<unknown> } completeTrigger
    */
-  @Input('rxLetCompleteTrg') completeTrigger?: Observable<unknown>;
+  @Input('rxLetCompleteTrigger') completeTrigger?: Observable<unknown>;
 
   /**
    * @description
@@ -276,7 +276,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *    hero$;
    *    let hero;
    *    let e = error;
-   *    errorTrg: errorTrigger$
+   *    errorTrigger: errorTrigger$
    * ">
    *
    *   <app-hero [hero]="hero"></app-hero>
@@ -288,7 +288,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param { Observable<unknown> } errorTrigger
    */
-  @Input('rxLetErrorTrg') errorTrigger?: Observable<unknown>;
+  @Input('rxLetErrorTrigger') errorTrigger?: Observable<unknown>;
 
   /**
    * @description
@@ -302,7 +302,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *    hero$;
    *    let hero;
    *    let s = suspense;
-   *    suspenseTrg: suspenseTrigger$
+   *    suspenseTrigger: suspenseTrigger$
    * ">
    *
    *   <app-hero [hero]="hero"></app-hero>
@@ -315,7 +315,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param { Observable<unknown> } suspenseTrigger
    */
-  @Input('rxLetSuspenseTrg') suspenseTrigger?: Observable<unknown>;
+  @Input('rxLetSuspenseTrigger') suspenseTrigger?: Observable<unknown>;
 
   /**
    * @description
@@ -328,7 +328,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *    hero$;
    *    let hero;
    *    suspense: suspense
-   *    nextTrg: nextTrigger$
+   *    nextTrigger: nextTrigger$
    * ">
    *
    *   <app-hero [hero]="hero"></app-hero>
@@ -341,7 +341,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param { Observable<unknown> } nextTrigger
    */
-  @Input('rxLetNextTrg') nextTrigger?: Observable<unknown>;
+  @Input('rxLetNextTrigger') nextTrigger?: Observable<unknown>;
 
   /**
    * @description
@@ -530,7 +530,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     );
     this.subscription.add(
       merge(
-        this.templateTrigger || NEVER,
+        this.contextTrigger || NEVER,
         this.nextTrigger?.pipe(map(() => RxNotificationKind.Next)) || NEVER,
         this.suspenseTrigger?.pipe(map(() => RxNotificationKind.Suspense)) ||
           NEVER,

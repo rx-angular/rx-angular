@@ -75,16 +75,16 @@ export class SomeComponent {
 
 **Contextual state**
 
-| Input         | Type                             | description                                                            |
-| ------------- | -------------------------------- | ---------------------------------------------------------------------- |
-| `error`       | `TemplateRef<RxIfViewContext>`   | defines the template for the error state                               |
-| `complete`    | `TemplateRef<RxIfViewContext>`   | defines the template for the complete state                            |
-| `suspense`    | `TemplateRef<RxIfViewContext>`   | defines the template for the suspense state                            |
-| `nextTrg`     | `Observable<unknown>`            | trigger to show `next` template                                        |
-| `errorTrg`    | `Observable<unknown>`            | trigger to show `error` template                                       |
-| `completeTrg` | `Observable<unknown>`            | trigger to show `complete` template                                    |
-| `suspenseTrg` | `Observable<unknown>`            | trigger to show `suspense` template                                    |
-| `templateTrg` | `Observable<RxNotificationKind>` | trigger to show any templates, based on the given `RxNotificationKind` |
+| Input             | Type                             | description                                                            |
+| ----------------- | -------------------------------- | ---------------------------------------------------------------------- |
+| `error`           | `TemplateRef<RxIfViewContext>`   | defines the template for the error state                               |
+| `complete`        | `TemplateRef<RxIfViewContext>`   | defines the template for the complete state                            |
+| `suspense`        | `TemplateRef<RxIfViewContext>`   | defines the template for the suspense state                            |
+| `nextTrigger`     | `Observable<unknown>`            | trigger to show `next` template                                        |
+| `errorTrigger`    | `Observable<unknown>`            | trigger to show `error` template                                       |
+| `completeTrigger` | `Observable<unknown>`            | trigger to show `complete` template                                    |
+| `suspenseTrigger` | `Observable<unknown>`            | trigger to show `suspense` template                                    |
+| `contextTrigger`  | `Observable<RxNotificationKind>` | trigger to show any templates, based on the given `RxNotificationKind` |
 
 **Rendering**
 
