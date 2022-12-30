@@ -87,72 +87,74 @@ export default function Home(): JSX.Element {
 
         <div className="text--center padding-horiz--md">
           <h3>Version Compatibility</h3>
-          <table style={{ display: 'inline-block' }}>
-            <tr>
-              <th>Angular</th>
-              <th>RxJS</th>
-              <th>
-                <code>@rx-angular/state</code>
-              </th>
-              <th>
-                <code>@rx-angular/template</code>
-              </th>
-              <th>
-                <code>@rx-angular/cdk</code>
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <code>14</code>
-              </td>
-              <td>
-                <code>^7.4.0</code>
-              </td>
-              <td>
-                <code>&gt; 1.4.6</code>
-              </td>
-              <td>
-                <code>&gt; 1.0.0-beta.29</code>
-              </td>
-              <td>
-                <code>&gt; 1.0.0-alpha.10</code>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <code>^12.0.0</code> or <code>^13.0.0</code>
-              </td>
-              <td>
-                <code>^6.5.5</code> or <code>^7.4.0</code>
-              </td>
-              <td>
-                <code>&gt; 1.4.6</code>
-              </td>
-              <td>
-                <code>&gt; 1.0.0-beta.29</code>
-              </td>
-              <td>
-                <code>&gt; 1.0.0-alpha.10</code>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <code>^11.0.0</code>
-              </td>
-              <td>
-                <code>^6.5.5</code>
-              </td>
-              <td>
-                <code>&lt;= 1.4.6</code>
-              </td>
-              <td>
-                <code>&lt;= 1.0.0-beta.29</code>
-              </td>
-              <td>
-                <code>&lt;= 1.0.0-alpha.10</code>
-              </td>
-            </tr>
-          </table>
+          <div className="wrapper__table">
+            <table style={{ display: 'inline-block' }}>
+              <tr>
+                <th>Angular</th>
+                <th>RxJS</th>
+                <th>
+                  <code>@rx-angular/state</code>
+                </th>
+                <th>
+                  <code>@rx-angular/template</code>
+                </th>
+                <th>
+                  <code>@rx-angular/cdk</code>
+                </th>
+              </tr>
+              <tr>
+                <td>
+                  <code>14</code>
+                </td>
+                <td>
+                  <code>^7.4.0</code>
+                </td>
+                <td>
+                  <code>&gt; 1.4.6</code>
+                </td>
+                <td>
+                  <code>&gt; 1.0.0-beta.29</code>
+                </td>
+                <td>
+                  <code>&gt; 1.0.0-alpha.10</code>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <code>^12.0.0</code> or <code>^13.0.0</code>
+                </td>
+                <td>
+                  <code>^6.5.5</code> or <code>^7.4.0</code>
+                </td>
+                <td>
+                  <code>&gt; 1.4.6</code>
+                </td>
+                <td>
+                  <code>&gt; 1.0.0-beta.29</code>
+                </td>
+                <td>
+                  <code>&gt; 1.0.0-alpha.10</code>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <code>^11.0.0</code>
+                </td>
+                <td>
+                  <code>^6.5.5</code>
+                </td>
+                <td>
+                  <code>&lt;= 1.4.6</code>
+                </td>
+                <td>
+                  <code>&lt;= 1.0.0-beta.29</code>
+                </td>
+                <td>
+                  <code>&lt;= 1.0.0-alpha.10</code>
+                </td>
+              </tr>
+            </table>
+          </div>
           <p>
             Regarding the compatibility to RxJs, we generally stick to the
             compatibilities of the angular framework itself.
