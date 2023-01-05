@@ -1,0 +1,13 @@
+{
+    "version": 2,
+    "public": true,
+    "name": "ngx-isr-docs",
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/api" }
+    ],
+    "functions": {
+      "api/index.js": {
+        "includeFiles": "dist/ngx-isr-demo/browser/**"
+      }
+    }
+  }

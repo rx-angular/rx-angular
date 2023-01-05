@@ -4,13 +4,13 @@
   "scripts": {
     "ng": "ng",
     "start": "ng build ngx-isr && ng run ngx-isr-demo:serve-ssr",
-    "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "dev:ssr": "ng run ngx-isr-demo:serve-ssr",
     "serve:ssr": "node dist/ngx-isr-demo/server/main.js",
     "build:ssr": "ng build && ng run ngx-isr-demo:server",
-    "prerender": "ng run ngx-isr-demo:prerender"
+    "prerender": "ng run ngx-isr-demo:prerender",
+    "build-vercel": "npm run build:ssr"
   },
   "private": true,
   "dependencies": {
@@ -33,7 +33,6 @@
     "@angular-devkit/build-angular": "^15.0.4",
     "@angular/cli": "^15.0.4",
     "@angular/compiler-cli": "^15.0.4",
-    "@netlify/plugin-angular-universal": "^1.0.1",
     "@nguniversal/builders": "^15.0.0",
     "@types/express": "^4.17.13",
     "@types/jasmine": "~4.0.3",
