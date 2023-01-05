@@ -1,43 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-body {
-  padding: 20px;
-}
 
-p {
-  height: 250px;
-  background: lightgrey;
-  display: grid;
-  place-items: center;
-  border-radius: 5px;
-  margin-top: 20px;
-  font-family: sans-serif;
-}
-
-a {
-  text-decoration: none;
-  color: white;
-  background: blue;
-  padding: 10px 25px;
-  border-radius: 5px;
-  font-weight: 600;
-  font-family: sans-serif;
-  margin-right: 10px;
-
-  &.active {
-    background: darkblue;
-  }
-}
-
-button {
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  color: white;
-  background: red;
-  padding: 10px 25px;
-  border-radius: 5px;
-  font-weight: 600;
-  font-family: sans-serif;
-  margin-right: 10px;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

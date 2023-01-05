@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
-import { useParams } from './helpers';
+import { useParams } from '../utils';
 
 const API_URL = 'https://jsonplaceholder.typicode.com';
 

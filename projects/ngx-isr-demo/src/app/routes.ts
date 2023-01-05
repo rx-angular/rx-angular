@@ -2,32 +2,42 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: "one",
-    loadComponent: () => import('./page-one.component'),
-    title: 'Page One',
-  },
-  {
-    path: "two",
-    loadComponent: () => import('./page-two.component'),
-    data: { revalidate: 5 },
-    title: 'Page Two',
-  },
-  {
-    path: "three",
-    loadComponent: () => import('./page-three.component'),
-    data: { revalidate: 0 },
-    title: 'Page Three',
-  },
-  {
-    path: "details",
-    loadComponent: () => import('./details.component'),
-    data: { revalidate: 10 },
-    title: 'Details',
-  },
-  {
-    path: "details/:id",
-    loadComponent: () => import('./details.component'),
-    data: { revalidate: 10 },
-    title: 'Details',
-  },
+    path: "",
+    loadComponent: () => import('./layout/main-layout.component'),
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./components/home.component'),
+      },
+      {
+        path: "one",
+        loadComponent: () => import('./components/page-one.component'),
+        title: 'Page One',
+      },
+      {
+        path: "two",
+        loadComponent: () => import('./components/page-two.component'),
+        data: { revalidate: 5 },
+        title: 'Page Two',
+      },
+      {
+        path: "three",
+        loadComponent: () => import('./components/page-three.component'),
+        data: { revalidate: 0 },
+        title: 'Page Three',
+      },
+      {
+        path: "details",
+        loadComponent: () => import('./components/details.component'),
+        data: { revalidate: 10 },
+        title: 'Details',
+      },
+      {
+        path: "details/:id",
+        loadComponent: () => import('./components/details.component'),
+        data: { revalidate: 10 },
+        title: 'Details',
+      },
+    ]
+  }
 ]
