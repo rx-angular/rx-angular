@@ -1,5 +1,5 @@
 # Incremental Static Regeneration for Angular
-Incremental Static Regeneration (ISR) enables developers and content editors to use static-generation on a per-page basis, without needing to rebuild the entire site. With ISR, you can retain the benefits of static while scaling to millions of pages. [Source](https://vercel.com/docs/concepts/next.js/incremental-static-regeneration)
+A library that enables Angular Universal applications to generate static pages at runtime and then update them incrementally on demand or on a schedule.
 
 📰 [Read the blog post](https://itnext.io/incremental-static-regeneration-for-angular-42b0a8440e53)
 
@@ -16,7 +16,7 @@ npm install ngx-isr
 ```ts
 const isr = new ISRHandler({
   indexHtml,
-  invalidateSecretToken: 'MY_TOKEN', // replace with env secret key
+  invalidateSecretToken: 'MY_TOKEN', // replace with env secret key ex. process.env.REVALIDATE_SECRET_TOKEN
   enableLogging: !environment.production
 });
 ```
@@ -143,20 +143,16 @@ const routes: Routes = [
 
 
 ## Changelog
-- Version 0.3.1
-  * Features: 
-    * Added FileSystem CacheHandler
-    * Added "@types/node": "^14.15.0" to peerDeps required by FileSystemCacheHandler
+- Version 0.4.0
+  Now ngx-isr will support only project in v15 and above. If you want to use it in older versions of Angular, please use v0.3.1.
 
-- Version 0.3.0
-  * Features:
-    * Added support for Angular v14
+  The reason for this is because now we use `ɵSERVER_CONTEXT` token in order to set the rendering context that now will be shown as: `ng-server-context="ngx-isr"`. And this token is only available in v15 and above.
 
-- Version 0.2.0
-  * Features:
-    * Added `skipCachingOnHttpError` option. It will be enabled by default.
-  * Breaking changes:
-    * When adding `NgxIsrModule` in AppServerModule imports, we should change it to be `NgxIsrModule.forRoot()`.
+  * Changes: 
+    * chore: Updated the project to v15
+    * feat: Added server context provider
+    * feat: Added RedisCacheHandler class usage in the demo app (experimental)
+    * chore: Started to convert the demo app in a documentation page for the library
 
 ## License
 MIT
