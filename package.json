@@ -10,7 +10,7 @@
     "serve:ssr": "node dist/ngx-isr-demo/server/main.js",
     "build:ssr": "ng build ngx-isr-demo && ng run ngx-isr-demo:server",
     "prerender": "ng run ngx-isr-demo:prerender",
-    "build-vercel": "npm run build:ssr"
+    "build-vercel": "ng build ngx-isr && npm run build:ssr"
   },
   "private": true,
   "dependencies": {
