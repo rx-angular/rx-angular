@@ -12,6 +12,6 @@ import { Component, OnInit } from '@angular/core';
   standalone: true,
   imports: [CommonModule]
 })
-export class PageOneComponent {
+export default class PageOneComponent {
   time = new Date();
 }

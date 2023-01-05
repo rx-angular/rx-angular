@@ -12,7 +12,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [CommonModule]
 })
-export class PageThreeComponent {
-
+export default class PageThreeComponent {
   time = new Date();
 }

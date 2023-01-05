@@ -1,37 +1,32 @@
 import { Routes } from '@angular/router';
 
-const DetailsComponent = () => import('./details.component').then(x => x.DetailsComponent);
-const PageOneComponent = () => import('./page-one.component').then(x => x.PageOneComponent);
-const PageTwoComponent = () => import('./page-two.component').then(x => x.PageTwoComponent);
-const PageThreeComponent = () => import('./page-three.component').then(x => x.PageThreeComponent);
-
 export const routes: Routes = [
   {
     path: "one",
-    loadComponent: PageOneComponent,
+    loadComponent: () => import('./page-one.component'),
     title: 'Page One',
   },
   {
     path: "two",
-    loadComponent: PageTwoComponent,
+    loadComponent: () => import('./page-two.component'),
     data: { revalidate: 5 },
     title: 'Page Two',
   },
   {
     path: "three",
-    loadComponent: PageThreeComponent,
+    loadComponent: () => import('./page-three.component'),
     data: { revalidate: 0 },
     title: 'Page Three',
   },
   {
     path: "details",
-    loadComponent: DetailsComponent,
+    loadComponent: () => import('./details.component'),
     data: { revalidate: 10 },
     title: 'Details',
   },
   {
     path: "details/:id",
-    loadComponent: DetailsComponent,
+    loadComponent: () => import('./details.component'),
     data: { revalidate: 10 },
     title: 'Details',
   },

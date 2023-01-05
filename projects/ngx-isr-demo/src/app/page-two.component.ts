@@ -15,6 +15,6 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, RouterModule]
 })
-export class PageTwoComponent {
+export default class PageTwoComponent {
   time = new Date()
 }

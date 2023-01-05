@@ -20,7 +20,7 @@ const API_URL = 'https://jsonplaceholder.typicode.com';
   standalone: true,
   imports: [CommonModule]
 })
-export class DetailsComponent {
+export default class DetailsComponent {
   private http = inject(HttpClient);
   detailsId = useParams('id');
 
