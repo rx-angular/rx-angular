@@ -15,3 +15,6 @@ export {
   RenderConfig,
   ServeFromCacheConfig,
 } from './lib/models/isr-handler-config';
+
+
+export { CacheHandler, ISROptions, CacheData } from './lib/models/cache-handler';
