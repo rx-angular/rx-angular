@@ -30,8 +30,10 @@ export class ISRHandler {
       config?.skipCachingOnHttpError !== false;
 
     if (config.cache && config.cache instanceof CacheHandler) {
+      this.showLogs && console.log('Using custom cache handler!');
       this.cache = config.cache;
     } else {
+      this.showLogs && console.log('Using in memory cache handler!');
       this.cache = new InMemoryCacheHandler();
     }
 

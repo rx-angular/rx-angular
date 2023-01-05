@@ -11,9 +11,29 @@ import { RouterLink } from '@angular/router';
         <a routerLink="/">ngx-isr</a>
       </div>
       <div class="header__nav">
-        <a href="https://github.com/eneajaho/ngx-isr?source=docs" target="_blank">
-            <img ngSrc="assets/github-mark.svg" width="20" height="20" alt="Github logo">
-            <span>Github</span>
+        <a
+          href="https://github.com/eneajaho/ngx-isr?source=docs"
+          target="_blank"
+        >
+          <img
+            ngSrc="assets/github-mark.svg"
+            width="20"
+            height="20"
+            alt="Github logo"
+          />
+          <span>Github</span>
+        </a>
+        <a routerLink="one">
+          <span>One</span>
+        </a>
+        <a routerLink="two">
+          <span>Two</span>
+        </a>
+        <a routerLink="three">
+          <span>Three</span>
+        </a>
+        <a routerLink="details/1">
+          <span>Details</span>
         </a>
       </div>
     </div>
@@ -58,7 +78,7 @@ import { RouterLink } from '@angular/router';
 
         display: flex;
         align-items: center;
-        gap: 5px
+        gap: 5px;
       }
       .header__nav a:hover {
         background: rgb(170 173 195 / 16%);

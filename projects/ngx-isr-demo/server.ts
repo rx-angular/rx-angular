@@ -9,12 +9,16 @@ import { AppServerModule } from './src/main.server';
 import { existsSync } from 'fs';
 
 import { ISRHandler , FileSystemCacheHandler} from 'ngx-isr';
+import { RedisCacheHandler } from './redis-cache-handler';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
   const server = express();
   const distFolder = join(process.cwd(), 'dist/ngx-isr-demo/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
+
+  const REDIS_CONNECTION_STRING = process.env['REDIS_CONNECTION_STRING'] || '';
+  const INVALIDATE_TOKEN = process.env['INVALIDATE_TOKEN'] || '';
 
   // Step 0 (optional): Create FileSystemCacheHandler with required options.
   const fsCacheHandler = new FileSystemCacheHandler({
@@ -23,11 +27,13 @@ export function app(): express.Express {
     addPrerenderedPagesToCache: true,
   });
 
+  const redisCacheHandler = REDIS_CONNECTION_STRING ? new RedisCacheHandler(REDIS_CONNECTION_STRING) : undefined;
+
   // Step 1: Initialize ISRHandler
   const isr = new ISRHandler({
     indexHtml,
-    cache: fsCacheHandler, // we can remove this field if we want to use the default InMemoryCacheHandler
-    invalidateSecretToken: 'MY_TOKEN',
+    cache: redisCacheHandler, // we can remove this field if we want to use the default InMemoryCacheHandler
+    invalidateSecretToken: INVALIDATE_TOKEN || 'MY_TOKEN',
     enableLogging: !environment.production
   });
 
