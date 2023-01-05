@@ -8,7 +8,7 @@
     "test": "ng test",
     "dev:ssr": "ng run ngx-isr-demo:serve-ssr",
     "serve:ssr": "node dist/ngx-isr-demo/server/main.js",
-    "build:ssr": "ng build && ng run ngx-isr-demo:server",
+    "build:ssr": "ng build ngx-isr-demo && ng run ngx-isr-demo:server",
     "prerender": "ng run ngx-isr-demo:prerender",
     "build-vercel": "npm run build:ssr"
   },
