@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="460" height="300" src="https://raw.githubusercontent.com/eneajaho/ngx-isr/main/projects/ngx-isr-demo/src/assets/logo.svg">
+</p>
+
 # Incremental Static Regeneration for Angular
 A library that enables Angular Universal applications to generate static pages at runtime and then update them incrementally on demand or on a schedule.
 
