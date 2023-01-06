@@ -5,16 +5,39 @@ title: 'Selections'
 hide_title: true
 ---
 
-import Readme, {
-  toc as readmeToc,
-} from '@site/../../libs/state/selections/README.md';
-import Docs, { toc as docsToc } from './_docs.md';
+# @rx-angular/state/selections
 
-<Readme />
+[![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)
+![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
 
-<Docs />
+> This package provides a set of RxJS operators to select the state in an efficient way.
 
-<!-- Workaround for generating table of contents -->
-<!-- See https://github.com/facebook/docusaurus/issues/3915#issuecomment-896193142 -->
+## Key features
 
-export const toc = [...readmeToc, ...docsToc];
+- ✅
+
+## Demos:
+
+- ⚡ GitHub
+
+## Install
+
+```bash
+npm install --save @rx-angular/state
+# or
+yarn add @rx-angular/state
+```
+
+## Documentation
+
+- [Selections](https://rx-angular.io/docs/state/selections)
+
+## Motivation
+
+TBD
+
+- [`Interfaces`](api/interfaces/)
+- [`distinctUntilSomeChanged`](../api/rxjs-operators/distinct-until-some-changed.md)
+- [`select`](../api/rxjs-operators/select.md)
+- [`selectSlice`](../api/rxjs-operators/select-slice.md)
+- [`stateful`](../api/rxjs-operators/stateful.md)
