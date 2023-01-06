@@ -31,11 +31,12 @@ import { coalescingManager } from './coalescingManager';
  * @usageNotes
  * Emit clicks at a rate of at most one click per second
  * ```typescript
- * import { fromEvent, animationFrames } from 'rxjs';
- * import { coalesce } from 'ngRx/component';
+ * import { from, fromEvent, animationFrames } from 'rxjs';
+ * import { coalesceWith } from '@rx-angular/cdk/coalescing';
  *
+ * const setTimeoutDurationSelector = interval(500) as Observable<any>;
  * const clicks = fromEvent(document, 'click');
- * const result = clicks.pipe(coalesce(ev => animationFrames));
+ * const result = clicks.pipe(coalesceWith(setTimeoutDurationSelector));
  * result.subscribe(x => console.log(x));
  * ```
  */
