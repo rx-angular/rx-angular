@@ -9,13 +9,16 @@ import { InMemoryCacheHandler } from './cache-handlers';
 import { renderUrl, RenderUrlConfig } from './utils/render-url';
 import { getISROptions } from './utils/get-isr-options';
 import { CacheRegeneration } from './cache-regeneration';
+import { NextFunction, Request, Response } from 'express';
+import { ISRLogger } from './isr-logger';
 
 export class ISRHandler {
   protected cache!: CacheHandler;
   protected cacheRegeneration!: CacheRegeneration;
 
   protected isrConfig: ISRHandlerConfig;
-  protected readonly showLogs: boolean = false;
+
+  protected readonly logger: ISRLogger;
 
   constructor(config?: ISRHandlerConfig) {
     if (!config) {
@@ -23,17 +26,18 @@ export class ISRHandler {
     }
 
     this.isrConfig = config;
-    this.showLogs = config?.enableLogging ?? false;
+
+    this.logger = new ISRLogger(config?.enableLogging ?? false);
 
     // if skipCachingOnHttpError is not provided it will default to true
     this.isrConfig.skipCachingOnHttpError =
       config?.skipCachingOnHttpError !== false;
 
     if (config.cache && config.cache instanceof CacheHandler) {
-      this.showLogs && console.log('Using custom cache handler!');
+      this.logger.log('Using custom cache handler!');
       this.cache = config.cache;
     } else {
-      this.showLogs && console.log('Using in memory cache handler!');
+      this.logger.log('Using in memory cache handler!');
       this.cache = new InMemoryCacheHandler();
     }
 
@@ -44,8 +48,8 @@ export class ISRHandler {
   }
 
   async invalidate(
-    req: any,
-    res: any,
+    req: Request,
+    res: Response,
     config?: InvalidateConfig
   ): Promise<any> {
     const { secretToken, urlToInvalidate } = extractData(req);
@@ -96,7 +100,7 @@ export class ISRHandler {
       // add the regenerated page to cache
       await this.cache.add(req.url, html, { revalidate });
 
-      this.showLogs && console.log(`Url: ${urlToInvalidate} was regenerated!`);
+      this.logger.log(`Url: ${urlToInvalidate} was regenerated!`);
 
       return res.json({
         status: 'success',
@@ -112,28 +116,32 @@ export class ISRHandler {
   }
 
   async serveFromCache(
-    req: any,
-    res: any,
-    next: any,
+    req: Request,
+    res: Response,
+    next: NextFunction,
     config?: ServeFromCacheConfig
   ): Promise<any> {
     try {
       const cacheData = await this.cache.get(req.url);
       const { html, options, createdAt } = cacheData;
 
-      // const lastCacheDateDiff = (Date.now() - createdAt) / 1000; // in seconds
+      // if the cache is expired, we will regenerate it
       if (options.revalidate && options.revalidate > 0) {
-        await this.cacheRegeneration.regenerate(
-          req,
-          res,
-          cacheData,
-          this.showLogs,
-          config?.providers
-        );
+        const lastCacheDateDiff = (Date.now() - createdAt) / 1000; // in seconds
+
+        if (lastCacheDateDiff > options.revalidate) {
+          await this.cacheRegeneration.regenerate(
+            req,
+            res,
+            cacheData,
+            this.logger,
+            config?.providers
+          );
+        }
       }
 
       // Cache exists. Send it.
-      this.showLogs && console.log('Page was retrieved from cache: ', req.url);
+      this.logger.log('Page was retrieved from cache: ', req.url);
       return res.send(html);
     } catch (error) {
       // Cache does not exist. Serve user using SSR
@@ -142,9 +150,9 @@ export class ISRHandler {
   }
 
   async render(
-    req: any,
-    res: any,
-    next: any,
+    req: Request,
+    res: Response,
+    next: NextFunction,
     config?: RenderConfig
   ): Promise<any> {
     const renderUrlConfig: RenderUrlConfig = {
@@ -161,7 +169,7 @@ export class ISRHandler {
       // if we have any http errors when rendering the site, and we have skipCachingOnHttpError enabled
       // we don't want to cache it, and, we will fall back to client side rendering
       if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
-        this.showLogs && console.log('Http errors: \n', errors);
+        this.logger.log('Http errors: \n', errors);
         return res.send(html);
       }
 
@@ -181,10 +189,12 @@ export class ISRHandler {
   }
 }
 
-const extractData = (req: any) => {
+const extractData = (
+  req: Request
+): { secretToken: string | null; urlToInvalidate: string | null } => {
   return {
-    secretToken: req.query['secret'] || null,
-    urlToInvalidate: req.query['urlToInvalidate'] || null,
+    secretToken: req.query['secret'] as string || null,
+    urlToInvalidate: req.query['urlToInvalidate'] as string || null,
     // urlsToInvalidate: req.body.urls || [],
   };
 };

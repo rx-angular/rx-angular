@@ -1,10 +1,11 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { Provider } from '@angular/core';
 import { ɵSERVER_CONTEXT as SERVER_CONTEXT } from '@angular/platform-server';
+import { Request, Response } from 'express';
 
 export interface RenderUrlConfig {
-  req: any;
-  res: any;
+  req: Request;
+  res: Response;
   url: string;
   indexHtml: string;
   providers?: Provider[];

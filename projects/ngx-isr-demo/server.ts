@@ -8,7 +8,7 @@ import { join } from 'path';
 import { AppServerModule } from './src/main.server';
 import { existsSync } from 'fs';
 
-import { ISRHandler , FileSystemCacheHandler} from 'ngx-isr';
+import { ISRHandler } from 'ngx-isr';
 import { RedisCacheHandler } from './redis-cache-handler';
 
 // The Express app is exported so that it can be used by serverless Functions.
@@ -21,11 +21,11 @@ export function app(): express.Express {
   const INVALIDATE_TOKEN = process.env['INVALIDATE_TOKEN'] || '';
 
   // Step 0 (optional): Create FileSystemCacheHandler with required options.
-  const fsCacheHandler = new FileSystemCacheHandler({
-    cacheFolderPath: join(distFolder, '/cache'),
-    prerenderedPagesPath: distFolder,
-    addPrerenderedPagesToCache: true,
-  });
+  // const fsCacheHandler = new FileSystemCacheHandler({
+  //   cacheFolderPath: join(distFolder, '/cache'),
+  //   prerenderedPagesPath: distFolder,
+  //   addPrerenderedPagesToCache: true,
+  // });
 
   const redisCacheHandler = REDIS_CONNECTION_STRING ? new RedisCacheHandler(REDIS_CONNECTION_STRING) : undefined;
 
