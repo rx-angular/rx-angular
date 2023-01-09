@@ -31,7 +31,7 @@ import { coalescingManager } from './coalescingManager';
  * @usageNotes
  * Emit clicks at a rate of at most one click per second
  * ```typescript
- * import { interval, fromEvent, animationFrames } from 'rxjs';
+ * import { interval, fromEvent } from 'rxjs';
  * import { coalesceWith } from '@rx-angular/cdk/coalescing';
  *
  * const setTimeoutDurationSelector = interval(500);
