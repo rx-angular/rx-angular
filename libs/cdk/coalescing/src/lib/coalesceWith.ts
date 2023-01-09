@@ -34,7 +34,7 @@ import { coalescingManager } from './coalescingManager';
  * import { interval, fromEvent, animationFrames } from 'rxjs';
  * import { coalesceWith } from '@rx-angular/cdk/coalescing';
  *
- * const setTimeoutDurationSelector = interval(500) as Observable<any>;
+ * const setTimeoutDurationSelector = interval(500);
  * const clicks = fromEvent(document, 'click');
  * const result = clicks.pipe(coalesceWith(setTimeoutDurationSelector));
  * result.subscribe(x => console.log(x));
