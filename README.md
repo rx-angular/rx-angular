@@ -7,10 +7,10 @@ performance and template rendering.
 
 RxAngular is divided into different packages:
 
-- [📦@rx-angular/cdk](https://rx-angular.io/docs/cdk)
-- [📦@rx-angular/eslint-plugin](https://rx-angular.io/docs/eslint-plugin)
 - [📦@rx-angular/state](https://rx-angular.io/docs/state)
 - [📦@rx-angular/template](https://rx-angular.io/docs/template)
+- [📦@rx-angular/cdk](https://rx-angular.io/docs/cdk)
+- [📦@rx-angular/eslint-plugin](https://rx-angular.io/docs/eslint-plugin)
 
 Used together, you get a powerful tool for developing high-performance angular applications with or without NgZone.
 
@@ -23,9 +23,6 @@ This repository holds a set of helpers to create **fully reactive** as well as *
 - ✔ Lean and simple: No boilerplate guaranteed
 - ✔ Well typed and tested
 - ✔ Backwards compatible: support for Angular > v11
-
-> **❗ Warning**
-> Expect no migration scripts for any change in `experimental` folders
 
 ## Used by
 
@@ -65,7 +62,7 @@ This repository holds a set of helpers to create **fully reactive** as well as *
 
 Find details in the links to the official docs below for installation and setup instructions, examples and resources.
 
-- [📦@rx-angular/cdk](https://rx-angular.io/docs/cdk) - Component Development Kit
-- [📦@rx-angular/eslint-plugin](https://rx-angular.io/docs/eslint-plugin) - ESLint Plugin
 - [📦@rx-angular/state](https://rx-angular.io/docs/state) - Imperative & Reactive Component State-Management
 - [📦@rx-angular/template](https://rx-angular.io/docs/template) - High-Performance Non-Blocking Rendering
+- [📦@rx-angular/cdk](https://rx-angular.io/docs/cdk) - Component Development Kit
+- [📦@rx-angular/eslint-plugin](https://rx-angular.io/docs/eslint-plugin) - ESLint Plugin
