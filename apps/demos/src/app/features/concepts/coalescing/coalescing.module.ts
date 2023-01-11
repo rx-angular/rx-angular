@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template/push';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 
 import { ROUTES } from './coalescing.routes';
@@ -10,9 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
 
-const DECLARATIONS = [
-  CoalescingComponent
-];
+const DECLARATIONS = [CoalescingComponent];
 
 @NgModule({
   declarations: [DECLARATIONS],
@@ -23,10 +21,9 @@ const DECLARATIONS = [
     StrategySelectModule,
     UnpatchModule,
     MatButtonModule,
-    PushModule
+    PushModule,
   ],
   providers: [],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
-export class CoalescingModule {
-}
+export class CoalescingModule {}

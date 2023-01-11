@@ -104,11 +104,9 @@
     "version": {
       "executor": "@jscutlery/semver:version",
       "options": {
-        "push": true,
         "noVerify": true,
         "baseBranch": "main",
         "versionTagPrefix": "${target}@",
-        "postTargets": ["state:github"],
         "commitMessageFormat": "release(${projectName}): ${version}"
       }
     },

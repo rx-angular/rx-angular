@@ -2,7 +2,6 @@
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
-[![Coverage Status](https://raw.githubusercontent.com/rx-angular/rx-angular/github-pages/docs/test-coverage/state/jest-coverage-badge.svg)](https://rx-angular.github.io/rx-angular/test-coverage/state/lcov-report/index.html)
 
 > Reactive Component State for Angular
 
@@ -35,8 +34,7 @@ None of them is dedicated to targeting the particular needs of the **component l
 `@rx-angular/state` was specifically designed to give developers a tool for mastering **component state** without forcing
 them to use complex design patterns.
 
-Its lightweight and intuitive API and the automatic subscription handling makes `@rx-angular/state`
-the **perfect fit** for handling state in any Angular component.
+Its lightweight and intuitive API and the automatic subscription handling make `@rx-angular/state` the **perfect fit** for handling state in any Angular component.
 
 Using this library allows you to implement things like:
 
@@ -96,7 +94,7 @@ nx migrate @rx-angular/state
 
 ## Tutorials
 
-- [Basic Tutorial](https://rx-angular.io/docs/state/tutorials/basics)
+- [Basic Tutorial](https://www.rx-angular.io/docs/state/tutorials/basic-tutorial/setup)
 - [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
 
 ## Snippets
@@ -136,6 +134,7 @@ nx migrate @rx-angular/state
 - [📑 Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) - [Mike Hartington](https://twitter.com/mhartington)
 - [📑 High performant zone-Less Angular Progressive Web Application](https://angular-movies-a12d3.web.app/list/category/popular) - [TasteJS](https://github.com/tastejs/angular-movies)
 - [📑 Zone-Less Angular Application - Tour of heros](https://github.com/BioPhoton/tour-of-heroes) - [Michael_Hladky](https://twitter.com/Michael_Hladky)
+- [📑 Zone-Less Todo MVC](https://github.com/edbzn/rx-angular-todo-mvc) - [Edouard Bozon](https://twitter.com/edbzn)
 
 ## Version Compatibility
 
@@ -145,6 +144,6 @@ nx migrate @rx-angular/state
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.4.6`         |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.4.6`        |
 
-Regarding the compatibility to RxJs, we generally stick to the compatibilities of the angular framework itself.
-All the packages support RxJs versions `^6.5.5` || `^7.4.0`.
-For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3)
+Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself.
+All the packages support RxJS versions `^6.5.5` || `^7.4.0`.
+For more information about the compatibilities of Angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).

@@ -228,7 +228,7 @@ export class RxIf<T = unknown>
    *  *rxIf="
    *    show$;
    *    let e = error;
-   *    templateTrg: templateTrigger$
+   *    contextTrigger: contextTrigger$
    * ">
    *
    *   <app-hero></app-hero>
@@ -236,12 +236,12 @@ export class RxIf<T = unknown>
    * </ng-container>
    *
    * // trigger template from component.ts
-   * templateTrigger$.next(RxNotificationKind.error)
+   * contextTrigger$.next(RxNotificationKind.error)
    *
-   * @param { Observable<RxNotificationKind> } templateTrigger
+   * @param { Observable<RxNotificationKind> } contextTrigger
    * @see {@link RxNotificationKind}
    */
-  @Input('rxIfTemplateTrg') templateTrigger?: Observable<RxNotificationKind>;
+  @Input('rxIfContextTrigger') contextTrigger?: Observable<RxNotificationKind>;
 
   /**
    * @description
@@ -253,7 +253,7 @@ export class RxIf<T = unknown>
    *  *rxIf="
    *    show$;
    *    suspense: suspense
-   *    nextTrg: nextTrigger$
+   *    nextTrigger: nextTrigger$
    * ">
    *
    *   <app-hero></app-hero>
@@ -266,7 +266,7 @@ export class RxIf<T = unknown>
    *
    * @param { Observable<unknown> } nextTrigger
    */
-  @Input('rxIfNextTrg') nextTrigger?: Observable<unknown>;
+  @Input('rxIfNextTrigger') nextTrigger?: Observable<unknown>;
 
   /**
    * @description
@@ -279,7 +279,7 @@ export class RxIf<T = unknown>
    *  *rxIf="
    *    show$;
    *    let s = suspense;
-   *    suspenseTrg: suspenseTrigger$
+   *    suspenseTrigger: suspenseTrigger$
    * ">
    *
    *   <app-hero></app-hero>
@@ -292,7 +292,7 @@ export class RxIf<T = unknown>
    *
    * @param { Observable<unknown> } suspenseTrigger
    */
-  @Input('rxIfSuspenseTrg') suspenseTrigger?: Observable<unknown>;
+  @Input('rxIfSuspenseTrigger') suspenseTrigger?: Observable<unknown>;
 
   /**
    * @description
@@ -305,7 +305,7 @@ export class RxIf<T = unknown>
    *  *rxIf="
    *    show$;
    *    let e = error;
-   *    errorTrg: errorTrigger$
+   *    errorTrigger: errorTrigger$
    * ">
    *
    *   <app-hero></app-hero>
@@ -317,7 +317,7 @@ export class RxIf<T = unknown>
    *
    * @param { Observable<unknown> } errorTrigger
    */
-  @Input('rxIfErrorTrg') errorTrigger?: Observable<unknown>;
+  @Input('rxIfErrorTrigger') errorTrigger?: Observable<unknown>;
 
   /**
    * @description
@@ -330,7 +330,7 @@ export class RxIf<T = unknown>
    *  *rxIf="
    *    show$;
    *    let c = complete;
-   *    completeTrg: completeTrigger$
+   *    completeTrigger: completeTrigger$
    * ">
    *
    *   <app-hero></app-hero>
@@ -342,7 +342,7 @@ export class RxIf<T = unknown>
    *
    * @param { Observable<unknown> } completeTrigger
    */
-  @Input('rxIfCompleteTrg') completeTrigger?: Observable<unknown>;
+  @Input('rxIfCompleteTrigger') completeTrigger?: Observable<unknown>;
 
   /**
    * @description
@@ -493,7 +493,7 @@ export class RxIf<T = unknown>
   ngOnInit() {
     this.subscription.add(
       merge(
-        this.templateTrigger || NEVER,
+        this.contextTrigger || NEVER,
         this.nextTrigger?.pipe(map(() => RxNotificationKind.Next)) || NEVER,
         this.suspenseTrigger?.pipe(map(() => RxNotificationKind.Suspense)) ||
           NEVER,

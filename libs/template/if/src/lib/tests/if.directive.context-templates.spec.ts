@@ -28,11 +28,11 @@ const ifContextTemplatesTemplate = `
         suspense: suspense;
         error: error;
         complete: complete;
-        nextTrg: nextTrg$;
-        suspenseTrg: suspenseTrg$;
-        errorTrg: errorTrg$;
-        completeTrg: completeTrg$;
-        templateTrg: templateTrg$;
+        nextTrigger: nextTrg$;
+        suspenseTrigger: suspenseTrg$;
+        errorTrigger: errorTrg$;
+        completeTrigger: completeTrg$;
+        contextTrigger: templateTrg$;
       "
     >
       <span class="context">next</span>

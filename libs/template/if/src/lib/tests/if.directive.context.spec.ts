@@ -29,11 +29,11 @@ const ifContextTemplate = `
         let s = suspense;
         let e = error;
         let c = complete;
-        nextTrg: nextTrg$;
-        suspenseTrg: suspenseTrg$;
-        errorTrg: errorTrg$;
-        completeTrg: completeTrg$;
-        templateTrg: templateTrg$;
+        nextTrigger: nextTrg$;
+        suspenseTrigger: suspenseTrg$;
+        errorTrigger: errorTrg$;
+        completeTrigger: completeTrg$;
+        contextTrigger: templateTrg$;
       "
     >
       <span class="value">truthy</span>

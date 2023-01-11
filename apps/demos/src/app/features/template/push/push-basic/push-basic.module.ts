@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template/push';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks/index';
 import { PushBasicComponent } from './push-basic.component';
@@ -18,9 +18,8 @@ const DECLARATIONS = [PushBasicComponent];
     PushModule,
     DirtyChecksModule,
     MatButtonModule,
-    UnpatchModule
+    UnpatchModule,
   ],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
-export class PushBasicModule {
-}
+export class PushBasicModule {}

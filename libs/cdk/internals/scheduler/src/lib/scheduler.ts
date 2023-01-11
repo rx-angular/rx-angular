@@ -2,7 +2,13 @@
 
 import { ɵglobal } from '@angular/core';
 import { enableIsInputPending } from './schedulerFeatureFlags';
-import { peek, pop, push, ReactSchedulerTask, SchedulerTaskZone } from './schedulerMinHeap';
+import {
+  peek,
+  pop,
+  push,
+  ReactSchedulerTask,
+  SchedulerTaskZone,
+} from './schedulerMinHeap';
 
 import { PriorityLevel } from './schedulerPriorities';
 
@@ -14,7 +20,8 @@ declare const ngDevMode: boolean;
 
 let getCurrentTime: () => number;
 const hasPerformanceNow =
-  typeof ɵglobal.performance === 'object' && typeof ɵglobal.performance.now === 'function';
+  typeof ɵglobal.performance === 'object' &&
+  typeof ɵglobal.performance.now === 'function';
 
 if (hasPerformanceNow) {
   const localPerformance = ɵglobal.performance;
@@ -68,11 +75,13 @@ const isInputPending =
   typeof ɵglobal.navigator !== 'undefined' &&
   ɵglobal.navigator.scheduling !== undefined &&
   ɵglobal.navigator.scheduling.isInputPending !== undefined
-  ? ɵglobal.navigator.scheduling.isInputPending.bind(ɵglobal.navigator.scheduling)
-  : null;
+    ? ɵglobal.navigator.scheduling.isInputPending.bind(
+        ɵglobal.navigator.scheduling
+      )
+    : null;
 
 const defaultZone = {
-  run: fn => fn()
+  run: (fn) => fn(),
 };
 function advanceTimers(currentTime) {
   // Check for tasks that are no longer delayed and add them to the queue.
@@ -131,7 +140,11 @@ function flushWork(hasTimeRemaining, initialTime) {
   }
 }
 
-function workLoop(hasTimeRemaining: boolean, initialTime: number, _currentTask?: ReactSchedulerTask) {
+function workLoop(
+  hasTimeRemaining: boolean,
+  initialTime: number,
+  _currentTask?: ReactSchedulerTask
+) {
   let currentTime = initialTime;
   if (_currentTask) {
     currentTask = _currentTask;
@@ -141,7 +154,8 @@ function workLoop(hasTimeRemaining: boolean, initialTime: number, _currentTask?:
   }
   let zoneChanged = false;
   const hitDeadline = () =>
-    currentTask && currentTask.expirationTime > currentTime &&
+    currentTask &&
+    currentTask.expirationTime > currentTime &&
     (!hasTimeRemaining || shouldYieldToHost());
 
   if (!hitDeadline()) {
@@ -155,7 +169,8 @@ function workLoop(hasTimeRemaining: boolean, initialTime: number, _currentTask?:
         if (typeof callback === 'function') {
           currentTask.callback = null;
           currentPriorityLevel = currentTask.priorityLevel;
-          const didUserCallbackTimeout = currentTask.expirationTime <= currentTime;
+          const didUserCallbackTimeout =
+            currentTask.expirationTime <= currentTime;
           const continuationCallback = callback(didUserCallbackTimeout);
           currentTime = getCurrentTime();
           if (typeof continuationCallback === 'function') {
@@ -170,11 +185,23 @@ function workLoop(hasTimeRemaining: boolean, initialTime: number, _currentTask?:
           pop(taskQueue);
         }
         currentTask = peek(taskQueue);
-        zoneChanged = currentTask?.ngZone != null && currentTask.ngZone !== ngZone;
+        zoneChanged =
+          currentTask?.ngZone != null && currentTask.ngZone !== ngZone;
       }
     });
   }
-  if (zoneChanged) {
+  // we need to check if leaving `NgZone` (tick => detectChanges) caused other
+  // directives to add tasks to the queue. If there is one and we still didn't
+  // hit the deadline, run the workLoop again in order to flush everything thats
+  // left.
+  // Otherwise, newly added tasks won't run as `performingWork` is still `true`
+  currentTask = currentTask ?? peek(taskQueue);
+  // We should also re-calculate the currentTime, as we need to account for the execution
+  // time of the NgZone tasks as well.
+  // If there is still a task in the queue, but no time is left for executing it,
+  // the scheduler will re-schedule the next tick anyway
+  currentTime = getCurrentTime();
+  if (zoneChanged || (currentTask && !hitDeadline())) {
     return workLoop(hasTimeRemaining, currentTime, currentTask);
   }
   // Return whether there's additional work
@@ -305,7 +332,7 @@ function scheduleCallback(
     startTime,
     expirationTime,
     sortIndex: -1,
-    ngZone: options?.ngZone || null
+    ngZone: options?.ngZone || null,
   };
 
   if (startTime > currentTime) {
