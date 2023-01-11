@@ -18,7 +18,7 @@ applications
 - [🛠 Coalescing](https://rx-angular.io/docs/cdk/coalescing)
 - [📡 Notifications](https://rx-angular.io/docs/cdk/notifications)
 - [🖌 Render-Strategies](https://rx-angular.io/docs/cdk/render-strategies)
-- [🔳 Template Management](https://rx-angular.io/docs/cdk/template)
+- [🔳 Template Management](https://rx-angular.io/docs/cdk/template-management)
 - [🔳 Transformations](https://rx-angular.io/docs/cdk/transformations)
 
 ## Demos:

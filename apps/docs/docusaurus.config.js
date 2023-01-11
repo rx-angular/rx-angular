@@ -73,24 +73,6 @@ module.exports = {
           src: 'img/logo.png',
         },
         items: [
-          // {
-          //   to: 'docs/',
-          //   activeBasePath: 'docs',
-          //   label: 'Docs',
-          //   position: 'left',
-          // },
-          {
-            docId: 'cdk/cdk',
-            label: 'CDK',
-            position: 'left',
-            type: 'doc',
-          },
-          {
-            docId: 'eslint-plugin/eslint-plugin',
-            label: 'ESLint',
-            position: 'left',
-            type: 'doc',
-          },
           {
             docId: 'state/state',
             label: 'State',
@@ -103,7 +85,18 @@ module.exports = {
             position: 'left',
             type: 'doc',
           },
-          // { to: 'blog', label: 'Blog', position: 'left' },
+          {
+            docId: 'cdk/cdk',
+            label: 'CDK',
+            position: 'left',
+            type: 'doc',
+          },
+          {
+            docId: 'eslint-plugin/eslint-plugin',
+            label: 'ESLint',
+            position: 'left',
+            type: 'doc',
+          },
           {
             href: `https://github.com/${organizationName}/${projectName}`,
             label: 'GitHub',
@@ -124,20 +117,20 @@ module.exports = {
             title: 'Documentation',
             items: [
               {
-                label: '@rx-angular/cdk',
-                to: 'docs/cdk/',
-              },
-              {
-                label: '@rx-angular/eslint-plugin',
-                to: 'docs/eslint-plugin/',
-              },
-              {
                 label: '@rx-angular/state',
                 to: 'docs/state/',
               },
               {
                 label: '@rx-angular/template',
                 to: 'docs/template/',
+              },
+              {
+                label: '@rx-angular/cdk',
+                to: 'docs/cdk/',
+              },
+              {
+                label: '@rx-angular/eslint-plugin',
+                to: 'docs/eslint-plugin/',
               },
             ],
           },
@@ -161,10 +154,6 @@ module.exports = {
           {
             title: 'More',
             items: [
-              // {
-              //   label: 'Blog',
-              //   to: 'blog',
-              // },
               {
                 label: 'GitHub',
                 href: `https://github.com/${organizationName}/${projectName}`,
