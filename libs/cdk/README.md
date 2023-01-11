@@ -2,6 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
+[![codecov](https://codecov.io/gh/rx-angular/rx-angular/branch/main/graph/badge.svg?token=Jxy4xLJSs1&flag=cdk)](https://codecov.io/gh/rx-angular/rx-angular)
 
 > A Component Development Kit for High performance and ergonomic Angular UI libs and large scale applications.
 

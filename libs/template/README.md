@@ -2,6 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/package/%40rx-angular%2Ftemplate)
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
+[![codecov](https://codecov.io/gh/rx-angular/rx-angular/branch/main/graph/badge.svg?token=Jxy4xLJSs1&flag=template)](https://codecov.io/gh/rx-angular/rx-angular)
 
 > A lib for handling data streams in templates for high performance and ergonomic Angular UI's in large-scale applications
 
