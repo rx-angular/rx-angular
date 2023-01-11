@@ -2,125 +2,130 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
-# [1.0.0-rc.2](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.1...cdk@1.0.0-rc.2) (2022-09-13)
+# [1.0.0-rc.4](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.3...cdk@1.0.0-rc.4) (2022-12-24)
 
 
 ### Bug Fixes
 
-* **cdk:** use rxjs version 6 compatible imports ([a37caa0](https://github.com/rx-angular/rx-angular/commit/a37caa04bde42c07501da5072bfa92272422d14f))
-
-
-### Performance Improvements
-
-* **cdk:** adjust default frameFrate and frame budget computation ([e66f169](https://github.com/rx-angular/rx-angular/commit/e66f169ffc012db324c9b012f77fed8e44337282))
-
-
-
-# [1.0.0-rc.1](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.0...cdk@1.0.0-rc.1) (2022-08-28)
-
-
-### Bug Fixes
-
-* **cdk:** list-template-manager: properly apply changes from iterableDiffer ([9718fdd](https://github.com/rx-angular/rx-angular/commit/9718fdd8f45b754d99b875e27b0a9ac07248bab1))
+* **cdk:** account for NgZone execution time ([c31556c](https://github.com/rx-angular/rx-angular/commit/c31556ccbc4ddaf02e5b68343dda19d35e150430))
+* **cdk:** make sure tasks queued by NgZone are also executed ([c07edbb](https://github.com/rx-angular/rx-angular/commit/c07edbbec95ed9c2f20a2388280891516ec5f8ea))
 
 
 ### Features
 
-* **cdk:** improve template-notifier suspense handling ([a6bfd05](https://github.com/rx-angular/rx-angular/commit/a6bfd053a2256b64a28dc7cfe00129a35128f40c))
-* **cdk:** support template-triggers ([940f36c](https://github.com/rx-angular/rx-angular/commit/940f36cad908ae28e9c29e0d11f3e5fa9736bb2a))
-* **template:** remove leading $ on RxViewContext properties ([16aab61](https://github.com/rx-angular/rx-angular/commit/16aab61ceb16216ed36defe066e4f40804140afa))
+* **cdk:** template-manager: add ability to dynamically configure templates ([c226b88](https://github.com/rx-angular/rx-angular/commit/c226b88cea36844a58a9b7fbd42dd5beb87eb2f3))
 
 
-### Performance Improvements
 
-* **cdk:** optimize list change handling ([03d1c95](https://github.com/rx-angular/rx-angular/commit/03d1c956389c910cb010d6d82e3a41ddbf74600c))
+# [1.0.0-rc.3](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.2...cdk@1.0.0-rc.3) (2022-11-15)
 
+### Bug Fixes
+
+- turn off updating deps in dist package.json ([faec3d4](https://github.com/rx-angular/rx-angular/commit/faec3d492a513d13cf78c4d2248a0dfbf18e5a52)), closes [#1405](https://github.com/rx-angular/rx-angular/issues/1405)
+
+### Features
+
+- **cdk:** remove unused fields from RxTemplateSettings model ([c203757](https://github.com/rx-angular/rx-angular/commit/c203757521582fc6777496a1f7c945799fc86771))
+- **cdk:** templateNotifier: handle initial suspense state based on observable value ([8e87101](https://github.com/rx-angular/rx-angular/commit/8e87101eefdcb9643238fbde6e526f8f72eb47a5))
 
 ### BREAKING CHANGES
 
-* **template:** context variables for error, suspense and complete were renamed, refer to #431
-* **cdk:** template-notifier does not emit suspense if the input observable has a value
+- **cdk:** removed unused fields from RxTemplateSettings interface
 
-
-
-# [1.0.0-rc.0](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-beta.3...cdk@1.0.0-rc.0) (2022-08-28)
-
-
-### Features
-
-* **cdk:** deprecate global StrategyCredentials and replace with native ([#1389](https://github.com/rx-angular/rx-angular/issues/1389)) ([f46e837](https://github.com/rx-angular/rx-angular/commit/f46e837137cefd2753b331c0bb3d249aa286905b))
-
-
-
-# [1.0.0-beta.3](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-beta.2...cdk@1.0.0-beta.3) (2022-06-07)
-
+# [1.0.0-rc.2](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.1...cdk@1.0.0-rc.2) (2022-09-13)
 
 ### Bug Fixes
 
-* add missing peerDependencies ([223b751](https://github.com/rx-angular/rx-angular/commit/223b751b9c14f67fe803d84872ffe56b005373c6)), closes [#1261](https://github.com/rx-angular/rx-angular/issues/1261)
-* **cdk:** fix rxjs schedulers & deprecate zone-less/rxjs ([9dc3483](https://github.com/rx-angular/rx-angular/commit/9dc34832c5bb2fca123fc9e328cb96c800f40c82))
-* **cdk:** requestPaint should force a paint ([1f5b6bb](https://github.com/rx-angular/rx-angular/commit/1f5b6bba7e1cb5fa4a22331d90e65bb8a0b38d29))
-* **cdk:** resolve null error in template-notifier ([68616a8](https://github.com/rx-angular/rx-angular/commit/68616a8af80323512bb638760f6695a15767c02b)), closes [#1106](https://github.com/rx-angular/rx-angular/issues/1106)
-
-
-### Features
-
-* **template:** introduce experimental rx-if directive ([#1251](https://github.com/rx-angular/rx-angular/issues/1251)) ([4f8c4ac](https://github.com/rx-angular/rx-angular/commit/4f8c4ac991ba8a6fad032ba461c31a17e3573c82))
-
+- **cdk:** use rxjs version 6 compatible imports ([a37caa0](https://github.com/rx-angular/rx-angular/commit/a37caa04bde42c07501da5072bfa92272422d14f))
 
 ### Performance Improvements
 
-* **cdk:** coalesce and optimize parent notification ([#1262](https://github.com/rx-angular/rx-angular/issues/1262)) ([9d1d099](https://github.com/rx-angular/rx-angular/commit/9d1d099608ffe848af207475a51f3788b94ca8bc))
-* **cdk:** improve ngZone aware scheduler poc ([f6bab88](https://github.com/rx-angular/rx-angular/commit/f6bab88e096a6bbce225764480921f51e4024ae0))
-* coalesce ngZone PoC ([668c28a](https://github.com/rx-angular/rx-angular/commit/668c28ad0fb949666c58b27468188d759cfaf5c0))
-* remove main entry point ([#1228](https://github.com/rx-angular/rx-angular/issues/1228)) ([4cc9a73](https://github.com/rx-angular/rx-angular/commit/4cc9a73bf3a20c8c96b09e523abf5c3a86d02635))
-* stay in ngZone as long as no new ngZone was provided ([117cb6b](https://github.com/rx-angular/rx-angular/commit/117cb6bc119536869731bd9e93ae2c1183dd7be2))
+- **cdk:** adjust default frameFrate and frame budget computation ([e66f169](https://github.com/rx-angular/rx-angular/commit/e66f169ffc012db324c9b012f77fed8e44337282))
 
+# [1.0.0-rc.1](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.0...cdk@1.0.0-rc.1) (2022-08-28)
 
+### Bug Fixes
+
+- **cdk:** list-template-manager: properly apply changes from iterableDiffer ([9718fdd](https://github.com/rx-angular/rx-angular/commit/9718fdd8f45b754d99b875e27b0a9ac07248bab1))
+
+### Features
+
+- **cdk:** improve template-notifier suspense handling ([a6bfd05](https://github.com/rx-angular/rx-angular/commit/a6bfd053a2256b64a28dc7cfe00129a35128f40c))
+- **cdk:** support template-triggers ([940f36c](https://github.com/rx-angular/rx-angular/commit/940f36cad908ae28e9c29e0d11f3e5fa9736bb2a))
+- **template:** remove leading $ on RxViewContext properties ([16aab61](https://github.com/rx-angular/rx-angular/commit/16aab61ceb16216ed36defe066e4f40804140afa))
+
+### Performance Improvements
+
+- **cdk:** optimize list change handling ([03d1c95](https://github.com/rx-angular/rx-angular/commit/03d1c956389c910cb010d6d82e3a41ddbf74600c))
+
+### BREAKING CHANGES
+
+- **template:** context variables for error, suspense and complete were renamed, refer to #431
+- **cdk:** template-notifier does not emit suspense if the input observable has a value
+
+# [1.0.0-rc.0](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-beta.3...cdk@1.0.0-rc.0) (2022-08-28)
+
+### Features
+
+- **cdk:** deprecate global StrategyCredentials and replace with native ([#1389](https://github.com/rx-angular/rx-angular/issues/1389)) ([f46e837](https://github.com/rx-angular/rx-angular/commit/f46e837137cefd2753b331c0bb3d249aa286905b))
+
+# [1.0.0-beta.3](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-beta.2...cdk@1.0.0-beta.3) (2022-06-07)
+
+### Bug Fixes
+
+- add missing peerDependencies ([223b751](https://github.com/rx-angular/rx-angular/commit/223b751b9c14f67fe803d84872ffe56b005373c6)), closes [#1261](https://github.com/rx-angular/rx-angular/issues/1261)
+- **cdk:** fix rxjs schedulers & deprecate zone-less/rxjs ([9dc3483](https://github.com/rx-angular/rx-angular/commit/9dc34832c5bb2fca123fc9e328cb96c800f40c82))
+- **cdk:** requestPaint should force a paint ([1f5b6bb](https://github.com/rx-angular/rx-angular/commit/1f5b6bba7e1cb5fa4a22331d90e65bb8a0b38d29))
+- **cdk:** resolve null error in template-notifier ([68616a8](https://github.com/rx-angular/rx-angular/commit/68616a8af80323512bb638760f6695a15767c02b)), closes [#1106](https://github.com/rx-angular/rx-angular/issues/1106)
+
+### Features
+
+- **template:** introduce experimental rx-if directive ([#1251](https://github.com/rx-angular/rx-angular/issues/1251)) ([4f8c4ac](https://github.com/rx-angular/rx-angular/commit/4f8c4ac991ba8a6fad032ba461c31a17e3573c82))
+
+### Performance Improvements
+
+- **cdk:** coalesce and optimize parent notification ([#1262](https://github.com/rx-angular/rx-angular/issues/1262)) ([9d1d099](https://github.com/rx-angular/rx-angular/commit/9d1d099608ffe848af207475a51f3788b94ca8bc))
+- **cdk:** improve ngZone aware scheduler poc ([f6bab88](https://github.com/rx-angular/rx-angular/commit/f6bab88e096a6bbce225764480921f51e4024ae0))
+- coalesce ngZone PoC ([668c28a](https://github.com/rx-angular/rx-angular/commit/668c28ad0fb949666c58b27468188d759cfaf5c0))
+- remove main entry point ([#1228](https://github.com/rx-angular/rx-angular/issues/1228)) ([4cc9a73](https://github.com/rx-angular/rx-angular/commit/4cc9a73bf3a20c8c96b09e523abf5c3a86d02635))
+- stay in ngZone as long as no new ngZone was provided ([117cb6b](https://github.com/rx-angular/rx-angular/commit/117cb6bc119536869731bd9e93ae2c1183dd7be2))
 
 ## [0.0.0-beta.2](/compare/cdk@1.0.0-beta.1...cdk@1.0.0-beta.2) (2022-02-27)
 
 ### Bug Fixes
 
-* **cdk:** compat for jest and Angular 12
+- **cdk:** compat for jest and Angular 12
 
 # [1.0.0-beta.1](/compare/cdk@1.0.0-beat.1...cdk@1.0.0-beta.1) (2022-02-08)
 
-
 ### Bug Fixes
 
-* **cdk:** use refCount in shareReplay 801d90f
-* drop `@nrwl/tao` deep import 6eeae5e
-* migrate `@rx-angular/zone-less` as well 78c1ec6
-* **template:** Rxfor template typings (#1198) 5830f38, closes #1198
-
+- **cdk:** use refCount in shareReplay 801d90f
+- drop `@nrwl/tao` deep import 6eeae5e
+- migrate `@rx-angular/zone-less` as well 78c1ec6
+- **template:** Rxfor template typings (#1198) 5830f38, closes #1198
 
 ### Performance Improvements
 
-* improve migrations perf 44eccda
-
-
+- improve migrations perf 44eccda
 
 # [1.0.0-beta.0](/compare/cdk@1.0.0-alpha.11...cdk@1.0.0-beta.0) (2022-02-02)
 
-
 ### Bug Fixes
 
-* **cdk:** support rxjs 6 (#1183) 98749c8, closes #1183
-* **docs:** adjust headline and add link to strategies 8bf672d
-* **docs:** update strategyProvider docs f290142
-
+- **cdk:** support rxjs 6 (#1183) 98749c8, closes #1183
+- **docs:** adjust headline and add link to strategies 8bf672d
+- **docs:** update strategyProvider docs f290142
 
 ### Features
 
-* **docs:** add readme file to rxStrategyProvider 0675dac
-* enable Ivy with partial compilation mode (#1186) eddaf20, closes #1186
-
+- **docs:** add readme file to rxStrategyProvider 0675dac
+- enable Ivy with partial compilation mode (#1186) eddaf20, closes #1186
 
 ### Performance Improvements
 
-* move getUnpatchedApi into sun-package and avoid zone-less package (#1035) 170ab7a, closes #1035
-* zone less sub modules f765336
+- move getUnpatchedApi into sun-package and avoid zone-less package (#1035) 170ab7a, closes #1035
+- zone less sub modules f765336
 
 ### New zone-less sub entry points
 
@@ -134,35 +139,33 @@ nx migrate @rx-angular/cdk
 nx migrate --run-migrations
 ```
 
-| item                      | from                          | to                                  |
-|---------------------------|-------------------------------|-------------------------------------|
-| `Promise`                 | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
-| `requestAnimationFrame`   | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
-| `cancelAnimationFrame`    | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
-| `setInterval`             | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
-| `clearInterval`           | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
-| `setTimeout`              | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
-| `clearTimeout`            | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
-| `unpatchAddEventListener` | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/browser` |
-| `interval`                | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/rxjs`    |
-| `timer`                   | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/rxjs`    |
-| `fromEvent`               | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/rxjs`    |
-| `asyncScheduler`          | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/rxjs`    |
-| `asapScheduler`           | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/rxjs`    |
-| `queueScheduler`          | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/rxjs`    |
-| `animationFrameScheduler` | `@rx-angular/cdk/zone-less`   | `@rx-angular/cdk/zone-less/rxjs`    |
+| item                      | from                        | to                                  |
+| ------------------------- | --------------------------- | ----------------------------------- |
+| `Promise`                 | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/browser` |
+| `requestAnimationFrame`   | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/browser` |
+| `cancelAnimationFrame`    | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/browser` |
+| `setInterval`             | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/browser` |
+| `clearInterval`           | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/browser` |
+| `setTimeout`              | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/browser` |
+| `clearTimeout`            | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/browser` |
+| `unpatchAddEventListener` | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/browser` |
+| `interval`                | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/rxjs`    |
+| `timer`                   | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/rxjs`    |
+| `fromEvent`               | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/rxjs`    |
+| `asyncScheduler`          | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/rxjs`    |
+| `asapScheduler`           | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/rxjs`    |
+| `queueScheduler`          | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/rxjs`    |
+| `animationFrameScheduler` | `@rx-angular/cdk/zone-less` | `@rx-angular/cdk/zone-less/rxjs`    |
 
 # [1.0.0-alpha.11](/compare/cdk@1.0.0-alpha.10...cdk@1.0.0-alpha.11) (2021-11-16)
 
-
 ### Bug Fixes
 
-* **cdk-render-strategies:** don't send complete event to strategy-behavior (#954) 8df99ea, closes #954
-
+- **cdk-render-strategies:** don't send complete event to strategy-behavior (#954) 8df99ea, closes #954
 
 ### Features
 
-* add ability to rxLet and push to take static values (#1033) 42d7a81, closes #1033
+- add ability to rxLet and push to take static values (#1033) 42d7a81, closes #1033
 
 ### New library structure
 
@@ -177,7 +180,7 @@ nx migrate --run-migrations
 ```
 
 | item                            | from              | to                                    |
-|---------------------------------|-------------------|---------------------------------------|
+| ------------------------------- | ----------------- | ------------------------------------- |
 | `RxCoalescingOptions`           | `@rx-angular/cdk` | `@rx-angular/cdk/coalescing`          |
 | `coalescingObj`                 | `@rx-angular/cdk` | `@rx-angular/cdk/coalescing`          |
 | `coalesceWith`                  | `@rx-angular/cdk` | `@rx-angular/cdk/coalescing`          |
@@ -282,41 +285,35 @@ nx migrate --run-migrations
 | `RxZoneRuntimeConfigurations`   | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
 | `zoneConfig`                    | `@rx-angular/cdk` | `@rx-angular/cdk/zone-configurations` |
 
-
-
 # [1.0.0-alpha.10](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.9...cdk@1.0.0-alpha.10) (2021-08-23)
 
-* **cdk:** fix RxJS7 update ([#907](https://github.com/rx-angular/rx-angular/pull/907)) ([674d584]()
-
+- **cdk:** fix RxJS7 update ([#907](https://github.com/rx-angular/rx-angular/pull/907)) ([674d584]()
 
 # [1.0.0-alpha.9](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.7...cdk@1.0.0-alpha.9) (2021-08-16)
 
-
 ### Bug Fixes
 
-* **cdk:** setup polyfills for non browser environments in scheduler ([#820](https://github.com/rx-angular/rx-angular/issues/820)) ([674d584](https://github.com/rx-angular/rx-angular/commit/674d5847d709380d6e6bee6e5e230ae36b688818))
-* **cdk:** skip logging irelevant browser API error ([#741](https://github.com/rx-angular/rx-angular/issues/741)) ([78a624f](https://github.com/rx-angular/rx-angular/commit/78a624f993a63327ffce2fcd4ce032d693deb129))
-* **demos:** fix most of the demos ([#640](https://github.com/rx-angular/rx-angular/issues/640)) ([3d443e9](https://github.com/rx-angular/rx-angular/commit/3d443e927ccc90f2bc7919c7364e3f3ab5cb8595))
+- **cdk:** setup polyfills for non browser environments in scheduler ([#820](https://github.com/rx-angular/rx-angular/issues/820)) ([674d584](https://github.com/rx-angular/rx-angular/commit/674d5847d709380d6e6bee6e5e230ae36b688818))
+- **cdk:** skip logging irelevant browser API error ([#741](https://github.com/rx-angular/rx-angular/issues/741)) ([78a624f](https://github.com/rx-angular/rx-angular/commit/78a624f993a63327ffce2fcd4ce032d693deb129))
+- **demos:** fix most of the demos ([#640](https://github.com/rx-angular/rx-angular/issues/640)) ([3d443e9](https://github.com/rx-angular/rx-angular/commit/3d443e927ccc90f2bc7919c7364e3f3ab5cb8595))
 
 ### Features
 
-* **cdk:** add accumulateObservable creation function ([#582](https://github.com/rx-angular/rx-angular/issues/582)) ([65250ba](https://github.com/rx-angular/rx-angular/commit/65250ba15ab2c6569a00b0d82c57be9ba54787c8))
-* **cdk:** improve rendering error handling ([#626](https://github.com/rx-angular/rx-angular/issues/626)) ([0437438](https://github.com/rx-angular/rx-angular/commit/0437438112c42b8f072b219d599d5ea8d68b30bc))
-* **cdk:** move scheduler into `internals/scheduler` ([#725](https://github.com/rx-angular/rx-angular/issues/725)) ([26aedbd](https://github.com/rx-angular/rx-angular/commit/26aedbd5c3f78e65d40797e3c310e797f00c426f))
-* **cdk:** swap arguments in the `getZoneUnPatchedApi` to benefit from autocomplete ([#707](https://github.com/rx-angular/rx-angular/issues/707)) ([6d5341d](https://github.com/rx-angular/rx-angular/commit/6d5341d22d5e24bf55289654989d3c11dd47c1e8))
-* **zone-configuration:** add ts docs to zone configuration ([#667](https://github.com/rx-angular/rx-angular/issues/667)) ([da4eb77](https://github.com/rx-angular/rx-angular/commit/da4eb776747c0e812e2fea1c4eac533db71d04cb))
-* **coercing:** add ts docs to coercing 
-* **coalescing:** add ts docs to coalescing 
-
+- **cdk:** add accumulateObservable creation function ([#582](https://github.com/rx-angular/rx-angular/issues/582)) ([65250ba](https://github.com/rx-angular/rx-angular/commit/65250ba15ab2c6569a00b0d82c57be9ba54787c8))
+- **cdk:** improve rendering error handling ([#626](https://github.com/rx-angular/rx-angular/issues/626)) ([0437438](https://github.com/rx-angular/rx-angular/commit/0437438112c42b8f072b219d599d5ea8d68b30bc))
+- **cdk:** move scheduler into `internals/scheduler` ([#725](https://github.com/rx-angular/rx-angular/issues/725)) ([26aedbd](https://github.com/rx-angular/rx-angular/commit/26aedbd5c3f78e65d40797e3c310e797f00c426f))
+- **cdk:** swap arguments in the `getZoneUnPatchedApi` to benefit from autocomplete ([#707](https://github.com/rx-angular/rx-angular/issues/707)) ([6d5341d](https://github.com/rx-angular/rx-angular/commit/6d5341d22d5e24bf55289654989d3c11dd47c1e8))
+- **zone-configuration:** add ts docs to zone configuration ([#667](https://github.com/rx-angular/rx-angular/issues/667)) ([da4eb77](https://github.com/rx-angular/rx-angular/commit/da4eb776747c0e812e2fea1c4eac533db71d04cb))
+- **coercing:** add ts docs to coercing
+- **coalescing:** add ts docs to coalescing
 
 ### Performance Improvements
 
-* **cdk:** decouple `notifications` into a lib ([#782](https://github.com/rx-angular/rx-angular/issues/782)) ([3032b69](https://github.com/rx-angular/rx-angular/commit/3032b696a909bd9066572584fd2fbb1a132fb730))
-* **cdk:** decouple `zone-configurations` into its own library ([#728](https://github.com/rx-angular/rx-angular/issues/728)) ([4f35bfa](https://github.com/rx-angular/rx-angular/commit/4f35bfaf2a65333b3eff2f74671ad2c443946ca4))
-* **cdk:** decouple `zone-less` into its own self-contained library ([#688](https://github.com/rx-angular/rx-angular/issues/688)) ([bf561e8](https://github.com/rx-angular/rx-angular/commit/bf561e837b37c25ae2ce5430eb861f08ec9c0204))
-* **cdk:** move `coercing` into lib ([#730](https://github.com/rx-angular/rx-angular/issues/730)) ([803412b](https://github.com/rx-angular/rx-angular/commit/803412b8f00d1e0b31f07ced1a2951e445b48546))
-* **cdk:** use existing `rxjs` schedulers ([#700](https://github.com/rx-angular/rx-angular/issues/700)) ([15d0333](https://github.com/rx-angular/rx-angular/commit/15d0333d74b4da56407a7514f2cc50b7db82c93d))
-
+- **cdk:** decouple `notifications` into a lib ([#782](https://github.com/rx-angular/rx-angular/issues/782)) ([3032b69](https://github.com/rx-angular/rx-angular/commit/3032b696a909bd9066572584fd2fbb1a132fb730))
+- **cdk:** decouple `zone-configurations` into its own library ([#728](https://github.com/rx-angular/rx-angular/issues/728)) ([4f35bfa](https://github.com/rx-angular/rx-angular/commit/4f35bfaf2a65333b3eff2f74671ad2c443946ca4))
+- **cdk:** decouple `zone-less` into its own self-contained library ([#688](https://github.com/rx-angular/rx-angular/issues/688)) ([bf561e8](https://github.com/rx-angular/rx-angular/commit/bf561e837b37c25ae2ce5430eb861f08ec9c0204))
+- **cdk:** move `coercing` into lib ([#730](https://github.com/rx-angular/rx-angular/issues/730)) ([803412b](https://github.com/rx-angular/rx-angular/commit/803412b8f00d1e0b31f07ced1a2951e445b48546))
+- **cdk:** use existing `rxjs` schedulers ([#700](https://github.com/rx-angular/rx-angular/issues/700)) ([15d0333](https://github.com/rx-angular/rx-angular/commit/15d0333d74b4da56407a7514f2cc50b7db82c93d))
 
 # [1.0.0-alpha.8](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-alpha.7...cdk@1.0.0-alpha.8) (2021-04-13)
 

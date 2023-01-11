@@ -5,3 +5,4 @@
 /node_modules
 /**/images/**/*
 .docusaurus/
+CHANGELOG.md

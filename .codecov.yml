@@ -1,17 +1,45 @@
-codecov:
-  require_ci_to_pass: no
-  notify:
-    wait_for_ci: no
-
 coverage:
   status:
     patch:
       default:
+        threshold: 2%
         target: 90%
     project:
-      default:
-        target: auto
-        threshold: 2%
+      default: false
+      state:
+        target: 68%
+        flags:
+          - state
+      template:
+        target: 90%
+        flags:
+          - template
+      cdk:
+        target: 72%
+        flags:
+          - cdk
+      eslint-plugin:
+        target: 90%
+        flags:
+          - eslint-plugin
+
+flags:
+  state:
+    paths:
+      - libs/state
+    carryforward: true
+  template:
+    paths:
+      - libs/template
+    carryforward: true
+  cdk:
+    paths:
+      - libs/cdk
+    carryforward: true
+  eslint-plugin:
+    paths:
+      - libs/eslint-plugin
+    carryforward: true
 
 comment:
   layout: diff, flags, files

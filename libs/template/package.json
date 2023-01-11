@@ -1,6 +1,6 @@
 {
   "name": "@rx-angular/template",
-  "version": "1.0.0-rc.3",
+  "version": "1.0.0-rc.5",
   "description": "**Fully** Reactive Component Template Rendering in Angular. @rx-angular/template aims to be a reflection of Angular's built in renderings just reactive.",
   "main": "index.js",
   "publishConfig": {
@@ -55,7 +55,7 @@
     "rxjs": ">=6.5.5"
   },
   "dependencies": {
-    "tslib": "^2.0.0",
+    "tslib": "^2.4.1",
     "ng-morph": "^2.1.1"
   },
   "schematics": "./schematics/collection.json",

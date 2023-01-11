@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Template Migration introduce-rxif-stable should replace module specifier 1`] = `
+"import { IfModule, RxIf, RxIfViewContext } from '@rx-angular/template/if';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, IfModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+"
+`;

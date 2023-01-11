@@ -118,11 +118,38 @@ jobs:
         if: ${{ always() }}
         run: yarn nx-cloud stop-all-agents
 
-      - name: Upload coverage to Codecov
+      # Upload coverage reports to Codecov
+      - name: Upload state coverage
         if: steps.test.outcome == 'success'
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage/state/lcov.info
+          flags: state
+
+      - name: Upload template coverage
+        if: steps.test.outcome == 'success'
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage/template/lcov.info
+          flags: template
+
+      - name: Upload cdk coverage
+        if: steps.test.outcome == 'success'
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage/cdk/lcov.info
+          flags: cdk
+
+      - name: Upload eslint-plugin coverage
+        if: steps.test.outcome == 'success'
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage/eslint-plugin/lcov.info
+          flags: eslint-plugin
 
   # The docs project is built in a separate job because it requires Node.js 16
   build-docs:

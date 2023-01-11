@@ -16,7 +16,6 @@ import {
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import {
   catchError,
-  filter,
   map,
   switchMap,
   tap,
@@ -127,7 +126,7 @@ export function createTemplateManager<
   const errorHandler = createErrorHandler(renderSettings.errorHandler);
   const ngZone = patchZone ? patchZone : undefined;
 
-  let activeTemplate: N;
+  let activeTemplate: TemplateRef<C>;
 
   const strategyHandling$ = strategyHandling(defaultStrategyName, strategies);
   const templates = templateHandling<N, C>(templateSettings.viewContainerRef);
@@ -135,15 +134,11 @@ export function createTemplateManager<
 
   const triggerHandling = config.templateTrigger$ || EMPTY;
   const getContext = notificationKindToViewContext(
-    templateSettings.customContext || ((v) => {})
+    templateSettings.customContext || (() => ({}))
   );
-  let withSuspense = false;
 
   return {
     addTemplateRef: (name: N, templateRef: TemplateRef<C>) => {
-      if (!withSuspense && name === 'suspenseTpl') {
-        withSuspense = true;
-      }
       templates.add(name, templateRef);
     },
     nextStrategy: strategyHandling$.next,
@@ -153,28 +148,17 @@ export function createTemplateManager<
         value: undefined,
         complete: false,
         error: false,
-        kind: withSuspense
-          ? RxNotificationKind.Suspense
-          : RxNotificationKind.Next,
+        kind: RxNotificationKind.Suspense,
         hasValue: false,
       };
 
       return merge(
-        values$.pipe(
-          filter(
-            ({ kind }) => withSuspense || kind !== RxNotificationKind.Suspense
-          ),
-          tap((n) => {
-            notification = n;
-            // set suspense to true after first emission so that we have continuous suspense context values
-            withSuspense = true;
-          })
-        ),
+        values$.pipe(tap((n) => (notification = n))),
         triggerHandling.pipe(
           tap<RxNotificationKind>((trigger) => (trg = trigger))
         )
       ).pipe(
-        map(() => {
+        switchMap(() => {
           const contextKind: RxNotificationKind = trg || notification.kind;
           trg = undefined;
           const value: T = notification.value as T;
@@ -182,8 +166,14 @@ export function createTemplateManager<
             value,
             templates
           );
-          const template = templates.get(templateName);
-          return { template, templateName, notification, contextKind };
+          return templates.get$(templateName).pipe(
+            map((template) => ({
+              template,
+              templateName,
+              notification,
+              contextKind,
+            }))
+          );
         }),
         withLatestFrom(strategyHandling$.strategy$),
         // Cancel old renders
@@ -192,7 +182,7 @@ export function createTemplateManager<
             { template, templateName, notification, contextKind },
             strategy,
           ]) => {
-            const isNewTemplate = activeTemplate !== templateName || !template;
+            const isNewTemplate = activeTemplate !== template || !template;
             const notifyParent = isNewTemplate && parent;
             return onStrategy(
               notification.value,
@@ -222,7 +212,7 @@ export function createTemplateManager<
                   // update view context, patch if needed
                   work(view, options.scope, notification);
                 }
-                activeTemplate = templateName;
+                activeTemplate = template;
               },
               { ngZone }
               // we don't need to specify any scope here. The template manager is the only one

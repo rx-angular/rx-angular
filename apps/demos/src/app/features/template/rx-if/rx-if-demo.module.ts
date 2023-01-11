@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 
 import { RouterModule } from '@angular/router';
-import { IfModule } from '@rx-angular/template/experimental/if';
+import { IfModule } from '@rx-angular/template/if';
 import { ROUTES } from './rx-if.routes';
 import { RxIfBasicComponent } from './rx-if-basic.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';

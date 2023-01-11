@@ -2,158 +2,178 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
-# [1.0.0-rc.3](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.2...template@1.0.0-rc.3) (2022-09-23)
+# [1.0.0-rc.5](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.4...template@1.0.0-rc.5) (2022-12-24)
 
 
-### Bug Fixes
+### Code Refactoring
 
-* turn off updating deps in dist package.json ([faec3d4](https://github.com/rx-angular/rx-angular/commit/faec3d492a513d13cf78c4d2248a0dfbf18e5a52)), closes [#1405](https://github.com/rx-angular/rx-angular/issues/1405)
-
-
-
-# [1.0.0-rc.2](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.1...template@1.0.0-rc.2) (2022-09-13)
-
-
-### Bug Fixes
-
-* **template:** use rxjs version 6 compatible imports ([9d1d23d](https://github.com/rx-angular/rx-angular/commit/9d1d23de2e7f064783c2103380fe9c00356bb7b8))
-
-
-
-# [1.0.0-rc.1](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.0...template@1.0.0-rc.1) (2022-08-28)
+* **template:** harmonize LetDirective triggers ([62f5d1f](https://github.com/rx-angular/rx-angular/commit/62f5d1fc4f9f02402e7ddde8a79b8e81cecc4f67))
+* **template:** harmonize RxIf triggers ([f9f6aba](https://github.com/rx-angular/rx-angular/commit/f9f6abad6a3ad7b2091f5523a7ef4ef0c42efa32))
+* **template:** remove root barrel exports ([fdb620e](https://github.com/rx-angular/rx-angular/commit/fdb620e3ee7ee98a104a23e3e72b385c5bb4c676))
 
 
 ### Features
 
-* **template:** harmonize LetDirective inputs ([1c8377d](https://github.com/rx-angular/rx-angular/commit/1c8377dbd45779b1395945303fd57948a53808b5))
-* **template:** implement rxLet template-triggers ([fa3b820](https://github.com/rx-angular/rx-angular/commit/fa3b8207bc717cc92a75e059a991450fc75c69e7))
-* **template:** introduce rxFor stable version ([3bdb702](https://github.com/rx-angular/rx-angular/commit/3bdb702d7b4bd66e5fb9965d6fd70f7d27492067))
-* **template:** make rxFor behave as drop-in replacement for ngFor ([49e7763](https://github.com/rx-angular/rx-angular/commit/49e77638befabf4568c8fe04acabcff7541acf30))
-* **template:** remove leading $ on RxViewContext properties ([16aab61](https://github.com/rx-angular/rx-angular/commit/16aab61ceb16216ed36defe066e4f40804140afa))
-
-
-### Performance Improvements
-
-* **template:** fix push pipe over-rendering on initialization ([6900f86](https://github.com/rx-angular/rx-angular/commit/6900f86b26c5d1e25cd29fd2203c0085b57bbb89))
+* **template:** implement template triggers for rxIf ([f008aaf](https://github.com/rx-angular/rx-angular/commit/f008aaf4da39d0e97ffb45d1d2911d8d33e3531a))
+* **template:** introduce stable rxIf ([4a88e7d](https://github.com/rx-angular/rx-angular/commit/4a88e7d276e2b9dcb200464c1833f1c743c6fd2a))
+* **template:** rxIf: adjust API to be in line with ngIf ([8601598](https://github.com/rx-angular/rx-angular/commit/860159841acf786e610399331803503295b0d4de))
+* **template:** rxIf: implement reactive context variables. react to template switches ([35e1d41](https://github.com/rx-angular/rx-angular/commit/35e1d41b9ce05b23d5df918c948c1ba75ce03750))
+* **template:** rxIfs viewContext should only allow boolean values ([768ebea](https://github.com/rx-angular/rx-angular/commit/768ebea79d4b5885ca121329fba2b27ed74d6983))
 
 
 ### BREAKING CHANGES
 
-* **template:** context variables for error, suspense and complete were renamed, refer to #431
-* **template:** Template binding inputs changed, please refer to #431.
+* **template:** Some LetDirective inputs were renamed to harmonize the template API.
+
+- `templateTrg` becomes `contextTrigger`
+- `nextTrg` becomes `nextTrigger`
+- `errorTrg` becomes `errorTrigger`
+- `completeTrg` becomes `completeTrigger`
+- `suspenseTrg` becomes `suspenseTrigger`
+* **template:** Modules and directives are now removed from the root entrypoint `'@rx-angular/template'`.
+
+Instead, use secondary entrypoint to import the symbol, for instance: `import { LetModule } from '@rx-angular/template/let';`.
+* **template:** Some RxIf inputs were renamed to harmonize the template API.
+
+- `templateTrg` becomes `contextTrigger`
+- `nextTrg` becomes `nextTrigger`
+- `errorTrg` becomes `errorTrigger`
+- `completeTrg` becomes `completeTrigger`
+- `suspenseTrg` becomes `suspenseTrigger`
+* **template:** move rxIf directive from template/experimental to template
 
 
 
-# [1.0.0-beta.33](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.32...template@1.0.0-beta.33) (2022-06-07)
-
+# [1.0.0-rc.4](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.3...template@1.0.0-rc.4) (2022-11-15)
 
 ### Bug Fixes
 
-* add missing peerDependencies ([223b751](https://github.com/rx-angular/rx-angular/commit/223b751b9c14f67fe803d84872ffe56b005373c6)), closes [#1261](https://github.com/rx-angular/rx-angular/issues/1261)
-* **template:** drop @angular/cdk dep for rxIf ([0ce6abc](https://github.com/rx-angular/rx-angular/commit/0ce6abc9a18dff11e9da8c1c939e5e5586cc3ef8))
-
+- **template:** rxFor: only subscribe once to value input ([3219492](https://github.com/rx-angular/rx-angular/commit/3219492c8d2f6cb7e7faa29d4f9226723cc9f391))
 
 ### Features
 
-* **template:** introduce experimental rx-if directive ([#1251](https://github.com/rx-angular/rx-angular/issues/1251)) ([4f8c4ac](https://github.com/rx-angular/rx-angular/commit/4f8c4ac991ba8a6fad032ba461c31a17e3573c82))
+- **template:** letDirective: handle initial suspense for observables emitting undefined values ([66cbb80](https://github.com/rx-angular/rx-angular/commit/66cbb80bdf1438acd727ca263ad124e73c81e958))
 
+# [1.0.0-rc.3](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.2...template@1.0.0-rc.3) (2022-09-23)
+
+### Bug Fixes
+
+- turn off updating deps in dist package.json ([faec3d4](https://github.com/rx-angular/rx-angular/commit/faec3d492a513d13cf78c4d2248a0dfbf18e5a52)), closes [#1405](https://github.com/rx-angular/rx-angular/issues/1405)
+
+# [1.0.0-rc.2](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.1...template@1.0.0-rc.2) (2022-09-13)
+
+### Bug Fixes
+
+- **template:** use rxjs version 6 compatible imports ([9d1d23d](https://github.com/rx-angular/rx-angular/commit/9d1d23de2e7f064783c2103380fe9c00356bb7b8))
+
+# [1.0.0-rc.1](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.0...template@1.0.0-rc.1) (2022-08-28)
+
+### Features
+
+- **template:** harmonize LetDirective inputs ([1c8377d](https://github.com/rx-angular/rx-angular/commit/1c8377dbd45779b1395945303fd57948a53808b5))
+- **template:** implement rxLet template-triggers ([fa3b820](https://github.com/rx-angular/rx-angular/commit/fa3b8207bc717cc92a75e059a991450fc75c69e7))
+- **template:** introduce rxFor stable version ([3bdb702](https://github.com/rx-angular/rx-angular/commit/3bdb702d7b4bd66e5fb9965d6fd70f7d27492067))
+- **template:** make rxFor behave as drop-in replacement for ngFor ([49e7763](https://github.com/rx-angular/rx-angular/commit/49e77638befabf4568c8fe04acabcff7541acf30))
+- **template:** remove leading $ on RxViewContext properties ([16aab61](https://github.com/rx-angular/rx-angular/commit/16aab61ceb16216ed36defe066e4f40804140afa))
 
 ### Performance Improvements
 
-* **cdk:** coalesce and optimize parent notification ([#1262](https://github.com/rx-angular/rx-angular/issues/1262)) ([9d1d099](https://github.com/rx-angular/rx-angular/commit/9d1d099608ffe848af207475a51f3788b94ca8bc))
+- **template:** fix push pipe over-rendering on initialization ([6900f86](https://github.com/rx-angular/rx-angular/commit/6900f86b26c5d1e25cd29fd2203c0085b57bbb89))
 
+### BREAKING CHANGES
 
+- **template:** context variables for error, suspense and complete were renamed, refer to #431
+- **template:** Template binding inputs changed, please refer to #431.
+
+# [1.0.0-beta.33](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.32...template@1.0.0-beta.33) (2022-06-07)
+
+### Bug Fixes
+
+- add missing peerDependencies ([223b751](https://github.com/rx-angular/rx-angular/commit/223b751b9c14f67fe803d84872ffe56b005373c6)), closes [#1261](https://github.com/rx-angular/rx-angular/issues/1261)
+- **template:** drop @angular/cdk dep for rxIf ([0ce6abc](https://github.com/rx-angular/rx-angular/commit/0ce6abc9a18dff11e9da8c1c939e5e5586cc3ef8))
+
+### Features
+
+- **template:** introduce experimental rx-if directive ([#1251](https://github.com/rx-angular/rx-angular/issues/1251)) ([4f8c4ac](https://github.com/rx-angular/rx-angular/commit/4f8c4ac991ba8a6fad032ba461c31a17e3573c82))
+
+### Performance Improvements
+
+- **cdk:** coalesce and optimize parent notification ([#1262](https://github.com/rx-angular/rx-angular/issues/1262)) ([9d1d099](https://github.com/rx-angular/rx-angular/commit/9d1d099608ffe848af207475a51f3788b94ca8bc))
 
 ## [0.0.0-beta.32](/compare/template@1.0.0-beta.1...template@1.0.0-beta.32) (2022-02-27)
 
 ### Bug Fixes
 
-* **template:** compat for jest and Angular 12
+- **template:** compat for jest and Angular 12
 
 # [1.0.0-beta.31](/compare/template@1.0.0-beta.30...template@1.0.0-beta.31) (2022-02-08)
 
-
 ### Bug Fixes
 
-* drop `@nrwl/tao` deep import 6eeae5e
-* migrate `@rx-angular/zone-less` as well 78c1ec6
-* **template:** Rxfor template typings (#1198) 5830f38, closes #1198
-* **template:** rxLet: don't override primary strategy  (#1197) 5c9d2a3, closes #1197
-
+- drop `@nrwl/tao` deep import 6eeae5e
+- migrate `@rx-angular/zone-less` as well 78c1ec6
+- **template:** Rxfor template typings (#1198) 5830f38, closes #1198
+- **template:** rxLet: don't override primary strategy (#1197) 5c9d2a3, closes #1197
 
 ### Performance Improvements
 
-* improve migrations perf 44eccda
+- improve migrations perf 44eccda
 
 # [1.0.0-beta.30](/compare/template@1.0.0-beta.29...template@1.0.0-beta.30) (2022-02-02)
 
-
 ### Features
 
-* enable Ivy with partial compilation mode (#1186) eddaf20, closes #1186
-* introduce viewport-prio and rx-for as experimental (#887) d5d026c, closes #887
-
+- enable Ivy with partial compilation mode (#1186) eddaf20, closes #1186
+- introduce viewport-prio and rx-for as experimental (#887) d5d026c, closes #887
 
 ### Performance Improvements
 
-* move getUnpatchedApi into sun-package and avoid zone-less package (#1035) 170ab7a, closes #1035
-* reduce bundle size by removing unused code (#1039) 0c6c089, closes #1039
-* zone less sub modules f765336
-
-
+- move getUnpatchedApi into sun-package and avoid zone-less package (#1035) 170ab7a, closes #1035
+- reduce bundle size by removing unused code (#1039) 0c6c089, closes #1039
+- zone less sub modules f765336
 
 # [1.0.0-beta.29](/compare/template@1.0.0-beta.28...template@1.0.0-beta.29) (2021-11-16)
 
-
 ### Bug Fixes
 
-* **schematics:** fix template migration (#848) 718eb36, closes #848
-* **schematics:** remove `@nrwl/workspace` dependency (#968) 0bdcd16, closes #968
-
+- **schematics:** fix template migration (#848) 718eb36, closes #848
+- **schematics:** remove `@nrwl/workspace` dependency (#968) 0bdcd16, closes #968
 
 ### Features
 
-* add ability to rxLet and push to take static values (#1033) 42d7a81, closes #1033
-
-
+- add ability to rxLet and push to take static values (#1033) 42d7a81, closes #1033
 
 # [1.0.0-beta.28](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.27...template@1.0.0-beta.28) (2021-08-23)
 
-* **template:** remove RxJS dependency
-
+- **template:** remove RxJS dependency
 
 # [1.0.0-beta.27](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.26...template@1.0.0-beta.27) (2021-08-23)
 
-* **template:** fix RxJS7 update ([#907](https://github.com/rx-angular/rx-angular/pull/907)) ([674d584]()
-
+- **template:** fix RxJS7 update ([#907](https://github.com/rx-angular/rx-angular/pull/907)) ([674d584]()
 
 # [1.0.0-beta.26](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.21...template@1.0.0-beta.26) (2021-08-16)
 
-
 ### Bug Fixes
 
-* **template:** remove window object access ([#599](https://github.com/rx-angular/rx-angular/issues/599)) ([47b6dbb](https://github.com/rx-angular/rx-angular/commit/47b6dbb66deac7b44cb7aa0f348bc45cd64541fb)), closes [#579](https://github.com/rx-angular/rx-angular/issues/579)
-* **docs:** Documentation for template overview ([#687](https://github.com/rx-angular/rx-angular/issues/687)) ([9374906](https://github.com/rx-angular/rx-angular/commit/93749060ba59ba197816848d5869d17976ca29be))
-* ng-packagr builds ([#553](https://github.com/rx-angular/rx-angular/issues/553)) ([cfd4711](https://github.com/rx-angular/rx-angular/commit/cfd47112c12bf7333e657c2f6b6e79d3d3eccda4))
-* **schematics:** use `"$id"` for schema ID ([1510339](https://github.com/rx-angular/rx-angular/commit/15103393fa0700d2fd795703f529fe2a7c15b7c4))
-* **state-docs:** Fix typo in concepts ([#614](https://github.com/rx-angular/rx-angular/issues/614)) ([3bdf93c](https://github.com/rx-angular/rx-angular/commit/3bdf93c17ad660fd4e5699ded40ee28e6b69a6e1))
-* **state-docs:** Polish basics tutorial ([#645](https://github.com/rx-angular/rx-angular/issues/645)) ([91419a1](https://github.com/rx-angular/rx-angular/commit/91419a1ebcb64f91cd6fa0277b9cad8fd93cd3a7))
-* **tempalte:** Fix broken image url ([#615](https://github.com/rx-angular/rx-angular/issues/615)) ([4f3d12b](https://github.com/rx-angular/rx-angular/commit/4f3d12bb7954728c6e9f8b9017e7f5c3e0cb2505))
-* **template:** import from another lib ([#693](https://github.com/rx-angular/rx-angular/issues/693)) ([6888a7c](https://github.com/rx-angular/rx-angular/commit/6888a7ce4ec0a893942a497b42375f8c2ed21ff3))
-* **template:** update readme install ([a51a9a9](https://github.com/rx-angular/rx-angular/commit/a51a9a976399d2522d119f6b5af0dbcc47d39955))
-* **template:** update template schematics ([546f80c](https://github.com/rx-angular/rx-angular/commit/546f80cc2dca95537c8cd699499e2c3ef5e6a79b))
-
+- **template:** remove window object access ([#599](https://github.com/rx-angular/rx-angular/issues/599)) ([47b6dbb](https://github.com/rx-angular/rx-angular/commit/47b6dbb66deac7b44cb7aa0f348bc45cd64541fb)), closes [#579](https://github.com/rx-angular/rx-angular/issues/579)
+- **docs:** Documentation for template overview ([#687](https://github.com/rx-angular/rx-angular/issues/687)) ([9374906](https://github.com/rx-angular/rx-angular/commit/93749060ba59ba197816848d5869d17976ca29be))
+- ng-packagr builds ([#553](https://github.com/rx-angular/rx-angular/issues/553)) ([cfd4711](https://github.com/rx-angular/rx-angular/commit/cfd47112c12bf7333e657c2f6b6e79d3d3eccda4))
+- **schematics:** use `"$id"` for schema ID ([1510339](https://github.com/rx-angular/rx-angular/commit/15103393fa0700d2fd795703f529fe2a7c15b7c4))
+- **state-docs:** Fix typo in concepts ([#614](https://github.com/rx-angular/rx-angular/issues/614)) ([3bdf93c](https://github.com/rx-angular/rx-angular/commit/3bdf93c17ad660fd4e5699ded40ee28e6b69a6e1))
+- **state-docs:** Polish basics tutorial ([#645](https://github.com/rx-angular/rx-angular/issues/645)) ([91419a1](https://github.com/rx-angular/rx-angular/commit/91419a1ebcb64f91cd6fa0277b9cad8fd93cd3a7))
+- **tempalte:** Fix broken image url ([#615](https://github.com/rx-angular/rx-angular/issues/615)) ([4f3d12b](https://github.com/rx-angular/rx-angular/commit/4f3d12bb7954728c6e9f8b9017e7f5c3e0cb2505))
+- **template:** import from another lib ([#693](https://github.com/rx-angular/rx-angular/issues/693)) ([6888a7c](https://github.com/rx-angular/rx-angular/commit/6888a7ce4ec0a893942a497b42375f8c2ed21ff3))
+- **template:** update readme install ([a51a9a9](https://github.com/rx-angular/rx-angular/commit/a51a9a976399d2522d119f6b5af0dbcc47d39955))
+- **template:** update template schematics ([546f80c](https://github.com/rx-angular/rx-angular/commit/546f80cc2dca95537c8cd699499e2c3ef5e6a79b))
 
 ### Features
 
-* **push:** implement proper patchZone flag ([#575](https://github.com/rx-angular/rx-angular/issues/575)) ([595d4a5](https://github.com/rx-angular/rx-angular/commit/595d4a54b36bc1d8c582c7925e1be0712a8d6e10))
-* **push:** support template typing  ([78b4816](https://github.com/rx-angular/rx-angular/commit/78b4816a52c7da7f583e7a614c97ec6fb8b885fc)), closes [#634](https://github.com/rx-angular/rx-angular/issues/634)
-* **schematics:** add template@1.0.0 migration schematic ([#806](https://github.com/rx-angular/rx-angular/issues/806)) ([7806063](https://github.com/rx-angular/rx-angular/commit/78060633c0ef00db6140af383ef750fc0b642697))
-* **template:** decouple `let` into a library ([#732](https://github.com/rx-angular/rx-angular/issues/732)) ([8529cb6](https://github.com/rx-angular/rx-angular/commit/8529cb68e3963a7fd6f0db12a41908281b733fe9))
-* **template:** decouple `push` into a lib ([#753](https://github.com/rx-angular/rx-angular/issues/753)) ([ee370be](https://github.com/rx-angular/rx-angular/commit/ee370be2ea2b6b097b5dc6a24b05afda53e95f1c))
-* **template:** decouple `unpatch` into a lib ([#752](https://github.com/rx-angular/rx-angular/issues/752)) ([f78ba33](https://github.com/rx-angular/rx-angular/commit/f78ba33ffad083d9ba38a3f530d497ceab5c0518))
-
-
+- **push:** implement proper patchZone flag ([#575](https://github.com/rx-angular/rx-angular/issues/575)) ([595d4a5](https://github.com/rx-angular/rx-angular/commit/595d4a54b36bc1d8c582c7925e1be0712a8d6e10))
+- **push:** support template typing ([78b4816](https://github.com/rx-angular/rx-angular/commit/78b4816a52c7da7f583e7a614c97ec6fb8b885fc)), closes [#634](https://github.com/rx-angular/rx-angular/issues/634)
+- **schematics:** add template@1.0.0 migration schematic ([#806](https://github.com/rx-angular/rx-angular/issues/806)) ([7806063](https://github.com/rx-angular/rx-angular/commit/78060633c0ef00db6140af383ef750fc0b642697))
+- **template:** decouple `let` into a library ([#732](https://github.com/rx-angular/rx-angular/issues/732)) ([8529cb6](https://github.com/rx-angular/rx-angular/commit/8529cb68e3963a7fd6f0db12a41908281b733fe9))
+- **template:** decouple `push` into a lib ([#753](https://github.com/rx-angular/rx-angular/issues/753)) ([ee370be](https://github.com/rx-angular/rx-angular/commit/ee370be2ea2b6b097b5dc6a24b05afda53e95f1c))
+- **template:** decouple `unpatch` into a lib ([#752](https://github.com/rx-angular/rx-angular/issues/752)) ([f78ba33](https://github.com/rx-angular/rx-angular/commit/f78ba33ffad083d9ba38a3f530d497ceab5c0518))
 
 # [1.0.0-beta.25](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-beta.21...template@1.0.0-beta.25) (2021-04-13)
 

@@ -50,3 +50,7 @@ img[src$='img/logo.png'] {
 .navbar__logo img[src$='img/logo.png'] {
   filter: none;
 }
+
+.wrapper__table {
+  overflow: scroll;
+}

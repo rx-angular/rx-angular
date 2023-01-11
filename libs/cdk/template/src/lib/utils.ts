@@ -9,7 +9,14 @@ import {
   onStrategy,
   RxStrategyCredentials,
 } from '@rx-angular/cdk/render-strategies';
-import { concat, MonoTypeOperatorFunction, of } from 'rxjs';
+import {
+  BehaviorSubject,
+  concat,
+  MonoTypeOperatorFunction,
+  Observable,
+  of,
+  Subject,
+} from 'rxjs';
 import { ignoreElements, switchMap } from 'rxjs/operators';
 
 /**
@@ -45,24 +52,37 @@ export function templateHandling<N, C>(
 ): {
   add(name: N, templateRef: TemplateRef<C>): void;
   get(name: N): TemplateRef<C>;
+  get$(name: N): Observable<TemplateRef<C>>;
   createEmbeddedView(name: N, context?: C, index?: number): EmbeddedViewRef<C>;
 } {
-  const templateCache = new Map<N, TemplateRef<C>>();
+  const templateCache = new Map<N, Subject<TemplateRef<C>>>();
 
-  const get = (name: N): TemplateRef<C> => {
-    return templateCache.get(name);
+  const get$ = (name: N): Observable<TemplateRef<C>> => {
+    return templateCache.get(name) || of(undefined);
   };
+  const get = (name: N): TemplateRef<C> | undefined => {
+    let ref: TemplateRef<C>;
+    const templatRef$ = get$(name);
+    if (templatRef$) {
+      const sub = templatRef$.subscribe((r) => (ref = r));
+      sub.unsubscribe();
+    }
+    return ref;
+  };
+
   return {
     add(name: N, templateRef: TemplateRef<C>): void {
       assertTemplate(name, templateRef);
       if (!templateCache.has(name)) {
-        templateCache.set(name, templateRef);
-      } else {
-        throw new Error(
-          'Updating an already existing Template is not supported at the moment.'
+        templateCache.set(
+          name,
+          new BehaviorSubject<TemplateRef<C>>(templateRef)
         );
+      } else {
+        templateCache.get(name).next(templateRef);
       }
     },
+    get$,
     get,
     createEmbeddedView: (name: N, context?: C) =>
       createEmbeddedView(viewContainerRef, get(name), context),
@@ -78,7 +98,7 @@ export function templateHandling<N, C>(
     );
     if (!isTemplateRefOrNull) {
       throw new Error(
-        `${property} must be a TemplateRef, but received something else.`
+        `${property} must be a TemplateRef, but received ${typeof templateRef}`
       );
     }
     return isTemplateRefOrNull;

@@ -32,18 +32,12 @@
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points && node ./decorate-angular-cli.js && husky install",
     "workspace-generator": "nx workspace-generator"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -e HUSKY_GIT_PARAMS"
-    }
-  },
   "lint-staged": {
-    "libs/**/!(images)/**/*.{ts,html,scss,md,json}": [
+    "**/!(images)/**/*.{ts,js,html,scss,md,mdx,json}": [
       "yarn affected:lint -- --uncommitted --fix --parallel"
     ],
-    "libs/**/*.{ts,html,scss,md,json}": [
-      "prettier --write"
+    "**/*.{ts,js,html,scss,md,mdx,json}": [
+      "nx format:write --uncommitted"
     ]
   },
   "private": true,
@@ -65,7 +59,7 @@
     "@angular/router": "12.2.16",
     "@nguniversal/express-engine": "^13.0.2",
     "@ngxs/store": "3.7.2",
-    "@typescript-eslint/experimental-utils": "^5.4.0",
+    "@typescript-eslint/utils": "^5.47.0",
     "angular-in-memory-web-api": "^0.11.0",
     "bootstrap": "^4.6.0",
     "core-js": "^3.18.3",
@@ -73,7 +67,7 @@
     "normalize-css": "^2.3.1",
     "rx-query": "^1.0.2",
     "rxjs": "^7.5.4",
-    "tslib": "^2.3.1",
+    "tslib": "^2.4.1",
     "zone.js": "0.11.4"
   },
   "devDependencies": {
@@ -84,8 +78,8 @@
     "@angular/cli": "12.2.16",
     "@angular/compiler-cli": "12.2.16",
     "@angular/language-service": "12.2.16",
-    "@commitlint/cli": "^16.1.0",
-    "@commitlint/config-conventional": "^16.0.0",
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-angular": "^17.3.0",
     "@jscutlery/semver": "^2.18.0",
     "@nguniversal/builders": "^13.0.2",
     "@ngxs/devtools-plugin": "^3.7.0",

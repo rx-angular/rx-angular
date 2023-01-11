@@ -1,6 +1,6 @@
 {
   "name": "@rx-angular/cdk",
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0-rc.4",
   "description": "@rx-angular/cdk is a Component Development Kit for ergonomic and highly performant angular applications. It helps to to build Large scale applications, UI libs, state management, rendering systems and much more. Furthermore the unique way of mixing reactive as well as imperative code leads to best DX and speed.",
   "main": "index.js",
   "publishConfig": {
@@ -52,7 +52,7 @@
     "rxjs": ">=6.5.5"
   },
   "dependencies": {
-    "tslib": "^2.0.0",
+    "tslib": "^2.4.1",
     "ng-morph": "^2.1.1"
   },
   "schematics": "./schematics/collection.json",

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template/push';
 import { LetModule } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { ComparisonComponent } from './comparison.component';
@@ -16,7 +16,7 @@ import { SiblingModule } from '../../../../shared/template-structures/sibling/si
 import { ImageArrayModule } from '../../../../shared/image-array/image-array.module';
 import { ROUTES } from './comparison.routes';
 import { RxForModule, PipeModule } from '../../../../rx-angular-pocs';
-import { IfModule } from '@rx-angular/template/experimental/if';
+import { IfModule } from '@rx-angular/template/if';
 
 @NgModule({
   declarations: [ComparisonComponent],

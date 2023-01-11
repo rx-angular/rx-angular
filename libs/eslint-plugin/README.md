@@ -1,6 +1,6 @@
 # @rx-angular/eslint-plugin
 
-A set of ESLint rules for building reactive, performant and Zone-less Angular applications.
+> A set of ESLint rules for building reactive, performant and Zone-less Angular applications.
 
 ## Installation
 

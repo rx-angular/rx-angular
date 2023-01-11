@@ -26,7 +26,7 @@ The ngIf hack looks like this:
 </ng-container>
 ```
 
-The problem is that `*ngIf` interferes with rendering and in case of falsy values (`0`, ``, `false`, `null`, `undefined`) the component
+The problem is that `*ngIf` interferes with rendering and in case of falsy values (`0`, `''`, `false`, `null`, `undefined`) the component
 would be hidden. This issue is a big problem and leads to many production bugs as its edge cases are often overlooked.
 
 **Downsides of the "`ngIf`-hack"**
@@ -89,16 +89,16 @@ It mostly is used in combination with state management libs to handle user inter
 
 **Contextual state**
 
-| Input         | Type                             | description                                                            |
-| ------------- | -------------------------------- | ---------------------------------------------------------------------- |
-| `error`       | `TemplateRef<RxLetViewContext>`  | defines the template for the error state                               |
-| `complete`    | `TemplateRef<RxLetViewContext>`  | defines the template for the complete state                            |
-| `suspense`    | `TemplateRef<RxLetViewContext>`  | defines the template for the suspense state                            |
-| `nextTrg`     | `Observable<unknown>`            | trigger to show `next` template                                        |
-| `errorTrg`    | `Observable<unknown>`            | trigger to show `error` template                                       |
-| `completeTrg` | `Observable<unknown>`            | trigger to show `complete` template                                    |
-| `suspenseTrg` | `Observable<unknown>`            | trigger to show `suspense` template                                    |
-| `templateTrg` | `Observable<RxNotificationKind>` | trigger to show any templates, based on the given `RxNotificationKind` |
+| Input             | Type                             | description                                                            |
+| ----------------- | -------------------------------- | ---------------------------------------------------------------------- |
+| `error`           | `TemplateRef<RxLetViewContext>`  | defines the template for the error state                               |
+| `complete`        | `TemplateRef<RxLetViewContext>`  | defines the template for the complete state                            |
+| `suspense`        | `TemplateRef<RxLetViewContext>`  | defines the template for the suspense state                            |
+| `nextTrigger`     | `Observable<unknown>`            | trigger to show `next` template                                        |
+| `errorTrigger`    | `Observable<unknown>`            | trigger to show `error` template                                       |
+| `completeTrigger` | `Observable<unknown>`            | trigger to show `complete` template                                    |
+| `suspenseTrigger` | `Observable<unknown>`            | trigger to show `suspense` template                                    |
+| `contextTrigger`  | `Observable<RxNotificationKind>` | trigger to show any templates, based on the given `RxNotificationKind` |
 
 **Rendering**
 
@@ -241,7 +241,7 @@ e.g. from the complete template back to the value display
   template: `
     <button (click)="nextTrigger$.next()">show value</button>
     <ng-container
-      *rxLet="num$; let n; let n; complete: complete; nextTrg: nextTrigger$"
+      *rxLet="num$; let n; complete: complete; nextTrg: nextTrigger$"
     >
       {{ n }}
     </ng-container>
@@ -265,9 +265,7 @@ e.g. from the complete template back to the value display
 @Component({
   selector: 'any-component',
   template: `
-    <ng-container
-      *rxLet="num$; let n; let n; error: error; errorTrg: errorTrigger$"
-    >
+    <ng-container *rxLet="num$; let n; error: error; errorTrg: errorTrigger$">
       {{ n }}
     </ng-container>
     <ng-template #error>❌</ng-template>
@@ -291,13 +289,7 @@ e.g. from the complete template back to the value display
   selector: 'any-component',
   template: `
     <ng-container
-      *rxLet="
-        num$;
-        let n;
-        let n;
-        complete: complete;
-        completeTrg: completeTrigger$
-      "
+      *rxLet="num$; let n; complete: complete; completeTrg: completeTrigger$"
     >
       {{ n }}
     </ng-container>
@@ -411,10 +403,12 @@ Learn more about the general concept of [`RenderStrategies`](../../cdk/render-st
 
 #### Local strategies and view/content queries (`parent`)
 
-When local rendering strategies are used, we need to treat view and content queries in a
-special way.
-To make `*rxLet` in such situations, a certain mechanism is implemented to
-execute change detection on the parent (`parent`).
+Structural directives maintain `EmbeddedViews` within a components' template.
+Depending on the bound value as well as the configured `RxRenderStrategy`, updates processed by the
+`@rx-angular/template` directives can be asynchronous.
+
+Whenever a template gets inserted into, or removed from, its parent component, the directive has to inform the parent in order to
+update any view- or contentquery (`@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren`).
 
 This is required if your components state is dependent on its view or content children:
 

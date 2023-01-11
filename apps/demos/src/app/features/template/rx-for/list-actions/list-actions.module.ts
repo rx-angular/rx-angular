@@ -7,7 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
-import { LetModule, PushModule } from '@rx-angular/template';
+import { PushModule } from '@rx-angular/template/push';
+import { LetModule } from '@rx-angular/template/let';
 import { ForModule } from '@rx-angular/template/for';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
@@ -16,7 +17,7 @@ import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/vis
 import { RecursiveModule } from '../../../../shared/template-structures/recursive/recursive.module';
 import { ListActionsComponent } from './list-actions.component';
 import { ROUTES } from './list-actions.routes';
-import { IfModule } from '@rx-angular/template/experimental/if';
+import { IfModule } from '@rx-angular/template/if';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 
 const DECLARATIONS = [ListActionsComponent];
