@@ -11,17 +11,6 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: '@rx-angular/cdk',
-    Svg: require('@site/static/img/undraw_rxangular_composition.svg').default,
-    description: (
-      <>
-        A Component Development Kit for High performance and ergonomic Angular
-        UI libs and large scale applications.
-      </>
-    ),
-    url: 'docs/cdk',
-  },
-  {
     title: '@rx-angular/state',
     Svg: require('@site/static/img/undraw_rxangular_data_processing.svg')
       .default,
@@ -34,6 +23,17 @@ const FeatureList: FeatureItem[] = [
       .default,
     description: <>High-Performance Reactive Template Rendering for Angular.</>,
     url: 'docs/template',
+  },
+  {
+    title: '@rx-angular/cdk',
+    Svg: require('@site/static/img/undraw_rxangular_composition.svg').default,
+    description: (
+      <>
+        A Component Development Kit for High performance and ergonomic Angular
+        UI libs and large scale applications.
+      </>
+    ),
+    url: 'docs/cdk',
   },
 ];
 
