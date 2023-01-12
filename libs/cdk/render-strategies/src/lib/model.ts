@@ -49,7 +49,9 @@ export type RxConcurrentStrategyNames =
 export type RxDefaultStrategyNames =
   | RxNativeStrategyNames
   | RxConcurrentStrategyNames;
-export type RxStrategyNames<T> = RxDefaultStrategyNames | T;
+export type RxStrategyNames<T extends string = string> =
+  | RxDefaultStrategyNames
+  | T;
 export type RxStrategies<T extends string> = RxCustomStrategyCredentials<
   RxStrategyNames<T>
 >;

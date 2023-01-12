@@ -85,9 +85,7 @@ import {
  * @publicApi
  */
 @Pipe({ name: 'push', pure: false })
-export class PushPipe<S extends string = string>
-  implements PipeTransform, OnDestroy
-{
+export class PushPipe implements PipeTransform, OnDestroy {
   /**
    * @internal
    * This is typed as `any` because the type cannot be inferred
@@ -121,29 +119,29 @@ export class PushPipe<S extends string = string>
 
   transform<U>(
     potentialObservable: null,
-    config?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>,
+    config?: RxStrategyNames | Observable<RxStrategyNames>,
     renderCallback?: NextObserver<U>
   ): null;
   transform<U>(
     potentialObservable: undefined,
-    config?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>,
+    config?: RxStrategyNames | Observable<RxStrategyNames>,
     renderCallback?: NextObserver<U>
   ): undefined;
   transform<U>(
     potentialObservable: ObservableInput<U> | U,
-    config?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>,
+    config?: RxStrategyNames | Observable<RxStrategyNames>,
     renderCallback?: NextObserver<U>
   ): U;
   transform<U>(
     potentialObservable: ObservableInput<U>,
-    config?: PushInput<U, S>
+    config?: PushInput<U>
   ): U;
   transform<U>(
     potentialObservable: ObservableInput<U> | U | null | undefined,
     config:
-      | PushInput<U, S>
-      | RxStrategyNames<S>
-      | Observable<RxStrategyNames<S>>
+      | PushInput<U>
+      | RxStrategyNames
+      | Observable<RxStrategyNames>
       | undefined,
     renderCallback?: NextObserver<U>
   ): U | null | undefined {
@@ -241,8 +239,8 @@ export class PushPipe<S extends string = string>
   }
 }
 
-interface PushInput<T, S> {
-  strategy?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>;
+interface PushInput<T> {
+  strategy?: RxStrategyNames | Observable<RxStrategyNames>;
   renderCallback?: NextObserver<T>;
   patchZone?: boolean;
 }
@@ -261,7 +259,7 @@ function onlyValues<T>(): MonoTypeOperatorFunction<RxNotification<T>> {
     );
 }
 
-function isRxComponentInput<U, S>(value: any): value is PushInput<U, S> {
+function isRxComponentInput<U>(value: any): value is PushInput<U> {
   return (
     value != null &&
     (hasOwnProperty.call(value, 'strategy') ||
