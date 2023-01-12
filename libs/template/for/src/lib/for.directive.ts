@@ -302,7 +302,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param trackByFnOrKey
    */
   @Input('rxForTrackBy')
-  set trackBy(trackByFnOrKey: string | ((idx: number, i: T) => any)) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  set trackBy(trackByFnOrKey: keyof T | ((idx: number, i: T) => any)) {
     if (
       (typeof ngDevMode === 'undefined' || ngDevMode) &&
       trackByFnOrKey != null &&
