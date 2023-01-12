@@ -7,11 +7,21 @@ import {
   OnDestroy,
   OnInit,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
-import { onStrategy, RxRenderWork, RxStrategyProvider, RxStrategyNames } from '@rx-angular/cdk/render-strategies';
+import {
+  onStrategy,
+  RxRenderWork,
+  RxStrategyProvider,
+  RxStrategyNames,
+} from '@rx-angular/cdk/render-strategies';
 import { Subscription, Unsubscribable } from 'rxjs';
-import { distinctUntilChanged, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  map,
+  switchMap,
+  withLatestFrom,
+} from 'rxjs/operators';
 import { RxSwitch } from './rx-switch.directive';
 
 @Directive({ selector: '[rxSwitchCase]' })
@@ -35,7 +45,7 @@ export class RxSwitchCase implements OnInit, OnDestroy {
     private viewContainer: ViewContainerRef,
     public templateRef: TemplateRef<Object>,
     private cdRef: ChangeDetectorRef,
-    private strategyProvider: RxStrategyProvider<RxStrategyNames<string>>,
+    private strategyProvider: RxStrategyProvider<RxStrategyNames>,
     @Host() private rxSwitch: RxSwitch<any>
   ) {}
 
@@ -46,7 +56,13 @@ export class RxSwitchCase implements OnInit, OnDestroy {
         map((switchValue) => this.caseValue === switchValue),
         distinctUntilChanged(),
         withLatestFrom(this.rxSwitch.strategies$),
-        switchMap(([v, strategyName]) => onStrategy(v, this.strategyProvider.strategies[strategyName], this.rxSwitchCaseWorkFactory))
+        switchMap(([v, strategyName]) =>
+          onStrategy(
+            v,
+            this.strategyProvider.strategies[strategyName],
+            this.rxSwitchCaseWorkFactory
+          )
+        )
         // applyStrategy2(this.rxSwitch.strategy$, this.rxSwitchCaseWorkFactory, this._view)
       )
       .subscribe({ error: console.log });
@@ -81,6 +97,5 @@ export class RxSwitchCase implements OnInit, OnDestroy {
     this._view.context.$implicit = this.caseValue;
     work(this._view, this._view);
     work(this.cdRef, (this.cdRef as any)?.context || this.cdRef);
-  }
+  };
 }
-

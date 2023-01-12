@@ -19,7 +19,10 @@ import {
   coerceDistinctWith,
   coerceObservableWith,
 } from '@rx-angular/cdk/coercing';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import {
+  RxStrategyNames,
+  RxStrategyProvider,
+} from '@rx-angular/cdk/render-strategies';
 import {
   createListTemplateManager,
   RxListManager,
@@ -162,7 +165,9 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @see {@link strategies}
    */
   @Input()
-  set rxForStrategy(strategyName: string | Observable<string> | undefined) {
+  set rxForStrategy(
+    strategyName: RxStrategyNames | Observable<RxStrategyNames> | undefined
+  ) {
     this.strategyInput$.next(strategyName);
   }
 
@@ -389,7 +394,9 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   ) {}
 
   /** @internal */
-  private strategyInput$ = new ReplaySubject<string | Observable<string>>(1);
+  private strategyInput$ = new ReplaySubject<
+    RxStrategyNames | Observable<RxStrategyNames>
+  >(1);
 
   /** @internal */
   private observables$ = new ReplaySubject<Observable<U> | U>(1);

@@ -69,9 +69,9 @@ export class SomeComponent {
 
 **Value**
 
-| Input  | Type                                 | description                                                       |
-| ------ | ------------------------------------ | ----------------------------------------------------------------- |
-| `rxIf` | `boolean \ ObservableInput<boolean>` | The Observable or value to be bound to the context of a template. |
+| Input  | Type                                    | description                                                       |
+| ------ | --------------------------------------- | ----------------------------------------------------------------- |
+| `rxIf` | `boolean` or `ObservableInput<boolean>` | The Observable or value to be bound to the context of a template. |
 
 **Contextual state**
 
@@ -88,14 +88,14 @@ export class SomeComponent {
 
 **Rendering**
 
-| Input            | Type                                                            | description                                                                                                                                                                                                                                                                                     |
-| ---------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `then`           | `TemplateRef<RxIfViewContext>`                                  | defines the template for when the bound condition is true                                                                                                                                                                                                                                       |
-| `else`           | `TemplateRef<RxIfViewContext>`                                  | defines the template for when the bound condition is false                                                                                                                                                                                                                                      |
-| `patchZone`      | `boolean`                                                       | _default: `true`_ if set to `false`, the `RxIf` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
-| `parent`         | `boolean`                                                       | _default: `true`_ if set to `false`, the `RxIf` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
-| `strategy`       | `Observable<RxStrategyNames<string>> \ RxStrategyNames<string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                            |
-| `renderCallback` | `Subject<boolean>`                                              | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                      |
+| Input            | Type                                               | description                                                                                                                                                                                                                                                                                     |
+| ---------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `then`           | `TemplateRef<RxIfViewContext>`                     | defines the template for when the bound condition is true                                                                                                                                                                                                                                       |
+| `else`           | `TemplateRef<RxIfViewContext>`                     | defines the template for when the bound condition is false                                                                                                                                                                                                                                      |
+| `patchZone`      | `boolean`                                          | _default: `true`_ if set to `false`, the `RxIf` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
+| `parent`         | `boolean`                                          | _default: `true`_ if set to `false`, the `RxIf` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
+| `strategy`       | `Observable<RxStrategyNames>` or `RxStrategyNames` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                            |
+| `renderCallback` | `Subject<boolean>`                                 | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                      |
 
 ### Outputs
 

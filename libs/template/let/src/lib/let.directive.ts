@@ -481,7 +481,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   private observablesHandler = createTemplateNotifier<U>();
   /** @internal */
   private strategyHandler = coerceAllFactory<string>(
-    () => new ReplaySubject<RxStrategyNames<string>>(1)
+    () => new ReplaySubject<RxStrategyNames>(1)
   );
   /** @internal */
   private triggerHandler = new ReplaySubject<RxNotificationKind>(1);
