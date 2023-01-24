@@ -15,7 +15,7 @@ const state$: Observable<{ person: { name: string } }>;
 const derivation3$ = state$.pipe(stateful(pluck('person', 'name')));
 ```
 
-We could even save more code by using the [`select`](../api/rxjs-operators/select) operator which essentially is a combination of `stateful` and `pluck`.
+We could even save more code by using the [`select`](../api/rxjs-operators/select.md) operator which essentially is a combination of `stateful` and `pluck`.
 
 ```typescript
 import { Observable } from 'rxjs';

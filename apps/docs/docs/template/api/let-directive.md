@@ -59,7 +59,7 @@ It mostly is used in combination with state management libs to handle user inter
 - [Local variables](../concepts/local-variables.md)
 - [Local template](../concepts/local-templates.md)
 - [Reactive context](../concepts/reactive-context.md)
-- [Render strategies](https://www.rx-angular.io/docs/cdk/render-strategies)
+- [Render strategies](../../cdk/render-strategies/render-strategies.mdx)
 
 ## Features
 
@@ -102,12 +102,12 @@ It mostly is used in combination with state management libs to handle user inter
 
 **Rendering**
 
-| Input            | Type                                                               | description                                                                                                                                                                                                                                                                                                                                                                             |
-| ---------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`. See [NgZone optimizations](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/ngzone-optimizations.md)                                                                                                                                         |
-| `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/performance-issues/handling-view-and-content-queries.md) |
-| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                                                                                                                    |
-| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                                                                                                              |
+| Input            | Type                                                               | description                                                                                                                                                                                                                                                                                             |
+| ---------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
+| `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
+| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                                    |
+| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                              |
 
 ### Outputs
 
@@ -149,8 +149,8 @@ export class AnyComponent {}
 >
 > This includes:
 >
-> - The default render strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies).
->   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies#Default-configuration) if you want to change it.
+> - The default render strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies.md).
+>   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies/strategies/basic-strategies.md) if you want to change it.
 > - Creates templates lazy and manages multiple template instances
 
 ### Binding an Observable to a local variable in the template
@@ -161,8 +161,8 @@ This can be achieved by using Angular's native 'let' syntax `*rxLet="observableN
 ```html
 <ng-container *rxLet="observableNumber$; let n">
   <app-number [number]="n"></app-number>
-  <app-number-special [number]="n"></app-number-special>
-</ng-container>
+  <app-number-special [number]="n"></app-number-special> </ng-container
+>-optimizations
 ```
 
 ### Using the reactive context
@@ -379,7 +379,7 @@ export class AppComponent {
 You can change the used `RenderStrategy` by using the `strategy` input of the `*rxFor`. It accepts
 an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/b0630f69017cc1871d093e976006066d5f2005b9/libs/cdk/render-strategies/src/lib/model.ts#L52).
 
-The default value for strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies).
+The default value for strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies.md#normal).
 
 ```html
 <ng-container *rxLet="item$; let item; strategy: strategy">
@@ -473,7 +473,7 @@ The result of the `renderCallback` will contain the currently rendered value of 
 Event listeners normally trigger zone. Especially high frequently events cause performance issues.
 By using we can run all event listener inside `rxLet` outside zone.
 
-For more details read about [NgZone optimizations](../performance-issues/ngzone-optimizations)
+For more details read about [NgZone optimizations](../performance-issues/ngzone-optimizations.md)
 
 ```ts
 @Component({
@@ -548,9 +548,9 @@ const setupTestComponent = (): void => {
 
 > do not forget to set the primary strategy to `native` in test environments
 
-In test environments it is recommended to configure rx-angular to use the [`native` strategy](../../cdk/render-strategies/strategies/basic-strategies#native),
+In test environments it is recommended to configure rx-angular to use the [`native` strategy](../../cdk/render-strategies/strategies/basic-strategies.md#native),
 as it will run change detection synchronously.
-Using the [`concurrent strategies`](../../cdk/render-strategies/strategies/concurrent-strategies) is possible, but
+Using the [`concurrent strategies`](../../cdk/render-strategies/strategies/concurrent-strategies.md) is possible, but
 requires more effort when writing the tests, as updates will be processed asynchronously.
 
 ```ts
