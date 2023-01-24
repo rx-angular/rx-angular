@@ -11,13 +11,13 @@ export interface DestroyProp {
  * Interface to declare names and values of single shot lifecycle hook. e.g. init, afterViewInit, afterContentInit, destroy
  */
 // tslint:disable-next-line:no-empty-interface
-export type SingleShotProps = DestroyProp;
+export interface SingleShotProps extends DestroyProp {}
 
 /**
  * Interface to declare names and values of lifecycle hook. e.g. init, changes, afterViewInit, etc...
  */
 // tslint:disable-next-line:no-empty-interface
-export type HookProps = DestroyProp;
+export interface HookProps extends DestroyProp {}
 
 /**
  * Interface to specify an Observable channel for lifecycle hooks.

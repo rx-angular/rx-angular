@@ -49,7 +49,6 @@ Each instance of `RxFor` can be configured to render with different settings.
 - Provide a comprehensive set of context variables
 
 **Performance Features**
--optimizations
 
 - lazy template creation (done by render strategies)
 - non-blocking rendering of lists
