@@ -161,8 +161,8 @@ This can be achieved by using Angular's native 'let' syntax `*rxLet="observableN
 ```html
 <ng-container *rxLet="observableNumber$; let n">
   <app-number [number]="n"></app-number>
-  <app-number-special [number]="n"></app-number-special> </ng-container
->-optimizations
+  <app-number-special [number]="n"></app-number-special>
+</ng-container>
 ```
 
 ### Using the reactive context
