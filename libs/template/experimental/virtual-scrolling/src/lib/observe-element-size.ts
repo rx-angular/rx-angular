@@ -21,7 +21,7 @@ export function observeElementSize<T>(
   }
 ): Observable<T | DOMRectReadOnly> {
   const extractProp: (entries: ResizeObserverEntry[]) => T | DOMRectReadOnly =
-    config?.extract ?? (entries) => entries[0].contentRect;
+    config?.extract ?? (entries => entries[0].contentRect);
   return new Observable<T | DOMRectReadOnly>((subscriber) => {
     const observer = new ResizeObserver((entries) => {
       subscriber.next(extractProp(entries));

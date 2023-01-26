@@ -49,6 +49,7 @@ import { RxVirtualScrollStrategy } from '../model';
     },
   ],
 })
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class FixedSizeVirtualScrollStrategy<
     T,
     U extends NgIterable<T> = NgIterable<T>
@@ -103,7 +104,7 @@ export class FixedSizeVirtualScrollStrategy<
   private viewRepeater: RxVirtualViewRepeater<T, U> | null = null;
 
   private readonly _scrolledIndex$ = new ReplaySubject<number>(1);
-  scrolledIndex$ = this._scrolledIndex$.asObservable();
+  readonly scrolledIndex$ = this._scrolledIndex$.pipe(distinctUntilChanged());
   private _scrolledIndex = 0;
   private set scrolledIndex(index: number) {
     this._scrolledIndex = index;

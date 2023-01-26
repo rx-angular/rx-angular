@@ -1,12 +1,13 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  OnInit,
-  ViewChild,
+  OnInit, QueryList, TemplateRef,
+  ViewChild, ViewChildren,
 } from '@angular/core';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { patch, toDictionary, update } from '@rx-angular/cdk/transformations';
@@ -20,7 +21,7 @@ import {
   Subject,
   switchMap,
 } from 'rxjs';
-import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { distinctUntilChanged, map, startWith, withLatestFrom } from 'rxjs/operators';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/index';
 import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimental/virtual-scrolling';
@@ -240,7 +241,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
                   let i = index;
                   trackBy: trackItem
                 "
-                class="item"
+                class="item cdk"
                 [style.height.px]="itemSize"
               >
                 {{ i }} {{ item.content }}
@@ -254,7 +255,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
                     let i = index;
                     trackBy: trackItem
                   "
-                  class="item"
+                  class="item cdk"
                 >
                   {{ i }} {{ item.content }}
                 </div>
@@ -264,6 +265,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
         </div>
       </div>
     </div>
+
   `,
   styles: [
     `
@@ -280,6 +282,9 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
         border: 1px solid green;
         padding: 10px 0;
         box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.13);
+      }
+      .item.cdk {
+        opacity: 1;
       }
       .content:hover {
         height: 200px;
@@ -377,7 +382,7 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
     return words[Math.floor(Math.random() * words.length)];
   };
 
-  trackItem = (idx: number, item: TestItem): number => item.id;
+  trackItem = (idx: number, item: TestItem & {tmpl: TemplateRef<any>, content: string}): number => item.id;
 
   constructor(
     public state: RxState<{

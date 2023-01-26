@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { IfModule } from '@rx-angular/template/experimental/if';
 import { LetModule } from '@rx-angular/template/let';
+import { RxForModule } from '../../../../rx-angular-pocs/index';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select/index';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/index';
 import {
@@ -40,6 +41,7 @@ import { VirtualForTestComponent } from './virtual-for-test.component';
     RxVirtualScrollingModule,
     FixedSizeVirtualScrollStrategyModule,
     AutosizeVirtualScrollStrategyModule,
+    RxForModule,
   ],
   declarations: [VirtualForTestComponent],
   providers: [],

@@ -34,6 +34,12 @@ import {
 } from './virtual-template-manager';
 
 /**
+ * @description Will be provided through Terser global definitions by Angular CLI
+ * during the production build.
+ */
+declare const ngDevMode: boolean;
+
+/**
  * @Directive RxVirtualFor
  *
  * @description
@@ -171,6 +177,8 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param potentialObservable
    */
+  // TODO: undefined / null input causes scrollbar to fuck up
+  // TODO: initial scrollbar position is weird
   @Input()
   set rxVirtualFor(
     potentialObservable:
@@ -213,7 +221,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    */
   private _template: TemplateRef<RxVirtualForViewContext<T, U>>;
   @Input()
-  set rxForTemplate(value: TemplateRef<RxVirtualForViewContext<T, U>>) {
+  set rxVirtualForTemplate(value: TemplateRef<RxVirtualForViewContext<T, U>>) {
     this._template = value;
   }
 
@@ -409,11 +417,15 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param trackByFnOrKey
    */
   @Input('rxVirtualForTrackBy')
-  set trackBy(trackByFnOrKey: string | ((idx: number, i: T) => any)) {
-    this._trackBy =
-      typeof trackByFnOrKey !== 'function'
-        ? (i, a) => a[trackByFnOrKey]
-        : trackByFnOrKey;
+  set trackBy(trackByFnOrKey: string | ((idx: number, i: T) => unknown)) {
+    if (typeof trackByFnOrKey === 'function') {
+      this._trackBy = trackByFnOrKey;
+    } else if (typeof trackByFnOrKey === 'string') {
+      this._trackBy = (i, a) => a[trackByFnOrKey];
+    } else if (ngDevMode) {
+      throw new Error(`Received incorrect value for trackBy, expected string | ((idx: number, i: T) => unknown), got ${typeof trackByFnOrKey}`);
+    }
+
   }
 
   /**
@@ -459,7 +471,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param renderCallback
    */
   @Input('rxVirtualForRenderCallback') set renderCallback(
-    renderCallback: Subject<U>
+    renderCallback: Subject<T>
   ) {
     this._renderCallback = renderCallback;
   }
@@ -504,7 +516,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   >(1);
 
   /** @internal */
-  private _renderCallback: Subject<any>;
+  private _renderCallback: Subject<T>;
 
   /** @internal */
   readonly values$ = this.observables$.pipe(

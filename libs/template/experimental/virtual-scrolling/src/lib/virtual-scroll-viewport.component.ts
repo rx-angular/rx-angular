@@ -5,7 +5,7 @@ import {
   ContentChild,
   ElementRef,
   NgZone,
-  OnDestroy,
+  OnDestroy, OnInit,
   Optional,
   Output,
   ViewChild,
@@ -87,7 +87,7 @@ declare const ngDevMode: boolean;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RxVirtualScrollViewportComponent
-  implements RxVirtualScrollViewport, AfterContentInit, OnDestroy
+  implements OnInit, RxVirtualScrollViewport, AfterContentInit, OnDestroy
 {
   /** @internal */
   @ViewChild('runway', { static: true })
@@ -119,7 +119,7 @@ export class RxVirtualScrollViewportComponent
    * in sync with the DOM when the next `renderCallback` emitted an event.
    */
   @Output()
-  readonly viewRange = defer(() => this.scrollStrategy.renderedRange$);
+  readonly viewRange = this.scrollStrategy.renderedRange$;
 
   /**
    * @description
@@ -127,8 +127,8 @@ export class RxVirtualScrollViewportComponent
    * The index of the currently scrolled item. The scrolled item is the topmost
    * item actually being visible to the user.
    */
-  @Output('scrolledIndexChange')
-  readonly scrolledIndex$ = defer(() => this.scrollStrategy.scrolledIndex$);
+  @Output()
+  readonly scrolledIndexChange = this.scrollStrategy.scrolledIndex$;
   /** @internal */
   readonly nativeElement = this.elementRef.nativeElement;
   /** @internal */
