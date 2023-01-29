@@ -137,7 +137,7 @@ export class AnyComponent {}
 >
 > This includes:
 >
-> - The default render strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies).
+> - The default render strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies.md).
 >   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies#Default-configuration) if you want to change it.
 > - Creates templates lazy and manages multiple template instances
 
@@ -411,7 +411,7 @@ export class AppComponent {
 You can change the used `RenderStrategy` by using the `strategy` input of the `*rxFor`. It accepts
 an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/b0630f69017cc1871d093e976006066d5f2005b9/libs/cdk/render-strategies/src/lib/model.ts#L52).
 
-The default value for strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies).
+The default value for strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies.md).
 
 ```html
 <ng-container *rxIf="showHero$; strategy: 'userBlocking'">
@@ -500,7 +500,7 @@ export class AppComponent {
 Event listeners normally trigger zone.
 Especially high frequency events can cause performance issues.
 
-For more details read about [NgZone optimizations](../performance-issues/ngzone-optimizations)
+For more details read about [NgZone optimizations](../performance-issues/ngzone-optimizations.md)
 
 ```ts
 @Component({
@@ -566,9 +566,9 @@ const setupTestComponent = (): void => {
 
 > do not forget to set the primary strategy to `native` in test environments
 
-In test environments it is recommended to configure rx-angular to use the [`native` strategy](../../cdk/render-strategies/strategies/basic-strategies#native),
+In test environments it is recommended to configure rx-angular to use the [`native` strategy](../../cdk/render-strategies/strategies/basic-strategies.md#native),
 as it will run change detection synchronously.
-Using the [`concurrent strategies`](../../cdk/render-strategies/strategies/concurrent-strategies) is possible, but
+Using the [`concurrent strategies`](../../cdk/render-strategies/strategies/concurrent-strategies.md) is possible, but
 requires more effort when writing the tests, as updates will be processed asynchronously.
 
 ```ts

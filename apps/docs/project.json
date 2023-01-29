@@ -8,7 +8,8 @@
       "options": {
         "outputPath": "dist/apps/docs"
       },
-      "outputs": ["{options.outputPath}"]
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": [{ "projects": "self", "target": "check-links" }]
     },
     "serve": {
       "executor": "@nx-plus/docusaurus:dev-server",
@@ -22,6 +23,16 @@
         "command": "docusaurus serve --config apps/docs/docusaurus.config.js --dir dist/apps/docs"
       },
       "dependsOn": [{ "projects": "self", "target": "build" }]
+    },
+    "check-links": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "find ./apps/docs/docs -name \\*.md -print0 | xargs -0 -n1 markdown-link-check -q -p -v -c markdown-link-check.config.json"
+          }
+        ]
+      }
     }
   },
   "tags": []
