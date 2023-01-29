@@ -2,6 +2,21 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.0.0](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.5...template@1.0.0) (2023-01-29)
+
+
+### Bug Fixes
+
+* bump ng-morph to fix vulnerabilities ([7534535](https://github.com/rx-angular/rx-angular/commit/75345358de107f3a8ab13fb32a8c96ca7f3c8fc0)), closes [#1493](https://github.com/rx-angular/rx-angular/issues/1493)
+* **template:** typing of track by key as keyof T ([4a65b1f](https://github.com/rx-angular/rx-angular/commit/4a65b1f50bc561f3c4414541c1ad38bc9485e353))
+
+
+### Features
+
+* **template:** use default strategy names type for template hint ([59885d0](https://github.com/rx-angular/rx-angular/commit/59885d010d3eb5e1d80c0e2840496cc78614e2c9))
+
+
+
 # [1.0.0-rc.5](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.4...template@1.0.0-rc.5) (2022-12-24)
 
 
