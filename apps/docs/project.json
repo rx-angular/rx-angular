@@ -1,6 +1,5 @@
 {
   "projectType": "application",
-  "root": "apps/docs",
   "sourceRoot": "apps/docs/src",
   "targets": {
     "build": {
@@ -9,7 +8,12 @@
         "outputPath": "dist/apps/docs"
       },
       "outputs": ["{options.outputPath}"],
-      "dependsOn": [{ "projects": "self", "target": "check-links" }]
+      "dependsOn": [
+        {
+          "projects": "self",
+          "target": "check-links"
+        }
+      ]
     },
     "serve": {
       "executor": "@nx-plus/docusaurus:dev-server",
@@ -22,7 +26,12 @@
       "options": {
         "command": "docusaurus serve --config apps/docs/docusaurus.config.js --dir dist/apps/docs"
       },
-      "dependsOn": [{ "projects": "self", "target": "build" }]
+      "dependsOn": [
+        {
+          "projects": "self",
+          "target": "build"
+        }
+      ]
     },
     "check-links": {
       "executor": "@nrwl/workspace:run-commands",

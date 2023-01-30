@@ -1,16 +1,18 @@
-module.exports = {
-  bail: true,
+/* eslint-disable */
+export default {
+  name: 'state',
+  displayName: 'state',
   preset: '../../jest.preset.js',
   coverageReporters: ['lcov'],
-  coverageDirectory: '../../coverage/template',
-  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
+  coverageDirectory: '../../coverage/state',
+  setupFilesAfterEnv: ['<rootDir>/test-setup.ts'],
   globals: {
     'ts-jest': {
-      tsconfig: '<rootDir>/tsconfig.spec.json',
       stringifyContentPathRegex: '\\.(html|svg)$',
+
+      tsconfig: '<rootDir>/tsconfig.spec.json',
     },
   },
-  displayName: 'template',
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
