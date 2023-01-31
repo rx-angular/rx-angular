@@ -4,21 +4,26 @@ import { RxTestScheduler } from '../../src/testing/test-scheduler';
 import { jestMatcher } from '@test-helpers';
 import { Subscription, SchedulerAction, merge } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { AsapAction } from '../../src/scheduler/asap/AsapAction';
 import { AsapScheduler } from '../../src/scheduler/asap/AsapScheduler';
+import { asapScheduler } from '../../src/scheduler/asap/asap';
 
-let asap: AsapScheduler;
+const asap: AsapScheduler = asapScheduler;
 
 /** @test {Scheduler} */
 describe('Scheduler.asap', () => {
   let testScheduler: RxTestScheduler;
+  const proxyZone = window['Zone']['ProxyZoneSpec'];
 
   beforeEach(() => {
     testScheduler = new RxTestScheduler(jestMatcher);
-    asap = new AsapScheduler(AsapAction);
+    window['Zone']['ProxyZoneSpec'] = undefined;
     jest.clearAllTimers();
     jest.useRealTimers();
     jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    window['Zone']['ProxyZoneSpec'] = proxyZone;
   });
 
   it('should exist', () => {
@@ -66,6 +71,10 @@ describe('Scheduler.asap', () => {
     jest.useFakeTimers();
     // callThrough is missing from the declarations installed by the typings tool in stable
     const intervalSpy = jest.spyOn(intervalProvider, 'setInterval');
+    intervalProvider.delegate = {
+      setInterval: setInterval,
+      clearInterval: clearInterval,
+    };
     const period = 50;
     const state = { index: 0, period };
     type State = typeof state;
@@ -80,17 +89,22 @@ describe('Scheduler.asap', () => {
     expect(state).toHaveProperty('index', 0);
     expect(intervalSpy).toHaveBeenCalledTimes(1);
     jest.advanceTimersByTime(period);
-    // expect(state).toHaveProperty('index', 1);
+    expect(state).toHaveProperty('index', 1);
     expect(intervalSpy).toHaveBeenCalledTimes(2);
     jest.advanceTimersByTime(period);
     expect(state).toHaveProperty('index', 2);
     expect(intervalSpy).toHaveBeenCalledTimes(3);
+    intervalProvider.delegate = undefined;
   });
 
   it('should reuse the interval for recursively scheduled actions with the same delay', () => {
     jest.useFakeTimers();
     // callThrough is missing from the declarations installed by the typings tool in stable
     const intervalSpy = jest.spyOn(intervalProvider, 'setInterval');
+    intervalProvider.delegate = {
+      setInterval: setInterval,
+      clearInterval: clearInterval,
+    };
     const period = 50;
     const state = { index: 0, period };
     type State = typeof state;
@@ -103,12 +117,13 @@ describe('Scheduler.asap', () => {
     asap.schedule(dispatch as any, period, state);
     expect(state).toHaveProperty('index', 0);
     expect(intervalSpy).toHaveBeenCalledTimes(1);
-    jest.advanceTimersByTime(period + 1);
+    jest.advanceTimersByTime(period);
     expect(state).toHaveProperty('index', 1);
     expect(intervalSpy).toHaveBeenCalledTimes(1);
     jest.advanceTimersByTime(period);
     expect(state).toHaveProperty('index', 2);
     expect(intervalSpy).toHaveBeenCalledTimes(1);
+    intervalProvider.delegate = undefined;
   });
 
   it('should schedule an action to happen later', (done) => {
