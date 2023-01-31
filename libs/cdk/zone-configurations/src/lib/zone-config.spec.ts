@@ -15,15 +15,18 @@ describe('zone-config', () => {
     } & { Zone?: any };
 
   const Zone = w.Zone;
+  const ProxyZoneSpec = Zone['ProxyZoneSpec'];
   const properties = Object.keys(w)
     .filter((property) => property.toLowerCase().startsWith('__zone'))
     .map((property) => [property, w[property]]);
 
-  beforeAll(() => {
+  beforeAll(async () => {
+    Zone['ProxyZoneSpec'] = undefined;
     w.Zone = undefined;
   });
 
   afterAll(() => {
+    Zone['ProxyZoneSpec'] = ProxyZoneSpec;
     w.Zone = Zone;
 
     properties.forEach(([property, method]) => {
