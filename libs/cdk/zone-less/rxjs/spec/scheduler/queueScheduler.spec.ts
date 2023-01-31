@@ -1,6 +1,7 @@
 import { queueScheduler } from '@rx-angular/cdk/zone-less/rxjs';
 import { Subscription, merge } from 'rxjs';
 import { delay } from 'rxjs/operators';
+import { intervalProvider } from '../../src/internals/intervalProvider';
 import { RxTestScheduler } from '../../src/testing/test-scheduler';
 import { jestMatcher } from '@test-helpers';
 
@@ -12,10 +13,9 @@ describe('Scheduler.queue', () => {
 
   beforeEach(() => {
     testScheduler = new RxTestScheduler(jestMatcher);
-  });
-
-  afterEach(() => {
+    jest.clearAllTimers();
     jest.useRealTimers();
+    jest.clearAllMocks();
   });
 
   it('should act like the async scheduler if delay > 0', () => {
@@ -33,6 +33,10 @@ describe('Scheduler.queue', () => {
 
   it('should switch from synchronous to asynchronous at will', () => {
     jest.useFakeTimers();
+    intervalProvider.delegate = {
+      setInterval: setInterval,
+      clearInterval: clearInterval,
+    };
 
     let asyncExec = false;
     const state: Array<number> = [];
@@ -58,6 +62,7 @@ describe('Scheduler.queue', () => {
 
     expect(asyncExec).toBe(true);
     expect(state).toEqual([0, 1, 2]);
+    intervalProvider.delegate = undefined;
   });
 
   it('should unsubscribe the rest of the scheduled actions if an action throws an error', () => {
