@@ -140,9 +140,18 @@ export class ISRHandler {
         }
       }
 
+      // Apply the callback if given
+      let finalHtml = html;
+      if(config?.modifyCachedHtml) {
+        const timeStart = performance.now();
+        finalHtml = config.modifyCachedHtml(req, html);
+        const totalTime = performance.now() - timeStart;
+        finalHtml += `<!--\nℹ️ NgxISR: This cachedHtml has been modified with modifyCachedHtml()\n❗️ This resulted into more ${totalTime.toFixed(2)}ms of processing time.\n-->`;
+      }
+
       // Cache exists. Send it.
-      this.logger.log('Page was retrieved from cache: ', req.url);
-      return res.send(html);
+      this.logger.log(`Page was retrieved from cache: `, req.url);
+      return res.send(finalHtml);
     } catch (error) {
       // Cache does not exist. Serve user using SSR
       next();
@@ -166,11 +175,14 @@ export class ISRHandler {
     renderUrl(renderUrlConfig).then(async (html) => {
       const { revalidate, errors } = getISROptions(html);
 
+      // Apply the callback if given
+      const finalHtml = config?.modifyGeneratedHtml ? config.modifyGeneratedHtml(req, html) : html;
+
       // if we have any http errors when rendering the site, and we have skipCachingOnHttpError enabled
       // we don't want to cache it, and, we will fall back to client side rendering
       if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
         this.logger.log('Http errors: \n', errors);
-        return res.send(html);
+        return res.send(finalHtml);
       }
 
       // if revalidate is null we won't cache it
@@ -179,12 +191,12 @@ export class ISRHandler {
 
       if (revalidate === null || revalidate === undefined) {
         // don't do !revalidate because it will also catch "0"
-        return res.send(html);
+        return res.send(finalHtml);
       }
 
       // Cache the rendered `html` for this request url to use for subsequent requests
-      await this.cache.add(req.url, html, { revalidate });
-      return res.send(html);
+      await this.cache.add(req.url, finalHtml, { revalidate });
+      return res.send(finalHtml);
     });
   }
 }
