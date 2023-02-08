@@ -27,7 +27,8 @@ const isr = new ISRHandler({
 
 3. Add invalidation url handler
 ```ts
-server.get("/api/invalidate", async (req, res) => await isr.invalidate(req, res));
+server.use(express.json());
+server.post("/api/invalidate", async (req, res) => await isr.invalidate(req, res));
 ```
 
 4. Replace Angular default server side rendering with ISR rendering
@@ -169,6 +170,31 @@ const routes: Routes = [
 
 
 ## Changelog
+- Version 0.5.0
+  
+  #### Breaking Changes:
+   The invalidate method of IsrHandler now is converted to be a POST request.
+
+  ```ts
+  server.post('/api/invalidate', async (req, res) => 
+    await isr.invalidate(req, res)
+  );
+  ```
+
+   It accepts a body with the following structure:
+   ```ts
+   {
+     token: string; // The secren token 
+     urlsToInvalidate: string[]; // The urls to invalidate ex. ['/one', '/two']
+   }
+   ```
+  
+  Now you also need to add `server.use(express.json());` in your server.ts file in order to parse the body of the request.
+
+  #### Changes:
+    * feat: added modifyCachedHtml and modifyGeneratedHtml callbacks to provide a mechanism to change html on the fly
+    * feat: Invalidate/regenerate multiple urls with one request
+
 - Version 0.4.0
   Now ngx-isr will support only project in v15 and above. If you want to use it in older versions of Angular, please use v0.3.1.
 

@@ -27,7 +27,8 @@ const isr = new ISRHandler({
 
 3. Add invalidation url handler
 ```ts
-server.get("/api/invalidate", async (req, res) => await isr.invalidate(req, res));
+server.use(express.json());
+server.post("/api/invalidate", async (req, res) => await isr.invalidate(req, res));
 ```
 
 4. Replace Angular default server side rendering with ISR rendering
@@ -41,6 +42,7 @@ server.get('*',
 );
 ```
 with
+
 ```ts
 server.get('*',
   // Serve page if it exists in cache
@@ -55,12 +57,33 @@ You can also pass `providers` to each of the `ISRHandler` methods.
 ```ts
 server.get('*',
   ...
+    async (req, res, next) => await isr.render(req, res, next, {
+      providers: [
+        { provide: APP_BASE_HREF, useValue: req.baseUrl }, // <-- Needs to be provided when passing providers
+        { provide: CUSTOM_TOKEN, useValue: 'Hello from ISR' },
+        CustomService
+      ]
+    }),
+);
+```
+
+It is also possible to pass a `modifyCachedHtml` or `modifyGeneratedHtml` callbacks to the `ISRHandler` methods.
+These methods provide a way to modify the html served from cache or the html that is generated on the fly.
+
+**Important:** Use these methods with caution as the logic written can increase the processing time.
+```ts
+server.get('*',
+  // Serve page if it exists in cache
+  async (req, res, next) => await isr.serveFromCache(req, res, next, {
+    modifyCachedHtml: (req, cachedHtml) => {
+        return `${cachedHtml}<!-- Hello, I'm a modification to the original cache! -->`;
+    }
+  }),
+  // Server side render the page and add to cache if needed
   async (req, res, next) => await isr.render(req, res, next, {
-    providers: [
-      { provide: APP_BASE_HREF, useValue: req.baseUrl }, // <-- Needs to be provided when passing providers
-      { provide: CUSTOM_TOKEN, useValue: 'Hello from ISR' },
-      CustomService
-    ]
+    modifyGeneratedHtml: (req, html) => {
+      return `${html}<!-- Hello, I'm modifying the generatedHtml before caching it! -->`
+    }
   }),
 );
 ```
@@ -147,12 +170,37 @@ const routes: Routes = [
 
 
 ## Changelog
+- Version 0.5.0
+
+  #### Breaking Changes:
+  The invalidate method of IsrHandler now is converted to be a POST request.
+
+  ```ts
+  server.post('/api/invalidate', async (req, res) => 
+    await isr.invalidate(req, res)
+  );
+  ```
+
+  It accepts a body with the following structure:
+   ```ts
+   {
+     token: string; // The secren token 
+     urlsToInvalidate: string[]; // The urls to invalidate ex. ['/one', '/two']
+   }
+   ```
+
+  Now you also need to add `server.use(express.json());` in your server.ts file in order to parse the body of the request.
+
+  #### Changes:
+  * feat: added modifyCachedHtml and modifyGeneratedHtml callbacks to provide a mechanism to change html on the fly
+  * feat: Invalidate/regenerate multiple urls with one request
+
 - Version 0.4.0
   Now ngx-isr will support only project in v15 and above. If you want to use it in older versions of Angular, please use v0.3.1.
 
   The reason for this is because now we use `ɵSERVER_CONTEXT` token in order to set the rendering context that now will be shown as: `ng-server-context="ngx-isr"`. And this token is only available in v15 and above.
 
-  * Changes: 
+  * Changes:
     * chore: Updated the project to v15
     * feat: Added server context provider
     * feat: Added RedisCacheHandler class usage in the demo app (experimental)
