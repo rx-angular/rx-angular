@@ -52,67 +52,63 @@ export class ISRHandler {
     res: Response,
     config?: InvalidateConfig
   ): Promise<any> {
-    const { secretToken, urlToInvalidate } = extractData(req);
+    const { token, urlsToInvalidate } = extractDataFromBody(req);
+    const { indexHtml } = this.isrConfig;
 
-    if (secretToken !== this.isrConfig.invalidateSecretToken) {
-      return res.json({
-        status: 'error',
-        message: 'Your secret token is wrong!!!',
-      });
+    if (token !== this.isrConfig.invalidateSecretToken) {
+      return res.json({ status: 'error', message: 'Your secret token is wrong!!!' });
     }
 
-    if (!urlToInvalidate) {
-      return res.json({
-        status: 'error',
-        message: 'Please add `urlToInvalidate` query param in your url',
-      });
+    if (!urlsToInvalidate || !urlsToInvalidate.length) {
+      return res.json({ status: 'error', message: 'Please add `urlsToInvalidate` in the payload!' });
     }
 
-    const urlExists = await this.cache.has(urlToInvalidate);
+    const notInCache: string[] = [];
+    const urlWithErrors: Record<string, any> = {};
 
-    if (!urlExists) {
-      return res.json({
-        status: 'error',
-        message: `Url: ${urlToInvalidate}, does not exist in cache.`,
-      });
-    }
+    for (const url of urlsToInvalidate) {
+      const urlExists = await this.cache.has(url);
 
-    try {
-      // re-render the page again
-      const html = await renderUrl({
-        req,
-        res,
-        url: urlToInvalidate,
-        indexHtml: this.isrConfig.indexHtml,
-        providers: config?.providers,
-      });
-
-      // get revalidate data in order to set it to cache data
-      const { revalidate, errors } = getISROptions(html);
-
-      // if there are errors when rendering the site we throw an error
-      if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
-        throw new Error(
-          'The new rendered page had errors: \n' + JSON.stringify(errors)
-        );
+      if (!urlExists) {
+        notInCache.push(url);
+        continue;
       }
 
-      // add the regenerated page to cache
-      await this.cache.add(req.url, html, { revalidate });
+      try {
+        // re-render the page again
+        const html = await renderUrl({ req, res, url, indexHtml, providers: config?.providers });
 
-      this.logger.log(`Url: ${urlToInvalidate} was regenerated!`);
+        // get revalidate data in order to set it to cache data
+        const { revalidate, errors } = getISROptions(html);
 
-      return res.json({
-        status: 'success',
-        message: `Url: ${urlToInvalidate} was regenerated!`,
-      });
-    } catch (err) {
-      return res.json({
-        status: 'error',
-        message: 'Error while regenerating url!!',
-        err,
-      });
+        // if there are errors when rendering the site we throw an error
+        if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
+          urlWithErrors[url] = errors;
+        }
+        // add the regenerated page to cache
+        await this.cache.add(req.url, html, { revalidate });
+      } catch (err) {
+        urlWithErrors[url] = err;
+      }
+
     }
+
+    const invalidatedUrls = urlsToInvalidate.filter(url => !notInCache.includes(url) && !urlWithErrors[url]);
+
+    if (notInCache.length) {
+      this.logger.log(`Urls: ${ notInCache.join(', ') } does not exist in cache.`);
+    }
+
+    if (Object.keys(urlWithErrors).length) {
+      this.logger.log(`Urls: ${Object.keys(urlWithErrors).join(', ')} had errors while regenerating!`);
+    }
+
+    if (invalidatedUrls.length) {
+      this.logger.log(`Urls: ${ invalidatedUrls.join(', ') } were regenerated!`);
+    }
+
+    const response = { status: 'success', notInCache, urlWithErrors, invalidatedUrls };
+    return res.json(response);
   }
 
   async serveFromCache(
@@ -201,12 +197,9 @@ export class ISRHandler {
   }
 }
 
-const extractData = (
+const extractDataFromBody = (
   req: Request
-): { secretToken: string | null; urlToInvalidate: string | null } => {
-  return {
-    secretToken: req.query['secret'] as string || null,
-    urlToInvalidate: req.query['urlToInvalidate'] as string || null,
-    // urlsToInvalidate: req.body.urls || [],
-  };
+): { token: string | null; urlsToInvalidate: string[] } => {
+  const { urlsToInvalidate, token } = req.body;
+  return { urlsToInvalidate, token };
 };

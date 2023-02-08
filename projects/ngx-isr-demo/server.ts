@@ -45,11 +45,14 @@ export function app(): express.Express {
   server.set('view engine', 'html');
   server.set('views', distFolder);
 
+  // needed for post requests in our case we use it for the invalidation url
+  server.use(express.json());
+
   // Example Express Rest API endpoints
   // server.get('/api/**', (req, res) => { });
 
   // Step 2: Add invalidation url handler
-  server.get("/api/invalidate", async (req, res) => await isr.invalidate(req, res));
+  server.post("/api/invalidate", async (req, res) => await isr.invalidate(req, res));
 
   // Serve static files from /browser
   server.get('*.*', express.static(distFolder, { maxAge: '1y' }));
@@ -62,15 +65,15 @@ export function app(): express.Express {
         // Simulate we're changing the html, and thus we make a long-running task to simulate this (150ms)
         // The HTML source-code will contain how long this took, this is important for developers to take care when
         // using this callback
-        const start = new Date().getTime();
-        for (let i = 0; i < 10000000; i++) {
-          if (new Date().getTime() - start >= 150) {
-            break;
-          }
-        }
+        // const start = new Date().getTime();
+        // for (let i = 0; i < 10000000; i++) {
+        //   if (new Date().getTime() - start >= 150) {
+        //     break;
+        //   }
+        // }
 
         // Return the modified html
-        return `${html}`;
+        return html;
       }
     }),
     // Server side render the page and add to cache if needed
