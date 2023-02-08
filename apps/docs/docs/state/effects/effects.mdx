@@ -383,7 +383,7 @@ export class FooComponent {
   chartVisible$ = new Subject<boolean>();
   chartData$ = this.ngRxStore.select(getListData());
 
-  pollingTrigger$ this.chartVisible$.pipe(
+  pollingTrigger$ = this.chartVisible$.pipe(
       switchMap(isPolling => isPolling ? interval(2000) : EMPTY)
   );
 
