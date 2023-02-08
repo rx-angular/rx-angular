@@ -57,9 +57,30 @@ export function app(): express.Express {
   // Step 3: handle rendering and serving using ISR handler
   server.get('*',
     // Serve page if it exists in cache
-    async (req, res, next) => await isr.serveFromCache(req, res, next),
+    async (req, res, next) => await isr.serveFromCache(req, res, next, {
+      modifyCachedHtml: (req, html) => {
+        // Simulate we're changing the html, and thus we make a long-running task to simulate this (150ms)
+        // The HTML source-code will contain how long this took, this is important for developers to take care when
+        // using this callback
+        const start = new Date().getTime();
+        for (let i = 0; i < 10000000; i++) {
+          if (new Date().getTime() - start >= 150) {
+            break;
+          }
+        }
+
+        // Return the modified html
+        return `${html}`;
+      }
+    }),
     // Server side render the page and add to cache if needed
-    async (req, res, next) => await isr.render(req, res, next),
+    async (req, res, next) => await isr.render(req, res, next, {
+      modifyGeneratedHtml: (req, html) => {
+        // Do something with the generated html
+        //...
+        return html;
+      }
+    }),
 
     // Step 4: Comment out default angular universal handler, because it's will be handled in ISR render method
     // (req, res) => {

@@ -41,6 +41,7 @@ server.get('*',
 );
 ```
 with
+
 ```ts
 server.get('*',
   // Serve page if it exists in cache
@@ -61,6 +62,27 @@ server.get('*',
       { provide: CUSTOM_TOKEN, useValue: 'Hello from ISR' },
       CustomService
     ]
+  }),
+);
+```
+
+It is also possible to pass a `modifyCachedHtml` or `modifyGeneratedHtml` callbacks to the `ISRHandler` methods. 
+These methods provide a way to modify the html served from cache or the html that is generated on the fly.
+
+**Important:** Use these methods with caution as the logic written can increase the processing time.
+```ts
+server.get('*',
+  // Serve page if it exists in cache
+  async (req, res, next) => await isr.serveFromCache(req, res, next, {
+    modifyCachedHtml: (req, cachedHtml) => {
+        return `${cachedHtml}<!-- Hello, I'm a modification to the original cache! -->`;
+    }
+  }),
+  // Server side render the page and add to cache if needed
+  async (req, res, next) => await isr.render(req, res, next, {
+    modifyGeneratedHtml: (req, html) => {
+      return `${html}<!-- Hello, I'm modifying the generatedHtml before caching it! -->`
+    }
   }),
 );
 ```
