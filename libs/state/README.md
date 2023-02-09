@@ -20,8 +20,8 @@ It is an ideal alternative or complimentary library to global state management s
 
 ### API overview
 
-With @rx-angular/state, you can easily manage your component state with a range of powerful methods.
-Detailed API documentation available [here](https://rx-angular.io/docs/state/api).
+With `@rx-angular/state`, you can easily manage your component state with a range of powerful methods.
+You find a detailed API documentation [here](https://rx-angular.io/docs/state/api).
 
 #### [.connect()](https://www.rx-angular.io/docs/state/api/rx-state#connect)
 
