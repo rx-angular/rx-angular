@@ -10,9 +10,9 @@
 ## Description
 
 `@rx-angular/state` is a library designed to help developers effectively manage component-level state in Angular.
-It offers a lightweight and intuitive API and automatic subscription handling, making it a perfect solution for handling state in any Angular component.
+It offers a lightweight and intuitive API and automatic subscription handling, making it a perfect solution for handling state in any Angular component, service or directive.
 This library offers unique features such as merging global state into local state, shared state selections, subscription-free interaction, and integration with imperative functions like component lifecycle and HostBindings.
-It is an ideal alternative to global state management solutions like Akita, NgRx, and NgXs.
+It is an ideal alternative or complimentary library to global state management solutions like Akita, NgRx, and NgXs.
 
 ### Introduction Video
 
@@ -32,7 +32,7 @@ making it easy to merge the source, update specific properties, or map to a proj
 #### [.select()](https://www.rx-angular.io/docs/state/api/rx-state#select)
 
 Get a cached, distinct Observable of your state, with options to access single properties, transform single properties, or transform state slices.
-With reactive composition support from rxjs, this method gives you complete control over your state data.
+With reactive composition support from rxjs, this method gives you complete control over selected data.
 
 #### [.get()](https://www.rx-angular.io/docs/state/api/rx-state#get)
 
@@ -47,7 +47,7 @@ Easily update one or many properties of your state. Whether you provide a partia
 
 #### [.hold()](https://www.rx-angular.io/docs/state/api/rx-state#hold)
 
-Manage side-effects of your state with the .hold() method, which provides an Observable and an optional function.
+Manage side-effects of your state with the `.hold()` method, which holds the trigger Observable and executes an optional handler function.
 With automatic subscription handling, this method is an effective way to manage side-effects without the hassle.
 
 #### [.setAccumulator()](https://www.rx-angular.io/docs/state/api/rx-state#setaccumulator)
@@ -74,7 +74,7 @@ nx migrate @rx-angular/state
 
 ## Usage
 
-Local Provider (recommended): Use RxState as a local provider in your component to make use of Angular's Dependency.
+Local Provider (recommended): Use RxState as a local provider in your component to make use of Angular's Dependency Injection.
 
 ```ts
 @Component({
