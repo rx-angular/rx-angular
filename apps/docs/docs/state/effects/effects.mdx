@@ -109,9 +109,7 @@ export class FooComponent {
     effect$.subscribe(this.runSideEffect);
 
     // [#2nd approach] `tap` is used to wrap and execute the side effect
-    effect$
-      .pipe(tap(this.runSideEffect))
-      .subscribe();
+    effect$.pipe(tap(this.runSideEffect)).subscribe();
   }
 }
 ```
@@ -377,21 +375,18 @@ To avoid data fetching when the chart is not visible we connect the side effect 
   providers: [RxEffects],
 })
 export class FooComponent {
-
   chartVisible$ = new Subject<boolean>();
   chartData$ = this.ngRxStore.select(getListData());
 
   pollingTrigger$ = this.chartVisible$.pipe(
-      switchMap(isPolling => isPolling ? interval(2000) : EMPTY)
+    switchMap((isPolling) => (isPolling ? interval(2000) : EMPTY))
   );
 
-  constructor(
-    private ngRxStore: Store,
-    private effects: RxEffects
-  ) {
-     effects.register(this.pollingTrigger$, () => this.ngRxStore.dispatch(refreshAction()));
+  constructor(private ngRxStore: Store, private effects: RxEffects) {
+    effects.register(this.pollingTrigger$, () =>
+      this.ngRxStore.dispatch(refreshAction())
+    );
   }
-
 }
 ```
 
