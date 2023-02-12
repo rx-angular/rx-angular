@@ -1,79 +1,35 @@
 # @rx-angular/state
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
+[![npm](https://img.shields.io/npm/dt/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 [![codecov](https://codecov.io/gh/rx-angular/rx-angular/branch/main/graph/badge.svg?token=Jxy4xLJSs1&flag=state)](https://codecov.io/gh/rx-angular/rx-angular)
 
-> Reactive Component State for Angular
-
-RxState is a lightweight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state in Angular.
-
 ![state logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/images/state_logo.png)
-
-## Sub Modules
-
-- [🧩 Selections](https://rx-angular.io/docs/state/selections)
-- [☁ Effects](https://rx-angular.io/docs/state/effects)
-- [? Actions](https://rx-angular.io/docs/state/actions)
-
-## Intro Video
-
-[![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)](https://www.youtube.com/watch?v=CcQYj4V2IKw)
 
 ## Description
 
-Developing modern, **reactive** user interfaces imposes a variety of challenging tasks. Naming some of those:
+`@rx-angular/state` is a library designed to help developers effectively manage component-level state in Angular.
+It offers a lightweight and intuitive API and automatic subscription handling, making it a perfect solution for handling state in any Angular component, service or directive.
+This library offers unique features such as merging global state into local state, shared state selections, subscription-free interaction, and integration with imperative functions like component lifecycle and HostBindings.
+It is an ideal alternative or complimentary library to global state management solutions like Akita, NgRx, and NgXs.
 
-- reacting to events from different sources
-- transforming and composing state
-- handling state lifetime
-- handling subscriptions
+### Introduction Video
 
-There are plenty of solutions available for managing these challenges on a **global level** (Akita, NgRx, NgXs, ...).
-None of them is dedicated to targeting the particular needs of the **component level**.
+[![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)](https://www.youtube.com/watch?v=CcQYj4V2IKw)
 
-`@rx-angular/state` was specifically designed to give developers a tool for mastering **component state** without forcing
-them to use complex design patterns.
-
-Its lightweight and intuitive API and the automatic subscription handling make `@rx-angular/state` the **perfect fit** for handling state in any Angular component.
-
-Using this library allows you to implement things like:
-
-- merge global into local state
-- shared state selections
-- subscription-less interaction
-- hook into imperative functions (e.g. component lifecycle or HostBindings)
-
-with very little effort in any component.
-
-<p float="left">
-  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/images/state_API-names.png" width="49%" />
-  <img src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/state/docs/images/state_API-types.png" width="49%" />
-</p>
-
-## Key features
-
-- Slim and intuitive API
-- Automated subscription handling
-- Intuitive way for handling ViewModels
-- Connect any Observable source to the state
-- Partial state updates
-- Reactive state selection
-- Lazy state (no BehaviorSubject)
-- Foundation for zone-less Angular applications
-
-## Install
+## Install and Update
 
 ```bash
 npm install --save @rx-angular/state
 # or
+pnpm install --save @rx-angular/state
+# or
 yarn add @rx-angular/state
 ```
 
-## Update
-
-If you are using `@rx-angular/state` already, please consider upgrading with the `@angular/cli update` command in order
-to make sure all provided code migrations are processed properly.
+For those currently using @rx-angular/state, we recommend updating with the @angular/cli update command to ensure a smooth transition and proper processing of all code migrations.
+Simply run the following command:
 
 ```bash
 ng update @rx-angular/state
@@ -83,68 +39,145 @@ nx migrate @rx-angular/state
 
 ## Usage
 
-[Usage Documentation](https://rx-angular.io/docs/state/setup)
+Local Provider (recommended): Use RxState as a local provider in your component to make use of Angular's Dependency Injection.
 
-## Testing
+With the new `inject` method:
 
-[Testing](https://rx-angular.io/docs/state/testing)
+```ts
+@Component({
+  /*...*/
+  providers: [RxState],
+})
+export class RxStateInjectionComponent {
+  private state: RxState<{ foo: string }> = inject(RxState);
 
-## API
+  state$ = this.state.select();
+}
+```
 
-[API Documentation](https://rx-angular.io/docs/state/api)
+With constructor based injection:
 
-## Tutorials
+```ts
+@Component({
+  /*...*/
+  providers: [RxState],
+})
+export class RxStateInjectionComponent {
+  state$ = this.state.select();
 
-- [Basic Tutorial](https://www.rx-angular.io/docs/state/tutorials/basic-tutorial/setup)
-- [Counter - StackBlitz](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
+  constructor(private state: RxState<{ foo: string }>) {}
+}
+```
 
-## Snippets
+Inheritance: Use RxState by extending it in your component.
 
-- [Logic comparison - Increment a Value](https://rx-angular.io/docs/state/tutorials/increment-a-value)
-- [Loading state and data fetching](https://rx-angular.io/docs/state/recipes/load-data-on-route-change)
-- [Passing Observables directly](https://rx-angular.io/docs/state/tutorials/passing-observables-directly)
-- [How to run partial state updates](https://rx-angular.io/docs/state/recipes/run-partial-updates)
-- [Get nested state slices](https://rx-angular.io/docs/state/concepts-and-best-practices/get-nested-state-slices)
-- [Deriving simple state](https://rx-angular.io/docs/state/concepts-and-best-practices/deriving-simple-state)
-- [Composing state using NgRx selectors](https://rx-angular.io/docs/state/integrations/resuse-ngrx-selectors-to-compose-state)
-- [Manage entities using NgRx entity adapter](https://rx-angular.io/docs/state/integrations/manage-entities-using-ngrx-entity)
-- [BehaviorSubject vs RxState](https://rx-angular.io/docs/state/tutorials/migrating-to-rxstate)
-- [Managing ViewModels with selectSlice](https://rx-angular.io/docs/state/recipes/manage-viewmodel)
-- [Manage reactive HostBindings](https://rx-angular.io/docs/state/recipes/work-with-hostbindings)
-- [Difference between Global and Local state](https://rx-angular.io/docs/state/recipes/determine-state-type)
-- [Using RxState as Global State](https://rx-angular.io/docs/state/recipes/use-rxstate-as-global-state)
+```ts
+@Component({
+  /*...*/
+})
+export class RxStateInheritanceClass extends RxState<{ foo: string }> {
+  value$ = this.select();
+}
+```
 
-## Videos
+- [📄 Detailed Usage Documentation](https://rx-angular.io/docs/state/setup)
+- [🧪 Extensive Testing Guide](https://www.rx-angular.io/docs/state/testing)
 
-[![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)_🎥 RxAngular State, The Component Reactive Store | Marmicode Tasting Session_](https://www.youtube.com/watch?v=CcQYj4V2IKw)
+## API overview
 
-[![tackling-component-state-reactively](https://user-images.githubusercontent.com/10064416/147395866-031704dc-837d-4d1f-82d6-e758e4cb9556.PNG)_🎥 Tackling Component State Reactively (Live Demo at 24:47)_](https://www.youtube.com/watch?v=I8uaHMs8rw0)
+With `@rx-angular/state`, you can easily manage your component state with a range of powerful methods.
+You find a detailed API documentation [here](https://rx-angular.io/docs/state/api).
 
-- [🎥 Extending Angular for the Reactive Web](https://youtu.be/pkN6CeZ8h_U?t=5913)
+#### [.connect()](https://www.rx-angular.io/docs/state/api/rx-state#connect)
 
-- [German content | 🎥 Michael explains rx-state to webdave_de (Livestream)](https://youtu.be/cKUFcY8QkYM)
+Link an Observable source to your component state and update it with emitted changes.
+With three signatures, this method offers automatic subscription handling,
+making it easy to merge the source, update specific properties, or map to a projection function.
 
-## Blogs/Documents
+#### [.select()](https://www.rx-angular.io/docs/state/api/rx-state#select)
 
-- [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
+Get a cached, distinct Observable of your state, with options to access single properties, transform single properties, or transform state slices.
+With reactive composition support from rxjs, this method gives you complete control over selected data.
 
-- [📜 Design Documents](https://hackmd.io/wVkWRc3XQWmtM6YcktRTrA)
+#### [.get()](https://www.rx-angular.io/docs/state/api/rx-state#get)
 
-## OSS Example Applications
+Retrieve your current state in an imperative manner.
+Whether you want the entire state or just a part of it, `.get()` makes it easy to access your data,
+with the ability to access deeply nested values.
 
-- [📑 Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) - [Mike Hartington](https://twitter.com/mhartington)
-- [📑 High performant zone-Less Angular Progressive Web Application](https://angular-movies-a12d3.web.app/list/category/popular) - [TasteJS](https://github.com/tastejs/angular-movies)
-- [📑 Zone-Less Angular Application - Tour of heros](https://github.com/BioPhoton/tour-of-heroes) - [Michael_Hladky](https://twitter.com/Michael_Hladky)
-- [📑 Zone-Less Todo MVC](https://github.com/edbzn/rx-angular-todo-mvc) - [Edouard Bozon](https://twitter.com/edbzn)
+#### [.set()](https://www.rx-angular.io/docs/state/api/rx-state#set)
+
+Easily update one or many properties of your state. Whether you provide a partial state object or a function to calculate the new value,
+`.set()` provides two signatures for updating multiple properties or a single property by name.
+
+#### [.hold()](https://www.rx-angular.io/docs/state/api/rx-state#hold)
+
+Manage side-effects of your state with the `.hold()` method, which holds the trigger Observable and executes an optional handler function.
+With automatic subscription handling, this method is an effective way to manage side-effects without the hassle.
+
+#### [.setAccumulator()](https://www.rx-angular.io/docs/state/api/rx-state#setaccumulator)
+
+Customize your state accumulation function with `.setAccumulator()`.
+Whether you want to update the accumulation logic for deep updates or solve immutability problems, this method is a powerful tool for fine-tuning your state management.
+
+## Addons
+
+The following complimentary tools are recommended for use with RxState to improve the development experience and optimize application performance.
+
+### [🚀 @rx-angular/template](https://www.rx-angular.io/docs/template)
+
+Reduce the amount of boilerplate code required in templates and bring rendering performance to next level.
+
+### [⚒️ @rx-angular/state/effects](https://rx-angular.io/docs/state/effects)
+
+Reactively handle side effects, forget about the `subscribe` API and potential memory leaks.
+
+### [📡 @rx-angular/state/actions](https://rx-angular.io/docs/state/actions)
+
+Create composable action streams for user interaction and backend communication with a minimal memory footprint.
+
+### [✨ @rx-angular/cdk/transformations](https://www.rx-angular.io/docs/cdk/api/transformation-helpers)
+
+Simplify data structures management. Create, modify, convert arrays and objects with ease.
+
+### [🔬 @rx-angular/eslint-plugin](https://www.rx-angular.io/docs/eslint-plugin)
+
+Enforce best practices for building reactive, performant, and Zone-less Angular applications.
+
+### [🧩 Selections](https://www.rx-angular.io/docs/state/api/rxjs-operators)
+
+Optimize state selections and data transfer, ensure only the necessary data is transferred.
 
 ## Version Compatibility
 
 | Angular                | RxJS                 | @rx-angular/state |
 | ---------------------- | -------------------- | ----------------- |
-| `14`                   | `^7.4.0`             | `> 1.4.6`         |
+| `14+`                  | `^7.4.0`             | `> 1.4.6`         |
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.4.6`         |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.4.6`        |
 
-Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself.
-All the packages support RxJS versions `^6.5.5` || `^7.4.0`.
-For more information about the compatibilities of Angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).
+We follow the compatibility of Angular for RxJS in our packages.
+The supported RxJS versions are ^6.5.5 or ^7.4.0.
+For further details on Angular compatibility, please refer to this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).
+
+## Contribution
+
+If you want to contribute to this project, please follow [our guideline](https://github.com/rx-angular/rx-angular/blob/main/CONTRIBUTING.md).
+
+## Additional materials
+
+- [💾 Research on Reactive Ephemeral State](https://dev.to/rxjs/research-on-reactive-ephemeral-state-in-component-oriented-frameworks-38lk)
+- [📜 Design Documents](https://hackmd.io/wVkWRc3XQWmtM6YcktRTrA)
+- [✍️Tutorials](https://www.rx-angular.io/docs/state/tutorials/basic-tutorial/setup)
+- [🍳 Recipes](https://rx-angular.io/docs/state/recipes/use-rxstate-as-global-state)
+- [💻Counter Demo](https://stackblitz.com/edit/rx-angular-state-counter-demo?file=src%2Fapp%2Fcounter%2Fcounter.component.ts)
+- [🎥 Tackling Component State Reactively (Live Demo at 24:47)](https://www.youtube.com/watch?v=I8uaHMs8rw0)
+- [🎥 Extending Angular for the Reactive Web](https://youtu.be/pkN6CeZ8h_U?t=5913)
+- [🎥 Michael explains rx-state to webdave_de (Livestream, German)](https://youtu.be/cKUFcY8QkYM)
+
+### OSS Example Applications
+
+- [‍💻 Fully-reactive Zone-Less Angular/Ionic Progressive Web Application](https://startrack-ng.web.app/search) - [Mike Hartington](https://twitter.com/mhartington)
+- [‍💻 High performant zone-Less Angular Progressive Web Application](https://angular-movies-a12d3.web.app/list/category/popular) - [TasteJS](https://github.com/tastejs/angular-movies)
+- [‍💻 Zone-Less Angular Application - Tour of heroes](https://github.com/BioPhoton/tour-of-heroes) - [Michael_Hladky](https://twitter.com/Michael_Hladky)
+- [‍💻 Zone-Less Todo MVC](https://github.com/edbzn/rx-angular-todo-mvc) - [Edouard Bozon](https://twitter.com/edbzn)
