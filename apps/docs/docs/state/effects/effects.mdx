@@ -105,14 +105,12 @@ export class FooComponent {
   private effect$ = interval(1000);
 
   constructor() {
-    // The subscribe's next callback it used to wrap and execute the side effect
+    // [#1st approach] The subscribe's next callback it used to wrap and execute the side effect
     effect$.subscribe(this.runSideEffect);
 
+    // [#2nd approach] `tap` is used to wrap and execute the side effect
     effect$
-      .pipe(
-        // `tap` is used to wrap and execute the side effect
-        tap(this.runSideEffect)
-      )
+      .pipe(tap(this.runSideEffect))
       .subscribe();
   }
 }
@@ -383,7 +381,7 @@ export class FooComponent {
   chartVisible$ = new Subject<boolean>();
   chartData$ = this.ngRxStore.select(getListData());
 
-  pollingTrigger$ this.chartVisible$.pipe(
+  pollingTrigger$ = this.chartVisible$.pipe(
       switchMap(isPolling => isPolling ? interval(2000) : EMPTY)
   );
 
