@@ -18,43 +18,6 @@ It is an ideal alternative or complimentary library to global state management s
 
 [![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)](https://www.youtube.com/watch?v=CcQYj4V2IKw)
 
-### API overview
-
-With @rx-angular/state, you can easily manage your component state with a range of powerful methods.
-Detailed API documentation available [here](https://rx-angular.io/docs/state/api).
-
-#### [.connect()](https://www.rx-angular.io/docs/state/api/rx-state#connect)
-
-Link an Observable source to your component state and update it with emitted changes.
-With three signatures, this method offers automatic subscription handling,
-making it easy to merge the source, update specific properties, or map to a projection function.
-
-#### [.select()](https://www.rx-angular.io/docs/state/api/rx-state#select)
-
-Get a cached, distinct Observable of your state, with options to access single properties, transform single properties, or transform state slices.
-With reactive composition support from rxjs, this method gives you complete control over selected data.
-
-#### [.get()](https://www.rx-angular.io/docs/state/api/rx-state#get)
-
-Retrieve your current state in an imperative manner.
-Whether you want the entire state or just a part of it, `.get()` makes it easy to access your data,
-with the ability to access deeply nested values.
-
-#### [.set()](https://www.rx-angular.io/docs/state/api/rx-state#set)
-
-Easily update one or many properties of your state. Whether you provide a partial state object or a function to calculate the new value,
-`.set()` provides two signatures for updating multiple properties or a single property by name.
-
-#### [.hold()](https://www.rx-angular.io/docs/state/api/rx-state#hold)
-
-Manage side-effects of your state with the `.hold()` method, which holds the trigger Observable and executes an optional handler function.
-With automatic subscription handling, this method is an effective way to manage side-effects without the hassle.
-
-#### [.setAccumulator()](https://www.rx-angular.io/docs/state/api/rx-state#setaccumulator)
-
-Customize your state accumulation function with `.setAccumulator()`.
-Whether you want to update the accumulation logic for deep updates or solve immutability problems, this method is a powerful tool for fine-tuning your state management.
-
 ## Install and Update
 
 ```bash
@@ -102,6 +65,43 @@ export class RxStateInheritanceClass extends RxState<{ foo: string }> {
 
 - [📄 Detailed Usage Documentation](https://rx-angular.io/docs/state/setup)
 - [🧪 Extensive Testing Guide](https://www.rx-angular.io/docs/state/testing)
+
+## API overview
+
+With @rx-angular/state, you can easily manage your component state with a range of powerful methods.
+Detailed API documentation available [here](https://rx-angular.io/docs/state/api).
+
+#### [.connect()](https://www.rx-angular.io/docs/state/api/rx-state#connect)
+
+Link an Observable source to your component state and update it with emitted changes.
+With three signatures, this method offers automatic subscription handling,
+making it easy to merge the source, update specific properties, or map to a projection function.
+
+#### [.select()](https://www.rx-angular.io/docs/state/api/rx-state#select)
+
+Get a cached, distinct Observable of your state, with options to access single properties, transform single properties, or transform state slices.
+With reactive composition support from rxjs, this method gives you complete control over selected data.
+
+#### [.get()](https://www.rx-angular.io/docs/state/api/rx-state#get)
+
+Retrieve your current state in an imperative manner.
+Whether you want the entire state or just a part of it, `.get()` makes it easy to access your data,
+with the ability to access deeply nested values.
+
+#### [.set()](https://www.rx-angular.io/docs/state/api/rx-state#set)
+
+Easily update one or many properties of your state. Whether you provide a partial state object or a function to calculate the new value,
+`.set()` provides two signatures for updating multiple properties or a single property by name.
+
+#### [.hold()](https://www.rx-angular.io/docs/state/api/rx-state#hold)
+
+Manage side-effects of your state with the `.hold()` method, which holds the trigger Observable and executes an optional handler function.
+With automatic subscription handling, this method is an effective way to manage side-effects without the hassle.
+
+#### [.setAccumulator()](https://www.rx-angular.io/docs/state/api/rx-state#setaccumulator)
+
+Customize your state accumulation function with `.setAccumulator()`.
+Whether you want to update the accumulation logic for deep updates or solve immutability problems, this method is a powerful tool for fine-tuning your state management.
 
 ## Addons
 
