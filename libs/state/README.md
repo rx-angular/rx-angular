@@ -68,8 +68,8 @@ export class RxStateInheritanceClass extends RxState<{ foo: string }> {
 
 ## API overview
 
-With @rx-angular/state, you can easily manage your component state with a range of powerful methods.
-Detailed API documentation available [here](https://rx-angular.io/docs/state/api).
+With `@rx-angular/state`, you can easily manage your component state with a range of powerful methods.
+You find a detailed API documentation [here](https://rx-angular.io/docs/state/api).
 
 #### [.connect()](https://www.rx-angular.io/docs/state/api/rx-state#connect)
 
@@ -135,7 +135,7 @@ Optimize state selections and data transfer, ensure only the necessary data is t
 
 | Angular                | RxJS                 | @rx-angular/state |
 | ---------------------- | -------------------- | ----------------- |
-| `14`                   | `^7.4.0`             | `> 1.4.6`         |
+| `14+`                  | `^7.4.0`             | `> 1.4.6`         |
 | `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.4.6`         |
 | `^11.0.0`              | `^6.5.5`             | `<= 1.4.6`        |
 
