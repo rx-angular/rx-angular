@@ -23,6 +23,8 @@ It is an ideal alternative or complimentary library to global state management s
 ```bash
 npm install --save @rx-angular/state
 # or
+pnpm install --save @rx-angular/state
+# or
 yarn add @rx-angular/state
 ```
 
@@ -39,27 +41,42 @@ nx migrate @rx-angular/state
 
 Local Provider (recommended): Use RxState as a local provider in your component to make use of Angular's Dependency Injection.
 
+With the new `inject` method:
+
 ```ts
 @Component({
-  ...
+  /*...*/
   providers: [RxState],
 })
 export class RxStateInjectionComponent {
-  value$ = this.state.select();
+  private state: RxState<{ foo: string }> = inject(RxState);
 
-  constructor(public state: RxState<{ foo: string }>) {}
+  state$ = this.state.select();
+}
+```
+
+With constructor based injection:
+
+```ts
+@Component({
+  /*...*/
+  providers: [RxState],
+})
+export class RxStateInjectionComponent {
+  state$ = this.state.select();
+
+  constructor(private state: RxState<{ foo: string }>) {}
 }
 ```
 
 Inheritance: Use RxState by extending it in your component.
 
 ```ts
+@Component({
+  /*...*/
+})
 export class RxStateInheritanceClass extends RxState<{ foo: string }> {
   value$ = this.select();
-
-  constructor() {
-    super();
-  }
 }
 ```
 
