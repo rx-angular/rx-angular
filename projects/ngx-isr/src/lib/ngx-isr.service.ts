@@ -8,20 +8,25 @@ import { HttpErrorResponse } from '@angular/common/http';
 export interface NgxIsrState {
   revalidate: number | null;
   errors: Error[];
+  extra: Record<string, any>;
 }
 
 const initialState: NgxIsrState = {
   revalidate: null,
-  errors: []
+  errors: [],
+  extra: {}
 }
 
 @Injectable({ providedIn: 'root' })
 export class NgxIsrService {
-
   protected state = new BehaviorSubject<NgxIsrState>(initialState);
 
   getState(): NgxIsrState {
     return this.state.getValue();
+  }
+
+  getExtra(): Record<string, any> {
+    return this.state.getValue().extra;
   }
 
   constructor(
@@ -59,6 +64,10 @@ export class NgxIsrService {
     this.state.next({ ...this.getState(), errors: [ ...currentErrors, err ] });
   }
 
+  addExtra(extra: Record<string, any> = {}): void {
+    this.state.next({ ...this.getState(), extra: { ...this.getExtra(), ...extra } });
+  }
+  
   setRevalidate = (revalidate: number | null): void => {
     this.state.next({ ...this.getState(), revalidate });
   }

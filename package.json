@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng build ngx-isr && ng run ngx-isr-demo:serve-ssr",
-    "watch": "ng build --watch --configuration development",
+    "watch": "ng build ngx-isr --watch --configuration development",
     "test": "ng test",
     "dev:ssr": "ng run ngx-isr-demo:serve-ssr",
     "serve:ssr": "node dist/ngx-isr-demo/server/main.js",
