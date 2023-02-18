@@ -15,7 +15,9 @@ import { RedisCacheHandler } from './redis-cache-handler';
 export function app(): express.Express {
   const server = express();
   const distFolder = join(process.cwd(), 'dist/ngx-isr-demo/browser');
-  const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
+  const indexHtml = existsSync(join(distFolder, 'index.original.html'))
+    ? 'index.original.html'
+    : 'index';
 
   const REDIS_CONNECTION_STRING = process.env['REDIS_CONNECTION_STRING'] || '';
   const INVALIDATE_TOKEN = process.env['INVALIDATE_TOKEN'] || '';
@@ -27,20 +29,25 @@ export function app(): express.Express {
   //   addPrerenderedPagesToCache: true,
   // });
 
-  const redisCacheHandler = REDIS_CONNECTION_STRING ? new RedisCacheHandler(REDIS_CONNECTION_STRING) : undefined;
+  const redisCacheHandler = REDIS_CONNECTION_STRING
+    ? new RedisCacheHandler(REDIS_CONNECTION_STRING)
+    : undefined;
 
   // Step 1: Initialize ISRHandler
   const isr = new ISRHandler({
     indexHtml,
     cache: redisCacheHandler, // we can remove this field if we want to use the default InMemoryCacheHandler
     invalidateSecretToken: INVALIDATE_TOKEN || 'MY_TOKEN',
-    enableLogging: !environment.production
+    enableLogging: !environment.production,
   });
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
-  server.engine('html', ngExpressEngine({
-    bootstrap: AppServerModule,
-  }));
+  server.engine(
+    'html',
+    ngExpressEngine({
+      bootstrap: AppServerModule,
+    })
+  );
 
   server.set('view engine', 'html');
   server.set('views', distFolder);
@@ -52,7 +59,10 @@ export function app(): express.Express {
   // server.get('/api/**', (req, res) => { });
 
   // Step 2: Add invalidation url handler
-  server.post("/api/invalidate", async (req, res) => await isr.invalidate(req, res));
+  server.post(
+    '/api/invalidate',
+    async (req, res) => await isr.invalidate(req, res)
+  );
 
   // Serve static files from /browser
   server.get('*.*', express.static(distFolder, { maxAge: '1y' }));
@@ -60,36 +70,15 @@ export function app(): express.Express {
   // Step 3: handle rendering and serving using ISR handler
   server.get('*',
     // Serve page if it exists in cache
-    async (req, res, next) => await isr.serveFromCache(req, res, next, {
-      modifyCachedHtml: (req, html) => {
-        // Simulate we're changing the html, and thus we make a long-running task to simulate this (150ms)
-        // The HTML source-code will contain how long this took, this is important for developers to take care when
-        // using this callback
-        // const start = new Date().getTime();
-        // for (let i = 0; i < 10000000; i++) {
-        //   if (new Date().getTime() - start >= 150) {
-        //     break;
-        //   }
-        // }
-
-        // Return the modified html
-        return html;
-      }
-    }),
+    async (req, res, next) => await isr.serveFromCache(req, res, next),
     // Server side render the page and add to cache if needed
-    async (req, res, next) => await isr.render(req, res, next, {
-      modifyGeneratedHtml: (req, html) => {
-        // Do something with the generated html
-        //...
-        return html;
-      }
-    }),
-
-    // Step 4: Comment out default angular universal handler, because it's will be handled in ISR render method
-    // (req, res) => {
-    //   res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
-    // }
+    async (req, res, next) => await isr.render(req, res, next)
   );
+
+  // Step 4: Comment out default angular universal handler, because it's will be handled in ISR render method
+  // (req, res) => {
+  //   res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
+  // }
 
   return server;
 }
@@ -109,7 +98,7 @@ function run(): void {
 // The below code is to ensure that the server is run only when not requiring the bundle.
 declare const __non_webpack_require__: NodeRequire;
 const mainModule = __non_webpack_require__.main;
-const moduleFilename = mainModule && mainModule.filename || '';
+const moduleFilename = (mainModule && mainModule.filename) || '';
 if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
   run();
 }
