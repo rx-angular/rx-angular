@@ -1,4 +1,6 @@
 {
+  "name": "demos",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "generators": {
     "@schematics/angular:component": {
@@ -115,7 +117,7 @@
         "jestConfig": "apps/demos/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": ["coverage/apps/demos"]
+      "outputs": ["{workspaceRoot}/coverage/apps/demos"]
     }
   },
   "tags": ["type:app"]

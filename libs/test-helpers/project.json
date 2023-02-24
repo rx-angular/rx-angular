@@ -1,4 +1,6 @@
 {
+  "name": "test-helpers",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/test-helpers/src",
   "projectType": "library",
   "generators": {},
@@ -9,7 +11,7 @@
         "jestConfig": "libs/test-helpers/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": ["coverage/libs/test-helpers"]
+      "outputs": ["{workspaceRoot}/coverage/libs/test-helpers"]
     }
   },
   "tags": ["type:test-util"]
