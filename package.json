@@ -34,10 +34,10 @@
   },
   "lint-staged": {
     "**/!(images)/**/*.{ts,js,html,scss,md,mdx,json}": [
-      "nx affected:lint --uncommitted --fix --parallel"
+      "eslint --fix --quiet"
     ],
     "**/*.{ts,js,html,scss,md,mdx,json}": [
-      "nx format:write --uncommitted"
+      "prettier --write"
     ]
   },
   "private": true,
