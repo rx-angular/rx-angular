@@ -13,7 +13,6 @@ import { ROUTES } from './app.routes';
 import { DirtyChecksModule } from '../shared/debug-helper/dirty-checks';
 import { AppControlPanelModule } from './app-control-panel/';
 
-
 @NgModule({
   imports: [
     BrowserModule,
@@ -24,13 +23,12 @@ import { AppControlPanelModule } from './app-control-panel/';
     MatListModule,
     MatIconModule,
     AppShellModule,
-    RouterModule.forRoot(ROUTES, { relativeLinkResolution: 'legacy' }),
+    RouterModule.forRoot(ROUTES, {}),
     DirtyChecksModule,
-    AppControlPanelModule
+    AppControlPanelModule,
   ],
   declarations: [AppComponent],
   exports: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppComponentModule {
-}
+export class AppComponentModule {}
