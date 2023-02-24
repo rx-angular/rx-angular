@@ -31,5 +31,5 @@ export function getZoneUnPatchedApi<T extends object, N extends keyof T>(
     name = targetOrName as N;
     targetOrName = ɵglobal as T;
   }
-  return targetOrName['__zone_symbol__' + name] || targetOrName[name];
+  return targetOrName['__zone_symbol__' + String(name)] || targetOrName[name];
 }
