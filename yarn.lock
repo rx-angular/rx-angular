@@ -16945,6 +16945,11 @@ rxjs-for-await@0.0.2:
   resolved "https://registry.yarnpkg.com/rxjs-for-await/-/rxjs-for-await-0.0.2.tgz#26598a1d6167147cc192172970e7eed4e620384b"
   integrity sha512-IJ8R/ZCFMHOcDIqoABs82jal00VrZx8Xkgfe7TOKoaRPAW5nH/VFlG23bXpeGdrmtqI9UobFPgUKgCuFc7Lncw==
 
+rxjs-zone-less@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/rxjs-zone-less/-/rxjs-zone-less-1.0.0.tgz#cb0c4325f546990f714570e2ef2456ddae6010bb"
+  integrity sha512-RrFIjJmGuLzro8Md36n8r7Ho6Nk+aagNkzISNepwjOygMf7Ke/Yw2Ocy9sRzEM2eEKktqJ5WxIJNdQPBfDBCWg==
+
 rxjs@6.5.5:
   version "6.5.5"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.5.5.tgz#c5c884e3094c8cfee31bf27eb87e54ccfc87f9ec"
