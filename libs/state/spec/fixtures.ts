@@ -22,7 +22,7 @@ export function createStateChecker<T extends object>(
 ): StateChecker<T> {
   return {
     checkState,
-    checkSubscriptions
+    checkSubscriptions,
   };
 
   function checkState(
@@ -52,8 +52,8 @@ export function createStateChecker<T extends object>(
   }
 
   function checkSubscriptions(service: RxState<T>, numTotalSubs: number): void {
-    const actual = (service as any).subscription._teardowns
-      ? (service as any).subscription._teardowns.length
+    const actual = (service as any).subscription._finalizers
+      ? (service as any).subscription._finalizers.length
       : 0;
     assert(actual, numTotalSubs);
   }

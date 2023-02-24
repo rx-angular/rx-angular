@@ -1,6 +1,5 @@
 /* eslint-disable */
 export default {
-  name: 'state',
   displayName: 'state',
   preset: '../../jest.preset.js',
   coverageReporters: ['lcov'],
