@@ -103,7 +103,7 @@ export function createTemplateNotifier<U>(): {
     distinctUntilChanged(),
     // handle static values inc null assignment and new Observable or Promises
     map((observable$): ObservableInput<U> | U => {
-      if (isObservableInput(observable$)) {
+      if (isObservableInput<U>(observable$)) {
         return skipSuspenseIfHasValue(observable$);
       } else if (!emittedValueOnce && observable$ === undefined) {
         return NEVER;
