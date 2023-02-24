@@ -105,15 +105,11 @@ export class FooComponent {
   private effect$ = interval(1000);
 
   constructor() {
-    // The subscribe's next callback it used to wrap and execute the side effect
+    // [#1st approach] The subscribe's next callback it used to wrap and execute the side effect
     effect$.subscribe(this.runSideEffect);
 
-    effect$
-      .pipe(
-        // `tap` is used to wrap and execute the side effect
-        tap(this.runSideEffect)
-      )
-      .subscribe();
+    // [#2nd approach] `tap` is used to wrap and execute the side effect
+    effect$.pipe(tap(this.runSideEffect)).subscribe();
   }
 }
 ```
@@ -379,21 +375,18 @@ To avoid data fetching when the chart is not visible we connect the side effect 
   providers: [RxEffects],
 })
 export class FooComponent {
-
   chartVisible$ = new Subject<boolean>();
   chartData$ = this.ngRxStore.select(getListData());
 
-  pollingTrigger$ this.chartVisible$.pipe(
-      switchMap(isPolling => isPolling ? interval(2000) : EMPTY)
+  pollingTrigger$ = this.chartVisible$.pipe(
+    switchMap((isPolling) => (isPolling ? interval(2000) : EMPTY))
   );
 
-  constructor(
-    private ngRxStore: Store,
-    private effects: RxEffects
-  ) {
-     effects.register(this.pollingTrigger$, () => this.ngRxStore.dispatch(refreshAction()));
+  constructor(private ngRxStore: Store, private effects: RxEffects) {
+    effects.register(this.pollingTrigger$, () =>
+      this.ngRxStore.dispatch(refreshAction())
+    );
   }
-
 }
 ```
 
