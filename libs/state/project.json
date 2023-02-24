@@ -1,4 +1,6 @@
 {
+  "name": "state",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/state/src",
   "prefix": "rx",
@@ -10,7 +12,7 @@
         "project": "libs/state/ng-package.json",
         "updateBuildableProjectDepsInPackageJson": false
       },
-      "outputs": ["dist/libs/state"],
+      "outputs": ["{workspaceRoot}/dist/libs/state"],
       "dependsOn": [
         {
           "target": "build",
@@ -19,7 +21,7 @@
       ]
     },
     "build": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "dependsOn": [
         {
           "target": "build-lib",
@@ -46,7 +48,7 @@
         ],
         "parallel": false
       },
-      "outputs": ["dist/libs/state/schematics"]
+      "outputs": ["{workspaceRoot}/dist/libs/state/schematics"]
     },
     "test": {
       "executor": "@nrwl/jest:jest",
@@ -55,7 +57,7 @@
         "passWithNoTests": true,
         "codeCoverage": true
       },
-      "outputs": ["coverage/state"]
+      "outputs": ["{workspaceRoot}/coverage/state"]
     },
     "perfBuild": {
       "executor": "@nrwl/node:webpack",
@@ -73,7 +75,7 @@
       }
     },
     "publish": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           {

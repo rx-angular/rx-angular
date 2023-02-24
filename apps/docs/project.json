@@ -1,4 +1,6 @@
 {
+  "name": "docs",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/docs/src",
   "targets": {
@@ -22,7 +24,7 @@
       }
     },
     "serve-static": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "docusaurus serve --config apps/docs/docusaurus.config.js --dir dist/apps/docs"
       },
@@ -34,7 +36,7 @@
       ]
     },
     "check-links": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           {
@@ -44,5 +46,25 @@
       }
     }
   },
-  "tags": []
+  "tags": [],
+  "namedInputs": {
+    "projectSpecificFiles": [
+      "{workspaceRoot}/CONTRIBUTING.md",
+      "{workspaceRoot}/libs/cdk/README.md",
+      "{workspaceRoot}/libs/cdk/coalescing/README.md",
+      "{workspaceRoot}/libs/cdk/coercing/README.md",
+      "{workspaceRoot}/libs/cdk/notifications/README.md",
+      "{workspaceRoot}/libs/cdk/render-strategies/README.md",
+      "{workspaceRoot}/libs/cdk/transformations/README.md",
+      "{workspaceRoot}/libs/cdk/zone-configurations/README.md",
+      "{workspaceRoot}/libs/cdk/zone-less/README.md",
+      "{workspaceRoot}/libs/cdk/template/README.md",
+      "{workspaceRoot}/libs/eslint-plugin/README.md",
+      "{workspaceRoot}/libs/state/README.md",
+      "{workspaceRoot}/libs/state/actions/README.md",
+      "{workspaceRoot}/libs/state/effects/README.md",
+      "{workspaceRoot}/libs/state/selections/README.md",
+      "{workspaceRoot}/libs/template/README.md"
+    ]
+  }
 }
