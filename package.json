@@ -33,7 +33,7 @@
     "workspace-generator": "nx workspace-generator"
   },
   "lint-staged": {
-    "**/!(images)/**/*.{ts,js,html,scss,md,mdx,json}": [
+    "**/!(images)/**/*.{ts,js,html}": [
       "eslint --fix --quiet"
     ],
     "**/*.{ts,js,html,scss,md,mdx,json}": [
