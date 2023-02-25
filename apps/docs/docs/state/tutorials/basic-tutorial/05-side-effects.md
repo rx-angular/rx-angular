@@ -222,8 +222,15 @@ It generally looks like this:
 In our constructor, we can use it as following:
 
 ```typescript
+// this should now looks like this
+refreshListSideEffect$ = merge(
+  this.refreshClicks,
+  this.intervalRefreshTick$
+);
+
 constructor(...) {
   // ...
+  // the trigger now registered as a second arg (for better readability)
   this.rxEffects.register(refreshListSideEffect$, () => this.listService.refetchList());
 }
 ```
