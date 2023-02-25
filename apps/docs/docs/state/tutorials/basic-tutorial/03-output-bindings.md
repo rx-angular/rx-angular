@@ -36,7 +36,7 @@ constructor() {
 
 Optionally, we can also provide it as `Partial`.
 Thus, we will need to transform the `boolean` value to fit `Partial<ComponentState>`.
-We can use the `map` operator here to achieve this transformation and pass the projection function `listExpanded => ({ listExpanded})`.
+We can use the `map` operator here to achieve this transformation and pass the projection function `listExpanded => ({ listExpanded })`.
 
 ```typescript
 import { map } from `rxjs`;
