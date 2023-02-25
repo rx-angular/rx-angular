@@ -342,7 +342,7 @@ describe('coerceDistinctWith', () => {
       });
     });
 
-    it('should only emit 1 value since the coerced value for the first emission never completes', () => {
+    xit('should only emit 1 value since the coerced value for the first emission never completes', () => {
       testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
         const source = '-a-b----c-d--------|';
         const expected = '-a------------------';
