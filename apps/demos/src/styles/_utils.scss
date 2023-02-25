@@ -21,40 +21,40 @@ $yiq-contrasted-threshold: 175;
 $sizes: () !default;
 // stylelint-disable-next-line scss/dollar-variable-default
 $sizes: map-merge(
-    (
-      25: 25%,
-      50: 50%,
-      75: 75%,
-      100: 100%,
-      auto: auto,
-    ),
-    $sizes
+  (
+    25: 25%,
+    50: 50%,
+    75: 75%,
+    100: 100%,
+    auto: auto,
+  ),
+  $sizes
 );
 
 $spacer: 1rem !default;
 $spacers: () !default;
 // stylelint-disable-next-line scss/dollar-variable-default
 $spacers: map-merge(
-    (
-      0: 0,
-      1: (
-        $spacer * 0.25,
-      ),
-      2: (
-        $spacer * 0.5,
-      ),
-      3: $spacer,
-      4: (
-        $spacer * 1.5,
-      ),
-      5: (
-        $spacer * 3,
-      ),
+  (
+    0: 0,
+    1: (
+      $spacer * 0.25,
     ),
-    $spacers
+    2: (
+      $spacer * 0.5,
+    ),
+    3: $spacer,
+    4: (
+      $spacer * 1.5,
+    ),
+    5: (
+      $spacer * 3,
+    ),
+  ),
+  $spacers
 );
 $displays: none, inline, inline-block, block, table, table-row, table-cell, flex,
-grid, inline-grid, inline-flex !default;
+  grid, inline-grid, inline-flex !default;
 $overflows: auto, hidden !default;
 $positions: static, relative, absolute, fixed, sticky !default;
 $user-selects: all, auto, none !default;
@@ -78,14 +78,14 @@ $zindex-fixed: 1030 !default;
 *::after {
   box-sizing: border-box; // 1
 }
-@import '~normalize-css';
-@import '~bootstrap/scss/mixins/breakpoints';
-@import '~bootstrap/scss/utilities/flex';
-@import '~bootstrap/scss/utilities/display';
-@import '~bootstrap/scss/utilities/sizing';
-@import '~bootstrap/scss/utilities/spacing';
-@import '~bootstrap/scss/utilities/position';
-@import '~bootstrap/scss/utilities/float';
-@import '~bootstrap/scss/mixins/grid-framework';
-@import '~bootstrap/scss/mixins/grid';
-@import '~bootstrap/scss/grid';
+@import 'normalize-css';
+@import 'bootstrap/scss/mixins/breakpoints';
+@import 'bootstrap/scss/utilities/flex';
+@import 'bootstrap/scss/utilities/display';
+@import 'bootstrap/scss/utilities/sizing';
+@import 'bootstrap/scss/utilities/spacing';
+@import 'bootstrap/scss/utilities/position';
+@import 'bootstrap/scss/utilities/float';
+@import 'bootstrap/scss/mixins/grid-framework';
+@import 'bootstrap/scss/mixins/grid';
+@import 'bootstrap/scss/grid';
