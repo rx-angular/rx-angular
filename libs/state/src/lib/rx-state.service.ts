@@ -1,4 +1,12 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import {
+  computed,
+  effect,
+  Injectable,
+  isSignal,
+  OnDestroy,
+  signal,
+  Signal,
+} from '@angular/core';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {
   AccumulationFn,
@@ -296,6 +304,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * // 5 due to the projectionFunction
    */
   connect(inputOrSlice$: Observable<Partial<T>>): void;
+  connect(signal: Signal<Partial<T>>): void;
 
   /**
    * @description
@@ -315,6 +324,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     inputOrSlice$: Observable<V>,
     projectFn: ProjectStateReducer<T, V>
   ): void;
+  connect<V>(signal: Signal<V>, projectFn: ProjectStateReducer<T, V>): void;
   /**
    *
    * @description
@@ -329,6 +339,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * // every 250ms the property timer will get updated
    */
   connect<K extends keyof T>(key: K, slice$: Observable<T[K]>): void;
+  connect<K extends keyof T>(key: K, signal: Signal<T[K]>): void;
   /**
    *
    * @description
@@ -347,57 +358,75 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     input$: Observable<V>,
     projectSliceFn: ProjectValueReducer<T, K, V>
   ): void;
+  connect<K extends keyof T, V>(
+    key: K,
+    signal: Signal<V>,
+    projectSliceFn: ProjectValueReducer<T, K, V>
+  ): void;
   /**
    * @internal
    */
   connect<K extends keyof T, V extends Partial<T>>(
-    keyOrInputOrSlice$: K | Observable<Partial<T> | V>,
-    projectOrSlices$?: ProjectStateReducer<T, V> | Observable<T[K] | V>,
+    keyOrInputOrSlice$: K | Observable<Partial<T> | V> | Signal<Partial<T> | V>,
+    projectOrSlices$?:
+      | ProjectStateReducer<T, V>
+      | Observable<T[K] | V>
+      | Signal<T[K] | V>,
     projectValueFn?: ProjectValueReducer<T, K, V>
   ): void {
+    let inputOrSlice$: Observable<Partial<T> | V>;
+    if (!isKeyOf<T>(keyOrInputOrSlice$)) {
+      if (isObservable(keyOrInputOrSlice$)) {
+        inputOrSlice$ = keyOrInputOrSlice$;
+      } else {
+        // why can't typescript infer the correct type?
+        inputOrSlice$ = signalToObservable(
+          keyOrInputOrSlice$ as Signal<Partial<T> | V>
+        );
+      }
+    }
+    const key: K | null =
+      !inputOrSlice$ && isKeyOf<T>(keyOrInputOrSlice$)
+        ? keyOrInputOrSlice$
+        : null;
     if (
       projectValueFn === undefined &&
       projectOrSlices$ === undefined &&
-      isObservable(keyOrInputOrSlice$)
+      inputOrSlice$
     ) {
-      this.accumulator.nextSliceObservable(keyOrInputOrSlice$);
+      this.accumulator.nextSliceObservable(inputOrSlice$);
       return;
     }
 
-    if (
-      projectValueFn === undefined &&
-      typeof projectOrSlices$ === 'function' &&
-      isObservable(keyOrInputOrSlice$) &&
-      !isObservable(projectOrSlices$)
-    ) {
-      const project = projectOrSlices$;
-      const slice$ = keyOrInputOrSlice$.pipe(
-        map((v) => project(this.get(), v as V))
+    let slices$: Observable<T[K] | V> | null = null;
+    let stateReducer: ProjectStateReducer<T, V>;
+
+    if (projectOrSlices$) {
+      if (isObservable(projectOrSlices$)) {
+        slices$ = projectOrSlices$;
+      } else if (isSignal(projectOrSlices$)) {
+        slices$ = signalToObservable(projectOrSlices$);
+      } else {
+        stateReducer = projectOrSlices$;
+      }
+    }
+
+    if (inputOrSlice$ && projectValueFn === undefined && stateReducer) {
+      const slice$ = inputOrSlice$.pipe(
+        map((v) => stateReducer(this.get(), v as V))
       );
       this.accumulator.nextSliceObservable(slice$);
       return;
     }
 
-    if (
-      projectValueFn === undefined &&
-      isKeyOf<T>(keyOrInputOrSlice$) &&
-      isObservable(projectOrSlices$)
-    ) {
-      const key = keyOrInputOrSlice$;
-      const slice$ = projectOrSlices$.pipe(
-        map((value) => ({ ...{}, [key]: value }))
-      );
+    if (projectValueFn === undefined && key && slices$) {
+      const slice$ = slices$.pipe(map((value) => ({ ...{}, [key]: value })));
       this.accumulator.nextSliceObservable(slice$);
       return;
     }
 
-    if (
-      typeof projectValueFn === 'function' &&
-      isKeyOf<T>(keyOrInputOrSlice$) &&
-      isObservable(projectOrSlices$)
-    ) {
-      const key = keyOrInputOrSlice$;
-      const slice$ = projectOrSlices$.pipe(
+    if (typeof projectValueFn === 'function' && key && slices$) {
+      const slice$ = slices$.pipe(
         map((value) => ({
           ...{},
           [key]: projectValueFn(this.get(), value as V),
@@ -636,4 +665,15 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     subscription.add(this.effectObservable.subscribe());
     return subscription;
   }
+}
+
+function signalToObservable<T>(signal: Signal<T>): Observable<T> {
+  return new Observable(({ next }) => {
+    const e = effect(() => {
+      next(signal());
+    });
+    return () => {
+      e.destroy();
+    };
+  });
 }
