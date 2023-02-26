@@ -623,6 +623,137 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   /**
    * @description
+   * Returns the state as cached and distinct `Observable<T>`. This way you don't have to think about **late
+   * subscribers**,
+   * **multiple subscribers** or **multiple emissions** of the same value
+   *
+   * @example
+   * const state$ = state.select();
+   * state$.subscribe(state => doStuff(state));
+   *
+   * @returns Observable<T>
+   */
+  computed(): Signal<T>;
+  computed<K extends keyof T, V>(fn: (slice: PickSlice<T, K>) => V): Signal<T>;
+  /**
+   * @description
+   * Transform a slice of the state by providing keys and map function.
+   * Returns result of applying function to state slice as cached and distinct `Observable<V>`.
+   *
+   * @example
+   * // Project state slice
+   * const text$ = state.select(
+   *   ['query', 'results'],
+   *   ({ query, results }) => `${results.length} results found for "${query}"`
+   * );
+   *
+   * @return Observable<V>
+   */
+  computed<K extends keyof T, V>(
+    keys: K[],
+    fn: (slice: PickSlice<T, K>) => V,
+    keyCompareMap?: KeyCompareMap<Pick<T, K>>
+  ): Signal<V>;
+  /**
+   * @description
+   * Transform a single property of the state by providing a key and map function.
+   * Returns result of applying function to state property as cached and distinct `Observable<V>`.
+   *
+   * @example
+   * // Project state based on single property
+   * const foo$ = state.select('bar', bar => `bar equals ${bar}`);
+   *
+   * @return Observable<V>
+   */
+  computed<K extends keyof T, V>(k: K, fn: (val: T[K]) => V): Signal<V>;
+  /**
+   * @description
+   * Access a single property of the state by providing keys.
+   * Returns a single property of the state as cached and distinct `Observable<T[K1]>`.
+   *
+   * @example
+   * // Access a single property
+   *
+   * const bar$ = state.select('bar');
+   *
+   * // Access a nested property
+   *
+   * const foo$ = state.select('bar', 'foo');
+   *
+   * @return Observable<T[K1]>
+   */
+  computed<K1 extends keyof T>(k1: K1): Signal<T[K1]>;
+  /**
+   * @internal
+   */
+  computed<K1 extends keyof T, K2 extends keyof T[K1]>(
+    k1: K1,
+    k2: K2
+  ): Signal<T[K1][K2]>;
+  /**
+   * @internal
+   */
+  computed<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2]
+  >(k1: K1, k2: K2, k3: K3): Signal<T[K1][K2][K3]>;
+  /**
+   * @internal
+   */
+  computed<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3]
+  >(k1: K1, k2: K2, k3: K3, k4: K4): Signal<T[K1][K2][K3][K4]>;
+  /**
+   * @internal
+   */
+  computed<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3],
+    K5 extends keyof T[K1][K2][K3][K4]
+  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): Signal<T[K1][K2][K3][K4][K5]>;
+  /**
+   * @internal
+   */
+  computed<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3],
+    K5 extends keyof T[K1][K2][K3][K4],
+    K6 extends keyof T[K1][K2][K3][K4][K5]
+  >(
+    k1: K1,
+    k2: K2,
+    k3: K3,
+    k4: K4,
+    k5: K5,
+    k6: K6
+  ): Signal<T[K1][K2][K3][K4][K5][K6]>;
+  computed<R>(
+    ...args:
+      | string[]
+      | [k: string, fn: (val: unknown) => unknown]
+      | [
+          keys: string[],
+          fn: (slice: unknown) => unknown,
+          keyCompareMap?: KeyCompareMap<T>
+        ]
+  ): Signal<T | R> {
+    return observableToSignal(
+      this.accumulator.state$.pipe(
+        select(...(args as Parameters<typeof select>))
+      )
+    );
+  }
+
+  /**
+   * @description
    * Manages side-effects of your state. Provide an `Observable<any>` **side-effect** and an optional
    * `sideEffectFunction`.
    * Subscription handling is done automatically.
@@ -665,6 +796,12 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     subscription.add(this.effectObservable.subscribe());
     return subscription;
   }
+}
+
+function observableToSignal<T>(o$: Observable<T>): Signal<T> {
+  const s = signal<T>(undefined);
+  o$.subscribe((v) => s.set(v));
+  return s;
 }
 
 function signalToObservable<T>(signal: Signal<T>): Observable<T> {
