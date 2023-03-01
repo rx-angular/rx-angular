@@ -1,9 +1,11 @@
 import {
   computed,
+  Effect,
   effect,
   Injectable,
   isSignal,
   OnDestroy,
+  SettableSignal,
   signal,
   Signal,
 } from '@angular/core';
@@ -64,6 +66,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   private accumulator = createAccumulationObservable<T>();
   private effectObservable = createSideEffectObservable();
+  private signalStoreProxy: SignalStore<T>;
 
   /**
    * @description
@@ -621,135 +624,22 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     );
   }
 
-  /**
-   * @description
-   * Returns the state as cached and distinct `Observable<T>`. This way you don't have to think about **late
-   * subscribers**,
-   * **multiple subscribers** or **multiple emissions** of the same value
-   *
-   * @example
-   * const state$ = state.select();
-   * state$.subscribe(state => doStuff(state));
-   *
-   * @returns Observable<T>
-   */
-  computed(): Signal<T>;
-  computed<K extends keyof T, V>(fn: (slice: PickSlice<T, K>) => V): Signal<T>;
-  /**
-   * @description
-   * Transform a slice of the state by providing keys and map function.
-   * Returns result of applying function to state slice as cached and distinct `Observable<V>`.
-   *
-   * @example
-   * // Project state slice
-   * const text$ = state.select(
-   *   ['query', 'results'],
-   *   ({ query, results }) => `${results.length} results found for "${query}"`
-   * );
-   *
-   * @return Observable<V>
-   */
-  computed<K extends keyof T, V>(
-    keys: K[],
-    fn: (slice: PickSlice<T, K>) => V,
-    keyCompareMap?: KeyCompareMap<Pick<T, K>>
-  ): Signal<V>;
-  /**
-   * @description
-   * Transform a single property of the state by providing a key and map function.
-   * Returns result of applying function to state property as cached and distinct `Observable<V>`.
-   *
-   * @example
-   * // Project state based on single property
-   * const foo$ = state.select('bar', bar => `bar equals ${bar}`);
-   *
-   * @return Observable<V>
-   */
-  computed<K extends keyof T, V>(k: K, fn: (val: T[K]) => V): Signal<V>;
-  /**
-   * @description
-   * Access a single property of the state by providing keys.
-   * Returns a single property of the state as cached and distinct `Observable<T[K1]>`.
-   *
-   * @example
-   * // Access a single property
-   *
-   * const bar$ = state.select('bar');
-   *
-   * // Access a nested property
-   *
-   * const foo$ = state.select('bar', 'foo');
-   *
-   * @return Observable<T[K1]>
-   */
-  computed<K1 extends keyof T>(k1: K1): Signal<T[K1]>;
-  /**
-   * @internal
-   */
-  computed<K1 extends keyof T, K2 extends keyof T[K1]>(
-    k1: K1,
-    k2: K2
-  ): Signal<T[K1][K2]>;
-  /**
-   * @internal
-   */
-  computed<
-    K1 extends keyof T,
-    K2 extends keyof T[K1],
-    K3 extends keyof T[K1][K2]
-  >(k1: K1, k2: K2, k3: K3): Signal<T[K1][K2][K3]>;
-  /**
-   * @internal
-   */
-  computed<
-    K1 extends keyof T,
-    K2 extends keyof T[K1],
-    K3 extends keyof T[K1][K2],
-    K4 extends keyof T[K1][K2][K3]
-  >(k1: K1, k2: K2, k3: K3, k4: K4): Signal<T[K1][K2][K3][K4]>;
-  /**
-   * @internal
-   */
-  computed<
-    K1 extends keyof T,
-    K2 extends keyof T[K1],
-    K3 extends keyof T[K1][K2],
-    K4 extends keyof T[K1][K2][K3],
-    K5 extends keyof T[K1][K2][K3][K4]
-  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): Signal<T[K1][K2][K3][K4][K5]>;
-  /**
-   * @internal
-   */
-  computed<
-    K1 extends keyof T,
-    K2 extends keyof T[K1],
-    K3 extends keyof T[K1][K2],
-    K4 extends keyof T[K1][K2][K3],
-    K5 extends keyof T[K1][K2][K3][K4],
-    K6 extends keyof T[K1][K2][K3][K4][K5]
-  >(
-    k1: K1,
-    k2: K2,
-    k3: K3,
-    k4: K4,
-    k5: K5,
-    k6: K6
-  ): Signal<T[K1][K2][K3][K4][K5][K6]>;
-  computed<R>(
-    ...args:
-      | string[]
-      | [k: string, fn: (val: unknown) => unknown]
-      | [
-          keys: string[],
-          fn: (slice: unknown) => unknown,
-          keyCompareMap?: KeyCompareMap<T>
-        ]
-  ): Signal<T | R> {
-    return observableToSignal(
-      this.accumulator.state$.pipe(
-        select(...(args as Parameters<typeof select>))
-      )
-    );
+  signal<K extends keyof T>(k: K): Signal<T[K]> {
+    return this.signalStoreProxy[k];
+  }
+
+  computed<C>(fn: (slice: SignalStore<T>) => C): Signal<C> {
+    return computed(() => {
+      return fn(this.signalStoreProxy);
+    });
+  }
+
+  effect(fn: (slice: SignalStore<T>) => void): Effect {
+    const _effect = effect(() => {
+      return fn(this.signalStoreProxy);
+    });
+    this.subscription.add(() => _effect.destroy());
+    return _effect;
   }
 
   /**
@@ -794,23 +684,62 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     const subscription = new Subscription();
     subscription.add(this.accumulator.subscribe());
     subscription.add(this.effectObservable.subscribe());
+    this.createSignalStoreProxy();
     return subscription;
+  }
+
+  private createSignalStoreProxy() {
+    const state$ = this.$;
+    const subs = this.subscription;
+    const currentState = (): T => this.get() || ({} as T);
+    const signalStore: SignalStore<T> = {} as SignalStore<T>;
+    this.signalStoreProxy = new Proxy<SignalStore<T>>(signalStore, {
+      get<K extends keyof T>(
+        target: SignalStore<T>,
+        p: K | string | symbol
+      ): Signal<T[K]> {
+        let _signal = target[p as K] as SettableSignal<T[K]>;
+        const state = currentState();
+        const val = state[p as K];
+        if (!_signal) {
+          _signal = signal(val || null);
+          target[p as keyof T] = _signal;
+          subs.add(
+            state$.pipe(select(p as K)).subscribe((val) => _signal.set(val))
+          );
+        }
+        return _signal;
+      },
+      has(target, prop) {
+        return !!target[prop];
+      },
+      ownKeys(target) {
+        return [...Reflect.ownKeys(target)];
+      },
+      getOwnPropertyDescriptor(target, key) {
+        return {
+          enumerable: true,
+          configurable: true,
+        };
+      },
+      set(): boolean {
+        return true;
+      },
+    });
   }
 }
 
-function observableToSignal<T>(o$: Observable<T>): Signal<T> {
-  const s = signal<T>(undefined);
-  o$.subscribe((v) => s.set(v));
-  return s;
-}
-
 function signalToObservable<T>(signal: Signal<T>): Observable<T> {
-  return new Observable(({ next }) => {
+  return new Observable((observer) => {
     const e = effect(() => {
-      next(signal());
+      observer.next(signal());
     });
     return () => {
       e.destroy();
     };
   });
 }
+
+type SignalStore<T extends object> = {
+  [K in keyof T]: Signal<T[K]>;
+};
