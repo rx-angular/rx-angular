@@ -1,15 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   effect,
   inject,
   OnInit,
-  Signal,
   signal,
 } from '@angular/core';
+import { insert } from '@rx-angular/cdk/transformations';
 import { RxState } from '@rx-angular/state';
-import { of, scheduled } from 'rxjs';
 
 type Todo = {
   id: number;
@@ -33,47 +31,47 @@ const todos = signal(todoData);
   providers: [RxState],
 })
 export class SignalStateComponent implements OnInit {
-  private readonly state = inject<RxState<{ todos: Todo[]; loading: boolean }>>(
-    RxState,
-    {
-      self: true,
-    }
-  );
+  private readonly state = inject<
+    RxState<{ todos: Todo[]; loading: boolean; foo: string }>
+  >(RxState, {
+    self: true,
+  });
 
   ngOnInit() {
+    // connect a signal:
     this.state.connect('todos', todos);
-    const a = signal(false);
-    const b = signal(false);
-
-    // computedState: Signal<{ todos: Todo[]; loading: boolean; }>
-    // VS
-    // computedState: { todos: Signal<Todo[]>; loading: Signal<boolean>; }
-    const computedState = this.state.computed(({ todos, loading }) => ({
-      todos,
-      loading,
-      count: todos.length,
-    }));
-
-    const computedState2 = this.state.computed(({ todos, loading }) => {
-      if (loading) {
-        return [];
-      } else {
-        return todos;
-      }
+    // get a signal:
+    const todosSignal = this.state.signal('todos');
+    // get a computed:
+    const count = this.state.computed(({ todos }) => {
+      return todos().length;
     });
 
-    // computedTodos: Signal<>
-    const computedTodos = computed(() => a());
+    // mutate the state
+    setTimeout(() => {
+      this.state.set('todos', ({ todos }) =>
+        insert(todos, { id: 23, done: false, title: 'somenewtitle' })
+      );
+    }, 100);
 
+    // create an effect from plain signal
     effect(() => {
-      if (a()) {
-        console.log('a');
-      } else {
-        console.log('b', b());
-      }
+      console.log('from plain signal');
+      console.log(todosSignal());
     });
 
-    a.set(true);
-    a.mutate(() => true);
+    // create an effect from computed
+    effect(() => {
+      console.log('from computed');
+      console.log(count());
+    });
+
+    // create an effect from state signals
+    this.state.effect(({ todos }) => {
+      console.log('from state effect');
+      if (todos().length > 20) {
+        console.log('something was added');
+      }
+    });
   }
 }
