@@ -136,12 +136,12 @@ export class MyComponent extends RxState<{ count: number }> {
 }
 ```
 
-## Control rendering with `zoneless`
+## Control rendering with `unpatch`
 
-In this section we use the `zoneless` directive to get control over rendering.
+In this section we use the `unpatch` directive to get control over rendering.
 
 The sections State and Action are identical.
-The Display has a small difference. We use the `zoneless` directive to get rid of renderings caused by the button eventListener.
+The Display has a small difference. We use the `unpatch` directive to get rid of renderings caused by the button eventListener.
 
 Rendering:
 A rerender gets only triggered by the `rxLet` directive. The process is the same as before.
@@ -151,7 +151,7 @@ A rerender gets only triggered by the `rxLet` directive. The process is the same
   selector: 'my-comp',
   template: `
     <div *rxLet="state$; let s">Value: {{ s.count }}</div>
-    <button [zoneless] (click)="btn$.next($event)">Increment</button>
+    <button [unpatch] (click)="btn$.next($event)">Increment</button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -178,7 +178,7 @@ The rendering still gets managed by the `rxLet` Directive. But with the `strateg
   selector: 'my-comp',
   template: `
     <div *rxLet="state$; let s; strategy: 'local'">Value: {{ s.count }}</div>
-    <button [zoneless] (click)="btn$.next($event)">Increment</button>
+    <button [unpatch] (click)="btn$.next($event)">Increment</button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
