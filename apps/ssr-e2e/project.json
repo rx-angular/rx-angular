@@ -1,5 +1,4 @@
 {
-  "root": "apps/ssr-e2e",
   "sourceRoot": "apps/ssr-e2e/src",
   "projectType": "application",
   "targets": {
@@ -13,7 +12,5 @@
     }
   },
   "tags": [],
-  "implicitDependencies": [
-    "ssr"
-  ]
+  "implicitDependencies": ["ssr"]
 }

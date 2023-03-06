@@ -66,7 +66,7 @@ Technically the methods we can use for it are `detectChanges` or `ɵdetectChange
 
 ### Pull vs push based
 
-![Render Strategies-requext-subscribe](https://user-images.githubusercontent.com/10064416/143153116-782bec55-0353-4254-8fe5-5a16691ac320.png)
+![Render Strategies-request-subscribe](https://user-images.githubusercontent.com/10064416/143153116-782bec55-0353-4254-8fe5-5a16691ac320.png)
 Consuming value changes can be done by **constantly** watching the source for changes and **pull** them,
 or subscribe to the changes like a DOM event binding **once** and get the changes **pushed**.
 
@@ -82,12 +82,11 @@ In combination with Observables, and EmbeddedViews change detection can be speed
 
 ### Strategies
 
-| Name                      | Priority | Render Method     | Scheduling              | Render Deadline |
-| ------------------------- | -------- | ----------------- | ----------------------- | --------------- |
-| `"native"`                | ❌       | ⮁ `markForCheck`  | `requestAnimationFrame` | N/A             |
-| `"global"` - _deprecated_ | ❌       | ⮁ `ɵmarkDirty`    | `requestAnimationFrame` | N/A             |
-| `"local"`                 | ❌       | 🠗 `detectChanges` | `requestAnimationFrame` | N/A             |
-| `"noop"`                  | ❌       | - `noop`          | `requestAnimationFrame` | N/A             |
+| Name       | Priority | Render Method     | Scheduling              | Render Deadline |
+| ---------- | -------- | ----------------- | ----------------------- | --------------- |
+| `"native"` | ❌       | ⮁ `markForCheck`  | `requestAnimationFrame` | N/A             |
+| `"local"`  | ❌       | 🠗 `detectChanges` | `requestAnimationFrame` | N/A             |
+| `"noop"`   | ❌       | - `noop`          | `requestAnimationFrame` | N/A             |
 
 #### Native
 
@@ -101,21 +100,6 @@ as the internally called function [`markViewDirty`](https://github.com/angular/a
 | Name     | Zone Agnostic | Render Method    | Coalescing    | Scheduling              |
 | -------- | ------------- | ---------------- | ------------- | ----------------------- |
 | `native` | ❌            | ⮁ `markForCheck` | ✔ RootContext | `requestAnimationFrame` |
-
-#### Global Strategy
-
-> **deprecated**
-> angular [drops support](https://github.com/angular/angular/pull/46806) for `ɵmarkDirty`
-
-This strategy leverages Angular's internal [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) render method.
-It acts identical to [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) but works also 🚫 zone-less.
-`markDirty` in comparison to `markForCheck` also calls [`scheduleTick`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1863) which is the reason why it also works in 🚫 zone-less environments.
-
-![rx-angular-cdk-render-strategies__strategy-global](https://user-images.githubusercontent.com/10064416/116009680-59737a00-a61b-11eb-8c97-394b72ddbc95.png)
-
-| Name     | Zone Agnostic | Render Method  | Coalescing      | Scheduling                                                                                                                                            |
-| -------- | ------------- | -------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `global` | ✔             | ⮁ `ɵmarkDirty` | ✔ `RootContext` | [`animationFrame`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/util/misc_utils.ts#L39) |
 
 #### Local
 
@@ -186,6 +170,6 @@ class Module {}
 
 ```html
 <h1 *rxLet="title$; strategy:'local'">{{title}}</h1>
-<a *rxFor="let itme of itmes$; strategy:'native'">{{item}}</a>
+<a *rxFor="let item of items$; strategy:'native'">{{item}}</a>
 <p>{{title$ | push : 'local'}}</p>
 ```

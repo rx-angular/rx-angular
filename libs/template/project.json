@@ -1,6 +1,5 @@
 {
   "projectType": "library",
-  "root": "libs/template",
   "sourceRoot": "libs/template/src",
   "prefix": "rx",
   "targets": {
@@ -52,7 +51,7 @@
     "test": {
       "executor": "@nrwl/jest:jest",
       "options": {
-        "jestConfig": "libs/template/jest.config.js",
+        "jestConfig": "libs/template/jest.config.ts",
         "passWithNoTests": true,
         "codeCoverage": true
       },

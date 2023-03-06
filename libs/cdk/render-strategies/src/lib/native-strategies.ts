@@ -1,13 +1,13 @@
 import { NgZone } from '@angular/core';
+import { coalesceWith } from '@rx-angular/cdk/coalescing';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import {
   RxCustomStrategyCredentials,
   RxNativeStrategyNames,
   RxStrategyCredentials,
 } from './model';
-import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 
 const animationFrameTick = () =>
   new Observable<number>((subscriber) => {
@@ -57,19 +57,9 @@ const nativeCredentials: RxStrategyCredentials = {
       ),
 };
 
-/**
- * @deprecated
- * angular drops the internal markDirty API, will fall back to native if used
- */
-const globalCredentials: RxStrategyCredentials = {
-  ...nativeCredentials,
-  name: 'global',
-};
-
 export type RxNativeStrategies =
   RxCustomStrategyCredentials<RxNativeStrategyNames>;
 export const RX_NATIVE_STRATEGIES: RxNativeStrategies = {
-  global: globalCredentials,
   native: nativeCredentials,
   noop: noopCredentials,
   local: localCredentials,

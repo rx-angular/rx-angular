@@ -18,5 +18,10 @@
     "strictMetadataEmit": true,
     "enableResourceInlining": true
   },
-  "exclude": ["./test-setup.ts", "**/*.spec.ts", "**/*.test.ts"]
+  "exclude": [
+    "./test-setup.ts",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "jest.config.ts"
+  ]
 }
