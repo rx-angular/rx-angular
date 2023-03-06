@@ -2,6 +2,28 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0...cdk@2.0.0) (2023-03-06)
+
+
+### Code Refactoring
+
+* **cdk:** drop `@rx-angular/cdk/zone-less/rxjs` wrappers ([ce7889a](https://github.com/rx-angular/rx-angular/commit/ce7889addb6119e63b6a87ad75a617909fc6411e))
+* **cdk:** remove global strategy ([da7758d](https://github.com/rx-angular/rx-angular/commit/da7758d3c7fb19a39a2849fb7624c52c5e946dfb))
+
+
+### Features
+
+* upgrade to Angular v13 ([76ac5d3](https://github.com/rx-angular/rx-angular/commit/76ac5d3e9dbfaa2de368d7128f4c9aacb094c085))
+
+
+### BREAKING CHANGES
+
+* **cdk:** The cdk library no longer export the set of zone-less RxJS wrappers, they moved in a [new repository](https://github.com/rx-angular/rxjs-zone-less) and now available under `rxjs-zone-less` on NPM.
+* **cdk:** The global render-strategy is no longer available.
+* The required Angular version is now `>=13.0.0`.
+
+
+
 # [1.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.4...cdk@1.0.0) (2023-01-29)
 
 
