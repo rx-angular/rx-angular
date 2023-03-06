@@ -50,7 +50,7 @@
   },
   "peerDependencies": {
     "@angular/core": ">=13.0.0",
-    "@rx-angular/cdk": "^1.0.0",
+    "@rx-angular/cdk": "^2.0.0",
     "rxjs": "^6.5.5 || ^7.4.0"
   },
   "dependencies": {
