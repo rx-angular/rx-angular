@@ -106,7 +106,9 @@
         "noVerify": true,
         "baseBranch": "main",
         "versionTagPrefix": "${target}@",
-        "commitMessageFormat": "release(${projectName}): ${version}"
+        "commitMessageFormat": "release(${projectName}): ${version}",
+        "postTargets": ["state:github"],
+        "push": true
       }
     },
     "github": {
