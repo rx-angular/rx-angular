@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.0.0](https://github.com/rx-angular/rx-angular/compare/template@1.0.0...template@2.0.0) (2023-03-06)
+
+
+### Features
+
+* upgrade to Angular v13 ([76ac5d3](https://github.com/rx-angular/rx-angular/commit/76ac5d3e9dbfaa2de368d7128f4c9aacb094c085))
+
+
+### BREAKING CHANGES
+
+* The required Angular version is now `>=13.0.0`.
+
+
+
 # [1.0.0](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.5...template@1.0.0) (2023-01-29)
 
 
