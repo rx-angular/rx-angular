@@ -27,9 +27,10 @@ Thank you to all contributors and users who have helped us to get here. We are e
 
 ### @rx-angular/template
 
-The @rx-angular/template library helps simplify building Angular applications of any scale.
-It reduces the need for boilerplate code and provides fast and reliable rendering.
-It has two options for implementation - with and without zone.js - both optimized for performance.
+The @rx-angular/template library simplifies building Angular applications of any scale.
+It improves the DX by reducing boilerplate code and provides fast and reliable change detection.
+It's implementation is zone agnostic by default and optimizes internally regardless of the environment.
+By leveraging the `@rx-angular/cdk/render-strategies` package, it enables the concurrent mode for #angular
 
 #### [Push pipe:](https://www.rx-angular.io/docs/template/api/push-pipe) A Better Alternative to Async Pipe
 
