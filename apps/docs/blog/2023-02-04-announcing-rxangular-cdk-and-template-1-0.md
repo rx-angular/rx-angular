@@ -34,10 +34,9 @@ By leveraging the `@rx-angular/cdk/render-strategies` package, it enables the co
 
 #### [Push pipe:](https://www.rx-angular.io/docs/template/api/push-pipe) A Better Alternative to Async Pipe
 
-The push pipe works like the async pipe but offers prioritized scheduling.
-This means your templates will load faster.
-Unlike the async pipe, the push pipe can work in environments without zones.
-But, you can reach better performance with our structural directives.
+The push pipe works like the async pipe but offers prioritized scheduling and local change detection.
+This means optimized cd cycles resulting in better performance.
+Unlike the async pipe, the push pipe can work in environments without zone.js.
 
 #### [RxLet directive:](https://www.rx-angular.io/docs/template/api/let-directive) Advanced Template Control
 
