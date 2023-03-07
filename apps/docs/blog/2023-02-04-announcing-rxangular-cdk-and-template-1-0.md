@@ -143,3 +143,8 @@ This technique is one of the key building blocks for optimizing change detection
 Our coercion package provides a set of utilities to perform type coercion (data type conversion) in a seamless and efficient manner.
 These utilities include factories, such as 'coerceObservable' and 'coerceDistinctObservable', and operators, such as 'coerceObservableWith' and 'coerceDistinctWith'.
 These tools help to ensure that data is in the desired format before it is used in the application, improving overall functionality and preventing unexpected errors.
+
+#### [Transformations](https://www.rx-angular.io/docs/cdk/api/transformation-helpers) Tree Shakable Entity Management
+
+The transformation helpers provided by the `@rx-angular/cdk/transformations` are a complete set of utilities to manage entities. They are immutable by default and include transformation functions to handle insertions, updates, dictionary <-> array conversions & more to help you build store like state management systems.
+
