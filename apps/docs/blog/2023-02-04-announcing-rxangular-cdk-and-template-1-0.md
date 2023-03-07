@@ -23,6 +23,12 @@ We are pleased to announce the stable release of RxAngular CDK and RxAngular Tem
 
 Thank you to all contributors and users who have helped us to get here. We are excited to see what the future holds for RxAngular.
 
+## TOC
+
+* [Template](#rx-angular-template)
+* [CDK](#rx-angular-cdk)
+* [Roadmap](#roadmap)
+
 ## Packages introduction
 
 ### @rx-angular/template
@@ -147,4 +153,32 @@ These tools help to ensure that data is in the desired format before it is used 
 #### [Transformations](https://www.rx-angular.io/docs/cdk/api/transformation-helpers) Tree Shakable Entity Management
 
 The transformation helpers provided by the `@rx-angular/cdk/transformations` are a complete set of utilities to manage entities. They are immutable by default and include transformation functions to handle insertions, updates, dictionary <-> array conversions & more to help you build store like state management systems.
+
+
+## Roadmap
+
+We also want to give a brief overview about the future steps we want to take with the RxAngular libraries.
+
+Right now, the RxAngular monorepo and all of its libraries are based on angular v12. This is because of backwards compatibility to pre-ivy projects.
+While we like the idea of being backwards compatible, we have made the decision to move forward and upgrade the whole project to the latest angular version available. We want to make sure to build modern solutions based on the new APIs introduced with the latest changes to the angular framework itself.
+
+Some things we are investigating right now:
+
+* new provider functions (`withFeature`)
+* easier creation of state (`inject`)
+* signals integration into `@rx-angular/state`
+* signals integration into `@rx-angular/template`
+* concurrent mode with signals
+
+That being said, we will release the next major versions very soon and we have decided to sync the `@rx-angular/*` versions with the angular versions, giving us the ability to provide two breaking changes a year.
+
+| RxAngular  | Angular version  |
+|------------|------------------|
+| `1.0.0`    | `>= 12`          |
+| `2.0.0`    | `>= 13`          |
+| `14.0.0`   | `^14`            |
+| `15.0.0`   | `^15`            |
+| `16.x`     | `^16`            |
+
+
 
