@@ -160,7 +160,7 @@ The transformation helpers provided by the `@rx-angular/cdk/transformations` are
 We also want to give a brief overview about the future steps we want to take with the RxAngular libraries.
 
 Right now, the RxAngular monorepo and all of its libraries are based on angular v12. This is because of backwards compatibility to pre-ivy projects.
-While we like the idea of being backwards compatible, we have made the decision to move forward and upgrade the whole project to the latest angular version available. We want to make sure to build modern solutions based on the new APIs introduced with the latest changes to the angular framework itself.
+While we like the idea of being backwards compatible, we have made the decision to move forward and upgrade the whole project to the latest Angular version available. We want to make sure to build modern solutions based on the new APIs introduced with the latest changes to the Angular framework itself.
 
 Some things we are investigating right now:
 
@@ -170,7 +170,7 @@ Some things we are investigating right now:
 * signals integration into `@rx-angular/template`
 * concurrent mode with signals
 
-That being said, we will release the next major versions very soon and we have decided to sync the `@rx-angular/*` versions with the angular versions, giving us the ability to provide two breaking changes a year.
+That being said, we will release the next major versions very soon and we have decided to sync the `@rx-angular/*` versions with the Angular versions, giving us the ability to provide two breaking changes a year.
 
 | RxAngular  | Angular version  |
 |------------|------------------|
