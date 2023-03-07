@@ -18,8 +18,8 @@ Thank you to all contributors and users who have helped us to get here. We are e
 
 ## TOC
 
-- [Template](#rx-angular-template)
-- [CDK](#rx-angular-cdk)
+- [Template](#rx-angulartemplate)
+- [CDK](#rx-angularcdk)
 - [Roadmap](#roadmap)
 
 ## Packages introduction
@@ -166,8 +166,8 @@ That being said, we will release the next major versions very soon and we have d
 
 | RxAngular | Angular version |
 | --------- | --------------- |
-| `1.0.0`   | `>= 12`         |
-| `2.0.0`   | `>= 13`         |
-| `14.0.0`  | `^14`           |
-| `15.0.0`  | `^15`           |
-| `16.x`    | `^16`           |
+| `^1.0.0`  | `>=12.0.0`      |
+| `^2.0.0`  | `>=13.0.0`      |
+| `^14.0.0` | `^14.0.0`       |
+| `^15.0.0` | `^15.0.0`       |
+| `^16.0.0` | `^16.0.0`       |
