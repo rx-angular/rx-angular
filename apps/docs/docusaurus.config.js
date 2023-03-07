@@ -37,8 +37,14 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: `https://github.com/${organizationName}/${projectName}/edit/main/apps/docs`,
         },
-        // Disable the blog plugin
-        blog: false,
+        blog: {
+          blogTitle: 'The RxAngular blog',
+          blogDescription:
+            'Announcements, releases and guides from the RxAngular team',
+          postsPerPage: 'ALL',
+          showReadingTime: true,
+          editUrl: `https://github.com/${organizationName}/${projectName}/edit/main/apps/docs`,
+        },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -98,6 +104,11 @@ module.exports = {
             type: 'doc',
           },
           {
+            to: 'blog',
+            label: 'Blog',
+            position: 'left',
+          },
+          {
             href: `https://github.com/${organizationName}/${projectName}`,
             label: 'GitHub',
             position: 'right',
@@ -154,6 +165,10 @@ module.exports = {
           {
             title: 'More',
             items: [
+              {
+                label: 'Blog',
+                to: 'blog',
+              },
               {
                 label: 'GitHub',
                 href: `https://github.com/${organizationName}/${projectName}`,
