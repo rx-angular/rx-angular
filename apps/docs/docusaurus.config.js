@@ -14,7 +14,7 @@ const googleTrackingId = 'UA-180240379-1';
 /** @type {import('@docusaurus/types').Config} */
 module.exports = {
   baseUrl: '/',
-  favicon: 'img/favicon.png',
+  favicon: 'img/logo.png',
   /**
    * Even if you don't use internalization, you can use this field to set useful
    * metadata like html lang. For example, if your site is Chinese, you may want
