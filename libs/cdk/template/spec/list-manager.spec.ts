@@ -23,7 +23,7 @@ import {
 } from '@rx-angular/cdk/template';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'rx-angular-error-test',
@@ -63,6 +63,7 @@ class ListTemplateManagerSpecComponent implements AfterViewInit {
   values$ = new ReplaySubject<number[]>(1);
 
   latestRenderedValue: any;
+  latestRenderedValue$ = new Subject<number>();
 
   constructor(
     private iterableDiffers: IterableDiffers,
@@ -97,6 +98,7 @@ class ListTemplateManagerSpecComponent implements AfterViewInit {
     });
     this.listManager.render(this.values$).subscribe((v: any) => {
       this.latestRenderedValue = v;
+      this.latestRenderedValue$.next(v);
     });
   }
 }
@@ -124,13 +126,7 @@ const customErrorHandler: ErrorHandler = {
 };
 
 let fixtureComponent: any;
-let componentInstance: {
-  listManager: RxListManager<any>;
-  errorHandler: ErrorHandler;
-  templateRef: TemplateRef<any>;
-  values$: ReplaySubject<any[]>;
-  latestRenderedValue: any;
-};
+let componentInstance: ListTemplateManagerSpecComponent;
 let componentNativeElement: any;
 const setupListManagerComponent = (): void => {
   TestBed.configureTestingModule({
@@ -182,6 +178,30 @@ describe('list-manager', () => {
     fixtureComponent.detectChanges();
     const componentContent = componentNativeElement.textContent;
     expect(componentContent).toEqual('1');
+  });
+
+  it('should report last rendered value', () => {
+    fixtureComponent.detectChanges();
+    componentInstance.values$.next([1]);
+    fixtureComponent.detectChanges();
+    expect(componentInstance.latestRenderedValue).toEqual([1]);
+  });
+
+  it('should report last rendered value without any changes', () => {
+    let renderedValueUpdate = 0;
+    let renderedValue;
+    componentInstance.latestRenderedValue$.subscribe((value) => {
+      renderedValueUpdate++;
+      renderedValue = value;
+    });
+    const valuesToRender = [1];
+    fixtureComponent.detectChanges();
+    componentInstance.values$.next(valuesToRender);
+    fixtureComponent.detectChanges();
+    componentInstance.values$.next(valuesToRender);
+    fixtureComponent.detectChanges();
+    expect(renderedValue).toEqual([1]);
+    expect(renderedValueUpdate).toBe(2);
   });
 
   describe('exception handling', () => {

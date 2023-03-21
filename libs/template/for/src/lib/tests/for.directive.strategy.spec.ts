@@ -1,6 +1,7 @@
 import { ErrorHandler } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { take } from 'rxjs/operators';
 import { ForModule } from '../for.module';
 import { createTestComponent, TestComponent } from './fixtures';
 
@@ -48,7 +49,7 @@ describe('rxFor strategies', () => {
   ])('Strategy: %p', (strategy) => {
     it('should render with given strategy', (done) => {
       component.strategy = strategy;
-      component.renderedValue$.subscribe((v) => {
+      component.renderedValue$.pipe(take(1)).subscribe((v) => {
         expect(v).toEqual([1, 2]);
         expect(nativeElement.textContent).toBe('1;2;');
         done();
@@ -57,7 +58,7 @@ describe('rxFor strategies', () => {
     });
     it('should not affect primary strategy', (done) => {
       component.strategy = strategy;
-      component.renderedValue$.subscribe((v) => {
+      component.renderedValue$.pipe(take(1)).subscribe((v) => {
         expect(v).toEqual([1, 2]);
         expect(nativeElement.textContent).toBe('1;2;');
         expect(strategyProvider.primaryStrategy).toBe(primaryStrategy);
