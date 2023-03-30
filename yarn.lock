@@ -4165,10 +4165,10 @@
     "@nrwl/workspace" "15.7.2"
     tslib "^2.3.0"
 
-"@nrwl/nx-cloud@15.1.1":
-  version "15.1.1"
-  resolved "https://registry.yarnpkg.com/@nrwl/nx-cloud/-/nx-cloud-15.1.1.tgz#4f730e04c43ba863df8ecf0a5e7c927a5e5d14eb"
-  integrity sha512-aIVb87PQpAjwdEaFksQ3rYgFq9MDaBG2KvYZcj/k+z2uWeWH84ha/opO37aCFLf5VXNiyJZGRb/+7vW7BFpNOw==
+"@nrwl/nx-cloud@15.3.3":
+  version "15.3.3"
+  resolved "https://registry.yarnpkg.com/@nrwl/nx-cloud/-/nx-cloud-15.3.3.tgz#964a4ad75df54ff89fdda24a7f312c560f1f844a"
+  integrity sha512-zU+0YwN2M+G8Z9RjcsIbya6jgTB1SBGhqCXOb/CdwLnCHylAP0T6f9vaQibZE1BhI6doM+betqY0FvPazTjd8g==
   dependencies:
     axios "^0.21.2"
     chalk "4.1.0"
