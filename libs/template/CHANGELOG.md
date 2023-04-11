@@ -2,6 +2,26 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [14.0.0](https://github.com/rx-angular/rx-angular/compare/template@2.0.0...template@14.0.0) (2023-04-11)
+
+
+### Bug Fixes
+
+* **template:** cleanup unpatched listeners ([4c9ef90](https://github.com/rx-angular/rx-angular/commit/4c9ef905d6436042d1712ba0664117ccff6c9732))
+* **template:** correct version to apply rxFor migration ([8fe7695](https://github.com/rx-angular/rx-angular/commit/8fe76953c660b6fd5a23a81003cc0fffb9aad2f6))
+
+
+### Features
+
+* upgrade Angular to v14 ([55ca73a](https://github.com/rx-angular/rx-angular/commit/55ca73a84dc03a29e56a8eb65093d42e0b148aa9))
+
+
+### BREAKING CHANGES
+
+* The required `@angular/core` version is now `^14.0.0`.
+
+
+
 # [2.0.0](https://github.com/rx-angular/rx-angular/compare/template@1.0.0...template@2.0.0) (2023-03-06)
 
 
