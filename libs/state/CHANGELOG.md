@@ -2,6 +2,25 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [14.0.0](https://github.com/rx-angular/rx-angular/compare/state@2.0.0...state@14.0.0) (2023-04-11)
+
+
+### Bug Fixes
+
+* **state:** set default type for ProxyHandler transforms ([96b46e3](https://github.com/rx-angular/rx-angular/commit/96b46e3deadf209b2b5777b9d52ed43ee1fe5c54))
+
+
+### Features
+
+* upgrade Angular to v14 ([55ca73a](https://github.com/rx-angular/rx-angular/commit/55ca73a84dc03a29e56a8eb65093d42e0b148aa9))
+
+
+### BREAKING CHANGES
+
+* The required `@angular/core` version is now `^14.0.0`.
+
+
+
 # [2.0.0](https://github.com/rx-angular/rx-angular/compare/state@1.7.0...state@2.0.0) (2023-03-06)
 
 
