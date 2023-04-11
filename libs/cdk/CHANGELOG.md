@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [14.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@2.0.0...cdk@14.0.0) (2023-04-11)
+
+
+### Features
+
+* upgrade Angular to v14 ([55ca73a](https://github.com/rx-angular/rx-angular/commit/55ca73a84dc03a29e56a8eb65093d42e0b148aa9))
+
+
+### BREAKING CHANGES
+
+* The required `@angular/core` version is now `^14.0.0`.
+
+
+
 # [2.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0...cdk@2.0.0) (2023-03-06)
 
 
