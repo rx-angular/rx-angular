@@ -1,4 +1,6 @@
 {
+  "name": "ssr",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/ssr/src",
   "prefix": "rx-angular",
@@ -70,7 +72,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/ssr"],
+      "outputs": ["{workspaceRoot}/coverage/apps/ssr"],
       "options": {
         "jestConfig": "apps/ssr/jest.config.ts",
         "passWithNoTests": true

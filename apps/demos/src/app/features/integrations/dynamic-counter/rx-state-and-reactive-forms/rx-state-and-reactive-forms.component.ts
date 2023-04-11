@@ -1,7 +1,7 @@
 import { EMPTY, Observable, Subject, timer } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 
 import { selectSlice } from '@rx-angular/state/selections';
 import { RxState } from '@rx-angular/state';
@@ -84,7 +84,10 @@ export class RxStateAndReactiveFormsCounterComponent {
 
   readonly count$: Observable<string> = this.$.select(map((s) => s.count + ''));
 
-  constructor(private fb: FormBuilder, private $: RxState<CounterState>) {
+  constructor(
+    private fb: UntypedFormBuilder,
+    private $: RxState<CounterState>
+  ) {
     this.reset();
 
     this.$.connect(this.updateTicking);

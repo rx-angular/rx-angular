@@ -1,4 +1,6 @@
 {
+  "name": "tour-of-heroes-ngxs",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "generators": {
     "@nrwl/angular:component": {
@@ -95,7 +97,7 @@
         "jestConfig": "apps/tour-of-heroes-ngxs/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": ["coverage/apps/tour-of-heroes-ngxs"]
+      "outputs": ["{workspaceRoot}/coverage/apps/tour-of-heroes-ngxs"]
     }
   },
   "tags": ["type:app"]

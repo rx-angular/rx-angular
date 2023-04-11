@@ -1,9 +1,12 @@
-import { ApplicationRef, ChangeDetectorRef, Injectable, ɵdetectChanges, ɵmarkDirty } from '@angular/core';
-
+import {
+  ApplicationRef,
+  ChangeDetectorRef,
+  Injectable,
+  ɵdetectChanges,
+} from '@angular/core';
 
 @Injectable()
 export class CdHelper {
-
   constructor(
     protected cdRef: ChangeDetectorRef,
     protected appRef: ApplicationRef
@@ -12,7 +15,7 @@ export class CdHelper {
   appRef_tick() {
     this.appRef.tick();
   }
- cdRef_detectChanges() {
+  cdRef_detectChanges() {
     this.cdRef.detectChanges();
   }
 
@@ -21,7 +24,7 @@ export class CdHelper {
   }
 
   markDirty() {
-    ɵmarkDirty((this.cdRef as any).context);
+    throw new Error('not implemented, markDirty API was dropped');
   }
 
   detectChanges() {

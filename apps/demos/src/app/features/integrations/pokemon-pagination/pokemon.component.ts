@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { debounceTime } from 'rxjs/operators';
 import { PokemonStateService } from './states/pokemon-state.service';
@@ -99,7 +99,7 @@ import { PokemonStateService } from './states/pokemon-state.service';
 })
 export class PokemonComponent {
   vm$ = this.pokemonStateService.vm$;
-  query = new FormControl();
+  query = new UntypedFormControl();
 
   constructor(private readonly pokemonStateService: PokemonStateService) {
     /**
