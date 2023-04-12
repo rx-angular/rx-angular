@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [15.0.0](https://github.com/rx-angular/rx-angular/compare/state@14.0.0...state@15.0.0) (2023-04-12)
+
+
+### Features
+
+* upgrade Angular to v15 ([a9938bc](https://github.com/rx-angular/rx-angular/commit/a9938bcb7b7df7d0557d9c682ada9cce55ad495e))
+
+
+### BREAKING CHANGES
+
+* The required `@angular/core` version is now `^15.0.0`.
+
+
+
 # [14.0.0](https://github.com/rx-angular/rx-angular/compare/state@2.0.0...state@14.0.0) (2023-04-11)
 
 
