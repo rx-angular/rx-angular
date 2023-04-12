@@ -117,7 +117,7 @@ export function unpatchEventListener(
  *
  * @publicApi
  */
-@Directive({ selector: '[unpatch]' })
+@Directive({ selector: '[unpatch]', standalone: true })
 /**
  * @todo: add prefix [rxUnpatch]
  */
