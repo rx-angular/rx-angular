@@ -2,6 +2,10 @@
   "name": "rx-angular",
   "version": "0.0.0",
   "license": "MIT",
+  "engines": {
+    "node": "^16.13.0 || ^18.10.0",
+    "yarn": "^1.22.0"
+  },
   "scripts": {
     "ng": "nx",
     "nx": "nx",
