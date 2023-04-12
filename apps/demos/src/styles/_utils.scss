@@ -1,3 +1,5 @@
+@import 'bootstrap/scss/functions';
+
 $font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
 $font-size-lg: $font-size-base * 1.25 !default;
 $font-size-sm: $font-size-base * 0.875 !default;
@@ -53,22 +55,11 @@ $spacers: map-merge(
   ),
   $spacers
 );
-$displays: none, inline, inline-block, block, table, table-row, table-cell, flex,
-  grid, inline-grid, inline-flex !default;
-$overflows: auto, hidden !default;
-$positions: static, relative, absolute, fixed, sticky !default;
-$user-selects: all, auto, none !default;
 
 $enable-grid-classes: true;
 $grid-gutter-width: 30px;
 $grid-columns: 12;
 $grid-row-columns: 6;
-$container-max-widths: (
-  sm: 540px,
-  md: 720px,
-  lg: 960px,
-  xl: 1140px,
-) !default;
 
 $zindex-sticky: 1020 !default;
 $zindex-fixed: 1030 !default;
@@ -78,14 +69,14 @@ $zindex-fixed: 1030 !default;
 *::after {
   box-sizing: border-box; // 1
 }
+
 @import 'normalize-css';
-@import 'bootstrap/scss/mixins/breakpoints';
-@import 'bootstrap/scss/utilities/flex';
-@import 'bootstrap/scss/utilities/display';
-@import 'bootstrap/scss/utilities/sizing';
-@import 'bootstrap/scss/utilities/spacing';
-@import 'bootstrap/scss/utilities/position';
-@import 'bootstrap/scss/utilities/float';
-@import 'bootstrap/scss/mixins/grid-framework';
+
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/utilities';
+@import 'bootstrap/scss/utilities/api';
 @import 'bootstrap/scss/mixins/grid';
 @import 'bootstrap/scss/grid';

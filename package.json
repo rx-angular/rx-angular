@@ -61,7 +61,7 @@
     "@ngxs/store": "3.7.2",
     "@typescript-eslint/utils": "5.53.0",
     "angular-in-memory-web-api": "^0.11.0",
-    "bootstrap": "^4.6.0",
+    "bootstrap": "^5.2.3",
     "core-js": "^3.18.3",
     "ngx-skeleton-loader": "^4.0.0",
     "normalize-css": "^2.3.1",
