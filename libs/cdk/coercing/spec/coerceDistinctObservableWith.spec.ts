@@ -286,7 +286,7 @@ describe('coerceDistinctWith', () => {
         };
 
         const values = {
-          a: 'hello dear contributor',
+          a: cold('(a)', { a: 'hello dear contributor' }),
           b: cold('(ab|)', { a: 'hello', b: 'world' }),
           c: cold('-a-b-c-d|', {
             a: 'hello',

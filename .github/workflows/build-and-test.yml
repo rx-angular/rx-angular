@@ -166,9 +166,6 @@ jobs:
           fetch-depth: 0
       - name: Set up dependencies
         uses: ./.github/actions/setup
-        with:
-          # Docusaurus needs Node.js 16
-          node-version: 16
 
       - name: Build docs
         env:

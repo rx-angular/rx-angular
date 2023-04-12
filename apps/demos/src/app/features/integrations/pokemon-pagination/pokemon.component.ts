@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { debounceTime } from 'rxjs/operators';
 import { PokemonStateService } from './states/pokemon-state.service';
 

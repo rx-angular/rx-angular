@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
+import { MatLegacyProgressBarModule as MatProgressBarModule } from '@angular/material/legacy-progress-bar';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { RouterModule } from '@angular/router';
 import { SetupContainerComponent } from './1-setup/setup-container.component';
 import { SetupSolution } from './1-setup/setup.solution.component';
@@ -32,40 +32,39 @@ import { PresenterPatternStart } from './6-presenter-pattern/presenter-pattern.s
 import { DemoBasicsComponent } from './solution/demo-basics.component';
 import { DemoBasicsContainerComponent } from './solution/demo-basics.container.component';
 
-
 export const ROUTES = [
   {
     path: '',
-    redirectTo: 'setup'
+    redirectTo: 'setup',
   },
   {
     path: 'setup',
-    component: SetupContainerComponent
+    component: SetupContainerComponent,
   },
   {
     path: 'input-bindings',
-    component: InputBindingsContainerComponent
+    component: InputBindingsContainerComponent,
   },
   {
     path: 'output-bindings',
-    component: OutputBindingsContainerComponent
+    component: OutputBindingsContainerComponent,
   },
   {
     path: 'global-state',
-    component: GlobalStateContainerComponent
+    component: GlobalStateContainerComponent,
   },
   {
     path: 'side-effects',
-    component: SideEffectsContainerComponent
+    component: SideEffectsContainerComponent,
   },
   {
     path: 'presenter-pattern',
-    component: PresenterPatternContainerComponent
+    component: PresenterPatternContainerComponent,
   },
   {
     path: 'solution',
-    component: DemoBasicsContainerComponent
-  }
+    component: DemoBasicsContainerComponent,
+  },
 ];
 const DECLARATIONS = [
   SetupContainerComponent,
@@ -87,7 +86,7 @@ const DECLARATIONS = [
   PresenterPatternStart,
   PresenterPatternSolution,
   DemoBasicsContainerComponent,
-  DemoBasicsComponent
+  DemoBasicsComponent,
 ];
 export const materialModules = [
   MatIconModule,
@@ -99,13 +98,12 @@ export const materialModules = [
   MatProgressSpinnerModule,
   MatProgressBarModule,
   MatInputModule,
-  MatFormFieldModule
+  MatFormFieldModule,
 ];
 
 @NgModule({
   declarations: [DECLARATIONS],
   imports: [CommonModule, materialModules, RouterModule.forChild(ROUTES)],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
-export class TutorialBasicsModule {
-}
+export class TutorialBasicsModule {}
