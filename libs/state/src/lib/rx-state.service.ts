@@ -702,7 +702,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
         const state = currentState();
         const val = state[p as K];
         if (!_signal) {
-          _signal = signal(val || null);
+          _signal = signal(val ?? null);
           target[p as keyof T] = _signal;
           subs.add(
             state$.pipe(select(p as K)).subscribe((val) => _signal.set(val))
