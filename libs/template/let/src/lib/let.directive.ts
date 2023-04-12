@@ -1,13 +1,16 @@
 import {
   ChangeDetectorRef,
   Directive,
+  effect,
   ErrorHandler,
   Input,
+  isSignal,
   NgZone,
   OnChanges,
   OnDestroy,
   OnInit,
   Output,
+  Signal,
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
@@ -73,10 +76,11 @@ export interface RxLetViewContext<T> extends RxViewContext<T> {
  *
  * **Conclusion - Structural directives**
  *
- * In contrast to global change detection, structural directives allow fine-grained control of change detection on a per directive basis.
- * The `LetDirective` comes with its own way to handle change detection in templates in a very efficient way.
- * However, the change detection behavior is configurable on a per directive or global basis.
- * This makes it possible to implement your own strategies, and also provides a migration path from large existing apps running with Angulars default change detection.
+ * In contrast to global change detection, structural directives allow fine-grained control of change detection on a
+ *   per directive basis. The `LetDirective` comes with its own way to handle change detection in templates in a very
+ *   efficient way. However, the change detection behavior is configurable on a per directive or global basis. This
+ *   makes it possible to implement your own strategies, and also provides a migration path from large existing apps
+ *   running with Angulars default change detection.
  *
  * This package helps to reduce code used to create composable action streams.
  * It mostly is used in combination with state management libs to handle user interaction and backend communication.
@@ -114,13 +118,19 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param { ObservableInput<U> | U | null | undefined } rxLet
    */
-  @Input() rxLet: ObservableInput<U> | U | null | undefined;
+  @Input() rxLet:
+    | ObservableInput<U>
+    | Signal<U | null | undefined>
+    | U
+    | null
+    | undefined;
 
   /**
    * @description
    *
    * You can change the used `RenderStrategy` by using the `strategy` input of the `*rxLet`. It accepts
-   * an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/b0630f69017cc1871d093e976006066d5f2005b9/libs/cdk/render-strategies/src/lib/model.ts#L52).
+   * an `Observable<RxStrategyNames>` or
+   *   [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/b0630f69017cc1871d093e976006066d5f2005b9/libs/cdk/render-strategies/src/lib/model.ts#L52).
    *
    * The default value for strategy is
    * [`normal`](https://www.rx-angular.io/docs/template/cdk/render-strategies/strategies/concurrent-strategies).
@@ -569,7 +579,11 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     }
 
     if (changes.rxLet) {
-      this.observablesHandler.next(this.rxLet);
+      this.observablesHandler.next(
+        typeof this.rxLet === 'function' && isSignal(this.rxLet)
+          ? toObservable(this.rxLet)
+          : this.rxLet
+      );
     }
   }
 
@@ -615,4 +629,15 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
     );
     this.templateManager.nextStrategy(this.strategyHandler.values$);
   }
+}
+
+function toObservable<T>(input: Signal<T>): Observable<T> {
+  return new Observable<T>((observer) => {
+    const _effect = effect(() => {
+      observer.next(input());
+    });
+    return () => {
+      _effect.destroy();
+    };
+  });
 }

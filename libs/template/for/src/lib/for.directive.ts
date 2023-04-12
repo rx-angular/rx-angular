@@ -2,15 +2,18 @@ import {
   ChangeDetectorRef,
   Directive,
   DoCheck,
+  effect,
   ElementRef,
   EmbeddedViewRef,
   ErrorHandler,
   Input,
+  isSignal,
   IterableDiffers,
   NgIterable,
   NgZone,
   OnDestroy,
   OnInit,
+  Signal,
   TemplateRef,
   TrackByFunction,
   ViewContainerRef,
@@ -105,10 +108,18 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     potentialObservable:
       | Observable<(U & NgIterable<T>) | undefined | null>
       | (U & NgIterable<T>)
+      | Signal<U & NgIterable<T>>
       | null
       | undefined
   ) {
-    if (!isObservable(potentialObservable)) {
+    if (
+      typeof potentialObservable === 'function' &&
+      isSignal(potentialObservable)
+    ) {
+      this.staticValue = undefined;
+      this.renderStatic = false;
+      this.observables$.next(toObservable(potentialObservable));
+    } else if (!isObservable(potentialObservable)) {
       this.staticValue = potentialObservable;
       this.renderStatic = true;
     } else {
@@ -134,7 +145,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @description
    *
    * You can change the used `RenderStrategy` by using the `strategy` input of the `*rxFor`. It accepts
-   * an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/b0630f69017cc1871d093e976006066d5f2005b9/libs/cdk/render-strategies/src/lib/model.ts#L52).
+   * an `Observable<RxStrategyNames>` or
+   *   [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/b0630f69017cc1871d093e976006066d5f2005b9/libs/cdk/render-strategies/src/lib/model.ts#L52).
    *
    * The default value for strategy is
    * [`normal`](https://www.rx-angular.io/docs/template/cdk/render-strategies/strategies/concurrent-strategies).
@@ -187,7 +199,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * - `@ContentChildren`
    *
    * Read more about this in the
-   * [official docs](https://www.rx-angular.io/docs/template/api/rx-for-directive#local-strategies-and-view-content-queries-parent).
+   * [official
+   *   docs](https://www.rx-angular.io/docs/template/api/rx-for-directive#local-strategies-and-view-content-queries-parent).
    *
    * @example
    * \@Component({
@@ -223,7 +236,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * Event listeners normally trigger zone. Especially high frequently events cause performance issues.
    *
    * Read more about this in the
-   * [official docs](https://www.rx-angular.io/docs/template/api/rx-for-directive#working-with-event-listeners-patchzone).
+   * [official
+   *   docs](https://www.rx-angular.io/docs/template/api/rx-for-directive#working-with-event-listeners-patchzone).
    *
    * @example
    * \@Component({
@@ -499,4 +513,15 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   >(dir: RxFor<T, U>, ctx: any): ctx is RxForViewContext<T, U, K> {
     return true;
   }
+}
+
+function toObservable<T>(input: Signal<T>): Observable<T> {
+  return new Observable<T>((observer) => {
+    const _effect = effect(() => {
+      observer.next(input());
+    });
+    return () => {
+      _effect.destroy();
+    };
+  });
 }
