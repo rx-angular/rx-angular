@@ -11,7 +11,7 @@ import { V4EComponent } from './v4-e.component';
 import { V4FComponent } from './v4-f.component';
 import { V4HComponent } from './v4-h.component';
 import { SharedModule } from '../shared/shared.module';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { PushModule } from '../../../../rx-angular-pocs';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -37,8 +37,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     RxLetModule,
     PushModule,
     DirtyChecksModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
-  exports: [V4AComponent]
+  exports: [V4AComponent],
 })
-export class RxFormVModule { }
+export class RxFormVModule {}
