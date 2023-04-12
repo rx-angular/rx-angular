@@ -25,7 +25,8 @@ class LetDirectiveTestErrorComponent {
 
 const setupLetDirectiveTestComponentError = (): void => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveTestErrorComponent, LetDirective],
+    declarations: [LetDirectiveTestErrorComponent],
+    imports: [LetDirective],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,

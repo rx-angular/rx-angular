@@ -32,7 +32,8 @@ let componentNativeElement: any;
 
 const setupLetDirectiveTestComponentComplete = (): void => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveTestCompleteComponent, LetDirective],
+    declarations: [LetDirectiveTestCompleteComponent],
+    imports: [LetDirective],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,

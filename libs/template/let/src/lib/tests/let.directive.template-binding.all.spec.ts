@@ -71,7 +71,8 @@ let nativeElement: HTMLElement;
 
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveAllTemplatesTestComponent, LetDirective],
+    declarations: [LetDirectiveAllTemplatesTestComponent],
+    imports: [LetDirective],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,
