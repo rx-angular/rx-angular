@@ -2,6 +2,7 @@ import { NgForOf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   Injectable,
@@ -12,6 +13,8 @@ import { insert, remove, update } from '@rx-angular/cdk/transformations';
 import { RxState } from '@rx-angular/state';
 import { RxActionFactory } from '@rx-angular/state/actions';
 import { Observable } from 'rxjs';
+import { ForModule } from '@rx-angular/template/for';
+import { SignalLetDirective } from './signal-let.directive';
 
 type Todo = {
   id: number;
@@ -28,7 +31,7 @@ abstract class TodoService {
   abstract deleteTodo(todo: Todo): Observable<void>;
 }
 
-const todoData: Todo[] = new Array(20).fill(null).map((v, i) => ({
+const todoData: Todo[] = new Array(200).fill(null).map((v, i) => ({
   id: i,
   title: `The todo #${i + 1}`,
   done: false,
@@ -126,18 +129,26 @@ class TodoStore extends RxState<TodoState> {
       </button>
     </div>
     <div class="d-flex flex-wrap todo-list">
-      <div class="todo" *ngFor="let todo of store.filteredTodos()">
+      <div class="todo" *rxFor="let todo of store.filteredTodos">
         <div>#{{ todo.id }}</div>
         <div>{{ todo.title }}</div>
         <button (click)="store.toggleDone(todo)">Done: {{ todo.done }}</button>
         <button (click)="store.removeTodo(todo)">remove</button>
       </div>
+      <!--<div class="todo" *ngFor="let todo of filteredTodosSignals()">
+        <ng-container *signalLet="todo; let t">
+          <div>#{{ t.id }}</div>
+          <div>{{ t.title }}</div>
+          <button (click)="store.toggleDone(t)">Done: {{ t.done }}</button>
+          <button (click)="store.removeTodo(t)">remove</button>
+        </ng-container>
+      </div>-->
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   providers: [TodoStore],
-  imports: [NgForOf],
+  imports: [NgForOf, ForModule, SignalLetDirective],
   styles: [
     `
       .todo-list {
@@ -152,5 +163,9 @@ class TodoStore extends RxState<TodoState> {
 export class SignalStateComponent {
   readonly store = inject(TodoStore, {
     self: true,
+  });
+
+  readonly filteredTodosSignals = computed(() => {
+    return this.store.filteredTodos().map((todo) => signal(todo));
   });
 }
