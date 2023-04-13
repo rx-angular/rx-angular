@@ -37,7 +37,8 @@ let strategyProvider: RxStrategyProvider;
 describe('LetDirective strategies', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LetDirectiveTestStrategyComponent, LetDirective],
+      declarations: [LetDirectiveTestStrategyComponent],
+      imports: [LetDirective],
       teardown: { destroyAfterEach: true },
     });
   });

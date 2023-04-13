@@ -2,6 +2,7 @@ import { ErrorHandler } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { RxFor } from '../for.directive';
 import { ForModule } from '../for.module';
 import {
   createErrorHandler,
@@ -37,7 +38,7 @@ describe('rxFor', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [TestComponent],
-      imports: [ForModule],
+      imports: [RxFor],
       providers: [
         {
           provide: ErrorHandler,

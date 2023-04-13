@@ -59,7 +59,8 @@ describe('LetDirective parent notification', () => {
   // beforeAll(() => mockConsole());
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LetDirectiveTestStrategyComponent, LetDirective],
+      declarations: [LetDirectiveTestStrategyComponent],
+      imports: [LetDirective],
       teardown: { destroyAfterEach: true },
     });
   });

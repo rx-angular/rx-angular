@@ -4,7 +4,6 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { UnpatchDirective } from '../unpatch.directive';
-import { UnpatchModule } from '../unpatch.module';
 
 describe(UnpatchDirective.name, () => {
   enum LogEvent {
@@ -35,7 +34,7 @@ describe(UnpatchDirective.name, () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [UnpatchModule],
+      imports: [UnpatchDirective],
       declarations: [TestComponent],
       teardown: { destroyAfterEach: true },
     });

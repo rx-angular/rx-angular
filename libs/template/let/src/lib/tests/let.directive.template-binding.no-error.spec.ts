@@ -40,7 +40,8 @@ const setupTestComponent = () => {
         },
       },
     ],
-    declarations: [LetDirectiveNoErrorTemplateTestComponent, LetDirective],
+    declarations: [LetDirectiveNoErrorTemplateTestComponent],
+    imports: [LetDirective],
     teardown: { destroyAfterEach: true },
   });
 };
