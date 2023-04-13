@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [15.1.0](https://github.com/rx-angular/rx-angular/compare/template@15.0.0...template@15.1.0) (2023-04-13)
+
+
+### Features
+
+* **template:** migrate LetDirective to standalone API ([a342dfe](https://github.com/rx-angular/rx-angular/commit/a342dfec7ce640be6c3b6cee21accc74a9864e21))
+* **template:** migrate PushPipe to standalone API ([3ed3e97](https://github.com/rx-angular/rx-angular/commit/3ed3e973c98cc55616f1a81b07de7a6521c7d4de))
+* **template:** migrate RxFor to standalone API ([b58aa7b](https://github.com/rx-angular/rx-angular/commit/b58aa7bfe281e658b3859b4a5f80d587a1e17581))
+* **template:** migrate RxIf to standalone API ([8e2441a](https://github.com/rx-angular/rx-angular/commit/8e2441a78405bec8d49456265cfcd829c96d5f11))
+* **template:** migrate UnpatchDirective to standalone API ([caebca4](https://github.com/rx-angular/rx-angular/commit/caebca4628fe56e55e2c33216de89a366883bdcb))
+* **template:** migrate ViewportPrioDirective to standalone API ([e7c379b](https://github.com/rx-angular/rx-angular/commit/e7c379b955f2bc93b34cb383ff208298b3107db3))
+
+
+
 # [15.0.0](https://github.com/rx-angular/rx-angular/compare/template@14.0.0...template@15.0.0) (2023-04-12)
 
 
