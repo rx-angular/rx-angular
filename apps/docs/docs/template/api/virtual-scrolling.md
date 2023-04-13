@@ -100,51 +100,6 @@ all pre-packaged ScrollStrategies as well as control the majority of inputs.
   - `AutosizeVirtualScrollStrategy`
   - `DynamicSizeVirtualScrollStrategy`
 
-### Inputs
-
-**Rendering**
-
-| Input            | Type                                                               | description                                                                                                                                                                                                                                                                                             |
-| ---------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `trackBy`        | `keyof T` or `(index: number, item: T) => any`                     | Identifier function for items. `rxFor` provides a shorthand where you can name the property directly.                                                                                                                                                                                                   |
-| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
-| `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
-| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                                    |
-| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                              |
-
-### Outputs
-
-- n/a
-
-### Context Variables
-
-The following context variables are available for each template:
-
-**Static Context Variables (mirrored from `ngFor`)**
-
-| Variable Name | Type      | description                                          |
-| ------------- | --------- | ---------------------------------------------------- |
-| `$implicit`   | `T`       | the default variable accessed by `let val`           |
-| `index`       | `number`  | current index of the item                            |
-| `count`       | `number`  | count of all items in the list                       |
-| `first`       | `boolean` | true if the item is the first in the list            |
-| `last`        | `boolean` | true if the item is the last in the list             |
-| `even`        | `boolean` | true if the item has on even index (index % 2 === 0) |
-| `odd`         | `boolean` | the opposite of even                                 |
-
-**Reactive Context Variables**
-
-| Variable Name | Type                                                           | description                                                                                                                                                                                                       |
-| ------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `item$`       | `Observable<T>`                                                | the same value as $implicit, but as `Observable`                                                                                                                                                                  |
-| `index$`      | `Observable<number>`                                           | index as `Observable`                                                                                                                                                                                             |
-| `count$`      | `Observable<number>`                                           | count as `Observable`                                                                                                                                                                                             |
-| `first$`      | `Observable<boolean>`                                          | first as `Observable`                                                                                                                                                                                             |
-| `last$`       | `Observable<boolean>`                                          | last as `Observable`                                                                                                                                                                                              |
-| `even$`       | `Observable<boolean>`                                          | even as `Observable`                                                                                                                                                                                              |
-| `odd$`        | `Observable<boolean>`                                          | odd as `Observable`                                                                                                                                                                                               |
-| `select`      | `(keys: (keyof T)[], distinctByMap) => Observable<Partial<T>>` | returns a selection function which accepts an array of properties to pluck out of every list item. The function returns the selected properties of the current list item as distinct `Observable` key-value-pair. |
-
 ## Usage Examples
 
 > **⚠ Notice:**
@@ -540,13 +495,13 @@ The default size can be configured directly as `@Input('itemSize')`.
 // my.component.ts
 import {
   FixedSizeVirtualScrollStrategyModule,
-  RxVirtualScrollingModule,
+  RxVirtualScrollViewportComponent,
 } from '@rx-angular/template/experimental/virtual-scrolling';
 
 @Component({
   /**/,
   standalone: true,
-  imports: [FixedSizeVirtualScrollStrategyModule, RxVirtualScrollingModule]
+  imports: [FixedSizeVirtualScrollStrategyModule, RxVirtualScrollViewportComponent]
 })
 export class MyComponent {
   // all items have the height of 50px
@@ -583,14 +538,14 @@ them.
 ```ts
 // my.component.ts
 import {
-  DynamicSizeVirtualScrollStrategyModule,
-  RxVirtualScrollingModule,
+  DynamicSizeVirtualScrollStrategy,
+  RxVirtualScrollViewportComponent,
 } from '@rx-angular/template/experimental/virtual-scrolling';
 
 @Component({
   /**/,
   standalone: true,
-  imports: [DynamicSizeVirtualScrollStrategyModule, RxVirtualScrollingModule]
+  imports: [DynamicSizeVirtualScrollStrategy, RxVirtualScrollViewportComponent]
 })
 export class MyComponent {
   // items with a description have 120px height, others only 50px
@@ -635,14 +590,14 @@ again as this can potentially lead to unwanted forced reflows.
 ```ts
 // my.component.ts
 import {
-  AutosizeVirtualScrollStrategyModule,
-  RxVirtualScrollingModule,
+  AutosizeVirtualScrollStrategy,
+  RxVirtualScrollViewportComponent,
 } from '@rx-angular/template/experimental/virtual-scrolling';
 
 @Component({
   /**/,
   standalone: true,
-  imports: [AutosizeVirtualScrollStrategyModule, RxVirtualScrollingModule]
+  imports: [AutosizeVirtualScrollStrategy, RxVirtualScrollViewportComponent]
 })
 export class MyComponent {
   items$ = inject(DataService).getItems();
