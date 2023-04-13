@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [1.1.0](https://github.com/rx-angular/rx-angular/compare/template@1.0.0...template@1.1.0) (2023-04-13)
+
+
+### Features
+
+* **template:** introduce experimental virtual-scrolling package ([dcd98b0](https://github.com/rx-angular/rx-angular/commit/dcd98b0b9fca831e03507af2b5e71985191b4ebf))
+
+
+
 # [1.0.0](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.5...template@1.0.0) (2023-01-29)
 
 
