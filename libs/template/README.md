@@ -21,6 +21,7 @@
 **Experimental features**
 
 - [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/experimental/viewport-prio-directive)
+- [🧪 Virtual Scrolling (`*rxVirtualFor`)](https://github.com/rx-angular/rx-angular/tree/feat-virtual-scroll/libs/template/experimental/virtual-scrolling#readme)
 
 All experimental features are very stable and already tested in production apps for multiple months. The reason to have them in experimental is so we can make small typing changes without breaking changes.
 
