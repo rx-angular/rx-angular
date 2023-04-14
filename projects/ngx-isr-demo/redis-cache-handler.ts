@@ -1,13 +1,24 @@
 import { CacheHandler, ISROptions, CacheData } from 'ngx-isr';
 import Redis from 'ioredis';
 
+type RedisCacheHandlerOptions = {
+  /**
+   * Redis connection string, e.g. "redis://localhost:6379"
+   */
+  connectionString: string;
+  /**
+   * Redis key prefix, defaults to "ngx-isr"
+   */
+  keyPrefix?: string;
+};
+
 export class RedisCacheHandler extends CacheHandler {
   private redis: Redis;
 
-  constructor(private readonly redisConnectionString: string) {
+  constructor(private readonly options: RedisCacheHandlerOptions) {
     super();
-    
-    this.redis = new Redis(this.redisConnectionString);
+
+    this.redis = new Redis(this.options.connectionString);
     console.log('RedisCacheHandler initialized 🚀');
   }
 
@@ -24,7 +35,8 @@ export class RedisCacheHandler extends CacheHandler {
         options,
         createdAt: Date.now(),
       };
-      this.redis.set(url, JSON.stringify(cacheData)).then(() => {
+      const key = this.createKey(url);
+      this.redis.set(key, JSON.stringify(cacheData)).then(() => {
         resolve();
       });
     });
@@ -32,7 +44,8 @@ export class RedisCacheHandler extends CacheHandler {
 
   get(url: string): Promise<CacheData> {
     return new Promise((resolve, reject) => {
-      this.redis.get(url, (err, result) => {
+      const key = this.createKey(url);
+      this.redis.get(key, (err, result) => {
         if (err || result === null || result === undefined) {
           reject('This url does not exist in cache!');
         } else {
@@ -49,18 +62,25 @@ export class RedisCacheHandler extends CacheHandler {
 
   has(url: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      resolve(this.redis.exists(url).then((exists) => exists === 1));
+      const key = this.createKey(url);
+      resolve(this.redis.exists(key).then((exists) => exists === 1));
     });
   }
 
   delete(url: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      resolve(this.redis.del(url).then((deleted) => deleted === 1));
+      const key = this.createKey(url);
+      resolve(this.redis.del(key).then((deleted) => deleted === 1));
     });
   }
 
   clearCache?(): Promise<boolean> {
     throw new Error('Method not implemented.');
+  }
+
+  private createKey(url: string): string {
+    const prefix = this.options.keyPrefix || 'ngx-isr';
+    return `${prefix}:${url}`;
   }
 }
 
