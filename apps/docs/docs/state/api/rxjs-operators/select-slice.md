@@ -17,7 +17,7 @@ _Example_
 ```typescript
 // An example with a custom comparison applied to each key
 import { of } from 'rxjs';
-import { selectSlice } from 'rx-angular/state';
+import { selectSlice } from '@rx-angular/state/selections';
 
 const state$: Observable<MyState> = of(
   { title: 'myTitle', panelOpen: true },
