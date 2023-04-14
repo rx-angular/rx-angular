@@ -40,7 +40,7 @@ _Example_
 ```typescript
 import { of, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { selectSlice } from 'rx-angular/state';
+import { selectSlice } from '@rx-angular/state/selections';
 
 interface MyState {
   title: string;
