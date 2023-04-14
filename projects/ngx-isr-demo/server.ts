@@ -30,7 +30,7 @@ export function app(): express.Express {
   // });
 
   const redisCacheHandler = REDIS_CONNECTION_STRING
-    ? new RedisCacheHandler(REDIS_CONNECTION_STRING)
+    ? new RedisCacheHandler({ connectionString: REDIS_CONNECTION_STRING })
     : undefined;
 
   // Step 1: Initialize ISRHandler
