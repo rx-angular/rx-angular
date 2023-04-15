@@ -95,7 +95,7 @@ export abstract class RxVirtualScrollStrategy<
    *
    * Emits whenever an update to a single view was rendered
    */
-  @Output() readonly viewRenderCallback = new Subject<{
+  readonly viewRenderCallback = new Subject<{
     view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>;
     item: T;
     index: number;
@@ -163,7 +163,7 @@ export abstract class RxVirtualViewRepeater<
     item: T;
   }>;
   abstract renderingStart$: Observable<void>;
-  _trackBy: TrackByFunction<T> = (i, a) => a;
+  _trackBy: TrackByFunction<T> | null;
 }
 
 /** @internal */

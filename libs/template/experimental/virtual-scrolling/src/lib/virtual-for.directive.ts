@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Directive,
+  DoCheck,
   EmbeddedViewRef,
   ErrorHandler,
   inject,
@@ -20,7 +21,7 @@ import {
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
 import { RxListViewComputedContext } from '@rx-angular/cdk/template';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { isObservable, Observable, ReplaySubject, Subject } from 'rxjs';
 import { shareReplay, takeUntil } from 'rxjs/operators';
 
 import {
@@ -31,7 +32,6 @@ import {
 import {
   DEFAULT_VIEW_CACHE_SIZE,
   RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS,
-  RxVirtualScrollDefaultOptions,
 } from './virtual-scroll.config';
 import {
   createVirtualListManager,
@@ -160,17 +160,14 @@ declare const ngDevMode: boolean;
  * @publicApi
  */
 @Directive({
-  selector: '[rxVirtualFor]',
+  selector: '[rxVirtualFor][rxVirtualForOf]',
   providers: [{ provide: RxVirtualViewRepeater, useExisting: RxVirtualFor }],
   standalone: true,
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
-  implements RxVirtualViewRepeater<T>, OnInit, OnDestroy
+  implements RxVirtualViewRepeater<T>, OnInit, DoCheck, OnDestroy
 {
-  /** @internal */
-  static ngTemplateGuard_rxVirtualFor: 'binding';
-
   private readonly scrollStrategy = inject(RxVirtualScrollStrategy<T, U>);
   private readonly iterableDiffers = inject(IterableDiffers);
   private readonly cdRef = inject(ChangeDetectorRef);
@@ -185,28 +182,10 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
     optional: true,
   });
 
-  /**
-   * @description
-   * The iterable input
-   *
-   * @example
-   * <rx-virtual-scroll-viewport>
-   *   <app-hero *rxVirtualFor="heroes$; let hero"
-   *     [hero]="hero"></app-hero>
-   * </rx-virtual-scroll-viewport>
-   *
-   * @param potentialObservable
-   */
-  @Input()
-  set rxVirtualFor(
-    potentialObservable:
-      | Observable<NgIterable<T>>
-      | NgIterable<T>
-      | null
-      | undefined
-  ) {
-    this.observables$.next(potentialObservable);
-  }
+  /** @internal */
+  private staticValue?: U;
+  /** @internal */
+  private renderStatic = false;
 
   /**
    * @description
@@ -223,12 +202,19 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   @Input()
   set rxVirtualForOf(
     potentialObservable:
-      | Observable<NgIterable<T>>
-      | NgIterable<T>
+      | Observable<(U & NgIterable<T>) | undefined | null>
+      | (U & NgIterable<T>)
       | null
       | undefined
   ) {
-    this.observables$.next(potentialObservable);
+    if (!isObservable(potentialObservable)) {
+      this.staticValue = potentialObservable;
+      this.renderStatic = true;
+    } else {
+      this.staticValue = undefined;
+      this.renderStatic = false;
+      this.observables$.next(potentialObservable);
+    }
   }
 
   /**
@@ -435,15 +421,27 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param trackByFnOrKey
    */
   @Input('rxVirtualForTrackBy')
-  set trackBy(trackByFnOrKey: keyof T | ((idx: number, i: T) => unknown)) {
-    if (typeof trackByFnOrKey === 'function') {
-      this._trackBy = trackByFnOrKey;
-    } else if (typeof trackByFnOrKey === 'string') {
-      this._trackBy = (i, a) => a[trackByFnOrKey];
-    } else if (ngDevMode) {
+  set trackBy(trackByFnOrKey: keyof T | TrackByFunction<T>) {
+    if (
+      ngDevMode &&
+      trackByFnOrKey != null &&
+      typeof trackByFnOrKey !== 'string' &&
+      typeof trackByFnOrKey !== 'symbol' &&
+      typeof trackByFnOrKey !== 'function'
+    ) {
       throw new Error(
-        `Received incorrect value for trackBy, expected string | ((idx: number, i: T) => unknown), got ${typeof trackByFnOrKey}`
+        `trackBy must be typeof function or keyof T, but received ${JSON.stringify(
+          trackByFnOrKey
+        )}.`
       );
+    }
+    if (trackByFnOrKey == null) {
+      this._trackBy = null;
+    } else {
+      this._trackBy =
+        typeof trackByFnOrKey !== 'function'
+          ? (i, a) => a[trackByFnOrKey]
+          : trackByFnOrKey;
     }
   }
 
@@ -490,7 +488,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param renderCallback
    */
   @Input('rxVirtualForRenderCallback') set renderCallback(
-    renderCallback: Subject<T>
+    renderCallback: Subject<U>
   ) {
     this._renderCallback = renderCallback;
   }
@@ -525,7 +523,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   >(1);
 
   /** @internal */
-  private _renderCallback?: Subject<T>;
+  private _renderCallback?: Subject<U>;
 
   /** @internal */
   readonly values$ = this.observables$.pipe(
@@ -546,6 +544,9 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   private _destroy$ = new Subject<void>();
 
   /** @internal */
+  _trackBy: TrackByFunction<T> | null = null;
+
+  /** @internal */
   static ngTemplateContextGuard<
     T,
     U extends NgIterable<T> = NgIterable<T>,
@@ -556,9 +557,6 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   ): ctx is RxVirtualForViewContext<T, U, RxListViewComputedContext, K> {
     return true;
   }
-
-  /** @internal */
-  _trackBy: TrackByFunction<T> = (i, a) => a;
 
   /** @internal */
   ngOnInit() {
@@ -605,6 +603,13 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
     this.listManager.renderingStart$
       .pipe(takeUntil(this._destroy$))
       .subscribe(this.renderingStart$);
+  }
+
+  /** @internal */
+  ngDoCheck() {
+    if (this.renderStatic) {
+      this.observables$.next(this.staticValue);
+    }
   }
 
   /** @internal */
