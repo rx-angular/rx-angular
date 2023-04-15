@@ -3,15 +3,15 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng build ngx-isr && ng run ngx-isr-demo:serve-ssr",
-    "watch": "ng build ngx-isr --watch --configuration development",
-    "test": "ng test",
-    "dev:ssr": "ng run ngx-isr-demo:serve-ssr",
+    "start": "nx build ngx-isr && nx run ngx-isr-demo:serve-ssr",
+    "watch": "nx build ngx-isr --watch --configuration development",
+    "test": "nx test",
+    "dev:ssr": "nx run ngx-isr-demo:serve-ssr",
     "serve:ssr": "node dist/ngx-isr-demo/server/main.js",
-    "build:ssr": "ng build ngx-isr-demo && ng run ngx-isr-demo:server",
-    "prerender": "ng run ngx-isr-demo:prerender",
-    "build-vercel": "ng build ngx-isr && npm run build:ssr",
-    "build-publish": "ng build ngx-isr && cd dist/ngx-isr && npm publish"
+    "build:ssr": "nx build ngx-isr-demo && nx run ngx-isr-demo:server",
+    "prerender": "nx run ngx-isr-demo:prerender",
+    "build-vercel": "nx build ngx-isr && npm run build:ssr",
+    "build-publish": "nx build ngx-isr && cd dist/ngx-isr && npm publish"
   },
   "private": true,
   "dependencies": {
@@ -34,9 +34,14 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.0.4",
+    "@angular-devkit/core": "^15.0.4",
+    "@angular-devkit/schematics": "^15.0.4",
     "@angular/cli": "^15.0.4",
     "@angular/compiler-cli": "^15.0.4",
     "@nguniversal/builders": "^15.0.0",
+    "@nrwl/angular": "15.9.2",
+    "@nrwl/workspace": "15.9.2",
+    "@schematics/angular": "^15.0.4",
     "@types/express": "^4.17.13",
     "@types/jasmine": "~4.0.3",
     "@types/node": "^17.0.44",
@@ -47,6 +52,7 @@
     "karma-jasmine": "~5.0.1",
     "karma-jasmine-html-reporter": "~2.0.0",
     "ng-packagr": "^15.0.3",
+    "nx": "15.9.2",
     "tailwindcss": "^3.2.4",
     "typescript": "~4.8.4"
   }
