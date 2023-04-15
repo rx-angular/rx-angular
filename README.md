@@ -215,10 +215,13 @@ const routes: Routes = [
 
 
 ## Changelog
-- version 0.5.1
+- version 0.5.2
   * feat: Migrate repository to nx workspace
   * feat: Added `provideISR` provider function
   * chore: Update example RedisCacheHandler to use a prefix
+
+- version 0.5.1
+  * feat: Added extra field to isrService in order to save extra data if needed
 
 - Version 0.5.0
 
