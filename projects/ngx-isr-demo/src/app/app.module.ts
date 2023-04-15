@@ -6,6 +6,7 @@ import { RouterModule, TitleStrategy } from '@angular/router';
 import { TransferHttpCacheModule } from '@nguniversal/common';
 import { AppComponent } from './app.component';
 import { CustomTitleStrategy } from './custom-title-strategy';
+import { HIGHLIGHT_OPTIONS, HighlightModule } from 'ngx-highlightjs';
 
 @NgModule({
   declarations: [AppComponent],
@@ -14,8 +15,20 @@ import { CustomTitleStrategy } from './custom-title-strategy';
     RouterModule.forRoot(routes),
     TransferHttpCacheModule,
     HttpClientModule,
+    HighlightModule,
   ],
-  providers: [{ provide: TitleStrategy, useClass: CustomTitleStrategy }],
+  providers: [
+    { provide: TitleStrategy, useClass: CustomTitleStrategy },
+    {
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: {
+        coreLibraryLoader: () => import('highlight.js/lib/core'),
+        languages: {
+          typescript: () => import('highlight.js/lib/languages/typescript'),
+        },
+      },
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

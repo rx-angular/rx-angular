@@ -54,7 +54,10 @@
               "projects/ngx-isr-demo/src/assets"
             ],
             "styles": ["projects/ngx-isr-demo/src/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "highlight.js"
+            ]
           },
           "configurations": {
             "production": {

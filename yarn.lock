@@ -4358,6 +4358,16 @@ hdr-histogram-percentiles-obj@^3.0.0:
   resolved "https://registry.npmjs.org/hdr-histogram-percentiles-obj/-/hdr-histogram-percentiles-obj-3.0.0.tgz"
   integrity sha512-7kIufnBqdsBGcSZLPJwqHT3yhk1QTsSlFsVD3kx5ixH/AlgBs9yM1q6DPhXZ8f8gtdqgh7N7/5btRLpQsS2gHw==
 
+highlight.js@^11.5.1:
+  version "11.7.0"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.7.0.tgz#3ff0165bc843f8c9bce1fd89e2fda9143d24b11e"
+  integrity sha512-1rRqesRFhMO/PRF+G86evnyJkCgaZFOI+Z6kdj15TA18funfoqJXvgPCLSf0SWq3SRfg1j3HlDs8o4s3EGq1oQ==
+
+highlightjs-line-numbers.js@^2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/highlightjs-line-numbers.js/-/highlightjs-line-numbers.js-2.8.0.tgz#479ea8cff0c31fadc1578a66fa03e38b801f9ca6"
+  integrity sha512-TEf1gw0c8mb8nan0QwliqS7obT4cpUd9hzsGzsZLweteNnWea/VIqy5/aQqsa5wnz9lnvmtAkS1ZtDTjB/goYQ==
+
 hosted-git-info@^5.0.0:
   version "5.0.0"
   resolved "https://registry.npmjs.org/hosted-git-info/-/hosted-git-info-5.0.0.tgz"
@@ -5623,6 +5633,15 @@ ng-packagr@^15.0.3:
     sass "^1.55.0"
   optionalDependencies:
     esbuild "^0.16.0"
+
+ngx-highlightjs@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-highlightjs/-/ngx-highlightjs-8.0.0.tgz#36c3069966e11eba0a32191dc8f87cb8b155bd73"
+  integrity sha512-joRqwYnliH+Qv5ceM/YmUWaryO+7hhBp8KVs91GSmTf8mZdD0OL6iYsQgg0p64YAjoStmO6MR11BP9W847NYEg==
+  dependencies:
+    highlight.js "^11.5.1"
+    highlightjs-line-numbers.js "^2.8.0"
+    tslib "^2.0.0"
 
 nice-napi@^1.0.2:
   version "1.0.2"
