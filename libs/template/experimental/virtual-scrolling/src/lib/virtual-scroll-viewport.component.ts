@@ -27,6 +27,8 @@ import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
  */
 declare const ngDevMode: boolean;
 
+const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
+
 /**
  * @Component RxVirtualScrollViewport
  *
@@ -158,7 +160,7 @@ export class RxVirtualScrollViewportComponent
     private elementRef: ElementRef<HTMLElement>,
     @Optional() private scrollStrategy: RxVirtualScrollStrategy<unknown>
   ) {
-    if (ngDevMode && !scrollStrategy) {
+    if (NG_DEV_MODE && !scrollStrategy) {
       throw Error(
         'Error: rx-virtual-scroll-viewport requires an `RxVirtualScrollStrategy` to be set.'
       );
