@@ -8,7 +8,7 @@
             <img class="h-[80px]" src="assets/logo.svg" alt="Your Company">
             <div class="mt-24 sm:mt-32 lg:mt-16">
               <a routerLink="/blog" class="inline-flex space-x-6">
-                <span class="rounded-full bg-indigo-600/10 px-3 py-1 text-sm font-semibold leading-6 text-indigo-600 ring-1 ring-inset ring-indigo-600/10">What's new</span>
+                <span class="rounded-full bg-main/10 px-3 py-1 text-sm font-semibold leading-6 text-main ring-1 ring-inset ring-indigo-600/10">What's new</span>
                 <span class="inline-flex items-center space-x-2 text-sm font-medium leading-6 text-gray-600">
                   <span>Just shipped v0.1.0</span>
                   <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -24,8 +24,12 @@
               Enable Angular Universal apps to generate static pages at runtime and update them incrementally on demand or schedule.
             </p>
             <div class="mt-10 flex items-center gap-x-6">
-              <a href="#" class="rounded-md bg-blue px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Documentation</a>
-              <a href="https://github.com/eneajaho/ngx-isr?source=docs" class="text-sm font-semibold leading-6 text-gray-900">View on GitHub <span aria-hidden="true">→</span></a>
+              <a routerLink="/docs" class="rounded-md bg-main px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                Documentation
+              </a>
+              <a href="https://github.com/eneajaho/ngx-isr?source=docs" class="text-sm font-semibold leading-6 text-gray-900">
+                View on GitHub <span aria-hidden="true">→</span>
+              </a>
             </div>
           </div>
         </div>
@@ -40,8 +44,8 @@
                 <div class="w-screen overflow-hidden rounded-tl-xl bg-gray-900">
                   <div class="flex bg-gray-800/40 ring-1 ring-white/5">
                     <div class="-mb-px flex text-sm font-medium leading-6 text-gray-400">
-                      <div *ngFor="let tab of tabs" (click)="activeTab = tab" class="border-r border-gray-600/10 px-4 py-2 cursor-pointer" 
-                        [ngClass]="{'border-b-white/20 border-r-white/10 bg-white/5 text-white': activeTab === tab}">
+                      <div *ngFor="let tab of tabs" (click)="activeTab = tab" class="border-r border-l border-gray-600/10 px-4 py-2 cursor-pointer" 
+                        [ngClass]="{'border-b-white/20 border-l-white/10 border-r-white/10  bg-white/5 text-white': activeTab === tab}">
                       {{ tab }}
                     </div>
                     </div>
@@ -83,74 +87,144 @@
 <div class="bg-white py-18 my-20 sm:py-30">
   <div class="mx-auto max-w-7xl px-6 lg:px-8">
     <div class="mx-auto max-w-2xl lg:text-center">
-      <h2 class="text-base font-semibold leading-7 text-indigo-600">
+      <h2 class="text-base font-semibold leading-7 text-main">
         Everything you need
       </h2>
       <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
         All-in-One library
       </p>
-      <!-- <p class="mt-6 text-lg leading-8 text-gray-600">
-        Quis tellus eget adipiscing convallis sit sit eget aliquet quis. Suspendisse eget egestas a elementum pulvinar et feugiat blandit at. In mi viverra elit nunc.
-      </p> -->
       <p class="mt-6 text-lg leading-8 text-gray-600">
-        <!-- 'Server Side Rendering & Static Site Generation in one',
-        'Static timer cache invalidation',
-        'In-demand cache invalidation',
-        'Plugin based cache handlers',
-        'Easy to setup and use',
-        'Supports Angular 9+',
-        'No build changes required',
-        'Supports Angular Universal',
-        'Improves TTFB (Time to First Byte)', -->
         <b class="text-black">ngx-isr</b> provides everything you need to speed up your Angular Universal app.
       </p>
     </div>
+<!--- 
+        'Easy to setup and use',
+        'Improves TTFB (Time to First Byte)' -->
     <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
       <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
         <div class="flex flex-col">
           <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
-            <svg class="h-5 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M5.5 17a4.5 4.5 0 01-1.44-8.765 4.5 4.5 0 018.302-3.046 3.5 3.5 0 014.504 4.272A4 4 0 0115 17H5.5zm3.75-2.75a.75.75 0 001.5 0V9.66l1.95 2.1a.75.75 0 101.1-1.02l-3.25-3.5a.75.75 0 00-1.1 0l-3.25 3.5a.75.75 0 101.1 1.02l1.95-2.1v4.59z" clip-rule="evenodd" />
-            </svg>
-            Push to deploy
+            <svg class="h-5 w-5 flex-none text-main"  fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>            
+            Scheduled cache invalidation
           </dt>
           <dd class="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
-            <p class="flex-auto">Commodo nec sagittis tortor mauris sed. Turpis tortor quis scelerisque diam id accumsan nullam tempus. Pulvinar etiam lacus volutpat eu. Phasellus praesent ligula sit faucibus.</p>
-            <p class="mt-6">
-              <a href="#" class="text-sm font-semibold leading-6 text-indigo-600">Learn more <span aria-hidden="true">→</span></a>
+            <p class="flex-auto">
+              <b class="text-black">ngx-isr</b> provides a simple API to invalidate the cache based on a schedule.
+              <br>
+              Requests are not cached by default. You have to explicitly mark the routes you want to cache.
             </p>
+            <!-- <p class="mt-6">
+              <a href="#" class="text-sm font-semibold leading-6 text-main">
+                Learn more <span aria-hidden="true">→</span>
+              </a>
+            </p> -->
+          </dd>
+        </div>
+        <div class="flex flex-col">
+          <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
+            <svg class="h-5 w-5 flex-none text-main"  fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5" />
+            </svg>
+            On-demand cache invalidation
+          </dt>
+          <dd class="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
+            <p class="flex-auto">
+              Revalidate specific routes on demand, when you need to and not based on a schedule. 
+              <br>
+              This is useful when you need to invalidate the cache when a user performs an action.
+            </p>
+            <!-- <p class="mt-6">
+              <a href="#" class="text-sm font-semibold leading-6 text-main">
+                Learn more <span aria-hidden="true">→</span>
+              </a>
+            </p> -->
+          </dd>
+        </div>
+
+        <div class="flex flex-col">
+          <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">          
+            <svg class="h-5 w-5 flex-none text-main" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+            </svg>
+            
+            Plugin based cache handlers
+          </dt>
+          <dd class="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
+            <p class="flex-auto">
+              Cache handlers are pluggable, allowing the cache to be stored in different locations. 
+              <br>
+              <b class="text-black">ngx-isr</b> provides a default cache handler that stores the cache in memory.
+            </p>
+            <!-- <p class="mt-6">
+              <a href="#" class="text-sm font-semibold leading-6 text-main">
+                Learn more <span aria-hidden="true">→</span>
+              </a>
+            </p> -->
           </dd>
         </div>
 
         <div class="flex flex-col">
           <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
-            <svg class="h-5 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" />
+      
+            <svg class="h-5 w-5 flex-none text-main" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            SSL certificates
+            
+            No build changes required!
           </dt>
           <dd class="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
-            <p class="flex-auto">Pellentesque enim a commodo malesuada turpis eleifend risus. Facilisis donec placerat sapien consequat tempor fermentum nibh.</p>
-            <p class="mt-6">
-              <a href="#" class="text-sm font-semibold leading-6 text-indigo-600">Learn more <span aria-hidden="true">→</span></a>
+            <p class="flex-auto">
+              Easy to setup and use and also no changes to your build process are required.
             </p>
+            <!-- <p class="mt-6">
+              <a href="#" class="text-sm font-semibold leading-6 text-main">
+                Learn more <span aria-hidden="true">→</span></a>
+            </p> -->
           </dd>
         </div>
 
         <div class="flex flex-col">
           <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
-            <svg class="h-5 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0V5.36l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389A5.5 5.5 0 0113.89 6.11l.311.31h-2.432a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.219z" clip-rule="evenodd" />
+            <svg  class="h-5 w-5 flex-none text-main" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
             </svg>
-            Simple queues
+            
+            Supports Angular Universal
           </dt>
           <dd class="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
-            <p class="flex-auto">Pellentesque sit elit congue ante nec amet. Dolor aenean curabitur viverra suspendisse iaculis eget. Nec mollis placerat ultricies euismod ut condimentum.</p>
-            <p class="mt-6">
-              <a href="#" class="text-sm font-semibold leading-6 text-indigo-600">Learn more <span aria-hidden="true">→</span></a>
+            <p class="flex-auto">
+              Compatible with Angular Universal is used as a plugin for the Angular Universal platform.
             </p>
+            <!-- <p class="mt-6">
+              <a href="#" class="text-sm font-semibold leading-6 text-main">
+                Learn more <span aria-hidden="true">→</span></a>
+            </p> -->
           </dd>
         </div>
+
+        <div class="flex flex-col">
+          <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
+    
+            <svg class="h-5 w-5 flex-none text-main" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+            </svg>
+            
+            NgModules & Standalone Compatible
+          </dt>
+          <dd class="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
+            <p class="flex-auto">
+              Supports both NgModules and standalone use. You can use it in your existing Angular project.
+            </p>
+            <!-- <p class="mt-6">
+              <a href="#" class="text-sm font-semibold leading-6 text-main">
+                Learn more <span aria-hidden="true">→</span></a>
+            </p> -->
+          </dd>
+        </div>
+
+
       </dl>
     </div>
   </div>
@@ -162,28 +236,27 @@
   <div class="mx-auto max-w-7xl px-6 lg:px-8">
     <div class="mx-auto max-w-2xl lg:max-w-none">
       <div class="text-center">
-        <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Trusted by creators worldwide</h2>
-        <p class="mt-4 text-lg leading-8 text-gray-600">Lorem ipsum dolor sit amet consect adipisicing possimus.</p>
+        <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Trusted by developers worldwide
+        </h2>
+        <p class="mt-4 text-lg leading-8 text-gray-600">
+          Used by developers worldwide to improve their websites performance.
+        </p>
       </div>
-      <dl class="mt-16 grid grid-cols-1 gap-0.5 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-4">
+      <dl class="mt-16 grid grid-cols-1 gap-0.5 overflow-hidden rounded-2xl text-center sm:grid-cols-1 lg:grid-cols-3">
         <div class="flex flex-col bg-gray-400/5 p-8">
-          <dt class="text-sm font-semibold leading-6 text-gray-600">Creators on the platform</dt>
-          <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900">8,000+</dd>
+          <dt class="text-sm font-semibold leading-6 text-gray-600">Total downloads</dt>
+          <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900">6,164+</dd>
         </div>
 
         <div class="flex flex-col bg-gray-400/5 p-8">
-          <dt class="text-sm font-semibold leading-6 text-gray-600">Flat platform fee</dt>
-          <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900">3%</dd>
+          <dt class="text-sm font-semibold leading-6 text-gray-600">Weekly downloads</dt>
+          <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900">200</dd>
         </div>
 
         <div class="flex flex-col bg-gray-400/5 p-8">
-          <dt class="text-sm font-semibold leading-6 text-gray-600">Uptime guarantee</dt>
-          <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900">99.9%</dd>
-        </div>
-
-        <div class="flex flex-col bg-gray-400/5 p-8">
-          <dt class="text-sm font-semibold leading-6 text-gray-600">Paid out to creators</dt>
-          <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900">$70M</dd>
+          <dt class="text-sm font-semibold leading-6 text-gray-600">Github stars</dt>
+          <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900">105+</dd>
         </div>
       </dl>
     </div>
@@ -191,7 +264,7 @@
 </div>
 
 <!-- TESTIMONIALS -->
-
+<!-- 
 <section class="bg-white py-24 sm:py-32">
   <div class="mx-auto max-w-7xl px-6 lg:px-8">
     <div class="mx-auto grid max-w-2xl grid-cols-1 lg:mx-0 lg:max-w-none lg:grid-cols-2">
@@ -227,7 +300,7 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
 
 
 
@@ -235,10 +308,16 @@
 
 <div class="bg-indigo-100">
   <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:justify-between lg:px-8">
-    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Ready to dive in?<br>Start your free trial today.</h2>
+    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+      Ready to dive in?<br>Install ngx-isr now.
+    </h2>
     <div class="mt-10 flex items-center gap-x-6 lg:mt-0 lg:flex-shrink-0">
-      <a href="#" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get started</a>
-      <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Learn more <span aria-hidden="true">→</span></a>
+      <a href="#" class="rounded-md bg-main px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        Get started
+      </a>
+      <a href="#" class="text-sm font-semibold leading-6 text-gray-900">
+        Learn more <span aria-hidden="true">→</span>
+      </a>
     </div>
   </div>
 </div>
