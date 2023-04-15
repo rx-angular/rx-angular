@@ -120,6 +120,15 @@
       "options": {
         "lintFilePatterns": ["libs/template/**/*.ts"]
       }
+    },
+    "component-test": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "libs/template/cypress.config.ts",
+        "testingType": "component",
+        "skipServe": true,
+        "devServerTarget": "tour-of-heroes-ngxs:build"
+      }
     }
   },
   "generators": {
