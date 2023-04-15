@@ -10,7 +10,7 @@
     "serve:ssr": "node dist/docs/server/main.js",
     "build:ssr": "nx build docs && nx run docs:server",
     "prerender": "nx run docs:prerender",
-    "build-vercel": "nx build ngx-isr && npm run build:ssr",
+    "build-vercel": "nx build ngx-isr && yarn run build:ssr",
     "build-publish": "nx build ngx-isr && cd dist/ngx-isr && npm publish"
   },
   "private": true,
