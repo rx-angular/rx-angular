@@ -1,3 +1,3 @@
-const server = require('../dist/ngx-isr-demo/server/main');
+const server = require('../dist/docs/server/main');
 
 module.exports = server.app();
