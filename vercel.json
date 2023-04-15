@@ -7,7 +7,7 @@
     ],
     "functions": {
       "api/index.js": {
-        "includeFiles": "dist/ngx-isr-demo/browser/**"
+        "includeFiles": "dist/docs/browser/**"
       }
     }
   }
