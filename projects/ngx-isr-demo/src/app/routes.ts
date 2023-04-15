@@ -7,6 +7,11 @@ export const routes: Routes = [
     data: { revalidate: 5 },
   },
   {
+    path: 'docs',
+    loadComponent: () => import('./docs/layout.component'),
+    loadChildren: () => import('./docs/routes'),
+  },
+  {
     path: '',
     loadComponent: () => import('./layout/main-layout.component'),
     children: [
