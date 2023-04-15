@@ -5,16 +5,28 @@
 # Incremental Static Regeneration for Angular
 A library that enables Angular Universal applications to generate static pages at runtime and then update them incrementally on demand or on a schedule.
 
-📰 [Read the blog post](https://itnext.io/incremental-static-regeneration-for-angular-42b0a8440e53)
+📰 [Documentation](https://ngx-isr.vercel.app/)
+
+📰 [ISR Blog post](https://itnext.io/incremental-static-regeneration-for-angular-42b0a8440e53)
+
+# Features
+- ⏰ Scheduled cache invalidation
+- ▶️ On-demand cache invalidation
+- 🔌  Plugin based cache handlers
+- 👌 No build changes required!
+- 🅰️ Supports Angular Universal
+- 🛡️ NgModules & Standalone Compatible
 
 # How to use it?
 
 1. Install npm package
 ```bash
 npm install ngx-isr
+# or
+yarn add ngx-isr
+# or
+pnpm add ngx-isr
 ```
-
-> Make sure you have Angular Universal in your app.
 
 2. Initialize `ISRHandler` inside `server.ts`
 ```ts
@@ -57,17 +69,17 @@ You can also pass `providers` to each of the `ISRHandler` methods.
 ```ts
 server.get('*',
   ...
-  async (req, res, next) => await isr.render(req, res, next, {
-    providers: [
-      { provide: APP_BASE_HREF, useValue: req.baseUrl }, // <-- Needs to be provided when passing providers
-      { provide: CUSTOM_TOKEN, useValue: 'Hello from ISR' },
-      CustomService
-    ]
-  }),
+    async (req, res, next) => await isr.render(req, res, next, {
+      providers: [
+        { provide: APP_BASE_HREF, useValue: req.baseUrl }, // <-- Needs to be provided when passing providers
+        { provide: CUSTOM_TOKEN, useValue: 'Hello from ISR' },
+        CustomService
+      ]
+    }),
 );
 ```
 
-It is also possible to pass a `modifyCachedHtml` or `modifyGeneratedHtml` callbacks to the `ISRHandler` methods. 
+It is also possible to pass a `modifyCachedHtml` or `modifyGeneratedHtml` callbacks to the `ISRHandler` methods.
 These methods provide a way to modify the html served from cache or the html that is generated on the fly.
 
 **Important:** Use these methods with caution as the logic written can increase the processing time.
@@ -104,7 +116,14 @@ Example:
 > **NOTE:** Routes that don't have revalidate key in data won't be handled by ISR. They will fallback to Angular default server side rendering pipeline.
 
 
-6. Add `NgxIsrModule` in AppServerModule imports
+6. Register providers
+To register the ngx-isr providers, you can either import `NgxIsrModule` in your `AppServerModule` or provide `provideISR` in your `AppServerModule` providers.
+
+Or, if you are in a standalone app, you can register the providers in your `app.config.server.ts` file.
+
+
+- Register using `NgxIsrModule`
+
 ```ts
 import { NgxIsrModule } from 'ngx-isr'; // <-- Import module from library
 
@@ -117,7 +136,33 @@ import { NgxIsrModule } from 'ngx-isr'; // <-- Import module from library
 export class AppServerModule {}
 ```
 
-When importing the module, `NgxIsrService` will be initialized and will start to listen to route changes, only on the server side, so the browser bundle won't contain any extra code.
+- Register using the `provideISR` function
+
+```ts
+import { provideISR } from 'ngx-isr';
+
+@NgModule({
+  providers: [
+    provideISR() // <-- Use it in module providers
+  ]
+})
+export class AppServerModule {}
+```
+
+- Register using the `provideISR` function in standalone app
+  
+```ts
+import { provideISR } from 'ngx-isr';
+
+const serverConfig: ApplicationConfig = {
+  providers: [
+    provideServerRendering(),
+    provideISR() // <-- Use it in config providers
+  ],
+};
+```
+
+When registering the providers, `NgxIsrService` will be initialized and will start to listen to route changes, only on the server side, so the browser bundle won't contain any extra code.
 
 # Play with demo
 
@@ -170,10 +215,15 @@ const routes: Routes = [
 
 
 ## Changelog
+- version 0.5.1
+  * feat: Migrate repository to nx workspace
+  * feat: Added `provideISR` provider function
+  * chore: Update example RedisCacheHandler to use a prefix
+
 - Version 0.5.0
-  
+
   #### Breaking Changes:
-   The invalidate method of IsrHandler now is converted to be a POST request.
+  The invalidate method of IsrHandler now is converted to be a POST request.
 
   ```ts
   server.post('/api/invalidate', async (req, res) => 
@@ -181,26 +231,26 @@ const routes: Routes = [
   );
   ```
 
-   It accepts a body with the following structure:
+  It accepts a body with the following structure:
    ```ts
    {
      token: string; // The secren token 
      urlsToInvalidate: string[]; // The urls to invalidate ex. ['/one', '/two']
    }
    ```
-  
+
   Now you also need to add `server.use(express.json());` in your server.ts file in order to parse the body of the request.
 
   #### Changes:
-    * feat: added modifyCachedHtml and modifyGeneratedHtml callbacks to provide a mechanism to change html on the fly
-    * feat: Invalidate/regenerate multiple urls with one request
+  * feat: added modifyCachedHtml and modifyGeneratedHtml callbacks to provide a mechanism to change html on the fly
+  * feat: Invalidate/regenerate multiple urls with one request
 
 - Version 0.4.0
   Now ngx-isr will support only project in v15 and above. If you want to use it in older versions of Angular, please use v0.3.1.
 
   The reason for this is because now we use `ɵSERVER_CONTEXT` token in order to set the rendering context that now will be shown as: `ng-server-context="ngx-isr"`. And this token is only available in v15 and above.
 
-  * Changes: 
+  * Changes:
     * chore: Updated the project to v15
     * feat: Added server context provider
     * feat: Added RedisCacheHandler class usage in the demo app (experimental)
