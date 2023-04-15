@@ -32,7 +32,7 @@ _Example_
 ```typescript
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { stateful } from 'rx-angular/state';
+import { stateful } from 'rx-angular/state/selections';
 
 const state$: Observable<{ name: string; items: string[] }>;
 const derivation$ = state$.pipe(
