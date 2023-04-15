@@ -60,15 +60,15 @@ export default class HomeComponent {
   `;
 
   ngModuleCode = `
-  import { NgxIsrModule } from 'ngx-isr';
+  import { provideISR } from 'ngx-isr';
 
   @NgModule({
     imports: [
       AppModule,
       ServerModule,
-      // 👇 Import NgxIsrModule to your server module
-      NgxIsrModule.forRoot()
     ],
+    // 👇 Register ISR providers
+    providers: [ provideISR() ],
     bootstrap: [AppComponent],
   })
   export class AppServerModule {}
