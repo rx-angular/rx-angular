@@ -219,45 +219,5 @@ const routes: Routes = [
   * feat: Migrate repository to nx workspace
   * feat: Added `provideISR` provider function
   * chore: Update example RedisCacheHandler to use a prefix
-
-- version 0.5.1
-  * feat: Added extra field to isrService in order to save extra data if needed
-
-- Version 0.5.0
-
-  #### Breaking Changes:
-  The invalidate method of IsrHandler now is converted to be a POST request.
-
-  ```ts
-  server.post('/api/invalidate', async (req, res) => 
-    await isr.invalidate(req, res)
-  );
-  ```
-
-  It accepts a body with the following structure:
-   ```ts
-   {
-     token: string; // The secren token 
-     urlsToInvalidate: string[]; // The urls to invalidate ex. ['/one', '/two']
-   }
-   ```
-
-  Now you also need to add `server.use(express.json());` in your server.ts file in order to parse the body of the request.
-
-  #### Changes:
-  * feat: added modifyCachedHtml and modifyGeneratedHtml callbacks to provide a mechanism to change html on the fly
-  * feat: Invalidate/regenerate multiple urls with one request
-
-- Version 0.4.0
-  Now ngx-isr will support only project in v15 and above. If you want to use it in older versions of Angular, please use v0.3.1.
-
-  The reason for this is because now we use `ɵSERVER_CONTEXT` token in order to set the rendering context that now will be shown as: `ng-server-context="ngx-isr"`. And this token is only available in v15 and above.
-
-  * Changes:
-    * chore: Updated the project to v15
-    * feat: Added server context provider
-    * feat: Added RedisCacheHandler class usage in the demo app (experimental)
-    * chore: Started to convert the demo app in a documentation page for the library
-
 ## License
 MIT
