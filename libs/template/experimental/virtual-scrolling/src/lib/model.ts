@@ -1,61 +1,32 @@
 import {
-  ChangeDetectorRef,
   Directive,
   EmbeddedViewRef,
-  ErrorHandler,
   NgIterable,
-  NgZone,
-  Output,
   TemplateRef,
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
-import { RxStrategies } from '@rx-angular/cdk/render-strategies';
 import { RxDefaultListViewContext } from '@rx-angular/cdk/template';
 import { Observable, Subject } from 'rxjs';
 
-type CreateViewContext<T, C, U> = (value: T, computedContext: U) => C;
+type CreateViewContext<Implicit, Context, ComputedContext> = (
+  value: Implicit,
+  computedContext: ComputedContext
+) => Context;
 
-type UpdateViewContext<T, C, U> = (
-  value: T,
-  view: EmbeddedViewRef<C>,
-  computedContext?: U
+type UpdateViewContext<Implicit, Context, ComputedContext> = (
+  value: Implicit,
+  view: EmbeddedViewRef<Context>,
+  computedContext?: ComputedContext
 ) => void;
 
-export interface TemplateSettings<T, C, U> {
+export interface TemplateSettings<Implicit, Context, ComputedContext> {
   viewContainerRef: ViewContainerRef;
-  templateRef: TemplateRef<C>;
-  createViewContext: CreateViewContext<T, C, U>;
-  updateViewContext: UpdateViewContext<T, C, U>;
+  templateRef: TemplateRef<Context>;
+  createViewContext: CreateViewContext<Implicit, Context, ComputedContext>;
+  updateViewContext: UpdateViewContext<Implicit, Context, ComputedContext>;
   viewCacheSize: number;
 }
-
-export interface RenderSettings {
-  cdRef: ChangeDetectorRef;
-  parent: boolean;
-  patchZone?: NgZone;
-  strategies: RxStrategies<string>;
-  defaultStrategyName: string;
-  errorHandler?: ErrorHandler;
-}
-
-export const enum ListTemplateChangeType {
-  insert,
-  remove,
-  move,
-  update,
-  context,
-}
-// [value, index, oldIndex?]
-export type ListTemplateChangePayload<T> = [T, number?, number?];
-export type ListTemplateChange<T = any> = [
-  ListTemplateChangeType,
-  ListTemplateChangePayload<T>
-];
-export type ListTemplateChanges<T = any> = [
-  ListTemplateChange<T>[], // changes to apply
-  boolean // notify parent
-];
 
 export interface ListRange {
   start: number;
@@ -95,7 +66,7 @@ export abstract class RxVirtualScrollStrategy<
    *
    * Emits whenever an update to a single view was rendered
    */
-  @Output() readonly viewRenderCallback = new Subject<{
+  readonly viewRenderCallback = new Subject<{
     view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>;
     item: T;
     index: number;
@@ -163,7 +134,7 @@ export abstract class RxVirtualViewRepeater<
     item: T;
   }>;
   abstract renderingStart$: Observable<void>;
-  _trackBy: TrackByFunction<T> = (i, a) => a;
+  _trackBy: TrackByFunction<T> | null;
 }
 
 /** @internal */

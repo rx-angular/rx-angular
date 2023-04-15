@@ -1,10 +1,13 @@
 import {
   ChangeDetectorRef,
   Directive,
+  DoCheck,
   EmbeddedViewRef,
   ErrorHandler,
   inject,
   Input,
+  IterableChanges,
+  IterableDiffer,
   IterableDiffers,
   NgIterable,
   NgZone,
@@ -14,35 +17,60 @@ import {
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
-import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
+import { coerceObservableWith } from '@rx-angular/cdk/coercing';
 import {
+  onStrategy,
+  RxStrategyCredentials,
   RxStrategyNames,
   RxStrategyProvider,
+  strategyHandling,
 } from '@rx-angular/cdk/render-strategies';
 import { RxListViewComputedContext } from '@rx-angular/cdk/template';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
-import { shareReplay, takeUntil } from 'rxjs/operators';
+import {
+  isObservable,
+  MonoTypeOperatorFunction,
+  NEVER,
+  Observable,
+  ReplaySubject,
+  Subject,
+  of,
+  combineLatest,
+  concat,
+} from 'rxjs';
+import {
+  shareReplay,
+  switchMap,
+  takeUntil,
+  catchError,
+  distinctUntilChanged,
+  map,
+  ignoreElements,
+  tap,
+  switchAll,
+} from 'rxjs/operators';
 
 import {
+  ListRange,
   RxVirtualForViewContext,
   RxVirtualScrollStrategy,
   RxVirtualViewRepeater,
 } from './model';
 import {
+  createVirtualListTemplateManager,
+  RxVirtualListTemplateManager,
+} from './virtual-list-template-manager';
+import {
   DEFAULT_VIEW_CACHE_SIZE,
   RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS,
-  RxVirtualScrollDefaultOptions,
 } from './virtual-scroll.config';
-import {
-  createVirtualListManager,
-  VirtualListManager,
-} from './virtual-template-manager';
 
 /**
  * @description Will be provided through Terser global definitions by Angular CLI
  * during the production build.
  */
 declare const ngDevMode: boolean;
+
+const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
 
 /**
  * @Directive RxVirtualFor
@@ -160,17 +188,14 @@ declare const ngDevMode: boolean;
  * @publicApi
  */
 @Directive({
-  selector: '[rxVirtualFor]',
+  selector: '[rxVirtualFor][rxVirtualForOf]',
   providers: [{ provide: RxVirtualViewRepeater, useExisting: RxVirtualFor }],
   standalone: true,
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
-  implements RxVirtualViewRepeater<T>, OnInit, OnDestroy
+  implements RxVirtualViewRepeater<T>, OnInit, DoCheck, OnDestroy
 {
-  /** @internal */
-  static ngTemplateGuard_rxVirtualFor: 'binding';
-
   private readonly scrollStrategy = inject(RxVirtualScrollStrategy<T, U>);
   private readonly iterableDiffers = inject(IterableDiffers);
   private readonly cdRef = inject(ChangeDetectorRef);
@@ -185,28 +210,16 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
     optional: true,
   });
 
-  /**
-   * @description
-   * The iterable input
-   *
-   * @example
-   * <rx-virtual-scroll-viewport>
-   *   <app-hero *rxVirtualFor="heroes$; let hero"
-   *     [hero]="hero"></app-hero>
-   * </rx-virtual-scroll-viewport>
-   *
-   * @param potentialObservable
-   */
-  @Input()
-  set rxVirtualFor(
-    potentialObservable:
-      | Observable<NgIterable<T>>
-      | NgIterable<T>
-      | null
-      | undefined
-  ) {
-    this.observables$.next(potentialObservable);
-  }
+  /** @internal */
+  private _differ?: IterableDiffer<T>;
+
+  /** @internal */
+  private partiallyFinished = false;
+
+  /** @internal */
+  private staticValue?: U;
+  /** @internal */
+  private renderStatic = false;
 
   /**
    * @description
@@ -223,12 +236,19 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   @Input()
   set rxVirtualForOf(
     potentialObservable:
-      | Observable<NgIterable<T>>
-      | NgIterable<T>
+      | Observable<(U & NgIterable<T>) | undefined | null>
+      | (U & NgIterable<T>)
       | null
       | undefined
   ) {
-    this.observables$.next(potentialObservable);
+    if (!isObservable(potentialObservable)) {
+      this.staticValue = potentialObservable;
+      this.renderStatic = true;
+    } else {
+      this.staticValue = undefined;
+      this.renderStatic = false;
+      this.observables$.next(potentialObservable);
+    }
   }
 
   /**
@@ -243,6 +263,11 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
     this._template = value;
   }
 
+  /** @internal */
+  private strategyHandler = strategyHandling(
+    this.strategyProvider.primaryStrategy,
+    this.strategyProvider.strategies
+  );
   /**
    * @description
    * The rendering strategy to be used to render updates to the DOM.
@@ -290,7 +315,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   set strategy(
     strategyName: RxStrategyNames<string> | Observable<RxStrategyNames<string>>
   ) {
-    this.strategyInput$.next(strategyName);
+    this.strategyHandler.next(strategyName);
   }
 
   /**
@@ -435,15 +460,27 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param trackByFnOrKey
    */
   @Input('rxVirtualForTrackBy')
-  set trackBy(trackByFnOrKey: keyof T | ((idx: number, i: T) => unknown)) {
-    if (typeof trackByFnOrKey === 'function') {
-      this._trackBy = trackByFnOrKey;
-    } else if (typeof trackByFnOrKey === 'string') {
-      this._trackBy = (i, a) => a[trackByFnOrKey];
-    } else if (ngDevMode) {
+  set trackBy(trackByFnOrKey: keyof T | TrackByFunction<T>) {
+    if (
+      NG_DEV_MODE &&
+      trackByFnOrKey != null &&
+      typeof trackByFnOrKey !== 'string' &&
+      typeof trackByFnOrKey !== 'symbol' &&
+      typeof trackByFnOrKey !== 'function'
+    ) {
       throw new Error(
-        `Received incorrect value for trackBy, expected string | ((idx: number, i: T) => unknown), got ${typeof trackByFnOrKey}`
+        `trackBy must be typeof function or keyof T, but received ${JSON.stringify(
+          trackByFnOrKey
+        )}.`
       );
+    }
+    if (trackByFnOrKey == null) {
+      this._trackBy = null;
+    } else {
+      this._trackBy =
+        typeof trackByFnOrKey !== 'function'
+          ? (i, a) => a[trackByFnOrKey]
+          : trackByFnOrKey;
     }
   }
 
@@ -490,7 +527,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param renderCallback
    */
   @Input('rxVirtualForRenderCallback') set renderCallback(
-    renderCallback: Subject<T>
+    renderCallback: Subject<U>
   ) {
     this._renderCallback = renderCallback;
   }
@@ -498,7 +535,9 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   readonly rendered$ = new Subject<any>();
   /** @internal */
-  readonly viewsRendered$ = new Subject<EmbeddedViewRef<any>[]>();
+  readonly viewsRendered$ = new Subject<
+    EmbeddedViewRef<RxVirtualForViewContext<T, U, RxListViewComputedContext>>[]
+  >();
   /** @internal */
   readonly viewRendered$ = new Subject<{
     view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>;
@@ -514,9 +553,6 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   /** @internal */
-  private strategyInput$ = new ReplaySubject<string | Observable<string>>(1);
-
-  /** @internal */
   private observables$ = new ReplaySubject<
     | Observable<NgIterable<T> | null | undefined>
     | NgIterable<T>
@@ -525,11 +561,12 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   >(1);
 
   /** @internal */
-  private _renderCallback?: Subject<T>;
+  private _renderCallback?: Subject<U>;
 
   /** @internal */
   readonly values$ = this.observables$.pipe(
-    coerceDistinctWith(),
+    coerceObservableWith(),
+    switchAll(),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
@@ -537,13 +574,16 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   private values?: NgIterable<T> | null | undefined;
 
   /** @internal */
-  private readonly strategy$ = this.strategyInput$.pipe(coerceDistinctWith());
-
-  /** @internal */
-  private listManager!: VirtualListManager<T, RxVirtualForViewContext<T, U>>;
+  private templateManager!: RxVirtualListTemplateManager<
+    T,
+    RxVirtualForViewContext<T, U>
+  >;
 
   /** @internal */
   private _destroy$ = new Subject<void>();
+
+  /** @internal */
+  _trackBy: TrackByFunction<T> | null = null;
 
   /** @internal */
   static ngTemplateContextGuard<
@@ -558,57 +598,163 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   /** @internal */
-  _trackBy: TrackByFunction<T> = (i, a) => a;
-
-  /** @internal */
   ngOnInit() {
-    this.listManager = createVirtualListManager<
-      T,
-      RxVirtualForViewContext<T, U, RxListViewComputedContext>,
-      RxListViewComputedContext
-    >({
-      iterableDiffers: this.iterableDiffers,
-      renderSettings: {
-        cdRef: this.cdRef,
-        strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
-        defaultStrategyName: this.strategyProvider.primaryStrategy,
-        parent: this.renderParent,
-        patchZone: this.patchZone ? this.ngZone : undefined,
-        errorHandler: this.errorHandler,
-      },
-      templateSettings: {
-        viewContainerRef: this.viewContainerRef,
-        templateRef: this.template,
-        createViewContext: this.createViewContext.bind(this),
-        updateViewContext: this.updateViewContext.bind(this),
-        viewCacheSize: this.viewCacheSize,
-      },
-      trackBy: this._trackBy,
-    });
-    this.listManager.nextStrategy(this.strategy$);
     this.values$.pipe(takeUntil(this._destroy$)).subscribe((values) => {
       this.values = values;
     });
-    this.listManager
-      .render(this.values$, this.scrollStrategy.renderedRange$)
+    this.templateManager = createVirtualListTemplateManager({
+      viewContainerRef: this.viewContainerRef,
+      templateRef: this.template,
+      createViewContext: this.createViewContext.bind(this),
+      updateViewContext: this.updateViewContext.bind(this),
+      viewCacheSize: this.viewCacheSize,
+    });
+    this.render()
       .pipe(takeUntil(this._destroy$))
       .subscribe((v) => {
         this.rendered$.next(v);
-        this._renderCallback?.next(v);
+        this._renderCallback?.next(v as U);
       });
-    this.listManager.viewsRendered$
-      .pipe(takeUntil(this._destroy$))
-      .subscribe(this.viewsRendered$);
-    this.listManager.viewRendered$
-      .pipe(takeUntil(this._destroy$))
-      .subscribe(this.viewRendered$);
-    this.listManager.renderingStart$
-      .pipe(takeUntil(this._destroy$))
-      .subscribe(this.renderingStart$);
   }
 
   /** @internal */
-  createViewContext(
+  ngDoCheck() {
+    if (this.renderStatic) {
+      this.observables$.next(this.staticValue);
+    }
+  }
+
+  /** @internal */
+  ngOnDestroy() {
+    this._destroy$.next();
+    this.templateManager.detach();
+  }
+
+  private render() {
+    return combineLatest<[T[], ListRange, RxStrategyCredentials]>([
+      this.values$.pipe(
+        map((values) =>
+          Array.isArray(values)
+            ? values
+            : values != null
+            ? Array.from(values)
+            : []
+        )
+      ),
+      this.scrollStrategy.renderedRange$,
+      this.strategyHandler.strategy$.pipe(distinctUntilChanged()),
+    ]).pipe(
+      // map iterable to latest diff
+      switchMap(([items, range, strategy]) => {
+        const iterable = items.slice(range.start, range.end);
+        const differ = this.getDiffer(iterable);
+        let changes: IterableChanges<T> | null = null;
+        if (differ) {
+          if (this.partiallyFinished) {
+            const currentIterable = [];
+            for (
+              let i = 0, ilen = this.viewContainerRef.length;
+              i < ilen;
+              i++
+            ) {
+              const viewRef = <EmbeddedViewRef<any>>(
+                this.viewContainerRef.get(i)
+              );
+              currentIterable[i] = viewRef.context.$implicit;
+            }
+            differ.diff(currentIterable);
+          }
+          changes = differ.diff(iterable);
+        }
+        if (!changes) {
+          return NEVER;
+        }
+        const listChanges = this.templateManager.getListChanges(
+          changes,
+          iterable,
+          items.length,
+          range.start
+        );
+        const updates = listChanges[0].sort((a, b) => a[0] - b[0]);
+        const insertedOrRemoved = listChanges[1];
+        const work$ = updates.map(([, work]) =>
+          onStrategy(
+            null,
+            strategy,
+            () => {
+              const update = work();
+              if (update.view) {
+                this.viewRendered$.next(update as any);
+              }
+            },
+            { ngZone: this.patchZone ? this.ngZone : undefined }
+          )
+        );
+        this.partiallyFinished = true;
+        const notifyParent = insertedOrRemoved && parent;
+        this.renderingStart$.next();
+        return combineLatest(
+          // emit after all changes are rendered
+          work$.length > 0 ? work$ : [of(iterable)]
+        ).pipe(
+          tap(() => {
+            this.partiallyFinished = false;
+            const viewsRendered = [];
+            const end = this.viewContainerRef.length;
+            let i = 0;
+            for (i; i < end; i++) {
+              viewsRendered.push(this.viewContainerRef.get(i));
+            }
+            this.viewsRendered$.next(viewsRendered);
+          }),
+          notifyParent
+            ? switchMap((v) =>
+                concat(
+                  of(v),
+                  onStrategy(
+                    null,
+                    strategy,
+                    (_, work, options) => {
+                      work(this.cdRef, options.scope);
+                    },
+                    {
+                      ngZone: this.patchZone ? this.ngZone : undefined,
+                      scope: (this.cdRef as any).context || this.cdRef,
+                    }
+                  ).pipe(ignoreElements())
+                )
+              )
+            : (o$) => o$,
+          this.handleError(),
+          map(() => iterable)
+        );
+      }),
+      this.handleError()
+    );
+  }
+
+  private handleError<T>(): MonoTypeOperatorFunction<T | null> {
+    return (o$) =>
+      o$.pipe(
+        catchError((err: Error) => {
+          this.partiallyFinished = false;
+          this.errorHandler.handleError(err);
+          return of(null);
+        })
+      );
+  }
+
+  private getDiffer(values: NgIterable<T>): IterableDiffer<T> | null {
+    if (this._differ) {
+      return this._differ;
+    }
+    return values
+      ? (this._differ = this.iterableDiffers.find(values).create(this._trackBy))
+      : null;
+  }
+
+  /** @internal */
+  private createViewContext(
     item: T,
     computedContext: RxListViewComputedContext
   ): RxVirtualForViewContext<T, U, RxListViewComputedContext> {
@@ -620,7 +766,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   /** @internal */
-  updateViewContext(
+  private updateViewContext(
     item: T,
     view: EmbeddedViewRef<
       RxVirtualForViewContext<T, U, RxListViewComputedContext>
@@ -630,11 +776,5 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
     view.context.updateContext(computedContext!);
     view.context.$implicit = item;
     view.context.rxVirtualForOf = this.values! as U;
-  }
-
-  /** @internal */
-  ngOnDestroy() {
-    this._destroy$.next();
-    this.listManager.detach();
   }
 }
