@@ -1,5 +1,4 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { DOCUMENT, isPlatformServer } from '@angular/common';
+import { Injectable } from '@angular/core';
 import { ChildActivationEnd, Router } from '@angular/router';
 import { filter, map, take } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
@@ -29,15 +28,7 @@ export class NgxIsrService {
     return this.state.getValue().extra;
   }
 
-  constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
-    @Inject(DOCUMENT) private doc: Document,
-    private router: Router
-  ) {
-    if (isPlatformServer(this.platformId)) {
-      this.activate();
-    }
-  }
+  constructor(private router: Router) {}
 
   activate(): void {
     this.router.events

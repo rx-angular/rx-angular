@@ -18,3 +18,5 @@ export {
 
 
 export { CacheHandler, ISROptions, CacheData } from './lib/models/cache-handler';
+
+export { provideISR } from './lib/provide-isr';

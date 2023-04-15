@@ -13,6 +13,9 @@ import { HTTP_URL_TIMINGS_INTERCEPTOR_ISR } from './url-timings.interceptor';
     NgxIsrModule.forRoot()
   ],
   bootstrap: [AppComponent],
-  providers: [HTTP_URL_TIMINGS_INTERCEPTOR_ISR]
+  providers: [
+    HTTP_URL_TIMINGS_INTERCEPTOR_ISR,
+    // provideISR()
+  ]
 })
 export class AppServerModule {}
