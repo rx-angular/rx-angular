@@ -17,7 +17,7 @@ import {
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
-import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
+import { coerceObservableWith } from '@rx-angular/cdk/coercing';
 import {
   onStrategy,
   RxStrategyCredentials,
@@ -46,6 +46,7 @@ import {
   map,
   ignoreElements,
   tap,
+  switchAll,
 } from 'rxjs/operators';
 
 import {
@@ -564,7 +565,8 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /** @internal */
   readonly values$ = this.observables$.pipe(
-    coerceDistinctWith(),
+    coerceObservableWith(),
+    switchAll(),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
