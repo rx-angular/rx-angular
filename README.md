@@ -213,7 +213,6 @@ const routes: Routes = [
 
 - Path `/three` after the first request that is server-rendered, the page will be added to cache and the cache will never be deleted automatically as in path `/two`. So after the first request, all the other ones will come from the cache.
 
-
 ## Changelog
 - version 0.5.2
   * feat: Migrate repository to nx workspace
