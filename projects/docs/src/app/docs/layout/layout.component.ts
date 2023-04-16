@@ -3,16 +3,16 @@ import { Component, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { DocsLayoutService } from '../services/docs-layout.service';
 import { DocsDesktopNavComponent } from './docs-desktop-nav.component';
-import { DocsFooterComponent } from "./docs-footer.component";
+import { DocsFooterComponent } from './docs-footer.component';
 import { DocsMobileNavComponent } from './docs-mobile-nav.component';
 import { DocsNavbarComponent } from './docs-navbar.component';
-import { DocsPageLayoutComponent } from "./docs-page-layout.component";
-import { DocsPaginationComponent } from "./docs-paginations.component";
+import { DocsPageLayoutComponent } from './docs-page-layout.component';
+import { DocsPaginationComponent } from './docs-paginations.component';
 import { DocsScrollTopComponent } from './docs-scroll-top.component';
 
 @Component({
-    selector: 'app-docs-layout',
-    template: `
+  selector: 'app-docs-layout',
+  template: `
     <div
       class="h-full mx-auto bg-white 2xl:max-w-7xl dark:bg-tuna"
       [class.dark]="layout.darkMode$ | async">
@@ -29,7 +29,6 @@ import { DocsScrollTopComponent } from './docs-scroll-top.component';
 
               <app-docs-pagination></app-docs-pagination>
               <app-docs-footer></app-docs-footer>
-
             </div>
           </div>
         </div>
@@ -37,19 +36,19 @@ import { DocsScrollTopComponent } from './docs-scroll-top.component';
       <app-docs-scroll-top></app-docs-scroll-top>
     </div>
   `,
-    standalone: true,
-    imports: [
-        RouterOutlet,
-        RouterLink,
-        AsyncPipe,
-        DocsDesktopNavComponent,
-        DocsNavbarComponent,
-        DocsMobileNavComponent,
-        DocsScrollTopComponent,
-        DocsPageLayoutComponent,
-        DocsPaginationComponent,
-        DocsFooterComponent
-    ],
+  standalone: true,
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    AsyncPipe,
+    DocsDesktopNavComponent,
+    DocsNavbarComponent,
+    DocsMobileNavComponent,
+    DocsScrollTopComponent,
+    DocsPageLayoutComponent,
+    DocsPaginationComponent,
+    DocsFooterComponent,
+  ],
 })
 export default class DocsLayoutComponent {
   layout = inject(DocsLayoutService);

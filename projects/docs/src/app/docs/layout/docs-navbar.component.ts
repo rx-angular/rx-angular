@@ -44,7 +44,7 @@ import { RouterLink } from '@angular/router';
                   d="M4 6h16M4 12h16M4 18h16"></path>
               </svg>
             </button>
-            <a routerLink="/docs" class="md:hidden">
+            <a routerLink="/docs" class="md:hidden !m-auto">
               <img src="assets/logo.svg" alt="logo" class="w-8 h-8" />
             </a>
             <button

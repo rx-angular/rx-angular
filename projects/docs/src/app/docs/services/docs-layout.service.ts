@@ -57,6 +57,11 @@ export class DocsLayoutService {
       routeLink: '/docs/modify-html-cache-hooks',
     },
     {
+      id: PAGE_IDS.deploying,
+      title: 'Deploying',
+      routeLink: '/docs/deploying',
+    },
+    {
       id: PAGE_IDS.useNgxIsrServiceForMoreThanCaching,
       title: 'Use NgxIsrService for more than caching',
       routeLink: '/docs/use-ngx-isr-service-for-more-than-caching',
@@ -126,6 +131,7 @@ export const PAGE_IDS = {
   preRenderingAndIsr: 'pre-rendering-and-isr',
   createYourOwnCacheHandler: 'create-your-own-cache-handler',
   modifyHtmlCacheHooks: 'modify-html-cache-hooks',
+  deploying: 'deploying',
   useNgxIsrServiceForMoreThanCaching: 'use-ngx-isr-service-for-more-than-caching',
   api: 'api',
 }

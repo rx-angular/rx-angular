@@ -33,6 +33,15 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
             <p class="mt-10 text-center text-sm leading-5 text-gray-500">
               Built with ❤️ & <b class="text-red-600">Angular</b>
             </p>
+
+            <p  class="mt-10 text-center text-sm leading-5 text-gray-500">
+              Docs theme by 
+              <a href="https://wicked-templates.gumroad.com/l/rdzjw" target="_blank" class="text-main">
+                Wicked Templates 🎨
+              </a> 
+              <br>
+              (converted to Angular & added some sugar 🍬)
+            </p>
           </div>
         </div>
       </div>
