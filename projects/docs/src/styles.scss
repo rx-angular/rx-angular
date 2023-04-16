@@ -1,8 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 @import '~highlight.js/styles/nord.css';
+
+app-docs-layout {
+  pre code.hljs {
+    font-size: 16px!important;
+    background: #2e343d;
+    border-radius: 10px;
+  }
+
+  .dark pre code.hljs {
+    background: #0000001f;
+  }
+}

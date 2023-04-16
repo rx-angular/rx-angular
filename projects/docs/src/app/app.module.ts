@@ -6,13 +6,13 @@ import { RouterModule, TitleStrategy } from '@angular/router';
 import { TransferHttpCacheModule } from '@nguniversal/common';
 import { AppComponent } from './app.component';
 import { CustomTitleStrategy } from './custom-title-strategy';
-import { HIGHLIGHT_OPTIONS, HighlightModule } from 'ngx-highlightjs';
+import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highlightjs';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled' }),
     TransferHttpCacheModule,
     HttpClientModule,
     HighlightModule,
@@ -26,7 +26,7 @@ import { HIGHLIGHT_OPTIONS, HighlightModule } from 'ngx-highlightjs';
         languages: {
           typescript: () => import('highlight.js/lib/languages/typescript'),
         },
-      },
+      } as HighlightOptions,
     },
   ],
   bootstrap: [AppComponent],
