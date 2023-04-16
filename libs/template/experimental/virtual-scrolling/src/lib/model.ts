@@ -111,7 +111,6 @@ export abstract class RxVirtualScrollStrategy<
 /** @internal */
 @Directive()
 export abstract class RxVirtualScrollViewport {
-  abstract rendered$: Observable<any>;
   abstract viewRange: Observable<ListRange>;
   abstract elementScrolled$: Observable<void>;
   abstract containerRect$: Observable<{ height: number; width: number }>;
@@ -126,7 +125,6 @@ export abstract class RxVirtualViewRepeater<
   U extends NgIterable<T> = NgIterable<T>
 > {
   abstract values$: Observable<U | null | undefined>;
-  abstract rendered$: Observable<any>;
   abstract viewsRendered$: Observable<EmbeddedViewRef<any>[]>;
   abstract viewRendered$: Observable<{
     view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>;

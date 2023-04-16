@@ -10,7 +10,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { defer, Observable, ReplaySubject, Subject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 import {
@@ -115,9 +115,6 @@ export class RxVirtualScrollViewportComponent
   /** @internal */
   @ContentChild(RxVirtualViewRepeater)
   viewRepeater!: RxVirtualViewRepeater<unknown>;
-
-  /** @internal */
-  readonly rendered$ = defer(() => this.viewRepeater.rendered$);
 
   /** @internal */
   private _elementScrolled = new Subject<Event>();
